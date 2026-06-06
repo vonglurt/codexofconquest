@@ -1041,3 +1041,173 @@ takeItem: "The Widow's Sons' Poaching Indictment"
 ```
 
 *STN-07 complete. 2026-06-03.*
+
+---
+
+## Cycle 8 — Angle: *The Royal Ranger Roll — Names Taken in Sherwood That Must Reach London*
+
+*Source re-read: Part 3. King Richard's forest pardon confirmed in text.*
+
+**What prior cycles missed:** The administrative consequence of the pardon. The King gave Robin's band free pardon verbally in a forest clearing and ordered their names "duly recorded as royal rangers" — but the roll was written on rough parchment by a traveling clerk, sealed with a signet ring into cold wax. Until it reaches London's royal registry, the men are still technically outlaws.
+
+**This cycle introduces:** *The roll of the pardoned outlaws — a list that transforms lawbreakers into law-keepers, written in the wrong place by the right authority, that must travel from greenwood to registry to be valid.*
+
+---
+
+### The Five-Act Vignette — "The Royal Ranger Roll"
+
+*A Fighter carries the forest roll from Sherwood to London. Sixty-three men's legal futures depend on priority of presentation — and the Sheriff has already sent his messenger.*
+
+---
+
+**ACT I — "The Names in the Clearing"**
+*The Royal Ranger Roll · freshly written, wax seal imperfect · Robin Hood places it in the Fighter's hands · Sherwood Forest, morning after the King's feast.*
+
+The King rode north with Robin, Little John, Will Scarlet, and Allan a Dale. The sixty-three who remained were told their names had been taken. The roll is real. The seal is real. But the wax was cold when the King pressed his signet ring, and the impression is partial. Until the roll reaches London, nothing is official. The Sheriff will file a counter-claim by noon.
+
+*The Fighter held the roll. It weighed almost nothing and carried sixty-three futures.*
+
+**Skill Check — Perception DC 12.** Notice the smeared seal before you ride. Can it be re-sealed? The clerk has already left with the King.
+**Fail:** You don't see the flaw until the registry clerk points it out. Ride hard.
+**Success:** You see it now. It cannot be fixed. The imperfect seal is what you carry.
+
+*You receive: Royal Ranger Roll (signet-sealed, wax imperfect).*
+
+---
+
+**ACT II — "The Fork in the Road"**
+*The Roll · in your saddlebag · A junction south of Nottingham · Two roads to London.*
+
+The King's high road is faster but passes three sheriff's checkpoints. The forest track is two hours slower but uncontrolled — and some of the pardoned men may still be on those tracks, not yet knowing they are rangers.
+
+**Skill Check — Wisdom DC 13.** Choose the forest track: slower, rougher, possibly interrupted by men whose names are on the roll.
+**Fail:** You take the high road. A checkpoint delays you two hours. You arrive in London forty minutes behind the Sheriff's messenger.
+**Success:** Forest track. Two men stop you at a stream. You show them the roll and they read their own names. One rides ahead to clear the path.
+
+---
+
+**ACT III — "The Imperfect Seal"**
+*The Roll · at the registry desk · A London clerk tilts it toward window light.*
+
+"The impression is partial. Under our rules, a document sealed under these conditions requires a second royal witness before registration." He looks at you. "Is there such a witness available?"
+
+**Skill Check — Persuasion DC 14.** Argue that the imperfect seal proves authenticity — no forger produces a smeared impression. A forger makes a perfect one. The flaw is evidence of the conditions: cold wax, a forest, night, the King in a hurry.
+**Fail:** The clerk needs a second witness. You send to the city garrison; it costs an hour.
+**Success:** He concedes. Notes: *"Seal imperfect; conditions authenticated by bearer's account; provisional registration."*
+
+---
+
+**ACT IV — "The Counter-Filing"**
+*The Roll · on the registry desk · beside the Sheriff's counter-filing.*
+
+The Sheriff's messenger arrived forty minutes ago. His complaint: no chancery warrant, no great seal, no countersignature — the pardon was issued without proper legal process. The clerk looks at both documents. Both sit on his desk. He looks at you.
+
+**Skill Check — History DC 13.** Cite the principle of priority of presentation: when two conflicting documents arrive at the same registry, the one presented first takes precedence while a hearing is arranged.
+**Fail:** The clerk explains it himself. The roll is registered anyway, with a note of the objection.
+**Success:** You cite it before he can explain it. He registers the roll with the counter-filing noted as subsequent. The roll stands.
+
+---
+
+**ACT V — "Registered"**
+*The Roll · now entered · Sweelinck receives the certified copy at Weimar.*
+
+Sweelinck reads receipt and roll together. "Sixty-three names. Outlaws Monday. Rangers Tuesday. The difference is this parchment." He looks up. "What category covers a document that transforms the legal status of named persons simultaneously, in aggregate, by registry?"
+
+**Skill Check — History DC 12.** Name the category before he does.
+**Fail:** He creates it himself and looks at you: "You may as well have suggested it."
+**Success:** Filed as: *Registry of Collective Pardon — Documents That Alter Legal Status of Named Persons in Aggregate. First entry.*
+
+TOKEN TAKEN: Royal Ranger Roll. *questComplete: true.*
+
+*You receive: Sweelinck's Collective Pardon Record — certified copy, stamped.*
+
+---
+
+### Quest API Stub
+
+```
+Act I — "The Names in the Clearing"
+activateNode: SHW
+type: skill_check
+missionAccept: "King Richard pardoned Robin Hood's band in Sherwood last night.
+  The roll of sixty-three names must reach London before the Sheriff's
+  counter-filing. The seal was pressed into cold wax. The impression is
+  imperfect. The King has already ridden north."
+scene: "Sherwood clearing, morning after the feast. Sixty-three men stand
+  among the oaks, newly pardoned on rough parchment. The signet wax is
+  slightly smeared. The King's clerk has already gone. The Sheriff's
+  messenger is saddling up in Nottingham."
+prompt: "Perception DC 12. Notice the flaw before you ride. Can it be fixed?"
+failText: "You miss the flaw. It will come up in London."
+successText: "Seen and noted. Cannot be fixed. The imperfect seal is what
+  you have. You receive the Royal Ranger Roll."
+grantItem: "Royal Ranger Roll"
+checkPassFlag: rollReceived
+activateMissionBit: stn8_act1Active
+
+Act II — "The Fork in the Road"
+activateNode: SHW
+type: skill_check
+scene: "Road junction south of Nottingham. The King's high road: three
+  checkpoints, but faster. The forest track: two hours slower, uncontrolled,
+  patrolled by men whose names are on the roll but who don't know it yet.
+  The Sheriff's messenger is already riding the high road."
+prompt: "Wisdom DC 13. Take the forest track — avoid the checkpoints
+  even at the cost of two hours."
+failText: "High road. A checkpoint holds you two hours. You arrive forty
+  minutes behind the Sheriff's messenger."
+successText: "Forest track. Two men stop you at a stream, read their own
+  names on the roll, and clear your path."
+checkPassFlag: pathChosen
+activateCond: rollReceived
+
+Act III — "The Imperfect Seal"
+activateNode: NGM
+type: skill_check
+scene: "The royal registry in London. The clerk tilts the roll toward window
+  light. 'The impression is partial. Under our rules this requires a second
+  royal witness.' He looks at you. 'Is there one available?'"
+prompt: "Persuasion DC 14. A smeared seal proves authenticity — forgers
+  make perfect seals, not imperfect ones. The flaw is evidence of the
+  conditions: cold wax, forest clearing, night, the King in a hurry."
+failText: "He needs a second witness. You send to the city garrison.
+  This costs an hour."
+successText: "He concedes. Registers under provisional status, seal
+  imperfection noted and authenticated."
+checkPassFlag: sealAccepted
+activateCond: pathChosen
+
+Act IV — "The Counter-Filing"
+activateNode: NGM
+type: skill_check
+scene: "The Sheriff's counter-filing arrived forty minutes ago — it sits
+  beside your roll. The Sheriff claims the pardon lacks chancery warrant,
+  great seal, countersignature. He requests the registry hold all Sherwood
+  documents pending hearing. The clerk looks at both documents and at you."
+prompt: "History DC 13. Cite priority of presentation: the first document
+  filed takes precedence while a hearing is arranged."
+failText: "He explains the rule himself. The roll registers anyway, with
+  a note of objection."
+successText: "You cite it first. He registers the roll; the counter-filing
+  is noted as subsequent. The roll stands."
+checkPassFlag: priorityClaimed
+activateCond: sealAccepted
+
+Act V — "Registered"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads receipt and roll. 'Sixty-three names. Outlaws
+  Monday. Rangers Tuesday. The difference is this parchment.' He looks up.
+  'What category covers a document that transforms legal status of named
+  persons in aggregate, simultaneously, by registry?'"
+prompt: "History DC 12. Name the category before he writes it."
+failText: "He creates it and looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Registry of Collective Pardon — Documents That Alter
+  the Legal Status of Named Persons in Aggregate. First entry. You receive
+  Sweelinck's Collective Pardon Record."
+takeItem: "Royal Ranger Roll"
+grantItem: "Sweelinck's Collective Pardon Record"
+checkPassFlag: rollFiled
+questComplete: true
+activateCond: priorityClaimed
+```
