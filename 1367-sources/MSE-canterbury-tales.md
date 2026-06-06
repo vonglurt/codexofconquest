@@ -1166,3 +1166,88 @@ activateMissionBit: mseRelicComplete
 ---
 
 *MSE-07 complete. 2026-06-03.*
+
+---
+
+## Cycle 8 — Angle: *Appius's False Writ — The Forged Document That Became Its Own Evidence*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** The Physician's Tale uses a specific mechanism: Judge Appius wants Virginia, so he engineers a false legal writ claiming custody of her. The writ is forged — Appius's hired man claims to be Virginia's true master. Before the writ can be executed, Virginia's father Virginius kills her rather than surrender her. The false writ, intended as an instrument of crime, becomes the evidence that convicts Appius of corruption. The document that was meant to take Virginia is what takes Appius.
+
+**This cycle introduces:** *The false writ that became prosecution evidence — a forged legal instrument whose failure to be executed transformed it from a tool of crime into proof of it.*
+
+---
+
+### Quest API Stub — "Appius's False Writ"
+
+```
+Act I — "The False Writ"
+activateNode: ACT
+type: skill_check
+missionAccept: "Appius the judge forged a writ claiming Virginia as another
+  man's escaped bondservant. Virginia's father killed her before the writ
+  could be executed. Now the people have risen, Appius is in prison, and the
+  writ — stamped with Appius's seal — is the evidence that condemns him.
+  The writ must reach the court of appeal before Appius's supporters destroy it."
+scene: "A street in the town. The writ is in a clerk's hands — a small man
+  who served Appius and is now terrified. The document is sealed with Appius's
+  judge's stamp. It is forged: the seal is real but the writ's content was
+  fabricated. The man who presented it in court has fled. The clerk holds
+  the original. He does not know if surrendering it helps him or condemns him."
+prompt: "Persuasion DC 13. Convince the clerk that surrendering the writ
+  is his only protection — if Appius falls, those who held his instruments
+  are safer as witnesses than as accessories."
+failText: "He won't surrender it voluntarily. Offer a written promise that
+  you will testify on his behalf that he cooperated."
+successText: "He gives you the writ. 'I did not write it. I only stamped it
+  when I was told to. You can verify the stamp. I cannot undo what the judge
+  ordered.' You receive Appius's False Writ."
+grantItem: "Appius's False Writ"
+checkPassFlag: writReceived
+activateMissionBit: mse8_act1Active
+
+Act II — "The Court of Appeal"
+activateNode: LRD
+type: skill_check
+scene: "The court of appeal, London. The writ is presented to a senior judge.
+  He examines the stamp — it is genuine, Appius's seal. The content — the
+  claim that Virginia was a bondservant — is demonstrably false; Virginius's
+  family records and birth records contradict it. The judge looks at you:
+  'What is the legal status of this document? It is sealed with a judge's
+  authority, but its content is false. Is it a forged document or a corrupt
+  one?'"
+prompt: "History DC 13. Argue the distinction: a forged document is one
+  where the seal or signature is false; a corrupt document is one where the
+  authority is genuine but the content is fraudulent. This is the latter —
+  a corrupt instrument, not a forgery."
+failText: "The judge classifies it as forgery, which reduces Appius's
+  culpability. The distinction matters for the sentence."
+successText: "The judge accepts the distinction. He notes: 'Corrupt instrument
+  of a genuine authority. The authority makes the crime worse, not less.'"
+checkPassFlag: courtClassified
+activateCond: writReceived
+
+Act III — "Filed as Corruption Evidence"
+activateNode: WM
+type: skill_check
+scene: "Weimar archive. Sweelinck reads the writ and the court's classification.
+  'A document that was a legal instrument when sealed and became prosecution
+  evidence when its intended use failed.' He looks at you. 'The instrument
+  was defeated by the death of its intended victim before it could be executed.
+  What is the category for a legal document that failed to achieve its intended
+  crime and thereby became evidence of it?'"
+prompt: "History DC 11. Name the category: a corrupt legal instrument
+  that was defeated before execution and became prosecution evidence of its
+  own crime."
+failText: "He creates it himself: Frustrated Corrupt Instrument. He looks
+  at you. 'You may as well have suggested it.'"
+successText: "Filed: Frustrated Corrupt Instrument — Legal Document Whose
+  Intended Crime Was Defeated and Which Thereby Became Evidence of It.
+  You receive Sweelinck's Corruption Record."
+takeItem: "Appius's False Writ"
+grantItem: "Sweelinck's Corruption Record"
+checkPassFlag: writFiled
+questComplete: true
+activateCond: courtClassified
+```

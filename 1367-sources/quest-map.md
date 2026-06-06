@@ -1240,3 +1240,5 @@ SHK | The Rival's Door | Cycle 1 | BK/CI/IN/CY | Poem intercepted, rival blocked
 | KIR | The Task List of Ysbaddaden | 8 | HVY/WLD/WM | Fulfilled impossible conditions — completed checklist presented as proof the conditionally-granted cannot be withheld |
 | INV | The Disputed Fragment | 8 | CNA/HLD/WM | Document of permanent contestation — authenticity neither established nor dismissed; the contest is the primary archival fact |
 | BHD | Cuchulain's Ford Record | 8 | ULC/HLD/BK/WM | Solo defense record — single-combatant siege account kept by bard; blank entry preserved as refusal to record |
+| MSE | Appius's False Writ | 8 | ACT/LRD/WM | Frustrated corrupt instrument — legal document whose intended crime was defeated and which became evidence of it |
+| SDQ | Morris's Bill of Exchange | 8 | OBH/GLA/WM | Commercial instrument of political significance — monetary value superseded by political meaning during circulation |

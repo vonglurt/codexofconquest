@@ -1235,3 +1235,90 @@ He writes: *Politically Inconvenient Events — Neutral Deposition, First Entry.
 ---
 
 *SDQ SEEDS COMPLETE. §SDQ-01 through §SDQ-07 written. Admin pass: quest-map.md, books.md, plan.md.*
+
+---
+
+## Cycle 8 — Angle: *Morris's Bill of Exchange — The Commercial Instrument That Became a Political Target*
+
+*All prior cycles reviewed. Source knowledge used directly.*
+
+**What prior cycles missed:** Morris carries a bill of exchange for a large sum when he meets Frank Osbaldistone at the outset. The bill of exchange becomes the target of multiple parties — the MacGregors want it, the Jacobite plotters want it, the government wants it back. A bill of exchange is a commercial document: it authorizes payment from one party to another. In the middle of the Scottish Highlands in 1715, it is also political currency. Its commercial validity is irrelevant to everyone who is chasing it.
+
+**This cycle introduces:** *The commercial instrument that became a political target — a bill of exchange whose monetary value became irrelevant when it entered a zone of conflict where its possession was the point.*
+
+---
+
+### Quest API Stub — "Morris's Bill of Exchange"
+
+```
+Act I — "The Bill"
+activateNode: OBH
+type: skill_check
+missionAccept: "Morris's bill of exchange for a large sum has passed through
+  too many hands and is now in the custody of a factor in Glasgow who does
+  not know what he holds. He knows only that several men have asked him about
+  it and that two of them were armed. He wants to give it to someone responsible
+  before someone less responsible takes it."
+scene: "Osbaldistone Hall outbuildings. The factor holds a document: a bill of
+  exchange drawn on a London merchant house, payable to the bearer, for a sum
+  large enough to fund a small campaign. He is a careful man. He knows something
+  is wrong with this document because everyone who asks about it lies about why
+  they want it."
+prompt: "Persuasion DC 13. Convince the factor that you are not one of the
+  parties pursuing it for political reasons — you want it accounted for and
+  placed safely, not used."
+failText: "He doesn't trust any answer. He will hold it for two more days,
+  then give it to the sheriff. The sheriff is not neutral."
+successText: "He gives it to you. 'Whatever it was used for, it's still a
+  valid commercial document. Someone is owed money. See that the right
+  person gets it.' You receive Morris's Bill of Exchange."
+grantItem: "Morris's Bill of Exchange"
+checkPassFlag: billReceived
+activateMissionBit: sdq8_act1Active
+
+Act II — "The Glasgow Merchant"
+activateNode: GLA
+type: skill_check
+scene: "Glasgow counting house. The merchant on whom the bill is drawn
+  receives it. He looks at it for a long time. 'This is valid,' he says.
+  'The signature is genuine, the amount is correct. I am obliged to pay it
+  to the bearer.' He looks at you. 'You are the bearer. I owe you a great
+  deal of money.' He pauses. 'I suspect you did not earn this in the normal
+  way. I also suspect that if I refuse to pay it, I will have more trouble
+  than if I do.'"
+prompt: "Persuasion DC 14. Convince him that you are not accepting payment
+  — you are bringing the bill so that it can be formally cancelled and the
+  debt extinguished, which resolves his obligation and removes the political
+  weight from the document."
+failText: "He wants to pay. The easiest resolution for him is to honor
+  the bill and be done with it. Accept a reduced amount as documentation
+  fee and let the rest be extinguished."
+successText: "He cancels the bill formally: 'Obligation discharged by
+  surrender of instrument. Bearer accepted cancellation in lieu of payment.'
+  The bill is now dead as a commercial document."
+checkPassFlag: billCancelled
+activateCond: billReceived
+
+Act III — "Filed as Political History"
+activateNode: WM
+type: skill_check
+scene: "Sweelinck reads the cancelled bill and the cancellation notation.
+  'A bill of exchange cancelled without payment by the bearer's choice.
+  Commercially dead. Politically very interesting.' He looks at the document
+  carefully. 'This was worth a great deal of money and everyone who touched
+  it wanted it for reasons that had nothing to do with money. What is the
+  category for a commercial document that circulated as political currency?'"
+prompt: "History DC 12. Name the category: a commercial instrument whose
+  monetary function became secondary to its political meaning while it was
+  in circulation."
+failText: "He creates it himself: Commercial Instrument of Political Significance.
+  He looks at you. 'You may as well have suggested it.'"
+successText: "Filed: Commercial Instrument of Political Significance —
+  Bill of Exchange Whose Monetary Value Was Superseded by Its Political
+  Meaning During Circulation. You receive Sweelinck's Political Currency Record."
+takeItem: "Morris's Bill of Exchange"
+grantItem: "Sweelinck's Political Currency Record"
+checkPassFlag: billFiled
+questComplete: true
+activateCond: billCancelled
+```
