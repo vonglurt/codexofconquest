@@ -141,9 +141,13 @@ function printResult(data, flags) {
 function printError(r) {
   const col = r.status >= 500 ? C.red : C.yellow;
   const msg = r.body?.error || r.body?.message || r.raw || JSON.stringify(r.body);
-  stderr(`${col}HTTP ${r.status}${C.reset} ${msg}\n`);
-  // When piped (not a TTY), emit the response body as JSON to stdout so pipe consumers can parse it
-  if (!TTY && r.body) process.stdout.write(JSON.stringify(r.body, null, 2) + '\n');
+  if (TTY) {
+    // Terminal: colored human-readable error on stderr
+    stderr(`${col}HTTP ${r.status}${C.reset} ${msg}\n`);
+  } else {
+    // Piped: JSON only on stdout — stderr suppressed so 2>&1 doesn't corrupt the JSON stream
+    if (r.body) process.stdout.write(JSON.stringify(r.body, null, 2) + '\n');
+  }
 }
 
 // ── k=v pair parser (inline body args) ────────────────────────────────────────

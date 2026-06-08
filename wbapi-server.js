@@ -5293,6 +5293,7 @@ async function route(req, res) {
           activateNode: act.activateNode,
           checkStat:    act.checkStat  || null,
           checkDC:      act.checkDC    || 0,
+          ...(act.npc           && { npc:           act.npc           }),
           ...(act.checkPassFlag && { checkPassFlag: act.checkPassFlag }),
           ...(act.activateCond  && { activateCond:  act.activateCond  }),
           ...(act.questComplete && { questComplete: true }),
