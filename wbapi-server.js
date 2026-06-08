@@ -1018,7 +1018,7 @@ async function route(req, res) {
           '',
           'SYSTEM',
           `  POST ${b}/api/save      — serialise all in-memory edits back to roll2hit-v3.html`,
-          `  POST ${b}/api/reload    — re-parse roll2hit-v3.html from disk (discard memory edits)`,
+          `  POST ${b}/api/reload    — re-parse roll2hit-v3.html from disk (auto-reload already active via fs.watch — manual call is redundant)`,
           `  POST ${b}/api/restart   — save + exit(67); toggle script auto-relaunches`,
           '',
           'See: GET /api/help/nonce  |  GET /api/help/wizard',
@@ -1591,7 +1591,10 @@ async function route(req, res) {
       logRow('file', path.basename(GAME_FILE));
       logRow('loaded', stats);
       logResponse(method, url.pathname, 200, 'reload ok');
-      return json(res, 200, { ok:true });
+      return json(res, 200, {
+        ok: true,
+        note: 'Auto-reload is already active — the server watches roll2hit-v3.html and reloads automatically on any external edit. Manual POST /api/reload is redundant unless the watcher missed an event.',
+      });
     } catch(e) {
       log('ERROR', `Reload failed: ${e.message}`);
       logResponse(method, url.pathname, 500, `reload failed: ${e.message}`);
