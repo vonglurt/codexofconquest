@@ -6497,4 +6497,22 @@ server.listen(PORT, '127.0.0.1', () => {
 
   log('INFO', `Server listening on http://127.0.0.1:${PORT}`);
   logStream.write('═'.repeat(60) + '\n');
+
+  // Watch for external edits to the game file and auto-reload
+  let _watchDebounce = null;
+  let _lastMtime = fs.statSync(GAME_FILE).mtimeMs;
+  fs.watch(GAME_FILE, () => {
+    clearTimeout(_watchDebounce);
+    _watchDebounce = setTimeout(() => {
+      try {
+        const mtime = fs.statSync(GAME_FILE).mtimeMs;
+        if (mtime === _lastMtime) return; // no actual change
+        _lastMtime = mtime;
+        log('LOAD', `External edit detected — reloading ${path.basename(GAME_FILE)}`);
+        reload();
+      } catch (e) {
+        log('INFO', `Watch reload failed: ${e.message}`);
+      }
+    }, 200);
+  });
 });
