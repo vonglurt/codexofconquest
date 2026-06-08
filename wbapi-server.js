@@ -2299,7 +2299,7 @@ async function route(req, res) {
       }
     }
 
-    // ── 4. Long-link detection (distance > LONG_LINK_THRESHOLD) + midpoint suggestion ──
+    // ── 4. Long-link detection (distance > LONG_LINK_THRESHOLD) + between suggestion ──
     const longLinkSeen = new Set();
     for (const code of nodeCodesWithCoords) {
       const n  = nodeMap[code];
@@ -2313,12 +2313,35 @@ async function route(req, res) {
         const cb = coords[target];
         const d  = dist(ca, cb);
         if (d > LONG_LINK_THRESHOLD) {
-          const mr = Math.round((ca.r + cb.r) / 2);
-          const mc = Math.round((ca.c + cb.c) / 2);
+          // Build ranked between-placement candidates for an intermediate junction
+          const occupied = new Map();
+          for (const [c, p] of Object.entries(coords)) occupied.set(`${p.r},${p.c}`, c);
+          const snap = v => Math.round(v / 4) * 4;
+          const mr = snap((ca.r + cb.r) / 2), mc = snap((ca.c + cb.c) / 2);
+          const candidates = [];
+          const cSeen = new Set();
+          function tryC(r, c, reason) {
+            r = snap(r); c = snap(c);
+            const k = `${r},${c}`;
+            if (cSeen.has(k)) return; cSeen.add(k);
+            const occ = occupied.get(k) || null;
+            candidates.push({ r, c, reason, free: !occ, occupiedBy: occ,
+              moveCmd: `curl -s -XPOST http://localhost:${PORT}/api/node -H 'Content-Type: application/json' -d '{"code":"J??","name":"junction","label":"Junction"}'` +
+                       ` && curl -s -XPUT http://localhost:${PORT}/api/coords/J?? -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'` });
+          }
+          tryC(mr, mc,   'midpoint between source and destination');
+          tryC(ca.r, mc, 'source row, mid-column');
+          tryC(mr, ca.c, 'source column, mid-row');
+          tryC(cb.r, mc, 'destination row, mid-column');
+          tryC(mr, cb.c, 'destination column, mid-row');
+          tryC(ca.r, cb.c,'source row, destination column');
+          tryC(cb.r, ca.c,'destination row, source column');
+          const best = candidates.find(c => c.free) || candidates[0];
           suggestions.push({ check:'long_link', code, dir, target,
             distance: Math.round(d * 10) / 10,
-            msg:`${code}↔${target} distance ${Math.round(d*10)/10} cells (threshold ${LONG_LINK_THRESHOLD}) — consider intermediate node at r=${mr},c=${mc}`,
-            suggestedCoords: { r:mr, c:mc } });
+            msg:`${code}↔${target} distance ${Math.round(d*10)/10} cells (threshold ${LONG_LINK_THRESHOLD}) — insert intermediate node between them`,
+            suggestedCoords: best,
+            moveSuggestion: { node:'(new junction)', note:`Place a junction between "${code}" and "${target}"`, recommended: best, candidates } });
         }
       }
     }
@@ -2350,11 +2373,64 @@ async function route(req, res) {
           msg:`${code} is a market/shop node but has no other market node within 1 grid cell — vendors should cluster` });
     }
 
-    // ── 7. Nodes with no coords ───────────────────────────────────────────────
+    // ── 7. Nodes with no coords — suggest placement between known neighbors ──────
     for (const code of allNodeCodes) {
-      if (!coords[code])
-        suggestions.push({ check:'missing_coords', code,
-          msg:`${code} has no entry in NODE_COORDS — won't appear on map canvas` });
+      if (coords[code]) continue;
+      const n = nodeMap[code] || {};
+      // Find the first neighbor that does have coords, use it as the anchor
+      const knownNeighbors = DIRS.map(d => ({ dir:d, nb:n[d] }))
+        .filter(x => x.nb && coords[x.nb]);
+      const occupied = new Map();
+      for (const [c, p] of Object.entries(coords)) occupied.set(`${p.r},${p.c}`, c);
+      const snap = v => Math.round(v / 4) * 4;
+      let moveSuggestion = null;
+      if (knownNeighbors.length >= 2) {
+        // Two known neighbors — place between them
+        const ca = coords[knownNeighbors[0].nb], cb = coords[knownNeighbors[1].nb];
+        const mr = snap((ca.r + cb.r) / 2), mc = snap((ca.c + cb.c) / 2);
+        const cSeen = new Set(); const candidates = [];
+        function tryN(r, c, reason) {
+          r = snap(r); c = snap(c); const k = `${r},${c}`;
+          if (cSeen.has(k)) return; cSeen.add(k);
+          const occ = occupied.get(k) || null;
+          candidates.push({ r, c, reason, free: !occ, occupiedBy: occ,
+            moveCmd: `curl -s -XPUT http://localhost:${PORT}/api/coords/${code} -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'` });
+        }
+        tryN(mr, mc,   'midpoint between neighbors');
+        tryN(ca.r, mc, `neighbor "${knownNeighbors[0].nb}" row, mid-column`);
+        tryN(mr, ca.c, `neighbor "${knownNeighbors[0].nb}" column, mid-row`);
+        tryN(cb.r, mc, `neighbor "${knownNeighbors[1].nb}" row, mid-column`);
+        tryN(mr, cb.c, `neighbor "${knownNeighbors[1].nb}" column, mid-row`);
+        tryN(ca.r, cb.c, `neighbor "${knownNeighbors[0].nb}" row, neighbor "${knownNeighbors[1].nb}" column`);
+        tryN(cb.r, ca.c, `neighbor "${knownNeighbors[1].nb}" row, neighbor "${knownNeighbors[0].nb}" column`);
+        const best = candidates.find(c => c.free) || candidates[0];
+        moveSuggestion = { note:`Place "${code}" between its known neighbors`, recommended: best, candidates };
+      } else if (knownNeighbors.length === 1) {
+        // One known neighbor — project in the connection direction
+        const { dir, nb } = knownNeighbors[0];
+        const ca = coords[nb];
+        const DR = { N:-4, S:4, E:0, W:0 }, DC = { N:0, S:0, E:4, W:-4 };
+        const pr = { r: ca.r + DR[dir]*3, c: ca.c + DC[dir]*3 }; // 3 steps out
+        const cSeen = new Set(); const candidates = [];
+        function tryN2(r, c, reason) {
+          r = snap(r); c = snap(c); const k = `${r},${c}`;
+          if (cSeen.has(k)) return; cSeen.add(k);
+          const occ = occupied.get(k) || null;
+          candidates.push({ r, c, reason, free: !occ, occupiedBy: occ,
+            moveCmd: `curl -s -XPUT http://localhost:${PORT}/api/coords/${code} -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'` });
+        }
+        const mr = snap((ca.r + pr.r) / 2), mc = snap((ca.c + pr.c) / 2);
+        tryN2(pr.r, pr.c,  `3 steps ${dir} from neighbor "${nb}"`);
+        tryN2(mr, mc,      `midpoint 1.5 steps ${dir} from "${nb}"`);
+        tryN2(ca.r + DR[dir]*2, ca.c + DC[dir]*2, `2 steps ${dir} from "${nb}"`);
+        tryN2(ca.r, mc,    `neighbor row, projected mid-column`);
+        tryN2(mr, ca.c,    `neighbor column, projected mid-row`);
+        const best = candidates.find(c => c.free) || candidates[0];
+        moveSuggestion = { note:`Place "${code}" along the ${dir} axis from "${nb}"`, recommended: best, candidates };
+      }
+      suggestions.push({ check:'missing_coords', code,
+        msg:`"${code}" has no entry in NODE_COORDS — won't appear on map canvas`,
+        moveSuggestion });
     }
 
     // ── 8. Alignment: connected pair not on same row or column (diagonal) ──────
@@ -3893,6 +3969,63 @@ async function route(req, res) {
       });
     }
 
+    // ── suggestBetween — ranked placement candidates for an off/isolated node ──
+    // Given source coords ca and destination coords cb (may be null), returns up to 7
+    // candidate positions in priority order:
+    //   1. True midpoint between source and destination
+    //   2. Source row, mid-column
+    //   3. Source column, mid-row
+    //   4. Destination row, mid-column
+    //   5. Destination column, mid-row
+    //   6. Source row, destination column  (L-bend via source)
+    //   7. Destination row, source column  (L-bend via destination)
+    // Each candidate: {r, c, reason, free, occupiedBy}
+    // When cb is null (target has no coords), estimates position 4 steps along dir from ca.
+    function suggestBetween(ca, cb, dir, allCoords, excludeCode, step) {
+      const STEP = step || 4;
+      // If destination has no coords, project a target in the given direction
+      const DR4 = { N:-STEP, S:STEP, E:0, W:0 };
+      const DC4 = { N:0, S:0, E:STEP, W:-STEP };
+      const projected = cb || { r: ca.r + DR4[dir]*3, c: ca.c + DC4[dir]*3 };
+
+      const occupied = new Map();
+      for (const [code, pos] of Object.entries(allCoords)) {
+        if (code === excludeCode) continue;
+        occupied.set(`${pos.r},${pos.c}`, code);
+      }
+
+      // Snap to nearest grid step
+      const snap = v => Math.round(v / STEP) * STEP;
+
+      const out = [];
+      const seen = new Set();
+      function add(r, c, reason) {
+        r = snap(r); c = snap(c);
+        const key = `${r},${c}`;
+        if (seen.has(key)) return;
+        seen.add(key);
+        const occ = occupied.get(key) || null;
+        const nodeRef = excludeCode || 'J_new';
+        const cmd = excludeCode
+          ? `curl -s -XPUT http://localhost:${PORT}/api/coords/${excludeCode} -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'`
+          : `curl -s -XPOST http://localhost:${PORT}/api/node -H 'Content-Type: application/json' -d '{"code":"J_new","name":"junction","label":"Junction","act":1}' && curl -s -XPUT http://localhost:${PORT}/api/coords/J_new -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'`;
+        out.push({ r, c, reason, free: !occ, occupiedBy: occ, moveCmd: cmd });
+      }
+
+      const mr = (ca.r + projected.r) / 2;
+      const mc = (ca.c + projected.c) / 2;
+
+      add(mr, mc,           'midpoint between source and destination');
+      add(ca.r, mc,         'source row, mid-column');
+      add(mr,  ca.c,        'source column, mid-row');
+      add(projected.r, mc,  'destination row, mid-column');
+      add(mr,  projected.c, 'destination column, mid-row');
+      add(ca.r, projected.c,'source row, destination column');
+      add(projected.r, ca.c,'destination row, source column');
+
+      return out;
+    }
+
     // ── GET /api/graph/validate/{code} ───────────────────────────────────────
     // Check one node's N/E/S/W connections for walkability (gap ≤ maxGap, same axis)
     if (parts[1] === 'validate' && method === 'GET') {
@@ -3900,28 +4033,79 @@ async function route(req, res) {
       const maxGap = Math.max(1, parseInt(url.searchParams.get('maxGap') || '4', 10));
       if (!code || !nm[code]) return json(res, 404, { error:`Node "${code}" not found` });
       const cc = WBAPI.nodeCoords[code];
+      const allCoords = WBAPI.nodeCoords;
       const result = { code, coords: cc || null, maxGap, connections: {}, also_target_of: [] };
       const DIRS4 = ['N','E','S','W'];
-      const DR4 = { N:-1,S:1,E:0,W:0 };
-      const DC4 = { N:0,S:0,E:1,W:-1 };
 
       for (const d of DIRS4) {
         const tgt = nm[code]?.[d];
         if (!tgt) { result.connections[d] = { target:null, status:'unset' }; continue; }
         const tc = WBAPI.nodeCoords[tgt];
         if (!cc) { result.connections[d] = { target:tgt, status:'src_no_coords' }; continue; }
-        if (!tc) { result.connections[d] = { target:tgt, status:'tgt_no_coords', fix:`PUT /api/coords/${tgt} {"r":?,"c":?}` }; continue; }
+        if (!tc) {
+          // Target has no coordinates at all — suggest where to place it
+          const candidates = suggestBetween(cc, null, d, allCoords, tgt);
+          const best = candidates.find(c => c.free) || candidates[0];
+          result.connections[d] = {
+            target: tgt, status: 'tgt_no_coords',
+            fix: `PUT /api/coords/${tgt} {"r":${best.r},"c":${best.c}}`,
+            moveSuggestion: {
+              node: tgt,
+              note: `"${tgt}" has no coordinates — place it between "${code}" and the path ahead`,
+              candidates,
+              recommended: best,
+            },
+          };
+          continue;
+        }
         const dr = tc.r - cc.r, dc = tc.c - cc.c;
         const gap  = d in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
         const off  = d in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
-        const sign = d in {N:1,S:1} ? Math.sign(dr) : Math.sign(dc);
         const goodDir = (d==='N'&&dr<0)||(d==='S'&&dr>0)||(d==='E'&&dc>0)||(d==='W'&&dc<0);
-        let status = 'ok', fix = null;
-        if (off > 0 && gap > maxGap) { status = 'diagonal_and_gap'; fix = `corner-junction or move both nodes`; }
-        else if (off > 0)            { status = 'off_axis';          fix = `POST /api/graph/corner-junction`; }
-        else if (!goodDir)           { status = 'wrong_direction';   fix = `coords reversed — check if ${tgt} is actually ${OPP[d]} of ${code}`; }
-        else if (gap > maxGap)       { status = 'gap_too_large';     fix = `POST /api/graph/fill-gap {"from":"${code}","dir":"${d}","to":"${tgt}","maxGap":${maxGap}}`; }
-        result.connections[d] = { target:tgt, targetCoords:tc, gap, axisOffset:off, goodDirection:goodDir, status, fix };
+        let status = 'ok', fix = null, moveSuggestion = null;
+
+        if (off > 0 && gap > maxGap) {
+          status = 'diagonal_and_gap';
+          fix = `corner-junction or move both nodes`;
+          // Suggest moving the target to be between source and itself, snapped to axis
+          const candidates = suggestBetween(cc, tc, d, allCoords, tgt);
+          const best = candidates.find(c => c.free) || candidates[0];
+          moveSuggestion = {
+            node: tgt,
+            note: `"${tgt}" is diagonal AND too far — move it between "${code}" and its current position`,
+            candidates,
+            recommended: best,
+          };
+        } else if (off > 0) {
+          status = 'off_axis';
+          // Axis-align: snap target onto the correct row (E/W) or column (N/S) of source, then check distance
+          const axisSnapped = (d==='N'||d==='S') ? { r: tc.r, c: cc.c } : { r: cc.r, c: tc.c };
+          const candidates = suggestBetween(cc, axisSnapped, d, allCoords, tgt);
+          const best = candidates.find(c => c.free) || candidates[0];
+          fix = `Move "${tgt}" onto the same ${(d==='N'||d==='S')?'column':'row'} as "${code}"`;
+          moveSuggestion = {
+            node: tgt,
+            note: `"${tgt}" is off-axis — move it onto the correct ${(d==='N'||d==='S')?'column':'row'} of "${code}"`,
+            candidates,
+            recommended: best,
+          };
+        } else if (!goodDir) {
+          status = 'wrong_direction';
+          fix = `coords reversed — check if ${tgt} is actually ${OPP[d]} of ${code}`;
+        } else if (gap > maxGap) {
+          status = 'gap_too_large';
+          fix = `POST /api/graph/fill-gap {"from":"${code}","dir":"${d}","to":"${tgt}","maxGap":${maxGap}}`;
+          // Suggest placing an intermediate junction between them
+          const candidates = suggestBetween(cc, tc, d, allCoords, null);
+          const best = candidates.find(c => c.free) || candidates[0];
+          moveSuggestion = {
+            node: '(junction)',
+            note: `Gap=${gap} — insert a junction between "${code}" and "${tgt}"`,
+            candidates,
+            recommended: best,
+          };
+        }
+        result.connections[d] = { target:tgt, targetCoords:tc, gap, axisOffset:off, goodDirection:goodDir, status, fix, moveSuggestion };
       }
 
       // Check: is this node the target of any off-axis connection?
@@ -3935,8 +4119,18 @@ async function route(req, res) {
           const gap = d in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
           const off = d in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
           if (off > 0 || gap > maxGap) {
-            result.also_target_of.push({ from:src, fromDir:d, fromCoords:sc, gap, axisOffset:off,
-              status: off>0 ? 'off_axis' : 'gap_too_large' });
+            const candidates = suggestBetween(sc, cc, d, allCoords, code);
+            const best = candidates.find(c => c.free) || candidates[0];
+            result.also_target_of.push({
+              from:src, fromDir:d, fromCoords:sc, gap, axisOffset:off,
+              status: off>0 ? 'off_axis' : 'gap_too_large',
+              moveSuggestion: {
+                node: code,
+                note: `"${code}" is off from "${src}"'s ${d} connection — move it between them`,
+                candidates,
+                recommended: best,
+              },
+            });
           }
         }
       }
@@ -3949,7 +4143,13 @@ async function route(req, res) {
         const rFromEW = cc ? cc.r : '?';
         const cFromNS = nsIncoming[0] ? WBAPI.nodeCoords[nsIncoming[0].from]?.c : '?';
         result.diagnosis = `CORNER NODE — must sit at axis intersection: r=${rFromEW} c=${cFromNS}`;
-        if (cc && cFromNS !== '?' && (cc.c !== cFromNS)) result.fixCommand = `PUT /api/coords/${code} {"r":${rFromEW},"c":${cFromNS}}`;
+        if (cc && cFromNS !== '?' && (cc.c !== cFromNS)) {
+          const correctPos = { r: rFromEW, c: cFromNS };
+          result.fixCommand = `PUT /api/coords/${code} {"r":${rFromEW},"c":${cFromNS}}`;
+          // Also check collision at the correct position
+          const occAt = Object.entries(allCoords).find(([k,v]) => k !== code && v.r === correctPos.r && v.c === correctPos.c);
+          if (occAt) result.fixConflict = `(${rFromEW},${cFromNS}) is occupied by "${occAt[0]}" — swap or move it first`;
+        }
       }
 
       logResponse('GET', url.pathname, 200, `validate/${code}`);
@@ -3962,6 +4162,7 @@ async function route(req, res) {
       const maxGap = Math.max(1, parseInt(url.searchParams.get('maxGap') || '4', 10));
       const root   = url.searchParams.get('root') || null;
       const DIRS4 = ['N','E','S','W'];
+      const allCoords = WBAPI.nodeCoords;
       const edges = [], seen = new Set();
       let totalChecked = 0;
 
@@ -3972,7 +4173,26 @@ async function route(req, res) {
           const key = [code,tgt].sort().join(':');
           if (seen.has(key)) continue; seen.add(key); totalChecked++;
           const tc = WBAPI.nodeCoords[tgt];
-          if (!cc || !tc) { edges.push({ from:code,dir:d,to:tgt,type:'missing_coords' }); continue; }
+          if (!cc || !tc) {
+            // At least one node is unpositioned — suggest where to put it
+            const missingCode = !cc ? code : tgt;
+            const knownCoords = !cc ? tc : cc;
+            const candidates = knownCoords
+              ? suggestBetween(knownCoords, null, d, allCoords, missingCode)
+              : null;
+            const best = candidates ? (candidates.find(c => c.free) || candidates[0]) : null;
+            edges.push({
+              from:code, dir:d, to:tgt, type:'missing_coords',
+              missingCoords: missingCode,
+              moveSuggestion: candidates ? {
+                node: missingCode,
+                note: `"${missingCode}" has no coordinates — place it between the connected nodes`,
+                recommended: best,
+                candidates,
+              } : null,
+            });
+            continue;
+          }
           const dr = tc.r-cc.r, dc = tc.c-cc.c;
           const gap = d in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
           const off = d in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
@@ -3982,10 +4202,31 @@ async function route(req, res) {
           else if (gap>maxGap)     type = 'gap_too_large';
           if (type) {
             const juncsNeeded = type==='gap_too_large' ? Math.ceil(gap/maxGap)-1 : null;
-            edges.push({ from:code, fromCoords:cc, dir:d, to:tgt, toCoords:tc,
+            // For diagonal/off-axis: suggest moving the destination to be between source and itself snapped to axis
+            // For gap: suggest placing intermediate junction(s) between the two
+            const moveTarget = type === 'gap_too_large' ? null : tgt;  // null = new junction
+            const axisSnapped = (type !== 'gap_too_large')
+              ? ((d==='N'||d==='S') ? { r: tc.r, c: cc.c } : { r: cc.r, c: tc.c })
+              : tc;
+            const candidates = suggestBetween(cc, axisSnapped, d, allCoords, moveTarget);
+            const best = candidates.find(c => c.free) || candidates[0];
+            const noteMap = {
+              diagonal:        `"${tgt}" is off-axis — move it onto the correct axis of "${code}"`,
+              diagonal_and_gap:`"${tgt}" is diagonal AND too far — move it between "${code}" and its axis-snapped position`,
+              gap_too_large:   `Gap=${gap} between "${code}" and "${tgt}" — insert ${juncsNeeded||1} junction(s) between them`,
+            };
+            edges.push({
+              from:code, fromCoords:cc, dir:d, to:tgt, toCoords:tc,
               gap, axisOffset:off, type,
               junctionsNeeded: juncsNeeded,
-              fix: type==='diagonal' ? 'corner_junction' : type==='gap_too_large' ? 'fill_gap' : 'both' });
+              fix: type==='diagonal' ? 'corner_junction' : type==='gap_too_large' ? 'fill_gap' : 'both',
+              moveSuggestion: {
+                node: moveTarget || '(new junction)',
+                note: noteMap[type],
+                recommended: best,
+                candidates,
+              },
+            });
           }
         }
       }

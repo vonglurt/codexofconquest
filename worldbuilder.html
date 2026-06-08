@@ -333,6 +333,59 @@ select.fi{appearance:none;}
 /* ── Entity edit toolbar ── */
 .edit-toolbar{padding:8px 12px;border-top:1px solid var(--border);display:flex;gap:6px;align-items:center;flex-shrink:0;}
 .edit-toolbar .change-count{font-size:10px;color:var(--muted);flex:1;}
+
+/* ── CRUD tab ── */
+.crud-type-btn{padding:4px 10px;border-radius:4px;border:1px solid var(--border);background:var(--bg3);color:var(--muted);font-size:11px;cursor:pointer;font-family:inherit;transition:all .15s;}
+.crud-type-btn:hover{border-color:var(--accent);color:var(--accent);}
+.crud-type-btn.on{background:#1c2a40;border-color:var(--accent);color:var(--accent);font-weight:700;}
+.crud-filter-row{display:flex;flex-wrap:wrap;gap:6px;padding:6px 10px;border-bottom:1px solid var(--border);align-items:flex-end;}
+.crud-filter-row .fg{min-width:110px;}
+.crud-result-table{width:100%;border-collapse:collapse;font-size:11px;}
+.crud-result-table th{background:var(--bg3);color:var(--muted);padding:4px 8px;text-align:left;border-bottom:1px solid var(--border);font-size:10px;text-transform:uppercase;letter-spacing:.04em;position:sticky;top:0;z-index:1;}
+.crud-result-table td{padding:4px 8px;border-bottom:1px solid #1e2530;vertical-align:top;cursor:pointer;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.crud-result-table tr:hover td{background:var(--bg3);}
+.crud-result-table tr.sel td{background:#1c2130;}
+.crud-result-table .col-id{color:var(--accent);font-weight:700;font-size:11px;}
+.crud-form-field{display:flex;flex-direction:column;gap:3px;margin-bottom:8px;}
+.crud-form-field label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;display:flex;align-items:center;gap:5px;}
+.crud-form-field .req{color:var(--red);font-size:9px;}
+.crud-form-field .note{font-size:10px;color:var(--muted);font-style:italic;margin-top:2px;}
+.crud-action-bar{display:flex;gap:6px;padding:10px 14px;border-top:1px solid var(--border);background:var(--bg2);flex-shrink:0;}
+.crud-msg{font-size:11px;padding:5px 10px;border-radius:4px;margin:6px 14px;display:none;}
+.crud-msg.ok{background:var(--added);color:var(--green);border:1px solid var(--green);}
+.crud-msg.err{background:var(--deleted);color:var(--red);border:1px solid var(--red);}
+
+/* ── Endpoints tab ── */
+.ep-section{margin-bottom:12px;}
+.ep-section-hd{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:6px 10px;background:var(--bg3);border-radius:4px 4px 0 0;border:1px solid var(--border);display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;}
+.ep-section-hd:hover{color:var(--text);}
+.ep-section-body{border:1px solid var(--border);border-top:none;border-radius:0 0 4px 4px;overflow:hidden;}
+.ep-row{display:grid;grid-template-columns:44px 260px 1fr 80px;gap:0;border-bottom:1px solid #1e2530;align-items:stretch;cursor:pointer;}
+.ep-row:last-child{border-bottom:none;}
+.ep-row:hover{background:var(--bg3);}
+.ep-row.sel{background:#1c2130;}
+.ep-method{padding:6px 8px;font-size:10px;font-weight:700;text-align:center;display:flex;align-items:center;justify-content:center;border-right:1px solid var(--border);}
+.ep-m-get{color:var(--accent);}
+.ep-m-post{color:var(--purple);}
+.ep-m-put{color:var(--green);}
+.ep-m-delete{color:var(--red);}
+.ep-path{padding:6px 8px;font-size:11px;font-family:monospace;color:var(--text);display:flex;align-items:center;border-right:1px solid var(--border);}
+.ep-desc{padding:6px 8px;font-size:11px;color:var(--muted);display:flex;align-items:center;}
+.ep-run-btn{padding:4px 8px;font-size:10px;background:var(--bg3);border:none;border-left:1px solid var(--border);color:var(--accent);cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;}
+.ep-run-btn:hover{background:#1c2a40;}
+.ep-detail{background:#080d12;border:1px solid var(--border);border-radius:0 0 4px 4px;padding:10px 14px;font-size:11px;font-family:monospace;display:none;margin-top:-1px;}
+.ep-detail.open{display:flex;flex-direction:column;gap:8px;}
+.ep-detail .ep-example{color:var(--teal);white-space:pre-wrap;word-break:break-all;}
+.ep-detail .ep-params-grid{display:grid;grid-template-columns:140px 60px 1fr;gap:4px 10px;font-size:10px;}
+.ep-detail .ep-params-grid .pk{color:var(--yellow);}
+.ep-detail .ep-params-grid .pt{color:var(--muted);}
+.ep-detail .ep-params-grid .pd{color:var(--text);}
+.ep-try-row{display:flex;gap:6px;align-items:center;margin-top:4px;}
+.ep-try-input{background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:3px 7px;font-family:monospace;font-size:11px;flex:1;}
+.ep-try-input:focus{outline:none;border-color:var(--accent);}
+.ep-result-pre{background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:6px 8px;font-size:10px;max-height:200px;overflow-y:auto;white-space:pre-wrap;color:var(--text);display:none;margin-top:4px;}
+.ep-result-pre.ok{border-color:var(--green);}
+.ep-result-pre.err{border-color:var(--red);}
 </style>
 </head>
 <body>
@@ -345,9 +398,11 @@ select.fi{appearance:none;}
   <div class="nav-tab" data-tab="npcs">👤 NPCs</div>
   <div class="nav-tab" data-tab="quests">📜 Quests</div>
   <div class="nav-tab" data-tab="dice">🎲 Dice Lab</div>
+  <div class="nav-tab" data-tab="crud">🗂 CRUD</div>
   <div class="nav-tab" data-tab="api">⚙ API</div>
   <div class="nav-tab" data-tab="audit">🔍 Audit</div>
   <div class="nav-tab" data-tab="stats">📊 Stats</div>
+  <div class="nav-tab" data-tab="endpoints">📋 Endpoints</div>
   <div class="nav-tab" data-tab="builder">🏗 Builder</div>
   <div class="nav-tab" data-tab="wizard">✦ Wizard</div>
   <div class="nav-sep"></div>
@@ -775,6 +830,7 @@ select.fi{appearance:none;}
       <div>
         <div class="fl">Type</div>
         <select id="api-type" class="fi" style="width:100%">
+          <option value="count">count</option>
           <option value="location">location</option>
           <option value="node">node</option>
           <option value="quest">quest</option>
@@ -786,6 +842,7 @@ select.fi{appearance:none;}
           <option value="loot-drop">loot-drop</option>
           <option value="loot">loot (d100)</option>
           <option value="schema">schema</option>
+          <option value="help">help</option>
         </select>
       </div>
       <div>
@@ -922,8 +979,92 @@ select.fi{appearance:none;}
 
   </div>
 
+  <!-- ═══ CRUD ═══ -->
+  <div class="panel" id="tab-crud">
+    <div class="split">
+
+      <!-- Left sidebar: type selector + filter controls -->
+      <div class="sidebar" style="width:210px;">
+        <div class="sidebar-hd">Entity Type</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;border-bottom:1px solid var(--border)">
+          <button class="crud-type-btn on" data-ctype="node">node</button>
+          <button class="crud-type-btn" data-ctype="quest">quest</button>
+          <button class="crud-type-btn" data-ctype="monster">monster</button>
+          <button class="crud-type-btn" data-ctype="npc">npc</button>
+          <button class="crud-type-btn" data-ctype="terrain">terrain</button>
+        </div>
+
+        <!-- Dynamic filter area for selected type -->
+        <div id="crud-filters" style="padding:8px 10px;display:flex;flex-direction:column;gap:7px;border-bottom:1px solid var(--border)">
+          <!-- populated by JS -->
+        </div>
+
+        <div style="padding:8px 10px;display:flex;flex-direction:column;gap:5px">
+          <button class="btn primary" id="btn-crud-load" style="width:100%">Load / Refresh</button>
+          <div style="font-size:10px;color:var(--muted);text-align:center" id="crud-count-label">—</div>
+        </div>
+      </div>
+
+      <!-- Middle: results table -->
+      <div class="main-area">
+        <div style="padding:6px 10px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0;">
+          <input id="crud-search" class="fi" placeholder="Search…" style="font-size:11px;flex:1">
+          <button class="btn sm" id="btn-crud-new">+ New</button>
+        </div>
+        <div style="flex:1;overflow:auto;">
+          <table class="crud-result-table" id="crud-table">
+            <thead id="crud-thead"></thead>
+            <tbody id="crud-tbody"></tbody>
+          </table>
+          <div class="empty" id="crud-empty" style="display:none"><h2>No results</h2><p>Adjust filters or load a different type.</p></div>
+        </div>
+      </div>
+
+      <!-- Right: detail + CRUD form -->
+      <div class="detail-pane wide" id="crud-detail-pane">
+        <div class="detail-hd">
+          <span style="font-size:12px;font-weight:700;color:var(--accent)" id="crud-detail-title">Select a row</span>
+          <button class="btn sm" id="btn-crud-reload-item" style="margin-left:auto" disabled>↺ Reload</button>
+        </div>
+        <div class="detail-body" id="crud-detail-body">
+          <div class="empty" style="height:100%"><p>Select a row to view and edit, or click + New to create.</p></div>
+        </div>
+        <div class="crud-msg" id="crud-msg"></div>
+        <div class="crud-action-bar">
+          <button class="btn primary" id="btn-crud-save" disabled>Save (PUT)</button>
+          <button class="btn" id="btn-crud-create" disabled>Create (POST)</button>
+          <button class="btn" id="btn-crud-delete" style="color:var(--red);margin-left:auto" disabled>Delete</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ ENDPOINTS ═══ -->
+  <div class="panel" id="tab-endpoints" style="overflow-y:auto;padding:16px;flex-direction:column;gap:12px">
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0;flex-wrap:wrap">
+      <div style="font-size:12px;font-weight:700;color:var(--text)">API Endpoint Reference</div>
+      <span style="font-size:11px;color:var(--muted)">Every route · click to expand + try live</span>
+      <div style="margin-left:auto;display:flex;gap:6px">
+        <input id="ep-search" class="fi" placeholder="Filter endpoints…" style="width:180px;font-size:11px">
+        <select id="ep-method-filter" class="fi" style="width:80px;font-size:11px">
+          <option value="">All</option>
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="DELETE">DELETE</option>
+        </select>
+      </div>
+    </div>
+    <div id="ep-toc" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
   <!-- ═══ STATS ═══ -->
   <div class="panel" id="tab-stats" style="overflow-y:auto;padding:16px;flex-direction:column;gap:14px">
+    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;flex:1">World Statistics</div>
+      <button class="btn" id="btn-stats-refresh" style="font-size:11px" disabled>↺ Refresh from Server</button>
+    </div>
     <div id="stats-empty" class="empty"><h2>Load a game file</h2><p>Open roll2hit-v3.html to see world statistics.</p></div>
     <div id="stats-content" style="display:none;flex-direction:column;gap:14px"></div>
   </div>
@@ -2019,6 +2160,10 @@ async function serverDetect() {
       ind.style.display = '';
       $('btn-apply-patch').textContent = 'Save to File';
       if (WBAPI.loaded && window._auditEnableServer) window._auditEnableServer();
+      // enable server-dependent buttons
+      const sBtn = document.getElementById('btn-stats-refresh');
+      if (sBtn) sBtn.disabled = false;
+      if (window._onServerActivated) window._onServerActivated();
       return;
     }
   } catch(_) {}
@@ -4081,51 +4226,102 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
 (function(){
   const QQ = {
     list: [
+      { label:'List index (all types + counts)', url:'/api/list' },
       { label:'All nodes',                url:'/api/list/node' },
       { label:'All quests',               url:'/api/list/quest' },
       { label:'All monsters',             url:'/api/list/monster' },
       { label:'All NPCs',                 url:'/api/list/npc' },
       { label:'All terrains',             url:'/api/list/terrain' },
+      { label:'Node IDs only',            url:'/api/list/ids/node' },
+      { label:'Quest IDs only',           url:'/api/list/ids/quest' },
+      { label:'Monster keys only',        url:'/api/list/ids/monster' },
+      { label:'NPC keys only',            url:'/api/list/ids/npc' },
+      { label:'Terrain keys only',        url:'/api/list/ids/terrain' },
+      { label:'All locations (list)',     url:'/api/location' },
       { label:'All fish',                 url:'/api/fish' },
       { label:'All lake magic',           url:'/api/lake-magic' },
       { label:'All loot drops',           url:'/api/loot-drop' },
-      { label:'Loot drops — fishing only',url:'/api/loot-drop?fishing=true' },
-      { label:'Loot drops — by terrain',  url:'/api/loot-drop?terrain={v}',   param:'Terrain key (e.g. dungeon)' },
       { label:'D100 consumable table',    url:'/api/loot' },
-      { label:'Nodes — by act',           url:'/api/list/node?act={v}',        param:'Act (1–4)' },
-      { label:'Quests — by type',         url:'/api/list/quest?type={v}',      param:'Type (story/battle/…)' },
-      { label:'Quests — for node',        url:'/api/list/quest?node={v}',      param:'Node code (e.g. CY)' },
-      { label:'Monsters — by terrain',    url:'/api/list/monster?terrain={v}', param:'Terrain key' },
-      { label:'Fish — by rank',           url:'/api/fish?rank={v}',            param:'Rank (1–5)' },
+      // filtered
+      { label:'Nodes — by act',           url:'/api/list/node?act={v}',              param:'Act number (1–5)' },
+      { label:'Nodes — by terrain',       url:'/api/list/node?terrain={v}',          param:'Terrain key (e.g. forest)' },
+      { label:'Nodes — no coordinates',   url:'/api/list/node?no_coords=true' },
+      { label:'Nodes — have quests',      url:'/api/list/node?has_quests=true' },
+      { label:'Nodes — no quests',        url:'/api/list/node?has_quests=false' },
+      { label:'Nodes — junctions only',   url:'/api/list/node?junction=true' },
+      { label:'Nodes — named only',       url:'/api/list/node?junction=false' },
+      { label:'Nodes — text search',      url:'/api/list/node?q={v}',                param:'Search text (e.g. birka)' },
+      { label:'Quests — by type',         url:'/api/list/quest?type={v}',            param:'Type (main|side|combat|skill_check|mission_bit)' },
+      { label:'Quests — for node',        url:'/api/list/quest?node={v}',            param:'Node code (e.g. LHR)' },
+      { label:'Quests — by NPC',          url:'/api/list/quest?npc={v}',             param:'NPC key (e.g. yael)' },
+      { label:'Quests — by monster',      url:'/api/list/quest?monster={v}',         param:'Monster key (e.g. goblin)' },
+      { label:'Quests — by arc prefix',   url:'/api/list/quest?arc={v}',             param:'Arc prefix (e.g. mq_ or sq_)' },
+      { label:'Quests — with NPC',        url:'/api/list/quest?has_npc=true' },
+      { label:'Quests — no NPC',          url:'/api/list/quest?has_npc=false' },
+      { label:'Quests — with completeFn', url:'/api/list/quest?complete=true' },
+      { label:'Monsters — by terrain',    url:'/api/list/monster?terrain={v}',       param:'Terrain key (e.g. crypt)' },
+      { label:'Monsters — by tier',       url:'/api/list/monster?tier={v}',          param:'Tier (trivial|easy|medium|hard|boss)' },
+      { label:'Monsters — with drops',    url:'/api/list/monster?has_drop=true' },
+      { label:'Monsters — no drops',      url:'/api/list/monster?has_drop=false' },
+      { label:'Monsters — no terrain',    url:'/api/list/monster?no_terrain=true' },
+      { label:'NPCs — by node',           url:'/api/list/npc?node={v}',              param:'Node code (e.g. LHR)' },
+      { label:'NPCs — by occupation',     url:'/api/list/npc?occupation={v}',        param:'Occupation (e.g. innkeeper)' },
+      { label:'Locations — by act',       url:'/api/location?act={v}',               param:'Act number (1–5)' },
+      { label:'Locations — by terrain',   url:'/api/location?terrain={v}',           param:'Terrain key' },
+      { label:'Locations — have quests',  url:'/api/location?has_quests=true' },
+      { label:'Locations — text search',  url:'/api/location?q={v}',                 param:'Search text' },
+      { label:'Loot drops — by terrain',  url:'/api/loot-drop?terrain={v}',          param:'Terrain key' },
+      { label:'Fish — by rank',           url:'/api/fish?rank={v}',                  param:'Rank (1–5)' },
     ],
     count: [
-      { label:'Nodes per act',            local: () => countBy(WBAPI.nodeMap,    n => n.act) },
-      { label:'Quests per type',          local: () => countBy(WBAPI.questDb,    q => q.type||'(none)') },
-      { label:'Quests per arc',           local: () => countBy(WBAPI.questDb,    q => (q.id||'').replace(/_\d+$/,'')) },
-      { label:'Monsters per terrain',     local: () => monstersPerTerrain() },
+      // server-side (use /api/count endpoints when server active)
+      { label:'Master counts (all)',       url:'/api/count' },
+      { label:'Node counts (byAct/terrain)',url:'/api/count/nodes' },
+      { label:'Quest counts (byType/arc)', url:'/api/count/quests' },
+      { label:'Monster counts (byTier)',   url:'/api/count/monsters' },
+      { label:'NPC counts (byNode)',       url:'/api/count/npcs' },
+      { label:'Terrain counts',           url:'/api/count/terrains' },
+      { label:'Coord coverage',           url:'/api/count/coords' },
+      // local-only (no server needed)
+      { label:'Nodes per act (local)',    local: () => countBy(WBAPI.nodeMap,    n => n.act) },
+      { label:'Quests per type (local)',  local: () => countBy(WBAPI.questDb,    q => q.type||'(none)') },
+      { label:'Quests per arc (local)',   local: () => countBy(WBAPI.questDb,    q => (q.id||'').replace(/_\d+$/,'')) },
+      { label:'Monsters per terrain (local)', local: () => monstersPerTerrain() },
       { label:'Terrains with no monsters',local: () => Object.keys(WBAPI.worldDb||{}).filter(k=>!WBAPI.worldDb[k].monsters?.length) },
-      { label:'Unused monsters',          local: () => unusedMonsters() },
-      { label:'Nodes with no quests',     local: () => nodesWithNoQuests() },
-      { label:'Missing terrains list',    local: () => missingTerrains() },
+      { label:'Unused monsters (local)',  local: () => unusedMonsters() },
+      { label:'Nodes with no quests (local)', local: () => nodesWithNoQuests() },
+      { label:'Missing terrains (local)', local: () => missingTerrains() },
     ],
     inspect: [
-      { label:'Node',         url:'/api/node/{v}',           param:'Code (e.g. CY)' },
-      { label:'Quest',        url:'/api/quest/{v}',          param:'ID (e.g. quest_wis_01)' },
-      { label:'Quest chain',  url:'/api/quest/{v}/chain',    param:'ID' },
-      { label:'Monster',      url:'/api/monster/{v}',        param:'Key (e.g. goblin)' },
-      { label:'NPC',          url:'/api/npc/{v}',            param:'Key' },
-      { label:'Terrain',      url:'/api/terrain/{v}',        param:'Key' },
-      { label:'Location',     url:'/api/location/{v}',       param:'Node code' },
-      { label:'Fish',         url:'/api/fish/{v}',           param:'Fish key' },
-      { label:'Monster drop', url:'/api/monster/{v}/drop',   param:'Monster key' },
-      { label:'Loot drop — monster', url:'/api/loot-drop?monster={v}', param:'Monster key' },
+      { label:'Node',                    url:'/api/node/{v}',             param:'Code (e.g. LHR)' },
+      { label:'Quest',                   url:'/api/quest/{v}',            param:'ID (e.g. mq_1)' },
+      { label:'Quest chain',             url:'/api/quest/{v}/chain',      param:'ID' },
+      { label:'Monster',                 url:'/api/monster/{v}',          param:'Key (e.g. goblin)' },
+      { label:'NPC',                     url:'/api/npc/{v}',              param:'Key (e.g. yael)' },
+      { label:'Terrain',                 url:'/api/terrain/{v}',          param:'Key (e.g. forest)' },
+      { label:'Location (composite)',    url:'/api/location/{v}',         param:'Node code' },
+      { label:'Fish',                    url:'/api/fish/{v}',             param:'Fish key (e.g. fish_01)' },
+      { label:'Monster drop',            url:'/api/monster/{v}/drop',     param:'Monster key' },
+      { label:'Loot drop — monster',     url:'/api/loot-drop?monster={v}',param:'Monster key' },
+      { label:'Schema — by type',        url:'/api/schema/{v}',           param:'Type (node|quest|monster|npc|terrain)' },
+      { label:'Help topic',              url:'/api/help/{v}',             param:'Topic (overview|modes|quest|node|wizard|coords)' },
     ],
     audit: [
-      { label:'Full integrity audit',     url:'/api/audit' },
-      { label:'Schema — all types',       url:'/api/schema' },
-      { label:'Schema — by type',         url:'/api/schema/{v}',   param:'Type (node/quest/…)' },
-      { label:'Flags list',               url:'/api/flags' },
-      { label:'Ping / server status',     url:'/api/ping' },
+      { label:'Full integrity audit',    url:'/api/audit' },
+      { label:'Map connectivity audit',  url:'/api/audit/map' },
+      { label:'Next error (first fix)',   url:'/api/next-error' },
+      { label:'Next error — skip 1',     url:'/api/next-error?skip=1' },
+      { label:'Errors only',             url:'/api/next-error?severity=error' },
+      { label:'Graph — all broken edges',url:'/api/graph/broken?maxGap=4&root=BK' },
+      { label:'Graph — validate node',   url:'/api/graph/validate/{v}?maxGap=4',    param:'Node code (e.g. BK)' },
+      { label:'Graph — path between nodes', url:'/api/graph/path/{v}?maxGap=4',     param:'from/to e.g. BK/LHR' },
+      { label:'All coordinates',         url:'/api/coords' },
+      { label:'Nodes near position',     url:'/api/coords/near/{v}?radius=8',       param:'Node code (e.g. LHR)' },
+      { label:'Schema — all types',      url:'/api/schema' },
+      { label:'Flags list',              url:'/api/flags' },
+      { label:'Help index',              url:'/api/help' },
+      { label:'Ping / server status',    url:'/api/ping' },
+      { label:'Mission bits',            url:'/api/mission-bits' },
     ],
   };
 
@@ -4186,7 +4382,7 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
     if (!WBAPI.loaded) return apiOut('Load a game file first.', 'err');
     const cat   = $('qq-cat').value;
     const label = $('qq-query').value;
-    const v     = $('qq-param').value.trim();
+    const v     = ($('qq-param').value||'').trim();
     const q     = QQ[cat]?.find(x=>x.label===label);
     if (!q) return apiOut('Unknown query.', 'err');
 
@@ -4194,8 +4390,13 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
       try { apiOut(q.local(), 'ok'); } catch(e) { apiOut('Error: '+e.message, 'err'); }
       return;
     }
-    if (!SERVER.active) return apiOut('Server not connected. Start wbapi-server.js first.', 'err');
-    const path = q.url.replace('{v}', encodeURIComponent(v));
+    if (!SERVER.active) return apiOut('Server not connected — start wbapi-server.js first.\n\nStart with: ./wbapi-toggle.sh start', 'err');
+    let path = q.url;
+    // support {v} for single param and {v} as "from/to" path
+    if (path.includes('{v}')) {
+      if (!v) return apiOut('Enter a value in the parameter field.', 'err');
+      path = path.replace('{v}', v.includes('/') ? v.split('/').map(encodeURIComponent).join('/') : encodeURIComponent(v));
+    }
     try {
       const r = await fetch(SERVER.url + path);
       const d = await r.json();
@@ -4329,13 +4530,17 @@ $('btn-api-get').addEventListener('click', async () => {
     return;
   }
 
-  const listTypes = new Set(['fish', 'lake-magic']);
-  if (!id && !listTypes.has(type)) return apiOut('Enter an ID or name.', 'err');
+  // types that work without an id
+  const noIdTypes = new Set(['fish', 'lake-magic', 'count', 'location', 'help', 'loot', 'loot-drop']);
+  if (!id && !noIdTypes.has(type)) return apiOut('Enter an ID or name.', 'err');
 
   if (SERVER.active) {
     try {
-      const path = type === 'location' ? `location/${encodeURIComponent(id)}`
-                 : id ? `${type}/${encodeURIComponent(id)}` : type;
+      let path;
+      if (type === 'count')    path = id ? `count/${encodeURIComponent(id)}` : 'count';
+      else if (type === 'help') path = id ? `help/${encodeURIComponent(id)}` : 'help';
+      else if (type === 'location') path = id ? `location/${encodeURIComponent(id)}` : 'location';
+      else path = id ? `${type}/${encodeURIComponent(id)}` : type;
       const r = await fetch(`${SERVER.url}/api/${path}`);
       const d = await r.json();
       apiOut(d, r.ok ? 'ok' : 'err');
@@ -4421,7 +4626,7 @@ $('btn-api-delete').addEventListener('click', async () => {
     // Step 1: request nonce from server
     apiOut(`Requesting delete token for ${type}:${id}…`, 'ok');
     try {
-      const resp = await fetch(`${SERVER.base}/api/nonce`, {
+      const resp = await fetch(`${SERVER.url}/api/nonce`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, id }),
@@ -4476,7 +4681,7 @@ $('btn-nonce-confirm').addEventListener('click', async () => {
   nonceHide();
   apiOut(`Deleting ${type}:${id}…`, 'ok');
   try {
-    const resp = await fetch(`${SERVER.base}/api/${type}/${encodeURIComponent(id)}`, {
+    const resp = await fetch(`${SERVER.url}/api/${type}/${encodeURIComponent(id)}`, {
       method: 'DELETE',
       headers: { 'X-Nonce': token },
     });
@@ -4882,6 +5087,745 @@ function renderStats() {
 document.querySelector('[data-tab="stats"]').addEventListener('click', () => {
   if (WBAPI.loaded) renderStats();
 });
+
+// Stats — server-side refresh via /api/count/*
+$('btn-stats-refresh').addEventListener('click', async () => {
+  if (!SERVER.active) return;
+  const btn = $('btn-stats-refresh');
+  btn.disabled = true; btn.textContent = 'Loading…';
+  try {
+    const r = await fetch(`${SERVER.url}/api/count`);
+    const d = await r.json();
+    const el = $('stats-content');
+    $('stats-empty').style.display = 'none';
+    el.style.display = 'flex';
+
+    // Overwrite summary row with server counts
+    const grid = el.querySelector('.stat-grid');
+    if (grid && d.totals) {
+      const cols = [
+        {key:'nodes',    label:'Nodes',    color:'var(--accent)'},
+        {key:'quests',   label:'Quests',   color:'var(--purple)'},
+        {key:'monsters', label:'Monsters', color:'var(--red)'},
+        {key:'terrains', label:'Terrains', color:'var(--teal)'},
+        {key:'npcs',     label:'NPCs',     color:'var(--pink)'},
+        {key:'coords',   label:'Coords',   color:'var(--yellow)'},
+      ];
+      grid.innerHTML = cols.map(c =>
+        `<div class="stat-card"><div class="stat-num" style="color:${c.color}">${d.totals[c.key]??'—'}</div><div class="stat-label">${c.label} <span style="font-size:9px;color:var(--green)">●srv</span></div></div>`
+      ).join('');
+    }
+
+    // Append server breakdown section
+    const old = el.querySelector('#srv-count-section');
+    if (old) old.remove();
+    const sec = document.createElement('div');
+    sec.id = 'srv-count-section';
+    sec.className = 'stats-section';
+    sec.style.gridColumn = '1/-1';
+    const bar = (val, max, color) =>
+      `<div class="bar-track"><div class="bar-fill" style="width:${max?Math.round(val/max*100):0}%;background:${color}"></div></div>`;
+
+    let html = `<div class="stats-section-title">Server Breakdown — /api/count</div>`;
+    // byAct from nodes
+    if (d.byAct) {
+      const max = Math.max(...Object.values(d.byAct));
+      html += `<div style="font-size:10px;color:var(--muted);margin:6px 0 3px">Nodes by Act</div>`;
+      html += Object.entries(d.byAct).sort((a,b)=>+a[0]-+b[0]).map(([a,n])=>
+        `<div class="bar-row"><span class="bar-key">Act ${a}</span>${bar(n,max,'var(--accent)')}<span class="bar-val">${n}</span></div>`).join('');
+    }
+    if (d.byType) {
+      const max = Math.max(...Object.values(d.byType));
+      html += `<div style="font-size:10px;color:var(--muted);margin:6px 0 3px">Quests by Type</div>`;
+      html += Object.entries(d.byType).sort((a,b)=>b[1]-a[1]).map(([t,n])=>
+        `<div class="bar-row"><span class="bar-key">${t}</span>${bar(n,max,'var(--purple)')}<span class="bar-val">${n}</span></div>`).join('');
+    }
+    sec.innerHTML = html;
+    el.appendChild(sec);
+
+    btn.textContent = '✓ Refreshed';
+    setTimeout(() => { btn.textContent = '↺ Refresh from Server'; btn.disabled = !SERVER.active; }, 2500);
+  } catch(e) {
+    btn.textContent = 'Error — retry';
+    btn.disabled = false;
+  }
+});
+
+// Enable stats refresh when server is active
+const _origServerActivated = window._onServerActivated || (() => {});
+window._onServerActivated = () => {
+  _origServerActivated();
+  $('btn-stats-refresh').disabled = false;
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CRUD TAB
+// ═══════════════════════════════════════════════════════════════════════════
+(function(){
+  const CRUD_TYPES = {
+    node: {
+      cols: ['id','label','terrain','act','N','E','S','W'],
+      colLabels: { id:'Code', label:'Label', terrain:'Terrain', act:'Act', N:'N', E:'E', S:'S', W:'W' },
+      listUrl: (f) => `/api/list/node?${new URLSearchParams(f)}`,
+      getUrl:  (id) => `/api/node/${encodeURIComponent(id)}`,
+      putUrl:  (id) => `/api/node/${encodeURIComponent(id)}`,
+      postUrl: () => '/api/node',
+      delUrl:  (id) => `/api/node/${encodeURIComponent(id)}`,
+      filters: [
+        { key:'act',        label:'Act',       type:'select', options:['','1','2','3','4','5'] },
+        { key:'terrain',    label:'Terrain',   type:'text',   placeholder:'e.g. forest' },
+        { key:'q',          label:'Search',    type:'text',   placeholder:'label / code' },
+        { key:'has_quests', label:'Has quests',type:'select', options:['','true','false'] },
+        { key:'junction',   label:'Junction',  type:'select', options:['','true','false'] },
+        { key:'no_coords',  label:'No coords', type:'select', options:['','true'] },
+      ],
+      fields: [
+        { key:'code',  label:'Code', req:true, note:'Node ID, immutable' },
+        { key:'name',  label:'Terrain key', req:true, note:'Must match a WORLD_DB entry' },
+        { key:'label', label:'Label', req:true, note:'Display name on map' },
+        { key:'act',   label:'Act', req:true, note:'1–5', type:'number' },
+        { key:'text',  label:'Text', ta:true, note:'Location description prose' },
+        { key:'npc',   label:'NPC', note:'Inline NPC display name' },
+        { key:'loot',  label:'Loot', note:'Loot flavour text' },
+        { key:'sleep', label:'Sleep', type:'select', options:['','true','false'], note:'Can player rest here?' },
+        { key:'sleepCost', label:'Sleep cost', type:'number', note:'Gold cost' },
+        { key:'N', label:'N link' }, { key:'E', label:'E link' },
+        { key:'S', label:'S link' }, { key:'W', label:'W link' },
+      ],
+      rowData: (r) => ({ id:r.id, label:r.label, terrain:r.terrain, act:r.act, N:r.connections?.find(c=>c.dir==='N')?.to||'', E:r.connections?.find(c=>c.dir==='E')?.to||'', S:r.connections?.find(c=>c.dir==='S')?.to||'', W:r.connections?.find(c=>c.dir==='W')?.to||'' }),
+    },
+    quest: {
+      cols: ['id','title','type','activateNode','npc'],
+      colLabels: { id:'ID', title:'Title', type:'Type', activateNode:'Node', npc:'NPC' },
+      listUrl: (f) => `/api/list/quest?${new URLSearchParams(f)}`,
+      getUrl:  (id) => `/api/quest/${encodeURIComponent(id)}`,
+      putUrl:  (id) => `/api/quest/${encodeURIComponent(id)}`,
+      postUrl: () => '/api/quest',
+      delUrl:  (id) => `/api/quest/${encodeURIComponent(id)}`,
+      filters: [
+        { key:'type',    label:'Type',    type:'select', options:['','main','side','combat','skill_check','mission_bit'] },
+        { key:'node',    label:'Node',    type:'text',   placeholder:'e.g. LHR' },
+        { key:'arc',     label:'Arc',     type:'text',   placeholder:'e.g. mq_' },
+        { key:'npc',     label:'NPC',     type:'text',   placeholder:'e.g. yael' },
+        { key:'has_npc', label:'Has NPC', type:'select', options:['','true','false'] },
+        { key:'q',       label:'Search',  type:'text',   placeholder:'title / id' },
+      ],
+      fields: [
+        { key:'id',           label:'ID',           req:true },
+        { key:'type',         label:'Type',         req:true, type:'select', options:['main','side','combat','skill_check','mission_bit','hunt'] },
+        { key:'title',        label:'Title',        req:true },
+        { key:'activateNode', label:'Activate node',req:true },
+        { key:'waypointNode', label:'Waypoint node' },
+        { key:'npc',          label:'NPC key' },
+        { key:'desc',         label:'Description',  ta:true },
+        { key:'hint',         label:'Hint',         ta:true },
+        { key:'passText',     label:'Pass text',    ta:true },
+        { key:'failText',     label:'Fail text',    ta:true },
+      ],
+      rowData: (r) => ({ id:r.id, title:r.title, type:r.type, activateNode:r.activateNode, npc:r.npc||'' }),
+    },
+    monster: {
+      cols: ['key','name','tier','ac','hp','atk'],
+      colLabels: { key:'Key', name:'Name', tier:'Tier', ac:'AC', hp:'HP', atk:'Atk' },
+      listUrl: (f) => `/api/list/monster?${new URLSearchParams(f)}`,
+      getUrl:  (id) => `/api/monster/${encodeURIComponent(id)}`,
+      putUrl:  (id) => `/api/monster/${encodeURIComponent(id)}`,
+      postUrl: () => '/api/monster',
+      delUrl:  (id) => `/api/monster/${encodeURIComponent(id)}`,
+      filters: [
+        { key:'terrain',  label:'Terrain',  type:'text',   placeholder:'e.g. crypt' },
+        { key:'tier',     label:'Tier',     type:'select', options:['','trivial','easy','medium','hard','boss'] },
+        { key:'has_drop', label:'Has drop', type:'select', options:['','true','false'] },
+        { key:'q',        label:'Search',   type:'text',   placeholder:'name / key' },
+      ],
+      fields: [
+        { key:'key',      label:'Key',      req:true, note:'Immutable after creation' },
+        { key:'name',     label:'Name',     req:true },
+        { key:'tier',     label:'Tier',     req:true, type:'select', options:['trivial','easy','medium','hard','boss'] },
+        { key:'ac',       label:'AC',       req:true, type:'number' },
+        { key:'hp',       label:'HP',       req:true, type:'number' },
+        { key:'atk',      label:'Atk',      req:true, type:'number' },
+        { key:'dmgCount', label:'Dmg count',req:true, type:'number' },
+        { key:'dmgDie',   label:'Dmg die',  req:true, type:'number', note:'3,4,6,8,10,12' },
+        { key:'dmgFlat',  label:'Dmg flat', req:true, type:'number' },
+      ],
+      rowData: (r) => ({ key:r.key||r.id, name:r.name, tier:r.tier, ac:r.ac, hp:r.hp, atk:r.atk }),
+    },
+    npc: {
+      cols: ['key','name','occupation','node'],
+      colLabels: { key:'Key', name:'Name', occupation:'Occupation', node:'Node' },
+      listUrl: (f) => `/api/list/npc?${new URLSearchParams(f)}`,
+      getUrl:  (id) => `/api/npc/${encodeURIComponent(id)}`,
+      putUrl:  (id) => `/api/npc/${encodeURIComponent(id)}`,
+      postUrl: () => '/api/npc',
+      delUrl:  (id) => `/api/npc/${encodeURIComponent(id)}`,
+      filters: [
+        { key:'node',       label:'Node',       type:'text', placeholder:'e.g. LHR' },
+        { key:'occupation', label:'Occupation', type:'text', placeholder:'e.g. innkeeper' },
+        { key:'q',          label:'Search',     type:'text', placeholder:'name / key' },
+      ],
+      fields: [
+        { key:'key',        label:'Key',        req:true },
+        { key:'name',       label:'Name',       req:true },
+        { key:'occupation', label:'Occupation', req:true },
+        { key:'node',       label:'Node',       req:true },
+        { key:'role',       label:'Role' },
+        { key:'desc',       label:'Description', ta:true },
+      ],
+      rowData: (r) => ({ key:r.key||r.id, name:r.name, occupation:r.occupation||'', node:r.node||'' }),
+    },
+    terrain: {
+      cols: ['key','label','icon','monsters'],
+      colLabels: { key:'Key', label:'Label', icon:'Icon', monsters:'# Monsters' },
+      listUrl: (f) => `/api/list/terrain?${new URLSearchParams(f)}`,
+      getUrl:  (id) => `/api/terrain/${encodeURIComponent(id)}`,
+      putUrl:  (id) => `/api/terrain/${encodeURIComponent(id)}`,
+      postUrl: () => '/api/terrain',
+      delUrl:  (id) => `/api/terrain/${encodeURIComponent(id)}`,
+      filters: [
+        { key:'q', label:'Search', type:'text', placeholder:'label / key' },
+      ],
+      fields: [
+        { key:'key',   label:'Key',   req:true, note:'Immutable terrain identifier' },
+        { key:'label', label:'Label', req:true },
+        { key:'icon',  label:'Icon',  req:true, note:'Emoji' },
+      ],
+      rowData: (r) => ({ key:r.key||r.id, label:r.label, icon:r.icon||'', monsters:r.connections?.monsters?.length??r.monsters?.length??'—' }),
+    },
+  };
+
+  let crudType = 'node';
+  let crudRows = [];
+  let crudSel  = null; // selected entity full data
+
+  const $ = id => document.getElementById(id);
+  function crudMsg(txt, cls) {
+    const el = $('crud-msg');
+    el.textContent = txt; el.className = 'crud-msg ' + cls; el.style.display = '';
+    clearTimeout(el._t); el._t = setTimeout(() => { el.style.display = 'none'; }, 4000);
+  }
+
+  // ── Filter panel ──────────────────────────────────────────────────────────
+  function renderFilters() {
+    const def = CRUD_TYPES[crudType];
+    const el = $('crud-filters');
+    el.innerHTML = '';
+    for (const f of def.filters) {
+      const fg = document.createElement('div'); fg.className = 'fg';
+      const lbl = document.createElement('div'); lbl.className = 'fl'; lbl.textContent = f.label;
+      fg.appendChild(lbl);
+      let input;
+      if (f.type === 'select') {
+        input = document.createElement('select');
+        input.className = 'fi fi-sm';
+        for (const o of f.options) { const op = document.createElement('option'); op.value=o; op.textContent=o||'All'; input.appendChild(op); }
+      } else {
+        input = document.createElement('input');
+        input.className = 'fi fi-sm';
+        if (f.placeholder) input.placeholder = f.placeholder;
+      }
+      input.dataset.fkey = f.key;
+      input.id = `crud-f-${f.key}`;
+      fg.appendChild(input);
+      el.appendChild(fg);
+    }
+  }
+
+  function getFilters() {
+    const out = {};
+    for (const f of CRUD_TYPES[crudType].filters) {
+      const el = document.getElementById(`crud-f-${f.key}`);
+      if (el && el.value) out[f.key] = el.value;
+    }
+    return out;
+  }
+
+  // ── Table ─────────────────────────────────────────────────────────────────
+  function renderTable(rows) {
+    const def = CRUD_TYPES[crudType];
+    const thead = $('crud-thead');
+    const tbody = $('crud-tbody');
+    thead.innerHTML = `<tr>${def.cols.map(c=>`<th>${def.colLabels[c]||c}</th>`).join('')}</tr>`;
+    tbody.innerHTML = '';
+    if (!rows.length) { $('crud-empty').style.display = ''; return; }
+    $('crud-empty').style.display = 'none';
+    for (const r of rows) {
+      const rd = def.rowData(r);
+      const tr = document.createElement('tr');
+      tr.innerHTML = def.cols.map((c,i) => `<td class="${i===0?'col-id':''}">${rd[c]??''}</td>`).join('');
+      tr.addEventListener('click', () => selectRow(rd.id||rd.key, tr));
+      tbody.appendChild(tr);
+    }
+  }
+
+  // ── Search filter ─────────────────────────────────────────────────────────
+  $('crud-search').addEventListener('input', () => {
+    const q = $('crud-search').value.toLowerCase();
+    const def = CRUD_TYPES[crudType];
+    const rows = crudRows.filter(r => {
+      const rd = def.rowData(r);
+      return def.cols.some(c => String(rd[c]||'').toLowerCase().includes(q));
+    });
+    renderTable(rows);
+  });
+
+  // ── Select row → load detail ──────────────────────────────────────────────
+  async function selectRow(id, trEl) {
+    // highlight row
+    $('crud-tbody').querySelectorAll('tr').forEach(r => r.classList.remove('sel'));
+    if (trEl) trEl.classList.add('sel');
+    $('crud-detail-title').textContent = id;
+    $('btn-crud-reload-item').disabled = false;
+    $('btn-crud-save').disabled = false;
+    $('btn-crud-delete').disabled = false;
+    $('btn-crud-create').disabled = true;
+
+    if (!SERVER.active) {
+      crudSel = null;
+      return renderDetailForm(null, id);
+    }
+    try {
+      const r = await fetch(`${SERVER.url}${CRUD_TYPES[crudType].getUrl(id)}`);
+      const d = await r.json();
+      crudSel = d.entity || d;
+      renderDetailForm(crudSel, id);
+    } catch(e) { crudMsg('Failed to load: '+e.message, 'err'); }
+  }
+
+  // ── Detail form ───────────────────────────────────────────────────────────
+  function renderDetailForm(entity, id) {
+    const def = CRUD_TYPES[crudType];
+    const body = $('crud-detail-body');
+    body.innerHTML = '';
+    for (const f of def.fields) {
+      const wrap = document.createElement('div'); wrap.className = 'crud-form-field';
+      const lbl = document.createElement('label');
+      lbl.innerHTML = f.label + (f.req ? ' <span class="req">*</span>' : '');
+      wrap.appendChild(lbl);
+      let inp;
+      if (f.ta) {
+        inp = document.createElement('textarea');
+        inp.rows = 3; inp.className = 'fi'; inp.style.resize = 'vertical';
+      } else if (f.type === 'select') {
+        inp = document.createElement('select'); inp.className = 'fi';
+        for (const o of (f.options||[])) { const op = document.createElement('option'); op.value=o; op.textContent=o||'—'; inp.appendChild(op); }
+      } else {
+        inp = document.createElement('input'); inp.className = 'fi';
+        if (f.type === 'number') inp.type = 'number';
+      }
+      inp.id = `crud-field-${f.key}`;
+      inp.placeholder = f.note || '';
+      const val = entity ? (entity[f.key] ?? '') : '';
+      if (inp.tagName === 'SELECT') { inp.value = String(val); } else { inp.value = String(val === null || val === undefined ? '' : val); }
+      inp.dataset.origVal = inp.value;
+      inp.addEventListener('input', () => {
+        inp.classList.toggle('fi chg', inp.value !== inp.dataset.origVal);
+      });
+      wrap.appendChild(inp);
+      if (f.note) { const n = document.createElement('div'); n.className = 'note'; n.textContent = f.note; wrap.appendChild(n); }
+      body.appendChild(wrap);
+    }
+    // Raw JSON view
+    if (entity) {
+      const raw = document.createElement('details'); raw.style.marginTop = '10px';
+      raw.innerHTML = `<summary style="font-size:10px;color:var(--muted);cursor:pointer">Raw JSON</summary><pre style="font-size:10px;background:var(--bg3);padding:8px;border-radius:4px;overflow:auto;white-space:pre-wrap;margin-top:4px">${JSON.stringify(entity,null,2)}</pre>`;
+      body.appendChild(raw);
+    }
+  }
+
+  // ── CRUD action bar ───────────────────────────────────────────────────────
+  function collectFormData() {
+    const def = CRUD_TYPES[crudType]; const out = {};
+    for (const f of def.fields) {
+      const el = document.getElementById(`crud-field-${f.key}`);
+      if (!el) continue;
+      const v = el.value;
+      if (v === '' || v === undefined) continue;
+      const numF = new Set(['ac','hp','atk','dmgCount','dmgDie','dmgFlat','act','sleepCost','xp','checkDC','reward','xpAward']);
+      out[f.key] = numF.has(f.key) && !isNaN(v) ? Number(v) : (v === 'true' ? true : v === 'false' ? false : v);
+    }
+    return out;
+  }
+
+  $('btn-crud-save').addEventListener('click', async () => {
+    if (!SERVER.active) return crudMsg('Server required for save.', 'err');
+    const id = $('crud-detail-title').textContent;
+    if (!id || id === 'Select a row') return crudMsg('Select a row first.', 'err');
+    const body = collectFormData();
+    try {
+      const r = await fetch(`${SERVER.url}${CRUD_TYPES[crudType].putUrl(id)}`, {
+        method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)
+      });
+      const d = await r.json();
+      if (!r.ok) return crudMsg(d.error||'PUT failed', 'err');
+      crudMsg('Saved ✓', 'ok');
+      loadCrud();
+    } catch(e) { crudMsg(e.message,'err'); }
+  });
+
+  $('btn-crud-create').addEventListener('click', async () => {
+    if (!SERVER.active) return crudMsg('Server required for create.', 'err');
+    const body = collectFormData();
+    const def = CRUD_TYPES[crudType];
+    // auto-acquire nonce
+    const id = body.code || body.id || body.key;
+    let headers = {'Content-Type':'application/json'};
+    if (id) {
+      try {
+        const nr = await fetch(`${SERVER.url}/api/nonce`, {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({ type:crudType, id:String(id) })
+        });
+        const nd = await nr.json();
+        if (nd.nonce) headers['X-Nonce'] = nd.nonce;
+      } catch(_) {}
+    }
+    try {
+      const r = await fetch(`${SERVER.url}${def.postUrl()}`, { method:'POST', headers, body:JSON.stringify(body) });
+      const d = await r.json();
+      if (!r.ok) return crudMsg(d.error||'POST failed', 'err');
+      crudMsg(`Created ${id} ✓`, 'ok');
+      loadCrud();
+    } catch(e) { crudMsg(e.message,'err'); }
+  });
+
+  $('btn-crud-delete').addEventListener('click', async () => {
+    if (!SERVER.active) return crudMsg('Server required for delete.', 'err');
+    const id = $('crud-detail-title').textContent;
+    if (!id || id === 'Select a row') return crudMsg('Select a row first.', 'err');
+    if (!confirm(`Delete ${crudType}:${id}?`)) return;
+    try {
+      // get nonce
+      const nr = await fetch(`${SERVER.url}/api/nonce`, {
+        method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({ type:crudType, id })
+      });
+      const nd = await nr.json();
+      if (!nd.nonce) return crudMsg('Nonce failed: '+JSON.stringify(nd), 'err');
+      const r = await fetch(`${SERVER.url}${CRUD_TYPES[crudType].delUrl(id)}`, {
+        method:'DELETE', headers:{'X-Nonce':nd.nonce}
+      });
+      const d = await r.json();
+      if (!r.ok) return crudMsg(d.error||'DELETE failed', 'err');
+      crudMsg(`Deleted ${id} ✓`, 'ok');
+      $('crud-detail-title').textContent = 'Select a row';
+      $('crud-detail-body').innerHTML = '<div class="empty" style="height:100%"><p>Deleted.</p></div>';
+      loadCrud();
+    } catch(e) { crudMsg(e.message,'err'); }
+  });
+
+  $('btn-crud-new').addEventListener('click', () => {
+    $('crud-detail-title').textContent = 'New ' + crudType;
+    $('btn-crud-save').disabled = true;
+    $('btn-crud-create').disabled = false;
+    $('btn-crud-delete').disabled = true;
+    $('btn-crud-reload-item').disabled = true;
+    renderDetailForm(null, '');
+  });
+
+  $('btn-crud-reload-item').addEventListener('click', () => {
+    const id = $('crud-detail-title').textContent;
+    if (id && id !== 'Select a row') selectRow(id, null);
+  });
+
+  // ── Load list ─────────────────────────────────────────────────────────────
+  async function loadCrud() {
+    $('btn-crud-load').textContent = 'Loading…';
+    $('btn-crud-load').disabled = true;
+    if (!SERVER.active) {
+      $('btn-crud-load').textContent = 'Server offline';
+      $('btn-crud-load').disabled = false;
+      $('crud-count-label').textContent = 'Connect server to load';
+      return;
+    }
+    try {
+      const filters = getFilters();
+      const url = SERVER.url + CRUD_TYPES[crudType].listUrl(filters);
+      const r = await fetch(url);
+      const d = await r.json();
+      const rows = Array.isArray(d) ? d : (d.data || d.items || []);
+      crudRows = rows;
+      renderTable(rows);
+      $('crud-count-label').textContent = `${rows.length} ${crudType}s`;
+    } catch(e) {
+      $('crud-count-label').textContent = 'Error loading';
+    }
+    $('btn-crud-load').textContent = 'Load / Refresh';
+    $('btn-crud-load').disabled = false;
+  }
+
+  // ── Type selector ─────────────────────────────────────────────────────────
+  document.querySelectorAll('.crud-type-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.crud-type-btn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+      crudType = btn.dataset.ctype;
+      crudRows = [];
+      crudSel  = null;
+      $('crud-detail-title').textContent = 'Select a row';
+      $('crud-detail-body').innerHTML = '<div class="empty" style="height:100%"><p>Select a row to view and edit.</p></div>';
+      $('btn-crud-save').disabled = true;
+      $('btn-crud-delete').disabled = true;
+      $('btn-crud-create').disabled = true;
+      $('btn-crud-reload-item').disabled = true;
+      renderFilters();
+      renderTable([]);
+    });
+  });
+
+  document.querySelector('[data-tab="crud"]').addEventListener('click', () => {
+    renderFilters();
+    if (SERVER.active && crudRows.length === 0) loadCrud();
+  });
+
+  $('btn-crud-load').addEventListener('click', loadCrud);
+
+  renderFilters();
+})();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ENDPOINTS TAB — full API reference + live try-it
+// ═══════════════════════════════════════════════════════════════════════════
+(function(){
+  const EP = [
+    // Health
+    { section:'Health & Status', method:'GET', path:'/api/ping', desc:'Server health + data counts', params:[] },
+    { section:'Health & Status', method:'POST', path:'/api/save', desc:'Write all in-memory data to disk', params:[] },
+    { section:'Health & Status', method:'POST', path:'/api/reload', desc:'Re-read game file from disk into memory', params:[] },
+    { section:'Health & Status', method:'POST', path:'/api/restart', desc:'Exit server (toggle script relaunches it)', params:[] },
+    { section:'Health & Status', method:'GET', path:'/api/source', desc:'Serve raw HTML game file', params:[] },
+    // Count
+    { section:'Count Breakdowns', method:'GET', path:'/api/count', desc:'Master counts for all collections', params:[] },
+    { section:'Count Breakdowns', method:'GET', path:'/api/count/nodes', desc:'Node breakdown: byAct, byTerrain, coords, junctions', params:[] },
+    { section:'Count Breakdowns', method:'GET', path:'/api/count/quests', desc:'Quest breakdown: byType, topArcs, topNodes', params:[] },
+    { section:'Count Breakdowns', method:'GET', path:'/api/count/monsters', desc:'Monster breakdown: byTier, drops, terrains', params:[] },
+    { section:'Count Breakdowns', method:'GET', path:'/api/count/npcs', desc:'NPC breakdown: byNode, questCounts', params:[] },
+    { section:'Count Breakdowns', method:'GET', path:'/api/count/terrains', desc:'Terrain breakdown: withMonsters, usedByNodes', params:[] },
+    { section:'Count Breakdowns', method:'GET', path:'/api/count/coords', desc:'Coord coverage: nodesWithoutCoords list', params:[] },
+    // List
+    { section:'List Collections', method:'GET', path:'/api/list', desc:'Index of all available list types with counts', params:[] },
+    { section:'List Collections', method:'GET', path:'/api/list/node', desc:'All nodes with summary fields', params:[
+        {name:'act', type:'number', desc:'Filter by act number (1–5)'},
+        {name:'terrain', type:'string', desc:'Filter by terrain key'},
+        {name:'q', type:'string', desc:'Text search on label / id'},
+        {name:'no_coords', type:'bool', desc:'Only nodes without coordinates'},
+        {name:'has_quests', type:'bool', desc:'Filter by quest presence (true|false)'},
+        {name:'junction', type:'bool', desc:'Filter junction vs named nodes (true|false)'},
+        {name:'ids', type:'bool', desc:'Return {count, ids:[]} instead of full rows'},
+        {name:'node', type:'string', desc:'Single node by exact ID'},
+    ]},
+    { section:'List Collections', method:'GET', path:'/api/list/quest', desc:'All quests with summary fields', params:[
+        {name:'type', type:'string', desc:'main|side|combat|skill_check|mission_bit'},
+        {name:'node', type:'string', desc:'Quests at this node (activateNode or waypointNode)'},
+        {name:'arc', type:'string', desc:'ID prefix filter (e.g. mq_ or sq_)'},
+        {name:'npc', type:'string', desc:'NPC key assigned to quest'},
+        {name:'monster', type:'string', desc:'Monster key referenced in quest'},
+        {name:'has_npc', type:'bool', desc:'Filter by NPC presence (true|false)'},
+        {name:'complete', type:'bool', desc:'Filter by completeFn presence'},
+        {name:'q', type:'string', desc:'Text search on title / id'},
+        {name:'ids', type:'bool', desc:'Return IDs only'},
+    ]},
+    { section:'List Collections', method:'GET', path:'/api/list/monster', desc:'All monsters', params:[
+        {name:'terrain', type:'string', desc:'Monsters in this terrain'},
+        {name:'tier', type:'string', desc:'trivial|easy|medium|hard|boss'},
+        {name:'has_drop', type:'bool', desc:'Filter by drop presence'},
+        {name:'no_terrain', type:'bool', desc:'Monsters not in any terrain'},
+        {name:'q', type:'string', desc:'Text search on name / key'},
+        {name:'ids', type:'bool', desc:'Return keys only'},
+    ]},
+    { section:'List Collections', method:'GET', path:'/api/list/npc', desc:'Named NPCs', params:[
+        {name:'node', type:'string', desc:'NPCs at this node'},
+        {name:'occupation', type:'string', desc:'Occupation substring filter'},
+        {name:'q', type:'string', desc:'Text search'},
+        {name:'ids', type:'bool', desc:'Return keys only'},
+    ]},
+    { section:'List Collections', method:'GET', path:'/api/list/terrain', desc:'All terrain types', params:[
+        {name:'q', type:'string', desc:'Text search on label / key'},
+        {name:'ids', type:'bool', desc:'Return keys only'},
+    ]},
+    { section:'List Collections', method:'GET', path:'/api/list/ids/:type', desc:'Pure ID/key array for any type', params:[
+        {name:':type', type:'path', desc:'node|quest|monster|npc|terrain'},
+    ]},
+    // Read entities
+    { section:'Read Entities', method:'GET', path:'/api/node/:code', desc:'Full node: entity, connections, coords, quests, NPCs, _meta', params:[{name:':code',type:'path',desc:'Node code e.g. LHR'}] },
+    { section:'Read Entities', method:'GET', path:'/api/quest/:id', desc:'Full quest: entity, nodeDetails, npcDetails, chain info', params:[{name:':id',type:'path',desc:'Quest ID e.g. mq_1'}] },
+    { section:'Read Entities', method:'GET', path:'/api/quest/:id/chain', desc:'Quest dependency chain: upstream + downstream', params:[{name:':id',type:'path',desc:'Quest ID'}] },
+    { section:'Read Entities', method:'GET', path:'/api/monster/:key', desc:'Full monster: entity, drop, terrains, quests', params:[{name:':key',type:'path',desc:'Monster key e.g. goblin'}] },
+    { section:'Read Entities', method:'GET', path:'/api/npc/:key', desc:'Full NPC: entity, nodeDetails, questCount, all dialogue', params:[{name:':key',type:'path',desc:'NPC key e.g. yael'}] },
+    { section:'Read Entities', method:'GET', path:'/api/terrain/:key', desc:'Full terrain: entity, monster list, nodes', params:[{name:':key',type:'path',desc:'Terrain key e.g. forest'}] },
+    { section:'Read Entities', method:'GET', path:'/api/location', desc:'List ALL locations with counts (act/terrain/q/has_quests/ids filters)', params:[
+        {name:'act',type:'number',desc:'Filter by act'},
+        {name:'terrain',type:'string',desc:'Filter by terrain key'},
+        {name:'q',type:'string',desc:'Text search'},
+        {name:'has_quests',type:'bool',desc:'true|false'},
+        {name:'ids',type:'bool',desc:'Return codes only'},
+    ]},
+    { section:'Read Entities', method:'GET', path:'/api/location/:code', desc:'Composite location: node + monsters + quests + NPCs', params:[{name:':code',type:'path',desc:'Node code'}] },
+    // Write entities
+    { section:'Write Entities', method:'PUT', path:'/api/node/:code', desc:'Edit node field(s)', params:[{name:':code',type:'path',desc:'Node code'},{name:'body',type:'json',desc:'{ field: value, … }'}] },
+    { section:'Write Entities', method:'POST', path:'/api/node', desc:'Create new node (nonce required)', params:[{name:'body',type:'json',desc:'{ code, name, label, act, … }'},{name:'X-Nonce',type:'header',desc:'From POST /api/nonce'}] },
+    { section:'Write Entities', method:'DELETE', path:'/api/node/:code', desc:'Delete node (nonce required)', params:[{name:'X-Nonce',type:'header',desc:'From POST /api/nonce'}] },
+    { section:'Write Entities', method:'PUT', path:'/api/quest/:id', desc:'Edit quest field(s)', params:[{name:':id',type:'path',desc:'Quest ID'},{name:'body',type:'json',desc:'{ field: value }'}] },
+    { section:'Write Entities', method:'POST', path:'/api/quest', desc:'Create quest (nonce required)', params:[{name:'body',type:'json',desc:'{ id, type, title, activateNode, … }'}] },
+    { section:'Write Entities', method:'DELETE', path:'/api/quest/:id', desc:'Delete quest (nonce required)', params:[{name:'X-Nonce',type:'header',desc:'One-time token'}] },
+    { section:'Write Entities', method:'PUT', path:'/api/monster/:key', desc:'Edit monster stat(s)', params:[{name:':key',type:'path',desc:'Monster key'},{name:'body',type:'json',desc:'{ field: value }'}] },
+    { section:'Write Entities', method:'POST', path:'/api/monster', desc:'Create monster (nonce required)', params:[{name:'body',type:'json',desc:'{ key, name, tier, ac, hp, atk, dmgCount, dmgDie, dmgFlat }'}] },
+    { section:'Write Entities', method:'PUT', path:'/api/npc/:key', desc:'Edit NPC field(s)', params:[{name:'body',type:'json',desc:'{ field: value }'}] },
+    { section:'Write Entities', method:'POST', path:'/api/npc', desc:'Create NPC (nonce required)', params:[{name:'body',type:'json',desc:'{ key, name, occupation, node, … }'}] },
+    { section:'Write Entities', method:'PUT', path:'/api/terrain/:key', desc:'Edit terrain label or icon', params:[{name:'body',type:'json',desc:'{ label, icon }'}] },
+    // Coords & Graph
+    { section:'Coords & Graph', method:'GET', path:'/api/coords', desc:'All node coordinates {code:{r,c}}', params:[] },
+    { section:'Coords & Graph', method:'GET', path:'/api/coords/near/:code', desc:'Nodes within radius of a position', params:[{name:':code',type:'path',desc:'Node code'},{name:'radius',type:'number',desc:'Grid cells (default 8)'}] },
+    { section:'Coords & Graph', method:'PUT', path:'/api/coords/:code', desc:'Set absolute coordinates', params:[{name:'body',type:'json',desc:'{ r, c }'}] },
+    { section:'Coords & Graph', method:'POST', path:'/api/coords/:code/nudge', desc:'Move relative (no current position needed)', params:[{name:'body',type:'json',desc:'{ dr, dc }'}] },
+    { section:'Coords & Graph', method:'POST', path:'/api/coords/swap', desc:'Atomically swap two nodes positions', params:[{name:'body',type:'json',desc:'{ a: "CODE1", b: "CODE2" }'}] },
+    { section:'Coords & Graph', method:'GET', path:'/api/graph/validate/:code', desc:'Per-direction walkability check', params:[{name:'maxGap',type:'number',desc:'Max allowed gap (default 4)'}] },
+    { section:'Coords & Graph', method:'GET', path:'/api/graph/broken', desc:'All broken edges from a root', params:[{name:'maxGap',type:'number',desc:'Default 4'},{name:'root',type:'string',desc:'Root node code'}] },
+    { section:'Coords & Graph', method:'GET', path:'/api/graph/path/:from/:to', desc:'Walkable path between two nodes', params:[{name:'maxGap',type:'number',desc:'Default 4'}] },
+    { section:'Coords & Graph', method:'POST', path:'/api/graph/link', desc:'Wire both ends of a directional link', params:[{name:'body',type:'json',desc:'{ a, aDir, b }'}] },
+    { section:'Coords & Graph', method:'POST', path:'/api/graph/junction', desc:'Create one junction node', params:[{name:'body',type:'json',desc:'{ anchor, anchorDir, terrain?, … }'}] },
+    { section:'Coords & Graph', method:'POST', path:'/api/graph/corner-junction', desc:'Fix diagonal connection with corner junction', params:[{name:'body',type:'json',desc:'{ nodeA, dirA, nodeB, dirB, sharedTarget }'}] },
+    { section:'Coords & Graph', method:'POST', path:'/api/graph/fill-gap', desc:'Plan/create junction chain for long gap', params:[{name:'body',type:'json',desc:'{ from, dir, to, maxGap, step, terrain, dryRun }'}] },
+    // Layout
+    { section:'Layout', method:'GET', path:'/api/layout/solve', desc:'Propose grid layout from a root node', params:[{name:'root',type:'string',desc:'Root node code'},{name:'step',type:'number',desc:'Grid step size'}] },
+    { section:'Layout', method:'POST', path:'/api/layout/apply', desc:'Apply a proposed coord map', params:[{name:'body',type:'json',desc:'{ coords: { CODE: {r,c}, … } }'}] },
+    // Audit
+    { section:'Audit', method:'GET', path:'/api/audit', desc:'Full integrity scan: broken refs, missing data', params:[] },
+    { section:'Audit', method:'GET', path:'/api/audit/map', desc:'Bidirectional map link audit', params:[] },
+    { section:'Audit', method:'POST', path:'/api/audit/map/fix', desc:'Auto-fix detected map link errors', params:[] },
+    { section:'Audit', method:'GET', path:'/api/next-error', desc:'First failing validation item with fix suggestion', params:[{name:'skip',type:'number',desc:'Skip N errors'},{name:'severity',type:'string',desc:'error|warning|suggestion'}] },
+    { section:'Audit', method:'GET', path:'/api/schema', desc:'Schema definitions for all entity types', params:[] },
+    { section:'Audit', method:'GET', path:'/api/schema/:type', desc:'Schema for one type', params:[{name:':type',type:'path',desc:'node|quest|monster|npc|terrain'}] },
+    { section:'Audit', method:'GET', path:'/api/flags', desc:'Feature flags and default values', params:[] },
+    { section:'Audit', method:'GET', path:'/api/mission-bits', desc:'All mission bit tokens', params:[] },
+    // Nonce
+    { section:'Nonce', method:'POST', path:'/api/nonce', desc:'Request a single-use write token (5 min TTL)', params:[{name:'body',type:'json',desc:'{ type, id }'}] },
+    // Fish & Lake Magic
+    { section:'Fish & Lake Magic', method:'GET', path:'/api/fish', desc:'All fish entries', params:[{name:'rank',type:'number',desc:'Filter by rank tier'},{name:'night',type:'bool',desc:'Night fish only'}] },
+    { section:'Fish & Lake Magic', method:'GET', path:'/api/fish/:key', desc:'Single fish entry', params:[] },
+    { section:'Fish & Lake Magic', method:'POST', path:'/api/fish', desc:'Create fish entry', params:[{name:'body',type:'json',desc:'{ key, name, ac, hp, atk, … }'}] },
+    { section:'Fish & Lake Magic', method:'GET', path:'/api/lake-magic', desc:'All lake magic items', params:[] },
+    { section:'Fish & Lake Magic', method:'GET', path:'/api/lake-magic/:key', desc:'Single lake magic item', params:[] },
+    { section:'Fish & Lake Magic', method:'POST', path:'/api/lake-magic', desc:'Create lake magic item', params:[{name:'body',type:'json',desc:'{ key, name, effect, … }'}] },
+    // Loot
+    { section:'Loot', method:'GET', path:'/api/loot', desc:'D100 consumable loot table', params:[] },
+    { section:'Loot', method:'PUT', path:'/api/loot/:index', desc:'Update one loot table entry', params:[{name:':index',type:'path',desc:'Entry index number'}] },
+    { section:'Loot', method:'POST', path:'/api/loot', desc:'Replace entire loot table', params:[{name:'body',type:'json',desc:'{ entries: […] }'}] },
+    { section:'Loot', method:'GET', path:'/api/loot-drop', desc:'All monster loot drops', params:[{name:'monster',type:'string',desc:'Filter by monster key'},{name:'terrain',type:'string',desc:'Filter by terrain'},{name:'fishing',type:'bool',desc:'Fishing drops only'}] },
+    { section:'Loot', method:'GET', path:'/api/monster/:key/drop', desc:'Drop for one monster', params:[] },
+    { section:'Loot', method:'PUT', path:'/api/monster/:key/drop', desc:'Set or update monster drop', params:[{name:'body',type:'json',desc:'{ icon, name, sell }'}] },
+    // NPC speak
+    { section:'NPC Dialogue', method:'GET', path:'/api/npc/:key/speak', desc:'Claude-voiced NPC reply', params:[{name:'prompt',type:'string',desc:'Player input'},{name:'state',type:'string',desc:'neutral|friendly|dearFriend'},{name:'model',type:'string',desc:'Claude model override'}] },
+    // Import
+    { section:'Import', method:'POST', path:'/api/import/book', desc:'Bulk import nodes + quest cycles from JSON', params:[{name:'body',type:'json',desc:'{ book, nodes:[], cycles:[{acts:[]}] }'}] },
+    // Help
+    { section:'Help', method:'GET', path:'/api/help', desc:'Help index: all available topics', params:[] },
+    { section:'Help', method:'GET', path:'/api/help/:topic', desc:'Man-page for a topic', params:[{name:':topic',type:'path',desc:'overview|modes|nonce|quest|node|monster|terrain|coords|wizard|audit|export|curl'}] },
+  ];
+
+  const METHOD_COLORS = { GET:'var(--accent)', POST:'var(--purple)', PUT:'var(--green)', DELETE:'var(--red)' };
+
+  function buildEpToc(filter, methodFilter) {
+    const toc = document.getElementById('ep-toc');
+    toc.innerHTML = '';
+    const q = (filter||'').toLowerCase();
+    const sections = {};
+    for (const ep of EP) {
+      if (methodFilter && ep.method !== methodFilter) continue;
+      if (q && !ep.path.toLowerCase().includes(q) && !ep.desc.toLowerCase().includes(q) && !ep.section.toLowerCase().includes(q)) continue;
+      if (!sections[ep.section]) sections[ep.section] = [];
+      sections[ep.section].push(ep);
+    }
+    for (const [sec, eps] of Object.entries(sections)) {
+      const wrap = document.createElement('div'); wrap.className = 'ep-section';
+      const hd = document.createElement('div'); hd.className = 'ep-section-hd';
+      hd.innerHTML = `<span>${sec}</span><span class="badge" style="background:var(--bg2);color:var(--muted);border:1px solid var(--border);font-size:9px;padding:0 5px">${eps.length}</span>`;
+      const body = document.createElement('div'); body.className = 'ep-section-body';
+      hd.addEventListener('click', () => body.classList.toggle('hidden'));
+      for (const ep of eps) {
+        const row = document.createElement('div'); row.className = 'ep-row';
+        const mcls = 'ep-m-'+ep.method.toLowerCase();
+        row.innerHTML = `
+          <div class="ep-method ${mcls}">${ep.method}</div>
+          <div class="ep-path">${ep.path}</div>
+          <div class="ep-desc">${ep.desc}</div>
+          <button class="ep-run-btn">▶ Try</button>`;
+        const detail = document.createElement('div'); detail.className = 'ep-detail';
+        // params grid
+        let paramsHtml = '';
+        if (ep.params.length) {
+          paramsHtml = `<div class="ep-params-grid">` +
+            ep.params.map(p=>`<span class="pk">${p.name}</span><span class="pt">${p.type}</span><span class="pd">${p.desc}</span>`).join('') +
+            `</div>`;
+        }
+        // example command
+        const exPath = ep.path.replace(/:(\w+)/g, '{$1}');
+        const exCmd = ep.method === 'GET'
+          ? `curl -s 'http://localhost:1367${exPath}'`
+          : `curl -s -X${ep.method} 'http://localhost:1367${exPath}'\\\n  -H 'Content-Type: application/json'\\\n  -d '{…}'`;
+        // try-it row
+        const resultId = 'ep-res-' + Math.random().toString(36).slice(2);
+        const inputId  = 'ep-in-'  + Math.random().toString(36).slice(2);
+        const hasPathParam = ep.path.includes(':');
+        detail.innerHTML = paramsHtml +
+          `<div class="ep-example">${exCmd}</div>
+           <div class="ep-try-row">
+             ${hasPathParam ? `<input id="${inputId}" class="ep-try-input" placeholder="replace :param values in path…">` : ''}
+             <button class="btn sm" onclick="epTry('${ep.method}','${ep.path}','${resultId}','${inputId}')">Run against localhost:1367</button>
+           </div>
+           <pre class="ep-result-pre" id="${resultId}"></pre>`;
+        row.querySelector('.ep-run-btn').addEventListener('click', (e) => {
+          e.stopPropagation();
+          detail.classList.toggle('open');
+        });
+        row.addEventListener('click', (e) => {
+          if (e.target.classList.contains('ep-run-btn')) return;
+          detail.classList.toggle('open');
+        });
+        body.appendChild(row);
+        body.appendChild(detail);
+      }
+      wrap.appendChild(hd); wrap.appendChild(body);
+      toc.appendChild(wrap);
+    }
+    if (!toc.children.length) toc.innerHTML = '<div style="color:var(--muted);padding:16px">No endpoints match.</div>';
+  }
+
+  window.epTry = async function(method, pathTemplate, resultId, inputId) {
+    const pre = document.getElementById(resultId);
+    if (!pre) return;
+    const inp = document.getElementById(inputId);
+    const overrides = (inp?.value||'').trim();
+    let path = pathTemplate;
+    if (overrides) {
+      // replace :param segments with user values (space-separated)
+      const parts = overrides.split(/\s+/);
+      let i = 0;
+      path = path.replace(/:(\w+)/g, () => encodeURIComponent(parts[i++] || '?'));
+    }
+    pre.className = 'ep-result-pre';
+    pre.style.display = '';
+    pre.textContent = 'Loading…';
+    try {
+      const opts = method === 'GET' ? {} : { method, headers:{'Content-Type':'application/json'}, body:'{}' };
+      if (method !== 'GET') opts.method = method;
+      const r = await fetch(`http://localhost:1367${path}`, opts);
+      const d = await r.json();
+      pre.textContent = JSON.stringify(d, null, 2);
+      pre.className = 'ep-result-pre ' + (r.ok ? 'ok' : 'err');
+    } catch(e) {
+      pre.textContent = 'Error: '+e.message+'\n\nIs wbapi-server.js running at localhost:1367?';
+      pre.className = 'ep-result-pre err';
+    }
+  };
+
+  document.getElementById('ep-search').addEventListener('input', (e) => buildEpToc(e.target.value, document.getElementById('ep-method-filter').value));
+  document.getElementById('ep-method-filter').addEventListener('change', (e) => buildEpToc(document.getElementById('ep-search').value, e.target.value));
+
+  document.querySelector('[data-tab="endpoints"]').addEventListener('click', () => {
+    if (!document.getElementById('ep-toc').children.length) buildEpToc('', '');
+  });
+})();
 
 // ═══════════════════════════════════════════════════════════════════════════
 // BUILDER TAB — full CRUD accordion console
@@ -5398,6 +6342,100 @@ document.querySelector('[data-tab="stats"]').addEventListener('click', () => {
     });
   }
 
+  // ── Server-backed helper ────────────────────────────────────────────────────
+  function mkServerOp(body, path, btnLabel) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    const btn = mkBtn(btnLabel||'RUN','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click', async () => {
+      if (!SERVER.active) return showResult(res,'Server not connected — start wbapi-server.js',true);
+      try {
+        const r = await fetch(`${SERVER.url}${path}`);
+        const d = await r.json();
+        showResult(res, d, !r.ok);
+      } catch(e) { showResult(res, 'Error: '+e.message, true); }
+    });
+    return { res };
+  }
+  function mkServerParamOp(body, pathFn, paramLabel, btnLabel) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    const fld = mkField(paramLabel); fields.appendChild(fld);
+    const btn = mkBtn(btnLabel||'RUN','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click', async () => {
+      if (!SERVER.active) return showResult(res,'Server not connected',true);
+      const v = fld.querySelector('input')?.value.trim();
+      if (!v) return showResult(res,'Enter a value.',true);
+      try {
+        const r = await fetch(`${SERVER.url}${pathFn(v)}`);
+        const d = await r.json();
+        showResult(res, d, !r.ok);
+      } catch(e) { showResult(res, 'Error: '+e.message, true); }
+    });
+  }
+
+  // ── Count ops ──────────────────────────────────────────────────────────────
+  function opCountAll(body)      { mkServerOp(body,'/api/count','GET /api/count'); }
+  function opCountNodes(body)    { mkServerOp(body,'/api/count/nodes','GET /api/count/nodes'); }
+  function opCountQuests(body)   { mkServerOp(body,'/api/count/quests','GET /api/count/quests'); }
+  function opCountMonsters(body) { mkServerOp(body,'/api/count/monsters','GET /api/count/monsters'); }
+  function opCountNpcs(body)     { mkServerOp(body,'/api/count/npcs','GET /api/count/npcs'); }
+  function opCountTerrains(body) { mkServerOp(body,'/api/count/terrains','GET /api/count/terrains'); }
+  function opCountCoords(body)   { mkServerOp(body,'/api/count/coords','GET /api/count/coords'); }
+
+  // ── Node extra ops ─────────────────────────────────────────────────────────
+  function opNodeIds(body)       { mkServerOp(body,'/api/list/ids/node','GET IDs'); }
+  function opLocationGet(body)   { mkServerParamOp(body, v=>`/api/location/${encodeURIComponent(v)}`,'Node code','GET'); }
+  function opLocationList(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    const fAct = mkField('Act (opt)'); const fTerrain = mkField('Terrain (opt)'); const fQ = mkField('Search (opt)');
+    fields.appendChild(fAct); fields.appendChild(fTerrain); fields.appendChild(fQ);
+    const btn = mkBtn('RUN','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click', async () => {
+      if (!SERVER.active) return showResult(res,'Server not connected',true);
+      const qs = new URLSearchParams();
+      const a = fAct.querySelector('input')?.value.trim(); if (a) qs.set('act',a);
+      const t = fTerrain.querySelector('input')?.value.trim(); if (t) qs.set('terrain',t);
+      const q = fQ.querySelector('input')?.value.trim(); if (q) qs.set('q',q);
+      const url = `/api/location${qs.size?'?'+qs:''}`;
+      try { const r = await fetch(`${SERVER.url}${url}`); showResult(res,await r.json(),!r.ok); }
+      catch(e) { showResult(res,'Error: '+e.message,true); }
+    });
+  }
+
+  // ── Quest extra ops ────────────────────────────────────────────────────────
+  function opQuestGetByMonster(body) { mkServerParamOp(body, v=>`/api/list/quest?monster=${encodeURIComponent(v)}`,'Monster key','GET'); }
+  function opQuestGetByArc(body)     { mkServerParamOp(body, v=>`/api/list/quest?arc=${encodeURIComponent(v)}`,'Arc prefix (e.g. mq_)','GET'); }
+
+  // ── Monster extra ops ──────────────────────────────────────────────────────
+  function opMonsterGetByTier(body)  { mkServerParamOp(body, v=>`/api/list/monster?tier=${encodeURIComponent(v)}`,'Tier','GET'); }
+  function opMonsterWithDrops(body)  { mkServerOp(body,'/api/list/monster?has_drop=true','GET monsters with drops'); }
+  function opMonsterNoTerrain(body)  { mkServerOp(body,'/api/list/monster?no_terrain=true','GET monsters no terrain'); }
+
+  // ── NPC extra ops ──────────────────────────────────────────────────────────
+  function opNpcByOccupation(body)   { mkServerParamOp(body, v=>`/api/list/npc?occupation=${encodeURIComponent(v)}`,'Occupation substring','GET'); }
+
+  // ── Terrain extra ops ──────────────────────────────────────────────────────
+  function opTerrainIds(body)        { mkServerOp(body,'/api/list/ids/terrain','GET terrain keys'); }
+
+  // ── Audit extra ops ────────────────────────────────────────────────────────
+  function opNextError(body)         { mkServerOp(body,'/api/next-error','GET next-error'); }
+  function opMapAuditRun(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    const btn = mkBtn('RUN MAP AUDIT','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click', async () => {
+      if (!SERVER.active) return showResult(res,'Server not connected',true);
+      try { const r = await fetch(`${SERVER.url}/api/audit/map`); showResult(res,await r.json(),!r.ok); }
+      catch(e) { showResult(res,'Error: '+e.message,true); }
+    });
+  }
+
   function mkNote(txt) {
     const d = document.createElement('div');
     d.style.cssText = 'font-size:10px;color:var(--muted);line-height:1.5;';
@@ -5412,53 +6450,75 @@ document.querySelector('[data-tab="stats"]').addEventListener('click', () => {
     el.style.display = 'flex';
     if (el.childElementCount > 0) return; // already built
 
+    el.appendChild(mkSection('📊 Count Breakdowns', [
+      mkOpRow('GET', 'Master counts',           'All collection counts in one call — /api/count',                opCountAll),
+      mkOpRow('GET', 'Node counts',             'Nodes by act, terrain, coord coverage, junctions',              opCountNodes),
+      mkOpRow('GET', 'Quest counts',            'Quests by type, top arcs, top activate nodes',                  opCountQuests),
+      mkOpRow('GET', 'Monster counts',          'Monsters by tier, with/without drops, terrain links',           opCountMonsters),
+      mkOpRow('GET', 'NPC counts',              'NPCs by node, quest reference counts',                          opCountNpcs),
+      mkOpRow('GET', 'Terrain counts',          'Terrains with/without monsters, used by nodes',                 opCountTerrains),
+      mkOpRow('GET', 'Coord coverage',          'Nodes without coordinates, orphan coords, coverage %',          opCountCoords),
+    ]));
+
     el.appendChild(mkSection('🗺 Nodes', [
-      mkOpRow('GET',  'Get Node by Code',       'Fetch a single node by its code (CI, VS…)',           opNodeGet),
-      mkOpRow('GET',  'Get All / By Act',        'List all nodes or filter by act number',              opNodeGetAll),
+      mkOpRow('GET',  'Get Node by Code',       'Fetch a single node: entity, coords, quests, NPCs',   opNodeGet),
+      mkOpRow('GET',  'List Nodes',             'All nodes with filters: act, terrain, q, flags',       opNodeGetAll),
+      mkOpRow('GET',  'Node IDs Only',          'Compact array of node codes — /api/list/ids/node',     opNodeIds),
+      mkOpRow('GET',  'Location (composite)',   'Node + monsters + quests + NPCs in one view',          opLocationGet),
+      mkOpRow('GET',  'All Locations',          'List every location with counts (filterable)',          opLocationList),
       mkOpRow('PUT',  'Set Node Field',          'Edit any field on an existing node',                  opNodePut),
-      mkOpRow('POST', 'Add New Node',            'Create a new node (added to diff, not saved yet)',    opNodeAdd),
+      mkOpRow('POST', 'Add New Node',            'Create a new node (nonce auto-handled)',               opNodeAdd),
     ]));
 
     el.appendChild(mkSection('📜 Quests', [
-      mkOpRow('GET',  'Get Quest by ID',         'Fetch a single quest with chain info',                opQuestGet),
-      mkOpRow('GET',  'Get Quests by Node',      'All quests at a given activateNode or waypointNode',  opQuestGetByNode),
-      mkOpRow('GET',  'Get Quests by Type',      'Filter by quest type (side/main/skill_check/epic)',   opQuestGetByType),
-      mkOpRow('GET',  'Get Quests by NPC',       'All quests that reference a given NPC key',           opQuestGetByNpc),
-      mkOpRow('GET',  'Get Quest Chain',         'Upstream + downstream quests via shared flags',       opQuestGetChain),
-      mkOpRow('GET',  'Get All Quests',          'Dump entire quest database',                          opQuestAll),
+      mkOpRow('GET',  'Get Quest by ID',         'Full quest: entity, nodeDetails, npcDetails',         opQuestGet),
+      mkOpRow('GET',  'Quests by Node',          'All quests at a given activateNode or waypointNode',  opQuestGetByNode),
+      mkOpRow('GET',  'Quests by Type',          'Filter by quest type',                                opQuestGetByType),
+      mkOpRow('GET',  'Quests by NPC',           'All quests assigned to a specific NPC key',           opQuestGetByNpc),
+      mkOpRow('GET',  'Quests by Monster',       'Quests that reference a specific monster key',        opQuestGetByMonster),
+      mkOpRow('GET',  'Quests by Arc',           'Filter by ID prefix (arc)',                           opQuestGetByArc),
+      mkOpRow('GET',  'Quest Chain',             'Upstream + downstream quests via shared flags',       opQuestGetChain),
+      mkOpRow('GET',  'All Quests',              'Dump entire quest database',                          opQuestAll),
       mkOpRow('PUT',  'Set Quest Field',         'Edit any narrative or mechanic field on a quest',     opQuestPut),
     ]));
 
     el.appendChild(mkSection('⚔ Monsters', [
-      mkOpRow('GET',  'Get Monster by Key/Name', 'Fetch a single monster with drop + terrain data',     opMonsterGet),
-      mkOpRow('GET',  'Get Monsters by Terrain', 'List all monsters in a given terrain',                opMonsterGetByTerrain),
-      mkOpRow('PUT',  'Set Monster Field',       'Edit combat stat or name on a monster',               opMonsterPut),
-      mkOpRow('POST', 'Fork Monster',            'Clone a monster under a new key with overrides',      opMonsterFork),
-      mkOpRow('POST', 'Swap Monster in Terrain', 'Replace one monster with another in a terrain roster',opTerrainSwapMonster),
+      mkOpRow('GET',  'Get Monster by Key',     'Full monster: entity, drop, terrain list, quests',    opMonsterGet),
+      mkOpRow('GET',  'Monsters by Terrain',    'List monsters in a given terrain',                    opMonsterGetByTerrain),
+      mkOpRow('GET',  'Monsters by Tier',       'Filter by tier (trivial|easy|medium|hard|boss)',      opMonsterGetByTier),
+      mkOpRow('GET',  'Monsters with Drops',    'Monsters that have a loot drop defined',              opMonsterWithDrops),
+      mkOpRow('GET',  'Monsters no Terrain',    'Monsters not assigned to any terrain',                opMonsterNoTerrain),
+      mkOpRow('PUT',  'Set Monster Field',      'Edit combat stat or name on a monster',               opMonsterPut),
+      mkOpRow('POST', 'Fork Monster',           'Clone a monster under a new key with overrides',      opMonsterFork),
+      mkOpRow('POST', 'Swap Monster in Terrain','Replace one monster with another in a terrain roster',opTerrainSwapMonster),
     ]));
 
     el.appendChild(mkSection('👤 NPCs', [
-      mkOpRow('GET',  'Get NPC by Key/Name',     'Fetch NPC data with node + dialogue',                 opNpcGet),
-      mkOpRow('GET',  'Get NPCs by Node',        'All NPCs registered at a node',                       opNpcGetByNode),
-      mkOpRow('PUT',  'Set NPC Field',           'Edit any NPC field',                                  opNpcPut),
+      mkOpRow('GET',  'Get NPC by Key',         'Full NPC: entity, nodeDetails, questCount, dialogue', opNpcGet),
+      mkOpRow('GET',  'NPCs by Node',           'All NPCs registered at a node',                       opNpcGetByNode),
+      mkOpRow('GET',  'NPCs by Occupation',     'Filter by occupation substring',                      opNpcByOccupation),
+      mkOpRow('PUT',  'Set NPC Field',          'Edit any NPC field',                                  opNpcPut),
     ]));
 
     el.appendChild(mkSection('🏔 Terrains', [
-      mkOpRow('GET',  'Get Terrain by Key',      'Fetch terrain with node list + monster count',        opTerrainGet),
+      mkOpRow('GET',  'Get Terrain by Key',     'Full terrain: entity, monsters, nodes',               opTerrainGet),
+      mkOpRow('GET',  'All Terrain Keys',       'Compact list of all terrain key strings',             opTerrainIds),
     ]));
 
     el.appendChild(mkSection('🐟 Fish & Lake Magic', [
-      mkOpRow('GET',  'Get Fish',                'Look up a fish by key/name, or list all',             opFishGet),
-      mkOpRow('GET',  'Get Lake Magic',          'Look up a lake magic item by key/name, or list all',  opLakeMagicGet),
+      mkOpRow('GET',  'Get Fish',               'Look up a fish by key/name, or list all',             opFishGet),
+      mkOpRow('GET',  'Get Lake Magic',         'Look up a lake magic item by key/name, or list all',  opLakeMagicGet),
     ]));
 
     el.appendChild(mkSection('🎲 Dice', [
-      mkOpRow('POST', 'Roll Dice',               'Roll any expression: d20, 2d6+3, adv, dis',           opDiceRoll),
-      mkOpRow('POST', 'Skill Check',             'Roll d20 + mod + prof vs DC',                         opSkillCheck),
+      mkOpRow('POST', 'Roll Dice',              'Roll any expression: d20, 2d6+3, adv, dis',           opDiceRoll),
+      mkOpRow('POST', 'Skill Check',            'Roll d20 + mod + prof vs DC',                         opSkillCheck),
     ]));
 
     el.appendChild(mkSection('🔍 Audit', [
-      mkOpRow('POST', 'Run Integrity Audit',     'Check for broken refs, missing data, dead flags',     opAuditRun),
+      mkOpRow('GET',  'Next Error',             'First failing validation item + fix suggestion',       opNextError),
+      mkOpRow('GET',  'Full Integrity Audit',   'Check for broken refs, missing data, dead flags',     opAuditRun),
+      mkOpRow('GET',  'Map Connectivity Audit', 'Check all N/E/S/W bidirectional links',               opMapAuditRun),
     ]));
   }
 

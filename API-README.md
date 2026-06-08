@@ -177,56 +177,101 @@ curl http://localhost:1367/api/source -o backup.html
 
 ### GET /api/{type}/{id}
 
-Fetch a single entity with full connection envelope.
+Fetch a single entity with full detail envelope.
 
 `type` = `node` | `quest` | `monster` | `npc` | `terrain`
 
-**GET /api/monster/commoner**
+**Enhanced detail fields** (added in commits 744e9eb + d3dd6a3):
+
+| Type | Extra fields returned |
+|---|---|
+| `node` | `coords {r,c}`, `links {N,E,S,W}` with full target node objects, `questCount`, `questIds[]`, `npcCount`, `_lookups[]` |
+| `quest` | `nodeDetails` (full node object for activateNode), `npcDetails` (full NPC if key set), all schema fields explicit (null if unset) |
+| `monster` | `drop` object, `questCount`, `terrainDetails[]` with node lists, all schema fields |
+| `npc` | `nodeDetails`, `questCount`, `questIds[]`, `questsDetail[]`, all schema fields |
+
+**Verbose 404** — unknown ID returns full ID list:
+
+```bash
+curl http://localhost:1367/api/node/BADCODE
+# → { "error": "node \"BADCODE\" not found", "count": 241, "allIds": ["LHR","BK",…] }
+```
+
+**GET /api/monster/goblin**
 ```json
 {
-  "entity": { "name": "Commoner", "ac": 10, "hp": 4, "atk": 0, "tier": 1 },
+  "entity": { "key":"goblin","name":"Goblin","ac":15,"hp":7,"atk":4,"dmgDie":6,"dmgCount":1,"dmgFlat":2,"tier":"easy" },
   "connections": {
-    "terrains": [
-      { "key": "market_quarter", "label": "Market Quarter",
-        "nodes": [{ "code": "CI", "label": "City Streets — Birka" }] }
-    ],
-    "drop": null
+    "terrains": [ { "key":"goblin_cave","label":"Goblin Warrens","nodes":[{"code":"TRD","label":"Goblin Warrens","act":5}] } ],
+    "drop": { "icon":"🗡","name":"Goblin Blade","sell":4 },
+    "questCount": 2
   },
-  "_meta": { "canDelete": false, "blockedBy": { "terrains": ["market_quarter"] } }
+  "_meta": { "canDelete": false, "blockedBy": { "terrains": ["goblin_cave"] } }
 }
 ```
 
-**GET /api/node/CY**
+**GET /api/node/LHR**
 ```json
 {
-  "entity": { "label": "Neon Undercity", "name": "cyberpunk_streets", "act": 3 },
+  "entity": { "code":"LHR","name":"city","label":"City Streets — Birka","act":1,"N":"BMA","S":"KRN","E":"TLL","W":"WRO" },
   "connections": {
-    "terrain": "cyberpunk_streets",
-    "monsters": [{ "key": "street_thug", "name": "Street Thug", "tier": 2 }],
-    "quests":   [{ "id": "quest_antecedent_01", "title": "The Question", "type": "side" }],
-    "npcs":     [],
-    "linkedNodes": { "N": "BI", "S": null, "E": null, "W": null }
+    "terrain": "city",
+    "coords": { "r":120, "c":144 },
+    "links": {
+      "N": { "code":"BMA","label":"Birka Slums","act":1 },
+      "S": { "code":"KRN","label":"The Birka Crypt","act":1 },
+      "E": { "code":"TLL","label":"The First Inn","act":1 },
+      "W": { "code":"WRO","label":"…","act":1 }
+    },
+    "monsters": [ { "key":"commoner","name":"Commoner","tier":"trivial" } ],
+    "quests":   [ { "id":"mq_1","title":"Follow the Bloodstained Map","type":"main" } ],
+    "npcs":     [ { "key":"yael","name":"City Guard Captain" } ],
+    "questCount": 3,
+    "npcCount": 1
   },
-  "_meta": { "canDelete": false, "blockedBy": { "quests": ["quest_antecedent_01"] } }
+  "_meta": { "canDelete": false, "blockedBy": { "quests": ["mq_1","sq_1","sq_battling"] } }
 }
 ```
 
 ---
 
-### GET /api/location/{code}
+### GET /api/location[/{code}]
 
-Composite view: node + terrain + all monsters/quests/NPCs at that location.
+**Without code** — list ALL locations with counts (filterable):
 
 ```bash
-curl http://localhost:1367/api/location/CI
+curl http://localhost:1367/api/location
+curl 'http://localhost:1367/api/location?act=1'
+curl 'http://localhost:1367/api/location?terrain=forest'
+curl 'http://localhost:1367/api/location?has_quests=true'
+curl 'http://localhost:1367/api/location?q=birka&ids=true'
+```
+
+**Query parameters:**
+| Param | Type | Description |
+|---|---|---|
+| `act` | number | Filter by act number |
+| `terrain` | string | Filter by terrain key |
+| `q` | string | Substring search on label / code |
+| `has_quests` | bool | `true` = nodes with quests, `false` = nodes without |
+| `ids` | bool | Return `{count, ids:[…]}` instead of full rows |
+
+**With code** — composite detail view:
+
+```bash
+curl http://localhost:1367/api/location/LHR
 ```
 ```json
 {
-  "node": { "label": "City Streets — Birka", "name": "city", "act": 1 },
-  "terrain": { "label": "City", "icon": "🏙", "monsters": [...] },
+  "code": "LHR",
+  "label": "City Streets — Birka",
+  "terrain": "city",
+  "act": 1,
+  "connections": { "N": "BMA", "S": "KRN", "E": "TLL", "W": "WRO" },
   "monsters": [ { "key": "commoner", "name": "Commoner", "ac": 10 } ],
-  "quests":   [ { "id": "quest_wis_01", "title": "...", "type": "side" } ],
-  "npcs":     [ { "key": "yael", "name": "Yael" } ]
+  "quests":   [ { "id": "mq_1", "title": "Follow the Bloodstained Map", "type": "main" } ],
+  "npcs":     [ { "key": "yael", "name": "City Guard Captain" } ],
+  "counts":   { "monsters": 28, "quests": 3, "npcs": 1, "linkedNodes": 4 }
 }
 ```
 
@@ -248,24 +293,154 @@ curl http://localhost:1367/api/quest/quest_anath/chain
 
 ---
 
-### GET /api/list/{type}
+### GET /api/list[/{type}]
 
-Returns a lightweight list with `_meta.canDelete` per item.
-
-`type` = `node` | `quest` | `monster` | `npc` | `terrain` | `fish` | `lake-magic`
-
-**Query parameters:**
-| Param | Applies to | Example |
-|---|---|---|
-| `?node=CY` | quest, npc | quests/npcs at that node |
-| `?terrain=market_quarter` | monster | monsters in terrain |
-| `?type=skill_check` | quest | filter by quest type |
-| `?arc=quest_wis` | quest | filter by arc prefix |
+**Without type** — index of all available list types with counts and filter documentation:
 
 ```bash
-curl 'http://localhost:1367/api/list/quest?node=CY'
-curl 'http://localhost:1367/api/list/monster?terrain=market_quarter'
-curl 'http://localhost:1367/api/list/quest?type=mission_bit'
+curl http://localhost:1367/api/list
+```
+
+**With type** — filtered collection list.
+
+`type` = `node` | `quest` | `monster` | `npc` | `terrain`
+
+All types support `?ids=true` → returns `{ count, ids:[…] }` instead of full rows.
+
+#### Node filters
+| Param | Type | Description |
+|---|---|---|
+| `act` | number | Filter by act number (1–5) |
+| `terrain` | string | Filter by terrain key |
+| `q` | string | Substring search on label / code |
+| `no_coords` | bool | Nodes without coordinates set |
+| `has_quests` | bool | `true`/`false` — filter by quest presence |
+| `junction` | bool | `true` = junction nodes, `false` = named nodes only |
+| `node` | string | Single node by exact code |
+| `ids` | bool | Return `{count, ids:[…]}` |
+
+#### Quest filters
+| Param | Type | Description |
+|---|---|---|
+| `type` | string | `main\|side\|combat\|skill_check\|mission_bit` |
+| `node` | string | Quests at this node (activateNode or waypointNode) |
+| `arc` | string | ID prefix filter (e.g. `mq_`, `quest_wis`) |
+| `npc` | string | NPC key assigned to quest |
+| `monster` | string | Monster key referenced in quest |
+| `has_npc` | bool | `true`/`false` — filter by NPC presence |
+| `complete` | bool | Filter by `completeFn` presence |
+| `q` | string | Text search on title / id |
+| `ids` | bool | Return IDs only |
+
+#### Monster filters
+| Param | Type | Description |
+|---|---|---|
+| `terrain` | string | Monsters in this terrain |
+| `tier` | string | `trivial\|easy\|medium\|hard\|boss` |
+| `has_drop` | bool | Filter by loot drop presence |
+| `no_terrain` | bool | Monsters not assigned to any terrain |
+| `q` | string | Text search on name / key |
+| `ids` | bool | Return keys only |
+
+#### NPC filters
+| Param | Type | Description |
+|---|---|---|
+| `node` | string | NPCs at this node |
+| `occupation` | string | Occupation substring filter |
+| `q` | string | Text search on name / key |
+| `ids` | bool | Return keys only |
+
+#### Terrain filters
+| Param | Type | Description |
+|---|---|---|
+| `q` | string | Text search on label / key |
+| `ids` | bool | Return keys only |
+
+#### IDs-only shorthand
+
+```bash
+curl http://localhost:1367/api/list/ids/node     # → { count, ids:["LHR","BK",…] }
+curl http://localhost:1367/api/list/ids/quest    # → { count, ids:["mq_1","mq_2",…] }
+curl http://localhost:1367/api/list/ids/monster  # → { count, ids:["goblin","shadow",…] }
+curl http://localhost:1367/api/list/ids/npc
+curl http://localhost:1367/api/list/ids/terrain
+```
+
+#### Verbose 404 on unknown ID
+
+When you request `GET /api/node/BADCODE`, the response includes a count and all valid IDs:
+
+```json
+{
+  "error": "node \"BADCODE\" not found",
+  "type": "node",
+  "count": 241,
+  "allIds": ["LHR","BK","TLL","MHQ",…]
+}
+```
+
+```bash
+curl 'http://localhost:1367/api/list/quest?node=LHR'
+curl 'http://localhost:1367/api/list/node?act=1&terrain=crypt'
+curl 'http://localhost:1367/api/list/node?no_coords=true'
+curl 'http://localhost:1367/api/list/node?has_quests=false&junction=false'
+curl 'http://localhost:1367/api/list/quest?has_npc=true&type=side'
+curl 'http://localhost:1367/api/list/monster?tier=easy&has_drop=true'
+curl 'http://localhost:1367/api/list/monster?no_terrain=true'
+curl 'http://localhost:1367/api/list/npc?occupation=innkeeper'
+curl 'http://localhost:1367/api/list/node?q=birka&ids=true'
+```
+
+---
+
+### GET /api/count[/{subtype}]
+
+Breakdown statistics for each collection. Uses live server data.
+
+**Master count** (all collections):
+
+```bash
+curl http://localhost:1367/api/count
+```
+```json
+{
+  "totals": { "nodes": 241, "quests": 312, "monsters": 216, "terrains": 69, "npcs": 9, "coords": 189 },
+  "byAct": {"1":42,"2":31,"3":28,"4":38,"5":22},
+  "byType": {"main":7,"side":48,"combat":130,"skill_check":12,"mission_bit":115},
+  "byTier": {"trivial":18,"easy":64,"medium":48,"hard":30,"boss":56}
+}
+```
+
+**Subtypes** — each returns detailed breakdown:
+
+| Route | Returns |
+|---|---|
+| `/api/count/nodes` | byAct, byTerrain, junctionCount, nodesWithCoords, nodesWithoutCoords |
+| `/api/count/quests` | byType, topArcs (most quests), topNodes (most activate nodes) |
+| `/api/count/monsters` | byTier, withDrops, withoutDrops, withTerrain, withoutTerrain |
+| `/api/count/npcs` | total, byNode (count per node), questCounts (how many quests ref each NPC) |
+| `/api/count/terrains` | total, withMonsters, emptyTerrains, usedByNodes, unusedByNodes |
+| `/api/count/coords` | total, inNodeMap, orphanCoords, nodesWithoutCoordsList |
+
+```bash
+curl http://localhost:1367/api/count/nodes
+curl http://localhost:1367/api/count/quests
+curl http://localhost:1367/api/count/monsters
+curl http://localhost:1367/api/count/npcs
+curl http://localhost:1367/api/count/terrains
+curl http://localhost:1367/api/count/coords
+```
+
+#### ./api.sh shorthand
+
+```bash
+./api.sh count            # master
+./api.sh count nodes
+./api.sh count quests
+./api.sh count monsters
+./api.sh count npcs
+./api.sh count terrains
+./api.sh count coords
 ```
 
 ---
@@ -327,6 +502,43 @@ curl http://localhost:1367/api/missionbits
     }
   ]
 }
+```
+
+---
+
+### GET /api/next-error[?skip=N&severity=X]
+
+Returns the **first failing validation item** with full context and a suggested fix command. Ideal for systematic repair loops.
+
+```bash
+curl http://localhost:1367/api/next-error               # first error
+curl 'http://localhost:1367/api/next-error?skip=1'      # second error
+curl 'http://localhost:1367/api/next-error?skip=5'      # sixth error
+curl 'http://localhost:1367/api/next-error?severity=error'   # errors only
+curl 'http://localhost:1367/api/next-error?severity=warning' # warnings only
+```
+
+```json
+{
+  "ok": true,
+  "severity": "error",
+  "section": "quest",
+  "key": "mq_1",
+  "field": "activateNode",
+  "message": "activateNode 'BADCODE' not found in NODE_MAP",
+  "fix": "wb put quest mq_1 activateNode=LHR",
+  "context": {
+    "quest": { "id": "mq_1", "title": "Follow the Bloodstained Map" }
+  },
+  "remaining": 12
+}
+```
+
+Returns `{ ok:true, clean:true }` when no errors remain at the given severity level.
+
+```bash
+# Systematic repair loop:
+while curl -s http://localhost:1367/api/next-error | jq -e '.clean' > /dev/null 2>&1; do break; done
 ```
 
 ---
@@ -885,6 +1097,311 @@ curl "http://localhost:1367/api/coords/near/WK?radius=8"
 ```
 
 `available` contains up to 40 unoccupied `{r,c}` slots sorted by distance from origin. Pick the closest slot that fits the story geography.
+
+---
+
+### POST /api/coords/{code}/nudge
+
+Move a node by a relative offset without needing to know its current position first. Checks for collision and returns the new coordinates along with updated gap/alignment info for each affected connection.
+
+```bash
+curl -s -XPOST http://localhost:1367/api/coords/SHW/nudge \
+  -H 'Content-Type: application/json' \
+  -d '{"dr":0,"dc":-8}'
+```
+
+```json
+{
+  "ok": true,
+  "code": "SHW",
+  "before": {"r":104,"c":144},
+  "after":  {"r":104,"c":136},
+  "collision": null,
+  "connectionsAffected": [
+    {"dir":"W","target":"ROT","gapBefore":12,"gapAfter":4,"alignBefore":"aligned","alignAfter":"aligned"},
+    {"dir":"N_from_NRG","target":"NRG","gapBefore":8,"gapAfter":8,"alignBefore":"off-axis","alignAfter":"aligned"}
+  ]
+}
+```
+
+Returns 409 if the destination slot is already occupied.
+
+---
+
+### POST /api/coords/swap
+
+Atomically exchange the coordinates of two nodes. Useful when a junction node is sitting in the slot that a named node needs.
+
+```bash
+curl -s -XPOST http://localhost:1367/api/coords/swap \
+  -H 'Content-Type: application/json' \
+  -d '{"a":"J52","b":"SHW"}'
+```
+
+```json
+{
+  "ok": true,
+  "swapped": [
+    {"code":"J52","before":{"r":104,"c":136},"after":{"r":104,"c":144}},
+    {"code":"SHW","before":{"r":104,"c":144},"after":{"r":104,"c":136}}
+  ],
+  "connectionsCheck": {
+    "J52": {"N":"gap changed 6→8 (warn)","S":"gap unchanged 0"},
+    "SHW": {"W":"gap changed 12→4 (fixed)","N_from_NRG":"offset changed 8→0 (fixed)"}
+  },
+  "verify": ["GET /api/graph/validate/J52","GET /api/graph/validate/SHW"]
+}
+```
+
+---
+
+### GET /api/graph/validate/{code}
+
+Check one node's N/E/S/W connections for walkability (gap ≤ maxGap, same axis). Every broken connection carries a `moveSuggestion` block with up to 7 ranked placement candidates — see **§ moveSuggestion Algorithm** below.
+
+```bash
+curl "http://localhost:1367/api/graph/validate/SHW?maxGap=4"
+```
+
+| Query param | Default | Description |
+|---|---|---|
+| `maxGap` | 4 | Maximum allowed cell distance between connected nodes |
+
+**Connection status values:**
+
+| Status | Meaning |
+|---|---|
+| `ok` | Aligned, within maxGap |
+| `unset` | No connection in this direction |
+| `src_no_coords` | This node has no grid position |
+| `tgt_no_coords` | Target has no position — moveSuggestion tells where to place it |
+| `off_axis` | Nodes share neither row nor column |
+| `gap_too_large` | Correct axis but distance > maxGap |
+| `diagonal_and_gap` | Both off-axis and too far |
+| `wrong_direction` | Target sits in the opposite cardinal direction to the declared link |
+
+**Response (broken connection example):**
+
+```json
+{
+  "code": "BK", "coords": {"r":104,"c":172}, "maxGap":4,
+  "connections": {
+    "S": {
+      "target": "BLT", "targetCoords": {"r":112,"c":180},
+      "gap":8, "axisOffset":8, "goodDirection":true,
+      "status": "diagonal_and_gap",
+      "fix": "corner-junction or move both nodes",
+      "moveSuggestion": {
+        "node": "BLT",
+        "note": "\"BLT\" is diagonal AND too far — move it between \"BK\" and its axis-snapped position",
+        "recommended": {"r":108,"c":172,"reason":"midpoint between source and destination","free":true,
+          "moveCmd":"curl -s -XPUT http://localhost:1367/api/coords/BLT -H 'Content-Type: application/json' -d '{\"r\":108,\"c\":172}'"},
+        "candidates": [
+          {"r":108,"c":172,"reason":"midpoint between source and destination","free":true},
+          {"r":104,"c":176,"reason":"source row, mid-column",                  "free":true},
+          {"r":108,"c":172,"reason":"source column, mid-row",                  "free":true},
+          {"r":112,"c":176,"reason":"destination row, mid-column",             "free":false,"occupiedBy":"J44"},
+          {"r":108,"c":180,"reason":"destination column, mid-row",             "free":true},
+          {"r":104,"c":180,"reason":"source row, destination column",          "free":true},
+          {"r":112,"c":172,"reason":"destination row, source column",          "free":true}
+        ]
+      }
+    }
+  },
+  "also_target_of": [...],
+  "diagnosis": null,
+  "fixCommand": null
+}
+```
+
+**Common patterns:**
+
+```bash
+# Validate and show only broken connections
+curl -s "http://localhost:1367/api/graph/validate/BK?maxGap=4" | jq '
+  .connections | to_entries[]
+  | select(.value.status != "ok" and .value.status != "unset")
+  | {dir:.key, status:.value.status, recommended:.value.moveSuggestion.recommended}'
+
+# Get the first free move command for every problem
+curl -s "http://localhost:1367/api/graph/validate/SHW?maxGap=4" | jq '
+  [.connections[].moveSuggestion, .also_target_of[].moveSuggestion]
+  | map(select(. != null))
+  | .[].recommended | select(.free) | .moveCmd'
+
+# Check corner diagnosis
+curl -s "http://localhost:1367/api/graph/validate/SHW?maxGap=4" | jq '{diagnosis, fixCommand, fixConflict}'
+```
+
+---
+
+### GET /api/graph/broken
+
+Find all connected pairs in the graph that violate walkability rules. Every edge includes a `moveSuggestion` block. Optionally restrict to edges reachable from a root node.
+
+```bash
+curl "http://localhost:1367/api/graph/broken?maxGap=4&root=BK"
+```
+
+| Query param | Default | Description |
+|---|---|---|
+| `maxGap` | 4 | Maximum allowed gap |
+| `root` | (all edges) | Only include edges reachable from this node |
+
+**Edge types:** `diagonal` · `diagonal_and_gap` · `gap_too_large` · `missing_coords` · `wrong_direction`
+
+**Response:**
+
+```json
+{
+  "ok": true, "maxGap":4, "totalChecked":401, "broken":13,
+  "categories": {"diagonal":2,"gap_too_large":9,"missing_coords":2},
+  "edges": [
+    {
+      "from":"NRG","fromCoords":{"r":112,"c":136},"dir":"N","to":"SHW","toCoords":{"r":104,"c":144},
+      "gap":8,"axisOffset":8,"type":"diagonal","fix":"corner_junction",
+      "moveSuggestion": {
+        "node":"SHW",
+        "note":"\"SHW\" is off-axis — move it onto the correct axis of \"NRG\"",
+        "recommended":{"r":104,"c":136,"reason":"midpoint between source and destination","free":true,
+          "moveCmd":"curl -s -XPUT http://localhost:1367/api/coords/SHW -H 'Content-Type: application/json' -d '{\"r\":104,\"c\":136}'"},
+        "candidates":[
+          {"r":104,"c":136,"reason":"midpoint between source and destination","free":true},
+          {"r":112,"c":140,"reason":"source row, mid-column",                  "free":true},
+          {"r":108,"c":136,"reason":"source column, mid-row",                  "free":true},
+          {"r":104,"c":140,"reason":"destination row, mid-column",             "free":true},
+          {"r":108,"c":144,"reason":"destination column, mid-row",             "free":false,"occupiedBy":"J88"},
+          {"r":112,"c":144,"reason":"source row, destination column",          "free":true},
+          {"r":104,"c":136,"reason":"destination row, source column",          "free":true}
+        ]
+      }
+    }
+  ]
+}
+```
+
+**Common patterns:**
+
+```bash
+# Summary only
+curl -s 'http://localhost:1367/api/graph/broken?maxGap=4&root=BK' | jq '{broken, categories}'
+
+# Get ready-to-run command for every broken edge
+curl -s 'http://localhost:1367/api/graph/broken?maxGap=4' | jq \
+  '[.edges[] | {from,dir,to,type,cmd:.moveSuggestion.recommended.moveCmd}]'
+
+# Only edges where recommended slot is free
+curl -s 'http://localhost:1367/api/graph/broken?maxGap=4' | jq \
+  '[.edges[] | select(.moveSuggestion.recommended.free == true)
+    | {from,to,type,r:.moveSuggestion.recommended.r,c:.moveSuggestion.recommended.c,
+       cmd:.moveSuggestion.recommended.moveCmd}]'
+
+# Find all nodes that need placement
+curl -s 'http://localhost:1367/api/graph/broken?maxGap=4' | jq \
+  '[.edges[] | select(.type=="missing_coords")
+    | {missing:.missingCoords, place:.moveSuggestion.recommended | {r,c,reason,free}}]'
+```
+
+---
+
+### GET /api/graph/path/{from}/{to}
+
+Find a walkable path between two nodes (gap ≤ maxGap, axis-aligned only).
+
+```bash
+curl "http://localhost:1367/api/graph/path/BK/LHR?maxGap=4"
+```
+
+```json
+{
+  "ok":true, "from":"BK", "to":"LHR", "reachable":false,
+  "nearestReachableAncestor": {
+    "code":"J75","hops":8,"distanceToTarget":3,
+    "blockingEdge":{"from":"J75","dir":"S","to":"ORL","gap":8,"type":"gap_too_large"}
+  },
+  "walkablePath":["BK","J56","J57","NIL","J59","J60","J61","J75"],
+  "fix":"POST /api/graph/fill-gap {\"from\":\"J75\",\"dir\":\"S\",\"to\":\"ORL\"}"
+}
+```
+
+---
+
+### POST /api/graph/link
+
+Wire both ends of a directional connection atomically. Sets `A.dir = B` and `B.opposite = A` in one call.
+
+```bash
+curl -s -XPOST http://localhost:1367/api/graph/link \
+  -H 'Content-Type: application/json' \
+  -d '{"a":"LHR","aDir":"N","b":"BMA"}'
+```
+
+```json
+{"ok":true,"wired":{"LHR":{"N":"BMA"},"BMA":{"S":"LHR"}}}
+```
+
+Returns error if either slot is already occupied:
+```json
+{"ok":false,"error":"LHR.N already set to 'BMA' — clear it first with ./api.sh put node LHR N=null"}
+```
+
+---
+
+### § moveSuggestion Algorithm
+
+Every broken connection returns a `moveSuggestion` block. The suggestion engine generates up to 7 candidate positions in priority order:
+
+| Priority | Position | How computed |
+|---|---|---|
+| 1 | **Midpoint** | `{r:(src.r+dst.r)/2, c:(src.c+dst.c)/2}` snapped to grid step |
+| 2 | Source row, mid-column | `{r:src.r, c:mid.c}` |
+| 3 | Source column, mid-row | `{r:mid.r, c:src.c}` |
+| 4 | Destination row, mid-column | `{r:dst.r, c:mid.c}` |
+| 5 | Destination column, mid-row | `{r:mid.r, c:dst.c}` |
+| 6 | Source row → destination column | `{r:src.r, c:dst.c}` (L-bend via source) |
+| 7 | Destination row → source column | `{r:dst.r, c:src.c}` (L-bend via destination) |
+
+Each candidate is tagged `free: true/false` and `occupiedBy: code|null`. The `recommended` field is the first free candidate, or candidates[0] if everything is occupied.
+
+`moveCmd` is a ready-to-run curl command: `PUT /api/coords/{code}` to move an existing node, or `POST /api/node && PUT /api/coords` to create a new junction.
+
+**When destination is missing** (no coordinates at all): the algorithm projects a position 3 grid steps along the connection direction from the source, then applies the same ranking.
+
+**Snapping:** all positions are snapped to the nearest multiple of the grid step (default 4 cells).
+
+---
+
+### POST /api/graph/fill-gap
+
+Plan and optionally execute a chain of junction nodes to bridge a long gap between two aligned nodes. Run with `dryRun:true` first to review the plan; then remove `dryRun` to execute.
+
+```bash
+# Plan (dry run)
+curl -s -XPOST http://localhost:1367/api/graph/fill-gap \
+  -H 'Content-Type: application/json' \
+  -d '{"from":"KRN","dir":"S","to":"HKG","maxGap":4,"step":4,"terrain":"inherit","dryRun":true}'
+
+# Execute
+curl -s -XPOST http://localhost:1367/api/graph/fill-gap \
+  -H 'Content-Type: application/json' \
+  -d '{"from":"KRN","dir":"S","to":"HKG","maxGap":4,"step":4,"terrain":"inherit","resolveConflicts":"shift"}'
+```
+
+`resolveConflicts: "shift"` — if a slot is occupied, shift ±1 cell perpendicular rather than failing. `"abort"` stops at first conflict.
+
+---
+
+### POST /api/graph/corner-junction
+
+When two nodes point to the same target from perpendicular directions (one N/S, one E/W) but the target is off-axis, this endpoint places the target at the correct axis intersection.
+
+```bash
+curl -s -XPOST http://localhost:1367/api/graph/corner-junction \
+  -H 'Content-Type: application/json' \
+  -d '{"nodeA":"ROT","dirA":"E","nodeB":"NRG","dirB":"N","sharedTarget":"SHW"}'
+```
+
+Finds the intersection `r=ROT.r, c=NRG.c` and moves SHW there. Returns a conflict report (with swap options) if the slot is occupied.
 
 ---
 

@@ -164,101 +164,236 @@ curl -XPOST http://localhost:1367/api/graph/link \
 
 ---
 
-## Part 3 — New Endpoints (Proposed)
+## Part 3 — Graph & Coordinate Endpoints
+
+> All endpoints below are live. Every broken connection now returns a `moveSuggestion` block with ranked placement candidates — see §3.9 for the algorithm.
 
 ### 3.1 `GET /api/graph/validate/{code}` — Single Node Walkability Check
 
-Checks each N/E/S/W connection of a node against the grid rules (gap ≤ maxGap, same axis).
+Checks each N/E/S/W connection against grid rules (gap ≤ maxGap, same axis). Every broken connection returns a `moveSuggestion` with up to 7 ranked candidate positions for the node that needs to move.
 
 **Request:**
-```
-GET /api/graph/validate/SHW?maxGap=4
+```bash
+curl "http://localhost:1367/api/graph/validate/SHW?maxGap=4"
 ```
 
-**Response:**
+**Connection status values:**
+
+| Status | Meaning |
+|---|---|
+| `ok` | Aligned, within maxGap |
+| `unset` | No connection in this direction |
+| `src_no_coords` | This node has no coordinates |
+| `tgt_no_coords` | Target has no coordinates — `moveSuggestion` tells where to place it |
+| `off_axis` | Source and target are on different rows and columns — needs axis alignment |
+| `gap_too_large` | Correct axis but gap > maxGap — needs junction(s) between them |
+| `diagonal_and_gap` | Both off-axis and too far |
+| `wrong_direction` | Target is in the opposite direction — check coord swap |
+
+**Response (with moveSuggestion):**
 ```json
 {
   "code": "SHW",
   "coords": {"r": 104, "c": 144},
+  "maxGap": 4,
   "connections": {
-    "N": {
-      "target": null,
-      "status": "unset"
-    },
-    "E": {
-      "target": null,
-      "status": "unset"
-    },
-    "S": {
-      "target": null,
-      "status": "unset"
-    },
+    "N": { "target": null, "status": "unset" },
+    "E": { "target": null, "status": "unset" },
+    "S": { "target": null, "status": "unset" },
     "W": {
       "target": "ROT",
       "targetCoords": {"r": 104, "c": 132},
       "gap": 12,
       "axisOffset": 0,
       "status": "gap_too_large",
-      "fix": "move SHW to (104,136) or insert 2 junctions"
+      "fix": "POST /api/graph/fill-gap {\"from\":\"SHW\",\"dir\":\"W\",\"to\":\"ROT\",\"maxGap\":4}",
+      "moveSuggestion": {
+        "node": "(junction)",
+        "note": "Gap=12 — insert a junction between \"SHW\" and \"ROT\"",
+        "recommended": {"r": 104, "c": 136, "reason": "midpoint between source and destination", "free": true,
+          "moveCmd": "curl -s -XPOST http://localhost:1367/api/node -H 'Content-Type: application/json' -d '{\"code\":\"J_new\",\"name\":\"junction\",\"label\":\"Junction\",\"act\":1}' && curl -s -XPUT http://localhost:1367/api/coords/J_new -H 'Content-Type: application/json' -d '{\"r\":104,\"c\":136}'"},
+        "candidates": [
+          {"r":104,"c":136,"reason":"midpoint between source and destination",           "free":true,  "occupiedBy":null},
+          {"r":104,"c":144,"reason":"source row, mid-column",                            "free":false, "occupiedBy":"SHW"},
+          {"r":104,"c":132,"reason":"source column, mid-row",                            "free":false, "occupiedBy":"ROT"},
+          {"r":104,"c":138,"reason":"destination row, mid-column",                       "free":true,  "occupiedBy":null},
+          {"r":104,"c":132,"reason":"destination column, mid-row",                       "free":false, "occupiedBy":"ROT"},
+          {"r":104,"c":132,"reason":"source row, destination column",                    "free":false, "occupiedBy":"ROT"},
+          {"r":104,"c":144,"reason":"destination row, source column",                    "free":false, "occupiedBy":"SHW"}
+        ]
+      }
     }
   },
   "also_target_of": [
     {
-      "from": "NRG",
-      "fromDir": "N",
-      "fromCoords": {"r": 112, "c": 136},
-      "gap": 8,
-      "axisOffset": 8,
+      "from": "NRG", "fromDir": "N", "fromCoords": {"r": 112, "c": 136},
+      "gap": 8, "axisOffset": 8,
       "status": "off_axis",
-      "fix": "SHW needs to be at (108,136) for NRG.N alignment OR (104,136) for ROT.E alignment"
+      "moveSuggestion": {
+        "node": "SHW",
+        "note": "\"SHW\" is off from \"NRG\"'s N connection — move it between them",
+        "recommended": {"r": 108, "c": 136, "reason": "midpoint between source and destination", "free": true,
+          "moveCmd": "curl -s -XPUT http://localhost:1367/api/coords/SHW -H 'Content-Type: application/json' -d '{\"r\":108,\"c\":136}'"},
+        "candidates": [
+          {"r":108,"c":136,"reason":"midpoint between source and destination","free":true},
+          {"r":112,"c":140,"reason":"source row, mid-column",                  "free":true},
+          {"r":108,"c":136,"reason":"source column, mid-row",                  "free":true},
+          {"r":104,"c":140,"reason":"destination row, mid-column",             "free":true},
+          {"r":108,"c":144,"reason":"destination column, mid-row",             "free":false,"occupiedBy":"SHW"},
+          {"r":112,"c":144,"reason":"source row, destination column",          "free":true},
+          {"r":104,"c":136,"reason":"destination row, source column",          "free":true}
+        ]
+      }
     }
   ],
-  "diagnosis": "SHW is a CORNER NODE — it must sit at the intersection of two axes. ROT.E needs row=104. NRG.N needs col=136. Required position: (104,136). Currently at (104,144).",
+  "diagnosis": "CORNER NODE — must sit at axis intersection: r=104 c=136",
   "fixCommand": "PUT /api/coords/SHW {\"r\":104,\"c\":136}"
 }
+```
+
+**Practical usage:**
+
+```bash
+# Check a node
+curl "http://localhost:1367/api/graph/validate/BK?maxGap=4"
+
+# Get just the diagnosis
+curl -s "http://localhost:1367/api/graph/validate/SHW?maxGap=4" | jq '.diagnosis'
+
+# Get the first free candidate for every broken connection
+curl -s "http://localhost:1367/api/graph/validate/BK?maxGap=4" | jq '
+  .connections | to_entries[]
+  | select(.value.status != "ok" and .value.status != "unset")
+  | {dir: .key, status: .value.status,
+     move: (.value.moveSuggestion.candidates // [] | map(select(.free)) | .[0])}'
+
+# Get the ready-to-run moveCmd for the recommended position
+curl -s "http://localhost:1367/api/graph/validate/SHW?maxGap=4" | jq '
+  [.connections[].moveSuggestion, .also_target_of[].moveSuggestion]
+  | map(select(. != null)) | .[].recommended.moveCmd'
 ```
 
 ---
 
 ### 3.2 `GET /api/graph/broken?maxGap=4` — All Broken Edges
 
+Returns every connected pair that violates walkability rules. Each edge includes a `moveSuggestion` with ranked candidates for where to move the off-axis or unpositioned node.
+
 **Request:**
+```bash
+curl "http://localhost:1367/api/graph/broken?maxGap=4&root=BK"
 ```
-GET /api/graph/broken?maxGap=4&root=BK
-```
+
+**Query params:**
+
+| Param | Default | Description |
+|---|---|---|
+| `maxGap` | 4 | Maximum allowed distance between connected nodes |
+| `root` | (all) | Only report edges reachable from this node |
+
+**Edge types:**
+
+| Type | Fix strategy |
+|---|---|
+| `diagonal` | Move destination onto source's row or column — use `moveSuggestion` |
+| `diagonal_and_gap` | Move destination closer AND onto axis — use `moveSuggestion` |
+| `gap_too_large` | Insert junction(s) between them — use `moveSuggestion` |
+| `missing_coords` | One node has no position — use `moveSuggestion` to place it |
 
 **Response:**
 ```json
 {
+  "ok": true,
   "maxGap": 4,
   "totalChecked": 401,
   "broken": 13,
-  "categories": {
-    "diagonal": 2,
-    "gap_too_large": 9,
-    "missing_coords": 2
-  },
+  "categories": {"diagonal": 2, "gap_too_large": 9, "missing_coords": 2},
   "edges": [
     {
       "from": "NRG", "fromCoords": {"r":112,"c":136},
       "dir": "N",
       "to": "SHW", "toCoords": {"r":104,"c":144},
-      "gap": 8, "axisOffset": 8,
-      "type": "diagonal",
-      "fix": "corner_junction or move_node",
-      "cornerRequired": {"r":112,"c":144}
+      "gap": 8, "axisOffset": 8, "type": "diagonal",
+      "fix": "corner_junction",
+      "moveSuggestion": {
+        "node": "SHW",
+        "note": "\"SHW\" is off-axis — move it onto the correct axis of \"NRG\"",
+        "recommended": {"r":104,"c":136,"reason":"midpoint between source and destination","free":true,
+          "moveCmd":"curl -s -XPUT http://localhost:1367/api/coords/SHW -H 'Content-Type: application/json' -d '{\"r\":104,\"c\":136}'"},
+        "candidates": [
+          {"r":104,"c":136,"reason":"midpoint between source and destination","free":true},
+          {"r":112,"c":140,"reason":"source row, mid-column",                  "free":true},
+          {"r":108,"c":136,"reason":"source column, mid-row",                  "free":true},
+          {"r":104,"c":140,"reason":"destination row, mid-column",             "free":true},
+          {"r":108,"c":144,"reason":"destination column, mid-row",             "free":false,"occupiedBy":"J88"},
+          {"r":112,"c":144,"reason":"source row, destination column",          "free":true},
+          {"r":104,"c":136,"reason":"destination row, source column",          "free":true}
+        ]
+      }
     },
     {
       "from": "ROT", "fromCoords": {"r":104,"c":132},
       "dir": "E",
       "to": "SHW", "toCoords": {"r":104,"c":144},
-      "gap": 12, "axisOffset": 0,
-      "type": "gap_too_large",
+      "gap": 12, "axisOffset": 0, "type": "gap_too_large",
       "junctionsNeeded": 2,
-      "fix": "fill_gap"
+      "fix": "fill_gap",
+      "moveSuggestion": {
+        "node": "(new junction)",
+        "note": "Gap=12 between \"ROT\" and \"SHW\" — insert 2 junction(s) between them",
+        "recommended": {"r":104,"c":136,"reason":"midpoint between source and destination","free":true,
+          "moveCmd":"curl -s -XPOST http://localhost:1367/api/node ... && curl -s -XPUT http://localhost:1367/api/coords/J_new ..."},
+        "candidates": [
+          {"r":104,"c":136,"reason":"midpoint between source and destination","free":true},
+          {"r":104,"c":132,"reason":"source column, mid-row",                  "free":false,"occupiedBy":"ROT"},
+          {"r":104,"c":140,"reason":"destination column, mid-row",             "free":true},
+          {"r":104,"c":136,"reason":"source row, destination column",          "free":true},
+          {"r":104,"c":132,"reason":"destination row, source column",          "free":false,"occupiedBy":"ROT"}
+        ]
+      }
+    },
+    {
+      "from": "YRK", "dir": "S", "to": "ZRH",
+      "type": "missing_coords",
+      "missingCoords": "ZRH",
+      "moveSuggestion": {
+        "node": "ZRH",
+        "note": "\"ZRH\" has no coordinates — place it between the connected nodes",
+        "recommended": {"r":116,"c":136,"reason":"3 steps S from neighbor \"YRK\"","free":true,
+          "moveCmd":"curl -s -XPUT http://localhost:1367/api/coords/ZRH -H 'Content-Type: application/json' -d '{\"r\":116,\"c\":136}'"},
+        "candidates": [
+          {"r":116,"c":136,"reason":"3 steps S from neighbor \"YRK\"",        "free":true},
+          {"r":112,"c":136,"reason":"midpoint 1.5 steps S from \"YRK\"",      "free":true},
+          {"r":116,"c":136,"reason":"2 steps S from \"YRK\"",                 "free":true}
+        ]
+      }
     }
   ]
 }
+```
+
+**Practical usage:**
+
+```bash
+# Count broken edges from the main hub
+curl -s 'http://localhost:1367/api/graph/broken?maxGap=4&root=BK' | jq '{broken, categories}'
+
+# Get the recommended moveCmd for every broken edge
+curl -s 'http://localhost:1367/api/graph/broken?maxGap=4&root=BK' | jq \
+  '[.edges[] | {from, dir, to, type, cmd: .moveSuggestion.recommended.moveCmd}]'
+
+# Get only edges where the recommended slot is free
+curl -s 'http://localhost:1367/api/graph/broken?maxGap=4' | jq \
+  '[.edges[] | select(.moveSuggestion.recommended.free == true)
+    | {from, to, type, r:.moveSuggestion.recommended.r, c:.moveSuggestion.recommended.c}]'
+
+# Triage by type
+curl -s 'http://localhost:1367/api/graph/broken?maxGap=4' | jq \
+  '[.edges[] | select(.type=="diagonal") | {from, dir, to, cmd:.moveSuggestion.recommended.moveCmd}]'
+
+# Find all nodes with missing coordinates and where to put them
+curl -s 'http://localhost:1367/api/graph/broken?maxGap=4' | jq \
+  '[.edges[] | select(.type=="missing_coords") | {missing:.missingCoords, place:.moveSuggestion.recommended | {r,c,reason,free}}]'
 ```
 
 ---
