@@ -463,6 +463,8 @@ const CMD = {
     if (d.nodesSkipped?.length)  info(`nodes skipped:   ${d.nodesSkipped.join(', ')}`);
     if (d.questsCreated?.length) ok(`quests created:  ${d.questsCreated.length}  (${d.questsCreated[0]} … ${d.questsCreated[d.questsCreated.length - 1]})`);
     if (d.questsSkipped?.length) info(`quests skipped:  ${d.questsSkipped.length}`);
+    if (d.npcsCreated?.length)   ok(`npcs created:    ${d.npcsCreated.join(', ')}`);
+    if (d.npcsSkipped?.length)   info(`npcs skipped:    ${d.npcsSkipped.join(', ')}`);
     if (d.errors?.length)        stderr(`${C.red}errors (${d.errors.length}): ${JSON.stringify(d.errors)}${C.reset}\n`);
     if (d.total)                 info(`baseline: ${d.total.nodes} nodes  ${d.total.quests} quests`);
     if (flags.out) { fs.writeFileSync(flags.out, JSON.stringify(d, null, 2) + '\n'); ok(`→ ${flags.out}`); }

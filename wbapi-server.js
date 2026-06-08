@@ -5074,13 +5074,14 @@ async function route(req, res) {
     try { body = await readBody(req); } catch(e) {
       return json(res, 400, { error:'Invalid JSON' });
     }
-    const { book, nodes = [], cycles = [] } = body;
+    const { book, nodes = [], cycles = [], npcs = [] } = body;
     if (!book) return json(res, 400, { error:'Missing required field: book' });
 
     const results = {
       book,
       nodesCreated: [], nodesSkipped: [],
       questsCreated: [], questsSkipped: [],
+      npcsCreated: [], npcsSkipped: [],
       errors: [],
     };
 
@@ -5149,7 +5150,27 @@ async function route(req, res) {
     }
     WBAPI._buildIndexes();
 
-    // 3. Single save
+    // 3. NPC dialogue entries (optional — creates NPC_DIALOGUES card for each)
+    // Each entry: { key, quote, meta?, impartial?, questActive?, friendly?, dearFriend? }
+    for (const npc of npcs) {
+      const key = npc.key;
+      if (!key) { results.errors.push({ type:'npc', error:'missing key' }); continue; }
+      if (WBAPI.npcDialogues[key]) { results.npcsSkipped.push(key); continue; }
+      const enriched = {
+        meta:       npc.meta       || {},
+        impartial:  npc.impartial  || [],
+        questActive: npc.questActive || [],
+        friendly:   npc.friendly   || [],
+        dearFriend: npc.dearFriend || [],
+        quote:      npc.quote      || '',
+      };
+      WBAPI.npcDialogues[key] = enriched;
+      const ins = replaceSection('NPC_DIALOGUES', serializeNpcDialoguesSection());
+      if (!ins.ok) { results.errors.push({ type:'npc', key, error: ins.error || 'serialize failed' }); WBAPI.npcDialogues[key] = undefined; continue; }
+      results.npcsCreated.push(key);
+    }
+
+    // 4. Single save
     const saveR = WBAPI.save();
     if (!saveR.ok) return json(res, 500, { ok:false, error:`save failed: ${saveR.error}`, results });
     try { fs.copyFileSync(saveR.path, GAME_FILE); } catch(e) {
