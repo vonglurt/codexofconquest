@@ -4958,7 +4958,7 @@ async function route(req, res) {
       const out = list.map(n => ({
         id: n.id, label: n.label, terrain: n.name, act: n.act,
         coords: WBAPI.nodeCoords[n.id] || null,
-        connections: ['N','E','S','W'].filter(d=>nm[n.id]?.[d]).map(d=>({ dir:d, to:nm[n.id][d] })),
+        connections: ['N','E','S','W'].filter(d=>WBAPI.nodeMap[n.id]?.[d]).map(d=>({ dir:d, to:WBAPI.nodeMap[n.id][d] })),
         _meta: { quests: (WBAPI._questsByNode[n.id]||[]).length,
                  npcs:   WBAPI.npcs.byNode(n.id).length,
                  hasCoords: !!WBAPI.nodeCoords[n.id],
@@ -6682,6 +6682,20 @@ server.listen(PORT, '127.0.0.1', () => {
 
   log('INFO', `Server listening on http://127.0.0.1:${PORT}`);
   logStream.write('═'.repeat(60) + '\n');
+
+  // Crash handlers — log the real stack, then exit 67 so wbapi-toggle.sh auto-restarts
+  process.on('uncaughtException', (err) => {
+    log('ERROR', `CRASH uncaughtException: ${err.message}`, { stack: err.stack });
+    logStream.write(`CRASH: ${err.stack || err.message}\n`);
+    process.exit(67);
+  });
+  process.on('unhandledRejection', (reason) => {
+    const msg = reason instanceof Error ? reason.message : String(reason);
+    const stack = reason instanceof Error ? reason.stack : '';
+    log('ERROR', `CRASH unhandledRejection: ${msg}`, { stack });
+    logStream.write(`CRASH (rejection): ${stack || msg}\n`);
+    process.exit(67);
+  });
 
   // Watch for external edits to the game file and auto-reload
   let _watchDebounce = null;
