@@ -9,6 +9,23 @@
 // directly.  The game is fully self-contained in that one file.
 // Toggle: ./wbapi-toggle.sh [start|stop|restart|status]
 // curl:   curl http://localhost:1367/api/ping
+//
+// ── CLI DIRECTIVE ────────────────────────────────────────────
+// Prefer api.sh over raw curl for all day-to-day operations.
+// api.sh is the official CLI wrapper: it handles nonces, retry/
+// backoff, queued requests, and pipe-safe JSON output.
+//
+//   ./api.sh ping                     health check
+//   ./api.sh get quest <id>           fetch any entity
+//   ./api.sh list npc --q egil        search by name
+//   ./api.sh put quest <id> k=v       patch a field
+//   ./api.sh post npc key=x name=y    create an entity
+//   ./api.sh import file.json         bulk import (nodes+quests+npcs)
+//   ./api.sh audit                    integrity scan
+//   ./api.sh --help                   full command reference (always current)
+//
+// GET /api/help/cli  — runs ./api.sh --help and returns live output.
+// ─────────────────────────────────────────────────────────────
 
 const http      = require('http');
 const fs        = require('fs');
@@ -798,6 +815,12 @@ async function route(req, res) {
           '  GET /api/help/coords          — coordinate system, 4x expansion, and node placement',
           '  GET /api/help/import          — 1367 quest import workflow and node placement strategy',
           '  GET /api/help/curl            — curl cheat sheet for every operation',
+          '  GET /api/help/cli             — api.sh CLI reference (live: runs ./api.sh --help)',
+          '',
+          'PREFERRED TOOL',
+          '  Use ./api.sh for all day-to-day work — not raw curl.',
+          '  ./api.sh handles nonces, retry/backoff, and pipe-safe JSON automatically.',
+          '  Run:  ./api.sh --help   for the full, always-current command reference.',
           '',
           `Server: ${b}`,
           'Source: PaulRicheson@Roll2Hit.com — MIT License',
@@ -1487,6 +1510,26 @@ async function route(req, res) {
         ].join('\n'),
       },
     };
+
+    // cli topic — run ./api.sh --help live and return current output
+    if (topic === 'cli') {
+      const { execFile } = require('child_process');
+      const apiSh = path.join(__dirname, 'api.sh');
+      return new Promise(resolve => {
+        execFile(apiSh, ['--help'], { timeout: 8000 }, (err, stdout, stderr) => {
+          const output = (stdout || '') + (stderr || '');
+          const title  = 'api.sh CLI Reference';
+          logResponse(method, url.pathname, 200, title);
+          const plain = (url.searchParams.get('format') || 'text') === 'text';
+          if (plain) {
+            cors(res);
+            res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+            return resolve(res.end(`\n${title}\n${'─'.repeat(title.length)}\n\n${output}\n`));
+          }
+          resolve(json(res, 200, { topic, title, text: output, live: true, source: './api.sh --help' }));
+        });
+      });
+    }
 
     const entry = HELP[topic] || HELP['index'];
     const plain = method === 'GET' && (url.searchParams.get('format') || 'text') === 'text';
