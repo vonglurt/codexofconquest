@@ -22,6 +22,20 @@ let   TIMEOUT  = 10_000;
 const AI_KEY   = process.env.ANTHROPIC_API_KEY;
 const AI_MODEL = 'claude-haiku-4-5-20251001';
 
+// ── CLI Log — milepoints/api-cli.log ─────────────────────────────────────────
+const path     = require('path');
+const LOG_FILE = path.join(__dirname, '..', 'milepoints', 'api-cli.log');
+const _logStart = new Date().toISOString();
+let   _logCmd  = process.argv.slice(2).join(' ');
+
+function cliLog(entry) {
+  try {
+    const line = JSON.stringify({ ts: new Date().toISOString(), ...entry }) + '\n';
+    fs.appendFileSync(LOG_FILE, line);
+  } catch {}  // never crash the CLI over logging
+}
+cliLog({ event: 'start', cmd: _logCmd });
+
 // ── Arg parser ─────────────────────────────────────────────────────────────────
 function parseArgs(argv) {
   const flags = {}, pos = [];
@@ -107,10 +121,16 @@ async function request(method, urlPath, body = null, extraHeaders = {}) {
         await sleep(d);
       }
       try {
+        const t0 = Date.now();
         const r = await doHTTP(method, url, body, extraHeaders);
+        const ms = Date.now() - t0;
         if (r.status >= 500 && i < RETRIES) { lastErr = r; continue; }
+        cliLog({ event: 'request', method, path: urlPath, status: r.status, ms,
+          body: body ? (typeof body === 'string' ? body.slice(0,200) : JSON.stringify(body).slice(0,200)) : null,
+          response: r.body ? JSON.stringify(r.body).slice(0,500) : null });
         return r;
       } catch (e) {
+        cliLog({ event: 'request_error', method, path: urlPath, error: e.message, attempt: i });
         lastErr = e;
         if (RETRYABLE.has(e.code) && i < RETRIES) continue;
         throw e;
@@ -130,6 +150,7 @@ function printResult(data, flags) {
   const out = flags.raw
     ? (typeof data === 'string' ? data : JSON.stringify(data))
     : (typeof data === 'string' ? data : JSON.stringify(data, null, 2));
+  cliLog({ event: 'result', bytes: out.length, preview: out.slice(0, 200) });
   if (flags.out) {
     fs.writeFileSync(flags.out, out + '\n');
     ok(`→ ${flags.out}`);
@@ -141,6 +162,7 @@ function printResult(data, flags) {
 function printError(r) {
   const col = r.status >= 500 ? C.red : C.yellow;
   const msg = r.body?.error || r.body?.message || r.raw || JSON.stringify(r.body);
+  cliLog({ event: 'error', status: r.status, msg });
   if (TTY) {
     // Terminal: colored human-readable error on stderr
     stderr(`${col}HTTP ${r.status}${C.reset} ${msg}\n`);

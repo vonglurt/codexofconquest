@@ -242,19 +242,22 @@ say "Next: {BOOK} {next_cycle} — {quest title}." &
 
 | Code | Book                          | Missing desc | Missing passText | Missing failText | Status              |
 |------|-------------------------------|-------------|-----------------|-----------------|---------------------|
-| HTY  | Mahabharata                   | ~25         | 0               | 0               | IN PROGRESS 2026-06-04 (HTY-01 done) |
-| CLJ  | Dracula (Stoker)              | ~45         | 0               | 0               | QUEUED              |
-| CRL  | Froissart (Boy's)             | ~40         | 0               | 0               | QUEUED              |
-| LBC  | Nibelungenlied                | ~35         | 0               | 0               | QUEUED              |
-| FRO  | Völsunga Saga                 | ~35         | 0               | 0               | QUEUED              |
-| MSE  | Canterbury Tales              | ~35         | 0               | 0               | QUEUED              |
-| KIR  | Mabinogion                    | ~35         | 0               | 0               | QUEUED              |
-| IST  | The Alexiad (Anna Komnene)    | ~35         | 0               | 0               | QUEUED              |
-| MAN  | Ivanhoe (Scott)               | ~32         | 0               | 0               | QUEUED              |
-| SEN  | Treasure Island (Stevenson)   | ~30         | 0               | 0               | QUEUED              |
-| STN  | Robin Hood                    | ~30         | 0               | 0               | QUEUED              |
-| CPH  | Gesta Danorum (Saxo)          | ~10         | 0               | 0               | QUEUED              |
-| MOL  | Laxdaela Saga                 | ~10         | 0               | 0               | QUEUED              |
+| HTY  | Mahabharata                   | 0           | 0               | 0               | DONE 2026-06-08 — 35 acts (cycles 1–7); all desc/passText/failText complete |
+| CLJ  | Dracula (Stoker)              | 0           | 0               | 0               | DONE 2026-06-08 — 45 acts complete |
+| CRL  | Froissart (Boy's)             | 0           | 0               | 0               | DONE 2026-06-08 — 40 acts complete |
+| LBC  | Nibelungenlied                | 0           | 0               | 0               | DONE 2026-06-08 — 35 acts complete |
+| FRO  | Völsunga Saga                 | 0           | 0               | 0               | DONE 2026-06-08 — 35 acts complete |
+| MSE  | Canterbury Tales              | 0           | 0               | 0               | DONE 2026-06-08 — 35 acts complete |
+| KIR  | Mabinogion                    | 0           | 0               | 0               | DONE 2026-06-08 — 35 acts complete |
+| IST  | The Alexiad (Anna Komnene)    | 0           | 0               | 0               | DONE 2026-06-08 — 35 acts complete |
+| MAN  | Ivanhoe (Scott)               | 0           | 0               | 0               | DONE 2026-06-08 — 32 acts complete |
+| SEN  | Treasure Island (Stevenson)   | 0           | 0               | 0               | DONE 2026-06-08 — 30 acts complete |
+| STN  | Robin Hood                    | 0           | 0               | 0               | DONE 2026-06-08 — 30 acts complete |
+| CPH  | Gesta Danorum (Saxo)          | 0           | 0               | 0               | DONE 2026-06-08 — 10 acts complete |
+| MOL  | Laxdaela Saga                 | 0           | 0               | 0               | DONE 2026-06-08 — 10 acts complete |
+| ATH  | Iliad (Homer)                 | 0           | 0               | 0               | DONE 2026-06-08 — 60 acts, 12 cycles; IDC/SKN/TRH nodes used; WM hub |
+| ZTH  | Odyssey (Homer)               | 0           | 0               | 0               | DONE 2026-06-08 — 55 acts, 11 cycles; SIT/PRT/MSN nodes created; ITH/PHC/WM hub |
+| FLR  | Divine Comedy Inferno (Dante) | 0           | 0               | 0               | DONE 2026-06-08 — 55 acts, 11 cycles; MBR/HMN nodes created; PSA/PAR/VEN/ROM/WM hub |
 | LHR  | Beowulf (Gummere)             | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text |
 | LCY  | The White Company (Doyle)     | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text |
 | LGW  | Le Morte d'Arthur (Malory)    | 0           | 0               | 0               | DONE 2026-06-05 — 35 acts imported with full text |
