@@ -2796,10 +2796,12 @@ async function route(req, res) {
       if (!WBAPI.npcDialogues[npcKey])
         warnings.push({ section:'BIRKA_NPC', key:npcKey, field:'NPC_DIALOGUES', msg:`"${npc.name||npcKey}" has no NPC_DIALOGUES entry — dialogue card will not render in game` });
     // WARNINGS — NPC with no quests (has no gameplay function)
+    // Birka Six NPCs (yael/brynn/quill/pachelbel/crov/auros) have quests in NPC_DIALOGUE, not QUEST_DB
+    const _birkaSixExempt = new Set(Object.keys(WBAPI.npcDialogues));
     const _npcQuestKeys = new Set();
     for (const q of Object.values(WBAPI.questDb)) if (q.npc) _npcQuestKeys.add(q.npc);
     for (const [key, npc] of Object.entries(WBAPI.birkaNpcs))
-      if (!_npcQuestKeys.has(key) && !_npcQuestKeys.has(npc.name))
+      if (!_npcQuestKeys.has(key) && !_npcQuestKeys.has(npc.name) && !_birkaSixExempt.has(key))
         warnings.push({ section:'BIRKA_NPC', key, field:'quests', msg:`"${npc.name||key}" has no quests — NPC has no gameplay function` });
 
     // WARNINGS — loot table gap
@@ -3016,10 +3018,12 @@ async function route(req, res) {
     for (const [npcKey, npc] of Object.entries(WBAPI.birkaNpcs))
       if (!WBAPI.npcDialogues[npcKey]) neAdd('warning','BIRKA_NPC',npcKey,'NPC_DIALOGUES',`"${npc.name||npcKey}" has no NPC_DIALOGUES entry — dialogue card blank in game`);
     // WARNING — NPC with no quests
+    // Birka Six NPCs have quests defined in NPC_DIALOGUE (not QUEST_DB); exempt them from this check
+    const _birkaSixKeys = new Set(Object.keys(WBAPI.npcDialogues)); // yael/brynn/quill/pachelbel/crov/auros
     const _neNpcQuestKeys = new Set();
     for (const q of Object.values(WBAPI.questDb)) if (q.npc) _neNpcQuestKeys.add(q.npc);
     for (const [key, npc] of Object.entries(WBAPI.birkaNpcs))
-      if (!_neNpcQuestKeys.has(key) && !_neNpcQuestKeys.has(npc.name))
+      if (!_neNpcQuestKeys.has(key) && !_neNpcQuestKeys.has(npc.name) && !_birkaSixKeys.has(key))
         neAdd('warning','BIRKA_NPC',key,'quests',`"${npc.name||key}" has no quests — NPC has no gameplay function`);
 
     // SUGGESTIONS
