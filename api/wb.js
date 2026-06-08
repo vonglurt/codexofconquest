@@ -483,6 +483,136 @@ ${C.bold}./api.sh${C.reset}  —  Roll2Hit World Builder CLI  ${C.dim}(delegates
   Start the server first:  ${C.dim}./wbapi-toggle.sh start${C.reset}
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
+  PREFERRED TOOL — USE api.sh, NOT curl
+═══════════════════════════════════════════════════════════════════${C.reset}
+
+  ${C.yellow}Always use ./api.sh for day-to-day work. Raw curl is a fallback only.${C.reset}
+
+  api.sh handles automatically:
+    • Nonces (one-time write tokens) — acquired and attached for you
+    • Retry with exponential backoff on 5xx or connection errors
+    • Pipe-safe JSON — errors land on stdout so | jq and | python3 work
+    • Queued requests — serialised to avoid race conditions on writes
+    • Auto-reload notification — the server watches roll2hit-v3.html;
+      you do not need POST /api/reload after an external edit
+
+  When raw curl is still useful:
+    • Graph/coords endpoints (fill-gap, corner-junction, layout/solve)
+      — not wrapped by api.sh yet
+    • Scripting DELETE with a nonce captured from ./api.sh nonce
+    • One-off POST /api/save at session end
+
+${C.bold}═══════════════════════════════════════════════════════════════════
+  THE COMMON CYCLE — search → inspect → edit
+═══════════════════════════════════════════════════════════════════${C.reset}
+
+  The workflow for every entity type follows the same three steps.
+  Never guess an ID — search first, then fetch full details, then edit.
+
+  ── quests ───────────────────────────────────────────────────────
+
+  # 1. Find the quest by keyword
+  ./api.sh list quest --q "wolsey"
+  ./api.sh list quest --arc shk --q "inventory"
+  ./api.sh list quest --node BK --type skill_check
+
+  # 2. Fetch all fields for the exact quest
+  ./api.sh get quest shk6_act1
+  # → see desc, passText, failText, npc, activateNode, checkDC, etc.
+
+  # 3. Patch the specific field(s) you need
+  ./api.sh put quest shk6_act1 desc="Egil Thorvaldsen, a Birka wool factor..."
+  ./api.sh put quest shk6_act1 npc=egil_thorvaldsen checkDC=14
+  # Multi-field — pipe JSON:
+  echo '{"desc":"...","passText":"...","failText":"..."}' | ./api.sh put quest shk6_act1
+
+  ── nodes ────────────────────────────────────────────────────────
+
+  # 1. Find the node
+  ./api.sh list node --q "nuremberg"
+  ./api.sh list node --terrain scholars_qtr
+  ./api.sh list node --act 2 --q "birka"
+
+  # 2. Get composite view — node + quests + NPCs + monsters
+  ./api.sh location NUE
+  ./api.sh get node NUE
+  # → label, terrain, coords, N/E/S/W links, quest list, NPC list
+
+  # 3. Edit
+  ./api.sh put node NUE label="Nuremberg Scholar Quarter"
+  ./api.sh put node NUE N=BMA S=KRN
+
+  ── NPCs ─────────────────────────────────────────────────────────
+
+  # 1. Find the NPC
+  ./api.sh list npc --q "egil"
+  ./api.sh list npc --node BK
+  ./api.sh list npc --occupation "clerk"
+
+  # 2. Fetch full details (quests linked, node, occupation)
+  ./api.sh get npc egil_thorvaldsen
+
+  # 3. Edit
+  ./api.sh put npc egil_thorvaldsen occupation="wool factor and Hanseatic broker"
+  # Link a quest to this NPC:
+  ./api.sh put quest shk6_act1 npc=egil_thorvaldsen
+
+  ── monsters ─────────────────────────────────────────────────────
+
+  # 1. Find the monster
+  ./api.sh list monster --terrain crypt
+  ./api.sh list monster --q "shadow" --tier easy
+
+  # 2. Inspect stat block
+  ./api.sh get monster shadow
+
+  # 3. Tune a field
+  ./api.sh put monster shadow hp=22 ac=13
+  ./api.sh put monster shadow tier=medium
+
+  ── terrain ──────────────────────────────────────────────────────
+
+  # 1. Find terrain key (needed when creating nodes)
+  ./api.sh list terrain --q "scholar"
+  ./api.sh list terrain --ids
+
+  # 2. Inspect which monsters are in it
+  ./api.sh get terrain scholars_qtr
+  ./api.sh list monster --terrain scholars_qtr
+
+  # 3. Update label or icon
+  ./api.sh put terrain scholars_qtr label="Scholar's Quarter"
+
+  ── create → verify → commit cycle ──────────────────────────────
+
+  # Create an NPC
+  ./api.sh post npc key=marta_vby name="Marta" node=VBY occupation="Flemish intake clerk"
+
+  # Confirm it landed
+  ./api.sh get npc marta_vby
+
+  # Link a quest to it
+  ./api.sh list quest --arc shk --q "visby"    # find the quest ID
+  ./api.sh put quest shk6_act2 npc=marta_vby   # link it
+
+  # Audit — confirm zero errors/warnings
+  ./api.sh audit --raw | jq '{errors:.errors|length, warnings:.warnings|length}'
+
+  ── bulk search with jq ──────────────────────────────────────────
+
+  # All quests missing desc
+  ./api.sh export quest_db --raw | jq '[to_entries[] | select(.value.desc=="" or .value.desc==null) | .key]'
+
+  # All quests for a specific NPC
+  ./api.sh list quest --npc egil_thorvaldsen
+
+  # All nodes in act 2 with no quests
+  ./api.sh list node --act 2 --has-quests false
+
+  # NPC keys at a specific node
+  ./api.sh list npc --node NUE --ids
+
+${C.bold}═══════════════════════════════════════════════════════════════════
   COMMAND INDEX
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
