@@ -265,6 +265,9 @@ echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 ./api.sh fix-all-broken --execute --limit 50  # apply batch
 ./api.sh fix-bidirectional            # preview one-way link violations
 ./api.sh fix-bidirectional --execute  # fix all one-way links (A→B but B doesn't point back)
+./api.sh reweave                      # dry-run: full repair sequence (rip → fix-broken → fix-bidir)
+./api.sh reweave --execute            # mega-loop: all phases server-side, safe loop limits
+./api.sh reweave --execute --max-rip 3 --max-fix 3
 ```
 
 > **Requesting new features**: if a map or graph operation is not listed above,
@@ -354,6 +357,7 @@ If you find yourself reaching for curl to hit one of these, request an api.sh wr
 | `GET /api/audit` | `./api.sh audit` |
 | `GET /api/audit/map` | `./api.sh audit --map` |
 | `POST /api/audit/map/fix` | `./api.sh fix-bidirectional --execute` |
+| `POST /api/graph/reweave-all` | `./api.sh reweave --execute` |
 
 ---
 

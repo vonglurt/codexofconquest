@@ -4994,7 +4994,7 @@ async function route(req, res) {
       return json(res, 200, { ok:true, dryRun, ...results });
     }
 
-    // ── POST /api/graph/repair-all — mega-loop: rip → fix-broken → fix-bidir ──
+    // ── POST /api/graph/reweave-all — mega-loop: rip → fix-broken → fix-bidir ──
     // Runs the full network repair sequence in one server-side call.
     // Body: { execute?, maxRip?, maxFix?, limit?, meshRadius? }
     //   execute    — false = dry-run, reports only (default false)
@@ -5007,12 +5007,12 @@ async function route(req, res) {
     //   Phase 2 stops: broken = 0 OR broken count did not decrease for 2 passes OR hit maxFix
     //   Phase 3: always runs once
     // Returns: { ok, execute, phases:{rip,fixBroken,fixBidir}, final, verbose[] }
-    if (parts[1] === 'repair-all' && method === 'POST') {
+    if (parts[1] === 'reweave-all' && method === 'POST') {
       let body; try { body = await readBody(req); } catch(e) { body = {}; }
       const { execute=false, maxRip=5, maxFix=5, limit=100, meshRadius=6 } = body||{};
 
       const verbose = [];
-      const vlog = (msg, data) => { verbose.push(data ? `${msg} ${JSON.stringify(data)}` : msg); logRow('repair-all', msg); };
+      const vlog = (msg, data) => { verbose.push(data ? `${msg} ${JSON.stringify(data)}` : msg); logRow('reweave-all', msg); };
 
       // helper: batch-save + reload (no HTTP response yet)
       const batchSave = (label) => {
@@ -5294,11 +5294,11 @@ async function route(req, res) {
         bidirFixed:bidirFixed.length,
         bidirErrors:bidirErrors.length,
       };
-      logResponse('POST',url.pathname,200,`repair-all done: reach=${finalReach.size}/${finalTotal}(${finalPct}%) broken=${finalBroken} bidir=${bidirFixed.length}`);
+      logResponse('POST',url.pathname,200,`reweave-all done: reach=${finalReach.size}/${finalTotal}(${finalPct}%) broken=${finalBroken} bidir=${bidirFixed.length}`);
       return json(res,200,{ok:true,...summary,phases:{rip:ripPhase,fixBroken:fixPhase,fixBidir:{fixed:bidirFixed,errors:bidirErrors}},verbose});
     }
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/rip-and-connect  POST /api/graph/repair-all' });
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/rip-and-connect  POST /api/graph/reweave-all' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────

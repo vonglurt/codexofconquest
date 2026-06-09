@@ -1002,8 +1002,8 @@ const CMD = {
     }
   },
 
-  // ── repair-network: mega-loop — rip-and-connect → fix-all-broken → fix-bidir ──
-  // Usage: ./api.sh repair-network [--execute] [--max-rip N] [--max-fix N] [--limit N] [--radius N]
+  // ── reweave: mega-loop — rip-and-connect → fix-all-broken → fix-bidir ─────
+  // Usage: ./api.sh reweave [--execute] [--max-rip N] [--max-fix N] [--limit N] [--radius N]
   //   Dry-run:  reports what each phase would do, no writes.
   //   --execute: runs all three phases server-side in one call.
   //   --max-rip   max rip-and-connect passes (default 5)
@@ -1015,19 +1015,21 @@ const CMD = {
   //   Phase 1 stops when totalStrays=0 or maxRip hit.
   //   Phase 2 stops when broken=0, plateau (2 consecutive non-improving passes), or maxFix hit.
   //   Phase 3 always runs once.
-  async 'repair-network'(pos, flags) {
+  async 'reweave'(pos, flags) {
     await requireServer();
+    // reweave scans thousands of nodes — needs longer than the 10s default
+    if (!flags.timeout) TIMEOUT = 120_000;
     const execute   = !!flags.execute;
     const maxRip    = flags['max-rip']  ? +flags['max-rip']  : 5;
     const maxFix    = flags['max-fix']  ? +flags['max-fix']  : 5;
     const limit     = flags.limit       ? +flags.limit       : 100;
     const meshRadius= flags.radius      ? +flags.radius      : 6;
 
-    ok(`repair-network  execute=${execute}  maxRip=${maxRip}  maxFix=${maxFix}  limit=${limit}  radius=${meshRadius}`);
+    ok(`reweave  execute=${execute}  maxRip=${maxRip}  maxFix=${maxFix}  limit=${limit}  radius=${meshRadius}`);
     if (!execute) ok('[DRY RUN] add --execute to apply changes');
 
     const body = { execute, maxRip, maxFix, limit, meshRadius };
-    const r = await request('POST', '/api/graph/repair-all', body);
+    const r = await request('POST', '/api/graph/reweave-all', body);
     if (r.status !== 200) { printError(r); process.exit(1); }
 
     const { phases, final, verbose = [], ...summary } = r.body;
@@ -1065,7 +1067,7 @@ const CMD = {
     } else if (summary.finalPct >= 100) {
       ok(`  Reachability 100% ✓  (${summary.finalBroken} broken edges remain — cosmetic)`);
     } else {
-      ok(`  WARNING: ${summary.unreachable?.length} nodes unreachable — re-run repair-network`);
+      ok(`  WARNING: ${summary.unreachable?.length} nodes unreachable — re-run reweave`);
     }
     ok('');
     ok(`Re-check: ./api.sh broken && ./api.sh reachability`);
@@ -1272,7 +1274,7 @@ ${C.bold}═══════════════════════�
   §19 MAP VISUALIZATION  (worldmap --regions --region --city --search --monster --route)
   §20 COORDINATE MANAGEMENT  (geo-seed  move  find-open-location)
   §21 NETWORK WIRING  (smart-connect  highway  junction  fill-gap  connect)
-  §22 NETWORK HEALTH & REPAIR  (broken  reachability  fix-diagonal  fix-all-broken  fix-bidirectional  rip-and-connect  repair-network)
+  §22 NETWORK HEALTH & REPAIR  (broken  reachability  fix-diagonal  fix-all-broken  fix-bidirectional  rip-and-connect  reweave)
   §23 COMMON RECIPES
   §24 SERVER LIFECYCLE
 
@@ -2383,10 +2385,10 @@ ${C.bold}═══════════════════════�
     ./api.sh fix-bidirectional --execute
 
   Mega-loop repair (all phases server-side, safe loop limits):
-    ./api.sh repair-network
-    ./api.sh repair-network --execute
-    ./api.sh repair-network --execute --max-rip 3 --max-fix 3
-    ./api.sh repair-network --execute --max-rip 5 --max-fix 5 --limit 100
+    ./api.sh reweave
+    ./api.sh reweave --execute
+    ./api.sh reweave --execute --max-rip 3 --max-fix 3
+    ./api.sh reweave --execute --max-rip 5 --max-fix 5 --limit 100
 
   Relocate all stray/unreachable nodes near their quest city:
     ./api.sh rip-and-connect
@@ -2513,7 +2515,7 @@ const SYNOPSIS = [
   `  ${C.green}fix-diagonal${C.reset} <CODE> <dir>          fix one diagonal edge  [--execute]`,
   `  ${C.green}fix-all-broken${C.reset} [--execute] [--limit N]  batch-fix all broken edges`,
   `  ${C.green}fix-bidirectional${C.reset} [--execute]         fix all one-way links (A→B but B doesn't point back)`,
-  `  ${C.green}repair-network${C.reset} [--execute] [--max-rip 5] [--max-fix 5]  mega-loop: rip → fix-broken → fix-bidir (server-side, safe limits)`,
+  `  ${C.green}reweave${C.reset} [--execute] [--max-rip 5] [--max-fix 5]  mega-loop: rip → fix-broken → fix-bidir (server-side, safe limits)`,
   ``,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,
