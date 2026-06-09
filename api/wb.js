@@ -787,6 +787,122 @@ const CMD = {
     }
   },
 
+  // ── highway: build a full junction chain between two cities ─────────────────
+  // Usage: ./api.sh highway <from> <to> [--step 4] [--dry-run] [--terrain junction]
+  //
+  // Builds a walkable highway of junctions from <from> to <to>.
+  // Strategy:
+  //   1. Fetch coordinates of both cities
+  //   2. Walk East/West first to align columns, then North/South to align rows
+  //      (or vice versa, whichever is shorter first leg)
+  //   3. At the corner turn, insert an elbow junction
+  //   4. Fill each straight segment with junctions spaced --step apart
+  //   5. Wire <from>.dir = first junction, last junction.dir = <to>
+  //
+  // Signpost text is generated for each junction indicating the road name.
+  async highway(pos, flags) {
+    const [, fromCode, toCode] = pos;
+    if (!fromCode || !toCode) die('Usage: ./api.sh highway <from> <to> [--step N] [--dry-run] [--terrain type]');
+    const step     = flags.step    ? +flags.step : 4;
+    const terrain  = flags.terrain || 'junction';
+    const dryRun   = flags['dry-run'] !== undefined ? true : !flags.execute;
+    const OPP = { N:'S', S:'N', E:'W', W:'E' };
+
+    // Fetch current state
+    const [nmResp, coordResp] = await Promise.all([
+      request('GET', '/api/export/node_map?format=json'),
+      request('GET', '/api/coords'),
+    ]);
+    if (nmResp.status !== 200) { printError(nmResp); process.exit(1); }
+    const nm     = nmResp.body.data   || {};
+    const coords = coordResp.body.coords || {};
+
+    const fromNode = nm[fromCode]; if (!fromNode) die(`Node "${fromCode}" not found`);
+    const toNode   = nm[toCode];   if (!toNode)   die(`Node "${toCode}" not found`);
+    const ca = coords[fromCode]; if (!ca) die(`"${fromCode}" has no coordinates — run geo-seed first`);
+    const cb = coords[toCode];   if (!cb) die(`"${toCode}" has no coordinates — run geo-seed first`);
+
+    const fromLabel = (fromNode.label || fromCode).split(/[—–]/)[0].trim().slice(0, 20);
+    const toLabel   = (toNode.label   || toCode).split(/[—–]/)[0].trim().slice(0, 20);
+    const roadName  = `The ${fromLabel}–${toLabel} Road`;
+
+    const dr = cb.r - ca.r;  // positive = toCode is south of fromCode
+    const dc = cb.c - ca.c;  // positive = toCode is east  of fromCode
+
+    ok(`Highway: ${fromCode}(${ca.r},${ca.c}) → ${toCode}(${cb.r},${cb.c})  Δr=${dr} Δc=${dc}`);
+    ok(`Road: "${roadName}"  step=${step}  terrain=${terrain}`);
+    if (dryRun) ok(`[DRY RUN] — add --execute to create junctions`);
+
+    // Plan the route: leg1 (horizontal or vertical), elbow, leg2
+    // Choose: go horizontal first if |dc| > |dr|, else vertical first
+    const goHorizFirst = Math.abs(dc) >= Math.abs(dr);
+    const leg1Dir = goHorizFirst ? (dc >= 0 ? 'E' : 'W') : (dr >= 0 ? 'S' : 'N');
+    const leg2Dir = goHorizFirst ? (dr >= 0 ? 'S' : 'N') : (dc >= 0 ? 'E' : 'W');
+    const elbowR  = goHorizFirst ? ca.r : cb.r;   // elbow row
+    const elbowC  = goHorizFirst ? cb.c : ca.c;   // elbow col
+
+    const leg1Steps = goHorizFirst ? Math.abs(dc) : Math.abs(dr);
+    const leg2Steps = goHorizFirst ? Math.abs(dr) : Math.abs(dc);
+
+    ok(`Route: ${leg1Dir} ${leg1Steps} units, elbow at (${elbowR},${elbowC}), ${leg2Dir} ${leg2Steps} units`);
+    ok(`Junctions needed: leg1≈${Math.ceil(leg1Steps/step)-1}  leg2≈${Math.ceil(leg2Steps/step)-1}  + 1 elbow`);
+
+    if (dryRun) return;
+
+    // ── Execute ──────────────────────────────────────────────────────────────
+    // Helper: spawn one junction in a given direction from a source node
+    const spawnNext = async (srcCode, dir, overrideR, overrideC) => {
+      const body = { from: srcCode, dir, dryRun: false, terrain,
+        label: `${roadName} Waypoint`, text: `Signpost says: ${roadName}. Follow this road between ${fromLabel} and ${toLabel}.` };
+      const r = await request('POST', '/api/graph/spawn-junction', body);
+      if (r.status >= 400) {
+        ok(`  WARN: ${r.body?.error || 'spawn failed'} — skipping`);
+        return null;
+      }
+      ok(`  ✓ ${r.body.code} at (${r.body.r},${r.body.c})`);
+      return r.body.code;
+    };
+
+    // Fill leg 1: from → toward elbow, step by step
+    ok(`\nLeg 1: ${fromCode} → elbow (${elbowR},${elbowC}) going ${leg1Dir}`);
+    let prevCode = fromCode;
+    let stepsLeft = leg1Steps;
+    while (stepsLeft > step) {
+      const next = await spawnNext(prevCode, leg1Dir);
+      if (!next) break;
+      prevCode = next;
+      stepsLeft -= step;
+    }
+    // Last junction of leg 1 (the elbow itself)
+    const elbowCode = await spawnNext(prevCode, leg1Dir);
+    if (elbowCode) {
+      // Move elbow to exact corner position
+      const mv = await request('POST', '/api/graph/move', { code: elbowCode, r: elbowR, c: elbowC });
+      if (mv.status < 400) ok(`  Elbow moved to (${elbowR},${elbowC})`);
+
+      // Fill leg 2: elbow → toCode
+      ok(`\nLeg 2: elbow → ${toCode} going ${leg2Dir}`);
+      prevCode = elbowCode;
+      stepsLeft = leg2Steps;
+      while (stepsLeft > step) {
+        const next = await spawnNext(prevCode, leg2Dir);
+        if (!next) break;
+        prevCode = next;
+        stepsLeft -= step;
+      }
+      // Wire last junction to destination
+      const r1 = await request('PUT', `/api/node/${prevCode}`, { [leg2Dir]: toCode });
+      const r2 = await request('PUT', `/api/node/${toCode}`,   { [OPP[leg2Dir]]: prevCode });
+      if (r1.status < 400 && r2.status < 400) {
+        ok(`  ✓ Wired: ${prevCode}.${leg2Dir} = ${toCode}`);
+      }
+    }
+
+    ok(`\nHighway complete. Verify:`);
+    ok(`  ./api.sh worldmap --route ${fromCode} --to ${toCode}`);
+    ok(`  ./api.sh worldmap --city ${fromCode}`);
+  },
+
   help() { process.stdout.write(HELP + '\n'); },
 };
 
@@ -1890,6 +2006,7 @@ const SYNOPSIS = [
   `  ${C.green}fill-gap${C.reset} <from> <dir> <to>        insert junction chain for gap > 4  [--step N] [--execute]`,
   `  ${C.green}fix-diagonal${C.reset} <CODE> <dir>         auto-fix one diagonal edge (move or elbow)  [--execute]`,
   `  ${C.green}fix-all-broken${C.reset} [--execute] [--limit N]  batch-fix all 196 broken edges`,
+  `  ${C.green}highway${C.reset} <from> <to> [--step 4] [--terrain junction] [--execute]  full junction chain`,
   `  ${C.green}location${C.reset} [code]                    composite node view (no code = list all)`,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,
