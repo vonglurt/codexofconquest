@@ -64,7 +64,7 @@ const VERBOSE   = process.env.WBAPI_VERBOSE === '1' || process.env.WBAPI_VERBOSE
 // TRACE: ultra-verbose — every algorithm decision, list traversal, insertion step.
 // Enable with: WBAPI_TRACE=1 node wbapi-server.js
 // All trace output goes to the log file AND terminal when enabled.
-const TRACE     = process.env.WBAPI_TRACE === '1' || VERBOSE;
+const TRACE     = process.env.WBAPI_TRACE === '1'; // independent of VERBOSE; opt-in only
 const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(__dirname, 'roll2hit-v3.html');
