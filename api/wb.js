@@ -2305,9 +2305,32 @@ ${C.bold}═══════════════════════�
   ./wbapi-toggle.sh status    Show PID and port
   ./wbapi-toggle.sh fg        Run in foreground with full log scroll
 
-  Verbose logging:
-    WBAPI_VERBOSE=1 node wbapi-server.js    Full request+response bodies
-    WBAPI_TRACE=1 node wbapi-server.js      Algorithm decisions, insertions, traversals
+  ── Logging modes ────────────────────────────────────────────────
+
+  Normal (default):
+    ./wbapi-toggle.sh start
+    → Request method/URL, response status, timing. No bodies.
+
+  Verbose — full request + response bodies:
+    WBAPI_VERBOSE=1 node wbapi-server.js
+    WBAPI_VERBOSE=1 ./wbapi-toggle.sh fg
+    → Every body printed to terminal AND log file.
+
+  Trace — ultra-verbose algorithm decisions:
+    WBAPI_TRACE=1 node wbapi-server.js
+    WBAPI_TRACE=1 ./wbapi-toggle.sh fg
+    → Logs every decision: auto-junction trigger, rip-and-connect stray
+      scoring + placement, smart-connect candidate selection, fill-gap
+      junction chain steps, PUT field processing, node creation details.
+    → Completely independent of VERBOSE. Off by default.
+
+  Both at once:
+    WBAPI_VERBOSE=1 WBAPI_TRACE=1 node wbapi-server.js
+
+  Live log tail (all modes write here):
+    tail -f milepoints/wbapi-server.log
+    tail -f milepoints/wbapi-server.log | grep TRACE
+    tail -f milepoints/wbapi-server.log | grep "auto-junction\|rip-stray\|smart-connect"
 
   Log file: milepoints/wbapi-server.log
   Port:     1367  (the canonical game year, 1367 AD)
