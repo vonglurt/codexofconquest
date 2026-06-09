@@ -1,0 +1,3062 @@
+{
+  "book": "ADA",
+  "nodes": [],
+  "cycles": [
+    {
+      "num": 2,
+      "acts": [
+        {
+          "id": "ada02_act1",
+          "title": "Sita Into the Earth \u2014 The Letter That Isn't for the ",
+          "activateNode": "BAG",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada02a1",
+          "desc": "Ahmad ibn Tawfiq's study, Baghdad. Ahmad tests whether you understand the letter is necessary but not sufficient \u2014 that the choice to hold remains Maryam's alone. Insight DC 12.",
+          "passText": "'Then you understand why I'm sending a person instead of a courier.'",
+          "failText": "He hands you the letter with minimal context: 'Don't let it be opened.'"
+        },
+        {
+          "id": "ada02_act2",
+          "title": "Sita Into the Earth \u2014 The River Road Checkpoint",
+          "activateNode": "BAS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada02a2",
+          "desc": "Tigris river road checkpoint, south of Baghdad. Officer has a list of persons under judicial review. Asks who the letter is addressed to. Deception DC 12: provide a false addressee description.",
+          "passText": "He stamps it 'private correspondence \u2014 personal contents' and waves you through.",
+          "failText": "Three-day hold. Returned with wax showing signs of examination."
+        },
+        {
+          "id": "ada02_act3",
+          "title": "Sita Into the Earth \u2014 What She Does With It",
+          "activateNode": "BAS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 13,
+          "checkPassFlag": "ada02a3",
+          "desc": "Maryam al-Basri's study, Basra. Maryam reads the letter, adds a release note, hands both to Fighter. A court official arrives and asks what was handed over. Persuasion DC 13: establish the transaction is complete and not subject to judicial review.",
+          "passText": "Official notes it and leaves. Fighter exits with both documents.",
+          "failText": "Official logs 'unknown courier, possible correspondence from Ahmad ibn Tawfiq.' Fighter exits before full inspection."
+        },
+        {
+          "id": "ada02_act4",
+          "title": "Sita Into the Earth \u2014 The Return Road",
+          "activateNode": "BAS",
+          "type": "skill_check",
+          "checkStat": "STR",
+          "checkDC": 13,
+          "checkPassFlag": "ada02a4",
+          "desc": "River road north from Basra. Two of the judge's agents on horseback. Warrant to confiscate 'correspondence from Ahmad ibn Tawfiq.'",
+          "passText": "Both documents intact. Warrant recovered.",
+          "failText": "Combat loss \u2014 documents at risk."
+        },
+        {
+          "id": "ada02_act5",
+          "title": "Sita Into the Earth \u2014 The First Distinction",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada02a5",
+          "desc": "Weimar archive intake desk. Sweelinck creates a new category. History DC 11: understand the distinction between justice and vindication as he describes it.",
+          "passText": "'The earth was her choice of court. Let that be the filing note.'",
+          "failText": "He files both documents. You leave without the category name."
+        }
+      ]
+    },
+    {
+      "num": 3,
+      "acts": [
+        {
+          "id": "ada03_act1",
+          "title": "The Bow No God Could String \u2014 What the Engineer Wants",
+          "activateNode": "ERZ",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada03a1",
+          "desc": "Grigor Bagratouni's workshop, Erzincan. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada03_act2",
+          "title": "The Bow No God Could String \u2014 The Zigana Pass",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada03a2",
+          "desc": "Zigana pass, Pontine Alps. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada03_act3",
+          "title": "The Bow No God Could String \u2014 The Factor's Examination",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada03a3",
+          "desc": "Harbor caravanserai, Trebizond. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada03_act4",
+          "title": "The Bow No God Could String \u2014 The Librarian's Request",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada03a4",
+          "desc": "Scholar quarter, Trebizond. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada03_act5",
+          "title": "The Bow No God Could String \u2014 Three Witnesses",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada03a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 4,
+      "acts": [
+        {
+          "id": "ada04_act1",
+          "title": "Kaikeyi's Ledger \u2014 The Jurist's Timing",
+          "activateNode": "BAG",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada04a1",
+          "desc": "Abd al-Karim's study, Baghdad. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada04_act2",
+          "title": "Kaikeyi's Ledger \u2014 The Tigris Checkpoint",
+          "activateNode": "MOS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada04a2",
+          "desc": "Tigris checkpoint, north of Baghdad. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada04_act3",
+          "title": "Kaikeyi's Ledger \u2014 The Advocate's Approach",
+          "activateNode": "MOS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 13,
+          "checkPassFlag": "ada04a3",
+          "desc": "Qadi's court district, Mosul. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada04_act4",
+          "title": "Kaikeyi's Ledger \u2014 The Second Commission",
+          "activateNode": "MOS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada04a4",
+          "desc": "Court district, Mosul. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada04_act5",
+          "title": "Kaikeyi's Ledger \u2014 The Instrument's Category",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada04a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 5,
+      "acts": [
+        {
+          "id": "ada05_act1",
+          "title": "The Sandals on the Throne \u2014 The Scribe's Decision",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada05a1",
+          "desc": "Habib ibn Yusuf's study, Tabriz. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada05_act2",
+          "title": "The Sandals on the Throne \u2014 The Excise Post",
+          "activateNode": "MRG",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada05a2",
+          "desc": "Jalayirid excise post, Tabriz\u2013Maragha road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada05_act3",
+          "title": "The Sandals on the Throne \u2014 The Astronomer's Observation",
+          "activateNode": "MRG",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada05a3",
+          "desc": "Observatory inn, Maragha. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada05_act4",
+          "title": "The Sandals on the Throne \u2014 The Dealer's Inquiry",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada05a4",
+          "desc": "Road west of Maragha. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada05_act5",
+          "title": "The Sandals on the Throne \u2014 Speech to Someone Who Could No",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada05a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 6,
+      "acts": [
+        {
+          "id": "ada06_act1",
+          "title": "Hanuman's Report \u2014 The Scholar's Cover",
+          "activateNode": "ALP",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada06a1",
+          "desc": "Merchants' guild conference hall, Aleppo. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada06_act2",
+          "title": "Hanuman's Report \u2014 The Road South",
+          "activateNode": "DAM",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada06a2",
+          "desc": "Homs checkpoint, Aleppo\u2013Damascus road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada06_act3",
+          "title": "Hanuman's Report \u2014 The Wrong Recipient",
+          "activateNode": "DAM",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 13,
+          "checkPassFlag": "ada06a3",
+          "desc": "Khalid al-Yafi'i's study, Damascus madrasa. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada06_act4",
+          "title": "Hanuman's Report \u2014 The Release",
+          "activateNode": "DAM",
+          "type": "skill_check",
+          "checkStat": "STR",
+          "checkDC": 13,
+          "checkPassFlag": "ada06a4",
+          "desc": "Damascus madrasa gate. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada06_act5",
+          "title": "Hanuman's Report \u2014 Lanka's Geometry",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada06a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 7,
+      "acts": [
+        {
+          "id": "ada07_act1",
+          "title": "The Fire Was Not the Proof \u2014 The Theologian's Caution",
+          "activateNode": "NIS",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada07a1",
+          "desc": "Umar al-Nishapuri's study, Nishapur. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada07_act2",
+          "title": "The Fire Was Not the Proof \u2014 The Khorasan Road",
+          "activateNode": "MRV",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada07a2",
+          "desc": "Muzaffarid checkpoint, Khorasan road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada07_act3",
+          "title": "The Fire Was Not the Proof \u2014 The Colleague's Response",
+          "activateNode": "MRV",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada07a3",
+          "desc": "Mahmud al-Marvazi's study, Merv. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada07_act4",
+          "title": "The Fire Was Not the Proof \u2014 The Interested Party",
+          "activateNode": "MRV",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 13,
+          "checkPassFlag": "ada07a4",
+          "desc": "Merv gate, Muzaffarid court official. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada07_act5",
+          "title": "The Fire Was Not the Proof \u2014 The Precedent's Category",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada07a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 8,
+      "acts": [
+        {
+          "id": "ada08_act1",
+          "title": "Ahaly\u00e1's Statement \u2014 The Argument's Form",
+          "activateNode": "BUR",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada08a1",
+          "desc": "Fatima al-Bursawi's study, Bursa. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada08_act2",
+          "title": "Ahaly\u00e1's Statement \u2014 The Bosphorus Checkpoint",
+          "activateNode": "CON",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada08a2",
+          "desc": "Ottoman checkpoint near Bosphorus crossing. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada08_act3",
+          "title": "Ahaly\u00e1's Statement \u2014 The School Near Blachernae",
+          "activateNode": "CON",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada08a3",
+          "desc": "Blachernae school, Constantinople. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada08_act4",
+          "title": "Ahaly\u00e1's Statement \u2014 The Seminar Audience",
+          "activateNode": "CON",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada08a4",
+          "desc": "Constantinople scholar quarter. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada08_act5",
+          "title": "Ahaly\u00e1's Statement \u2014 The Third Category",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada08a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 9,
+      "acts": [
+        {
+          "id": "ada09_act1",
+          "title": "Trishanku's Commission \u2014 The Patron's Deadline",
+          "activateNode": "CAF",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada09a1",
+          "desc": "Grigor Ardzruni's observatory, Caffa. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada09_act2",
+          "title": "Trishanku's Commission \u2014 The Steppe Road",
+          "activateNode": "TAN",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada09a2",
+          "desc": "Crimean steppe, near Don crossing. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada09_act3",
+          "title": "Trishanku's Commission \u2014 The Mapmaker's Question",
+          "activateNode": "TAN",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada09a3",
+          "desc": "Rafaello di Pesaro's workshop, Tana. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada09_act4",
+          "title": "Trishanku's Commission \u2014 The Patron's Factor",
+          "activateNode": "TAN",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 13,
+          "checkPassFlag": "ada09a4",
+          "desc": "Workshop, patron's factor arrives. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada09_act5",
+          "title": "Trishanku's Commission \u2014 The Region That Did Not Exist",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada09a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 10,
+      "acts": [
+        {
+          "id": "ada10_act1",
+          "title": "The Price of a Son \u2014 The Case Before the Hearing",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada10a1",
+          "desc": "Argyropoulos's study, Trebizond. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada10_act2",
+          "title": "The Price of a Son \u2014 The Pass in Rain",
+          "activateNode": "ERZ",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada10a2",
+          "desc": "Zigana pass, eastbound in rain. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada10_act3",
+          "title": "The Price of a Son \u2014 The Receiving Scholar",
+          "activateNode": "ERZ",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada10a3",
+          "desc": "Vardan Grigoryan's office, Erzincan. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada10_act4",
+          "title": "The Price of a Son \u2014 The Case Party's Agent",
+          "activateNode": "ERZ",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada10a4",
+          "desc": "Erzincan, outside Vardan's office. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada10_act5",
+          "title": "The Price of a Son \u2014 The Four Categories",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada10a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 11,
+      "acts": [
+        {
+          "id": "ada11_act1",
+          "title": "The Brahmin's Credentials \u2014 The Copy's Provenance",
+          "activateNode": "SAM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada11a1",
+          "desc": "Timur al-Samarqandi's stall, Samarkand bazaar. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada11_act2",
+          "title": "The Brahmin's Credentials \u2014 The Road to Bukhara",
+          "activateNode": "BUK",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada11a2",
+          "desc": "Zerafshan valley customs post. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada11_act3",
+          "title": "The Brahmin's Credentials \u2014 Thirty Years",
+          "activateNode": "BUK",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada11a3",
+          "desc": "Mir-i Arab madrasa, Bukhara. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada11_act4",
+          "title": "The Brahmin's Credentials \u2014 The Other Claimant",
+          "activateNode": "BUK",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 13,
+          "checkPassFlag": "ada11a4",
+          "desc": "Madrasa gate, Bukhara. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada11_act5",
+          "title": "The Brahmin's Credentials \u2014 A Thousand Years of Penance",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada11a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 12,
+      "acts": [
+        {
+          "id": "ada12_act1",
+          "title": "The Coats of Bark \u2014 The Commission at Tana",
+          "activateNode": "TAN",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada12a1",
+          "desc": "Yusuf al-Tanawi's translation workshop, Tana. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada12_act2",
+          "title": "The Coats of Bark \u2014 The Steppe Checkpoint",
+          "activateNode": "SAR",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada12a2",
+          "desc": "Volga floodplain checkpoint. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada12_act3",
+          "title": "The Coats of Bark \u2014 Bharat at the Winter Court",
+          "activateNode": "SAR",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada12a3",
+          "desc": "Khan's winter court hall, Saray. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada12_act4",
+          "title": "The Coats of Bark \u2014 The Faction's Response",
+          "activateNode": "SAR",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 13,
+          "checkPassFlag": "ada12a4",
+          "desc": "Court hall, Saray. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada12_act5",
+          "title": "The Coats of Bark \u2014 What the Ceremony Proved",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada12a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 13,
+      "acts": [
+        {
+          "id": "ada13_act1",
+          "title": "The False Track \u2014 The Collector's Archive",
+          "activateNode": "ALE",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada13a1",
+          "desc": "Ahmad al-Iskandarani's study, Alexandria. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada13_act2",
+          "title": "The False Track \u2014 The Delta Road",
+          "activateNode": "CAI",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada13a2",
+          "desc": "Delta road checkpoint, Nile crossing. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada13_act3",
+          "title": "The False Track \u2014 The Charioteer Chapter",
+          "activateNode": "CAI",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada13a3",
+          "desc": "Rashid al-Qahiri's study, Cairo. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada13_act4",
+          "title": "The False Track \u2014 The Chancery Note",
+          "activateNode": "CAI",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada13a4",
+          "desc": "School near al-Azhar, Cairo. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada13_act5",
+          "title": "The False Track \u2014 The Divided Obligation",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada13a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 14,
+      "acts": [
+        {
+          "id": "ada14_act1",
+          "title": "Sita's Vow on the Ganga \u2014 The Monastery's Curiosity",
+          "activateNode": "ANT",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada14a1",
+          "desc": "Syrian monastery near Antioch, Brother Theodoros's library. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada14_act2",
+          "title": "Sita's Vow on the Ganga \u2014 The Mamluk Coast Road",
+          "activateNode": "BYR",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada14a2",
+          "desc": "Tripoli checkpoint, Mamluk coast road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada14_act3",
+          "title": "Sita's Vow on the Ganga \u2014 The Cross-Tradition Specialist",
+          "activateNode": "BYR",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada14a3",
+          "desc": "Yusuf al-Bayruti's study, Beirut. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada14_act4",
+          "title": "Sita's Vow on the Ganga \u2014 The Merchant's Interest",
+          "activateNode": "BYR",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada14a4",
+          "desc": "Outside Yusuf's study, Beirut. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada14_act5",
+          "title": "Sita's Vow on the Ganga \u2014 The Hope That Arrived",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada14a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 15,
+      "acts": [
+        {
+          "id": "ada15_act1",
+          "title": "The Curse of the Blind Parents \u2014 The Text's Journey",
+          "activateNode": "AMY",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada15a1",
+          "desc": "Bahram al-Amasyawi's study, Amasya. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada15_act2",
+          "title": "The Curse of the Blind Parents \u2014 The Ye\u015fil\u0131rmak Road",
+          "activateNode": "SIV",
+          "type": "skill_check",
+          "checkStat": "STR",
+          "checkDC": 12,
+          "checkPassFlag": "ada15a2",
+          "desc": "Ye\u015fil\u0131rmak valley ford crossing. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada15_act3",
+          "title": "The Curse of the Blind Parents \u2014 The Seminar's Conclusion",
+          "activateNode": "SIV",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada15a3",
+          "desc": "Muhsin al-Sivasi's seminar room, Sivas. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada15_act4",
+          "title": "The Curse of the Blind Parents \u2014 The Will Case's Party",
+          "activateNode": "SIV",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada15a4",
+          "desc": "Outside Muhsin's study, Sivas. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada15_act5",
+          "title": "The Curse of the Blind Parents \u2014 The Curse That Was Also a Prop",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada15a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 16,
+      "acts": [
+        {
+          "id": "ada16_act1",
+          "title": "The Sage's Feast \u2014 The Logistics Chapter",
+          "activateNode": "CON",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada16a1",
+          "desc": "Nikephoros Skleros's study, Constantinople. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada16_act2",
+          "title": "The Sage's Feast \u2014 The Via Egnatia",
+          "activateNode": "THE",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada16a2",
+          "desc": "Adrianople junction checkpoint, Via Egnatia. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada16_act3",
+          "title": "The Sage's Feast \u2014 Demetrios at the Chapter",
+          "activateNode": "THE",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada16a3",
+          "desc": "Demetrios Tarchaneiotes's study, Thessaloniki. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada16_act4",
+          "title": "The Sage's Feast \u2014 The Competing Historian",
+          "activateNode": "THE",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada16a4",
+          "desc": "Thessaloniki, competing historian. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada16_act5",
+          "title": "The Sage's Feast \u2014 The Supply That Stopped the Ar",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada16a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 17,
+      "acts": [
+        {
+          "id": "ada17_act1",
+          "title": "The Crow's Eye \u2014 The Proportionality Problem",
+          "activateNode": "BUR",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada17a1",
+          "desc": "Yusuf al-Bursawi's study, Bursa. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada17_act2",
+          "title": "The Crow's Eye \u2014 The Bithynian Road",
+          "activateNode": "NIC",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada17a2",
+          "desc": "Bithynian plain road, Ottoman checkpoint. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada17_act3",
+          "title": "The Crow's Eye \u2014 The Negotiating Crow",
+          "activateNode": "NIC",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada17a3",
+          "desc": "Georgios Palaiologos's study, Nicaea. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada17_act4",
+          "title": "The Crow's Eye \u2014 The Ottoman Academic Registry",
+          "activateNode": "NIC",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada17a4",
+          "desc": "Nicaea, Ottoman academic registry. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada17_act5",
+          "title": "The Crow's Eye \u2014 The Arrow That Could Not Be Re",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada17a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 18,
+      "acts": [
+        {
+          "id": "ada18_act1",
+          "title": "Javalin's Retraction \u2014 The Page That Was Not Found",
+          "activateNode": "DAM",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada18a1",
+          "desc": "Ibrahim al-Dimashqi's study, Damascus. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada18_act2",
+          "title": "Javalin's Retraction \u2014 The Mamluk Road Checkpoint",
+          "activateNode": "DAM",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada18a2",
+          "desc": "Mamluk checkpoint, Damascus\u2013Jerusalem road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada18_act3",
+          "title": "Javalin's Retraction \u2014 The Rationalist's Recognition",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada18a3",
+          "desc": "Salim al-Qudsawi's study, Jerusalem. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada18_act4",
+          "title": "Javalin's Retraction \u2014 The Theological Objection",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 13,
+          "checkPassFlag": "ada18a4",
+          "desc": "Jerusalem, al-Aqsa school teacher. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada18_act5",
+          "title": "Javalin's Retraction \u2014 The Argument Without the Retra",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada18a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 19,
+      "acts": [
+        {
+          "id": "ada19_act1",
+          "title": "The Saint Who Waited to Die \u2014 The Ash Document",
+          "activateNode": "SUL",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada19a1",
+          "desc": "Farid al-Sultanawi's collection, Sultaniya. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada19_act2",
+          "title": "The Saint Who Waited to Die \u2014 The Jazira Road",
+          "activateNode": "AMD",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada19a2",
+          "desc": "Jalayirid customs post, Azerbaijani highlands. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada19_act3",
+          "title": "The Saint Who Waited to Die \u2014 The Mystic's Question",
+          "activateNode": "AMD",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada19a3",
+          "desc": "Ahmad al-Amidi's study, Amid. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada19_act4",
+          "title": "The Saint Who Waited to Die \u2014 The Second Mystic",
+          "activateNode": "AMD",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada19a4",
+          "desc": "Amid, Ibrahim al-Amidi's challenge. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada19_act5",
+          "title": "The Saint Who Waited to Die \u2014 The Voluntary Expenditure",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada19a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 20,
+      "acts": [
+        {
+          "id": "ada20_act1",
+          "title": "The Sword That Corrupts by Proximity \u2014 The Current Case",
+          "activateNode": "TUN",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada20a1",
+          "desc": "Yusuf al-Tunisi's study, Tunis. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada20_act2",
+          "title": "The Sword That Corrupts by Proximity \u2014 The Hafsid\u2013Marinid Road",
+          "activateNode": "FZN",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada20a2",
+          "desc": "Hafsid\u2013Marinid border, Tlemcen region. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada20_act3",
+          "title": "The Sword That Corrupts by Proximity \u2014 The Ceremonial Sword Argument",
+          "activateNode": "FZN",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada20a3",
+          "desc": "Abdullah al-Fasi's court, Fez. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada20_act4",
+          "title": "The Sword That Corrupts by Proximity \u2014 The Second Court",
+          "activateNode": "FZN",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada20a4",
+          "desc": "Fez, second soldier's objection. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada20_act5",
+          "title": "The Sword That Corrupts by Proximity \u2014 The Corrupting Object",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada20a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 21,
+      "acts": [
+        {
+          "id": "ada21_act1",
+          "title": "The Demon in the Stomach \u2014 The Mechanism",
+          "activateNode": "SIN",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada21a1",
+          "desc": "Chrysoberges study, Sinop harbor district. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada21_act2",
+          "title": "The Demon in the Stomach \u2014 The Document Check",
+          "activateNode": "ANK",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada21a2",
+          "desc": "Ottoman checkpoint, Kastamonu garrison. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada21_act3",
+          "title": "The Demon in the Stomach \u2014 The Parallel Argument",
+          "activateNode": "ANK",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada21a3",
+          "desc": "Mehmed ibn Yusuf's medrese, Ankara. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada21_act4",
+          "title": "The Demon in the Stomach \u2014 The Manuscript Dealer",
+          "activateNode": "ANK",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada21a4",
+          "desc": "Ankara medrese courtyard. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada21_act5",
+          "title": "The Demon in the Stomach \u2014 The Sovereign Interior",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada21a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 22,
+      "acts": [
+        {
+          "id": "ada22_act1",
+          "title": "The Golden Deer \u2014 The Single Observation",
+          "activateNode": "SUL",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada22a1",
+          "desc": "Ali ibn Mahmud's study, Sultaniyya court district. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada22_act2",
+          "title": "The Golden Deer \u2014 The Caravan Road",
+          "activateNode": "HAM",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada22a2",
+          "desc": "Merchant caravan, Persian highland road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada22_act3",
+          "title": "The Golden Deer \u2014 The Epistemologist's Note",
+          "activateNode": "HAM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada22a3",
+          "desc": "Ibrahim al-Hamadani's study, Hamadan. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada22_act4",
+          "title": "The Golden Deer \u2014 The Manuscript Dealer",
+          "activateNode": "HAM",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada22a4",
+          "desc": "Hamadan bazaar approach, manuscript dealer. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada22_act5",
+          "title": "The Golden Deer \u2014 The Valid Observation",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada22a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 23,
+      "acts": [
+        {
+          "id": "ada23_act1",
+          "title": "Surpanakha's Lecture \u2014 The Separated Argument",
+          "activateNode": "CAI",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada23a1",
+          "desc": "Ahmad al-Iskandarani's study, Cairo. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada23_act2",
+          "title": "Surpanakha's Lecture \u2014 The Sensitive Category",
+          "activateNode": "CAI",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada23a2",
+          "desc": "Mamluk road checkpoint, Sinai crossing. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada23_act3",
+          "title": "Surpanakha's Lecture \u2014 The Precedent Citation",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada23a3",
+          "desc": "Yusuf al-Quds's study, Jerusalem. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada23_act4",
+          "title": "Surpanakha's Lecture \u2014 The Footnote Problem",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada23a4",
+          "desc": "Jerusalem chancery official's office. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada23_act5",
+          "title": "Surpanakha's Lecture \u2014 The Analysis Without the Speak",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada23a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 24,
+      "acts": [
+        {
+          "id": "ada24_act1",
+          "title": "Maricha's Confession \u2014 The Third Category",
+          "activateNode": "ERZ",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada24a1",
+          "desc": "Grigor Poghosyan's study, Erzincan. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada24_act2",
+          "title": "Maricha's Confession \u2014 The Highland Road",
+          "activateNode": "TIF",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada24a2",
+          "desc": "Jalayirid checkpoint, Armenian highlands east of Erzurum. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada24_act3",
+          "title": "Maricha's Confession \u2014 The Neoplatonic Frame",
+          "activateNode": "TIF",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada24a3",
+          "desc": "Giorgi Metreveli's study, Tbilisi scholarly quarter. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada24_act4",
+          "title": "Maricha's Confession \u2014 The Copyist",
+          "activateNode": "TIF",
+          "type": "skill_check",
+          "checkStat": "DEX",
+          "checkDC": 12,
+          "checkPassFlag": "ada24a4",
+          "desc": "Tbilisi, Giorgi's study, copyist at work. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada24_act5",
+          "title": "Maricha's Confession \u2014 The Third Category",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada24a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 25,
+      "acts": [
+        {
+          "id": "ada25_act1",
+          "title": "What the River Saw \u2014 The Witness Statement",
+          "activateNode": "THE",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada25a1",
+          "desc": "Tarchaneiotes's study, Thessaloniki. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada25_act2",
+          "title": "What the River Saw \u2014 The Via Egnatia Gate",
+          "activateNode": "ADR",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada25a2",
+          "desc": "Ottoman frontier post, Via Egnatia. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada25_act3",
+          "title": "What the River Saw \u2014 The Ottoman Capital",
+          "activateNode": "ADR",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada25a3",
+          "desc": "Philanthropenos's study, Adrianople. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada25_act4",
+          "title": "What the River Saw \u2014 The Competing Citation",
+          "activateNode": "ADR",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada25a4",
+          "desc": "Adrianople Greek community, monk's study. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada25_act5",
+          "title": "What the River Saw \u2014 The River's Account",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada25a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 26,
+      "acts": [
+        {
+          "id": "ada26_act1",
+          "title": "The Vulture's Funeral \u2014 The Cross-Species Record",
+          "activateNode": "AMY",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada26a1",
+          "desc": "Bahram al-Amasyawi's study, Amasya. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada26_act2",
+          "title": "The Vulture's Funeral \u2014 The Pontic Highland Road",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada26a2",
+          "desc": "Pontic highland road, descending to Trebizond. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada26_act3",
+          "title": "The Vulture's Funeral \u2014 The Natural Philosopher",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada26a3",
+          "desc": "Alexios Philanthropos's study, Trebizond. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada26_act4",
+          "title": "The Vulture's Funeral \u2014 The Komnenian Patron",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada26a4",
+          "desc": "Trebizond court, Komnenian patron visit. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada26_act5",
+          "title": "The Vulture's Funeral \u2014 The Debt Across Species",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada26a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 27,
+      "acts": [
+        {
+          "id": "ada27_act1",
+          "title": "The Cursed Form \u2014 The Moral Status Question",
+          "activateNode": "BAG",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada27a1",
+          "desc": "Umar ibn Khalil's study, Baghdad Sufi quarter. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada27_act2",
+          "title": "The Cursed Form \u2014 The South Gate",
+          "activateNode": "BAS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada27a2",
+          "desc": "Baghdad south gate, judicial monitor. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada27_act3",
+          "title": "The Cursed Form \u2014 The Basra Jurisprudent",
+          "activateNode": "BAS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada27a3",
+          "desc": "Hassan ibn Yusuf's study, Basra. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada27_act4",
+          "title": "The Cursed Form \u2014 The Current Defendant",
+          "activateNode": "BAS",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada27a4",
+          "desc": "Basra, defendant's advocate intervention. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada27_act5",
+          "title": "The Cursed Form \u2014 The Third Status",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada27a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 28,
+      "acts": [
+        {
+          "id": "ada28_act1",
+          "title": "The Envoy's Grammar \u2014 The Register of Diplomatic Spe",
+          "activateNode": "BYR",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada28a1",
+          "desc": "Yusuf al-Bayruti's study, Beirut. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada28_act2",
+          "title": "The Envoy's Grammar \u2014 The Mamluk Coast Road",
+          "activateNode": "ANT",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada28a2",
+          "desc": "Mamluk coast road checkpoint, near Tripoli. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada28_act3",
+          "title": "The Envoy's Grammar \u2014 The Antioch Diplomat",
+          "activateNode": "ANT",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada28a3",
+          "desc": "Ibrahim al-Antaki's study, Antioch. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada28_act4",
+          "title": "The Envoy's Grammar \u2014 The Parallel Example",
+          "activateNode": "ANT",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada28a4",
+          "desc": "Antioch, parallel cases handover. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada28_act5",
+          "title": "The Envoy's Grammar \u2014 The Protocol Violation",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada28a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 29,
+      "acts": [
+        {
+          "id": "ada29_act1",
+          "title": "The Ornaments \u2014 The Custody Problem",
+          "activateNode": "ANT",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada29a1",
+          "desc": "Khalil ibn Suleiman's study, Antioch. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada29_act2",
+          "title": "The Ornaments \u2014 The Mamluk Road",
+          "activateNode": "ALP",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada29a2",
+          "desc": "Mamluk checkpoint, Orontes bridge. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada29_act3",
+          "title": "The Ornaments \u2014 The Comparable Case",
+          "activateNode": "ALP",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada29a3",
+          "desc": "Ahmad ibn Dawud's office, Aleppo legal district. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada29_act4",
+          "title": "The Ornaments \u2014 The Merchant's Representative",
+          "activateNode": "ALP",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada29a4",
+          "desc": "Aleppo, merchant's court representative. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada29_act5",
+          "title": "The Ornaments \u2014 The Placed Objects",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada29a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 30,
+      "acts": [
+        {
+          "id": "ada30_act1",
+          "title": "Tara's Warning \u2014 The Accurate Warning",
+          "activateNode": "CON",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada30a1",
+          "desc": "Nikephoros Angelos's study, Constantinople. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada30_act2",
+          "title": "Tara's Warning \u2014 The Bosphorus Gate",
+          "activateNode": "ADR",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada30a2",
+          "desc": "Ottoman checkpoint, Constantinople western gate. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada30_act3",
+          "title": "Tara's Warning \u2014 The Ottoman Scholar",
+          "activateNode": "ADR",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada30a3",
+          "desc": "Mehmed ibn Ahmad's study, Adrianople. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada30_act4",
+          "title": "Tara's Warning \u2014 The Historical Parallel",
+          "activateNode": "ADR",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada30a4",
+          "desc": "Adrianople, military historian's parallel offer. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada30_act5",
+          "title": "Tara's Warning \u2014 The Decision Not to Hear",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada30a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 31,
+      "acts": [
+        {
+          "id": "ada31_act1",
+          "title": "The Hidden Shot \u2014 The Dying Interrogation",
+          "activateNode": "ALP",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada31a1",
+          "desc": "Masud al-Halabi's study, Aleppo. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada31_act2",
+          "title": "The Hidden Shot \u2014 The Military Caravan",
+          "activateNode": "DAM",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada31a2",
+          "desc": "Mamluk military caravan, road south. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada31_act3",
+          "title": "The Hidden Shot \u2014 The Alliance Law Framework",
+          "activateNode": "DAM",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada31a3",
+          "desc": "Khalid ibn Umar's office, Damascus. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada31_act4",
+          "title": "The Hidden Shot \u2014 The Method Question",
+          "activateNode": "DAM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada31a4",
+          "desc": "Damascus, military academy dissent offer. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada31_act5",
+          "title": "The Hidden Shot \u2014 The Standing Question and the ",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada31a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 32,
+      "acts": [
+        {
+          "id": "ada32_act1",
+          "title": "Sampati's Wings \u2014 The Testimony That Heals",
+          "activateNode": "ERZ",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada32a1",
+          "desc": "Vardan Grigoryan's study, Erzincan. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada32_act2",
+          "title": "Sampati's Wings \u2014 The Mountain Pass",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada32a2",
+          "desc": "Zigana pass checkpoint, eastern approach. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada32_act3",
+          "title": "Sampati's Wings \u2014 The Hagiographic Parallel",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada32a3",
+          "desc": "Father Nikolaos's study, Trebizond monastery. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada32_act4",
+          "title": "Sampati's Wings \u2014 The Trebizond Bishop",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada32a4",
+          "desc": "Trebizond monastery, deacon's verification. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada32_act5",
+          "title": "Sampati's Wings \u2014 The Cost Discharged",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada32a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 33,
+      "acts": [
+        {
+          "id": "ada33_act1",
+          "title": "The Enchanted Cave \u2014 The Structural Impossibility",
+          "activateNode": "AMD",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada33a1",
+          "desc": "Yusuf ibn Ibrahim's study, Amid. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada33_act2",
+          "title": "The Enchanted Cave \u2014 The Tigris Road",
+          "activateNode": "BAS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada33a2",
+          "desc": "Jalayirid customs post, near Mosul. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada33_act3",
+          "title": "The Enchanted Cave \u2014 The Engineer's Framework",
+          "activateNode": "BAS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada33a3",
+          "desc": "Hasan ibn Dawud's engineering office, Basra. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada33_act4",
+          "title": "The Enchanted Cave \u2014 The Competing Analysis",
+          "activateNode": "BAS",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada33a4",
+          "desc": "Basra, natural philosopher's competing framework. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada33_act5",
+          "title": "The Enchanted Cave \u2014 The Impossible Record",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada33a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 34,
+      "acts": [
+        {
+          "id": "ada34_act1",
+          "title": "Trijata's Dream \u2014 The Disinterested Prophet",
+          "activateNode": "CAI",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada34a1",
+          "desc": "Mahmud ibn Rashid's madrasa study, Cairo. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada34_act2",
+          "title": "Trijata's Dream \u2014 The Sinai Road",
+          "activateNode": "CAI",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada34a2",
+          "desc": "Mamluk checkpoint, Sinai road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada34_act3",
+          "title": "Trijata's Dream \u2014 The Prophetic Evidence Standar",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada34a3",
+          "desc": "Baraka ibn Yusuf's study, Jerusalem. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada34_act4",
+          "title": "Trijata's Dream \u2014 The Dreamer's Identity",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada34a4",
+          "desc": "Jerusalem, theologian's source objection. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada34_act5",
+          "title": "Trijata's Dream \u2014 The Credible Enemy",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada34a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 35,
+      "acts": [
+        {
+          "id": "ada35_act1",
+          "title": "Sita Refuses the Rescue \u2014 The Form of the Act",
+          "activateNode": "BYR",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada35a1",
+          "desc": "Mariam bint Khaled's study, Beirut. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada35_act2",
+          "title": "Sita Refuses the Rescue \u2014 The Coastal Checkpoint",
+          "activateNode": "ANT",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada35a2",
+          "desc": "Mamluk coast road checkpoint, near Tripoli. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada35_act3",
+          "title": "Sita Refuses the Rescue \u2014 The Intrinsic Procedure",
+          "activateNode": "ANT",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada35a3",
+          "desc": "Theodoros al-Antaki's study, Antioch. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada35_act4",
+          "title": "Sita Refuses the Rescue \u2014 The War's Justification",
+          "activateNode": "ANT",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada35a4",
+          "desc": "Antioch, second philosopher's pride objection. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada35_act5",
+          "title": "Sita Refuses the Rescue \u2014 The Token That Creates the War",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada35a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 36,
+      "acts": [
+        {
+          "id": "ada36_act1",
+          "title": "Mandodari Mistaken \u2014 The Conquered Archive",
+          "activateNode": "ANT",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada36a1",
+          "desc": "Basilios al-Antaki's study, Antioch. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada36_act2",
+          "title": "Mandodari Mistaken \u2014 The Northern Road",
+          "activateNode": "ALP",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada36a2",
+          "desc": "Mamluk road checkpoint, northern Syria. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada36_act3",
+          "title": "Mandodari Mistaken \u2014 The Collection",
+          "activateNode": "ALP",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada36a3",
+          "desc": "Ibrahim ibn Suleiman's archive office, Aleppo. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada36_act4",
+          "title": "Mandodari Mistaken \u2014 The Loser's Testimony",
+          "activateNode": "ALP",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada36a4",
+          "desc": "Aleppo, Vibhishana-release angle. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada36_act5",
+          "title": "Mandodari Mistaken \u2014 The Record of the Warning",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada36a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 37,
+      "acts": [
+        {
+          "id": "ada37_act1",
+          "title": "Sarama's Truth \u2014 The Compassion Intelligence",
+          "activateNode": "ALE",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada37a1",
+          "desc": "Ahmad al-Iskandarani's study, Alexandria. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada37_act2",
+          "title": "Sarama's Truth \u2014 The Delta Road",
+          "activateNode": "CAI",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada37a2",
+          "desc": "Mamluk delta checkpoint, Nile road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada37_act3",
+          "title": "Sarama's Truth \u2014 The Taxonomy",
+          "activateNode": "CAI",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada37a3",
+          "desc": "Rashid ibn Ahmad's madrasa, Cairo. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada37_act4",
+          "title": "Sarama's Truth \u2014 The Fifth Category",
+          "activateNode": "CAI",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada37a4",
+          "desc": "Cairo madrasa, fifth-category dispute. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada37_act5",
+          "title": "Sarama's Truth \u2014 The Compassion Archive",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada37a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 38,
+      "acts": [
+        {
+          "id": "ada38_act1",
+          "title": "The Suppliant's Shelter \u2014 The Absolute Obligation",
+          "activateNode": "BUR",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada38a1",
+          "desc": "Yusuf ibn Ahmad's study, Bursa. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada38_act2",
+          "title": "The Suppliant's Shelter \u2014 The Bithynian Road",
+          "activateNode": "NIC",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada38a2",
+          "desc": "Ottoman checkpoint, Bithynian plain. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada38_act3",
+          "title": "The Suppliant's Shelter \u2014 The Byzantine Canon",
+          "activateNode": "NIC",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada38a3",
+          "desc": "Georgios Palaiologos's study, Nicaea. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada38_act4",
+          "title": "The Suppliant's Shelter \u2014 The Limits of Suspicion",
+          "activateNode": "NIC",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada38a4",
+          "desc": "Nicaea, military law edge-case objection. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada38_act5",
+          "title": "The Suppliant's Shelter \u2014 The Unconditional",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada38a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 39,
+      "acts": [
+        {
+          "id": "ada39_act1",
+          "title": "Nala's Bridge \u2014 The Impossible Causeway",
+          "activateNode": "CON",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada39a1",
+          "desc": "Nikephoros Bryennios's study, Constantinople. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada39_act2",
+          "title": "Nala's Bridge \u2014 The Via Egnatia",
+          "activateNode": "THE",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada39a2",
+          "desc": "Ottoman checkpoint, Via Egnatia. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada39_act3",
+          "title": "Nala's Bridge \u2014 The Structural Review",
+          "activateNode": "THE",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada39a3",
+          "desc": "Tarchaneiotes's study, Thessaloniki. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada39_act4",
+          "title": "Nala's Bridge \u2014 The Political Use",
+          "activateNode": "THE",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada39a4",
+          "desc": "Thessaloniki, official's political use attempt. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada39_act5",
+          "title": "Nala's Bridge \u2014 The Gap in the Engineering",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada39a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 40,
+      "acts": [
+        {
+          "id": "ada40_act1",
+          "title": "The Serpent Noose \u2014 The Biological Weapon Report",
+          "activateNode": "TRB",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada40a1",
+          "desc": "Argyropoulos's brother's military medical study, Trebizond. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada40_act2",
+          "title": "The Serpent Noose \u2014 The Mountain Road",
+          "activateNode": "SIV",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada40a2",
+          "desc": "Eretna principality checkpoint, Pontic highland road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada40_act3",
+          "title": "The Serpent Noose \u2014 The Medical Analysis",
+          "activateNode": "SIV",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada40a3",
+          "desc": "Muhsin al-Sivasi's study, Sivas. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada40_act4",
+          "title": "The Serpent Noose \u2014 The Vulnerability Classificati",
+          "activateNode": "SIV",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada40a4",
+          "desc": "Sivas, biological vulnerability classification dispute. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada40_act5",
+          "title": "The Serpent Noose \u2014 The Living Weapon",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada40a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 41,
+      "acts": [
+        {
+          "id": "ada41_act1",
+          "title": "The Magnanimous Dismissal \u2014 The Ethics of Restraint",
+          "activateNode": "BAG",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 11,
+          "checkPassFlag": "ada41a1",
+          "desc": "Umar ibn Khalil's study, Baghdad. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada41_act2",
+          "title": "The Magnanimous Dismissal \u2014 The Tigris Checkpoint",
+          "activateNode": "MOS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada41a2",
+          "desc": "Jalayirid checkpoint, Tigris road north. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada41_act3",
+          "title": "The Magnanimous Dismissal \u2014 The Required Restraint",
+          "activateNode": "MOS",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada41a3",
+          "desc": "Ahmad ibn Qasim's study, Mosul. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada41_act4",
+          "title": "The Magnanimous Dismissal \u2014 The Counter-Argument",
+          "activateNode": "MOS",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada41a4",
+          "desc": "Mosul, military jurist's counter-argument. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada41_act5",
+          "title": "The Magnanimous Dismissal \u2014 The Meaning of the Battle",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada41a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 42,
+      "acts": [
+        {
+          "id": "ada42_act1",
+          "title": "Kumbhakarna's Kill \u2014 The Clinical Account",
+          "activateNode": "MOS",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada42a1",
+          "desc": "Ahmad ibn Qasim's study, Mosul. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada42_act2",
+          "title": "Kumbhakarna's Kill \u2014 The Mountain Pass North",
+          "activateNode": "ERZ",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada42a2",
+          "desc": "Jalayirid checkpoint, upper Tigris headwaters. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada42_act3",
+          "title": "Kumbhakarna's Kill \u2014 The Erzincan Jurist",
+          "activateNode": "ERZ",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada42a3",
+          "desc": "Hassan ibn Dawud's study, Erzincan. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada42_act4",
+          "title": "Kumbhakarna's Kill \u2014 The Obedience Question",
+          "activateNode": "ERZ",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada42a4",
+          "desc": "Erzincan, Neoplatonic will-act separation. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada42_act5",
+          "title": "Kumbhakarna's Kill \u2014 The Organized Act",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada42a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 43,
+      "acts": [
+        {
+          "id": "ada43_act1",
+          "title": "The False Sita \u2014 The Simulated Atrocity",
+          "activateNode": "ERZ",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada43a1",
+          "desc": "Grigor Poghosyan's study, Erzincan. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada43_act2",
+          "title": "The False Sita \u2014 The Armenian\u2013Tabriz Road",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada43a2",
+          "desc": "Jalayirid checkpoint, Armenian\u2013Tabriz road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada43_act3",
+          "title": "The False Sita \u2014 The Deception Jurist",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada43a3",
+          "desc": "Mahmud al-Tabrizi's court study, Tabriz. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada43_act4",
+          "title": "The False Sita \u2014 The Identical Harm",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada43a4",
+          "desc": "Tabriz, Sufi scholar's identical-harm objection. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada43_act5",
+          "title": "The False Sita \u2014 The Perfect Counterfeit",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada43a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 44,
+      "acts": [
+        {
+          "id": "ada44_act1",
+          "title": "Sita Enters the Fire \u2014 The Ethics of Public Proof",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada44a1",
+          "desc": "Fatima bint Ahmad's study, Tabriz. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada44_act2",
+          "title": "Sita Enters the Fire \u2014 The Jalayirid Road",
+          "activateNode": "SUL",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada44a2",
+          "desc": "Jalayirid checkpoint, Azerbaijan plateau. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada44_act3",
+          "title": "Sita Enters the Fire \u2014 The Institutional Trust",
+          "activateNode": "SUL",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada44a3",
+          "desc": "Ibrahim al-Sultani's study, Sultaniyya. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada44_act4",
+          "title": "Sita Enters the Fire \u2014 The Structural Defense",
+          "activateNode": "SUL",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada44a4",
+          "desc": "Sultaniyya, protective-demand counter-argument. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada44_act5",
+          "title": "Sita Enters the Fire \u2014 The Priority Question",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada44a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 45,
+      "acts": [
+        {
+          "id": "ada45_act1",
+          "title": "Ravana's Genealogy \u2014 The Villain's Credentials",
+          "activateNode": "SUL",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada45a1",
+          "desc": "Ibrahim al-Sultani's study, Sultaniyya. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada45_act2",
+          "title": "Ravana's Genealogy \u2014 The Court Road",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada45a2",
+          "desc": "Jalayirid checkpoint, Azerbaijan plateau road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada45_act3",
+          "title": "Ravana's Genealogy \u2014 The Court Historian",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada45a3",
+          "desc": "Aisha bint Suleiman's archive study, Tabriz. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada45_act4",
+          "title": "Ravana's Genealogy \u2014 The Incomplete Record",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada45a4",
+          "desc": "Tabriz, incomplete-record counter-argument. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada45_act5",
+          "title": "Ravana's Genealogy \u2014 The Complete Record",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada45a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 46,
+      "acts": [
+        {
+          "id": "ada46_act1",
+          "title": "The Suppliant Dove \u2014 The Graduated Cost",
+          "activateNode": "BAS",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada46a1",
+          "desc": "Hassan ibn Yusuf's study, Basra. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada46_act2",
+          "title": "The Suppliant Dove \u2014 The River Road",
+          "activateNode": "BAG",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada46a2",
+          "desc": "Jalayirid checkpoint, Tigris river road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada46_act3",
+          "title": "The Suppliant Dove \u2014 The Obligation's Logic",
+          "activateNode": "BAG",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada46a3",
+          "desc": "Umar ibn Khalil's study, Baghdad. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada46_act4",
+          "title": "The Suppliant Dove \u2014 The Outer Limit",
+          "activateNode": "BAG",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada46a4",
+          "desc": "Baghdad, Sufi theologian's cosmic reading. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada46_act5",
+          "title": "The Suppliant Dove \u2014 The Scale That Did Not Level",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada46a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 47,
+      "acts": [
+        {
+          "id": "ada47_act1",
+          "title": "The Aditya Hridayam \u2014 The 108 Names",
+          "activateNode": "BAG",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada47a1",
+          "desc": "Umar ibn Khalil's study, Baghdad. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada47_act2",
+          "title": "The Aditya Hridayam \u2014 The Jalayirid Road",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada47a2",
+          "desc": "Jalayirid checkpoint, Kurdistan road to Tabriz. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada47_act3",
+          "title": "The Aditya Hridayam \u2014 The Celestial Taxonomy",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada47a3",
+          "desc": "Ali ibn Mahmud's astronomical study, Tabriz. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada47_act4",
+          "title": "The Aditya Hridayam \u2014 The Prayer as Pedagogy",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada47a4",
+          "desc": "Tabriz, Sufi scholar's form-as-content argument. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada47_act5",
+          "title": "The Aditya Hridayam \u2014 The Complete Cosmology",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada47a5",
+          "desc": "Weimar archive intake. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        }
+      ]
+    },
+    {
+      "num": 48,
+      "acts": [
+        {
+          "id": "ada48_act1",
+          "title": "The Wrong Ally \u2014 The Defection Brief",
+          "activateNode": "TBZ",
+          "type": "skill_check",
+          "checkStat": "INT",
+          "checkDC": 12,
+          "checkPassFlag": "ada48a1",
+          "desc": "Aisha bint Suleiman's study, Tabriz. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada48_act2",
+          "title": "The Wrong Ally \u2014 The Final Road",
+          "activateNode": "SUL",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 11,
+          "checkPassFlag": "ada48a2",
+          "desc": "Jalayirid checkpoint, final road. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada48_act3",
+          "title": "The Wrong Ally \u2014 The Alliance Obligation",
+          "activateNode": "SUL",
+          "type": "skill_check",
+          "checkStat": "CHA",
+          "checkDC": 12,
+          "checkPassFlag": "ada48a3",
+          "desc": "Ibrahim al-Sultani's study, Sultaniyya. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada48_act4",
+          "title": "The Wrong Ally \u2014 The Wrong Cause",
+          "activateNode": "SUL",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 11,
+          "checkPassFlag": "ada48a4",
+          "desc": "Sultaniyya, theological betrayal counter-reading. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications."
+        },
+        {
+          "id": "ada48_act5",
+          "title": "The Wrong Ally \u2014 The Final Document",
+          "activateNode": "WM",
+          "type": "skill_check",
+          "checkStat": "WIS",
+          "checkDC": 12,
+          "checkPassFlag": "ada48a5",
+          "desc": "Weimar archive intake, final entry. ",
+          "passText": "The document reaches its destination.",
+          "failText": "The document continues with complications.",
+          "questComplete": true
+        }
+      ]
+    }
+  ]
+}
