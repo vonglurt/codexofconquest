@@ -693,6 +693,334 @@ async function drawCityMap(code, port) {
   }
 }
 
+// ─── Search & monster-hunt maps ───────────────────────────────────────────────
+// Search nodes by label/terrain/monster and render on world + region maps.
+// Matching nodes are double-highlighted: ★ prefix on map, listed below.
+
+async function drawSearchMap(query, port) {
+  // Fetch everything needed
+  let nodeMap, coords;
+  try {
+    const [nm, cd] = await Promise.all([
+      apiGet(port, '/api/export/node_map?format=json'),
+      apiGet(port, '/api/coords'),
+    ]);
+    nodeMap = nm.data || {};
+    coords  = cd.coords || {};
+  } catch(e) {
+    console.error(`Cannot reach WBAPI: ${e.message}`); process.exit(1);
+  }
+
+  const q = query.toLowerCase();
+
+  // Match nodes by: label, terrain (name), battle.key, battle.label, text, npc
+  const hits = [];
+  for (const [code, node] of Object.entries(nodeMap)) {
+    const fields = [
+      node.label || '',
+      node.name  || '',
+      node.text  || '',
+      node.npc   || '',
+      node.battle?.key   || '',
+      node.battle?.label || '',
+    ].map(s => s.toLowerCase());
+
+    if (fields.some(f => f.includes(q))) {
+      hits.push({ code, node, coord: coords[code] || null });
+    }
+  }
+
+  if (!hits.length) {
+    console.log(`No nodes matching "${query}".`);
+    return;
+  }
+
+  // Determine which geo cities are near the hits (within same region cell)
+  // and which regions have hits
+  const hitCodes = new Set(hits.map(h => h.code));
+
+  // Build world map with hit markers
+  const W = MAP.WIDTH, H = MAP.HEIGHT;
+  const grid = Array.from({ length: H }, () => Array(W).fill(' '));
+
+  // Graticule
+  for (let lat = MAP.minLat; lat <= MAP.maxLat; lat += 15) {
+    const { r } = project(lat, 0); if (r >= 0 && r < H) for (let c=0;c<W;c++) if(grid[r][c]===' ') grid[r][c]='·';
+  }
+  for (let lon = MAP.minLon; lon <= MAP.maxLon; lon += 15) {
+    const { c } = project(0, lon); if (c >= 0 && c < W) for (let r=0;r<H;r++) if(grid[r][c]===' ') grid[r][c]='·';
+  }
+
+  // Place all geo cities dimly
+  for (const [code, geo] of Object.entries(GEO)) {
+    const { r, c } = project(geo.lat, geo.lon);
+    if (r < 0 || r >= H || c < 0 || c >= W) continue;
+    const ch = code.slice(0, 3);
+    for (let i = 0; i < ch.length && c + i < W; i++) grid[r][c + i] = ch[i];
+  }
+
+  // Count hits per region (for summary)
+  const hitsByRegion = {};
+  const nG = 6;
+  for (const hit of hits) {
+    if (!hit.coord) continue;
+    // Find the geo city nearest to this hit's game coordinates to locate it on the world map
+    // (since most nodes don't have lat/lon, we approximate via nearest geo-referenced city)
+    // For now skip non-geo nodes on the world map — show them in region breakdown
+    const geoCode = Object.keys(GEO).find(gc => gc === hit.code);
+    if (geoCode) {
+      const { r, c } = project(GEO[geoCode].lat, GEO[geoCode].lon);
+      if (r >= 0 && r < H && c >= 0 && c < W) {
+        grid[r][c] = '★'; // double-highlight: replace first char with star
+      }
+    }
+
+    // Record hit in its region (based on game coord position on grid)
+    for (let row = 0; row < nG; row++) {
+      for (let col = 0; col < nG; col++) {
+        const b = regionBounds(row, col, nG, nG);
+        // Approximate lat/lon from game coord
+        const approxLat = MAP.maxLat - (hit.coord.r - 8) / 492 * (MAP.maxLat - MAP.minLat);
+        const approxLon = MAP.minLon + (hit.coord.c - 8) / 492 * (MAP.maxLon - MAP.minLon);
+        if (approxLat >= b.minLat && approxLat < b.maxLat && approxLon >= b.minLon && approxLon < b.maxLon) {
+          const rk = regionCode(row, col);
+          hitsByRegion[rk] = (hitsByRegion[rk] || []);
+          hitsByRegion[rk].push(hit);
+        }
+      }
+    }
+  }
+
+  // Print world map
+  const typeTag = hits.some(h => h.node.battle) ? 'monster-hunt' : 'location';
+  console.log(`Search: "${query}"  —  ${hits.length} matching nodes  [${typeTag}]`);
+  console.log(`★ = search hit on map`);
+  const lonHdr = Array(W+4).fill(' ');
+  for (let lon=MAP.minLon; lon<=MAP.maxLon; lon+=15) { const {c}=project(0,lon); const t=(lon<0?`${-lon}W`:`${lon}E`).padStart(4); for(let i=0;i<t.length&&c+i+3<lonHdr.length;i++) lonHdr[c+i+3]=t[i]; }
+  console.log('   '+lonHdr.join(''));
+  console.log('   ╔'+'═'.repeat(W)+'╗');
+  let lastL = '';
+  for (let r=0; r<H; r++) {
+    const lat = MAP.maxLat - r*(MAP.maxLat-MAP.minLat)/(H-1);
+    const lbl = (lat>=0?`${Math.round(lat)}N`:`${Math.abs(Math.round(lat))}S`).padStart(3);
+    const show = lbl !== lastL ? lbl : '   '; lastL = lbl;
+    console.log(`${show}║${grid[r].join('')}║`);
+  }
+  console.log('   ╚'+'═'.repeat(W)+'╝');
+  console.log();
+
+  // Group hits by region for compact multi-region display
+  const regionKeys = Object.keys(hitsByRegion).sort();
+  if (regionKeys.length > 1) {
+    console.log(`Results span ${regionKeys.length} regions: ${regionKeys.join(', ')}`);
+    console.log(`Use --region <code> to zoom into any region. Consolidating nearby regions:\n`);
+  }
+
+  // Show results grouped by region
+  for (const rk of regionKeys) {
+    const regionHits = hitsByRegion[rk];
+    console.log(`── Region ${rk} (${regionHits.length} hits) ─────────────────────`);
+    const isMonster = regionHits.some(h => h.node.battle?.key?.includes(q) || h.node.battle?.label?.toLowerCase().includes(q));
+    for (const h of regionHits.sort((a, b) => (a.node.label || '').localeCompare(b.node.label || ''))) {
+      const terrain  = (h.node.name || '?').padEnd(14);
+      const battle   = h.node.battle ? `  ★BATTLE: ${h.node.battle.label || h.node.battle.key}` : '';
+      const rc       = h.coord ? `r=${h.coord.r} c=${h.coord.c}` : 'no-coords';
+      const label    = (h.node.label || h.code).slice(0, 38);
+      console.log(`  ${h.code.padEnd(6)} ${label.padEnd(38)} ${terrain} ${rc}${battle}`);
+    }
+    console.log(`  → node worldmap.js --region ${rk}`);
+    console.log();
+  }
+
+  // Hits without any region (no coords or out of geo bounds)
+  const unlocated = hits.filter(h => !h.coord);
+  if (unlocated.length) {
+    console.log(`── ${unlocated.length} nodes without coordinates (no map position) ────`);
+    for (const h of unlocated) console.log(`  ${h.code.padEnd(6)} ${(h.node.label||'').slice(0,40)}`);
+    console.log(`  Fix: node layout-solve.js --apply`);
+    console.log();
+  }
+
+  // Footer navigation
+  const isMonsterSearch = hits.some(h => h.node.battle);
+  console.log('Navigate:');
+  if (isMonsterSearch) {
+    const monsterCodes = [...new Set(hits.filter(h=>h.node.battle).map(h=>h.node.battle.key))].slice(0, 4);
+    console.log(`  Monster hunt: ${monsterCodes.map(m=>`node worldmap.js --monster ${m}`).join('  ')}`);
+  }
+  console.log(`  Zoom into city:   node worldmap.js --city <CODE>`);
+  console.log(`  Zoom into region: node worldmap.js --region <A1..F6>`);
+  console.log(`  New search:       node worldmap.js --search "<query>"`);
+}
+
+// ─── Route map: A → B navigation ────────────────────────────────────────────
+async function drawRouteMap(fromCode, toCode, port) {
+  let nodeMap, coords;
+  try {
+    const [nm, cd] = await Promise.all([
+      apiGet(port, '/api/export/node_map?format=json'),
+      apiGet(port, '/api/coords'),
+    ]);
+    nodeMap = nm.data || {};
+    coords  = cd.coords || {};
+  } catch(e) {
+    console.error(`Cannot reach WBAPI: ${e.message}`); process.exit(1);
+  }
+
+  const src = fromCode.toUpperCase(), dst = toCode.toUpperCase();
+  if (!nodeMap[src]) { console.error(`Node "${src}" not found.`); process.exit(1); }
+  if (!nodeMap[dst]) { console.error(`Node "${dst}" not found.`); process.exit(1); }
+
+  // BFS through N/E/S/W connections to find shortest path
+  const visited = new Map(); // code → {from, dir}
+  const queue   = [src];
+  visited.set(src, null);
+  let found = false;
+
+  while (queue.length) {
+    const cur = queue.shift();
+    if (cur === dst) { found = true; break; }
+    const n = nodeMap[cur]; if (!n) continue;
+    for (const dir of ['N','E','S','W']) {
+      const tgt = n[dir]; if (!tgt || !nodeMap[tgt] || visited.has(tgt)) continue;
+      visited.set(tgt, { from: cur, dir });
+      queue.push(tgt);
+    }
+  }
+
+  if (!found) {
+    console.log(`Route: ${src} → ${dst}`);
+    console.log(`✗ No path found — nodes are not connected in the current graph.`);
+    console.log(`  Check disconnected components: node layout-solve.js | jq .stats`);
+    console.log(`  Check connections: ./api.sh get node ${src}  and  ./api.sh get node ${dst}`);
+    return;
+  }
+
+  // Reconstruct path
+  const path = [];
+  let cur = dst;
+  while (cur) {
+    const entry = visited.get(cur);
+    path.unshift({ code: cur, dir: entry?.dir || null });
+    cur = entry?.from || null;
+  }
+
+  const OPP = { N:'S', S:'N', E:'W', W:'E' };
+  const ARROW = { N:'↑', S:'↓', E:'→', W:'←' };
+
+  console.log(`Route: ${src} → ${dst}  (${path.length} hops)`);
+  console.log('═'.repeat(72));
+
+  // Step-by-step log (Google Maps style)
+  console.log(`\nDIRECTIONS\n`);
+  for (let i = 0; i < path.length; i++) {
+    const { code, dir } = path[i];
+    const node    = nodeMap[code];
+    const rc      = coords[code];
+    const terrain = node?.name || '?';
+    const label   = (node?.label || code).slice(0, 42);
+    const rcStr   = rc ? `(r=${rc.r},c=${rc.c})` : '(no coords)';
+    const battle  = node?.battle ? `  ⚔ ${node.battle.label}` : '';
+    const sleep   = node?.sleep  ? '  🛏 Rest available' : '';
+
+    if (i === 0) {
+      console.log(`  START  ${code.padEnd(6)}  ${label.padEnd(42)}  [${terrain}] ${rcStr}`);
+    } else if (i === path.length - 1) {
+      console.log(`  ${ARROW[dir] || ' '} ${dir.padEnd(4)} ${code.padEnd(6)}  ${label.padEnd(42)}  [${terrain}] ${rcStr}${battle}${sleep}`);
+      console.log(`  ARRIVE`);
+    } else {
+      console.log(`  ${ARROW[dir] || ' '} ${dir.padEnd(4)} ${code.padEnd(6)}  ${label.padEnd(42)}  [${terrain}]${battle}${sleep}`);
+    }
+  }
+
+  console.log(`\n${'─'.repeat(72)}`);
+
+  // Terrain summary
+  const terrainCounts = {};
+  for (const { code } of path) {
+    const t = nodeMap[code]?.name || '?';
+    terrainCounts[t] = (terrainCounts[t] || 0) + 1;
+  }
+  console.log(`Terrain along route:`);
+  for (const [t, n] of Object.entries(terrainCounts).sort(([,a],[,b]) => b - a)) {
+    console.log(`  ${t.padEnd(16)} ${n} node${n>1?'s':''}`);
+  }
+
+  // Battles along the way
+  const battles = path.filter(({ code }) => nodeMap[code]?.battle);
+  if (battles.length) {
+    console.log(`\nBattles on this route (${battles.length}):`);
+    for (const { code } of battles) {
+      const b = nodeMap[code].battle;
+      console.log(`  ${code.padEnd(6)} ${(nodeMap[code].label||'').slice(0,35).padEnd(35)} ⚔ ${b.label || b.key}`);
+    }
+  }
+
+  // Mini map of route nodes with coords
+  const routeCoords = path.map(({ code }) => ({ code, rc: coords[code] || null })).filter(x => x.rc);
+  if (routeCoords.length >= 2) {
+    console.log(`\nROUTE MAP  (${routeCoords.length}/${path.length} nodes have coordinates)\n`);
+
+    const minR = Math.min(...routeCoords.map(x => x.rc.r));
+    const maxR = Math.max(...routeCoords.map(x => x.rc.r));
+    const minC = Math.min(...routeCoords.map(x => x.rc.c));
+    const maxC = Math.max(...routeCoords.map(x => x.rc.c));
+    const pad  = 3;
+    const W = 70, H = 20;
+    const bMinR = minR - pad, bMaxR = maxR + pad, bMinC = minC - pad, bMaxC = maxC + pad;
+
+    function proj(r, c) {
+      return {
+        pr: Math.round((r - bMinR) / Math.max(1, bMaxR - bMinR) * (H - 1)),
+        pc: Math.round((c - bMinC) / Math.max(1, bMaxC - bMinC) * (W - 1)),
+      };
+    }
+
+    const grid = Array.from({ length: H }, () => Array(W).fill(' '));
+
+    // Draw path lines
+    for (let i = 1; i < routeCoords.length; i++) {
+      const { pr: r1, pc: c1 } = proj(routeCoords[i-1].rc.r, routeCoords[i-1].rc.c);
+      const { pr: r2, pc: c2 } = proj(routeCoords[i].rc.r,   routeCoords[i].rc.c);
+      // Horizontal segment
+      for (let c = Math.min(c1, c2); c <= Math.max(c1, c2); c++) {
+        if (grid[r1]?.[c] === ' ') grid[r1][c] = '─';
+      }
+      // Vertical segment
+      for (let r = Math.min(r1, r2); r <= Math.max(r1, r2); r++) {
+        if (grid[r]?.[c2] === ' ') grid[r][c2] = '│';
+      }
+    }
+
+    // Place node markers
+    const routeSet = new Set(path.map(x => x.code));
+    for (const { code, rc } of routeCoords) {
+      const { pr, pc } = proj(rc.r, rc.c);
+      if (pr < 0 || pr >= H || pc < 0 || pc >= W) continue;
+      const marker = code === src ? `[${code}]START` : code === dst ? `[${code}]END` : `·${code}`;
+      for (let i = 0; i < marker.length && pc + i < W; i++) grid[pr][pc + i] = marker[i];
+    }
+
+    console.log('╔' + '═'.repeat(W) + '╗');
+    for (let r = 0; r < H; r++) {
+      const gameR = Math.round(bMinR + r * (bMaxR - bMinR) / (H - 1));
+      console.log(`${String(gameR).padStart(3)}║${grid[r].join('')}║`);
+    }
+    console.log('   ╚' + '═'.repeat(W) + '╝');
+  }
+
+  // Navigation
+  const srcGeo = GEO[src], dstGeo = GEO[dst];
+  const srcReg = srcGeo ? (() => { for(let r=0;r<6;r++) for(let c=0;c<6;c++) { const b=regionBounds(r,c,6,6); if(srcGeo.lat>=b.minLat&&srcGeo.lat<b.maxLat&&srcGeo.lon>=b.minLon&&srcGeo.lon<b.maxLon) return regionCode(r,c); } return null; })() : null;
+  const dstReg = dstGeo ? (() => { for(let r=0;r<6;r++) for(let c=0;c<6;c++) { const b=regionBounds(r,c,6,6); if(dstGeo.lat>=b.minLat&&dstGeo.lat<b.maxLat&&dstGeo.lon>=b.minLon&&dstGeo.lon<b.maxLon) return regionCode(r,c); } return null; })() : null;
+  console.log(`\nNavigate:`);
+  if (srcReg)  console.log(`  Start region:  node worldmap.js --region ${srcReg}`);
+  if (dstReg && dstReg !== srcReg) console.log(`  End region:    node worldmap.js --region ${dstReg}`);
+  console.log(`  Start city:    node worldmap.js --city ${src}`);
+  console.log(`  End city:      node worldmap.js --city ${dst}`);
+  console.log(`  World map:     node worldmap.js`);
+}
+
 // ─── Geo seeding ──────────────────────────────────────────────────────────────
 // Map lat/lon to game grid coordinates (0-512 × 0-512).
 // North is small row, South is large row.
@@ -777,9 +1105,22 @@ async function main() {
   const nGrid      = getArg('--regions') ? +getArg('--regions') : (getArg('--grid') ? +getArg('--grid') : 6);
   const regionZoom = getArg('--region');
   const cityZoom   = getArg('--city');
+  const searchQ    = getArg('--search') || getArg('--monster') || getArg('-s');
+  const routeFrom  = getArg('--route') || getArg('--from');
+  const routeTo    = getArg('--to');
 
   if (cityZoom) {
     await drawCityMap(cityZoom, port);
+    return;
+  }
+
+  if (routeFrom && routeTo) {
+    await drawRouteMap(routeFrom, routeTo, port);
+    return;
+  }
+
+  if (searchQ) {
+    await drawSearchMap(searchQ, port);
     return;
   }
 

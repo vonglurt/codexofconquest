@@ -499,6 +499,27 @@ const CMD = {
   // ── worldmap: terminal ASCII world map of major cities ──────────────────────
   // Usage: ./api.sh worldmap [--latlon]
   async worldmap(_pos, flags) {
+    // Delegate rich views to worldmap.js before fetching API data
+    const regionArg   = flags.region;
+    const cityArg     = flags.city;
+    const regionsFlag = flags.regions !== undefined;
+    const searchArg   = flags.search || flags.monster;
+    const routeFrom   = flags.route || flags.from;
+    const routeTo     = flags.to;
+    if (regionArg || cityArg || regionsFlag || searchArg || (routeFrom && routeTo)) {
+      const { spawnSync } = require('child_process');
+      const args = cityArg              ? ['--city',   cityArg]
+                 : searchArg            ? ['--search', searchArg]
+                 : (routeFrom&&routeTo) ? ['--route',  routeFrom, '--to', routeTo]
+                 : regionArg            ? ['--region', regionArg]
+                 : ['--regions'];
+      const result = spawnSync('node', [
+        require('path').join(__dirname, '..', 'worldmap.js'), ...args,
+        '--port', String(flags.port || 1367),
+      ], { stdio: 'inherit' });
+      process.exit(result.status || 0);
+    }
+
     const r = await request('GET', '/api/layout/worldmap');
     if (r.status !== 200) { printError(r); process.exit(1); }
     const cities = r.body.cities || {};
@@ -533,22 +554,6 @@ const CMD = {
       process.stdout.write(`${tag}║${grid[r].join('')}║\n`);
     }
     process.stdout.write('   ╚'+'═'.repeat(W)+'╝\n\n');
-
-    // Delegate --region and --city to worldmap.js directly (rich terminal output)
-    const regionArg = flags.region || flags.r;
-    const cityArg   = flags.city;
-    const regionsFlag = flags.regions !== undefined;
-    if (regionArg || cityArg || regionsFlag) {
-      const { spawnSync } = require('child_process');
-      const args = cityArg   ? ['--city', cityArg]
-                 : regionArg ? ['--region', regionArg]
-                 : ['--regions'];
-      const result = spawnSync('node', [
-        require('path').join(__dirname, '..', 'worldmap.js'), ...args,
-        '--port', String(flags.port || 1367),
-      ], { stdio: 'inherit' });
-      process.exit(result.status || 0);
-    }
 
     if (flags.latlon || flags.l) {
       // City list with lat/lon
@@ -1719,7 +1724,7 @@ const SYNOPSIS = [
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
   `  ${C.green}chain${C.reset} <quest-id>                   quest chain`,
   `  ${C.green}export${C.reset} <collection>                dump JSON  [--format js|module]`,
-  `  ${C.green}worldmap${C.reset} [--latlon] [--regions] [--region A1] [--city LON]  3-level map`,
+  `  ${C.green}worldmap${C.reset} [--regions] [--region A1] [--city LON] [--search "city"] [--monster skeleton] [--from A --to B]`,
   `  ${C.green}move${C.reset} <CODE> <r> <c> [--swap]       move node coordinates (swap if occupied)`,
   `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain type] [--execute]`,
   `  ${C.green}geo-seed${C.reset} [--execute]               seed major cities from real lat/lon`,
