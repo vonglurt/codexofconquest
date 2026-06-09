@@ -629,6 +629,164 @@ const CMD = {
     }
   },
 
+  // ── connect: wire two existing nodes together in a direction ────────────────
+  // Usage: ./api.sh connect <A> <dir> <B>
+  //   Sets A[dir] = B and B[OPP[dir]] = A (bidirectional wire).
+  //   Checks coordinate alignment first; warns if bendy or gap > 4.
+  async connect(pos) {
+    const [, aCode, dir, bCode] = pos;
+    if (!aCode||!dir||!bCode) die('Usage: ./api.sh connect <A> <N|E|S|W> <B>');
+    if (!['N','E','S','W'].includes(dir.toUpperCase())) die('dir must be N|E|S|W');
+    const D = dir.toUpperCase(), OPP={N:'S',S:'N',E:'W',W:'E'};
+    // Fetch coords to warn before wiring
+    const coordsResp = await request('GET', '/api/coords');
+    const coords = coordsResp.body?.coords || {};
+    const ca = coords[aCode], cb = coords[bCode];
+    if (ca && cb) {
+      const axisOff = (D==='N'||D==='S') ? Math.abs(cb.c-ca.c) : Math.abs(cb.r-ca.r);
+      const axisDist= (D==='N'||D==='S') ? Math.abs(cb.r-ca.r) : Math.abs(cb.c-ca.c);
+      if (axisOff > 0) ok(`⚠ BENDY: offset=${axisOff} — consider an elbow junction first`);
+      if (axisDist > 4) ok(`⚠ GAP: distance=${axisDist} > 4 — consider fill-gap first`);
+      if (axisOff === 0 && axisDist <= 4) ok(`Coords OK: axis-aligned, gap=${axisDist} ≤ 4`);
+    }
+    const r1 = await request('PUT', `/api/node/${aCode}`, { [D]: bCode });
+    if (r1.status >= 400) { printError(r1); process.exit(1); }
+    const r2 = await request('PUT', `/api/node/${bCode}`, { [OPP[D]]: aCode });
+    if (r2.status >= 400) { printError(r2); process.exit(1); }
+    ok(`Wired: ${aCode}.${D} = ${bCode}  ↔  ${bCode}.${OPP[D]} = ${aCode}`);
+  },
+
+  // ── fill-gap: insert junction chain to bridge a long axis-aligned gap ────────
+  // Usage: ./api.sh fill-gap <from> <dir> <to> [--step 4] [--dry-run]
+  async 'fill-gap'(pos, flags) {
+    const [, from, dir, to] = pos;
+    if (!from||!dir||!to) die('Usage: ./api.sh fill-gap <from> <N|E|S|W> <to> [--step N] [--dry-run]');
+    const step   = flags.step ? +flags.step : 4;
+    const dryRun = flags['dry-run'] !== undefined ? true : !flags.execute;
+    const body   = { from, dir: dir.toUpperCase(), to, maxGap:4, step, terrain:'inherit', dryRun };
+    const resp   = await request('POST', '/api/graph/fill-gap', body);
+    if (resp.status >= 400) { printError(resp); process.exit(1); }
+    const d = resp.body;
+    if (d.dryRun) {
+      ok(`[DRY RUN] ${from}─${dir}→${to}  gap=${d.gap}  needs ${d.junctionsNeeded} junction(s)`);
+      (d.plan||[]).forEach(p => ok(`  ${p.code}  r=${p.r} c=${p.c}  ${p.conflict?'CONFLICT: '+p.slot:'free'}`));
+      if (d.conflicts?.length) ok(`⚠ ${d.conflicts.length} slot conflicts — resolve before executing`);
+      ok(`Add --execute to create junctions`);
+    } else {
+      ok(`fill-gap: ${d.junctionsCreated} junction(s) created`);
+      ok(`Chain: ${d.wireChain}`);
+    }
+  },
+
+  // ── fix-diagonal: auto-fix one diagonal (bendy) edge via move or elbow ───────
+  // Usage: ./api.sh fix-diagonal <CODE> <dir> [--dry-run]
+  //   Inspects the edge CODE[dir] and proposes the least-invasive fix:
+  //   1. Move target if it has only 1-2 connections (cheap)
+  //   2. Otherwise spawn elbow junction at axis intersection
+  async 'fix-diagonal'(pos, flags) {
+    const [, code, dir] = pos;
+    if (!code||!dir) die('Usage: ./api.sh fix-diagonal <CODE> <N|E|S|W> [--dry-run]');
+    const D    = dir.toUpperCase();
+    const exec = flags.execute && !flags['dry-run'];
+
+    // Validate the edge
+    const vResp = await request('GET', `/api/graph/validate/${code}`);
+    if (vResp.status >= 400) { printError(vResp); process.exit(1); }
+    const v = vResp.body;
+    const conn = v.connections?.[D];
+    if (!conn) { ok(`${code}.${D}: (no connection)`); return; }
+    if (conn.status === 'ok') { ok(`${code}.${D} → ${conn.target}: already OK (${conn.status})`); return; }
+
+    ok(`${code}.${D} → ${conn.target}:  status=${conn.status}  gap=${conn.gap}  offset=${conn.axisOffset}`);
+
+    if (conn.moveSuggestion) {
+      const s = conn.moveSuggestion;
+      ok(`Suggested fix: move "${s.node}" to r=${s.recommended?.r} c=${s.recommended?.c}`);
+      ok(`  ${conn.fix || ''}`);
+      if (exec && s.recommended && s.node !== '(junction)' && s.node !== '(new junction)') {
+        const mr = await request('POST', '/api/graph/move', {
+          code: s.node, r: s.recommended.r, c: s.recommended.c
+        });
+        if (mr.status >= 400) {
+          ok(`Move failed (${mr.body?.error}) — trying elbow junction instead`);
+          const jr = await request('POST', '/api/graph/spawn-junction', {
+            from: code, dir: D, dryRun: false
+          });
+          if (jr.status >= 400) { printError(jr); process.exit(1); }
+          ok(`Elbow ${jr.body.code} created at (${jr.body.r},${jr.body.c})`);
+        } else {
+          ok(`Moved ${s.node} → (${s.recommended.r},${s.recommended.c})`);
+        }
+      } else if (exec) {
+        // New junction needed
+        const jr = await request('POST', '/api/graph/spawn-junction', { from: code, dir: D, dryRun: false });
+        if (jr.status >= 400) { printError(jr); process.exit(1); }
+        ok(`Elbow ${jr.body.code} created at (${jr.body.r},${jr.body.c})`);
+      } else {
+        ok(`Add --execute to apply fix`);
+      }
+    } else {
+      ok(`No auto-fix available — inspect manually: ./api.sh worldmap --city ${code}`);
+    }
+  },
+
+  // ── fix-all-broken: batch-diagnose all broken edges, apply safe auto-fixes ───
+  // Usage: ./api.sh fix-all-broken [--dry-run] [--limit N]
+  //   Fetches /api/graph/broken, then for each edge either moves a light node
+  //   or spawns an elbow junction. Safe fixes only (no multi-hop guesses).
+  async 'fix-all-broken'(pos, flags) {
+    const exec  = flags.execute && !flags['dry-run'];
+    const limit = flags.limit ? +flags.limit : Infinity;
+    const resp  = await request('GET', '/api/graph/broken');
+    if (resp.status !== 200) { printError(resp); process.exit(1); }
+    const { edges, broken } = resp.body;
+    ok(`${broken} broken edges found`);
+    if (!exec) ok(`[DRY RUN] showing first ${Math.min(broken, 20)} — add --execute --limit N to fix`);
+
+    let fixed = 0, failed = 0, skipped = 0;
+    for (const edge of (edges||[]).slice(0, limit)) {
+      const { from, dir, to, type, moveSuggestion } = edge;
+      if (type === 'missing_coords') { skipped++; continue; }
+
+      process.stdout.write(`  ${from}─${dir}→${to}  [${type}]`);
+
+      if (!exec) {
+        const s = moveSuggestion;
+        if (s?.recommended) {
+          process.stdout.write(`  → move ${s.node} to (${s.recommended.r},${s.recommended.c})\n`);
+        } else {
+          process.stdout.write(`  → elbow junction\n`);
+        }
+        continue;
+      }
+
+      // Try move first, fall back to elbow
+      const s = moveSuggestion;
+      if (s?.recommended && s.node !== '(new junction)' && s.node !== '(junction)') {
+        const mr = await request('POST', '/api/graph/move', {
+          code: s.node, r: s.recommended.r, c: s.recommended.c
+        });
+        if (mr.status < 400) {
+          process.stdout.write(`  → moved ${s.node} ✓\n`);
+          fixed++; continue;
+        }
+      }
+      // Elbow
+      const jr = await request('POST', '/api/graph/spawn-junction', { from, dir, dryRun: false });
+      if (jr.status < 400) {
+        process.stdout.write(`  → elbow ${jr.body?.code} ✓\n`);
+        fixed++;
+      } else {
+        process.stdout.write(`  → FAILED: ${jr.body?.error}\n`);
+        failed++;
+      }
+    }
+    if (exec) {
+      ok(`Done: ${fixed} fixed, ${failed} failed, ${skipped} skipped (missing coords)`);
+      ok(`Re-check: ./api.sh fix-all-broken`);
+    }
+  },
+
   help() { process.stdout.write(HELP + '\n'); },
 };
 
@@ -1728,6 +1886,10 @@ const SYNOPSIS = [
   `  ${C.green}move${C.reset} <CODE> <r> <c> [--swap]       move node coordinates (swap if occupied)`,
   `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain type] [--execute]`,
   `  ${C.green}geo-seed${C.reset} [--execute]               seed major cities from real lat/lon`,
+  `  ${C.green}connect${C.reset} <A> <dir> <B>             wire two nodes bidirectionally (checks alignment)`,
+  `  ${C.green}fill-gap${C.reset} <from> <dir> <to>        insert junction chain for gap > 4  [--step N] [--execute]`,
+  `  ${C.green}fix-diagonal${C.reset} <CODE> <dir>         auto-fix one diagonal edge (move or elbow)  [--execute]`,
+  `  ${C.green}fix-all-broken${C.reset} [--execute] [--limit N]  batch-fix all 196 broken edges`,
   `  ${C.green}location${C.reset} [code]                    composite node view (no code = list all)`,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,
