@@ -405,6 +405,7 @@ select.fi{appearance:none;}
   <div class="nav-tab" data-tab="endpoints">📋 Endpoints</div>
   <div class="nav-tab" data-tab="builder">🏗 Builder</div>
   <div class="nav-tab" data-tab="wizard">✦ Wizard</div>
+  <div class="nav-tab" data-tab="grid">🔲 Grid</div>
   <div class="nav-sep"></div>
   <div id="topbar-right">
     <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
@@ -6901,6 +6902,290 @@ window._onServerActivated = () => {
   }
   // Also listen for the custom event fired by loadFromServer / loadFromFile
   document.addEventListener('wbapi:loaded', wizActivate);
+
+})();
+
+/* ══════════════════════════════════════════════════════════════════════
+   GRID TOOLS TAB — cell-mode map, degree coloring, broken-edge display
+   ══════════════════════════════════════════════════════════════════════ */
+(function(){
+
+// ── Panel HTML ────────────────────────────────────────────────────────────────
+document.getElementById('tab-wizard').insertAdjacentHTML('afterend', `
+<div class="panel" id="tab-grid" style="overflow-y:auto;padding:0;flex-direction:column;">
+
+  <!-- Health bar -->
+  <div style="display:flex;gap:10px;padding:8px 14px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap;align-items:center">
+    <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Network Health</span>
+    <span id="gh-reachable" style="font-size:11px;color:var(--green)">— reachable</span>
+    <span id="gh-broken"    style="font-size:11px;color:var(--red)">— broken edges</span>
+    <span id="gh-orphans"   style="font-size:11px;color:var(--orange)">— no coords</span>
+    <button class="btn sm" id="btn-grid-refresh" style="margin-left:auto">⟳ Refresh</button>
+    <button class="btn sm" id="btn-grid-mode" style="min-width:140px">Mode: Cell Grid</button>
+  </div>
+
+  <!-- Legend -->
+  <div style="display:flex;gap:14px;padding:6px 14px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap;font-size:10px;color:var(--muted)">
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#3fb950;margin-right:4px;vertical-align:middle"></span>deg 1–2 (open)</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#d29922;margin-right:4px;vertical-align:middle"></span>deg 3 (one slot left)</span>
+    <span><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#f85149;margin-right:4px;vertical-align:middle"></span>deg 4 (full)</span>
+    <span><span style="display:inline-block;width:30px;height:2px;background:#f85149;margin-right:4px;vertical-align:middle"></span>broken edge (diagonal/gap)</span>
+    <span><span style="display:inline-block;width:30px;height:2px;background:#58a6ff;margin-right:4px;vertical-align:middle"></span>good edge (axis-aligned)</span>
+  </div>
+
+  <!-- Split: canvas + not-shown sidebar -->
+  <div style="display:flex;flex:1;overflow:hidden;">
+
+    <!-- Canvas area -->
+    <div style="flex:1;overflow:auto;background:#0d1117;position:relative;" id="grid-canvas-wrap">
+      <div id="grid-empty" style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);flex-direction:column;gap:8px;">
+        <span style="font-size:32px">🔲</span>
+        <span style="font-size:13px">Load a game file to view the cell grid</span>
+      </div>
+      <canvas id="grid-canvas" style="display:none;cursor:crosshair;"></canvas>
+    </div>
+
+    <!-- Not-shown sidebar -->
+    <div style="width:230px;flex-shrink:0;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
+      <div style="padding:8px 12px;border-bottom:1px solid var(--border);font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">
+        Not on Grid <span id="ghost-count" style="color:var(--orange)"></span>
+      </div>
+      <div style="padding:4px 8px;border-bottom:1px solid var(--border);">
+        <input id="ghost-search" class="fi" style="width:100%;font-size:11px;" placeholder="Search…">
+      </div>
+      <div id="ghost-list" style="flex:1;overflow-y:auto;font-size:11px;"></div>
+    </div>
+
+  </div>
+</div>
+`);
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let gridScale    = 10;   // px per coordinate unit
+let gridMode     = 'cell'; // 'cell' | 'force'
+let gridSelected = null;
+let brokenSet    = new Set(); // edge keys that are broken
+let gridReachable= new Set(); // reachable node codes from hub
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+
+function degOf(code) {
+  const n = WBAPI.nodeMap[code]; if (!n) return 0;
+  return ['N','E','S','W'].filter(d => n[d]).length;
+}
+
+function degColor(d) {
+  if (d <= 2) return '#3fb950';
+  if (d === 3) return '#d29922';
+  return '#f85149';
+}
+
+// Determine if an edge is broken (diagonal or gap > 4)
+function edgeIsBroken(codeA, codeB, dir) {
+  const ca = WBAPI.nodeCoords[codeA], cb = WBAPI.nodeCoords[codeB];
+  if (!ca || !cb) return true;
+  const isNS = dir === 'N' || dir === 'S';
+  const axisOff  = isNS ? Math.abs(cb.c - ca.c) : Math.abs(cb.r - ca.r);
+  const axisDist = isNS ? Math.abs(cb.r - ca.r) : Math.abs(cb.c - ca.c);
+  return axisOff > 0 || axisDist < 1 || axisDist > 4;
+}
+
+// ── Render grid canvas ────────────────────────────────────────────────────────
+function renderGrid() {
+  if (!WBAPI.loaded) return;
+  const coords = WBAPI.nodeCoords;
+  const nodes  = WBAPI.nodeMap;
+  const S      = gridScale;
+
+  // Compute bounds
+  const vals = Object.values(coords);
+  if (!vals.length) return;
+  const maxR = Math.max(...vals.map(p=>p.r)) + 4;
+  const maxC = Math.max(...vals.map(p=>p.c)) + 4;
+
+  const cv = $('grid-canvas');
+  cv.width  = (maxC + 2) * S;
+  cv.height = (maxR + 2) * S;
+  cv.style.display = 'block';
+  $('grid-empty').style.display = 'none';
+
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, cv.width, cv.height);
+
+  // Grid dots
+  ctx.fillStyle = '#1a2030';
+  for (let r = 0; r <= maxR + 1; r++) {
+    for (let c = 0; c <= maxC + 1; c++) {
+      ctx.fillRect(c * S - 0.5, r * S - 0.5, 1, 1);
+    }
+  }
+
+  // Edges
+  const drawn = new Set();
+  for (const [code, node] of Object.entries(nodes)) {
+    const p = coords[code]; if (!p) continue;
+    for (const dir of ['N','E','S','W']) {
+      const nb = node[dir]; if (!nb || !coords[nb]) continue;
+      const key = [code, nb].sort().join('|');
+      if (drawn.has(key)) continue; drawn.add(key);
+      const np  = coords[nb];
+      const bad = edgeIsBroken(code, nb, dir);
+      ctx.beginPath();
+      ctx.strokeStyle = bad ? '#f85149' : '#58a6ff';
+      ctx.lineWidth   = bad ? 1.5 : 1;
+      if (bad) ctx.setLineDash([3, 3]); else ctx.setLineDash([]);
+      ctx.moveTo(p.c * S, p.r * S);
+      ctx.lineTo(np.c * S, np.r * S);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+  }
+
+  // Nodes
+  for (const [code, node] of Object.entries(nodes)) {
+    const p = coords[code]; if (!p) continue;
+    const cx  = p.c * S, cy = p.r * S;
+    const d   = degOf(code);
+    const col = degColor(d);
+    const sel = code === gridSelected;
+    const r   = sel ? 9 : (S > 8 ? 5 : 3);
+
+    // Reachability halo
+    if (!gridReachable.has(code) && gridReachable.size > 0) {
+      ctx.beginPath(); ctx.arc(cx, cy, r + 3, 0, Math.PI*2);
+      ctx.strokeStyle = '#d2992280'; ctx.lineWidth = 1.5; ctx.stroke();
+    }
+
+    // Node circle
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fillStyle = sel ? '#fff' : col; ctx.fill();
+    if (sel) { ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.stroke(); }
+
+    // Code label at higher zoom
+    if (S >= 12) {
+      ctx.fillStyle = sel ? '#000' : '#0d1117';
+      ctx.font = `bold ${Math.min(9, S * 0.7)}px monospace`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(code.slice(0, 3), cx, cy);
+    }
+  }
+}
+
+// ── Not-shown (ghost) nodes list ──────────────────────────────────────────────
+function renderGhostList(filter) {
+  if (!WBAPI.loaded) return;
+  const q = (filter || '').toLowerCase();
+  const ghosts = Object.entries(WBAPI.nodeMap)
+    .filter(([code]) => !WBAPI.nodeCoords[code])
+    .filter(([code, n]) => !q || code.toLowerCase().includes(q) || (n.label||'').toLowerCase().includes(q));
+
+  $('ghost-count').textContent = `(${ghosts.length})`;
+  const ul = ghosts.slice(0, 80).map(([code, n]) => {
+    const d = degOf(code);
+    const qLink = WBAPI.quests.byNode(code).slice(0,1).map(q=>q.id).join('');
+    return `<div class="ghost-row" data-code="${code}" style="padding:4px 10px;border-bottom:1px solid var(--border);cursor:pointer;display:flex;gap:6px;align-items:center;">
+      <span style="font-family:monospace;font-weight:700;color:${degColor(d)};font-size:11px;">${code}</span>
+      <span style="color:var(--muted);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;">${(n.label||'').slice(0,28)}</span>
+      <span style="font-size:9px;color:var(--muted)">d${d}</span>
+    </div>`;
+  }).join('');
+  $('ghost-list').innerHTML = ul || '<div style="padding:12px;color:var(--muted);font-size:11px;">All nodes have coordinates ✓</div>';
+
+  $('ghost-list').querySelectorAll('.ghost-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const code = row.dataset.code;
+      gridSelected = code;
+      if (typeof selectMapNode === 'function') { switchTab('map'); selectMapNode(code); }
+    });
+  });
+}
+
+// ── Health stats (from WBAPI server if connected) ─────────────────────────────
+async function refreshHealth() {
+  if (!WBAPI.loaded) return;
+
+  // Reachability via local BFS
+  const nm = WBAPI.nodeMap;
+  const visited = new Set();
+  const hub = Object.keys(nm).reduce((b, c) => {
+    const da = ['N','E','S','W'].filter(d => nm[c]?.[d]).length;
+    const db = ['N','E','S','W'].filter(d => nm[b]?.[d]).length;
+    return da > db ? c : b;
+  }, Object.keys(nm)[0] || 'LHR');
+  const q = [hub];
+  while (q.length) {
+    const cur = q.shift(); if (visited.has(cur)) continue; visited.add(cur);
+    for (const d of ['N','E','S','W']) { const t = nm[cur]?.[d]; if (t && nm[t] && !visited.has(t)) q.push(t); }
+  }
+  gridReachable = visited;
+  const total = Object.keys(nm).length;
+  const pct   = Math.round(100 * visited.size / total);
+  $('gh-reachable').textContent = `${visited.size}/${total} reachable (${pct}%)`;
+  $('gh-reachable').style.color  = pct >= 90 ? 'var(--green)' : pct >= 60 ? 'var(--orange)' : 'var(--red)';
+
+  // Broken edges (local check)
+  let brokenCount = 0;
+  brokenSet.clear();
+  const seen = new Set();
+  for (const [code, node] of Object.entries(nm)) {
+    for (const dir of ['N','E','S','W']) {
+      const nb = node[dir]; if (!nb) continue;
+      const key = [code, nb].sort().join('|'); if (seen.has(key)) continue; seen.add(key);
+      if (edgeIsBroken(code, nb, dir)) { brokenCount++; brokenSet.add(key); }
+    }
+  }
+  $('gh-broken').textContent = `${brokenCount} broken edges`;
+  $('gh-broken').style.color  = brokenCount === 0 ? 'var(--green)' : 'var(--red)';
+
+  // Nodes without coords
+  const noCoords = Object.keys(nm).filter(c => !WBAPI.nodeCoords[c]).length;
+  $('gh-orphans').textContent = `${noCoords} without coords`;
+  $('gh-orphans').style.color  = noCoords === 0 ? 'var(--green)' : 'var(--orange)';
+
+  renderGrid();
+  renderGhostList($('ghost-search').value);
+}
+
+// ── Canvas interactions ───────────────────────────────────────────────────────
+$('grid-canvas').addEventListener('click', e => {
+  const rect = $('grid-canvas').getBoundingClientRect();
+  const mx   = e.clientX - rect.left, my = e.clientY - rect.top;
+  const S    = gridScale;
+  const coords = WBAPI.nodeCoords;
+  let best = null, bestDist = Infinity;
+  for (const [code, p] of Object.entries(coords)) {
+    const dx = p.c * S - mx, dy = p.r * S - my;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    if (dist < 12 && dist < bestDist) { bestDist = dist; best = code; }
+  }
+  if (best) { gridSelected = best; renderGrid(); }
+});
+
+$('grid-canvas').addEventListener('wheel', e => {
+  e.preventDefault();
+  gridScale = Math.max(4, Math.min(30, gridScale + (e.deltaY < 0 ? 1 : -1)));
+  renderGrid();
+}, { passive: false });
+
+// Buttons
+$('btn-grid-refresh').addEventListener('click', refreshHealth);
+$('btn-grid-mode').addEventListener('click', () => {
+  gridMode = gridMode === 'cell' ? 'force' : 'cell';
+  $('btn-grid-mode').textContent = `Mode: ${gridMode === 'cell' ? 'Cell Grid' : 'Force Layout'}`;
+  if (gridMode === 'force') { switchTab('map'); } // delegate to existing map
+});
+$('ghost-search').addEventListener('input', e => renderGhostList(e.target.value));
+
+// Auto-refresh when tab is activated
+const _origSwitch = window.switchTab;
+window.switchTab = function(name) {
+  _origSwitch(name);
+  if (name === 'grid' && WBAPI.loaded) refreshHealth();
+};
+
+// Also refresh when WBAPI loads
+document.addEventListener('wbapi:loaded', () => { if ($('tab-grid').classList.contains('active')) refreshHealth(); });
 
 })();
 </script>
