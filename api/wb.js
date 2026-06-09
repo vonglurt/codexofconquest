@@ -629,6 +629,54 @@ const CMD = {
     }
   },
 
+  // ── rip-and-connect: auto-relocate all stray (unreachable) nodes ─────────────
+  // Usage: ./api.sh rip-and-connect [--execute] [--limit 50] [--radius 6]
+  //
+  // For each node unreachable from the hub:
+  //   1. Finds the best city to relocate near (scored by quest cross-references + proximity)
+  //   2. Walks that city's mesh to find an open slot (deg ≤ 3)
+  //   3. Moves the stray's coordinates to the adjacent cell
+  //   4. Wires it bidirectionally to the slot node
+  //   5. If slot is deg=3, notes that a junction should be spawned first
+  // Dry-run by default. --execute applies all changes in one server pass.
+  // Reports: placed, failed (cell occupied or no slot), skipped.
+  // Errors that can't be auto-satisfied are listed for manual review.
+  async 'rip-and-connect'(pos, flags) {
+    const limit   = flags.limit  ? +flags.limit  : 50;
+    const radius  = flags.radius ? +flags.radius :  6;
+    const execute = !!flags.execute;
+    const resp = await request('POST', '/api/graph/rip-and-connect', {
+      dryRun: !execute, limit, meshRadius: radius,
+    });
+    if (resp.status >= 400) { printError(resp); process.exit(1); }
+    const d = resp.body;
+
+    ok(`Rip-and-connect  hub=${d.hub}  totalStrays=${d.totalStrays}  limit=${limit}`);
+    ok(`Result: ${d.placed?.length ?? 0} placed  |  ${d.failed?.length ?? 0} failed  |  ${d.skipped?.length ?? 0} skipped`);
+    if (!execute) ok(`[DRY RUN] — add --execute to apply`);
+
+    if (d.placed?.length) {
+      ok(`\nPlaced:`);
+      d.placed.slice(0, 20).forEach(r => {
+        const p = r.plan;
+        ok(`  ${r.stray.padEnd(8)} → near ${p.bestCity} via ${p.slotNode}(deg=${p.slotDeg}).${p.attachDir}  coord=(${p.targetCoord?.r},${p.targetCoord?.c})${p.needsJunction ? '  ⚠ junction recommended' : ''}  ${r.status||''}`);
+      });
+      if (d.placed.length > 20) ok(`  ...and ${d.placed.length - 20} more`);
+    }
+
+    if (d.failed?.length) {
+      ok(`\nFailed (manual review needed):`);
+      d.failed.slice(0, 10).forEach(r => ok(`  ${r.stray.padEnd(8)}  ${r.reason}`));
+    }
+
+    if (d.failed?.length && !execute) {
+      ok(`\nTo fix failed nodes manually:`);
+      ok(`  ./api.sh find-open-location <nearest-city>  # find open slot`);
+      ok(`  ./api.sh move <stray> <r> <c>               # reposition`);
+      ok(`  ./api.sh connect <slot> <dir> <stray>       # wire in`);
+    }
+  },
+
   // ── broken: list all broken edges (diagonal, gap > 4) ───────────────────────
   // Usage: ./api.sh broken [--maxgap N]
   async broken(pos, flags) {
@@ -722,8 +770,10 @@ const CMD = {
     if (!fromCode || !toCode) die('Usage: ./api.sh smart-connect <from> <to> [--radius 6] [--execute]');
     const radius  = flags.radius ? +flags.radius : 6;
     const execute = !!flags.execute;
+
+    // Always fetch the plan first (dryRun=true gives us the commands array)
     const resp = await request('POST', '/api/graph/smart-connect', {
-      from: fromCode, to: toCode, meshRadius: radius, dryRun: !execute,
+      from: fromCode, to: toCode, meshRadius: radius, dryRun: true,
     });
     if (resp.status >= 400) { printError(resp); process.exit(1); }
     const d = resp.body;
@@ -734,27 +784,39 @@ const CMD = {
     ok(`  B-mesh insertion: ${p.insertB.code} (deg=${p.insertB.degree}, depth=${p.insertB.depth}, ${p.insertB.action})`);
     ok(`  Bridge direction: ${p.direction}  gap: ${p.gap ?? '?'}  needsFillGap: ${p.needsFillGap}`);
 
-    if (d.commands?.length) {
-      ok(`\nCommands to execute:`);
-      d.commands.forEach(cmd => ok(`  ${cmd}`));
+    const cmds = (d.commands || []).filter(c => !c.startsWith('#'));
+    ok(`\nCommands:`);
+    (d.commands || []).forEach(cmd => ok(`  ${cmd}`));
+
+    if (!execute) {
+      ok(`\nAdd --execute to run these automatically.`);
+      return;
     }
-    if (!execute) ok(`\nAdd --execute to run the first wiring step automatically.`);
-    else {
-      // Execute: apply each command via api.sh
-      if (d.commands?.length) {
-        ok(`\nExecuting...`);
-        for (const cmd of d.commands) {
-          // Parse and run the command
-          const parts = cmd.replace(/\s*#.*$/, '').trim().split(/\s+/);
-          const subCmd = parts[1]; // e.g. 'junction', 'connect', 'fill-gap'
-          const fn = CMD[subCmd];
-          if (fn) {
-            await fn(parts.slice(1), { execute: true });
-          } else {
-            ok(`  (manual step needed): ${cmd}`);
+
+    // Execute each command by delegating to the existing CMD handlers
+    ok(`\nExecuting...`);
+    for (const rawCmd of cmds) {
+      const parts = rawCmd.trim().split(/\s+/);
+      // Commands look like: "./api.sh connect TLL E BTR" or "node layout-solve.js ..."
+      const apiShIdx = parts.findIndex(p => p === './api.sh' || p === 'api.sh');
+      if (apiShIdx >= 0) {
+        const subParts = parts.slice(apiShIdx + 1);
+        const subCmd = subParts[0];
+        const fn = CMD[subCmd];
+        if (fn) {
+          const subFlags = {};
+          const subPos = [subCmd];
+          for (let i = 1; i < subParts.length; i++) {
+            if (subParts[i].startsWith('--')) subFlags[subParts[i].slice(2)] = subParts[i+1]?.startsWith('--') ? true : subParts[++i];
+            else subPos.push(subParts[i]);
           }
+          subFlags.execute = true;
+          ok(`  → ${subParts.join(' ')}`);
+          await fn(subPos, subFlags);
+          continue;
         }
       }
+      ok(`  (manual): ${rawCmd}`);
     }
   },
 
@@ -2176,6 +2238,7 @@ const SYNOPSIS = [
   `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain T] [--execute]`,
   `  ${C.green}fill-gap${C.reset} <from> <dir> <to>         junction chain for gap > 4  [--step N] [--execute]`,
   `  ${C.green}highway${C.reset} <from> <to>                full junction highway  [--step 4] [--execute]`,
+  `  ${C.green}rip-and-connect${C.reset} [--execute] [--limit 50]  auto-relocate stray nodes to nearest city mesh`,
   `  ${C.green}fix-diagonal${C.reset} <CODE> <dir>          fix one diagonal edge  [--execute]`,
   `  ${C.green}fix-all-broken${C.reset} [--execute] [--limit N]  batch-fix all broken edges`,
   ``,

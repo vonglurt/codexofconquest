@@ -4796,7 +4796,182 @@ async function route(req, res) {
         note: 'Execute the commands field to apply. smart-connect returns the plan; use ./api.sh connect + fill-gap to execute.' });
     }
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect' });
+    // ── POST /api/graph/rip-and-connect ──────────────────────────────────────
+    // Find all nodes unreachable from the hub (stray/orphan nodes).
+    // For each stray, determine the best city to relocate near based on:
+    //   1. Quest cross-references (activateNode, waypointNode) — highest weight
+    //   2. Graph proximity (how close the stray was to reachable nodes before)
+    // Then find an open slot in that city's mesh via find-open-location logic,
+    // move the stray's coordinates adjacent to that slot, and wire it in.
+    // Body: { dryRun?, limit?, meshRadius? }
+    if (parts[1] === 'rip-and-connect' && method === 'POST') {
+      const DIRS4 = ['N','E','S','W'];
+      let body; try { body = await readBody(req); } catch(e) { body = {}; }
+      const { dryRun = true, limit = 50, meshRadius = 6 } = body || {};
+
+      // 1. Find reachable set from hub (LHR or most-connected)
+      const allCodes   = Object.keys(nm);
+      const hub        = allCodes.reduce((b, c) => {
+        const ca = DIRS4.filter(d => nm[c]?.[d] && nm[nm[c][d]]).length;
+        const cb = DIRS4.filter(d => nm[b]?.[d] && nm[nm[b][d]]).length;
+        return ca > cb ? c : b;
+      }, allCodes[0]);
+
+      const reachable = new Set();
+      const bfsQ = [hub];
+      while (bfsQ.length) {
+        const cur = bfsQ.shift();
+        if (reachable.has(cur)) continue;
+        reachable.add(cur);
+        for (const dir of DIRS4) {
+          const tgt = nm[cur]?.[dir];
+          if (tgt && nm[tgt] && !reachable.has(tgt)) bfsQ.push(tgt);
+        }
+      }
+
+      const strays = allCodes.filter(c => !reachable.has(c));
+
+      // 2. Build quest cross-reference map: node → [quest ids that reference it]
+      const nodeQuestRefs = {};  // node code → count of quest refs
+      for (const [qid, q] of Object.entries(WBAPI.questDb || {})) {
+        for (const field of ['activateNode', 'waypointNode']) {
+          const ref = q[field];
+          if (ref && nm[ref]) {
+            nodeQuestRefs[ref] = (nodeQuestRefs[ref] || 0) + 1;
+          }
+        }
+      }
+
+      // 3. For each stray, score candidate cities based on quest cross-references
+      const reachableCities = allCodes.filter(c => reachable.has(c) && ['city','airport'].includes(nm[c]?.name));
+      const reachableArr = [...reachable];
+
+      const deg = code => DIRS4.filter(d => nm[code]?.[d] && nm[nm[code][d]]).length;
+
+      // Find open slot in a city's mesh (simplified inline BFS)
+      const findSlot = (cityCode) => {
+        const visited = new Set();
+        const q = [{code: cityCode, depth: 0}];
+        while (q.length) {
+          const {code, depth} = q.shift();
+          if (visited.has(code) || depth > meshRadius) continue;
+          visited.add(code);
+          const d = deg(code);
+          if (d < 3) return { code, degree: d, freeSlots: DIRS4.filter(dir => !nm[code]?.[dir]), needsJunction: false };
+          if (d === 3) return { code, degree: d, freeSlots: DIRS4.filter(dir => !nm[code]?.[dir]), needsJunction: true };
+          for (const dir of DIRS4) {
+            const tgt = nm[code]?.[dir];
+            if (tgt && nm[tgt] && !visited.has(tgt)) q.push({code: tgt, depth: depth + 1});
+          }
+        }
+        return null;
+      };
+
+      const allCoords = WBAPI.nodeCoords;
+      const occupied  = new Map(Object.entries(allCoords).map(([c,p]) => [`${p.r},${p.c}`, c]));
+
+      const DR4={N:-1,S:1,E:0,W:0}, DC4={N:0,S:0,E:1,W:-1};
+      const OPP4={N:'S',S:'N',E:'W',W:'E'};
+
+      const results = { hub, totalStrays: strays.length, processed: 0, placed: [], failed: [], skipped: [] };
+
+      // Track allocated cells even in dry-run so each stray gets a unique slot
+      const allocatedCells = new Map(occupied); // copy of occupied
+
+      for (const stray of strays.slice(0, limit)) {
+        // Score each reachable city — shuffle candidates so equal scores spread evenly
+        const shuffled = reachableCities.slice().sort(() => Math.random() - 0.5);
+        let bestCity = null, bestScore = -1, bestSlot = null, bestDir = null, bestNr = null, bestNc = null;
+
+        for (const city of shuffled) {
+          const slot = findSlot(city);
+          if (!slot) continue;
+
+          let score = 0;
+          // Quest cross-references (strongest signal)
+          score += (nodeQuestRefs[stray] || 0) * 5;
+          // Geographically close (if both have coords)
+          const cs = allCoords[stray], cc = allCoords[city];
+          if (cs && cc) {
+            const dist = Math.abs(cs.r - cc.r) + Math.abs(cs.c - cc.c);
+            score += Math.max(0, 30 - dist);
+          }
+          // Prefer direct-attach over junction-needed
+          score += slot.needsJunction ? 0 : 2;
+
+          // Find a free cell adjacent to slot in one of its free directions
+          const slotCoord = allCoords[slot.code];
+          if (!slotCoord) continue;
+          let foundCell = false;
+          for (const dir of slot.freeSlots) {
+            const nr = slotCoord.r + DR4[dir], nc = slotCoord.c + DC4[dir];
+            if (!allocatedCells.has(`${nr},${nc}`)) {
+              if (score > bestScore) {
+                bestScore = score; bestCity = city; bestSlot = slot;
+                bestDir = dir; bestNr = nr; bestNc = nc;
+              }
+              foundCell = true; break;
+            }
+          }
+          if (!foundCell) continue;
+        }
+
+        if (!bestCity || !bestSlot) {
+          results.failed.push({ stray, reason: 'no reachable city with free adjacent cell found' });
+          continue;
+        }
+
+        const cellKey = `${bestNr},${bestNc}`;
+        const plan = {
+          stray, bestCity, slotNode: bestSlot.code, slotDeg: bestSlot.degree,
+          needsJunction: bestSlot.needsJunction, attachDir: bestDir,
+          targetCoord: {r: bestNr, c: bestNc},
+          strayLabel: nm[stray]?.label,
+        };
+
+        // Reserve this cell immediately (even in dry-run) so next stray doesn't conflict
+        allocatedCells.set(cellKey, stray);
+
+        if (dryRun) { results.placed.push({ stray, plan }); continue; }
+
+        // Execute: move stray coordinates, wire to slot
+        try {
+          // Move stray to the open cell
+          WBAPI.nodeCoords[stray] = { r: bestNr, c: bestNc };
+          allocatedCells.set(cellKey, stray);
+
+          // Wire stray to slot node
+          WBAPI.editField('node', bestSlot.code, bestDir, stray);
+          WBAPI.editField('node', stray, OPP4[bestDir], bestSlot.code);
+
+          results.placed.push({ stray, plan, status: 'wired' });
+          results.processed++;
+        } catch(e) {
+          results.failed.push({ stray, plan, reason: e.message });
+        }
+      }
+
+      if (!dryRun && results.processed > 0) {
+        // Rewrite NODE_COORDS and save
+        const CS='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', CE='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+        const si=WBAPI._rawSrc.indexOf(CS)+CS.length, ei=WBAPI._rawSrc.indexOf(CE);
+        const entries=Object.entries(WBAPI.nodeCoords).sort(([,a],[,b])=>(a.r-b.r)||(a.c-b.c));
+        let newSec=`\nconst NODE_COORDS = { // → doc: maps.md §NODE_COORDS\n`;
+        let prevBand=-999;
+        for (const [ec,ep] of entries){const band=Math.floor(ep.r/8)*8;if(band!==prevBand&&prevBand!==-999)newSec+='\n';newSec+=`  ${ec}:{r:${ep.r},c:${ep.c}},\n`;prevBand=band;}
+        newSec+=`};\n`;
+        WBAPI._rawSrc=WBAPI._rawSrc.slice(0,si)+newSec+WBAPI._rawSrc.slice(ei);
+        WBAPI._buildIndexes();
+        logResponse('POST', url.pathname, 201, `rip-and-connect: ${results.processed} placed, ${results.failed.length} failed`);
+        return saveAndRestart(res, 201, { ok:true, dryRun:false, ...results });
+      }
+
+      logResponse('POST', url.pathname, 200,
+        `rip-and-connect dry-run: ${results.placed.length} would place, ${results.failed.length} failed, ${results.skipped.length} skipped`);
+      return json(res, 200, { ok:true, dryRun, ...results });
+    }
+
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/rip-and-connect' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
