@@ -4484,7 +4484,118 @@ async function route(req, res) {
     // ── POST /api/coords/swap ─────────────────────────────────────────────────
     // Handled below in the coords block
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap' });
+    // ── POST /api/graph/spawn-junction ───────────────────────────────────────
+    // Create a new junction node between two existing nodes on a given axis.
+    // Body: { from, dir, label?, terrain?, act?, text?, dryRun? }
+    //   from    — source node code
+    //   dir     — N|S|E|W (direction from `from` toward the new junction)
+    //   label   — optional display name (auto-generated if omitted)
+    //   terrain — optional terrain type (inherits from `from` if omitted)
+    //   act     — optional act number (inherits from `from` if omitted)
+    //   text    — signpost description (auto-generated if omitted)
+    //   dryRun  — true → return plan without writing
+    if (parts[1] === 'spawn-junction' && method === 'POST') {
+      let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
+      const { from: srcCode, dir, label: labelArg, terrain: terrainArg, act: actArg, text: textArg, dryRun=true } = body||{};
+      if (!srcCode||!dir) return json(res,400,{error:'Required: from, dir'});
+      if (!['N','S','E','W'].includes(dir)) return json(res,400,{error:'dir must be N|S|E|W'});
+      const srcNode = nm[srcCode]; if (!srcNode) return json(res,404,{error:`Node not found: ${srcCode}`});
+      const srcCoord = WBAPI.nodeCoords[srcCode];
+      if (!srcCoord) return json(res,400,{error:`${srcCode} has no coordinates — place it first`});
+
+      // If dir is already occupied, warn
+      const existingTgt = srcNode[dir];
+      const DR4={N:-1,S:1,E:0,W:0}, DC4={N:0,S:0,E:1,W:-1};
+
+      // Find a free slot in the given direction (1-4 cells out, then further)
+      const occupied = new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
+      let jR = srcCoord.r, jC = srcCoord.c, slotFound=false;
+      for (let d=1; d<=8; d++) {
+        const nr = srcCoord.r + DR4[dir]*d, nc = srcCoord.c + DC4[dir]*d;
+        if (!occupied.has(`${nr},${nc}`)) { jR=nr; jC=nc; slotFound=true; break; }
+      }
+      if (!slotFound) return json(res,409,{error:`No free cell found in direction ${dir} from ${srcCode} within 8 cells`});
+
+      const terrain    = terrainArg || srcNode.name || 'junction';
+      const act        = actArg     != null ? actArg : (srcNode.act||1);
+      const srcLabel   = srcNode.label || srcCode;
+      const tgtLabel   = existingTgt ? (nm[existingTgt]?.label||existingTgt) : `(${dir} end)`;
+      const autoLabel  = labelArg || `${srcLabel} ↔ ${tgtLabel} Junction`;
+      const OPP4={N:'S',S:'N',E:'W',W:'E'};
+      const signEnv    = {city:'crowded streets',airport:'wind-swept tarmac',junction:'open crossroads',site:'ancient ruins',default:'open road'}[terrain]||'open road';
+      const signMonster= {city:'city wolves and pickpockets',airport:'customs wraiths',junction:'highway bandits',site:'site guardians',default:'wandering beasts'}[terrain]||'wandering beasts';
+      const autoText   = textArg || `Signpost says: The road between ${srcLabel} and ${tgtLabel}. You stand at a crossroads on ${signEnv}. Beware of ${signMonster} — good hunting grounds nearby.`;
+
+      // Generate a junction code: next Jnn
+      const jNums = Object.keys(nm).filter(c=>/^J\d+$/.test(c)).map(c=>+c.slice(1));
+      const jCode = `J${(jNums.length?Math.max(...jNums):0)+1}`;
+
+      const plan = {
+        code:jCode, r:jR, c:jC, terrain, label:autoLabel, text:autoText, act,
+        connects: { [OPP4[dir]]: srcCode, ...(existingTgt ? {[dir]:existingTgt} : {}) },
+        patches:  { [srcCode]:{ field:dir, value:jCode }, ...(existingTgt?{[existingTgt]:{field:OPP4[dir],value:jCode}}:{}) },
+        gap: Math.abs(DR4[dir]*(jR-srcCoord.r)) || Math.abs(DC4[dir]*(jC-srcCoord.c)),
+        needsFillGap: (Math.abs(DR4[dir]*(jR-srcCoord.r))||Math.abs(DC4[dir]*(jC-srcCoord.c))) > 4,
+      };
+
+      if (dryRun) {
+        logResponse('POST', url.pathname, 200, `spawn-junction dry-run: ${jCode}`);
+        return json(res,200,{ok:true,dryRun:true,plan});
+      }
+
+      // Execute: create junction node
+      const jBody = { name:terrain, label:autoLabel, text:autoText, act, junction:true, npc:null, battle:null, loot:null, sleep:false, ...plan.connects };
+      const jEntry = serializeNodeLiteral(jCode, jBody);
+      const ins = insertBeforeSectionClose('NODE_MAP', jEntry);
+      if (!ins.ok) return json(res,500,{error:`NODE_MAP insert failed: ${ins.error}`});
+      const newNum = Object.values(WBAPI.nodeMap).reduce((m,n)=>Math.max(m,n.num||0),0)+1;
+      WBAPI.nodeMap[jCode] = { ...jBody, num:newNum };
+
+      // Place coordinates
+      WBAPI.nodeCoords[jCode] = { r:jR, c:jC };
+      const CS='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', CE='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+      const si=WBAPI._rawSrc.indexOf(CS)+CS.length, ei=WBAPI._rawSrc.indexOf(CE);
+      let sec=WBAPI._rawSrc.slice(si,ei);
+      const ci=sec.lastIndexOf('\n};');
+      sec=sec.slice(0,ci+1)+`  ${jCode}:{r:${jR},c:${jC}},\n`+sec.slice(ci+1);
+      WBAPI._rawSrc=WBAPI._rawSrc.slice(0,si)+sec+WBAPI._rawSrc.slice(ei);
+
+      // Patch connecting nodes
+      for (const [pCode, {field,value}] of Object.entries(plan.patches)) WBAPI.editField('node',pCode,field,value);
+      WBAPI._buildIndexes();
+      logResponse('POST', url.pathname, 201, `spawn-junction: ${jCode} at (${jR},${jC})`);
+      return saveAndRestart(res,201,{ok:true,code:jCode,r:jR,c:jC,plan});
+    }
+
+    // ── POST /api/graph/move ──────────────────────────────────────────────────
+    // Move a node to new coordinates, with collision check and optional swap.
+    // Body: { code, r, c, swap? }
+    //   swap: true → swap coords with whatever is at the destination (if occupied)
+    if (parts[1] === 'move' && method === 'POST') {
+      let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
+      const { code, r, c, swap=false } = body||{};
+      if (!code||r==null||c==null) return json(res,400,{error:'Required: code, r, c'});
+      if (!nm[code]) return json(res,404,{error:`Node not found: ${code}`});
+      const destKey = `${r},${c}`;
+      const occupier = Object.entries(WBAPI.nodeCoords).find(([k,p])=>k!==code&&p.r===r&&p.c===c)?.[0];
+      if (occupier && !swap) return json(res,409,{error:`(${r},${c}) occupied by "${occupier}"`,occupier,tip:'Add "swap":true to swap coordinates'});
+      const srcCoord = WBAPI.nodeCoords[code] || null;
+      if (occupier && swap && srcCoord) WBAPI.nodeCoords[occupier] = { r:srcCoord.r, c:srcCoord.c };
+      WBAPI.nodeCoords[code] = { r, c };
+      // Rewrite NODE_COORDS section
+      const entries = Object.entries(WBAPI.nodeCoords).sort(([,a],[,b])=>(a.r-b.r)||(a.c-b.c));
+      const CS='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', CE='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+      const si=WBAPI._rawSrc.indexOf(CS)+CS.length, ei=WBAPI._rawSrc.indexOf(CE);
+      let newSec=`\nconst NODE_COORDS = { // → doc: maps.md §NODE_COORDS\n`;
+      let prevBand=-999;
+      for (const [ec,ep] of entries) { const band=Math.floor(ep.r/8)*8; if(band!==prevBand&&prevBand!==-999)newSec+='\n'; newSec+=`  ${ec}:{r:${ep.r},c:${ep.c}},\n`; prevBand=band; }
+      newSec+=`};\n`;
+      WBAPI._rawSrc=WBAPI._rawSrc.slice(0,si)+newSec+WBAPI._rawSrc.slice(ei);
+      logResponse('POST', url.pathname, 200, `move: ${code} → (${r},${c})${occupier&&swap?' swapped with '+occupier:''}`);
+      return saveAndRestart(res,200,{ok:true,code,from:srcCoord,to:{r,c},...(occupier&&swap?{swapped:{code:occupier,movedTo:srcCoord}}:{})});
+    }
+
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
@@ -4808,7 +4919,170 @@ async function route(req, res) {
       return saveAndRestart(res, 200, { ok:true, updated });
     }
 
-    return json(res, 404, { error:'Unknown layout route. Available: GET /api/layout/solve  POST /api/layout/apply' });
+    // ── GET /api/layout/worldmap ──────────────────────────────────────────────
+    // Return geographic reference data for all major cities.
+    // Each entry has lat, lon, region, and current game grid (r,c) if placed.
+    if (method === 'GET' && layoutAction === 'worldmap') {
+      const nm = WBAPI.nodeMap;
+      const GEO = {
+        HHL:{lat:65.0,lon:-22.0,label:'Herdholt',region:'Iceland'},
+        NID:{lat:63.4,lon:10.4,label:'Nidaros',region:'Norway'},
+        LYG:{lat:62.0,lon:9.0,label:'Lyngvi Hall',region:'Norway'},
+        ODD:{lat:60.0,lon:11.0,label:"Oddrun's Estate",region:'Norway'},
+        SIG:{lat:59.5,lon:11.5,label:"Siggeir's Hall",region:'Scandinavia'},
+        LHR:{lat:59.3,lon:17.6,label:'Birka',region:'Sweden'},
+        HEO:{lat:55.6,lon:11.9,label:'Lejre',region:'Denmark'},
+        GLA:{lat:55.9,lon:-4.3,label:'Glasgow',region:'Scotland'},
+        EDI:{lat:55.9,lon:-3.2,label:'Edinburgh',region:'Scotland'},
+        YRK:{lat:53.9,lon:-1.1,label:'York',region:'England'},
+        GWN:{lat:53.2,lon:-4.0,label:'Gwynedd',region:'Wales'},
+        MGL:{lat:53.1,lon:-3.8,label:'Deganwy',region:'Wales'},
+        SHF:{lat:52.9,lon:-1.2,label:'Nottingham',region:'England'},
+        HVY:{lat:52.0,lon:-3.0,label:"Heveydd's Court",region:'Wales'},
+        HFD:{lat:52.1,lon:-2.7,label:'Hereford',region:'England'},
+        LDN:{lat:51.5,lon:-0.1,label:'London (White Hill)',region:'England'},
+        LON:{lat:51.5,lon:-0.3,label:'London (Chancellor)',region:'England'},
+        BRK:{lat:51.5,lon:-0.2,label:'British Royal Court',region:'England'},
+        MSE:{lat:51.3,lon:1.1,label:'Canterbury',region:'England'},
+        ACT:{lat:50.6,lon:-4.7,label:"Arthur's Court",region:'England'},
+        CVP:{lat:38.7,lon:-9.1,label:'Lisbon',region:'Portugal'},
+        BDX:{lat:44.8,lon:-0.6,label:'Bordeaux',region:'France'},
+        SRL:{lat:44.7,lon:1.1,label:'Beaulieu-en-Périgord',region:'France'},
+        FRK:{lat:48.9,lon:2.3,label:'Paris',region:'France'},
+        MTP:{lat:43.6,lon:3.9,label:'Montpellier',region:'France'},
+        AVG:{lat:43.9,lon:4.8,label:'Avignon',region:'France'},
+        MAR:{lat:43.3,lon:5.4,label:'Marseille',region:'France'},
+        KOL:{lat:50.9,lon:6.9,label:'Cologne',region:'Germany'},
+        WOR:{lat:49.6,lon:8.4,label:'Worms',region:'Germany'},
+        REG:{lat:49.0,lon:12.1,label:'Regensburg',region:'Germany'},
+        SAL:{lat:44.6,lon:7.5,label:'Saluzzo',region:'N Italy'},
+        BDA:{lat:47.5,lon:19.0,label:'Buda',region:'Hungary'},
+        ETZ:{lat:47.3,lon:19.2,label:"Etzel's Court",region:'Hungary'},
+        KRK:{lat:50.1,lon:19.9,label:'Kraków',region:'Poland'},
+        VEN:{lat:45.4,lon:12.3,label:'Venice',region:'Italy'},
+        FRR:{lat:44.8,lon:11.6,label:'Ferrara',region:'Italy'},
+        BOL:{lat:44.5,lon:11.3,label:'Bologna',region:'Italy'},
+        PRA:{lat:43.9,lon:11.1,label:'Prato',region:'Italy'},
+        PIS:{lat:43.8,lon:10.9,label:'Pistoia',region:'Italy'},
+        PSA:{lat:43.7,lon:10.4,label:'Florence/Pisa Gate',region:'Italy'},
+        AOI:{lat:43.6,lon:13.5,label:'Ancona',region:'Italy'},
+        ROM:{lat:41.9,lon:12.5,label:'Rome',region:'Italy'},
+        SAU:{lat:41.8,lon:12.6,label:'Appian Way',region:'Italy'},
+        BAR:{lat:41.1,lon:16.9,label:'Bari',region:'Italy'},
+        PAR:{lat:38.1,lon:13.4,label:'Palermo',region:'Sicily'},
+        BIS:{lat:47.1,lon:24.5,label:'Bistritz',region:'Romania'},
+        KLZ:{lat:46.8,lon:23.6,label:'Klausenburg',region:'Romania'},
+        SIB:{lat:45.8,lon:24.2,label:'Sibiu',region:'Romania'},
+        VAR:{lat:43.2,lon:27.9,label:'Varna',region:'Bulgaria'},
+        THA:{lat:40.6,lon:22.9,label:'Thessaloniki Harbor',region:'Greece'},
+        LMO:{lat:40.5,lon:23.0,label:'Thessaloniki Mon.',region:'Greece'},
+        PHC:{lat:39.6,lon:19.9,label:'Phaeacia',region:'Greece'},
+        ITH:{lat:38.4,lon:20.7,label:'Ithaca',region:'Greece'},
+        ORC:{lat:38.5,lon:22.9,label:'Orchomenos',region:'Greece'},
+        MYS:{lat:37.1,lon:22.4,label:'Mystras',region:'Greece'},
+        MSN:{lat:36.9,lon:21.7,label:'Messenia',region:'Greece'},
+        CON:{lat:41.0,lon:28.9,label:'Constantinople',region:'Turkey'},
+        VRG:{lat:41.1,lon:28.8,label:'Varangian Barracks',region:'Turkey'},
+        BTR:{lat:41.0,lon:29.1,label:'Bosphorus',region:'Turkey'},
+        BUR:{lat:40.2,lon:29.1,label:'Bursa',region:'Turkey'},
+        SIN:{lat:42.0,lon:35.2,label:'Sinope',region:'Turkey'},
+        TRB:{lat:41.0,lon:39.7,label:'Trebizond',region:'Turkey'},
+        ANT:{lat:36.2,lon:36.2,label:'Antioch',region:'Turkey/Syria'},
+        ALP:{lat:36.2,lon:37.2,label:'Aleppo',region:'Syria'},
+        ALB:{lat:36.4,lon:37.0,label:'Aleppo Hills',region:'Syria'},
+        JAR:{lat:31.8,lon:35.2,label:'Jerusalem',region:'Palestine'},
+        OLN:{lat:31.7,lon:35.3,label:'Jerusalem Inner',region:'Palestine'},
+        BGD:{lat:33.3,lon:44.4,label:'Baghdad',region:'Iraq'},
+        TUN:{lat:36.8,lon:10.2,label:'Tunis',region:'Tunisia'},
+        MLN:{lat:-3.2,lon:40.1,label:'Malindi',region:'Kenya'},
+        GNJ:{lat:40.7,lon:46.3,label:'Ganja',region:'Azerbaijan'},
+        TBZ:{lat:38.1,lon:46.3,label:'Tabriz',region:'Iran'},
+        MRG:{lat:37.4,lon:46.5,label:'Maragha',region:'Iran'},
+        NIS:{lat:36.2,lon:58.8,label:'Nishapur',region:'Iran'},
+        MRV:{lat:37.7,lon:62.2,label:'Merv',region:'Turkmenistan'},
+        SAM:{lat:39.6,lon:66.9,label:'Samarkand',region:'Uzbekistan'},
+      };
+      const result = {};
+      for (const [code, geo] of Object.entries(GEO)) {
+        if (!nm[code]) continue;
+        result[code] = { ...geo, gameCoords: WBAPI.nodeCoords[code] || null, inNodeMap: true };
+      }
+      logResponse(method, url.pathname, 200, `worldmap: ${Object.keys(result).length} geo-referenced cities`);
+      return json(res, 200, { ok:true, count: Object.keys(result).length, cities: result });
+    }
+
+    // ── POST /api/layout/geo-seed ─────────────────────────────────────────────
+    // Assign geographic lat/lon-derived game coordinates to known major cities.
+    // Body: { dryRun?, minLat?, maxLat?, minLon?, maxLon?, gridMin?, gridMax? }
+    if (method === 'POST' && layoutAction === 'geo-seed') {
+      const nm = WBAPI.nodeMap;
+      let body; try { body = await readBody(req); } catch(e) { body = {}; }
+      const { dryRun=true, minLat=-8, maxLat=68, minLon=-25, maxLon=72, gridMin=8, gridMax=500 } = body||{};
+
+      // Reuse the GEO table from the worldmap handler inline (abbreviated for brevity)
+      const geoSeed = await (async () => {
+        const res2 = { statusCode:200 }; // fake response for inner handler
+        // Instead: return the geo table directly
+        return null;
+      })();
+
+      // Inline geo table (same as worldmap)
+      const GEO2 = {
+        HHL:{lat:65.0,lon:-22.0},NID:{lat:63.4,lon:10.4},LYG:{lat:62.0,lon:9.0},ODD:{lat:60.0,lon:11.0},
+        SIG:{lat:59.5,lon:11.5},LHR:{lat:59.3,lon:17.6},HEO:{lat:55.6,lon:11.9},GLA:{lat:55.9,lon:-4.3},
+        EDI:{lat:55.9,lon:-3.2},YRK:{lat:53.9,lon:-1.1},GWN:{lat:53.2,lon:-4.0},MGL:{lat:53.1,lon:-3.8},
+        SHF:{lat:52.9,lon:-1.2},HVY:{lat:52.0,lon:-3.0},HFD:{lat:52.1,lon:-2.7},LDN:{lat:51.5,lon:-0.1},
+        LON:{lat:51.5,lon:-0.3},BRK:{lat:51.5,lon:-0.2},MSE:{lat:51.3,lon:1.1},ACT:{lat:50.6,lon:-4.7},
+        CVP:{lat:38.7,lon:-9.1},BDX:{lat:44.8,lon:-0.6},SRL:{lat:44.7,lon:1.1},FRK:{lat:48.9,lon:2.3},
+        MTP:{lat:43.6,lon:3.9},AVG:{lat:43.9,lon:4.8},MAR:{lat:43.3,lon:5.4},KOL:{lat:50.9,lon:6.9},
+        WOR:{lat:49.6,lon:8.4},REG:{lat:49.0,lon:12.1},SAL:{lat:44.6,lon:7.5},BDA:{lat:47.5,lon:19.0},
+        ETZ:{lat:47.3,lon:19.2},KRK:{lat:50.1,lon:19.9},VEN:{lat:45.4,lon:12.3},FRR:{lat:44.8,lon:11.6},
+        BOL:{lat:44.5,lon:11.3},PRA:{lat:43.9,lon:11.1},PIS:{lat:43.8,lon:10.9},PSA:{lat:43.7,lon:10.4},
+        AOI:{lat:43.6,lon:13.5},ROM:{lat:41.9,lon:12.5},SAU:{lat:41.8,lon:12.6},BAR:{lat:41.1,lon:16.9},
+        PAR:{lat:38.1,lon:13.4},BIS:{lat:47.1,lon:24.5},KLZ:{lat:46.8,lon:23.6},SIB:{lat:45.8,lon:24.2},
+        VAR:{lat:43.2,lon:27.9},THA:{lat:40.6,lon:22.9},LMO:{lat:40.5,lon:23.0},PHC:{lat:39.6,lon:19.9},
+        ITH:{lat:38.4,lon:20.7},ORC:{lat:38.5,lon:22.9},MYS:{lat:37.1,lon:22.4},MSN:{lat:36.9,lon:21.7},
+        CON:{lat:41.0,lon:28.9},VRG:{lat:41.1,lon:28.8},BTR:{lat:41.0,lon:29.1},BUR:{lat:40.2,lon:29.1},
+        SIN:{lat:42.0,lon:35.2},TRB:{lat:41.0,lon:39.7},ANT:{lat:36.2,lon:36.2},ALP:{lat:36.2,lon:37.2},
+        ALB:{lat:36.4,lon:37.0},JAR:{lat:31.8,lon:35.2},OLN:{lat:31.7,lon:35.3},BGD:{lat:33.3,lon:44.4},
+        TUN:{lat:36.8,lon:10.2},MLN:{lat:-3.2,lon:40.1},GNJ:{lat:40.7,lon:46.3},TBZ:{lat:38.1,lon:46.3},
+        MRG:{lat:37.4,lon:46.5},NIS:{lat:36.2,lon:58.8},MRV:{lat:37.7,lon:62.2},SAM:{lat:39.6,lon:66.9},
+      };
+
+      const coords = {}, seeded = [], skipped = [];
+      const occ = new Map();
+      for (const [code, geo] of Object.entries(GEO2)) {
+        if (!nm[code]) { skipped.push(code); continue; }
+        let r = Math.round(gridMin + (maxLat - geo.lat) / (maxLat - minLat) * (gridMax - gridMin));
+        let c = Math.round(gridMin + (geo.lon - minLon) / (maxLon - minLon) * (gridMax - gridMin));
+        r = Math.max(gridMin, Math.min(gridMax, r));
+        c = Math.max(gridMin, Math.min(gridMax, c));
+        for (let try_=0; occ.has(`${r},${c}`) && try_<20; try_++) c++;
+        coords[code] = {r, c};
+        occ.set(`${r},${c}`, code);
+        seeded.push(code);
+      }
+
+      if (dryRun) {
+        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} cities`);
+        return json(res, 200, { ok:true, dryRun:true, seeded:seeded.length, skipped, coords });
+      }
+
+      // Apply
+      for (const [code, p] of Object.entries(coords)) WBAPI.nodeCoords[code] = p;
+      const START_M='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', END_M='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+      const sI=WBAPI._rawSrc.indexOf(START_M)+START_M.length, eI=WBAPI._rawSrc.indexOf(END_M);
+      const allEntries=Object.entries(WBAPI.nodeCoords).sort(([,a],[,b])=>(a.r-b.r)||(a.c-b.c));
+      let newSec=`\nconst NODE_COORDS = { // → doc: maps.md §NODE_COORDS\n`;
+      let prevBand=-999;
+      for (const [ec,ep] of allEntries){const band=Math.floor(ep.r/8)*8;if(band!==prevBand&&prevBand!==-999)newSec+='\n';newSec+=`  ${ec}:{r:${ep.r},c:${ep.c}},\n`;prevBand=band;}
+      newSec+=`};\n`;
+      WBAPI._rawSrc=WBAPI._rawSrc.slice(0,sI)+newSec+WBAPI._rawSrc.slice(eI);
+      logResponse(method, url.pathname, 200, `geo-seed applied: ${seeded.length} cities`);
+      return saveAndRestart(res, 200, { ok:true, dryRun:false, seeded:seeded.length, skipped, coords });
+    }
+
+    return json(res, 404, { error:'Unknown layout route. Available: GET /api/layout/solve  POST /api/layout/apply  GET /api/layout/worldmap  POST /api/layout/geo-seed' });
   }
 
   // ── Flags (_S_DEFAULTS) ───────────────────────────────────────────────────

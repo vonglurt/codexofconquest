@@ -496,6 +496,118 @@ const CMD = {
     if (flags.out) { fs.writeFileSync(flags.out, JSON.stringify(d, null, 2) + '\n'); ok(`→ ${flags.out}`); }
   },
 
+  // ── worldmap: terminal ASCII world map of major cities ──────────────────────
+  // Usage: ./api.sh worldmap [--latlon]
+  async worldmap(_pos, flags) {
+    const r = await request('GET', '/api/layout/worldmap');
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    const cities = r.body.cities || {};
+    const geo = Object.entries(cities).sort(([,a],[,b]) => (a.lon||0) - (b.lon||0) || (b.lat||0) - (a.lat||0));
+
+    // Simple terminal map (equirectangular, 90 wide × 26 tall)
+    const W=90, H=26, MLAT=68, mLAT=-8, MLON=72, mLON=-25;
+    const project = (lat,lon) => ({
+      r: Math.round((MLAT-lat)/(MLAT-mLAT)*(H-1)),
+      c: Math.round((lon-mLON)/(MLON-mLON)*(W-1)),
+    });
+    const grid = Array.from({length:H},()=>Array(W).fill(' '));
+    // Grid lines every 15°
+    for (let lat=mLAT; lat<=MLAT; lat+=15) { const {r}=project(lat,0); if(r>=0&&r<H) for(let c=0;c<W;c++) if(grid[r][c]===' ') grid[r][c]='·'; }
+    for (let lon=mLON; lon<=MLON; lon+=15) { const {c}=project(0,lon); if(c>=0&&c<W) for(let r=0;r<H;r++) if(grid[r][c]===' ') grid[r][c]='·'; }
+    // Place cities
+    for (const [code, city] of geo) {
+      const {r,c}=project(city.lat,city.lon);
+      if(r<0||r>=H||c<0||c>=W) continue;
+      const ch=code.slice(0,3);
+      for(let i=0;i<ch.length&&c+i<W;i++) grid[r][c+i]=ch[i];
+    }
+    // Print
+    ok(`World Map — ${geo.length} geo-referenced cities`);
+    const lonHdr = Array(W+4).fill(' ');
+    for (let lon=mLON; lon<=MLON; lon+=15) { const {c}=project(0,lon); const t=(lon<0?`${-lon}W`:`${lon}E`).padStart(4); for(let i=0;i<t.length&&c+i+3<lonHdr.length;i++) lonHdr[c+i+3]=t[i]; }
+    process.stdout.write('   '+lonHdr.join('')+'\n');
+    process.stdout.write('   ╔'+'═'.repeat(W)+'╗\n');
+    for (let r=0; r<H; r++) {
+      const lat=MLAT-r*(MLAT-mLAT)/(H-1);
+      const tag=(lat>=0?`${Math.round(lat)}N`:`${Math.abs(Math.round(lat))}S`).padStart(3);
+      process.stdout.write(`${tag}║${grid[r].join('')}║\n`);
+    }
+    process.stdout.write('   ╚'+'═'.repeat(W)+'╝\n\n');
+
+    if (flags.latlon || flags.l) {
+      // City list with lat/lon
+      process.stdout.write(`${'CODE'.padEnd(6)} ${'LABEL'.padEnd(26)} ${'REGION'.padEnd(20)} ${'LAT'.padStart(6)} ${'LON'.padStart(7)}  ${'r,c in game'.padStart(10)}\n`);
+      process.stdout.write('─'.repeat(88)+'\n');
+      for (const [code,city] of geo) {
+        const latS=(city.lat>=0?`${city.lat.toFixed(1)}N`:`${Math.abs(city.lat).toFixed(1)}S`).padStart(6);
+        const lonS=(city.lon>=0?`${city.lon.toFixed(1)}E`:`${Math.abs(city.lon).toFixed(1)}W`).padStart(7);
+        const rc   = city.gameCoords ? `r=${city.gameCoords.r} c=${city.gameCoords.c}` : '(no coords)';
+        process.stdout.write(`${code.padEnd(6)} ${(city.label||'').slice(0,26).padEnd(26)} ${(city.region||'').slice(0,20).padEnd(20)} ${latS} ${lonS}  ${rc}\n`);
+      }
+    }
+  },
+
+  // ── move: move a node to new coordinates (with collision check / swap) ──────
+  // Usage: ./api.sh move <CODE> <r> <c> [--swap]
+  async move(pos, flags) {
+    const [, code, rStr, cStr] = pos;
+    if (!code||rStr==null||cStr==null) die('Usage: ./api.sh move <CODE> <r> <c> [--swap]');
+    const r=+rStr, c=+cStr;
+    if (isNaN(r)||isNaN(c)) die('r and c must be numbers');
+    const resp = await request('POST', '/api/graph/move', { code, r, c, swap: !!flags.swap });
+    if (resp.status >= 400) { printError(resp); process.exit(1); }
+    const d = resp.body;
+    ok(`${code} moved from (${d.from?.r},${d.from?.c}) → (${r},${c})`);
+    if (d.swapped) ok(`swapped with ${d.swapped.code} → (${d.swapped.movedTo?.r},${d.swapped.movedTo?.c})`);
+  },
+
+  // ── junction: spawn a new junction node between two points ───────────────────
+  // Usage: ./api.sh junction <from> <dir> [--label "name"] [--terrain city] [--execute]
+  //   from     — source node code
+  //   dir      — N|S|E|W direction for the new junction
+  //   --label  — custom label (default: auto-generated signpost name)
+  //   --terrain — terrain type (default: inherits from source)
+  //   --execute — actually create (default is dry-run)
+  async junction(pos, flags) {
+    const [, from, dir] = pos;
+    if (!from||!dir) die('Usage: ./api.sh junction <from> <dir> [--label "name"] [--terrain type] [--execute]');
+    const body = { from, dir, dryRun: !flags.execute, ...(flags.label?{label:flags.label}:{}), ...(flags.terrain?{terrain:flags.terrain}:{}) };
+    const resp = await request('POST', '/api/graph/spawn-junction', body);
+    if (resp.status >= 400) { printError(resp); process.exit(1); }
+    const d = resp.body;
+    if (d.dryRun) {
+      ok(`[DRY RUN] Junction ${d.plan.code}  r=${d.plan.r}  c=${d.plan.c}  terrain=${d.plan.terrain}`);
+      ok(`Label:  ${d.plan.label}`);
+      ok(`Text:   ${d.plan.text}`);
+      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — run fill-gap after creating`);
+      ok(`Add --execute to create the junction`);
+    } else {
+      ok(`Junction ${d.code} created at (${d.r},${d.c})`);
+      ok(`Label: ${d.plan.label}`);
+      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — run: ./api.sh fill-gap ${from} ${dir} ${d.code}`);
+    }
+  },
+
+  // ── geo-seed: apply geographic lat/lon seeds to major city coordinates ────────
+  // Usage: ./api.sh geo-seed [--execute] [--grid-min 8] [--grid-max 500]
+  async 'geo-seed'(pos, flags) {
+    const dryRun = !flags.execute;
+    const body   = { dryRun, ...(flags['grid-min']?{gridMin:+flags['grid-min']}:{}), ...(flags['grid-max']?{gridMax:+flags['grid-max']}:{}) };
+    const resp = await request('POST', '/api/layout/geo-seed', body);
+    if (resp.status >= 400) { printError(resp); process.exit(1); }
+    const d = resp.body;
+    if (dryRun) {
+      ok(`[DRY RUN] ${d.seeded} cities would be geo-seeded. Add --execute to apply.`);
+      if (d.skipped?.length) ok(`Not in node_map: ${d.skipped.join(', ')}`);
+      for (const [code,p] of Object.entries(d.coords||{}).slice(0,10)) ok(`  ${code}: r=${p.r} c=${p.c}`);
+      if (Object.keys(d.coords||{}).length>10) ok(`  ...and ${Object.keys(d.coords).length-10} more`);
+    } else {
+      ok(`Geo-seeded ${d.seeded} cities to game grid.`);
+      if (d.skipped?.length) info(`Skipped (not in node_map): ${d.skipped.join(', ')}`);
+      info(`Next: node layout-solve.js --apply  to propagate remaining nodes from geo anchors`);
+    }
+  },
+
   help() { process.stdout.write(HELP + '\n'); },
 };
 
@@ -523,7 +635,7 @@ ${C.bold}═══════════════════════�
       you do not need POST /api/reload after an external edit
 
   When raw curl is still useful:
-    • Graph/coords endpoints (fill-gap, corner-junction, layout/solve)
+    • Graph/coords endpoints (corner-junction, layout/solve)
       — not wrapped by api.sh yet
     • Scripting DELETE with a nonce captured from ./api.sh nonce
     • One-off POST /api/save at session end
@@ -1591,6 +1703,10 @@ const SYNOPSIS = [
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
   `  ${C.green}chain${C.reset} <quest-id>                   quest chain`,
   `  ${C.green}export${C.reset} <collection>                dump JSON  [--format js|module]`,
+  `  ${C.green}worldmap${C.reset} [--latlon]                ASCII terminal map (lat/lon orientation)`,
+  `  ${C.green}move${C.reset} <CODE> <r> <c> [--swap]       move node coordinates (swap if occupied)`,
+  `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain type] [--execute]`,
+  `  ${C.green}geo-seed${C.reset} [--execute]               seed major cities from real lat/lon`,
   `  ${C.green}location${C.reset} [code]                    composite node view (no code = list all)`,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,
