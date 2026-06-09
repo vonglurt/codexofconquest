@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com
 // worldmap.js — terminal world map of major cities + geographic coordinate seeding
 //
 // Draws an ASCII map of the game world oriented by real-world lat/long,
@@ -1102,7 +1104,8 @@ async function main() {
   const seed     = argv.includes('--seed');
   const dryRun   = argv.includes('--dry-run');
   const regions    = argv.includes('--regions');
-  const nGrid      = getArg('--regions') ? +getArg('--regions') : (getArg('--grid') ? +getArg('--grid') : 6);
+  const _nGridRaw  = getArg('--regions');
+  const nGrid      = (_nGridRaw && !isNaN(+_nGridRaw)) ? +_nGridRaw : (getArg('--grid') && !isNaN(+getArg('--grid')) ? +getArg('--grid') : 6);
   const regionZoom = getArg('--region');
   const cityZoom   = getArg('--city');
   const searchQ    = getArg('--search') || getArg('--monster') || getArg('-s');
