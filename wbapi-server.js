@@ -61,6 +61,10 @@ function purgeNonces() {
 // ── Config ──────────────────────────────────────────────────────────────────
 const PORT      = parseInt(process.env.PORT || '1367');
 const VERBOSE   = process.env.WBAPI_VERBOSE === '1' || process.env.WBAPI_VERBOSE === 'true';
+// TRACE: ultra-verbose — every algorithm decision, list traversal, insertion step.
+// Enable with: WBAPI_TRACE=1 node wbapi-server.js
+// All trace output goes to the log file AND terminal when enabled.
+const TRACE     = process.env.WBAPI_TRACE === '1' || VERBOSE;
 const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(__dirname, 'roll2hit-v3.html');
@@ -131,6 +135,15 @@ function logResponse(_method, _url, status, summary) {
   const timeStr = elapsed < 10 ? `${elapsed}ms` : elapsed < 100 ? `${C.yellow}${elapsed}ms${C.reset}` : `${C.red}${elapsed}ms${C.reset}`;
   console.log(`  ${C.dim}└─${C.reset}  ${col}${C.bold}${status}${C.reset}  ${summary}  ${C.dim}[${timeStr}${C.dim}]${C.reset}`);
   logStream.write(`  └─  ${status}  ${summary}  [${elapsed}ms]\n`);
+}
+
+// ── logTrace() — ultra-verbose algorithm decision trace ──────────────────────
+// Shows input→decision→output for every significant processing step.
+// Always written to log file; also to terminal when TRACE=true.
+function logTrace(op, detail) {
+  const line = `  ·· [TRACE] ${op}: ${detail}`;
+  logStream.write(line + '\n');
+  if (TRACE) console.log(`  ${C.dim}··${C.reset} ${C.dim}[TRACE]${C.reset} ${op}${detail ? ': ' + detail : ''}`);
 }
 
 // ── logBody() — pretty-print JSON body; always to file, console only in verbose
@@ -4446,10 +4459,12 @@ async function route(req, res) {
       if (conflicts.length) return json(res,409,{ error:`${conflicts.length} slot conflicts`, conflicts,
         suggestion:'Move conflicting nodes first, or use dryRun:true to see the plan' });
 
+      logTrace('fill-gap execute', `from=${src} dir=${dir} to=${tgt} gap=${gap} step=${step} junctions=${juncsNeeded} terrain=${terrainType}`);
       // Execute: create junctions and wire chain
       const created = [];
       let prev = src, prevDir = dir;
       for (const p of plan) {
+        logTrace('fill-gap insert', `${p.code} at r=${p.r} c=${p.c}  chain: ${prev}→${p.code}`);
         const jBody = { name:terrainType, label:`Junction near ${nm[prev]?.label||prev}`,
           text:`Junction along ${dir} path.`, act:nm[src]?.act||1, junction:true, npc:null, battle:null, loot:null, sleep:false,
           [OPP[dir]]: prev };
@@ -4738,6 +4753,9 @@ async function route(req, res) {
       const fromCandidates = walkMesh(fromCode, toCode);
       const toCandidates   = walkMesh(toCode,   fromCode);
 
+      logTrace('smart-connect', `from=${fromCode}(${fromCandidates.length} candidates) to=${toCode}(${toCandidates.length} candidates) meshRadius=${meshRadius}`);
+      if (fromCandidates.length) logTrace('smart-connect insertA', `best=${fromCandidates[0].code} deg=${fromCandidates[0].degree} depth=${fromCandidates[0].depth} dist=${fromCandidates[0].dist}`);
+      if (toCandidates.length)   logTrace('smart-connect insertB', `best=${toCandidates[0].code} deg=${toCandidates[0].degree} depth=${toCandidates[0].depth} dist=${toCandidates[0].dist}`);
       if (!fromCandidates.length) return json(res, 409, {
         error: `No open slots found within ${meshRadius} hops of "${fromCode}"`,
         advice: `Run ./api.sh find-open-location ${fromCode} to inspect the mesh`,
@@ -4878,7 +4896,9 @@ async function route(req, res) {
       // Track allocated cells even in dry-run so each stray gets a unique slot
       const allocatedCells = new Map(occupied); // copy of occupied
 
+      logTrace('rip-and-connect', `totalStrays=${strays.length} limit=${limit} meshRadius=${meshRadius} dryRun=${dryRun}`);
       for (const stray of strays.slice(0, limit)) {
+        logTrace('rip-stray', `processing ${stray} label="${(nm[stray]?.label||'').slice(0,30)}"`);
         // Score each reachable city — shuffle candidates so equal scores spread evenly
         const shuffled = reachableCities.slice().sort(() => Math.random() - 0.5);
         let bestCity = null, bestScore = -1, bestSlot = null, bestDir = null, bestNr = null, bestNc = null;
@@ -4921,6 +4941,7 @@ async function route(req, res) {
           continue;
         }
 
+        logTrace('rip-decision', `${stray}→${bestCity} slot=${bestSlot.code}(deg=${bestSlot.degree}).${bestDir} targetCell=(${bestNr},${bestNc}) score=${bestScore}`);
         const cellKey = `${bestNr},${bestNc}`;
         const plan = {
           stray, bestCity, slotNode: bestSlot.code, slotDeg: bestSlot.degree,
@@ -6126,6 +6147,7 @@ async function route(req, res) {
       WBAPI._buildIndexes();
       logRow('code', code);
       logRow('label', `${body.label}  ·  Act ${body.act}  ·  terrain: ${body.name||'—'}${coordNote}`);
+      logTrace('node create', `code=${code} terrain=${body.name} label="${(body.label||'').slice(0,40)}" act=${body.act} coords=${coordNote.trim()} connections=${['N','E','S','W'].filter(d=>body[d]).map(d=>d+'='+body[d]).join(' ')}`);
       logResponse(method, url.pathname, 201, `created node/${code}`);
       return saveAndRestart(res, 201, { ok:true, code, coords: WBAPI.nodeCoords[code] || null, ...nodeConnections(code) });
     }
@@ -6926,8 +6948,80 @@ async function route(req, res) {
       return json(res, 404, { ok:false, error:`${type} "${resolvedKey}" not found` });
     }
 
+    logTrace('PUT', `type=${type} key=${resolvedKey} fields=${Object.keys(body).join(',')}`);
+
+    // Auto-junction rule: if setting a directional field (N/E/S/W) on a node
+    // that already has 3 connections (deg=3), automatically create a junction
+    // node first so the source stays at deg=3 and the junction gets the 4th slot.
+    // Body can pass autoJunction:false to bypass this behaviour.
+    const autoJunctionEnabled = type === 'node' && body.autoJunction !== false;
+    const autoJunctionCreated = [];
+    if (autoJunctionEnabled) {
+      const DIRS4 = ['N','E','S','W'];
+      const OPP4  = {N:'S',S:'N',E:'W',W:'E'};
+      const DR4   = {N:-1,S:1,E:0,W:0};
+      const DC4   = {N:0,S:0,E:1,W:-1};
+      const srcNode = WBAPI.nodeMap[resolvedKey];
+      if (srcNode) {
+        const currentDeg = DIRS4.filter(d => srcNode[d] && WBAPI.nodeMap[srcNode[d]]).length;
+        logTrace('auto-junction check', `node=${resolvedKey} currentDeg=${currentDeg} dirFields=${DIRS4.filter(d=>d in body&&body[d]).join(',')}`);
+        if (currentDeg >= 3) {
+          for (const dirField of DIRS4) {
+            if (!(dirField in body) || !body[dirField]) continue; // only for set directions
+            if (srcNode[dirField]) continue; // slot already taken — let normal handler run
+            logTrace('auto-junction trigger', `${resolvedKey}(deg=${currentDeg}).${dirField}→${body[dirField]} — will insert junction`);
+            // Degree is 3 and we're trying to set the 4th slot → auto-junction
+            const targetCode  = body[dirField];
+            const srcCoord    = WBAPI.nodeCoords[resolvedKey];
+            // Generate a junction code
+            const jNums = Object.keys(WBAPI.nodeMap).filter(c=>/^J\d+$/.test(c)).map(c=>+c.slice(1));
+            const jCode = `J${(jNums.length?Math.max(...jNums):0)+1}`;
+            // Place junction 1 step in the chosen direction from src
+            const jR = srcCoord ? srcCoord.r + DR4[dirField] : null;
+            const jC = srcCoord ? srcCoord.c + DC4[dirField] : null;
+            // Verify the cell is free
+            const occupied = jR !== null && Object.entries(WBAPI.nodeCoords).some(([c,p]) => p.r===jR && p.c===jC);
+            if (!occupied && jR !== null) {
+              const srcNode2 = WBAPI.nodeMap[resolvedKey];
+              const terrain  = srcNode2?.name || 'junction';
+              const srcLabel = (srcNode2?.label||resolvedKey).split(/[—–]/)[0].trim().slice(0,20);
+              const tgtLabel = (WBAPI.nodeMap[targetCode]?.label||targetCode).split(/[—–]/)[0].trim().slice(0,20);
+              const jBody = {
+                name: terrain, label: `${srcLabel} ↔ ${tgtLabel} Junction`,
+                text: `Signpost says: The road between ${srcLabel} and ${tgtLabel}. Junction auto-created at degree-3 node.`,
+                act: srcNode2?.act||1, junction:true,
+                [OPP4[dirField]]: resolvedKey, [dirField]: targetCode,
+              };
+              const jEntry = serializeNodeLiteral(jCode, jBody);
+              const ins = insertBeforeSectionClose('NODE_MAP', jEntry);
+              logTrace('auto-junction create', `code=${jCode} at r=${jR} c=${jC} between ${resolvedKey} and ${targetCode}`);
+              if (ins.ok) {
+                const newNum = Object.values(WBAPI.nodeMap).reduce((m,n)=>Math.max(m,n.num||0),0)+1;
+                WBAPI.nodeMap[jCode] = { ...jBody, num:newNum };
+                WBAPI.nodeCoords[jCode] = { r:jR, c:jC };
+                // Write coord into source
+                const CS='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', CE='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+                const si=WBAPI._rawSrc.indexOf(CS)+CS.length, ei=WBAPI._rawSrc.indexOf(CE);
+                let sec=WBAPI._rawSrc.slice(si,ei);
+                const ci=sec.lastIndexOf('\n};');
+                sec=sec.slice(0,ci+1)+`  ${jCode}:{r:${jR},c:${jC}},\n`+sec.slice(ci+1);
+                WBAPI._rawSrc=WBAPI._rawSrc.slice(0,si)+sec+WBAPI._rawSrc.slice(ei);
+                // Wire back from target to junction
+                WBAPI.editField('node', targetCode, OPP4[dirField], jCode);
+                // Replace the requested field with junction connection
+                body[dirField] = jCode;
+                autoJunctionCreated.push({ jCode, direction:dirField, target:targetCode, at:{r:jR,c:jC} });
+                logRow('auto-junction', `${resolvedKey}(deg=3) → ${jCode} → ${targetCode}`);
+              }
+            }
+          }
+        }
+      }
+    }
+
     const results = [];
     for (const [field, value] of Object.entries(body)) {
+      if (field === 'autoJunction') continue; // internal flag, not a real field
       if (typeof value === 'string' || value === null) {
         const r = WBAPI.editField(type, resolvedKey, field, value);
         results.push({ field, ok: r.ok, error: r.error, inserted: r.inserted || false, removed: r.removed || false, strategy: 'editField' });
@@ -6958,7 +7052,10 @@ async function route(req, res) {
       if (r.ok && r.strategy === 'editField' && !r.removed) expectedFields[r.field] = String(body[r.field]);
     }
     const putReminder = type === 'node' ? { reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit roll2hit-v3.html directly.' } : {};
-    return saveAndVerify(res, 200, { ok:true, fields: results, ...putReminder }, expectedFields, type, resolvedKey);
+    const autoJunctionInfo = autoJunctionCreated.length
+      ? { autoJunctionsCreated: autoJunctionCreated, note: `${autoJunctionCreated.length} junction(s) auto-inserted (source was deg=3). Pass autoJunction:false to bypass.` }
+      : {};
+    return saveAndVerify(res, 200, { ok:true, fields: results, ...autoJunctionInfo, ...putReminder }, expectedFields, type, resolvedKey);
   }
 
   // ── DELETE ──
@@ -7246,6 +7343,8 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log(`  Game file: ${C.cyan}${GAME_FILE}${C.reset}`);
   console.log(`  Log file:  ${C.cyan}${LOG_FILE}${C.reset}`);
   if (VERBOSE) console.log(`  ${C.yellow}${C.bold}VERBOSE${C.reset}${C.yellow}     Full request + response bodies printed to terminal${C.reset}`);
+  if (TRACE)   console.log(`  ${C.cyan}${C.bold}TRACE${C.reset}${C.cyan}       Algorithm decisions, list traversals, insertions — ultra-verbose${C.reset}`);
+  if (!TRACE)  console.log(`  ${C.dim}             Enable TRACE: WBAPI_TRACE=1 node wbapi-server.js${C.reset}`);
   console.log(`\n  ${C.dim}Endpoints:${C.reset}`);
   const routes = [
     ['GET',    '/api/help[/{topic}]             → man-page style docs (read|write|nonce|wizard|curl|...)'],
