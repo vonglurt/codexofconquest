@@ -861,7 +861,12 @@ const CMD = {
     if (r1.status >= 400) { printError(r1); process.exit(1); }
     const r2 = await request('PUT', `/api/node/${bCode}`, { [OPP[D]]: aCode });
     if (r2.status >= 400) { printError(r2); process.exit(1); }
-    ok(`Wired: ${aCode}.${D} = ${bCode}  ↔  ${bCode}.${OPP[D]} = ${aCode}`);
+    // Report auto-junctions (server creates them when source is at deg=3)
+    const jA = r1.body?.autoJunctionsCreated, jB = r2.body?.autoJunctionsCreated;
+    if (jA?.length) jA.forEach(j => ok(`  Auto-junction ${j.jCode} inserted at (${j.at?.r},${j.at?.c}) between ${aCode} and ${bCode} (${aCode} was deg=3)`));
+    if (jB?.length) jB.forEach(j => ok(`  Auto-junction ${j.jCode} inserted at (${j.at?.r},${j.at?.c}) between ${bCode} and ${aCode} (${bCode} was deg=3)`));
+    if (!jA?.length && !jB?.length) ok(`Wired: ${aCode}.${D} = ${bCode}  ↔  ${bCode}.${OPP[D]} = ${aCode}`);
+    else ok(`Wired via junction chain: ${aCode} → junction → ${bCode}`);
   },
 
   // ── fill-gap: insert junction chain to bridge a long axis-aligned gap ────────
@@ -1142,7 +1147,37 @@ ${C.bold}═══════════════════════�
   named command. See API-README.md §Requesting new features.
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
-  THE COMMON CYCLE — search → inspect → edit
+  TABLE OF CONTENTS
+═══════════════════════════════════════════════════════════════════${C.reset}
+
+  §1  THE COMMON CYCLE — search → inspect → edit
+  §2  COMMAND INDEX (all commands, one line each)
+  §3  GLOBAL OPTIONS
+  §4  ping — server health
+  §5  count — breakdown statistics
+  §6  get — fetch one entity
+  §7  list — collection listing with filters
+      list node  |  list quest  |  list monster  |  list npc  |  list terrain  |  list ids
+  §8  location — composite node view
+  §9  chain — quest dependency chain
+  §10 put — edit one or more fields
+  §11 post — create a new entity
+  §12 del — delete an entity
+  §13 audit — integrity scan
+  §14 export — dump collection data
+  §15 import — bulk import nodes + quest cycles
+  §16 speak — Claude-voiced NPC dialogue
+  §17 nonce — one-time write token
+  §18 ai — ask Claude about the API
+  §19 MAP VISUALIZATION  (worldmap --regions --region --city --search --monster --route)
+  §20 COORDINATE MANAGEMENT  (geo-seed  move  find-open-location)
+  §21 NETWORK WIRING  (smart-connect  highway  junction  fill-gap  connect)
+  §22 NETWORK HEALTH & REPAIR  (broken  reachability  fix-diagonal  fix-all-broken  rip-and-connect)
+  §23 COMMON RECIPES
+  §24 SERVER LIFECYCLE
+
+${C.bold}═══════════════════════════════════════════════════════════════════
+  §1  THE COMMON CYCLE — search → inspect → edit
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
   The workflow for every entity type follows the same three steps.
@@ -2105,74 +2140,177 @@ ${C.bold}═══════════════════════�
   ./api.sh export all --out world-snapshot-$(date +%Y%m%d).json
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
-  COORDINATE & GRAPH OPERATIONS  (curl only — no ./api.sh wrapper)
+  MAP VISUALIZATION
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  These endpoints exist on the server but are not wrapped by ./api.sh.
-  Use curl directly:
+  ./api.sh worldmap [options]
 
-  # All coordinates
-  curl -s http://localhost:1367/api/coords | jq '.coords.LHR'
+  Three zoom levels — each embeds navigation hints for the next level.
+  No curl needed. All map operations go through ./api.sh worldmap.
 
-  # Nodes near a position
-  curl -s 'http://localhost:1367/api/coords/near/BK?radius=8' | jq '[.nearby[] | .code]'
+  Level 0 — World (all 76 geo-referenced cities, lat/lon oriented):
+    ./api.sh worldmap
+    ./api.sh worldmap --latlon
 
-  # Validate one node's connections
-  curl -s 'http://localhost:1367/api/graph/validate/LHR?maxGap=4' | jq
-  curl -s 'http://localhost:1367/api/graph/validate/BK?maxGap=4' | jq '.diagnosis'
+  Level 1 — Region (6×6 grid, A1–F6, west→east, north→south):
+    ./api.sh worldmap --regions
+    ./api.sh worldmap --region A1
+    ./api.sh worldmap --region B2
+    ./api.sh worldmap --region C3
+    ./api.sh worldmap --region C4
+    ./api.sh worldmap --region C5
 
-  # All broken edges from root
-  curl -s 'http://localhost:1367/api/graph/broken?maxGap=4&root=BK' | jq '{broken, categories}'
+  Level 2 — City (immediate connections, terrain, gap/bendy status):
+    ./api.sh worldmap --city LHR
+    ./api.sh worldmap --city CON
+    ./api.sh worldmap --city ROM
+    ./api.sh worldmap --city JAR
+    ./api.sh worldmap --city BGD
+    ./api.sh worldmap --city SAM
 
-  # Walkable path between two nodes
-  curl -s 'http://localhost:1367/api/graph/path/BK/LHR?maxGap=4' | jq '{reachable, walkablePath}'
+  Search / Hunt:
+    ./api.sh worldmap --search "crypt"
+    ./api.sh worldmap --search "forest"
+    ./api.sh worldmap --search "Jerusalem"
+    ./api.sh worldmap --monster skeleton
+    ./api.sh worldmap --monster thug
+    ./api.sh worldmap --monster drowner
 
-  # Move node to absolute position
-  curl -s -XPUT http://localhost:1367/api/coords/LHR \\
-    -H 'Content-Type: application/json' \\
-    -d '{"r":120,"c":144}' | jq
+  Route navigation (BFS A→B, shows turn-by-turn + terrain + battles):
+    ./api.sh worldmap --route LHR --to CON
+    ./api.sh worldmap --route LON --to JAR
+    ./api.sh worldmap --route LHR --to SAM
+    ./api.sh worldmap --route GLA --to NID
 
-  # Nudge node relative to current position
-  curl -s -XPOST http://localhost:1367/api/coords/BK/nudge \\
-    -H 'Content-Type: application/json' \\
-    -d '{"dr":-4,"dc":0}' | jq
+${C.bold}═══════════════════════════════════════════════════════════════════
+  COORDINATE MANAGEMENT
+═══════════════════════════════════════════════════════════════════${C.reset}
 
-  # Swap two nodes' coordinates
-  curl -s -XPOST http://localhost:1367/api/coords/swap \\
-    -H 'Content-Type: application/json' \\
-    -d '{"a":"J52","b":"LHR"}' | jq
+  ./api.sh geo-seed [--execute]
 
-  # Wire both ends of a directional link
-  curl -s -XPOST http://localhost:1367/api/graph/link \\
-    -H 'Content-Type: application/json' \\
-    -d '{"a":"LHR","aDir":"N","b":"BMA"}' | jq
+  Dry-run by default (shows what would change). --execute applies.
+  Anchors 76 major cities to real lat/lon positions on the game grid.
 
-  # Plan junction chain (dry run — review before executing)
-  curl -s -XPOST http://localhost:1367/api/graph/fill-gap \\
-    -H 'Content-Type: application/json' \\
-    -d '{"from":"KRN","dir":"S","to":"HKG","maxGap":4,"step":4,"terrain":"inherit","dryRun":true}' | jq
+    ./api.sh geo-seed
+    ./api.sh geo-seed --execute
 
-  # Execute junction chain
-  curl -s -XPOST http://localhost:1367/api/graph/fill-gap \\
-    -H 'Content-Type: application/json' \\
-    -d '{"from":"KRN","dir":"S","to":"HKG","maxGap":4,"step":4,"terrain":"inherit","resolveConflicts":"shift"}' | jq
+  After geo-seed, propagate all connected nodes:
+    node layout-solve.js --apply
 
-  # Fix diagonal connection (corner junction)
-  curl -s -XPOST http://localhost:1367/api/graph/corner-junction \\
-    -H 'Content-Type: application/json' \\
-    -d '{"nodeA":"ROT","dirA":"E","nodeB":"NRG","dirB":"N","sharedTarget":"SHW"}' | jq
+  Move a node's coordinates (swap if destination is occupied):
+    ./api.sh move LHR 12 18
+    ./api.sh move LHR 12 18 --swap
+    ./api.sh move KRN 13 18
 
-  # Propose layout from root
-  curl -s 'http://localhost:1367/api/layout/solve?root=LHR&step=8' | jq '{placed:(.coords|keys|length), orphans}'
+  Find open attachment points near a city (where to add new content):
+    ./api.sh find-open-location LHR
+    ./api.sh find-open-location CON
+    ./api.sh find-open-location LHR --radius 10
 
-  # Save all changes to disk
-  curl -s -XPOST http://localhost:1367/api/save | jq
+${C.bold}═══════════════════════════════════════════════════════════════════
+  NETWORK WIRING
+═══════════════════════════════════════════════════════════════════${C.reset}
 
-  # Server help topics
-  curl -s 'http://localhost:1367/api/help' | jq '.topics'
-  curl -s 'http://localhost:1367/api/help/wizard?format=text'
-  curl -s 'http://localhost:1367/api/help/coords?format=text'
-  curl -s 'http://localhost:1367/api/help/nonce?format=text'
+  Connection rules (enforced everywhere):
+    • Max 4 connections per node
+    • Degree-3 rule: if inserting into a deg=3 node, junction auto-created first
+    • A→B = A-mesh → B-mesh: use smart-connect for city-to-city wiring
+    • After any change: run broken + reachability to check for regressions
+
+  Preferred — mesh-aware (finds open insertion points in each city's mesh):
+    ./api.sh smart-connect LHR CON
+    ./api.sh smart-connect LHR CON --execute
+    ./api.sh smart-connect KOL SAM --execute
+    ./api.sh smart-connect GLA NID --execute
+    ./api.sh smart-connect LHR CON --radius 8
+
+  Full junction highway (L-shaped route, elbow at corner):
+    ./api.sh highway LHR CON
+    ./api.sh highway LHR CON --execute
+    ./api.sh highway KOL REG --execute
+    ./api.sh highway REG VEN --execute
+    ./api.sh highway VEN CON --execute
+    ./api.sh highway CON SIN --execute
+    ./api.sh highway ANT JAR --execute
+    ./api.sh highway BGD SAM --execute
+    ./api.sh highway MAR CVP --execute
+    ./api.sh highway GLA NID --step 2 --execute
+    ./api.sh highway WOR REG --terrain junction --execute
+
+  Single junction node:
+    ./api.sh junction LHR S
+    ./api.sh junction LHR S --execute
+    ./api.sh junction LHR S --label "Birka South Gate" --terrain city --execute
+    ./api.sh junction CON W --execute
+
+  Fill gap between two existing connected nodes:
+    ./api.sh fill-gap WOR E SAL
+    ./api.sh fill-gap WOR E SAL --execute
+    ./api.sh fill-gap KOL S REG --step 4 --execute
+    ./api.sh fill-gap LHR S KRN --execute
+
+  Direct wire (warns on deg=3 or deg=4; --force to override):
+    ./api.sh connect WOR E SAL
+    ./api.sh connect CON W THA
+    ./api.sh connect GLA S YRK
+    ./api.sh connect VEN N ROM
+    ./api.sh connect ANT S JAR
+
+${C.bold}═══════════════════════════════════════════════════════════════════
+  NETWORK HEALTH & REPAIR
+═══════════════════════════════════════════════════════════════════${C.reset}
+
+  Check broken edges (diagonal or gap > 4):
+    ./api.sh broken
+    ./api.sh broken --maxgap 4
+
+  Check reachability (% of nodes walkable from hub):
+    ./api.sh reachability
+
+  Fix a single broken edge:
+    ./api.sh fix-diagonal LHR S
+    ./api.sh fix-diagonal LHR S --execute
+    ./api.sh fix-diagonal BMA N --execute
+    ./api.sh fix-diagonal KRN N --execute
+
+  Batch-fix all broken edges:
+    ./api.sh fix-all-broken
+    ./api.sh fix-all-broken --execute
+    ./api.sh fix-all-broken --execute --limit 50
+
+  Relocate all stray/unreachable nodes near their quest city:
+    ./api.sh rip-and-connect
+    ./api.sh rip-and-connect --execute
+    ./api.sh rip-and-connect --execute --limit 50
+    ./api.sh rip-and-connect --execute --limit 100 --radius 8
+
+  Full world reset sequence (run in order):
+    ./api.sh geo-seed --execute
+    node layout-solve.js --apply
+    ./api.sh highway LHR CON --execute
+    ./api.sh highway KOL REG --execute
+    ./api.sh smart-connect LHR CON --execute
+    ./api.sh rip-and-connect --execute --limit 100
+    ./api.sh fix-all-broken --execute
+    ./api.sh broken
+    ./api.sh reachability
+
+${C.bold}═══════════════════════════════════════════════════════════════════
+  SERVER LIFECYCLE
+═══════════════════════════════════════════════════════════════════${C.reset}
+
+  ./wbapi-toggle.sh start     Start server in background (auto-restart loop)
+  ./wbapi-toggle.sh stop      Kill background instance
+  ./wbapi-toggle.sh restart   Stop + start (required after wbapi-server.js changes)
+  ./wbapi-toggle.sh status    Show PID and port
+  ./wbapi-toggle.sh fg        Run in foreground with full log scroll
+
+  Verbose logging:
+    WBAPI_VERBOSE=1 node wbapi-server.js    Full request+response bodies
+    WBAPI_TRACE=1 node wbapi-server.js      Algorithm decisions, insertions, traversals
+
+  Log file: milepoints/wbapi-server.log
+  Port:     1367  (the canonical game year, 1367 AD)
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   SERVER LIFECYCLE

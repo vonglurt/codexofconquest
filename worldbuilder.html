@@ -2376,6 +2376,13 @@ function renderNodeDetail(code){
   const ds=DIFF.status(code);
   $('nd-diff-ind').innerHTML=ds?`<span class="badge ${ds==='added'?'green':'yellow'}">${ds}</span>`:'';
   const body=$('nd-body'); body.innerHTML='';
+  // Degree badge + auto-junction warning
+  const deg = ['N','S','E','W'].filter(d=>node[d]).length;
+  const degCol = deg<=2?'var(--green)':deg===3?'var(--orange)':'var(--red)';
+  const junctionBadge = node.junction ? '<span style="font-size:9px;background:#58a6ff22;color:#58a6ff;padding:1px 5px;border-radius:3px;margin-left:6px">JUNCTION</span>' : '';
+  const degBadge = `<span style="font-size:9px;color:${degCol};margin-left:6px" title="connections used / 4">${deg}/4 connections${deg>=3?' — junction-first rule applies':''}${deg>=4?' (FULL)':''}</span>${junctionBadge}`;
+  const degRow=document.createElement('div'); degRow.style.cssText='padding:2px 12px 6px;font-size:11px'; degRow.innerHTML=degBadge; body.appendChild(degRow);
+
   const F=['label','name','act','npc','loot','text'];
   for(const key of F){
     const div=document.createElement('div'); div.className='fg';
@@ -2396,16 +2403,38 @@ function renderNodeDetail(code){
     }
     body.appendChild(div);
   }
-  // Exits
+  // Junction toggle
+  const jG=document.createElement('div'); jG.className='fg row';
+  const jChkId=`_nd_junc_${code}`;
+  jG.innerHTML=`<div class="fg" style="flex:0 0 auto"><div class="fl">Junction</div>
+    <input type="checkbox" id="${jChkId}" ${node.junction?'checked':''} style="margin-top:4px">
+  </div><div style="font-size:9px;color:var(--muted);padding-top:14px;margin-left:8px">
+    Junction nodes get signpost text. Deg-3 rule auto-creates one.</div>`;
+  body.appendChild(jG);
+  document.getElementById(jChkId)?.addEventListener('change', e => mapEditBuf.junction = e.target.checked);
+
+  // Exits — with broken-edge indicators
+  const coordA = WBAPI.nodeCoords[code];
   const exG=document.createElement('div'); exG.className='fg';
-  exG.innerHTML='<div class="fl">Exits (N/S/E/W)</div>';
+  exG.innerHTML='<div class="fl">Exits N/S/E/W</div>';
   const eg=document.createElement('div'); eg.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:4px';
   for(const d of ['N','S','E','W']){
+    const tgt = node[d];
+    const isBroken = tgt && coordA && WBAPI.nodeCoords[tgt] ? (() => {
+      const cb = WBAPI.nodeCoords[tgt];
+      const isNS = d==='N'||d==='S';
+      const off  = isNS ? Math.abs(cb.c-coordA.c) : Math.abs(cb.r-coordA.r);
+      const dist = isNS ? Math.abs(cb.r-coordA.r) : Math.abs(cb.c-coordA.c);
+      return off>0||dist<1||dist>4;
+    })() : false;
     const wrap=document.createElement('div');
-    wrap.innerHTML=`<div style="font-size:9px;color:var(--muted)">${d}</div>`;
-    const inp=document.createElement('input'); inp.type='text'; inp.style.cssText='width:100%;font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--orange);font-weight:700;padding:2px 4px;font-family:inherit;text-align:center';
-    inp.value=node[d]||''; inp.placeholder=d;
-    inp.style.color=node[d]?'var(--orange)':'var(--muted)';
+    const indicator = tgt ? (isBroken ? '⚠' : '✓') : '';
+    const indicatorColor = isBroken ? 'var(--red)' : 'var(--green)';
+    wrap.innerHTML=`<div style="font-size:9px;color:var(--muted);display:flex;justify-content:space-between">${d}<span style="color:${indicatorColor};font-size:8px">${indicator}</span></div>`;
+    const inp=document.createElement('input'); inp.type='text';
+    inp.style.cssText=`width:100%;font-size:11px;background:var(--bg3);border:1px solid ${isBroken?'var(--red)':'var(--border)'};border-radius:3px;font-weight:700;padding:2px 4px;font-family:inherit;text-align:center`;
+    inp.value=tgt||''; inp.placeholder=d;
+    inp.style.color=tgt?(isBroken?'var(--red)':'var(--orange)'):'var(--muted)';
     inp.addEventListener('input',()=>{ mapEditBuf[d]=inp.value||null; inp.style.color=inp.value?'var(--orange)':'var(--muted)'; inp.classList.toggle('chg',inp.value!==(node[d]||'')); });
     wrap.appendChild(inp); eg.appendChild(wrap);
   }
@@ -7470,6 +7499,19 @@ async function refreshHealth() {
 }
 
 // ── Server API helper ─────────────────────────────────────────────────────────
+async function reloadCoordsFromServer() {
+  // After any server write, pull fresh NODE_COORDS so canvas reflects reality
+  if (!SERVER.active) return;
+  try {
+    const r = await fetch(`${SERVER.url}/api/coords`);
+    const d = await r.json();
+    if (d.coords) {
+      // Merge server coords into WBAPI.nodeCoords
+      Object.assign(WBAPI.nodeCoords, d.coords);
+    }
+  } catch(e) { /* silent — will catch on next refresh */ }
+}
+
 async function gridApiAction(endpoint, body, label) {
   if (!SERVER.active) { alert('Server not connected'); return; }
   const [method, path] = endpoint.split(' ');
@@ -7479,8 +7521,10 @@ async function gridApiAction(endpoint, body, label) {
       body: body ? JSON.stringify(body) : undefined,
     });
     const d = await r.json();
-    if (r.ok) { await refreshHealth(); }
-    else alert(`${label} failed: ${d.error || r.statusText}`);
+    if (r.ok) {
+      await reloadCoordsFromServer();
+      await refreshHealth();
+    } else alert(`${label} failed: ${d.error || r.statusText}`);
     return d;
   } catch(e) { alert(`${label} error: ${e.message}`); }
 }
@@ -7541,6 +7585,7 @@ async function finishDrag() {
     const data = await r.json();
     if (r.ok) {
       WBAPI.nodeCoords[dragCode] = { r:dragCurR, c:dragCurC };
+      await reloadCoordsFromServer(); // pull any auto-adjustments from server
       await refreshHealth();
     } else if (data.tip) {
       if (confirm(`${data.error}\n\nSwap with ${data.occupier}?`)) {
