@@ -534,6 +534,22 @@ const CMD = {
     }
     process.stdout.write('   ╚'+'═'.repeat(W)+'╝\n\n');
 
+    // Delegate --region and --city to worldmap.js directly (rich terminal output)
+    const regionArg = flags.region || flags.r;
+    const cityArg   = flags.city;
+    const regionsFlag = flags.regions !== undefined;
+    if (regionArg || cityArg || regionsFlag) {
+      const { spawnSync } = require('child_process');
+      const args = cityArg   ? ['--city', cityArg]
+                 : regionArg ? ['--region', regionArg]
+                 : ['--regions'];
+      const result = spawnSync('node', [
+        require('path').join(__dirname, '..', 'worldmap.js'), ...args,
+        '--port', String(flags.port || 1367),
+      ], { stdio: 'inherit' });
+      process.exit(result.status || 0);
+    }
+
     if (flags.latlon || flags.l) {
       // City list with lat/lon
       process.stdout.write(`${'CODE'.padEnd(6)} ${'LABEL'.padEnd(26)} ${'REGION'.padEnd(20)} ${'LAT'.padStart(6)} ${'LON'.padStart(7)}  ${'r,c in game'.padStart(10)}\n`);
@@ -1703,7 +1719,7 @@ const SYNOPSIS = [
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
   `  ${C.green}chain${C.reset} <quest-id>                   quest chain`,
   `  ${C.green}export${C.reset} <collection>                dump JSON  [--format js|module]`,
-  `  ${C.green}worldmap${C.reset} [--latlon]                ASCII terminal map (lat/lon orientation)`,
+  `  ${C.green}worldmap${C.reset} [--latlon] [--regions] [--region A1] [--city LON]  3-level map`,
   `  ${C.green}move${C.reset} <CODE> <r> <c> [--swap]       move node coordinates (swap if occupied)`,
   `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain type] [--execute]`,
   `  ${C.green}geo-seed${C.reset} [--execute]               seed major cities from real lat/lon`,

@@ -134,6 +134,211 @@ const MAP = {
   HEIGHT: 30,
 };
 
+// ─── Region grid ──────────────────────────────────────────────────────────────
+// Divides the world into an R×C grid.  Default 6×6.
+// Row letters A–F go north→south.  Column numbers 1–6 go west→east.
+// e.g. A1 = top-left (Iceland/Atlantic), C4 = Turkey/Levant area.
+
+function regionBounds(row, col, nRows, nCols) {
+  const latStep = (MAP.maxLat - MAP.minLat) / nRows;
+  const lonStep = (MAP.maxLon - MAP.minLon) / nCols;
+  return {
+    minLat: MAP.maxLat - (row + 1) * latStep,   // south edge
+    maxLat: MAP.maxLat - row * latStep,           // north edge
+    minLon: MAP.minLon + col * lonStep,           // west edge
+    maxLon: MAP.minLon + (col + 1) * lonStep,    // east edge
+  };
+}
+
+function regionCode(row, col) {
+  return String.fromCharCode(65 + row) + (col + 1);
+}
+
+function parseRegionCode(code) {
+  const m = code.match(/^([A-Za-z])(\d+)$/);
+  if (!m) return null;
+  return { row: m[1].toUpperCase().charCodeAt(0) - 65, col: parseInt(m[2], 10) - 1 };
+}
+
+function citiesInRegion(row, col, nRows, nCols) {
+  const b = regionBounds(row, col, nRows, nCols);
+  return Object.entries(GEO).filter(([, g]) =>
+    g.lat >= b.minLat && g.lat < b.maxLat &&
+    g.lon >= b.minLon && g.lon < b.maxLon
+  );
+}
+
+// Primary label for a region: pick the most westward city label (first city as entered w→e)
+function regionLabel(cities) {
+  if (!cities.length) return '';
+  const sorted = cities.slice().sort(([,a],[,b]) => a.lon - b.lon || b.lat - a.lat);
+  // Abbreviate to first word or recognizable place
+  const lbl = sorted[0][1].label.split(/[\s—]/)[0];
+  return lbl.length > 10 ? lbl.slice(0, 10) : lbl;
+}
+
+// ─── Overview grid ────────────────────────────────────────────────────────────
+function drawRegionOverview(nRows, nCols) {
+  const latStep = (MAP.maxLat - MAP.minLat) / nRows;
+  const lonStep = (MAP.maxLon - MAP.minLon) / nCols;
+
+  // Column header: lon ranges
+  const colW = 14;
+  const hdr = '     ' + Array.from({ length: nCols }, (_, c) => {
+    const w = MAP.minLon + c * lonStep, e = w + lonStep;
+    const wLbl = w < 0 ? `${-w|0}W` : `${w|0}E`;
+    const eLbl = e < 0 ? `${-e|0}W` : `${e|0}E`;
+    return (`${wLbl}–${eLbl}`).padEnd(colW);
+  }).join('');
+  console.log(hdr);
+  console.log('     ' + ('─'.repeat(colW) + '+').repeat(nCols));
+
+  for (let row = 0; row < nRows; row++) {
+    const maxLat = MAP.maxLat - row * latStep;
+    const minLat = maxLat - latStep;
+    const rowLbl = (String.fromCharCode(65 + row) + ' ' +
+      `${minLat|0}–${maxLat|0}°N`).padEnd(5);
+
+    // Line 1: region code + city count
+    const line1 = rowLbl + Array.from({ length: nCols }, (_, col) => {
+      const cities = citiesInRegion(row, col, nRows, nCols);
+      const code   = regionCode(row, col);
+      if (!cities.length) return `  ·  (empty)   `.padEnd(colW);
+      return ` ${code} [${cities.length} city]`.padEnd(colW);
+    }).join('');
+
+    // Line 2: primary city names
+    const line2 = '     ' + Array.from({ length: nCols }, (_, col) => {
+      const cities = citiesInRegion(row, col, nRows, nCols);
+      if (!cities.length) return ' '.repeat(colW);
+      const labels = cities.slice(0, 3).map(([c]) => c).join(' ');
+      return ` ${labels}`.padEnd(colW);
+    }).join('');
+
+    console.log(line1);
+    console.log(line2);
+    console.log('     ' + ('─'.repeat(colW) + '+').repeat(nCols));
+  }
+  console.log();
+  console.log(`${nRows}×${nCols} region grid`);
+  console.log();
+  console.log('Navigate:');
+  console.log('  Zoom out → world:        node worldmap.js');
+  console.log('  Zoom into a region:      node worldmap.js --region B2');
+  console.log('  Zoom into a city:        node worldmap.js --city LON');
+  console.log('  Show lat/lon list:       node worldmap.js --latlon');
+}
+
+// ─── Region zoom ─────────────────────────────────────────────────────────────
+function drawRegionZoom(regionArg, nRows, nCols) {
+  const parsed = parseRegionCode(regionArg);
+  if (!parsed) { console.error(`Invalid region code "${regionArg}". Format: A1 through ${String.fromCharCode(65+nRows-1)}${nCols}`); process.exit(1); }
+  const { row, col } = parsed;
+  if (row < 0 || row >= nRows || col < 0 || col >= nCols) {
+    console.error(`Region "${regionArg}" out of range for ${nRows}×${nCols} grid.`); process.exit(1);
+  }
+
+  const b    = regionBounds(row, col, nRows, nCols);
+  const W    = 88, H = 28;
+  const grid = Array.from({ length: H }, () => Array(W).fill(' '));
+
+  function proj(lat, lon) {
+    return {
+      r: Math.round((b.maxLat - lat) / (b.maxLat - b.minLat) * (H - 1)),
+      c: Math.round((lon - b.minLon) / (b.maxLon - b.minLon) * (W - 1)),
+    };
+  }
+
+  // Graticule every 5°
+  for (let lat = Math.ceil(b.minLat / 5) * 5; lat <= b.maxLat; lat += 5) {
+    const { r } = proj(lat, b.minLon);
+    if (r >= 0 && r < H) for (let c = 0; c < W; c++) if (grid[r][c] === ' ') grid[r][c] = '·';
+  }
+  for (let lon = Math.ceil(b.minLon / 5) * 5; lon <= b.maxLon; lon += 5) {
+    const { c } = proj(b.maxLat, lon);
+    if (c >= 0 && c < W) for (let r = 0; r < H; r++) if (grid[r][c] === ' ') grid[r][c] = '·';
+  }
+
+  // Place cities — CODE·Label, nudge row if two cities collide
+  const inRegion = citiesInRegion(row, col, nRows, nCols);
+  const usedRows = new Set(); // track rows that already have text to nudge colliders
+  // Sort west→east so labels open leftward when possible
+  const sorted = inRegion.slice().sort(([,a],[,b]) => a.lon - b.lon);
+  for (const [code, geo] of sorted) {
+    let { r, c } = proj(geo.lat, geo.lon);
+    if (r < 0 || r >= H || c < 0 || c >= W) continue;
+    // Nudge row ±1 if this exact row is already occupied near this column
+    const rKey = `${r},${Math.floor(c / 20)}`;
+    if (usedRows.has(rKey)) {
+      if (r + 1 < H) r += 1; else if (r - 1 >= 0) r -= 1;
+    }
+    usedRows.add(`${r},${Math.floor(c / 20)}`);
+    // Label: CODE·ShortName (fit within 18 chars max)
+    const shortName = geo.label.split(/[—–]/)[0].trim().slice(0, 13);
+    const tag = `${code}·${shortName}`;
+    // Place left-to-right, but if near right edge, shift left
+    let startC = c;
+    if (startC + tag.length > W) startC = Math.max(0, W - tag.length);
+    for (let i = 0; i < tag.length && startC + i < W; i++) {
+      grid[r][startC + i] = tag[i];
+    }
+  }
+
+  // Print — suppress duplicate lat labels (only show when integer degree changes)
+  const fmtLat = lat => lat >= 0 ? `${Math.round(lat)}N` : `${Math.abs(Math.round(lat))}S`;
+  const rLabel  = regionCode(row, col);
+  const latRange = `${b.minLat >= 0 ? b.minLat.toFixed(0)+'°N' : Math.abs(b.minLat).toFixed(0)+'°S'}–${b.maxLat.toFixed(0)}°N`;
+  const lonFmt  = v => v < 0 ? `${Math.abs(v).toFixed(0)}°W` : `${v.toFixed(0)}°E`;
+  const lonRange = `${lonFmt(b.minLon)}–${lonFmt(b.maxLon)}`;
+  console.log(`Region ${rLabel}  ${latRange}  ${lonRange}  (${inRegion.length} cities)`);
+  console.log('╔' + '═'.repeat(W) + '╗');
+  let lastLatLbl = '';
+  for (let r = 0; r < H; r++) {
+    const lat = b.maxLat - r * (b.maxLat - b.minLat) / (H - 1);
+    const lbl = fmtLat(lat);
+    const showLbl = lbl !== lastLatLbl ? lbl : '   ';
+    if (lbl !== lastLatLbl) lastLatLbl = lbl;
+    console.log(`${showLbl.padStart(3)}║${grid[r].join('')}║`);
+  }
+  console.log('   ╚' + '═'.repeat(W) + '╝');
+
+  // Lon axis below
+  const lonAxis = Array(W + 4).fill(' ');
+  for (let lon = Math.ceil(b.minLon / 5) * 5; lon <= b.maxLon; lon += 5) {
+    if (lon % 10 !== 0) continue;
+    const { c } = proj(b.maxLat, lon);
+    const tag = (lon < 0 ? `${-lon}W` : `${lon}E`).padStart(3);
+    for (let i = 0; i < tag.length && c + i + 3 < lonAxis.length; i++) lonAxis[c + i + 3] = tag[i];
+  }
+  console.log(lonAxis.join(''));
+  console.log();
+
+  // City list + zoom-in hints
+  if (inRegion.length) {
+    console.log(`Cities in ${rLabel}  (type --city CODE to zoom into any city):`);
+    console.log(`  ${'CODE'.padEnd(5)} ${'LABEL'.padEnd(32)} ${'REGION'.padEnd(20)} ${'LAT'.padStart(7)}  ${'LON'.padStart(7)}  ZOOM`);
+    console.log('  ' + '─'.repeat(80));
+    for (const [code, geo] of inRegion.sort(([,a],[,b]) => b.lat - a.lat || a.lon - b.lon)) {
+      const latS = (geo.lat >= 0 ? `${geo.lat.toFixed(1)}°N` : `${Math.abs(geo.lat).toFixed(1)}°S`).padStart(7);
+      const lonS = (geo.lon >= 0 ? `${geo.lon.toFixed(1)}°E` : `${Math.abs(geo.lon).toFixed(1)}°W`).padStart(7);
+      console.log(`  ${code.padEnd(5)} ${geo.label.padEnd(32)} ${geo.region.padEnd(20)} ${latS}  ${lonS}  --city ${code}`);
+    }
+  } else {
+    console.log(`No geo-referenced cities in region ${rLabel} (ocean / uninhabited).`);
+  }
+  console.log();
+  console.log('Navigate:');
+  const adjRegions = [
+    row > 0        ? `N: --region ${regionCode(row-1, col)}` : null,
+    row < nRows-1  ? `S: --region ${regionCode(row+1, col)}` : null,
+    col > 0        ? `W: --region ${regionCode(row, col-1)}` : null,
+    col < nCols-1  ? `E: --region ${regionCode(row, col+1)}` : null,
+  ].filter(Boolean);
+  console.log(`  Zoom out → world:   node worldmap.js`);
+  console.log(`  Region overview:    node worldmap.js --regions`);
+  if (adjRegions.length) console.log(`  Adjacent regions:   ${adjRegions.map(s => `node worldmap.js ${s.slice(3)}`).join('  ')}`);
+}
+
 function project(lat, lon) {
   const c = Math.round((lon - MAP.minLon) / (MAP.maxLon - MAP.minLon) * (MAP.WIDTH - 1));
   const r = Math.round((MAP.maxLat - lat) / (MAP.maxLat - MAP.minLat) * (MAP.HEIGHT - 1));
@@ -256,6 +461,10 @@ function drawMap() {
   }
   console.log(ftr.join(''));
   console.log();
+  console.log('Navigate:');
+  console.log('  Region overview:    node worldmap.js --regions');
+  console.log('  Zoom into region:   node worldmap.js --region A1  (A1–F6)');
+  console.log('  Zoom into city:     node worldmap.js --city LON');
 }
 
 // ─── City list ────────────────────────────────────────────────────────────────
@@ -310,6 +519,178 @@ function printList(showLatLon) {
   }
   console.log('─'.repeat(colW));
   console.log(`${Object.keys(GEO).length} cities with geographic reference data`);
+}
+
+// ─── City map ─────────────────────────────────────────────────────────────────
+// Shows a city's immediate N/E/S/W connections using game coordinates.
+// Fetches live node_map + nodeCoords from WBAPI.
+async function drawCityMap(code, port) {
+  let nodeMap, coords;
+  try {
+    const [nm, cd] = await Promise.all([
+      apiGet(port, '/api/export/node_map?format=json'),
+      apiGet(port, '/api/coords'),
+    ]);
+    nodeMap = nm.data || {};
+    coords  = cd.coords || {};
+  } catch(e) {
+    console.error(`Cannot reach WBAPI on port ${port}: ${e.message}`);
+    process.exit(1);
+  }
+
+  const node = nodeMap[code.toUpperCase()];
+  if (!node) { console.error(`Node "${code}" not found in node_map.`); process.exit(1); }
+  const center = coords[code.toUpperCase()];
+
+  const W = 72, H = 22;
+  const grid = Array.from({ length: H }, () => Array(W).fill(' '));
+
+  // Determine bounding box from center + neighbours
+  const allPts = [center];
+  const DIRS = ['N','E','S','W'];
+  const neighbours = {};
+  for (const dir of DIRS) {
+    const tgt = node[dir]; if (!tgt) continue;
+    const tc = coords[tgt];
+    if (tc) { allPts.push(tc); neighbours[dir] = { code: tgt, node: nodeMap[tgt], coords: tc }; }
+  }
+
+  if (!center) {
+    // No coords: just show text box
+    console.log(`City: ${code.toUpperCase()} — ${node.label || '(no label)'}`);
+    console.log(`Terrain: ${node.name || '?'}   Act: ${node.act ?? '?'}`);
+    console.log(`Connections:`);
+    for (const dir of DIRS) {
+      const t = node[dir];
+      console.log(`  ${dir}: ${t ? `${t}  ${nodeMap[t]?.label || ''}` : '(none)'}`);
+    }
+    return;
+  }
+
+  // Compute bounding box with padding
+  const pad  = 3;
+  let minR = center.r - pad*3, maxR = center.r + pad*3;
+  let minC = center.c - pad*5, maxC = center.c + pad*5;
+  // Expand to include all neighbours
+  for (const p of allPts) {
+    minR = Math.min(minR, p.r - 2); maxR = Math.max(maxR, p.r + 2);
+    minC = Math.min(minC, p.c - 3); maxC = Math.max(maxC, p.c + 3);
+  }
+
+  function proj(r, c) {
+    return {
+      pr: Math.round((r - minR) / (maxR - minR) * (H - 1)),
+      pc: Math.round((c - minC) / (maxC - minC) * (W - 1)),
+    };
+  }
+
+  // Draw graticule (coord grid lines every 4 units)
+  const rStep = Math.max(1, Math.round((maxR - minR) / 6));
+  const cStep = Math.max(1, Math.round((maxC - minC) / 8));
+  for (let r = Math.ceil(minR / rStep) * rStep; r <= maxR; r += rStep) {
+    const { pr } = proj(r, minC); if (pr < 0 || pr >= H) continue;
+    for (let c = 0; c < W; c++) if (grid[pr][c] === ' ') grid[pr][c] = '·';
+  }
+  for (let c = Math.ceil(minC / cStep) * cStep; c <= maxC; c += cStep) {
+    const { pc } = proj(minR, c); if (pc < 0 || pc >= W) continue;
+    for (let r = 0; r < H; r++) if (grid[r][pc] === ' ') grid[r][pc] = '·';
+  }
+
+  // Draw connection lines between center and each neighbour
+  const { pr: cr, pc: cc } = proj(center.r, center.c);
+  const ARROW = { N:'↑', S:'↓', E:'→', W:'←' };
+  for (const [dir, nb] of Object.entries(neighbours)) {
+    const { pr: nr, pc: nc } = proj(nb.coords.r, nb.coords.c);
+    // Draw a simple L-shaped path: horizontal then vertical
+    const midC = nc;
+    // Horizontal segment from cc to midC at row cr
+    const r = cr;
+    for (let c = Math.min(cc, midC); c <= Math.max(cc, midC); c++) {
+      if (c !== cc && grid[r][c] === ' ' || grid[r][c] === '·') grid[r][c] = '─';
+    }
+    // Vertical segment from cr to nr at col midC
+    for (let rv = Math.min(cr, nr); rv <= Math.max(cr, nr); rv++) {
+      if (rv !== cr && (grid[rv][midC] === ' ' || grid[rv][midC] === '·')) grid[rv][midC] = '│';
+    }
+    // Arrow at midpoint of each leg
+    const arrowR = dir === 'N' ? Math.min(cr, nr) + 1 : dir === 'S' ? Math.max(cr, nr) - 1 : cr;
+    const arrowC = dir === 'E' ? Math.min(cc, nc) + 1 : dir === 'W' ? Math.max(cc, nc) - 1 : midC;
+    if (arrowR >= 0 && arrowR < H && arrowC >= 0 && arrowC < W) grid[arrowR][arrowC] = ARROW[dir];
+  }
+
+  // Place centre node
+  const centerTag = `[${code.toUpperCase()}]`;
+  const startCC = Math.max(0, cc - Math.floor(centerTag.length / 2));
+  for (let i = 0; i < centerTag.length && startCC + i < W; i++) grid[cr][startCC + i] = centerTag[i];
+
+  // Place neighbour labels
+  for (const [dir, nb] of Object.entries(neighbours)) {
+    const { pr: nr, pc: nc } = proj(nb.coords.r, nb.coords.c);
+    const terrain = nb.node?.name || '?';
+    const lbl = `${nb.code}(${terrain})`;
+    const startC = Math.max(0, Math.min(nc - 1, W - lbl.length));
+    const startR = nr < 0 ? 0 : nr >= H ? H - 1 : nr;
+    for (let i = 0; i < lbl.length && startC + i < W; i++) grid[startR][startC + i] = lbl[i];
+  }
+
+  // Header
+  const geo = GEO[code.toUpperCase()];
+  const geoTag = geo ? ` (${geo.lat >= 0 ? geo.lat.toFixed(1)+'°N' : Math.abs(geo.lat).toFixed(1)+'°S'} ${geo.lon >= 0 ? geo.lon.toFixed(1)+'°E' : Math.abs(geo.lon).toFixed(1)+'°W'})` : '';
+  console.log(`City: ${code.toUpperCase()} — ${(node.label || '').slice(0, 50)}${geoTag}`);
+  console.log(`Terrain: ${(node.name || '?').padEnd(12)}  Act: ${node.act ?? '?'}  Game coords: r=${center.r} c=${center.c}`);
+  console.log('╔' + '═'.repeat(W) + '╗');
+  for (let r = 0; r < H; r++) {
+    const gameR = Math.round(minR + r * (maxR - minR) / (H - 1));
+    const lbl   = String(gameR).padStart(3);
+    console.log(`${lbl}║${grid[r].join('')}║`);
+  }
+  console.log('   ╚' + '═'.repeat(W) + '╝');
+
+  // Footer: game col axis
+  const colAxis = Array(W + 4).fill(' ');
+  for (let c = Math.ceil(minC / cStep) * cStep; c <= maxC; c += cStep) {
+    const { pc } = proj(minR, c);
+    const tag = String(c);
+    for (let i = 0; i < tag.length && pc + i + 3 < colAxis.length; i++) colAxis[pc + i + 3] = tag[i];
+  }
+  console.log(colAxis.join(''));
+
+  // Connection table
+  console.log();
+  console.log(`Connections from ${code.toUpperCase()}:`);
+  const missing = [];
+  for (const dir of DIRS) {
+    const tgt = node[dir];
+    if (!tgt) { console.log(`  ${dir}: (none)`); continue; }
+    const tn   = nodeMap[tgt];
+    const tc   = coords[tgt];
+    const terrain = tn?.name || '?';
+    const gap  = tc && center ? (dir === 'N' || dir === 'S' ? Math.abs(tc.r - center.r) : Math.abs(tc.c - center.c)) : '?';
+    const axisOff = tc && center ? (dir === 'N' || dir === 'S' ? Math.abs(tc.c - center.c) : Math.abs(tc.r - center.r)) : '?';
+    const status = !tc ? 'NO COORDS' : axisOff > 0 ? `BENDY(off=${axisOff})` : gap > 4 ? `GAP(${gap})` : `ok(gap=${gap})`;
+    console.log(`  ${dir}: ${tgt.padEnd(6)} ${(tn?.label || '').slice(0, 28).padEnd(28)} terrain=${terrain.padEnd(10)} ${status}`);
+    if (!tc) missing.push(tgt);
+  }
+  if (missing.length) console.log(`\n  ⚠ No coords: ${missing.join(', ')} — run: node layout-solve.js --apply`);
+
+  // Navigation hints
+  const regionForCity = () => {
+    if (!geo) return null;
+    for (let r = 0; r < 6; r++) for (let c = 0; c < 6; c++) {
+      const b = regionBounds(r, c, 6, 6);
+      if (geo.lat >= b.minLat && geo.lat < b.maxLat && geo.lon >= b.minLon && geo.lon < b.maxLon)
+        return regionCode(r, c);
+    }
+    return null;
+  };
+  const reg = regionForCity();
+  console.log();
+  console.log('Navigate:');
+  if (reg) console.log(`  Zoom out → region:  node worldmap.js --region ${reg}`);
+  console.log(`  Zoom out → world:   node worldmap.js`);
+  for (const dir of DIRS) {
+    if (node[dir]) console.log(`  Go ${dir}:             node worldmap.js --city ${node[dir]}`);
+  }
 }
 
 // ─── Geo seeding ──────────────────────────────────────────────────────────────
@@ -387,28 +768,39 @@ async function seedCoords(port, dryRun) {
 // ─── Main ─────────────────────────────────────────────────────────────────────
 async function main() {
   const argv  = process.argv.slice(2);
-  const port  = (() => { const i = argv.indexOf('--port'); return i >= 0 ? +argv[i+1] : 1367; })();
-  const showLL = argv.includes('--latlon') || argv.includes('-l');
-  const seed   = argv.includes('--seed');
-  const dryRun = argv.includes('--dry-run');
+  const getArg = flag => { const i = argv.indexOf(flag); return i >= 0 ? argv[i + 1] : null; };
+  const port     = getArg('--port') ? +getArg('--port') : 1367;
+  const showLL   = argv.includes('--latlon') || argv.includes('-l');
+  const seed     = argv.includes('--seed');
+  const dryRun   = argv.includes('--dry-run');
+  const regions    = argv.includes('--regions');
+  const nGrid      = getArg('--regions') ? +getArg('--regions') : (getArg('--grid') ? +getArg('--grid') : 6);
+  const regionZoom = getArg('--region');
+  const cityZoom   = getArg('--city');
 
+  if (cityZoom) {
+    await drawCityMap(cityZoom, port);
+    return;
+  }
+
+  if (regionZoom) {
+    drawRegionZoom(regionZoom.toUpperCase(), nGrid, nGrid);
+    return;
+  }
+
+  if (regions) {
+    console.log(`World Region Grid  ${nGrid}×${nGrid}  (lat ${MAP.minLat}°–${MAP.maxLat}°  lon ${MAP.minLon}°–${MAP.maxLon}°)\n`);
+    drawRegionOverview(nGrid, nGrid);
+    return;
+  }
+
+  // Default: full world map
   drawMap();
-  printList(showLL);
+  if (showLL) { console.log(); printList(true); }
 
   if (seed) {
     console.log();
     await seedCoords(port, dryRun);
-  } else {
-    console.log();
-    console.log('Options:');
-    console.log('  --latlon      Add lat/lon column to the city list');
-    console.log('  --seed        Apply geo-seeded coords to WBAPI (anchors cities to real geography)');
-    console.log('  --seed --dry-run  Preview seed coords without writing');
-    console.log();
-    console.log('Workflow:');
-    console.log('  node worldmap.js --seed          # anchor cities to real-world positions');
-    console.log('  node layout-solve.js --apply     # propagate all other nodes from geo anchors');
-    console.log('  node layout-solve.js --apply --insert-elbows  # fix structural conflicts');
   }
 }
 
