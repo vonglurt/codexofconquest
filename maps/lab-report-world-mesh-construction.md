@@ -210,13 +210,13 @@ Sub-locations attached to a disconnected city will inherit that city's isolated 
 1. Fill gaps on all bridge connections (each wired bridge currently has gap > 4)
 2. Connect remaining 162 non-GEO unreachable nodes
 3. Insert elbow junctions at all diagonal bridge corners
-4. Final validation: `curl http://localhost:1367/api/graph/broken`
+4. Final validation: `./api.sh broken
 
 **Target:**
 ```
 ./api.sh worldmap --route LHR --to SAM    # Birka → Samarkand: full route exists
 ./api.sh worldmap --route LON --to JAR    # London → Jerusalem: full route exists
-curl http://localhost:1367/api/graph/broken | jq .broken   # → 0
+./api.sh broken
 ```
 
 ---
@@ -241,7 +241,7 @@ node layout-solve.js --apply             # propagate all nodes from geo anchors
 ./api.sh worldmap --route LHR --to CON  # test navigation path
 
 # Validation
-curl http://localhost:1367/api/graph/broken      # broken edge report
-curl http://localhost:1367/api/graph/reachability  # component sizes
+./api.sh broken
+./api.sh reachability
 ./api.sh fix-all-broken --limit 20              # preview remaining fixes
 ```

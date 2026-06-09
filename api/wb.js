@@ -629,6 +629,49 @@ const CMD = {
     }
   },
 
+  // ── broken: list all broken edges (diagonal, gap > 4) ───────────────────────
+  // Usage: ./api.sh broken [--maxgap N]
+  async broken(pos, flags) {
+    const maxGap = flags.maxgap ? +flags.maxgap : 4;
+    const resp = await request('GET', `/api/graph/broken?maxGap=${maxGap}`);
+    if (resp.status !== 200) { printError(resp); process.exit(1); }
+    const d = resp.body;
+    if (d.broken === 0) {
+      ok(`No broken edges ✓  (${d.totalChecked} checked, maxGap=${maxGap})`);
+      return;
+    }
+    ok(`${d.broken} broken edges  |  categories: ${JSON.stringify(d.categories)}`);
+    ok(`Total checked: ${d.totalChecked}  |  maxGap: ${maxGap}`);
+    for (const e of (d.edges || []).slice(0, 20)) {
+      const s = e.moveSuggestion;
+      const fix = s?.recommended
+        ? `→ move ${s.node} to (${s.recommended.r},${s.recommended.c})`
+        : `→ elbow or fill-gap`;
+      ok(`  ${e.from}─${e.dir}→${e.to}  [${e.type}]  off=${e.axisOffset}  gap=${e.gap}  ${fix}`);
+    }
+    if (d.broken > 20) ok(`  ... and ${d.broken - 20} more`);
+    ok(`Fix all: ./api.sh fix-all-broken --execute`);
+  },
+
+  // ── reachability: show how many nodes are reachable from the hub ─────────────
+  // Usage: ./api.sh reachability
+  async reachability() {
+    const resp = await request('GET', '/api/graph/reachability');
+    if (resp.status !== 200) { printError(resp); process.exit(1); }
+    const d = resp.body; const c = d.counts;
+    const pct = Math.round(100 * c.reachable / c.total);
+    ok(`Hub: ${d.hub}  |  Reachable: ${c.reachable}/${c.total} (${pct}%)  |  Unreachable: ${c.unreachable}  |  Clusters: ${c.clusters}`);
+    if (c.unreachable > 0) {
+      ok(`Isolated clusters: ${c.clusters} — use ./api.sh highway to connect them`);
+    } else {
+      ok(`All nodes reachable ✓`);
+    }
+    const deg = d.reachableByDegree || {};
+    for (const [k, v] of Object.entries(deg)) {
+      ok(`  ${k}: ${v.length} nodes`);
+    }
+  },
+
   // ── connect: wire two existing nodes together in a direction ────────────────
   // Usage: ./api.sh connect <A> <dir> <B>
   //   Sets A[dir] = B and B[OPP[dir]] = A (bidirectional wire).
@@ -929,11 +972,9 @@ ${C.bold}═══════════════════════�
     • Auto-reload notification — the server watches roll2hit-v3.html;
       you do not need POST /api/reload after an external edit
 
-  When raw curl is still useful:
-    • Graph/coords endpoints (corner-junction, layout/solve)
-      — not wrapped by api.sh yet
-    • Scripting DELETE with a nonce captured from ./api.sh nonce
-    • One-off POST /api/save at session end
+  If a feature is missing from api.sh, request an API refactor — do not
+  fall back to curl. Describe the operation and it will be added as a
+  named command. See API-README.md §Requesting new features.
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   THE COMMON CYCLE — search → inspect → edit
@@ -1996,18 +2037,43 @@ const SYNOPSIS = [
   `  ${C.green}speak${C.reset} <npc-id> "<prompt>"           Claude NPC reply  [--state neutral|friendly|dearFriend]`,
   `  ${C.green}import${C.reset} <file.json>                 bulk import nodes + quest cycles`,
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
+  `  ${C.yellow}Directive: always use ./api.sh — never curl. Request a refactor if a feature is missing.${C.reset}`,
+  `  ${C.yellow}Maintain the network: run broken + reachability after every change.${C.reset}`,
+  ``,
+  `  ${C.bold}── Health ──────────────────────────────────────────────────────────────${C.reset}`,
+  `  ${C.green}ping${C.reset}                               health check + entity counts`,
+  `  ${C.green}broken${C.reset} [--maxgap N]               list broken edges (target: 0)`,
+  `  ${C.green}reachability${C.reset}                       % reachable from hub (target: 100%)`,
+  `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
+  ``,
+  `  ${C.bold}── Read ────────────────────────────────────────────────────────────────${C.reset}`,
+  `  ${C.green}count${C.reset} [nodes|quests|monsters|npcs|terrains|coords]  stats`,
+  `  ${C.green}get${C.reset}   <type> <id>                  fetch entity`,
+  `  ${C.green}list${C.reset}  [type] [filters]             list (no type = index)`,
+  `  ${C.green}location${C.reset} [code]                    composite node view`,
   `  ${C.green}chain${C.reset} <quest-id>                   quest chain`,
   `  ${C.green}export${C.reset} <collection>                dump JSON  [--format js|module]`,
-  `  ${C.green}worldmap${C.reset} [--regions] [--region A1] [--city LON] [--search "city"] [--monster skeleton] [--from A --to B]`,
-  `  ${C.green}move${C.reset} <CODE> <r> <c> [--swap]       move node coordinates (swap if occupied)`,
-  `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain type] [--execute]`,
-  `  ${C.green}geo-seed${C.reset} [--execute]               seed major cities from real lat/lon`,
-  `  ${C.green}connect${C.reset} <A> <dir> <B>             wire two nodes bidirectionally (checks alignment)`,
-  `  ${C.green}fill-gap${C.reset} <from> <dir> <to>        insert junction chain for gap > 4  [--step N] [--execute]`,
-  `  ${C.green}fix-diagonal${C.reset} <CODE> <dir>         auto-fix one diagonal edge (move or elbow)  [--execute]`,
-  `  ${C.green}fix-all-broken${C.reset} [--execute] [--limit N]  batch-fix all 196 broken edges`,
-  `  ${C.green}highway${C.reset} <from> <to> [--step 4] [--terrain junction] [--execute]  full junction chain`,
-  `  ${C.green}location${C.reset} [code]                    composite node view (no code = list all)`,
+  ``,
+  `  ${C.bold}── Write ───────────────────────────────────────────────────────────────${C.reset}`,
+  `  ${C.green}post${C.reset}  <type> [k=v…]                create`,
+  `  ${C.green}put${C.reset}   <type> <id> [k=v…]           update fields  (or pipe JSON)`,
+  `  ${C.green}del${C.reset}   <type> <id>                  delete`,
+  `  ${C.green}speak${C.reset} <npc-id> "<prompt>"           Claude NPC reply`,
+  `  ${C.green}import${C.reset} <file.json>                 bulk import nodes + quest cycles`,
+  ``,
+  `  ${C.bold}── Map & Coordinates ───────────────────────────────────────────────────${C.reset}`,
+  `  ${C.green}worldmap${C.reset} [--regions] [--region A1] [--city CODE] [--search Q] [--monster M] [--route A --to B]`,
+  `  ${C.green}geo-seed${C.reset} [--execute]               seed major cities from lat/lon`,
+  `  ${C.green}move${C.reset} <CODE> <r> <c> [--swap]       move node coordinates`,
+  ``,
+  `  ${C.bold}── Network Wiring ──────────────────────────────────────────────────────${C.reset}`,
+  `  ${C.green}connect${C.reset} <A> <dir> <B>              wire two nodes bidirectionally`,
+  `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain T] [--execute]`,
+  `  ${C.green}fill-gap${C.reset} <from> <dir> <to>         junction chain for gap > 4  [--step N] [--execute]`,
+  `  ${C.green}highway${C.reset} <from> <to>                full junction highway  [--step 4] [--execute]`,
+  `  ${C.green}fix-diagonal${C.reset} <CODE> <dir>          fix one diagonal edge  [--execute]`,
+  `  ${C.green}fix-all-broken${C.reset} [--execute] [--limit N]  batch-fix all broken edges`,
+  ``,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,
 ].join('\n');

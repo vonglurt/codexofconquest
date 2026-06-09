@@ -316,13 +316,15 @@ returns proposed coords for every node + elbow specs. Accepts `dryRun:true` for 
 
 ```bash
 # Dry run — see what would change
-curl -sX POST http://localhost:1367/api/layout/solve-exact \
-  -d '{"dryRun":true,"restCity":1,"restJunction":2}' | jq .stats
+node layout-solve.js | jq .stats
 
 # Apply full world reshuffle
-curl -sX POST http://localhost:1367/api/layout/solve-exact \
-  -d '{"dryRun":false,"insertElbows":true}' | jq .summary
+node layout-solve.js --apply
+
+# Apply with elbow insertion
+node layout-solve.js --apply --insert-elbows
 ```
+> Note: these operations will be wrapped as `./api.sh layout-solve` in a future API refactor.
 
 ---
 
@@ -374,5 +376,5 @@ node layout-solve.js --apply
 node layout-solve.js --apply --insert-elbows
 
 # Compare broken edges before/after
-curl http://localhost:1367/api/graph/broken | jq .categories
+./api.sh broken
 ```

@@ -48,7 +48,8 @@ Every junction node must have:
 - `terrain`: inherited from connecting nodes
 
 ### api.sh-Only Rule
-All changes go through `./api.sh` commands. No direct HTML edits. No curl except where api.sh wraps it.
+All changes go through `./api.sh` commands. No direct HTML edits. No curl.
+If a feature is missing from `./api.sh`, request an API refactor — do not use curl as a workaround.
 
 ---
 
@@ -118,8 +119,7 @@ Elbow goes at axis intersection: (A.row, B.col) for E/W bendy, (B.row, A.col) fo
 
 **Strategy C — fill-gap** (if axis-aligned but gap > 4):
 ```bash
-curl -sX POST http://localhost:1367/api/graph/fill-gap \
-  -d '{"from":"A","dir":"E","to":"B","maxGap":4,"step":4,"dryRun":false}'
+./api.sh fill-gap A E B --execute
 ```
 
 **Triage order:** Fix the 135 `diagonal_and_gap` edges first (worst violations), then the 61 `diagonal` edges.
@@ -179,13 +179,14 @@ G. Singleton wiring:
 
 After all cluster wiring is done, re-run the broken-edge check:
 ```bash
-curl -s 'http://localhost:1367/api/graph/broken' | python3 -c "..."
+./api.sh broken
 ```
 
-For any remaining diagonal edges, use the validate tool to get specific fix commands:
+For any remaining diagonal edges, inspect and fix:
 ```bash
-./api.sh worldmap --city <CODE>    # see connection status
-curl -s 'http://localhost:1367/api/graph/validate/<CODE>'  # get move suggestions
+./api.sh worldmap --city <CODE>          # see connection status + nav hints
+./api.sh fix-diagonal <CODE> <dir>       # preview fix
+./api.sh fix-diagonal <CODE> <dir> --execute  # apply fix
 ```
 
 Apply coordinate moves one at a time:
@@ -200,11 +201,7 @@ Apply coordinate moves one at a time:
 
 Run connectivity check — should be 0 unreachable:
 ```bash
-curl -s 'http://localhost:1367/api/graph/reachability' | python3 -c "
-import json,sys; d=json.load(sys.stdin); c=d['counts']
-print(f'Reachable: {c[\"reachable\"]} / {c[\"total\"]}')
-print(f'Unreachable: {c[\"unreachable\"]}')
-"
+./api.sh reachability
 ```
 
 Test specific routes:
@@ -220,7 +217,7 @@ Test specific routes:
 ### Phase 5: Final Validation Pass
 
 ```bash
-curl -s 'http://localhost:1367/api/graph/broken'         # should be 0
+./api.sh broken
 ./api.sh audit --map                                       # full integrity scan
 ./api.sh worldmap --regions                               # visual confirmation
 ```
