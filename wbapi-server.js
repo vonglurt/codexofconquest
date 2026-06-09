@@ -4595,7 +4595,208 @@ async function route(req, res) {
       return saveAndRestart(res,200,{ok:true,code,from:srcCoord,to:{r,c},...(occupier&&swap?{swapped:{code:occupier,movedTo:srcCoord}}:{})});
     }
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move' });
+    // ── GET /api/graph/find-open-location/{code} ─────────────────────────────
+    // Walk the network BFS from {code}. Return nodes that can accept a new
+    // neighbour without hitting the 4-connection cap.  Rules:
+    //   degree ≤ 2  → directAttach  (connect straight to it)
+    //   degree = 3  → junctionNeeded (spawn junction first, then connect)
+    //   degree = 4  → skip
+    // Dense cells (≥3 of the 4 axis-adjacent grid slots occupied) are skipped.
+    // Query params: ?radius=8 (BFS hop limit)
+    if (parts[1] === 'find-open-location' && parts[2] && method === 'GET') {
+      const DIRS4    = ['N','E','S','W'];
+      const startCode = parts[2];
+      if (!nm[startCode]) return json(res, 404, { error: `Node "${startCode}" not found` });
+      const radius = Math.max(1, Math.min(20, parseInt(url.searchParams.get('radius') || '8', 10)));
+      const allCoords = WBAPI.nodeCoords;
+
+      // Degree of a node
+      const deg = code => DIRS4.filter(d => nm[code]?.[d] && nm[nm[code][d]]).length;
+
+      // Grid density: count occupied axis-adjacent cells (not diagonals)
+      const density = (r, c) => {
+        let n = 0;
+        for (const [dr, dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
+          if (allCoords && Object.values(allCoords).some(p => p.r === r+dr && p.c === c+dc)) n++;
+        }
+        return n;
+      };
+
+      const visited = new Set();
+      const queue = [{ code: startCode, depth: 0 }];
+      const directAttach = [], junctionNeeded = [], deadEnds = [];
+
+      while (queue.length) {
+        const { code, depth } = queue.shift();
+        if (visited.has(code) || depth > radius) continue;
+        visited.add(code);
+
+        const d = deg(code);
+        const coord = allCoords[code];
+        const dense = coord ? density(coord.r, coord.c) : 0;
+        const freeSlots = DIRS4.filter(dir => !nm[code]?.[dir]);
+        const entry = { code, degree: d, depth, density: dense,
+          coords: coord || null, freeSlots, label: nm[code]?.label };
+
+        if (d === 1 && depth > 0)       deadEnds.push(entry);
+        if (d <= 2 && dense < 3)        directAttach.push(entry);
+        else if (d === 3 && dense < 3)  junctionNeeded.push(entry);
+
+        for (const dir of DIRS4) {
+          const tgt = nm[code]?.[dir];
+          if (tgt && nm[tgt] && !visited.has(tgt)) queue.push({ code: tgt, depth: depth + 1 });
+        }
+      }
+
+      // Sort each list: prefer shallower, then lower density
+      const rank = e => e.depth * 10 + e.density;
+      directAttach.sort((a, b) => rank(a) - rank(b));
+      junctionNeeded.sort((a, b) => rank(a) - rank(b));
+
+      logResponse('GET', url.pathname, 200,
+        `find-open-location: ${directAttach.length} direct, ${junctionNeeded.length} junction-needed, ${deadEnds.length} dead-ends`);
+      return json(res, 200, {
+        ok: true, startCode, radius,
+        summary: { directAttach: directAttach.length, junctionNeeded: junctionNeeded.length, deadEnds: deadEnds.length },
+        directAttach:    directAttach.slice(0, 10),
+        junctionNeeded:  junctionNeeded.slice(0, 10),
+        deadEnds:        deadEnds.slice(0, 10),
+        advice: directAttach.length
+          ? `Best open slot: ${directAttach[0].code} (deg=${directAttach[0].degree}, depth=${directAttach[0].depth})`
+          : junctionNeeded.length
+          ? `All nearby nodes at deg=3 — spawn junction at ${junctionNeeded[0].code} first`
+          : 'Area saturated — try larger radius or different city',
+      });
+    }
+
+    // ── POST /api/graph/smart-connect ─────────────────────────────────────────
+    // Mesh-aware bidirectional connect: A → B is really A-mesh → B-mesh.
+    // Algorithm:
+    //   1. Walk A's network (BFS, up to meshRadius hops) toward B to find
+    //      the nearest node in A's mesh with a free slot.
+    //   2. Walk B's network toward A to find the nearest node in B's mesh
+    //      with a free slot.
+    //   3. If either insertion node has degree=3, spawn a junction there first.
+    //   4. Wire the two insertion nodes together (or note gap for fill-gap).
+    // Body: { from, to, dir?, meshRadius?, dryRun? }
+    if (parts[1] === 'smart-connect' && method === 'POST') {
+      const DIRS4 = ['N','E','S','W'];
+      let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
+      const { from: fromCode, to: toCode, meshRadius = 6, dryRun = true } = body || {};
+      if (!fromCode || !toCode) return json(res, 400, { error: 'Required: from, to' });
+      if (!nm[fromCode]) return json(res, 404, { error: `Node "${fromCode}" not found` });
+      if (!nm[toCode])   return json(res, 404, { error: `Node "${toCode}" not found` });
+
+      const allCoords = WBAPI.nodeCoords;
+      const deg = code => DIRS4.filter(d => nm[code]?.[d] && nm[nm[code][d]]).length;
+
+      // BFS walk from startCode, scoring each candidate by proximity to targetCoord
+      function walkMesh(startCode, targetCode) {
+        const targetCoord = allCoords[targetCode];
+        const visited = new Set();
+        const queue = [{ code: startCode, depth: 0 }];
+        const candidates = [];
+
+        while (queue.length) {
+          const { code, depth } = queue.shift();
+          if (visited.has(code) || depth > meshRadius) continue;
+          visited.add(code);
+
+          const d = deg(code);
+          const coord = allCoords[code];
+
+          // Distance toward target (Manhattan on grid)
+          const dist = (coord && targetCoord)
+            ? Math.abs(coord.r - targetCoord.r) + Math.abs(coord.c - targetCoord.c)
+            : 999;
+
+          const freeSlots = DIRS4.filter(dir => !nm[code]?.[dir]);
+
+          if (d < 4 && freeSlots.length > 0) {
+            candidates.push({
+              code, degree: d, depth, dist, freeSlots,
+              needsJunction: d === 3,  // would fill 4th slot → spawn junction first
+              label: nm[code]?.label,
+              coords: coord || null,
+            });
+          }
+
+          for (const dir of DIRS4) {
+            const tgt = nm[code]?.[dir];
+            if (tgt && nm[tgt] && !visited.has(tgt)) queue.push({ code: tgt, depth: depth + 1 });
+          }
+        }
+
+        // Prefer: shallow depth, low dist toward target, lower degree
+        candidates.sort((a, b) =>
+          (a.depth + a.dist * 0.1 + (a.needsJunction ? 2 : 0)) -
+          (b.depth + b.dist * 0.1 + (b.needsJunction ? 2 : 0))
+        );
+        return candidates.slice(0, 5);
+      }
+
+      const fromCandidates = walkMesh(fromCode, toCode);
+      const toCandidates   = walkMesh(toCode,   fromCode);
+
+      if (!fromCandidates.length) return json(res, 409, {
+        error: `No open slots found within ${meshRadius} hops of "${fromCode}"`,
+        advice: `Run ./api.sh find-open-location ${fromCode} to inspect the mesh`,
+      });
+      if (!toCandidates.length) return json(res, 409, {
+        error: `No open slots found within ${meshRadius} hops of "${toCode}"`,
+        advice: `Run ./api.sh find-open-location ${toCode} to inspect the mesh`,
+      });
+
+      const insertA = fromCandidates[0];
+      const insertB = toCandidates[0];
+
+      // Determine best direction between the two insertion points
+      const cA = insertA.coords, cB = insertB.coords;
+      let bestDir = 'E';  // fallback
+      if (cA && cB) {
+        const dr = cB.r - cA.r, dc = cB.c - cA.c;
+        if (Math.abs(dc) >= Math.abs(dr)) bestDir = dc >= 0 ? 'E' : 'W';
+        else                              bestDir = dr >= 0 ? 'S' : 'N';
+        // Prefer a free slot in that direction
+        if (!insertA.freeSlots.includes(bestDir)) bestDir = insertA.freeSlots[0] || bestDir;
+      }
+      const reverseDir = OPP[bestDir];
+
+      const gap = (cA && cB)
+        ? Math.abs(['N','S'].includes(bestDir) ? cB.r - cA.r : cB.c - cA.c)
+        : null;
+
+      const plan = {
+        fromCity:   fromCode,
+        toCity:     toCode,
+        insertA:    { ...insertA, action: insertA.needsJunction ? 'spawn_junction_then_connect' : 'connect_direct' },
+        insertB:    { ...insertB, action: insertB.needsJunction ? 'spawn_junction_then_connect' : 'connect_direct' },
+        direction:  bestDir,
+        gap,
+        needsFillGap: gap !== null && gap > 4,
+        dryRun,
+      };
+
+      if (dryRun) {
+        logResponse('POST', url.pathname, 200, `smart-connect dry-run: ${insertA.code}→${insertB.code}`);
+        return json(res, 200, { ok: true, dryRun: true, plan,
+          commands: [
+            insertA.needsJunction
+              ? `./api.sh junction ${insertA.code} ${bestDir} --execute  # spawn junction at deg-3 node`
+              : `./api.sh connect ${insertA.code} ${bestDir} ${insertB.code}  # direct connect`,
+            ...(plan.needsFillGap ? [`./api.sh fill-gap ${insertA.code} ${bestDir} ${insertB.code} --execute  # bridge gap`] : []),
+          ],
+        });
+      }
+
+      // Execute: connect (possibly via junction) and report
+      // (actual write deferred to api.sh commands — this dry-run plan is the primary output)
+      logResponse('POST', url.pathname, 200, `smart-connect: plan for ${insertA.code}→${insertB.code}`);
+      return json(res, 200, { ok: true, dryRun: false, plan,
+        note: 'Execute the commands field to apply. smart-connect returns the plan; use ./api.sh connect + fill-gap to execute.' });
+    }
+
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────

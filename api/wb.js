@@ -672,18 +672,120 @@ const CMD = {
     }
   },
 
+  // ── find-open-location: find a node near a city that can accept a new neighbour
+  // Usage: ./api.sh find-open-location <city> [--radius 8]
+  //
+  // Returns open attachment points in the city's mesh:
+  //   directAttach   — degree ≤ 2, connect straight to this node
+  //   junctionNeeded — degree = 3, spawn junction here first, then connect
+  //   deadEnds       — degree = 1 nodes that should be expanded
+  async 'find-open-location'(pos, flags) {
+    const [, code] = pos;
+    if (!code) die('Usage: ./api.sh find-open-location <city> [--radius N]');
+    const radius = flags.radius ? +flags.radius : 8;
+    const resp = await request('GET', `/api/graph/find-open-location/${code}?radius=${radius}`);
+    if (resp.status >= 400) { printError(resp); process.exit(1); }
+    const d = resp.body;
+    ok(`Open locations near ${code}  (radius=${radius})`);
+    ok(`  Direct attach (deg ≤ 2): ${d.summary.directAttach}`);
+    ok(`  Need junction first (deg=3): ${d.summary.junctionNeeded}`);
+    ok(`  Dead ends (deg=1): ${d.summary.deadEnds}`);
+    ok(`Advice: ${d.advice}`);
+    if (d.directAttach?.length) {
+      ok(`\nBest direct slots:`);
+      d.directAttach.slice(0, 5).forEach(e =>
+        ok(`  ${e.code.padEnd(8)} deg=${e.degree}  depth=${e.depth}  density=${e.density}  free=${e.freeSlots.join(',')}  ${(e.label||'').slice(0,30)}`));
+    }
+    if (d.junctionNeeded?.length) {
+      ok(`\nJunction-spawn spots (deg=3):`);
+      d.junctionNeeded.slice(0, 3).forEach(e =>
+        ok(`  ${e.code.padEnd(8)} deg=${e.degree}  depth=${e.depth}  free=${e.freeSlots.join(',')}  ${(e.label||'').slice(0,30)}`));
+    }
+    if (d.deadEnds?.length) {
+      ok(`\nDead ends (should be extended):`);
+      d.deadEnds.slice(0, 5).forEach(e =>
+        ok(`  ${e.code.padEnd(8)} depth=${e.depth}  free=${e.freeSlots.join(',')}  ${(e.label||'').slice(0,30)}`));
+    }
+  },
+
+  // ── smart-connect: mesh-aware A→B connection with degree/junction rules ─────
+  // Usage: ./api.sh smart-connect <from> <to> [--radius 6] [--execute]
+  //
+  // "A to B" is really "A-mesh to B-mesh".
+  // Walks each city's network to find the best insertion points:
+  //   - Nodes with deg ≤ 2: connect directly
+  //   - Nodes with deg = 3: spawn junction first (preserve the 4th slot)
+  //   - Nodes with deg = 4: skip (full), walk deeper
+  // Reports the plan; use --execute to apply the first step.
+  async 'smart-connect'(pos, flags) {
+    const [, fromCode, toCode] = pos;
+    if (!fromCode || !toCode) die('Usage: ./api.sh smart-connect <from> <to> [--radius 6] [--execute]');
+    const radius  = flags.radius ? +flags.radius : 6;
+    const execute = !!flags.execute;
+    const resp = await request('POST', '/api/graph/smart-connect', {
+      from: fromCode, to: toCode, meshRadius: radius, dryRun: !execute,
+    });
+    if (resp.status >= 400) { printError(resp); process.exit(1); }
+    const d = resp.body;
+    const p = d.plan;
+
+    ok(`Smart-connect: ${fromCode} ↔ ${toCode}`);
+    ok(`  A-mesh insertion: ${p.insertA.code} (deg=${p.insertA.degree}, depth=${p.insertA.depth}, ${p.insertA.action})`);
+    ok(`  B-mesh insertion: ${p.insertB.code} (deg=${p.insertB.degree}, depth=${p.insertB.depth}, ${p.insertB.action})`);
+    ok(`  Bridge direction: ${p.direction}  gap: ${p.gap ?? '?'}  needsFillGap: ${p.needsFillGap}`);
+
+    if (d.commands?.length) {
+      ok(`\nCommands to execute:`);
+      d.commands.forEach(cmd => ok(`  ${cmd}`));
+    }
+    if (!execute) ok(`\nAdd --execute to run the first wiring step automatically.`);
+    else {
+      // Execute: apply each command via api.sh
+      if (d.commands?.length) {
+        ok(`\nExecuting...`);
+        for (const cmd of d.commands) {
+          // Parse and run the command
+          const parts = cmd.replace(/\s*#.*$/, '').trim().split(/\s+/);
+          const subCmd = parts[1]; // e.g. 'junction', 'connect', 'fill-gap'
+          const fn = CMD[subCmd];
+          if (fn) {
+            await fn(parts.slice(1), { execute: true });
+          } else {
+            ok(`  (manual step needed): ${cmd}`);
+          }
+        }
+      }
+    }
+  },
+
   // ── connect: wire two existing nodes together in a direction ────────────────
   // Usage: ./api.sh connect <A> <dir> <B>
   //   Sets A[dir] = B and B[OPP[dir]] = A (bidirectional wire).
   //   Checks coordinate alignment first; warns if bendy or gap > 4.
-  async connect(pos) {
+  async connect(pos, flags) {
     const [, aCode, dir, bCode] = pos;
     if (!aCode||!dir||!bCode) die('Usage: ./api.sh connect <A> <N|E|S|W> <B>');
     if (!['N','E','S','W'].includes(dir.toUpperCase())) die('dir must be N|E|S|W');
     const D = dir.toUpperCase(), OPP={N:'S',S:'N',E:'W',W:'E'};
-    // Fetch coords to warn before wiring
-    const coordsResp = await request('GET', '/api/coords');
+
+    // Fetch current node state + coords for degree/alignment checks
+    const [nmResp, coordsResp] = await Promise.all([
+      request('GET', '/api/export/node_map?format=json'),
+      request('GET', '/api/coords'),
+    ]);
+    const nm     = nmResp.body?.data    || {};
     const coords = coordsResp.body?.coords || {};
+
+    const degA = ['N','E','S','W'].filter(d => nm[aCode]?.[d]).length;
+    const degB = ['N','E','S','W'].filter(d => nm[bCode]?.[d]).length;
+
+    // Degree-cap warnings
+    if (degA >= 4) { ok(`⚠ ${aCode} already has 4 connections (full). Use ./api.sh smart-connect ${aCode} ${bCode} to find a mesh insertion point.`); if (!flags.force) return; }
+    if (degB >= 4) { ok(`⚠ ${bCode} already has 4 connections (full). Use ./api.sh smart-connect ${aCode} ${bCode} to find a mesh insertion point.`); if (!flags.force) return; }
+    if (degA === 3) ok(`⚠ ${aCode} has 3 connections — this will fill its 4th (last) slot. Consider: ./api.sh junction ${aCode} ${D} --execute  (spawns junction first, preserves slot)`);
+    if (degB === 3) ok(`⚠ ${bCode} has 3 connections — this will fill its 4th (last) slot. Consider: ./api.sh junction ${bCode} ${OPP[D]} --execute  (spawns junction first, preserves slot)`);
+
+    // Coordinate alignment check
     const ca = coords[aCode], cb = coords[bCode];
     if (ca && cb) {
       const axisOff = (D==='N'||D==='S') ? Math.abs(cb.c-ca.c) : Math.abs(cb.r-ca.r);
@@ -692,6 +794,7 @@ const CMD = {
       if (axisDist > 4) ok(`⚠ GAP: distance=${axisDist} > 4 — consider fill-gap first`);
       if (axisOff === 0 && axisDist <= 4) ok(`Coords OK: axis-aligned, gap=${axisDist} ≤ 4`);
     }
+
     const r1 = await request('PUT', `/api/node/${aCode}`, { [D]: bCode });
     if (r1.status >= 400) { printError(r1); process.exit(1); }
     const r2 = await request('PUT', `/api/node/${bCode}`, { [OPP[D]]: aCode });
@@ -2067,7 +2170,9 @@ const SYNOPSIS = [
   `  ${C.green}move${C.reset} <CODE> <r> <c> [--swap]       move node coordinates`,
   ``,
   `  ${C.bold}── Network Wiring ──────────────────────────────────────────────────────${C.reset}`,
-  `  ${C.green}connect${C.reset} <A> <dir> <B>              wire two nodes bidirectionally`,
+  `  ${C.green}smart-connect${C.reset} <A> <B>              mesh-aware connect: finds open slots, respects deg rules  [--radius 6] [--execute]`,
+  `  ${C.green}find-open-location${C.reset} <city>         find open attachment points near a city  [--radius 8]`,
+  `  ${C.green}connect${C.reset} <A> <dir> <B>              direct wire (warns on deg=3/4 issues)  [--force]`,
   `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain T] [--execute]`,
   `  ${C.green}fill-gap${C.reset} <from> <dir> <to>         junction chain for gap > 4  [--step N] [--execute]`,
   `  ${C.green}highway${C.reset} <from> <to>                full junction highway  [--step 4] [--execute]`,

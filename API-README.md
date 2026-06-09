@@ -229,14 +229,29 @@ echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 
 ### Network Wiring
 
+**Connection rules (enforced everywhere):**
+- Max 4 connections per node
+- Degree-3 rule: if inserting into a deg=3 node, spawn a junction first (preserves the last slot)
+- A→B is really A-mesh→B-mesh: use `smart-connect` to find the best insertion points in each city's surrounding mesh
+- Dead ends (deg=1) should be extended with a junction when the area allows it
+
 ```bash
-./api.sh connect WOR E SAL            # wire two nodes bidirectionally (checks alignment)
-./api.sh junction LHR S --execute     # spawn single junction node going South
+# Preferred: mesh-aware connect (finds best insertion points in each city's mesh)
+./api.sh smart-connect LHR CON           # dry-run: shows insertion plan
+./api.sh smart-connect LHR CON --execute # applies first wiring step
+./api.sh smart-connect LHR CON --radius 8  # search deeper into mesh
+
+# Find open attachment points near a city (where to add new content)
+./api.sh find-open-location LHR          # lists open nodes near Birka
+./api.sh find-open-location LHR --radius 10
+
+# Direct wire (use when you know exactly where to connect)
+./api.sh connect WOR E SAL               # warns on deg=3/4; use --force to override
+./api.sh junction LHR S --execute        # spawn single junction node
 ./api.sh junction LHR S --label "Crossroads" --terrain city --execute
-./api.sh fill-gap WOR E SAL --execute # fill junction chain for gap > 4
-./api.sh highway LHR CON              # dry-run: show highway plan
-./api.sh highway LHR CON --execute    # build full junction highway A→B
-./api.sh highway WOR REG --step 4 --terrain junction --execute
+./api.sh fill-gap WOR E SAL --execute    # junction chain for gap > 4
+./api.sh highway LHR CON --execute       # full junction highway A→B
+./api.sh highway WOR REG --step 4 --execute
 ```
 
 ### Validation
