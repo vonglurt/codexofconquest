@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com
 'use strict';
 // api/wb.js — Roll2Hit WBAPI CLI wrapper
 // SDK-pattern queue with retry/backoff; Claude AI assist via --ai
@@ -1000,6 +1002,104 @@ const CMD = {
     }
   },
 
+  // ── repair-network: mega-loop — rip-and-connect → fix-all-broken → fix-bidir ──
+  // Usage: ./api.sh repair-network [--execute] [--max-rip N] [--max-fix N] [--limit N] [--radius N]
+  //   Dry-run:  reports what each phase would do, no writes.
+  //   --execute: runs all three phases server-side in one call.
+  //   --max-rip   max rip-and-connect passes (default 5)
+  //   --max-fix   max fix-all-broken passes  (default 5)
+  //   --limit     nodes per rip-and-connect pass (default 100)
+  //   --radius    BFS depth for city-search (default 6)
+  //
+  // Stopping conditions (prevents runaway):
+  //   Phase 1 stops when totalStrays=0 or maxRip hit.
+  //   Phase 2 stops when broken=0, plateau (2 consecutive non-improving passes), or maxFix hit.
+  //   Phase 3 always runs once.
+  async 'repair-network'(pos, flags) {
+    await requireServer();
+    const execute   = !!flags.execute;
+    const maxRip    = flags['max-rip']  ? +flags['max-rip']  : 5;
+    const maxFix    = flags['max-fix']  ? +flags['max-fix']  : 5;
+    const limit     = flags.limit       ? +flags.limit       : 100;
+    const meshRadius= flags.radius      ? +flags.radius      : 6;
+
+    ok(`repair-network  execute=${execute}  maxRip=${maxRip}  maxFix=${maxFix}  limit=${limit}  radius=${meshRadius}`);
+    if (!execute) ok('[DRY RUN] add --execute to apply changes');
+
+    const body = { execute, maxRip, maxFix, limit, meshRadius };
+    const r = await request('POST', '/api/graph/repair-all', body);
+    if (r.status !== 200) { printError(r); process.exit(1); }
+
+    const { phases, final, verbose = [], ...summary } = r.body;
+
+    // Print verbose log
+    for (const line of verbose) ok(line);
+
+    // Phase summaries
+    if (phases?.rip?.length) {
+      ok('');
+      ok('── Phase 1: rip-and-connect ──');
+      for (const p of phases.rip) {
+        ok(`  pass ${p.pass}: strays=${p.totalStrays}  placed=${p.placed}  failed=${p.failed}  status=${p.status||'ok'}`);
+      }
+    }
+    if (phases?.fixBroken?.length) {
+      ok('');
+      ok('── Phase 2: fix-all-broken ──');
+      for (const p of phases.fixBroken) {
+        ok(`  pass ${p.pass}: broken=${p.broken}  fixed=${p.fixed}  failed=${p.failed}  status=${p.status||'ok'}`);
+      }
+    }
+    if (phases?.fixBidir) {
+      ok('');
+      ok(`── Phase 3: fix-bidirectional — fixed=${phases.fixBidir.fixed?.length||0}  errors=${phases.fixBidir.errors?.length||0}`);
+    }
+
+    ok('');
+    ok('── Final state ──');
+    ok(`  reachable : ${summary.finalReachable}/${summary.finalTotal} (${summary.finalPct}%)`);
+    ok(`  broken    : ${summary.finalBroken}`);
+    ok(`  unreachable nodes: ${summary.unreachable?.length||0}`);
+    if (summary.finalPct >= 100 && summary.finalBroken === 0) {
+      ok('  Network is clean ✓');
+    } else if (summary.finalPct >= 100) {
+      ok(`  Reachability 100% ✓  (${summary.finalBroken} broken edges remain — cosmetic)`);
+    } else {
+      ok(`  WARNING: ${summary.unreachable?.length} nodes unreachable — re-run repair-network`);
+    }
+    ok('');
+    ok(`Re-check: ./api.sh broken && ./api.sh reachability`);
+  },
+
+  // ── fix-bidirectional: batch-fix one-way links (A→B but B doesn't point back) ─
+  // Usage: ./api.sh fix-bidirectional [--execute]
+  //   Dry-run: calls GET /api/audit/map, counts bidirectional violations, shows summary.
+  //   --execute: POSTs to /api/audit/map/fix (no body) which fixes all diagonal + one-way
+  //              issues in one pass, then saves and reloads.
+  async 'fix-bidirectional'(pos, flags) {
+    await requireServer();
+    const exec = !!flags.execute;
+
+    if (!exec) {
+      // Dry-run: fetch audit to show how many violations exist
+      const r = await request('GET', '/api/audit/map');
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      const errors = (r.body.errors || []).filter(e => e.check === 'bidirectional');
+      ok(`${errors.length} bidirectional violations found`);
+      if (errors.length) ok(`[DRY RUN] add --execute to fix all`);
+      return;
+    }
+
+    const r = await request('POST', '/api/audit/map/fix', {});
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    const { fixed = [], errors = [], note } = r.body;
+    const bidir = fixed.filter(f => f.check === 'bidirectional');
+    const diag  = fixed.filter(f => f.check === 'diagonal_exit');
+    ok(`Done: ${bidir.length} bidirectional fixed, ${diag.length} diagonal fixed, ${errors.length} errors`);
+    if (note) ok(note);
+    ok(`Re-check: ./api.sh audit --map`);
+  },
+
   // ── highway: build a full junction chain between two cities ─────────────────
   // Usage: ./api.sh highway <from> <to> [--step 4] [--dry-run] [--terrain junction]
   //
@@ -1172,7 +1272,7 @@ ${C.bold}═══════════════════════�
   §19 MAP VISUALIZATION  (worldmap --regions --region --city --search --monster --route)
   §20 COORDINATE MANAGEMENT  (geo-seed  move  find-open-location)
   §21 NETWORK WIRING  (smart-connect  highway  junction  fill-gap  connect)
-  §22 NETWORK HEALTH & REPAIR  (broken  reachability  fix-diagonal  fix-all-broken  rip-and-connect)
+  §22 NETWORK HEALTH & REPAIR  (broken  reachability  fix-diagonal  fix-all-broken  fix-bidirectional  rip-and-connect  repair-network)
   §23 COMMON RECIPES
   §24 SERVER LIFECYCLE
 
@@ -2278,6 +2378,16 @@ ${C.bold}═══════════════════════�
     ./api.sh fix-all-broken --execute
     ./api.sh fix-all-broken --execute --limit 50
 
+  Fix all one-way links (A→B but B doesn't point back):
+    ./api.sh fix-bidirectional
+    ./api.sh fix-bidirectional --execute
+
+  Mega-loop repair (all phases server-side, safe loop limits):
+    ./api.sh repair-network
+    ./api.sh repair-network --execute
+    ./api.sh repair-network --execute --max-rip 3 --max-fix 3
+    ./api.sh repair-network --execute --max-rip 5 --max-fix 5 --limit 100
+
   Relocate all stray/unreachable nodes near their quest city:
     ./api.sh rip-and-connect
     ./api.sh rip-and-connect --execute
@@ -2402,6 +2512,8 @@ const SYNOPSIS = [
   `  ${C.green}rip-and-connect${C.reset} [--execute] [--limit 50]  auto-relocate stray nodes to nearest city mesh`,
   `  ${C.green}fix-diagonal${C.reset} <CODE> <dir>          fix one diagonal edge  [--execute]`,
   `  ${C.green}fix-all-broken${C.reset} [--execute] [--limit N]  batch-fix all broken edges`,
+  `  ${C.green}fix-bidirectional${C.reset} [--execute]         fix all one-way links (A→B but B doesn't point back)`,
+  `  ${C.green}repair-network${C.reset} [--execute] [--max-rip 5] [--max-fix 5]  mega-loop: rip → fix-broken → fix-bidir (server-side, safe limits)`,
   ``,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,

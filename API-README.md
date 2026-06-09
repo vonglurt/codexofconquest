@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Roll2Hit World Builder — API Reference
 
@@ -263,6 +263,8 @@ echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 ./api.sh fix-diagonal LHR S --execute # apply fix
 ./api.sh fix-all-broken               # preview all fixes
 ./api.sh fix-all-broken --execute --limit 50  # apply batch
+./api.sh fix-bidirectional            # preview one-way link violations
+./api.sh fix-bidirectional --execute  # fix all one-way links (A→B but B doesn't point back)
 ```
 
 > **Requesting new features**: if a map or graph operation is not listed above,
@@ -350,6 +352,8 @@ If you find yourself reaching for curl to hit one of these, request an api.sh wr
 | `GET /api/export/{collection}` | `./api.sh export <collection>` |
 | `POST /api/import/book` | `./api.sh import <file.json>` |
 | `GET /api/audit` | `./api.sh audit` |
+| `GET /api/audit/map` | `./api.sh audit --map` |
+| `POST /api/audit/map/fix` | `./api.sh fix-bidirectional --execute` |
 
 ---
 

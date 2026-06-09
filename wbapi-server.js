@@ -1,7 +1,9 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com
 // ============================================================
 // wbapi-server.js — Roll2Hit World Builder API Server
-// MIT License — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
+// MIT License — Copyright (c) 2026 paul@roll2hit.com
 // SPDX-License-Identifier: MIT
 // ============================================================
 'use strict';
@@ -838,7 +840,7 @@ async function route(req, res) {
           '  Run:  GET /api/help/workflow  for the common search→inspect→edit cycle.',
           '',
           `Server: ${b}`,
-          'Source: PaulRicheson@Roll2Hit.com — MIT License',
+          'Source: paul@roll2hit.com — MIT License',
         ].join('\n'),
       },
 
@@ -4992,7 +4994,311 @@ async function route(req, res) {
       return json(res, 200, { ok:true, dryRun, ...results });
     }
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/rip-and-connect' });
+    // ── POST /api/graph/repair-all — mega-loop: rip → fix-broken → fix-bidir ──
+    // Runs the full network repair sequence in one server-side call.
+    // Body: { execute?, maxRip?, maxFix?, limit?, meshRadius? }
+    //   execute    — false = dry-run, reports only (default false)
+    //   maxRip     — max rip-and-connect passes (default 5)
+    //   maxFix     — max fix-all-broken passes (default 5)
+    //   limit      — nodes per rip-and-connect pass (default 100)
+    //   meshRadius — BFS depth for stray city-search (default 6)
+    // Stopping conditions:
+    //   Phase 1 stops: totalStrays = 0 OR hit maxRip
+    //   Phase 2 stops: broken = 0 OR broken count did not decrease for 2 passes OR hit maxFix
+    //   Phase 3: always runs once
+    // Returns: { ok, execute, phases:{rip,fixBroken,fixBidir}, final, verbose[] }
+    if (parts[1] === 'repair-all' && method === 'POST') {
+      let body; try { body = await readBody(req); } catch(e) { body = {}; }
+      const { execute=false, maxRip=5, maxFix=5, limit=100, meshRadius=6 } = body||{};
+
+      const verbose = [];
+      const vlog = (msg, data) => { verbose.push(data ? `${msg} ${JSON.stringify(data)}` : msg); logRow('repair-all', msg); };
+
+      // helper: batch-save + reload (no HTTP response yet)
+      const batchSave = (label) => {
+        const stamp = WBAPI.getStampedName();
+        const sv = WBAPI.save(stamp);
+        if (!sv.ok) throw new Error(`save failed (${label}): ${sv.error}`);
+        fs.copyFileSync(sv.path, GAME_FILE);
+        WBAPI.load(GAME_FILE);
+        vlog(`[save] ${label} → ${path.basename(sv.path)}`);
+        return sv.path;
+      };
+
+      // helper: BFS reachability from hub
+      const DIRS4 = ['N','S','E','W'];
+      const OPP4  = {N:'S',S:'N',E:'W',W:'E'};
+      const DR4   = {N:-1,S:1,E:0,W:0};
+      const DC4   = {N:0,S:0,E:1,W:-1};
+      const bfsReach = (hub) => {
+        const seen = new Set(); const q = [hub];
+        while (q.length) { const c = q.shift(); if (seen.has(c)) continue; seen.add(c); for (const d of DIRS4) { const t = nm[c]?.[d]; if (t && nm[t] && !seen.has(t)) q.push(t); } }
+        return seen;
+      };
+      const allCodes = Object.keys(nm);
+      const hub = allCodes.reduce((b,c) => { const ca=DIRS4.filter(d=>nm[c]?.[d]&&nm[nm[c][d]]).length, cb=DIRS4.filter(d=>nm[b]?.[d]&&nm[nm[b][d]]).length; return ca>cb?c:b; }, allCodes[0]);
+
+      // ══════════════════════════════════════════════════════════════════════
+      // PHASE 1 — rip-and-connect loop
+      // ══════════════════════════════════════════════════════════════════════
+      vlog(`[phase1] rip-and-connect  maxRip=${maxRip}  limit=${limit}  execute=${execute}`);
+      const ripPhase = [];
+
+      const nodeQuestRefs = {};
+      for (const [,q] of Object.entries(WBAPI.questDb||{})) {
+        for (const f of ['activateNode','waypointNode']) { const r=q[f]; if(r&&nm[r]) nodeQuestRefs[r]=(nodeQuestRefs[r]||0)+1; }
+      }
+      const deg = code => DIRS4.filter(d => nm[code]?.[d] && nm[nm[code][d]]).length;
+      const findSlot = (cityCode) => {
+        const vis=new Set(); const q=[{code:cityCode,depth:0}];
+        while (q.length) { const {code,depth}=q.shift(); if(vis.has(code)||depth>meshRadius)continue; vis.add(code); const d=deg(code); if(d<3)return{code,degree:d,freeSlots:DIRS4.filter(dir=>!nm[code]?.[dir]),needsJunction:false}; if(d===3)return{code,degree:d,freeSlots:DIRS4.filter(dir=>!nm[code]?.[dir]),needsJunction:true}; for(const dir of DIRS4){const t=nm[code]?.[dir];if(t&&nm[t]&&!vis.has(t))q.push({code:t,depth:depth+1});} } return null;
+      };
+
+      for (let pass = 1; pass <= maxRip; pass++) {
+        const reachable = bfsReach(hub);
+        const strays = allCodes.filter(c => !reachable.has(c));
+        vlog(`[rip pass ${pass}] totalStrays=${strays.length}`);
+        if (!strays.length) { vlog(`[rip pass ${pass}] no strays — stopping`); break; }
+
+        const reachableCities = allCodes.filter(c => reachable.has(c) && ['city','airport'].includes(nm[c]?.name));
+        const allCoords = WBAPI.nodeCoords;
+        const occupied  = new Map(Object.entries(allCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
+        const allocated = new Map(occupied);
+
+        let placed=0, failed=0;
+        const passLog = [];
+        for (const stray of strays.slice(0, limit)) {
+          const shuffled = reachableCities.slice().sort(()=>Math.random()-0.5);
+          let bestCity=null,bestScore=-1,bestSlot=null,bestDir=null,bestNr=null,bestNc=null;
+          for (const city of shuffled) {
+            const slot=findSlot(city); if(!slot)continue;
+            let score=(nodeQuestRefs[stray]||0)*5;
+            const cs=allCoords[stray],cc=allCoords[city];
+            if(cs&&cc){const dist=Math.abs(cs.r-cc.r)+Math.abs(cs.c-cc.c);score+=Math.max(0,30-dist);}
+            score+=slot.needsJunction?0:2;
+            const slotCoord=allCoords[slot.code]; if(!slotCoord)continue;
+            for(const dir of slot.freeSlots){const nr=slotCoord.r+DR4[dir],nc=slotCoord.c+DC4[dir];if(!allocated.has(`${nr},${nc}`)){if(score>bestScore){bestScore=score;bestCity=city;bestSlot=slot;bestDir=dir;bestNr=nr;bestNc=nc;}break;}}
+          }
+          if(!bestCity||!bestSlot){failed++;passLog.push({stray,status:'no_slot'});continue;}
+          allocated.set(`${bestNr},${bestNc}`,stray);
+          if(!execute){passLog.push({stray,city:bestCity,slot:bestSlot.code,dir:bestDir,status:'would_place'});continue;}
+          WBAPI.nodeCoords[stray]={r:bestNr,c:bestNc};
+          WBAPI.editField('node',bestSlot.code,bestDir,stray);
+          WBAPI.editField('node',stray,OPP4[bestDir],bestSlot.code);
+          placed++; passLog.push({stray,city:bestCity,slot:bestSlot.code,dir:bestDir,coord:{r:bestNr,c:bestNc},status:'placed'});
+          vlog(`  [rip] ${stray} → ${bestCity} via ${bestSlot.code}.${bestDir} (${bestNr},${bestNc})`);
+        }
+        ripPhase.push({pass,totalStrays:strays.length,placed,failed,details:passLog});
+        if(execute&&placed>0){
+          const CS='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆',CE='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+          const si=WBAPI._rawSrc.indexOf(CS)+CS.length,ei=WBAPI._rawSrc.indexOf(CE);
+          const ents=Object.entries(WBAPI.nodeCoords).sort(([,a],[,b])=>(a.r-b.r)||(a.c-b.c));
+          let ns=`\nconst NODE_COORDS = { // → doc: maps.md §NODE_COORDS\n`;let pb=-999;
+          for(const [ec,ep]of ents){const band=Math.floor(ep.r/8)*8;if(band!==pb&&pb!==-999)ns+='\n';ns+=`  ${ec}:{r:${ep.r},c:${ep.c}},\n`;pb=band;}
+          ns+=`};\n`;
+          WBAPI._rawSrc=WBAPI._rawSrc.slice(0,si)+ns+WBAPI._rawSrc.slice(ei);
+          WBAPI._buildIndexes();
+          batchSave(`rip-pass-${pass}`);
+        }
+        if(placed===0&&!execute){vlog(`[rip pass ${pass}] dry-run: ${passLog.filter(p=>p.status==='would_place').length} would place`);break;}
+        if(execute&&placed===0){vlog(`[rip pass ${pass}] nothing placed — stopping`);break;}
+      }
+
+      // ══════════════════════════════════════════════════════════════════════
+      // PHASE 2 — fix-all-broken loop
+      // ══════════════════════════════════════════════════════════════════════
+      vlog(`[phase2] fix-all-broken  maxFix=${maxFix}  execute=${execute}`);
+      const fixPhase = [];
+      const DIAG = ['NW','NE','SW','SE'];
+      let noImprovePasses = 0, prevBrokenCount = Infinity;
+
+      // Next junction code helper (scoped here so it stays current across passes)
+      const nextJCode = () => { const nums=Object.keys(nm).filter(c=>/^J\d+$/.test(c)).map(c=>+c.slice(1)); return `J${(nums.length?Math.max(...nums):0)+1}`; };
+      const maxGap = 4;
+
+      for (let pass = 1; pass <= maxFix; pass++) {
+        // Scan broken edges
+        const edges=[], seen=new Set();
+        const coords = WBAPI.nodeCoords;
+        for(const [code,dirs]of Object.entries(nm)){
+          const cc=coords[code];
+          for(const d of DIRS4){
+            const tgt=dirs[d];if(!tgt)continue;
+            const key=[code,tgt].sort().join(':');if(seen.has(key))continue;seen.add(key);
+            const tc=coords[tgt];if(!cc||!tc)continue;
+            const dr=tc.r-cc.r,dc=tc.c-cc.c;
+            const gap=d in{N:1,S:1}?Math.abs(dr):Math.abs(dc);
+            const off=d in{N:1,S:1}?Math.abs(dc):Math.abs(dr);
+            let type=null;
+            if(off>0&&gap>maxGap)type='diagonal_and_gap';
+            else if(off>0)type='diagonal';
+            else if(gap>maxGap)type='gap_too_large';
+            if(type){
+              const axisSnapped=(type!=='gap_too_large')?((d==='N'||d==='S')?{r:tc.r,c:cc.c}:{r:cc.r,c:tc.c}):tc;
+              const candidates=suggestBetween(cc,axisSnapped,d,coords,type!=='gap_too_large'?tgt:null);
+              const best=candidates.find(c=>c.free)||candidates[0];
+              edges.push({from:code,dir:d,to:tgt,type,moveSuggestion:{node:type!=='gap_too_large'?tgt:'(new junction)',recommended:best,candidates}});
+            }
+          }
+        }
+        const brokenCount=edges.length;
+        vlog(`[fix pass ${pass}] broken=${brokenCount}  prevBroken=${prevBrokenCount===Infinity?'—':prevBrokenCount}`);
+
+        if(brokenCount===0){vlog(`[fix pass ${pass}] 0 broken — stopping`);fixPhase.push({pass,broken:0,fixed:0,failed:0,status:'clean'});break;}
+
+        // Stopping: if count didn't improve for 2 consecutive passes, stop
+        if(brokenCount>=prevBrokenCount){
+          noImprovePasses++;
+          vlog(`[fix pass ${pass}] no improvement (${prevBrokenCount}→${brokenCount}) consecutiveNoImprove=${noImprovePasses}`);
+          if(noImprovePasses>=2){vlog(`[fix pass ${pass}] plateau — stopping fix-all-broken`);fixPhase.push({pass,broken:brokenCount,fixed:0,failed:0,status:'plateau'});break;}
+        } else {
+          noImprovePasses=0;
+        }
+        prevBrokenCount=brokenCount;
+
+        if(!execute){fixPhase.push({pass,broken:brokenCount,fixed:0,failed:0,status:'dry-run'});vlog(`[fix pass ${pass}] dry-run — would attempt ${brokenCount} fixes`);continue;}
+
+        let fixed=0,failed=0;
+        const passDetails=[];
+        const occ=new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
+
+        for(const edge of edges){
+          const{from,dir,to,type,moveSuggestion:ms}=edge;
+          // Try move first
+          if(ms?.recommended&&ms.node&&ms.node!=='(new junction)'){
+            const{r,c}=ms.recommended;
+            const destKey=`${r},${c}`;
+            if(!occ.has(destKey)||occ.get(destKey)===ms.node){
+              const old=WBAPI.nodeCoords[ms.node];
+              if(old)occ.delete(`${old.r},${old.c}`);
+              WBAPI.nodeCoords[ms.node]={r,c};
+              occ.set(destKey,ms.node);
+              fixed++;
+              vlog(`  [fix] move ${ms.node} → (${r},${c}) [${type}]`);
+              passDetails.push({from,dir,to,type,action:'move',node:ms.node,coord:{r,c}});
+              continue;
+            }
+          }
+          // Spawn elbow junction
+          const cc=WBAPI.nodeCoords[from];if(!cc){failed++;continue;}
+          let jR=cc.r,jC=cc.c,found=false;
+          for(let d2=1;d2<=8;d2++){const nr=cc.r+DR4[dir]*d2,nc=cc.c+DC4[dir]*d2;if(!occ.has(`${nr},${nc}`)){jR=nr;jC=nc;found=true;break;}}
+          if(!found){failed++;vlog(`  [fix] FAILED elbow ${from}.${dir} no free cell`);passDetails.push({from,dir,to,type,action:'elbow_failed',reason:'no_free_cell'});continue;}
+          const jCode=nextJCode();
+          const terrain=nm[from]?.name||'junction';
+          const act=nm[from]?.act||1;
+          const jBody={name:terrain,label:`${nm[from]?.label||from} ↔ ${nm[to]?.label||to} Junction`,text:`A crossroads on the road between ${nm[from]?.label||from} and ${nm[to]?.label||to}.`,act,junction:true,npc:null,battle:null,loot:null,sleep:false,[OPP4[dir]]:from,[dir]:to};
+          const jEntry=serializeNodeLiteral(jCode,jBody);
+          const ins=insertBeforeSectionClose('NODE_MAP',jEntry);
+          if(!ins.ok){failed++;vlog(`  [fix] FAILED elbow ${jCode} insert: ${ins.error}`);passDetails.push({from,dir,to,type,action:'elbow_failed',reason:ins.error});continue;}
+          const newNum=Object.values(nm).reduce((m,n)=>Math.max(m,n.num||0),0)+1;
+          nm[jCode]={...jBody,num:newNum};
+          WBAPI.nodeCoords[jCode]={r:jR,c:jC};
+          const CSc='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆',CEc='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+          const sic=WBAPI._rawSrc.indexOf(CSc)+CSc.length,eic=WBAPI._rawSrc.indexOf(CEc);
+          let secc=WBAPI._rawSrc.slice(sic,eic);
+          const cii=secc.lastIndexOf('\n};');
+          secc=secc.slice(0,cii+1)+`  ${jCode}:{r:${jR},c:${jC}},\n`+secc.slice(cii+1);
+          WBAPI._rawSrc=WBAPI._rawSrc.slice(0,sic)+secc+WBAPI._rawSrc.slice(eic);
+          WBAPI.editField('node',from,dir,jCode);
+          WBAPI.editField('node',to,OPP4[dir],jCode);
+          occ.set(`${jR},${jC}`,jCode);
+          fixed++;
+          vlog(`  [fix] elbow ${jCode} at (${jR},${jC}) between ${from}.${dir}→${to} [${type}]`);
+          passDetails.push({from,dir,to,type,action:'elbow',jCode,coord:{r:jR,c:jC}});
+        }
+
+        // Save + reload once per pass
+        // Rewrite NODE_COORDS to reflect all moves in this pass
+        if(fixed>0){
+          const CS2='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆',CE2='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+          const si2=WBAPI._rawSrc.indexOf(CS2)+CS2.length,ei2=WBAPI._rawSrc.indexOf(CE2);
+          const ents2=Object.entries(WBAPI.nodeCoords).sort(([,a],[,b])=>(a.r-b.r)||(a.c-b.c));
+          let ns2=`\nconst NODE_COORDS = { // → doc: maps.md §NODE_COORDS\n`;let pb2=-999;
+          for(const [ec,ep]of ents2){const band=Math.floor(ep.r/8)*8;if(band!==pb2&&pb2!==-999)ns2+='\n';ns2+=`  ${ec}:{r:${ep.r},c:${ep.c}},\n`;pb2=band;}
+          ns2+=`};\n`;
+          WBAPI._rawSrc=WBAPI._rawSrc.slice(0,si2)+ns2+WBAPI._rawSrc.slice(ei2);
+          WBAPI._buildIndexes();
+          batchSave(`fix-pass-${pass}`);
+        }
+        fixPhase.push({pass,broken:brokenCount,fixed,failed,details:passDetails});
+        vlog(`[fix pass ${pass}] done: ${fixed} fixed  ${failed} failed  brokenAfter=~${brokenCount-fixed+Math.floor(fixed*0.6)}`);
+      }
+
+      // ══════════════════════════════════════════════════════════════════════
+      // PHASE 3 — fix-bidirectional (one pass, always)
+      // ══════════════════════════════════════════════════════════════════════
+      vlog(`[phase3] fix-bidirectional  execute=${execute}`);
+      const bidirFixed=[], bidirErrors=[];
+      const OPP2b={N:'S',S:'N',E:'W',W:'E'};
+      const biTargets=Object.entries(nm).flatMap(([code,n])=>
+        ['N','S','E','W'].filter(d=>n[d]&&nm[n[d]]&&nm[n[d]][OPP2b[d]]!==code).map(d=>({code,dir:d,target:n[d]})));
+      vlog(`[phase3] ${biTargets.length} one-way links found`);
+      if(execute){
+        // also fix diagonals in audit/map/fix style
+        const DIAG2b=['NW','NE','SW','SE'];
+        // strip diagonals inline
+        for(const [code,n] of Object.entries(nm)){
+          for(const d of DIAG2b){
+            if(n[d]==null)continue;
+            const S2='// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆',E2='// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
+            const a2=WBAPI._rawSrc.indexOf(S2)+S2.length,e2=WBAPI._rawSrc.indexOf(E2);
+            if(a2<S2.length||e2<0)continue;
+            const sec2=WBAPI._rawSrc.slice(a2,e2);
+            const lineRe2=new RegExp(`^([ \\t]*${code}\\s*:\\s*\\{[^\\n]+)$`,'m');
+            const m2=lineRe2.exec(sec2);if(!m2)continue;
+            const before2=m2[1];
+            const after2=before2.replace(new RegExp(`,\\s*${d}\\s*:\\s*'[^']*'`),'').replace(new RegExp(`\\b${d}\\s*:\\s*'[^']*',?\\s*`),'');
+            if(after2===before2)continue;
+            WBAPI._rawSrc=WBAPI._rawSrc.slice(0,a2)+sec2.replace(before2,after2)+WBAPI._rawSrc.slice(e2);
+            delete nm[code][d];
+            bidirFixed.push({check:'diagonal_exit',code,dir:d});
+          }
+        }
+        for(const{code,dir,target}of biTargets){
+          if(!nm[target]){bidirErrors.push({code,dir,target,error:'target not in NODE_MAP'});continue;}
+          if(nm[target][OPP2b[dir]]===code)continue;
+          const r2=WBAPI.editField('node',target,OPP2b[dir],code);
+          if(r2.ok)bidirFixed.push({check:'bidirectional',code,dir,target,set:`${target}.${OPP2b[dir]}="${code}"`});
+          else bidirErrors.push({code,dir,target,error:r2.error});
+        }
+        if(bidirFixed.length){batchSave('fix-bidir');}
+        vlog(`[phase3] done: ${bidirFixed.length} fixed  ${bidirErrors.length} errors`);
+      } else {
+        vlog(`[phase3] dry-run: ${biTargets.length} would fix`);
+      }
+
+      // ══════════════════════════════════════════════════════════════════════
+      // PHASE 4 — final reachability check
+      // ══════════════════════════════════════════════════════════════════════
+      vlog('[phase4] reachability check');
+      const finalReach=bfsReach(hub);
+      const finalTotal=Object.keys(nm).length;
+      const finalPct=Math.round(finalReach.size/finalTotal*1000)/10;
+      const finalUnreachable=Object.keys(nm).filter(c=>!finalReach.has(c));
+
+      // Final broken count
+      let finalBroken=0;
+      const fSeen=new Set();
+      const fCoords=WBAPI.nodeCoords;
+      for(const[code,dirs]of Object.entries(nm)){const cc=fCoords[code];for(const d of DIRS4){const tgt=dirs[d];if(!tgt)continue;const key=[code,tgt].sort().join(':');if(fSeen.has(key))continue;fSeen.add(key);const tc=fCoords[tgt];if(!cc||!tc)continue;const dr=tc.r-cc.r,dc=tc.c-cc.c;const gap=d in{N:1,S:1}?Math.abs(dr):Math.abs(dc);const off=d in{N:1,S:1}?Math.abs(dc):Math.abs(dr);if(off>0||gap>maxGap)finalBroken++;}}
+      vlog(`[phase4] reachable=${finalReach.size}/${finalTotal} (${finalPct}%)  broken=${finalBroken}  unreachable=${finalUnreachable.length}`);
+
+      const summary={
+        execute,
+        finalReachable:finalReach.size, finalTotal, finalPct,
+        finalBroken,
+        unreachable:finalUnreachable,
+        ripPasses:ripPhase.length,
+        fixPasses:fixPhase.length,
+        bidirFixed:bidirFixed.length,
+        bidirErrors:bidirErrors.length,
+      };
+      logResponse('POST',url.pathname,200,`repair-all done: reach=${finalReach.size}/${finalTotal}(${finalPct}%) broken=${finalBroken} bidir=${bidirFixed.length}`);
+      return json(res,200,{ok:true,...summary,phases:{rip:ripPhase,fixBroken:fixPhase,fixBidir:{fixed:bidirFixed,errors:bidirErrors}},verbose});
+    }
+
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/rip-and-connect  POST /api/graph/repair-all' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
@@ -7338,7 +7644,7 @@ server.listen(PORT, '127.0.0.1', () => {
   const line = '═'.repeat(60);
   console.log(`\n${C.bold}${C.magenta}${line}${C.reset}`);
   console.log(`${C.bold}  WBAPI Server  —  http://localhost:${PORT}/api${C.reset}`);
-  console.log(`${C.dim}  PaulRicheson@Roll2Hit.com  —  MIT License  —  Public Domain${C.reset}`);
+  console.log(`${C.dim}  paul@roll2hit.com  —  MIT License  —  Public Domain${C.reset}`);
   console.log(`${C.magenta}${line}${C.reset}`);
   console.log(`  Game file: ${C.cyan}${GAME_FILE}${C.reset}`);
   console.log(`  Log file:  ${C.cyan}${LOG_FILE}${C.reset}`);
