@@ -50,8 +50,8 @@ SAY_LOCK_FILE = ROOT / "milepoints" / "say.lock"  # shared with sayd.sh
 LAST_HTML   = PATCHES_DIR / "_last.html"
 LAST_NAME_F = PATCHES_DIR / "_last.name"
 GLOB        = "roll2hit-v3-????????-??????.html"
-SETTLE      = 2.0   # grace seconds after lsof shows no handles
-POLL        = 0.8   # directory scan interval
+SETTLE      = 0.0   # grace seconds after lsof shows no handles
+POLL        = 0.0   # directory scan interval
 
 _TITLE     = "Monitor-Snapshots"
 _COPYRIGHT = "PaulRicheson@Roll2hit.com MIT License"
@@ -70,9 +70,8 @@ def wait_closed(path, timeout=30):
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:
         if not _lsof_open(path):
-            time.sleep(SETTLE)
-            return not _lsof_open(path)
-        time.sleep(0.5)
+            return True
+        time.sleep(0.05)
     return False
 
 
@@ -198,7 +197,7 @@ class Monitor:
                 if f.name not in seen:
                     seen.add(f.name)
                     self._handle(f)
-            time.sleep(POLL)
+            time.sleep(0.05)
 
     def _handle(self, f):
         if not f.exists():
