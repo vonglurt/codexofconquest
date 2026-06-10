@@ -566,6 +566,46 @@ const WBAPI = {
     return { ok:true, applied, failed };
   },
 
+  // Remove a node entry from NODE_MAP source using brace-depth tracking.
+  // Handles both single-line and multi-line entries (insertStringField makes entries multi-line
+  // after direction fields are added). Returns true if removed, false if not found.
+  deleteNodeSource(code) {
+    if (!this._rawSrc) return false;
+    const S = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
+    const E = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
+    const am = this._rawSrc.indexOf(S) + S.length;
+    const em = this._rawSrc.indexOf(E);
+    if (am < S.length || em < 0) return false;
+    const sec = this._rawSrc.slice(am, em);
+    const keyRe = new RegExp(`^([ \\t]*)${code}\\s*:\\s*\\{`, 'gm');
+    const km = keyRe.exec(sec);
+    if (!km) return false;
+    const lineStart = km.index;
+    const openEnd = km.index + km[0].length;
+    let depth = 1, i = openEnd, inStr = null;
+    while (i < sec.length) {
+      const c = sec[i];
+      if (inStr) {
+        if (c === '\\' && inStr !== '`') { i += 2; continue; }
+        if (c === inStr) inStr = null;
+      } else if (c === '/' && sec[i+1] === '/') {
+        while (i < sec.length && sec[i] !== '\n') i++;
+        continue;
+      } else {
+        if (c === '"' || c === "'" || c === '`') inStr = c;
+        else if (c === '{') depth++;
+        else if (c === '}') { depth--; if (depth === 0) break; }
+      }
+      i++;
+    }
+    if (depth !== 0) return false;
+    let end = i + 1;
+    while (end < sec.length && sec[end] !== '\n') end++;
+    if (end < sec.length) end++;
+    this._rawSrc = this._rawSrc.slice(0, am) + sec.slice(0, lineStart) + sec.slice(end) + this._rawSrc.slice(em);
+    return true;
+  },
+
   renameNodeKey(oldCode, newCode) {
     if (!this._rawSrc) return { ok:false, error:'no source loaded' };
     const sections = ['NODE_MAP', 'NODE_COORDS', 'BIRKA_NPC'];
