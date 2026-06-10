@@ -111,8 +111,20 @@ const PLACEHOLDER_NODES = new Set(['QUEST','TBD','TODO','UNKNOWN','NONE','XXX','
 
 // ── Logging ──────────────────────────────────────────────────────────────────
 const LOG_FILE       = path.join(__dirname, 'milepoints', 'wbapi-server.log');
+const ERROR_FILE     = path.join(__dirname, 'milepoints', 'wbapi-server.error');
 const SPEAK_LOG_FILE = path.join(__dirname, 'milepoints', 'npc-speak.log');
 const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
+
+function writeError(msg, detail) {
+  const ts = new Date().toISOString();
+  const body = `${ts}  ${msg}${detail ? '\n' + detail : ''}\n`;
+  try { fs.writeFileSync(ERROR_FILE, body); } catch (_) {}
+  console.error(`[wbapi-server] ERROR: ${msg}`);
+  logStream.write(`${ts} [ERROR   ] ${msg}${detail ? '\n' + detail : ''}\n`);
+}
+function clearError() {
+  try { if (fs.existsSync(ERROR_FILE)) fs.unlinkSync(ERROR_FILE); } catch (_) {}
+}
 
 const C = {
   reset:  '\x1b[0m',  bold:    '\x1b[1m',  dim:     '\x1b[2m',
@@ -9128,10 +9140,11 @@ const server = http.createServer(async (req, res) => {
 // so the wbapi-toggle restart loop does NOT relaunch (exit 0 ≠ exit 67).
 server.on('error', (err) => {
   if (err.code === 'EADDRINUSE') {
-    console.error(`[wbapi-server] Port ${PORT} already in use — port 1367 wins; this instance exits.`);
+    writeError(`Port ${PORT} already in use — port 1367 wins; this instance exits.`);
     process.exit(0);
   }
-  throw err;
+  writeError(`server.listen failed: ${err.message}`, err.stack);
+  process.exit(1);
 });
 
 server.listen(PORT, '127.0.0.1', () => {
@@ -9231,19 +9244,20 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log(`    ${C.red}curl${C.reset} ${C.dim}-XDELETE ${b}/api/node/XX -H "X-Nonce: \$NONCE"${C.reset}`);
   console.log(`${C.magenta}${line}${C.reset}\n`);
 
+  clearError(); // successful start — remove any stale error file
   log('INFO', `Server listening on http://127.0.0.1:${PORT}`);
   logStream.write('═'.repeat(60) + '\n');
 
-  // Crash handlers — log the real stack, then exit 67 so wbapi-toggle.sh auto-restarts
+  // Crash handlers — write error file, log the stack, exit 67 so wbapi-toggle.sh auto-restarts
   process.on('uncaughtException', (err) => {
-    log('ERROR', `CRASH uncaughtException: ${err.message}`, { stack: err.stack });
+    writeError(`CRASH uncaughtException: ${err.message}`, err.stack);
     logStream.write(`CRASH: ${err.stack || err.message}\n`);
     process.exit(67);
   });
   process.on('unhandledRejection', (reason) => {
     const msg = reason instanceof Error ? reason.message : String(reason);
     const stack = reason instanceof Error ? reason.stack : '';
-    log('ERROR', `CRASH unhandledRejection: ${msg}`, { stack });
+    writeError(`CRASH unhandledRejection: ${msg}`, stack);
     logStream.write(`CRASH (rejection): ${stack || msg}\n`);
     process.exit(67);
   });
