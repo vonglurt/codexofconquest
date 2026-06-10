@@ -1107,7 +1107,7 @@ async function route(req, res) {
           'SYSTEM',
           `  POST ${b}/api/save      — serialise all in-memory edits back to roll2hit-v3.html`,
           `  POST ${b}/api/reload    — re-parse roll2hit-v3.html from disk (auto-reload already active via fs.watch — manual call is redundant)`,
-          `  POST ${b}/api/restart   — save + exit(67); toggle script auto-relaunches`,
+          `  POST ${b}/api/restart   — exit(0); external process handles relaunch`,
           '',
           'See: GET /api/help/nonce  |  GET /api/help/wizard',
         ].join('\n'),
@@ -1812,14 +1812,14 @@ async function route(req, res) {
     return json(res, 405, { error:'POST only' });
   }
 
-  // ── Restart (exits with code 67; toggle script loops on this) ──
+  // ── Restart (exits with code 0; external process is responsible for relaunch) ──
   if (parts[0] === 'restart' && method === 'POST') {
-    logRow('exit(67)', 'wbapi-toggle.sh restart loop will relaunch');
+    logRow('exit(0)', 'shutting down — external process responsible for relaunch');
     logResponse(method, url.pathname, 200, 'restarting');
     res.writeHead(200, { 'Content-Type':'application/json', 'Access-Control-Allow-Origin':'*' });
-    res.end(JSON.stringify({ ok:true, note:'Server restarting. Poll /api/ping until it responds.' }));
-    server.close(() => { process.exit(67); });
-    setTimeout(() => process.exit(67), 500);
+    res.end(JSON.stringify({ ok:true, note:'Server shutting down. External process will relaunch.' }));
+    server.close(() => { process.exit(0); });
+    setTimeout(() => process.exit(0), 500);
     return;
   }
 
@@ -5102,6 +5102,285 @@ async function route(req, res) {
       return json(res, 200, { ok:true, dryRun, ...results });
     }
 
+    // ── POST /api/graph/nuke-junctions — P_NUKE: bulk-delete all J#### junctions ──
+    // Streaming text/plain, no timeout.
+    // Body: { execute? }   default: dry-run (execute=false)
+    //
+    // Three-phase operation:
+    //   Phase 1  Straight-stitch: A-J-B chains → A-B direct, then delete J
+    //   Phase 2  L-shaped deferred: collect (neighborA, neighborB) pairs, delete J
+    //            (dangling refs cleaned in Phase 3; A* reconnects them later)
+    //   Phase 3  Dead-end delete: degree≤1 junctions → outright removal
+    //   Phase 4  Dangling cleanup: scan remaining nodes, clear any dir pointing at deleted codes
+    //   Phase 5  Bulk source delete: ONE pass over NODE_MAP + NODE_COORDS removing all collected codes
+    //   Phase 6  Save, reload, report
+    //
+    // See: lab-report-junction-reweave-overhaul.md §5
+    if (parts[1] === 'nuke-junctions' && method === 'POST') {
+      let body; try { body = await readBody(req); } catch(e) { body = {}; }
+      const { execute = false } = body || {};
+
+      res.writeHead(200, { 'Content-Type':'text/plain; charset=utf-8', 'Transfer-Encoding':'chunked', 'X-Accel-Buffering':'no' });
+      const emit = (msg) => { try { res.write(msg + '\n'); } catch(_) {} logRow('nuke-junctions', msg); };
+      const yieldN = () => new Promise(r => setImmediate(r));
+
+      emit(`[nuke-junctions] execute=${execute}  ts=${new Date().toISOString()}`);
+      emit(`[nuke-junctions] nodes=${Object.keys(nm).length}`);
+
+      const DIRS4n = ['N','S','E','W'];
+      const OPP4n  = {N:'S',S:'N',E:'W',W:'E'};
+      const jCodeRe = /^J\d+$/;
+
+      // ── Build protection sets ───────────────────────────────────────────────
+      const questRefNodes = new Set();
+      for (const q of Object.values(WBAPI.questDb || {}))
+        for (const f of ['activateNode','waypointNode']) if (q[f]) questRefNodes.add(q[f]);
+      const npcRefNodes = new Set(
+        Object.values(WBAPI.birkaNpcs || {}).map(n => n.node).filter(Boolean)
+      );
+      emit(`[nuke] questRefNodes=${questRefNodes.size}  npcRefNodes=${npcRefNodes.size}`);
+      const jQuestBlocked = [...questRefNodes].filter(c => jCodeRe.test(c));
+      const jNpcBlocked   = [...npcRefNodes].filter(c => jCodeRe.test(c));
+      if (jQuestBlocked.length || jNpcBlocked.length) {
+        emit(`[nuke] ⚠ BLOCKED: ${jQuestBlocked.length} J#### have quest refs, ${jNpcBlocked.length} have NPC refs`);
+        emit(`[nuke] questBlocked: ${jQuestBlocked.join(', ')}`);
+        emit(`[nuke] npcBlocked: ${jNpcBlocked.join(', ')}`);
+        emit(`[nuke] Aborting — resolve blocked codes first.`);
+        res.end(); return;
+      }
+      emit(`[nuke] safety check PASSED — 0 J#### have quest/NPC refs`);
+
+      // ── Classify all J#### junctions ───────────────────────────────────────
+      const toDelete     = new Set();   // all safe J#### to remove from source
+      const stitchOps    = [];          // {jCode, nodeA, dirA, nodeB, dirB}
+      const deferredPairs= [];          // {jCode, neighbors:[{code,dir},...]}
+      let   deadEndCount = 0;
+
+      for (const [code, node] of Object.entries(nm)) {
+        if (!jCodeRe.test(code)) continue;
+        if (questRefNodes.has(code) || npcRefNodes.has(code)) {
+          logTrace('nuke-skip', `${code} blocked — questRef=${questRefNodes.has(code)} npcRef=${npcRefNodes.has(code)}`);
+          continue;
+        }
+        toDelete.add(code);
+
+        const liveDirs = DIRS4n.filter(d => node[d] && nm[node[d]]);
+        const coord = WBAPI.nodeCoords[code];
+        const coordStr = coord ? `(${coord.r},${coord.c})` : '(no-coord)';
+        const trunc = (s, n=32) => s && s.length > n ? s.slice(0, n) + '…' : (s || '');
+
+        if (liveDirs.length <= 1) {
+          deadEndCount++;
+          logTrace('nuke-dead-end', `${code} ${coordStr} deg=${liveDirs.length} neighbors=[${liveDirs.map(d=>node[d]).join(',')}] → outright delete`);
+        } else if (liveDirs.length === 2 && OPP4n[liveDirs[0]] === liveDirs[1]) {
+          const nodeA = node[liveDirs[0]], nodeB = node[liveDirs[1]];
+          const labA = trunc(nm[nodeA]?.label || nodeA);
+          const labB = trunc(nm[nodeB]?.label || nodeB);
+          const isAJct = jCodeRe.test(nodeA), isBJct = jCodeRe.test(nodeB);
+          stitchOps.push({ jCode:code, nodeA, dirA:liveDirs[0], nodeB, dirB:liveDirs[1] });
+          logTrace('nuke-straight', `${code} ${coordStr} ${liveDirs[0]}↔${liveDirs[1]} → "${labA}"(${nodeA}${isAJct?'/J':''}) ↔ "${labB}"(${nodeB}${isBJct?'/J':''})`);
+        } else {
+          const nbDesc = liveDirs.map(d => {
+            const nb = node[d];
+            const lab = trunc(nm[nb]?.label || nb);
+            const nbCoord = WBAPI.nodeCoords[nb];
+            const nbCoordStr = nbCoord ? `(${nbCoord.r},${nbCoord.c})` : '';
+            const isJct = jCodeRe.test(nb);
+            return `${d}→"${lab}"(${nb}${isJct?'/J':''})${nbCoordStr}`;
+          }).join('  ');
+          deferredPairs.push({ jCode:code, neighbors: liveDirs.map(d => ({ code:node[d], dir:d })) });
+          logTrace('nuke-lshaped', `${code} ${coordStr} deg=${liveDirs.length} ${nbDesc} → deferred for A*`);
+        }
+      }
+
+      emit(`[nuke] classified: safe=${toDelete.size}  straight=${stitchOps.length}  L-shaped=${deferredPairs.length}  dead-end=${deadEndCount}`);
+
+      if (!execute) {
+        emit(`[nuke] DRY-RUN — no changes written. Re-run with execute:true to apply.`);
+        emit(JSON.stringify({ dryRun:true, safeToDelete:toDelete.size, straightStitch:stitchOps.length, lShapedDeferred:deferredPairs.length, deadEndDelete:deadEndCount }));
+        res.end(); return;
+      }
+
+      // ── Phase 1: straight stitches (in-memory + source via editField) ───────
+      emit(`\n[phase-1] applying ${stitchOps.length} straight stitches…`);
+      let stitchOk = 0, stitchFail = 0;
+      for (let i = 0; i < stitchOps.length; i++) {
+        if (i % 500 === 0) { emit(`  [stitch] ${i}/${stitchOps.length}`); await yieldN(); }
+        const { jCode, nodeA, dirA, nodeB, dirB } = stitchOps[i];
+        if (!nm[nodeA] || !nm[nodeB]) {
+          logTrace('nuke-stitch-fail', `${jCode} missing neighbor: nodeA=${nodeA}(${!!nm[nodeA]}) nodeB=${nodeB}(${!!nm[nodeB]})`);
+          stitchFail++; continue;
+        }
+        const r1 = WBAPI.editField('node', nodeA, OPP4n[dirA], nodeB);
+        if (!r1?.ok) {
+          logTrace('nuke-stitch-fail', `${jCode} editField failed: ${nodeA}.${OPP4n[dirA]}=${nodeB} err=${r1?.error}`);
+          stitchFail++; continue;
+        }
+        const r2 = WBAPI.editField('node', nodeB, OPP4n[dirB], nodeA);
+        if (!r2?.ok) {
+          logTrace('nuke-stitch-fail', `${jCode} editField rollback: ${nodeB}.${OPP4n[dirB]}=${nodeA} err=${r2?.error}`);
+          WBAPI.editField('node', nodeA, OPP4n[dirA], jCode); stitchFail++; continue;
+        }
+        const labA2 = (nm[nodeA]?.label||nodeA).slice(0,32), labB2 = (nm[nodeB]?.label||nodeB).slice(0,32);
+        logTrace('nuke-stitch-ok', `${jCode} → "${labA2}"(${nodeA}) ${OPP4n[dirA]}↔${OPP4n[dirB]} "${labB2}"(${nodeB})`);
+        stitchOk++;
+      }
+      emit(`[phase-1] done: stitched=${stitchOk}  failed=${stitchFail}`);
+
+      // Save stitch results to disk so file monitor sees progress before bulk delete
+      if (stitchOk > 0) {
+        const stampS = WBAPI.getStampedName();
+        const svS = WBAPI.save(stampS);
+        if (svS.ok) {
+          fs.copyFileSync(svS.path, GAME_FILE);
+          WBAPI.load(GAME_FILE);
+          nm = WBAPI.nodeMap;
+          emit(`[save] phase-1-stitches  nodes=${Object.keys(nm).length}`);
+          logTrace('nuke-save', `phase-1 stitches written to ${GAME_FILE}`);
+        }
+      }
+
+      // ── Phase 5 (bulk): remove all J#### from NODE_MAP source in one pass ───
+      emit(`\n[phase-5] bulk source delete of ${toDelete.size} junctions from NODE_MAP…`);
+      await yieldN();
+      {
+        const S = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
+        const E = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
+        const srcStart = WBAPI._rawSrc.indexOf(S) + S.length;
+        const srcEnd   = WBAPI._rawSrc.indexOf(E);
+        if (srcStart >= S.length && srcEnd > srcStart) {
+          let sec = WBAPI._rawSrc.slice(srcStart, srcEnd);
+          const keyRe = /^([ \t]*)(J\d+)\s*:\s*\{/gm;
+          const spans = [];
+          let m;
+          while ((m = keyRe.exec(sec)) !== null) {
+            const code = m[2];
+            if (!toDelete.has(code)) continue;
+            const lineStart = m.index;
+            const openEnd   = m.index + m[0].length;
+            let depth = 1, i = openEnd, inStr = null;
+            while (i < sec.length && depth > 0) {
+              const ch = sec[i];
+              if (inStr) {
+                if (ch === '\\' && inStr !== '`') { i += 2; continue; }
+                if (ch === inStr) inStr = null;
+              } else if (ch === '/' && sec[i+1] === '/') {
+                while (i < sec.length && sec[i] !== '\n') i++;
+                continue;
+              } else {
+                if (ch === '"' || ch === "'" || ch === '`') inStr = ch;
+                else if (ch === '{') depth++;
+                else if (ch === '}') { depth--; if (depth === 0) break; }
+              }
+              i++;
+            }
+            if (depth !== 0) continue;
+            let end = i + 1;
+            while (end < sec.length && sec[end] !== '\n') end++;
+            if (end < sec.length) end++;
+            spans.push({ start: lineStart, end });
+          }
+          emit(`  [source] found ${spans.length} entries to excise`);
+          // remove in reverse to preserve offsets
+          spans.sort((a, b) => b.start - a.start);
+          for (const { start, end } of spans) sec = sec.slice(0, start) + sec.slice(end);
+          WBAPI._rawSrc = WBAPI._rawSrc.slice(0, srcStart) + sec + WBAPI._rawSrc.slice(srcEnd);
+          emit(`  [source] NODE_MAP section rebuilt (${spans.length} removed)`);
+        } else {
+          emit(`  [source] ⚠ NODE_MAP section not found — source integrity check failed`);
+        }
+      }
+      await yieldN();
+
+      // ── Phase 5b: remove J#### from NODE_COORDS in one pass ─────────────────
+      emit(`[phase-5b] purging J#### from NODE_COORDS…`);
+      {
+        const S = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆';
+        const E = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+        const srcStart = WBAPI._rawSrc.indexOf(S) + S.length;
+        const srcEnd   = WBAPI._rawSrc.indexOf(E);
+        if (srcStart >= S.length && srcEnd > srcStart) {
+          const sec = WBAPI._rawSrc.slice(srcStart, srcEnd);
+          // NODE_COORDS entries are single-line: "  J12345:{r:-13,c:18},\n"
+          const cleaned = sec.replace(/^[ \t]*(J\d+)\s*:\{[^\n]*\},?\n/gm, (match, code) =>
+            toDelete.has(code) ? '' : match
+          );
+          const removed = (sec.match(/^[ \t]*(J\d+)/gm) || []).filter(l => {
+            const c = l.trim(); return toDelete.has(c);
+          }).length;
+          WBAPI._rawSrc = WBAPI._rawSrc.slice(0, srcStart) + cleaned + WBAPI._rawSrc.slice(srcEnd);
+          emit(`  [source] NODE_COORDS purged (~${removed} entries)`);
+        }
+      }
+      await yieldN();
+
+      // ── Reload in-memory nodeMap and nodeCoords from updated source ──────────
+      emit(`[phase-5c] rebuilding in-memory nodeMap from updated source…`);
+      {
+        const stamp = WBAPI.getStampedName();
+        const sv = WBAPI.save(stamp);
+        if (!sv.ok) { emit(`[ERROR] save failed: ${sv.error}`); res.end(); return; }
+        try { fs.copyFileSync(sv.path, GAME_FILE); } catch(e) { emit(`[ERROR] copy: ${e.message}`); res.end(); return; }
+        try { WBAPI.load(GAME_FILE); } catch(e) { emit(`[ERROR] reload: ${e.message}`); res.end(); return; }
+        nm = WBAPI.nodeMap;
+        emit(`[save] post-nuke-bulk  nodes=${Object.keys(nm).length}`);
+      }
+      await yieldN();
+
+      // ── Phase 4: dangling direction cleanup ──────────────────────────────────
+      emit(`\n[phase-4] cleaning dangling direction refs in ${Object.keys(nm).length} remaining nodes…`);
+      let danglingFixed = 0;
+      for (const [code, node] of Object.entries(nm)) {
+        for (const d of DIRS4n) {
+          const tgt = node[d];
+          if (tgt && !nm[tgt]) {
+            // target was deleted — clear this direction field
+            WBAPI.editField('node', code, d, null);
+            danglingFixed++;
+          }
+        }
+      }
+      emit(`[phase-4] cleared ${danglingFixed} dangling direction fields`);
+      if (danglingFixed > 0) {
+        const stamp = WBAPI.getStampedName();
+        const sv = WBAPI.save(stamp);
+        if (sv.ok) { fs.copyFileSync(sv.path, GAME_FILE); WBAPI.load(GAME_FILE); nm = WBAPI.nodeMap; }
+        emit(`[save] post-dangling-cleanup  nodes=${Object.keys(nm).length}`);
+      }
+      await yieldN();
+
+      // ── Final report ─────────────────────────────────────────────────────────
+      const remaining    = Object.keys(nm).length;
+      const remJunctions = Object.keys(nm).filter(c => jCodeRe.test(c)).length;
+      const remNamed     = remaining - remJunctions;
+      const deferredList = deferredPairs.map(p => ({
+        deleted: p.jCode,
+        neighbors: p.neighbors.map(n => n.code),
+      }));
+
+      emit(`\n[nuke-junctions] COMPLETE`);
+      emit(`  nodes before : ${toDelete.size + remaining}`);
+      emit(`  nodes after  : ${remaining}`);
+      emit(`  junctions del: ${toDelete.size}`);
+      emit(`  remaining J##: ${remJunctions}`);
+      emit(`  named nodes  : ${remNamed}`);
+      emit(`  deferred pairs: ${deferredPairs.length}  (need A* reconnect)`);
+      emit(`  dangling fixed: ${danglingFixed}`);
+      emit(JSON.stringify({
+        ok:true, execute,
+        before: toDelete.size + remaining,
+        after:  remaining,
+        deletedJunctions: toDelete.size,
+        remainingJunctions: remJunctions,
+        namedNodes: remNamed,
+        stitched: stitchOk,
+        deferredPairs: deferredList.length,
+        danglingFixed,
+        deferredSample: deferredList.slice(0, 20),
+      }));
+      res.end(); return;
+    }
+
     // ── POST /api/graph/reweave-all — MegaReWeave streaming loop ────────────────
     // Streaming response (chunked text/plain), no timeout.
     // Body: { execute?, geoSeed?, priorityHighways?, cityMesh?, derelictCleanup?,
@@ -5158,8 +5437,15 @@ async function route(req, res) {
         emit(`  ${'═'.repeat(90)}`);
       };
 
+      // Activate patch queue for the entire reweave — editField queues node writes,
+      // flushPatches() materializes them via one batchEditNode call before each save.
+      WBAPI.beginPatchQueue();
+
       // helper: batch-save + reload without ending the HTTP response
       const batchSave = (label) => {
+        const fp = WBAPI.flushPatches();
+        if (fp.applied || fp.failed)
+          emit(`[save:flush] ${fp.applied} patches applied  ${fp.failed} failed  (${fp.cleared} nodes)`);
         const stamp = WBAPI.getStampedName();
         const sv = WBAPI.save(stamp);
         if (!sv.ok) { emit(`[ERROR] save failed (${label}): ${sv.error}`); return false; }
@@ -5225,9 +5511,43 @@ async function route(req, res) {
       //   walkLeg scans every existing node along the corridor path (at any position,
       //   not just exact step multiples) and merges them in instead of creating new junctions.
       const buildHighway = (fromCode, toCode) => {
-        const fc=WBAPI.nodeCoords[fromCode],tc=WBAPI.nodeCoords[toCode];
-        if(!fc)return{ok:false,error:`${fromCode} has no coords`};
-        if(!tc)return{ok:false,error:`${toCode} has no coords`};
+        const origFc=WBAPI.nodeCoords[fromCode],origTc=WBAPI.nodeCoords[toCode];
+        if(!origFc)return{ok:false,error:`${fromCode} has no coords`};
+        if(!origTc)return{ok:false,error:`${toCode} has no coords`};
+
+        // ── mesh-entry selection ─────────────────────────────────────────────────
+        // Route between the closest cells across both connected components rather
+        // than forcing the corridor all the way to the named node itself.
+        // toCode may sit deep inside its mesh; a border cell is much cheaper to reach.
+        const mdist=(a,b)=>Math.abs(a.r-b.r)+Math.abs(a.c-b.c);
+
+        // ── same-component check: skip if already connected ──────────────────────
+        const fromReach=bfsReach(fromCode);
+        if(fromReach.has(toCode)){
+          emit(`  [highway] SKIP: ${fromCode} already reaches ${toCode} (same component, ${fromReach.size} nodes)  no new junctions needed`);
+          return{ok:true,created:[],from:fromCode,to:toCode,shape:'already-connected',skipped:true};
+        }
+
+        // ── mesh-entry selection: O(n) per side, not O(n²) ───────────────────────
+        // Find the node in toCode's network closest to origFc (source pos),
+        // and the node in fromCode's network closest to origTc (dest pos).
+        // Two linear scans — safe on large (15k+) components.
+        const toReach=bfsReach(toCode);
+        let actualFrom=fromCode,actualTo=toCode;
+        let bestToD=mdist(origFc,origTc);
+        for(const c of toReach){const co=WBAPI.nodeCoords[c];if(!co)continue;const d=mdist(origFc,co);if(d<bestToD){bestToD=d;actualTo=c;}}
+        const origActualTo=WBAPI.nodeCoords[actualTo];
+        let bestFromD=mdist(origFc,origActualTo||origTc);
+        for(const c of fromReach){const co=WBAPI.nodeCoords[c];if(!co)continue;const d=mdist(co,origActualTo||origTc);if(d<bestFromD){bestFromD=d;actualFrom=c;}}
+        const directDist=mdist(origFc,origTc);
+        const meshDist=mdist(WBAPI.nodeCoords[actualFrom]||origFc,WBAPI.nodeCoords[actualTo]||origTc);
+        emit(`  [highway] ${fromCode}(net=${fromReach.size})→${toCode}(net=${toReach.size})  direct-dist=${directDist}`);
+        if(actualFrom!==fromCode||actualTo!==toCode)
+          emit(`  [highway] mesh-entry reroute: ${fromCode}→${actualFrom}  ${toCode}→${actualTo}  dist=${meshDist}  saved=${directDist-meshDist}`);
+        else
+          emit(`  [highway] mesh-entry: direct pair already optimal  dist=${directDist}`);
+
+        const fc=WBAPI.nodeCoords[actualFrom],tc=WBAPI.nodeCoords[actualTo];
         const dr=tc.r-fc.r,dc=tc.c-fc.c;
         const occ=new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
         const created=[];
@@ -5307,16 +5627,16 @@ async function route(req, res) {
         const pureEW=absDC>0&&(absDR===0||absDC/Math.max(absDR,1)>=5||absDR<=step);
         if(pureNS){
           const dir=dr>=0?'S':'N';
-          emit(`  corridor(${dir}): ${fromCode}(${fc.r},${fc.c})→${toCode}(${tc.r},${tc.c})`);
-          const e1=walkLeg(fromCode,fc.r,fc.c,tc.r,tc.c,dir);if(!e1)return{ok:false,error:'corridor failed',created};
-          if(e1.code!==toCode){WBAPI.editField('node',e1.code,dir,toCode);WBAPI.editField('node',toCode,OPP4[dir],e1.code);emit(`  wired ${e1.code}.${dir}→${toCode}`);}
+          emit(`  corridor(${dir}): ${actualFrom}(${fc.r},${fc.c})→${actualTo}(${tc.r},${tc.c})`);
+          const e1=walkLeg(actualFrom,fc.r,fc.c,tc.r,tc.c,dir);if(!e1)return{ok:false,error:'corridor failed',created};
+          if(e1.code!==actualTo){WBAPI.editField('node',e1.code,dir,actualTo);WBAPI.editField('node',actualTo,OPP4[dir],e1.code);emit(`  wired ${e1.code}.${dir}→${actualTo}`);}
           return{ok:true,created,from:fromCode,to:toCode,shape:'corridor-NS'};
         }
         if(pureEW){
           const dir=dc>=0?'E':'W';
-          emit(`  corridor(${dir}): ${fromCode}(${fc.r},${fc.c})→${toCode}(${tc.r},${tc.c})`);
-          const e1=walkLeg(fromCode,fc.r,fc.c,tc.r,tc.c,dir);if(!e1)return{ok:false,error:'corridor failed',created};
-          if(e1.code!==toCode){WBAPI.editField('node',e1.code,dir,toCode);WBAPI.editField('node',toCode,OPP4[dir],e1.code);emit(`  wired ${e1.code}.${dir}→${toCode}`);}
+          emit(`  corridor(${dir}): ${actualFrom}(${fc.r},${fc.c})→${actualTo}(${tc.r},${tc.c})`);
+          const e1=walkLeg(actualFrom,fc.r,fc.c,tc.r,tc.c,dir);if(!e1)return{ok:false,error:'corridor failed',created};
+          if(e1.code!==actualTo){WBAPI.editField('node',e1.code,dir,actualTo);WBAPI.editField('node',actualTo,OPP4[dir],e1.code);emit(`  wired ${e1.code}.${dir}→${actualTo}`);}
           return{ok:true,created,from:fromCode,to:toCode,shape:'corridor-EW'};
         }
         // L-shape: walk dominant axis first, then minor axis
@@ -5324,15 +5644,15 @@ async function route(req, res) {
         const L1=goH?(dc>=0?'E':'W'):(dr>=0?'S':'N');
         const L2=goH?(dr>=0?'S':'N'):(dc>=0?'E':'W');
         const eR=goH?fc.r:tc.r,eC=goH?tc.c:fc.c;
-        emit(`  leg1(${L1}): ${fromCode}(${fc.r},${fc.c})→elbow(${eR},${eC})`);
-        const e1=walkLeg(fromCode,fc.r,fc.c,eR,eC,L1);if(!e1)return{ok:false,error:'leg1 failed',created};
+        emit(`  leg1(${L1}): ${actualFrom}(${fc.r},${fc.c})→elbow(${eR},${eC})`);
+        const e1=walkLeg(actualFrom,fc.r,fc.c,eR,eC,L1);if(!e1)return{ok:false,error:'leg1 failed',created};
         const eKey=`${eR},${eC}`;let elbJ=occ.get(eKey);
         if(!elbJ){elbJ=nextJ();if(!addJ(elbJ,eR,eC,L1,e1.code))return{ok:false,error:'elbow failed',created};emit(`  elbow ${elbJ}(${eR},${eC})`);}
         else{if(!nm[e1.code]?.[L1]){WBAPI.editField('node',e1.code,L1,elbJ);WBAPI.editField('node',elbJ,OPP4[L1],e1.code);}}
         const ec=WBAPI.nodeCoords[elbJ]||{r:eR,c:eC};
-        emit(`  leg2(${L2}): elbow→${toCode}(${tc.r},${tc.c})`);
+        emit(`  leg2(${L2}): elbow→${actualTo}(${tc.r},${tc.c})`);
         const e2=walkLeg(elbJ,ec.r,ec.c,tc.r,tc.c,L2);if(!e2)return{ok:false,error:'leg2 failed',created};
-        if(e2.code!==toCode){WBAPI.editField('node',e2.code,L2,toCode);WBAPI.editField('node',toCode,OPP4[L2],e2.code);emit(`  wired ${e2.code}.${L2}→${toCode}`);}
+        if(e2.code!==actualTo){WBAPI.editField('node',e2.code,L2,actualTo);WBAPI.editField('node',actualTo,OPP4[L2],e2.code);emit(`  wired ${e2.code}.${L2}→${actualTo}`);}
         return{ok:true,created,from:fromCode,to:toCode,shape:'L-shape'};
       };
 
@@ -6125,10 +6445,16 @@ async function route(req, res) {
       const OPP2b={N:'S',S:'N',E:'W',W:'E'};
       const biTargets=Object.entries(nm).flatMap(([code,n])=>
         ['N','S','E','W'].filter(d=>n[d]&&nm[n[d]]&&nm[n[d]][OPP2b[d]]!==code).map(d=>({code,dir:d,target:n[d]})));
-      emit(`[p5] ${biTargets.length} one-way links found`);
+      // breakdown by direction so we know what kind of links dominate
+      const biDirCount={N:0,S:0,E:0,W:0};biTargets.forEach(t=>biDirCount[t.dir]++);
+      const biJct=biTargets.filter(t=>/^J\d+$/.test(t.code)).length;
+      const biNamed=biTargets.length-biJct;
+      emit(`[p5] ${biTargets.length} one-way links  N=${biDirCount.N} S=${biDirCount.S} E=${biDirCount.E} W=${biDirCount.W}  named=${biNamed} junction=${biJct}`);
+      if(biTargets.length>0)emit(`[p5] sample: ${biTargets.slice(0,3).map(t=>`${t.code}.${t.dir}→${t.target}`).join('  ')}`);
       if(execute){
         // also fix diagonals in audit/map/fix style
         const DIAG2b=['NW','NE','SW','SE'];
+        let diagFixed=0;
         // strip diagonals inline
         for(const [code,n] of Object.entries(nm)){
           for(const d of DIAG2b){
@@ -6145,26 +6471,32 @@ async function route(req, res) {
             WBAPI._rawSrc=WBAPI._rawSrc.slice(0,a2)+sec2.replace(before2,after2)+WBAPI._rawSrc.slice(e2);
             delete nm[code][d];
             bidirFixed.push({check:'diagonal_exit',code,dir:d});
+            diagFixed++;
           }
         }
-        const p5Tick=1;
-        sectionBanner(`P5: fix-bidirectional — ${biTargets.length} one-way links`);
+        if(diagFixed>0)emit(`[p5] stripped ${diagFixed} diagonal direction fields`);
+        sectionBanner(`P5: fix-bidirectional — ${biTargets.length} one-way links  (diagonal-stripped: ${diagFixed})`);
+        emit(`[p5] queuing ${biTargets.length} editField calls — patch queue batches them into one batchSave flush`);
+        {const h=process.memoryUsage();emit(`  [p5 pre-fix] heapUsed=${Math.round(h.heapUsed/1e6)}MB  rss=${Math.round(h.rss/1e6)}MB`);}
+
         let p5i=0;
         for(const{code,dir,target}of biTargets){
           p5i++;
-          if(p5i===1||p5i===biTargets.length||p5i%p5Tick===0){
-            progressLine('p5 fix-bidir', p5i, biTargets.length, `fixed=${bidirFixed.length} errors=${bidirErrors.length}`);
-            if(p5i%200===0)await yieldOnce();
-          }
+          if(p5i%200===0) await yieldOnce();
           if(!nm[target]){bidirErrors.push({code,dir,target,error:'target not in NODE_MAP'});continue;}
           if(nm[target][OPP2b[dir]]===code)continue;
           const r2=WBAPI.editField('node',target,OPP2b[dir],code);
           if(r2.ok)bidirFixed.push({check:'bidirectional',code,dir,target,set:`${target}.${OPP2b[dir]}="${code}"`});
           else bidirErrors.push({code,dir,target,error:r2.error});
         }
-        emit(`  └── [p5 fix-bidir summary] processed=${p5i}/${biTargets.length} fixed=${bidirFixed.length} errors=${bidirErrors.length}`);
-        if(bidirFixed.length){batchSave('fix-bidir');nm=WBAPI.nodeMap;}
-        emit(`[p5] done: ${bidirFixed.length} fixed  ${bidirErrors.length} errors`);
+        {const h=process.memoryUsage();emit(`  [p5 post-queue] heapUsed=${Math.round(h.heapUsed/1e6)}MB  rss=${Math.round(h.rss/1e6)}MB  queued=${WBAPI._pendingPatches?.size||0} nodes`);}
+
+        const p5Bidir=bidirFixed.filter(x=>x.check==='bidirectional').length;
+        emit(`  └── [p5 fix-bidir summary] processed=${p5i}/${biTargets.length}  bidir-fixed=${p5Bidir}  diag-fixed=${diagFixed}  errors=${bidirErrors.length}`);
+        if(bidirErrors.length>0)emit(`  [p5 errors] sample: ${bidirErrors.slice(0,3).map(e=>`${e.code}.${e.dir}→${e.target}: ${e.error}`).join('  ')}`);
+        emit(`[p5] saving — flushPatches() will batchEditNode all queued writes in one pass`);
+        if(bidirFixed.length){batchSave('fix-bidir');nm=WBAPI.nodeMap;emit(`[p5] save complete — nodeMap reloaded, nodes=${Object.keys(nm).length}`);}
+        emit(`[p5] done: ${p5Bidir} bidir-fixed  ${diagFixed} diag-fixed  ${bidirErrors.length} errors  →  next: P2 highways`);
       } else {
         emit(`[p5] dry-run: ${biTargets.length} would fix`);
       }
@@ -6292,31 +6624,25 @@ async function route(req, res) {
           let passWired = 0, gci = 0;
           for (const code of junctions2) {
             gci++;
-            if (gci%200===0) await yieldOnce();
-            if (execute) {
-              const jCoord = coords[code]; if (!jCoord) continue;
-              for (const d of DIRS4.filter(d2 => !nm[code]?.[d2])) {
-                const [dr, dc] = DELTA[d];
-                const neighbor = occ.get(`${jCoord.r+dr},${jCoord.c+dc}`);
-                if (!neighbor || !nm[neighbor] || nm[neighbor][OPP4[d]]) continue;
-                const r1 = WBAPI.editField('node', code, d, neighbor);
-                if (!r1?.ok) continue;
-                const r2 = WBAPI.editField('node', neighbor, OPP4[d], code);
-                if (!r2?.ok) { WBAPI.editField('node', code, d, null); continue; }
-                passWired++; totalGridWired++;
-                emit(`  [grid-connect] ${code}↔${neighbor} (${d}/${OPP4[d]})`);
-              }
-            } else {
-              const jCoord = coords[code]; if (!jCoord) continue;
-              for (const d of DIRS4.filter(d2 => !nm[code]?.[d2])) {
-                const [dr, dc] = DELTA[d];
-                const neighbor = occ.get(`${jCoord.r+dr},${jCoord.c+dc}`);
-                if (neighbor && nm[neighbor] && !nm[neighbor][OPP4[d]]) passWired++;
-              }
+            if (gci%500===0) {
+              await yieldOnce();
+              progressLine('p6.5 grid-connect', gci, junctions2.length, `wired=${passWired} ∑=${totalGridWired} queued=${WBAPI._pendingPatches?.size||0}`);
+            }
+            const jCoord = coords[code]; if (!jCoord) continue;
+            for (const d of DIRS4.filter(d2 => !nm[code]?.[d2])) {
+              const [dr, dc] = DELTA[d];
+              const neighbor = occ.get(`${jCoord.r+dr},${jCoord.c+dc}`);
+              if (!neighbor || !nm[neighbor] || nm[neighbor][OPP4[d]]) continue;
+              if (execute) {
+                WBAPI.editField('node', code, d, neighbor);
+                WBAPI.editField('node', neighbor, OPP4[d], code);
+                passWired++;
+              } else passWired++;
             }
           }
-          emit(`  [p6.5 pass ${gp}] ${execute?'wired':'would wire'}=${passWired}  total=${totalGridWired}`);
-          if (!execute || passWired === 0) break;
+          if (!execute) { emit(`  [p6.5 pass ${gp}] would wire=${passWired}`); break; }
+          {const h=process.memoryUsage();emit(`  [p6.5 pass ${gp}] wired=${passWired}  total=${totalGridWired+=passWired}  queued=${WBAPI._pendingPatches?.size||0}  heapUsed=${Math.round(h.heapUsed/1e6)}MB`);}
+          if (passWired === 0) break;
           rewriteCoords(); WBAPI._buildIndexes(); batchSave(`p6.5-grid-${gp}`); nm = WBAPI.nodeMap;
         }
         emit(`[p6.5] done: ${totalGridWired} grid connections added`);
@@ -6789,12 +7115,128 @@ async function route(req, res) {
         } catch(e){ emit(`  [maps] WARN: could not write maps file: ${e.message}`); }
       }
 
+      WBAPI.stopPatchQueue();
       logResponse('POST',url.pathname,200,`MegaReWeave done reach=${finalReach.size}/${finalTotal}(${finalPct}%) broken=${finalBroken}`);
       res.end();
       return;
     }
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/rip-and-connect  POST /api/graph/reweave-all' });
+    // ── GET /api/graph/junction-audit ────────────────────────────────────────
+    // Reports junction vs. named node breakdown, quest-ref safety check,
+    // coordinate coverage, degree distribution, and a P_NUKE dry-run preview.
+    // See: lab-report-junction-reweave-overhaul.md §2, §5
+    if (parts[1] === 'junction-audit' && method === 'GET') {
+      const coords   = WBAPI.nodeCoords || {};
+      const DIRS4    = ['N','S','E','W'];
+      const OPP4     = {N:'S',S:'N',E:'W',W:'E'};
+
+      // ── Quest and NPC ref sets ────────────────────────────────────────────
+      const questRefNodes = new Set();
+      for (const q of Object.values(WBAPI.questDb || {}))
+        for (const f of ['activateNode','waypointNode']) if (q[f]) questRefNodes.add(q[f]);
+      const npcRefNodes = new Set(
+        Object.values(WBAPI.birkaNpcs || {}).map(n => n.node).filter(Boolean)
+      );
+
+      // ── Classify every node ───────────────────────────────────────────────
+      const jCodeRe = /^J\d+$/;
+      let jTotal = 0, namedTotal = 0;
+      let jWithCoords = 0, namedWithCoords = 0;
+      let jReachable = 0, namedReachable = 0;
+      const jQuestRefs = [];   // J#### nodes that quests point at (should be 0)
+      const jNpcRefs   = [];   // J#### nodes that NPCs are stationed at
+      const degDist    = {0:0, 1:0, 2:0, 3:0, 4:0};  // junction degree distribution
+
+      // P_NUKE preview accumulators
+      let nukeSafe = 0, nukeQuestBlocked = 0, nukeNpcBlocked = 0;
+      let straightStitch = 0, lShapedDeferred = 0, deadEndDelete = 0;
+
+      for (const [code, node] of Object.entries(nm)) {
+        const isJ = jCodeRe.test(code);
+        const hasCoord = !!coords[code];
+        const isReach  = reachable.has(code);
+
+        if (isJ) {
+          jTotal++;
+          if (hasCoord)  jWithCoords++;
+          if (isReach)   jReachable++;
+          if (questRefNodes.has(code)) jQuestRefs.push(code);
+          if (npcRefNodes.has(code))   jNpcRefs.push(code);
+
+          const deg = degree(code);
+          degDist[Math.min(deg, 4)]++;
+
+          // P_NUKE preview classification
+          const safe = !questRefNodes.has(code) && !npcRefNodes.has(code);
+          if (!safe) {
+            if (questRefNodes.has(code)) nukeQuestBlocked++;
+            if (npcRefNodes.has(code))   nukeNpcBlocked++;
+            continue;
+          }
+          nukeSafe++;
+          const liveDirs = DIRS4.filter(d => node[d] && nm[node[d]]);
+          if (liveDirs.length === 0 || liveDirs.length === 1) {
+            deadEndDelete++;
+          } else if (liveDirs.length === 2 && OPP4[liveDirs[0]] === liveDirs[1]) {
+            straightStitch++;
+          } else {
+            lShapedDeferred++;
+          }
+        } else {
+          namedTotal++;
+          if (hasCoord)  namedWithCoords++;
+          if (isReach)   namedReachable++;
+        }
+      }
+
+      // ── Quest nodes that have no r,c (unplaced named) ─────────────────────
+      const unplacedQuestNodes = [...questRefNodes].filter(c => nm[c] && !coords[c] && !jCodeRe.test(c));
+
+      return json(res, 200, {
+        ok: true,
+        summary: {
+          total:        jTotal + namedTotal,
+          junctionCount: jTotal,
+          namedCount:   namedTotal,
+          junctionPct:  jTotal ? ((jTotal / (jTotal + namedTotal)) * 100).toFixed(1) + '%' : '0%',
+        },
+        coordsCoverage: {
+          jWithCoords,        jWithoutCoords:    jTotal - jWithCoords,
+          namedWithCoords,    namedWithoutCoords: namedTotal - namedWithCoords,
+        },
+        reachability: {
+          jReachable,         jUnreachable:     jTotal - jReachable,
+          namedReachable,     namedUnreachable: namedTotal - namedReachable,
+        },
+        questRefs: {
+          totalQuestRefNodes:    questRefNodes.size,
+          uniqueNamedQuestNodes: questRefNodes.size - jQuestRefs.length,
+          junctionQuestRefs:     jQuestRefs.length,
+          junctionQuestRefCodes: jQuestRefs,
+          safeToNukeAllJunctions: jQuestRefs.length === 0 && jNpcRefs.length === 0,
+        },
+        npcRefs: {
+          junctionNpcRefs:     jNpcRefs.length,
+          junctionNpcRefCodes: jNpcRefs,
+        },
+        junctionDegreeDist: degDist,
+        unplacedQuestNodes: {
+          count: unplacedQuestNodes.length,
+          codes: unplacedQuestNodes,
+        },
+        nukePreview: {
+          safeToDelete:     nukeSafe,
+          blockedByQuest:   nukeQuestBlocked,
+          blockedByNpc:     nukeNpcBlocked,
+          straightStitch:   straightStitch,
+          lShapedDeferred:  lShapedDeferred,
+          deadEndDelete:    deadEndDelete,
+          note: 'straightStitch = A-J-B chains that collapse to direct edges. lShapedDeferred = pairs handed to A* for path rebuild. deadEndDelete = degree≤1 safe to drop outright.',
+        },
+      });
+    }
+
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/rip-and-connect  POST /api/graph/reweave-all  GET /api/graph/junction-audit' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
@@ -9218,7 +9660,7 @@ server.listen(PORT, '127.0.0.1', () => {
     ['POST',   '/api/node/{id}/move                 body: {newCode}'],
     ['POST',   '/api/save                           body: {outputPath?}'],
     ['POST',   '/api/reload'],
-    ['POST',   '/api/restart                        → save + exit(67); toggle script auto-relaunches'],
+    ['POST',   '/api/restart                        → exit(0); external process handles relaunch'],
   ];
   const methodColor = { GET:C.green, PUT:C.yellow, DELETE:C.red, POST:C.blue };
   for (const [m, path] of routes)
@@ -9248,18 +9690,21 @@ server.listen(PORT, '127.0.0.1', () => {
   log('INFO', `Server listening on http://127.0.0.1:${PORT}`);
   logStream.write('═'.repeat(60) + '\n');
 
-  // Crash handlers — write error file, log the stack, exit 67 so wbapi-toggle.sh auto-restarts
+  // Crash handlers — write error file and log the stack, then exit cleanly.
+  // The server never exits with code 67. All restart/relaunch is handled by
+  // an external process (monitor-snapshots.py keepalive or wbapi-toggle.sh).
+  // Crashes exit 1 (hard stop). POST /api/restart exits 0 (clean stop).
   process.on('uncaughtException', (err) => {
     writeError(`CRASH uncaughtException: ${err.message}`, err.stack);
     logStream.write(`CRASH: ${err.stack || err.message}\n`);
-    process.exit(67);
+    process.exit(1);
   });
   process.on('unhandledRejection', (reason) => {
     const msg = reason instanceof Error ? reason.message : String(reason);
     const stack = reason instanceof Error ? reason.stack : '';
     writeError(`CRASH unhandledRejection: ${msg}`, stack);
     logStream.write(`CRASH (rejection): ${stack || msg}\n`);
-    process.exit(67);
+    process.exit(1);
   });
 
   // Watch for external edits to the game file and auto-reload

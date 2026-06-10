@@ -251,6 +251,7 @@ const WBAPI = {
   _rawSrc: null,
   _srcPath: null,
   loaded: false,
+  _pendingPatches: null, // null = inactive; Map<code, Map<field, value|null>> when active
 
   load(filePathOrText) {
     let src;
@@ -261,6 +262,9 @@ const WBAPI = {
       src = fs.readFileSync(this._srcPath, 'utf8');
     }
     this._rawSrc = src;
+    // Clear pending patches on reload — the new source is the ground truth.
+    // Keep the queue active (don't null it) so subsequent edits still queue.
+    if (this._pendingPatches !== null) this._pendingPatches = new Map();
 
     const A = '◆◆◆ WORLDBUILDER:';
     const e = (s, en) => extrSection(src, s);
@@ -519,6 +523,16 @@ const WBAPI = {
     const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool }[type];
     const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
 
+    // ── patch queue: defer source write, update in-memory immediately ────────
+    // Only queue node edits — quest/npc/monster sections are small and infrequent.
+    if (this._pendingPatches !== null && type === 'node') {
+      if (!this._pendingPatches.has(key)) this._pendingPatches.set(key, new Map());
+      this._pendingPatches.get(key).set(field, value ?? null);
+      if (value === null || value === undefined) delete col[key][field];
+      else col[key][field] = value;
+      return { ok:true, key, field, value, deferred:true };
+    }
+
     const sectionSrc = extrSection(this._rawSrc, section);
 
     // null value → remove the field entirely
@@ -539,6 +553,37 @@ const WBAPI = {
     this._rawSrc = respliceSection(this._rawSrc, section, patched);
     col[key][field] = value;
     return { ok:true, key, field, value, inserted: isNew };
+  },
+
+  // beginPatchQueue: activate deferred writes for node editField calls.
+  // Call once at the start of a long operation (e.g. reweave-all).
+  // editField will update nodeMap immediately but defer _rawSrc writes.
+  // Call flushPatches() (or batchSave) to materialize all queued writes at once.
+  beginPatchQueue() {
+    this._pendingPatches = new Map();
+  },
+
+  // flushPatches: materialize all queued node edits into _rawSrc in one pass.
+  // Returns {applied, failed, cleared} and resets the queue (leaves it active).
+  flushPatches() {
+    if (!this._pendingPatches || this._pendingPatches.size === 0)
+      return { applied:0, failed:0, cleared:0 };
+    const edits = [];
+    for (const [code, fieldMap] of this._pendingPatches)
+      for (const [field, value] of fieldMap)
+        edits.push({ code, field, value });
+    const cleared = this._pendingPatches.size;
+    this._pendingPatches = new Map(); // reset but keep queue active
+    if (!edits.length) return { applied:0, failed:0, cleared };
+    const r = this.batchEditNode(edits);
+    return { applied: r.applied, failed: r.failed, cleared };
+  },
+
+  // stopPatchQueue: flush all pending patches and deactivate the queue.
+  stopPatchQueue() {
+    const r = this.flushPatches();
+    this._pendingPatches = null;
+    return r;
   },
 
   // batchEditNode: apply many {code, field, value} node edits in ONE respliceSection call.
