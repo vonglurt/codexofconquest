@@ -1,8 +1,8 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report: Map Audit, Grid Layout Solver, and Tooling Infrastructure
 
-**Author:** Claude (Sonnet 4.6) + PaulRicheson@Roll2Hit.com  
+**Author:** Claude (Sonnet 4.6) + paul@roll2hit.com  
 **Date:** 2026-06-04 / 2026-06-05  
 **Classification:** Engineering / Developer Tooling / Map Graph Validation  
 **Audience:** Developer working on `roll2hit-v3.html` WBAPI toolchain  
@@ -372,3 +372,77 @@ These rules are enforced by `buildCorridorMap()` at game startup. Violating them
 **Applying the layout to the live world is irreversible without `_base.html.gz` + patches.** Before calling `POST /api/layout/apply` with the full proposed set, save a manual snapshot or confirm `monitor-snapshots.py` is running so the before-state is archived as a diff.
 
 **The `alignment` and `axis_distance` warnings have no auto-fix.** Fixing them requires moving one of the two nodes, which shifts all that node's other connections. The layout solver is the intended tool; the audit warnings link directly to `GET /api/layout/solve` in their `fix.curl` hint.
+
+---
+
+## 11. MegaReWeave — Grid Coherence Engine (added 2026-06-09)
+
+The `POST /api/graph/reweave-all` endpoint runs a 9-phase pipeline that repairs the cell grid and guarantees a traversable mesh. All phases stream progress to the caller.
+
+### Phase summary
+
+| Phase | Name | What it fixes |
+|---|---|---|
+| P0 | geo-seed | Lock GEO2 city nodes to Mercator lat/lon cells |
+| P1 | rip-and-connect | BFS-place stray (unreachable) nodes near reachable cities |
+| P1.5 | coord-scan | Wire nodes that are coord-adjacent but unlinked |
+| P4 | fix-all-broken | Fix diagonal and gap-too-large edges via move or elbow junction |
+| P5 | fix-bidirectional | Add missing reverse links |
+| P2 | priority highways | Build explicit city-to-city corridors |
+| P3 | city-mesh MST | Greedily connect all GEO2 cities via minimum spanning tree |
+| P6 | derelict-cleanup | Delete dead-end junctions with no quests or NPCs |
+| P7 | wither | Remove junctions not on any quest or city-pair path |
+
+### Cell contention and grid expansion (P4)
+
+When an elbow junction cannot be placed (all 8 scanned cells occupied for 3+ consecutive passes), P4 triggers **grid expansion**:
+
+1. A new row and column are inserted at the contention point — every node with `r ≥ insertR` shifts `r+1`, every node with `c ≥ insertC` shifts `c+1`.
+2. Edges that were at exactly `maxGap=4` crossing the inserted row/column gain `+1` gap and are immediately **repaired** by planting a junction on the new empty row/col.
+3. Up to 6 deferred edges from the persistent `p4Deferred` queue are **backfilled** into the newly empty axis cells.
+4. An **outer-row guard** (`GRID_MARGIN=4`) prevents planting junctions on the world boundary — those attempts are thrown back to deferred.
+
+### Junction backfill and promotion (P4)
+
+After creating any elbow junction J:
+- Free cells adjacent to J are scanned against the `p4Deferred` queue.
+- Each matching deferred edge gets a new junction K planted in the free cell, wired to both the deferred endpoint AND to J.
+- When J reaches 4 connections (all cardinal directions wired), it is **promoted** from `junction:true` to `junction:false` — it becomes a real location eligible for quests, NPCs, loot, and sleep spots.
+
+### Tarjan bridge-check (P7 wither)
+
+The wither phase previously ran a BFS per candidate junction (O(K × V+E)). It now uses **Tarjan's articulation-point algorithm** (iterative, O(V+E) once per pass), reducing the bridge-check cost by ~1000× on large maps.
+
+Wither output format (tab-aligned):
+```
+    withered    J14827    (64,180)    [42/380]
+    bridge      J14800    (60,171)    N:J14799    (59,171)    E:──────    S:J14801    (61,171)    W:──────    [42/380 withered  87 bridges]
+```
+
+### Key performance improvements
+
+| Optimization | Before | After |
+|---|---|---|
+| `nextJCode()` | O(V) regex scan per call | O(1) cached counter |
+| `nextNodeNum()` | O(V) reduce per junction | O(1) cached counter |
+| P4 coord writes | O(junctions × source_len) per pass | Batched at batchSave (1× per pass) |
+| P4 edge scan | O(V×4) full scan every pass | Incremental: only dirty nodes rescanned |
+| P1 slot-finding | O(S×C×BFS) per pass | O(C×BFS) precomputed + lazy invalidation |
+| P7 bridge check | O(K×(V+E)) per pass | O(V+E) Tarjan once + O(1) per candidate |
+
+### Cross-pass accumulators in progress bars
+
+Every progress tick now shows both per-pass and cumulative (`∑`) counts:
+```
+│ [p4 pass 2/500 [=─────────] 0%] [edge 150/5786 [=──────────] 3%] fixed=90 def=60 │ ∑fixed=380 ∑def=200 ∑passes=2 ∑edges=11572
+│ [p1 pass 2/500 [=─────────] 0%] [stray 50/312 [====──────] 16%] placed=12 no_slot=3 wf=0 │ ∑placed=200 ∑passes=2 ∑strays=624
+```
+
+### Navigation invariant
+
+After a complete reweave run the mesh satisfies:
+- **Reachability**: all named nodes reachable from the hub via ≤4-cell N/S/E/W steps
+- **No diagonals**: every wired pair shares a row (E/W) or column (N/S)
+- **Max gap 4**: no wired pair is more than 4 cells apart on its shared axis
+- **Bidirectional**: every A.dir→B has a matching B.OPP(dir)→A
+- **Quest paths valid**: hub can reach every quest `activateNode` and `waypointNode`

@@ -107,6 +107,34 @@ function doHTTP(method, urlStr, body, extraHeaders = {}) {
   });
 }
 
+// ── Streaming POST — reads chunked text/plain response, prints lines as they arrive ──
+// Used for long-running server operations (reweave) that have no timeout.
+function streamPost(urlPath, body) {
+  return new Promise((resolve, reject) => {
+    const u = new URL(`${BASE}${urlPath}`);
+    const str = JSON.stringify(body);
+    const req = http.request({
+      hostname: u.hostname, port: u.port || 80,
+      path: u.pathname + u.search, method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(str) },
+    }, (res) => {
+      let leftover = '';
+      res.setEncoding('utf8');
+      res.on('data', chunk => {
+        const lines = (leftover + chunk).split('\n');
+        leftover = lines.pop();
+        for (const line of lines) if (line.trim()) process.stdout.write(`${C.green}✓${C.reset} ${line}\n`);
+      });
+      res.on('end', () => {
+        if (leftover.trim()) process.stdout.write(`${C.green}✓${C.reset} ${leftover}\n`);
+        resolve(res.statusCode);
+      });
+    });
+    req.on('error', reject);
+    req.write(str); req.end();
+  });
+}
+
 // ── HTTP with exponential backoff retry (SDK pattern) ─────────────────────────
 const RETRYABLE = new Set(['ECONNREFUSED', 'ECONNRESET', 'ETIMEDOUT', 'TIMEOUT', 'ENOTFOUND']);
 
@@ -1006,71 +1034,110 @@ const CMD = {
   // Usage: ./api.sh reweave [--execute] [--max-rip N] [--max-fix N] [--limit N] [--radius N]
   //   Dry-run:  reports what each phase would do, no writes.
   //   --execute: runs all three phases server-side in one call.
-  //   --max-rip   max rip-and-connect passes (default 5)
-  //   --max-fix   max fix-all-broken passes  (default 5)
-  //   --limit     nodes per rip-and-connect pass (default 100)
-  //   --radius    BFS depth for city-search (default 6)
+  //   --max-rip   max rip-and-connect passes (default 50000)
+  //   --max-fix   max fix-all-broken passes  (default 50000)
+  //   --limit     nodes per rip-and-connect pass (default 1000000)
+  //   --radius    BFS depth for city-search (default 60000)
+  //   --no-wither skip Phase 7 wither (default: wither is ON)
   //
   // Stopping conditions (prevents runaway):
   //   Phase 1 stops when totalStrays=0 or maxRip hit.
   //   Phase 2 stops when broken=0, plateau (2 consecutive non-improving passes), or maxFix hit.
   //   Phase 3 always runs once.
+  //   Phase 7 (Wither) stops when no unused non-bridge junctions remain.
   async 'reweave'(pos, flags) {
     await requireServer();
-    // reweave scans thousands of nodes — needs longer than the 10s default
-    if (!flags.timeout) TIMEOUT = 120_000;
-    const execute   = !!flags.execute;
-    const maxRip    = flags['max-rip']  ? +flags['max-rip']  : 5;
-    const maxFix    = flags['max-fix']  ? +flags['max-fix']  : 5;
-    const limit     = flags.limit       ? +flags.limit       : 100;
-    const meshRadius= flags.radius      ? +flags.radius      : 6;
+    const execute    = !!flags.execute;
+    const maxRip     = flags['max-rip']       ? +flags['max-rip']       : 50000;
+    const maxFix     = flags['max-fix']       ? +flags['max-fix']       : 50000;
+    const step       = flags.step             ? +flags.step             : 4;
+    const limit      = flags.limit            ? +flags.limit            : 1000000;
+    const meshRadius = flags.radius           ? +flags.radius           : 60000;
+    const geoSeed    = flags['no-geo-seed']   ? false : true;
+    const cityMesh   = flags['no-city-mesh']  ? false : true;
+    const derelict   = flags['no-derelict']   ? false : true;
+    const wither     = flags['no-wither']     ? false : true;
 
-    ok(`reweave  execute=${execute}  maxRip=${maxRip}  maxFix=${maxFix}  limit=${limit}  radius=${meshRadius}`);
-    if (!execute) ok('[DRY RUN] add --execute to apply changes');
+    // ── Priority highways — corridor definitions ──────────────────────────
+    // Each entry is a {from, to} pair. buildHighway auto-detects shape:
+    //   • Pure N/S corridor if one endpoint is nearly due north/south of the other
+    //   • Pure E/W corridor if one is nearly due east/west
+    //   • L-shape (elbow) only when both axes are significant
+    // New junctions stitch into surrounding mesh in ALL 4 directions — not just
+    // the corridor axis — so highways merge with the existing node network.
+    // Run in Phase 2, after geo-seed, before city MST.
+    const PRIORITY_HIGHWAYS = [
+      // N/S corridors — same longitude, large latitude delta
+      { from:'HHL', to:'MLN',  note:'Meridian spine: Iceland → East Africa (lon~22-40°)' },
+      { from:'EDI', to:'CVP',  note:'Atlantic coast: Scotland → Lisbon (lon~3-9°W)' },
+      { from:'NID', to:'TUN',  note:'Norse → North Africa (lon~10°E)' },
+      // E/W corridors — same latitude, large longitude delta
+      { from:'CVP', to:'SAM',  note:'Southern silk road: Lisbon → Samarkand (lat~38°N)' },
+      { from:'LHR', to:'TRB',  note:'Northern route: London → Trebizond (lat~41-51°N)' },
+      { from:'GLA', to:'SIN',  note:'High latitude: Scotland → Sinop (lat~55-42°N)' },
+      // Long diagonals — L-shape elbow
+      { from:'ACT', to:'BGD',  note:'West → Mesopotamia connector' },
+      { from:'HHL', to:'GEDI', note:'Iceland → Horn of Africa (if GEDI exists)' },
+    ];
 
-    const body = { execute, maxRip, maxFix, limit, meshRadius };
-    const r = await request('POST', '/api/graph/reweave-all', body);
-    if (r.status !== 200) { printError(r); process.exit(1); }
+    process.stdout.write(`${C.bold}══ MegaReWeave ══${C.reset}\n`);
+    ok(`execute=${execute}  geoSeed=${geoSeed}  cityMesh=${cityMesh}  derelict=${derelict}  wither=${wither}`);
+    ok(`maxRip=${maxRip}  maxFix=${maxFix}  step=${step}  limit=${limit}`);
+    ok(`highways: ${PRIORITY_HIGHWAYS.length} configured`);
+    if (!execute) ok('[DRY RUN] add --execute to apply all changes');
+    ok('streaming from server — output below:\n');
 
-    const { phases, final, verbose = [], ...summary } = r.body;
+    const body = {
+      execute, geoSeed, priorityHighways: PRIORITY_HIGHWAYS,
+      cityMesh, derelictCleanup: derelict, witherPhase: wither,
+      maxRip, maxFix, step, limit, meshRadius,
+    };
 
-    // Print verbose log
-    for (const line of verbose) ok(line);
+    // Uses streamPost — no timeout, prints lines as the server emits them
+    await streamPost('/api/graph/reweave-all', body);
 
-    // Phase summaries
-    if (phases?.rip?.length) {
-      ok('');
-      ok('── Phase 1: rip-and-connect ──');
-      for (const p of phases.rip) {
-        ok(`  pass ${p.pass}: strays=${p.totalStrays}  placed=${p.placed}  failed=${p.failed}  status=${p.status||'ok'}`);
-      }
-    }
-    if (phases?.fixBroken?.length) {
-      ok('');
-      ok('── Phase 2: fix-all-broken ──');
-      for (const p of phases.fixBroken) {
-        ok(`  pass ${p.pass}: broken=${p.broken}  fixed=${p.fixed}  failed=${p.failed}  status=${p.status||'ok'}`);
-      }
-    }
-    if (phases?.fixBidir) {
-      ok('');
-      ok(`── Phase 3: fix-bidirectional — fixed=${phases.fixBidir.fixed?.length||0}  errors=${phases.fixBidir.errors?.length||0}`);
-    }
-
+    // ── post-reweave checks (run automatically as part of the full workflow) ──
     ok('');
-    ok('── Final state ──');
-    ok(`  reachable : ${summary.finalReachable}/${summary.finalTotal} (${summary.finalPct}%)`);
-    ok(`  broken    : ${summary.finalBroken}`);
-    ok(`  unreachable nodes: ${summary.unreachable?.length||0}`);
-    if (summary.finalPct >= 100 && summary.finalBroken === 0) {
-      ok('  Network is clean ✓');
-    } else if (summary.finalPct >= 100) {
-      ok(`  Reachability 100% ✓  (${summary.finalBroken} broken edges remain — cosmetic)`);
+    ok(`${'═'.repeat(60)}`);
+    ok(`  POST-REWEAVE CHECKS`);
+    ok(`${'═'.repeat(60)}`);
+    ok('');
+    ok('── reachability ─────────────────────────────────────────');
+    await this.reachability();
+    ok('');
+    ok('── broken edges ─────────────────────────────────────────');
+    await this.broken([], {});
+    ok('');
+    ok('── geographic world map ──────────────────────────────────');
+    await this.worldmap([], {});
+    ok('');
+    ok(`${'═'.repeat(60)}`);
+    ok('  reweave workflow complete.');
+    ok(`${'═'.repeat(60)}`);
+  },
+
+  // ── promote-junction: upgrade a junction node to real content, wiring preserved ─
+  // Usage: ./api.sh promote-junction <CODE> --label "Name" --text "desc" [--terrain key]
+  //        [--npc key] [--act N]
+  async 'promote-junction'(pos, flags) {
+    await requireServer();
+    const code = pos[0]; if (!code) die('Usage: ./api.sh promote-junction <CODE> --label "..." --text "..."');
+    const label   = flags.label;
+    const text    = flags.text;
+    const terrain = flags.terrain;
+    const npc     = flags.npc || null;
+    const act     = flags.act ? +flags.act : undefined;
+    const sleep   = !!flags.sleep;
+    if (!label) die('--label is required');
+    if (!text)  die('--text is required');
+    const body = { code, label, text, ...(terrain?{name:terrain}:{}), npc, sleep, ...(act!==undefined?{act}:{}) };
+    const r = await request('POST', '/api/graph/promote-junction', body);
+    if (r.status === 200) {
+      ok(`Promoted ${code} → "${label}"`);
+      ok(`Connections preserved: ${JSON.stringify(r.body.connections)}`);
     } else {
-      ok(`  WARNING: ${summary.unreachable?.length} nodes unreachable — re-run reweave`);
+      printError(r); process.exit(1);
     }
-    ok('');
-    ok(`Re-check: ./api.sh broken && ./api.sh reachability`);
   },
 
   // ── fix-bidirectional: batch-fix one-way links (A→B but B doesn't point back) ─
@@ -2384,11 +2451,12 @@ ${C.bold}═══════════════════════�
     ./api.sh fix-bidirectional
     ./api.sh fix-bidirectional --execute
 
-  Mega-loop repair (all phases server-side, safe loop limits):
+  Mega-loop repair (all phases server-side, 100x limits):
     ./api.sh reweave
     ./api.sh reweave --execute
-    ./api.sh reweave --execute --max-rip 3 --max-fix 3
-    ./api.sh reweave --execute --max-rip 5 --max-fix 5 --limit 100
+    ./api.sh reweave --execute --max-rip 50000 --max-fix 50000 --limit 1000000
+    ./api.sh reweave --execute --max-rip 50000 --max-fix 50000 --limit 1000000 --radius 60000
+    ./api.sh reweave --execute --no-wither     (skip Phase 7 junction wither)
 
   Relocate all stray/unreachable nodes near their quest city:
     ./api.sh rip-and-connect
@@ -2515,7 +2583,7 @@ const SYNOPSIS = [
   `  ${C.green}fix-diagonal${C.reset} <CODE> <dir>          fix one diagonal edge  [--execute]`,
   `  ${C.green}fix-all-broken${C.reset} [--execute] [--limit N]  batch-fix all broken edges`,
   `  ${C.green}fix-bidirectional${C.reset} [--execute]         fix all one-way links (A→B but B doesn't point back)`,
-  `  ${C.green}reweave${C.reset} [--execute] [--max-rip 5] [--max-fix 5]  mega-loop: rip → fix-broken → fix-bidir (server-side, safe limits)`,
+  `  ${C.green}reweave${C.reset} [--execute] [--max-rip 50000] [--max-fix 50000] [--step 4] [--limit 1000000] [--radius 60000] [--no-wither]  MegaReWeave: geo-seed→highways→city-MST→fix-broken→fix-bidir→derelict→wither (streaming, no timeout)`,
   ``,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,
