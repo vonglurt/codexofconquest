@@ -9124,6 +9124,16 @@ const server = http.createServer(async (req, res) => {
   }
 });
 
+// Port 1367 wins: if another instance already owns the port, exit cleanly
+// so the wbapi-toggle restart loop does NOT relaunch (exit 0 ≠ exit 67).
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`[wbapi-server] Port ${PORT} already in use — port 1367 wins; this instance exits.`);
+    process.exit(0);
+  }
+  throw err;
+});
+
 server.listen(PORT, '127.0.0.1', () => {
   const line = '═'.repeat(60);
   console.log(`\n${C.bold}${C.magenta}${line}${C.reset}`);

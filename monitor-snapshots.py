@@ -171,8 +171,14 @@ def _server_pid():
         return None
 
 
+_last_spawn_time = 0.0   # shared cooldown — prevents double-spawn during startup
+_SPAWN_GRACE     = 15.0  # seconds to wait after a spawn (210 MB file takes ~10 s)
+
+
 def _spawn_server_window():
     """Open a new macOS Terminal window running the server with VERBOSE+TRACE."""
+    global _last_spawn_time
+    _last_spawn_time = time.time()
     root = str(ROOT)
     cmd = (
         f"cd {root} && "
@@ -200,7 +206,7 @@ def _ensure_server():
     if _server_pid():
         return
     _spawn_server_window()
-    deadline = time.time() + 8
+    deadline = time.time() + _SPAWN_GRACE
     while time.time() < deadline:
         time.sleep(0.5)
         if _server_pid():
@@ -274,26 +280,31 @@ class Monitor:
 
     def _keepalive(self):
         """Poll port 1367 every 3 s; respawn server Terminal if it goes dark.
-        After 2 failed spawns, stops trying and shows manual start hint."""
+        Respects _last_spawn_time cooldown so we never spawn during the ~15 s
+        startup window. After 2 failed spawns, stops and shows manual hint."""
         spawns = 0
         while self.alive:
+            # Honour the shared spawn cooldown (startup loads 210 MB)
+            grace_left = _SPAWN_GRACE - (time.time() - _last_spawn_time)
+            if grace_left > 0:
+                time.sleep(min(grace_left, 2))
+                continue
+
             pid = _server_pid()
             with self.lk:
                 self.srv_pid = pid
                 if not pid:
-                    if spawns < 2:
-                        self.srv_msg = "respawning…"
-                    else:
-                        self.srv_msg = f"DOWN — run: ./wbapi-toggle.sh fg"
+                    self.srv_msg = ("respawning…" if spawns < 2
+                                    else "DOWN — run: ./wbapi-toggle.sh fg")
             if not pid:
                 if spawns < 2:
                     _spawn_server_window()
                     spawns += 1
-                    time.sleep(6)
+                    # grace period will be respected on next loop iteration
                 else:
                     time.sleep(5)
             else:
-                spawns = 0   # reset counter on successful connection
+                spawns = 0
                 with self.lk:
                     if self.srv_msg in ("respawning…", ""):
                         self.srv_msg = ""

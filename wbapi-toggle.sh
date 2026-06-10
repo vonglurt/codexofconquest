@@ -39,6 +39,11 @@ PID=$(pgrep -f "$SCRIPT" | head -1)
 _run_loop() {
   local mode="${1:-bg}"
   while true; do
+    # Port 1367 wins: if it's already occupied, exit cleanly (not 67)
+    if lsof -ti tcp:1367 >/dev/null 2>&1; then
+      echo "[wbapi-toggle] Port 1367 already in use — another instance owns it. Exiting."
+      break
+    fi
     node --max-old-space-size=4096 "$DIR/$SCRIPT"
     CODE=$?
     if [ "$CODE" -eq 67 ]; then
