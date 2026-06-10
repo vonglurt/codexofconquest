@@ -39,7 +39,7 @@ PID=$(pgrep -f "$SCRIPT" | head -1)
 _run_loop() {
   local mode="${1:-bg}"
   while true; do
-    node "$DIR/$SCRIPT"
+    node --max-old-space-size=4096 "$DIR/$SCRIPT"
     CODE=$?
     if [ "$CODE" -eq 67 ]; then
       echo ""

@@ -153,6 +153,36 @@ def _say(line):
     threading.Thread(target=_say_worker, args=(filtered, gen), daemon=True).start()
 
 
+# ── server launcher ──────────────────────────────────────────────────────────
+
+def _ensure_server():
+    """
+    If the WBAPI server is not already listening on port 1367, open a new
+    macOS Terminal window that runs wbapi-toggle.sh fg (with VERBOSE + auto-
+    restart loop).  The monitor TUI then starts normally in this terminal.
+    """
+    # Check if something is already on port 1367
+    already = subprocess.run(
+        ["lsof", "-ti", "tcp:1367"], capture_output=True
+    ).stdout.strip()
+    if already:
+        return  # server already running
+
+    root = str(ROOT)
+    # AppleScript: open a new Terminal window, cd to root, start the server loop
+    script = (
+        f'tell application "Terminal"\n'
+        f'  do script "cd {root} && '
+        f'while true; do WBAPI_VERBOSE=1 ./wbapi-toggle.sh fg; '
+        f'echo \\"[server exited — restarting in 2 s…]\\"; sleep 2; done"\n'
+        f'  activate\n'
+        f'end tell'
+    )
+    subprocess.Popen(["osascript", "-e", script])
+    # Give the server a moment to start before the TUI takes over the terminal
+    time.sleep(4)
+
+
 # ── monitor ──────────────────────────────────────────────────────────────────
 
 class Monitor:
@@ -470,4 +500,5 @@ class Monitor:
 
 
 if __name__ == "__main__":
+    _ensure_server()
     curses.wrapper(Monitor().run)
