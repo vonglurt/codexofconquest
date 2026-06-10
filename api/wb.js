@@ -1286,6 +1286,22 @@ const CMD = {
     ok(`  ./api.sh worldmap --city ${fromCode}`);
   },
 
+  async mode(pos, flags) {
+    await requireServer();
+    const newMode = pos[1]; // fast | debug | trace | undefined = GET
+    if (!newMode) {
+      const r = await request('GET', '/api/mode');
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      const { mode, verbose, trace } = r.body;
+      const modeColor = { fast: C.dim, debug: C.yellow, trace: C.cyan }[mode] || C.white;
+      ok(`${modeColor}${C.bold}${mode.toUpperCase()}${C.reset}  ${C.dim}verbose=${verbose}  trace=${trace}${C.reset}`);
+      return;
+    }
+    const r = await request('POST', '/api/mode', { mode: newMode });
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    ok(`mode → ${C.bold}${r.body.mode.toUpperCase()}${C.reset}  ${C.dim}verbose=${r.body.verbose}  trace=${r.body.trace}${C.reset}`);
+  },
+
   help() { process.stdout.write(HELP + '\n'); },
 };
 
@@ -1509,6 +1525,23 @@ ${C.bold}═══════════════════════�
     ./api.sh ping
     ./api.sh ping --server http://192.168.1.10:1367
     ./api.sh ping --raw
+
+${C.bold}═══════════════════════════════════════════════════════════════════
+  mode — get or set the server logging mode
+═══════════════════════════════════════════════════════════════════${C.reset}
+
+  ./api.sh mode               show current mode
+  ./api.sh mode fast          minimal output (quiet)
+  ./api.sh mode debug         verbose — request/response bodies logged
+  ./api.sh mode trace         verbose + full algorithm trace (ultra-verbose)
+
+  Mode is saved to milepoints/wbapi-config.json and survives restarts.
+  Default is TRACE. Env vars WBAPI_VERBOSE / WBAPI_TRACE override on startup.
+
+  Examples:
+    ./api.sh mode
+    ./api.sh mode fast
+    ./api.sh mode trace
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   count — breakdown statistics

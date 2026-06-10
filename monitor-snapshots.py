@@ -177,7 +177,7 @@ def _spawn_server_window():
     cmd = (
         f"cd {root} && "
         f"while true; do "
-        f"WBAPI_VERBOSE=1 WBAPI_TRACE=1 ./wbapi-toggle.sh fg; "
+        f"./wbapi-toggle.sh fg; "
         f"echo '[server exited — restarting in 2 s…]'; sleep 2; "
         f"done"
     )
@@ -530,6 +530,12 @@ class Monitor:
         while self.alive:
             k = scr.getch()
             if k in (ord("q"), ord("Q"), 27):
+                # Graceful: ask server to restart (no force kill — let it finish)
+                subprocess.Popen(
+                    ["curl", "-s", "--max-time", "3", "-X", "POST",
+                     f"http://localhost:{_SERVER_PORT}/api/restart"],
+                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                )
                 self.alive = False
                 break
 

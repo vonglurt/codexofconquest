@@ -62,14 +62,49 @@ function purgeNonces() {
 
 // ── Config ──────────────────────────────────────────────────────────────────
 const PORT      = parseInt(process.env.PORT || '1367');
-const VERBOSE   = process.env.WBAPI_VERBOSE === '1' || process.env.WBAPI_VERBOSE === 'true';
-// TRACE: ultra-verbose — every algorithm decision, list traversal, insertion step.
-// Enable with: WBAPI_TRACE=1 node wbapi-server.js
-// All trace output goes to the log file AND terminal when enabled.
-const TRACE     = process.env.WBAPI_TRACE === '1'; // independent of VERBOSE; opt-in only
 const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(__dirname, 'roll2hit-v3.html');
+
+// ── Runtime mode config ──────────────────────────────────────────────────────
+// Modes: fast (quiet) | debug (verbose) | trace (verbose + full algorithm trace)
+// Persisted in milepoints/wbapi-config.json; changed live via POST /api/mode.
+// Env vars WBAPI_VERBOSE / WBAPI_TRACE override the config on startup only.
+const CONFIG_FILE = path.join(__dirname, 'milepoints', 'wbapi-config.json');
+const MODES = {
+  fast:  { verbose: false, trace: false },
+  debug: { verbose: true,  trace: false },
+  trace: { verbose: true,  trace: true  },
+};
+let VERBOSE     = false;
+let TRACE       = false;
+let currentMode = 'trace';
+
+function _applyMode(mode, save) {
+  if (!MODES[mode]) return false;
+  currentMode = mode;
+  VERBOSE     = MODES[mode].verbose;
+  TRACE       = MODES[mode].trace;
+  if (save) {
+    try {
+      fs.mkdirSync(path.dirname(CONFIG_FILE), { recursive: true });
+      fs.writeFileSync(CONFIG_FILE, JSON.stringify({ mode }, null, 2) + '\n');
+    } catch (_) {}
+  }
+  return true;
+}
+
+(function _loadConfig() {
+  let mode = 'trace'; // default: debug + trace on
+  try {
+    const cfg = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
+    if (cfg.mode && MODES[cfg.mode]) mode = cfg.mode;
+  } catch (_) {}
+  // env vars override config for one-off testing
+  if      (process.env.WBAPI_TRACE   === '1') mode = 'trace';
+  else if (process.env.WBAPI_VERBOSE === '1') mode = 'debug';
+  _applyMode(mode, false);
+}());
 
 // ── Placeholder node codes that are never valid geographic locations ─────────
 const PLACEHOLDER_NODES = new Set(['QUEST','TBD','TODO','UNKNOWN','NONE','XXX','PLACEHOLDER']);
@@ -102,9 +137,10 @@ function log(level, msg, data) {
     ERROR: C.red    + '[ERROR]   ' + C.reset,
     LOAD:  C.magenta+ '[LOAD]    ' + C.reset,
   };
-  // LOGIC suppressed from console; goes to file only
+  // In debug/trace (VERBOSE=true): all levels go to console for log↔console parity.
+  // In fast mode: LOGIC and REQUEST are file-only to reduce noise.
   const dataStr = data !== undefined ? ' ' + (typeof data === 'string' ? data : JSON.stringify(data)) : '';
-  if (level !== 'LOGIC' && level !== 'REQUEST') {
+  if (VERBOSE || (level !== 'LOGIC' && level !== 'REQUEST')) {
     const prefix = levelColors[level] || `${C.dim}[${level}]${C.reset}`;
     console.log(`${C.dim}${ts}${C.reset} ${prefix} ${msg}${dataStr}`);
   }
@@ -1700,6 +1736,26 @@ async function route(req, res) {
     logRow(`${nNodes} nodes  ·  ${nQuests} quests  ·  ${nMonsters} monsters  ·  ${nTerrains} terrains  ·  ${nFish} fish`);
     logResponse(method, url.pathname, 200, 'ok');
     return json(res, 200, resp);
+  }
+
+  // ── Mode (fast | debug | trace) ──
+  if (parts[0] === 'mode') {
+    if (method === 'GET') {
+      logResponse(method, url.pathname, 200, `mode=${currentMode}`);
+      return json(res, 200, { mode: currentMode, verbose: VERBOSE, trace: TRACE });
+    }
+    if (method === 'POST') {
+      let body;
+      try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
+      const { mode } = body || {};
+      if (!mode) return json(res, 400, { error:'body.mode required  (fast | debug | trace)' });
+      if (!_applyMode(mode, true))
+        return json(res, 400, { error:`Unknown mode "${mode}". Valid: fast, debug, trace` });
+      log('INFO', `Mode changed → ${currentMode}`, { verbose: VERBOSE, trace: TRACE });
+      logResponse(method, url.pathname, 200, `mode → ${currentMode}`);
+      return json(res, 200, { ok: true, mode: currentMode, verbose: VERBOSE, trace: TRACE });
+    }
+    return json(res, 405, { error:'GET or POST' });
   }
 
   // ── Source (raw HTML for worldbuilder "Load from Server") ──
@@ -9076,13 +9132,14 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log(`${C.magenta}${line}${C.reset}`);
   console.log(`  Game file: ${C.cyan}${GAME_FILE}${C.reset}`);
   console.log(`  Log file:  ${C.cyan}${LOG_FILE}${C.reset}`);
-  if (VERBOSE) console.log(`  ${C.yellow}${C.bold}VERBOSE${C.reset}${C.yellow}     Full request + response bodies printed to terminal${C.reset}`);
-  if (TRACE)   console.log(`  ${C.cyan}${C.bold}TRACE${C.reset}${C.cyan}       Algorithm decisions, list traversals, insertions — ultra-verbose${C.reset}`);
-  if (!TRACE)  console.log(`  ${C.dim}             Enable TRACE: WBAPI_TRACE=1 node wbapi-server.js${C.reset}`);
+  const modeColor = { fast: C.dim, debug: C.yellow, trace: C.cyan }[currentMode] || C.white;
+  console.log(`  Mode:      ${modeColor}${C.bold}${currentMode.toUpperCase()}${C.reset}  ${C.dim}verbose=${VERBOSE} trace=${TRACE}  · ./api.sh mode [fast|debug|trace]${C.reset}`);
   console.log(`\n  ${C.dim}Endpoints:${C.reset}`);
   const routes = [
     ['GET',    '/api/help[/{topic}]             → man-page style docs (read|write|nonce|wizard|curl|...)'],
     ['GET',    '/api/ping'],
+    ['GET',    '/api/mode'],
+    ['POST',   '/api/mode                           body: {mode} (fast|debug|trace)'],
     ['GET',    '/api/source                         → raw HTML source (worldbuilder Load from Server)'],
     ['GET',    '/api/audit[?format=text]             → integrity scan (errors/warnings/suggestions/connectivity)'],
     ['GET',    '/api/audit/map[?format=text]         → map conformity: diagonal/bidirectional/alignment/axis-distance/long-links/market-proximity'],
