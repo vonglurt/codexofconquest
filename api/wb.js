@@ -751,6 +751,51 @@ const CMD = {
     }
   },
 
+  // ── junction-audit: breakdown of junction vs named nodes + P_NUKE dry-run preview ─
+  // Usage: ./api.sh junction-audit
+  async 'junction-audit'() {
+    const resp = await request('GET', '/api/graph/junction-audit');
+    if (resp.status !== 200) { printError(resp); process.exit(1); }
+    const d = resp.body;
+    const s = d.summary;
+    ok(`── Node Summary ──────────────────────────────────────────`);
+    ok(`  Total:      ${s.total}`);
+    ok(`  Junctions:  ${s.junctionCount}  (${s.junctionPct})`);
+    ok(`  Named:      ${s.namedCount}`);
+    ok(`── Coordinate Coverage ───────────────────────────────────`);
+    const cc = d.coordsCoverage;
+    ok(`  Junctions with coords:    ${cc.jWithCoords}  |  without: ${cc.jWithoutCoords}`);
+    ok(`  Named nodes with coords:  ${cc.namedWithCoords}  |  without: ${cc.namedWithoutCoords}`);
+    ok(`── Reachability ──────────────────────────────────────────`);
+    const rc = d.reachability;
+    ok(`  Junctions reachable:  ${rc.jReachable}  |  unreachable: ${rc.jUnreachable}`);
+    ok(`  Named reachable:      ${rc.namedReachable}  |  unreachable: ${rc.namedUnreachable}`);
+    ok(`── Quest / NPC Refs ──────────────────────────────────────`);
+    const qr = d.questRefs;
+    ok(`  Quest ref nodes:           ${qr.totalQuestRefNodes}`);
+    ok(`  Named quest nodes:         ${qr.uniqueNamedQuestNodes}`);
+    ok(`  J#### with quest refs:     ${qr.junctionQuestRefs}  ${qr.junctionQuestRefs === 0 ? '✓ zero — safe to nuke' : '⚠ BLOCKED'}`);
+    if (qr.junctionQuestRefCodes.length) ok(`  Blocked codes: ${qr.junctionQuestRefCodes.join(', ')}`);
+    ok(`  J#### with NPC stations:   ${d.npcRefs.junctionNpcRefs}  ${d.npcRefs.junctionNpcRefs === 0 ? '✓' : '⚠ BLOCKED'}`);
+    ok(`  Safe to nuke all junctions: ${qr.safeToNukeAllJunctions ? 'YES ✓' : 'NO ⚠'}`);
+    ok(`── Junction Degree Distribution ─────────────────────────`);
+    const dd = d.junctionDegreeDist;
+    ok(`  deg-0 (isolated):  ${dd[0]}    deg-1 (dead-end): ${dd[1]}`);
+    ok(`  deg-2:             ${dd[2]}    deg-3:            ${dd[3]}    deg-4: ${dd[4]}`);
+    ok(`── Unplaced Quest Nodes ──────────────────────────────────`);
+    const up = d.unplacedQuestNodes;
+    ok(`  Named quest nodes missing r,c: ${up.count}`);
+    if (up.count > 0 && up.count <= 20) ok(`  Codes: ${up.codes.join(', ')}`);
+    ok(`── P_NUKE Dry-Run Preview ────────────────────────────────`);
+    const nk = d.nukePreview;
+    ok(`  Safe to delete:    ${nk.safeToDelete}`);
+    ok(`  Straight-stitch:   ${nk.straightStitch}  (A-J-B → A-B direct)`);
+    ok(`  L-shaped deferred: ${nk.lShapedDeferred}  (handed to A* for path rebuild)`);
+    ok(`  Dead-end delete:   ${nk.deadEndDelete}  (degree≤1, drop outright)`);
+    ok(`  Blocked by quest:  ${nk.blockedByQuest}`);
+    ok(`  Blocked by NPC:    ${nk.blockedByNpc}`);
+  },
+
   // ── find-open-location: find a node near a city that can accept a new neighbour
   // Usage: ./api.sh find-open-location <city> [--radius 8]
   //
@@ -1029,6 +1074,21 @@ const CMD = {
       ok(`Done: ${fixed} fixed, ${failed} failed, ${skipped} skipped (missing coords)`);
       ok(`Re-check: ./api.sh fix-all-broken`);
     }
+  },
+
+  // ── nuke-junctions: P_NUKE — bulk-delete all J#### junction nodes ────────────
+  // Usage: ./api.sh nuke-junctions [--execute]
+  //   Dry-run (default): reports what would be deleted/stitched/deferred.
+  //   --execute: applies straight stitches, bulk-deletes all J#### from source,
+  //              cleans dangling direction refs, saves snapshot.
+  //   After running, deferred L-shaped pairs need A* reconnect (future step).
+  //   See: lab-report-junction-reweave-overhaul.md §5
+  async 'nuke-junctions'(pos, flags) {
+    await requireServer();
+    const execute = !!flags.execute;
+    if (execute) ok(`Executing P_NUKE — this will delete all J#### nodes and save. No undo except snapshot.`);
+    else ok(`Dry-run — add --execute to apply.`);
+    await streamPost('/api/graph/nuke-junctions', { execute });
   },
 
   // ── reweave: mega-loop — rip-and-connect → fix-all-broken → fix-bidir ─────
@@ -1358,7 +1418,7 @@ ${C.bold}═══════════════════════�
   §19 MAP VISUALIZATION  (worldmap --regions --region --city --search --monster --route)
   §20 COORDINATE MANAGEMENT  (geo-seed  move  find-open-location)
   §21 NETWORK WIRING  (smart-connect  highway  junction  fill-gap  connect)
-  §22 NETWORK HEALTH & REPAIR  (broken  reachability  fix-diagonal  fix-all-broken  fix-bidirectional  rip-and-connect  reweave)
+  §22 NETWORK HEALTH & REPAIR  (broken  reachability  junction-audit  fix-diagonal  fix-all-broken  fix-bidirectional  rip-and-connect  reweave)
   §23 COMMON RECIPES
   §24 SERVER LIFECYCLE
 
@@ -2469,6 +2529,13 @@ ${C.bold}═══════════════════════�
 
   Check reachability (% of nodes walkable from hub):
     ./api.sh reachability
+
+  Junction audit (breakdown + P_NUKE dry-run preview):
+    ./api.sh junction-audit
+
+  Nuclear junction cull (delete all J#### nodes):
+    ./api.sh nuke-junctions             # dry-run
+    ./api.sh nuke-junctions --execute   # apply
 
   Fix a single broken edge:
     ./api.sh fix-diagonal LHR S

@@ -5,15 +5,16 @@
 # Usage: ./wbapi-toggle.sh [start|stop|restart|status|fg]
 #        (no arg = toggle between background start/stop)
 #
-#   start    — run in background (restart-loop, exit code 67 triggers relaunch)
+#   start    — run in background (one-shot; server does not self-restart)
 #   stop     — kill background instance
 #   restart  — stop + start
 #   status   — show PID / port
 #   fg       — run in FOREGROUND, terminal attached, full log scrolls
-#              Ctrl-C to stop. Restart loop still active on exit code 67.
 #   toggle   — start if stopped, stop if running (default)
 #
-# POST /api/restart → server exits with code 67 → toggle script relaunches it.
+# The server never self-restarts. Relaunch is handled by monitor-snapshots.py
+# or by running this script again. POST /api/restart exits the server cleanly
+# (exit 0); this script does NOT auto-relaunch on that.
 
 SCRIPT="wbapi-server.js"
 DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -34,27 +35,32 @@ fi
 
 PID=$(pgrep -f "$SCRIPT" | head -1)
 
-# ── Run server in a restart loop ─────────────────────────────────────────────
-# $1: 'bg' | 'fg'
-_run_loop() {
-  local mode="${1:-bg}"
-  while true; do
-    # Port 1367 wins: if it's already occupied, exit cleanly (not 67)
-    if lsof -ti tcp:1367 >/dev/null 2>&1; then
-      echo "[wbapi-toggle] Port 1367 already in use — another instance owns it. Exiting."
-      break
-    fi
-    node --max-old-space-size=4096 "$DIR/$SCRIPT"
-    CODE=$?
-    if [ "$CODE" -eq 67 ]; then
-      echo ""
-      echo "[wbapi-toggle] ↺  Server requested restart (exit 67) — relaunching…"
-      sleep 0.1
-    else
-      echo "[wbapi-toggle] ⏹  Server exited with code $CODE."
-      break
-    fi
-  done
+# ── Run server once (no restart loop) ────────────────────────────────────────
+# The server never self-restarts. Relaunch is handled by monitor-snapshots.py
+# or by the caller. This function starts the server and returns when it exits.
+#
+# Conflict rule: if monitor-snapshots.py is already running AND this shell was
+# NOT spawned by it (WBAPI_MANAGED_BY_MONITOR unset), defer to it and exit.
+# monitor-snapshots.py sets WBAPI_MANAGED_BY_MONITOR=1 in the Terminal window
+# it opens, so its own spawned toggles are always allowed through.
+_monitor_running() {
+  pgrep -f "monitor-snapshots.py" > /dev/null 2>&1
+}
+
+_run_once() {
+  if _monitor_running && [ -z "$WBAPI_MANAGED_BY_MONITOR" ]; then
+    echo "[wbapi-toggle] monitor-snapshots.py is running and owns the server lifecycle."
+    echo "[wbapi-toggle] Deferring — not starting."
+    return 0
+  fi
+  if lsof -ti tcp:1367 >/dev/null 2>&1; then
+    echo "[wbapi-toggle] Port 1367 already in use — another instance owns it. Not starting."
+    return 0
+  fi
+  node --max-old-space-size=4096 "$DIR/$SCRIPT"
+  CODE=$?
+  echo "[wbapi-toggle] ⏹  Server exited with code $CODE."
+  return $CODE
 }
 
 do_start() {
@@ -63,7 +69,7 @@ do_start() {
     return 0
   fi
   echo "Starting wbapi-server (background)…"
-  _run_loop bg &
+  _run_once &
   sleep 0.5
   NEW_PID=$(pgrep -f "$SCRIPT" | head -1)
   if [ -n "$NEW_PID" ]; then
@@ -88,7 +94,8 @@ do_fg() {
   echo "  └─────────────────────────────────────────────────────────┘"
   echo ""
   export WBAPI_VERBOSE=1
-  _run_loop fg
+  _run_once
+  return $?
 }
 
 do_stop() {

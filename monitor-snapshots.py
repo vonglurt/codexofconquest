@@ -175,28 +175,96 @@ _last_spawn_time = 0.0   # shared cooldown — prevents double-spawn during star
 _SPAWN_GRACE     = 15.0  # seconds to wait after a spawn (210 MB file takes ~10 s)
 
 
+def _find_terminal():
+    """Return (kind, path) for the best available terminal emulator.
+    Preference: Ghostty → Kitty → Alacritty → Terminal.app (fallback).
+    Returns kind in {'ghostty', 'kitty', 'alacritty', 'terminal'}.
+    """
+    candidates = [
+        ("ghostty",   ["/Applications/Ghostty.app/Contents/MacOS/ghostty",
+                       "/usr/local/bin/ghostty", "/opt/homebrew/bin/ghostty"]),
+        ("kitty",     ["/Applications/kitty.app/Contents/MacOS/kitty",
+                       "/usr/local/bin/kitty", "/opt/homebrew/bin/kitty"]),
+        ("alacritty", ["/Applications/Alacritty.app/Contents/MacOS/alacritty",
+                       "/usr/local/bin/alacritty", "/opt/homebrew/bin/alacritty"]),
+    ]
+    for kind, paths in candidates:
+        for path in paths:
+            if os.path.isfile(path) and os.access(path, os.X_OK):
+                return kind, path
+        # also try PATH lookup
+        result = subprocess.run(["which", kind], capture_output=True, text=True)
+        if result.returncode == 0:
+            return kind, result.stdout.strip()
+    return "terminal", None
+
+
 def _spawn_server_window():
-    """Open a new macOS Terminal window running the server with VERBOSE+TRACE."""
+    """Open a new terminal window running the server.
+    Prefers Ghostty → Kitty → Alacritty → Terminal.app."""
     global _last_spawn_time
     _last_spawn_time = time.time()
     root = str(ROOT)
+    # WBAPI_MANAGED_BY_MONITOR=1 tells wbapi-toggle.sh that this instance is
+    # legitimately spawned by monitor-snapshots.py and should proceed normally,
+    # even though monitor-snapshots.py is running. Without this flag, wbapi-toggle
+    # would detect monitor-snapshots.py and exit to avoid a management conflict.
+    #
+    # Exit code contract (from wbapi-toggle.sh _run_once):
+    #   0  — clean shutdown (POST /api/restart or port-in-use) — do NOT loop
+    #   1  — crash / error                                     — loop: retry after 2 s
     cmd = (
         f"cd {root} && "
-        f"while true; do "
+        f"export WBAPI_MANAGED_BY_MONITOR=1 && "
         f"./wbapi-toggle.sh fg; "
-        f"echo '[server exited — restarting in 2 s…]'; sleep 2; "
-        f"done"
+        f"EXIT=$?; "
+        f"if [ $EXIT -ne 0 ]; then "
+        f"  echo '[server crashed (exit '$EXIT') — restarting in 2 s…]'; sleep 2; "
+        f"  while true; do "
+        f"    ./wbapi-toggle.sh fg; EXIT=$?; "
+        f"    [ $EXIT -eq 0 ] && break; "
+        f"    echo '[server crashed (exit '$EXIT') — restarting in 2 s…]'; sleep 2; "
+        f"  done; "
+        f"fi"
     )
-    script = (
-        f'tell application "Terminal"\n'
-        f'  do script "{cmd}"\n'
-        f'  activate\n'
-        f'end tell'
-    )
-    subprocess.Popen(["osascript", "-e", script])
+
+    kind, path = _find_terminal()
+
+    if kind == "ghostty":
+        subprocess.Popen([path, "-e", "bash", "-c", cmd])
+    elif kind == "kitty":
+        subprocess.Popen([path, "bash", "-c", cmd])
+    elif kind == "alacritty":
+        subprocess.Popen([path, "-e", "bash", "-c", cmd])
+    else:
+        # fallback: macOS Terminal via osascript
+        # cmd must be shell-escaped for the AppleScript string literal
+        escaped = cmd.replace("\\", "\\\\").replace('"', '\\"')
+        script = (
+            f'tell application "Terminal"\n'
+            f'  do script "{escaped}"\n'
+            f'  activate\n'
+            f'end tell'
+        )
+        subprocess.Popen(["osascript", "-e", script])
 
 
 _MANUAL_CMD = f"cd {ROOT}  &&  ./wbapi-toggle.sh fg"
+
+
+def _set_trace_mode():
+    """Tell the server to enable trace+debug mode via POST /api/mode."""
+    try:
+        subprocess.run(
+            ["curl", "-s", "--max-time", "3", "-X", "POST",
+             f"http://localhost:{_SERVER_PORT}/api/mode",
+             "-H", "Content-Type: application/json",
+             "-d", '{"mode":"trace"}'],
+            capture_output=True, timeout=4,
+        )
+    except Exception:
+        pass
+
 
 def _ensure_server():
     """If server not running, spawn it in a new Terminal window.
@@ -204,12 +272,14 @@ def _ensure_server():
     continues (the TUI will show server DOWN — start the server manually
     and the keepalive will detect it)."""
     if _server_pid():
+        _set_trace_mode()
         return
     _spawn_server_window()
     deadline = time.time() + _SPAWN_GRACE
     while time.time() < deadline:
         time.sleep(0.5)
         if _server_pid():
+            _set_trace_mode()
             return
     # Server didn't appear — osascript probably needs Automation permission
     print()
@@ -304,6 +374,9 @@ class Monitor:
                 else:
                     time.sleep(5)
             else:
+                if spawns > 0:
+                    # Server just came back up after a respawn — set trace mode
+                    _set_trace_mode()
                 spawns = 0
                 with self.lk:
                     if self.srv_msg in ("respawning…", ""):
