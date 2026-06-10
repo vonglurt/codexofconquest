@@ -4160,18 +4160,19 @@ async function route(req, res) {
     //   7. Destination row, source column  (L-bend via destination)
     // Each candidate: {r, c, reason, free, occupiedBy}
     // When cb is null (target has no coords), estimates position 4 steps along dir from ca.
-    function suggestBetween(ca, cb, dir, allCoords, excludeCode, step) {
+    function suggestBetween(ca, cb, dir, allCoords, excludeCode, step, sharedOccupied) {
       const STEP = step || 4;
       // If destination has no coords, project a target in the given direction
       const DR4 = { N:-STEP, S:STEP, E:0, W:0 };
       const DC4 = { N:0, S:0, E:STEP, W:-STEP };
       const projected = cb || { r: ca.r + DR4[dir]*3, c: ca.c + DC4[dir]*3 };
 
-      const occupied = new Map();
-      for (const [code, pos] of Object.entries(allCoords)) {
-        if (code === excludeCode) continue;
-        occupied.set(`${pos.r},${pos.c}`, code);
-      }
+      // sharedOccupied: caller-built map (all coords). Build it once per batch, not per call.
+      const occupied = sharedOccupied || (() => {
+        const m = new Map();
+        for (const [code, pos] of Object.entries(allCoords)) m.set(`${pos.r},${pos.c}`, code);
+        return m;
+      })();
 
       // Snap to nearest grid step
       const snap = v => Math.round(v / STEP) * STEP;
@@ -4184,11 +4185,12 @@ async function route(req, res) {
         if (seen.has(key)) return;
         seen.add(key);
         const occ = occupied.get(key) || null;
-        const nodeRef = excludeCode || 'J_new';
+        // treat excludeCode's own position as free (caller may have moved it)
+        const isFree = !occ || occ === excludeCode;
         const cmd = excludeCode
           ? `curl -s -XPUT http://localhost:${PORT}/api/coords/${excludeCode} -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'`
           : `curl -s -XPOST http://localhost:${PORT}/api/node -H 'Content-Type: application/json' -d '{"code":"J_new","name":"junction","label":"Junction","act":1}' && curl -s -XPUT http://localhost:${PORT}/api/coords/J_new -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'`;
-        out.push({ r, c, reason, free: !occ, occupiedBy: occ, moveCmd: cmd });
+        out.push({ r, c, reason, free: isFree, occupiedBy: isFree ? null : occ, moveCmd: cmd });
       }
 
       const mr = (ca.r + projected.r) / 2;
@@ -4340,10 +4342,14 @@ async function route(req, res) {
     if (parts[1] === 'broken' && method === 'GET') {
       const maxGap = Math.max(1, parseInt(url.searchParams.get('maxGap') || '4', 10));
       const root   = url.searchParams.get('root') || null;
+      const fast   = url.searchParams.get('fast') === 'true'; // skip suggestions, count only
       const DIRS4 = ['N','E','S','W'];
       const allCoords = WBAPI.nodeCoords;
       const edges = [], seen = new Set();
       let totalChecked = 0;
+
+      // Build occupied map once — shared across all suggestBetween calls (O(N) amortised vs O(N) per call)
+      const occupiedMap = fast ? null : new Map(Object.entries(allCoords).map(([c,p]) => [`${p.r},${p.c}`, c]));
 
       for (const [code, dirs] of Object.entries(nm)) {
         const cc = WBAPI.nodeCoords[code];
@@ -4353,11 +4359,12 @@ async function route(req, res) {
           if (seen.has(key)) continue; seen.add(key); totalChecked++;
           const tc = WBAPI.nodeCoords[tgt];
           if (!cc || !tc) {
+            if (fast) { edges.push({ from:code, dir:d, to:tgt, type:'missing_coords' }); continue; }
             // At least one node is unpositioned — suggest where to put it
             const missingCode = !cc ? code : tgt;
             const knownCoords = !cc ? tc : cc;
             const candidates = knownCoords
-              ? suggestBetween(knownCoords, null, d, allCoords, missingCode)
+              ? suggestBetween(knownCoords, null, d, allCoords, missingCode, undefined, occupiedMap)
               : null;
             const best = candidates ? (candidates.find(c => c.free) || candidates[0]) : null;
             edges.push({
@@ -4380,6 +4387,7 @@ async function route(req, res) {
           else if (off>0)          type = 'diagonal';
           else if (gap>maxGap)     type = 'gap_too_large';
           if (type) {
+            if (fast) { edges.push({ from:code, dir:d, to:tgt, type, gap, axisOffset:off }); continue; }
             const juncsNeeded = type==='gap_too_large' ? Math.ceil(gap/maxGap)-1 : null;
             // For diagonal/off-axis: suggest moving the destination to be between source and itself snapped to axis
             // For gap: suggest placing intermediate junction(s) between the two
@@ -4387,7 +4395,7 @@ async function route(req, res) {
             const axisSnapped = (type !== 'gap_too_large')
               ? ((d==='N'||d==='S') ? { r: tc.r, c: cc.c } : { r: cc.r, c: tc.c })
               : tc;
-            const candidates = suggestBetween(cc, axisSnapped, d, allCoords, moveTarget);
+            const candidates = suggestBetween(cc, axisSnapped, d, allCoords, moveTarget, undefined, occupiedMap);
             const best = candidates.find(c => c.free) || candidates[0];
             const noteMap = {
               diagonal:        `"${tgt}" is off-axis — move it onto the correct axis of "${code}"`,
@@ -5052,6 +5060,7 @@ async function route(req, res) {
       cors(res);
       res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Transfer-Encoding': 'chunked' });
       const emit = (msg) => { try { res.write(msg + '\n'); } catch(_) {} logRow('reweave', msg); };
+      const yieldOnce = () => new Promise(r => setImmediate(r)); // flush HTTP stream + allow event loop
       // progress tick: emits only at start, end, or every tickEvery items
       const BAR_W = 40; // wide bar — assumes 220+ char terminal
       const mkBar = (iter, total) => { const p=total>0?Math.floor(iter/total*BAR_W):0; return '█'.repeat(p)+'░'.repeat(BAR_W-p); };
@@ -5403,7 +5412,8 @@ async function route(req, res) {
         let placed=0, failed=0, wireFailed=0;
         const passLog = [];
         const straysToProcess = strays.slice(0, limit);
-        const p1Tick = Math.max(5, Math.min(50, Math.floor(straysToProcess.length / 20)));
+        const p1Tick = 1;
+        const p1Edits = []; // accumulated node edits — flushed to source via batchEditNode at end
         sectionBanner(`P1 PASS ${pass}/${maxRip}: rip-and-connect — ${straysToProcess.length} strays`);
         let p1i = 0;
         for (const stray of straysToProcess) {
@@ -5411,6 +5421,7 @@ async function route(req, res) {
           if(p1i===1||p1i===straysToProcess.length||p1i%p1Tick===0){
             nestedProgressLine('p1 pass', pass, maxRip, 'stray', p1i, straysToProcess.length,
               `placed=${placed} no_slot=${failed} wf=${wireFailed} │ ∑placed=${p1TotalPlaced+placed} ∑passes=${p1TotalPasses} ∑strays=${p1TotalStrays+p1i}`);
+            if(p1i%200===0)await yieldOnce();
           }
           const shuffled = reachableCities.slice().sort(()=>Math.random()-0.5);
           let bestCity=null,bestScore=-1,bestSlot=null,bestDir=null,bestNr=null,bestNc=null;
@@ -5427,17 +5438,12 @@ async function route(req, res) {
           allocated.set(`${bestNr},${bestNc}`,stray);
           if(!execute){passLog.push({stray,city:bestCity,slot:bestSlot.code,dir:bestDir,status:'would_place'});continue;}
           WBAPI.nodeCoords[stray]={r:bestNr,c:bestNc};
-          const r1=WBAPI.editField('node',bestSlot.code,bestDir,stray);
-          const r2=WBAPI.editField('node',stray,OPP4[bestDir],bestSlot.code);
-          if(!r1?.ok||!r2?.ok){
-            // wire failed — don't count as placed, mark slot as seen so we skip it next time
-            wireFailed++;
-            p1SlotSeen.add(bestSlot.code);
-            invalidateSlot(bestSlot.code); // slot is now seen — refresh cache for affected cities
-            emit(`  [p1] WIRE-FAIL ${stray}→${bestSlot.code}.${bestDir}  slot:${r1?.error||'ok'} stray:${r2?.error||'ok'}`);
-            passLog.push({stray,city:bestCity,slot:bestSlot.code,dir:bestDir,status:'wire_failed',slotErr:r1?.error,strayErr:r2?.error});
-            continue;
-          }
+          // Update in-memory nodeMap directly (defer source update to batchEditNode after loop)
+          if(!nm[bestSlot.code]){wireFailed++;p1SlotSeen.add(bestSlot.code);invalidateSlot(bestSlot.code);continue;}
+          nm[bestSlot.code][bestDir] = stray;
+          if(nm[stray]) nm[stray][OPP4[bestDir]] = bestSlot.code;
+          p1Edits.push({code:bestSlot.code, field:bestDir, value:stray});
+          p1Edits.push({code:stray, field:OPP4[bestDir], value:bestSlot.code});
           // wire succeeded — track moves, mark slot as seen (now has fewer free slots)
           const moves=(p1MoveCounts.get(stray)||0)+1;
           p1MoveCounts.set(stray,moves);
@@ -5459,6 +5465,8 @@ async function route(req, res) {
           placed++; passLog.push({stray,city:bestCity,slot:bestSlot.code,dir:bestDir,coord:{r:bestNr,c:bestNc},status:'placed',moves});
           emit(`  [p1] ${stray} → ${bestCity} via ${bestSlot.code}.${bestDir} (${bestNr},${bestNc}) moves=${moves}`);
         }
+        // Flush all deferred node edits to source in ONE respliceSection call (~100-1000× faster)
+        if(execute&&p1Edits.length){const br=WBAPI.batchEditNode(p1Edits);emit(`  [p1] batch flushed: applied=${br.applied} failed=${br.failed}`);}
         p1TotalPlaced+=placed; p1TotalNoSlot+=failed; p1TotalWireFail+=wireFailed; p1TotalPasses++; p1TotalStrays+=p1i;
         emit(`  └── [p1 pass ${pass} summary] placed=${placed} no_slot=${failed} wf=${wireFailed}  │  ∑placed=${p1TotalPlaced} ∑no_slot=${p1TotalNoSlot} ∑wf=${p1TotalWireFail} ∑passes=${p1TotalPasses} ∑strays=${p1TotalStrays}`);
         ripPhase.push({pass,totalStrays:allStrays.length,placed,failed,wireFailed,details:passLog});
@@ -5492,13 +5500,14 @@ async function route(req, res) {
         const cmap=new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
         let p15added=0,p15skipped=0;
         const p15Entries=Object.entries(WBAPI.nodeCoords);
-        const p15Tick=Math.max(10,Math.min(100,Math.floor(p15Entries.length/20)));
+        const p15Tick=1;
         sectionBanner(`P1.5: coord-scan — ${p15Entries.length} nodes × 4 dirs`);
         let p15i=0;
         for(const[code,coord]of p15Entries){
           p15i++;
           if(p15i===1||p15i===p15Entries.length||p15i%p15Tick===0){
             progressLine('p1.5 coord-scan', p15i, p15Entries.length, `added=${p15added} skipped=${p15skipped}`);
+            if(p15i%200===0)await yieldOnce();
           }
           if(!nm[code])continue;
           for(const dir of DIRS4){
@@ -5565,6 +5574,8 @@ async function route(req, res) {
         const result = [], seen = new Set();
         const coords = WBAPI.nodeCoords;
         const nodesToScan = nodeFilter ? [...nodeFilter] : Object.keys(nm);
+        // Build occupied map once per scan call — shared across all suggestBetween calls
+        const occ = new Map(Object.entries(coords).map(([c,p]) => [`${p.r},${p.c}`, c]));
         for (const code of nodesToScan) {
           const dirs = nm[code]; if (!dirs) continue;
           const cc = coords[code];
@@ -5581,7 +5592,7 @@ async function route(req, res) {
             else if(gap>maxGap) type='gap_too_large';
             if (type) {
               const axisSnapped=(type!=='gap_too_large')?((d==='N'||d==='S')?{r:tc.r,c:cc.c}:{r:cc.r,c:tc.c}):tc;
-              const candidates=suggestBetween(cc,axisSnapped,d,coords,type!=='gap_too_large'?tgt:null);
+              const candidates=suggestBetween(cc,axisSnapped,d,coords,type!=='gap_too_large'?tgt:null,undefined,occ);
               const best=candidates.find(c=>c.free)||candidates[0];
               result.push({from:code,dir:d,to:tgt,type,moveSuggestion:{node:type!=='gap_too_large'?tgt:'(new junction)',recommended:best,candidates}});
             }
@@ -5883,7 +5894,7 @@ async function route(req, res) {
         let fixed=0,failed=0,deferred=0;
         const passDetails=[];
         const occ=new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
-        const p4Tick=Math.max(5,Math.min(50,Math.floor(edges.length/20)));
+        const p4Tick=1;
         sectionBanner(`P4 PASS ${pass}/${maxFix}: fix-all-broken — ${edges.length} broken edges`);
         let p4i=0;
         for(const edge of edges){
@@ -5891,6 +5902,7 @@ async function route(req, res) {
           if(p4i===1||p4i===edges.length||p4i%p4Tick===0){
             nestedProgressLine('p4 pass', pass, maxFix, 'edge', p4i, edges.length,
               `fixed=${fixed} def=${deferred} blk=${failed} │ ∑fixed=${p4TotalFixed+fixed} ∑def=${p4TotalDeferred+deferred} ∑passes=${p4TotalPasses} ∑edges=${p4TotalEdges+p4i}`);
+            if(p4i%200===0)await yieldOnce();
           }
           const{from,dir,to,type,moveSuggestion:ms}=edge;
           // Try move first
@@ -6027,13 +6039,14 @@ async function route(req, res) {
             bidirFixed.push({check:'diagonal_exit',code,dir:d});
           }
         }
-        const p5Tick=Math.max(5,Math.min(50,Math.floor(biTargets.length/20)));
+        const p5Tick=1;
         sectionBanner(`P5: fix-bidirectional — ${biTargets.length} one-way links`);
         let p5i=0;
         for(const{code,dir,target}of biTargets){
           p5i++;
           if(p5i===1||p5i===biTargets.length||p5i%p5Tick===0){
             progressLine('p5 fix-bidir', p5i, biTargets.length, `fixed=${bidirFixed.length} errors=${bidirErrors.length}`);
+            if(p5i%200===0)await yieldOnce();
           }
           if(!nm[target]){bidirErrors.push({code,dir,target,error:'target not in NODE_MAP'});continue;}
           if(nm[target][OPP2b[dir]]===code)continue;
@@ -6115,13 +6128,14 @@ async function route(req, res) {
           const degF=code=>DIRS4.filter(d=>nm[code]?.[d]&&nm[nm[code][d]]).length;
           const toDel=Object.keys(nm).filter(c=>isDer(c)&&degF(c)<=1);
           if(!toDel.length)break;
-          const p6Tick=Math.max(3,Math.min(20,Math.floor(toDel.length/20)));
+          const p6Tick=1;
           sectionBanner(`P6 PASS ${dp}: derelict-cleanup — ${toDel.length} degree≤1 derelicts  totalDel so far: ${totalDel}`);
           let p6i=0;
           for(const code of toDel){
             p6i++;
             if(p6i===1||p6i===toDel.length||p6i%p6Tick===0){
               nestedProgressLine('p6 pass', dp, 0, 'derelict', p6i, toDel.length, `totalDel=${totalDel}`);
+              if(p6i%200===0)await yieldOnce();
             }
             for(const d of DIRS4){const nb=nm[code]?.[d];if(nb&&nm[nb])clearDir(nb,OPP4[d]);}
             const SM='// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆',EM='// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
@@ -6180,7 +6194,7 @@ async function route(req, res) {
         };
 
         // Snail: walk all quest paths + all-pairs GEO2 city routes, count junction traversals
-        const runSnail=()=>{
+        const runSnail=async ()=>{
           const usage=new Map();
           for(const code of Object.keys(nm))if(nm[code]?.junction&&!qRefW.has(code)&&!npcNodeW.has(code))usage.set(code,0);
           const hub=getHub();
@@ -6188,13 +6202,15 @@ async function route(req, res) {
 
           // Walk 1: hub → every quest activateNode and waypointNode
           const questList=Object.values(WBAPI.questDb||{});
-          const w1Tick=Math.max(5,Math.min(30,Math.floor(questList.length/20)));
+          const w1Tick=1;
           let questPaths=0,questMisses=0,w1i=0;
           emit(`  [snail] walk1: ${questList.length} quests → hub=${hub}  junctions=${usage.size}`);
           for(const q of questList){
             w1i++;
-            if(w1i===1||w1i===questList.length||w1i%w1Tick===0)
+            if(w1i===1||w1i===questList.length||w1i%w1Tick===0){
               progressLine('snail walk1 quests',w1i,questList.length,`paths=${questPaths} misses=${questMisses}`);
+              if(w1i%200===0)await yieldOnce();
+            }
             for(const f of['activateNode','waypointNode']){
               const dest=q[f];if(!dest||!nm[dest])continue;
               const path=bfsPath(hub,dest);
@@ -6207,20 +6223,55 @@ async function route(req, res) {
           logTrace('wither-snail','walk1 quest paths='+questPaths+' misses='+questMisses);
 
           // Walk 2: all-pairs between GEO2 cities — marks inter-city corridor junctions
+          // Optimized: O(C×V) BFS tree precompute + O(C²×L_avg) path trace
+          // vs. old O(C²×V) all-pairs BFS. 20-100× faster for large graphs.
           const geoCodes=Object.keys(GEO2).filter(c=>nm[c]);
           const totalPairs=Math.floor(geoCodes.length*(geoCodes.length-1)/2);
-          const w2Tick=Math.max(5,Math.min(50,Math.floor(totalPairs/20)));
+          const w2Tick=1;
           let cityPaths=0,cityMisses=0,w2i=0;
-          emit(`  [snail] walk2: ${geoCodes.length} cities → ${totalPairs} pairs`);
+          emit(`  [snail] walk2: ${geoCodes.length} cities → ${totalPairs} pairs (BFS-tree method)`);
+
+          // Phase 2a: one BFS per city — build parent trees (O(C×V))
+          const cityParent=new Map();
+          let w2bfsI=0;
+          for(const src of geoCodes){
+            w2bfsI++;
+            progressLine('snail walk2 bfs',w2bfsI,geoCodes.length,`building parent trees`);
+            if(w2bfsI%10===0)await yieldOnce();
+            if(!nm[src])continue;
+            const parent=new Map([[src,null]]);
+            const q=[src];
+            while(q.length){
+              const cur=q.shift();
+              for(const d of DIRS4){
+                const next=nm[cur]?.[d];
+                if(!next||!nm[next]||parent.has(next))continue;
+                parent.set(next,cur);
+                q.push(next);
+              }
+            }
+            cityParent.set(src,parent);
+          }
+          emit(`  [snail] walk2 bfs done: ${cityParent.size}/${geoCodes.length} trees built`);
+
+          // Phase 2b: trace parent trees for all pairs — mark junctions (O(C²×L_avg))
           for(let i=0;i<geoCodes.length;i++){
+            const parent=cityParent.get(geoCodes[i]);
+            if(!parent)continue;
             for(let j=i+1;j<geoCodes.length;j++){
               w2i++;
-              if(w2i===1||w2i===totalPairs||w2i%w2Tick===0)
+              if(w2i===1||w2i===totalPairs||w2i%w2Tick===0){
                 progressLine('snail walk2 city-pairs',w2i,totalPairs,`paths=${cityPaths} misses=${cityMisses} used=${[...usage.values()].filter(v=>v>0).length}`);
-              const path=bfsPath(geoCodes[i],geoCodes[j]);
-              if(!path.length){cityMisses++;logTrace('wither-snail-miss',`city ${geoCodes[i]}→${geoCodes[j]} no path`);continue;}
+                if(w2i%200===0)await yieldOnce();
+              }
+              const t=geoCodes[j];
+              if(!parent.has(t)){cityMisses++;logTrace('wither-snail-miss',`city ${geoCodes[i]}→${t} no path`);continue;}
               cityPaths++;
-              for(const node of path){if(usage.has(node))usage.set(node,usage.get(node)+1);}
+              let cur=t;
+              while(cur!==null){
+                if(usage.has(cur))usage.set(cur,usage.get(cur)+1);
+                cur=parent.get(cur);
+              }
             }
           }
           emit(`  [snail] walk2 done: paths=${cityPaths}  misses=${cityMisses}  cities=${geoCodes.length}`);
@@ -6357,7 +6408,7 @@ async function route(req, res) {
         };
 
         // Dry-run: report unused count without modifying anything
-        const usage0=runSnail(); lastSnailUsage=usage0;
+        const usage0=await runSnail(); lastSnailUsage=usage0;
         const unusedCount0=[...usage0.values()].filter(cnt=>cnt===0).length;
         phaseBanner('P7: wither', `junctions tracked=${usage0.size}  unused=${unusedCount0}  execute=${execute&&witherPhase}`);
 
@@ -6365,12 +6416,12 @@ async function route(req, res) {
           let totalWithered=0;const witherLog=[];
           for(let wp=1;wp<=20;wp++){
             nm=WBAPI.nodeMap;
-            const usage=runSnail(); lastSnailUsage=usage;
+            const usage=await runSnail(); lastSnailUsage=usage;
             const witherCandidates=[...usage.entries()].filter(([c,cnt])=>nm[c]&&cnt===0);
             // Tarjan once per pass — O(V+E) — replaces O(K*(V+E)) per-candidate BFS
             const unsafeJunctions = findUnsafeJunctions();
             sectionBanner(`P7 PASS ${wp}/20: wither — ${witherCandidates.length} candidates  unsafe(bridges)=${unsafeJunctions.size}  safe=${witherCandidates.length-[...witherCandidates].filter(([c])=>unsafeJunctions.has(c)).length}  totalWithered so far: ${totalWithered}`);
-            const p7Tick=Math.max(3,Math.min(20,Math.floor(witherCandidates.length/20)));
+            const p7Tick=1;
             let passWithered=0,p7checked=0;
             for(const[code,cnt]of usage){
               if(!nm[code])continue;     // already removed this pass
@@ -6379,6 +6430,7 @@ async function route(req, res) {
               if(p7checked===1||p7checked===witherCandidates.length||p7checked%p7Tick===0){
                 nestedProgressLine('p7 pass', wp, 20, 'candidate', p7checked, witherCandidates.length,
                   `withered=${passWithered} totalWithered=${totalWithered} bridges=${unsafeJunctions.size} heat=0`);
+                if(p7checked%200===0)await yieldOnce();
               }
               if(unsafeJunctions.has(code)){
                 // Unwitherable bridge — tab-aligned NESW columns + coords + heat

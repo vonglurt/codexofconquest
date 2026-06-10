@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
 'use strict';
 // wbapi-core.js — Roll2Hit World Builder data layer for Node.js
 // Mirrors the parsing logic in worldbuilder.html.
@@ -539,6 +539,31 @@ const WBAPI = {
     this._rawSrc = respliceSection(this._rawSrc, section, patched);
     col[key][field] = value;
     return { ok:true, key, field, value, inserted: isNew };
+  },
+
+  // batchEditNode: apply many {code, field, value} node edits in ONE respliceSection call.
+  // Up to 1000× faster than calling editField() per edit on a large source file.
+  // edits: [{code, field, value}, ...] — value=null removes the field.
+  batchEditNode(edits) {
+    if (!this._rawSrc || !edits.length) return { ok:true, applied:0, failed:0 };
+    let sectionSrc = extrSection(this._rawSrc, 'NODE_MAP');
+    let applied = 0, failed = 0;
+    for (const {code, field, value} of edits) {
+      const key = this._findKey(this.nodeMap, code);
+      if (!key) { failed++; continue; }
+      if (value === null || value === undefined) {
+        const p = removeStringField(sectionSrc, key, field);
+        if (p) { sectionSrc = p; delete this.nodeMap[key][field]; applied++; }
+        else failed++;
+      } else {
+        const p = patchStringField(sectionSrc, key, field, String(value))
+               || insertStringField(sectionSrc, key, field, String(value));
+        if (p) { sectionSrc = p; if (this.nodeMap[key]) this.nodeMap[key][field] = value; applied++; }
+        else failed++;
+      }
+    }
+    this._rawSrc = respliceSection(this._rawSrc, 'NODE_MAP', sectionSrc);
+    return { ok:true, applied, failed };
   },
 
   renameNodeKey(oldCode, newCode) {

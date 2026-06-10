@@ -711,7 +711,8 @@ const CMD = {
   // Usage: ./api.sh broken [--maxgap N]
   async broken(pos, flags) {
     const maxGap = flags.maxgap ? +flags.maxgap : 4;
-    const resp = await request('GET', `/api/graph/broken?maxGap=${maxGap}`);
+    const fast = !flags.full; // default fast=true (count only, no suggestions); --full for detailed
+    const resp = await request('GET', `/api/graph/broken?maxGap=${maxGap}${fast ? '&fast=true' : ''}`);
     if (resp.status !== 200) { printError(resp); process.exit(1); }
     const d = resp.body;
     if (d.broken === 0) {
