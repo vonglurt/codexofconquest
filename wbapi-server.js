@@ -6971,7 +6971,8 @@ async function route(req, res) {
       // ── map rendering helpers (used for post-reweave output) ─────────────────
       // renderNodeGrid: game-coordinate (r,c) ASCII map. W×H = terminal chars.
       // bounds: optional {minR,maxR,minC,maxC} for zoom. heatMap: usage Map from snail.
-      const renderNodeGrid = (W, H, title, bounds=null, heatMap=null) => {
+      // opts.junctionMode=true → show junctions as 'j' (pri=2) instead of suppressing/heat.
+      const renderNodeGrid = (W, H, title, bounds=null, heatMap=null, opts={}) => {
         const coordEntries = Object.entries(WBAPI.nodeCoords);
         if (!coordEntries.length) return [`(no coordinates for ${title})`];
         let minR,maxR,minC,maxC;
@@ -6998,7 +6999,8 @@ async function route(req, res) {
           else if(terrain==='airport') pri=4;
           let display;
           if(isJ){
-            if(heatMap){
+            if(opts.junctionMode){ display='j'; pri=2; }
+            else if(heatMap){
               const h=heatMap.get(code)||0;
               if(h>100){display='●';pri=3;}
               else if(h>20){display='◉';pri=3;}
@@ -7099,26 +7101,48 @@ async function route(req, res) {
         };
         const emitLines=(lines)=>{for(const l of lines){emit('  '+l);allMapLines.push('  '+l);}};
 
+        const namedCount=Object.keys(nm).filter(c=>!nm[c]?.junction).length;
+        const jCount=Object.keys(nm).filter(c=>!!nm[c]?.junction).length;
+        const heatLegend=lastSnailUsage?'  ●=100+ ◉=21-100 ○=6-20 ∘=1-5 ·=cold':'  (no heat — run --execute)';
+        const JM={junctionMode:true};
+        const northB={minR:gMinR,maxR:gMidR,minC:gMinC,maxC:gMaxC};
+        const southB={minR:gMidR,maxR:gMaxR,minC:gMinC,maxC:gMaxC};
+
         // ── Map 1: Geographic world map (lat/lon) ────────────────────────────
-        section(`MAP 1 / 5  ·  GEOGRAPHIC WORLD  (lat/lon projection, GEO2 cities)  ·  ${MW}×${MH}`);
+        section(`MAP 1 / 9  ·  GEOGRAPHIC WORLD  (lat/lon projection, GEO2 cities)  ·  ${MW}×${MH}`);
         emitLines(renderGeoMap(MW, MH));
 
-        // ── Map 2: Full game grid — named nodes only ──────────────────────────
-        section(`MAP 2 / 5  ·  GAME GRID — named nodes  (${Object.keys(nm).filter(c=>!nm[c]?.junction).length} cities/locations)  ·  ${MW}×${MH}`);
-        emitLines(renderNodeGrid(MW, MH, 'full game grid — named nodes', null, null));
+        // ── Map 2: Named nodes only ───────────────────────────────────────────
+        section(`MAP 2 / 9  ·  NAMED NODES  (${namedCount} cities/locations)  ·  ${MW}×${MH}`);
+        emitLines(renderNodeGrid(MW, MH, 'named nodes', null, null));
 
-        // ── Map 3: Full game grid — all nodes with heat overlay ───────────────
-        const heatLegend=lastSnailUsage?'  ●=100+ ◉=21-100 ○=6-20 ∘=1-5 ·=cold':'  (no heat data — run with --execute to generate)';
-        section(`MAP 3 / 5  ·  GAME GRID — all nodes + heat overlay${heatLegend}  ·  ${MW}×${MH}`);
-        emitLines(renderNodeGrid(MW, MH, 'all nodes + heat', null, lastSnailUsage));
+        // ── Map 3: Named nodes + junctions ───────────────────────────────────
+        section(`MAP 3 / 9  ·  NAMED + JUNCTIONS  (${namedCount} cities · ${jCount} junctions shown as j)  ·  ${MW}×${MH}`);
+        emitLines(renderNodeGrid(MW, MH, 'named + junctions', null, null, JM));
 
-        // ── Map 4: North half zoom ────────────────────────────────────────────
-        section(`MAP 4 / 5  ·  ZOOM NORTH  (r=${gMinR}–${gMidR})  ·  ${MW}×${MH}`);
-        emitLines(renderNodeGrid(MW, MH, 'north half', {minR:gMinR,maxR:gMidR,minC:gMinC,maxC:gMaxC}, lastSnailUsage));
+        // ── Map 4: Heat overlay (no junction labels) ──────────────────────────
+        section(`MAP 4 / 9  ·  HEAT OVERLAY${heatLegend}  ·  ${MW}×${MH}`);
+        emitLines(renderNodeGrid(MW, MH, 'heat overlay', null, lastSnailUsage));
 
-        // ── Map 5: South half zoom ────────────────────────────────────────────
-        section(`MAP 5 / 5  ·  ZOOM SOUTH  (r=${gMidR}–${gMaxR})  ·  ${MW}×${MH}`);
-        emitLines(renderNodeGrid(MW, MH, 'south half', {minR:gMidR,maxR:gMaxR,minC:gMinC,maxC:gMaxC}, lastSnailUsage));
+        // ── Map 5: Heat overlay + junctions ──────────────────────────────────
+        section(`MAP 5 / 9  ·  HEAT + JUNCTIONS${heatLegend}  ·  ${MW}×${MH}`);
+        emitLines(renderNodeGrid(MW, MH, 'heat + junctions', null, lastSnailUsage, JM));
+
+        // ── Map 6: Zoom North — named only ───────────────────────────────────
+        section(`MAP 6 / 9  ·  ZOOM NORTH  (r=${gMinR}–${gMidR})  ·  ${MW}×${MH}`);
+        emitLines(renderNodeGrid(MW, MH, 'north half', northB, lastSnailUsage));
+
+        // ── Map 7: Zoom North + junctions ────────────────────────────────────
+        section(`MAP 7 / 9  ·  ZOOM NORTH + JUNCTIONS  (r=${gMinR}–${gMidR})  ·  ${MW}×${MH}`);
+        emitLines(renderNodeGrid(MW, MH, 'north half + junctions', northB, lastSnailUsage, JM));
+
+        // ── Map 8: Zoom South — named only ───────────────────────────────────
+        section(`MAP 8 / 9  ·  ZOOM SOUTH  (r=${gMidR}–${gMaxR})  ·  ${MW}×${MH}`);
+        emitLines(renderNodeGrid(MW, MH, 'south half', southB, lastSnailUsage));
+
+        // ── Map 9: Zoom South + junctions ────────────────────────────────────
+        section(`MAP 9 / 9  ·  ZOOM SOUTH + JUNCTIONS  (r=${gMidR}–${gMaxR})  ·  ${MW}×${MH}`);
+        emitLines(renderNodeGrid(MW, MH, 'south half + junctions', southB, lastSnailUsage, JM));
 
         // Save all maps to file
         try {
