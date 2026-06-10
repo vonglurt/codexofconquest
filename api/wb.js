@@ -2718,7 +2718,7 @@ function printSynopsis() {
   if (cmd !== 'help') printSynopsis();
 
   try {
-    await fn(pos, flags);
+    await fn.call(CMD, pos, flags);
   } catch (e) {
     if (e.code === 'ECONNREFUSED') die(`Server not running at ${BASE}\n  Start: ./wbapi-toggle.sh start`);
     die(e.message || String(e));
