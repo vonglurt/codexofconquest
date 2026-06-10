@@ -5443,6 +5443,15 @@ async function route(req, res) {
 
       // helper: batch-save + reload without ending the HTTP response
       const heapMB = () => { const u = process.memoryUsage(); return `heap=${Math.round(u.heapUsed/1e6)}MB rss=${Math.round(u.rss/1e6)}MB`; };
+      const nodeStats = () => {
+        const all = Object.keys(nm); const jct = all.filter(c=>!!nm[c]?.junction);
+        return `nodes=${all.length}  named=${all.length-jct.length}  junctions=${jct.length}`;
+      };
+      // phaseTime: call at phase START, returns a closer fn that emits elapsed ms.
+      const phaseTime = (label) => {
+        const t0 = Date.now();
+        return () => emit(`  [${label}] elapsed=${Date.now()-t0}ms`);
+      };
       const batchSave = (label) => {
         const fp = WBAPI.flushPatches();
         if (fp.applied || fp.failed)
@@ -5673,6 +5682,25 @@ async function route(req, res) {
       emit(`  Road: 0/jct-reduce → 1/geo-seed → 2/rip-connect → 3/coord-scan → 4/fix-broken`);
       emit(`        5/fix-bidir → 6/highways → 7/city-mesh → 8/derelict → 9/grid-connect → 10/wither → final-bridge`);
 
+      // ── INIT snapshot ─────────────────────────────────────────────────────
+      const rwT0 = Date.now();
+      {
+        nm = WBAPI.nodeMap;
+        const initAll  = Object.keys(nm);
+        const initJct  = initAll.filter(c=>!!nm[c]?.junction);
+        const initNamed= initAll.length - initJct.length;
+        const initCoordCoverage = initAll.filter(c=>!!WBAPI.nodeCoords[c]).length;
+        const initReach = bfsReach(getHub());
+        const initUnreach = initAll.length - initReach.size;
+        const initQuestRefs = new Set();
+        for (const q of Object.values(WBAPI.questDb||{}))
+          for (const f of ['activateNode','waypointNode']) if (q[f]) initQuestRefs.add(q[f]);
+        emit(`[init] ${nodeStats()}  coords=${initCoordCoverage}/${initAll.length}`);
+        emit(`[init] reachable=${initReach.size}/${initAll.length}  unreachable=${initUnreach}`);
+        emit(`[init] quests=${Object.keys(WBAPI.questDb||{}).length}  quest-ref nodes=${initQuestRefs.size}  npcs=${Object.keys(WBAPI.npcDb||{}).length}`);
+        emit(`[init] ${heapMB()}`);
+      }
+
       // ══════════════════════════════════════════════════════════════════════
       // PHASE PRE — junction straight-chain reduction
       // Exhausts all A-J-B straight-line junctions (J with exactly 2 opposite
@@ -5681,6 +5709,8 @@ async function route(req, res) {
       // ══════════════════════════════════════════════════════════════════════
       phaseBanner('P_PRE: junction straight-chain reduction', `execute=${execute}`);
       {
+        const donePreT = phaseTime('p_pre');
+        emit(`  [p_pre start] ${nodeStats()}  ${heapMB()}`);
         const preQRefs = {};
         for (const q of Object.values(WBAPI.questDb||{}))
           for (const f of ['activateNode','waypointNode']) if (q[f]) preQRefs[q[f]] = (preQRefs[q[f]]||0)+1;
@@ -5716,6 +5746,7 @@ async function route(req, res) {
           if (pp === 10) emit(`[p_pre] hit max 10 passes`);
         }
         emit(`[p_pre] done: ${totalPreReduced} straight-chain junctions removed`);
+        emit(`  [p_pre end] ${nodeStats()}  ${heapMB()}`); donePreT();
         if (totalPreReduced > 0) { rewriteCoords(); WBAPI._buildIndexes(); batchSave('p_pre-final'); nm = WBAPI.nodeMap; }
       }
 
@@ -5724,25 +5755,32 @@ async function route(req, res) {
       // ══════════════════════════════════════════════════════════════════════
       phaseBanner('P0: geo-seed', `execute=${execute&&geoSeed}`);
       if(execute&&geoSeed){
+        const doneP0 = phaseTime('p0');
         const minLat=-8,maxLat=68,minLon=-25,maxLon=72,gridMin=8,gridMax=500;
         const occ0=new Map();
+        let p0New=0,p0Moved=0,p0Skip=0;
         for(const[c,g]of Object.entries(GEO2)){
-          if(!nm[c]){emit(`  skip ${c} (not in nodeMap)`);continue;}
+          if(!nm[c]){emit(`  skip ${c} (not in nodeMap)`);p0Skip++;continue;}
           let r=Math.round(gridMin+(maxLat-g.lat)/(maxLat-minLat)*(gridMax-gridMin));
           let col=Math.round(gridMin+(g.lon-minLon)/(maxLon-minLon)*(gridMax-gridMin));
           r=Math.max(gridMin,Math.min(gridMax,r));col=Math.max(gridMin,Math.min(gridMax,col));
           for(let t=0;occ0.has(`${r},${col}`)&&t<20;t++)col++;
+          const had=WBAPI.nodeCoords[c];
+          if(!had) p0New++; else if(had.r!==r||had.c!==col) p0Moved++;
           WBAPI.nodeCoords[c]={r,c:col};occ0.set(`${r},${col}`,c);
-          emit(`  ${c}→(${r},${col})`);
+          emit(`  ${c}→(${r},${col})${had?had.r!==r||had.c!==col?' [moved from ('+had.r+','+had.c+')]':' [unchanged]':' [new]'}`);
         }
         rewriteCoords();batchSave('p0-geo-seed');nm=WBAPI.nodeMap;
-        emit(`[p0] done: ${Object.keys(GEO2).filter(c=>nm[c]).length} cities placed`);
+        emit(`[p0] done: ${Object.keys(GEO2).filter(c=>nm[c]).length} cities placed  new=${p0New}  moved=${p0Moved}  skipped=${p0Skip}`);
+        doneP0();
       }else emit(`[p0] skipped`);
 
       // ══════════════════════════════════════════════════════════════════════
       // PHASE 1 — rip-and-connect loop
       // ══════════════════════════════════════════════════════════════════════
       phaseBanner('P1: rip-and-connect', `maxRip=${maxRip}  limit=${limit}  execute=${execute}`);
+      const doneP1 = phaseTime('p1');
+      emit(`  [p1 start] ${nodeStats()}  ${heapMB()}`);
       const deg = code => DIRS4.filter(d => nm[code]?.[d] && nm[nm[code][d]]).length;
       // p1SlotSeen: global set of slot codes already tried — avoids revisiting exhausted slots across passes
       const p1SlotSeen = new Set();
@@ -5915,6 +5953,21 @@ async function route(req, res) {
         if(execute&&placed===0&&wireFailed===0){emit(`[p1 pass ${pass}] nothing placed — stopping`);break;}
         if(execute&&placed===0&&wireFailed>0){emit(`[p1 pass ${pass}] all ${wireFailed} wires failed — slots exhausted or unreachable`);}
       }
+      {
+        // Final P1 report: remaining unreachable nodes after all passes
+        nm = WBAPI.nodeMap;
+        const p1FinalReach = bfsReach(getHub());
+        const p1FinalUnreach = Object.keys(nm).filter(c => !p1FinalReach.has(c));
+        const p1UnreachNamed = p1FinalUnreach.filter(c => !nm[c]?.junction);
+        const p1UnreachJct   = p1FinalUnreach.filter(c => !!nm[c]?.junction);
+        if (p1FinalUnreach.length) {
+          emit(`[p1 final] still unreachable: ${p1FinalUnreach.length} total  named=${p1UnreachNamed.length}  junctions=${p1UnreachJct.length}`);
+          if (p1UnreachNamed.length) emit(`  unreachable named: ${p1UnreachNamed.map(c=>`${c}(${nm[c]?.label||nm[c]?.name||'?'})`).join('  ')}`);
+        } else {
+          emit(`[p1 final] all nodes reachable ✓`);
+        }
+        emit(`  [p1 end] ${nodeStats()}  ${heapMB()}`); doneP1();
+      }
 
       // ══════════════════════════════════════════════════════════════════════
       // PHASE 1.5 — coordinate-scan: derive connections from grid positions
@@ -5925,6 +5978,7 @@ async function route(req, res) {
       {
         const scanGap=4; // wire nodes up to this many cells apart in one axis
         phaseBanner('P1.5: coord-scan', `gap=${scanGap}  execute=${execute}`);
+        const doneP15 = phaseTime('p1.5');
         nm=WBAPI.nodeMap;
         const cmap=new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
         let p15added=0,p15skipped=0;
@@ -5966,6 +6020,7 @@ async function route(req, res) {
         }
         emit(`  └── [p1.5 coord-scan summary] scanned=${p15i}/${p15Entries.length} added=${p15added} skipped=${p15skipped}`);
         emit(`[p1.5] done: ${p15added} connections ${execute?'added':'would add'}  ${p15skipped} skipped`);
+        doneP15();
         if(execute&&p15added>0){rewriteCoords();WBAPI._buildIndexes();batchSave('p1.5-coord-scan');nm=WBAPI.nodeMap;}
       }
 
@@ -5973,6 +6028,8 @@ async function route(req, res) {
       // PHASE 4 — fix-all-broken loop
       // ══════════════════════════════════════════════════════════════════════
       phaseBanner('P4: fix-all-broken', `maxFix=${maxFix}  execute=${execute}`);
+      const doneP4 = phaseTime('p4');
+      emit(`  [p4 start] ${nodeStats()}  ${heapMB()}`);
       const fixPhase = [];
       const DIAG = ['NW','NE','SW','SE'];
       let noImprovePasses = 0, prevBrokenCount = Infinity;
@@ -6437,11 +6494,13 @@ async function route(req, res) {
         fixPhase.push({pass,broken:brokenCount,fixed,failed:failed+deferred,details:passDetails});
         emit(`[p4 pass ${pass}] done: ${fixed} fixed  ${deferred} deferred  ${failed} blocked  brokenAfter=~${brokenCount-fixed+Math.floor(fixed*0.6)}`);
       }
+      emit(`  [p4 end] ${nodeStats()}  ${heapMB()}`); doneP4();
 
       // ══════════════════════════════════════════════════════════════════════
       // PHASE 5 — fix-bidirectional (one pass)
       // ══════════════════════════════════════════════════════════════════════
       phaseBanner('P5: fix-bidirectional', `execute=${execute}`);
+      const doneP5 = phaseTime('p5');
       const bidirFixed=[], bidirErrors=[];
       const OPP2b={N:'S',S:'N',E:'W',W:'E'};
       const biTargets=Object.entries(nm).flatMap(([code,n])=>
@@ -6498,6 +6557,7 @@ async function route(req, res) {
         emit(`[p5] saving — flushPatches() will batchEditNode all queued writes in one pass`);
         if(bidirFixed.length){batchSave('fix-bidir');nm=WBAPI.nodeMap;emit(`[p5] save complete — nodeMap reloaded, nodes=${Object.keys(nm).length}`);}
         emit(`[p5] done: ${p5Bidir} bidir-fixed  ${diagFixed} diag-fixed  ${bidirErrors.length} errors  →  next: P2 highways`);
+        doneP5();
       } else {
         emit(`[p5] dry-run: ${biTargets.length} would fix`);
       }
@@ -6506,6 +6566,7 @@ async function route(req, res) {
       // PHASE 2 — priority highways
       // ══════════════════════════════════════════════════════════════════════
       phaseBanner('P2: priority highways', `configured=${priorityHighways.length}`);
+      { const doneP2=phaseTime('p2');
       if(execute&&priorityHighways.length){
         for(const{from,to,note}of priorityHighways){
           emit(`  highway: ${from}→${to}${note?' ('+note+')':''}`);
@@ -6518,11 +6579,13 @@ async function route(req, res) {
           else emit(`  FAILED: ${r.error}`);
         }
       }else emit(`[p2] skipped (execute=${execute}, highways=${priorityHighways.length})`);
+      doneP2(); }
 
       // ══════════════════════════════════════════════════════════════════════
       // PHASE 3 — city mesh MST: connect all GEO2 cities greedily
       // ══════════════════════════════════════════════════════════════════════
       phaseBanner('P3: city-mesh MST', `execute=${execute&&cityMesh}`);
+      const doneP3 = phaseTime('p3');
       if(execute&&cityMesh){
         let hub3=getHub(),reach3=bfsReach(hub3);
         const geoCities=Object.keys(GEO2).filter(c=>nm[c]&&WBAPI.nodeCoords[c]);
@@ -6552,6 +6615,7 @@ async function route(req, res) {
         const geoCities=Object.keys(GEO2).filter(c=>nm[c]);
         emit(`[p3] dry-run: ${geoCities.filter(c=>!reach3.has(c)).length} GEO2 cities would be connected`);
       }
+      doneP3();
 
       // ══════════════════════════════════════════════════════════════════════
       // PHASE 6 — derelict cleanup (dead-end no-quest junctions)
@@ -6559,6 +6623,8 @@ async function route(req, res) {
       // PHASE 6 — derelict cleanup (dead-end junctions with no quests/NPCs)
       // ══════════════════════════════════════════════════════════════════════
       phaseBanner('P6: derelict-cleanup', `execute=${execute&&derelictCleanup}`);
+      const doneP6 = phaseTime('p6'); emit(`  [p6 start] ${nodeStats()}`);
+
       if(execute&&derelictCleanup){
         const qRefs=new Set();
         for(const q of Object.values(WBAPI.questDb||{})){for(const f of['activateNode','waypointNode'])if(q[f])qRefs.add(q[f]);}
@@ -6595,6 +6661,7 @@ async function route(req, res) {
         const cnt=Object.keys(nm).filter(c=>nm[c]?.junction&&!qRefs.has(c)&&!npcN.has(c)&&degF(c)<=1).length;
         emit(`[p6] dry-run: ${cnt} derelict degree≤1 junctions found`);
       }
+      doneP6();
 
       // ══════════════════════════════════════════════════════════════════════
       // PHASE 6.5 — junction grid-connect
@@ -6604,6 +6671,7 @@ async function route(req, res) {
       // T-intersections or full crossings. Runs up to 5 passes until stable.
       // ══════════════════════════════════════════════════════════════════════
       phaseBanner('P6.5: junction grid-connect', `execute=${execute}`);
+      const doneP65 = phaseTime('p6.5');
       {
         const g65QRefs = new Set();
         for (const q of Object.values(WBAPI.questDb||{}))
@@ -6660,6 +6728,7 @@ async function route(req, res) {
           nm = WBAPI.nodeMap;
         }
         emit(`[p6.5] done: ${totalGridWired} grid connections added`);
+        doneP65();
       }
 
       let lastSnailUsage = null; // captured from runSnail(), used for post-reweave heat overlay
@@ -6708,7 +6777,8 @@ async function route(req, res) {
           const questList=Object.values(WBAPI.questDb||{});
           const w1Tick=1;
           let questPaths=0,questMisses=0,w1i=0;
-          emit(`  [snail] walk1: ${questList.length} quests → hub=${hub}  junctions=${usage.size}`);
+          const snailMissedNodes = new Set();
+          emit(`  [snail] walk1: ${questList.length} quests → hub=${hub}  junctions=${usage.size}  ${heapMB()}`);
           for(const q of questList){
             w1i++;
             if(w1i===1||w1i===questList.length||w1i%w1Tick===0){
@@ -6718,12 +6788,13 @@ async function route(req, res) {
             for(const f of['activateNode','waypointNode']){
               const dest=q[f];if(!dest||!nm[dest])continue;
               const path=bfsPath(hub,dest);
-              if(!path.length){questMisses++;logTrace('wither-snail-miss',`quest ${q.id||'?'} ${f}=${dest} unreachable`);continue;}
+              if(!path.length){questMisses++;snailMissedNodes.add(dest);logTrace('wither-snail-miss',`quest ${q.id||'?'} ${f}=${dest} unreachable`);continue;}
               questPaths++;
               for(const node of path){if(usage.has(node))usage.set(node,usage.get(node)+1);}
             }
           }
           emit(`  [snail] walk1 done: paths=${questPaths}  misses=${questMisses}`);
+          if(snailMissedNodes.size) emit(`  [snail] walk1 missed nodes (${snailMissedNodes.size}): ${[...snailMissedNodes].map(c=>`${c}(${nm[c]?.label||nm[c]?.name||'?'})`).join('  ')}`);
           logTrace('wither-snail','walk1 quest paths='+questPaths+' misses='+questMisses);
 
           // Walk 2: all-pairs between GEO2 cities — marks inter-city corridor junctions
@@ -6908,6 +6979,8 @@ async function route(req, res) {
         const usage0=await runSnail(); lastSnailUsage=usage0;
         const unusedCount0=[...usage0.values()].filter(cnt=>cnt===0).length;
         phaseBanner('P7: wither', `junctions tracked=${usage0.size}  unused=${unusedCount0}  execute=${execute&&witherPhase}`);
+        const doneP7 = phaseTime('p7');
+        emit(`  [p7 start] ${nodeStats()}  ${heapMB()}`);
 
         if(execute&&witherPhase){
           let totalWithered=0;const witherLog=[];
@@ -6958,10 +7031,11 @@ async function route(req, res) {
           }
           emit(`[p7] done: ${totalWithered} junctions withered`);
           if(witherLog.length)emit(`  removed: ${witherLog.slice(0,60).join(', ')}${witherLog.length>60?` ...+${witherLog.length-60} more`:''}`);
+          emit(`  [p7 end] ${nodeStats()}  ${heapMB()}`); doneP7();
         }else if(!witherPhase){
-          emit(`[p7] skipped (--no-wither)`);
+          emit(`[p7] skipped (--no-wither)`); doneP7();
         }else{
-          emit(`[p7] dry-run: ${unusedCount0} unused junctions (run --execute to wither)`);
+          emit(`[p7] dry-run: ${unusedCount0} unused junctions (run --execute to wither)`); doneP7();
         }
       }
 
@@ -7073,14 +7147,38 @@ async function route(req, res) {
       };
 
       emit('[p8] final check');
+      emit(`  [p8] ${nodeStats()}  ${heapMB()}`);
       const finalReach=bfsReach(getHub());
       const finalTotal=Object.keys(nm).length;
       const finalPct=Math.round(finalReach.size/finalTotal*1000)/10;
+      // Broken edge scan with category breakdown
       let finalBroken=0;
+      const fBreakCats={missing_coords:0,diagonal:0,gap_too_large:0,diagonal_and_gap:0};
       const fSeen=new Set(),fCoords=WBAPI.nodeCoords;
-      for(const[code,dirs]of Object.entries(nm)){const cc=fCoords[code];for(const d of DIRS4){const tgt=dirs[d];if(!tgt)continue;const key=[code,tgt].sort().join(':');if(fSeen.has(key))continue;fSeen.add(key);const tc=fCoords[tgt];if(!cc||!tc)continue;const dr=tc.r-cc.r,dc=tc.c-cc.c;const gap=d in{N:1,S:1}?Math.abs(dr):Math.abs(dc);const off=d in{N:1,S:1}?Math.abs(dc):Math.abs(dr);if(off>0||gap>4)finalBroken++;}}
-      emit(`[p8] reachable=${finalReach.size}/${finalTotal}(${finalPct}%)  broken=${finalBroken}  unreachable=${finalTotal-finalReach.size}`);
-      emit(finalPct>=100&&finalBroken===0?'[p8] MAP IS STABLE ✓':finalPct>=100?`[p8] reachability 100% ✓ — ${finalBroken} cosmetic broken edges remain`:`[p8] WARNING: ${finalTotal-finalReach.size} nodes unreachable — run reweave again`);
+      for(const[code,dirs]of Object.entries(nm)){
+        const cc=fCoords[code];
+        for(const d of DIRS4){
+          const tgt=dirs[d];if(!tgt)continue;
+          const key=[code,tgt].sort().join(':');if(fSeen.has(key))continue;fSeen.add(key);
+          const tc=fCoords[tgt];
+          if(!cc||!tc){fBreakCats.missing_coords++;finalBroken++;continue;}
+          const dr=tc.r-cc.r,dc=tc.c-cc.c;
+          const gap=d in{N:1,S:1}?Math.abs(dr):Math.abs(dc);
+          const off=d in{N:1,S:1}?Math.abs(dc):Math.abs(dr);
+          if(off>0&&gap>4){fBreakCats.diagonal_and_gap++;finalBroken++;}
+          else if(off>0){fBreakCats.diagonal++;finalBroken++;}
+          else if(gap>4){fBreakCats.gap_too_large++;finalBroken++;}
+        }
+      }
+      // Unreachable node detail
+      const p8Unreachable=Object.keys(nm).filter(c=>!finalReach.has(c));
+      const p8UnreachNamed=p8Unreachable.filter(c=>!nm[c]?.junction);
+      const p8UnreachJct=p8Unreachable.filter(c=>!!nm[c]?.junction);
+      emit(`[p8] reachable=${finalReach.size}/${finalTotal}(${finalPct}%)  broken=${finalBroken}  unreachable=${p8Unreachable.length}`);
+      emit(`[p8] broken by type: missing_coords=${fBreakCats.missing_coords}  diagonal=${fBreakCats.diagonal}  gap_too_large=${fBreakCats.gap_too_large}  diag_and_gap=${fBreakCats.diagonal_and_gap}`);
+      if(p8UnreachNamed.length) emit(`[p8] unreachable named (${p8UnreachNamed.length}): ${p8UnreachNamed.map(c=>`${c}(${nm[c]?.label||nm[c]?.name||'?'})`).join('  ')}`);
+      if(p8UnreachJct.length)   emit(`[p8] unreachable junctions: ${p8UnreachJct.length}`);
+      emit(finalPct>=100&&finalBroken===0?'[p8] MAP IS STABLE ✓':finalPct>=100?`[p8] reachability 100% ✓ — ${finalBroken} cosmetic broken edges remain`:`[p8] WARNING: ${p8Unreachable.length} nodes unreachable — run reweave again`);
 
       // ══════════════════════════════════════════════════════════════════════
       // POST-REWEAVE MAPS  (wide terminal assumed — 220+ cols)
@@ -7166,7 +7264,8 @@ async function route(req, res) {
         const unreachF = Object.keys(nm).filter(c => !reachF.has(c));
 
         if (!unreachF.length) {
-          emit('\n[final-bridge] all nodes reachable ✓');
+          const doneFB = phaseTime('final-bridge');
+          emit('\n[final-bridge] all nodes reachable ✓'); doneFB();
         } else {
           // ── connected components of unreachable nodes ──────────────────────
           const unvisF = new Set(unreachF);
@@ -7223,6 +7322,7 @@ async function route(req, res) {
                 fbFailed++;
               }
             }
+            const doneFB = phaseTime('final-bridge');
             if (fbBridged) {
               rewriteCoords(); WBAPI._buildIndexes();
               batchSave('final-bridge'); nm = WBAPI.nodeMap;
@@ -7231,10 +7331,24 @@ async function route(req, res) {
             } else {
               emit(`[final-bridge] done: 0 connected  ${fbFailed} failed`);
             }
+            doneFB();
           } else {
+          const doneFB = phaseTime('final-bridge');
             emit(`[final-bridge] dry-run: ${clustersF.length} clusters identified — re-run with --execute to bridge`);
+            doneFB();
           }
         }
+      }
+
+      // ── FINAL summary ──────────────────────────────────────────────────────
+      {
+        const elapsedS = ((Date.now()-rwT0)/1000).toFixed(1);
+        const finalAll = Object.keys(nm);
+        const finalJct = finalAll.filter(c=>!!nm[c]?.junction);
+        emit(`\n[reweave-summary] elapsed=${elapsedS}s`);
+        emit(`[reweave-summary] ${nodeStats()}`);
+        emit(`[reweave-summary] reachable=${finalReach.size}/${finalAll.length}(${finalPct}%)  broken=${finalBroken}`);
+        emit(`[reweave-summary] ${heapMB()}`);
       }
 
       WBAPI.stopPatchQueue();
