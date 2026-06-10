@@ -5459,9 +5459,10 @@ async function route(req, res) {
         const stamp = WBAPI.getStampedName();
         const sv = WBAPI.save(stamp);
         if (!sv.ok) { emit(`[ERROR] save failed (${label}): ${sv.error}`); return false; }
+        const fileSizeKB = Math.round((WBAPI._rawSrc?.length||0)/1024);
         try { fs.copyFileSync(sv.path, GAME_FILE); } catch(e) { emit(`[ERROR] copy: ${e.message}`); return false; }
         try { WBAPI.load(GAME_FILE); } catch(e) { emit(`[ERROR] reload: ${e.message}`); return false; }
-        emit(`[save] ${label}  ${heapMB()}`);
+        emit(`[save] ${label}  ${heapMB()}  file=${fileSizeKB}KB  nodes=${Object.keys(nm).length}`);
         return true;
       };
 
@@ -5851,6 +5852,7 @@ async function route(req, res) {
         const hub1=getHub();const reachable=bfsReach(hub1);
         const allStrays = Object.keys(nm).filter(c => !reachable.has(c));
         const strays = allStrays.filter(c => !p1Skipped.has(c));
+        const doneP1pass = phaseTime(`p1-pass-${pass}`);
         emit(`[p1 pass ${pass}] totalStrays=${allStrays.length}  active=${strays.length}  skipped=${p1Skipped.size}`);
         if (!strays.length) { emit(`[p1 pass ${pass}] no active strays — stopping`); break; }
 
@@ -5936,6 +5938,7 @@ async function route(req, res) {
         if(execute&&p1Edits.length){const br=WBAPI.batchEditNode(p1Edits);emit(`  [p1] batch flushed: applied=${br.applied} failed=${br.failed}`);}
         p1TotalPlaced+=placed; p1TotalNoSlot+=failed; p1TotalWireFail+=wireFailed; p1TotalPasses++; p1TotalStrays+=p1i;
         emit(`  └── [p1 pass ${pass} summary] placed=${placed} no_slot=${failed} wf=${wireFailed}  │  ∑placed=${p1TotalPlaced} ∑no_slot=${p1TotalNoSlot} ∑wf=${p1TotalWireFail} ∑passes=${p1TotalPasses} ∑strays=${p1TotalStrays}`);
+        doneP1pass();
         ripPhase.push({pass,totalStrays:allStrays.length,placed,failed,wireFailed,details:passLog});
         if(execute&&placed>0){
           const CS='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆',CE='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
@@ -5965,6 +5968,11 @@ async function route(req, res) {
           if (p1UnreachNamed.length) emit(`  unreachable named: ${p1UnreachNamed.map(c=>`${c}(${nm[c]?.label||nm[c]?.name||'?'})`).join('  ')}`);
         } else {
           emit(`[p1 final] all nodes reachable ✓`);
+        }
+        if (p1Skipped.size) {
+          const skippedNamed = [...p1Skipped].filter(c=>!nm[c]?.junction);
+          if (skippedNamed.length) emit(`[p1 final] permanently skipped named: ${skippedNamed.map(c=>`${c}(${nm[c]?.label||nm[c]?.name||'?'})`).join('  ')}`);
+          emit(`[p1 final] skipped set: ${p1Skipped.size} total  named=${skippedNamed.length}`);
         }
         emit(`  [p1 end] ${nodeStats()}  ${heapMB()}`); doneP1();
       }
@@ -6361,7 +6369,15 @@ async function route(req, res) {
           p4Deferred=p4Deferred.filter(d=>edgeKeySet.has(`${d.from}:${d.dir}:${d.to}`));
           emit(`  [p4] deferred queue: ${p4Deferred.length} pending${before>p4Deferred.length?'  ('+( before-p4Deferred.length)+' resolved last pass)':''}`);
         }
-        emit(`[p4 pass ${pass}] broken=${brokenCount}  prevBroken=${prevBrokenCount===Infinity?'—':prevBrokenCount}`);
+        // Type breakdown + sample of worst edges
+        { const byType={}; for(const e of edges) byType[e.type]=(byType[e.type]||0)+1;
+          const btStr=Object.entries(byType).map(([t,n])=>`${t}=${n}`).join('  ');
+          emit(`[p4 pass ${pass}] broken=${brokenCount}  prevBroken=${prevBrokenCount===Infinity?'—':prevBrokenCount}  [${btStr}]`);
+          if(pass===1){
+            const samples=edges.filter(e=>e.type!=='missing_coords').slice(0,5);
+            for(const s of samples) emit(`  sample: ${s.from}.${s.dir}→${s.to} [${s.type}]`);
+          }
+        }
 
         if(brokenCount===0){emit(`[p4 pass ${pass}] 0 broken — stopping`);fixPhase.push({pass,broken:0,fixed:0,failed:0,status:'clean'});break;}
 
@@ -6606,7 +6622,7 @@ async function route(req, res) {
           if(r3.ok){
             rewriteCoords();WBAPI._buildIndexes();batchSave(`p3-mesh-${pass3}`);nm=WBAPI.nodeMap;
             reach3=bfsReach(getHub());unreach=geoCities.filter(c=>!reach3.has(c));
-            emit(`  done: ${r3.created.length} junctions. unreachable=${unreach.length}`);
+            emit(`  done: ${r3.created.length} junctions  shape=${r3.shape}  unreachable=${unreach.length}`);
           }else{emit(`  FAILED: ${r3.error} — skipping ${bU}`);unreach=unreach.filter(c=>c!==bU);}
         }
         emit(`[p3] done: ${geoCities.length-unreach.length}/${geoCities.length} GEO2 cities reachable`);
@@ -6855,6 +6871,16 @@ async function route(req, res) {
           const used=[...usage.values()].filter(v=>v>0).length;
           const unused=usage.size-used;
           logTrace('wither-snail','done used='+used+' unused='+unused+' total_junctions='+usage.size);
+          // Heat distribution summary
+          { const vals=[...usage.values()];
+            const cold=vals.filter(v=>v===0).length;
+            const warm=vals.filter(v=>v>0&&v<=5).length;
+            const hot=vals.filter(v=>v>5&&v<=20).length;
+            const blazing=vals.filter(v=>v>20).length;
+            const top5=[...usage.entries()].sort((a,b)=>b[1]-a[1]).slice(0,5);
+            emit(`  [snail heat] cold=${cold}  warm(1-5)=${warm}  hot(6-20)=${hot}  blazing(21+)=${blazing}  total=${usage.size}`);
+            emit(`  [snail heat] top: ${top5.map(([c,v])=>`${c}×${v}`).join('  ')}`);
+          }
           emitHeatReport(usage);
           return usage;
         };
@@ -7179,6 +7205,167 @@ async function route(req, res) {
       if(p8UnreachNamed.length) emit(`[p8] unreachable named (${p8UnreachNamed.length}): ${p8UnreachNamed.map(c=>`${c}(${nm[c]?.label||nm[c]?.name||'?'})`).join('  ')}`);
       if(p8UnreachJct.length)   emit(`[p8] unreachable junctions: ${p8UnreachJct.length}`);
       emit(finalPct>=100&&finalBroken===0?'[p8] MAP IS STABLE ✓':finalPct>=100?`[p8] reachability 100% ✓ — ${finalBroken} cosmetic broken edges remain`:`[p8] WARNING: ${p8Unreachable.length} nodes unreachable — run reweave again`);
+
+      // ══════════════════════════════════════════════════════════════════════
+      // PF — broken-edge auto-repair (post-wither, post-P8 report)
+      // A: infer coords for coordless junctions (multi-pass until stable)
+      // B: fix gap_too_large by inserting corridor junctions
+      // C: fix diagonal / diagonal_and_gap by inserting elbow junctions
+      // ══════════════════════════════════════════════════════════════════════
+      if (execute && finalBroken > 0) {
+        const donePF = phaseTime('pf');
+        emit('\n[pf] broken-edge auto-repair');
+        nm = WBAPI.nodeMap;
+        let pfCoordAssigned = 0, pfGapFixed = 0, pfDiagFixed = 0, pfAnySaved = false;
+
+        // ── PF-A: coord inference ──────────────────────────────────────────
+        // Multi-pass: each pass may reveal new coordless nodes whose neighbors
+        // just got coords in a previous pass (cascade along junction chains).
+        emit('[pf-a] coord inference — assigning coords to coordless junctions');
+        for (let pfPass = 1; pfPass <= 20; pfPass++) {
+          await yieldOnce();
+          const coords = WBAPI.nodeCoords;
+          const occ = new Map(Object.entries(coords).map(([c,p])=>[`${p.r},${p.c}`,c]));
+          // Collect implied positions: for each node X with coords that points to J without coords
+          const implied = new Map(); // code → [{r,c,from,dir}]
+          for (const [code, dirs] of Object.entries(nm)) {
+            const cc = coords[code]; if (!cc) continue;
+            for (const d of DIRS4) {
+              const tgt = dirs[d]; if (!tgt || coords[tgt]) continue;
+              const nr = cc.r + DR4[d] * step, nc = cc.c + DC4[d] * step;
+              if (!implied.has(tgt)) implied.set(tgt, []);
+              implied.get(tgt).push({r:nr, c:nc, from:code, dir:d});
+            }
+          }
+          if (!implied.size) { emit(`[pf-a] pass ${pfPass}: no more coordless junctions — stable`); break; }
+          let passAssigned = 0;
+          for (const [code, cands] of implied) {
+            if (coords[code]) continue;
+            // Average all implied positions and find nearest free cell
+            const avgR = Math.round(cands.reduce((s,p)=>s+p.r,0)/cands.length);
+            const avgC = Math.round(cands.reduce((s,p)=>s+p.c,0)/cands.length);
+            let placed = false;
+            outer: for (let d = 0; d <= 12 && !placed; d++) {
+              for (const [dr,dc] of [[0,0],[0,d],[0,-d],[d,0],[-d,0],[d,d],[-d,-d],[d,-d],[-d,d]]) {
+                const r=avgR+dr, c=avgC+dc;
+                if (r<1||c<1) continue;
+                const key=`${r},${c}`;
+                if (!occ.has(key)) {
+                  coords[code]={r,c}; occ.set(key,code);
+                  passAssigned++; pfCoordAssigned++;
+                  emit(`  [pf-a] ${code}@(${r},${c}) from ${cands.map(x=>`${x.from}.${x.dir}`).join('+')}`);
+                  placed = true; break outer;
+                }
+              }
+            }
+            if (!placed) emit(`  [pf-a] SKIP ${code} — no free cell near (${avgR},${avgC})`);
+          }
+          emit(`[pf-a] pass ${pfPass}: assigned=${passAssigned}  total=${pfCoordAssigned}`);
+          if (passAssigned === 0) break;
+        }
+        if (pfCoordAssigned > 0) { rewriteCoords(); WBAPI._buildIndexes(); pfAnySaved = true; }
+
+        // ── PF-B + PF-C: fix gap_too_large and diagonal ─────────────────────
+        // Re-scan now that missing_coords are repaired; address remaining edge types.
+        if (execute) {
+          nm = WBAPI.nodeMap;
+          const pfEdges = scanBrokenEdges().filter(e => e.type !== 'missing_coords');
+          const pfByType = {}; for(const e of pfEdges) pfByType[e.type]=(pfByType[e.type]||0)+1;
+          emit(`[pf-bc] post-coord-inference scan: ${pfEdges.length} fixable edges  ${Object.entries(pfByType).map(([t,n])=>`${t}=${n}`).join('  ')}`);
+          const pfOcc = new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
+
+          for (const edge of pfEdges) {
+            await yieldOnce();
+            const {from, dir, to, type} = edge;
+            const fc = WBAPI.nodeCoords[from], tc = WBAPI.nodeCoords[to];
+            if (!fc || !tc) continue;
+
+            if (type === 'gap_too_large') {
+              // Insert one junction midway, then wire chain
+              const midR = Math.round((fc.r + tc.r) / 2);
+              const midC = Math.round((fc.c + tc.c) / 2);
+              let placed = false;
+              for (let d = 0; d <= 8 && !placed; d++) {
+                for (const [dr,dc] of [[0,0],[0,d],[0,-d],[d,0],[-d,0]]) {
+                  const r=midR+dr, c=midC+dc;
+                  const key=`${r},${c}`;
+                  if (!pfOcc.has(key)) {
+                    const jc = nextJCode();
+                    const jBody = {name:'junction',label:`Gap fill ${from}↔${to}`,text:'Gap-repair junction.',
+                      act:nm[from]?.act||1,junction:true,npc:null,battle:null,loot:null,sleep:false};
+                    const entry = serializeNodeLiteral(jc, jBody);
+                    if (!insertBeforeSectionClose('NODE_MAP', entry).ok) break;
+                    nm[jc] = {...jBody, num: nextNodeNum()};
+                    WBAPI.nodeCoords[jc] = {r, c};
+                    pfOcc.set(key, jc);
+                    // Wire: from → J → to; clear old direct back-edge on 'to'
+                    WBAPI.editField('node', from, dir, jc);
+                    WBAPI.editField('node', jc, OPP4[dir], from);
+                    WBAPI.editField('node', jc, dir, to);
+                    WBAPI.editField('node', to, OPP4[dir], jc);
+                    // If 'to' still had a stale back-reference to 'from', it's now overwritten above.
+                    emit(`  [pf-b] gap ${from}.${dir}→${to} (gap=${dir in{N:1,S:1}?Math.abs(tc.r-fc.r):Math.abs(tc.c-fc.c)}) → mid junction ${jc}@(${r},${c})`);
+                    pfGapFixed++; pfAnySaved = true; placed = true; break;
+                  }
+                }
+              }
+              if (!placed) emit(`  [pf-b] SKIP gap ${from}.${dir}→${to} — no free midpoint cell near (${midR},${midC})`);
+
+            } else if (type === 'diagonal' || type === 'diagonal_and_gap') {
+              // Insert elbow junction at the corner (same row as from, same col as to OR vice versa)
+              const elbowR = fc.r, elbowC = tc.c; // prefer: row of 'from', col of 'to'
+              const alt = {r: tc.r, c: fc.c};      // alt: row of 'to', col of 'from'
+              let elbCoord = null;
+              for (const cand of [{r:elbowR,c:elbowC}, alt]) {
+                if (!pfOcc.has(`${cand.r},${cand.c}`)) { elbCoord = cand; break; }
+              }
+              // Search nearby if both corners occupied
+              if (!elbCoord) {
+                outer2: for (let d = 1; d <= 8; d++) {
+                  for (const cand of [{r:elbowR,c:elbowC}, alt]) {
+                    for (const [dr,dc] of [[0,d],[0,-d],[d,0],[-d,0]]) {
+                      const r=cand.r+dr, c=cand.c+dc;
+                      if (!pfOcc.has(`${r},${c}`)) { elbCoord={r,c}; break outer2; }
+                    }
+                  }
+                }
+              }
+              if (!elbCoord) { emit(`  [pf-c] SKIP diag ${from}.${dir}→${to} — no elbow cell found`); continue; }
+              const jc = nextJCode();
+              const jBody = {name:'junction',label:`Elbow ${from}→${to}`,text:'Diagonal-repair elbow.',
+                act:nm[from]?.act||1,junction:true,npc:null,battle:null,loot:null,sleep:false};
+              const entry = serializeNodeLiteral(jc, jBody);
+              if (!insertBeforeSectionClose('NODE_MAP', entry).ok) continue;
+              nm[jc] = {...jBody, num: nextNodeNum()};
+              WBAPI.nodeCoords[jc] = elbCoord;
+              pfOcc.set(`${elbCoord.r},${elbCoord.c}`, jc);
+              // Leg 1: from → elbow (cardinal in dir)
+              const leg1dir = dir; // N/S/E/W from→elbow
+              // Leg 2: elbow → to (perpendicular)
+              const leg2dir = (dir==='N'||dir==='S') ? (tc.c>elbCoord.c?'E':'W') : (tc.r>elbCoord.r?'S':'N');
+              WBAPI.editField('node', from, leg1dir, jc);         // from → elbow
+              WBAPI.editField('node', jc, OPP4[leg1dir], from);  // elbow ← from
+              WBAPI.editField('node', jc, leg2dir, to);            // elbow → to
+              WBAPI.editField('node', to, OPP4[leg2dir], jc);     // to ← elbow
+              // Clear stale back-reference on 'to' if it still pointed directly at 'from'
+              if (nm[to]?.[OPP4[dir]] === from) WBAPI.editField('node', to, OPP4[dir], null);
+              emit(`  [pf-c] diag ${from}.${dir}→${to} → elbow ${jc}@(${elbCoord.r},${elbCoord.c}) legs=${leg1dir}+${leg2dir}`);
+              pfDiagFixed++; pfAnySaved = true;
+            }
+          }
+        }
+
+        if (pfAnySaved) {
+          rewriteCoords(); WBAPI._buildIndexes();
+          batchSave('pf-edge-repair'); nm = WBAPI.nodeMap;
+          // Re-check after repair
+          const pfScan2 = scanBrokenEdges();
+          const pfCats2 = {}; for(const e of pfScan2) pfCats2[e.type]=(pfCats2[e.type]||0)+1;
+          emit(`[pf] after repair: ${pfScan2.length} broken  ${Object.entries(pfCats2).map(([t,n])=>`${t}=${n}`).join('  ')}`);
+        }
+        emit(`[pf] done: coords-assigned=${pfCoordAssigned}  gap-fixed=${pfGapFixed}  diag-fixed=${pfDiagFixed}`);
+        donePF();
+      }
 
       // ══════════════════════════════════════════════════════════════════════
       // POST-REWEAVE MAPS  (wide terminal assumed — 220+ cols)
