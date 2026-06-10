@@ -190,11 +190,36 @@ def _spawn_server_window():
     subprocess.Popen(["osascript", "-e", script])
 
 
+_MANUAL_CMD = f"cd {ROOT}  &&  ./wbapi-toggle.sh fg"
+
 def _ensure_server():
-    """If server not running, spawn it in a new Terminal window and wait."""
-    if not _server_pid():
-        _spawn_server_window()
-        time.sleep(4)
+    """If server not running, spawn it in a new Terminal window.
+    Polls for up to 8 s; if it never appears, prints instructions and
+    continues (the TUI will show server DOWN — start the server manually
+    and the keepalive will detect it)."""
+    if _server_pid():
+        return
+    _spawn_server_window()
+    deadline = time.time() + 8
+    while time.time() < deadline:
+        time.sleep(0.5)
+        if _server_pid():
+            return
+    # Server didn't appear — osascript probably needs Automation permission
+    print()
+    print("  ⚠  Server did not start automatically.")
+    print()
+    print("  macOS Automation permission may not be granted yet.")
+    print("  The permission dialog appears the first time osascript runs.")
+    print("  If nothing appeared, go to:")
+    print("    System Settings → Privacy & Security → Automation")
+    print("    Enable Terminal (or Python) to control Terminal.")
+    print()
+    print("  Or start the server manually in a new Terminal tab/window:")
+    print(f"    {_MANUAL_CMD}")
+    print()
+    print("  Then re-run this script.  (Starting TUI now — server shows as DOWN)")
+    print()
 
 
 # ── monitor ──────────────────────────────────────────────────────────────────
@@ -248,17 +273,27 @@ class Monitor:
     # ── server keep-alive ────────────────────────────────────────────────────
 
     def _keepalive(self):
-        """Poll port 1367 every 3 s; respawn server Terminal if it goes dark."""
+        """Poll port 1367 every 3 s; respawn server Terminal if it goes dark.
+        After 2 failed spawns, stops trying and shows manual start hint."""
+        spawns = 0
         while self.alive:
             pid = _server_pid()
             with self.lk:
                 self.srv_pid = pid
-                if not pid and self.srv_msg == "":
-                    self.srv_msg = "respawning…"
+                if not pid:
+                    if spawns < 2:
+                        self.srv_msg = "respawning…"
+                    else:
+                        self.srv_msg = f"DOWN — run: ./wbapi-toggle.sh fg"
             if not pid:
-                _spawn_server_window()
-                time.sleep(6)   # allow startup before next check
+                if spawns < 2:
+                    _spawn_server_window()
+                    spawns += 1
+                    time.sleep(6)
+                else:
+                    time.sleep(5)
             else:
+                spawns = 0   # reset counter on successful connection
                 with self.lk:
                     if self.srv_msg in ("respawning…", ""):
                         self.srv_msg = ""
