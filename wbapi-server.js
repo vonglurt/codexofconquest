@@ -5442,6 +5442,7 @@ async function route(req, res) {
       WBAPI.beginPatchQueue();
 
       // helper: batch-save + reload without ending the HTTP response
+      const heapMB = () => { const u = process.memoryUsage(); return `heap=${Math.round(u.heapUsed/1e6)}MB rss=${Math.round(u.rss/1e6)}MB`; };
       const batchSave = (label) => {
         const fp = WBAPI.flushPatches();
         if (fp.applied || fp.failed)
@@ -5451,7 +5452,7 @@ async function route(req, res) {
         if (!sv.ok) { emit(`[ERROR] save failed (${label}): ${sv.error}`); return false; }
         try { fs.copyFileSync(sv.path, GAME_FILE); } catch(e) { emit(`[ERROR] copy: ${e.message}`); return false; }
         try { WBAPI.load(GAME_FILE); } catch(e) { emit(`[ERROR] reload: ${e.message}`); return false; }
-        emit(`[save] ${label}`);
+        emit(`[save] ${label}  ${heapMB()}`);
         return true;
       };
 
@@ -6608,20 +6609,25 @@ async function route(req, res) {
         for (const q of Object.values(WBAPI.questDb||{}))
           for (const f of ['activateNode','waypointNode']) if (q[f]) g65QRefs.add(q[f]);
         const g65NpcNodes = new Set(Object.values(WBAPI.npcDb||{}).map(n=>n.node).filter(Boolean));
-        const DELTA = {n:[-1,0], s:[1,0], e:[0,1], w:[0,-1]};
+        const DELTA = {N:[-1,0], S:[1,0], E:[0,1], W:[0,-1]};
         let totalGridWired = 0;
 
+        emit(`[p6.5 start] ${heapMB()}`);
         for (let gp = 1; gp <= 5; gp++) {
           nm = WBAPI.nodeMap;
           const coords = WBAPI.nodeCoords;
+          emit(`[p6.5 gp=${gp} pre-filter] ${heapMB()}`);
           const occ = new Map(Object.entries(coords).map(([c,p]) => [`${p.r},${p.c}`, c]));
           const junctions2 = Object.keys(nm).filter(c => {
             if (!nm[c]?.junction || g65QRefs.has(c) || g65NpcNodes.has(c)) return false;
             return DIRS4.filter(d => nm[c]?.[d] && nm[nm[c][d]]).length === 2;
           });
+          emit(`[p6.5 gp=${gp} post-filter] ${heapMB()}  junctions2=${junctions2.length}`);
           if (!junctions2.length) { emit(`[p6.5] converged after ${gp-1} pass${gp>2?'es':''}`); break; }
           sectionBanner(`P6.5 PASS ${gp}/5: grid-connect — ${junctions2.length} 2-conn junctions`);
+          await yieldOnce(); emit(`[p6.5 gp=${gp} pre-loop] ${heapMB()}`);
           let passWired = 0, gci = 0;
+          try {
           for (const code of junctions2) {
             gci++;
             if (gci%500===0) {
@@ -6640,10 +6646,18 @@ async function route(req, res) {
               } else passWired++;
             }
           }
+          } catch(e65) { emit(`[p6.5 EXCEPTION gci=${gci}] ${e65?.message||e65} ${heapMB()}`); }
           if (!execute) { emit(`  [p6.5 pass ${gp}] would wire=${passWired}`); break; }
           {const h=process.memoryUsage();emit(`  [p6.5 pass ${gp}] wired=${passWired}  total=${totalGridWired+=passWired}  queued=${WBAPI._pendingPatches?.size||0}  heapUsed=${Math.round(h.heapUsed/1e6)}MB`);}
           if (passWired === 0) break;
-          rewriteCoords(); WBAPI._buildIndexes(); batchSave(`p6.5-grid-${gp}`); nm = WBAPI.nodeMap;
+          emit(`[p6.5 gp=${gp} pre-rewriteCoords] ${heapMB()}`);
+          rewriteCoords();
+          emit(`[p6.5 gp=${gp} post-rewriteCoords] ${heapMB()}`);
+          WBAPI._buildIndexes();
+          emit(`[p6.5 gp=${gp} pre-batchSave] ${heapMB()}`);
+          batchSave(`p6.5-grid-${gp}`);
+          emit(`[p6.5 gp=${gp} post-batchSave] ${heapMB()}`);
+          nm = WBAPI.nodeMap;
         }
         emit(`[p6.5] done: ${totalGridWired} grid connections added`);
       }

@@ -587,27 +587,73 @@ const WBAPI = {
   },
 
   // batchEditNode: apply many {code, field, value} node edits in ONE respliceSection call.
-  // Up to 1000× faster than calling editField() per edit on a large source file.
+  // O(M) memory: groups edits by node, applies all fields to each node's small body string,
+  // then rebuilds sectionSrc with one array-join (no intermediate full-section string copies).
   // edits: [{code, field, value}, ...] — value=null removes the field.
   batchEditNode(edits) {
     if (!this._rawSrc || !edits.length) return { ok:true, applied:0, failed:0 };
-    let sectionSrc = extrSection(this._rawSrc, 'NODE_MAP');
+    const sectionSrc = extrSection(this._rawSrc, 'NODE_MAP');
+    if (!sectionSrc) return { ok:true, applied:0, failed:0 };
     let applied = 0, failed = 0;
+
+    // Group edits by code so each node entry is found and modified exactly once.
+    const byCode = new Map();
     for (const {code, field, value} of edits) {
-      const key = this._findKey(this.nodeMap, code);
-      if (!key) { failed++; continue; }
-      if (value === null || value === undefined) {
-        const p = removeStringField(sectionSrc, key, field);
-        if (p) { sectionSrc = p; delete this.nodeMap[key][field]; applied++; }
-        else failed++;
-      } else {
-        const p = patchStringField(sectionSrc, key, field, String(value))
-               || insertStringField(sectionSrc, key, field, String(value));
-        if (p) { sectionSrc = p; if (this.nodeMap[key]) this.nodeMap[key][field] = value; applied++; }
-        else failed++;
-      }
+      if (!byCode.has(code)) byCode.set(code, []);
+      byCode.get(code).push({field, value});
     }
-    this._rawSrc = respliceSection(this._rawSrc, 'NODE_MAP', sectionSrc);
+
+    // Collect (start, end, newBody) replacements using original sectionSrc offsets.
+    const replacements = [];
+    for (const [code, fields] of byCode) {
+      const key = this._findKey(this.nodeMap, code);
+      if (!key) { failed += fields.length; continue; }
+      const b = findEntryBounds(sectionSrc, key);
+      if (!b) { failed += fields.length; continue; }
+      const { openEnd, bodyEnd, baseIndent } = b;
+      // body is only this node's content between { and } — typically a few hundred bytes.
+      let body = sectionSrc.slice(openEnd, bodyEnd);
+      for (const {field, value} of fields) {
+        if (value === null || value === undefined) {
+          const prev = body;
+          body = body
+            .replace(new RegExp(`,\\s*${field}\\s*:\\s*(['"\`])[^\\1]*?\\1`), '')
+            .replace(new RegExp(`${field}\\s*:\\s*(['"\`])[^\\1]*?\\1,?\\s*`), '');
+          if (body !== prev) { if (this.nodeMap[key]) delete this.nodeMap[key][field]; applied++; }
+          else { body = prev; failed++; }
+        } else {
+          const escaped = String(value).replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+          const fieldRe = new RegExp(`(\\b${field}\\s*:\\s*)(["\`'])(.*?)\\2`, 'm');
+          if (fieldRe.test(body)) {
+            body = body.replace(fieldRe, (_, pre) => `${pre}"${escaped}"`);
+            applied++;
+          } else {
+            const trimmed = body.trimEnd();
+            const fieldIndent = baseIndent + '  ';
+            body = (trimmed && !trimmed.endsWith(',') ? trimmed + ',' : trimmed) +
+                   `\n${fieldIndent}${field}:"${escaped}",\n${baseIndent}`;
+            applied++;
+          }
+          if (this.nodeMap[key]) this.nodeMap[key][field] = value;
+        }
+      }
+      replacements.push({ start: openEnd, end: bodyEnd, body });
+    }
+
+    if (!replacements.length) return { ok:true, applied, failed };
+
+    // Sort by position and build new sectionSrc in one forward pass — O(M) allocation.
+    replacements.sort((a, b) => a.start - b.start);
+    const parts = [];
+    let pos = 0;
+    for (const {start, end, body} of replacements) {
+      if (start > pos) parts.push(sectionSrc.slice(pos, start));
+      parts.push(body);
+      pos = end;
+    }
+    if (pos < sectionSrc.length) parts.push(sectionSrc.slice(pos));
+
+    this._rawSrc = respliceSection(this._rawSrc, 'NODE_MAP', parts.join(''));
     return { ok:true, applied, failed };
   },
 
