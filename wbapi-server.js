@@ -5425,7 +5425,7 @@ async function route(req, res) {
       };
       const sectionBanner = (title) => emit(`\n  ┌${'─'.repeat(80)}\n  │ ${title}\n  └${'─'.repeat(80)}`);
       // ── MegaReWeave overall phase tracker ────────────────────────────────────
-      const RW_STEPS = 11;
+      const RW_STEPS = 12;
       let rwStep = 0;
       const phaseBanner = (label, detail='') => {
         rwStep++;
@@ -5671,7 +5671,7 @@ async function route(req, res) {
       emit(`  ██  MEGAREWEAVE  execute=${execute}  step=${step}  maxRip=${maxRip}  maxFix=${maxFix}  ██`);
       emit(`  ${'█'.repeat(62)}`);
       emit(`  Road: 0/jct-reduce → 1/geo-seed → 2/rip-connect → 3/coord-scan → 4/fix-broken`);
-      emit(`        5/fix-bidir → 6/highways → 7/city-mesh → 8/derelict → 9/grid-connect → 10/wither`);
+      emit(`        5/fix-bidir → 6/cluster-bridge → 7/highways → 8/city-mesh → 9/derelict → 10/grid-connect → 11/wither`);
 
       // ══════════════════════════════════════════════════════════════════════
       // PHASE PRE — junction straight-chain reduction
@@ -6500,6 +6500,94 @@ async function route(req, res) {
         emit(`[p5] done: ${p5Bidir} bidir-fixed  ${diagFixed} diag-fixed  ${bidirErrors.length} errors  →  next: P2 highways`);
       } else {
         emit(`[p5] dry-run: ${biTargets.length} would fix`);
+      }
+
+      // ══════════════════════════════════════════════════════════════════════
+      // PHASE 5.5 — cluster bridge
+      // After fix-bidir, find all remaining isolated clusters (nodes not
+      // reachable from the hub) and build a junction corridor from the
+      // nearest reachable node to each cluster's closest entry point.
+      // Uses the same buildHighway corridor logic as P2.
+      // ══════════════════════════════════════════════════════════════════════
+      phaseBanner('P5.5: cluster-bridge', `execute=${execute}`);
+      {
+        nm = WBAPI.nodeMap;
+        const hub55 = getHub();
+        const reach55 = bfsReach(hub55);
+        const unr55 = Object.keys(nm).filter(c => !reach55.has(c));
+
+        if (!unr55.length) {
+          emit('[p5.5] all nodes already reachable — skip');
+        } else {
+          // ── find connected components among unreachable nodes ────────────────
+          const unvisited = new Set(unr55);
+          const clusters55 = [];
+          for (const start of unr55) {
+            if (!unvisited.has(start)) continue;
+            const comp = [];
+            const bq = [start];
+            while (bq.length) {
+              const c = bq.shift();
+              if (!unvisited.has(c)) continue;
+              unvisited.delete(c); comp.push(c);
+              for (const d of DIRS4) { const t = nm[c]?.[d]; if (t && nm[t] && unvisited.has(t)) bq.push(t); }
+            }
+            clusters55.push(comp);
+          }
+          emit(`[p5.5] ${clusters55.length} isolated cluster${clusters55.length!==1?'s':''} — ${unr55.length} total unreachable nodes`);
+          for (const [i, cl] of clusters55.entries()) {
+            const named = cl.filter(c => !nm[c]?.junction);
+            emit(`  cluster ${i+1}: ${cl.length} nodes  named=[${named.slice(0,5).join(' ')}${named.length>5?` +${named.length-5}`:''}]`);
+          }
+
+          if (execute) {
+            let bridged = 0, failed55 = 0;
+            // Re-derive reachable list each iteration so newly-connected nodes
+            // can serve as anchors for subsequent clusters.
+            let reachArr = [...reach55];
+
+            for (let ci = 0; ci < clusters55.length; ci++) {
+              await yieldOnce();
+              const cluster = clusters55[ci];
+              // Find (reachable node, cluster node) pair with minimum Manhattan distance.
+              let bestDist = Infinity, bestR = null, bestC = null;
+              for (const clNode of cluster) {
+                const cc = WBAPI.nodeCoords[clNode]; if (!cc) continue;
+                for (const rNode of reachArr) {
+                  const rc = WBAPI.nodeCoords[rNode]; if (!rc) continue;
+                  const d = Math.abs(cc.r-rc.r) + Math.abs(cc.c-rc.c);
+                  if (d < bestDist) { bestDist = d; bestR = rNode; bestC = clNode; }
+                }
+              }
+              if (!bestR || !bestC) {
+                emit(`  [p5.5 cluster ${ci+1}] SKIP — no coords in cluster`);
+                failed55++; continue;
+              }
+              emit(`  [p5.5 cluster ${ci+1}/${clusters55.length}] bridging ${bestR}→${bestC}  dist=${bestDist}  cluster.size=${cluster.length}`);
+              const res = buildHighway(bestR, bestC);
+              if (res.ok && !res.skipped) {
+                emit(`  [p5.5] ✓ connected  junctions=${res.created.length}  shape=${res.shape}`);
+                bridged++;
+                // Expand reachable set with the newly-connected cluster
+                const newReach = bfsReach(hub55);
+                for (const c of newReach) reach55.add(c);
+                reachArr = [...reach55];
+              } else if (res.skipped) {
+                emit(`  [p5.5] already reachable`);
+              } else {
+                emit(`  [p5.5] ✗ FAILED: ${res.error||'unknown'}`);
+                failed55++;
+              }
+            }
+            if (bridged) {
+              rewriteCoords(); WBAPI._buildIndexes();
+              batchSave('p5.5-cluster-bridge'); nm = WBAPI.nodeMap;
+            }
+            emit(`[p5.5] done: ${bridged} bridged  ${failed55} failed/skipped`);
+          } else {
+            emit(`[p5.5] dry-run: would attempt to bridge ${clusters55.length} clusters`);
+          }
+        }
       }
 
       // ══════════════════════════════════════════════════════════════════════
