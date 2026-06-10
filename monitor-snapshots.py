@@ -155,32 +155,46 @@ def _say(line):
 
 # ── server launcher ──────────────────────────────────────────────────────────
 
-def _ensure_server():
-    """
-    If the WBAPI server is not already listening on port 1367, open a new
-    macOS Terminal window that runs wbapi-toggle.sh fg (with VERBOSE + auto-
-    restart loop).  The monitor TUI then starts normally in this terminal.
-    """
-    # Check if something is already on port 1367
-    already = subprocess.run(
-        ["lsof", "-ti", "tcp:1367"], capture_output=True
-    ).stdout.strip()
-    if already:
-        return  # server already running
+_SERVER_PORT = 1367
 
+
+def _server_pid():
+    """Return PID of the process listening on port 1367, or None."""
+    out = subprocess.run(
+        ["lsof", "-ti", f"tcp:{_SERVER_PORT}"], capture_output=True
+    ).stdout.strip()
+    if not out:
+        return None
+    try:
+        return int(out.split()[0])
+    except (ValueError, IndexError):
+        return None
+
+
+def _spawn_server_window():
+    """Open a new macOS Terminal window running the server with VERBOSE+TRACE."""
     root = str(ROOT)
-    # AppleScript: open a new Terminal window, cd to root, start the server loop
+    cmd = (
+        f"cd {root} && "
+        f"while true; do "
+        f"WBAPI_VERBOSE=1 WBAPI_TRACE=1 ./wbapi-toggle.sh fg; "
+        f"echo '[server exited — restarting in 2 s…]'; sleep 2; "
+        f"done"
+    )
     script = (
         f'tell application "Terminal"\n'
-        f'  do script "cd {root} && '
-        f'while true; do WBAPI_VERBOSE=1 ./wbapi-toggle.sh fg; '
-        f'echo \\"[server exited — restarting in 2 s…]\\"; sleep 2; done"\n'
+        f'  do script "{cmd}"\n'
         f'  activate\n'
         f'end tell'
     )
     subprocess.Popen(["osascript", "-e", script])
-    # Give the server a moment to start before the TUI takes over the terminal
-    time.sleep(4)
+
+
+def _ensure_server():
+    """If server not running, spawn it in a new Terminal window and wait."""
+    if not _server_pid():
+        _spawn_server_window()
+        time.sleep(4)
 
 
 # ── monitor ──────────────────────────────────────────────────────────────────
@@ -200,6 +214,8 @@ class Monitor:
         self.scroll        = 0
         self._prev         = ""    # text of last archived file (for diff input)
         self.flash_pending = False
+        self.srv_pid       = _server_pid()
+        self.srv_msg       = ""   # transient server action message
 
         # row → diff-line-index map; built each draw, only used on main thread
         self._row_map = {}
@@ -228,6 +244,54 @@ class Monitor:
                     seen.add(f.name)
                     self._handle(f)
             time.sleep(0.05)
+
+    # ── server keep-alive ────────────────────────────────────────────────────
+
+    def _keepalive(self):
+        """Poll port 1367 every 3 s; respawn server Terminal if it goes dark."""
+        while self.alive:
+            pid = _server_pid()
+            with self.lk:
+                self.srv_pid = pid
+                if not pid and self.srv_msg == "":
+                    self.srv_msg = "respawning…"
+            if not pid:
+                _spawn_server_window()
+                time.sleep(6)   # allow startup before next check
+            else:
+                with self.lk:
+                    if self.srv_msg in ("respawning…", ""):
+                        self.srv_msg = ""
+                time.sleep(3)
+
+    def _do_kill(self):
+        pid = _server_pid()
+        if pid:
+            subprocess.run(["kill", str(pid)], capture_output=True)
+            with self.lk:
+                self.srv_msg = f"killed {pid}"
+        else:
+            with self.lk:
+                self.srv_msg = "not running"
+
+    def _do_restart(self):
+        """Prefer curl /api/restart (exit 67 → wbapi-toggle loop relaunches).
+        Falls back to kill if the server is not responding."""
+        try:
+            r = subprocess.run(
+                ["curl", "-s", "--max-time", "3", "-X", "POST",
+                 f"http://localhost:{_SERVER_PORT}/api/restart"],
+                capture_output=True, text=True, timeout=4,
+            )
+            if r.returncode == 0:
+                with self.lk:
+                    self.srv_msg = "↺ restart via API"
+                return
+        except Exception:
+            pass
+        self._do_kill()
+        with self.lk:
+            self.srv_msg = "↺ killed — keepalive will respawn"
 
     def _handle(self, f):
         if not f.exists():
@@ -318,14 +382,16 @@ class Monitor:
 
     def draw(self, scr):
         with self.lk:
-            h, w   = scr.getmaxyx()
-            hms    = self._hms()
-            count  = self.count
-            status = self.status
-            plbl   = self.plbl
-            clbl   = self.clbl
-            dl     = self.dlines
-            sc     = self.scroll
+            h, w      = scr.getmaxyx()
+            hms       = self._hms()
+            count     = self.count
+            status    = self.status
+            plbl      = self.plbl
+            clbl      = self.clbl
+            dl        = self.dlines
+            sc        = self.scroll
+            srv_pid   = self.srv_pid
+            srv_msg   = self.srv_msg
 
         P = curses.color_pair
         scr.erase()
@@ -378,6 +444,18 @@ class Monitor:
         put(row, 0, hdr.ljust(w), P(1))
         row += 1
 
+        # server status bar
+        if srv_pid:
+            srv_text = f" ● server pid {srv_pid}"
+            if srv_msg:
+                srv_text += f"  {srv_msg}"
+            srv_attr = P(3)   # green
+        else:
+            srv_text = f" ○ server DOWN" + (f"  {srv_msg}" if srv_msg else "")
+            srv_attr = P(4)   # red
+        put(row, 0, srv_text.ljust(w)[:w], srv_attr)
+        row += 1
+
         # file label pair
         if clbl:
             put(row, 0, f" ← {plbl or '(base)'}", P(4))
@@ -417,9 +495,9 @@ class Monitor:
         # footer
         if dl:
             hi   = sc + shown
-            foot = f" ↑↓ · PgUp/Dn · dbl-click read · click stop · q quit    {sc+1}–{hi}/{len(dl)} lines"
+            foot = f" ↑↓ · PgUp/Dn · r restart · k kill · dbl-click read · q quit    {sc+1}–{hi}/{len(dl)} lines"
         else:
-            foot = " ↑↓ · PgUp/Dn · dbl-click read · click stop · q quit"
+            foot = " ↑↓ · PgUp/Dn · r restart · k kill · dbl-click read · q quit"
         put(h - 1, 0, foot[:w], P(2))
 
         scr.refresh()
@@ -446,7 +524,8 @@ class Monitor:
         scr.nodelay(True)
         scr.timeout(100)
 
-        threading.Thread(target=self._work, daemon=True).start()
+        threading.Thread(target=self._work,      daemon=True).start()
+        threading.Thread(target=self._keepalive, daemon=True).start()
 
         while self.alive:
             k = scr.getch()
@@ -460,12 +539,16 @@ class Monitor:
                 fp            = self.flash_pending
                 if fp:
                     self.flash_pending = False
-            page = max(1, h - 7)
+            page = max(1, h - 8)
 
             if   k == curses.KEY_DOWN:   self._scroll(1,    n)
             elif k == curses.KEY_UP:     self._scroll(-1,   n)
             elif k == curses.KEY_NPAGE:  self._scroll(page, n)
             elif k == curses.KEY_PPAGE:  self._scroll(-page, n)
+            elif k in (ord("k"), ord("K")):
+                threading.Thread(target=self._do_kill,    daemon=True).start()
+            elif k in (ord("r"), ord("R")):
+                threading.Thread(target=self._do_restart, daemon=True).start()
             elif k == curses.KEY_MOUSE:
                 try:
                     _, _mx, my, _, bstate = curses.getmouse()
