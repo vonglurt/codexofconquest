@@ -887,3 +887,52 @@ You give the vellum to the sister on your way out.
 }
 ```
 
+---
+
+## Pass 4: Source Summaries (June 2026)
+
+### Part 1 Summary
+Introduction to the Polish court and the opening conflict with the Teutonic Order. Jurand of Spychów appears, a great noble of the borderlands whose lands are threatened. Zbyszko, a young knight, and Danusia, Jurand's daughter, meet at court. The seed of love is planted, but political tension and the danger of the Teutonic Order dominate. The part establishes the historical world: 1399, Poland and the Order at war, honor and chivalry the language through which battles are fought.
+
+### Part 2 Summary
+The deepening of the love story between Zbyszko and Danusia runs parallel to Jurand's escalating conflict with the Teutonic Order. Danusia issues the veil-challenge at court, which Zbyszko accepts as a binding vow. The Teutonic Knights raid the borderlands. Danusia is captured and taken into captivity in the Order's fortress. Zbyszko swears his battle-vow: to collect three peacock-feathered helmets from Teutonic knights as proof of his prowess, the price of winning Danusia's hand.
+
+### Part 3 Summary
+Zbyszko begins his quest for the three helmets. He travels the borderlands and battles Teutonic knights in ritual combat. Each helmet represents a victory, a knight defeated, a step toward redeeming his vow. Meanwhile, Danusia endures captivity, her spirit unbroken. The narrative interweaves her suffering with his striving—both are testing grounds. The part shows how love becomes an engine of honor and how honor becomes the medium through which love is pursued.
+
+### Part 4 Summary
+Zbyszko collects the first two helmets. Each combat is described in detail—the challenge, the fight, the stakes. The Teutonic Order begins to understand that Zbyszko is more than a minor Polish knight; he is becoming a legendary figure. Danusia's captivity deepens; rumors of her death circulate, then are contradicted. Jurand's rage at the Order intensifies. The borderlands become a stage for smaller wars within the larger war.
+
+### Part 5 Summary
+The third helmet remains unclaimed. Zbyszko pursues it with increasing desperation. Political events intervene; the Polish court considers peace with the Order. Danusia's situation becomes more precarious. The vow hangs in balance. Zbyszko fights with the knowledge that time is running out—not just for the vow, but for Danusia's survival.
+
+### Part 6 Summary
+Danusia dies in captivity before Zbyszko can complete his vow. The news reaches him when he is close to collecting the third helmet. He has a choice: abandon the quest in despair, or continue it as a memorial. He chooses to continue. The final combat is fought not for a living woman, but for the principle that a vow speaks louder than death.
+
+### Part 7 Summary
+Zbyszko completes his vow after Danusia's death. The three helmets are gathered. He writes the completion record in his own hand—three names, three dates, three victories. At the bottom, he adds Danusia's name and the date of her death in different ink. He seals it. The novel ends with the vow fulfilled and the fulfiller still living, carrying the weight of a promise that no longer has a recipient.
+
+---
+
+## Pass 4: New Quest Cycles (Grounded in Source Text)
+
+### Cycle 8 — Danusia's Captivity Letter
+
+**Route:** KRK → JUR → TKT → WM | **Theme:** The only letter Danusia managed to send from the Teutonic fortress — a message hidden in a merchant's goods  
+**Acts:** [1] skill_check@KRK · [2] skill_check@JUR · [3] skill_check@TKT · [4] skill_check@road · [5] delivery@WM  
+**Token:** Danusia's Hidden Letter (written on cloth, sewn into a merchant's bundle, carried to Jurand in secret)
+
+### Cycle 9 — Jurand's Desperate Ransom Offer
+
+**Route:** JUR → TKT → KRK → WM | **Theme:** Jurand's formal ransom offer to the Teutonic Order — what a father will give for his daughter's return  
+**Acts:** [1] skill_check@JUR · [2] skill_check@TKT · [3] skill_check@KRK · [4] skill_check@road · [5] delivery@WM  
+**Token:** Ransom Offer Document (sealed with Jurand's signet; the specific terms he was willing to pay)
+
+### Cycle 10 — Zbyszko's First Helmet
+
+**Route:** KRK → TKT → KRK → WM | **Theme:** The first of three peacock-feathered helmets — Zbyszko's first victory in the vow's service  
+**Acts:** [1] skill_check@KRK · [2] combat@TKT · [3] skill_check@KRK · [4] skill_check@road · [5] delivery@WM  
+**Token:** First Helmet & Combat Record (witness account of the fight, the knight named, the helmet's seizure)
+
+*(Full quest JSONs for cycles 8-10 will be posted via API below)*
+

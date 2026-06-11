@@ -1066,3 +1066,54 @@ not an active accusation. The difference is location. Location is everything.*
   "questComplete": true
 }
 ```
+
+---
+
+## Pass 4: Source Summaries (June 2026)
+
+### Part 1 Summary
+The Völuspá (The Prophecy of the Völva) and related cosmological poems. The seeress tells Odin of the nine worlds, the creation of the cosmos, the making of dwarfs and gods, the first war in heaven between Aesir and Vanir, and most centrally: the doom of Ragnarök. She sees the end-times coming—the wolf breaks his chains, the serpent rises, the stars vanish, the sun is swallowed, and the gods fall. The poems are cosmic history told in verse, from creation to apocalypse.
+
+### Part 2 Summary
+The narrative and romantic poems: Skirnir's journey (wooing Gerd for the god Frey), the wisdom contest between Odin and Vafthrudnir, the theft of Thor's hammer and his disguise as a bride. These poems show the gods as characters—cunning, boastful, driven by desire and competition. The poetry is full of riddles, flyting (ritualized insults), and the small daily dramas of divinity: a theft, a courtship, a wager with a giant.
+
+### Part 3 Summary
+The heroic cycles begin: Sigurd and Brynhildr, the dragons, the curses. Tales of human warriors entangled with the gods' purposes and the dwarves' made treasures (rings, gold, swords). The poetry shifts from cosmology and divine comedy to tragedy—human strength and honor measured against fate and love. The magic is older here, darker, and more intimate.
+
+### Part 4 Summary
+The continuation of the heroic cycles: more of Sigurd and Brynhildr's tragedy, the murders that follow, the oaths sworn and broken. The poetry becomes less about plot and more about the weight of words—names, curses, prophecies, and the way language binds people across death. Every poem is something someone said, and those words have power.
+
+### Part 5 Summary
+The final laments and conclusion: Gudrun's grief over Sigurd, the words she speaks when the cloth is lifted from his face. The Edda closes not with victory or resolution, but with a woman's lamentation—the oldest human response to loss. The doubled word in her lament's manuscript is the evidence it was spoken in real time. The poetry ends where all poetry does: in the moment someone opens their mouth to say what happened.
+
+---
+
+## Pass 4: New Quest Cycles (Grounded in Source Text)
+
+### Cycle 8 — Ragnarök's Sequence
+
+**Route:** VLH → ASG → WM | **Theme:** The end-times poem — the Völva's vision of how the gods will fall, written in the order it was seen  
+**Acts:** [1] skill_check@VLH · [2] skill_check@VLH · [3] skill_check@ASG · [4] skill_check@road · [5] delivery@WM  
+**Token:** Ragnarök Sequence Document (the order in which the seeress saw the ending)
+
+### Cycle 9 — Odin's Wager with Vafthrudnir
+
+**Route:** AEG → ASG → WM | **Theme:** The giant's final answer — the riddle that costs him his life, the moment wisdom became a wager  
+**Acts:** [1] skill_check@AEG · [2] skill_check@AEG · [3] skill_check@ASG · [4] skill_check@road · [5] delivery@WM  
+**Token:** Vafthrudnismál Final Exchange (the question and answer that ended the contest)
+
+### Cycle 10 — Thor's Bridal Veil
+
+**Route:** AEG → RSS → ASG → WM | **Theme:** The theft and recovery — Thor dressed as a bride to retrieve his hammer, the poetry written by witnesses  
+**Acts:** [1] skill_check@AEG · [2] skill_check@RSS · [3] combat@ASG · [4] skill_check@road · [5] delivery@WM  
+**Token:** Thrymskviða Witness Account (the bridal party's testimony to what they saw)
+
+### Cycle 11 — Sigurd's Final Warning
+
+**Route:** AEG → AEG → ASG → WM | **Theme:** Sigurd speaks the prophecy of doom before he dies — the moment he knows the curse cannot be broken  
+**Acts:** [1] skill_check@AEG · [2] skill_check@AEG · [3] skill_check@ASG · [4] skill_check@road · [5] delivery@WM  
+**Token:** Sigurd's Deathbed Prophecy (the words spoken to those who would survive him)
+
+*(Full quest JSONs for cycles 8-11 will be posted via API below)*
+
+

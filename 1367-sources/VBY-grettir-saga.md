@@ -1174,3 +1174,128 @@ activateMissionBit: vbyBarrowComplete
 }
 ```
 
+---
+
+## Pass 4: Source Summaries (June 2026)
+
+### Part 1 Summary
+From the genealogy of Önund Treefoot through Grettir's early adventures in Iceland and Norway. Covers his childhood defiance, first outlawry (three winters for killing Skeggi), his proving-grounds in Norway (verse-battles, jarl's service), the barrow-fight where he gains Jökulsnaut, his return to Iceland, and the escalating incidents that lead to full *skóggangr* — wolf's head outlawry at age twenty. The saga emphasizes strength tested against man and ghost alike, the pattern of incident becoming reputation becoming legend.
+
+### Part 2 Summary
+From Grettir's return to his mother at Bjarg through the revenge and resolution. Chronicles the killing of Thorbjorn Oxmain (blood-price for Atli), his fugitive years across Iceland, the island stronghold of Drangey with his brother Illugi, and the sorcery-death at Thorbjorn Öngull's hands. Then follows Thorsteinn Dromund's journey to Constantinople, the Varangian service, the love story and legal trap with Spes, their return to Norway in honor, and final pilgrimage to Rome where they seek absolution and build stone retreats to atone. The saga closes with Sturla's testimony: no outlaw was ever so distinguished as Grettir the Strong.
+
+---
+
+## Pass 4: New Quest Cycles (Grounded in Source Text)
+
+### Cycle 8 — Sandhaugar Darkness
+
+**Route:** RKN → BWH → WM | **Theme:** The troll-giants at Sandhaugar and the bones of the missing men beneath the waterfall  
+**Acts:** [1] skill_check@RKN · [2] skill_check@BWH · [3] combat@BWH · [4] skill_check@RKN · [5] delivery@WM  
+**Token:** Sandhaugar Bone-Sack (rune-marked cloth bag, blackened by age and fire)
+
+```json
+{
+  "id": "vby8_sandhaugar",
+  "name": "Sandhaugar Darkness",
+  "book": "VBY",
+  "source_episode": "Grettir dives under Sandhaugar waterfall, fights troll-giants in cave, recovers bones of missing men, ascends the rope. Becomes the farm's deliverer from nightly loss.",
+  "theme": "The deep place where troll-kind fed on men. The rope that pulled up bones instead of corpses. The farm made clean.",
+  "activateNode": "RKN",
+  "token": {
+    "id": "sandhaugar_bone_sack",
+    "name": "Sandhaugar Bone-Sack",
+    "description": "Cloth bag with rune marks burned into the weave. Contains the blackened bones of two men taken by the trolls over three winters. Grettir gathered them in the cave beneath the waterfall. The bag was hauled up on a rope while Grettir free-climbed the stone behind it. The parish priest Steinn broke the seal and said the names. The farm of Sandhaugar lost no more men after that night.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKN", "BWH", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKN", "type": "skill_check", "dc": 13, "skill": "Survival", "prompt": "A farmer from Sandhaugar comes to the fire. His voice is steady but his eyes are not. He says: 'Three winters, the thing came in the dark. Two men — Jón and Ketil — it took. We know because of the sack.' He shows you the rune-marked cloth. 'You are strong, like the man who came before. Will you go under the waterfall?'"},
+    {"act": 2, "node": "BWH", "type": "skill_check", "dc": 14, "skill": "Athletics", "prompt": "The waterfall is not a passage; it is a wall of stone and roaring water. The cave mouth is beneath the pool. You stand on the ledge in winter spray, breath steaming, rope coiled at your back. The rope was old when Grettir tied it. You are not the first. The water is black and moving fast. Take a long breath."},
+    {"act": 3, "node": "BWH", "type": "combat", "prompt": "In the cave: two shapes that were not man-shape. One moves. The stone is slick. The dark is absolute except for what your torch shows — grey-skinned, long-armed, teeth. You are alone and waist-deep in water that has not seen sun. The bones of two men are stacked in the corner like firewood. Kill or drown. There is no third choice."},
+    {"act": 4, "node": "RKN", "type": "skill_check", "dc": 12, "skill": "Insight", "prompt": "The bone-sack is in your hands. The farmer's wife at Sandhaugar has washed the cloth and bound it again with sinew. She says: 'The priest said their names. Now Jón and Ketil can rest instead of walking the high field in the dark.' The sack is light. What is heavy is that a farm can sleep now."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck takes the sack and reads the runes. 'Sandhaugar,' he says. 'Three winters of loss. One night of descent. This is the kind of strength that shapes a valley.' He opens a new section in the archive. Deepwater Recovery Records begins here."}
+  ],
+  "archiveCategory": "Deepwater Recovery Records — When the Missing Return",
+  "questComplete": false,
+  "sweelinckNote": "The trolls at Sandhaugar were not sorcery; they were older than sorcery. The rope that pulled up bones is the spine of this account. Most men do not come back. Grettir came back and climbed behind the rope he had tied."
+}
+```
+
+### Cycle 9 — The Fire-Fetch of Drangey
+
+**Route:** RKN → DRN → RKN → WM | **Theme:** Winter swim through black water carrying fire; the coal sealed in clay; the islands and the outlaw's provision  
+**Acts:** [1] skill_check@RKN · [2] combat@road · [3] skill_check@DRN · [4] skill_check@road · [5] delivery@WM  
+**Token:** The Fire-Fetch Vessel (clay pot with seal-marks, ash still visible inside)
+
+```json
+{
+  "id": "vby9_fire_fetch",
+  "name": "The Fire-Fetch of Drangey",
+  "book": "VBY",
+  "source_episode": "Grettir swims miles from Reykjaness mainland to Drangey island in winter darkness, carrying a live coal sealed in clay pot above the water surface, arm raised the whole distance. Lands at the island. Fire continues through the winter.",
+  "theme": "The swimmer in winter water, holding the fire above the world. The oath made in cold. The island that would have frozen.",
+  "activateNode": "RKN",
+  "token": {
+    "id": "fire_fetch_vessel",
+    "name": "The Fire-Fetch Vessel",
+    "description": "Clay pot, hand-sized, with seal-marks pressed into the rim — Grettir's mark. Ash still clings to the inside. When you turn it, you hear the faint rattle of charred wood. The coal was sealed inside at Reykjaness farm. The pot was raised above the water the entire swim. The fire was still live when Grettir reached Drangey. The island's winter did not take it.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKN", "DRN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKN", "type": "skill_check", "dc": 13, "skill": "Survival", "prompt": "The farmer at Reykjaness shows you the pot. 'He asked for fire,' she says. 'Not to steal. To ask. And then he held this above the water for miles — dark, winter, alone. That is the kind of cold we live in.' The pot is warm to the touch, though it cannot be. 'He sealed his own name into the clay before he left.'"},
+    {"act": 2, "node": "RKN_to_DRN", "type": "combat", "prompt": "The sea between the islands. The cold is a living thing. Your arm, raised, begins to burn. The pot is heavy. The water is darker than black. Something moves beneath — nothing you can see, only the knowledge that depth has intelligence. Keep the fire above. Keep moving."},
+    {"act": 3, "node": "DRN", "type": "skill_check", "dc": 14, "skill": "Athletics", "prompt": "The shore is rocks. Your arm is still raised though there is no more sea. The pot is still sealed. Your fingers are white. The fire inside is still burning. Illugi is there — the brother, wordless, ready. He takes the pot. The smoke rises from Drangey for the first time in three winters."},
+    {"act": 4, "node": "DRN_to_WM", "type": "skill_check", "dc": 12, "skill": "Composure", "prompt": "The vessel is in your pack now. The seal-marks are Grettir's own hand pressed into clay before the fire was sealed. Drangey is behind you. The fire still burns there because one man was willing to be cold and solitary. Most men would have let the island freeze."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck turns the pot in his hands. 'I have seen many deeds of strength,' he says. 'This one is quieter than the others. But the cold remembers. The island remembers. The fire remembers.' He places it on the highest shelf. Endurance Records — The Cold and the Flame."}
+  ],
+  "archiveCategory": "Endurance Records — The Cold and the Flame",
+  "questComplete": false,
+  "sweelinckNote": "Some deeds are about winning. This one is about keeping something alive while freezing. The fire was still burning when he reached the island. That is what outlawry means when you do it right."
+}
+```
+
+### Cycle 10 — The Rune-Carving of Thurid Öngull
+
+**Route:** RKN → DRN → WM | **Theme:** The sorcery that could do what steel could not; the log carved with blood-runes; the wound that festered beyond healing  
+**Acts:** [1] skill_check@RKN · [2] skill_check@DRN · [3] combat@DRN · [4] skill_check@road · [5] delivery@WM  
+**Token:** Thurid's Rune-Log Fragment (driftwood marked with dried blood and carved lines)
+
+```json
+{
+  "id": "vby10_rune_carving",
+  "name": "The Rune-Carving of Thurid Öngull",
+  "book": "VBY",
+  "source_episode": "Thurid, the old woman with sorcerous knowledge, carves runes in blood on a driftwood log, walks backward around it three times, and pushes it to sea. The log washes up at Drangey. Grettir's axe glances off it and cuts into his own thigh. The wound festers beyond remedy. Within days, fever. Within days, the end.",
+  "theme": "The sorcery that is older than swords; the log that was a spell; the man who could defeat troll-giants but not the knowledge written in blood.",
+  "activateNode": "RKN",
+  "token": {
+    "id": "thurid_rune_fragment",
+    "name": "Thurid's Rune-Log Fragment",
+    "description": "Piece of driftwood, charred at one end, carved with marks on the other. The marks are in the old hand — not quite rune, not quite glyph. Dried blood clings to the carved edges. Thurid walked backward three times around the log before pushing it to sea. The blood was her own. The spell was older than Christianity. Grettir's axe, which had broken through troll-hide, glanced off this wood and opened his own thigh. He bled for ten days.",
+    "grant_act": 1,
+    "take_act": 5,
+    "check_acts": [2, 3, 4]
+  },
+  "nodes": ["RKN", "DRN", "WM"],
+  "new_nodes": [],
+  "acts": [
+    {"act": 1, "node": "RKN", "type": "skill_check", "dc": 13, "skill": "Occult", "prompt": "An old woman comes to the fire. Her name is Thurid. She is alone except for memory. 'I sent the log,' she says. 'I carved it. I bled on it. I walked backward so that the spell would reverse itself into him, not protect him.' She shows you the fragment — what washed back to shore after Thorbjorn's men burned the island. 'There is no steel for that kind of wound.'"},
+    {"act": 2, "node": "DRN", "type": "skill_check", "dc": 14, "skill": "Medicine", "prompt": "The wound is on the thigh. It is not deep but it will not close. The skin around it is black at the edges — not from infection but from something that moves through the blood like a river. It festers with a smell that is not rot. Grettir said: 'I have fought trolls. I have fought ghosts. I have never fought something inside.' The wound kept moving."},
+    {"act": 3, "node": "DRN", "type": "combat", "prompt": "The wound is the enemy now. Fever comes. Rational thought leaves. For ten days Grettir lies against the wall with his sword, burning from inside. Illugi sits beside him saying nothing. Thorbjorn Öngull waits on the mainland. The wound does the work that ten men cannot do. Grettir's strength cannot fight this battle."},
+    {"act": 4, "node": "DRN_to_WM", "type": "skill_check", "dc": 13, "skill": "Insight", "prompt": "The fragment of log in your hands. The marks carved in blood and old knowledge. Thurid walked backward to invert the spell into the man. Most men fear steel. Grettir feared nothing made of steel. Thurid knew that. She did not send steel. She sent the knowledge that strength is not enough."},
+    {"act": 5, "node": "WM", "type": "delivery", "prompt": "Sweelinck reads the rune-marks. 'Thurid Öngull,' he says quietly. 'She sent him a question: what if the enemy is not outside?' He locks the fragment in a reliquary. Sorcery Records — The Spell That Became a Wound. 'This is why we write things down. So we remember that strength can be unmade.'"}
+  ],
+  "archiveCategory": "Sorcery Records — The Spell That Became a Wound",
+  "questComplete": false,
+  "sweelinckNote": "Grettir was the strongest man in Iceland. But he was not the wisest. Thurid understood something about strength that Grettir did not. The wound was a question. The answer took ten days. After that, there were no more questions."
+}
+```
+

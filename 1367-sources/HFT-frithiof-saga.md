@@ -1372,3 +1372,40 @@ The token is taken.
 
 *Cycle 7 complete. HFT SEEDS COMPLETE.*
 
+---
+
+## Pass 4: Source Summary (June 2026)
+
+### Complete Narrative Arc Summary
+Frithiof's Saga (Tegnér's 1825 romantic epic) traces a single unified narrative: from the childhood love between Frithiof and Ingeborg through his exile, trials, and redemptive return. The saga opens with Frithiof as a young warrior proving himself in contests, then taking Balder's sacred arm-ring as an oath-token, which brings divine judgment and exile upon him. He is forced to leave Sognefjord. The middle section chronicles his travels and the famous storm at sea—a trial that tests both his courage and his character. The saga's final movement shows his return, his restitution (returning the arm-ring, restoring his honor), and his union with Ingeborg. Unlike the medieval sagas or the Poetic Edda, Tegnér's Frithiof emphasizes love and redemption as much as honor and war. The narrative arc is romantic and Christian in sensibility, making it distinct among the Norse sources.
+
+---
+
+## Pass 4: New Quest Cycles (Grounded in Source Text)
+
+### Cycle 8 — The Arm-Ring's Oath
+
+**Route:** BLG → BLG → ALR → WM | **Theme:** Frithiof's oath sworn on Balder's arm-ring — the moment honor bound him to exile  
+**Acts:** [1] skill_check@BLG · [2] skill_check@BLG · [3] skill_check@ALR · [4] skill_check@road · [5] delivery@WM  
+**Token:** The Oath-Ring Transcript (the words Frithiof spoke when he seized the arm-ring; the oath that could not be unsaid)
+
+### Cycle 9 — Ingeborg's Vigil
+
+**Route:** ING → BLG → WM | **Theme:** Ingeborg waiting through winter and spring for Frithiof to return or die — the letters she could not send  
+**Acts:** [1] skill_check@ING · [2] skill_check@ING · [3] skill_check@BLG · [4] skill_check@road · [5] delivery@WM  
+**Token:** Ingeborg's Vigil Letters (unsent — written every month, sealed, hidden; the record of her waiting)
+
+### Cycle 10 — The Storm at Sea
+
+**Route:** BLG → BLG → WM | **Theme:** Frithiof's ship in the storm — the moment he cried out to the gods and the gods answered through destruction and survival both  
+**Acts:** [1] skill_check@BLG · [2] skill_check@BLG · [3] combat@BLG · [4] skill_check@road · [5] delivery@WM  
+**Token:** The Storm Testimony (the crew's written account of how Frithiof held the ship and how the gods tested him)
+
+### Cycle 11 — The Return & Restitution
+
+**Route:** ALR → ALR → BLG → WM | **Theme:** Frithiof returns the arm-ring to Balder's temple and claims his honor back — the restoration that redeems the oath  
+**Acts:** [1] skill_check@ALR · [2] skill_check@ALR · [3] skill_check@BLG · [4] skill_check@road · [5] delivery@WM  
+**Token:** The Restitution Record (the temple's acceptance of the returned arm-ring; Frithiof's name entered as restorer; the oath fulfilled)
+
+*(Full quest JSONs for cycles 8-11 will be posted via API below)*
+

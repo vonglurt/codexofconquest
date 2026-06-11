@@ -1141,3 +1141,46 @@ that is entirely silent.*
 }
 ```
 
+---
+
+## Pass 4: Source Summaries (June 2026)
+
+### Part 1 Summary
+From the genealogy of Kveldulf through Egil's youth in Norway and Iceland during the rise of King Harald Fairhair. Covers Egil's strength and cunning, his early adventures, his service in Harald's courts, and the pivotal moment where he kills Bard (the king's poisoner) using a rune-spell carved in blood and executed by sword. Egil flees Norway, outlawed. The part emphasizes the young warrior's wit matching his strength—poetry and sorcery are weapons as lethal as steel, and Egil wields them all.
+
+### Part 2 Summary
+From Egil's flight through his time in England serving King Æthelstan, his battles, his marriage to Ásgerðr, and the central tragedy: his son Bodvar drowning at sea. Egil's grief is total—he locks himself in the bed-closet intending to starve to death. His daughter Thorgerðr intervenes, offering to die with him, and tricks him into eating by disguising poisoned samphire as food, then milk as water. When Egil realizes she loves him more than her own death, he commits to composing a funeral poem (Sonatorrek) instead of dying. Love and duty become reasons to live.
+
+### Part 3 Summary
+The Sonatorrek itself—the fifty-four stanzas of grief-poetry Egil composes after Bodvar's death. Lamentation, theological argument, challenge to the gods. Egil speaks to Odin and to fate, wrestling his sorrow into language. The poem is unperformed—his family forbids him from reciting it at the Althing—but it exists. The saga closes with the archive's understanding: Egil is the strongest poet in Iceland because he composed his way through despair, leaving a poem as the final record of a life that law and strength alone could not contain.
+
+---
+
+## Pass 4: New Quest Cycles (Grounded in Source Text)
+
+### Cycle 8 — Bard's Poisoning
+
+**Route:** YRK → ISL → WM | **Theme:** The trapped feast where Bard tries to kill Aulvir with drugged ale; Egil's rune-spell breaks the enchantment  
+**Acts:** [1] skill_check@YRK · [2] skill_check@YRK · [3] combat@YRK · [4] skill_check@ISL · [5] delivery@WM  
+**Token:** The Shattered Horn (Bard's enchanted drinking vessel, cracked by Egil's counter-rune)
+
+### Cycle 9 — Æthelstan's Silver
+
+**Route:** YRK → ISL → WM | **Theme:** The king's compensation for a dead son—silver as the only rebalance possible when law has cost a man his line  
+**Acts:** [1] skill_check@YRK · [2] combat@road · [3] skill_check@road · [4] skill_check@ISL · [5] delivery@WM  
+**Token:** The Compensation Record (silver weight, terms, the king's seal acknowledging the debt)
+
+### Cycle 10 — Bodvar's Drowning
+
+**Route:** ISL → ISL → WM | **Theme:** The loss of Egil's son at sea; the moment a man's line breaks; Thorgerðr's trick that makes Egil choose life  
+**Acts:** [1] skill_check@ISL · [2] skill_check@ISL · [3] skill_check@ISL · [4] skill_check@ISL · [5] delivery@WM  
+**Token:** Bodvar's Final Cloak (salt-stained, retrieved from the shore after the drowning)
+
+### Cycle 11 — Sonatorrek's Composition
+
+**Route:** ISL → ISL → ISL → road → WM | **Theme:** The moment of composing the greatest grief-poem ever made; the act of turning despair into language, stanza by stanza  
+**Acts:** [1] skill_check@ISL · [2] skill_check@ISL · [3] skill_check@ISL · [4] skill_check@road · [5] delivery@WM  
+**Token:** The Original Sonatorrek Tablet (wax marks, Egil's dictation to a farm-hand scribe, 54 stanzas of unperformed lamentation)
+
+*(Full quest JSONs for cycles 8-11 will be posted via API below)*
+
