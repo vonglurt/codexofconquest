@@ -630,6 +630,61 @@ function insertBeforeSectionClose(section, entry) {
   return { ok:true };
 }
 
+// insertAfterLastParsedNode: inserts a new NODE_MAP entry immediately after the node
+// with the highest `num` in the currently-parsed WBAPI.nodeMap.  This keeps new nodes
+// inside the portion of the section that parseSimple can evaluate, avoiding the
+// "new node invisible after restart" problem caused by malformed multi-line junction
+// entries that appear later in the section and break JS evaluation.
+// Falls back to insertBeforeSectionClose if no anchor is found.
+function insertAfterLastParsedNode(entry) {
+  // Find the last node by num in the current in-memory map.
+  let lastKey = null, lastNum = -1;
+  for (const [k, n] of Object.entries(WBAPI.nodeMap)) {
+    const num = n.num || 0;
+    if (num > lastNum) { lastNum = num; lastKey = k; }
+  }
+  if (!lastKey) return insertBeforeSectionClose('NODE_MAP', entry);
+
+  const S = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
+  const E = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
+  const sStart = WBAPI._rawSrc.indexOf(S) + S.length;
+  const eIdx   = WBAPI._rawSrc.indexOf(E);
+  if (sStart < S.length || eIdx < 0) return insertBeforeSectionClose('NODE_MAP', entry);
+  const sectionSrc = WBAPI._rawSrc.slice(sStart, eIdx);
+
+  // Locate the entry for lastKey using brace-depth tracking.
+  const keyRe = new RegExp(`^([ \\t]*)${lastKey}\\s*:\\s*\\{`, 'gm');
+  const km = keyRe.exec(sectionSrc);
+  if (!km) return insertBeforeSectionClose('NODE_MAP', entry);
+
+  const openEnd = km.index + km[0].length;
+  let depth = 1, i = openEnd, inStr = null;
+  while (i < sectionSrc.length) {
+    const c = sectionSrc[i];
+    if (inStr) {
+      if (c === '\\' && inStr !== '`') { i += 2; continue; }
+      if (c === inStr) inStr = null;
+    } else if (c === '/' && sectionSrc[i + 1] === '/') {
+      while (i < sectionSrc.length && sectionSrc[i] !== '\n') i++;
+      continue;
+    } else {
+      if (c === '"' || c === "'" || c === '`') inStr = c;
+      else if (c === '{') depth++;
+      else if (c === '}') { depth--; if (depth === 0) break; }
+    }
+    i++;
+  }
+  if (depth !== 0) return insertBeforeSectionClose('NODE_MAP', entry);
+
+  // i is at the closing } of the last node entry.  Skip past },\n in the raw source.
+  let insertAt = sStart + i + 1; // one past the }
+  while (insertAt < WBAPI._rawSrc.length && WBAPI._rawSrc[insertAt] !== '\n') insertAt++;
+  if (insertAt < WBAPI._rawSrc.length) insertAt++; // include the \n
+
+  WBAPI._rawSrc = WBAPI._rawSrc.slice(0, insertAt) + entry + WBAPI._rawSrc.slice(insertAt);
+  return { ok:true };
+}
+
 function serializeQuestLiteral(id, body) {
   const STR  = ['type','title','desc','hint','hook','passText','failText','rewardText',
     'disposition','npc','activateNode','waypointNode','checkAbility','checkLabel',
@@ -9224,7 +9279,7 @@ async function route(req, res) {
         return json(res, 409, { error:`Node "${code}" already exists` });
       }
       const entry = serializeNodeLiteral(code, body);
-      const ins = insertBeforeSectionClose('NODE_MAP', entry);
+      const ins = insertAfterLastParsedNode(entry);
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
       const maxNum = Object.values(WBAPI.nodeMap).reduce((m, n) => Math.max(m, n.num || 0), 0);
       const { code: _code, r: _r, c: _c, ...nodeFields } = body;
