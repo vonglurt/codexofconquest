@@ -467,7 +467,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [x] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 | Source txt acquired 2026-06-11 — PG, O'Hagan tr. (Harvard Classics vol.49); split 2 parts. Prior notes: OST-01–07 done, AIX/RON/PYR/FRS in grid. |
+| [x] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 | COMPLETE 2026-06-11 — 11 cycles written and imported (55 live quests). C1–7 existing + C8–11 new: witness account, traitor correspondence, negotiation fabrication, monument inflation. Document meaning in epic context: battle aftermath, truth vs. legend, grief counting. See OST-song-of-roland.md. |
 | [x] | CDG | three-musketeers | The Three Musketeers — Alexandre Dumas | 1844 (1625 setting) | Swashbuckler | 1356 | SEEDS COMPLETE 2026-06-03 — CDG-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Blank Commission" (CDG/WM). No new nodes. See CDG-three-musketeers.md. |
 | [x] | VIE | faust | Faust — Johann Wolfgang von Goethe | 1808–1832 | Philosophical Drama | 213 | SEEDS COMPLETE 2026-06-03 — VIE-01–07 all vignettes done. Cycle 8 2026-06-05 — "Mephistopheles's Receipt" (VIE/WM). No new nodes. See VIE-faust.md. |
 | [x] | ERF | grimm-fairy-tales | Grimm's Fairy Tales — Brothers Grimm | 1812 | Folk Tales | 547 | SEEDS COMPLETE 2026-06-03 — ERF-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Mirror's Testimony" (ERF/WM). No new nodes. See ERF-grimm-fairy-tales.md. |
