@@ -1575,18 +1575,19 @@ Canonical list of everything not yet done. Ordered by type, then priority.
 
 Books with full vignette specs in their `.md` files, ready to import. Use `import_ath.py` as the template — the pattern is established. Key rule: `activateCond` must be set via `put` after `post` (CLI parser strips the `()` syntax). Each book needs its own `import_{code}.py`.
 
-**ZTH is partially imported** — cycle 1 done (Euryclea's Wax Account, ITH+PHC nodes, 5 quests). Cycles 2–7 still need scripting from ZTH-odyssey.md.
+Verified 2026-06-11 against live DB. ATH/ZTH/JRS/FLR/LIS already imported.
 
-| # | Code | Title | Cycles | Acts | New Nodes Needed | Import Script |
-|---|------|-------|--------|------|-----------------|---------------|
-| 1 | **ZTH** | Odyssey (Homer) | 2–7 remaining (6 left) | 30 | none (ITH/PHC created) | extend import_ath.py pattern |
-| 2 | **JRS** | Jerusalem Delivered | 1–7 | 35 | JER (create ~r:179 c:233) | write import_jrs.py |
-| 3 | **FLR** | Divine Comedy: Inferno | 1–7 | 35 | MBR/PAR/HMN (confirm exist) | write import_flr.py |
-| 4 | **LIS** | Lusiads | 1–7 | 35 | LHA/CVP/MDN/MLN (may need creation) | write import_lis.py |
-| 5 | **CID** | Chronicle of the Cid | 1–7 | 35 | VLC (Valencia, create ~r:158 c:185) | write import_cid.py |
-| 6 | **TBS** | Knight in the Panther's Skin | 1–7 | 35 | GEO (confirm/create) | write import_tbs.py — after Phase 1 verification |
-| 7 | **BEY** | Mandeville's Travels | 1–16 | ~65 | BEI/JER/SID (new); KOL (confirm) | write import_bey.py — 3 sessions |
-| 8 | **KYA** | Shah-Nameh | 1–30 | ~125 | YAZ/KBL/SIS/HRT (new); TBZ/TRB confirm | write import_kya.py — 5 sessions |
+| # | Code | Title | Cycles | Acts | New Nodes Needed | Status |
+|---|------|-------|--------|------|-----------------|--------|
+| 1 | ~~ATH~~ | Iliad | — | — | — | ✓ DONE (95 quests, 12 cycles) |
+| 2 | ~~ZTH~~ | Odyssey | — | — | — | ✓ DONE (60 quests) |
+| 3 | ~~JRS~~ | Jerusalem Delivered | — | — | — | ✓ DONE (35 quests) |
+| 4 | ~~FLR~~ | Divine Comedy: Inferno | — | — | — | ✓ DONE (55 quests) |
+| 5 | ~~LIS~~ | Lusiads | — | — | — | ✓ DONE (65 quests) |
+| 6 | **CID** | Chronicle of the Cid | 1–7 | 35 | VLC (Valencia, ~r:158 c:185) | **NEXT** |
+| 7 | **TBS** | Knight in the Panther's Skin | 1–7 | 35 | GEO (confirm/create) | open |
+| 8 | **BEY** | Mandeville's Travels | 1–16 | ~65 | BEI/JER/SID (new); KOL (confirm) | open |
+| 9 | **KYA** | Shah-Nameh | 1–30 | ~125 | YAZ/KBL/SIS/HRT (new); TBZ/TRB confirm | open |
 
 **Pass 4 extra cycles** (8–11/12/13/16/30) are in the `.md` files and can be imported after the base 7 cycles are live. They don't block the base import.
 
