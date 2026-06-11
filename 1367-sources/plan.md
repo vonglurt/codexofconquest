@@ -1227,21 +1227,21 @@ Audit confirmed 0 errors 2026-06-11.
 
 ---
 
-### Group D — Source Text Acquisition (Phase 1)
+### Group D — Source Text Acquisition (Phase 1) — MOSTLY DONE 2026-06-11
 
 Books that were memory-processed and have no `.txt` source file. All are already imported (quests are live). Acquiring the source text enables Pass 4 (additional source summaries + new cycles).
 
-| # | Code | Title | Translation to find | Expected size | Split? |
-|---|------|-------|-------------------|---------------|--------|
-| 11 | **VBY** | Grettir's Saga | Hight 1914 or Morris/Magnusson 1900 (PG) | ~370 KB | 2 parts |
-| 12 | **RIX** | Egil's Saga | W.C. Green 1893 (PG) | ~580 KB | 3 parts |
-| 13 | **RKV** | Poetic Edda | Bellows 1936 (PG) | ~750 KB | 4 parts |
-| 14 | **HFT** | Frithiof's Saga | Bayard Taylor 1866 (PG) | ~130 KB | none |
-| 15 | **ARN** | Knights of the Cross | Curtin 1900 (PG) | ~950 KB | 5 parts |
-| 16 | **OST** | Song of Roland | O'Hagan 1880 (PG) | ~150 KB | none |
-| 17 | **TBS** | Knight in the Panther's Skin | Wardrop 1912 (PG) | ~250 KB | 1–2 parts |
+| # | Code | Title | Translation to find | Expected size | Split? | Status |
+|---|------|-------|-------------------|---------------|--------|--------|
+| 11 | ~~VBY~~ | Grettir's Saga | Hight 1914 (PG) | ~370 KB | 2 parts | ✓ DONE 2026-06-11 — source acquired, Pass 4 complete |
+| 12 | ~~RIX~~ | Egil's Saga | W.C. Green 1893 (PG) | ~580 KB | 3 parts | ✓ DONE 2026-06-11 — source acquired, Pass 4 complete |
+| 13 | ~~RKV~~ | Poetic Edda | Bellows 1936 (PG) | ~750 KB | 5 parts | ✓ DONE 2026-06-11 — source acquired, Pass 4 complete |
+| 14 | ~~HFT~~ | Frithiof's Saga | Schmidt tr. (PG) | ~130 KB | none | ✓ DONE 2026-06-11 — source acquired, Pass 4 complete |
+| 15 | ~~ARN~~ | Knights of the Cross | Binion tr. (PG) | ~950 KB | 7 parts | ✓ DONE 2026-06-11 — source acquired, Pass 4 complete |
+| 16 | ~~OST~~ | Song of Roland | O'Hagan 1880 (PG) | ~150 KB | 2 parts | ✓ DONE 2026-06-11 — source acquired, Pass 4 complete |
+| 17 | **TBS** | Knight in the Panther's Skin | Wardrop 1912 (PG) | ~250 KB | 1–2 parts | ⏳ PENDING — Wikisource acquisition blocked |
 
-**After acquiring each:** name as `{CODE}-{slug}.txt`, run `split-sources.sh` if > 200 KB, update books.md `[ ]` → `[x]`. Verify `.md` vignette details match real text (especially TBS — prior source was wrong content).
+**After acquiring TBS:** name as `TBS-knight-panther-skin.txt`, run `split-sources.sh` if > 200 KB, update books.md `[ ]` → `[x]`. Verify `.md` vignette details match real text (prior pass was from incorrect source).
 
 ---
 
@@ -1252,19 +1252,39 @@ See SHK-shakespeare-complete-works.md. No remaining work.
 
 ---
 
-### Group F — Pass 4 for Phase 1 Books (blocked on Group D)
+### Group F — Pass 4 for Phase 1 Books — MOSTLY DONE 2026-06-11
 
-Once source texts are acquired (Group D), these books need Pass 4 (source summaries + new vignette cycles). Run same agent pattern as the 7 books done this session.
+Source texts acquired in Group D; Pass 4 (source summaries + new vignette cycles) run for 6 of 7 books. Cycles deployed via WBAPI.
 
-| Code | Parts | Existing cycles | New cycles target |
-|------|-------|----------------|-----------------|
-| VBY | 2 | 7 | 8–9 |
-| RIX | 3 | 7 | 8–10 |
-| RKV | 4 | 7 | 8–11 |
-| HFT | 1 | 7 | 8 (Alternative Reading) |
-| ARN | 5 | 7 | 8–12 |
-| OST | 1 | 7 | 8 (Alternative Reading) |
-| TBS | 1–2 | 7 | 8–9 |
+| Code | Parts | Cycles added | API deployed | Status |
+|------|-------|-------------|-------------|--------|
+| ~~VBY~~ | 2 | 8–10 (3 new) | ✓ | ✓ DONE 2026-06-11 |
+| ~~RIX~~ | 3 | 8–11 (4 new) | ✓ | ✓ DONE 2026-06-11 |
+| ~~RKV~~ | 5 | 8–11 (4 new) | ✓ | ✓ DONE 2026-06-11 |
+| ~~HFT~~ | Alt | 8–11 (4 new) | ✓ | ✓ DONE 2026-06-11 |
+| ~~ARN~~ | 7 | 8–10 (3 new) | ✓ | ✓ DONE 2026-06-11 |
+| ~~OST~~ | Alt | 8–11 (4 new) | ✓ | ✓ DONE 2026-06-11 |
+| TBS | 1–2 | 8–9 | — | ⏳ BLOCKED — awaiting source text (Group D TBS) |
+
+---
+
+### Group G — Pass 4 Extra Cycles API Import (OPEN)
+
+ZTH/ATH/JRS/LIS/FLR/BEY/KYA had Pass 4 summaries and extra cycles written in 2026-06-05 and stored in `All Phases Imported/` `.md` files. Base 7 cycles are live. Extra cycles (8+) are written but **not yet imported** via API.
+
+**Procedure:** For each book, read the extra cycles from the `.md` file in `1367-sources/All Phases Imported/`, then post each act via `./api.sh post quest ...`. Use `npc=archivus_sweelinck` for all delivery/deposit acts. Confirm with `./api.sh audit` after each book. Commit after each book.
+
+| Code | Title | Extra cycles | Acts | NPC | Status |
+|------|-------|-------------|------|-----|--------|
+| ZTH | Odyssey (Homer) | 8–11 (4 cycles) | 20 | archivus_sweelinck | OPEN |
+| ATH | Iliad (Homer) | 8–12 (5 cycles) | 25 | archivus_sweelinck | OPEN |
+| JRS | Jerusalem Delivered (Tasso) | 8–11 (4 cycles) | 20 | archivus_sweelinck | OPEN |
+| LIS | Lusiads (Camões) | 8–13 (6 cycles) | 30 | archivus_sweelinck | OPEN |
+| FLR | Divine Comedy: Inferno (Dante) | 8–11 (4 cycles) | 20 | archivus_sweelinck | OPEN |
+| BEY | Mandeville's Travels | 14–16 (3 cycles) | 15 | archivus_sweelinck | OPEN |
+| KYA | Shah-Nameh (Ferdowsi) | 26–30 (5 cycles) | 25 | archivus_sweelinck | OPEN |
+
+Total: 31 cycles, ~155 acts. Commit cadence: one commit per book (`§PASS4-EXTRA-{CODE}: ... cycles {N}–{M} deployed`).
 
 ---
 
@@ -1275,9 +1295,10 @@ Once source texts are acquired (Group D), these books need Pass 4 (source summar
 | A — API Imports | 9 books | — | ✓ DONE 2026-06-11 |
 | B — OST tracking | 3 file edits + commit | — | ✓ DONE 2026-06-11 |
 | C — SHK NPC fix | 1 NPC + 27 put calls | — | ✓ DONE (prior session) |
-| D — Source text acquisition | 7 books | 7 downloads + splits | open |
+| D — Source text acquisition | 7 books | 7 downloads + splits | ✓ MOSTLY DONE — 6/7 complete; TBS pending |
 | E — Shakespeare | 14 cycles, 27 quests | — | ✓ DONE 2026-06-05 |
-| F — Pass 4 (Phase 1 books) | 7 agents (after D) | 1 parallel run | blocked on D |
+| F — Pass 4 (Phase 1 books) | 7 books | — | ✓ MOSTLY DONE — 6/7 complete; TBS blocked |
+| G — Pass 4 extra cycles import | 31 cycles, 155 acts | 7 API sessions | open |
 ## §MATH-01 — The Mathematical World: Group Theory, The Monster, and the Event Horizon (PLANNED)
 
 **Status:** PLANNED — not yet in game. Requires §DUNGEON-01 node infrastructure and CY node operational before integration.
