@@ -998,7 +998,7 @@ In approximate queue order:
 
 ### Procedure on next session start
 
-1. Complete OST tracking file updates first (3 files + commit §IMPORT-99)
+1. ~~Complete OST tracking file updates first (3 files + commit §IMPORT-99)~~ **DONE 2026-06-11**
 2. Check each book's source file for node collisions before writing import script
 3. RME→ROM substitution applies throughout
 4. Current baseline: 443 nodes, 1590 quests
@@ -1592,17 +1592,12 @@ Books with full vignette specs in their `.md` files, ready to import. Use `impor
 
 ---
 
-### Group B — OST Tracking File Cleanup (§IMPORT-99)
+### Group B — OST Tracking File Cleanup (§IMPORT-99) ✓ DONE 2026-06-11
 
-OST was imported 2026-06-05 (443 nodes, 1590 quests). Three files were never updated:
-
-| File | What to add |
-|------|------------|
-| `api-data-audit.md` | Add OST row after RKV row: 4 new nodes (RON/PYR/AIX/FRS), 35 quests, questComplete on ost_07_act5 |
-| `plan.md` | Confirm Import Queue row #99 is in the main table (it's in the Session End block but may not be in the queue table) |
-| `index.md` | Add OST Code Collision Register entry + `## Song of Roland (OST) Nodes` section (RON/PYR/AIX/FRS) |
-
-Commit as `§IMPORT-99` after all three files are updated.
+OST imported 2026-06-05 (443 nodes, 1590 quests). Tracking files updated 2026-06-11:
+- `api-data-audit.md` — OST row was already present (written during import session)
+- `plan.md` — Import Queue row #99 confirmed present (line 923)
+- `index.md` — OST collision entry added to Code Collision Register; `## Song of Roland (OST) Nodes` section added (RON/PYR/AIX/FRS)
 
 ---
 

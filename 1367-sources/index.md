@@ -203,6 +203,7 @@ Codes that were planned but found already occupied by existing game nodes:
 | ERF | Grimm's Fairy Tales starting node | Grimm Archive — German Collection City (existing) | ERF exists; ANT existed; STB/GLD/CI/DNG/CHC/PRH created; cycle 1→STB hub; cycle 2→DNG hub; cycles 3–7→ERF hub |
 | HFT | Frithiof's Saga starting node | "South Shore — The Fishermen's Village" (lake_south game node) | HFT collision — cycle 1 activates at ALR; cycle 2 at RNG; cycles 3–7 at BLG (Balder's Grove); quest prefix hft_ unaffected |
 | RKV | Poetic Edda starting node | "Frost Warden's Throne" (game node) | RKV collision — cycle 1 activates at VLH (Völva's Heath); cycle 2 at AEG (Ægir's Hall)/ASG/RSS; cycles 3–7 at AEG hub; quest prefix rkv_ unaffected |
+| OST | Song of Roland starting node | "Bruges — Cloth Hall" (docks game node) | Quest prefix only — cycles 1–2 route RON/PYR/AIX/FRS naturally; cycles 3–7 hub at AIX or RON |
 
 ---
 
@@ -280,3 +281,12 @@ Codes that were planned but found already occupied by existing game nodes:
 | VLH | Völva's Heath — The Empty Ground | Northern Norse heath | The flat heath where the seeress was called up to speak Völuspá to Odin; grass pressed flat in a rough circle; two plain gold rings lying cold in the bent grass; quality of air after something large has been said | 108,128 | RKV | Created 2026-06-05; highlands terrain; cycle 1 hub (all 5 acts) |
 | AEG | Ægir's Feast Hall — The Flyting End | Divine feast hall of the sea-giant | Where Loki returned after ejection to say everything he had saved about every god; torches burning low; ravens near the ceiling; a rune-chip half-under a bench at the threshold; hub for cycles 2–7 (RKV collision) | 108,130 | RKV | Created 2026-06-05; camelot terrain; cycle 2 acts 1–2; hub for cycles 3–7 |
 | RSS | The Standing Stone — The Archive Road | Road's edge outside Ásgarðr | Carved with marks older than the current rune-system; at its base: things too dangerous to keep, things too true to destroy; receives what is carried here from Ásgarðr's gate a quarter-mile back | 108,132 | RKV | Created 2026-06-05; ruins terrain; cycle 2 acts 4–5 |
+
+## Song of Roland (OST) Nodes
+
+| Code | Label | Location | Source | Coords (r,c) | Book | Notes |
+|------|-------|----------|--------|--------------|------|-------|
+| RON | Roncevaux Pass — Roland's Last Stand | Pyrenean pass, Navarre | The mountain defile where Roland held the rearguard; his olifant shattered; the paladin's last charge; cycle 1 hub (all 5 acts); cycle 2 acts 1–2 | 110,128 | OST | Created 2026-06-05; highlands terrain |
+| PYR | Pyrenean High Road — The Charlemagne Route | Pyrenees mountain road | The high road Charlemagne's army descended after Roncevaux; the road that brought news of the ambush south; cycle 2 acts 3–4 | 110,130 | OST | Created 2026-06-05; highlands terrain |
+| AIX | Aix-la-Chapelle — Charlemagne's Chapel | Aachen, Frankish capital | The imperial chapel where Roland's sword Durendal was commemorated; Charlemagne's court judgment; hub for cycles 3–7 | 110,132 | OST | Created 2026-06-05; camelot terrain |
+| FRS | Frankish Road-Town — The Supply Depot | Frankish road junction, east of Aachen | The logistical waystation on the road east; the quartermaster's record of the lost rearguard's equipment; cycles 1–2 waypoint | 110,134 | OST | Created 2026-06-05; city terrain |
