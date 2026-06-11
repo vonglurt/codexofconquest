@@ -1,6 +1,6 @@
 # Plan: TBS — Knight in the Panther's Skin (Shota Rustaveli, c.1225)
 
-**Phase:** 1 → 2 | **Status:** SEEDS COMPLETE but NOT YET IMPORTED — source .txt MISSING (wrong file)  
+**Phase:** 3 — IMPORTED 2026-06-11 | **Status:** COMPLETE — 7 cycles, 35 acts, questComplete on tbs_c7a5  
 **Source:** TBS-knight-panther-skin.md (7 cycles, 35 acts — complete from memory pass)  
 **Quest prefix:** `tbs_` | **questComplete:** `tbsArabian7Complete` (cycle 7 act 5)  
 **Phase 1 task:** Acquire CORRECT TBS-knight-panther-skin.txt (Marjory Scott Wardrop tr. 1912, Project Gutenberg)  

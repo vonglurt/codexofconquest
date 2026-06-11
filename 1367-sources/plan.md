@@ -293,7 +293,7 @@ All files under 60 KB in 1367-sources/. Each to receive full pipeline: read → 
 | Code | Title | KB | Status |
 |------|-------|----|--------|
 | SDQ | Rob Roy — Walter Scott | 36 | **IMPORTED — 2026-06-05 — OBH/GLA/ABF/GLN/LLM/EDI new nodes; SDQ-01–07 (7 cycles, 35 acts); questComplete on SDQ-07 act5; SDQ collision (Crones' Domain)→OBH; terrain key fix applied** |
-| TBS | Knight in the Panther's Skin — Rustaveli | 41 | **SEEDS COMPLETE 2026-06-03 — TBS-01–07 all vignettes done. No new nodes. See TBS-knight-panther-skin.md.** |
+| TBS | Knight in the Panther's Skin — Rustaveli | 41 | **IMPORTED — 2026-06-11 — GEO/PHY/GHC new nodes (placed before parser stop per BGZ pattern); tbs_c1a1–tbs_c7a5 (7 cycles, 35 acts); questComplete on tbs_c7a5; 7 NPCs** |
 | LHR | Beowulf — Anon (Gummere) | 42 | **IMPORTED — 2026-06-05 — BRW/GEA/WM new nodes; HEO/DAN reused from CPH; LHR-01–07 (7 cycles, 35 acts); questComplete on LHR-07 act5; coast→beach terrain fix on GEA; WM created as central archive hub** |
 | BHD | Cuchulain of Muirthemne — Lady Gregory | 43 | **IMPORTED — 2026-06-05 — EMR/PSU/ULC new nodes; BHD-01–07 (7 cycles, 35 acts); questComplete on BHD-07 act5; BHD collision→EMR (Emain Macha)** |
 | ZTH | Odyssey — Homer (Butler) | 43 | **SEEDS COMPLETE 2026-06-03 — ZTH-01–07 all vignettes done. New nodes: PHC, RME. See ZTH-odyssey.md.** |
@@ -1585,7 +1585,7 @@ Verified 2026-06-11 against live DB. ATH/ZTH/JRS/FLR/LIS already imported.
 | 4 | ~~FLR~~ | Divine Comedy: Inferno | — | — | — | ✓ DONE (55 quests) |
 | 5 | ~~LIS~~ | Lusiads | — | — | — | ✓ DONE (65 quests) |
 | 6 | ~~CID~~ | Chronicle of the Cid | — | — | BGZ/TOL/CDN/VLC | ✓ DONE 2026-06-11 (35 quests, 7 cycles, questComplete cid_c7a5) |
-| 7 | **TBS** | Knight in the Panther's Skin | 1–7 | 35 | GEO (confirm/create) | open |
+| 7 | ~~TBS~~ | Knight in the Panther's Skin | — | — | GEO/PHY/GHC | ✓ DONE 2026-06-11 (35 quests, 7 cycles, questComplete tbs_c7a5) |
 | 8 | **BEY** | Mandeville's Travels | 1–16 | ~65 | BEI/JER/SID (new); KOL (confirm) | open |
 | 9 | **KYA** | Shah-Nameh | 1–30 | ~125 | YAZ/KBL/SIS/HRT (new); TBZ/TRB confirm | open |
 
