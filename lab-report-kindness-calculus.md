@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # On the Asymptotic Kindness of Quest Graphs: Prosocial Mechanics, Token Automata, and the Probabilistic Case Against Hitting Things in Narrative Role-Playing Systems
 

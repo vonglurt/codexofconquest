@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Roll2Hit — The Shattered Codex: Combat Mechanics
 **Last synced:** 2026-05-26 · 17,762 lines · All line numbers re-verified (SP4 annotation pass)

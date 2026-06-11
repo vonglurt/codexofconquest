@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com
 // layout-solve.js — exact constraint-propagation grid layout for N/E/S/W networks
 //
 // Springs are wrong for orthogonal grids: they converge to ~1-unit off-axis

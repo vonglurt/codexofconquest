@@ -1,5 +1,5 @@
 #!/bin/bash
-# SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
 #       this eats up transcripts with numbers seperated by : . we then colapse whitespace. we also design this for macos if neither content in pipeline or file exist with length. 
 
 # Function to process input stream

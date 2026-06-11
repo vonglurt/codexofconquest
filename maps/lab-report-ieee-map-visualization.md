@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com -->
+
 # Hierarchical Map Visualization and Coordinate Mesh Organization for a Medieval World Graph
 
 **Roll2Hit World Builder — Technical Report**

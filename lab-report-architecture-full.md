@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report — Roll2Hit Architecture: A Full Technical Review
 ### IEEE-Format Architectural Review of a 14,377-Line Single-File Browser RPG

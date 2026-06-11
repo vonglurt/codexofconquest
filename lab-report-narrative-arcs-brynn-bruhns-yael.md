@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report: Companion Narrative Arc Layers 70, 72, 74
 ## §XXXV The First Inn Light / §XXXVII Commander Bruhns's CO Scene / §XXXIX Yael's Named Report Scene

@@ -1,9 +1,9 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # WBAPI Architecture Report
 ## Roll2Hit World Builder API — Internal Design, Buffer Model, and Single-File Source of Truth
 
-**Author:** PaulRicheson@Roll2Hit.com  
+**Author:** paul@roll2hit.com  
 **System:** `wbapi-server.js` + `wbapi-core.js`  
 **Game file:** `roll2hit-v3.html` (1,794,283 bytes)  
 **Server:** Node.js HTTP, port 1367  

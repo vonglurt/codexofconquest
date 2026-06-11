@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report — Tattoo Progression System: Character Persistence, Death Economics, and Run Chronicle in a D&D 5e-Derived Single-File RPG
 

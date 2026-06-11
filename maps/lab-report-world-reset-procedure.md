@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com -->
+
 # World Reset & Mesh Insertion Cycle — Lab Report
 
 **Roll2Hit World Builder — Engineering Report**

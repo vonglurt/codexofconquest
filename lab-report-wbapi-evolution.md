@@ -1,8 +1,8 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report: From grep to WBAPI — The Evolution of Roll2Hit World Data Access
 
-**Author:** Claude (Sonnet 4.6) + PaulRicheson@Roll2Hit.com  
+**Author:** Claude (Sonnet 4.6) + paul@roll2hit.com  
 **Date:** 2026-05-29  
 **Classification:** Architecture / Developer Tooling / Data Access Evolution  
 **Audience:** CS/EE background; familiar with shell scripting, Node.js, REST APIs  

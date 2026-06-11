@@ -5546,10 +5546,11 @@ async function route(req, res) {
         const toReach=bfsReach(toCode);
         let actualFrom=fromCode,actualTo=toCode;
         let bestToD=mdist(origFc,origTc);
-        for(const c of toReach){const co=WBAPI.nodeCoords[c];if(!co)continue;const d=mdist(origFc,co);if(d<bestToD){bestToD=d;actualTo=c;}}
+        // skip coord-only stubs (in nodeCoords but not nodeMap) — editField no-ops on them
+        for(const c of toReach){const co=WBAPI.nodeCoords[c];if(!co||!nm[c])continue;const d=mdist(origFc,co);if(d<bestToD){bestToD=d;actualTo=c;}}
         const origActualTo=WBAPI.nodeCoords[actualTo];
         let bestFromD=mdist(origFc,origActualTo||origTc);
-        for(const c of fromReach){const co=WBAPI.nodeCoords[c];if(!co)continue;const d=mdist(co,origActualTo||origTc);if(d<bestFromD){bestFromD=d;actualFrom=c;}}
+        for(const c of fromReach){const co=WBAPI.nodeCoords[c];if(!co||!nm[c])continue;const d=mdist(co,origActualTo||origTc);if(d<bestFromD){bestFromD=d;actualFrom=c;}}
         const directDist=mdist(origFc,origTc);
         const meshDist=mdist(WBAPI.nodeCoords[actualFrom]||origFc,WBAPI.nodeCoords[actualTo]||origTc);
         emit(`  [highway] ${fromCode}(net=${fromReach.size})→${toCode}(net=${toReach.size})  direct-dist=${directDist}`);
@@ -5560,7 +5561,8 @@ async function route(req, res) {
 
         const fc=WBAPI.nodeCoords[actualFrom],tc=WBAPI.nodeCoords[actualTo];
         const dr=tc.r-fc.r,dc=tc.c-fc.c;
-        const occ=new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
+        // only nodes with NODE_MAP entries — coord-only stubs would silently reject editField
+        const occ=new Map(Object.entries(WBAPI.nodeCoords).filter(([c])=>!!nm[c]).map(([c,p])=>[`${p.r},${p.c}`,c]));
         const created=[];
         const nextJ=()=>{const nums=Object.keys(nm).filter(c=>/^J\d+$/.test(c)).map(c=>+c.slice(1));return`J${(nums.length?Math.max(...nums):0)+1}`;};
         const addJ=(code,r,c,dir,prev)=>{
@@ -6164,9 +6166,12 @@ async function route(req, res) {
           const kCode = nextJCode();
           const kTerrain = nm[def.from]?.name||'junction';
           const kAct = nm[def.from]?.act||1;
+          // use code (not label) for junction endpoints to prevent exponential label growth
+          const kLabFrom = nm[def.from]?.junction ? def.from : (nm[def.from]?.label||def.from);
+          const kLabTo   = nm[def.to]?.junction   ? def.to   : (nm[def.to]?.label||def.to);
           const kBody = {
-            name:kTerrain, label:`${nm[def.from]?.label||def.from} ↔ ${nm[def.to]?.label||def.to} Junction`,
-            text:`A crossroads between ${nm[def.from]?.label||def.from} and ${nm[def.to]?.label||def.to}.`,
+            name:kTerrain, label:`${kLabFrom} ↔ ${kLabTo} Junction`,
+            text:`A crossroads between ${kLabFrom} and ${kLabTo}.`,
             act:kAct, junction:true, npc:null, battle:null, loot:null, sleep:false,
             [OPP4[def.dir]]:def.from, [def.dir]:def.to, [backToJ]:jCode
           };
@@ -7544,6 +7549,148 @@ async function route(req, res) {
       return;
     }
 
+    // ── POST /api/graph/cluster-bridge ──────────────────────────────────────
+    // Connects remaining isolated clusters to the main network without running
+    // a full reweave.  Safe to run after reweave when a few clusters are left.
+    // Body: { execute? }
+    if (parts[1] === 'cluster-bridge' && method === 'POST') {
+      let cbBody; try { cbBody = await readBody(req); } catch(e) { cbBody = {}; }
+      const cbExec = !!(cbBody||{}).execute;
+
+      res.writeHead(200, {'Content-Type':'text/plain; charset=utf-8','Transfer-Encoding':'chunked','X-Accel-Buffering':'no'});
+      const emit = s => res.write(s + '\n');
+
+      const nm   = WBAPI.nodeMap;
+      const DIRS4= ['N','S','E','W'];
+
+      // undirected adjacency — matches the canonical bfsReach in the graph handler
+      const cbAdj = new Map();
+      for (const c of Object.keys(nm)) cbAdj.set(c, new Set());
+      for (const [c, node] of Object.entries(nm)) {
+        for (const d of DIRS4) {
+          const nb = node[d]; if (!nb || !nm[nb]) continue;
+          cbAdj.get(c).add(nb);
+          cbAdj.get(nb).add(c);
+        }
+      }
+      const bfsReach = start => {
+        if (!cbAdj.has(start)) return new Set([start]);
+        const visited = new Set([start]); const q = [start];
+        while (q.length) {
+          const c = q.shift();
+          for (const nb of cbAdj.get(c)) { if (!visited.has(nb)) { visited.add(nb); q.push(nb); } }
+        }
+        return visited;
+      };
+
+      // find hub — prefer LHR, else largest component
+      const getHub = () => {
+        if (nm['LHR']) return 'LHR';
+        let best='',bestSz=0;
+        for (const c of Object.keys(nm)) { const sz=bfsReach(c).size; if(sz>bestSz){bestSz=sz;best=c;} }
+        return best;
+      };
+
+      const hub    = getHub();
+      const reachF = bfsReach(hub);
+      const unreachF = Object.keys(nm).filter(c => !reachF.has(c));
+      emit(`[cluster-bridge] hub=${hub}  reachable=${reachF.size}/${Object.keys(nm).length}  unreachable=${unreachF.length}`);
+
+      if (!unreachF.length) {
+        emit('[cluster-bridge] all nodes reachable ✓');
+        res.end(); return;
+      }
+
+      // build connected components of unreachable nodes
+      const unvisSet = new Set(unreachF);
+      const clusters = [];
+      for (const start of unreachF) {
+        if (!unvisSet.has(start)) continue;
+        const comp = []; const bq = [start];
+        while (bq.length) {
+          const c = bq.shift(); if (!unvisSet.has(c)) continue;
+          unvisSet.delete(c); comp.push(c);
+          for (const d of DIRS4) { const t = nm[c]?.[d]; if (t && nm[t] && unvisSet.has(t)) bq.push(t); }
+        }
+        clusters.push(comp);
+      }
+
+      emit(`[cluster-bridge] ${clusters.length} isolated cluster${clusters.length!==1?'s':''}`);
+      for (const [i,cl] of clusters.entries()) {
+        const named = cl.filter(c => !nm[c]?.junction);
+        emit(`  cluster ${i+1}: ${cl.length} nodes  named=[${named.slice(0,6).join(' ')}${named.length>6?` +${named.length-6}`:''}]`);
+      }
+
+      if (!cbExec) {
+        emit(`[cluster-bridge] dry-run: ${clusters.length} clusters — add --execute to bridge`);
+        res.end(); return;
+      }
+
+      // ── reuse buildHighway from reweave context ───────────────────────────
+      // buildHighway is a closure defined inside the reweave-all block and is
+      // not accessible here.  Run the full reweave with execute=true instead,
+      // or use the streamlined inline bridge below.
+
+      // inline bridge: for each cluster find nearest (reach,cluster) pair and
+      // connect via smart-connect endpoint which builds the corridor
+      const mdist = (a,b) => Math.abs(a.r-b.r)+Math.abs(a.c-b.c);
+      let bridged=0, failed=0;
+      let reachArr = [...reachF];
+
+      for (let ci=0; ci<clusters.length; ci++) {
+        const cluster = clusters[ci];
+        let bestDist=Infinity, bestR=null, bestC=null;
+        for (const clNode of cluster) {
+          const cc = WBAPI.nodeCoords[clNode]; if(!cc||!nm[clNode]) continue;
+          for (const rNode of reachArr) {
+            const rc = WBAPI.nodeCoords[rNode]; if(!rc||!nm[rNode]) continue;
+            const d = mdist(cc,rc);
+            if (d<bestDist) { bestDist=d; bestR=rNode; bestC=clNode; }
+          }
+        }
+        if (!bestR||!bestC) { emit(`  cluster ${ci+1}: SKIP — no coords`); failed++; continue; }
+        emit(`  cluster ${ci+1}: ${bestR}→${bestC}  dist=${bestDist}`);
+
+        // Get plan from smart-connect (direction + anchor nodes), then PUT to wire them
+        const OPP4cb = {N:'S',S:'N',E:'W',W:'E'};
+        const httpReq = (path, method, body) => new Promise(resolve => {
+          const s = JSON.stringify(body);
+          const opts = {hostname:'localhost',port:PORT,path,method,
+                        headers:{'Content-Type':'application/json','Content-Length':Buffer.byteLength(s)}};
+          const r = require('http').request(opts, res2 => {
+            let d=''; res2.on('data',c=>d+=c); res2.on('end',()=>{ try{resolve(JSON.parse(d));}catch{resolve({ok:false,raw:d.slice(0,200)});} });
+          });
+          r.on('error',e=>resolve({ok:false,error:e.message})); r.write(s); r.end();
+        });
+
+        const plan = await httpReq('/api/graph/smart-connect','POST',{from:bestR,to:bestC,dryRun:true});
+        if (!plan.ok||!plan.plan?.direction) {
+          emit(`  ✗ plan failed: ${plan.error||'no direction'}`); failed++; continue;
+        }
+        const { direction: dir, insertA, insertB } = plan.plan;
+        const aCode = insertA.code, bCode = insertB.code;
+
+        // Wire A→dir→B and B→OPP(dir)→A via separate PUTs (bidirectional)
+        const putA = await httpReq(`/api/node/${aCode}`,'PUT',{[dir]:bCode});
+        const putB = await httpReq(`/api/node/${bCode}`,'PUT',{[OPP4cb[dir]]:aCode});
+
+        if (putA.ok && putB.ok) {
+          emit(`  ✓ wired ${aCode}.${dir}↔${bCode}  (${dir}/${OPP4cb[dir]})`);
+          bridged++;
+          const nr = bfsReach(hub);
+          for (const c of nr) reachF.add(c);
+          reachArr = [...reachF];
+        } else {
+          emit(`  ✗ put failed: A=${putA.ok?'ok':putA.error||'fail'}  B=${putB.ok?'ok':putB.error||'fail'}`);
+          failed++;
+        }
+      }
+
+      const postR = bfsReach(hub);
+      emit(`[cluster-bridge] done: ${bridged} connected  ${failed} failed  → reachable=${postR.size}/${Object.keys(nm).length}`);
+      res.end(); return;
+    }
+
     // ── GET /api/graph/junction-audit ────────────────────────────────────────
     // Reports junction vs. named node breakdown, quest-ref safety check,
     // coordinate coverage, degree distribution, and a P_NUKE dry-run preview.
@@ -7659,7 +7806,7 @@ async function route(req, res) {
       });
     }
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/rip-and-connect  POST /api/graph/reweave-all  GET /api/graph/junction-audit' });
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/rip-and-connect  POST /api/graph/reweave-all  POST /api/graph/cluster-bridge  GET /api/graph/junction-audit' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────

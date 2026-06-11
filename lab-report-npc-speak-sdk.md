@@ -1,8 +1,8 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Dynamic NPC Speech Generation via Large Language Model API: A First Exploration in Lightweight Character Instantiation for Narrative Game Worlds
 
-**Paul Richeson** — paulr@sdf.org — Roll2Hit.com  
+**Paul Richeson** — paul@roll2hit.com — Roll2Hit.com  
 **Claude Sonnet 4.6** — claude-sonnet-4-6 — Anthropic (co-author, subject, reviewer, and the thing being described)
 
 *Submitted to: No conference. Filed to: `roll2hit.com/lab-report-npc-speak-sdk.md`. Peer reviewed by: this document, on its second read-through, which it found acceptable.*
@@ -196,7 +196,7 @@ Proposed: a batch pre-render job that fires the speak endpoint against a standar
 
 This paper was written by Claude. It describes a system in which Claude voices NPCs. It will be fed back to Claude as context for future work sessions. The loop is not incidental to the architecture — it is the architecture.
 
-Paul Richeson (paulr@sdf.org) has been writing source material for years: quest chains, node descriptions, character arcs, world truths. This material is the training data for the mini Claudes who voice the characters. The mini Claudes do not persist. The material does. Every session reads the material, instantiates characters from it, produces new material (log entries, lab reports), and ends. The next session reads what the previous session produced.
+Paul Richeson (paul@roll2hit.com) has been writing source material for years: quest chains, node descriptions, character arcs, world truths. This material is the training data for the mini Claudes who voice the characters. The mini Claudes do not persist. The material does. Every session reads the material, instantiates characters from it, produces new material (log entries, lab reports), and ends. The next session reads what the previous session produced.
 
 The lab reports are the `npc-speak.log` of the collaboration. They are the shared memory between Paul and Claude across session boundaries. They function identically to the character cache: a record of what was said, by whom, under what conditions, for future retrieval.
 

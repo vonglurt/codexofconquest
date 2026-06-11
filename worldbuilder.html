@@ -552,7 +552,7 @@ select.fi{appearance:none;}
   <div class="panel" id="tab-bestiary">
     <div class="split">
       <div class="sidebar" style="width:200px">
-        <div class="sidebar-hd">Terrains</div>
+        <div class="sidebar-hd">Terrains <button class="btn sm" id="btn-bestiary-refresh" style="font-size:10px;margin-left:auto;display:none" title="Reload terrains + monsters from API">↺</button></div>
         <div class="search-bar"><input id="terrain-search" placeholder="Filter terrain…"></div>
         <div class="sidebar-body" id="terrain-list"></div>
       </div>
@@ -2256,6 +2256,66 @@ function loadFile(text) {
   serverDetect();
 }
 
+// ── Server-first API load — populates WBAPI directly from JSON endpoints ──────
+async function loadFromAPIData() {
+  const B = 'http://localhost:1367';
+  // Fetch all collections in parallel
+  const [allExport, coordsResp, npcListResp, dropsResp] = await Promise.all([
+    fetch(`${B}/api/export/all?format=json`).then(r => { if (!r.ok) throw new Error('HTTP '+r.status); return r.json(); }),
+    fetch(`${B}/api/coords`).then(r => r.json()),
+    fetch(`${B}/api/list/npc`).then(r => r.json()),
+    fetch(`${B}/api/export/monster_drops?format=json`).then(r => r.json()),
+  ]);
+  const d = allExport.data || {};
+  WBAPI.nodeMap        = d.NODE_MAP        || {};
+  WBAPI.questDb        = d.QUEST_DB        || {};
+  WBAPI.monsterPool    = d.MONSTER_POOL    || {};
+  WBAPI.worldDb        = d.WORLD_DB        || {};
+  WBAPI.fishPool       = d.FISH_POOL       || [];
+  WBAPI.nightFishPool  = d.NIGHT_FISH_POOL || [];
+  WBAPI.lakeMagicDb    = d.LAKE_MAGIC_DB   || {};
+  WBAPI.nodeCoords     = coordsResp.coords  || {};
+  WBAPI.monsterDrops   = dropsResp.data     || {};
+  // Build minimal birkaNpcs from list (key → object with at least name/node/occupation)
+  WBAPI.birkaNpcs = {};
+  for (const npc of (Array.isArray(npcListResp) ? npcListResp : (npcListResp.npcs||[]))) {
+    const k = npc.key || npc.id;
+    if (k) WBAPI.birkaNpcs[k] = npc;
+  }
+  WBAPI._rawQuestSrc = ''; // flag chain analysis requires HTML source; unavailable in API mode
+  WBAPI._buildIndexes();
+  WBAPI.loaded = true;
+}
+
+function afterAPILoad() {
+  _rawSource = null; // no raw HTML in API mode — diff/patch unavailable
+  const nc = Object.keys(WBAPI.nodeMap).length;
+  const qc = Object.keys(WBAPI.questDb).length;
+  $('node-count').textContent  = nc + ' nodes';
+  $('quest-count').textContent = qc + ' quests';
+  $('map-node-cnt').textContent = nc;
+  if ($('quest-cnt'))  $('quest-cnt').textContent  = qc;
+  if ($('npc-cnt'))    $('npc-cnt').textContent    = WBAPI.npcs.all().filter(n=>!n._inline).length;
+  $('map-empty').style.display = 'none';
+  // Diff/patch requires HTML source — disable when loaded from API
+  $('btn-diff').disabled = true;
+  $('btn-apply-patch').textContent = 'Save to File';
+  $('btn-apply-patch').disabled = false;
+  ['btn-save-node','btn-delete-node','btn-add-node','btn-run-audit'].forEach(id => { const el=$(id); if(el) el.disabled=false; });
+  renderMapNodeList();
+  renderMap();
+  renderTerrainList();
+  renderNpcList();
+  renderQuestList();
+  if (typeof populateArcFilter === 'function') populateArcFilter();
+  $('stats-content').style.display = 'none'; $('stats-empty').style.display = '';
+  if ($('builder-content')) { $('builder-content').innerHTML = ''; $('builder-content').style.display = 'none'; $('builder-empty').style.display = ''; }
+  $('welcome-screen').classList.add('hidden');
+  SERVER.active = true;
+  serverDetect();
+  document.dispatchEvent(new Event('wbapi:loaded'));
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // MAP TAB
 // ═══════════════════════════════════════════════════════════════════════════
@@ -2367,6 +2427,36 @@ function selectMapNode(code){
   renderMap(); renderMapNodeList();
   $('map-detail-pane').style.display='flex';
   renderNodeDetail(code);
+  // Async: load rich location data from API if server active
+  if (SERVER.active) loadLocationDetail(code);
+}
+
+async function loadLocationDetail(code) {
+  try {
+    const r = await fetch(`${SERVER.url}/api/location/${encodeURIComponent(code)}`);
+    if (!r.ok) return;
+    const d = await r.json();
+    // Inject location summary strip at top of detail body
+    const body = $('nd-body');
+    if (!body || mapSelected !== code) return;
+    let strip = body.querySelector('#nd-api-strip');
+    if (!strip) { strip = document.createElement('div'); strip.id='nd-api-strip'; body.insertBefore(strip, body.firstChild); }
+    const t = d.terrain || {};
+    const mons = (d.monsters||[]).slice(0,6).map(m=>`<span style="font-size:9px;background:var(--bg3);padding:1px 5px;border-radius:3px;margin:1px;display:inline-block">${m.name||m.key}</span>`).join('');
+    const quests = (d.quests||[]).map(q=>`<div style="font-size:10px;color:var(--purple);cursor:pointer" onclick="switchTab('quests');selectQuest('${q.id}')">${q.id} — ${(q.title||'').slice(0,38)}</div>`).join('');
+    const npcs = (d.npcs||[]).map(n=>`<span style="font-size:10px;color:var(--pink);margin-right:6px">${n.name||n.key}</span>`).join('');
+    strip.innerHTML = `
+      <div style="background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:6px 8px;margin-bottom:6px;font-size:10px">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span style="font-size:14px">${t.icon||'🗺'}</span>
+          <span style="color:var(--text);font-weight:700">${t.label||d.node?.name||'?'}</span>
+          <span style="color:var(--muted);margin-left:auto">Act ${d.node?.act||'?'}</span>
+        </div>
+        ${mons ? `<div style="margin-bottom:3px">${mons}</div>` : ''}
+        ${quests ? `<div style="margin-bottom:3px">${quests}</div>` : ''}
+        ${npcs ? `<div>${npcs}</div>` : ''}
+      </div>`;
+  } catch(_) {}
 }
 
 function renderNodeDetail(code){
@@ -2704,6 +2794,20 @@ function renderTerrainList(){
   }
 }
 $('terrain-search').addEventListener('input',renderTerrainList);
+
+// Refresh bestiary from API
+document.addEventListener('DOMContentLoaded', () => {
+  const brBtn = $('btn-bestiary-refresh');
+  if (brBtn) {
+    brBtn.addEventListener('click', async () => {
+      if (!SERVER.active) return;
+      brBtn.disabled = true; brBtn.textContent = '…';
+      await refreshMapFromServer();
+      renderTerrainList();
+      brBtn.disabled = false; brBtn.textContent = '↺';
+    });
+  }
+});
 
 function renderMonsterTable(){
   if(!selTerrain){$('bestiary-empty').style.display='flex'; $('monster-tbody').innerHTML=''; return;}
@@ -3327,6 +3431,58 @@ function renderNpcDetail(npc){
     }
   }
   area.innerHTML=h;
+  if (SERVER.active && npcKey) loadNpcFromAPI(npcKey);
+}
+
+async function loadNpcFromAPI(key) {
+  if (!SERVER.active || !key) return;
+  try {
+    const r = await fetch(`${SERVER.url}/api/npc/${encodeURIComponent(key)}`);
+    if (!r.ok) return;
+    const d = await r.json();
+    // Find or create NPC API strip
+    let strip = document.getElementById('npc-api-strip');
+    if (!strip) {
+      const pane = $('npc-detail-area') || document.querySelector('.npc-card')?.parentElement;
+      if (!pane) return;
+      strip = document.createElement('div'); strip.id = 'npc-api-strip';
+      pane.appendChild(strip);
+    }
+    const npc = d.npc || d;
+    // Build speak interface
+    strip.innerHTML = `
+      <div style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
+        <div style="font-size:10px;color:var(--teal);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px">🎭 NPC Speak</div>
+        <div style="display:flex;gap:5px;margin-bottom:5px">
+          <input id="npc-speak-input" class="fi fi-sm" placeholder="Say something to ${npc.name||key}…" style="flex:1">
+          <select id="npc-speak-state" class="fi fi-sm" style="width:90px">
+            <option value="neutral">Neutral</option>
+            <option value="friendly">Friendly</option>
+            <option value="dearFriend">Dear Friend</option>
+          </select>
+          <button class="btn sm" id="npc-speak-btn" style="font-size:10px">Talk</button>
+        </div>
+        <div id="npc-speak-out" style="font-size:11px;font-style:italic;color:var(--teal);padding:5px 7px;background:var(--bg3);border-radius:4px;display:none;line-height:1.65"></div>
+      </div>`;
+    const speakBtn = strip.querySelector('#npc-speak-btn');
+    const speakInput = strip.querySelector('#npc-speak-input');
+    const speakOut = strip.querySelector('#npc-speak-out');
+    const speakState = strip.querySelector('#npc-speak-state');
+    async function doSpeak() {
+      const prompt = speakInput.value.trim(); if (!prompt) return;
+      speakBtn.disabled = true; speakBtn.textContent = '…';
+      speakOut.textContent = '…'; speakOut.style.display = 'block';
+      try {
+        const p = new URLSearchParams({ prompt, state: speakState.value });
+        const r = await fetch(`${SERVER.url}/api/npc/${encodeURIComponent(key)}/speak?${p}`);
+        const rd = await r.json();
+        speakOut.textContent = `"${rd.reply || rd.error || 'No response'}"`;
+      } catch(e) { speakOut.textContent = 'Error: '+e.message; }
+      speakBtn.disabled = false; speakBtn.textContent = 'Talk';
+    }
+    speakBtn.addEventListener('click', doSpeak);
+    speakInput.addEventListener('keydown', e => { if (e.key==='Enter') doSpeak(); });
+  } catch(_) {}
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -3570,6 +3726,31 @@ function selectQuest(id){
     }
     cb.appendChild(ag);
   }
+  if (SERVER.active) loadQuestChainFromAPI(id);
+}
+
+async function loadQuestChainFromAPI(id) {
+  try {
+    const r = await fetch(`${SERVER.url}/api/quest/${encodeURIComponent(id)}/chain`);
+    if (!r.ok || selQuestId !== id) return;
+    const d = await r.json();
+    const chain = d.chain || d;
+    const up   = (chain.upstream   || chain.dependencies || []);
+    const down = (chain.downstream || chain.dependents   || []);
+    if (!up.length && !down.length) return;
+    // Inject chain strip into quest detail body
+    let strip = document.getElementById('qd-chain-strip');
+    if (!strip) {
+      const qdb = $('quest-detail-area') || $('qd-body');
+      if (!qdb) return;
+      strip = document.createElement('div'); strip.id = 'qd-chain-strip';
+      qdb.appendChild(strip);
+    }
+    const mkLink = arr => arr.map(qid=>`<span class="chain-link" onclick="selectQuest('${qid}')">${qid}<span class="arrow">→</span>${(WBAPI.questDb[qid]?.title||'').slice(0,28)}</span>`).join('');
+    strip.innerHTML = (up.length?`<div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin-bottom:3px">Upstream</div>${mkLink(up)}`:'') +
+      (down.length?`<div style="font-size:10px;color:var(--muted);text-transform:uppercase;margin:6px 0 3px">Downstream</div>${mkLink(down)}`:'');
+    strip.style.cssText='margin-top:8px;padding-top:8px;border-top:1px solid var(--border)';
+  } catch(_) {}
 }
 
 $('btn-quest-reset').addEventListener('click', () => {
@@ -4990,18 +5171,16 @@ const BIRKA_NPC = {};
     splash.style.animation = '';
     splashHexCols();
 
-    // Kick off fetch in parallel
-    const fetchP = fetch('http://localhost:1367/api/source')
-      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); });
+    // Kick off all API fetches in parallel while splash animates
+    const apiP = loadFromAPIData();
 
     // Phase sequence
-    splashPhase('Searching…',           'scanning local network', 5);  await wait(700);
-    splashPhase('Establishing link…',   'port 1367', 14);              await wait(600);
-    splashPhase('Receiving data…',      'roll2hit-v3.html', 26);
+    splashPhase('Connecting…',          'port 1367', 5);            await wait(400);
+    splashPhase('Fetching world data…', '/api/export/all', 16);     await wait(300);
+    splashPhase('Loading nodes…',       '/api/coords', 28);
 
-    let src;
     try {
-      src = await fetchP;
+      await apiP;
     } catch(e) {
       splashPhase('Connection failed', e.message, 0);
       $('splash-bar').style.background = '#ff3333';
@@ -5013,16 +5192,12 @@ const BIRKA_NPC = {};
       return;
     }
 
-    // Parse and switch columns to real data
-    loadFile(src);
     splashRealCols();
-
-    splashPhase('Parsing terrain…',         'world topology', 40);        await wait(550);
-    splashPhase('Cataloguing monsters…',    WBAPI.loaded ? Object.keys(WBAPI.monsterPool).length + ' entries' : '', 54); await wait(600);
-    splashPhase('Mapping nodes…',           WBAPI.loaded ? Object.keys(WBAPI.nodeMap).length + ' locations' : '', 66);  await wait(500);
-    splashPhase('Cross-referencing…',       WBAPI.loaded ? Object.keys(WBAPI.questDb).length + ' quests' : '', 78);    await wait(550);
-    splashPhase('Decombobulating…',         'please stand by', 88);        await wait(800);
-    splashPhase('Synchronising…',           '', 96);                       await wait(500);
+    splashPhase('Terrain & monsters…', Object.keys(WBAPI.worldDb).length + ' terrains  ' + Object.keys(WBAPI.monsterPool).length + ' monsters', 44); await wait(400);
+    splashPhase('Mapping nodes…',      Object.keys(WBAPI.nodeMap).length + ' locations', 60);   await wait(350);
+    splashPhase('Cross-referencing…',  Object.keys(WBAPI.questDb).length + ' quests', 76);      await wait(350);
+    splashPhase('Building indexes…',   '', 90);                                                   await wait(300);
+    splashPhase('Synchronising…',      '', 96);                                                   await wait(300);
 
     // READY
     $('splash-status').style.cssText = 'position:absolute;bottom:56px;left:0;right:0;text-align:center;z-index:10;font-size:22px;font-weight:700;color:#fff;letter-spacing:.28em;text-shadow:0 0 30px #00ff41,0 0 60px #00ff41;';
@@ -5042,6 +5217,7 @@ const BIRKA_NPC = {};
     const card = $('wcard-server'), status = $('wcard-server-status');
     card.classList.remove('checking'); card.classList.add('active');
     status.style.color = 'var(--green)'; status.textContent = '✓ Loaded from server';
+    afterAPILoad();
     dismiss();
   }
 
@@ -5249,6 +5425,7 @@ $('btn-stats-refresh').addEventListener('click', async () => {
 const _origServerActivated = window._onServerActivated || (() => {});
 window._onServerActivated = () => {
   _origServerActivated();
+  const brBtn = $('btn-bestiary-refresh'); if (brBtn) brBtn.style.display = '';
   $('btn-stats-refresh').disabled = false;
 };
 

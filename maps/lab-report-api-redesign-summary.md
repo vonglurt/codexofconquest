@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com -->
+
 # API Redesign & Worldbuilder Map Repair — Session Summary
 
 **Roll2Hit World Builder — Engineering Report**

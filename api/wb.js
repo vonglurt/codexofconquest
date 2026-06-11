@@ -1177,6 +1177,18 @@ const CMD = {
     ok(`${'═'.repeat(60)}`);
   },
 
+  // ── cluster-bridge: connect remaining isolated clusters without a full reweave ──
+  // Usage: ./api.sh cluster-bridge [--execute]
+  //   Dry-run: reports isolated clusters and the nearest bridge target for each.
+  //   --execute: bridges each cluster to the main network via smart-connect.
+  async 'cluster-bridge'(pos, flags) {
+    await requireServer();
+    const execute = !!flags.execute;
+    if (!execute) ok('[DRY RUN] add --execute to bridge all clusters');
+    ok('streaming from server — output below:\n');
+    await streamPost('/api/graph/cluster-bridge', { execute });
+  },
+
   // ── promote-junction: upgrade a junction node to real content, wiring preserved ─
   // Usage: ./api.sh promote-junction <CODE> --label "Name" --text "desc" [--terrain key]
   //        [--npc key] [--act N]
@@ -1418,7 +1430,7 @@ ${C.bold}═══════════════════════�
   §19 MAP VISUALIZATION  (worldmap --regions --region --city --search --monster --route)
   §20 COORDINATE MANAGEMENT  (geo-seed  move  find-open-location)
   §21 NETWORK WIRING  (smart-connect  highway  junction  fill-gap  connect)
-  §22 NETWORK HEALTH & REPAIR  (broken  reachability  junction-audit  fix-diagonal  fix-all-broken  fix-bidirectional  rip-and-connect  reweave)
+  §22 NETWORK HEALTH & REPAIR  (broken  reachability  junction-audit  fix-diagonal  fix-all-broken  fix-bidirectional  rip-and-connect  reweave  cluster-bridge)
   §23 COMMON RECIPES
   §24 SERVER LIFECYCLE
 
@@ -2685,6 +2697,7 @@ const SYNOPSIS = [
   `  ${C.green}fix-all-broken${C.reset} [--execute] [--limit N]  batch-fix all broken edges`,
   `  ${C.green}fix-bidirectional${C.reset} [--execute]         fix all one-way links (A→B but B doesn't point back)`,
   `  ${C.green}reweave${C.reset} [--execute] [--max-rip 50000] [--max-fix 50000] [--step 4] [--limit 1000000] [--radius 60000] [--no-wither]  MegaReWeave: geo-seed→highways→city-MST→fix-broken→fix-bidir→derelict→wither (streaming, no timeout)`,
+  `  ${C.green}cluster-bridge${C.reset} [--execute]             connect remaining isolated clusters without a full reweave`,
   ``,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Roll2Hit — Combat System Reference
 **File:** `roll2hit-v3.html` · **Layers:** 11–17 (battle engine), 21 (level-up), 23 (notoriety), 36–37 (features, d-pad, Boyscout)  

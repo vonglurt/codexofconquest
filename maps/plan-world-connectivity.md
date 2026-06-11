@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com -->
+
 # Plan: World Connectivity Fix — Making Every City Reachable
 
 **Date:** 2026-06-09  

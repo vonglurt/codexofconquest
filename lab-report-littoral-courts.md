@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 PaulRicheson@Roll2Hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 ```
  lp -o page-top=48 -o page-bottom=48 -o page-left=12 -o page-right=12 -o cpi=18 -o lpi=9 lab-report-littorial-courts-story.txt

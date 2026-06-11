@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com -->
+
 # World Mesh Construction — Procedure & Design
 
 **Roll2Hit World Builder — Engineering Report**  
