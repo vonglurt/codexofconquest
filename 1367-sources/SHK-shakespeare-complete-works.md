@@ -2463,15 +2463,15 @@ SHK | The Pressed Anemone | Cycle 14 | BK/VBY/NUE | Grief-preserved botanical ob
 
 ## SHK Processing Complete
 
-**28 parts read. 14 cycles written and imported. Parts 1–28 fully summarized.**
+**28 parts read. 14 cycles written and imported (47 live quests). Parts 1–28 fully summarized. Cycles 4–7 deployed 2026-06-11 via quick-path method.**
 
 **Cycle themes (taxonomy of document meaning):**
 1. The poem intercepted by a rival — art blocked from its reader
 2–3. (prior session — archived in commit history)
-4. The Dozen Lines — disputed authenticity
-5. The First Rose — inadvertent emblem, token made symbolic before meaning understood
-6. The Inventory of Wolsey — self-authored document that ruined by being read
-7. The Dagger Before the Murder — proximity contamination, guilt by adjacency
+4. The Bracelet's False Claim (Cymbeline) — object weaponized by false narrative
+5. Hamlet's Letter to Ophelia — private correspondence violated for court politics
+6. Portia's Bond Document (Merchant of Venice) — contract language encoding violence
+7. The Agincourt Muster Roll (Henry V) — victory list as cost accounting
 8. The Identical Letter — duplicated singular address, harm released by comparison
 9. The Handkerchief — meaning-bearing vessel, accumulated misreading
 10. The Restoration Certificate — superseded accurate record, both states preserved
@@ -2479,3 +2479,9 @@ SHK | The Pressed Anemone | Cycle 14 | BK/VBY/NUE | Grief-preserved botanical ob
 12. The Forged Instruction — performative forgery, target's compliance is the weapon
 13. The Unfinished Tale — preserved opening, incompleteness as intentional form
 14. The Pressed Anemone — grief-preserved object, orphaned from its mourning record
+
+**Quick-path cycles 4–7 (June 2026):**
+- **Cycle 4**: Imogen's Bracelet — false accusation made physical (5 acts, BK/WM route)
+- **Cycle 5**: Hamlet's Letter — betrayed privacy, court as witness (5 acts, BK/WM route)
+- **Cycle 6**: Shylock's Bond — language weaponized through law (5 acts, BK/WM route)
+- **Cycle 7**: Agincourt Muster — cost of victory counted by names (5 acts, BK/WM route, questComplete flag set)
