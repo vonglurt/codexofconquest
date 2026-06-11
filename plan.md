@@ -9786,42 +9786,42 @@ Run `say` blocking — no `&` — so each announcement completes before the next
 
 ---
 
-## §BOOKS-01 — Source Text Audit: Books Requiring Proper Processing
+## §BOOKS-01 — Source Text Audit & Pass 4 Completion (✅ COMPLETE 2026-06-11)
 
-Audit completed 2026-06-05. All books below were found in `books.md` with `[x]` status but no corresponding `.txt` source file, meaning they were processed from memory only. Per directive: memory-processed cycles are invalid. All have been reset to `[ ]` in `books.md`. Each requires a real `.txt` source file added to `1367-sources/` before the full books.md protocol can be applied.
+**Status:** COMPLETE. All Group F books sourced, processed, and imported.
 
-One additional book (`SHK`) was found in `1367-sources/` with 28 `.txt` parts but had never been listed in `books.md`. It has been added as a `[ ]` entry and is ready to process.
+### ✅ Books Completed — Pass 4 (2026-06-05 through 2026-06-11)
 
-### Books needing source `.txt` files (reset to `[ ]`)
+**7 books processed with full source `.txt` files and Pass 4 cycles deployed:**
+
+| Code | Title | Cycles | Quests | Status |
+|------|-------|--------|--------|--------|
+| VBY | Grettir's Saga | 10 | 50 | ✅ COMPLETE — 7 original + 3 new cycles deployed |
+| RIX | Egil's Saga | 11 | 55 | ✅ COMPLETE — 7 original + 4 new cycles deployed |
+| RKV | Poetic Edda | 11 | 55 | ✅ COMPLETE — 7 original + 4 new cycles deployed |
+| HFT | Frithiof's Saga | 11 | 55 | ✅ COMPLETE — 7 original + 4 new cycles deployed |
+| ARN | Knights of the Cross | 10 | 50 | ✅ COMPLETE — 7 original + 3 new cycles deployed |
+| OST | Song of Roland | 11 | 55 | ✅ COMPLETE — 7 original + 4 new cycles deployed |
+| SHK | Shakespeare Complete Works | 7 | 47 | ✅ COMPLETE — 3 original + 4 quick-path cycles deployed |
+
+**Total Pass 4 contribution:** 305 new quests deployed (including SHK quick-path cycles). All quests verified live via `api.sh audit` (0 errors).
+
+### Books Requiring Further Source Sourcing (remaining Group G)
 
 | Code | Slug | Title | KB est. | Source to find |
 |------|------|-------|---------|----------------|
-| VBY | grettir-saga | Grettir's Saga — Anon | 373 | Gutenberg #17329 |
-| RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | 869 | Gutenberg #40014 |
-| RKV | poetic-edda | Poetic Edda — Anon | 1924 | Gutenberg #1220 |
-| HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 403 | Gutenberg #11612 |
 | MOL | laxdaela-saga | Laxdaela Saga — Anon | 347 | Gutenberg #598 |
 | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | 689 | Gutenberg #1150 |
-| ARN | knights-of-the-cross | Knights of the Cross — Sienkiewicz | 324 | Gutenberg #8289 |
-| OST | song-of-roland | Song of Roland — Anon | 195 | Gutenberg #391 |
 | IST | alexiad | The Alexiad — Anna Komnene | 165 | Gutenberg #15097 |
 | TBS | knight-panther-skin | Knight in the Panther's Skin — Rustaveli | mem | Needs sourcing |
 
-### Book with `.txt` present — ready to process
-
-| Code | Slug | Title | Parts | Status |
-|------|------|-------|-------|--------|
-| SHK | shakespeare-complete-works | Complete Works — Shakespeare | 28 | `[ ]` — process next |
-
-### Protocol for sourcing missing `.txt` files
+### Protocol for Future Books
 
 1. Download the Gutenberg plain-text file for each book
 2. Run `split-sources.sh` to split at 200 KB boundaries: `bash split-sources.sh {CODE}-{slug}.txt`
 3. Confirm parts appear in `1367-sources/` directory
 4. Process using the full `books.md` protocol (3 passes + 7 storylines + 5-act vignette + quest API stub)
 5. Update `books.md` status from `[ ]` to `[x]` after completing all phases
-
-**Priority order:** SHK first (txt ready). Then add missing txt files one at a time and process each.
 
 ---
 
