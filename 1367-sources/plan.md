@@ -277,7 +277,7 @@ Next books to process (in approximate priority order):
 | CAI | Arabian Nights (Lang) | 629 | **IMPORTED — 2026-06-04 — ALB/ALP/LAT new nodes (Aleppo Hills/Storytellers'/Latakia); CAI-01–08 (8 cycles, 40 acts); WM→NUE; BAG→BGD** |
 | SHK | Complete Works — Shakespeare | 5318 | **IN PROGRESS — Parts 1–5 read (5/28). Cycles 1–3 complete. Cycle 3: The Unread Treaty (ANT/ROM/NUE, Coriolanus). Part 5: Cymbeline complete + Hamlet Acts I–II begin. Seeds banked: Imogen's Bracelet, Hamlet's Letter to Ophelia. Parts 6–28 pending.** |
 | BEY | Mandeville's Travels | 472 | **SEEDS COMPLETE 2026-06-02 — BEY-01–07 all vignettes done** |
-| KYA | Shah-Nameh | 883 | **SEEDS COMPLETE 2026-06-02 — KYA-01–25 all vignettes done. New nodes: YAZ, KBL, SIS, TBZ, TRB, HRT. See §KYA-CONT.** |
+| KYA | Shah-Nameh | 883 | **IMPORTED — 2026-06-11 — YAZ/KBL new nodes; TBZ/TRB existing; kya_c1a1–kya_c7a5 (7 cycles, 35 acts); questComplete on kya_c7a5; SIS/HRT deferred (cycles 8+)** |
 | HTY | Mahabharata | 83 | **SEEDS COMPLETE 2026-06-02 — HTY-01–06 all vignettes done** |
 | ADA | Ramayana | 2339 | **COMPLETE 2026-06-02 — ADA-01–48 all done. New nodes: ERZ, MOS, MRV, BUR, CAF, TAN, BUK, SAR, BYR, AMY, SIV, THE, NIC, AMD, TUN, FEZ, ANK, HAM, TIF, ADR. See ADA-ramayana.md.** |
 | AMS | Tale of Genji | 435 | **SEEDS COMPLETE 2026-06-02 — AMS-01–07 all vignettes done** |
@@ -1587,7 +1587,7 @@ Verified 2026-06-11 against live DB. ATH/ZTH/JRS/FLR/LIS already imported.
 | 6 | ~~CID~~ | Chronicle of the Cid | — | — | BGZ/TOL/CDN/VLC | ✓ DONE 2026-06-11 (35 quests, 7 cycles, questComplete cid_c7a5) |
 | 7 | ~~TBS~~ | Knight in the Panther's Skin | — | — | GEO/PHY/GHC | ✓ DONE 2026-06-11 (35 quests, 7 cycles, questComplete tbs_c7a5) |
 | 8 | ~~BEY~~ | Mandeville's Travels | — | — | LGE/ADN/RGS/MGZ/STR/AUG (ADN replaces ARD conflict; DBV used for Ragusa waystation in C2) | ✓ DONE 2026-06-11 (35 quests, 7 cycles, questComplete bey_c7a5) |
-| 9 | **KYA** | Shah-Nameh | 1–30 | ~125 | YAZ/KBL/SIS/HRT (new); TBZ/TRB confirm | open |
+| 9 | ~~KYA~~ | Shah-Nameh | — | — | YAZ/KBL new; TBZ/TRB existing; SIS/HRT deferred | ✓ DONE 2026-06-11 (35 quests, 7 cycles, questComplete kya_c7a5) |
 
 **Pass 4 extra cycles** (8–11/12/13/16/30) are in the `.md` files and can be imported after the base 7 cycles are live. They don't block the base import.
 
@@ -1664,7 +1664,7 @@ Once source texts are acquired (Group D), these books need Pass 4 (source summar
 
 | Group | Items | Effort | Status |
 |-------|-------|--------|--------|
-| A — API Imports | 8 books (ZTH partial + 7 full) | ~16 sessions | open |
+| A — API Imports | 9 books | — | ✓ DONE 2026-06-11 |
 | B — OST tracking | 3 file edits + commit | — | ✓ DONE 2026-06-11 |
 | C — SHK NPC fix | 1 NPC + 27 put calls | — | ✓ DONE (prior session) |
 | D — Source text acquisition | 7 books | 7 downloads + splits | open |

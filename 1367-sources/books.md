@@ -515,7 +515,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | BGW | arabian-nights-burton | Arabian Nights — Alf Layla wa-Layla (Burton tr., 1885 — Calcutta II ms.) | c. 9th–14th century | Arabic Frame-Tale | 983 |
 | [x] | CAI | arabian-nights-lang | Arabian Nights — Alf Layla wa-Layla (Lang adaptation, 1898 — Galland/Syrian tradition) | c. 9th–14th century | Arabic Frame-Tale | 629 |
 | [x] | BEY | mandeville | Mandeville's Travels — attr. Sir John Mandeville | c. 1357 | Travel/Compilation | 472 |
-| [x] | KYA | shah-nameh | Shah-Nameh — Ferdowsi (Atkinson transl.) | c.1010 | Persian Epic | 863 | SEEDS COMPLETE 2026-06-02 — KYA-01–25 all vignettes done. KYA-01: The Derafsh Kaviani Fragment (TBZ→TRB→CPL→WM). KYA-02: The Two-Falls Custom (NIS→TBZ→WM). KYA-03–25: Fire Chain, Demon's First Lesson, Princess of Zábulistán, Record of Successive Honors, Símúrgh's Second Feather, Caravanserai Account, Trophy of the Broken Girdle, Second Bracelet, Tree at the Border, Portrait Gallery, King from the Sky, Seeing Cup, Ring in the Bird, Warriors' Mounds, Golden Basin, Zerdusht's Tree, Maníjeh's Letter, Dragon-Cart Design, Kazú-Tree Arrow, Pit Record, Four Goblets, Wall Stone, Firdusi's Complaint. New nodes: YAZ, KBL, SIS, TBZ, TRB, HRT. Volume also contains Rubaiyat/Divan/Gulistan (separate works, separate codes if processed). See KYA-shah-nameh.md. |
+| [x] | KYA | shah-nameh | Shah-Nameh — Ferdowsi (Atkinson transl.) | c.1010 | Persian Epic | 863 | IMPORTED — 2026-06-11 — YAZ/KBL new nodes; TBZ/TRB existing; kya_c1a1–kya_c7a5 (7 cycles, 35 acts); questComplete on kya_c7a5; SIS/HRT deferred (cycles 8+). Volume also contains Rubaiyat/Divan/Gulistan (separate works, separate codes if processed). See KYA-shah-nameh.md. |
 
 ### South Asian
 
