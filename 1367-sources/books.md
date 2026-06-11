@@ -450,24 +450,24 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | FRO | volsunga-saga | Volsunga Saga — Anon | ~13th C (legendary) | Norse Legend | 342 | SEEDS COMPLETE 2026-06-03 — FRO-01–07 all vignettes done. Cycle 8 2026-06-05 — "Andvari's Curse Inscription" (ATL/BK/WM); fulfilled malediction. No new nodes. See FRO-volsunga-saga.md. |
-| [ ] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 | Source txt missing — prior cycle was memory-processed only. Add VBY-grettir-saga.txt before processing. Prior notes: VBY-01–07 done, RKN/BWH in grid. |
+| [x] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 | Source txt acquired 2026-06-11 — PG; split 2 parts. Prior notes: VBY-01–07 done, RKN/BWH in grid. |
 | [x] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 | SEEDS COMPLETE 2026-06-03 — LBC-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Linden Leaf" (ETZ/WOR/WM); inverted protective disclosure. No new nodes. See LBC-nibelungenlied.md. |
 | [x] | GDN | njal-saga | Njal's Saga — Anon (Dasent transl.) | ~13th C | Icelandic Saga | 787 | SEEDS COMPLETE 2026-06-03 — GDN-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Burning Witness Account" (ISL/BK/WM); arranged death record. No new nodes. See GDN-njal-saga.md. |
 | [ ] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 | Source txt missing — prior cycle was memory-processed only. Add RIX-egil-saga.txt before processing. Prior notes: RIX-01–07 done, YRK/ISL in grid. |
 | [x] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 | SEEDS COMPLETE 2026-06-03 — BOO-01–07 all vignettes done. Cycle 8 2026-06-05 — "Utgard-Loki's Confession" (BOO/WM). No new nodes. See BOO-prose-edda.md. |
 | [x] | ALF | kalevala | Kalevala — Elias Lönnrot | 1835/1849 | Finnish Epic | 642 | SEEDS COMPLETE 2026-06-03 — ALF-01–07 all vignettes done. Cycle 8 2026-06-05 — "Vainamoinen's Departure Promise" (ALF/WM). No new nodes. See ALF-kalevala.md. |
 | [x] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 | SEEDS COMPLETE 2026-06-03 — KSU-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Skald's Safe-Conduct" (KSU/WM). No new nodes. See KSU-heimskringla.md. |
-| [ ] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 | Source txt missing — prior cycle was memory-processed only. Add RKV-poetic-edda.txt before processing. Prior notes: RKV-01–07 done, AEG/RSS in grid. |
-| [ ] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 | Source txt missing — prior cycle was memory-processed only. Add HFT-frithiof-saga.txt before processing. Prior notes: HFT-01–07 done, BLG/ALR/RNG/ING pre-existing. |
+| [x] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 | Source txt acquired 2026-06-11 — PG, Bellows tr.; split 5 parts. Prior notes: RKV-01–07 done, AEG/RSS in grid. |
+| [x] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 | Source txt acquired 2026-06-11 — PG, Schmidt tr.; single file (136KB). Prior notes: HFT-01–07 done, BLG/ALR/RNG/ING pre-existing. |
 | [x] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 | IMPORTED — 2026-06-04 — LGR/LXF/HHL/VRG/BLT/HFG new nodes; MOL-01–02 (2 cycles, 10 acts); questComplete on MOL-02. Source txt missing (memory-processed). |
 | [x] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 | IMPORTED — 2026-06-04 — STK/DAN/HEO/DNS/BRK new nodes; CPH-01–02 (2 cycles, 10 acts); questComplete on CPH-02. Source txt missing (memory-processed). |
-| [ ] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 | Source txt missing — prior cycle was memory-processed only. Add ARN-knights-of-the-cross.txt before processing. Prior notes: ARN-01–07 done, KRK/JUR/TKT/CHP in grid. |
+| [x] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 | Source txt acquired 2026-06-11 — PG, Binion tr. (Curtin tr. unavailable on PG); split 7 parts. Prior notes: ARN-01–07 done, KRK/JUR/TKT/CHP in grid. |
 
 ### French & Continental
 
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
-| [ ] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 | Source txt missing — prior cycle was memory-processed only. Add OST-song-of-roland.txt before processing. Prior notes: OST-01–07 done, AIX/RON/PYR/FRS in grid. |
+| [x] | OST | song-of-roland | Song of Roland — Anon | c.1100 | French Chanson | 195 | Source txt acquired 2026-06-11 — PG, O'Hagan tr. (Harvard Classics vol.49); split 2 parts. Prior notes: OST-01–07 done, AIX/RON/PYR/FRS in grid. |
 | [x] | CDG | three-musketeers | The Three Musketeers — Alexandre Dumas | 1844 (1625 setting) | Swashbuckler | 1356 | SEEDS COMPLETE 2026-06-03 — CDG-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Blank Commission" (CDG/WM). No new nodes. See CDG-three-musketeers.md. |
 | [x] | VIE | faust | Faust — Johann Wolfgang von Goethe | 1808–1832 | Philosophical Drama | 213 | SEEDS COMPLETE 2026-06-03 — VIE-01–07 all vignettes done. Cycle 8 2026-06-05 — "Mephistopheles's Receipt" (VIE/WM). No new nodes. See VIE-faust.md. |
 | [x] | ERF | grimm-fairy-tales | Grimm's Fairy Tales — Brothers Grimm | 1812 | Folk Tales | 547 | SEEDS COMPLETE 2026-06-03 — ERF-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Mirror's Testimony" (ERF/WM). No new nodes. See ERF-grimm-fairy-tales.md. |

@@ -1,0 +1,2276 @@
+[RKV-poetic-edda  —  part 3 of 5, continuation of part 2]
+============================================================
+
+builder of the hall, with the aid of the nine dwarfs. Jari, Dori, and Ori appear in the Voluspo catalogue of the dwarfs (stanzas 13 and 15); Delling appears in Hovamol, 161, and Vafthruthnismol, 25, in the latter case, however, the name quite possibly referring to some one else. The other dwarfs’ names do not appear elsewhere. The manuscripts differ as to the forms of many of these names.
+
+52. Lyfjaberg (“Hill of Healing”): the manuscripts vary as to this name; I have followed Bugge’s suggestion. This stanza implies that Mengloth is a goddess of healing, and hence, perhaps, an hypostasis of Frigg, as already intimated by her name (cf. stanza 3, note). In stanza 54 Eir appears as one of Mengloth’s handmaidens, and Eir, according to Snorri (Gylfaginning, 35) is herself the Norse Hygeia. Compare this stanza with stanza 32.
+
+54. The manuscripts and editions show many variations in these names. They may be approximately rendered thus: Helper, Help-Breather, Folk-Guardian, Shining, White, Blithe, Peaceful, Kindly (?), and Gold-Giver.
+
+55. One of the manuscripts omits stanzas 55 and 56.
+
+56. The first line is based on a conjectural emendation.
+
+63. Solbjart (“Sun-Bright”): not elsewhere mentioned. The words of Urth: i.e., the decrees of fate; cf. stanza 7.
+
+65. Lyfjaberg cf. stanza 52 and note.
+
+
+
+
+
+
+
+
+PART II
+
+THE POETIC EDDA
+
+
+VOLUME II
+
+LAYS OF THE HEROES
+
+
+
+
+
+
+
+
+VÖLUNDARKVITHA
+
+THE LAY OF VÖLUND
+
+
+INTRODUCTORY NOTE
+
+Between the Thrymskvitha and the Alvissmol in the Codex Regius stands the Völundarkvitha. It was also included in the Arnamagnæan Codex, but unluckily it begins at the very end of the fragment which has been preserved, and thus only a few lines of the opening prose remain. This is doubly regrettable because the text in Regius is unquestionably in very bad shape, and the other manuscript would doubtless have been of great assistance in the reconstruction of the poem.
+
+There has been a vast amount written regarding the Weland tradition as a whole, discussing particularly the relations between the Völundarkvitha and the Weland passage in Deor’s Lament. There can be little question that the story came to the North from Saxon regions, along with many of the other early hero tales. In stanza 16 the Rhine is specifically mentioned as the home of treasure; and the presence of the story in Anglo-Saxon poetry probably as early as the first part of the eighth century proves beyond a doubt that the legend cannot have been a native product of Scandinavia. In one form or another, however, the legend or the smith persisted for centuries throughout all the Teutonic lands, and the name of Wayland Smith is familiar to all readers of Walter Scott, and even of Rudyard Kipling’s tales of England.
+
+In what form this story reached the North is uncertain. Sundry striking parallels between the diction of the Völundarkvitha and that of the Weland passage in Deor’s Lament make it distinctly probable that a Saxon song on this subject had found its way to Scandinavia or Iceland. But the prose introduction to the poem mentions the “old sagas” in which Völund was celebrated, and in the Thithrekssaga we have definite evidence of the existence of such prose narrative in the form of the Velentssaga (Velent, Völund, Weland, and Wayland all being, of course, identical), which gives a long story for which the Völundarkvitha can have supplied relatively little, if any, of the material. It is probable, then, that Weland stories were current in both prose and verse in Scandinavia as early as the latter part of the ninth century.
+
+Once let a figure become popular in oral tradition, and the number and variety of the incidents connected with his name will increase very rapidly. Doubtless there were scores of Weland stories current in the eighth, ninth, and tenth centuries, many of them with very little if any traditional authority. The main one, however, the story of the laming of the smith by King Nithuth (or by some other enemy) and of Weland’s terrible revenge, forms the basis of the Völundarkvitha. To this, by way of introduction, has been added the story of Völund and the swan-maiden, who, to make things even more complex, is likewise said to be a Valkyrie. Some critics maintain that these two sections were originally two distinct poems, merely strung together by the compiler with the help of narrative prose links; but the poem as a whole has a kind of dramatic unity which suggests rather that an early poet—for linguistically the poem belongs among the oldest of the Eddic collection—used two distinct legends, whether in prose or verse, as the basis for the composition of a new and homogeneous poem.
+
+The swan-maiden story appears, of course, in many places quite distinct from the Weland tradition, and, in another form, became one of the most popular of German folk-tales. Like the story of Weland, however, it is of German rather than Scandinavian origin, and the identification of the swan-maidens as Valkyries, which may have taken place before the legend reached the North, may, on the other hand, have been simply an attempt to connect southern tradition with figures well known in northern mythology.
+
+The Völundarkvitha is full of prose narrative links, including an introduction. The nature of such prose links has already been discussed in the introductory note to the Grimnismol; the Völundarkvitha is a striking illustration of the way in which the function of the earlier Eddic verse was limited chiefly to dialogue or description, the narrative outline being provided, if at all, in prose. This prose was put in by each reciter according to his fancy and knowledge, and his estimate of his hearers’ need for such explanations; some of it, as in this instance, eventually found its way into the written record.
+
+The manuscript of the Völundarkvitha is in such bad shape, and the conjectural emendations have been so numerous, that in the notes I have attempted to record only the most important of them.
+
+
+
+
+
+There was a king in Sweden named Nithuth. He had two sons and one daughter; her name was Bothvild. There were three brothers, sons of a king of the Finns: one was called Slagfith, another Egil, the third Völund. They went on snowshoes and hunted wild beasts. They came into Ulfdalir and there they built themselves a house; there was a lake there which is called Ulfsjar. Early one morning they found on the shore of the lake three women, who were spinning flax. Near them were their swan-garments, for they were Valkyries. Two of them were daughters of King Hlothver, Hlathguth the Swan-White and Hervor the All-Wise, and the third was Olrun, daughter of Kjar from Valland. These did they bring home to their hall with them. Egil took Olrun, and Slagfith Swan-White, and Völund All-Wise. There they dwelt seven winters; but then they flew away to find battles, and came back no more. Then Egil set forth on his snowshoes to follow Olrun, and Slagfith followed Swan-White, but Völund stayed in Ulfdalir. He was a most skillful man, as men know from old tales. King Nithuth had him taken by force, as the poem here tells.
+
+
+1.  Maids from the south   |   through Myrkwood flew,     Fair and young,   |   their fate to follow;     On the shore of the sea   |   to rest them they sat,     The maids of the south,   |   and flax they spun.
+
+2.  .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     Hlathguth and Hervor,   |   Hlothver’s children,     And Olrun the Wise   |   Kjar’s daughter was.
+
+3.  .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     One in her arms   |   took Egil then     To her bosom white,   |   the woman fair.
+
+4.  Swan-White second,—   |   swan-feathers she wore,     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     And her arms the third   |   of the sisters threw     Next round Völund’s   |   neck so white.
+
+5.  There did they sit   |   for seven winters,     In the eighth at last   |   came their longing again,     (And in the ninth   |   did need divide them).     The maidens yearned   |   for the murky wood,     The fair young maids,   |   their fate to follow.
+
+6.  Völund home   |   from his hunting came,     From a weary way,   |   the weather-wise bowman,     Slagfith and Egil   |   the hall found empty,     Out and in went they,   |   everywhere seeking.
+
+7.  East fared Egil   |   after Olrun,     And Slagfith south   |   to seek for Swan-White;     Völund alone   |   in Ulfdalir lay,     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .
+
+8.  Red gold he fashioned   |   with fairest gems,     And rings he strung   |   on ropes of bast;     So for his wife   |   he waited long,     If the fair one home   |   might come to him.
+
+9.  This Nithuth learned,   |   the lord of the Njars,     That Völund alone   |   in Ulfdalir lay;     By night went his men,   |   their mail-coats were studded,     Their shields in the waning   |   moonlight shone.
+
+10. From their saddles the gable   |   wall they sought,     And in they went   |   at the end of the hall;     Rings they saw there   |   on ropes of bast,     Seven hundred   |   the hero had.
+
+11. Off they took them,   |   but all they left     Save one alone   |   which they bore away.     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .
+
+12. Völund home   |   from his hunting came,     From a weary way,   |   the weather-wise bowman;     A brown bear’s flesh   |   would he roast with fire;     Soon the wood so dry   |   was burning well,     (The wind-dried wood   |   that Völund’s was).
+
+13. On the bearskin he rested,   |   and counted the rings,     The master of elves,   |   but one he missed;     That Hlothver’s daughter   |   had it he thought,     And the all-wise maid   |   had come once more.
+
+14. So long he sat   |   that he fell asleep,     His waking empty   |   of gladness was;     Heavy chains   |   he saw on his hands,     And fetters bound   |   his feet together.
+
+
+Völund spake:
+
+
+15. “What men are they   |   who thus have laid     Ropes of bast   |   to bind me now?”
+
+    Then Nithuth called,   |   the lord of the Njars:     “How gottest thou, Völund,   |   greatest of elves,     These treasures of ours   |   in Ulfdalir?”
+
+
+Völund spake:
+
+
+16. “The gold was not   |   on Grani’s way,     Far, methinks, is our realm   |   from the hills of the Rhine;     I mind me that treasures   |   more we had     When happy together   |   at home we were.”
+
+17. Without stood the wife   |   of Nithuth wise,     And in she came   |   from the end of the hall;     On the floor she stood,   |   and softly spoke:     “Not kind does he look   |   who comes from the wood.”
+
+
+King Nithuth gave to his daughter Bothvild the gold ring that he had taken from the bast rope in Völund’s house, and he himself wore the sword that Völund had had. The queen spake:
+
+
+18. “The glow of his eyes   |   is like gleaming snakes,     His teeth he gnashes   |   if now is shown     The sword, or Bothvild’s   |   ring he sees;     Let them straightway cut   |   his sinews of strength,     And set him then   |   in Sævarstath.”
+
+
+So was it done: the sinews in his knee-joints were cut, and he was set in an island which was near the mainland, and was called Sævarstath. There he smithied for the king all kinds of precious things. No man dared to go to him, save only the king himself. Völund spake:
+
+
+19. “At Nithuth’s girdle   |   gleams the sword     That I sharpened keen   |   with cunningest craft,     (And hardened the steel   |   with highest skill;)     The bright blade far   |   forever is borne,     (Nor back shall I see it   |   borne to my smithy;)     Now Bothvild gets   |   the golden ring     (That was once my bride’s,—   |   ne’er well shall it be.)”
+
+20. He sat, nor slept,   |   and smote with his hammer,     Fast for Nithuth   |   wonders he fashioned;     Two boys did go   |   in his door to gaze,     Nithuth’s sons,   |   into Sævarstath.
+
+21. They came to the chest,   |   and they craved the keys,     The evil was open   |   when in they looked;     To the boys it seemed   |   that gems they saw,     Gold in plenty   |   and precious stones.
+
+
+Völund spake:
+
+
+22. “Come ye alone,   |   the next day come,     Gold to you both   |   shall then be given;     Tell not the maids   |   or the men of the hall,     To no one say   |   that me you have sought.”
+
+23. .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     Early did brother   |   to brother call:     “Swift let us go   |   the rings to see.”
+
+24. They came to the chest,   |   and they craved the keys,     The evil was open   |   when in they looked;     He smote off their heads,   |   and their feet he hid     Under the sooty   |   straps of the bellows.
+
+25. Their skulls, once hid   |   by their hair, he took,     Set them in silver   |   and sent them to Nithuth;     Gems full fair   |   from their eyes he fashioned,     To Nithuth’s wife   |   so wise he gave them.
+
+26. And from the teeth   |   of the twain he wrought     A brooch for the breast,   |   to Bothvild he sent it;     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .
+
+27. Bothvild then   |   of her ring did boast,     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     .  .  .  .  .  .  .  .    |   “The ring I have broken,     I dare not say it   |   save to thee.”
+
+
+Völund spake:
+
+
+28. “I shall weld the break   |   in the gold so well     That fairer than ever   |   thy father shall find it,     And better much   |   thy mother shall think it,     And thou no worse   |   than ever it was.”
+
+29. Beer he brought,   |   he was better in cunning,     Until in her seat   |   full soon she slept.
+
+
+Völund spake:
+
+
+    “Now vengeance I have   |   for all my hurts,     Save one alone,   |   on the evil woman.”
+
+30. .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     Quoth Völund: “Would   |   that well were the sinews     Maimed in my feet   |   by Nithuth’s men.”
+
+31. Laughing Völund   |   rose aloft,     Weeping Bothvild   |   went from the isle,     For her lover’s flight   |   and her father’s wrath.
+
+32. Without stood the wife   |   of Nithuth wise,     And in she came   |   from the end of the hall;     But he by the wall   |   in weariness sat:     “Wakest thou, Nithuth,   |   lord of the Njars?”
+
+
+Nithuth spake:
+
+
+33. “Always I wake,   |   and ever joyless,     Little I sleep   |   since my sons were slain;     Cold is my head,   |   cold was thy counsel,     One thing, with Völund   |   to speak, I wish.
+
+34. .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     “Answer me, Völund,   |   greatest of elves,     What happed with my boys   |   that hale once were?”
+
+
+Völund spake:
+
+
+35. “First shalt thou all   |   the oaths now swear,     By the rail of ship,   |   and the rim of shield,     By the shoulder of steed,   |   and the edge of sword,     That to Völund’s wife   |   thou wilt work no ill,     Nor yet my bride   |   to her death wilt bring,     Though a wife I should have   |   that well thou knowest,     And a child I should have   |   within thy hall.
+
+36. “Seek the smithy   |   that thou didst set,     Thou shalt find the bellows   |   sprinkled with blood;     I smote off the heads   |   of both thy sons,     And their feet ’neath the sooty   |   straps I hid.
+
+37. “Their skulls, once hid   |   by their hair, I took,     Set them in silver   |   and sent them to Nithuth;     Gems full fair   |   from their eyes I fashioned,     To Nithuth’s wife   |   so wise I gave them.
+
+38. “And from the teeth   |   of the twain I wrought     A brooch for the breast,   |   to Bothvild I gave it;     Now big with child   |   does Bothvild go,     The only daughter   |   ye two had ever.”
+
+
+Nithuth spake:
+
+
+39. “Never spakest thou word   |   that worse could hurt me,     Nor that made me, Völund,   |   more bitter for vengeance;     There is no man so high   |   from thy horse to take thee,     Or so doughty an archer   |   as down to shoot thee,     While high in the clouds   |   thy course thou takest.”
+
+40. Laughing Völund   |   rose aloft,     But left in sadness   |   Nithuth sat.     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .
+
+41. Then spake Nithuth,   |   lord of the Njars:     “Rise up, Thakkrath,   |   best of my thralls,     Bid Bothvild come,   |   the bright-browed maid,     Bedecked so fair,   |   with her father to speak.”
+
+42. .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     “Is it true, Bothvild,   |   that which was told me;     Once in the isle   |   with Völund wert thou?”
+
+
+Bothvild spake:
+
+
+43. “True is it, Nithuth,   |   that which was told thee,     Once in the isle   |   with Völund was I,     An hour of lust,   |   alas it should be!     Nought was my might   |   with such a man,     Nor from his strength   |   could I save myself.”
+
+
+
+
+
+
+
+
+NOTES
+
+
+Prose. Nithuth (“Bitter Hater”): here identified as a king of Sweden, is in the poem (stanzas 9, 15 and 32) called lord of the Njars, which may refer to the people of the Swedish district of Nerike. In any case, the scene of the story has moved from Saxon lands into the Northeast. The first and last sentences of the introduction refer to the second part of the poem; the rest of it concerns the swan-maidens episode. Bothvild (“Warlike Maid”): Völund’s victim in the latter part of the poem. King of the Finns: this notion, clearly later than the poem, which calls Völund an elf, may perhaps be ascribed to the annotator who composed the prose introduction. The Finns, meaning the dwellers in Lapland, were generally credited with magic powers. Egil appears in the Thithrekssaga as Völund’s brother, but Slagfith is not elsewhere mentioned. Ulfdalir (“Wolf-Dale”), Ulfsjar (“Wolf-Sea”), Valland (“Slaughter-Land”): mythical places without historical identification. Valkyries: cf. Voluspo, 31 and note; there is nothing in the poem to identify the three swan-maidens as Valkyries except one obscure word in line 2 of stanza 1 and again in line 5 of stanza 5, which may mean, as Gering translates it, “helmed,” or else “fair and wise.” I suspect that the annotator, anxious to give the Saxon legend as much northern local color as possible, was mistaken in his mythology, and that the poet never conceived of his swan-maidens as Valkyries at all. However, this identification of swan-maidens with Valkyries was not uncommon; cf. Helreith Brynhildar, 7. The three maidens’ names, Hlathguth, Hervor, and Olrun, do not appear in the lists of Valkyries. King Hlothver: this name suggests the southern origin of the story, as it is the northern form of Ludwig; the name appears again in Guthrunarkvitha II, 26, and that of Kjar is found in Atlakvitha, 7, both of these poems being based on German stories. It is worth noting that the composer of this introductory note seems to have had little or no information beyond what was actually contained in the poem as it has come down to us; he refers to the “old stories” about Völund, but either he was unfamiliar with them in detail or else he thought it needless to make use of them. His note simply puts in clear and connected form what the verse tells somewhat obscurely; his only additions are making Nithuth a king of Sweden and Völund’s father a king of the Finns, supplying the name Ulfsjar for the lake, identifying the swan-maidens as Valkyries, and giving Kjar a home in Valland.
+
+1. The manuscript indicates line 3 as the beginning of a stanza; two lines may have been lost before or after lines 1–2, and two more, or even six, with the additional stanza describing the theft of the swan-garments, after line 4. Myrkwood: a stock name for a magic, dark forest; cf. Lokasenna, 42.
+
+2. In the manuscript these two lines stand after stanza 16; editors have tried to fit them into various places, but the prose indicates that they belong here, with a gap assumed.
+
+3. In the manuscript these two lines follow stanza 1, with no gap indicated, and the first line marked as the beginning of a stanza. Many editors have combined them with stanza 4.
+
+4. No lacuna indicated in the manuscript; one editor fills the stanza out with a second line running: “Then to her breast Slagfith embraced.”
+
+5. Line 3 looks like an interpolation, but line 5, identical with line 2 of stanza 1, may be the superfluous one.
+
+6. The phrase “Völund home from a weary way” is an emendation of Bugge’s, accepted by many editors. Some of those who do not include it reject line 4, and combine the remainder of the stanza with all or part of stanza 7.
+
+7. The manuscript marks the second, and not the first, line as the beginning of a stanza. Some editors combine lines 2–3 with all or part of stanza 8. No gap is indicated in the manuscript, but many editors have assumed one, some of them accepting Bugge’s suggested “Till back the maiden   |   bright should come.”
+
+8. No line in this stanza is indicated in the manuscript as beginning a new stanza; editors have tried all sorts of experiments in regrouping the lines into stanzas with those of stanzas 7 and 9. In line 3 the word long is sheer guesswork, as the line in the manuscript contains a metrical error.
+
+9. Some editors combine the first two lines with parts of stanza 8, and the last two with the first half of stanza 10. Njars: there has been much, and inconclusive, discussion as to what this name means; probably it applies to a semi-mythical people somewhere vaguely in “the East.”
+
+10. Some editors combine lines 3–4 with the fragmentary stanza 11.
+
+11. No gap indicated in the manuscript; some editors combine these lines with lines 3–4 of stanza 10, while others combine them with the first two lines of stanza 12. The one ring which Nithuth’s men steal is given to Bothvild, and proves the cause of her undoing.
+
+12. The manuscript indicates line 3, and not line 1, as the beginning of a stanza, which has given rise to a large amount of conjectural rearrangement. Line 2 of the original is identical with the phrase added by Bugge in stanza 6. Line 5 may be spurious, or lines 4–5 may have been expanded out of a single line running “The wind-dried wood |   for Völund burned well.”
+
+13. Elves: the poem here identifies Völund as belonging to the race of the elves. Hlothver’s daughter: Hervor; many editors treat the adjective “all-wise” here as a proper name.
+
+15. In this poem the manuscript indicates the speakers. Some editors make lines 1–2 into a separate stanza, linking lines 3–5 (or 4–5) with stanza 16. Line 3 is very possibly spurious, a mere expansion of “Nithuth spake.” Nithuth, of course, has come with his men to capture Völund, and now charges him with having stolen his treasure.
+
+16. The manuscript definitely assigns this stanza to Völund, but many editors give the first two lines to Nithuth. In the manuscript stanza 16 is followed by the two lines of stanza 2, and many editions make of lines 3–4 of stanza 16 and stanza 2 a single speech by Völund. Grani’s way: Grani was Sigurth’s horse, on which he rode to slay Fafnir and win Andvari’s hoard; this and the reference to the Rhine as the home of wealth betray the southern source of the story. If lines 1–2 belong to Völund, they mean that Nithuth got his wealth in the Rhine country, and that Völund’s hoard has nothing to do with it; if the speaker is Nithuth, they mean that Völund presumably has not killed a dragon, and that he is far from the wealth of the Rhine, so that he must have stolen his treasure from Nithuth himself.
+
+17. Line 1 is lacking in the manuscript, lines 2–4 following immediately after the two lines here given as stanza 2. Line 1, borrowed from line 1 of stanza 32, is placed here by many editors, following Bugge’s suggestion. Certainly it is Nithuth’s wife who utters line 4. Who comes from the wood: Völund, noted as a hunter. Gering assumes that with the entrance of Nithuth’s wife the scene has changed from Völund’s house to Nithuth’s, but I cannot see that this is necessary.
+
+Prose. The annotator inserted this note rather clumsily in the midst of the speech of Nithuth’s wife.
+
+18. In the manuscript lines 2–3 stand before line 1; many editors have made the transposition here indicated. Some editors reject line 3 as spurious. Sævarstath: “Sea-Stead.”
+
+19. This stanza is obviously in bad shape. Vigfusson makes two stanzas of it by adding a first line: “Then did Völund speak,   |   sagest of elves.” Editors have rejected various lines, and some have regrouped the last lines with the first two of stanza 20. The elimination of the passages in parenthesis produces a four-line stanza which is metrically correct, but it has little more than guesswork to support it.
+
+20. The editions vary radically in combining the lines of this stanza with those of stanzas 19 and 21, particularly as the manuscript indicates the third line as the beginning of a stanza. The meaning, however, remains unchanged.
+
+21. Several editions make one stanza out of lines 3–4 of stanza 20 and lines 1–2 of stanza 21, and another out of the next four lines. The evil was open: i.e., the gold in the chest was destined to be their undoing.
+
+22. The manuscript indicates line 3 as the beginning of a stanza, and several editors have adopted this grouping. In the Thithrekssaga Völund sends the boys away with instructions not to come back until just after a fall of snow, and then to approach his dwelling walking backward. The boys do this, and when, after he has killed them, Völund is questioned regarding them, he points to the tracks in the snow as evidence that they had left his house.
+
+23. No gap indicated in the manuscript. Some editors assume it, as here; some group the lines with lines 3–4 of stanza 22, and some with lines 1–2 of stanza 24.
+
+24. Some editions begin a new stanza with line 3.
+
+25. The manuscript indicates line 3 as the beginning of a stanza, and many editors have adopted this grouping.
+
+26. These two lines have been grouped in various ways, either with lines 3–4 of stanza 25 or with the fragmentary stanza 27. No gap is indicated in the manuscript, but the loss of something is so obvious that practically all editors have noted it, although they have differed as to the number of lines lost.
+
+27. No gap indicated in the manuscript; the line and a half might be filled out (partly with the aid of late paper manuscripts) thus: “But soon it broke,   |   and swiftly to Völund / She bore it and said—”
+
+29. The manuscript does not name Völund as the speaker before line 3; Vigfusson again inserts his convenient line, “Then Völund spake,   | sagest of elves.” A few editions combine lines 3–4 with the two lines of stanza 30.
+
+30. No gap indicated in the manuscript; some editors combine the two lines with lines 3–4 of stanza 29, and many with the three lines of stanza 31.
+
+31. Something has probably been lost before this stanza, explaining how Völund made himself wings, as otherwise, owing to his lameness, he could not leave the island. The Thithrekssaga tells the story of how Völund’s brother, Egil, shot birds and gave him the feathers, out of which he made a feather-garment. This break in the narrative illustrates the lack of knowledge apparently possessed by the compiler who was responsible for the prose notes; had he known the story told in the Thithrekssaga, it is hardly conceivable that he would have failed to indicate the necessary connecting link at this point. Some editors reject line 3 as spurious. The manuscript does not indicate any lacuna.
+
+32. The manuscript indicates line 4 as the beginning of a stanza, and many editors have followed this arrangement.
+
+33. The manuscript does not name the speaker. It indicates line 3 as the beginning of a new stanza. Vigfusson adds before line 1, “Then spake Nithuth,   |   lord of the Njars.”
+
+34. No gap indicated in the manuscript, but it seems clear that something has been lost. Some editors combine these two lines with lines 3–4 of stanza 33. Völund is now flying over Nithuth’s hall.
+
+35. The manuscript does not name the speaker; Vigfusson again makes two full stanzas with the line, “Then did Völund speak,   |   sagest of elves.” Some editors begin a new stanza with line 4, while others reject as interpolations lines 2–3 or 5–7. Völund’s wife: the reference is to Bothvild, as Völund wishes to have his vengeance fall more heavily on her father than on her.
+
+36. Lines 3–4 are nearly identical with lines 3–4 of stanza 24.
+
+37. Identical, except for the pronouns, with stanza 25.
+
+38. Lines 1–2: cf. stanza 26.
+
+39. The manuscript does not name the speaker. Either line 4 or line 5 may be an interpolation; two editions reject lines 3–5, combining lines 1–2 with stanza 40. In the Thithrekssaga Nithuth actually compels Egil, Völund’s brother, to shoot at Völund. The latter has concealed a bladder full of blood under his left arm, and when his brother’s arrow pierces this, Nithuth assumes that his enemy has been killed. This episode likewise appears among the scenes from Völund’s career rudely carved on an ancient casket of ivory, bearing an Anglo-Saxon inscription in runic letters, which has been preserved.
+
+40. Line 1: cf. stanza 31. The manuscript indicates no lacuna.
+
+41. The first line is a conjectural addition. Thakkrath is probably the northern form of the Middle High German name Dancrat.
+
+42. The manuscript indicates no gap, but indicates line 3 as the beginning of a stanza; Vigfusson’s added “Then Nithuth spake,   | lord of the Njars” seems plausible enough.
+
+43. The manuscript does not name the speaker. Different editors have rejected one or another of the last three lines, and as the manuscript indicates line 4 as the beginning of a new stanza, the loss of two or three lines has likewise been suggested. According to the Thithrekssaga, the son of Völund and Bothvild was Vithga, or Witege, one of the heroes of Dietrich of Bern.
+
+
+
+
+
+
+
+
+HELGAKVITHA HJORVARTHSSONAR
+
+THE LAY OF HELGI THE SON OF HJORVARTH
+
+
+INTRODUCTORY NOTE
+
+The three Helgi lays, all found in the Codex Regius, have been the subjects of a vast amount of discussion, in spite of which many of the facts regarding them are still very far from settled. It is, indeed, scarcely possible to make any unqualified statement regarding these three poems for which a flat contradiction cannot be found in the writings of some scholar of distinction. The origin of the Helgi tradition, its connection with that of Sigurth, the authorship, date and home of the poems, the degree to which they have been altered from their original forms, the status of the composer of the copious prose notes: these and many other allied questions have been and probably always will be matters of dispute among students of the Edda’s history.
+
+Without attempting to enter into the discussion in detail, certain theories should be noted. Helgi appears originally to have been a Danish popular hero, the son of King Halfdan. Saxo Grammaticus has a good deal to say about him in that capacity, and it has been pointed out that many of the place names in the Helgi lays can be pretty clearly identified with parts of Denmark and neighboring stretches of the Baltic. The Danish Helgi, according to Saxo, was famed as the conqueror of Hunding and Hothbrodd, the latter as the result of a naval expedition at the head of a considerable fleet.
+
+From Denmark the story appears to have spread northward into Norway and westward into the Norse settlements among the islands. Not many of its original features remained, and new ones were added here and there, particularly with regard to Helgi’s love affair with Sigrun. The victories over Hunding and Hothbrodd, however, were generally retained, and out of material relating to these two fights, and to the Helgi-Sigrun story, were fashioned the two lays of Helgi Hundingsbane.
+
+How the Helgi legend became involved with that of the Volsungs is an open question. Both stories travelled from the South, and presumably about the same time, so it is not unnatural that some confusion should have arisen. At no time, however, was the connection particularly close so far as the actual episodes of the two stories were concerned. In the two lays of Helgi Hundingsbane the relationship is established only by the statement that Helgi was the son of Sigmund and Borghild; Sigurth is not mentioned, and in the lay of Helgi the son of Hjorvarth there is no connection at all. On the other hand, Helgi does not appear in any of the Eddic poems dealing directly with the Volsung stories, although in one passage of doubtful authenticity (cf. Reginsmol, introductory note) his traditional enemy, Hunding, does, represented by his sons. In the Volsungasaga the story of Helgi, including the fights with Hunding and Hothbrodd and the love affair with Sigrun, is told in chapters 8 and 9 without otherwise affecting the course of the narrative. Here, as in the Helgi lays, Helgi is the son of Sigmund Volsungsson and Borghild; Sigurth, on the other hand, is the son of Sigmund and Hjordis, the latter being the daughter of King Eylimi. Still another son, who complicates both stories somewhat, is Sinfjotli, son of Sigmund and his own sister, Signy. Sinfjotli appears in both of the Helgi Hundingsbane lays and in the Volsungasaga, but not in any of the Eddic poems belonging to the Volsung cycle (cf. Fra Dautha Sinfjotla and note).
+
+There is a certain amount of resemblance between the story of Helgi and Sigrun and that of Sigurth and Brynhild, particularly as the annotator responsible for the prose notes insists that Sigrun was a Valkyrie. Whether this resemblance was the cause of bringing the two stories together, or whether the identification of Helgi as Sigmund’s son resulted in alterations of the love story in the Helgi poems, cannot be determined.
+
+The first of the three Helgi poems, the lay of Helgi the son of Hjorvarth, is a somewhat distant cousin of the other two. The Helgi in question is apparently the same traditional figure, and he leads a naval expedition, but he is not the son of Sigmund, there is no connection with the Volsung cycle, and his wife is Svava, not Sigrun. At the same time, the points of general resemblance with the two Helgi Hundingsbane lays are such as to indicate a common origin, provided one goes far enough back. The annotator brings the stories together by the naive expedient of having Helgi “born again,” and not once only, but twice.
+
+The first Helgi lay is manifestly in bad shape, and includes at least two distinct poems, differentiated not only by subject-matter but by metrical form. Although the question is debatable, the longer of these poems (stanzas 1–11 and 31–43) seems in turn to have been compounded out of fragments of two or more Helgi poems. The first five stanzas are a dialogue between a bird and Atli, one of Hjorvarth’s followers, concerning the winning of Sigrlin, who is destined to be Hjorvarth’s wife and Helgi’s mother. Stanzas 6–11 are a dialogue between Helgi and a Valkyrie (the accompanying prose so calls her, and identifies her as Svava, but there is nothing in the verse to prove this). Stanzas 12–30 form a fairly consecutive unit, in which Atli, on guard over Helgi’s ship, has a vigorous argument with a giantess, Hrimgerth, whence this section has sometimes been called the Hrimgertharmol (Lay of Hrimgerth). The last section, stanzas 31–43, is again fairly consecutive, and tells of the death of Helgi following the rash oath of his brother, Hethin, to win Svava for himself.
+
+Parts I, II, and IV may all have come from the same poem or they may not; it is quite impossible to tell surely. All of them are generally dated by commentators not later than the first half of the tenth century, whereas the Hrimgertharmol (section III) is placed considerably later. When and by whom these fragments were pieced together is another vexed question, and this involves a consideration of the prose notes and links, of which the Helgakvitha Hjorvarthssonar has a larger amount than any other poem in the Edda. These prose links contain practically all the narrative, the verse being almost exclusively dialogue. Whoever composed them seems to have been consciously trying to bring his chaotic verse material into some semblance of unity, but he did his work pretty clumsily, with manifest blunders and contradictions. Bugge has advanced the theory that these prose passages are to be regarded as an original and necessary part of the work, but this hardly squares with the evidence.
+
+It seems probable, rather, that as the Helgi tradition spread from its native Denmark through the Norse regions of the North and West, and became gradually interwoven, although not in essentials, with the other great hero cycle from the South, that of the Volsungs, a considerable number of poems dealing with Helgi were composed, at different times and in different places, reflecting varied forms of the story. Many generations afterwards, when Iceland’s literary period had arrived, some zealous scribe committed to writing such poems or fragments of poems as he knew, piecing them together and annotating them on the basis of information which had reached him through other channels. The prose notes to Helgakvitha Hundingsbana II frankly admit this patchwork process: a section of four stanzas (13–16) is introduced with the phrase, “as is said in the Old Volsung Lay”; the final prose note cites an incident “told in the Karuljoth (Lay of Kara),” and a two-line speech is quoted “as it was written before in the Helgakvitha.”
+
+
+
+The whole problem of the origin, character and home of the Helgi poems has been discussed in great detail by Bugge in his Helge-Digtene i den Ældre Edda, Deres Hjem og Forbindelser, which, as translated by W. H. Schofield under the title The Home of the Eddic Poems, is available for readers of English. This study is exceedingly valuable, if not in all respects convincing. The whole matter is so complex and so important in the history of Old Norse literature, and any intelligent reading of the Helgi poems is so dependent on an understanding of the conditions under which they have come down to us, that I have here discussed the question more extensively than the scope of a mere introductory note to a single poem would warrant.
+
+
+
+
+
+(I)
+
+OF HJORVARTH AND SIGRLIN
+
+
+Hjorvarth was the name of a king, who had four wives: one was called Alfhild, and their son was named Hethin; the second was called Særeith, and their son was named Humlung; the third was called Sinrjoth, and their son was named Hymling. King Hjorvarth had made a great vow to have as wife whatsoever woman he knew was fairest. He learned that King Svafnir had a daughter fairer than all others, whose name was Sigrlin. Ithmund was the name of one of his jarls; he had a son called Atli, who went to woo Sigrlin on behalf of the king. He dwelt the winter long with King Svafnir. There was a jarl called Franmar, Sigrlin’s foster-father; his daughter was named Alof. The jarl told him that the maiden’s hand was denied, and Atli went home. Atli, the jarl’s son, stood one day in a certain wood; a bird sat in the branches up over him, and it had heard that his men called Hjorvarth’s wives the fairest of women. The bird twittered, and Atli hearkened to what it spoke. It said:
+
+
+1.  “Sawest thou Sigrlin,   |   Svafnir’s daughter,     The fairest maid   |   in her home-land found?     Though Hjorvarth’s wives   |   by men are held     Goodly to see   |   in Glasir’s wood.”
+
+
+Atli spake:
+
+
+2.  “Now with Atli,   |   Ithmund’s son,     Wilt thou say more,   |   thou bird so wise?”
+
+
+The bird spake:
+
+
+    “I may if the prince   |   an offering makes,     And I have what I will   |   from the house of the king.”
+
+
+Atli spake:
+
+
+3.  “Choose not Hjorvarth,   |   nor sons of his,     Nor the wives so fair   |   of the famous chief;     Ask not the brides   |   that the prince’s are;     Fair let us deal   |   in friendly wise.”
+
+
+The bird spake:
+
+
+4.  “A fane will I ask,   |   and altars many,     Gold-horned cattle   |   the prince shall give me,     If Sigrlin yet   |   shall sleep in his arms,     Or free of will   |   the hero shall follow.”
+
+
+This was before Atli went on his journey; but when he came home, and the king asked his tidings, he said:
+
+
+5.  “Trouble we had,   |   but tidings none,     Our horses failed   |   in the mountains high,     The waters of Sæmorn   |   we needs must wade;     Svafnir’s daughter,   |   with rings bedecked,     She whom we sought,   |   was still denied us.”
+
+
+The king bade that they should go another time, and he went with them himself. But when they came up on the mountain, they saw Svavaland burning and mighty dust-clouds from many steeds. The king rode from the mountain forward into the land, and made a night’s stay hard by a stream. Atli kept watch and went over the stream; he found there a house. A great bird sat on the housetop to guard it, but he was asleep. Atli hurled his spear at the bird and slew it, and in the house he found Sigrlin the king’s daughter and Alof the jarl’s daughter, and he brought them both thence with him. Jarl Franmar had changed himself into the likeness of an eagle, and guarded them from the enemy host by magic. Hrothmar was the name of a king, a wooer of Sigrlin; he slew the king of Svavaland and had plundered and burned his land. King Hjorvarth took Sigrlin, and Atli took Alof.
+
+
+
+
+
+(II)
+
+Hjorvarth and Sigrlin had a son, mighty and of noble stature; he was a silent man, and no name stuck fast to him. He sat on a hill, and saw nine Valkyries riding; one of them was the fairest of all. She spake:
+
+
+6.  “Late wilt thou, Helgi,   |   have hoard of rings,     Thou battle-tree fierce,   |   or of shining fields,—     The eagle screams soon,—   |   if never thou speakest,     Though, hero, hard   |   thy heart may cry.”
+
+
+Helgi spake:
+
+
+7.  “What gift shall I have   |   with Helgi’s name,     Glorious maid,   |   for the giving is thine?     All thy words   |   shall I think on well,     But I want them not   |   if I win not thee.”
+
+
+The Valkyrie spake:
+
+
+8.  “Swords I know lying   |   in Sigarsholm,     Fifty there are   |   save only four;     One there is   |   that is best of all,     The shield-destroyer,   |   with gold it shines.
+
+9.  “In the hilt is fame,   |   in the haft is courage,     In the point is fear,   |   for its owner’s foes;     On the blade there lies   |   a blood-flecked snake,     And a serpent’s tail   |   round the flat is twisted.”
+
+
+Eylimi was the name of a king, whose daughter was Svava; she was a Valkyrie, and rode air and sea. She gave Helgi this name, and shielded him oft thereafter in battle. Helgi spake:
+
+
+10. “Hjorvarth, king,   |   unwholesome thy counsels,     Though famed thou art   |   in leading the folk,     Letting fire the homes   |   of heroes eat,     Who evil deed   |   had never done thee.
+
+11. “Yet Hrothmar still   |   the hoard doth hold,     The wealth that once   |   our kinsmen wielded;     Full seldom care   |   the king disturbs,     Heir to dead men   |   he deems himself.”
+
+
+Hjorvarth answered that he would give Helgi a following if he fain would avenge his mother’s father. Then Helgi got the sword that Svava had told him of. So he went, and Atli with him, and they slew Hrothmar, and they did many great deeds.
+
+
+
+
+
+(III)
+
+He slew the giant Hati, whom he found sitting on a certain mountain. Helgi and Atli lay with their ships in Hatafjord. Atli kept watch during the first part of the night. Hrimgerth, Hati’s daughter, spake:
+
+
+12. “Who are the heroes   |   in Hatafjord?       The ships are covered with shields;     Bravely ye look,   |   and little ye fear,       The name of the king would I know.”
+
+
+Atli spake:
+
+
+13. “Helgi his name,   |   and never thou mayst       Harm to the hero bring;     With iron is fitted   |   the prince’s fleet,       Nor can witches work us ill.”
+
+
+Hrimgerth spake:
+
+
+14. “Who now, thou mighty   |   man, art thou?       By what name art thou known to men?     He trusts thee well,   |   the prince who wills       That thou stand at the stem of his ship.”
+
+
+Atli spake:
+
+
+15. “Atli am I,   |   and ill shalt thou find me,       Great hate for witches I have;     Oft have I been   |   in the dripping bows,       And to dusk-riders death have brought.
+
+16. “Corpse-hungry giantess,   |   how art thou called?       Say, witch, who thy father was!     Nine miles deeper   |   down mayst thou sink,       And a tree grow tall on thy bosom.”
+
+
+Hrimgerth spake:
+
+
+17. “Hrimgerth am I,   |   my father was Hati,       Of giants the most in might;     Many a woman   |   he won from her home,       Ere Helgi hewed him down.”
+
+
+Atli spake:
+
+
+18. “Witch, in front   |   of the ship thou wast,       And lay before the fjord;     To Ron wouldst have given   |   the ruler’s men,       If a spear had not stuck in thy flesh.”
+
+
+Hrimgerth spake:
+
+
+19. “Dull art thou, Atli,   |   thou dreamest, methinks,       The lids lie over thine eyes;     By the leader’s ships   |   my mother lay,       Hlothvarth’s sons on the sea I slew.
+
+20. “Thou wouldst neigh, Atli,   |   but gelded thou art,       See, Hrimgerth hoists her tail;     In thy hinder end   |   is thy heart, methinks,       Though thy speech is a stallion’s cry.”
+
+
+Atli spake:
+
+
+21. “A stallion I seem   |   if thou seekest to try me,       And I leap to land from the sea;     I shall smite thee to bits,   |   if so I will,       And heavy sinks Hrimgerth’s tail.”
+
+
+Hrimgerth spake:
+
+
+22. “Go ashore then, Atli,   |   if sure of thy might,       Let us come to Varin’s cove;     Straight shall thy rounded   |   ribs be made       If thou comest within my claws.”
+
+
+Atli spake:
+
+
+23. “I will not go   |   till the warriors wake,       Again their chief to guard;     I should wonder not,   |   foul witch, if up       From beneath our keel thou shouldst come.”
+
+
+Hrimgerth spake:
+
+
+24. “Awake now, Helgi,   |   and Hrimgerth requite,       That Hati to death thou didst hew;     If a single night   |   she can sleep by the prince,       Then requited are all her ills.”
+
+
+Helgi spake:
+
+
+25. “’Tis Lothin shall have thee,—   |   thou’rt loathsome to men,—       His home in Tholley he has;     Of the wild-dwellers worst   |   is the giant wise,       He is meet as a mate for thee.”
+
+
+Hrimgerth spake:
+
+
+26. “More thou lovest her   |   who scanned the harbor,       Last night among the men;     (The gold-decked maid   |   bore magic, methinks,       When the land from the sea she sought,       And fast she kept your fleet;)     She alone is to blame   |   that I may not bring       Death to the monarch’s men.”
+
+
+Helgi spake:
+
+
+27. “Hrimgerth, mark,   |   if thy hurts I requite,       Tell now the truth to the king;     Was there one who the ships   |   of the warrior warded,       Or did many together go?”
+
+
+Hrimgerth spake:
+
+
+28. “Thrice nine there were,   |   but one rode first,       A helmed maid white of hue;     Their horses quivered,   |   there came from their manes       Dew in the dales so deep,       (Hail on the woods so high,       Thence men their harvest have,       But ill was the sight I saw.)”
+
+
+Atli spake:
+
+
+29. “Look eastward, Hrimgerth,   |   for Helgi has struck thee       Down with the runes of death;     Safe in harbor floats   |   the prince’s fleet,       And safe are the monarch’s men.”
+
+
+Helgi spake:
+
+
+30. “It is day, Hrimgerth,   |   for Atli held thee       Till now thy life thou must lose;     As a harbor mark   |   men shall mock at thee,       Where in stone thou shalt ever stand.”
+
+
+
+
+
+(IV)
+
+King Helgi was a mighty warrior. He came to King Eylimi and sought the hand of his daughter, Svava. Then Helgi and Svava exchanged vows, and greatly they loved each other. Svava was at home with her father, while Helgi was in the field; Svava was still a Valkyrie as before.
+
+Hethin was at home with his father, King Hjorvarth, in Norway. Hethin was coming home alone from the forest one Yule-eve, and found a troll-woman; she rode on a wolf, and had snakes in place of a bridle. She asked Hethin for his company. “Nay,” said he. She said, “Thou shalt pay for this at the king’s toast.” That evening the great vows were taken; the sacred boar was brought in, the men laid their hands thereon, and took their vows at the king’s toast. Hethin vowed that he would have Svava, Eylimi’s daughter, the beloved of his brother Helgi; then such great grief seized him that he went forth on wild paths southward over the land, and found Helgi, his brother. Helgi said:
+
+
+31. “Welcome, Hethin!   |   what hast thou to tell     Of tidings new   |   that from Norway come?     Wherefore didst leave   |   thy land, O prince,     And fared alone   |   to find us here?”
+
+
+Hethin spake:
+
+
+32. “A deed more evil   |   I have done     Than, brother mine,   |   thou e’er canst mend;     For I have chosen   |   the child of the king,     Thy bride, for mine   |   at the monarch’s toast.”
+
+
+Helgi spake:
+
+
+33. “Grieve not, Hethin,   |   for true shall hold     The words we both   |   by the beer have sworn;     To the isle a warrior   |   wills that I go,     (There shall I come   |   the third night hence;)     And doubtful must be   |   my coming back,     (So may all be well,   |   if fate so wills.)”
+
+
+Hethin spake:
+
+
+34. “Thou saidst once, Helgi,   |   that Hethin was     A friend full good,   |   and gifts didst give him;     More seemly it were   |   thy sword to redden,     Than friendship thus   |   to thy foe to give.”
+
+
+Helgi spoke thus because he foresaw his death, for his following-spirits had met Hethin when he saw the woman riding on the wolf. Alf was the name of a king, the son of Hrothmar, who had marked out a battle-place with Helgi at Sigarsvoll after a stay of three nights. Then Helgi spake:
+
+
+35. “On a wolf there rode,   |   when dusk it was,     A woman who fain   |   would have him follow;     Well she knew   |   that now would fall     Sigrlin’s son   |   at Sigarsvoll.”
+
+
+There was a great battle, and there Helgi got a mortal wound.
+
+
+36. Sigar riding   |   did Helgi send     To seek out Eylimi’s   |   only daughter:     “Bid her swiftly   |   ready to be,     If her lover   |   alive she would find.”
+
+
+Sigar spake:
+
+
+37. “Hither now   |   has Helgi sent me,     With thee, Svava,   |   thyself to speak;     The hero said   |   he fain would see thee     Ere life the nobly   |   born should leave.”
+
+
+Svava spake:
+
+
+38. “What chanced with Helgi,   |   Hjorvarth’s son?     Hard to me   |   is harm now come;     If the sea smote him,   |   or sword bit him,     Ill shall I bring   |   to all his foes.”
+
+
+Sigar spake:
+
+
+39. “In the morn he fell   |   at Frekastein,     The king who was noblest   |   beneath the sun;     Alf has the joy   |   of victory all,     Though need therefor   |   is never his.”
+
+
+Helgi spake:
+
+
+40. “Hail to thee, Svava!   |   thy sorrow rule,     Our meeting last   |   in life is this;     Hard the wounds   |   of the hero bleed,     And close to my heart   |   the sword has come.
+
+41. “I bid thee, Svava,—   |   weep not, bride,—     If thou wilt hearken   |   to these my words,     The bed for Hethin   |   have thou ready,     And yield thy love   |   to the hero young.”
+
+
+Svava spake:
+
+
+42. “A vow I had   |   in my dear-loved home,     When Helgi sought   |   with rings to have me,     That not of my will,   |   if the warrior died,     Would I fold in my arms   |   a man unfamed.”
+
+
+Hethin spake:
+
+
+43. “Kiss me, Svava,   |   I come not back,     Rogheim to see,   |   or Rothulsfjoll,     Till vengeance I have   |   for the son of Hjorvarth,     The king who was noblest   |   beneath the sun.”
+
+
+Of Helgi and Svava it is said that they were born again.
+
+
+
+
+
+
+
+
+NOTES
+
+
+Prose: In the manuscript the sub-title, “Of Hjorvarth and Sigrlin,” stands as the title for the whole poem, though it clearly applies only to the first five stanzas. Most editions employ the title here given. Hjorvarth: the name is a not uncommon one; there are two men of that name mentioned in the mythical-heroic genealogies of the Hyndluljoth (stanzas 23 and 28), and Hjorvarth appears in Helgakvitha Hundingsbana I (stanza 14) and II (prose after stanza 12) as a son of Hunding. This particular Hjorvarth is called by the annotator, but not directly so in the verse, a king of Norway. The name means “Sword-Guardian.” Four wives: polygamy, while very infrequent, appears occasionally in the Norse sagas. Alfhild: “Elf-Warrior.” Hethin: “Fur-Clothed” (?). Særeith: “Sea-Rider.” Sinrjoth: “Ever-Red.” The fourth wife, not here named, may be Sigrlin. It has been suggested that Særeith and Sinrjoth may be northern and southern forms of the same name, as also Humlung and Hymling, their sons. Svafnir: the annotator calls him king of Svavaland, apparently a place on the mainland which could be reached from Norway either by land or by sea. Sigrlin: “The Conquering Serpent.” Atli: Norse form of the Gothic Attila (Etzel). Alof: perhaps a feminine form of Olaf. A bird: compare the counsel given by the birds to Sigurth after the slaying of Fafnir (Fafnismol, stanzas 32–38). This is one of the many curious resemblances between the Helgi and the Sigurth stories.
+
+1. Glasir’s wood: Snorri in the Skaldskaparmal quotes a half stanza to the effect that “Glasir stands with golden leaves before Othin’s hall,” and calls it “the fairest wood among gods and men.” The phrase as used here seems to mean little.
+
+4. The bird’s demands would indicate that it is in reality one of the gods. Gold-horned cattle: cf. Thrymskvitha, 23. There are other references to gilding the horns of cattle, particularly for sacrificial purposes.
+
+Prose. The annotator contradicts himself here, as he had already stated that Atli was on his way home.
+
+5. Possibly the remains of two stanzas, or perhaps a line has been added. Sæmorn: this river is nowhere else mentioned.
+
+Prose. Sigrlin and Alof, protected by the latter’s father, Franmar, have fled before the ravaging army of Sigrlin’s rejected suitor, Hrothmar. The beginning of a new section (II) is indicated in the manuscript only by the unusually large capital letter with which “Hjorvarth” begins. No name, etc.: this probably means that Helgi had always been so silent that he would answer to no name, with the result that he had none. Valkyries: cf. Voluspo, 31 and note. The annotator insists here and in the prose after stanza 9 that Svava was a Valkyrie, but there is nothing in the verse to prove it, or, indeed, to identify the Svava of the last section of the poem with the person who gave Helgi his name. In the Volsungasaga Sigmund himself names his son Helgi, and gives him a sword, following Helgakvitha Hundingsbana I.
+
+6. Battle-tree: poetic phrase for “warrior.” Shining fields: the words in the manuscript may form a proper name, Rothulsvoll, having this meaning.
+
+7. Gift: not only was it customary to give gifts with the naming of a child, but the practice frequently obtained when a permanent epithet was added to the name of an adult.
+
+8. Sigarsholm (“Isle of Sigar”): a place not identified, but probably related to the Sigarsvoll where Helgi was slain (stanza 35).
+
+9. The sword is carved with magic runes and with snakes. Fame: the original word is uncertain.
+
+Prose. Eylimi: this name is another link with the Sigurth story, as it is likewise the name of the father of Sigurth’s mother, Hjordis.
+
+10. With this stanza begins a new episode, that of Helgi’s victory over King Hrothmar, who had killed his mother’s father (cf. prose after stanza 5). It has been suggested, in consequence, that stanzas 10–11 may be a separate fragment. The verse tells nothing of the battle, merely giving Helgi’s reproaches to his father for having left Svafnir’s death and the burning of Svavaland unavenged.
+
+Prose. The manuscript does not indicate any break, but the episode which forms the basis of the Hrimgertharmol (stanzas 12–30) clearly begins with the slaying of the giant Hati (“The Hateful”). Hatafjord: “Hati’s Fjord.” Hrimgerth: “Frost-Shrouded” (?).
+
+13. Iron: the keels of Norse ships were sometimes fitted with iron “shoes” at bow and stern, but it is not certain that this practice much antedated the year 1000, and thus this line has raised some question as to the antiquity of this stanza, if not of the entire Hrimgertharmol, which may have been composed as late as the eleventh century.
+
+15. The manuscript does not indicate the speaker. The pun on “Atli” and “atall” (meaning “ill”) is untranslatable.
+
+17. The manuscript does not indicate the speaker.
+
+18. From this point to the end the manuscript does not indicate the speakers. Ron: wife of the sea-god Ægir, who draws drowning men into the sea with her net. There is no other reference to the wounding of Hrimgerth.
+
+19. Apparently both Hrimgerth and her mother, Hati’s wife, had sought to destroy Helgi’s ships, and had actually killed some of his companions, the sons of Hlothvarth, concerning whom nothing more is known. Many editors assume that a stanza containing a speech by Atli has been lost after stanza 19.
+
+20. Apparently Hrimgerth has assumed the form of a mare.
+
+22. Varin’s cove: the name of Varin appears twice in place names in Helgakvitha Hundingsbana I (stanzas 27 and 39). The sagas mention a mythical King Varin who lived at Skorustrond in Rogaland (Norway).
+
+25. Of the giant Lothin (“The Shaggy”) and his home in Tholley (“Pine Island”) nothing is known. Cf. Skirnismol, 35.
+
+26. Something is clearly wrong with this stanza, and the manuscript indicates line 6 as the beginning of a new one. Perhaps a line (between lines 4 and 5) has been lost, or perhaps the lines in parenthesis are interpolations. Hrimgerth here refers to Svava, or to the protectress with whom the annotator has identified her, as having saved Helgi and his ships from the vengeance of the giantesses. In the original line 1 includes Helgi’s name, which makes it metrically incorrect.
+
+28. Again something is clearly wrong, and the last three lines look like interpolations, though some editors have tried to reconstruct two full stanzas. The passage suggests the identification of the Valkyries with the clouds.
+
+29. Some editions give this speech to Helgi. Eastward: Atli and Helgi have held Hrimgerth in talk till sunrise, and the sun’s rays turn her into stone. But dwarfs rather than giants were the victims of sunlight; cf. Alvissmol, stanzas 16 and 35.
+
+30. Most editions give this stanza to Atli. With this the Hrimgertharmol ends, and after the next prose passage the meter reverts to that of the earlier sections.
+
+Prose. The manuscript does not indicate a new section of the poem. Eylimi: cf. note on prose after stanza 9. Valkyrie: here, as before, the annotator has apparently nothing but his own imagination on which to base his statement. Svava in the ensuing stanzas certainly does not behave like a Valkyrie. Norway: the annotator doubtless based this statement on the reference to Norway in line 2 of stanza 31. Yule-eve: the Yule feast, marking the new year, was a great event in the heathen North. It was a time of feasting and merrymaking, vows (“New Year’s resolutions”), ghosts and witches; the spirits had their greatest power on Yule-eve. The king’s toast: vows made at the passing of the king’s cup at the Yule feast were particularly sacred. Sacred boar: a boar consecrated to Freyr, an integral part of the Yule rites. Hethin’s vow, which is, of course, the vengeance of the troll-woman, is too sacred to be broken, but he immediately realizes the horror of his oath.
+
+31. From Norway: Bugge uses this phrase as evidence that the poem was composed in one of the Icelandic settlements of the western islands, but as the annotator himself seems to have thought that Hethin came to Helgi by land (“on wild paths southward”), this argument does not appear to have much weight.
+
+32. The second line is conjectural; a line has clearly been lost from this stanza, and various emendations have been suggested.
+
+33. Perhaps this is the remnant of two stanzas, or perhaps two lines (probably the ones in parenthesis) have been interpolated. The isle: duels were commonly fought on islands, probably to guard against treacherous interference, whence the usual name for a duel was “isle-going.” A duel was generally fought three days after the challenge. Reckoning the lapse of time by nights instead of days was a common practice throughout the German and Scandinavian peoples.
+
+Prose. Some editors place all or part of this prose passage after stanza 35. Following-spirits: the “fylgja” was a female guardian spirit whose appearance generally betokened death. The belief was common throughout the North, and has come down to recent times in Scottish and Irish folk-lore. Individuals and sometimes whole families had these following-spirits, but it was most unusual for a person to have more than one of them. Alf: son of the Hrothmar who killed Helgi’s grandfather, and who was in turn later killed by Helgi. Sigarsvoll (“Sigar’s Field”): cf. stanza 8 and note; the Sigar in question may be the man who appears as Helgi’s messenger in stanzas 36–39.
+
+36. Sigar (“The Victorious”): cf. the foregoing note.
+
+39. Frekastein (“Wolf-Crag”): the name appears several times in the Helgi lays applied to battlefields; cf. Helgakvitha Hundingsbana I, 46 and 55, and II, 18 and 24. Need: i.e., Alf deserves no credit for the victory, which was due to the troll-woman’s magic.
+
+41. One or two editors ascribe this stanza to Hethin.
+
+43. A few editions make the extraordinary blunder of ascribing this speech to the dying Helgi. The point, of course, is that Hethin will satisfy Svava’s vow by becoming famous as the slayer of Alf. Rogheim (“Home of Battle”) and Rothulsfjoll (“Sun-Mountain”): nowhere else mentioned; Hethin means simply that he will not come back to Svava till he has won fame.
+
+Prose. Regarding this extraordinary bit see the prose note at the end of Helgakvitha Hundingsbana II. Gering thinks the reborn Helgi Hjorvarthsson was Helgi Hundingsbane, while Svava, according to the annotator himself, became Sigrun. The point seems to be simply that there were so many Helgi stories current, and the hero died in so many irreconcilable ways, that tradition had to have him born over again, not once only but several times, to accommodate his many deaths, and to avoid splitting him up into several Helgis. Needless to say, the poems themselves know nothing of this rebirth, and we owe the suggestion entirely to the annotator, who probably got it from current tradition.
+
+
+
+
+
+
+
+
+HELGAKVITHA HUNDINGSBANA I
+
+THE FIRST LAY OF HELGI HUNDINGSBANE
+
+
+INTRODUCTORY NOTE
+
+The general subject of the Helgi lays is considered in the introduction to Helgakvitha Hjorvarthssonar, and it is needless here to repeat the statements there made. The first lay of Helgi Hundingsbane is unquestionably one of the latest of the Eddic poems, and was composed probably not earlier than the second quarter of the eleventh century. It presents several unusual characteristics. For one thing, it is among the few essentially narrative poems in the whole collection, telling a consecutive story in verse, and, except for the abusive dialogue between Sinfjotli and Gothmund, which clearly was based on another and older poem, it does so with relatively little use of dialogue. It is, in fact, a ballad, and in the main an exceedingly vigorous one. The annotator, who added his prose narrative notes so freely in the other Helgi poems, here found nothing to do. The available evidence indicates that narrative verse was a relatively late development in Old Norse poetry, and it is significant that most of the poems which consist chiefly, not of dialogue, but of narrative stanzas, such as the first Helgi Hundingsbane lay and the two Atli lays, can safely be dated, on the basis of other evidence, after the year 1000.
+
+The first Helgi Hundingsbane lay is again differentiated from most of the Eddic poems by the character of its language. It is full of those verbal intricacies which were the delight of the Norse skalds, and which made Snorri’s dictionary of poetic phrases an absolute necessity. Many of these I have paraphrased in the translation; some I have simplified or wholly avoided. A single line will serve to indicate the character of this form of complex diction (stanza 56, line 4): “And the horse of the giantess   |   raven’s-food had.” This means simply that wolves (giantesses habitually rode on wolves) ate the bodies of the dead.
+
+Except for its intricacies of diction, and the possible loss of a stanza here and there, the poem is comparatively simple. The story belongs in all its essentials to the Helgi tradition, with the Volsung cycle brought in only to the extent of making Helgi the son of Sigmund, and in the introduction of Sinfjotli, son of Sigmund and his sister Signy, in a passage which has little or nothing to do with the course of the narrative, and which looks like an expansion of a passage from some older poem, perhaps from the “old Volsung lay” to which the annotator of the second Helgi Hundingsbane lay refers (prose after stanza 12). There are many proper names, some of which betray the confusion caused by the blending of the two sets of traditions; for example, Helgi appears indiscriminately as an Ylfing (which presumably he was before the Volsung story became involved) and as a Volsung. Granmar and his sons are called Hniflungs (Nibelungen) in stanza 50, though they seem to have had no connection with this race. The place names have aroused much debate as to the localization of the action, but while some of them probably reflect actual places, there is so much geographical confusion, and such a profusion of names which are almost certainly mythical, that it is hard to believe that the poet had any definite locations in mind.
+
+
+
+
+
+1.  In olden days,   |   when eagles screamed,     And holy streams   |   from heaven’s crags fell,     Was Helgi then,   |   the hero-hearted,     Borghild’s son,   |   in Bralund born.
+
+2.  ’Twas night in the dwelling,   |   and Norns there came,     Who shaped the life   |   of the lofty one;     They bade him most famed   |   of fighters all     And best of princes   |   ever to be.
+
+3.  Mightily wove they   |   the web of fate,     While Bralund’s towns   |   were trembling all;     And there the golden   |   threads they wove,     And in the moon’s hall   |   fast they made them.
+
+4.  East and west   |   the ends they hid,     In the middle the hero   |   should have his land;     And Neri’s kinswoman   |   northward cast     A chain, and bade it   |   firm ever to be.
+
+5.  Once sorrow had   |   the Ylfings’ son,     And grief the bride   |   who the loved one had borne.         *    *    *    *    *    *     Quoth raven to raven,   |   on treetop resting,     Seeking for food,   |   “There is something I know.
+
+6.  “In mail-coat stands   |   the son of Sigmund,     A half-day old;   |   now day is here;     His eyes flash sharp   |   as the heroes’ are,     He is friend of the wolves;   |   full glad are we.”
+
+7.  The warrior throng   |   a ruler thought him,     Good times, they said,   |   mankind should see;     The king himself   |   from battle-press came,     To give the prince   |   a leek full proud.
+
+8.  Helgi he named him,   |   and Hringstathir gave him,     Solfjoll, Snæfjoll,   |   and Sigarsvoll,     Hringstoth, Hotun,   |   and Himinvangar,     And a blood-snake bedecked   |   to Sinfjotli’s brother.
+
+9.  Mighty he grew   |   in the midst of his friends,     The fair-born elm,   |   in fortune’s glow;     To his comrades gold   |   he gladly gave,     The hero spared not   |   the blood-flecked hoard.
+
+10. Short time for war   |   the chieftain waited,     When fifteen winters   |   old he was;     Hunding he slew,   |   the hardy wight     Who long had ruled   |   o’er lands and men.
+
+11. Of Sigmund’s son   |   then next they sought     Hoard and rings,   |   the sons of Hunding;     They bade the prince   |   requital pay     For booty stolen   |   and father slain.
+
+12. The prince let not   |   their prayers avail,     Nor gold for their dead   |   did the kinsmen get;     Waiting, he said,   |   was a mighty storm     Of lances gray   |   and Othin’s grimness.
+
+13. The warriors forth   |   to the battle went,     The field they chose   |   at Logafjoll;     Frothi’s peace   |   midst foes they broke,     Through the isle went hungrily   |   Vithrir’s hounds.
+
+14. The king then sat,   |   when he had slain     Eyjolf and Alf,   |   ’neath the eagle-stone;     Hjorvarth and Hovarth,   |   Hunding’s sons,     The kin of the spear-wielder,   |   all had he killed.
+
+15. Then glittered light   |   from Logafjoll,     And from the light   |   the flashes leaped;     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .
+
+16. .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     High under helms   |   on heaven’s field;     Their byrnies all   |   with blood were red,     And from their spears   |   the sparks flew forth.
+
+17. Early then   |   in wolf-wood asked     The mighty king   |   of the southern maid,     If with the hero   |   home would she     Come that night;   |   the weapons clashed.
+
+18. Down from her horse   |   sprang Hogni’s daughter,—     The shields were still,—   |   and spake to the hero:     “Other tasks   |   are ours, methinks,     Than drinking beer   |   with the breaker of rings.
+
+19. “My father has pledged   |   his daughter fair     As bride to Granmar’s   |   son so grim;     But, Helgi, I   |   once Hothbrodd called     As fine a king   |   as the son of a cat.
+
+20. “Yet the hero will come   |   a few nights hence,     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     Unless thou dost bid him   |   the battle-ground seek,     Or takest the maid   |   from the warrior mighty.”
+
+
+Helgi spake:
+
+
+21. “Fear him not,   |   though Isung he felled,     First must our courage   |   keen be tried,     Before unwilling   |   thou fare with the knave;     Weapons will clash,   |   if to death I come not.”
+
+22. Messengers sent   |   the mighty one then,     By land and by sea,   |   a host to seek,     Store of wealth   |   of the water’s gleam,     And men to summon,   |   and sons of men.
+
+23. “Bid them straightway   |   seek the ships,     And off Brandey   |   ready to be!”     There the chief waited   |   till thither were come     Men by hundreds   |   from Hethinsey.
+
+24. Soon off Stafnsnes   |   stood the ships,     Fair they glided   |   and gay with gold;     Then Helgi spake   |   to Hjorleif asking:     “Hast thou counted   |   the gallant host?”
+
+25. The young king answered   |   the other then:     “Long were it to tell   |   from Tronueyr     The long-stemmed ships   |   with warriors laden     That come from without   |   into Orvasund.
+
+26. .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     “There are hundreds twelve   |   of trusty men,     But in Hotun lies   |   the host of the king,     Greater by half;   |   I have hope of battle.”
+
+27. The ship’s-tents soon   |   the chieftain struck,     And waked the throng   |   of warriors all;     (The heroes the red   |   of dawn beheld;)     And on the masts   |   the gallant men     Made fast the sails   |   in Varinsfjord.
+
+28. There was beat of oars   |   and clash of iron,     Shield smote shield   |   as the ships’-folk rowed;     Swiftly went   |   the warrior-laden     Fleet of the ruler   |   forth from the land.
+
+29. So did it sound,   |   when together the sisters     Of Kolga struck   |   with the keels full long,     As if cliffs were broken   |   with beating surf,     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .
+
+30. Helgi bade higher   |   hoist the sails,     Nor did the ships’-folk   |   shun the waves,     Though dreadfully   |   did Ægir’s daughters     Seek the steeds   |   of the sea to sink.
+
+31. But from above   |   did Sigrun brave     Aid the men   |   and all their faring;     Mightily came   |   from the claws of Ron     The leader’s sea-beast   |   off Gnipalund.
+
+32. At evening there   |   in Unavagar     Floated the fleet   |   bedecked full fair;     But they who saw   |   from Svarin’s hill,     Bitter at heart   |   the host beheld.
+
+33. Then Gothmund asked,   |   goodly of birth,     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     “Who is the monarch   |   who guides the host,     And to the land   |   the warriors leads?”
+
+34. Sinfjotli answered,   |   and up on an oar     Raised a shield all red   |   with golden rim;     A sea-sentry was he,   |   skilled to speak,     And in words with princes   |   well to strive.
+
+35. “Say tonight   |   when you feed the swine,     And send your bitches   |   to seek their swill,     That out of the East   |   have the Ylfings come,     Greedy for battle,   |   to Gnipalund.
+
+36. “There will Hothbrodd   |   Helgi find,     In the midst of the fleet,   |   and flight he scorns;     Often has he   |   the eagles gorged,     Whilst thou at the quern   |   wert slave-girls kissing.”
+
+
+Gothmund spake:
+
+
+37. “Hero, the ancient   |   sayings heed,     And bring not lies   |   to the nobly born.     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .
+
+38. “Thou hast eaten   |   the entrails of wolves,     And of thy brothers   |   the slayer been;     Oft wounds to suck   |   thy cold mouth sought,     And loathed in rocky   |   dens didst lurk.”
+
+
+Sinfjotli spake:
+
+
+39. “A witch in Varin’s   |   isle thou wast,     A woman false,   |   and lies didst fashion;     Of the mail-clad heroes   |   thou wouldst have     No other, thou saidst,   |   save Sinfjotli only.
+
+40. “A Valkyrie wast thou,   |   loathly witch,     Evil and base,   |   in Allfather’s home;     The warriors all   |   must ever fight,     Woman subtle,   |   for sake of thee.
+
+41. “.  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     Nine did we   |   in Sogunes     Of wolf-cubs have;   |   I their father was.”
+
+
+Gothmund spake:
+
+
+42. “Thou didst not father   |   Fenrir’s-wolves,     Though older thou art   |   than all I know;     For they gelded thee   |   in Gnipalund,     The giant-women   |   at Thorsnes once.
+
+43. “Under houses the stepson   |   of Siggeir lay,     Fain of the wolf’s cry   |   out in the woods;     Evil came then   |   all to thy hands,     When thy brothers’   |   breasts thou didst redden,     Fame didst thou win   |   for foulest deeds.
+
+44. “In Bravoll wast thou   |   Grani’s bride,     Golden-bitted   |   and ready to gallop;     I rode thee many   |   a mile, and down     Didst sink, thou giantess,   |   under the saddle.”
+
+
+Sinfjotli spake:
+
+
+45. “A brainless fellow   |   didst seem to be,     When once for Gollnir   |   goats didst milk,     And another time   |   when as Imth’s daughter     In rags thou wentest;   |   wilt longer wrangle?”
+
+
+Gothmund spake:
+
+
+46. “Sooner would I   |   at Frekastein     Feed the ravens   |   with flesh of thine     Than send your bitches   |   to seek their swill,     Or feed the swine;   |   may the fiends take you!”
+
+
+Helgi spake:
+
+
+47. “Better, Sinfjotli,   |   thee ’twould beseem     Battle to give   |   and eagles to gladden,     Than vain and empty   |   words to utter,     Though ring-breakers oft   |   in speech do wrangle.
+
+48. “Good I find not   |   the sons of Granmar,     But for heroes ’tis seemly   |   the truth to speak;     At Moinsheimar   |   proved the men     That hearts for the wielding   |   of swords they had.”
+
+49. Mightily then   |   they made to run     Sviputh and Sveggjuth   |   to Solheimar;     (By dewy dales   |   and chasms dark,     Mist’s horse shook   |   where the men went by;)     The king they found   |   at his courtyard gate,     And told him the foeman   |   fierce was come.
+
+50. Forth stood Hothbrodd,   |   helmed for battle,     Watched the riding   |   of his warriors;     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     “Why are the Hniflungs   |   white with fear?”
+
+
+Gothmund spake:
+
+
+51. “Swift keels lie   |   hard by the land,     (Mast-ring harts   |   and mighty yards,     Wealth of shields   |   and well-planed oars;)     The king’s fair host,   |   the Ylfings haughty;     Fifteen bands   |   to land have fared,     But out in Sogn   |   are seven thousand.
+
+52. “At anchor lying   |   off Gnipalund     Are fire-beasts black,   |   all fitted with gold;     There wait most   |   of the foeman’s men,     Nor will Helgi long   |   the battle delay.”
+
+
+Hothbrodd spake:
+
+
+53. “Bid the horses run   |   to the Reginthing,     Melnir and Mylnir   |   to Myrkwood now,     (And Sporvitnir   |   to Sparinsheith;)     Let no man seek   |   henceforth to sit     Who the flame of wounds   |   knows well to wield.
+
+54. “Summon Hogni,   |   the sons of Hring,     Atli and Yngvi   |   and Alf the Old;     Glad they are   |   of battle ever;     Against the Volsungs   |   let us go.”
+
+55. Swift as a storm   |   there smote together     The flashing blades   |   at Frekastein;     Ever was Helgi,   |   Hunding’s slayer,     First in the throng   |   where warriors fought;     (Fierce in battle,   |   slow to fly,     Hard the heart   |   of the hero was.)
+
+56. From heaven there came   |   the maidens helmed,—     The weapon-clang grew,—   |   who watched o’er the king;     Spake Sigrun fair,—   |   the wound-givers flew,     And the horse of the giantess   |   raven’s-food had:—
+
+57. “Hail to thee, hero!   |   full happy with men,     Offspring of Yngvi,   |   shalt ever live,     For thou the fearless   |   foe hast slain     Who to many the dread   |   of death had brought.
+
+58. “Warrior, well   |   for thyself hast won     Red rings bright   |   and the noble bride;     Both now, warrior,   |   thine shall be,     Hogni’s daughter   |   and Hringstathir,     Wealth and triumph;   |   the battle wanes.”
+
+
+
+
+
+
+
+
+NOTES
+
+
+1. The manuscript contains the superscription: “Here begins the lay of Helgi Hundingsbane and h. (Hothbrodd?) The lay of the Volsungs.” Eagles, etc.: the screaming of eagles and water pouring from heaven were portents of the birth of a hero. Borghild: Sigmund’s first wife; Bralund was her home, not Sigmund’s.
+
+2. Norns: cf. Voluspo, 20 and note. Here it is the Norns who preside over Helgi’s early destiny, and not a Valkyrie, as in Helgakvitha Hjorvarthssonar.
+
+3. Line 2 is largely guesswork, the manuscript being obscure. Moon’s hall: the sky.
+
+4. East, etc.: the Norns give Helgi fame in the East, West, and North; in the North his renown is particularly to endure. This suggests that the poet was aware of the spread of the Helgi story over many lands. Neri’s kinswoman: evidently one of the Norns, but nothing further is known of Neri, and the word may not be a proper name at all.
+
+5. The manuscript indicates no gap, but it looks as though something had been lost after line 2. Ylfings’ son: Sigmund is evidently meant, though calling him an Ylfing (cf. Hyndluljoth, 11 and note) is a manifest error. Helgi, in the tradition as it came from Denmark, was undoubtedly an Ylfing, and the poet, in order to combine the two legends, has to treat the Ylfings and Volsungs as if they were the same family.
+
+6. Sigmund: the chief link between the Helgi and Sigurth stories. He was the son of Volsung, great-grandson of Othin. His children by his first wife, Borghild, were Helgi and Hamund (belonging to the Helgi cycle); his son by his second wife, Hjordis, was Sigurth. An incestuous connection with his sister, Signy (cf. Wagner’s Siegmund and Sieglinde) resulted in the birth of Sinfjotli (cf. Fra Dautha Sinfjotla and note).
+
+7. The king: Sigmund, who gives his son a symbol of the lands which he bestows on him. Regarding the leek, cf. Voluspo, 4; Guthrunarkvitha I, 17, and Sigrdrifumol, 7.
+
+8. Hringstathir (“Ring-Stead”): quite possibly the historical Ringsted, long a possession of the Danish kings, and thus a relic of the old Helgi tradition. Hringstoth may be another form of the same name. Solfjoll (“Sun-Mountain”) and Snæfjoll (“Snow-Mountain”) are fictitious names. Regarding Sigarsvoll cf. Helgakvitha Hjorvarthssonar, stanzas 8 and 35. Saxo mentions a Danish king named Sigar, and the frequency with which the name appears in the Helgi poems may be taken as a reminiscence of Denmark. Hotun (“High Place”): possibly the village of Tune in Seeland. Himinvangar (“Heaven’s Field”): an imaginary place. Blood-snake: a sword. Sinfjotli: cf. note on stanza 6.
+
+9. Elm: a not uncommon word for “man.” Blood-flecked: i.e., won in battle.
+
+10. Fifteen: until early in the eleventh century a Norwegian or Icelandic boy became “of age” at twelve, and Maurer cites this passage as added proof of the poem’s lateness. Hunding: the annotator (introductory prose to Helgakvitha Hundingsbana II) calls him king of Hundland, which shows no great originality. Saxo mentions a Hunding who was a Saxon king ruling in Jutland, probably the origin of Helgi’s traditional foe.
+
+12. Storm, etc.: war.
+
+13. Logafjoll (“Flame-Mountain”): a mythical name. Frothi: a: traditional king of Denmark, whose peaceful reign was so famous that “Frothi’s peace” became a by-word for peace of any kind. Vithrir’s hounds: wolves; Vithrir is Othin, and his hounds are the wolves Freki and Geri.
+
+14. In this poem Helgi kills all the sons of Hunding, but in the poems of the Sigurth cycle, and the prose notes attached thereto, Sigmund and his father-in-law, Eylimi, are killed by Hunding’s sons, on whom Sigurth subsequently takes vengeance (cf. Fra Dautha Sinfjotla and Regïnsmol).
+
+15. No gap indicated in the manuscript, but almost certainly something has been lost mentioning more specifically the coming of the Valkyries. The lightning which accompanies them suggests again their identification with the clouds (cf. Helgakvitha Hjorvarthssonar, 28).
+
+16. Some editions fill out the first line: “He saw there mighty maidens riding.” The manuscript indicates line 4 as the beginning of a new stanza.
+
+17. Wolf-wood: dark forest; the original word is not altogether clear. Southern: this variety of Valkyrie, like the swan-maidens of the Völundarkvitha, was clearly regarded as of southern (i.e., German) origin. Here again there is a confusion of traditions; the Valkyries of the Voluspo were as essentially Norse as any part of the older mythology. I doubt if a poet much earlier than the author of the first Helgi Hundingsbane lay would have made his Sigrun, daughter of Hogni, a Valkyrie. It is to be noted that the same complication appears in the Sigurth story, where the undoubted Valkyrie, Brynhild-Sigrdrifa (the latter name is really only an epithet) is hopelessly mixed up with the quite human Brynhild, daughter of Buthli.
+
+18. Breaker of rings: generous prince, because the breaking of rings was the customary form of distributing gold.
+
+19. Granmar: the annotator gives an account of him and his family in the prose following stanza 12 of Helgakvitha Hundingsbana II.
+
+20. No gap indicated in the manuscript; some editors combine the stanza with the fragmentary stanza 21, and others fill in with “And home will carry   |   Hogni’s daughter.”
+
+21. The manuscript has only lines 1 and 4 with the word “first” of line 2, and does not indicate Helgi as the speaker. The Volsungasaga, which follows this poem pretty closely, expands Helgi’s speech, and lines 2–3 are conjectural versifications of the saga’s prose. Isung: nothing is known of him beyond the fact, here indicated, that Hothbrodd killed him.
+
+22. Water’s gleam: gold.
+
+23. Brandey (“Brand-Isle”): not mentioned elsewhere. Hethinsey (“Hethin’s Isle”): possibly the island of Hiddensee, east of Rügen.
+
+24. Stafnsnes (“Steersman’s Cape”): an unidentifiable promontory. Fair: a guess, as the adjective in the manuscript is obscure. Hjorleif does not appear elsewhere, and seems to be simply one of Helgi’s lieutenants.
+
+25. Tronueyr: “Crane-Strand.” Long-stemmed: literally “long-headed,” as the high, curving stem of a Norse ship was often carved to represent a head and neck. Orvasund: almost certainly the Danish Öresund, off Seeland. Such bits of geography as this followed Helgi persistently.
+
+26. No gap indicated in the manuscript. Hotun: cf. stanza 8 and note.
+
+27. Line 3 seems to have been interpolated from line 4 of Helgakvitha Hundingsbana II, 42. Ship’s-tents: the awnings spread over the deck to shelter the crews from sun and rain when the ships were at anchor. Varinsfjord: cf. Helgakvitha Hjorvarthssonar, 22 and note.
+
+28. The manuscript indicates line 3 as the beginning of a new stanza, and some editions follow this arrangement, making lines 1–2 a separate stanza.
+
+29. The manuscript indicates no gap, and some editions combine the stanza with lines 3–4 of stanza 28. Sisters of Kolga: the waves, Kolga (“The Gold”) being one of the daughters of the sea-god, Ægir. As the Volsungasaga says, “Now there was a great storm.”
+
+30. Helgi demonstrates his courage, whatever one may think of his seamanship. Ægir’s daughters: the waves; cf. stanza 29 and note.
+
+31. Sigrun here appears again as a Valkyrie. Ron: Ægir’s wife; cf. Helgakvitha Hjorvarthssonar, 18 and note. Sea-beast: ship. Gnipalund: “Crag-Wood.”
+
+32. Unavagar: “Friendly Waves.” Svarin’s hill: the hill where Granmar had his dwelling.
+
+33. Here begins the long dialogue between Gothmund, one of Granmar’s sons, and Sinfjotli, Helgi’s half-brother. Two lines (stanza 33, lines 3–4) are quoted by the annotator in the prose note following stanza 16 of the second Helgi Hundingsbane lay, and the dialogue, in much abbreviated form, together with Helgi’s admonition to Sinfjotli to cease talking, is closely paralleled in stanzas 22–27 of that poem. It has been suggested that this whole passage (stanzas 33–48) is an interpolation, perhaps from “the Old Volsung lay.” This may be, but it seems more probable that the poet used an older poem simply as the basis for this passage, borrowing a little but making up a great deal more. The manuscript indicates no gap in stanza 33.
+
+34. Sinfjotli: cf. note on stanza 6. Red: raising a red shield was the signal for war.
+
+35. Ylfings: cf. stanza 5 and note.
+
+36. Quern: turning the hand mill was, throughout antiquity, the task of slaves.
+
+37. The manuscript does not name the speakers in this dialogue. No gap indicated in the manuscript, and editors have attempted various combinations of stanzas 37 and 38.
+
+38. Wolves: the Volsungasaga tells that Sigmund and Sinfjotli lived in the woods for a time as werewolves. Brothers: Sinfjotli killed the two sons of his mother, Signy, and her husband, Siggeir, as part of the vengeance wreaked on Siggeir for the treacherous murder of Sigmund’s father, Volsung, and nine of his brothers (cf. Fra Dautha Sinfjotla and note). The manuscript marks line 3 as the beginning of a new stanza.
+
+39. Varin’s isle: cf. stanza 27 and note, and Helgakvitha Hjorvarthssonar, 22. Reproaching a man with having been a woman and borne children was not uncommon.
+
+40. This stanza may be an interpolation in the dialogue passage. Allfather: Othin. We have no information regarding Gothmund’s career, but it looks as though Sinfjotli were drawing solely on his imagination for his taunts, whereas Gothmund’s insults have a basis in Sinfjotli’s previous life.
+
+41. No gap indicated in the manuscript; some editors combine the two lines with stanza 40, some regard them as the first instead of the last lines of a separate stanza, and some assume the lacuna here indicated. Sogunes (“Saga’s Cape”): of the goddess Saga little is known; cf. Grimnismol, 7.
+
+42. Fenrir’s-wolves: wolves in general. Thorsnes: “Thor’s Cape.”
+
+43. The phrase “under houses,” which follows the manuscript, may be an error for “in wolf-caves.” Line 3 (or 4) may be an interpolation. The manuscript indicates line 5 as the beginning of a new stanza. Siggeir: cf. stanza 38, note.
+
+44. Several editions assign this stanza to Sinfjotli instead of to Gothmund. Bravoll (“Field of the Brow”): not elsewhere mentioned in the poems. Grani: Sigurth’s horse (cf. Völundarkvitha, 16 and note); Gothmund means that Sinfjotli had turned into a mare, after the fashion of Loki (cf. Grimnismol, 44, note). The meaning of line 4 in the original is uncertain.
+
+45. A few editions give this stanza to Gothmund. Gollnir: possibly a giant. Imth: nothing is known of him or his daughter.
+
+46. A few editions give this stanza to Sinfjotli. Frekastein: cf. Helgakvitha Hjorvarthssonar, 39 and note. A stanza may have been lost after stanza 46, parallel to stanza 25 of the second Helgi Hundingsbane lay.
+
+47. Ring-breakers: cf. stanza 18 and note.
+
+48. Moinsheimar: a battlefield of which nothing is known, where, however, the sons of Granmar appear to have fought bravely.
+
+49. Here the scene shifts to the shore among Hothbrodd’s followers. Sviputh and Sveggjuth (“Swift” and “Lithe”): horses’ names. Mist’s horse: the Valkyrie’s name is the same as the English word “mist,” and the “horse” on which the mist rides is the earth. The two lines in parenthesis may be interpolated, or line 5 may begin a new stanza, as the manuscript indicates.
+
+50. No gap indicated in the manuscript. Hniflungs: cf. introductory note.
+
+51. Lines 2–3 may be interpolated, or a new stanza may begin, as the manuscript indicates, with line 5. Many editors combine lines 5–6 with all or part of stanza 52. Possibly Gothmund is not the speaker. Mast-ring harts: ships, so called from the ring attaching the yard to the mast. Ylfings: cf. stanza 5 and note. Sogn: this name, which actually belongs in western Norway, seems to have been used here with no particular significance.
+
+52. The manuscript indicates line 3 as beginning a new stanza; some editors combine lines 3–4 with all or part of stanza 53, while others assume the loss of two lines following line 4. Fire-beasts: dragons, i.e., ships. The Norse ships of war, as distinguished from merchant vessels, were often called dragons because of their shape and the carving of their stems.
+
+53. The manuscript does not indicate the speaker, and a few editors assume the loss of one or two lines embodying the phrase “Hothbrodd spake.” In the manuscript line 3, which many editors have suspected of being spurious, stands before line 2. Possibly lines 4–5 are the remains of a separate stanza. Reginthing (“The Great Council”): apparently the council-place for the whole country, as distinct from the local council, or “herathsthing.” Melnir (“Bit-Bearer”), Mylnir (“The Biter”) and Sporvitnir (“Spur-Wolf”): horses’ names. Myrkwood: a not uncommon name for a dark forest; cf. Lokasenna, 42, and Atlakvitha, 3. Sparinsheith (“Sparin’s Heath”): nothing more is known of Sparin or his heath. Flame of wounds: sword.
+
+54. Hogni: the father of Sigrun; cf. Helgakvitha Hundingsbana II, 18. Of Hring and his sons nothing further is known. Volsungs: here for the first time the poet gives Helgi and Sinfjotli the family name to which, as sons of Sigmund Volsungsson, they are entitled.
+
+55. The manuscript indicates line 5 as the beginning of a new stanza, but many editors have rejected lines 5–6 as spurious, while others regard them as the first half of a stanza the last two lines of which have been lost.
+
+56. Wound-givers: probably this means “Valkyries,” but there is considerable doubt as to the original word. Horse, etc.: i.e., the wolf (because giantesses customarily had wolves for their steeds) ate corpses (the food of birds of prey).
+
+57. Yngvi: one of the sons of Halfdan the Old, and traditional ancestor of the Ynglings, with whom the Ylfings seem to have been confused (cf. Hyndluljoth, 11 and note). The confusion between the Ylfings (or Ynglings) and Volsungs was carried far enough so that Sigurth himself is once called a descendant of Yngvi (Reginsmol, 14). Gering identifies the name of Yngvi with the god Freyr, but the Volsungs certainly claimed descent from Othin, not Freyr, and there is nothing to indicate that Helgi in the Danish tradition was supposed to be descended from Freyr, whereas his descent from Yngvi Halfdansson fits well with the rest of his story. However, cf. Sigurtharkvitha en skamma, 24 and note.
+
+58. This entire stanza may be an interpolation; nearly every edition has a different way of dealing with it. Hringstathir: as this place had been given to Helgi by his father (cf. stanza 8 and note), the poet has apparently made a mistake in naming it here as a conquest from Granmar’s sons, unless, indeed, they had previously captured it from Helgi, which seems unlikely.
+
+
+
+
+
+
+
+
+HELGAKVITHA HUNDINGSBANA II
+
+THE SECOND LAY OF HELGI HUNDINGSBANE
+
+
+INTRODUCTORY NOTE
+
+As the general nature of the Helgi tradition has been considered in the introductory note to Helgakvitha Hjorvarthssonar, it is necessary here to discuss only the characteristics of this particular poem. The second Helgi Hundingsbane lay is in most respects the exact opposite of the first one: it is in no sense consecutive; it is not a narrative poem, and all or most of it gives evidence of relatively early composition, its origin probably going well back into the tenth century.
+
+It is frankly nothing but a piece of, in the main, very clumsy patchwork, made up of eight distinct fragments, pieced together awkwardly by the annotator with copious prose notes. One of these fragments (stanzas 13–16) is specifically identified as coming from “the old Volsung lay.” What was that poem, and how much more of the extant Helgi-lay compilation was taken from it, and did the annotator know more of it than he included in his patchwork? Conclusive answers to these questions have baffled scholarship, and probably always will do so. My own guess is that the annotator knew little or nothing more than he wrote down; having got the first Helgi Hundingsbane lay, which was obviously in fairly good shape, out of the way, he proceeded to assemble all the odds and ends of verse about Helgi which he could get hold of, putting them together on the basis of the narrative told in the first Helgi lay and of such stories as his knowledge of prose sagas may have yielded.
+
+Section I (stanzas 1–4) deals with an early adventure of Helgi’s, in which he narrowly escapes capture when he ventures into Hunding’s home in disguise. Section II (stanzas 5–12) is a dialogue between Helgi and Sigrun at their first meeting. Section III (stanzas 13–16, the “old Volsung lay” group) is another dialogue between Helgi and Sigrun when she invokes his aid to save her from Hothbrodd. Section IV (stanzas 17–21), which may well be from the same poem as Section III, is made up of speeches by Helgi and Sigrun after the battle in which Hothbrodd is killed; stanza 21, however, is certainly an interpolation from another poem, as it is in a different meter. Section V (stanzas 22–27) is the dispute between Sinfjotli and Gothmund, evidently in an older form than the one included in the first Helgi Hundingsbane lay. Section VI (stanzas 28–37) gives Dag’s speech to his sister, Sigrun, telling of Helgi’s death, her curse on her brother and her lament for her slain husband. Section VII (stanza 38) is the remnant of a dispute between Helgi and Hunding, here inserted absurdly out of place. Section VIII (stanzas 39–50) deals with the return of the dead Helgi and Sigrun’s visit to him in the burial hill.
+
+Sijmons maintains that sections I and II are fragments of the Kara lay mentioned by the annotator in his concluding prose note, and that sections IV, VI, and VIII are from a lost Helgi-Sigrun poem, while Section III comes, of course, from the “old Volsung lay.” This seems as good a guess as any other, conclusive proof being quite out of the question.
+
+Were it not for sections VI and VIII the poem would be little more than a battle-ground for scholars, but those two sections are in many ways as fine as anything in Old Norse poetry. Sigrun’s curse of her brother for the slaying of Helgi and her lament for her dead husband, and the extraordinary vividness of the final scene in the burial hill, have a quality which fully offsets the baffling confusion of the rest of the poem.
+
+
+
+
+
+King Sigmund, the son of Volsung, had as wife Borghild, from Bralund. They named their son Helgi, after Helgi Hjorvarthsson; Hagal was Helgi’s foster-father. Hunding was the name of a powerful king, and Hundland is named from him. He was a mighty warrior, and had many sons with him on his campaigns. There was enmity and strife between these two, King Hunding and King Sigmund, and each slew the other’s kinsmen. King Sigmund and his family were called Volsungs and Ylfings.
+
+Helgi went as a spy to the home of King Hunding in disguise. Hæming, a son of King Hunding’s, was at home. When Helgi went forth, then he met a young herdsman, and said:
+
+
+1.  “Say to Hæming   |   that Helgi knows     Whom the heroes   |   in armor hid;     A gray wolf had they   |   within their hall,     Whom King Hunding   |   Hamal thought.”
+
+
+Hamal was the name of Hagal’s son. King Hunding sent men to Hagal to seek Helgi, and Helgi could not save himself in any other way, so he put on the clothes of a bond-woman and set to work at the mill. They sought Helgi but found him not.
+
+
+2.  Then Blind spake out,   |   the evil-minded:     “Of Hagal’s bond-woman   |   bright are the eyes;     Yon comes not of churls   |   who stands at the quern;     The millstones break,   |   the boards are shattered.
+
+3.  “The hero has   |   a doom full hard,     That barley now   |   he needs must grind;     Better befits   |   his hand to feel     The hilt of the sword   |   than the millstone’s handle.”
+
+
+Hagal answered and said:
+
+
+4.  “Small is the wonder   |   if boards are splintered;     By a monarch’s daughter   |   the mill is turned;     Once through clouds   |   she was wont to ride,     And battles fought   |   like fighting men,     (Till Helgi a captive   |   held her fast;     Sister she is   |   of Sigar and Hogni,     Thus bright are the eyes   |   of the Ylfings’ maid.)”
+
+
+Helgi escaped and went to a fighting ship. He slew King Hunding, and thenceforth was called Helgi Hundingsbane.
+
+
+
+
+
+(II)
+
+He lay with his host in Brunavagar, and they had there a strand-slaughtering, and ate the flesh raw. Hogni was the name of a king. His daughter was Sigrun; she was a Valkyrie and rode air and water; she was Svava reborn. Sigrun rode to Helgi’s ship and said:
+
+
+5.  “Who rules the ship   |   by the shore so steep?     Where is the home   |   ye warriors have?     Why do ye bide   |   in Brunavagar,     Or what the way   |   that ye wish to try?”
+
+
+Helgi spake:
+
+
+6.  “Hamal’s the ship   |   by the shore so steep,     Our home in Hlesey   |   do we have;     For fair wind bide we   |   in Brunavagar,     Eastward the way   |   that we wish to try.”
+
+
+Sigrun spake:
+
+
+7.  “Where hast thou, warrior,   |   battle wakened,     Or gorged the birds   |   of the sisters of Guth?     Why is thy byrnie   |   spattered with blood,     Why helmed dost feast   |   on food uncooked?”
+
+
+Helgi spake:
+
+
+8.  “Latest of all,   |   the Ylfings’ son     On the western sea,   |   if know thou wilt,     Captured bears   |   in Bragalund,     And fed the eagles   |   with edge of sword.     Now is it shown   |   why our shirts are bloody,     And little our food   |   with fire is cooked.”
+
+
+Sigrun spake:
+
+
+9.  “Of battle thou tellest,   |   and there was bent     Hunding the king   |   before Helgi down;     There was carnage when thou   |   didst avenge thy kin,     And blood flowed fast   |   on the blade of the sword.”
+
+
+Helgi spake:
+
+
+10. “How didst thou know   |   that now our kin,     Maiden wise,   |   we have well avenged?     Many there are   |   of the sons of the mighty     Who share alike   |   our lofty race.”
+
+
+Sigrun spake:
+
+
+11. “Not far was I   |   from the lord of the folk,     Yester morn,   |   when the monarch was slain;     Though crafty the son   |   of Sigmund, methinks,     When he speaks of the fight   |   in slaughter-runes.
+
+12. “On the long-ship once   |   I saw thee well,     When in the blood-stained   |   bow thou wast,     (And round thee icy   |   waves were raging;)     Now would the hero   |   hide from me,     But to Hogni’s daughter   |   is Helgi known.”
+
+
+
+
+
+(III)
+
+Granmar was the name of a mighty king, who dwelt at Svarin’s hill. He had many sons; one was named Hothbrodd, another Gothmund, a third Starkath. Hothbrodd was in a kings’ meeting, and he won the promise of having Sigrun, Hogni’s daughter, for his wife. But when she heard this, she rode with the Valkyries over air and sea to seek Helgi. Helgi was then at Logafjoll, and had fought with Hunding’s sons; there he killed Alf and Eyolf, Hjorvarth and Hervarth. He was all weary with battle, and sat under the eagle-stone. There Sigrun found him, and ran to throw her arms about his neck, and kissed him, and told him her tidings, as is set forth in the old Volsung lay:
+
+
+13. Sigrun the joyful   |   chieftain sought,     Forthwith Helgi’s   |   hand she took;     She greeted the hero   |   helmed and kissed him,     The warrior’s heart   |   to the woman turned.
+
+14. From her heart the daughter   |   of Hogni spake,     Dear was Helgi,   |   she said, to her;     “Long with all   |   my heart I loved     Sigmund’s son   |   ere ever I saw him.
+
+15. “At the meeting to Hothbrodd   |   mated I was,     But another hero   |   I fain would have;     Though, king, the wrath   |   of my kin I fear,     Since I broke my father’s   |   fairest wish.”
+
+
+Helgi spake:
+
+
+16. “Fear not ever   |   Hogni’s anger,     Nor yet thy kinsmen’s   |   cruel wrath;     Maiden, thou   |   with me shalt live,     Thy kindred, fair one,   |   I shall not fear.”
+
+
+
+
+
+(IV)
+
+Helgi then assembled a great sea-host and went to Frekastein. On the sea he met a perilous storm; lightning flashed overhead and the bolts struck the ship. They saw in the air that nine Valkyries were riding, and recognized Sigrun among them. Then the storm abated, and they came safe and sound to land. Granmar’s sons sat on a certain mountain as the ships sailed toward the land. Gothmund leaped on a horse and rode for news to a promontory near the harbor; the Volsungs were even then lowering their sails. Then Gothmund said, as is written before in the Helgi lay:
+
+
+    “Who is the king   |   who captains the fleet,     And to the land   |   the warriors leads?”
+
+
+Sinfjotli, Sigmund’s son, answered him, and that too is written.
+
+Gothmund rode home with his tidings of the host; then Granmar’s sons summoned an army. Many kings came there; there were Hogni, Sigrun’s father, and his sons Bragi and Dag. There was a great battle, and all Granmar’s sons were slain and all their allies; only Dag, Hogni’s son, was spared, and he swore loyalty to the Volsungs. Sigrun went among the dead and found Hothbrodd at the coming of death. She said:
+
+
+17. “Never shall Sigrun   |   from Sevafjoll,     Hothbrodd king,   |   be held in thine arms;     Granmar’s sons   |   full cold have grown,     And the giant-steeds gray   |   on corpses gorge.”
+
+
+Then she sought out Helgi, and was full of joy. He said:
+
+
+18. “Maid, not fair   |   is all thy fortune,     The Norns I blame   |   that this should be;     This morn there fell   |   at Frekastein     Bragi and Hogni   |   beneath my hand.
+
+19. “At Hlebjorg fell   |   the sons of Hrollaug,     Starkath the king   |   at Styrkleifar;     Fighters more noble   |   saw I never,     The body fought when   |   the head had fallen.
+
+20. “On the ground full low   |   the slain are lying,     Most are there   |   of the men of thy race;     Nought hast thou won,   |   for thy fate it was     Brave men to bring   |   to the battle-field.”
+
+
+Then Sigrun wept.   |   Helgi said:
+
+
+21. “Grieve not, Sigrun,   |   the battle is gained,       The fighter can shun not his fate.”
+
+
+Sigrun spake:
+
+
+    “To life would I call   |   them who slaughtered lie,       If safe on thy breast I might be.”
+
+
+
+
+
+(V)
+
+This Gothmund the son of Granmar spoke:
+
+
+22. “What hero great   |   is guiding the ships?     A golden flag   |   on the stem he flies;     I find not peace   |   in the van of your faring,     And round the fighters   |   is battle-light red.”
+
+
+Sinfjotli spake:
+
+
+23. “Here may Hothbrodd   |   Helgi find,     The hater of flight,   |   in the midst of the fleet;     The home of all   |   thy race he has,     And over the realm   |   of the fishes he rules.”
+
+
+Gothmund spake:
+
+
+24. “First shall swords   |   at Frekastein     Prove our worth   |   in place of words;     Time is it, Hothbrodd,   |   vengeance to have,     If in battle worsted   |   once we were.”
+
+
+Sinfjotli spake:
+
+
+25. “Better, Gothmund,   |   to tend the goats,     And climb the rocks   |   of the mountain cliffs;     A hazel switch   |   to hold in thy hand     More seemly were   |   than the hilt of a sword.”
+
+
+Helgi spake:
+
+
+26. “Better, Sinfjotli,   |   thee ’twould beseem     Battles to give,   |   and eagles to gladden,     Than vain and empty   |   speech to utter,     Though warriors oft   |   with words do strive.
+
+27. “Good I find not   |   the sons of Granmar,     But for heroes ’tis seemly   |   the truth to speak;     At Moinsheimar   |   proved the men     That hearts for the wielding   |   of swords they had,     (And ever brave   |   the warriors are.)”
+
+
+
+
+
+(VI)
+
+Helgi took Sigrun to wife, and they had sons. Helgi did not reach old age. Dag, the son of Hogni, offered sacrifice to Othin to be avenged for his father’s death; Othin gave Dag his spear. Dag found Helgi, his brother-in-law, at a place which is called Fjoturlund. He thrust the spear through Helgi’s body. Then Helgi fell, and Dag rode to Sevafjoll and told Sigrun the tidings:
+
+
+28. “Sad am I, sister,   |   sorrow to tell thee,     Woe to my kin   |   unwilling I worked;     In the morn there fell   |   at Fjoturlund     The noblest prince   |   the world has known,     (And his heel he set   |   on the heroes’ necks.)”
+
+
+Sigrun spake:
+
+
+29. “Now may every   |   oath thee bite     That with Helgi   |   sworn thou hast,     By the water   |   bright of Leipt,     And the ice-cold   |   stone of Uth.
+
+30. “The ship shall sail not   |   in which thou sailest,     Though a favoring wind   |   shall follow after;     The horse shall run not   |   whereon thou ridest,     Though fain thou art   |   thy foe to flee.
+
+31. .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     .  .  .  .  .  .  .  .   |   .  .  .  .  .  .  .  .     “The sword shall bite not   |   which thou bearest,     Till thy head itself   |   it sings about.
+
+32. “Vengeance were mine   |   for Helgi’s murder,     Wert thou a wolf   |   in the woods without,     Possessing nought   |   and knowing no joy,     Having no food   |   save corpses to feed on.”
+
+
+Dag spake:
+
+
+33. “Mad art thou, sister,   |   and wild of mind,     Such a curse   |   on thy brother to cast;     Othin is ruler   |   of every ill,     Who sunders kin   |   with runes of spite.
+
+34. “Thy brother rings   |   so red will give thee,     All Vandilsve   |   and Vigdalir;     Take half my land   |   to pay the harm,     Ring-decked maid,   |   and as meed for thy sons.”
+
+
+Sigrun spake:
+
+
+35. “I shall sit not happy   |   at Sevafjoll,     Early or late,   |   my life to love,     If the light cannot show,   |   in the leader’s band,     Vigblær bearing him   |   back to his home,     (The golden-bitted;   |   I shall greet him never.)
+
+36. “Such the fear   |   that Helgi’s foes     Ever felt,   |   and all their kin,     As makes the goats   |   with terror mad     Run from the wolf   |   among the rocks.
+
+37. “Helgi rose   |   above heroes all     Like the lofty ash   |   above lowly thorns,     Or the noble stag,   |   with dew besprinkled,     Bearing his head   |   above all beasts,     (And his horns gleam bright   |   to heaven itself.)”
+
+
+A hill was made in Helgi’s memory. And when he came to Valhall, then Othin bade him rule over everything with himself.
+
+
+
+
+
+(VII)
+
+Helgi said:
+
+
+38. “Thou shalt, Hunding,   |   of every hero     Wash the feet,   |   and kindle the fire,     Tie up dogs,   |   and tend the horses,     And feed the swine   |   ere to sleep thou goest.”
+
+
+
+
+
+(VIII)
+
+One of Sigrun’s maidens went one evening to Helgi’s hill, and saw that Helgi rode to the hill with many men. The maiden said:
+
+
+39. “Is this a dream   |   that methinks I see,     Or the doom of the gods,   |   that dead men ride,     And hither spurring   |   urge your steeds,     Or is home-coming now   |   to the heroes granted?”
+
+
+Helgi spake:
+
+
+40. “No dream is this   |   that thou thinkest to see,     Nor the end of the world,   |   though us thou beholdest,     And hither spurring   |   we urge our steeds,     Nor is home-coming now   |   to the heroes granted.”
+
+
+The maiden went home and said to Sigrun:
+
+
+41. “Go forth, Sigrun,   |   from Sevafjoll,     If fain the lord   |   of the folk wouldst find;     (The hill is open,   |   Helgi is come;)     The sword-tracks bleed;   |   the monarch bade     That thou his wounds   |   shouldst now make well.”
+
+
+Sigrun went in the hill to Helgi, and said:
+
+
+42. “Now am I glad   |   of our meeting together,     As Othin’s hawks,   |   so eager for prey,     When slaughter and flesh   |   all warm they scent,     Or dew-wet see   |   the red of day.
+
+43. “First will I kiss   |   the lifeless king,     Ere off the bloody   |   byrnie thou cast;     With frost thy hair   |   is heavy, Helgi,     And damp thou art   |   with the dew of death;     (Ice-cold hands   |   has Hogni’s kinsman,     What, prince, can I   |   to bring thee ease?)”
+
+
+Helgi spake:
+
+
+44. “Thou alone, Sigrun   |   of Sevafjoll,     Art cause that Helgi   |   with dew is heavy;     Gold-decked maid,   |   thy tears are grievous,     (Sun-bright south-maid,   |   ere thou sleepest;)     Each falls like blood   |   on the hero’s breast,     (Burned-out, cold,   |   and crushed with care.)
+
+45. “Well shall we drink   |   a noble draught,     Though love and lands   |   are lost to me;     No man a song   |   of sorrow shall sing,     Though bleeding wounds   |   are on my breast;     Now in the hill   |   our brides we hold,     The heroes’ loves,   |   by their husbands dead.”
+
+
+Sigrun made ready a bed in the hill.
+
+
+46. “Here a bed   |   I have made for thee, Helgi,     To rest thee from care,   |   thou kin of the Ylfings;     I will make thee sink   |   to sleep in my arms,     As once I lay   |   with the living king.”
+
+
+Helgi spake:
+
+
+47. “Now do I say   |   that in Sevafjoll     Aught may happen,   |   early or late,     Since thou sleepest clasped   |   in a corpse’s arms,     So fair in the hill,   |   the daughter of Hogni!     (Living thou comest,   |   a daughter of kings.)
+
+48. “Now must I ride   |   the reddened ways,     And my bay steed set   |   to tread the sky;     Westward I go   |   to wind-helm’s bridges,     Ere Salgofnir wakes   |   the warrior throng.”
+
+
+Then Helgi and his followers rode on their way, and the women went home to the dwelling. Another evening Sigrun bade the maiden keep watch at the hill. And at sunset when Sigrun came to the hill she said:
+
+
+49. “Now were he come,   |   if come he might,     Sigmund’s son,   |   from Othin’s seat;     Hope grows dim   |   of the hero’s return     When eagles sit   |   on the ash-tree boughs,     And men are seeking   |   the meeting of dreams.”
+
+
+The Maiden said:
+
+
+50. “Mad thou wouldst seem   |   alone to seek,     Daughter of heroes,   |   the house of the dead;     For mightier now   |   at night are all     The ghosts of the dead   |   than when day is bright.”
+
+
+Sigrun was early dead of sorrow and grief. It was believed in olden times that people were born again, but that is now called old wives’ folly. Of Helgi and Sigrun it is said that they were born again; he became Helgi Haddingjaskati, and she Kara the daughter of Halfdan, as is told in the Lay of Kara, and she was a Valkyrie.
+
+
+
+
+
+
+
+
+NOTES
+
+
+Prose. In the manuscript the poem is headed “Of the Volsungs,” but most editions give it the title used here. Sigmund: cf. Helgakvitha Hundingsbana I, 6 and note, which also mentions Volsung, Borghild and Bralund: cf. Helgakvitha Hundingsbana I, 1 and note. Helgi: the annotator’s explanation that the child was named after Helgi Hjorvarthsson is a naive way of getting around the difficulties created by the two sets of Helgi stories. He might equally well have said that the new Helgi was the old one born again, as he accounts for Sigrun in this way (“she was Svava reborn”). Hagal: not elsewhere mentioned; it was a common custom to have boys brought up by foster-parents. Hunding and Hundland: cf. Helgakvitha Hundingsbana I, 10 and note. Volsungs and Ylfings: regarding this confusion of family names cf. Helgakvitha Hundingsbana I, 5 and note. Hæming: his name does not appear in the list of Hunding’s sons. It is quite possible that these opening stanzas (1–4) do not refer to Hunding at all.
+
+1. Helgi appears to have stayed with Hunding under the name of Hamal, but now, thinking himself safe, he sends word of who he really is. Hunding: it has been suggested that the compiler may have inserted this name to fit what he thought the story ought to be, in place of Hæming, or even Hadding. If stanzas 1–4 are a fragment of the Karuljoth (Lay of Kara), this latter suggestion is quite reasonable, for in that poem, which we do not possess, but which supplied material for the compilers of the Hromundar saga Greipssonar, Helgi appears as Helgi Haddingjaskati (cf. final prose note). Nothing beyond this one name connects stanzas 1–4 with Hunding.
+
+Prose. Hagal: Helgi’s foster-father, who naturally protects him.
+
+2. The manuscript indicates line 2 as the beginning of the stanza, the copyist evidently regarding line 1 as prose. This has caused various rearrangements in the different editions. Blind: leader of the band sent to capture Helgi.
+
+3. The manuscript marks line 3 as the beginning of a stanza. Barley: the word literally means “foreign grain,” and would afford an interesting study to students of early commerce.
+
+4. Possibly two stanzas with one line lost, or perhaps the lines in parenthesis are spurious; each editor has his own guess. Sigar and Hogni: it seems unlikely that Hagal refers to the Hogni who was Sigrun’s father, for this part of the story has nothing whatever to do with Sigrun. As Hagal is, of course, deliberately lying, it is useless to test any part of his speech for accuracy.
+
+Prose. No division indicated in the manuscript. Brunavagar (“Bruni’s Sea”): mentioned only in this section. Strand-slaughtering: a killing on the shore of cattle stolen in a raid. Hogni and Sigrun: cf. Helgakvitha Hundingsbana I, 17 and note; the annotator’s notion of Sigrun as the reincarnated Svava (cf. Helgakvitha Hjorvarthssonar, concluding prose note) represents a naive form of scholarship. There is nothing in stanzas 5–12 which clearly identifies Sigrun as a Valkyrie, or which, except for the last line of stanza 12, identifies the speaker as Sigrun. Some editors, therefore, call her simply “the Valkyrie,” while Vigfusson, who thinks this section is also a remnant of the Karuljoth, calls her Kara.
+
+6. The manuscript does not indicate the speakers. Hamal: Helgi’s assumption of this name seems to link this section (stanzas 5–12) with stanza 1. Hlesey (“Island of Hler”—i.e., Ægir, the sea-god): generally identified as the Danish island of Läsö; cf. Harbarthsljoth, 37 and note.
+
+7. Guth: a Valkyrie (cf. Voluspo, 31); the birds of her sisters are the kites and ravens.
+
+8. The manuscript indicates line 5 as the beginning of a new stanza; some editors reject lines 1–2, while others make lines 5–6 into a fragmentary stanza. Ylfings: cf. introductory prose and note. Bragalund (“Bragi’s Wood”): a mythical place. Bears: presumably Berserkers, regarding whom cf. Hyndluljoth, 23.
+
+10. Helgi’s meaning in lines 3–4 is that, although he has already declared himself an Ylfing (stanza 8, line 1), there are many heroes of that race, and he does not understand how Sigrun knows him to be Helgi.
+
+11. Slaughter-runes: equivocal or deceptive speech regarding the battle. The word “rune” had the meaning of “magic” or “mystery” long before it was applied to the signs or characters with which it was later identified.
+
+12. Some editors reject line 3, others line 5. The manuscript omits Helgi’s name in line 5, thereby destroying both the sense and the meter. Vigfusson, following his Karuljoth theory (cf. note on prose following stanza 4), changes Hogni to Halfdan, father of Kara.
+
+Prose. The manuscript indicates no division. Most of this prose passage is evidently based on Helgakvitha Hundingsbana I; the only new features are the introduction of Starkath as a third son of Granmar, which is clearly an error based on a misunderstanding of stanza 19, and the reference to the kings’ meeting, based on stanza 15. Kings’ meetings, or councils, were by no means unusual; the North in early days was prolific in kings. For the remaining names, cf. Helgakvitha Hundingsbana I: Granmar, stanza 19; Hothbrodd, stanza 19; Gothmund, stanza 33; Svarin’s hill, stanza 32; Logafjoll, stanza 13; Alf, Eyjolf, Hjorvarth and Hervarth, stanza 14. The old Volsung lay: cf. Introductory Note.
+
+13. Some editions combine lines 3–4, or line 4, with part of stanza 14.
+
+14. The lines of stanzas 14 and 15 are here rearranged in accordance with Bugge’s emendation; in the manuscript they stand as follows: lines 3–4 of stanza 14; stanza 15; lines 1–2 of stanza 14. This confusion has given rise to various editorial conjectures.
+
+Prose. The manuscript indicates no division. Here again, the annotator has drawn practically all his information from Helgakvitha Hundingsbana I, which he specifically mentions and even quotes. The only new features are the names of Hogni’s sons, Bragi and Dag. Bragi is mentioned in stanza 18, though it is not there stated that he is Hogni’s son. Dag, who figures largely in stanzas 28–34, is a puzzle, for the verse never names him, and it is an open question where the annotator got his name. Frekastein: cf. Helgakvitha Hjorvarthssonar, 39 and note. As is written: the two lines are quoted, with a change of two words, from Helgakvitha Hundingsbana I, 33. Sinfjotli: cf. Helgakvitha Hundingsbana I, 6 and note, and stanzas 33–48, in which the whole dialogue is given. Loyalty: apparently the annotator got this bit of information out of stanza 29, in which Sigrun refers to the oaths which her brother had sworn to Helgi.
+
+17. Sevafjoll (“Wet Mountain”): mentioned only in this poem. Giant-steeds: wolves, the usual steeds of giantesses; cf. Helgakvitha Hundingsbana I, 56.
+
+18. Maid: the word thus rendered is the same doubtful one which appears in Völundarkvitha, 1 and 5, and which may mean specifically a Valkyrie (Gering translates it “helmed” or “heroic”) or simply “wise.” Cf. Völundarkvitha, note on introductory prose. Norns: cf. Voluspo, 20 and note. In stanza 33 Dag similarly lays the blame for the murder he has committed on Othin. Bragi: probably Sigrun’s brother.
+
+19. This stanza looks like an interpolation, and there is little or nothing to connect it with the slaying of Granmar’s sons. In the manuscript line 2, indicated as the beginning of a stanza, precedes line 1. Hlebjorg (“Sea-Mountain”) and Styrkleifar (“Battle-Cliffs”): place names not elsewhere mentioned. Of Hrollaug’s sons nothing further is known. Starkath: this name gives a hint of the origin of this stanza, for Saxo Grammaticus tells of the slaying of the Swedish hero Starkath (“The Strong”) the son of Storverk, and describes how his severed head bit the ground in anger (cf. line 4). In all probability this stanza is from an entirely different poem, dealing with the Starkath story, and the annotator’s attempt to identify the Swedish hero as a third son of Granmar is quite without foundation.
+
+21. The difference of meter would of itself be enough to indicate that this stanza comes from an entirely different poem. A few editions assign the whole stanza to Helgi, but lines 3–4 are almost certainly Sigrun’s, and the manuscript begins line 3 with a large capital letter following a period.
+
+22. With this stanza begins the dispute between Gothmund and Sinfjotli which, together with Helgi’s rebuke to his half-brother, appears at much greater length in Helgakvitha Hundingsbana I, 33–48. It is introduced here manifestly in the wrong place. The version here given is almost certainly the older of the two, but the resemblance is so striking, and in some cases (notably in Helgi’s rebuke) the stanzas are so nearly identical, that it seems probable that the composer of the first Helgi Hundingsbane lay borrowed directly from the poem of which the present dialogue is a fragment. Flag: the banner (“gunnfani,” cf. “gonfalon”) here serves as the signal for war instead of the red shield mentioned in Helgakvitha Hundingsbana I, 34. Battle-light: perhaps the “northern lights.”
+
+23. Lines 3–4 are obscure, and in the manuscript show signs of error. Helgi had not at this time, so far as we know, conquered any of Hothbrodd’s land. The realm of the fishes, in line 4, presumably means the sea, but the word here translated “fishes” is obscure, and many editors treat it as a proper name, “the realm of the Fjorsungs,” but without further suggestion as to who or what the Fjorsungs are.
+
+24. The word here translated swords is a conjectural emendation; the manuscript implies merely an invitation to continue the quarrel at Frekastein. Hothbrodd: apparently he is here considered as present during the dispute; some editors, in defiance of the meter, have emended the line to mean “Time is it for Hothbrodd   |   vengeance to have.”
+
+26–27. Cf. Helgakvitha Hundingsbana I, 47–48, which are nearly identical. Stanza 27 in the manuscript is abbreviated to the first letters of the words, except for line 5, which does not appear in the other poem, and which looks like an interpolation.
+
+Prose. Here begins a new section of the poem, dealing with Helgi’s death at the hands of Dag, Sigrun’s brother. The note is based wholly on stanzas 28–34, except for the introduction of Dag’s name (cf. note on prose following stanza 16), and the reference to Othin’s spear, the weapon which made victory certain, and which the annotator brought in doubtless on the strength of Dag’s statement that Othin was responsible for Helgi’s death (stanza 33). Fjoturlund (“Fetter-Wood”): mentioned only here and in stanza 28.
+
+28. Line 5 looks like an interpolation.
+
+29. Leipt: this river is mentioned in Grimnismol, 28. Uth: a daughter of the sea-god Ægir; regarding her sacred stone we know nothing. According to the annotator, Dag’s life had been spared because he swore loyalty to Helgi.
+
+31. No gap indicated in the manuscript, but most editors have assumed that either the first or the last two lines have been lost. Bugge adds a line: “The shield shall not help thee   |   which thou holdest.”
+
+34. Vandilsve (“Vandil’s Shrine”): who Vandil was we do not know; this and Vigdalir (“Battle-Dale”) are purely mythical places.
+
+35. Line 5 may be spurious. Vigblær (“Battle-Breather”): Helgi’s horse.
+
+37. Line 5 (or possibly line 4) may be spurious. Cf. Guthrunarkvitha I, 17, and Guthrunarkvitha II, 2.
+
+Prose. Valhall, etc.: there is no indication as to where the annotator got this notion of Helgi’s sharing Othin’s rule. It is most unlikely that such an idea ever found place in any of the Helgi poems, or at least in the earlier ones; probably it was a late development of the tradition in a period when Othin was no longer taken seriously.
+
+38. This stanza apparently comes from an otherwise lost passage containing a contest of words between Helgi and Hunding; indeed the name of Hunding may have been substituted for another one beginning with “H,” and the stanza originally have had no connection with Helgi at all. The annotator inserts it here through an obvious misunderstanding, taking it to be Helgi’s application of the power conferred on him by Othin.
+
+39. Here begins the final section (stanzas 39–50), wherein Sigrun visits the dead Helgi in his burial hill. Doom of the gods: the phrase “ragna rök” has been rather unfortunately Anglicized into the word “ragnarok” (the Norse term is not a proper name), and rök, “doom,” has been confused with rökkr, “darkness,” and so translated “dusk of the Gods,” or “Götterdämmerung.”
+
+40. In the manuscript most of this stanza is abbreviated to the first letters of the words.
+
+41. Line 3 (or possibly line 2) may be spurious. Sword-tracks: wounds. One edition places stanza 48 after stanza 41, and another does the same with stanza 50.
+
+43. Possibly lines 5–6 are spurious, or part of a stanza the rest of which has been lost. It has also been suggested that two lines may have been lost after line 2, making a new stanza of lines 3–6. Kinsman: literally “son-in-law.”
+
+44. Lines 4 and 6 have been marked by various editors as probably spurious. Others regard lines 1–2 as the beginning of a stanza the rest of which has been lost, or combine lines 5–6 with lines 5–6 of stanza 45 to make a new stanza. South-maid: cf. Helgakvitha Hundingsbana I, 17 and note.
+
+45. Both lines 3–4 and lines 5–6 have been suspected by editors of being interpolated, and the loss of two lines has also been suggested. Brides: the plural here is perplexing. Gering insists that only Sigrun is meant, and translates the word as singular, but both “brides” and “loves” are uncompromisingly plural in the text. Were the men of Helgi’s ghostly following likewise visited by their wives? The annotator may have thought so, for in the prose he mentions the “women” returning to the house, although, of course, this may refer simply to Sigrun and the maid.
+
+47. Line 5 (or possibly line 4) may be interpolated.
+
+48. Wind-helm: the sky; the bridge is Bifrost, the rainbow (cf. Grimnismol, 29). Salgofnir (“Hall-Crower”): the cock Gollinkambi who awakes the gods and warriors for the last battle.
+
+49. Many editors assign this speech to the maid. Line 5 (or 4) may be spurious. Meeting of dreams (“Dream-Thing”): sleep.
+
+Prose. The attitude of the annotator is clearly revealed by his contempt for those who put any faith in such “old wives’ folly” as the idea that men and women could be reborn. As in the case of Helgi Hjorvarthsson, the theory of the hero’s rebirth seems to have developed in order to unite around a single Helgi the various stories in which the hero is slain. The Lay of Kara (Karuljoth) is lost, although, as has been pointed out, parts of the Helgakvitha Hundingsbana II may be remnants of it, but we find the main outlines of the story in the Hromundar saga Greipssonar, whose compilers appear to have known the Karuljoth. In the saga Helgi Haddingjaskati (Helgi the Haddings’-Hero) is protected by the Valkyrie Kara, who flies over him in the form of a swan (note once more the Valkyrie swan-maiden confusion); but in his fight with Hromund he swings his sword so high that he accidentally gives Kara a mortal wound, whereupon Hromund cuts off his head. As this makes the third recorded death of Helgi (once at the hands of Alf, once at those of Dag, and finally in the fight with Hromund), the phenomenon of his rebirth is not surprising. The points of resemblance in all the Helgi stories, including the one told in the lost Karuljoth, are sufficiently striking so that it is impossible not to see in them a common origin, and not to believe that Helgi the son of Hjorvarth, Helgi the son of Sigmund and Helgi the Haddings’-Hero (not to mention various other Helgis who probably figured in songs and stories now lost) were all originally the same Helgi who appears in the early traditions of Denmark.
+
+
+
+
+
+
+
+
+FRA DAUTHA SINFJOTLA
+
+OF SINFJOTLI’S DEATH
+
+
+INTRODUCTORY NOTE
+
+It has been pointed out that the Helgi tradition, coming originally from Denmark, was early associated with that of the Volsungs, which was of German, or rather of Frankish, origin (cf. Introductory Note to Helgakvitha Hjorvarthssonar). The connecting links between these two sets of stories were few in number, the main point being the identification of Helgi as a son of Sigmund Volsungsson. Another son of Sigmund, however, appears in the Helgi poems, though not in any of the poems dealing with the Volsung cycle proper. This is Sinfjotli, whose sole function in the extant Helgi lays is to have a wordy dispute with Gothmund Granmarsson.
+
+Sinfjotli’s history is told in detail in the early chapters of the Volsungasaga. The twin sister of Sigmund Volsungsson, Signy, had married Siggeir, who hated his brother-in-law by reason of his desire to possess a sword which had belonged to Othin and been won by Sigmund. Having treacherously invited Volsung and his ten sons to visit him, Siggeir slew Volsung and captured his sons, who were set in the stocks. Each night a wolf (“some men say that she was Siggeir’s mother”) came out of the woods and ate up one of the brothers, till on the tenth night Sigmund alone was left. Then, however, Signy aided him to escape, and incidentally to kill the wolf. He vowed vengeance on Siggeir, and Signy, who hated her husband, was determined to help him. Convinced that Sigmund must have a helper of his own race, Signy changed forms with a witch, and in this guise sought out Sigmund, who, not knowing who she was, spent three nights with her. Thereafter she gave birth to a boy, whom she named Sinfjotli (“The Yellow-Spotted”?), whom she sent to Sigmund. For a time they lived in the woods, occasionally turning into wolves (whence perhaps Sinfjotli’s name). When Sinfjotli was full grown, he and his father came to Siggeir’s house, but were seen and betrayed by the two young sons of Signy and Siggeir, whereupon Sinfjotli slew them. Siggeir promptly had Sigmund and Sinfjotli buried alive, but Signy managed to smuggle Sigmund’s famous sword into the grave, and with this the father and son dug themselves out. The next night they burned Siggeir’s house, their enemy dying in the flames, and Signy, who had at the last refused to leave her husband, from a sense of somewhat belated loyalty, perishing with him.
+
+Was this story, which the Volsungasaga relates in considerable detail, the basis of an old poem which has been lost? Almost certainly it was, although, as I have pointed out, many if not most of the old stories appear to have been handed down rather in prose than in verse, for the Volsungasaga quotes two lines of verse regarding the escape from the grave. At any rate, Sinfjotli early became a part of the Volsung tradition, which, in turn, formed the basis for no less than fifteen poems generally included in the Eddic collection. Of this tradition we may recognize three distinct parts: the Volsung-Sigmund-Sinfjotli story; the Helgi story, and the Sigurth story, the last of these three being by far the most extensive, and suggesting an almost limitless amount of further subdivision. With the Volsung-Sigmund-Sinfjotli story the Sigurth legend is connected only by the fact that Sigurth appears as Sigmund’s son by his last wife, Hjordis; with the Helgi legend it is not connected directly at all. Aside from the fact that Helgi appears as Sigmund’s son by his first wife, Borghild, the only link between the Volsung story proper and that of Helgi is the appearance of Sinfjotli in two of the Helgi poems. Originally it is altogether probable that the three stories, or sets of stories, were entirely distinct, and that Sigurth (the familiar Siegfried) had little or nothing more to do with the Volsungs of northern mythological-heroic tradition than he had with Helgi.
+
+The annotator or compiler of the collection of poems preserved in the Codex Regius, having finished with the Helgi lays, had before him the task of setting down the fifteen complete or fragmentary poems dealing with the Sigurth story. Before doing this, however, he felt it incumbent on him to dispose of both Sigmund and Sinfjotli, the sole links with the two other sets of stories. He apparently knew of no poem or poems concerning the deaths of these two; perhaps there were none, though this is unlikely. Certainly the story of how Sinfjotli and Sigmund died was current in oral prose tradition, and this story the compiler set forth in the short prose passage entitled Of Sinfjotli’s Death which, in Regius, immediately follows the second lay of Helgi Hundingsbane. The relation of this passage to the prose of the Reginsmol is discussed in the introductory note to that poem.
+
+
+
+
+
+Sigmund, the son of Volsung, was a king in the land of the Franks; Sinfjotli was his eldest son, the second was Helgi, and the third Hamund. Borghild, Sigmund’s wife, had a brother who was named ——. Sinfjotli, her stepson, and —— both wooed the same woman, wherefore Sinfjotli slew him. And when he came home, Borghild bade him depart, but Sigmund offered her atonement-money, and this she had to accept. At the funeral feast Borghild brought in ale; she took poison, a great horn full, and brought it to Sinfjotli. But when he looked into the horn, he saw that it was poison, and said to Sigmund: “Muddy is the drink, Father!” Sigmund took the horn and drank therefrom. It is said that Sigmund was so hardy that poison might not harm him, either outside or in, but all his sons could withstand poison only without on their skin. Borghild bore another horn to Sinfjotli and bade him drink, and all happened as before. And yet a third time she brought him a horn, and spoke therewith scornful words of him if he should not drink from it. He spoke as before with Sigmund. The latter said: “Let it trickle through your beard, Son!” Sinfjotli drank, and straightway was dead. Sigmund bore him a long way in his arms, and came to a narrow and long fjord, and there was a little boat and a man in it. He offered to take Sigmund across the fjord. But when Sigmund had borne the corpse out into the boat, then the craft was full. The man told Sigmund to go round the inner end of the fjord. Then the man pushed the boat off, and disappeared.
+
+King Sigmund dwelt long in Denmark in Borghild’s kingdom after he had married her. Thereafter Sigmund went south into the land of the Franks, to the kingdom which he had there. There he married Hjordis, the daughter of King Eylimi; their son was Sigurth. King Sigmund fell in a battle with the sons of Hunding, and Hjordis then married Alf the son of King Hjalprek. There Sigurth grew up in his boyhood. Sigmund and all his sons were far above all other men in might and stature and courage and every kind of ability. Sigurth, however, was the foremost of all, and all men call him in the old tales the noblest of mankind and the mightiest leader.
+
+
+
+
+
+
+
+
+NOTE
+
+
+Prose. Regarding Sigmund, Sinfjotli, and Volsung see Introductory Note. The Franks: although the Sigurth story had reached the North as early as the sixth or seventh century, it never lost all the marks of its Frankish origin. Helgi and Hamund: sons of Sigmund and Borghild; Helgi is, of course Helgi Hundingsbane; of Hamund nothing further is recorded. Borghild: the manuscript leaves a blank for the name of her brother; evidently the compiler hoped some day to discover it and write it in, but never did. A few editions insert wholly unauthorized names from late paper manuscripts, such as Hroar, Gunnar, or Borgar. In the Volsungasaga Borghild bids Sinfjotli drink “if he has the courage of a Volsung.” Sigmund gives his advice because “the king was very drunk, and that was why he spoke thus.” Gering, on the other hand, gives Sigmund credit for having believed that the draught would deposit its poisonous contents in Sinfjotli’s beard, and thus do him no harm. Boat: the man who thus carries off the dead Sinfjotli in his boat is presumably Othin. Denmark: Borghild belongs to the Danish Helgi part of the story. The Franks: with this the Danish and Norse stories of Helgi and Sinfjotli come to an end, and the Frankish story of Sigurth begins. Sigmund’s two kingdoms are an echo of the blended traditions. Hjordis: just where this name came from is not clear, for in the German story Siegfried’s mother is Sigelint, but the name of the father of Hjordis, Eylimi, gives a clew, for Eylimi is the father of Svava, wife of Helgi Hjorvarthsson. Doubtless the two men are not identical, but it seems likely that both Eylimi and Hjordis were introduced into the Sigmund-Sigurth story, the latter replacing Sigelint, from some version of the Helgi tradition. Hunding: in the Helgi lays the sons of Hunding are all killed, but they reappear here and in two of the poems (Gripisspo, 9, and Reginsmol, 15), and the Volsungasaga names Lyngvi as the son of Hunding who, as the rejected lover of Hjordis, kills Sigmund and his father-in-law, Eylimi, as well. The episode of Hunding and his sons belongs entirely to the Danish (Helgi) part of the story; the German legend knows nothing of it, and permits the elderly Sigmund to outlive his son. There was doubtless a poem on this battle, for the Volsungasaga quotes two lines spoken by the dying Sigmund to Hjordis before he tells her to give the pieces of his broken sword to their unborn son. Alf: after the battle, according to the Volsungasaga, Lyngvi Hundingsson tried to capture Hjordis, but she was rescued by the sea-rover Alf, son of King Hjalprek of Denmark, who subsequently married her. Here is another trace of the Danish Helgi tradition. The Nornageststhattr briefly tells the same story.
+
+
+
+
+
+
+
+
+GRIPISSPO
+
+GRIPIR’S PROPHECY
+
+
+INTRODUCTORY NOTE
+
+The Gripisspo immediately follows the prose Fra Dautha Sinfjotla in the Codex Regius, and is contained in no other early manuscript. It is unquestionably one of the latest of the poems in the Eddic collection; most critics agree in calling it the latest of all, dating it not much before the year 1200. Its author (for in this instance the word may be correctly used) was not only familiar with the other poems of the Sigurth cycle, but seems to have had actual written copies of them before him; it has, indeed, been suggested, and not without plausibility, that the Gripisspo may have been written by the very man who compiled and annotated the collection of poems preserved in the Codex Regius.
+
+In form the poem is a dialogue between the youthful Sigurth and his uncle, Gripir, but in substance it is a condensed outline of Sigurth’s whole career as told piecemeal in the older poems. The writer was sufficiently skillful in the handling of verse, but he was utterly without inspiration; his characters are devoid of vitality, and their speeches are full of conventional phrases, with little force or incisiveness. At the same time, the poem is of considerable interest as giving, in brief form, a summary of the story of Sigurth as it existed in Iceland (for the Gripisspo is almost certainly Icelandic) in the latter half of the twelfth century.
+
+It is not desirable here to go in detail into the immensely complex question of the origin, growth, and spread of the story of Sigurth (Siegfried). The volume of critical literature on the subject is enormous, and although some of the more patently absurd theories have been eliminated, there are still wide divergencies of opinion regarding many important points. At the same time, a brief review of the chief facts is necessary in order to promote a clearer understanding of the poems which follow, and which make up more than a third of the Eddic collection.
+
+That the story of Sigurth reached the North from Germany, having previously developed among the Franks of the Rhine country, is now universally recognized. How and when it spread from northwestern Germany into Scandinavia are less certainly known. It spread, indeed, in every direction, so that traces of it are found wherever Frankish influence was extensively felt; but it was clearly better known and more popular in Norway, and in the settlements established by Norwegians, than anywhere else. We have historical proof that there was considerable contact, commercial and otherwise, between the Franks of northwestern Germany and the Norwegians (but not the Swedes or the Danes) throughout the period from 600 to 800; coins of Charlemagne have been found in Norway, and there is other evidence showing a fairly extensive interchange of ideas as well as of goods. Presumably, then, the story of the Frankish hero found its way into Norway in the seventh century. While, at this stage of its development, it may conceivably have included a certain amount of verse, it is altogether probable that the story as it came into Norway in the seventh century was told largely in prose, and that, even after the poets had got hold of it, the legend continued to live among the people in the form of oral prose saga.
+
+The complete lack of contemporary material makes it impossible for us to speak with certainty regarding the character and content of the Sigurth legend as it existed in the Rhine country in the seventh century. It is, however, important to remember the often overlooked fact that any popular traditional hero became a magnet for originally unrelated stories of every kind. It must also be remembered that in the early Middle Ages there existed no such distinction between fiction and history as we now make; a saga, for instance, might be anything from the most meticulously accurate history to the wildest of fairy tales, and a single saga might (and sometimes did) combine both elements. This was equally true of the Frankish traditions, and the two principles just stated account for most of the puzzling phenomena in the growth of the Sigurth story.
+
+Of the origin of Sigurth himself we know absolutely nothing. No historical analogy can be made to fit in the slightest degree. If one believes in the possibility of resolving hero stories into nature myths, he may be explained in that fashion, but such a solution is not necessary. The fact remains that from very early days Sigurth (Sifrit) was a great traditional hero among the Franks. The tales of his strength and valor, of his winning of a great treasure, of his wooing a more or less supernatural bride, and of his death at the hands of his kinsmen, probably were early features of this legend.
+
+The next step was the blending of this story with one which had a clear basis in history. In the year 437 the Burgundians, under their king, Gundicarius (so the Latin histories call him), were practically annihilated by the Huns. The story of this great battle soon became one of the foremost of Rhineland traditions; and though Attila was presumably not present in person, he was quite naturally introduced as the famous ruler of the invading hordes. The dramatic story of Attila’s death in the year 453 was likewise added to the tradition, and during the sixth century the chain was completed by linking together the stories of Sigurth and those of the Burgundian slaughter. Gundicarius becomes the Gunther of the Nibelungenlied and the Gunnar of the Eddic poems; Attila becomes Etzel and Atli. A still further development came through the addition of another, and totally unrelated, set of historical traditions based on the career of Ermanarich, king of the Goths, who died about the year 376. Ermanarich figures largely in many stories unconnected with the Sigurth cycle, but, with the zeal of the medieval story-tellers for connecting their heroes, he was introduced as the husband of Sigurth’s daughter, Svanhild, herself originally part of a separate narrative group, and as Jormunrek he plays a considerable part in a few of the Eddic poems.
+
+Such, briefly, appears to have been the development of the legend before it came into Norway. Here it underwent many changes, though the clear marks of its southern origin were never obliterated. The names were given Scandinavian forms, and in some cases were completely changed (e.g., Kriemhild becomes Guthrun). New figures, mostly of secondary importance, were introduced, and a large amount of purely Northern local color was added. Above all, the earlier part of the story was linked with Northern mythology in a way which seems to have had no counterpart among the southern Germanic peoples. The Volsungs become direct descendants of Othin; the gods are closely concerned with Fafnir’s treasure, and so on. Above all, the Norse story-tellers and poets changed the figure of Brynhild. In making her a Valkyrie, sleeping on the flame-girt rock, they were never completely successful, as she persisted in remaining, to a considerable extent, the entirely human daughter of Buthli whom Sigurth woos for Gunnar. This confusion, intensified by a mixing of names (cf. Sigrdrifumol, introductory note), and much resembling that which existed in the parallel cases of Svava and Sigrun in the Helgi tradition, created difficulties which the Norse poets and story-tellers were never able to smooth out, and which have perplexed commentators ever since.
+
+
+
+Those who read the Sigurth poems in the Edda, or the story told in the Volsungasaga, expecting to find a critically accurate biography of the hero, will, of course, be disappointed. If, however, they will constantly keep in mind the general manner in which the legend grew, its accretions ranging all the way from the Danube to Iceland, they will find that most of the difficulties are simply the natural results of conflicting traditions. Just as the Danish Helgi had to be “reborn” twice in order to enable three different men to kill him, so the story of Sigurth, as told in the Eddic poems, involves here and there inconsistencies explicable only when the historical development of the story is taken into consideration.
+
+
+
+
+
+Gripir was the name of Eylimi’s son, the brother of Hjordis; he ruled over lands and was of all men the wisest and most forward-seeing. Sigurth once was riding alone and came to Gripir’s hall. Sigurth was easy to recognize; he found out in front of the hall a man whose name was Geitir. Then Sigurth questioned him and asked:
+
+
+1.  “Who is it has   |   this dwelling here,     Or what do men call   |   the people’s king?”
+
+
+Geitir spake:
+
+
+    “Gripir the name   |   of the chieftain good     Who holds the folk   |   and the firm-ruled land.”
+
+
+Sigurth spake:
+
+
+2.  “Is the king all-knowing   |   now within,     Will the monarch come   |   with me to speak?     A man unknown   |   his counsel needs,     And Gripir fain   |   I soon would find.”
+
+
+Geitir spake:
+
+
+3.  “The ruler glad   |   of Geitir will ask     Who seeks with Gripir   |   speech to have.”
+
+
+Sigurth spake:
+
+
+    “Sigurth am I,   |   and Sigmund’s son,     And Hjordis the name   |   of the hero’s mother.”
+
+4.  Then Geitir went   |   and to Gripir spake:     “A stranger comes   |   and stands without;     Lofty he is   |   to look upon,     And, prince, thyself   |   he fain would see.”
+
+5.  From the hall the ruler   |   of heroes went,     And greeted well   |   the warrior come:     “Sigurth, welcome   |   long since had been thine;     Now, Geitir, shalt thou   |   Grani take.”
+
+6.  Then of many   |   things they talked,     When thus the men   |   so wise had met.
+
+
+Sigurth spake:
+
+
+    “To me, if thou knowest,   |   my mother’s brother,     Say what life   |   will Sigurth’s be.”
+
+
+Gripir spake:
+
+
+7.  “Of men thou shalt be   |   on earth the mightiest,     And higher famed   |   than all the heroes;     Free of gold-giving,   |   slow to flee,     Noble to see,   |   and sage in speech.”
+
+
+Sigurth spake:
+
+
+8.  “Monarch wise,   |   now more I ask;     To Sigurth say,   |   if thou thinkest to see,     What first will chance   |   of my fortune fair,     When hence I go   |   from out thy home?”
+
+
+Gripir spake:
+
+
+9.  “First shalt thou, prince,   |   thy father avenge,     And Eylimi,   |   their ills requiting;     The hardy sons   |   of Hunding thou     Soon shalt fell,   |   and victory find.”
+
+
+Sigurth spake:
+
+
+10. “Noble king,   |   my kinsman, say     Thy meaning true,   |   for our minds we speak:     For Sigurth mighty   |   deeds dost see,     The highest beneath   |   the heavens all?”
+
+
+Gripir spake:
+
+
+11. “The fiery dragon   |   alone thou shalt fight     That greedy lies   |   at Gnitaheith;     Thou shalt be of Regin   |   and Fafnir both     The slayer; truth   |   doth Gripir tell thee.”
+
+
+Sigurth spake:
+
+
+12. “Rich shall I be   |   if battles I win     With such as these,   |   as now thou sayest;     Forward look,   |   and further tell:     What the life   |   that I shall lead?”
+
+
+Gripir spake:
+
+
+13. “Fafnir’s den   |   thou then shalt find,     And all his treasure   |   fair shalt take;     Gold shalt heap   |   on Grani’s back,     And, proved in fight,   |   to Gjuki fare.”
+
+
+Sigurth spake:
+
+
+14. “To the warrior now   |   in words so wise,     Monarch noble,   |   more shalt tell;     I am Gjuki’s guest,   |   and thence I go:     What the life   |   that I shall lead?”
+
+
+Gripir spake:
+
+
+15. “On the rocks there sleeps   |   the ruler’s daughter,     Fair in armor,   |   since Helgi fell;     Thou shalt cut   |   with keen-edged sword,     And cleave the byrnie   |   with Fafnir’s killer.”
+
+
+Sigurth spake:
+
+
+16. “The mail-coat is broken,   |   the maiden speaks,     The woman who   |   from sleep has wakened;     What says the maid   |   to Sigurth then     That happy fate   |   to the hero brings?”
+
+
+Gripir spake:
+
+
+17. “Runes to the warrior   |   will she tell,     All that men   |   may ever seek,     And teach thee to speak   |   in all men’s tongues,     And life with health;   |   thou’rt happy, king!”
+
+
+Sigurth spake:
+
+
+18. “Now is it ended,   |   the knowledge is won,     And ready I am   |   forth thence to ride;     Forward look   |   and further tell:     What the life   |   that I shall lead?”
+
+
+Gripir spake:
+
+
+19. “Then to Heimir’s   |   home thou comest,     And glad shalt be   |   the guest of the king;     Ended, Sigurth,   |   is all I see,     No further aught   |   of Gripir ask.”
+
+
+Sigurth spake:
+
+
+20. “Sorrow brings me   |   the word thou sayest,     For, monarch, forward   |   further thou seest;     Sad the grief   |   for Sigurth thou knowest,     Yet nought to me, Gripir,   |   known wilt make.”
+
+
+Gripir spake:
+
+
+21. “Before me lay   |   in clearest light     All of thy youth   |   for mine eyes to see;     Not rightly can I   |   wise be called,     Nor forward-seeing;   |   my wisdom is fled.”
+
+
+Sigurth spake:
+
+
+22. “No man, Gripir,   |   on earth I know     Who sees the future   |   as far as thou;     Hide thou nought,   |   though hard it be,     And base the deeds   |   that I shall do.”
+
+
+Gripir spake:
+
+
+23. “With baseness never   |   thy life is burdened,     Hero noble,   |   hold that sure;     Lofty as long   |   as the world shall live,     Battle-bringer,   |   thy name shall be.”
+
+
+Sigurth spake:
+
+
+24. “Nought could seem worse,   |   but now must part     The prince and Sigurth,   |   since so it is;     My road I ask,—   |   the future lies open,—     Mighty one, speak,   |   my mother’s brother.”
+
+
+Gripir spake:
+
+
+25. “Now to Sigurth   |   all shall I say,     For to this the warrior   |   bends my will;     Thou knowest well   |   that I will not lie,—     A day there is   |   when thy death is doomed.”
+
+
+Sigurth spake:
+
+
+26. “No scorn I know   |   for the noble king,     But counsel good   |   from Gripir I seek;     Well will I know,   |   though evil awaits,     What Sigurth may   |   before him see.”
+
+
+Gripir spake:
+
+
+27. “A maid in Heimir’s   |   home there dwells,     Brynhild her name   |   to men is known,     Daughter of Buthli,   |   the doughty king,     And Heimir fosters   |   the fearless maid.”
+
+
+Sigurth spake:
+
+
+28. “What is it to me,   |   though the maiden be     So fair, and of Heimir   |   the fosterling is?     Gripir, truth   |   to me shalt tell,     For all of fate   |   before me thou seest.”
+
+
+Gripir spake:
+
+
+29. “Of many a joy   |   the maiden robs thee,     Fair to see,   |   whom Heimir fosters;     Sleep thou shalt find not,   |   feuds thou shalt end not,     Nor seek out men,   |   if the maid thou seest not.”
+
+
+Sigurth spake:
+
+
+30. “What may be had   |   for Sigurth’s healing?     Say now, Gripir,   |   if see thou canst;     May I buy the maid   |   with the marriage-price,     The daughter fair   |   of the chieftain famed?”
+
+
+Gripir spake:
+
+
+31. “Ye twain shall all   |   the oaths then swear     That bind full fast;   |   few shall ye keep;     One night when Gjuki’s   |   guest thou hast been,     Will Heimir’s fosterling   |   fade from thy mind.”
+
+
+Sigurth spake:
+
+
+32. “What sayst thou, Gripir?   |   give me the truth,     Does fickleness hide   |   in the hero’s heart?     Can it be that troth   |   I break with the maid,     With her I believed   |   I loved so dear?”
+
+
+Gripir spake:
+
+
+33. “Tricked by another,   |   prince, thou art,     And the price of Grimhild’s   |   wiles thou must pay;     Fain of thee   |   for the fair-haired maid,     Her daughter, she is,   |   and she drags thee down.”
+
+
+Sigurth spake:
+
+
+34. “Might I with Gunnar   |   kinship make,     And Guthrun win   |   to be my wife,     Well the hero   |   wedded would be,     If my treacherous deed   |   would trouble me not.”
+
+
+Gripir spake:
+
+
+35. “Wholly Grimhild   |   thy heart deceives,     She will bid thee go   |   and Brynhild woo     For Gunnar’s wife,   |   the lord of the Goths;     And the prince’s mother   |   thy promise shall win.”
+
+
+Sigurth spake:
+
+
+36. “Evil waits me,   |   well I see it,     And gone is Sigurth’s   |   wisdom good,     If I shall woo   |   for another to win     The maiden fair   |   that so fondly I loved.”
+
+
+Gripir spake:
+
+
+37. “Ye three shall all   |   the oaths then take,     Gunnar and Hogni,   |   and, hero, thou;     Your forms ye shall change,   |   as forth ye fare,     Gunnar and thou;   |   for Gripir lies not.”
+
+
+Sigurth spake:
+
+
+38. “How meanest thou?   |   Why make we the change     Of shape and form   |   as forth we fare?     There must follow   |   another falsehood     Grim in all ways;   |   speak on, Gripir!”
+
+
+Gripir spake:
+
+
+39. “The form of Gunnar   |   and shape thou gettest,     But mind and voice   |   thine own remain;     The hand of the fosterling   |   noble of Heimir     Now dost thou win,   |   and none can prevent.”
+
+
+Sigurth spake:
+
+
+40. “Most evil it seems,   |   and men will say     Base is Sigurth   |   that so he did;     Not of my will   |   shall I cheat with wiles     The heroes’ maiden   |   whom noblest I hold.”
+
+
+Gripir spake:
+
+
+41. “Thou dwellest, leader   |   lofty of men,     With the maid as if   |   thy mother she were;     Lofty as long   |   as the world shall live,     Ruler of men,   |   thy name shall remain.”
+
+
+Sigurth spake:
+
+
+42. “Shall Gunnar have   |   a goodly wife,     Famed among men,—   |   speak forth now, Gripir!     Although at my side   |   three nights she slept,     The warrior’s bride?   |   Such ne’er has been.”
+
+
+Gripir spake:
+
+
+43. “The marriage draught   |   will be drunk for both,     For Sigurth and Gunnar,   |   in Gjuki’s hall;     Your forms ye change,   |   when home ye fare,     But the mind of each   |   to himself remains.”
+
+
+Sigurth spake:
+
+
+44. “Shall the kinship new   |   thereafter come     To good among us?   |   Tell me, Gripir!     To Gunnar joy   |   shall it later give,     Or happiness send   |   for me myself?”
+
+
+Gripir spake:
+
+
+45. “Thine oaths remembering,   |   silent thou art,     And dwellest with Guthrun   |   in wedlock good;     But Brynhild shall deem   |   she is badly mated,     And wiles she seeks,   |   herself to avenge.”
+
+
+Sigurth spake:
+
+
+46. “What may for the bride   |   requital be,     The wife we won   |   with subtle wiles?     From me she has   |   the oaths I made,     And kept not long;   |   they gladdened her little.”
+
+
+Gripir spake:
+
+
+47. “To Gunnar soon   |   his bride will say     That ill didst thou   |   thine oath fulfill,     When the goodly king,   |   the son of Gjuki,     With all his heart   |   the hero trusted.”
+
+
+Sigurth spake:
+
+
+48. “What sayst thou, Gripir?   |   give me the truth!     Am I guilty so   |   as now is said,     Or lies does the far-famed   |   queen put forth     Of me and herself?   |   Yet further speak.”
+
+
+Gripir spake:
+
+
+49. “In wrath and grief   |   full little good     The noble bride   |   shall work thee now;     No shame thou gavest   |   the goodly one,     Though the monarch’s wife   |   with wiles didst cheat.”
+
+
+Sigurth spake:
+
+
+50. “Shall Gunnar the wise   |   to the woman’s words,     And Gotthorm and Hogni,   |   then give heed?     Shall Gjuki’s sons,   |   now tell me, Gripir,     Redden their blades   |   with their kinsman’s blood?”
+
+
+Gripir spake:
+
+
+51. “Heavy it lies   |   on Guthrun’s heart,     When her brothers all   |   shall bring thee death;     Never again   |   shall she happiness know,     The woman so fair;   |   ’tis Grimhild’s work.”
+
+
+Sigurth spake:
+
+
+52. “Now fare thee well!   |   our fates we shun not;     And well has Gripir   |   answered my wish;     More of joy   |   to me wouldst tell     Of my life to come   |   if so thou couldst.”
+
+
+Gripir spake:
+
+
+53. “Ever remember,   |   ruler of men,     That fortune lies   |   in the hero’s life;     A nobler man   |   shall never live     Beneath the sun   |   than Sigurth shall seem.”
+
+
+
+
+
+
+
+
+NOTES
+
+
+Prose. The manuscript gives the poem no title. Gripir: this uncle of Sigurth’s was probably a pure invention of the poet’s. The Volsungasaga mentions him, but presumably only because of his appearance here. On Eylimi and Hjordis see Fra Dautha Sinfjotla and note. Geitir, the serving-man, is likewise apparently an invention of the poet’s.
+
+1. The manuscript does not indicate the speakers anywhere in the poem. Some editors have made separate stanzas out of the two-line speeches in stanzas 1, 3 and 6.
+
+3. Sigurth: a few editions use in the verse the older form of this name, “Sigvorth,” though the manuscript here keeps to the form used in this translation. The Old High German “Sigifrid” (“Peace-Bringer through Victory”) became the Norse “Sigvorth” (“Victory-Guarder”), this, in turn, becoming “Sigurth.”
+
+4. Bugge thinks a stanza has been lost after stanza 4, in which Geitir tells Gripir who Sigurth is.
+
+5. Grani: Sigurth’s horse. According to the Volsungasaga his father was Sleipnir, Othin’s eight-legged horse, and Othin himself gave him to Sigurth. The introductory note to the Reginsmol tells a different story.
+
+9. Thy father: on the death of Sigmund and Eylimi at the hands of Hunting’s sons see Fra Dautha Sinfjotla and note.
+
+11. The dragon: Fafnir, brother of the dwarf Regin, who turns himself into a dragon to guard Andvari’s hoard; cf. Reginsmol and Fafnismol. Gnitaheith: a relic of the German tradition; it has been identified as lying south of Paderborn.
+
+13. Gjuki: the Norse form of the name Gibeche (“The Giver”). Gjuki is the father of Gunnar, Hogni, and Guthrun, the family which reflects most directly the Burgundian part of the tradition (cf. Introductory Note). The statement that Sigurth is to go direct from the slaying of Fafnir to Gjuki’s hall involves one of the confusions resulting from the dual personality of Brynhild. In the older (and the original South Germanic) story, Sigurth becomes a guest of the Gjukungs before he has ever heard of Brynhild, and first sees her when, having changed forms with Gunnar, he goes to woo her for the latter. In another version he finds Brynhild before he visits the Gjukungs, only to forget her as the result of the magic draught administered by Guthrun’s mother. Both these versions are represented in the poems of which the author of the Gripisspo made use, and he tried, rather clumsily, to combine them, by having Sigurth go to Gjuki’s house, then find the unnamed Valkyrie, and then return to Gjuki, the false wooing following this second visit.
+
+15. Basing his story on the Sigrdrifumol, the poet here tells of Sigurth’s finding of the Valkyrie, whom he does not identify with Brynhild, daughter of Buthli (stanza 27), at all. His error in this respect is not surprising, in view of Brynhild’s dual identity (cf. Introductory Note, and Fafnismol, 44 and note). Helgi: according to Helreith Brynhildar (stanza 8), with which the author of the Gripisspo was almost certainly familiar, the hero for whose death Brynhild was punished was named Hjalmgunnar. Is Helgi here identical with Hjalmgunnar, or did the author make a mistake? Finnur Jonsson thinks the author regarded Sigurth’s Valkyrie as a fourth incarnation of Svava-Sigrun-Kara, and wrote Helgi’s name in deliberately. Many editors, following Bugge, have tried to reconstruct line 2 so as to get rid of Helgi’s name.
+
+19. Heimir: the Volsungasaga says that Heimir was the husband of Brynhild’s sister, Bekkhild. Brynhild’s family connections involve a queer mixture of northern and southern legend. Heimir and Bekkhild are purely of northern invention; neither of them is mentioned in any of the earlier poems, though Brynhild speaks of her “foster-father” in Helreith Brynhildar. In the older Norse poems Brynhild is a sister of Atli (Attila), a relationship wholly foreign to the southern stories, and the father of this strangely assorted pair is Buthli, who in the Nibelungenlied is apparently Etzel’s grandfather. Add to this her role of Valkyrie, and it is small wonder that the annotator himself was puzzled.
+
+27. Brynhild (“Armed Warrior”): on her and her family see Introductory Note and note to stanza 19.
+
+33. Most editions have no comma after line 3, and change the meaning to “Fain of thee   |   the fair-haired one / For her daughter is.” Grimhild: in the northern form of the story Kriemhild, Gunther’s sister and Siegfried’s wife, becomes Grimhild, mother of Gunnar and Guthrun, the latter taking Kriemhild’s place. The Volsungasaga tells how Grimhild gave Sigurth a magic draught which made him utterly forget Brynhild. Edzardi thinks two stanzas have been lost after stanza 33, their remains appearing in stanza 37.
+
+35. In the Volsungasaga Grimhild merely advises Gunnar to seek Brynhild for his wife, and to have Sigurth ride with him. Goths: the historical Gunnar (Gundicarius, cf. Introductory Note) was not a Goth, but a Burgundian, but the word “Goth” was applied in the North without much discrimination to the southern Germanic peoples.
+
+37. In the Nibelungenlied Siegfried merely makes himself invisible in order to lend Gunther his strength for the feats which must be performed in order to win the redoubtable bride. In the northern version Sigurth and Gunnar change forms, “as Grimhild had taught them how to do.” The Volsungasaga tells how Sigurth and Gunnar came to Heimir, who told them that to win Brynhild one must ride through the ring of fire which surrounded her hall (cf. the hall of Mengloth in Svipdagsmol). Gunnar tries it, but his horse balks; then he mounts Grani, but Grani will not stir for him. So they change forms, and Sigurth rides Grani through the flames. Oaths: the blood-brotherhood sworn by Sigurth, Gunnar, and Hogni makes it impossible for the brothers to kill him themselves, but they finally get around the difficulty by inducing their half-brother, Gotthorm (cf. Hyndluljoth, 27 and note) to do it.
+
+39. The last half of line 4 is obscure, and the reading is conjectural.
+
+41. Something is clearly wrong with stanzas 41–43. In the manuscript the order is 41, 43, 42, which brings two of Gripir’s answers together, followed by two of Sigurth’s questions. Some editors have arranged the stanzas as in this translation, while others have interchanged 41 and 43. In any case, Sigurth in stanza 42 asks about the “three nights” which Gripir has never mentioned. I suspect that lines 3–4 of stanza 41, which are practically identical with lines 3–4 of stanza 23, got in here by mistake, replacing two lines which may have run thus: “With thy sword between,   |   three nights thou sleepest / With her thou winnest |   for Gunnar’s wife.” The subsequent poems tell how Sigurth laid his sword Gram between himself and Brynhild.
+
+43. The simultaneous weddings of Sigurth and Gunnar form a memorable feature of the German tradition as it appears in the Nibelungenlied, but in the Volsungasaga Sigurth marries Guthrun before he sets off with Gunnar to win Brynhild.
+
+45. According to the Volsungasaga, Sigurth remembers his oaths to Brynhild almost immediately after his return to Gunnar’s house. Brynhild, on the other hand, knows nothing until the famous quarrel between herself and Guthrun at the bath (another reminiscence of the German story), when she taunts Guthrun with Sigurth’s inferiority to Gunnar, and Guthrun retorts with the statement that it was Sigurth, and not Gunnar, who rode through the flames.
+
+47. Brynhild tells Gunnar that Sigurth really possessed her during the three nights when he slept by her in Gunnar’s form, thus violating his oath. Here again there is a confusion of two traditions. If Sigurth did not meet Brynhild until after his oath to Gunnar (cf. note on stanza 13), Brynhild’s charge is entirely false, as she herself admits in Helreith Brynhildar. On the other hand, according to the version in which Sigurth finds Brynhild before he meets Gjuki’s sons, their union was not only completed, but she had by him a daughter, Aslaug, whom she leaves in Heimir’s charge before going to become Gunnar’s wife. This is the Volsungasaga version, and thus the statement Brynhild makes to Gunnar, as a result of which Sigurth is slain, is quite true.
+
+50. Gotthorm: Gunnar’s half-brother, and slayer of Sigurth.
+
+52. The manuscript has stanzas 52 and 53 in inverse order.
+
+
+
+
+
+
+
+
+REGINSMOL
+
+THE BALLAD OF REGIN
+
+
+INTRODUCTORY NOTE
+
+The Reginsmol immediately follows the Gripisspo in the Codex Regius, and in addition stanzas 1, 2, 6, and 18 are quoted in the Volsungasaga, and stanzas 13–26 in the Nornageststhattr. In no instance is the title of the poem stated, and in Regius there stands before the introductory prose, very faintly written, what appears to be “Of Sigurth.” As a result, various titles have been affixed to it, the two most often used being “the Ballad of Regin” and “the First Lay of Sigurth Fafnisbane.”
+
+As a matter of fact, it is by no means clear that the compiler of the Eddic collection regarded this or either of the two following poems, the Fafnismol and the Sigrdrifumol, as separate and distinct poems at all. There are no specific titles given, and the prose notes link the three poems in a fairly consecutive whole. Furthermore, the prose passage introducing the Reginsmol connects directly with Fra Dautha Sinfjotla, and only the insertion of the Gripisspo at this point, which may well have been done by some stupid copyist, breaks the continuity of the story.
+
+For convenience I have here followed the usual plan of dividing this material into distinct parts, or poems, but I greatly doubt if this division is logically sound. The compiler seems, rather, to have undertaken to set down the story of Sigurth in consecutive form, making use of all the verse with which he was familiar, and which, by any stretch of the imagination, could be made to fit, filling up the gaps with prose narrative notes based on the living oral tradition.
+
+This view is supported by the fact that not one of the three poems in question, and least of all the Reginsmol, can possibly be regarded as a unit. For one thing, each of them includes both types of stanza commonly used in the Eddic poems, and this, notwithstanding the efforts of Grundtvig and Müllenhoff to prove the contrary, is almost if not quite conclusive proof that each poem consists of material taken from more than one source. Furthermore, there is nowhere continuity within the verse itself for more than a very few stanzas. An analysis of the Reginsmol shows that stanzas 1–4, 6–10, and 12, all in Ljothahattr stanza form, seem to belong together as fragments of a poem dealing with Loki’s (not Andvari’s) curse on the gold taken by the gods from Andvari and paid to Hreithmar, together with Hreithmar’s death at the hands of his son, Fafnir, as the first result of this curse. Stanza 5, in Fornyrthislag, is a curse on the gold, here ascribed to Andvari, but the only proper name in the stanza, Gust, is quite unidentifiable, and the stanza may originally have had to do with a totally different story. Stanza 11, likewise in Fornyrthislag, is merely a father’s demand that his daughter rear a family to avenge his death; there is nothing in it to link it necessarily with the dying Hreithmar. Stanzas 13–18, all in Fornyrthislag, give Regin’s welcome to Sigurth (stanzas 13–14), Sigurth’s announcement that he will avenge his father’s death on the sons of Hunding before he seeks any treasure (stanza 15), and a dialogue between a certain Hnikar, who is really Othin, and Regin, as the latter and Sigurth are on the point of being shipwrecked. This section (stanzas 13–18) bears a striking resemblance to the Helgi lays, and may well have come originally from that cycle. Next follows a passage in Ljothahattr form (stanzas 19–22 and 24–25) in which Hnikar-Othin gives some general advice as to lucky omens and good conduct in battle; the entire passage might equally well stand in the Hovamol, and I suspect that it originally came from just such a collection of wise saws. Inserted in this passage is stanza 23, in Fornyrthislag, likewise on the conduct of battle, with a bit of tactical advice included. The “poem” ends with a single stanza, in Fornyrthislag, simply stating that the bloody fight is over and that Sigurth fought well—a statement equally applicable to any part of the hero’s career.
+
+Finnur Jonsson has divided the Reginsmol into two poems, or rather into two sets of fragments, but this, as the foregoing analysis has indicated, does not appear to go nearly far enough. It accords much better with the facts to assume that the compiler of the collection represented by the Codex Regius, having set out to tell the story of Sigurth, took his verse fragments pretty much wherever he happened to find them. In this connection, it should be remembered that in the fluid state of oral tradition poems, fragments, and stanzas passed readily and frequently from one story to another. Tradition, never critical, doubtless connected with the Sigurth story much verse that never originated there.
+
+If the entire passage beginning with the prose Fra Dautha Sinfjotla, and, except for the Gripisspo, including the Reginsmol, Fafnismol, and Sigrdrifumol, be regarded as a highly uncritical piece of compilation, rendered consecutive by the compiler’s prose narrative, its difficulties are largely smoothed away; any other way of looking at it results in utterly inconclusive attempts to reconstruct poems some of which quite possibly never existed.
+
+The twenty-six stanzas and accompanying prose notes included under the heading of Reginsmol belong almost wholly to the northern part of the Sigurth legend; the mythological features have no counterpart in the southern stories, and only here and there is there any betrayal of the tradition’s Frankish home. The story of Andvari, Loki, and Hreithmar is purely Norse, as is the concluding section containing Othin’s counsels. If we assume that the passage dealing with the victory over Hunding’s sons belongs to the Helgi cycle (cf. introductory notes to Helgakvitha Hjorvarthssonar and Helgakvitha Hundingsbana I), there is very little left to reflect the Sigurth tradition proper.
+
+Regarding the general development of the story of Sigurth in the North, see the introductory note to the Gripisspo.
+
+
+
+
+
+Sigurth went to Hjalprek’s stud and chose for himself a horse, who thereafter was called Grani. At that time Regin, the son of Hreithmar, was come to Hjalprek’s home; he was more ingenious than all other men, and a dwarf in stature; he was wise, fierce and skilled in magic. Regin undertook Sigurth’s bringing up and teaching, and loved him much. He told Sigurth of his forefathers, and also of this: that once Othin and Hönir and Loki had come to Andvari’s waterfall, and in the fall were many fish. Andvari was a dwarf, who had dwelt long in the waterfall in the shape of a pike, and there he got his food. “Otr was the name of a brother of ours,” said Regin, “who often went into the fall in the shape of an otter; he had caught a salmon, and sat on the high bank eating it with his eyes shut. Loki threw a stone at him and killed him; the gods thought they had had great good luck, and stripped the skin off the otter. That same evening they sought a night’s lodging at Hreithmar’s house, and showed their booty. Then we seized them, and told them, as ransom for their lives, to fill the otter skin with gold, and completely cover it outside as well with red gold. Then they sent Loki to get the gold; he went to Ron and got her net, and went then to Andvari’s fall and cast the net in front of the pike, and the pike leaped into the net.” Then Loki said:
+
+
+1.  “What is the fish   |   that runs in the flood,       And itself from ill cannot save?     If thy head thou wouldst   |   from hell redeem,       Find me the water’s flame.”
+
+
+Andvari spake:
+
+
+2.  “Andvari am I,   |   and Oin my father,       In many a fall have I fared;     An evil Norn   |   in olden days       Doomed me in waters to dwell.”
+
+
+Loki spake:
+
+
+3.  “Andvari, say,   |   if thou seekest still       To live in the land of men,     What payment is set   |   for the sons of men       Who war with lying words?”
+
+
+Andvari spake:
+
+
+4.  “A mighty payment   |   the men must make       Who in Vathgelmir’s waters wade;     On a long road lead   |   the lying words       That one to another utters.”
+
+
+Loki saw all the gold that Andvari had. But when he had brought forth all the gold, he held back one ring, and Loki took this from him. The dwarf went into his rocky hole and said:
+
+
+5.  “Now shall the gold   |   that Gust once had     Bring their death   |   to brothers twain,     And evil be   |   for heroes eight;     Joy of my wealth   |   shall no man win.”
+
+
+The gods gave Hreithmar the gold, and filled up the otter-skin, and stood it on its feet. Then the gods had to heap up gold and hide it. And when that was done, Hreithmar came forward and saw a single whisker, and bade them cover it. Then Othin brought out the ring Andvaranaut and covered the hair. Then Loki said:
+
+
+6.  “The gold is given,   |   and great the price       Thou hast my head to save;     But fortune thy sons   |   shall find not there,       The bane of ye both it is.”
+
+
+Hreithmar spake:
+
+
+7.  “Gifts ye gave,   |   but ye gave not kindly,       Gave not with hearts that were whole;     Your lives ere this   |   should ye all have lost,       If sooner this fate I had seen.”
+
+
+Loki spake:
+
+
+8.  “Worse is this   |   that methinks I see,       For a maid shall kinsmen clash;     Heroes unborn   |   thereby shall be,       I deem, to hatred doomed.”
+
+
+Hreithmar spake:
+
+
+9.  “The gold so red   |   shall I rule, methinks,       So long as I shall live;     Nought of fear   |   for thy threats I feel,       So get ye hence to your homes.”
+
+
+Fafnir and Regin asked Hreithmar for a share of the wealth that was paid for the slaying of their brother, Otr. This he refused, and Fafnir thrust his sword through the body of his father, Hreithmar, while he was sleeping. Hreithmar called to his daughters:
+
+
+10. “Lyngheith and Lofnheith,   |   fled is my life,       And mighty now is my need!”
+
+
+Lyngheith spake:
+
+
+    “Though a sister loses   |   her father, seldom       Revenge on her brother she brings.”
+
+
+Hreithmar spake:
+
+
+11. “A daughter, woman   |   with wolf’s heart, bear,     If thou hast no son   |   with the hero brave;     If one weds the maid,   |   for the need is mighty,     Their son for thy hurt   |   may vengeance seek.”
+
+
+Then Hreithmar died, and Fafnir took all the gold. Thereupon Regin asked to have his inheritance from his father, but Fafnir refused this. Then Regin asked counsel of Lyngheith, his sister, how he should win his inheritance. She said:
+
+
+12. “In friendly wise   |   the wealth shalt thou ask       Of thy brother, and better will;     Not seemly is it   |   to seek with the sword       Fafnir’s treasure to take.”
+
+
+All these happenings did Regin tell to Sigurth.
+
+One day, when he came to Regin’s house, he was gladly welcomed. Regin said:
+
+
+13. “Hither the son   |   of Sigmund is come,     The hero eager,   |   here to our hall;     His courage is more   |   than an ancient man’s,     And battle I hope   |   from the hardy wolf.
+
+14. “Here shall I foster   |   the fearless prince,     Now Yngvi’s heir   |   to us is come;     The noblest hero   |   beneath the sun,     The threads of his fate   |   all lands enfold.”
+
+
+Sigurth was there continually with Regin, who said to Sigurth that Fafnir lay at Gnitaheith, and was in the shape of a dragon. He had a fear-helm, of which all living creatures were terrified. Regin made Sigurth the sword which was called Gram; it was so sharp that when he thrust it down into the Rhine, and let a strand of wool drift against it with the stream, it cleft the strand asunder as if it were water. With this sword Sigurth cleft asunder Regin’s anvil. After that Regin egged Sigurth on to slay Fafnir, but he said:
+
+
+15. “Loud will the sons   |   of Hunding laugh,     Who low did Eylimi   |   lay in death,     If the hero sooner   |   seeks the red     Rings to find   |   than his father’s vengeance.”
+
+
+King Hjalprek gave Sigurth a fleet for the avenging of his father. They ran into a great storm, and were off a certain headland. A man stood on the mountain, and said:
+
+
+16. “Who yonder rides   |   on Rævil’s steeds,     O’er towering waves   |   and waters wild?     The sail-horses all   |   with sweat are dripping,     Nor can the sea-steeds   |   the gale withstand.”
+
+
+Regin answered:
+
+
+17. “On the sea-trees here   |   are Sigurth and I,     The storm wind drives us   |   on to our death;     The waves crash down   |   on the forward deck,     And the roller-steeds sink;   |   who seeks our names?”
+
+
+The Man spake:
+
+
+18. “Hnikar I was   |   when Volsung once     Gladdened the ravens   |   and battle gave;     Call me the Man   |   from the Mountain now,     Feng or Fjolnir;   |   with you will I fare.”
+
+
+They sailed to the land, and the man went on board the ship, and the storm subsided. Sigurth spake:
+
+
+19. “Hnikar, say,   |   for thou seest the fate       That to gods and men is given;     What sign is fairest   |   for him who fights,       And best for the swinging of swords?”
+
+
+Hnikar spake:
+
+
+20. “Many the signs,   |   if men but knew,       That are good for the swinging of swords;     It is well, methinks,   |   if the warrior meets       A raven black on his road.
+
+21. “Another it is   |   if out thou art come,       And art ready forth to fare,     To behold on the path   |   before thy house       Two fighters greedy of fame.
+
+22. “Third it is well   |   if a howling wolf       Thou hearest under the ash;     And fortune comes   |   if thy foe thou seest       Ere thee the hero beholds.
+
+23. “A man shall fight not   |   when he must face     The moon’s bright sister   |   setting late;     Win he shall   |   who well can see,     And wedge-like forms   |   his men for the fray.
+
+24. “Foul is the sign   |   if thy foot shall stumble       As thou goest forth to fight;     Goddesses baneful   |   at both thy sides       Will that wounds thou shalt get.
+
+25. “Combed and washed   |   shall the wise man go,       And a meal at morn shall take;     For unknown it is   |   where at eve he may be;       It is ill thy luck to lose.”
+
+
+Sigurth had a great battle with Lyngvi, the son of Hunding, and his brothers; there Lyngvi fell, and his two brothers with him. After the battle Regin said:
+
+
+26. “Now the bloody eagle   |   with biting sword     Is carved on the back   |   of Sigmund’s killer;     Few were more fierce   |   in fight than his son,     Who reddened the earth   |   and gladdened the ravens.”
+
+
+Sigurth went home to Hjalprek’s house; thereupon Regin egged him on to fight with Fafnir.
+
+
+
+
+
+
+
+
+NOTES
+
+
+Prose. Hjalprek: father of Alf, Sigurth’s step-father; cf. Fra Dautha Sinfjotla, and note. Grani: cf. Gripisspo, 5 and note. Regin (“Counsel-Giver”): undoubtedly he goes back to the smith of the German story; in the Thithrekssaga version he is called Mimir, while Regin is there the name of the dragon (here Regin’s brother, Fafnir). The Voluspo (stanza 12) names a Regin among the dwarfs, and the name may have assisted in making Regin a dwarf here. Hreithmar: nothing is known of him outside of this story. Othin, Hönir and Loki: these same three gods appear in company in Voluspo, 17–18. Andvari’s fall: according to Snorri, who tells this entire story in the Skaldskaparmal, Andvari’s fall was in the world of the dark elves, while the one where Loki killed the otter was not; here, however, the two are considered identical. With his eyes shut: according to Snorri, Otr ate with his eyes shut because he was so greedy that he could not bear to see the food before him diminishing. Ron: wife of the sea-god Ægir, who draws down drowning men with her net; cf. Helgakvitha Hjorvarthssonar, 18 and note. Snorri says that Loki caught the pike with his hands.
+
+1. Snorri quotes this stanza. Water’s flame: gold, so called because Ægir, the sea-god, was wont to light his hall with gold.
+
+2. Snorri quotes this stanza. The name of the speaker is not given in the manuscripts. Oin: nothing further is known of Andvari’s father. Norn: cf. Voluspo, 20.
+
+3. Stanzas 3–4 may well be fragments of some other poem. Certainly Loki’s question does not fit the situation, and the passage looks like an extract from some such poem as Vafthruthnismol. In Regius the phrase “Loki spake” stands in the middle of line 1.
+
+4. The manuscript does not name the speaker. Vathgelmir (“Raging to Wade”): a river not elsewhere mentioned, but cf. Voluspo, 39.
+
+Prose. Snorri says Andvari’s ring had the power to create new gold. In this it resembled Baldr’s ring, Draupnir; cf. Skirnismol, 21 and note.
+
+5. This stanza apparently comes from a different source from stanzas 1–4 (or 1–2 if 3–4 are interpolated) and 6–10; cf. Introductory Note. In the Volsungasaga Andvari lays his curse particularly on the ring. Gust: possibly a name for Andvari himself, or for an earlier possessor of the treasure. Brothers twain: Fafnir and Regin. Heroes eight: the word “eight” may easily have been substituted for something like “all” to make the stanza fit the case; the “eight” in question are presumably Sigurth, Gotthorm, Gunnar, Hogni, Atli, Erp, Sorli and Hamther, all of whom are slain in the course of the story. But the stanza may originally not have referred to Andvari’s treasure at all.
+
+Prose. Andvaranaut: “Andvari’s Gem.”
+
+6. Snorri quotes this stanza, introducing it, as here, with “Then Loki said” in the prose. Regius omits this phrase, but inserts “said Loki” in line 1.
+
+8. The word translated “maid” in line 2 is obscure, and “gold” may be meant. Apparently, however, the reference is to the fight between Sigurth and the sons of Gjuki over Brynhild. The manuscript does not name the speaker, and many editions assign this stanza to Hreithmar.
+
+9. The manuscript includes “said Hreithmar” (abbreviated) in the middle of line 1, and some editors have followed this.
+
+10. Hreithmar’s daughters do not appear elsewhere. It has been suggested that originally stanza 10 was followed by one in which Lofnheith lamented her inability to avenge her father, as she was married and had no son.
+
+11. Apparently an interpolation (cf. Introductory Note). Vigfusson tries to reconstruct lines 2 and 4 to fit the Ljothahattr rhythm, but without much success. Hreithmar urges his daughter, as she has no sons, to bear a daughter who, in turn, will have a son to avenge his great-grandfather. Grundtvig worked out an ingenious theory to fit this stanza, making Sigurth’s grandfather, Eylimi, the husband of Lyngheith’s daughter, but there is absolutely no evidence to support this. The stanza may have nothing to do with Hreithmar.
+
+13. This and the following stanza may be out of place here, really belonging, together with their introductory prose sentence, in the opening prose passage, following the first sentence describing Regin. Certainly they seem to relate to Regin’s first meeting with Sigurth. Stanzas 13–26, interspersed with prose, are quoted in the Nornageststhattr. Stanzas 13–18 may be the remnants of a lost poem belonging to the Helgi cycle (cf. Introductory Note). Hardy wolf: warrior, i.e., Sigurth.
+
+14. Yngvi’s heir: Yngvi was one of the sons of the Danish king Halfdan the Old, and traditionally an ancestor of Helgi (cf. Helgakvitha Hundingsbana I, 57 and note). Calling Sigurth a descendant of Yngvi is, of course, absurd, and the use of this phrase is one of the many reasons for believing that stanzas 13–18 belonged originally to the Helgi cycle. The threads, etc.: another link with Helgi; cf. Helgakvitha Hundingsbana I, 3–4. As Helgi was likewise regarded as a son of Sigmund, stanzas 13–14 would fit him just as well as Sigurth.
+
+Prose. Gnitaheith: cf. Gripisspo, 11 and note. Fear-helm: the word “ægis-hjalmr,” which occurs both here and in Fafnismol, suggests an extraordinarily interesting, and still disputed, question of etymology. Gram: according to the Volsungasaga Regin forged this sword from the fragments of the sword given by Othin to Sigmund (cf. Fra Dautha Sinfjotla and note).
+
+15. Regarding the sons of Hunding and Eylimi, father of Sigurth’s mother, all of whom belong to the Helgi tradition, cf. Fra Dautha Sinfjotla and note.
+
+Prose. The fleet, and the subsequent storm, are also reminiscent of the Helgi cycle; cf. Helgakvitha Hundingsbana I, 29–31, and II, prose after stanza 16. A man: Othin.
+
+16. Rævil’s steeds (Rævil was a sea-king, possibly the grandson of Ragnar Lothbrok mentioned in the Hervararsaga), sail-horses and sea-steeds all mean “ships.”
+
+17. Sea-trees and roller-steeds (the latter because ships were pulled up on shore by means of rollers) both mean “ships.”
+
+18. The Volsungasaga quotes this stanza. Hnikar and Fjolnir: Othin gives himself both these names in Grimnismol, 47; Feng (“The Seizer”) does not appear elsewhere. According to the Volsungasaga, no one knew Othin’s name when he came to Volsung’s house and left the sword there for Sigmund.
+
+19. This and the following stanzas are strongly suggestive of the Hovamol, and probably came originally from some such collection.
+
+23. This stanza is clearly an interpolation, drawn in by the common-sense advice, as distinct from omens, given in the last lines of stanza 22. Moon’s sister: the sun; cf. Vafthruthnismol, 23 and note. Wedge-like: the wedge formation (prescribed anew in 1920 for the United States Army under certain circumstances) was said to have been invented by Othin himself, and taught by him only to the most favored warriors.
+
+24. Goddesses: Norse mythology included an almost limitless number of minor deities, the female ones, both kind and unkind, being generally classed among the lesser Norns.
+
+25. This stanza almost certainly had nothing originally to do with the others in this passage; it may have been taken from a longer version of the Hovamol itself.
+
+Prose. Lyngvi: the son of Hunding who killed Sigmund in jealousy of his marriage with Hjordis; cf. Fra Dautha Sinfjotla and note. The Volsungasaga names one brother who was with Lyngvi in the battle, Hjorvarth, and Sigurth kills him as readily as if he had not already been killed long before by Helgi. But, as has been seen, it was nothing for a man to be killed in two or three different ways.
+
+26. Bloody eagle, etc.: the Nornageststhattr describes the manner in which the captured Lyngvi was put to death. “Regin advised that they should carve the bloody eagle on his back. So Regin took his sword and cleft Lyngvi’s back so that he severed his back from his ribs, and then drew out his lungs. So died Lyngvi with great courage.”
+
+Prose. In Regius there is no break of any kind between this prose passage and the prose introduction to the Fafnismol (cf. Introductory Note).
+
+
+
+
+
+
+
+
+FAFNISMOL
+
+THE BALLAD OF FAFNIR
+
+
+INTRODUCTORY NOTE
+
+The so-called Fafnismol, contained in full in the Codex Regius, where it immediately follows the Reginsmol without any indication of a break, is quoted by Snorri in the Gylfaginning (stanza 13) and the Skaldskaparmal (stanzas 32 and 33), and stanzas 6, 3, and 4 appear in the Sverrissaga. Although the Volsungasaga does not actually quote any of the stanzas, it gives a very close prose parallel to the whole poem in chapters 18 and 19.
+
+The general character of the Fafnismol, and its probable relation to the Reginsmol and the Sigrdrifumol, have been discussed in the introductory note to the Reginsmol. While it is far more nearly a unit than the Reginsmol, it shows many of the same characteristics. It has the same mixture of stanza forms, although in this case only nine stanzas (32–33, 35–36 and 40–44) vary from the normal Ljothahattr measure. It shows, though to a much less marked extent, the same tendency to introduce passages from extraneous sources, such as the question-and-answer passage in stanzas 11–15. At the same time, in this instance it is quite clear that one distinct poem, including probably stanzas 1–10, 16–23, 25–31, and 34–39, underlay the compilation which we here have. This may, perhaps, have been a long poem (not, however, the “Long” Sigurth Lay; see introductory note to Brot af Sigurtharkvithu) dealing with the Regin-Fafnir-Sigurth-Brynhild story, and including, besides most of the Fafnismol, stanzas 1–4 and 6–11 of the Reginsmol and part of the so-called Sigrdrifumol, together with much that has been lost. The original poem may, on the other hand, have confined itself to the Fafnir episode.
+
+In any case, and while the extant Fafnismol can be spoken of as a distinct poem far more justly than the Reginsmol, there is still no indication that the compiler regarded it as a poem by itself. His prose notes run on without a break, and the verses simply cover a dramatic episode in Sigurth’s early life. The fact that the work of compilation has been done more intelligently than in the case of the Reginsmol seems to have resulted chiefly from the compiler’s having been familiar with longer consecutive verse passages dealing with the Fafnir episode. The Reginsmol is little more than a clumsy mosaic, but in the Fafnismol it is possible to distinguish between the main substance of the poem and the interpolations.
+
+Here, as in the Reginsmol, there is very little that bespeaks the German origin of the Sigurth story. Sigurth’s winning of the treasure is in itself undoubtedly a part of the earlier southern legend, but the manner in which he does it is thoroughly Norse. Moreover, the concluding section, which points toward the finding of the sleeping Brynhild, relates entirely to the northern Valkyrie, the warrior-maiden punished by Othin, and not at all to the southern Brynhild the daughter of Buthli. The Fafnismol is, however, sharply distinguished from the Reginsmol by showing no clear traces of the Helgi tradition, although a part of the bird song (stanzas 40–44, in Fornyrthislag form, as distinct from the body of the poem) sounds suspiciously like the bird passage in the beginning of the Helgakvitha Hjorvarthssonar. Regarding the general relations of the various sets of traditions in shaping the story of Sigurth, see the introductory note to Gripisspo.
+
+The Fafnismol, together with a part of the Sigrdrifumol, has indirectly become the best known of all the Eddic poems, for the reason that Wagner used it, with remarkably little change of outline, as the basis for his “Siegfried.”
+
+
+
+
+
+Sigurth and Regin went up to the Gnitaheith, and found there the track that Fafnir made when he crawled to water. Then Sigurth made a great trench across the path, and took his place therein. When Fafnir crawled from his gold, he blew out venom, and it ran down from above on Sigurth’s head. But when Fafnir crawled over the trench, then Sigurth thrust his sword into his body to the heart. Fafnir writhed and struck out with his head and tail. Sigurth leaped from the trench, and each looked at the other. Fafnir said:
+
+
+1.  “Youth, oh, youth!   |   of whom then, youth, art thou born?       Say whose son thou art,     Who in Fafnir’s blood   |   thy bright blade reddened,       And struck thy sword to my heart.”
+
+
+Sigurth concealed his name because it was believed in olden times that the word of a dying man might have great power if he cursed his foe by his name. He said:
+
+
+2.  “The Noble Hart   |   my name, and I go       A motherless man abroad;     Father I had not,   |   as others have,       And lonely ever I live.”
+
+
+Fafnir spake:
+
+
+3.  “If father thou hadst not,   |   as others have,       By what wonder wast thou born?     (Though thy name on the day   |   of my death thou hidest,       Thou knowest now thou dost lie.)”
+
+
+Sigurth spake:
+
+
+4.  “My race, methinks,   |   is unknown to thee,       And so am I myself;     Sigurth my name,   |   and Sigmund’s son,       Who smote thee thus with the sword.”
+
+
+Fafnir spake:
+
+
+5.  “Who drove thee on?   |   why wert thou driven       My life to make me lose?     A father brave   |   had the bright-eyed youth,       For bold in boyhood thou art.”
+
+
+Sigurth spake:
+
+
+6.  “My heart did drive me,   |   my hand fulfilled,       And my shining sword so sharp;     Few are keen   |   when old age comes,       Who timid in boyhood be.”
+
+
+Fafnir spake:
+
+
+7.  “If thou mightest grow   |   thy friends among,       One might see thee fiercely fight;     But bound thou art,   |   and in battle taken,       And to fear are prisoners prone.”
+
+
+Sigurth spake:
+
+
+8.  “Thou blamest me, Fafnir,   |   that I see from afar       The wealth that my father’s was;     Not bound am I,   |   though in battle taken,       Thou hast found that free I live.”
+
+
+Fafnir spake:
+
+
+9.  “In all I say   |   dost thou hatred see,       Yet truth alone do I tell;     The sounding gold,   |   the glow-red wealth,       And the rings thy bane shall be.”
+
+
+Sigurth spake:
+
+
+10. “Some one the hoard   |   shall ever hold,       Till the destined day shall come;     For a time there is   |   when every man       Shall journey hence to hell.”
+
+
+Fafnir spake:
+
+
+11. “The fate of the Norns   |   before the headland       Thou findest, and doom of a fool;     In the water shalt drown   |   if thou row ’gainst the wind,       All danger is near to death.”
+
+
+Sigurth spake:
+
+
+12. “Tell me then, Fafnir,   |   for wise thou art famed,       And much thou knowest now:     Who are the Norns   |   who are helpful in need,       And the babe from the mother bring?”
+
+
+Fafnir spake:
+
+
+13. “Of many births   |   the Norns must be,       Nor one in race they were;     Some to gods, others   |   to elves are kin,       And Dvalin’s daughters some.”
+
+
+Sigurth spake:
+
+
+14. “Tell me then, Fafnir,   |   for wise thou art famed,       And much thou knowest now:     How call they the isle   |   where all the gods       And Surt shall sword-sweat mingle?”
+
+
+Fafnir spake:
+
+
+15. “Oskopnir is it,   |   where all the gods       Shall seek the play of swords;     Bilrost breaks   |   when they cross the bridge,       And the steeds shall swim in the flood.
+
+16. “The fear-helm I wore   |   to afright mankind,       While guarding my gold I lay;     Mightier seemed I   |   than any man,       For a fiercer never I found.”
+
+
+Sigurth spake:
+
+
+17. “The fear-helm surely   |   no man shields       When he faces a valiant foe;     Oft one finds,   |   when the foe he meets,       That he is not the bravest of all.”
+
+
+Fafnir spake:
+
+
+18. “Venom I breathed   |   when bright I lay       By the hoard my father had;     (There was none so mighty   |   as dared to meet me,       And weapons nor wiles I feared.)”
+
+
+Sigurth spake:
+
+
+19. “Glittering worm,   |   thy hissing was great,       And hard didst show thy heart;     But hatred more   |   have the sons of men       For him who owns the helm.”
+
+
+Fafnir spake:
+
+
+20. “I counsel thee, Sigurth,   |   heed my speech,       And ride thou homeward hence;     The sounding gold,   |   the glow-red wealth,       And the rings thy bane shall be.”
+
+
+Sigurth spake:
+
+
+21. “Thy counsel is given,   |   but go I shall       To the gold in the heather hidden;     And, Fafnir, thou   |   with death dost fight,       Lying where Hel shall have thee.”
+
+
+Fafnir spake:
+
+
+22. “Regin betrayed me,   |   and thee will betray,       Us both to death will he bring;     His life, methinks,   |   must Fafnir lose,       For the mightier man wast thou.”
+
+
+Regin had gone to a distance while Sigurth fought Fafnir, and came back while Sigurth was wiping the blood from his sword. Regin said:
+
+
+23. “Hail to thee, Sigurth!   |   Thou victory hast,       And Fafnir in fight hast slain;     Of all the men   |   who tread the earth,       Most fearless art thou, methinks.”
+
+
+Sigurth spake:
+
+
+24. “Unknown it is,   |   when all are
