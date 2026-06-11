@@ -255,7 +255,7 @@ The game is a D&D 5e world stored in a single HTML file. The API manages: nodes 
   ./api.sh put <type> <id> k=v [k=v]            update fields
   ./api.sh post <type> k=v [k=v]                create entity (nonce auto-handled)
   ./api.sh del <type> <id>                      delete (nonce auto-handled)
-  ./api.sh audit [--map]                        integrity scan
+  ./api.sh audit [--map] [--data] [--section node|quest|monster|terrain|coords]  integrity scan
   ./api.sh chain <quest-id>                     quest dependency chain
   ./api.sh export <collection>                  dump JSON (node_map quest_db monster_pool world_db all)
   ./api.sh location [code]                      composite view (no code = list all)
@@ -415,9 +415,16 @@ const CMD = {
 
   async audit(pos, flags) {
     await requireServer();
-    const path = flags.map ? '/api/audit/map' : '/api/audit';
-    const q    = flags.text ? '?format=text' : '';
-    const r    = await request('GET', path + q);
+    let auditPath;
+    if (flags.data) {
+      const section = flags.section || 'all';
+      auditPath = `/api/audit/data${section !== 'all' ? `?section=${section}` : ''}`;
+    } else {
+      auditPath = flags.map ? '/api/audit/map' : '/api/audit';
+    }
+    const sep  = auditPath.includes('?') ? '&' : '?';
+    const q    = flags.text ? `${sep}format=text` : '';
+    const r    = await request('GET', auditPath + q);
     if (r.status !== 200) { printError(r); process.exit(1); }
     printResult(r.body, flags);
   },

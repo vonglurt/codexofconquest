@@ -2956,6 +2956,299 @@ async function route(req, res) {
     return json(res, 200, { ok:true, errors, warnings, suggestions, blockedEdges, summary });
   }
 
+  // ── Audit/Data/Clean — delete label-explosion J-nodes + orphan coords ───────
+  // POST /api/audit/data/clean[?dryRun=true]
+  // Removes all J-nodes whose label contains ↔ (explosion artifacts), nulls out
+  // any surviving exits that pointed to them, and strips orphaned NODE_COORDS.
+  if (parts[0] === 'audit' && parts[1] === 'data' && parts[2] === 'clean' && method === 'POST') {
+    let body = {};
+    try { body = await readBody(req); } catch(_) {}
+    const dryRun = body?.dryRun === true || url.searchParams.get('dryRun') === 'true';
+
+    // 1. Collect explosion J-node codes.
+    //    Criterion: J-prefixed code AND label contains ↔.
+    //    Authored J-nodes (J10–J13 etc.) never have ↔ in their labels;
+    //    ↔ is exclusively the highway-builder separator, so this is safe.
+    const toDelete = new Set();
+    for (const [code, node] of Object.entries(WBAPI.nodeMap)) {
+      if (/^J\d+$/.test(code) && typeof node.label === 'string' && node.label.includes('↔'))
+        toDelete.add(code);
+    }
+
+    // 2. Find surviving-node exits that will dangle after deletion
+    let danglingCount = 0;
+    for (const [code, node] of Object.entries(WBAPI.nodeMap)) {
+      if (toDelete.has(code)) continue;
+      for (const d of ['N','S','E','W']) {
+        if (node[d] && toDelete.has(node[d])) danglingCount++;
+      }
+    }
+
+    // 3. Count orphaned NODE_COORDS (coord entry with no NODE_MAP match, or in toDelete)
+    const survivingNodes = new Set(Object.keys(WBAPI.nodeMap).filter(c => !toDelete.has(c)));
+    let orphanCoordCount = 0;
+    for (const code of Object.keys(WBAPI.nodeCoords)) {
+      if (toDelete.has(code) || !survivingNodes.has(code)) orphanCoordCount++;
+    }
+
+    if (dryRun) {
+      logResponse(method, url.pathname, 200, `dry-run: ${toDelete.size} explosion nodes, ${danglingCount} dangling exits, ${orphanCoordCount} orphan coords`);
+      return json(res, 200, { ok:true, dryRun:true,
+        explosionNodes: toDelete.size, danglingExits: danglingCount, orphanCoords: orphanCoordCount,
+        sampleCodes: [...toDelete].slice(0, 10) });
+    }
+
+    // 4. Patch NODE_MAP section in _rawSrc
+    const NM_S = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
+    const NM_E = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
+    const nmStart = WBAPI._rawSrc.indexOf(NM_S) + NM_S.length;
+    const nmEnd   = WBAPI._rawSrc.indexOf(NM_E);
+    if (nmStart < NM_S.length || nmEnd === -1)
+      return json(res, 500, { ok:false, error:'NODE_MAP section markers not found' });
+
+    let nmBlock = WBAPI._rawSrc.slice(nmStart, nmEnd);
+
+    // Remove single-line J-node entries whose label contains ↔
+    const removedLines = { n: 0 };
+    nmBlock = nmBlock.replace(/^[ \t]+J\d+\s*:\s*\{[^\n]*↔[^\n]*\n/gm, (m) => {
+      removedLines.n++;
+      return '';
+    });
+
+    // Null out all remaining references to deleted codes in one regex pass
+    if (toDelete.size > 0) {
+      const escaped = [...toDelete].map(c => c.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+      const refRe = new RegExp('"(' + escaped.join('|') + ')"', 'g');
+      nmBlock = nmBlock.replace(refRe, 'null');
+    }
+
+    WBAPI._rawSrc = WBAPI._rawSrc.slice(0, nmStart) + nmBlock + WBAPI._rawSrc.slice(nmEnd);
+
+    // 5. Patch NODE_COORDS section — remove deleted + orphaned entries
+    const NC_S = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆';
+    const NC_E = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+    const ncStart = WBAPI._rawSrc.indexOf(NC_S) + NC_S.length;
+    const ncEnd   = WBAPI._rawSrc.indexOf(NC_E);
+    if (ncStart < NC_S.length || ncEnd === -1)
+      return json(res, 500, { ok:false, error:'NODE_COORDS section markers not found' });
+
+    let ncBlock = WBAPI._rawSrc.slice(ncStart, ncEnd);
+    let coordsRemoved = 0;
+    ncBlock = ncBlock.replace(/^[ \t]+(\w+)\s*:\s*\{r:[^\n]*\},?\n/gm, (match, code) => {
+      if (toDelete.has(code) || !survivingNodes.has(code)) { coordsRemoved++; return ''; }
+      return match;
+    });
+
+    WBAPI._rawSrc = WBAPI._rawSrc.slice(0, ncStart) + ncBlock + WBAPI._rawSrc.slice(ncEnd);
+
+    // 6. Update in-memory objects to match
+    for (const code of toDelete) {
+      delete WBAPI.nodeMap[code];
+      delete WBAPI.nodeCoords[code];
+    }
+    for (const [code, node] of Object.entries(WBAPI.nodeMap)) {
+      for (const d of ['N','S','E','W']) {
+        if (node[d] && toDelete.has(node[d])) node[d] = null;
+      }
+    }
+    for (const code of Object.keys(WBAPI.nodeCoords)) {
+      if (!WBAPI.nodeMap[code]) delete WBAPI.nodeCoords[code];
+    }
+
+    logResponse(method, url.pathname, 200,
+      `clean: removed ${removedLines.n} explosion nodes, ${coordsRemoved} orphan coords, ${danglingCount} exits nulled`);
+    return saveAndRestart(res, 200, {
+      ok: true,
+      explosionNodesRemoved: removedLines.n,
+      danglingExitsNulled: danglingCount,
+      orphanCoordsRemoved: coordsRemoved,
+    });
+  }
+
+  // ── Audit/Data — deep structural integrity scan ───────────────────────────
+  // GET /api/audit/data[?format=text&section=node|quest|monster|terrain|coords]
+  // Validates every entity against its schema, detects bloat/explosion artifacts,
+  // orphaned coords, duplicate nums, broken exits, and auto-generated junk text.
+  if (parts[0] === 'audit' && parts[1] === 'data' && method === 'GET') {
+    const sectionFilter = url.searchParams.get('section') || 'all';
+    const fmt           = url.searchParams.get('format') || 'json';
+
+    // ── Validators — each returns [{severity, check, key, field, msg}] ────────
+    const DIRS = ['N','S','E','W'];
+    const findings = [];
+    const push = (severity, check, key, field, msg) =>
+      findings.push({ severity, check, key, field, msg });
+
+    // ─────────────── NODE_MAP ────────────────────────────────────────────────
+    if (sectionFilter === 'all' || sectionFilter === 'node') {
+      const nodeKeys    = new Set(Object.keys(WBAPI.nodeMap));
+      const terrainKeys = new Set(Object.keys(WBAPI.worldDb));
+      const numSeen     = new Map();   // num → first code seen
+
+      for (const [code, node] of Object.entries(WBAPI.nodeMap)) {
+        // Required fields
+        if (node.num  == null) push('error',   'missing_field',   code, 'num',   'num is required');
+        if (!node.name)        push('error',   'missing_field',   code, 'name',  'name (terrain key) is required');
+        if (!node.label)       push('error',   'missing_field',   code, 'label', 'label is required');
+        if (node.act  == null) push('error',   'missing_field',   code, 'act',   'act is required');
+
+        // code field matches its key
+        if (node.code && node.code !== code)
+          push('error', 'code_mismatch', code, 'code', `node.code "${node.code}" does not match map key "${code}"`);
+
+        // act in valid range
+        if (node.act != null && (node.act < 1 || node.act > 8))
+          push('warning', 'invalid_act', code, 'act', `act ${node.act} outside range 1–8`);
+
+        // terrain key exists
+        if (node.name && !terrainKeys.has(node.name))
+          push('error', 'bad_terrain', code, 'name', `terrain "${node.name}" not in WORLD_DB`);
+
+        // Broken exits
+        for (const d of DIRS) {
+          if (node[d] && !nodeKeys.has(node[d]))
+            push('error', 'broken_exit', code, d, `exit ${d}="${node[d]}" points to non-existent node`);
+        }
+
+        // Duplicate num
+        if (node.num != null) {
+          if (numSeen.has(node.num)) {
+            push('warning', 'duplicate_num', code, 'num', `num ${node.num} also used by "${numSeen.get(node.num)}"`);
+          } else {
+            numSeen.set(node.num, code);
+          }
+        }
+
+        // Label explosion — J-node with ↔ in label = auto-generated highway artifact
+        // (authored J-nodes like J10–J13 never use ↔ in their labels)
+        if (/^J\d+$/.test(code) && node.label && node.label.includes('↔'))
+          push('warning', 'label_explosion', code, 'label', `label contains ↔ — auto-generated explosion artifact (${node.label.length} chars)`);
+
+        // Auto-generated signpost text
+        if (typeof node.text === 'string' && node.text.startsWith('Signpost says:'))
+          push('warning', 'autogen_text', code, 'text', `text is auto-generated signpost copy — no authored narrative`);
+
+        // Bloated entry — estimate serialized size
+        const entryLen = JSON.stringify(node).length;
+        if (entryLen > 10000)
+          push('warning', 'bloated_entry', code, '_size', `serialized size ${(entryLen/1024).toFixed(1)} KB — likely explosion artifact`);
+        else if (entryLen > 2000)
+          push('suggestion', 'large_entry', code, '_size', `serialized size ${(entryLen/1024).toFixed(1)} KB — unusually large for a junction node`);
+      }
+    }
+
+    // ─────────────── NODE_COORDS ─────────────────────────────────────────────
+    if (sectionFilter === 'all' || sectionFilter === 'coords') {
+      const nodeKeys = new Set(Object.keys(WBAPI.nodeMap));
+      for (const code of Object.keys(WBAPI.nodeCoords)) {
+        if (!nodeKeys.has(code))
+          push('warning', 'orphan_coords', code, 'r/c', `NODE_COORDS entry "${code}" has no NODE_MAP entry — phantom coordinate`);
+      }
+      const coordKeys = new Set(Object.keys(WBAPI.nodeCoords));
+      for (const code of Object.keys(WBAPI.nodeMap)) {
+        if (!coordKeys.has(code))
+          push('suggestion', 'missing_coords', code, 'r/c', `node has no NODE_COORDS entry — won't appear on map`);
+      }
+    }
+
+    // ─────────────── QUEST_DB ────────────────────────────────────────────────
+    if (sectionFilter === 'all' || sectionFilter === 'quest') {
+      const nodeKeys = new Set(Object.keys(WBAPI.nodeMap));
+      const VALID_QUEST_TYPES = new Set(['main','side','combat','fetch','escort','dialogue','skill_check','mission_bit']);
+      for (const [id, q] of Object.entries(WBAPI.questDb)) {
+        if (!q.title)        push('warning', 'missing_field', id, 'title', 'missing title');
+        if (!q.desc)         push('warning', 'missing_field', id, 'desc',  'missing desc');
+        if (!q.npc)          push('error',   'missing_field', id, 'npc',   'missing npc — quests must be anchored to an NPC');
+        if (!q.type)         push('warning', 'missing_field', id, 'type',  'missing type');
+        if (!q.activateNode) push('warning', 'missing_field', id, 'activateNode', 'no activateNode — quest has no entry point');
+        if (q.type && !VALID_QUEST_TYPES.has(q.type))
+          push('warning', 'invalid_type', id, 'type', `unknown quest type "${q.type}"`);
+        if (q.activateNode && !nodeKeys.has(q.activateNode))
+          push('error', 'broken_ref', id, 'activateNode', `node "${q.activateNode}" not in NODE_MAP`);
+        if (q.waypointNode && !nodeKeys.has(q.waypointNode))
+          push('error', 'broken_ref', id, 'waypointNode', `node "${q.waypointNode}" not in NODE_MAP`);
+      }
+    }
+
+    // ─────────────── MONSTER_POOL ────────────────────────────────────────────
+    if (sectionFilter === 'all' || sectionFilter === 'monster') {
+      const dropKeys = new Set(Object.keys(WBAPI.monsterDrops));
+      for (const [key, m] of Object.entries(WBAPI.monsterPool)) {
+        if (!m.name)      push('warning', 'missing_field', key, 'name',  'missing name');
+        if (m.ac  == null) push('warning', 'missing_field', key, 'ac',   'missing ac');
+        if (m.hp  == null) push('warning', 'missing_field', key, 'hp',   'missing hp');
+        if (m.atk == null) push('warning', 'missing_field', key, 'atk',  'missing atk');
+        if (m.xp  == null) push('warning', 'missing_field', key, 'xp',   'missing xp');
+        if (!dropKeys.has(key))
+          push('suggestion', 'no_drops', key, 'drops', 'no MONSTER_DROPS entry — creature drops nothing');
+      }
+      for (const dk of Object.keys(WBAPI.monsterDrops))
+        if (!WBAPI.monsterPool[dk])
+          push('error', 'orphan_drop', dk, 'key', 'MONSTER_DROPS entry has no matching MONSTER_POOL entry');
+    }
+
+    // ─────────────── WORLD_DB (terrain) ──────────────────────────────────────
+    if (sectionFilter === 'all' || sectionFilter === 'terrain') {
+      const monsterKeys = new Set(Object.keys(WBAPI.monsterPool));
+      for (const [key, t] of Object.entries(WBAPI.worldDb)) {
+        if (!t.label) push('warning', 'missing_field', key, 'label', 'terrain missing label');
+        if (!t.monsters || !t.monsters.length)
+          push('warning', 'empty_monsters', key, 'monsters', 'terrain has no monsters — encounters impossible here');
+        for (const m of (t.monsters || [])) {
+          const mk = typeof m === 'string' ? m : m?.key;
+          if (mk && !monsterKeys.has(mk))
+            push('error', 'bad_monster_ref', key, 'monsters', `references monster "${mk}" not in MONSTER_POOL`);
+        }
+      }
+    }
+
+    // ── Summary ───────────────────────────────────────────────────────────────
+    const grouped = {};
+    for (const f of findings) {
+      grouped[f.check] = grouped[f.check] || { errors:0, warnings:0, suggestions:0, items:[] };
+      grouped[f.check][f.severity + 's'] = (grouped[f.check][f.severity + 's'] || 0) + 1;
+      grouped[f.check].items.push(f);
+    }
+    const errors      = findings.filter(f => f.severity === 'error');
+    const warnings    = findings.filter(f => f.severity === 'warning');
+    const suggestions = findings.filter(f => f.severity === 'suggestion');
+    const summary = {
+      errors: errors.length, warnings: warnings.length, suggestions: suggestions.length,
+      total: findings.length,
+      byCheck: Object.fromEntries(Object.entries(grouped).map(([k,v]) =>
+        [k, { errors:v.errors||0, warnings:v.warnings||0, suggestions:v.suggestions||0 }])),
+    };
+
+    logResponse(method, url.pathname, 200,
+      `data audit: ${errors.length} errors · ${warnings.length} warnings · ${suggestions.length} suggestions`);
+
+    if (fmt === 'text') {
+      const HR = '─'.repeat(64);
+      const ts = new Date().toISOString().slice(0,19).replace('T',' ');
+      const lines = ['', `DATA INTEGRITY REPORT — ${path.basename(GAME_FILE)}`, `Generated ${ts}`, ''];
+      for (const [checkName, group] of Object.entries(grouped)) {
+        const total = (group.errors||0) + (group.warnings||0) + (group.suggestions||0);
+        const icon = group.errors ? '✗' : group.warnings ? '⚠' : '·';
+        lines.push(HR);
+        lines.push(`  ${icon} ${checkName.toUpperCase()} (${total})`);
+        lines.push(HR);
+        for (const f of group.items) {
+          lines.push(`  [${f.severity.toUpperCase()}]  ${f.key}.${f.field}`);
+          lines.push(`         ${f.msg}`);
+          lines.push('');
+        }
+      }
+      lines.push(HR);
+      lines.push(`  TOTALS: ${errors.length} errors · ${warnings.length} warnings · ${suggestions.length} suggestions`);
+      lines.push(HR, '');
+      cors(res);
+      res.writeHead(200, { 'Content-Type':'text/plain; charset=utf-8' });
+      return res.end(lines.join('\n'));
+    }
+
+    return json(res, 200, { ok:true, summary, findings, grouped });
+  }
+
   // ── Audit (data integrity scan) ───────────────────────────────────────────
   if (parts[0] === 'audit' && method === 'GET') {
     const errors = [], warnings = [], suggestions = [], parse = [];
@@ -10177,6 +10470,8 @@ server.listen(PORT, '127.0.0.1', () => {
     ['POST',   '/api/mode                           body: {mode} (fast|debug|trace)'],
     ['GET',    '/api/source                         → raw HTML source (worldbuilder Load from Server)'],
     ['GET',    '/api/audit[?format=text]             → integrity scan (errors/warnings/suggestions/connectivity)'],
+    ['GET',    '/api/audit/data[?format=text&section=node|quest|monster|terrain|coords]  → deep schema + bloat + explosion validator'],
+    ['POST',   '/api/audit/data/clean[?dryRun=true]   → remove explosion J-nodes + orphan coords, null dangling exits'],
     ['GET',    '/api/audit/map[?format=text]         → map conformity: diagonal/bidirectional/alignment/axis-distance/long-links/market-proximity'],
     ['POST',   '/api/audit/map/fix                   body: {} (all) or {check,code,dir,target} (one)'],
     ['GET',    '/api/layout/solve[?step=8&root=TLS]  → BFS grid layout: proposed {r,c} for every node'],
