@@ -1584,7 +1584,7 @@ Verified 2026-06-11 against live DB. ATH/ZTH/JRS/FLR/LIS already imported.
 | 3 | ~~JRS~~ | Jerusalem Delivered | — | — | — | ✓ DONE (35 quests) |
 | 4 | ~~FLR~~ | Divine Comedy: Inferno | — | — | — | ✓ DONE (55 quests) |
 | 5 | ~~LIS~~ | Lusiads | — | — | — | ✓ DONE (65 quests) |
-| 6 | **CID** | Chronicle of the Cid | 1–7 | 35 | VLC (Valencia, ~r:158 c:185) | **NEXT** |
+| 6 | ~~CID~~ | Chronicle of the Cid | — | — | BGZ/TOL/CDN/VLC | ✓ DONE 2026-06-11 (35 quests, 7 cycles, questComplete cid_c7a5) |
 | 7 | **TBS** | Knight in the Panther's Skin | 1–7 | 35 | GEO (confirm/create) | open |
 | 8 | **BEY** | Mandeville's Travels | 1–16 | ~65 | BEI/JER/SID (new); KOL (confirm) | open |
 | 9 | **KYA** | Shah-Nameh | 1–30 | ~125 | YAZ/KBL/SIS/HRT (new); TBZ/TRB confirm | open |
