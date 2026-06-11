@@ -1601,12 +1601,11 @@ OST imported 2026-06-05 (443 nodes, 1590 quests). Tracking files updated 2026-06
 
 ---
 
-### Group C — SHK Audit Errors (pre-existing)
+### Group C — SHK Audit Errors ✓ DONE (prior session)
 
-27 audit errors all from SHK (Shakespeare) quests missing NPC fields:
-`shk6_act1` through `shk14_act3` — 27 quests with no `npc` field.
-
-These were created before the NPC requirement was enforced. Fix: create a placeholder NPC for SHK (e.g., `shakespeare_collector`) at an appropriate node and `put` it onto all 27 quests.
+All 27 SHK quests (`shk6_act1` through `shk14_act3`) already have `npc` fields:
+`egil_thorvaldsen` (BK), `marta_vby` (VBY), `ulrich_von_gessert` (NUE).
+Audit confirmed 0 errors 2026-06-11.
 
 ---
 
@@ -1662,11 +1661,11 @@ Once source texts are acquired (Group D), these books need Pass 4 (source summar
 
 ### Summary Count
 
-| Group | Items | Effort |
-|-------|-------|--------|
-| A — API Imports | 8 books (ZTH partial + 7 full) | ~16 sessions |
-| B — OST tracking | 3 file edits + commit | 1 session |
-| C — SHK NPC fix | 1 NPC + 27 put calls | 30 min |
-| D — Source text acquisition | 7 books | 7 downloads + splits |
-| E — Shakespeare | 23 parts remaining | 23 sessions |
-| F — Pass 4 (Phase 1 books) | 7 agents (after D) | 1 parallel run |
+| Group | Items | Effort | Status |
+|-------|-------|--------|--------|
+| A — API Imports | 8 books (ZTH partial + 7 full) | ~16 sessions | open |
+| B — OST tracking | 3 file edits + commit | — | ✓ DONE 2026-06-11 |
+| C — SHK NPC fix | 1 NPC + 27 put calls | — | ✓ DONE (prior session) |
+| D — Source text acquisition | 7 books | 7 downloads + splits | open |
+| E — Shakespeare | 23 parts remaining | 23 sessions | open |
+| F — Pass 4 (Phase 1 books) | 7 agents (after D) | 1 parallel run | blocked on D |
