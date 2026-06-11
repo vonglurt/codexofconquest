@@ -453,7 +453,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | VBY | grettir-saga | Grettir's Saga — Anon | ~14th C | Icelandic Saga | 373 | Source txt acquired 2026-06-11 — PG; split 2 parts. Prior notes: VBY-01–07 done, RKN/BWH in grid. |
 | [x] | LBC | nibelungenlied | Nibelungenlied — Anon | c.1200 | German Epic | 660 | SEEDS COMPLETE 2026-06-03 — LBC-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Linden Leaf" (ETZ/WOR/WM); inverted protective disclosure. No new nodes. See LBC-nibelungenlied.md. |
 | [x] | GDN | njal-saga | Njal's Saga — Anon (Dasent transl.) | ~13th C | Icelandic Saga | 787 | SEEDS COMPLETE 2026-06-03 — GDN-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Burning Witness Account" (ISL/BK/WM); arranged death record. No new nodes. See GDN-njal-saga.md. |
-| [ ] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 | Source txt missing — prior cycle was memory-processed only. Add RIX-egil-saga.txt before processing. Prior notes: RIX-01–07 done, YRK/ISL in grid. |
+| [x] | RIX | egil-saga | Egil's Saga — Anon (attr. Snorri) | ~13th C | Icelandic Saga | 869 | Source txt acquired 2026-06-11 — Archive.org Green tr. (1893), 524 KB. Prior notes: RIX-01–07 done, YRK/ISL in grid. |
 | [x] | BOO | prose-edda | Prose Edda — Snorri Sturluson | c.1220 | Norse Mythology | 514 | SEEDS COMPLETE 2026-06-03 — BOO-01–07 all vignettes done. Cycle 8 2026-06-05 — "Utgard-Loki's Confession" (BOO/WM). No new nodes. See BOO-prose-edda.md. |
 | [x] | ALF | kalevala | Kalevala — Elias Lönnrot | 1835/1849 | Finnish Epic | 642 | SEEDS COMPLETE 2026-06-03 — ALF-01–07 all vignettes done. Cycle 8 2026-06-05 — "Vainamoinen's Departure Promise" (ALF/WM). No new nodes. See ALF-kalevala.md. |
 | [x] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 | SEEDS COMPLETE 2026-06-03 — KSU-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Skald's Safe-Conduct" (KSU/WM). No new nodes. See KSU-heimskringla.md. |
@@ -529,7 +529,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | SEEDS COMPLETE 2026-06-03 — AMS-01–07 done. Cycle 8 2026-06-05 — "Genji's Picture Catalog" (MRG/WM). See AMS-tale-of-genji.md. |
-| [ ] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem | Source txt missing — prior cycle was memory-processed only (source file contained unrelated content). Add TBS-knight-panther-skin.txt before processing. Prior notes: TBS-01–07 done, GEO/TIF/ALP/CON/DAM/CAF in grid. |
+| [ ] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem | Source txt acquisition pending — EPUB extraction from Archive.org unsuccessful; Wikisource/PG direct text not accessible. Requires manual fetch or alternate format conversion. Prior notes: TBS-01–07 done, GEO/TIF/ALP/CON/DAM/CAF in grid. |
 
 ### Caribbean & Americas
 
