@@ -1586,7 +1586,7 @@ Verified 2026-06-11 against live DB. ATH/ZTH/JRS/FLR/LIS already imported.
 | 5 | ~~LIS~~ | Lusiads | — | — | — | ✓ DONE (65 quests) |
 | 6 | ~~CID~~ | Chronicle of the Cid | — | — | BGZ/TOL/CDN/VLC | ✓ DONE 2026-06-11 (35 quests, 7 cycles, questComplete cid_c7a5) |
 | 7 | ~~TBS~~ | Knight in the Panther's Skin | — | — | GEO/PHY/GHC | ✓ DONE 2026-06-11 (35 quests, 7 cycles, questComplete tbs_c7a5) |
-| 8 | **BEY** | Mandeville's Travels | 1–16 | ~65 | BEI/JER/SID (new); KOL (confirm) | open |
+| 8 | ~~BEY~~ | Mandeville's Travels | — | — | LGE/ADN/RGS/MGZ/STR/AUG (ADN replaces ARD conflict; DBV used for Ragusa waystation in C2) | ✓ DONE 2026-06-11 (35 quests, 7 cycles, questComplete bey_c7a5) |
 | 9 | **KYA** | Shah-Nameh | 1–30 | ~125 | YAZ/KBL/SIS/HRT (new); TBZ/TRB confirm | open |
 
 **Pass 4 extra cycles** (8–11/12/13/16/30) are in the `.md` files and can be imported after the base 7 cycles are live. They don't block the base import.
