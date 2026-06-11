@@ -275,7 +275,7 @@ Next books to process (in approximate priority order):
 | MLA | Plutarch's Lives | 4222 | **IMPORTED — 2026-06-04 — LMO/THA/NXS new nodes; MLA-01–05/02/04/06/03 (7 cycles, 35 acts); questComplete on MLA-05 (cycle 7); island→islands terrain fix on NXS** |
 | BGW | Arabian Nights (Burton) | 983 | **IMPORTED — 2026-06-04 — KHR new node (Cairo); TUN new node (Tunis); BGW-01–08 (8 cycles, 40 acts); CAI→KHR; WM→NUE; BAG→BGD** |
 | CAI | Arabian Nights (Lang) | 629 | **IMPORTED — 2026-06-04 — ALB/ALP/LAT new nodes (Aleppo Hills/Storytellers'/Latakia); CAI-01–08 (8 cycles, 40 acts); WM→NUE; BAG→BGD** |
-| SHK | Complete Works — Shakespeare | 5318 | **IN PROGRESS — Parts 1–5 read (5/28). Cycles 1–3 complete. Cycle 3: The Unread Treaty (ANT/ROM/NUE, Coriolanus). Part 5: Cymbeline complete + Hamlet Acts I–II begin. Seeds banked: Imogen's Bracelet, Hamlet's Letter to Ophelia. Parts 6–28 pending.** |
+| SHK | Complete Works — Shakespeare | 5318 | **COMPLETE 2026-06-05 — All 28 parts read; 14 cycles written and imported (shk6_act1–shk14_act3, 27 live quests). See SHK-shakespeare-complete-works.md.** |
 | BEY | Mandeville's Travels | 472 | **SEEDS COMPLETE 2026-06-02 — BEY-01–07 all vignettes done** |
 | KYA | Shah-Nameh | 883 | **IMPORTED — 2026-06-11 — YAZ/KBL new nodes; TBZ/TRB existing; kya_c1a1–kya_c7a5 (7 cycles, 35 acts); questComplete on kya_c7a5; SIS/HRT deferred (cycles 8+)** |
 | HTY | Mahabharata | 83 | **SEEDS COMPLETE 2026-06-02 — HTY-01–06 all vignettes done** |
@@ -1167,26 +1167,11 @@ Expected size: ~250 KB. Single file or 2 parts.
 
 ---
 
-### §PHASE-1-SHK — Shakespeare Complete Works (continuing, parts 6–28)
+### §PHASE-1-SHK — Shakespeare Complete Works ✓ COMPLETE 2026-06-05
 
-**Code:** SHK | **Slug:** shakespeare-complete-works | **Current books.md status:** `[ ]` IN PROGRESS  
-**Source files:** Already present — parts 1–28 all exist in 1367-sources/  
-**Current state:** Parts 1–5 read; cycles 1–3 complete  
-- Cycle 1: The Rival's Door (Sonnets / All's Well) — BK/CI/IN/CY  
-- Cycle 2: (from Antony and Cleopatra)  
-- Cycle 3: The Unread Treaty (Coriolanus) — ANT/ROM/NUE  
-- Seeds banked: Imogen's Bracelet (Cymbeline), Hamlet's Letter to Ophelia  
-- Parts 6–28 pending: As You Like It (mid Act I Scene I) through the late plays
-
-**Next steps per multi-part protocol:**
-1. Read `SHK-shakespeare-complete-works.part6of28.txt`
-2. Append `### Part 6 coverage` to SHK-shakespeare-complete-works.md
-3. Identify new quest seeds from this part
-4. Ask user to continue for part 7
-5. Repeat through part 28; write cycles 4–7 when enough seeds are banked
-6. On part 28: complete full document, write cycles 4–7 (if not already done), apply admin updates
-
-**Note:** SHK has 28 parts. One-part-per-session rule (books.md Rule 3) applies. Short summaries capped at ~5 sentences per part (memory rule: short-summaries-for-10+-part-books).
+**Code:** SHK | **Slug:** shakespeare-complete-works | **Status:** COMPLETE  
+All 28 parts read. 14 cycles written and imported. 27 live quests (shk6_act1–shk14_act3).  
+See SHK-shakespeare-complete-works.md for full cycle specs and Part 1–28 coverage notes.
 
 ---
 
@@ -1628,19 +1613,10 @@ Books that were memory-processed and have no `.txt` source file. All are already
 
 ---
 
-### Group E — Shakespeare Continuation
+### Group E — Shakespeare Continuation ✓ DONE 2026-06-05
 
-**Code:** SHK | **Source files:** parts 1–28 all present  
-**Current state:** Parts 1–5 read, cycles 1–3 complete
-
-- C1: The Rival's Door (Sonnets + All's Well) — BK/CI/IN/CY
-- C2: (Antony and Cleopatra angle)
-- C3: The Unread Treaty (Coriolanus) — ANT/ROM/NUE
-- **Seeds banked:** Imogen's Bracelet (Cymbeline), Hamlet's Letter to Ophelia
-
-**Next step:** Read `SHK-shakespeare-complete-works.part6of28.txt`. Append Part 6 coverage to SHK-shakespeare-complete-works.md. Continue through part 28 (one part per session). Write cycles 4–7 when enough seeds are banked.
-
-**Short summary rule:** ≤5 sentences per part (10+ part book).
+**Code:** SHK | All 28 parts read, 14 cycles written and imported, 27 live quests.  
+See SHK-shakespeare-complete-works.md. No remaining work.
 
 ---
 
@@ -1668,5 +1644,5 @@ Once source texts are acquired (Group D), these books need Pass 4 (source summar
 | B — OST tracking | 3 file edits + commit | — | ✓ DONE 2026-06-11 |
 | C — SHK NPC fix | 1 NPC + 27 put calls | — | ✓ DONE (prior session) |
 | D — Source text acquisition | 7 books | 7 downloads + splits | open |
-| E — Shakespeare | 23 parts remaining | 23 sessions | open |
+| E — Shakespeare | 14 cycles, 27 quests | — | ✓ DONE 2026-06-05 |
 | F — Pass 4 (Phase 1 books) | 7 agents (after D) | 1 parallel run | blocked on D |
