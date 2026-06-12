@@ -5774,7 +5774,7 @@ async function route(req, res) {
       };
       const sectionBanner = (title) => emit(`\n  ┌${'─'.repeat(80)}\n  │ ${title}\n  └${'─'.repeat(80)}`);
       // ── MegaReWeave overall phase tracker ────────────────────────────────────
-      const RW_STEPS = 21; // 12 original + 9 final passes (bidir×5 + xjct×3 + cross×1)
+      const RW_STEPS = 26; // 12 original + 9 final passes + 5 P7b passes (double-snail + p8b)
       let rwStep = 0;
       const phaseBanner = (label, detail='') => {
         rwStep++;
@@ -6033,7 +6033,8 @@ async function route(req, res) {
       emit(`  ██  MEGAREWEAVE  execute=${execute}  step=${step}  maxRip=${maxRip}  maxFix=${maxFix}  ██`);
       emit(`  ${'█'.repeat(62)}`);
       emit(`  Road: 0/jct-reduce → 1/geo-seed → 2/rip-connect → 3/coord-scan → 4/fix-broken`);
-      emit(`        5/fix-bidir → 6/highways → 7/city-mesh → 8/derelict → 9/grid-connect → 10/wither → 11/xjct → final-bridge → bidir → xjct2 → bidir → xjct3 → bidir → cross → bidir → xjct4 → bidir`);
+      emit(`        5/fix-bidir → 6/highways → 7/city-mesh → 8/derelict → 9/grid-connect → 10/wither → 11/xjct → final-bridge → bidir → xjct2 → bidir → xjct3 → bidir → cross → bidir → xjct4 → bidir → xjct5 → bidir → final`);
+      emit(`        → P7b/double-snail-wither(fwd+rev cities, all quests) → post-p7b bidir+xjct×2 → P8b/check → maps`);
 
       // ── INIT snapshot ─────────────────────────────────────────────────────
       const rwT0 = Date.now();
@@ -8187,6 +8188,293 @@ async function route(req, res) {
         await runXjctPass('p_xjct5');
         await runBidirFixPass('post-xjct5');
         await runBidirFixPass('final');
+
+        // ══════════════════════════════════════════════════════════════════════
+        // P7b — Double-Snail Second Wither
+        // Runs AFTER all xjct/bidir/cross passes have maximally connected the
+        // graph.  Two city-traversal directions (forward + reverse GEO2 order)
+        // are combined: BFS explores different tie-break paths per source order,
+        // marking more junctions live than a single-direction pass.
+        // Unused (cold, heat=0) non-bridge junctions are withered.
+        // Followed by bidir + xjct passes, P8b reachability check, and a
+        // second full map printing — the existing POST-REWEAVE MAPS section
+        // uses lastSnailUsage (updated here) to render heat from this pass.
+        // ══════════════════════════════════════════════════════════════════════
+        if (execute && witherPhase) {
+          phaseBanner('P7b: double-snail second wither', `execute=${execute}`);
+          const doneP7b = phaseTime('p7b');
+          emit(`  [p7b start] ${nodeStats()}  ${heapMB()}`);
+          nm = WBAPI.nodeMap;
+
+          // Re-derive content-pinned sets (P7's block is now closed)
+          const p7bQRef = new Set();
+          for (const q of Object.values(WBAPI.questDb || {}))
+            for (const f of ['activateNode', 'waypointNode']) if (q[f]) p7bQRef.add(q[f]);
+          const p7bNpcRef = new Set(Object.values(WBAPI.npcDb || {}).map(n => n.node).filter(Boolean));
+
+          // BFS shortest-path helper (P7's bfsPath is block-scoped there)
+          const p7bBfsPath = (from, to) => {
+            if (!nm[from] || !nm[to]) return [];
+            if (from === to) return [from];
+            const prev = new Map([[from, null]]); const bq = [from];
+            while (bq.length) {
+              const cur = bq.shift();
+              for (const d of DIRS4) {
+                const nxt = nm[cur]?.[d];
+                if (!nxt || !nm[nxt] || prev.has(nxt)) continue;
+                prev.set(nxt, cur);
+                if (nxt === to) {
+                  const p = []; let n = to;
+                  while (n !== null) { p.unshift(n); n = prev.get(n); }
+                  return p;
+                }
+                bq.push(nxt);
+              }
+            }
+            return [];
+          };
+
+          // Tarjan articulation-point detector — O(V+E), explicit stack
+          // Returns junction codes that are structural bridges (removing them
+          // would disconnect a named node from the hub).
+          const p7bFindUnsafe = () => {
+            const disc = new Map(), low = new Map(), namedBelow = new Map();
+            const unsafe = new Set();
+            let timer = 0;
+            const root = getHub();
+            let rootDfsChildren = 0;
+            const stack = [[root, null, 0]];
+            disc.set(root, ++timer); low.set(root, timer);
+            namedBelow.set(root, !nm[root]?.junction);
+            while (stack.length) {
+              const frame = stack[stack.length - 1];
+              const v = frame[0], par = frame[1];
+              let pushed = false;
+              while (frame[2] < DIRS4.length) {
+                const d = DIRS4[frame[2]++];
+                const u = nm[v]?.[d];
+                if (!u || !nm[u] || u === par) continue;
+                if (!disc.has(u)) {
+                  disc.set(u, ++timer); low.set(u, timer);
+                  namedBelow.set(u, !nm[u]?.junction);
+                  stack.push([u, v, 0]);
+                  if (par === null) rootDfsChildren++;
+                  pushed = true; break;
+                } else {
+                  low.set(v, Math.min(low.get(v), disc.get(u)));
+                }
+              }
+              if (!pushed) {
+                stack.pop();
+                if (par !== null) {
+                  low.set(par, Math.min(low.get(par), low.get(v)));
+                  const sn = namedBelow.get(v);
+                  if (sn) namedBelow.set(par, true);
+                  if (low.get(v) >= disc.get(par) && nm[par]?.junction && sn) unsafe.add(par);
+                }
+              }
+            }
+            if (nm[root]?.junction && rootDfsChildren > 1) unsafe.add(root);
+            logTrace('p7b-tarjan', `unsafe=${unsafe.size}  visited=${disc.size}`);
+            return unsafe;
+          };
+
+          // Delete a junction: unwire neighbors, remove from source + nm + coords
+          const p7bDeleteJ = (code) => {
+            for (const d of DIRS4) { const nb = nm[code]?.[d]; if (nb && nm[nb]) clearDir(nb, OPP4[d]); }
+            WBAPI.deleteNodeSource(code);
+            delete nm[code]; delete WBAPI.nodeCoords[code];
+          };
+
+          // Heat report: frequency buckets + top hotspots, saved to milepoints/
+          const p7bHeatReport = (usage) => {
+            const entries = [...usage.entries()]; const total = entries.length;
+            const usedC = [...usage.values()].filter(v => v > 0).length;
+            const BUCKETS2 = [
+              {label:'never walked  (heat=0)    ',min:0,  max:0        },
+              {label:'cold          (heat=1-5)   ',min:1,  max:5        },
+              {label:'warm          (heat=6-20)  ',min:6,  max:20       },
+              {label:'hot           (heat=21-100)',min:21, max:100      },
+              {label:'blazing       (heat=100+)  ',min:101,max:Infinity  },
+            ];
+            const lines2 = [];
+            const wr = (s) => { emit(s); lines2.push(s); };
+            wr(`  [p7b-heat] ═══ double-snail heat distribution ══════════════════════════════════`);
+            for (const {label, min, max} of BUCKETS2) {
+              const n = entries.filter(([,v]) => v >= min && v <= max).length;
+              const pct = total > 0 ? Math.round(n / total * 100) : 0;
+              const filled = Math.floor(pct / 4);
+              wr(`  [p7b-heat]   ${label}  ${String(n).padStart(6)}  [${'█'.repeat(filled)}${'░'.repeat(25-filled)}]  ${String(pct).padStart(3)}%`);
+            }
+            wr(`  [p7b-heat]   total: ${total}   used=${usedC}   unused(wither candidates)=${total-usedC}`);
+            const hotspots2 = entries.filter(([,v]) => v > 0).sort(([,a],[,b]) => b - a).slice(0, 20);
+            if (hotspots2.length) {
+              wr(`  [p7b-heat] ─── top ${hotspots2.length} hotspots ──────────────────────────────────────────`);
+              for (const [code, cnt] of hotspots2) {
+                const coord = WBAPI.nodeCoords[code];
+                wr(`  [p7b-heat]   ${code.padEnd(14)}\t(${String(coord?.r??'?').padStart(4)},${String(coord?.c??'?').padStart(4)})\theat=${String(cnt).padStart(6)}\t${nm[code]?.label||''}`);
+              }
+            }
+            wr(`  [p7b-heat] ════════════════════════════════════════════════════════════════════`);
+            try {
+              const stamp = new Date().toISOString().replace(/[:.]/g,'-').slice(0,19);
+              const hf = path.join(__dirname,'milepoints',`heatmap-${stamp}.txt`);
+              fs.writeFileSync(hf, lines2.join('\n')+'\n', 'utf8');
+              emit(`  [p7b-heat] saved → ${path.basename(hf)}`);
+            } catch(e) { emit(`  [p7b-heat] WARN: could not write heatmap: ${e.message}`); }
+          };
+
+          // Double-snail: forward + reverse city-order BFS trees, combined into
+          // one usage map.  Different source orders explore different tie-break
+          // shortest paths, marking junctions that a single-direction pass would miss.
+          const runDoubleSnail = async (label) => {
+            emit(`\n  [double-snail:${label}] starting  ${heapMB()}`);
+            const usage = new Map();
+            for (const code of Object.keys(nm))
+              if (nm[code]?.junction && !p7bQRef.has(code) && !p7bNpcRef.has(code))
+                usage.set(code, 0);
+            const hub = getHub();
+            emit(`  [double-snail:${label}] hub=${hub}  junctions=${usage.size}`);
+
+            // Walk 1: hub → every quest activateNode and waypointNode
+            const quests2 = Object.values(WBAPI.questDb || {});
+            let qP = 0, qM = 0;
+            emit(`  [double-snail:${label}] quest-walk: ${quests2.length} quests`);
+            for (let qi = 0; qi < quests2.length; qi++) {
+              if (qi % 200 === 0) await yieldOnce();
+              if (qi === 0 || qi === quests2.length - 1 || qi % 100 === 0)
+                progressLine(`ds:${label} quests`, qi+1, quests2.length, `paths=${qP} misses=${qM}`);
+              for (const f of ['activateNode', 'waypointNode']) {
+                const dest = quests2[qi][f]; if (!dest || !nm[dest]) continue;
+                const p = p7bBfsPath(hub, dest);
+                if (!p.length) { qM++; continue; }
+                qP++;
+                for (const node of p) if (usage.has(node)) usage.set(node, usage.get(node) + 1);
+              }
+            }
+            emit(`  [double-snail:${label}] quest-walk done: paths=${qP}  misses=${qM}`);
+
+            // Walk 2: city-pairs — forward order then reverse order.
+            // Each pass builds one BFS parent-tree per source city, traces all
+            // pairs, and accumulates into the shared usage map.
+            const geoCodes2 = Object.keys(GEO2).filter(c => nm[c]);
+            for (const pass of ['forward', 'reverse']) {
+              const walkOrder = pass === 'reverse' ? [...geoCodes2].reverse() : geoCodes2;
+              const pairs2 = Math.floor(walkOrder.length * (walkOrder.length - 1) / 2);
+              emit(`  [double-snail:${label}:${pass}] ${walkOrder.length} cities → ${pairs2} pairs`);
+
+              // Phase 2a: build one BFS parent-tree per source city (O(C×V))
+              const cityPar2 = new Map();
+              for (let bi = 0; bi < walkOrder.length; bi++) {
+                if (bi % 10 === 0) await yieldOnce();
+                if (bi === 0 || bi === walkOrder.length - 1 || bi % 20 === 0)
+                  progressLine(`ds:${label}:${pass} bfs`, bi+1, walkOrder.length, `building trees`);
+                const src = walkOrder[bi]; if (!nm[src]) continue;
+                const par2 = new Map([[src, null]]); const bq2 = [src];
+                while (bq2.length) {
+                  const cur = bq2.shift();
+                  for (const d of DIRS4) {
+                    const nxt = nm[cur]?.[d];
+                    if (!nxt || !nm[nxt] || par2.has(nxt)) continue;
+                    par2.set(nxt, cur); bq2.push(nxt);
+                  }
+                }
+                cityPar2.set(src, par2);
+              }
+              emit(`  [double-snail:${label}:${pass}] BFS trees built: ${cityPar2.size}/${walkOrder.length}`);
+
+              // Phase 2b: trace all-pairs and mark junction usage (O(C²×L_avg))
+              let cp2 = 0, cm2 = 0, pi2 = 0;
+              for (let i = 0; i < walkOrder.length; i++) {
+                const par2 = cityPar2.get(walkOrder[i]); if (!par2) continue;
+                for (let j = i + 1; j < walkOrder.length; j++) {
+                  pi2++;
+                  if (pi2 % 200 === 0) await yieldOnce();
+                  if (pi2 === 1 || pi2 === pairs2 || pi2 % 100 === 0)
+                    progressLine(`ds:${label}:${pass} pairs`, pi2, pairs2,
+                      `paths=${cp2} misses=${cm2} used=${[...usage.values()].filter(v=>v>0).length}`);
+                  const t = walkOrder[j];
+                  if (!par2.has(t)) { cm2++; continue; }
+                  cp2++;
+                  let cur = t;
+                  while (cur !== null) {
+                    if (usage.has(cur)) usage.set(cur, usage.get(cur) + 1);
+                    cur = par2.get(cur);
+                  }
+                }
+              }
+              emit(`  [double-snail:${label}:${pass}] done: paths=${cp2}  misses=${cm2}`);
+            }
+
+            const usedC = [...usage.values()].filter(v=>v>0).length;
+            emit(`  [double-snail:${label}] summary: junctions=${usage.size}  used=${usedC}  cold(unused)=${usage.size-usedC}`);
+            p7bHeatReport(usage);
+            return usage;
+          };
+
+          // Multi-pass wither: run double-snail, wither cold non-bridge junctions,
+          // repeat until no more junctions are removed (stable).
+          let p7bTotalW = 0;
+          for (let wp = 1; wp <= 20; wp++) {
+            nm = WBAPI.nodeMap;
+            const usage2 = await runDoubleSnail(`pass-${wp}`);
+            lastSnailUsage = usage2; // update heat overlay used by final maps section
+            const cands2 = [...usage2.entries()].filter(([c,cnt]) => nm[c] && cnt === 0);
+            const unsafe2 = p7bFindUnsafe();
+            sectionBanner(`P7b PASS ${wp}/20: double-snail wither — ${cands2.length} cold candidates  bridges=${unsafe2.size}  total-withered=${p7bTotalW}`);
+            let passW2 = 0, p7bChecked = 0;
+            for (const [code, cnt] of usage2) {
+              if (!nm[code] || cnt > 0) continue;
+              p7bChecked++;
+              if (p7bChecked % 200 === 0) await yieldOnce();
+              if (unsafe2.has(code)) {
+                const coord = WBAPI.nodeCoords[code];
+                emit(`    bridge\t${code}\t(${coord?.r??'?'},${coord?.c??'?'})\theat=${cnt}\t[bridge — kept]`);
+                continue;
+              }
+              const wc = WBAPI.nodeCoords[code];
+              p7bDeleteJ(code);
+              passW2++; p7bTotalW++;
+              if (passW2 <= 30 || passW2 % 100 === 0)
+                emit(`    withered\t${code}\t(${wc?.r??'?'},${wc?.c??'?'})\theat=${cnt}\t[${p7bTotalW}/${cands2.length}]`);
+            }
+            emit(`  └── [p7b pass ${wp}] withered=${passW2}  total-withered=${p7bTotalW}  candidates=${cands2.length}`);
+            if (passW2 > 0) {
+              rewriteCoords(); WBAPI._buildIndexes(); batchSave(`p7b-wither-${wp}`); nm = WBAPI.nodeMap;
+            } else {
+              emit(`[p7b pass ${wp}] stable — no cold non-bridge junctions remain`);
+              break;
+            }
+          }
+          emit(`[p7b] wither done: ${p7bTotalW} junctions removed in second pass`);
+          emit(`  [p7b post-wither] ${nodeStats()}  ${heapMB()}`);
+
+          // Post-p7b cleanup: bidir + xjct to heal any gaps opened by second wither
+          await runBidirFixPass('post-p7b');
+          await runXjctPass('p7b-xjct1');
+          await runBidirFixPass('post-p7b-xjct1');
+          await runXjctPass('p7b-xjct2');
+          await runBidirFixPass('post-p7b-xjct2');
+
+          // P8b: reachability + broken-edge check after second wither
+          {
+            phaseBanner('P8b: post-second-wither reachability check');
+            nm = WBAPI.nodeMap;
+            const p8bR = bfsReach(getHub()); const p8bT = Object.keys(nm).length;
+            const p8bPct = Math.round(p8bR.size / p8bT * 1000) / 10;
+            const p8bU = Object.keys(nm).filter(c => !p8bR.has(c));
+            const p8bUN = p8bU.filter(c => !nm[c]?.junction);
+            const p8bScan = scanBrokenEdges();
+            const p8bByCat = {}; for (const e of p8bScan) p8bByCat[e.type]=(p8bByCat[e.type]||0)+1;
+            emit(`[p8b] reachable=${p8bR.size}/${p8bT}(${p8bPct}%)  unreachable=${p8bU.length}  unreachable-named=${p8bUN.length}`);
+            emit(`[p8b] broken-edges=${p8bScan.length}  ${Object.entries(p8bByCat).map(([t,n])=>`${t}=${n}`).join('  ')}`);
+            if (p8bUN.length) emit(`[p8b] unreachable named: ${p8bUN.map(c=>`${c}(${nm[c]?.label||nm[c]?.name||'?'})`).join('  ')}`);
+            emit(p8bPct >= 100 ? '[p8b] ✓ MAP STABLE AFTER SECOND WITHER' : `[p8b] ⚠️  ${p8bU.length} nodes unreachable — may need another reweave pass`);
+          }
+
+          emit(`  [p7b end] ${nodeStats()}  ${heapMB()}`);
+          doneP7b();
+        }
       }
 
       // ══════════════════════════════════════════════════════════════════════
