@@ -717,6 +717,19 @@ select.fi{appearance:none;}
           <select id="quest-arc-filter" class="fi fi-sm" style="flex:1">
             <option value="">All Arcs</option>
           </select>
+          <select id="quest-class-filter" class="fi fi-sm" style="flex:1">
+            <option value="">All Classes</option>
+            <option value="skill_check">skill_check</option>
+            <option value="hunt">hunt</option>
+            <option value="collect">collect</option>
+            <option value="escort">escort</option>
+            <option value="talk_chain">talk_chain</option>
+            <option value="lore_collect">lore_collect</option>
+            <option value="gate_pass">gate_pass</option>
+            <option value="investigation">investigation</option>
+            <option value="epic">epic</option>
+            <option value="main">main</option>
+          </select>
         </div>
         <div class="sidebar-body" id="quest-list"></div>
       </div>
@@ -1362,6 +1375,34 @@ const OPERAND_CONTRACTS = {
                   gate:'previous operand complete', complete:'one option chosen and resolved' },
 };
 
+// ── §WORLDBUILDER-02 Phase 2: operational-class classifier (browser-side mirror) ──
+function _classifyQuestWB(q) {
+  const t = q.type || 'side';
+  if (t === 'main')        return 'main';
+  if (t === 'epic')        return 'epic';
+  if (t === 'skill_check') return 'skill_check';
+  if (t === 'combat')      return 'hunt';
+  if (t === 'delivery')    return 'collect';
+  if (t === 'escort')      return 'escort';
+  if (t === 'dialogue')    return 'talk_chain';
+  if (t === 'hybrid')      return 'investigation';
+  const hasItems    = !!(q.completeItems && q.completeItems.length > 0);
+  const hasWaypoint = !!(q.waypointNode && q.waypointNode !== q.activateNode);
+  if (t === 'side') {
+    if (hasItems && hasWaypoint) return 'collect';
+    if (hasItems)                return 'lore_collect';
+    if (hasWaypoint)             return 'gate_pass';
+    return 'talk_chain';
+  }
+  return 'talk_chain';
+}
+
+const QUEST_CLASS_COLORS = {
+  main:'#e8b84b', epic:'#9b7fe8', skill_check:'#4b9ee8', hunt:'#e85454',
+  collect:'#e88b4b', escort:'#4be8c8', talk_chain:'#5ab868', lore_collect:'#c8c84b',
+  gate_pass:'#888', investigation:'#d46be8', survival:'#b83030',
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // WBAPI — World Builder API (data layer)
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1799,7 +1840,9 @@ const WBAPI = {
   quests: {
     all() { return Object.entries(WBAPI.questDb).map(([id,q]) => ({...q, id})); },
     byNode(code) { return (WBAPI._questsByNode[code]||[]).map(id => ({...WBAPI.questDb[id], id})); },
-    byType(t) { return WBAPI.quests.all().filter(q => q.type === t); },
+    byType(t)   { return WBAPI.quests.all().filter(q => q.type === t); },
+    classify(id){ const q=WBAPI.questDb[id]; return q ? _classifyQuestWB(q) : null; },
+    byClass(cls){ return WBAPI.quests.all().filter(q=>_classifyQuestWB(q)===cls); },
     flags(id) { return WBAPI._questFlags[id] || {reads:new Set(), writes:new Set()}; },
     chain(id) {
       const flags = WBAPI._questFlags[id];
@@ -3662,22 +3705,27 @@ function renderQuestList(){
   const q=($('quest-search').value||'').toLowerCase();
   const type=$('quest-type-filter').value;
   const arc=$('quest-arc-filter').value;
+  const cls=$('quest-class-filter').value;
   const list=$('quest-list'); list.innerHTML='';
   let shown=0;
   for(const [id,quest] of Object.entries(WBAPI.questDb)){
     if(type&&quest.type!==type) continue;
     if(arc&&!id.startsWith(arc)) continue;
+    if(cls&&_classifyQuestWB(quest)!==cls) continue;
     if(q&&!id.includes(q)&&!(quest.title||'').toLowerCase().includes(q)&&!(quest.activateNode||'').toLowerCase().includes(q)&&!(quest.hint||'').toLowerCase().includes(q)) continue;
+    const qcls=_classifyQuestWB(quest);
+    const clsColor=QUEST_CLASS_COLORS[qcls]||'#888';
     const el=document.createElement('div');
     el.className='quest-row'+(id===selQuestId?' sel':'')+(quest.type==='main'?' qtype-main':quest.type==='skill_check'?' qtype-skill':'');
     el.innerHTML=`<span class="quest-id">${id}</span><span class="quest-title">${quest.title||'—'}</span>
-      <span class="quest-meta">${quest.type||'side'}${quest.activateNode?' · '+quest.activateNode:''}${quest.xpAward?' · '+quest.xpAward+'xp':''}${quest.reward?' / '+quest.reward+'gp':''}</span>`;
+      <span class="quest-meta"><span style="color:${clsColor};font-weight:600">${qcls}</span>${quest.activateNode?' · '+quest.activateNode:''}${quest.xpAward?' · '+quest.xpAward+'xp':''}${quest.reward?' / '+quest.reward+'gp':''}</span>`;
     el.addEventListener('click',()=>selectQuest(id)); list.appendChild(el); shown++;
   }
   $('quest-cnt').textContent=shown;
 }
-['quest-search','quest-type-filter','quest-arc-filter'].forEach(id=>$(id).addEventListener('input',renderQuestList));
+['quest-search','quest-type-filter','quest-arc-filter','quest-class-filter'].forEach(id=>$(id).addEventListener('input',renderQuestList));
 $('quest-arc-filter').addEventListener('change',renderQuestList);
+$('quest-class-filter').addEventListener('change',renderQuestList);
 
 // ── Quest detail: editable fields with change tracking ──
 let qOriginals = {}, qCurrentId = null;
@@ -3748,9 +3796,11 @@ function selectQuest(id){
     : '<span style="color:var(--muted)">no node</span>';
   const arcName = id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '');
   const arcSize = (WBAPI._questArcs[arcName]||[]).length;
+  const qcls = _classifyQuestWB(q);
+  const clsColor = QUEST_CLASS_COLORS[qcls] || '#888';
   const header=document.createElement('div'); header.style.marginBottom='12px';
   header.innerHTML=`<div style="font-size:16px;font-weight:800;color:var(--accent)">${id}</div>
-    <div style="font-size:11px;color:var(--muted);margin-top:3px">${q.type||'side'} · ${nodeInfo}${arcSize>1?` · <span style="color:var(--purple)">arc: ${arcName} (${arcSize})</span>`:''}</div>`;
+    <div style="font-size:11px;color:var(--muted);margin-top:3px">${q.type||'side'} · <span style="color:${clsColor};font-weight:700">${qcls}</span> · ${nodeInfo}${arcSize>1?` · <span style="color:var(--purple)">arc: ${arcName} (${arcSize})</span>`:''}</div>`;
   area.appendChild(header);
 
   // Type-change notice banner (inserted once, updated on type change)

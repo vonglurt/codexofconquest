@@ -274,6 +274,32 @@ const OPERAND_CONTRACTS = {
                   gate:'previous operand complete', complete:'one option chosen and resolved' },
 };
 
+// ── §WORLDBUILDER-02 Phase 2: operational-class classifier ──────────────────
+// Maps a quest object → one of 11 operational classes (§WORLDBUILDER-02-B).
+// Classification is deterministic from existing QUEST_DB fields.
+// `survival` is not auto-detectable from current fields and is excluded.
+function _classifyQuest(q) {
+  const t = q.type || 'side';
+  if (t === 'main')        return 'main';
+  if (t === 'epic')        return 'epic';
+  if (t === 'skill_check') return 'skill_check';
+  if (t === 'combat')      return 'hunt';
+  if (t === 'delivery')    return 'collect';
+  if (t === 'escort')      return 'escort';
+  if (t === 'dialogue')    return 'talk_chain';
+  if (t === 'hybrid')      return 'investigation';
+  // side: infer from secondary signals
+  const hasItems   = !!(q.completeItems && q.completeItems.length > 0);
+  const hasWaypoint = !!(q.waypointNode && q.waypointNode !== q.activateNode);
+  if (t === 'side') {
+    if (hasItems && hasWaypoint) return 'collect';
+    if (hasItems)                return 'lore_collect';
+    if (hasWaypoint)             return 'gate_pass';
+    return 'talk_chain';
+  }
+  return 'talk_chain';
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // WBAPI
 // ═══════════════════════════════════════════════════════════════════════════
@@ -497,6 +523,8 @@ const WBAPI = {
     all()       { return Object.entries(WBAPI.questDb).map(([id,q])=>({...q,id})); },
     byNode(code){ return (WBAPI._questsByNode[code]||[]).map(id=>({...WBAPI.questDb[id],id})); },
     byType(t)   { return WBAPI.quests.all().filter(q=>q.type===t); },
+    classify(id){ const q=WBAPI.questDb[id]; return q ? _classifyQuest(q) : null; },
+    byClass(cls){ return WBAPI.quests.all().filter(q=>_classifyQuest(q)===cls); },
     flags(id)   { return WBAPI._questFlags[id]||{reads:new Set(),writes:new Set()}; },
     chain(id) {
       const flags=WBAPI._questFlags[id]; if(!flags) return {upstream:[],downstream:[]};
@@ -523,7 +551,7 @@ const WBAPI = {
     validate(id) {
       const q = WBAPI.questDb[id]; if (!q) return {ok:false,errors:[`quest "${id}" not found`]};
       const errors = [];
-      const VALID_TYPES = ['side','skill_check','main','epic'];
+      const VALID_TYPES = ['side','skill_check','main','epic','combat','hybrid','escort','dialogue','delivery'];
       if (!q.title) errors.push('missing title');
       if (!VALID_TYPES.includes(q.type)) errors.push(`invalid type "${q.type}" — expected: ${VALID_TYPES.join(', ')}`);
       if (!q.activateNode) errors.push('missing activateNode');
@@ -974,4 +1002,5 @@ const WBAPI = {
   },
 };
 
+WBAPI._classifyQuest = _classifyQuest; // expose for server routes and direct use
 module.exports = WBAPI;
