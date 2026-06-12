@@ -6302,14 +6302,15 @@ function _rollCeremonia(questId) {
   const iodineBonus = S_story.iodineBuffActive ? (S_story.iodineBuffBonus || 3) : 0;
   const iodineName  = S_story.iodineBuffBonus >= 5 ? 'Charged Iodine' : 'Iodine Salt';
   if (S_story.iodineBuffActive) { S_story.iodineBuffActive = false; S_story.iodineBuffBonus = 0; }
-  const total = d20 + mod + prof + iodineBonus;
+  const _lmAllAbility = _lakeMagicBonuses().allAbility; // §DROP-03
+  const total = d20 + mod + prof + iodineBonus + _lmAllAbility;
   const passed = total >= q.checkDC;
   const modStr = (mod >= 0 ? '+' : '') + mod;
   const iodineStr = iodineBonus > 0 ? ' + ' + iodineName + '(+' + iodineBonus + ')' : '';
   _appendStoryHcard({
     round: 'Day ' + (S_story.day || 1),
     actor: 'ROLL',
-    formula: 'd20(' + d20 + ') + ' + q.checkLabel + '(' + modStr + ') + Prof(+' + prof + ')' + iodineStr,
+    formula: 'd20(' + d20 + ') + ' + q.checkLabel + '(' + modStr + ') + Prof(+' + prof + ')' + iodineStr + (_lmAllAbility > 0 ? ' + LakeMagic(+' + _lmAllAbility + ')' : ''),
     outcome: total + ' vs DC ' + q.checkDC + ' — ' + (passed ? 'PASS ✓' : 'FAIL'),
     dmg: passed ? (typeof q.passText === 'function' ? q.passText() : q.passText) : (typeof q.failText === 'function' ? q.failText() : q.failText),
   });
@@ -6367,6 +6368,23 @@ function battKillEvent() {
     S_story._fishBattleGold = null;
   } else {
     S._pendingDrop = drop || null;
+  }
+  // §DROP-03: lake magic item grant — rank-gated, unique per item, ~20–55% chance by rank
+  const _fishRank = S_story._fishBattleRank || 0;
+  S_story._fishBattleRank = null;
+  if (_fishRank >= 11 && S_story.active) {
+    const _lmChance = Math.min(55, (_fishRank - 9) * 5);
+    if (Math.ceil(Math.random() * 100) <= _lmChance) {
+      const lv = S_story.level || 1;
+      const held = new Set((S_story.inventory || []).filter(i => i.type === 'lake_magic').map(i => i.key));
+      const eligible = Object.values(LAKE_MAGIC_DB).filter(it => _fishRank >= it.minRank && lv >= it.minLevel && !held.has(it.key));
+      if (eligible.length) {
+        const granted = eligible[Math.floor(Math.random() * eligible.length)];
+        S_story.inventory = S_story.inventory || [];
+        S_story.inventory.push({ ...granted });
+        storyMsg('✨ Lake magic item found: ' + granted.icon + ' ' + granted.name + ' — ' + granted.desc);
+      }
+    }
   }
   const dropLine = drop
     ? drop.icon + ' ' + drop.name + (drop.sell > 0 ? ' (' + drop.sell + 'gp)' : '')
@@ -49319,6 +49337,25 @@ function _tomeBonuses() {
   return out;
 }
 
+// §DROP-03: Lake magic passive bonuses — items in inventory with type:'lake_magic'
+function _lakeMagicBonuses() {
+  const out = { ac:0, atk:0, firstStrike:0, catchBonus:0, nightTypeBonus:0, allAbility:0 };
+  const lv = S_story.level || 1;
+  const lm = _luckMod();
+  (S_story.inventory || []).forEach(item => {
+    if (item.type !== 'lake_magic' || item.effect == null) return;
+    const bonus = Math.floor((item.base || 0) + lv * (item.levelScale || 0) + lm * (item.luckScale || 0));
+    if (bonus <= 0) return;
+    if (item.effect === 'ac_bonus')     out.ac             += bonus;
+    if (item.effect === 'atk_bonus')    out.atk            += bonus;
+    if (item.effect === 'first_strike') out.firstStrike    += bonus;
+    if (item.effect === 'fishing_dc')   out.catchBonus     += bonus;
+    if (item.effect === 'night_type')   out.nightTypeBonus += bonus;
+    if (item.effect === 'all_ability')  out.allAbility     += bonus;
+  });
+  return out;
+}
+
 function _calcLuck() {
   const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
   const product = s.str * s.dex * s.con * s.int * s.wis * s.cha;
@@ -50406,7 +50443,8 @@ function _calcPlayerAc() {
   const base = S.char.baseAc || S.char.ac || 10;
   return base
     + (S_story.equippedShield ? (S_story.equippedShield.acBonus || 0) : 0)
-    + (S_story.acBonus || 0);
+    + (S_story.acBonus || 0)
+    + _lakeMagicBonuses().ac; // §DROP-03
 }
 
 const CONDITION_GOLD = { // → doc: mechanics-combat.md §Combat Flow
@@ -50429,6 +50467,7 @@ function _storyRollInit() {
   S_story.usedRealAttack       = false;
   S_story.conditionRoundsLeft  = S.opp.cond ? 3 : 0;
   S_story.spellAdvantageReady  = false;
+  S_story._firstStrikeFired    = false; // §DROP-03: reset per encounter
   // surgeCharges persist across battles (rest-gated); no reset here
   _statTally('battlesAttempted', 1);
   S_story.hour = ((S_story.hour || 0) + 1) % 24;
@@ -50796,7 +50835,7 @@ function _overlayPlayerAttack() {
   const critMin = _lv >= 20 ? 17 : _lv >= 15 ? 18 : _lv >= 3 ? 19 : 20;
   const atkMod       = getAtkAbilityMod();
   const profB        = S.weapon.prof ? getProfBonus() : 0;
-  const lvlAtk       = (S_story.atkBonus || 0) + _tomeBonuses().atk;
+  const lvlAtk       = (S_story.atkBonus || 0) + _tomeBonuses().atk + _lakeMagicBonuses().atk; // §DROP-03
   const weaponAtk    = S_story.equippedWeapon     ? (S_story.equippedWeapon.atkBonus     || 0) : 0;
   const mainWeaponAtk= S_story.equippedMainWeapon ? (S_story.equippedMainWeapon.magicBonus|| 0) : 0;
 
@@ -50838,11 +50877,14 @@ function _overlayPlayerAttack() {
       const flat = S.weapon.flatMod + getDmgMod() + drunkBonus + _scarsLight;
       const raw  = Math.max(0, dmgRolls.reduce((a,b)=>a+b,0) + flat);
       finalDmg   = applyDmgMod(raw, S.opp.dmgMod);
+      // §DROP-03: first_strike — extra damage on first hit of each encounter
+      const _fsBonus = (!S_story._firstStrikeFired) ? _lakeMagicBonuses().firstStrike : 0;
+      if (_fsBonus > 0) { finalDmg += _fsBonus; S_story._firstStrikeFired = true; }
       S.opp.hp   = Math.max(0, S.opp.hp - finalDmg);
       refreshLeftPanel();
       _statTally('dmgDealt', finalDmg);
       _statTally('attacksHit', 1);
-      logMsg = lbl + (isCrit ? '★ CRIT! ' : '✓ HIT! ') + atkTotal + ' vs AC ' + S.enemy.ac + ' — ' + finalDmg + ' dmg dealt.';
+      logMsg = lbl + (isCrit ? '★ CRIT! ' : '✓ HIT! ') + atkTotal + ' vs AC ' + S.enemy.ac + ' — ' + finalDmg + ' dmg dealt.' + (_fsBonus > 0 ? ' [+' + _fsBonus + ' first strike]' : '');
     }
     appendCard({ round: S.round, actor:'YOU',
       formula: 'd20(' + d20Val + ')+' + atkMod + '(mod)+' + profB + '(prof)=' + atkTotal,
@@ -54658,7 +54700,7 @@ function storyFishing() {
     const cDie1 = Math.ceil(Math.random() * 20);
     const cDie2 = bait.advantage ? Math.ceil(Math.random() * 20) : null;
     const cResult = cDie2 !== null ? Math.max(cDie1, cDie2) : cDie1;
-    const catchTotal = cResult + bait.catch + castMod + favBonus + rodBonus;
+    const catchTotal = cResult + bait.catch + castMod + favBonus + rodBonus + _lakeMagicBonuses().catchBonus; // §DROP-03
 
     const sizeOrder = ['small','medium','large','very_large','legendary'];
     let sizeKey = catchTotal <= 5 ? null : catchTotal <= 10 ? 'small' : catchTotal <= 16 ? 'medium' : catchTotal <= 19 ? 'large' : catchTotal === 20 ? 'very_large' : 'legendary';
@@ -54670,7 +54712,8 @@ function storyFishing() {
     if (sizeKey) {
       const tDie = Math.ceil(Math.random() * 20);
       const eelBonus = S_story.eelSkinPouchActive ? 1 : 0; // §XLVIII
-      typeTotal  = tDie + bait.type + _luckMod() + eelBonus; // Layer 48: Luck; §XLVIII: eel pouch
+      const nightMagicBonus = isNight ? _lakeMagicBonuses().nightTypeBonus : 0; // §DROP-03
+      typeTotal  = tDie + bait.type + _luckMod() + eelBonus + nightMagicBonus; // Layer 48: Luck; §XLVIII: eel pouch; §DROP-03
       rarity     = _rarityFromRoll(typeTotal);
       // Special Catch (raw die 20 before bait) → force legendary rarity
       if (catchTotal >= 20 && cResult === 20) rarity = 'legendary';
@@ -54723,6 +54766,7 @@ function storyFishing() {
     castBtn.onclick = () => {
       modal.classList.remove('visible');
       S_story._fishBattleGold = goldValue;
+      S_story._fishBattleRank = fish.rank || 0; // §DROP-03: store rank for lake magic grant check
       if (!S_story.fishingQuestFlags) S_story.fishingQuestFlags = {};
       S_story.fishingQuestFlags.q01 = true;
       if (fish.rank >= 15 && !isBare) S_story.fishingQuestFlags.landed15Plus = true; // §XLVI: Q-FISH-01 trigger
