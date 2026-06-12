@@ -1492,8 +1492,8 @@ The graph is not a map replacement — it is a relationship surface for the sele
 - [x] Show operational class badge alongside QUEST_DB type in quest card header
 
 **Phase 3 — Location Profile card**
-- [ ] `WBAPI.location.profile(nodeCode)` — extends existing `location.get()` with: quest list with classes, NPC list with quest counts, flag reads/writes at this node
-- [ ] Render Location Profile card in worldbuilder when clicking a node (replaces simple node detail pane)
+- [x] `WBAPI.location.profile(nodeCode)` — extends existing `location.get()` with: quest list with classes, NPC list with quest counts, flag reads/writes at this node
+- [x] Render Location Profile card in worldbuilder when clicking a node (replaces simple node detail pane)
 
 **Phase 4 — Relationship graph panel**
 - [ ] Add lightweight canvas/SVG graph panel (right sidebar or overlay)
@@ -1535,7 +1535,7 @@ A consolidated register of all open work across the project. Organized by domain
 
 - [x] **§WORLDBUILDER-02 Phase 2 — Mission classification:** Add `_classifyQuest(q)` to wbapi-core.js (10 operational classes; survival not auto-detectable). Add `WBAPI.quests.byClass(cls)`. Class filter in worldbuilder sidebar. Class badge in quest list and detail header. *(✅ 2026-06-12)*
 
-- [ ] **§WORLDBUILDER-02 Phase 3 — Location Profile card:** `WBAPI.location.profile(nodeCode)` — extends `location.get()` with quest list w/ classes, NPC quest counts, flag reads/writes at node. Render as Location Profile card in worldbuilder. *(Depends on: Phase 2 classification, §ARCH-02 Phase 1 for flag-class map.)*
+- [x] **§WORLDBUILDER-02 Phase 3 — Location Profile card:** `WBAPI.location.profile(nodeCode)` — extends `location.get()` with quest list w/ classes, NPC quest counts, flag reads/writes at node. Render as Location Profile card in worldbuilder. Also: `_questsByNpc` + `_questsByWaypoint` indexes added to wbapi-core.js; `/api/location/:code` enriched with same data. *(✅ 2026-06-12)*
 
 - [ ] **§ARCH-02 Phase 2 — Quest creation flow:** Add `WBAPI.quests.create(questObj)` (validates then adds). Add operand builder UI in worldbuilder Quest Editor. Show `quests.chain()` upstream/downstream in Quest Editor. *(Depends on: §ARCH-02 Phase 1.)*
 

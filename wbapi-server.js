@@ -9570,8 +9570,8 @@ async function route(req, res) {
       return json(res, 200, out);
     }
 
-    const r = locationConnections(rawId);
-    if (r) {
+    const prof = WBAPI.location.profile(rawId);
+    if (prof) {
       const node = WBAPI.nodeMap[rawId] || {};
       const coords = WBAPI.nodeCoords[rawId] || null;
       const links = ['N','E','S','W'].reduce((acc,d) => { if(node[d]) acc[d]=node[d]; return acc; }, {});
@@ -9580,10 +9580,10 @@ async function route(req, res) {
         coords: WBAPI.nodeCoords[code]||null
       }));
       const out = {
-        ...r,
+        ...prof,
         coords,
         links: linkedNodes,
-        counts: { monsters:r.monsters?.length||0, quests:r.quests?.length||0, npcs:r.npcs?.length||0, linkedNodes:linkedNodes.length },
+        counts: { monsters:prof.monsters?.length||0, quests:prof.quests.length, waypointQuests:prof.waypointQuests.length, npcs:prof.npcs.length, linkedNodes:linkedNodes.length },
         _detail: `Full entity: GET /api/node/${rawId}`,
         _nearby: `Nearby coords: GET /api/coords/near/${rawId}?radius=8`,
         _validate: `Walkability: GET /api/graph/validate/${rawId}`,

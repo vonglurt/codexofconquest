@@ -308,7 +308,8 @@ const WBAPI = {
   monsterDrops: {}, worldDb: {}, birkaNpcs: {},
   fishPool: [], nightFishPool: [], lakeMagicDb: {}, itemDb: {}, npcDialogues: {}, d100Table: [],
   _terrainToMonsters: {}, _monsterToTerrains: {},
-  _questsByNode: {}, _questFlags: {}, _flagToQuests: {}, _questArcs: {},
+  _questsByNode: {}, _questsByNpc: {}, _questsByWaypoint: {},
+  _questFlags: {}, _flagToQuests: {}, _questArcs: {},
   _rawQuestSrc: '',
   _rawSrc: null,
   _srcPath: null,
@@ -365,13 +366,22 @@ const WBAPI = {
         this._monsterToTerrains[mk].push(tk);
       }
     }
-    this._questsByNode = {};
-    for (const [id, q] of Object.entries(this.questDb))
+    this._questsByNode = {}; this._questsByNpc = {}; this._questsByWaypoint = {};
+    for (const [id, q] of Object.entries(this.questDb)) {
       for (const field of ['activateNode','waypointNode'])
         if (q[field]) {
           if (!this._questsByNode[q[field]]) this._questsByNode[q[field]] = [];
           this._questsByNode[q[field]].push(id);
         }
+      if (q.waypointNode) {
+        if (!this._questsByWaypoint[q.waypointNode]) this._questsByWaypoint[q.waypointNode] = [];
+        this._questsByWaypoint[q.waypointNode].push(id);
+      }
+      if (q.npc) {
+        if (!this._questsByNpc[q.npc]) this._questsByNpc[q.npc] = [];
+        this._questsByNpc[q.npc].push(id);
+      }
+    }
     this._questFlags = {}; this._flagToQuests = {};
     if (this._rawQuestSrc) {
       for (const { id, src } of this._splitQuestBlocks(this._rawQuestSrc)) {
@@ -640,6 +650,34 @@ const WBAPI = {
       const k=WBAPI._findKey(WBAPI.nodeMap,codeOrName); if(!k) return null;
       const node=WBAPI.nodes.get(k), terrainKey=node.name, terrain=WBAPI.worldDb[terrainKey]||null;
       return { node, terrainKey, terrain, monsters:terrain?WBAPI.monsters.byTerrain(terrainKey):[], quests:WBAPI.quests.byNode(k), npcs:WBAPI.npcs.byNode(k) };
+    },
+    profile(codeOrName) {
+      const base = WBAPI.location.get(codeOrName);
+      if (!base) return null;
+      const code = base.node.id;
+      const questIds = WBAPI._questsByNode[code] || [];
+      const quests = questIds.map(id => {
+        const q = WBAPI.questDb[id] || {};
+        return { ...q, id, operationalClass: _classifyQuest(q) };
+      });
+      const activateSet = new Set(questIds);
+      const waypointIds = (WBAPI._questsByWaypoint[code] || []).filter(id => !activateSet.has(id));
+      const waypointQuests = waypointIds.map(id => {
+        const q = WBAPI.questDb[id] || {};
+        return { id, title:q.title||null, type:q.type||null, operationalClass:_classifyQuest(q), activateNode:q.activateNode||null };
+      });
+      const npcs = base.npcs.map(n => ({
+        ...n, questCount: (WBAPI._questsByNpc[n.key] || []).length,
+      }));
+      const inlineKey = base.node.npc;
+      if (inlineKey && !npcs.find(n => n.key === inlineKey))
+        npcs.push({ key:inlineKey, name:inlineKey, questCount:(WBAPI._questsByNpc[inlineKey]||[]).length, inline:true });
+      const flagReadsSet = new Set(), flagWritesSet = new Set();
+      for (const id of [...questIds, ...waypointIds]) {
+        const fl = WBAPI._questFlags[id];
+        if (fl) { for (const f of fl.reads) flagReadsSet.add(f); for (const f of fl.writes) flagWritesSet.add(f); }
+      }
+      return { ...base, quests, waypointQuests, npcs, flagReads:[...flagReadsSet], flagWrites:[...flagWritesSet] };
     },
   },
 

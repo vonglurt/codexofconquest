@@ -1995,6 +1995,46 @@ const WBAPI = {
         npcs:     WBAPI.npcs.byNode(key),
       };
     },
+    profile(codeOrName) {
+      const base = WBAPI.location.get(codeOrName);
+      if (!base) return null;
+      const code = base.node.id;
+      // Quests activated at this node, enriched with operationalClass
+      const questIds = WBAPI._questsByNode[code] || [];
+      const quests = questIds.map(id => {
+        const q = WBAPI.questDb[id] || {};
+        return { ...q, id, operationalClass: _classifyQuestWB(q) };
+      });
+      // Waypoint quests: completion here but activated elsewhere
+      const activateSet = new Set(questIds);
+      const waypointIds = (WBAPI._questsByWaypoint[code] || []).filter(id => !activateSet.has(id));
+      const waypointQuests = waypointIds.map(id => {
+        const q = WBAPI.questDb[id] || {};
+        return { ...q, id, operationalClass: _classifyQuestWB(q) };
+      });
+      // NPCs enriched with questCount
+      const npcs = base.npcs.map(n => ({
+        ...n, questCount: (WBAPI._questsByNpc[n.key] || []).length,
+      }));
+      const inlineKey = base.node.npc;
+      if (inlineKey && !npcs.find(n => n.key === inlineKey)) {
+        npcs.push({ key: inlineKey, name: inlineKey, questCount: (WBAPI._questsByNpc[inlineKey]||[]).length, inline: true });
+      }
+      // Aggregate flags from all quests at this node
+      const flagReadsSet = new Set(), flagWritesSet = new Set();
+      for (const id of [...questIds, ...waypointIds]) {
+        const fl = WBAPI._questFlags[id];
+        if (fl) { for (const f of fl.reads) flagReadsSet.add(f); for (const f of fl.writes) flagWritesSet.add(f); }
+      }
+      return {
+        ...base,
+        quests,
+        waypointQuests,
+        npcs,
+        flagReads:  [...flagReadsSet],
+        flagWrites: [...flagWritesSet],
+      };
+    },
   },
 
   fish: {
@@ -2718,38 +2758,57 @@ function renderNodeDetail(code){
 }
 
 function buildLocationProfile(code, el) {
-  const node = WBAPI.nodeMap[code]||{};
+  const prof = WBAPI.location.profile(code);
+  if (!prof) { el.innerHTML = '<span style="color:var(--muted)">Node not found.</span>'; return; }
   const lines = [];
 
   // Terrain + monsters
-  const terrain = WBAPI.worldDb[node.name];
+  const { terrain } = prof;
   if (terrain) {
-    const mons = (terrain.monsters||[]).slice(0,10).map(m => typeof m==='string'?m:(m?.key||'?'));
-    const more = (terrain.monsters||[]).length - mons.length;
-    lines.push(`<div><span style="color:var(--muted)">Terrain:</span> <span style="color:var(--teal)">${node.name}</span> — ${terrain.label||''}</div>`);
-    if(mons.length) lines.push(`<div style="margin-left:8px;color:var(--muted)">Monsters: ${mons.join(', ')}${more>0?' + '+more+' more':''}</div>`);
+    const mons = prof.monsters.slice(0,10).map(m => m.name || m.key);
+    const more = prof.monsters.length - mons.length;
+    lines.push(`<div><span style="color:var(--muted)">Terrain:</span> <span style="color:var(--teal)">${prof.node.name}</span> — ${terrain.label||''}${terrain.icon?' '+terrain.icon:''}</div>`);
+    if (mons.length) lines.push(`<div style="margin-left:8px;color:var(--muted)">Monsters: ${mons.join(', ')}${more>0?' + '+more+' more':''}</div>`);
   }
 
-  // NPCs at node
-  const npcs = WBAPI.npcs.byNode(code);
-  const inlineNpc = node.npc ? `${node.npc} (inline)` : null;
-  const allNpcs = [...npcs.map(n=>n.name||n.key), ...(inlineNpc&&!npcs.find(n=>n.key===node.npc)?[inlineNpc]:[])];
-  if(allNpcs.length) lines.push(`<div><span style="color:var(--muted)">NPCs:</span> ${allNpcs.join(', ')}</div>`);
-
-  // Quest count by type
-  const qIds = WBAPI._questsByNode[code]||[];
-  if(qIds.length) {
-    const byType = {};
-    for(const id of qIds) { const t=(WBAPI.questDb[id]||{}).type||'side'; byType[t]=(byType[t]||0)+1; }
-    const summary = Object.entries(byType).map(([t,n])=>`${n} ${t}`).join(', ');
-    lines.push(`<div><span style="color:var(--muted)">Quests:</span> ${qIds.length} (${summary})</div>`);
+  // NPCs with quest count
+  if (prof.npcs.length) {
+    const npcBits = prof.npcs.map(n => {
+      const label = n.name || n.key;
+      const qc = n.questCount ? ` <span style="color:var(--purple);font-size:9px">(${n.questCount}q)</span>` : '';
+      const tag = n.inline ? ` <span style="color:var(--muted);font-size:9px">inline</span>` : '';
+      return `<span style="cursor:pointer;color:var(--pink)" onclick="switchTab('npcs');selectNpc('${n.key}')">${label}</span>${qc}${tag}`;
+    });
+    lines.push(`<div><span style="color:var(--muted)">NPCs:</span> ${npcBits.join(' &nbsp;')}</div>`);
   }
 
-  // Flags read/written by quests here
-  const flagReads = new Set(), flagWrites = new Set();
-  for(const id of qIds) { const fl=WBAPI._questFlags[id]; if(fl){ for(const f of fl.reads) flagReads.add(f); for(const f of fl.writes) flagWrites.add(f); } }
-  if(flagWrites.size) lines.push(`<div><span style="color:var(--muted)">Flags set:</span> ${[...flagWrites].slice(0,8).map(f=>`<span class="flag-pill flag-write" style="font-size:9px">${f}</span>`).join('')}${flagWrites.size>8?' + '+(flagWrites.size-8)+' more':''}</div>`);
-  if(flagReads.size) lines.push(`<div><span style="color:var(--muted)">Flags read:</span> ${[...flagReads].slice(0,6).map(f=>`<span class="flag-pill flag-read" style="font-size:9px">${f}</span>`).join('')}${flagReads.size>6?' + '+(flagReads.size-6)+' more':''}</div>`);
+  // Quests activated here with class badge
+  if (prof.quests.length) {
+    const qRows = prof.quests.map(q => {
+      const cls = q.operationalClass || 'talk_chain';
+      const color = QUEST_CLASS_COLORS[cls] || '#888';
+      const badge = `<span style="background:${color}22;color:${color};border:1px solid ${color}44;border-radius:3px;padding:0 4px;font-size:8px;font-weight:700;margin-right:4px">${cls}</span>`;
+      return `<div style="cursor:pointer;padding:1px 0" onclick="switchTab('quests');selectQuest('${q.id}')">${badge}<span style="color:var(--purple)">${q.id}</span> <span style="color:var(--muted)">${(q.title||'').slice(0,40)}</span></div>`;
+    });
+    lines.push(`<div style="margin-top:4px"><span style="color:var(--muted)">Quests (${prof.quests.length}):</span></div>`);
+    lines.push(qRows.join(''));
+  }
+
+  // Waypoint quests (complete here, started elsewhere)
+  if (prof.waypointQuests.length) {
+    const wRows = prof.waypointQuests.map(q => {
+      const cls = q.operationalClass || 'talk_chain';
+      const color = QUEST_CLASS_COLORS[cls] || '#888';
+      const badge = `<span style="background:${color}22;color:${color};border:1px solid ${color}44;border-radius:3px;padding:0 4px;font-size:8px;font-weight:700;margin-right:4px">${cls}</span>`;
+      return `<div style="cursor:pointer;padding:1px 0" onclick="switchTab('quests');selectQuest('${q.id}')">${badge}<span style="color:var(--purple)">${q.id}</span> <span style="color:var(--muted)">${(q.title||'').slice(0,36)}</span> <span style="color:var(--muted);font-size:9px">↩ waypoint</span></div>`;
+    });
+    lines.push(`<div style="margin-top:4px"><span style="color:var(--muted)">Waypoint quests (${prof.waypointQuests.length}):</span></div>`);
+    lines.push(wRows.join(''));
+  }
+
+  // Flags
+  if (prof.flagWrites.length) lines.push(`<div style="margin-top:4px"><span style="color:var(--muted)">Flags set:</span> ${prof.flagWrites.slice(0,8).map(f=>`<span class="flag-pill flag-write" style="font-size:9px">${f}</span>`).join('')}${prof.flagWrites.length>8?' + '+(prof.flagWrites.length-8)+' more':''}</div>`);
+  if (prof.flagReads.length)  lines.push(`<div><span style="color:var(--muted)">Flags read:</span> ${prof.flagReads.slice(0,6).map(f=>`<span class="flag-pill flag-read" style="font-size:9px">${f}</span>`).join('')}${prof.flagReads.length>6?' + '+(prof.flagReads.length-6)+' more':''}</div>`);
 
   el.innerHTML = lines.join('') || '<span style="color:var(--muted)">No additional data.</span>';
 }
