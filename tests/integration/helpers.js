@@ -1,41 +1,12 @@
 'use strict';
-const fs   = require('fs');
-const path = require('path');
 const { expect } = require('@playwright/test');
 
-const HTML_PATH = path.join(__dirname, '../../roll2hit-v3.html');
-
 // ── HTML patch ────────────────────────────────────────────────────────────────
-// The NODE_MAP section (HTML lines 9864–33152) contains junction nodes that lost
-// their keys in a worldbuilder write — their N/S/E/W properties are orphaned and
-// each block closes with a stray }; that prematurely closes the NODE_MAP const.
-// V8 (Chrome 148+) throws "Missing initializer in const declaration" and the
-// entire script fails. Route-intercept strips that range for test runs only.
-// Fishing tests don't touch any node in the affected range (BOO is at line ~8249).
-const _PATCH_START_LINE = 9863;  // 0-indexed; first orphan line after AUG
-const _PATCH_END_LINE   = 33152; // 0-indexed; last stray }, before valid J45736
-
-let _patchedHtml = null;
-function _getPatchedHtml() {
-  if (_patchedHtml) return _patchedHtml;
-  const raw   = fs.readFileSync(HTML_PATH, 'utf8').split('\n');
-  const fixed = [
-    ...raw.slice(0, _PATCH_START_LINE),
-    '  // [test-mode: keyless junction blocks stripped — see IntegrationPlan.md §Bug]',
-    ...raw.slice(_PATCH_END_LINE),
-  ].join('\n');
-  _patchedHtml = fixed;
-  return fixed;
-}
-
-/**
- * Intercept the HTML request and serve the syntax-patched version.
- * Call this BEFORE page.goto().
- */
-async function patchGameHtml(page) {
-  await page.route('**/roll2hit-v3.html', route =>
-    route.fulfill({ contentType: 'text/html; charset=utf-8', body: _getPatchedHtml() })
-  );
+// The orphaned junction blocks (originally lines 9864–33152) that caused
+// "Missing initializer in const declaration" were removed from roll2hit-v3.html
+// directly on 2026-06-12. patchGameHtml is now a no-op kept for API stability.
+async function patchGameHtml(page) { // eslint-disable-line no-unused-vars
+  // no-op: HTML syntax was repaired in source
 }
 
 // ── Seed State ────────────────────────────────────────────────────────────────

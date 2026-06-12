@@ -895,6 +895,8 @@ const WBAPI = {
 
   getStampedName(base) {
     base = base || path.basename(this._srcPath||'roll2hit-v3.html', '.html');
+    // Strip any cascaded timestamps to prevent runaway filename growth
+    base = base.replace(/(-\d{8}-\d{6})+$/, '');
     const d = new Date();
     const ds = d.toISOString().slice(0,10).replace(/-/g,'');
     const ts = d.toISOString().slice(11,19).replace(/:/g,'');
