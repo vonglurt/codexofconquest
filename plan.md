@@ -8783,7 +8783,7 @@ bonus formula: base + floor(level × levelScale) + floor(luckMod × luckScale)
 ```
 
 **Pending (P2):**
-- §DROP-03 (PLANNED): Implement `_lakeMagicBonuses()` — read `type:'lake_magic'` items from inventory and apply their `effect` fields (`ac_bonus`, `atk_bonus`, `first_strike`, `fishing_dc`, `night_type`, `all_ability`). Parallel to `_tomeBonuses()`. Items are acquired via fishing but currently do nothing when held.
+- §DROP-03 ✅ COMPLETE 2026-06-12: `_lakeMagicBonuses()` implemented. All 6 effect types live: `ac_bonus` → `_calcPlayerAc()`; `atk_bonus` → `lvlAtk`; `first_strike` → first hit per encounter; `fishing_dc` → `catchTotal`; `night_type` → `typeTotal` when `isNight`; `all_ability` → skill check total. Grant path: fish rank stored at battle start, `battKillEvent()` grants eligible item at 20–55% chance by rank (unique per item).
 - Wire `LAKE_MAGIC_DB` effects into fishing battle rewards — currently items are defined but not yet dropped in-game
 - Add `POST /api/fish/simulate?advantage=true` for bait advantage rolls
 - Worldbuilder quest pane: "Produces: 🪬 Token" display (§MBIT-02-C P2)
