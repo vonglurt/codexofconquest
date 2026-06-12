@@ -361,9 +361,9 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 
 ---
 
-## §PAUL-01 — The Escort of the Apostle: Revised Arc Design (📋 PLANNED)
+## §PAUL-01 — The Escort of the Apostle: Revised Arc Design (✅ Implemented 2026-06-11)
 
-**Status:** 📋 PLANNED — written 2026-05-29. Supersedes the storytelling approach of §FUTURE-01 (archived in `plan-archive.md`, remains the node map and implementation reference). This section reframes the player role, establishes the Fighter's presence, redesigns the skill check structure, and integrates real source quotes.
+**Status:** ✅ Implemented 2026-06-11. All §PAUL-01-I checklist items resolved. Two Malta quests added: `quest_shipwreck_melta` (STR DC 12) + `quest_snake_melta` (witness, auto-complete via `maltaSnakeEvent`). `shipwreckSurvived` flag added to `_S_DEFAULTS`. 0 errors audit clean. Fighter presence layer live in all Paul arc nodes (DAM/KVA/MLA). Thorn tooltip live. Real quotes exact. See `plan-archive.md §FUTURE-01` for node map reference.
 
 **The premise shift:** In §FUTURE-01 as implemented, the player walks in Paul's footprints — the narration is in second person but the events are Paul's events. The revision establishes the **Fighter as co-protagonist**. Paul is a Cleric NPC — on a mission from his deity, skilled in rhetoric and faith-mechanics, incapable of routing himself safely through a hostile world. The Fighter is his escort. Both characters are present in every scene. Neither is backdrop to the other.
 
@@ -549,21 +549,20 @@ Direct quotes from source material are used sparingly and exactly: one per quest
 
 ---
 
-### §PAUL-01-I. Implementation Checklist
+### §PAUL-01-I. Implementation Checklist ✅ COMPLETE
 
-This section specifies what needs to change from the existing §FUTURE-01 implementation to match the §PAUL-01 revised design. All nodes exist; quests are partially implemented; what is missing is the Fighter's presence layer and the two new quests.
-
-- [ ] Add `quest_basket_descent` to QUEST_DB (STR Athletics DC 12, node: KS, activateCond: `kesraMadnessWISSave` complete, completion signal: `kesraBasketComplete`)
-- [ ] Add `quest_prison_phillam` to QUEST_DB (WIS Insight DC 12, node: PL, activateCond: `lyraConverted`, completion signal: `phillippiJailerConverted`) — currently the prison event fires as a storyRender block only; needs a player-facing skill check
-- [ ] Revise existing quest `desc` fields to add Fighter-presence clauses (one sentence per quest noting the Fighter's physical position/action during Paul's moment)
-- [ ] Add Fighter second-person sections to KS, PL, and MT node texts (see §PAUL-01-E vignettes above)
-- [ ] Add `quest_basket_descent` disposition and `quest_prison_phillam` disposition using quotes from §PAUL-01-G
-- [ ] Update `_S_DEFAULTS` with two new flags: `kesraBasketComplete: false`, `phillippiJailerConverted: false`
-- [ ] The Thorn permanent status effect tooltip: replace current (none/empty) with the 2 Corinthians 12:9 quote, exact text
-- [ ] `quest_snake_melta` disposition: add "The islanders showed us unusual kindness." — cross-references the harmonyChainComplete world-state (if `harmonyChainComplete: true`, add a second line: "You have seen this before. It moves the same way.")
-- [ ] `quest_unknown_altar` Fighter section: add DEX Stealth DC 11 pre-check to scout the hall exits before Paul takes the steps; Fighter result appears in storyRender pass/fail text
-- [ ] Revise `quest_stoning_lythros` to add STR Athletics DC 13 Fighter extraction check; current version has only Paul's survival event with no Fighter participation
-- [ ] Ensure all real quotes from §PAUL-01-G appear exactly as written — no paraphrase, no archaic substitution
+- ✅ `quest_basket_descent` → implemented as `quest_basket_damascus` (STR DC 12, DAM node); `basketRopeComplete` flag via `_grantMissionBit`
+- ✅ `quest_prison_phillam` — WIS Insight DC 12, KVA node, `lyraConverted` gate; `phillippiJailerConverted` flag
+- ✅ Fighter-presence clauses in all quest descs — second-person physical actions throughout
+- ✅ Fighter sections in KVA (PL) and MLA (MT) node texts; DAM conversion handled by storyRender block
+- ✅ Dispositions from §PAUL-01-G — all exact Scripture quotes placed
+- ✅ `_S_DEFAULTS`: `phillippiJailerConverted`, `basketRopeComplete`, `shipwreckSurvived` (2026-06-11)
+- ✅ Thorn tooltip — 2 Cor 12:9 exact text live in character sheet
+- ✅ `quest_snake_melta` — "It Did Nothing" at MLA; auto-complete via `maltaSnakeEvent`; disposition "The islanders showed us unusual kindness." with `harmonyChainComplete` cross-reference in storyRender
+- ✅ `quest_areopagus` Fighter section — DEX Stealth scouting + exit-count live in vignetteText
+- ✅ `quest_stoning_lystra` — STR Athletics DC 13 Fighter extraction
+- ✅ `quest_shipwreck_melta` — "Two Hundred and Seventy-Six" STR DC 12 at MLA (added 2026-06-11)
+- ✅ All Scripture quotes exact — no paraphrase
 
 ### §SPARK-01-H. Naval Extension — §SPARK-01 SEA (PLANNED, unscheduled)
 
@@ -1987,11 +1986,12 @@ effect: ac_bonus | atk_bonus | fishing_dc | first_strike | night_type | all_abil
 bonus formula: base + floor(level × levelScale) + floor(luckMod × luckScale)
 ```
 
-**Pending (P2):**
-- §DROP-03 ✅ COMPLETE 2026-06-12: `_lakeMagicBonuses()` implemented. All 6 effect types live: `ac_bonus` → `_calcPlayerAc()`; `atk_bonus` → `lvlAtk`; `first_strike` → first hit per encounter; `fishing_dc` → `catchTotal`; `night_type` → `typeTotal` when `isNight`; `all_ability` → skill check total. Grant path: fish rank stored at battle start, `battKillEvent()` grants eligible item at 20–55% chance by rank (unique per item).
-- Wire `LAKE_MAGIC_DB` effects into fishing battle rewards — currently items are defined but not yet dropped in-game
+**Implemented (P2 — completed):**
+- §DROP-03 ✅ COMPLETE 2026-06-12: `_lakeMagicBonuses()` implemented. All 6 effect types live. Grant path live in `battKillEvent()` — 20–55% chance by rank, unique per item. ✅ LAKE_MAGIC_DB effects are dropped in-game.
+
+**Pending (P3 — unscheduled):**
 - Add `POST /api/fish/simulate?advantage=true` for bait advantage rolls
-- Worldbuilder quest pane: "Produces: 🪬 Token" display (§MBIT-02-C P2)
+- Worldbuilder quest pane: "Produces: 🪬 Token" display (§MBIT-02-C P3)
 
 ---
 

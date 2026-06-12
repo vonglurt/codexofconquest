@@ -38507,6 +38507,33 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     disposition:'"Through a window in the wall his disciples lowered him in a basket."',
     npc:"ibrahim_al_tawil_cai",
   },
+  // ── §PAUL-01: Malta — The Shipwreck ──
+  quest_shipwreck_melta: { id:'quest_shipwreck_melta', type:'skill_check', title:'Two Hundred and Seventy-Six',
+    desc:"Paul has directed everyone on the ship to eat before the hull goes. Fourteen days without food, the storm unrelenting, the constant pumping. He breaks bread. You distribute the rest — 276 people, moving deck, high weather, each one receiving something before the ship goes into the shallows.\n\nThe soldiers want to kill the prisoners — standard protocol, no escaped prisoner on their watch. You stand in the way. The centurion stops his soldiers because he wants to save Paul, and Paul gets out, but you are the reason the moment pauses long enough for the centurion to make the order.\n\nEveryone goes in the water. The count at the start and the count at the end should be the same number.",
+    hint:'Help everyone reach shore. Keep the count.',
+    activateNode:'MLA', activateCond:() => true,
+    checkAbility:'str', checkLabel:'Athletics', checkDC:12,
+    retryable:false,
+    xpAward:250,
+    vignetteText:"The hull goes on the sandbar at speed. The wood shudders but holds — it will not hold until morning.\n\nEveryone in the water. Some have planks. Some don't. The sea is cold enough that the swim to shore is a problem for the exhausted and the old. You are neither.\n\nPaul is counting. He has been counting since the last leg of the journey. He wants the number at the start to match the number at the end. He has asked you, without asking, to help with the math.",
+    passText:'You get to shore after most of the others. You have been in the water longer than anyone else.\n\nThe count is correct. Two hundred and seventy-six people reach the shore before dawn. You know the count because you asked the ship\'s log keeper on the second day, and you have been watching since.\n\n"Therefore I urge you to take some food. You need it to survive. Not one of you will lose a single hair from his head."',
+    failText:'You lose track of someone in the water — not to death, to distance. They reach shore at the south end of the beach, separated. Paul counts twice before he finds the number correct. It takes longer than it should. The count is correct. It just takes longer.',
+    completeItems:[], checkPassFlag:'shipwreckSurvived', bitLabel:'Malta Wreck',
+    disposition:'"Two hundred and seventy-six people. Your man — he was counting. All night. He was still counting when you hit the shore." — Malta Shore Elder',
+    npc:'long_john_silver_sen',
+  },
+  // ── §PAUL-01: Malta — The Snake ──
+  quest_snake_melta: { id:'quest_snake_melta', type:'side', title:'It Did Nothing',
+    desc:"A viper comes out of the brush when the wood is gathered for the fire. The heat of the fire, the disturbance of 276 people making camp on an unfamiliar beach. It fastens to his hand.\n\nThe islanders have reached a theory: he is a murderer. He survived the sea, so the sea did not judge him — but the land has found him at the fire. This theory is internally consistent given what the islanders know, which is what they can see from the beach.\n\nHe shakes the snake into the fire.\n\nHis hand does not swell. He does not fall. He goes back to building the fire.",
+    hint:'Watch. No action required from you this time.',
+    activateNode:'MLA', activateCond:() => !!S_story.shipwreckSurvived,
+    completeFn:() => !!S_story.maltaSnakeEvent,
+    xpAward:150, waypointNode:'MLA', reward:0,
+    passText:'The islanders change their theory twice in one afternoon — first: murderer. Then: god. He corrects neither of these. He has been counting people all night and the count is correct and the fire is what the 276 need right now.\n\n"The islanders showed us unusual kindness."\n\nYou have seen this before — a place with no reason to be kind that is kind anyway. It moves the same way every time.',
+    failText:'The snake is in the brush. The fire has not been built yet.',
+    disposition:'"The islanders showed us unusual kindness." — Acts 28:2',
+    npc:'long_john_silver_sen',
+  },
   // ── §SIREN-01: The Four Courts of the Littoral Sea ──
   quest_aurel_tide: { id:'quest_aurel_tide', type:'skill_check', title:'The Tidal Schedule',
     desc:"Lady Aurel administers the harbor from the harbormaster's tower. She is never not working. The tide tables are open on her desk. She is glad you have come. She will see you at the next window. The warmth is genuine. The warmth is given in installments.",
@@ -49106,7 +49133,7 @@ const _S_DEFAULTS = () => ({
   commissionReceived: false, silarJoined: false, ezzirConfronted: false, govCopperConverted: false,
   lameManHealed: false, stoningEvent: false, timaelaJoined: false,
   // §LXV–§LXIX: Mediterranean Journey
-  lyraConverted: false, areopagusSpeech: false, demetriusRiotEscaped: false, corinthLettersWritten: false, maltaSnakeEvent: false, romeArrestBegun: false,
+  lyraConverted: false, areopagusSpeech: false, demetriusRiotEscaped: false, corinthLettersWritten: false, maltaSnakeEvent: false, romeArrestBegun: false, shipwreckSurvived: false, // §PAUL-01
   phillippiJailerConverted: false, basketRopeComplete: false, // §PAUL-01
   // §SIREN-01: Littoral Courts
   aurelTideRead: false, betrayalThought: false,
