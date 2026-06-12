@@ -239,6 +239,42 @@ function respliceSection(rawSrc, sectionName, newContent) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// §ARCH-02: Operand Registry — 12 atomic quest bit contracts
+// ═══════════════════════════════════════════════════════════════════════════
+const OPERAND_CONTRACTS = {
+  talk_at:      { required:['node'],
+                  optional:['npcKey','objectKey','requiresItem','dialogue'],
+                  gate:'S.currentNode === node', complete:'talked flag set' },
+  skill_check:  { required:['ability','dc','label','passText','failText'],
+                  optional:['retryable','retryGateDays','passFlag'],
+                  gate:'player at activateNode', complete:'rolled, result recorded' },
+  navigate:     { required:['fromNode','toNode'], optional:['hint'],
+                  gate:'S.currentNode === fromNode', complete:'S.currentNode === toNode' },
+  kill_at:      { required:['node','monsterKey'], optional:['count','targetLabel','killFlag'],
+                  gate:'at node with battle field', complete:'kill flag set' },
+  escort:       { required:['npcKey','fromNode','toNode'],
+                  optional:['partySlot','combatRisk','failFlag'],
+                  gate:'at fromNode, party slot empty', complete:'at toNode with NPC in party' },
+  talk_party:   { required:['npcKey'],
+                  optional:['partySlot','trigger','dialogue','talkFlag'],
+                  gate:'NPC in party slot', complete:'talkFlag set' },
+  deliver:      { required:['item','toNode'],
+                  optional:['fromNode','recipient','consumeOnDeliver'],
+                  gate:'item in inventory', complete:'at toNode' },
+  collect_item: { required:['item'], optional:['icon','sell','unique'],
+                  gate:'previous operand complete', complete:'item in inventory' },
+  consume_item: { required:['item'], optional:['failText'],
+                  gate:'item in inventory', complete:'item removed' },
+  investigate:  { required:['node','target'],
+                  optional:['skillCheck','reveals','narrativeText','investigateFlag'],
+                  gate:'S.currentNode === node', complete:'investigateFlag set' },
+  flag_gate:    { required:[], optional:['requires','requiresAny','blocks'],
+                  gate:'evaluated against S_story', complete:'gate passes (not an action)' },
+  choice:       { required:['prompt','options'], optional:[],
+                  gate:'previous operand complete', complete:'one option chosen and resolved' },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
 // WBAPI
 // ═══════════════════════════════════════════════════════════════════════════
 const WBAPI = {
@@ -481,6 +517,72 @@ const WBAPI = {
       const k=WBAPI._findKey(WBAPI.questDb,idOrTitle); if(!k) return {ok:false,error:'not found'};
       const d=WBAPI._deps.quest(k); if(d.downstream.length) return {ok:false,blockedBy:d};
       delete WBAPI.questDb[k]; return {ok:true,key:k};
+    },
+
+    // §ARCH-02 Phase 1 — field-level validity check
+    validate(id) {
+      const q = WBAPI.questDb[id]; if (!q) return {ok:false,errors:[`quest "${id}" not found`]};
+      const errors = [];
+      const VALID_TYPES = ['side','skill_check','main','epic'];
+      if (!q.title) errors.push('missing title');
+      if (!VALID_TYPES.includes(q.type)) errors.push(`invalid type "${q.type}" — expected: ${VALID_TYPES.join(', ')}`);
+      if (!q.activateNode) errors.push('missing activateNode');
+      if (q.type === 'skill_check') {
+        const VA = ['wis','int','str','dex','con','cha'];
+        if (!q.checkAbility) errors.push('skill_check missing checkAbility');
+        else if (!VA.includes(q.checkAbility)) errors.push(`invalid checkAbility "${q.checkAbility}"`);
+        if (q.checkDC == null) errors.push('skill_check missing checkDC');
+        else if (typeof q.checkDC !== 'number') errors.push('checkDC must be a number');
+      }
+      if (q.xpAward != null && typeof q.xpAward !== 'number') errors.push('xpAward must be a number');
+      return {ok: errors.length === 0, errors};
+    },
+
+    // §ARCH-02 Phase 1 — world-logic cross-reference advisory
+    advise(id) {
+      const q = WBAPI.questDb[id]; if (!q) return {ok:false,warnings:[`quest "${id}" not found`]};
+      const warnings = [];
+      if (q.activateNode && !WBAPI.nodeMap[q.activateNode]) warnings.push(`activateNode "${q.activateNode}" not in NODE_MAP`);
+      if (q.waypointNode && !WBAPI.nodeMap[q.waypointNode]) warnings.push(`waypointNode "${q.waypointNode}" not in NODE_MAP`);
+      const npcKey = q.npc || q.npcKey;
+      if (npcKey) {
+        const inBirka = !!WBAPI.birkaNpcs[npcKey];
+        const inMap   = Object.values(WBAPI.nodeMap).some(n => n.npc && n.npc.toLowerCase().replace(/\s/g,'_') === npcKey);
+        if (!inBirka && !inMap) warnings.push(`npc "${npcKey}" not found in BIRKA_NPC or NODE_MAP`);
+      }
+      const chain = WBAPI.quests.chain(id);
+      return {ok: warnings.length === 0, warnings, chain};
+    },
+
+    // §ARCH-02 Phase 1 — heuristic mapping of quest fields → operand bit sequence
+    toOperands(id) {
+      const q = WBAPI.questDb[id]; if (!q) return null;
+      const bits = [];
+      const flags = WBAPI._questFlags[id];
+      if (flags && flags.reads.size > 0)
+        bits.push({kind:'flag_gate', requires:[...flags.reads], _note:'inferred from flag reads'});
+      if (q.activateNode && q.waypointNode && q.activateNode !== q.waypointNode)
+        bits.push({kind:'navigate', fromNode:q.activateNode, toNode:q.waypointNode, hint:q.hint||undefined});
+      if (q.type === 'skill_check' && q.checkAbility && q.checkDC != null)
+        bits.push({kind:'skill_check', ability:q.checkAbility, dc:q.checkDC, label:q.checkLabel||'', passText:q.passText||'', failText:q.failText||'', retryable:q.retryable||false});
+      if (bits.filter(b=>b.kind!=='flag_gate'&&b.kind!=='navigate').length === 0 && q.activateNode)
+        bits.push({kind:'talk_at', node:q.waypointNode||q.activateNode, npcKey:q.npc||q.npcKey||undefined});
+      return {id, type:q.type, bits};
+    },
+  },
+
+  // ── §ARCH-02 Phase 1: Operand namespace ──
+  operands: {
+    list()        { return Object.keys(OPERAND_CONTRACTS); },
+    contract(kind){ return OPERAND_CONTRACTS[kind] || null; },
+    validate(bit) {
+      if (!bit || !bit.kind) return {ok:false,errors:['missing kind']};
+      const c = OPERAND_CONTRACTS[bit.kind];
+      if (!c) return {ok:false,errors:[`unknown kind "${bit.kind}"`]};
+      const errors = c.required
+        .filter(f => bit[f] === undefined || bit[f] === null || bit[f] === '')
+        .map(f => `missing required field "${f}"`);
+      return {ok: errors.length === 0, errors};
     },
   },
 

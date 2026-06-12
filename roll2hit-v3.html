@@ -47790,6 +47790,28 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
+/* §ARCH-01 Phase 1 — UQF skeleton (inert — no behavior change) */
+const SCHEMA_VERSION = 'UQF-1.0';
+
+const QuestRuntime = {
+  _schema: SCHEMA_VERSION,
+  // Stub: will execute UQF v1.0 quests once Phase 2 migration begins.
+  run(quest, state) { return { ok:false, reason:'not implemented — legacy path still active' }; },
+  // Adapt a legacy QUEST_DB entry into a minimal UQF-compatible shape.
+  adaptLegacyQuest(id, q) {
+    return {
+      schema: '0.legacy',
+      id,
+      type: q.type,
+      title: q.title,
+      gate: q.activateCond ? { _legacy: true } : {},
+      bits: [],
+      _source: q,
+    };
+  },
+};
+/* end §ARCH-01 Phase 1 */
+
 /* ── Layer 5: Void Tide Events ── */
 const VOID_TIDE_EVENTS = { // → doc: world.md §Void Tide
    3: { title:'The First Warning',    text:"Seven new moons. You have spent three days. The clock is a fact you cannot argue with. What accelerates the Void is not combat, not failure — it is exhaustion. The people who stop sleeping are the ones who notice the Void first, and then they stop sleeping more, and then they stop coming back. Keep moving. Keep resting. These are not two different instructions." },

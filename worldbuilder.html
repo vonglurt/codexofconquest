@@ -729,7 +729,9 @@ select.fi{appearance:none;}
           <span class="change-count" id="quest-change-count"></span>
           <button class="btn primary sm" id="btn-quest-put" disabled>PUT Changes</button>
           <button class="btn sm" id="btn-quest-reset">Reset</button>
+          <button class="btn sm" id="btn-quest-validate" title="§ARCH-01: field-level validity check">✓ Validate</button>
         </div>
+        <div id="quest-validate-result" style="display:none;font-size:11px;padding:6px 10px;border-radius:4px;margin:4px 14px 0;line-height:1.6"></div>
       </div>
       <div class="detail-pane wide" id="quest-chain-pane" style="display:none">
         <div class="detail-hd"><span style="font-weight:600;font-size:12px">Flag Chain</span></div>
@@ -1325,6 +1327,42 @@ select.fi{appearance:none;}
 
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
+// §ARCH-02: Operand Registry — 12 atomic quest bit contracts
+// ═══════════════════════════════════════════════════════════════════════════
+const OPERAND_CONTRACTS = {
+  talk_at:      { required:['node'],
+                  optional:['npcKey','objectKey','requiresItem','dialogue'],
+                  gate:'S.currentNode === node', complete:'talked flag set' },
+  skill_check:  { required:['ability','dc','label','passText','failText'],
+                  optional:['retryable','retryGateDays','passFlag'],
+                  gate:'player at activateNode', complete:'rolled, result recorded' },
+  navigate:     { required:['fromNode','toNode'], optional:['hint'],
+                  gate:'S.currentNode === fromNode', complete:'S.currentNode === toNode' },
+  kill_at:      { required:['node','monsterKey'], optional:['count','targetLabel','killFlag'],
+                  gate:'at node with battle field', complete:'kill flag set' },
+  escort:       { required:['npcKey','fromNode','toNode'],
+                  optional:['partySlot','combatRisk','failFlag'],
+                  gate:'at fromNode, party slot empty', complete:'at toNode with NPC in party' },
+  talk_party:   { required:['npcKey'],
+                  optional:['partySlot','trigger','dialogue','talkFlag'],
+                  gate:'NPC in party slot', complete:'talkFlag set' },
+  deliver:      { required:['item','toNode'],
+                  optional:['fromNode','recipient','consumeOnDeliver'],
+                  gate:'item in inventory', complete:'at toNode' },
+  collect_item: { required:['item'], optional:['icon','sell','unique'],
+                  gate:'previous operand complete', complete:'item in inventory' },
+  consume_item: { required:['item'], optional:['failText'],
+                  gate:'item in inventory', complete:'item removed' },
+  investigate:  { required:['node','target'],
+                  optional:['skillCheck','reveals','narrativeText','investigateFlag'],
+                  gate:'S.currentNode === node', complete:'investigateFlag set' },
+  flag_gate:    { required:[], optional:['requires','requiresAny','blocks'],
+                  gate:'evaluated against S_story', complete:'gate passes (not an action)' },
+  choice:       { required:['prompt','options'], optional:[],
+                  gate:'previous operand complete', complete:'one option chosen and resolved' },
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
 // WBAPI — World Builder API (data layer)
 // ═══════════════════════════════════════════════════════════════════════════
 const WBAPI = {
@@ -1793,6 +1831,72 @@ const WBAPI = {
       delete WBAPI.questDb[key];
       DIFF.delSection('QUEST_DB', key);
       return { ok:true, key };
+    },
+
+    // §ARCH-02 Phase 1 — field-level validity check
+    validate(id) {
+      const q = WBAPI.questDb[id]; if (!q) return {ok:false,errors:[`quest "${id}" not found`]};
+      const errors = [];
+      const VALID_TYPES = ['side','skill_check','main','epic'];
+      if (!q.title) errors.push('missing title');
+      if (!VALID_TYPES.includes(q.type)) errors.push(`invalid type "${q.type}" — expected: ${VALID_TYPES.join(', ')}`);
+      if (!q.activateNode) errors.push('missing activateNode');
+      if (q.type === 'skill_check') {
+        const VA = ['wis','int','str','dex','con','cha'];
+        if (!q.checkAbility) errors.push('skill_check missing checkAbility');
+        else if (!VA.includes(q.checkAbility)) errors.push(`invalid checkAbility "${q.checkAbility}"`);
+        if (q.checkDC == null) errors.push('skill_check missing checkDC');
+        else if (typeof q.checkDC !== 'number') errors.push('checkDC must be a number');
+      }
+      if (q.xpAward != null && typeof q.xpAward !== 'number') errors.push('xpAward must be a number');
+      return {ok: errors.length === 0, errors};
+    },
+
+    // §ARCH-02 Phase 1 — world-logic cross-reference advisory
+    advise(id) {
+      const q = WBAPI.questDb[id]; if (!q) return {ok:false,warnings:[`quest "${id}" not found`]};
+      const warnings = [];
+      if (q.activateNode && !WBAPI.nodeMap[q.activateNode]) warnings.push(`activateNode "${q.activateNode}" not in NODE_MAP`);
+      if (q.waypointNode && !WBAPI.nodeMap[q.waypointNode]) warnings.push(`waypointNode "${q.waypointNode}" not in NODE_MAP`);
+      const npcKey = q.npc || q.npcKey;
+      if (npcKey) {
+        const inBirka = !!WBAPI.birkaNpcs[npcKey];
+        const inMap   = Object.values(WBAPI.nodeMap).some(n => n.npc && n.npc.toLowerCase().replace(/\s/g,'_') === npcKey);
+        if (!inBirka && !inMap) warnings.push(`npc "${npcKey}" not found in BIRKA_NPC or NODE_MAP`);
+      }
+      const chain = WBAPI.quests.chain(id);
+      return {ok: warnings.length === 0, warnings, chain};
+    },
+
+    // §ARCH-02 Phase 1 — heuristic mapping of quest fields → operand bit sequence
+    toOperands(id) {
+      const q = WBAPI.questDb[id]; if (!q) return null;
+      const bits = [];
+      const flags = WBAPI._questFlags[id];
+      if (flags && flags.reads.size > 0)
+        bits.push({kind:'flag_gate', requires:[...flags.reads], _note:'inferred from flag reads'});
+      if (q.activateNode && q.waypointNode && q.activateNode !== q.waypointNode)
+        bits.push({kind:'navigate', fromNode:q.activateNode, toNode:q.waypointNode, hint:q.hint||undefined});
+      if (q.type === 'skill_check' && q.checkAbility && q.checkDC != null)
+        bits.push({kind:'skill_check', ability:q.checkAbility, dc:q.checkDC, label:q.checkLabel||'', passText:q.passText||'', failText:q.failText||'', retryable:q.retryable||false});
+      if (bits.filter(b=>b.kind!=='flag_gate'&&b.kind!=='navigate').length === 0 && q.activateNode)
+        bits.push({kind:'talk_at', node:q.waypointNode||q.activateNode, npcKey:q.npc||q.npcKey||undefined});
+      return {id, type:q.type, bits};
+    },
+  },
+
+  // ── §ARCH-02 Phase 1: Operand namespace ──
+  operands: {
+    list()        { return Object.keys(OPERAND_CONTRACTS); },
+    contract(kind){ return OPERAND_CONTRACTS[kind] || null; },
+    validate(bit) {
+      if (!bit || !bit.kind) return {ok:false,errors:['missing kind']};
+      const c = OPERAND_CONTRACTS[bit.kind];
+      if (!c) return {ok:false,errors:[`unknown kind "${bit.kind}"`]};
+      const errors = c.required
+        .filter(f => bit[f] === undefined || bit[f] === null || bit[f] === '')
+        .map(f => `missing required field "${f}"`);
+      return {ok: errors.length === 0, errors};
     },
   },
 
@@ -2551,6 +2655,60 @@ function renderNodeDetail(code){
     }
     body.appendChild(qg);
   }
+
+  // §WORLDBUILDER-02 Phase 1 — Location Profile: NPCs, terrain/monsters, flag aggregates
+  const profDiv = document.createElement('div');
+  profDiv.style.cssText='margin-top:8px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;overflow:hidden';
+  const profHd = document.createElement('div');
+  profHd.style.cssText='display:flex;align-items:center;padding:5px 9px;cursor:pointer;font-size:11px;font-weight:700;color:var(--muted);gap:6px;user-select:none';
+  profHd.innerHTML='<span>📍 Location Profile</span><span id="_prof_toggle_'+code+'" style="margin-left:auto;font-size:10px">▸</span>';
+  const profBody = document.createElement('div');
+  profBody.style.cssText='display:none;padding:6px 9px;font-size:10px;line-height:1.7';
+  profHd.addEventListener('click', ()=>{
+    const open = profBody.style.display==='block';
+    profBody.style.display = open ? 'none' : 'block';
+    const tog = document.getElementById('_prof_toggle_'+code);
+    if(tog) tog.textContent = open ? '▸' : '▾';
+    if(!open && !profBody.dataset.built) { profBody.dataset.built='1'; buildLocationProfile(code, profBody); }
+  });
+  profDiv.appendChild(profHd); profDiv.appendChild(profBody); body.appendChild(profDiv);
+}
+
+function buildLocationProfile(code, el) {
+  const node = WBAPI.nodeMap[code]||{};
+  const lines = [];
+
+  // Terrain + monsters
+  const terrain = WBAPI.worldDb[node.name];
+  if (terrain) {
+    const mons = (terrain.monsters||[]).slice(0,10).map(m => typeof m==='string'?m:(m?.key||'?'));
+    const more = (terrain.monsters||[]).length - mons.length;
+    lines.push(`<div><span style="color:var(--muted)">Terrain:</span> <span style="color:var(--teal)">${node.name}</span> — ${terrain.label||''}</div>`);
+    if(mons.length) lines.push(`<div style="margin-left:8px;color:var(--muted)">Monsters: ${mons.join(', ')}${more>0?' + '+more+' more':''}</div>`);
+  }
+
+  // NPCs at node
+  const npcs = WBAPI.npcs.byNode(code);
+  const inlineNpc = node.npc ? `${node.npc} (inline)` : null;
+  const allNpcs = [...npcs.map(n=>n.name||n.key), ...(inlineNpc&&!npcs.find(n=>n.key===node.npc)?[inlineNpc]:[])];
+  if(allNpcs.length) lines.push(`<div><span style="color:var(--muted)">NPCs:</span> ${allNpcs.join(', ')}</div>`);
+
+  // Quest count by type
+  const qIds = WBAPI._questsByNode[code]||[];
+  if(qIds.length) {
+    const byType = {};
+    for(const id of qIds) { const t=(WBAPI.questDb[id]||{}).type||'side'; byType[t]=(byType[t]||0)+1; }
+    const summary = Object.entries(byType).map(([t,n])=>`${n} ${t}`).join(', ');
+    lines.push(`<div><span style="color:var(--muted)">Quests:</span> ${qIds.length} (${summary})</div>`);
+  }
+
+  // Flags read/written by quests here
+  const flagReads = new Set(), flagWrites = new Set();
+  for(const id of qIds) { const fl=WBAPI._questFlags[id]; if(fl){ for(const f of fl.reads) flagReads.add(f); for(const f of fl.writes) flagWrites.add(f); } }
+  if(flagWrites.size) lines.push(`<div><span style="color:var(--muted)">Flags set:</span> ${[...flagWrites].slice(0,8).map(f=>`<span class="flag-pill flag-write" style="font-size:9px">${f}</span>`).join('')}${flagWrites.size>8?' + '+(flagWrites.size-8)+' more':''}</div>`);
+  if(flagReads.size) lines.push(`<div><span style="color:var(--muted)">Flags read:</span> ${[...flagReads].slice(0,6).map(f=>`<span class="flag-pill flag-read" style="font-size:9px">${f}</span>`).join('')}${flagReads.size>6?' + '+(flagReads.size-6)+' more':''}</div>`);
+
+  el.innerHTML = lines.join('') || '<span style="color:var(--muted)">No additional data.</span>';
 }
 
 $('btn-save-node').addEventListener('click',()=>{
@@ -3755,6 +3913,24 @@ async function loadQuestChainFromAPI(id) {
 
 $('btn-quest-reset').addEventListener('click', () => {
   if (qCurrentId) selectQuest(qCurrentId);
+});
+
+$('btn-quest-validate').addEventListener('click', () => {
+  const id = qCurrentId; if (!id) return;
+  const out = $('quest-validate-result');
+  const v = WBAPI.quests.validate(id);
+  const a = WBAPI.quests.advise(id);
+  const lines = [];
+  if (v.ok && a.ok) {
+    out.style.cssText = 'display:block;font-size:11px;padding:6px 10px;border-radius:4px;margin:4px 14px 0;line-height:1.6;background:rgba(83,186,130,0.08);border:1px solid var(--teal);color:var(--teal)';
+    lines.push('✓ Valid — no field errors, no world warnings.');
+  } else {
+    out.style.cssText = 'display:block;font-size:11px;padding:6px 10px;border-radius:4px;margin:4px 14px 0;line-height:1.6;background:rgba(214,85,85,0.08);border:1px solid var(--red);color:var(--text)';
+    for (const e of v.errors) lines.push(`<span style="color:var(--red)">✗ ${e}</span>`);
+    for (const w of a.warnings) lines.push(`<span style="color:var(--orange)">⚠ ${w}</span>`);
+  }
+  out.innerHTML = lines.join('<br>');
+  setTimeout(()=>{ out.style.display='none'; }, 8000);
 });
 
 $('btn-quest-put').addEventListener('click', async () => {
@@ -5226,8 +5402,8 @@ const BIRKA_NPC = {};
     if (up) loadFromServer();
   });
 
-  // Auto-probe on load — show status, wait for user to click
-  probeServer();
+  // Auto-probe on load — auto-load if server is up
+  probeServer().then(up => { if (up) loadFromServer(); });
 
 })();
 
@@ -6384,6 +6560,94 @@ window._onServerActivated = () => {
     });
   }
 
+  function opQuestValidate(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Quest ID','text',{placeholder:'quest_wis_01…',flex:'1 1 200px'}));
+    const btn = mkBtn('VALIDATE','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    body.appendChild(mkNote('Field-level check: type, title, activateNode, skill_check fields, xpAward type.'));
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Quest ID'}])) return;
+      const r = WBAPI.quests.validate(f.id.value.trim());
+      showResult(res, r, !r.ok);
+    });
+  }
+
+  function opQuestAdvise(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Quest ID','text',{placeholder:'quest_wis_01…',flex:'1 1 200px'}));
+    const btn = mkBtn('ADVISE','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    body.appendChild(mkNote('World cross-ref: activateNode/waypointNode in NODE_MAP, npc in BIRKA_NPC, flag chain.'));
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Quest ID'}])) return;
+      const r = WBAPI.quests.advise(f.id.value.trim());
+      showResult(res, r, !r.ok);
+    });
+  }
+
+  function opQuestToOperands(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('id','Quest ID','text',{placeholder:'quest_wis_01…',flex:'1 1 200px'}));
+    const btn = mkBtn('TO OPERANDS','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    body.appendChild(mkNote('Heuristic parse of quest fields → operand bit sequence (§ARCH-02 preview).'));
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const f = getFields(fields);
+      if (!validate(f,[{name:'id',required:true,label:'Quest ID'}])) return;
+      const r = WBAPI.quests.toOperands(f.id.value.trim());
+      showResult(res, r || `Quest "${f.id.value}" not found.`, !r);
+    });
+  }
+
+  function opOperandList(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    const btn = mkBtn('LIST','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      showResult(res, WBAPI.operands.list(), false);
+    });
+  }
+
+  function opOperandContract(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    const opts = {}; for (const k of Object.keys(OPERAND_CONTRACTS)) opts[k]=k;
+    fields.appendChild(mkField('kind','Operand Kind','select',{options:opts}));
+    const btn = mkBtn('GET CONTRACT','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    btn.addEventListener('click',()=>{
+      const f = getFields(fields);
+      const r = WBAPI.operands.contract(f.kind.value);
+      showResult(res, r || `Unknown kind "${f.kind.value}".`, !r);
+    });
+  }
+
+  function opOperandValidateBit(body) {
+    const fields = document.createElement('div'); fields.className = 'op-row-fields';
+    fields.appendChild(mkField('json','Bit JSON','text',{placeholder:'{"kind":"talk_at","node":"CI"}',flex:'1 1 320px'}));
+    const btn = mkBtn('VALIDATE BIT','primary sm'); fields.appendChild(btn);
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(fields); body.appendChild(res);
+    body.appendChild(mkNote('Paste a bit object as JSON to check it against the operand contract.'));
+    btn.addEventListener('click',()=>{
+      const f = getFields(fields);
+      let bit;
+      try { bit = JSON.parse(f.json.value.trim()); } catch(e) { return showResult(res,`JSON parse error: ${e.message}`,true); }
+      const r = WBAPI.operands.validate(bit);
+      showResult(res, r, !r.ok);
+    });
+  }
+
   function opMonsterGet(body) {
     const fields = document.createElement('div'); fields.className = 'op-row-fields';
     fields.appendChild(mkField('id','Key or Name','text',{placeholder:'goblin, Goblin…',flex:'1 1 180px'}));
@@ -6751,6 +7015,15 @@ window._onServerActivated = () => {
       mkOpRow('GET',  'Quest Chain',             'Upstream + downstream quests via shared flags',       opQuestGetChain),
       mkOpRow('GET',  'All Quests',              'Dump entire quest database',                          opQuestAll),
       mkOpRow('PUT',  'Set Quest Field',         'Edit any narrative or mechanic field on a quest',     opQuestPut),
+      mkOpRow('✓',    'Validate Quest',          '§ARCH-02: Field-level validity check',                opQuestValidate),
+      mkOpRow('◆',    'Advise Quest',            '§ARCH-02: World cross-ref — nodes, NPC, flag chain',  opQuestAdvise),
+      mkOpRow('◆',    'Quest → Operands',        '§ARCH-02: Heuristic parse to operand bit sequence',  opQuestToOperands),
+    ]));
+
+    el.appendChild(mkSection('◆ Operands (§ARCH-02)', [
+      mkOpRow('GET',  'List Operand Kinds',      '12 operand kind names',                               opOperandList),
+      mkOpRow('GET',  'Get Contract',            'Required + optional fields for a given kind',         opOperandContract),
+      mkOpRow('✓',    'Validate Bit',            'Check a bit object JSON against its contract',        opOperandValidateBit),
     ]));
 
     el.appendChild(mkSection('⚔ Monsters', [

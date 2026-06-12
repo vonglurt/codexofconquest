@@ -1766,10 +1766,10 @@ The graph is not a map replacement — it is a relationship surface for the sele
 
 ### §WORLDBUILDER-02-E. Implementation Phases
 
-**Phase 1 — Quest investigation card (no graph)**
-- [ ] Extend quest detail pane in worldbuilder.html to show: arc siblings, upstream/downstream flags with originating quest IDs, NPC key → NPC name lookup, activateNode → node label lookup
-- [ ] Add arc-filter to quest sidebar (filter by arc prefix extracted from quest ID)
-- [ ] Add "Location Profile" button on node detail that shows all quests + NPCs + monsters at that node
+**Phase 1 — Quest investigation card (no graph)** ✅ 2026-06-12
+- [x] Extend quest detail pane in worldbuilder.html to show: arc siblings, upstream/downstream flags with originating quest IDs, NPC key → NPC name lookup, activateNode → node label lookup
+- [x] Add arc-filter to quest sidebar (filter by arc prefix extracted from quest ID)
+- [x] Add "Location Profile" button on node detail that shows all quests + NPCs + monsters at that node
 
 **Phase 2 — Mission classification layer**
 - [ ] Add `_classifyQuest(q)` to wbapi-core.js — returns operational class from `§WORLDBUILDER-02-B` table based on field inspection
@@ -1819,11 +1819,11 @@ A consolidated register of all open work across the project. Organized by domain
 
 **P1 — Immediately actionable:**
 
-- [ ] **§ARCH-02 Phase 1 — Operand Registry (inert):** Add `OPERAND_CONTRACTS` object (12 operand kinds, required/optional fields) to `wbapi-core.js`. Add `WBAPI.operands.list()`, `.contract(kind)`, `.validate(bit)`. Add `WBAPI.quests.validate(id)` (field-level) and `WBAPI.quests.advise(id)` (world-logic cross-ref). Add `WBAPI.quests.toOperands(id)` — parse existing quest fields into operand array. Wire validate + advise into worldbuilder.html API tab. *(Depends on: nothing. Enables: §ARCH-02 Phase 2, §WORLDBUILDER-02 advisory warnings.)*
+- [x] **§ARCH-02 Phase 1 — Operand Registry (inert):** Add `OPERAND_CONTRACTS` object (12 operand kinds, required/optional fields) to `wbapi-core.js`. Add `WBAPI.operands.list()`, `.contract(kind)`, `.validate(bit)`. Add `WBAPI.quests.validate(id)` (field-level) and `WBAPI.quests.advise(id)` (world-logic cross-ref). Add `WBAPI.quests.toOperands(id)` — parse existing quest fields into operand array. Wire validate + advise into worldbuilder.html API tab. *(✅ 2026-06-12)*
 
-- [ ] **§ARCH-01 Phase 1 — UQF skeleton (inert):** Add `SCHEMA_VERSION = 'UQF-1.0'` and stub `QuestRuntime` + `adaptLegacyQuest()` to `roll2hit-v3.html` inside a `/* §ARCH-01 */` block. No behavior change — just establishes the namespace. Add `BIT_CONTRACTS` and `validateQuest()` to worldbuilder.html Quest Editor. *(Depends on: nothing. Enables: §ARCH-01 Phase 2 migration.)*
+- [x] **§ARCH-01 Phase 1 — UQF skeleton (inert):** Add `SCHEMA_VERSION = 'UQF-1.0'` and stub `QuestRuntime` + `adaptLegacyQuest()` to `roll2hit-v3.html` inside a `/* §ARCH-01 */` block. No behavior change — just establishes the namespace. Add `BIT_CONTRACTS` and `validateQuest()` to worldbuilder.html Quest Editor. *(✅ 2026-06-12)*
 
-- [ ] **§WORLDBUILDER-02 Phase 1 — Quest investigation card:** Extend quest detail pane in worldbuilder.html: arc siblings, upstream/downstream flags with originating quest IDs, NPC key → NPC name lookup, activateNode → node label. Add arc-filter to quest sidebar. Add "Location Profile" button on node detail. *(Depends on: nothing. Enables: Phase 2 classification layer.)*
+- [x] **§WORLDBUILDER-02 Phase 1 — Quest investigation card:** Extend quest detail pane in worldbuilder.html: arc siblings, upstream/downstream flags with originating quest IDs, NPC key → NPC name lookup, activateNode → node label. Add arc-filter to quest sidebar. Add "Location Profile" button on node detail. *(✅ 2026-06-12 — most already implemented; added Location Profile collapsible section to node detail with terrain/monsters/NPCs/flag aggregates)*
 
 **P2 — Sequenced after P1:**
 
