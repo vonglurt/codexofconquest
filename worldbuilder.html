@@ -2811,6 +2811,8 @@ function buildLocationProfile(code, el) {
   if (prof.flagReads.length)  lines.push(`<div><span style="color:var(--muted)">Flags read:</span> ${prof.flagReads.slice(0,6).map(f=>`<span class="flag-pill flag-read" style="font-size:9px">${f}</span>`).join('')}${prof.flagReads.length>6?' + '+(prof.flagReads.length-6)+' more':''}</div>`);
 
   el.innerHTML = lines.join('') || '<span style="color:var(--muted)">No additional data.</span>';
+  const _rgNode = document.createElement('div'); el.appendChild(_rgNode);
+  renderRelGraph('node', code, _rgNode);
 }
 
 $('btn-save-node').addEventListener('click',()=>{
@@ -3639,6 +3641,157 @@ function lootTabActivated() {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// §WORLDBUILDER-02 Phase 4: Relationship Graph
+// ═══════════════════════════════════════════════════════════════════════════
+function selectNpc(key) {
+  const npc = WBAPI.npcs.get(key);
+  if (npc) renderNpcDetail(npc);
+}
+
+const REL_COLORS = { node:'#39c5cf', quest:'#bc8cff', npc:'#f778ba', cur:'#58a6ff' };
+
+function renderRelGraph(type, centerId, container) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const nodes = [], edges = [];
+
+  const addNode = (t, k, lbl) => {
+    const rid = t+':'+k;
+    if (nodes.find(n => n.rid === rid)) return rid;
+    nodes.push({ rid, type:t, key:k, label:(lbl||k).slice(0,11) });
+    return rid;
+  };
+  const addEdge = (fr, to, lbl) => edges.push({ fr, to, lbl });
+
+  const cLabel = (type==='node'  ? (centerId+(WBAPI.nodeMap[centerId]?.label?' '+WBAPI.nodeMap[centerId].label.slice(0,7):''))
+                : type==='npc'   ? (WBAPI.birkaNpcs[centerId]?.name||centerId)
+                : centerId).slice(0,13);
+  const centerRid = type+':'+centerId;
+  nodes.push({ rid:centerRid, type, key:centerId, label:cLabel, isCurrent:true });
+
+  if (type === 'node') {
+    const node = WBAPI.nodeMap[centerId] || {};
+    for (const dir of ['N','S','E','W']) {
+      const adj = node[dir]; if (!adj || !WBAPI.nodeMap[adj]) continue;
+      const lbl = adj+(WBAPI.nodeMap[adj].label?' '+WBAPI.nodeMap[adj].label.slice(0,5):'');
+      addEdge(centerRid, addNode('node', adj, lbl), dir);
+    }
+    for (const qid of (WBAPI._questsByNode[centerId]||[]).slice(0,6))
+      addEdge(centerRid, addNode('quest', qid, qid));
+    for (const n of WBAPI.npcs.byNode(centerId).slice(0,3))
+      addEdge(centerRid, addNode('npc', n.key, n.name||n.key));
+  } else if (type === 'quest') {
+    const q = WBAPI.questDb[centerId] || {};
+    const ch = WBAPI.quests.chain(centerId);
+    if (q.activateNode)
+      addEdge(centerRid, addNode('node', q.activateNode, q.activateNode), 'at');
+    if (q.waypointNode && q.waypointNode !== q.activateNode)
+      addEdge(centerRid, addNode('node', q.waypointNode, q.waypointNode), '→');
+    const nk = q.npc || q.npcKey;
+    if (nk) addEdge(centerRid, addNode('npc', nk, WBAPI.birkaNpcs[nk]?.name||nk), 'npc');
+    const arc = centerId.replace(/_\d+$/,'').replace(/_[a-z]{2}$/,'');
+    for (const s of (WBAPI._questArcs[arc]||[]).filter(s=>s!==centerId).slice(0,3))
+      addEdge(centerRid, addNode('quest', s, s), 'arc');
+    for (const u of ch.upstream.slice(0,3))   addEdge(addNode('quest',u,u), centerRid, '↑');
+    for (const d of ch.downstream.slice(0,3)) addEdge(centerRid, addNode('quest',d,d), '↓');
+  } else if (type === 'npc') {
+    const npc = WBAPI.birkaNpcs[centerId] || {};
+    if (npc.node && WBAPI.nodeMap[npc.node])
+      addEdge(centerRid, addNode('node', npc.node, npc.node), 'home');
+    for (const qid of (WBAPI._questsByNpc[centerId]||[]).slice(0,9))
+      addEdge(centerRid, addNode('quest', qid, qid));
+  }
+
+  const maxSurr = 10;
+  const others = nodes.filter(n => !n.isCurrent);
+  const overflow = Math.max(0, others.length - maxSurr);
+  const surr = others.slice(0, maxSurr);
+  const finalNodes = [nodes[0], ...surr];
+
+  const W = 320, H = 220, cx = 160, cy = 110;
+  const r = surr.length <= 3 ? 62 : surr.length <= 6 ? 76 : 95;
+  nodes[0].x = cx; nodes[0].y = cy;
+  surr.forEach((n, i) => {
+    const a = (2*Math.PI*i/surr.length) - Math.PI/2;
+    n.x = Math.round(cx + r*Math.cos(a));
+    n.y = Math.round(cy + r*Math.sin(a));
+  });
+
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('width', '100%');
+  svg.setAttribute('height', String(H));
+  svg.style.display = 'block';
+
+  const ridMap = new Map(finalNodes.map(n => [n.rid, n]));
+
+  for (const { fr, to, lbl } of edges) {
+    const fn = ridMap.get(fr), tn = ridMap.get(to);
+    if (!fn || !tn || fn.x === undefined || tn.x === undefined) continue;
+    const ln = document.createElementNS(ns, 'line');
+    ln.setAttribute('x1', fn.x); ln.setAttribute('y1', fn.y);
+    ln.setAttribute('x2', tn.x); ln.setAttribute('y2', tn.y);
+    ln.setAttribute('stroke', '#30363d'); ln.setAttribute('stroke-width', '1');
+    svg.appendChild(ln);
+    if (lbl) {
+      const t = document.createElementNS(ns, 'text');
+      t.setAttribute('x', Math.round((fn.x+tn.x)/2));
+      t.setAttribute('y', Math.round((fn.y+tn.y)/2)-3);
+      t.setAttribute('text-anchor', 'middle'); t.setAttribute('font-size', '7');
+      t.setAttribute('fill', '#8b949e'); t.setAttribute('font-family', 'monospace');
+      t.textContent = lbl; svg.appendChild(t);
+    }
+  }
+
+  for (const n of finalNodes) {
+    if (n.x === undefined) continue;
+    const col = n.isCurrent ? REL_COLORS.cur : (REL_COLORS[n.type]||'#888');
+    const bw = n.isCurrent ? 70 : 58, bh = n.isCurrent ? 20 : 16;
+    const g = document.createElementNS(ns, 'g');
+    g.style.cursor = n.isCurrent ? 'default' : 'pointer';
+    if (!n.isCurrent) {
+      g.addEventListener('click', () => {
+        if (n.type==='quest')     { switchTab('quests'); selectQuest(n.key); }
+        else if (n.type==='node') { switchTab('map');    selectMapNode(n.key); }
+        else if (n.type==='npc')  { switchTab('npcs');   selectNpc(n.key); }
+      });
+      g.addEventListener('mouseenter', e => { e.currentTarget.querySelector('rect').setAttribute('stroke-width','2'); });
+      g.addEventListener('mouseleave', e => { e.currentTarget.querySelector('rect').setAttribute('stroke-width','1'); });
+    }
+    const rect = document.createElementNS(ns, 'rect');
+    rect.setAttribute('x', n.x-bw/2); rect.setAttribute('y', n.y-bh/2);
+    rect.setAttribute('width', bw); rect.setAttribute('height', bh); rect.setAttribute('rx', '3');
+    rect.setAttribute('fill', col+(n.isCurrent?'33':'18'));
+    rect.setAttribute('stroke', col); rect.setAttribute('stroke-width', n.isCurrent?'1.5':'1');
+    g.appendChild(rect);
+    const txt = document.createElementNS(ns, 'text');
+    txt.setAttribute('x', n.x); txt.setAttribute('y', n.y);
+    txt.setAttribute('text-anchor', 'middle'); txt.setAttribute('dominant-baseline', 'middle');
+    txt.setAttribute('font-size', n.isCurrent?'9':'8');
+    txt.setAttribute('font-family', 'monospace'); txt.setAttribute('fill', col);
+    txt.textContent = n.label; g.appendChild(txt);
+    svg.appendChild(g);
+  }
+
+  if (overflow) {
+    const t = document.createElementNS(ns, 'text');
+    t.setAttribute('x', W-4); t.setAttribute('y', H-4);
+    t.setAttribute('text-anchor', 'end'); t.setAttribute('font-size', '8');
+    t.setAttribute('fill', '#8b949e'); t.setAttribute('font-family', 'monospace');
+    t.textContent = '+'+overflow+' more'; svg.appendChild(t);
+  }
+
+  container.innerHTML = '';
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'margin-top:8px;padding:6px 8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;overflow:hidden;';
+  const hd = document.createElement('div');
+  hd.style.cssText = 'font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;';
+  hd.textContent = 'Relationships';
+  wrap.appendChild(hd);
+  wrap.appendChild(svg);
+  container.appendChild(wrap);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // NPC TAB
 // ═══════════════════════════════════════════════════════════════════════════
 function renderNpcList(){
@@ -3691,6 +3844,8 @@ function renderNpcDetail(npc){
     }
   }
   area.innerHTML=h;
+  const _rgNpc = document.createElement('div'); area.appendChild(_rgNpc);
+  if (npcKey) renderRelGraph('npc', npcKey, _rgNpc);
   if (SERVER.active && npcKey) loadNpcFromAPI(npcKey);
 }
 
@@ -3951,6 +4106,8 @@ function selectQuest(id){
   };
   mkFlagDetail(flags.reads,  'flag-read',  'reads',  'writes');
   mkFlagDetail(flags.writes, 'flag-write', 'writes', 'reads');
+  const _rgQuest = document.createElement('div'); area.appendChild(_rgQuest);
+  renderRelGraph('quest', id, _rgQuest);
 
   // Chain
   $('quest-chain-pane').style.display='flex';

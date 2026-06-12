@@ -1495,10 +1495,10 @@ The graph is not a map replacement — it is a relationship surface for the sele
 - [x] `WBAPI.location.profile(nodeCode)` — extends existing `location.get()` with: quest list with classes, NPC list with quest counts, flag reads/writes at this node
 - [x] Render Location Profile card in worldbuilder when clicking a node (replaces simple node detail pane)
 
-**Phase 4 — Relationship graph panel**
-- [ ] Add lightweight canvas/SVG graph panel (right sidebar or overlay)
-- [ ] Populate from `WBAPI.location.profile()` + `WBAPI.quests.chain()` data
-- [ ] Nodes clickable → navigate to investigation card
+**Phase 4 — Relationship graph panel** *(✅ 2026-06-12)*
+- [x] Add lightweight SVG graph panel inline in detail pane (node profile accordion, quest detail, NPC detail)
+- [x] Populate from `WBAPI.location.profile()` + `WBAPI.quests.chain()` + `_questsByNpc` data
+- [x] Nodes clickable → switchTab + selectQuest/selectMapNode/selectNpc; hover highlight
 
 ---
 
@@ -1536,6 +1536,8 @@ A consolidated register of all open work across the project. Organized by domain
 - [x] **§WORLDBUILDER-02 Phase 2 — Mission classification:** Add `_classifyQuest(q)` to wbapi-core.js (10 operational classes; survival not auto-detectable). Add `WBAPI.quests.byClass(cls)`. Class filter in worldbuilder sidebar. Class badge in quest list and detail header. *(✅ 2026-06-12)*
 
 - [x] **§WORLDBUILDER-02 Phase 3 — Location Profile card:** `WBAPI.location.profile(nodeCode)` — extends `location.get()` with quest list w/ classes, NPC quest counts, flag reads/writes at node. Render as Location Profile card in worldbuilder. Also: `_questsByNpc` + `_questsByWaypoint` indexes added to wbapi-core.js; `/api/location/:code` enriched with same data. *(✅ 2026-06-12)*
+
+- [x] **§WORLDBUILDER-02 Phase 4 — Relationship graph panel:** SVG radial graph in node/quest/NPC detail panes. Node→adjacent+quests+NPCs; Quest→activateNode/waypointNode/NPC/arc siblings/upstream/downstream; NPC→home node+quests. Clickable nodes navigate via switchTab. `selectNpc()` helper added. *(✅ 2026-06-12)*
 
 - [ ] **§ARCH-02 Phase 2 — Quest creation flow:** Add `WBAPI.quests.create(questObj)` (validates then adds). Add operand builder UI in worldbuilder Quest Editor. Show `quests.chain()` upstream/downstream in Quest Editor. *(Depends on: §ARCH-02 Phase 1.)*
 
