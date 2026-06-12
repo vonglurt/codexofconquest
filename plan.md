@@ -1485,11 +1485,11 @@ The graph is not a map replacement — it is a relationship surface for the sele
 - [x] Add arc-filter to quest sidebar (filter by arc prefix extracted from quest ID)
 - [x] Add "Location Profile" button on node detail that shows all quests + NPCs + monsters at that node
 
-**Phase 2 — Mission classification layer**
-- [ ] Add `_classifyQuest(q)` to wbapi-core.js — returns operational class from `§WORLDBUILDER-02-B` table based on field inspection
-- [ ] Add `WBAPI.quests.byClass(cls)` list method
-- [ ] Expose in worldbuilder: type filter dropdown includes the 11 operational classes (not just QUEST_DB's 4)
-- [ ] Show operational class badge alongside QUEST_DB type in quest card header
+**Phase 2 — Mission classification layer** *(✅ 2026-06-12)*
+- [x] Add `_classifyQuest(q)` to wbapi-core.js — returns operational class from `§WORLDBUILDER-02-B` table based on field inspection
+- [x] Add `WBAPI.quests.byClass(cls)` list method
+- [x] Expose in worldbuilder: class filter dropdown with 10 operational classes + class badge in quest list
+- [x] Show operational class badge alongside QUEST_DB type in quest card header
 
 **Phase 3 — Location Profile card**
 - [ ] `WBAPI.location.profile(nodeCode)` — extends existing `location.get()` with: quest list with classes, NPC list with quest counts, flag reads/writes at this node
@@ -1533,7 +1533,7 @@ A consolidated register of all open work across the project. Organized by domain
 
 **P1 — Immediately actionable:**
 
-- [ ] **§WORLDBUILDER-02 Phase 2 — Mission classification:** Add `_classifyQuest(q)` to wbapi-core.js (11 operational classes). Add `WBAPI.quests.byClass(cls)`. Expose in worldbuilder filter bar. Show operational class badge in quest card. *(Depends on: §WORLDBUILDER-02 Phase 1.)*
+- [x] **§WORLDBUILDER-02 Phase 2 — Mission classification:** Add `_classifyQuest(q)` to wbapi-core.js (10 operational classes; survival not auto-detectable). Add `WBAPI.quests.byClass(cls)`. Class filter in worldbuilder sidebar. Class badge in quest list and detail header. *(✅ 2026-06-12)*
 
 - [ ] **§WORLDBUILDER-02 Phase 3 — Location Profile card:** `WBAPI.location.profile(nodeCode)` — extends `location.get()` with quest list w/ classes, NPC quest counts, flag reads/writes at node. Render as Location Profile card in worldbuilder. *(Depends on: Phase 2 classification, §ARCH-02 Phase 1 for flag-class map.)*
 
@@ -1558,7 +1558,7 @@ A consolidated register of all open work across the project. Organized by domain
 
 - [ ] **§SPARK-01 — The Harmony Chain (5 quests):** Full spec in quest.md §SPARK-01 and plan.md §SPARK-01. Quests: `quest_spark_01–05`. Nodes: DK, MS. State flags: `smaltBefriended`, `pipMet`, `bioluminescentParasiteFound`, `whodunitSolved`, `wrenpemburyInconsistencyNoticed`, `aldousConfessed`, `harmonyChainComplete`. Token objects: Smalt's Trust, Pip's Friendship Bead, Clot's Glow, Letter of Safe Passage, Letter of True Passage (King's Writ destroyed). Inspector Aldous Wren-Pembury becomes recurring ally NPC after §SPARK-01 close. *Self-contained arc, no prerequisites beyond existing node access.*
 
-- [ ] **Combined monster rename save:** Two renames (commoner → "Rabid Monkey", npc_merchant → "Badger") currently exist in separate timestamped saves. A combined single-session save that applies both in one timestamped file has never been produced. Low risk, low effort. *(Run both `monsters.rename()` calls in one `node -e` session.)*
+- [x] **Combined monster rename save:** commoner → "Rabid Monkey", npc_merchant → "Badger" — applied in one `node -e` session, single save. *(✅ 2026-06-12)*
 
 **P2 — Unscheduled:**
 
