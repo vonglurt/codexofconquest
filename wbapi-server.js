@@ -2485,7 +2485,8 @@ async function route(req, res) {
         logResponse(method, url.pathname, 500, `fix ok but save failed: ${sv.error}`);
         return json(res, 500, { ok:false, error:`fixes applied but save failed: ${sv.error}`, fixed });
       }
-      await WBAPI.load(stamp);
+      fs.copyFileSync(sv.path, GAME_FILE);
+      await WBAPI.load(GAME_FILE);
       logRow('fixed', fixed.length);
       logRow('saved', stamp);
     }
@@ -5773,12 +5774,13 @@ async function route(req, res) {
       };
       const sectionBanner = (title) => emit(`\n  ┌${'─'.repeat(80)}\n  │ ${title}\n  └${'─'.repeat(80)}`);
       // ── MegaReWeave overall phase tracker ────────────────────────────────────
-      const RW_STEPS = 11;
+      const RW_STEPS = 21; // 12 original + 9 final passes (bidir×5 + xjct×3 + cross×1)
       let rwStep = 0;
       const phaseBanner = (label, detail='') => {
         rwStep++;
-        const pct = Math.round(rwStep/RW_STEPS*100);
-        const bar = '█'.repeat(Math.floor(rwStep/RW_STEPS*BAR_W)) + '░'.repeat(BAR_W-Math.floor(rwStep/RW_STEPS*BAR_W));
+        const pct = Math.min(100, Math.round(rwStep/RW_STEPS*100));
+        const filled = Math.min(BAR_W, Math.floor(rwStep/RW_STEPS*BAR_W));
+        const bar = '█'.repeat(filled) + '░'.repeat(BAR_W - filled);
         emit(`\n  ${'═'.repeat(90)}`);
         emit(`  MegaReWeave [${bar}] ${String(pct).padStart(3)}%  step ${rwStep}/${RW_STEPS}`);
         emit(`  ▶ ${label}${detail?'  '+detail:''}`);
@@ -6031,7 +6033,7 @@ async function route(req, res) {
       emit(`  ██  MEGAREWEAVE  execute=${execute}  step=${step}  maxRip=${maxRip}  maxFix=${maxFix}  ██`);
       emit(`  ${'█'.repeat(62)}`);
       emit(`  Road: 0/jct-reduce → 1/geo-seed → 2/rip-connect → 3/coord-scan → 4/fix-broken`);
-      emit(`        5/fix-bidir → 6/highways → 7/city-mesh → 8/derelict → 9/grid-connect → 10/wither → final-bridge`);
+      emit(`        5/fix-bidir → 6/highways → 7/city-mesh → 8/derelict → 9/grid-connect → 10/wither → 11/xjct → final-bridge → bidir → xjct2 → bidir → xjct3 → bidir → cross → bidir → xjct4 → bidir`);
 
       // ── INIT snapshot ─────────────────────────────────────────────────────
       const rwT0 = Date.now();
@@ -6380,6 +6382,39 @@ async function route(req, res) {
         emit(`[p1.5] done: ${p15added} connections ${execute?'added':'would add'}  ${p15skipped} skipped`);
         doneP15();
         if(execute&&p15added>0){rewriteCoords();WBAPI._buildIndexes();batchSave('p1.5-coord-scan');nm=WBAPI.nodeMap;}
+      }
+
+      // ══════════════════════════════════════════════════════════════════════
+      // PHASE P_CLEAN: dangling exit cleanup
+      // Null out any N/S/E/W exit that points to a code not in NODE_MAP.
+      // Runs before P4 so fix-all-broken doesn't waste passes on dead targets.
+      // ══════════════════════════════════════════════════════════════════════
+      {
+        phaseBanner('P_CLEAN:dangling-exits', `execute=${execute}`);
+        const doneClean = phaseTime('p_clean');
+        nm = WBAPI.nodeMap;
+        const dangling = [];
+        for (const [code, node] of Object.entries(nm)) {
+          for (const d of DIRS4) {
+            const tgt = node[d];
+            if (!tgt || nm[tgt]) continue; // null or valid → skip
+            dangling.push({ code, dir:d, tgt });
+          }
+        }
+        emit(`  [p_clean] dangling exits found: ${dangling.length}${dangling.length ? '  sample: ' + dangling.slice(0,5).map(x=>`${x.code}.${x.dir}→${x.tgt}`).join('  ') : ' ✓'}`);
+        if (execute && dangling.length > 0) {
+          let cleaned = 0;
+          for (const { code, dir } of dangling) {
+            const r = WBAPI.editField('node', code, dir, null);
+            if (r.ok) cleaned++;
+          }
+          emit(`  [p_clean] nulled ${cleaned} dangling exits`);
+          if (cleaned > 0) { batchSave('p_clean'); nm = WBAPI.nodeMap; }
+        } else if (!execute) {
+          emit(`  [p_clean] dry-run — would null ${dangling.length} exits`);
+          dangling.slice(0, 20).forEach(x => emit(`    ${x.code}.${x.dir} → ${x.tgt} (missing)`));
+        }
+        doneClean();
       }
 
       // ══════════════════════════════════════════════════════════════════════
@@ -7721,6 +7756,440 @@ async function route(req, res) {
       }
 
       // ══════════════════════════════════════════════════════════════════════
+      // P_XJCT — cross-junction fill
+      // After wither/snail, scan every axis-aligned edge that jumps over ≥1
+      // empty cell.  For each jumped-over cell, check the two perpendicular
+      // directions for existing nodes within XJCT_RADIUS cells (clear line of
+      // sight required).  Spawn a junction ONLY when at least one such
+      // perpendicular neighbour exists — guaranteeing degree ≥ 3 so the new
+      // node is not a bare pass-through that wither would remove next run.
+      // ══════════════════════════════════════════════════════════════════════
+      {
+        phaseBanner('P_XJCT: cross-junction fill', `execute=${execute}`);
+        const doneXJCT = phaseTime('p_xjct');
+        emit(`  [p_xjct start] ${nodeStats()}  ${heapMB()}`);
+        nm = WBAPI.nodeMap;
+
+        const XJCT_RADIUS = 3;
+        // Build occupancy map: "r,c" → code
+        const xjOcc = new Map(
+          Object.entries(WBAPI.nodeCoords).map(([c,p]) => [`${p.r},${p.c}`, c])
+        );
+
+        // Collect spawn plans: scan every undirected edge once
+        const xjPairs = new Set();
+        const xjSpawnList = []; // [{pathFrom, pathTo, fwdDir, cells:[{r,c,perpNeighbors}]}]
+
+        for (const [codeA, nodeA] of Object.entries(nm)) {
+          for (const fwdDir of DIRS4) {
+            const codeB = nodeA[fwdDir];
+            if (!codeB || !nm[codeB]) continue;
+            const pairKey = [codeA, codeB].sort().join(':');
+            if (xjPairs.has(pairKey)) continue;
+            xjPairs.add(pairKey);
+
+            const ca = WBAPI.nodeCoords[codeA], cb = WBAPI.nodeCoords[codeB];
+            if (!ca || !cb) continue;
+            const dr = cb.r - ca.r, dc = cb.c - ca.c;
+            if (dr !== 0 && dc !== 0) continue; // diagonal edge — skip
+            const isNS = dr !== 0;
+            // Skip mislabeled edges: direction label must match geometry
+            if ((fwdDir === 'N' || fwdDir === 'S') && !isNS) continue;
+            if ((fwdDir === 'E' || fwdDir === 'W') &&  isNS) continue;
+            const gap = isNS ? Math.abs(dr) : Math.abs(dc);
+            if (gap <= 1) continue; // adjacent cell, nothing to fill
+
+            const stepR = isNS ? Math.sign(dr) : 0;
+            const stepC = isNS ? 0 : Math.sign(dc);
+            const perpDirs = isNS ? ['E','W'] : ['N','S'];
+
+            const cells = [];
+            for (let k = 1; k < gap; k++) {
+              const r = ca.r + stepR * k;
+              const c = ca.c + stepC * k;
+              if (xjOcc.has(`${r},${c}`)) continue; // cell occupied
+
+              // Find perpendicular neighbours with clear line of sight
+              const perpNeighbors = [];
+              for (const pd of perpDirs) {
+                for (let dist = 1; dist <= XJCT_RADIUS; dist++) {
+                  const pr = r + DR4[pd] * dist;
+                  const pc = c + DC4[pd] * dist;
+                  // Clear line-of-sight: intermediate cells must be empty
+                  let blocked = false;
+                  for (let d2 = 1; d2 < dist; d2++) {
+                    if (xjOcc.has(`${r + DR4[pd]*d2},${c + DC4[pd]*d2}`)) {
+                      blocked = true; break;
+                    }
+                  }
+                  if (blocked) break; // farther cells also occluded — stop
+                  const pCode = xjOcc.get(`${pr},${pc}`);
+                  if (pCode && nm[pCode]) {
+                    // Neighbour must have its inward slot free
+                    if (!nm[pCode][OPP4[pd]]) {
+                      perpNeighbors.push({ code: pCode, dir: pd, dist });
+                    }
+                    break; // nearest node in this direction found; stop
+                  }
+                }
+              }
+
+              if (perpNeighbors.length > 0) {
+                cells.push({ r, c, perpNeighbors });
+              }
+            }
+
+            if (cells.length > 0) {
+              xjSpawnList.push({ pathFrom: codeA, pathTo: codeB, fwdDir, cells });
+            }
+          }
+        }
+
+        const xjTotal = xjSpawnList.reduce((s,e) => s + e.cells.length, 0);
+        emit(`  [p_xjct] paths with fillable cells: ${xjSpawnList.length}  total cross-junctions: ${xjTotal}`);
+
+        if (!execute) {
+          for (const { pathFrom, pathTo, fwdDir, cells } of xjSpawnList.slice(0, 20)) {
+            const ca2 = WBAPI.nodeCoords[pathFrom], cb2 = WBAPI.nodeCoords[pathTo];
+            const gap2 = fwdDir==='N'||fwdDir==='S' ? Math.abs(cb2.r-ca2.r) : Math.abs(cb2.c-ca2.c);
+            emit(`  [dry] ${pathFrom}.${fwdDir}→${pathTo}  gap=${gap2}  ${cells.length} junction(s)`);
+            for (const { r, c, perpNeighbors } of cells) {
+              emit(`    cell(${r},${c}) perp: ${perpNeighbors.map(n=>`${n.dir}:${n.code}@d${n.dist}`).join(' ')}`);
+            }
+          }
+          if (xjSpawnList.length > 20) emit(`  ... and ${xjSpawnList.length - 20} more paths`);
+          emit('[p_xjct] dry-run — add --execute to create junctions');
+        } else {
+          let xjCreated = 0;
+          for (const { pathFrom, pathTo, fwdDir, cells } of xjSpawnList) {
+            const bwdDir = OPP4[fwdDir];
+            let prevCode = pathFrom;
+
+            for (const { r, c, perpNeighbors } of cells) {
+              if (xjOcc.has(`${r},${c}`)) continue; // another path already claimed this cell
+
+              const jCode = nextJCode();
+              const jBody = {
+                name: 'junction',
+                label: `X-jct`,
+                text: 'Cross-path junction.',
+                act: nm[pathFrom]?.act || 1,
+                junction: true,
+                npc: null, battle: null, loot: null, sleep: false,
+              };
+              const entry = serializeNodeLiteral(jCode, jBody);
+              if (!insertBeforeSectionClose('NODE_MAP', entry).ok) {
+                emit(`  [p_xjct] WARN: insert failed for ${jCode}@(${r},${c})`);
+                continue;
+              }
+              nm[jCode] = { ...jBody, num: nextNodeNum() };
+              WBAPI.nodeCoords[jCode] = { r, c };
+              xjOcc.set(`${r},${c}`, jCode);
+
+              // Wire path: prevCode →fwdDir→ jCode ←bwdDir← prevCode
+              WBAPI.editField('node', prevCode, fwdDir, jCode);
+              WBAPI.editField('node', jCode, bwdDir, prevCode);
+
+              // Wire perpendicular neighbours (one per perp direction, max 2)
+              const wiredPerp = [];
+              for (const { code: pCode, dir: pd } of perpNeighbors.slice(0, 2)) {
+                if (!nm[pCode]?.[OPP4[pd]] && !nm[jCode]?.[pd]) {
+                  WBAPI.editField('node', jCode, pd, pCode);
+                  WBAPI.editField('node', pCode, OPP4[pd], jCode);
+                  wiredPerp.push(`${pd}:${pCode}`);
+                }
+              }
+
+              emit(`  [p_xjct] ${jCode}@(${r},${c}) on ${prevCode}.${fwdDir}→${pathTo}  perp=[${wiredPerp.join(' ')}]`);
+              prevCode = jCode;
+              xjCreated++;
+            }
+
+            // Close the chain: last inserted junction → pathTo
+            if (prevCode !== pathFrom) {
+              WBAPI.editField('node', prevCode, fwdDir, pathTo);
+              WBAPI.editField('node', pathTo, bwdDir, prevCode);
+            }
+          }
+
+          emit(`  [p_xjct] created ${xjCreated} cross-junctions`);
+          if (xjCreated > 0) {
+            rewriteCoords();
+            WBAPI._buildIndexes();
+            batchSave('p_xjct');
+            nm = WBAPI.nodeMap;
+          }
+        }
+
+        emit(`  [p_xjct end] ${nodeStats()}  ${heapMB()}`);
+        doneXJCT();
+      }
+
+      // ══════════════════════════════════════════════════════════════════════
+      // FINAL PASSES: 2 more perpendicular-xjct sweeps + geometric crossover
+      // Sequence: bidir → xjct2 → bidir → xjct3 → bidir → cross → bidir
+      // ══════════════════════════════════════════════════════════════════════
+      {
+        const XJCT_R = 3; // perpendicular scan radius (cells)
+
+        // ── inline bidir fix helper ───────────────────────────────────────────
+        const runBidirFixPass = async (label) => {
+          phaseBanner(`P_BIDIR:${label}`, `execute=${execute}`);
+          const doneB = phaseTime(`bidir-${label}`);
+          nm = WBAPI.nodeMap;
+          const bTgts = Object.entries(nm).flatMap(([code, n]) =>
+            DIRS4.filter(d => n[d] && nm[n[d]] && nm[n[d]][OPP4[d]] !== code)
+                 .map(d => ({ code, dir:d, target:n[d] })));
+          emit(`  [bidir:${label}] ${bTgts.length} one-way links`);
+          if (execute && bTgts.length > 0) {
+            let fixed = 0;
+            for (const { code, dir, target } of bTgts) {
+              if (!nm[target]) continue;
+              if (nm[target][OPP4[dir]] === code) continue;
+              if (WBAPI.editField('node', target, OPP4[dir], code).ok) fixed++;
+              if (fixed % 300 === 0) await yieldOnce();
+            }
+            emit(`  [bidir:${label}] fixed=${fixed}`);
+            if (fixed > 0) { batchSave(`bidir-${label}`); nm = WBAPI.nodeMap; }
+          }
+          doneB();
+        };
+
+        // ── perpendicular xjct pass helper ───────────────────────────────────
+        const runXjctPass = async (label) => {
+          phaseBanner(`P_XJCT:${label}`, `execute=${execute}`);
+          const doneX = phaseTime(`xjct-${label}`);
+          emit(`  [${label} start] ${nodeStats()}  ${heapMB()}`);
+          nm = WBAPI.nodeMap;
+
+          const occ = new Map(Object.entries(WBAPI.nodeCoords).map(([c,p]) => [`${p.r},${p.c}`, c]));
+          const pairs = new Set();
+          const spawnList = [];
+
+          for (const [codeA, nodeA] of Object.entries(nm)) {
+            for (const fwdDir of DIRS4) {
+              const codeB = nodeA[fwdDir];
+              if (!codeB || !nm[codeB]) continue;
+              const pk = [codeA, codeB].sort().join(':');
+              if (pairs.has(pk)) continue; pairs.add(pk);
+              const ca = WBAPI.nodeCoords[codeA], cb = WBAPI.nodeCoords[codeB];
+              if (!ca || !cb) continue;
+              const dr = cb.r - ca.r, dc = cb.c - ca.c;
+              if (dr !== 0 && dc !== 0) continue;
+              const isNS = dr !== 0;
+              if ((fwdDir === 'N' || fwdDir === 'S') && !isNS) continue;
+              if ((fwdDir === 'E' || fwdDir === 'W') &&  isNS) continue;
+              const gap = isNS ? Math.abs(dr) : Math.abs(dc);
+              if (gap <= 1) continue;
+              const stepR = isNS ? Math.sign(dr) : 0;
+              const stepC = isNS ? 0 : Math.sign(dc);
+              const perpDirs = isNS ? ['E','W'] : ['N','S'];
+              const cells = [];
+              for (let k = 1; k < gap; k++) {
+                const r = ca.r + stepR * k, c = ca.c + stepC * k;
+                if (occ.has(`${r},${c}`)) continue;
+                const perpNeighbors = [];
+                for (const pd of perpDirs) {
+                  for (let dist = 1; dist <= XJCT_R; dist++) {
+                    const pr = r + DR4[pd]*dist, pc = c + DC4[pd]*dist;
+                    let blocked = false;
+                    for (let d2 = 1; d2 < dist; d2++) {
+                      if (occ.has(`${r+DR4[pd]*d2},${c+DC4[pd]*d2}`)) { blocked=true; break; }
+                    }
+                    if (blocked) break;
+                    const pCode = occ.get(`${pr},${pc}`);
+                    if (pCode && nm[pCode]) {
+                      if (!nm[pCode][OPP4[pd]]) perpNeighbors.push({ code:pCode, dir:pd, dist });
+                      break;
+                    }
+                  }
+                }
+                if (perpNeighbors.length > 0) cells.push({ r, c, perpNeighbors });
+              }
+              if (cells.length > 0) spawnList.push({ pathFrom:codeA, pathTo:codeB, fwdDir, cells });
+            }
+          }
+
+          const total = spawnList.reduce((s, e) => s + e.cells.length, 0);
+          emit(`  [${label}] paths=${spawnList.length}  junctions=${total}`);
+          if (execute && total > 0) {
+            let created = 0;
+            for (const { pathFrom, pathTo, fwdDir, cells } of spawnList) {
+              let prev = pathFrom;
+              const bwdDir = OPP4[fwdDir];
+              for (const { r, c, perpNeighbors } of cells) {
+                if (occ.has(`${r},${c}`)) continue;
+                const jCode = nextJCode();
+                const jBody = { name:'junction', label:'X-jct', text:'Cross-path junction.',
+                  act: nm[pathFrom]?.act||1, junction:true, npc:null, battle:null, loot:null, sleep:false };
+                if (!insertBeforeSectionClose('NODE_MAP', serializeNodeLiteral(jCode, jBody)).ok) continue;
+                nm[jCode] = { ...jBody, num:nextNodeNum() };
+                WBAPI.nodeCoords[jCode] = { r, c };
+                occ.set(`${r},${c}`, jCode);
+                WBAPI.editField('node', prev, fwdDir, jCode);
+                WBAPI.editField('node', jCode, bwdDir, prev);
+                for (const { code:pCode, dir:pd } of perpNeighbors.slice(0, 2)) {
+                  if (!nm[pCode]?.[OPP4[pd]] && !nm[jCode]?.[pd]) {
+                    WBAPI.editField('node', jCode, pd, pCode);
+                    WBAPI.editField('node', pCode, OPP4[pd], jCode);
+                  }
+                }
+                prev = jCode; created++;
+              }
+              if (prev !== pathFrom) {
+                WBAPI.editField('node', prev, fwdDir, pathTo);
+                WBAPI.editField('node', pathTo, bwdDir, prev);
+              }
+            }
+            emit(`  [${label}] created=${created}`);
+            if (created > 0) { rewriteCoords(); WBAPI._buildIndexes(); batchSave(label); nm = WBAPI.nodeMap; }
+          }
+          emit(`  [${label} end] ${nodeStats()}  ${heapMB()}`);
+          doneX();
+        };
+
+        // ── sequence ──────────────────────────────────────────────────────────
+        await runBidirFixPass('post-xjct1');
+        await runXjctPass('p_xjct2');
+        await runBidirFixPass('post-xjct2');
+        await runXjctPass('p_xjct3');
+        await runBidirFixPass('post-xjct3');
+
+        // ── P_CROSS — geometric crossover junction creation ───────────────────
+        // Any NS edge and EW edge whose grid lines intersect at an empty cell
+        // get a 4-way junction at that cell, wired into both chains.
+        {
+          phaseBanner('P_CROSS: geometric crossover junctions', `execute=${execute}`);
+          const doneCross = phaseTime('p_cross');
+          nm = WBAPI.nodeMap;
+          const crossOcc = new Map(Object.entries(WBAPI.nodeCoords).map(([c,p]) => [`${p.r},${p.c}`, c]));
+
+          // Collect all direct NS and EW hops (each undirected edge once)
+          const nsHops = []; // {nodeTop,nodeBot,col,rTop,rBot}
+          const ewHops = []; // {nodeLeft,nodeRight,row,cLeft,cRight}
+          const seenPairsC = new Set();
+          for (const [code, n] of Object.entries(nm)) {
+            const ca = WBAPI.nodeCoords[code]; if (!ca) continue;
+            for (const dir of DIRS4) {
+              const tgt = n[dir]; if (!tgt || !nm[tgt]) continue;
+              const pk = [code, tgt].sort().join(':');
+              if (seenPairsC.has(pk)) continue; seenPairsC.add(pk);
+              const cb = WBAPI.nodeCoords[tgt]; if (!cb) continue;
+              if (dir === 'N' || dir === 'S') {
+                if (ca.c !== cb.c) continue; // must be same column
+                const rTop=Math.min(ca.r,cb.r), rBot=Math.max(ca.r,cb.r);
+                if (rBot-rTop <= 1) continue;
+                nsHops.push({ nodeTop:ca.r<cb.r?code:tgt, nodeBot:ca.r<cb.r?tgt:code, col:ca.c, rTop, rBot });
+              } else { // E or W
+                if (ca.r !== cb.r) continue; // must be same row
+                const cLeft=Math.min(ca.c,cb.c), cRight=Math.max(ca.c,cb.c);
+                if (cRight-cLeft <= 1) continue;
+                ewHops.push({ nodeLeft:ca.c<cb.c?code:tgt, nodeRight:ca.c<cb.c?tgt:code, row:ca.r, cLeft, cRight });
+              }
+            }
+          }
+          emit(`  [p_cross] NS hops=${nsHops.length}  EW hops=${ewHops.length}`);
+
+          // Index NS hops by column for fast lookup
+          const nsByCol = new Map();
+          for (const ns of nsHops) {
+            if (!nsByCol.has(ns.col)) nsByCol.set(ns.col, []);
+            nsByCol.get(ns.col).push(ns);
+          }
+
+          // Find crossings: for each EW hop, walk its column range looking for NS hops
+          const crossingsByNS = new Map(); // nsHop → [{row, ewHop}] sorted later
+          const crossingsByEW = new Map(); // ewHop → [{col}] sorted later
+          const claimedCells  = new Set();
+
+          for (const ew of ewHops) {
+            for (let c = ew.cLeft+1; c < ew.cRight; c++) {
+              const nsList = nsByCol.get(c); if (!nsList) continue;
+              for (const ns of nsList) {
+                if (ew.row <= ns.rTop || ew.row >= ns.rBot) continue; // not "between"
+                const cellKey = `${ew.row},${c}`;
+                if (crossOcc.has(cellKey) || claimedCells.has(cellKey)) continue;
+                claimedCells.add(cellKey);
+                if (!crossingsByNS.has(ns)) crossingsByNS.set(ns, []);
+                crossingsByNS.get(ns).push({ row:ew.row, ew });
+                if (!crossingsByEW.has(ew)) crossingsByEW.set(ew, []);
+                crossingsByEW.get(ew).push({ col:c });
+              }
+            }
+          }
+
+          const totalCross = claimedCells.size;
+          emit(`  [p_cross] crossings found=${totalCross}`);
+
+          if (!execute) {
+            for (const [ns, crossings2] of [...crossingsByNS.entries()].slice(0,8)) {
+              emit(`  [dry] NS ${ns.nodeTop}→${ns.nodeBot} col=${ns.col}  rows=[${crossings2.map(x=>x.row).join(',')}]`);
+            }
+            if (crossingsByNS.size > 8) emit(`  ... +${crossingsByNS.size-8} more NS hops`);
+            emit('[p_cross] dry-run');
+          } else if (totalCross > 0) {
+            const crossJunctions = new Map(); // cellKey → jCode
+
+            // Pass 1: create junctions + wire N/S along each NS hop
+            for (const [ns, crossings2] of crossingsByNS) {
+              const sorted = crossings2.slice().sort((a,b) => a.row - b.row);
+              let prev = ns.nodeTop;
+              for (const { row } of sorted) {
+                const cellKey = `${row},${ns.col}`;
+                const jCode = nextJCode();
+                const jBody = { name:'junction', label:'Crossover', text:'Geographic crossover junction.',
+                  act: nm[ns.nodeTop]?.act||1, junction:true, npc:null, battle:null, loot:null, sleep:false };
+                if (!insertBeforeSectionClose('NODE_MAP', serializeNodeLiteral(jCode, jBody)).ok) {
+                  emit(`  [p_cross] WARN: insert failed ${jCode}`); continue;
+                }
+                nm[jCode] = { ...jBody, num:nextNodeNum() };
+                WBAPI.nodeCoords[jCode] = { r:row, c:ns.col };
+                crossOcc.set(cellKey, jCode);
+                crossJunctions.set(cellKey, jCode);
+                WBAPI.editField('node', prev, 'S', jCode);
+                WBAPI.editField('node', jCode, 'N', prev);
+                prev = jCode;
+              }
+              // Close the NS chain to the bottom node
+              WBAPI.editField('node', prev, 'S', ns.nodeBot);
+              WBAPI.editField('node', ns.nodeBot, 'N', prev);
+            }
+
+            // Pass 2: wire E/W through the crossing junctions along each EW hop
+            for (const [ew, crossings2] of crossingsByEW) {
+              const sorted = crossings2.slice().sort((a,b) => a.col - b.col);
+              let prev = ew.nodeLeft;
+              for (const { col } of sorted) {
+                const jCode = crossJunctions.get(`${ew.row},${col}`);
+                if (!jCode) continue;
+                WBAPI.editField('node', prev, 'E', jCode);
+                WBAPI.editField('node', jCode, 'W', prev);
+                prev = jCode;
+              }
+              // Close the EW chain to the right node
+              WBAPI.editField('node', prev, 'E', ew.nodeRight);
+              WBAPI.editField('node', ew.nodeRight, 'W', prev);
+            }
+
+            const crossCreated = crossJunctions.size;
+            emit(`  [p_cross] created=${crossCreated} crossover junctions`);
+            if (crossCreated > 0) { rewriteCoords(); WBAPI._buildIndexes(); batchSave('p_cross'); nm = WBAPI.nodeMap; }
+          }
+          emit(`  [p_cross end] ${nodeStats()}  ${heapMB()}`);
+          doneCross();
+        }
+
+        // Post-cross bidir + one more xjct sweep: P_CROSS creates new junctions
+        // that open fresh perpendicular opportunities P_XJCT hasn't seen yet.
+        await runBidirFixPass('post-cross');
+        await runXjctPass('p_xjct4');
+        await runBidirFixPass('post-xjct4');
+        await runXjctPass('p_xjct5');
+        await runBidirFixPass('post-xjct5');
+        await runBidirFixPass('final');
+      }
+
+      // ══════════════════════════════════════════════════════════════════════
       // POST-REWEAVE MAPS  (wide terminal assumed — 220+ cols)
       // ══════════════════════════════════════════════════════════════════════
       {
@@ -7878,6 +8347,96 @@ async function route(req, res) {
             doneFB();
           }
         }
+      }
+
+      // ── POST-BRIDGE bidir fix — final-bridge may have added new one-way links ──
+      {
+        phaseBanner('P_BIDIR:post-bridge', `execute=${execute}`);
+        const donePostBridge = phaseTime('bidir-post-bridge');
+        nm = WBAPI.nodeMap;
+        const pbTgts = Object.entries(nm).flatMap(([code, n]) =>
+          DIRS4.filter(d => n[d] && nm[n[d]] && nm[n[d]][OPP4[d]] !== code)
+               .map(d => ({ code, dir:d, target:n[d] })));
+        emit(`  [bidir:post-bridge] ${pbTgts.length} one-way links`);
+        if (execute && pbTgts.length > 0) {
+          let pbFixed = 0;
+          for (const { code, dir, target } of pbTgts) {
+            if (!nm[target]) continue;
+            if (nm[target][OPP4[dir]] === code) continue;
+            if (WBAPI.editField('node', target, OPP4[dir], code).ok) pbFixed++;
+            if (pbFixed % 300 === 0) await yieldOnce();
+          }
+          emit(`  [bidir:post-bridge] fixed=${pbFixed}`);
+          if (pbFixed > 0) { batchSave('bidir-post-bridge'); nm = WBAPI.nodeMap; }
+        }
+        donePostBridge();
+      }
+
+      // ── FINAL VALIDATE — comprehensive health check after all passes ────────
+      {
+        const doneVal = phaseTime('final-validate');
+        phaseBanner('P_VALIDATE:final', `execute=${execute}`);
+        nm = WBAPI.nodeMap;
+        const valCoords = WBAPI.nodeCoords;
+
+        // 1. Reachability
+        const valHub   = getHub();
+        const valReach = bfsReach(valHub);
+        const valTotal = Object.keys(nm).length;
+        const valPct   = Math.round(valReach.size / valTotal * 1000) / 10;
+        const valUnreach = Object.keys(nm).filter(c => !valReach.has(c));
+        const valUnreachNamed = valUnreach.filter(c => !nm[c]?.junction);
+        emit(`  [validate] reachability: ${valReach.size}/${valTotal} (${valPct}%)  unreachable=${valUnreach.length} (named=${valUnreachNamed.length})`);
+        if (valUnreachNamed.length)
+          emit(`  [validate] unreachable named: ${valUnreachNamed.map(c => `${c}(${nm[c]?.label||nm[c]?.name||'?'})`).join('  ')}`);
+
+        // 2. One-way links remaining
+        const OPP_V = {N:'S',S:'N',E:'W',W:'E'};
+        const oneWay = Object.entries(nm).flatMap(([code, n]) =>
+          ['N','S','E','W'].filter(d => n[d] && nm[n[d]] && nm[n[d]][OPP_V[d]] !== code)
+                           .map(d => `${code}.${d}→${n[d]}`));
+        emit(`  [validate] one-way links: ${oneWay.length}${oneWay.length ? '  sample: ' + oneWay.slice(0,5).join('  ') : ' ✓'}`);
+
+        // 3. Ghost coordinates (in NODE_COORDS but no NODE_MAP entry)
+        const ghosts = Object.keys(valCoords).filter(c => !nm[c]);
+        emit(`  [validate] ghost coords (no NODE_MAP entry): ${ghosts.length}${ghosts.length ? '  ' + ghosts.slice(0,8).join(' ') : ' ✓'}`);
+
+        // 4. Nodes without coordinates
+        const noCoord = Object.keys(nm).filter(c => !valCoords[c]);
+        emit(`  [validate] nodes without coords: ${noCoord.length}${noCoord.length ? '  sample: ' + noCoord.slice(0,5).join(' ') : ' ✓'}`);
+
+        // 5. Dead-end junctions (≤1 exit, no quest/npc/battle)
+        const deadEnds = Object.entries(nm).filter(([c, n]) => {
+          if (!n.junction) return false;
+          const exits = ['N','S','E','W'].filter(d => n[d]).length;
+          return exits <= 1 && !n.npc && !n.battle && !n.loot;
+        });
+        emit(`  [validate] dead-end junctions (≤1 exit, no content): ${deadEnds.length}`);
+
+        const stable = valPct >= 100 && oneWay.length === 0 && ghosts.length === 0;
+        emit(`  [validate] ${stable ? '✅ MAP FULLY VALIDATED' : '⚠️  issues remain — see above'}`);
+        doneVal();
+      }
+
+      // ── COORD RESYNC — remove ghost entries, then rewrite NODE_COORDS ────────
+      // Ghost = exists in NODE_COORDS but not in NODE_MAP (dangling after node deletes).
+      {
+        const doneResync = phaseTime('coord-resync');
+        phaseBanner('P_RESYNC:coord-cleanup', `execute=${execute}`);
+        nm = WBAPI.nodeMap;
+        const coords = WBAPI.nodeCoords;
+        const ghostKeys = Object.keys(coords).filter(c => !nm[c]);
+        emit(`  [coord-resync] ghost coords found: ${ghostKeys.length}${ghostKeys.length ? '  ' + ghostKeys.slice(0,10).join(' ') : ' ✓'}`);
+        if (execute && ghostKeys.length > 0) {
+          for (const c of ghostKeys) delete coords[c];
+          rewriteCoords();
+          WBAPI._buildIndexes();
+          batchSave('coord-resync');
+          emit(`  [coord-resync] removed ${ghostKeys.length} ghost entries → NODE_COORDS rewritten`);
+        } else if (!execute) {
+          emit(`  [coord-resync] dry-run — would remove ${ghostKeys.length} ghost entries`);
+        }
+        doneResync();
       }
 
       // ── FINAL summary ──────────────────────────────────────────────────────
