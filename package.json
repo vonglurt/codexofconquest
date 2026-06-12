@@ -6,9 +6,15 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "start": "node wbapi-server.js"
+    "start": "node wbapi-server.js",
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:install": "playwright install chromium"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0"
   }
 }
