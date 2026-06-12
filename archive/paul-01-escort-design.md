@@ -1,6 +1,6 @@
 ## §PAUL-01 — The Escort of the Apostle: Revised Arc Design (✅ Implemented 2026-06-11)
 
-**Status:** ✅ Implemented 2026-06-11. All §PAUL-01-I checklist items resolved. Two Malta quests added: `quest_shipwreck_melta` (STR DC 12) + `quest_snake_melta` (witness, auto-complete via `maltaSnakeEvent`). `shipwreckSurvived` flag added to `_S_DEFAULTS`. 0 errors audit clean. Fighter presence layer live in all Paul arc nodes (DAM/KVA/MLA). Thorn tooltip live. Real quotes exact. See `plan-archive.md §FUTURE-01` for node map reference.
+**Status:** ✅ Implemented 2026-06-11. All §PAUL-01-I checklist items resolved. Two Malta quests added: `quest_shipwreck_melta` (STR DC 12) + `quest_snake_melta` (witness, auto-complete via `maltaSnakeEvent`). `shipwreckSurvived` flag added to `_S_DEFAULTS`. 0 errors audit clean. Fighter presence layer live in all Paul arc nodes (DAM/KVA/MLA). Thorn tooltip live. Real quotes exact. See `archive/plan-archive.md §FUTURE-01` for node map reference.
 
 **The premise shift:** In §FUTURE-01 as implemented, the player walks in Paul's footprints — the narration is in second person but the events are Paul's events. The revision establishes the **Fighter as co-protagonist**. Paul is a Cleric NPC — on a mission from his deity, skilled in rhetoric and faith-mechanics, incapable of routing himself safely through a hostile world. The Fighter is his escort. Both characters are present in every scene. Neither is backdrop to the other.
 

@@ -866,7 +866,7 @@ Atomic, composable mechanics — each bit is a typed contract:
 | Phase | Description | Risk |
 |-------|-------------|------|
 | 0 | Anchors + worldbuilder (✅ Done) | Zero |
-| 1 | `QuestRuntime` singleton + `adaptLegacyQuest()` adapter + `schema:'0.legacy'` stamps | Zero |
+| 1 | `QuestRuntime` singleton + `adaptLegacyQuest()` adapter + `schema:'0.legacy'` stamps (✅ Done) | Zero |
 | 2 | New arcs written in UQF; runtime serves both formats | Low |
 | 3 | Arc-by-arc migration (§WISDOM-01 first) | Medium |
 | 4 | All arcs UQF; legacy path removed | Medium-low |
@@ -1523,7 +1523,7 @@ Items that arise from the investigation-mode design and should feed into §ARCH-
 
 ---
 
-## §BACKLOG — Outstanding Tasks (updated 2026-05-29)
+## §BACKLOG — Outstanding Tasks (updated 2026-06-12)
 
 A consolidated register of all open work across the project. Organized by domain. Items carry a priority tier: **P1** (blocks other work or has active dependencies), **P2** (planned, sequenced), **P3** (unscheduled / speculative).
 
