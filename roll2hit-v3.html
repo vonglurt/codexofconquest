@@ -4937,7 +4937,7 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
   spooked_horse:     { key:'spooked_horse',     name:'Spooked Horse',           ac:4, hp:18, atk:4, dmgDie:6, dmgCount:1, dmgFlat:2, tier:'easy'    },
   catnabbing_eagle:  { key:'catnabbing_eagle',  name:'CatNabbing Eagle',        ac:4, hp:10, atk:4, dmgDie:6, dmgCount:1, dmgFlat:1, tier:'easy'    },
   // trivial — general
-  commoner:        { key:'commoner',        name:'Commoner',           ac:10, hp:4,   atk:2,  dmgDie:4,  dmgCount:1, dmgFlat:0,  tier:'trivial' },
+  commoner:        { key:'commoner',        name:"Rabid Monkey",           ac:10, hp:4,   atk:2,  dmgDie:4,  dmgCount:1, dmgFlat:0,  tier:'trivial' },
   kobold:          { key:'kobold',          name:'Kobold',             ac:12, hp:5,   atk:4,  dmgDie:4,  dmgCount:1, dmgFlat:2,  tier:'trivial' },
   needle_blight:   { key:'needle_blight',   name:'Needle Blight',      ac:12, hp:11,  atk:3,  dmgDie:4,  dmgCount:1, dmgFlat:1,  tier:'trivial' },
   lemure:          { key:'lemure',          name:'Lemure',             ac:7,  hp:10,  atk:3,  dmgDie:6,  dmgCount:1, dmgFlat:1,  tier:'trivial' },
@@ -5045,7 +5045,7 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
   // ── Expansion ──────────────────────────────────────────
   // trivial
   guard:               { key:'guard',               name:'Guard',                  ac:16, hp:11,  atk:3,  dmgDie:6,  dmgCount:1, dmgFlat:1,  tier:'trivial' },
-  npc_merchant:        { key:'npc_merchant',         name:'NPC Merchant',           ac:10, hp:9,   atk:2,  dmgDie:4,  dmgCount:1, dmgFlat:0,  tier:'trivial' },
+  npc_merchant:        { key:'npc_merchant',         name:"Badger",           ac:10, hp:9,   atk:2,  dmgDie:4,  dmgCount:1, dmgFlat:0,  tier:'trivial' },
   // easy
   pirate:              { key:'pirate',               name:'Pirate',                 ac:12, hp:11,  atk:3,  dmgDie:6,  dmgCount:1, dmgFlat:1,  tier:'easy' },
   giant_crab:          { key:'giant_crab',           name:'Giant Crab',             ac:15, hp:13,  atk:3,  dmgDie:6,  dmgCount:1, dmgFlat:1,  tier:'easy' },
@@ -40241,7 +40241,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'The Shadow Room',
     desc:'Ardley W6 — The Law of Repression: "The parts of yourself you have refused to examine do not disappear. They operate below the surface. They surface as overreactions, as inexplicable preferences, as patterns you cannot explain. The shadow is not your enemy — it is the part of you that has been waiting to be named." Roen: "There is a room in the lower level I have been in four times now. It shows you something. I will not say what it showed me. It was accurate, though. I gave it a formal nod. It seemed appropriate." The shadow room at Visby. Accept the reflection (Shadow Shard awarded) or fight the shadow construct.',
     hint:'Enter the shadow room in Visby. Use the story panel at VS to choose: accept or fight.',
-    activateNode:'VS', activateCond:() => !!S_story.wisHookReceived,
+    activateNode:'VS', activateCond:() => !!S_story.visbyUnderground,
     completeItems:[], completeFn:() => !!(S_story.wisPage6_shadow || (S_story.defeatedBattles||{})['VS_SHADOW']),
     waypointNode:'VS', reward:0,
     disposition:'"I gave it a formal nod. It seemed appropriate." — Roen',
@@ -49259,6 +49259,7 @@ const _S_DEFAULTS = () => ({
   wisPage4_sight: false,
   wisPage5_form: false,
   wisPage6_shadow: false,
+  visbyUnderground: false,
   wisArchiveLetter: false,
   personalLegendMature: false,
     faith_orthodox: 0, // Church orthodoxy track. Range -5 to +5. Affects inquisitor quests, bishop dialogue, pilgrimage availability.
@@ -59751,6 +59752,26 @@ function storyRender(node, prefix) {
       });
       _aDiv.appendChild(_aBtn);
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
+    }
+  }
+  // §DUNGEON-01: VS Underground Room — lower archive entrance
+  { const _vsUgOld = document.getElementById('story-vs-underground'); if (_vsUgOld) _vsUgOld.remove();
+    if (node.code === 'VS' && S_story.wisHookReceived && !S_story.visbyUnderground) {
+      const _ugDiv = document.createElement('div');
+      _ugDiv.id = 'story-vs-underground'; _ugDiv.className = 'sweelinck-variant';
+      _ugDiv.style.cssText = 'margin-top:10px;border-left-color:#1a1a3a;color:#7080b0;font-size:12px;';
+      _ugDiv.textContent = '🕯 The main archive has a lower level. Roen mentioned it four times in passing — always the same detail: "It shows you something." He did not elaborate. The passage down is behind the southeast stack, below the cartography section. Eight steps.';
+      const _ugBtn = document.createElement('button');
+      _ugBtn.className = 'inv-use-btn'; _ugBtn.style.marginTop = '6px';
+      _ugBtn.textContent = '🕯 Descend to the lower archive level';
+      _ugBtn.addEventListener('click', () => {
+        _ugBtn.disabled = true;
+        S_story.visbyUnderground = true;
+        storyMsg('🕯 The lower level is cut stone over older stone. No windows. The air is cold in the way that archives are cold — not temperature, but attention. Three alcoves and one central chamber. The central chamber has a standing mirror, obsidian, no frame. The shadow room is here.');
+        storyRender(node);
+      });
+      _ugDiv.appendChild(_ugBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _ugDiv);
     }
   }
   // §WISDOM-01: VS — The Manuscript Hub (hook + shadow room + resolution)
