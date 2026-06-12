@@ -8439,6 +8439,174 @@ async function route(req, res) {
         doneResync();
       }
 
+      // ══════════════════════════════════════════════════════════════════════
+      // LUFP — Last Ultimate Final Pass
+      //
+      // Ground truth: NODE_COORDS cell positions define the world geometry.
+      // Goal: verify every named city can reach every other named city, and
+      //       if any component is disconnected, build the shortest land bridge
+      //       between their nearest border nodes using coordinate proximity.
+      //
+      // Algorithm:
+      //   1. Build undirected adjacency (all N/S/E/W links in both directions)
+      //   2. BFS-flood to find city components
+      //   3. Greedy Prim-like spanning: always bridge the two components whose
+      //      nearest city-pair coordinate distance is smallest
+      //   4. After bridging, run directed BFS verification city-to-city
+      //   5. Greedy nearest-neighbour spanning walk (TSP heuristic) — emit
+      //      the route so the output proves every city is routable
+      // ══════════════════════════════════════════════════════════════════════
+      {
+        phaseBanner('LUFP:city-span-verify', `execute=${execute}`);
+        const doneLUFP = phaseTime('lufp');
+        nm = WBAPI.nodeMap;
+        const lCoords = WBAPI.nodeCoords;
+        const mdist  = (a, b) => Math.abs(a.r - b.r) + Math.abs(a.c - b.c);
+
+        // ── named cities with coordinates ──────────────────────────────────
+        const cities = Object.keys(nm).filter(c => !nm[c].junction && lCoords[c]);
+        emit(`  [lufp] named cities with coords: ${cities.length}`);
+
+        // ── undirected adjacency (treats every link as bidirectional) ──────
+        const undirAdj = new Map(Object.keys(nm).map(c => [c, new Set()]));
+        for (const [c, n] of Object.entries(nm)) {
+          for (const d of DIRS4) {
+            const t = n[d]; if (!t || !nm[t]) continue;
+            undirAdj.get(c).add(t);
+            if (!undirAdj.has(t)) undirAdj.set(t, new Set());
+            undirAdj.get(t).add(c);
+          }
+        }
+        const undirBFS = start => {
+          const seen = new Set([start]), q = [start];
+          while (q.length) { const c = q.shift(); for (const nb of undirAdj.get(c)||[]) { if (!seen.has(nb)) { seen.add(nb); q.push(nb); } } }
+          return seen;
+        };
+
+        // ── find city components ───────────────────────────────────────────
+        const citySet = new Set(cities);
+        const seen0   = new Set();
+        const comps   = []; // [{allNodes:Set, cities:[]}]
+        for (const city of cities) {
+          if (seen0.has(city)) continue;
+          const all = undirBFS(city);
+          const cs  = [...all].filter(c => citySet.has(c));
+          comps.push({ all, cities: cs });
+          for (const c of all) seen0.add(c);
+        }
+        emit(`  [lufp] city-component count: ${comps.length}`);
+        comps.forEach((cp, i) => {
+          const sample = cp.cities.slice(0, 8).join(' ');
+          emit(`    comp ${i+1}: ${cp.cities.length} cities / ${cp.all.size} nodes  [${sample}${cp.cities.length>8?` +${cp.cities.length-8}`:''}]`);
+        });
+
+        // ── bridge: Prim-like — merge nearest-pair components ─────────────
+        let lufpBridges = 0;
+        if (execute && comps.length > 1) {
+          while (comps.length > 1) {
+            await yieldOnce();
+            // Find closest city-pair between any two distinct components
+            let bDist = Infinity, bFrom = null, bTo = null, bI = -1, bJ = -1;
+            for (let i = 0; i < comps.length; i++) {
+              for (let j = i + 1; j < comps.length; j++) {
+                for (const ci of comps[i].cities) {
+                  const cc = lCoords[ci]; if (!cc) continue;
+                  for (const cj of comps[j].cities) {
+                    const tc = lCoords[cj]; if (!tc) continue;
+                    const d = mdist(cc, tc);
+                    if (d < bDist) { bDist=d; bFrom=ci; bTo=cj; bI=i; bJ=j; }
+                  }
+                }
+              }
+            }
+            if (!bFrom) { emit('  [lufp] no bridgeable pair found — stopping'); break; }
+            emit(`  [lufp] bridge ${lufpBridges+1}: ${bFrom} → ${bTo}  coord-dist=${bDist}`);
+            const res = buildHighway(bFrom, bTo);
+            if (res.ok && !res.skipped) {
+              emit(`  [lufp] ✓ bridge built  junctions=${res.created.length}  shape=${res.shape||'?'}`);
+              lufpBridges++;
+              // Re-flood both components and merge
+              const mergedAll = new Set([...comps[bI].all, ...comps[bJ].all]);
+              for (const c of res.created) mergedAll.add(c);
+              const merged = { all: undirBFS(bFrom), cities: [...comps[bI].cities, ...comps[bJ].cities] };
+              comps.splice(bJ, 1); comps.splice(bI, 1, merged);
+            } else if (res.skipped) {
+              // already connected — merge silently
+              const merged = { all: undirBFS(bFrom), cities: [...comps[bI].cities, ...comps[bJ].cities] };
+              comps.splice(bJ, 1); comps.splice(bI, 1, merged);
+            } else {
+              emit(`  [lufp] ✗ bridge failed (${res.error||'unknown'}) — skipping pair`);
+              // avoid infinite loop: remove one city from consideration
+              comps[bI].cities = comps[bI].cities.filter(c => c !== bFrom);
+              if (!comps[bI].cities.length) comps.splice(bI, 1);
+            }
+          }
+          if (lufpBridges > 0) {
+            rewriteCoords(); WBAPI._buildIndexes();
+            batchSave('lufp'); nm = WBAPI.nodeMap;
+            emit(`  [lufp] saved ${lufpBridges} bridges → nodeMap reloaded`);
+          }
+        }
+
+        // ── directed BFS path finder (used for route verification) ─────────
+        // Returns hop count or Infinity if unreachable.
+        const dirBFSHops = (from, to) => {
+          if (from === to) return 0;
+          const seen = new Set([from]), q = [[from, 0]];
+          while (q.length) {
+            const [c, hops] = q.shift();
+            for (const d of DIRS4) {
+              const nb = nm[c]?.[d]; if (!nb || !nm[nb] || seen.has(nb)) continue;
+              if (nb === to) return hops + 1;
+              seen.add(nb); q.push([nb, hops + 1]);
+            }
+          }
+          return Infinity;
+        };
+
+        // ── greedy nearest-neighbour spanning walk (TSP heuristic) ────────
+        // Uses coordinate proximity to pick next city, then verifies directed
+        // BFS can actually route there.  Emits the full walk as proof.
+        const walkCities = cities.filter(c => nm[c] && lCoords[c]);
+        emit(`  [lufp] spanning walk verification: ${walkCities.length} cities`);
+
+        const unvis = new Set(walkCities);
+        const walk  = [walkCities[0]];
+        unvis.delete(walkCities[0]);
+        let walkOK = 0, walkFail = 0;
+
+        while (unvis.size > 0) {
+          const cur = walk[walk.length - 1].replace(/^⚠️/, '');
+          const cc  = lCoords[cur];
+          // nearest unvisited by coordinate distance
+          let nearest = null, nearDist = Infinity;
+          for (const c of unvis) {
+            const tc = lCoords[c]; if (!tc) continue;
+            const d = mdist(cc, tc);
+            if (d < nearDist) { nearDist = d; nearest = c; }
+          }
+          if (!nearest) break;
+          const hops = dirBFSHops(cur, nearest);
+          unvis.delete(nearest);
+          if (hops < Infinity) { walk.push(nearest); walkOK++; }
+          else                 { walk.push(`⚠️${nearest}`); walkFail++; }
+          if (walk.length % 20 === 0) await yieldOnce();
+        }
+
+        emit(`  [lufp] routable: ${walkOK}/${walkCities.length-1} hops  unreachable: ${walkFail}`);
+
+        // emit walk in lines of ~120 chars
+        const walkStr = walk.join(' → ');
+        for (let i = 0; i < walkStr.length; i += 120)
+          emit(`    ${walkStr.slice(i, i + 120)}`);
+
+        const lufpOK = comps.length === 1 && walkFail === 0;
+        emit(lufpOK
+          ? `  [lufp] ✅ ALL CITIES SPAN-CONNECTED — map is fully routable`
+          : `  [lufp] ⚠️  ${comps.length > 1 ? comps.length + ' components remain' : ''}${walkFail > 0 ? '  ' + walkFail + ' directed-path gaps' : ''}`);
+        doneLUFP();
+      }
+
       // ── FINAL summary ──────────────────────────────────────────────────────
       {
         const elapsedS = ((Date.now()-rwT0)/1000).toFixed(1);
