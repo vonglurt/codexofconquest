@@ -459,8 +459,8 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | KSU | heimskringla | Heimskringla — Snorri Sturluson | c.1230 | Norse Kings History | 1707 | SEEDS COMPLETE 2026-06-03 — KSU-01–07 all vignettes done. Cycle 8 2026-06-05 — "The Skald's Safe-Conduct" (KSU/WM). No new nodes. See KSU-heimskringla.md. |
 | [x] | RKV | poetic-edda | Poetic Edda — Anon | ~10th–13th C | Norse Poetry | 1924 | Source txt acquired 2026-06-11 — PG, Bellows tr.; split 5 parts. Prior notes: RKV-01–07 done, AEG/RSS in grid. |
 | [x] | HFT | frithiof-saga | Frithiof's Saga — Esaias Tegnér | 1825 (Old Norse) | Romantic Epic | 403 | Source txt acquired 2026-06-11 — PG, Schmidt tr.; single file (136KB). Prior notes: HFT-01–07 done, BLG/ALR/RNG/ING pre-existing. |
-| [x] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 | IMPORTED — 2026-06-04 — LGR/LXF/HHL/VRG/BLT/HFG new nodes; MOL-01–02 (2 cycles, 10 acts); questComplete on MOL-02. Source txt missing (memory-processed). |
-| [x] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 | IMPORTED — 2026-06-04 — STK/DAN/HEO/DNS/BRK new nodes; CPH-01–02 (2 cycles, 10 acts); questComplete on CPH-02. Source txt missing (memory-processed). |
+| [x] | MOL | laxdaela-saga | Laxdaela Saga — Anon | ~13th C | Icelandic Saga | 347 | COMPLETE 2026-06-12 — Source acquired (laxdlasaga00presgoog, Muriel Press 1906, 397KB, 3 parts). MOL-01–07 (7 cycles, 35 acts); questComplete on MOL-07. New nodes: LGR/LXF/HHL/VRG/BLT/HFG (original), ALT (Althing — Þingvellir, added cycle 8+). See MOL-laxdaela-saga.md. |
+| [x] | CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | c.1200 | Danish Chronicles | 689 | COMPLETE 2026-06-12 — Source acquired (ninebooksdanish04saxogoog, Oliver Elton 1905, 512KB, 3 parts — books 1–9). CPH-01–07 (7 cycles, 35 acts); questComplete on CPH-07. New nodes: STK/DAN/HEO/DNS/BRK. See CPH-gesta-danorum.md. |
 | [x] | ARN | knights-of-the-cross | Knights of the Cross — Henryk Sienkiewicz | 1900 (1399 setting) | Polish Historical Epic | 324 | Source txt acquired 2026-06-11 — PG, Binion tr. (Curtin tr. unavailable on PG); split 7 parts. Prior notes: ARN-01–07 done, KRK/JUR/TKT/CHP in grid. |
 
 ### French & Continental
@@ -499,7 +499,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | [x] | FCO | aeneid | Aeneid — Virgil (Latin original — Gutenberg #227) | ~19 BC | Roman Epic | 484 |
 | [x] | MLA | plutarch-lives | Plutarch's Lives — Plutarch (Dryden/Clough tr.) | c. 95–110 AD | Biography | 4222 | SEEDS COMPLETE 2026-06-03 — MLA-01–07 done. Cycle 8 2026-06-05 — "The Parallel Lives Cross-Reference" (LMO/WM). See MLA-plutarch-lives.md. |
 | [x] | NWI | anabasis | Anabasis — Xenophon (Dakyns tr. — Gutenberg #1170) | c. 401 BC | Greek Military | 545 | SEEDS COMPLETE 2026-06-03 — NWI-01–09 all vignettes done (9 cycles). questComplete added to NWI-08 (cycle 9). New nodes: CPL, BLK, SIN, ORC, VAR, MYS, ANC added to Location Grid. Theme threads for all 9 cycles. See NWI-anabasis.md. |
-| [x] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | IMPORTED — 2026-06-04 — PAR new node (Palermo); IST-01–07 (7 cycles, 35 acts); questComplete on all 7; RGS→DBV; ANC→AOI; WM→NUE. Source txt missing (memory-processed). |
+| [x] | IST | alexiad | The Alexiad — Anna Komnene | c.1148 | Byzantine History | 165 | COMPLETE 2026-06-12 — Source acquired (alexiad-english-dawes-1928, Elizabeth Dawes 1928, 1.1MB, 6 parts). IST-01–10 (10 cycles, 50 acts); questComplete on IST-10. New nodes: PAR (Palermo, original). See IST-alexiad.md. |
 | [x] | WAW | quo-vadis | Quo Vadis — Henryk Sienkiewicz (Curtin tr. — 1895) | c. 64–68 AD (Nero's Rome) | Historical Novel | 1201 | SEEDS COMPLETE 2026-06-03 — WAW-01–08 done. Cycle 8 (base): 2026-06-05 — "Petronius's Letter Copy" (SAU/WM). See WAW-quo-vadis.md. |
 
 ### Byzantine & Eastern European
@@ -529,7 +529,7 @@ Books ≤ 400 KB can be read directly. Sizes shown in KB.
 | Status | Code | Slug | Title — Author | Period | Category | KB |
 |--------|------|------|----------------|--------|----------|----|
 | [x] | AMS | tale-of-genji | Tale of Genji — Murasaki Shikibu | c.1010 | Japanese Novel | 435 | SEEDS COMPLETE 2026-06-03 — AMS-01–07 done. Cycle 8 2026-06-05 — "Genji's Picture Catalog" (MRG/WM). See AMS-tale-of-genji.md. |
-| [ ] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem | Source txt acquisition pending — EPUB extraction from Archive.org unsuccessful; Wikisource/PG direct text not accessible. Requires manual fetch or alternate format conversion. Prior notes: TBS-01–07 done, GEO/TIF/ALP/CON/DAM/CAF in grid. |
+| [x] | TBS | knight-panther-skin | Knight in the Panther's Skin — Shota Rustaveli | c.1225 | Georgian Epic | mem | COMPLETE 2026-06-12 — TBS-01–09 (9 cycles, 45 acts); questComplete on TBS-09. Nodes: GEO/TIF/ALP/CON/DAM/CAF. Source txt still not acquired (Wardrop 1912 not on archive.org); all cycles memory-processed. See TBS-knight-panther-skin.md. |
 
 ### Caribbean & Americas
 

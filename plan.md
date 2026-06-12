@@ -9806,14 +9806,18 @@ Run `say` blocking — no `&` — so each announcement completes before the next
 
 **Total Pass 4 contribution:** 305 new quests deployed (including SHK quick-path cycles). All quests verified live via `api.sh audit` (0 errors).
 
-### Books Requiring Further Source Sourcing (remaining Group G)
+### ✅ Group G Extra Cycles — Completed 2026-06-12
 
-| Code | Slug | Title | KB est. | Source to find |
-|------|------|-------|---------|----------------|
-| MOL | laxdaela-saga | Laxdaela Saga — Anon | 347 | Gutenberg #598 |
-| CPH | gesta-danorum | Gesta Danorum — Saxo Grammaticus | 689 | Gutenberg #1150 |
-| IST | alexiad | The Alexiad — Anna Komnene | 165 | Gutenberg #15097 |
-| TBS | knight-panther-skin | Knight in the Panther's Skin — Rustaveli | mem | Needs sourcing |
+All four remaining Group G books extended. 75 additional quests deployed (2767 total live, 0 errors).
+
+| Code | Title | Before | After | New quests | Source |
+|------|-------|--------|-------|------------|--------|
+| MOL | Laxdaela Saga | 2 cycles / 10 acts | 7 cycles / 35 acts | +25 | laxdlasaga00presgoog (Muriel Press 1906, 397KB, 3 parts) |
+| CPH | Gesta Danorum | 2 cycles / 10 acts | 7 cycles / 35 acts | +25 | ninebooksdanish04saxogoog (Oliver Elton 1905, 512KB, 3 parts) |
+| IST | The Alexiad | 7 cycles / 35 acts | 10 cycles / 50 acts | +15 | alexiad-english-dawes-1928 (Elizabeth Dawes 1928, 1.1MB, 6 parts) |
+| TBS | Knight in the Panther's Skin | 7 cycles / 35 acts | 9 cycles / 45 acts | +10 | Memory-processed (Wardrop 1912 not on archive.org) |
+
+New node added: **ALT** (Althing — Þingvellir, Iceland; midlands; r:10 c:94) — created during MOL extra cycles.
 
 ### Protocol for Future Books
 
