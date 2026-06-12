@@ -9119,9 +9119,9 @@ notes:         Two solo attempts required. No Help action. No hints given in-gam
 
 ---
 
-## §CLEANUP-01 — Audit Error Resolution (📋 PLANNED)
+## §CLEANUP-01 — Audit Error Resolution (✅ COMPLETE 2026-06-12)
 
-**Status:** 📋 PLANNED — 11 errors, 35 warnings, 120 suggestions as of 2026-05-30  
+**Status:** ✅ COMPLETE — 0 errors, 0 warnings as of 2026-06-12. 566 suggestions (monster pool unused-terrain entries) remain as cosmetic backlog.  
 **Goal:** Drive audit errors to 0. Warnings and suggestions are cosmetic backlog.
 
 ### Immediate — Clears Errors
