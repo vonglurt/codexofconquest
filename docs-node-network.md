@@ -223,13 +223,25 @@ The `portal` field was preserved during §CELL-01 stripping because it drives `s
 
 ---
 
-## 9. Waypoint & BFS Pathfinding
+## 9. Waypoint & BFS Pathfinding (§CELL-09, ✅ active)
 
-**Current state:** `_bfsPath()` reads `NODE_MAP[code][dir]` edges, which were stripped in §CELL-01. The waypoint button will show "Waypoint navigation requires grid BFS (§CELL-09). Move manually toward the waypoint." until §CELL-09 replaces `_bfsPath` with a `CELL_GRID` grid-walk.
+`_bfsGridPath(fromCode, toCode)` walks `CELL_GRID` one cell at a time using standard BFS. It returns a path of `{r, c, code}` steps from the player's current position to the target node. No stored edge data is used.
 
-`storyWaypoint()` still reads `S_story.waypoint` (node code string or null) to display the current objective. The waypoint is set by quest activation and cleared on arrival.
+```js
+// First step direction toward a waypoint
+function _bfsGridDir(fromCode, toCode) {
+  const path = _bfsGridPath(fromCode, toCode);
+  if (!path.length) return null;
+  const startCoord = NODE_COORDS[fromCode] || { r: S_story.playerR, c: S_story.playerC };
+  const dr = path[0].r - startCoord.r;
+  const dc = path[0].c - startCoord.c;
+  return dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
+}
+```
 
-**§CELL-09 replacement:** `_bfsGridPath(fromCode, toCode)` will walk `CELL_GRID` cell-by-cell using standard BFS, returning a path of `{r, c, code}` steps. No stored edge data needed.
+`storyWaypoint()` calls `_bfsGridDir` and then `cellMove(dir)` to auto-step toward the objective. The dpad buttons are highlighted with `.dpad-wp` for the waypoint direction in `_updateExitLinks()`.
+
+**Hunt Mode:** When `S_story.huntMode` is true, `_enterEmptyCell` rolls at `effectiveRate = 1.0` (guaranteed encounter). Named-node encounters are unchanged. The quest-stalked monster selection (`_stalkedMonsterPick`) is still used for node battles.
 
 ---
 

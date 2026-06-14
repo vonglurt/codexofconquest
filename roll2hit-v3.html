@@ -37678,13 +37678,18 @@ function _enterEmptyCell(r, c) {
   document.getElementById('story-content').innerHTML = html;
   document.getElementById('story-move-msg').textContent = '';
 
-  const rate = TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default;
-  if (Math.random() < rate) {
+  // §CELL-09: hunt mode guarantees encounter on every empty cell step
+  const baseRate = TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default;
+  const effectiveRate = S_story.huntMode ? 1.0 : baseRate;
+  if (Math.random() < effectiveRate) {
     const pool = terrainEntry.monsters || [];
     if (pool.length) {
       const monsterKey = pool[Math.floor(Math.random()*pool.length)];
       const monster = MONSTER_POOL[monsterKey];
-      if (monster) setTimeout(() => _startStoryBattle(monster, `Wild ${monster.name}`), 300);
+      if (monster) {
+        const label = S_story.huntMode ? `🎯 Hunt ambush — ${monster.name}` : `Wild ${monster.name}`;
+        setTimeout(() => _startStoryBattle(monster, label), 300);
+      }
     }
   }
 }
@@ -44394,12 +44399,11 @@ function _updateExitLinks() {
   const node = NODE_MAP[S_story.currentCode];
   if (!node) return;
   const ARROWS = {N:'↑N',S:'↓S',E:'E→',W:'←W'};
-  // Compute waypoint first-step direction
+  // Compute waypoint first-step direction via grid BFS (§CELL-09)
   let wpDir = null;
   const wp = S_story.waypoint;
   if (wp && wp !== S_story.currentCode) {
-    const path = _bfsPath(S_story.currentCode, wp);
-    if (path && path.length) wpDir = path[0].dir;
+    wpDir = _bfsGridDir(S_story.currentCode, wp);
   }
   // Highlight dpad direction buttons toward waypoint
   ['N','S','E','W'].forEach(d => {
@@ -44635,6 +44639,46 @@ function _bfsPath(fromCode, toCode) {
   return null;
 }
 
+// §CELL-09: grid BFS — walks CELL_GRID one cell at a time; returns [{r,c,code}] path
+function _bfsGridPath(fromCode, toCode) {
+  if (!toCode || !NODE_COORDS[toCode]) return [];
+  const endCoord = NODE_COORDS[toCode];
+  const startCoord = NODE_COORDS[fromCode] || { r: S_story.playerR, c: S_story.playerC };
+  if (!startCoord || startCoord.r == null) return [];
+  if (startCoord.r === endCoord.r && startCoord.c === endCoord.c) return [];
+
+  const visited = new Set();
+  const startKey = `${startCoord.r},${startCoord.c}`;
+  visited.add(startKey);
+  const queue = [{ r: startCoord.r, c: startCoord.c, path: [] }];
+
+  while (queue.length) {
+    const { r, c, path } = queue.shift();
+    for (const [dr, dc] of [[-1,0],[1,0],[0,1],[0,-1]]) {
+      const nr = r + dr, nc = c + dc;
+      const k = `${nr},${nc}`;
+      if (visited.has(k) || IMPASSABLE_CELLS.has(k)) continue;
+      if (nr < 1 || nc < 1 || nr > 300 || nc > 300) continue;
+      visited.add(k);
+      const step = { r: nr, c: nc, code: CELL_GRID[k] || null };
+      const newPath = [...path, step];
+      if (nr === endCoord.r && nc === endCoord.c) return newPath;
+      queue.push({ r: nr, c: nc, path: newPath });
+    }
+  }
+  return [];
+}
+
+// Returns the compass direction of the first grid BFS step toward toCode, or null
+function _bfsGridDir(fromCode, toCode) {
+  const path = _bfsGridPath(fromCode, toCode);
+  if (!path.length) return null;
+  const startCoord = NODE_COORDS[fromCode] || { r: S_story.playerR, c: S_story.playerC };
+  const dr = path[0].r - startCoord.r;
+  const dc = path[0].c - startCoord.c;
+  return dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
+}
+
 function _updateWaypointBtn() {
   const btn = document.getElementById('btn-waypoint');
   if (!btn) return;
@@ -44654,9 +44698,9 @@ function storyWaypoint() {
     storyQuestToggle();
     return;
   }
-  const path = _bfsPath(S_story.currentCode, wp);
-  if (!path || !path.length) { storyMsg('📍 Waypoint navigation requires grid BFS (§CELL-09). Move manually toward the waypoint.'); return; }
-  cellMove(path[0].dir);
+  const dir = _bfsGridDir(S_story.currentCode, wp);
+  if (!dir) { storyMsg('📍 No path to waypoint found. Move manually toward ' + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '.'); return; }
+  cellMove(dir);
 }
 
 function _updateHuntBtn() {
@@ -44664,10 +44708,10 @@ function _updateHuntBtn() {
   if (!btn) return;
   if (S_story.huntMode) {
     btn.classList.add('hunt-on');
-    btn.title = 'Hunt for Quest ON — footpaths roll quest encounters w/ surprise (click to disable)';
+    btn.title = 'Hunt Mode ON — every open-terrain step triggers an encounter (click to disable)';
   } else {
     btn.classList.remove('hunt-on');
-    btn.title = 'Hunt for Quest OFF — footpaths warp safely (click to enable)';
+    btn.title = 'Hunt Mode OFF — open terrain uses normal encounter rates (click to enable)';
   }
 }
 
@@ -44675,8 +44719,8 @@ function storyToggleHunt() {
   S_story.huntMode = !S_story.huntMode;
   _updateHuntBtn();
   storyMsg(S_story.huntMode
-    ? '🎯 Hunt Mode ON — footpaths will ambush quest targets with surprise advantage.'
-    : '⚡ Warp Mode — footpaths travel instantly and safely.');
+    ? '🎯 Hunt Mode ON — every open-terrain cell step triggers an encounter.'
+    : '🗺 Hunt Mode OFF — open terrain uses normal encounter rates.');
 }
 
 function _storyFindTerrainNode(terrain) {
