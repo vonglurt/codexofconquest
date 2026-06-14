@@ -2646,20 +2646,41 @@ async function route(req, res) {
     }
 
     // ── 5. Density check (radius 3) ───────────────────────────────────────────
-    for (const code of nodeCodesWithCoords) {
-      const ca  = coords[code];
-      const cat = terrainCat(code);
-      const threshold = DENSITY_THRESH[cat] || DENSITY_THRESH._default;
-      let count = 0;
-      const neighbours = [];
-      for (const other of nodeCodesWithCoords) {
-        if (other === code) continue;
-        if (dist(ca, coords[other]) <= DENSITY_RADIUS) { count++; neighbours.push(other); }
+    // Uses a spatial grid (bucket size = DENSITY_RADIUS) for O(N) lookup
+    // instead of O(N²) all-pairs comparison.
+    {
+      const bucketSize = DENSITY_RADIUS;
+      const spatialGrid = new Map(); // "br,bc" → [code, ...]
+      for (const code of nodeCodesWithCoords) {
+        const { r, c } = coords[code];
+        const br = Math.floor(r / bucketSize), bc = Math.floor(c / bucketSize);
+        const key = `${br},${bc}`;
+        if (!spatialGrid.has(key)) spatialGrid.set(key, []);
+        spatialGrid.get(key).push(code);
       }
-      if (count > threshold)
-        warnings.push({ check:'density', code, terrain: nodeMap[code]?.name||'—', category:cat,
-          neighbours: count, threshold,
-          msg:`${code} has ${count} neighbours within radius ${DENSITY_RADIUS} (${cat} threshold ${threshold}) — cluster too dense` });
+      for (const code of nodeCodesWithCoords) {
+        const ca  = coords[code];
+        const cat = terrainCat(code);
+        const threshold = DENSITY_THRESH[cat] || DENSITY_THRESH._default;
+        let count = 0;
+        const neighbours = [];
+        // Only check buckets within ±1 bucket of this node
+        const br = Math.floor(ca.r / bucketSize), bc = Math.floor(ca.c / bucketSize);
+        for (let dbr = -1; dbr <= 1; dbr++) {
+          for (let dbc = -1; dbc <= 1; dbc++) {
+            const bucket = spatialGrid.get(`${br+dbr},${bc+dbc}`);
+            if (!bucket) continue;
+            for (const other of bucket) {
+              if (other === code) continue;
+              if (dist(ca, coords[other]) <= DENSITY_RADIUS) { count++; neighbours.push(other); }
+            }
+          }
+        }
+        if (count > threshold)
+          warnings.push({ check:'density', code, terrain: nodeMap[code]?.name||'—', category:cat,
+            neighbours: count, threshold,
+            msg:`${code} has ${count} neighbours within radius ${DENSITY_RADIUS} (${cat} threshold ${threshold}) — cluster too dense` });
+      }
     }
 
     // ── 6. Shop/vendor proximity (market terrain should be within 1 grid cell of another market) ──
@@ -7257,6 +7278,34 @@ async function route(req, res) {
           emit(`  [snail] walk2 done: paths=${cityPaths}  misses=${cityMisses}  cities=${geoCodes.length}`);
           logTrace('wither-snail','walk2 city pairs='+cityPaths+' misses='+cityMisses+' cities='+geoCodes.length);
 
+          // Walk 3: hub → ALL named non-junction nodes not already covered by walk1/walk2.
+          // Heats up junctions that are bridges to named nodes with no quests and not in GEO2.
+          // Without this, those junctions appear as heat=0 ghost entries even though they are
+          // structurally necessary (Tarjan keeps them as bridges).
+          {
+            const namedNodes=Object.keys(nm).filter(c=>!nm[c]?.junction&&!qRefW.has(c)&&!npcNodeW.has(c));
+            let w3Paths=0,w3Misses=0;
+            emit(`  [snail] walk3: ${namedNodes.length} non-quest non-NPC named nodes`);
+            for(let w3i=0;w3i<namedNodes.length;w3i++){
+              if(w3i%200===0)await yieldOnce();
+              const dest=namedNodes[w3i];
+              if(!nm[dest])continue;
+              const parent3=cityParent.get(hub)||null;
+              // Reuse hub's BFS tree if available, else fall back to bfsPath
+              let path3;
+              if(parent3&&parent3.has(dest)){
+                path3=[];let n=dest;while(n!==null){path3.unshift(n);n=parent3.get(n);}
+              } else {
+                path3=bfsPath(hub,dest);
+              }
+              if(!path3.length){w3Misses++;continue;}
+              w3Paths++;
+              for(const node of path3){if(usage.has(node))usage.set(node,usage.get(node)+1);}
+            }
+            emit(`  [snail] walk3 done: paths=${w3Paths}  misses=${w3Misses}  named=${namedNodes.length}`);
+            logTrace('wither-snail','walk3 named-nodes paths='+w3Paths+' misses='+w3Misses);
+          }
+
           const used=[...usage.values()].filter(v=>v>0).length;
           const unused=usage.size-used;
           logTrace('wither-snail','done used='+used+' unused='+unused+' total_junctions='+usage.size);
@@ -8404,6 +8453,34 @@ async function route(req, res) {
                 }
               }
               emit(`  [double-snail:${label}:${pass}] done: paths=${cp2}  misses=${cm2}`);
+            }
+
+            // Walk 3: hub → ALL named non-junction nodes not covered by walk1/walk2.
+            // Heats up bridge junctions protecting named nodes with no quests and not in GEO2.
+            // Without this those junctions appear as heat=0 ghost entries in the heatmap.
+            {
+              const hub3 = getHub();
+              const namedNodes3 = Object.keys(nm).filter(c => !nm[c]?.junction && !p7bQRef.has(c) && !p7bNpcRef.has(c));
+              let w3p = 0, w3m = 0;
+              emit(`  [double-snail:${label}] walk3: ${namedNodes3.length} non-quest non-NPC named nodes`);
+              // Build hub BFS tree once
+              const hubPar3 = new Map([[hub3, null]]); const hbq3 = [hub3];
+              while (hbq3.length) {
+                const cur = hbq3.shift();
+                for (const d of DIRS4) {
+                  const nxt = nm[cur]?.[d];
+                  if (!nxt || !nm[nxt] || hubPar3.has(nxt)) continue;
+                  hubPar3.set(nxt, cur); hbq3.push(nxt);
+                }
+              }
+              for (let wi = 0; wi < namedNodes3.length; wi++) {
+                if (wi % 200 === 0) await yieldOnce();
+                const dest = namedNodes3[wi]; if (!nm[dest] || !hubPar3.has(dest)) { w3m++; continue; }
+                w3p++;
+                let cur = dest;
+                while (cur !== null) { if (usage.has(cur)) usage.set(cur, usage.get(cur) + 1); cur = hubPar3.get(cur); }
+              }
+              emit(`  [double-snail:${label}] walk3 done: paths=${w3p}  misses=${w3m}`);
             }
 
             const usedC = [...usage.values()].filter(v=>v>0).length;
