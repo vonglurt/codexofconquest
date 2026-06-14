@@ -8,6 +8,8 @@
 >
 > Full design spec: `plan.md §CELL` (lines 2165–2576).
 > Implementation order: 02 → 03 → 04 → 01 → 05 → 09 → 10 → 06 → 08 → 07 → 11.
+>
+> **Status (2026-06-13):** §CELL-02 ✅ · §CELL-03 ✅ · §CELL-04 ✅ · §CELL-01 next
 
 ---
 
@@ -283,70 +285,133 @@ After making changes, commit:
 
 ```
 We are converting roll2hit.com to a MUD-style cell-based navigation system.
-§CELL-02, §CELL-03, §CELL-04 are complete: movement is driven by CELL_GRID coordinates.
-The N/E/S/W fields in NODE_MAP are now dead data — cellMove never reads them.
-This increment strips those fields from the data (not the movement engine — that 
-already doesn't use them).
+§CELL-02, §CELL-03, §CELL-04 are complete and committed. Specifically:
+- CELL_GRID ("r,c" → node code) and IMPASSABLE_CELLS exist in roll2hit-v3.html
+- cellMove(dir) is the active movement handler — reads CELL_GRID, not NODE_MAP edges
+- _enterEmptyCell(r, c) handles open terrain with terrain inference and encounters
+- storyMove_LEGACY(dir) is retained but not wired to any UI element
+
+The N/E/S/W direction fields in NODE_MAP are now dead navigation data.
+cellMove never reads them. This increment strips them from the data.
 
 Working directory: /Users/user/code/roll2hit.com
-Primary file: roll2hit-v3.html (~143,000 lines)
-wbapi-server.js — server must also stop reading/writing these fields
+Primary file: roll2hit-v3.html (~143,000+ lines)
+Server: wbapi-server.js (WBAPI runs on port 1367)
 Full design spec: plan.md §CELL-01
 
-CONTEXT:
-The NODE_MAP has ~449 named nodes PLUS thousands of auto-generated junction nodes
-(J##### codes). The direction fields are: N, S, E, W, SW, spire, portal.
-The `portal` field is used by storyPortal() — keep that for now (it's a special 
-mechanic, not a navigation edge). Strip only: N, S, E, W, SW, spire.
+=== WHAT EXISTS AND WHAT STILL READS N/E/S/W ===
 
-IMPORTANT: Do NOT do this by hand for 449+ nodes. Use the WBAPI server.
+Fields to strip from NODE_MAP: N, S, E, W, SW, spire
+Keep: portal (used by storyPortal() — a distinct mechanic, not a nav edge)
+Keep: all other content fields (code, r, c, name, label, act, text, npc, battle,
+      loot, sleep, sleepCost, junction, isEpicBattleground, isFishingLake, bossKey)
 
-TASK:
+Remaining readers of node[dir] in roll2hit-v3.html (do NOT modify these —
+they are either legacy-guarded or deferred to later §CELL sections):
 
-1. First ensure wbapi-server.js has a bulk-strip endpoint. Add to the route() function:
+  storyMove_LEGACY (~line 143192): reads node[dir] — retained until §CELL-05,
+    not called by any UI; leave as-is
+
+  _mapAddExits (~line 150012): reads node[dir] for minimap exit arrows —
+    leave as-is; will be rewritten in §CELL-10 minimap pass
+
+  _bfsPath (~line 150394): reads NODE_MAP[code][d] over
+    ['N','S','E','W','MSY','SFT','NW','NE','spire'] for waypoint pathfinding —
+    leave as-is; will be rewritten in §CELL-06 to walk CELL_GRID
+
+  _buildNodeExits (~line 150771): reads node[dir] to build corridor wire-glyph
+    map — leave as-is; will be removed in §CELL-05
+
+Readers in wbapi-server.js (do NOT modify the snail/reweave/heatmap algorithms
+this session — they are §CELL-06 scope):
+  - BFS reachability (~line 4057): for (const d of ['N','S','E','W']) { ... }
+  - Degree functions (~lines 5088, 5165, 5358): DIRS4.filter(d => nm[code]?.[d])
+  - Reweave/snail (~lines 3070, 3138, 5548, 5716, 6969): node[d] reads
+  Add // §CELL-06: replace with CELL_GRID walk comment to each location found,
+  but do NOT change the logic.
+
+=== TASK ===
+
+1. Add a bulk-strip endpoint to wbapi-server.js. Find the route() function
+   (it's a large if/else chain — search for "pathname === '/api/node/'").
+   Add this block near the other /api/admin/* endpoints:
 
    if (pathname === '/api/admin/strip-edges' && method === 'POST') {
-     // Remove N,S,E,W,SW,spire from all NODE_MAP entries
-     const nm = getNodeMap();
+     const nm = WBAPI.nodeMap;
+     const STRIP = ['N','S','E','W','SW','spire'];
      let count = 0;
      for (const code of Object.keys(nm)) {
        let changed = false;
-       for (const field of ['N','S','E','W','SW','spire']) {
+       for (const field of STRIP) {
          if (field in nm[code]) { delete nm[code][field]; changed = true; }
        }
        if (changed) count++;
      }
-     // Write back using existing writeNodeMap(nm) or equivalent
-     writeNodeMap(nm);
-     return res.json({ stripped: count });
+     return saveAndRestart(res, 200, { stripped: count });
    }
 
-2. Restart the WBAPI server: ./wbapi-toggle.sh restart
+   Note: saveAndRestart() is defined at line ~510 — it calls WBAPI.save(), copies
+   the file to GAME_FILE, reloads WBAPI.load(GAME_FILE), and sends the JSON response.
+   This is the correct pattern used by all other mutating endpoints.
 
-3. Call the endpoint: curl -X POST http://localhost:1367/api/admin/strip-edges
-   Confirm the response shows a nonzero stripped count.
+2. Restart the WBAPI server to pick up the new endpoint:
+   ./wbapi-toggle.sh restart
+   (or kill the existing node process and re-run: node wbapi-server.js &)
 
-4. In wbapi-server.js, remove all code that reads node.N / node.E / node.S / node.W
-   for navigation purposes (heatmap BFS, reweave, reachability). These will be 
-   rewritten in §CELL-06 to use the cell grid. For now, add a comment 
-   // §CELL-06: rewrite as grid walk wherever these reads occur.
+3. Call the endpoint:
+   curl -X POST http://localhost:1367/api/admin/strip-edges
+   The response should show { stripped: <nonzero count> }.
+   Verify: curl http://localhost:1367/api/node/CI | grep -E '"N"|"S"|"E"|"W"'
+   should return nothing (portal is OK).
 
-5. In roll2hit-v3.html, verify that storyMove_LEGACY is the only remaining reader
-   of node.N/E/S/W. Add a grep check:
-   grep -n '\.N\b\|\.S\b\|\.E\b\|\.W\b' roll2hit-v3.html | grep -v 'storyMove_LEGACY\|//\|DIRS'
+4. In wbapi-server.js, update the GET /api/node/:code response (~line 258) that
+   currently sends linkedNodes: { N:node.N||null, ... }. Either remove the
+   linkedNodes field entirely or compute it from CELL_GRID adjacency:
+   (For now, removing it is fine — it was used by the old corridor visualizer.)
 
-6. Update docs-node-network.md Section 3 (Connection Object) to show the new schema
-   without N/E/S/W fields. Add note: "Direction exits are derived at runtime from 
-   CELL_GRID adjacency — not stored in node data."
+5. In wbapi-server.js, update the audit broken_exit check (~line 3196):
+   The current check is:
+     for (const d of DIRS) {
+       if (node[d] && !nodeKeys.has(node[d]))
+         push('error', 'broken_exit', ...)
+     }
+   After stripping, node[d] will always be undefined, so this loop will never
+   push errors — it is harmless but misleading. Replace the whole broken_exit
+   block with a comment:
+     // §CELL-01: N/S/E/W fields stripped — exits are derived from CELL_GRID adjacency
 
-7. Update maps.md — remove the "N/E/S/W connections" column from the node legend 
-   table and the "Node Network" section. Add a sentence: "Navigation is coordinate-
-   driven: the engine checks (r±1,c) and (r,c±1) in CELL_GRID to find exits."
+6. In wbapi-server.js, add // §CELL-06: replace with CELL_GRID walk comments to
+   the BFS/reachability/reweave sections that still iterate node directions:
+   - ~line 4057: the undirected adjacency loop in GET /api/graph/reachability
+   - ~line 3070, 3138: the junction nuke/repair loops
+   - Each DIRS4.filter(d => nm[code]?.[d]) degree function
+   Do NOT change logic — just mark them for §CELL-06.
 
-Verify: ./api.sh get node CI — response should have no N,S,E,W fields.
-Run ./api.sh audit — there should be no "missing N/S/E/W" errors (the audit must
-be updated to not require these fields — check wbapi-server.js audit logic and 
-remove any check for direction fields being present).
+7. Verify storyMove_LEGACY is the only UI-unreachable reader left.
+   Run this grep and confirm every line is either in storyMove_LEGACY, _mapAddExits,
+   _bfsPath, or _buildNodeExits (all deferred):
+   grep -n "node\[dir\]\|node\[d\]\|\bnode\.N\b\|\bnode\.S\b\|\bnode\.E\b\|\bnode\.W\b" \
+     roll2hit-v3.html | grep -v "//\|storyMove_LEGACY\|_mapAddExits\|_bfsPath\|_buildNodeExits"
+
+8. Update docs-node-network.md Section 3 (Connection Object).
+   The schema block currently shows N/S/E/W fields with the note
+   "(legacy — used by _bfsPath only)". Change that note to:
+   "(stripped in §CELL-01 — exits derived at runtime from CELL_GRID adjacency)"
+   and remove the N/S/E/W lines from the schema example entirely.
+
+=== VERIFY ===
+
+curl http://localhost:1367/api/node/CI
+  → response must have no "N", "S", "E", "W" fields (portal is OK)
+
+curl http://localhost:1367/api/audit | grep broken_exit
+  → must return nothing (no broken exit errors)
+
+Open the game in browser: N/E/S/W movement must still work via cellMove.
+Waypoint button must still navigate (uses _bfsPath — which will now find no
+edges in NODE_MAP and therefore return null for all paths). If _bfsPath breaks
+because NODE_MAP edges are gone, add a fallback in storyWaypoint():
+  if (!path) { storyMsg('Waypoint pathfinding requires §CELL-06 grid BFS.'); return; }
 
 After making changes, commit:
 "§CELL-01: strip N/E/S/W edge fields from NODE_MAP — exits now derived from grid"
