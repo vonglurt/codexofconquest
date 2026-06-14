@@ -10226,8 +10226,81 @@ async function route(req, res) {
       return saveAndRestart(res, 200, { ok:true, deleted:toDelete.length, skipped:skipped.length, skippedDetails:skipped });
     }
 
+    // POST /api/admin/delete-junction-terrain — §CELL-05b: purge zombie J-stubs (name:junction, junction:false)
+    if (parts[1] === 'delete-junction-terrain' && method === 'POST') {
+      let body; try { body = await readBody(req); } catch(e) { body = {}; }
+      const dryRun = body?.dryRun !== false;
+      const nm = WBAPI.nodeMap;
+      const toDelete = [];
+      for (const [code, node] of Object.entries(nm)) {
+        if (node.name === 'junction') toDelete.push(code);
+      }
+      if (dryRun) {
+        return json(res, 200, { dryRun:true, count:toDelete.length, sample:toDelete.slice(0,10) });
+      }
+
+      // Batch-delete from NODE_MAP section in _rawSrc (same pattern as delete-junctions)
+      const deleteSet = new Set(toDelete);
+      const NMS = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
+      const NME = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
+      const nmStart = WBAPI._rawSrc.indexOf(NMS) + NMS.length;
+      const nmEnd   = WBAPI._rawSrc.indexOf(NME);
+      if (nmStart < NMS.length || nmEnd < 0)
+        return json(res, 500, { ok:false, error:'NODE_MAP section markers not found' });
+
+      const nmSec = WBAPI._rawSrc.slice(nmStart, nmEnd);
+      const entryRe = /^([ \t]*)([A-Z][A-Z0-9]{0,6})\s*:\s*\{/gm;
+      const kept = [];
+      let last = 0, match;
+      while ((match = entryRe.exec(nmSec)) !== null) {
+        const code = match[2];
+        if (!deleteSet.has(code)) continue;
+        const openEnd = match.index + match[0].length;
+        let depth = 1, j = openEnd, inStr = null;
+        while (j < nmSec.length) {
+          const ch = nmSec[j];
+          if (inStr) {
+            if (ch === '\\' && inStr !== '`') { j += 2; continue; }
+            if (ch === inStr) inStr = null;
+          } else if (ch === '/' && nmSec[j+1] === '/') {
+            while (j < nmSec.length && nmSec[j] !== '\n') j++;
+            continue;
+          } else {
+            if (ch === '"' || ch === "'" || ch === '`') inStr = ch;
+            else if (ch === '{') depth++;
+            else if (ch === '}') { depth--; if (depth === 0) break; }
+          }
+          j++;
+        }
+        let end = j + 1;
+        while (end < nmSec.length && nmSec[end] !== '\n') end++;
+        if (end < nmSec.length) end++;
+        kept.push(nmSec.slice(last, match.index));
+        last = end;
+      }
+      kept.push(nmSec.slice(last));
+      WBAPI._rawSrc = WBAPI._rawSrc.slice(0, nmStart) + kept.join('') + WBAPI._rawSrc.slice(nmEnd);
+
+      // Batch-delete from NODE_COORDS section
+      const NCS = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆';
+      const NCE = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+      const ncStart = WBAPI._rawSrc.indexOf(NCS) + NCS.length;
+      const ncEnd   = WBAPI._rawSrc.indexOf(NCE);
+      if (ncStart >= NCS.length && ncEnd >= 0) {
+        const ncSec = WBAPI._rawSrc.slice(ncStart, ncEnd);
+        const coordRe = new RegExp(`^[ \\t]*(${[...deleteSet].map(c => c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')})\\s*:\\s*\\{[^\\n]*\\}[,;]?[ \\t]*\\n`, 'gm');
+        WBAPI._rawSrc = WBAPI._rawSrc.slice(0, ncStart) + ncSec.replace(coordRe, '') + WBAPI._rawSrc.slice(ncEnd);
+      }
+
+      // Remove from in-memory maps
+      for (const code of toDelete) { delete nm[code]; delete WBAPI.nodeCoords?.[code]; }
+
+      logRow('delete-junction-terrain', `deleted ${toDelete.length} zombie J-stubs`);
+      return saveAndRestart(res, 200, { deleted: toDelete.length });
+    }
+
     logResponse(method, url.pathname, 404, `Unknown admin route "${parts[1]}"`);
-    return json(res, 404, { error:`Unknown admin route "${parts[1]}". Available: strip-edges, delete-junctions` });
+    return json(res, 404, { error:`Unknown admin route "${parts[1]}". Available: strip-edges, delete-junctions, delete-junction-terrain` });
   }
 
   // ── Single entity ─────────────────────────────────────────────────────────
