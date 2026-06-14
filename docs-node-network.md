@@ -3,7 +3,7 @@
 # roll2hit.com — Node Network Technical Reference
 
 **File:** `roll2hit-v3.html`  
-**Last updated:** 2026-06-14  
+**Last updated:** 2026-06-15  
 **Node count:** 687 nodes (J##### junction nodes bulk-deleted in §CELL-05)
 
 ---
@@ -160,7 +160,37 @@ All gate-lock checks from the old `storyMove` are preserved verbatim in `cellMov
 
 ---
 
-## 5. Corridor Travel System — REMOVED (§CELL-05)
+## 5. Minimap Rendering (§CELL-10, ✅ active)
+
+Three map views exist in the game:
+
+| View | Function | Grid | Center |
+|------|----------|------|--------|
+| HUD mini-map | `_renderMiniMap()` | 11×17 at 8px cells | `playerR, playerC` |
+| Full world map | `_renderWorldMiniMap()` | 41×61 at 3px cells | whole world view |
+| Map sheet | `_renderMapGrid()` | 11×11 at 44px cells | `playerR, playerC` |
+
+All three center on `S_story.playerR / playerC` (the actual cell, updated in `cellMove`). If the player is on an empty cell the maps still center correctly.
+
+**Cell rendering logic (HUD minimap):**
+
+| Cell type | Display | CSS class |
+|-----------|---------|-----------|
+| Player position | `@` | `mmc-player` |
+| Named node (visited/trail) | 2-char code | `mmc-visited` / `mmc-trail` |
+| Named node (unvisited) | `?` | `mmc-node` |
+| Epic battleground | code or `?` | `mmc-epic` / `mmc-epic-unvis` |
+| Visited empty cell | terrain glyph (·♣▲≈∴~░♠⌂─│) | `mmc-empty-visited` |
+| Unvisited within 3 cells | `·` | `mmc-partial` |
+| Full fog | (blank) | `mmc-fog-cell` |
+
+`_MMC_TERRAIN_GLYPHS` constant maps terrain key → glyph. `_inferTerrain(r,c)` derives terrain from named neighbors.
+
+`_renderMiniMap()` is called from `storyRender()` (named-node entry) and `_enterEmptyCell()` (empty-cell step).
+
+---
+
+## 6. Corridor Travel System — REMOVED (§CELL-05)
 
 The corridor system (`storyMove_LEGACY`, `storyCorridorTravel`, `CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, corridor overlay HTML/CSS) was fully removed in §CELL-05. `cellMove` is the sole navigation function.
 

@@ -2463,14 +2463,14 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #story-nav-row { display: none; } /* contents moved to #story-history-panel bottom row */
 #story-nav-left { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
 
-/* ── Local mini-map (7×7 around player) ── */
+/* ── Local mini-map (11×17 around player) §CELL-10 ── */
 #story-mini-map { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
 #mini-map-title { font-size: 8px; font-weight: 900; color: var(--c3); text-transform: uppercase; letter-spacing: 2px; text-align: center; }
 #mini-map-grid {
   display: grid;
-  grid-template-columns: repeat(7, 20px);
-  grid-template-rows: repeat(7, 20px);
-  width: 150px; height: 150px;
+  grid-template-columns: repeat(17, 8px);
+  grid-template-rows: repeat(11, 8px);
+  width: 152px; height: 98px;
   gap: 1px;
   background: #2a0e06;
   border: 2px solid #562717;
@@ -2479,20 +2479,21 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 }
 .mmc {
   display: flex; align-items: center; justify-content: center;
-  font-size: 9px; font-family: monospace;
-  cursor: default; box-sizing: border-box;
+  font-size: 6px; font-family: monospace;
+  cursor: default; box-sizing: border-box; overflow: hidden;
   background: #1e0f06; color: #4a2c14;
 }
-.mmc-current  { background: #B87C28; color: #1a0400; border: 2px solid #F0E6C8; box-shadow: 0 0 6px rgba(184,124,40,0.9); font-size: 11px; }
-.mmc-visited  { background: #0f3820; color: #50d880; border: 1px solid #2a7840; }
-.mmc-trail    { background: #1e1800; color: #c8a828; border: 1px solid #5a4410; }
-.mmc-node     { background: #0c0c1a; color: #3a3a6a; border: 1px solid #1a1a30; }
-.mmc-corridor { background: #1e0f06; color: #4a3010; font-size: 10px; }
-.mmc-corridor-visited { color: #b06020; }
-.mmc-corridor-active  { color: #E76219; background: #200c00; }
-.mmc-icon { font-size: 12px; line-height: 1; }
-.mmc-fog  { font-size: 9px; color: #4a2c14; }
-.mmc-epic         { background: #8b0000; color: #ffaaaa; border: 1px solid #cc2222; box-shadow: 0 0 5px rgba(180,0,0,0.8); }
+.mmc-player       { background: #B87C28; color: #1a0400; border: 1px solid #F0E6C8; box-shadow: 0 0 4px rgba(184,124,40,0.9); font-size: 8px; font-weight: 900; }
+.mmc-current      { background: #B87C28; color: #1a0400; border: 1px solid #F0E6C8; box-shadow: 0 0 4px rgba(184,124,40,0.9); font-size: 8px; font-weight: 900; }
+.mmc-visited      { background: #0f3820; color: #50d880; border: 1px solid #2a7840; }
+.mmc-trail        { background: #1e1800; color: #c8a828; border: 1px solid #5a4410; }
+.mmc-node         { background: #0c0c1a; color: #3a3a6a; border: 1px solid #1a1a30; }
+.mmc-empty-visited{ background: #120e0a; color: #5a4020; }
+.mmc-partial      { background: #0e0e0e; color: #2a2a2a; }
+.mmc-fog-cell     { background: #0a0a0a; }
+.mmc-icon { font-size: 7px; line-height: 1; }
+.mmc-fog  { font-size: 6px; color: #4a2c14; }
+.mmc-epic         { background: #8b0000; color: #ffaaaa; border: 1px solid #cc2222; box-shadow: 0 0 3px rgba(180,0,0,0.8); }
 .mmc-epic-visited { background: #3a0000; color: #cc5555; border: 1px solid #770000; }
 .mmc-epic-unvis   { background: #200808; color: #4a1a1a; }
 
@@ -2520,10 +2521,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .wmc-visited  { background: #0f3820; color: #50d880; border: 1px solid #2a7840; }
 .wmc-trail    { background: #1e1800; color: #c8a828; border: 1px solid #5a4410; }
 .wmc-node     { background: #0c0c1a; color: #3a3a6a; border: 1px solid #1a1a30; }
-.wmc-corridor     { background: #1e0f06; color: #4a3010; }
-.wmc-corridor-dim { color: #2a1e0c; }
-.wmc-corridor-visited { color: #b06020; }
-.wmc-corridor-active  { color: #E76219; background: #200c00; }
+.wmc-empty-visited { background: #100c08; }
 .wmc-icon  { font-size: 4px; line-height: 1; overflow: hidden; }
 .wmc-unvis { font-size: 3px; color: #25253a; }
 .wmc-epic         { background: #8b0000; color: #ffaaaa; border: 1px solid #cc2222; box-shadow: 0 0 4px rgba(180,0,0,0.8); }
@@ -37692,6 +37690,8 @@ function _enterEmptyCell(r, c) {
       }
     }
   }
+  // §CELL-10: refresh local minimap after entering empty cell
+  _renderMiniMap();
 }
 
 function storyPortal() {
@@ -44120,15 +44120,10 @@ function storyMapToggle() {
 }
 
 function _renderMapGrid() {
-  const cur = NODE_COORDS[S_story.currentCode];
-  if (!cur) return;
-  const cr = cur.r, cc = cur.c;
-
-  const byCoord = {};
-  Object.keys(NODE_COORDS).forEach(code => {
-    const p = NODE_COORDS[code];
-    byCoord[p.r + ',' + p.c] = code;
-  });
+  const nc_ = NODE_COORDS[S_story.currentCode];
+  const cr = S_story.playerR || (nc_ && nc_.r) || 0;
+  const cc = S_story.playerC || (nc_ && nc_.c) || 0;
+  if (!cr && !cc) return;
 
   const trailSet = new Set((S_story.log || []).slice(-20));
   const grid = document.getElementById('map-grid');
@@ -44138,7 +44133,7 @@ function _renderMapGrid() {
   for (let dr = -5; dr <= 5; dr++) {
     for (let dc = -5; dc <= 5; dc++) {
       const r = cr + dr, c = cc + dc;
-      const code = byCoord[r + ',' + c];
+      const code = CELL_GRID[`${r},${c}`];
       const isCurrent = (dr === 0 && dc === 0);
       const cell = document.createElement('div');
       cell.className = 'mc';
@@ -44189,34 +44184,7 @@ function _renderMapGrid() {
     }
   }
 
-  // ── L9-D: Corridor cell rendering pass ──
-  const activeSet    = new Set((S_story.lastCorridorCells || []).map(p => p.r + ',' + p.c));
-  const nodeCoordSet = new Set(Object.values(NODE_COORDS).map(p => p.r + ',' + p.c));
-  for (let dr = -5; dr <= 5; dr++) {
-    for (let dc = -5; dc <= 5; dc++) {
-      const r   = cr + dr, c = cc + dc;
-      const key = r + ',' + c;
-      const corr = CORRIDOR_CELLS[key];
-      if (!corr) continue;
-      if (nodeCoordSet.has(key)) continue;
-      const idx  = (dr + 5) * 11 + (dc + 5);
-      const cell = grid.children[idx];
-      if (!cell) continue;
-      if (cell.classList.contains('mc-current') || cell.classList.contains('mc-node') ||
-          cell.classList.contains('mc-visited')  || cell.classList.contains('mc-trail')) continue;
-      const isActive   = activeSet.has(key);
-      const anyVisited = corr.edges.some(e => S_story.visited[e.from] && S_story.visited[e.to]);
-      cell.classList.add('mc-corridor');
-      if (isActive)    cell.classList.add('mc-corridor-active');
-      if (anyVisited)  cell.classList.add('mc-corridor-visited');
-      else             cell.classList.add('mc-corridor-dim');
-      cell.innerHTML = '<div class="mc-wire">' + corr.glyph + '</div>';
-      const edgeDesc = corr.edges.map(e => e.from + '↔' + e.to).join(', ');
-      cell.addEventListener('mouseenter', () => {
-        info.textContent = '⚡ Corridor: ' + edgeDesc + '  ·  ' + corr.terrain.replace(/_/g,' ');
-      });
-    }
-  }
+  // §CELL-10: corridor cell pass removed — CORRIDOR_CELLS is empty after §CELL-05
 
   document.getElementById('map-status-bar').textContent =
     'Day ' + S_story.day + ' of 49  ·  ' + S_story.shards + '/7 Shards  ·  ' +
@@ -44253,80 +44221,90 @@ function _mapAddExits(cell, code) {
 }
 
 /* ── Mini-Map ── */
+// §CELL-10: terrain glyphs for empty visited cells on local mini-map
+const _MMC_TERRAIN_GLYPHS = {
+  midlands:'·', forest:'♣', highlands:'▲', swamp:'≈', desert:'∴',
+  ocean:'~', beach:'░', jungle:'♠', city:'⌂', city_slums:'⌂',
+  road:'─', alley:'│', _default:'·'
+};
+
 function _renderMiniMap() {
   const grid = document.getElementById('mini-map-grid');
   if (!grid) return;
-  const cur = NODE_COORDS[S_story.currentCode];
-  if (!cur) { grid.innerHTML = ''; return; }
-  const cr = cur.r, cc = cur.c;
-  const byCoord = {};
-  Object.keys(NODE_COORDS).forEach(code => {
-    const p = NODE_COORDS[code];
-    byCoord[p.r + ',' + p.c] = code;
-  });
-  const trailSet  = new Set((S_story.log || []).slice(-20));
-  const activeSet = new Set((S_story.lastCorridorCells || []).map(p => p.r + ',' + p.c));
-  const nodeCoordSet = new Set(Object.values(NODE_COORDS).map(p => p.r + ',' + p.c));
+  // §CELL-10: center on actual player cell, not just named-node coordinate
+  const nc_ = NODE_COORDS[S_story.currentCode];
+  const cr = S_story.playerR || (nc_ && nc_.r) || 0;
+  const cc = S_story.playerC || (nc_ && nc_.c) || 0;
+  if (!cr && !cc) { grid.innerHTML = ''; return; }
+
+  const trailSet    = new Set((S_story.log || []).slice(-20));
+  const visitedCells = S_story.visitedCells || {};
   grid.innerHTML = '';
 
-  for (let dr = -3; dr <= 3; dr++) {
-    for (let dc = -3; dc <= 3; dc++) {
+  // 11 rows (dr -5..+5) × 17 cols (dc -8..+8)
+  for (let dr = -5; dr <= 5; dr++) {
+    for (let dc = -8; dc <= 8; dc++) {
       const r = cr + dr, c = cc + dc;
-      const key = r + ',' + c;
-      const code = byCoord[key];
-      const isCurrent = (dr === 0 && dc === 0);
+      const key = `${r},${c}`;
+      const code = CELL_GRID[key];
+      const isPlayer = (dr === 0 && dc === 0);
+      const dist = Math.max(Math.abs(dr), Math.abs(dc));
       const cell = document.createElement('div');
       cell.className = 'mmc';
 
-      if (isCurrent) {
-        const ebCur = NODE_MAP[S_story.currentCode];
-        cell.classList.add((ebCur && ebCur.isEpicBattleground) ? 'mmc-epic' : 'mmc-current');
-        cell.innerHTML = '<span class="mmc-icon">◉</span>';
-      } else if (code) {
+      if (isPlayer) {
+        const curNode = NODE_MAP[S_story.currentCode];
+        cell.classList.add((curNode && curNode.isEpicBattleground) ? 'mmc-epic' : 'mmc-player');
+        cell.textContent = '@';
+      } else if (code && NODE_MAP[code]) {
         const isVis   = !!S_story.visited[code];
         const isTrail = trailSet.has(code);
         const ebN     = NODE_MAP[code];
         const isEB    = !!(ebN && ebN.isEpicBattleground);
         const ebDef   = isEB && !!(S_story.defeatedBattles && S_story.defeatedBattles[code]);
         if (isEB) {
-          if (ebDef)            cell.classList.add('mmc-epic-visited');
-          else if (isVis || isTrail) cell.classList.add('mmc-epic');
-          else                  cell.classList.add('mmc-epic-unvis');
-          cell.innerHTML = '<span class="mmc-icon">' + (isVis || isTrail ? _mapIcon(code) : '?') + '</span>';
+          cell.classList.add(ebDef ? 'mmc-epic-visited' : (isVis || isTrail ? 'mmc-epic' : 'mmc-epic-unvis'));
+          cell.textContent = (isVis || isTrail) ? code.slice(0,2) : '?';
         } else if (isVis || isTrail) {
           cell.classList.add(isTrail ? 'mmc-trail' : 'mmc-visited');
-          // L44-G: warmth tinting
           const warmColor = _getNodeMapColor(code);
           if (warmColor !== '#555') cell.style.background = warmColor;
-          cell.innerHTML = '<span class="mmc-icon">' + _mapIcon(code) + '</span>';
+          cell.textContent = code.slice(0,2);
         } else {
           cell.classList.add('mmc-node');
-          cell.innerHTML = '<span class="mmc-fog">?</span>';
+          cell.textContent = '?';
         }
+      } else if (visitedCells[key]) {
+        // Visited empty cell — show terrain glyph
+        const terrain = _inferTerrain(r, c);
+        cell.classList.add('mmc-empty-visited');
+        cell.textContent = _MMC_TERRAIN_GLYPHS[terrain] || _MMC_TERRAIN_GLYPHS._default;
+      } else if (dist <= 3) {
+        // Within sight radius — partially known
+        cell.classList.add('mmc-partial');
+        cell.textContent = '·';
       } else {
-        const corr = CORRIDOR_CELLS[key];
-        if (corr && !nodeCoordSet.has(key)) {
-          cell.classList.add('mmc-corridor');
-          const anyVis = corr.edges.some(e => S_story.visited[e.from] && S_story.visited[e.to]);
-          if (activeSet.has(key)) cell.classList.add('mmc-corridor-active');
-          else if (anyVis) cell.classList.add('mmc-corridor-visited');
-          cell.textContent = corr.glyph;
-        }
-        // L44-R: Void's First Sign at row 4, col 3 — flickers in Act I, traversable in Act V
-        if (r === 4 && c === 3) {
-          const act = S_story.actNumber || 1;
-          if (act === 1) {
-            cell.classList.add('void-flicker');
-            cell.style.cursor = 'pointer';
-            cell.addEventListener('click', () => { S_story.voidSignClicked = true; });
-          } else if (act >= 5) {
-            cell.classList.add('mmc-visited');
-            cell.style.cursor = 'pointer';
-            cell.title = 'You saw this before. It was waiting for you to be ready.';
-            cell.addEventListener('click', () => storyMsg('You saw this before. It was waiting for you to be ready.'));
-          }
+        // Full fog
+        cell.classList.add('mmc-fog-cell');
+      }
+
+      // L44-R: Void's First Sign at row 4, col 3 — flickers in Act I, traversable in Act V
+      if (r === 4 && c === 3) {
+        const act = S_story.actNumber || 1;
+        if (act === 1) {
+          cell.classList.remove('mmc-fog-cell', 'mmc-partial');
+          cell.classList.add('void-flicker');
+          cell.style.cursor = 'pointer';
+          cell.addEventListener('click', () => { S_story.voidSignClicked = true; });
+        } else if (act >= 5) {
+          cell.classList.remove('mmc-fog-cell', 'mmc-partial');
+          cell.classList.add('mmc-visited');
+          cell.style.cursor = 'pointer';
+          cell.title = 'You saw this before. It was waiting for you to be ready.';
+          cell.addEventListener('click', () => storyMsg('You saw this before. It was waiting for you to be ready.'));
         }
       }
+
       grid.appendChild(cell);
     }
   }
@@ -44335,28 +44313,25 @@ function _renderMiniMap() {
 function _renderWorldMiniMap() {
   const grid = document.getElementById('world-map-grid');
   if (!grid) return;
-  const byCoord = {};
-  Object.keys(NODE_COORDS).forEach(code => {
-    const p = NODE_COORDS[code];
-    byCoord[p.r + ',' + p.c] = code;
-  });
   const curCode      = S_story.currentCode;
+  const curCoord     = NODE_COORDS[curCode];
+  const playerR      = S_story.playerR || (curCoord && curCoord.r) || 0;
+  const playerC      = S_story.playerC || (curCoord && curCoord.c) || 0;
   const trailSet     = new Set((S_story.log || []).slice(-20));
-  const activeSet    = new Set((S_story.lastCorridorCells || []).map(p => p.r + ',' + p.c));
-  const nodeCoordSet = new Set(Object.values(NODE_COORDS).map(p => p.r + ',' + p.c));
+  const visitedCells = S_story.visitedCells || {};
   grid.innerHTML = '';
   for (let r = 1; r <= 41; r++) {
     for (let c = 1; c <= 61; c++) {
-      const key  = r + ',' + c;
-      const code = byCoord[key];
+      const key  = `${r},${c}`;
+      const code = CELL_GRID[key];
       const cell = document.createElement('div');
       cell.className = 'wmc';
-      if (code) {
-        const isCurrent = code === curCode;
-        const isTrail   = trailSet.has(code);
-        const isVisited = !!(S_story.visited && S_story.visited[code]);
-        const ebNode    = NODE_MAP[code];
-        const isEB      = !!(ebNode && ebNode.isEpicBattleground);
+      if (code && NODE_MAP[code]) {
+        const isCurrent  = (r === playerR && c === playerC);
+        const isTrail    = trailSet.has(code);
+        const isVisited  = !!(S_story.visited && S_story.visited[code]);
+        const ebNode     = NODE_MAP[code];
+        const isEB       = !!(ebNode && ebNode.isEpicBattleground);
         const ebDefeated = isEB && !!(S_story.defeatedBattles && S_story.defeatedBattles[code]);
         if (isCurrent) {
           cell.classList.add(isEB ? 'wmc-epic' : 'wmc-current');
@@ -44374,16 +44349,14 @@ function _renderWorldMiniMap() {
           cell.classList.add('wmc-node');
           cell.innerHTML = '<span class="wmc-icon wmc-unvis">·</span>';
         }
-      } else {
-        const corr = CORRIDOR_CELLS[key];
-        if (corr && !nodeCoordSet.has(key)) {
-          cell.classList.add('wmc-corridor');
-          const anyVis = corr.edges.some(e => S_story.visited[e.from] && S_story.visited[e.to]);
-          if (activeSet.has(key))        cell.classList.add('wmc-corridor-active');
-          else if (anyVis)               cell.classList.add('wmc-corridor-visited');
-          else                           cell.classList.add('wmc-corridor-dim');
-          cell.textContent = corr.glyph;
-        }
+      } else if (visitedCells[key]) {
+        // §CELL-10: visited empty cell — dim background dot
+        cell.classList.add('wmc-empty-visited');
+      }
+      // Player position if on an empty cell
+      if (r === playerR && c === playerC && !code) {
+        cell.classList.add('wmc-current');
+        cell.innerHTML = '<span class="wmc-icon">@</span>';
       }
       grid.appendChild(cell);
     }
