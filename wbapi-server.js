@@ -2513,6 +2513,17 @@ async function route(req, res) {
       return Math.sqrt(dr*dr + dc*dc);
     }
 
+    // §CELL-02: Reverse grid lookup — "r,c" → node code (server-side mirror of CELL_GRID)
+    function buildCellGrid(nm, coords) {
+      const g = {};
+      for (const code of Object.keys(nm)) {
+        const coord = coords[code] || { r: nm[code].r, c: nm[code].c };
+        if (coord && coord.r != null && coord.c != null)
+          g[`${coord.r},${coord.c}`] = code;
+      }
+      return g;
+    }
+
     // Terrain category helper
     function terrainCat(code) {
       const terrKey = nodeMap[code]?.name || '';

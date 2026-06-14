@@ -126527,6 +126527,18 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
+// §CELL-02: Reverse grid lookup — "r,c" → node code
+const CELL_GRID = (() => {
+  const g = {};
+  for (const code of Object.keys(NODE_MAP)) {
+    const coord = NODE_COORDS[code] || { r: NODE_MAP[code].r, c: NODE_MAP[code].c };
+    if (coord && coord.r != null && coord.c != null)
+      g[`${coord.r},${coord.c}`] = code;
+  }
+  return g;
+})();
+const IMPASSABLE_CELLS = new Set(); // populated in §CELL-10
+
 /* ── Layer 9-A: Circuit Corridor Data Structures ── */
 
 const WIRE_GLYPH = {
