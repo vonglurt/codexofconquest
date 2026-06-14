@@ -98,8 +98,8 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 
 | Const | Purpose |
 |---|---|
-| `NODE_MAP` | 121 nodes (base 76 + Paul arc 91–110 + Littoral Courts 111–120); all `N/E/S/W/sleep/battle/loot` fields |
-| `NODE_COORDS` | Grid position `{r,c}` for all nodes; used by corridor router and map renderer |
+| `NODE_MAP` | 688 total entries: 420 with `r,c` grid coords (reachable) + 268 zombie J-stubs with no coords (§CELL-05 missed them — had `junction:false`); no `N/S/E/W` fields on coordinated nodes (stripped §CELL-01) |
+| `NODE_COORDS` | Grid position `{r,c}` for all nodes; used by cell renderer and minimap |
 | `QUEST_DB` | Quest definitions: activateNode, objectiveText, reward, completionCheck |
 | `GATE_LOCKS` | 4 passage locks + shard gate; each entry: `{from, to, item, label}` |
 | `CONDITION_ITEMS` | 11 condition items: name, icon, effect, sell value |
@@ -108,7 +108,7 @@ Do **not** write a lab report for: a single monster/quest addition (sync core do
 | `WORLD_DB` | 66 terrain entries (46 base + 20 epic); each has `monsters: []` with full stat blocks |
 | `MONSTER_POOL` | 370 monsters across 8 source pools; keyed by monster key string |
 | `MONSTER_DROPS` | Trophy drop per monster key; `{name, icon, sell}` |
-| `CORRIDOR_CELLS` | Computed corridor grid; key `"r,c"` → `{dirs, glyph, terrain, edges}` |
+| `CELL_GRID` | Reverse grid lookup; key `"r,c"` → node code (replaces `CORRIDOR_CELLS`, removed in §CELL-05) |
 | `HUNTING_GROUNDS` | 42 terrain → `{displayName}` for stalk overlay; 20 epic terrain entries |
 | `EPIC_BOSS_POOL` | 20 deadly-tier bosses keyed by slug; AC/HP/ATK/dmg/epicDesc |
 | `EB_NPC_DIALOGUE` | 20 quest-giver NPC profiles; payment negotiation, return beat, specialItem |
@@ -2333,7 +2333,9 @@ function _enterEmptyCell(r, c) {
 
 ---
 
-### §CELL-05: Abolish Junction Nodes ✅ COMPLETE
+### §CELL-05: Abolish Junction Nodes ✅ COMPLETE (partial — see §CELL-05b)
+
+> **§CELL-05b needed:** 268 J-stubs with `junction:false` and no `r,c` survived the bulk-delete (endpoint only targeted `junction:true`). They're inert (not in `CELL_GRID`, unreachable by `cellMove`) but should be purged. Add `POST /api/admin/delete-junction-terrain` that deletes all nodes where `name === 'junction'` AND `!node.r`. Run before §CELL-06.
 
 **What changes:** Remove all J-nodes (J1–J7 in old system; auto-spawned J##### in current system). Any J-node that exists in `NODE_MAP` becomes either:
   - (a) **Promoted** to a named location with content (text, encounter), OR
@@ -2361,43 +2363,73 @@ function _enterEmptyCell(r, c) {
 
 ---
 
-### §CELL-06: BFS and Heatmap — Grid Walk Rewrite ⚠️ PLANNED
+### §CELL-06: BFS and Heatmap — Grid Walk Rewrite ✅ 2026-06-14
 
-**What changes:** All graph algorithms in `wbapi-server.js` (wither-snail, double-snail, heatmap, reachability, BFS pathfinding) switch from "walk node.N/E/S/W edges" to "walk (r±1,c), (r,c±1) in CELL_GRID."
+> **Urgency note:** The server-side snail's `bfsPath` reads `nm[cur]?.[d]` (node.N/S/E/W). After §CELL-01 stripped those fields from stored HTML, `bfsPath` returns `[]` for every query. The reweave-all endpoint is **currently broken**. §CELL-06 fixes this.
 
-**Current pattern (to remove):**
+**Code locations in `wbapi-server.js` to change (grounded, 2026-06-14):**
+
+| Location | Line | What to change |
+|----------|------|---------------|
+| `undirAdj` build loop | ~4050–4060 | Replace `node[d]` loop with CELL_GRID neighbor probe |
+| `degree()` function | ~4061 | Count CELL_GRID cardinal neighbors instead of `n[d]` slots |
+| `freeDirs()` function | ~4066 | Remove (slot concept gone — grid has no "free" direction) |
+| `/api/graph/reachability` BFS | ~4173 | Already uses `undirAdj` — fixing `undirAdj` fixes this |
+| Snail `bfsPath(from,to)` | ~7196 | Replace `DIRS4` edge-walk with grid BFS using `coords` + `buildCellGrid` |
+| Snail `walk3` | ~7294 | **DELETE** — walk3 heated junction nodes; no junctions remain |
+| Reweave-all `bfsPath` | ~5860 | Same replacement as snail bfsPath |
+| Reweave-all degree functions | ~5087, 5165, 5325, 5359 | Replace with CELL_GRID neighbor count |
+| Reweave-all `freeSlots` | ~5110, 5187, 5336 | Remove (no edge slots in grid system) |
+| Bidirectional audit check | ~2466–2476 | **DELETE** — grid implies bidirectionality |
+| Bidirectional fix endpoint | ~2940 | **DELETE** |
+| `linkedNodes` in GET /api/node | ~258 | Replace with `derived_exits` from CELL_GRID neighbors |
+
+**`buildCellGrid(nm, coords)`** already exists at line 2517. A module-level `const MOVES4 = [[-1,0],[1,0],[0,1],[0,-1]];` needs to be added near it.
+
+**New BFS pattern (replaces all DIRS4 node-edge walks):**
 ```js
-for (const d of DIRS4) {          // ['N','E','S','W']
-  const nxt = nm[cur]?.[d];       // reads node.N / node.E etc.
-  if (!nxt || !nm[nxt]) continue;
-  queue.push(nxt);
-}
-```
+const cellGrid = buildCellGrid(nm, WBAPI.nodeCoords);
+const MOVES4   = [[-1,0],[1,0],[0,1],[0,-1]];
 
-**New pattern:**
-```js
-const MOVES = [[-1,0],[1,0],[0,1],[0,-1]]; // N,S,E,W
-const {r, c} = coords[cur];
-for (const [dr,dc] of MOVES) {
-  const nr = r+dr, nc = c+dc;
-  if (nr<1||nr>MAX_R||nc<1||nc>MAX_C) continue;
-  if (IMPASSABLE[`${nr},${nc}`]) continue;
-  const nxt = cellGrid[`${nr},${nc}`];     // named node or null
-  if (nxt && !visited.has(nxt)) {
-    visited.add(nxt); queue.push(nxt);
+function gridBfsPath(fromCode, toCode) {
+  const coords = WBAPI.nodeCoords;
+  const start = coords[fromCode]; const end = coords[toCode];
+  if (!start || !end) return [];
+  const prev = new Map(); prev.set(`${start.r},${start.c}`, null);
+  const queue = [start];
+  while (queue.length) {
+    const {r, c} = queue.shift();
+    for (const [dr,dc] of MOVES4) {
+      const nr=r+dr, nc=c+dc;
+      const k=`${nr},${nc}`;
+      if (prev.has(k) || nr<1 || nc<1 || nr>300 || nc>300) continue;
+      prev.set(k, {r,c});
+      if (nr===end.r && nc===end.c) {
+        // Reconstruct path of node codes only
+        const path=[]; let cur={r:nr,c:nc};
+        while (cur) {
+          const code=cellGrid[`${cur.r},${cur.c}`];
+          if (code) path.unshift(code);
+          cur=prev.get(`${cur.r},${cur.c}`);
+        }
+        return path;
+      }
+      queue.push({r:nr,c:nc});
+    }
   }
-  // For heatmap: also count traversal through empty cells
+  return [];
 }
 ```
 
-**Heatmap change:** The "junction heat" concept (counting BFS usage of J-nodes) is replaced with "cell heat" — a 2D grid of traversal counts. Every cell on a BFS path gets +1. Named nodes and empty cells alike. Output is a 2D grid visualization, not a node list.
+**Reweave-all status:** The reweave-all endpoint's job was to create junction edges. Junction nodes don't exist in the cell system. The endpoint should be **deprecated** — mark the route as `// §CELL-06: reweave-all deprecated — junction system removed` and return a 410 Gone with a message. The underlying Phase 1–6 steps (density, coord assignment, `connect` endpoint) remain useful for placing new named nodes; only Phase 7 (wither-snail) is dead.
 
-**Reweave pass:** Since there are no junction edges to rebuild, reweave becomes "fill connectivity gaps" — find cells that are reachable but isolated (no named neighbors), flag them for content placement rather than auto-connecting them.
+**Heatmap change:** Replace junction-heat output with a 2D grid. Each cell on a BFS path from hub to a quest node gets `+1`. Output as `{ grid: {"r,c": count}, maxHeat, timestamp }`.
 
 **Files to change:**
-- `wbapi-server.js` — rewrite all BFS/DFS/heatmap routines; replace `DIRS4` node-edge walk with grid walk
-- `api.sh` — update `fix-bidirectional` command (now "verify-grid-passability")
-- `milepoints/` — heatmap output format changes from node-code list to grid visualization
+- `wbapi-server.js` — replace `undirAdj`/`degree`/`freeDirs`, rewrite snail `bfsPath`, delete walk3, delete bidirectional, deprecate reweave-all, update `linkedNodes` → `derived_exits`
+- `api.sh` — remove `fix-bidirectional`; add `grid reachability`, `grid heatmap`
+- `docs-node-network.md §7` — already has `_bfsGridPath` documented for client; add server-side note
+- `wbapi-help.md` — update reachability/heatmap sections
 
 ---
 
@@ -2467,7 +2499,7 @@ GET  /api/grid/reachability       → all cells reachable from default start; un
 
 ---
 
-### §CELL-09: Quest System — Cell-Driven Triggers ⚠️ PLANNED
+### §CELL-09: Quest System — Cell-Driven Triggers ✅ COMPLETE (2026-06-14)
 
 **What changes:** Quest activation and completion checks remain node-code based (`activateNode: 'CI'`) but the trigger mechanism changes: instead of "did the player navigate to this code via the edge graph?", the trigger is "did the player's `(r, c)` land on the cell for this code?"
 
@@ -2491,7 +2523,7 @@ function bfsPath(fromR, fromC, toR, toC) {
 
 ---
 
-### §CELL-10: Minimap — Live Player Cursor ⚠️ PLANNED
+### §CELL-10: Minimap — Live Player Cursor ✅ COMPLETE (2026-06-14)
 
 **What changes:** The minimap already renders from `(r, c)` coordinates. Update it to show:
 1. **Player position** — a blinking cursor at `(playerR, playerC)`
@@ -2510,24 +2542,50 @@ function bfsPath(fromR, fromC, toR, toC) {
 
 ### §CELL-11: Documentation Sync Pass ⚠️ PLANNED
 
-Full sync of all markdown docs after §CELL-01 through §CELL-10 are complete.
+Full sync of all markdown docs after §CELL-01 through §CELL-10 are complete. Also includes HTML dead-code cleanup (corridor system remnants).
 
-**Files requiring full rewrite:**
-- `docs-node-network.md` — replaces all 5 sections with new cell-map architecture; new sections: Grid System, Cell Registry, Cell Movement, Empty Cells, MUD Session API
-- `maps.md` — remove N/E/S/W network section; add "Cell Navigation" section explaining grid-walk; update Legend table (remove N/E/S/W columns); update all node coordinate listings
+#### Part A — HTML dead-code removal (roll2hit-v3.html)
+
+These are confirmed present in the file as of 2026-06-14. All are safe to delete because `cellMove` never calls them.
+
+| Symbol | Line | Size | Why removable |
+|--------|------|------|--------------|
+| `storyMove_LEGACY(dir)` | 37413 | ~92 lines | No UI callers; superseded by `cellMove` |
+| `_showCorridorPrompt()` | 44846 | ~40 lines | Only called by `storyMove_LEGACY` |
+| `storyCorridorTravel()` | 44888 | ~80 lines | Only called by corridor overlay buttons |
+| `_wireGlyph()` | 44970 | ~5 lines | Only called by `buildCorridorMap` |
+| `_corridorTerrain()` | 44974 | ~3 lines | Only called by `buildCorridorMap` + stubs |
+| `_routeSegments()` | 44978 | ~30 lines | Only called by `buildCorridorMap` |
+| `buildCorridorMap()` | 45009 | ~40 lines | Populates `CORRIDOR_CELLS` which minimap no longer uses |
+| `_buildNodeExits()` | 45059 | ~20 lines | Re-adds N/E/S/W in memory at startup — dead weight since `cellMove` uses `CELL_GRID`, not `node[dir]`. **Critical:** removing this stops the unnecessary in-memory re-population of N/E/S/W |
+| `CORRIDOR_TERRAIN` const | 20788 | ~31 lines | Only read by `_corridorTerrain()` |
+| `CORRIDOR_CELLS = {}` const | 20819 | 1 line | Dead after removing `buildCorridorMap` |
+| `_corridorPendingFrom/To/Dir` | 33162–33164 | 3 lines | Only set/read by `_showCorridorPrompt`/`storyCorridorTravel` |
+| `<div id="story-corridor-overlay">` HTML | 4331 | ~10 lines | Never shown (overlay never added `.visible` without storyMove_LEGACY) |
+| `#story-corridor-overlay` CSS | 3143 | ~2 lines | Goes with the HTML |
+| `Object.entries(CORRIDOR_CELLS).forEach(...)` | 44783 | ~8 lines | In `_setActivePath` — sets `S_story.lastCorridorCells` which is never read |
+| `'story-corridor-overlay'` in modal reset arrays | 35284, 44767 | 2 entries | Remove from both arrays |
+| `_buildNodeExits()` call | 45083 | 1 line | Call site |
+| `buildCorridorMap()` call | 45084 | 1 line | Call site |
+
+**After removing:** `storyRender` (which calls `_renderMiniMap`) and `_enterEmptyCell` are the only paths that update the display. The game is fully cell-based at that point with no dead startup cost.
+
+**Verify:** After removal, search for `CORRIDOR_CELLS`, `storyMove_LEGACY`, `story-corridor-overlay` — should return zero hits.
+
+#### Part B — Markdown docs
 
 **Files requiring updates:**
-- `index.md` — update "Node map (121 nodes)" keyword → "Cell map"; update description of `docs-node-network.md`
-- `mechanics.md` — remove corridor/warp/hunt travel paragraph; add "Cell Movement" paragraph
-- `spec-corridors.md` — add SUPERSEDED header; redirect to §CELL-03
-- `world.md` — remove any references to junction nodes or corridor travel
-- `story.md` — update travel descriptions (e.g., "follow the junction highway west" → "travel west through open terrain")
-- `story-flowchart.md` — note that edges are now implied by grid adjacency, not stored links
-- `API-README.md` — add cell + session endpoints
-- `wbapi-help.md` — full update: cell endpoints, session API, deprecations
+- `index.md` — "Node map (121 nodes)" → "Cell map (420 named nodes)"; update `maps.md` and `docs-node-network.md` descriptions; remove corridor system row from cross-ref table; add §CELL lab report entry
+- `mechanics.md` — remove "Corridor Travel" section; add "Cell Movement" paragraph (one cell per keypress, empty cell traversal, terrain inference, hunt mode)
+- `spec-corridors.md` — add `> **⚠️ SUPERSEDED by §CELL-03.** Archived for reference.` header
+- `world.md` — remove junction node references; remove "highway mesh" and "Time-Warp Footpath" mentions
+- `story.md` — grep for "junction", "highway", "take the road" — rephrase as geographic directions
+- `story-flowchart.md` — add note: edges are grid adjacency, not stored links
+- `API-README.md` — add cell + session endpoints (from §CELL-08, §CELL-07)
+- `wbapi-help.md` — update reachability/heatmap sections; add Cell & Grid Endpoints; add MUD Session API
 
 **Files to add:**
-- `lab-report-cell-map-mud-redesign.md` — lab report per Lab Report Policy (large multi-system redesign)
+- `lab-report-cell-map-mud-redesign.md` — lab report per Lab Report Policy (large multi-system redesign touching 11 sections)
 
 ---
 
@@ -2541,15 +2599,19 @@ Process one section per "continue." Each section is a self-contained increment t
 | 2 | §CELL-03 | §CELL-02 | High — replaces storyMove | ✅ 2026-06-13 |
 | 3 | §CELL-04 | §CELL-03 | Medium — new UI path | ✅ 2026-06-13 |
 | 4 | §CELL-01 | §CELL-03 | Medium — strips NODE_MAP fields | ✅ 2026-06-14 |
-| 5 | §CELL-05 | §CELL-01, §CELL-04 | Medium — deletes J-nodes | ✅ complete |
-| 6 | §CELL-09 | §CELL-03 | Low — quest trigger is additive | ⚠️ planned |
-| 7 | §CELL-10 | §CELL-02, §CELL-04 | Low — visual only | ⚠️ planned |
-| 8 | §CELL-06 | §CELL-02 | Medium — server-side only | ⚠️ planned |
+| 5 | §CELL-05 | §CELL-01, §CELL-04 | Medium — deletes J-nodes | ✅ complete (partial) |
+| 5b | §CELL-05b | §CELL-05 | Low — purge 268 zombie stubs | ✅ 2026-06-14 |
+| 6 | §CELL-09 | §CELL-03 | Low — quest trigger is additive | ✅ 2026-06-14 |
+| 7 | §CELL-10 | §CELL-02, §CELL-04 | Low — visual only | ✅ 2026-06-14 |
+| 8 | §CELL-06 | §CELL-02 | Medium — server-side only | ✅ 2026-06-14 |
 | 9 | §CELL-08 | §CELL-06 | Low — additive endpoints | ⚠️ planned |
 | 10 | §CELL-07 | §CELL-08 | Medium — new server feature | ⚠️ planned |
-| 11 | §CELL-11 | all above | Low — docs only | ⚠️ planned |
+| 11A | §CELL-11 Part A | §CELL-05b | Medium — removes live startup cost (`_buildNodeExits`+`buildCorridorMap`) | ⚠️ planned |
+| 11B | §CELL-11 Part B | §CELL-06, §CELL-07, §CELL-08 | Low — docs only | ⚠️ planned |
 
-**Parallel track:** §CELL-06 / §CELL-07 / §CELL-08 are server-only changes and can proceed independently of the client-side §CELL-01 through §CELL-05. If the HTML game needs to stay playable during transition, implement §CELL-06/07/08 on `wbapi-server.js` first, then do the HTML changes.
+**Parallel track:** §CELL-06 / §CELL-07 / §CELL-08 are server-only changes and can proceed independently of the client-side §CELL-05b / §CELL-11A. Recommended order: §CELL-05b → §CELL-11A → §CELL-06 → §CELL-08 → §CELL-07 → §CELL-11B.
+
+**Note on §CELL-11A urgency:** `_buildNodeExits()` runs every page load and patches `NODE_MAP[code].N/S/E/W` in memory. This is invisible during gameplay (cellMove never reads it) but means the browser's in-memory NODE_MAP always has N/E/S/W populated — which could confuse any future code that checks those fields. Remove it as soon as §CELL-05b is done.
 
 ---
 

@@ -240,6 +240,21 @@ function reload() {
 }
 reload();
 
+// §CELL-06: cardinal grid offsets — index order: N,S,E,W (matches DIR_NAMES below)
+const MOVES4    = [[-1,0],[1,0],[0,1],[0,-1]];
+const DIR_NAMES = ['N','S','E','W'];
+
+// §CELL-06: "r,c" → node code reverse lookup (module-level; promoted from §CELL-02 audit scope)
+function buildCellGrid(nm, coords) {
+  const g = {};
+  for (const code of Object.keys(nm)) {
+    const coord = coords[code] || { r: nm[code].r, c: nm[code].c };
+    if (coord && coord.r != null && coord.c != null)
+      g[`${coord.r},${coord.c}`] = code;
+  }
+  return g;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Connection enrichment — every GET returns entity + connections + _meta
 // ═══════════════════════════════════════════════════════════════════════════
@@ -255,7 +270,16 @@ function nodeConnections(key) {
       monsters:    node.name ? WBAPI.monsters.byTerrain(node.name).map(m => ({ key:m.key, name:m.name, tier:m.tier })) : [],
       quests:      quests.map(q => ({ id:q.id, title:q.title, type:q.type })),
       npcs:        npcs.map(n => ({ key:n.key, name:n.name })),
-      linkedNodes: { N:node.N||null, S:node.S||null, E:node.E||null, W:node.W||null },
+      derived_exits: (function() {
+        const coord = WBAPI.nodeCoords[key]; if (!coord) return {};
+        const cg = buildCellGrid(WBAPI.nodeMap, WBAPI.nodeCoords);
+        const result = {};
+        for (let i = 0; i < DIR_NAMES.length; i++) {
+          const nb = cg[`${coord.r+MOVES4[i][0]},${coord.c+MOVES4[i][1]}`];
+          if (nb) result[DIR_NAMES[i]] = nb;
+        }
+        return result;
+      }()),
     },
     _meta: {
       canDelete:  deps.quests.length === 0 && deps.npcs.length === 0,
@@ -2420,9 +2444,7 @@ async function route(req, res) {
     let body = {};
     try { body = await readBody(req); } catch(_) {}
 
-    const OPP2  = { N:'S', S:'N', E:'W', W:'E' };
     const DIAG2 = ['NW','NE','SW','SE'];
-    const DIRS2 = ['N','S','E','W'];
     const nm    = WBAPI.nodeMap;
     const fixed = [];
     const errs  = [];
@@ -2460,21 +2482,6 @@ async function route(req, res) {
         if (nm[code]?.[dir] == null) continue;
         if (stripDiag(code, dir)) fixed.push({ check:'diagonal_exit', code, dir });
         else errs.push({ check:'diagonal_exit', code, dir, error:'source patch failed' });
-      }
-    }
-
-    if (!specific || body.check === 'bidirectional') {
-      const targets = specific
-        ? [{ code: body.code, dir: body.dir, target: body.target }]
-        : Object.entries(nm).flatMap(([code, n]) =>
-            DIRS2.filter(d => n[d] && nm[n[d]] && nm[n[d]][OPP2[d]] !== code)
-                 .map(d => ({ code, dir:d, target:n[d] })));
-      for (const { code, dir, target } of targets) {
-        if (!nm[target]) { errs.push({ check:'bidirectional', code, dir, target, error:'target not in NODE_MAP' }); continue; }
-        if (nm[target][OPP2[dir]] === code) continue; // already fixed by a previous iteration
-        const r = WBAPI.editField('node', target, OPP2[dir], code);
-        if (r.ok) fixed.push({ check:'bidirectional', code, dir, target, set:`${target}.${OPP2[dir]}="${code}"` });
-        else errs.push({ check:'bidirectional', code, dir, target, error: r.error });
       }
     }
 
@@ -2937,9 +2944,6 @@ async function route(req, res) {
         if (check === 'dangling_link')
           return `   → curl -XPUT ${b2}/api/node/${code} -H 'Content-Type: application/json' -d '{"${dir}":null}'  # remove broken link\n` +
                  `     OR create the missing node: curl -XPOST ${b2}/api/node -d '{"code":"${target}",...}'`;
-        if (check === 'bidirectional' && code && target && dir)
-          return `   → curl -XPOST ${b2}/api/audit/map/fix -H 'Content-Type: application/json' -d '{"check":"bidirectional","code":"${code}","dir":"${dir}","target":"${target}"}'  # fix now\n` +
-                 `     OR fix all: curl -XPOST ${b2}/api/audit/map/fix`;
         if (check === 'max_connections')
           return `   → curl ${b2}/api/node/${code}  # inspect N/S/E/W links and remove duplicate`;
         if (check === 'long_link' && item.suggestedCoords)
@@ -4045,29 +4049,28 @@ async function route(req, res) {
     let nm = WBAPI.nodeMap;
     const OPP = { N:'S', S:'N', E:'W', W:'E' };
 
-    // §CELL-06: replace with CELL_GRID walk — N/S/E/W fields stripped in §CELL-01
-    // Undirected adjacency: union of both sides of each N/S/E/W edge
-    // so BFS treats the graph as undirected even if one side is missing
+    // §CELL-06: cell-grid adjacency replaces N/S/E/W field walks (stripped in §CELL-01)
+    const coords   = WBAPI.nodeCoords;
+    const cellGrid = buildCellGrid(nm, coords);
+
     const undirAdj = new Map();
-    for (const code of Object.keys(nm)) undirAdj.set(code, new Set());
-    for (const [code, node] of Object.entries(nm)) {
-      for (const d of ['N','S','E','W']) {
-        const nb = node[d]; if (!nb || !nm[nb]) continue;
-        undirAdj.get(code).add(nb);
-        undirAdj.get(nb).add(code);
+    for (const code of Object.keys(nm)) {
+      const coord = coords[code];
+      undirAdj.set(code, new Set());
+      if (!coord) continue;
+      for (const [dr,dc] of MOVES4) {
+        const nb = cellGrid[`${coord.r+dr},${coord.c+dc}`];
+        if (nb && nm[nb]) undirAdj.get(code).add(nb);
       }
     }
 
-    // §CELL-06: replace with CELL_GRID walk — degree based on (r,c) adjacency
-    // Directed degree: how many N/S/E/W slots are filled on a node (for "how full is it")
     function degree(code) {
-      const n = nm[code]; if (!n) return 0;
-      return ['N','S','E','W'].filter(d => n[d]).length;
+      const coord = coords[code]; if (!coord) return 0;
+      return MOVES4.filter(([dr,dc]) => cellGrid[`${coord.r+dr},${coord.c+dc}`]).length;
     }
-    // Free directions on a node (empty N/S/E/W slots)
     function freeDirs(code) {
-      const n = nm[code]; if (!n) return [];
-      return ['N','S','E','W'].filter(d => !n[d]);
+      const coord = coords[code]; if (!coord) return [];
+      return DIR_NAMES.filter((_,i) => !cellGrid[`${coord.r+MOVES4[i][0]},${coord.c+MOVES4[i][1]}`]);
     }
 
     // BFS reachability using undirected adjacency
@@ -5777,8 +5780,10 @@ async function route(req, res) {
     // See: lab-report-mega-reweave.md
     //   Phase 3: always runs once
     if (parts[1] === 'reweave-all' && method === 'POST') {
+      // §CELL-06: reweave-all deprecated — junction system removed in §CELL-01/§CELL-05
+      return json(res, 410, { ok:false, error:'reweave-all is deprecated: junction nodes were removed. Use GET /api/graph/connect for cluster-bridging suggestions.' });
       // Read body BEFORE starting streaming response
-      let body; try { body = await readBody(req); } catch(e) { body = {}; }
+      let body; try { body = await readBody(req); } catch(e) { body = {}; } // eslint-disable-line no-unreachable
       const {
         execute=false, geoSeed=true, priorityHighways=[], cityMesh=true,
         derelictCleanup=true, witherPhase=true,
@@ -7186,20 +7191,27 @@ async function route(req, res) {
         for(const q of Object.values(WBAPI.questDb||{})){for(const f of['activateNode','waypointNode'])if(q[f])qRefW.add(q[f]);}
         const npcNodeW=new Set(Object.values(WBAPI.npcDb||{}).map(n=>n.node).filter(Boolean));
 
-        // BFS shortest path from→to; returns array of node codes on the path, or []
+        // §CELL-06: grid BFS replaces DIRS4 edge-walk — N/S/E/W stripped in §CELL-01
+        const cellCoordsW = WBAPI.nodeCoords;
+        const cellGridW   = buildCellGrid(nm, cellCoordsW);
         const bfsPath=(from,to)=>{
-          if(!nm[from]||!nm[to])return[];
+          const cs=cellCoordsW[from],ce=cellCoordsW[to];
+          if(!cs||!ce)return[];
           if(from===to)return[from];
-          const prev=new Map([[from,null]]);
-          const q=[from];
+          const prev=new Map();prev.set(`${cs.r},${cs.c}`,null);
+          const q=[cs];
           while(q.length){
-            const cur=q.shift();
-            for(const d of DIRS4){
-              const next=nm[cur]?.[d];
-              if(!next||!nm[next]||prev.has(next))continue;
-              prev.set(next,cur);
-              if(next===to){const path=[];let n=to;while(n!==null){path.unshift(n);n=prev.get(n);}return path;}
-              q.push(next);
+            const{r,c}=q.shift();
+            for(const[dr,dc]of MOVES4){
+              const nr=r+dr,nc=c+dc,k=`${nr},${nc}`;
+              if(prev.has(k)||nr<1||nc<1||nr>300||nc>300)continue;
+              prev.set(k,{r,c});
+              if(nr===ce.r&&nc===ce.c){
+                const path=[];let cur={r:nr,c:nc};
+                while(cur){const code=cellGridW[`${cur.r},${cur.c}`];if(code)path.unshift(code);cur=prev.get(`${cur.r},${cur.c}`);}
+                return path;
+              }
+              q.push({r:nr,c:nc});
             }
           }
           return[];
@@ -7291,33 +7303,7 @@ async function route(req, res) {
           emit(`  [snail] walk2 done: paths=${cityPaths}  misses=${cityMisses}  cities=${geoCodes.length}`);
           logTrace('wither-snail','walk2 city pairs='+cityPaths+' misses='+cityMisses+' cities='+geoCodes.length);
 
-          // Walk 3: hub → ALL named non-junction nodes not already covered by walk1/walk2.
-          // Heats up junctions that are bridges to named nodes with no quests and not in GEO2.
-          // Without this, those junctions appear as heat=0 ghost entries even though they are
-          // structurally necessary (Tarjan keeps them as bridges).
-          {
-            const namedNodes=Object.keys(nm).filter(c=>!nm[c]?.junction&&!qRefW.has(c)&&!npcNodeW.has(c));
-            let w3Paths=0,w3Misses=0;
-            emit(`  [snail] walk3: ${namedNodes.length} non-quest non-NPC named nodes`);
-            for(let w3i=0;w3i<namedNodes.length;w3i++){
-              if(w3i%200===0)await yieldOnce();
-              const dest=namedNodes[w3i];
-              if(!nm[dest])continue;
-              const parent3=cityParent.get(hub)||null;
-              // Reuse hub's BFS tree if available, else fall back to bfsPath
-              let path3;
-              if(parent3&&parent3.has(dest)){
-                path3=[];let n=dest;while(n!==null){path3.unshift(n);n=parent3.get(n);}
-              } else {
-                path3=bfsPath(hub,dest);
-              }
-              if(!path3.length){w3Misses++;continue;}
-              w3Paths++;
-              for(const node of path3){if(usage.has(node))usage.set(node,usage.get(node)+1);}
-            }
-            emit(`  [snail] walk3 done: paths=${w3Paths}  misses=${w3Misses}  named=${namedNodes.length}`);
-            logTrace('wither-snail','walk3 named-nodes paths='+w3Paths+' misses='+w3Misses);
-          }
+          // §CELL-06: walk3 deleted — it heated junction nodes; no junctions remain in cell system
 
           const used=[...usage.values()].filter(v=>v>0).length;
           const unused=usage.size-used;
