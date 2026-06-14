@@ -138293,6 +138293,7 @@ const _S_DEFAULTS = () => ({
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   huntMode: false,
   hoursElapsed: 0, hoursSinceSlept: 0,
+  playerR: 0, playerC: 0,   // §CELL-03: current grid position
   gameDay: 0, couperiDebtDegraded: false, worldEventsFired: [],
   brynThirdStepFixed: false, brynFirewoodBrought: false, brynPantryRestocked: false,
   brynLedgerBalance: -8, voidSignClicked: false,
@@ -143177,7 +143178,8 @@ function storyCheckVictory(node) {
   }, sigilDelay);
 }
 
-function storyMove(dir) {
+// SUPERSEDED by cellMove — remove after §CELL-05 is complete
+function storyMove_LEGACY(dir) {
   const node = NODE_MAP[S_story.currentCode];
   const dest = node[dir];
   if (!dest) {
@@ -143282,6 +143284,125 @@ function storyMove(dir) {
   S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
   _pendingFarewell = _farewell || null;
   storyRender(next);
+}
+
+// §CELL-03: MUD-style one-cell-per-move navigation
+function cellMove(dir) {
+  const DELTAS = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
+  const [dr, dc] = DELTAS[dir];
+  const nr = (S_story.playerR || 0) + dr;
+  const nc = (S_story.playerC || 0) + dc;
+
+  if (nr < 1 || nc < 1 || nr > 300 || nc > 300) {
+    storyMsg('You reach the edge of the known world.'); return;
+  }
+  if (IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
+    storyMsg('The sea is impassable on foot.'); return;
+  }
+
+  const destCode = CELL_GRID[`${nr},${nc}`];
+
+  // Gate-lock checks (copied verbatim from storyMove_LEGACY, dest → destCode)
+  if (destCode === 'TLS' && S_story.shards < 7) {
+    const _urgency = (S_story.voidPressure || 0) >= 9 ? '\n\n⚠️ The Void is one day away.' : '';
+    storyMsg('🔮 The Convergence is sealed. You need all 7 Codex Shards. You have ' + S_story.shards + '/7.' + _urgency);
+    return;
+  }
+  // §LIX–§LX: KS two-stage gate — blind days, then magistrate detention
+  if (S_story.currentCode === 'DAM' && S_story.saulConverted) {
+    if (!S_story.anathSightRestored) {
+      S_story.blindDaysKS = (S_story.blindDaysKS || 0) + 1;
+      const _ksDay = S_story.blindDaysKS;
+      if (_ksDay >= 3) {
+        storyMsg('Day three. You hear a knock at the door.\n\nSpeak to Anath before leaving Damascus.');
+      } else {
+        storyMsg('You cannot navigate the road without sight. You wait in the house on the lower road.\n\nDay ' + _ksDay + '. Tomorrow may be different.');
+      }
+      storyRender(NODE_MAP[S_story.currentCode]);
+      return;
+    }
+    if (!S_story.escapedDamascus) {
+      storyMsg('The city watch is at the gate. The magistrate of Damascus has issued a detention order — the warrant authority has turned against the warrant-carrier.\n\nThe gate is watched. The wall is not. Check your active quests.');
+      return;
+    }
+  }
+  // §LXIII: AO→CI2 gate — commission required before first journey departs
+  if (S_story.currentCode === 'HTY' && destCode === 'CI2' && !S_story.commissionReceived) {
+    storyMsg('The journey has not yet been commissioned. Speak to Assembly Elder Joach before leaving Antioch.');
+    return;
+  }
+  // §LXI: HR→TS gate — fifteen days before Barnach releases you
+  if (S_story.currentCode === 'JRS' && destCode === 'ADA' && S_story.saulConverted) {
+    if (!S_story.barnachVouchedHR) {
+      storyMsg('You have not yet been vouched for. Find Barnach in Jerusalem first.');
+      return;
+    }
+    if (!S_story.hellenistsThreaten) {
+      S_story.hrHellenistDays = (S_story.hrHellenistDays || 0) + 1;
+      const _hrDay = S_story.hrHellenistDays;
+      if (_hrDay >= 15) {
+        S_story.hellenistsThreaten = true;
+        storyMsg('The Hellenists are at the gate. At the assembly hall. In the square. Fifteen days is how long this city was prepared to hold the tension.\n\nBarnach says: go. The road west leads to Tarsus.');
+        storyRender(NODE_MAP[S_story.currentCode]);
+      } else {
+        storyMsg('Day ' + _hrDay + ' of fifteen. You speak in the assembly halls. You argue. The city watches. Barnach watches the city.');
+      }
+      return;
+    }
+  }
+  // §LXXII: SQ → CAN gate — Tide Gate must be opened first
+  if (S_story.currentCode === 'NUE' && destCode === 'CAN' && !S_story.tideGateOpened) {
+    storyMsg('The door to the west annex is sealed. The monitoring protocol has not yet activated.');
+    return;
+  }
+  // §LXX: HCA → DS0 gate — Leviathan must be defeated first
+  if (S_story.currentCode === 'HCA' && destCode === 'DS0' && !((S_story.defeatedBattles||{})['HCA_BOSS'])) {
+    storyMsg('The path south does not open until the Clearing is settled. The Leviathan holds the threshold.');
+    return;
+  }
+  // §PORT-02: HL → DF gate — kelpie must be cleared before Dunfall ford opens
+  if (S_story.currentCode === 'KIR' && destCode === 'ZRH' && !((S_story.defeatedBattles||{})['KIR'])) {
+    storyMsg('The ford west of the standing stones is still closed. Clear the kelpie first — the village has its doors barred while the loch is held.');
+    return;
+  }
+  // §HUNT-02: J1 → BN gate — relay warning must be received before going north
+  if (S_story.currentCode === 'WRO' && destCode === 'BNX' && !S_story.huntHook2Received) {
+    storyMsg('The relay road goes north from here. The eastern bend is two hundred paces up. There\'s something worth knowing before you go that way.');
+    return;
+  }
+  // §HUNT-01: LN → LD gate — tracks must be read before the den is accessible
+  if (S_story.currentCode === 'ALF' && destCode === 'VAW' && !S_story.lakeLairLocated) {
+    storyMsg('The shelf collapse is north of here. The path is disturbed — something has been moving through. Read the tracks before going further.');
+    return;
+  }
+  // §LXXIII: DA2 → DA3 gate — Tide Gate must be open to descend
+  if (S_story.currentCode === 'DA2' && destCode === 'DA3' && !S_story.tideGateOpened) {
+    storyMsg('The arch is sealed. Open the Gate mechanism before descending.');
+    return;
+  }
+
+  storyCheckMissedSleep();
+  S_story.log.push(S_story.currentCode);
+  if (S_story.log.length > 20) S_story.log.shift();
+  S_story.playerR = nr;
+  S_story.playerC = nc;
+  _statTally('exitsTaken', 1);
+  S_story.hoursElapsed    = (S_story.hoursElapsed || 0) + 1;
+  S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
+
+  if (destCode && NODE_MAP[destCode]) {
+    const _farewell = _getFarewell(S_story.currentCode, destCode);
+    _pendingFarewell = _farewell || null;
+    _setActivePath(S_story.currentCode, destCode, dir);
+    S_story.currentCode = destCode;
+    storyRender(NODE_MAP[destCode]);
+  } else {
+    _enterEmptyCell(nr, nc);
+  }
+}
+
+function _enterEmptyCell(r, c) {
+  storyMsg(`Open terrain. [Row ${r}, Col ${c}] — no named location here.`);
 }
 
 function storyPortal() {
@@ -144786,6 +144907,11 @@ function _openBlueShuttersContent(wrap) {
 }
 
 function storyRender(node, prefix) {
+  // §CELL-03: keep grid position in sync whenever we land on a named node
+  if (node && NODE_COORDS[node.code]) {
+    S_story.playerR = NODE_COORDS[node.code].r;
+    S_story.playerC = NODE_COORDS[node.code].c;
+  }
   S_story.actNumber = node.act || 1;
   const lootMsg  = storyCollectLoot(node);
   // Farewell line (L44-I)
@@ -149758,7 +149884,7 @@ function _renderMapGrid() {
             for (const dir of ['N','S','E','W']) {
               if (cur[dir] === code) {
                 switchSheet('sheet-story');
-                storyMove(dir);
+                cellMove(dir);
                 return;
               }
             }
@@ -150007,7 +150133,7 @@ function _updateExitLinks() {
         const terrain = _terrainLabel(dest.name);
         const isWp = (d === wpDir);
         el.className = 'exit-line exit-active' + (isWp ? ' exit-waypoint' : '');
-        el.setAttribute('onclick', "storyMove('" + d + "')");
+        el.setAttribute('onclick', "cellMove('" + d + "')");
         el.innerHTML = '<span class="exit-arrow">' + ARROWS[d] + '</span> '
           + '<span class="exit-num">' + num + '</span>'
           + ' <a>' + dest.label + '</a>'
@@ -150033,7 +150159,7 @@ function _updateExitLinks() {
         const dest = NODE_MAP[node[d]];
         const label = d === 'spire' ? '⬡ spire' : '↘ ' + d;
         const isWp = (d === wpDir);
-        return '<span class="exit-extra-item' + (isWp ? ' exit-waypoint-item' : '') + '" onclick="storyMove(\'' + d + '\')">'
+        return '<span class="exit-extra-item' + (isWp ? ' exit-waypoint-item' : '') + '" onclick="cellMove(\'' + d + '\')">'
           + '<span class="exit-arrow">' + label + '</span> '
           + '<span class="exit-num">' + String(dest.num).padStart(2,'0') + '</span>'
           + ' <a>' + dest.label + '</a>'
@@ -150246,7 +150372,7 @@ function storyWaypoint() {
   }
   const path = _bfsPath(S_story.currentCode, wp);
   if (!path || !path.length) { storyMsg('📍 Waypoint unreachable from here.'); return; }
-  storyMove(path[0].dir);
+  cellMove(path[0].dir);
 }
 
 function _updateHuntBtn() {
@@ -150319,7 +150445,7 @@ document.addEventListener('keydown', e => {
   const mapOpen = document.getElementById('sheet-map').classList.contains('active');
   if (dirMap[e.key]) {
     e.preventDefault();
-    storyMove(dirMap[e.key]);
+    cellMove(dirMap[e.key]);
     if (mapOpen) _renderMapGrid();
     return;
   }
@@ -150664,7 +150790,7 @@ document.getElementById('story-mode-btn').addEventListener('click', storyToggle)
 
 /* ── Wire D-pad buttons ── */
 ['N','S','E','W'].forEach(d => {
-  document.getElementById('btn-' + d).addEventListener('click', () => { storyMove(d); });
+  document.getElementById('btn-' + d).addEventListener('click', () => { cellMove(d); });
 });
 document.getElementById('btn-dpad-npc').addEventListener('click', () => {
   const node = NODE_MAP[S_story.currentCode];
