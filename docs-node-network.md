@@ -3,27 +3,36 @@
 # roll2hit.com — Node Network Technical Reference
 
 **File:** `roll2hit-v3.html`  
-**Last updated:** 2026-05-25  
-**Node count:** 78 (42 story + 8 junction + 20 epic + 8 special/lake)
+**Last updated:** 2026-06-13  
+**Node count:** ~449 named nodes + thousands of auto-generated J##### junction nodes (to be removed in §CELL-05)
 
 ---
 
 ## 1. Grid System
 
-All nodes have a grid coordinate `{r, c}` stored in `NODE_COORDS`. The grid is 16 rows × 26 columns.
+All nodes have a grid coordinate `{r, c}` stored in `NODE_COORDS`. The grid is at least 16 rows × 200 columns (expanded by the 1367 import; the 1367 region extends to c ≈ 428).
 
 ```
-r = 1 (north) → 16 (south)
-c = 1 (west)  → 26 (east)
+r = 1 (north) → 300 max (south)
+c = 1 (west)  → 300 max (east)
 ```
 
 Grid coordinates serve two purposes:
-1. **Minimap rendering** — the `_renderMiniMap()` and `_renderWorldMiniMap()` functions place node cells at `(r, c)`.
-2. **Corridor travel trigger** — `storyMove()` computes Manhattan distance between `fromCoord` and `toCoord`. If `distance >= 3`, the Time-Warp Footpath overlay appears before travel.
+1. **Minimap rendering** — `_renderMiniMap()` and `_renderMapGrid()` place node cells at `(r, c)`.
+2. **Cell-based navigation** — `CELL_GRID["r,c"]` maps each coordinate to a node code. `cellMove(dir)` reads this to find the destination.
 
-Grid distance formula:
+The reverse grid lookup:
 ```js
-Math.abs(fromCoord.r - toCoord.r) + Math.abs(fromCoord.c - toCoord.c)
+// Built once at startup — "r,c" → node code
+const CELL_GRID = (() => {
+  const g = {};
+  for (const code of Object.keys(NODE_MAP)) {
+    const coord = NODE_COORDS[code] || { r: NODE_MAP[code].r, c: NODE_MAP[code].c };
+    if (coord && coord.r != null && coord.c != null)
+      g[`${coord.r},${coord.c}`] = code;
+  }
+  return g;
+})();
 ```
 
 ---
@@ -32,13 +41,16 @@ Math.abs(fromCoord.r - toCoord.r) + Math.abs(fromCoord.c - toCoord.c)
 
 | Type | Count | Code pattern | `junction` | `isEpicBattleground` | `isFishingLake` |
 |------|-------|-------------|------------|----------------------|-----------------|
-| Story nodes (main arc) | 42 | CI, SL, IN … CO | — | — | — |
-| Junction nodes (highway) | 8 | J1–J7, RD | `true` | — | — |
+| Story nodes (main arc) | ~78 | CI, SL, IN … CO | — | — | — |
+| Named junction nodes | 8 | J1–J7, RD | `true` | — | — |
+| Auto-generated junction nodes | thousands | J##### | `true` | — | — |
 | Epic Battleground | 20 | E* (EF, EH … EG) | — | `true` | — |
 | Fishing lake | 2 | YL, YC | — | — | `true` |
 | DeFi Land (special Act I) | 3 | DF, HM, GL | — | — | — |
 | Mountain pass (hunt) | 1 | MT | — | — | — |
 | Ally Cat Arc | 1 | CQ | — | — | — |
+
+> **§CELL-05 note:** All J##### auto-generated junction nodes will be bulk-deleted via a WBAPI endpoint. Named J1–J7 nodes will be reviewed individually — some become traversable empty cells, some may be kept as named nodes.
 
 ### Act grouping
 
@@ -57,7 +69,7 @@ Math.abs(fromCoord.r - toCoord.r) + Math.abs(fromCoord.c - toCoord.c)
 
 ## 3. Connection Object (NODE_MAP)
 
-Each node has a direction map:
+Each node has a direction map. The N/S/E/W fields are **read-only legacy data** — `cellMove` does not use them for navigation. They are retained for BFS pathfinding (`_bfsPath`) and will be stripped in §CELL-01.
 
 ```js
 NodeCode: {
@@ -66,11 +78,11 @@ NodeCode: {
   name:  '<terrain>',    // WORLD_DB terrain key
   label: '<str>',        // display name
   act:   <1–8>,
-  N:     '<code>|null',  // north exit
+  N:     '<code>|null',  // north exit (legacy — used by _bfsPath only)
   S:     '<code>|null',  // south exit
   E:     '<code>|null',  // east exit
   W:     '<code>|null',  // west exit
-  // Optional extra directions:
+  // Optional extra directions (legacy):
   SW:    '<code>',       // only on DS → epic trench
   spire: '<code>',       // only on HC → epic spire
   // Content:
@@ -89,145 +101,92 @@ NodeCode: {
 }
 ```
 
-Direction values are logical compass labels (what the player presses). They do **not** have to align exactly with the grid direction — they only need the grid distance to stay `< 3` to avoid triggering corridor travel.
-
 ---
 
-## 4. Corridor Travel System (Time-Warp Footpath)
+## 4. Navigation System — cellMove (§CELL-03, ✅ active)
 
-When a move has `grid distance >= 3`, the **corridor overlay** appears before travel.
+Navigation is **MUD-style cell grid**: pressing N/E/S/W always moves exactly one cell. There is no corridor dialog, no Manhattan-distance gating, and no Hunt/Warp overlay on normal movement.
 
-### Trigger
+### Movement flow
+
+```
+Player presses N/E/S/W
+  │
+  ├─ cellMove(dir) called
+  │   ├─ Compute (nr, nc) = (playerR ± 1, playerC ± 1)
+  │   ├─ Bounds check: nr/nc must be 1–300
+  │   ├─ IMPASSABLE_CELLS check (water — populated in §CELL-10)
+  │   ├─ Gate-lock checks (TLS shards, Damascus gate, etc.)
+  │   ├─ destCode = CELL_GRID["nr,nc"]
+  │   │
+  │   ├─ destCode found in NODE_MAP → storyRender(NODE_MAP[destCode])
+  │   └─ destCode not found → _enterEmptyCell(nr, nc)
+  │
+  └─ S_story.playerR / playerC updated; visitedCells["r,c"] = true
+```
+
+### Empty cell traversal (§CELL-04, ✅ active)
+
+When the player steps on a cell with no named node:
+
+1. `_inferTerrain(r, c)` — polls the four cardinal neighbors in `CELL_GRID`; returns the majority terrain (`NODE_MAP[code].name`), fallback `'midlands'`.
+2. Exits list — all four cardinal directions are shown with labels if a named node is adjacent.
+3. Random encounter — rolls against `TERRAIN_ENCOUNTER_RATE[terrain]`; if triggered, picks a monster from `WORLD_DB[terrain].monsters` and calls `_startStoryBattle`.
 
 ```js
-// storyMove() — L9-G
-const dist = Math.abs(from.r - to.r) + Math.abs(from.c - to.c);
-if (dist >= 3) {
-  _showCorridorPrompt(fromCode, destCode, dir);
-  return;
-}
+const TERRAIN_ENCOUNTER_RATE = {
+  midlands:0.15, forest:0.25, highlands:0.20, swamp:0.30, desert:0.20,
+  jungle:0.30, hag_swamp:0.35, ocean:0.10, beach:0.10, road:0, junction:0,
+  city:0.05, city_slums:0.10, alley:0.15, _default:0.15
+};
 ```
 
-### Overlay flow
+### State fields
 
-1. `_showCorridorPrompt(fromCode, destCode, dir)` — populates overlay with From/To/Road and encounter %.
-2. Player chooses:
-   - **⚡ Warp** — instant travel, no encounter.
-   - **🎯 Hunt** — rolls for encounter in corridor terrain.
-   - **✕ Cancel** — returns to current node, no travel.
-3. Warp/Hunt calls `storyCorridorTravel(fromCode, destCode, dir)` with `S_story.huntMode` set accordingly.
+| Field | Type | Description |
+|-------|------|-------------|
+| `S_story.playerR` | number | Current grid row |
+| `S_story.playerC` | number | Current grid column |
+| `S_story.visitedCells` | `{[key:string]:true}` | All `"r,c"` cells ever stepped on |
 
-### Corridor terrain lookup
+`storyRender()` syncs `playerR`/`playerC` from `NODE_COORDS` on every named-node entry, so saves from before §CELL-03 are automatically corrected on first render.
 
-Terrain for a corridor pair is in `CORRIDOR_TERRAIN`:
-```js
-const CORRIDOR_TERRAIN = {
-  'CI-J1': 'midlands',
-  'DK-OC': 'ocean',
-  // etc.
-}
-// fallback: 'midlands'
-```
+### Gate locks
 
-### Corridor connections (distance ≥ 3)
-
-These always show the overlay:
-
-| From | Dir | To | Dist | Terrain |
-|------|-----|----|------|---------|
-| DK | W | OC | 19 | ocean |
-| OC | N | DK | 19 | ocean |
-| JU | N | BQ | 9 | jungle |
-| BQ | S | JU | 9 | jungle |
-| AR | E | J5 | 8 | arctic |
-| J5 | W | AR | 8 | arctic |
-| SE | W | J4 | 7 | ocean |
-| VC | E | DE | 7 | desert |
-| HC | W | J5 | 7 | arctic |
-| J4 | E | SE | 7 | ocean |
-| J5 | E | HC | 7 | arctic |
-| MI | N | HL | 6 | highlands |
-| HL | E | MI | 6 | highlands |
-| DS | E | J4 | 6 | ocean |
-| CO | S | CI | 6 | midlands |
-| DC | N | JU | 5 | jungle |
-| KT | N | HC | 5 | heavenly_clouds |
-| HC | S | KT | 5 | heavenly_clouds |
-| HC | E | J7 | 5 | heavenly_clouds |
-| CI | W | J1 | 4 | midlands |
-| MS | W | DK | 4 | ocean |
-| MI | E | J1 | 4 | midlands |
-| BE | N | J3 | 4 | forest |
-| OC | S | DS | 4 | ocean |
-| DS | W | OC | 4 | ocean |
-| GC | S | MC | 4 | goblin_cave |
-| J1 | E | CI | 4 | midlands |
-| J1 | W | MI | 4 | midlands |
-| J3 | S | BE | 4 | forest |
-| CI | S | CR | 3 | city |
-| AL | S | SE | 3 | alley |
+All gate-lock checks from the old `storyMove` are preserved verbatim in `cellMove`, using `destCode` (from `CELL_GRID`) rather than `node[dir]`. See `cellMove()` in the HTML (~143404).
 
 ---
 
-## 5. Junction Highway System
+## 5. Corridor Travel System — SUPERSEDED
 
-Junction nodes (J1–J7, RD) are waypoints connecting distant regions. They have no NPCs, battles, or loot — pure routing nodes marked `junction: true`.
+> The old corridor system (`storyMove` / `storyCorridorTravel` / Manhattan-distance trigger) is **no longer the active navigation path**. `storyMove` was renamed `storyMove_LEGACY` and is retained only until §CELL-05 removes all junction nodes.
+>
+> See `spec-corridors.md` for the full historical spec.
 
-### Highway map (west → east along row 5)
-
-```
-[EF] ─ FO ─ J6 ─ RD ─ MI ─ J1 ─ CI
-              │         │
-             YL        EM (S epic)
-              │
-             YC
-```
-
-**J1** `Midlands Road Fork` at (5,12):
-- E → CI (City Streets — Birka) [corridor, 4]
-- W → MI (Plains & Midlands) [corridor, 4]
-
-**J6** `Western Wilds Crossroads` at (5,5):
-- N → MT (Mountain Pass)
-- S → YL (Yugurt Lake)
-- E → RD (Roadside Clearing)
-- W → FO (Aldric's Forest) [direct, 2]
-
-**RD** `Roadside Clearing` at (5,6):
-- E → MI (Plains & Midlands) [direct, 2]
-- W → J6 [direct, 1]
-
-### Coastal junction
-
-**J3** `Coastal Fork` at (9,3):
-- N → HS (Crones' Domain) [direct, 2]
-- S → BE (Tropical Beach) [corridor, 4]
-
-### Ocean-to-Ashcrag junction
-
-**J4** `Deep Road Split` at (12,8):
-- E → SE (Visby Sewers) [corridor, 7]
-- W → DS (Deep Sea Trench) [corridor, 6]
-
-### Sky road junctions
-
-**J5** `Arctic Overpass` at (1,10):
-- E → HC (Sky Road) [corridor, 7]
-- W → AR (Arctic Wastes) [corridor, 8]
-
-**J7** `Sky Gate Spur` at (1,22):
-- N → HC (Sky Road) [corridor, 5]
-- E → OP (Oriental Dragon Palace) [direct, 2]
-
-### Southern desert junction
-
-**J2** `Southern Road Cross` at (10,4):
-- E → DE (Desert Wastes) [direct, 1]
-- W → JU (Dense Jungle) [direct, 2]
+The corridor overlay (`#story-corridor-overlay`), `buildCorridorMap()`, `CORRIDOR_CELLS`, and `CORRIDOR_TERRAIN` remain in the HTML for minimap wire-glyph rendering. They will be removed in §CELL-05.
 
 ---
 
-## 6. Dead-End Nodes
+## 6. Junction Highway System — to be removed in §CELL-05
+
+Named junction nodes (J1–J7, RD) are waypoints that existed to break up long corridor segments. In the cell-grid system, players walk through the cells they occupy as ordinary empty cells. Auto-generated J##### nodes (created by the junction reweave operations) number in the thousands and will be bulk-deleted.
+
+### Named junction coords (for reference until §CELL-05)
+
+```
+J1  (5,12)   Midlands Road Fork
+J2  (10,4)   Southern Road Cross
+J3  (9,3)    Coastal Fork
+J4  (12,8)   Deep Road Split
+J5  (1,10)   Arctic Overpass
+J6  (5,5)    Western Wilds Crossroads
+J7  (1,22)   Sky Gate Spur
+RD  (5,6)    Roadside Clearing
+```
+
+---
+
+## 7. Dead-End Nodes
 
 These nodes have only one NSEW exit (plus any epic/portal extras):
 
@@ -247,7 +206,7 @@ Epic Battleground nodes (E*) all have exactly one exit back to their parent node
 
 ---
 
-## 7. Special Exits
+## 8. Special Exits
 
 Two nodes have non-NSEW extra exits handled by the `EXTRA_DIRS` block in `_updateExitLinks()`:
 
@@ -256,19 +215,17 @@ Two nodes have non-NSEW extra exits handled by the `EXTRA_DIRS` block in `_updat
 | DS | SW | ED (Trench Titan — Epic) | 5th exit |
 | HC | spire | EK (Shattered Seraph's Spire — Epic) | 5th exit |
 
-These show below the main NSEW exit list in the UI.
-
 **Portal exits** (not NSEW):
 
 | Code | Portal | Dest |
 |------|--------|------|
-| OU | portal | GA (Greek Agora) | instant, no encounter |
+| OU | portal | GA (Greek Agora) — instant, no encounter |
 
 ---
 
-## 8. Waypoint & BFS Pathfinding
+## 9. Waypoint & BFS Pathfinding
 
-The `storyWaypoint()` and `_bfsPath()` functions implement BFS over `NODE_MAP` N/S/E/W edges to find shortest hop count between any two nodes. The UI shows the next step direction with a `▶ WP` tag on the correct exit.
+`storyWaypoint()` and `_bfsPath()` implement BFS over `NODE_MAP` N/S/E/W edges to find the shortest hop count between any two named nodes. Each step calls `cellMove(dir)`, which moves one cell at a time.
 
 `_bfsPath(from, to)` returns an array of `{dir, code}` steps.
 
@@ -276,7 +233,7 @@ Active waypoint: `S_story.waypoint` (node code string or null).
 
 ---
 
-## 9. Grid Coordinate Table (all 78 nodes)
+## 10. Grid Coordinate Table (core 78 story/junction nodes)
 
 ```
 Code  r   c   Label
@@ -363,16 +320,15 @@ GL    3   15  Old Guard's Corner
 
 ---
 
-## 10. Adding New Nodes — Checklist
+## 11. Adding New Nodes — Checklist
 
 1. Pick a code (2–3 chars, unique in NODE_MAP).
-2. Choose grid `(r,c)` — aim for Manhattan distance ≤ 2 from each connected neighbor. Distance ≥ 3 triggers corridor overlay; ≥ 6 is a major inter-region connection.
-3. Add to `NODE_MAP` with `act`, `N/S/E/W`, `name` (WORLD_DB terrain key), `label`, `text`, etc.
+2. Choose grid `(r,c)` — ensure no existing `NODE_COORDS` entry uses that cell.
+3. Add to `NODE_MAP` with `act`, `name` (WORLD_DB terrain key), `label`, `text`, etc. N/S/E/W fields are legacy and only needed for `_bfsPath` to work before §CELL-01.
 4. Add to `NODE_COORDS`.
-5. Wire reverse connections: if `A.N = 'B'` add `B.S = 'A'` unless the connection is one-way (like epic battlegrounds).
-6. If the connection crosses a region (distance ≥ 3), add `CORRIDOR_TERRAIN['A-B'] = 'terrain'`.
-7. If a junction is needed, pick a J-code (next available after J7) and place it between.
-8. Update docs: `story.md`, `maps.md`, `plan.md`.
+5. Wire reverse connections for BFS: if `A.N = 'B'` add `B.S = 'A'`.
+6. `CELL_GRID` is built automatically at startup — no manual addition needed.
+7. Update docs: `story.md`, `maps.md`, `plan.md`.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

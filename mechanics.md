@@ -13,7 +13,7 @@ Roll2Hit runs in two modes that share a single state. **Battle Mode** is the com
 ### Combat Flow
 
 #### Starting a Battle (Story Mode)
-1. Navigate to a node with a **⚔ BATTLE** chip (or trigger a Stalk / corridor encounter).
+1. Navigate to a node with a **⚔ BATTLE** chip (or trigger a Stalk / open-cell encounter).
 2. The **Pre-Battle screen** opens with three tabs:
 
 | Tab | Cost | Effect |
@@ -143,7 +143,7 @@ In both cases: the battle is not marked defeated — no victory credit, no drops
 
 ### XP System
 
-XP is earned on every enemy kill, including Stalk and corridor encounters.
+XP is earned on every enemy kill, including Stalk and open-cell encounters.
 
 **Formula:** `XP = enemy AC × enemy max HP`
 
@@ -373,7 +373,7 @@ Notoriety is a persistent scalar that drives enemy scaling across the entire run
 
 **Formula:** `_notoriety() = level × 3 + floor(battlesWon / 2)`
 
-where `battlesWon` counts all defeated node battles plus Stalk/corridor victories.
+where `battlesWon` counts all defeated node battles plus Stalk/open-cell victories.
 
 **Effect on enemy tier weights:**
 
@@ -386,9 +386,9 @@ where `battlesWon` counts all defeated node battles plus Stalk/corridor victorie
 | 31–40 | 1% | 8% | 30% | 40% | 21% |
 | 41+ | 0% | 5% | 25% | 40% | 30% |
 
-**Effect on corridor encounters:** `encounterPct = min(95, 10 + notoriety × 1.5 + activeQuests × 4)`
+**Effect on open-cell encounters:** `TERRAIN_ENCOUNTER_RATE[terrain]` sets the base probability (0.10–0.35 depending on terrain). Empty cells in jungle, swamp, and hag_swamp are most dangerous; roads and junctions are safe (0%). Notoriety weights the tier of whatever monster is picked from the terrain pool.
 
-As notoriety climbs, corridors become progressively more dangerous and deadly-tier enemies appear more often. High-notoriety runs demand consumable spending and careful route planning.
+As notoriety climbs, open-cell encounters skew toward harder-tier enemies. High-notoriety runs in dangerous terrain demand consumable spending and careful route planning.
 
 ---
 

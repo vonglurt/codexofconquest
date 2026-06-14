@@ -2217,7 +2217,7 @@ CODE: {
 
 ---
 
-### §CELL-02: CELL_GRID Registry ⚠️ PLANNED
+### §CELL-02: CELL_GRID Registry ✅ COMPLETE (2026-06-13)
 
 **What changes:** Add a `CELL_GRID` lookup that maps `(r, c)` → node code (or `null`). This replaces the role of N/E/S/W as the movement routing table.
 
@@ -2251,7 +2251,7 @@ for (const code of Object.keys(NODE_MAP)) {
 
 ---
 
-### §CELL-03: Movement Engine Rewrite — storyMove → cellMove ⚠️ PLANNED
+### §CELL-03: Movement Engine Rewrite — storyMove → cellMove ✅ COMPLETE (2026-06-13)
 
 **What changes:** Replace `storyMove(dir)` with `cellMove(dir)`. Remove all corridor travel logic. Every move is strictly `(r±1, c)` or `(r, c±1)`.
 
@@ -2300,7 +2300,7 @@ function cellMove(dir) {
 
 ---
 
-### §CELL-04: Empty Cell Traversal ⚠️ PLANNED
+### §CELL-04: Empty Cell Traversal ✅ COMPLETE (2026-06-13)
 
 **What changes:** When the player moves to a cell with no node (`CELL_GRID` miss), the game describes the terrain and allows random encounters. This replaces junctions as the "routing glue" of the map.
 
@@ -2535,19 +2535,19 @@ Full sync of all markdown docs after §CELL-01 through §CELL-10 are complete.
 
 Process one section per "continue." Each section is a self-contained increment that leaves the game playable.
 
-| Order | Section | Dependency | Risk |
-|-------|---------|-----------|------|
-| 1 | §CELL-02 | none | Low — additive only |
-| 2 | §CELL-03 | §CELL-02 | High — replaces storyMove |
-| 3 | §CELL-04 | §CELL-03 | Medium — new UI path |
-| 4 | §CELL-01 | §CELL-03 | Medium — strips NODE_MAP fields |
-| 5 | §CELL-05 | §CELL-01, §CELL-04 | Medium — deletes J-nodes |
-| 6 | §CELL-09 | §CELL-03 | Low — quest trigger is additive |
-| 7 | §CELL-10 | §CELL-02, §CELL-04 | Low — visual only |
-| 8 | §CELL-06 | §CELL-02 | Medium — server-side only |
-| 9 | §CELL-08 | §CELL-06 | Low — additive endpoints |
-| 10 | §CELL-07 | §CELL-08 | Medium — new server feature |
-| 11 | §CELL-11 | all above | Low — docs only |
+| Order | Section | Dependency | Risk | Status |
+|-------|---------|-----------|------|--------|
+| 1 | §CELL-02 | none | Low — additive only | ✅ 2026-06-13 |
+| 2 | §CELL-03 | §CELL-02 | High — replaces storyMove | ✅ 2026-06-13 |
+| 3 | §CELL-04 | §CELL-03 | Medium — new UI path | ✅ 2026-06-13 |
+| 4 | §CELL-01 | §CELL-03 | Medium — strips NODE_MAP fields | ⚠️ next |
+| 5 | §CELL-05 | §CELL-01, §CELL-04 | Medium — deletes J-nodes | ⚠️ planned |
+| 6 | §CELL-09 | §CELL-03 | Low — quest trigger is additive | ⚠️ planned |
+| 7 | §CELL-10 | §CELL-02, §CELL-04 | Low — visual only | ⚠️ planned |
+| 8 | §CELL-06 | §CELL-02 | Medium — server-side only | ⚠️ planned |
+| 9 | §CELL-08 | §CELL-06 | Low — additive endpoints | ⚠️ planned |
+| 10 | §CELL-07 | §CELL-08 | Medium — new server feature | ⚠️ planned |
+| 11 | §CELL-11 | all above | Low — docs only | ⚠️ planned |
 
 **Parallel track:** §CELL-06 / §CELL-07 / §CELL-08 are server-only changes and can proceed independently of the client-side §CELL-01 through §CELL-05. If the HTML game needs to stay playable during transition, implement §CELL-06/07/08 on `wbapi-server.js` first, then do the HTML changes.
 

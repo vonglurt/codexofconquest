@@ -300,59 +300,82 @@ The game has exactly two modes. Switching between them is explicit and intention
 
 ## PART FOUR — NAVIGATION SYSTEM
 
-### Movement Model (MUD-style N/E/S/W)
+### Movement Model — MUD Cell Grid (§CELL-03, ✅ active)
 
-Each node has up to 4 directional exits. Movement from node A to node B:
-1. Player inputs direction (N / E / S / W)
-2. Engine checks `connections[direction]` for current node
-3. If null: "You cannot go that way."
-4. If valid node ID: Move player to target node
-5. Trigger `onEnter(targetNode)` — show description, NPC, loot, battle check
+Navigation is pure coordinate-based: pressing N/E/S/W always moves exactly **one grid cell**. There is no node-exit lookup, no corridor dialog, and no distance gating.
 
 ```javascript
-// Pseudocode: movement handler
-function move(direction) {
-  const exit = currentNode.connections[direction];
-  if (!exit) return "No path that way.";
-  
-  const nextNode = NODE_MAP[exit];
-  
-  // Check if passage requires an item
-  if (nextNode.requires_item && !inventory.has(nextNode.requires_item)) {
-    return `You need ${nextNode.requires_item_name} to pass here.`;
+// cellMove(dir) — the active movement handler
+function cellMove(dir) {
+  const DELTAS = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
+  const [dr, dc] = DELTAS[dir];
+  const nr = S_story.playerR + dr;
+  const nc = S_story.playerC + dc;
+
+  // Bounds check (grid 1–300)
+  if (nr < 1 || nc < 1 || nr > 300 || nc > 300) {
+    storyMsg('You reach the edge of the known world.'); return;
   }
-  
-  // Check if story flag gate applies
-  if (nextNode.requires_flag && !flags[nextNode.requires_flag]) {
-    return nextNode.blocked_text;
+  if (IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
+    storyMsg('The sea is impassable on foot.'); return;
   }
-  
-  currentNode = nextNode;
-  return onEnter(nextNode);
+
+  // Gate-lock checks (see cellMove in HTML for all 9 gates)
+  const destCode = CELL_GRID[`${nr},${nc}`];
+  // ... gate checks using destCode vs S_story.currentCode ...
+
+  S_story.playerR = nr; S_story.playerC = nc;
+  S_story.visitedCells[`${nr},${nc}`] = true;
+
+  if (destCode && NODE_MAP[destCode]) {
+    storyRender(NODE_MAP[destCode]);      // named node
+  } else {
+    _enterEmptyCell(nr, nc);             // open terrain
+  }
 }
 ```
 
+**Key data structures:**
+
+| Constant | Purpose |
+|---|---|
+| `CELL_GRID` | `"r,c"` → node code — built at startup from NODE_COORDS |
+| `IMPASSABLE_CELLS` | `Set<"r,c">` — water/edge cells (populated in §CELL-10) |
+| `TERRAIN_ENCOUNTER_RATE` | per-terrain encounter probability on empty cells |
+
+**Empty cell traversal (`_enterEmptyCell`):**
+
+When the player steps on a cell with no named node, `_inferTerrain(r,c)` polls the four cardinal neighbors in `CELL_GRID` and returns the majority terrain. The cell panel shows terrain name, coordinates, and an exit compass. A random encounter rolls against `TERRAIN_ENCOUNTER_RATE[terrain]`.
+
 ### Portal Nodes
 
-Node 36 (OU, Outhouse) → Node 37 (GA, Greek Agora) is a portal — instant, non-directional, one-time use (unless revisited). Modeled as a special `portal` connection type, not N/E/S/W.
+Node OU → GA is a portal — instant, non-directional. Handled by `storyPortal()`, bypasses `cellMove` entirely.
 
-### Locked Passages
+### Gate Locks
 
-Some connections require items:
-| From | To | Requires |
-|------|----|---------:|
-| CR(05) | CY(06) | crypt_key |
-| SC(21) | FL(22) | sea_cave_key |
-| AL(11) | SE(24) | conclave_pass OR sewers_path |
-| VC(30) | DE(31) | toll_token |
-| SQ(35) | CO(42) | all 7 shards |
+Gate locks are checked inside `cellMove` using `destCode` (the node at the target cell). They are identical to the old `storyMove` checks:
 
-### Travel Time
+| From | To (destCode) | Condition |
+|------|--------------|-----------|
+| any | TLS | shards < 7 |
+| DAM | any | saulConverted → blind days / escapedDamascus gates |
+| HTY | CI2 | commissionReceived |
+| JRS | ADA | barnachVouchedHR + hellenistsThreaten |
+| NUE | CAN | tideGateOpened |
+| HCA | DS0 | defeatedBattles['HCA_BOSS'] |
+| KIR | ZRH | defeatedBattles['KIR'] |
+| WRO | BNX | huntHook2Received |
+| ALF | VAW | lakeLairLocated |
+| DA2 | DA3 | tideGateOpened |
 
-- Moving between adjacent nodes: 0 days (same day)
-- Ocean crossing (ship): +1 day per leg (DK→OC, OC→IS, IS→AT)
-- Deep sea: +1 day (optional encounter, node DS)
-- Missing sleep at end of day: voidPressure += 1, DIS on next 2 battles
+### Time Cost
+
+- Every `cellMove` call advances `hoursElapsed` and `hoursSinceSlept` by 1.
+- Missing sleep at end of day: `voidPressure += 1`, DIS on next 2 battles.
+
+### Legacy: storyMove_LEGACY
+
+The old node-graph movement function (`storyMove`) has been renamed `storyMove_LEGACY`. It is retained until §CELL-05 removes all junction nodes. It is **not called** by any UI element — all D-pad buttons, keyboard handler, waypoint walker, and exit chips call `cellMove`.
 
 ---
 
@@ -564,10 +587,11 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 - All 370 monsters in `MONSTER_POOL`
 - 46 base + 20 epic = 66 terrains in `WORLD_DB`
 
-### Layer 1 — ✅ IMPLEMENTED
-- `NODE_MAP` (76 nodes) with `N/S/E/W` connections from maps.md
-- `storyMove(direction)` with locked-passage checks and move message feedback
-- D-pad buttons (N/E/S/W) + keyboard arrows/WASD navigation
+### Layer 1 — ✅ IMPLEMENTED (§CELL-03 supersedes navigation)
+- `NODE_MAP` (76+ nodes) with `N/S/E/W` connections from maps.md
+- `storyMove(direction)` (now renamed `storyMove_LEGACY`) — node-graph navigation
+- **§CELL-03:** `cellMove(dir)` replaces `storyMove` — one grid cell per keypress, `CELL_GRID` lookup, `_enterEmptyCell` for open terrain
+- D-pad buttons (N/E/S/W) + keyboard arrows/WASD → `cellMove`
 - Node header, story text box, exits shown as available/blocked
 
 ### Layer 2 — ✅ IMPLEMENTED
@@ -619,11 +643,13 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 - **Transmort Scroll**: consumes item, teleports player to Hearth Home, triggers normal node render.
 - **Sidequests**: `sq_battling` (collect 3 drops) and `sq_leveling` (win 5 battles) using `completeFn` for automatic tracking.
 
-### Layer 9 — ✅ IMPLEMENTED
-- **Circuit corridors**: `CORRIDOR_CELLS` computed grid; key `"r,c"` → `{dirs, glyph, terrain, edges}`
-- **Junction nodes J1–J7 + MT**: 8 navigation nodes at grid intersections; wired into NODE_MAP
-- `buildCorridorMap()`, `storyCorridorTravel()`, `_setActivePath()` — animated corridor transit with sequential cell-by-cell movement
-- Stalk/corridor encounters routed through same battle flow as node battles
+### Layer 9 — ✅ IMPLEMENTED (corridor system superseded by §CELL)
+- **Circuit corridors**: `CORRIDOR_CELLS` computed grid; key `"r,c"` → `{dirs, glyph, terrain, edges}` — still rendered on minimap
+- **Junction nodes J1–J7 + MT**: 8 named navigation nodes; thousands of auto-generated J##### nodes — to be removed in §CELL-05
+- `buildCorridorMap()`, `storyCorridorTravel()`, `_setActivePath()` — retained for minimap wire-glyph rendering; corridor travel dialog is no longer shown
+- **§CELL-02:** `CELL_GRID` + `IMPASSABLE_CELLS` — reverse grid lookup
+- **§CELL-03:** `cellMove(dir)` — one cell per keypress, replaces corridor/node-graph navigation
+- **§CELL-04:** `_inferTerrain()`, `_enterEmptyCell()`, `TERRAIN_ENCOUNTER_RATE` — open cell traversal with random encounters
 
 ### Layer 10 — ✅ IMPLEMENTED
 - **Hunting Grounds**: 64 terrain types mapped to display names via `HUNTING_GROUNDS`
@@ -896,6 +922,10 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 
 | Function | Location | Purpose |
 |----------|----------|---------|
+| `cellMove(dir)` | story mode | **Primary movement handler** — moves one grid cell per call; gate checks; CELL_GRID lookup; calls storyRender or _enterEmptyCell |
+| `_enterEmptyCell(r, c)` | story mode | Renders an unnamed cell — infers terrain, shows exits, rolls random encounter |
+| `_inferTerrain(r, c)` | story mode | Returns majority terrain name from CELL_GRID cardinal neighbors; fallback 'midlands' |
+| `storyMove_LEGACY(dir)` | story mode | Old node-graph navigator — retained until §CELL-05; **not called by any UI element** |
 | `storyShortRest(nodeCode)` | story mode | Heals, grants Boyscout Token on first visit, or auto-sets inn waypoint on 0 charges |
 | `storyConfirmSleep(nodeCode)` | story mode | Dice-based HP heal (2×d10+CON first sleep, 1×d10+CON revisit); min 50% hpMax |
 | `storyQuickWait(nodeCode)` | story mode | SE button — random terrain encounter via `_weightedMonsterPick()`, starts battle immediately |
@@ -903,7 +933,7 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 | `storyRenderCharSheet()` | story mode | Renders stat header, ability grid, equipment strip, and `progRows()` interleaved feature/tattoo list |
 | `progRows()` | inner of `storyRenderCharSheet` | Loops levels 1–20; generates `.cs-prog-row` + `.cs-tattoo-row` pairs; earned vs `.upcoming` |
 | `storyShowNpc(nodeCode)` | story mode | Opens NPC dialogue overlay from `NPC_DIALOGUE[nodeCode]` |
-| `_bfsPath(from, to)` | utility | BFS step array for waypoint navigation and auto-inn search |
+| `_bfsPath(from, to)` | utility | BFS step array for waypoint navigation and auto-inn search (uses NODE_MAP N/S/E/W — §CELL-06 will rewrite to use CELL_GRID) |
 | `_weightedMonsterPick(terrain)` | battle | Picks random monster weighted by `_notorietyWeights()`; used by stalk + quick wait |
 | `_extraAttackCount()` | battle | Returns 1/2/3/4 attack rolls per main action based on level (Lv1/5/11/20) |
 | `_notoriety()` | utility | `level × 3 + floor(battlesWon / 2)` — scales encounter difficulty dynamically |
@@ -921,7 +951,13 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 | `monsters.md` | Monster stats reference | Verified against `MONSTER_POOL` in HTML |
 
 ### Current State
-All 37 layers are implemented in `roll2hit-v3.html` (~10,200 lines, 515 div pairs). The single-file, no-CDN architecture is complete. Story Mode and Battle Mode share a single mutable `S_story` state object. Layers 21–37 added the Fighter level-up system (tattoos, Extra Attack, Action Surge, Indomitable), d100 unified loot, notoriety scaling, world minimap, waypoint BFS, city slums node (51 total), and the d-pad 3×3 grid with Boyscout Token camping mechanics and character sheet overlay.
+All 37 layers are implemented in `roll2hit-v3.html` (~143,000 lines). The single-file, no-CDN architecture is complete. Story Mode and Battle Mode share a single mutable `S_story` state object. Layers 21–37 added the Fighter level-up system (tattoos, Extra Attack, Action Surge, Indomitable), d100 unified loot, notoriety scaling, world minimap, waypoint BFS, city slums node, and the d-pad 3×3 grid with Boyscout Token camping mechanics and character sheet overlay.
+
+**§CELL migration (in progress — 2026-06-13):**
+- §CELL-02 ✅ `CELL_GRID` + `IMPASSABLE_CELLS` added
+- §CELL-03 ✅ `cellMove()` replaces `storyMove` — MUD cell grid navigation live
+- §CELL-04 ✅ `_enterEmptyCell()` / `_inferTerrain()` / `TERRAIN_ENCOUNTER_RATE` — open terrain traversal
+- §CELL-01, §CELL-05 through §CELL-11 planned — see `plan.md §CELL`
 
 
 ---

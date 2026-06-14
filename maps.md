@@ -434,14 +434,14 @@ Four passages require a specific item in inventory to traverse. The lock is **on
 
 Every node that should appear on the map canvas must have an entry in `NODE_COORDS`. The coordinate system is a flat integer grid: `r` = row (north → south, increasing), `c` = column (west → east, increasing).
 
-### Hard constraints (enforced by corridor engine)
+### Hard constraints (enforced by WBAPI audit)
 
 | rule | requirement |
 |------|-------------|
-| **Axis alignment** | Two nodes connected by N/S/E/W must share the **exact same column** (N/S link) or **exact same row** (E/W link). Off-axis pairs break `buildCorridorMap()` and will not render a corridor. |
-| **Maximum link distance** | Connected nodes may be at most **4 cells apart** on the shared axis. The corridor animation walks one cell per tick — links longer than 4 require intermediate junction nodes. |
-| **Junction chains** | For links longer than 4 cells, insert up to 4 junction nodes, each ≤ 4 cells from the previous. A chain of 4 junctions with step 4 spans up to 20 cells. |
-| **Cardinal exits only** | `N`, `S`, `E`, `W` are valid. `NW`, `NE`, `SW`, `SE` are rejected by the audit and break map rendering. |
+| **Unique cell** | No two nodes may share the same `(r, c)` — `CELL_GRID` is a one-to-one mapping. |
+| **Cardinal exits only** | `N`, `S`, `E`, `W` are valid direction fields in NODE_MAP. `NW`, `NE`, `SW`, `SE` are rejected by the audit and break map rendering. |
+| **Axis alignment** | Two nodes connected by N/S/E/W should share the same column (N/S link) or row (E/W link) for minimap wire-glyph correctness. Off-axis pairs still function for `cellMove` navigation but render incorrectly on the corridor minimap. |
+| **No required junction intermediaries** | `cellMove` walks any gap freely — intermediate junction nodes are no longer required for long-distance connections. They will be removed in §CELL-05. |
 
 ### Grid layout API
 
@@ -481,14 +481,35 @@ Run `POST /api/audit/map/fix` to auto-fix diagonal exits and one-way links. Coor
 
 ---
 
-## CIRCUIT CORRIDORS (Layer 9)
+## CELL GRID (§CELL-02, ✅ active)
 
-The `CORRIDOR_CELLS` computed grid provides animated transit between non-adjacent nodes. When the player moves between two nodes that are ≥ 2 grid cells apart (Manhattan distance), `storyCorridorTravel()` fires — the player walks cell-by-cell through the corridor rather than jumping directly.
+The primary navigation data structure is `CELL_GRID` — a reverse lookup from grid coordinates to node code:
 
-- **Cell data:** key `"r,c"` → `{dirs, glyph, terrain, edges}` — each cell knows its navigable directions and visual glyph
-- **Junction nodes (J1–J7):** grid crossroads that stitch together corridor paths from multiple directions
-- **MT node:** dedicated hunting ground at grid (4,5), accessible only from J6 — has a 🎯 STALK chip
-- **Active path highlight:** the last-traversed corridor path glows gold in the map overlay
+```js
+// "r,c" → node code  (e.g. "5,16" → "CI")
+const CELL_GRID = (() => {
+  const g = {};
+  for (const code of Object.keys(NODE_MAP)) {
+    const coord = NODE_COORDS[code] || { r: NODE_MAP[code].r, c: NODE_MAP[code].c };
+    if (coord && coord.r != null && coord.c != null)
+      g[`${coord.r},${coord.c}`] = code;
+  }
+  return g;
+})();
+```
+
+`cellMove(dir)` (§CELL-03) moves the player exactly one grid cell per keypress and uses `CELL_GRID` to find the destination. Open cells (no entry in `CELL_GRID`) are handled by `_enterEmptyCell()` (§CELL-04).
+
+## CIRCUIT CORRIDORS (Layer 9) — ⚠️ SUPERSEDED for navigation
+
+> The corridor travel system (`storyCorridorTravel`, Manhattan-distance gating, Hunt/Warp overlay) is **no longer the active navigation path**. `cellMove` replaced it in §CELL-03. The corridor infrastructure remains in the HTML only for **minimap wire-glyph rendering** and will be removed in §CELL-05.
+
+`CORRIDOR_CELLS` data: key `"r,c"` → `{dirs, glyph, terrain, edges}` — used by `_renderMapGrid()` to draw wire glyphs between nodes on the minimap.
+
+- **Junction nodes (J1–J7 + thousands of J##### auto-generated nodes):** to be bulk-deleted in §CELL-05
+- **Active path highlight:** `_setActivePath()` still marks the last-traversed edge gold on the minimap; called by `cellMove`
+
+See `spec-corridors.md` for the full historical spec.
 
 ---
 
@@ -507,49 +528,47 @@ The `CORRIDOR_CELLS` computed grid provides animated transit between non-adjacen
 
 > **Source of truth:** `roll2hit-v3.html`. This section documents all functions that read or write map/navigation state. Every function listed here is covered by at least one flowchart below.
 >
-> **CS architecture note:** `NODE_MAP` is a flat plain object keyed by 2-letter node code — O(1) lookup. `CORRIDOR_CELLS` is a sparse object keyed by `"r,c"` string — also O(1). `GATE_LOCKS` is a 4-entry array — linear scan. `NODE_COORDS` is a flat object keyed by code — O(1). Navigation is a synchronous MUD-style state machine: one node at a time, no concurrency. The only async element is `storyCorridorTravel()` which uses `setTimeout` for per-cell animation.
+> **CS architecture note:** `NODE_MAP` is a flat plain object keyed by node code — O(1) lookup. `CELL_GRID` is a sparse object keyed by `"r,c"` string — O(1) reverse lookup. `NODE_COORDS` is a flat object keyed by code — O(1). `CORRIDOR_CELLS` is retained for minimap wire-glyph rendering but is not part of the navigation path. Navigation is a synchronous MUD-style state machine: one cell at a time, no concurrency. `cellMove(dir)` is fully synchronous; the only async element is the `setTimeout` in `_enterEmptyCell` that delays encounter start by 300ms.
 
 ---
 
 ### FL1 — Story Navigation (Core Game Loop)
 
-**Entry point:** Player clicks a d-pad direction button.
+**Entry point:** Player clicks a d-pad direction button (or presses arrow key / WASD).
 
 ```
-MILEPOINT A  Player clicks direction → storyMove(dir) called
-MILEPOINT B  GATE_LOCKS.find() — does this passage require an item?
-             ├─ item absent → storyMsg() blocked message; return
-             └─ item present → proceed
-MILEPOINT C  Compute Manhattan distance via NODE_COORDS[from] and NODE_COORDS[to]
-             ├─ distance ≤ 1 → direct move → storyRender(destNode)
-             └─ distance > 1 → storyCorridorTravel(from, dest, dir)
-MILEPOINT D  storyCorridorTravel() walks cell-by-cell via _routeSegments()
-             Each step: _wireGlyph() for glyph, _corridorTerrain() for terrain
-             Possible encounter: triggerCorridorEncounter() per step
-MILEPOINT E  Arrive at destination node → storyRender(node)
-             → storyCheckQuests() → storyCheckJournal() → storyShowNpc()
-MILEPOINT F  _updateExitLinks() refreshes d-pad buttons for new node
-             _setActivePath() marks gold path on map overlay
+MILEPOINT A  Player clicks N/E/S/W → cellMove(dir) called
+MILEPOINT B  Bounds check (1 ≤ nr,nc ≤ 300)
+             IMPASSABLE_CELLS check (water — populated in §CELL-10)
+MILEPOINT C  Gate-lock checks: destCode vs S_story.currentCode (9 gates)
+             ├─ gate blocked → storyMsg() message; return
+             └─ gate clear → proceed
+MILEPOINT D  destCode = CELL_GRID["nr,nc"]
+             ├─ destCode in NODE_MAP → _setActivePath(); storyRender(NODE_MAP[destCode])
+             └─ destCode absent → _enterEmptyCell(nr, nc)
+MILEPOINT E  _enterEmptyCell: _inferTerrain() → render open-cell panel → encounter roll
+MILEPOINT F  S_story.playerR/playerC updated; visitedCells["r,c"] = true
 ```
 
-**Special case — portal:** `storyPortal()` is called at OU node; bypasses `storyMove()` entirely; jumps directly to GA with no corridor animation.
+**Special case — portal:** `storyPortal()` is called at OU node; bypasses `cellMove()` entirely; jumps directly to GA.
 
 ---
 
-### FL9 — Hunt & Corridor Encounter
+### FL9 — Empty Cell Encounter
 
-**Entry point:** Player toggles Hunt Mode ON, then moves between nodes.
+**Entry point:** Player steps onto a cell with no named node.
 
 ```
-MILEPOINT A  storyToggleHunt() → S_story.huntMode = !huntMode
-             _updateHuntBtn() refreshes UI state
-MILEPOINT B  storyMove(dir) → storyCorridorTravel() begins
-MILEPOINT C  Each corridor step calls triggerCorridorEncounter(terrain, dest, questHunt)
-             ├─ huntMode=true  → _stalkedMonsterPick(terrain) — quest-target filtered
-             └─ huntMode=false → _weightedMonsterPick(terrain) — notoriety-weighted
-MILEPOINT D  Encounter triggers → storyPreBattle() with picked monster
-MILEPOINT E  Post-travel: _setActivePath(from, to, dir) marks gold corridor on map
+MILEPOINT A  cellMove() → _enterEmptyCell(nr, nc) called
+MILEPOINT B  _inferTerrain(r, c) polls 4 cardinal CELL_GRID neighbors → majority terrain
+MILEPOINT C  Render: terrain icon, label, [Row r, Col c], exit compass
+MILEPOINT D  Roll random() vs TERRAIN_ENCOUNTER_RATE[terrain]
+             ├─ no encounter → panel stays
+             └─ encounter → pick monster from WORLD_DB[terrain].monsters
+                           → setTimeout 300ms → _startStoryBattle(monster, ...)
 ```
+
+**Hunt mode (stalk encounters)** fires from `storyQuickWait()` or `storyStalk()` — independent of cellMove. The Hunt/Warp overlay (`#story-corridor-overlay`) is no longer shown during normal movement.
 
 ---
 
@@ -559,16 +578,16 @@ MILEPOINT E  Post-travel: _setActivePath(from, to, dir) marks gold corridor on m
 
 ```
 MILEPOINT A  Player clicks a node on the map overlay → storySetWaypoint(nodeCode)
-             Sets S_story.waypointTarget; calls _updateWaypointBtn()
+             Sets S_story.waypoint; calls _updateWaypointBtn()
 MILEPOINT B  Player clicks ✦ waypoint button → storyWaypoint()
-MILEPOINT C  _bfsPath(currentCode, waypointTarget) runs BFS over NODE_MAP adjacency graph
-             Returns ordered array of node codes: [current, n1, n2, ..., target]
-MILEPOINT D  storyWaypoint() iterates path: calls storyMove(dir) for each step
-             Each storyMove fires the full FL1 flow (gate checks, corridor travel, render)
+MILEPOINT C  _bfsPath(currentCode, waypointTarget) runs BFS over NODE_MAP N/S/E/W edges
+             Returns ordered [{dir, code}] steps
+MILEPOINT D  storyWaypoint() calls cellMove(path[0].dir) for one step per click
+             cellMove fires the full FL1 flow (gate checks, CELL_GRID lookup, render)
 MILEPOINT E  _updateWaypointBtn() clears waypoint display on arrival
 ```
 
-**BFS implementation note:** `_bfsPath()` builds adjacency from `NODE_MAP[code].N/S/E/W` fields at runtime — no separate graph structure. Junction nodes (J1–J7) are traversed normally. EB dead-ends are excluded from BFS paths (no outbound edges from EB nodes).
+**BFS implementation note:** `_bfsPath()` builds adjacency from `NODE_MAP[code].N/S/E/W` fields at runtime (§CELL-06 will rewrite to use `CELL_GRID` walk). Junction nodes (J1–J7) are traversed normally until §CELL-05 removes them.
 
 ---
 
@@ -576,29 +595,31 @@ MILEPOINT E  _updateWaypointBtn() clears waypoint display on arrival
 
 | Function | Purpose | Key Data Read | Key Data Written |
 |----------|---------|---------------|-----------------|
-| `storyMove(dir)` | Single-direction navigation; gate check; dispatches corridor or direct | `NODE_MAP[code].N/S/E/W`, `GATE_LOCKS`, `NODE_COORDS` | `S_story.currentCode` |
-| `storyPortal()` | Instant OU→GA teleport; bypasses corridor system | `NODE_MAP.OU` | `S_story.currentCode` |
-| `storyCorridorTravel(from,dest,dir)` | Animates cell-by-cell walk via setTimeout; fires encounter checks per step | `CORRIDOR_CELLS`, `NODE_COORDS` | `S_story.currentCode` (per step) |
-| `triggerCorridorEncounter(terrain,dest,questHunt)` | Rolls for random encounter during corridor transit | `HUNTING_GROUNDS`, `S_story.huntMode` | `S_story.pendingBattle` |
-| `buildCorridorMap()` | Computes `CORRIDOR_CELLS` sparse grid at startup from `NODE_MAP` and `NODE_COORDS` | `NODE_MAP`, `NODE_COORDS` | `CORRIDOR_CELLS` (write-once at init) |
-| `_bfsPath(from,to)` | BFS shortest path between two node codes; returns ordered code array | `NODE_MAP` adjacency | none (pure function) |
-| `storyWaypoint()` | Iterates BFS path; calls `storyMove()` per step | `S_story.waypointTarget` | `S_story.waypointTarget` (clears on arrival) |
-| `storySetWaypoint(nodeCode)` | Sets waypoint target; updates button; highlights BFS path | `NODE_MAP` | `S_story.waypointTarget` |
-| `_setActivePath(from,to,dir)` | Marks last-traversed corridor gold on map overlay | `NODE_COORDS` | DOM only (map overlay cells) |
-| `_updateWaypointBtn()` | Refreshes waypoint button label and state | `S_story.waypointTarget` | DOM only |
+| `cellMove(dir)` | **Primary movement handler** — one grid cell per call; gate checks; CELL_GRID lookup | `CELL_GRID`, `IMPASSABLE_CELLS`, `NODE_MAP` | `S_story.playerR/playerC`, `visitedCells`, `currentCode` |
+| `_enterEmptyCell(r,c)` | Renders open terrain panel; infers terrain; rolls random encounter | `CELL_GRID`, `WORLD_DB`, `TERRAIN_ENCOUNTER_RATE` | DOM only; may trigger battle |
+| `_inferTerrain(r,c)` | Majority-vote terrain from CELL_GRID cardinal neighbors | `CELL_GRID`, `NODE_MAP` | none (pure function) |
+| `storyMove_LEGACY(dir)` | Old node-graph navigator; **not called by any UI** — retained until §CELL-05 | `NODE_MAP[code].N/S/E/W` | `S_story.currentCode` |
+| `storyPortal()` | Instant OU→GA teleport; bypasses cellMove | `NODE_MAP.OU.portal` | `S_story.currentCode` |
+| `storyCorridorTravel(from,dest,dir)` | Legacy corridor travel dialog — **no longer triggered by normal navigation** | `CORRIDOR_CELLS`, `NODE_COORDS` | `S_story.currentCode` |
+| `triggerCorridorEncounter(terrain,dest,questHunt)` | Legacy corridor encounter — superseded by `_enterEmptyCell` encounter roll | `HUNTING_GROUNDS`, `S_story.huntMode` | `S_story.pendingBattle` |
+| `buildCorridorMap()` | Computes `CORRIDOR_CELLS` at startup; used by minimap wire-glyph renderer | `NODE_MAP`, `NODE_COORDS` | `CORRIDOR_CELLS` (write-once) |
+| `_bfsPath(from,to)` | BFS shortest path over NODE_MAP N/S/E/W edges; returns `[{dir,code}]` steps | `NODE_MAP` adjacency | none (pure function) |
+| `storyWaypoint()` | One BFS step toward waypoint; calls `cellMove(path[0].dir)` | `S_story.waypoint` | `S_story.waypoint` (clears on arrival) |
+| `storySetWaypoint(nodeCode)` | Sets waypoint target; updates button | `NODE_MAP` | `S_story.waypoint` |
+| `_setActivePath(from,to,dir)` | Records last-traversed edge for minimap gold highlight | `NODE_COORDS` | `S_story.lastCorridorCells`, `lastExitDir`, `lastExitCode` |
+| `_updateWaypointBtn()` | Refreshes waypoint button label and state | `S_story.waypoint` | DOM only |
 | `storyMapToggle()` | Opens/closes map overlay panel | DOM state | DOM only |
-| `_renderMapGrid()` | Renders full 26×16 node grid in map overlay | `NODE_MAP`, `NODE_COORDS`, `CORRIDOR_CELLS` | DOM only |
+| `_renderMapGrid()` | Renders node grid + corridor wire glyphs in map overlay | `NODE_MAP`, `NODE_COORDS`, `CORRIDOR_CELLS`, `CELL_GRID` | DOM only |
 | `_renderMiniMap()` | Renders compact inline minimap in node panel | `NODE_MAP`, `NODE_COORDS` | DOM only |
-| `_renderWorldMiniMap()` | Renders world-level minimap with warmth tint (Layer 44) | `NODE_MAP`, `S_story.actNumber` | DOM only |
+| `_renderWorldMiniMap()` | Renders world-level minimap with warmth tint | `NODE_MAP`, `S_story.actNumber` | DOM only |
 | `_renderFinalMap()` | End-game map render at CO victory sequence | `NODE_MAP`, full S_story | DOM only |
-| `_mapIcon(code)` | Returns glyph character for a node code (e.g. `🏙` for city) | `NODE_MAP[code].name` | none (pure function) |
+| `_mapIcon(code)` | Returns glyph character for a node code | `NODE_MAP[code].name` | none (pure function) |
 | `_mapAddExits(cell,code)` | Adds directional exit arrows to a map cell element | `NODE_MAP[code].N/S/E/W` | DOM only |
-| `_updateExitLinks()` | Refreshes all four d-pad direction buttons for current node | `NODE_MAP[currentCode]`, `GATE_LOCKS` | DOM only |
-| `_wireGlyph(dirs)` | Returns corridor wire character (`─`, `│`, `┼`, etc.) from direction set | none | none (pure function) |
-| `_routeSegments(r1,c1,r2,c2,first)` | Decomposes a route into horizontal + vertical corridor segments | none | none (pure function) |
-| `_corridorTerrain(from,to)` | Returns terrain type string for a corridor segment between two nodes | `NODE_MAP` | none (pure function) |
+| `_updateExitLinks()` | Refreshes d-pad direction buttons for current node | `NODE_MAP[currentCode]` | DOM only |
+| `_wireGlyph(dirs)` | Returns corridor wire character from direction set | none | none (pure function) |
+| `_corridorTerrain(from,to)` | Returns terrain key for a corridor segment (legacy — used by storyMove_LEGACY only) | `CORRIDOR_TERRAIN` | none (pure function) |
 | `_storyFindTerrainNode(terrain)` | Finds nearest reachable node of given terrain type via BFS | `NODE_MAP`, `HUNTING_GROUNDS` | none (pure function) |
-| `_getYaelLocation()` | Returns Yael's current patrol node code (Layer 45) | `S_story.npcFavorability`, `S_story.currentCode` | none (pure function) |
+| `_getYaelLocation()` | Returns Yael's current patrol node code | `S_story.npcFavorability`, `S_story.currentCode` | none (pure function) |
 
 ---
 

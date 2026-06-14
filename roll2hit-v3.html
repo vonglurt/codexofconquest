@@ -126555,7 +126555,14 @@ const WIRE_GLYPH = {
   'E,N,S,W': '┼',
 };
 
-const CORRIDOR_TERRAIN = { // → doc: world.md §Terrain Types (corridor-pair → terrain key; drives encounter table selection)
+// §CELL-04: Encounter probability by inferred terrain on empty cells
+const TERRAIN_ENCOUNTER_RATE = {
+  midlands:0.15, forest:0.25, highlands:0.20, swamp:0.30, desert:0.20,
+  jungle:0.30, hag_swamp:0.35, ocean:0.10, beach:0.10, road:0, junction:0,
+  city:0.05, city_slums:0.10, alley:0.15, _default:0.15
+};
+
+const CORRIDOR_TERRAIN = { // → doc: world.md §Terrain Types (corridor-pair → terrain key; drives storyMove_LEGACY encounter table selection)
   'CI-MI':'midlands',  'MI-CI':'midlands',
   'CI-J1':'midlands',  'J1-CI':'midlands',
   'J1-MI':'midlands',  'MI-J1':'midlands',
@@ -138294,6 +138301,7 @@ const _S_DEFAULTS = () => ({
   huntMode: false,
   hoursElapsed: 0, hoursSinceSlept: 0,
   playerR: 0, playerC: 0,   // §CELL-03: current grid position
+  visitedCells: {},          // §CELL-04: "r,c" → true — all cells stepped on (used by §CELL-10 minimap)
   gameDay: 0, couperiDebtDegraded: false, worldEventsFired: [],
   brynThirdStepFixed: false, brynFirewoodBrought: false, brynPantryRestocked: false,
   brynLedgerBalance: -8, voidSignClicked: false,
@@ -143386,6 +143394,7 @@ function cellMove(dir) {
   if (S_story.log.length > 20) S_story.log.shift();
   S_story.playerR = nr;
   S_story.playerC = nc;
+  S_story.visitedCells[`${nr},${nc}`] = true;
   _statTally('exitsTaken', 1);
   S_story.hoursElapsed    = (S_story.hoursElapsed || 0) + 1;
   S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
@@ -143401,8 +143410,58 @@ function cellMove(dir) {
   }
 }
 
+// §CELL-04: infer terrain for an unnamed cell by majority vote of named neighbors
+function _inferTerrain(r, c) {
+  const neighbors = [[-1,0],[1,0],[0,1],[0,-1]]
+    .map(([dr,dc]) => CELL_GRID[`${r+dr},${c+dc}`])
+    .filter(Boolean)
+    .map(code => NODE_MAP[code]?.name)
+    .filter(Boolean);
+  if (!neighbors.length) return 'midlands';
+  const freq = {};
+  let best = 'midlands', bestN = 0;
+  for (const t of neighbors) {
+    freq[t] = (freq[t]||0) + 1;
+    if (freq[t] > bestN) { bestN = freq[t]; best = t; }
+  }
+  return best;
+}
+
 function _enterEmptyCell(r, c) {
-  storyMsg(`Open terrain. [Row ${r}, Col ${c}] — no named location here.`);
+  const terrain      = _inferTerrain(r, c);
+  const terrainEntry = WORLD_DB[terrain] || WORLD_DB.midlands;
+  const DIRS = {N:[-1,0], S:[1,0], E:[0,1], W:[0,-1]};
+  const exits = Object.entries(DIRS)
+    .filter(([, [dr,dc]]) => {
+      const nr=r+dr, nc=c+dc;
+      return nr>=1 && nc>=1 && nr<=300 && nc<=300 && !IMPASSABLE_CELLS.has(`${nr},${nc}`);
+    })
+    .map(([d,[dr,dc]]) => {
+      const code = CELL_GRID[`${r+dr},${c+dc}`];
+      return code ? `${d} → ${NODE_MAP[code]?.label||code}` : d;
+    });
+
+  const html = `
+    <div class="story-node-hd">${terrainEntry.icon||'·'} Open Terrain</div>
+    <div style="color:var(--dim);font-size:12px;margin-bottom:6px;">
+      [Row ${r}, Col ${c}] — ${terrainEntry.label||terrain}
+    </div>
+    <div class="story-text">The path continues. No named location marks this ground.</div>
+    <div style="margin-top:8px;font-size:12px;color:var(--dim);">
+      Exits: ${exits.join(' · ')||'none'}
+    </div>`;
+  document.getElementById('story-content').innerHTML = html;
+  document.getElementById('story-move-msg').textContent = '';
+
+  const rate = TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default;
+  if (Math.random() < rate) {
+    const pool = terrainEntry.monsters || [];
+    if (pool.length) {
+      const monsterKey = pool[Math.floor(Math.random()*pool.length)];
+      const monster = MONSTER_POOL[monsterKey];
+      if (monster) setTimeout(() => _startStoryBattle(monster, `Wild ${monster.name}`), 300);
+    }
+  }
 }
 
 function storyPortal() {

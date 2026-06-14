@@ -31,8 +31,8 @@ This directory maintains a **two-way sync** between the source HTML and the mark
 
 **Spec files — JavaScript architecture reference:**
 
-- `spec-engine.md` — core combat loop, dice, initiative, action economy
-- `spec-corridors.md` — corridor grid, CORRIDOR_CELLS, stalk/hunt system
+- `spec-engine.md` — core combat loop, dice, initiative, action economy, cellMove navigation
+- `spec-corridors.md` — corridor grid history (⚠️ superseded by §CELL-03; kept as reference)
 - `spec-world.md` — WORLD_DB, MONSTER_POOL, terrain cascade UI
 - `spec-combat.md` — combat flow, conditions, death saves, Fighter features
 - `spec-migration.md` — full architecture overview, all data structures
@@ -84,13 +84,15 @@ When you open the game, click **Story Mode** to begin your quest. You arrive in 
 
 ### Moving Through the World
 
-The world is a map of named terrain nodes connected by roads and paths. At each location you'll see which directions are available:
+The world is a MUD-style coordinate grid. Every press of N/E/S/W moves you exactly one cell. Named locations appear when your cell matches a known node. Between named locations you walk through open terrain — no corridor overlay, no jump.
 
 | Command | Action |
 |---------|--------|
-| **N / E / S / W** | Move in that direction |
-| **Wait** | Rest at your current location (advances time) |
+| **N / E / S / W** | Move one grid cell in that direction |
+| **Wait** | Rest at your current location (costs time) |
 | **Hunt** | Enter the wilderness to find a monster encounter |
+
+Open terrain shows your coordinates, the terrain type, and which adjacent cells lead to named locations. Dangerous terrain (jungle, swamp, hag-swamp) can trigger random encounters mid-travel.
 
 Move toward quest markers. Talk to everyone. Read what the NPCs say — it changes as your relationship with them grows.
 
