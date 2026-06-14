@@ -4,7 +4,7 @@
 
 **File:** `roll2hit-v3.html`  
 **Last updated:** 2026-06-14  
-**Node count:** ~449 named nodes (plus J##### junction nodes — to be bulk-deleted in §CELL-05)
+**Node count:** 687 nodes (J##### junction nodes bulk-deleted in §CELL-05)
 
 ---
 
@@ -42,15 +42,14 @@ const CELL_GRID = (() => {
 | Type | Count | Code pattern | `junction` | `isEpicBattleground` | `isFishingLake` |
 |------|-------|-------------|------------|----------------------|-----------------|
 | Story nodes (main arc) | ~78 | CI, SL, IN … CO | — | — | — |
-| Named junction nodes | 8 | J1–J7, RD | `true` | — | — |
-| Auto-generated junction nodes | thousands | J##### | `true` | — | — |
+| Named junction nodes | 10 | J1–J7, J13, WRO, RD | — | — | — |
 | Epic Battleground | 20 | E* (EF, EH … EG) | — | `true` | — |
 | Fishing lake | 2 | YL, YC | — | — | `true` |
 | DeFi Land (special Act I) | 3 | DF, HM, GL | — | — | — |
 | Mountain pass (hunt) | 1 | MT | — | — | — |
 | Ally Cat Arc | 1 | CQ | — | — | — |
 
-> **§CELL-05 note:** All J##### auto-generated junction nodes will be bulk-deleted via a WBAPI endpoint. Named J1–J7 nodes will be reviewed individually — some become traversable empty cells, some may be kept as named nodes.
+> **§CELL-05 complete:** All 21,046 boilerplate junction nodes were bulk-deleted. J13 (The Western Sea Road) and WRO (Midlands Road Fork) had real narrative text and were promoted to named midlands nodes.
 
 ### Act grouping
 
@@ -161,21 +160,19 @@ All gate-lock checks from the old `storyMove` are preserved verbatim in `cellMov
 
 ---
 
-## 5. Corridor Travel System — SUPERSEDED (§CELL-03)
+## 5. Corridor Travel System — REMOVED (§CELL-05)
 
-> The corridor system (`storyMove` / `storyCorridorTravel` / Manhattan-distance gating) has been replaced by `cellMove`. The old `storyMove` was renamed `storyMove_LEGACY` and is retained until §CELL-05 removes junction nodes.
->
-> See `spec-corridors.md` for the archived spec.
+The corridor system (`storyMove_LEGACY`, `storyCorridorTravel`, `CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, corridor overlay HTML/CSS) was fully removed in §CELL-05. `cellMove` is the sole navigation function.
 
-`CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, and the corridor overlay remain in the HTML for minimap wire-glyph rendering — they will be removed in §CELL-05.
+See `spec-corridors.md` for the archived spec.
 
 ---
 
-## 6. Junction Highway System — to be removed in §CELL-05
+## 6. Junction Highway System — REMOVED (§CELL-05)
 
-Named junction nodes (J1–J7, RD) are waypoints that existed to break up long corridor segments. In the cell-grid system, players walk through the cells they occupy as ordinary empty cells. Auto-generated J##### nodes (created by the junction reweave operations) number in the thousands and will be bulk-deleted.
+All 21,046 boilerplate J##### junction nodes were bulk-deleted via `POST /api/admin/delete-junctions`. J13 (The Western Sea Road, r=131 c=146) and WRO (Midlands Road Fork, r=39 c=188) had real narrative text and were promoted to `name:'midlands'` nodes without the junction flag.
 
-### Named junction coords (for reference until §CELL-05)
+Remaining named nodes with J-prefix (J1–J7, RD) have no `junction` flag and serve as ordinary named story locations at their grid coordinates.
 
 ```
 J1  (5,12)   Midlands Road Fork
@@ -185,7 +182,9 @@ J4  (12,8)   Deep Road Split
 J5  (1,10)   Arctic Overpass
 J6  (5,5)    Western Wilds Crossroads
 J7  (1,22)   Sky Gate Spur
+J13 (131,146) The Western Sea Road
 RD  (5,6)    Roadside Clearing
+WRO (39,188) Midlands Road Fork
 ```
 
 ---

@@ -2333,7 +2333,7 @@ function _enterEmptyCell(r, c) {
 
 ---
 
-### §CELL-05: Abolish Junction Nodes ⚠️ PLANNED
+### §CELL-05: Abolish Junction Nodes ✅ COMPLETE
 
 **What changes:** Remove all J-nodes (J1–J7 in old system; auto-spawned J##### in current system). Any J-node that exists in `NODE_MAP` becomes either:
   - (a) **Promoted** to a named location with content (text, encounter), OR
@@ -2541,7 +2541,7 @@ Process one section per "continue." Each section is a self-contained increment t
 | 2 | §CELL-03 | §CELL-02 | High — replaces storyMove | ✅ 2026-06-13 |
 | 3 | §CELL-04 | §CELL-03 | Medium — new UI path | ✅ 2026-06-13 |
 | 4 | §CELL-01 | §CELL-03 | Medium — strips NODE_MAP fields | ✅ 2026-06-14 |
-| 5 | §CELL-05 | §CELL-01, §CELL-04 | Medium — deletes J-nodes | ⚠️ planned |
+| 5 | §CELL-05 | §CELL-01, §CELL-04 | Medium — deletes J-nodes | ✅ complete |
 | 6 | §CELL-09 | §CELL-03 | Low — quest trigger is additive | ⚠️ planned |
 | 7 | §CELL-10 | §CELL-02, §CELL-04 | Low — visual only | ⚠️ planned |
 | 8 | §CELL-06 | §CELL-02 | Medium — server-side only | ⚠️ planned |

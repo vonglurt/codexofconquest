@@ -3217,7 +3217,7 @@ async function route(req, res) {
         if (entryLen > 10000)
           push('warning', 'bloated_entry', code, '_size', `serialized size ${(entryLen/1024).toFixed(1)} KB — likely explosion artifact`);
         else if (entryLen > 2000)
-          push('suggestion', 'large_entry', code, '_size', `serialized size ${(entryLen/1024).toFixed(1)} KB — unusually large for a junction node`);
+          push('suggestion', 'large_entry', code, '_size', `serialized size ${(entryLen/1024).toFixed(1)} KB — unusually large node entry`);
       }
     }
 
@@ -10123,8 +10123,111 @@ async function route(req, res) {
       logResponse(method, url.pathname, 200, `stripped ${count} nodes`);
       return saveAndRestart(res, 200, { ok:true, stripped: count, fields: STRIP });
     }
+    // POST /api/admin/delete-junctions — §CELL-05: bulk-delete boilerplate J-nodes
+    if (parts[1] === 'delete-junctions' && method === 'POST') {
+      let body; try { body = await readBody(req); } catch(e) { body = {}; }
+      const dryRun = body?.dryRun !== false;
+      const BOILERPLATE_PREFIXES = [
+        'Cross-path junction',
+        'Diagonal-repair elbow',
+        'Geographic crossover junction',
+        'Gap-repair junction',
+        'A crossroads on the road between',
+        'A crossroads between',
+        'Signpost says: The road between',
+        'Highway junction',
+        'The road branches here',
+        'Road junction',
+      ];
+      const isBoilerplate = t => !t || t.length < 10 || BOILERPLATE_PREFIXES.some(p => t.startsWith(p));
+
+      const nm = WBAPI.nodeMap;
+      const toDelete = [];
+      const skipped = [];
+      for (const [code, node] of Object.entries(nm)) {
+        if (!node.junction) continue;
+        if (!isBoilerplate(node.text)) { skipped.push({ code, reason:'real text' }); continue; }
+        const deps = WBAPI._deps.node(code);
+        if (deps.quests.length || deps.npcs.length) { skipped.push({ code, reason:'has deps' }); continue; }
+        toDelete.push(code);
+      }
+
+      if (dryRun) {
+        logResponse(method, url.pathname, 200, `dry-run: ${toDelete.length} to delete, ${skipped.length} skipped`);
+        return json(res, 200, { dryRun:true, toDelete:toDelete.length, skipped:skipped.length, skippedDetails:skipped, hint:'POST with {"dryRun":false} to execute' });
+      }
+
+      // Batch-delete from NODE_MAP section in one pass (O(S), not O(N×S))
+      const deleteSet = new Set(toDelete);
+      const NMS = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
+      const NME = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
+      const nmStart = WBAPI._rawSrc.indexOf(NMS) + NMS.length;
+      const nmEnd   = WBAPI._rawSrc.indexOf(NME);
+      if (nmStart < NMS.length || nmEnd < 0) {
+        return json(res, 500, { ok:false, error:'NODE_MAP section markers not found' });
+      }
+      const nmSec = WBAPI._rawSrc.slice(nmStart, nmEnd);
+
+      // Single forward scan — accumulate kept segments between deleted entries
+      const entryRe = /^([ \t]*)([A-Z][A-Z0-9]{0,6})\s*:\s*\{/gm;
+      const kept = [];
+      let last = 0;
+      let match;
+      while ((match = entryRe.exec(nmSec)) !== null) {
+        const code = match[2];
+        if (!deleteSet.has(code)) continue;
+        const openEnd = match.index + match[0].length;
+        let depth = 1, j = openEnd, inStr = null;
+        while (j < nmSec.length) {
+          const ch = nmSec[j];
+          if (inStr) {
+            if (ch === '\\' && inStr !== '`') { j += 2; continue; }
+            if (ch === inStr) inStr = null;
+          } else if (ch === '/' && nmSec[j+1] === '/') {
+            while (j < nmSec.length && nmSec[j] !== '\n') j++;
+            continue;
+          } else {
+            if (ch === '"' || ch === "'" || ch === '`') inStr = ch;
+            else if (ch === '{') depth++;
+            else if (ch === '}') { depth--; if (depth === 0) break; }
+          }
+          j++;
+        }
+        let end = j + 1;
+        while (end < nmSec.length && nmSec[end] !== '\n') end++;
+        if (end < nmSec.length) end++;
+        kept.push(nmSec.slice(last, match.index));
+        last = end;
+      }
+      kept.push(nmSec.slice(last));
+      const newNmSec = kept.join('');
+      WBAPI._rawSrc = WBAPI._rawSrc.slice(0, nmStart) + newNmSec + WBAPI._rawSrc.slice(nmEnd);
+
+      // Batch-delete from NODE_COORDS section (single-line entries)
+      const NCS = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆';
+      const NCE = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
+      const ncStart = WBAPI._rawSrc.indexOf(NCS) + NCS.length;
+      const ncEnd   = WBAPI._rawSrc.indexOf(NCE);
+      if (ncStart >= NCS.length && ncEnd >= 0) {
+        const ncSec = WBAPI._rawSrc.slice(ncStart, ncEnd);
+        const coordRe = new RegExp(`^[ \\t]*(${[...deleteSet].map(c => c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')).join('|')})\\s*:\\s*\\{[^\\n]*\\}[,;]?[ \\t]*\\n`, 'gm');
+        const newNcSec = ncSec.replace(coordRe, '');
+        WBAPI._rawSrc = WBAPI._rawSrc.slice(0, ncStart) + newNcSec + WBAPI._rawSrc.slice(ncEnd);
+      }
+
+      // Remove from in-memory maps
+      for (const code of toDelete) {
+        delete nm[code];
+        delete WBAPI.nodeCoords?.[code];
+      }
+
+      logRow('delete-junctions', `deleted ${toDelete.length} boilerplate junctions`);
+      logResponse(method, url.pathname, 200, `deleted ${toDelete.length} nodes`);
+      return saveAndRestart(res, 200, { ok:true, deleted:toDelete.length, skipped:skipped.length, skippedDetails:skipped });
+    }
+
     logResponse(method, url.pathname, 404, `Unknown admin route "${parts[1]}"`);
-    return json(res, 404, { error:`Unknown admin route "${parts[1]}". Available: strip-edges` });
+    return json(res, 404, { error:`Unknown admin route "${parts[1]}". Available: strip-edges, delete-junctions` });
   }
 
   // ── Single entity ─────────────────────────────────────────────────────────
