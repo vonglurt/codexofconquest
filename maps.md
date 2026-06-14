@@ -170,7 +170,9 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 
 ## NODE NETWORK — Travel Connections
 
-*Derived from the story. These are the valid moves, not grid adjacency. North/South/East/West labels give movement direction convention for the MUD engine.*
+*Connections are derived at runtime from `CELL_GRID` grid adjacency — not stored as edge fields. This table documents the canonical story connections for reference. Directions reflect geographic movement on the cell grid.*
+
+> **§CELL-01 note:** N/E/S/W edge fields were stripped from `NODE_MAP`. All arrows below are derived from (r,c) proximity, not stored data. SW/spire entries are also stripped — DS→ED and HC→EK are now co-located grid neighbors.
 
 ```
 BIRKA CLUSTER (Acts I–II)
@@ -439,9 +441,9 @@ Every node that should appear on the map canvas must have an entry in `NODE_COOR
 | rule | requirement |
 |------|-------------|
 | **Unique cell** | No two nodes may share the same `(r, c)` — `CELL_GRID` is a one-to-one mapping. |
-| **Cardinal exits only** | `N`, `S`, `E`, `W` are valid direction fields in NODE_MAP. `NW`, `NE`, `SW`, `SE` are rejected by the audit and break map rendering. |
-| **Axis alignment** | Two nodes connected by N/S/E/W should share the same column (N/S link) or row (E/W link) for minimap wire-glyph correctness. Off-axis pairs still function for `cellMove` navigation but render incorrectly on the corridor minimap. |
-| **No required junction intermediaries** | `cellMove` walks any gap freely — intermediate junction nodes are no longer required for long-distance connections. They will be removed in §CELL-05. |
+| **No N/S/E/W stored fields** | Direction edge fields (`N`, `S`, `E`, `W`, `SW`, `spire`) were stripped in §CELL-01. Exits are derived from grid adjacency at runtime — do not add them. |
+| **Axis alignment** | Two adjacent nodes should share the same column (N/S neighbors) or row (E/W neighbors) for minimap wire-glyph correctness. Off-axis pairs are passable but render incorrectly on the corridor minimap until §CELL-05. |
+| **No required junction intermediaries** | `cellMove` walks any gap freely — intermediate junction nodes are no longer required. They will be removed in §CELL-05. |
 
 ### Grid layout API
 
@@ -471,10 +473,9 @@ curl -XPUT http://localhost:1367/api/coords/BEL \
 
 | check | severity | description |
 |-------|----------|-------------|
-| `alignment` | warning | connected pair does not share a row or column |
-| `axis_distance` | warning | connected pair is axis-aligned but >4 cells apart |
-| `direction_sign` | warning | N link goes to higher r (south); E link goes to lower c (west) |
-| `long_link` | suggestion | Euclidean distance >4 — catches off-axis diagonal links |
+| `alignment` | warning | grid neighbors do not share a row or column |
+| `axis_distance` | warning | axis-aligned neighbors are >4 cells apart |
+| `long_link` | suggestion | Euclidean distance >4 — catches off-axis diagonal neighbors |
 | `missing_coords` | suggestion | node exists in NODE_MAP but has no NODE_COORDS entry |
 
 Run `POST /api/audit/map/fix` to auto-fix diagonal exits and one-way links. Coordinate positioning (alignment, axis_distance) must be corrected manually or via the layout solver.
@@ -580,14 +581,15 @@ MILEPOINT D  Roll random() vs TERRAIN_ENCOUNTER_RATE[terrain]
 MILEPOINT A  Player clicks a node on the map overlay → storySetWaypoint(nodeCode)
              Sets S_story.waypoint; calls _updateWaypointBtn()
 MILEPOINT B  Player clicks ✦ waypoint button → storyWaypoint()
-MILEPOINT C  _bfsPath(currentCode, waypointTarget) runs BFS over NODE_MAP N/S/E/W edges
-             Returns ordered [{dir, code}] steps
-MILEPOINT D  storyWaypoint() calls cellMove(path[0].dir) for one step per click
-             cellMove fires the full FL1 flow (gate checks, CELL_GRID lookup, render)
+MILEPOINT C  _bfsPath(currentCode, waypointTarget) — currently non-functional
+             N/S/E/W edge fields were stripped in §CELL-01; BFS returns null
+             storyWaypoint() shows "navigate manually" message
+MILEPOINT D  §CELL-09 will replace _bfsPath with _bfsGridPath (CELL_GRID walk)
+             Returns ordered [{r,c,code}] cells; storyWaypoint calls cellMove per step
 MILEPOINT E  _updateWaypointBtn() clears waypoint display on arrival
 ```
 
-**BFS implementation note:** `_bfsPath()` builds adjacency from `NODE_MAP[code].N/S/E/W` fields at runtime (§CELL-06 will rewrite to use `CELL_GRID` walk). Junction nodes (J1–J7) are traversed normally until §CELL-05 removes them.
+**BFS status:** `_bfsPath()` reads `NODE_MAP[code].N/S/E/W` edges that no longer exist. It returns null for all queries. §CELL-09 will rewrite this as `_bfsGridPath()` using `CELL_GRID` grid-walk.
 
 ---
 
@@ -598,13 +600,13 @@ MILEPOINT E  _updateWaypointBtn() clears waypoint display on arrival
 | `cellMove(dir)` | **Primary movement handler** — one grid cell per call; gate checks; CELL_GRID lookup | `CELL_GRID`, `IMPASSABLE_CELLS`, `NODE_MAP` | `S_story.playerR/playerC`, `visitedCells`, `currentCode` |
 | `_enterEmptyCell(r,c)` | Renders open terrain panel; infers terrain; rolls random encounter | `CELL_GRID`, `WORLD_DB`, `TERRAIN_ENCOUNTER_RATE` | DOM only; may trigger battle |
 | `_inferTerrain(r,c)` | Majority-vote terrain from CELL_GRID cardinal neighbors | `CELL_GRID`, `NODE_MAP` | none (pure function) |
-| `storyMove_LEGACY(dir)` | Old node-graph navigator; **not called by any UI** — retained until §CELL-05 | `NODE_MAP[code].N/S/E/W` | `S_story.currentCode` |
+| `storyMove_LEGACY(dir)` | Old node-graph navigator; **not called by any UI** — retained until §CELL-05 removes junction nodes | `NODE_MAP[code].N/S/E/W` (stripped — non-functional) | `S_story.currentCode` |
 | `storyPortal()` | Instant OU→GA teleport; bypasses cellMove | `NODE_MAP.OU.portal` | `S_story.currentCode` |
-| `storyCorridorTravel(from,dest,dir)` | Legacy corridor travel dialog — **no longer triggered by normal navigation** | `CORRIDOR_CELLS`, `NODE_COORDS` | `S_story.currentCode` |
+| `storyCorridorTravel(from,dest,dir)` | Legacy corridor travel dialog — **no longer triggered** | `CORRIDOR_CELLS`, `NODE_COORDS` | `S_story.currentCode` |
 | `triggerCorridorEncounter(terrain,dest,questHunt)` | Legacy corridor encounter — superseded by `_enterEmptyCell` encounter roll | `HUNTING_GROUNDS`, `S_story.huntMode` | `S_story.pendingBattle` |
-| `buildCorridorMap()` | Computes `CORRIDOR_CELLS` at startup; used by minimap wire-glyph renderer | `NODE_MAP`, `NODE_COORDS` | `CORRIDOR_CELLS` (write-once) |
-| `_bfsPath(from,to)` | BFS shortest path over NODE_MAP N/S/E/W edges; returns `[{dir,code}]` steps | `NODE_MAP` adjacency | none (pure function) |
-| `storyWaypoint()` | One BFS step toward waypoint; calls `cellMove(path[0].dir)` | `S_story.waypoint` | `S_story.waypoint` (clears on arrival) |
+| `buildCorridorMap()` | Computes `CORRIDOR_CELLS` at startup; used by minimap wire-glyph renderer only (removed in §CELL-05) | `NODE_MAP`, `NODE_COORDS` | `CORRIDOR_CELLS` (write-once) |
+| `_bfsPath(from,to)` | **Non-functional since §CELL-01** — reads N/S/E/W edges that no longer exist; returns null. §CELL-09 replaces with `_bfsGridPath` | `NODE_MAP` adjacency (stripped) | none (pure function) |
+| `storyWaypoint()` | Shows "navigate manually" message until §CELL-09; clears waypoint on arrival | `S_story.waypoint` | `S_story.waypoint` (clears on arrival) |
 | `storySetWaypoint(nodeCode)` | Sets waypoint target; updates button | `NODE_MAP` | `S_story.waypoint` |
 | `_setActivePath(from,to,dir)` | Records last-traversed edge for minimap gold highlight | `NODE_COORDS` | `S_story.lastCorridorCells`, `lastExitDir`, `lastExitCode` |
 | `_updateWaypointBtn()` | Refreshes waypoint button label and state | `S_story.waypoint` | DOM only |
@@ -614,10 +616,10 @@ MILEPOINT E  _updateWaypointBtn() clears waypoint display on arrival
 | `_renderWorldMiniMap()` | Renders world-level minimap with warmth tint | `NODE_MAP`, `S_story.actNumber` | DOM only |
 | `_renderFinalMap()` | End-game map render at CO victory sequence | `NODE_MAP`, full S_story | DOM only |
 | `_mapIcon(code)` | Returns glyph character for a node code | `NODE_MAP[code].name` | none (pure function) |
-| `_mapAddExits(cell,code)` | Adds directional exit arrows to a map cell element | `NODE_MAP[code].N/S/E/W` | DOM only |
+| `_mapAddExits(cell,code)` | Adds directional exit arrows to a map cell element — reads N/S/E/W (stripped; deferred to §CELL-10) | `NODE_MAP[code].N/S/E/W` | DOM only |
 | `_updateExitLinks()` | Refreshes d-pad direction buttons for current node | `NODE_MAP[currentCode]` | DOM only |
 | `_wireGlyph(dirs)` | Returns corridor wire character from direction set | none | none (pure function) |
-| `_corridorTerrain(from,to)` | Returns terrain key for a corridor segment (legacy — used by storyMove_LEGACY only) | `CORRIDOR_TERRAIN` | none (pure function) |
+| `_corridorTerrain(from,to)` | Returns terrain key for a corridor segment (legacy — storyMove_LEGACY only) | `CORRIDOR_TERRAIN` | none (pure function) |
 | `_storyFindTerrainNode(terrain)` | Finds nearest reachable node of given terrain type via BFS | `NODE_MAP`, `HUNTING_GROUNDS` | none (pure function) |
 | `_getYaelLocation()` | Returns Yael's current patrol node code | `S_story.npcFavorability`, `S_story.currentCode` | none (pure function) |
 
@@ -627,10 +629,11 @@ MILEPOINT E  _updateWaypointBtn() clears waypoint display on arrival
 
 | Constant | Type | Shape | Purpose |
 |----------|------|-------|---------|
-| `NODE_MAP` | plain object | `{code: {num,name,label,act,N,S,E,W,text,npc,battle,loot,sleep,...}}` | 76 nodes; single source for connections AND content |
-| `NODE_COORDS` | plain object | `{code: {r,c}}` | Grid position for each node; drives corridor routing and map render. **Grid rules:** connected nodes must share the same row or column, and be ≤ 4 cells apart. Use junction nodes (spaced ≤ 4 cells apart, up to 4 in a chain) for longer links. |
-| `CORRIDOR_CELLS` | plain object (computed) | `{"r,c": {dirs,glyph,terrain,edges}}` | Sparse grid of traversable corridor cells; built once at startup by `buildCorridorMap()` |
-| `GATE_LOCKS` | array | `[{from,to,item,label}]` | 4 item-gated one-way passages; checked in `storyMove()` |
+| `NODE_MAP` | plain object | `{code: {num,name,label,act,text,npc,battle,loot,sleep,...}}` | ~449 named nodes; N/S/E/W stripped in §CELL-01 — exits derived from CELL_GRID adjacency |
+| `NODE_COORDS` | plain object | `{code: {r,c}}` | Grid position for each node; drives CELL_GRID and map render. **Grid rules:** adjacent nodes should share the same row or column and be ≤ 4 cells apart. Junction intermediaries no longer needed. |
+| `CELL_GRID` | plain object (computed) | `{"r,c": code}` | Reverse lookup: grid coordinate → node code; built at startup from NODE_COORDS |
+| `CORRIDOR_CELLS` | plain object (computed) | `{"r,c": {dirs,glyph,terrain,edges}}` | Wire-glyph data for minimap rendering — **not part of navigation path**; removed in §CELL-05 |
+| `GATE_LOCKS` | array | `[{from,to,item,label}]` | Item-gated one-way passages; checked in `cellMove()` |
 | `HUNTING_GROUNDS` | plain object | `{terrain: {displayName}}` | 42 + 20 EB terrain display names; used in stalk/hunt overlays |
 
 ---

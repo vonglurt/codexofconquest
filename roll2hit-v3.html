@@ -150430,7 +150430,7 @@ function storyWaypoint() {
     return;
   }
   const path = _bfsPath(S_story.currentCode, wp);
-  if (!path || !path.length) { storyMsg('📍 Waypoint unreachable from here.'); return; }
+  if (!path || !path.length) { storyMsg('📍 Waypoint navigation requires grid BFS (§CELL-09). Move manually toward the waypoint.'); return; }
   cellMove(path[0].dir);
 }
 

@@ -3,8 +3,8 @@
 # roll2hit.com — Node Network Technical Reference
 
 **File:** `roll2hit-v3.html`  
-**Last updated:** 2026-06-13  
-**Node count:** ~449 named nodes + thousands of auto-generated J##### junction nodes (to be removed in §CELL-05)
+**Last updated:** 2026-06-14  
+**Node count:** ~449 named nodes (plus J##### junction nodes — to be bulk-deleted in §CELL-05)
 
 ---
 
@@ -67,9 +67,9 @@ const CELL_GRID = (() => {
 
 ---
 
-## 3. Connection Object (NODE_MAP)
+## 3. Node Record Schema (NODE_MAP)
 
-Each node has a direction map. The N/S/E/W fields are **read-only legacy data** — `cellMove` does not use them for navigation. They are retained for BFS pathfinding (`_bfsPath`) and will be stripped in §CELL-01.
+Each node is a self-describing record. **N, S, E, W, SW, and spire direction fields were stripped in §CELL-01** — exits are derived at runtime from `CELL_GRID` adjacency, not stored data.
 
 ```js
 NodeCode: {
@@ -78,13 +78,6 @@ NodeCode: {
   name:  '<terrain>',    // WORLD_DB terrain key
   label: '<str>',        // display name
   act:   <1–8>,
-  N:     '<code>|null',  // north exit (legacy — used by _bfsPath only)
-  S:     '<code>|null',  // south exit
-  E:     '<code>|null',  // east exit
-  W:     '<code>|null',  // west exit
-  // Optional extra directions (legacy):
-  SW:    '<code>',       // only on DS → epic trench
-  spire: '<code>',       // only on HC → epic spire
   // Content:
   text:  '<str>',        // story text
   npc:   '<str>|null',
@@ -93,13 +86,24 @@ NodeCode: {
   sleep: <bool>,
   sleepCost: <int>,      // gp cost (0 = free)
   // Flags:
-  junction: true,        // J-nodes and RD
+  junction: true,        // J-nodes and RD (to be removed in §CELL-05)
   isEpicBattleground: true,
   isFishingLake: true,
   bossKey: '<str>',      // epic nodes only
-  portal: '<code>',      // OU → GA
+  portal: '<code>',      // OU → GA (distinct mechanic, not a nav edge)
 }
 ```
+
+Exits are derived at runtime:
+```js
+// "What nodes border this cell?" — computed in cellMove, not stored
+const N = CELL_GRID[`${node.r - 1},${node.c}`] ?? null;
+const S = CELL_GRID[`${node.r + 1},${node.c}`] ?? null;
+const E = CELL_GRID[`${node.r},${node.c + 1}`] ?? null;
+const W = CELL_GRID[`${node.r},${node.c - 1}`] ?? null;
+```
+
+The WBAPI server exposes these as `derived_exits` on `GET /api/node/:code`.
 
 ---
 
@@ -157,13 +161,13 @@ All gate-lock checks from the old `storyMove` are preserved verbatim in `cellMov
 
 ---
 
-## 5. Corridor Travel System — SUPERSEDED
+## 5. Corridor Travel System — SUPERSEDED (§CELL-03)
 
-> The old corridor system (`storyMove` / `storyCorridorTravel` / Manhattan-distance trigger) is **no longer the active navigation path**. `storyMove` was renamed `storyMove_LEGACY` and is retained only until §CELL-05 removes all junction nodes.
+> The corridor system (`storyMove` / `storyCorridorTravel` / Manhattan-distance gating) has been replaced by `cellMove`. The old `storyMove` was renamed `storyMove_LEGACY` and is retained until §CELL-05 removes junction nodes.
 >
-> See `spec-corridors.md` for the full historical spec.
+> See `spec-corridors.md` for the archived spec.
 
-The corridor overlay (`#story-corridor-overlay`), `buildCorridorMap()`, `CORRIDOR_CELLS`, and `CORRIDOR_TERRAIN` remain in the HTML for minimap wire-glyph rendering. They will be removed in §CELL-05.
+`CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, and the corridor overlay remain in the HTML for minimap wire-glyph rendering — they will be removed in §CELL-05.
 
 ---
 
@@ -188,10 +192,10 @@ RD  (5,6)    Roadside Clearing
 
 ## 7. Dead-End Nodes
 
-These nodes have only one NSEW exit (plus any epic/portal extras):
+These nodes have only one cardinal grid neighbor (plus any epic/portal extras). Exits are derived from `CELL_GRID` at runtime.
 
-| Code | Label | Single exit |
-|------|-------|-------------|
+| Code | Label | Single adjacent node |
+|------|-------|---------------------|
 | CQ | The Cat Quarter | W → SL |
 | HM | Frequency Row | W → DF |
 | GL | Old Guard's Corner | E → DF |
@@ -202,34 +206,31 @@ These nodes have only one NSEW exit (plus any epic/portal extras):
 | GA | Greek Agora | N → KT |
 | CO | Cosmic Realm | S → CI (game finale) |
 
-Epic Battleground nodes (E*) all have exactly one exit back to their parent node.
+Epic Battleground nodes (E*) all have exactly one grid neighbor — their parent node.
 
 ---
 
 ## 8. Special Exits
 
-Two nodes have non-NSEW extra exits handled by the `EXTRA_DIRS` block in `_updateExitLinks()`:
+`SW` and `spire` direction fields were stripped in §CELL-01. DS → ED and HC → EK are now co-located in CELL_GRID at adjacent cells; no stored edge is needed.
 
-| Code | Extra dir | Dest | Note |
-|------|-----------|------|------|
-| DS | SW | ED (Trench Titan — Epic) | 5th exit |
-| HC | spire | EK (Shattered Seraph's Spire — Epic) | 5th exit |
-
-**Portal exits** (not NSEW):
+**Portal exits** (stored as `portal` field — distinct mechanic, not a nav edge):
 
 | Code | Portal | Dest |
 |------|--------|------|
-| OU | portal | GA (Greek Agora) — instant, no encounter |
+| OU | portal | GA (Greek Agora) — instant warp, no encounter |
+
+The `portal` field was preserved during §CELL-01 stripping because it drives `storyPortal()`, which is a teleport mechanic, not a grid movement.
 
 ---
 
 ## 9. Waypoint & BFS Pathfinding
 
-`storyWaypoint()` and `_bfsPath()` implement BFS over `NODE_MAP` N/S/E/W edges to find the shortest hop count between any two named nodes. Each step calls `cellMove(dir)`, which moves one cell at a time.
+**Current state:** `_bfsPath()` reads `NODE_MAP[code][dir]` edges, which were stripped in §CELL-01. The waypoint button will show "Waypoint navigation requires grid BFS (§CELL-09). Move manually toward the waypoint." until §CELL-09 replaces `_bfsPath` with a `CELL_GRID` grid-walk.
 
-`_bfsPath(from, to)` returns an array of `{dir, code}` steps.
+`storyWaypoint()` still reads `S_story.waypoint` (node code string or null) to display the current objective. The waypoint is set by quest activation and cleared on arrival.
 
-Active waypoint: `S_story.waypoint` (node code string or null).
+**§CELL-09 replacement:** `_bfsGridPath(fromCode, toCode)` will walk `CELL_GRID` cell-by-cell using standard BFS, returning a path of `{r, c, code}` steps. No stored edge data needed.
 
 ---
 
@@ -324,11 +325,12 @@ GL    3   15  Old Guard's Corner
 
 1. Pick a code (2–3 chars, unique in NODE_MAP).
 2. Choose grid `(r,c)` — ensure no existing `NODE_COORDS` entry uses that cell.
-3. Add to `NODE_MAP` with `act`, `name` (WORLD_DB terrain key), `label`, `text`, etc. N/S/E/W fields are legacy and only needed for `_bfsPath` to work before §CELL-01.
+3. Add to `NODE_MAP` with `act`, `name` (WORLD_DB terrain key), `label`, `text`, etc. **Do not add N/S/E/W fields** — exits are derived from grid adjacency.
 4. Add to `NODE_COORDS`.
-5. Wire reverse connections for BFS: if `A.N = 'B'` add `B.S = 'A'`.
-6. `CELL_GRID` is built automatically at startup — no manual addition needed.
-7. Update docs: `story.md`, `maps.md`, `plan.md`.
+5. `CELL_GRID` is rebuilt automatically at startup — no manual addition needed.
+6. Update docs: `story.md`, `maps.md`, `plan.md`.
+
+Preferred path: use `POST /api/node` via WBAPI (rejects duplicate coordinates and rejects N/S/E/W fields).
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

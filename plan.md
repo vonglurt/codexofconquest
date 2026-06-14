@@ -2178,7 +2178,7 @@ These NPCs exist in BIRKA_NPC with full dialogue entries but give no quests. The
 
 ---
 
-### §CELL-01: Core Data Schema — Remove Explicit Edge Fields ⚠️ PLANNED
+### §CELL-01: Core Data Schema — Remove Explicit Edge Fields ✅ COMPLETE (2026-06-14)
 
 **What changes:** Strip `N`, `E`, `S`, `W`, `SW`, `spire`, `portal` direction fields from every `NODE_MAP` entry. Each node becomes a self-describing record with only position + content.
 
@@ -2540,7 +2540,7 @@ Process one section per "continue." Each section is a self-contained increment t
 | 1 | §CELL-02 | none | Low — additive only | ✅ 2026-06-13 |
 | 2 | §CELL-03 | §CELL-02 | High — replaces storyMove | ✅ 2026-06-13 |
 | 3 | §CELL-04 | §CELL-03 | Medium — new UI path | ✅ 2026-06-13 |
-| 4 | §CELL-01 | §CELL-03 | Medium — strips NODE_MAP fields | ⚠️ next |
+| 4 | §CELL-01 | §CELL-03 | Medium — strips NODE_MAP fields | ✅ 2026-06-14 |
 | 5 | §CELL-05 | §CELL-01, §CELL-04 | Medium — deletes J-nodes | ⚠️ planned |
 | 6 | §CELL-09 | §CELL-03 | Low — quest trigger is additive | ⚠️ planned |
 | 7 | §CELL-10 | §CELL-02, §CELL-04 | Low — visual only | ⚠️ planned |

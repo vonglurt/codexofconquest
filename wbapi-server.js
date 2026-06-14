@@ -3192,11 +3192,7 @@ async function route(req, res) {
         if (node.name && !terrainKeys.has(node.name))
           push('error', 'bad_terrain', code, 'name', `terrain "${node.name}" not in WORLD_DB`);
 
-        // Broken exits
-        for (const d of DIRS) {
-          if (node[d] && !nodeKeys.has(node[d]))
-            push('error', 'broken_exit', code, d, `exit ${d}="${node[d]}" points to non-existent node`);
-        }
+        // §CELL-01: N/S/E/W fields stripped — exits are derived from CELL_GRID adjacency
 
         // Duplicate num
         if (node.num != null) {
@@ -4049,6 +4045,7 @@ async function route(req, res) {
     let nm = WBAPI.nodeMap;
     const OPP = { N:'S', S:'N', E:'W', W:'E' };
 
+    // §CELL-06: replace with CELL_GRID walk — N/S/E/W fields stripped in §CELL-01
     // Undirected adjacency: union of both sides of each N/S/E/W edge
     // so BFS treats the graph as undirected even if one side is missing
     const undirAdj = new Map();
@@ -4061,6 +4058,7 @@ async function route(req, res) {
       }
     }
 
+    // §CELL-06: replace with CELL_GRID walk — degree based on (r,c) adjacency
     // Directed degree: how many N/S/E/W slots are filled on a node (for "how full is it")
     function degree(code) {
       const n = nm[code]; if (!n) return 0;
@@ -5078,6 +5076,7 @@ async function route(req, res) {
     // Dense cells (≥3 of the 4 axis-adjacent grid slots occupied) are skipped.
     // Query params: ?radius=8 (BFS hop limit)
     if (parts[1] === 'find-open-location' && parts[2] && method === 'GET') {
+      // §CELL-06: replace DIRS4 edge-degree with CELL_GRID adjacency count
       const DIRS4    = ['N','E','S','W'];
       const startCode = parts[2];
       if (!nm[startCode]) return json(res, 404, { error: `Node "${startCode}" not found` });
@@ -5154,6 +5153,7 @@ async function route(req, res) {
     //   4. Wire the two insertion nodes together (or note gap for fill-gap).
     // Body: { from, to, dir?, meshRadius?, dryRun? }
     if (parts[1] === 'smart-connect' && method === 'POST') {
+      // §CELL-06: replace DIRS4 edge-degree with CELL_GRID adjacency count
       const DIRS4 = ['N','E','S','W'];
       let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
       const { from: fromCode, to: toCode, meshRadius = 6, dryRun = true } = body || {};
@@ -5299,11 +5299,11 @@ async function route(req, res) {
       }
       if (errors.length) {
         logResponse('POST', url.pathname, 207, `promote-junction: ${code} partial (${errors.join(', ')})`);
-        return json(res, 207, {ok:false, code, errors, connections:{N:node.N,S:node.S,E:node.E,W:node.W}});
+        return json(res, 207, {ok:false, code, errors, connections:{}});
       }
       WBAPI._buildIndexes();
       logResponse('POST', url.pathname, 200, `promote-junction: ${code}`);
-      return saveAndRestart(res, 200, {ok:true, code, promoted:{label,text,terrain,npc,battle,loot,sleep}, connections:{N:node.N,S:node.S,E:node.E,W:node.W}});
+      return saveAndRestart(res, 200, {ok:true, code, promoted:{label,text,terrain,npc,battle,loot,sleep}, connections:{}});
     }
 
     // Find all nodes unreachable from the hub (stray/orphan nodes).
@@ -5314,6 +5314,7 @@ async function route(req, res) {
     // move the stray's coordinates adjacent to that slot, and wire it in.
     // Body: { dryRun?, limit?, meshRadius? }
     if (parts[1] === 'rip-and-connect' && method === 'POST') {
+      // §CELL-06: replace DIRS4 edge-degree with CELL_GRID adjacency count
       const DIRS4 = ['N','E','S','W'];
       let body; try { body = await readBody(req); } catch(e) { body = {}; }
       const { dryRun = true, limit = 50, meshRadius = 6 } = body || {};
@@ -5849,6 +5850,7 @@ async function route(req, res) {
       };
 
       // ── shared constants & helpers ───────────────────────────────────────────
+      // §CELL-06: replace DIRS4 BFS edge-walk with CELL_GRID grid-walk throughout reweave-all
       const DIRS4 = ['N','S','E','W'];
       const OPP4  = {N:'S',S:'N',E:'W',W:'E'};
       const DR4   = {N:-1,S:1,E:0,W:0};
@@ -10101,6 +10103,28 @@ async function route(req, res) {
       allTerrainKeys: Object.keys(WBAPI.worldDb),
       allQuestTypes: [...new Set(WBAPI.quests.all().map(q=>q.type).filter(Boolean))],
     });
+  }
+
+  // ── Admin bulk operations ────────────────────────────────────────────────
+  if (parts[0] === 'admin') {
+    // POST /api/admin/strip-edges — §CELL-01: remove N/S/E/W/SW/spire from all NODE_MAP entries
+    if (parts[1] === 'strip-edges' && method === 'POST') {
+      const nm = WBAPI.nodeMap;
+      const STRIP = ['N','S','E','W','SW','spire'];
+      let count = 0;
+      for (const code of Object.keys(nm)) {
+        let changed = false;
+        for (const field of STRIP) {
+          if (field in nm[code]) { delete nm[code][field]; changed = true; }
+        }
+        if (changed) count++;
+      }
+      logRow('strip-edges', `stripped direction fields from ${count} nodes`);
+      logResponse(method, url.pathname, 200, `stripped ${count} nodes`);
+      return saveAndRestart(res, 200, { ok:true, stripped: count, fields: STRIP });
+    }
+    logResponse(method, url.pathname, 404, `Unknown admin route "${parts[1]}"`);
+    return json(res, 404, { error:`Unknown admin route "${parts[1]}". Available: strip-edges` });
   }
 
   // ── Single entity ─────────────────────────────────────────────────────────

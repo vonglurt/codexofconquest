@@ -9,7 +9,7 @@
 > Full design spec: `plan.md §CELL` (lines 2165–2576).
 > Implementation order: 02 → 03 → 04 → 01 → 05 → 09 → 10 → 06 → 08 → 07 → 11.
 >
-> **Status (2026-06-13):** §CELL-02 ✅ · §CELL-03 ✅ · §CELL-04 ✅ · §CELL-01 next
+> **Status (2026-06-14):** §CELL-02 ✅ · §CELL-03 ✅ · §CELL-04 ✅ · §CELL-01 ✅ · §CELL-05 next
 
 ---
 
