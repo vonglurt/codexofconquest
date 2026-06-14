@@ -2162,4 +2162,415 @@ These NPCs exist in BIRKA_NPC with full dialogue entries but give no quests. The
 
 ---
 
+---
+
+## §CELL — Overland MUD Cell-Map Redesign
+
+> **Vision:** Roll2Hit becomes a MUD. The world map is a grid of cells. You walk one cell at a time — N, E, S, W — with no teleporting, no corridor warps, no junction-hopping. Every location is identified by its row/column position. Connections between locations are not stored in data — they are derived at runtime from physical adjacency. The server supports multiple simultaneous players. This is a traditional overland MUD with a 1367 AD skin.
+
+**Design Principles:**
+1. **Cell = atom.** All navigation is one cell per move. No concept of "distance ≥ 3 = corridor."
+2. **Coordinate = identity.** A location's primary key is `(r, c)`. The two-letter code is a lookup alias, not a link pointer.
+3. **No explicit edges.** `N`, `E`, `S`, `W` fields are removed from `NODE_MAP`. The engine computes neighbors by `(r-1,c)`, `(r,c+1)`, `(r+1,c)`, `(r,c-1)`.
+4. **No junctions.** Auto-spawned J-nodes are abolished. Place real content or leave cells empty. Empty cells are traversable terrain (encounters possible, no quests).
+5. **Live derivation.** Anything the old system computed from N/E/S/W links (BFS paths, heatmaps, reachability) is recomputed from the live 2D grid.
+6. **MUD server.** `wbapi-server.js` gains a session layer: multiple players, each with a live `(r, c)` position, can connect and move concurrently.
+
+---
+
+### §CELL-01: Core Data Schema — Remove Explicit Edge Fields ⚠️ PLANNED
+
+**What changes:** Strip `N`, `E`, `S`, `W`, `SW`, `spire`, `portal` direction fields from every `NODE_MAP` entry. Each node becomes a self-describing record with only position + content.
+
+**New minimum node record:**
+```js
+CODE: {
+  code:    'CODE',      // 2–4 char lookup alias
+  r:       <int>,       // row (1–N, north = 1)
+  c:       <int>,       // column (1–M, west = 1)
+  name:    '<terrain>', // WORLD_DB terrain key
+  label:   '<str>',     // display name
+  act:     <1–8>,
+  text:    '<str>',     // story text (empty cells have no text)
+  npc:     '<str>|null',
+  battle:  {…}|null,
+  loot:    '<str>|null',
+  sleep:   <bool>,
+  sleepCost: <int>,
+  // Optional flags (no navigation role):
+  junction:            // REMOVED — no more junction concept
+  isEpicBattleground:  true,
+  isFishingLake:       true,
+  bossKey:             '<str>',
+}
+```
+
+**Files to change:**
+- `roll2hit-v3.html` — strip `N/E/S/W/SW/spire/portal` from all `NODE_MAP` entries
+- `wbapi-server.js` — remove all code that reads/writes `node.N`, `node.E`, `node.S`, `node.W`
+- `docs-node-network.md` — rewrite Section 3 (Connection Object) with new schema
+- `maps.md` — remove N/E/S/W column from the full node table
+
+**Migration path:** Do not change node codes or `r/c` values. Only strip the direction pointers. All ~449 nodes already have `r` and `c` in `NODE_COORDS` — that data stays as-is and becomes the sole position authority.
+
+**Verification:** `./api.sh audit` should pass with 0 edge-related errors after this change. A grep for `\.N\b|\.E\b|\.S\b|\.W\b` on node reads in JS should return only combat stats (not direction reads).
+
+---
+
+### §CELL-02: CELL_GRID Registry ⚠️ PLANNED
+
+**What changes:** Add a `CELL_GRID` lookup that maps `(r, c)` → node code (or `null`). This replaces the role of N/E/S/W as the movement routing table.
+
+**Data structure:**
+```js
+// Computed at game start from NODE_MAP entries
+const CELL_GRID = {};  // key: "r,c" → 'CODE' | null
+for (const code of Object.keys(NODE_MAP)) {
+  const node = NODE_MAP[code];
+  if (node.r != null && node.c != null) {
+    CELL_GRID[`${node.r},${node.c}`] = code;
+  }
+}
+
+// Also define passability: water cells are impassable
+// WATER_CELLS: Set of "r,c" strings read from the existing WW grid
+```
+
+**Passability rules:**
+- Cell occupied by a node → passable, player enters that node
+- Cell not in CELL_GRID but within map bounds → "open terrain" (passable, no node, random encounter possible)
+- Cell outside map bounds → blocked ("You reach the edge of the known world.")
+- Cell explicitly water (derived from existing `WW` grid in `maps.md`) → blocked ("The sea is impassable on foot.")
+
+**Where to store WATER_CELLS:** Add `IMPASSABLE_CELLS` as a `Set` of `"r,c"` strings, populated from the WW cells in the existing 26×16 grid definition (already documented in maps.md).
+
+**Files to change:**
+- `roll2hit-v3.html` — add `CELL_GRID` and `IMPASSABLE_CELLS` constants, populated on `DOMContentLoaded`
+- `wbapi-server.js` — add `buildCellGrid(nm)` helper that builds the same map from the live `NODE_MAP`
+- `spec-world.md` — add CELL_GRID and IMPASSABLE_CELLS to the constants reference
+
+---
+
+### §CELL-03: Movement Engine Rewrite — storyMove → cellMove ⚠️ PLANNED
+
+**What changes:** Replace `storyMove(dir)` with `cellMove(dir)`. Remove all corridor travel logic. Every move is strictly `(r±1, c)` or `(r, c±1)`.
+
+**Current system (to remove):**
+- `storyMove(dir)` — reads `NODE_MAP[current].N/E/S/W` to find destination
+- Corridor distance check: `if (dist >= 3) _showCorridorPrompt(…)`
+- `_showCorridorPrompt(from, to, dir)` — "Time-Warp Footpath" overlay
+- `storyCorridorTravel(from, to, dir)` — warp/hunt choice
+- `CORRIDOR_TERRAIN` constant — terrain per corridor pair
+- `CORRIDOR_CELLS` constant — computed corridor grid
+
+**New system:**
+```js
+function cellMove(dir) {
+  const deltas = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
+  const [dr, dc] = deltas[dir];
+  const nr = S_story.playerR + dr;
+  const nc = S_story.playerC + dc;
+
+  if (isOutOfBounds(nr, nc))   return _showMsg("You reach the edge of the known world.");
+  if (IMPASSABLE_CELLS.has(`${nr},${nc}`)) return _showMsg("The sea is impassable on foot.");
+
+  const destCode = CELL_GRID[`${nr},${nc}`];
+  S_story.playerR = nr;
+  S_story.playerC = nc;
+
+  if (destCode && NODE_MAP[destCode]) {
+    S_story.node = destCode;
+    _enterNode(destCode);         // existing node entry logic
+  } else {
+    _enterEmptyCell(nr, nc);      // new: open terrain cell
+  }
+}
+```
+
+**State fields to add:**
+- `S_story.playerR` — current row (replaces implicit derivation from `S_story.node`)
+- `S_story.playerC` — current column (same)
+- These are always kept in sync: on `_enterNode(code)` → set `playerR = NODE_MAP[code].r`, `playerC = NODE_MAP[code].c`
+
+**Files to change:**
+- `roll2hit-v3.html` — replace `storyMove` with `cellMove`; remove `_showCorridorPrompt`, `storyCorridorTravel`, `CORRIDOR_TERRAIN`, `CORRIDOR_CELLS`
+- `docs-node-network.md` — rewrite Section 4 (Corridor Travel System) as Section 4 (Cell Movement)
+- `mechanics.md` — remove corridor/warp/hunt travel description
+- `spec-corridors.md` — mark SUPERSEDED; add note pointing to §CELL-03
+
+---
+
+### §CELL-04: Empty Cell Traversal ⚠️ PLANNED
+
+**What changes:** When the player moves to a cell with no node (`CELL_GRID` miss), the game describes the terrain and allows random encounters. This replaces junctions as the "routing glue" of the map.
+
+**Empty cell behavior:**
+```js
+function _enterEmptyCell(r, c) {
+  const terrain = _inferTerrain(r, c);  // from neighboring nodes / zone
+  const zone    = _inferZone(r, c);
+  _renderEmptyCellUI(r, c, terrain, zone);
+  // Random encounter: same probability as corridor Hunt, based on terrain
+  if (Math.random() < TERRAIN_ENCOUNTER_RATE[terrain]) {
+    _triggerWildEncounter(terrain);
+  }
+}
+```
+
+**Terrain inference (`_inferTerrain`):**
+- Check N/E/S/W neighbors in CELL_GRID; return majority terrain, or nearest node's terrain
+- Fallback: zone-based default from `ZONE_DEFAULT_TERRAIN` (arctic→arctic, midlands→midlands, etc.)
+
+**Empty cell display:**
+- Show coordinates: `[R:${r} C:${c}]` — a MUD-style position indicator
+- Show compass: which of N/E/S/W have nodes visible (within 1 cell)
+- Short ambient description from terrain type (not story text — just "Open plains stretch in every direction.")
+- Available actions: move N/E/S/W, look, camp (short rest if applicable)
+
+**Files to change:**
+- `roll2hit-v3.html` — add `_enterEmptyCell`, `_inferTerrain`, `_inferZone`, `_renderEmptyCellUI`, `ZONE_DEFAULT_TERRAIN`, `TERRAIN_ENCOUNTER_RATE`
+- `mechanics.md` — document empty cell traversal rules
+
+---
+
+### §CELL-05: Abolish Junction Nodes ⚠️ PLANNED
+
+**What changes:** Remove all J-nodes (J1–J7 in old system; auto-spawned J##### in current system). Any J-node that exists in `NODE_MAP` becomes either:
+  - (a) **Promoted** to a named location with content (text, encounter), OR
+  - (b) **Deleted** — the cell becomes an empty traversable cell handled by §CELL-04
+
+**Decision rule for each J-node:**
+1. Does the cell sit on an important geographic path (mountain pass, ford, crossroads)? → Write a short text and terrain, promote to named location.
+2. Is it a pure routing stub with no geographic significance? → Delete. The grid handles routing now.
+
+**In wbapi-server.js:**
+- Remove all `junction: true` logic from audit, heatmap, density, and reweave passes
+- Remove `_spawnJunction` / auto-junction-creation endpoints
+- Remove "spawn junctions every X" heuristic from any map generation
+
+**In roll2hit-v3.html:**
+- Remove `junction: true` flag handling from `_enterNode`, `_renderMiniMap`, minimap CSS classes
+- Remove `junction` terrain from `WORLD_DB` (the `junction: { label:'Crossroads Junction' …}` entry)
+
+**Files to change:**
+- `roll2hit-v3.html` — remove junction handling
+- `wbapi-server.js` — remove junction spawn logic, junction audit passes
+- `maps.md` — remove Junction Nodes section
+- `docs-node-network.md` — remove Node Types table row for junctions
+- `lab-report-junction-reweave-overhaul.md` — add §SUPERSEDED note
+
+---
+
+### §CELL-06: BFS and Heatmap — Grid Walk Rewrite ⚠️ PLANNED
+
+**What changes:** All graph algorithms in `wbapi-server.js` (wither-snail, double-snail, heatmap, reachability, BFS pathfinding) switch from "walk node.N/E/S/W edges" to "walk (r±1,c), (r,c±1) in CELL_GRID."
+
+**Current pattern (to remove):**
+```js
+for (const d of DIRS4) {          // ['N','E','S','W']
+  const nxt = nm[cur]?.[d];       // reads node.N / node.E etc.
+  if (!nxt || !nm[nxt]) continue;
+  queue.push(nxt);
+}
+```
+
+**New pattern:**
+```js
+const MOVES = [[-1,0],[1,0],[0,1],[0,-1]]; // N,S,E,W
+const {r, c} = coords[cur];
+for (const [dr,dc] of MOVES) {
+  const nr = r+dr, nc = c+dc;
+  if (nr<1||nr>MAX_R||nc<1||nc>MAX_C) continue;
+  if (IMPASSABLE[`${nr},${nc}`]) continue;
+  const nxt = cellGrid[`${nr},${nc}`];     // named node or null
+  if (nxt && !visited.has(nxt)) {
+    visited.add(nxt); queue.push(nxt);
+  }
+  // For heatmap: also count traversal through empty cells
+}
+```
+
+**Heatmap change:** The "junction heat" concept (counting BFS usage of J-nodes) is replaced with "cell heat" — a 2D grid of traversal counts. Every cell on a BFS path gets +1. Named nodes and empty cells alike. Output is a 2D grid visualization, not a node list.
+
+**Reweave pass:** Since there are no junction edges to rebuild, reweave becomes "fill connectivity gaps" — find cells that are reachable but isolated (no named neighbors), flag them for content placement rather than auto-connecting them.
+
+**Files to change:**
+- `wbapi-server.js` — rewrite all BFS/DFS/heatmap routines; replace `DIRS4` node-edge walk with grid walk
+- `api.sh` — update `fix-bidirectional` command (now "verify-grid-passability")
+- `milepoints/` — heatmap output format changes from node-code list to grid visualization
+
+---
+
+### §CELL-07: MUD Server — Multi-Session Architecture ⚠️ PLANNED
+
+**What changes:** `wbapi-server.js` gains a session layer. Multiple players can connect, each with their own `(r, c)` position and state. This is the multiplayer MUD layer.
+
+**Session model:**
+```js
+// In-memory session store (no persistence yet — Phase 1)
+const SESSIONS = new Map();  // sessionId → { id, playerName, r, c, nodeCode, state, lastSeen }
+
+// Session lifecycle
+POST /api/session/start    { name: 'PlayerName' }  → { sessionId, r, c, node }
+POST /api/session/move     { sessionId, dir: 'N'|'E'|'S'|'W' } → { r, c, node, desc, exits }
+GET  /api/session/look     { sessionId }            → { r, c, node, desc, exits, players: [] }
+GET  /api/session/who                               → [{ id, name, r, c, node }]
+POST /api/session/say      { sessionId, msg }       → broadcast to same-cell players
+POST /api/session/end      { sessionId }            → remove session
+```
+
+**Broadcast mechanism:** Server-Sent Events (SSE) — each session subscribes to an event stream. When a player enters a cell, all players in the same cell get a `player_arrived` event. When someone says something, all same-cell players get a `chat` event. No WebSocket dependency — SSE works over HTTP/1.1.
+
+**Starting position:** New sessions spawn at the game's default starting node (currently `LHR` / City Streets — Birka, at its grid coordinates).
+
+**Concurrency:** Each `POST /api/session/move` is a synchronous operation against in-memory state. No async conflict — Node.js is single-threaded. Add a per-session mutex only if WebSocket upgrade added later.
+
+**Persistence (Phase 2 — not this increment):** Sessions are ephemeral in Phase 1. Phase 2 adds `sessions.json` write on move, read on server restart.
+
+**Files to change:**
+- `wbapi-server.js` — add SESSIONS store, SSE endpoint, and all `/api/session/*` routes
+- `wbapi-help.md` — add Session API section
+- `API-README.md` — add multiplayer session documentation
+
+---
+
+### §CELL-08: WBAPI Cell Endpoints ⚠️ PLANNED
+
+**What changes:** Add REST endpoints for cell-based queries. Authors and tools can ask "what's at (r, c)?" and "what are the neighbors of (r, c)?" without scanning NODE_MAP manually.
+
+**New endpoints:**
+```
+GET  /api/cell/:r/:c              → { code, node, terrain, exits: {N,E,S,W} }
+GET  /api/cell/:r/:c/neighbors    → { N:{…}, E:{…}, S:{…}, W:{…} }  (each: code|null, terrain, passable)
+GET  /api/grid/region?r1=&c1=&r2=&c2=  → 2D array of cells in bounding box
+POST /api/node                    → create node; fields: code, r, c, terrain, label, text (NO N/E/S/W)
+PUT  /api/node/:code              → update node; reject if N/E/S/W/junction fields submitted (deprecated)
+GET  /api/grid/heatmap            → 2D cell-heat grid (from §CELL-06 algorithm)
+GET  /api/grid/reachability       → all cells reachable from default start; unreachable cells listed
+```
+
+**Node creation rule:** `POST /api/node` accepts `r` and `c`. If `CELL_GRID["r,c"]` is already occupied, return 409. No automatic junction insertion. The node is placed and CELL_GRID updated live.
+
+**Deprecation:** `GET /api/node/:code` still works but its response omits `N/E/S/W` fields (they are derived, not stored). The response includes a `derived_exits` field:
+```json
+{
+  "code": "CI",
+  "r": 5, "c": 16,
+  "derived_exits": { "N": "SL", "E": "IN", "S": null, "W": null }
+}
+```
+
+**Files to change:**
+- `wbapi-server.js` — add all cell endpoints
+- `wbapi-help.md` — document new endpoints
+- `api.sh` — add `cell` and `grid` subcommands
+
+---
+
+### §CELL-09: Quest System — Cell-Driven Triggers ⚠️ PLANNED
+
+**What changes:** Quest activation and completion checks remain node-code based (`activateNode: 'CI'`) but the trigger mechanism changes: instead of "did the player navigate to this code via the edge graph?", the trigger is "did the player's `(r, c)` land on the cell for this code?"
+
+**No schema change needed for QUEST_DB** — `activateNode` is still a node code. The engine just checks `CELL_GRID[playerR,playerC] === quest.activateNode` on each `cellMove`.
+
+**BFS pathfinding for quest waypoints:** The existing "highlight path to quest objective" feature used node-edge BFS. Replace with grid BFS:
+```js
+function bfsPath(fromR, fromC, toR, toC) {
+  // Standard BFS over (r,c) grid; returns array of {r,c} pairs
+}
+```
+
+**Hunt mode:** The existing "Hunt — guaranteed encounter on path" feature used corridor terrain. Replace with: Hunt mode activates on any empty cell move; terrain is inferred from `_inferTerrain(r, c)`.
+
+**Gate locks:** Gate lock checks (`GATE_LOCKS`) check whether player has the required item when `cellMove` would enter the locked cell. No change to lock data — just the trigger location.
+
+**Files to change:**
+- `roll2hit-v3.html` — update `cellMove` to check quest triggers on arrival; replace waypoint BFS
+- `quest.md` — note that `activateNode` triggers on cell arrival, not edge traversal
+- `docs-node-network.md` — remove "waypoint BFS highlight" section; add cell-BFS pathfinding doc
+
+---
+
+### §CELL-10: Minimap — Live Player Cursor ⚠️ PLANNED
+
+**What changes:** The minimap already renders from `(r, c)` coordinates. Update it to show:
+1. **Player position** — a blinking cursor at `(playerR, playerC)`
+2. **Empty cells** — dim traversable cells (not just named nodes)
+3. **Visited cells** — cells the player has stepped on, persisted in `S_story.visitedCells`
+4. **Remove corridor overlays** — `CORRIDOR_CELLS` CSS classes and rendering removed
+
+**New state field:** `S_story.visitedCells` — `Set<"r,c">` of all cells stepped on. Persisted in save. Used for minimap "fog of war" reveal.
+
+**Minimap rendering:** Currently renders only named node cells. New behavior: render all cells in a viewport around player (`playerR ± 5`, `playerC ± 8`). Named nodes get their code label. Empty cells get a terrain glyph. Water/impassable cells shown in blue. Unvisited cells outside the viewport are fog.
+
+**Files to change:**
+- `roll2hit-v3.html` — update `_renderMiniMap()` and `_renderWorldMiniMap()`; add `visitedCells` to `_S_DEFAULTS()`; remove corridor CSS
+
+---
+
+### §CELL-11: Documentation Sync Pass ⚠️ PLANNED
+
+Full sync of all markdown docs after §CELL-01 through §CELL-10 are complete.
+
+**Files requiring full rewrite:**
+- `docs-node-network.md` — replaces all 5 sections with new cell-map architecture; new sections: Grid System, Cell Registry, Cell Movement, Empty Cells, MUD Session API
+- `maps.md` — remove N/E/S/W network section; add "Cell Navigation" section explaining grid-walk; update Legend table (remove N/E/S/W columns); update all node coordinate listings
+
+**Files requiring updates:**
+- `index.md` — update "Node map (121 nodes)" keyword → "Cell map"; update description of `docs-node-network.md`
+- `mechanics.md` — remove corridor/warp/hunt travel paragraph; add "Cell Movement" paragraph
+- `spec-corridors.md` — add SUPERSEDED header; redirect to §CELL-03
+- `world.md` — remove any references to junction nodes or corridor travel
+- `story.md` — update travel descriptions (e.g., "follow the junction highway west" → "travel west through open terrain")
+- `story-flowchart.md` — note that edges are now implied by grid adjacency, not stored links
+- `API-README.md` — add cell + session endpoints
+- `wbapi-help.md` — full update: cell endpoints, session API, deprecations
+
+**Files to add:**
+- `lab-report-cell-map-mud-redesign.md` — lab report per Lab Report Policy (large multi-system redesign)
+
+---
+
+### §CELL Implementation Order
+
+Process one section per "continue." Each section is a self-contained increment that leaves the game playable.
+
+| Order | Section | Dependency | Risk |
+|-------|---------|-----------|------|
+| 1 | §CELL-02 | none | Low — additive only |
+| 2 | §CELL-03 | §CELL-02 | High — replaces storyMove |
+| 3 | §CELL-04 | §CELL-03 | Medium — new UI path |
+| 4 | §CELL-01 | §CELL-03 | Medium — strips NODE_MAP fields |
+| 5 | §CELL-05 | §CELL-01, §CELL-04 | Medium — deletes J-nodes |
+| 6 | §CELL-09 | §CELL-03 | Low — quest trigger is additive |
+| 7 | §CELL-10 | §CELL-02, §CELL-04 | Low — visual only |
+| 8 | §CELL-06 | §CELL-02 | Medium — server-side only |
+| 9 | §CELL-08 | §CELL-06 | Low — additive endpoints |
+| 10 | §CELL-07 | §CELL-08 | Medium — new server feature |
+| 11 | §CELL-11 | all above | Low — docs only |
+
+**Parallel track:** §CELL-06 / §CELL-07 / §CELL-08 are server-only changes and can proceed independently of the client-side §CELL-01 through §CELL-05. If the HTML game needs to stay playable during transition, implement §CELL-06/07/08 on `wbapi-server.js` first, then do the HTML changes.
+
+---
+
+### §CELL — What to Preserve
+
+These concepts are unchanged by the cell redesign:
+
+| Concept | Status | Reason |
+|---------|--------|--------|
+| Node codes (CI, LHR, etc.) | **Keep** | Used by quests, saves, NPCs — stable identifiers |
+| NODE_MAP content fields (text, npc, battle, loot, sleep) | **Keep** | Content unaffected |
+| QUEST_DB / WORLD_DB / MONSTER_POOL | **Keep** | No dependency on edge fields |
+| Gate locks | **Keep** — trigger check updates | Checked on cell arrival |
+| Epic Battlegrounds | **Keep** — access method changes | Accessed by entering their cell |
+| Fishing lakes (YL, YC) | **Keep** | Normal named nodes |
+| Act grouping | **Keep** | Narrative structure unchanged |
+| Save / load system | **Keep** — add playerR/playerC fields | Backward-compatible |
+| BFS pathfinding concept | **Keep** — algorithm changes | Grid BFS replaces edge BFS |
+| Hunt mode encounters | **Keep** — trigger changes | Cell move triggers, not corridor |
+| Minimap rendering | **Keep** — extended | Already cell-based, enhanced |
+
+---
+
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
