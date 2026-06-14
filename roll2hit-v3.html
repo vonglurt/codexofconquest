@@ -3139,11 +3139,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .map-cell.unvisited { background: #1e0802; color: #562717; }
 .map-cell.water { background: #120600; color: #2a0a05; }
 
-/* ── Corridor Overlay ────────────────────────────────── */
-#story-corridor-overlay { background: #120600; }
-.corridor-cell { border: 1px solid #562717; border-radius: 4px; font-family: 'Courier New', monospace; }
-.corridor-cell.active-path { border-color: #FEA712; color: #FEA712; background: #3d1510; }
-.corridor-cell.current-pos { background: #FEA712; color: #120600; border-color: #FDDCA9; }
 
 /* ── Death Save Panel ────────────────────────────────── */
 #sbo-death-save-panel { background: #2a0505; border: 3px solid #C21717; border-radius: 10px; }
@@ -4323,25 +4318,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <div id="stalk-card-actions">
         <button id="btn-stalk-abandon">Abandon Stalk</button>
         <button id="btn-stalk-wait">Wait for Prey</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ── Corridor travel overlay (Layer 9) ── -->
-  <div id="story-corridor-overlay">
-    <div id="corridor-card">
-      <div id="corridor-card-hd">⚡ Time-Warp Footpath</div>
-      <div id="corridor-route">
-        <div><span class="corridor-lbl">From:</span> <span id="corridor-from-name"></span></div>
-        <div><span class="corridor-lbl">To:</span>   <span id="corridor-to-name"></span></div>
-        <div><span class="corridor-lbl">Road:</span> <span id="corridor-terrain-name"></span></div>
-      </div>
-      <div id="corridor-hunt-targets" style="display:none;font-size:11px;color:#6A4808;margin-top:4px;"></div>
-      <div id="corridor-encounter-rate"></div>
-      <div id="corridor-card-actions">
-        <button id="btn-corridor-cancel">✕ Cancel</button>
-        <button id="btn-corridor-hunt">🎯 Hunt — guaranteed encounter</button>
-        <button id="btn-corridor-warp">⚡ Warp — instant, safe</button>
       </div>
     </div>
   </div>
@@ -19419,61 +19395,12 @@ const CELL_GRID = (() => {
 })();
 const IMPASSABLE_CELLS = new Set(); // populated in §CELL-10
 
-/* ── Layer 9-A: Circuit Corridor Data Structures ── */
-
-const WIRE_GLYPH = {
-  'E,W':     '─',
-  'N,S':     '│',
-  'E,N':     '└',
-  'N,W':     '┘',
-  'E,S':     '┌',
-  'S,W':     '┐',
-  'E,N,S':   '├',
-  'N,S,W':   '┤',
-  'E,N,W':   '┴',
-  'E,S,W':   '┬',
-  'E,N,S,W': '┼',
-};
-
 // §CELL-04: Encounter probability by inferred terrain on empty cells
 const TERRAIN_ENCOUNTER_RATE = {
   midlands:0.15, forest:0.25, highlands:0.20, swamp:0.30, desert:0.20,
   jungle:0.30, hag_swamp:0.35, ocean:0.10, beach:0.10, road:0, junction:0,
   city:0.05, city_slums:0.10, alley:0.15, _default:0.15
 };
-
-const CORRIDOR_TERRAIN = { // → doc: world.md §Terrain Types (corridor-pair → terrain key; drives storyMove_LEGACY encounter table selection)
-  'CI-MI':'midlands',  'MI-CI':'midlands',
-  'CI-J1':'midlands',  'J1-CI':'midlands',
-  'J1-MI':'midlands',  'MI-J1':'midlands',
-  'MI-FO':'forest',    'FO-MI':'forest',
-  'MI-J6':'forest',    'J6-MI':'forest',
-  'J6-FO':'forest',    'FO-J6':'forest',
-  'MI-HL':'highlands', 'HL-MI':'highlands',
-  'HS-BE':'forest',    'BE-HS':'forest',
-  'HS-J3':'forest',    'J3-HS':'forest',
-  'J3-BE':'forest',    'BE-J3':'forest',
-  'OC-IS':'ocean',     'IS-OC':'ocean',
-  'IS-AT':'ocean',     'AT-IS':'ocean',
-  'OC-DS':'ocean',     'DS-OC':'ocean',
-  'DS-SE':'ocean',     'SE-DS':'ocean',
-  'DS-J4':'ocean',     'J4-DS':'ocean',
-  'J4-SE':'ocean',     'SE-J4':'ocean',
-  'VC-DE':'desert',    'DE-VC':'desert',
-  'DC-JU':'jungle',    'JU-DC':'jungle',
-  'JU-BQ':'jungle',    'BQ-JU':'jungle',
-  'KT-OP':'heavenly_clouds', 'OP-KT':'heavenly_clouds',
-  'OP-HC':'heavenly_clouds', 'HC-OP':'heavenly_clouds',
-  'OP-J7':'heavenly_clouds', 'J7-OP':'heavenly_clouds',
-  'J7-HC':'heavenly_clouds', 'HC-J7':'heavenly_clouds',
-  'HC-AR':'arctic',    'AR-HC':'arctic',
-  'HC-J5':'arctic',    'J5-HC':'arctic',
-  'J5-AR':'arctic',    'AR-J5':'arctic',
-  'AR-CO':'arctic',    'CO-AR':'arctic',
-  'J5-CO':'arctic',    'CO-J5':'arctic',
-};
-
-const CORRIDOR_CELLS = {}; // populated by buildCorridorMap() at startup
 
 const HUNTING_GROUNDS = { // → doc: mechanics-combat.md §Hunting Mode (terrain → displayName; used in storyHunt() encounter header)
   city:             { displayName:"The Thieves' Den" },
@@ -31114,7 +31041,6 @@ let S_story = {
   dropsCollected: 0,
   checkpointNode: 'LHR',
   hearthHome: 'LHR',
-  lastCorridorCells: [],
   lastExitDir: null,
   lastExitCode: null,
   battleTurn: 'player',
@@ -31161,7 +31087,7 @@ const _S_DEFAULTS = () => ({
   defeatedBattles: {}, pendingBattle: null,
   sleptAtNodes: {}, shortRestedAtNodes: {}, countedMissedInns: {}, missedSleeps: 0, battleDis: 0, dropsCollected: 0,
   checkpointNode: 'LHR', hearthHome: 'LHR',
-  lastCorridorCells: [], lastExitDir: null, lastExitCode: null,
+  lastExitDir: null, lastExitCode: null,
   battleTurn: 'player', battlePRoll: 0, battleERoll: 0, battleRound: 1,
   usedMainAttack: false, usedBonusAction: false, usedRealAttack: false, surpriseAdvantage: false,
   conditionRoundsLeft: 0, spellAdvantageReady: false, equippedShield: null,
@@ -31816,9 +31742,6 @@ function storyLoadSave(key) {
 
 let _continueChecked = false;
 let _pendingFarewell = null;
-let _corridorPendingFrom = null;
-let _corridorPendingTo   = null;
-let _corridorPendingDir  = null;
 
 function storyCheckContinue() {
   if (_continueChecked) return false;
@@ -33938,7 +33861,7 @@ function storyUseTransmort() {
 function storyExit() {
   S_story.active = false;
   switchSheet('sheet-story');
-  ['story-journal-modal','story-npc-modal','story-stalk-modal','story-corridor-overlay',
+  ['story-journal-modal','story-npc-modal','story-stalk-modal',
    'story-outcome-modal','story-void-modal',
    'story-sleep-overlay','story-prebatt-overlay',
    'story-vendor-overlay',
@@ -36067,113 +35990,6 @@ function storyCheckVictory(node) {
 }
 
 // SUPERSEDED by cellMove — remove after §CELL-05 is complete
-function storyMove_LEGACY(dir) {
-  const node = NODE_MAP[S_story.currentCode];
-  const dest = node[dir];
-  if (!dest) {
-    storyMsg('No path to the ' + dir + '.'); return;
-  }
-  const next = NODE_MAP[dest];
-  if (!next) { storyMsg('Unknown destination.'); return; }
-
-  if (dest === 'TLS' && S_story.shards < 7) {
-    const _urgency = (S_story.voidPressure || 0) >= 9 ? '\n\n⚠️ The Void is one day away.' : '';
-    storyMsg('🔮 The Convergence is sealed. You need all 7 Codex Shards. You have ' + S_story.shards + '/7.' + _urgency);
-    return;
-  }
-  // §LIX–§LX: KS two-stage gate — blind days, then magistrate detention
-  if (S_story.currentCode === 'DAM' && S_story.saulConverted) {
-    if (!S_story.anathSightRestored) {
-      S_story.blindDaysKS = (S_story.blindDaysKS || 0) + 1;
-      const _ksDay = S_story.blindDaysKS;
-      if (_ksDay >= 3) {
-        storyMsg('Day three. You hear a knock at the door.\n\nSpeak to Anath before leaving Damascus.');
-      } else {
-        storyMsg('You cannot navigate the road without sight. You wait in the house on the lower road.\n\nDay ' + _ksDay + '. Tomorrow may be different.');
-      }
-      storyRender(NODE_MAP[S_story.currentCode]);
-      return;
-    }
-    if (!S_story.escapedDamascus) {
-      storyMsg('The city watch is at the gate. The magistrate of Damascus has issued a detention order — the warrant authority has turned against the warrant-carrier.\n\nThe gate is watched. The wall is not. Check your active quests.');
-      return;
-    }
-  }
-  // §LXIII: AO→CI2 gate — commission required before first journey departs
-  if (S_story.currentCode === 'HTY' && dest === 'CI2' && !S_story.commissionReceived) {
-    storyMsg('The journey has not yet been commissioned. Speak to Assembly Elder Joach before leaving Antioch.');
-    return;
-  }
-  // §LXI: HR→TS gate — fifteen days before Barnach releases you
-  if (S_story.currentCode === 'JRS' && dest === 'ADA' && S_story.saulConverted) {
-    if (!S_story.barnachVouchedHR) {
-      storyMsg('You have not yet been vouched for. Find Barnach in Jerusalem first.');
-      return;
-    }
-    if (!S_story.hellenistsThreaten) {
-      S_story.hrHellenistDays = (S_story.hrHellenistDays || 0) + 1;
-      const _hrDay = S_story.hrHellenistDays;
-      if (_hrDay >= 15) {
-        S_story.hellenistsThreaten = true;
-        storyMsg('The Hellenists are at the gate. At the assembly hall. In the square. Fifteen days is how long this city was prepared to hold the tension.\n\nBarnach says: go. The road west leads to Tarsus.');
-        storyRender(NODE_MAP[S_story.currentCode]);
-      } else {
-        storyMsg('Day ' + _hrDay + ' of fifteen. You speak in the assembly halls. You argue. The city watches. Barnach watches the city.');
-      }
-      return;
-    }
-  }
-  // §LXXII: SQ → CAN gate — Tide Gate must be opened first (Annex activates on condition)
-  if (S_story.currentCode === 'NUE' && dest === 'CAN' && !S_story.tideGateOpened) {
-    storyMsg('The door to the west annex is sealed. The monitoring protocol has not yet activated.');
-    return;
-  }
-  // §LXX: HCA → DS0 gate — Leviathan must be defeated first
-  if (S_story.currentCode === 'HCA' && dest === 'DS0' && !((S_story.defeatedBattles||{})['HCA_BOSS'])) {
-    storyMsg('The path south does not open until the Clearing is settled. The Leviathan holds the threshold.');
-    return;
-  }
-  // §PORT-02: HL → DF gate — kelpie must be cleared before Dunfall ford opens
-  if (S_story.currentCode === 'KIR' && dest === 'ZRH' && !((S_story.defeatedBattles||{})['KIR'])) {
-    storyMsg('The ford west of the standing stones is still closed. Clear the kelpie first — the village has its doors barred while the loch is held.');
-    return;
-  }
-  // §HUNT-02: J1 → BN gate — relay warning must be received before going north
-  if (S_story.currentCode === 'WRO' && dest === 'BNX' && !S_story.huntHook2Received) {
-    storyMsg('The relay road goes north from here. The eastern bend is two hundred paces up. There\'s something worth knowing before you go that way.');
-    return;
-  }
-  // §HUNT-01: LN → LD gate — tracks must be read before the den is accessible
-  if (S_story.currentCode === 'ALF' && dest === 'VAW' && !S_story.lakeLairLocated) {
-    storyMsg('The shelf collapse is north of here. The path is disturbed — something has been moving through. Read the tracks before going further.');
-    return;
-  }
-  // §LXXIII: DA2 → DA3 gate — Tide Gate must be open to descend
-  if (S_story.currentCode === 'DA2' && dest === 'DA3' && !S_story.tideGateOpened) {
-    storyMsg('The arch is sealed. Open the Gate mechanism before descending.');
-    return;
-  }
-  storyCheckMissedSleep();
-  // ── L9-G: Corridor travel for non-adjacent moves ──
-  const fromCoord = NODE_COORDS[S_story.currentCode];
-  const toCoord   = NODE_COORDS[dest];
-  const manhattan = fromCoord && toCoord ? Math.abs(fromCoord.r - toCoord.r) + Math.abs(fromCoord.c - toCoord.c) : 0;
-  if (fromCoord && toCoord && manhattan >= 3) {
-    _showCorridorPrompt(S_story.currentCode, dest, dir);
-    return;
-  }
-  _setActivePath(S_story.currentCode, dest, dir);
-  const _farewell = _getFarewell(S_story.currentCode, dest);
-  S_story.log.push(S_story.currentCode);
-  if (S_story.log.length > 20) S_story.log.shift();
-  S_story.currentCode = dest;
-  _statTally('exitsTaken', 1);
-  S_story.hoursElapsed  = (S_story.hoursElapsed  || 0) + 1;
-  S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
-  _pendingFarewell = _farewell || null;
-  storyRender(next);
-}
-
 // §CELL-03: MUD-style one-cell-per-move navigation
 function cellMove(dir) {
   const DELTAS = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
@@ -36190,7 +36006,7 @@ function cellMove(dir) {
 
   const destCode = CELL_GRID[`${nr},${nc}`];
 
-  // Gate-lock checks (copied verbatim from storyMove_LEGACY, dest → destCode)
+  // Gate-lock checks
   if (destCode === 'TLS' && S_story.shards < 7) {
     const _urgency = (S_story.voidPressure || 0) >= 9 ? '\n\n⚠️ The Void is one day away.' : '';
     storyMsg('🔮 The Convergence is sealed. You need all 7 Codex Shards. You have ' + S_story.shards + '/7.' + _urgency);
@@ -37878,7 +37694,6 @@ function storyRender(node, prefix) {
   switchSheet('sheet-story');
   document.getElementById('story-vendor-overlay').classList.remove('visible');
   document.getElementById('story-stalk-modal').classList.remove('visible');
-  document.getElementById('story-corridor-overlay').classList.remove('visible');
   document.getElementById('story-eb-npc-modal').classList.remove('visible');
   document.getElementById('story-fishing-modal').classList.remove('visible');
   // Act badge
@@ -42841,8 +42656,6 @@ function _renderMapGrid() {
     }
   }
 
-  // §CELL-10: corridor cell pass removed — CORRIDOR_CELLS is empty after §CELL-05
-
   document.getElementById('map-status-bar').textContent =
     'Day ' + S_story.day + ' of 49  ·  ' + S_story.shards + '/7 Shards  ·  ' +
     S_story.hp + '/' + S_story.hpMax + ' HP  ·  ' + S_story.gold + 'gp';
@@ -43421,7 +43234,7 @@ document.addEventListener('keydown', e => {
     if (activeSheet && activeSheet.id !== 'sheet-story') { switchSheet('sheet-story'); return; }
     for (const id of ['story-victory-modal','story-gameover-modal','story-continue-modal',
                       'story-void-modal','story-outcome-modal','story-journal-modal',
-                      'story-npc-modal','story-stalk-modal','story-corridor-overlay',
+                      'story-npc-modal','story-stalk-modal',
                       'story-sleep-overlay','story-prebatt-overlay',
                       'story-vendor-overlay']) {
       const el = document.getElementById(id);
@@ -43431,21 +43244,9 @@ document.addEventListener('keydown', e => {
   }
 });
 
-/* ── Layer 9: Corridor Travel ── */
-
 function _setActivePath(fromCode, toCode, dir) {
   S_story.lastExitCode = fromCode;
   S_story.lastExitDir  = dir;
-  const cells = [];
-  Object.entries(CORRIDOR_CELLS).forEach(([k, corr]) => {
-    if (corr.edges.some(e =>
-      (e.from === fromCode && e.to === toCode) ||
-      (e.from === toCode   && e.to === fromCode))) {
-      const [r, c] = k.split(',').map(Number);
-      cells.push({ r, c });
-    }
-  });
-  S_story.lastCorridorCells = cells;
 }
 
 /* ── Layer 23: Notoriety & Enemy Scaling ── */
@@ -43500,98 +43301,6 @@ function triggerCorridorEncounter(terrain, destCode, questHunt, forceQuestTarget
   _showBattleOverlay();
 }
 
-function _showCorridorPrompt(fromCode, destCode, dir) {
-  const fromNode  = NODE_MAP[fromCode];
-  const destNode  = NODE_MAP[destCode];
-  const terrain   = _corridorTerrain(fromCode, destCode);
-  const terrainDb = WORLD_DB[terrain];
-
-  _corridorPendingFrom = fromCode;
-  _corridorPendingTo   = destCode;
-  _corridorPendingDir  = dir;
-
-  document.getElementById('corridor-from-name').textContent    = fromNode ? fromNode.label : fromCode;
-  document.getElementById('corridor-to-name').textContent      = destNode ? destNode.label : destCode;
-  document.getElementById('corridor-terrain-name').textContent = terrainDb ? terrainDb.label : terrain.replace(/_/g,' ');
-
-  const notoriety = _notoriety();
-  const activeQuestCount = Object.values(S_story.quests || {}).filter(s => s === 'active').length;
-  const chance = Math.round(Math.min(0.95, Math.max(0.05,
-    0.1 + notoriety * 0.015 + activeQuestCount * 0.04 - _luckMod() * 0.5)) * 100);
-  document.getElementById('corridor-encounter-rate').textContent = 'Global hunt-mode encounter chance: ' + chance + '%';
-
-  // Show quest hunt targets for this terrain
-  const targetsEl = document.getElementById('corridor-hunt-targets');
-  const terrainDb2 = WORLD_DB[terrain];
-  const terrainPool = terrainDb2 ? terrainDb2.monsters.map(m => m.key) : [];
-  const questTargetKeys = _getQuestTargetKeys();
-  const relevantTargets = [...questTargetKeys].filter(k => terrainPool.includes(k));
-  const targetNames = relevantTargets.map(k => {
-    const m = MONSTER_POOL[k]; return m ? m.name : k;
-  });
-  const huntBtn = document.getElementById('btn-corridor-hunt');
-  if (targetNames.length) {
-    targetsEl.style.display = '';
-    targetsEl.textContent = '🎯 Quest targets on this road: ' + targetNames.join(' · ');
-    huntBtn.textContent = '🎯 Hunt (1hr) — 100% quest monster';
-  } else {
-    targetsEl.style.display = 'none';
-    huntBtn.textContent = '🎯 Hunt — guaranteed encounter';
-  }
-
-  document.getElementById('story-corridor-overlay').classList.add('visible');
-}
-
-function storyCorridorTravel(fromCode, destCode, dir, forceEncounter) {
-  const fromNode = NODE_MAP[fromCode];
-  const destNode = NODE_MAP[destCode];
-  const terrain  = _corridorTerrain(fromCode, destCode);
-  const activeQuestCount = Object.values(S_story.quests).filter(s => s === 'active').length;
-  const notoriety = _notoriety();
-  const destLabel = destNode ? destNode.label.split(' — ')[0] : destCode;
-
-  _setActivePath(fromCode, destCode, dir);
-  S_story.log.push(fromCode);
-  if (S_story.log.length > 20) S_story.log.shift();
-  if (fromCode === 'INN') S_story.innDeparted = true; // §CROWN-01: quest_inn_05 gate
-  S_story.currentCode = destCode;
-
-  // ── Layer 53: Road Companion — fires once per act on first corridor travel ──
-  { const act = S_story.actNumber || 1;
-    if (!S_story.companionActsSeen) S_story.companionActsSeen = {};
-    if (act >= 2 && !S_story.companionActsSeen[act] && COMPANION_LINES[act]) {
-      S_story.companionActsSeen[act] = true;
-      const comp = COMPANION_LINES[act];
-      const compText = comp.name
-        ? '👣 ' + comp.name + ' — on the road (' + comp.ctx + '):\n"' + comp.line + '"'
-        : '🛤 ' + comp.line;
-      setTimeout(() => storyMsg(compText), 900);
-    }
-  }
-  if (S_story.huntMode || forceEncounter) {
-    const chance = forceEncounter ? 1.0
-      : Math.min(0.95, Math.max(0.05, 0.1 + notoriety * 0.015 + activeQuestCount * 0.04 - _luckMod() * 0.5)); // Layer 48: Luck reduces encounter rate
-    if (Math.random() < chance) {
-      // Layer 61: false_warrant auto-consume skips encounter (disabled at voidPressure >= 7)
-      const _fwIdx = (S_story.inventory || []).findIndex(i => i.name === CORELLI_ITEMS.false_warrant.name);
-      if (_fwIdx >= 0 && (S_story.voidPressure || 0) < 7) {
-        S_story.inventory.splice(_fwIdx, 1);
-        storyMsg('📋 The patrol glances at your papers and waves you through. (False Warrant Papers consumed.)');
-        storyRender(NODE_MAP[destCode]);
-      } else {
-        storyMsg('🎯 Hunting footpath → ' + destLabel + (forceEncounter ? ' — quest target spotted!' : ' — ambush!'));
-        triggerCorridorEncounter(terrain, destCode, true, forceEncounter);
-      }
-    } else {
-      storyMsg('🎯 Hunting footpath → ' + destLabel + ' — no prey found.');
-      storyRender(destNode);
-    }
-  } else {
-    storyMsg('⚡ Warped → ' + destLabel + '.');
-    storyRender(destNode);
-  }
-}
-
 /* ── Layer 10: Stalk Helpers ── */
 
 function _getQuestTargetKeys() {
@@ -43621,124 +43330,6 @@ function _stalkedMonsterPick(terrain) {
   });
   return weighted.length ? weighted[Math.floor(Math.random() * weighted.length)] : null;
 }
-
-/* ── Layer 9-A: Corridor Builder Functions ── */
-
-function _wireGlyph(dirs) {
-  return WIRE_GLYPH[[...dirs].sort().join(',')] || '·';
-}
-
-function _corridorTerrain(fromCode, toCode) {
-  return CORRIDOR_TERRAIN[fromCode + '-' + toCode] || 'midlands';
-}
-
-function _routeSegments(r1, c1, r2, c2, first) {
-  const cells  = [];
-  const hStep  = c2 > c1 ? 1 : (c2 < c1 ? -1 : 0);
-  const vStep  = r2 > r1 ? 1 : (r2 < r1 ? -1 : 0);
-
-  if (first === 'H') {
-    // Horizontal segment (r1, c1+h .. c2-h)
-    if (hStep !== 0)
-      for (let c = c1 + hStep; c !== c2; c += hStep)
-        cells.push({ r:r1, c, dirs: new Set(['E','W']) });
-    // Corner at (r1, c2) — only when both axes change
-    if (hStep !== 0 && vStep !== 0)
-      cells.push({ r:r1, c:c2, dirs: new Set([hStep > 0 ? 'W' : 'E', vStep > 0 ? 'S' : 'N']) });
-    // Vertical segment (r1+v .. r2-v, c2)
-    if (vStep !== 0)
-      for (let r = r1 + vStep; r !== r2; r += vStep)
-        cells.push({ r, c:c2, dirs: new Set(['N','S']) });
-  } else {
-    // Vertical-first: corner at (r2, c1)
-    if (vStep !== 0)
-      for (let r = r1 + vStep; r !== r2; r += vStep)
-        cells.push({ r, c:c1, dirs: new Set(['N','S']) });
-    if (vStep !== 0 && hStep !== 0)
-      cells.push({ r:r2, c:c1, dirs: new Set([vStep > 0 ? 'N' : 'S', hStep > 0 ? 'E' : 'W']) });
-    if (hStep !== 0)
-      for (let c = c1 + hStep; c !== c2; c += hStep)
-        cells.push({ r:r2, c, dirs: new Set(['E','W']) });
-  }
-  return cells;
-}
-
-function buildCorridorMap() {
-  const processed = new Set();
-  const nodeSet   = new Set(Object.values(NODE_COORDS).map(p => p.r + ',' + p.c));
-
-  Object.keys(NODE_MAP).forEach(fromCode => {
-    const fromCoords = NODE_COORDS[fromCode];
-    if (!fromCoords) return;
-    const node = NODE_MAP[fromCode];
-    if (node.portal) return;
-
-    ['N','S','E','W','MSY','SFT','NW','NE','spire'].forEach(dir => {
-      const toCode = node[dir];
-      if (!toCode) return;
-      const edgeKey = [fromCode, toCode].sort().join('-');
-      if (processed.has(edgeKey)) return;
-      processed.add(edgeKey);
-
-      const toCoords = NODE_COORDS[toCode];
-      if (!toCoords) return;
-
-      const r1 = fromCoords.r, c1 = fromCoords.c;
-      const r2 = toCoords.r,   c2 = toCoords.c;
-      if (Math.abs(r1 - r2) + Math.abs(c1 - c2) <= 1) return;
-
-      // Prefer H-first; switch to V-first if H-corner lands on an existing node
-      let first = 'H';
-      if (r1 !== r2 && c1 !== c2 && nodeSet.has(r1 + ',' + c2) && !nodeSet.has(r2 + ',' + c1))
-        first = 'V';
-
-      const terrain  = _corridorTerrain(fromCode, toCode);
-      _routeSegments(r1, c1, r2, c2, first).forEach(seg => {
-        const key = seg.r + ',' + seg.c;
-        if (nodeSet.has(key)) return; // node cells take precedence
-        if (CORRIDOR_CELLS[key]) {
-          seg.dirs.forEach(d => CORRIDOR_CELLS[key].dirs.add(d));
-          CORRIDOR_CELLS[key].glyph = _wireGlyph(CORRIDOR_CELLS[key].dirs);
-          CORRIDOR_CELLS[key].edges.push({ from: fromCode, to: toCode });
-        } else {
-          CORRIDOR_CELLS[key] = { dirs: seg.dirs, glyph: _wireGlyph(seg.dirs), terrain, edges: [{ from: fromCode, to: toCode }] };
-        }
-      });
-    });
-  });
-}
-
-/* ── Dynamic exit builder — derives N/S/E/W from NODE_COORDS proximity ──
-   Probes up to 4 cells in each cardinal direction from every node.
-   Patches NODE_MAP[code].N/S/E/W so all downstream code (storyMove,
-   _bfsPath, buildCorridorMap, _updateExitLinks) gets two-way symmetric exits
-   without any manual maintenance of the direction fields in NODE_MAP. */
-function _buildNodeExits() {
-  const coordToCode = {};
-  for (const [code, pos] of Object.entries(NODE_COORDS)) {
-    coordToCode[pos.r + ',' + pos.c] = code;
-  }
-
-  function probe(r, c, dr, dc) {
-    for (let d = 1; d <= 4; d++) {
-      const key = (r + dr * d) + ',' + (c + dc * d);
-      if (coordToCode[key]) return coordToCode[key];
-    }
-    return null;
-  }
-
-  for (const [code, pos] of Object.entries(NODE_COORDS)) {
-    const nm = NODE_MAP[code];
-    if (!nm) continue;
-    nm.N = probe(pos.r, pos.c, -1, 0);
-    nm.S = probe(pos.r, pos.c, +1, 0);
-    nm.E = probe(pos.r, pos.c,  0, +1);
-    nm.W = probe(pos.r, pos.c,  0, -1);
-  }
-}
-
-_buildNodeExits();
-buildCorridorMap();
 
 /* ── Auto-enter story mode on load ── */
 storyEnter();
@@ -43791,31 +43382,6 @@ document.getElementById('btn-inv-close').addEventListener('click', storyInventor
 document.getElementById('btn-quest').addEventListener('click', storyQuestToggle);
 document.getElementById('btn-quest-close').addEventListener('click', storyQuestToggle);
 document.getElementById('btn-vendor-close').addEventListener('click', storyVendorToggle);
-document.getElementById('btn-corridor-warp').addEventListener('click', () => {
-  if (!_corridorPendingFrom) return;
-  const f = _corridorPendingFrom, t = _corridorPendingTo, d = _corridorPendingDir;
-  _corridorPendingFrom = _corridorPendingTo = _corridorPendingDir = null;
-  document.getElementById('story-corridor-overlay').classList.remove('visible');
-  const prevHunt = S_story.huntMode;
-  S_story.huntMode = false;
-  storyCorridorTravel(f, t, d);
-  S_story.huntMode = prevHunt;
-});
-document.getElementById('btn-corridor-hunt').addEventListener('click', () => {
-  if (!_corridorPendingFrom) return;
-  const f = _corridorPendingFrom, t = _corridorPendingTo, d = _corridorPendingDir;
-  _corridorPendingFrom = _corridorPendingTo = _corridorPendingDir = null;
-  document.getElementById('story-corridor-overlay').classList.remove('visible');
-  const prevHunt = S_story.huntMode;
-  S_story.huntMode = true;
-  storyCorridorTravel(f, t, d, true); // forceEncounter=true — player explicitly chose Hunt
-  S_story.huntMode = prevHunt;
-});
-document.getElementById('btn-corridor-cancel').addEventListener('click', () => {
-  _corridorPendingFrom = _corridorPendingTo = _corridorPendingDir = null;
-  document.getElementById('story-corridor-overlay').classList.remove('visible');
-  storyMsg('Travel cancelled.');
-});
 document.getElementById('btn-sell-all').addEventListener('click', storySellAll);
 document.getElementById('btn-sell-equipment').addEventListener('click', storySellEquipment);
 document.querySelectorAll('.btn-buy-potion').forEach(btn => {
