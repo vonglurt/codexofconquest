@@ -228,11 +228,13 @@ The user pastes the diff into the game file. A future version could write direct
 
 ---
 
-## §EDITOR-01 — The Quest Creator / Generic Mission Maker (📋 PLANNED)
+## §EDITOR-01 — The Quest Creator / Generic Mission Maker (✅ IMPLEMENTED 2026-06-15)
 
 **What it is:** A form-based UI for creating, editing, and cross-referencing quest objects of any type (`side`, `skill_check`). Outputs valid JS quest object literals ready to paste into `QUEST_DB`. Eliminates the need to hand-write the boilerplate for each quest while preserving full flexibility.
 
 **Why now:** Six quest templates are proven (`§SPARK`, `§HUNT`, `§PORT`, `§WHODUNIT`, `§ALCHEMY`, `§WISDOM`). Each template has a predictable field set. The quest boilerplate is repetitive to write and error-prone (flag name typos, unmatched braces, missing `activateCond`). A form editor with type-aware field display reduces the error surface and makes new arc creation accessible without reading existing quest code.
+
+**Status:** ✅ IMPLEMENTED 2026-06-15 — "✏ Editor" tab in `worldbuilder.html`. §EDITOR-01-D (token item manager) deferred.
 
 ---
 
@@ -380,6 +382,134 @@ One-click presets that pre-fill the field set for each proven template:
 - The function serialization problem: JS functions in `onPass`, `completeFn` etc. cannot be stored as JSON. The editor stores them as **template strings** with named slots (`{{flagName}}`, `{{xpAmount}}`, `{{itemName}}`), and generates the final JS function body at export time
 - Side-by-side preview: left panel = editor form; right panel = rendered quest card as it would appear in the game's quest panel UI
 - All flag names validated against a loaded snapshot of `_S_DEFAULTS()`
+
+---
+
+## §WALK — Playable World Editor (✅ IMPLEMENTED 2026-06-15)
+
+**What it is:** A "🚶 Walk" tab in `worldbuilder.html` that lets you navigate the node graph the same way you play the game — arrow keys, D-pad, neighbor clicks — but every location you visit is directly editable. The worldbuilder becomes a playable editor: spatial navigation gives editing context that abstract table views cannot.
+
+**Why:** Editing nodes in list or form views loses the sense of where things sit relative to each other. Walking to a node gives the same spatial awareness as playing the game: you can immediately tell whether an NPC placement feels right, whether the story text reads correctly in context, and whether quest nodes are in the right neighborhood. The editor becomes inhabitable rather than merely navigable.
+
+**Status:** ✅ IMPLEMENTED 2026-06-15 — "🚶 Walk" tab in `worldbuilder.html` (~500 lines).
+
+---
+
+### §WALK-A. Layout
+
+Three-column layout mirroring the game's story panel (`#story-panel`):
+
+```
+┌──────────────────┬─────────────────────────────────┬──────────────────┐
+│  Mini-map        │  ◆ CI  BIRKA          ACT 1     │  Edit Node       │
+│  canvas          │                                  │  Label: Birka    │
+│  196 × 400 px    │  You are in BIRKA.               │  Name: urban     │
+│                  │  [urban]                         │  Act: 1          │
+│  ● blue = you    │                                  │  NPC: merchant   │
+│  ● orange = nbrs │  👤 NPC   Merchant Hans          │  Battle: ___     │
+│  · grey = other  │  ⚔  BATTLE  Rabid Monkey         │  Desc: ____      │
+│                  │  📜 QUESTS  3 quests here         │                  │
+│  click = teleport│                                  │  [PUT Node]      │
+│                  │  [↖][N][↗]  ↑N: VS — Visby      │                  │
+│                  │  [W][◆][E]  ↓S: HKG — Hkg       │  QUESTS HERE     │
+│                  │  [↙][S][↘]  ←W: —              │  quest_wis_01    │
+│                  │             →E: AN — Aarhus       │  quest_mq_01    │
+│                  │                                  │  [+ New]         │
+└──────────────────┴─────────────────────────────────┴──────────────────┘
+  Arrow keys / WASD · click mini-map to teleport · click neighbor to jump
+```
+
+---
+
+### §WALK-B. Navigation
+
+| Input | Action |
+|-------|--------|
+| Arrow keys / WASD | Move to N/S/E/W neighbor (blocked when focus is in a form field) |
+| D-pad buttons | 3×3 grid; 4 cardinal + 4 diagonal. Button lights orange when a node exists in that direction |
+| Click neighbor list | Jump to named N/S/E/W adjacent node |
+| Click mini-map dot | Teleport to any visible node (nearest dot within `SCALE × 1.5` px) |
+| Jump input + Enter | Type a node code → teleport |
+| ↩ Origin button | Teleport to the first node in `NODE_COORDS` |
+
+**Adjacency model:** uses the reverse coordinate index `"r,c" → code` built from `WBAPI.nodeCoords`. A node is a neighbor if it occupies the adjacent cell in the grid (Δr=±1, Δc=0 for N/S; Δr=0, Δc=±1 for E/W; diagonal cells for NW/NE/SW/SE). This matches the game's cell-first navigation (§CELL-01).
+
+The reverse index is rebuilt on `wbapi:loaded` and on every switch to this tab.
+
+---
+
+### §WALK-C. Mini-Map Canvas
+
+Canvas dimensions: 196 × 400 px. `SCALE = 10` px per cell. Viewport is `VIEW_C × VIEW_R` cells centered on the current node's `{r, c}` position.
+
+| Element | Style |
+|---------|-------|
+| Current node | Blue dot (r=5) + 1.5px halo ring + code label (bold, 9px) |
+| Immediate neighbors | Orange dots (r=3.5) + code labels (8px) |
+| All other nodes in viewport | Muted dark dots (r=2, `#2e3a4a`) |
+| Edges (N/S and E/W links) | Muted lines (`#253040`, 1px) — drawn for E+S directions to avoid double-drawing |
+
+**Teleport**: click registers the `(x, y)` pixel hit against all drawn node positions; the nearest node within `SCALE × 1.5` px gets selected.
+
+---
+
+### §WALK-D. Node View (Center)
+
+Mirrors the game's `#story-center` + `#story-text-box` layout:
+
+- **Node header**: code badge (yellow, monospace) + big name + act label
+- **Story text box**: shows `node.desc` if present; otherwise generates `"You are in NAME. [terrain]"` from available fields — same text the player would see
+- **Info chips**: NPC chip (purple border, click → NPCs tab), BATTLE chip (red border), QUESTS chip (blue border, click → Quests tab) — only shown when the field is populated
+- **D-pad**: 3×3 grid of buttons. Cardinal buttons show `N/S/E/W`; diagonal show arrow glyphs. Buttons with a valid neighbor get a lit blue style and a tooltip showing the target code + label. Disabled buttons (no node) are 20% opacity.
+- **Neighbor list**: text list of N/S/E/W exits with clickable node code + label
+
+---
+
+### §WALK-E. Edit Panel (Right)
+
+Inline edit form for the current node. Saves via `PUT /api/node/:code` (server must be running).
+
+| Field | Source field | Notes |
+|-------|-------------|-------|
+| Label | `node.label` | Display name |
+| Name | `node.name` | Terrain key |
+| Act | `node.act` | Integer; blank clears to null |
+| Terrain | `node.terrain` | Secondary terrain/biome label |
+| NPC | `node.npc` | NPC key |
+| Battle | `node.battle` | Monster key |
+| Desc | `node.desc` | Full prose description |
+
+- **Dirty tracking**: `input` event adds `.dirty` class (yellow border) to the changed field
+- **PUT**: sends only changed fields (compares against `WBAPI.nodeMap[code]`); merges the server response back into `WBAPI.nodeMap` and re-renders
+- **Reset**: restores all fields from `WBAPI.nodeMap` without a server call
+- **Quests section**: lists `WBAPI._questsByNode[code]` entries as clickable rows; click opens Quests tab and calls `selectQuest(id)`
+- **+ New**: jumps to ✏ Editor tab with `activateNode` pre-filled to the current node code
+
+---
+
+### §WALK-F. Cross-Tab Integration
+
+| Button / Action | Target |
+|-----------------|--------|
+| → CRUD toolbar button | Opens CRUD tab |
+| → Editor toolbar button | Opens ✏ Editor tab; pre-fills `activateNode` |
+| NPC chip | Opens NPCs tab |
+| QUESTS chip | Opens Quests tab |
+| Quest list row | Opens Quests tab + `selectQuest(id)` |
+| + New quest | Opens ✏ Editor tab; pre-fills `activateNode` |
+
+---
+
+### §WALK-G. Planned Extensions
+
+- [ ] **Node creation in-context:** click an empty cell on the mini-map → New Node form with `r,c` pre-filled; POST via `/api/node`
+- [ ] **Terrain-color mini-map dots:** color dots by terrain type (urban=blue, forest=green, sea=teal, plains=yellow, dungeon=red, etc.) using `WORLD_DB` terrain keys
+- [ ] **Quest waypoint overlay:** toggle to also highlight nodes where `waypointNode === current` in a secondary color on the mini-map
+- [ ] **Move-history breadcrumb:** track last 10 visited nodes; render a fading trail on the mini-map
+- [ ] **Act filter:** button row to grey-out nodes from other acts, reducing visual noise when working on a single act
+- [ ] **Fit-to-neighborhood zoom:** keyboard shortcut to set `SCALE` so the current node + all neighbors fill the mini-map canvas
+- [ ] **storyRender live preview:** when `node.desc` is edited and saved, re-render a game-accurate preview of what the player would see at this node (imports the game's storyRender CSS into a sandboxed iframe)
+- [ ] **Compass rose:** small N/S/E/W overlay on the canvas corner for orientation
 
 ---
 
@@ -1290,7 +1420,7 @@ Items that arise from the investigation-mode design and should feed into §ARCH-
 
 ---
 
-## §BACKLOG — Outstanding Tasks (updated 2026-06-12)
+## §BACKLOG — Outstanding Tasks (updated 2026-06-15)
 
 A consolidated register of all open work across the project. Organized by domain. Items carry a priority tier: **P1** (blocks other work or has active dependencies), **P2** (planned, sequenced), **P3** (unscheduled / speculative).
 
@@ -1311,6 +1441,8 @@ A consolidated register of all open work across the project. Organized by domain
 - [ ] **§WORLDBUILDER-01 — Visual grid editor:** Full canvas-based node map editor with node detail inspector, exit bidirectional editing, collision detection. See full spec in §WORLDBUILDER-01-A through -D. *(Depends on: §WORLDBUILDER-02 Phase 1 for cross-ref panel integration.)*
 
 - [x] **§EDITOR-01 — Quest creator UI:** Form-based quest creator with type-aware fields, flag dependency graph, storyRender block generator, template presets (8 presets), live advisory via §ARCH-02, JS export, POST Quest. "✏ Editor" tab in worldbuilder.html. §EDITOR-01-D (token item manager) deferred. *(✅ 2026-06-15)*
+
+- [x] **§WALK — Playable world editor:** "🚶 Walk" tab in worldbuilder.html. Navigate the node graph with arrow keys / WASD / D-pad / mini-map click. Left: live mini-map canvas (node dots + edges, current=blue, neighbors=orange, click=teleport). Center: game-style node view (story text box, NPC/battle/quest chips, D-pad, neighbor list). Right: inline edit form (label/name/act/terrain/npc/battle/desc, dirty tracking, PUT to server). Cross-tab links to CRUD, ✏ Editor, Quests, NPCs tabs. *(✅ 2026-06-15)*
 
 **P2 — Deferred / unscheduled:**
 
