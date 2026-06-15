@@ -6,10 +6,16 @@
 > to resume that exact increment. Each prompt assumes the previous sections are complete
 > unless the ordering note says otherwise.
 >
-> Full design spec: `plan.md §CELL` (lines 2165–2576).
-> Implementation order: 02 → 03 → 04 → 01 → 05 → 09 → 10 → 06 → 08 → 07 → 11.
+> Full design spec: `plan.md §CELL`.
+> Implementation order: 02 → 03 → 04 → 01 → 05 → 09 → 10 → **05b → 11A → 06 → 08 → 07 → 11B**.
 >
-> **Status (2026-06-14):** §CELL-02 ✅ · §CELL-03 ✅ · §CELL-04 ✅ · §CELL-01 ✅ · §CELL-05 ✅ · §CELL-09 ✅ · §CELL-10 ✅ · §CELL-06 next
+> **Status (2026-06-14):** §CELL-02 ✅ · §CELL-03 ✅ · §CELL-04 ✅ · §CELL-01 ✅ · §CELL-05 ✅ (partial — 268 zombie J-stubs remain, no r/c, inert) · §CELL-09 ✅ · §CELL-10 ✅ · §CELL-05b next (purge zombies) → §CELL-11A (remove corridor dead code + _buildNodeExits) → §CELL-06 (server BFS — URGENT: reweave-all currently broken) → §CELL-08 → §CELL-07 → §CELL-11B
+>
+> **Code-audit findings (2026-06-14):**
+> - `_buildNodeExits()` at HTML:45059 still re-populates node.N/S/E/W in memory every page load (dead weight — cellMove ignores it)
+> - Server-side snail `bfsPath` reads `nm[cur]?.[d]` → always undefined after §CELL-01 → reweave-all broken
+> - 268 zombie J-stubs: `name:"junction"`, `junction:false`, no r/c → not in CELL_GRID, unreachable
+> - `buildCellGrid()` exists in wbapi-server.js at line ~2517; `MOVES4` constant not yet added
 
 ---
 
@@ -653,89 +659,196 @@ After making changes, commit:
 
 ---
 
+## §CELL-05b — Purge Zombie Junction Stubs
+
+```
+We are converting roll2hit.com to a MUD-style cell-based navigation system.
+§CELL-05 bulk-deleted junction nodes where junction:true, but 268 J-stubs with
+junction:false and no r/c coordinates survived. They're inert (not in CELL_GRID,
+unreachable by cellMove) but should be purged before §CELL-06.
+
+Working directory: /Users/user/code/roll2hit.com
+Server: wbapi-server.js (WBAPI runs on port 1367)
+Full design spec: plan.md §CELL-05b note
+
+TASK:
+
+1. Add endpoint to wbapi-server.js near the other /api/admin/* endpoints:
+
+   if (pathname === '/api/admin/delete-junction-terrain' && method === 'POST') {
+     const body = await readBody(req);
+     const dryRun = body.dryRun !== false;
+     const nm = WBAPI.nodeMap;
+     const coords = WBAPI.nodeCoords || {};
+     const toDelete = [];
+     for (const code of Object.keys(nm)) {
+       const node = nm[code];
+       const coord = coords[code];
+       if (node.name === 'junction' && !coord?.r && !node.r) {
+         toDelete.push(code);
+       }
+     }
+     if (dryRun) return respond(res, 200, { dryRun:true, count:toDelete.length, sample:toDelete.slice(0,10) });
+     for (const code of toDelete) delete nm[code];
+     return saveAndRestart(res, 200, { deleted: toDelete.length });
+   }
+
+2. Restart server: ./wbapi-toggle.sh restart
+
+3. Dry run first:
+   curl -X POST http://localhost:1367/api/admin/delete-junction-terrain \
+     -H 'Content-Type: application/json' -d '{"dryRun":true}'
+   Expect count ~268. Review sample codes.
+
+4. Delete:
+   curl -X POST http://localhost:1367/api/admin/delete-junction-terrain \
+     -H 'Content-Type: application/json' -d '{"dryRun":false}'
+
+5. Verify:
+   curl http://localhost:1367/api/audit   # 0 errors expected
+   # Count remaining nodes — expect ~420
+   node -e "const f=require('fs').readFileSync('roll2hit-v3.html','utf8'); \
+     const m=f.match(/^\s{2}[A-Z][A-Z0-9_]{0,7}:\s*\{/gm); console.log(m?.length)"
+
+After making changes, commit:
+"§CELL-05b: purge 268 zombie J-stubs — name:junction + no r/c coordinates deleted"
+```
+
+---
+
 ## §CELL-06 — BFS and Heatmap Grid Walk Rewrite (server-side)
 
 ```
 We are converting roll2hit.com to a MUD-style cell-based navigation system.
-§CELL-02 is complete: CELL_GRID and buildCellGrid() exist in wbapi-server.js.
-§CELL-01 is complete: N/E/S/W fields are stripped from NODE_MAP.
-This increment rewrites all graph algorithms in wbapi-server.js to walk the 2D
-grid instead of the old N/E/S/W edge graph.
+§CELL-05b is complete: 268 zombie J-stubs deleted, NODE_MAP contains only 420 
+named nodes, all with r/c coordinates. No nodes have stored N/S/E/W fields 
+(stripped in §CELL-01 — confirmed: grep for N/S/E/W in NODE_MAP returns 0 hits
+on coordinated nodes). buildCellGrid() exists in wbapi-server.js at line ~2517.
+
+URGENCY: The server-side snail's bfsPath reads nm[cur]?.[d] (node.N/S/E/W).
+After §CELL-01 stripped those fields from stored HTML, bfsPath returns [] for
+every query. The reweave-all endpoint is currently broken.
 
 Working directory: /Users/user/code/roll2hit.com
-Server file: wbapi-server.js (~8500 lines)
+Server file: wbapi-server.js (~11,877 lines as of 2026-06-14)
 Full design spec: plan.md §CELL-06
 
-CONTEXT:
-wbapi-server.js has these graph-walk algorithms that use N/E/S/W edges:
-- wither-snail BFS (walks node.N/E/S/W to find reachable nodes from a hub)
-- double-snail BFS (walk1, walk2, walk3 passes — all read node[dir])
-- Heatmap generation (counts BFS traversal; outputs per-node heat scores)
-- Reachability check (/api/audit → unreachable nodes)
-- Bidirectional check (verifies A→B implies B→A — no longer meaningful)
-- Density check (already has spatial grid — §CELL-02 helper exists)
+EXACT LOCATIONS TO CHANGE (verified by grep 2026-06-14):
 
-All of these currently do:
-  for (const d of DIRS4) {          // DIRS4 = ['N','E','S','W']
-    const nxt = nm[cur]?.[d];       // reads node.N / node.E
-    if (!nxt || !nm[nxt]) continue;
-    queue.push(nxt);
-  }
-
-The new pattern uses the cell grid:
-  const MOVES = [[-1,0],[1,0],[0,1],[0,-1]];
-  const {r, c} = coords[cur];
-  for (const [dr,dc] of MOVES) {
-    const nr=r+dr, nc=c+dc;
-    const nxt = cellGrid[`${nr},${nc}`];
-    if (!nxt || !nm[nxt]) continue;  // only step to named nodes
-    if (!visited.has(nxt)) { visited.add(nxt); queue.push(nxt); }
-  }
-  // To also traverse empty cells (for heat counting), skip the nm[nxt] check
-
-TASK:
-
-1. Add a module-level buildCellGrid(nm, coords) function (may already exist from 
-   §CELL-02 task — confirm). Also add a MOVES constant:
+A. Near line 2517: buildCellGrid(nm, coords) already exists. Add MOVES4 constant
+   immediately after it:
    const MOVES4 = [[-1,0],[1,0],[0,1],[0,-1]]; // N,S,E,W grid steps
 
-2. Rewrite the wither-snail BFS walk (search for "wither-snail" or "walk1" / "walk2"):
-   Replace the DIRS4 edge walk with MOVES4 grid walk as shown above.
-   walk3 (the bridge-junction heating walk added in the last commit) is now 
-   DELETED — its entire purpose was heating junction nodes that no longer exist.
-   Remove walk3 from both wither-snail and double-snail.
+B. Lines ~4050–4060 — undirAdj build loop in /api/graph/* section:
+   REPLACE:
+     for (const [code, node] of Object.entries(nm)) {
+       for (const d of ['N','S','E','W']) {
+         const nb = node[d]; if (!nb || !nm[nb]) continue;
+         undirAdj.get(code).add(nb); undirAdj.get(nb).add(code);
+       }
+     }
+   WITH:
+     const cg = buildCellGrid(nm, WBAPI.nodeCoords);
+     const co = WBAPI.nodeCoords;
+     for (const code of Object.keys(nm)) {
+       const pos = co[code]; if (!pos) continue;
+       for (const [dr,dc] of MOVES4) {
+         const nb = cg[`${pos.r+dr},${pos.c+dc}`];
+         if (nb && nm[nb]) { undirAdj.get(code)?.add(nb); undirAdj.get(nb)?.add(code); }
+       }
+     }
 
-3. Rewrite the reachability check (/api/audit unreachable-node scan):
-   Same replacement: grid BFS from the start node, collect reachable node codes.
-   Unreachable = named nodes not reached.
+C. Lines ~4061–4070 — degree() and freeDirs() functions:
+   REPLACE degree() with:
+     function degree(code) {
+       const pos = WBAPI.nodeCoords[code]; if (!pos) return 0;
+       const cg = buildCellGrid(nm, WBAPI.nodeCoords);
+       return MOVES4.filter(([dr,dc]) => cg[`${pos.r+dr},${pos.c+dc}`] && nm[cg[`${pos.r+dr},${pos.c+dc}`]]).length;
+     }
+   REMOVE freeDirs() entirely (slot concept gone — grid has no empty direction slots).
 
-4. Remove the bidirectional check entirely. In a coordinate grid, if A is at (r,c)
-   and B is at (r-1,c), then A can go N to B and B can go S to A by definition.
-   There is no asymmetric edge to check. Delete the bidirectional audit endpoint
-   and remove it from ./api.sh.
+D. Line ~258 — GET /api/node/:code response, linkedNodes field:
+   REPLACE:
+     linkedNodes: { N:node.N||null, S:node.S||null, E:node.E||null, W:node.W||null },
+   WITH:
+     derived_exits: (() => {
+       const cg = buildCellGrid(nm, WBAPI.nodeCoords);
+       const pos = WBAPI.nodeCoords[key];
+       if (!pos) return { N:null, S:null, E:null, W:null };
+       const [N,S,E,W] = [[-1,0],[1,0],[0,1],[0,-1]].map(([dr,dc]) =>
+         cg[`${pos.r+dr},${pos.c+dc}`] || null);
+       return {N,S,E,W};
+     })(),
 
-5. Rewrite the heatmap output: instead of per-node heat scores, output a 2D grid.
-   Format: tab-separated values, one row per r, one column per c, value = heat count.
-   Named nodes show their code + heat. Empty cells show heat count only.
-   Save output to milepoints/heatmap-{timestamp}.txt as before.
+E. Line ~7196 — snail's internal bfsPath(from,to) function:
+   This BFS is inside runSnail() → PHASE 7 of reweave-all.
+   Search for: const bfsPath=(from,to)=>{
+   REPLACE the entire function body with the grid BFS:
 
-6. The density check already uses a spatial grid (added in last session). Confirm
-   it uses CELL_GRID coordinates (r,c) not edge distances — it should already be
-   correct. If it still references node edges, update to purely use r/c positions.
+   const bfsPath=(from,to)=>{
+     if(!nm[from]||!nm[to])return[];
+     if(from===to)return[from];
+     const coords=WBAPI.nodeCoords;
+     const cg=buildCellGrid(nm,coords);
+     const startPos=coords[from]; const endPos=coords[to];
+     if(!startPos||!endPos)return[];
+     const prev=new Map(); prev.set(`${startPos.r},${startPos.c}`,null);
+     const q=[startPos];
+     while(q.length){
+       const {r,c}=q.shift();
+       for(const[dr,dc]of MOVES4){
+         const nr=r+dr,nc=c+dc,k=`${nr},${nc}`;
+         if(prev.has(k)||nr<1||nc<1||nr>300||nc>300)continue;
+         prev.set(k,{r,c});
+         if(nr===endPos.r&&nc===endPos.c){
+           const path=[];let cur={r:nr,c:nc};
+           while(cur){const code=cg[`${cur.r},${cur.c}`];if(code)path.unshift(code);cur=prev.get(`${cur.r},${cur.c}`);}
+           return path;
+         }
+         q.push({r:nr,c:nc});
+       }
+     }
+     return[];
+   };
 
-7. Update /api/fix-bidirectional in api.sh to /api/grid/reachability or remove it.
-   Add new commands:
-   ./api.sh grid reachability   → lists unreachable named nodes
-   ./api.sh grid heatmap        → runs heatmap and saves to milepoints/
+F. Lines ~7294–7319 — walk3 in snail (heated junction-node traversal):
+   Search for: // Walk 3: hub → ALL named non-junction nodes
+   DELETE the entire walk3 block (from that comment through the emit for walk3 done).
+   walk3's only purpose was heating junction nodes that no longer exist.
+
+G. Lines ~2466–2476 and ~2584–2587 — bidirectional audit check and fix:
+   DELETE: the bidirectional check block in the audit pass (if (!specific || body.check === 'bidirectional'))
+   DELETE: the bidirectional entry in the fix-action handler (~line 2940)
+   In a coordinate grid, bidirectionality is structural — A→B implies B→A by geometry.
+
+H. Lines ~5087, 5165, 5325, 5359 — reweave-all degree functions:
+   These all compute: DIRS4.filter(d => nm[code]?.[d] && nm[nm[code][d]]).length
+   They are inside the reweave-all endpoint which is being deprecated.
+   Mark the entire POST /api/graph/reweave-all route with a comment at the top:
+   // §CELL-06: reweave-all deprecated — junction placement system removed.
+   // This endpoint returns 410. Grid-based content placement replaces it.
+   Then return json(res, 410, { error: 'reweave-all deprecated — cell grid requires no junction wiring. Use /api/grid/reachability to identify unreachable nodes.' });
+   Do NOT delete the function body yet — mark it with // DEAD CODE §CELL-06 for audit.
+
+TASK SUMMARY:
+1. Add MOVES4 constant after buildCellGrid() (~line 2527)
+2. Replace undirAdj build loop with CELL_GRID neighbor probe (~line 4050)
+3. Replace degree() with CELL_GRID version; remove freeDirs() (~line 4061)
+4. Replace linkedNodes with derived_exits in GET /api/node/:code (~line 258)
+5. Replace snail bfsPath with grid BFS (~line 7196)
+6. Delete walk3 from snail (~lines 7294–7319)
+7. Delete bidirectional audit check + fix handler (~lines 2466, 2584, 2940)
+8. Deprecate reweave-all with 410 response (~line 5779)
+9. Add MOVES4 constant near buildCellGrid
 
 Verify:
-   curl http://localhost:1367/api/audit  # should run without error
-   ./api.sh grid reachability            # lists unreachable nodes
-   ./api.sh grid heatmap                 # writes heatmap file
-   The heatmap file should be a 2D grid, not a node list.
+   curl http://localhost:1367/api/audit              # no bidirectional errors
+   curl http://localhost:1367/api/graph/reachability # uses grid BFS, returns 420 reachable
+   curl http://localhost:1367/api/node/CI            # derived_exits instead of linkedNodes
+   curl -X POST http://localhost:1367/api/graph/reweave-all  # returns 410
 
 After making changes, commit:
-"§CELL-06: BFS/heatmap/reachability rewritten as grid walks — edge graph removed from server"
+"§CELL-06: BFS/reachability/heatmap rewritten as grid walks — reweave-all deprecated, bidirectional removed"
 ```
 
 ---
@@ -901,89 +1014,210 @@ After making changes, commit:
 
 ---
 
-## §CELL-11 — Documentation Sync Pass
+## §CELL-11A — HTML Dead-Code Removal (corridor system cleanup)
 
 ```
 We are converting roll2hit.com to a MUD-style cell-based navigation system.
-§CELL-01 through §CELL-10 are all complete. This final increment synchronizes
+§CELL-05b is complete (zombie stubs purged). This increment removes the corridor
+system remnants still alive in roll2hit-v3.html even though cellMove never calls them.
+
+CRITICAL FINDING: _buildNodeExits() at line 45059 still runs at every page load
+and re-populates node.N/S/E/W in memory for every node that has NODE_COORDS coords.
+This is invisible to the player (cellMove uses CELL_GRID, not node[dir]) but means
+the browser's runtime NODE_MAP always has N/S/E/W present. Removing _buildNodeExits
+cleanly severs the last in-memory edge-graph artifact.
+
+Working directory: /Users/user/code/roll2hit.com
+Primary file: roll2hit-v3.html (45,495 lines as of 2026-06-14)
+Full design spec: plan.md §CELL-11 Part A
+
+CONFIRMED LOCATIONS TO REMOVE (all verified by grep 2026-06-14):
+
+1. storyMove_LEGACY function — line 37413, ~92 lines
+   Search for: function storyMove_LEGACY(dir) {
+   Delete from that line through its closing brace.
+   No UI calls this. Only reference is from _showCorridorPrompt (also being removed).
+
+2. _showCorridorPrompt function — line 44846, ~40 lines
+   Search for: function _showCorridorPrompt(fromCode, destCode, dir) {
+   Delete through closing brace.
+
+3. storyCorridorTravel function — line 44888, ~80 lines
+   Search for: function storyCorridorTravel(fromCode, destCode, dir, forceEncounter) {
+   Delete through closing brace.
+
+4. _wireGlyph function — line 44970
+   Search for: function _wireGlyph(dirs) {
+   Delete (5 lines).
+
+5. _corridorTerrain function — line 44974
+   Search for: function _corridorTerrain(fromCode, toCode) {
+   Delete (3 lines).
+
+6. _routeSegments function — line 44978, ~30 lines
+   Search for: function _routeSegments(r1, c1, r2, c2, first) {
+   Delete through closing brace.
+
+7. buildCorridorMap function — line 45009, ~40 lines
+   Search for: function buildCorridorMap() {
+   Delete through closing brace.
+
+8. _buildNodeExits function — line 45059, ~20 lines
+   Search for: function _buildNodeExits() {
+   Delete through closing brace.
+
+9. Call sites at lines 45083–45084:
+   _buildNodeExits();
+   buildCorridorMap();
+   Delete both lines.
+
+10. CORRIDOR_TERRAIN constant — line 20788, ~31 lines
+    Search for: const CORRIDOR_TERRAIN = {
+    Delete through its closing };
+
+11. CORRIDOR_CELLS constant — line 20819
+    Search for: const CORRIDOR_CELLS = {};
+    Delete the line.
+
+12. _corridorPendingFrom/To/Dir variables — lines 33162–33164
+    Search for: let _corridorPendingFrom = null;
+    Delete all three let lines.
+
+13. Corridor overlay HTML — line 4331
+    Search for: <div id="story-corridor-overlay">
+    Delete the div and all its children through its closing </div>.
+
+14. Corridor overlay CSS — line 3143
+    Search for: #story-corridor-overlay {
+    Delete that rule (2 lines).
+
+15. CORRIDOR_CELLS forEach loop in _setActivePath — line 44783
+    Search for: Object.entries(CORRIDOR_CELLS).forEach(([k, corr]) => {
+    Delete that block (~8 lines) through its closing });
+    Also delete: S_story.lastCorridorCells = cells; and const cells = []; before it.
+    Also delete: S_story.lastExitCode = fromCode; S_story.lastExitDir  = dir; only if
+    those are only used to feed the corridor cells block (check first).
+
+16. 'story-corridor-overlay' in modal reset arrays:
+    Line 35284: inside an array — remove the entry 'story-corridor-overlay'
+    Line 44767: inside another array — remove the entry 'story-corridor-overlay'
+
+VERIFY AFTER EACH DELETION:
+- The game still loads in browser (open roll2hit-v3.html, no JS errors)
+- N/S/E/W movement still works via cellMove
+- grep -c "storyMove_LEGACY\|CORRIDOR_CELLS\|story-corridor-overlay\|_buildNodeExits\|buildCorridorMap" roll2hit-v3.html
+  Should return 0.
+
+After making changes, commit:
+"§CELL-11A: remove corridor dead code — storyMove_LEGACY, buildCorridorMap, _buildNodeExits deleted"
+```
+
+---
+
+## §CELL-11B — Documentation Sync Pass
+
+```
+We are converting roll2hit.com to a MUD-style cell-based navigation system.
+§CELL-01 through §CELL-11A are all complete. This final increment synchronizes
 all markdown documentation to reflect the new cell-based architecture.
 
 Working directory: /Users/user/code/roll2hit.com
 Full design spec: plan.md §CELL-11
 
 Two-Way Sync Rule (from index.md): every item in the markdown docs traces back to
-roll2hit-v3.html. Everything in the HTML has a home doc. After this sync pass,
-verify world map consistency across maps.md, story.md, world.md.
+roll2hit-v3.html. Everything in the HTML has a home doc.
 
-TASK — Files to rewrite:
+STALE REFERENCE INVENTORY (confirmed by grep 2026-06-14):
 
-1. docs-node-network.md — FULL REWRITE. Replace all 5 existing sections with:
-   §1 Grid System (same as before but now authoritative)
-   §2 Node Types (remove junction row; keep epic, fishing, story, etc.)
-   §3 Node Record Schema (new schema without N/E/S/W; show derived_exits concept)
-   §4 Cell Movement (cellMove function design; CELL_GRID lookup; IMPASSABLE_CELLS)
-   §5 Empty Cell Traversal (_enterEmptyCell; terrain inference; encounter rates)
-   §6 MUD Session API (link to wbapi-help.md §MUD Session API)
-   §7 BFS Pathfinding (_bfsGridPath; waypoint highlighting; heatmap grid format)
+index.md:
+  Line 6:  "121 nodes" → "420 named nodes"
+  Line 16: "121 / 121" → update to actual count
+  Line 43: "121-node narrative adventure game" → "cell-based narrative adventure game"
+  Line 58: maps.md description mentions "N/E/S/W network, gate locks, corridors" → remove N/E/S/W and corridors
+  Line 94: spec-corridors.md listed as active → note as SUPERSEDED
+  Line 267: "Corridor system" row in cross-ref table → update to "Cell movement"
+  Line 307: "Node map (121 nodes)" → "Cell map (420 named nodes)"
 
-2. maps.md — Update:
-   - Header note: change "Node connections are governed by the Node Network section"
-     to "Connections are derived at runtime from grid adjacency — see docs-node-network.md"
-   - Remove the "Corridor Travel System" section if present
-   - Remove N/E/S/W columns from the full node legend table (keep Code, Node#, Terrain, Act, Grid Cell, Story Description)
-   - Add a paragraph "Cell Navigation" explaining that the player moves one cell at
-     a time via N/E/S/W, empty cells are traversable, named node cells trigger content
+TASK — in order:
 
-3. spec-corridors.md — Add at top:
-   > **⚠️ SUPERSEDED by §CELL-03.** The corridor system has been replaced by
-   > cell-based movement. This file is archived for historical reference.
+1. spec-corridors.md — Add at very top (before any other content):
+   > **⚠️ SUPERSEDED by §CELL-03 (2026-06-13).** The corridor system has been
+   > replaced by MUD-style cell-based movement. This file is archived for reference.
+   > See docs-node-network.md §4 for the current movement system.
 
-4. mechanics.md — Remove the "Corridor Travel" section. Replace with:
-   "### Cell Movement
+2. mechanics.md — grep for "Corridor" section. Remove the Corridor Travel section
+   entirely. Add in its place:
+   ### Cell Movement
    The player moves one cell at a time on the world grid. Pressing N/E/S/W steps
-   to the adjacent cell in that direction. Named locations appear at specific (r,c)
-   coordinates. Unnamed cells are open terrain where random encounters may occur.
-   Hunt Mode guarantees an encounter on every open-cell move."
+   one cell in that direction. Named locations (420 nodes) appear at specific (r,c)
+   coordinates. Unnamed cells are traversable open terrain where random encounters
+   may occur based on terrain type. Hunt Mode (toggle in the HUD) guarantees an
+   encounter on every open-cell move.
 
-5. world.md — Remove any sentence referencing junction nodes, corridor travel,
-   Time-Warp Footpath, or "highway mesh." These concepts are removed.
+3. world.md — grep for "junction", "highway mesh", "corridor", "Time-Warp".
+   Remove or rephrase each reference. Junction nodes were bulk-deleted in §CELL-05.
+   Replace "highway mesh" with "world grid". Replace corridor travel with cell movement.
 
-6. story.md — Search for junction-based directions ("follow the highway west",
-   "take the junction road south"). Rephrase as geographic directions 
-   ("travel west through the midlands", "head south into the forest").
+4. story.md — grep for "junction", "highway", "take the road", "crossroads jct".
+   Rephrase junction-based directions as geographic directions. Examples:
+   "follow the junction highway west" → "travel west"
+   "take the road junction south" → "head south"
 
-7. story-flowchart.md — Add a note at the top:
-   "Edges in this flowchart represent geographic adjacency on the world grid.
-   Connections are derived from (r,c) proximity, not stored link data.
-   See docs-node-network.md §Cell Movement for implementation."
+5. story-flowchart.md — Add note at top:
+   > Edges in this flowchart represent geographic adjacency on the world grid.
+   > Connections are derived from (r,c) proximity, not stored link data.
+   > See docs-node-network.md §4 (Cell Movement) for implementation.
 
-8. index.md — Update:
-   - "Node map (121 nodes)" → "Cell map (~449 named locations on a coordinate grid)"
-   - docs-node-network.md description: update from "adjacency, code conventions, 
-     N/E/S/W graph structure" to "cell grid architecture, MUD movement, session API"
-   - maps.md description: remove "N/E/S/W network" from description
-   - Add §CELL lab report entry when lab report is written
+6. maps.md — Update:
+   - Remove "Corridor Travel System" section if present
+   - Remove N/E/S/W columns from node legend table (keep Code, Terrain, Act, Grid Cell, Label)
+   - Update node count in header from 121 to 420
+   - Add "Cell Navigation" paragraph:
+     "The player navigates by pressing N/E/S/W. Each press moves one grid cell.
+     Named nodes appear at fixed (r,c) coordinates. Empty cells are traversable with
+     terrain-based encounter rates. Exits to named nodes are shown in the HUD."
 
-9. wbapi-help.md — Add sections:
-   "## Cell & Grid Endpoints" (from §CELL-08)
-   "## MUD Session API" (from §CELL-07)
-   Mark old "Node connections" section as removed.
+7. index.md — Update the Status line and cross-reference table:
+   - "121 nodes" → "420 named nodes"
+   - "121-node narrative adventure game" → "cell-based MUD-style narrative adventure"
+   - maps.md entry: remove "N/E/S/W network" and "corridors" from description
+   - docs-node-network.md entry: "cell grid architecture, MUD movement, BFS pathfinding"
+   - spec-corridors.md entry: add "(SUPERSEDED by §CELL-03)"
+   - Corridor system cross-ref row: "Cell movement system" → docs-node-network.md
+
+8. wbapi-help.md — Add two new sections (after §CELL-08 and §CELL-07 are done):
+   ## Cell & Grid Endpoints
+   (document GET /api/cell/:r/:c, GET /api/grid/region, GET /api/grid/reachability)
+   ## MUD Session API
+   (document POST /api/session/start, move, look, who, say, end, events)
+   Mark old "Node connections (N/S/E/W)" help section as removed.
+
+9. docs-node-network.md — Already mostly up-to-date after §CELL-09 and §CELL-10.
+   Add Section 10 update: confirm node count is accurate (420 coordinated nodes).
+   Remove any remaining "to be removed" language.
 
 10. Write lab-report-cell-map-mud-redesign.md per Lab Report Policy:
     This qualifies as a "Large redesign touching multiple systems."
-    Sections: Motivation, Design Principles, What Changed (11 sections), 
-    What Was Preserved, Non-Obvious Decisions, Performance Notes.
+    Sections:
+    - Motivation (why MUD cell grid over node-edge graph)
+    - Design Principles (one cell per move; named nodes as landmarks; empty cells traversable)
+    - What Changed (§CELL-01 through §CELL-11, one subsection each)
+    - What Was Preserved (quests, saves, NPCs, gate locks, epic battlegrounds)
+    - Non-Obvious Decisions (why _buildNodeExits survived so long; why walk3 was built then deleted)
+    - Performance Notes (buildCorridorMap removal; BFS on 300×300 grid vs 21k-node graph)
 
 After all docs are updated:
 - Run ./api.sh audit to confirm 0 errors
-- Verify the index.md status line is accurate (node count, layer count)
+- grep -r "121 nodes\|N/E/S/W network\|corridor travel\|junction nodes" docs/ *.md
+  → should return only historical lab-report references, not active docs
 - Commit:
-  "§CELL-11: doc sync — maps/docs-node-network/mechanics/world/story updated for cell system"
+  "§CELL-11B: doc sync — index/maps/mechanics/world/story/wbapi-help updated for cell system"
 - Write the lab report and commit:
-  "§CELL-11: lab-report-cell-map-mud-redesign — full redesign postmortem"
+  "§CELL-11B: lab-report-cell-map-mud-redesign — full redesign postmortem"
 ```
 
 ---
 
-*Cell redesign prompts — 11 of 11. Implementation order: 02 → 03 → 04 → 01 → 05 → 09 → 10 → 06 → 08 → 07 → 11.*
-*Full spec: plan.md §CELL (lines 2165–2576).*
+*Cell redesign prompts — revised 2026-06-14 after code audit.*
+*Order: 02 → 03 → 04 → 01 → 05 → 09 → 10 → 05b → 11A → 06 → 08 → 07 → 11B.*
+*Full spec: plan.md §CELL.*

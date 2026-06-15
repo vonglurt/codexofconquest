@@ -880,7 +880,7 @@ Validates quest definitions against bit contracts before writing to QUEST_DB. Ru
 
 - [x] Phase 1: Add `SCHEMA_VERSION`, `QuestRuntime`, `adaptLegacyQuest()` to game file (inert — no behavior change) *(✅ 2026-06-12)*
 - [x] Phase 1: Add `BIT_CONTRACTS` and `validateQuest()` to worldbuilder.html Quest Editor *(✅ 2026-06-12)*
-- [ ] Phase 2: Write §DUNGEON-01 quests in UQF v1.0 as first proof-of-concept
+- [x] Phase 2: §D01-07 "The Maintenance Plate" arc (quest_d0207_a1–a5 at HKG) migrated from NPC_DIALOGUE dead-code to QUEST_DB — now activatable via storyCheckQuests. WIS Perception DC 10 → auto WIS save → Data Wraith battle → INT Arcana DC 13 cipher → CHA Persuasion DC 12 identity reveal. Scholar King's Name Plate reward. StoryRender plate-state indicator added. *(✅ 2026-06-14)*
 - [ ] Phase 3-a: Migrate §WISDOM-01 (8 quests) — cleanest arc, well-documented
 - [ ] Phase 3-b: Migrate §SPARK-01, §SPARK-02 arcs
 - [ ] Phase 3-c: Migrate §ALCHEMY-01, §HUNT arcs
@@ -1558,13 +1558,13 @@ A consolidated register of all open work across the project. Organized by domain
 
 **P1 — Specced and ready:**
 
-- [ ] **§SPARK-01 — The Harmony Chain (5 quests):** Full spec in quest.md §SPARK-01 and plan.md §SPARK-01. Quests: `quest_spark_01–05`. Nodes: DK, MS. State flags: `smaltBefriended`, `pipMet`, `bioluminescentParasiteFound`, `whodunitSolved`, `wrenpemburyInconsistencyNoticed`, `aldousConfessed`, `harmonyChainComplete`. Token objects: Smalt's Trust, Pip's Friendship Bead, Clot's Glow, Letter of Safe Passage, Letter of True Passage (King's Writ destroyed). Inspector Aldous Wren-Pembury becomes recurring ally NPC after §SPARK-01 close. *Self-contained arc, no prerequisites beyond existing node access.*
+- [x] **§SPARK-01 — The Harmony Chain (5 quests):** IMPLEMENTED. All 5 quests in QUEST_DB, full storyRender UI at LCY + SEN nodes, all flags (smaltBefriended → pipMet → bioluminescentParasiteFound → whodunitSolved → aldousConfessed → harmonyChainComplete) and tokens complete. *(✅ 2026-06-14)*
 
 - [x] **Combined monster rename save:** commoner → "Rabid Monkey", npc_merchant → "Badger" — applied in one `node -e` session, single save. *(✅ 2026-06-12)*
 
 **P2 — Unscheduled:**
 
-- [ ] **§SPARK-01-H — Naval Extension (Deep Warmth Eel):** Non-aggressive CR 4 Deep Warmth Eel at open sea between DK and LW. Four-phase hunt (strange stillness → investigation → confrontation → escort). Resolution: escort to deeper trench, not kill. Reward: two pirate crews owe a debt, sea route unlocks. *(Depends on: §SPARK-01 complete, `harmonyChainComplete` flag set.)*
+- [x] **§SPARK-01-H — Naval Extension (Deep Warmth Eel):** IMPLEMENTED. `quest_sea_01/02/03` at NWI ("Open Water — The Warmth Calm"). Three-quest arc: strange stillness → INT DC 13 investigation → WIS DC 14 escort south into trench depth. Flags: `seaStrangenessNoticed`, `warmthEelFound`, `warmthEelEscorted`, `pirateCrew_allied`. Reward: Joint Pirate Debt Note, +400gp/xp. NWI storyRender UI shows live state. Connection to §SPARK-01 via knowledge entry ("same organism as Clot's Glow, different scale"). *(✅ 2026-06-14)*
 
 - [ ] **§WISDOM-01 — Keel thread close:** quest_wis_03 identified that Keel was protecting Baltic sea route survey data from the navigator's notes. This is a partial resolution only — Keel took the notes, their destination is unknown, the navigator is missing. A future arc (unspecced) must close this thread. Candidate: an arc at an eastern Baltic node where the survey data surfaces. *(Unspecced — requires new arc design.)*
 
@@ -2433,7 +2433,7 @@ function gridBfsPath(fromCode, toCode) {
 
 ---
 
-### §CELL-07: MUD Server — Multi-Session Architecture ⚠️ PLANNED
+### §CELL-07: MUD Server — Multi-Session Architecture ✅ COMPLETE (2026-06-14)
 
 **What changes:** `wbapi-server.js` gains a session layer. Multiple players can connect, each with their own `(r, c)` position and state. This is the multiplayer MUD layer.
 
@@ -2466,7 +2466,7 @@ POST /api/session/end      { sessionId }            → remove session
 
 ---
 
-### §CELL-08: WBAPI Cell Endpoints ⚠️ PLANNED
+### §CELL-08: WBAPI Cell Endpoints ✅ COMPLETE (2026-06-14)
 
 **What changes:** Add REST endpoints for cell-based queries. Authors and tools can ask "what's at (r, c)?" and "what are the neighbors of (r, c)?" without scanning NODE_MAP manually.
 
@@ -2540,7 +2540,7 @@ function bfsPath(fromR, fromC, toR, toC) {
 
 ---
 
-### §CELL-11: Documentation Sync Pass ⚠️ PLANNED
+### §CELL-11: Documentation Sync Pass ✅ COMPLETE (2026-06-14)
 
 Full sync of all markdown docs after §CELL-01 through §CELL-10 are complete. Also includes HTML dead-code cleanup (corridor system remnants).
 
@@ -2604,10 +2604,10 @@ Process one section per "continue." Each section is a self-contained increment t
 | 6 | §CELL-09 | §CELL-03 | Low — quest trigger is additive | ✅ 2026-06-14 |
 | 7 | §CELL-10 | §CELL-02, §CELL-04 | Low — visual only | ✅ 2026-06-14 |
 | 8 | §CELL-06 | §CELL-02 | Medium — server-side only | ✅ 2026-06-14 |
-| 9 | §CELL-08 | §CELL-06 | Low — additive endpoints | ⚠️ planned |
-| 10 | §CELL-07 | §CELL-08 | Medium — new server feature | ⚠️ planned |
-| 11A | §CELL-11 Part A | §CELL-05b | Medium — removes live startup cost (`_buildNodeExits`+`buildCorridorMap`) | ⚠️ planned |
-| 11B | §CELL-11 Part B | §CELL-06, §CELL-07, §CELL-08 | Low — docs only | ⚠️ planned |
+| 9 | §CELL-08 | §CELL-06 | Low — additive endpoints | ✅ 2026-06-14 |
+| 10 | §CELL-07 | §CELL-08 | Medium — new server feature | ✅ 2026-06-14 |
+| 11A | §CELL-11 Part A | §CELL-05b | Medium — removes live startup cost (`_buildNodeExits`+`buildCorridorMap`) | ✅ 2026-06-14 |
+| 11B | §CELL-11 Part B | §CELL-06, §CELL-07, §CELL-08 | Low — docs only | ✅ 2026-06-14 |
 
 **Parallel track:** §CELL-06 / §CELL-07 / §CELL-08 are server-only changes and can proceed independently of the client-side §CELL-05b / §CELL-11A. Recommended order: §CELL-05b → §CELL-11A → §CELL-06 → §CELL-08 → §CELL-07 → §CELL-11B.
 

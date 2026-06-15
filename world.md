@@ -207,9 +207,9 @@ See plan.md §XVII for the full Constructor's Log text, investigation site descr
 
 #### Living World: Junction Vignettes + Road Companion *(Layer 53 — ✅ Implemented)*
 
-J1–J7 junction nodes gain one first-visit NPC encounter: Tessie (J1), Old Faeron (J2), Mira (J3, Act III+), The Cartographer (J4), Wren (J5, Scholar Kings courier who stopped reading the messages), a pinned note reading *"Paid in full. —S."* (J6, Act VII+), and a child's toy with no explanation (J7). Optional `[HELP]` interaction at J1–J5 (10gp; Curse of Knowledge credit). No state flags, no quests.
+J1–J7 named roadside nodes gain one first-visit NPC encounter: Tessie (J1), Old Faeron (J2), Mira (J3, Act III+), The Cartographer (J4), Wren (J5, Scholar Kings courier who stopped reading the messages), a pinned note reading *"Paid in full. —S."* (J6, Act VII+), and a child's toy with no explanation (J7). Optional `[HELP]` interaction at J1–J5 (10gp; Curse of Knowledge credit). No state flags, no quests.
 
-**Road Companion** — one named traveler per act section (Acts II–VI) appears in the first corridor cell departing a hub node; delivers one piece of world lore, then is gone. No state tracking. See plan.md §XVIII for full dialogue and implementation spec.
+**Road Companion** — one named traveler per act section (Acts II–VI) appears in the first cell departing a hub node; delivers one piece of world lore, then is gone. No state tracking. See plan.md §XVIII for full dialogue and implementation spec.
 
 ### The Crimson Warrant (Visby)
 **What they want:** Visby to remain independent, profitable, and ungoverned by outsiders.

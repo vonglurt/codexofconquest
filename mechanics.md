@@ -644,6 +644,22 @@ Bare Hook fallback: if `equippedBait === null` and `tacklebox` is empty, predato
 
 ## Story Mode
 
+### Cell Movement (§CELL-03)
+
+Navigation is **cell-based**: pressing N/E/S/W moves the player exactly one grid cell `(r±1, c)` or `(r, c±1)` per keypress. The function `cellMove(dir)` handles all movement.
+
+**Node entry:** If the destination cell has an entry in `CELL_GRID`, the player enters that named node and `storyRender(node)` fires (quests, encounters, NPC dialogue, loot). If the destination cell is empty, `_enterEmptyCell(r, c)` fires (§CELL-04) — terrain is inferred from `_inferTerrain(r, c)` and an encounter roll is made.
+
+**Hunt Mode:** Active when `S_story.hunting === true`. Every cell move — named or empty — triggers an encounter roll against the terrain's `TERRAIN_ENCOUNTER_RATE`. Hunt mode does not require corridor travel; any cell with the target terrain qualifies.
+
+**Quest waypoints:** BFS over the cell grid (not node edges) finds the shortest path to a quest's `activateNode`. The minimap highlights this path.
+
+**Exits:** Exits from a node are derived at runtime from `CELL_GRID` adjacency — whichever of the four cardinal neighbors is occupied. They are **not stored** on the node object. `PUT /api/node/:code` rejects `N/E/S/W` field submissions; change a node's connections by moving it with `PUT /api/coords/:code`.
+
+There is no corridor dialog, no Manhattan-distance gating, and no "Hunt/Warp" overlay. The corridor travel system was removed in §CELL-05.
+
+---
+
 ### Vendor System
 
 **Available at nodes**: BA (City Fence), MQ (Vendor Mira), SF (Proprietor Dusk), IS (Oracle's Apprentice), BK (Warlord Mordus)

@@ -1381,6 +1381,56 @@ const CMD = {
     ok(`mode → ${C.bold}${r.body.mode.toUpperCase()}${C.reset}  ${C.dim}verbose=${r.body.verbose}  trace=${r.body.trace}${C.reset}`);
   },
 
+  // ── §CELL-08: cell — inspect a single grid cell ─────────────────────────────
+  // Usage: ./api.sh cell <r> <c> [neighbors]
+  async cell(pos, flags) {
+    await requireServer();
+    const [, rStr, cStr, sub] = pos;
+    if (!rStr || !cStr) die('Usage: ./api.sh cell <r> <c> [neighbors]');
+    const r = +rStr, c = +cStr;
+    if (isNaN(r) || isNaN(c)) die('r and c must be integers');
+    const endpoint = sub === 'neighbors'
+      ? `/api/cell/${r}/${c}/neighbors`
+      : `/api/cell/${r}/${c}`;
+    const resp = await request('GET', endpoint);
+    if (resp.status !== 200) { printError(resp); process.exit(1); }
+    printResult(resp.body, flags);
+  },
+
+  // ── §CELL-08: grid — query the cell grid ────────────────────────────────────
+  // Usage: ./api.sh grid <region|heatmap|reachability> [--r1=N --c1=N --r2=N --c2=N] [--hub=LHR]
+  async grid(pos, flags) {
+    await requireServer();
+    const [, sub] = pos;
+    if (!sub) die('Usage: ./api.sh grid <region|heatmap|reachability> [options]');
+    let endpoint;
+    if (sub === 'region') {
+      if (flags.r1 == null || flags.c1 == null || flags.r2 == null || flags.c2 == null)
+        die('Usage: ./api.sh grid region --r1=N --c1=N --r2=N --c2=N');
+      const qs = new URLSearchParams({ r1: flags.r1, c1: flags.c1, r2: flags.r2, c2: flags.c2 });
+      endpoint = `/api/grid/region?${qs}`;
+    } else if (sub === 'heatmap') {
+      endpoint = '/api/grid/heatmap';
+    } else if (sub === 'reachability') {
+      const qs = flags.hub ? `?hub=${encodeURIComponent(flags.hub)}` : '';
+      endpoint = `/api/grid/reachability${qs}`;
+    } else {
+      die(`Unknown grid sub-command "${sub}". Available: region, heatmap, reachability`);
+    }
+    const resp = await request('GET', endpoint);
+    if (resp.status !== 200) { printError(resp); process.exit(1); }
+    if (sub === 'reachability') {
+      const d = resp.body;
+      ok(`Hub: ${d.hub}  |  Reachable: ${d.reachable.count}/${d.total} (${d.pct}%)  |  Unreachable: ${d.unreachable.count}`);
+      if (d.unreachable.count > 0 && !flags.raw)
+        ok(`Unreachable (first 20): ${d.unreachable.codes.slice(0, 20).join(', ')}`);
+      else if (d.unreachable.count === 0)
+        ok('All cells reachable ✓');
+    } else {
+      printResult(resp.body, flags);
+    }
+  },
+
   help() { process.stdout.write(HELP + '\n'); },
 };
 
@@ -1438,8 +1488,9 @@ ${C.bold}═══════════════════════�
   §20 COORDINATE MANAGEMENT  (geo-seed  move  find-open-location)
   §21 NETWORK WIRING  (smart-connect  highway  junction  fill-gap  connect)
   §22 NETWORK HEALTH & REPAIR  (broken  reachability  junction-audit  fix-diagonal  fix-all-broken  fix-bidirectional  rip-and-connect  reweave  cluster-bridge)
-  §23 COMMON RECIPES
-  §24 SERVER LIFECYCLE
+  §23 CELL GRID QUERIES  (cell  grid region|heatmap|reachability)
+  §24 COMMON RECIPES
+  §25 SERVER LIFECYCLE
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   §1  THE COMMON CYCLE — search → inspect → edit
@@ -2364,7 +2415,40 @@ ${C.bold}═══════════════════════�
     ./api.sh import import_vie.json --timeout 15000
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
-  COMMON RECIPES
+  §23 CELL GRID QUERIES
+═══════════════════════════════════════════════════════════════════${C.reset}
+
+  Cell and grid endpoints expose the game's (r,c) coordinate system
+  without scanning NODE_MAP manually.  All are read-only (GET only).
+
+  ── cell — inspect a single grid cell ──────────────────────────
+
+  ./api.sh cell <r> <c>              # node at (r,c): code, terrain, exits
+  ./api.sh cell <r> <c> neighbors    # N/E/S/W neighbors with terrain + passable
+
+  Example:
+    ./api.sh cell 5 16
+    → { r:5, c:16, code:"CI", terrain:"city", exits:{N:"SL",E:"IN",S:null,W:null} }
+
+    ./api.sh cell 5 16 neighbors
+    → { N:{code:"SL",terrain:"road",passable:true}, E:{…}, S:null, W:null }
+
+  ── grid — bulk cell-grid queries ──────────────────────────────
+
+  ./api.sh grid heatmap
+    → all cells with adjacency heat (0–4 occupied neighbors)
+    → sort by heat to find highly connected vs isolated nodes
+
+  ./api.sh grid reachability [--hub LHR]
+    → reachable vs unreachable cells from hub (default: LHR)
+    → same answer as ./api.sh reachability but cell-based
+
+  ./api.sh grid region --r1=0 --c1=0 --r2=10 --c2=20
+    → 2D array of cells in bounding box
+    → null = empty cell, object = { code, terrain, exits }
+
+${C.bold}═══════════════════════════════════════════════════════════════════
+  §24 COMMON RECIPES
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
   # Is the server running?

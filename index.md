@@ -3,8 +3,8 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · ~21,200 lines · 121 nodes · 378 monsters · 46 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅
-**Last updated:** 2026-06-02
+**Status:** Layers 0–104 implemented · ~21,200 lines · 419 nodes · 392 monsters · 55 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-11 ✅
+**Last updated:** 2026-06-14
 
 ### Doc Health Badge
 
@@ -40,7 +40,7 @@
 
 ## The Game in One Paragraph
 
-Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 121-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 121 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D 5e mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
+Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 419-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 121 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D 5e mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
 
 ---
 
@@ -55,13 +55,13 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `mechanics-combat.md` | Battle Mode: combat flow, 1.5 AP economy, weapons, loot, leveling, defeat screens, save system | ✅ Split 2026-05-25 |
 | `mechanics-economy.md` | Story Mode: vendor system, NPC favorability, EB, NG+, state fields, F4 function reference | ✅ Split 2026-05-25 |
 | `combat.md` | Battle engine reference: initiative, overlay, Champion features, death saves, flee | ✅ §API-02 line-verified 2026-05-25 |
-| `maps.md` | World map: 26×16 grid + extended areas, 121 node codes + coordinates, N/E/S/W network, gate locks, corridors | ✅ Updated 2026-05-28 |
+| `maps.md` | World map: cell grid + extended areas, 419 node codes + coordinates, cell-adjacency network, gate locks | ✅ Updated 2026-05-28 |
 | `story.md` | Main quest narrative: 42 story nodes across 8 acts, 7 Epic NPC profiles, prologue, endings, NG+ | ✅ 76 nodes covered |
 | `world.md` | DM manual: world history, 4 factions, 7 Epic NPC profiles, quest motivation, survival pressure | ✅ Reviewed 2026-05-24 |
 | `monsters.md` | 370 monsters: stat blocks by tier and terrain pool, 20 EB bosses, fish pool | ✅ Verified 2026-05-24 |
 | `quest.md` | Master quest register — all quests organized by location (implemented + planned) | ✅ |
 | `mechanics.md` | High-level game mechanics overview — links to mechanics-combat.md and mechanics-economy.md | ✅ |
-| `docs-node-network.md` | Node network technical reference — adjacency, code conventions, N/E/S/W graph structure | ✅ |
+| `docs-node-network.md` | Node network technical reference — cell grid, adjacency, code conventions, `cellMove` navigation | ✅ |
 | `Year1367AD.md` | Canonical year 1367 AD — historical events, source texts, quest vignettes for §1367 integration | ✅ |
 
 ### Story Arc Files
@@ -91,7 +91,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | File | Scope |
 |------|-------|
 | `spec-engine.md` | Layers 0–20 narrative engine design — all marked IMPLEMENTED |
-| `spec-corridors.md` | Layer 9 corridor system — all L9-A through L9-H ✅ |
+| `spec-corridors.md` | Layer 9 corridor system — all L9-A through L9-H ✅ — **⚠️ SUPERSEDED by §CELL-03** |
 | `spec-world.md` | WORLD_DB + MONSTER_POOL architecture — counts verified (66 terrains, 370 monsters) |
 | `spec-combat.md` | Phase 0/2 combat arena spec — historical |
 | `spec-migration.md` | Layers 0–8 IEEE migration report — all sections implemented |
@@ -178,6 +178,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 | File | Layer(s) | Topic |
 |------|---------|-------|
+| `lab-report-cell-map-mud-redesign.md` | §CELL-01–§CELL-11 | Cell map redesign — 11-section grid migration, MUD session layer, 419 nodes, dead-code removal |
 | `lab-report-plan-cleanup-v13.md` | 9–13 | Spec archive Layers 9–13 — corridor, hunt, stalk, quest engine |
 | `lab-report-plan-cleanup-v17.md` | 14–17 | Spec archive Layers 14–17 — conditions, shield, flee, 6 bug corrections |
 | `lab-report-circuit-map-theory.md` | 9 | CS theory: sparse node mesh, junction concept, TSP framing, Hunt/Warp traces |
@@ -264,7 +265,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Cooperative DM Principle** | `lab-report-drop-rates-balance-and-health.md` | `lab-report-prompt-migration-arena-to-prototype.md` |
 | **Corelli merchant** | `story.md §XXVI stub` | `lab-report-corelli-merchant.md` · `story-arc-coastal.md` |
 | **Corinth / Korath (KR)** | `story.md Layer 104a` | `lab-report-saul-paul-travel-reference.md` |
-| **Corridor system** | `maps.md` | `spec-corridors.md` · `lab-report-circuit-map-theory.md` |
+| **Cell movement system (§CELL-01–§CELL-11)** | `docs-node-network.md` | `spec-corridors.md` (archived) · `lab-report-cell-map-mud-redesign.md` · `lab-report-circuit-map-theory.md` |
 | **Curse score / Covenant Standing** | `story.md` | `lab-report-endings-and-echoes.md` · `lab-report-architecture-full.md` |
 | **Daggers (offhand)** | `mechanics-combat.md` | `plan.md §II` |
 | **Death saves** | `combat.md` | `lab-report-plan-cleanup-v17.md` |
@@ -304,7 +305,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **NPC dialogue system** | `story-arc-npc-dialogues.md` | `lab-report-npc-dialogue-system.md` · `lab-report-birka-beginner-arc.md` |
 | **NPC favorability** | `world.md` | `lab-report-birka-beginner-arc.md` · `plan.md §III` |
 | **NG+ system** | `story-arc-ngplus.md` | `lab-report-ng-plus-remembrance.md` · `lab-report-endings-and-echoes.md` |
-| **Node map (121 nodes)** | `maps.md` | `plan.md §II (NODE_MAP)` · `story-flowchart.md` |
+| **Cell map (419 nodes)** | `maps.md` | `plan.md §II (NODE_MAP · NODE_COORDS · CELL_GRID)` · `story-flowchart.md` · `docs-node-network.md` |
 | **Overseer (The Fog Bank / LSO)** | `world.md` · `story.md Layer 104b` | `lab-report-littoral-courts.md §III` |
 | **Pachelbel / Deacon** | `story-arc-npc-dialogues.md` | `lab-report-web-of-connections.md` |
 | **Paul's Mediterranean Journey (§LXV–§LXIX)** | `story.md Layer 104a` · `maps.md` | `lab-report-saul-paul-travel-reference.md` · `lab-report-saul-paul-vignette-spec.md` |
@@ -414,8 +415,8 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 
 ---
 
-*Last updated: 2026-06-05*
-*Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 449 nodes · 392 monsters · 1695 quests*
+*Last updated: 2026-06-14*
+*Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 419 nodes · 392 monsters · 1695 quests · cell-based navigation (§CELL-01–§CELL-11)*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---

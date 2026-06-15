@@ -277,6 +277,82 @@ echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 
 ---
 
+## Session API — MUD Multi-Player (§CELL-07)
+
+The session layer adds in-memory player state. Sessions are ephemeral (no disk
+persistence in Phase 1) and expire after 30 minutes of idle.
+
+### Session lifecycle
+
+```bash
+# 1. Start — spawns at LHR (City Streets — Birka)
+curl -XPOST http://localhost:1367/api/session/start \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"PlayerName"}'
+# → { sessionId, name, r, c, node, desc, exits, players, _hint }
+
+# 2. Look at your current cell
+curl "http://localhost:1367/api/session/look?sessionId=<id>"
+# → { r, c, node:{code,label,terrain,act}, desc, exits:{N,E,S,W}, players:[{id,name}] }
+
+# 3. Move one step in a direction
+curl -XPOST http://localhost:1367/api/session/move \
+  -H 'Content-Type: application/json' \
+  -d '{"sessionId":"<id>","dir":"N"}'
+# → 200 same as look on success; 409 if no exit in that direction
+
+# 4. Say something to players in the same cell
+curl -XPOST http://localhost:1367/api/session/say \
+  -H 'Content-Type: application/json' \
+  -d '{"sessionId":"<id>","msg":"Hello!"}'
+# → { ok, broadcast:{name,msg,r,c}, recipientCount }
+
+# 5. End the session
+curl -XPOST http://localhost:1367/api/session/end \
+  -H 'Content-Type: application/json' \
+  -d '{"sessionId":"<id>"}'
+# → { ok, ended: sessionId }
+```
+
+### Presence queries
+
+```bash
+# List all active sessions (all players, positions visible)
+curl http://localhost:1367/api/session/who
+# → { count, sessions:[{id,name,r,c,nodeCode,state,lastSeen}] }
+```
+
+### Real-time events (SSE)
+
+Subscribe to a Server-Sent Events stream for real-time updates:
+
+```bash
+curl -N "http://localhost:1367/api/session/events?sessionId=<id>"
+```
+
+Event types:
+| Event | When fired | Data |
+|---|---|---|
+| `connected` | Immediately on subscribe | `{sessionId, name, r, c}` |
+| `player_arrived` | Another player enters your cell | `{name, from:{r,c}, to:{r,c}, node}` |
+| `chat` | Someone says in your cell | `{name, sessionId, msg, r, c}` |
+
+Keepalive comments (`: keepalive`) are sent every 15 seconds to prevent proxy timeout.
+
+### Server Internals
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /api/session/start` | Create session, spawn at LHR |
+| `POST /api/session/move` | Move one cell in N/E/S/W direction |
+| `GET /api/session/look?sessionId=` | See current cell, exits, co-present players |
+| `GET /api/session/who` | All active sessions |
+| `POST /api/session/say` | Broadcast chat to same-cell players via SSE |
+| `POST /api/session/end` | Remove session, close SSE stream |
+| `GET /api/session/events?sessionId=` | SSE subscription endpoint |
+
+---
+
 ## World Construction Procedure
 
 The correct order for building or repairing the world coordinate mesh:

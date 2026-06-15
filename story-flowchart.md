@@ -5,6 +5,8 @@
 > Node codes are two-letter identifiers from `NODE_MAP` in `roll2hit-v3.html`.
 > Town hubs use bold two-letter abbreviations: **BI** Birka · **TL** Tilbury · **VS** Visby · **WM** Weimar.
 > `[dead]` = dead-end node (no exits). `──*──>` = portal/instant teleport. `[E*]` = Epic Battleground dead-end.
+>
+> **§CELL note:** Edges in this diagram represent **cell-grid adjacency** (neighboring `(r,c)` coordinates), not stored N/E/S/W fields on node objects. `cellMove(dir)` derives exits from `CELL_GRID` at runtime. Moving a node's coordinates changes its connections; stored direction fields are deprecated and rejected by the API.
 
 ---
 

@@ -1647,8 +1647,8 @@ Prerequisites: `ngPlusRun ≥ 1` + `wmFirstResearcherKnown` (from §XVI) + `entr
 
 Two texture layers added to open-world traversal. No state flags on either system.
 
-- **Junction Vignettes** (`JUNCTION_VIGNETTES`, HTML line 11145) — J1–J7 junction nodes each have one NPC on first visit: Tessie (J1), Old Faeron (J2), Mira (J3, Act III+), The Cartographer (J4), Wren (J5), empty note (J6), child's toy (J7), empty verge (RD). Optional `[HELP]` button (10gp donation). Rendered in `storyRender()` at HTML line 15608 when `node.junction` and `JUNCTION_VIGNETTES[node.code]` exist.
-- **Road Companion** (`COMPANION_LINES`, HTML line 11155) — one named traveler per act (Acts II–VI) delivers one lore line in the first corridor cell departing a hub node: Dessa (Act II, harbor ledger), Olaf (Act III, Scholar Kings lockout date), Maret (Act IV, Visby west gate), Pilgrim (Act V, MT sealed tunnel), empty road (Act VI). Rendered at HTML line 17152 when `act >= 2 && !companionActsSeen[act]`. No repeat per act.
+- **Junction Vignettes** (`JUNCTION_VIGNETTES`, HTML line 11145) — J1–J7 named roadside nodes each have one NPC on first visit: Tessie (J1), Old Faeron (J2), Mira (J3, Act III+), The Cartographer (J4), Wren (J5), empty note (J6), child's toy (J7), empty verge (RD). Optional `[HELP]` button (10gp donation). Rendered in `storyRender()` at HTML line 15608 when `JUNCTION_VIGNETTES[node.code]` exists.
+- **Road Companion** (`COMPANION_LINES`, HTML line 11155) — one named traveler per act (Acts II–VI) delivers one lore line in the first cell departing a hub node: Dessa (Act II, harbor ledger), Olaf (Act III, Scholar Kings lockout date), Maret (Act IV, Visby west gate), Pilgrim (Act V, MT sealed tunnel), empty road (Act VI). Rendered at HTML line 17152 when `act >= 2 && !companionActsSeen[act]`. No repeat per act.
 
 ---
 

@@ -442,8 +442,8 @@ Every node that should appear on the map canvas must have an entry in `NODE_COOR
 |------|-------------|
 | **Unique cell** | No two nodes may share the same `(r, c)` — `CELL_GRID` is a one-to-one mapping. |
 | **No N/S/E/W stored fields** | Direction edge fields (`N`, `S`, `E`, `W`, `SW`, `spire`) were stripped in §CELL-01. Exits are derived from grid adjacency at runtime — do not add them. |
-| **Axis alignment** | Two adjacent nodes should share the same column (N/S neighbors) or row (E/W neighbors) for minimap wire-glyph correctness. Off-axis pairs are passable but render incorrectly on the corridor minimap until §CELL-05. |
-| **No required junction intermediaries** | `cellMove` walks any gap freely — intermediate junction nodes are no longer required. They will be removed in §CELL-05. |
+| **Axis alignment** | Two adjacent nodes should share the same column (N/S neighbors) or row (E/W neighbors) for minimap wire-glyph correctness. Off-axis pairs are passable but render without connecting glyphs. |
+| **No junction intermediaries** | `cellMove` walks any gap freely — intermediate junction nodes are no longer required. The auto-generated J##### nodes were removed in §CELL-05. Named J1–J7 roadside nodes are retained as story locations. |
 
 ### Grid layout API
 
@@ -503,7 +503,7 @@ const CELL_GRID = (() => {
 
 ## CIRCUIT CORRIDORS (Layer 9) — ⚠️ SUPERSEDED for navigation
 
-> The corridor travel system (`storyCorridorTravel`, Manhattan-distance gating, Hunt/Warp overlay) is **no longer the active navigation path**. `cellMove` replaced it in §CELL-03. The corridor infrastructure remains in the HTML only for **minimap wire-glyph rendering** and will be removed in §CELL-05.
+> The corridor travel system (`storyCorridorTravel`, Manhattan-distance gating, Hunt/Warp overlay) is **no longer the active navigation path**. `cellMove` replaced it in §CELL-03. The corridor infrastructure (`storyMove_LEGACY`, `buildCorridorMap`, `_buildNodeExits`, `CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, overlay HTML/CSS) was **fully removed in §CELL-05/§CELL-11A**.
 
 `CORRIDOR_CELLS` data: key `"r,c"` → `{dirs, glyph, terrain, edges}` — used by `_renderMapGrid()` to draw wire glyphs between nodes on the minimap.
 

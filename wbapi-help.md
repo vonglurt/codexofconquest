@@ -102,6 +102,63 @@ node layout-solve.js --apply             # propagate all nodes
 
 ---
 
+---
+
+## Session API — MUD multi-player (§CELL-07)
+
+In-memory session layer. Multiple players, each with their own (r,c) position.
+Sessions expire after 30 minutes of idle.
+
+```bash
+# Start a session (spawns at LHR)
+curl -XPOST http://localhost:1367/api/session/start -d '{"name":"PlayerName"}'
+# → { sessionId, r, c, node, desc, exits, _hint }
+
+# Look at your current cell
+curl http://localhost:1367/api/session/look?sessionId=<id>
+# → { r, c, node, desc, exits, players: [{id, name}, ...] }
+
+# Move one step
+curl -XPOST http://localhost:1367/api/session/move -d '{"sessionId":"<id>","dir":"N"}'
+# → { r, c, node, desc, exits, players }  — 409 if no exit in that direction
+
+# Say something to players in the same cell
+curl -XPOST http://localhost:1367/api/session/say -d '{"sessionId":"<id>","msg":"Hello!"}'
+
+# Subscribe to real-time events (SSE)
+curl -N http://localhost:1367/api/session/events?sessionId=<id>
+# → event: connected / event: player_arrived / event: chat  (keepalive every 15s)
+
+# List all active sessions
+curl http://localhost:1367/api/session/who
+
+# End your session
+curl -XPOST http://localhost:1367/api/session/end -d '{"sessionId":"<id>"}'
+```
+
+---
+
+## Cell grid queries (§CELL-08)
+
+Exits are **derived from cell adjacency**, not stored. Use cell/grid endpoints
+to inspect the grid without scanning NODE_MAP manually.
+
+```bash
+./api.sh cell 5 16               # node at (r,c): code, terrain, exits
+./api.sh cell 5 16 neighbors     # N/E/S/W neighbor detail
+
+./api.sh grid heatmap            # all cells with adjacency heat (0–4)
+./api.sh grid reachability       # reachable vs unreachable from LHR
+./api.sh grid reachability --hub CY   # use a different hub
+./api.sh grid region --r1=0 --c1=0 --r2=10 --c2=20  # bounding box
+```
+
+**Node create/update rules (§CELL-08 enforcement):**
+- `POST /api/node` rejects N, E, S, W fields — place node at (r,c) instead
+- `PUT /api/node/:code` rejects N, E, S, W, junction fields — use `PUT /api/coords/:code`
+
+---
+
 ## Need a feature curl can do but api.sh can't?
 
 Describe the operation and request an API refactor. It will be added as a named

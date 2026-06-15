@@ -60,6 +60,35 @@ function purgeNonces() {
   for (const [t, r] of NONCES) if (r.expires < now) NONCES.delete(t);
 }
 
+// ── §CELL-07: In-memory session store + SSE broadcast ────────────────────────
+const SESSIONS    = new Map(); // sessionId → { id, playerName, r, c, nodeCode, state, lastSeen }
+const SSE_CLIENTS = new Map(); // sessionId → Response (SSE stream)
+const SESSION_TTL = 30 * 60 * 1000; // 30-minute idle timeout
+
+function sessionPrune() {
+  const now = Date.now();
+  for (const [id, s] of SESSIONS) {
+    if (now - s.lastSeen > SESSION_TTL) {
+      SESSIONS.delete(id);
+      const sse = SSE_CLIENTS.get(id);
+      if (sse) { try { sse.end(); } catch {} SSE_CLIENTS.delete(id); }
+    }
+  }
+}
+
+function sseSend(res, event, data) {
+  try { res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`); } catch {}
+}
+
+function broadcastCell(r, c, event, data, excludeId) {
+  for (const [id, s] of SESSIONS) {
+    if (s.r === r && s.c === c && id !== excludeId) {
+      const sse = SSE_CLIENTS.get(id);
+      if (sse) sseSend(sse, event, data);
+    }
+  }
+}
+
 // ── Config ──────────────────────────────────────────────────────────────────
 const PORT      = parseInt(process.env.PORT || '1367');
 const GAME_FILE = process.env.ROLL2HIT_FILE
@@ -7204,7 +7233,7 @@ async function route(req, res) {
             const{r,c}=q.shift();
             for(const[dr,dc]of MOVES4){
               const nr=r+dr,nc=c+dc,k=`${nr},${nc}`;
-              if(prev.has(k)||nr<1||nc<1||nr>300||nc>300)continue;
+              if(prev.has(k)||nr<1||nc<1||nr>500||nc>500)continue;
               prev.set(k,{r,c});
               if(nr===ce.r&&nc===ce.c){
                 const path=[];let cur={r:nr,c:nc};
@@ -10289,6 +10318,346 @@ async function route(req, res) {
     return json(res, 404, { error:`Unknown admin route "${parts[1]}". Available: strip-edges, delete-junctions, delete-junction-terrain` });
   }
 
+  // ── §CELL-08: Cell + Grid endpoints ──────────────────────────────────────
+  if (parts[0] === 'cell' || parts[0] === 'grid') {
+    if (method !== 'GET') {
+      logResponse(method, url.pathname, 405, 'cell/grid endpoints are read-only');
+      return json(res, 405, { error: 'Cell and grid endpoints are read-only (GET only)' });
+    }
+    const nm     = WBAPI.nodeMap;
+    const coords = WBAPI.nodeCoords;
+    const cg     = buildCellGrid(nm, coords);
+
+    if (parts[0] === 'cell') {
+      const r = parseInt(parts[1], 10);
+      const c = parseInt(parts[2], 10);
+      if (isNaN(r) || isNaN(c)) {
+        logResponse(method, url.pathname, 400, 'r and c must be integers');
+        return json(res, 400, { error: 'Path: /api/cell/:r/:c  —  r and c must be integers' });
+      }
+      const code = cg[`${r},${c}`];
+      if (!code) {
+        logResponse(method, url.pathname, 404, `no node at (${r},${c})`);
+        return json(res, 404, { ok: false, error: `No node at (${r},${c})` });
+      }
+      const node = nm[code];
+      const exits = {};
+      for (let i = 0; i < DIR_NAMES.length; i++) {
+        exits[DIR_NAMES[i]] = cg[`${r+MOVES4[i][0]},${c+MOVES4[i][1]}`] || null;
+      }
+
+      if (parts[3] === 'neighbors') {
+        const neighbors = {};
+        for (let i = 0; i < DIR_NAMES.length; i++) {
+          const nr = r + MOVES4[i][0];
+          const nc = c + MOVES4[i][1];
+          const nbCode = cg[`${nr},${nc}`];
+          neighbors[DIR_NAMES[i]] = nbCode
+            ? { code: nbCode, r: nr, c: nc, terrain: nm[nbCode]?.name || null, label: nm[nbCode]?.label || null, passable: true }
+            : null;
+        }
+        logResponse(method, url.pathname, 200, `cell (${r},${c})=${code} neighbors`);
+        return json(res, 200, { r, c, code, neighbors });
+      }
+
+      logResponse(method, url.pathname, 200, `cell (${r},${c}) = ${code}`);
+      return json(res, 200, {
+        r, c, code,
+        terrain: node?.name || null,
+        label:   node?.label || null,
+        act:     node?.act   || null,
+        exits,
+      });
+    }
+
+    // parts[0] === 'grid'
+    const sub = parts[1];
+
+    if (sub === 'region') {
+      const r1 = parseInt(url.searchParams.get('r1'), 10);
+      const c1 = parseInt(url.searchParams.get('c1'), 10);
+      const r2 = parseInt(url.searchParams.get('r2'), 10);
+      const c2 = parseInt(url.searchParams.get('c2'), 10);
+      if ([r1, c1, r2, c2].some(isNaN)) {
+        logResponse(method, url.pathname, 400, 'r1,c1,r2,c2 required');
+        return json(res, 400, { error: 'Query params required: r1, c1, r2, c2 (integers)', example: '/api/grid/region?r1=0&c1=0&r2=10&c2=10' });
+      }
+      const minR = Math.min(r1, r2), maxR = Math.max(r1, r2);
+      const minC = Math.min(c1, c2), maxC = Math.max(c1, c2);
+      if ((maxR - minR + 1) * (maxC - minC + 1) > 10000) {
+        logResponse(method, url.pathname, 400, 'region too large (max 10000 cells)');
+        return json(res, 400, { error: 'Region too large — max 10 000 cells. Reduce range.' });
+      }
+      const cells2d = [];
+      let nodeCount = 0;
+      for (let r = minR; r <= maxR; r++) {
+        const row = [];
+        for (let c = minC; c <= maxC; c++) {
+          const code2 = cg[`${r},${c}`];
+          if (code2) {
+            const exits2 = {};
+            for (let i = 0; i < DIR_NAMES.length; i++)
+              exits2[DIR_NAMES[i]] = cg[`${r+MOVES4[i][0]},${c+MOVES4[i][1]}`] || null;
+            row.push({ r, c, code: code2, terrain: nm[code2]?.name || null, label: nm[code2]?.label || null, exits: exits2 });
+            nodeCount++;
+          } else {
+            row.push(null);
+          }
+        }
+        cells2d.push(row);
+      }
+      logResponse(method, url.pathname, 200, `grid/region (${minR},${minC})→(${maxR},${maxC})  ${nodeCount} nodes`);
+      return json(res, 200, { r1: minR, c1: minC, r2: maxR, c2: maxC, rows: maxR - minR + 1, cols: maxC - minC + 1, nodeCount, cells: cells2d });
+    }
+
+    if (sub === 'heatmap') {
+      const cells = [];
+      for (const [key, code2] of Object.entries(cg)) {
+        const [rStr, cStr] = key.split(',');
+        const r = +rStr, c = +cStr;
+        let heat = 0;
+        for (const [dr, dc] of MOVES4) if (cg[`${r+dr},${c+dc}`]) heat++;
+        cells.push({ r, c, code: code2, terrain: nm[code2]?.name || null, heat });
+      }
+      cells.sort((a, b) => a.r - b.r || a.c - b.c);
+      logResponse(method, url.pathname, 200, `grid/heatmap  ${cells.length} cells`);
+      return json(res, 200, { count: cells.length, cells });
+    }
+
+    if (sub === 'reachability') {
+      const hub = url.searchParams.get('hub') || 'LHR';
+      if (!nm[hub]) {
+        logResponse(method, url.pathname, 400, `hub "${hub}" not in NODE_MAP`);
+        return json(res, 400, { error: `hub "${hub}" not in NODE_MAP` });
+      }
+      const hubCoord = coords[hub];
+      if (!hubCoord) {
+        logResponse(method, url.pathname, 400, `hub "${hub}" has no coordinates`);
+        return json(res, 400, { error: `hub "${hub}" has no coordinates — assign r,c via PUT /api/coords/${hub}` });
+      }
+      const visited = new Set([hub]);
+      const queue   = [hub];
+      while (queue.length) {
+        const cur     = queue.shift();
+        const coord2  = coords[cur]; if (!coord2) continue;
+        for (const [dr, dc] of MOVES4) {
+          const nb = cg[`${coord2.r+dr},${coord2.c+dc}`];
+          if (nb && !visited.has(nb)) { visited.add(nb); queue.push(nb); }
+        }
+      }
+      const all         = Object.keys(nm);
+      const reachable   = all.filter(c2 => visited.has(c2));
+      const unreachable = all.filter(c2 => !visited.has(c2));
+      const pct         = all.length ? Math.round(100 * reachable.length / all.length) : 100;
+      logResponse(method, url.pathname, 200, `grid/reachability hub=${hub} ${reachable.length}/${all.length} (${pct}%)`);
+      return json(res, 200, {
+        hub,
+        total:       all.length,
+        pct,
+        reachable:   { count: reachable.length,   codes: reachable },
+        unreachable: { count: unreachable.length,  codes: unreachable },
+      });
+    }
+
+    logResponse(method, url.pathname, 404, `unknown grid sub-route "${sub}"`);
+    return json(res, 404, { error: `Unknown grid sub-route "${sub}"`, available: ['region', 'heatmap', 'reachability'] });
+  }
+
+  // ── §CELL-07: Session / MUD endpoints ────────────────────────────────────
+  if (parts[0] === 'session') {
+    sessionPrune();
+    const sub = parts[1]; // start | move | look | who | say | end | events
+
+    // ── Shared look helper ─────────────────────────────────────────────────
+    function buildLook(s) {
+      const nm     = WBAPI.nodeMap;
+      const coords = WBAPI.nodeCoords;
+      const cg     = buildCellGrid(nm, coords);
+      const code   = cg[`${s.r},${s.c}`] || null;
+      const node   = code ? nm[code] : null;
+      const exits  = {};
+      for (let i = 0; i < DIR_NAMES.length; i++)
+        exits[DIR_NAMES[i]] = cg[`${s.r+MOVES4[i][0]},${s.c+MOVES4[i][1]}`] || null;
+      const desc = node
+        ? (node.text ? String(node.text).slice(0, 400) : `You are at ${node.label}. Terrain: ${node.name}.`)
+        : `You stand at an unmarked crossroads (${s.r},${s.c}).`;
+      const players = [];
+      for (const [id2, s2] of SESSIONS)
+        if (id2 !== s.id && s2.r === s.r && s2.c === s.c)
+          players.push({ id: id2, name: s2.playerName });
+      return {
+        r: s.r, c: s.c,
+        node: code ? { code, label: node.label, terrain: node.name, act: node.act } : null,
+        desc, exits, players,
+      };
+    }
+
+    // ── GET /api/session/who ───────────────────────────────────────────────
+    if (sub === 'who' && method === 'GET') {
+      const all = [];
+      for (const [id2, s] of SESSIONS)
+        all.push({ id: id2, name: s.playerName, r: s.r, c: s.c, nodeCode: s.nodeCode, state: s.state, lastSeen: s.lastSeen });
+      logResponse(method, url.pathname, 200, `${all.length} sessions active`);
+      return json(res, 200, { count: all.length, sessions: all });
+    }
+
+    // ── GET /api/session/look?sessionId= ──────────────────────────────────
+    if (sub === 'look' && method === 'GET') {
+      const sessionId = url.searchParams.get('sessionId');
+      if (!sessionId || !SESSIONS.has(sessionId)) {
+        logResponse(method, url.pathname, 404, 'session not found');
+        return json(res, 404, { ok: false, error: 'Session not found. Start one with POST /api/session/start' });
+      }
+      const s = SESSIONS.get(sessionId);
+      s.lastSeen = Date.now();
+      const look = buildLook(s);
+      logResponse(method, url.pathname, 200, `session look: (${s.r},${s.c}) ${look.node?.code || 'empty'}`);
+      return json(res, 200, look);
+    }
+
+    // ── GET /api/session/events?sessionId= — SSE stream ───────────────────
+    if (sub === 'events' && method === 'GET') {
+      const sessionId = url.searchParams.get('sessionId');
+      if (!sessionId || !SESSIONS.has(sessionId)) {
+        logResponse(method, url.pathname, 404, 'session not found for SSE');
+        return json(res, 404, { ok: false, error: 'Session not found. Start one with POST /api/session/start' });
+      }
+      const s = SESSIONS.get(sessionId);
+      // Close any existing SSE connection for this session
+      const prev = SSE_CLIENTS.get(sessionId);
+      if (prev) { try { prev.end(); } catch {} }
+
+      cors(res);
+      res.writeHead(200, {
+        'Content-Type':  'text/event-stream; charset=utf-8',
+        'Cache-Control': 'no-cache',
+        'Connection':    'keep-alive',
+        'X-Accel-Buffering': 'no',
+      });
+      SSE_CLIENTS.set(sessionId, res);
+      // Initial connected event
+      sseSend(res, 'connected', { sessionId, name: s.playerName, r: s.r, c: s.c });
+      // Keepalive comment every 15s
+      const keepalive = setInterval(() => {
+        try { res.write(': keepalive\n\n'); } catch { clearInterval(keepalive); }
+      }, 15000);
+      req.on('close', () => {
+        clearInterval(keepalive);
+        SSE_CLIENTS.delete(sessionId);
+        log('INFO', `SSE closed for session ${sessionId}`);
+      });
+      logResponse(method, url.pathname, 200, `SSE stream open for ${s.playerName}`);
+      return; // leave response open
+    }
+
+    // ── POST endpoints — require body ──────────────────────────────────────
+    if (method !== 'POST') {
+      logResponse(method, url.pathname, 405, `session/${sub} requires POST`);
+      return json(res, 405, { error: `POST required for /api/session/${sub}` });
+    }
+    let body;
+    try { body = await readBody(req); } catch(e) {
+      return json(res, 400, { error: 'Invalid JSON' });
+    }
+
+    // ── POST /api/session/start ────────────────────────────────────────────
+    if (sub === 'start') {
+      const playerName = (body.name || '').trim();
+      if (!playerName) {
+        logResponse(method, url.pathname, 400, 'session/start: name required');
+        return json(res, 400, { ok: false, error: 'body.name required' });
+      }
+      const hub      = 'LHR';
+      const hubCoord = WBAPI.nodeCoords[hub] || { r: 64, c: 224 };
+      const sessionId = crypto.randomBytes(16).toString('hex');
+      const hubNode   = WBAPI.nodeMap[hub];
+      const s = {
+        id:         sessionId,
+        playerName,
+        r:          hubCoord.r,
+        c:          hubCoord.c,
+        nodeCode:   hub,
+        state:      'active',
+        lastSeen:   Date.now(),
+      };
+      SESSIONS.set(sessionId, s);
+      const look = buildLook(s);
+      logRow('session', `${playerName}  ·  id:${sessionId.slice(0,8)}…  ·  spawn:(${s.r},${s.c})=${hub}`);
+      logResponse(method, url.pathname, 201, `session started for "${playerName}"`);
+      return json(res, 201, { ok: true, sessionId, name: playerName, ...look,
+        _hint: 'Subscribe to GET /api/session/events?sessionId=... for real-time events.' });
+    }
+
+    // All remaining POST routes require a valid sessionId
+    const sessionId = body.sessionId;
+    if (!sessionId || !SESSIONS.has(sessionId)) {
+      logResponse(method, url.pathname, 404, 'session not found');
+      return json(res, 404, { ok: false, error: 'Session not found or expired. Start one with POST /api/session/start' });
+    }
+    const s = SESSIONS.get(sessionId);
+    s.lastSeen = Date.now();
+
+    // ── POST /api/session/move ─────────────────────────────────────────────
+    if (sub === 'move') {
+      const dir = (body.dir || '').toUpperCase();
+      if (!DIR_NAMES.includes(dir)) {
+        logResponse(method, url.pathname, 400, `invalid dir "${dir}"`);
+        return json(res, 400, { ok: false, error: `dir must be one of: ${DIR_NAMES.join(', ')}` });
+      }
+      const cg    = buildCellGrid(WBAPI.nodeMap, WBAPI.nodeCoords);
+      const idx   = DIR_NAMES.indexOf(dir);
+      const newR  = s.r + MOVES4[idx][0];
+      const newC  = s.c + MOVES4[idx][1];
+      const newCode = cg[`${newR},${newC}`];
+      if (!newCode) {
+        logResponse(method, url.pathname, 409, `no exit to ${dir} from (${s.r},${s.c})`);
+        return json(res, 409, { ok: false, error: `No exit to ${dir} from (${s.r},${s.c})` });
+      }
+      const prevR = s.r, prevC = s.c;
+      s.r = newR; s.c = newC; s.nodeCode = newCode;
+      // Broadcast to players now in the same cell (not the mover themselves)
+      broadcastCell(newR, newC, 'player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, sessionId);
+      const look = buildLook(s);
+      logRow('move', `${s.playerName}  ·  ${dir}  →  (${newR},${newC}) ${newCode}`);
+      logResponse(method, url.pathname, 200, `session move: ${dir} → ${newCode}`);
+      return json(res, 200, { ok: true, dir, ...look });
+    }
+
+    // ── POST /api/session/say ──────────────────────────────────────────────
+    if (sub === 'say') {
+      const msg = (body.msg || body.message || '').trim();
+      if (!msg) {
+        logResponse(method, url.pathname, 400, 'session/say: msg required');
+        return json(res, 400, { ok: false, error: 'body.msg required' });
+      }
+      if (msg.length > 500) {
+        logResponse(method, url.pathname, 400, 'session/say: msg too long (max 500)');
+        return json(res, 400, { ok: false, error: 'msg too long — max 500 characters' });
+      }
+      const chatData = { name: s.playerName, sessionId, msg, r: s.r, c: s.c };
+      broadcastCell(s.r, s.c, 'chat', chatData, null); // include sender's own SSE
+      // Also fire to sender's own SSE if subscribed
+      const senderSse = SSE_CLIENTS.get(sessionId);
+      if (senderSse) sseSend(senderSse, 'chat', chatData);
+      logRow('say', `${s.playerName}  ·  "${msg.slice(0,60)}"`);
+      logResponse(method, url.pathname, 200, `session say: "${msg.slice(0,40)}"`);
+      return json(res, 200, { ok: true, broadcast: chatData, recipientCount: [...SESSIONS.values()].filter(s2 => s2.r === s.r && s2.c === s.c).length });
+    }
+
+    // ── POST /api/session/end ──────────────────────────────────────────────
+    if (sub === 'end') {
+      SESSIONS.delete(sessionId);
+      const sse = SSE_CLIENTS.get(sessionId);
+      if (sse) { try { sse.end(); } catch {} SSE_CLIENTS.delete(sessionId); }
+      logRow('ended', `session ${sessionId.slice(0,8)}…  ·  player: ${s.playerName}`);
+      logResponse(method, url.pathname, 200, `session ended for "${s.playerName}"`);
+      return json(res, 200, { ok: true, ended: sessionId });
+    }
+
+    logResponse(method, url.pathname, 404, `unknown session sub-route "${sub}"`);
+    return json(res, 404, { error: `Unknown session sub-route "${sub}"`, available: ['start', 'move', 'look', 'who', 'say', 'end', 'events'] });
+  }
+
   // ── Single entity ─────────────────────────────────────────────────────────
   const [type, rawId, action] = parts;
 
@@ -10566,6 +10935,12 @@ async function route(req, res) {
       if (WBAPI.nodeMap[code]) {
         logResponse(method, url.pathname, 409, `node "${code}" already exists`);
         return json(res, 409, { error:`Node "${code}" already exists` });
+      }
+      // §CELL-08: reject deprecated direction fields — exits are derived from cell grid adjacency
+      const _badNodeFields = ['N','E','S','W'].filter(f => f in body);
+      if (_badNodeFields.length) {
+        logResponse(method, url.pathname, 400, `node create: deprecated fields ${_badNodeFields.join(',')}`);
+        return json(res, 400, { ok:false, error:`Fields ${_badNodeFields.join(', ')} are deprecated — exits are derived from cell-grid adjacency, not stored. Place the node at (r,c) to establish connections.`, deprecated: _badNodeFields });
       }
       const entry = serializeNodeLiteral(code, body);
       const ins = insertAfterLastParsedNode(entry);
@@ -11401,6 +11776,15 @@ async function route(req, res) {
 
     logTrace('PUT', `type=${type} key=${resolvedKey} fields=${Object.keys(body).join(',')}`);
 
+    // §CELL-08: reject deprecated fields on node PUT — exits + junction are derived, not stored
+    if (type === 'node') {
+      const _badPutFields = ['N','E','S','W','junction'].filter(f => f in body);
+      if (_badPutFields.length) {
+        logResponse(method, url.pathname, 400, `node PUT: deprecated fields ${_badPutFields.join(',')}`);
+        return json(res, 400, { ok:false, error:`Fields ${_badPutFields.join(', ')} are deprecated on node PUT. Exits are derived from cell-grid adjacency — move the node with PUT /api/coords/${resolvedKey} to change its connections.`, deprecated: _badPutFields });
+      }
+    }
+
     // Auto-junction rule: if setting a directional field (N/E/S/W) on a node
     // that already has 3 connections (deg=3), automatically create a junction
     // node first so the source stays at deg=3 and the junction gets the 4th slot.
@@ -11820,6 +12204,18 @@ server.listen(PORT, '127.0.0.1', () => {
     ['POST',   '/api/audit/map/fix                   body: {} (all) or {check,code,dir,target} (one)'],
     ['GET',    '/api/layout/solve[?step=8&root=TLS]  → BFS grid layout: proposed {r,c} for every node'],
     ['POST',   '/api/layout/apply                    body: {coords:{code:{r,c},...}} → mass-update NODE_COORDS'],
+    ['GET',    '/api/cell/:r/:c                      → node at grid cell (code, terrain, exits)'],
+    ['GET',    '/api/cell/:r/:c/neighbors            → N/E/S/W neighbors of cell (code, terrain, passable)'],
+    ['GET',    '/api/grid/region?r1=&c1=&r2=&c2=    → 2D array of cells in bounding box'],
+    ['GET',    '/api/grid/heatmap                    → all cells with adjacency heat (0-4)'],
+    ['GET',    '/api/grid/reachability[?hub=LHR]     → reachable vs unreachable cells from hub'],
+    ['POST',   '/api/session/start                   body: {name} → {sessionId, r, c, node, desc, exits}'],
+    ['POST',   '/api/session/move                    body: {sessionId, dir} → {r, c, node, desc, exits, players}'],
+    ['GET',    '/api/session/look?sessionId=          → current cell + exits + co-present players'],
+    ['GET',    '/api/session/who                     → all active sessions'],
+    ['POST',   '/api/session/say                     body: {sessionId, msg} → chat broadcast'],
+    ['POST',   '/api/session/end                     body: {sessionId} → remove session'],
+    ['GET',    '/api/session/events?sessionId=        → SSE stream (player_arrived, chat)'],
     ['GET',    '/api/schema[/{type}]                → canonical field schema'],
     ['GET',    '/api/flags                          → list _S_DEFAULTS flags'],
     ['POST',   '/api/flags                          body: {name, defaultValue, comment?}'],

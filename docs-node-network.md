@@ -4,7 +4,7 @@
 
 **File:** `roll2hit-v3.html`  
 **Last updated:** 2026-06-15  
-**Node count:** 687 nodes (J##### junction nodes bulk-deleted in §CELL-05)
+**Node count:** 419 named nodes with grid coordinates (reachable via `cellMove`). The 268 zombie J-stubs with no `r,c` were purged in §CELL-05b.
 
 ---
 
@@ -49,7 +49,7 @@ const CELL_GRID = (() => {
 | Mountain pass (hunt) | 1 | MT | — | — | — |
 | Ally Cat Arc | 1 | CQ | — | — | — |
 
-> **§CELL-05 complete:** All 21,046 boilerplate junction nodes were bulk-deleted. J13 (The Western Sea Road) and WRO (Midlands Road Fork) had real narrative text and were promoted to named midlands nodes.
+> **§CELL-05 + §CELL-05b:** §CELL-05 bulk-deleted `junction:true` nodes. 268 J-stubs with `junction:false` and no `r,c` were purged in §CELL-05b. J13 (The Western Sea Road) and WRO (Midlands Road Fork) had real narrative text and were promoted to named midlands nodes.
 
 ### Act grouping
 
@@ -85,7 +85,7 @@ NodeCode: {
   sleep: <bool>,
   sleepCost: <int>,      // gp cost (0 = free)
   // Flags:
-  junction: true,        // J-nodes and RD (to be removed in §CELL-05)
+  junction: true,        // J-nodes and RD (boilerplate entries removed in §CELL-05; remaining are promoted named nodes)
   isEpicBattleground: true,
   isFishingLake: true,
   bossKey: '<str>',      // epic nodes only
