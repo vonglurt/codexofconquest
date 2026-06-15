@@ -344,7 +344,74 @@ test.describe('Exit link consistency — _updateExitLinks (§UNIFY-04)', () => {
 
 });
 
-// ── 6 — Status bar §UNIFY-03 ─────────────────────────────────────────────────
+// ── 6 — _gameWarn channel §UNIFY-10 ─────────────────────────────────────────
+//
+// Verifies that _gameWarn(msg) adds class 'game-warn' to #story-move-msg
+// (dim styling) while storyMsg() clears it (gold styling).
+//
+// Also verifies that the edge-of-world gate in cellMove routes through
+// _gameWarn, giving gate blocks the dim visual treatment.
+
+test.describe('_gameWarn channel (§UNIFY-10)', () => {
+
+  test.beforeEach(async ({ page }) => {
+    await seedAndLoad(page);
+    await dismissContinue(page);
+  });
+
+  test('_gameWarn adds game-warn class to #story-move-msg', async ({ page }) => {
+    await page.evaluate(() => _gameWarn('test gate message'));
+    const cls = await page.locator('#story-move-msg').getAttribute('class');
+    expect(cls).toContain('game-warn');
+    const txt = await page.locator('#story-move-msg').textContent();
+    expect(txt).toBe('test gate message');
+  });
+
+  test('storyMsg removes game-warn class set by a prior _gameWarn', async ({ page }) => {
+    await page.evaluate(() => {
+      _gameWarn('gate block');
+      storyMsg('narrative event');
+    });
+    const cls = await page.locator('#story-move-msg').getAttribute('class');
+    expect(cls || '').not.toContain('game-warn');
+    const txt = await page.locator('#story-move-msg').textContent();
+    expect(txt).toBe('narrative event');
+  });
+
+  test('cellMove at world edge fires _gameWarn (game-warn class applied)', async ({ page }) => {
+    // BOO is at r:47 c:223. Move N repeatedly until we reach r:1 (boundary),
+    // then one more N triggers the out-of-bounds gate.
+    // Simpler: force playerR to 1 and move N.
+    await page.evaluate(() => {
+      S_story.playerR = 1;
+      S_story.playerC = 100;
+      const orig = Math.random; Math.random = () => 1;
+      cellMove('N');  // would go to r:0 — out of bounds
+      Math.random = orig;
+    });
+    const cls = await page.locator('#story-move-msg').getAttribute('class');
+    expect(cls).toContain('game-warn');
+    const txt = await page.locator('#story-move-msg').textContent();
+    expect(txt).toBe('You reach the edge of the known world.');
+  });
+
+  test('normal cellMove clears game-warn class', async ({ page }) => {
+    // First trigger a warn, then take a valid step — storyRender clears the msg.
+    await page.evaluate(() => _gameWarn('stale warn'));
+    await page.evaluate(() => {
+      const orig = Math.random; Math.random = () => 1;
+      cellMove('S');  // BOO → LXF (named node south)
+      Math.random = orig;
+    });
+    // After arriving at LXF, storyRender runs and storyMsg is called at end,
+    // clearing game-warn. The move-msg may be set by quest msgs or cleared.
+    const cls = await page.locator('#story-move-msg').getAttribute('class');
+    expect(cls || '').not.toContain('game-warn');
+  });
+
+});
+
+// ── 7 — Status bar §UNIFY-03 ─────────────────────────────────────────────────
 //
 // Verifies storyUpdateStatus() is called AFTER storyCheckQuests() inside
 // storyRender(), so quest completion rewards (gold, hp) are visible in the

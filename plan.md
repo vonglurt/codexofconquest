@@ -2584,7 +2584,7 @@ A player moving through a story beat may see feedback in different visual positi
 
 ---
 
-### §UNIFY-10 — Error / Warning Channel (`_gameWarn`) (📋 TODO)
+### §UNIFY-10 — Error / Warning Channel (`_gameWarn`) ✅ COMPLETE (2026-06-15)
 
 **Problem:** Soft errors and player-visible warnings use at least four channels: `storyMsg()`, `console.log()`, silent `return`, and direct DOM writes. A player hitting a gate lock or an unreachable waypoint may or may not see a message depending on which path triggered.
 
@@ -2609,7 +2609,7 @@ A player moving through a story beat may see feedback in different visual positi
 | 3 | §UNIFY-03 storyUpdateStatus discipline | ✅ done | |
 | 4 | §UNIFY-01 empty cell parity | ✅ done | |
 | 5 | §UNIFY-04 exit link consistency | ✅ done | |
-| 6 | §UNIFY-10 _gameWarn channel | audit | medium — messaging |
+| 6 | §UNIFY-10 _gameWarn channel | ✅ done | |
 | 7 | §UNIFY-02 storyMsg discipline | audit + §UNIFY-10 | medium |
 | 8 | §UNIFY-09 state mutation / autosave | audit | high — save/load |
 | 9 | §UNIFY-07 quest/missionbit boundary | audit | design decision first |

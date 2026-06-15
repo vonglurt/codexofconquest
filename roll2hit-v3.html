@@ -1251,6 +1251,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   min-height: 16px; font-style: italic;
   transition: background 0.1s;
 }
+#story-move-msg.game-warn { color: var(--dim); }
 
 
 /* ── Layer 2: Inventory ─── */
@@ -30462,7 +30463,7 @@ function storyBuyShield(tier) {
   const s = SHIELD_ITEMS.find(sh => sh.tier === tier);
   if (!s) return;
   const lv = S_story.level || 1;
-  if (lv < (s.minLevel || 1)) { storyMsg('🔒 ' + s.name + ' requires Level ' + s.minLevel + '.'); return; }
+  if (lv < (s.minLevel || 1)) { _gameWarn('🔒 ' + s.name + ' requires Level ' + s.minLevel + '.'); return; }
   if (S_story.gold < s.cost) { storyMsg('💰 Not enough gold. ' + s.name + ' costs ' + s.cost + 'gp.'); return; }
   S_story.gold -= s.cost;
   S_story.inventory.push({ ...s, code:'vendor' });
@@ -34223,10 +34224,10 @@ function cellMove(dir) {
   const nc = (S_story.playerC || 0) + dc;
 
   if (nr < 1 || nc < 1 || nr > 500 || nc > 500) {
-    storyMsg('You reach the edge of the known world.'); return;
+    _gameWarn('You reach the edge of the known world.'); return;
   }
   if (IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
-    storyMsg('The sea is impassable on foot.'); return;
+    _gameWarn('The sea is impassable on foot.'); return;
   }
 
   const destCode = CELL_GRID[`${nr},${nc}`];
@@ -34234,7 +34235,7 @@ function cellMove(dir) {
   // Gate-lock checks
   if (destCode === 'TLS' && S_story.shards < 7) {
     const _urgency = (S_story.voidPressure || 0) >= 9 ? '\n\n⚠️ The Void is one day away.' : '';
-    storyMsg('🔮 The Convergence is sealed. You need all 7 Codex Shards. You have ' + S_story.shards + '/7.' + _urgency);
+    _gameWarn('🔮 The Convergence is sealed. You need all 7 Codex Shards. You have ' + S_story.shards + '/7.' + _urgency);
     return;
   }
   // §LIX–§LX: KS two-stage gate — blind days, then magistrate detention
@@ -34251,19 +34252,19 @@ function cellMove(dir) {
       return;
     }
     if (!S_story.escapedDamascus) {
-      storyMsg('The city watch is at the gate. The magistrate of Damascus has issued a detention order — the warrant authority has turned against the warrant-carrier.\n\nThe gate is watched. The wall is not. Check your active quests.');
+      _gameWarn('The city watch is at the gate. The magistrate of Damascus has issued a detention order — the warrant authority has turned against the warrant-carrier.\n\nThe gate is watched. The wall is not. Check your active quests.');
       return;
     }
   }
   // §LXIII: AO→CI2 gate — commission required before first journey departs
   if (S_story.currentCode === 'HTY' && destCode === 'CI2' && !S_story.commissionReceived) {
-    storyMsg('The journey has not yet been commissioned. Speak to Assembly Elder Joach before leaving Antioch.');
+    _gameWarn('The journey has not yet been commissioned. Speak to Assembly Elder Joach before leaving Antioch.');
     return;
   }
   // §LXI: HR→TS gate — fifteen days before Barnach releases you
   if (S_story.currentCode === 'JRS' && destCode === 'ADA' && S_story.saulConverted) {
     if (!S_story.barnachVouchedHR) {
-      storyMsg('You have not yet been vouched for. Find Barnach in Jerusalem first.');
+      _gameWarn('You have not yet been vouched for. Find Barnach in Jerusalem first.');
       return;
     }
     if (!S_story.hellenistsThreaten) {
@@ -34281,32 +34282,32 @@ function cellMove(dir) {
   }
   // §LXXII: SQ → CAN gate — Tide Gate must be opened first
   if (S_story.currentCode === 'NUE' && destCode === 'CAN' && !S_story.tideGateOpened) {
-    storyMsg('The door to the west annex is sealed. The monitoring protocol has not yet activated.');
+    _gameWarn('The door to the west annex is sealed. The monitoring protocol has not yet activated.');
     return;
   }
   // §LXX: HCA → DS0 gate — Leviathan must be defeated first
   if (S_story.currentCode === 'HCA' && destCode === 'DS0' && !((S_story.defeatedBattles||{})['HCA_BOSS'])) {
-    storyMsg('The path south does not open until the Clearing is settled. The Leviathan holds the threshold.');
+    _gameWarn('The path south does not open until the Clearing is settled. The Leviathan holds the threshold.');
     return;
   }
   // §PORT-02: HL → DF gate — kelpie must be cleared before Dunfall ford opens
   if (S_story.currentCode === 'KIR' && destCode === 'ZRH' && !((S_story.defeatedBattles||{})['KIR'])) {
-    storyMsg('The ford west of the standing stones is still closed. Clear the kelpie first — the village has its doors barred while the loch is held.');
+    _gameWarn('The ford west of the standing stones is still closed. Clear the kelpie first — the village has its doors barred while the loch is held.');
     return;
   }
   // §HUNT-02: J1 → BN gate — relay warning must be received before going north
   if (S_story.currentCode === 'WRO' && destCode === 'BNX' && !S_story.huntHook2Received) {
-    storyMsg('The relay road goes north from here. The eastern bend is two hundred paces up. There\'s something worth knowing before you go that way.');
+    _gameWarn('The relay road goes north from here. The eastern bend is two hundred paces up. There\'s something worth knowing before you go that way.');
     return;
   }
   // §HUNT-01: LN → LD gate — tracks must be read before the den is accessible
   if (S_story.currentCode === 'ALF' && destCode === 'VAW' && !S_story.lakeLairLocated) {
-    storyMsg('The shelf collapse is north of here. The path is disturbed — something has been moving through. Read the tracks before going further.');
+    _gameWarn('The shelf collapse is north of here. The path is disturbed — something has been moving through. Read the tracks before going further.');
     return;
   }
   // §LXXIII: DA2 → DA3 gate — Tide Gate must be open to descend
   if (S_story.currentCode === 'DA2' && destCode === 'DA3' && !S_story.tideGateOpened) {
-    storyMsg('The arch is sealed. Open the Gate mechanism before descending.');
+    _gameWarn('The arch is sealed. Open the Gate mechanism before descending.');
     return;
   }
 
@@ -34400,7 +34401,16 @@ function _enterEmptyCell(r, c) {
 }
 
 function storyMsg(txt) {
-  document.getElementById('story-move-msg').textContent = txt;
+  const _el = document.getElementById('story-move-msg');
+  _el.textContent = txt;
+  _el.classList.remove('game-warn');
+}
+
+// §UNIFY-10: soft-error channel — dim styling distinguishes gate blocks from narrative rewards
+function _gameWarn(msg) {
+  const _el = document.getElementById('story-move-msg');
+  _el.textContent = msg;
+  _el.classList.add('game-warn');
 }
 
 function _rollKeyEvent(id) {
@@ -41352,7 +41362,7 @@ function storyWaypoint() {
     return;
   }
   const dir = _bfsGridDir(S_story.currentCode, wp, S_story.playerR, S_story.playerC);
-  if (!dir) { storyMsg('📍 No path to waypoint found. Move manually toward ' + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '.'); return; }
+  if (!dir) { _gameWarn('📍 No path to waypoint found. Move manually toward ' + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '.'); return; }
   cellMove(dir);
 }
 
