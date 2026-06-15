@@ -9836,6 +9836,12 @@ document.addEventListener('wbapi:loaded', () => {
   }
 });
 
+// Expose internals for integration tests (getters so reassignments stay live)
+Object.defineProperty(window, 'wkRev', { get: () => wkRev, configurable: true });
+Object.defineProperty(window, 'wkCur', { get: () => wkCur, configurable: true });
+window.wkNeighbors = wkNeighbors;
+window.wkGo        = wkGo;
+
 })();
 </script>
 </body>

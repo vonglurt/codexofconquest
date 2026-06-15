@@ -3,7 +3,7 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · ~42,014 lines · 422 nodes · 392 monsters · 63 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-13 ✅ · §ARCH-02 Phase 2 ✅ · §ARCH-02 Phase 3 ✅ · §UNIFY-09 ✅
+**Status:** Layers 0–104 implemented · ~42,014 lines · 422 nodes · 392 monsters · 63 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-13 ✅ · §ARCH-02 Phases 1–5 ✅ · §EDITOR-01 ✅ · §WALK ✅ · §UNIFY-09 ✅
 **Last updated:** 2026-06-15
 
 ### Doc Health Badge
@@ -16,7 +16,7 @@
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-15 §ARCH-02 Phase 2+3: WBAPI.quests.create() + opQuestCreate UI (Phase 2); S_story.party, escort pickup/dropoff, talk_party panel (Phase 3); party added to _S_DEFAULTS(); §UNIFY-09 autosave 4-test suite; fishing rarity test fixed; lab-report-movement-by-cells.md indexed; 419→422 node count corrected in maps.md row + reverse lookup | ✅ |
+| Last sync pass | 2026-06-15 §ARCH-02 Phases 1–5 complete (operand registry, advisory, server guard, audit extension, advise CLI); §EDITOR-01 "✏ Editor" tab (type-aware quest form, 8 presets, flag graph, storyRender gen, JS export, POST, advisory); §WALK "🚶 Walk" tab (playable world editor — mini-map canvas, D-pad, arrow-key nav, in-context node edit, PUT to server, quest panel, cross-tab links); 73 Playwright integration tests for §WALK all green | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -82,7 +82,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `froberger-journal-all-entries.txt` | All 41 Froberger journal entries verbatim | ✅ Verified 41/41 (2026-05-24) |
 | `ux-first-battles.md` | First battles UX walkthrough, 10 UX fixes, wimper/flee flow | ✅ Accurate for L0–37 |
 | `5thOrgan.html` | Standalone polyphonic pipe organ synthesizer (72 oscillators, Beethoven canon) | ✅ 2026-05-24 |
-| `worldbuilder.html` | World Builder UI — 14 WBAPI anchors, live game-file editor (see wbapi-help.md) | ✅ |
+| `worldbuilder.html` | World Builder UI — 16 tabs: Map, Bestiary, Loot, NPCs, Quests, Dice Lab, CRUD, API, Audit, Stats, Endpoints, Builder, Wizard, Grid, ✏ Editor (§EDITOR-01), 🚶 Walk (§WALK) | ✅ 2026-06-15 |
 | `Saul2Paul.txt` | §FUTURE-01 reference text — Paul's journey from Acts/Pauline letters, itinerary notes | ✅ |
 | `littoral-courts-story.txt` | §SIREN-01 vignette prose — Littoral Courts story text, French register source | ✅ |
 
@@ -107,6 +107,18 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `wbapi-toggle.sh` | Shell helper — start/stop wbapi-server |
 | `wbapi-help.md` | WBAPI usage reference — endpoint list, anchor syntax, example calls |
 | `parse-nodes.js` | Standalone node parser — extracts NODE_MAP entries for external tooling |
+
+### Integration Tests (Playwright)
+
+Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI server needed).
+
+| File | Coverage | Count |
+|------|---------|-------|
+| `tests/integration/helpers.js` | Shared helpers: `seedAndLoad`, `dismissContinue`, `readStory`, `SEED_STATE` | — |
+| `tests/integration/navigation.test.js` | `cellMove`, BFS path (`_bfsGridPath`), `storyWaypoint`, empty-cell parity (§UNIFY-01), exit links (§UNIFY-04), `_gameWarn` (§UNIFY-10), `storyMsg` (§UNIFY-02), status bar (§UNIFY-03) | ~35 tests |
+| `tests/integration/fishing.test.js` | Fishing modal flow, cast/catch/XP loop, miss/recast cycle, throw-back | ~10 tests |
+| `tests/integration/autosave.spec.js` | Autosave on navigation, save-and-verify discipline (§UNIFY-09) | ~4 tests |
+| `tests/integration/worldbuilder-walk.test.js` | **§WALK** tab in worldbuilder.html — load/nav/chips/D-pad/keyboard/neighbor list/edit form/dirty tracking/quest panel/coord index/cross-tab buttons | **73 tests** |
 
 ### Version Snapshots
 
