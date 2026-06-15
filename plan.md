@@ -2408,4 +2408,213 @@ These concepts are unchanged by the cell redesign:
 
 ---
 
+## §UNIFY — Unified In-Game Experience (📋 INVESTIGATE → IMPLEMENT)
+
+**Goal:** The player should experience one coherent game, not a collection of loosely coupled panels. Two dimensions need work: (A) the visual/interaction feel across game modes, and (B) the code architecture patterns that produce those modes.
+
+**Prerequisite:** Every item below requires an audit pass before implementation. The single-file architecture means call-site counts and DOM shape must be verified before changing anything. Audit findings supersede the estimates here.
+
+**Work order:** Audit all items first (§UNIFY-A). Then implement in the sequence below — UI items first because they are independent; architecture items second because they touch save/load.
+
+---
+
+### §UNIFY-A — Audit Pass ✅ COMPLETE (2026-06-15)
+
+Before any edit, run grep sweeps across `roll2hit-v3.html` to establish ground truth:
+
+```bash
+# Call-site counts
+grep -c "storyMsg("           roll2hit-v3.html
+grep -c "storyUpdateStatus("  roll2hit-v3.html
+grep -c "_updateExitLinks("   roll2hit-v3.html
+grep -c "_itemType("          roll2hit-v3.html
+grep -c "_grantMissionBit("   roll2hit-v3.html
+grep -c "S_story\."           roll2hit-v3.html   # state mutation density
+
+# Show/hide mechanisms in use
+grep -oP '\.classList\.(add|remove|toggle)\("[^"]+"\)' roll2hit-v3.html | sort | uniq -c | sort -rn | head -30
+
+# Direct display writes
+grep -n 'style\.display' roll2hit-v3.html | wc -l
+
+# storyUpdateStatus missing after known mutators
+grep -n "S_story\.hp\s*=" roll2hit-v3.html | head -20
+grep -n "S_story\.gold\s*=" roll2hit-v3.html | head -20
+grep -n "S_story\.shards\s*=" roll2hit-v3.html | head -20
+```
+
+**Deliverable:** A findings note (can be inline in this section) that confirms or revises each item's scope estimate before work begins.
+
+---
+
+### §UNIFY-01 — Empty Cell vs Named Node Parity ✅ COMPLETE (2026-06-15)
+
+**Problem:** `_enterEmptyCell(r, c)` renders a minimal hardcoded div. Named nodes get the full `storyRender` pipeline: act badge, node header, terrain icon, story text, exit links, minimap. The gap is jarring mid-journey — the player visually leaves the game when stepping off a named node.
+
+**Target state:** Empty cells should use the same DOM skeleton as named nodes. Terrain-specific icon, a location header (`[Row r, Col c] — Forest` → `🌲 Deep Forest`), a one-line narrative stub, and exit links built identically to the named-node path. No new gameplay, just structural parity.
+
+**Implementation sketch:**
+1. Extract the named-node header/icon block from `storyRender` into a shared `_renderNodeShell(icon, title, subtitle)` helper.
+2. Call `_renderNodeShell` from both `storyRender` and `_enterEmptyCell`.
+3. Confirm `_updateExitLinks()` is called in both paths (audit first).
+
+**Skillset needed:** Read (find `_enterEmptyCell` and `storyRender` bodies), Edit, `/verify`.
+
+---
+
+### §UNIFY-02 — `storyMsg` vs Direct DOM Mutation (📋 TODO)
+
+**Problem:** Player-visible feedback arrives through at least three channels:
+- `storyMsg(text)` — writes to `#story-move-msg`
+- Direct `innerHTML` / `textContent` writes to named DOM elements
+- `console.log` / `console.warn` (invisible to player)
+
+A player moving through a story beat may see feedback in different visual positions depending on which code path triggered.
+
+**Target state:** One entry point for player-visible soft messages (`storyMsg`). DOM element writes are acceptable only for structural content (the story panel itself, the status bar). `console` stays for developer logs.
+
+**Implementation sketch:**
+1. Audit: find all direct `.innerHTML =` and `.textContent =` writes that carry player-facing narrative text (not structural panel content).
+2. For each, determine whether the content belongs in `storyMsg` or is structural.
+3. Route narrative writes through `storyMsg`; leave structural writes in place.
+
+**Skillset needed:** Bash grep, Read, Edit.
+
+---
+
+### §UNIFY-03 — `storyUpdateStatus()` Call Discipline ✅ COMPLETE (2026-06-15)
+
+**Problem:** `S_story.hp`, `S_story.gold`, `S_story.shards`, and `S_story.day` may be mutated without a subsequent `storyUpdateStatus()` call, causing the status bar to show stale values until the next render cycle.
+
+**Target state:** Every mutation path that changes a status-bar field ends with `storyUpdateStatus()`. Alternatively, `storyUpdateStatus()` is called once at the end of `cellMove()` and `storyRender()` so individual mutation sites don't need to remember.
+
+**Implementation sketch:**
+1. Audit: `grep -n "S_story\.hp\s*=" roll2hit-v3.html` — check each site for a following `storyUpdateStatus()`.
+2. If the "call at cellMove/storyRender exit" pattern is cleaner, add it there and remove redundant call sites.
+3. Add a Playwright assertion: after a battle that changes HP, the status bar DOM reflects the new value.
+
+**Skillset needed:** Bash grep, Read, Edit, Playwright test.
+
+---
+
+### §UNIFY-04 — Exit Link Rendering Consistency (📋 TODO)
+
+**Problem:** `_updateExitLinks()` may produce different button states at named nodes vs empty cells (available exits, waypoint tinting, disabled states). The exit affordance is the primary navigation UI — it must feel identical everywhere.
+
+**Target state:** `_updateExitLinks()` is the single source of exit UI truth, called from both `storyRender` and `_enterEmptyCell`. All four directions always render; unavailable directions are visually dimmed; waypoint direction is tinted green, regardless of whether the player is on a named node or an empty cell.
+
+**Implementation sketch:**
+1. Confirm `_updateExitLinks()` is called in `_enterEmptyCell` (audit — it appears to be, but verify).
+2. Check whether the function uses `S_story.currentCode` or `S_story.playerR/C` to determine exits — it should use `CELL_GRID` from current `playerR/C`, not `currentCode`, when on an empty cell.
+3. Verify waypoint tinting logic runs in both branches.
+
+**Skillset needed:** Read (find `_updateExitLinks` body), Bash grep for call sites, Edit if needed.
+
+---
+
+### §UNIFY-05 — Modal/Overlay Class Pattern (📋 TODO)
+
+**Problem:** Show/hide for different overlays likely uses a mix of `.visible`, `.active`, and direct `style.display` writes. This makes CSS animation and focus trapping inconsistent and makes the show/hide logic hard to audit.
+
+**Target state:** One pattern: `element.classList.toggle('open', bool)` (or `data-open` attribute). CSS transitions are defined once on `.modal[data-open]`. Focus is trapped in a single `trapFocus(el)` utility.
+
+**Scope note:** This is the riskiest UI change — touches every overlay. Do the audit (§UNIFY-A) first to count mechanisms and decide whether a full unification is worth the blast radius, or whether a smaller "new overlays use the pattern" rule is sufficient.
+
+**Skillset needed:** Bash grep (count mechanisms), `/frontend-design` skill for CSS, Edit, `/verify`.
+
+---
+
+### §UNIFY-06 — `ITEM_TYPES` Registry ✅ COMPLETE (2026-06-15)
+
+**Problem:** `_itemType(name)` is a regex dispatch function. The type strings `'shard'`, `'mission_bit'`, `'weapon'`, `'armor'`, etc. are implicit contracts — they appear in `_itemType`, in `storyCollectLoot`, in inventory rendering, and in quest conditions, with no single authoritative list.
+
+**Target state:** A top-level `const ITEM_TYPES = { SHARD:'shard', WEAPON:'weapon', … }` object. `_itemType` returns `ITEM_TYPES.X` values. All downstream consumers reference `ITEM_TYPES.X`, not string literals.
+
+**Implementation sketch:**
+1. Extract all distinct type strings returned by `_itemType` (audit).
+2. Define `ITEM_TYPES` near the top of the constant layer (after `ACT_NAMES`).
+3. Update `_itemType` return values and all `=== 'shard'` / `=== 'mission_bit'` comparisons to reference the registry.
+4. No behavior change — purely a naming consolidation.
+
+**Skillset needed:** Bash grep, Read, Edit.
+
+---
+
+### §UNIFY-07 — Quest vs Mission Bit Gate Boundary (📋 TODO)
+
+**Problem:** `S_story.quests[id] = 'active'|'complete'` and `_grantMissionBit`/`_takeMissionBit` both represent player-held flags that gate content, but with different APIs and no documented boundary for when to use which.
+
+**Target state:** Either (a) converge on one system, or (b) write a clear documented rule: "quests gate narrative progression; mission bits gate inventory-driven state." Whichever is chosen, the rule must be in `plan.md` and enforced in new code.
+
+**Implementation sketch:**
+1. Audit: list all `_grantMissionBit` call sites and what they unlock vs all `S_story.quests[id] = 'complete'` sites and what they unlock.
+2. Determine whether there is a functional overlap or whether they truly serve different purposes.
+3. If overlap: migrate one system to the other. If distinct: document the boundary here.
+
+**Note:** This is a design decision, not a code change, until the audit reveals the answer.
+
+**Skillset needed:** Bash grep, Read, judgment call on system boundary.
+
+---
+
+### §UNIFY-08 — `loot` String Format ✅ COMPLETE (2026-06-15)
+
+**Problem:** `node.loot = "Codex Shard #1 · Iron Sword"` is split on `" · "` and type-inferred by regex in `storyCollectLoot`. The delimiter and format are implicit — a loot entry with an unexpected character silently breaks collection.
+
+**Target state:** Either (a) a `parseLoot(str)` utility with a single definition that is the only place the `" · "` delimiter is handled and `_itemType` is called, or (b) a structured `loot: [{name, type}]` array in `NODE_MAP` (bigger migration, requires WBAPI support).
+
+**Recommended first step:** Option (a) — extract `parseLoot` without changing the data format. This makes the implicit contract explicit and gives one place to add validation later.
+
+**Skillset needed:** Read (`storyCollectLoot` body), Edit, unit test for `parseLoot`.
+
+---
+
+### §UNIFY-09 — State Mutation Discipline (📋 TODO)
+
+**Problem:** `S_story.x = y` mutations are scattered throughout the codebase. There is no guarantee that autosave (`storySave()`) fires after every meaningful mutation. A mutation that doesn't trigger a save is a data-loss risk.
+
+**Target state:** Autosave is guaranteed to fire at the end of every player action (cellMove, storyRender, combat resolution). Individual mutation sites do not need to call `storySave()`. The three entry points listed become the only autosave call sites.
+
+**Implementation sketch:**
+1. Audit: find all `storySave()` call sites. Are they in action-entry functions or scattered in helpers?
+2. If scattered: consolidate to the three action entry points and remove call sites from helpers.
+3. Add a Playwright test: set `S_story.gold = 999`, trigger a `cellMove`, reload page, confirm gold is 999 in the restored state.
+
+**Skillset needed:** Bash grep, Read, Edit, Playwright test.
+
+---
+
+### §UNIFY-10 — Error / Warning Channel (`_gameWarn`) (📋 TODO)
+
+**Problem:** Soft errors and player-visible warnings use at least four channels: `storyMsg()`, `console.log()`, silent `return`, and direct DOM writes. A player hitting a gate lock or an unreachable waypoint may or may not see a message depending on which path triggered.
+
+**Target state:** A `_gameWarn(msg)` function that routes to `storyMsg` for player-visible soft errors. `console.warn` for developer-only diagnostics. Silent `return` only for truly expected no-op conditions.
+
+**Implementation sketch:**
+1. Audit: find all `storyMsg` calls that carry error-tone text (`'No path'`, `'sealed'`, `'You cannot'`, etc.) — these are correct.
+2. Find silent `return` statements in navigation/quest code that should be player-visible.
+3. Introduce `_gameWarn(msg)` as a thin wrapper for `storyMsg` with a distinct visual style (dim text, no icon) — then route existing error-tone messages through it so they can be styled separately from narrative messages.
+
+**Skillset needed:** Bash grep, Read, Edit, `/frontend-design` for visual style.
+
+---
+
+### §UNIFY — Implementation Order
+
+| Priority | Item | Dependency | Blast radius |
+|---|---|---|---|
+| 0 | §UNIFY-A audit | none | read-only |
+| 1 | §UNIFY-06 ITEM_TYPES registry | audit | low — naming only |
+| 2 | §UNIFY-08 parseLoot utility | audit | low — one function |
+| 3 | §UNIFY-03 storyUpdateStatus discipline | ✅ done | |
+| 4 | §UNIFY-01 empty cell parity | ✅ done | |
+| 5 | §UNIFY-04 exit link consistency | audit | medium — UI |
+| 6 | §UNIFY-10 _gameWarn channel | audit | medium — messaging |
+| 7 | §UNIFY-02 storyMsg discipline | audit + §UNIFY-10 | medium |
+| 8 | §UNIFY-09 state mutation / autosave | audit | high — save/load |
+| 9 | §UNIFY-07 quest/missionbit boundary | audit | design decision first |
+| 10 | §UNIFY-05 modal class pattern | audit | high — all overlays |
+
+---
+
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
