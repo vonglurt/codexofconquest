@@ -3,7 +3,7 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · ~21,200 lines · 419 nodes · 392 monsters · 55 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-11 ✅
+**Status:** Layers 0–104 implemented · ~21,200 lines · 419 nodes · 392 monsters · 55 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-12 ✅
 **Last updated:** 2026-06-14
 
 ### Doc Health Badge
@@ -16,7 +16,7 @@
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-02 Directory scan — 8 lab reports + worldbuilder.html + WBAPI toolchain + 1367-sources/ + milepoints/ + misc docs added to index | ✅ |
+| Last sync pass | 2026-06-14 §CELL-12 added; §EDITOR-02-D + §WBAPI-01-F Phase 2 marked done; §II + §III tables moved from plan.md to index.md; Cell-First policy added to plan.md §I | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -354,6 +354,259 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 ---
 
+## Design Constants Quick Reference
+
+> Moved from `plan.md §II`. Updated 2026-06-14 — reflects §CELL-01–§CELL-12 state.
+
+| Const | Purpose |
+|---|---|
+| `NODE_MAP` | ~420 named nodes with `r,c` grid coords; no `N/S/E/W` fields (stripped §CELL-01); 268 zombie J-stubs purged by §CELL-05b |
+| `NODE_COORDS` | Grid position `{r,c}` for all nodes; used by cell renderer and minimap |
+| `CELL_GRID` | Reverse grid lookup; key `"r,c"` → node code; computed at startup from `NODE_MAP`; `getCellGrid()` in server caches it per `WBAPI.nodeMap` reference |
+| `QUEST_DB` | Quest definitions: activateNode, objectiveText, reward, completionCheck; 1695 quests |
+| `GATE_LOCKS` | 4 passage locks + shard gate; each entry: `{from, to, item, label}` |
+| `CONDITION_ITEMS` | 11 condition items: name, icon, effect, sell value |
+| `CONDITION_GOLD` | Pre-battle cost per condition (flat gold, not inventory) |
+| `CONDITION_ADV` | Adv/DIS modifier keyed by lowercase-underscore condition name |
+| `WORLD_DB` | 66 terrain entries (46 base + 20 epic); each has `monsters: []` with full stat blocks |
+| `MONSTER_POOL` | 392 monsters across 8 source pools; keyed by monster key string |
+| `MONSTER_DROPS` | Trophy drop per monster key; `{name, icon, sell}` |
+| `HUNTING_GROUNDS` | 42 terrain → `{displayName}` for stalk overlay; 20 epic terrain entries |
+| `EPIC_BOSS_POOL` | 20 deadly-tier bosses keyed by slug; AC/HP/ATK/dmg/epicDesc |
+| `EB_NPC_DIALOGUE` | 20 quest-giver NPC profiles; payment negotiation, return beat, specialItem |
+| `EB_STORY_ITEMS` | 11 special non-gold EB rewards: Forge Rune, Runic Hammer, Star Fragment, etc. |
+| `FROBERGER_JOURNAL` | 41 entries `{entryNum, nodeCode, readAloud, text}`; 10 read-aloud + 31 collectible |
+| `SWEELINCK_DIALOGUE_VARIANTS` | 5 variants keyed by curse score bracket + Birka variant if `_lubeckFriends()≥3` |
+| `BIRKA_NPC_PROFILES` | 6 Birka NPC profiles (Yael/Brynn/Quill/Pachelbel/Weckmann/Auros); key/name/occupation/node |
+| `NPC_DIALOGUES` | 6 NPCs × 4 states × 5 quotes each; cycled by visit count |
+| `POTION_TIERS` | 4 potion tiers: minor/healing/greater/superior; `{name, icon, heal, cost, sell}` |
+| `SHIELD_ITEMS` | 6 tiers: Small +1 → Legendary +5 → Ancient +6 AC; vendor-gated by minLevel |
+| `DAGGER_ITEMS` | 4 offhand daggers (drop-only): +1 Royal (Lv3) → +4 Voidsteel (Lv20) |
+| `WEAPON_ITEMS` | 70 main-hand weapons (14 base × 5 magic tiers 0–+4); `_magicTierAllowed()` gates drops |
+| `FIGHTER_FEATURES` | Fighter Champion features per level 2–20 |
+| `_ASI_TABLE` | 6-entry d6 table; each: `{name, icon, delta, desc}` |
+| `_LEVEL_GOLD_GIFT` | Gold gifted on non-ASI levels: `{2:250, 3:350, 5:500, …, 20:2500}` |
+| `_LEVEL_SHIELD_GIFT` | Magic shield gifts on milestone levels: L3 → +1 Shield, L11 → +2 Shield |
+| `XP_BY_TIER` | Legacy tier XP; kept for reference — L12+ uses `AC × maxHP` formula |
+| `BOSS_COMMANDER_AUROS` | AC22/HP300/ATK+12/3d8+6; final boss at CO node; requires Lv20 + 7 shards |
+| `VENDOR_NODES` | Set of node codes with vendor access (5 nodes: BA/MQ/SF/IS/BK) |
+| `XP_LEVELS` | 20-entry array; max 195,000 XP at L20 |
+| `LOOT_TABLE` | 20-entry d20 drop table (dead code — replaced by `_D100_TABLE`) |
+
+---
+
+## State Fields Quick Reference (S_story)
+
+> Moved from `plan.md §III`. All 194 `S_story` fields from `_S_DEFAULTS()`. Updated 2026-06-14.
+
+| Field | Type | Purpose |
+|---|---|---|
+| `S_story.hp / hpMax` | number | Player story HP |
+| `S_story.gold` | number | Current gold |
+| `S_story.day` | number | Current day (1–49) |
+| `S_story.shards` | number | Codex Shards collected (0–7) |
+| `S_story.voidPressure` | number | Void Tide counter (0–10) |
+| `S_story.xp / xpLastBattle` | number | Cumulative XP / last battle award |
+| `S_story.level` | number | Current character level (1–20) |
+| `S_story.atkBonus / acBonus` | number | Story combat modifiers |
+| `S_story.abilityScores` | object | `{str,dex,con,int,wis,cha}` — set by character creation (base `{10,10,10,8,8,8}` + point-buy); legacy-save fallback `{16,12,14,10,12,8}` |
+| `S_story.shieldTier` | string\|null | Magic shield tier granted |
+| `S_story.levelUpLog` | array | Records each level-up `{lvl, hp, asiResult, goldGift, shieldGift}` |
+| `S_story.shortRests` | number | Remaining short rest charges today (0–3) |
+| `S_story.knowledge` | array | Necklace of Knowledge beads |
+| `S_story.inventory` | array | All held items |
+| `S_story.quests` | object | Quest status map: `questId → 'active'|'done'|'failed'` |
+| `S_story.defeatedBattles` | object | nodeCode → true for completed story battles |
+| `S_story.hearthHome` | string | Transmort Scroll destination node code |
+| `S_story.checkpointNode` | string | Last inn slept at (respawn point) |
+| `S_story.battleTurn` | `'player'|'enemy'` | Initiative state for current battle |
+| `S_story.battleRound` | number | Current round number |
+| `S_story.surpriseAdvantage` | boolean | Stealth check passed — ADV on first attack |
+| `S_story.usedMainAttack` | boolean | Main action consumed this round |
+| `S_story.usedRealAttack` | boolean | A genuine weapon attack was made (gates offhand) |
+| `S_story.usedBonusAction` | boolean | Bonus action consumed this round |
+| `S_story.conditionRoundsLeft` | number | Rounds remaining on opponent condition |
+| `S_story.spellAdvantageReady` | boolean | Spell scroll ADV queued |
+| `S_story.equippedShield` | object\|null | Currently equipped shield |
+| `S_story.equippedWeapon` | object\|null | Equipped offhand dagger |
+| `S_story.equippedMainWeapon` | object\|null | Equipped main hand weapon |
+| `S_story.pendingBattle` | object\|null | Active battle descriptor |
+| `S._pendingDrop` | object\|null | Staged monster-specific drop for next victory |
+| `S.char.baseAc` | number | AC snapshot taken at battle start |
+| `S_story.surgeCharges` | number | Action Surge charges remaining (0–2) |
+| `S_story.indomitableCharges` | number | Indomitable death-save reroll charges (0–1) |
+| `S_story.tattoos` | array | Tattoo items pushed on each level-up |
+| `S_story.shortRestedAtNodes` | object | nodeCode → true; first short rest per location |
+| `S_story.sleptAtNodes` | object | nodeCode → true; first sleep per location |
+| `S_story.journalEntriesRead` | array | entryNums of FROBERGER_JOURNAL entries found |
+| `S_story.ebReturnsCompleted` | object | ebCode → true; set on EB return quest completion |
+| `S_story.ebNegotiatedPayments` | object | ebCode → gold accepted |
+| `S_story.npcFavorability` | object | npcKey → 0/1/2/3 |
+| `S_story.roughWhiskeyUsed` | boolean | true after drunk pit fight event fires |
+| `S_story.yaelEscortUsed` | boolean | true after one-time escort narration fires |
+| `S_story.pitTrainingWins` | number | CY battle wins while `quest_pit_training` active |
+| `S_story.ngPlusRun` | number | NG+ generation counter; 0 = first run |
+| `S_story.frobergerLastEntryRead` | boolean | true after player finds Journal Entry 41 |
+| `S_story.gameDay` | number | Alias for `S_story.day` |
+| `S_story.actNumber` | number | Current act (1–8); set from `NODE_MAP[code].act` at top of `storyRender()`; defaults 1 |
+| `S_story.currentCode` | string | Current node code |
+| `S_story.s8VargaWatches` | number | Varga observation count (S8 mechanic, 0–3) |
+| `S_story.archiveVisited` | boolean | Blue Shutters Archive entered |
+| `S_story.s29LineDelivered` | boolean | Auros/Froberger theory line delivered |
+| `S_story.s49BrynnDelivered` | boolean | Brynn Entry-41 reaction delivered |
+| `S_story.raisonToolsUsed` | boolean | Raison's Tools assessment used |
+| `S_story.log` | array | Navigation history — node codes pushed on each move, max 20; used by vignette delivery and farewell logic |
+| `S_story.visited` | object | nodeCode → true; first arrival |
+| `S_story.journalRead` | object | nodeCode → true; which node journals read |
+| `S_story.countedMissedInns` | object | nodeCode → true; prevents double-penalizing |
+| `S_story.missedSleeps` | number | Consecutive sleep-skips |
+| `S_story.battleDis` | number | Rounds of Disadvantage on player attacks |
+| `S_story.dropsCollected` | number | Lifetime monster drop collection count |
+| `S_story.lastCorridorCells` | array | Cell sequence from last corridor walk |
+| `S_story.lastExitDir` | string\|null | Direction string from last move |
+| `S_story.lastExitCode` | string\|null | Node code departed from in last move |
+| `S_story.battlePRoll` | number | Raw player roll value in current battle round |
+| `S_story.battleERoll` | number | Raw enemy roll value in current battle round |
+| `S_story.corpsesQuests` | array | Active corpse-loot quests |
+| `S_story.storyDeathSaves` | object | `{successes:0, failures:0, active:false}` |
+| `S_story.lastAutoSellNode` | string\|null | Node where last auto-sell triggered |
+| `S_story.waypoint` | string\|null | Active waypoint target node code |
+| `S_story.customQuestTerrain` | string\|null | Terrain for active Assassin's Guild hunt |
+| `S_story.ebReturnDone` | object | ebCode → true; player arrived at EB return node |
+| `S_story.roughWhiskeyActive` | boolean | Rough Whiskey buff currently active |
+| `S_story.slStalksWon` | number | Stalk-mode victories won |
+| `S_story.npcVisitCounts` | object | npcKey → visit count |
+| `S_story.couperiSongReceived` | boolean | Quill has played Couperin's song |
+| `S_story.bruhnsDepthsReported` | boolean | Depth report delivered to Auros |
+| `S_story.pitPerks` | array | Active pit training perks |
+| `S_story.frobergerNoteNode` | string\|null | Node code of last Froberger note found |
+| `S_story.froberger_last_note_found` | boolean | Froberger's final note found |
+| `S_story.froberger_last_note_read` | boolean | Final note opened and read |
+| `S_story.huntMode` | boolean | true while player is in active stalk/hunt mode |
+| `S_story.couperiDebtDegraded` | boolean | Quill's debt acknowledged as "just a number" |
+| `S_story.worldEventsFired` | array | One-time world event IDs that have fired |
+| `S_story.brynThirdStepFixed` | boolean | Bryn's third porch step repaired |
+| `S_story.brynFirewoodBrought` | boolean | Firewood delivered to Bryn |
+| `S_story.brynPantryRestocked` | boolean | Pantry restocked for Bryn |
+| `S_story.brynLedgerBalance` | number | Bryn's ledger debt (starts −8) |
+| `S_story.voidSignClicked` | boolean | Player has clicked the Void Sign once |
+| `S_story.brynnsJournalRead` | boolean | Bryn's hidden cabin journal read |
+| `S_story.pachelbelPaidBack` | boolean | Pachelbel's debt paid |
+| `S_story.quillQuestComplete` | boolean | Quill's main quest resolved |
+| `S_story.actThreeWeightApplied` | boolean | Act III emotional weight injected |
+| `S_story.s49SweelinckDelivered` | boolean | Sweelinck moment delivered |
+| `S_story.s54JointMomentDelivered` | boolean | Joint NPC moment delivered |
+| `S_story.s55MapLineDelivered` | boolean | Map reveal line delivered |
+| `S_story.s51NorthRoadBought` | boolean | North Road tome purchased |
+| `S_story.s51ManifoldBought` | boolean | Manifold tome purchased |
+| `S_story.s51LastStockBought` | boolean | Final shop item purchased from Leeuwenhoek |
+| `S_story.s6JointDelivered` | boolean | S6 joint NPC moment delivered |
+| `S_story.s2DaughterDelivered` | boolean | S2 daughter-mention line delivered |
+| `S_story.archiveLetterObtained` | boolean | Letter from Blue Shutters Archive obtained |
+| `S_story.archiveUndercitySurveyTaken` | boolean | Undercity survey quest accepted |
+| `S_story.undercitySurveyDelivered` | boolean | Survey report delivered |
+| `S_story.s8VargaClueUnlocked` | boolean | Varga surveillance clue revealed |
+| `S_story.s8PachelbelTold` | boolean | Pachelbel informed of Varga observations |
+| `S_story.romanceQuotesDelivered` | array | Indices of ROMANCE_QUOTES already shown; prevents repeats |
+| `S_story.npcRomanceVignetteDelivered` | object | npcKey → true; inn vignette fires once per NPC per run |
+| `S_story.nexusQuestSeen` | boolean | Nexus quest intro line delivered |
+| `S_story.nexusQ01Active` | boolean | Nexus quest 01 active |
+| `S_story.nexusQ02Complete` | boolean | Nexus quest 02 complete |
+| `S_story.creativeLiteracyToken` | boolean | Creative Literacy Token obtained |
+| `S_story.fishingQuestFlags` | object | Fishing quest completion flags by fish key |
+| `S_story.fishingBaitSatchel` | boolean | Bait Satchel item obtained |
+| `S_story.fishingYugurtFavour` | boolean | Yugurt Lake favour earned |
+| `S_story.fishingCatchLog` | array | Log of fish caught |
+| `S_story.junctionsSeen` | object | nodeCode → true; junction arrival tracking |
+| `S_story.companionActsSeen` | object | Companion act IDs that have fired |
+| `S_story.shardNotes` | array[7] | boolean per shard; true when shard origin note read |
+| `S_story.shardNotesAllRead` | boolean | All 7 shard origin notes read |
+| `S_story.voidCrackFired` | boolean | Void crack event fired (Act VII warning) |
+| `S_story.voidFracturesFired` | boolean | Void fractures event fired |
+| `S_story.voidImminentWarned` | boolean | Void imminent warning shown |
+| `S_story.void_mercy_count` | number | Times Void mercy mechanic has triggered |
+| `S_story.act8FarewellYael` | boolean | Act VIII Yael farewell scene delivered |
+| `S_story.act8FarewellBrynn` | boolean | Act VIII Brynn farewell scene delivered |
+| `S_story.act8FarewellQuill` | boolean | Act VIII Quill farewell scene delivered |
+| `S_story.act8FarewellPachelbel` | boolean | Act VIII Pachelbel farewell scene delivered |
+| `S_story.act8FarewellCrov` | boolean | Act VIII Weckmann farewell scene delivered |
+| `S_story.act8FarewellAuros` | boolean | Act VIII Bruhns farewell scene delivered |
+| `S_story.frobergerMemorialVisited` | boolean | Froberger memorial node visited |
+| `S_story.frobergerMemorialFlowers` | boolean | Flowers placed at memorial |
+| `S_story.frobergerMemorialBookSigned` | boolean | Book of remembrance signed at memorial |
+| `S_story._memorialPlayerEntry` | string\|null | Player's text entry in the memorial book |
+| `S_story.pitChampionOffered` | boolean | Pit Champion bout offered to player |
+| `S_story.pitChampionWon` | boolean | Pit Champion bout won |
+| `S_story.s54QuillBrynnDelivered` | boolean | Quill+Brynn joint scene at S54 delivered |
+| `S_story.s55SqMapLineDelivered` | boolean | SQ map reveal line at S55 delivered |
+| `S_story.brynnKeeperStoryTold` | boolean | Brynn's keeper backstory revealed |
+| `S_story.brynnLightChoiceMade` | boolean | Player made the light/dark choice in Brynn arc |
+| `S_story.brynnLightKept` | boolean | true = light choice; false = dark choice |
+| `S_story.bruhnsCoSceneDelivered` | boolean | Bruhns CO confrontation scene delivered |
+| `S_story.yaelNamedReportDelivered` | boolean | Yael named report scene delivered |
+| `S_story.catKills` | object | nodeCode → kill count; Cat Quarter arc tracking |
+| `S_story.catKingDefeated` | boolean | Cat King boss defeated |
+| `S_story.kenickieMarketUsed` | boolean | Kenickie's black market accessed |
+| `S_story.questMinusOne` | boolean | Quest -1 (Level 21 / World Creator) seen |
+| `S_story.entry42Written` | boolean | Player has written Entry 42 |
+| `S_story.entry42Text` | string | Player's text for Entry 42 |
+| `S_story.entry42Read` | boolean | Entry 42 read back after writing |
+| `S_story.ngMemoryDelivered` | object | npcKey → true; NG+ memory line delivered per NPC |
+| `S_story.nextFrobergerComplete` | boolean | NG+ Froberger arc complete |
+| `S_story.frobergerLetterFound` | boolean | Froberger's sealed letter at CO found |
+| `S_story.priorQuestMinusOne` | boolean | Quest -1 seen on a prior NG+ run |
+| `S_story.wmLowerArchiveUnlocked` | boolean | Weimar lower archive unlocked |
+| `S_story.wmDoc1Read` | boolean | Weimar archive Doc 1 read |
+| `S_story.wmDoc2Read` | boolean | Weimar archive Doc 2 read |
+| `S_story.wmDoc3Read` | boolean | Weimar archive Doc 3 read |
+| `S_story.wmDoc3Unredacted` | boolean | Doc 3 unredacted (First Researcher name revealed) |
+| `S_story.wmArchiveComplete` | boolean | Full archive sequence complete |
+| `S_story.wmSessionsDays` | array | Days on which archive sessions occurred |
+| `S_story.wmBenediktCircleComplete` | boolean | Benedikt reading circle sequence complete |
+| `S_story.wmFirstResearcherKnown` | boolean | First Researcher identity known |
+| `S_story.vaCI` | boolean | Void Archaeology mark found at CI |
+| `S_story.vaSL` | boolean | Void Archaeology mark found at SL |
+| `S_story.vaDF` | boolean | Void Archaeology mark found at DF |
+| `S_story.vaWM` | boolean | Void Archaeology mark found at WM |
+| `S_story.vaMT` | boolean | Void Archaeology mark found at MT |
+| `S_story.vaAllMarksFound` | boolean | All 5 archaeology marks found |
+| `S_story.vaLogFound` | boolean | Constructor's Log found in lower archive |
+| `S_story.vaLastWardVisited` | boolean | Last ward (sealed tunnel) visited |
+| `S_story.vaArchitectureKnown` | boolean | Full void architecture understood |
+| `S_story.tlLedgerRead` | boolean | Tilbury Harbor ledger read |
+| `S_story.tlEmbargoChallenged` | boolean | Emergency Trade Protocol 7 challenged |
+| `S_story.tlEmbargoDismissed` | boolean | Embargo dismissed or resolved |
+| `S_story.tlMissingShipSolved` | boolean | Missing ship investigation complete |
+| `S_story.vsDebtProbed` | boolean | Visby debt structure investigated |
+| `S_story.vsWeaponsFound` | boolean | Visby underground weapons cache found |
+| `S_story.vsDebtSettled` | boolean | Visby debt arc resolved |
+| `S_story.vsShamanKnown` | boolean | Void Shaman (the Warden) identified |
+| `S_story.vshamanFound` | boolean | Warden located at MT |
+| `S_story.vshamanDefeated` | boolean | Warden defeated in combat |
+| `S_story.vsShamanPersuaded` | boolean | Warden persuaded (non-combat resolution) |
+| `S_story.wardensLegacyKnown` | boolean | Warden's corrupted mandate understood |
+| `S_story.vsShamanBenediktDelivered` | boolean | Warden truth delivered via Benedikt chain |
+| `S_story.fav_corelli` | number | Corelli favorability (0–3) |
+| `S_story.corelli_purchase_count` | number | Items purchased from Corelli |
+| `S_story.corelli_encounter_count` | number | Times Corelli wandering merchant encountered |
+| `S_story.corelliRevelationDelivered` | boolean | Corelli's final revelation delivered |
+| `S_story.hour` | number | Time-of-day clock 0–23; +1 per battle, +6 per sleep |
+| `S_story.careerStats` | object | Permanent career ledger (never reset): kills, deaths, dmgDealt, dmgReceived, sleeps, battlesAttempted, attacksAttempted, attacksHit, exitsTaken, daysAdventuring |
+| `S_story.runStats` | object | Per-run ledger (reset on respawn): same 10 fields as careerStats |
+| `S_story.tackleboxZoneUnlocks` | object | `{shore:true, reeds:false, deep:false}` — which fishing search zones are accessible; zone gating live (Layer 83) |
+| `S_story.baitFishingActive` | boolean | Suppresses node re-render during bait catch sequence |
+| `S_story.skillCheckAttempts` | object | `{ questId: { lastDay, failures } }` — retry gate for Ceremonia Roll quests; set on each failed retryable roll |
+| `S_story.ceremoniaYaelAct` | number | Current act in Yael Ceremonia Arc (0 = not started, 1–5 = act N complete) |
+| `S_story.ceremonia_yael_04_failed` | boolean | Act IV fail path — changes Yael's Act V vignetteText |
+| `S_story.ceremonia_yael_complete` | boolean | Full Yael Ceremonia Arc complete; triggers Watch Token item |
+| `S_story.cryptSurveyed` | boolean | `quest_crypt_survey` pass flag |
+| `S_story.courierReleased` | boolean | `quest_courier_release` pass flag |
+| `S_story.patrolBA` | boolean | Player visited CI while `quest_city_watch_patrol` active |
+| `S_story.patrolIN` | boolean | Player visited IN after CI while `quest_city_watch_patrol` active |
+| `S_story.patrolRouteComplete` | boolean | Full patrol route BA→IN→TA completed; triggers quest completion |
+
+---
+
 ## Known Cross-Document Issues
 
 All previously logged conflicts resolved. Current known gaps:
@@ -416,7 +669,7 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 ---
 
 *Last updated: 2026-06-14*
-*Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 419 nodes · 392 monsters · 1695 quests · cell-based navigation (§CELL-01–§CELL-11)*
+*Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 419 nodes · 392 monsters · 1695 quests · cell-based navigation (§CELL-01–§CELL-12)*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---
