@@ -142,6 +142,14 @@ All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
 | **§D01-07 Maintenance Plate** | 2026-06-14 | 5-quest arc at HKG: WIS Perception DC 10 → auto WIS save → Data Wraith battle → INT Arcana DC 13 cipher → CHA Persuasion DC 12 identity reveal; Scholar King's Name Plate reward |
 | **§WORLDBUILDER-02-F open items** | — | `_questsByNpc` ✅ done; `_questsByWaypoint` ✅ done; `_nodesByTerrain` index pending; `_flagToQuests` arc-class map pending |
 
+### Planned Features
+
+| Item | Description |
+|------|-------------|
+| **§WORLDBUILDER-01** | Canvas node map editor — click node to edit, click empty cell to create, bidirectional exit wiring, collision detection. Depends on §WORLDBUILDER-02 Ph1 ✅ |
+| **§1367** | Historical year 1367 AD integration — `GAME_YEAR=1367`, plague mechanic, Hanseatic faction score, faith triple-track (orthodox/reform/folk), 4 new Baltic nodes (LB/DZ/RG/BG), 6 arc seeds, historical NPCs. Full spec in `Year1367AD.md`. |
+| **§EDITOR-02 UI** | Mission Builder tab in worldbuilder.html — form-based arc insertion, Preview Chain / Validate / POST All. Workflow reference in `wbapi-help.md`. |
+
 ### Version Snapshots
 
 | Location | Contents |

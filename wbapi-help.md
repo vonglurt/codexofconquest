@@ -166,3 +166,122 @@ Describe the operation and request an API refactor. It will be added as a named
 retry logic, and pipe-safe error handling.
 
 Full reference: **API-README.md**
+
+---
+
+## Arc Insertion Workflow
+
+The canonical workflow for adding any quest chain via the API. Steps are invariant; content changes.
+
+### A. The Seven-Step Arc Insertion Protocol
+
+```bash
+# Step 0: confirm node exists and terrain is correct
+./api.sh location {startNode}
+
+# Step 1: register new flags in _S_DEFAULTS (manual edit in roll2hit-v3.html)
+
+# Step 2: inspect quest schema
+./api.sh get quest --schema
+
+# Step 3: create one quest
+./api.sh post quest id=quest_{arc}_{nn} type=side npc={npc_key} activateNode={code} title="..."
+
+# Step 4: verify quest readable
+./api.sh get quest quest_{arc}_{nn}
+
+# Step 5: patch text fields
+./api.sh put quest quest_{arc}_{nn} passText="..." failText="..."
+
+# Step 6: repeat steps 3–5 for each quest in chain
+
+# Step 7: verify dependency graph
+./api.sh chain quest_{arc}_{nn}
+
+# Step 8: run audit — must be clean before save
+./api.sh audit
+
+# Step 9: commit to timestamped HTML
+```
+
+**One session per arc.** All POSTs and PUTs must happen in a single server session before Step 8.
+
+### B. Mission Type → Field Templates
+
+**`talk_chain`** (NPC conversation, no roll):
+```json
+{ "id":"quest_{arc}_{nn}", "type":"side", "title":"...", "desc":"...", "hint":"...",
+  "activateNode":"{code}", "activateCond":"{priorFlag}", "checkPassFlag":"{arcFlag}", "xpAward":100 }
+```
+
+**`skill_check`**:
+```json
+{ "id":"quest_{arc}_{nn}", "type":"skill_check", "title":"...", "desc":"...", "hint":"...",
+  "activateNode":"{code}", "activateCond":"{priorFlag}", "checkAbility":"{str|dex|con|int|wis|cha}",
+  "checkLabel":"{Skill}", "checkDC":12, "retryable":false, "xpAward":150,
+  "passText":"...", "failText":"...", "checkPassFlag":"{arcFlag}", "disposition":"..." }
+```
+
+**`escort`** (companion travel):
+```json
+{ "id":"quest_{arc}_{nn}", "type":"side", "title":"...", "desc":"...",
+  "hint":"Reach {dest} with {npc}.", "activateNode":"{start}", "waypointNode":"{dest}",
+  "activateCond":"{priorFlag}", "checkPassFlag":"{arcFlag}", "xpAward":150 }
+```
+
+**`collect`** (item delivery):
+```json
+{ "id":"quest_{arc}_{nn}", "type":"side", "title":"...", "desc":"...",
+  "hint":"Bring {item} to {npc} at {code}.", "activateNode":"{code}", "waypointNode":"{dest}",
+  "activateCond":"{priorFlag}", "completeItems":["{item}"], "checkPassFlag":"{arcFlag}", "xpAward":150 }
+```
+
+### C. Pre-flight Checklist
+
+Before `POST /api/save`:
+
+1. All `activateCond` flags exist in `_S_DEFAULTS`
+2. All `checkPassFlag` values are unique across QUEST_DB
+3. All `activateNode` and `waypointNode` codes exist in NODE_MAP
+4. Chain is connected: `./api.sh chain {firstQuestId}` shows all expected quests downstream
+
+---
+
+## Quest Operand Reference
+
+The 12 operand kinds for quest `bits[]` arrays. Used when creating new quests via ✏ Editor or API.
+
+| Kind | Required fields | Optional fields |
+|------|----------------|----------------|
+| `talk_at` | `node` | `npcKey`, `objectKey`, `requiresItem`, `dialogue` |
+| `skill_check` | `ability`, `dc`, `label`, `passText`, `failText` | `retryable`, `passFlag` |
+| `navigate` | `fromNode`, `toNode` | `hint` |
+| `kill_at` | `node`, `monsterKey` | `count`, `killFlag` |
+| `escort` | `npcKey`, `fromNode`, `toNode` | `partySlot`, `combatRisk`, `failFlag` |
+| `talk_party` | `npcKey` | `partySlot`, `talkFlag`, `dialogue` |
+| `deliver` | `item`, `toNode` | `fromNode`, `recipient`, `consumeOnDeliver` |
+| `collect_item` | `item` | `icon`, `sell`, `unique` |
+| `consume_item` | `item` | `failText` |
+| `investigate` | `node`, `target` | `skillCheck`, `reveals`, `investigateFlag` |
+| `flag_gate` | `requires` OR `requiresAny` | `blocks` |
+| `choice` | `prompt`, `options[]` | — |
+
+**Composition rule:** every quest must end with `collect_item`, `flag_write`, or `choice`. See `WBAPI.quests.advise(id)` for live checks.
+
+---
+
+## §AUDIT-02 — NPC/Quest Connection Gap
+
+**Finding 1:** ~985 quests have no `npc` field. Root cause: book-import scripts created quest stubs without populating `npc`. Before fixing, determine: do the book-arc nodes already have NPCs in BIRKA_NPC who should own these quests?
+
+**Fix workflow when ready:**
+```bash
+./api.sh location LHR     # shows NPCs at that node
+./api.sh list npc --node LHR
+./api.sh list quest --node LHR --raw | jq '.[].id' | xargs -I{} ./api.sh put quest {} npc=yael
+./api.sh audit --raw | jq '.errors | length'
+```
+
+**Finding 2:** 13 NPCs have no quests:
+- Core Birka 6 (yael/brynn/quill/pachelbel/crov/auros) — deeply characterised; waiting for real quest arcs to be written
+- Book-import stubs (ser_bardo, ser_taddeo, etc.) — quests exist but have no `npc` field pointing back; fix by wiring existing quests → NPC
