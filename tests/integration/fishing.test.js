@@ -160,7 +160,7 @@ test.describe('Fishing — Yugurt Lake (BOO)', () => {
     const lastCatch = await readStory(page, 'fishingCatchLog').then(l => (l || [])[0]);
     expect(lastCatch).toMatchObject({
       size: expect.stringMatching(/^(small|medium|large|very_large|legendary)$/),
-      rarity: expect.stringMatching(/^(common|uncommon|rare|legendary)$/),
+      rarity: expect.stringMatching(/^(common|rare|enchanted|golden|legendary)$/),
       fish_key: expect.stringMatching(/^fish_\d{2}$|^common_fish$/),
     });
   });

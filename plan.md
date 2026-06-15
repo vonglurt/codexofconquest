@@ -1122,11 +1122,11 @@ WBAPI.worlds.flagUniqueInArc(flag, arcId)  // flag not reused across arc
 - [x] Add operand builder UI in worldbuilder.html Quest Editor (one card per operand, `opQuestCreate`)
 - [x] Add `WBAPI.quests.chain()` to show upstream/downstream in Quest Editor — already present in quest-chain-pane since Phase 1
 
-**Phase 3 — Escort + party operand runtime (new execution paths)**
-- [ ] Add `S.party` to game state model
-- [ ] Implement `escort` pickup/dropoff in storyRender
-- [ ] Implement `talk_party` trigger in inventory/party panel
-- [ ] Add `talk_party` detection to `_questsByNode` — these quests appear everywhere
+**Phase 3 — Escort + party operand runtime (new execution paths)** *(✅ 2026-06-15)*
+- [x] Add `S.party` to game state model
+- [x] Implement `escort` pickup/dropoff in storyCheckQuests
+- [x] Implement `talk_party` trigger in inventory/party panel
+- [x] Add `talk_party` detection to storyCheckQuests — these quests activate at any node when NPC is in party
 
 **Phase 4 — Legacy quest conversion**
 - [ ] `quests.toOperands()` used to audit all 210 quests
@@ -1310,7 +1310,7 @@ A consolidated register of all open work across the project. Organized by domain
 **P2 — Deferred / unscheduled:**
 
 - [x] **§WORLDBUILDER-02 Phase 4 — Relationship graph:** Canvas/SVG graph panel showing entity neighborhood. Nodes clickable. *(✅ 2026-06-12 — SVG radial graph implemented)*
-- [ ] **§ARCH-02 Phase 3 — Escort + party runtime:** `S.party`, `escort` pickup/dropoff, `talk_party` in inventory panel. *(Depends on: Phase 2.)*
+- [x] **§ARCH-02 Phase 3 — Escort + party runtime:** `S.party`, `escort` pickup/dropoff, `talk_party` in inventory panel. *(✅ 2026-06-15)*
 - [ ] **§ARCH-02 Phase 4 — Legacy quest conversion:** Audit all 210 quests with `toOperands()`. Convert 59 skill_check quests first (most uniform). Convert §HUNT-01 and §SPARK-01 as proof-of-concept. *(Depends on: Phase 2.)*
 - [ ] **§ARCH-01 Phases 2–5:** Migrate quest arcs to UQF one by one (WISDOM → SPARK → ALCHEMY → main chain). Remove `completeFn`/`onPass` closure pattern. Export UQF JS literals from worldbuilder. *(Long-term.)*
 

@@ -29324,6 +29324,7 @@ let S_story = {
   slStalksWon: 0,
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   huntMode: false,
+  party: {},
 };
 
 /* ── Layer 6: Save / Load ── */
@@ -34512,6 +34513,38 @@ function storyCheckQuests(node) {
       msgs.push('📋 ' + q.title);
     }
   });
+  // §ARCH-02 Phase 3: talk_party quests activate when escort NPC is in party (any node)
+  Object.values(QUEST_DB).forEach(q => {
+    if (q.type === 'epic') return;
+    if (S_story.quests[q.id]) return;
+    if (!q.bits) return;
+    const tpBit = q.bits.find(b => b.kind === 'talk_party');
+    if (!tpBit) return;
+    const slot = tpBit.partySlot || 'escort';
+    if ((S_story.party || {})[slot] !== tpBit.npcKey) return;
+    if (q.activateCond && !q.activateCond()) return;
+    S_story.quests[q.id] = 'active';
+    msgs.push('📋 ' + q.title);
+  });
+  // §ARCH-02 Phase 3: escort pickup/dropoff for active quests with bits[]
+  Object.keys(S_story.quests).forEach(id => {
+    if (S_story.quests[id] !== 'active') return;
+    const q = QUEST_DB[id];
+    if (!q || !q.bits) return;
+    q.bits.forEach(bit => {
+      if (bit.kind !== 'escort') return;
+      const slot = bit.partySlot || 'escort';
+      S_story.party = S_story.party || {};
+      if (node.code === bit.fromNode && !S_story.party[slot]) {
+        S_story.party[slot] = bit.npcKey;
+        msgs.push('👤 ' + (bit.npcKey || 'NPC') + ' joins your party.');
+      } else if (node.code === bit.toNode && S_story.party[slot] === bit.npcKey) {
+        S_story.party[slot] = null;
+        if (bit.deliverFlag) S_story[bit.deliverFlag] = true;
+        msgs.push('👤 ' + (bit.npcKey || 'NPC') + ' delivered.');
+      }
+    });
+  });
   // §GUIDE-01: Emmer Finch visible once arc is active
   if (!S_story.emmerMet && ['active','done','complete'].includes((S_story.quests||{}).quest_guide_01)) S_story.emmerMet = true;
   // §DESIGN-03: Track patrol route for quest_city_watch_patrol
@@ -35542,6 +35575,41 @@ function storyRenderInventory() {
       div.appendChild(unBtn);
       list.appendChild(div);
     }
+  }
+
+  // ── §ARCH-02 Phase 3: Party members ──
+  const partyMembers = Object.entries(S_story.party || {}).filter(([, v]) => !!v);
+  if (partyMembers.length) {
+    makeSection('👤 Party');
+    partyMembers.forEach(([slot, npcKey]) => {
+      const div = document.createElement('div');
+      div.className = 'inv-item';
+      div.innerHTML = '<span class="inv-icon">👤</span>'
+        + '<span class="inv-name">' + npcKey + '</span>'
+        + '<span class="inv-src">' + slot + '</span>';
+      const talkBtn = document.createElement('button');
+      talkBtn.className = 'inv-use-btn';
+      talkBtn.textContent = '💬 Talk';
+      talkBtn.addEventListener('click', () => {
+        let handled = false;
+        Object.keys(S_story.quests).forEach(id => {
+          if (S_story.quests[id] !== 'active') return;
+          const q = QUEST_DB[id];
+          if (!q || !q.bits) return;
+          q.bits.forEach(bit => {
+            if (bit.kind !== 'talk_party' || bit.npcKey !== npcKey) return;
+            if (bit.talkFlag && S_story[bit.talkFlag]) return;
+            if (bit.talkFlag) { S_story[bit.talkFlag] = true; }
+            storyMsg('💬 ' + npcKey + ': ' + (bit.talkText || '(no dialogue set)'));
+            handled = true;
+            storyAutoSave();
+          });
+        });
+        if (!handled) storyMsg('💬 ' + npcKey + ' has nothing to say right now.');
+      });
+      div.appendChild(talkBtn);
+      list.appendChild(div);
+    });
   }
 
   // ── 2. Consumables (potions + spell scrolls + flashbangs + farewell gifts) ──
