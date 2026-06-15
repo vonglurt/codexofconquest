@@ -3,20 +3,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · ~41,929 lines · 422 nodes · 392 monsters · 62 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-13 ✅
+**Status:** Layers 0–104 implemented · ~42,014 lines · 422 nodes · 392 monsters · 63 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-13 ✅ · §ARCH-02 Phase 2 ✅ · §ARCH-02 Phase 3 ✅ · §UNIFY-09 ✅
 **Last updated:** 2026-06-15
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~41,929 | ✅ |
-| Lab reports on disk | 62 | ✅ |
-| Lab reports in index | 62 | ✅ |
+| HTML line count | ~42,014 | ✅ |
+| Lab reports on disk | 63 | ✅ |
+| Lab reports in index | 63 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-15 §CELL-13 navigation fixes + jump-travel removal: 5 nav bugs fixed (playerR fallback, bounds 300→500, spire crash, storyRender no-arg, snap fallback); 3 empty-cell position bugs fixed (map click, _mapAddExits, BFS); portal/transmort/hearthHome/spire removed; 1,800 dead N/S/E/W edge fields stripped; 8 missing lab reports indexed | ✅ |
+| Last sync pass | 2026-06-15 §ARCH-02 Phase 2+3: WBAPI.quests.create() + opQuestCreate UI (Phase 2); S_story.party, escort pickup/dropoff, talk_party panel (Phase 3); party added to _S_DEFAULTS(); §UNIFY-09 autosave 4-test suite; fishing rarity test fixed; lab-report-movement-by-cells.md indexed; 419→422 node count corrected in maps.md row + reverse lookup | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -55,7 +55,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `mechanics-combat.md` | Battle Mode: combat flow, 1.5 AP economy, weapons, loot, leveling, defeat screens, save system | ✅ Split 2026-05-25 |
 | `mechanics-economy.md` | Story Mode: vendor system, NPC favorability, EB, NG+, state fields, F4 function reference | ✅ Split 2026-05-25 |
 | `combat.md` | Battle engine reference: initiative, overlay, Champion features, death saves, flee | ✅ §API-02 line-verified 2026-05-25 |
-| `maps.md` | World map: cell grid + extended areas, 419 node codes + coordinates, cell-adjacency network, gate locks | ✅ Updated 2026-05-28 |
+| `maps.md` | World map: cell grid + extended areas, 422 node codes + coordinates, cell-adjacency network, gate locks | ✅ Updated 2026-05-28 |
 | `story.md` | Main quest narrative: 42 story nodes across 8 acts, 7 Epic NPC profiles, prologue, endings, NG+ | ✅ 76 nodes covered |
 | `world.md` | DM manual: world history, 4 factions, 7 Epic NPC profiles, quest motivation, survival pressure | ✅ Reviewed 2026-05-24 |
 | `monsters.md` | 370 monsters: stat blocks by tier and terrain pool, 20 EB bosses, fish pool | ✅ Verified 2026-05-24 |
@@ -179,6 +179,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 | File | Layer(s) | Topic |
 |------|---------|-------|
+| `lab-report-movement-by-cells.md` | §CELL-01–§CELL-12 | Cell-grid navigation architecture — full program flow, wbapi-server/worldmap/runtime layers, BFS reachability, Playwright + Node test suite spec |
 | `lab-report-cell-map-mud-redesign.md` | §CELL-01–§CELL-11 | Cell map redesign — 11-section grid migration, MUD session layer, 419 nodes, dead-code removal |
 | `lab-report-map-audit-layout-tooling.md` | §CELL | Map audit, grid layout solver, tooling infrastructure — coordinate audit, gap analysis, reachability |
 | `lab-report-node-network-reconnection.md` | §CELL | Full node network reconnection — stray relocation, bidirectional check, reachability recovery |
@@ -312,7 +313,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **NPC dialogue system** | `story-arc-npc-dialogues.md` | `lab-report-npc-dialogue-system.md` · `lab-report-birka-beginner-arc.md` |
 | **NPC favorability** | `world.md` | `lab-report-birka-beginner-arc.md` · `plan.md §III` |
 | **NG+ system** | `story-arc-ngplus.md` | `lab-report-ng-plus-remembrance.md` · `lab-report-endings-and-echoes.md` |
-| **Cell map (419 nodes)** | `maps.md` | `plan.md §II (NODE_MAP · NODE_COORDS · CELL_GRID)` · `story-flowchart.md` · `docs-node-network.md` |
+| **Cell map (422 nodes)** | `maps.md` | `plan.md §II (NODE_MAP · NODE_COORDS · CELL_GRID)` · `story-flowchart.md` · `docs-node-network.md` |
 | **Overseer (The Fog Bank / LSO)** | `world.md` · `story.md Layer 104b` | `lab-report-littoral-courts.md §III` |
 | **Pachelbel / Deacon** | `story-arc-npc-dialogues.md` | `lab-report-web-of-connections.md` |
 | **Paul's Mediterranean Journey (§LXV–§LXIX)** | `story.md Layer 104a` · `maps.md` | `lab-report-saul-paul-travel-reference.md` · `lab-report-saul-paul-vignette-spec.md` |
@@ -489,6 +490,12 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.froberger_last_note_found` | boolean | Froberger's final note found |
 | `S_story.froberger_last_note_read` | boolean | Final note opened and read |
 | `S_story.huntMode` | boolean | true while player is in active stalk/hunt mode |
+| `S_story.hoursElapsed` | number | Total hours elapsed this run; +1 per short rest, battle, or inn stay |
+| `S_story.hoursSinceSlept` | number | Hours since last inn sleep; ≥24 → exhaustion penalty |
+| `S_story.playerR` | number | Current grid row; updated every `storyRender()` call (§CELL-03) |
+| `S_story.playerC` | number | Current grid column; updated every `storyRender()` call (§CELL-03) |
+| `S_story.visitedCells` | object | `"r,c"` → true for every cell stepped on; drives §CELL-10 minimap shading |
+| `S_story.party` | object | Escort slot map: `{escort: npcKey\|null, …}`; `talk_party` quests gate on this (§ARCH-02 Phase 3) |
 | `S_story.couperiDebtDegraded` | boolean | Quill's debt acknowledged as "just a number" |
 | `S_story.worldEventsFired` | array | One-time world event IDs that have fired |
 | `S_story.brynThirdStepFixed` | boolean | Bryn's third porch step repaired |
@@ -675,7 +682,7 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 ---
 
 *Last updated: 2026-06-15*
-*Codebase: `roll2hit-v3.html` · ~41,929 lines · Layers 0–104 complete · 422 nodes · 392 monsters · 1695 quests · cell-based navigation (§CELL-01–§CELL-13) · all jump-travel removed*
+*Codebase: `roll2hit-v3.html` · ~42,014 lines · Layers 0–104 complete · 422 nodes · 392 monsters · 1695 quests · cell-based navigation (§CELL-01–§CELL-13) · §ARCH-02 Phase 2+3 · all jump-travel removed*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---
