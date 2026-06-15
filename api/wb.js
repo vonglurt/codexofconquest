@@ -257,6 +257,7 @@ The game is a D&D 5e world stored in a single HTML file. The API manages: nodes 
   ./api.sh del <type> <id>                      delete (nonce auto-handled)
   ./api.sh audit [--map] [--data] [--section node|quest|monster|terrain|coords]  integrity scan
   ./api.sh chain <quest-id>                     quest dependency chain
+  ./api.sh advise <quest-id>                    §ARCH-02 Ph5: quest fields + chain + advisory in one call
   ./api.sh export <collection>                  dump JSON (node_map quest_db monster_pool world_db all)
   ./api.sh location [code]                      composite view (no code = list all)
   ./api.sh speak <npc> "<prompt>" --state neutral|friendly|dearFriend
@@ -436,6 +437,35 @@ const CMD = {
     const r = await request('GET', `/api/quest/${encodeURIComponent(id)}/chain`);
     if (r.status !== 200) { printError(r); process.exit(1); }
     printResult(r.body, flags);
+  },
+
+  // §ARCH-02 Phase 5 — composite advise: quest fields + chain check in one call
+  async advise(pos, flags) {
+    await requireServer();
+    const [, id] = pos;
+    if (!id) die('Usage: ./api.sh advise <quest-id>');
+    const [rQuest, rChain] = await Promise.all([
+      request('GET', `/api/quest/${encodeURIComponent(id)}`),
+      request('GET', `/api/quest/${encodeURIComponent(id)}/chain`),
+    ]);
+    if (rQuest.status !== 200) { printError(rQuest); process.exit(1); }
+    const quest = rQuest.body;
+    const chain = rChain.status === 200 ? rChain.body : { error: 'chain fetch failed' };
+    // World-logic advisory: check node/NPC refs in quest fields
+    const errors = [], warnings = [];
+    if (quest.activateNode && !quest._activateNodeValid)
+      warnings.push(`activateNode "${quest.activateNode}" — verify it exists in NODE_MAP`);
+    if (quest.waypointNode && !quest._waypointNodeValid)
+      warnings.push(`waypointNode "${quest.waypointNode}" — verify it exists in NODE_MAP`);
+    if (quest.type === 'skill_check' && quest.checkStat && !quest.checkAbility)
+      warnings.push(`uses legacy checkStat field — update to checkAbility`);
+    const hasBits = Array.isArray(quest.bits) && quest.bits.length > 0;
+    const result = {
+      quest: { id, type: quest.type, title: quest.title, activateNode: quest.activateNode, npc: quest.npc, bits: quest.bits },
+      chain,
+      advisory: { errors, warnings, has_bits: hasBits, ok: errors.length === 0 },
+    };
+    printResult(result, flags);
   },
 
   async export(pos, flags) {

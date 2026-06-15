@@ -3475,6 +3475,32 @@ async function route(req, res) {
     else if (lootTotal < 100)
       warnings.push({ section:'D100_TABLE', key:'_D100_TABLE', field:'weight', msg:`d100 loot table weights sum to ${lootTotal}/100 — ${100-lootTotal} unassigned slots will produce null drops` });
 
+    // WARNINGS — §ARCH-02 Phase 5 quest-bits advisory (node/NPC/monster world-logic)
+    {
+      const VA = new Set(['str','dex','con','int','wis','cha']);
+      const _nodeOk = code => !code || nodeKeys.has(code);
+      const _npcOk  = key  => !key  || !!WBAPI.birkaNpcs[key] || Object.values(WBAPI.nodeMap).some(n => n.npc && n.npc.toLowerCase().replace(/\s/g,'_') === key);
+      for (const [id, q] of Object.entries(WBAPI.questDb)) {
+        for (const bit of (q.bits || [])) {
+          const p = `${id} bit[${bit.kind}]`;
+          if (['talk_at','kill_at','navigate','escort','investigate'].includes(bit.kind)) {
+            if (bit.node     && !_nodeOk(bit.node))     warnings.push({ section:'QUEST_DB', key:id, field:`bits.${bit.kind}.node`,     msg:`${p}: node "${bit.node}" not in NODE_MAP` });
+            if (bit.fromNode && !_nodeOk(bit.fromNode)) warnings.push({ section:'QUEST_DB', key:id, field:`bits.${bit.kind}.fromNode`, msg:`${p}: fromNode "${bit.fromNode}" not in NODE_MAP` });
+            if (bit.toNode   && !_nodeOk(bit.toNode))   warnings.push({ section:'QUEST_DB', key:id, field:`bits.${bit.kind}.toNode`,   msg:`${p}: toNode "${bit.toNode}" not in NODE_MAP` });
+          }
+          if (bit.kind === 'kill_at' && bit.monsterKey && !monsterKeys.has(bit.monsterKey))
+            warnings.push({ section:'QUEST_DB', key:id, field:'bits.kill_at.monsterKey', msg:`${p}: monsterKey "${bit.monsterKey}" not in MONSTER_POOL` });
+          if (bit.kind === 'skill_check' && bit.ability && !VA.has(bit.ability))
+            warnings.push({ section:'QUEST_DB', key:id, field:'bits.skill_check.ability', msg:`${p}: ability "${bit.ability}" not in [str,dex,con,int,wis,cha]` });
+          if (['talk_at','escort','talk_party'].includes(bit.kind) && bit.npcKey && !_npcOk(bit.npcKey))
+            warnings.push({ section:'QUEST_DB', key:id, field:`bits.${bit.kind}.npcKey`, msg:`${p}: npcKey "${bit.npcKey}" not in BIRKA_NPC or NODE_MAP` });
+        }
+        // legacy field check: quests with checkStat but no checkAbility
+        if (q.type === 'skill_check' && q.checkStat && !q.checkAbility)
+          warnings.push({ section:'QUEST_DB', key:id, field:'checkAbility', msg:`skill_check uses legacy checkStat field — render uses undefined ability label` });
+      }
+    }
+
     // SUGGESTIONS
     const usedMonsters = new Set();
     for (const t of Object.values(WBAPI.worldDb))
@@ -10912,6 +10938,34 @@ async function route(req, res) {
       if (WBAPI.questDb[id]) {
         logResponse(method, url.pathname, 409, `quest "${id}" already exists`);
         return json(res, 409, { error:`Quest "${id}" already exists` });
+      }
+      // §ARCH-02 Phase 5 — world-logic checks before write
+      {
+        const nodeKeys  = new Set(Object.keys(WBAPI.nodeMap));
+        const monKeys   = new Set(Object.keys(WBAPI.monsterPool));
+        const _npcOk    = k => !k || !!WBAPI.birkaNpcs[k] || Object.values(WBAPI.nodeMap).some(n => n.npc && n.npc.toLowerCase().replace(/\s/g,'_') === k);
+        const worldErrors = [];
+        if (body.activateNode && !nodeKeys.has(body.activateNode))
+          worldErrors.push(`activateNode "${body.activateNode}" not found in NODE_MAP`);
+        if (body.waypointNode && !nodeKeys.has(body.waypointNode))
+          worldErrors.push(`waypointNode "${body.waypointNode}" not found in NODE_MAP`);
+        const npcKey = body.npc || body.npcKey;
+        if (npcKey && !_npcOk(npcKey))
+          worldErrors.push(`npc "${npcKey}" not found in BIRKA_NPC or NODE_MAP`);
+        for (const bit of (body.bits || [])) {
+          const p = `bit[${bit.kind}]`;
+          if (['talk_at','kill_at','navigate','escort','investigate'].includes(bit.kind)) {
+            if (bit.node     && !nodeKeys.has(bit.node))     worldErrors.push(`${p}: node "${bit.node}" not in NODE_MAP`);
+            if (bit.fromNode && !nodeKeys.has(bit.fromNode)) worldErrors.push(`${p}: fromNode "${bit.fromNode}" not in NODE_MAP`);
+            if (bit.toNode   && !nodeKeys.has(bit.toNode))   worldErrors.push(`${p}: toNode "${bit.toNode}" not in NODE_MAP`);
+          }
+          if (bit.kind === 'kill_at' && bit.monsterKey && !monKeys.has(bit.monsterKey))
+            worldErrors.push(`${p}: monsterKey "${bit.monsterKey}" not in MONSTER_POOL`);
+        }
+        if (worldErrors.length) {
+          logResponse(method, url.pathname, 422, `world-logic: ${worldErrors[0]}`);
+          return json(res, 422, { ok:false, error:'World-logic check failed', worldErrors, hint:'Fix all worldErrors before resubmitting. Run ./api.sh audit to confirm world state.' });
+        }
       }
       const entry = serializeQuestLiteral(id, body);
       const ins = insertBeforeSectionClose('QUEST_DB', entry);

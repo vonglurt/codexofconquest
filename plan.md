@@ -23,8 +23,9 @@
 ./api.sh put quest quest_wis_01 passText="..." # update field
 ./api.sh post quest id=q_foo npc=aldric type=side activateNode=CY title="..." # create
 ./api.sh del quest quest_old_01            # delete (nonce auto-handled)
-./api.sh audit                             # full integrity scan
+./api.sh audit                             # full integrity scan (includes §ARCH-02 Ph5 bits advisory)
 ./api.sh chain quest_wis_01               # quest dependency chain
+./api.sh advise quest_wis_01              # §ARCH-02 Ph5: quest fields + chain + advisory in one call
 ./api.sh export quest_db --out quests.json # dump collection to file
 ./api.sh location CY                       # composite node view
 ./api.sh --ai "how do I link two nodes?"  # ask Claude (ANTHROPIC_API_KEY)
@@ -1135,9 +1136,12 @@ WBAPI.worlds.flagUniqueInArc(flag, arcId)  // flag not reused across arc
 - [x] §HUNT-01 (4 quests) converted: `talk_at`, `flag_gate+skill_check`, `navigate+kill_at+collect_item` bits
 - [x] §SPARK-01 (5 quests) converted: `skill_check+collect_item`, `talk_at`, `flag_gate+skill_check+collect_item`, `talk_party` bits
 
-**Phase 5 — Full advisory enforcement**
-- [ ] `quests.create()` hard-blocks on world-logic failures (node not found, NPC not placed)
-- [ ] World Builder CLI: `./api.sh audit` advise mode — `./api.sh get quest <id>` + chain check in one call
+**Phase 5 — Full advisory enforcement** *(✅ 2026-06-15)*
+- [x] `quests.advise()` extended: checks every bit operand for node/NPC/monster world-logic; accepts quest object directly (pre-create); separates `errors` (hard block) from `warnings` (advisory)
+- [x] `quests.create()` hard-blocks on world-logic failures via `advise()`: node not found, NPC not placed, invalid bit → `{ok:false, errors:[...]}`
+- [x] `POST /api/quest` server-side world-logic check: activateNode, waypointNode, npc, and each bit's node/monster/NPC refs validated before write
+- [x] `GET /api/audit` extended with §ARCH-02 bits advisory: all quest bits checked for node/NPC/monster existence; legacy `checkStat` quests flagged as warnings
+- [x] `./api.sh advise <quest-id>`: composite call — quest fields + chain + advisory in one response
 
 ---
 

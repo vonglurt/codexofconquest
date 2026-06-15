@@ -1896,19 +1896,79 @@ const WBAPI = {
     },
 
     // §ARCH-02 Phase 1 — world-logic cross-reference advisory
-    advise(id) {
-      const q = WBAPI.questDb[id]; if (!q) return {ok:false,warnings:[`quest "${id}" not found`]};
-      const warnings = [];
-      if (q.activateNode && !WBAPI.nodeMap[q.activateNode]) warnings.push(`activateNode "${q.activateNode}" not in NODE_MAP`);
-      if (q.waypointNode && !WBAPI.nodeMap[q.waypointNode]) warnings.push(`waypointNode "${q.waypointNode}" not in NODE_MAP`);
+    // Accepts quest id OR raw quest object (for pre-create checks)
+    advise(idOrObj) {
+      const isObj = typeof idOrObj === 'object' && idOrObj !== null;
+      const q     = isObj ? idOrObj : WBAPI.questDb[idOrObj];
+      const id    = isObj ? idOrObj.id : idOrObj;
+      if (!q) return {ok:false, errors:[`quest "${id}" not found`], warnings:[]};
+
+      const VA = new Set(['str','dex','con','int','wis','cha']);
+      const errors = [], warnings = [];
+
+      const _nodeOk  = code => !code || !!WBAPI.nodeMap[code];
+      const _npcOk   = key  => !key  || !!WBAPI.birkaNpcs[key] || Object.values(WBAPI.nodeMap).some(n => n.npc && n.npc.toLowerCase().replace(/\s/g,'_') === key);
+      const _monOk   = key  => !key  || !!WBAPI.monsterPool[key];
+
+      // Top-level field checks
+      if (q.activateNode && !_nodeOk(q.activateNode)) errors.push(`activateNode "${q.activateNode}" not in NODE_MAP`);
+      if (q.waypointNode  && !_nodeOk(q.waypointNode))  errors.push(`waypointNode "${q.waypointNode}" not in NODE_MAP`);
       const npcKey = q.npc || q.npcKey;
-      if (npcKey) {
-        const inBirka = !!WBAPI.birkaNpcs[npcKey];
-        const inMap   = Object.values(WBAPI.nodeMap).some(n => n.npc && n.npc.toLowerCase().replace(/\s/g,'_') === npcKey);
-        if (!inBirka && !inMap) warnings.push(`npc "${npcKey}" not found in BIRKA_NPC or NODE_MAP`);
-      }
-      const chain = WBAPI.quests.chain(id);
-      return {ok: warnings.length === 0, warnings, chain};
+      if (npcKey && !_npcOk(npcKey)) warnings.push(`npc "${npcKey}" not found in BIRKA_NPC or NODE_MAP`);
+
+      // Bits advisory (§ARCH-02 Phase 5)
+      const VALID_ABILITIES = VA;
+      let hasFinalReward = false;
+      (q.bits || []).forEach((bit, i) => {
+        const prefix = `bit[${i}] ${bit.kind}`;
+        switch (bit.kind) {
+          case 'talk_at':
+            if (!_nodeOk(bit.node))         errors.push(`${prefix}: node "${bit.node}" not in NODE_MAP`);
+            if (bit.npcKey && !_npcOk(bit.npcKey)) warnings.push(`${prefix}: npcKey "${bit.npcKey}" not in BIRKA_NPC or NODE_MAP`);
+            break;
+          case 'kill_at': {
+            if (!_nodeOk(bit.node))         errors.push(`${prefix}: node "${bit.node}" not in NODE_MAP`);
+            if (bit.node && WBAPI.nodeMap[bit.node] && !WBAPI.nodeMap[bit.node].battle)
+              warnings.push(`${prefix}: node "${bit.node}" has no battle field — kill_at may never fire`);
+            if (bit.monsterKey && !_monOk(bit.monsterKey)) errors.push(`${prefix}: monsterKey "${bit.monsterKey}" not in MONSTER_POOL`);
+            break;
+          }
+          case 'navigate':
+            if (!_nodeOk(bit.fromNode))     errors.push(`${prefix}: fromNode "${bit.fromNode}" not in NODE_MAP`);
+            if (!_nodeOk(bit.toNode))       errors.push(`${prefix}: toNode "${bit.toNode}" not in NODE_MAP`);
+            if (!bit.hint) warnings.push(`${prefix}: no hint — player has no waypoint guidance`);
+            break;
+          case 'escort':
+            if (!_nodeOk(bit.fromNode))     errors.push(`${prefix}: fromNode "${bit.fromNode}" not in NODE_MAP`);
+            if (!_nodeOk(bit.toNode))       errors.push(`${prefix}: toNode "${bit.toNode}" not in NODE_MAP`);
+            if (bit.npcKey && !_npcOk(bit.npcKey)) warnings.push(`${prefix}: npcKey "${bit.npcKey}" not in BIRKA_NPC or NODE_MAP`);
+            if (bit.combatRisk && !bit.failFlag) warnings.push(`${prefix}: combatRisk:true but no failFlag — combat outcome untracked`);
+            break;
+          case 'talk_party':
+            if (bit.npcKey && !_npcOk(bit.npcKey)) warnings.push(`${prefix}: npcKey "${bit.npcKey}" not in BIRKA_NPC or NODE_MAP`);
+            break;
+          case 'investigate':
+            if (!_nodeOk(bit.node))         errors.push(`${prefix}: node "${bit.node}" not in NODE_MAP`);
+            break;
+          case 'skill_check':
+            if (bit.ability && !VALID_ABILITIES.has(bit.ability)) errors.push(`${prefix}: ability "${bit.ability}" not in [str,dex,con,int,wis,cha]`);
+            if (bit.dc != null && (bit.dc < 5 || bit.dc > 25))   warnings.push(`${prefix}: DC ${bit.dc} outside advisory range 5–25`);
+            break;
+          case 'collect_item':
+          case 'flag_write':
+            hasFinalReward = true;
+            break;
+        }
+      });
+      if ((q.bits||[]).length > 0 && !hasFinalReward)
+        warnings.push('no collect_item or flag_write bit — player gets no completion signal');
+
+      // skill_check quest with no passFlag
+      if (q.type === 'skill_check' && !q.checkPassFlag)
+        warnings.push('skill_check with no checkPassFlag — downstream quests cannot gate on this result');
+
+      const chain = !isObj ? WBAPI.quests.chain(id) : null;
+      return {ok: errors.length === 0, errors, warnings, ...(chain ? {chain} : {})};
     },
 
     // §ARCH-02 Phase 1 — heuristic mapping of quest fields → operand bit sequence
@@ -1930,7 +1990,7 @@ const WBAPI = {
       return {id, type:q.type, bits};
     },
 
-    // §ARCH-02 Phase 2 — quest creation with pre-flight operand validation
+    // §ARCH-02 Phase 2+5 — quest creation with pre-flight operand + world-logic validation
     async create(questObj) {
       const { id, type, title, activateNode } = questObj;
       if (!id)           return { ok: false, error: 'Missing required field: id' };
@@ -1938,11 +1998,17 @@ const WBAPI = {
       if (!title)        return { ok: false, error: 'Missing required field: title' };
       if (!activateNode) return { ok: false, error: 'Missing required field: activateNode' };
       if (WBAPI.questDb[id]) return { ok: false, error: `Quest "${id}" already exists` };
+      // Bit contract validation (field types)
       if (questObj.bits) {
         for (const bit of questObj.bits) {
           const bv = WBAPI.operands.validate(bit);
           if (!bv.ok) return { ok: false, error: `Bit [${bit.kind}]: ${bv.errors.join('; ')}` };
         }
+      }
+      // §ARCH-02 Phase 5 — world-logic advisory: hard-block on errors
+      if (WBAPI.loaded) {
+        const advisory = WBAPI.quests.advise(questObj);
+        if (!advisory.ok) return { ok: false, error: 'World-logic check failed', errors: advisory.errors, warnings: advisory.warnings };
       }
       if (SERVER.active) {
         const r = await fetch(`${SERVER.url}/api/quest`, {
