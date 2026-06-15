@@ -3,20 +3,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · ~42,014 lines · 422 nodes · 392 monsters · 63 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-13 ✅ · §ARCH-02 Phases 1–5 ✅ · §EDITOR-01 ✅ · §WALK ✅ · §UNIFY-09 ✅
+**Status:** Layers 0–104 implemented · ~43,736 lines · 426 nodes · 392 monsters · 63 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-13 ✅ · §ARCH-02 Phases 1–5 ✅ · §EDITOR-01 ✅ · §WALK ✅ · §UNIFY-09 ✅ · §GR ✅ · §MATH-01 ✅
 **Last updated:** 2026-06-15
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~42,014 | ✅ |
+| HTML line count | ~43,736 | ✅ |
 | Lab reports on disk | 63 | ✅ |
 | Lab reports in index | 63 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-15 §ARCH-02 Phases 1–5 complete (operand registry, advisory, server guard, audit extension, advise CLI); §EDITOR-01 "✏ Editor" tab (type-aware quest form, 8 presets, flag graph, storyRender gen, JS export, POST, advisory); §WALK "🚶 Walk" tab (playable world editor — mini-map canvas, D-pad, arrow-key nav, in-context node edit, PUT to server, quest panel, cross-tab links); 73 Playwright integration tests for §WALK all green | ✅ |
+| Last sync pass | 2026-06-15 §MATH-01: 4 math-world nodes (EHZ, MONS, ZERO, CNTR) + 5 quests (quest_math_01–05) east of HKG; Group Theory dungeon, Monster Group, zero corridor, Cantor's Attic; Adventure Time register; total 426 nodes | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 

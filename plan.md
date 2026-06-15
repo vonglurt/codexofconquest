@@ -138,10 +138,11 @@ Run `say` blocking (no `&`) so each announcement completes before the next reque
 
 ### Game Content
 
-- [ ] **§GR** — La Riva grief arc + Connie/Aldo/Vinnie arc + FR node + corruption chain CY→FR. See `project_grief_arc.md` in memory.
-- [ ] **§DUNGEON-01** — Loop Heart choice room, Sacrifice Gates, Shifting Labyrinth, Scholar Workshop (Node SW), Mimic Meadows (Node MM)
-- [ ] **§WISDOM-01 Keel thread close** — Baltic survey data arc at eastern Baltic node; the "after witnessing" arc
-- [ ] **Covenant Keeper Ending** — all six grief arcs name their people in a final storyRender event. Depends on §GR complete.
+- [x] **§GR** — La Riva grief arc + Connie/Aldo/Vinnie arc + FR node + corruption chain CY→FR. See `project_grief_arc.md` in memory.
+- [x] **§WISDOM-01 Keel thread close** — Baltic survey data arc at eastern Baltic node; the "after witnessing" arc
+- [x] **§MATH-01** — Mathematical World node; Group Theory dungeon, Monster group (~8×10^53), EHZ node, counting quest, zero transmission. See `project_math_world.md` in memory.
+- [ ] **§1367** — Historical 1367 AD integration; 6 events→quest seeds, 8 clarification questions gate scope. See `project_1367_setting.md` in memory.
+- [x] **Covenant Keeper Ending** — all six grief arcs name their people in a final storyRender event. Depends on §GR complete.
 - [ ] **§GR-D Froberger Entry 42** — blank page filled on second playthrough. Requires NG+ state tracking (currently unsupported).
 
 ### Design Decisions
