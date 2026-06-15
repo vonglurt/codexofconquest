@@ -1117,10 +1117,10 @@ WBAPI.worlds.flagUniqueInArc(flag, arcId)  // flag not reused across arc
 - [x] Add `WBAPI.quests.toOperands(id)` — parse existing quest fields into operand array
 - [x] Wire validate + advise into API tab in worldbuilder.html
 
-**Phase 2 — Quest creation flow**
-- [ ] Add `WBAPI.quests.create(questObj)` — validates then adds
-- [ ] Add operand builder UI in worldbuilder.html Quest Editor (one card per operand)
-- [ ] Add `WBAPI.quests.chain()` to show upstream/downstream in Quest Editor
+**Phase 2 — Quest creation flow** *(✅ 2026-06-15)*
+- [x] Add `WBAPI.quests.create(questObj)` — validates then adds (server POST or browser DIFF fallback)
+- [x] Add operand builder UI in worldbuilder.html Quest Editor (one card per operand, `opQuestCreate`)
+- [x] Add `WBAPI.quests.chain()` to show upstream/downstream in Quest Editor — already present in quest-chain-pane since Phase 1
 
 **Phase 3 — Escort + party operand runtime (new execution paths)**
 - [ ] Add `S.party` to game state model
@@ -1301,7 +1301,7 @@ A consolidated register of all open work across the project. Organized by domain
 
 - [x] **§WORLDBUILDER-02 Phase 4 — Relationship graph panel:** SVG radial graph in node/quest/NPC detail panes. Node→adjacent+quests+NPCs; Quest→activateNode/waypointNode/NPC/arc siblings/upstream/downstream; NPC→home node+quests. Clickable nodes navigate via switchTab. `selectNpc()` helper added. *(✅ 2026-06-12)*
 
-- [ ] **§ARCH-02 Phase 2 — Quest creation flow:** Add `WBAPI.quests.create(questObj)` (validates then adds). Add operand builder UI in worldbuilder Quest Editor. Show `quests.chain()` upstream/downstream in Quest Editor. *(Depends on: §ARCH-02 Phase 1.)*
+- [x] **§ARCH-02 Phase 2 — Quest creation flow:** `WBAPI.quests.create()` added with pre-flight operand validation. `opQuestCreate` in Builder tab with basic fields + operand bit cards. Chain already shown in quest-chain-pane. *(✅ 2026-06-15)*
 
 - [ ] **§WORLDBUILDER-01 — Visual grid editor:** Full canvas-based node map editor with node detail inspector, exit bidirectional editing, collision detection. See full spec in §WORLDBUILDER-01-A through -D. *(Depends on: §WORLDBUILDER-02 Phase 1 for cross-ref panel integration.)*
 
@@ -1397,8 +1397,8 @@ Every major implemented arc and every PLANNED arc was reviewed against the proje
 
 ### BACKLOG-F. API-CLI Tooling Follow-Ups (2026-06-05)
 
-- [ ] **`wb import` endpoint verification:** `wb import` calls `POST /api/import/book` — verify the endpoint is actually wired into the server route table (`wbapi-server.js`) and test with a real book JSON before relying on it in production.
-- [ ] **`wb import` synopsis line:** Update `HELP` text in `wb` / `api.sh` to match the full flag set (verify `--out` and others pass through correctly).
+- [x] **`wb import` endpoint verification:** `POST /api/import/book` confirmed wired at wbapi-server.js:10724. *(✅ 2026-06-15)*
+- [x] **`wb import` synopsis line:** AI system prompt synopsis updated to `bulk import nodes + quest cycles  [--out file]`. `--out` already handled at wb.js:533. *(✅ 2026-06-15)*
 
 ---
 
@@ -2512,15 +2512,22 @@ A player moving through a story beat may see feedback in different visual positi
 
 ---
 
-### §UNIFY-05 — Modal/Overlay Class Pattern (📋 TODO)
+### §UNIFY-05 — Modal/Overlay Class Pattern ✅ COMPLETE (audit-only, 2026-06-15)
 
-**Problem:** Show/hide for different overlays likely uses a mix of `.visible`, `.active`, and direct `style.display` writes. This makes CSS animation and focus trapping inconsistent and makes the show/hide logic hard to audit.
+**Audit finding:** The problem does not exist. All 17 top-level modals/overlays already use the `.visible` class pattern — each has a matching CSS rule `#id.visible { display: flex }` and is shown/hidden exclusively via `classList.add/remove('visible')`.
 
-**Target state:** One pattern: `element.classList.toggle('open', bool)` (or `data-open` attribute). CSS transitions are defined once on `.modal[data-open]`. Focus is trapped in a single `trapFocus(el)` utility.
+**Pattern inventory:**
 
-**Scope note:** This is the riskiest UI change — touches every overlay. Do the audit (§UNIFY-A) first to count mechanisms and decide whether a full unification is worth the blast radius, or whether a smaller "new overlays use the pattern" rule is sufficient.
+| Category | Pattern | Appropriate? |
+|---|---|---|
+| 17 top-level modals (`story-*-modal`, `story-*-overlay`) | `.classList.add/remove('visible')` → CSS `#id.visible { display:flex }` | ✅ Already unified |
+| 6 story sheets (`sheet-story`, `sheet-inventory`, etc.) | `.classList.add/remove('active')` | ✅ Semantically distinct — tab switching |
+| 6 sub-panels inside open modals (`sbo-death-save-panel`, `sbo-action-row`, `sbo-potion-row`, `eb-npc-cha-fail-panel`, `cc-custom-panel`, `cc-hard-panel`) | `style.display = ''/'none'` | ✅ Appropriate — conditional UI within an already-open modal |
+| 3 cinematic overlays (`ng-plus-title-overlay`, `covenant-ceremony-overlay`, `final-map-overlay`) | `style.display` + inline `opacity`/`transition` | ✅ Appropriate — runtime animation sequences require inline property control |
 
-**Skillset needed:** Bash grep (count mechanisms), `/frontend-design` skill for CSS, Edit, `/verify`.
+**Rule for new overlays:** New top-level overlays must use the `.visible` class. Add a CSS rule `#new-id { display:none } #new-id.visible { display:flex }` and control with `classList.add/remove('visible')`. Do not use `style.display` on top-level overlays. Sub-panels inside open modals may use `style.display`.
+
+**No code change needed.**
 
 ---
 
@@ -2540,20 +2547,23 @@ A player moving through a story beat may see feedback in different visual positi
 
 ---
 
-### §UNIFY-07 — Quest vs Mission Bit Gate Boundary (📋 TODO)
+### §UNIFY-07 — Quest vs Mission Bit Gate Boundary ✅ COMPLETE (audit-only, 2026-06-15)
 
-**Problem:** `S_story.quests[id] = 'active'|'complete'` and `_grantMissionBit`/`_takeMissionBit` both represent player-held flags that gate content, but with different APIs and no documented boundary for when to use which.
+**Audit finding:** No functional overlap. The two systems serve distinct layers:
 
-**Target state:** Either (a) converge on one system, or (b) write a clear documented rule: "quests gate narrative progression; mission bits gate inventory-driven state." Whichever is chosen, the rule must be in `plan.md` and enforced in new code.
+| System | Mechanism | Player visible? | When to use |
+|---|---|---|---|
+| `S_story.quests[id]` | String slot (`'active'/'done'/'failed'/'complete'`) | No | Track whether a narrative beat happened and how it resolved. Gate node/quest availability via `activateCond`. |
+| `_grantMissionBit(flag, label)` | Boolean flag + inventory `mission_bit` token | Yes (🪬 in inventory) | Grant a visible token for a witnessed moment. Use when the player must *hold* something that can later be *consumed* via `_takeMissionBit`. |
 
-**Implementation sketch:**
-1. Audit: list all `_grantMissionBit` call sites and what they unlock vs all `S_story.quests[id] = 'complete'` sites and what they unlock.
-2. Determine whether there is a functional overlap or whether they truly serve different purposes.
-3. If overlap: migrate one system to the other. If distinct: document the boundary here.
+**Co-fire pattern is correct:** When a skill check passes, `S_story.quests[questId] = 'done'` AND `_grantMissionBit(q.checkPassFlag, ...)` both fire. The quest slot records the mechanical result; the mission bit creates the physical artifact. Different layers of the same event — no redundancy.
 
-**Note:** This is a design decision, not a code change, until the audit reveals the answer.
+**Rule for new code:**
+- Use `S_story.quests[id]` for narrative state (quest opened, resolved, failed).
+- Use `_grantMissionBit` only when the player should receive a 🪬 token that may later be taken/consumed.
+- Never use mission bits as a substitute for quest state — they have different semantics and different visibility.
 
-**Skillset needed:** Bash grep, Read, judgment call on system boundary.
+**No code change needed.**
 
 ---
 
@@ -2569,16 +2579,17 @@ A player moving through a story beat may see feedback in different visual positi
 
 ---
 
-### §UNIFY-09 — State Mutation Discipline (📋 TODO)
+### §UNIFY-09 — State Mutation Discipline ✅ COMPLETE (audit-only, 2026-06-15)
 
 **Problem:** `S_story.x = y` mutations are scattered throughout the codebase. There is no guarantee that autosave (`storySave()`) fires after every meaningful mutation. A mutation that doesn't trigger a save is a data-loss risk.
 
-**Target state:** Autosave is guaranteed to fire at the end of every player action (cellMove, storyRender, combat resolution). Individual mutation sites do not need to call `storySave()`. The three entry points listed become the only autosave call sites.
+**Audit finding:** ~70 `storySave()` call sites exist. They fall into two categories:
+- ~3 canonical entry-point saves (end of `storyRender`, end of `_enterEmptyCell`, end of combat resolution) — these are already in place.
+- ~67 per-action saves in event handlers (shop purchases, document reads, fishing, quest panel actions, etc.) — these are **correct and necessary**. These actions mutate `S_story` outside the three entry points; the browser could close before the next navigation, so each action must save immediately.
 
-**Implementation sketch:**
-1. Audit: find all `storySave()` call sites. Are they in action-entry functions or scattered in helpers?
-2. If scattered: consolidate to the three action entry points and remove call sites from helpers.
-3. Add a Playwright test: set `S_story.gold = 999`, trigger a `cellMove`, reload page, confirm gold is 999 in the restored state.
+**Revised target state:** The "consolidate to 3 entry points" goal does not fit this event-driven architecture. The existing pattern — save at every action that mutates state — is correct. No code consolidation needed.
+
+**Verification added:** Playwright test `tests/integration/autosave.spec.js` — mutate gold, trigger `cellMove`, reload, confirm gold persisted in restored state.
 
 **Skillset needed:** Bash grep, Read, Edit, Playwright test.
 
@@ -2611,7 +2622,7 @@ A player moving through a story beat may see feedback in different visual positi
 | 5 | §UNIFY-04 exit link consistency | ✅ done | |
 | 6 | §UNIFY-10 _gameWarn channel | ✅ done | |
 | 7 | §UNIFY-02 storyMsg discipline | ✅ done | |
-| 8 | §UNIFY-09 state mutation / autosave | audit | high — save/load |
+| 8 | §UNIFY-09 state mutation / autosave | ✅ done | |
 | 9 | §UNIFY-07 quest/missionbit boundary | audit | design decision first |
 | 10 | §UNIFY-05 modal class pattern | audit | high — all overlays |
 

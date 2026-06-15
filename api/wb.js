@@ -260,7 +260,7 @@ The game is a D&D 5e world stored in a single HTML file. The API manages: nodes 
   ./api.sh export <collection>                  dump JSON (node_map quest_db monster_pool world_db all)
   ./api.sh location [code]                      composite view (no code = list all)
   ./api.sh speak <npc> "<prompt>" --state neutral|friendly|dearFriend
-  ./api.sh import <file.json>                   bulk import
+  ./api.sh import <file.json>                   bulk import nodes + quest cycles  [--out file]
 
 Reply in 1–3 lines. Lead with a concrete ./api.sh command when applicable.`;
 
@@ -696,7 +696,7 @@ const CMD = {
       ok(`\nPlaced:`);
       d.placed.slice(0, 20).forEach(r => {
         const p = r.plan;
-        ok(`  ${r.stray.padEnd(8)} → near ${p.bestCity} via ${p.slotNode}(deg=${p.slotDeg}).${p.attachDir}  coord=(${p.targetCoord?.r},${p.targetCoord?.c})${p.needsJunction ? '  ⚠ junction recommended' : ''}  ${r.status||''}`);
+        ok(`  ${r.stray.padEnd(8)} → anchor=${p.slotNode}  coord=(${p.targetCoord?.r},${p.targetCoord?.c})  ${r.status || ''}`);
       });
       if (d.placed.length > 20) ok(`  ...and ${d.placed.length - 20} more`);
     }
@@ -704,57 +704,158 @@ const CMD = {
     if (d.failed?.length) {
       ok(`\nFailed (manual review needed):`);
       d.failed.slice(0, 10).forEach(r => ok(`  ${r.stray.padEnd(8)}  ${r.reason}`));
-    }
-
-    if (d.failed?.length && !execute) {
-      ok(`\nTo fix failed nodes manually:`);
-      ok(`  ./api.sh find-open-location <nearest-city>  # find open slot`);
-      ok(`  ./api.sh move <stray> <r> <c>               # reposition`);
-      ok(`  ./api.sh connect <slot> <dir> <stray>       # wire in`);
+      ok(`  Fix: ./api.sh geo-seed --execute  then  node layout-solve.js --apply`);
     }
   },
 
-  // ── broken: list all broken edges (diagonal, gap > 4) ───────────────────────
-  // Usage: ./api.sh broken [--maxgap N]
+  // ── broken: §CELL-06 — show nodes in grid with no cell neighbors (isolated) ───
+  // Usage: ./api.sh broken
+  //   In cell-first world, "broken" = a node is in a grid cell but touches 0
+  //   adjacent occupied cells.  The old gap/diagonal check is gone because
+  //   N/S/E/W direction fields were stripped in §CELL-01.
   async broken(pos, flags) {
-    const maxGap = flags.maxgap ? +flags.maxgap : 4;
-    const fast = !flags.full; // default fast=true (count only, no suggestions); --full for detailed
-    const resp = await request('GET', `/api/graph/broken?maxGap=${maxGap}${fast ? '&fast=true' : ''}`);
+    await requireServer();
+    const resp = await request('GET', '/api/grid/heatmap');
     if (resp.status !== 200) { printError(resp); process.exit(1); }
-    const d = resp.body;
-    if (d.broken === 0) {
-      ok(`No broken edges ✓  (${d.totalChecked} checked, maxGap=${maxGap})`);
+    const { cells = [], count } = resp.body;
+    const isolated = cells.filter(c => c.heat === 0);
+    if (isolated.length === 0) {
+      ok(`No isolated cells ✓  (${count} cells in grid, all have ≥1 neighbor)`);
       return;
     }
-    ok(`${d.broken} broken edges  |  categories: ${JSON.stringify(d.categories)}`);
-    ok(`Total checked: ${d.totalChecked}  |  maxGap: ${maxGap}`);
-    for (const e of (d.edges || []).slice(0, 20)) {
-      const s = e.moveSuggestion;
-      const fix = s?.recommended
-        ? `→ move ${s.node} to (${s.recommended.r},${s.recommended.c})`
-        : `→ elbow or fill-gap`;
-      ok(`  ${e.from}─${e.dir}→${e.to}  [${e.type}]  off=${e.axisOffset}  gap=${e.gap}  ${fix}`);
-    }
-    if (d.broken > 20) ok(`  ... and ${d.broken - 20} more`);
-    ok(`Fix all: ./api.sh fix-all-broken --execute`);
+    ok(`${isolated.length} isolated cell(s) — no cell neighbors:`);
+    isolated.slice(0, 20).forEach(c => ok(`  ${c.code.padEnd(8)} r=${c.r} c=${c.c}  terrain=${c.terrain || '?'}`));
+    if (isolated.length > 20) ok(`  ...and ${isolated.length - 20} more`);
+    ok(`Fix: ./api.sh rip-and-connect --execute  (repositions strays to adjacent open cells)`);
   },
 
   // ── reachability: show how many nodes are reachable from the hub ─────────────
-  // Usage: ./api.sh reachability
-  async reachability() {
-    const resp = await request('GET', '/api/graph/reachability');
+  // Usage: ./api.sh reachability [--hub LHR]
+  //   Uses cell-grid BFS (§CELL-06): adjacency is determined by coordinate
+  //   proximity, not N/S/E/W pointer fields.
+  async reachability(pos, flags) {
+    await requireServer();
+    const hub  = flags.hub || 'LHR';
+    const resp = await request('GET', `/api/graph/reachability?hub=${hub}`);
     if (resp.status !== 200) { printError(resp); process.exit(1); }
     const d = resp.body; const c = d.counts;
     const pct = Math.round(100 * c.reachable / c.total);
     ok(`Hub: ${d.hub}  |  Reachable: ${c.reachable}/${c.total} (${pct}%)  |  Unreachable: ${c.unreachable}  |  Clusters: ${c.clusters}`);
     if (c.unreachable > 0) {
-      ok(`Isolated clusters: ${c.clusters} — use ./api.sh highway to connect them`);
+      ok(`Isolated clusters: ${c.clusters} — use ./api.sh rip-and-connect to relocate strays`);
     } else {
       ok(`All nodes reachable ✓`);
     }
     const deg = d.reachableByDegree || {};
     for (const [k, v] of Object.entries(deg)) {
       ok(`  ${k}: ${v.length} nodes`);
+    }
+  },
+
+  // ── verify: comprehensive cell-grid health check ──────────────────────────────
+  // Usage: ./api.sh verify [--hub LHR]
+  //
+  // Reports four categories:
+  //   1. Nodes with no coordinates (not in any cell)
+  //   2. Coordinate collisions (two nodes in the same cell)
+  //   3. Reachability from hub (cell-BFS — can you walk there?)
+  //   4. Grid-isolated nodes (in a cell but heat=0, no cell neighbors)
+  //
+  // PASS = all nodes coordinated + 0 collisions + 100% reachable + 0 isolated
+  async verify(pos, flags) {
+    await requireServer();
+    const hub = flags.hub || 'LHR';
+    process.stdout.write(`${C.bold}══ Grid Verify ══${C.reset}\n`);
+
+    const [coordResp, reachResp] = await Promise.all([
+      request('GET', '/api/coords'),
+      request('GET', `/api/grid/reachability?hub=${hub}`),
+    ]);
+    if (coordResp.status !== 200) { printError(coordResp); process.exit(1); }
+    if (reachResp.status !== 200) { printError(reachResp); process.exit(1); }
+
+    const coords   = coordResp.body.coords || {};
+    const coordSet = new Set(Object.keys(coords));
+    const nCoords  = coordResp.body.count;
+    const rData    = reachResp.body;
+    const total    = rData.total;
+
+    // nodeMapSet: only codes actually in NODE_MAP (from reachability total)
+    const nodeMapSet = new Set([
+      ...(rData.reachable.codes  || []),
+      ...(rData.unreachable.codes || []),
+    ]);
+
+    // Coordinate collisions: two NODE_MAP codes sharing the same (r,c)
+    // (orphaned coords — in NODE_COORDS but not NODE_MAP — are excluded)
+    const cellMap = {};
+    for (const [code, p] of Object.entries(coords)) {
+      if (!nodeMapSet.has(code)) continue;   // skip orphaned coords
+      const key = `${p.r},${p.c}`;
+      if (!cellMap[key]) cellMap[key] = [];
+      cellMap[key].push(code);
+    }
+    const collisions = Object.entries(cellMap).filter(([, codes]) => codes.length > 1);
+
+    // Nodes without coords (appear in reachability unreachable list but have no coord entry)
+    const unreachCodes   = rData.unreachable.codes || [];
+    const noCoordCodes   = unreachCodes.filter(c => !coordSet.has(c));
+    const gridUnreachable = unreachCodes.filter(c => coordSet.has(c));
+
+    // inGrid = nodes in nodeMap that have coordinates (reachable + grid-unreachable)
+    // (nodeCoords may have orphan entries for deleted nodes, so use reachability total)
+    const inGrid = total - noCoordCodes.length;
+
+    ok(`── Coordinate Coverage ─────────────────────────────────`);
+    ok(`  Total nodes:      ${total}`);
+    ok(`  In grid (coords): ${inGrid}  (${total > 0 ? Math.round(100 * inGrid / total) : 100}%)`);
+    if (noCoordCodes.length) {
+      ok(`  ${C.red}Missing coords:    ${noCoordCodes.length}${C.reset}  (not in any cell)`);
+      noCoordCodes.slice(0, 20).forEach(c => ok(`    ${c}`));
+      if (noCoordCodes.length > 20) ok(`    ...and ${noCoordCodes.length - 20} more`);
+    } else {
+      ok(`  Missing coords:    0 ✓`);
+    }
+
+    ok(`── Coordinate Collisions ───────────────────────────────`);
+    if (collisions.length) {
+      ok(`  ${C.red}${collisions.length} collision(s) — two nodes in same cell:${C.reset}`);
+      collisions.slice(0, 10).forEach(([key, codes]) => ok(`    (${key}): ${codes.join(', ')}`));
+    } else {
+      ok(`  0 collisions ✓`);
+    }
+
+    ok(`── Reachability from ${hub} ─────────────────────────────`);
+    ok(`  Reachable: ${rData.reachable.count}/${total} (${rData.pct}%)`);
+    if (gridUnreachable.length) {
+      ok(`  ${C.yellow}Grid-placed but unreachable: ${gridUnreachable.length}${C.reset}`);
+      gridUnreachable.slice(0, 20).forEach(c => ok(`    ${c}`));
+      if (gridUnreachable.length > 20) ok(`    ...and ${gridUnreachable.length - 20} more`);
+    } else if (inGrid > 0) {
+      ok(`  All coordinated nodes reachable ✓`);
+    }
+
+    // Isolated: in grid but no cell neighbors
+    const hmResp = await request('GET', '/api/grid/heatmap');
+    if (hmResp.status !== 200) { printError(hmResp); process.exit(1); }
+    const isolated = (hmResp.body.cells || []).filter(c => c.heat === 0);
+
+    ok(`── Grid-Isolated (heat=0) ──────────────────────────────`);
+    if (isolated.length) {
+      ok(`  ${C.yellow}${isolated.length} node(s) in grid with no cell neighbors:${C.reset}`);
+      isolated.slice(0, 10).forEach(c => ok(`    ${c.code}  r=${c.r} c=${c.c}`));
+      if (isolated.length > 10) ok(`    ...and ${isolated.length - 10} more`);
+    } else {
+      ok(`  0 isolated ✓`);
+    }
+
+    const issues = noCoordCodes.length + collisions.length + isolated.length + gridUnreachable.length;
+    ok(`── Summary ─────────────────────────────────────────────`);
+    if (issues === 0) {
+      ok(`  ${C.green}PASS${C.reset} — all ${total} nodes are in the grid and reachable ✓`);
+    } else {
+      ok(`  ${C.red}FAIL${C.reset} — ${issues} issue(s) found`);
+      ok(`  Fix: ./api.sh reweave --execute`);
     }
   },
 
@@ -1098,89 +1199,84 @@ const CMD = {
     await streamPost('/api/graph/nuke-junctions', { execute });
   },
 
-  // ── reweave: mega-loop — rip-and-connect → fix-all-broken → fix-bidir ─────
-  // Usage: ./api.sh reweave [--execute] [--max-rip N] [--max-fix N] [--limit N] [--radius N]
-  //   Dry-run:  reports what each phase would do, no writes.
-  //   --execute: runs all three phases server-side in one call.
-  //   --max-rip   max rip-and-connect passes (default 50000)
-  //   --max-fix   max fix-all-broken passes  (default 50000)
-  //   --limit     nodes per rip-and-connect pass (default 1000000)
-  //   --radius    BFS depth for city-search (default 60000)
-  //   --no-wither skip Phase 7 wither (default: wither is ON)
+  // ── reweave: §CELL-06 cell-first repair loop ─────────────────────────────────
+  // Usage: ./api.sh reweave [--execute] [--limit N] [--radius N] [--hub LHR]
   //
-  // Stopping conditions (prevents runaway):
-  //   Phase 1 stops when totalStrays=0 or maxRip hit.
-  //   Phase 2 stops when broken=0, plateau (2 consecutive non-improving passes), or maxFix hit.
-  //   Phase 3 always runs once.
-  //   Phase 7 (Wither) stops when no unused non-bridge junctions remain.
+  // Cell-first world: exits are derived from grid adjacency only.
+  //   No junction chains, no highways, no wither phase.
+  //   Every location must be in exactly one cell (r,c).
+  //   Adjacency = one cell apart — no skipping cells.
+  //
+  // Phases:
+  //   Phase 1 (pre-check):  verify — show uncoordinated, collisions, reachability
+  //   Phase 2 (if execute): rip-and-connect — place uncoordinated nodes into grid
+  //   Phase 3 (post-check): verify — confirm all nodes are in the grid and reachable
+  //
+  // Dry-run by default.  Add --execute to apply phase 2.
+  //   --limit N    max nodes to relocate per rip-and-connect pass (default 200)
+  //   --radius N   BFS depth for placement search (default 8)
+  //   --hub CODE   reachability hub (default LHR)
   async 'reweave'(pos, flags) {
     await requireServer();
-    const execute    = !!flags.execute;
-    const maxRip     = flags['max-rip']       ? +flags['max-rip']       : 50000;
-    const maxFix     = flags['max-fix']       ? +flags['max-fix']       : 50000;
-    const step       = flags.step             ? +flags.step             : 4;
-    const limit      = flags.limit            ? +flags.limit            : 1000000;
-    const meshRadius = flags.radius           ? +flags.radius           : 60000;
-    const geoSeed    = flags['no-geo-seed']   ? false : true;
-    const cityMesh   = flags['no-city-mesh']  ? false : true;
-    const derelict   = flags['no-derelict']   ? false : true;
-    const wither     = flags['no-wither']     ? false : true;
+    const execute = !!flags.execute;
+    const limit   = flags.limit  ? +flags.limit  : 200;
+    const radius  = flags.radius ? +flags.radius : 8;
+    const hub     = flags.hub    || 'LHR';
 
-    // ── Priority highways — corridor definitions ──────────────────────────
-    // Each entry is a {from, to} pair. buildHighway auto-detects shape:
-    //   • Pure N/S corridor if one endpoint is nearly due north/south of the other
-    //   • Pure E/W corridor if one is nearly due east/west
-    //   • L-shape (elbow) only when both axes are significant
-    // New junctions stitch into surrounding mesh in ALL 4 directions — not just
-    // the corridor axis — so highways merge with the existing node network.
-    // Run in Phase 2, after geo-seed, before city MST.
-    const PRIORITY_HIGHWAYS = [
-      // N/S corridors — same longitude, large latitude delta
-      { from:'HHL', to:'MLN',  note:'Meridian spine: Iceland → East Africa (lon~22-40°)' },
-      { from:'EDI', to:'CVP',  note:'Atlantic coast: Scotland → Lisbon (lon~3-9°W)' },
-      { from:'NID', to:'TUN',  note:'Norse → North Africa (lon~10°E)' },
-      // E/W corridors — same latitude, large longitude delta
-      { from:'CVP', to:'SAM',  note:'Southern silk road: Lisbon → Samarkand (lat~38°N)' },
-      { from:'LHR', to:'TRB',  note:'Northern route: London → Trebizond (lat~41-51°N)' },
-      { from:'GLA', to:'SIN',  note:'High latitude: Scotland → Sinop (lat~55-42°N)' },
-      // Long diagonals — L-shape elbow
-      { from:'ACT', to:'BGD',  note:'West → Mesopotamia connector' },
-      { from:'HHL', to:'GEDI', note:'Iceland → Horn of Africa (if GEDI exists)' },
-    ];
+    process.stdout.write(`${C.bold}══ Cell-First ReWeave ══${C.reset}\n`);
+    ok(`execute=${execute}  limit=${limit}  radius=${radius}  hub=${hub}`);
+    if (!execute) ok('[DRY RUN] add --execute to apply changes');
+    ok('');
 
-    process.stdout.write(`${C.bold}══ MegaReWeave ══${C.reset}\n`);
-    ok(`execute=${execute}  geoSeed=${geoSeed}  cityMesh=${cityMesh}  derelict=${derelict}  wither=${wither}`);
-    ok(`maxRip=${maxRip}  maxFix=${maxFix}  step=${step}  limit=${limit}`);
-    ok(`highways: ${PRIORITY_HIGHWAYS.length} configured`);
-    if (!execute) ok('[DRY RUN] add --execute to apply all changes');
-    ok('streaming from server — output below:\n');
+    // ── Phase 1: pre-check ────────────────────────────────────────────────────
+    ok(`${'─'.repeat(60)}`);
+    ok('  Phase 1 — Pre-check');
+    ok(`${'─'.repeat(60)}`);
+    await this.verify([], { hub });
 
-    const body = {
-      execute, geoSeed, priorityHighways: PRIORITY_HIGHWAYS,
-      cityMesh, derelictCleanup: derelict, witherPhase: wither,
-      maxRip, maxFix, step, limit, meshRadius,
-    };
+    if (!execute) {
+      ok('');
+      ok(`${'═'.repeat(60)}`);
+      ok('  Dry-run complete — add --execute to run Phase 2 (rip-and-connect)');
+      ok(`${'═'.repeat(60)}`);
+      return;
+    }
 
-    // Uses streamPost — no timeout, prints lines as the server emits them
-    await streamPost('/api/graph/reweave-all', body);
+    // ── Phase 2: rip-and-connect (place uncoordinated nodes into grid) ────────
+    ok('');
+    ok(`${'─'.repeat(60)}`);
+    ok('  Phase 2 — Rip-and-Connect');
+    ok(`${'─'.repeat(60)}`);
+    const ripResp = await request('POST', '/api/graph/rip-and-connect', {
+      dryRun: false, limit, meshRadius: radius,
+    });
+    if (ripResp.status >= 400) { printError(ripResp); process.exit(1); }
+    const rd = ripResp.body;
+    ok(`Rip-and-connect  hub=${rd.hub}  totalStrays=${rd.totalStrays}  limit=${limit}`);
+    ok(`Result: ${rd.placed?.length ?? 0} placed  |  ${rd.failed?.length ?? 0} failed  |  ${rd.skipped?.length ?? 0} skipped`);
+    if (rd.placed?.length) {
+      ok(`Placed:`);
+      rd.placed.slice(0, 20).forEach(r => {
+        const p = r.plan;
+        ok(`  ${r.stray.padEnd(8)} → near ${p.bestCity}  coord=(${p.targetCoord?.r},${p.targetCoord?.c})  ${r.status || ''}`);
+      });
+      if (rd.placed.length > 20) ok(`  ...and ${rd.placed.length - 20} more`);
+    }
+    if (rd.failed?.length) {
+      ok(`Failed (${rd.failed.length}):`);
+      rd.failed.slice(0, 10).forEach(r => ok(`  ${r.stray}  ${r.reason || ''}`));
+    }
 
-    // ── post-reweave checks (run automatically as part of the full workflow) ──
+    // ── Phase 3: post-check ───────────────────────────────────────────────────
+    ok('');
+    ok(`${'─'.repeat(60)}`);
+    ok('  Phase 3 — Post-check');
+    ok(`${'─'.repeat(60)}`);
+    await this.verify([], { hub });
+
     ok('');
     ok(`${'═'.repeat(60)}`);
-    ok(`  POST-REWEAVE CHECKS`);
-    ok(`${'═'.repeat(60)}`);
-    ok('');
-    ok('── reachability ─────────────────────────────────────────');
-    await this.reachability();
-    ok('');
-    ok('── broken edges ─────────────────────────────────────────');
-    await this.broken([], {});
-    ok('');
-    ok('── geographic world map ──────────────────────────────────');
-    await this.worldmap([], {});
-    ok('');
-    ok(`${'═'.repeat(60)}`);
-    ok('  reweave workflow complete.');
+    ok('  Cell-First ReWeave complete.');
     ok(`${'═'.repeat(60)}`);
   },
 
@@ -1487,7 +1583,7 @@ ${C.bold}═══════════════════════�
   §19 MAP VISUALIZATION  (worldmap --regions --region --city --search --monster --route)
   §20 COORDINATE MANAGEMENT  (geo-seed  move  find-open-location)
   §21 NETWORK WIRING  (smart-connect  highway  junction  fill-gap  connect)
-  §22 NETWORK HEALTH & REPAIR  (broken  reachability  junction-audit  fix-diagonal  fix-all-broken  fix-bidirectional  rip-and-connect  reweave  cluster-bridge)
+  §22 NETWORK HEALTH & REPAIR  (verify  broken  reachability  rip-and-connect  reweave  junction-audit  fix-bidirectional  cluster-bridge)
   §23 CELL GRID QUERIES  (cell  grid region|heatmap|reachability)
   §24 COMMON RECIPES
   §25 SERVER LIFECYCLE
@@ -2623,60 +2719,47 @@ ${C.bold}═══════════════════════�
     ./api.sh connect ANT S JAR
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
-  NETWORK HEALTH & REPAIR
+  NETWORK HEALTH & REPAIR  (§CELL-06 cell-first)
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  Check broken edges (diagonal or gap > 4):
+  Exits = cell adjacency only (N/S/E/W pointer fields removed in §CELL-01).
+  Each location must be in exactly one cell.  Steps are always length 1.
+
+  Full grid health check (coords + collisions + reachability + isolated):
+    ./api.sh verify
+    ./api.sh verify --hub LHR
+
+  Show nodes with no cell neighbors (isolated in grid):
     ./api.sh broken
-    ./api.sh broken --maxgap 4
 
-  Check reachability (% of nodes walkable from hub):
+  Check reachability (% of nodes walkable from hub via cell adjacency):
     ./api.sh reachability
+    ./api.sh reachability --hub LHR
 
-  Junction audit (breakdown + P_NUKE dry-run preview):
-    ./api.sh junction-audit
-
-  Nuclear junction cull (delete all J#### nodes):
-    ./api.sh nuke-junctions             # dry-run
-    ./api.sh nuke-junctions --execute   # apply
-
-  Fix a single broken edge:
-    ./api.sh fix-diagonal LHR S
-    ./api.sh fix-diagonal LHR S --execute
-    ./api.sh fix-diagonal BMA N --execute
-    ./api.sh fix-diagonal KRN N --execute
-
-  Batch-fix all broken edges:
-    ./api.sh fix-all-broken
-    ./api.sh fix-all-broken --execute
-    ./api.sh fix-all-broken --execute --limit 50
-
-  Fix all one-way links (A→B but B doesn't point back):
-    ./api.sh fix-bidirectional
-    ./api.sh fix-bidirectional --execute
-
-  Mega-loop repair (all phases server-side, 100x limits):
-    ./api.sh reweave
-    ./api.sh reweave --execute
-    ./api.sh reweave --execute --max-rip 50000 --max-fix 50000 --limit 1000000
-    ./api.sh reweave --execute --max-rip 50000 --max-fix 50000 --limit 1000000 --radius 60000
-    ./api.sh reweave --execute --no-wither     (skip Phase 7 junction wither)
-
-  Relocate all stray/unreachable nodes near their quest city:
+  Relocate all stray/uncoordinated nodes near their quest city:
     ./api.sh rip-and-connect
     ./api.sh rip-and-connect --execute
     ./api.sh rip-and-connect --execute --limit 50
     ./api.sh rip-and-connect --execute --limit 100 --radius 8
 
-  Full world reset sequence (run in order):
+  Cell-first repair loop (pre-check → rip-and-connect → post-check):
+    ./api.sh reweave
+    ./api.sh reweave --execute
+    ./api.sh reweave --execute --limit 200 --radius 8
+    ./api.sh reweave --execute --limit 500 --radius 12 --hub LHR
+
+  Fix all one-way links (A→B but B doesn't point back):
+    ./api.sh fix-bidirectional
+    ./api.sh fix-bidirectional --execute
+
+  Junction audit (if any J#### nodes still remain):
+    ./api.sh junction-audit
+
+  Full world reset sequence (cell-first):
     ./api.sh geo-seed --execute
     node layout-solve.js --apply
-    ./api.sh highway LHR CON --execute
-    ./api.sh highway KOL REG --execute
-    ./api.sh smart-connect LHR CON --execute
-    ./api.sh rip-and-connect --execute --limit 100
-    ./api.sh fix-all-broken --execute
-    ./api.sh broken
+    ./api.sh rip-and-connect --execute --limit 500
+    ./api.sh verify
     ./api.sh reachability
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
@@ -2748,12 +2831,13 @@ const SYNOPSIS = [
   `  ${C.green}import${C.reset} <file.json>                 bulk import nodes + quest cycles`,
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
   `  ${C.yellow}Directive: always use ./api.sh — never curl. Request a refactor if a feature is missing.${C.reset}`,
-  `  ${C.yellow}Maintain the network: run broken + reachability after every change.${C.reset}`,
+  `  ${C.yellow}Maintain the network: run ./api.sh verify after every change.${C.reset}`,
   ``,
   `  ${C.bold}── Health ──────────────────────────────────────────────────────────────${C.reset}`,
   `  ${C.green}ping${C.reset}                               health check + entity counts`,
-  `  ${C.green}broken${C.reset} [--maxgap N]               list broken edges (target: 0)`,
-  `  ${C.green}reachability${C.reset}                       % reachable from hub (target: 100%)`,
+  `  ${C.green}verify${C.reset} [--hub LHR]                full cell-grid health: coords + collisions + reachability + isolated`,
+  `  ${C.green}broken${C.reset}                             nodes in grid with no cell neighbors (heat=0)`,
+  `  ${C.green}reachability${C.reset} [--hub LHR]           % reachable from hub (cell-grid BFS)`,
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
   ``,
   `  ${C.bold}── Read ────────────────────────────────────────────────────────────────${C.reset}`,
@@ -2783,12 +2867,10 @@ const SYNOPSIS = [
   `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain T] [--execute]`,
   `  ${C.green}fill-gap${C.reset} <from> <dir> <to>         junction chain for gap > 4  [--step N] [--execute]`,
   `  ${C.green}highway${C.reset} <from> <to>                full junction highway  [--step 4] [--execute]`,
-  `  ${C.green}rip-and-connect${C.reset} [--execute] [--limit 50]  auto-relocate stray nodes to nearest city mesh`,
-  `  ${C.green}fix-diagonal${C.reset} <CODE> <dir>          fix one diagonal edge  [--execute]`,
-  `  ${C.green}fix-all-broken${C.reset} [--execute] [--limit N]  batch-fix all broken edges`,
+  `  ${C.green}rip-and-connect${C.reset} [--execute] [--limit 200] [--radius 8]  place uncoordinated nodes into adjacent grid cells`,
   `  ${C.green}fix-bidirectional${C.reset} [--execute]         fix all one-way links (A→B but B doesn't point back)`,
-  `  ${C.green}reweave${C.reset} [--execute] [--max-rip 50000] [--max-fix 50000] [--step 4] [--limit 1000000] [--radius 60000] [--no-wither]  MegaReWeave: geo-seed→highways→city-MST→fix-broken→fix-bidir→derelict→wither (streaming, no timeout)`,
-  `  ${C.green}cluster-bridge${C.reset} [--execute]             connect remaining isolated clusters without a full reweave`,
+  `  ${C.green}reweave${C.reset} [--execute] [--limit 200] [--radius 8] [--hub LHR]  cell-first repair: verify → rip-and-connect → verify`,
+  `  ${C.green}cluster-bridge${C.reset} [--execute]             connect remaining isolated clusters`,
   ``,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,

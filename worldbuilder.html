@@ -1926,6 +1926,34 @@ const WBAPI = {
         bits.push({kind:'talk_at', node:q.waypointNode||q.activateNode, npcKey:q.npc||q.npcKey||undefined});
       return {id, type:q.type, bits};
     },
+
+    // §ARCH-02 Phase 2 — quest creation with pre-flight operand validation
+    async create(questObj) {
+      const { id, type, title, activateNode } = questObj;
+      if (!id)           return { ok: false, error: 'Missing required field: id' };
+      if (!type)         return { ok: false, error: 'Missing required field: type' };
+      if (!title)        return { ok: false, error: 'Missing required field: title' };
+      if (!activateNode) return { ok: false, error: 'Missing required field: activateNode' };
+      if (WBAPI.questDb[id]) return { ok: false, error: `Quest "${id}" already exists` };
+      if (questObj.bits) {
+        for (const bit of questObj.bits) {
+          const bv = WBAPI.operands.validate(bit);
+          if (!bv.ok) return { ok: false, error: `Bit [${bit.kind}]: ${bv.errors.join('; ')}` };
+        }
+      }
+      if (SERVER.active) {
+        const r = await fetch(`${SERVER.url}/api/quest`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(questObj),
+        });
+        return r.json();
+      }
+      WBAPI.questDb[id] = { ...questObj };
+      DIFF.recordSection('QUEST_DB', id, 'added', questObj);
+      WBAPI._buildIndexes();
+      return { ok: true, id };
+    },
   },
 
   // ── §ARCH-02 Phase 1: Operand namespace ──
@@ -6874,6 +6902,106 @@ window._onServerActivated = () => {
     });
   }
 
+  function opQuestCreate(body) {
+    // Basic quest fields
+    const basicRow = document.createElement('div'); basicRow.className = 'op-row-fields';
+    basicRow.appendChild(mkField('id', 'Quest ID', 'text', {placeholder:'quest_wis_04…', flex:'1 1 160px'}));
+    basicRow.appendChild(mkField('type', 'Type', 'select', {options:{side:'side',main:'main',skill_check:'skill_check',epic:'epic'}}));
+    basicRow.appendChild(mkField('title', 'Title', 'text', {placeholder:'Short quest title', flex:'1 1 200px'}));
+    basicRow.appendChild(mkField('activateNode', 'Node', 'text', {placeholder:'CI', flex:'0 0 80px'}));
+    basicRow.appendChild(mkField('arc', 'Arc', 'text', {placeholder:'quest_wis', flex:'0 0 100px'}));
+    body.appendChild(basicRow);
+    // Narrative fields
+    const narRow = document.createElement('div'); narRow.className = 'op-row-fields'; narRow.style.marginTop = '6px';
+    narRow.appendChild(mkField('desc', 'Desc', 'textarea', {placeholder:'Player-facing quest description…', flex:'1 1 240px'}));
+    narRow.appendChild(mkField('passText', 'Pass Text', 'textarea', {placeholder:'On success…', flex:'1 1 180px'}));
+    narRow.appendChild(mkField('failText', 'Fail Text', 'textarea', {placeholder:'On failure…', flex:'1 1 180px'}));
+    body.appendChild(narRow);
+    // Operand builder
+    const bitsHd = document.createElement('div');
+    bitsHd.style.cssText = 'font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 4px;';
+    bitsHd.textContent = 'Operand Bits (optional — one card per bit)';
+    body.appendChild(bitsHd);
+    const bitsList = document.createElement('div'); bitsList.style.cssText = 'display:flex;flex-direction:column;gap:6px;';
+    body.appendChild(bitsList);
+    const BIT_FIELDS = {
+      talk_at:     ['node','npcKey','objectKey'],
+      skill_check: ['ability','dc','label','passText','failText'],
+      navigate:    ['fromNode','toNode','hint'],
+      kill_at:     ['node','monsterKey','count'],
+      escort:      ['npcKey','fromNode','toNode'],
+      talk_party:  ['npcKey','talkFlag'],
+      deliver:     ['item','toNode','fromNode'],
+      collect_item:['item','icon'],
+      consume_item:['item'],
+      investigate: ['node','target','investigateFlag'],
+      flag_gate:   ['requires','requiresAny'],
+      choice:      ['prompt','options'],
+    };
+    function addBitCard(defaultKind) {
+      const card = document.createElement('div');
+      card.style.cssText = 'display:flex;align-items:flex-start;gap:6px;padding:7px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;flex-wrap:wrap;';
+      const kindSel = document.createElement('select'); kindSel.className = 'fi'; kindSel.style.flex = '0 0 120px';
+      for (const k of Object.keys(OPERAND_CONTRACTS)) {
+        const o = document.createElement('option'); o.value = k; o.textContent = k;
+        if (k === defaultKind) o.selected = true;
+        kindSel.appendChild(o);
+      }
+      card.appendChild(kindSel);
+      const fieldsDiv = document.createElement('div'); fieldsDiv.style.cssText = 'display:flex;flex-wrap:wrap;gap:5px;flex:1;';
+      card.appendChild(fieldsDiv);
+      function renderBitFields(kind) {
+        fieldsDiv.innerHTML = '';
+        for (const f of (BIT_FIELDS[kind] || [])) {
+          const inp = document.createElement('input'); inp.type = 'text'; inp.className = 'fi';
+          inp.placeholder = f; inp.dataset.bitField = f; inp.style.flex = '1 1 80px';
+          fieldsDiv.appendChild(inp);
+        }
+      }
+      renderBitFields(defaultKind || 'talk_at');
+      kindSel.addEventListener('change', () => renderBitFields(kindSel.value));
+      const rm = mkBtn('✕', 'sm'); rm.addEventListener('click', () => card.remove());
+      card.appendChild(rm);
+      bitsList.appendChild(card);
+    }
+    const addBitBtn = mkBtn('+ Add Bit', 'sm'); addBitBtn.style.marginTop = '4px';
+    addBitBtn.addEventListener('click', () => addBitCard('talk_at'));
+    body.appendChild(addBitBtn);
+    const postBtn = mkBtn('POST Quest', 'primary sm'); postBtn.style.marginTop = '8px';
+    const res = document.createElement('pre'); res.className = 'op-result';
+    body.appendChild(postBtn); body.appendChild(res);
+    body.appendChild(mkNote('Required: id, type, title, activateNode, desc, passText, failText. Bits are optional — stored as questObj.bits, runtime support in Phase 3.'));
+    postBtn.addEventListener('click', async () => {
+      if (!WBAPI.loaded) return showResult(res, 'Load a file first.', true);
+      const f = getFields(body);
+      if (!validate(f, [{name:'id',required:true,label:'Quest ID'},{name:'activateNode',required:true,label:'Node'}])) return;
+      const bits = [];
+      for (const card of bitsList.children) {
+        const kindSel = card.querySelector('select');
+        const kind = kindSel?.value; if (!kind) continue;
+        const bit = { kind };
+        for (const inp of card.querySelectorAll('[data-bit-field]')) {
+          const v = inp.value.trim(); if (v) bit[inp.dataset.bitField] = v;
+        }
+        bits.push(bit);
+      }
+      const questObj = {
+        id:           f.id.value.trim(),
+        type:         f.type?.value || 'side',
+        title:        f.title?.value?.trim() || '',
+        activateNode: f.activateNode.value.trim().toUpperCase(),
+        desc:         f.desc?.value?.trim() || '',
+        passText:     f.passText?.value?.trim() || '',
+        failText:     f.failText?.value?.trim() || '',
+      };
+      if (f.arc?.value?.trim()) questObj.arc = f.arc.value.trim();
+      if (bits.length) questObj.bits = bits;
+      const result = await WBAPI.quests.create(questObj);
+      showResult(res, result, !result.ok);
+      if (result.ok) { WBAPI._buildIndexes(); renderQuestList(); switchTab('quests'); selectQuest(questObj.id); }
+    });
+  }
+
   function opOperandList(body) {
     const fields = document.createElement('div'); fields.className = 'op-row-fields';
     const btn = mkBtn('LIST','primary sm'); fields.appendChild(btn);
@@ -7280,6 +7408,7 @@ window._onServerActivated = () => {
       mkOpRow('GET',  'Quests by Arc',           'Filter by ID prefix (arc)',                           opQuestGetByArc),
       mkOpRow('GET',  'Quest Chain',             'Upstream + downstream quests via shared flags',       opQuestGetChain),
       mkOpRow('GET',  'All Quests',              'Dump entire quest database',                          opQuestAll),
+      mkOpRow('POST', 'Create Quest',             '§ARCH-02 Ph2: Create quest with operand bits builder', opQuestCreate),
       mkOpRow('PUT',  'Set Quest Field',         'Edit any narrative or mechanic field on a quest',     opQuestPut),
       mkOpRow('✓',    'Validate Quest',          '§ARCH-02: Field-level validity check',                opQuestValidate),
       mkOpRow('◆',    'Advise Quest',            '§ARCH-02: World cross-ref — nodes, NPC, flag chain',  opQuestAdvise),
