@@ -544,28 +544,35 @@ async function drawCityMap(code, port) {
   if (!node) { console.error(`Node "${code}" not found in node_map.`); process.exit(1); }
   const center = coords[code.toUpperCase()];
 
+  // §CELL-06: derive connections from cell-grid adjacency (coordinates), not N/S/E/W fields
+  const DIRS = ['N','S','E','W'];
+  const CELL_DELTAS = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
+  // Build cell grid: "r,c" → code (only nodeMap codes)
+  const cellGrid = {};
+  for (const [c2, p] of Object.entries(coords)) {
+    if (nodeMap[c2]) cellGrid[`${p.r},${p.c}`] = c2;
+  }
+  const neighbours = {};
+  if (center) {
+    for (const dir of DIRS) {
+      const [dr, dc] = CELL_DELTAS[dir];
+      const tgtCode  = cellGrid[`${center.r+dr},${center.c+dc}`];
+      if (tgtCode && nodeMap[tgtCode]) {
+        neighbours[dir] = { code: tgtCode, node: nodeMap[tgtCode], coords: coords[tgtCode] };
+      }
+    }
+  }
+
   const W = 72, H = 22;
   const grid = Array.from({ length: H }, () => Array(W).fill(' '));
-
-  // Determine bounding box from center + neighbours
-  const allPts = [center];
-  const DIRS = ['N','E','S','W'];
-  const neighbours = {};
-  for (const dir of DIRS) {
-    const tgt = node[dir]; if (!tgt) continue;
-    const tc = coords[tgt];
-    if (tc) { allPts.push(tc); neighbours[dir] = { code: tgt, node: nodeMap[tgt], coords: tc }; }
-  }
+  const allPts = center ? [center] : [];
+  for (const nb of Object.values(neighbours)) if (nb.coords) allPts.push(nb.coords);
 
   if (!center) {
     // No coords: just show text box
     console.log(`City: ${code.toUpperCase()} — ${node.label || '(no label)'}`);
     console.log(`Terrain: ${node.name || '?'}   Act: ${node.act ?? '?'}`);
-    console.log(`Connections:`);
-    for (const dir of DIRS) {
-      const t = node[dir];
-      console.log(`  ${dir}: ${t ? `${t}  ${nodeMap[t]?.label || ''}` : '(none)'}`);
-    }
+    console.log(`Connections: (no coordinates — cannot derive cell neighbors)`);
     return;
   }
 
@@ -657,23 +664,16 @@ async function drawCityMap(code, port) {
   }
   console.log(colAxis.join(''));
 
-  // Connection table
+  // Connection table — §CELL-06: connections from cell-grid adjacency
   console.log();
   console.log(`Connections from ${code.toUpperCase()}:`);
-  const missing = [];
   for (const dir of DIRS) {
-    const tgt = node[dir];
-    if (!tgt) { console.log(`  ${dir}: (none)`); continue; }
-    const tn   = nodeMap[tgt];
-    const tc   = coords[tgt];
-    const terrain = tn?.name || '?';
-    const gap  = tc && center ? (dir === 'N' || dir === 'S' ? Math.abs(tc.r - center.r) : Math.abs(tc.c - center.c)) : '?';
-    const axisOff = tc && center ? (dir === 'N' || dir === 'S' ? Math.abs(tc.c - center.c) : Math.abs(tc.r - center.r)) : '?';
-    const status = !tc ? 'NO COORDS' : axisOff > 0 ? `BENDY(off=${axisOff})` : gap > 4 ? `GAP(${gap})` : `ok(gap=${gap})`;
-    console.log(`  ${dir}: ${tgt.padEnd(6)} ${(tn?.label || '').slice(0, 28).padEnd(28)} terrain=${terrain.padEnd(10)} ${status}`);
-    if (!tc) missing.push(tgt);
+    const nb = neighbours[dir];
+    if (!nb) { console.log(`  ${dir}: (none)`); continue; }
+    const tc      = nb.coords;
+    const terrain = nb.node?.name || '?';
+    console.log(`  ${dir}: ${nb.code.padEnd(6)} ${(nb.node?.label || '').slice(0, 28).padEnd(28)} terrain=${terrain.padEnd(10)} r=${tc.r} c=${tc.c}`);
   }
-  if (missing.length) console.log(`\n  ⚠ No coords: ${missing.join(', ')} — run: node layout-solve.js --apply`);
 
   // Navigation hints
   const regionForCity = () => {
@@ -691,7 +691,7 @@ async function drawCityMap(code, port) {
   if (reg) console.log(`  Zoom out → region:  ./api.sh worldmap --region ${reg}`);
   console.log(`  Zoom out → world:   ./api.sh worldmap`);
   for (const dir of DIRS) {
-    if (node[dir]) console.log(`  Go ${dir}:             ./api.sh worldmap --city ${node[dir]}`);
+    if (neighbours[dir]) console.log(`  Go ${dir}:             ./api.sh worldmap --city ${neighbours[dir].code}`);
   }
 }
 

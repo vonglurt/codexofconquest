@@ -78,6 +78,11 @@ const SEED_STATE = {
   pitTrainingWins: 0,
   slStalksWon: 0,
   huntMode: false,
+  visitedCells: {},
+  hoursElapsed: 0,
+  hoursSinceSlept: 0,
+  playerR: 0,
+  playerC: 0,
 };
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -98,14 +103,15 @@ async function seedAndLoad(page, overrides = {}) {
 }
 
 /**
- * Enter story mode and dismiss the "Continue / New Game" modal.
+ * Dismiss the "Continue / New Game" modal and load the seeded save.
  *
- * Flow: clicking #story-mode-btn calls storyToggle() → storyEnter() →
- * storyCheckContinue() → adds .visible to #story-continue-modal.
- * Then #btn-continue-load calls storyLoadContinue() → renders the seeded node.
+ * storyEnter() is called automatically at the bottom of roll2hit-v3.html, so
+ * the continue modal is already visible when the page finishes loading — no
+ * need to click #story-mode-btn first.
+ * Clicking #btn-continue-load calls storyLoadContinue() → storyLoadSave() →
+ * storyRender(), which sets S_story from localStorage and syncs playerR/C.
  */
 async function dismissContinue(page) {
-  await page.locator('#story-mode-btn').click();
   await page.locator('#story-continue-modal').waitFor({ state: 'visible' });
   await page.locator('#btn-continue-load').click();
   await expect(page.locator('#story-continue-modal')).not.toHaveClass(/visible/);

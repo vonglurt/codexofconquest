@@ -5357,161 +5357,152 @@ async function route(req, res) {
     // move the stray's coordinates adjacent to that slot, and wire it in.
     // Body: { dryRun?, limit?, meshRadius? }
     if (parts[1] === 'rip-and-connect' && method === 'POST') {
-      // §CELL-06: replace DIRS4 edge-degree with CELL_GRID adjacency count
-      const DIRS4 = ['N','E','S','W'];
+      // §CELL-06 rewrite: cell-first — N/S/E/W fields stripped, exits from grid adjacency.
+      // Strays = nodes unreachable from hub via cell-BFS.
+      // Fix = move stray coordinates to a free cell adjacent to the reachable frontier.
+      // No N/S/E/W wires are written — adjacency is automatic from coordinates.
       let body; try { body = await readBody(req); } catch(e) { body = {}; }
       const { dryRun = true, limit = 50, meshRadius = 6 } = body || {};
 
-      // 1. Find reachable set from hub (LHR or most-connected)
-      const allCodes   = Object.keys(nm);
-      const hub        = allCodes.reduce((b, c) => {
-        const ca = DIRS4.filter(d => nm[c]?.[d] && nm[nm[c][d]]).length;
-        const cb = DIRS4.filter(d => nm[b]?.[d] && nm[nm[b][d]]).length;
-        return ca > cb ? c : b;
-      }, allCodes[0]);
+      const allCodes  = Object.keys(nm);
+      const allCoords = WBAPI.nodeCoords;
+
+      // 1. Build mutable cell grid from current coords
+      //    cellOccupied: 'r,c' → code  (mutable — updated as strays are placed)
+      //    Include ALL coord entries (even orphaned ones not in nodeMap) to prevent
+      //    placing strays in cells already occupied by orphaned coordinates.
+      const cellOccupied = new Map(
+        Object.entries(allCoords).map(([c, p]) => [`${p.r},${p.c}`, c])
+      );
+
+      // 2. Cell-BFS from LHR (or first available node with coords)
+      const HUB = nm['LHR'] ? 'LHR' : (allCodes.find(c => allCoords[c]) || allCodes[0]);
+      const hubCoord = allCoords[HUB];
 
       const reachable = new Set();
-      const bfsQ = [hub];
-      while (bfsQ.length) {
-        const cur = bfsQ.shift();
-        if (reachable.has(cur)) continue;
-        reachable.add(cur);
-        for (const dir of DIRS4) {
-          const tgt = nm[cur]?.[dir];
-          if (tgt && nm[tgt] && !reachable.has(tgt)) bfsQ.push(tgt);
+      if (hubCoord) {
+        const bfsQ = [HUB];
+        reachable.add(HUB);
+        while (bfsQ.length) {
+          const cur = bfsQ.shift();
+          const cc  = allCoords[cur]; if (!cc) continue;
+          for (const [dr, dc] of MOVES4) {
+            const nb = cellOccupied.get(`${cc.r+dr},${cc.c+dc}`);
+            if (nb && nm[nb] && !reachable.has(nb)) { reachable.add(nb); bfsQ.push(nb); }
+          }
         }
       }
 
       const strays = allCodes.filter(c => !reachable.has(c));
 
-      // 2. Build quest cross-reference map: node → [quest ids that reference it]
-      const nodeQuestRefs = {};  // node code → count of quest refs
-      for (const [qid, q] of Object.entries(WBAPI.questDb || {})) {
+      // 3. Build quest cross-reference map (used for scoring)
+      const nodeQuestRefs = {};
+      for (const [, q] of Object.entries(WBAPI.questDb || {})) {
         for (const field of ['activateNode', 'waypointNode']) {
-          const ref = q[field];
-          if (ref && nm[ref]) {
-            nodeQuestRefs[ref] = (nodeQuestRefs[ref] || 0) + 1;
-          }
+          if (q[field] && nm[q[field]]) nodeQuestRefs[q[field]] = (nodeQuestRefs[q[field]] || 0) + 1;
         }
       }
 
-      // 3. For each stray, score candidate cities based on quest cross-references
-      const reachableCities = allCodes.filter(c => reachable.has(c) && ['city','airport'].includes(nm[c]?.name));
-      const reachableArr = [...reachable];
-
-      const deg = code => DIRS4.filter(d => nm[code]?.[d] && nm[nm[code][d]]).length;
-
-      // Find open slot in a city's mesh (simplified inline BFS)
-      const findSlot = (cityCode) => {
-        const visited = new Set();
-        const q = [{code: cityCode, depth: 0}];
-        while (q.length) {
-          const {code, depth} = q.shift();
-          if (visited.has(code) || depth > meshRadius) continue;
-          visited.add(code);
-          const d = deg(code);
-          if (d < 3) return { code, degree: d, freeSlots: DIRS4.filter(dir => !nm[code]?.[dir]), needsJunction: false };
-          if (d === 3) return { code, degree: d, freeSlots: DIRS4.filter(dir => !nm[code]?.[dir]), needsJunction: true };
-          for (const dir of DIRS4) {
-            const tgt = nm[code]?.[dir];
-            if (tgt && nm[tgt] && !visited.has(tgt)) q.push({code: tgt, depth: depth + 1});
-          }
-        }
-        return null;
-      };
-
-      const allCoords = WBAPI.nodeCoords;
-      const occupied  = new Map(Object.entries(allCoords).map(([c,p]) => [`${p.r},${p.c}`, c]));
-
-      const DR4={N:-1,S:1,E:0,W:0}, DC4={N:0,S:0,E:1,W:-1};
-      const OPP4={N:'S',S:'N',E:'W',W:'E'};
-
-      const results = { hub, totalStrays: strays.length, processed: 0, placed: [], failed: [], skipped: [] };
-
-      // Track allocated cells even in dry-run so each stray gets a unique slot
-      const allocatedCells = new Map(occupied); // copy of occupied
-
-      logTrace('rip-and-connect', `totalStrays=${strays.length} limit=${limit} meshRadius=${meshRadius} dryRun=${dryRun}`);
-      for (const stray of strays.slice(0, limit)) {
-        logTrace('rip-stray', `processing ${stray} label="${(nm[stray]?.label||'').slice(0,30)}"`);
-        // Score each reachable city — shuffle candidates so equal scores spread evenly
-        const shuffled = reachableCities.slice().sort(() => Math.random() - 0.5);
-        let bestCity = null, bestScore = -1, bestSlot = null, bestDir = null, bestNr = null, bestNc = null;
-
-        for (const city of shuffled) {
-          const slot = findSlot(city);
-          if (!slot) continue;
-
-          let score = 0;
-          // Quest cross-references (strongest signal)
-          score += (nodeQuestRefs[stray] || 0) * 5;
-          // Geographically close (if both have coords)
-          const cs = allCoords[stray], cc = allCoords[city];
-          if (cs && cc) {
-            const dist = Math.abs(cs.r - cc.r) + Math.abs(cs.c - cc.c);
-            score += Math.max(0, 30 - dist);
-          }
-          // Prefer direct-attach over junction-needed
-          score += slot.needsJunction ? 0 : 2;
-
-          // Find a free cell adjacent to slot in one of its free directions
-          const slotCoord = allCoords[slot.code];
-          if (!slotCoord) continue;
-          let foundCell = false;
-          for (const dir of slot.freeSlots) {
-            const nr = slotCoord.r + DR4[dir], nc = slotCoord.c + DC4[dir];
-            if (!allocatedCells.has(`${nr},${nc}`)) {
-              if (score > bestScore) {
-                bestScore = score; bestCity = city; bestSlot = slot;
-                bestDir = dir; bestNr = nr; bestNc = nc;
-              }
-              foundCell = true; break;
+      // 4. Build the reachable frontier: empty cells adjacent to any reachable node.
+      //    Updated live as strays are placed so each placed node expands the frontier.
+      //    frontier: Array<{r, c, anchor}> where anchor is the adjacent reachable code
+      const buildFrontier = () => {
+        const seen = new Set();
+        const out  = [];
+        for (const code of reachable) {
+          const cc = allCoords[code]; if (!cc) continue;
+          for (const [dr, dc] of MOVES4) {
+            const nr = cc.r+dr, nc = cc.c+dc, key = `${nr},${nc}`;
+            if (!cellOccupied.has(key) && !seen.has(key) && nr > 0 && nc > 0) {
+              seen.add(key); out.push({ r: nr, c: nc, anchor: code });
             }
           }
-          if (!foundCell) continue;
         }
+        return out;
+      };
 
-        if (!bestCity || !bestSlot) {
-          results.failed.push({ stray, reason: 'no reachable city with free adjacent cell found' });
+      const results = { hub: HUB, totalStrays: strays.length, processed: 0, placed: [], failed: [], skipped: [] };
+
+      // workingCoords: starts as a copy of allCoords, updated as strays are placed.
+      // Used by buildFrontier so placed strays expand the frontier in dry-run too.
+      const workingCoords = Object.assign({}, allCoords);
+
+      // Override buildFrontier to use workingCoords instead of allCoords
+      const buildFrontierW = () => {
+        const seen = new Set();
+        const out  = [];
+        for (const code of reachable) {
+          const cc = workingCoords[code]; if (!cc) continue;
+          for (const [dr, dc] of MOVES4) {
+            const nr = cc.r+dr, nc = cc.c+dc, key = `${nr},${nc}`;
+            if (!cellOccupied.has(key) && !seen.has(key) && nr > 0 && nc > 0) {
+              seen.add(key); out.push({ r: nr, c: nc, anchor: code });
+            }
+          }
+        }
+        return out;
+      };
+
+      logTrace('rip-and-connect', `hub=${HUB} totalStrays=${strays.length} limit=${limit} dryRun=${dryRun}`);
+
+      // Sort strays: nodes with quest refs first, then by distance to hub
+      const sortedStrays = strays.slice(0, limit).sort((a, b) => {
+        const qa = nodeQuestRefs[a] || 0, qb = nodeQuestRefs[b] || 0;
+        if (qb !== qa) return qb - qa;
+        const ca = allCoords[a], cb = allCoords[b];
+        if (!hubCoord) return 0;
+        const da = ca ? Math.abs(ca.r-hubCoord.r)+Math.abs(ca.c-hubCoord.c) : 9999;
+        const db = cb ? Math.abs(cb.r-hubCoord.r)+Math.abs(cb.c-hubCoord.c) : 9999;
+        return da - db;
+      });
+
+      for (const stray of sortedStrays) {
+        const frontier = buildFrontierW();
+        if (!frontier.length) {
+          results.failed.push({ stray, reason: 'no free cells adjacent to reachable nodes' });
           continue;
         }
 
-        logTrace('rip-decision', `${stray}→${bestCity} slot=${bestSlot.code}(deg=${bestSlot.degree}).${bestDir} targetCell=(${bestNr},${bestNc}) score=${bestScore}`);
-        const cellKey = `${bestNr},${bestNc}`;
+        // Pick the frontier cell nearest to the stray's current position (or hub if no coords)
+        const sc = allCoords[stray] || hubCoord;
+        let best = null, bestDist = Infinity;
+        for (const fc of frontier) {
+          const dist = sc ? Math.abs(fc.r - sc.r) + Math.abs(fc.c - sc.c) : 0;
+          if (dist < bestDist) { bestDist = dist; best = fc; }
+        }
+
+        if (!best) {
+          results.failed.push({ stray, reason: 'frontier empty' });
+          continue;
+        }
+
+        const cellKey = `${best.r},${best.c}`;
         const plan = {
-          stray, bestCity, slotNode: bestSlot.code, slotDeg: bestSlot.degree,
-          needsJunction: bestSlot.needsJunction, attachDir: bestDir,
-          targetCoord: {r: bestNr, c: bestNc},
+          stray, bestCity: best.anchor, slotNode: best.anchor,
+          targetCoord: { r: best.r, c: best.c },
           strayLabel: nm[stray]?.label,
         };
 
-        // Reserve this cell immediately (even in dry-run) so next stray doesn't conflict
-        allocatedCells.set(cellKey, stray);
+        logTrace('rip-decision', `${stray} → (${best.r},${best.c}) anchor=${best.anchor} dist=${bestDist}`);
+
+        // Reserve cell + expand reachable frontier (works in both dry-run and execute)
+        cellOccupied.set(cellKey, stray);
+        workingCoords[stray] = { r: best.r, c: best.c };
+        reachable.add(stray);
 
         if (dryRun) { results.placed.push({ stray, plan }); continue; }
 
-        // Execute: move stray coordinates, wire to slot
-        try {
-          // Move stray to the open cell
-          WBAPI.nodeCoords[stray] = { r: bestNr, c: bestNc };
-          allocatedCells.set(cellKey, stray);
-
-          // Wire stray to slot node
-          WBAPI.editField('node', bestSlot.code, bestDir, stray);
-          WBAPI.editField('node', stray, OPP4[bestDir], bestSlot.code);
-
-          results.placed.push({ stray, plan, status: 'wired' });
-          results.processed++;
-        } catch(e) {
-          results.failed.push({ stray, plan, reason: e.message });
-        }
+        // Execute: write to actual allCoords (cell adjacency automatic from coords)
+        allCoords[stray] = { r: best.r, c: best.c };
+        results.placed.push({ stray, plan, status: 'placed' });
+        results.processed++;
       }
 
       if (!dryRun && results.processed > 0) {
-        // Rewrite NODE_COORDS and save
+        // Save NODE_COORDS only — no NODE_MAP direction fields to write
         const CS='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', CE='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
         const si=WBAPI._rawSrc.indexOf(CS)+CS.length, ei=WBAPI._rawSrc.indexOf(CE);
-        const entries=Object.entries(WBAPI.nodeCoords).sort(([,a],[,b])=>(a.r-b.r)||(a.c-b.c));
+        const entries=Object.entries(allCoords).sort(([,a],[,b])=>(a.r-b.r)||(a.c-b.c));
         let newSec=`\nconst NODE_COORDS = { // → doc: maps.md §NODE_COORDS\n`;
         let prevBand=-999;
         for (const [ec,ep] of entries){const band=Math.floor(ep.r/8)*8;if(band!==prevBand&&prevBand!==-999)newSec+='\n';newSec+=`  ${ec}:{r:${ep.r},c:${ep.c}},\n`;prevBand=band;}
@@ -5523,7 +5514,7 @@ async function route(req, res) {
       }
 
       logResponse('POST', url.pathname, 200,
-        `rip-and-connect dry-run: ${results.placed.length} would place, ${results.failed.length} failed, ${results.skipped.length} skipped`);
+        `rip-and-connect dry-run: ${results.placed.length} would place, ${results.failed.length} failed`);
       return json(res, 200, { ok:true, dryRun, ...results });
     }
 

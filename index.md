@@ -3,20 +3,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · ~21,200 lines · 419 nodes · 392 monsters · 55 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-12 ✅
-**Last updated:** 2026-06-14
+**Status:** Layers 0–104 implemented · ~41,929 lines · 422 nodes · 392 monsters · 62 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-13 ✅
+**Last updated:** 2026-06-15
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~21,200 | ✅ |
-| Lab reports on disk | 54 | ✅ |
-| Lab reports in index | 54 | ✅ |
+| HTML line count | ~41,929 | ✅ |
+| Lab reports on disk | 62 | ✅ |
+| Lab reports in index | 62 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-14 §CELL-12 added; §EDITOR-02-D + §WBAPI-01-F Phase 2 marked done; §II + §III tables moved from plan.md to index.md; Cell-First policy added to plan.md §I | ✅ |
+| Last sync pass | 2026-06-15 §CELL-13 navigation fixes + jump-travel removal: 5 nav bugs fixed (playerR fallback, bounds 300→500, spire crash, storyRender no-arg, snap fallback); 3 empty-cell position bugs fixed (map click, _mapAddExits, BFS); portal/transmort/hearthHome/spire removed; 1,800 dead N/S/E/W edge fields stripped; 8 missing lab reports indexed | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -40,7 +40,7 @@
 
 ## The Game in One Paragraph
 
-Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 419-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 121 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D 5e mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
+Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 422-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 121 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D 5e mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
 
 ---
 
@@ -170,6 +170,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-report-leveling-flashbang-condition-economy.md` | 18 | Level-up system, Flashbang, CONDITION_GOLD ×100, 0.5-action bonus phase |
 | `lab-report-drop-rates-balance-and-health.md` | 12 | `reward = floor(0.1 × AC × maxHP)`, health economy, Cooperative DM Principle |
 | `lab-report-loot-drop-weapon-economy.md` | 25 | Historical proposal — superseded by `_D100_TABLE`. Read for design context. |
+| `lab-report-loot-drop-system-v2.md` | 25+ | Loot drop system redesign and API formalization — `_D100_TABLE`, monster-specific drops, vendor economy |
 | `lab-report-luck-seventh-stat.md` | 48 | §XIII Luck as seventh stat — d20 roll modifier, stat interaction |
 | `lab-report-tattoo-progression-system.md` | 76 | §XLI Tattoo progression — character creation modal, HP tattoos, death persistence |
 | `lab-report-kenickie-chronicle.md` | 75+77 | §XL Kenickie's black market + §XLII Chronicle System (careerStats/runStats) |
@@ -179,6 +180,11 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | File | Layer(s) | Topic |
 |------|---------|-------|
 | `lab-report-cell-map-mud-redesign.md` | §CELL-01–§CELL-11 | Cell map redesign — 11-section grid migration, MUD session layer, 419 nodes, dead-code removal |
+| `lab-report-map-audit-layout-tooling.md` | §CELL | Map audit, grid layout solver, tooling infrastructure — coordinate audit, gap analysis, reachability |
+| `lab-report-node-network-reconnection.md` | §CELL | Full node network reconnection — stray relocation, bidirectional check, reachability recovery |
+| `lab-report-junction-reweave-overhaul.md` | §CELL | Junction reduction & reweave overhaul — boilerplate purge, coordinate mesh redesign |
+| `lab-report-mega-reweave.md` | §CELL | MegaReWeave procedure & configuration — batch coordinate migration, world mesh construction |
+| `lab-report-highway-mesh-entry.md` | §CELL | Highway mesh-entry selection & same-component skip — connected-component BFS, entry-point algorithm |
 | `lab-report-plan-cleanup-v13.md` | 9–13 | Spec archive Layers 9–13 — corridor, hunt, stalk, quest engine |
 | `lab-report-plan-cleanup-v17.md` | 14–17 | Spec archive Layers 14–17 — conditions, shield, flee, 6 bug corrections |
 | `lab-report-circuit-map-theory.md` | 9 | CS theory: sparse node mesh, junction concept, TSP framing, Hunt/Warp traces |
@@ -199,6 +205,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 |------|---------|-------|
 | `lab-report-birka-beginner-arc.md` | 41 | Birka Six NPCs, 7 quests, Rough Whiskey, Yael escort, pit fight |
 | `lab-report-npc-dialogue-system.md` | 42 | 4-state dialogue system, `NPC_DIALOGUES` (6×4×5), `_missionComplete()` |
+| `lab-report-npc-speak-sdk.md` | — | Dynamic NPC speech via LLM API — lightweight character instantiation, voice consistency, first-person vignette register |
 | `lab-report-friendships-with-magic.md` | 41–42 | Session postmortem — waypoint BFS highlight, Hunt Mode, EB negotiation |
 | `lab-report-living-world.md` | 44 | World progression events, Gigault stall, NPC farewells, Act III desaturation |
 | `lab-report-web-of-connections.md` | 45 | `FROBERGER_TRACES`, `NPC_CROSS_REFS` (17), Room 6, Yael patrol, cross-item triggers |
@@ -360,7 +367,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 | Const | Purpose |
 |---|---|
-| `NODE_MAP` | ~420 named nodes with `r,c` grid coords; no `N/S/E/W` fields (stripped §CELL-01); 268 zombie J-stubs purged by §CELL-05b |
+| `NODE_MAP` | 422 named nodes with `r,c` grid coords; all `N/S/E/W`, `portal`, `spire` edge fields stripped (§CELL-01 + §CELL-13); 268 zombie J-stubs purged by §CELL-05b; exits derived at runtime from CELL_GRID adjacency only |
 | `NODE_COORDS` | Grid position `{r,c}` for all nodes; used by cell renderer and minimap |
 | `CELL_GRID` | Reverse grid lookup; key `"r,c"` → node code; computed at startup from `NODE_MAP`; `getCellGrid()` in server caches it per `WBAPI.nodeMap` reference |
 | `QUEST_DB` | Quest definitions: activateNode, objectiveText, reward, completionCheck; 1695 quests |
@@ -379,7 +386,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `SWEELINCK_DIALOGUE_VARIANTS` | 5 variants keyed by curse score bracket + Birka variant if `_lubeckFriends()≥3` |
 | `BIRKA_NPC_PROFILES` | 6 Birka NPC profiles (Yael/Brynn/Quill/Pachelbel/Weckmann/Auros); key/name/occupation/node |
 | `NPC_DIALOGUES` | 6 NPCs × 4 states × 5 quotes each; cycled by visit count |
-| `POTION_TIERS` | 4 potion tiers: minor/healing/greater/superior; `{name, icon, heal, cost, sell}` |
+| `POTION_TIERS` | 4 healing potion tiers: minor/healing/greater/superior; `{name, icon, heal, cost}`; transmort scroll removed §CELL-13 |
 | `SHIELD_ITEMS` | 6 tiers: Small +1 → Legendary +5 → Ancient +6 AC; vendor-gated by minLevel |
 | `DAGGER_ITEMS` | 4 offhand daggers (drop-only): +1 Royal (Lv3) → +4 Voidsteel (Lv20) |
 | `WEAPON_ITEMS` | 70 main-hand weapons (14 base × 5 magic tiers 0–+4); `_magicTierAllowed()` gates drops |
@@ -417,7 +424,6 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.inventory` | array | All held items |
 | `S_story.quests` | object | Quest status map: `questId → 'active'|'done'|'failed'` |
 | `S_story.defeatedBattles` | object | nodeCode → true for completed story battles |
-| `S_story.hearthHome` | string | Transmort Scroll destination node code |
 | `S_story.checkpointNode` | string | Last inn slept at (respawn point) |
 | `S_story.battleTurn` | `'player'|'enemy'` | Initiative state for current battle |
 | `S_story.battleRound` | number | Current round number |
@@ -668,8 +674,8 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 
 ---
 
-*Last updated: 2026-06-14*
-*Codebase: `roll2hit-v3.html` · ~21,300 lines · Layers 0–104 complete · 419 nodes · 392 monsters · 1695 quests · cell-based navigation (§CELL-01–§CELL-12)*
+*Last updated: 2026-06-15*
+*Codebase: `roll2hit-v3.html` · ~41,929 lines · Layers 0–104 complete · 422 nodes · 392 monsters · 1695 quests · cell-based navigation (§CELL-01–§CELL-13) · all jump-travel removed*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---

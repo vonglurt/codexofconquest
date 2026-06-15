@@ -3,8 +3,8 @@
 # roll2hit.com — Node Network Technical Reference
 
 **File:** `roll2hit-v3.html`  
-**Last updated:** 2026-06-15  
-**Node count:** 419 named nodes with grid coordinates (reachable via `cellMove`). The 268 zombie J-stubs with no `r,c` were purged in §CELL-05b.
+**Last updated:** 2026-06-15 §CELL-13  
+**Node count:** 422 named nodes with grid coordinates (reachable via `cellMove`). The 268 zombie J-stubs with no `r,c` were purged in §CELL-05b.
 
 ---
 
@@ -13,8 +13,8 @@
 All nodes have a grid coordinate `{r, c}` stored in `NODE_COORDS`. The grid is at least 16 rows × 200 columns (expanded by the 1367 import; the 1367 region extends to c ≈ 428).
 
 ```
-r = 1 (north) → 300 max (south)
-c = 1 (west)  → 300 max (east)
+r = 1 (north) → 500 max (south)
+c = 1 (west)  → 500 max (east)
 ```
 
 Grid coordinates serve two purposes:
@@ -68,7 +68,7 @@ const CELL_GRID = (() => {
 
 ## 3. Node Record Schema (NODE_MAP)
 
-Each node is a self-describing record. **N, S, E, W, SW, and spire direction fields were stripped in §CELL-01** — exits are derived at runtime from `CELL_GRID` adjacency, not stored data.
+Each node is a self-describing record. **All N, S, E, W, SW, spire, and portal direction fields were stripped** (§CELL-01 + §CELL-13) — exits are derived at runtime from `CELL_GRID` adjacency only. No stored edge data of any kind.
 
 ```js
 NodeCode: {
@@ -89,7 +89,6 @@ NodeCode: {
   isEpicBattleground: true,
   isFishingLake: true,
   bossKey: '<str>',      // epic nodes only
-  portal: '<code>',      // OU → GA (distinct mechanic, not a nav edge)
 }
 ```
 
@@ -117,7 +116,7 @@ Player presses N/E/S/W
   │
   ├─ cellMove(dir) called
   │   ├─ Compute (nr, nc) = (playerR ± 1, playerC ± 1)
-  │   ├─ Bounds check: nr/nc must be 1–300
+  │   ├─ Bounds check: nr/nc must be 1–500
   │   ├─ IMPASSABLE_CELLS check (water — populated in §CELL-10)
   │   ├─ Gate-lock checks (TLS shards, Damascus gate, etc.)
   │   ├─ destCode = CELL_GRID["nr,nc"]
@@ -231,7 +230,7 @@ These nodes have only one cardinal grid neighbor (plus any epic/portal extras). 
 | SF | The Map Shop | W → MQ |
 | MS | Aboard the Tilbury Star | W → DK |
 | YC | Yugurt Cabin | N → YL |
-| OU | The Observatory Outhouse | W → BQ (has portal → GA) |
+| OU | The Observatory Outhouse | W → BQ |
 | GA | Greek Agora | N → KT |
 | CO | Cosmic Realm | S → CI (game finale) |
 
@@ -239,17 +238,19 @@ Epic Battleground nodes (E*) all have exactly one grid neighbor — their parent
 
 ---
 
-## 8. Special Exits
+## 8. Jump-Travel Removal (§CELL-13, 2026-06-15)
 
-`SW` and `spire` direction fields were stripped in §CELL-01. DS → ED and HC → EK are now co-located in CELL_GRID at adjacent cells; no stored edge is needed.
+All non-cell-grid travel mechanisms were removed. Navigation is strictly one adjacent cell per move.
 
-**Portal exits** (stored as `portal` field — distinct mechanic, not a nav edge):
+| Removed | What it did | Replacement |
+|---------|-------------|-------------|
+| `storyPortal()` + `node.portal` | Instant OU→GA teleport | Walk the grid (OU and GA are navigable by cell path) |
+| `storyUseTransmort()` + transmort scroll | Jump to hearth home inn | Walk or use waypoint BFS |
+| `storySetHearthHome()` + `S_story.hearthHome` | Marked a home inn for transmort | Removed — `checkpointNode` (death respawn) is the only warp left |
+| `node.spire` field + spire exit in sidebar | Extra non-NSEW portal exit | Removed |
+| N/S/E/W edge fields on all nodes | Legacy explicit edge data (~1,800 lines) | Already unused; now fully stripped |
 
-| Code | Portal | Dest |
-|------|--------|------|
-| OU | portal | GA (Greek Agora) — instant warp, no encounter |
-
-The `portal` field was preserved during §CELL-01 stripping because it drives `storyPortal()`, which is a teleport mechanic, not a grid movement.
+`SW` and `spire` direction fields were stripped in §CELL-01. DS → ED and HC → EK are co-located in CELL_GRID at adjacent cells.
 
 ---
 
@@ -258,18 +259,20 @@ The `portal` field was preserved during §CELL-01 stripping because it drives `s
 `_bfsGridPath(fromCode, toCode)` walks `CELL_GRID` one cell at a time using standard BFS. It returns a path of `{r, c, code}` steps from the player's current position to the target node. No stored edge data is used.
 
 ```js
-// First step direction toward a waypoint
-function _bfsGridDir(fromCode, toCode) {
-  const path = _bfsGridPath(fromCode, toCode);
+// First step direction toward a waypoint — startR/startC optional for empty-cell accuracy
+function _bfsGridDir(fromCode, toCode, startR, startC) {
+  const path = _bfsGridPath(fromCode, toCode, startR, startC);
   if (!path.length) return null;
-  const startCoord = NODE_COORDS[fromCode] || { r: S_story.playerR, c: S_story.playerC };
+  const startCoord = (startR != null && startC != null)
+    ? { r: startR, c: startC }
+    : NODE_COORDS[fromCode] || { r: S_story.playerR, c: S_story.playerC };
   const dr = path[0].r - startCoord.r;
   const dc = path[0].c - startCoord.c;
   return dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
 }
 ```
 
-`storyWaypoint()` calls `_bfsGridDir` and then `cellMove(dir)` to auto-step toward the objective. The dpad buttons are highlighted with `.dpad-wp` for the waypoint direction in `_updateExitLinks()`.
+Both `_updateExitLinks()` and `storyWaypoint()` pass `(pr, pc)` — the actual player grid position — as `startR/startC`. This ensures waypoint directions are correct when the player is standing on an unnamed empty cell (where `currentCode` still points to the last named node). `storyWaypoint()` calls `cellMove(dir)` — one step per button press, not a teleport.
 
 **Hunt Mode:** When `S_story.huntMode` is true, `_enterEmptyCell` rolls at `effectiveRate = 1.0` (guaranteed encounter). Named-node encounters are unchanged. The quest-stalked monster selection (`_stalkedMonsterPick`) is still used for node battles.
 
