@@ -120,6 +120,28 @@ Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI serve
 | `tests/integration/autosave.spec.js` | Autosave on navigation, save-and-verify discipline (§UNIFY-09) | ~4 tests |
 | `tests/integration/worldbuilder-walk.test.js` | **§WALK** tab in worldbuilder.html — load/nav/chips/D-pad/keyboard/neighbor list/edit form/dirty tracking/quest panel/coord index/cross-tab buttons | **73 tests** |
 
+### Completed Work Registry
+
+All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
+
+| Item | Date | What was built |
+|------|------|---------------|
+| **§CELL-01–§CELL-13** | 2026-06-13/14 | Cell-first MUD redesign: stripped N/E/S/W from NODE_MAP; added `CELL_GRID` + `IMPASSABLE_CELLS`; rewrote movement as `cellMove(dir)`; empty cell traversal (`_enterEmptyCell`); abolished junction nodes (268 stubs purged); BFS + heatmap rewritten for grid; MUD session layer (`/api/session/*`); cell REST endpoints (`/api/cell/:r/:c`, `/api/grid/*`); quest triggers cell-driven; minimap extended with visited-cell fog; dead corridor code removed; all docs synced |
+| **§UNIFY-01–§UNIFY-10** | 2026-06-15 | Unified in-game experience: empty-cell/named-node UI parity (`_renderNodeShell`); `storyMsg` as single narrative channel; `storyUpdateStatus` call discipline; exit link consistency (uses `playerR/C` not `currentCode`); modal `.visible` class audit (no change needed); `ITEM_TYPES` registry; quest/mission-bit boundary audit; `parseLoot` utility; autosave discipline + 4 Playwright tests; `_gameWarn` channel for soft errors |
+| **§ARCH-02 Phases 1–5** | 2026-06-12/15 | Operand registry + full-cycle API: `OPERAND_CONTRACTS` (12 kinds); `WBAPI.quests.validate/advise/create/toOperands/chain`; `WBAPI.operands.list/contract/validate`; quest creation UI (opQuestCreate); escort + party runtime (`S.party`, `escort` pickup/dropoff, `talk_party` in inventory); legacy quest conversion (`toOperands` for 108 skill_check quests; §HUNT-01 + §SPARK-01 bits arrays); full advisory enforcement (world-logic hard-block on create + server guard on POST /api/quest); audit extension for bits; `./api.sh advise` composite call |
+| **§WORLDBUILDER-02 Phases 1–4** | 2026-06-12 | Investigation mode: quest detail card with arc siblings + upstream/downstream flags; arc filter; mission classification (`_classifyQuest`, 10 classes, `WBAPI.quests.byClass`); Location Profile card (`WBAPI.location.profile`); SVG radial relationship graph in node/quest/NPC detail panes; `_questsByNpc` + `_questsByWaypoint` indexes; `/api/location/:code` enriched |
+| **§ARCH-01 Phases 1–2** | 2026-06-12/14 | UQF schema foundation: `SCHEMA_VERSION`, `QuestRuntime`, `adaptLegacyQuest()` (inert); `BIT_CONTRACTS` + `validateQuest()` in worldbuilder; §D01-07 "The Maintenance Plate" arc (5 quests at HKG) migrated from NPC_DIALOGUE dead-code to QUEST_DB |
+| **§EDITOR-01** | 2026-06-15 | "✏ Editor" tab in worldbuilder.html: type-aware form (side/skill_check/main/epic); 8 template presets (§SPARK hook/skill, §HUNT setup/invest, §WHODUNIT drain, §ALCHEMY beat, §WISDOM frag); live preview card; flag dependency panel (reads/writes from S_story.*); ID uniqueness badge; ⚡ Advise (§ARCH-02 advisory); ↳ storyRender skeleton generator; ◇ JS export (paste-ready QUEST_DB entry); POST Quest; operand bits builder |
+| **§WALK** | 2026-06-15 | "🚶 Walk" tab in worldbuilder.html — playable world editor: 3-column layout (mini-map canvas / game-style node view / inline edit form); live mini-map (196×400px, SCALE=10, current=blue dot+halo, neighbors=orange, edges, click=teleport); D-pad + neighbor list navigation; WASD/arrow keys; jump input; NPC/BATTLE/QUEST info chips; dirty-tracking edit form (label/name/act/terrain/npc/battle/desc); PUT to server; quests-at-node panel; cross-tab links (CRUD/Editor/Quests/NPCs); 73/73 Playwright integration tests green |
+| **§SPARK-01** | 2026-06-14 | The Harmony Chain (5 quests at LCY+SEN): smalt befriended → pip met → bioluminescent parasite found → whodunit solved → aldous confessed → harmony chain complete; full storyRender UI; all tokens |
+| **§SPARK-01-H Naval Ext.** | 2026-06-14 | Open Water arc (quest_sea_01/02/03 at NWI): strange stillness → INT DC 13 investigation → WIS DC 14 escort into trench depth; pirateCrew_allied; Joint Pirate Debt Note |
+| **§FISH-01** | 2026-05-29 | Fish + lake magic in worldbuilder + API: `FISH_POOL`/`NIGHT_FISH_POOL`/`LAKE_MAGIC_DB` anchors; `WBAPI.fishPool/nightFishPool/lakeMagicDb`; `/api/fish`, `/api/lake-magic` endpoints; fishing sim easter egg in Dice Lab; `_lakeMagicBonuses()` drop in `battKillEvent()` |
+| **§WBAPI-01 Ph 1–2** | 2026-05-29/06-05 | `POST /api/terrain`, `POST /api/monster`; `GET /api/export/:collection` (node_map, quest_db, monster_pool, world_db, fish_pool, lake_magic; formats: json/js/module); `GET /api/flags` + `POST /api/flags` |
+| **§MBIT-01** | 2026-06-05 | Mission bit token system: `_grantMissionBit`/`_takeMissionBit` helpers; `type:'mission_bit'` inventory items; 🪬 token display in inventory panel |
+| **§CELL-01–§CELL-13** nav/session | 2026-06-14 | See §CELL entry above |
+| **§D01-07 Maintenance Plate** | 2026-06-14 | 5-quest arc at HKG: WIS Perception DC 10 → auto WIS save → Data Wraith battle → INT Arcana DC 13 cipher → CHA Persuasion DC 12 identity reveal; Scholar King's Name Plate reward |
+| **§WORLDBUILDER-02-F open items** | — | `_questsByNpc` ✅ done; `_questsByWaypoint` ✅ done; `_nodesByTerrain` index pending; `_flagToQuests` arc-class map pending |
+
 ### Version Snapshots
 
 | Location | Contents |
