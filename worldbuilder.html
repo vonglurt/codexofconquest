@@ -406,6 +406,7 @@ select.fi{appearance:none;}
   <div class="nav-tab" data-tab="builder">🏗 Builder</div>
   <div class="nav-tab" data-tab="wizard">✦ Wizard</div>
   <div class="nav-tab" data-tab="grid">🔲 Grid</div>
+  <div class="nav-tab" data-tab="editor">✏ Editor</div>
   <div class="nav-sep"></div>
   <div id="topbar-right">
     <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
@@ -8636,6 +8637,707 @@ window.switchTab = function(name) {
 document.addEventListener('wbapi:loaded', () => {
   if (GG('tab-grid').classList.contains('active')) refreshHealth();
 });
+
+})();
+
+/* ══════════════════════════════════════════════════════════════════════
+   §EDITOR-01 — Quest Creator Tab
+   ══════════════════════════════════════════════════════════════════════ */
+(function(){
+
+const EG = id => document.getElementById(id);
+
+// ── CSS ───────────────────────────────────────────────────────────────────────
+document.head.insertAdjacentHTML('beforeend', `<style>
+#tab-editor { flex-direction:column; overflow:hidden; }
+.ed-section { background:var(--bg2); border:1px solid var(--border); border-radius:6px; padding:10px 12px; }
+.ed-shd { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+.ed-bit-card { display:flex; align-items:flex-start; gap:6px; padding:7px; background:var(--bg3); border:1px solid var(--border); border-radius:5px; flex-wrap:wrap; }
+.ed-adv-err { color:var(--red); }
+.ed-adv-warn { color:var(--yellow); }
+.ed-adv-ok { color:var(--green); }
+#ed-card-preview { background:var(--bg3); border:1px solid var(--border); border-radius:6px; padding:12px 14px; font-size:12px; line-height:1.6; }
+#ed-card-preview .qc-type { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; border-radius:3px; padding:1px 6px; display:inline-block; margin-bottom:6px; }
+#ed-card-preview .qc-title { font-weight:700; color:var(--text); font-size:13px; margin-bottom:4px; }
+#ed-card-preview .qc-desc { color:var(--muted); font-size:11px; margin-bottom:6px; line-height:1.5; }
+#ed-card-preview .qc-hint { font-size:10px; color:var(--accent); border-top:1px solid var(--border); padding-top:5px; }
+#ed-card-preview .qc-dc { font-size:10px; color:var(--yellow); margin-top:3px; }
+</style>`);
+
+// ── Constants ─────────────────────────────────────────────────────────────────
+const ED_TYPE_COLOR = { side:'#58a6ff', skill_check:'#3fb950', main:'#d29922', epic:'#f778ba' };
+const SKILLS_ALL = ['Acrobatics','Animal Handling','Arcana','Athletics','Deception',
+  'History','Insight','Intimidation','Investigation','Medicine','Nature',
+  'Perception','Performance','Persuasion','Religion','Sleight of Hand','Stealth','Survival'];
+const BIT_FIELDS = {
+  talk_at:     ['node','npcKey','objectKey'],
+  skill_check: ['ability','dc','label','passText','failText'],
+  navigate:    ['fromNode','toNode','hint'],
+  kill_at:     ['node','monsterKey','count'],
+  escort:      ['npcKey','fromNode','toNode'],
+  talk_party:  ['npcKey','talkFlag'],
+  deliver:     ['item','toNode','fromNode'],
+  collect_item:['item','icon'],
+  consume_item:['item'],
+  investigate: ['node','target','investigateFlag'],
+  flag_gate:   ['requires'],
+  flag_write:  ['flag','value'],
+  choice:      ['prompt','options'],
+};
+const PRESET_BLANK = { type:'side', checkStat:'wis', checkSkill:'Perception', checkDC:'12' };
+const PRESETS = {
+  blank: {},
+  spark_hook: {
+    type:'side',
+    hint:'Talk to the creature near the water\'s edge.',
+    disposition:'It moves differently than any creature you know. Not threatening. Curious.',
+    desc:'Something alive is watching you from the shallows.',
+    completeFn:'S_story.xp = (S_story.xp||0) + 150;\nstoryMsg("You made contact.");',
+  },
+  spark_skill: {
+    type:'skill_check', checkStat:'wis', checkSkill:'Animal Handling', checkDC:'11',
+    retryable:true, xpAward:'0',
+    onPass:'S_story.creatureBefriended = true;\nS_story.xp = (S_story.xp||0) + 250;\nstoryMsg("The creature relaxes. You have its trust.");',
+    onFail:'storyMsg("It flinches away. Try again later.");',
+  },
+  hunt_setup: {
+    type:'side',
+    disposition:'Something is wrong here. You can feel it in the fog.',
+    desc:'The bodies were found three mornings apart. Local logic says beast. You are not certain.',
+    hint:'Investigate the scene before committing to a theory.',
+  },
+  hunt_invest: {
+    type:'skill_check', checkStat:'int', checkSkill:'Investigation', checkDC:'12',
+    retryable:false,
+    onPass:'S_story.realCulpritFound = true;\nS_story.xp = (S_story.xp||0) + 300;\nstoryMsg("The wound pattern is wrong. No animal made this.");',
+    onFail:'storyMsg("The evidence is confusing. You need another approach.");',
+  },
+  whodunit_drain: {
+    type:'skill_check', checkStat:'int', checkSkill:'Investigation', checkDC:'12',
+    retryable:false,
+    onPass:'S_story.clueFound = true;\nS_story.xp = (S_story.xp||0) + 200;\nstoryMsg("The detail clicks. You write it down.");',
+    onFail:'storyMsg("Nothing useful. The room gives up nothing.");',
+  },
+  alchemy_beat: {
+    type:'side',
+    desc:'Fragment found. It connects to nothing you have read yet.',
+    disposition:'The page is torn, the margin annotated in a hand you do not recognise.',
+    completeFn:'S_story.xp = (S_story.xp||0) + 250;\nstoryMsg("Fragment catalogued.");',
+  },
+  wisdom_frag: {
+    type:'skill_check', checkStat:'int', checkSkill:'Arcana', checkDC:'10',
+    retryable:false,
+    onPass:'S_story.fragmentRead = true;\nS_story.xp = (S_story.xp||0) + 200;\nstoryMsg("The Ardley text confirms it. Roen\'s commentary in the margin disagrees.");',
+    onFail:'storyMsg("The language resists you. Return when you have more context.");',
+  },
+};
+
+// ── Insert HTML ───────────────────────────────────────────────────────────────
+EG('tab-grid').insertAdjacentHTML('afterend', (function(){
+  const skillOpts = SKILLS_ALL.map(s => `<option value="${s}">${s}</option>`).join('');
+  return `
+<div class="panel" id="tab-editor">
+
+  <!-- Preset toolbar -->
+  <div style="display:flex;gap:5px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap;align-items:center;background:var(--bg2)">
+    <span style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-right:4px">Preset</span>
+    <button class="btn sm" id="ed-pre-blank">Blank</button>
+    <button class="btn sm" id="ed-pre-spark-hook">§SPARK hook</button>
+    <button class="btn sm" id="ed-pre-spark-skill">§SPARK skill</button>
+    <button class="btn sm" id="ed-pre-hunt-setup">§HUNT setup</button>
+    <button class="btn sm" id="ed-pre-hunt-invest">§HUNT invest</button>
+    <button class="btn sm" id="ed-pre-whodunit">§WHODUNIT drain</button>
+    <button class="btn sm" id="ed-pre-alchemy">§ALCHEMY beat</button>
+    <button class="btn sm" id="ed-pre-wisdom">§WISDOM frag</button>
+    <div style="margin-left:auto;display:flex;gap:5px">
+      <button class="btn sm" id="ed-btn-advise">⚡ Advise</button>
+      <button class="btn sm" id="ed-btn-storygen">↳ storyRender</button>
+      <button class="btn primary sm" id="ed-btn-export">◇ Export JS</button>
+      <button class="btn primary sm" id="ed-btn-post">POST Quest</button>
+    </div>
+  </div>
+
+  <!-- Main split -->
+  <div style="display:flex;flex:1;overflow:hidden;">
+
+    <!-- LEFT: form -->
+    <div id="ed-form" style="width:500px;flex-shrink:0;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;border-right:1px solid var(--border);">
+
+      <!-- Core fields -->
+      <div class="ed-section">
+        <div class="ed-shd">Core Fields</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div class="fg" style="flex:0 0 180px">
+            <div class="fl">Quest ID <span id="ed-id-badge" style="margin-left:4px;font-size:10px"></span></div>
+            <input class="fi" id="ed-id" name="id" placeholder="quest_wis_04…">
+          </div>
+          <div class="fg" style="flex:0 0 110px">
+            <div class="fl">Type</div>
+            <select class="fi" id="ed-type" name="type">
+              <option value="side">side</option>
+              <option value="skill_check">skill_check</option>
+              <option value="main">main</option>
+              <option value="epic">epic</option>
+            </select>
+          </div>
+          <div class="fg" style="flex:1 1 100px">
+            <div class="fl">Arc</div>
+            <input class="fi" id="ed-arc" name="arc" placeholder="quest_wis">
+          </div>
+        </div>
+        <div class="fg" style="margin-top:6px">
+          <div class="fl">Title</div>
+          <input class="fi" id="ed-title" name="title" placeholder="Short quest title">
+        </div>
+        <div style="display:flex;gap:8px;margin-top:6px">
+          <div class="fg">
+            <div class="fl">Activate Node</div>
+            <select class="fi" id="ed-activateNode" name="activateNode">
+              <option value="">— select node —</option>
+            </select>
+          </div>
+          <div class="fg">
+            <div class="fl">Waypoint Node (opt)</div>
+            <select class="fi" id="ed-waypointNode" name="waypointNode">
+              <option value="">— none —</option>
+            </select>
+          </div>
+        </div>
+        <div class="fg" style="margin-top:6px">
+          <div class="fl">Activate Condition (JS expression, no S_story. prefix needed)</div>
+          <input class="fi" id="ed-activateCond" name="activateCond" placeholder="flagA &amp;&amp; !flagB">
+        </div>
+        <div style="display:flex;gap:8px;margin-top:6px">
+          <div class="fg">
+            <div class="fl">Hint</div>
+            <input class="fi" id="ed-hint" name="hint" placeholder="Quest panel hint line">
+          </div>
+          <div class="fg" style="flex:0 0 90px">
+            <div class="fl">Reward (gp)</div>
+            <input class="fi" id="ed-reward" name="reward" type="number" placeholder="0">
+          </div>
+        </div>
+        <div class="fg" style="margin-top:6px">
+          <div class="fl">Disposition (closing NPC line)</div>
+          <input class="fi" id="ed-disposition" name="disposition" placeholder="The closing line the NPC speaks.">
+        </div>
+        <div class="fg" style="margin-top:6px">
+          <div class="fl">Desc</div>
+          <textarea class="fi" id="ed-desc" name="desc" rows="3" placeholder="Player-facing quest description…"></textarea>
+        </div>
+      </div>
+
+      <!-- skill_check fields -->
+      <div class="ed-section" id="ed-sec-skill" style="display:none">
+        <div class="ed-shd">Skill Check Fields</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div class="fg" style="flex:0 0 90px">
+            <div class="fl">Stat</div>
+            <select class="fi" id="ed-checkStat" name="checkStat">
+              <option value="wis">wis</option>
+              <option value="int">int</option>
+              <option value="cha">cha</option>
+              <option value="str">str</option>
+              <option value="dex">dex</option>
+              <option value="con">con</option>
+            </select>
+          </div>
+          <div class="fg" style="flex:1 1 140px">
+            <div class="fl">Skill</div>
+            <select class="fi" id="ed-checkSkill" name="checkSkill">${skillOpts}</select>
+          </div>
+          <div class="fg" style="flex:0 0 60px">
+            <div class="fl">DC</div>
+            <input class="fi" id="ed-checkDC" name="checkDC" type="number" placeholder="12">
+          </div>
+          <div class="fg" style="flex:0 0 72px">
+            <div class="fl">XP Award</div>
+            <input class="fi" id="ed-xpAward" name="xpAward" type="number" placeholder="0">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:6px;align-items:center">
+          <div class="fg">
+            <div class="fl">checkPassFlag</div>
+            <input class="fi" id="ed-checkPassFlag" name="checkPassFlag" placeholder="myQuestPassed">
+          </div>
+          <div style="flex:0 0 80px;padding-top:14px;display:flex;align-items:center;gap:5px">
+            <input type="checkbox" id="ed-retryable" name="retryable">
+            <label for="ed-retryable" style="font-size:11px;color:var(--muted);cursor:pointer">Retryable</label>
+          </div>
+        </div>
+        <div class="fg" style="margin-top:6px">
+          <div class="fl">onPass body</div>
+          <textarea class="fi" id="ed-onPass" name="onPass" rows="4" placeholder="S_story.flagC = true;&#10;S_story.xp = (S_story.xp||0) + 250;&#10;storyMsg('...');"></textarea>
+        </div>
+        <div class="fg" style="margin-top:6px">
+          <div class="fl">onFail body</div>
+          <textarea class="fi" id="ed-onFail" name="onFail" rows="2" placeholder="storyMsg('...');"></textarea>
+        </div>
+      </div>
+
+      <!-- side/main/epic fields -->
+      <div class="ed-section" id="ed-sec-side" style="display:none">
+        <div class="ed-shd">Side / Main / Epic Fields</div>
+        <div class="fg">
+          <div class="fl">Complete Items (comma-separated)</div>
+          <input class="fi" id="ed-completeItems" name="completeItems" placeholder="Bloodstained Map, Trade Seal…">
+        </div>
+        <div class="fg" style="margin-top:6px">
+          <div class="fl">completeFn body</div>
+          <textarea class="fi" id="ed-completeFn" name="completeFn" rows="4" placeholder="S_story.xp = (S_story.xp||0) + 300;&#10;S_story.flagName = true;&#10;storyMsg('...');"></textarea>
+        </div>
+        <div class="fg" style="margin-top:6px">
+          <div class="fl">passText</div>
+          <textarea class="fi" id="ed-passText" name="passText" rows="2" placeholder="On completion text…"></textarea>
+        </div>
+      </div>
+
+      <!-- Operand bits -->
+      <div class="ed-section">
+        <div class="ed-shd">
+          <span>Operand Bits</span>
+          <button class="btn sm" id="ed-add-bit">+ Add Bit</button>
+        </div>
+        <div id="ed-bits-list" style="display:flex;flex-direction:column;gap:6px"></div>
+      </div>
+
+    </div><!-- /ed-form -->
+
+    <!-- RIGHT: preview + advisory + export -->
+    <div id="ed-right" style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0">
+
+      <!-- Quest card preview -->
+      <div class="ed-section">
+        <div class="ed-shd">Preview</div>
+        <div id="ed-card-preview">
+          <div class="qc-type" id="ed-pv-type" style="background:var(--bg);color:var(--muted)">side</div>
+          <div class="qc-title" id="ed-pv-title" style="color:var(--muted)">Quest title</div>
+          <div class="qc-desc" id="ed-pv-desc">Quest description will appear here.</div>
+          <div class="qc-hint" id="ed-pv-hint" style="display:none"></div>
+          <div class="qc-dc" id="ed-pv-dc" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- Advisory -->
+      <div class="ed-section">
+        <div class="ed-shd">Advisory <span id="ed-adv-badge" style="font-size:10px;font-weight:400;color:var(--muted)">—</span></div>
+        <div id="ed-advisory" style="font-size:11px;line-height:1.7;color:var(--muted)">
+          Fill in Quest ID + Activate Node, then click ⚡ Advise.
+        </div>
+      </div>
+
+      <!-- Flag dependencies -->
+      <div class="ed-section">
+        <div class="ed-shd">Flag Dependencies</div>
+        <div id="ed-flags" style="font-size:11px;line-height:1.7;color:var(--muted)">Fill in activateCond or onPass / completeFn to see reads/writes.</div>
+      </div>
+
+      <!-- storyRender skeleton -->
+      <div class="ed-section">
+        <div class="ed-shd">
+          <span>storyRender Skeleton</span>
+          <button class="btn sm" id="ed-btn-story-copy" style="display:none">Copy</button>
+        </div>
+        <textarea class="fi" id="ed-storygen-out" rows="9" style="display:none;font-size:10px;margin-top:4px" readonly></textarea>
+        <div id="ed-storygen-placeholder" style="font-size:11px;color:var(--muted)">Click ↳ storyRender to generate a skeleton block.</div>
+      </div>
+
+      <!-- JS export -->
+      <div class="ed-section">
+        <div class="ed-shd">
+          <span>JS Export</span>
+          <span id="ed-export-badge" style="font-size:10px;font-weight:400;color:var(--muted)"></span>
+          <button class="btn sm" id="ed-btn-copy-export" style="display:none">Copy</button>
+        </div>
+        <textarea class="fi" id="ed-export-out" rows="20" style="display:none;font-size:10px;margin-top:4px" readonly></textarea>
+        <div id="ed-export-placeholder" style="font-size:11px;color:var(--muted)">Click ◇ Export JS to generate a paste-ready QUEST_DB entry.</div>
+      </div>
+
+      <!-- POST result -->
+      <pre id="ed-post-result" class="op-result" style="display:none"></pre>
+
+    </div><!-- /ed-right -->
+
+  </div><!-- /split -->
+</div><!-- /tab-editor -->
+`;
+})());
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let edDebounce = null;
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+function edVal(id)  { const e = EG(id); return e ? (e.type === 'checkbox' ? e.checked : e.value.trim()) : ''; }
+function edSet(id, v) {
+  const e = EG(id); if (!e) return;
+  if (e.type === 'checkbox') e.checked = !!v;
+  else e.value = (v == null ? '' : v);
+}
+
+function edPopulateNodes() {
+  if (!WBAPI.loaded) return;
+  const nodes = Object.entries(WBAPI.nodeMap)
+    .map(([code, n]) => ({ code, label: n.label || n.name || code }))
+    .sort((a,b) => a.code.localeCompare(b.code));
+  for (const selId of ['ed-activateNode','ed-waypointNode']) {
+    const sel = EG(selId); if (!sel) continue;
+    const cur = sel.value;
+    const empty = selId === 'ed-waypointNode' ? '— none —' : '— select node —';
+    sel.innerHTML = `<option value="">${empty}</option>`;
+    for (const {code, label} of nodes) {
+      const o = document.createElement('option');
+      o.value = code; o.textContent = `${code} — ${label}`;
+      sel.appendChild(o);
+    }
+    if (cur) sel.value = cur;
+  }
+}
+
+function edKnownFlags() {
+  const s = new Set();
+  for (const { reads, writes } of Object.values(WBAPI._questFlags || {})) {
+    reads.forEach(f => s.add(f)); writes.forEach(f => s.add(f));
+  }
+  return s;
+}
+
+function edGetBits() {
+  const bits = [];
+  for (const card of EG('ed-bits-list').children) {
+    const kind = card.querySelector('select')?.value; if (!kind) continue;
+    const bit = { kind };
+    for (const inp of card.querySelectorAll('[data-bit-field]')) {
+      const v = inp.value.trim(); if (v) bit[inp.dataset.bitField] = v;
+    }
+    bits.push(bit);
+  }
+  return bits;
+}
+
+function edAddBitCard(defaultKind) {
+  const card = document.createElement('div'); card.className = 'ed-bit-card';
+  const kindSel = document.createElement('select'); kindSel.className = 'fi fi-sm';
+  kindSel.style.flex = '0 0 120px';
+  for (const k of Object.keys(BIT_FIELDS)) {
+    const o = document.createElement('option'); o.value = k; o.textContent = k;
+    if (k === defaultKind) o.selected = true;
+    kindSel.appendChild(o);
+  }
+  const fieldsDiv = document.createElement('div');
+  fieldsDiv.style.cssText = 'display:flex;flex-wrap:wrap;gap:5px;flex:1;';
+  function renderFields(kind) {
+    fieldsDiv.innerHTML = '';
+    for (const f of (BIT_FIELDS[kind] || [])) {
+      const inp = document.createElement('input'); inp.type = 'text'; inp.className = 'fi fi-sm';
+      inp.placeholder = f; inp.dataset.bitField = f; inp.style.flex = '1 1 80px';
+      fieldsDiv.appendChild(inp);
+    }
+  }
+  renderFields(defaultKind || 'talk_at');
+  kindSel.addEventListener('change', () => { renderFields(kindSel.value); edSchedule(); });
+  const rm = document.createElement('button'); rm.className = 'btn sm'; rm.textContent = '✕'; rm.type = 'button';
+  rm.addEventListener('click', () => { card.remove(); edSchedule(); });
+  card.appendChild(kindSel); card.appendChild(fieldsDiv); card.appendChild(rm);
+  EG('ed-bits-list').appendChild(card);
+}
+
+function edBuildQuestObj() {
+  const type = edVal('ed-type');
+  const q = {};
+  const add = (k, v) => { if (v !== '' && v != null && v !== false) q[k] = v; };
+  add('id',           edVal('ed-id'));
+  add('type',         type);
+  add('title',        edVal('ed-title'));
+  add('arc',          edVal('ed-arc'));
+  const an = edVal('ed-activateNode'); if (an) q.activateNode = an;
+  const wn = edVal('ed-waypointNode'); if (wn) q.waypointNode = wn;
+  add('activateCond', edVal('ed-activateCond'));
+  add('hint',         edVal('ed-hint'));
+  const rew = edVal('ed-reward'); if (rew) q.reward = +rew;
+  add('disposition',  edVal('ed-disposition'));
+  add('desc',         edVal('ed-desc'));
+  if (type === 'skill_check') {
+    add('checkStat',     edVal('ed-checkStat'));
+    add('checkSkill',    edVal('ed-checkSkill'));
+    const dc = edVal('ed-checkDC'); if (dc) q.checkDC = +dc;
+    q.retryable = !!edVal('ed-retryable');
+    add('checkPassFlag', edVal('ed-checkPassFlag'));
+    const xp = edVal('ed-xpAward'); if (xp !== '') q.xpAward = +xp;
+    add('onPass', edVal('ed-onPass'));
+    add('onFail', edVal('ed-onFail'));
+  } else {
+    const items = edVal('ed-completeItems');
+    if (items) q.completeItems = items.split(',').map(s=>s.trim()).filter(Boolean);
+    add('completeFn', edVal('ed-completeFn'));
+    add('passText',   edVal('ed-passText'));
+  }
+  const bits = edGetBits();
+  if (bits.length) q.bits = bits;
+  return q;
+}
+
+// ── Type-aware visibility ─────────────────────────────────────────────────────
+function edUpdateType() {
+  const type = edVal('ed-type');
+  EG('ed-sec-skill').style.display = type === 'skill_check' ? '' : 'none';
+  EG('ed-sec-side').style.display  = type !== 'skill_check' ? '' : 'none';
+}
+
+// ── Preview card ──────────────────────────────────────────────────────────────
+function edUpdatePreview() {
+  const type  = edVal('ed-type');
+  const title = edVal('ed-title') || 'Quest title';
+  const desc  = edVal('ed-desc')  || 'Quest description will appear here.';
+  const hint  = edVal('ed-hint');
+  const color = ED_TYPE_COLOR[type] || '#8b949e';
+  EG('ed-pv-type').textContent = type;
+  EG('ed-pv-type').style.cssText = `background:${color}22;color:${color};border:1px solid ${color}44;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;border-radius:3px;padding:1px 6px;display:inline-block;margin-bottom:6px;`;
+  EG('ed-pv-title').textContent  = title;
+  EG('ed-pv-title').style.color  = edVal('ed-title') ? 'var(--text)' : 'var(--muted)';
+  EG('ed-pv-desc').textContent   = desc;
+  const hintEl = EG('ed-pv-hint');
+  if (hint) { hintEl.textContent = hint; hintEl.style.display = ''; }
+  else hintEl.style.display = 'none';
+  const dcEl = EG('ed-pv-dc');
+  if (type === 'skill_check') {
+    const stat = edVal('ed-checkStat'); const skill = edVal('ed-checkSkill'); const dc = edVal('ed-checkDC');
+    if (stat && dc) { dcEl.textContent = `${stat.toUpperCase()} ${skill} DC ${dc}`; dcEl.style.display = ''; }
+    else dcEl.style.display = 'none';
+  } else dcEl.style.display = 'none';
+}
+
+// ── ID uniqueness badge ───────────────────────────────────────────────────────
+function edCheckId() {
+  const id = edVal('ed-id'); const badge = EG('ed-id-badge');
+  if (!id || !WBAPI.loaded) { badge.textContent = ''; return; }
+  badge.innerHTML = WBAPI.questDb[id]
+    ? '<span style="color:var(--red)">⚠ exists</span>'
+    : '<span style="color:var(--green)">✓ new</span>';
+}
+
+// ── Flag dependency analysis ──────────────────────────────────────────────────
+function edUpdateFlags() {
+  const reads = new Set(), writes = new Set();
+  const reFlagWrite = /S_story\.([A-Za-z_][A-Za-z0-9_]*)\s*=/g;
+  const reFlagRead  = /S_story\.([A-Za-z_][A-Za-z0-9_]*)/g;
+  const cond = edVal('ed-activateCond');
+  for (const m of cond.matchAll(reFlagRead)) reads.add(m[1]);
+  const cpf = edVal('ed-checkPassFlag'); if (cpf) writes.add(cpf);
+  for (const src of [edVal('ed-onPass'), edVal('ed-onFail'), edVal('ed-completeFn')]) {
+    for (const m of src.matchAll(reFlagWrite)) writes.add(m[1]);
+    for (const m of src.matchAll(reFlagRead))  reads.add(m[1]);
+  }
+  writes.forEach(w => reads.delete(w));
+  const el = EG('ed-flags');
+  if (reads.size === 0 && writes.size === 0) {
+    el.textContent = 'Fill in activateCond or onPass / completeFn to see reads/writes.';
+    el.style.color = 'var(--muted)'; return;
+  }
+  const known = edKnownFlags();
+  const fmt = (f, isWrite) => {
+    const col = isWrite ? 'var(--green)' : 'var(--accent)';
+    const extra = !known.has(f) ? ' <span style="color:var(--yellow);font-size:9px">NEW</span>' : '';
+    return `<span style="color:${col}">${f}</span>${extra}`;
+  };
+  let html = '';
+  if (reads.size)  html += `<div><span style="color:var(--muted)">READS:</span>  ${[...reads].map(f=>fmt(f,false)).join(', ')}</div>`;
+  if (writes.size) html += `<div><span style="color:var(--muted)">WRITES:</span> ${[...writes].map(f=>fmt(f,true)).join(', ')}</div>`;
+  el.innerHTML = html; el.style.color = '';
+}
+
+// ── Advisory ─────────────────────────────────────────────────────────────────
+function edRunAdvise() {
+  const q = edBuildQuestObj();
+  const el = EG('ed-advisory'), badge = EG('ed-adv-badge');
+  if (!WBAPI.loaded) { el.textContent = 'Load a game file to enable advisory.'; badge.textContent = '—'; return; }
+  if (!q.id || !q.activateNode) { el.textContent = 'Fill in Quest ID + Activate Node to enable advisory.'; badge.textContent = '—'; return; }
+  const r = WBAPI.quests.advise(q);
+  let html = '';
+  if (r.errors.length === 0 && r.warnings.length === 0) {
+    html = '<span class="ed-adv-ok">✓ All world-logic checks pass.</span>';
+    badge.innerHTML = '<span style="color:var(--green)">✓ OK</span>';
+  } else {
+    badge.innerHTML = `<span style="color:${r.errors.length?'var(--red)':'var(--yellow)'}">` +
+      `${r.errors.length} error${r.errors.length!==1?'s':''}, ${r.warnings.length} warning${r.warnings.length!==1?'s':''}</span>`;
+  }
+  for (const e of r.errors)   html += `<div class="ed-adv-err">✗ ${e}</div>`;
+  for (const w of r.warnings) html += `<div class="ed-adv-warn">⚠ ${w}</div>`;
+  el.innerHTML = html;
+}
+
+// ── Debounced live update ─────────────────────────────────────────────────────
+function edSchedule() {
+  clearTimeout(edDebounce);
+  edDebounce = setTimeout(() => { edUpdatePreview(); edUpdateFlags(); edCheckId(); }, 250);
+}
+
+// ── storyRender skeleton ──────────────────────────────────────────────────────
+function edGenerateStoryRender() {
+  const id   = edVal('ed-id') || 'quest_id';
+  const node = edVal('ed-activateNode') || '??';
+  const cond = edVal('ed-activateCond');
+  const type = edVal('ed-type');
+  const desc = edVal('ed-desc') || '[desc text here]';
+  const arc  = edVal('ed-arc')  || 'ARC';
+  const title= edVal('ed-title')|| id;
+  const color = ED_TYPE_COLOR[type] || '#58a6ff';
+  const varName = '_' + id.replace(/[^A-Za-z0-9]/g,'');
+  const condExpr = cond
+    ? cond.replace(/\b([A-Za-z_][A-Za-z0-9_]*)\b/g, (m) =>
+        ['true','false','null','undefined','&&','||','!'].includes(m) ? m : `S_story.${m}`)
+    : '/* add condition */';
+  const sk = `// §${arc}: ${node} — ${title}
+{ const ${varName}Old = document.getElementById('${id}'); if (${varName}Old) ${varName}Old.remove();
+  if (node.code === '${node}' && ${condExpr}) {
+    const _div = document.createElement('div');
+    _div.id = '${id}'; _div.className = 'sweelinck-variant';
+    _div.style.cssText = 'margin-top:10px;border-left-color:${color};color:${color};font-size:12px;';
+    _div.textContent = ${JSON.stringify(desc)};
+    document.getElementById('story-text-box').insertAdjacentElement('afterend', _div);
+  }
+}`;
+  EG('ed-storygen-out').value = sk;
+  EG('ed-storygen-out').style.display = '';
+  EG('ed-storygen-placeholder').style.display = 'none';
+  EG('ed-btn-story-copy').style.display = '';
+}
+
+// ── JS Export ─────────────────────────────────────────────────────────────────
+function edGenerateExport() {
+  const q = edBuildQuestObj();
+  if (!q.id) { alert('Quest ID is required for export.'); return; }
+  const s = v => JSON.stringify(v);
+  let out = `  ${q.id}: { id:${s(q.id)}, type:${s(q.type||'side')},\n`;
+  if (q.title)        out += `    title:${s(q.title)},\n`;
+  if (q.arc)          out += `    arc:${s(q.arc)},\n`;
+  if (q.desc)         out += `    desc:${s(q.desc)},\n`;
+  if (q.hint)         out += `    hint:${s(q.hint)},\n`;
+  if (q.activateNode) {
+    out += `    activateNode:${s(q.activateNode)}`;
+    if (q.activateCond) {
+      const cexpr = q.activateCond.replace(/\b([A-Za-z_][A-Za-z0-9_]*)\b/g, m =>
+        ['true','false','null','undefined'].includes(m) ? m : `S_story.${m}`);
+      out += `, activateCond:() => !!(${cexpr})`;
+    }
+    out += `,\n`;
+  }
+  if (q.waypointNode) out += `    waypointNode:${s(q.waypointNode)},\n`;
+  if (q.type === 'skill_check') {
+    if (q.checkStat)     out += `    checkStat:${s(q.checkStat)},\n`;
+    if (q.checkSkill)    out += `    checkSkill:${s(q.checkSkill)},\n`;
+    if (q.checkDC)       out += `    checkDC:${q.checkDC},\n`;
+    out +=                       `    retryable:${!!q.retryable},\n`;
+    if (q.checkPassFlag) out += `    checkPassFlag:${s(q.checkPassFlag)},\n`;
+    if (q.onPass)        out += `    onPass:() => {\n      ${q.onPass.split('\n').join('\n      ')}\n    },\n`;
+    if (q.onFail)        out += `    onFail:() => { ${q.onFail.replace(/\n/g,' ')} },\n`;
+    out +=                       `    xpAward:${q.xpAward??0},\n`;
+  } else {
+    if (q.completeItems?.length) out += `    completeItems:[${q.completeItems.map(s).join(',')}],\n`;
+    if (q.completeFn)   out += `    completeFn:() => {\n      ${q.completeFn.split('\n').join('\n      ')}\n    },\n`;
+    if (q.passText)     out += `    passText:${s(q.passText)},\n`;
+  }
+  if (q.bits?.length) {
+    const bitsJson = JSON.stringify(q.bits, null, 4);
+    out += `    bits:${bitsJson.replace(/\n/g,'\n    ')},\n`;
+  }
+  if (q.reward)       out += `    reward:${q.reward},\n`;
+  if (q.disposition)  out += `    disposition:${s(q.disposition)} },\n`;
+  else                out += `  },\n`;
+
+  const placeholders = [...out.matchAll(/\[.*?\]/g)].map(m => m[0]);
+  EG('ed-export-badge').innerHTML = placeholders.length
+    ? `<span style="color:var(--yellow)">${placeholders.length} unfilled placeholder${placeholders.length>1?'s':''}</span>`
+    : '<span style="color:var(--green)">✓ ready to paste</span>';
+  EG('ed-export-out').value = out;
+  EG('ed-export-out').style.display = '';
+  EG('ed-export-placeholder').style.display = 'none';
+  EG('ed-btn-copy-export').style.display = '';
+}
+
+// ── Apply preset ──────────────────────────────────────────────────────────────
+function edApplyPreset(key) {
+  const p = PRESETS[key]; if (!p) return;
+  // Reset to blank defaults first
+  for (const [k,v] of Object.entries(PRESET_BLANK)) edSet(`ed-${k}`, v);
+  for (const id of ['ed-id','ed-title','ed-arc','ed-activateCond','ed-hint','ed-reward',
+                     'ed-disposition','ed-desc','ed-checkPassFlag','ed-onPass','ed-onFail',
+                     'ed-completeItems','ed-completeFn','ed-passText','ed-xpAward']) {
+    edSet(id, '');
+  }
+  edSet('ed-retryable', false);
+  EG('ed-bits-list').innerHTML = '';
+  // Apply preset values
+  for (const [k,v] of Object.entries(p)) edSet(`ed-${k}`, v);
+  edUpdateType(); edSchedule();
+}
+
+// ── POST Quest ────────────────────────────────────────────────────────────────
+async function edPostQuest() {
+  if (!WBAPI.loaded) { edShowResult('Load a game file first.', true); return; }
+  const q = edBuildQuestObj();
+  const res = await WBAPI.quests.create(q);
+  edShowResult(res, !res.ok);
+  if (res.ok) { WBAPI._buildIndexes(); renderQuestList(); window.switchTab('quests'); }
+}
+
+function edShowResult(data, isErr) {
+  const el = EG('ed-post-result');
+  el.style.display = ''; el.className = 'op-result '+(isErr?'err':'ok');
+  el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+}
+
+// ── Wire events ───────────────────────────────────────────────────────────────
+EG('ed-type').addEventListener('change', () => { edUpdateType(); edSchedule(); });
+EG('ed-add-bit').addEventListener('click', () => edAddBitCard('talk_at'));
+EG('ed-btn-advise').addEventListener('click', () => { edRunAdvise(); edUpdateFlags(); edCheckId(); });
+EG('ed-btn-storygen').addEventListener('click', edGenerateStoryRender);
+EG('ed-btn-export').addEventListener('click', edGenerateExport);
+EG('ed-btn-post').addEventListener('click', edPostQuest);
+EG('ed-btn-copy-export').addEventListener('click', () => {
+  navigator.clipboard.writeText(EG('ed-export-out').value).then(() => {
+    EG('ed-btn-copy-export').textContent = 'Copied!';
+    setTimeout(() => EG('ed-btn-copy-export').textContent = 'Copy', 1500);
+  });
+});
+EG('ed-btn-story-copy').addEventListener('click', () => {
+  navigator.clipboard.writeText(EG('ed-storygen-out').value).then(() => {
+    EG('ed-btn-story-copy').textContent = 'Copied!';
+    setTimeout(() => EG('ed-btn-story-copy').textContent = 'Copy', 1500);
+  });
+});
+
+// Preset buttons
+const presetMap = {
+  'ed-pre-blank':'blank','ed-pre-spark-hook':'spark_hook','ed-pre-spark-skill':'spark_skill',
+  'ed-pre-hunt-setup':'hunt_setup','ed-pre-hunt-invest':'hunt_invest',
+  'ed-pre-whodunit':'whodunit_drain','ed-pre-alchemy':'alchemy_beat','ed-pre-wisdom':'wisdom_frag',
+};
+for (const [btnId, key] of Object.entries(presetMap)) {
+  EG(btnId).addEventListener('click', () => edApplyPreset(key));
+}
+
+// Live update on form change
+const liveIds = ['ed-id','ed-title','ed-activateCond','ed-hint','ed-disposition','ed-desc',
+                 'ed-checkPassFlag','ed-onPass','ed-onFail','ed-completeFn','ed-reward',
+                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-passText'];
+for (const id of liveIds) {
+  const el = EG(id); if (el) el.addEventListener('input', edSchedule);
+}
+for (const id of ['ed-type','ed-checkStat','ed-checkSkill','ed-activateNode','ed-waypointNode','ed-retryable']) {
+  const el = EG(id); if (el) el.addEventListener('change', edSchedule);
+}
+
+// ── Tab switch hook ───────────────────────────────────────────────────────────
+const _edSwitch = window.switchTab;
+window.switchTab = function(name) {
+  _edSwitch(name);
+  if (name === 'editor') { edPopulateNodes(); edUpdateType(); edUpdatePreview(); }
+};
+document.addEventListener('wbapi:loaded', edPopulateNodes);
+
+// Initial state
+edUpdateType();
+edUpdatePreview();
 
 })();
 </script>

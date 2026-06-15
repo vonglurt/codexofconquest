@@ -1310,7 +1310,7 @@ A consolidated register of all open work across the project. Organized by domain
 
 - [ ] **§WORLDBUILDER-01 — Visual grid editor:** Full canvas-based node map editor with node detail inspector, exit bidirectional editing, collision detection. See full spec in §WORLDBUILDER-01-A through -D. *(Depends on: §WORLDBUILDER-02 Phase 1 for cross-ref panel integration.)*
 
-- [ ] **§EDITOR-01 — Quest creator UI:** Form-based quest creator with type-aware fields, flag dependency graph, storyRender block generator, token item manager, template presets. See full spec in §EDITOR-01-A through -G. *(Depends on: §ARCH-02 Phase 1 for operand validation.)*
+- [x] **§EDITOR-01 — Quest creator UI:** Form-based quest creator with type-aware fields, flag dependency graph, storyRender block generator, template presets (8 presets), live advisory via §ARCH-02, JS export, POST Quest. "✏ Editor" tab in worldbuilder.html. §EDITOR-01-D (token item manager) deferred. *(✅ 2026-06-15)*
 
 **P2 — Deferred / unscheduled:**
 
