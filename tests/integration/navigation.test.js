@@ -270,7 +270,81 @@ test.describe('Empty cell parity — _renderNodeShell discipline (§UNIFY-01)', 
 
 });
 
-// ── 5 — Status bar §UNIFY-03 ─────────────────────────────────────────────────
+// ── 5 — Exit link consistency §UNIFY-04 ──────────────────────────────────────
+//
+// Verifies _updateExitLinks() uses playerR/C (not currentCode) for position so
+// exit buttons render identically on named nodes and empty cells.
+//
+// Before §UNIFY-04, _updateExitLinks derived position from currentCode's node
+// coords as a fallback; after the fix it uses playerR/C directly and guards on
+// both being zero.
+//
+// Grid: BOO(47,223) E→ empty(47,224). From the empty cell:
+//   W → BOO(47,223) = named node    → exit-active (no exit-empty)
+//   S → LEA(48,224) = named node    → exit-active (no exit-empty)
+//   E → (47,225)    = empty cell    → exit-active exit-empty
+//   N → (46,224)    = empty cell    → exit-active exit-empty
+// Waypoint LHR(64,224): BFS from (47,224) → first step S → btn-S has dpad-wp.
+
+test.describe('Exit link consistency — _updateExitLinks (§UNIFY-04)', () => {
+
+  async function stepEast(page) {
+    await page.evaluate(() => {
+      const orig = Math.random; Math.random = () => 1;
+      cellMove('E');   // BOO(47,223) → empty(47,224)
+      Math.random = orig;
+    });
+  }
+
+  test.beforeEach(async ({ page }) => {
+    await seedAndLoad(page);
+    await dismissContinue(page);
+  });
+
+  test('exit-W on empty cell has exit-active (BOO is a named neighbor)', async ({ page }) => {
+    await stepEast(page);
+    const cls = await page.locator('#exit-W').getAttribute('class');
+    expect(cls).toContain('exit-active');
+    expect(cls).not.toContain('exit-empty');
+  });
+
+  test('exit-E on empty cell has exit-active exit-empty (open terrain)', async ({ page }) => {
+    await stepEast(page);
+    const cls = await page.locator('#exit-E').getAttribute('class');
+    expect(cls).toContain('exit-active');
+    expect(cls).toContain('exit-empty');
+  });
+
+  test('exit-S on empty cell shows LEA label (named neighbor south)', async ({ page }) => {
+    await stepEast(page);
+    const text = await page.locator('#exit-S').textContent();
+    // LEA = "Castle Lea — Sir Richard's Estate" but the label portion is what shows
+    expect(text).toContain('Castle Lea');
+  });
+
+  test('waypoint tinting: btn-S has dpad-wp when waypoint=LHR from empty cell', async ({ page }) => {
+    // Set waypoint before stepping, then verify the S button is tinted
+    await page.evaluate(() => { S_story.waypoint = 'LHR'; });
+    await stepEast(page);
+    // BFS from (47,224) toward LHR(64,224) first steps S to LEA(48,224)
+    const cls = await page.locator('#btn-S').getAttribute('class');
+    expect(cls).toContain('dpad-wp');
+  });
+
+  test('waypoint tinting absent when no waypoint set', async ({ page }) => {
+    await stepEast(page);
+    const clsN = await page.locator('#btn-N').getAttribute('class');
+    const clsS = await page.locator('#btn-S').getAttribute('class');
+    const clsE = await page.locator('#btn-E').getAttribute('class');
+    const clsW = await page.locator('#btn-W').getAttribute('class');
+    for (const cls of [clsN, clsS, clsE, clsW]) {
+      expect(cls || '').not.toContain('dpad-wp');
+    }
+  });
+
+});
+
+// ── 6 — Status bar §UNIFY-03 ─────────────────────────────────────────────────
 //
 // Verifies storyUpdateStatus() is called AFTER storyCheckQuests() inside
 // storyRender(), so quest completion rewards (gold, hp) are visible in the

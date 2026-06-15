@@ -41068,13 +41068,12 @@ function _terrainLabel(nodeName) {
 }
 
 function _updateExitLinks() {
-  const node = NODE_MAP[S_story.currentCode];
-  if (!node) return;
+  // §UNIFY-04: use playerR/C directly — no currentCode/node dependency for position
   const ARROWS = {N:'↑N', S:'↓S', E:'E→', W:'←W'};
   const DELTAS = {N:[-1,0], S:[1,0], E:[0,1], W:[0,-1]};
-  const _nc = NODE_COORDS[S_story.currentCode] || (node.r != null ? { r: node.r, c: node.c } : null);
-  const pr = S_story.playerR || (_nc && _nc.r) || 0;
-  const pc = S_story.playerC || (_nc && _nc.c) || 0;
+  const pr = S_story.playerR;
+  const pc = S_story.playerC;
+  if (!pr && !pc) return;  // no position set yet (pre-game state)
   // Waypoint BFS direction (§CELL-09)
   let wpDir = null;
   const wp = S_story.waypoint;

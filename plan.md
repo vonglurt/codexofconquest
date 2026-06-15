@@ -2497,7 +2497,7 @@ A player moving through a story beat may see feedback in different visual positi
 
 ---
 
-### §UNIFY-04 — Exit Link Rendering Consistency (📋 TODO)
+### §UNIFY-04 — Exit Link Rendering Consistency ✅ COMPLETE (2026-06-15)
 
 **Problem:** `_updateExitLinks()` may produce different button states at named nodes vs empty cells (available exits, waypoint tinting, disabled states). The exit affordance is the primary navigation UI — it must feel identical everywhere.
 
@@ -2608,7 +2608,7 @@ A player moving through a story beat may see feedback in different visual positi
 | 2 | §UNIFY-08 parseLoot utility | audit | low — one function |
 | 3 | §UNIFY-03 storyUpdateStatus discipline | ✅ done | |
 | 4 | §UNIFY-01 empty cell parity | ✅ done | |
-| 5 | §UNIFY-04 exit link consistency | audit | medium — UI |
+| 5 | §UNIFY-04 exit link consistency | ✅ done | |
 | 6 | §UNIFY-10 _gameWarn channel | audit | medium — messaging |
 | 7 | §UNIFY-02 storyMsg discipline | audit + §UNIFY-10 | medium |
 | 8 | §UNIFY-09 state mutation / autosave | audit | high — save/load |
