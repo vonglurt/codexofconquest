@@ -407,6 +407,7 @@ select.fi{appearance:none;}
   <div class="nav-tab" data-tab="wizard">✦ Wizard</div>
   <div class="nav-tab" data-tab="grid">🔲 Grid</div>
   <div class="nav-tab" data-tab="editor">✏ Editor</div>
+  <div class="nav-tab" data-tab="walk">🚶 Walk</div>
   <div class="nav-sep"></div>
   <div id="topbar-right">
     <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
@@ -9338,6 +9339,502 @@ document.addEventListener('wbapi:loaded', edPopulateNodes);
 // Initial state
 edUpdateType();
 edUpdatePreview();
+
+})();
+
+/* ══════════════════════════════════════════════════════════════════════
+   §WALK — Playable World Editor Tab
+   Walk the node graph; view + edit each node in context.
+   ══════════════════════════════════════════════════════════════════════ */
+(function(){
+'use strict';
+
+const WK = id => document.getElementById(id);
+
+// ── CSS ──────────────────────────────────────────────────────────────────────
+document.head.insertAdjacentHTML('beforeend', `<style>
+#tab-walk { flex-direction:column; overflow:hidden; }
+#wk-toolbar { display:flex; align-items:center; gap:8px; padding:7px 12px; border-bottom:1px solid var(--border); background:var(--bg2); flex-shrink:0; flex-wrap:wrap; }
+#wk-loc { font-size:12px; font-weight:700; color:var(--accent); flex:1; min-width:120px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+#wk-statusbar { padding:3px 12px; font-size:10px; color:var(--muted); border-top:1px solid var(--border); flex-shrink:0; background:var(--bg2); }
+/* Center — game style */
+#wk-node-hd { display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+.wk-code-badge { font-size:11px; font-weight:700; color:var(--yellow); background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:2px 8px; letter-spacing:.5px; }
+.wk-node-name { font-size:18px; font-weight:700; color:var(--text); flex:1; }
+.wk-act-lbl { font-size:10px; color:var(--muted); letter-spacing:.8px; text-transform:uppercase; }
+#wk-textbox { background:var(--bg2); border:1px solid var(--border); border-radius:6px; border-left:4px solid var(--accent); padding:14px 16px; font-size:13px; line-height:1.75; color:var(--text); min-height:70px; white-space:pre-line; margin-bottom:10px; }
+/* Info chips */
+.wk-chip { display:flex; align-items:center; gap:8px; background:var(--bg2); border:1px solid var(--border); border-left-width:3px; border-radius:5px; padding:6px 12px; font-size:12px; margin-bottom:4px; transition:background .12s; }
+.wk-chip.clickable { cursor:pointer; } .wk-chip.clickable:hover { background:var(--bg3); }
+.wk-chip-lbl { color:var(--muted); font-size:9px; letter-spacing:.8px; text-transform:uppercase; font-weight:700; min-width:44px; flex-shrink:0; }
+.wk-chip.c-npc    { border-left-color:#9a6aaa; }
+.wk-chip.c-battle { border-left-color:var(--red); }
+.wk-chip.c-quest  { border-left-color:var(--accent); }
+/* D-pad */
+#wk-dpad { display:grid; grid-template-columns:repeat(3,40px); grid-template-rows:repeat(3,40px); gap:3px; }
+.wkd-btn { width:100%; height:100%; border-radius:5px; background:var(--bg2); border:1px solid var(--border); color:var(--text); font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .12s; }
+.wkd-btn:hover:not(:disabled) { background:var(--bg3); border-color:var(--accent); color:var(--accent); }
+.wkd-btn:disabled { opacity:.2; cursor:default; }
+.wkd-center { background:var(--bg3); border-color:var(--accent); color:var(--accent); font-size:15px; }
+.wkd-btn.live { background:rgba(88,166,255,0.08); border-color:var(--accent); }
+.wkd-btn.live:hover:not(:disabled) { background:rgba(88,166,255,0.18); }
+#wk-move-msg { font-size:11px; color:var(--yellow); text-align:center; min-height:16px; font-style:italic; margin-top:4px; }
+/* Right edit panel */
+#wk-edit-hd { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; padding:8px 12px; border-bottom:1px solid var(--border); background:var(--bg3); display:flex; align-items:center; gap:6px; flex-shrink:0; }
+.wk-flbl { font-size:9px; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:2px; }
+.wk-fi { font-size:12px; color:var(--text); background:var(--bg3); border:1px solid var(--border); border-radius:4px; padding:4px 8px; font-family:inherit; width:100%; resize:vertical; }
+.wk-fi:focus { outline:none; border-color:var(--accent); }
+.wk-fi.dirty { border-color:var(--yellow); background:var(--modified); }
+.wk-qrow { font-size:11px; padding:5px 8px; background:var(--bg3); border:1px solid var(--border); border-radius:4px; cursor:pointer; color:var(--accent); margin-bottom:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.wk-qrow:hover { background:var(--bg2); border-color:var(--accent); }
+/* Mini-map */
+#wk-map-wrap { background:#060c12; position:relative; flex-shrink:0; border-right:1px solid var(--border); }
+#wk-map-empty { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:11px; text-align:center; padding:12px; pointer-events:none; }
+</style>`);
+
+// ── Constants ─────────────────────────────────────────────────────────────────
+const MAP_W = 196, MAP_H = 400; // mini-map canvas dimensions
+const SCALE  = 10;              // px per cell
+const VIEW_C = Math.floor(MAP_W / SCALE); // cells wide in view
+const VIEW_R = Math.floor(MAP_H / SCALE); // cells tall in view
+
+// ── State ─────────────────────────────────────────────────────────────────────
+let wkCur = null;     // current node code
+let wkRev = {};       // "r,c" → code
+
+// ── Insert HTML ───────────────────────────────────────────────────────────────
+WK('tab-editor').insertAdjacentHTML('afterend', `
+<div class="panel" id="tab-walk">
+
+  <!-- Toolbar -->
+  <div id="wk-toolbar">
+    <span id="wk-loc">Load a game file to walk the world</span>
+    <input id="wk-jump-inp" class="fi fi-sm" placeholder="Jump to code…" style="width:150px">
+    <button class="btn sm" id="wk-btn-jump">Go</button>
+    <button class="btn sm" id="wk-btn-first">↩ Origin</button>
+    <div style="margin-left:auto;display:flex;gap:5px">
+      <button class="btn sm" id="wk-btn-to-crud">→ CRUD</button>
+      <button class="btn sm" id="wk-btn-to-editor">→ Editor</button>
+    </div>
+  </div>
+
+  <!-- 3-column split -->
+  <div style="display:flex;flex:1;overflow:hidden;">
+
+    <!-- LEFT: mini-map canvas -->
+    <div id="wk-map-wrap" style="width:${MAP_W}px;">
+      <canvas id="wk-map-canvas" width="${MAP_W}" height="${MAP_H}" style="display:block;cursor:crosshair;"></canvas>
+      <div id="wk-map-empty">Load a file to see the map</div>
+    </div>
+
+    <!-- CENTER: node view -->
+    <div style="flex:1;overflow-y:auto;padding:16px 20px;min-width:0;display:flex;flex-direction:column;">
+
+      <div id="wk-node-hd">
+        <span class="wk-code-badge" id="wk-code">—</span>
+        <span class="wk-node-name" id="wk-name">—</span>
+        <span class="wk-act-lbl" id="wk-act"></span>
+      </div>
+
+      <div id="wk-textbox">Navigate to a node to begin.</div>
+
+      <div id="wk-chips" style="margin-bottom:10px"></div>
+
+      <div style="display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap">
+        <!-- D-pad -->
+        <div>
+          <div style="font-size:8px;font-weight:900;letter-spacing:2px;text-transform:uppercase;color:var(--muted);text-align:center;margin-bottom:4px">MOVE</div>
+          <div id="wk-dpad">
+            <button class="wkd-btn" id="wkd-nw" disabled title="NW">↖</button>
+            <button class="wkd-btn" id="wkd-n"  disabled title="North (↑ / W)">N</button>
+            <button class="wkd-btn" id="wkd-ne" disabled title="NE">↗</button>
+            <button class="wkd-btn" id="wkd-w"  disabled title="West (← / A)">W</button>
+            <button class="wkd-btn wkd-center" id="wkd-c" disabled title="You are here">◆</button>
+            <button class="wkd-btn" id="wkd-e"  disabled title="East (→ / D)">E</button>
+            <button class="wkd-btn" id="wkd-sw" disabled title="SW">↙</button>
+            <button class="wkd-btn" id="wkd-s"  disabled title="South (↓ / S)">S</button>
+            <button class="wkd-btn" id="wkd-se" disabled title="SE">↘</button>
+          </div>
+          <div id="wk-move-msg"></div>
+        </div>
+
+        <!-- Neighbor list -->
+        <div id="wk-neighbors" style="flex:1;min-width:140px;font-size:11px;line-height:1.9"></div>
+      </div>
+
+    </div><!-- /center -->
+
+    <!-- RIGHT: edit panel -->
+    <div style="width:270px;flex-shrink:0;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;">
+      <div id="wk-edit-hd">
+        <span style="flex:1">Edit Node</span>
+        <button class="btn primary sm" id="wk-btn-put" disabled>PUT</button>
+        <button class="btn sm" id="wk-btn-reset" disabled>Reset</button>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:10px 12px;">
+        <div id="wk-edit-empty" style="color:var(--muted);font-size:11px">Navigate to a node to edit it.</div>
+        <div id="wk-edit-fields" style="display:none;display:flex;flex-direction:column;gap:8px;">
+          <div><div class="wk-flbl">Label (display name)</div><input class="wk-fi" id="we-label" placeholder="Birka"></div>
+          <div><div class="wk-flbl">Name (terrain key)</div><input class="wk-fi" id="we-name" placeholder="urban"></div>
+          <div style="display:flex;gap:6px">
+            <div style="flex:0 0 70px"><div class="wk-flbl">Act</div><input class="wk-fi" id="we-act" placeholder="1"></div>
+            <div style="flex:1"><div class="wk-flbl">Terrain / Biome</div><input class="wk-fi" id="we-terrain" placeholder="forest"></div>
+          </div>
+          <div><div class="wk-flbl">NPC</div><input class="wk-fi" id="we-npc" placeholder="npc_merchant"></div>
+          <div><div class="wk-flbl">Battle (monster key)</div><input class="wk-fi" id="we-battle" placeholder="goblin"></div>
+          <div><div class="wk-flbl">Desc (story text)</div><textarea class="wk-fi" id="we-desc" rows="4" placeholder="Node description shown to the player…"></textarea></div>
+          <button class="btn sm" id="wk-btn-put2" disabled style="width:100%">PUT Node</button>
+          <pre id="wk-put-result" class="op-result" style="display:none"></pre>
+        </div>
+
+        <!-- Quests at node -->
+        <div id="wk-quests-sec" style="display:none;margin-top:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+            Quests Here <span id="wk-qcnt" style="font-weight:400;color:var(--muted)"></span>
+            <button class="btn sm" id="wk-btn-new-quest" style="margin-left:auto">+ New</button>
+          </div>
+          <div id="wk-quest-list"></div>
+        </div>
+      </div>
+    </div><!-- /right -->
+
+  </div><!-- /3-col -->
+
+  <!-- Status bar -->
+  <div id="wk-statusbar">Arrow keys / WASD to move · Click mini-map to teleport · Click neighbor to jump</div>
+
+</div><!-- /tab-walk -->
+`);
+
+// ── Build reverse coord index ─────────────────────────────────────────────────
+function wkBuildRev() {
+  wkRev = {};
+  for (const [code, p] of Object.entries(WBAPI.nodeCoords || {}))
+    wkRev[`${p.r},${p.c}`] = code;
+}
+
+function wkNeighbors(code) {
+  const p = WBAPI.nodeCoords[code]; if (!p) return {};
+  const at = (dr, dc) => wkRev[`${p.r+dr},${p.c+dc}`] || null;
+  return { n:at(-1,0), s:at(1,0), w:at(0,-1), e:at(0,1), nw:at(-1,-1), ne:at(-1,1), sw:at(1,-1), se:at(1,1) };
+}
+
+// ── Mini-map canvas ───────────────────────────────────────────────────────────
+function wkDrawMap() {
+  const canvas = WK('wk-map-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, MAP_W, MAP_H);
+  if (!WBAPI.loaded || !wkCur) return;
+  const cur = WBAPI.nodeCoords[wkCur]; if (!cur) return;
+
+  const S = SCALE;
+  const halfC = Math.floor(VIEW_C / 2), halfR = Math.floor(VIEW_R / 2);
+  const oR = cur.r - halfR, oC = cur.c - halfC;
+
+  const toXY = p => [(p.c - oC)*S + S/2, (p.r - oR)*S + S/2];
+
+  // Edges
+  ctx.lineWidth = 1;
+  for (const [code, p] of Object.entries(WBAPI.nodeCoords)) {
+    const nbrs = wkNeighbors(code);
+    for (const nb of [nbrs.e, nbrs.s]) {
+      if (!nb) continue;
+      const pb = WBAPI.nodeCoords[nb]; if (!pb) continue;
+      const [x1,y1] = toXY(p), [x2,y2] = toXY(pb);
+      if (Math.max(x1,x2) < 0 || Math.min(x1,x2) > MAP_W) continue;
+      if (Math.max(y1,y2) < 0 || Math.min(y1,y2) > MAP_H) continue;
+      ctx.strokeStyle = '#253040'; ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    }
+  }
+
+  const nbSet = new Set(Object.values(wkNeighbors(wkCur)).filter(Boolean));
+
+  // Nodes
+  for (const [code, p] of Object.entries(WBAPI.nodeCoords)) {
+    const [x, y] = toXY(p);
+    if (x < -S || x > MAP_W+S || y < -S || y > MAP_H+S) continue;
+    let color, r;
+    if (code === wkCur)       { color = '#58a6ff'; r = 5; }
+    else if (nbSet.has(code)) { color = '#ffa657'; r = 3.5; }
+    else                      { color = '#2e3a4a'; r = 2; }
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2);
+    ctx.fillStyle = color; ctx.fill();
+    if (code === wkCur) {
+      ctx.strokeStyle = '#88c6ff'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(x, y, r+3, 0, Math.PI*2); ctx.stroke();
+    }
+    // Label for current + neighbors
+    if (code === wkCur || nbSet.has(code)) {
+      ctx.fillStyle = code === wkCur ? '#c9d1d9' : '#7a8a9a';
+      ctx.font = code === wkCur ? 'bold 9px monospace' : '8px monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(code, x, y - r - 2);
+    }
+  }
+}
+
+// ── Center panel ──────────────────────────────────────────────────────────────
+function wkRenderCenter() {
+  const node = WBAPI.nodeMap[wkCur]; if (!node) return;
+  WK('wk-loc').textContent = `${wkCur} — ${node.label || node.name || wkCur}`;
+  WK('wk-code').textContent = wkCur;
+  WK('wk-name').textContent = node.label || node.name || wkCur;
+  WK('wk-act').textContent  = node.act != null ? `ACT ${node.act}` : '';
+
+  // Story text
+  let text = '';
+  if (node.desc) text = node.desc;
+  else {
+    const lines = [];
+    if (node.label) lines.push(`You are in ${node.label.toUpperCase()}.`);
+    if (node.name && node.name !== node.label) lines.push(`[${node.name}]`);
+    if (!lines.length) lines.push(`Node ${wkCur}`);
+    text = lines.join('\n');
+  }
+  WK('wk-textbox').textContent = text;
+
+  // Chips
+  const chips = WK('wk-chips'); chips.innerHTML = '';
+  const chip = (cls, icon, lbl, val, onClick) => {
+    const d = document.createElement('div');
+    d.className = `wk-chip ${cls}${onClick?' clickable':''}`;
+    d.innerHTML = `<span class="wk-chip-lbl">${lbl}</span><span>${icon} ${val}</span>`;
+    if (onClick) d.addEventListener('click', onClick);
+    chips.appendChild(d);
+  };
+  if (node.npc)    chip('c-npc',    '👤', 'NPC',    node.npc,    () => switchTab('npcs'));
+  if (node.battle) chip('c-battle', '⚔',  'BATTLE', node.battle, null);
+  const qids = WBAPI._questsByNode[wkCur] || [];
+  if (qids.length) chip('c-quest', '📜', 'QUESTS', `${qids.length} quest${qids.length!==1?'s':''}`, () => switchTab('quests'));
+
+  // D-pad
+  const nbrs = wkNeighbors(wkCur);
+  const dirs = {
+    n:{id:'wkd-n',lbl:'N'}, s:{id:'wkd-s',lbl:'S'}, w:{id:'wkd-w',lbl:'W'}, e:{id:'wkd-e',lbl:'E'},
+    nw:{id:'wkd-nw',lbl:'↖'}, ne:{id:'wkd-ne',lbl:'↗'}, sw:{id:'wkd-sw',lbl:'↙'}, se:{id:'wkd-se',lbl:'↘'},
+  };
+  for (const [dir, {id, lbl}] of Object.entries(dirs)) {
+    const btn = WK(id); if (!btn) continue;
+    const tgt = nbrs[dir];
+    btn.disabled = !tgt;
+    btn.classList.toggle('live', !!tgt);
+    const tgtNode = tgt ? WBAPI.nodeMap[tgt] : null;
+    btn.title = tgt ? `${lbl}: ${tgt} — ${tgtNode?.label||tgt}` : `${lbl}: no node`;
+    btn.onclick = tgt ? () => wkGo(tgt, `→ ${lbl}`) : null;
+  }
+  WK('wkd-c').disabled = false;
+  WK('wkd-c').title = `${wkCur} — ${node.label||wkCur}`;
+
+  // Neighbor list
+  const ntbl = WK('wk-neighbors'); ntbl.innerHTML = '';
+  const cardDirs = [['n','↑ N'],['s','↓ S'],['w','← W'],['e','→ E']];
+  for (const [dir, arrow] of cardDirs) {
+    const tgt = nbrs[dir];
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;gap:8px;align-items:center;';
+    const arrowEl = document.createElement('span');
+    arrowEl.style.cssText = 'color:var(--muted);min-width:36px;font-size:11px;';
+    arrowEl.textContent = arrow;
+    row.appendChild(arrowEl);
+    if (tgt) {
+      const lnk = document.createElement('span');
+      lnk.style.cssText = 'color:var(--accent);cursor:pointer;font-size:11px;';
+      lnk.textContent = `${tgt} — ${WBAPI.nodeMap[tgt]?.label||tgt}`;
+      lnk.addEventListener('click', () => wkGo(tgt, `→ ${arrow}`));
+      row.appendChild(lnk);
+    } else {
+      const em = document.createElement('span');
+      em.style.cssText = 'color:var(--bg3);font-size:11px;';
+      em.textContent = '—';
+      row.appendChild(em);
+    }
+    ntbl.appendChild(row);
+  }
+}
+
+// ── Right panel ───────────────────────────────────────────────────────────────
+function wkRenderEdit() {
+  const node = WBAPI.nodeMap[wkCur]; if (!node) return;
+  WK('wk-edit-empty').style.display = 'none';
+  WK('wk-edit-fields').style.display = 'flex';
+  WK('wk-btn-put').disabled = false;
+  WK('wk-btn-reset').disabled = false;
+  WK('wk-btn-put2').disabled = false;
+
+  const fi = (id, v) => {
+    const el = WK(id); if (!el) return;
+    el.value = (v == null ? '' : String(v));
+    el.classList.remove('dirty');
+  };
+  fi('we-label',   node.label   ?? '');
+  fi('we-name',    node.name    ?? '');
+  fi('we-act',     node.act     ?? '');
+  fi('we-terrain', node.terrain ?? node.name ?? '');
+  fi('we-npc',     node.npc     ?? '');
+  fi('we-battle',  node.battle  ?? '');
+  fi('we-desc',    node.desc    ?? '');
+  WK('wk-put-result').style.display = 'none';
+
+  // Quests
+  const qids = WBAPI._questsByNode[wkCur] || [];
+  WK('wk-quests-sec').style.display = '';
+  WK('wk-qcnt').textContent = `(${qids.length})`;
+  const ql = WK('wk-quest-list'); ql.innerHTML = '';
+  for (const qid of qids) {
+    const q = WBAPI.questDb[qid];
+    const row = document.createElement('div'); row.className = 'wk-qrow';
+    row.textContent = q?.title ? `${qid} — ${q.title}` : qid;
+    row.addEventListener('click', () => { switchTab('quests'); selectQuest(qid); });
+    ql.appendChild(row);
+  }
+}
+
+// ── Full render ───────────────────────────────────────────────────────────────
+function wkRender(msg) {
+  if (!wkCur || !WBAPI.loaded) return;
+  WK('wk-move-msg').textContent = msg || '';
+  WK('wk-map-empty').style.display = 'none';
+  wkDrawMap();
+  wkRenderCenter();
+  wkRenderEdit();
+}
+
+// ── Navigate ──────────────────────────────────────────────────────────────────
+function wkGo(code, msg) {
+  if (!code || !WBAPI.nodeMap[code]) {
+    WK('wk-move-msg').textContent = code ? `Unknown: ${code}` : '';
+    return;
+  }
+  wkCur = code;
+  wkRender(msg || '');
+}
+window.wkGo = wkGo; // expose for mini-map onclick
+
+// ── PUT node ──────────────────────────────────────────────────────────────────
+async function wkPutNode() {
+  if (!wkCur) return;
+  if (!SERVER.active) { wkPutMsg('Server not connected — start the WBAPI server first.', true); return; }
+  const node = WBAPI.nodeMap[wkCur];
+  const FIELDS = ['label','name','act','npc','battle','desc'];
+  const update = {};
+  for (const f of FIELDS) {
+    const el = WK(`we-${f}`); if (!el) continue;
+    const v = el.value.trim();
+    const orig = String(node[f] ?? '');
+    if (v !== orig) update[f] = (f === 'act') ? (v === '' ? null : +v) : (v || null);
+  }
+  if (!Object.keys(update).length) { wkPutMsg('No changes.', false); return; }
+  try {
+    const res = await fetch(`${SERVER.url}/api/node/${wkCur}`, {
+      method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(update),
+    });
+    const data = await res.json();
+    if (data.ok !== false) {
+      Object.assign(WBAPI.nodeMap[wkCur], update);
+      for (const f of FIELDS) { const el = WK(`we-${f}`); if (el) el.classList.remove('dirty'); }
+      wkPutMsg(data, false);
+      wkRender('Saved ✓');
+    } else {
+      wkPutMsg(data, true);
+    }
+  } catch(err) {
+    wkPutMsg(String(err), true);
+  }
+}
+
+function wkPutMsg(data, isErr) {
+  const el = WK('wk-put-result');
+  el.style.display = ''; el.className = 'op-result '+(isErr?'err':'ok');
+  el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
+}
+
+// ── Wire events ───────────────────────────────────────────────────────────────
+WK('wk-btn-put').addEventListener('click', wkPutNode);
+WK('wk-btn-put2').addEventListener('click', wkPutNode);
+WK('wk-btn-reset').addEventListener('click', () => { if (wkCur) wkRenderEdit(); });
+
+WK('wk-btn-jump').addEventListener('click', () => {
+  const code = WK('wk-jump-inp').value.trim().toUpperCase();
+  wkGo(code, `Jumped to ${code}`);
+});
+WK('wk-jump-inp').addEventListener('keydown', e => { if (e.key === 'Enter') WK('wk-btn-jump').click(); });
+
+WK('wk-btn-first').addEventListener('click', () => {
+  if (!WBAPI.loaded) return;
+  const code = Object.keys(WBAPI.nodeCoords)[0]; if (code) wkGo(code, '↩ Origin');
+});
+
+WK('wk-btn-to-crud').addEventListener('click', () => {
+  switchTab('crud');
+});
+WK('wk-btn-to-editor').addEventListener('click', () => {
+  switchTab('editor');
+  if (wkCur) setTimeout(() => {
+    const el = document.getElementById('ed-activateNode'); if (el) el.value = wkCur;
+  }, 40);
+});
+
+WK('wk-btn-new-quest').addEventListener('click', () => {
+  switchTab('editor');
+  if (wkCur) setTimeout(() => {
+    const el = document.getElementById('ed-activateNode'); if (el) el.value = wkCur;
+  }, 40);
+});
+
+// Dirty tracking on edit fields
+for (const fid of ['we-label','we-name','we-act','we-terrain','we-npc','we-battle','we-desc']) {
+  const el = WK(fid); if (el) el.addEventListener('input', () => el.classList.add('dirty'));
+}
+
+// Mini-map click — teleport to nearest node
+WK('wk-map-canvas').addEventListener('click', e => {
+  if (!WBAPI.loaded || !wkCur) return;
+  const rect = WK('wk-map-canvas').getBoundingClientRect();
+  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
+  const cur = WBAPI.nodeCoords[wkCur]; if (!cur) return;
+  const halfC = Math.floor(VIEW_C/2), halfR = Math.floor(VIEW_R/2);
+  const oR = cur.r - halfR, oC = cur.c - halfC;
+  let best = null, bestD = Infinity;
+  for (const [code, p] of Object.entries(WBAPI.nodeCoords)) {
+    const nx = (p.c - oC)*SCALE + SCALE/2, ny = (p.r - oR)*SCALE + SCALE/2;
+    const d = Math.hypot(mx-nx, my-ny);
+    if (d < bestD && d < SCALE*1.5) { bestD = d; best = code; }
+  }
+  if (best) wkGo(best, `Teleport → ${best}`);
+});
+
+// Keyboard navigation (only when Walk tab is active and focus not in a field)
+document.addEventListener('keydown', e => {
+  if (!WK('tab-walk').classList.contains('active')) return;
+  const tag = document.activeElement?.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+  const nbrs = wkCur ? wkNeighbors(wkCur) : {};
+  const KEY_DIR = { ArrowUp:'n', ArrowDown:'s', ArrowLeft:'w', ArrowRight:'e', w:'n', s:'s', a:'w', d:'e' };
+  const dir = KEY_DIR[e.key];
+  if (dir && nbrs[dir]) { e.preventDefault(); wkGo(nbrs[dir], `→ ${dir.toUpperCase()}`); }
+});
+
+// ── Tab switch hook ───────────────────────────────────────────────────────────
+const _wkPrev = window.switchTab;
+window.switchTab = function(name) {
+  _wkPrev(name);
+  if (name === 'walk' && WBAPI.loaded) {
+    wkBuildRev();
+    if (!wkCur) {
+      const first = Object.keys(WBAPI.nodeCoords)[0];
+      if (first) wkGo(first, '');
+    } else {
+      wkRender('');
+    }
+  }
+};
+document.addEventListener('wbapi:loaded', () => {
+  wkBuildRev();
+  if (WK('tab-walk').classList.contains('active')) {
+    const first = Object.keys(WBAPI.nodeCoords)[0];
+    if (first) wkGo(first, '');
+  }
+});
 
 })();
 </script>
