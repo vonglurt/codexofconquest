@@ -284,6 +284,17 @@ function buildCellGrid(nm, coords) {
   return g;
 }
 
+// Cached wrapper — rebuilds only when WBAPI.nodeMap or nodeCoords reference changes (i.e. after reload)
+let _cgCacheNm = null, _cgCacheCoords = null, _cgCache = null;
+function getCellGrid() {
+  const nm = WBAPI.nodeMap, coords = WBAPI.nodeCoords;
+  if (nm !== _cgCacheNm || coords !== _cgCacheCoords) {
+    _cgCacheNm = nm; _cgCacheCoords = coords;
+    _cgCache = buildCellGrid(nm, coords);
+  }
+  return _cgCache;
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Connection enrichment — every GET returns entity + connections + _meta
 // ═══════════════════════════════════════════════════════════════════════════
@@ -301,7 +312,7 @@ function nodeConnections(key) {
       npcs:        npcs.map(n => ({ key:n.key, name:n.name })),
       derived_exits: (function() {
         const coord = WBAPI.nodeCoords[key]; if (!coord) return {};
-        const cg = buildCellGrid(WBAPI.nodeMap, WBAPI.nodeCoords);
+        const cg = getCellGrid();
         const result = {};
         for (let i = 0; i < DIR_NAMES.length; i++) {
           const nb = cg[`${coord.r+MOVES4[i][0]},${coord.c+MOVES4[i][1]}`];
@@ -10471,8 +10482,7 @@ async function route(req, res) {
     // ── Shared look helper ─────────────────────────────────────────────────
     function buildLook(s) {
       const nm     = WBAPI.nodeMap;
-      const coords = WBAPI.nodeCoords;
-      const cg     = buildCellGrid(nm, coords);
+      const cg     = getCellGrid();
       const code   = cg[`${s.r},${s.c}`] || null;
       const node   = code ? nm[code] : null;
       const exits  = {};
@@ -12292,6 +12302,7 @@ server.listen(PORT, '127.0.0.1', () => {
   console.log(`${C.magenta}${line}${C.reset}\n`);
 
   clearError(); // successful start — remove any stale error file
+  setInterval(sessionPrune, SESSION_TTL / 2).unref(); // prune stale sessions every 15 min, even without traffic
   log('INFO', `Server listening on http://127.0.0.1:${PORT}`);
   logStream.write('═'.repeat(60) + '\n');
 
