@@ -1916,12 +1916,15 @@ const WBAPI = {
       const q = WBAPI.questDb[id]; if (!q) return null;
       const bits = [];
       const flags = WBAPI._questFlags[id];
+      // handle both checkAbility (canonical) and checkStat (legacy) field names
+      const ability = q.checkAbility || (q.checkStat ? q.checkStat.toLowerCase() : null);
+      const label   = q.checkLabel   || q.checkSkill || '';
       if (flags && flags.reads.size > 0)
         bits.push({kind:'flag_gate', requires:[...flags.reads], _note:'inferred from flag reads'});
       if (q.activateNode && q.waypointNode && q.activateNode !== q.waypointNode)
         bits.push({kind:'navigate', fromNode:q.activateNode, toNode:q.waypointNode, hint:q.hint||undefined});
-      if (q.type === 'skill_check' && q.checkAbility && q.checkDC != null)
-        bits.push({kind:'skill_check', ability:q.checkAbility, dc:q.checkDC, label:q.checkLabel||'', passText:q.passText||'', failText:q.failText||'', retryable:q.retryable||false});
+      if (q.type === 'skill_check' && ability && q.checkDC != null)
+        bits.push({kind:'skill_check', ability, dc:q.checkDC, label, passText:q.passText||'', failText:q.failText||'', retryable:q.retryable||false});
       if (bits.filter(b=>b.kind!=='flag_gate'&&b.kind!=='navigate').length === 0 && q.activateNode)
         bits.push({kind:'talk_at', node:q.waypointNode||q.activateNode, npcKey:q.npc||q.npcKey||undefined});
       return {id, type:q.type, bits};
@@ -6902,6 +6905,41 @@ window._onServerActivated = () => {
     });
   }
 
+  function opQuestAuditAll(body) {
+    const btn = mkBtn('AUDIT ALL QUESTS','primary sm');
+    const res = document.createElement('pre'); res.className='op-result';
+    body.appendChild(btn); body.appendChild(res);
+    body.appendChild(mkNote('§ARCH-02 Phase 4 audit: runs toOperands() on every quest and summarises field coverage.'));
+    btn.addEventListener('click',()=>{
+      if (!WBAPI.loaded) return showResult(res,'Load a file first.',true);
+      const all = Object.values(WBAPI.questDb);
+      const byType = {}; const missing = []; const legacyStat = []; const hasBits = [];
+      all.forEach(q => {
+        byType[q.type] = (byType[q.type]||0) + 1;
+        if (q.bits && q.bits.length > 0) hasBits.push(q.id);
+        if (q.checkStat && !q.checkAbility) legacyStat.push(q.id);
+        if (q.type === 'skill_check') {
+          const op = WBAPI.quests.toOperands(q.id);
+          const hasSC = op && op.bits.some(b => b.kind === 'skill_check');
+          if (!hasSC) missing.push(q.id);
+        }
+      });
+      const out = {
+        total: all.length,
+        byType,
+        skill_check_quests: byType['skill_check']||0,
+        with_bits: hasBits.length,
+        skill_check_operand_ok: (byType['skill_check']||0) - missing.length,
+        skill_check_missing_operand: missing.length,
+        legacy_checkStat: legacyStat.length,
+        missing_operand_ids: missing,
+        legacy_stat_ids: legacyStat,
+        has_bits_ids: hasBits,
+      };
+      showResult(res, out, missing.length > 0 || legacyStat.length > 0);
+    });
+  }
+
   function opQuestCreate(body) {
     // Basic quest fields
     const basicRow = document.createElement('div'); basicRow.className = 'op-row-fields';
@@ -7413,6 +7451,7 @@ window._onServerActivated = () => {
       mkOpRow('✓',    'Validate Quest',          '§ARCH-02: Field-level validity check',                opQuestValidate),
       mkOpRow('◆',    'Advise Quest',            '§ARCH-02: World cross-ref — nodes, NPC, flag chain',  opQuestAdvise),
       mkOpRow('◆',    'Quest → Operands',        '§ARCH-02: Heuristic parse to operand bit sequence',  opQuestToOperands),
+      mkOpRow('◆',    'Audit All Quests',        '§ARCH-02 Ph4: toOperands() batch — field coverage summary', opQuestAuditAll),
     ]));
 
     el.appendChild(mkSection('◆ Operands (§ARCH-02)', [

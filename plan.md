@@ -1128,11 +1128,12 @@ WBAPI.worlds.flagUniqueInArc(flag, arcId)  // flag not reused across arc
 - [x] Implement `talk_party` trigger in inventory/party panel
 - [x] Add `talk_party` detection to storyCheckQuests — these quests activate at any node when NPC is in party
 
-**Phase 4 — Legacy quest conversion**
-- [ ] `quests.toOperands()` used to audit all 210 quests
-- [ ] Generate operand arrays for all 59 `skill_check` quests (most uniform, lowest risk)
-- [ ] Convert §HUNT-01 (4 quests) as escort+kill_at proof-of-concept
-- [ ] Convert §SPARK-01 arc as collect_item+talk_party proof-of-concept
+**Phase 4 — Legacy quest conversion** *(✅ 2026-06-15)*
+- [x] `quests.toOperands()` updated to handle `checkStat`/`checkSkill` legacy field names; `opQuestAuditAll` batch panel added to worldbuilder
+- [x] `checkStat`/`checkSkill` → `checkAbility`/`checkLabel` normalised for 24 single-quote quests (§SPARK-01, §HUNT-01, §HUNT-02, §SPARK-02 arcs); runtime fallback added for double-quote uppercase variants
+- [x] `bits` arrays generated for 108 `skill_check` quests with `checkAbility` (all arcs)
+- [x] §HUNT-01 (4 quests) converted: `talk_at`, `flag_gate+skill_check`, `navigate+kill_at+collect_item` bits
+- [x] §SPARK-01 (5 quests) converted: `skill_check+collect_item`, `talk_at`, `flag_gate+skill_check+collect_item`, `talk_party` bits
 
 **Phase 5 — Full advisory enforcement**
 - [ ] `quests.create()` hard-blocks on world-logic failures (node not found, NPC not placed)
@@ -1311,7 +1312,7 @@ A consolidated register of all open work across the project. Organized by domain
 
 - [x] **§WORLDBUILDER-02 Phase 4 — Relationship graph:** Canvas/SVG graph panel showing entity neighborhood. Nodes clickable. *(✅ 2026-06-12 — SVG radial graph implemented)*
 - [x] **§ARCH-02 Phase 3 — Escort + party runtime:** `S.party`, `escort` pickup/dropoff, `talk_party` in inventory panel. *(✅ 2026-06-15)*
-- [ ] **§ARCH-02 Phase 4 — Legacy quest conversion:** Audit all 210 quests with `toOperands()`. Convert 59 skill_check quests first (most uniform). Convert §HUNT-01 and §SPARK-01 as proof-of-concept. *(Depends on: Phase 2.)*
+- [x] **§ARCH-02 Phase 4 — Legacy quest conversion:** `toOperands()` now handles legacy `checkStat`; `opQuestAuditAll` batch panel; 108 skill_check quests get `bits`; §HUNT-01 + §SPARK-01 proof-of-concept. *(✅ 2026-06-15)*
 - [ ] **§ARCH-01 Phases 2–5:** Migrate quest arcs to UQF one by one (WISDOM → SPARK → ALCHEMY → main chain). Remove `completeFn`/`onPass` closure pattern. Export UQF JS literals from worldbuilder. *(Long-term.)*
 
 ---
