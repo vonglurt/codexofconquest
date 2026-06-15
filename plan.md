@@ -2462,7 +2462,7 @@ grep -n "S_story\.shards\s*=" roll2hit-v3.html | head -20
 
 ---
 
-### §UNIFY-02 — `storyMsg` vs Direct DOM Mutation (📋 TODO)
+### §UNIFY-02 — `storyMsg` vs Direct DOM Mutation ✅ COMPLETE (2026-06-15)
 
 **Problem:** Player-visible feedback arrives through at least three channels:
 - `storyMsg(text)` — writes to `#story-move-msg`
@@ -2610,7 +2610,7 @@ A player moving through a story beat may see feedback in different visual positi
 | 4 | §UNIFY-01 empty cell parity | ✅ done | |
 | 5 | §UNIFY-04 exit link consistency | ✅ done | |
 | 6 | §UNIFY-10 _gameWarn channel | ✅ done | |
-| 7 | §UNIFY-02 storyMsg discipline | audit + §UNIFY-10 | medium |
+| 7 | §UNIFY-02 storyMsg discipline | ✅ done | |
 | 8 | §UNIFY-09 state mutation / autosave | audit | high — save/load |
 | 9 | §UNIFY-07 quest/missionbit boundary | audit | design decision first |
 | 10 | §UNIFY-05 modal class pattern | audit | high — all overlays |

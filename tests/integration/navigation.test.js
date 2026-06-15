@@ -411,7 +411,37 @@ test.describe('_gameWarn channel (§UNIFY-10)', () => {
 
 });
 
-// ── 7 — Status bar §UNIFY-03 ─────────────────────────────────────────────────
+// ── 7 — storyMsg discipline §UNIFY-02 ───────────────────────────────────────
+//
+// Audit result: no console channel exists; story-text-box no longer has rogue
+// innerHTML writes (fixed §UNIFY-01); the one remaining direct story-move-msg
+// write was in _enterEmptyCell and has been converted to storyMsg('').
+//
+// This test verifies the fix: a stale game-warn class is cleared when the
+// player steps into an empty cell, because _enterEmptyCell calls storyMsg('')
+// which removes the game-warn class.
+
+test.describe('storyMsg discipline (§UNIFY-02)', () => {
+
+  test('_enterEmptyCell clears stale game-warn class via storyMsg()', async ({ page }) => {
+    await seedAndLoad(page);
+    await dismissContinue(page);
+    // Trigger a gate warn, then step into an empty cell — warn should clear.
+    await page.evaluate(() => {
+      _gameWarn('stale gate message');
+      const orig = Math.random; Math.random = () => 1;
+      cellMove('E');  // BOO(47,223) → empty(47,224)
+      Math.random = orig;
+    });
+    const cls = await page.locator('#story-move-msg').getAttribute('class');
+    expect(cls || '').not.toContain('game-warn');
+    const txt = await page.locator('#story-move-msg').textContent();
+    expect(txt).toBe('');
+  });
+
+});
+
+// ── 8 — Status bar §UNIFY-03 ─────────────────────────────────────────────────
 //
 // Verifies storyUpdateStatus() is called AFTER storyCheckQuests() inside
 // storyRender(), so quest completion rewards (gold, hp) are visible in the

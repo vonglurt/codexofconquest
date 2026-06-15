@@ -34380,7 +34380,7 @@ function _enterEmptyCell(r, c) {
     '— ' + _label + ' —',
     'The path continues. No named location marks this ground.'
   );
-  document.getElementById('story-move-msg').textContent = '';
+  storyMsg('');  // §UNIFY-02: use storyMsg so game-warn class is cleared
   // §CELL-09: hunt mode guarantees encounter on every empty cell step
   const baseRate = TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default;
   const effectiveRate = S_story.huntMode ? 1.0 : baseRate;
