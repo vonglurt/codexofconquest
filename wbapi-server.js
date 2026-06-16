@@ -5942,9 +5942,9 @@ async function route(req, res) {
 
       // ── GEO2: city lat/lon table (Rectangular Mercator, same as geo-seed) ──────
       const GEO2 = {
-        HHL:{lat:65.0,lon:-22.0},NID:{lat:63.4,lon:10.4},LYG:{lat:62.0,lon:9.0},ODD:{lat:60.0,lon:11.0},
-        SIG:{lat:59.5,lon:11.5},LHR:{lat:59.3,lon:17.6},HEO:{lat:55.6,lon:11.9},GLA:{lat:55.9,lon:-4.3},
-        EDI:{lat:55.9,lon:-3.2},YRK:{lat:53.9,lon:-1.1},GWN:{lat:53.2,lon:-4.0},MGL:{lat:53.1,lon:-3.8},
+        HHL:{lat:65.0,lon:-22.0},ISL:{lat:64.1,lon:-21.9},NID:{lat:63.4,lon:10.4},LYG:{lat:62.0,lon:9.0},ODD:{lat:60.0,lon:11.0},
+        VS:{lat:57.6,lon:18.3},SIG:{lat:59.5,lon:11.5},LHR:{lat:59.3,lon:17.6},HEO:{lat:55.6,lon:11.9},GLA:{lat:55.9,lon:-4.3},
+        EDI:{lat:55.9,lon:-3.2},YRK:{lat:53.9,lon:-1.1},GWN:{lat:53.2,lon:-4.0},MGL:{lat:53.1,lon:-3.8},TWY:{lat:51.6,lon:-3.5},
         SHF:{lat:52.9,lon:-1.2},HVY:{lat:52.0,lon:-3.0},HFD:{lat:52.1,lon:-2.7},LDN:{lat:51.5,lon:-0.1},
         LON:{lat:51.5,lon:-0.3},BRK:{lat:51.5,lon:-0.2},MSE:{lat:51.3,lon:1.1},ACT:{lat:50.6,lon:-4.7},
         CVP:{lat:38.7,lon:-9.1},BDX:{lat:44.8,lon:-0.6},SRL:{lat:44.7,lon:1.1},FRK:{lat:48.9,lon:2.3},
@@ -9672,9 +9672,11 @@ async function route(req, res) {
       const nm = WBAPI.nodeMap;
       const GEO = {
         HHL:{lat:65.0,lon:-22.0,label:'Herdholt',region:'Iceland'},
+        ISL:{lat:64.1,lon:-21.9,label:'Althing Ground',region:'Iceland'},
         NID:{lat:63.4,lon:10.4,label:'Nidaros',region:'Norway'},
         LYG:{lat:62.0,lon:9.0,label:'Lyngvi Hall',region:'Norway'},
         ODD:{lat:60.0,lon:11.0,label:"Oddrun's Estate",region:'Norway'},
+        VS:{lat:57.6,lon:18.3,label:'Visby Underground',region:'Sweden'},
         SIG:{lat:59.5,lon:11.5,label:"Siggeir's Hall",region:'Scandinavia'},
         LHR:{lat:59.3,lon:17.6,label:'Birka',region:'Sweden'},
         HEO:{lat:55.6,lon:11.9,label:'Lejre',region:'Denmark'},
@@ -9683,6 +9685,7 @@ async function route(req, res) {
         YRK:{lat:53.9,lon:-1.1,label:'York',region:'England'},
         GWN:{lat:53.2,lon:-4.0,label:'Gwynedd',region:'Wales'},
         MGL:{lat:53.1,lon:-3.8,label:'Deganwy',region:'Wales'},
+        TWY:{lat:51.6,lon:-3.5,label:'Tidal River',region:'Wales'},
         SHF:{lat:52.9,lon:-1.2,label:'Nottingham',region:'England'},
         HVY:{lat:52.0,lon:-3.0,label:"Heveydd's Court",region:'Wales'},
         HFD:{lat:52.1,lon:-2.7,label:'Hereford',region:'England'},
@@ -9851,9 +9854,9 @@ async function route(req, res) {
 
       // Inline geo table (same as worldmap)
       const GEO2 = {
-        HHL:{lat:65.0,lon:-22.0},NID:{lat:63.4,lon:10.4},LYG:{lat:62.0,lon:9.0},ODD:{lat:60.0,lon:11.0},
-        SIG:{lat:59.5,lon:11.5},LHR:{lat:59.3,lon:17.6},HEO:{lat:55.6,lon:11.9},GLA:{lat:55.9,lon:-4.3},
-        EDI:{lat:55.9,lon:-3.2},YRK:{lat:53.9,lon:-1.1},GWN:{lat:53.2,lon:-4.0},MGL:{lat:53.1,lon:-3.8},
+        HHL:{lat:65.0,lon:-22.0},ISL:{lat:64.1,lon:-21.9},NID:{lat:63.4,lon:10.4},LYG:{lat:62.0,lon:9.0},ODD:{lat:60.0,lon:11.0},
+        VS:{lat:57.6,lon:18.3},SIG:{lat:59.5,lon:11.5},LHR:{lat:59.3,lon:17.6},HEO:{lat:55.6,lon:11.9},GLA:{lat:55.9,lon:-4.3},
+        EDI:{lat:55.9,lon:-3.2},YRK:{lat:53.9,lon:-1.1},GWN:{lat:53.2,lon:-4.0},MGL:{lat:53.1,lon:-3.8},TWY:{lat:51.6,lon:-3.5},
         SHF:{lat:52.9,lon:-1.2},HVY:{lat:52.0,lon:-3.0},HFD:{lat:52.1,lon:-2.7},LDN:{lat:51.5,lon:-0.1},
         LON:{lat:51.5,lon:-0.3},BRK:{lat:51.5,lon:-0.2},MSE:{lat:51.3,lon:1.1},ACT:{lat:50.6,lon:-4.7},
         CVP:{lat:38.7,lon:-9.1},BDX:{lat:44.8,lon:-0.6},SRL:{lat:44.7,lon:1.1},FRK:{lat:48.9,lon:2.3},

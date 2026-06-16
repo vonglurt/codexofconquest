@@ -22,11 +22,13 @@ const http = require('http');
 const GEO = {
   // Iceland / Far North
   HHL: { lat: 65.0, lon:-22.0, label: 'Herdholt',        region: 'Iceland' },
+  ISL: { lat: 64.1, lon:-21.9, label: 'Althing Ground',  region: 'Iceland' },
 
   // Scandinavia
   NID: { lat: 63.4, lon: 10.4, label: 'Nidaros',         region: 'Norway' },
   LYG: { lat: 62.0, lon:  9.0, label: 'Lyngvi Hall',     region: 'Norway' },
   ODD: { lat: 60.0, lon: 11.0, label: "Oddrun's Estate", region: 'Norway' },
+  VS:  { lat: 57.6, lon: 18.3, label: 'Visby Underground', region: 'Sweden' },
   SIG: { lat: 59.5, lon: 11.5, label: "Siggeir's Hall",  region: 'Scandinavia' },
   LHR: { lat: 59.3, lon: 17.6, label: 'Birka',           region: 'Sweden' },
   HEO: { lat: 55.6, lon: 11.9, label: 'Lejre',           region: 'Denmark' },
@@ -37,6 +39,7 @@ const GEO = {
   YRK: { lat: 53.9, lon: -1.1, label: 'York',            region: 'England' },
   GWN: { lat: 53.2, lon: -4.0, label: 'Gwynedd',         region: 'Wales' },
   MGL: { lat: 53.1, lon: -3.8, label: 'Deganwy',         region: 'Wales' },
+  TWY: { lat: 51.6, lon: -3.5, label: 'Tidal River',     region: 'Wales' },
   SHF: { lat: 52.9, lon: -1.2, label: 'Nottingham',      region: 'England' },
   HVY: { lat: 52.0, lon: -3.0, label: "Heveydd's Court", region: 'Wales' },
   HFD: { lat: 52.1, lon: -2.7, label: 'Hereford',        region: 'England' },
