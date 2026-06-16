@@ -437,9 +437,7 @@ const WBAPI = {
     npc(key) {
       return {
         nodes: WBAPI.birkaNpcs[key]?.node ? [WBAPI.birkaNpcs[key].node] : [],
-        quests: WBAPI._rawQuestSrc
-          ? Object.keys(WBAPI.questDb).filter(()=>WBAPI._rawQuestSrc.includes(key))
-          : [],
+        quests: WBAPI._questsByNpc[key] || [],
       };
     },
   },
