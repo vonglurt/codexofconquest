@@ -563,6 +563,28 @@ const CMD = {
     if (flags.out) { fs.writeFileSync(flags.out, JSON.stringify(d, null, 2) + '\n'); ok(`→ ${flags.out}`); }
   },
 
+  // ── clean: prune orphaned NODE_COORDS + explosion J-nodes ──────────────────
+  // Usage: ./api.sh clean [--execute]
+  //   Dry-run: reports orphan coord count + explosion node count.
+  //   --execute: removes all NODE_COORDS entries with no NODE_MAP match
+  //              and any J-nodes whose label contains ↔ (explosion artifacts).
+  //   Run this after nuke-junctions to free the 8K+ phantom grid cells that
+  //   would otherwise block rip-and-connect placement.
+  async clean(pos, flags) {
+    await requireServer();
+    const execute = !!flags.execute;
+    const r = await request('POST', `/api/audit/data/clean${execute ? '' : '?dryRun=true'}`, {});
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    const d = r.body;
+    if (!execute) {
+      ok(`[DRY RUN] orphan coords: ${d.orphanCoords}  explosion nodes: ${d.explosionNodes}  dangling exits: ${d.danglingExits}`);
+      if (d.orphanCoords > 0 || d.explosionNodes > 0) ok(`Add --execute to remove`);
+      else ok(`Nothing to clean ✓`);
+    } else {
+      ok(`Removed ${d.orphanCoordsRemoved} orphan coords, ${d.explosionNodesRemoved} explosion nodes, ${d.danglingExitsNulled} dangling exits nulled`);
+    }
+  },
+
   // ── worldmap: terminal ASCII world map of major cities ──────────────────────
   // Usage: ./api.sh worldmap [--latlon]
   async worldmap(_pos, flags) {
@@ -885,7 +907,8 @@ const CMD = {
       ok(`  ${C.green}PASS${C.reset} — all ${total} nodes are in the grid and reachable ✓`);
     } else {
       ok(`  ${C.red}FAIL${C.reset} — ${issues} issue(s) found`);
-      ok(`  Fix: ./api.sh reweave --execute`);
+      if (collisions.length) ok(`  Collisions: ./api.sh reweave --execute  (moves collision losers to free cells)`);
+      ok(`  General:    ./api.sh reweave --execute  (clean + rip-and-connect)`);
     }
   },
 
@@ -1238,9 +1261,10 @@ const CMD = {
   //   Adjacency = one cell apart — no skipping cells.
   //
   // Phases:
-  //   Phase 1 (pre-check):  verify — show uncoordinated, collisions, reachability
-  //   Phase 2 (if execute): rip-and-connect — place uncoordinated nodes into grid
-  //   Phase 3 (post-check): verify — confirm all nodes are in the grid and reachable
+  //   Phase 1   (pre-check):        verify — coords, collisions, reachability
+  //   Phase 1.5 (if execute):       clean  — prune orphaned NODE_COORDS entries
+  //   Phase 2   (if execute):       rip-and-connect — place uncoordinated nodes
+  //   Phase 3   (post-check):       verify — confirm all nodes in grid + reachable
   //
   // Dry-run by default.  Add --execute to apply phase 2.
   //   --limit N    max nodes to relocate per rip-and-connect pass (default 200)
@@ -1264,10 +1288,32 @@ const CMD = {
     ok(`${'─'.repeat(60)}`);
     await this.verify([], { hub });
 
+    // ── Phase 1.5: orphan coord cleanup ──────────────────────────────────────
+    ok('');
+    ok(`${'─'.repeat(60)}`);
+    ok('  Phase 1.5 — Orphan Coord Cleanup');
+    ok(`${'─'.repeat(60)}`);
+    const cleanDryResp = await request('POST', '/api/audit/data/clean?dryRun=true', {});
+    if (cleanDryResp.status === 200) {
+      const cd = cleanDryResp.body;
+      ok(`  Orphan coords: ${cd.orphanCoords}  Explosion nodes: ${cd.explosionNodes}`);
+      if (execute && (cd.orphanCoords > 0 || cd.explosionNodes > 0)) {
+        const cleanResp = await request('POST', '/api/audit/data/clean', {});
+        if (cleanResp.status === 200) {
+          const cr = cleanResp.body;
+          ok(`  Pruned ${cr.orphanCoordsRemoved} orphan coords, ${cr.explosionNodesRemoved} explosion nodes`);
+        }
+      } else if (!execute && cd.orphanCoords > 0) {
+        ok(`  [DRY RUN] would prune ${cd.orphanCoords} orphan coords — included in --execute`);
+      } else {
+        ok(`  Nothing to prune ✓`);
+      }
+    }
+
     if (!execute) {
       ok('');
       ok(`${'═'.repeat(60)}`);
-      ok('  Dry-run complete — add --execute to run Phase 2 (rip-and-connect)');
+      ok('  Dry-run complete — add --execute to run Phase 1.5 (clean) + Phase 2 (rip-and-connect)');
       ok(`${'═'.repeat(60)}`);
       return;
     }
@@ -1373,6 +1419,43 @@ const CMD = {
     ok(`Done: ${bidir.length} bidirectional fixed, ${diag.length} diagonal fixed, ${errors.length} errors`);
     if (note) ok(note);
     ok(`Re-check: ./api.sh audit --map`);
+  },
+
+  // ── migrate: §CELL-14 data cleanup ─────────────────────────────────────────
+  // Usage:
+  //   ./api.sh migrate strip-exit-fields                # dry-run (default)
+  //   ./api.sh migrate strip-exit-fields --execute      # actually rewrite NODE_MAP
+  //   ./api.sh migrate strip-exit-fields --fields N,S,E,W   # narrow the field set
+  //
+  // Strips dead direction pointers (N/S/E/W/SW/portal/spire) from every NODE_MAP
+  // entry in roll2hit-v3.html. After §CELL-01–§CELL-13 these fields are no longer
+  // read by any runtime code path — adjacency comes from CELL_GRID. The cleanup
+  // is documented in data-code-migration-into-cells.md §6.
+  async migrate(pos, flags) {
+    await requireServer();
+    const sub = pos[1];
+    if (sub !== 'strip-exit-fields')
+      die('Usage: ./api.sh migrate strip-exit-fields [--execute] [--fields N,S,E,W,portal,spire]');
+    const dryRun = !flags.execute;
+    const body = { dryRun };
+    if (flags.fields) body.fields = String(flags.fields).split(',').map(s => s.trim()).filter(Boolean);
+    const r = await request('POST', '/api/migrate/strip-exit-fields', body);
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    const { nodesTouched, totalRemoved, perField, sampleNode, fields, savePath } = r.body;
+    if (dryRun) ok(`[DRY RUN] ${totalRemoved} field(s) across ${nodesTouched} node(s)`);
+    else        ok(`stripped ${totalRemoved} field(s) across ${nodesTouched} node(s)`);
+    if (perField) {
+      const ent = Object.entries(perField).filter(([,n]) => n > 0);
+      for (const [f, n] of ent) ok(`  ${f}: ${n}`);
+    }
+    if (sampleNode) {
+      ok(`sample (${sampleNode.code}):`);
+      ok(`  before: ${sampleNode.before.replace(/\n/g,' ')}…`);
+      ok(`  after : ${sampleNode.after.replace(/\n/g,' ')}…`);
+    }
+    if (!dryRun && savePath) ok(`saved → ${savePath}`);
+    if (dryRun)               ok(`add --execute to write`);
+    void fields;
   },
 
   // ── highway: build a full junction chain between two cities ─────────────────
@@ -2772,7 +2855,11 @@ ${C.bold}═══════════════════════�
     ./api.sh rip-and-connect --execute --limit 50
     ./api.sh rip-and-connect --execute --limit 100 --radius 8
 
-  Cell-first repair loop (pre-check → rip-and-connect → post-check):
+  Prune orphaned NODE_COORDS entries (leftovers from deleted junctions):
+    ./api.sh clean
+    ./api.sh clean --execute
+
+  Cell-first repair loop (pre-check → clean → rip-and-connect → post-check):
     ./api.sh reweave
     ./api.sh reweave --execute
     ./api.sh reweave --execute --limit 200 --radius 8
@@ -2786,6 +2873,7 @@ ${C.bold}═══════════════════════�
     ./api.sh junction-audit
 
   Full world reset sequence (cell-first):
+    ./api.sh clean --execute
     ./api.sh geo-seed --execute
     node layout-solve.js --apply
     ./api.sh rip-and-connect --execute --limit 500
@@ -2901,6 +2989,7 @@ const SYNOPSIS = [
   `  ${C.green}fix-bidirectional${C.reset} [--execute]         fix all one-way links (A→B but B doesn't point back)`,
   `  ${C.green}reweave${C.reset} [--execute] [--limit 200] [--radius 8] [--hub LHR]  cell-first repair: verify → rip-and-connect → verify`,
   `  ${C.green}cluster-bridge${C.reset} [--execute]             connect remaining isolated clusters`,
+  `  ${C.green}migrate strip-exit-fields${C.reset} [--execute]   §CELL-14: strip dead N/S/E/W/portal/spire from NODE_MAP`,
   ``,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,

@@ -5395,10 +5395,13 @@ async function route(req, res) {
 
       // 1. Build mutable cell grid from current coords
       //    cellOccupied: 'r,c' → code  (mutable — updated as strays are placed)
-      //    Include ALL coord entries (even orphaned ones not in nodeMap) to prevent
-      //    placing strays in cells already occupied by orphaned coordinates.
+      //    Only include NODE_MAP codes — orphaned coords (deleted junctions) are
+      //    phantom entries that don't represent real game nodes and should not block
+      //    placement. Run `./api.sh clean --execute` to prune them from NODE_COORDS.
       const cellOccupied = new Map(
-        Object.entries(allCoords).map(([c, p]) => [`${p.r},${p.c}`, c])
+        Object.entries(allCoords)
+          .filter(([c]) => nm[c])
+          .map(([c, p]) => [`${p.r},${p.c}`, c])
       );
 
       // 2. Cell-BFS from LHR (or first available node with coords)
@@ -10149,22 +10152,39 @@ async function route(req, res) {
   }
 
   // ── Admin bulk operations ────────────────────────────────────────────────
+  // ── §CELL-14 migration endpoints ─────────────────────────────────────────
+  if (parts[0] === 'migrate') {
+    // POST /api/migrate/strip-exit-fields — strip dead N/S/E/W/portal/spire from NODE_MAP source.
+    //   body: { dryRun?:true, fields?:string[] }   (defaults: dryRun=true, fields=all six)
+    // Returns { ok, dryRun, nodesTouched, totalRemoved, perField, sampleNode }.
+    if (parts[1] === 'strip-exit-fields' && method === 'POST') {
+      let body; try { body = await readBody(req); } catch(_) { body = {}; }
+      const dryRun = body?.dryRun !== false;   // dry-run by default — caller must opt in to writes
+      const fields = Array.isArray(body?.fields) && body.fields.length
+        ? body.fields
+        : ['N','S','E','W','SW','portal','spire'];
+      const r = WBAPI.stripExitFields(fields, { dryRun });
+      if (!r.ok) return json(res, 400, r);
+      const summary = `${dryRun ? 'dry-run' : 'strip'}: ${r.totalRemoved} fields across ${r.nodesTouched} nodes`;
+      logRow('migrate/strip-exit-fields', summary);
+      logResponse(method, url.pathname, 200, summary);
+      if (dryRun) return json(res, 200, { ok:true, ...r, fields, hint:'POST with {"dryRun":false} to write' });
+      return saveAndRestart(res, 200, { ok:true, ...r, fields });
+    }
+    return json(res, 404, { error:'unknown migrate operation', available:['strip-exit-fields'] });
+  }
+
   if (parts[0] === 'admin') {
-    // POST /api/admin/strip-edges — §CELL-01: remove N/S/E/W/SW/spire from all NODE_MAP entries
+    // POST /api/admin/strip-edges — §CELL-01/§CELL-14: remove N/S/E/W/SW/portal/spire from NODE_MAP source.
+    // Now backed by WBAPI.stripExitFields() so the change actually reaches _rawSrc (the in-memory-only
+    // version shipped before §CELL-14 was a silent no-op — save() writes _rawSrc, not nodeMap).
     if (parts[1] === 'strip-edges' && method === 'POST') {
-      const nm = WBAPI.nodeMap;
-      const STRIP = ['N','S','E','W','SW','spire'];
-      let count = 0;
-      for (const code of Object.keys(nm)) {
-        let changed = false;
-        for (const field of STRIP) {
-          if (field in nm[code]) { delete nm[code][field]; changed = true; }
-        }
-        if (changed) count++;
-      }
-      logRow('strip-edges', `stripped direction fields from ${count} nodes`);
-      logResponse(method, url.pathname, 200, `stripped ${count} nodes`);
-      return saveAndRestart(res, 200, { ok:true, stripped: count, fields: STRIP });
+      const STRIP = ['N','S','E','W','SW','portal','spire'];
+      const r = WBAPI.stripExitFields(STRIP);
+      if (!r.ok) return json(res, 500, r);
+      logRow('strip-edges', `stripped ${r.totalRemoved} fields from ${r.nodesTouched} nodes`);
+      logResponse(method, url.pathname, 200, `stripped ${r.totalRemoved} fields`);
+      return saveAndRestart(res, 200, { ok:true, ...r, fields: STRIP });
     }
     // POST /api/admin/delete-junctions — §CELL-05: bulk-delete boilerplate J-nodes
     if (parts[1] === 'delete-junctions' && method === 'POST') {

@@ -100,6 +100,7 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 - [ ] **§WALK-G extensions** — terrain-color dots, act filter, node creation in-context, compass rose (see index.md Planned Features)
 - [ ] **§WBAPI-01 phases 3–5** — full-array PATCH, worldbuilder write tab, standalone Node module
 - [ ] **§EDITOR-01-D** — Token item manager (visual chain editor for inv.push/splice sequences)
+- [ ] **§CELL-14** — Strip dead `N/S/E/W/portal/spire` fields from `NODE_MAP` source. Endpoint + CLI implemented (`POST /api/migrate/strip-exit-fields`, `./api.sh migrate strip-exit-fields`); dry-run reports 404 nodes / 2,095 fields. Fixes silent no-op in pre-§CELL-14 `/api/admin/strip-edges` (in-memory-only). Run `--execute` to apply. See `data-code-migration-into-cells.md` §6.
 
 ### Game Content
 

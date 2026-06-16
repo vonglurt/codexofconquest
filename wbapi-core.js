@@ -228,6 +228,103 @@ function removeStringField(sectionSrc, entryKey, field) {
   return sectionSrc.slice(0, openEnd) + patchedBody + sectionSrc.slice(bodyEnd);
 }
 
+// §CELL-14: strip a set of top-level fields from a single NODE_MAP entry body.
+// String- and comment-aware so prose like text:"go N:..." is never matched.
+// Skips into nested {}/[]/() blocks (so battle:{key:'N'} is safe).
+// Handles values of form: null | "..." | '...' | `...` | identifiers | numbers.
+// Removes the leading whitespace + a trailing comma (or, if only on its own line,
+// the whole line including trailing newline).
+// Returns { body, removed, perField:{name:count} }.
+function _stripFieldsFromEntryBody(body, fieldSet) {
+  const perField = {};
+  const removals = []; // [{start, end, name}]
+
+  function skipString(i) {
+    const q = body[i]; i++;
+    while (i < body.length) {
+      if (body[i] === '\\' && q !== '`') { i += 2; continue; }
+      if (body[i] === q) { i++; break; }
+      i++;
+    }
+    return i;
+  }
+  function skipBalanced(i) {
+    const open = body[i], close = open === '{' ? '}' : open === '[' ? ']' : ')';
+    let depth = 1; i++;
+    while (i < body.length && depth > 0) {
+      const c = body[i];
+      if (c === '"' || c === "'" || c === '`') { i = skipString(i); continue; }
+      if (c === '/' && body[i+1] === '/') { while (i < body.length && body[i] !== '\n') i++; continue; }
+      if (c === '/' && body[i+1] === '*') { i += 2; while (i < body.length && !(body[i] === '*' && body[i+1] === '/')) i++; i += 2; continue; }
+      if (c === open) depth++;
+      else if (c === close) depth--;
+      i++;
+    }
+    return i;
+  }
+
+  let i = 0;
+  while (i < body.length) {
+    const c = body[i];
+    if (c === '"' || c === "'" || c === '`') { i = skipString(i); continue; }
+    if (c === '/' && body[i+1] === '/') { while (i < body.length && body[i] !== '\n') i++; continue; }
+    if (c === '/' && body[i+1] === '*') { i += 2; while (i < body.length && !(body[i] === '*' && body[i+1] === '/')) i++; i += 2; continue; }
+    if (c === '{' || c === '[' || c === '(') { i = skipBalanced(i); continue; }
+
+    if (/[A-Za-z_$]/.test(c)) {
+      let j = i;
+      while (j < body.length && /[A-Za-z0-9_$]/.test(body[j])) j++;
+      const name = body.slice(i, j);
+      let k = j;
+      while (k < body.length && /[ \t]/.test(body[k])) k++;
+      if (body[k] === ':' && fieldSet.has(name)) {
+        let v = k + 1;
+        while (v < body.length && /[ \t]/.test(body[v])) v++;
+        let valueEnd;
+        if (body[v] === '"' || body[v] === "'" || body[v] === '`') {
+          valueEnd = skipString(v);
+        } else if (body[v] === '{' || body[v] === '[' || body[v] === '(') {
+          // shouldn't happen for N/S/E/W/portal/spire but kept for safety
+          valueEnd = skipBalanced(v);
+        } else {
+          valueEnd = v;
+          while (valueEnd < body.length && /[A-Za-z0-9_.]/.test(body[valueEnd])) valueEnd++;
+        }
+
+        let removeStart = i;
+        let removeEnd = valueEnd;
+        while (removeEnd < body.length && /[ \t]/.test(body[removeEnd])) removeEnd++;
+        if (body[removeEnd] === ',') {
+          removeEnd++;
+          while (removeEnd < body.length && /[ \t]/.test(body[removeEnd])) removeEnd++;
+        }
+        // If the field sits alone on its own line, swallow the line break too.
+        let lineStart = removeStart;
+        while (lineStart > 0 && /[ \t]/.test(body[lineStart - 1])) lineStart--;
+        const atLineStart = lineStart === 0 || body[lineStart - 1] === '\n';
+        const atLineEnd = removeEnd === body.length || body[removeEnd] === '\n';
+        if (atLineStart && atLineEnd) {
+          removeStart = lineStart;
+          if (body[removeEnd] === '\n') removeEnd++;
+        }
+        removals.push({ start: removeStart, end: removeEnd, name });
+        perField[name] = (perField[name] || 0) + 1;
+        i = removeEnd;
+        continue;
+      }
+      i = j;
+      continue;
+    }
+    i++;
+  }
+
+  if (!removals.length) return { body, removed: 0, perField };
+  let out = body;
+  for (let r = removals.length - 1; r >= 0; r--)
+    out = out.slice(0, removals[r].start) + out.slice(removals[r].end);
+  return { body: out, removed: removals.length, perField };
+}
+
 // Replace an entire entry block in a section (for add/delete)
 function respliceSection(rawSrc, sectionName, newContent) {
   const S = `// ◆◆◆ WORLDBUILDER:${sectionName}:START ◆◆◆`;
@@ -821,6 +918,64 @@ const WBAPI = {
 
     this._rawSrc = respliceSection(this._rawSrc, 'NODE_MAP', parts.join(''));
     return { ok:true, applied, failed };
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // §CELL-14 migration: strip dead exit fields from every NODE_MAP entry.
+  // Operates on the raw source — handles both `N:null` and `N:"CODE"` forms,
+  // and is string/comment-aware so prose containing "N:" inside text fields
+  // is never matched. Updates in-memory nodeMap to mirror the source.
+  //
+  //   fields      — array of field names to strip, e.g. ['N','S','E','W','portal','spire']
+  //   opts.dryRun — if true, returns the plan without mutating _rawSrc or nodeMap
+  // Returns { ok, nodesTouched, totalRemoved, perField, sampleNode }.
+  stripExitFields(fields, opts = {}) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    if (!Array.isArray(fields) || fields.length === 0)
+      return { ok:false, error:'fields array required' };
+    const FIELD_SET = new Set(fields);
+    const dryRun = !!opts.dryRun;
+
+    const sectionSrc = extrSection(this._rawSrc, 'NODE_MAP');
+    if (!sectionSrc) return { ok:false, error:'NODE_MAP section markers not found' };
+
+    const perField = Object.fromEntries(fields.map(f => [f, 0]));
+    const replacements = [];
+    let nodesTouched = 0;
+    let totalRemoved = 0;
+    let sampleNode = null;
+
+    for (const code of Object.keys(this.nodeMap)) {
+      const b = findEntryBounds(sectionSrc, code);
+      if (!b) continue;
+      const { openEnd, bodyEnd } = b;
+      const body = sectionSrc.slice(openEnd, bodyEnd);
+      const r = _stripFieldsFromEntryBody(body, FIELD_SET);
+      if (r.removed === 0) continue;
+      nodesTouched++;
+      totalRemoved += r.removed;
+      for (const [f, n] of Object.entries(r.perField)) perField[f] += n;
+      if (!sampleNode) sampleNode = { code, before: body.slice(0, 200), after: r.body.slice(0, 200) };
+      replacements.push({ start: openEnd, end: bodyEnd, body: r.body });
+      if (!dryRun) {
+        for (const f of fields) if (f in this.nodeMap[code]) delete this.nodeMap[code][f];
+      }
+    }
+
+    if (dryRun || replacements.length === 0)
+      return { ok:true, nodesTouched, totalRemoved, perField, sampleNode, dryRun };
+
+    replacements.sort((a, b) => a.start - b.start);
+    const parts = [];
+    let pos = 0;
+    for (const { start, end, body } of replacements) {
+      if (start > pos) parts.push(sectionSrc.slice(pos, start));
+      parts.push(body);
+      pos = end;
+    }
+    if (pos < sectionSrc.length) parts.push(sectionSrc.slice(pos));
+    this._rawSrc = respliceSection(this._rawSrc, 'NODE_MAP', parts.join(''));
+    return { ok:true, nodesTouched, totalRemoved, perField, sampleNode, dryRun:false };
   },
 
   // Remove a node entry from NODE_MAP source using brace-depth tracking.
