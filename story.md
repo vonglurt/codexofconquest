@@ -6,7 +6,7 @@
 
 ---
 
-The Neon Undercity is where corruption begins. Void pressure through the CY corridors, data wraiths in the relay chambers, the Scholar Kings' underground city turned inside out and made to carry something it was not built for. The corruption does not stay there. It moves upward through commercial channels: the Merchant Cats who ran Corrupted Cat enforcers across the CY/CQ boundary, the void-accelerated merges that produced the Taz Devils, the Cat-King that came from those merges and destroyed three city blocks and went back down. The grief that settled in those three city blocks is the same void corruption in a human register. It is not metaphor. It is the social form of the same mechanism.
+The Neon Undercity is where corruption begins. Void pressure through the CY corridors, data wraiths in the relay chambers, the Scholar Kings' underground city turned inside out and made to carry something it was not built for. The corruption does not stay there. It moves upward through commercial channels: the Merchant Cats who ran Corrupted Cat enforcers across the CY/CDG boundary, the void-accelerated merges that produced the Taz Devils, the Cat-King that came from those merges and destroyed three city blocks and went back down. The grief that settled in those three city blocks is the same void corruption in a human register. It is not metaphor. It is the social form of the same mechanism.
 
 Nobody has been back to Fishmonger's Row since.
 
@@ -395,13 +395,13 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 **Boyscout Opportunity:** Short-resting here for the first time earns a 🏕 Necklace Token. Sleep south (at City Inn) after for Boyscout Night double rolls.
 
 **Exit Condition:** N/A — stalk-only node. Return south to CI when done.
-**Next Node →** south to City Streets (CI); east to CQ (Cat Quarter — Layer 44)
+**Next Node →** south to City Streets (CI); east to CDG (Cat Quarter — Layer 44)
 
 ---
 
 ### NODE 77 — cat_quarter (The Cat Quarter) ✅ Layer 44
 
-> *Implemented 2026-05-25. Accessible east of SL (SL.E → CQ). Terrain: `cat_quarter`. NPC: Jimmy Two-Tails. Node num: 77. Coords: r:4, c:17.*
+> *Implemented 2026-05-25. Accessible east of SL (SL.E → CDG). Terrain: `cat_quarter`. NPC: Jimmy Two-Tails. Node num: 77. Coords: r:4, c:17.*
 
 **First visit:** Jimmy Two-Tails (orange tabby, tiny fedora) auto-dialogues from an overturned crate and auto-activates Q-CAT-01. Sandy Scratchpad Mewlino appears as NPC card after Q-CAT-02 complete.
 
@@ -413,7 +413,7 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 
 #### Q-CAT-01 — "The New Scratch" ✅ Layer 44
 - **ID:** `quest_cat_01` | **Reward:** 200gp
-- **Trigger:** First CQ visit — Jimmy auto-dialogue fires, quest activated manually in storyRender
+- **Trigger:** First CDG visit — Jimmy auto-dialogue fires, quest activated manually in storyRender
 - **Completion:** Kill 5× stray_alley_cat AND 3× fluffy_cat (tracked via `S_story.catKills`)
 - **Dialogue:** *"You done good, kid. Real professional. The neighborhood's already calmer. Relatively. For cats."*
 
@@ -421,16 +421,16 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 
 #### Q-CAT-02 — "Beefy Business" ✅ Layer 44
 - **ID:** `quest_cat_02` | **Reward:** 350gp
-- **Trigger:** Q-CAT-01 complete → Jimmy activates at CQ
+- **Trigger:** Q-CAT-01 complete → Jimmy activates at CDG
 - **Completion:** Kill 3× beefy_tom AND hold 3× Cracked Claw in inventory
-- **Unlock:** Sandy Scratchpad Mewlino NPC card appears at CQ
+- **Unlock:** Sandy Scratchpad Mewlino NPC card appears at CDG
 - **Dialogue:** Sandy: *"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart."*
 
 ---
 
 #### Q-CAT-03 — "Honcho Problems" ✅ Layer 44
 - **ID:** `quest_cat_03` | **Reward:** 500gp + Rhinestone Collar trophy
-- **Trigger:** Q-CAT-02 complete → Sandy activates at CQ (simultaneous with Q-CAT-05 and Q-CAT-VOID)
+- **Trigger:** Q-CAT-02 complete → Sandy activates at CDG (simultaneous with Q-CAT-05 and Q-CAT-VOID)
 - **Completion:** Kill 1× honcho_cat_m AND 1× honcho_cat_f (tracked via `S_story.catKills`)
 - **Dialogue:** Jimmy: *"Kid, I told you. SEPARATE. You kill 'em SEPARATE. The merge thing is NOT a mechanic I enjoy."*
 
@@ -438,7 +438,7 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 
 #### Q-CAT-04 — "When the Tornado Comes" ✅ Layer 44
 - **ID:** `quest_cat_04` | **Reward:** 750gp + Furball Crown trophy
-- **Trigger:** Q-CAT-03 complete → Taz Devil battle button appears at CQ
+- **Trigger:** Q-CAT-03 complete → Taz Devil battle button appears at CDG
 - **Completion:** Defeat taz_devil via CQ_TAZ special battle (`defeatedBattles['CQ_TAZ']`)
 - **Unlock:** Tommy No-Ears DeVito dialogue; Q-CAT-06 unlocks when Q-CAT-05 also complete
 - **Dialogue:** Tommy: *"Oh you think you TOUGH now? You killed ONE Taz? There's THREE more building up..."*
@@ -447,16 +447,16 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 
 #### Q-CAT-05 — "Fat Cats Don't Tip" ✅ Layer 44
 - **ID:** `quest_cat_05` | **Reward:** 900gp + The Don's Signet Ring (sell:35)
-- **Trigger:** Q-CAT-02 complete → Sandy activates at CQ (parallel with Q-CAT-03)
+- **Trigger:** Q-CAT-02 complete → Sandy activates at CDG (parallel with Q-CAT-03)
 - **Completion:** Kill 4× fat_merchant_cat AND defeat Don Fluffissimo via CQ_BOSS battle
-- **Boss button:** Appears at CQ when 4 fat merchant cats killed and Q-CAT-05 active
+- **Boss button:** Appears at CDG when 4 fat merchant cats killed and Q-CAT-05 active
 - **Dialogue:** Sandy: *"The merchants have been using Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin."*
 
 ---
 
 #### Q-CAT-06 — "The Cat-King Cometh" ✅ Layer 44
 - **ID:** `quest_cat_06` | **Reward:** 1500gp + Cat-King's Claw Fragment (sell:50) + `catKingDefeated:true`
-- **Trigger:** BOTH Q-CAT-04 AND Q-CAT-05 complete → Cat-King battle button appears at CQ
+- **Trigger:** BOTH Q-CAT-04 AND Q-CAT-05 complete → Cat-King battle button appears at CDG
 - **Completion:** Defeat The Cat-King via CQ_KING special battle (`catKingDefeated` flag)
 - **Dialogue:** Jimmy: *"Listen. I want you to know something. You did good. Real good. You're like... honorary Ally Cat now. Don't tell nobody. It ain't a thing we advertise."*
 
@@ -464,7 +464,7 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 
 #### Q-CAT-VOID — "Void Strays" ✅ Layer 44
 - **ID:** `quest_cat_void` | **Reward:** 400gp
-- **Trigger:** Q-CAT-02 complete → Sandy activates at CQ (parallel with Q-CAT-03 and Q-CAT-05)
+- **Trigger:** Q-CAT-02 complete → Sandy activates at CDG (parallel with Q-CAT-03 and Q-CAT-05)
 - **Completion:** Kill 5× corrupted_cat (tracked via `S_story.catKills`)
 - **Lore tie:** Void pressure from DF (Unbanked Quarter) leaking into Cat Quarter
 - **Dialogue:** Sandy: *"Something's wrong with the strays near the DF node. They're not just feral — they're WRONG."*
@@ -473,7 +473,7 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 
 ### NODE 79 — ruins (Fishmonger's Row) ✅ Layer 78
 
-> *Implemented 2026-05-26. Accessible east of CQ (CQ.E → FR). Terrain: `ruins`. NPCs: Connie Tuna, Aldo Sardino. Node num: 79. Coords: r:4, c:18. Unlocks after `catKingDefeated`.*
+> *Implemented 2026-05-26. Accessible east of CDG (CDG.E → AMS). Terrain: `ruins`. NPCs: Connie Tuna, Aldo Sardino. Node num: 79. Coords: r:4, c:18. Unlocks after `catKingDefeated`.*
 
 **First visit:** Connie Tuna auto-dialogues. `connieMet: true` set. `quest_la_riva_02` activated.
 
@@ -486,14 +486,14 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 #### Q-FR-01 — "What Remains" ✅ Layer 78
 - **ID:** `quest_la_riva_01` | **Reward:** 0gp
 - **Trigger:** Cat-King defeated (`catKingDefeated: true`) → Kenickie sends player east
-- **Completion:** Reach FR; Connie first dialogue (`connieMet: true`)
+- **Completion:** Reach AMS; Connie first dialogue (`connieMet: true`)
 - **Dialogue:** Kenickie: *"She's been there since... You should go."*
 
 ---
 
 #### Q-FR-02 — "The Weight of a Net" ✅ Layer 78
 - **ID:** `quest_la_riva_02` | **Reward:** 500gp
-- **Trigger:** Q-FR-01 complete → Connie activates at FR
+- **Trigger:** Q-FR-01 complete → Connie activates at AMS
 - **Completion:** `frCatKillCount >= 5` AND `Vincenzo's Net` in inventory (guaranteed drop at frCatKillCount = 5)
 - **Unlock:** Aldo Sardino NPC card; Q-FR-03 activated
 - **Dialogue:** Aldo: *"I found the net in the rubble of my stall. Three days after. I folded it. I've been carrying it since."*
@@ -503,7 +503,7 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 #### Q-FR-03 — "The Account Book" ✅ Layer 78
 - **ID:** `quest_la_riva_03` | **Reward:** 0gp + Kenickie Dear Friend + `laRivaComplete: true`
 - **Trigger:** Q-FR-02 complete → Aldo gives Old Tuna Account Book
-- **Completion:** Deliver `Old Tuna Account Book` to Kenickie at CQ (button in CQ render)
+- **Completion:** Deliver `Old Tuna Account Book` to Kenickie at CDG (button in CDG render)
 - **Dialogue:** Kenickie: *"Yeah. Okay. I'll hold onto this."*
 
 ---
@@ -1206,11 +1206,11 @@ The golem guards the gate to the scholars' quarter. It was built to recognise Iv
 
 #### ✅ Layer 51 — Weimar Scholar Gate Quest Arc (plan.md §XVI, Implemented 2026-05-25)
 
-Two new NPCs at the SQ node:
+Two new NPCs at the NUE node:
 - **Archivist Isolde Voss** (`isolde_voss`) — controls access to the Lower Archive; impartial → friendly after Q-WM-02. Starts guarding the gate. Quote: *"The revocation was filed correctly. I stopped being certain it was right about three months after he died."*
-- **Benedikt Rasp** (`benedikt_rasp`) — ex-Scholar Tier 3 (resigned); runs a reading circle from a bookbinder's stall; appears at SQ after `wmArchiveComplete`. Dear Friend after Q-WM-03.
+- **Benedikt Rasp** (`benedikt_rasp`) — ex-Scholar Tier 3 (resigned); runs a reading circle from a bookbinder's stall; appears at NUE after `wmArchiveComplete`. Dear Friend after Q-WM-03.
 
-Quest chain (all activated at SQ node, sequential):
+Quest chain (all activated at NUE node, sequential):
 - **Q-WM-01** "The Revocation Record" — collect 3 Scholar Kings' Seals OR use `archiveLetterObtained`. Reward: `wmLowerArchiveUnlocked`.
 - **Q-WM-02** "Lower Archive" — read all 3 archive docs in `_storyWmArchiveModal()`. Reward: Froberger's Field Notes (Tome, +1 death save) + Isolde Friendly.
 - **Q-WM-03** "Benedikt's Circle" — attend 3 reading circle sessions (one per `dayCounter` value). Reward: Scholar Kings' History (Tome, +2 initiative) + Benedikt Dear Friend + `wmDoc3Unredacted`.
@@ -1220,7 +1220,7 @@ Tome bonus system: `_tomeBonuses()` helper computes aggregate bonuses from all `
 
 New monster: `scholars_guard` (medium, AC14/HP45/ATK+5/1d8+3) — added to `scholars_qtr` terrain. Drops Scholar Kings' Seal (🔏, sell:20).
 
-Archive modal (`_storyWmArchiveModal()`): 3 documents with [READ] buttons; Document 3 shows unredacted after `wmDoc3Unredacted` set. Accessible via "Lower Archive" button at SQ when `wmLowerArchiveUnlocked`.
+Archive modal (`_storyWmArchiveModal()`): 3 documents with [READ] buttons; Document 3 shows unredacted after `wmDoc3Unredacted` set. Accessible via "Lower Archive" button at NUE when `wmLowerArchiveUnlocked`.
 
 ---
 
@@ -1637,7 +1637,7 @@ Prerequisites: `ngPlusRun ≥ 1` + `wmFirstResearcherKnown` (from §XVI) + `entr
 - **Q-VA-01** "Five Marks" — auto-activates on first investigation site visit; complete when all 5 visited (`vaAllMarksFound`).
 - **Q-VA-02** "Constructor's Log" — activates when `vaAllMarksFound`; 4th document appears in `_storyWmArchiveModal()`; 7 entries written by Marta Eilene Vass (First Researcher); reward: `The Constructor's Log` (readable) + `Antecedent Seal` (relic) items.
 - **Q-VA-03** "The Sealed Tunnel" — MT node gains `[Open the tunnel]` when `vaLogFound` + key item in inventory. Text chamber: 6 sentences + *"The Antecedent was here. It is not anymore."* Reward: `vaLastWardVisited` + 200gp.
-- **Q-VA-04** "The Architecture" — Benedikt delivers message at SQ when `vaLastWardVisited + entry42Written`. Reward: `vaArchitectureKnown` + 500gp + lore addendum to Annotated Copy.
+- **Q-VA-04** "The Architecture" — Benedikt delivers message at NUE when `vaLastWardVisited + entry42Written`. Reward: `vaArchitectureKnown` + 500gp + lore addendum to Annotated Copy.
 - **Fifth ending** — if `vaArchitectureKnown + entry42Written + ngPlusRun ≥ 1`: CO outro addendum *"Froberger wrote 41 entries. You wrote one. She wrote 7..."*; Sweelinck question: *"What was inside the cage?"* (overrides all other questions).
 - **State flags (9):** `vaCI`, `vaSL`, `vaDF`, `vaWM`, `vaMT`, `vaAllMarksFound`, `vaLogFound`, `vaLastWardVisited`, `vaArchitectureKnown`.
 
@@ -1693,7 +1693,7 @@ MT tunnel node block gated by `vsShamanKnown && vaLastWardVisited && !wardensLeg
 - **`void_shaman`** — AC15/HP65/ATK+6/2d6+4, rare tier. MONSTER_POOL scripted entry; not in any random terrain pool.
 - **`warden_token`** — The Warden's Token (🔑, relic, sell:0). Description: "Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything."
 - **`wardensLegacyKnown`** set on either outcome. Hollow Hands arc resolved.
-- **Benedikt callback** — at SQ if `vsShamanPersuaded && benedikt_rasp fav >= 2 && !vsShamanBenediktDelivered`: "She planted a guardian at the tunnel and didn't write it down anywhere official. She planted a 200-year misunderstanding. The difference between those things might be very small."
+- **Benedikt callback** — at NUE if `vsShamanPersuaded && benedikt_rasp fav >= 2 && !vsShamanBenediktDelivered`: "She planted a guardian at the tunnel and didn't write it down anywhere official. She planted a 200-year misunderstanding. The difference between those things might be very small."
 - **State flags:** `vshamanFound`, `vshamanDefeated`, `vsShamanPersuaded`, `wardensLegacyKnown`, `vsShamanBenediktDelivered` in `_S_DEFAULTS()`.
 - **`quest_vs_warden`** in QUEST_DB — completeFn: `wardensLegacyKnown`; reward: 600gp (delivered inline).
 
@@ -1711,18 +1711,18 @@ MT tunnel node block gated by `vsShamanKnown && vaLastWardVisited && !wardensLeg
 | 4 | The Cantata Mark | GC | Archivist Hendrika (Scholar Kings defector) | — |
 | 5 | The Passacaglia Core | DC | The First Researcher | `wmFirstResearcherKnown`: "You recognize the handwriting. She was here. This was hers." |
 | 6 | The Chaconne Piece | OP | The original Warden | `wardensLegacyKnown`: "Placed by the first Warden, on the First Researcher's instruction." |
-| 7 | The Sarabande Key | SQ | Froberger himself | `entry42Written`: "You wrote Entry 42. He left the page. You filled it." |
+| 7 | The Sarabande Key | NUE | Froberger himself | `entry42Written`: "You wrote Entry 42. He left the page. You filled it." |
 
-Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five of them knew what they were carrying. One of them didn't know what was inside it. One of them did and placed it last. You know all their names now."* Sets `shardNotesAllRead = true` (SQ dream variant gate, §XXIII).
+Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five of them knew what they were carrying. One of them didn't know what was inside it. One of them did and placed it last. You know all their names now."* Sets `shardNotesAllRead = true` (NUE dream variant gate, §XXIII).
 
 ---
 
 #### ✅ Implemented — Inn Dreams (plan.md §XXIII, Layer 58)
 
-`INN_DREAMS` const keyed by `IN` and `SQ` (SF/IS have `sleep:false` in WORLD_DB). Fires via `setTimeout` after `storyConfirmSleep()`, prefixed `💤 ‹dream›`. Cycle: `gameDay % 3`. Conditionals checked first; first matching flag wins.
+`INN_DREAMS` const keyed by `IN` and `NUE` (SF/IS have `sleep:false` in WORLD_DB). Fires via `setTimeout` after `storyConfirmSleep()`, prefixed `💤 ‹dream›`. Cycle: `gameDay % 3`. Conditionals checked first; first matching flag wins.
 
 - **IN (Birka)** — *Birka in the small hours / A door / The city is very quiet.* Flags: `frobergerLastEntryRead` → Entry 41 dream; `entry42Written` → journal heavier; `vaArchitectureKnown` → four authors.
-- **SQ (Weimar)** — *Pages turning / Name at margin / Archive organized.* Flags: `wmFirstResearcherKnown` → name readable; `vaArchitectureKnown` → Constructor's Log Entry 7; `shardNotesAllRead` → seven handwritings.
+- **NUE (Weimar)** — *Pages turning / Name at margin / Archive organized.* Flags: `wmFirstResearcherKnown` → name readable; `vaArchitectureKnown` → Constructor's Log Entry 7; `shardNotesAllRead` → seven handwritings.
 - No new state flags. No new monsters. No new items.
 
 ---
@@ -1798,7 +1798,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 - Quill + Brynn at TV: joint ambient moment
 - Weckmann + Auros at CY: mid-conversation the player interrupts
 - Froberger traces fire (one-time NPC memory of Froberger per Dear Friend NPC)
-- Entry 41 reaction lines at IN (Brynn) and SQ (Sweelinck) after `frobergerLastEntryRead`
+- Entry 41 reaction lines at IN (Brynn) and NUE (Sweelinck) after `frobergerLastEntryRead`
 
 ---
 
@@ -2677,7 +2677,7 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 **Brynn's scene (IN, `!s49BrynnDelivered`):** `📔 You read the last entry.` button fires `storyMsg(S49_BRYNN_SCENE)` — full scene with double-read, the *"Come back"* quote, *"Glad you're not done yet."* Sets `s49BrynnDelivered = true`, button removes itself.
 
-**Sweelinck's scene (SQ, `!s49SweelinckDelivered`):** Same button pattern fires `storyMsg(_getS49SweelinckScene())` — full scene with Sweelinck reading standing, *"He knew the shape of the absence"*, journal kept. NG+ closing: *"Still here. Bring it back when you're done again."* Base closing: *"I'll keep it here. You know where to find me when you're done."* `_getS49SweelinckScene()` function resolves the correct closing at call time.
+**Sweelinck's scene (NUE, `!s49SweelinckDelivered`):** Same button pattern fires `storyMsg(_getS49SweelinckScene())` — full scene with Sweelinck reading standing, *"He knew the shape of the absence"*, journal kept. NG+ closing: *"Still here. Bring it back when you're done again."* Base closing: *"I'll keep it here. You know where to find me when you're done."* `_getS49SweelinckScene()` function resolves the correct closing at call time.
 
 **Covenant Keeper opening patch:** Victory screen `intro` string in the Covenant Keeper ending block is now conditional — if `s49SweelinckDelivered`, prepends *"You know where to find me. / You found me." + pause + "Good."* before the standard naming intro. Turns the ceremony into a reunion.
 
@@ -2689,7 +2689,7 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 **S54 — Yael and Brynn at CI (Layer 66a):** Fires on first CI visit where `actNumber >= 7` AND `_npcFavor('yael') >= 1` AND `_npcFavor('brynn') >= 1` AND `!s54JointMomentDelivered`. `storyMsg(S54_JOINT_MOMENT)` via `setTimeout(400)`. Full scene: Brynn with delivery basket, Yael already at CI, *"Still the same light?" / "Still the same light."*, then both address the player. Sets `s54JointMomentDelivered = true`.
 
-**Flag split:** Pre-existing TV stub (Quill plays Brynn's song) was using `s54JointMomentDelivered`. Renamed to `s54QuillBrynnDelivered` (new flag in `_S_DEFAULTS()`). SQ "map on the wall" stub was using `s55MapLineDelivered`. Renamed to `s55SqMapLineDelivered` (new flag in `_S_DEFAULTS()`). Both pre-existing stubs now have their own flags; canonical §XXXI flags restored to their intended roles.
+**Flag split:** Pre-existing TV stub (Quill plays Brynn's song) was using `s54JointMomentDelivered`. Renamed to `s54QuillBrynnDelivered` (new flag in `_S_DEFAULTS()`). NUE "map on the wall" stub was using `s55MapLineDelivered`. Renamed to `s55SqMapLineDelivered` (new flag in `_S_DEFAULTS()`). Both pre-existing stubs now have their own flags; canonical §XXXI flags restored to their intended roles.
 
 **S55 — The Map Caption (Layer 66b):** `_renderFinalMap()` patched — creates `<div id="final-map-caption">` positioned absolute at bottom of overlay, fade-in at +400 ms after grid appears (3500 ms total), fades with grid at 5000 ms. Base: *"He walked every corridor. So did you. The map remembers."* Sweelinck variant (if `s49SweelinckDelivered`): *"...Sweelinck has the record."* Sets `s55MapLineDelivered = true` immediately on render (no gate needed — fires once per victory).
 

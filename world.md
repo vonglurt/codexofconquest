@@ -88,11 +88,11 @@ Dead-end west of DF.
 
 ---
 
-### **[✅ Layer 46 — Implemented]** The Cat Quarter (Node CQ, R04,C17)
+### **[✅ Layer 46 — Implemented]** The Cat Quarter (Node CDG, R04,C17)
 
-CQ in WORLD_DB (HTML line 7231). Quest chain `quest_cat_01`–`quest_cat_void` in QUEST_DB (HTML lines 8078–8138). Full design in `plan.md` Section IX.
+CDG in WORLD_DB (HTML line 8026). Quest chain `quest_cat_01`–`quest_cat_void` in QUEST_DB (HTML lines ~11799–11885). Full design in `plan.md` Section IX.
 
-**CQ — The Cat Quarter (Node 77, R04,C17)**
+**CDG — The Cat Quarter (Node 77, R04,C17)**
 Dead-end east of SL. `cat_quarter` terrain.
 
 A sub-district invisible to city records. Entry sign (hand-lettered on a cardboard box): **"RAT PROBLEM. NOT RATS. CATS. WORSE."** The Ally Cat community runs this block through a strict hierarchy — strays at the bottom, Honchos at the top, and the Cat-King rotating through every Taz Devil merge event. Nobody human runs anything here. The cats have opinions about this.
@@ -104,7 +104,7 @@ A sub-district invisible to city records. Entry sign (hand-lettered on a cardboa
 - **Cat hierarchy:** Stray → Fluffy → Beefy → Honcho → Taz Devil (Honcho merge) → Cat-King (3× Taz Devil merge)
 - **Loot:** Cat-King drops The Don's Signet Ring; vendor chip "Kenickie's Black Market" unlocks after Q-CAT-03
 
-> **DM note:** CQ has no Codex Shard and no connection to the main quest. It is optional Act I content — a full side arc for players who explore east of the Slums before heading to Tilbury. The Corrupted Cat sub-quest ties to DF node Void pressure lore.
+> **DM note:** CDG has no Codex Shard and no connection to the main quest. It is optional Act I content — a full side arc for players who explore east of the Slums before heading to Tilbury. The Corrupted Cat sub-quest ties to DF node Void pressure lore.
 
 ---
 
@@ -540,7 +540,7 @@ All three together bring the balance to exactly 0. When `brynLedgerBalance >= 0`
 
 **S29 — Auros/Froberger theory** (`s29LineDelivered`) — one-time dialogue injection. Fires when the player visits Auros at CY after: (1) Froberger's last journal entry has been read AND (2) Auros is at Dear Friend (fav ≥ 2). Auros connects Froberger's final courier route to the Void advance, explains what the entry means in tactical terms. Fires once; `s29LineDelivered` prevents repeat.
 
-**S49 — Entry 41 delivery** (`s49BrynnDelivered`, `s49SweelinckDelivered`) — two parallel one-time scenes that fire after Froberger's last entry is read. At IN: Brynn reads Entry 41 twice (quietly), quotes the last line *"Come back"* and says: *"He was right. They do need the person. Glad you're not done yet."* At SQ: Sweelinck takes the journal, reads Entry 41 standing, closes it carefully, says: *"I'll keep it here. You know where to find me when you're done."* — and keeps it. Each fires independently on the next visit after `frobergerLastEntryRead = true`. Full scene text: `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts. Covenant Keeper patch: if `s49SweelinckDelivered`, `_buildSweelinckNamingSequence()` opening changes to *"You know where to find me. You found me. Good."* See `plan.md §XXX` for full design.
+**S49 — Entry 41 delivery** (`s49BrynnDelivered`, `s49SweelinckDelivered`) — two parallel one-time scenes that fire after Froberger's last entry is read. At IN: Brynn reads Entry 41 twice (quietly), quotes the last line *"Come back"* and says: *"He was right. They do need the person. Glad you're not done yet."* At NUE: Sweelinck takes the journal, reads Entry 41 standing, closes it carefully, says: *"I'll keep it here. You know where to find me when you're done."* — and keeps it. Each fires independently on the next visit after `frobergerLastEntryRead = true`. Full scene text: `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts. Covenant Keeper patch: if `s49SweelinckDelivered`, `_buildSweelinckNamingSequence()` opening changes to *"You know where to find me. You found me. Good."* See `plan.md §XXX` for full design.
 
 *(Layer 65 — ✅ Implemented. Consts: `S49_BRYNN_SCENE` (HTML 11699), `S49_SWEELINCK_SCENE`. Trigger logic in HTML. Flags `s49BrynnDelivered` / `s49SweelinckDelivered` in `_S_DEFAULTS()` (HTML 8440).)*
 
@@ -1078,7 +1078,7 @@ The ambient text renders as an italic blue chip below the NPC row at the qualify
 | TV | "The tavern crowd has thinned. Quill is still playing. Long after the regular crowd left." |
 | BA | "The rough bar is loud even at this hour. Louder, maybe. Some people do their best business at night." |
 | CY | "The official pit is closed. The unofficial sparring is not. Weckmann pretends not to notice." |
-| SQ | "The Oude Kerk square is empty. Sweelinck's lamp is on." |
+| NUE | "The Oude Kerk square is empty. Sweelinck's lamp is on." |
 
 All six are Birka city nodes. No other nodes have NIGHT_AMBIENT entries.
 

@@ -123,6 +123,97 @@ const GEO = {
 
   // East Africa
   MLN: { lat: -3.2, lon: 40.1, label: 'Malindi',         region: 'Kenya' },
+
+  // ── Extended city set (added 2026-06-16) ────────────────────────────────────
+  // British Isles
+  BEL: { lat: 54.6, lon:  -5.9, label: 'Belfast',              region: 'Ireland' },
+  GCI: { lat: 49.4, lon:  -2.6, label: 'Guernsey',             region: 'Channel Islands' },
+  GIB: { lat: 36.2, lon:  -5.4, label: 'Gibraltar',            region: 'Gibraltar' },
+  INV: { lat: 57.5, lon:  -4.1, label: 'Inverness',            region: 'Scotland' },
+  KIR: { lat: 52.2, lon:  -9.5, label: 'Kerry',                region: 'Ireland' },
+  LCY: { lat: 51.5, lon:   0.1, label: 'Tilbury Harbor',       region: 'England' },
+  LGW: { lat: 51.2, lon:  -0.2, label: 'London Gatwick',       region: 'England' },
+  MAN: { lat: 53.4, lon:  -2.3, label: 'Manchester',           region: 'England' },
+  MME: { lat: 54.5, lon:  -1.4, label: 'Durham',               region: 'England' },
+  NWI: { lat: 52.7, lon:   1.3, label: 'Norwich',              region: 'England' },
+  SEN: { lat: 51.6, lon:   0.7, label: 'Southend',             region: 'England' },
+  STN: { lat: 51.9, lon:   0.2, label: 'The Map Shop',         region: 'England' },
+
+  // Scandinavia / Nordic extended
+  BMA: { lat: 59.4, lon:  18.0, label: 'Stockholm Bromma',     region: 'Sweden' },
+  BOO: { lat: 67.3, lon:  14.4, label: 'Bodø',                 region: 'Norway' },
+  FRO: { lat: 61.6, lon:   5.0, label: 'Florø',               region: 'Norway' },
+  GOT: { lat: 57.7, lon:  12.3, label: 'Gothenburg',           region: 'Sweden' },
+  KRN: { lat: 67.8, lon:  20.3, label: 'Kiruna',               region: 'Sweden' },
+  KSU: { lat: 63.1, lon:   7.8, label: 'Kristiansund',         region: 'Norway' },
+  LLA: { lat: 65.5, lon:  22.1, label: 'Luleå',               region: 'Sweden' },
+  MHQ: { lat: 60.1, lon:  19.9, label: 'Mariehamn',            region: 'Åland' },
+  MJF: { lat: 65.8, lon:  13.2, label: 'Mosjøen',             region: 'Norway' },
+  MOL: { lat: 62.7, lon:   7.3, label: 'Molde',                region: 'Norway' },
+  RKV: { lat: 64.1, lon: -22.0, label: 'Reykjavik',            region: 'Iceland' },
+  SFT: { lat: 64.6, lon:  21.1, label: 'Skellefteå',          region: 'Sweden' },
+  SSJ: { lat: 66.0, lon:  12.5, label: 'Sandnessjøen',        region: 'Norway' },
+  TRD: { lat: 63.5, lon:  10.9, label: 'Trondheim',            region: 'Norway' },
+  TRF: { lat: 59.2, lon:  10.3, label: 'Sandefjord',           region: 'Norway' },
+  VBY: { lat: 57.7, lon:  18.4, label: 'Visby',                region: 'Sweden' },
+
+  // Western & Central Europe
+  AMS: { lat: 52.4, lon:   4.9, label: "Fishmonger's Row",     region: 'Netherlands' },
+  CDG: { lat: 49.0, lon:   2.5, label: 'The Cat Quarter',      region: 'France' },
+  DUS: { lat: 51.3, lon:   6.8, label: 'Düsseldorf',          region: 'Germany' },
+  ERF: { lat: 51.0, lon:  11.0, label: 'Erfurt',               region: 'Germany' },
+  FCO: { lat: 41.8, lon:  12.2, label: 'Rome Fiumicino',       region: 'Italy' },
+  FLR: { lat: 43.8, lon:  11.2, label: 'Florence',             region: 'Italy' },
+  GVA: { lat: 46.2, lon:   6.1, label: 'Mountain Pass',        region: 'Switzerland' },
+  HAJ: { lat: 52.5, lon:   9.7, label: 'Hannover',             region: 'Germany' },
+  INN: { lat: 47.3, lon:  11.3, label: 'Innsbruck',            region: 'Austria' },
+  MAD: { lat: 40.5, lon:  -3.6, label: 'Madrid',               region: 'Spain' },
+  MUC: { lat: 48.4, lon:  11.8, label: 'Munich',               region: 'Germany' },
+  NUE: { lat: 49.5, lon:  11.1, label: "Scholar's Quarter",    region: 'Germany' },
+  PMO: { lat: 38.2, lon:  13.1, label: 'Palermo',              region: 'Sicily' },
+  SDR: { lat: 43.4, lon:  -3.8, label: 'Santander',            region: 'Spain' },
+  SZG: { lat: 47.8, lon:  13.0, label: 'Salzburg',             region: 'Austria' },
+  TLS: { lat: 43.6, lon:   1.4, label: 'Toulouse',             region: 'France' },
+  VIE: { lat: 48.1, lon:  16.6, label: 'Vienna',               region: 'Austria' },
+  WRO: { lat: 51.1, lon:  17.0, label: 'Wrocław',             region: 'Poland' },
+  ZRH: { lat: 47.5, lon:   8.6, label: 'Zurich',               region: 'Switzerland' },
+
+  // Eastern Europe & Balkans
+  ATH: { lat: 37.9, lon:  23.7, label: 'Athens',               region: 'Greece' },
+  BEG: { lat: 44.8, lon:  20.5, label: 'Belgrade',             region: 'Serbia' },
+  BNX: { lat: 44.9, lon:  17.3, label: 'Banja Luka',           region: 'Bosnia' },
+  CLJ: { lat: 46.8, lon:  23.7, label: 'Cluj-Napoca',          region: 'Romania' },
+  KUN: { lat: 55.0, lon:  24.1, label: 'Kaunas',               region: 'Lithuania' },
+  KVA: { lat: 40.9, lon:  24.6, label: 'Kavala',               region: 'Greece' },
+  MLA: { lat: 35.9, lon:  14.5, label: 'Malta',                region: 'Malta' },
+  OTP: { lat: 44.6, lon:  26.1, label: 'Bucharest',            region: 'Romania' },
+  PRN: { lat: 42.6, lon:  21.0, label: 'Pristina',             region: 'Kosovo' },
+  SOF: { lat: 42.7, lon:  23.4, label: 'Sofia',                region: 'Bulgaria' },
+  TLL: { lat: 59.4, lon:  24.8, label: 'Tallinn',              region: 'Estonia' },
+  WAW: { lat: 52.2, lon:  21.0, label: 'Warsaw',               region: 'Poland' },
+  ZTH: { lat: 37.8, lon:  20.9, label: 'Zakynthos',            region: 'Greece' },
+
+  // Caucasus & Russia
+  LCA: { lat: 34.9, lon:  33.6, label: 'Larnaca',              region: 'Cyprus' },
+  SVO: { lat: 56.0, lon:  37.4, label: 'Moscow',               region: 'Russia' },
+  TBS: { lat: 41.7, lon:  44.9, label: 'Tbilisi',              region: 'Georgia' },
+
+  // Middle East & North Africa
+  ADA: { lat: 37.0, lon:  35.3, label: 'Adana',                region: 'Turkey' },
+  CAI: { lat: 30.1, lon:  31.4, label: 'Cairo',                region: 'Egypt' },
+  DAM: { lat: 33.4, lon:  36.5, label: 'Damascus',             region: 'Syria' },
+  DOH: { lat: 25.3, lon:  51.6, label: 'Doha',                 region: 'Qatar' },
+  FEZ: { lat: 34.0, lon:  -5.0, label: 'Fez',                  region: 'Morocco' },
+  JRS: { lat: 31.9, lon:  35.2, label: 'Jerusalem',            region: 'Palestine' },
+  KYA: { lat: 38.0, lon:  32.6, label: 'Konya',                region: 'Turkey' },
+  MCT: { lat: 23.6, lon:  58.3, label: 'Muscat',               region: 'Oman' },
+  RUH: { lat: 25.0, lon:  46.7, label: 'Riyadh',               region: 'Arabia' },
+
+  // Atlantic islands
+  ACE: { lat: 29.0, lon: -13.6, label: 'Isle of the Wyrm Crown', region: 'Canaries' },
+  PDL: { lat: 37.7, lon: -25.7, label: 'Ponta Delgada',        region: 'Azores' },
+  RAI: { lat: 14.9, lon: -23.5, label: 'Praia',                region: 'Cape Verde' },
+  SID: { lat: 16.7, lon: -23.0, label: 'Sal',                  region: 'Cape Verde' },
 };
 
 // ─── Map projection bounds ────────────────────────────────────────────────────
