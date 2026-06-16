@@ -25872,7 +25872,7 @@ function storyCheckQuests(node) {
     const q = QUEST_DB[id];
     if (!q) return;
     const done = (q.completeFn && q.completeFn()) ||
-      (q.completeItems.length > 0 && q.completeItems.some(ci =>
+      (q.completeItems && q.completeItems.length > 0 && q.completeItems.some(ci =>
         S_story.inventory.some(inv => inv.name.includes(ci) || ci.includes(inv.name))));
     if (done) {
       S_story.quests[id] = 'complete';
