@@ -11,8 +11,8 @@
 | Metric | Value | Status |
 |--------|-------|--------|
 | HTML line count | ~43,736 | ✅ |
-| Lab reports on disk | 70 | ✅ |
-| Lab reports in index | 70 | ✅ |
+| Lab reports on disk | 71 | ✅ |
+| Lab reports in index | 71 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
@@ -203,7 +203,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-reports/lab-report-synthesis-part4-monsters-fishing.md` | Part 4 of 7 | Both Fishing reports — 2d20 superseded by Catch/Type/Size system; BAIT_TABLES vs planned BAIT_FISH_POOL; Luck live at 7 roll points; LAKE_MAGIC_DB; night fishing; Emmer arc; tournament chain |
 | `lab-reports/lab-report-synthesis-part5-npc-narrative.md` | Part 5 of 7 | All 8 NPC & Narrative reports — NPC_DIALOGUES/BIRKA_NPC_PROFILES dual-structure; Corelli arc; living world; Brynn/Bruhns/Yael companion scenes; La Riva AMS node; romance layer; vignette principle; kindness calculus templates |
 | `lab-reports/lab-report-synthesis-part6-quest-arcs.md` | Part 6 of 7 | All 14 Quest Arc reports — Cat Quarter CDG; Weimar NUE; _rollCeremonia universal resolver; §XVI→§XVII→Quest-1→Entry 42 deep-lore chain; Littoral Courts/Crown arc; endings live; P3+ dungeon themes implemented |
-| *(Part 7 in progress)* | Part 7 | Writing & Design Philosophy |
+| `lab-reports/lab-report-synthesis-part7-writing-design-philosophy.md` | Part 7 of 7 ✅ | All 8 Writing & Design Philosophy reports — Curse of Knowledge architecture; Pinker writing standard; Void Shaman at GVA not MT; 5thOrgan.html live; Birka wounds visible in dearFriend arcs; methodology loop; 64-report series complete |
 
 ### Architecture & Systems
 
