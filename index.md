@@ -11,8 +11,8 @@
 | Metric | Value | Status |
 |--------|-------|--------|
 | HTML line count | ~43,736 | ✅ |
-| Lab reports on disk | 68 | ✅ |
-| Lab reports in index | 68 | ✅ |
+| Lab reports on disk | 69 | ✅ |
+| Lab reports in index | 69 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
@@ -201,7 +201,8 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-reports/lab-report-synthesis-part2-combat-mechanics.md` | Part 2 of 7 | All 7 Combat & Mechanics reports — loot channels, 1.5 AP economy, Cooperative DM Principle, Luck stat, tattoo/chronicle persistence |
 | `lab-reports/lab-report-synthesis-part3-world-navigation.md` | Part 3 of 7 | All 13 World & Navigation reports — §CELL model, BFS, MegaReWeave, Epic Battlegrounds, arc templates (§SPARK/§WHODUNIT/§ALCHEMY) |
 | `lab-reports/lab-report-synthesis-part4-monsters-fishing.md` | Part 4 of 7 | Both Fishing reports — 2d20 superseded by Catch/Type/Size system; BAIT_TABLES vs planned BAIT_FISH_POOL; Luck live at 7 roll points; LAKE_MAGIC_DB; night fishing; Emmer arc; tournament chain |
-| *(Part 5–7 in progress)* | Parts 5–7 | NPC & Narrative, Quest Arcs, Design Philosophy |
+| `lab-reports/lab-report-synthesis-part5-npc-narrative.md` | Part 5 of 7 | All 8 NPC & Narrative reports — NPC_DIALOGUES/BIRKA_NPC_PROFILES dual-structure; Corelli arc; living world; Brynn/Bruhns/Yael companion scenes; La Riva AMS node; romance layer; vignette principle; kindness calculus templates |
+| *(Part 6–7 in progress)* | Parts 6–7 | Quest Arcs, Design Philosophy |
 
 ### Architecture & Systems
 
