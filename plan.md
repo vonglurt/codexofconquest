@@ -90,41 +90,6 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 
 ---
 
-## §FUTURE — Long-Range Ideas (not scheduled)
-
-> Speculative world expansions. No implementation layer assigned. Record the concept while the idea is fresh.
-
----
-
-> Arc insertion workflow: see `wbapi-help.md` §Arc Insertion Workflow
-
----
-
-> Operand reference: see `wbapi-help.md` §Quest Operand Reference
-
----
-
-## §TTS — macOS Text-to-Speech Session Protocol
-
-After every `git commit`:
-```bash
-git commit -m "message" && say "message"
-```
-
-When asking user to type "continue":
-```bash
-say "continue, continue, continue!"
-```
-
-Mid-loop after each PUT:
-```bash
-say "Fixed quest_id. Verified on disk." &
-```
-
-Run `say` blocking (no `&`) so each announcement completes before the next request.
-
----
-
 ## §BACKLOG — Open Items
 
 ### Tooling
@@ -138,11 +103,7 @@ Run `say` blocking (no `&`) so each announcement completes before the next reque
 
 ### Game Content
 
-- [x] **§GR** — La Riva grief arc + Connie/Aldo/Vinnie arc + FR node + corruption chain CY→FR. See `project_grief_arc.md` in memory.
-- [x] **§WISDOM-01 Keel thread close** — Baltic survey data arc at eastern Baltic node; the "after witnessing" arc
-- [x] **§MATH-01** — Mathematical World node; Group Theory dungeon, Monster group (~8×10^53), EHZ node, counting quest, zero transmission. See `project_math_world.md` in memory.
 - [ ] **§1367** — Historical 1367 AD integration; 6 events→quest seeds, 8 clarification questions gate scope. See `project_1367_setting.md` in memory.
-- [x] **Covenant Keeper Ending** — all six grief arcs name their people in a final storyRender event. Depends on §GR complete.
 - [ ] **§GR-D Froberger Entry 42** — blank page filled on second playthrough. Requires NG+ state tracking (currently unsupported).
 
 ### Design Decisions
