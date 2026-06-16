@@ -11,14 +11,14 @@
 | Metric | Value | Status |
 |--------|-------|--------|
 | HTML line count | ~43,736 | ✅ |
-| Lab reports on disk | 64 | ✅ |
-| Lab reports in index | 64 | ✅ |
+| Lab reports on disk | 65 | ✅ |
+| Lab reports in index | 65 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
 | Last sync pass | 2026-06-15 §MATH-01: 4 math-world nodes (EHZ, MONS, ZERO, CNTR) + 5 quests (quest_math_01–05) east of HKG; Group Theory dungeon, Monster Group, zero corridor, Cantor's Attic; Adventure Time register; total 426 nodes | ✅ |
 
-> Update this table at the start of each session: recount lab reports with `ls lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
+> Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
 ---
 
@@ -32,7 +32,7 @@
 
 **Two-Way Sync Rule.** Every item in the markdown docs traces back to `roll2hit-v3.html`. Everything in the HTML has a home doc. On each sync pass: verify world map consistency across `maps.md`, `story.md`, `world.md`.
 
-**Lab Report Rule.** Write a `lab-report-<title>.md` for: major collections, multi-system redesigns, new narrative arcs (3+ nodes), pre-implementation design reviews, or session postmortems with non-obvious decisions. Do not write one for single-item additions or value corrections.
+**Lab Report Rule.** Write a `lab-reports/lab-report-<title>.md` for: major collections, multi-system redesigns, new narrative arcs (3+ nodes), pre-implementation design reviews, or session postmortems with non-obvious decisions. Do not write one for single-item additions or value corrections.
 
 **Session Format.** One increment per "continue."
 
@@ -141,10 +141,10 @@ All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
 | **§CELL-01–§CELL-13** nav/session | 2026-06-14 | See §CELL entry above |
 | **§D01-07 Maintenance Plate** | 2026-06-14 | 5-quest arc at HKG: WIS Perception DC 10 → auto WIS save → Data Wraith battle → INT Arcana DC 13 cipher → CHA Persuasion DC 12 identity reveal; Scholar King's Name Plate reward |
 | **§WORLDBUILDER-02-F open items** | — | `_questsByNpc` ✅ done; `_questsByWaypoint` ✅ done; `_nodesByTerrain` index pending; `_flagToQuests` arc-class map pending |
-| **§GR + Covenant Keeper Ending** | 2026-06-15 | La Riva grief arc: FR node + corruption chain CY→FR; Connie/Aldo/Vinnie sub-arc; 6 grief vignettes at FR; Covenant Keeper Ending — all six grief arcs name their people in final storyRender event. Lab report: `lab-report-la-riva-grief-arc.md` |
+| **§GR + Covenant Keeper Ending** | 2026-06-15 | La Riva grief arc: FR node + corruption chain CY→FR; Connie/Aldo/Vinnie sub-arc; 6 grief vignettes at FR; Covenant Keeper Ending — all six grief arcs name their people in final storyRender event. Lab report: `lab-reports/lab-report-la-riva-grief-arc.md` |
 | **§WISDOM-01** | — | Keel thread close: Baltic survey data arc at eastern Baltic node; "after witnessing" arc completion |
 | **§MATH-01** | 2026-06-15 | Mathematical World: 4 nodes (EHZ/MONS/ZERO/CNTR) east of HKG + 5 quests (quest_math_01–05); Group Theory dungeon, Monster Group (~8×10^53), zero corridor, Cantor's Attic; Adventure Time register |
-| **§DATA-01 Quest Data–Code Separation** | 2026-06-16 | `storyShowNpc` quoteFn bug fixed (all NPC state changes were silently bypassed); `ZRH` duplicate node resolved — Dunfall renamed `DFL` at `(83,223)`, 11 quests + NPC_DIALOGUE + 3 `node.code` checks + KIR gate updated; `QUEST_DB` purged of all 127 `onPass`/`onFail` functions; `QUEST_EFFECTS` (declarative effect descriptors, 121 entries) + `QUEST_HOOKS` (91 named engine handlers) + `applyQuestEffects()` (10-case dispatch); `q.title/desc/hint` rendering moved from `innerHTML` to `textContent`. Lab report: `lab-report-quest-data-code-separation.md` |
+| **§DATA-01 Quest Data–Code Separation** | 2026-06-16 | `storyShowNpc` quoteFn bug fixed (all NPC state changes were silently bypassed); `ZRH` duplicate node resolved — Dunfall renamed `DFL` at `(83,223)`, 11 quests + NPC_DIALOGUE + 3 `node.code` checks + KIR gate updated; `QUEST_DB` purged of all 127 `onPass`/`onFail` functions; `QUEST_EFFECTS` (declarative effect descriptors, 121 entries) + `QUEST_HOOKS` (91 named engine handlers) + `applyQuestEffects()` (10-case dispatch); `q.title/desc/hint` rendering moved from `innerHTML` to `textContent`. Lab report: `lab-reports/lab-report-quest-data-code-separation.md` |
 
 ### Planned Features
 
@@ -193,104 +193,111 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 ## Lab Report Index (All 54 Reports)
 
+### Synthesis (Multi-Part Cross-Reference)
+
+| File | Parts | Coverage |
+|------|-------|----------|
+| `lab-reports/lab-report-synthesis-part1-architecture.md` | Part 1 of 7 | All 12 Architecture & Systems reports cross-referenced against live HTML — current line numbers, active/superseded status, what still applies |
+| *(Part 2–7 in progress)* | Parts 2–7 | Combat, Navigation, Fishing, NPC, Quest Arcs, Design Philosophy |
+
 ### Architecture & Systems
 
 | File | Layer(s) | Topic |
 |------|---------|-------|
-| `lab-report-architecture-full.md` | 0–45 | Complete IEEE function catalog — every function, all subsystems, flow charts |
-| `lab-report-documentation-system-design.md` | — | Two-way sync architecture, plan.md purpose, task decomposition framework |
-| `lab-report-sp4-documentation-sync-pass.md` | SP4 | SP4 sync pass — 20 PLANNED markers, 67 annotations, F4/F6 re-verification, FC01–FC08 archive |
-| `lab-report-api-01-02-mechanics-combat-review.md` | §API-01+02 | IEEE API review: mechanics.md (36 points) + combat.md F6 drift (+163 to +3,115 lines) |
-| `lab-report-plan-cleanup-world-builder-arc.md` | 48–77 | plan.md archaeology + arc from dice tracker to world builder |
-| `lab-report-timeline-history-completed.md` | 0–45 | Complete layer-by-layer development timeline archive |
-| `lab-report-prompt-migration-arena-to-prototype.md` | 0–13 | Arena → Prototype: specification gravity, Cooperative DM Principle |
-| `lab-report-wbapi.md` | WBAPI | World Builder API first-pass design — buffer model, extractObj pipeline, port 1367 |
-| `lab-report-wbapi-architecture.md` | WBAPI | WBAPI internal architecture — Proxy model, comment-aware brace counting, single-file source of truth |
-| `lab-report-wbapi-evolution.md` | WBAPI | Evolution from grep to WBAPI — world data access history, design decisions, tradeoffs |
-| `lab-report-quest-api-architecture.md` | §ARCH-01 | Quest API & Universal Mission Format — UQF v1.0 schema, Mission Bit Registry, QuestRuntime design |
-| `lab-report-quest-data-code-separation.md` | §DATA-01 | Data–code boundary enforcement: QUEST_EFFECTS declarative DSL, QUEST_HOOKS named engine, applyQuestEffects dispatch; storyShowNpc quoteFn fix; DFL node rename; innerHTML→textContent; passText function removal |
+| `lab-reports/lab-report-architecture-full.md` | 0–45 | Complete IEEE function catalog — every function, all subsystems, flow charts |
+| `lab-reports/lab-report-documentation-system-design.md` | — | Two-way sync architecture, plan.md purpose, task decomposition framework |
+| `lab-reports/lab-report-sp4-documentation-sync-pass.md` | SP4 | SP4 sync pass — 20 PLANNED markers, 67 annotations, F4/F6 re-verification, FC01–FC08 archive |
+| `lab-reports/lab-report-api-01-02-mechanics-combat-review.md` | §API-01+02 | IEEE API review: mechanics.md (36 points) + combat.md F6 drift (+163 to +3,115 lines) |
+| `lab-reports/lab-report-plan-cleanup-world-builder-arc.md` | 48–77 | plan.md archaeology + arc from dice tracker to world builder |
+| `lab-reports/lab-report-timeline-history-completed.md` | 0–45 | Complete layer-by-layer development timeline archive |
+| `lab-reports/lab-report-prompt-migration-arena-to-prototype.md` | 0–13 | Arena → Prototype: specification gravity, Cooperative DM Principle |
+| `lab-reports/lab-report-wbapi.md` | WBAPI | World Builder API first-pass design — buffer model, extractObj pipeline, port 1367 |
+| `lab-reports/lab-report-wbapi-architecture.md` | WBAPI | WBAPI internal architecture — Proxy model, comment-aware brace counting, single-file source of truth |
+| `lab-reports/lab-report-wbapi-evolution.md` | WBAPI | Evolution from grep to WBAPI — world data access history, design decisions, tradeoffs |
+| `lab-reports/lab-report-quest-api-architecture.md` | §ARCH-01 | Quest API & Universal Mission Format — UQF v1.0 schema, Mission Bit Registry, QuestRuntime design |
+| `lab-reports/lab-report-quest-data-code-separation.md` | §DATA-01 | Data–code boundary enforcement: QUEST_EFFECTS declarative DSL, QUEST_HOOKS named engine, applyQuestEffects dispatch; storyShowNpc quoteFn fix; DFL node rename; innerHTML→textContent; passText function removal |
 
 ### Combat & Mechanics
 
 | File | Layer(s) | Topic |
 |------|---------|-------|
-| `lab-report-leveling-flashbang-condition-economy.md` | 18 | Level-up system, Flashbang, CONDITION_GOLD ×100, 0.5-action bonus phase |
-| `lab-report-drop-rates-balance-and-health.md` | 12 | `reward = floor(0.1 × AC × maxHP)`, health economy, Cooperative DM Principle |
-| `lab-report-loot-drop-weapon-economy.md` | 25 | Historical proposal — superseded by `_D100_TABLE`. Read for design context. |
-| `lab-report-loot-drop-system-v2.md` | 25+ | Loot drop system redesign and API formalization — `_D100_TABLE`, monster-specific drops, vendor economy |
-| `lab-report-luck-seventh-stat.md` | 48 | §XIII Luck as seventh stat — d20 roll modifier, stat interaction |
-| `lab-report-tattoo-progression-system.md` | 76 | §XLI Tattoo progression — character creation modal, HP tattoos, death persistence |
-| `lab-report-kenickie-chronicle.md` | 75+77 | §XL Kenickie's black market + §XLII Chronicle System (careerStats/runStats) |
+| `lab-reports/lab-report-leveling-flashbang-condition-economy.md` | 18 | Level-up system, Flashbang, CONDITION_GOLD ×100, 0.5-action bonus phase |
+| `lab-reports/lab-report-drop-rates-balance-and-health.md` | 12 | `reward = floor(0.1 × AC × maxHP)`, health economy, Cooperative DM Principle |
+| `lab-reports/lab-report-loot-drop-weapon-economy.md` | 25 | Historical proposal — superseded by `_D100_TABLE`. Read for design context. |
+| `lab-reports/lab-report-loot-drop-system-v2.md` | 25+ | Loot drop system redesign and API formalization — `_D100_TABLE`, monster-specific drops, vendor economy |
+| `lab-reports/lab-report-luck-seventh-stat.md` | 48 | §XIII Luck as seventh stat — d20 roll modifier, stat interaction |
+| `lab-reports/lab-report-tattoo-progression-system.md` | 76 | §XLI Tattoo progression — character creation modal, HP tattoos, death persistence |
+| `lab-reports/lab-report-kenickie-chronicle.md` | 75+77 | §XL Kenickie's black market + §XLII Chronicle System (careerStats/runStats) |
 
 ### World & Navigation
 
 | File | Layer(s) | Topic |
 |------|---------|-------|
-| `lab-report-movement-by-cells.md` | §CELL-01–§CELL-12 | Cell-grid navigation architecture — full program flow, wbapi-server/worldmap/runtime layers, BFS reachability, Playwright + Node test suite spec |
-| `lab-report-cell-map-mud-redesign.md` | §CELL-01–§CELL-11 | Cell map redesign — 11-section grid migration, MUD session layer, 419 nodes, dead-code removal |
-| `lab-report-map-audit-layout-tooling.md` | §CELL | Map audit, grid layout solver, tooling infrastructure — coordinate audit, gap analysis, reachability |
-| `lab-report-node-network-reconnection.md` | §CELL | Full node network reconnection — stray relocation, bidirectional check, reachability recovery |
-| `lab-report-junction-reweave-overhaul.md` | §CELL | Junction reduction & reweave overhaul — boilerplate purge, coordinate mesh redesign |
-| `lab-report-mega-reweave.md` | §CELL | MegaReWeave procedure & configuration — batch coordinate migration, world mesh construction |
-| `lab-report-highway-mesh-entry.md` | §CELL | Highway mesh-entry selection & same-component skip — connected-component BFS, entry-point algorithm |
-| `lab-report-plan-cleanup-v13.md` | 9–13 | Spec archive Layers 9–13 — corridor, hunt, stalk, quest engine |
-| `lab-report-plan-cleanup-v17.md` | 14–17 | Spec archive Layers 14–17 — conditions, shield, flee, 6 bug corrections |
-| `lab-report-circuit-map-theory.md` | 9 | CS theory: sparse node mesh, junction concept, TSP framing, Hunt/Warp traces |
-| `lab-report-battleground-circuit-path-quest.md` | 9–12 | Stalk mechanics, quest-coupled guaranteed encounters, XP methodology |
-| `lab-report-epic-battlegrounds.md` | 39 | §0 20 EB dead-end nodes, `EB_NPC_DIALOGUE`, payment negotiation, return beats |
-| `lab-report-naval-campaign-layer.md` | — | Naval Campaign Layer — ports, intercepts, hunts, Harmony Chain at sea (design spec) |
+| `lab-reports/lab-report-movement-by-cells.md` | §CELL-01–§CELL-12 | Cell-grid navigation architecture — full program flow, wbapi-server/worldmap/runtime layers, BFS reachability, Playwright + Node test suite spec |
+| `lab-reports/lab-report-cell-map-mud-redesign.md` | §CELL-01–§CELL-11 | Cell map redesign — 11-section grid migration, MUD session layer, 419 nodes, dead-code removal |
+| `lab-reports/lab-report-map-audit-layout-tooling.md` | §CELL | Map audit, grid layout solver, tooling infrastructure — coordinate audit, gap analysis, reachability |
+| `lab-reports/lab-report-node-network-reconnection.md` | §CELL | Full node network reconnection — stray relocation, bidirectional check, reachability recovery |
+| `lab-reports/lab-report-junction-reweave-overhaul.md` | §CELL | Junction reduction & reweave overhaul — boilerplate purge, coordinate mesh redesign |
+| `lab-reports/lab-report-mega-reweave.md` | §CELL | MegaReWeave procedure & configuration — batch coordinate migration, world mesh construction |
+| `lab-reports/lab-report-highway-mesh-entry.md` | §CELL | Highway mesh-entry selection & same-component skip — connected-component BFS, entry-point algorithm |
+| `lab-reports/lab-report-plan-cleanup-v13.md` | 9–13 | Spec archive Layers 9–13 — corridor, hunt, stalk, quest engine |
+| `lab-reports/lab-report-plan-cleanup-v17.md` | 14–17 | Spec archive Layers 14–17 — conditions, shield, flee, 6 bug corrections |
+| `lab-reports/lab-report-circuit-map-theory.md` | 9 | CS theory: sparse node mesh, junction concept, TSP framing, Hunt/Warp traces |
+| `lab-reports/lab-report-battleground-circuit-path-quest.md` | 9–12 | Stalk mechanics, quest-coupled guaranteed encounters, XP methodology |
+| `lab-reports/lab-report-epic-battlegrounds.md` | 39 | §0 20 EB dead-end nodes, `EB_NPC_DIALOGUE`, payment negotiation, return beats |
+| `lab-reports/lab-report-naval-campaign-layer.md` | — | Naval Campaign Layer — ports, intercepts, hunts, Harmony Chain at sea (design spec) |
 
 ### Monsters & Fishing
 
 | File | Layer(s) | Topic |
 |------|---------|-------|
-| `lab-report-fish-with-dnd.md` | 37 | Yugurt Lake — 20 rank fish, 2d20 cast roll, predator-as-combat design |
-| `lab-report-fishing-bait-prompting.md` | 47 | §XII Fishing bait sub-system design — 5 bait tiers, biome zones, Luck integration |
+| `lab-reports/lab-report-fish-with-dnd.md` | 37 | Yugurt Lake — 20 rank fish, 2d20 cast roll, predator-as-combat design |
+| `lab-reports/lab-report-fishing-bait-prompting.md` | 47 | §XII Fishing bait sub-system design — 5 bait tiers, biome zones, Luck integration |
 
 ### NPC & Narrative
 
 | File | Layer(s) | Topic |
 |------|---------|-------|
-| `lab-report-birka-beginner-arc.md` | 41 | Birka Six NPCs, 7 quests, Rough Whiskey, Yael escort, pit fight |
-| `lab-report-npc-dialogue-system.md` | 42 | 4-state dialogue system, `NPC_DIALOGUES` (6×4×5), `_missionComplete()` |
-| `lab-report-npc-speak-sdk.md` | — | Dynamic NPC speech via LLM API — lightweight character instantiation, voice consistency, first-person vignette register |
-| `lab-report-friendships-with-magic.md` | 41–42 | Session postmortem — waypoint BFS highlight, Hunt Mode, EB negotiation |
-| `lab-report-living-world.md` | 44 | World progression events, Gigault stall, NPC farewells, Act III desaturation |
-| `lab-report-web-of-connections.md` | 45 | `FROBERGER_TRACES`, `NPC_CROSS_REFS` (17), Room 6, Yael patrol, cross-item triggers |
-| `lab-report-ally-cat.md` | 44 | §IX Cat Quarter — 6-quest arc, Ally Cat hierarchy, Kenickie unlock |
-| `lab-report-narrative-arcs-brynn-bruhns-yael.md` | 70+72+74 | §XXXV Brynn's Vigil + §XXXVII Bruhns CO scene + §XXXIX Yael Named Report |
+| `lab-reports/lab-report-birka-beginner-arc.md` | 41 | Birka Six NPCs, 7 quests, Rough Whiskey, Yael escort, pit fight |
+| `lab-reports/lab-report-npc-dialogue-system.md` | 42 | 4-state dialogue system, `NPC_DIALOGUES` (6×4×5), `_missionComplete()` |
+| `lab-reports/lab-report-npc-speak-sdk.md` | — | Dynamic NPC speech via LLM API — lightweight character instantiation, voice consistency, first-person vignette register |
+| `lab-reports/lab-report-friendships-with-magic.md` | 41–42 | Session postmortem — waypoint BFS highlight, Hunt Mode, EB negotiation |
+| `lab-reports/lab-report-living-world.md` | 44 | World progression events, Gigault stall, NPC farewells, Act III desaturation |
+| `lab-reports/lab-report-web-of-connections.md` | 45 | `FROBERGER_TRACES`, `NPC_CROSS_REFS` (17), Room 6, Yael patrol, cross-item triggers |
+| `lab-reports/lab-report-ally-cat.md` | 44 | §IX Cat Quarter — 6-quest arc, Ally Cat hierarchy, Kenickie unlock |
+| `lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` | 70+72+74 | §XXXV Brynn's Vigil + §XXXVII Bruhns CO scene + §XXXIX Yael Named Report |
 
 ### Quest Arcs
 
 | File | Layer(s) | Topic |
 |------|---------|-------|
-| `lab-report-game-story-codex-of-conquest.md` | 40 | `FROBERGER_JOURNAL` (41 entries), curse arc, Pinker's Curse of Knowledge |
-| `lab-report-endings-and-echoes.md` | 43 | Covenant ending system, curse score formula, epilogue scroll, NG+ state |
-| `lab-report-ng-plus-remembrance.md` | 50 | §XV Entry 42, NPC_NG_MEMORY_LINES, quest_ng_01/02/03, priorQuestMinusOne |
-| `lab-report-weimar-scholar-gate.md` | 51 | §XVI Scholar Gate — archive modal, tome items, Benedikt reading circle, First Researcher |
-| `lab-report-void-archaeology.md` | 52 | §XVII Void Archaeology — 5 investigation sites, Constructor's Log, 4-author chain |
-| `lab-report-tilbury-visby-arcs.md` | 54+55 | §XIX Tilbury Harbor + §XX Visby Underground — Rennau, Solvak, hollow_hands_guard |
-| `lab-report-void-shaman.md` | 56 | §XXI Void Shaman "The Warden" — dual resolution, verb-tense mandate corruption |
-| `lab-report-corelli-merchant.md` | 61 | §XXVI Corelli — 5-appearance wandering merchant, purchase-gated fav, last_cipher |
-| `lab-report-quest-minus-one-world-creator.md` | 49 | §XIV Quest -1 — Level 21 undefined as invitation, World Creator Wizard |
-| `lab-report-ceremonia-roll-skill-checks.md` | 79 | §DESIGN-03 Ceremonia Roll — `skill_check` quest type, `_rollCeremonia()`, Yael 5-act arc |
-| `lab-report-dungeon-ten-themes.md` | 80 | §DUNGEON-01 — 10 dungeon themes, P1–P3+ tiers, Node MM, Tribble counter, Madness Table, voidFluxActive, Prior Carrier, Codex Core ending compat |
-| `lab-report-la-riva-grief-arc.md` | 78 | §GR Grief Arc — La Riva / Fishmonger's Row, Connie/Aldo/Vinnie, corruption-grief chain, distributed grief subplot map |
-| `lab-report-littoral-courts.md` | 104 | §SIREN-01 Littoral Courts — four manipulative words, betrayal mechanic, Overseer parallel quest, French vignette register, non-obvious decisions |
-| `lab-report-crown-three-hags.md` | §CROWN-01 | The Three Crowns of the Swamp — hag encounter arc design |
+| `lab-reports/lab-report-game-story-codex-of-conquest.md` | 40 | `FROBERGER_JOURNAL` (41 entries), curse arc, Pinker's Curse of Knowledge |
+| `lab-reports/lab-report-endings-and-echoes.md` | 43 | Covenant ending system, curse score formula, epilogue scroll, NG+ state |
+| `lab-reports/lab-report-ng-plus-remembrance.md` | 50 | §XV Entry 42, NPC_NG_MEMORY_LINES, quest_ng_01/02/03, priorQuestMinusOne |
+| `lab-reports/lab-report-weimar-scholar-gate.md` | 51 | §XVI Scholar Gate — archive modal, tome items, Benedikt reading circle, First Researcher |
+| `lab-reports/lab-report-void-archaeology.md` | 52 | §XVII Void Archaeology — 5 investigation sites, Constructor's Log, 4-author chain |
+| `lab-reports/lab-report-tilbury-visby-arcs.md` | 54+55 | §XIX Tilbury Harbor + §XX Visby Underground — Rennau, Solvak, hollow_hands_guard |
+| `lab-reports/lab-report-void-shaman.md` | 56 | §XXI Void Shaman "The Warden" — dual resolution, verb-tense mandate corruption |
+| `lab-reports/lab-report-corelli-merchant.md` | 61 | §XXVI Corelli — 5-appearance wandering merchant, purchase-gated fav, last_cipher |
+| `lab-reports/lab-report-quest-minus-one-world-creator.md` | 49 | §XIV Quest -1 — Level 21 undefined as invitation, World Creator Wizard |
+| `lab-reports/lab-report-ceremonia-roll-skill-checks.md` | 79 | §DESIGN-03 Ceremonia Roll — `skill_check` quest type, `_rollCeremonia()`, Yael 5-act arc |
+| `lab-reports/lab-report-dungeon-ten-themes.md` | 80 | §DUNGEON-01 — 10 dungeon themes, P1–P3+ tiers, Node MM, Tribble counter, Madness Table, voidFluxActive, Prior Carrier, Codex Core ending compat |
+| `lab-reports/lab-report-la-riva-grief-arc.md` | 78 | §GR Grief Arc — La Riva / Fishmonger's Row, Connie/Aldo/Vinnie, corruption-grief chain, distributed grief subplot map |
+| `lab-reports/lab-report-littoral-courts.md` | 104 | §SIREN-01 Littoral Courts — four manipulative words, betrayal mechanic, Overseer parallel quest, French vignette register, non-obvious decisions |
+| `lab-reports/lab-report-crown-three-hags.md` | §CROWN-01 | The Three Crowns of the Swamp — hag encounter arc design |
 
 ### Writing & Design Philosophy
 
 | File | Topic |
 |------|-------|
-| `lab-report-story-codoex-curse-of-knowedge.md` | Pinker framework — writing guide for terrain descriptions and NPC dialogue |
-| `lab-report-Polyphonic-Organ-Synth.md` | `5thOrgan.html` — IIR biquad filter, ADSR, Beethoven canon construction, Web Audio API |
-| `lab-report-ponies-unicorns-aspirations-future-ideas.md` | Future aspirations — DM's Companion Guide, Fishing Guide, Mission Explorer |
-| `lab-report-meta-process-loop-expansion.md` | Meta-process — prompt→plan→lab-report recursive loop, 10 historical instances, session efficiency |
-| `lab-report-saul-paul-travel-reference.md` | §FUTURE-01 source — 37-node Paul arc itinerary, Acts 7–28 + Pauline letters, NPC list, lodging, speeches |
-| `lab-report-saul-paul-vignette-spec.md` | §FUTURE-01 vignette — 14 node texts, 9 quest descriptions, 7 NPC voice lines, 8 voice rules, object inventory, thorn mechanic |
-| `lab-report-kindness-calculus.md` | Prosocial mechanics — asymptotic kindness in quest graphs, token automata, the probabilistic case against combat |
-| `lab-report-wisdom-arc.md` | Wisdom Arc — Robert Greene's Laws of Human Nature as quest mechanics, WIS progression design |
+| `lab-reports/lab-report-story-codoex-curse-of-knowedge.md` | Pinker framework — writing guide for terrain descriptions and NPC dialogue |
+| `lab-reports/lab-report-Polyphonic-Organ-Synth.md` | `5thOrgan.html` — IIR biquad filter, ADSR, Beethoven canon construction, Web Audio API |
+| `lab-reports/lab-report-ponies-unicorns-aspirations-future-ideas.md` | Future aspirations — DM's Companion Guide, Fishing Guide, Mission Explorer |
+| `lab-reports/lab-report-meta-process-loop-expansion.md` | Meta-process — prompt→plan→lab-report recursive loop, 10 historical instances, session efficiency |
+| `lab-reports/lab-report-saul-paul-travel-reference.md` | §FUTURE-01 source — 37-node Paul arc itinerary, Acts 7–28 + Pauline letters, NPC list, lodging, speeches |
+| `lab-reports/lab-report-saul-paul-vignette-spec.md` | §FUTURE-01 vignette — 14 node texts, 9 quest descriptions, 7 NPC voice lines, 8 voice rules, object inventory, thorn mechanic |
+| `lab-reports/lab-report-kindness-calculus.md` | Prosocial mechanics — asymptotic kindness in quest graphs, token automata, the probabilistic case against combat |
+| `lab-reports/lab-report-wisdom-arc.md` | Wisdom Arc — Robert Greene's Laws of Human Nature as quest mechanics, WIS progression design |
 
 ---
 
@@ -300,99 +307,99 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 | Keyword / Topic | Primary File | Elaboration |
 |----------------|-------------|-------------|
-| **Action economy (1.5 AP)** | `mechanics-combat.md` | `lab-report-plan-cleanup-v17.md` |
+| **Action economy (1.5 AP)** | `mechanics-combat.md` | `lab-reports/lab-report-plan-cleanup-v17.md` |
 | **Ability scores** | `mechanics-combat.md` | `plan.md §III` |
 | **ASI table (d6)** | `mechanics-combat.md` | `plan.md §II` |
-| **Antecedent / cage** | `story-arc-investigation.md` | `lab-report-void-archaeology.md` · `lab-report-void-shaman.md` |
-| **Archive modal (Weimar)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` |
-| **Benedikt Rasp** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` · `lab-report-void-archaeology.md` |
-| **Betrayal mechanic (thought/word/deed)** | `story.md Layer 104b` | `lab-report-littoral-courts.md` · `world.md §SIREN-01` |
-| **Battle Mode engine** | `combat.md` | `lab-report-architecture-full.md` · `spec-combat.md` |
-| **BFS pathfinding** | `maps.md` | `lab-report-circuit-map-theory.md` · `lab-report-battleground-circuit-path-quest.md` |
-| **Birka Six NPCs** | `world.md` | `lab-report-birka-beginner-arc.md` · `story-arc-npc-dialogues.md` |
-| **Brynn Clerambault** | `story-arc-npc-dialogues.md` | `lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-report-living-world.md` |
-| **Bruhns CO scene** | `story.md` | `lab-report-narrative-arcs-brynn-bruhns-yael.md` |
-| **Career/run stats (Chronicle)** | `lab-report-kenickie-chronicle.md` | `plan.md §III (careerStats/runStats)` |
-| **Cat Quarter / Ally Cat** | `story.md` | `lab-report-ally-cat.md` |
-| **Codex Shards (7)** | `story.md` | `lab-report-game-story-codex-of-conquest.md` |
-| **Conditions / CONDITION_GOLD** | `mechanics-combat.md` | `combat.md` · `lab-report-leveling-flashbang-condition-economy.md` |
-| **Constructor's Log** | `story-arc-investigation.md` | `lab-report-void-archaeology.md` · `lab-report-void-shaman.md` |
-| **Cooperative DM Principle** | `lab-report-drop-rates-balance-and-health.md` | `lab-report-prompt-migration-arena-to-prototype.md` |
-| **Corelli merchant** | `story.md §XXVI stub` | `lab-report-corelli-merchant.md` · `story-arc-coastal.md` |
-| **Corinth / Korath (KR)** | `story.md Layer 104a` | `lab-report-saul-paul-travel-reference.md` |
-| **Cell movement system (§CELL-01–§CELL-11)** | `docs-node-network.md` | `spec-corridors.md` (archived) · `lab-report-cell-map-mud-redesign.md` · `lab-report-circuit-map-theory.md` |
-| **Curse score / Covenant Standing** | `story.md` | `lab-report-endings-and-echoes.md` · `lab-report-architecture-full.md` |
+| **Antecedent / cage** | `story-arc-investigation.md` | `lab-reports/lab-report-void-archaeology.md` · `lab-reports/lab-report-void-shaman.md` |
+| **Archive modal (Weimar)** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
+| **Benedikt Rasp** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` · `lab-reports/lab-report-void-archaeology.md` |
+| **Betrayal mechanic (thought/word/deed)** | `story.md Layer 104b` | `lab-reports/lab-report-littoral-courts.md` · `world.md §SIREN-01` |
+| **Battle Mode engine** | `combat.md` | `lab-reports/lab-report-architecture-full.md` · `spec-combat.md` |
+| **BFS pathfinding** | `maps.md` | `lab-reports/lab-report-circuit-map-theory.md` · `lab-reports/lab-report-battleground-circuit-path-quest.md` |
+| **Birka Six NPCs** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `story-arc-npc-dialogues.md` |
+| **Brynn Clerambault** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-reports/lab-report-living-world.md` |
+| **Bruhns CO scene** | `story.md` | `lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` |
+| **Career/run stats (Chronicle)** | `lab-reports/lab-report-kenickie-chronicle.md` | `plan.md §III (careerStats/runStats)` |
+| **Cat Quarter / Ally Cat** | `story.md` | `lab-reports/lab-report-ally-cat.md` |
+| **Codex Shards (7)** | `story.md` | `lab-reports/lab-report-game-story-codex-of-conquest.md` |
+| **Conditions / CONDITION_GOLD** | `mechanics-combat.md` | `combat.md` · `lab-reports/lab-report-leveling-flashbang-condition-economy.md` |
+| **Constructor's Log** | `story-arc-investigation.md` | `lab-reports/lab-report-void-archaeology.md` · `lab-reports/lab-report-void-shaman.md` |
+| **Cooperative DM Principle** | `lab-reports/lab-report-drop-rates-balance-and-health.md` | `lab-reports/lab-report-prompt-migration-arena-to-prototype.md` |
+| **Corelli merchant** | `story.md §XXVI stub` | `lab-reports/lab-report-corelli-merchant.md` · `story-arc-coastal.md` |
+| **Corinth / Korath (KR)** | `story.md Layer 104a` | `lab-reports/lab-report-saul-paul-travel-reference.md` |
+| **Cell movement system (§CELL-01–§CELL-11)** | `docs-node-network.md` | `spec-corridors.md` (archived) · `lab-reports/lab-report-cell-map-mud-redesign.md` · `lab-reports/lab-report-circuit-map-theory.md` |
+| **Curse score / Covenant Standing** | `story.md` | `lab-reports/lab-report-endings-and-echoes.md` · `lab-reports/lab-report-architecture-full.md` |
 | **Daggers (offhand)** | `mechanics-combat.md` | `plan.md §II` |
-| **Death saves** | `combat.md` | `lab-report-plan-cleanup-v17.md` |
+| **Death saves** | `combat.md` | `lab-reports/lab-report-plan-cleanup-v17.md` |
 | **defi_land cluster (DF/HM/GL)** | `maps.md` · `world.md` | `story-flowchart.md` |
-| **Drop rates / reward formula** | `mechanics-combat.md` | `lab-report-drop-rates-balance-and-health.md` |
-| **Entry 42** | `story-arc-ngplus.md` | `lab-report-ng-plus-remembrance.md` · `lab-report-void-archaeology.md` |
-| **Epic Battlegrounds** | `story-arc-epic-battlegrounds.md` | `lab-report-epic-battlegrounds.md` · `story-flowchart.md` |
-| **Endings / epilogue** | `story.md` | `lab-report-endings-and-echoes.md` |
+| **Drop rates / reward formula** | `mechanics-combat.md` | `lab-reports/lab-report-drop-rates-balance-and-health.md` |
+| **Entry 42** | `story-arc-ngplus.md` | `lab-reports/lab-report-ng-plus-remembrance.md` · `lab-reports/lab-report-void-archaeology.md` |
+| **Epic Battlegrounds** | `story-arc-epic-battlegrounds.md` | `lab-reports/lab-report-epic-battlegrounds.md` · `story-flowchart.md` |
+| **Endings / epilogue** | `story.md` | `lab-reports/lab-report-endings-and-echoes.md` |
 | **Fighter Champion features** | `mechanics-combat.md` | `plan.md §II (FIGHTER_FEATURES)` |
-| **First Researcher (Marta Eilene Vass)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` · `lab-report-void-archaeology.md` |
-| **Fishing / Yugurt Lake** | `monsters.md` | `lab-report-fish-with-dnd.md` · `lab-report-fishing-bait-prompting.md` · `maps.md` |
-| **Fishing Buddy / Emmer Finch (§GUIDE-01)** | `plan.md §GUIDE-01` | `lab-report-fish-with-dnd.md` · `plan.md §XLV` |
+| **First Researcher (Marta Eilene Vass)** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` · `lab-reports/lab-report-void-archaeology.md` |
+| **Fishing / Yugurt Lake** | `monsters.md` | `lab-reports/lab-report-fish-with-dnd.md` · `lab-reports/lab-report-fishing-bait-prompting.md` · `maps.md` |
+| **Fishing Buddy / Emmer Finch (§GUIDE-01)** | `plan.md §GUIDE-01` | `lab-reports/lab-report-fish-with-dnd.md` · `plan.md §XLV` |
 | **Four Stages of Competence / Self-Discovery arc** | `plan.md §GUIDE-01` | `plan.md §WISDOM-01` · `plan.md §ALCHEMY-01` |
 | **Rod of Self-Discovery** | `plan.md §GUIDE-01-F` | `plan.md §XLV` (tournament wiring) |
-| **Scar into a Star / §SCAR-01** | `plan.md §SCAR-01` | `lab-report-weimar-scholar-gate.md` · `plan.md §XVI` |
+| **Scar into a Star / §SCAR-01** | `plan.md §SCAR-01` | `lab-reports/lab-report-weimar-scholar-gate.md` · `plan.md §XVI` |
 | **Gret Orrens (Philosopher NPC)** | `plan.md §SCAR-01-C` | `plan.md §SCAR-01` |
 | **The Scar's Light (passive amulet)** | `plan.md §SCAR-01-G` | `plan.md §SCAR-01-F` (wound_badge mechanic) |
 | **Pier Falk (BQ — trapped person)** | `plan.md §SCAR-01-D` | `plan.md §SCAR-01` |
-| **Froberger journal (41 entries)** | `froberger-journal-all-entries.txt` | `lab-report-game-story-codex-of-conquest.md` · `story.md §PROLOGUE` |
-| **Froberger traces** | `world.md` | `lab-report-web-of-connections.md` |
+| **Froberger journal (41 entries)** | `froberger-journal-all-entries.txt` | `lab-reports/lab-report-game-story-codex-of-conquest.md` · `story.md §PROLOGUE` |
+| **Froberger traces** | `world.md` | `lab-reports/lab-report-web-of-connections.md` |
 | **Gate locks (4 passages)** | `maps.md` · `story.md §Gate Locks` | `plan.md §II (GATE_LOCKS)` |
-| **Hollow Hands sub-clan** | `story-arc-coastal.md` | `lab-report-tilbury-visby-arcs.md` · `lab-report-void-shaman.md` |
-| **Hunt Mode / stalk** | `mechanics-combat.md` | `lab-report-battleground-circuit-path-quest.md` · `lab-report-friendships-with-magic.md` |
-| **Inn Dreams** | `story.md §XXIII stub` | `lab-report-void-archaeology.md §H` |
+| **Hollow Hands sub-clan** | `story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` · `lab-reports/lab-report-void-shaman.md` |
+| **Hunt Mode / stalk** | `mechanics-combat.md` | `lab-reports/lab-report-battleground-circuit-path-quest.md` · `lab-reports/lab-report-friendships-with-magic.md` |
+| **Inn Dreams** | `story.md §XXIII stub` | `lab-reports/lab-report-void-archaeology.md §H` |
 | **Investigation chain arc** | `story-arc-investigation.md` | `story-flowchart.md` |
-| **Isolde Voss (Archivist)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` |
-| **Kenickie's market** | `lab-report-kenickie-chronicle.md` | `lab-report-ally-cat.md` |
-| **Lab report policy** | `index.md` · `plan.md §I` | `lab-report-documentation-system-design.md` |
-| **Littoral Courts (§SIREN-01)** | `story.md Layer 104b` · `world.md` | `lab-report-littoral-courts.md` · `maps.md §SIREN-01` |
-| **Level-up system** | `mechanics-combat.md` | `lab-report-leveling-flashbang-condition-economy.md` · `lab-report-architecture-full.md` |
-| **Luck stat** | `mechanics-combat.md` | `lab-report-luck-seventh-stat.md` · `lab-report-fishing-bait-prompting.md` |
-| **MIT License / Quest -1** | `story.md §XIV` | `lab-report-quest-minus-one-world-creator.md` |
+| **Isolde Voss (Archivist)** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
+| **Kenickie's market** | `lab-reports/lab-report-kenickie-chronicle.md` | `lab-reports/lab-report-ally-cat.md` |
+| **Lab report policy** | `index.md` · `plan.md §I` | `lab-reports/lab-report-documentation-system-design.md` |
+| **Littoral Courts (§SIREN-01)** | `story.md Layer 104b` · `world.md` | `lab-reports/lab-report-littoral-courts.md` · `maps.md §SIREN-01` |
+| **Level-up system** | `mechanics-combat.md` | `lab-reports/lab-report-leveling-flashbang-condition-economy.md` · `lab-reports/lab-report-architecture-full.md` |
+| **Luck stat** | `mechanics-combat.md` | `lab-reports/lab-report-luck-seventh-stat.md` · `lab-reports/lab-report-fishing-bait-prompting.md` |
+| **MIT License / Quest -1** | `story.md §XIV` | `lab-reports/lab-report-quest-minus-one-world-creator.md` |
 | **Monster pool (370)** | `monsters.md` | `plan.md §II (MONSTER_POOL)` · `spec-world.md` |
-| **Mordus (Warlord)** | `story.md` · `world.md` | `lab-report-tilbury-visby-arcs.md` |
+| **Mordus (Warlord)** | `story.md` · `world.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` |
 | **MT Mountain Pass** | `maps.md` · `story-flowchart.md` | `story-arc-investigation.md` (§XVII + §XXI intersection) |
-| **NPC cross-references** | `world.md` | `lab-report-web-of-connections.md` |
-| **NPC dialogue system** | `story-arc-npc-dialogues.md` | `lab-report-npc-dialogue-system.md` · `lab-report-birka-beginner-arc.md` |
-| **NPC favorability** | `world.md` | `lab-report-birka-beginner-arc.md` · `plan.md §III` |
-| **NG+ system** | `story-arc-ngplus.md` | `lab-report-ng-plus-remembrance.md` · `lab-report-endings-and-echoes.md` |
+| **NPC cross-references** | `world.md` | `lab-reports/lab-report-web-of-connections.md` |
+| **NPC dialogue system** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-npc-dialogue-system.md` · `lab-reports/lab-report-birka-beginner-arc.md` |
+| **NPC favorability** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `plan.md §III` |
+| **NG+ system** | `story-arc-ngplus.md` | `lab-reports/lab-report-ng-plus-remembrance.md` · `lab-reports/lab-report-endings-and-echoes.md` |
 | **Cell map (422 nodes)** | `maps.md` | `plan.md §II (NODE_MAP · NODE_COORDS · CELL_GRID)` · `story-flowchart.md` · `docs-node-network.md` |
-| **Overseer (The Fog Bank / LSO)** | `world.md` · `story.md Layer 104b` | `lab-report-littoral-courts.md §III` |
-| **Pachelbel / Deacon** | `story-arc-npc-dialogues.md` | `lab-report-web-of-connections.md` |
-| **Paul's Mediterranean Journey (§LXV–§LXIX)** | `story.md Layer 104a` · `maps.md` | `lab-report-saul-paul-travel-reference.md` · `lab-report-saul-paul-vignette-spec.md` |
-| **Pit training / Weckmann** | `world.md` | `lab-report-birka-beginner-arc.md` · `lab-report-kenickie-chronicle.md` |
-| **Polyphonic organ** | `5thOrgan.html` | `lab-report-Polyphonic-Organ-Synth.md` |
+| **Overseer (The Fog Bank / LSO)** | `world.md` · `story.md Layer 104b` | `lab-reports/lab-report-littoral-courts.md §III` |
+| **Pachelbel / Deacon** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
+| **Paul's Mediterranean Journey (§LXV–§LXIX)** | `story.md Layer 104a` · `maps.md` | `lab-reports/lab-report-saul-paul-travel-reference.md` · `lab-reports/lab-report-saul-paul-vignette-spec.md` |
+| **Pit training / Weckmann** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `lab-reports/lab-report-kenickie-chronicle.md` |
+| **Polyphonic organ** | `5thOrgan.html` | `lab-reports/lab-report-Polyphonic-Organ-Synth.md` |
 | **Potions (4 tiers)** | `mechanics-economy.md` | `plan.md §II (POTION_TIERS)` |
-| **Quill / Couperin** | `story-arc-npc-dialogues.md` | `lab-report-web-of-connections.md` |
-| **Quest -1 (Level 21)** | `story.md §XIV` | `lab-report-quest-minus-one-world-creator.md` |
-| **Quest system** | `world.md` | `plan.md §II (QUEST_DB)` · `lab-report-architecture-full.md` |
-| **Reward formula** | `mechanics-combat.md` | `lab-report-drop-rates-balance-and-health.md` |
-| **Room 6 (joint NPC moment)** | `world.md` | `lab-report-web-of-connections.md` |
-| **Save / load system** | `mechanics-combat.md` | `lab-report-architecture-full.md` · `plan.md §III` |
-| **Shard origin stories** | `story.md §XXII stub` | `lab-report-void-archaeology.md` (shard notes table) |
+| **Quill / Couperin** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
+| **Quest -1 (Level 21)** | `story.md §XIV` | `lab-reports/lab-report-quest-minus-one-world-creator.md` |
+| **Quest system** | `world.md` | `plan.md §II (QUEST_DB)` · `lab-reports/lab-report-architecture-full.md` |
+| **Reward formula** | `mechanics-combat.md` | `lab-reports/lab-report-drop-rates-balance-and-health.md` |
+| **Room 6 (joint NPC moment)** | `world.md` | `lab-reports/lab-report-web-of-connections.md` |
+| **Save / load system** | `mechanics-combat.md` | `lab-reports/lab-report-architecture-full.md` · `plan.md §III` |
+| **Shard origin stories** | `story.md §XXII stub` | `lab-reports/lab-report-void-archaeology.md` (shard notes table) |
 | **Shields (6 tiers)** | `mechanics-combat.md` | `plan.md §II (SHIELD_ITEMS)` |
-| **Specification gravity** | `lab-report-prompt-migration-arena-to-prototype.md` | `lab-report-documentation-system-design.md` |
-| **State fields (194)** | `plan.md §III` | `lab-report-architecture-full.md` |
+| **Specification gravity** | `lab-reports/lab-report-prompt-migration-arena-to-prototype.md` | `lab-reports/lab-report-documentation-system-design.md` |
+| **State fields (194)** | `plan.md §III` | `lab-reports/lab-report-architecture-full.md` |
 | **Story arc split** | `story-flowchart.md` | All `story-arc-*.md` files |
-| **Sweelinck / endings** | `story.md` | `lab-report-endings-and-echoes.md` · `lab-report-npc-dialogue-system.md` |
-| **Tattoos** | `lab-report-tattoo-progression-system.md` | `plan.md §III (S_story.tattoos)` |
-| **Tilbury Harbor Arc** | `story-arc-coastal.md` | `lab-report-tilbury-visby-arcs.md` |
-| **Tomes (item type)** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` |
-| **Void Archaeology** | `story-arc-investigation.md` | `lab-report-void-archaeology.md` |
-| **Void pressure / Void Tide** | `mechanics-combat.md` | `plan.md §III (voidPressure)` · `lab-report-architecture-full.md` |
-| **Void Shaman / The Warden** | `story-arc-investigation.md` | `lab-report-void-shaman.md` |
-| **Visby Underground** | `story-arc-coastal.md` | `lab-report-tilbury-visby-arcs.md` |
+| **Sweelinck / endings** | `story.md` | `lab-reports/lab-report-endings-and-echoes.md` · `lab-reports/lab-report-npc-dialogue-system.md` |
+| **Tattoos** | `lab-reports/lab-report-tattoo-progression-system.md` | `plan.md §III (S_story.tattoos)` |
+| **Tilbury Harbor Arc** | `story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` |
+| **Tomes (item type)** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
+| **Void Archaeology** | `story-arc-investigation.md` | `lab-reports/lab-report-void-archaeology.md` |
+| **Void pressure / Void Tide** | `mechanics-combat.md` | `plan.md §III (voidPressure)` · `lab-reports/lab-report-architecture-full.md` |
+| **Void Shaman / The Warden** | `story-arc-investigation.md` | `lab-reports/lab-report-void-shaman.md` |
+| **Visby Underground** | `story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` |
 | **Weapons (70 types)** | `mechanics-combat.md` | `plan.md §II (WEAPON_ITEMS)` |
-| **Weimar Scholar Gate** | `story-arc-investigation.md` | `lab-report-weimar-scholar-gate.md` |
-| **World builder arc** | `lab-report-plan-cleanup-world-builder-arc.md` | `lab-report-quest-minus-one-world-creator.md` |
-| **World progression events** | `world.md` | `lab-report-living-world.md` |
-| **XP / leveling** | `mechanics-combat.md` | `plan.md §II (XP_LEVELS)` · `lab-report-leveling-flashbang-condition-economy.md` |
-| **Yael Scheidemann** | `story-arc-npc-dialogues.md` | `lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-report-web-of-connections.md` |
-| **Yugurt Lake / fishing** | `monsters.md` · `maps.md` | `lab-report-fish-with-dnd.md` |
+| **Weimar Scholar Gate** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
+| **World builder arc** | `lab-reports/lab-report-plan-cleanup-world-builder-arc.md` | `lab-reports/lab-report-quest-minus-one-world-creator.md` |
+| **World progression events** | `world.md` | `lab-reports/lab-report-living-world.md` |
+| **XP / leveling** | `mechanics-combat.md` | `plan.md §II (XP_LEVELS)` · `lab-reports/lab-report-leveling-flashbang-condition-economy.md` |
+| **Yael Scheidemann** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-reports/lab-report-web-of-connections.md` |
+| **Yugurt Lake / fishing** | `monsters.md` · `maps.md` | `lab-reports/lab-report-fish-with-dnd.md` |
 
 ---
 
