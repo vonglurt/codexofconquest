@@ -73,5 +73,8 @@ milepoints/say.lock
 roll2hit-v3-2*.html
 milepoints/snapshots.zip
 
+# ── Cleanup archives (produced by scripts/cleanup-cruft.sh) ──────────────────
+milepoints/archive/cleanup-*.tar.gz
+
 # ── _last.html / _last.name ARE tracked (current game state pointer) ─────────
 # (not ignored — intentionally committed)
