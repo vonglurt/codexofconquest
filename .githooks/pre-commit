@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+# MIT License — Copyright (c) 2026 Paul Richeson
+# .githooks/pre-commit — auto-purge transient artifacts before each commit.
+#
+# Calls scripts/cleanup-cruft.sh, then re-stages any deletions or
+# truncations so the cleanup lands in this commit.  Quiet by default so
+# it doesn't drown out commit output; pass CLEANUP_VERBOSE=1 to see
+# per-file activity.
+#
+# Activated by running once:
+#   git config core.hooksPath .githooks
+#
+# Skip on demand with:
+#   SKIP_CLEANUP=1 git commit ...
+
+set -euo pipefail
+
+if [ "${SKIP_CLEANUP:-}" = "1" ]; then
+  exit 0
+fi
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+SCRIPT="$REPO_ROOT/scripts/cleanup-cruft.sh"
+
+if [ ! -x "$SCRIPT" ]; then
+  echo "[pre-commit] cleanup-cruft.sh not found or not executable — skipping" >&2
+  exit 0
+fi
+
+# Capture which transient paths existed before so we can re-stage only those.
+TRANSIENT_PATHS=(
+  "milepoints/patches"
+  "milepoints/api-cli.log"
+  "milepoints/wbapi-server.log"
+  "milepoints/npc-speak.log"
+  "milepoints/say.log"
+)
+
+if [ "${CLEANUP_VERBOSE:-}" = "1" ]; then
+  "$SCRIPT"
+else
+  "$SCRIPT" --quiet
+fi
+
+# Re-stage transient deletions/truncations so they land in this commit.
+# Only touches paths the cleanup script can affect — never broadens the diff.
+TO_STAGE=()
+for p in "${TRANSIENT_PATHS[@]}"; do
+  if [ -e "$REPO_ROOT/$p" ] || git -C "$REPO_ROOT" ls-files --error-unmatch -- "$p" >/dev/null 2>&1; then
+    TO_STAGE+=("$p")
+  fi
+done
+
+if [ "${#TO_STAGE[@]}" -gt 0 ]; then
+  # Find root-level stamped HTML snapshots too (filename pattern, not a fixed path)
+  for f in "$REPO_ROOT"/roll2hit-v3-*.html; do
+    [ -e "$f" ] || continue
+    TO_STAGE+=("$(basename "$f")")
+  done
+  # `git add -A` on these paths will both stage deletions and content trims.
+  git -C "$REPO_ROOT" add -A -- "${TO_STAGE[@]}" 2>/dev/null || true
+fi
+
+exit 0
