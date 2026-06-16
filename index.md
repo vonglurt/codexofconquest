@@ -3,16 +3,16 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · ~43,736 lines · 426 nodes · 392 monsters · 63 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-13 ✅ · §ARCH-02 Phases 1–5 ✅ · §EDITOR-01 ✅ · §WALK ✅ · §UNIFY-09 ✅ · §GR ✅ · §MATH-01 ✅
-**Last updated:** 2026-06-15
+**Status:** Layers 0–104 implemented · ~43,736 lines · 426 nodes · 392 monsters · 64 lab reports · FC01–FC08 ✅ · §RESEARCH-01 ✅ · §API-01+02 ✅ · SP4 ✅ · §DESIGN-02 ✅ · §DESIGN-03 ✅ · §DUNGEON-01 ✅ · §DUNGEON-02 ✅ · §XLIII ✅ · §XLIV ✅ · §XLV ✅ · §XLVI ✅ · §XLVII ✅ · §XLVIII ✅ · §XLIX ✅ · §L ✅ · §LI ✅ · §LII ✅ · §LIII ✅ · §LIV ✅ · §LV ✅ · §LVI ✅ · §LVII ✅ · §LVIII ✅ · §LIX ✅ · §LX ✅ · §LXI ✅ · §LXII ✅ · §LXIII ✅ · §LXIV ✅ · §LXV–§LXIX ✅ · §SIREN-01 ✅ · §CELL-01–§CELL-13 ✅ · §ARCH-02 Phases 1–5 ✅ · §EDITOR-01 ✅ · §WALK ✅ · §UNIFY-09 ✅ · §GR ✅ · §MATH-01 ✅ · §DATA-01 ✅
+**Last updated:** 2026-06-16
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
 | HTML line count | ~43,736 | ✅ |
-| Lab reports on disk | 63 | ✅ |
-| Lab reports in index | 63 | ✅ |
+| Lab reports on disk | 64 | ✅ |
+| Lab reports in index | 64 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
@@ -144,6 +144,7 @@ All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
 | **§GR + Covenant Keeper Ending** | 2026-06-15 | La Riva grief arc: FR node + corruption chain CY→FR; Connie/Aldo/Vinnie sub-arc; 6 grief vignettes at FR; Covenant Keeper Ending — all six grief arcs name their people in final storyRender event. Lab report: `lab-report-la-riva-grief-arc.md` |
 | **§WISDOM-01** | — | Keel thread close: Baltic survey data arc at eastern Baltic node; "after witnessing" arc completion |
 | **§MATH-01** | 2026-06-15 | Mathematical World: 4 nodes (EHZ/MONS/ZERO/CNTR) east of HKG + 5 quests (quest_math_01–05); Group Theory dungeon, Monster Group (~8×10^53), zero corridor, Cantor's Attic; Adventure Time register |
+| **§DATA-01 Quest Data–Code Separation** | 2026-06-16 | `storyShowNpc` quoteFn bug fixed (all NPC state changes were silently bypassed); `ZRH` duplicate node resolved — Dunfall renamed `DFL` at `(83,223)`, 11 quests + NPC_DIALOGUE + 3 `node.code` checks + KIR gate updated; `QUEST_DB` purged of all 127 `onPass`/`onFail` functions; `QUEST_EFFECTS` (declarative effect descriptors, 121 entries) + `QUEST_HOOKS` (91 named engine handlers) + `applyQuestEffects()` (10-case dispatch); `q.title/desc/hint` rendering moved from `innerHTML` to `textContent`. Lab report: `lab-report-quest-data-code-separation.md` |
 
 ### Planned Features
 
@@ -207,6 +208,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-report-wbapi-architecture.md` | WBAPI | WBAPI internal architecture — Proxy model, comment-aware brace counting, single-file source of truth |
 | `lab-report-wbapi-evolution.md` | WBAPI | Evolution from grep to WBAPI — world data access history, design decisions, tradeoffs |
 | `lab-report-quest-api-architecture.md` | §ARCH-01 | Quest API & Universal Mission Format — UQF v1.0 schema, Mission Bit Registry, QuestRuntime design |
+| `lab-report-quest-data-code-separation.md` | §DATA-01 | Data–code boundary enforcement: QUEST_EFFECTS declarative DSL, QUEST_HOOKS named engine, applyQuestEffects dispatch; storyShowNpc quoteFn fix; DFL node rename; innerHTML→textContent; passText function removal |
 
 ### Combat & Mechanics
 
@@ -726,8 +728,8 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 
 ---
 
-*Last updated: 2026-06-15*
-*Codebase: `roll2hit-v3.html` · ~42,014 lines · Layers 0–104 complete · 422 nodes · 392 monsters · 1695 quests · cell-based navigation (§CELL-01–§CELL-13) · §ARCH-02 Phase 2+3 · all jump-travel removed*
+*Last updated: 2026-06-16*
+*Codebase: `roll2hit-v3.html` · ~43,736 lines · Layers 0–104 complete · 426 nodes · 392 monsters · 1695 quests · cell-based navigation (§CELL-01–§CELL-13) · §ARCH-02 Phase 2+3 · §DATA-01 data–code separation · all jump-travel removed*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---
