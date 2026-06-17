@@ -95,6 +95,35 @@ const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(__dirname, 'roll2hit-v3.html');
 
+// ── GEO-anchored node codes (single source of truth for geo-seed + rip-and-connect) ──
+// These nodes have authoritative lat/lon positions; rip-and-connect must NOT relocate them.
+// Update this set whenever a new entry is added to the GEO2 / GEO tables.
+const GEO_ANCHORED = new Set([
+  // Iceland / Norse
+  'HHL','ISL','NID','LYG','ODD','VS','SIG',
+  // British Isles
+  'LHR','GLA','EDI','YRK','GWN','MGL','TWY','SHF','HVY','HFD','LDN','LON','BRK','MSE','ACT',
+  'LCY','STN','MAN','BHD','INV','GCI','GIB',
+  // W/C Europe
+  'AMS','CDG','NUE','GVA','ZRH','VIE','MUC','FRK','HAM','BRU','LIS','MAD','BCN',
+  // Scandinavia extended
+  'TRD','GOT','VBY','MOL','KSU','BOO','MJF',
+  // E Europe / Balkans
+  'ATH','BEG','WAW','SOF','TLL','OTP','RIX','VNO','KBP','BUD','PRG','WRO2',
+  // Caucasus / Russia
+  'SVO','TBS','LCA',
+  // Middle East / N Africa
+  'DAM','JRS','CAI','ADA','FEZ','DOH','RUH','ALP','IST','ANK',
+  // Atlantic Islands
+  'ACE','PDL','RAI','SID','CVP',
+  // Iberian
+  'SDR','MAD',
+  // Baltic / Eastern
+  'HEO','KOE',
+  // Samarkand / Eastern extent
+  'SAM',
+]);
+
 // ── Runtime mode config ──────────────────────────────────────────────────────
 // Modes: fast (quiet) | debug (verbose) | trace (verbose + full algorithm trace)
 // Persisted in milepoints/wbapi-config.json; changed live via POST /api/mode.
@@ -5486,6 +5515,14 @@ async function route(req, res) {
       });
 
       for (const stray of sortedStrays) {
+        // Protect geo-anchored city nodes (explicit geographic positions) and
+        // highway junction nodes (J### codes — corridor integrity) from relocation.
+        // Regular content nodes that got disconnected by geo-seed CAN be relocated.
+        if (GEO_ANCHORED.has(stray) || /^J\d+$/.test(stray)) {
+          results.skipped.push({ stray, reason: 'protected (geo-anchored or junction)' });
+          continue;
+        }
+
         const frontier = buildFrontierW();
         if (!frontier.length) {
           results.failed.push({ stray, reason: 'no free cells adjacent to reachable nodes' });
@@ -5514,21 +5551,19 @@ async function route(req, res) {
 
         logTrace('rip-decision', `${stray} → (${best.r},${best.c}) anchor=${best.anchor} dist=${bestDist}`);
 
-        // Reserve cell + expand reachable frontier (works in both dry-run and execute)
         cellOccupied.set(cellKey, stray);
         workingCoords[stray] = { r: best.r, c: best.c };
         reachable.add(stray);
 
         if (dryRun) { results.placed.push({ stray, plan }); continue; }
 
-        // Execute: write to actual allCoords (cell adjacency automatic from coords)
         allCoords[stray] = { r: best.r, c: best.c };
         results.placed.push({ stray, plan, status: 'placed' });
         results.processed++;
       }
 
       if (!dryRun && results.processed > 0) {
-        // Save NODE_COORDS only — no NODE_MAP direction fields to write
+        // Save NODE_COORDS — rip-and-connect only relocates non-geo strays, no NODE_MAP changes
         const CS='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', CE='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
         const si=WBAPI._rawSrc.indexOf(CS)+CS.length, ei=WBAPI._rawSrc.indexOf(CE);
         const entries=Object.entries(allCoords).sort(([,a],[,b])=>(a.r-b.r)||(a.c-b.c));

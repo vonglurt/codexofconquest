@@ -311,18 +311,18 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   border-radius: 4px;
   border-left: 3px solid var(--border-lt);
   background: var(--panel);
-  padding: 5px 7px;
-  font-size: 11px;
-  line-height: 1.5;
+  padding: 6px 10px;
+  font-size: 12px;
+  line-height: 1.6;
   flex-shrink: 0;
-  width: 100px; min-width: 100px;
-  align-self: stretch; display: flex; flex-direction: column; overflow-y: auto;
+  width: 200px; min-width: 200px;
+  align-self: stretch; display: flex; flex-direction: column; overflow: hidden;
 }
-.hcard .hc-round  { font-size: 9px; color: var(--muted); }
+.hcard .hc-round  { font-size: 10px; color: var(--muted); }
 .hcard .hc-actor  { font-weight: 700; color: var(--text); }
 .hcard .hc-roll   { color: var(--muted); }
 .hcard .hc-outcome{ font-weight: 700; }
-.hcard .hc-dmg    { font-size: 10px; color: var(--muted); }
+.hcard .hc-dmg    { font-size: 11px; color: var(--muted); }
 
 /* ── Histogram Strip ───────────────────────────────────── */
 #histogram-strip {
@@ -1119,11 +1119,45 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 
 #story-center {
-  flex: 1; display: block; min-width: 0; position: relative; overflow: hidden;
+  flex: 1; display: flex; flex-direction: column; min-width: 0; position: relative; overflow: hidden;
 }
 
+/* ── Sheet Tab Bar ─────────────────────────────────────── */
+#story-sheet-tab-bar {
+  display: flex; flex-direction: row; flex-shrink: 0; align-items: stretch;
+  background: var(--panel2); border-bottom: 2px solid var(--border); height: 30px;
+  overflow: hidden;
+}
+.sheet-tab {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 4px;
+  font-size: 9px; font-weight: 900; letter-spacing: 0.6px; text-transform: uppercase;
+  color: var(--dim); background: transparent; border: none;
+  border-right: 1px solid var(--border); cursor: pointer;
+  padding: 0 3px; transition: background .12s, color .12s;
+  white-space: nowrap;
+}
+.sheet-tab:last-child { border-right: none; }
+.sheet-tab:hover:not(.st-active) { background: var(--panel3); color: var(--text); }
+.sheet-tab.st-active {
+  background: var(--bg); color: var(--gold);
+  border-bottom: 2px solid var(--gold); margin-bottom: -2px;
+}
+.sheet-tab .st-icon { font-size: 11px; line-height: 1; }
+.sheet-tab .st-key {
+  font-size: 8px; color: var(--muted); opacity: 0.6; font-weight: 700;
+  border: 1px solid var(--muted); border-radius: 2px; padding: 0 2px; line-height: 1.4;
+}
+.sheet-tab.st-active .st-key { color: var(--gold); opacity: 0.55; border-color: var(--gold); }
+.sheet-tab .st-badge {
+  font-size: 8px; font-weight: 900; color: var(--gold);
+  background: rgba(106,72,8,0.15); border: 1px solid var(--gold);
+  border-radius: 8px; padding: 0 4px; min-width: 14px; text-align: center; line-height: 1.5;
+  display: none;
+}
+.sheet-tab .st-badge.show { display: inline-block; }
+
 /* ── Sheet-swapper: only one sheet visible at a time ── */
-.story-sheet { display: none; height: 100%; overflow-y: auto; box-sizing: border-box; }
+.story-sheet { display: none; flex: 1; min-height: 0; overflow-y: auto; box-sizing: border-box; }
 #sheet-story { padding: 16px 20px; }
 #sheet-story.active { display: block; }
 #sheet-story.active > * { margin-bottom: 12px; }
@@ -1251,8 +1285,21 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #story-move-msg {
   font-size: 11px; color: var(--gold); text-align: center;
   min-height: 16px; font-style: italic;
-  transition: background 0.1s;
+  transition: color 0.15s, background 0.15s;
+  border-radius: 4px; padding: 0 6px;
 }
+#story-move-msg.msg-block {
+  color: var(--red-lt); font-weight: 700; font-style: normal;
+  background: rgba(138,32,21,0.09);
+}
+@keyframes msg-shake {
+  0%,100% { transform: translateX(0); }
+  20%     { transform: translateX(-5px); }
+  40%     { transform: translateX(5px); }
+  60%     { transform: translateX(-3px); }
+  80%     { transform: translateX(3px); }
+}
+#story-move-msg.msg-shake { animation: msg-shake 0.32s ease; }
 
 
 /* ── Layer 2: Inventory ─── */
@@ -2290,8 +2337,8 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 
 .hcard {
   background: var(--panel); border-left: 4px solid var(--c3);
-  border-radius: 5px; width: 100px; min-width: 100px; flex-shrink: 0;
-  align-self: stretch; display: flex; flex-direction: column; overflow-y: auto;
+  border-radius: 5px; width: 200px; min-width: 200px; flex-shrink: 0;
+  align-self: stretch; display: flex; flex-direction: column; overflow: hidden;
 }
 .hcard .hc-round  { color: var(--dim); }
 .hcard .hc-actor  { color: var(--text); }
@@ -2413,7 +2460,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 }
 .bot-section-body { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
 
-#bot-nav     { width: 90px; }
+#bot-nav     { display: none; }
 #bot-compass { width: 130px; }
 #bot-local   { width: 162px; }
 #bot-world   { width: 202px; }
@@ -3903,6 +3950,35 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
     <!-- Center: node info + direction pad -->
     <div id="story-center">
 
+      <!-- ── Sheet Tab Bar ── -->
+      <div id="story-sheet-tab-bar">
+        <button class="sheet-tab st-active" data-sheet="sheet-story">
+          <span class="st-icon">📖</span><span>Story</span>
+        </button>
+        <button class="sheet-tab" data-sheet="sheet-inventory">
+          <span class="st-icon">📦</span><span>Bag</span>
+          <span class="st-badge" id="stab-inv-badge"></span>
+          <span class="st-key">I</span>
+        </button>
+        <button class="sheet-tab" data-sheet="sheet-quests">
+          <span class="st-icon">📋</span><span>Quests</span>
+          <span class="st-badge" id="stab-quest-badge"></span>
+          <span class="st-key">Q</span>
+        </button>
+        <button class="sheet-tab" data-sheet="sheet-map">
+          <span class="st-icon">🗺</span><span>Map</span>
+          <span class="st-key">M</span>
+        </button>
+        <button class="sheet-tab" data-sheet="sheet-journal">
+          <span class="st-icon">📔</span><span>Journal</span>
+          <span class="st-badge" id="stab-journal-badge"></span>
+          <span class="st-key">J</span>
+        </button>
+        <button class="sheet-tab" data-sheet="sheet-character">
+          <span class="st-icon">👤</span><span>Char</span>
+        </button>
+      </div>
+
       <!-- ── Sheet: Story (default) ── -->
       <div id="sheet-story" class="story-sheet active">
 
@@ -4211,7 +4287,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
             <button class="dpad-btn" id="btn-N">↑ N</button>
             <button class="dpad-btn dpad-corner" id="btn-waypoint" title="Waypoint">WP</button>
             <button class="dpad-btn" id="btn-W">← W</button>
-            <button class="dpad-btn dpad-center" id="btn-hunt-toggle" title="Hunt for Quest OFF — footpaths warp safely (click to enable)">🎯</button>
+            <button class="dpad-btn dpad-center" id="btn-hunt-toggle" title="Hunt Mode OFF — travel normally (click to enable)">🎯</button>
             <button class="dpad-btn" id="btn-E">E →</button>
             <button class="dpad-btn dpad-corner" id="btn-dpad-rest" title="Short Rest">🛌</button>
             <button class="dpad-btn" id="btn-S">↓ S</button>
@@ -6184,16 +6260,14 @@ function appendCard(entry) {
   }
   container.scrollTop = container.scrollHeight;
 
-  // Mirror to story history panel
+  // Mirror to story history panel — newest on left
   const sc = document.getElementById('story-hcard-container');
   if (sc) {
-    sc.appendChild(buildCard(entry));
+    sc.prepend(buildCard(entry));
     const scards = sc.querySelectorAll('.hcard');
-    scards.forEach((c, i) => {
-      c.style.opacity = Math.max(0.3, 1.0 - (scards.length - 1 - i) * 0.07);
-    });
-    while (sc.children.length > 30) sc.removeChild(sc.firstChild);
-    sc.scrollTop = sc.scrollHeight;
+    scards.forEach((c, i) => { c.style.opacity = Math.max(0.3, 1.0 - i * 0.07); });
+    while (sc.children.length > 30) sc.removeChild(sc.lastChild);
+    sc.scrollLeft = 0;
   }
 }
 
@@ -6201,13 +6275,11 @@ function appendCard(entry) {
 function _appendStoryHcard(entry) {
   const sc = document.getElementById('story-hcard-container');
   if (!sc) return;
-  sc.appendChild(buildCard(entry));
+  sc.prepend(buildCard(entry));
   const scards = sc.querySelectorAll('.hcard');
-  scards.forEach((c, i) => {
-    c.style.opacity = Math.max(0.3, 1.0 - (scards.length - 1 - i) * 0.07);
-  });
-  while (sc.children.length > 30) sc.removeChild(sc.firstChild);
-  sc.scrollTop = sc.scrollHeight;
+  scards.forEach((c, i) => { c.style.opacity = Math.max(0.3, 1.0 - i * 0.07); });
+  while (sc.children.length > 30) sc.removeChild(sc.lastChild);
+  sc.scrollLeft = 0;
 }
 
 function _ceremoRetryBlocked(questId) {
@@ -6367,7 +6439,7 @@ function _showReturnRow(enemyName, dropLine) {
     _updateHeal();
     healBtn.className = 'rts-btn-heal';
     healBtn.addEventListener('click', () => {
-      if (_rests() <= 0) { storyMsg('😴 No short rests left — find an inn.'); return; }
+      if (_rests() <= 0) { storyBlock('😴 No short rests left — find an inn.'); return; }
       const node = NODE_MAP[S_story.currentCode];
       const isInn = !!(node && node.sleep);
       const base = Math.floor(S_story.hpMax * 0.25);
@@ -8242,8 +8314,10 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   WRM: { num:244, name:"ruins", label:"Worm-Close — Atli's Snake Pit Below the East Tower", text:"The worm-close is below the east tower. Stairs go down to a stone pit where the darkness moves. Gunnar is inside. His hands are bound. The snakes move at the edges except when he plays, and he cannot play with bound hands. Unless someone brings him what his sister sent.", act:1,
   },
   ODD: { num:245, name:"city", label:"Oddrun's Estate — Atli's Sister's Hall", text:"Oddrun — Atli's sister, Gunnar's secret love — lives under prohibition on this estate. Atli has forbidden her to leave after his execution of Gunnar. The prohibition is punitive. She does not accept it. She has saddled her horse. The murk-wood is two hours east.", act:1,
+    E:"J87",
   },
   LYG: { num:246, name:"city", label:"Lyngvi Hall — Borgny's Estate", text:"Borgny's hall, east of Atli's territory. A woman in labor since midday; the birth is not progressing. A medical summons has gone to every healer within two hours' ride. One healer is forbidden to come. She comes anyway.", act:1,
+    S:"J307",
   },
   HKL: { num:247, name:"freshwater_lake", label:"Hlymdal — River Crossing Between Burgundy and Atli", text:"A wide river crossing, the natural border between the Burgundian Rhine corridor and the eastern roads toward Atli's hall. The Nibelung brothers received their invitation at this crossing. Their wives' warnings were given here too. The water moves regardless.", act:1,
   },
@@ -8282,6 +8356,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   CWL: { num:264, name:"forest", label:"Cwm Cawlwd — Three-Forest Valley", text:"A steep-sided valley where three generations of forest are visible in the geology. The Owl of Cwm Cawlwd has watched three forests grow and collapse here. She was here when it was bare rock. A dead elm stands at the valley crook. No paths.", act:0,
   },
   TWY: { num:265, name:"freshwater_lake", label:"The Tidal River — Roman City Walls", text:"A tidal river below a city whose walls are Roman stone. The river smells of the sea even this far inland. The salmon of Llyn Llyw circles here each tide, drawn to a wrong inside those walls that it cannot stop returning to. The Eagle of Gwern Abwy watches from its crag above the river bend.", act:0,
+    N:"J76",
   },
   BRC: { num:266, name:"beach", label:"Irish Shore — After the Battle", text:"A flat Irish strand after a total war that destroyed two islands. The field of the dead lies behind. The sea lies ahead. Seven men stand in the after-silence of something that cannot be undone. Bran's head is still alive in Pryderi's arms. The shore smells of salt and iron.", act:0,
   },
@@ -8310,6 +8385,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   TL: { num:278, name:"docks", label:"Bristol Harbor — Tilbury Docks", act:1,
   },
   VS: { num:279, name:"market_quarter", label:"Visby Underground — Fence Quarter", act:2,
+    N:"J62",
   },
   HMS: { num:280, name:"docks", label:"Hispaniola — Mid-Atlantic Deck", act:2,
   },
@@ -8416,6 +8492,8 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   SWF: { num:411, name:"camelot", label:"Swinefell — Flosi's Hall, Iceland", act:1,
   },
   ISL: { num:412, name:"highlands", label:"Althing Ground — Iceland", act:1,
+    N:"J56",
+    E:"J123",
   },
   ASG: { num:413, name:"camelot", label:"Ásgarðr — Frigg's Hall", act:1,
   },
@@ -8430,6 +8508,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   KVM: { num:418, name:"camelot", label:"The Master's Hall — Kullervo's People", act:1,
   },
   NID: { num:419, name:"city", label:"Nidaros — Olaf's Shrine City", act:1,
+    S:"J291",
   },
   ECF: { num:420, name:"beach", label:"Eclipse Farm — Coast North of Stiklestad", act:1,
   },
@@ -8690,6 +8769,814 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   J54: { num:63711, name:"junction", label:"The Copyist's Quarter–Isle of the Wyrm Cro Road Waypoint", text:"Signpost says: The Copyist's Quarter–Isle of the Wyrm Cro Road. Follow this road between Copyist's Quarter and Isle of the Wyrm Cro.", npc:null, loot:null, act:6, sleep:false, junction:true,
   },
   J55: { num:63712, name:"junction", label:"The Copyist's Quarter–Isle of the Wyrm Cro Road Waypoint", text:"Signpost says: The Copyist's Quarter–Isle of the Wyrm Cro Road. Follow this road between Copyist's Quarter and Isle of the Wyrm Cro.", npc:null, loot:null, act:6, sleep:false, junction:true },
+  J56: { num:63713, name:"junction", label:"The Althing Ground–Herdholt Road Waypoint", text:"Signpost says: The Althing Ground–Herdholt Road. Follow this road between Althing Ground and Herdholt.", npc:null, loot:null, S:"ISL", act:1, sleep:false, junction:true,
+    N:"J57",
+  },
+  J57: { num:63714, name:"junction", label:"The Althing Ground–Herdholt Road Waypoint", text:"Signpost says: The Althing Ground–Herdholt Road. Follow this road between Althing Ground and Herdholt.", npc:null, loot:null, S:"J56", act:1, sleep:false, junction:true,
+    N:"J58",
+  },
+  J58: { num:63715, name:"junction", label:"The Althing Ground–Herdholt Road Waypoint", text:"Signpost says: The Althing Ground–Herdholt Road. Follow this road between Althing Ground and Herdholt.", npc:null, loot:null, S:"J57", act:1, sleep:false, junction:true,
+    N:"J59",
+  },
+  J59: { num:63716, name:"junction", label:"The Althing Ground–Herdholt Road Waypoint", text:"Signpost says: The Althing Ground–Herdholt Road. Follow this road between Althing Ground and Herdholt.", npc:null, loot:null, S:"J58", act:1, sleep:false, junction:true,
+    N:"J60",
+  },
+  J60: { num:63717, name:"junction", label:"The Althing Ground–Herdholt Road Waypoint", text:"Signpost says: The Althing Ground–Herdholt Road. Follow this road between Althing Ground and Herdholt.", npc:null, loot:null, S:"J59", act:1, sleep:false, junction:true,
+    N:"J61",
+  },
+  J61: { num:63718, name:"junction", label:"The Althing Ground–Herdholt Road Waypoint", text:"Signpost says: The Althing Ground–Herdholt Road. Follow this road between Althing Ground and Herdholt.", npc:null, loot:null, S:"J60", act:1, sleep:false, junction:true },
+  J62: { num:63719, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"VS", act:2, sleep:false, junction:true,
+    N:"J63",
+  },
+  J63: { num:63720, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"J62", act:2, sleep:false, junction:true,
+    N:"J64",
+  },
+  J64: { num:63721, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"J63", act:2, sleep:false, junction:true,
+    N:"J65",
+  },
+  J65: { num:63722, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"J64", act:2, sleep:false, junction:true,
+    N:"J66",
+  },
+  J66: { num:63723, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"J65", act:2, sleep:false, junction:true,
+    N:"J67",
+  },
+  J67: { num:63724, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"J66", act:2, sleep:false, junction:true,
+    N:"J68",
+  },
+  J68: { num:63725, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"J67", act:2, sleep:false, junction:true,
+    N:"J69",
+  },
+  J69: { num:63726, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"J68", act:2, sleep:false, junction:true,
+    N:"J70",
+  },
+  J70: { num:63727, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"J69", act:2, sleep:false, junction:true,
+    N:"J71",
+  },
+  J71: { num:63728, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"J70", act:2, sleep:false, junction:true,
+    N:"J72",
+  },
+  J72: { num:63729, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, S:"J71", act:2, sleep:false, junction:true,
+    W:"J73",
+  },
+  J73: { num:63730, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, E:"J72", act:2, sleep:false, junction:true,
+    W:"J74",
+  },
+  J74: { num:63731, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, E:"J73", act:2, sleep:false, junction:true,
+    W:"J75",
+  },
+  J75: { num:63732, name:"junction", label:"The Visby Underground–City Streets Road Waypoint", text:"Signpost says: The Visby Underground–City Streets Road. Follow this road between Visby Underground and City Streets.", npc:null, loot:null, E:"J74", act:2, sleep:false, junction:true },
+  J76: { num:63733, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, S:"TWY", act:1, sleep:false, junction:true,
+    N:"J77",
+  },
+  J77: { num:63734, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, S:"J76", act:1, sleep:false, junction:true,
+    N:"J78",
+  },
+  J78: { num:63735, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, S:"J77", act:1, sleep:false, junction:true,
+    N:"J79",
+  },
+  J79: { num:63736, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, S:"J78", act:1, sleep:false, junction:true,
+    N:"J80",
+  },
+  J80: { num:63737, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, S:"J79", act:1, sleep:false, junction:true,
+    N:"J81",
+  },
+  J81: { num:63738, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, S:"J80", act:1, sleep:false, junction:true,
+    N:"J82",
+  },
+  J82: { num:63739, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, S:"J81", act:1, sleep:false, junction:true,
+    N:"J83",
+  },
+  J83: { num:63740, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, S:"J82", act:1, sleep:false, junction:true,
+    N:"J84",
+  },
+  J84: { num:63741, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, S:"J83", act:1, sleep:false, junction:true,
+    N:"J85",
+  },
+  J85: { num:63742, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, S:"J84", act:1, sleep:false, junction:true,
+    W:"J86",
+  },
+  J86: { num:63743, name:"junction", label:"The The Tidal River–Math's Court Road Waypoint", text:"Signpost says: The The Tidal River–Math's Court Road. Follow this road between The Tidal River and Math's Court.", npc:null, loot:null, E:"J85", act:1, sleep:false, junction:true },
+  J87: { num:63744, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"ODD", act:1, sleep:false, junction:true,
+    E:"J88",
+  },
+  J88: { num:63745, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J87", act:1, sleep:false, junction:true,
+    E:"J89",
+  },
+  J89: { num:63746, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J88", act:1, sleep:false, junction:true,
+    E:"J90",
+  },
+  J90: { num:63747, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J89", act:1, sleep:false, junction:true,
+    E:"J91",
+  },
+  J91: { num:63748, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J90", act:1, sleep:false, junction:true,
+    E:"J92",
+  },
+  J92: { num:63749, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J91", act:1, sleep:false, junction:true,
+    E:"J93",
+  },
+  J93: { num:63750, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J92", act:1, sleep:false, junction:true,
+    E:"J94",
+  },
+  J94: { num:63751, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J93", act:1, sleep:false, junction:true,
+    E:"J95",
+  },
+  J95: { num:63752, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J94", act:1, sleep:false, junction:true,
+    E:"J96",
+  },
+  J96: { num:63753, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J95", act:1, sleep:false, junction:true,
+    E:"J97",
+  },
+  J97: { num:63754, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J96", act:1, sleep:false, junction:true,
+    E:"J98",
+  },
+  J98: { num:63755, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J97", act:1, sleep:false, junction:true,
+    E:"J99",
+  },
+  J99: { num:63756, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J98", act:1, sleep:false, junction:true,
+    E:"J100",
+  },
+  J100: { num:63757, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J99", act:1, sleep:false, junction:true,
+    E:"J101",
+  },
+  J101: { num:63758, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J100", act:1, sleep:false, junction:true,
+    E:"J102",
+  },
+  J102: { num:63759, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J101", act:1, sleep:false, junction:true,
+    E:"J103",
+  },
+  J103: { num:63760, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J102", act:1, sleep:false, junction:true,
+    E:"J104",
+  },
+  J104: { num:63761, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J103", act:1, sleep:false, junction:true,
+    E:"J105",
+  },
+  J105: { num:63762, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J104", act:1, sleep:false, junction:true,
+    E:"J106",
+  },
+  J106: { num:63763, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J105", act:1, sleep:false, junction:true,
+    E:"J107",
+  },
+  J107: { num:63764, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J106", act:1, sleep:false, junction:true,
+    E:"J108",
+  },
+  J108: { num:63765, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J107", act:1, sleep:false, junction:true,
+    E:"J109",
+  },
+  J109: { num:63766, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J108", act:1, sleep:false, junction:true,
+    E:"J110",
+  },
+  J110: { num:63767, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J109", act:1, sleep:false, junction:true,
+    E:"J111",
+  },
+  J111: { num:63768, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J110", act:1, sleep:false, junction:true,
+    E:"J112",
+  },
+  J112: { num:63769, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J111", act:1, sleep:false, junction:true,
+    E:"J113",
+  },
+  J113: { num:63770, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J112", act:1, sleep:false, junction:true,
+    E:"J114",
+  },
+  J114: { num:63771, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J113", act:1, sleep:false, junction:true,
+    E:"J115",
+  },
+  J115: { num:63772, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J114", act:1, sleep:false, junction:true,
+    E:"J116",
+  },
+  J116: { num:63773, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J115", act:1, sleep:false, junction:true,
+    E:"J117",
+  },
+  J117: { num:63774, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J116", act:1, sleep:false, junction:true,
+    E:"J118",
+  },
+  J118: { num:63775, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J117", act:1, sleep:false, junction:true,
+    E:"J119",
+  },
+  J119: { num:63776, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, W:"J118", act:1, sleep:false, junction:true,
+    S:"J120",
+  },
+  J120: { num:63777, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, N:"J119", act:1, sleep:false, junction:true,
+    S:"J121",
+  },
+  J121: { num:63778, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, N:"J120", act:1, sleep:false, junction:true,
+    S:"J122",
+  },
+  J122: { num:63779, name:"junction", label:"The Oddrun's Estate–City Streets Road Waypoint", text:"Signpost says: The Oddrun's Estate–City Streets Road. Follow this road between Oddrun's Estate and City Streets.", npc:null, loot:null, N:"J121", act:1, sleep:false, junction:true },
+  J123: { num:63780, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"ISL", act:1, sleep:false, junction:true,
+    E:"J124",
+  },
+  J124: { num:63781, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J123", act:1, sleep:false, junction:true,
+    E:"J125",
+  },
+  J125: { num:63782, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J124", act:1, sleep:false, junction:true,
+    E:"J126",
+  },
+  J126: { num:63783, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J125", act:1, sleep:false, junction:true,
+    E:"J127",
+  },
+  J127: { num:63784, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J126", act:1, sleep:false, junction:true,
+    E:"J128",
+  },
+  J128: { num:63785, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J127", act:1, sleep:false, junction:true,
+    E:"J129",
+  },
+  J129: { num:63786, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J128", act:1, sleep:false, junction:true,
+    E:"J130",
+  },
+  J130: { num:63787, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J129", act:1, sleep:false, junction:true,
+    E:"J131",
+  },
+  J131: { num:63788, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J130", act:1, sleep:false, junction:true,
+    E:"J132",
+  },
+  J132: { num:63789, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J131", act:1, sleep:false, junction:true,
+    E:"J133",
+  },
+  J133: { num:63790, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J132", act:1, sleep:false, junction:true,
+    E:"J134",
+  },
+  J134: { num:63791, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J133", act:1, sleep:false, junction:true,
+    E:"J135",
+  },
+  J135: { num:63792, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J134", act:1, sleep:false, junction:true,
+    E:"J136",
+  },
+  J136: { num:63793, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J135", act:1, sleep:false, junction:true,
+    E:"J137",
+  },
+  J137: { num:63794, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J136", act:1, sleep:false, junction:true,
+    E:"J138",
+  },
+  J138: { num:63795, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J137", act:1, sleep:false, junction:true,
+    E:"J139",
+  },
+  J139: { num:63796, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J138", act:1, sleep:false, junction:true,
+    E:"J140",
+  },
+  J140: { num:63797, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J139", act:1, sleep:false, junction:true,
+    E:"J141",
+  },
+  J141: { num:63798, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J140", act:1, sleep:false, junction:true,
+    E:"J142",
+  },
+  J142: { num:63799, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J141", act:1, sleep:false, junction:true,
+    E:"J143",
+  },
+  J143: { num:63800, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J142", act:1, sleep:false, junction:true,
+    E:"J144",
+  },
+  J144: { num:63801, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J143", act:1, sleep:false, junction:true,
+    E:"J145",
+  },
+  J145: { num:63802, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J144", act:1, sleep:false, junction:true,
+    E:"J146",
+  },
+  J146: { num:63803, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J145", act:1, sleep:false, junction:true,
+    E:"J147",
+  },
+  J147: { num:63804, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J146", act:1, sleep:false, junction:true,
+    E:"J148",
+  },
+  J148: { num:63805, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J147", act:1, sleep:false, junction:true,
+    E:"J149",
+  },
+  J149: { num:63806, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J148", act:1, sleep:false, junction:true,
+    E:"J150",
+  },
+  J150: { num:63807, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J149", act:1, sleep:false, junction:true,
+    E:"J151",
+  },
+  J151: { num:63808, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J150", act:1, sleep:false, junction:true,
+    E:"J152",
+  },
+  J152: { num:63809, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J151", act:1, sleep:false, junction:true,
+    E:"J153",
+  },
+  J153: { num:63810, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J152", act:1, sleep:false, junction:true,
+    E:"J154",
+  },
+  J154: { num:63811, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J153", act:1, sleep:false, junction:true,
+    E:"J155",
+  },
+  J155: { num:63812, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J154", act:1, sleep:false, junction:true,
+    E:"J156",
+  },
+  J156: { num:63813, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J155", act:1, sleep:false, junction:true,
+    E:"J157",
+  },
+  J157: { num:63814, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J156", act:1, sleep:false, junction:true,
+    E:"J158",
+  },
+  J158: { num:63815, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J157", act:1, sleep:false, junction:true,
+    E:"J159",
+  },
+  J159: { num:63816, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J158", act:1, sleep:false, junction:true,
+    E:"J160",
+  },
+  J160: { num:63817, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J159", act:1, sleep:false, junction:true,
+    E:"J161",
+  },
+  J161: { num:63818, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J160", act:1, sleep:false, junction:true,
+    E:"J162",
+  },
+  J162: { num:63819, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J161", act:1, sleep:false, junction:true,
+    E:"J163",
+  },
+  J163: { num:63820, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J162", act:1, sleep:false, junction:true,
+    E:"J164",
+  },
+  J164: { num:63821, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J163", act:1, sleep:false, junction:true,
+    E:"J165",
+  },
+  J165: { num:63822, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J164", act:1, sleep:false, junction:true,
+    E:"J166",
+  },
+  J166: { num:63823, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J165", act:1, sleep:false, junction:true,
+    E:"J167",
+  },
+  J167: { num:63824, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J166", act:1, sleep:false, junction:true,
+    E:"J168",
+  },
+  J168: { num:63825, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J167", act:1, sleep:false, junction:true,
+    E:"J169",
+  },
+  J169: { num:63826, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J168", act:1, sleep:false, junction:true,
+    E:"J170",
+  },
+  J170: { num:63827, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J169", act:1, sleep:false, junction:true,
+    E:"J171",
+  },
+  J171: { num:63828, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J170", act:1, sleep:false, junction:true,
+    E:"J172",
+  },
+  J172: { num:63829, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J171", act:1, sleep:false, junction:true,
+    E:"J173",
+  },
+  J173: { num:63830, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J172", act:1, sleep:false, junction:true,
+    E:"J174",
+  },
+  J174: { num:63831, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J173", act:1, sleep:false, junction:true,
+    E:"J175",
+  },
+  J175: { num:63832, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J174", act:1, sleep:false, junction:true,
+    E:"J176",
+  },
+  J176: { num:63833, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J175", act:1, sleep:false, junction:true,
+    E:"J177",
+  },
+  J177: { num:63834, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J176", act:1, sleep:false, junction:true,
+    E:"J178",
+  },
+  J178: { num:63835, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J177", act:1, sleep:false, junction:true,
+    E:"J179",
+  },
+  J179: { num:63836, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J178", act:1, sleep:false, junction:true,
+    E:"J180",
+  },
+  J180: { num:63837, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J179", act:1, sleep:false, junction:true,
+    E:"J181",
+  },
+  J181: { num:63838, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J180", act:1, sleep:false, junction:true,
+    E:"J182",
+  },
+  J182: { num:63839, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J181", act:1, sleep:false, junction:true,
+    E:"J183",
+  },
+  J183: { num:63840, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J182", act:1, sleep:false, junction:true,
+    E:"J184",
+  },
+  J184: { num:63841, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J183", act:1, sleep:false, junction:true,
+    E:"J185",
+  },
+  J185: { num:63842, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J184", act:1, sleep:false, junction:true,
+    E:"J186",
+  },
+  J186: { num:63843, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J185", act:1, sleep:false, junction:true,
+    E:"J187",
+  },
+  J187: { num:63844, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J186", act:1, sleep:false, junction:true,
+    E:"J188",
+  },
+  J188: { num:63845, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J187", act:1, sleep:false, junction:true,
+    E:"J189",
+  },
+  J189: { num:63846, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J188", act:1, sleep:false, junction:true,
+    E:"J190",
+  },
+  J190: { num:63847, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J189", act:1, sleep:false, junction:true,
+    E:"J191",
+  },
+  J191: { num:63848, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J190", act:1, sleep:false, junction:true,
+    E:"J192",
+  },
+  J192: { num:63849, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J191", act:1, sleep:false, junction:true,
+    E:"J193",
+  },
+  J193: { num:63850, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J192", act:1, sleep:false, junction:true,
+    E:"J194",
+  },
+  J194: { num:63851, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J193", act:1, sleep:false, junction:true,
+    E:"J195",
+  },
+  J195: { num:63852, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J194", act:1, sleep:false, junction:true,
+    E:"J196",
+  },
+  J196: { num:63853, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J195", act:1, sleep:false, junction:true,
+    E:"J197",
+  },
+  J197: { num:63854, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J196", act:1, sleep:false, junction:true,
+    E:"J198",
+  },
+  J198: { num:63855, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J197", act:1, sleep:false, junction:true,
+    E:"J199",
+  },
+  J199: { num:63856, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J198", act:1, sleep:false, junction:true,
+    E:"J200",
+  },
+  J200: { num:63857, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J199", act:1, sleep:false, junction:true,
+    E:"J201",
+  },
+  J201: { num:63858, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J200", act:1, sleep:false, junction:true,
+    E:"J202",
+  },
+  J202: { num:63859, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J201", act:1, sleep:false, junction:true,
+    E:"J203",
+  },
+  J203: { num:63860, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J202", act:1, sleep:false, junction:true,
+    E:"J204",
+  },
+  J204: { num:63861, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J203", act:1, sleep:false, junction:true,
+    E:"J205",
+  },
+  J205: { num:63862, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J204", act:1, sleep:false, junction:true,
+    E:"J206",
+  },
+  J206: { num:63863, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J205", act:1, sleep:false, junction:true,
+    E:"J207",
+  },
+  J207: { num:63864, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J206", act:1, sleep:false, junction:true,
+    E:"J208",
+  },
+  J208: { num:63865, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J207", act:1, sleep:false, junction:true,
+    E:"J209",
+  },
+  J209: { num:63866, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J208", act:1, sleep:false, junction:true,
+    E:"J210",
+  },
+  J210: { num:63867, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J209", act:1, sleep:false, junction:true,
+    E:"J211",
+  },
+  J211: { num:63868, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J210", act:1, sleep:false, junction:true,
+    E:"J212",
+  },
+  J212: { num:63869, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J211", act:1, sleep:false, junction:true,
+    E:"J213",
+  },
+  J213: { num:63870, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J212", act:1, sleep:false, junction:true,
+    E:"J214",
+  },
+  J214: { num:63871, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J213", act:1, sleep:false, junction:true,
+    E:"J215",
+  },
+  J215: { num:63872, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J214", act:1, sleep:false, junction:true,
+    E:"J216",
+  },
+  J216: { num:63873, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J215", act:1, sleep:false, junction:true,
+    E:"J217",
+  },
+  J217: { num:63874, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J216", act:1, sleep:false, junction:true,
+    E:"J218",
+  },
+  J218: { num:63875, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J217", act:1, sleep:false, junction:true,
+    E:"J219",
+  },
+  J219: { num:63876, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J218", act:1, sleep:false, junction:true,
+    E:"J220",
+  },
+  J220: { num:63877, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J219", act:1, sleep:false, junction:true,
+    E:"J221",
+  },
+  J221: { num:63878, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J220", act:1, sleep:false, junction:true,
+    E:"J222",
+  },
+  J222: { num:63879, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J221", act:1, sleep:false, junction:true,
+    E:"J223",
+  },
+  J223: { num:63880, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J222", act:1, sleep:false, junction:true,
+    E:"J224",
+  },
+  J224: { num:63881, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J223", act:1, sleep:false, junction:true,
+    E:"J225",
+  },
+  J225: { num:63882, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J224", act:1, sleep:false, junction:true,
+    E:"J226",
+  },
+  J226: { num:63883, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J225", act:1, sleep:false, junction:true,
+    E:"J227",
+  },
+  J227: { num:63884, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J226", act:1, sleep:false, junction:true,
+    E:"J228",
+  },
+  J228: { num:63885, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J227", act:1, sleep:false, junction:true,
+    E:"J229",
+  },
+  J229: { num:63886, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J228", act:1, sleep:false, junction:true,
+    E:"J230",
+  },
+  J230: { num:63887, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J229", act:1, sleep:false, junction:true,
+    E:"J231",
+  },
+  J231: { num:63888, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J230", act:1, sleep:false, junction:true,
+    E:"J232",
+  },
+  J232: { num:63889, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J231", act:1, sleep:false, junction:true,
+    E:"J233",
+  },
+  J233: { num:63890, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J232", act:1, sleep:false, junction:true,
+    E:"J234",
+  },
+  J234: { num:63891, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J233", act:1, sleep:false, junction:true,
+    E:"J235",
+  },
+  J235: { num:63892, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J234", act:1, sleep:false, junction:true,
+    E:"J236",
+  },
+  J236: { num:63893, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J235", act:1, sleep:false, junction:true,
+    E:"J237",
+  },
+  J237: { num:63894, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J236", act:1, sleep:false, junction:true,
+    E:"J238",
+  },
+  J238: { num:63895, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J237", act:1, sleep:false, junction:true,
+    E:"J239",
+  },
+  J239: { num:63896, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J238", act:1, sleep:false, junction:true,
+    E:"J240",
+  },
+  J240: { num:63897, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J239", act:1, sleep:false, junction:true,
+    E:"J241",
+  },
+  J241: { num:63898, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J240", act:1, sleep:false, junction:true,
+    E:"J242",
+  },
+  J242: { num:63899, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J241", act:1, sleep:false, junction:true,
+    E:"J243",
+  },
+  J243: { num:63900, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J242", act:1, sleep:false, junction:true,
+    E:"J244",
+  },
+  J244: { num:63901, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J243", act:1, sleep:false, junction:true,
+    E:"J245",
+  },
+  J245: { num:63902, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J244", act:1, sleep:false, junction:true,
+    E:"J246",
+  },
+  J246: { num:63903, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J245", act:1, sleep:false, junction:true,
+    E:"J247",
+  },
+  J247: { num:63904, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J246", act:1, sleep:false, junction:true,
+    E:"J248",
+  },
+  J248: { num:63905, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J247", act:1, sleep:false, junction:true,
+    E:"J249",
+  },
+  J249: { num:63906, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J248", act:1, sleep:false, junction:true,
+    E:"J250",
+  },
+  J250: { num:63907, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J249", act:1, sleep:false, junction:true,
+    E:"J251",
+  },
+  J251: { num:63908, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J250", act:1, sleep:false, junction:true,
+    E:"J252",
+  },
+  J252: { num:63909, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J251", act:1, sleep:false, junction:true,
+    E:"J253",
+  },
+  J253: { num:63910, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J252", act:1, sleep:false, junction:true,
+    E:"J254",
+  },
+  J254: { num:63911, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J253", act:1, sleep:false, junction:true,
+    E:"J255",
+  },
+  J255: { num:63912, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J254", act:1, sleep:false, junction:true,
+    E:"J256",
+  },
+  J256: { num:63913, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J255", act:1, sleep:false, junction:true,
+    E:"J257",
+  },
+  J257: { num:63914, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J256", act:1, sleep:false, junction:true,
+    E:"J258",
+  },
+  J258: { num:63915, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J257", act:1, sleep:false, junction:true,
+    E:"J259",
+  },
+  J259: { num:63916, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J258", act:1, sleep:false, junction:true,
+    E:"J260",
+  },
+  J260: { num:63917, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J259", act:1, sleep:false, junction:true,
+    E:"J261",
+  },
+  J261: { num:63918, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J260", act:1, sleep:false, junction:true,
+    E:"J262",
+  },
+  J262: { num:63919, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J261", act:1, sleep:false, junction:true,
+    E:"J263",
+  },
+  J263: { num:63920, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J262", act:1, sleep:false, junction:true,
+    E:"J264",
+  },
+  J264: { num:63921, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J263", act:1, sleep:false, junction:true,
+    E:"J265",
+  },
+  J265: { num:63922, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J264", act:1, sleep:false, junction:true,
+    E:"J266",
+  },
+  J266: { num:63923, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J265", act:1, sleep:false, junction:true,
+    E:"J267",
+  },
+  J267: { num:63924, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J266", act:1, sleep:false, junction:true,
+    E:"J268",
+  },
+  J268: { num:63925, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J267", act:1, sleep:false, junction:true,
+    E:"J269",
+  },
+  J269: { num:63926, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J268", act:1, sleep:false, junction:true,
+    E:"J270",
+  },
+  J270: { num:63927, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J269", act:1, sleep:false, junction:true,
+    E:"J271",
+  },
+  J271: { num:63928, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J270", act:1, sleep:false, junction:true,
+    E:"J272",
+  },
+  J272: { num:63929, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J271", act:1, sleep:false, junction:true,
+    E:"J273",
+  },
+  J273: { num:63930, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J272", act:1, sleep:false, junction:true,
+    E:"J274",
+  },
+  J274: { num:63931, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J273", act:1, sleep:false, junction:true,
+    E:"J275",
+  },
+  J275: { num:63932, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J274", act:1, sleep:false, junction:true,
+    E:"J276",
+  },
+  J276: { num:63933, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J275", act:1, sleep:false, junction:true,
+    E:"J277",
+  },
+  J277: { num:63934, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J276", act:1, sleep:false, junction:true,
+    E:"J278",
+  },
+  J278: { num:63935, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J277", act:1, sleep:false, junction:true,
+    E:"J279",
+  },
+  J279: { num:63936, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J278", act:1, sleep:false, junction:true,
+    E:"J280",
+  },
+  J280: { num:63937, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J279", act:1, sleep:false, junction:true,
+    E:"J281",
+  },
+  J281: { num:63938, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J280", act:1, sleep:false, junction:true,
+    E:"J282",
+  },
+  J282: { num:63939, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J281", act:1, sleep:false, junction:true,
+    E:"J283",
+  },
+  J283: { num:63940, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J282", act:1, sleep:false, junction:true,
+    E:"J284",
+  },
+  J284: { num:63941, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J283", act:1, sleep:false, junction:true,
+    E:"J285",
+  },
+  J285: { num:63942, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J284", act:1, sleep:false, junction:true,
+    E:"J286",
+  },
+  J286: { num:63943, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, W:"J285", act:1, sleep:false, junction:true,
+    S:"J287",
+  },
+  J287: { num:63944, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, N:"J286", act:1, sleep:false, junction:true,
+    S:"J288",
+  },
+  J288: { num:63945, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, N:"J287", act:1, sleep:false, junction:true,
+    S:"J289",
+  },
+  J289: { num:63946, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, N:"J288", act:1, sleep:false, junction:true,
+    S:"J290",
+  },
+  J290: { num:63947, name:"junction", label:"The Althing Ground–Nidaros Road Waypoint", text:"Signpost says: The Althing Ground–Nidaros Road. Follow this road between Althing Ground and Nidaros.", npc:null, loot:null, N:"J289", act:1, sleep:false, junction:true },
+  J291: { num:63948, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, N:"NID", act:1, sleep:false, junction:true,
+    S:"J292",
+  },
+  J292: { num:63949, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, N:"J291", act:1, sleep:false, junction:true,
+    S:"J293",
+  },
+  J293: { num:63950, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, N:"J292", act:1, sleep:false, junction:true,
+    S:"J294",
+  },
+  J294: { num:63951, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, N:"J293", act:1, sleep:false, junction:true,
+    S:"J295",
+  },
+  J295: { num:63952, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, N:"J294", act:1, sleep:false, junction:true,
+    S:"J296",
+  },
+  J296: { num:63953, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, N:"J295", act:1, sleep:false, junction:true,
+    S:"J297",
+  },
+  J297: { num:63954, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, N:"J296", act:1, sleep:false, junction:true,
+    S:"J298",
+  },
+  J298: { num:63955, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, N:"J297", act:1, sleep:false, junction:true,
+    S:"J299",
+  },
+  J299: { num:63956, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, N:"J298", act:1, sleep:false, junction:true,
+    W:"J300",
+  },
+  J300: { num:63957, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, E:"J299", act:1, sleep:false, junction:true,
+    W:"J301",
+  },
+  J301: { num:63958, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, E:"J300", act:1, sleep:false, junction:true,
+    W:"J302",
+  },
+  J302: { num:63959, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, E:"J301", act:1, sleep:false, junction:true,
+    W:"J303",
+  },
+  J303: { num:63960, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, E:"J302", act:1, sleep:false, junction:true,
+    W:"J304",
+  },
+  J304: { num:63961, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, E:"J303", act:1, sleep:false, junction:true,
+    W:"J305",
+  },
+  J305: { num:63962, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, E:"J304", act:1, sleep:false, junction:true,
+    W:"J306",
+  },
+  J306: { num:63963, name:"junction", label:"The Nidaros–Lyngvi Hall Road Waypoint", text:"Signpost says: The Nidaros–Lyngvi Hall Road. Follow this road between Nidaros and Lyngvi Hall.", npc:null, loot:null, E:"J305", act:1, sleep:false, junction:true },
+  J307: { num:63964, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"LYG", act:1, sleep:false, junction:true,
+    S:"J308",
+  },
+  J308: { num:63965, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J307", act:1, sleep:false, junction:true,
+    S:"J309",
+  },
+  J309: { num:63966, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J308", act:1, sleep:false, junction:true,
+    S:"J310",
+  },
+  J310: { num:63967, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J309", act:1, sleep:false, junction:true,
+    S:"J311",
+  },
+  J311: { num:63968, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J310", act:1, sleep:false, junction:true,
+    S:"J312",
+  },
+  J312: { num:63969, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J311", act:1, sleep:false, junction:true,
+    S:"J313",
+  },
+  J313: { num:63970, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J312", act:1, sleep:false, junction:true,
+    S:"J314",
+  },
+  J314: { num:63971, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J313", act:1, sleep:false, junction:true,
+    S:"J315",
+  },
+  J315: { num:63972, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J314", act:1, sleep:false, junction:true,
+    S:"J316",
+  },
+  J316: { num:63973, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J315", act:1, sleep:false, junction:true,
+    S:"J317",
+  },
+  J317: { num:63974, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J316", act:1, sleep:false, junction:true,
+    S:"J318",
+  },
+  J318: { num:63975, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J317", act:1, sleep:false, junction:true,
+    S:"J319",
+  },
+  J319: { num:63976, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, N:"J318", act:1, sleep:false, junction:true,
+    E:"J320",
+  },
+  J320: { num:63977, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J319", act:1, sleep:false, junction:true,
+    E:"J321",
+  },
+  J321: { num:63978, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J320", act:1, sleep:false, junction:true,
+    E:"J322",
+  },
+  J322: { num:63979, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J321", act:1, sleep:false, junction:true,
+    E:"J323",
+  },
+  J323: { num:63980, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J322", act:1, sleep:false, junction:true,
+    E:"J324",
+  },
+  J324: { num:63981, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J323", act:1, sleep:false, junction:true,
+    E:"J325",
+  },
+  J325: { num:63982, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J324", act:1, sleep:false, junction:true,
+    E:"J326",
+  },
+  J326: { num:63983, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J325", act:1, sleep:false, junction:true,
+    E:"J327",
+  },
+  J327: { num:63984, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J326", act:1, sleep:false, junction:true,
+    E:"J328",
+  },
+  J328: { num:63985, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J327", act:1, sleep:false, junction:true,
+    E:"J329",
+  },
+  J329: { num:63986, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J328", act:1, sleep:false, junction:true },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -8722,23 +9609,27 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   KUN:{r:26,c:220},
   OTP:{r:26,c:221},
   HFG:{r:26,c:222},
-  HHL:{r:27,c:212},
+  HHL:{r:27,c:23},
+  J61:{r:27,c:24},
   HJ3:{r:27,c:213},
   PCR:{r:27,c:218},
   GVA:{r:27,c:219},
   PISNOT:{r:27,c:220},
   LC4:{r:27,c:221},
   NTN:{r:27,c:222},
+  J60:{r:28,c:24},
   SEA:{r:28,c:213},
   ORL:{r:28,c:214},
   COT:{r:28,c:218},
   HTY:{r:28,c:219},
   MESFRY:{r:28,c:220},
   KLN:{r:28,c:222},
+  J59:{r:29,c:24},
   LCA:{r:29,c:213},
   GEN:{r:29,c:219},
   LSO:{r:29,c:220},
   GNP:{r:29,c:221},
+  J58:{r:30,c:24},
   CLJ:{r:30,c:213},
   HLG:{r:30,c:215},
   RDV:{r:30,c:217},
@@ -8747,6 +9638,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   PISGAT:{r:30,c:220},
   LC3:{r:30,c:221},
   BGC:{r:30,c:222},
+  J57:{r:31,c:24},
   DA0:{r:31,c:213},
   CWL:{r:31,c:215},
   GWL:{r:31,c:217},
@@ -8756,6 +9648,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   HMN:{r:31,c:221},
   LAT:{r:31,c:222},
 
+  J56:{r:32,c:24},
   DSJ:{r:32,c:213},
   KTM:{r:32,c:214},
   WLD:{r:32,c:215},
@@ -8764,69 +9657,264 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   MONTTG:{r:32,c:220},
   MUC:{r:32,c:221},
   DBN:{r:32,c:222},
+  ISL:{r:33,c:24},
+  J123:{r:33,c:25},
+  J124:{r:33,c:26},
+  J125:{r:33,c:27},
+  J126:{r:33,c:28},
+  J127:{r:33,c:29},
+  J128:{r:33,c:30},
+  J129:{r:33,c:31},
+  J130:{r:33,c:32},
+  J131:{r:33,c:33},
+  J132:{r:33,c:34},
+  J133:{r:33,c:35},
+  J134:{r:33,c:36},
+  J135:{r:33,c:37},
+  J136:{r:33,c:38},
+  J137:{r:33,c:39},
+  J138:{r:33,c:40},
+  J139:{r:33,c:41},
+  J140:{r:33,c:42},
+  J141:{r:33,c:43},
+  J142:{r:33,c:44},
+  J143:{r:33,c:45},
+  J144:{r:33,c:46},
+  J145:{r:33,c:47},
+  J146:{r:33,c:48},
+  J147:{r:33,c:49},
+  J148:{r:33,c:50},
+  J149:{r:33,c:51},
+  J150:{r:33,c:52},
+  J151:{r:33,c:53},
+  J152:{r:33,c:54},
+  J153:{r:33,c:55},
+  J154:{r:33,c:56},
+  J155:{r:33,c:57},
+  J156:{r:33,c:58},
+  J157:{r:33,c:59},
+  J158:{r:33,c:60},
+  J159:{r:33,c:61},
+  J160:{r:33,c:62},
+  J161:{r:33,c:63},
+  J162:{r:33,c:64},
+  J163:{r:33,c:65},
+  J164:{r:33,c:66},
+  J165:{r:33,c:67},
+  J166:{r:33,c:68},
+  J167:{r:33,c:69},
+  J168:{r:33,c:70},
+  J169:{r:33,c:71},
+  J170:{r:33,c:72},
+  J171:{r:33,c:73},
+  J172:{r:33,c:74},
+  J173:{r:33,c:75},
+  J174:{r:33,c:76},
+  J175:{r:33,c:77},
+  J176:{r:33,c:78},
+  J177:{r:33,c:79},
+  J178:{r:33,c:80},
+  J179:{r:33,c:81},
+  J180:{r:33,c:82},
+  J181:{r:33,c:83},
+  J182:{r:33,c:84},
+  J183:{r:33,c:85},
+  J184:{r:33,c:86},
+  J185:{r:33,c:87},
+  J186:{r:33,c:88},
+  J187:{r:33,c:89},
+  J188:{r:33,c:90},
+  J189:{r:33,c:91},
+  J190:{r:33,c:92},
+  J191:{r:33,c:93},
+  J192:{r:33,c:94},
+  J193:{r:33,c:95},
+  J194:{r:33,c:96},
+  J195:{r:33,c:97},
+  J196:{r:33,c:98},
+  J197:{r:33,c:99},
+  J198:{r:33,c:100},
+  J199:{r:33,c:101},
+  J200:{r:33,c:102},
+  J201:{r:33,c:103},
+  J202:{r:33,c:104},
+  J203:{r:33,c:105},
+  J204:{r:33,c:106},
+  J205:{r:33,c:107},
+  J206:{r:33,c:108},
+  J207:{r:33,c:109},
+  J208:{r:33,c:110},
+  J209:{r:33,c:111},
+  J210:{r:33,c:112},
+  J211:{r:33,c:113},
+  J212:{r:33,c:114},
+  J213:{r:33,c:115},
+  J214:{r:33,c:116},
+  J215:{r:33,c:117},
+  J216:{r:33,c:118},
+  J217:{r:33,c:119},
+  J218:{r:33,c:120},
+  J219:{r:33,c:121},
+  J220:{r:33,c:122},
+  J221:{r:33,c:123},
+  J222:{r:33,c:124},
+  J223:{r:33,c:125},
+  J224:{r:33,c:126},
+  J225:{r:33,c:127},
+  J226:{r:33,c:128},
+  J227:{r:33,c:129},
+  J228:{r:33,c:130},
+  J229:{r:33,c:131},
+  J230:{r:33,c:132},
+  J231:{r:33,c:133},
+  J232:{r:33,c:134},
+  J233:{r:33,c:135},
+  J234:{r:33,c:136},
+  J235:{r:33,c:137},
+  J236:{r:33,c:138},
+  J237:{r:33,c:139},
+  J238:{r:33,c:140},
+  J239:{r:33,c:141},
+  J240:{r:33,c:142},
+  J241:{r:33,c:143},
+  J242:{r:33,c:144},
+  J243:{r:33,c:145},
+  J244:{r:33,c:146},
+  J245:{r:33,c:147},
+  J246:{r:33,c:148},
+  J247:{r:33,c:149},
+  J248:{r:33,c:150},
+  J249:{r:33,c:151},
+  J250:{r:33,c:152},
+  J251:{r:33,c:153},
+  J252:{r:33,c:154},
+  J253:{r:33,c:155},
+  J254:{r:33,c:156},
+  J255:{r:33,c:157},
+  J256:{r:33,c:158},
+  J257:{r:33,c:159},
+  J258:{r:33,c:160},
+  J259:{r:33,c:161},
+  J260:{r:33,c:162},
+  J261:{r:33,c:163},
+  J262:{r:33,c:164},
+  J263:{r:33,c:165},
+  J264:{r:33,c:166},
+  J265:{r:33,c:167},
+  J266:{r:33,c:168},
+  J267:{r:33,c:169},
+  J268:{r:33,c:170},
+  J269:{r:33,c:171},
+  J270:{r:33,c:172},
+  J271:{r:33,c:173},
+  J272:{r:33,c:174},
+  J273:{r:33,c:175},
+  J274:{r:33,c:176},
+  J275:{r:33,c:177},
+  J276:{r:33,c:178},
+  J277:{r:33,c:179},
+  J278:{r:33,c:180},
+  J279:{r:33,c:181},
+  J280:{r:33,c:182},
+  J281:{r:33,c:183},
+  J282:{r:33,c:184},
+  J283:{r:33,c:185},
+  J284:{r:33,c:186},
+  J285:{r:33,c:187},
+  J286:{r:33,c:188},
   LC1:{r:33,c:214},
   SVO:{r:33,c:216},
   LC2:{r:33,c:217},
   NWI:{r:33,c:219},
   GENWHS:{r:33,c:220},
   ARB:{r:33,c:221},
+  BDX:{r:34,c:132},
+  J287:{r:34,c:188},
   MJF:{r:34,c:214},
   SOF:{r:34,c:215},
   SDR:{r:34,c:216},
   KSU:{r:34,c:217},
   HFT:{r:34,c:219},
+  J288:{r:35,c:188},
   DA3:{r:35,c:215},
   DA1:{r:35,c:217},
   VFM:{r:35,c:218},
   NXS:{r:35,c:219},
-  NID:{r:36,c:215},
+  J289:{r:36,c:188},
   CHI:{r:36,c:219},
   ADM:{r:36,c:220},
   STB:{r:36,c:221},
+  J290:{r:37,c:188},
   DSF:{r:37,c:219},
   SIV:{r:37,c:220},
+  NID:{r:38,c:188},
   CDV:{r:38,c:219},
+  J291:{r:39,c:188},
   TRD:{r:39,c:219},
   VLH:{r:39,c:220},
 
+  J292:{r:40,c:188},
   DA2:{r:40,c:219},
+  J293:{r:41,c:188},
   MSY:{r:41,c:219},
+  J294:{r:42,c:188},
   STN:{r:42,c:219},
+  J295:{r:43,c:188},
   KVA:{r:43,c:219},
   PRN:{r:43,c:220},
+  J296:{r:44,c:188},
   WRO:{r:44,c:219},
+  J297:{r:45,c:188},
   AMS:{r:45,c:219},
+  J298:{r:46,c:188},
   BRI:{r:46,c:219},
-  LYG:{r:47,c:218},
+  LYG:{r:47,c:180},
+  J306:{r:47,c:181},
+  J305:{r:47,c:182},
+  J304:{r:47,c:183},
+  J303:{r:47,c:184},
+  J302:{r:47,c:185},
+  J301:{r:47,c:186},
+  J300:{r:47,c:187},
+  J299:{r:47,c:188},
   JRS:{r:47,c:219},
 
+  J307:{r:48,c:180},
   DNS:{r:48,c:219},
   TPR:{r:48,c:220},
   LEA:{r:48,c:221},
+  J308:{r:49,c:180},
   MME:{r:49,c:219},
+  J309:{r:50,c:180},
   MAN:{r:50,c:219},
+  J310:{r:51,c:180},
   STK:{r:51,c:218},
   DOH:{r:51,c:219},
   FSLINN:{r:51,c:220},
+  J311:{r:52,c:180},
   CAN:{r:52,c:217},
   GCI:{r:52,c:218},
   BRC:{r:52,c:220},
   ROT:{r:52,c:223},
+  J312:{r:53,c:180},
   SID:{r:53,c:218},
   LGR:{r:53,c:219},
   BTL:{r:53,c:221},
   DAN:{r:53,c:222},
   ULC:{r:53,c:223},
+  J313:{r:54,c:180},
   ATH:{r:54,c:219},
   SEN:{r:54,c:220},
   LGW:{r:54,c:221},
   PER:{r:54,c:222},
   RHD:{r:54,c:223},
+  J314:{r:55,c:180},
   HG1:{r:55,c:220},
   BOO:{r:55,c:221},
   NAP:{r:55,c:222},
   FAM:{r:55,c:223},
 
+  J315:{r:56,c:180},
   HN1:{r:56,c:221},
   LXF:{r:56,c:222},
   FLM:{r:56,c:223},
@@ -8835,295 +9923,365 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   TKT:{r:56,c:226},
   CHP:{r:56,c:227},
   BLW:{r:56,c:228},
+  J316:{r:57,c:180},
   CAF:{r:57,c:222},
   MCRJN:{r:57,c:223},
   SKN:{r:57,c:224},
+  J317:{r:58,c:180},
   INN:{r:58,c:223},
   SSJ:{r:58,c:224},
+  J318:{r:59,c:180},
   THK:{r:59,c:223},
-  VS:{r:59,c:224},
-  ODD:{r:60,c:223},
+  J319:{r:60,c:180},
+  J320:{r:60,c:181},
+  J321:{r:60,c:182},
+  J322:{r:60,c:183},
+  J323:{r:60,c:184},
+  J324:{r:60,c:185},
+  J325:{r:60,c:186},
+  J326:{r:60,c:187},
+  J327:{r:60,c:188},
+  J328:{r:60,c:189},
+  J329:{r:60,c:190},
+  ODD:{r:60,c:191},
+  J87:{r:60,c:192},
+  J88:{r:60,c:193},
+  J89:{r:60,c:194},
+  J90:{r:60,c:195},
+  J91:{r:60,c:196},
+  J92:{r:60,c:197},
+  J93:{r:60,c:198},
+  J94:{r:60,c:199},
+  J95:{r:60,c:200},
+  J96:{r:60,c:201},
+  J97:{r:60,c:202},
+  J98:{r:60,c:203},
+  J99:{r:60,c:204},
+  J100:{r:60,c:205},
+  J101:{r:60,c:206},
+  J102:{r:60,c:207},
+  J103:{r:60,c:208},
+  J104:{r:60,c:209},
+  J105:{r:60,c:210},
+  J106:{r:60,c:211},
+  J107:{r:60,c:212},
+  J108:{r:60,c:213},
+  J109:{r:60,c:214},
+  J110:{r:60,c:215},
+  J111:{r:60,c:216},
+  J112:{r:60,c:217},
+  J113:{r:60,c:218},
+  J114:{r:60,c:219},
+  J115:{r:60,c:220},
+  J116:{r:60,c:221},
+  J117:{r:60,c:222},
+  J118:{r:60,c:223},
   DAM:{r:60,c:224},
-  TWY:{r:60,c:225},
+  J119:{r:60,c:225},
+  PSA:{r:61,c:188},
+  VEN:{r:61,c:197},
+  ROM:{r:61,c:198},
   MGR:{r:61,c:223},
-  ISL:{r:61,c:224},
+  J120:{r:61,c:225},
   DBV:{r:62,c:224},
-  SIG:{r:63,c:221},
+  J121:{r:62,c:225},
+  SIG:{r:63,c:193},
   LYR:{r:63,c:222},
   BK:{r:63,c:224},
   BRW:{r:63,c:225},
 
+  J75:{r:64,c:220},
+  J74:{r:64,c:221},
   OBH:{r:64,c:222},
   SDQ:{r:64,c:223},
   LHR:{r:64,c:224},
   TUO:{r:64,c:225},
   AHB:{r:64,c:226},
+  J73:{r:64,c:227},
+  J72:{r:64,c:228},
   WM:{r:65,c:224},
+  J122:{r:65,c:225},
+  J71:{r:65,c:228},
   BOLSAC:{r:66,c:223},
   NUE:{r:66,c:224},
+  J70:{r:66,c:228},
   RVP:{r:67,c:221},
   IGH:{r:67,c:222},
   RON:{r:67,c:223},
-  CON:{r:67,c:224},
-  BEL:{r:67,c:225},
+  BEL:{r:67,c:224},
+  J69:{r:67,c:228},
   PRH:{r:68,c:220},
   ING:{r:68,c:221},
   KVF:{r:68,c:222},
   PRACRT:{r:68,c:223},
-  VEN:{r:68,c:224},
-  GHL:{r:68,c:225},
-  NRG:{r:68,c:226},
+  GHL:{r:68,c:224},
+  NRG:{r:68,c:227},
+  J68:{r:68,c:228},
   AST:{r:69,c:220},
   HVG:{r:69,c:221},
   PSAGLD:{r:69,c:222},
   EMR:{r:69,c:223},
-  ROM:{r:69,c:224},
+  J67:{r:69,c:228},
   FLR:{r:70,c:222},
-  PSA:{r:70,c:223},
-  TBZ:{r:70,c:224},
   LCY:{r:70,c:225},
+  J66:{r:70,c:228},
   WAW:{r:71,c:222},
-  HEO:{r:71,c:223},
-  TRB:{r:71,c:225},
+  J65:{r:71,c:228},
 
-  HAV:{r:72,c:224},
-  HKG:{r:72,c:225},
-  ANT:{r:73,c:225},
-  ALE:{r:74,c:225},
-  PMO:{r:75,c:222},
-  MCT:{r:75,c:223},
-  BDX:{r:75,c:224},
+  HAV:{r:72,c:222},
+  HKG:{r:72,c:227},
+  J64:{r:72,c:228},
+  PMO:{r:73,c:222},
+  J63:{r:73,c:228},
+  ALE:{r:74,c:227},
+  J62:{r:74,c:228},
   RAI:{r:75,c:225},
-  ERF:{r:76,c:224},
-  NIS:{r:76,c:225},
-  BLG:{r:77,c:224},
-  LON:{r:77,c:225},
-  TLS:{r:77,c:226},
-  KLZ:{r:77,c:227},
-  RKN:{r:78,c:224},
+  TLS:{r:75,c:226},
+  VS:{r:75,c:228},
+  MCT:{r:76,c:225},
+  ERF:{r:76,c:226},
+  RKN:{r:76,c:227},
+  CON:{r:76,c:228},
+  BLG:{r:77,c:227},
+  TBZ:{r:77,c:228},
   ZERO:{r:78,c:225},
   CNTR:{r:78,c:226},
   ZRH:{r:78,c:227},
+  ITH:{r:78,c:228},
   EHZ:{r:79,c:225},
   MONS:{r:79,c:226},
   CAI:{r:79,c:227},
+  TRB:{r:79,c:228},
 
-  DKN:{r:80,c:223},
-  BKK:{r:80,c:224},
   PDL:{r:80,c:225},
-  FRO:{r:80,c:226},
-  AOI:{r:80,c:227},
+  FRO:{r:80,c:227},
+  ANT:{r:80,c:228},
+  BKK:{r:81,c:226},
   VIE:{r:81,c:227},
-  IDC:{r:82,c:224},
-  BIS:{r:82,c:227},
-  CLK:{r:83,c:222},
-  BYR:{r:83,c:223},
-  STP:{r:83,c:224},
-  KIR:{r:83,c:227},
-  MDN:{r:84,c:223},
-  LHA:{r:84,c:224},
-  VENCTR:{r:84,c:225},
-  SJO:{r:84,c:226},
+  IDC:{r:81,c:228},
+  DKN:{r:82,c:226},
+  KIR:{r:82,c:227},
+  STP:{r:82,c:228},
+  BYR:{r:83,c:224},
+  VENCTR:{r:83,c:225},
+  CLK:{r:83,c:226},
+  LHA:{r:83,c:228},
+  MDN:{r:84,c:225},
   VBY:{r:84,c:227},
-  MGF:{r:85,c:223},
-  AEG:{r:85,c:224},
-  BLK:{r:85,c:226},
-  SIB:{r:85,c:227},
-  PKR:{r:86,c:224},
-  PSU:{r:86,c:225},
+  AEG:{r:84,c:228},
+  SJO:{r:84,c:229},
+  MGF:{r:85,c:227},
+  ASG:{r:85,c:228},
+  BLK:{r:85,c:229},
+  GLA:{r:86,c:113},
+  EDI:{r:86,c:119},
   GIB:{r:86,c:226},
-  BGD:{r:86,c:227},
-  EDI:{r:87,c:222},
-  ARD:{r:87,c:223},
-  GLA:{r:87,c:224},
-  CTU:{r:87,c:226},
-  HW1:{r:87,c:227},
+  PKR:{r:86,c:227},
+  CNA:{r:86,c:228},
+  PSU:{r:86,c:229},
+  NIS:{r:87,c:228},
+  ARD:{r:87,c:229},
 
-  AMD:{r:88,c:222},
-  SGA:{r:88,c:223},
-  ASG:{r:88,c:224},
-  NGM:{r:88,c:225},
-  PSAFAB:{r:88,c:226},
-  MRV:{r:88,c:227},
-  CNA:{r:89,c:224},
+  HEO:{r:88,c:195},
+  AMD:{r:88,c:226},
+  HW1:{r:88,c:227},
+  TRH:{r:88,c:228},
+  NGM:{r:88,c:229},
+  PSAFAB:{r:89,c:226},
   TBS:{r:89,c:227},
-  TIF:{r:90,c:224},
-  AVG:{r:90,c:227},
-  TRH:{r:91,c:224},
-  MRG:{r:91,c:227},
-  SAM:{r:92,c:227},
-  SZG:{r:93,c:227},
-  PSAFM:{r:94,c:226},
-  LIM:{r:94,c:227},
-  TRF:{r:95,c:226},
-  BOL:{r:95,c:227},
+  KRK:{r:89,c:228},
+  TIF:{r:90,c:225},
+  CTU:{r:90,c:226},
+  SGA:{r:90,c:227},
+  PAR:{r:90,c:228},
+  KLZ:{r:91,c:228},
+  PSAFM:{r:92,c:226},
+  SZG:{r:92,c:227},
+  JAR:{r:92,c:228},
+  ETZ:{r:93,c:228},
+  AOI:{r:94,c:228},
+  LIM:{r:95,c:227},
+  HLD:{r:95,c:228},
 
-  LRD:{r:96,c:226},
-  BRK:{r:96,c:227},
-  THA:{r:97,c:227},
-  SIT:{r:98,c:224},
-  BUR:{r:98,c:227},
-  HLD:{r:99,c:224},
-  YRK:{r:99,c:225},
-  NAS:{r:99,c:226},
-  MLA:{r:99,c:227},
-  CHY:{r:100,c:222},
+  TRF:{r:96,c:227},
+  AIX:{r:96,c:228},
+  LRD:{r:97,c:226},
+  BIS:{r:97,c:228},
+  NAS:{r:98,c:226},
+  MLA:{r:98,c:227},
+  SIT:{r:98,c:228},
+  YRK:{r:99,c:129},
+  KHR:{r:99,c:228},
   ADR:{r:100,c:223},
   SUL:{r:100,c:224},
   BAS:{r:100,c:225},
   SAR:{r:100,c:226},
-  MYS:{r:100,c:227},
-  FZN:{r:101,c:220},
+  CHY:{r:100,c:227},
+  SIB:{r:100,c:228},
+  ZTH:{r:100,c:229},
   ANK:{r:101,c:221},
-  MGL:{r:101,c:222},
+  FZN:{r:101,c:223},
   THE:{r:101,c:224},
-  ZTH:{r:101,c:226},
-  BGI:{r:101,c:227},
+  PHC:{r:101,c:228},
+  BGI:{r:101,c:229},
   HAM:{r:102,c:220},
   TLL:{r:102,c:227},
-  GWN:{r:103,c:220},
-  ERZ:{r:103,c:226},
-  BOR:{r:103,c:227},
+  BGD:{r:102,c:228},
+  ERZ:{r:103,c:227},
+  JUR:{r:103,c:228},
+  BOR:{r:103,c:229},
 
-  SHF:{r:104,c:220},
-  PYR:{r:104,c:225},
-  AIX:{r:104,c:226},
-  BMA:{r:104,c:227},
-  KHR:{r:105,c:226},
-  FRK:{r:105,c:227},
-  LBC:{r:106,c:226},
-  BNX:{r:106,c:227},
-  BDA:{r:107,c:227},
-  DUS:{r:108,c:226},
-  LLA:{r:108,c:227},
-  FCO:{r:109,c:227},
-  WRM:{r:110,c:224},
-  ALF:{r:110,c:226},
-  KRN:{r:110,c:227},
-  HFD:{r:111,c:222},
-  LGE:{r:111,c:223},
-  BGZ:{r:111,c:224},
-  SAU:{r:111,c:227},
+  J86:{r:104,c:114},
+  GWN:{r:104,c:115},
+  MGL:{r:104,c:116},
+  J85:{r:104,c:117},
+  MRV:{r:104,c:228},
+  BMA:{r:104,c:229},
+  J84:{r:105,c:117},
+  PYR:{r:105,c:227},
+  LLM:{r:105,c:228},
+  J83:{r:106,c:117},
+  SHF:{r:106,c:129},
+  TL:{r:106,c:228},
+  J82:{r:107,c:117},
+  LBC:{r:107,c:225},
+  DUS:{r:107,c:226},
+  BNX:{r:107,c:227},
+  ALR:{r:107,c:228},
+  J81:{r:108,c:117},
+  ABF:{r:108,c:228},
+  LLA:{r:108,c:229},
+  J80:{r:109,c:117},
+  SWF:{r:109,c:228},
+  FCO:{r:109,c:229},
+  J79:{r:110,c:117},
+  WOR:{r:110,c:228},
+  KRN:{r:110,c:229},
+  J78:{r:111,c:117},
+  HFD:{r:111,c:121},
+  BGZ:{r:111,c:225},
+  ALF:{r:111,c:226},
+  WRM:{r:111,c:227},
+  AVG:{r:111,c:228},
 
-  HVY:{r:112,c:223},
-  BAG:{r:112,c:224},
+  J77:{r:112,c:117},
+  HVY:{r:112,c:120},
   FEZ:{r:112,c:225},
-  PRAAPR:{r:112,c:226},
-  MTP:{r:112,c:227},
-  JUR:{r:113,c:224},
-  SRL:{r:113,c:227},
-  ADN:{r:114,c:222},
+  PRAAPR:{r:112,c:227},
+  MRG:{r:112,c:228},
+  J76:{r:113,c:117},
+  LGE:{r:113,c:223},
+  BAG:{r:113,c:224},
+  HNJ:{r:113,c:228},
+  TWY:{r:114,c:117},
+  ADN:{r:114,c:223},
   MOS:{r:114,c:224},
-  SIN:{r:114,c:227},
-  HKL:{r:115,c:219},
-  ASH:{r:115,c:220},
-  LDN:{r:115,c:221},
-  TL:{r:115,c:222},
+  RKV:{r:114,c:227},
+  BWH:{r:114,c:228},
+  LON:{r:115,c:133},
+  LDN:{r:115,c:134},
+  BRK:{r:115,c:135},
   RGS:{r:115,c:223},
   TOL:{r:115,c:224},
-  GNJ:{r:115,c:227},
-  MSE:{r:116,c:221},
-  HNJ:{r:116,c:222},
-  LLM:{r:116,c:224},
+  HKL:{r:115,c:225},
+  ASH:{r:115,c:226},
+  BRT:{r:115,c:227},
+  GEA:{r:115,c:228},
+  MSE:{r:116,c:140},
   BHD:{r:116,c:226},
-  RKV:{r:116,c:227},
-  BRT:{r:117,c:222},
-  HAJ:{r:117,c:227},
-  ACT:{r:118,c:221},
-  KOL:{r:118,c:222},
-  ALR:{r:118,c:226},
-  CONREG:{r:118,c:227},
-  MGZ:{r:119,c:221},
-  REG:{r:119,c:227},
+  BOL:{r:116,c:228},
+  THA:{r:117,c:228},
+  HAJ:{r:117,c:229},
+  BUR:{r:118,c:228},
+  CONREG:{r:118,c:229},
+  MGZ:{r:119,c:226},
+  KOL:{r:119,c:227},
+  OLN:{r:119,c:228},
 
   NIC:{r:120,c:226},
   ACE:{r:120,c:227},
-  ABF:{r:121,c:226},
+  RHN:{r:120,c:228},
+  ACT:{r:121,c:111},
   IST:{r:121,c:227},
-  SWF:{r:122,c:226},
-  VAW:{r:122,c:227},
-  TVO:{r:123,c:224},
+  RNG:{r:121,c:228},
+  MYS:{r:122,c:228},
+  VAW:{r:122,c:229},
   INV:{r:123,c:227},
-  STR:{r:124,c:224},
-  KVM:{r:124,c:225},
-  GDN:{r:124,c:226},
-  FRZINN:{r:124,c:227},
-  KRK:{r:124,c:228},
-  AUG:{r:125,c:224},
-  MHQ:{r:125,c:227},
-  FRRFRY:{r:126,c:227},
-  WOR:{r:127,c:226},
+  OKD:{r:123,c:228},
+  TVO:{r:123,c:229},
+  STR:{r:124,c:227},
+  VLN:{r:124,c:228},
+  KVM:{r:124,c:229},
+  GDN:{r:124,c:230},
+  AUG:{r:125,c:227},
+  RSS:{r:125,c:228},
+  FRZINN:{r:125,c:229},
+  ECF:{r:126,c:228},
+  MHQ:{r:126,c:229},
   BEG:{r:127,c:227},
+  CAM:{r:127,c:228},
 
-  OKD:{r:128,c:225},
-  RHN:{r:128,c:226},
-  BAR:{r:128,c:227},
-  BWH:{r:129,c:226},
-  OST:{r:129,c:227},
-  FRR:{r:130,c:227},
+  FRRFRY:{r:128,c:227},
+  TUN:{r:128,c:228},
+  GLN:{r:129,c:228},
+  OST:{r:130,c:227},
+  BDA:{r:130,c:228},
   CDN:{r:131,c:225},
   J13:{r:131,c:226},
-  LMO:{r:131,c:227},
-  GEA:{r:132,c:225},
-  WG0:{r:132,c:226},
-  VAR:{r:132,c:227},
-  GLN:{r:133,c:225},
-  ORC:{r:133,c:227},
-  MAR:{r:134,c:227},
+  REG:{r:131,c:227},
+  LKS:{r:131,c:228},
+  FRK:{r:132,c:146},
+  WG0:{r:132,c:227},
+  BTH:{r:132,c:228},
+  FRS:{r:133,c:228},
+  GLD:{r:134,c:228},
   YAZ:{r:135,c:226},
-  BTR:{r:135,c:227},
+  SFT:{r:135,c:227},
+  REL:{r:135,c:228},
 
   GEO:{r:136,c:226},
-  SFT:{r:136,c:227},
+  SAU:{r:136,c:228},
   GHC:{r:137,c:226},
   GOT:{r:137,c:227},
+  SAL:{r:137,c:228},
   VLC:{r:138,c:226},
-  HOR:{r:138,c:227},
-  TAN:{r:139,c:225},
-  PRA:{r:139,c:226},
+  MTP:{r:138,c:228},
+  HOR:{r:138,c:229},
+  TAN:{r:139,c:226},
   RIX:{r:139,c:227},
-  RNG:{r:140,c:226},
+  SRL:{r:139,c:228},
   MOL:{r:140,c:227},
-  BUK:{r:141,c:226},
-  EGE:{r:141,c:227},
-  PIS:{r:141,c:228},
-  VLN:{r:142,c:226},
-  ITH:{r:142,c:228},
-  ETZ:{r:142,c:229},
-  EMT:{r:143,c:226},
-  MLN:{r:143,c:228},
+  SIN:{r:140,c:228},
+  BUK:{r:141,c:227},
+  ALB:{r:141,c:228},
+  EGE:{r:142,c:227},
+  GNJ:{r:142,c:228},
+  EMT:{r:143,c:228},
 
-  ALP:{r:144,c:228},
-  RSS:{r:145,c:227},
-  PAR:{r:145,c:228},
-  ECF:{r:146,c:227},
-  JAR:{r:146,c:228},
-  CAM:{r:147,c:227},
-  CVP:{r:147,c:228},
-  PHC:{r:148,c:228},
-  OLN:{r:149,c:228},
-  TUN:{r:150,c:228},
-  LKS:{r:151,c:228},
+  MBR:{r:144,c:228},
+  DAR:{r:145,c:228},
+  PRT:{r:146,c:228},
+  CI:{r:147,c:228},
+  CHC:{r:148,c:228},
+  DNG:{r:149,c:228},
+  FRR:{r:150,c:227},
+  BAR:{r:150,c:228},
+  LMO:{r:150,c:229},
+  MAR:{r:151,c:227},
+  VAR:{r:151,c:229},
 
-  BTH:{r:152,c:228},
-  MBR:{r:153,c:227},
+  ORC:{r:152,c:229},
   AMY:{r:153,c:228},
-  FRS:{r:154,c:228},
-  PHY:{r:155,c:227},
-  GLD:{r:155,c:228},
-  REL:{r:156,c:228},
-  SAL:{r:157,c:228},
-  ALB:{r:158,c:228},
-  DAR:{r:159,c:228},
+  MSN:{r:153,c:229},
+  VRG:{r:154,c:229},
+  PHY:{r:155,c:228},
+  BTR:{r:155,c:229},
+  PRA:{r:156,c:229},
+  PIS:{r:157,c:229},
+  MLN:{r:158,c:229},
+  JER:{r:159,c:229},
 
-  JER:{r:160,c:228},
-  PRT:{r:161,c:228},
-  SIS:{r:162,c:228},
-  CI:{r:163,c:228},
-  CHC:{r:164,c:228},
-  DNG:{r:165,c:228},
-  MSN:{r:166,c:228},
-  VRG:{r:167,c:228},
+  SIS:{r:160,c:229},
 
   J55:{r:168,c:228},
   J54:{r:169,c:228},
@@ -9153,12 +10311,14 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   J32:{r:191,c:228},
 
   J31:{r:192,c:228},
+  SAM:{r:192,c:474},
   J30:{r:193,c:228},
   J29:{r:194,c:228},
   J28:{r:195,c:228},
   J27:{r:196,c:228},
   J21:{r:197,c:225},
   J26:{r:197,c:228},
+  CVP:{r:198,c:89},
   J14:{r:198,c:220},
   J15:{r:198,c:221},
   J16:{r:198,c:222},
@@ -9170,6 +10330,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   J18:{r:199,c:223},
   J19:{r:199,c:224},
   J20:{r:199,c:225},
+
+  ALP:{r:214,c:323},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -21774,6 +22936,9 @@ function switchSheet(id) {
   document.querySelectorAll('#story-center .story-sheet').forEach(s => s.classList.remove('active'));
   const el = document.getElementById(id);
   if (el) el.classList.add('active');
+  document.querySelectorAll('#story-sheet-tab-bar .sheet-tab').forEach(t => {
+    t.classList.toggle('st-active', t.dataset.sheet === id);
+  });
 }
 
 function storyVendorToggle() {
@@ -21857,7 +23022,7 @@ function _renderPachelbelSpecials() {
       sBtn.className = 'vendor-buy-btn';
       sBtn.textContent = 'Buy';
       sBtn.addEventListener('click', () => {
-        if (S_story.gold < si.cost) { storyMsg('Not enough gold.'); return; }
+        if (S_story.gold < si.cost) { storyBlock('Not enough gold.'); return; }
         S_story.gold -= si.cost;
         S_story[si.flagBought] = true;
         S_story.inventory.push({name:si.name,icon:si.icon,type:'misc',sell:si.sell,desc:si.desc});
@@ -21889,7 +23054,7 @@ function _renderPachelbelSpecials() {
       btn.className = 'vendor-buy-btn';
       btn.textContent = 'Buy';
       btn.addEventListener('click', () => {
-        if (S_story.gold < 50) { storyMsg('Not enough gold.'); return; }
+        if (S_story.gold < 50) { storyBlock('Not enough gold.'); return; }
         S_story.gold -= 50;
         S_story.inventory.push({name:"Raison's Tools",icon:'🔧',type:'key_item',sell:0,
           desc:"A certified salvager's toolkit. Identifies and documents item provenance. No questions asked about how you found things."});
@@ -21920,7 +23085,7 @@ function _renderPachelbelSpecials() {
     btn2.className = 'vendor-buy-btn';
     btn2.textContent = 'Buy';
     btn2.addEventListener('click', () => {
-      if (S_story.gold < noqItem.cost) { storyMsg('Not enough gold.'); return; }
+      if (S_story.gold < noqItem.cost) { storyBlock('Not enough gold.'); return; }
       S_story.gold -= noqItem.cost;
       S_story.inventory.push({name:noqItem.name,icon:noqItem.icon,type:'misc',sell:noqItem.sell,desc:noqItem.desc});
       storyUpdateStatus();
@@ -21958,7 +23123,7 @@ function storySellEquipment() {
     (i.type === 'mainweapon' || i.type === 'weapon' || i.type === 'shield') &&
     i.sell > 0 && !equippedTiers.has(i.tier) && !_isLastWeapon(i)
   );
-  if (!sellable.length) { storyMsg('⚔ No unequipped gear to sell.'); return; }
+  if (!sellable.length) { storyBlock('⚔ No unequipped gear to sell.'); return; }
   const total = sellable.reduce((s, i) => s + i.sell, 0);
   const sellSet = new Set(sellable);
   S_story.inventory = S_story.inventory.filter(i => !sellSet.has(i));
@@ -21979,7 +23144,7 @@ const POTION_TIERS = { // → doc: mechanics-economy.md §Vendor System
 function storyBuyPotion(tier) {
   const p = POTION_TIERS[tier];
   if (!p) return;
-  if (S_story.gold < p.cost) { storyMsg('💰 Not enough gold. ' + p.name + ' costs ' + p.cost + 'gp.'); return; }
+  if (S_story.gold < p.cost) { storyBlock('💰 Not enough gold. ' + p.name + ' costs ' + p.cost + 'gp.'); return; }
   S_story.gold -= p.cost;
   const itemType = (tier === 'transmort') ? 'item' : 'potion';
   S_story.inventory.push({ name:p.name, icon:p.icon, type:itemType, code:'vendor', sell:0 });
@@ -21995,8 +23160,8 @@ function storyBuyShield(tier) {
   const s = SHIELD_ITEMS.find(sh => sh.tier === tier);
   if (!s) return;
   const lv = S_story.level || 1;
-  if (lv < (s.minLevel || 1)) { storyMsg('🔒 ' + s.name + ' requires Level ' + s.minLevel + '.'); return; }
-  if (S_story.gold < s.cost) { storyMsg('💰 Not enough gold. ' + s.name + ' costs ' + s.cost + 'gp.'); return; }
+  if (lv < (s.minLevel || 1)) { storyBlock('🔒 ' + s.name + ' requires Level ' + s.minLevel + '.'); return; }
+  if (S_story.gold < s.cost) { storyBlock('💰 Not enough gold. ' + s.name + ' costs ' + s.cost + 'gp.'); return; }
   S_story.gold -= s.cost;
   S_story.inventory.push({ ...s, code:'vendor' });
   storyUpdateStatus();
@@ -22036,7 +23201,7 @@ function _renderVendorShields() {
 function storyBuyFlashbang() {
   const f = COMBAT_ITEMS.find(i => i.type === 'flashbang');
   if (!f) return;
-  if (S_story.gold < f.cost) { storyMsg('💰 Not enough gold. Flashbang costs ' + f.cost + 'gp.'); return; }
+  if (S_story.gold < f.cost) { storyBlock('💰 Not enough gold. Flashbang costs ' + f.cost + 'gp.'); return; }
   S_story.gold -= f.cost;
   S_story.inventory.push({ ...f, code:'vendor' });
   storyUpdateStatus();
@@ -22045,7 +23210,7 @@ function storyBuyFlashbang() {
 }
 
 function storyBuyWhiskey() {
-  if (S_story.gold < 5) { storyMsg('💰 Not enough gold. Rough Whiskey costs 5gp.'); return; }
+  if (S_story.gold < 5) { storyBlock('💰 Not enough gold. Rough Whiskey costs 5gp.'); return; }
   S_story.gold -= 5;
   S_story.inventory.push({name:'Rough Whiskey',icon:'🥃',type:'consumable_misc',sell:2});
   storyUpdateStatus();
@@ -23359,7 +24524,7 @@ function storyShortRest(nodeCode) {
       const dest = NODE_MAP[bestCode];
       storyMsg('😴 No short rests left. Waypoint set → ' + dest.label + ' (' + bestLen + ' hop' + (bestLen !== 1 ? 's' : '') + '). Sleep there to restore full HP and reset rests.');
     } else {
-      storyMsg('😴 No short rests remaining today. Find an inn to sleep.');
+      storyBlock('😴 No short rests remaining today. Find an inn to sleep.');
     }
     return;
   }
@@ -23567,9 +24732,9 @@ function storySetHearthHome(nodeCode) {
 
 function storyUseTransmort() {
   const home = NODE_MAP[S_story.hearthHome];
-  if (!home) { storyMsg('No Hearth Home set. Talk to an innkeeper first.'); return; }
+  if (!home) { storyBlock('No Hearth Home set. Talk to an innkeeper first.'); return; }
   const idx = S_story.inventory.findIndex(i => i.name === 'Transmort Scroll');
-  if (idx < 0) { storyMsg('No Transmort Scroll in inventory.'); return; }
+  if (idx < 0) { storyBlock('No Transmort Scroll in inventory.'); return; }
   S_story.inventory.splice(idx, 1);
   S_story.log.push(S_story.currentCode);
   S_story.currentCode = S_story.hearthHome;
@@ -25704,96 +26869,18 @@ function storyCheckVictory(node) {
 function cellMove(dir) {
   const DELTAS = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
   const [dr, dc] = DELTAS[dir];
-  const nr = (S_story.playerR || 0) + dr;
-  const nc = (S_story.playerC || 0) + dc;
+  const pr = (S_story.playerR || 0), pc = (S_story.playerC || 0);
 
-  if (nr < 1 || nc < 1 || nr > 500 || nc > 500) {
-    storyMsg('You reach the edge of the known world.'); return;
-  }
-  if (IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
-    storyMsg('The sea is impassable on foot.'); return;
+  // Scan forward for first non-junction named node (multi-step traversal removed;
+  // junction nodes are grid infrastructure and are skipped transparently)
+  let nr = pr + dr, nc = pc + dc, destCode = null;
+  while (nr >= 1 && nc >= 1 && nr <= 500 && nc <= 500 && !IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
+    const code = CELL_GRID[`${nr},${nc}`];
+    if (code && NODE_MAP[code] && !NODE_MAP[code].junction) { destCode = code; break; }
+    nr += dr; nc += dc;
   }
 
-  const destCode = CELL_GRID[`${nr},${nc}`];
-
-  // Gate-lock checks
-  if (destCode === 'TLS' && S_story.shards < 7) {
-    const _urgency = (S_story.voidPressure || 0) >= 9 ? '\n\n⚠️ The Void is one day away.' : '';
-    storyMsg('🔮 The Convergence is sealed. You need all 7 Codex Shards. You have ' + S_story.shards + '/7.' + _urgency);
-    return;
-  }
-  // §LIX–§LX: KS two-stage gate — blind days, then magistrate detention
-  if (S_story.currentCode === 'DAM' && S_story.saulConverted) {
-    if (!S_story.anathSightRestored) {
-      S_story.blindDaysKS = (S_story.blindDaysKS || 0) + 1;
-      const _ksDay = S_story.blindDaysKS;
-      if (_ksDay >= 3) {
-        storyMsg('Day three. You hear a knock at the door.\n\nSpeak to Anath before leaving Damascus.');
-      } else {
-        storyMsg('You cannot navigate the road without sight. You wait in the house on the lower road.\n\nDay ' + _ksDay + '. Tomorrow may be different.');
-      }
-      storyRender(NODE_MAP[S_story.currentCode]);
-      return;
-    }
-    if (!S_story.escapedDamascus) {
-      storyMsg('The city watch is at the gate. The magistrate of Damascus has issued a detention order — the warrant authority has turned against the warrant-carrier.\n\nThe gate is watched. The wall is not. Check your active quests.');
-      return;
-    }
-  }
-  // §LXIII: AO→CI2 gate — commission required before first journey departs
-  if (S_story.currentCode === 'HTY' && destCode === 'CI2' && !S_story.commissionReceived) {
-    storyMsg('The journey has not yet been commissioned. Speak to Assembly Elder Joach before leaving Antioch.');
-    return;
-  }
-  // §LXI: HR→TS gate — fifteen days before Barnach releases you
-  if (S_story.currentCode === 'JRS' && destCode === 'ADA' && S_story.saulConverted) {
-    if (!S_story.barnachVouchedHR) {
-      storyMsg('You have not yet been vouched for. Find Barnach in Jerusalem first.');
-      return;
-    }
-    if (!S_story.hellenistsThreaten) {
-      S_story.hrHellenistDays = (S_story.hrHellenistDays || 0) + 1;
-      const _hrDay = S_story.hrHellenistDays;
-      if (_hrDay >= 15) {
-        S_story.hellenistsThreaten = true;
-        storyMsg('The Hellenists are at the gate. At the assembly hall. In the square. Fifteen days is how long this city was prepared to hold the tension.\n\nBarnach says: go. The road west leads to Tarsus.');
-        storyRender(NODE_MAP[S_story.currentCode]);
-      } else {
-        storyMsg('Day ' + _hrDay + ' of fifteen. You speak in the assembly halls. You argue. The city watches. Barnach watches the city.');
-      }
-      return;
-    }
-  }
-  // §LXXII: SQ → CAN gate — Tide Gate must be opened first
-  if (S_story.currentCode === 'NUE' && destCode === 'CAN' && !S_story.tideGateOpened) {
-    storyMsg('The door to the west annex is sealed. The monitoring protocol has not yet activated.');
-    return;
-  }
-  // §LXX: HCA → DS0 gate — Leviathan must be defeated first
-  if (S_story.currentCode === 'HCA' && destCode === 'DS0' && !((S_story.defeatedBattles||{})['HCA_BOSS'])) {
-    storyMsg('The path south does not open until the Clearing is settled. The Leviathan holds the threshold.');
-    return;
-  }
-  // §PORT-02: HL → DF gate — kelpie must be cleared before Dunfall ford opens
-  if (S_story.currentCode === 'KIR' && destCode === 'ZRH' && !((S_story.defeatedBattles||{})['KIR'])) {
-    storyMsg('The ford west of the standing stones is still closed. Clear the kelpie first — the village has its doors barred while the loch is held.');
-    return;
-  }
-  // §HUNT-02: J1 → BN gate — relay warning must be received before going north
-  if (S_story.currentCode === 'WRO' && destCode === 'BNX' && !S_story.huntHook2Received) {
-    storyMsg('The relay road goes north from here. The eastern bend is two hundred paces up. There\'s something worth knowing before you go that way.');
-    return;
-  }
-  // §HUNT-01: LN → LD gate — tracks must be read before the den is accessible
-  if (S_story.currentCode === 'ALF' && destCode === 'VAW' && !S_story.lakeLairLocated) {
-    storyMsg('The shelf collapse is north of here. The path is disturbed — something has been moving through. Read the tracks before going further.');
-    return;
-  }
-  // §LXXIII: DA2 → DA3 gate — Tide Gate must be open to descend
-  if (S_story.currentCode === 'DA2' && destCode === 'DA3' && !S_story.tideGateOpened) {
-    storyMsg('The arch is sealed. Open the Gate mechanism before descending.');
-    return;
-  }
+  if (!destCode) { storyBlock('No path leads that way.'); return; }
 
   storyCheckMissedSleep();
   S_story.log.push(S_story.currentCode);
@@ -25805,15 +26892,11 @@ function cellMove(dir) {
   S_story.hoursElapsed    = (S_story.hoursElapsed || 0) + 1;
   S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
 
-  if (destCode && NODE_MAP[destCode]) {
-    const _farewell = _getFarewell(S_story.currentCode, destCode);
-    _pendingFarewell = _farewell || null;
-    _setActivePath(S_story.currentCode, destCode, dir);
-    S_story.currentCode = destCode;
-    storyRender(NODE_MAP[destCode]);
-  } else {
-    _enterEmptyCell(nr, nc);
-  }
+  const _farewell = _getFarewell(S_story.currentCode, destCode);
+  _pendingFarewell = _farewell || null;
+  _setActivePath(S_story.currentCode, destCode, dir);
+  S_story.currentCode = destCode;
+  storyRender(NODE_MAP[destCode]);
 }
 
 // §CELL-04: infer terrain for an unnamed cell by majority vote of named neighbors
@@ -25884,7 +26967,19 @@ function storyPortal() {
 }
 
 function storyMsg(txt) {
-  document.getElementById('story-move-msg').textContent = txt;
+  const el = document.getElementById('story-move-msg');
+  el.textContent = txt;
+  el.classList.remove('msg-block', 'msg-shake');
+}
+function storyBlock(txt) {
+  const el = document.getElementById('story-move-msg');
+  el.textContent = txt;
+  el.classList.remove('msg-shake');
+  el.classList.add('msg-block');
+  void el.offsetWidth;
+  el.classList.add('msg-shake');
+  clearTimeout(el._bt);
+  el._bt = setTimeout(() => el.classList.remove('msg-block', 'msg-shake'), 3000);
 }
 
 function _rollKeyEvent(id) {
@@ -26725,6 +27820,8 @@ function storyUpdateJournalCount() {
   const read = S_story.journalEntriesRead || [];
   const el = document.getElementById('s-journal-count');
   if (el) el.textContent = read.length > 0 ? read.length + '/17' : '';
+  const badge = document.getElementById('stab-journal-badge');
+  if (badge) { badge.textContent = read.length; badge.classList.toggle('show', read.length > 0); }
 }
 
 function storyQuestToggle() {
@@ -26766,6 +27863,8 @@ function storyRenderQuests() {
   const done   = Object.keys(S_story.quests).filter(id => S_story.quests[id] === 'complete');
   const countEl = document.getElementById('s-quest-count');
   if (countEl) countEl.textContent = active.length ? '(' + active.length + ')' : '';
+  const qBadge = document.getElementById('stab-quest-badge');
+  if (qBadge) { qBadge.textContent = active.length || ''; qBadge.classList.toggle('show', active.length > 0); }
   const hasCorpses = S_story.corpsesQuests && S_story.corpsesQuests.length > 0;
   const customWp = S_story.customQuestTerrain ? {
     terrain: S_story.customQuestTerrain,
@@ -28020,7 +29119,7 @@ function storyRender(node, prefix) {
         _buyBtn.className = 'inv-use-btn';
         _buyBtn.textContent = _coApp.itemLabel;
         _buyBtn.addEventListener('click', () => {
-          if ((S_story.gold || 0) < itemDef.price) { storyMsg('💰 Not enough gold.'); return; }
+          if ((S_story.gold || 0) < itemDef.price) { storyBlock('💰 Not enough gold.'); return; }
           S_story.gold -= itemDef.price;
           S_story.inventory = S_story.inventory || [];
           S_story.inventory.push({ ...itemDef });
@@ -28460,7 +29559,7 @@ function storyRender(node, prefix) {
           buyBtn.style.cssText = 'white-space:nowrap;font-size:10px;padding:3px 8px;';
           buyBtn.textContent = 'Buy';
           buyBtn.addEventListener('click', () => {
-            if (S_story.gold < stock.price) { storyMsg('💰 Not enough gold.'); return; }
+            if (S_story.gold < stock.price) { storyBlock('💰 Not enough gold.'); return; }
             S_story.gold -= stock.price;
             const item = stock.makeItem();
             const ei = item.type === 'bait' ? (S_story.inventory||[]).findIndex(i => i.name === item.name && i.type === 'bait') : -1;
@@ -28826,7 +29925,7 @@ function storyRender(node, prefix) {
             mBtn.textContent = '🔧 ' + task.label + (task.cost_gold > 0 ? ' (' + task.cost_gold + 'g)' : '');
             mBtn.addEventListener('click', () => {
               if (task.cost_gold > 0 && S_story.gold < task.cost_gold) {
-                storyMsg('Not enough gold.'); return;
+                storyBlock('Not enough gold.'); return;
               }
               if (task.cost_gold > 0) { S_story.gold -= task.cost_gold; storyUpdateStatus(); }
               task.action();
@@ -29661,7 +30760,7 @@ function storyRender(node, prefix) {
               helpBtn.textContent = '[Help — 10gp]';
               helpBtn.style.cssText = 'margin-top:4px;';
               helpBtn.addEventListener('click', () => {
-                if ((S_story.gold || 0) < 10) { storyMsg('Not enough gold.'); return; }
+                if ((S_story.gold || 0) < 10) { storyBlock('Not enough gold.'); return; }
                 S_story.gold -= 10;
                 storyMsg(vig.help);
                 helpBtn.remove();
@@ -30505,11 +31604,7 @@ function storyRender(node, prefix) {
     });
     row.appendChild(vb);
   }
-  // D-pad directions — always enabled; CELL_GRID adjacency checked at move time
-  ['N','S','E','W'].forEach(d => {
-    const btn = document.getElementById('btn-' + d);
-    if (btn) btn.disabled = false;
-  });
+  // D-pad directions — disabled state set by _updateExitLinks() below
   // D-pad corner buttons
   document.getElementById('btn-dpad-npc').disabled  = !(node.npc && NPC_DIALOGUE[node.code]);
   document.getElementById('btn-dpad-rest').disabled = false;  // always clickable (0 rests → shows auto-quest)
@@ -31825,6 +32920,8 @@ function storyUpdateStatus() {
   const activeQ = Object.values(S_story.quests).filter(s => s === 'active').length;
   const qc = document.getElementById('s-quest-count');
   qc.textContent = activeQ ? '(' + activeQ + ')' : '';
+  const qb = document.getElementById('stab-quest-badge');
+  if (qb) { qb.textContent = activeQ || ''; qb.classList.toggle('show', activeQ > 0); }
   const cpNode = NODE_MAP[S_story.checkpointNode];
   document.getElementById('s-checkpoint').textContent = cpNode ? cpNode.label.split(' — ')[0] : 'Start';
   const lvEl = document.getElementById('s-level');
@@ -31920,6 +33017,13 @@ function storyConfirmSleep() {
   S_story.day = Math.min(49, S_story.day + 1);
   S_story.gameDay = (S_story.gameDay || 0) + 1;
   _checkWorldProgressionEvents();
+  // Narrative wait counters — sleep-based triggers (gates removed)
+  if (nodeCode === 'DAM' && S_story.saulConverted && !S_story.anathSightRestored)
+    S_story.blindDaysKS = (S_story.blindDaysKS || 0) + 1;
+  if (nodeCode === 'JRS' && S_story.saulConverted && S_story.barnachVouchedHR && !S_story.hellenistsThreaten) {
+    S_story.hrHellenistDays = (S_story.hrHellenistDays || 0) + 1;
+    if (S_story.hrHellenistDays >= 15) S_story.hellenistsThreaten = true;
+  }
   // Record sleep
   S_story.sleptAtNodes[nodeCode] = true;
   _statTally('sleeps', 1);
@@ -32183,7 +33287,7 @@ function storyCommitBattle() {
   // Gold-cost condition deduction (no longer consumes inventory items)
   const condCost = _selectedCondsTotalCost();
   if (condCost > S_story.gold) {
-    storyMsg('💰 Not enough gold for selected conditions (' + condCost + 'gp needed).');
+    storyBlock('💰 Not enough gold for selected conditions (' + condCost + 'gp needed).');
     return;
   }
   if (condCost > 0) S_story.gold -= condCost;
@@ -32551,40 +33655,36 @@ function _updateExitLinks() {
     const btn = document.getElementById('btn-' + d);
     if (btn) btn.classList.toggle('dpad-wp', d === wpDir);
   });
-  // Cardinal exits derived from CELL_GRID (§CELL-06)
+  // Cardinal exits: scan forward skipping junctions, show first named non-junction node
   ['N','S','E','W'].forEach(d => {
-    const el = document.getElementById('exit-' + d);
+    const el  = document.getElementById('exit-' + d);
+    const btn = document.getElementById('btn-' + d);
     if (!el) return;
     const [dr, dc] = DELTAS[d];
-    const nr = pr + dr, nc = pc + dc;
-    const inBounds = nr >= 1 && nc >= 1 && nr <= 300 && nc <= 300;
-    if (!inBounds || IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
+    let nr = pr + dr, nc = pc + dc, destCode = null;
+    while (nr >= 1 && nc >= 1 && nr <= 500 && nc <= 500 && !IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
+      const code = CELL_GRID[`${nr},${nc}`];
+      if (code && NODE_MAP[code] && !NODE_MAP[code].junction) { destCode = code; break; }
+      nr += dr; nc += dc;
+    }
+    if (btn) btn.disabled = !destCode;
+    if (!destCode) {
       el.className = 'exit-line';
       el.removeAttribute('onclick');
       el.innerHTML = '<span class="exit-none">— (none)</span>';
       return;
     }
-    const destCode = CELL_GRID[`${nr},${nc}`];
+    const dest = NODE_MAP[destCode];
     const isWp = (d === wpDir);
-    if (destCode && NODE_MAP[destCode]) {
-      const dest = NODE_MAP[destCode];
-      const num  = String(dest.num).padStart(2,'0');
-      const terrain = _terrainLabel(dest.name);
-      el.className = 'exit-line exit-active' + (isWp ? ' exit-waypoint' : '');
-      el.setAttribute('onclick', "cellMove('" + d + "')");
-      el.innerHTML = '<span class="exit-arrow">' + ARROWS[d] + '</span> '
-        + '<span class="exit-num">' + num + '</span>'
-        + ' <a>' + dest.label + '</a>'
-        + (isWp ? '<span class="exit-wp-tag">▶ WP</span>' : '')
-        + (terrain ? '<br><span style="font-size:9px;color:#4A2010;padding-left:18px">' + terrain + '</span>' : '');
-    } else {
-      // Empty traversable cell
-      el.className = 'exit-line exit-active exit-empty' + (isWp ? ' exit-waypoint' : '');
-      el.setAttribute('onclick', "cellMove('" + d + "')");
-      el.innerHTML = '<span class="exit-arrow">' + ARROWS[d] + '</span> '
-        + '<span style="color:var(--dim)">· Open terrain</span>'
-        + (isWp ? '<span class="exit-wp-tag">▶ WP</span>' : '');
-    }
+    const num  = String(dest.num).padStart(2,'0');
+    const terrain = _terrainLabel(dest.name);
+    el.className = 'exit-line exit-active' + (isWp ? ' exit-waypoint' : '');
+    el.setAttribute('onclick', "cellMove('" + d + "')");
+    el.innerHTML = '<span class="exit-arrow">' + ARROWS[d] + '</span> '
+      + '<span class="exit-num">' + num + '</span>'
+      + ' <a>' + dest.label + '</a>'
+      + (isWp ? '<span class="exit-wp-tag">▶ WP</span>' : '')
+      + (terrain ? '<br><span style="font-size:9px;color:#4A2010;padding-left:18px">' + terrain + '</span>' : '');
   });
   // Special exits: only node.spire survives as a non-NSEW portal exit
   const extraEl = document.getElementById('exit-extra');
@@ -32835,10 +33935,10 @@ function _updateHuntBtn() {
   if (!btn) return;
   if (S_story.huntMode) {
     btn.classList.add('hunt-on');
-    btn.title = 'Hunt Mode ON — every open-terrain step triggers an encounter (click to disable)';
+    btn.title = 'Hunt Mode ON — travel triggers encounters (click to disable)';
   } else {
     btn.classList.remove('hunt-on');
-    btn.title = 'Hunt Mode OFF — open terrain uses normal encounter rates (click to enable)';
+    btn.title = 'Hunt Mode OFF — travel normally (click to enable)';
   }
 }
 
@@ -32846,8 +33946,8 @@ function storyToggleHunt() {
   S_story.huntMode = !S_story.huntMode;
   _updateHuntBtn();
   storyMsg(S_story.huntMode
-    ? '🎯 Hunt Mode ON — every open-terrain cell step triggers an encounter.'
-    : '🗺 Hunt Mode OFF — open terrain uses normal encounter rates.');
+    ? '🎯 Hunt Mode ON — travel triggers encounters.'
+    : '🗺 Hunt Mode OFF — travel normally.');
 }
 
 function _storyFindTerrainNode(terrain) {
@@ -32899,6 +33999,8 @@ document.addEventListener('keydown', e => {
   const mapOpen = document.getElementById('sheet-map').classList.contains('active');
   if (dirMap[e.key]) {
     e.preventDefault();
+    const _dpadBtn = document.getElementById('btn-' + dirMap[e.key]);
+    if (_dpadBtn && _dpadBtn.disabled) return;
     cellMove(dirMap[e.key]);
     if (mapOpen) _renderMapGrid();
     return;
@@ -33004,6 +34106,19 @@ storyEnter();
 
 /* ── Wire Story Mode button ── */
 document.getElementById('story-mode-btn').addEventListener('click', storyToggle);
+
+/* ── Sheet Tab Bar ── */
+document.querySelectorAll('#story-sheet-tab-bar .sheet-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    const sheet = tab.dataset.sheet;
+    if (sheet === 'sheet-story')    { switchSheet('sheet-story');     return; }
+    if (sheet === 'sheet-inventory'){ storyInventoryToggle();          return; }
+    if (sheet === 'sheet-quests')   { storyQuestToggle();              return; }
+    if (sheet === 'sheet-map')      { storyMapToggle();                return; }
+    if (sheet === 'sheet-journal')  { storyJournalToggle();            return; }
+    if (sheet === 'sheet-character'){ storyCharToggle();               return; }
+  });
+});
 
 /* ── Wire D-pad buttons ── */
 ['N','S','E','W'].forEach(d => {
