@@ -10349,6 +10349,7 @@ async function route(req, res) {
         'A crossroads on the road between',
         'A crossroads between',
         'Signpost says: The road between',
+        'Signpost says:',   // §WALK-1: all junction signposts are routing waypoints (e.g. "Signpost says: The X–Y Road.")
         'Highway junction',
         'The road branches here',
         'Road junction',

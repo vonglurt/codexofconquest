@@ -92,6 +92,17 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 
 ## §BACKLOG — Open Items
 
+### Navigation Core Redesign — §WALK series
+
+> Data shapes locked in `lab-reports/lab-report-terrain-field-mover-redesign.md` (2026-06-25). Strictly sequential; each step is a green-CI checkpoint. Decisions: delete junctions (not transparency); **geo-grid** coordinate system (equirectangular 1°, 360×90, band 70°N→20°S, E↔W wrap, sea impassable + ferry edges, hub=LHR/Birka, 1° city collisions held as locale lists); instanced encounters v1.
+
+- [ ] **§WALK-1** — Delete the 316 surviving `junction:true` nodes (API-first via `POST /api/admin/delete-junctions`); fixes "stop on every signpost" walkability bug; folds in the uncommitted transparency revert. Re-audit J14–J31 for promotable text.
+- [ ] **§WALK-1.5** — Geo re-projection: switch geo-seed to equirectangular; re-project all `NODE_COORDS` onto 360×90 / 70N–20S; `CELL_GRID` → locale lists (multi-node cells); author `SEA_MASK` + `FERRY_EDGES`. Data substrate for §WALK-2/3.
+- [ ] **§WALK-2** — Extract pure shared mover `mover.js` (`move(world,pos,dir)→MoveResult` with wrap/clamp/sea/ferry/locale); rewire `cellMove` + `session/move` to thin callers; inline-and-verify for single-file guarantee.
+- [ ] **§WALK-3** — Recast reweave as read-only `GET /api/graph/reachability`; retire `fill-gap`/`rip-and-connect`/`fix-all-broken`/`fix-bidirectional`/`reweave-all` (410); delete dead reweave body (`wbapi-server.js:5891+`).
+- [ ] **§WALK-4** — CI-gated invariant suite: reachability proof (I1/I2/I3) + walk parity (structural inline-identity + behavioural kernel trace).
+- [ ] **§WALK-5** — MUD multi-client harness; instanced per-session encounters on `session/move`; assert no cross-session encounter bleed.
+
 ### Tooling
 
 - [ ] **§WORLDBUILDER-01** — Visual grid editor with canvas node map, exit bidirectional wiring, collision detection
