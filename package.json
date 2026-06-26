@@ -13,7 +13,8 @@
     "check:invariants": "node scripts/check-invariants.js",
     "check:parity": "node scripts/check-mover-parity.js",
     "check:behaviour": "node scripts/check-mover-behaviour.js",
-    "check:walk": "npm run check:invariants && npm run check:parity && npm run check:behaviour"
+    "check:terrain": "node scripts/check-terrain-parity.js",
+    "check:walk": "npm run check:invariants && npm run check:parity && npm run check:behaviour && npm run check:terrain"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3"

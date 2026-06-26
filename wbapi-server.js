@@ -370,15 +370,72 @@ function getLocaleGrid() {
   return _lgCache;
 }
 
-// Read-only world snapshot handed to Mover.move(). terrainAt/encounterRate are
-// omitted — server-side encounter resolution lands in §WALK-5; the kernel
-// reports encounter.eligible=false / baseRate=0 without them.
+// §WALK-5 Inc 1 — SEA_LANES parsed from the game's `new Set([...])` literal (the
+// same set the client builds at load). Sea-lane cells are passable carved channels
+// that _inferTerrain renders as 'ocean'. Cached by raw-source reference.
+let _laneCacheSrc = null, _laneCache = null;
+function getSeaLanes() {
+  const src = WBAPI._rawSrc || '';
+  if (src !== _laneCacheSrc) {
+    _laneCacheSrc = src;
+    let set = new Set();
+    const m = src.match(/const\s+SEA_LANES\s*=\s*new Set\(\s*(\[[\s\S]*?\])\s*\)\s*;/);
+    if (m) { try { set = new Set((new Function('return ' + m[1]))()); } catch { set = new Set(); } }  // trusted local source
+    _laneCache = set;
+  }
+  return _laneCache;
+}
+
+// §WALK-5 Inc 1 — TERRAIN_ENCOUNTER_RATE parsed from the game literal (a flat
+// numeric table with a `_default`). The server keeps no copy of its own so it
+// cannot drift; scripts/check-terrain-parity.js asserts the parse round-trips.
+let _rateCacheSrc = null, _rateCache = null;
+function getEncounterRateTable() {
+  const src = WBAPI._rawSrc || '';
+  if (src !== _rateCacheSrc) {
+    _rateCacheSrc = src;
+    let tbl = { _default: 0.15 };
+    const m = src.match(/const\s+TERRAIN_ENCOUNTER_RATE\s*=\s*(\{[\s\S]*?\});/);
+    if (m) { try { tbl = (new Function('return ' + m[1]))(); } catch { tbl = { _default: 0.15 }; } }  // trusted local source
+    _rateCache = tbl;
+  }
+  return _rateCache;
+}
+
+// §WALK-5 Inc 1 — server-side terrain inference, mirrors the client _inferTerrain
+// (roll2hit-v3.html): a sea-lane cell is 'ocean'; otherwise the majority terrain
+// among the 4 orthogonal PRIMARY neighbours (NODE_MAP[code].name), strict-> tie-break
+// so the first terrain seen in N,S,E,W order wins ties; no named neighbour →
+// 'midlands'. Same neighbour order (MOVES4) + tie-break as the client for parity.
+function terrainAt(r, c) {
+  if (getSeaLanes().has(`${r},${c}`)) return 'ocean';
+  const lg = getLocaleGrid(), nm = WBAPI.nodeMap;
+  const names = [];
+  for (const [dr, dc] of MOVES4) {
+    const codes = lg[`${r + dr},${c + dc}`];
+    const name = codes && codes.length ? (nm[codes[0]] && nm[codes[0]].name) : null;  // primary only (= client cellCode)
+    if (name) names.push(name);
+  }
+  if (!names.length) return 'midlands';
+  const freq = {};
+  let best = 'midlands', bestN = 0;
+  for (const t of names) { freq[t] = (freq[t] || 0) + 1; if (freq[t] > bestN) { bestN = freq[t]; best = t; } }
+  return best;
+}
+
+// Read-only world snapshot handed to Mover.move(). §WALK-5 Inc 1 wires terrainAt +
+// encounterRate so the kernel populates encounter.{eligible,baseRate} on empty cells
+// (the per-session roll that reads it lands in §WALK-5 Inc 2). ferryEdges stays
+// unset — the inert kernel hook is deferred to §WALK-5-FU (author FERRY_EDGES for
+// server+SP together, or drop the branch).
 function getMoverWorld() {
-  const lg = getLocaleGrid(), imp = getImpassable();
+  const lg = getLocaleGrid(), imp = getImpassable(), rates = getEncounterRateTable();
   return {
     proj: { ROWS: 90, COLS: 360 },   // §2.1 equirectangular 1° (matches client GEO_PROJ)
     impassable: imp,
     cellCodes: (r, c) => lg[`${r},${c}`] || [],
+    terrainAt,
+    encounterRate: (key) => rates[key] ?? rates._default,
   };
 }
 

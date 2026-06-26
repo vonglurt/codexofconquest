@@ -1,6 +1,6 @@
 # Lab Report — §WALK-5: MUD Multi-Client Harness (instanced encounters, v1)
 
-**Status:** DESIGN LOCKED (2026-06-26). Implementation pending (Inc 1→4 below).
+**Status:** DESIGN LOCKED (2026-06-26). **Inc 1 ✅ done** (world inputs + terrain-parity guard); Inc 2→4 pending.
 **Parent:** `lab-reports/lab-report-terrain-field-mover-redesign.md` §7 (the v1 instanced-vs-shared decision).
 **Predecessor MUD layer:** `lab-reports/lab-report-cell-map-mud-redesign.md` §CELL-07 (the in-memory `SESSIONS` store + SSE broadcast this report extends).
 
@@ -190,9 +190,13 @@ terrain re-tuning that touches one side and not the other fails CI immediately.
 
 Strictly sequential; each is a green checkpoint (`npm run check:walk` + harness where applicable):
 
-- **Inc 1 — World inputs.** Add `SEA_LANES` parse + `terrainAt`/`encounterRate` to `getMoverWorld()`; add the
-  §6 parity guard to `scripts/` and `check:walk`. *No behaviour change to `move` yet* (encounter still not
-  stored). Verify the kernel now reports non-zero `baseRate` on empty cells over HTTP. **Green: parity guard.**
+- **Inc 1 — World inputs. ✅ DONE.** Added `getSeaLanes()` parse + `terrainAt`/`encounterRate` to
+  `getMoverWorld()` (wbapi-server.js); added `scripts/check-terrain-parity.js` to `scripts/` + `check:walk` +
+  CI `paths:`. *No behaviour change to `move` yet* (encounter not yet stored). Verified the kernel now reports
+  non-zero `baseRate` on empty cells (LHR N→empty `eligible:true baseRate:0.15`; E→named BMA `eligible:false`).
+  The guard extracts the REAL `_inferTerrain` (HTML) + `terrainAt` (server) and runs both in a sandbox: rate
+  table (15 keys) + SEA_LANES (59 cells) regex round-trip, terrainAt==_inferTerrain on all 10440 band cells.
+  **Parity guard green; full `check:walk` green.**
 - **Inc 2 — Instanced roll.** Add `s.seed`/`s.rngState`/`seededNext`, `pickMonster` (flat-tier), and the §4.4
   roll on the `session/move` success path; store `s.encounter`; surface it in the move response + `who`.
   Clear `s.encounter` on named/blocked. **Green: existing session e2e still passes; encounter appears on

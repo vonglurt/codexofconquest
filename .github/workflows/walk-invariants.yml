@@ -1,8 +1,10 @@
-# §WALK-4 Inc 2 — CI gate for the terrain-field invariants + walk parity.
-# Runs the three self-contained Node proofs (no server, no browser, no install):
+# §WALK-4 Inc 2 / §WALK-5 Inc 1 — CI gate for the terrain-field invariants + walk parity.
+# Runs the self-contained Node proofs (no server, no browser, no install):
 #   • check-invariants  — I1 totality / I2 no-stubs / I3 reachability (409/409, 1 component)
 #   • check-mover-parity     — structural: MOVER:CORE inlined byte-identical to mover.js
 #   • check-mover-behaviour  — behavioural: shared kernel reproduces every cellMove decision
+#   • check-terrain-parity   — §WALK-5: server getMoverWorld() terrain/encounter inputs
+#                              (rate table, SEA_LANES, terrainAt) match the client byte-for-behaviour
 # Red on any I1/I2/I3 violation or parity mismatch; green on current main (lab report §6).
 name: WALK invariants
 
@@ -15,6 +17,7 @@ on:
       - 'scripts/check-invariants.js'
       - 'scripts/check-mover-parity.js'
       - 'scripts/check-mover-behaviour.js'
+      - 'scripts/check-terrain-parity.js'
       - 'package.json'
       - '.github/workflows/walk-invariants.yml'
   pull_request:
@@ -25,6 +28,7 @@ on:
       - 'scripts/check-invariants.js'
       - 'scripts/check-mover-parity.js'
       - 'scripts/check-mover-behaviour.js'
+      - 'scripts/check-terrain-parity.js'
       - 'package.json'
       - '.github/workflows/walk-invariants.yml'
 
