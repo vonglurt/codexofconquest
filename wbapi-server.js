@@ -9912,26 +9912,87 @@ async function route(req, res) {
         ALB:{lat:36.4,lon:37.0},JAR:{lat:31.8,lon:35.2},OLN:{lat:31.7,lon:35.3},BGD:{lat:33.3,lon:44.4},
         TUN:{lat:36.8,lon:10.2},MLN:{lat:-3.2,lon:40.1},GNJ:{lat:40.7,lon:46.3},TBZ:{lat:38.1,lon:46.3},
         MRG:{lat:37.4,lon:46.5},NIS:{lat:36.2,lon:58.8},MRV:{lat:37.7,lon:62.2},SAM:{lat:39.6,lon:66.9},
+        // ── Extended city set (added 2026-06-16) ─────────────────────────────────
+        // British Isles
+        BEL:{lat:54.6,lon:-5.9},GCI:{lat:49.4,lon:-2.6},GIB:{lat:36.2,lon:-5.4},
+        INV:{lat:57.5,lon:-4.1},KIR:{lat:52.2,lon:-9.5},LCY:{lat:51.5,lon:0.1},
+        LGW:{lat:51.2,lon:-0.2},MAN:{lat:53.4,lon:-2.3},MME:{lat:54.5,lon:-1.4},
+        NWI:{lat:52.7,lon:1.3},SEN:{lat:51.6,lon:0.7},STN:{lat:51.9,lon:0.2},
+        // Scandinavia / Nordic
+        BMA:{lat:59.4,lon:18.0},BOO:{lat:67.3,lon:14.4},FRO:{lat:61.6,lon:5.0},
+        GOT:{lat:57.7,lon:12.3},KRN:{lat:67.8,lon:20.3},KSU:{lat:63.1,lon:7.8},
+        LLA:{lat:65.5,lon:22.1},MHQ:{lat:60.1,lon:19.9},MJF:{lat:65.8,lon:13.2},
+        MOL:{lat:62.7,lon:7.3},RKV:{lat:64.1,lon:-22.0},SFT:{lat:64.6,lon:21.1},
+        SSJ:{lat:66.0,lon:12.5},TRD:{lat:63.5,lon:10.9},TRF:{lat:59.2,lon:10.3},
+        VBY:{lat:57.7,lon:18.4},
+        // Western & Central Europe
+        AMS:{lat:52.4,lon:4.9},CDG:{lat:49.0,lon:2.5},DUS:{lat:51.3,lon:6.8},
+        ERF:{lat:51.0,lon:11.0},FCO:{lat:41.8,lon:12.2},FLR:{lat:43.8,lon:11.2},
+        GVA:{lat:46.2,lon:6.1},HAJ:{lat:52.5,lon:9.7},INN:{lat:47.3,lon:11.3},
+        MAD:{lat:40.5,lon:-3.6},MUC:{lat:48.4,lon:11.8},NUE:{lat:49.5,lon:11.1},
+        PMO:{lat:38.2,lon:13.1},SDR:{lat:43.4,lon:-3.8},SZG:{lat:47.8,lon:13.0},
+        TLS:{lat:43.6,lon:1.4},VIE:{lat:48.1,lon:16.6},WRO:{lat:51.1,lon:17.0},
+        ZRH:{lat:47.5,lon:8.6},
+        // Eastern Europe & Balkans
+        ATH:{lat:37.9,lon:23.7},BEG:{lat:44.8,lon:20.5},BNX:{lat:44.9,lon:17.3},
+        CLJ:{lat:46.8,lon:23.7},KUN:{lat:55.0,lon:24.1},KVA:{lat:40.9,lon:24.6},
+        MLA:{lat:35.9,lon:14.5},OTP:{lat:44.6,lon:26.1},PRN:{lat:42.6,lon:21.0},
+        SOF:{lat:42.7,lon:23.4},TLL:{lat:59.4,lon:24.8},WAW:{lat:52.2,lon:21.0},
+        ZTH:{lat:37.8,lon:20.9},
+        // Caucasus & Russia
+        LCA:{lat:34.9,lon:33.6},SVO:{lat:56.0,lon:37.4},TBS:{lat:41.7,lon:44.9},
+        // Middle East & North Africa
+        ADA:{lat:37.0,lon:35.3},CAI:{lat:30.1,lon:31.4},DAM:{lat:33.4,lon:36.5},
+        DOH:{lat:25.3,lon:51.6},FEZ:{lat:34.0,lon:-5.0},JRS:{lat:31.9,lon:35.2},
+        KYA:{lat:38.0,lon:32.6},MCT:{lat:23.6,lon:58.3},RUH:{lat:25.0,lon:46.7},
+        // Atlantic islands
+        ACE:{lat:29.0,lon:-13.6},PDL:{lat:37.7,lon:-25.7},RAI:{lat:14.9,lon:-23.5},
+        SID:{lat:16.7,lon:-23.0},
       };
+
+      // §WALK-1.5 inc 3: project EVERY node. lat/lon source priority —
+      //   GEO2 (155 true) → gazetteer.realPlaces (true) → gazetteer.anchors (approx);
+      //   satellites + offEarth resolve to their parent/anchor's lat/lon (chained, cycle-safe).
+      let GAZ = { realPlaces:{}, satellites:{}, anchors:{}, offEarth:{} };
+      try { GAZ = JSON.parse(fs.readFileSync(path.join(__dirname, 'walk-geo-gazetteer.json'), 'utf8')); }
+      catch (e) { logRow('geo-seed', `WARN: gazetteer not loaded (${e.message}) — GEO2-only`); }
+      const latlon = {};
+      for (const [k, v] of Object.entries(GEO2))                    latlon[k] = { lat:v.lat, lon:v.lon, src:'geo2' };
+      for (const [k, v] of Object.entries(GAZ.realPlaces || {}))    latlon[k] = { lat:v.lat, lon:v.lon, src:'real' };
+      for (const [k, v] of Object.entries(GAZ.anchors || {})) if (v.lat != null) latlon[k] = { lat:v.lat, lon:v.lon, src:'anchor' };
+      const resolveLL = (code, seen = new Set()) => {
+        if (latlon[code]) return latlon[code];
+        if (seen.has(code)) return null; seen.add(code);
+        const parent = (GAZ.satellites || {})[code]
+          || ((GAZ.offEarth || {})[code] || {}).anchor
+          || ((GAZ.anchors || {})[code] || {}).anchor;
+        return parent ? resolveLL(parent, seen) : null;
+      };
+      for (const code of [...Object.keys(GAZ.satellites || {}), ...Object.keys(GAZ.offEarth || {})]) {
+        const ll = resolveLL(code); if (ll) latlon[code] = { lat:ll.lat, lon:ll.lon, src:'anchored' };
+      }
 
       const coords = {}, seeded = [], skipped = [];
       const occ = new Map();          // "r,c" → first code placed there (for collision reporting)
       const collisions = [];          // §WALK-1.5: collisions are EXPECTED at 1° → locale lists, NOT nudged
-      for (const [code, geo] of Object.entries(GEO2)) {
-        if (!nm[code]) { skipped.push(code); continue; }
-        const r = Math.max(0, Math.min(rows - 1, Math.floor(latN - geo.lat)));
-        const c = (((Math.floor(geo.lon + 180)) % cols) + cols) % cols;
+      const bySrc = { geo2:0, real:0, anchor:0, anchored:0 };
+      for (const code of Object.keys(nm)) {
+        const ll = latlon[code];
+        if (!ll) { skipped.push(code); continue; }
+        const r = Math.max(0, Math.min(rows - 1, Math.floor(latN - ll.lat)));
+        const c = (((Math.floor(ll.lon + 180)) % cols) + cols) % cols;
         const key = `${r},${c}`;
         if (occ.has(key)) collisions.push({ code, cell:key, sharesWith: occ.get(key) });
         else occ.set(key, code);
         coords[code] = { r, c };       // every node keeps its TRUE projected cell; co-location is fine
+        bySrc[ll.src] = (bySrc[ll.src] || 0) + 1;
         seeded.push(code);
       }
 
       if (dryRun) {
-        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} cities, ${collisions.length} collisions`);
+        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} placed (${JSON.stringify(bySrc)}), ${collisions.length} collisions, ${skipped.length} skipped`);
         return json(res, 200, { ok:true, dryRun:true, projection:'equirectangular-1deg', latN, latS, rows, cols,
-          seeded:seeded.length, skipped, collisions, coords });
+          seeded:seeded.length, bySrc, distinctCells:occ.size, skipped, collisions, coords });
       }
 
       // Apply
