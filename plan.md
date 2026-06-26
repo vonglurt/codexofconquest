@@ -92,12 +92,31 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 
 ## §BACKLOG — Open Items
 
+### §RESUME — Continue Here (updated 2026-06-25)
+
+**Where we are:** §WALK-1.5 (geo re-projection) is **code-complete and verified but NOT committed.** Branch `main`, last commit `7c93490`. Uncommitted working tree:
+- `roll2hit-v3.html` — (a) NODE_COORDS rewritten to equirectangular 1° for all 409 nodes; (b) `SEA_RUNS` + `SEA_LANES` + `IMPASSABLE_CELLS` block (~line 9132); (c) one-liner atop `_inferTerrain` (~line 25709) returning `'ocean'` for lane cells.
+- `plan.md` — this backlog consolidation + §WALK-1.5 marked done.
+- `1367-sources/pla.md` (untracked), `milepoints/api-cli.log` (incidental log churn — don't stage).
+- wbapi-server already restarted so its in-memory copy matches disk.
+
+**Verified:** 409/409 nodes reachable from Birka (LHR cell 10,197); 0 nodes on impassable cells; 4790 sea cells; 59 lane cells. Mask-gen scripts saved at `/tmp/seamask.py` + `/tmp/lanes.py` (regenerate from these if coords change).
+
+**Immediate next steps, in order:**
+1. **Commit §WALK-1.5** — stage `roll2hit-v3.html` + `plan.md` only (NOT `api-cli.log`). Suggested subject: `§WALK-1.5: apply equirectangular projection + SEA_MASK + sea-lane ferries`. Then `say` the subject (Commit+Speak rule).
+2. *(optional)* Browser smoke-test: walk Birka → hit a coastline ("No path leads that way") → cross a carved lane (renders as Open Terrain — Ocean, may trigger an ocean encounter).
+3. **Start §WALK-2** — extract pure `mover.js` (`move(world,pos,dir)→MoveResult` with wrap/clamp/sea/ferry/locale); make `cellMove` (roll2hit-v3.html ~25675) + `POST /api/session/move` (wbapi-server.js ~10866) thin callers. Note: server mover currently lacks the client's IMPASSABLE_CELLS/bounds checks — §WALK-2 unifies that (latent bug). Inline-and-verify for single-file guarantee.
+4. Continue down the §WALK series (3→4→5), then the rest of this backlog.
+
+**Copy-paste prompt to resume:**
+> Read plan.md §RESUME. Commit the uncommitted §WALK-1.5 geo work (roll2hit-v3.html + plan.md only), then begin §WALK-2: extract the pure shared mover.js and rewire cellMove + session/move as thin callers. Work incrementally per the Directive.
+
 ### Navigation Core Redesign — §WALK series
 
 > Data shapes locked in `lab-reports/lab-report-terrain-field-mover-redesign.md` (2026-06-25). Strictly sequential; each step is a green-CI checkpoint. Decisions: delete junctions (not transparency); **geo-grid** coordinate system (equirectangular 1°, 360×90, band 70°N→20°S, E↔W wrap, sea impassable + ferry edges, hub=LHR/Birka, 1° city collisions held as locale lists); instanced encounters v1.
 
 - [x] **§WALK-1** — Deleted 316 `junction:true` boilerplate stubs (commit efa8f7a); predicate extended to `"Signpost says:"`; audit clean. Folded in the transparency revert.
-- [ ] **§WALK-1.5** — Geo re-projection (SCOPED — lab report §3.5). Ground truth: 409 nodes, ~84 geocoded, ~325 to place; 23 GEO2 cities collide at 1° (11 cells); CELL_GRID is last-write-wins (10 read sites). Decisions: geo-seed → equirectangular 1°; satellites offset to **own** true-coord cell (sub-degree residue co-locates as locale lists); off-Earth nodes (ASG/AEG/EHZ/MONS) → sub-location of entry-quest anchor; SEA_MASK from Natural Earth 1:110m coastline raster + snap-to-land reconciliation. Open: revisit 0.25° for dense regions?
+- [x] **§WALK-1.5** — Geo re-projection (SCOPED — lab report §3.5). **DONE 2026-06-25.** Applied in 3 steps: (1) equirectangular 1° projection written to NODE_COORDS for all 409 nodes (geo-seed dryRun:false; CELL_GRID auto-rebuilds at load); (2) SEA_MASK installed — `SEA_RUNS` RLE from Natural Earth 110m coastline rasterized at 1°, builds `IMPASSABLE_CELLS` (4790 sea cells); node-occupied cells force-landed (0 nodes on sea); (3) ports+ferry model via **sea-lane land bridges** — `SEA_LANES` (59 cells) carve 1-wide walkable channels reconnecting all 26 island nodes (Iceland/Gotland/Sicily/Malta/Azores/Canaries/CapeVerde/Åland/Doha) + 3 hub maritime shortcuts (VEN↔CON, CON↔CAI, MAR↔ROM); lane cells render as `ocean` terrain (ocean encounters apply). Verified: 409/409 reachable from Birka. NEXT: §WALK-2. Ground truth: 409 nodes, ~84 geocoded, ~325 to place; 23 GEO2 cities collide at 1° (11 cells); CELL_GRID is last-write-wins (10 read sites). Decisions: geo-seed → equirectangular 1°; satellites offset to **own** true-coord cell (sub-degree residue co-locates as locale lists); off-Earth nodes (ASG/AEG/EHZ/MONS) → sub-location of entry-quest anchor; SEA_MASK from Natural Earth 1:110m coastline raster + snap-to-land reconciliation. Open: revisit 0.25° for dense regions?
   - Increment 1 ✅ equirectangular projection in geo-seed (wbapi-server.js), dry-run verified (LHR→10,197; London→18,179; 12 collisions/11 cells). NOT applied.
   - Increment 2 ✅ CELL_GRID → locale lists + `cellCode`/`cellCodes` helpers (10 read sites routed, verified no-op: 0 current collisions). Geocode METHOD validated = **invert-and-reproject** (abstract grid is geo-faithful, median 3 cells to GEO2 anchor; inversion exact on GEO2). Label-matching only covers 22/228 — rejected.
   - Increment 3 ❌ invert-and-reproject REJECTED by dry-run: abstract grid is not geo-faithful (409→108 cells, LHR+Damascus+Nuremberg merged; CAI/ATH/ROM/DAM/TBS cluster near Birka). Reverted; nothing applied. Only reliable source = true GEO2 lat/lon.
@@ -108,26 +127,41 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 - [ ] **§WALK-3** — Recast reweave as read-only `GET /api/graph/reachability`; retire `fill-gap`/`rip-and-connect`/`fix-all-broken`/`fix-bidirectional`/`reweave-all` (410); delete dead reweave body (`wbapi-server.js:5891+`).
 - [ ] **§WALK-4** — CI-gated invariant suite: reachability proof (I1/I2/I3) + walk parity (structural inline-identity + behavioural kernel trace).
 - [ ] **§WALK-5** — MUD multi-client harness; instanced per-session encounters on `session/move`; assert no cross-session encounter bleed.
+- [ ] **§WALK-1.5-FU** — Geo follow-ups left open after the apply: (a) 4 anachronistic realms (HKG cyberpunk / BKK oriental / CTU heavenly / SJO jungle) currently anchored to Samarkand — decide off-grid/portal realm vs Earth-anchor; (b) ~19 German/scholarly + Grimm interiors piled on Weimar hub — revisit distribution; (c) revisit 0.25° resolution for dense regions (Tuscany/London locale lists) if 1° co-location proves too coarse; (d) optional browser smoke-test of the new sea-gated overworld. See `project_walk_redesign` in memory.
 
 ### Tooling
 
 - [ ] **§WORLDBUILDER-01** — Visual grid editor with canvas node map, exit bidirectional wiring, collision detection
 - [ ] **§EDITOR-02 UI** — Mission Builder tab in worldbuilder.html (form-based arc insertion with Preview Chain + POST All)
-- [ ] **§ARCH-01 Phases 2–5** — UQF migration arc-by-arc; remove closure pattern; export UQF from worldbuilder
+- [ ] **§EDITOR-03 — Worldbuilder UQF export** — once §ARCH-01 (Mechanics) lands, add "export UQF" to worldbuilder.html. (Canonical migration plan now under Mechanics → §ARCH-01.)
 - [ ] **§WALK-G extensions** — terrain-color dots, act filter, node creation in-context, compass rose (see index.md Planned Features)
 - [ ] **§WBAPI-01 phases 3–5** — full-array PATCH, worldbuilder write tab, standalone Node module
 - [ ] **§EDITOR-01-D** — Token item manager (visual chain editor for inv.push/splice sequences)
 - [ ] **§CELL-14** — Strip dead `N/S/E/W/portal/spire` fields from `NODE_MAP` source. Endpoint + CLI implemented (`POST /api/migrate/strip-exit-fields`, `./api.sh migrate strip-exit-fields`); dry-run reports 404 nodes / 2,095 fields. Fixes silent no-op in pre-§CELL-14 `/api/admin/strip-edges` (in-memory-only). Run `--execute` to apply. See `data-code-migration-into-cells.md` §6.
 
-### Game Content
+### Game Content — Major Planned Arcs
 
-- [ ] **§1367** — Historical 1367 AD integration; 6 events→quest seeds, 8 clarification questions gate scope. See `project_1367_setting.md` in memory.
+> Each is design-complete or scoped in a memory file; **all require a `lab-report-*.md` locking data shapes before any HTML edit.** Restored here 2026-06-25 from memory (dropped from plan.md during the §WALK rewrite).
+
+- [ ] **§GR — Grief Arc / "La Riva"** — design-complete (2026-05-26), deferred to Layer 78+. Corruption→grief causal chain; node AMS (design: FR) Fishmonger's Row unlocks after `catKingDefeated`; NPCs `connie_tuna`/`aldo_sardino`; 3-quest chain (`quest_la_riva_01..03`); French 5-act vignette technique (object-per-act). Prereq: `lab-report-la-riva-grief-arc.md`. See `project_grief_arc` in memory + story.md §GRIEF AND CORRUPTION.
+- [ ] **§DESIGN-03 — Ceremonia Roll + Starting City Expansion** — PLANNED. `d20+abilityMod+profBonus≥DC` skill-check mechanic; new `type:'skill_check'` quest fields; fills the Birka L3–6 XP gap (4 new missions); Yael "The Watchpost" 5-act romantic Ceremonia arc. Prereq: `lab-report-ceremonia-roll-skill-checks.md`. See `project_ceremonia_roll`. *(Note: `type:'skill_check'` quests already exist live — confirm what's shipped vs scoped before building.)*
+- [ ] **§DUNGEON-01 — 10 Dungeon Themes** — PLANNED. Priority: D01-03 hero-origin canon (player = trapped Scholar King Apprentice; Prior Carrier NPC at NUE) → D01-07 CY first-visit madness WIS DC12 → D01-08 Mimic Meadows (node LIM, `mimic_meadow`, `quest_mimic_colony`, Tribbles) → D01-10 Loop Heart at CO (pre-boss choice). Plus Sacrifice Gates, Shifting Labyrinth, Scholar Workshop (node SW), Arcane Inversion, Inquisitor interview. Many new state fields. Prereq: `lab-report-dungeon-ten-themes.md`. See `project_dungeon_themes`.
+- [ ] **§MATH-01 — Mathematical World** — PLANNED (2026-06-02). Group-theory overlay; nodes EHZ (Event Horizon station), MONS (Monster's Manifold 196,883-dim), ZERO, CNTR (Cantor's Attic); 5 quest seeds (MATH-01..05) connecting Roman/Byzantine/Arabic zero, Galois quintic, Monstrous Moonshine. Adventure-Time register for EHZ/MONS only (French-noir elsewhere). See `project_math_world`.
+- [ ] **§1367 — Historical 1367 AD integration** — 6 events→quest seeds (Nájera/routiers, Tamerlane, Ottoman Balkans, Hanseatic peak, Wycliffe, Black Death aftermath); **8 clarification questions in §1367-D gate HTML integration**. No anachronisms. See `project_1367_setting`.
+- [ ] **§FUTURE-01 — Saul→Paul arc** — unscheduled. Middle East node map; Acts/Pauline fidelity; Damascus-Road conversion reframes toolkit (combat→rhetoric) and rewrites quest availability — a world-first conversion mechanic. Node map/quest IDs/NPC keys drafted. See `project_future_saul_paul`. *(Open design call: does Acts-fidelity register create tonal discontinuity?)*
 - [ ] **§GR-D Froberger Entry 42** — blank page filled on second playthrough. Requires NG+ state tracking (currently unsupported).
 
-### Design Decisions
+### Mechanics & Systems
+
+- [ ] **§ARCH-01 — Universal Quest Format (UQF v1.0)** — unify 3 incompatible quest formats. Phase 0 ✅ (anchors + worldbuilder.html). Remaining: Phase 1 add `SCHEMA_VERSION`+`QuestRuntime`+`adaptLegacyQuest` (inert); Phase 2 new arcs in UQF; Phase 3 arc-by-arc migration (§WISDOM-01 first); Phase 4 remove legacy path; Phase 5 QUEST_DB = single source of truth. Prereq: `lab-report-quest-api-architecture.md`. See `project_quest_api`.
+- [ ] **§MBIT-02 — Mission Bit Token follow-ups** — §MBIT-01 shipped (`_grantMissionBit`/`_takeMissionBit`, `type:'mission_bit'` items). Remaining: `bitLabel` cleanup for Paul-arc quests, `_takeMissionBit` call sites for consumed tokens, worldbuilder schema update, token timeline in journal. See `project_mission_bit_tokens`.
+- [ ] **Global monster drop nerf (−3→0 floor)** — design intent (fishing = exclusive positive-magic-loot vector) never shipped; monster drops still yield 0..+3. Open loot-balance gap. See `project_open_gaps`.
+- [ ] **`fishmongerRowRestored` visual rebuild** — flag sets on `quest_la_riva_03` but AMS node has no `partial_market` "after restoration" text variant; Row never visually rebuilds. (Blocks on §GR.)
+- [ ] **UI gaps** — `[INVESTIGATE]` buttons don't highlight on node entry (root cause unknown); reading-circle has no progress UI. See `project_open_gaps`.
+
+### Design Decisions (pending)
 
 - [ ] **Arc ID as first-class UQF field** — add `arc: 'quest_wis'` explicitly to quest objects; enables arc sorting without string-splitting heuristics
-- [ ] **§FUTURE-01 Saul/Paul arc** — canonical placement decision: does Acts-fidelity register create tonal discontinuity? See thematic audit in git history.
 - [ ] **§MBIT-02-E token/gate unification** — leaning toward keeping KEY_EVENTS items and mission bit tokens separate (different ontology). Decision pending.
 
 *© 2026 Paul Richeson — MIT License.*
