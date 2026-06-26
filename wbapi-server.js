@@ -4326,26 +4326,79 @@ async function route(req, res) {
     const hubDistMap  = bfsDist(hub);
 
     // ── GET /api/graph/reachability ───────────────────────────────────────
+    // §WALK-3: reachability is a terrain-field LAND FLOOD — the same passability
+    // the mover (mover.js) walks — NOT node-to-node adjacency. A named node is
+    // reachable iff its cell connects to the hub's cell by a 4-connected walk over
+    // passable land (sea = IMPASSABLE; longitude wraps; latitude clamps). Lanes
+    // are passable (not in IMPASSABLE), so land-bridge crossings count for free.
+    // Diagnosis only: if anything is unreachable, the fix is a content decision
+    // (re-anchor a node's lat/lon, or carve a lane) — never an auto-junction.
     if (parts[1] === 'reachability' && method === 'GET') {
+      const IMP = getImpassable();
+      const ROWS = 90, COLS = 360;
+      const passable = (r, c) => r >= 0 && r < ROWS && !IMP.has(`${r},${c}`);
+      function floodCells(r0, c0) {
+        const seen = new Set();
+        if (!passable(r0, c0)) return seen;   // hub on sea — snap-to-land should prevent this
+        seen.add(`${r0},${c0}`);
+        const stack = [[r0, c0]];
+        while (stack.length) {
+          const [r, c] = stack.pop();
+          for (const [dr, dc] of MOVES4) {
+            const nr = r + dr, nc = ((c + dc) % COLS + COLS) % COLS;   // wrap E↔W, clamp checked in passable
+            const k = `${nr},${nc}`;
+            if (seen.has(k) || !passable(nr, nc)) continue;
+            seen.add(k); stack.push([nr, nc]);
+          }
+        }
+        return seen;
+      }
+
+      const hubCoord = coords[hub];
+      if (!hubCoord) return json(res, 404, { ok: false, error: `hub '${hub}' has no coordinates` });
+
+      const hubCells       = floodCells(hubCoord.r, hubCoord.c);
+      const inHub          = (code) => { const co = coords[code]; return co && hubCells.has(`${co.r},${co.c}`); };
+      const reachableNodes = allCodes.filter(inHub);
+      const reachableSet   = new Set(reachableNodes);
+      const unreachableNodes = allCodes.filter(c => !reachableSet.has(c));
+
+      // components = distinct passable-land regions that contain ≥1 named node
+      // (I3: a fully-connected map has unreachableCount 0 and components 1).
+      const seenRegion = new Set();
+      let componentCount = 0;
+      for (const code of allCodes) {
+        const co = coords[code]; if (!co || !passable(co.r, co.c)) continue;
+        if (seenRegion.has(`${co.r},${co.c}`)) continue;
+        componentCount++;
+        for (const k of floodCells(co.r, co.c)) seenRegion.add(k);
+      }
+
       const qByNode  = questsByNode();
       const nByNode  = npcsByNode();
-      const clusters = components(unreachable);
+      const clusters = components(unreachableNodes);   // node-adjacency grouping for the fix suggestions
 
       return json(res, 200, {
         ok: true,
         hub,
         counts: {
           total: allCodes.length,
-          reachable: reachable.size,
-          unreachable: unreachable.length,
+          reachable: reachableNodes.length,
+          unreachable: unreachableNodes.length,
+          components: componentCount,
           clusters: clusters.length,
         },
+        components: componentCount,
         reachableByDegree: {
-          deg1: allCodes.filter(c => reachable.has(c) && degree(c) === 1),
-          deg2: allCodes.filter(c => reachable.has(c) && degree(c) === 2),
-          deg3: allCodes.filter(c => reachable.has(c) && degree(c) === 3),
-          deg4: allCodes.filter(c => reachable.has(c) && degree(c) === 4),
+          deg1: reachableNodes.filter(c => degree(c) === 1),
+          deg2: reachableNodes.filter(c => degree(c) === 2),
+          deg3: reachableNodes.filter(c => degree(c) === 3),
+          deg4: reachableNodes.filter(c => degree(c) === 4),
         },
+        unreachable: unreachableNodes.map(code => ({
+          code, r: coords[code]?.r ?? null, c: coords[code]?.c ?? null,
+          terrain: nm[code]?.name || null, label: nm[code]?.label || null,
+        })),
         unreachableClusters: clusters.map(cluster => ({
           size: cluster.length,
           nodes: cluster,
