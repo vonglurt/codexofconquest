@@ -9878,7 +9878,11 @@ async function route(req, res) {
     if (method === 'POST' && layoutAction === 'geo-seed') {
       const nm = WBAPI.nodeMap;
       let body; try { body = await readBody(req); } catch(e) { body = {}; }
-      const { dryRun=true, minLat=-8, maxLat=68, minLon=-25, maxLon=72, gridMin=8, gridMax=500 } = body||{};
+      // §WALK-1.5: equirectangular (Plate Carrée) 1° projection — equal degrees per cell.
+      //   row(lat) = clamp(floor(LAT_N - lat), 0, ROWS-1)   (N→S, clamped, no wrap)
+      //   col(lon) = mod(floor(lon + 180), COLS)            (wraps E↔W)
+      // Replaces the old linear 8–500 box-fit (which was NOT equal-degree: 6.47 cells/° lat vs 5.07/° lon).
+      const { dryRun=true, latN=70, latS=-20, rows=90, cols=360 } = body||{};
 
       // Reuse the GEO table from the worldmap handler inline (abbreviated for brevity)
       const geoSeed = await (async () => {
@@ -9911,22 +9915,23 @@ async function route(req, res) {
       };
 
       const coords = {}, seeded = [], skipped = [];
-      const occ = new Map();
+      const occ = new Map();          // "r,c" → first code placed there (for collision reporting)
+      const collisions = [];          // §WALK-1.5: collisions are EXPECTED at 1° → locale lists, NOT nudged
       for (const [code, geo] of Object.entries(GEO2)) {
         if (!nm[code]) { skipped.push(code); continue; }
-        let r = Math.round(gridMin + (maxLat - geo.lat) / (maxLat - minLat) * (gridMax - gridMin));
-        let c = Math.round(gridMin + (geo.lon - minLon) / (maxLon - minLon) * (gridMax - gridMin));
-        r = Math.max(gridMin, Math.min(gridMax, r));
-        c = Math.max(gridMin, Math.min(gridMax, c));
-        for (let try_=0; occ.has(`${r},${c}`) && try_<20; try_++) c++;
-        coords[code] = {r, c};
-        occ.set(`${r},${c}`, code);
+        const r = Math.max(0, Math.min(rows - 1, Math.floor(latN - geo.lat)));
+        const c = (((Math.floor(geo.lon + 180)) % cols) + cols) % cols;
+        const key = `${r},${c}`;
+        if (occ.has(key)) collisions.push({ code, cell:key, sharesWith: occ.get(key) });
+        else occ.set(key, code);
+        coords[code] = { r, c };       // every node keeps its TRUE projected cell; co-location is fine
         seeded.push(code);
       }
 
       if (dryRun) {
-        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} cities`);
-        return json(res, 200, { ok:true, dryRun:true, seeded:seeded.length, skipped, coords });
+        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} cities, ${collisions.length} collisions`);
+        return json(res, 200, { ok:true, dryRun:true, projection:'equirectangular-1deg', latN, latS, rows, cols,
+          seeded:seeded.length, skipped, collisions, coords });
       }
 
       // Apply

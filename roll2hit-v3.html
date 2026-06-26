@@ -9131,15 +9131,20 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
 // §CELL-02: Reverse grid lookup — "r,c" → node code
+// §WALK-1.5: each cell is a LOCALE that may hold ≥1 node (1° collisions merge close cities).
+// CELL_GRID value is an array of codes; primaryOf = list[0] is the node you "arrive at", the
+// rest are intra-cell sub-locations. Use cellCode(key) to read the primary code (back-compat).
 const CELL_GRID = (() => {
   const g = {};
   for (const code of Object.keys(NODE_MAP)) {
     const coord = NODE_COORDS[code] || { r: NODE_MAP[code].r, c: NODE_MAP[code].c };
     if (coord && coord.r != null && coord.c != null)
-      g[`${coord.r},${coord.c}`] = code;
+      (g[`${coord.r},${coord.c}`] ??= []).push(code);
   }
   return g;
 })();
+const cellCode   = (key) => CELL_GRID[key]?.[0] || null;   // primary node code at a cell, or null
+const cellCodes  = (key) => CELL_GRID[key] || [];          // all node codes at a cell (locale list)
 const IMPASSABLE_CELLS = new Set(); // populated in §CELL-10
 
 // §CELL-04: Encounter probability by inferred terrain on empty cells
@@ -25677,7 +25682,7 @@ function cellMove(dir) {
   if (nr < 1 || nc < 1 || nr > 500 || nc > 500 || IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
     storyBlock('No path leads that way.'); return;
   }
-  const destCode = CELL_GRID[`${nr},${nc}`] || null;
+  const destCode = cellCode(`${nr},${nc}`);
   const destNode = destCode ? NODE_MAP[destCode] : null;
 
   storyCheckMissedSleep();
@@ -25705,7 +25710,7 @@ function cellMove(dir) {
 // §CELL-04: infer terrain for an unnamed cell by majority vote of named neighbors
 function _inferTerrain(r, c) {
   const neighbors = [[-1,0],[1,0],[0,1],[0,-1]]
-    .map(([dr,dc]) => CELL_GRID[`${r+dr},${c+dc}`])
+    .map(([dr,dc]) => cellCode(`${r+dr},${c+dc}`))
     .filter(Boolean)
     .map(code => NODE_MAP[code]?.name)
     .filter(Boolean);
@@ -25729,7 +25734,7 @@ function _enterEmptyCell(r, c) {
       return nr>=1 && nc>=1 && nr<=500 && nc<=500 && !IMPASSABLE_CELLS.has(`${nr},${nc}`);
     })
     .map(([d,[dr,dc]]) => {
-      const code = CELL_GRID[`${r+dr},${c+dc}`];
+      const code = cellCode(`${r+dr},${c+dc}`);
       return code ? `${d} → ${NODE_MAP[code]?.label||code}` : d;
     });
 
@@ -32196,7 +32201,7 @@ function _renderMapGrid() {
   for (let dr = -5; dr <= 5; dr++) {
     for (let dc = -5; dc <= 5; dc++) {
       const r = cr + dr, c = cc + dc;
-      const code = CELL_GRID[`${r},${c}`];
+      const code = cellCode(`${r},${c}`);
       const isCurrent = (dr === 0 && dc === 0);
       const cell = document.createElement('div');
       cell.className = 'mc';
@@ -32276,11 +32281,11 @@ function _mapAddExits(cell, code) {
   const OPP    = {N:'S', S:'N', E:'W', W:'E'};
   ['N','S','E','W'].forEach(dir => {
     const [dr, dc] = DELTAS[dir];
-    const toCode = CELL_GRID[`${coord.r+dr},${coord.c+dc}`];
+    const toCode = cellCode(`${coord.r+dr},${coord.c+dc}`);
     if (!toCode) return;
     const toCoord = NODE_COORDS[toCode];
     const [bdr, bdc] = DELTAS[OPP[dir]];
-    const backCode = toCoord ? CELL_GRID[`${toCoord.r+bdr},${toCoord.c+bdc}`] : null;
+    const backCode = toCoord ? cellCode(`${toCoord.r+bdr},${toCoord.c+bdc}`) : null;
     const ow = backCode !== code;
     const sp = document.createElement('span');
     sp.className = 'mc-exit dir-' + dir.toLowerCase() + (ow ? ' oneway' : ' available');
@@ -32316,7 +32321,7 @@ function _renderMiniMap() {
     for (let dc = -8; dc <= 8; dc++) {
       const r = cr + dr, c = cc + dc;
       const key = `${r},${c}`;
-      const code = CELL_GRID[key];
+      const code = cellCode(key);
       const isPlayer = (dr === 0 && dc === 0);
       const dist = Math.max(Math.abs(dr), Math.abs(dc));
       const cell = document.createElement('div');
@@ -32395,7 +32400,7 @@ function _renderWorldMiniMap() {
   for (let r = wm_r0; r < wm_r0 + 41; r++) {
     for (let c = wm_c0; c < wm_c0 + 61; c++) {
       const key  = `${r},${c}`;
-      const code = CELL_GRID[key];
+      const code = cellCode(key);
       const cell = document.createElement('div');
       cell.className = 'wmc';
       if (code && NODE_MAP[code]) {
@@ -32473,7 +32478,7 @@ function _updateExitLinks() {
       el.innerHTML = '<span class="exit-none">— (none)</span>';
       return;
     }
-    const destCode = CELL_GRID[`${nr},${nc}`] || null;
+    const destCode = cellCode(`${nr},${nc}`);
     const dest = destCode ? NODE_MAP[destCode] : null;
     const isWp = (d === wpDir);
     if (btn) btn.disabled = false;
@@ -32694,7 +32699,7 @@ function _bfsGridPath(fromCode, toCode) {
       if (visited.has(k) || IMPASSABLE_CELLS.has(k)) continue;
       if (nr < 1 || nc < 1 || nr > 500 || nc > 500) continue;
       visited.add(k);
-      const step = { r: nr, c: nc, code: CELL_GRID[k] || null };
+      const step = { r: nr, c: nc, code: cellCode(k) };
       const newPath = [...path, step];
       if (nr === endCoord.r && nc === endCoord.c) return newPath;
       queue.push({ r: nr, c: nc, path: newPath });

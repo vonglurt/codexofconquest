@@ -194,6 +194,112 @@ the MUD `buildLook`. Deletion removes the category.
 
 **Acceptance:** `grep -c 'junction:true' roll2hit-v3.html` → 0; `./api.sh audit` reports 0
 junction warnings; walking through former junction cells shows the empty-cell screen; no signpost stop.
+**Status: ✅ DONE (commit efa8f7a, 2026-06-25)** — 316 deleted, predicate extended to `"Signpost says:"`, audit clean.
+
+---
+
+## 3.5 §WALK-1.5 — Geo Re-Projection (data substrate) — SCOPED 2026-06-25
+
+The mover (§WALK-2) and reachability (§WALK-3) assume every node lives on the geo-grid of §2. Today
+it does not. This step builds that substrate. Ground truth (post-§WALK-1, measured against the live
+file + GEO2):
+
+| Fact | Value |
+|---|---|
+| NODE_MAP entries | **409** |
+| NODE_COORDS entries | **409** (every node has abstract `{r,c}`; **0** missing) |
+| Nodes with authoritative lat/lon (GEO2) | **~84** |
+| Nodes needing geographic placement | **~325** |
+| GEO2 cities that **collide** at 1° | **23 cities across 11 cells** (e.g. (18,179)=LDN/LON/BRK; (5,158)=HHL/ISL; (26,190)=PIS/PSA) |
+| Current geo-seed projection | linear fit into an 8–500 box, **6.47 cells/° lat vs 5.07 cells/° lon** (not equal-degree, not Mercator despite the comment) |
+| Current collision handling | `c++` nudge east (wrong at 1° — pushes nodes into the sea) |
+| `CELL_GRID` build | last-write-wins (`g[key]=code`) — silently orphans collided nodes |
+| `CELL_GRID` read sites in client | **10** |
+
+### 3.5.1 Projection rewrite (mechanical)
+Replace the geo-seed box-fit with the §2.1 equirectangular formula:
+```
+row(lat) = clamp(floor(70 − lat), 0, 89)      col(lon) = mod(floor(lon + 180), 360)
+```
+Remove the `c++` nudge — collisions are now *expected* and handled by locale lists (§2.2), not by
+relocating cities.
+
+### 3.5.2 CELL_GRID → locale lists (client, ~10 sites)
+`g[key] = code` → `(g[key] ??= []).push(code)`. The 10 read sites switch to `primaryOf(cell)` /
+array-aware logic (`roll2hit-v3.html:9134` build; reads at 25680, 25708, 25732, 32199, 32279, 32283,
+32319, 32398, 32476, 32697). Sub-location navigation within a multi-node cell costs no grid step.
+
+### 3.5.3 Geocoding the ~325 (the bulk — mostly mechanical)
+Inspection shows the non-GEO2 nodes are overwhelmingly **real-place satellites** of GEO2 cities,
+following a `CityName — Specific Place` label form:
+- `PSAGLD` "Florence — Guild Counting House", `CONREG` "Constantinople — Imperial Court Registry",
+  `BOLSAC` "Bologna — San Petronio", `VENCTR` "Venice — Ca Tron", `PISGAT` "Pistoia — Eastern Gate"…
+- The dense Italian/Tuscany campaign (Florence/Pisa/Pistoia/Prato/Fiesole) + Norse farmsteads
+  (Starkad's, Laugar, Saelingsdals Ford) + passes/roads (Carpathian, Apennine, Black Sea Road).
+
+**Decision: offset to own cell via true coords** (not inherit-parent). **Method (validated 2026-06-25):
+invert-and-reproject**, not label-matching. Label-matching only resolves 22/228 (most satellites are
+labeled by district/feature, not "City —", and a large fantasy/dungeon tail — "Leviathan's Eye",
+"Sunken God's Throne" — has no real place name). Instead:
+
+1. Every node already carries an abstract `{r,c}` that reweave placed *near its geographic
+   neighbors* — measured median distance to nearest GEO2 anchor = **3 cells** (203/325 within 5,
+   none beyond 40). The abstract grid is geographically faithful.
+2. The old geo-seed was a global linear map `abstract = linear(lat,lon)` with
+   `minLat=-8,maxLat=68,minLon=-25,maxLon=72,gridMin=8,gridMax=500`. **Invert it** to recover an
+   approximate `(lat,lon)` from any node's abstract `{r,c}`:
+   `lat = 68 − (r−8)/492·76`, `lon = −25 + (c−8)/492·97`. Verified exact on GEO2 (LHR `{64,224}` →
+   59.35,17.6 = its true coords).
+3. **Re-project** that `(lat,lon)` equirectangular (§2.1). GEO2 nodes override step 2 with their
+   authoritative lat/lon; the ~325 others use the inverted-approximate lat/lon.
+
+Fully mechanical, global, no new data, no per-node decisions. Caveat: non-GEO2 nodes inherit any
+reweave distortion — acceptable given the 3-cell median fidelity; a handful of real cities missing
+from GEO2 (Genoa, Lübeck, Danzig, Riga, Bruges, Naples) should be *added* with true coords first so
+their satellites anchor correctly.
+
+Project at 1° so each lands on its (approx) true cell, spreading naturally wherever real separation ≥ ~1°.
+
+**Unavoidable 1° consequence (flagged):** satellites that are genuinely < 1° (~110 km) from each
+other — the entire Tuscany campaign (Florence/Pisa/Pistoia/Prato/Fiesole interiors), London's
+districts — *cannot* be placed on distinct cells without lying about geography by ≥110 km. For that
+residue, offset degrades to **co-location** (locale list, §2.2): the cell carries several
+sub-locations. Offset wins where the grid can express it; co-location is the only honest fallback
+below 1°. **Open: revisit resolution (e.g. 0.25°) for dense regions, or accept co-located clusters?**
+
+The `camelot` terrain key is a **misnomer** for court/monastery/interior scenes — most (`AIX`
+Aix-la-Chapelle, `AUG` Augsburg, `LGE` Liège, `STR` Strasbourg, `TIF` Tbilisi, `YAZ` Yazd) are at
+**real places** and geocode normally. Only a handful are genuinely off-Earth (see §3.5.6).
+
+### 3.5.4 SEA_MASK authoring
+**Decision: coastline raster (Natural Earth 1:110m → 1°).** Downsample a public coastline to a static
+1° land/sea mask over the active window (rows for lat 70..−20, cols ~154–247 for lon −26..+67 ≈ an
+90×94 region of interest, ~8.5k cells). **Alignment risk (flagged):** stylized/approximate GEO2
+coords may land a coastal city in a raster *sea* cell, violating I4 (on-land). Mitigation: a
+reconciliation pass after re-projection — snap any node on a sea cell to its nearest land cell, then
+hand-verify. The raster is committed as a generated data blob (the single-file game inlines it).
+
+### 3.5.5 FERRY_EDGES authoring
+Some water crossings already exist as nodes — `FRRFRY` "Ferrara — Po River Ferry", `MESFRY`
+"Mestre — Mainland Ferry Landing", `LXF` "Saelingsdals Ford" — and inform the edge set. Add sea
+straits: English Channel, Gibraltar, Bosphorus, Baltic approaches, Iceland approach, Aegean island
+hops (e.g. `NXS` Naxos). Each is a bidirectional land↔land edge over sea cells (§2.3).
+
+### 3.5.6 Off-Earth nodes (the one real fork)
+A small set has **no real-Earth coordinate**: Norse divine halls (`ASG` Ásgarðr/Frigg's Hall, `AEG`
+Ægir's Feast Hall), the cosmic/math realm (Event Horizon `EHZ`, Monster group `MONS` — see
+`project_math_world`), and abstract dream/grief interiors. These cannot project.
+
+**Decision: sub-location of an Earth anchor.** Each off-Earth node co-locates on the cell of a chosen
+Earth anchor (Norse halls → the nearest Norse city cell, e.g. Birka/Iceland; cosmic/math realm →
+the anchor of the quest that enters it; dream/grief interiors → their framing city). They thus get a
+real cell and appear in reachability via the anchor. Anchor selection is derived from the
+`activateNode`/entry quest of each. (Trade-off accepted: mythic realms nominally sit "inside" an
+Earth cell; acceptable since they are entered via quest transition, not by walking the map.)
+
+**Acceptance:** geo-seed emits equirectangular 1° coords for all geocodable nodes; `CELL_GRID` holds
+locale lists; every Earth node sits on a land cell (I4); `SEA_MASK` + `FERRY_EDGES` authored;
+off-Earth nodes resolved per the chosen policy; `reachability(LHR)` (§WALK-3) returns one component.
 
 ---
 
@@ -391,11 +497,17 @@ Strictly sequential — each step is a green-CI checkpoint:
 - **City collisions @ 1°:** locale lists — a cell holds ≥1 node; intra-cell moves are sub-location picks. ✅
 - **Sea:** impassable land/sea mask + explicit ferry edges (only sanctioned stored edges). ✅
 - **Canonical hub:** **LHR** (Birka, the `currentCode:'LHR'` start node) → cell (10,197). ✅
+- **§WALK-1 executed:** 316 junctions deleted, commit efa8f7a. ✅
+
+**Resolved for §WALK-1.5 (2026-06-25):**
+- **City satellites:** offset to own cell via *true* lat/lon; sub-degree residue (Tuscany, London) co-locates as locale lists — offset cannot beat the 1° floor. ✅
+- **Off-Earth nodes (ASG/AEG/EHZ/MONS/dream):** sub-location of an Earth anchor derived from their entry quest. ✅
+- **SEA_MASK source:** Natural Earth 1:110m coastline → 1° raster, committed as a generated blob; reconciliation pass snaps sea-cell nodes to nearest land (I4). ✅
 
 **Remaining for implementation time:**
-- Exact `SEA_MASK` source (coastline raster vs. hand-authored) and the ferry-edge inventory.
-- Whether any of the 316 junctions warrant promotion to named lore nodes.
-- Whether non-GEO2 nodes get real lat/lon or become sub-locations of the nearest GEO2 cell.
+- Whether to revisit resolution (e.g. 0.25°) for dense regions vs. accept co-located sub-degree clusters at 1° (§3.5.3).
+- Ferry-edge inventory (some already exist as nodes: FRRFRY, MESFRY, LXF).
+- Exact Earth anchor for each off-Earth node (derive from `activateNode`/entry quest).
 
 ---
 
