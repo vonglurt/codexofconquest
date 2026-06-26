@@ -25759,8 +25759,8 @@ function cellMove(dir) {
   S_story.playerC = nc;
   S_story.visitedCells[`${nr},${nc}`] = true;
   _statTally('exitsTaken', 1);
-  S_story.hoursElapsed    = (S_story.hoursElapsed || 0) + 1;
-  S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
+  // §TIMELESS-01: movement is timeless — stepping one cell N/E/S/W no longer
+  // advances the clock. Time still passes on battle / sleep / fishing / rest.
 
   if (destNode) {
     const _farewell = _getFarewell(S_story.currentCode, destCode);
