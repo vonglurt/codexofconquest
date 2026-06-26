@@ -64,7 +64,10 @@ function purgeNonces() {
 // ── §CELL-07: In-memory session store + SSE broadcast ────────────────────────
 const SESSIONS    = new Map(); // sessionId → { id, playerName, r, c, nodeCode, state, lastSeen }
 const SSE_CLIENTS = new Map(); // sessionId → Response (SSE stream)
-const SESSION_TTL = 30 * 60 * 1000; // 30-minute idle timeout
+// 30-minute idle timeout. SESSION_TTL_MS env override exists ONLY so the MUD
+// harness (tests/mud-harness.mjs §D) can exercise the prune path in ms; unset
+// in every real deployment, so this is identically the 30-minute default there.
+const SESSION_TTL = parseInt(process.env.SESSION_TTL_MS || '', 10) || 30 * 60 * 1000;
 
 function sessionPrune() {
   const now = Date.now();

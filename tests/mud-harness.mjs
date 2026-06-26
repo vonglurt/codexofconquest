@@ -38,19 +38,21 @@ async function waitFor(fn, ms = 2000, step = 25) {
   return !!fn();
 }
 
-// ── HTTP helpers (all routes live under /api) ─────────────────────────────────
-async function jpost(p, body) {
-  const r = await fetch(BASE + '/api' + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+// ── HTTP helpers (all routes live under /api; base defaults to the main server)─
+async function jpost(p, body, base = BASE) {
+  const r = await fetch(base + '/api' + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   return r.json();
 }
-async function jget(p) { return (await fetch(BASE + '/api' + p)).json(); }
+async function jget(p, base = BASE) { return (await fetch(base + '/api' + p)).json(); }
 
 // ── SSE client — parses `event:`/`data:` frames into client.events[] ──────────
-function openSSE(sessionId) {
-  const client = { id: sessionId, events: [], req: null };
+function openSSE(sessionId, base = BASE) {
+  const client = { id: sessionId, events: [], req: null, closed: false };
   return new Promise((resolve, reject) => {
-    const req = http.get(`${BASE}/api/session/events?sessionId=${sessionId}`, (res) => {
+    const req = http.get(`${base}/api/session/events?sessionId=${sessionId}`, (res) => {
       res.setEncoding('utf8');
+      res.on('end', () => { client.closed = true; });
+      res.on('close', () => { client.closed = true; });
       let buf = '', evName = 'message';
       res.on('data', (chunk) => {
         buf += chunk;
@@ -78,35 +80,40 @@ const closeSSE = (c) => { try { c.req.destroy(); } catch {} };
 // initial 'connected' frame, which carries no event payload of interest).
 const countEv = (c, type, pred = () => true) => c.events.filter((e) => e.event === type && pred(e.data)).length;
 
-// ── server lifecycle ──────────────────────────────────────────────────────────
-async function pingOk(ms = 400) {
+// ── server lifecycle (factory — supports >1 throwaway server per run) ──────────
+async function pingOk(base, ms = 400) {
   const ctl = AbortSignal.timeout ? AbortSignal.timeout(ms) : undefined;
-  try { const r = await fetch(BASE + '/api/ping', ctl ? { signal: ctl } : {}); return r.ok; } catch { return false; }
+  try { const r = await fetch(base + '/api/ping', ctl ? { signal: ctl } : {}); return r.ok; } catch { return false; }
 }
-let server = null;
-async function startServer() {
-  if (await pingOk()) {
-    console.error(`✗ port ${PORT} is already in use — set MUD_HARNESS_PORT to a free port.`);
-    process.exit(1);
+const servers = [];
+async function startServer(port, extraEnv = {}) {
+  const base = `http://127.0.0.1:${port}`;
+  if (await pingOk(base)) {
+    console.error(`✗ port ${port} is already in use — set MUD_HARNESS_PORT to a free port.`);
+    stopAllServers(); process.exit(1);
   }
-  server = spawn('node', ['wbapi-server.js'], {
-    cwd: ROOT, env: { ...process.env, PORT: String(PORT) }, stdio: ['ignore', 'ignore', 'pipe'],
+  const proc = spawn('node', ['wbapi-server.js'], {
+    cwd: ROOT, env: { ...process.env, PORT: String(port), ...extraEnv }, stdio: ['ignore', 'ignore', 'pipe'],
   });
-  let stderr = '';
-  server.stderr.on('data', (d) => { stderr += d; });
-  const up = await waitFor(() => server.exitCode === null, 500) && await (async () => {
+  const srv = { port, base, proc, stderr: '' };
+  servers.push(srv);
+  proc.stderr.on('data', (d) => { srv.stderr += d; });
+  const up = await waitFor(() => proc.exitCode === null, 500) && await (async () => {
     const start = Date.now();
-    while (Date.now() - start < 8000) { if (await pingOk()) return true; await sleep(150); }
+    while (Date.now() - start < 8000) { if (await pingOk(base)) return true; await sleep(150); }
     return false;
   })();
-  if (!up) { console.error(`✗ test server failed to start on ${PORT}\n${stderr}`); stopServer(); process.exit(1); }
+  if (!up) { console.error(`✗ test server failed to start on ${port}\n${srv.stderr}`); stopAllServers(); process.exit(1); }
+  return srv;
 }
-function stopServer() { if (server && server.exitCode === null) { try { server.kill('SIGTERM'); } catch {} } }
+function stopAllServers() {
+  for (const s of servers) if (s.proc && s.proc.exitCode === null) { try { s.proc.kill('SIGTERM'); } catch {} }
+}
 
 // ── the harness run ───────────────────────────────────────────────────────────
 const openClients = [];
 async function main() {
-  await startServer();
+  await startServer(PORT);
 
   // ════════ (a/c) co-presence at the hub ════════
   console.log('\n[A] co-presence chat + who/look at the hub');
@@ -189,6 +196,38 @@ async function main() {
 
   console.log(`\n  (encounters fired — Dora seed7: ${tD.length}, Evan seed808: ${tE.length}, Finn seed7: ${tF.length})`);
 
+  // ════════ (d) idle session past SESSION_TTL is pruned + its SSE closed ════════
+  // A SECOND throwaway server with a short SESSION_TTL_MS (env override that is
+  // inert in every real deployment) so the 30-min prune path runs in ms. We keep
+  // a "Warm" session alive with periodic look()s and leave "Ghost" idle, then
+  // trigger the sweep (any /session/* request prunes first) and assert that only
+  // the idle one is dropped — and that its SSE stream was server-closed.
+  console.log('\n[D] idle session past SESSION_TTL is pruned + its SSE closed');
+  const TTL_MS = 700;
+  const ttl = await startServer(PORT + 1, { SESSION_TTL_MS: String(TTL_MS) });
+  const ghost = await jpost('/session/start', { name: 'Ghost', seed: 11 }, ttl.base);
+  const warm  = await jpost('/session/start', { name: 'Warm',  seed: 22 }, ttl.base);
+  const sseG = await openSSE(ghost.sessionId, ttl.base); openClients.push(sseG);
+  await sleep(100);
+  check((await jget('/session/who', ttl.base)).count === 2, 'both sessions present before TTL elapses');
+  check(sseG.closed === false, 'Ghost SSE is open before TTL elapses');
+
+  // Keep Warm warm across > TTL of wall-clock; never touch Ghost.
+  const warmTouches = 4, warmStep = Math.ceil((TTL_MS * 1.6) / warmTouches);
+  for (let i = 0; i < warmTouches; i++) {
+    await sleep(warmStep);
+    await jget(`/session/look?sessionId=${warm.sessionId}`, ttl.base); // refreshes Warm.lastSeen + prunes stale
+  }
+  // one more pruning request after the dust settles, then assert
+  const whoAfter = await jget('/session/who', ttl.base);
+  const survivors = (whoAfter.sessions || whoAfter.players || []).map((p) => p.name);
+  await waitFor(() => sseG.closed, 1000);
+  check(whoAfter.count === 1, 'after idle TTL, exactly one session survives');
+  check(survivors.includes('Warm') && !survivors.includes('Ghost'), 'Warm (kept active) survives; Ghost (idle) is pruned');
+  check(sseG.closed === true, 'pruned Ghost’s SSE stream was closed by the server');
+  const ghostLook = await jget(`/session/look?sessionId=${ghost.sessionId}`, ttl.base);
+  check(ghostLook.ok === false, 'pruned Ghost session is gone (look 404s)');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});
@@ -199,7 +238,7 @@ main()
   .catch((e) => { fails.push('harness threw: ' + (e && e.stack || e)); console.error(e); })
   .finally(async () => {
     openClients.forEach(closeSSE);
-    stopServer();
+    stopAllServers();
     await sleep(150);
     console.log('\n' + '─'.repeat(60));
     if (fails.length) {

@@ -1,6 +1,6 @@
 # Lab Report — §WALK-5: MUD Multi-Client Harness (instanced encounters, v1)
 
-**Status:** DESIGN LOCKED (2026-06-26). **Inc 1 ✅** (world inputs + terrain-parity guard) · **Inc 2 ✅** (per-session seeded RNG + instanced roll) · **Inc 3 ✅** (`tests/mud-harness.mjs`, 18/18); Inc 4 pending.
+**Status:** ✅ **COMPLETE (2026-06-26).** **Inc 1 ✅** (world inputs + terrain-parity guard) · **Inc 2 ✅** (per-session seeded RNG + instanced roll) · **Inc 3 ✅** (`tests/mud-harness.mjs`, properties a–c) · **Inc 4 ✅** (TTL-prune assertion + CI `mud` job + docs). Full harness **24/24, green across 3 consecutive runs**; closes the **§WALK series**.
 **Parent:** `lab-reports/lab-report-terrain-field-mover-redesign.md` §7 (the v1 instanced-vs-shared decision).
 **Predecessor MUD layer:** `lab-reports/lab-report-cell-map-mud-redesign.md` §CELL-07 (the in-memory `SESSIONS` store + SSE broadcast this report extends).
 
@@ -218,9 +218,15 @@ Strictly sequential; each is a green checkpoint (`npm run check:walk` + harness 
   includes the sender, then a redundant `sseSend` to the sender fired again) — removed the redundant send.
   *CI wiring deferred to Inc 4: the harness boots the server, which top-level-requires `@anthropic-ai/sdk`, so
   it needs an `npm ci` job (unlike the pure-stdlib `check:walk`).*
-- **Inc 4 — TTL + docs.** Add the property (d) TTL-prune assertion; doc-sync (index.md cross-ref, mechanics
-  doc note on SP/MP encounter divergence §4.3, this report → status DONE); file **§WALK-5-FU** (ferry data).
-  **Green: full harness + check:walk.**
+- **Inc 4 — TTL + CI + docs. ✅ DONE.** Added property (d): a second throwaway server booted with a
+  `SESSION_TTL_MS` env override (inert in every real deployment — falls back to the 30-min default) so the
+  prune path runs in ms. The harness keeps a "Warm" session alive with periodic `look`s and leaves a "Ghost"
+  idle, then triggers the sweep (every `/session/*` request prunes first) and asserts **only** the idle Ghost
+  is dropped *and* its SSE stream was server-closed (`res.end()` → client `'end'`), while Warm survives —
+  proving the prune is selective, not a blanket reap. **Harness now 24/24.** Wired into CI as a **separate
+  `mud` job** in `walk-invariants.yml` (`npm ci` + `npm run test:mud`) — it can't ride the stdlib-only
+  `invariants` job because the server top-level-requires `@anthropic-ai/sdk`. Docs synced; **§WALK-5-FU**
+  (ferry data) filed. **Green: full harness + `check:walk`.** This closes §WALK-5 and the entire §WALK series.
 
 ---
 
@@ -240,13 +246,14 @@ Strictly sequential; each is a green checkpoint (`npm run check:walk` + harness 
 
 ---
 
-## 9. Files (planned)
+## 9. Files (as shipped)
 
 | File | Change |
 |---|---|
-| `wbapi-server.js` | `getMoverWorld()` +`terrainAt`/`encounterRate`/`SEA_LANES`; `session/move` +instanced roll; `s.encounter`/`s.seed`/`s.rngState`; `who` +`encounter` |
+| `wbapi-server.js` | `getMoverWorld()` +`terrainAt`/`encounterRate`/`SEA_LANES`; `session/move` +instanced roll; `s.encounter`/`s.seed`/`s.rngState`; `who` +`encounter`; `SESSION_TTL` reads `SESSION_TTL_MS` env override (test-only, prod-inert) |
 | `scripts/check-terrain-parity.js` (new) | server↔client terrain/encounter-rate parity guard |
-| `package.json` | `check:terrain` alias; fold into `check:walk` |
-| `tests/mud-harness.*` (new) | K-client deterministic harness (properties a–d) |
+| `package.json` | `check:terrain` + `test:mud` aliases; `check:terrain` folded into `check:walk` |
+| `tests/mud-harness.mjs` (new) | K-client deterministic HTTP+SSE harness, properties a–d (24/24) |
+| `.github/workflows/walk-invariants.yml` | new `mud` job (`npm ci` + `test:mud`); harness path added to triggers |
 | `index.md` / `plan.md` | cross-ref + status; SP/MP encounter divergence note |
-| this report | status → DONE on Inc 4 |
+| this report | status → COMPLETE |
