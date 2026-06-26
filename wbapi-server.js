@@ -34,6 +34,7 @@ const fs        = require('fs');
 const path      = require('path');
 const crypto    = require('crypto');
 const WBAPI     = require('./wbapi-core');
+const Mover     = require('./mover');   // §WALK-2 shared movement kernel (also inlined in roll2hit-v3.html)
 const Anthropic = require('@anthropic-ai/sdk');
 
 // ── Nonce registry (one-time delete tokens, 5-min TTL) ───────────────────────
@@ -307,7 +308,9 @@ function buildCellGrid(nm, coords) {
   const g = {};
   for (const code of Object.keys(nm)) {
     const coord = coords[code] || { r: nm[code].r, c: nm[code].c };
-    if (coord && coord.r != null && coord.c != null)
+    // §WALK-2: first-wins (not last-wins) so the primary at a collided 1° cell
+    // matches the client's CELL_GRID[key][0] and the mover's locale grid.
+    if (coord && coord.r != null && coord.c != null && g[`${coord.r},${coord.c}`] === undefined)
       g[`${coord.r},${coord.c}`] = code;
   }
   return g;
@@ -322,6 +325,61 @@ function getCellGrid() {
     _cgCache = buildCellGrid(nm, coords);
   }
   return _cgCache;
+}
+
+// ── §WALK-2 — server geo-grid for the shared mover kernel (mover.js) ──────────
+// The kernel needs a locale-list grid (first-wins primary, matching the client's
+// CELL_GRID) and the IMPASSABLE set. Both are cached and rebuild on reload.
+
+// IMPASSABLE_CELLS parsed from the game's SEA_RUNS literal — the same set the
+// client builds at load (roll2hit-v3.html). Closes the latent bug where the
+// server move ignored sea cells (lab report §8). Cached by raw-source reference.
+let _seaCacheSrc = null, _seaCache = null;
+function getImpassable() {
+  const src = WBAPI._rawSrc || '';
+  if (src !== _seaCacheSrc) {
+    _seaCacheSrc = src;
+    const set = new Set();
+    const m = src.match(/const\s+SEA_RUNS\s*=\s*(\{[\s\S]*?\});/);
+    if (m) {
+      let runs = null;
+      try { runs = (new Function('return ' + m[1]))(); } catch { runs = null; }  // trusted local source
+      if (runs) for (const r of Object.keys(runs))
+        for (const [a, b] of runs[r]) for (let c = a; c <= b; c++) set.add(`${r},${c}`);
+    }
+    _seaCache = set;
+  }
+  return _seaCache;
+}
+
+// First-wins locale-list grid: "r,c" → [code,…] in NODE_MAP key order (so the
+// primary, list[0], matches the client's CELL_GRID at collided 1° cells).
+let _lgCacheNm = null, _lgCacheCoords = null, _lgCache = null;
+function getLocaleGrid() {
+  const nm = WBAPI.nodeMap, coords = WBAPI.nodeCoords;
+  if (nm !== _lgCacheNm || coords !== _lgCacheCoords) {
+    _lgCacheNm = nm; _lgCacheCoords = coords;
+    const g = {};
+    for (const code of Object.keys(nm)) {
+      const coord = coords[code] || { r: nm[code].r, c: nm[code].c };
+      if (coord && coord.r != null && coord.c != null)
+        (g[`${coord.r},${coord.c}`] ??= []).push(code);
+    }
+    _lgCache = g;
+  }
+  return _lgCache;
+}
+
+// Read-only world snapshot handed to Mover.move(). terrainAt/encounterRate are
+// omitted — server-side encounter resolution lands in §WALK-5; the kernel
+// reports encounter.eligible=false / baseRate=0 without them.
+function getMoverWorld() {
+  const lg = getLocaleGrid(), imp = getImpassable();
+  return {
+    proj: { ROWS: 90, COLS: 360 },   // §2.1 equirectangular 1° (matches client GEO_PROJ)
+    impassable: imp,
+    cellCodes: (r, c) => lg[`${r},${c}`] || [],
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -10869,22 +10927,27 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, `invalid dir "${dir}"`);
         return json(res, 400, { ok: false, error: `dir must be one of: ${DIR_NAMES.join(', ')}` });
       }
-      const cg    = buildCellGrid(WBAPI.nodeMap, WBAPI.nodeCoords);
-      const idx   = DIR_NAMES.indexOf(dir);
-      const newR  = s.r + MOVES4[idx][0];
-      const newC  = s.c + MOVES4[idx][1];
-      const newCode = cg[`${newR},${newC}`];
-      if (!newCode) {
-        logResponse(method, url.pathname, 409, `no exit to ${dir} from (${s.r},${s.c})`);
-        return json(res, 409, { ok: false, error: `No exit to ${dir} from (${s.r},${s.c})` });
+      // §WALK-2: the shared kernel (mover.js) decides bounds/wrap/sea; the server
+      // applies the session side effects. This adds the geo-clamp + IMPASSABLE
+      // rules the server previously lacked (latent sea-walk bug, lab report §8)
+      // and unifies empty-cell movement with the SP client (was 409 before).
+      const mres = Mover.move(getMoverWorld(), { r: s.r, c: s.c }, dir);
+      if (!mres.ok) {
+        const msg = mres.reason === 'sea'
+          ? `Sea blocks the way ${dir} from (${s.r},${s.c})`
+          : `No path ${dir} from (${s.r},${s.c}) — the world ends here`;
+        logResponse(method, url.pathname, 409, msg);
+        return json(res, 409, { ok: false, error: msg, reason: mres.reason });
       }
       const prevR = s.r, prevC = s.c;
+      const newR  = mres.to.r, newC = mres.to.c;
+      const newCode = mres.destCodes[0] || null;   // null = empty (unmarked) cell
       s.r = newR; s.c = newC; s.nodeCode = newCode;
       // Broadcast to players now in the same cell (not the mover themselves)
       broadcastCell(newR, newC, 'player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, sessionId);
       const look = buildLook(s);
-      logRow('move', `${s.playerName}  ·  ${dir}  →  (${newR},${newC}) ${newCode}`);
-      logResponse(method, url.pathname, 200, `session move: ${dir} → ${newCode}`);
+      logRow('move', `${s.playerName}  ·  ${dir}  →  (${newR},${newC}) ${newCode || 'empty'}`);
+      logResponse(method, url.pathname, 200, `session move: ${dir} → ${newCode || 'empty'}`);
       return json(res, 200, { ok: true, dir, ...look });
     }
 
