@@ -1,0 +1,43 @@
+# §WALK-4 Inc 2 — CI gate for the terrain-field invariants + walk parity.
+# Runs the three self-contained Node proofs (no server, no browser, no install):
+#   • check-invariants  — I1 totality / I2 no-stubs / I3 reachability (409/409, 1 component)
+#   • check-mover-parity     — structural: MOVER:CORE inlined byte-identical to mover.js
+#   • check-mover-behaviour  — behavioural: shared kernel reproduces every cellMove decision
+# Red on any I1/I2/I3 violation or parity mismatch; green on current main (lab report §6).
+name: WALK invariants
+
+on:
+  push:
+    paths:
+      - 'mover.js'
+      - 'roll2hit-v3.html'
+      - 'wbapi-server.js'
+      - 'scripts/check-invariants.js'
+      - 'scripts/check-mover-parity.js'
+      - 'scripts/check-mover-behaviour.js'
+      - 'package.json'
+      - '.github/workflows/walk-invariants.yml'
+  pull_request:
+    paths:
+      - 'mover.js'
+      - 'roll2hit-v3.html'
+      - 'wbapi-server.js'
+      - 'scripts/check-invariants.js'
+      - 'scripts/check-mover-parity.js'
+      - 'scripts/check-mover-behaviour.js'
+      - 'package.json'
+      - '.github/workflows/walk-invariants.yml'
+
+jobs:
+  invariants:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+      # No `npm ci` — these proofs depend only on the Node stdlib and the
+      # committed mover.js / roll2hit-v3.html, so install would just pull
+      # Playwright + the SDK for nothing.
+      - name: Run terrain-field invariant + walk-parity suite
+        run: npm run check:walk

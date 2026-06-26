@@ -9,7 +9,11 @@
     "start": "node wbapi-server.js",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
-    "test:install": "playwright install chromium"
+    "test:install": "playwright install chromium",
+    "check:invariants": "node scripts/check-invariants.js",
+    "check:parity": "node scripts/check-mover-parity.js",
+    "check:behaviour": "node scripts/check-mover-behaviour.js",
+    "check:walk": "npm run check:invariants && npm run check:parity && npm run check:behaviour"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3"
