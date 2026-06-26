@@ -10,13 +10,13 @@
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~33,011 | ✅ |
+| HTML line count | ~33,015 | ✅ |
 | Lab reports on disk | 71 | ✅ |
 | Lab reports in index | 71 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-26 **§WALK-4 Inc 2 done**: CI gate `.github/workflows/walk-invariants.yml` runs `npm run check:walk` (invariants + structural + behavioural walk-parity) on push/PR touching `mover.js`/`roll2hit-v3.html`/`wbapi-server.js`; added `check:invariants`/`check:parity`/`check:behaviour`/`check:walk` npm aliases. Prior: §WALK-4 Inc 1 (`scripts/check-invariants.js` I1/I2/I3 — caught + fixed orphaned `junction` terrain + VBY `'bar (Visby)'`→`'bar'`); §TIMELESS-01-FU; §WALK-3 Inc 3 | ✅ |
+| Last sync pass | 2026-06-26 **§WALK-4 complete** (Inc 3 done): rebuilt Playwright nav tests against current geo (navigation 13/13, autosave reseeded 4/4; worldbuilder-walk 18/18 not-stale). **Caught + fixed a P0 bug:** `_enterEmptyCell` wrote to non-existent `#story-content` → every empty-cell step crashed; restored §UNIFY-01 `_renderNodeShell` shared shell. Prior Inc 2 (CI gate `npm run check:walk`) + Inc 1 (`scripts/check-invariants.js` I1/I2/I3 — fixed orphaned `junction` terrain + VBY `'bar (Visby)'`→`'bar'`); §TIMELESS-01-FU; §WALK-3 | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 

@@ -37,14 +37,15 @@ test.describe('Autosave guarantee (§UNIFY-09)', () => {
   // ── 1. Entry-point save: cellMove triggers storyRender → storyAutoSave ──────
 
   test('cellMove writes mutated gold to localStorage', async ({ page }) => {
-    await seedAndLoad(page, { gold: 500 });
+    // Seed at LHR (10,197); E → BMA (10,198) is a one-cell named move (current geo).
+    await seedAndLoad(page, { currentCode: 'LHR', playerR: 10, playerC: 197, visited: { LHR: true }, gold: 500 });
     await dismissContinue(page);
 
     await page.evaluate(() => {
       S_story.gold = 999;
       const orig = Math.random;
       Math.random = () => 1;   // suppress encounter roll
-      cellMove('S');           // BOO(47,223) → LXF(48,223); storyRender calls storyAutoSave
+      cellMove('E');           // LHR → BMA; storyRender calls storyAutoSave
       Math.random = orig;
     });
 
@@ -54,7 +55,7 @@ test.describe('Autosave guarantee (§UNIFY-09)', () => {
     });
     expect(saved).not.toBeNull();
     expect(saved.gold).toBe(999);
-    expect(saved.currentCode).toBe('LXF');
+    expect(saved.currentCode).toBe('BMA');
   });
 
   // ── 2. Per-action save: direct storyAutoSave() writes to localStorage ───────
@@ -99,14 +100,15 @@ test.describe('Autosave guarantee (§UNIFY-09)', () => {
   });
 
   test('cellMove save survives page reload (full round-trip)', async ({ page }) => {
-    await seedAndLoadViaStorage(page);
+    // Seed at LHR; E → BMA is a one-cell named move (current geo).
+    await seedAndLoadViaStorage(page, { currentCode: 'LHR', playerR: 10, playerC: 197, visited: { LHR: true } });
     await dismissContinue(page);
 
     await page.evaluate(() => {
       S_story.gold = 555;
       const orig = Math.random;
       Math.random = () => 1;
-      cellMove('S');   // BOO → LXF; storyRender calls storyAutoSave
+      cellMove('E');   // LHR → BMA; storyRender calls storyAutoSave
       Math.random = orig;
     });
 
@@ -117,7 +119,7 @@ test.describe('Autosave guarantee (§UNIFY-09)', () => {
     expect(goldAfter).toBe(555);
 
     const codeAfter = await readStory(page, 'currentCode');
-    expect(codeAfter).toBe('LXF');
+    expect(codeAfter).toBe('BMA');
   });
 
 });

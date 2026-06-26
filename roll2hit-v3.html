@@ -25654,30 +25654,34 @@ function _inferTerrain(r, c) {
   return best;
 }
 
+// §UNIFY-01 shared shell — empty cells reuse the same header slots (#s-node-num /
+// #s-node-name / #s-node-act / #story-act-badge) and body box (#story-text-box) as
+// named nodes. Restored in §WALK-4 Inc 3: §MATH-01 had reintroduced a write to the
+// non-existent #story-content, which threw "Cannot set properties of null" on every
+// empty-cell step. The d-pad exit buttons convey exits (via _updateExitLinks below).
+function _renderNodeShell(numBadge, nameText, actText, badgeText, bodyText) {
+  document.getElementById('story-act-badge').textContent = badgeText;
+  document.getElementById('s-node-num').textContent = numBadge;
+  document.getElementById('s-node-name').textContent = nameText;
+  document.getElementById('s-node-act').textContent = actText;
+  document.getElementById('story-text-box').textContent = bodyText;
+  // Clear the dynamic action cards (battle/npc/quest/…) between story-text-box and
+  // the static story-info-row so an empty cell shows no stale named-node actions.
+  let _el = document.getElementById('story-text-box').nextElementSibling;
+  while (_el && _el.id !== 'story-info-row') { const _next = _el.nextElementSibling; _el.remove(); _el = _next; }
+}
+
 function _enterEmptyCell(r, c) {
   const terrain      = _inferTerrain(r, c);
   const terrainEntry = WORLD_DB[terrain] || WORLD_DB.midlands;
-  const DIRS = {N:[-1,0], S:[1,0], E:[0,1], W:[0,-1]};
-  const exits = Object.entries(DIRS)
-    .filter(([, [dr,dc]]) => {
-      const nr=r+dr, nc=c+dc;
-      return nr>=1 && nc>=1 && nr<=500 && nc<=500 && !IMPASSABLE_CELLS.has(`${nr},${nc}`);
-    })
-    .map(([d,[dr,dc]]) => {
-      const code = cellCode(`${r+dr},${c+dc}`);
-      return code ? `${d} → ${NODE_MAP[code]?.label||code}` : d;
-    });
-
-  const html = `
-    <div class="story-node-hd">${terrainEntry.icon||'·'} Open Terrain</div>
-    <div style="color:var(--dim);font-size:12px;margin-bottom:6px;">
-      [Row ${r}, Col ${c}] — ${terrainEntry.label||terrain}
-    </div>
-    <div class="story-text">The path continues. No named location marks this ground.</div>
-    <div style="margin-top:8px;font-size:12px;color:var(--dim);">
-      Exits: ${exits.join(' · ')||'none'}
-    </div>`;
-  document.getElementById('story-content').innerHTML = html;
+  const _label       = terrainEntry.label || terrain;
+  _renderNodeShell(
+    terrainEntry.icon || '·',
+    _label,
+    'Row ' + r + ', Col ' + c,
+    '— ' + _label + ' —',
+    'The path continues. No named location marks this ground.'
+  );
   document.getElementById('story-move-msg').textContent = '';
 
   // §CELL-09 / §TIMELESS-01: encounter rolls at the terrain's base rate on each step.
