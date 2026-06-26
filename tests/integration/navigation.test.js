@@ -132,6 +132,19 @@ test.describe('Navigation — sea-blocked move (§WALK-1.5)', () => {
     const cls = await page.locator('#story-move-msg').getAttribute('class');
     expect(cls || '').toContain('msg-block');
   });
+
+  // Positive counterpart: a carved sea-lane cell is walkable and renders as ocean.
+  // BMA (10,198) has a SEA_LANES cell directly S at (11,198) — step onto it.
+  test('a carved sea-lane cell is walkable and renders as ocean', async ({ page }) => {
+    await seedAndLoad(page, seedAt({ code: 'BMA', r: 10, c: 198 }));
+    await dismissContinue(page);
+    // The lane cell itself renders as ocean (vs the surrounding impassable sea).
+    const laneTerr = await page.evaluate(() => _inferTerrain(11, 198));
+    expect(laneTerr).toBe('ocean');
+    await moveNoEncounter(page, 'S');
+    const [r, c] = await page.evaluate(() => [S_story.playerR, S_story.playerC]);
+    expect([r, c]).toEqual([11, 198]);   // walked onto the lane, not blocked
+  });
 });
 
 // ── 5 — BFS connectivity (_bfsGridPath / _bfsGridDir) ────────────────────────
