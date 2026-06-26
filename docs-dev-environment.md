@@ -280,7 +280,7 @@ retry/backoff, and pipe-safe JSON output. Common commands:
 ./api.sh put quest quest_wis_01 hp=12  # patch a field
 ./api.sh list npc --q egil             # search by name
 ./api.sh audit                         # integrity scan
-./api.sh reweave                       # repair node graph connectivity
+./api.sh reachability                  # read-only connectivity check (reweave retired §WALK-3)
 ./api.sh save                          # flush memory to disk
 ./api.sh restart                       # graceful restart
 ```

@@ -64,7 +64,6 @@ with a network health check. Broken edges silently disconnect navigation.
 # Fix broken edges
 ./api.sh fix-diagonal LHR S           # fix one diagonal edge
 ./api.sh fix-all-broken --execute     # batch-fix all broken edges
-./api.sh fill-gap WOR E SAL --execute # fill junction chain for long gap
 ./api.sh highway LHR CON --execute    # build full highway between two cities
 ```
 
@@ -249,7 +248,6 @@ echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 ./api.sh connect WOR E SAL               # warns on deg=3/4; use --force to override
 ./api.sh junction LHR S --execute        # spawn single junction node
 ./api.sh junction LHR S --label "Crossroads" --terrain city --execute
-./api.sh fill-gap WOR E SAL --execute    # junction chain for gap > 4
 ./api.sh highway LHR CON --execute       # full junction highway A→B
 ./api.sh highway WOR REG --step 4 --execute
 ```
@@ -265,10 +263,14 @@ echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 ./api.sh fix-all-broken --execute --limit 50  # apply batch
 ./api.sh fix-bidirectional            # preview one-way link violations
 ./api.sh fix-bidirectional --execute  # fix all one-way links (A→B but B doesn't point back)
-./api.sh reweave                      # dry-run: full repair sequence (rip → fix-broken → fix-bidir)
-./api.sh reweave --execute            # mega-loop: all phases server-side, safe loop limits
-./api.sh reweave --execute --max-rip 3 --max-fix 3
 ```
+
+> **Retired (§WALK-3):** `reweave` / `reweave-all`, `fill-gap`, and `rip-and-connect`
+> are gone — junction stubs were removed (§WALK-1/§WALK-1.5) and empty land cells are
+> now freely walkable, so there is no gap to fill or mesh to reweave. The CLI commands
+> return "Unknown command" and the endpoints return HTTP 410. To check connectivity use
+> `./api.sh reachability` (read-only land-flood); to bridge isolated clusters use
+> `./api.sh cluster-bridge`.
 
 > **Requesting new features**: if a map or graph operation is not listed above,
 > request an API refactor rather than reaching for raw curl. Describe the operation
@@ -422,7 +424,6 @@ If you find yourself reaching for curl to hit one of these, request an api.sh wr
 | `GET /api/coords` | `./api.sh count coords` |
 | `GET /api/graph/broken` | `./api.sh broken` *(needs wrapper — request refactor)* |
 | `GET /api/graph/reachability` | `./api.sh reachability` *(needs wrapper — request refactor)* |
-| `POST /api/graph/fill-gap` | `./api.sh fill-gap <from> <dir> <to>` |
 | `POST /api/graph/spawn-junction` | `./api.sh junction <from> <dir>` |
 | `POST /api/graph/move` | `./api.sh move <code> <r> <c>` |
 | `GET /api/layout/worldmap` | `./api.sh worldmap` |
@@ -433,7 +434,6 @@ If you find yourself reaching for curl to hit one of these, request an api.sh wr
 | `GET /api/audit` | `./api.sh audit` |
 | `GET /api/audit/map` | `./api.sh audit --map` |
 | `POST /api/audit/map/fix` | `./api.sh fix-bidirectional --execute` |
-| `POST /api/graph/reweave-all` | `./api.sh reweave --execute` |
 
 ---
 
