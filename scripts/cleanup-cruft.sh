@@ -137,7 +137,7 @@ finalize_archive() {
   if [ "$DRY_RUN" -eq 1 ]; then return; fi
 
   if [ "$NO_ARCHIVE" -eq 1 ]; then
-    for f in "${PRUNE_LIST[@]}"; do rm -f -- "$f"; done
+    for f in ${PRUNE_LIST[@]+"${PRUNE_LIST[@]}"}; do rm -f -- "$f"; done
     return
   fi
 
@@ -153,7 +153,10 @@ finalize_archive() {
   mkdir -p -- "$ARCHIVE_DIR"
 
   # Stage the prune-list files alongside the log snapshots (preserving paths).
-  for f in "${PRUNE_LIST[@]}"; do
+  # Guard: bash 3.2 (macOS default) treats "${arr[@]}" on an EMPTY array as an
+  # unbound variable under `set -u` — this loop can run with PRUNE_LIST empty
+  # (pruned=0 but a log was capped → has_log_snapshots=1). §WALK-2-FU.
+  for f in ${PRUNE_LIST[@]+"${PRUNE_LIST[@]}"}; do
     local dest="$STAGING/$f"
     mkdir -p -- "$(dirname "$dest")"
     mv -- "$f" "$dest"
