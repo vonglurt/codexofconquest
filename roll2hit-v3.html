@@ -9225,75 +9225,7 @@ function _moverWorld() {
   };
 }
 
-const HUNTING_GROUNDS = { // → doc: mechanics-combat.md §Hunting Mode (terrain → displayName; used in storyHunt() encounter header)
-  city:             { displayName:"The Thieves' Den" },
-  city_slums:       { displayName:'The Vermin Pit' },
-  defi_land:        { displayName:'The Unbanked Quarter' },
-  alley:            { displayName:'The Rat Run' },
-  cat_quarter:      { displayName:'The Cat Quarter' },
-  docks:            { displayName:"The Smugglers' Wharf" },
-  market_quarter:   { displayName:'The Black Market Stall' },
-  blacksmith_qtr:   { displayName:'The Forge Pit' },
-  scholars_qtr:     { displayName:'The Forbidden Archive' },
-  cyberpunk_streets:{ displayName:'The Null Zone' },
-  storefront:       { displayName:"The Fence's Back Room" },
-  bar:              { displayName:'The Pit Fight' },
-  inn:              { displayName:'The Night Watch' },
-  tavern:           { displayName:"The Brawler's Corner" },
-  outhouse:         { displayName:'The Sewer Hatch' },
-  merchant_ship:    { displayName:'The Hold Raid' },
-  crypt:            { displayName:'The Bone Chamber' },
-  catacombs:        { displayName:'The Deep Catacomb' },
-  vampire_castle:   { displayName:'The Blood Hall' },
-  sewers:           { displayName:"The Rat King's Warren" },
-  goblin_cave:      { displayName:'The Goblin Pit' },
-  pirate_cave:      { displayName:"The Corsairs' Hold" },
-  monster_cave:     { displayName:'The Beast Den' },
-  sea_cavern:       { displayName:'The Crab Trap' },
-  forest:           { displayName:'The Dark Copse' },
-  jungle:           { displayName:"The Strangler's Canopy" },
-  swamp:            { displayName:'The Bog Pit' },
-  hag_swamp:        { displayName:'The Witch Pool' },
-  beach:            { displayName:'The Wreck Shore' },
-  midlands:         { displayName:'The Open Kill' },
-  highlands:        { displayName:'The Stone Circle' },
-  desert:           { displayName:'The Dune Ambush' },
-  desert_caravan:   { displayName:'The Caravan Trap' },
-  mountains:        { displayName:'The Mountain Pass' },
-  arctic:           { displayName:'The Frost Hollow' },
-  ocean:            { displayName:'The Deep Current' },
-  islands:          { displayName:'The Hidden Cove' },
-  atlantis:         { displayName:'The Coral Maze' },
-  freshwater_lake:  { displayName:'The Lake Shallows' },
-  yugurt_lake:      { displayName:'The Noon Point' },
-  deep_sea:         { displayName:'The Abyss Shelf' },
-  greek_agora:      { displayName:'The Arena Pit' },
-  camelot:          { displayName:'The Tournament Ground' },
-  oriental_palace:  { displayName:'The Jade Court' },
-  heavenly_clouds:  { displayName:'The Storm Approach' },
-  cosmic_realm:     { displayName:'The Void Rift' },
-  // ── Layer 39 — Epic Battlegrounds (no stalk; entry required for _terrainLabel()) ──
-  epic_forest:          { displayName:'Thornwood Maw' },
-  epic_highlands:       { displayName:'Loch of the Drowned King' },
-  epic_swamp:           { displayName:'Sunken Altar' },
-  epic_hag_swamp:       { displayName:"Hag Mother's Cradle" },
-  epic_beach:           { displayName:'Wreck of the Unbroken' },
-  epic_deep_sea:        { displayName:"Leviathan's Eye" },
-  epic_islands:         { displayName:'Isle of the Wyrm Crown' },
-  epic_atlantis:        { displayName:'Abyssal Scriptorium' },
-  epic_sea_cavern:      { displayName:"Scholar Kings' Forge" },
-  epic_freshwater_lake: { displayName:"Sunken God's Throne" },
-  epic_deep_trench:     { displayName:'Trench Titan' },
-  epic_midlands:        { displayName:"Noonwraith Queen's Field" },
-  epic_desert:          { displayName:"Pharaoh's Vault" },
-  epic_desert_caravan:  { displayName:"Djinn Lord's Palace" },
-  epic_jungle:          { displayName:'Canopy Cathedral' },
-  epic_mountains:       { displayName:'Peak of the Eldest' },
-  epic_arctic:          { displayName:"Frost Warden's Throne" },
-  epic_heavenly_clouds: { displayName:"Shattered Seraph's Spire" },
-  epic_pirate_cave:     { displayName:"Admiral's Last Cove" },
-  epic_goblin_cave:     { displayName:"Void Shaman's Sanctum" },
-};
+// §TIMELESS-01: HUNTING_GROUNDS removed with the Hunt/Stalk feature.
 
 /* ── Layer 42: NPC World-Truth Dialogue System ── */
 // ◆◆◆ WORLDBUILDER:NPC_DIALOGUES:START ◆◆◆
@@ -20891,7 +20823,6 @@ let S_story = {
   pitTrainingWins: 0,
   slStalksWon: 0,
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
-  huntMode: false,
 };
 
 /* ── Layer 6: Save / Load ── */
@@ -20919,7 +20850,6 @@ const _S_DEFAULTS = () => ({
   npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, cycle4NoteRead: false, bogDefeated: false, // §LI–§LVIII + CO-001
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
-  huntMode: false,
   hoursElapsed: 0, hoursSinceSlept: 0,
   playerR: 0, playerC: 0,   // §CELL-03: current grid position
   visitedCells: {},          // §CELL-04: "r,c" → true — all cells stepped on (used by §CELL-10 minimap)
@@ -22895,7 +22825,7 @@ function _storyBattleVictory() {
 
   // Mark defeated + collect monster-specific drop
   const dropsThisBattle = [];
-  if (pb && !pb.corridor && !pb.stalk) S_story.defeatedBattles[pb.nodeCode] = true;
+  if (pb && !pb.corridor) S_story.defeatedBattles[pb.nodeCode] = true;
   // Layer 41: pit training wins
   if (pb && pb.nodeCode === 'HKG' && (S_story.quests['quest_pit_training'] === 'active')) {
     S_story.pitTrainingWins = (S_story.pitTrainingWins || 0) + 1;
@@ -23621,7 +23551,7 @@ function storyUseTransmort() {
 function storyExit() {
   S_story.active = false;
   switchSheet('sheet-story');
-  ['story-journal-modal','story-npc-modal','story-stalk-modal',
+  ['story-journal-modal','story-npc-modal',
    'story-outcome-modal','story-void-modal',
    'story-sleep-overlay','story-prebatt-overlay',
    'story-vendor-overlay',
@@ -25819,14 +25749,12 @@ function _enterEmptyCell(r, c) {
   document.getElementById('story-content').innerHTML = html;
   document.getElementById('story-move-msg').textContent = '';
 
-  // §CELL-09: hunt mode guarantees encounter on every empty cell step
+  // §CELL-09 / §TIMELESS-01: encounter rolls at the terrain's base rate on each step.
   const baseRate = TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default;
-  const effectiveRate = S_story.huntMode ? 1.0 : baseRate;
-  if (Math.random() < effectiveRate) {
-    const monster = S_story.huntMode ? _stalkedMonsterPick(terrain) : _weightedMonsterPick(terrain);
+  if (Math.random() < baseRate) {
+    const monster = _weightedMonsterPick(terrain);
     if (monster) {
-      const label = S_story.huntMode ? `🎯 Hunt ambush — ${monster.name}` : `Wild ${monster.name}`;
-      setTimeout(() => _startStoryBattle(monster, label), 300);
+      setTimeout(() => _startStoryBattle(monster, `Wild ${monster.name}`), 300);
     }
   }
   // §CELL-10: refresh local minimap after entering empty cell
@@ -26644,19 +26572,6 @@ function _startFishBattle(fish, hasRod, rodName) {
   document.getElementById('story-prebatt-overlay').classList.add('visible');
 }
 
-function storyQuickWait(nodeCode) {
-  const node = NODE_MAP[nodeCode];
-  if (!node || !HUNTING_GROUNDS[node.name]) { storyMsg('Nothing to wait for here.'); return; }
-  const pick = _weightedMonsterPick(node.name);
-  if (!pick) { storyMsg('⏳ Nothing stirs. The area is quiet.'); return; }
-  storyMsg('⏳ You wait... a ' + pick.name + ' approaches.');
-  S_story.pendingBattle = { nodeCode, name: pick.name, label: node.label, stalk: true };
-  loadWorldMonster(pick);
-  storyExit();
-  _storyRollInit();
-  _showBattleOverlay();
-}
-
 function storyJournalToggle() {
   if (document.getElementById('sheet-journal').classList.contains('active')) {
     switchSheet('sheet-story');
@@ -26710,29 +26625,6 @@ function storyQuestToggle() {
   }
 }
 
-function storyQuestHunt(questId, forceKey) {
-  const q = QUEST_DB[questId];
-  if (!q || !q.targetMonsterKeys || !q.targetMonsterKeys.length) return;
-  const node = NODE_MAP[S_story.currentCode];
-  if (!node) return;
-
-  // forceKey: hunt a specific monster (from per-quest STALK card); otherwise random
-  const keys = q.targetMonsterKeys;
-  const key = (forceKey && keys.includes(forceKey)) ? forceKey : keys[Math.floor(Math.random() * keys.length)];
-  const monster = MONSTER_POOL[key];
-  if (!monster) { storyMsg('🎯 Nothing found after an hour of searching.'); return; }
-
-  storyQuestToggle(); // close quest panel
-  S_story.hoursElapsed    = (S_story.hoursElapsed    || 0) + 2;
-  S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 2;
-  storyMsg('🎯 You spend an hour hunting... ' + monster.name + ' spotted!');
-  S_story.pendingBattle = { nodeCode: S_story.currentCode, name: monster.name, label: node.label, stalk: true };
-  loadWorldMonster(monster);
-  storyExit();
-  _storyRollInit();
-  _showBattleOverlay();
-}
-
 function storyRenderQuests() {
   const list = document.getElementById('quest-list');
   list.innerHTML = '';
@@ -26768,7 +26660,6 @@ function storyRenderQuests() {
         const atDest = q.waypointNode && S_story.currentCode === q.waypointNode;
         const wpNode = q.waypointNode ? NODE_MAP[q.waypointNode] : null;
         let wpBtnHtml = '';
-        let huntBtnHtml = '';
         if (!completed && q.waypointNode) {
           if (atDest && wpNode && wpNode.battle) {
             const isFinal = q.waypointNode === 'TLS' && (S_story.level||1) >= 20 && (S_story.shards||0) >= 7;
@@ -26782,10 +26673,6 @@ function storyRenderQuests() {
               + (isActiveWp ? '📍 Waypoint Active' : '📍 Navigate → ' + destLabel) + '</button>';
           }
         }
-        if (!completed && q.targetMonsterKeys && q.targetMonsterKeys.length) {
-          huntBtnHtml = '<button class="quest-set-wp-btn" style="background:rgba(106,72,8,0.1);border-color:var(--gold);color:var(--gold);margin-top:4px;width:100%;" onclick="storyQuestHunt(\'' + id + '\')">'
-            + '🎯 Hunt Here (2h) — 1h stalk + encounter</button>';
-        }
         let progressHtml = '';
         if (!completed && q.killGoals) {
           const k = S_story.catKills || {};
@@ -26798,7 +26685,7 @@ function storyRenderQuests() {
         }
         div.innerHTML = '<div class="quest-title"><span>' + q.title + '</span>' + badge + '</div>'
           + '<div class="quest-desc">' + q.desc + '</div>'
-          + (completed ? '' : '<div class="quest-hint">▶ ' + q.hint + '</div>' + progressHtml + wpBtnHtml + huntBtnHtml);
+          + (completed ? '' : '<div class="quest-hint">▶ ' + q.hint + '</div>' + progressHtml + wpBtnHtml);
         if (q.disposition) {
           const dRow = document.createElement('div');
           dRow.style.cssText = 'font-style:italic;font-size:11px;color:#3A2010;margin-top:4px;border-left:2px solid #5c3311;padding-left:6px;';
@@ -27331,7 +27218,6 @@ function storyRender(node, prefix) {
   // close all sheets and overlays on navigation
   switchSheet('sheet-story');
   document.getElementById('story-vendor-overlay').classList.remove('visible');
-  document.getElementById('story-stalk-modal').classList.remove('visible');
   document.getElementById('story-eb-npc-modal').classList.remove('visible');
   document.getElementById('story-fishing-modal').classList.remove('visible');
   // Act badge
@@ -29759,152 +29645,16 @@ function storyRender(node, prefix) {
   const row = document.getElementById('story-info-row');
   row.innerHTML = '';
 
-  // ── STALK section ──────────────────────────────────
-  const hg = HUNTING_GROUNDS[node.name];
+  // ── FISH section (§TIMELESS-01: hunt/stalk feature removed) ──
   const hasFish = node.isFishingLake;
-
-  // Build per-quest hunt cards: one card per targetMonsterKey that exists in this terrain
-  const terrainMonsterKeys = new Set(
-    ((WORLD_DB[node.name] && WORLD_DB[node.name].monsters) || []).map(m => m.key)
-  );
-  const questHuntCards = [];
-  Object.entries(S_story.quests || {})
-    .filter(([, s]) => s === 'active')
-    .forEach(([qId]) => {
-      const q = QUEST_DB[qId];
-      if (!q || !q.targetMonsterKeys) return;
-      q.targetMonsterKeys.forEach(mKey => {
-        if (!terrainMonsterKeys.has(mKey)) return;
-        const monster = MONSTER_POOL[mKey];
-        if (!monster) return;
-        // Kill progress (catKills covers all cat arc monsters)
-        const kills = (S_story.catKills || {})[mKey] || 0;
-        const goal = q.killGoals ? q.killGoals.find(g => g.key === mKey) : null;
-        const progressTag = goal ? kills + '/' + goal.need : null;
-        const alreadyDone = goal ? kills >= goal.need : false;
-        if (!alreadyDone) {
-          questHuntCards.push({ qId, q, mKey, monster, progressTag });
-        }
-      });
-    });
-
-  if (hg || hasFish || questHuntCards.length) {
-    const { sec, body } = _mkSection(null, '🎯', 'Stalk');
-    if (hg) {
-      const _TIER_DC    = { trivial:8, easy:10, medium:12, hard:14, deadly:16 };
-      const _TIER_LBL   = { trivial:'TRIVIAL', easy:'EASY', medium:'MEDIUM', hard:'HARD', deadly:'DEADLY' };
-      const _TIER_CLS   = { trivial:'threat-trivial', easy:'threat-easy', medium:'threat-medium', hard:'threat-hard', deadly:'threat-deadly' };
-      const _HUNT_FAIL  = [
-        'You wait at the ridge line for hours. The quarry never comes.',
-        'A branch snaps. Whatever was there is already gone.',
-        'You find tracks — old ones. The trail is cold.',
-        'You circle the perimeter twice. The terrain offers nothing today.',
-        'The wind shifts and betrays your position.'
-      ];
-      let _huntAccordion = null;
-      const _huntCard = _mkCard({
-        lbl: 'HUNT', main: hg.displayName,
-        hint: '⏱ 2 hours · setup + encounter',
-        tag: '2h', btn: 'Hunt', btnClass: 'btn-hunt',
-        btnClick: () => {
-          const _huntBtn = _huntCard.querySelector('.story-card-btn');
-          if (_huntAccordion) {
-            _huntAccordion.classList.remove('open');
-            const _c = _huntAccordion; setTimeout(() => _c.remove(), 270);
-            _huntAccordion = null;
-            if (_huntBtn) _huntBtn.textContent = 'Hunt';
-            return;
-          }
-          const pool = (WORLD_DB[node.name] || WORLD_DB['midlands']).monsters;
-          const questKeys = _getQuestTargetKeys();
-          const acc = document.createElement('div');
-          acc.className = 'npc-talk-accordion hunt-accordion';
-
-          // Rush In
-          const rushBtn = document.createElement('button');
-          rushBtn.className = 'story-card-btn btn-hunt';
-          rushBtn.style.cssText = 'width:100%;margin-bottom:8px;font-size:11px;';
-          rushBtn.textContent = '⚡ Rush In — random encounter, 1h (no survival check)';
-          rushBtn.addEventListener('click', () => storyQuickWait(node.code));
-          acc.appendChild(rushBtn);
-
-          const mkMonsterRow = (m, isQuest) => {
-            const dc = _TIER_DC[m.tier] || 12;
-            const r = document.createElement('div');
-            r.className = 'hunt-target-row';
-            r.innerHTML =
-              (isQuest ? '<span style="color:var(--gold)">◈ </span>' : '')
-              + '<span class="threat-tier ' + (_TIER_CLS[m.tier]||'') + '" style="font-size:9px;padding:1px 3px;margin-right:4px;">' + (_TIER_LBL[m.tier]||'?') + '</span>'
-              + '<span class="hunt-target-name">' + m.name + '</span>'
-              + '<span class="hunt-target-stats">AC ' + m.ac + ' · HP ' + m.hp + ' · DC ' + dc + '</span>';
-            r.addEventListener('click', () => {
-              acc.classList.remove('open');
-              const _c = acc; setTimeout(() => _c.remove(), 270);
-              _huntAccordion = null;
-              if (_huntBtn) _huntBtn.textContent = 'Hunt';
-              const wis = (S_story.abilityScores || {}).wis || 10;
-              const wisMod = Math.floor((wis - 10) / 2);
-              const roll = Math.ceil(Math.random() * 20);
-              const total = roll + wisMod;
-              const pass = total >= dc;
-              const modStr = (wisMod >= 0 ? '+' : '') + wisMod;
-              const rollLine = 'd20 (' + roll + ') + WIS (' + modStr + ') = ' + total + ' vs DC ' + dc;
-              if (pass) {
-                S_story.surpriseAdvantage = true;
-                storyMsg('🎯 Targeted Hunt — ' + m.name + '\n' + rollLine + ' → PASS\n\nYou move in quietly. ADV on first attack.');
-                S_story.pendingBattle = { nodeCode: node.code, name: m.name, label: node.label, stalk: true };
-                loadWorldMonster(m);
-                storyExit(); _storyRollInit(); _showBattleOverlay();
-              } else {
-                const flavor = _HUNT_FAIL[Math.floor(Math.random() * _HUNT_FAIL.length)];
-                const fallback = _weightedMonsterPick(node.name);
-                if (!fallback) { storyMsg('🎯 Hunt — ' + rollLine + ' → FAIL\n\n' + flavor + '\n\nNothing stirs.'); return; }
-                S_story.surpriseAdvantage = false;
-                storyMsg('🎯 Hunt — ' + rollLine + ' → FAIL\n\n' + flavor + '\n\nA ' + fallback.name + ' crosses your path instead.');
-                S_story.pendingBattle = { nodeCode: node.code, name: fallback.name, label: node.label, stalk: true };
-                loadWorldMonster(fallback);
-                storyExit(); _storyRollInit(); _showBattleOverlay();
-              }
-            });
-            return r;
-          };
-
-          const questPool = pool.filter(m => questKeys.has(m.key));
-          if (questPool.length) {
-            const hd = document.createElement('div'); hd.className = 'hunt-section-hd'; hd.textContent = 'Quest Targets Here';
-            acc.appendChild(hd);
-            questPool.forEach(m => acc.appendChild(mkMonsterRow(m, true)));
-          }
-          const hd2 = document.createElement('div'); hd2.className = 'hunt-section-hd';
-          hd2.textContent = questPool.length ? 'All Monsters' : 'Monsters Here';
-          acc.appendChild(hd2);
-          pool.forEach(m => acc.appendChild(mkMonsterRow(m, questKeys.has(m.key))));
-
-          _huntAccordion = acc;
-          _huntCard.insertAdjacentElement('afterend', acc);
-          requestAnimationFrame(() => _huntAccordion && _huntAccordion.classList.add('open'));
-          if (_huntBtn) _huntBtn.textContent = 'Close';
-        }
-      });
-      body.appendChild(_huntCard);
-    }
-    if (hasFish) {
-      body.appendChild(_mkCard({
-        lbl: 'FISH', main: 'Cast a Line',
-        hint: '⏱ 1 hour · fishing session',
-        tag: '1h', btn: 'Fish', btnClass: 'btn-hunt',
-        btnClick: () => storyFishing()
-      }));
-    }
-    // Per-quest targeted hunt cards
-    questHuntCards.forEach(({ qId, q, mKey, monster, progressTag }) => {
-      body.appendChild(_mkCard({
-        lbl: 'QUEST', main: monster.name + (progressTag ? ' — ' + progressTag : ''),
-        hint: q.title,
-        tag: '2h', btn: '🎯 Hunt', btnClass: 'btn-hunt',
-        btnClick: () => storyQuestHunt(qId, mKey)
-      }));
-    });
+  if (hasFish) {
+    const { sec, body } = _mkSection(null, '🎣', 'Fish');
+    body.appendChild(_mkCard({
+      lbl: 'FISH', main: 'Cast a Line',
+      hint: '⏱ 1 hour · fishing session',
+      tag: '1h', btn: 'Fish', btnClass: 'btn-hunt',
+      btnClick: () => storyFishing()
+    }));
     row.appendChild(sec);
   }
 
@@ -30135,10 +29885,6 @@ function storyRender(node, prefix) {
             btn = isFinal ? '🔥 Final Fight' : '⚔ Fight Now';
             btnClass = 'btn-fight';
             btnClick = () => isFinal ? storyPreFinalBattle() : storyPreBattle(wpNode);
-          } else if (atDest && q.targetMonsterKeys && q.targetMonsterKeys.length) {
-            btn = '🎯 Hunt (2h)';
-            btnClass = 'btn-hunt';
-            btnClick = () => storyQuestHunt(id);
           } else if (!atDest) {
             btn = '📍 Navigate';
             btnClass = 'btn-rest';
@@ -30485,7 +30231,6 @@ function storyRender(node, prefix) {
   // D-pad corner buttons
   document.getElementById('btn-dpad-npc').disabled  = !(node.npc && NPC_DIALOGUE[node.code]);
   document.getElementById('btn-dpad-rest').disabled = false;  // always clickable (0 rests → shows auto-quest)
-  _updateHuntBtn();
   // Log
   // Build travel log entries in both sidebar (removed) and map overlay
   const mapLogList = document.getElementById('map-travel-log-list');
@@ -32214,8 +31959,8 @@ function storyApplyOutcome(won) {
   const hp  = isNaN(raw) ? S_story.hp : Math.max(0, Math.min(S_story.hpMax, raw));
   const pb  = S_story.pendingBattle;
   S_story.hp = hp;
-  if (won && pb && !pb.corridor && !pb.stalk && !pb.fish) S_story.defeatedBattles[pb.nodeCode] = true;
-  if (won && pb && !pb.corridor && !pb.stalk && !pb.fish) {
+  if (won && pb && !pb.corridor && !pb.fish) S_story.defeatedBattles[pb.nodeCode] = true;
+  if (won && pb && !pb.corridor && !pb.fish) {
     const _ebN = NODE_MAP[pb.nodeCode];
     if (_ebN && _ebN.isEpicBattleground) {
       const returnId = 'quest_' + pb.nodeCode.toLowerCase() + '_return';
@@ -32811,25 +32556,7 @@ function storyWaypoint() {
   cellMove(dir);
 }
 
-function _updateHuntBtn() {
-  const btn = document.getElementById('btn-hunt-toggle');
-  if (!btn) return;
-  if (S_story.huntMode) {
-    btn.classList.add('hunt-on');
-    btn.title = 'Hunt Mode ON — travel triggers encounters (click to disable)';
-  } else {
-    btn.classList.remove('hunt-on');
-    btn.title = 'Hunt Mode OFF — travel normally (click to enable)';
-  }
-}
-
-function storyToggleHunt() {
-  S_story.huntMode = !S_story.huntMode;
-  _updateHuntBtn();
-  storyMsg(S_story.huntMode
-    ? '🎯 Hunt Mode ON — travel triggers encounters.'
-    : '🗺 Hunt Mode OFF — travel normally.');
-}
+// §TIMELESS-01: _updateHuntBtn / storyToggleHunt removed with the Hunt feature.
 
 function _storyFindTerrainNode(terrain) {
   const candidates = new Set(Object.keys(NODE_MAP).filter(c => NODE_MAP[c].name === terrain));
@@ -32900,7 +32627,7 @@ document.addEventListener('keydown', e => {
     if (activeSheet && activeSheet.id !== 'sheet-story') { switchSheet('sheet-story'); return; }
     for (const id of ['story-victory-modal','story-gameover-modal','story-continue-modal',
                       'story-void-modal','story-outcome-modal','story-journal-modal',
-                      'story-npc-modal','story-stalk-modal',
+                      'story-npc-modal',
                       'story-sleep-overlay','story-prebatt-overlay',
                       'story-vendor-overlay']) {
       const el = document.getElementById(id);
@@ -32952,35 +32679,7 @@ function _startStoryBattle(monster, label) {
   _showBattleOverlay();
 }
 
-/* ── Layer 10: Stalk Helpers ── */
-
-function _getQuestTargetKeys() {
-  const keys = new Set();
-  Object.entries(S_story.quests).forEach(([id, status]) => {
-    if (status !== 'active') return;
-    const q = QUEST_DB[id];
-    if (!q) return;
-    if (q.targetMonsterKeys) q.targetMonsterKeys.forEach(k => keys.add(k));
-    const targetNode = NODE_MAP[q.activateNode];
-    if (targetNode && targetNode.battle) keys.add(targetNode.battle.key);
-  });
-  return keys;
-}
-
-function _stalkedMonsterPick(terrain) {
-  const WEIGHTS = _notorietyWeights(_notoriety());
-  const BOOST   = 6;
-  const db      = WORLD_DB[terrain] || WORLD_DB['midlands'];
-  const pool    = db.monsters;
-  const targets = _getQuestTargetKeys();
-  const weighted = [];
-  pool.forEach(m => {
-    const base = WEIGHTS[m.tier] || 10;
-    const w    = targets.has(m.key) ? base * BOOST : base;
-    for (let i = 0; i < w; i++) weighted.push(m);
-  });
-  return weighted.length ? weighted[Math.floor(Math.random() * weighted.length)] : null;
-}
+// §TIMELESS-01: Stalk Helpers (_getQuestTargetKeys / _stalkedMonsterPick) removed with the Hunt feature.
 
 /* ── Auto-enter story mode on load ── */
 storyEnter();
@@ -33009,7 +32708,6 @@ document.getElementById('btn-dpad-npc').addEventListener('click', () => {
   const node = NODE_MAP[S_story.currentCode];
   if (node && node.npc && NPC_DIALOGUE[node.code]) storyShowNpc(node.code);
 });
-document.getElementById('btn-hunt-toggle').addEventListener('click', storyToggleHunt);
 document.getElementById('btn-dpad-rest').addEventListener('click', () => {
   storyShortRest(S_story.currentCode);
 });
