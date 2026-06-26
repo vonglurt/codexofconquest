@@ -237,28 +237,35 @@ following a `CityName — Specific Place` label form:
 - The dense Italian/Tuscany campaign (Florence/Pisa/Pistoia/Prato/Fiesole) + Norse farmsteads
   (Starkad's, Laugar, Saelingsdals Ford) + passes/roads (Carpathian, Apennine, Black Sea Road).
 
-**Decision: offset to own cell via true coords** (not inherit-parent). **Method (validated 2026-06-25):
-invert-and-reproject**, not label-matching. Label-matching only resolves 22/228 (most satellites are
-labeled by district/feature, not "City —", and a large fantasy/dungeon tail — "Leviathan's Eye",
-"Sunken God's Throne" — has no real place name). Instead:
+**Decision: offset to own cell via true coords** (not inherit-parent).
 
-1. Every node already carries an abstract `{r,c}` that reweave placed *near its geographic
-   neighbors* — measured median distance to nearest GEO2 anchor = **3 cells** (203/325 within 5,
-   none beyond 40). The abstract grid is geographically faithful.
-2. The old geo-seed was a global linear map `abstract = linear(lat,lon)` with
-   `minLat=-8,maxLat=68,minLon=-25,maxLon=72,gridMin=8,gridMax=500`. **Invert it** to recover an
-   approximate `(lat,lon)` from any node's abstract `{r,c}`:
-   `lat = 68 − (r−8)/492·76`, `lon = −25 + (c−8)/492·97`. Verified exact on GEO2 (LHR `{64,224}` →
-   59.35,17.6 = its true coords).
-3. **Re-project** that `(lat,lon)` equirectangular (§2.1). GEO2 nodes override step 2 with their
-   authoritative lat/lon; the ~325 others use the inverted-approximate lat/lon.
+**❌ Invert-and-reproject — TRIED AND REJECTED (dry-run, 2026-06-25).** The idea was to recover
+approximate `(lat,lon)` from each node's existing abstract `{r,c}` by inverting the old linear
+geo-seed (`lat = 68 − (r−8)/492·76`, `lon = −25 + (c−8)/492·97`) and re-project. The
+`scope:'all'` dry-run **disproved it**: 409 nodes collapsed into 108 cells with geographically
+unrelated cities merged (cell (10,197) held LHR/Birka **and** DAM/Damascus **and** NUE/Nuremberg).
+Inversion is exact for LHR, SAM, LDN but **wrong** for CAI, ATH, ROM, DAM, TBS — those real cities
+sit clustered near Birka in abstract space (r 54–89, c 198–227) regardless of true location. The
+abstract grid was only *partially* geo-seeded then scrambled by reweave/rip-and-connect; it is **not**
+a trustworthy geographic source. (The earlier "median 3 cells from a GEO2 anchor" metric measured
+proximity in an already-packed cluster, not fidelity.) Label-matching (22/228) and code-prefix
+parenting (11/254, only the Italian campaign) are also insufficient. **The only reliable geographic
+source is the true GEO2 lat/lon table.**
 
-Fully mechanical, global, no new data, no per-node decisions. Caveat: non-GEO2 nodes inherit any
-reweave distortion — acceptable given the 3-cell median fidelity; a handful of real cities missing
-from GEO2 (Genoa, Lübeck, Danzig, Riga, Bruges, Naples) should be *added* with true coords first so
-their satellites anchor correctly.
+**Revised approach (the gazetteer pass):**
+1. **Use the full GEO2 table** — the extended set (`wbapi-server.js:5979`, ~155 cities incl. AMS,
+   FLR, DAM, CAI, IST, NUE, GVA…) is already in the repo and present in NODE_MAP. Projecting these
+   from *true* lat/lon correctly places **155/409** with zero new data. (The geo-seed handler's
+   inline table is the short 79 — unify it to the 155.)
+2. **Add true lat/lon for the remaining real-place nodes** (~50–100: Ankara, Baghdad, Augsburg,
+   Aix-la-Chapelle, Genoa, Lübeck, Danzig, Riga, Bruges, Naples…). City-level accuracy suffices at
+   1° (~110 km/cell). This is a **data-entry gazetteer task**, not a script.
+3. **Satellites/districts** ("Scholar's Quarter", "Fishmonger's Row", code-prefix cases
+   BOLSAC→BOL): assign to the parent city's cell (co-locate as locale, §2.2).
+4. **Fantasy/dungeon + off-Earth** (Leviathan's Eye, Asgard, Ægir): anchor to the entry-quest city
+   (§3.5.6).
 
-Project at 1° so each lands on its (approx) true cell, spreading naturally wherever real separation ≥ ~1°.
+Project at 1° so each lands on its true cell, co-locating where real separation < ~1°.
 
 **Unavoidable 1° consequence (flagged):** satellites that are genuinely < 1° (~110 km) from each
 other — the entire Tuscany campaign (Florence/Pisa/Pistoia/Prato/Fiesole interiors), London's
