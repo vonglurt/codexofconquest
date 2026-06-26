@@ -1,6 +1,6 @@
 # Lab Report — §WALK-5: MUD Multi-Client Harness (instanced encounters, v1)
 
-**Status:** DESIGN LOCKED (2026-06-26). **Inc 1 ✅ done** (world inputs + terrain-parity guard); Inc 2→4 pending.
+**Status:** DESIGN LOCKED (2026-06-26). **Inc 1 ✅** (world inputs + terrain-parity guard) · **Inc 2 ✅** (per-session seeded RNG + instanced roll); Inc 3→4 pending.
 **Parent:** `lab-reports/lab-report-terrain-field-mover-redesign.md` §7 (the v1 instanced-vs-shared decision).
 **Predecessor MUD layer:** `lab-reports/lab-report-cell-map-mud-redesign.md` §CELL-07 (the in-memory `SESSIONS` store + SSE broadcast this report extends).
 
@@ -197,10 +197,15 @@ Strictly sequential; each is a green checkpoint (`npm run check:walk` + harness 
   The guard extracts the REAL `_inferTerrain` (HTML) + `terrainAt` (server) and runs both in a sandbox: rate
   table (15 keys) + SEA_LANES (59 cells) regex round-trip, terrainAt==_inferTerrain on all 10440 band cells.
   **Parity guard green; full `check:walk` green.**
-- **Inc 2 — Instanced roll.** Add `s.seed`/`s.rngState`/`seededNext`, `pickMonster` (flat-tier), and the §4.4
-  roll on the `session/move` success path; store `s.encounter`; surface it in the move response + `who`.
-  Clear `s.encounter` on named/blocked. **Green: existing session e2e still passes; encounter appears on
-  empty steps.**
+- **Inc 2 — Instanced roll. ✅ DONE.** Added `s.seed`/`s.rngState`/`seededNext` (mulberry32), `pickMonster`
+  (flat base-tier weights `{trivial:40,easy:35,medium:20,hard:4,deadly:1}` via `WBAPI.monsters.byTerrain`,
+  midlands fallback), and the §4.4 roll on the `session/move` **success** path; stored `s.encounter`; surfaced
+  it on the move response + `who` (which also exposes `seed`). Empty cell rolls; named cell clears; a blocked
+  **409** returns early so a pending encounter survives (no move happened). `session/start` accepts an optional
+  `body.seed` for reproducible harness traces. **Verified live over HTTP** (throwaway `PORT=1368` instance,
+  user's 1367 untouched): determinism (same seed+path ⇒ identical trace), firing (32/40 seeds fired ≥1), and
+  per-seed divergence (31 distinct traces / 40 seeds). The automated multi-client SSE/no-bleed assertions are
+  Inc 3. **`check:walk` green.**
 - **Inc 3 — Harness.** Build `tests/mud-harness.*` (K clients, SSE capture, scripted drive) and assert
   properties (a)–(c). **Green: harness.**
 - **Inc 4 — TTL + docs.** Add the property (d) TTL-prune assertion; doc-sync (index.md cross-ref, mechanics

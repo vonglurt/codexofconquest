@@ -439,6 +439,41 @@ function getMoverWorld() {
   };
 }
 
+// ── §WALK-5 Inc 2: per-session instanced encounter resolution ────────────────
+// Each session carries its own RNG stream (s.rngState), so an encounter roll reads
+// and writes ONLY s.* — never cell or other-session state. Instancing is therefore
+// structural: client A's fight can never appear in B's trace, and a deterministic
+// seed makes the whole trace replayable in the §WALK-5 harness.
+
+// mulberry32 — tiny deterministic PRNG; advances s.rngState, returns [0,1).
+function seededNext(s) {
+  let t = (s.rngState = (s.rngState + 0x6D2B79F5) | 0);
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
+// Flat tier weights = _notorietyWeights at base notoriety (n≤5, i.e. a fresh level-1
+// player). The MUD session tracks no progression, so weights don't scale with
+// notoriety the way the SP client's _weightedMonsterPick does — a known SP/MP
+// divergence logged in lab-report-walk5-mud-harness.md §4.3.
+const BASE_TIER_WEIGHTS = { trivial: 40, easy: 35, medium: 20, hard: 4, deadly: 1 };
+
+// Mirrors the client _weightedMonsterPick (tier-weighted draw, midlands fallback)
+// but flat-weighted and driven by the session RNG instead of Math.random.
+function pickMonster(terrain, s) {
+  let pool = WBAPI.monsters.byTerrain(terrain);
+  if (!pool || !pool.length) pool = WBAPI.monsters.byTerrain('midlands') || [];
+  const weighted = [];
+  for (const m of pool) {
+    const w = BASE_TIER_WEIGHTS[m.tier] || 10;
+    for (let i = 0; i < w; i++) weighted.push(m);
+  }
+  if (!weighted.length) return null;
+  const m = weighted[Math.floor(seededNext(s) * weighted.length)];
+  return { key: m.key, name: m.name, tier: m.tier };
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // Connection enrichment — every GET returns entity + connections + _meta
 // ═══════════════════════════════════════════════════════════════════════════
@@ -7448,7 +7483,7 @@ async function route(req, res) {
     if (sub === 'who' && method === 'GET') {
       const all = [];
       for (const [id2, s] of SESSIONS)
-        all.push({ id: id2, name: s.playerName, r: s.r, c: s.c, nodeCode: s.nodeCode, state: s.state, lastSeen: s.lastSeen });
+        all.push({ id: id2, name: s.playerName, r: s.r, c: s.c, nodeCode: s.nodeCode, state: s.state, seed: s.seed, encounter: s.encounter || null, lastSeen: s.lastSeen });
       logResponse(method, url.pathname, 200, `${all.length} sessions active`);
       return json(res, 200, { count: all.length, sessions: all });
     }
@@ -7523,6 +7558,11 @@ async function route(req, res) {
       const hubCoord = WBAPI.nodeCoords[hub] || { r: 64, c: 224 };
       const sessionId = crypto.randomBytes(16).toString('hex');
       const hubNode   = WBAPI.nodeMap[hub];
+      // §WALK-5 Inc 2: per-session RNG seed. Harness clients may pass body.seed for a
+      // reproducible encounter trace; otherwise derive a 32-bit seed from sessionId.
+      const seed = (body.seed != null && Number.isFinite(+body.seed))
+        ? (+body.seed | 0)
+        : (parseInt(sessionId.slice(0, 8), 16) | 0);
       const s = {
         id:         sessionId,
         playerName,
@@ -7531,6 +7571,9 @@ async function route(req, res) {
         nodeCode:   hub,
         state:      'active',
         lastSeen:   Date.now(),
+        seed,                    // §WALK-5 Inc 2
+        rngState:   seed,        // mutable RNG stream, advanced per encounter roll
+        encounter:  null,        // pending instanced encounter (null = none); hub is a named cell
       };
       SESSIONS.set(sessionId, s);
       const look = buildLook(s);
@@ -7572,12 +7615,22 @@ async function route(req, res) {
       const newR  = mres.to.r, newC = mres.to.c;
       const newCode = mres.destCodes[0] || null;   // null = empty (unmarked) cell
       s.r = newR; s.c = newC; s.nodeCode = newCode;
+      // §WALK-5 Inc 2: instanced encounter roll (lab report §4.4). Reads/writes ONLY
+      // s.* — its own RNG stream — so the encounter is instanced by construction.
+      // Empty cell: roll against the kernel's baseRate; named cell: clear any stale
+      // pending encounter (you've reached a town). encounter persists across a blocked
+      // 409 above (no move happened) since that path returns before reaching here.
+      if (mres.encounter.eligible) {
+        s.encounter = (seededNext(s) < mres.encounter.baseRate) ? pickMonster(mres.terrain, s) : null;
+      } else {
+        s.encounter = null;
+      }
       // Broadcast to players now in the same cell (not the mover themselves)
       broadcastCell(newR, newC, 'player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, sessionId);
       const look = buildLook(s);
-      logRow('move', `${s.playerName}  ·  ${dir}  →  (${newR},${newC}) ${newCode || 'empty'}`);
-      logResponse(method, url.pathname, 200, `session move: ${dir} → ${newCode || 'empty'}`);
-      return json(res, 200, { ok: true, dir, ...look });
+      logRow('move', `${s.playerName}  ·  ${dir}  →  (${newR},${newC}) ${newCode || 'empty'}${s.encounter ? '  ⚔ ' + s.encounter.name : ''}`);
+      logResponse(method, url.pathname, 200, `session move: ${dir} → ${newCode || 'empty'}${s.encounter ? ' (encounter: ' + s.encounter.name + ')' : ''}`);
+      return json(res, 200, { ok: true, dir, ...look, encounter: s.encounter });
     }
 
     // ── POST /api/session/say ──────────────────────────────────────────────
@@ -9194,8 +9247,8 @@ server.listen(PORT, '127.0.0.1', () => {
     ['GET',    '/api/grid/region?r1=&c1=&r2=&c2=    → 2D array of cells in bounding box'],
     ['GET',    '/api/grid/heatmap                    → all cells with adjacency heat (0-4)'],
     ['GET',    '/api/grid/reachability[?hub=LHR]     → reachable vs unreachable cells from hub'],
-    ['POST',   '/api/session/start                   body: {name} → {sessionId, r, c, node, desc, exits}'],
-    ['POST',   '/api/session/move                    body: {sessionId, dir} → {r, c, node, desc, exits, players}'],
+    ['POST',   '/api/session/start                   body: {name, seed?} → {sessionId, r, c, node, desc, exits}'],
+    ['POST',   '/api/session/move                    body: {sessionId, dir} → {r, c, node, desc, exits, players, encounter}'],
     ['GET',    '/api/session/look?sessionId=          → current cell + exits + co-present players'],
     ['GET',    '/api/session/who                     → all active sessions'],
     ['POST',   '/api/session/say                     body: {sessionId, msg} → chat broadcast'],
