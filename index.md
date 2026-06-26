@@ -10,13 +10,13 @@
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~33,010 | ✅ |
+| HTML line count | ~33,011 | ✅ |
 | Lab reports on disk | 71 | ✅ |
 | Lab reports in index | 71 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-26 **§TIMELESS-01-FU done** (thread fully closed): swept all 7 deeper spec docs (`monsters.md`, `maps.md`, `spec-engine.md`, `spec-world.md`, `mechanics.md`, `docs-node-network.md`) free of stale Hunt/Stalk/`HUNTING_GROUNDS`/`huntMode` claims — retired milepoints/fn-table rows/D-pad chips/CSS, fixed `_storyFindTerrainNode` reads; `cell-resume-prompts.md` got a staleness banner (frozen archive). Prior: §WALK-3 Inc 3 (deleted the 3,240-line dead `reweave-all` body + orphaned `reweave` CLI); §TIMELESS-01 Inc D (Hunt Mechanic retired in `mechanics-combat.md`; state-field count 194→193); §WALK-3 Inc 1/2 | ✅ |
+| Last sync pass | 2026-06-26 **§WALK-4 Inc 1 done**: new `scripts/check-invariants.js` (I1 terrain totality / I2 no junctions / I3 reachability 409/409, 1 component) — caught + fixed two latent bugs on main: an orphaned `junction` WORLD_DB terrain (§WALK-1 residue) and VBY's malformed terrain key `'bar (Visby)'`→`'bar'` (was silently falling back to midlands). Verified headless: 0 errors, mover parity green. Prior: §TIMELESS-01-FU (Hunt-residue swept from 7 spec docs); §WALK-3 Inc 3 (deleted 3,240-line dead `reweave-all` body + `reweave` CLI); §TIMELESS-01 Inc D | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
