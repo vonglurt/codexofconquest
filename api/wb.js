@@ -108,7 +108,7 @@ function doHTTP(method, urlStr, body, extraHeaders = {}) {
 }
 
 // ── Streaming POST — reads chunked text/plain response, prints lines as they arrive ──
-// Used for long-running server operations (reweave) that have no timeout.
+// Used for long-running server operations (nuke-junctions, cluster-bridge) that have no timeout.
 function streamPost(urlPath, body) {
   return new Promise((resolve, reject) => {
     const u = new URL(`${BASE}${urlPath}`);
@@ -1196,110 +1196,6 @@ const CMD = {
     if (execute) ok(`Executing P_NUKE — this will delete all J#### nodes and save. No undo except snapshot.`);
     else ok(`Dry-run — add --execute to apply.`);
     await streamPost('/api/graph/nuke-junctions', { execute });
-  },
-
-  // ── reweave: §CELL-06 cell-first repair loop ─────────────────────────────────
-  // Usage: ./api.sh reweave [--execute] [--limit N] [--radius N] [--hub LHR]
-  //
-  // Cell-first world: exits are derived from grid adjacency only.
-  //   No junction chains, no highways, no wither phase.
-  //   Every location must be in exactly one cell (r,c).
-  //   Adjacency = one cell apart — no skipping cells.
-  //
-  // Phases:
-  //   Phase 1   (pre-check):        verify — coords, collisions, reachability
-  //   Phase 1.5 (if execute):       clean  — prune orphaned NODE_COORDS entries
-  //   Phase 2   (if execute):       rip-and-connect — place uncoordinated nodes
-  //   Phase 3   (post-check):       verify — confirm all nodes in grid + reachable
-  //
-  // Dry-run by default.  Add --execute to apply phase 2.
-  //   --limit N    max nodes to relocate per rip-and-connect pass (default 200)
-  //   --radius N   BFS depth for placement search (default 8)
-  //   --hub CODE   reachability hub (default LHR)
-  async 'reweave'(pos, flags) {
-    await requireServer();
-    const execute = !!flags.execute;
-    const limit   = flags.limit  ? +flags.limit  : 200;
-    const radius  = flags.radius ? +flags.radius : 8;
-    const hub     = flags.hub    || 'LHR';
-
-    process.stdout.write(`${C.bold}══ Cell-First ReWeave ══${C.reset}\n`);
-    ok(`execute=${execute}  limit=${limit}  radius=${radius}  hub=${hub}`);
-    if (!execute) ok('[DRY RUN] add --execute to apply changes');
-    ok('');
-
-    // ── Phase 1: pre-check ────────────────────────────────────────────────────
-    ok(`${'─'.repeat(60)}`);
-    ok('  Phase 1 — Pre-check');
-    ok(`${'─'.repeat(60)}`);
-    await this.verify([], { hub });
-
-    // ── Phase 1.5: orphan coord cleanup ──────────────────────────────────────
-    ok('');
-    ok(`${'─'.repeat(60)}`);
-    ok('  Phase 1.5 — Orphan Coord Cleanup');
-    ok(`${'─'.repeat(60)}`);
-    const cleanDryResp = await request('POST', '/api/audit/data/clean?dryRun=true', {});
-    if (cleanDryResp.status === 200) {
-      const cd = cleanDryResp.body;
-      ok(`  Orphan coords: ${cd.orphanCoords}  Explosion nodes: ${cd.explosionNodes}`);
-      if (execute && (cd.orphanCoords > 0 || cd.explosionNodes > 0)) {
-        const cleanResp = await request('POST', '/api/audit/data/clean', {});
-        if (cleanResp.status === 200) {
-          const cr = cleanResp.body;
-          ok(`  Pruned ${cr.orphanCoordsRemoved} orphan coords, ${cr.explosionNodesRemoved} explosion nodes`);
-        }
-      } else if (!execute && cd.orphanCoords > 0) {
-        ok(`  [DRY RUN] would prune ${cd.orphanCoords} orphan coords — included in --execute`);
-      } else {
-        ok(`  Nothing to prune ✓`);
-      }
-    }
-
-    if (!execute) {
-      ok('');
-      ok(`${'═'.repeat(60)}`);
-      ok('  Dry-run complete — add --execute to run Phase 1.5 (clean) + Phase 2 (rip-and-connect)');
-      ok(`${'═'.repeat(60)}`);
-      return;
-    }
-
-    // ── Phase 2: rip-and-connect (place uncoordinated nodes into grid) ────────
-    ok('');
-    ok(`${'─'.repeat(60)}`);
-    ok('  Phase 2 — Rip-and-Connect');
-    ok(`${'─'.repeat(60)}`);
-    const ripResp = await request('POST', '/api/graph/rip-and-connect', {
-      dryRun: false, limit, meshRadius: radius,
-    });
-    if (ripResp.status >= 400) { printError(ripResp); process.exit(1); }
-    const rd = ripResp.body;
-    ok(`Rip-and-connect  hub=${rd.hub}  totalStrays=${rd.totalStrays}  limit=${limit}`);
-    ok(`Result: ${rd.placed?.length ?? 0} placed  |  ${rd.failed?.length ?? 0} failed  |  ${rd.skipped?.length ?? 0} skipped`);
-    if (rd.placed?.length) {
-      ok(`Placed:`);
-      rd.placed.slice(0, 20).forEach(r => {
-        const p = r.plan;
-        ok(`  ${r.stray.padEnd(8)} → near ${p.bestCity}  coord=(${p.targetCoord?.r},${p.targetCoord?.c})  ${r.status || ''}`);
-      });
-      if (rd.placed.length > 20) ok(`  ...and ${rd.placed.length - 20} more`);
-    }
-    if (rd.failed?.length) {
-      ok(`Failed (${rd.failed.length}):`);
-      rd.failed.slice(0, 10).forEach(r => ok(`  ${r.stray}  ${r.reason || ''}`));
-    }
-
-    // ── Phase 3: post-check ───────────────────────────────────────────────────
-    ok('');
-    ok(`${'─'.repeat(60)}`);
-    ok('  Phase 3 — Post-check');
-    ok(`${'─'.repeat(60)}`);
-    await this.verify([], { hub });
-
-    ok('');
-    ok(`${'═'.repeat(60)}`);
-    ok('  Cell-First ReWeave complete.');
-    ok(`${'═'.repeat(60)}`);
   },
 
   // ── cluster-bridge: connect remaining isolated clusters without a full reweave ──

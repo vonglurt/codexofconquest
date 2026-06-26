@@ -16,7 +16,7 @@
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-26 **§TIMELESS-01 Inc D done**: Hunt/Stalk Mechanic retired in `mechanics-combat.md` (replaced by plain random encounters; removed Stalk refs at §How-combat-starts / §XP / §battlesWon); `index.md` reverse-lookup row marked retired, `HUNTING_GROUNDS` constant + `huntMode` state-field rows removed, state-field count 194→193, `slStalksWon` redocumented as BMA-win counter; map-click hint reworded (adjacency, not gap-distance); `slStalksWon` increment commented in `roll2hit-v3.html`. Prior: §WALK-3 Inc 2 (`fill-gap`/`rip-and-connect`→410); §WALK-3 Inc 1; §WALK-2 (`mover.js`); §MATH-01 | ✅ |
+| Last sync pass | 2026-06-26 **§WALK-3 Inc 3 done** (§WALK-3 complete): deleted the 3,240-line dead `reweave-all` body in `wbapi-server.js` (12,510→9,270) + the orphaned `reweave` CLI orchestrator in `api/wb.js`; verified `reweave-all`/`rip-and-connect`→410, reachability 409/409, mover parity + behaviour green, `reweave` CLI gone. Prior: §TIMELESS-01 Inc D (Hunt/Stalk Mechanic retired in `mechanics-combat.md`; `index.md` reverse-lookup + `HUNTING_GROUNDS`/`huntMode` rows + state-field count 194→193; map-click hint reworded); §WALK-3 Inc 2 (`fill-gap`/`rip-and-connect`→410); §WALK-3 Inc 1; §WALK-2 (`mover.js`) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
