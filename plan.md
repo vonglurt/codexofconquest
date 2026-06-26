@@ -92,24 +92,11 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 
 ## §BACKLOG — Open Items
 
-### §RESUME — Continue Here (updated 2026-06-25)
+### §RESUME — Continue Here
 
-**Where we are:** §WALK-1.5 (geo re-projection) is **code-complete and verified but NOT committed.** Branch `main`, last commit `7c93490`. Uncommitted working tree:
-- `roll2hit-v3.html` — (a) NODE_COORDS rewritten to equirectangular 1° for all 409 nodes; (b) `SEA_RUNS` + `SEA_LANES` + `IMPASSABLE_CELLS` block (~line 9132); (c) one-liner atop `_inferTerrain` (~line 25709) returning `'ocean'` for lane cells.
-- `plan.md` — this backlog consolidation + §WALK-1.5 marked done.
-- `1367-sources/pla.md` (untracked), `milepoints/api-cli.log` (incidental log churn — don't stage).
-- wbapi-server already restarted so its in-memory copy matches disk.
+> ⏩ **The canonical, up-to-date resume prompt is the LAST section of this file** — see **[§RESUME — Continue Here (newest)](#resume--continue-here-newest)** at the bottom. This pointer is kept here so the top-of-backlog habit still lands on current state.
 
-**Verified:** 409/409 nodes reachable from Birka (LHR cell 10,197); 0 nodes on impassable cells; 4790 sea cells; 59 lane cells. Mask-gen scripts saved at `/tmp/seamask.py` + `/tmp/lanes.py` (regenerate from these if coords change).
-
-**Immediate next steps, in order:**
-1. **Commit §WALK-1.5** — stage `roll2hit-v3.html` + `plan.md` only (NOT `api-cli.log`). Suggested subject: `§WALK-1.5: apply equirectangular projection + SEA_MASK + sea-lane ferries`. Then `say` the subject (Commit+Speak rule).
-2. *(optional)* Browser smoke-test: walk Birka → hit a coastline ("No path leads that way") → cross a carved lane (renders as Open Terrain — Ocean, may trigger an ocean encounter).
-3. **Start §WALK-2** — extract pure `mover.js` (`move(world,pos,dir)→MoveResult` with wrap/clamp/sea/ferry/locale); make `cellMove` (roll2hit-v3.html ~25675) + `POST /api/session/move` (wbapi-server.js ~10866) thin callers. Note: server mover currently lacks the client's IMPASSABLE_CELLS/bounds checks — §WALK-2 unifies that (latent bug). Inline-and-verify for single-file guarantee.
-4. Continue down the §WALK series (3→4→5), then the rest of this backlog.
-
-**Copy-paste prompt to resume:**
-> Read plan.md §RESUME. Commit the uncommitted §WALK-1.5 geo work (roll2hit-v3.html + plan.md only), then begin §WALK-2: extract the pure shared mover.js and rewire cellMove + session/move as thin callers. Work incrementally per the Directive.
+**Current state (2026-06-26, last commit `c865841`):** §WALK-1, §WALK-1.5, §WALK-2 are **done & committed**; §WALK-3 is **in progress** (Inc 1 reachability recast ✅). Working tree clean except untracked `1367-sources/pla.md` + incidental `milepoints/api-cli.log` churn (hook-managed; don't stage). wbapi-server restarted (in-memory matches disk). **Immediate next: §WALK-3 Inc 2** (410 the `fill-gap`/`rip-and-connect` mutators). Full status + copy-paste prompt at the bottom of this file.
 
 ### Navigation Core Redesign — §WALK series
 
@@ -174,5 +161,37 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 
 - [ ] **Arc ID as first-class UQF field** — add `arc: 'quest_wis'` explicitly to quest objects; enables arc sorting without string-splitting heuristics
 - [ ] **§MBIT-02-E token/gate unification** — leaning toward keeping KEY_EVENTS items and mission bit tokens separate (different ontology). Decision pending.
+
+---
+
+## §RESUME — Continue Here (newest)
+
+> **Updated 2026-06-26 · branch `main` · last commit `c865841`.** This is the canonical handoff — the most current snapshot of where the work stands and everything still outstanding. (The top-of-file §RESUME just points here.)
+
+### Where we are
+
+The **§WALK navigation-core redesign** is the active thread (lab report: `lab-reports/lab-report-terrain-field-mover-redesign.md`). Done & committed: **§WALK-1** (junctions deleted), **§WALK-1.5** (equirectangular geo re-projection + SEA_MASK + sea-lane land-bridges), **§WALK-2** (pure shared `mover.js` extracted, inlined byte-identically into the HTML + `require()`d by the server; `cellMove` + `POST /api/session/move` are thin callers; latent server sea-walk bug fixed). **§WALK-3 Inc 1** (reachability recast as a terrain-field land flood: now 409/409 reachable, 1 component) ✅.
+
+Working tree is clean except untracked `1367-sources/pla.md` and incidental `milepoints/api-cli.log` churn (pre-commit hook manages `milepoints/`; never stage it manually). wbapi-server is restarted — its in-memory copy matches disk. Verify movement with `node scripts/check-mover-parity.js` + `node scripts/check-mover-behaviour.js` (the Playwright nav tests are stale since §WALK-1.5 — see §WALK-1.5-FU(e)).
+
+### Immediate next step
+
+**§WALK-3 Inc 2** — make `POST /api/graph/fill-gap` (creates the junction stubs §WALK-1 abolished) and `POST /api/graph/rip-and-connect` (relocates strays) return **410** pointing at `GET /api/graph/reachability`; drop their `./api.sh` commands. Then **Inc 3** — delete the dead `reweave-all` body (`wbapi-server.js` ~5938→~9183, ~3,200 lines below the early-return; this also removes the `fix-all-broken`/`fix-bidirectional` phase code, which are not separate endpoints).
+
+### All outstanding work (index into the sections above)
+
+- **§WALK series (active, sequential):** §WALK-3 Inc 2 (410 mutators) → Inc 3 (delete dead reweave body) → **§WALK-4** (CI-gated invariant suite: I1/I2/I3 reachability proof + walk-parity; also rebuilds the stale Playwright nav tests) → **§WALK-5** (MUD multi-client harness; instanced per-session encounters on `session/move`).
+- **§WALK-1.5-FU** (geo follow-ups): (a) 4 anachronistic realms HKG/BKK/CTU/SJO anchored to Samarkand — off-grid/portal vs Earth-anchor; (b) ~19 German/scholarly interiors piled on Weimar — redistribute; (c) revisit 0.25° resolution for dense regions; (d) browser smoke-test of the sea-gated overworld; (e) rebuild stale Playwright nav tests (scoped to §WALK-4).
+- **§WALK-2-FU** (mover follow-ups): cleanup-cruft.sh `PRUNE_LIST[@]` unbound-var hook bug; wire server `terrainAt`/`encounterRate` for §WALK-5; resolve the inert ferry hook (author `FERRY_EDGES` vs delete).
+- **Tooling:** §WORLDBUILDER-01, §EDITOR-02 UI, §EDITOR-03 (UQF export), §WALK-G extensions, §WBAPI-01 ph3–5, §EDITOR-01-D, §CELL-14 (strip dead N/S/E/W fields — endpoint ready, run `--execute`).
+- **Game content arcs** (each needs a `lab-report-*.md` before HTML edits): §GR (La Riva grief arc), §DESIGN-03 (Ceremonia Roll), §DUNGEON-01 (10 dungeon themes), §MATH-01 (mathematical world), §1367 (historical integration — 8 gating questions), §FUTURE-01 (Saul→Paul), §GR-D (Froberger Entry 42, needs NG+).
+- **Mechanics & systems:** §ARCH-01 (UQF v1.0, phases 1–5), §MBIT-02 (mission-bit follow-ups), global monster drop nerf (−3→0 floor, never shipped), `fishmongerRowRestored` visual rebuild (blocks on §GR), UI gaps ([INVESTIGATE] highlight, reading-circle progress).
+- **Design decisions (pending):** Arc ID as first-class UQF field; §MBIT-02-E token/gate ontology unification.
+
+### Copy-paste prompt to resume
+
+> Read plan.md §RESUME (newest, bottom of file). Continue the §WALK series: do **§WALK-3 Inc 2** — return 410 from `POST /api/graph/fill-gap` and `POST /api/graph/rip-and-connect` (point at `GET /api/graph/reachability`) and drop their `./api.sh` commands; then **Inc 3** — delete the dead `reweave-all` body in wbapi-server.js (~5938→~9183). Restart the server and confirm the endpoint table + `./api.sh` still work. Work one increment per "continue" per the Directive; commit + `say` each subject; keep plan.md and index.md in sync.
+
+---
 
 *© 2026 Paul Richeson — MIT License.*
