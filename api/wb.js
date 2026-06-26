@@ -689,12 +689,12 @@ const CMD = {
       ok(`[DRY RUN] Junction ${d.plan.code}  r=${d.plan.r}  c=${d.plan.c}  terrain=${d.plan.terrain}`);
       ok(`Label:  ${d.plan.label}`);
       ok(`Text:   ${d.plan.text}`);
-      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — run fill-gap after creating`);
+      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — empty land is walkable (§WALK-1.5); verify via ./api.sh reachability`);
       ok(`Add --execute to create the junction`);
     } else {
       ok(`Junction ${d.code} created at (${d.r},${d.c})`);
       ok(`Label: ${d.plan.label}`);
-      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — run: ./api.sh fill-gap ${from} ${dir} ${d.code}`);
+      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — empty land is walkable (§WALK-1.5); verify via ./api.sh reachability`);
     }
   },
 
@@ -718,47 +718,10 @@ const CMD = {
     }
   },
 
-  // ── rip-and-connect: auto-relocate all stray (unreachable) nodes ─────────────
-  // Usage: ./api.sh rip-and-connect [--execute] [--limit 50] [--radius 6]
-  //
-  // For each node unreachable from the hub:
-  //   1. Finds the best city to relocate near (scored by quest cross-references + proximity)
-  //   2. Walks that city's mesh to find an open slot (deg ≤ 3)
-  //   3. Moves the stray's coordinates to the adjacent cell
-  //   4. Wires it bidirectionally to the slot node
-  //   5. If slot is deg=3, notes that a junction should be spawned first
-  // Dry-run by default. --execute applies all changes in one server pass.
-  // Reports: placed, failed (cell occupied or no slot), skipped.
-  // Errors that can't be auto-satisfied are listed for manual review.
-  async 'rip-and-connect'(pos, flags) {
-    const limit   = flags.limit  ? +flags.limit  : 50;
-    const radius  = flags.radius ? +flags.radius :  6;
-    const execute = !!flags.execute;
-    const resp = await request('POST', '/api/graph/rip-and-connect', {
-      dryRun: !execute, limit, meshRadius: radius,
-    });
-    if (resp.status >= 400) { printError(resp); process.exit(1); }
-    const d = resp.body;
-
-    ok(`Rip-and-connect  hub=${d.hub}  totalStrays=${d.totalStrays}  limit=${limit}`);
-    ok(`Result: ${d.placed?.length ?? 0} placed  |  ${d.failed?.length ?? 0} failed  |  ${d.skipped?.length ?? 0} skipped`);
-    if (!execute) ok(`[DRY RUN] — add --execute to apply`);
-
-    if (d.placed?.length) {
-      ok(`\nPlaced:`);
-      d.placed.slice(0, 20).forEach(r => {
-        const p = r.plan;
-        ok(`  ${r.stray.padEnd(8)} → anchor=${p.slotNode}  coord=(${p.targetCoord?.r},${p.targetCoord?.c})  ${r.status || ''}`);
-      });
-      if (d.placed.length > 20) ok(`  ...and ${d.placed.length - 20} more`);
-    }
-
-    if (d.failed?.length) {
-      ok(`\nFailed (manual review needed):`);
-      d.failed.slice(0, 10).forEach(r => ok(`  ${r.stray.padEnd(8)}  ${r.reason}`));
-      ok(`  Fix: ./api.sh geo-seed --execute  then  node layout-solve.js --apply`);
-    }
-  },
+  // ── rip-and-connect: REMOVED (§WALK-3 Inc 2) ────────────────────────────────
+  // The server endpoint now returns 410. Reachability is a terrain-field land
+  // flood (§WALK-1.5), so there are no node-adjacency strays to relocate.
+  // Verify connectivity with `./api.sh reachability` instead.
 
   // ── broken: §CELL-06 — show nodes in grid with no cell neighbors (isolated) ───
   // Usage: ./api.sh broken
@@ -778,7 +741,7 @@ const CMD = {
     ok(`${isolated.length} isolated cell(s) — no cell neighbors:`);
     isolated.slice(0, 20).forEach(c => ok(`  ${c.code.padEnd(8)} r=${c.r} c=${c.c}  terrain=${c.terrain || '?'}`));
     if (isolated.length > 20) ok(`  ...and ${isolated.length - 20} more`);
-    ok(`Fix: ./api.sh rip-and-connect --execute  (repositions strays to adjacent open cells)`);
+    ok(`Fix: re-anchor the node's lat/lon or carve a sea-lane (§WALK-1.5); confirm with ./api.sh reachability`);
   },
 
   // ── reachability: show how many nodes are reachable from the hub ─────────────
@@ -794,7 +757,7 @@ const CMD = {
     const pct = Math.round(100 * c.reachable / c.total);
     ok(`Hub: ${d.hub}  |  Reachable: ${c.reachable}/${c.total} (${pct}%)  |  Unreachable: ${c.unreachable}  |  Clusters: ${c.clusters}`);
     if (c.unreachable > 0) {
-      ok(`Isolated clusters: ${c.clusters} — use ./api.sh rip-and-connect to relocate strays`);
+      ok(`${c.unreachable} unreachable node(s) — re-anchor their lat/lon or carve a sea-lane (§WALK-1.5); see the unreachable list in GET /api/graph/reachability`);
     } else {
       ok(`All nodes reachable ✓`);
     }
@@ -907,8 +870,8 @@ const CMD = {
       ok(`  ${C.green}PASS${C.reset} — all ${total} nodes are in the grid and reachable ✓`);
     } else {
       ok(`  ${C.red}FAIL${C.reset} — ${issues} issue(s) found`);
-      if (collisions.length) ok(`  Collisions: ./api.sh reweave --execute  (moves collision losers to free cells)`);
-      ok(`  General:    ./api.sh reweave --execute  (clean + rip-and-connect)`);
+      if (collisions.length) ok(`  Collisions: re-anchor a colliding node's lat/lon, or hold both as a 1° locale list (§WALK-1.5)`);
+      ok(`  General:    ./api.sh clean --execute → ./api.sh geo-seed --execute → node layout-solve.js --apply → ./api.sh reachability`);
     }
   },
 
@@ -1090,7 +1053,7 @@ const CMD = {
       const axisOff = (D==='N'||D==='S') ? Math.abs(cb.c-ca.c) : Math.abs(cb.r-ca.r);
       const axisDist= (D==='N'||D==='S') ? Math.abs(cb.r-ca.r) : Math.abs(cb.c-ca.c);
       if (axisOff > 0) ok(`⚠ BENDY: offset=${axisOff} — consider an elbow junction first`);
-      if (axisDist > 4) ok(`⚠ GAP: distance=${axisDist} > 4 — consider fill-gap first`);
+      if (axisDist > 4) ok(`⚠ GAP: distance=${axisDist} > 4 — empty land between is walkable (§WALK-1.5); verify via ./api.sh reachability`);
       if (axisOff === 0 && axisDist <= 4) ok(`Coords OK: axis-aligned, gap=${axisDist} ≤ 4`);
     }
 
@@ -1106,27 +1069,10 @@ const CMD = {
     else ok(`Wired via junction chain: ${aCode} → junction → ${bCode}`);
   },
 
-  // ── fill-gap: insert junction chain to bridge a long axis-aligned gap ────────
-  // Usage: ./api.sh fill-gap <from> <dir> <to> [--step 4] [--dry-run]
-  async 'fill-gap'(pos, flags) {
-    const [, from, dir, to] = pos;
-    if (!from||!dir||!to) die('Usage: ./api.sh fill-gap <from> <N|E|S|W> <to> [--step N] [--dry-run]');
-    const step   = flags.step ? +flags.step : 4;
-    const dryRun = flags['dry-run'] !== undefined ? true : !flags.execute;
-    const body   = { from, dir: dir.toUpperCase(), to, maxGap:4, step, terrain:'inherit', dryRun };
-    const resp   = await request('POST', '/api/graph/fill-gap', body);
-    if (resp.status >= 400) { printError(resp); process.exit(1); }
-    const d = resp.body;
-    if (d.dryRun) {
-      ok(`[DRY RUN] ${from}─${dir}→${to}  gap=${d.gap}  needs ${d.junctionsNeeded} junction(s)`);
-      (d.plan||[]).forEach(p => ok(`  ${p.code}  r=${p.r} c=${p.c}  ${p.conflict?'CONFLICT: '+p.slot:'free'}`));
-      if (d.conflicts?.length) ok(`⚠ ${d.conflicts.length} slot conflicts — resolve before executing`);
-      ok(`Add --execute to create junctions`);
-    } else {
-      ok(`fill-gap: ${d.junctionsCreated} junction(s) created`);
-      ok(`Chain: ${d.wireChain}`);
-    }
-  },
+  // ── fill-gap: REMOVED (§WALK-3 Inc 2) ───────────────────────────────────────
+  // The server endpoint now returns 410. Junction stubs were abolished (§WALK-1)
+  // and empty land cells are freely walkable (§WALK-1.5) — there is no gap to fill.
+  // Verify connectivity with `./api.sh reachability` instead.
 
   // ── fix-diagonal: auto-fix one diagonal (bendy) edge via move or elbow ───────
   // Usage: ./api.sh fix-diagonal <CODE> <dir> [--dry-run]
@@ -1695,8 +1641,8 @@ ${C.bold}═══════════════════════�
   §18 ai — ask Claude about the API
   §19 MAP VISUALIZATION  (worldmap --regions --region --city --search --monster --route)
   §20 COORDINATE MANAGEMENT  (geo-seed  move  find-open-location)
-  §21 NETWORK WIRING  (smart-connect  highway  junction  fill-gap  connect)
-  §22 NETWORK HEALTH & REPAIR  (verify  broken  reachability  rip-and-connect  reweave  junction-audit  fix-bidirectional  cluster-bridge)
+  §21 NETWORK WIRING  (smart-connect  highway  junction  connect)
+  §22 NETWORK HEALTH & REPAIR  (verify  broken  reachability  junction-audit  fix-bidirectional  cluster-bridge)
   §23 CELL GRID QUERIES  (cell  grid region|heatmap|reachability)
   §24 COMMON RECIPES
   §25 SERVER LIFECYCLE
@@ -2818,12 +2764,6 @@ ${C.bold}═══════════════════════�
     ./api.sh junction LHR S --label "Birka South Gate" --terrain city --execute
     ./api.sh junction CON W --execute
 
-  Fill gap between two existing connected nodes:
-    ./api.sh fill-gap WOR E SAL
-    ./api.sh fill-gap WOR E SAL --execute
-    ./api.sh fill-gap KOL S REG --step 4 --execute
-    ./api.sh fill-gap LHR S KRN --execute
-
   Direct wire (warns on deg=3 or deg=4; --force to override):
     ./api.sh connect WOR E SAL
     ./api.sh connect CON W THA
@@ -2849,21 +2789,9 @@ ${C.bold}═══════════════════════�
     ./api.sh reachability
     ./api.sh reachability --hub LHR
 
-  Relocate all stray/uncoordinated nodes near their quest city:
-    ./api.sh rip-and-connect
-    ./api.sh rip-and-connect --execute
-    ./api.sh rip-and-connect --execute --limit 50
-    ./api.sh rip-and-connect --execute --limit 100 --radius 8
-
   Prune orphaned NODE_COORDS entries (leftovers from deleted junctions):
     ./api.sh clean
     ./api.sh clean --execute
-
-  Cell-first repair loop (pre-check → clean → rip-and-connect → post-check):
-    ./api.sh reweave
-    ./api.sh reweave --execute
-    ./api.sh reweave --execute --limit 200 --radius 8
-    ./api.sh reweave --execute --limit 500 --radius 12 --hub LHR
 
   Fix all one-way links (A→B but B doesn't point back):
     ./api.sh fix-bidirectional
@@ -2872,13 +2800,17 @@ ${C.bold}═══════════════════════�
   Junction audit (if any J#### nodes still remain):
     ./api.sh junction-audit
 
-  Full world reset sequence (cell-first):
+  Full world reset sequence (cell-first, §WALK-1.5 geo flood):
     ./api.sh clean --execute
     ./api.sh geo-seed --execute
     node layout-solve.js --apply
-    ./api.sh rip-and-connect --execute --limit 500
     ./api.sh verify
     ./api.sh reachability
+
+  NOTE (§WALK-3): rip-and-connect, fill-gap, and reweave-all are retired (HTTP 410).
+  Reachability is a terrain-field land flood — empty land cells are walkable and
+  there are no node-adjacency strays. Unreachable nodes are a content decision:
+  re-anchor lat/lon or carve a sea-lane (§WALK-1.5).
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   SERVER LIFECYCLE
@@ -2904,9 +2836,8 @@ ${C.bold}═══════════════════════�
   Trace — ultra-verbose algorithm decisions:
     WBAPI_TRACE=1 node wbapi-server.js
     WBAPI_TRACE=1 ./wbapi-toggle.sh fg
-    → Logs every decision: auto-junction trigger, rip-and-connect stray
-      scoring + placement, smart-connect candidate selection, fill-gap
-      junction chain steps, PUT field processing, node creation details.
+    → Logs every decision: auto-junction trigger, smart-connect candidate
+      selection, PUT field processing, node creation details.
     → Completely independent of VERBOSE. Off by default.
 
   Both at once:
@@ -2983,11 +2914,8 @@ const SYNOPSIS = [
   `  ${C.green}find-open-location${C.reset} <city>         find open attachment points near a city  [--radius 8]`,
   `  ${C.green}connect${C.reset} <A> <dir> <B>              direct wire (warns on deg=3/4 issues)  [--force]`,
   `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain T] [--execute]`,
-  `  ${C.green}fill-gap${C.reset} <from> <dir> <to>         junction chain for gap > 4  [--step N] [--execute]`,
   `  ${C.green}highway${C.reset} <from> <to>                full junction highway  [--step 4] [--execute]`,
-  `  ${C.green}rip-and-connect${C.reset} [--execute] [--limit 200] [--radius 8]  place uncoordinated nodes into adjacent grid cells`,
   `  ${C.green}fix-bidirectional${C.reset} [--execute]         fix all one-way links (A→B but B doesn't point back)`,
-  `  ${C.green}reweave${C.reset} [--execute] [--limit 200] [--radius 8] [--hub LHR]  cell-first repair: verify → rip-and-connect → verify`,
   `  ${C.green}cluster-bridge${C.reset} [--execute]             connect remaining isolated clusters`,
   `  ${C.green}migrate strip-exit-fields${C.reset} [--execute]   §CELL-14: strip dead N/S/E/W/portal/spire from NODE_MAP`,
   ``,

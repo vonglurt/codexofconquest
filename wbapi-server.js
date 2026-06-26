@@ -4931,16 +4931,9 @@ async function route(req, res) {
           fix = `coords reversed — check if ${tgt} is actually ${OPP[d]} of ${code}`;
         } else if (gap > maxGap) {
           status = 'gap_too_large';
-          fix = `POST /api/graph/fill-gap {"from":"${code}","dir":"${d}","to":"${tgt}","maxGap":${maxGap}}`;
-          // Suggest placing an intermediate junction between them
-          const candidates = suggestBetween(cc, tc, d, allCoords, null);
-          const best = candidates.find(c => c.free) || candidates[0];
-          moveSuggestion = {
-            node: '(junction)',
-            note: `Gap=${gap} — insert a junction between "${code}" and "${tgt}"`,
-            candidates,
-            recommended: best,
-          };
+          // §WALK-1.5: empty land cells between the two nodes are freely walkable, so a
+          // large gap is no longer "broken" — confirm with the reachability flood.
+          fix = `gap=${gap} cells, but empty land is walkable post-§WALK-1.5 — verify via GET /api/graph/reachability`;
         }
         result.connections[d] = { target:tgt, targetCoords:tc, gap, axisOffset:off, goodDirection:goodDir, status, fix, moveSuggestion };
       }
@@ -5079,84 +5072,17 @@ async function route(req, res) {
       return json(res, 200, { ok:true, maxGap, totalChecked, broken:edges.length, categories, edges });
     }
 
-    // ── POST /api/graph/fill-gap ──────────────────────────────────────────────
-    // Plan (or execute) inserting junction chain between two directly-connected nodes
+    // ── POST /api/graph/fill-gap — DEPRECATED (§WALK-3 Inc 2) ─────────────────
+    // fill-gap inserted J#### junction stubs to bridge a long axis-aligned gap.
+    // §WALK-1 abolished all 316 junction stubs and §WALK-1.5 made empty land cells
+    // freely walkable (terrain-field flood), so there is nothing to "fill" — a gap
+    // between two land cells is already traversable. Use the reachability flood to
+    // confirm connectivity instead of creating stubs.
     if (parts[1] === 'fill-gap' && method === 'POST') {
-      let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
-      const { from: src, dir, to: tgt, maxGap=4, step=4, terrain='inherit', dryRun=true } = body||{};
-      if (!src||!dir||!tgt) return json(res,400,{error:'Required: from, dir, to'});
-      if (!nm[src]||!nm[tgt]) return json(res,400,{error:`Node not found: ${nm[src]?tgt:src}`});
-      const sc = WBAPI.nodeCoords[src], tc = WBAPI.nodeCoords[tgt];
-      if (!sc) return json(res,400,{error:`${src} has no coordinates`});
-      if (!tc) return json(res,400,{error:`${tgt} has no coordinates`});
-      const DR4={N:-1,S:1,E:0,W:0}, DC4={N:0,S:0,E:1,W:-1};
-      const dr=tc.r-sc.r, dc=tc.c-sc.c;
-      const gap = dir in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
-      const off = dir in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
-      if (off>0) return json(res,400,{error:`Connection is off-axis (offset=${off}). Use POST /api/graph/corner-junction instead.`});
-      if (gap<=maxGap) return json(res,200,{ok:true,message:'Gap is already within limit',gap,maxGap});
-
-      const juncsNeeded = Math.ceil(gap/step)-1;
-      const terrainType = terrain==='inherit' ? (nm[src]?.name||'junction') : terrain;
-      const occupied = new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
-
-      // Generate positions
-      const plan = [];
-      const nums = Object.keys(nm).filter(c=>/^J\d+$/.test(c)).map(c=>+c.slice(1));
-      let nextJ = (nums.length?Math.max(...nums):0)+1;
-
-      for (let i=1; i<=juncsNeeded; i++) {
-        const r = sc.r + DR4[dir]*step*i;
-        const c = sc.c + DC4[dir]*step*i;
-        const key = `${r},${c}`;
-        const slot = occupied.get(key);
-        const jCode = `J${nextJ++}`;
-        plan.push({ code:jCode, r, c, slot: slot ? `OCCUPIED by ${slot}` : 'free', conflict: !!slot });
-      }
-
-      const conflicts = plan.filter(p=>p.conflict);
-      if (dryRun) {
-        return json(res,200,{ ok:true, dryRun:true, from:src, to:tgt, dir, gap, maxGap, step,
-          junctionsNeeded:juncsNeeded, terrain:terrainType, plan, conflicts,
-          wireChain: `${src}.${dir}→${plan.map(p=>p.code).join('→')}→${tgt}`,
-          note: conflicts.length ? `${conflicts.length} slot conflicts — resolve before executing` : 'Ready to execute',
-          executeCommand: `POST /api/graph/fill-gap (same body, dryRun:false)` });
-      }
-      if (conflicts.length) return json(res,409,{ error:`${conflicts.length} slot conflicts`, conflicts,
-        suggestion:'Move conflicting nodes first, or use dryRun:true to see the plan' });
-
-      logTrace('fill-gap execute', `from=${src} dir=${dir} to=${tgt} gap=${gap} step=${step} junctions=${juncsNeeded} terrain=${terrainType}`);
-      // Execute: create junctions and wire chain
-      const created = [];
-      let prev = src, prevDir = dir;
-      for (const p of plan) {
-        logTrace('fill-gap insert', `${p.code} at r=${p.r} c=${p.c}  chain: ${prev}→${p.code}`);
-        const jBody = { name:terrainType, label:`Junction near ${nm[prev]?.label||prev}`,
-          text:`Junction along ${dir} path.`, act:nm[src]?.act||1, junction:true, npc:null, battle:null, loot:null, sleep:false,
-          [OPP[dir]]: prev };
-        const jEntry = serializeNodeLiteral(p.code, jBody);
-        const ins = insertBeforeSectionClose('NODE_MAP', jEntry);
-        if (!ins.ok) return json(res,500,{error:`NODE_MAP insert failed for ${p.code}: ${ins.error}`});
-        const newNum = Object.values(WBAPI.nodeMap).reduce((m,n)=>Math.max(m,n.num||0),0)+1;
-        WBAPI.nodeMap[p.code] = { ...jBody, num:newNum };
-        WBAPI.editField('node', prev, prevDir, p.code);
-        // Place coords
-        WBAPI.nodeCoords[p.code] = { r:p.r, c:p.c };
-        const START2='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', END2='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
-        const sI=WBAPI._rawSrc.indexOf(START2)+START2.length, eI=WBAPI._rawSrc.indexOf(END2);
-        let sec=WBAPI._rawSrc.slice(sI,eI);
-        const cIdx=sec.lastIndexOf('\n};');
-        sec=sec.slice(0,cIdx+1)+`  ${p.code}:{r:${p.r},c:${p.c}},\n`+sec.slice(cIdx+1);
-        WBAPI._rawSrc=WBAPI._rawSrc.slice(0,sI)+sec+WBAPI._rawSrc.slice(eI);
-        occupied.set(`${p.r},${p.c}`, p.code);
-        created.push(p.code);
-        prev = p.code; prevDir = dir;
-      }
-      WBAPI.editField('node', prev, dir, tgt);
-      WBAPI.editField('node', tgt, OPP[dir], prev);
-      WBAPI._buildIndexes();
-      logResponse('POST', url.pathname, 201, `fill-gap: ${juncsNeeded} junctions created`);
-      return saveAndRestart(res, 201, { ok:true, from:src, to:tgt, dir, gap, junctionsCreated:juncsNeeded, created, wireChain:`${src}→${created.join('→')}→${tgt}` });
+      logResponse('POST', url.pathname, 410, 'fill-gap deprecated (§WALK-3)');
+      return json(res, 410, { ok:false,
+        error:'fill-gap is deprecated (§WALK-1/§WALK-1.5): junction stubs were removed and empty land cells are freely walkable. There is no gap to fill.',
+        see:'GET /api/graph/reachability' });
     }
 
     // ── POST /api/coords/{code}/nudge ─────────────────────────────────────────
@@ -5482,7 +5408,6 @@ async function route(req, res) {
         note: 'Execute the commands field to apply. smart-connect returns the plan; use ./api.sh connect + fill-gap to execute.' });
     }
 
-    // ── POST /api/graph/rip-and-connect ──────────────────────────────────────
     // ── POST /api/graph/promote-junction ─────────────────────────────────────
     // Promote a junction node to real content in-place, preserving all N/S/E/W wiring.
     // Body: { code, label, text, name (terrain key), npc?, battle?, loot?, sleep? }
@@ -5522,175 +5447,18 @@ async function route(req, res) {
     // Then find an open slot in that city's mesh via find-open-location logic,
     // move the stray's coordinates adjacent to that slot, and wire it in.
     // Body: { dryRun?, limit?, meshRadius? }
+    // ── POST /api/graph/rip-and-connect — DEPRECATED (§WALK-3 Inc 2) ──────────
+    // rip-and-connect relocated "stray" nodes (unreachable via node-to-node
+    // cell-BFS) to a free cell adjacent to the reachable frontier. After §WALK-1.5
+    // reachability is a terrain-field LAND FLOOD — empty land cells are walkable,
+    // so a node is "reachable" whenever it sits on a land cell connected to the hub
+    // (409/409 today). There are no node-adjacency strays to rip and re-place; use
+    // the reachability flood to find any genuinely sea-locked nodes instead.
     if (parts[1] === 'rip-and-connect' && method === 'POST') {
-      // §CELL-06 rewrite: cell-first — N/S/E/W fields stripped, exits from grid adjacency.
-      // Strays = nodes unreachable from hub via cell-BFS.
-      // Fix = move stray coordinates to a free cell adjacent to the reachable frontier.
-      // No N/S/E/W wires are written — adjacency is automatic from coordinates.
-      let body; try { body = await readBody(req); } catch(e) { body = {}; }
-      const { dryRun = true, limit = 50, meshRadius = 6 } = body || {};
-
-      const allCodes  = Object.keys(nm);
-      const allCoords = WBAPI.nodeCoords;
-
-      // 1. Build mutable cell grid from current coords
-      //    cellOccupied: 'r,c' → code  (mutable — updated as strays are placed)
-      //    Only include NODE_MAP codes — orphaned coords (deleted junctions) are
-      //    phantom entries that don't represent real game nodes and should not block
-      //    placement. Run `./api.sh clean --execute` to prune them from NODE_COORDS.
-      const cellOccupied = new Map(
-        Object.entries(allCoords)
-          .filter(([c]) => nm[c])
-          .map(([c, p]) => [`${p.r},${p.c}`, c])
-      );
-
-      // 2. Cell-BFS from LHR (or first available node with coords)
-      const HUB = nm['LHR'] ? 'LHR' : (allCodes.find(c => allCoords[c]) || allCodes[0]);
-      const hubCoord = allCoords[HUB];
-
-      const reachable = new Set();
-      if (hubCoord) {
-        const bfsQ = [HUB];
-        reachable.add(HUB);
-        while (bfsQ.length) {
-          const cur = bfsQ.shift();
-          const cc  = allCoords[cur]; if (!cc) continue;
-          for (const [dr, dc] of MOVES4) {
-            const nb = cellOccupied.get(`${cc.r+dr},${cc.c+dc}`);
-            if (nb && nm[nb] && !reachable.has(nb)) { reachable.add(nb); bfsQ.push(nb); }
-          }
-        }
-      }
-
-      const strays = allCodes.filter(c => !reachable.has(c));
-
-      // 3. Build quest cross-reference map (used for scoring)
-      const nodeQuestRefs = {};
-      for (const [, q] of Object.entries(WBAPI.questDb || {})) {
-        for (const field of ['activateNode', 'waypointNode']) {
-          if (q[field] && nm[q[field]]) nodeQuestRefs[q[field]] = (nodeQuestRefs[q[field]] || 0) + 1;
-        }
-      }
-
-      // 4. Build the reachable frontier: empty cells adjacent to any reachable node.
-      //    Updated live as strays are placed so each placed node expands the frontier.
-      //    frontier: Array<{r, c, anchor}> where anchor is the adjacent reachable code
-      const buildFrontier = () => {
-        const seen = new Set();
-        const out  = [];
-        for (const code of reachable) {
-          const cc = allCoords[code]; if (!cc) continue;
-          for (const [dr, dc] of MOVES4) {
-            const nr = cc.r+dr, nc = cc.c+dc, key = `${nr},${nc}`;
-            if (!cellOccupied.has(key) && !seen.has(key) && nr > 0 && nc > 0) {
-              seen.add(key); out.push({ r: nr, c: nc, anchor: code });
-            }
-          }
-        }
-        return out;
-      };
-
-      const results = { hub: HUB, totalStrays: strays.length, processed: 0, placed: [], failed: [], skipped: [] };
-
-      // workingCoords: starts as a copy of allCoords, updated as strays are placed.
-      // Used by buildFrontier so placed strays expand the frontier in dry-run too.
-      const workingCoords = Object.assign({}, allCoords);
-
-      // Override buildFrontier to use workingCoords instead of allCoords
-      const buildFrontierW = () => {
-        const seen = new Set();
-        const out  = [];
-        for (const code of reachable) {
-          const cc = workingCoords[code]; if (!cc) continue;
-          for (const [dr, dc] of MOVES4) {
-            const nr = cc.r+dr, nc = cc.c+dc, key = `${nr},${nc}`;
-            if (!cellOccupied.has(key) && !seen.has(key) && nr > 0 && nc > 0) {
-              seen.add(key); out.push({ r: nr, c: nc, anchor: code });
-            }
-          }
-        }
-        return out;
-      };
-
-      logTrace('rip-and-connect', `hub=${HUB} totalStrays=${strays.length} limit=${limit} dryRun=${dryRun}`);
-
-      // Sort strays: nodes with quest refs first, then by distance to hub
-      const sortedStrays = strays.slice(0, limit).sort((a, b) => {
-        const qa = nodeQuestRefs[a] || 0, qb = nodeQuestRefs[b] || 0;
-        if (qb !== qa) return qb - qa;
-        const ca = allCoords[a], cb = allCoords[b];
-        if (!hubCoord) return 0;
-        const da = ca ? Math.abs(ca.r-hubCoord.r)+Math.abs(ca.c-hubCoord.c) : 9999;
-        const db = cb ? Math.abs(cb.r-hubCoord.r)+Math.abs(cb.c-hubCoord.c) : 9999;
-        return da - db;
-      });
-
-      for (const stray of sortedStrays) {
-        // Protect geo-anchored city nodes (explicit geographic positions) and
-        // highway junction nodes (J### codes — corridor integrity) from relocation.
-        // Regular content nodes that got disconnected by geo-seed CAN be relocated.
-        if (GEO_ANCHORED.has(stray) || /^J\d+$/.test(stray)) {
-          results.skipped.push({ stray, reason: 'protected (geo-anchored or junction)' });
-          continue;
-        }
-
-        const frontier = buildFrontierW();
-        if (!frontier.length) {
-          results.failed.push({ stray, reason: 'no free cells adjacent to reachable nodes' });
-          continue;
-        }
-
-        // Pick the frontier cell nearest to the stray's current position (or hub if no coords)
-        const sc = allCoords[stray] || hubCoord;
-        let best = null, bestDist = Infinity;
-        for (const fc of frontier) {
-          const dist = sc ? Math.abs(fc.r - sc.r) + Math.abs(fc.c - sc.c) : 0;
-          if (dist < bestDist) { bestDist = dist; best = fc; }
-        }
-
-        if (!best) {
-          results.failed.push({ stray, reason: 'frontier empty' });
-          continue;
-        }
-
-        const cellKey = `${best.r},${best.c}`;
-        const plan = {
-          stray, bestCity: best.anchor, slotNode: best.anchor,
-          targetCoord: { r: best.r, c: best.c },
-          strayLabel: nm[stray]?.label,
-        };
-
-        logTrace('rip-decision', `${stray} → (${best.r},${best.c}) anchor=${best.anchor} dist=${bestDist}`);
-
-        cellOccupied.set(cellKey, stray);
-        workingCoords[stray] = { r: best.r, c: best.c };
-        reachable.add(stray);
-
-        if (dryRun) { results.placed.push({ stray, plan }); continue; }
-
-        allCoords[stray] = { r: best.r, c: best.c };
-        results.placed.push({ stray, plan, status: 'placed' });
-        results.processed++;
-      }
-
-      if (!dryRun && results.processed > 0) {
-        // Save NODE_COORDS — rip-and-connect only relocates non-geo strays, no NODE_MAP changes
-        const CS='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', CE='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
-        const si=WBAPI._rawSrc.indexOf(CS)+CS.length, ei=WBAPI._rawSrc.indexOf(CE);
-        const entries=Object.entries(allCoords).sort(([,a],[,b])=>(a.r-b.r)||(a.c-b.c));
-        let newSec=`\nconst NODE_COORDS = { // → doc: maps.md §NODE_COORDS\n`;
-        let prevBand=-999;
-        for (const [ec,ep] of entries){const band=Math.floor(ep.r/8)*8;if(band!==prevBand&&prevBand!==-999)newSec+='\n';newSec+=`  ${ec}:{r:${ep.r},c:${ep.c}},\n`;prevBand=band;}
-        newSec+=`};\n`;
-        WBAPI._rawSrc=WBAPI._rawSrc.slice(0,si)+newSec+WBAPI._rawSrc.slice(ei);
-        WBAPI._buildIndexes();
-        logResponse('POST', url.pathname, 201, `rip-and-connect: ${results.processed} placed, ${results.failed.length} failed`);
-        return saveAndRestart(res, 201, { ok:true, dryRun:false, ...results });
-      }
-
-      logResponse('POST', url.pathname, 200,
-        `rip-and-connect dry-run: ${results.placed.length} would place, ${results.failed.length} failed`);
-      return json(res, 200, { ok:true, dryRun, ...results });
+      logResponse('POST', url.pathname, 410, 'rip-and-connect deprecated (§WALK-3)');
+      return json(res, 410, { ok:false,
+        error:'rip-and-connect is deprecated (§WALK-1.5): reachability is now a terrain-field land flood, so there are no node-adjacency strays to relocate.',
+        see:'GET /api/graph/reachability' });
     }
 
     // ── POST /api/graph/nuke-junctions — P_NUKE: bulk-delete all J#### junctions ──
@@ -9487,7 +9255,7 @@ async function route(req, res) {
       });
     }
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/fill-gap  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/rip-and-connect  POST /api/graph/reweave-all  POST /api/graph/cluster-bridge  GET /api/graph/junction-audit' });
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/cluster-bridge  GET /api/graph/junction-audit  (deprecated→410: fill-gap, rip-and-connect, reweave-all)' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────

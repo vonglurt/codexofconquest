@@ -16,7 +16,7 @@
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-26 **§WALK-2 done**: pure shared `mover.js` (`move(world,pos,dir)→MoveResult`) inlined byte-identically into the HTML and `require()`d by `wbapi-server.js`; both `cellMove` and `POST /api/session/move` are thin callers. Server gained the missing sea/bounds rules (latent bug fixed) + empty-cell parity; `buildCellGrid` is first-wins to match the client. Verifiers `scripts/check-mover-{parity,behaviour}.js`. Prior: 2026-06-15 §MATH-01; total 426 nodes | ✅ |
+| Last sync pass | 2026-06-26 **§WALK-3 Inc 2 done**: `POST /api/graph/fill-gap` + `/api/graph/rip-and-connect` now return **410** (point at `GET /api/graph/reachability`); their server bodies + `./api.sh` command handlers + help/example/index refs deleted; stale suggestion strings rewired to re-anchor-lat-lon / sea-lane / `./api.sh reachability`; `reweave` CLI un-advertised (now hits 410, deleted in Inc 3). Verified live: both →410, reachability 409/409, mover parity green. Prior: §WALK-3 Inc 1 (reachability recast as land flood); §WALK-2 (shared `mover.js`); §MATH-01 | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
