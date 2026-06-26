@@ -10,13 +10,13 @@
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~43,736 | ✅ |
+| HTML line count | ~33,382 | ✅ |
 | Lab reports on disk | 71 | ✅ |
 | Lab reports in index | 71 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-15 §MATH-01: 4 math-world nodes (EHZ, MONS, ZERO, CNTR) + 5 quests (quest_math_01–05) east of HKG; Group Theory dungeon, Monster Group, zero corridor, Cantor's Attic; Adventure Time register; total 426 nodes | ✅ |
+| Last sync pass | 2026-06-26 §WALK-2 inc 1: extracted pure shared `mover.js` (`move(world,pos,dir)→MoveResult`), inlined byte-identically into the HTML, rewired `cellMove` as a thin caller; parity verifiers `scripts/check-mover-{parity,behaviour}.js`. Prior: 2026-06-15 §MATH-01 (4 math-world nodes EHZ/MONS/ZERO/CNTR + quest_math_01–05); total 426 nodes | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -62,6 +62,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `quest.md` | Master quest register — all quests organized by location (implemented + planned) | ✅ |
 | `mechanics.md` | High-level game mechanics overview — links to mechanics-combat.md and mechanics-economy.md | ✅ |
 | `docs-node-network.md` | Node network technical reference — cell grid, adjacency, code conventions, `cellMove` navigation | ✅ |
+| `mover.js` | **§WALK-2** unified mover kernel — pure `move(world,pos,dir)→MoveResult` (geo wrap/clamp/sea/locale per lab report §4.1; no DOM/SSE/RNG). The `MOVER:CORE` block is inlined byte-identically into `roll2hit-v3.html` and `require()`d by `wbapi-server.js` — single source of movement truth shared by SP client + MUD server | ✅ inc 1 (client) 2026-06-26 |
 | `Year1367AD.md` | Canonical year 1367 AD — historical events, source texts, quest vignettes for §1367 integration | ✅ |
 
 ### Story Arc Files
@@ -107,10 +108,14 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `wbapi-toggle.sh` | Shell helper — start/stop wbapi-server |
 | `wbapi-help.md` | WBAPI usage reference — endpoint list, anchor syntax, example calls |
 | `parse-nodes.js` | Standalone node parser — extracts NODE_MAP entries for external tooling |
+| `scripts/check-mover-parity.js` | **§WALK-2** structural walk-parity — asserts the `MOVER:CORE` block is byte-identical in `mover.js` and `roll2hit-v3.html` |
+| `scripts/check-mover-behaviour.js` | **§WALK-2** behavioural walk-parity — replays real `CELL_GRID`/`IMPASSABLE_CELLS` through old `cellMove` logic vs `mover.js`; asserts 0 content-affecting decision mismatches |
 
 ### Integration Tests (Playwright)
 
 Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI server needed).
+
+> ⚠️ **`navigation.test.js` + `worldbuilder-walk.test.js` are stale since §WALK-1.5** — they hardcode pre-re-projection coords/adjacencies (BOO r:47,c:223 → now r:2,c:194; BOO→LXF→SEN no longer adjacent) and assume one node per cell (LHR+BK now co-locate at cell 10,197). Already red on `main`, independent of §WALK-2. Rebuild is scoped to §WALK-4 (invariant suite); until then verify movement via `scripts/check-mover-{parity,behaviour}.js`. Tracked in `plan.md §WALK-1.5-FU(e)`.
 
 | File | Coverage | Count |
 |------|---------|-------|
@@ -144,6 +149,7 @@ All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
 | **§GR + Covenant Keeper Ending** | 2026-06-15 | La Riva grief arc: FR node + corruption chain CY→FR; Connie/Aldo/Vinnie sub-arc; 6 grief vignettes at FR; Covenant Keeper Ending — all six grief arcs name their people in final storyRender event. Lab report: `lab-reports/lab-report-la-riva-grief-arc.md` |
 | **§WISDOM-01** | — | Keel thread close: Baltic survey data arc at eastern Baltic node; "after witnessing" arc completion |
 | **§MATH-01** | 2026-06-15 | Mathematical World: 4 nodes (EHZ/MONS/ZERO/CNTR) east of HKG + 5 quests (quest_math_01–05); Group Theory dungeon, Monster Group (~8×10^53), zero corridor, Cantor's Attic; Adventure Time register |
+| **§WALK-1 / §WALK-1.5** | 2026-06-25 | Navigation-core redesign substrate: §WALK-1 deleted 316 `junction:true` routing stubs (predicate extended to "Signpost says:"); §WALK-1.5 re-projected all 409 `NODE_COORDS` to equirectangular 1° (360×90, band 70°N→20°S), converted `CELL_GRID` to locale lists, installed `SEA_RUNS`→`IMPASSABLE_CELLS` (4790 sea cells) + `SEA_LANES` land-bridge crossings (59 cells render as ocean); 409/409 reachable from Birka (LHR cell 10,197). Lab report: `lab-reports/lab-report-terrain-field-mover-redesign.md`. **§WALK-2 inc 1 in progress** (`mover.js` client extraction — see Core Reference) |
 | **§DATA-01 Quest Data–Code Separation** | 2026-06-16 | `storyShowNpc` quoteFn bug fixed (all NPC state changes were silently bypassed); `ZRH` duplicate node resolved — Dunfall renamed `DFL` at `(83,223)`, 11 quests + NPC_DIALOGUE + 3 `node.code` checks + KIR gate updated; `QUEST_DB` purged of all 127 `onPass`/`onFail` functions; `QUEST_EFFECTS` (declarative effect descriptors, 121 entries) + `QUEST_HOOKS` (91 named engine handlers) + `applyQuestEffects()` (10-case dispatch); `q.title/desc/hint` rendering moved from `innerHTML` to `textContent`. Lab report: `lab-reports/lab-report-quest-data-code-separation.md` |
 
 ### Planned Features
@@ -429,7 +435,9 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 |---|---|
 | `NODE_MAP` | 422 named nodes with `r,c` grid coords; all `N/S/E/W`, `portal`, `spire` edge fields stripped (§CELL-01 + §CELL-13); 268 zombie J-stubs purged by §CELL-05b; exits derived at runtime from CELL_GRID adjacency only |
 | `NODE_COORDS` | Grid position `{r,c}` for all nodes; used by cell renderer and minimap |
-| `CELL_GRID` | Reverse grid lookup; key `"r,c"` → node code; computed at startup from `NODE_MAP`; `getCellGrid()` in server caches it per `WBAPI.nodeMap` reference |
+| `CELL_GRID` | Reverse grid lookup; key `"r,c"` → **node-code list** (§WALK-1.5 locale lists); computed at startup from `NODE_MAP`; `cellCode(key)`=primary, `cellCodes(key)`=full list; `getCellGrid()` in server caches it per `WBAPI.nodeMap` reference |
+| `GEO_PROJ` | §2.1 equirectangular 1° grid dims `{ROWS:90, COLS:360}`; passed to the mover kernel as `world.proj` for N/S clamp + E↔W wrap |
+| `Mover` / `_moverWorld()` | §WALK-2 client handle to `mover.js` (`Mover.move(world,pos,dir)`); `_moverWorld()` builds the read-only world snapshot (`proj`/`impassable`/`cellCodes`/`terrainAt`/`encounterRate`) per move. See `mover.js` in Core Reference |
 | `QUEST_DB` | Quest definitions: activateNode, objectiveText, reward, completionCheck; 1695 quests |
 | `GATE_LOCKS` | 4 passage locks + shard gate; each entry: `{from, to, item, label}` |
 | `CONDITION_ITEMS` | 11 condition items: name, icon, effect, sell value |
