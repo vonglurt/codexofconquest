@@ -154,7 +154,7 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 
 > **Yugurt Lake cluster note (Nodes 75–76):** YL (Yugurt Lake, R06,C05) and YC (Yugurt Cabin, R07,C05) occupy cells south of J6 at the Western Wilds Crossroads. YL has `isFishingLake:true` — `storyFishing()` triggers here instead of a standard encounter. YC has The Fisherman NPC and a free sleep (sleepCost:0) with a Fishing Rod loot drop. Neither node has a main quest battle or Codex Shard. The Yugurt fish pool (fish_01–fish_20) is documented in `monsters.md` and `lab-report-fish-with-dnd.md`.
 
-> **Epic Battleground note:** E* nodes (EF–EW, Nodes 52–71) are dead-ends with a single deadly-tier boss, no tier picker, no stalk mechanic. They are accessible only from their parent node. WW-override cells represent terrain that is accessible by specific lore (deep forest passage, underwater cave, frozen waste, sky-adjacent spire, tidal cave) but not traversable by normal travel. The `isEpicBattleground:true` flag in NODE_MAP gates the DANGER:EPIC pre-battle overlay and auto-waypoint-return system (Layer 39).
+> **Epic Battleground note:** E* nodes (EF–EW, Nodes 52–71) are dead-ends with a single deadly-tier boss and no tier picker. They are accessible only from their parent node. WW-override cells represent terrain that is accessible by specific lore (deep forest passage, underwater cave, frozen waste, sky-adjacent spire, tidal cave) but not traversable by normal travel. The `isEpicBattleground:true` flag in NODE_MAP gates the DANGER:EPIC pre-battle overlay and auto-waypoint-return system (Layer 39).
 
 > **Duplicate terrain note:** `BA` = bar, Node 4 (Birka, R06,C18). `BK` = bar (Broken Tooth), Node 25 (Visby, R10,C14). Same terrain type, different nodes and codes. DS(23) has two EB dead-ends: EO (south, Leviathan's Eye) and ED (SW, Trench Titan) — both are separate encounters with separate quest givers.
 
@@ -569,7 +569,7 @@ MILEPOINT D  Roll random() vs TERRAIN_ENCOUNTER_RATE[terrain]
                            → setTimeout 300ms → _startStoryBattle(monster, ...)
 ```
 
-**Hunt mode (stalk encounters)** fires from `storyQuickWait()` or `storyStalk()` — independent of cellMove. The Hunt/Warp overlay (`#story-corridor-overlay`) is no longer shown during normal movement.
+*(§TIMELESS-01: the old Hunt/Stalk path — `storyQuickWait()`, `storyStalk()`, and the Hunt/Warp `#story-corridor-overlay` — was removed. Empty-cell movement now rolls a single `TERRAIN_ENCOUNTER_RATE` encounter, exactly as FL9 above.)*
 
 ---
 
@@ -611,7 +611,7 @@ MILEPOINT E  _updateWaypointBtn() clears waypoint display on arrival
 | `_mapIcon(code)` | Returns glyph character for a node code | `NODE_MAP[code].name` | none (pure function) |
 | `_mapAddExits(cell,code,overrideR?,overrideC?)` | Adds directional exit arrows to a map cell; uses `overrideR/C` when player is on empty cell, else `NODE_COORDS[code]` | `CELL_GRID`, `NODE_COORDS` | DOM only |
 | `_updateExitLinks()` | Refreshes d-pad direction buttons for current node | `NODE_MAP[currentCode]` | DOM only |
-| `_storyFindTerrainNode(terrain)` | Finds nearest reachable node of given terrain type via BFS | `NODE_MAP`, `HUNTING_GROUNDS` | none (pure function) |
+| `_storyFindTerrainNode(terrain)` | Finds nearest node of given terrain type by Manhattan distance | `NODE_MAP`, `NODE_COORDS` | none (pure function) |
 | `_getYaelLocation()` | Returns Yael's current patrol node code | `S_story.npcFavorability`, `S_story.currentCode` | none (pure function) |
 
 ---
@@ -624,7 +624,8 @@ MILEPOINT E  _updateWaypointBtn() clears waypoint display on arrival
 | `NODE_COORDS` | plain object | `{code: {r,c}}` | Grid position for each node; drives CELL_GRID and map render. **Grid rules:** adjacent nodes should share the same row or column and be ≤ 4 cells apart. Junction intermediaries no longer needed. |
 | `CELL_GRID` | plain object (computed) | `{"r,c": code}` | Reverse lookup: grid coordinate → node code; built at startup from NODE_COORDS |
 | `GATE_LOCKS` | array | `[{from,to,item,label}]` | Item-gated one-way passages; checked in `cellMove()` |
-| `HUNTING_GROUNDS` | plain object | `{terrain: {displayName}}` | 42 + 20 EB terrain display names; used in stalk/hunt overlays |
+
+*(`HUNTING_GROUNDS` — the `{terrain: {displayName}}` map used by the old stalk/hunt overlays — was removed in §TIMELESS-01.)*
 
 ---
 

@@ -2,6 +2,13 @@
 
 # §CELL Redesign — Resume Prompts
 
+> ⚠️ **Historical archive (do not act on verbatim).** These are completed §CELL resume
+> prompts preserved as a record. Several reference **Hunt Mode / `S_story.huntMode` /
+> guaranteed open-cell encounters** (e.g. §CELL-09's "Hunt Mode guarantees an encounter
+> on every open-cell move"). That feature was **removed entirely in §TIMELESS-01** —
+> movement is now timeless and empty-cell encounters are a single plain
+> `TERRAIN_ENCOUNTER_RATE` roll. Read those Hunt-Mode lines as obsolete.
+
 > One self-contained prompt per section. Paste any block into a fresh Claude Code session
 > to resume that exact increment. Each prompt assumes the previous sections are complete
 > unless the ordering note says otherwise.

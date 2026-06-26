@@ -651,11 +651,9 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 - **§CELL-03:** `cellMove(dir)` — one cell per keypress, replaces corridor/node-graph navigation
 - **§CELL-04:** `_inferTerrain()`, `_enterEmptyCell()`, `TERRAIN_ENCOUNTER_RATE` — open cell traversal with random encounters
 
-### Layer 10 — ✅ IMPLEMENTED
-- **Hunting Grounds**: 64 terrain types mapped to display names via `HUNTING_GROUNDS`
-- **MT node** at grid (4,5): dedicated monster-hunting node with 🎯 STALK chip
-- `storyStalk()`, `_stalkedMonsterPick()`, `_getQuestTargetKeys()`: stalk mechanic with quest-weighted monster selection
-- Stalk modal shows terrain name, quest targets, and a Wait/Abandon flow
+### Layer 10 — ⊘ REMOVED (§TIMELESS-01)
+- The Hunt/Stalk layer was removed in §TIMELESS-01. Gone: `HUNTING_GROUNDS`, the 🎯 STALK d-pad chip, `storyStalk()` / `_stalkedMonsterPick()` / `_getQuestTargetKeys()`, and the stalk modal (terrain name + quest targets + Wait/Abandon flow).
+- Replacement: empty-cell movement rolls a single `TERRAIN_ENCOUNTER_RATE` encounter via `_weightedMonsterPick()` (§CELL-04 / FL9). The MT node remains as an ordinary `mountains`-terrain location. See `lab-reports/lab-report-timeless-movement-hunt-removal.md`.
 
 ### Layer 11 — ✅ IMPLEMENTED
 - **Story Battle Focus System**: `#story-battle-overlay` full-screen takeover during combat
@@ -739,8 +737,7 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 ### Layer 23 — ✅ IMPLEMENTED
 - **`_notoriety()`**: `level × 3 + floor(battlesWon / 2)`; shown in status panel as `#s-notoriety`
 - **`_notorietyWeights(n)`**: bracket table → `{trivial, easy, medium, hard, deadly}` weights
-- **`_weightedMonsterPick` + `_stalkedMonsterPick`**: patched to use notoriety weights; quest boost ×6 preserved
-- **Corridor encounter formula**: `10 + notoriety×1.5 + questCount×4`
+- **`_weightedMonsterPick`**: uses notoriety weights for tier expansion. *(`_stalkedMonsterPick` + its ×6 quest boost and the `10 + notoriety×1.5 + questCount×4` corridor encounter formula were removed in §TIMELESS-01.)*
 
 ### Layer 24 — ✅ IMPLEMENTED
 - **`WEAPON_ITEMS`**: 70 entries (14 base × 5 magic tiers); `{tier, name, icon, type:'mainweapon', die, count, magicBonus, minLevel}`
@@ -789,7 +786,7 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 ### Layer 34 — ✅ IMPLEMENTED
 - **12 vermin monsters**: trivial/easy tier (AC ≤ 5, HP 2–20) in `MONSTER_POOL` for `city_slums` terrain
 - **`city_slums` terrain** in `WORLD_DB`; **SL node** (num:51, `N:'SL'` from CI) in `NODE_MAP`; `SL:{r:4,c:16}` in `NODE_COORDS`
-- **`HUNTING_GROUNDS`**: `city_slums: { displayName:'The Vermin Pit' }` added; vermin added to `city` terrain too
+- **`HUNTING_GROUNDS`** *(later removed §TIMELESS-01)*: `city_slums: { displayName:'The Vermin Pit' }` added; vermin added to `city` terrain too
 
 ### Layer 35 — ✅ IMPLEMENTED
 - **Victory banner auto-dismiss**: 1.4s fade when `S_story.active`; auto-calls `storyEnter()` to return to story
@@ -807,11 +804,11 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 - **`storyCharToggle()` auto-sync**: on open when `S_story.active`, syncs `char-level`, `char-ac`, `char-maxhp`, `ab-str`…`ab-cha` simulator inputs from `S_story`, then calls `syncCharFromUI()`
 
 ### Layer 37 — ✅ IMPLEMENTED
-- **D-pad 3×3 grid**: NW=🧙 NPC, N=↑, NE=⚔ Battle, W=←, Center=🗡 Stalk, E=→, SW=🛌 Rest, S=↓, SE=⏳ Wait
+- **D-pad 3×3 grid**: NW=🧙 NPC, N=↑, NE=⚔ Battle, W=←, Center=🗡 Stalk, E=→, SW=🛌 Rest, S=↓, SE=⏳ Wait *(§TIMELESS-01: the Center Stalk button is now an inert spacer and the SE Wait button + `storyQuickWait` were removed — encounters roll automatically on empty-cell movement)*
 - **Starting kit**: `STARTER_POINTY_STICK` (1d4 main weapon) + `STARTER_FLINT_DAGGER` (atkBonus:−3 offhand) equipped at new game; 2× Minor Healing Potion + Rusted Dagger in inventory
 - **Boyscout Token**: first short rest at any node → `{name:'Necklace Token', icon:'🏕', type:'token'}` added to inventory; tracked in `S_story.shortRestedAtNodes: {}`
 - **Auto-inn waypoint**: `storyShortRest()` on 0 charges → BFS finds nearest `sleep:true` node, auto-sets `S_story.waypoint` + calls `_updateWaypointBtn()`
-- **`storyQuickWait(nodeCode)`**: SE button; `_weightedMonsterPick()` picks random terrain encounter, starts battle immediately (no stalk modal)
+- **`storyQuickWait(nodeCode)`** *(removed §TIMELESS-01)*: was the SE button; `_weightedMonsterPick()` picked a random terrain encounter. Empty-cell movement now rolls that encounter automatically.
 - **CatNabbing Eagle**: renamed from Catnapping Eagle (key: `catnabbing_eagle`) in MONSTER_POOL + city_slums terrain
 
 ---
@@ -871,15 +868,18 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 │btn-dpad- │ btn-N    │btn-battle│
 │npc       │          │          │
 ├──────────┼──────────┼──────────┤
-│ ← W      │ 🗡 Stalk │  E →     │  ← W cardinal / Center (Stalk) / E cardinal
-│ btn-W    │btn-dpad- │ btn-E    │
-│          │stalk     │          │
+│ ← W      │ (spacer) │  E →     │  ← W cardinal / Center inert spacer / E cardinal
+│ btn-W    │dpad-     │ btn-E    │
+│          │center-   │          │
+│          │spacer    │          │
 ├──────────┼──────────┼──────────┤
-│ 🛌 Rest  │  ↓ S     │ ⏳ Wait  │  ← SW corner / S cardinal / SE corner
-│btn-dpad- │ btn-S    │btn-dpad- │
-│rest      │          │wait      │
+│ 🛌 Rest  │  ↓ S     │  (none)  │  ← SW corner / S cardinal / SE empty
+│btn-dpad- │ btn-S    │          │
+│rest      │          │          │
 └──────────┴──────────┴──────────┘
 ```
+
+> *(§TIMELESS-01: the Center button — formerly 🗡 Stalk / 🎯 Hunt-toggle (`btn-dpad-stalk` / `#btn-hunt-toggle`) — is now an inert `dpad-center-spacer` that keeps the 3×3 grid shape, and the SE ⏳ Wait button (`btn-dpad-wait`) was removed. Encounters roll automatically on empty-cell movement.)*
 
 **Disable logic** (applied in `storyRender()` on every node render):
 
@@ -887,9 +887,9 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 |--------|-------------|
 | `btn-dpad-npc` | `node.npc && NPC_DIALOGUE[node.code]` |
 | `btn-battle` | `node.battle && !S_story.defeatedBattles[node.code]` |
-| `btn-dpad-stalk` | `HUNTING_GROUNDS[node.name]` exists |
 | `btn-dpad-rest` | always (0 rests triggers auto-inn quest instead of refusing) |
-| `btn-dpad-wait` | `HUNTING_GROUNDS[node.name]` exists |
+
+*(§TIMELESS-01 removed the `btn-dpad-stalk` and `btn-dpad-wait` rows — both were gated on the now-deleted `HUNTING_GROUNDS`.)*
 
 ### CSS Classes — D-Pad & Character Sheet
 
@@ -902,11 +902,10 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 .dpad-corner:hover:not(:disabled) { background: #2a1208; border-color: #E76219; color: #FEA712; }
 .dpad-corner:disabled { opacity: 0.18; cursor: default; }
 
-/* D-pad center button (Stalk) */
-.dpad-center {
-  width: 48px; height: 48px; background: #2a1208; border-color: #E76219;
-  color: #E76219; font-size: 18px;
-}
+/* D-pad center — inert spacer since §TIMELESS-01 (was the Stalk/Hunt button).
+   .dpad-center + its hover/active rules were removed; the center is now an empty
+   <span class="dpad-center-spacer"></span> that just holds the 3×3 grid shape. */
+.dpad-center-spacer { display: block; }
 
 /* Character sheet — feature row (one per level) */
 .cs-prog-row { display:flex; align-items:center; gap:4px; font-size:11px; padding:2px 0; color:#FDDCA9; }
@@ -928,13 +927,12 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 | `storyMove_LEGACY(dir)` | story mode | Old node-graph navigator — retained until §CELL-05; **not called by any UI element** |
 | `storyShortRest(nodeCode)` | story mode | Heals, grants Boyscout Token on first visit, or auto-sets inn waypoint on 0 charges |
 | `storyConfirmSleep(nodeCode)` | story mode | Dice-based HP heal (2×d10+CON first sleep, 1×d10+CON revisit); min 50% hpMax |
-| `storyQuickWait(nodeCode)` | story mode | SE button — random terrain encounter via `_weightedMonsterPick()`, starts battle immediately |
 | `storyCharToggle()` | story mode | Opens/closes `#story-char-overlay`; syncs simulator inputs from `S_story` on open |
 | `storyRenderCharSheet()` | story mode | Renders stat header, ability grid, equipment strip, and `progRows()` interleaved feature/tattoo list |
 | `progRows()` | inner of `storyRenderCharSheet` | Loops levels 1–20; generates `.cs-prog-row` + `.cs-tattoo-row` pairs; earned vs `.upcoming` |
 | `storyShowNpc(nodeCode)` | story mode | Opens NPC dialogue overlay from `NPC_DIALOGUE[nodeCode]` |
 | `_bfsPath(from, to)` | utility | BFS step array for waypoint navigation and auto-inn search (uses NODE_MAP N/S/E/W — §CELL-06 will rewrite to use CELL_GRID) |
-| `_weightedMonsterPick(terrain)` | battle | Picks random monster weighted by `_notorietyWeights()`; used by stalk + quick wait |
+| `_weightedMonsterPick(terrain)` | battle | Picks random monster weighted by `_notorietyWeights()`; called by `_enterEmptyCell` on empty-cell encounter rolls |
 | `_extraAttackCount()` | battle | Returns 1/2/3/4 attack rolls per main action based on level (Lv1/5/11/20) |
 | `_notoriety()` | utility | `level × 3 + floor(battlesWon / 2)` — scales encounter difficulty dynamically |
 

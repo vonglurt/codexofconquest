@@ -579,7 +579,7 @@ Terrain: `yugurt_lake`. Used exclusively by the fishing system (2d20 cast; fish 
 
 ## **[PLANNED — Layer 47]** Yugurt Lake Bait Fish — Pool (BAIT_FISH_POOL)
 
-Bait fish are **not** in `MONSTER_POOL`. They live in a separate `BAIT_FISH_POOL` const and are never placed by the normal weighted-encounter picker — they cannot appear in corridor encounters, vendor offerings, or stalk events. They exist only inside the fishing modal at `isFishingLake:true` nodes (currently YL only).
+Bait fish are **not** in `MONSTER_POOL`. They live in a separate `BAIT_FISH_POOL` const and are never placed by the normal weighted-encounter picker — they cannot appear in random terrain encounters or vendor offerings. They exist only inside the fishing modal at `isFishingLake:true` nodes (currently YL only).
 
 **Combat behavior:** No counterattack. No enemy turn. One hit catches them. `baitFishingActive:true` suppresses the normal battle overlay — bait catching uses a simplified single-roll UI. XP is awarded on catch.
 
@@ -634,63 +634,49 @@ Terrain: `defi_land`. Meme-themed crypto/internet bestiary. All 8 keys in `MONST
 
 ## MONSTER ENGINE — Function Reference (F5 Coverage)
 
-> **CS architecture note:** F5 contains the monster selection and encounter layer. All random monster picks go through a weighted array expansion: for each monster in the terrain pool, push it N times where N = `_notorietyWeights(n)[m.tier]`. Picking a random element from that expanded array gives exact tier probability. Notoriety `n = level × 3 + floor(battlesWon / 2)` — grows with both level and fight history. Six weight tiers map n to five tier distributions (trivial/easy/medium/hard/deadly). Stalk mode applies a ×6 boost to quest-target monster weight before expansion. Hunt Mode corridor encounters use a chance formula: `min(0.95, 0.1 + notoriety × 0.015 + activeQuestCount × 0.04)`. Fishing uses a 2d20 range cast; FISH_POOL rank must fall within [lo, hi] of the two rolls.
+> **CS architecture note:** F5 contains the monster selection and encounter layer. All random monster picks go through a weighted array expansion: for each monster in the terrain pool, push it N times where N = `_notorietyWeights(n)[m.tier]`. Picking a random element from that expanded array gives exact tier probability. Notoriety `n = level × 3 + floor(battlesWon / 2)` — grows with both level and fight history. Six weight tiers map n to five tier distributions (trivial/easy/medium/hard/deadly). Empty-cell encounters roll once per step: `Math.random() < TERRAIN_ENCOUNTER_RATE[terrain]` → `_weightedMonsterPick(terrain)` (see FL9). *(The Hunt/Stalk layer — quest-target ×6 boost, the `min(0.95, …)` corridor chance formula — was removed in §TIMELESS-01; encounters are now a plain terrain-rate roll.)* Fishing uses a 2d20 range cast; FISH_POOL rank must fall within [lo, hi] of the two rolls.
 
 ---
 
-### FL9 — Hunt & Corridor Encounter
+### FL9 — Empty-Cell Encounter (§CELL-09 / §TIMELESS-01)
 
 ```
-MILEPOINT A  Player toggles Hunt Mode → storyToggleHunt()
-             S_story.huntMode flipped; _updateHuntBtn() refreshes button class + tooltip
-             huntMode ON: footpaths roll encounter chance; OFF: footpaths warp safely
+MILEPOINT A  Player steps into an unnamed cell → cellMove(dir) → _enterEmptyCell(r,c)
+             terrain = _inferTerrain(r,c); renders "Open Terrain" panel + exits
+             (Movement is timeless — no clock advance; §TIMELESS-01 Inc A)
 
-MILEPOINT B  Player moves via footpath → storyCorridorTravel(fromCode, destCode, dir)
-             huntMode ON: encounter chance = min(0.95, 0.1 + notoriety×0.015 + activeQuests×0.04)
-             Math.random() < chance → triggerCorridorEncounter(terrain, destCode, true)
-             questHunt=true: _stalkedMonsterPick() used; surpriseAdvantage = true
+MILEPOINT B  Encounter roll — one roll per step, no player agency:
+             baseRate = TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default
+             Math.random() < baseRate → monster = _weightedMonsterPick(terrain)
 
-MILEPOINT C  triggerCorridorEncounter(terrain, destCode, questHunt)
-             pick = questHunt ? _stalkedMonsterPick(terrain) : _weightedMonsterPick(terrain)
-             No pick → storyRender(destNode) — encounter skipped silently
-             loadWorldMonster(pick) → writes S.enemy.* fields; storyExit(); battle overlay shown
-
-MILEPOINT D  _weightedMonsterPick(terrain)
+MILEPOINT C  _weightedMonsterPick(terrain)
              WEIGHTS = _notorietyWeights(_notoriety())
              Expands WORLD_DB[terrain].monsters into weighted array by WEIGHTS[m.tier]
              Math.random() × array.length → selected monster; returns null if pool empty
 
-MILEPOINT E  [Battle Mode] resolves; on victory S_story.pendingBattle.corridor = true
-             After battle: storyRender(destNode) continues corridor travel to destination
+MILEPOINT D  monster non-null → setTimeout(_startStoryBattle(monster, `Wild ${name}`), 300)
+             No surprise advantage, no target selection (Hunt/Stalk removed in §TIMELESS-01)
 
-MILEPOINT F  _setActivePath(fromCode, destCode, dir) highlights active corridor on minimap
-             S_story.log.push(fromCode); log capped at 20 entries; currentCode = destCode
+MILEPOINT E  _renderMiniMap() + _updateExitLinks() refresh local map after the step
 ```
+
+> **Retired (§TIMELESS-01):** The old Hunt-toggle / footpath-corridor path —
+> `storyToggleHunt`, `storyCorridorTravel`, `triggerCorridorEncounter`, the
+> `min(0.95, 0.1 + notoriety×0.015 + activeQuests×0.04)` corridor chance, and
+> the `questHunt`/`surpriseAdvantage` branch — is gone. Empty-cell movement now
+> rolls a single plain `baseRate` encounter as above.
 
 ---
 
-### FL13 — Stalk Mechanic
+### FL13 — Stalk Mechanic *(⊘ removed §TIMELESS-01)*
 
-```
-MILEPOINT A  Player clicks "Stalk" at terrain node → storyStalk(nodeCode)
-             Guards: HUNTING_GROUNDS[node.name] must exist (42 terrain types + 20 epic terrain)
-             Populates stalk modal: terrain displayName; lists active quest targets in this terrain
-
-MILEPOINT B  _getQuestTargetKeys() — scans active quests
-             For each quest id with status='active': reads QUEST_DB[id].activateNode
-             Returns Set of battle.key values from those activate nodes
-
-MILEPOINT C  _stalkedMonsterPick(terrain)
-             Same weighted expansion as _weightedMonsterPick but quest targets get ×6 (BOOST=6)
-             base = WEIGHTS[m.tier]; w = targets.has(m.key) ? base×6 : base
-             Guaranteed non-null if terrain has monsters (WORLD_DB fallback: 'midlands')
-
-MILEPOINT D  Player clicks "Wait" → pick selected; pendingBattle.stalk = true
-             loadWorldMonster(pick); storyExit(); _storyRollInit(); _showBattleOverlay()
-             No pre-battle stealth tab (stalk grants positional advantage by lore, not mechanics)
-
-MILEPOINT E  [Battle Mode] resolves; no special post-battle stalk state — standard outcome
-```
+The Stalk mechanic (`storyStalk` target picker, `_getQuestTargetKeys`,
+`_stalkedMonsterPick` with its ×6 quest-target boost, `pendingBattle.stalk`)
+was removed with the rest of the Hunt feature in §TIMELESS-01. Quest kills now
+progress purely by winning the relevant node battles (e.g. `quest_slums_cleanup`
+completes after 3 BMA combat wins via `S_story.slStalksWon`). See
+`lab-reports/lab-report-timeless-movement-hunt-removal.md` and `mechanics-combat.md`
+§Stalk / Hunt (retired).
 
 ---
 
@@ -726,15 +712,11 @@ MILEPOINT E  [Battle Mode] resolves; fish drops from MONSTER_DROPS[fish.key]
 |----------|------|---------|---------------|-----------------|
 | `_notoriety()` | 13888 | Returns notoriety score driving tier weights | `S_story.level`, `defeatedBattles`, `dropsCollected` | none (computed) |
 | `_notorietyWeights(n)` | 13893 | Maps notoriety score to 5-tier weight distribution | n (0–∞, 6 brackets) | none (returns object) |
-| `_weightedMonsterPick(terrain)` | 13902 | Picks random monster by notoriety-weighted tier | `WORLD_DB[terrain].monsters`, `_notorietyWeights()` | none (returns monster\|null) |
-| `_stalkedMonsterPick(terrain)` | 13968 | Same as weighted pick but quest targets get ×6 weight boost | `WORLD_DB[terrain].monsters`, `_getQuestTargetKeys()`, `_notorietyWeights()` | none (returns monster\|null) |
-| `_getQuestTargetKeys()` | 13956 | Returns Set of monster keys required by active hunt quests | `S_story.quests`, `QUEST_DB`, `NODE_MAP[activateNode].battle.key` | none (returns Set) |
-| `triggerCorridorEncounter(terrain, destCode, questHunt)` | 13914 | Picks monster; loads into battle; fires battle overlay | `questHunt` flag, terrain, `NODE_MAP[destCode]` | `pendingBattle`, `S.enemy.*`, `surpriseAdvantage` |
-| `storyToggleHunt()` | 13780 | Flips huntMode; updates button; logs mode message | `S_story.huntMode` | `S_story.huntMode` toggled |
-| `_updateHuntBtn()` | 13768 | Refreshes Hunt Mode button class and tooltip text | `S_story.huntMode` | DOM btn-hunt-toggle class/title |
-| `storyStalk(nodeCode)` | 11631 | Shows stalk modal; lists quest targets; fires pick on confirm | `HUNTING_GROUNDS[node.name]`, `_getQuestTargetKeys()`, `WORLD_DB[node.name]` | `pendingBattle`; calls `loadWorldMonster()` |
-| `storyQuickWait(nodeCode)` | 11676 | Instant encounter without stalk modal; uses weighted pick | `HUNTING_GROUNDS[node.name]`, `_weightedMonsterPick()` | `pendingBattle`; calls `loadWorldMonster()` |
+| `_weightedMonsterPick(terrain)` | 32591 | Picks random monster by notoriety-weighted tier; called by `_enterEmptyCell` | `WORLD_DB[terrain].monsters`, `_notorietyWeights()` | none (returns monster\|null) |
+| `_enterEmptyCell(r,c)` | 25656 | Renders open-terrain panel; rolls one `TERRAIN_ENCOUNTER_RATE` encounter (FL9) | `TERRAIN_ENCOUNTER_RATE`, `WORLD_DB`, `_inferTerrain()` | DOM story panel; may call `_startStoryBattle()` |
 | `storyFishing()` | 11537 | Opens fishing modal; 2d20 cast; FISH_POOL rank range lookup | `FISH_POOL`, `S_story.inventory` (rod check) | DOM fishing-modal; calls `_startFishBattle()` |
+
+> *(§TIMELESS-01 removed `_stalkedMonsterPick`, `_getQuestTargetKeys`, `triggerCorridorEncounter`, `storyToggleHunt`, `_updateHuntBtn`, `storyStalk`, and `storyQuickWait` — the entire Hunt/Stalk path. Other line numbers in this table are pre-§WALK and may have drifted; re-audit when next touched.)*
 | `_startFishBattle(fish, hasRod)` | 11604 | Builds _preBattNode for fish; prepends Hooked cond if rod present | `fish.key/rank`, `hasRod`, `CONDITION_ITEMS` | `_preBattNode._isFishBattle`, `_availableConds` |
 | `loadWorldMonster(m)` | 6687 | Loads WORLD_DB/EPIC_BOSS_POOL monster into S.enemy and battle UI | monster object `{key,name,ac,hp,atk,dmgDie,dmgCount,dmgFlat,tier}` | `S.enemy.*`, `S.opp.hp/maxHp/tier/cond/adv`; DOM battle fields |
 | `loadEnemyPreset(key)` | 6615 | Loads named preset from ENEMY_DB (Battle Mode direct selection) | `ENEMY_DB[key]` | `S.enemy.*`, `S.opp.*`; DOM battle fields |

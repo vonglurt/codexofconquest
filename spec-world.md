@@ -550,10 +550,10 @@ monsters: [
 
 ### V-A2. city_slums — Birka Slums (Node SL, Act I)
 
-Cramped alleys north of the Birka market. Refuse heaps, vermin, and livestock gone feral. The hunting ground is called **"The Vermin Pit"**. All 14 monsters are low-tier vermin and beasts — the slums offer easy early XP for level 1 fighters.
+Cramped alleys north of the Birka market. Refuse heaps, vermin, and livestock gone feral. Locals call this stretch **"The Vermin Pit"**. All 14 monsters are low-tier vermin and beasts — the slums offer easy early XP for level 1 fighters.
 
 **Node code:** `SL` · `num: 51` · Connects south to CI (City Streets)  
-**Terrain key:** `city_slums` · **HUNTING_GROUNDS:** `displayName: 'The Vermin Pit'`
+**Terrain key:** `city_slums` *(the `HUNTING_GROUNDS` display-name map that surfaced "The Vermin Pit" in the stalk UI was removed in §TIMELESS-01; the name survives only as world lore here)*
 
 ```js
 monsters: [

@@ -13,7 +13,7 @@ Roll2Hit runs in two modes that share a single state. **Battle Mode** is the com
 ### Combat Flow
 
 #### Starting a Battle (Story Mode)
-1. Navigate to a node with a **⚔ BATTLE** chip (or trigger a Stalk / open-cell encounter).
+1. Navigate to a node with a **⚔ BATTLE** chip (or trigger an open-cell encounter).
 2. The **Pre-Battle screen** opens with three tabs:
 
 | Tab | Cost | Effect |
@@ -143,7 +143,7 @@ In both cases: the battle is not marked defeated — no victory credit, no drops
 
 ### XP System
 
-XP is earned on every enemy kill, including Stalk and open-cell encounters.
+XP is earned on every enemy kill, including open-cell encounters.
 
 **Formula:** `XP = enemy AC × enemy max HP`
 
@@ -373,7 +373,7 @@ Notoriety is a persistent scalar that drives enemy scaling across the entire run
 
 **Formula:** `_notoriety() = level × 3 + floor(battlesWon / 2)`
 
-where `battlesWon` counts all defeated node battles plus Stalk/open-cell victories.
+where `battlesWon` counts all defeated node battles plus open-cell victories.
 
 **Effect on enemy tier weights:**
 
@@ -650,7 +650,7 @@ Navigation is **cell-based**: pressing N/E/S/W moves the player exactly one grid
 
 **Node entry:** If the destination cell has an entry in `CELL_GRID`, the player enters that named node and `storyRender(node)` fires (quests, encounters, NPC dialogue, loot). If the destination cell is empty, `_enterEmptyCell(r, c)` fires (§CELL-04) — terrain is inferred from `_inferTerrain(r, c)` and an encounter roll is made.
 
-**Hunt Mode:** Active when `S_story.hunting === true`. Every cell move — named or empty — triggers an encounter roll against the terrain's `TERRAIN_ENCOUNTER_RATE`. Hunt mode does not require corridor travel; any cell with the target terrain qualifies.
+**Encounters:** There is no Hunt Mode toggle (removed in §TIMELESS-01). Stepping into an empty cell always makes a single encounter roll against the terrain's `TERRAIN_ENCOUNTER_RATE` inside `_enterEmptyCell` — on hit, `_weightedMonsterPick(terrain)` starts a "Wild …" battle. Movement itself is timeless (no clock advance). Named-node entry does not roll an open-cell encounter; it runs the node's own `storyRender` battle/quest logic.
 
 **Quest waypoints:** BFS over the cell grid (not node edges) finds the shortest path to a quest's `activateNode`. The minimap highlights this path.
 

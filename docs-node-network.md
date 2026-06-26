@@ -274,7 +274,7 @@ function _bfsGridDir(fromCode, toCode, startR, startC) {
 
 Both `_updateExitLinks()` and `storyWaypoint()` pass `(pr, pc)` — the actual player grid position — as `startR/startC`. This ensures waypoint directions are correct when the player is standing on an unnamed empty cell (where `currentCode` still points to the last named node). `storyWaypoint()` calls `cellMove(dir)` — one step per button press, not a teleport.
 
-**Hunt Mode:** When `S_story.huntMode` is true, `_enterEmptyCell` rolls at `effectiveRate = 1.0` (guaranteed encounter). Named-node encounters are unchanged. The quest-stalked monster selection (`_stalkedMonsterPick`) is still used for node battles.
+**Empty-cell encounters:** `_enterEmptyCell` always rolls once at the terrain's `TERRAIN_ENCOUNTER_RATE` (no Hunt-Mode toggle — `S_story.huntMode` and the guaranteed-encounter `effectiveRate = 1.0` path were removed in §TIMELESS-01). On a hit, `_weightedMonsterPick(terrain)` selects the monster; the old quest-stalked `_stalkedMonsterPick` is gone. Named-node battles are unchanged.
 
 ---
 
