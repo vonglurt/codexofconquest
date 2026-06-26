@@ -9118,11 +9118,8 @@ function moverMove(world, pos, dir) {
   if (s.oob) return __moverBlocked(from, 'oob');
 
   const key = s.nr + ',' + s.nc;
-  const fromKey = from.r + ',' + from.c;
   const blocked = !!(world.impassable && world.impassable.has(key));
-  const viaFerry = blocked && !!(world.ferryEdges &&
-    (world.ferryEdges.has(fromKey + '|' + key) || world.ferryEdges.has(key + '|' + fromKey)));
-  if (blocked && !viaFerry) return __moverBlocked(from, 'sea');
+  if (blocked) return __moverBlocked(from, 'sea');
 
   const destCodes = (world.cellCodes && world.cellCodes(s.nr, s.nc)) || [];
   const destKind = destCodes.length ? 'named' : 'empty';
@@ -9131,7 +9128,7 @@ function moverMove(world, pos, dir) {
 
   return {
     ok: true, reason: null,
-    from, to: { r: s.nr, c: s.nc }, via: viaFerry ? 'ferry' : 'step',
+    from, to: { r: s.nr, c: s.nc }, via: 'step',
     destCodes, destKind, terrain,
     encounter: { eligible: destKind === 'empty', baseRate },
   };
@@ -9142,8 +9139,9 @@ const Mover = { move: moverMove, _step: __moverStep, _blocked: __moverBlocked };
 
 // World snapshot the client hands the shared kernel. Built per-move so it always
 // reflects current CELL_GRID / IMPASSABLE state. terrainAt/encounterRate mirror
-// _enterEmptyCell's existing logic; ferryEdges is omitted — §WALK-1.5 carries
-// water crossings as SEA_LANES land bridges (passable cells), not ferry edges.
+// _enterEmptyCell's existing logic. Water crossings are carried as SEA_LANES land
+// bridges (passable cells); the kernel has no ferry-edge mechanism (§WALK-5-FU
+// removed the inert hook), so any impassable destination cell simply blocks.
 function _moverWorld() {
   return {
     proj: GEO_PROJ,

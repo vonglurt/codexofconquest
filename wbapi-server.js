@@ -428,9 +428,9 @@ function terrainAt(r, c) {
 
 // Read-only world snapshot handed to Mover.move(). §WALK-5 Inc 1 wires terrainAt +
 // encounterRate so the kernel populates encounter.{eligible,baseRate} on empty cells
-// (the per-session roll that reads it lands in §WALK-5 Inc 2). ferryEdges stays
-// unset — the inert kernel hook is deferred to §WALK-5-FU (author FERRY_EDGES for
-// server+SP together, or drop the branch).
+// (the per-session roll that reads it lands in §WALK-5 Inc 2). There is no ferry
+// data: §WALK-5-FU removed the inert kernel ferry-edge hook, since §WALK-1.5 carries
+// every water crossing as a SEA_LANES land bridge (a passable cell), not a ferry edge.
 function getMoverWorld() {
   const lg = getLocaleGrid(), imp = getImpassable(), rates = getEncounterRateTable();
   return {

@@ -13,8 +13,9 @@
 //     impassable,                // Set "r,c"            (sea + IMPASSABLE_CELLS)
 //     cellCodes:(r,c)=>string[], // §2.2 locale list at a cell ([] = empty)
 //     terrainAt:(r,c)=>key,      // §2.4 terrain at a cell
-//     encounterRate:(key)=>num,  // TERRAIN_ENCOUNTER_RATE lookup (baseRate)
-//     ferryEdges }               // optional Set "r,c|r,c" — land↔land over sea
+//     encounterRate:(key)=>num } // TERRAIN_ENCOUNTER_RATE lookup (baseRate)
+// §WALK-1.5 carries water crossings as SEA_LANES land bridges (passable cells), so
+// the kernel has no ferry-edge mechanism: any impassable dest cell blocks (sea).
 // pos: {r,c}   dir: 'N'|'S'|'E'|'W'   ->  MoveResult (a description; caller does effects)
 
 // ◆◆◆ MOVER:CORE:START ◆◆◆
@@ -49,11 +50,8 @@ function moverMove(world, pos, dir) {
   if (s.oob) return __moverBlocked(from, 'oob');
 
   const key = s.nr + ',' + s.nc;
-  const fromKey = from.r + ',' + from.c;
   const blocked = !!(world.impassable && world.impassable.has(key));
-  const viaFerry = blocked && !!(world.ferryEdges &&
-    (world.ferryEdges.has(fromKey + '|' + key) || world.ferryEdges.has(key + '|' + fromKey)));
-  if (blocked && !viaFerry) return __moverBlocked(from, 'sea');
+  if (blocked) return __moverBlocked(from, 'sea');
 
   const destCodes = (world.cellCodes && world.cellCodes(s.nr, s.nc)) || [];
   const destKind = destCodes.length ? 'named' : 'empty';
@@ -62,7 +60,7 @@ function moverMove(world, pos, dir) {
 
   return {
     ok: true, reason: null,
-    from, to: { r: s.nr, c: s.nc }, via: viaFerry ? 'ferry' : 'step',
+    from, to: { r: s.nr, c: s.nc }, via: 'step',
     destCodes, destKind, terrain,
     encounter: { eligible: destKind === 'empty', baseRate },
   };

@@ -131,19 +131,22 @@ The instancing property falls straight out: `s.encounter` reads and writes **onl
 other session — so client A's stream and client B's stream are independent by construction. The harness
 asserts this empirically (§5) rather than trusting the argument alone.
 
-### 4.5 Ferry hook — resolve the inert `ferryEdges`
+### 4.5 Ferry hook — resolve the inert `ferryEdges` ✅ RESOLVED (§WALK-5-FU, 2026-06-26)
 
-`mover.js` supports `world.ferryEdges` (a `Set` of `"r,c|r,c"` land↔land-over-sea edges) but `getMoverWorld()`
-never sets it, and there is no `FERRY_EDGES` data anywhere — it is dead capability (§WALK-2-FU "inert ferry
-hook"). **Decision for §WALK-5: keep the kernel capability, defer the data.** Authoring a real `FERRY_EDGES`
-table is a content/geo task (which crossings exist) that does not belong in a harness increment and would need
-its own SP-client wiring to stay in parity. The §WALK-5 increment will instead:
-- leave `mover.js`'s `ferryEdges` branch as-is (already tested structurally),
-- add a one-line `getMoverWorld()` comment pointing here, and
-- file the authoring task as **§WALK-5-FU** (author `FERRY_EDGES` for both server and SP client together, or
-  delete the kernel branch if no crossing is ever needed).
-This avoids shipping a half-wired ferry that exists on the server but not the client (a parity violation the
-§WALK-4 invariant suite would not catch, since it does not model ferries).
+`mover.js` supported `world.ferryEdges` (a `Set` of `"r,c|r,c"` land↔land-over-sea edges) but `getMoverWorld()`
+never set it, and there was no `FERRY_EDGES` data anywhere — it was dead capability (§WALK-2-FU "inert ferry
+hook"). §WALK-5 deferred the decision (kept the kernel branch, filed the authoring task). **§WALK-5-FU resolved
+it by DELETING the branch, not authoring data.** Rationale: §WALK-1.5 already carries *every* water crossing as a
+**SEA_LANES land bridge** — a passable cell the kernel walks for free — so a `ferryEdges` `Set` would be a
+redundant second water-crossing mechanism. Authoring `FERRY_EDGES` would invent geo content to duplicate what
+SEA_LANES already does; the honest move is to remove the parallel path. Changes (byte-identical across the two
+MOVER:CORE copies, so `check:parity` stays green):
+- dropped the `viaFerry` computation + the now-unused `fromKey`; the blocked check is simply `if (blocked) return
+  __moverBlocked(from, 'sea')`; the result's `via` is always `'step'` (no consumer ever branched on `'ferry'`).
+- rewrote the `world` doc-comment in `mover.js`, the `_moverWorld()` comment in `roll2hit-v3.html`, and the
+  `getMoverWorld()` comment in `wbapi-server.js` to state there is no ferry mechanism (SEA_LANES carries crossings).
+**Verified:** `check:walk` green (MOVER:CORE identical 1847 bytes, behavioural 0 content mismatches, terrain
+10440/10440); MUD harness **24/24**. This was the last open item under §WALK — the series is now fully closed.
 
 ---
 
