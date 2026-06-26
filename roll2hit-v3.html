@@ -9577,6 +9577,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
     E:"J329",
   },
   J329: { num:63986, name:"junction", label:"The Lyngvi Hall–Oddrun's Estate Road Waypoint", text:"Signpost says: The Lyngvi Hall–Oddrun's Estate Road. Follow this road between Lyngvi Hall and Oddrun's Estate.", npc:null, loot:null, W:"J328", act:1, sleep:false, junction:true },
+  GVW: { num:63987, name:"forest", label:"Greenwood Watcher's Clearing", text:"A clearing in old-growth forest, not on any map. The trees have grown around the house without touching it. The woman who lives here never advertised her presence — but the ones who need to find her do.", act:1 },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -10332,6 +10333,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   J20:{r:199,c:225},
 
   ALP:{r:214,c:323},
+  GVW:{r:65,c:222},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -21331,6 +21333,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   quest_math_03: { id:"quest_math_03", type:"side", title:"The Quintic's Impossibility", desc:"A ledger entry at the Bruges Cloth Hall references the Hamadani Failure Record — a ninth-century Persian document logging seventeen attempts to solve the quintic equation by radicals. Hamadani failed. Abel proved in 1823 that failure was the only possible outcome: the quintic cannot be solved by radicals. The record is at the Event Horizon Station, filed under results that required five centuries to be understood.", hint:"Find the Hamadani Failure Record at the Event Horizon Station. Enter through the Neon Undercity east panel.", passText:"Hamadani Failure Record collected. Seventeen documented failures, each one a step toward the proof of impossibility.", failText:"The Hamadani Failure Record is at the Event Horizon Station. The panel is in the east wall of the Neon Undercity.", activateNode:"OST", waypointNode:"EHZ", xpAward:400, reward:350 },
   quest_math_04: { id:"quest_math_04", type:"side", title:"The Counting Quest", desc:"Three counting systems passed through Jerusalem: Greek sphere reckoning from the Antikythera calculation tradition, Byzantine ledger numerals from the imperial tax offices, Roman surveyor notation from the engineering corps. Each system worked. None of them had zero. The documents were copied here and sent west, where they eventually met the number they had been missing. The complete bundle is in the Zero Corridor.", hint:"Find the Counting Document Bundle in the Zero Corridor, north of the Event Horizon Station.", passText:"Counting Document Bundle collected. Three civilizations counting toward the same number, finally assembled.", failText:"The Counting Document Bundle is in the Zero Corridor. Reach the Event Horizon Station through the Neon Undercity, then go north.", activateNode:"JRS", waypointNode:"ZERO", xpAward:500, reward:500 },
   quest_math_05: { id:"quest_math_05", type:"side", title:"The Moonshine Memo", desc:"The Monster's Manifold produces a whisper: the j-function, which describes torus geometry in elliptic curve theory, matches the Monster Group's dimensions with impossible precision. The smallest representation is 196,883-dimensional. The j-function's first non-trivial coefficient is 196,884. The difference is 1. John McKay noticed this in 1978. No one knows why it is true. The memo documenting the observation is in Cantor's Attic.", hint:"Find the Moonshine Memo in Cantor's Attic, northeast of the Event Horizon Station.", passText:"Moonshine Memo collected. The Monster Group's impossible moonshine, documented by Johannes von Weisheit before anyone had language for it.", failText:"The Moonshine Memo is in Cantor's Attic, north of the Monster's Manifold.", activateNode:"MONS", waypointNode:"CNTR", xpAward:600, reward:600 },
+  clr_01_act1: { id:"clr_01_act1", type:"skill_check", title:"I Just Know This — The Clearing", desc:"A clearing in old-growth forest, not on any map. A house, smoke from a chimney, a woman in the doorway. She says: “I wondered which word you would use.” She has not been introduced. She asks only: “How did you find this place?”", passText:"You tell her the truth: you stopped following the map at some point and something else took over. You cannot name what it was. She nods. “That one,” she says. She goes inside and returns with a small leather satchel. “Eleven accounts. Each from a different person. Each uses the same word. Deliver them to the archive at Weimar. Tell the archivist to pay attention to the language.”", failText:"You say you followed the map, or felt something, or saw a light between the trees. She waits through each answer. Then: “You are not ready yet — but you will be. Walk with me first.” She leads you to the document cache anyway. The satchel transfers regardless.", npc:"watcher_gvw", activateNode:"GVW", checkStat:"INT", checkPassFlag:"clrC1A1Done", checkDC:12 },
+  clr_01_act2: { id:"clr_01_act2", type:"skill_check", title:"I Just Know This — The Cache Walk", desc:"She walks you to the edge of the forest before departing. The path changes direction three times. She does not look at the ground. She does not use landmarks. She says: \"The ones who get lost in this forest are the ones who keep checking.\"", passText:"You stop checking. The feet decide. The forest opens and the main road is there. On the road out you open the satchel and read the first testimony: a merchant who knew his ship had sunk six days before the news arrived. His word: \"I simply knew.\"", failText:"You check the map. She continues without you noticing. You find the main road on your own, a few minutes behind. The satchel is still in your hands. The first testimony reads the same.", npc:"watcher_gvw", activateNode:"GVW", checkStat:"WIS", checkPassFlag:"clrC1A2Done", checkDC:11 },
+  clr_01_act3: { id:"clr_01_act3", type:"skill_check", title:"I Just Know This — The Crossroads", desc:"A three-way crossroads. No road signs. No other travelers. One set of tracks leading left — a day old, moving the wrong direction. Whoever made them was also lost.", passText:"You stop. You stand at the crossroads and wait. Nothing visible, audible, or felt — but after a moment there is a knowing. Left. You take the left fork. Within a hundred paces a familiar milestone from your planned route appears. You did not navigate here. You knew.", failText:"You follow the tracks or reason from the sun. The fork is wrong — you backtrack twenty minutes. The correct road still waits. On the way back you understand: the tracks were left by someone who also reasoned their way to the wrong choice.", activateNode:"GVW", checkStat:"WIS", checkPassFlag:"clrC1A3Done", checkDC:13 },
+  clr_01_act4: { id:"clr_01_act4", type:"skill_check", title:"I Just Know This — The Merchant", desc:"A merchant on the road is looking for the nearest market town. He has tried both other forks and turned back each time. He asks: \"Do you know the way?\" You know. You cannot explain how.", passText:"You tell him which road. He asks how you know. You say: \"I just know.\" He pauses. Then: \"I don't know why I believe you.\" He takes the road you indicated. You watch him go and know he will arrive.", failText:"He does not accept conviction without argument. He tries the third fork. A traveler you meet later tells you: the merchant arrived at the market an hour late, via the long way round. The knowing was correct. Only the argument failed.", activateNode:"GVW", checkStat:"CHA", checkPassFlag:"clrC1A4Done", checkDC:12 },
+  clr_01_act5: { id:"clr_01_act5", type:"skill_check", title:"I Just Know This — The Archive", desc:"The archivist at Weimar opens the leather satchel. He reads the first three testimonies silently. Then a fourth. He looks up. \"These are from completely different people. Different centuries, different countries, different situations. What is the category?\"", passText:"You say: \"Knowing Records — Cognition Without Visible Input.\" He writes it. He pauses. \"How did you settle on knowing rather than sensing or feeling?\" You say: \"She told me to pay attention to the language.\" He reads the preface note. He stamps it: RECEIVED. KNOWING RECORDS — COGNITION WITHOUT VISIBLE INPUT. ELEVEN TESTIMONIES. PROVENANCE: GREENWOOD WATCHER'S CLEARING, 1367. He asks: \"Do you know her name?\" You think. She never said it. And you knew, at the time, that she would not.", failText:"The archivist proposes a narrower category: \"Psychic Phenomena — Informal Reports.\" You accept his framing. The testimonies are received but under a category that obscures what they are. The preface note sits in the folder, unread.", activateNode:"WM", checkStat:"INT", checkPassFlag:"clrC1A5Done", checkDC:12 },
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
@@ -21952,6 +21959,7 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   malikshah_kya: { key:"malikshah_kya", name:"Malikshah al-Sultani", occupation:"Court historian in Kabul, seventy-five years old, holder of the Zábulistán Chronicle for forty years; four folios of a 10th-century court history naming Jemshíd's queen Sháhdokht and recording her account of the king's final years before his capture; political situation in eastern Persia deteriorating with Timurid advance; commissioned the Fighter to carry the chronicle to Tabriz and then to Weimar before a conqueror can claim it as a trophy", node:"KBL" },
   khalid_kya: { key:"khalid_kya", name:"Khalid ibn Ahmad al-Zargar", occupation:"Dying guild master of the Anjuman-i Zargar, Tabriz goldsmith's brotherhood; keeper of seventeen folios recording every Sassanian king's addition to the Derafsh Kaviani banner from the 6th to 10th century; six dynasties used the same phrase acknowledging Kavah's craftsman-origin each time; the incoming guild master will file it without reading it; commissioned the Fighter to carry the Guild Ledger to Weimar before he dies", node:"TBZ" },
   ardeshir_kya: { key:"ardeshir_kya", name:"Ardeshir", occupation:"Junior fire-keeper and inventory officer at the Azar Yazdan temple, Yazd, twenty years in post; has known about the sealed ivory case since his first audit and has never opened it; the waqf dispute from the temple's property case threatens to make it exhibit evidence in a hearing; commissioned the Fighter to carry the palm-sized ivory case — inventory claiming one Símúrgh feather, Alberz mountain provenance — to Constantinople for scholarly assessment and then to Weimar sealed and unopened", node:"YAZ" },
+  watcher_gvw: { key:"watcher_gvw", name:"The Greenwood Watcher", occupation:"Natural historian of cognition, forest warden", node:"GVW" },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -26871,16 +26879,13 @@ function cellMove(dir) {
   const [dr, dc] = DELTAS[dir];
   const pr = (S_story.playerR || 0), pc = (S_story.playerC || 0);
 
-  // Scan forward for first non-junction named node (multi-step traversal removed;
-  // junction nodes are grid infrastructure and are skipped transparently)
-  let nr = pr + dr, nc = pc + dc, destCode = null;
-  while (nr >= 1 && nc >= 1 && nr <= 500 && nc <= 500 && !IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
-    const code = CELL_GRID[`${nr},${nc}`];
-    if (code && NODE_MAP[code] && !NODE_MAP[code].junction) { destCode = code; break; }
-    nr += dr; nc += dc;
+  // One cell only — no scanning, no junction skipping
+  const nr = pr + dr, nc = pc + dc;
+  if (nr < 1 || nc < 1 || nr > 500 || nc > 500 || IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
+    storyBlock('No path leads that way.'); return;
   }
-
-  if (!destCode) { storyBlock('No path leads that way.'); return; }
+  const destCode = CELL_GRID[`${nr},${nc}`] || null;
+  const destNode = destCode ? NODE_MAP[destCode] : null;
 
   storyCheckMissedSleep();
   S_story.log.push(S_story.currentCode);
@@ -26892,11 +26897,16 @@ function cellMove(dir) {
   S_story.hoursElapsed    = (S_story.hoursElapsed || 0) + 1;
   S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
 
-  const _farewell = _getFarewell(S_story.currentCode, destCode);
-  _pendingFarewell = _farewell || null;
-  _setActivePath(S_story.currentCode, destCode, dir);
-  S_story.currentCode = destCode;
-  storyRender(NODE_MAP[destCode]);
+  if (destNode) {
+    const _farewell = _getFarewell(S_story.currentCode, destCode);
+    _pendingFarewell = _farewell || null;
+    _setActivePath(S_story.currentCode, destCode, dir);
+    S_story.currentCode = destCode;
+    storyRender(destNode);
+  } else {
+    _pendingFarewell = null;
+    _enterEmptyCell(nr, nc);
+  }
 }
 
 // §CELL-04: infer terrain for an unnamed cell by majority vote of named neighbors
@@ -33655,36 +33665,40 @@ function _updateExitLinks() {
     const btn = document.getElementById('btn-' + d);
     if (btn) btn.classList.toggle('dpad-wp', d === wpDir);
   });
-  // Cardinal exits: scan forward skipping junctions, show first named non-junction node
+  // Cardinal exits: one cell only — show what is immediately adjacent
   ['N','S','E','W'].forEach(d => {
     const el  = document.getElementById('exit-' + d);
     const btn = document.getElementById('btn-' + d);
     if (!el) return;
     const [dr, dc] = DELTAS[d];
-    let nr = pr + dr, nc = pc + dc, destCode = null;
-    while (nr >= 1 && nc >= 1 && nr <= 500 && nc <= 500 && !IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
-      const code = CELL_GRID[`${nr},${nc}`];
-      if (code && NODE_MAP[code] && !NODE_MAP[code].junction) { destCode = code; break; }
-      nr += dr; nc += dc;
-    }
-    if (btn) btn.disabled = !destCode;
-    if (!destCode) {
+    const nr = pr + dr, nc = pc + dc;
+    const passable = nr >= 1 && nc >= 1 && nr <= 500 && nc <= 500 && !IMPASSABLE_CELLS.has(`${nr},${nc}`);
+    if (!passable) {
+      if (btn) btn.disabled = true;
       el.className = 'exit-line';
       el.removeAttribute('onclick');
       el.innerHTML = '<span class="exit-none">— (none)</span>';
       return;
     }
-    const dest = NODE_MAP[destCode];
+    const destCode = CELL_GRID[`${nr},${nc}`] || null;
+    const dest = destCode ? NODE_MAP[destCode] : null;
     const isWp = (d === wpDir);
-    const num  = String(dest.num).padStart(2,'0');
-    const terrain = _terrainLabel(dest.name);
+    if (btn) btn.disabled = false;
     el.className = 'exit-line exit-active' + (isWp ? ' exit-waypoint' : '');
     el.setAttribute('onclick', "cellMove('" + d + "')");
-    el.innerHTML = '<span class="exit-arrow">' + ARROWS[d] + '</span> '
-      + '<span class="exit-num">' + num + '</span>'
-      + ' <a>' + dest.label + '</a>'
-      + (isWp ? '<span class="exit-wp-tag">▶ WP</span>' : '')
-      + (terrain ? '<br><span style="font-size:9px;color:#4A2010;padding-left:18px">' + terrain + '</span>' : '');
+    if (dest) {
+      const num  = String(dest.num).padStart(2,'0');
+      const terrain = _terrainLabel(dest.name);
+      el.innerHTML = '<span class="exit-arrow">' + ARROWS[d] + '</span> '
+        + '<span class="exit-num">' + num + '</span>'
+        + ' <a>' + dest.label + '</a>'
+        + (isWp ? '<span class="exit-wp-tag">▶ WP</span>' : '')
+        + (terrain ? '<br><span style="font-size:9px;color:#4A2010;padding-left:18px">' + terrain + '</span>' : '');
+    } else {
+      el.innerHTML = '<span class="exit-arrow">' + ARROWS[d] + '</span> '
+        + '<span style="font-size:11px;color:var(--dim);">open terrain</span>'
+        + (isWp ? '<span class="exit-wp-tag">▶ WP</span>' : '');
+    }
   });
   // Special exits: only node.spire survives as a non-NSEW portal exit
   const extraEl = document.getElementById('exit-extra');
