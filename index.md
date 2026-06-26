@@ -10,13 +10,13 @@
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | ~33,382 | ✅ |
+| HTML line count | ~33,010 | ✅ |
 | Lab reports on disk | 71 | ✅ |
 | Lab reports in index | 71 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-06-26 **§WALK-3 Inc 2 done**: `POST /api/graph/fill-gap` + `/api/graph/rip-and-connect` now return **410** (point at `GET /api/graph/reachability`); their server bodies + `./api.sh` command handlers + help/example/index refs deleted; stale suggestion strings rewired to re-anchor-lat-lon / sea-lane / `./api.sh reachability`; `reweave` CLI un-advertised (now hits 410, deleted in Inc 3). Verified live: both →410, reachability 409/409, mover parity green. Prior: §WALK-3 Inc 1 (reachability recast as land flood); §WALK-2 (shared `mover.js`); §MATH-01 | ✅ |
+| Last sync pass | 2026-06-26 **§TIMELESS-01 Inc D done**: Hunt/Stalk Mechanic retired in `mechanics-combat.md` (replaced by plain random encounters; removed Stalk refs at §How-combat-starts / §XP / §battlesWon); `index.md` reverse-lookup row marked retired, `HUNTING_GROUNDS` constant + `huntMode` state-field rows removed, state-field count 194→193, `slStalksWon` redocumented as BMA-win counter; map-click hint reworded (adjacency, not gap-distance); `slStalksWon` increment commented in `roll2hit-v3.html`. Prior: §WALK-3 Inc 2 (`fill-gap`/`rip-and-connect`→410); §WALK-3 Inc 1; §WALK-2 (`mover.js`); §MATH-01 | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -51,7 +51,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | File | Purpose | Status |
 |------|---------|--------|
 | `index.md` | This file — master index + cross-reference | ✅ Updated 2026-05-25 |
-| `plan.md` | Implementation directive + constants ref + state fields (194) + pending FC items | ✅ Updated 2026-05-26 (~3,400 lines) |
+| `plan.md` | Implementation directive + constants ref + state fields (193) + pending FC items | ✅ Updated 2026-05-26 (~3,400 lines) |
 | `mechanics-combat.md` | Battle Mode: combat flow, 1.5 AP economy, weapons, loot, leveling, defeat screens, save system | ✅ Split 2026-05-25 |
 | `mechanics-economy.md` | Story Mode: vendor system, NPC favorability, EB, NG+, state fields, F4 function reference | ✅ Split 2026-05-25 |
 | `combat.md` | Battle engine reference: initiative, overlay, Champion features, death saves, flee | ✅ §API-02 line-verified 2026-05-25 |
@@ -361,7 +361,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Froberger traces** | `world.md` | `lab-reports/lab-report-web-of-connections.md` |
 | **Gate locks (4 passages)** | `maps.md` · `story.md §Gate Locks` | `plan.md §II (GATE_LOCKS)` |
 | **Hollow Hands sub-clan** | `story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` · `lab-reports/lab-report-void-shaman.md` |
-| **Hunt Mode / stalk** | `mechanics-combat.md` | `lab-reports/lab-report-battleground-circuit-path-quest.md` · `lab-reports/lab-report-friendships-with-magic.md` |
+| **Hunt Mode / stalk** *(retired §TIMELESS-01)* | `mechanics-combat.md §Stalk / Hunt (retired)` | `lab-reports/lab-report-timeless-movement-hunt-removal.md` · `lab-reports/lab-report-battleground-circuit-path-quest.md` |
 | **Inn Dreams** | `story.md §XXIII stub` | `lab-reports/lab-report-void-archaeology.md §H` |
 | **Investigation chain arc** | `story-arc-investigation.md` | `story-flowchart.md` |
 | **Isolde Voss (Archivist)** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
@@ -394,7 +394,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Shard origin stories** | `story.md §XXII stub` | `lab-reports/lab-report-void-archaeology.md` (shard notes table) |
 | **Shields (6 tiers)** | `mechanics-combat.md` | `plan.md §II (SHIELD_ITEMS)` |
 | **Specification gravity** | `lab-reports/lab-report-prompt-migration-arena-to-prototype.md` | `lab-reports/lab-report-documentation-system-design.md` |
-| **State fields (194)** | `plan.md §III` | `lab-reports/lab-report-architecture-full.md` |
+| **State fields (193)** | `plan.md §III` | `lab-reports/lab-report-architecture-full.md` |
 | **Story arc split** | `story-flowchart.md` | All `story-arc-*.md` files |
 | **Sweelinck / endings** | `story.md` | `lab-reports/lab-report-endings-and-echoes.md` · `lab-reports/lab-report-npc-dialogue-system.md` |
 | **Tattoos** | `lab-reports/lab-report-tattoo-progression-system.md` | `plan.md §III (S_story.tattoos)` |
@@ -446,7 +446,6 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `WORLD_DB` | 66 terrain entries (46 base + 20 epic); each has `monsters: []` with full stat blocks |
 | `MONSTER_POOL` | 392 monsters across 8 source pools; keyed by monster key string |
 | `MONSTER_DROPS` | Trophy drop per monster key; `{name, icon, sell}` |
-| `HUNTING_GROUNDS` | 42 terrain → `{displayName}` for stalk overlay; 20 epic terrain entries |
 | `EPIC_BOSS_POOL` | 20 deadly-tier bosses keyed by slug; AC/HP/ATK/dmg/epicDesc |
 | `EB_NPC_DIALOGUE` | 20 quest-giver NPC profiles; payment negotiation, return beat, specialItem |
 | `EB_STORY_ITEMS` | 11 special non-gold EB rewards: Forge Rune, Runic Hammer, Star Fragment, etc. |
@@ -472,7 +471,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 ## State Fields Quick Reference (S_story)
 
-> Moved from `plan.md §III`. All 194 `S_story` fields from `_S_DEFAULTS()`. Updated 2026-06-14.
+> Moved from `plan.md §III`. All 193 `S_story` fields from `_S_DEFAULTS()`. Updated 2026-06-26 (§TIMELESS-01 removed `huntMode`).
 
 | Field | Type | Purpose |
 |---|---|---|
@@ -548,7 +547,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.customQuestTerrain` | string\|null | Terrain for active Assassin's Guild hunt |
 | `S_story.ebReturnDone` | object | ebCode → true; player arrived at EB return node |
 | `S_story.roughWhiskeyActive` | boolean | Rough Whiskey buff currently active |
-| `S_story.slStalksWon` | number | Stalk-mode victories won |
+| `S_story.slStalksWon` | number | BMA combat wins; `quest_slums_cleanup` completes at ≥3 (legacy name kept; no save migration — §TIMELESS-01) |
 | `S_story.npcVisitCounts` | object | npcKey → visit count |
 | `S_story.couperiSongReceived` | boolean | Quill has played Couperin's song |
 | `S_story.bruhnsDepthsReported` | boolean | Depth report delivered to Auros |
@@ -556,7 +555,6 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.frobergerNoteNode` | string\|null | Node code of last Froberger note found |
 | `S_story.froberger_last_note_found` | boolean | Froberger's final note found |
 | `S_story.froberger_last_note_read` | boolean | Final note opened and read |
-| `S_story.huntMode` | boolean | true while player is in active stalk/hunt mode |
 | `S_story.hoursElapsed` | number | Total hours elapsed this run; +1 per short rest, battle, or inn stay |
 | `S_story.hoursSinceSlept` | number | Hours since last inn sleep; ≥24 → exhaustion penalty |
 | `S_story.playerR` | number | Current grid row; updated every `storyRender()` call (§CELL-03) |

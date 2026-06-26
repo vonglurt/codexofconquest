@@ -77,7 +77,6 @@ const SEED_STATE = {
   lastExitCode: null,
   pitTrainingWins: 0,
   slStalksWon: 0,
-  huntMode: false,
   visitedCells: {},
   hoursElapsed: 0,
   hoursSinceSlept: 0,

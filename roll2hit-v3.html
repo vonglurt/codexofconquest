@@ -22759,7 +22759,9 @@ function _storyBattleVictory() {
     S_story.pitTrainingWins = (S_story.pitTrainingWins || 0) + 1;
     _checkPitPerkUnlock();
   }
-  // Layer 41: track SL kills for slums cleanup
+  // Layer 41: track BMA battle wins for quest_slums_cleanup (completes at >= 3).
+  // §TIMELESS-01: `slStalksWon` counts plain BMA combat wins — it never depended on
+  // Hunt Mode (removed in Inc B). Field name kept as-is to avoid a save migration.
   if (pb && pb.nodeCode === 'BMA') {
     S_story.slStalksWon = (S_story.slStalksWon || 0) + 1;
   }
@@ -31986,7 +31988,7 @@ function _renderMapGrid() {
                 return;
               }
             }
-            info.textContent = code + ' — not reachable in one step. Use D-pad to navigate toward it.';
+            info.textContent = code + ' — only an adjacent cell can be clicked to move there. Use the D-pad to travel toward it.';
           });
         } else {
           cell.classList.add('mc-node');

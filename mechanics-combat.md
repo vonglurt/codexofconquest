@@ -14,7 +14,7 @@ Roll2Hit runs in two modes that share a single state. **Battle Mode** is the com
 ### Combat Flow
 
 #### Starting a Battle (Story Mode)
-1. Navigate to a node with a **⚔ BATTLE** chip (or trigger a Stalk / corridor encounter).
+1. Navigate to a node with a **⚔ BATTLE** chip (or trigger a random movement / corridor encounter).
 2. The **Pre-Battle screen** opens with three tabs:
 
 | Tab | Cost | Effect |
@@ -144,7 +144,7 @@ In both cases: the battle is not marked defeated — no victory credit, no drops
 
 ### XP System
 
-XP is earned on every enemy kill, including Stalk and corridor encounters.
+XP is earned on every enemy kill, including random movement and corridor encounters.
 
 **Formula:** `XP = enemy AC × enemy max HP`
 
@@ -378,7 +378,7 @@ Notoriety is a persistent scalar that drives enemy scaling across the entire run
 
 **Formula:** `_notoriety() = level × 3 + floor(battlesWon / 2)`
 
-where `battlesWon` counts all defeated node battles plus Stalk/corridor victories.
+where `battlesWon` counts all defeated node battles plus random movement / corridor victories.
 
 **Effect on enemy tier weights:**
 
@@ -656,71 +656,13 @@ Locked buttons show `🔒`, opacity 0.45, `disabled`, and a tooltip hint. The `b
 
 ---
 
-### Stalk / Hunt Mechanic *(§XLIII — ✅ Implemented Layer 82)*
+### Stalk / Hunt Mechanic *(§XLIII — ⊘ Retired §TIMELESS-01, 2026-06-26)*
 
-Hunting lets the player choose a specific target before entering combat. Three distinct paths exist with different time costs and risk profiles.
-
-#### Hunt Modes
-
-| Mode | Time Cost | Survival Check | Outcome |
-|---|---|---|---|
-| **Targeted Hunt** | 1h hunt + 1h battle = 2h | WIS Survival vs tier DC | Pass → exact target + surprise ADV; Fail → random fallback |
-| **Rush In** | 1h battle only | None | Random encounter from terrain pool (notoriety-weighted) |
-| **Corridor** | 0h (passive) | None | Encounter rolls on movement, no player agency |
-
-**Time Economy:** A targeted hunt costs one extra hour but rewards precise control and surprise advantage on pass. Players hunting quest targets should invest the extra hour — the XP/loot from off-target monsters doesn't contribute to quest completion. Players grinding levels may prefer Rush In for speed.
-
-#### Target Selector UI
-
-The Hunt card in Story Mode expands an **inline accordion** below the card (same CSS transition as the NPC Talk accordion). The panel lists two groups:
-
-**Quest Targets** — monsters from active quests matching this terrain.  
-**All Monsters Here** — full terrain pool from `WORLD_DB[node.name].monsters`.
-
-Each row: name · tier badge · AC · HP · WIS Survival DC. Quest targets also show a ◈ badge.
-
-A **Rush In** button above the selector skips target selection, calls `storyQuickWait(nodeCode)`, and costs only the 1h battle.
-
-#### WIS Survival DC by Tier
-
-| Tier | DC |
-|---|---|
-| Trivial | 8 |
-| Easy | 10 |
-| Medium | 12 |
-| Hard | 14 |
-| Deadly | 16 |
-
-DC is derived from the monster's `tier` field in `MONSTER_POOL`.
-
-#### Survival Roll Formula
-
-```
-roll  = d20 + floor((WIS − 10) / 2)
-dc    = TIER_DC[monster.tier]
-pass  = roll >= dc
-```
-
-**UI display:** `d20 (N) + WIS (±N) = N vs DC N → PASS` or `→ FAIL`
-
-#### Pass / Fail Outcomes
-
-**Pass:** `pendingBattle` set with exact monster key. `surpriseAdvantage = true` → ADV on first attack. 1h added to time.
-
-**Fail:** `_weightedMonsterPick(terrain)` fires as fallback. No surprise advantage. Flavor text shown (5 entries: cold trail, snapped branch, old tracks, wind betrayal, quarry never arrived). 1h added to time.
-
-**Rush In:** Calls `storyQuickWait(nodeCode)` unchanged — no survival check, no extra hour.
-
-#### Reward for Hunting Well
-
-Precise hunting completes quest kills in 2h vs 4–6h of random encounters. Surprise ADV is meaningful against hard/deadly-tier enemies with high AC. The extra hour is never wasted if the target is a quest monster.
-
-#### State Fields
-
-| Field | Type | Default | Notes |
-|---|---|---|---|
-| `huntSelectedTarget` | string\|null | `null` | Monster key selected in target picker |
-| `huntLastSurvivalRoll` | object\|null | `null` | `{roll, mod, total, dc, pass}` — for display |
+> **Retired.** Hunt/Stalk Mode — the targeted-hunt target picker, the WIS Survival check, the "Rush In" path, surprise-advantage on hunt, and all hunt-only time costs — was removed in **§TIMELESS-01** (movement is now timeless; encounters are always a plain `baseRate` + `_weightedMonsterPick(terrain)` roll). This section is kept as a historical pointer; the mechanic no longer exists in the engine.
+>
+> **What replaced it:** entering an empty cell rolls a notoriety-weighted random encounter from the terrain pool — no player target selection, no survival roll, no extra hour (movement and battle no longer advance the clock). Quest-kill progress is tracked purely by winning battles at the relevant node (e.g. `quest_slums_cleanup` completes after 3 BMA combat wins via `S_story.slStalksWon`, a field name retained to avoid a save migration).
+>
+> **Removed code/state:** `storyToggleHunt`, `_updateHuntBtn`, `storyQuestHunt`, `storyQuickWait`, `_stalkedMonsterPick`, `_getQuestTargetKeys`, the `HUNTING_GROUNDS` constant, the stalk modal, and the `huntMode` / `pb.stalk` / `huntSelectedTarget` / `huntLastSurvivalRoll` state fields. See `lab-reports/lab-report-timeless-movement-hunt-removal.md`.
 
 ---
 
