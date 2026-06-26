@@ -9151,6 +9151,80 @@ const TERRAIN_ENCOUNTER_RATE = {
   city:0.05, city_slums:0.10, alley:0.15, _default:0.15
 };
 
+// §WALK-2 — unified mover kernel. The block between the MOVER:CORE sentinels is
+// inlined BYTE-IDENTICALLY from mover.js (the server require()s the same source);
+// §WALK-4 walk-parity asserts the two copies match. Edit mover.js, not this copy,
+// then re-run: node scripts/check-mover-parity.js
+const GEO_PROJ = { ROWS: 90, COLS: 360 };   // §2.1 equirectangular 1° grid
+
+// ◆◆◆ MOVER:CORE:START ◆◆◆
+const __MOVER_DELTAS = { N: [-1, 0], S: [1, 0], E: [0, 1], W: [0, -1] };
+
+// Geo-grid topology (§2.1): longitude wraps E↔W (mod COLS); latitude is clamped
+// at the band edges (no pole wrap). E/W therefore never goes out of bounds.
+function __moverStep(proj, r, c, dr, dc) {
+  const ROWS = proj.ROWS, COLS = proj.COLS;
+  const nr = r + dr;
+  const nc = (((c + dc) % COLS) + COLS) % COLS;   // E↔W wrap
+  const oob = nr < 0 || nr >= ROWS;               // N/S band edge only
+  return { nr, nc, oob };
+}
+
+function __moverBlocked(from, reason) {
+  return {
+    ok: false, reason,
+    from: { r: from.r, c: from.c }, to: { r: from.r, c: from.c }, via: null,
+    destCodes: [], destKind: reason === 'sea' ? 'sea' : 'empty',
+    terrain: null, encounter: { eligible: false, baseRate: 0 },
+  };
+}
+
+// move(world, pos, dir) -> MoveResult  (§4.1 locked signature)
+function moverMove(world, pos, dir) {
+  const delta = __MOVER_DELTAS[dir];
+  const from = { r: pos.r, c: pos.c };
+  if (!delta) return __moverBlocked(from, 'oob');
+
+  const s = __moverStep(world.proj, from.r, from.c, delta[0], delta[1]);
+  if (s.oob) return __moverBlocked(from, 'oob');
+
+  const key = s.nr + ',' + s.nc;
+  const fromKey = from.r + ',' + from.c;
+  const blocked = !!(world.impassable && world.impassable.has(key));
+  const viaFerry = blocked && !!(world.ferryEdges &&
+    (world.ferryEdges.has(fromKey + '|' + key) || world.ferryEdges.has(key + '|' + fromKey)));
+  if (blocked && !viaFerry) return __moverBlocked(from, 'sea');
+
+  const destCodes = (world.cellCodes && world.cellCodes(s.nr, s.nc)) || [];
+  const destKind = destCodes.length ? 'named' : 'empty';
+  const terrain = world.terrainAt ? world.terrainAt(s.nr, s.nc) : null;
+  const baseRate = (destKind === 'empty' && world.encounterRate) ? world.encounterRate(terrain) : 0;
+
+  return {
+    ok: true, reason: null,
+    from, to: { r: s.nr, c: s.nc }, via: viaFerry ? 'ferry' : 'step',
+    destCodes, destKind, terrain,
+    encounter: { eligible: destKind === 'empty', baseRate },
+  };
+}
+// ◆◆◆ MOVER:CORE:END ◆◆◆
+
+const Mover = { move: moverMove, _step: __moverStep, _blocked: __moverBlocked };
+
+// World snapshot the client hands the shared kernel. Built per-move so it always
+// reflects current CELL_GRID / IMPASSABLE state. terrainAt/encounterRate mirror
+// _enterEmptyCell's existing logic; ferryEdges is omitted — §WALK-1.5 carries
+// water crossings as SEA_LANES land bridges (passable cells), not ferry edges.
+function _moverWorld() {
+  return {
+    proj: GEO_PROJ,
+    impassable: IMPASSABLE_CELLS,
+    cellCodes: (r, c) => cellCodes(`${r},${c}`),
+    terrainAt: (r, c) => _inferTerrain(r, c),
+    encounterRate: (t) => TERRAIN_ENCOUNTER_RATE[t] ?? TERRAIN_ENCOUNTER_RATE._default,
+  };
+}
+
 const HUNTING_GROUNDS = { // → doc: mechanics-combat.md §Hunting Mode (terrain → displayName; used in storyHunt() encounter header)
   city:             { displayName:"The Thieves' Den" },
   city_slums:       { displayName:'The Vermin Pit' },
@@ -25670,16 +25744,12 @@ function storyCheckVictory(node) {
 
 // §CELL-03: MUD-style one-cell-per-move navigation
 function cellMove(dir) {
-  const DELTAS = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
-  const [dr, dc] = DELTAS[dir];
-  const pr = (S_story.playerR || 0), pc = (S_story.playerC || 0);
-
-  // One cell only — no scanning, no junction skipping
-  const nr = pr + dr, nc = pc + dc;
-  if (nr < 1 || nc < 1 || nr > 500 || nc > 500 || IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
-    storyBlock('No path leads that way.'); return;
-  }
-  const destCode = cellCode(`${nr},${nc}`);
+  // §WALK-2: bounds/wrap/sea decisions live in the shared mover kernel (mover.js).
+  // cellMove is now a thin caller that applies the SP side effects to the result.
+  const res = Mover.move(_moverWorld(), { r: S_story.playerR || 0, c: S_story.playerC || 0 }, dir);
+  if (!res.ok) { storyBlock('No path leads that way.'); return; }
+  const nr = res.to.r, nc = res.to.c;
+  const destCode = res.destCodes[0] || null;
   const destNode = destCode ? NODE_MAP[destCode] : null;
 
   storyCheckMissedSleep();
