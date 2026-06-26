@@ -1,6 +1,6 @@
 # Lab Report — §WALK-5: MUD Multi-Client Harness (instanced encounters, v1)
 
-**Status:** DESIGN LOCKED (2026-06-26). **Inc 1 ✅** (world inputs + terrain-parity guard) · **Inc 2 ✅** (per-session seeded RNG + instanced roll); Inc 3→4 pending.
+**Status:** DESIGN LOCKED (2026-06-26). **Inc 1 ✅** (world inputs + terrain-parity guard) · **Inc 2 ✅** (per-session seeded RNG + instanced roll) · **Inc 3 ✅** (`tests/mud-harness.mjs`, 18/18); Inc 4 pending.
 **Parent:** `lab-reports/lab-report-terrain-field-mover-redesign.md` §7 (the v1 instanced-vs-shared decision).
 **Predecessor MUD layer:** `lab-reports/lab-report-cell-map-mud-redesign.md` §CELL-07 (the in-memory `SESSIONS` store + SSE broadcast this report extends).
 
@@ -206,8 +206,18 @@ Strictly sequential; each is a green checkpoint (`npm run check:walk` + harness 
   user's 1367 untouched): determinism (same seed+path ⇒ identical trace), firing (32/40 seeds fired ≥1), and
   per-seed divergence (31 distinct traces / 40 seeds). The automated multi-client SSE/no-bleed assertions are
   Inc 3. **`check:walk` green.**
-- **Inc 3 — Harness.** Build `tests/mud-harness.*` (K clients, SSE capture, scripted drive) and assert
-  properties (a)–(c). **Green: harness.**
+- **Inc 3 — Harness. ✅ DONE.** Built `tests/mud-harness.mjs` (`npm run test:mud`) — a pure HTTP+SSE Node
+  driver (no Playwright). Spawns a throwaway `wbapi-server` on `MUD_HARNESS_PORT` (default 13679, pre-checked;
+  child killed in `finally`), starts K seeded sessions, opens an SSE stream per client (parses `event:`/`data:`
+  frames into `events[]`), drives scripted move/say, and asserts properties (a)–(c): co-presence chat (every
+  co-present session incl. the sender exactly once; a walked-away session stops hearing the cell), cell-scoped
+  `player_arrived` (once, only to sessions already at the destination, never the mover), instancing (encounters
+  never delivered over SSE; trace is a pure fn of the session's own seed — determinism; different seeds
+  diverge), and `who`/`look` co-presence. **18/18, green across 3 consecutive runs.** **Caught + fixed a real
+  §CELL-07 bug:** `session/say` double-delivered the sender's own chat (`broadcastCell(...,null)` already
+  includes the sender, then a redundant `sseSend` to the sender fired again) — removed the redundant send.
+  *CI wiring deferred to Inc 4: the harness boots the server, which top-level-requires `@anthropic-ai/sdk`, so
+  it needs an `npm ci` job (unlike the pure-stdlib `check:walk`).*
 - **Inc 4 — TTL + docs.** Add the property (d) TTL-prune assertion; doc-sync (index.md cross-ref, mechanics
   doc note on SP/MP encounter divergence §4.3, this report → status DONE); file **§WALK-5-FU** (ferry data).
   **Green: full harness + check:walk.**

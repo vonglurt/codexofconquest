@@ -7645,10 +7645,11 @@ async function route(req, res) {
         return json(res, 400, { ok: false, error: 'msg too long — max 500 characters' });
       }
       const chatData = { name: s.playerName, sessionId, msg, r: s.r, c: s.c };
-      broadcastCell(s.r, s.c, 'chat', chatData, null); // include sender's own SSE
-      // Also fire to sender's own SSE if subscribed
-      const senderSse = SSE_CLIENTS.get(sessionId);
-      if (senderSse) sseSend(senderSse, 'chat', chatData);
+      // excludeId=null → delivered to EVERY session at this cell, including the
+      // sender (their own session is at s.r,s.c). §WALK-5 Inc 3 fix: dropped a
+      // redundant second sseSend to the sender that double-delivered the sender's
+      // own chat (the harness asserts each co-present session receives it once).
+      broadcastCell(s.r, s.c, 'chat', chatData, null);
       logRow('say', `${s.playerName}  ·  "${msg.slice(0,60)}"`);
       logResponse(method, url.pathname, 200, `session say: "${msg.slice(0,40)}"`);
       return json(res, 200, { ok: true, broadcast: chatData, recipientCount: [...SESSIONS.values()].filter(s2 => s2.r === s.r && s2.c === s.c).length });
