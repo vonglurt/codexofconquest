@@ -228,6 +228,99 @@ function removeStringField(sectionSrc, entryKey, field) {
   return sectionSrc.slice(0, openEnd) + patchedBody + sectionSrc.slice(bodyEnd);
 }
 
+// §WBAPI-01 ph3: serialize a JSON-safe value to codebase-style JS-literal text.
+// Strings → single-quoted + escaped; numbers/booleans → as-is; null → 'null';
+// arrays → [a,b,…]; flat objects → {key:val,…} (identifier keys unquoted, else quoted).
+// Rejects functions/undefined/non-finite numbers (returns null) — those are out of scope
+// (function-valued fields are §DATA-01 territory).
+function serializeJsLiteral(v) {
+  if (v === null) return 'null';
+  const t = typeof v;
+  if (t === 'string') return "'" + v.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n').replace(/\r/g, '\\r') + "'";
+  if (t === 'number') return Number.isFinite(v) ? String(v) : null;
+  if (t === 'boolean') return String(v);
+  if (Array.isArray(v)) {
+    const parts = [];
+    for (const el of v) { const s = serializeJsLiteral(el); if (s === null) return null; parts.push(s); }
+    return '[' + parts.join(',') + ']';
+  }
+  if (t === 'object') {
+    const parts = [];
+    for (const k of Object.keys(v)) {
+      const s = serializeJsLiteral(v[k]); if (s === null) return null;
+      const key = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(k) ? k : "'" + k.replace(/'/g, "\\'") + "'";
+      parts.push(key + ':' + s);
+    }
+    return '{' + parts.join(',') + '}';
+  }
+  return null; // function, undefined, symbol, bigint
+}
+
+// §WBAPI-01 ph3: find the end index (exclusive) of a value starting at body[i],
+// skipping balanced []/{}/() and strings/comments. For primitives (number/bool/
+// null/identifier) scans the run of value chars. String/comment-aware.
+function _valueEnd(body, i) {
+  const c = body[i];
+  if (c === '"' || c === "'" || c === '`') {
+    const q = c; i++;
+    while (i < body.length) {
+      if (body[i] === '\\' && q !== '`') { i += 2; continue; }
+      if (body[i] === q) return i + 1;
+      i++;
+    }
+    return i;
+  }
+  if (c === '[' || c === '{' || c === '(') {
+    const open = c, close = open === '[' ? ']' : open === '{' ? '}' : ')';
+    let depth = 1; i++;
+    while (i < body.length && depth > 0) {
+      const ch = body[i];
+      if (ch === '"' || ch === "'" || ch === '`') { i = _valueEnd(body, i); continue; }
+      if (ch === '/' && body[i+1] === '/') { while (i < body.length && body[i] !== '\n') i++; continue; }
+      if (ch === '[' || ch === '{' || ch === '(') depth++;
+      else if (ch === ']' || ch === '}' || ch === ')') depth--;
+      i++;
+    }
+    return i;
+  }
+  // primitive: number / true / false / null / identifier
+  while (i < body.length && /[A-Za-z0-9_.+\-]/.test(body[i])) i++;
+  return i;
+}
+
+// §WBAPI-01 ph3: replace an entire field value (array/object/primitive) in an entry
+// body with a pre-serialized literal. Comment/string/bracket-aware so it never matches
+// the field name inside prose or nested blocks. Returns patched sectionSrc, or null if
+// the entry or a top-level `field:` key is not found.
+function patchLiteralField(sectionSrc, entryKey, field, literal) {
+  const b = findEntryBounds(sectionSrc, entryKey);
+  if (!b) return null;
+  const { openEnd, bodyEnd } = b;
+  const body = sectionSrc.slice(openEnd, bodyEnd);
+  // Token-walk the body top level (skip nested blocks/strings/comments) to find `field:`.
+  let i = 0;
+  while (i < body.length) {
+    const c = body[i];
+    if (c === '"' || c === "'" || c === '`') { i = _valueEnd(body, i); continue; }
+    if (c === '/' && body[i+1] === '/') { while (i < body.length && body[i] !== '\n') i++; continue; }
+    if (c === '{' || c === '[' || c === '(') { i = _valueEnd(body, i); continue; }
+    if (/[A-Za-z_$]/.test(c)) {
+      let j = i; while (j < body.length && /[A-Za-z0-9_$]/.test(body[j])) j++;
+      const name = body.slice(i, j);
+      let k = j; while (k < body.length && /[ \t]/.test(body[k])) k++;
+      if (body[k] === ':' && name === field) {
+        let v = k + 1; while (v < body.length && /[ \t\n\r]/.test(body[v])) v++;
+        const ve = _valueEnd(body, v);
+        const newBody = body.slice(0, v) + literal + body.slice(ve);
+        return sectionSrc.slice(0, openEnd) + newBody + sectionSrc.slice(bodyEnd);
+      }
+      i = j; continue;
+    }
+    i++;
+  }
+  return null; // field not present at top level
+}
+
 // §CELL-14: strip a set of top-level fields from a single NODE_MAP entry body.
 // String- and comment-aware so prose like text:"go N:..." is never matched.
 // Skips into nested {}/[]/() blocks (so battle:{key:'N'} is safe).
@@ -816,6 +909,39 @@ const WBAPI = {
     this._rawSrc = respliceSection(this._rawSrc, section, patched);
     col[key][field] = value;
     return { ok:true, key, field, value, inserted: isNew };
+  },
+
+  // §WBAPI-01 ph3: edit a structured (array/object/number/boolean) field at SOURCE level,
+  // so it persists through save() (which writes the patched _rawSrc, not a re-serialization).
+  // Mirrors editField but serializes the value to a JS literal and replaces the whole value.
+  // Falls back to inserting the field if absent. Strings/null still belong to editField.
+  editStructuredField(type, idOrTitle, field, value) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL' };
+    const section = sectionMap[type]; if (!section) return { ok:false, error:'unknown type' };
+    const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool }[type];
+    const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
+
+    const literal = serializeJsLiteral(value);
+    if (literal === null) return { ok:false, error:`value for "${field}" is not JSON-serializable (functions/undefined not supported)` };
+
+    const sectionSrc = extrSection(this._rawSrc, section);
+    let patched = patchLiteralField(sectionSrc, key, field, literal);
+    const isNew = !patched;
+    if (isNew) {
+      // Insert a new field with a raw (unquoted) literal before the entry's closing brace.
+      const bnd = findEntryBounds(sectionSrc, key);
+      if (!bnd) return { ok:false, error:`entry "${key}" not found in ${section}` };
+      const { openEnd, bodyEnd, baseIndent } = bnd;
+      const body = sectionSrc.slice(openEnd, bodyEnd);
+      let newBody = body.trimEnd();
+      if (newBody && !newBody.endsWith(',')) newBody += ',';
+      newBody += `\n${baseIndent}  ${field}:${literal},\n${baseIndent}`;
+      patched = sectionSrc.slice(0, openEnd) + newBody + sectionSrc.slice(bodyEnd);
+    }
+    this._rawSrc = respliceSection(this._rawSrc, section, patched);
+    col[key][field] = value;
+    return { ok:true, key, field, value, inserted: isNew, strategy:'editStructuredField' };
   },
 
   // beginPatchQueue: activate deferred writes for node editField calls.

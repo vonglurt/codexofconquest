@@ -14,6 +14,7 @@
     "check:parity": "node scripts/check-mover-parity.js",
     "check:behaviour": "node scripts/check-mover-behaviour.js",
     "check:terrain": "node scripts/check-terrain-parity.js",
+    "check:arraypatch": "node scripts/check-array-patch.js",
     "test:mud": "node tests/mud-harness.mjs",
     "check:walk": "npm run check:invariants && npm run check:parity && npm run check:behaviour && npm run check:terrain"
   },

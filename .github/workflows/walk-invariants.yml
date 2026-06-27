@@ -22,10 +22,12 @@ on:
       - 'mover.js'
       - 'roll2hit-v3.html'
       - 'wbapi-server.js'
+      - 'wbapi-core.js'
       - 'scripts/check-invariants.js'
       - 'scripts/check-mover-parity.js'
       - 'scripts/check-mover-behaviour.js'
       - 'scripts/check-terrain-parity.js'
+      - 'scripts/check-array-patch.js'
       - 'tests/mud-harness.mjs'
       - 'package.json'
       - '.github/workflows/walk-invariants.yml'
@@ -34,10 +36,12 @@ on:
       - 'mover.js'
       - 'roll2hit-v3.html'
       - 'wbapi-server.js'
+      - 'wbapi-core.js'
       - 'scripts/check-invariants.js'
       - 'scripts/check-mover-parity.js'
       - 'scripts/check-mover-behaviour.js'
       - 'scripts/check-terrain-parity.js'
+      - 'scripts/check-array-patch.js'
       - 'tests/mud-harness.mjs'
       - 'package.json'
       - '.github/workflows/walk-invariants.yml'
@@ -55,6 +59,11 @@ jobs:
       # Playwright + the SDK for nothing.
       - name: Run terrain-field invariant + walk-parity suite
         run: npm run check:walk
+      # §WBAPI-01 ph3: structured-field PATCH round-trip guard — also stdlib-only
+      # (requires wbapi-core, which pulls in just fs/path), loads the committed HTML
+      # read-only. No install needed.
+      - name: Run WBAPI structured-field PATCH guard
+        run: npm run check:arraypatch
 
   mud:
     runs-on: ubuntu-latest
