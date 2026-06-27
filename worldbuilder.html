@@ -9567,7 +9567,7 @@ edUpdatePreview();
     <button class="btn sm" id="mb-add">+ Add Step</button>
     <div style="margin-left:auto;display:flex;gap:5px">
       <button class="btn primary sm" id="mb-build">⛓ Build Chain</button>
-      <button class="btn primary sm" id="mb-post" disabled title="Lands in §EDITOR-02 Inc 4">POST All</button>
+      <button class="btn primary sm" id="mb-post" disabled title="Build the chain first">POST All</button>
     </div>
   </div>
   <div style="display:flex;flex:1;overflow:hidden">
@@ -9703,8 +9703,58 @@ edUpdatePreview();
   }
   window.__mbCompiled = () => mbCompiled;     // test hook
 
+  // ── POST All → create each compiled quest in arc order. ──
+  // Sequential (each create runs _buildIndexes, so later advise() sees earlier
+  // steps). Stop on the first REAL error; a step whose id already lives in
+  // questDb is SKIPPED, not failed — so re-pressing after a partial/failed run
+  // resumes from where it stopped instead of dying on "already exists".
+  function mbShowResult(html) {
+    const el = MB('mb-result');
+    el.style.display = 'block'; el.className = 'op-result'; el.innerHTML = html;
+  }
+  let mbPosting = false;
+  async function mbPostAll() {
+    if (mbPosting) return;
+    if (!WBAPI.loaded)       { mbShowResult('<span style="color:var(--red)">Load a game file first.</span>'); return; }
+    if (!mbCompiled.length)  { mbShowResult('<span style="color:var(--red)">⛓ Build Chain first.</span>'); return; }
+    mbPosting = true;
+    MB('mb-post').disabled = true;
+    const lines = [];
+    const tag = id => `<span style="color:var(--purple)">${id}</span>`;
+    let posted = 0, skipped = 0, failedAt = -1;
+    for (let i = 0; i < mbCompiled.length; i++) {
+      const q = mbCompiled[i];
+      if (WBAPI.questDb[q.id]) {
+        skipped++;
+        lines.push(`<div>⊘ ${tag(q.id)} <span style="color:var(--muted)">— skipped (already exists)</span></div>`);
+        mbShowResult(lines.join('')); continue;
+      }
+      const res = await WBAPI.quests.create(q);
+      if (res && res.ok) {
+        posted++;
+        lines.push(`<div>✓ ${tag(q.id)} <span style="color:var(--green)">— posted</span></div>`);
+        mbShowResult(lines.join(''));
+      } else {
+        const detail = res ? (res.error || 'unknown error') + (res.errors ? ': ' + res.errors.join('; ') : '') : 'no response';
+        lines.push(`<div>🔴 ${tag(q.id)} <span style="color:var(--red)">— ${detail}</span></div>`);
+        lines.push(`<div style="color:var(--muted);margin-top:4px">Stopped at step ${i + 1}; ${mbCompiled.length - i - 1} later step(s) not posted. Fix it and POST All again — posted steps are skipped.</div>`);
+        failedAt = i;
+        mbShowResult(lines.join('')); break;
+      }
+    }
+    if (failedAt < 0) {
+      lines.push(`<div style="color:var(--muted);margin-top:4px">Done — ${posted} posted${skipped ? ', ' + skipped + ' skipped' : ''}.</div>`);
+      mbShowResult(lines.join(''));
+      WBAPI._buildIndexes(); renderQuestList();
+    }
+    mbPosting = false;
+    MB('mb-post').disabled = false;
+  }
+  window.__mbPostAll = mbPostAll;             // test hook
+
   MB('mb-add').addEventListener('click', mbAddStep);
   MB('mb-build').addEventListener('click', mbBuildAndPreview);
+  MB('mb-post').addEventListener('click', mbPostAll);
 
   // Seed one step so the tab is usable immediately.
   mbAddStep();

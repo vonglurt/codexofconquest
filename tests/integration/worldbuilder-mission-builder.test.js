@@ -166,6 +166,69 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02)', () =>
     expect(await page.locator('#mb-steps .mb-step:nth-child(2) .mb-num').textContent()).toBe('#2');
   });
 
+  // ── Inc 4 — POST All wiring: sequential create, skip-existing, stop-on-error ──
+  // We mock WBAPI.quests.create so the flow is exercised without a server or real
+  // world mutation, and seed WBAPI.questDb to drive the already-posted skip.
+  async function mbBuildTwoStep(page) {
+    await page.evaluate(() => window.switchTab('mission'));
+    await page.fill('#mb-arcId', 'quest_post');
+    await page.fill('#mb-arcLabel', 'Post arc');
+    await page.fill('#mb-node', 'BMA');
+    await page.fill('#mb-steps .mb-step:nth-child(1) .mb-title', 'Step one');
+    await page.click('#mb-add');
+    await page.selectOption('#mb-steps .mb-step:nth-child(2) .mb-type', 'skill_check');
+    await page.fill('#mb-steps .mb-step:nth-child(2) .mb-title', 'Step two');
+    await page.fill('#mb-steps .mb-step:nth-child(2) .mb-dc', '13');
+    await page.click('#mb-build');
+    // Compiled chain is ready for POST All to consume.
+    const compiled = await page.evaluate(() => window.__mbCompiled());
+    expect(compiled.map(q => q.id)).toEqual(['quest_post_1', 'quest_post_2']);
+  }
+
+  test('POST All: creates each step in arc order, then reports done', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    await mbBuildTwoStep(page);
+    const out = await page.evaluate(async () => {
+      // Pretend a world is loaded; mock create to record calls + always succeed.
+      WBAPI.loaded = true; WBAPI.questDb = {}; window.renderQuestList = () => {};
+      const calls = [];
+      WBAPI.quests.create = async (q) => { calls.push(q.id); WBAPI.questDb[q.id] = q; return { ok: true, id: q.id }; };
+      await window.__mbPostAll();
+      return { calls, html: document.getElementById('mb-result').innerHTML };
+    });
+    // Both steps posted, in order.
+    expect(out.calls).toEqual(['quest_post_1', 'quest_post_2']);
+    expect(out.html).toContain('quest_post_1');
+    expect(out.html).toContain('quest_post_2');
+    expect(out.html).toContain('posted');
+    expect(out.html).toContain('Done — 2 posted');
+    await expect(page.locator('#mb-result')).toBeVisible();
+  });
+
+  test('POST All: skips already-existing ids and stops on the first real error', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    await mbBuildTwoStep(page);
+    const out = await page.evaluate(async () => {
+      WBAPI.loaded = true; window.renderQuestList = () => {};
+      // Step 1 already exists → skipped (never reaches create). Step 2 errors → stop.
+      WBAPI.questDb = { quest_post_1: { id: 'quest_post_1' } };
+      const calls = [];
+      WBAPI.quests.create = async (q) => {
+        calls.push(q.id);
+        return { ok: false, error: 'World-logic check failed', errors: ['node "BMA" does not exist'] };
+      };
+      await window.__mbPostAll();
+      return { calls, html: document.getElementById('mb-result').innerHTML };
+    });
+    // create called ONLY for the non-existing step 2.
+    expect(out.calls).toEqual(['quest_post_2']);
+    expect(out.html).toContain('skipped (already exists)');
+    expect(out.html).toContain('node "BMA" does not exist');
+    expect(out.html).toContain('Stopped at step 2');
+    // No "Done" summary on a failed run.
+    expect(out.html).not.toContain('Done —');
+  });
+
   test('empty / malformed drafts compile to an empty array (no throw)', async ({ page }) => {
     await page.goto('/worldbuilder.html');
     const r = await page.evaluate(() => ({
