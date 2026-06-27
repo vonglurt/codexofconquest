@@ -8884,6 +8884,14 @@ EG('tab-grid').insertAdjacentHTML('afterend', (function(){
           <input class="fi" id="ed-completeItems" name="completeItems" placeholder="Bloodstained Map, Trade Seal…">
         </div>
         <div class="fg" style="margin-top:6px">
+          <div class="fl">Target Monster Keys (comma-separated) — §HUNT / kill quests</div>
+          <input class="fi" id="ed-targetMonsterKeys" name="targetMonsterKeys" placeholder="stray_alley_cat, fluffy_cat">
+        </div>
+        <div class="fg" style="margin-top:6px">
+          <div class="fl">Kill Goals (one per line: <code>key:need:label</code>)</div>
+          <textarea class="fi" id="ed-killGoals" name="killGoals" rows="2" placeholder="stray_alley_cat:5:Stray&#10;fluffy_cat:3:Fluffy"></textarea>
+        </div>
+        <div class="fg" style="margin-top:6px">
           <div class="fl">completeFn body</div>
           <textarea class="fi" id="ed-completeFn" name="completeFn" rows="4" placeholder="S_story.xp = (S_story.xp||0) + 300;&#10;S_story.flagName = true;&#10;storyMsg('...');"></textarea>
         </div>
@@ -9069,6 +9077,13 @@ function edBuildQuestObj() {
   } else {
     const items = edVal('ed-completeItems');
     if (items) q.completeItems = items.split(',').map(s=>s.trim()).filter(Boolean);
+    const tmk = edVal('ed-targetMonsterKeys');
+    if (tmk) q.targetMonsterKeys = tmk.split(',').map(s=>s.trim()).filter(Boolean);
+    const kg = edVal('ed-killGoals');
+    if (kg) q.killGoals = kg.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+      const [key,need,label] = l.split(':').map(x=>x.trim());
+      return { key, need: +need||1, label: label||key };
+    });
     add('completeFn', edVal('ed-completeFn'));
     add('passText',   edVal('ed-passText'));
   }
@@ -9234,6 +9249,8 @@ function edGenerateExport() {
     out +=                       `    xpAward:${q.xpAward??0},\n`;
   } else {
     if (q.completeItems?.length) out += `    completeItems:[${q.completeItems.map(s).join(',')}],\n`;
+    if (q.targetMonsterKeys?.length) out += `    targetMonsterKeys:[${q.targetMonsterKeys.map(s).join(',')}],\n`;
+    if (q.killGoals?.length) out += `    killGoals:[${q.killGoals.map(g=>`{key:${s(g.key)},need:${g.need},label:${s(g.label)}}`).join(',')}],\n`;
     if (q.completeFn)   out += `    completeFn:() => {\n      ${q.completeFn.split('\n').join('\n      ')}\n    },\n`;
     if (q.passText)     out += `    passText:${s(q.passText)},\n`;
   }
@@ -9262,7 +9279,7 @@ function edApplyPreset(key) {
   for (const [k,v] of Object.entries(PRESET_BLANK)) edSet(`ed-${k}`, v);
   for (const id of ['ed-id','ed-title','ed-arc','ed-activateCond','ed-hint','ed-reward',
                      'ed-disposition','ed-desc','ed-checkPassFlag','ed-onPass','ed-onFail',
-                     'ed-completeItems','ed-completeFn','ed-passText','ed-xpAward']) {
+                     'ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-completeFn','ed-passText','ed-xpAward']) {
     edSet(id, '');
   }
   edSet('ed-retryable', false);
@@ -9320,7 +9337,7 @@ for (const [btnId, key] of Object.entries(presetMap)) {
 // Live update on form change
 const liveIds = ['ed-id','ed-title','ed-activateCond','ed-hint','ed-disposition','ed-desc',
                  'ed-checkPassFlag','ed-onPass','ed-onFail','ed-completeFn','ed-reward',
-                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-passText'];
+                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-passText'];
 for (const id of liveIds) {
   const el = EG(id); if (el) el.addEventListener('input', edSchedule);
 }
