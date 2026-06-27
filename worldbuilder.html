@@ -6036,6 +6036,7 @@ window._onServerActivated = () => {
         { key:'completeItems',     label:'Complete items',  arr:'csv',     note:'Comma-separated item names' },
         { key:'targetMonsterKeys', label:'Target monsters', arr:'csv',     note:'Comma-separated monster keys (hunt quests)' },
         { key:'killGoals',         label:'Kill goals',      arr:'objlines',ta:true, note:'One per line — key:need:label (need→1, label→key by default)' },
+        { key:'itemChain',         label:'Item chain',      arr:'itemchain',ta:true, note:'One step/line — grant|name|icon|type|sell|desc · take|name|all? · grantBit|flag|label · takeBit|flag' },
       ],
       rowData: (r) => ({ id:r.id, title:r.title, type:r.type, activateNode:r.activateNode, npc:r.npc||'' }),
     },
@@ -6126,6 +6127,7 @@ window._onServerActivated = () => {
   function arrToText(kind, val) {
     if (!Array.isArray(val)) return '';
     if (kind === 'objlines') return val.map(g => `${g.key}:${g.need ?? 1}:${g.label ?? g.key}`).join('\n');
+    if (kind === 'itemchain') return window.itemChainToText(val);   // §EDITOR-01-D (editor-IIFE codec)
     return val.join(', ');               // csv
   }
   function textToArr(kind, txt) {
@@ -6135,6 +6137,7 @@ window._onServerActivated = () => {
         return { key, need: +need || 1, label: label || key };
       });
     }
+    if (kind === 'itemchain') return window.parseItemChainText(txt);  // §EDITOR-01-D (editor-IIFE codec)
     return txt.split(',').map(s => s.trim()).filter(Boolean);  // csv
   }
 
@@ -9136,6 +9139,9 @@ function itemChainToText(arr) {
     }
   }).filter(Boolean).join('\n');
 }
+// Bridge to the CRUD IIFE (separate closure) so its arr:'itemchain' codec can reuse these.
+window.parseItemChainText = parseItemChainText;
+window.itemChainToText = itemChainToText;
 
 function edBuildQuestObj() {
   const type = edVal('ed-type');

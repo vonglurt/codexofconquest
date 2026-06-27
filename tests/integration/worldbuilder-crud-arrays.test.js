@@ -42,6 +42,29 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
     expect(r.emptyText).toBe('');
   });
 
+  // ── §EDITOR-01-D — itemchain codec via the CRUD __crudTest hook ─────────────
+  test('codecs round-trip the itemchain grammar (all four action kinds)', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    const chain = [
+      { action: 'grant', name: 'Pip Bead', icon: '🪵', type: 'misc', sell: 1, desc: "O'Brien's gift" },
+      { action: 'take', name: "Smalt's Trust", all: true },
+      { action: 'grantBit', flag: 'harmonyChainComplete', label: 'Harmony Chain' },
+      { action: 'takeBit', flag: 'harmonyChainComplete' },
+    ];
+    const r = await page.evaluate((chain) => {
+      const { arrToText, textToArr } = window.__crudTest;
+      const text = arrToText('itemchain', chain);
+      return { text, back: textToArr('itemchain', text), bare: textToArr('itemchain', 'grant | Bare Item') };
+    }, chain);
+    expect(r.text).toBe(
+      "grant | Pip Bead | 🪵 | misc | 1 | O'Brien's gift\n" +
+      "take | Smalt's Trust | all\n" +
+      'grantBit | harmonyChainComplete | Harmony Chain\n' +
+      'takeBit | harmonyChainComplete');
+    expect(r.back).toEqual(chain);                                  // round-trip identity
+    expect(r.bare).toEqual([{ action: 'grant', name: 'Bare Item' }]); // optional fields omitted
+  });
+
   test('quest CRUD form renders array inputs and collectFormData emits arrays', async ({ page }) => {
     await page.goto('/worldbuilder.html');
     await page.evaluate(() => window.switchTab('crud'));
@@ -53,6 +76,7 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
     await expect(page.locator('#crud-field-completeItems')).toHaveCount(1);
     await expect(page.locator('#crud-field-targetMonsterKeys')).toHaveCount(1);
     expect(await page.locator('#crud-field-killGoals').evaluate(el => el.tagName)).toBe('TEXTAREA');
+    expect(await page.locator('#crud-field-itemChain').evaluate(el => el.tagName)).toBe('TEXTAREA');
 
     // Fill scalar + array fields, then collect — arrays must come out parsed.
     await page.fill('#crud-field-id', 'quest_test_crud_hunt');
@@ -60,6 +84,7 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
     await page.fill('#crud-field-completeItems', 'Trophy Pelt, Bounty Token');
     await page.fill('#crud-field-targetMonsterKeys', 'stray_alley_cat, fluffy_cat');
     await page.fill('#crud-field-killGoals', 'stray_alley_cat:5:Stray\nfluffy_cat:3:Fluffy');
+    await page.fill('#crud-field-itemChain', 'grant | Pip Bead | 🪵 | misc | 1 | A token\ntakeBit | someFlag');
 
     const body = await page.evaluate(() => window.__crudTest.collectFormData());
     expect(body.completeItems).toEqual(['Trophy Pelt', 'Bounty Token']);
@@ -67,6 +92,10 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
     expect(body.killGoals).toEqual([
       { key: 'stray_alley_cat', need: 5, label: 'Stray' },
       { key: 'fluffy_cat', need: 3, label: 'Fluffy' },
+    ]);
+    expect(body.itemChain).toEqual([
+      { action: 'grant', name: 'Pip Bead', icon: '🪵', type: 'misc', sell: 1, desc: 'A token' },
+      { action: 'takeBit', flag: 'someFlag' },
     ]);
     // Empty array fields are omitted (consistent with empty scalars).
     expect('waypointNode' in body).toBe(false);
