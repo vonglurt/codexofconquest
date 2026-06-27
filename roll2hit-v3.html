@@ -7963,7 +7963,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   PRN:{ num:52, code:'PRN', name:'epic_forest',          label:'Thornwood Maw',                  act:3, text:"The trees ahead are black-barked. Not diseased — wrong. They grow wrong in the specific way that means something underneath them has been growing longer. No birds. No wind. No sound except a deep creaking from below the roots, rhythmic and patient, the kind of sound a thing makes when it has been making it for a very long time.\n\nThe Thornwood Maw opens past the normal forest line at the point where the light changes color. Not darker — a different color. The bark is not dead wood. It is occupied wood. Every trunk here conducts something upward from the root system.\n\nThe Thornwood King is what happens when a forest decides it has had enough of being a forest. He has been here since before the name Thornwood. The name came after.\n\nThe creaking is closer than it was a moment ago.", npc:null, battle:null, loot:null, sleep:false, isEpicBattleground:true, bossKey:'thornwood_king',
   },
   // ── §PORT-02: Dunfall — Highland Loch Harbor ──
-  ZRH:{ num:143, code:'ZRH', name:'highlands', label:'Dunfall — The Loch Harbor', act:3, 
+  DNF:{ num:143, code:'DNF', name:'highlands', label:'Dunfall — The Loch Harbor', act:3,
     text:"Dunfall is older than the name Dunfall. The stonework of the harbor wall predates the current village by four generations — the village was built around the wall rather than the wall around the village.\n\nThe economy here has never been gold-primary. The market runs on what the land and the loch produce: salted fish, highland wool, dried herbs from the upper moorland, and the particular quality of silence that highland cloth carries from the looms. Gold is welcome but converted to goods before it finishes the transaction.\n\nElder Fionn's daughter Mairén runs the harbor ledger. The ledger is a physical object — a stitched book of sheepskin pages, every transaction in her handwriting, going back twenty years. She knows the exact weight of every bolt of wool that has passed through this dock.\n\nWhen the kelpie was active the village barred its doors at dusk. Three men did not come back. The doors were not opened for the wakes. This is the specific grief the village carried while the ford was closed.\n\nThe ford is open. The doors are open. Mairén is at the dock.",
     npc:'Mairén Fionn', battle:null, loot:null, sleep:true, sleepCost:2,
   },
@@ -8013,7 +8013,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   SSJ:{ num:76, code:'SSJ', name:'yugurt_cabin', label:'Yugurt Cabin',  act:3, text:"The smell reaches you before the cabin does: wood smoke and fish oil, the specific combination that means a fire kept through the night and something cooked on it years ago that the walls remember. A lifetime of tackle hangs inside — hooks, lines, leaders, a sinker collection organized in a way that took decades. The nets haven't been cast in years. They are hung correctly, maintained, waiting for a decision that hasn't come back yet.\n\nThe rod is propped by the door. Not inside — outside, by the door, where a visitor would see it before they knocked.\n\nThe Fisherman is always here in the morning. He does not ask where you have been or where you are going. He has a fire. He has a floor you can sleep on for nothing.\n\nThis is the only place between the highlands and the coast that offers both.", npc:'The Fisherman', battle:null, loot:'Fishing Rod', sleep:true, sleepCost:0,
   },
   // ── DeFi Land (The Unbanked Quarter) ──
-  ZRH:{ num:72, code:'ZRH', name:'defi_land', label:'The Unbanked Quarter',  act:1, N:null, S:'BMA', E:'DUS', W:'MUC', text:"The sign in the cracked window reads NO COIN · NO TRUST · NO THANKS, in that order, which is also the order in which you will need to accept them. The Unbanked Quarter appears on no city register. Tax collectors who came back from this block had nothing to report except that they were not going back. The ones who went back have not come back.\n\nA shortwave signal repeats on every frequency. Same pattern, same interval, same broadcast quality — which is poor. Nobody is answering. The signal has been going out long enough that nobody answering is not a condition; it is the standing state of the broadcast.\n\nGrimshaw runs the transmitter. His receiver has been broken for eleven years. He is aware of this. He does not consider it relevant to the transmission.\n\nThe rats here are wrong. Not wrong in the way of sick rats or starving rats — wrong in the way of rats that have adapted to something that should not be adapted to. They do not scatter. They watch the frequency bands.", npc:'Grimshaw', battle:{label:'NGMI Swarm ×3 + Rug Spider', key:'ngmi_swarm', count:3}, loot:'Corrupted Meme Fragment ×2', sleep:false },
+  ZRH:{ num:72, code:'ZRH', name:'defi_land', label:'The Unbanked Quarter',  act:1, text:"The sign in the cracked window reads NO COIN · NO TRUST · NO THANKS, in that order, which is also the order in which you will need to accept them. The Unbanked Quarter appears on no city register. Tax collectors who came back from this block had nothing to report except that they were not going back. The ones who went back have not come back.\n\nA shortwave signal repeats on every frequency. Same pattern, same interval, same broadcast quality — which is poor. Nobody is answering. The signal has been going out long enough that nobody answering is not a condition; it is the standing state of the broadcast.\n\nGrimshaw runs the transmitter. His receiver has been broken for eleven years. He is aware of this. He does not consider it relevant to the transmission.\n\nThe rats here are wrong. Not wrong in the way of sick rats or starving rats — wrong in the way of rats that have adapted to something that should not be adapted to. They do not scatter. They watch the frequency bands.", npc:'Grimshaw', battle:{label:'NGMI Swarm ×3 + Rug Spider', key:'ngmi_swarm', count:3}, loot:'Corrupted Meme Fragment ×2', sleep:false },
   DUS:{ num:73, code:'DUS', name:'defi_land', label:'Frequency Row',         act:1, text:"The storage units have been converted into listening posts — each one bristles with antenna arrays, improvised, dense, aimed at frequencies the city does not acknowledge. Cable runs between them in configurations that violate physics and every permit classification on record. Nobody has corrected this. The cables stay.\n\nBertha No-Bank sits outside on a metal folding chair with a composition notebook. She is on volume forty-one. Volume forty-two begins tomorrow; she has already labeled the cover.\n\nThe frequency she monitors is 14.225. She has checked it every morning since the third moon of the fourth year. Nothing was on it then. Nothing is on it now. She logs this. Every morning: a new entry confirming the absence. Forty-one volumes of confirmed absence, organized by date, cross-referenced by atmospheric condition.\n\nYou are now in the log. Frequency Row notes everything that passes through it. This is the hospitality it offers — not shelter, not coin. Documentation.", npc:'Bertha No-Bank', battle:null, loot:null, sleep:false,
   },
   // ── §LIII: Station 7 ──
@@ -8823,6 +8823,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   SAR:{r:21,c:224},
   ORL:{r:22,c:181},
   ZRH:{r:22,c:188},
+  DNF:{r:17,c:171},
   KTM:{r:22,c:191},
   INN:{r:22,c:191},
   SZG:{r:22,c:193},
@@ -11281,8 +11282,8 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'The Open Harbor',
     desc:'Dunfall kept its doors closed while the kelpie held the ford. Three men did not come back. With the kelpie gone, the harbor is open again and Mairén Fionn is at the dock.',
     hint:'Arrive at Dunfall after clearing the kelpie at the Highland loch.',
-    activateNode:'ZRH', completeItems:[], completeFn:() => !!(S_story.dunfallAccessed),
-    waypointNode:'ZRH', reward:0,
+    activateNode:'DNF', completeItems:[], completeFn:() => !!(S_story.dunfallAccessed),
+    waypointNode:'DNF', reward:0,
     disposition:'"You cleared the ford. We opened the doors." — Mairén Fionn, the entire explanation',
     passText:"You cleared the ford. We opened the doors. Mairen Fionn does not waste words.",
     failText:"The Dunfall harbor is still closed. The ford has not been cleared.",
@@ -11292,7 +11293,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'The Salt Price',
     desc:"Dunfall's market runs on barter. Mairén will trade Highland herb pouches — medicinal, rare on the coast — for a fair exchange. WIS Insight DC 11 to understand what fair means in a loch-harbor economy.",
     hint:'Trade with Mairén at Dunfall. WIS Insight DC 11.',
-    activateNode:'ZRH', activateCond:() => !!S_story.dunfallAccessed,
+    activateNode:'DNF', activateCond:() => !!S_story.dunfallAccessed,
     checkStat:'wis', checkSkill:'Insight', checkDC:11, retryable:true,
     checkPassFlag:'dfBarterLearned',
     onPass:() => {
@@ -11530,9 +11531,9 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'The Commissioner\'s Problem',
     desc:'A Commissioner of the Inland Revenue has arrived at Dunfall by Crown directive to assess harbor taxes. His credentials are inconsistent. The dock cat has been sitting directly on the assessment ledger since he arrived.',
     hint:'Speak to Commissioner Halvard Fehn at Dunfall.',
-    activateNode:'ZRH', activateCond:() => !!S_story.dunfallAccessed,
+    activateNode:'DNF', activateCond:() => !!S_story.dunfallAccessed,
     completeItems:[], completeFn:() => !!(S_story.spark2HookReceived),
-    waypointNode:'ZRH', reward:0,
+    waypointNode:'DNF', reward:0,
     disposition:'"By order of the Inland Revenue, the animal currently impeding the tax ledger must be — it is sitting on my pen." — Commissioner Halvard Fehn',
     passText:"The Commissioner has been engaged. The dock cat is still on the pen. By order of the Inland Revenue — the animal must be. It is sitting on my pen.",
     failText:"Commissioner Halvard Fehn at Dunfall has not been spoken to yet.",
@@ -11543,7 +11544,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'Bram and the Ledger',
     desc:'The dock cat is Bram. He has been on Mairén\'s ledger for three years. He watches a specific point on the south dock wall. WIS Animal Handling DC 11 to understand what Bram is watching — it is not the Commissioner.',
     hint:'Read what Bram is watching at Dunfall dock. WIS Animal Handling DC 11.',
-    activateNode:'ZRH', activateCond:() => !!S_story.spark2HookReceived,
+    activateNode:'DNF', activateCond:() => !!S_story.spark2HookReceived,
     checkStat:'wis', checkSkill:'Animal Handling', checkDC:11, retryable:true,
     checkPassFlag:'bramBefriended',
     onPass:() => {
@@ -11567,9 +11568,9 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'Bram Leads South',
     desc:'Bram leads you to the fish market sweep pile — a grain-husk mound behind the south dock wall joint. At the center: Oat. A harbor mouse, white-gray, sitting in someone else\'s grain with complete serenity.',
     hint:'Follow Bram to Oat at the Dunfall south dock.',
-    activateNode:'ZRH', activateCond:() => !!S_story.bramBefriended,
+    activateNode:'DNF', activateCond:() => !!S_story.bramBefriended,
     completeItems:[], completeFn:() => !!(S_story.oatMet),
-    waypointNode:'ZRH', reward:0,
+    waypointNode:'DNF', reward:0,
     disposition:'"A cat and a mouse. Sitting together. I was told this was a standard harbor assessment." — Commissioner Halvard Fehn',
     passText:"A cat and a mouse sitting together. Bram led you to Oat. The Commissioner was told this was a standard harbor assessment.",
     failText:"Bram has not led south yet. Follow the dock cat to the fish market sweep pile.",
@@ -11580,7 +11581,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'What Oat Carries',
     desc:'Oat has a faint amber glow on his left ear — a drift spore colony from the loch shallows. Related to the Deep Warmth Eel chemistry, but airborne. INT Nature DC 12 to identify what the colony is doing to the dock ecosystem.',
     hint:'Identify the drift spore on Oat\'s ear. INT Nature DC 12.',
-    activateNode:'ZRH', activateCond:() => !!S_story.oatMet,
+    activateNode:'DNF', activateCond:() => !!S_story.oatMet,
     checkStat:'int', checkSkill:'Nature', checkDC:12, retryable:false,
     checkPassFlag:'brimFound',
     onPass:() => {
@@ -11608,9 +11609,9 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'Commissioner Fehn\'s Three Names',
     desc:'Three inconsistencies: the Inland Revenue Division that does not exist, the Highland Fleet his grandfather commanded that does not exist, the appointment certificate from an office that closed before his appointment date. Commissioner Halvard Fehn is holding three identities and losing track of which one he is today.',
     hint:'Confront Commissioner Fehn with the three inconsistencies at Dunfall.',
-    activateNode:'ZRH', activateCond:() => !!S_story.brimFound,
+    activateNode:'DNF', activateCond:() => !!S_story.brimFound,
     completeItems:[], completeFn:() => !!(S_story.fehnConfessed),
-    waypointNode:'ZRH', reward:0,
+    waypointNode:'DNF', reward:0,
     disposition:'"I was told to use the name until the investigation closed. It has been nine years. I am not certain anyone is still watching." — Commissioner Halvard Fehn',
     passText:"He was told to use the name until the investigation closed. It has been nine years. He is not certain anyone is still watching.",
     failText:"The three inconsistencies in Commissioner Fehn identity have not been confronted yet.",
@@ -20310,7 +20311,7 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     ? '"Gangplanks out." She says it to her first officer. Not to you. You were not the intended audience.'
     : '"The Commission authorizes search and retention on the eastern run. We both know what that means. I am giving you the opportunity to manage how this proceeds." She holds the pennant level. "Choose your station."' },
   // §PORT-02: Dunfall
-  ZRH: { name:'Mairén Fionn', quoteFn:() => S_story.dfBarterLearned
+  DNF: { name:'Mairén Fionn', quoteFn:() => S_story.dfBarterLearned
     ? '"The pouch will hold its potency for two months if you keep it out of salt air." She marks the transaction in the ledger — her handwriting, sheepskin page, twenty years of exchanges. "Come back in spring. The myrtle is better after the first frost." She means it as an invitation, not a pleasantry.'
     : S_story.dunfallAccessed
     ? '"The loch is quiet now." She says it the way you say something you have been waiting to say for a long time. "My father has been at the ford since morning. He watches it differently now — not watching for the kelpie, watching the water. The difference is in the shoulders."'
@@ -30697,7 +30698,7 @@ function storyRender(node, prefix) {
   }
   // §PORT-02: DF — Dunfall access (kelpie must be defeated at HL)
   { const _dfOld = document.getElementById('story-df-access'); if (_dfOld) _dfOld.remove();
-    if (node.code === 'ZRH') {
+    if (node.code === 'DNF') {
       const _dfDiv = document.createElement('div');
       _dfDiv.id = 'story-df-access';
       _dfDiv.className = 'sweelinck-variant';
@@ -30731,7 +30732,7 @@ function storyRender(node, prefix) {
   }
   // §SPARK-02: DF — Commissioner Fehn + Bram + Oat + Drift Spore (Dunfall Harmony Chain)
   { const _spk2dfOld = document.getElementById('story-spark2-df'); if (_spk2dfOld) _spk2dfOld.remove();
-    if (node.code === 'ZRH' && S_story.dunfallAccessed) {
+    if (node.code === 'DNF' && S_story.dunfallAccessed) {
       const _spk2Div = document.createElement('div');
       _spk2Div.id = 'story-spark2-df';
       _spk2Div.className = 'sweelinck-variant';
