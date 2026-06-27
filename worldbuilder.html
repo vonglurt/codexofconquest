@@ -6037,7 +6037,7 @@ window._onServerActivated = () => {
         { key:'completeItems',     label:'Complete items',  arr:'csv',     note:'Comma-separated item names' },
         { key:'targetMonsterKeys', label:'Target monsters', arr:'csv',     note:'Comma-separated monster keys (hunt quests)' },
         { key:'killGoals',         label:'Kill goals',      arr:'objlines',ta:true, note:'One per line — key:need:label (need→1, label→key by default)' },
-        { key:'itemChain',         label:'Item chain',      arr:'itemchain',ta:true, note:'One step/line — grant|name|icon|type|sell|desc · take|name|all? · grantBit|flag|label · takeBit|flag' },
+        { key:'itemChain',         label:'Item chain',      arr:'itemchain',ta:true, note:'On completion — add steps (grant / take / grantBit / takeBit), fill each kind’s fields, reorder with ▲/▼ or drag.' },
       ],
       rowData: (r) => ({ id:r.id, title:r.title, type:r.type, activateNode:r.activateNode, npc:r.npc||'' }),
     },
@@ -6239,6 +6239,16 @@ window._onServerActivated = () => {
       const lbl = document.createElement('label');
       lbl.innerHTML = f.label + (f.req ? ' <span class="req">*</span>' : '');
       wrap.appendChild(lbl);
+      // §EDITOR-01-D-FU(a) Inc 4: itemChain edits via the visual widget, not a textarea.
+      // Mount a buildChainEditor instance seeded from the entity; collectFormData reads it back.
+      if (f.arr === 'itemchain') {
+        wrap.dataset.chainField = f.key;
+        const initial = entity && Array.isArray(entity[f.key]) ? entity[f.key] : [];
+        wrap._chainEd = window.buildChainEditor(wrap, { initial });
+        if (f.note) { const n = document.createElement('div'); n.className = 'note'; n.textContent = f.note; wrap.appendChild(n); }
+        body.appendChild(wrap);
+        continue;
+      }
       let inp;
       if (f.ta) {
         inp = document.createElement('textarea');
@@ -6277,6 +6287,13 @@ window._onServerActivated = () => {
   function collectFormData() {
     const def = CRUD_TYPES[crudType]; const out = {};
     for (const f of def.fields) {
+      // §EDITOR-01-D-FU(a) Inc 4: itemChain comes from the mounted widget, not a #crud-field-* input.
+      if (f.arr === 'itemchain') {
+        const w = document.querySelector(`[data-chain-field="${f.key}"]`);
+        const ed = w && w._chainEd;
+        if (ed) { const a = ed.getSteps(); if (a.length) out[f.key] = a; }
+        continue;
+      }
       const el = document.getElementById(`crud-field-${f.key}`);
       if (!el) continue;
       const v = el.value;
@@ -6423,7 +6440,7 @@ window._onServerActivated = () => {
   $('btn-crud-load').addEventListener('click', loadCrud);
 
   // Test hook (ph4-FU): expose the array-field codecs for unit tests.
-  window.__crudTest = { arrToText, textToArr, collectFormData };
+  window.__crudTest = { arrToText, textToArr, collectFormData, renderDetailForm };
 
   renderFilters();
 })();
