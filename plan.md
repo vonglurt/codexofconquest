@@ -187,7 +187,7 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 
 ## §RESUME — Continue Here (newest)
 
-> **Updated 2026-06-27 · branch `main` · last commit `9b0ece7` — §WALK series CLOSED; §WALK-1.5-FU ✅, §WALK-2-FU ✅, §CELL-14 ✅ + §CELL-14-FU ✅, **§WBAPI-01 ph3 ✅ + ph5 ✅ + ph4 inc1 ✅ + ph4-FU ✅** (CRUD quest form now edits existing entities' array fields — `completeItems`/`targetMonsterKeys`/`killGoals` — via the ph3 PUT→`editStructuredField` source patch; client codecs `arrToText`/`textToArr`; `worldbuilder-crud-arrays.test.js` 2 tests + live server round-trip on `mq_1` verified persist-to-source). §WBAPI-01 is now fully closed. Open finding: §DATA-01-REVERTED (index.md corrected; restore deferred). Next = §EDITOR-01-D / other Tooling.** This is the canonical handoff — the most current snapshot of where the work stands and everything still outstanding. (The top-of-file §RESUME just points here.)
+> **Updated 2026-06-27 · branch `main` · last commit `24c7049` — §WALK series CLOSED; §WALK-1.5-FU ✅, §WALK-2-FU ✅, §CELL-14 ✅ + §CELL-14-FU ✅, **§WBAPI-01 ph3 ✅ + ph5 ✅ + ph4 inc1 ✅ + ph4-FU ✅** (CRUD quest form now edits existing entities' array fields — `completeItems`/`targetMonsterKeys`/`killGoals` — via the ph3 PUT→`editStructuredField` source patch; client codecs `arrToText`/`textToArr`; `worldbuilder-crud-arrays.test.js` 2 tests + live server round-trip on `mq_1` verified persist-to-source). §WBAPI-01 is now fully closed. Open finding: §DATA-01-REVERTED (index.md corrected; restore deferred). Next = §EDITOR-01-D / other Tooling.** This is the canonical handoff — the most current snapshot of where the work stands and everything still outstanding. (The top-of-file §RESUME just points here.)
 
 ### Where we are
 
