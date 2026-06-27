@@ -8930,6 +8930,15 @@ EG('tab-grid').insertAdjacentHTML('afterend', (function(){
         </div>
       </div>
 
+      <!-- §EDITOR-01-D: declarative item chain — applies on completion for ALL quest types -->
+      <div class="ed-section">
+        <div class="ed-shd">Item Chain — on completion (one step per line)</div>
+        <div class="fg">
+          <div class="fl"><code>grant|name|icon|type|sell|desc</code> · <code>take|name|all?</code> · <code>grantBit|flag|label</code> · <code>takeBit|flag</code></div>
+          <textarea class="fi" id="ed-itemChain" name="itemChain" rows="3" placeholder="grant | Pip's Bead | 🪵 | misc | 1 | A token&#10;take | Smalt's Trust&#10;grantBit | harmonyChainComplete | Harmony Chain"></textarea>
+        </div>
+      </div>
+
       <!-- Operand bits -->
       <div class="ed-section">
         <div class="ed-shd">
@@ -9079,6 +9088,55 @@ function edAddBitCard(defaultKind) {
   EG('ed-bits-list').appendChild(card);
 }
 
+// §EDITOR-01-D: pipe-delimited item-chain grammar ⇄ Step[] (shared by the Quest
+// Creator here and the CRUD arr:'itemchain' codec). One step per line:
+//   grant | name | icon | type | sell | desc      (trailing fields optional; | allowed in desc)
+//   take | name | all?                              (all|true|1 → remove every match)
+//   grantBit | flag | label                         (label optional)
+//   takeBit | flag
+function parseItemChainText(txt) {
+  return (txt || '').split('\n').map(l => l.trim()).filter(Boolean).map(line => {
+    const p = line.split('|').map(s => s.trim());
+    const action = (p[0] || '').toLowerCase();
+    if (action === 'grant') {
+      const step = { action: 'grant', name: p[1] || '' };
+      if (p[2]) step.icon = p[2];
+      if (p[3]) step.type = p[3];
+      if (p[4] !== undefined && p[4] !== '') step.sell = +p[4] || 0;
+      if (p[5]) step.desc = p.slice(5).join('|').trim(); // re-join so | survives in desc
+      return step;
+    }
+    if (action === 'take') {
+      const step = { action: 'take', name: p[1] || '' };
+      if (/^(all|true|1)$/i.test(p[2] || '')) step.all = true;
+      return step;
+    }
+    if (action === 'grantbit') {
+      const step = { action: 'grantBit', flag: p[1] || '' };
+      if (p[2]) step.label = p[2];
+      return step;
+    }
+    if (action === 'takebit') return { action: 'takeBit', flag: p[1] || '' };
+    return null;
+  }).filter(Boolean);
+}
+function itemChainToText(arr) {
+  if (!Array.isArray(arr)) return '';
+  return arr.map(s => {
+    switch (s && s.action) {
+      case 'grant': {
+        const tail = [s.icon || '', s.type || '', (s.sell != null ? String(s.sell) : ''), s.desc || ''];
+        let last = -1; tail.forEach((v, i) => { if (v !== '') last = i; });
+        return ['grant', s.name || ''].concat(tail.slice(0, last + 1)).join(' | ');
+      }
+      case 'take':     return ['take', s.name || ''].concat(s.all ? ['all'] : []).join(' | ');
+      case 'grantBit': return ['grantBit', s.flag || ''].concat(s.label ? [s.label] : []).join(' | ');
+      case 'takeBit':  return ['takeBit', s.flag || ''].join(' | ');
+      default:         return '';
+    }
+  }).filter(Boolean).join('\n');
+}
+
 function edBuildQuestObj() {
   const type = edVal('ed-type');
   const q = {};
@@ -9116,6 +9174,8 @@ function edBuildQuestObj() {
     add('completeFn', edVal('ed-completeFn'));
     add('passText',   edVal('ed-passText'));
   }
+  const ic = parseItemChainText(edVal('ed-itemChain')); // §EDITOR-01-D (all quest types)
+  if (ic.length) q.itemChain = ic;
   const bits = edGetBits();
   if (bits.length) q.bits = bits;
   return q;
@@ -9283,6 +9343,8 @@ function edGenerateExport() {
     if (q.completeFn)   out += `    completeFn:() => {\n      ${q.completeFn.split('\n').join('\n      ')}\n    },\n`;
     if (q.passText)     out += `    passText:${s(q.passText)},\n`;
   }
+  if (q.itemChain?.length) out += `    itemChain:[${q.itemChain.map(st =>
+    `{${Object.entries(st).map(([k,v]) => `${k}:${typeof v === 'string' ? s(v) : v}`).join(',')}}`).join(',')}],\n`; // §EDITOR-01-D
   if (q.bits?.length) {
     const bitsJson = JSON.stringify(q.bits, null, 4);
     out += `    bits:${bitsJson.replace(/\n/g,'\n    ')},\n`;
@@ -9308,7 +9370,7 @@ function edApplyPreset(key) {
   for (const [k,v] of Object.entries(PRESET_BLANK)) edSet(`ed-${k}`, v);
   for (const id of ['ed-id','ed-title','ed-arc','ed-activateCond','ed-hint','ed-reward',
                      'ed-disposition','ed-desc','ed-checkPassFlag','ed-onPass','ed-onFail',
-                     'ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-completeFn','ed-passText','ed-xpAward']) {
+                     'ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-completeFn','ed-passText','ed-xpAward','ed-itemChain']) {
     edSet(id, '');
   }
   edSet('ed-retryable', false);
@@ -9366,7 +9428,7 @@ for (const [btnId, key] of Object.entries(presetMap)) {
 // Live update on form change
 const liveIds = ['ed-id','ed-title','ed-activateCond','ed-hint','ed-disposition','ed-desc',
                  'ed-checkPassFlag','ed-onPass','ed-onFail','ed-completeFn','ed-reward',
-                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-passText'];
+                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-passText','ed-itemChain'];
 for (const id of liveIds) {
   const el = EG(id); if (el) el.addEventListener('input', edSchedule);
 }
