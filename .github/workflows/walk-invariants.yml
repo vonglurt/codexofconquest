@@ -28,6 +28,7 @@ on:
       - 'scripts/check-mover-behaviour.js'
       - 'scripts/check-terrain-parity.js'
       - 'scripts/check-array-patch.js'
+      - 'scripts/check-itemchain.js'
       - 'tests/mud-harness.mjs'
       - 'package.json'
       - '.github/workflows/walk-invariants.yml'
@@ -42,6 +43,7 @@ on:
       - 'scripts/check-mover-behaviour.js'
       - 'scripts/check-terrain-parity.js'
       - 'scripts/check-array-patch.js'
+      - 'scripts/check-itemchain.js'
       - 'tests/mud-harness.mjs'
       - 'package.json'
       - '.github/workflows/walk-invariants.yml'
@@ -64,6 +66,10 @@ jobs:
       # read-only. No install needed.
       - name: Run WBAPI structured-field PATCH guard
         run: npm run check:arraypatch
+      # §EDITOR-01-D: declarative itemChain runtime + source round-trip guard —
+      # stdlib-only (vm + wbapi-core), loads the committed HTML read-only.
+      - name: Run itemChain guard
+        run: npm run check:itemchain
 
   mud:
     runs-on: ubuntu-latest

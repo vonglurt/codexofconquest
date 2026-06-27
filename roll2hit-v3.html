@@ -6249,6 +6249,7 @@ function _rollCeremonia(questId) {
     if (q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }
     if (q.goldAward) S_story.gold += q.goldAward;
     if (q.onPass) q.onPass();
+    _applyItemChain(q).forEach(m => storyMsg(m)); // §EDITOR-01-D
   } else {
     if (q.onFail) q.onFail();
     if (q.retryable) {
@@ -23525,6 +23526,44 @@ function _grantMissionBit(flagName, label) {
   storyMsg('🪬 Token received: ' + tokenName + '.');
 }
 
+// §MBIT-02 / §EDITOR-01-D: clear a mission-bit flag and remove its token.
+function _takeMissionBit(flagName) {
+  if (!flagName) return;
+  S_story[flagName] = false;
+  if (S_story.inventory) {
+    S_story.inventory = S_story.inventory.filter(
+      i => !(i.type === 'mission_bit' && i.flagRef === flagName));
+  }
+}
+
+// §EDITOR-01-D: apply a quest's declarative itemChain (grant/take/grantBit/takeBit).
+// Inert until a quest authors `itemChain`. Returns msg[] for the caller to surface.
+function _applyItemChain(q) {
+  if (!q || !Array.isArray(q.itemChain)) return [];
+  const inv = S_story.inventory = S_story.inventory || [];
+  const msgs = [];
+  for (const s of q.itemChain) {
+    switch (s && s.action) {
+      case 'grant': {
+        if (s.once !== false && inv.some(i => i.name === s.name)) break;
+        const item = { name: s.name, icon: s.icon || '📦', type: s.type || 'misc', sell: s.sell || 0 };
+        if (s.desc) item.desc = s.desc;
+        inv.push(item);
+        msgs.push(item.icon + ' ' + s.name + ' obtained.');
+        break;
+      }
+      case 'take':
+        if (s.all) S_story.inventory = inv.filter(i => i.name !== s.name);
+        else { const i = inv.findIndex(x => x.name === s.name); if (i !== -1) inv.splice(i, 1); }
+        break;
+      case 'grantBit': _grantMissionBit(s.flag, s.label); break; // emits its own storyMsg
+      case 'takeBit':  _takeMissionBit(s.flag); break;
+      default: break; // unknown action: skip, never throw into the completion path
+    }
+  }
+  return msgs;
+}
+
 /* ── Layer 7-B: Key Events — item-triggered world changes (replaces gate locks) ── */
 const KEY_EVENTS = [
   { id:'ke_crypt_key', node:'KRN', item:'Crypt Key', label:'🗝 Open the lower ward',
@@ -25827,6 +25866,7 @@ function storyCheckQuests(node) {
     if (done) {
       S_story.quests[id] = 'complete';
       if (q.onComplete) q.onComplete();
+      msgs.push(..._applyItemChain(q)); // §EDITOR-01-D
       msgs.push('✓ ' + q.title);
       if (q.passText) { const pt = typeof q.passText === 'function' ? q.passText() : q.passText; if (pt) msgs.push(pt); }
       // §D02 xpAward on side-type quest completion
