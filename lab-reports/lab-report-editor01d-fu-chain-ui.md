@@ -1,6 +1,6 @@
 # Lab Report — §EDITOR-01-D-FU (a): visual drag-reorder chain editor
 
-**Status:** DESIGN LOCKED → implementing
+**Status:** ✅ (a) CLOSED — Inc 1 (design lock) → Inc 2 (`buildChainEditor` factory, `78ca3ae`) → Inc 3 (Quest Creator wiring, `0198149`) → Inc 4 (CRUD form wiring, `c2e6892`). Item (b) reward-ladder migration remains open under §EDITOR-01-D-FU (overlaps §DATA-01-REVERTED).
 **Date:** 2026-06-27
 **Scope:** §EDITOR-01-D-FU item (a) only — replace the pipe-delimited `itemChain` **textarea** with an interactive step-list widget (add / remove / **reorder** action rows, per-action field inputs) on both the Quest Creator and the CRUD quest form. Item (b) — the 58-branch reward-ladder migration — is explicitly **out of scope** here (it overlaps §DATA-01-REVERTED and stays open).
 
