@@ -9144,6 +9144,147 @@ function itemChainToText(arr) {
 window.parseItemChainText = parseItemChainText;
 window.itemChainToText = itemChainToText;
 
+// §EDITOR-01-D-FU(a): visual step-list editor for itemChain. A FACTORY (not a
+// singleton) — each call returns an independent instance so the Quest Creator and
+// the CRUD form can each mount their own. getSteps() is byte-identical to
+// parseItemChainText output, plus the grant.once superset the text grammar can't
+// express. Reorder via ▲/▼ (canonical, test-driven) + native drag (additive).
+document.head.insertAdjacentHTML('beforeend', `<style>
+.chain-ed { display:flex; flex-direction:column; gap:5px; }
+.chain-rows { display:flex; flex-direction:column; gap:4px; }
+.chain-row { display:flex; align-items:center; gap:5px; background:var(--bg2); border:1px solid var(--border); border-radius:5px; padding:4px 6px; }
+.chain-row.chain-drag { opacity:.5; }
+.chain-grip { cursor:grab; color:var(--muted); font-size:13px; user-select:none; flex:0 0 auto; }
+.chain-kind { flex:0 0 92px; }
+.chain-fields { display:flex; flex-wrap:wrap; gap:4px; flex:1; min-width:0; }
+.chain-chk { display:flex; align-items:center; gap:3px; font-size:11px; color:var(--muted); flex:0 0 auto; white-space:nowrap; }
+.chain-row .btn.sm { flex:0 0 auto; padding:2px 6px; }
+</style>`);
+
+// Per-kind field schema — a superset of the pipe grammar (adds grant.once).
+const CHAIN_KINDS = {
+  grant:    [ {f:'name',req:true}, {f:'icon'}, {f:'type'}, {f:'sell',num:true}, {f:'desc'}, {f:'once',chk:true,def:true} ],
+  take:     [ {f:'name',req:true}, {f:'all',chk:true} ],
+  grantBit: [ {f:'flag',req:true}, {f:'label'} ],
+  takeBit:  [ {f:'flag',req:true} ],
+};
+
+function buildChainEditor(host, opts) {
+  opts = opts || {};
+  const fire = () => { try { opts.onChange && opts.onChange(); } catch (e) {} };
+
+  const root = document.createElement('div'); root.className = 'chain-ed';
+  const rowsWrap = document.createElement('div'); rowsWrap.className = 'chain-rows';
+  const addBtn = document.createElement('button');
+  addBtn.type = 'button'; addBtn.className = 'btn sm'; addBtn.textContent = '+ Add step';
+  root.appendChild(rowsWrap); root.appendChild(addBtn);
+
+  function renderFields(fieldsDiv, kind, step) {
+    fieldsDiv.innerHTML = '';
+    for (const spec of CHAIN_KINDS[kind] || []) {
+      if (spec.chk) {
+        const lbl = document.createElement('label'); lbl.className = 'chain-chk';
+        const cb = document.createElement('input'); cb.type = 'checkbox'; cb.dataset.cf = spec.f;
+        cb.checked = step && step[spec.f] != null ? !!step[spec.f] : !!spec.def;
+        cb.addEventListener('change', fire);
+        lbl.appendChild(cb); lbl.appendChild(document.createTextNode(spec.f));
+        fieldsDiv.appendChild(lbl);
+        continue;
+      }
+      const inp = document.createElement('input');
+      inp.type = spec.num ? 'number' : 'text'; inp.className = 'fi fi-sm';
+      inp.placeholder = spec.f + (spec.req ? '*' : ''); inp.dataset.cf = spec.f;
+      inp.style.flex = '1 1 70px';
+      if (step && step[spec.f] != null) inp.value = step[spec.f];
+      inp.addEventListener('input', fire);
+      fieldsDiv.appendChild(inp);
+    }
+  }
+
+  function makeRow(step) {
+    step = step || { action: 'grant' };
+    const row = document.createElement('div'); row.className = 'chain-row'; row.draggable = true;
+    const grip = document.createElement('span'); grip.className = 'chain-grip'; grip.textContent = '⠿';
+    const kindSel = document.createElement('select'); kindSel.className = 'fi fi-sm chain-kind';
+    for (const k of Object.keys(CHAIN_KINDS)) {
+      const o = document.createElement('option'); o.value = k; o.textContent = k;
+      if (k === step.action) o.selected = true;
+      kindSel.appendChild(o);
+    }
+    const fieldsDiv = document.createElement('div'); fieldsDiv.className = 'chain-fields';
+    renderFields(fieldsDiv, step.action || 'grant', step);
+    kindSel.addEventListener('change', () => { renderFields(fieldsDiv, kindSel.value, null); fire(); });
+
+    const up = document.createElement('button'); up.type='button'; up.className='btn sm chain-up'; up.textContent='▲';
+    const dn = document.createElement('button'); dn.type='button'; dn.className='btn sm chain-dn'; dn.textContent='▼';
+    const rm = document.createElement('button'); rm.type='button'; rm.className='btn sm chain-rm'; rm.textContent='✕';
+    up.addEventListener('click', () => { const p = row.previousElementSibling; if (p) { rowsWrap.insertBefore(row, p); fire(); } });
+    dn.addEventListener('click', () => { const n = row.nextElementSibling; if (n) { rowsWrap.insertBefore(n, row); fire(); } });
+    rm.addEventListener('click', () => { row.remove(); fire(); });
+
+    row.addEventListener('dragstart', e => { row.classList.add('chain-drag'); if (e.dataTransfer) e.dataTransfer.setData('text/plain', ''); });
+    row.addEventListener('dragend',   () => row.classList.remove('chain-drag'));
+    row.addEventListener('dragover',  e => e.preventDefault());
+    row.addEventListener('drop',      e => {
+      e.preventDefault();
+      const dragging = rowsWrap.querySelector('.chain-drag'); if (!dragging || dragging === row) return;
+      const list = [...rowsWrap.children];
+      if (list.indexOf(dragging) < list.indexOf(row)) rowsWrap.insertBefore(dragging, row.nextElementSibling);
+      else rowsWrap.insertBefore(dragging, row);
+      fire();
+    });
+
+    row.append(grip, kindSel, fieldsDiv, up, dn, rm);
+    return row;
+  }
+
+  // One row → a Step (or null if its required field is blank — mirrors the codec's .filter(Boolean)).
+  function readRow(row) {
+    const kind = row.querySelector('.chain-kind').value;
+    const get = f => { const e = row.querySelector(`[data-cf="${f}"]`); return e ? (e.type === 'checkbox' ? e.checked : e.value.trim()) : ''; };
+    if (kind === 'grant') {
+      const name = get('name'); if (!name) return null;
+      const step = { action: 'grant', name };
+      if (get('icon')) step.icon = get('icon');
+      if (get('type')) step.type = get('type');
+      const sell = get('sell'); if (sell !== '') step.sell = +sell || 0;
+      if (get('desc')) step.desc = get('desc');
+      if (get('once') === false) step.once = false;   // default true → only emit when toggled off
+      return step;
+    }
+    if (kind === 'take') {
+      const name = get('name'); if (!name) return null;
+      const step = { action: 'take', name };
+      if (get('all') === true) step.all = true;
+      return step;
+    }
+    if (kind === 'grantBit') {
+      const flag = get('flag'); if (!flag) return null;
+      const step = { action: 'grantBit', flag };
+      if (get('label')) step.label = get('label');
+      return step;
+    }
+    if (kind === 'takeBit') {
+      const flag = get('flag'); if (!flag) return null;
+      return { action: 'takeBit', flag };
+    }
+    return null;
+  }
+
+  addBtn.addEventListener('click', () => { rowsWrap.appendChild(makeRow({ action: 'grant' })); fire(); });
+
+  const api = {
+    el: root,
+    getSteps() { return [...rowsWrap.children].map(readRow).filter(Boolean); },
+    setSteps(arr) { rowsWrap.innerHTML = ''; for (const s of (Array.isArray(arr) ? arr : [])) rowsWrap.appendChild(makeRow(s)); },
+    addStep(s) { rowsWrap.appendChild(makeRow(s || { action: 'grant' })); fire(); },
+  };
+  if (opts.initial) api.setSteps(opts.initial);
+  if (host) host.appendChild(root);
+  return api;
+}
+window.buildChainEditor = buildChainEditor;
+
 // ── §EDITOR-02 — Mission Builder: pure arc compiler ───────────────────────────
 // An arc has no runtime object — it's an emergent property of correctly-wired
 // flags (WBAPI.quests.chain derives up/downstream from flag reads vs writes).
