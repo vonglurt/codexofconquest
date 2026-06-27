@@ -8934,12 +8934,12 @@ EG('tab-grid').insertAdjacentHTML('afterend', (function(){
         </div>
       </div>
 
-      <!-- §EDITOR-01-D: declarative item chain — applies on completion for ALL quest types -->
+      <!-- §EDITOR-01-D / §EDITOR-01-D-FU(a): declarative item chain — applies on completion for ALL quest types -->
       <div class="ed-section">
-        <div class="ed-shd">Item Chain — on completion (one step per line)</div>
+        <div class="ed-shd">Item Chain — on completion</div>
         <div class="fg">
-          <div class="fl"><code>grant|name|icon|type|sell|desc</code> · <code>take|name|all?</code> · <code>grantBit|flag|label</code> · <code>takeBit|flag</code></div>
-          <textarea class="fi" id="ed-itemChain" name="itemChain" rows="3" placeholder="grant | Pip's Bead | 🪵 | misc | 1 | A token&#10;take | Smalt's Trust&#10;grantBit | harmonyChainComplete | Harmony Chain"></textarea>
+          <div class="fl">Per step pick a kind, fill its fields: <code>grant</code> (name·icon·type·sell·desc·once) · <code>take</code> (name·all) · <code>grantBit</code> (flag·label) · <code>takeBit</code> (flag). Reorder with ▲/▼ or drag.</div>
+          <div id="ed-itemChain-editor"></div>
         </div>
       </div>
 
@@ -9415,7 +9415,7 @@ function edBuildQuestObj() {
     add('completeFn', edVal('ed-completeFn'));
     add('passText',   edVal('ed-passText'));
   }
-  const ic = parseItemChainText(edVal('ed-itemChain')); // §EDITOR-01-D (all quest types)
+  const ic = edChain.getSteps(); // §EDITOR-01-D-FU(a) visual editor (all quest types)
   if (ic.length) q.itemChain = ic;
   const bits = edGetBits();
   if (bits.length) q.bits = bits;
@@ -9611,10 +9611,11 @@ function edApplyPreset(key) {
   for (const [k,v] of Object.entries(PRESET_BLANK)) edSet(`ed-${k}`, v);
   for (const id of ['ed-id','ed-title','ed-arc','ed-activateCond','ed-hint','ed-reward',
                      'ed-disposition','ed-desc','ed-checkPassFlag','ed-onPass','ed-onFail',
-                     'ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-completeFn','ed-passText','ed-xpAward','ed-itemChain']) {
+                     'ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-completeFn','ed-passText','ed-xpAward']) {
     edSet(id, '');
   }
   edSet('ed-retryable', false);
+  edChain.setSteps([]);                 // §EDITOR-01-D-FU(a): clear the item-chain rows
   EG('ed-bits-list').innerHTML = '';
   // Apply preset values
   for (const [k,v] of Object.entries(p)) edSet(`ed-${k}`, v);
@@ -9635,6 +9636,11 @@ function edShowResult(data, isErr) {
   el.style.display = ''; el.className = 'op-result '+(isErr?'err':'ok');
   el.textContent = typeof data === 'string' ? data : JSON.stringify(data, null, 2);
 }
+
+// ── itemChain visual editor instance (§EDITOR-01-D-FU a) ──────────────────────
+// Replaces the old #ed-itemChain textarea; getSteps() feeds edBuildQuestObj.
+const edChain = buildChainEditor(EG('ed-itemChain-editor'), { onChange: edSchedule });
+window.__edChain = edChain;   // test hook (§EDITOR-01-D-FU a)
 
 // ── Wire events ───────────────────────────────────────────────────────────────
 EG('ed-type').addEventListener('change', () => { edUpdateType(); edSchedule(); });
@@ -9669,7 +9675,7 @@ for (const [btnId, key] of Object.entries(presetMap)) {
 // Live update on form change
 const liveIds = ['ed-id','ed-title','ed-activateCond','ed-hint','ed-disposition','ed-desc',
                  'ed-checkPassFlag','ed-onPass','ed-onFail','ed-completeFn','ed-reward',
-                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-passText','ed-itemChain'];
+                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-passText'];
 for (const id of liveIds) {
   const el = EG(id); if (el) el.addEventListener('input', edSchedule);
 }
