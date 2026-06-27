@@ -6033,6 +6033,9 @@ window._onServerActivated = () => {
         { key:'hint',         label:'Hint',         ta:true },
         { key:'passText',     label:'Pass text',    ta:true },
         { key:'failText',     label:'Fail text',    ta:true },
+        { key:'completeItems',     label:'Complete items',  arr:'csv',     note:'Comma-separated item names' },
+        { key:'targetMonsterKeys', label:'Target monsters', arr:'csv',     note:'Comma-separated monster keys (hunt quests)' },
+        { key:'killGoals',         label:'Kill goals',      arr:'objlines',ta:true, note:'One per line — key:need:label (need→1, label→key by default)' },
       ],
       rowData: (r) => ({ id:r.id, title:r.title, type:r.type, activateNode:r.activateNode, npc:r.npc||'' }),
     },
@@ -6115,6 +6118,24 @@ window._onServerActivated = () => {
     const el = $('crud-msg');
     el.textContent = txt; el.className = 'crud-msg ' + cls; el.style.display = '';
     clearTimeout(el._t); el._t = setTimeout(() => { el.style.display = 'none'; }, 4000);
+  }
+
+  // ── Array-field codecs (ph4-FU) ─────────────────────────────────────────────
+  // 'csv'      ↔ ['a','b']                       (display "a, b")
+  // 'objlines' ↔ [{key,need,label}]              (display one "key:need:label" per line)
+  function arrToText(kind, val) {
+    if (!Array.isArray(val)) return '';
+    if (kind === 'objlines') return val.map(g => `${g.key}:${g.need ?? 1}:${g.label ?? g.key}`).join('\n');
+    return val.join(', ');               // csv
+  }
+  function textToArr(kind, txt) {
+    if (kind === 'objlines') {
+      return txt.split('\n').map(l => l.trim()).filter(Boolean).map(l => {
+        const [key, need, label] = l.split(':').map(x => x.trim());
+        return { key, need: +need || 1, label: label || key };
+      });
+    }
+    return txt.split(',').map(s => s.trim()).filter(Boolean);  // csv
   }
 
   // ── Filter panel ──────────────────────────────────────────────────────────
@@ -6227,7 +6248,10 @@ window._onServerActivated = () => {
       }
       inp.id = `crud-field-${f.key}`;
       inp.placeholder = f.note || '';
-      const val = entity ? (entity[f.key] ?? '') : '';
+      let val = entity ? (entity[f.key] ?? '') : '';
+      // §WBAPI-01 ph4-FU: array fields edit existing entities via the ph3 source-level PATCH.
+      // Render the stored array as editable text; collectFormData parses it back on save.
+      if (f.arr) val = arrToText(f.arr, val);
       if (inp.tagName === 'SELECT') { inp.value = String(val); } else { inp.value = String(val === null || val === undefined ? '' : val); }
       inp.dataset.origVal = inp.value;
       inp.addEventListener('input', () => {
@@ -6253,6 +6277,8 @@ window._onServerActivated = () => {
       if (!el) continue;
       const v = el.value;
       if (v === '' || v === undefined) continue;
+      // §WBAPI-01 ph4-FU: array fields parse to arrays → PUT routes them to editStructuredField (ph3 source patch).
+      if (f.arr) { const a = textToArr(f.arr, v); if (a.length) out[f.key] = a; continue; }
       const numF = new Set(['ac','hp','atk','dmgCount','dmgDie','dmgFlat','act','sleepCost','xp','checkDC','reward','xpAward']);
       out[f.key] = numF.has(f.key) && !isNaN(v) ? Number(v) : (v === 'true' ? true : v === 'false' ? false : v);
     }
@@ -6391,6 +6417,9 @@ window._onServerActivated = () => {
   });
 
   $('btn-crud-load').addEventListener('click', loadCrud);
+
+  // Test hook (ph4-FU): expose the array-field codecs for unit tests.
+  window.__crudTest = { arrToText, textToArr, collectFormData };
 
   renderFilters();
 })();
