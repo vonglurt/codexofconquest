@@ -9143,6 +9143,99 @@ function itemChainToText(arr) {
 window.parseItemChainText = parseItemChainText;
 window.itemChainToText = itemChainToText;
 
+// ── §EDITOR-02 — Mission Builder: pure arc compiler ───────────────────────────
+// An arc has no runtime object — it's an emergent property of correctly-wired
+// flags (WBAPI.quests.chain derives up/downstream from flag reads vs writes).
+// buildArcQuests turns an authoring draft into final quest objects, generating
+// those chain flags so step k+1 gates on step k's completion.
+//
+//   arcDraft = { arcId, arcLabel, activateNode, steps:[Step] }
+//   Step     = { type, title, desc, hint, activateNode?,        // common
+//                gateMode:'auto'|'manual'|'none', activateCond?, // chaining
+//                checkStat,checkSkill,checkDC,xpAward,onPass,onFail,checkPassFlag, // skill_check
+//                completeItems,targetMonsterKeys,killGoals,completeFn,passText,    // side (csv / line text)
+//                itemChain }                                     // §EDITOR-01-D textarea grammar
+//
+// Producer flag (what the NEXT step reads): skill_check → checkPassFlag
+// (auto `<arcId>_<n>_passed`); non-skill → `<arcId>_<n>_done`, materialised by
+// appending a `grantBit` to that step's itemChain — but ONLY when a downstream
+// auto-gated step actually consumes it, so the last/unread step gets no stray
+// mission-bit token. skill_check checkPassFlag is always emitted (it carries no
+// inventory token, and documents the pass result for the Audit tab).
+function edArcProducerFlag(step, i, arcId) {
+  if (step && step.type === 'skill_check')
+    return (step.checkPassFlag && String(step.checkPassFlag).trim()) || `${arcId}_${i + 1}_passed`;
+  return `${arcId}_${i + 1}_done`;
+}
+function edArcEffectiveGate(step, i) {
+  return (step && step.gateMode) || (i === 0 ? 'none' : 'auto');
+}
+function buildArcQuests(arcDraft) {
+  const draft  = arcDraft || {};
+  const arcId  = (draft.arcId || '').trim();
+  const steps  = Array.isArray(draft.steps) ? draft.steps : [];
+  const sval   = v => (v == null ? '' : String(v).trim());
+  return steps.map((step, i) => {
+    const n = i + 1;
+    const type = sval(step.type) || 'side';
+    const q = { id: `${arcId}_${n}`, type };
+    if (sval(step.title))      q.title = sval(step.title);
+    if (sval(draft.arcLabel))  q.arc   = sval(draft.arcLabel);
+    const node = sval(step.activateNode) || sval(draft.activateNode);
+    if (node)                  q.activateNode = node;
+    if (sval(step.desc))       q.desc = sval(step.desc);
+    if (sval(step.hint))       q.hint = sval(step.hint);
+
+    // ── chain wiring ──
+    const gate = edArcEffectiveGate(step, i);
+    if (gate === 'manual') {
+      if (sval(step.activateCond)) q.activateCond = sval(step.activateCond);
+    } else if (gate === 'auto' && i > 0) {
+      // Read the previous step's producer flag. Emit an arrow-fn SOURCE string —
+      // never a bare identifier, or the save-abort guard (wbapi-core.js) fires.
+      q.activateCond = `(s)=>s.${edArcProducerFlag(steps[i - 1], i - 1, arcId)}`;
+    } // 'none' → no activateCond
+
+    // ── type-specific fields ──
+    if (type === 'skill_check') {
+      if (sval(step.checkStat))  q.checkStat  = sval(step.checkStat);
+      if (sval(step.checkSkill)) q.checkSkill = sval(step.checkSkill);
+      if (sval(step.checkDC) !== '')  q.checkDC  = +step.checkDC;
+      if (sval(step.xpAward) !== '')  q.xpAward  = +step.xpAward;
+      if (sval(step.onPass))     q.onPass = sval(step.onPass);
+      if (sval(step.onFail))     q.onFail = sval(step.onFail);
+      q.checkPassFlag = edArcProducerFlag(step, i, arcId);    // always (no token, documents result)
+    } else {
+      const items = sval(step.completeItems);
+      if (items) q.completeItems = items.split(',').map(s => s.trim()).filter(Boolean);
+      const tmk = sval(step.targetMonsterKeys);
+      if (tmk) q.targetMonsterKeys = tmk.split(',').map(s => s.trim()).filter(Boolean);
+      const kg = sval(step.killGoals);
+      if (kg) q.killGoals = kg.split('\n').map(l => l.trim()).filter(Boolean).map(l => {
+        const [key, need, label] = l.split(':').map(x => x.trim());
+        return { key, need: +need || 1, label: label || key };
+      });
+      if (sval(step.completeFn)) q.completeFn = sval(step.completeFn);
+      if (sval(step.passText))   q.passText   = sval(step.passText);
+    }
+
+    // ── itemChain: author steps + (non-skill) producer flag iff consumed downstream ──
+    let chain = parseItemChainText(sval(step.itemChain));
+    if (type !== 'skill_check') {
+      const next = steps[i + 1];
+      const consumed = next && edArcEffectiveGate(next, i + 1) === 'auto';
+      if (consumed) {
+        const flag = edArcProducerFlag(step, i, arcId);
+        if (!chain.some(c => c.action === 'grantBit' && c.flag === flag))
+          chain = chain.concat([{ action: 'grantBit', flag }]);
+      }
+    }
+    if (chain.length) q.itemChain = chain;
+    return q;
+  });
+}
+window.buildArcQuests = buildArcQuests;   // bridge for tests + the Inc 3 tab UI
+
 function edBuildQuestObj() {
   const type = edVal('ed-type');
   const q = {};

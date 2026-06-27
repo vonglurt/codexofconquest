@@ -60,7 +60,7 @@ The draft is the single source of truth; **Build Chain** (§4) compiles it into 
     - Step *k* gets `activateCond: (s) => s.<prevflag>` — emitted as a real arrow-function source string (the Audit guard at wbapi-core.js:1195 rejects bare-identifier activateConds, so we MUST emit `(s)=>s.flag`, never the bare name).
   - `manual`: author supplied their own `activateCond` / flag — passed through untouched.
   - `none`: step 1, or a parallel step — no `activateCond`.
-- **producer flag is always set**: skill_check → ensure `checkPassFlag`; non-skill step → append a `grantBit|<arcId>_<n>_done` to its `itemChain` (reuses §EDITOR-01-D's runtime — the bit is what the next step reads). This is why §EDITOR-02 *depends on* §EDITOR-01-D being shipped: non-skill steps chain through itemChain `grantBit`/flags rather than `checkPassFlag`.
+- **producer flag** (what the next step reads): skill_check → `checkPassFlag` (auto `<arcId>_<n>_passed`), **always emitted** (it carries no inventory token and documents the result for the Audit tab); non-skill step → `<arcId>_<n>_done`, materialised by appending a `grantBit` to its `itemChain` (reuses §EDITOR-01-D's runtime). **Refinement (impl):** the non-skill `grantBit` is appended **only when a downstream auto-gated step actually consumes it** — so the last/unread step gets no stray mission-bit token. This is why §EDITOR-02 *depends on* §EDITOR-01-D being shipped: non-skill steps chain through itemChain `grantBit`/flags rather than `checkPassFlag`.
 - Per-step `itemChain` is parsed with the shared `parseItemChainText` codec (window-bridged, worldbuilder.html:9094) — identical grammar to the Quest Creator.
 
 The compile is **pure** (no I/O) so it's unit-testable head-lessly and drives both Preview and POST.
