@@ -118,6 +118,54 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02)', () =>
     expect(qs2[1].activateCond).toBe('(s)=>s.customFlag');
   });
 
+  // ── Inc 3 — the tab UI: fill a 2-step arc, Build Chain, inspect the preview ──
+  test('Mission tab: Build Chain renders the resolved chain + connector flag', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    await page.evaluate(() => window.switchTab('mission'));
+    // Arc header + the seeded step #1 (defaults to type "side").
+    await page.fill('#mb-arcId', 'quest_demo');
+    await page.fill('#mb-arcLabel', 'Demo arc');
+    await page.fill('#mb-node', 'BMA');
+    await page.fill('#mb-steps .mb-step:nth-child(1) .mb-title', 'Fetch the key');
+    // Add step #2 as a skill_check that auto-gates on step #1.
+    await page.click('#mb-add');
+    await page.selectOption('#mb-steps .mb-step:nth-child(2) .mb-type', 'skill_check');
+    await page.fill('#mb-steps .mb-step:nth-child(2) .mb-title', 'Open the door');
+    await page.fill('#mb-steps .mb-step:nth-child(2) .mb-dc', '13');
+
+    // Collected draft mirrors the DOM.
+    const draft = await page.evaluate(() => window.__mbCollectDraft());
+    expect(draft.arcId).toBe('quest_demo');
+    expect(draft.steps).toHaveLength(2);
+    expect(draft.steps[1].type).toBe('skill_check');
+
+    await page.click('#mb-build');
+    // Two chain-link rows, one connector that names step 1's producer flag.
+    await expect(page.locator('#mb-preview .chain-link')).toHaveCount(2);
+    await expect(page.locator('#mb-preview')).toContainText('quest_demo_1');
+    await expect(page.locator('#mb-preview')).toContainText('quest_demo_2');
+    await expect(page.locator('#mb-preview')).toContainText('reads');
+    await expect(page.locator('#mb-preview')).toContainText('quest_demo_1_done');
+
+    // Compiled output is retrievable; step 2 auto-gates on step 1's done flag.
+    const compiled = await page.evaluate(() => window.__mbCompiled());
+    expect(compiled[1].activateCond).toBe('(s)=>s.quest_demo_1_done');
+    // The POST All button exists (its enable/disable wiring lands in Inc 4).
+    await expect(page.locator('#mb-post')).toHaveCount(1);
+  });
+
+  test('Mission tab: removing a step renumbers the rows', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    await page.evaluate(() => window.switchTab('mission'));
+    await page.click('#mb-add');               // now 2 steps (1 seeded + 1)
+    await page.click('#mb-add');               // 3 steps
+    await expect(page.locator('#mb-steps .mb-step')).toHaveCount(3);
+    await page.click('#mb-steps .mb-step:nth-child(2) .mb-rm');
+    await expect(page.locator('#mb-steps .mb-step')).toHaveCount(2);
+    // Numbers re-sequence 1..2.
+    expect(await page.locator('#mb-steps .mb-step:nth-child(2) .mb-num').textContent()).toBe('#2');
+  });
+
   test('empty / malformed drafts compile to an empty array (no throw)', async ({ page }) => {
     await page.goto('/worldbuilder.html');
     const r = await page.evaluate(() => ({

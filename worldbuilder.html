@@ -407,6 +407,7 @@ select.fi{appearance:none;}
   <div class="nav-tab" data-tab="wizard">✦ Wizard</div>
   <div class="nav-tab" data-tab="grid">🔲 Grid</div>
   <div class="nav-tab" data-tab="editor">✏ Editor</div>
+  <div class="nav-tab" data-tab="mission">⛓ Mission</div>
   <div class="nav-tab" data-tab="walk">🚶 Walk</div>
   <div class="nav-sep"></div>
   <div id="topbar-right">
@@ -9547,6 +9548,166 @@ document.addEventListener('wbapi:loaded', edPopulateNodes);
 edUpdateType();
 edUpdatePreview();
 
+})();
+
+/* ══════════════════════════════════════════════════════════════════════
+   §EDITOR-02 — Mission Builder Tab
+   Author a multi-quest arc in one form. Build Chain compiles the draft via
+   the pure window.buildArcQuests (auto-wiring the chain flags); Preview Chain
+   renders the resolved arc with per-step advise badges. POST All → Inc 4.
+   ══════════════════════════════════════════════════════════════════════ */
+(function(){
+  const MB = id => document.getElementById(id);
+  const sty = 'background:var(--bg3);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:4px 6px;font-family:inherit;font-size:12px;width:100%';
+
+  MB('tab-editor').insertAdjacentHTML('afterend', `
+<div class="panel" id="tab-mission">
+  <div style="display:flex;gap:6px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;align-items:center;background:var(--bg2)">
+    <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">⛓ Mission Builder</span>
+    <button class="btn sm" id="mb-add">+ Add Step</button>
+    <div style="margin-left:auto;display:flex;gap:5px">
+      <button class="btn primary sm" id="mb-build">⛓ Build Chain</button>
+      <button class="btn primary sm" id="mb-post" disabled title="Lands in §EDITOR-02 Inc 4">POST All</button>
+    </div>
+  </div>
+  <div style="display:flex;flex:1;overflow:hidden">
+    <div style="width:540px;flex-shrink:0;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;border-right:1px solid var(--border)">
+      <div class="ed-section">
+        <div class="ed-shd">Arc</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div class="fg" style="flex:0 0 170px"><div class="fl">Arc ID (id prefix)</div><input class="fi" id="mb-arcId" placeholder="quest_yael"></div>
+          <div class="fg" style="flex:1 1 150px"><div class="fl">Arc label (q.arc)</div><input class="fi" id="mb-arcLabel" placeholder="Yael romance"></div>
+          <div class="fg" style="flex:0 0 110px"><div class="fl">Default node</div><input class="fi" id="mb-node" placeholder="BRK"></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">Steps become <code>&lt;arcId&gt;_1, _2, …</code>; each auto-step gates on the previous step's completion flag.</div>
+      </div>
+      <div id="mb-steps" style="display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
+      <div class="ed-shd">Preview Chain</div>
+      <div id="mb-preview" style="font-size:11px;color:var(--muted)">Add steps, then ⛓ Build Chain to resolve the arc.</div>
+      <div id="mb-result" class="op-result" style="display:none"></div>
+    </div>
+  </div>
+</div>`);
+
+  // ── A step row. Fields map 1:1 onto a buildArcQuests Step. ──
+  function mbStepRow() {
+    const row = document.createElement('div');
+    row.className = 'mb-step';
+    row.style.cssText = 'background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:8px;display:flex;flex-direction:column;gap:6px';
+    row.innerHTML = `
+      <div style="display:flex;gap:6px;align-items:center">
+        <span class="mb-num" style="font-size:11px;font-weight:700;color:var(--accent)">#</span>
+        <select class="mb-type" style="${sty};flex:0 0 120px">
+          <option value="side">side</option><option value="skill_check">skill_check</option>
+          <option value="main">main</option><option value="epic">epic</option>
+        </select>
+        <input class="mb-title" placeholder="Step title" style="${sty};flex:1">
+        <button class="btn sm mb-rm" title="Remove step">✕</button>
+      </div>
+      <div style="display:flex;gap:6px">
+        <input class="mb-node" placeholder="node override" style="${sty};flex:0 0 130px">
+        <select class="mb-gate" style="${sty};flex:0 0 110px" title="How this step activates">
+          <option value="auto">gate: auto</option><option value="none">gate: none</option><option value="manual">gate: manual</option>
+        </select>
+        <input class="mb-cond" placeholder="(s)=>s.flag" style="${sty};flex:1;display:none">
+      </div>
+      <div class="mb-skill" style="display:none;gap:6px;flex-wrap:wrap">
+        <input class="mb-stat"  placeholder="stat (cha)"  style="${sty};flex:0 0 90px">
+        <input class="mb-skill-name" placeholder="skill (persuasion)" style="${sty};flex:1 1 120px">
+        <input class="mb-dc" type="number" placeholder="DC" style="${sty};flex:0 0 70px">
+        <input class="mb-xp" type="number" placeholder="XP" style="${sty};flex:0 0 70px">
+        <input class="mb-passflag" placeholder="checkPassFlag (auto)" style="${sty};flex:1 1 140px">
+      </div>
+      <div class="mb-side" style="display:flex;gap:6px;flex-wrap:wrap">
+        <input class="mb-items" placeholder="completeItems (csv)" style="${sty};flex:1 1 160px">
+        <textarea class="mb-kills" rows="1" placeholder="killGoals — key:need:label per line" style="${sty};flex:1 1 160px"></textarea>
+      </div>
+      <textarea class="mb-chain" rows="1" placeholder="itemChain — grant|name|icon… · take|name|all? · grantBit|flag|label · takeBit|flag" style="${sty}"></textarea>`;
+    // type → show skill vs side block
+    const typeSel = row.querySelector('.mb-type');
+    const sync = () => {
+      const isSkill = typeSel.value === 'skill_check';
+      row.querySelector('.mb-skill').style.display = isSkill ? 'flex' : 'none';
+      row.querySelector('.mb-side').style.display  = isSkill ? 'none' : 'flex';
+    };
+    typeSel.addEventListener('change', sync); sync();
+    // gate manual → reveal activateCond input
+    const gateSel = row.querySelector('.mb-gate');
+    gateSel.addEventListener('change', () => {
+      row.querySelector('.mb-cond').style.display = gateSel.value === 'manual' ? '' : 'none';
+    });
+    row.querySelector('.mb-rm').addEventListener('click', () => { row.remove(); mbRenumber(); });
+    return row;
+  }
+  function mbRenumber() {
+    [...MB('mb-steps').children].forEach((r, i) => { r.querySelector('.mb-num').textContent = '#' + (i + 1); });
+  }
+  function mbAddStep() { MB('mb-steps').appendChild(mbStepRow()); mbRenumber(); }
+
+  // ── Read the DOM into a buildArcQuests draft. ──
+  function mbCollectDraft() {
+    const v = (row, sel) => { const e = row.querySelector(sel); return e ? e.value.trim() : ''; };
+    return {
+      arcId:        MB('mb-arcId').value.trim(),
+      arcLabel:     MB('mb-arcLabel').value.trim(),
+      activateNode: MB('mb-node').value.trim(),
+      steps: [...MB('mb-steps').children].map(row => ({
+        type:         v(row, '.mb-type'),
+        title:        v(row, '.mb-title'),
+        activateNode: v(row, '.mb-node'),
+        gateMode:     v(row, '.mb-gate'),
+        activateCond: v(row, '.mb-cond'),
+        checkStat:    v(row, '.mb-stat'),
+        checkSkill:   v(row, '.mb-skill-name'),
+        checkDC:      v(row, '.mb-dc'),
+        xpAward:      v(row, '.mb-xp'),
+        checkPassFlag:v(row, '.mb-passflag'),
+        completeItems:v(row, '.mb-items'),
+        killGoals:    v(row, '.mb-kills'),
+        itemChain:    v(row, '.mb-chain'),
+      })),
+    };
+  }
+  window.__mbCollectDraft = mbCollectDraft;   // test hook
+
+  // ── Build Chain → compile + render preview. Returns the compiled quests. ──
+  let mbCompiled = [];
+  function mbBuildAndPreview() {
+    const draft = mbCollectDraft();
+    if (!draft.arcId) { MB('mb-preview').innerHTML = '<span style="color:var(--red)">Set an Arc ID first.</span>'; return []; }
+    const quests = window.buildArcQuests(draft);
+    mbCompiled = quests;
+    if (!quests.length) { MB('mb-preview').innerHTML = '<span style="color:var(--muted)">No steps yet.</span>'; MB('mb-post').disabled = true; return []; }
+    let anyError = false, html = '';
+    quests.forEach((q, i) => {
+      const adv = WBAPI.loaded ? WBAPI.quests.advise(q) : { ok: true, errors: [], warnings: [] };
+      if (!adv.ok) anyError = true;
+      const badge = !WBAPI.loaded ? '<span style="color:var(--muted);font-size:10px">load a file to validate</span>'
+        : adv.errors.length ? `<span style="color:var(--red);font-size:10px">🔴 ${adv.errors.join('; ')}</span>`
+        : adv.warnings.length ? `<span style="color:var(--yellow);font-size:10px">🟡 ${adv.warnings.join('; ')}</span>`
+        : '<span style="color:var(--green);font-size:10px">✓ ok</span>';
+      const reads = (q.activateCond || '').match(/s\.([A-Za-z0-9_]+)/);
+      if (i > 0) html += `<div style="font-size:10px;color:var(--muted);margin:1px 0 1px 10px">↓ ${reads ? 'reads <code>' + reads[1] + '</code>' : '(no gate)'}</div>`;
+      html += `<div class="chain-link" style="cursor:default">
+        <span style="color:var(--purple)">${q.id}</span>
+        <span style="color:var(--muted)"> — </span>${q.title || '<em>(untitled)</em>'}
+        <span style="background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:0 4px;font-size:9px;margin-left:4px">${q.type}</span>
+        <span style="float:right">${badge}</span></div>`;
+    });
+    MB('mb-preview').innerHTML = html;
+    MB('mb-post').disabled = anyError || !WBAPI.loaded;
+    MB('mb-post').title = anyError ? 'Fix the 🔴 errors first' : !WBAPI.loaded ? 'Load a game file first' : 'POST All — Inc 4';
+    return quests;
+  }
+  window.__mbCompiled = () => mbCompiled;     // test hook
+
+  MB('mb-add').addEventListener('click', mbAddStep);
+  MB('mb-build').addEventListener('click', mbBuildAndPreview);
+
+  // Seed one step so the tab is usable immediately.
+  mbAddStep();
 })();
 
 /* ══════════════════════════════════════════════════════════════════════
