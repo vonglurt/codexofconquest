@@ -2636,6 +2636,10 @@ function getEffNode(code) {
 function renderMap() {
   if (!WBAPI.loaded) return;
   const S = mapScale, coords = WBAPI.nodeCoords, nodes = WBAPI.nodeMap;
+  // §WALK-G: the #map-act-filter also dims the canvas (not just the list) — same
+  // act-default (||1) as renderMapNodeList so the two views agree.
+  const actFilter = $('map-act-filter').value;
+  const inAct = code => !actFilter || String((nodes[code]?.act)||1)===actFilter;
   let maxR=0, maxC=0;
   for (const p of Object.values(coords)) { maxR=Math.max(maxR,p.r); maxC=Math.max(maxC,p.c); }
   let vi=0;
@@ -2659,7 +2663,7 @@ function renderMap() {
       const key=[code,nb].sort().join('|');
       if(drawn.has(key)) continue; drawn.add(key);
       const np=coords[nb];
-      ctx.beginPath(); ctx.strokeStyle='#2d333b'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.strokeStyle=(inAct(code)&&inAct(nb))?'#2d333b':'#191f26'; ctx.lineWidth=1.5;
       ctx.moveTo(p.c*S,p.r*S); ctx.lineTo(np.c*S,np.r*S); ctx.stroke();
     }
   }
@@ -2668,6 +2672,9 @@ function renderMap() {
     const p=coords[code]; if(!p) continue;
     if(DIFF.deleted.has(code)) continue;
     const cx=p.c*S, cy=p.r*S;
+    if(!inAct(code)){ // §WALK-G: out-of-act node → faded grey dot (keeps spatial context, no markers/label)
+      ctx.beginPath(); ctx.arc(cx,cy,3,0,Math.PI*2); ctx.fillStyle='#2d333b'; ctx.fill(); continue;
+    }
     const act=node.act||0;
     const base=mapColorMode==='terrain' ? terrainColor(node.name) : (ACT_COLORS[act]||'#8b949e');
     const ds=DIFF.status(code), isSel=(code===mapSelected);
@@ -2968,7 +2975,7 @@ function renderMapNodeList(){
   }
 }
 $('map-search').addEventListener('input',renderMapNodeList);
-$('map-act-filter').addEventListener('change',renderMapNodeList);
+$('map-act-filter').addEventListener('change',()=>{ renderMapNodeList(); renderMap(); }); // §WALK-G: filter dims canvas too
 $('map-color-mode').addEventListener('change',e=>{ mapColorMode=e.target.value; renderMap(); });
 
 // ── Diff panel ──

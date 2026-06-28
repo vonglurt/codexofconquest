@@ -49,4 +49,36 @@ test.describe('Map color-by mode (§WALK-G)', () => {
     // Terrain mode repaints the dot a terrain-hash color → the act green is gone.
     expect(res.terrain).not.toContain('63,185,80');
   });
+
+  test('the #map-act-filter dims out-of-act dots on the canvas', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    const res = await page.evaluate(() => {
+      // Two nodes, different acts, far apart so their discs never overlap.
+      WBAPI.loaded = true;
+      WBAPI.nodeMap = {
+        AAA: { label: 'Act2', name: 'forest', act: 2 },   // ACT_COLORS[2]=#3fb950
+        BBB: { label: 'Act5', name: 'desert', act: 5 },   // ACT_COLORS[5]=#bc8cff
+      };
+      WBAPI.nodeCoords = { AAA: { r: 3, c: 3 }, BBB: { r: 3, c: 9 } };
+      const sel = document.getElementById('map-color-mode');
+      sel.value = 'act'; sel.dispatchEvent(new Event('change'));
+      const ctx = document.getElementById('map-canvas').getContext('2d');
+      const S = 18;
+      const disc = (r, c) => {
+        const img = ctx.getImageData(c * S - 9, r * S - 9, 18, 18).data, s = new Set();
+        for (let i = 0; i < img.length; i += 4) s.add(`${img[i]},${img[i + 1]},${img[i + 2]}`);
+        return [...s];
+      };
+      const af = document.getElementById('map-act-filter');
+      const at = (act) => { af.value = act; af.dispatchEvent(new Event('change')); return { aaa: disc(3, 3), bbb: disc(3, 9) }; };
+      return { none: at(''), act2: at('2') };
+    });
+    // No filter: both dots carry their own act color.
+    expect(res.none.aaa).toContain('63,185,80');     // #3fb950
+    expect(res.none.bbb).toContain('188,140,255');   // #bc8cff
+    // Filter to Act II: AAA stays act-green, BBB is dimmed to grey (#2d333b=45,51,59).
+    expect(res.act2.aaa).toContain('63,185,80');
+    expect(res.act2.bbb).not.toContain('188,140,255');
+    expect(res.act2.bbb).toContain('45,51,59');
+  });
 });
