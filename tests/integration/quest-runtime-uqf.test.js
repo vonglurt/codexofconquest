@@ -580,7 +580,8 @@ test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () =
   test('a non-retryable FAIL locks the quest and grants no croneMark or xp', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
-      S_story.abilityScores = { str:1, dex:1, con:1, int:1, wis:1, cha:1 }; // any DC fails
+      // deeply negative score ⇒ even a natural 20 lands far below the DC (deterministic fail)
+      S_story.abilityScores = { str:-100, dex:-100, con:-100, int:-100, wis:-100, cha:-100 };
       S_story.level = 1; S_story.xp = 0; S_story.croneMarks = 0; S_story.day = 1;
       S_story.quests = { quest_wane_03:'active' };
       _rollCeremonia('quest_wane_03');
@@ -640,5 +641,108 @@ test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () =
       return res;
     });
     expect(r).toMatchObject({ empty:false, active:false, failed:false, done:true, complete:true });
+  });
+});
+
+// ── §ARCH-01 Wave 1 — Whisper's Crown arc (quest_whisper_01..06) ──
+//
+// Second Wave-1 crone arc. Five skill_checks (01–04, 06) follow the wane pattern
+// (xpAward→reward, _addCroneMark→_legacy_fn, questsAttempted chain gate). The
+// sixth member, quest_whisper_05, is a type:'side' quest: its `completeFn`
+// (`!!whisperSaintSeen`) becomes a declarative `completion:{flags}` gate while
+// its `onComplete` (sets the flag + inn-kindness) is kept verbatim — it fires
+// from storyCheckQuests for every schema, so no bit migration is needed for it.
+
+test.describe('§ARCH-01 Wave 1 — Whisper\'s Crown arc (quest_whisper_01..06)', () => {
+  const SKILL = ['quest_whisper_01','quest_whisper_02','quest_whisper_03','quest_whisper_04','quest_whisper_06'];
+
+  test('five skill_checks + the side quest all validate as UQF', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((skill) => {
+      const sc = skill.map(id => {
+        const q = QUEST_DB[id]; const bit = q.bits[0];
+        return { id, schema:q.schema, valid:validateQuest(q).valid, bit:bit.kind, stat:bit.stat, dc:bit.dc,
+                 xp:(bit.onPass||[]).find(b=>b.kind==='reward').xp, hasLegacy:(bit.onPass||[]).some(b=>b.kind==='_legacy_fn') };
+      });
+      const side = QUEST_DB.quest_whisper_05;
+      return { sc, side:{ schema:side.schema, valid:validateQuest(side).valid, completion:!!(side.completion&&side.completion.flags), bits:side.bits.length, onComplete:typeof side.onComplete } };
+    }, SKILL);
+    expect(r.sc.every(x => x.schema==='UQF-1.0' && x.valid && x.bit==='skill_check' && x.hasLegacy)).toBe(true);
+    expect(r.sc).toMatchObject([
+      { id:'quest_whisper_01', stat:'WIS', dc:12, xp:150 },
+      { id:'quest_whisper_02', stat:'INT', dc:13, xp:175 },
+      { id:'quest_whisper_03', stat:'WIS', dc:12, xp:175 },
+      { id:'quest_whisper_04', stat:'WIS', dc:14, xp:200 },
+      { id:'quest_whisper_06', stat:'CHA', dc:13, xp:225 },
+    ]);
+    // side quest: declarative completion gate, empty bits, onComplete kept as a live hook
+    expect(r.side).toMatchObject({ schema:'UQF-1.0', valid:true, completion:true, bits:0, onComplete:'function' });
+  });
+
+  test('each skill_check PASS marks done, grants exact xp, runs _addCroneMark', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const got = await page.evaluate((skill) => {
+      const xp = { quest_whisper_01:150, quest_whisper_02:175, quest_whisper_03:175, quest_whisper_04:200, quest_whisper_06:225 };
+      const out = {};
+      for (const id of skill) {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 1000000; S_story.day = 1; S_story.croneMarks = 0;
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        out[id] = { status:S_story.quests[id], dxp:S_story.xp - 1000000, croneMarks:S_story.croneMarks };
+      }
+      return { out, xp };
+    }, SKILL);
+    for (const id of SKILL) {
+      expect(got.out[id].status, id).toBe('done');
+      expect(got.out[id].dxp, id).toBe(got.xp[id]);
+      expect(got.out[id].croneMarks, id).toBe(1);
+    }
+  });
+
+  test('whisper_06 PASS runs its compound closure (croneMark + whisperCrownComplete)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { cha:40 };
+      S_story.level = 20; S_story.xp = 1000000; S_story.croneMarks = 0; S_story.day = 1;
+      S_story.quests = { quest_whisper_01:'complete', quest_whisper_02:'complete', quest_whisper_03:'complete',
+                         quest_whisper_04:'complete', quest_whisper_05:'complete', quest_whisper_06:'active' };
+      delete S_story.whisperCrownComplete;
+      _rollCeremonia('quest_whisper_06');
+      return { status:S_story.quests.quest_whisper_06, crown:S_story.whisperCrownComplete, croneMarks:S_story.croneMarks };
+    });
+    expect(r.status).toBe('done');
+    expect(r.croneMarks).toBe(1);
+    expect(r.crown).toBe(true);
+  });
+
+  test('whisper_05 (side): questsAttempted gate, then declarative completion via whisperSaintSeen + onComplete hook', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // gate: needs whisper_01 to have a status
+      S_story.quests = {}; delete S_story.whisperSaintSeen;
+      const blocked = QuestRuntime.canActivate('quest_whisper_05');
+      S_story.quests = { quest_whisper_01:'active' };
+      const open = QuestRuntime.canActivate('quest_whisper_05');
+      // completion gate is unmet until the witness flag is set
+      const incompletePre = QuestRuntime.canComplete('quest_whisper_05');
+      // drive it through storyCheckQuests: activate, then complete once flag is set
+      S_story.quests = { quest_whisper_01:'active', quest_whisper_05:'active' };
+      S_story.innmotherKindness = 0;
+      storyCheckQuests({ code:'__none' });               // flag still false ⇒ stays active
+      const stillActive = S_story.quests.quest_whisper_05;
+      S_story.whisperSaintSeen = true;
+      const canCompleteNow = QuestRuntime.canComplete('quest_whisper_05');
+      storyCheckQuests({ code:'__none' });               // now completes ⇒ onComplete fires
+      return { blocked, open, incompletePre, stillActive, canCompleteNow,
+               status:S_story.quests.quest_whisper_05, innKindness:S_story.innmotherKindness };
+    });
+    expect(r.blocked).toBe(false);
+    expect(r.open).toBe(true);
+    expect(r.incompletePre).toBe(false);
+    expect(r.stillActive).toBe('active');
+    expect(r.canCompleteNow).toBe(true);
+    expect(r.status).toBe('complete');
+    expect(r.innKindness).toBeGreaterThanOrEqual(1);   // onComplete's _innKindness(1) ran
   });
 });

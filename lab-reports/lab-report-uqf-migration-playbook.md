@@ -20,7 +20,8 @@ formats to Universal Quest Format (UQF v1.0)
 | Phase 3a | First quest migrated (`quest_wis_01`) + `mission_bit` bit kind + `passText` parity | `d7505ff` |
 | Phase 3b | `quest_wis_02`–`05` migrated (rest of the skill-checks) | `014fd00` |
 | Phase 3c | Declarative completion path (`canComplete`) + `wis_00/06/07` migrated → arc 100 % UQF | `fcd1e37` |
-| Wave 1a | Wane's Crown (`quest_wane_01`–`06`) + `gate.questsAttempted`/`questsDone` terms; `onPass` closure preserved via `_legacy_fn` | _this commit_ |
+| Wave 1a | Wane's Crown (`quest_wane_01`–`06`) + `gate.questsAttempted`/`questsDone` terms; `onPass` closure preserved via `_legacy_fn` | `24becb6` |
+| Wave 1b | Whisper's Crown (`quest_whisper_01`–`06`); first Wave-1 `side` quest (`whisper_05`: `completeFn`→`completion` gate, `onComplete` kept as live hook); flaky-FAIL-test fix | _this commit_ |
 
 **Proven properties:**
 - **Behavior parity** — every migrated quest produces byte-identical state
@@ -117,6 +118,15 @@ to run per quest (and per arc):
     a single shared helper. (Order matters: emit `reward` before `_legacy_fn` to
     mirror the legacy `xpAward`-then-`onPass()` sequence.)
 
+> **§C note — `side`-quest `onComplete` stays a live hook (for now).**
+> `storyCheckQuests` calls `q.onComplete()` on completion for **every** schema
+> (it is not behind a `schema` guard), so a migrated `side` quest keeps its
+> `onComplete` verbatim — convert only `completeFn`→`completion` gate and
+> `activateCond`→`gate`. Folding `onComplete` effects into a *completion bit
+> chain* needs a UQF completion-bit execution point that doesn't exist yet
+> (a Wave 3 engine task). Until then, `onComplete` is the legitimate hook, same
+> status as the per-id hardcoded completion effects in `storyCheckQuests`.
+
 ### D. Verify & land (per quest/arc)
 12. **Syntax-check** the inline script (vm parse) after each edit.
 13. **Write parity tests** (section 3).
@@ -134,8 +144,14 @@ game (`page.goto('/roll2hit-v3.html')`), and read **bare top-level globals**
 `storyCheckQuests`) inside `page.evaluate`.
 
 **Recurring techniques:**
-- **Determinism by DC**: a `dc:1` bit always passes, `dc:99` always fails — or
-  set `abilityScores` huge to force a pass at a real DC.
+- **Determinism by DC / ability**: a `dc:1` bit always passes, `dc:99` always
+  fails. When the DC is fixed by the quest (you can't lower it), force the
+  outcome via the ability score instead: a **huge** score (`{wis:40}`) guarantees
+  a pass; a **deeply negative** score (`{wis:-100}` ⇒ mod −55) guarantees a fail
+  even on a natural 20. **Do not** use a merely-low score like `1` (mod −5) for a
+  "fail" test against a low DC — a d20 of 16–20 can still clear it, and the test
+  flakes ~25 %. (Wave 1a shipped exactly this bug; caught + fixed in 1b. Verify
+  any roll-outcome test with `--repeat-each=3`.)
 - **Suppress level-up noise**: `S_story.level = 20` (so `_checkLevelUp` no-ops),
   high baseline `xp`/`gold`, then assert the **delta** — robust to the cumulative
   xp curve.
@@ -171,6 +187,7 @@ codemod** (the simple skill_checks are too numerous — ~2149 — to hand-edit).
 |------|--------|-------|----------------------------|
 | **0 ✅** | §WISDOM-01 pilot | 8 | proves skill_check + completion paths |
 | **1a ✅** | Wane's Crown (`quest_wane_01`–`06`) | 6 | full bit-chain transform; added `gate.questsAttempted`/`questsDone` chain terms; `onPass:()=>_addCroneMark()` preserved via `_legacy_fn`; `xpAward`→`reward`. |
+| **1b ✅** | Whisper's Crown (`quest_whisper_01`–`06`) | 6 | same pattern ×5 skill_checks; **first Wave-1 `side` quest** (`whisper_05`): `completeFn`→`completion:{flags}`, `onComplete` **kept verbatim** (fires from `storyCheckQuests` for any schema — see §C.note). |
 | **1** | skill-check arcs **with** `onPass` closures | **78** | full bit-chain transform (the wis/wane pattern). Remaining arcs: `whisper`(5), `glut`(5), `ceremonia_yael`(5), `1367_*`(4), `d0205`–`d0210`(15), `inn`(3), `spark`/`spark2`, `inquisitor`(3), `sea`, `sb`, `hunt`/`hunt2`, `bilge`, `alch`, `scar` + ~13 singletons (`basket_damascus`, `iodine`, `shore`, `forge`, `sunken`, `df`, `sk`, `lxvii67`, `guide_04`, `d0201_a5`/`d0204_a5`/`d0210_a5`). |
 | **2** | simple skill-checks (checkPassFlag/xpAward only) | **~2149** | **codemod, not hand-migration.** Mechanical rewrite `{checkAbility,checkLabel,checkDC,checkPassFlag,xpAward,goldAward}` → `schema+gate+bits:[{skill_check, onPass:[mission_bit?, reward?]}]`. Run in batches; parity-test each batch with the existing harness. The dominant chain gate `(quests['prev']||'')!==''` is already covered by `gate.questsAttempted`. |
 | **3** | `side` quests (completeFn) | 129 | declarative `completion` gates. Needs `item_check` gate term finalized; per-id hardcoded completion side-effects in `storyCheckQuests` move into completion bit chains. |
