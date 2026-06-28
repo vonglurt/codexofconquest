@@ -1,7 +1,19 @@
 # Lab Report — §EDITOR-01-D-FU (b): reward-ladder → itemChain migration
 
-**Status:** DESIGN LOCKED (Inc 1 — design only; no code changed this increment)
+**Status:** ✅ **CLOSED** (Inc 1 design → Inc 2 guard → Inc 3 b2a → Inc 4 b1 → **Inc 5 b2b**). 22 reward-ladder branches migrated (9 b2a + 13 b2b); the rest stay code by design (see §7 Residue). Item (a) (visual chain editor) was already CLOSED, so **§EDITOR-01-D-FU is fully closed.**
 **Date:** 2026-06-27
+
+## 7. Residue — what stays as code after (b) closes (LOCKED, by design)
+
+(b) is **partial extraction**: only the *inventory* ingredient moved into `itemChain`. Everything below is intentionally NOT migrated and remains in the `storyCheckQuests` ladder (or its quest object):
+
+- **`fishing_guide`** — the one "pure push", but its `readText` is `FISHING_GUIDE_TEXT`, a **const defined at line 24017, AFTER `QUEST_DB` (line 9373)**. Referencing it from a QUEST_DB data literal is a temporal-dead-zone error; inlining the long canonical text would duplicate a single-source string and risk divergence. **Stays code.** (Only a relocation of the const — out of this FU's scope — would let it migrate.)
+- **`tl_01`, `tl_03`** — dynamic/computed item `description` (concatenated from other state). Non-static; only a computed-effects layer could take them. **Stays code, forever under the static-itemChain model.**
+- **`wm_01`** — `Scholar Kings' Seal` removal is conditional (`!archiveLetterObtained`) AND count-limited to 3; a flat `take` can't express it. **Stays code** (effects-layer territory).
+- **19 no-inventory branches** (gold/favor/XP/flag only) + **16 message-only branches** — nothing for `itemChain` to model; these are the **§DATA-01-REVERTED effects-layer** candidates, explicitly out of scope (§3.5 scope fence).
+- **Per migrated branch (all 22 are PARTIAL):** gold/favor/XP, ability-score writes (`guide_06`/`scar_04` WIS), flag sets, NPC-favor/Dear-Friend calls, and the **verbatim narrative `msgs.push`** all stay as code; only the `inv.push`/`filter` left.
+
+**The larger lever remains §DATA-01-REVERTED** (a declarative effects layer) — it would subsume the 19 gold/favor branches, the 2 dynamic-item branches, and `wm_01`. (b) deliberately shrank the ladder without inventing a second gold/favor mechanism.
 **Scope:** §EDITOR-01-D-FU item **(b)** — mechanically extract the *inventory* operations from the 61-branch `if (id === 'quest_…')` reward ladder in `storyCheckQuests` (roll2hit-v3.html **25875–26094**) into the declarative `itemChain` quest field shipped in §EDITOR-01-D core. Item (a) — the visual chain editor — is **✅ CLOSED** (Inc 1–4) and is the authoring surface this migration feeds. Overlaps the deferred **§DATA-01-REVERTED** (`QUEST_EFFECTS`/`HOOKS` effects layer); §3.5 reconciles the boundary.
 
 This is a **runtime + data refactor** of roll2hit-v3.html. No worldbuilder/server change beyond the grant-grammar widening that (b1) shares with the codec + the §EDITOR-01-D-FU(a) widget schema.
