@@ -81,4 +81,26 @@ test.describe('Map color-by mode (§WALK-G)', () => {
     expect(res.act2.bbb).not.toContain('188,140,255');
     expect(res.act2.bbb).toContain('45,51,59');
   });
+
+  test('the compass rose is north-up (N above S, E right of W)', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    const r = await page.evaluate(() => {
+      const svg = document.getElementById('map-compass');
+      const lbl = c => svg.querySelector(`.mc-lbl.mc-${c}`) || [...svg.querySelectorAll('.mc-lbl')].find(t => t.textContent.trim() === c.toUpperCase());
+      const at = c => { const t = lbl(c); return { x: +t.getAttribute('x'), y: +t.getAttribute('y'), txt: t.textContent.trim() }; };
+      const N = at('n'), S = at('s'), E = at('e'), W = at('w');
+      return {
+        present: !!svg && svg.querySelectorAll('.mc-lbl').length === 4,
+        labels: [N.txt, S.txt, E.txt, W.txt].sort().join(''),
+        nAboveS: N.y < S.y,            // smaller y = higher on screen = north
+        eRightOfW: E.x > W.x,
+        overlay: getComputedStyle(svg).pointerEvents,
+      };
+    });
+    expect(r.present).toBe(true);
+    expect(r.labels).toBe('ENSW');    // exactly the four cardinals
+    expect(r.nAboveS).toBe(true);
+    expect(r.eRightOfW).toBe(true);
+    expect(r.overlay).toBe('none');   // never intercepts map clicks
+  });
 });
