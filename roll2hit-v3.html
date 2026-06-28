@@ -6234,11 +6234,17 @@ function _resolveQuestUQF(questId) {
   const modStr   = (roll.mod >= 0 ? '+' : '') + roll.mod;
   const iodineStr = roll.iodineBonus > 0 ? ' + Iodine(+' + roll.iodineBonus + ')' : '';
   const lmStr     = roll.lmAll > 0 ? ' + LakeMagic(+' + roll.lmAll + ')' : '';
+  // passText/failText (string or fn) ride in the card's dmg slot, matching the
+  // legacy resolver's presentation; the big narrative still comes from a
+  // narrative bit in onPass/onFail.
+  const _outText = pass ? (typeof q.passText === 'function' ? q.passText() : q.passText)
+                        : (typeof q.failText === 'function' ? q.failText() : q.failText);
   _appendStoryHcard({
     round: 'Day ' + (S_story.day || 1),
     actor: 'ROLL',
     formula: 'd20(' + roll.d20 + ') + ' + (sc.skill || sc.stat) + '(' + modStr + ') + Prof(+' + roll.prof + ')' + iodineStr + lmStr,
     outcome: roll.total + ' vs DC ' + sc.dc + ' — ' + (pass ? 'PASS ✓' : 'FAIL'),
+    dmg: _outText || undefined,
   });
   if (pass) {
     S_story.quests[questId] = 'done';
@@ -11877,25 +11883,28 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
 
-  quest_wis_01: { id:'quest_wis_01', type:'skill_check',
+  // §ARCH-01 Phase 3 — migrated legacy → UQF v1.0 (2026-06-28). Behavior parity:
+  // gate replaces activateCond; the skill_check bit's onPass chain replaces the
+  // closure — mission_bit grants the wisPage1_masks token+flag exactly as the
+  // legacy _grantMissionBit(checkPassFlag) did, reward applies +150gp/+250xp and
+  // the knowledge entry, narrative carries the verbatim storyMsg.
+  quest_wis_01: { id:'quest_wis_01', schema:'UQF-1.0', type:'skill_check',
     title:'Mask Check',
     desc:'Ardley W1 — The Law of Role-playing: "Everyone wears a social mask. What you look for is not the lie beneath — it is the gap. The moment when the performance requires more effort than usual. That effort is the tell." Roen: "There is a cloth merchant at the Tilbury dock who holds bolts of fabric the way my grandfather held a lamb — like something that could run." Silas Vance, third berth. His hands are rope-calloused, not bale-calloused. WIS Insight DC 13: read the gap.',
     hint:'Read Silas Vance\'s hands at the Tilbury docks. WIS Insight DC 13.',
-    activateNode:'LCY', activateCond:() => !!S_story.wisHookReceived,
-    checkStat:'wis', checkSkill:'Insight', checkDC:13, retryable:false,
-    checkPassFlag:'wisPage1_masks',
-    onPass:() => {
-      S_story.wisPage1_masks = true;
-      S_story.gold = (S_story.gold||0) + 150;
-      S_story.xp = (S_story.xp||0) + 250;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Ardley W1 — The Mask: Silas Vance, cloth merchant at Tilbury, is a former ship rigger. Rope callousing on the line-grip fingers, not palm-wide bale callousing. His grip on the bolt of fabric corrects twice — the natural motion of a man who learned to hold rope. When identified he gave up his re-export ledger willingly. He said: "I was waiting for someone to notice." Ardley was right: the tell is in the effort the performance costs, not in the performance itself.');
-      storyMsg('👁️ Vance\'s hands. The callous on a bale handler runs palm-wide; on a rigger it runs along the line-grip fingers. His grip on the bolt of cloth corrects twice in one handling.\n\nYou ask about the eastern consignments. Nothing about his hands.\n\nVance: "I wondered when someone would look at my hands."\n\nHe hands over the re-export ledger. Quiet scheme, not worth stopping. He knows three discount routes through Saltwick. Ardley\'s W1 fragment collected. Knowledge entry added. +150gp, +250 XP.');
-    },
-    onFail:() => {
-      storyMsg('Vance\'s hands are calloused from occupational work. The grain pattern is specific but the reading angle is wrong. He catches you looking and straightens his display cloth.');
-    },
-    xpAward:0,
+    activateNode:'LCY', gate:{ flags:['wisHookReceived'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Insight', dc:13,
+        onPass:[
+          { kind:'mission_bit', flag:'wisPage1_masks' },
+          { kind:'reward', gold:150, xp:250, knowledge:'Ardley W1 — The Mask: Silas Vance, cloth merchant at Tilbury, is a former ship rigger. Rope callousing on the line-grip fingers, not palm-wide bale callousing. His grip on the bolt of fabric corrects twice — the natural motion of a man who learned to hold rope. When identified he gave up his re-export ledger willingly. He said: "I was waiting for someone to notice." Ardley was right: the tell is in the effort the performance costs, not in the performance itself.' },
+          { kind:'narrative', msg:'👁️ Vance\'s hands. The callous on a bale handler runs palm-wide; on a rigger it runs along the line-grip fingers. His grip on the bolt of cloth corrects twice in one handling.\n\nYou ask about the eastern consignments. Nothing about his hands.\n\nVance: "I wondered when someone would look at my hands."\n\nHe hands over the re-export ledger. Quiet scheme, not worth stopping. He knows three discount routes through Saltwick. Ardley\'s W1 fragment collected. Knowledge entry added. +150gp, +250 XP.' },
+        ],
+        onFail:[
+          { kind:'narrative', msg:'Vance\'s hands are calloused from occupational work. The grain pattern is specific but the reading angle is wrong. He catches you looking and straightens his display cloth.' },
+        ],
+      },
+    ],
     disposition:'"I was waiting for someone to notice." — Silas Vance, third berth',
     passText:"I was waiting for someone to notice. Silas Vance rope-calloused hands have been read. The gap is found.",
     failText:"Silas Vance at the Tilbury third berth has not been read yet. WIS Insight DC 13 required.",
@@ -20157,6 +20166,8 @@ const BIT_CONTRACTS = {
     validate: b => typeof b.name === 'string' && b.name.length > 0 },
   item_check:  { required:['name'],              optional:['count'],   // lab Open-Q #3
     validate: b => typeof b.name === 'string' && b.name.length > 0 },
+  mission_bit: { required:['flag'],              optional:['label'],   // §MBIT-01 token grant
+    validate: b => typeof b.flag === 'string' && b.flag.length > 0 },
   unlock:      { required:[],                    optional:['quests','npcs'],
     validate: b => ((b.quests||[]).length + (b.npcs||[]).length) > 0 },
   choice:      { required:['prompt','options'],  optional:[],
@@ -20273,6 +20284,7 @@ const QuestRuntime = {
     combat(bit) { if (typeof storyPreBattle === 'function') storyPreBattle({ ...NODE_MAP[S_story.currentCode], code: bit.nodeCode || bit.key, battle: { label: bit.label, key: bit.key, count: bit.count || 1 } }); },
     narrative(bit) { if (bit.msg && typeof storyMsg === 'function') storyMsg(bit.msg); /* template path: Phase 2 renderNamedTemplate */ },
     item_remove(bit) { const inv = S_story.inventory || []; const i = inv.findIndex(x => x.name === bit.name); if (i > -1) inv.splice(i, 1); },
+    mission_bit(bit) { if (typeof _grantMissionBit === 'function') _grantMissionBit(bit.flag, bit.label); else S_story[bit.flag] = true; },
     item_check(bit, ctx) { const inv = S_story.inventory || []; ctx._itemCheck = inv.filter(x => x.name === bit.name).length >= (bit.count || 1); },
     unlock(bit) { (bit.quests || []).forEach(qid => { S_story.quests = S_story.quests || {}; if (!S_story.quests[qid]) S_story.quests[qid] = 'active'; }); },
     choice(bit, ctx) { /* Phase 2: renderChoiceBlock(bit.prompt, bit.options, ctx) */ },

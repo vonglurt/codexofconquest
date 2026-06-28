@@ -25,7 +25,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
     expect(r.hasGate).toBe(true);
     expect(r.hasExec).toBe(true);
     // Every bit kind in the registry has a handler.
-    expect(r.kinds).toBe('_legacy_fn,choice,combat,flag_write,item_check,item_remove,narrative,reward,skill_check,unlock');
+    expect(r.kinds).toBe('_legacy_fn,choice,combat,flag_write,item_check,item_remove,mission_bit,narrative,reward,skill_check,unlock');
   });
 
   test('validateQuest enforces bit contracts', async ({ page }) => {
@@ -274,5 +274,91 @@ test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
     });
     expect(r.before).toBeUndefined();   // declarative gate blocked activation
     expect(r.after).toBe('active');     // opened once the flag was set
+  });
+});
+
+// ── §ARCH-01 Phase 3 — first real arc migration: §WISDOM-01 quest_wis_01 ──────
+//
+// quest_wis_01 ("Mask Check") is migrated from the legacy skill_check closure
+// format to UQF v1.0. These tests prove byte-level behavior parity with the
+// legacy resolver: the gate gates activation, a pass grants the wisPage1_masks
+// flag AND its mission-bit inventory token (exactly as legacy
+// _grantMissionBit(checkPassFlag) did) plus +150gp / +250xp / the W1 knowledge
+// entry, and a non-retryable fail locks the quest.
+
+test.describe('§WISDOM-01 migrated to UQF — quest_wis_01 (§ARCH-01 Phase 3)', () => {
+  test('the quest is now UQF and still validates', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const q = QUEST_DB.quest_wis_01;
+      return { schema: q.schema, hasGate: !!(q.gate && q.gate.flags), bitKind: q.bits[0].kind,
+               valid: validateQuest(q).valid, errors: validateQuest(q).errors };
+    });
+    expect(r.schema).toBe('UQF-1.0');
+    expect(r.hasGate).toBe(true);
+    expect(r.bitKind).toBe('skill_check');
+    expect(r.valid).toBe(true);
+    expect(r.errors).toEqual([]);
+  });
+
+  test('activation honors the wisHookReceived gate at LCY', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = {}; delete S_story.wisHookReceived;
+      storyCheckQuests({ code:'LCY' });                 // hook not yet received → no activate
+      const before = S_story.quests.quest_wis_01;
+      S_story.wisHookReceived = true;
+      storyCheckQuests({ code:'LCY' });                 // hook received → activates
+      return { before, after: S_story.quests.quest_wis_01 };
+    });
+    expect(r.before).toBeUndefined();
+    expect(r.after).toBe('active');
+  });
+
+  test('a PASS grants the flag + mission-bit token + 150gp/250xp + W1 knowledge', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = { quest_wis_01:'active' };
+      S_story.abilityScores = { wis:40 };               // huge mod ⇒ DC 13 always passes
+      S_story.level = 20; S_story.xp = 1000000; S_story.gold = 500; S_story.day = 1;
+      S_story.inventory = []; S_story.knowledge = [];
+      delete S_story.wisPage1_masks;
+      _rollCeremonia('quest_wis_01');                   // the real roll-button entry
+      return {
+        status: S_story.quests.quest_wis_01,
+        flag: S_story.wisPage1_masks,
+        token: !!S_story.inventory.find(i => i.flagRef === 'wisPage1_masks' && i.type === 'mission_bit'),
+        gold: S_story.gold, xp: S_story.xp,
+        knowledge: S_story.knowledge.some(k => k.startsWith('Ardley W1 — The Mask')),
+      };
+    });
+    expect(r.status).toBe('done');
+    expect(r.flag).toBe(true);
+    expect(r.token).toBe(true);          // mission-bit token preserved from legacy _grantMissionBit
+    expect(r.gold).toBe(650);            // +150
+    expect(r.xp).toBe(1000250);          // +250
+    expect(r.knowledge).toBe(true);
+  });
+
+  test('a non-retryable FAIL locks the quest and grants nothing', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      QUEST_DB.quest_wis_01.bits[0].dc = 99;            // force fail (fresh page each test)
+      S_story.quests = { quest_wis_01:'active' };
+      S_story.abilityScores = { wis:14 }; S_story.level = 1; S_story.xp = 0; S_story.gold = 0; S_story.day = 1;
+      S_story.inventory = []; S_story.knowledge = []; delete S_story.wisPage1_masks;
+      _rollCeremonia('quest_wis_01');
+      return {
+        status: S_story.quests.quest_wis_01,
+        flag: !!S_story.wisPage1_masks,
+        token: !!S_story.inventory.find(i => i.flagRef === 'wisPage1_masks'),
+        gold: S_story.gold, xp: S_story.xp,
+      };
+    });
+    expect(r.status).toBe('failed');     // retryable:false ⇒ locked
+    expect(r.flag).toBe(false);
+    expect(r.token).toBe(false);
+    expect(r.gold).toBe(0);
+    expect(r.xp).toBe(0);
   });
 });
