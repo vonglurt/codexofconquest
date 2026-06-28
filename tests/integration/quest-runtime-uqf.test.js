@@ -519,3 +519,126 @@ test.describe('§WISDOM-01 side quests wis_00/06/07 → UQF (§ARCH-01 Phase 3)'
     expect(r.completed).toBe('complete');   // declarative completion fired
   });
 });
+
+// ── §ARCH-01 Wave 1 — Wane's Crown skill-check arc (quest_wane_01..06) ──
+//
+// First Wave-1 arc: six sequential skill_check quests whose legacy onPass was an
+// imperative closure (`_addCroneMark()` — increments S_story.croneMarks + bumps
+// inn-kindness; wane_06 additionally computes S_story.waneCrownComplete). The
+// closure is preserved verbatim behind a `_legacy_fn` bit (parity-safe), the
+// `xpAward` becomes a `reward` bit, and the chain dependency
+// `(S_story.quests['prev']||'') !== ''` becomes the new declarative
+// `gate.questsAttempted` term added to QuestRuntime.canActivate.
+
+test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () => {
+  const IDS = ['quest_wane_01','quest_wane_02','quest_wane_03','quest_wane_04','quest_wane_05','quest_wane_06'];
+
+  test('all six validate as UQF skill_check quests with exact stat/dc/xp transcription', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((ids) => ids.map(id => {
+      const q = QUEST_DB[id];
+      const sc = q.bits[0];
+      const reward = (sc.onPass || []).find(b => b.kind === 'reward');
+      const legacy = (sc.onPass || []).find(b => b.kind === '_legacy_fn');
+      return { id, schema:q.schema, valid:validateQuest(q).valid, bit:sc.kind,
+               stat:sc.stat, dc:sc.dc, skill:sc.skill, xp:reward && reward.xp, hasLegacy:!!legacy };
+    }), IDS);
+    expect(r.every(x => x.schema === 'UQF-1.0' && x.valid && x.bit === 'skill_check' && x.hasLegacy)).toBe(true);
+    // exact transcription from the legacy checkAbility/checkDC/xpAward fields
+    expect(r).toMatchObject([
+      { id:'quest_wane_01', stat:'WIS', skill:'Insight',       dc:12, xp:150 },
+      { id:'quest_wane_02', stat:'STR', skill:'Athletics',     dc:13, xp:175 },
+      { id:'quest_wane_03', stat:'INT', skill:'Investigation', dc:13, xp:175 },
+      { id:'quest_wane_04', stat:'WIS', skill:'Insight',       dc:14, xp:200 },
+      { id:'quest_wane_05', stat:'WIS', skill:'Insight',       dc:13, xp:200 },
+      { id:'quest_wane_06', stat:'CHA', skill:'Persuasion',    dc:14, xp:225 },
+    ]);
+  });
+
+  test('each PASS marks done, grants exact xp, and runs the _addCroneMark closure (+1 croneMark)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const got = await page.evaluate((ids) => {
+      const xpByQuest = { quest_wane_01:150, quest_wane_02:175, quest_wane_03:175, quest_wane_04:200, quest_wane_05:200, quest_wane_06:225 };
+      const out = {};
+      for (const id of ids) {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 }; // any DC passes
+        S_story.level = 20; S_story.xp = 1000000; S_story.day = 1;
+        S_story.croneMarks = 0;
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        out[id] = { status:S_story.quests[id], dxp:S_story.xp - 1000000, croneMarks:S_story.croneMarks };
+      }
+      return { out, xpByQuest };
+    }, IDS);
+    for (const id of IDS) {
+      expect(got.out[id].status, id).toBe('done');
+      expect(got.out[id].dxp, id).toBe(got.xpByQuest[id]);
+      expect(got.out[id].croneMarks, id).toBe(1);   // _legacy_fn(_addCroneMark) ran exactly once
+    }
+  });
+
+  test('a non-retryable FAIL locks the quest and grants no croneMark or xp', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { str:1, dex:1, con:1, int:1, wis:1, cha:1 }; // any DC fails
+      S_story.level = 1; S_story.xp = 0; S_story.croneMarks = 0; S_story.day = 1;
+      S_story.quests = { quest_wane_03:'active' };
+      _rollCeremonia('quest_wane_03');
+      return { status:S_story.quests.quest_wane_03, xp:S_story.xp, croneMarks:S_story.croneMarks };
+    });
+    expect(r.status).toBe('failed');   // retryable:false ⇒ locked
+    expect(r.xp).toBe(0);
+    expect(r.croneMarks).toBe(0);
+  });
+
+  test('questsAttempted gate chains the arc: wane_02 needs wane_01 to have a status', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = {};
+      const blocked = QuestRuntime.canActivate('quest_wane_02');   // wane_01 not yet present
+      S_story.quests = { quest_wane_01:'active' };
+      const viaActive = QuestRuntime.canActivate('quest_wane_02'); // 'active' is a non-empty status
+      S_story.quests = { quest_wane_01:'failed' };
+      const viaFailed = QuestRuntime.canActivate('quest_wane_02'); // even a failed attempt opens the next
+      const w1open = (S_story.quests = {}, QuestRuntime.canActivate('quest_wane_01')); // wane_01 has no gate
+      return { blocked, viaActive, viaFailed, w1open };
+    });
+    expect(r.blocked).toBe(false);
+    expect(r.viaActive).toBe(true);
+    expect(r.viaFailed).toBe(true);   // parity with legacy `(quests['wane_01']||'') !== ''`
+    expect(r.w1open).toBe(true);
+  });
+
+  test('wane_06 PASS runs its compound closure (croneMark + waneCrownComplete computation)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // five prior wane quests marked 'complete' ⇒ the closure should set waneCrownComplete true
+      S_story.abilityScores = { cha:40 };
+      S_story.level = 20; S_story.xp = 1000000; S_story.croneMarks = 0; S_story.day = 1;
+      S_story.quests = { quest_wane_01:'complete', quest_wane_02:'complete', quest_wane_03:'complete',
+                         quest_wane_04:'complete', quest_wane_05:'complete', quest_wane_06:'active' };
+      delete S_story.waneCrownComplete;
+      _rollCeremonia('quest_wane_06');
+      return { status:S_story.quests.quest_wane_06, crown:S_story.waneCrownComplete, croneMarks:S_story.croneMarks };
+    });
+    expect(r.status).toBe('done');
+    expect(r.croneMarks).toBe(1);
+    expect(r.crown).toBe(true);   // verbatim closure: ≥5 wane quests 'complete'
+  });
+
+  test('canActivate questsDone term requires a terminal pass status (done/complete)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // synthetic probe quest exercising the new questsDone gate term in isolation
+      QUEST_DB.__probe_done = { id:'__probe_done', schema:'UQF-1.0', gate:{ questsDone:['quest_wane_01'] }, bits:[] };
+      const res = {};
+      for (const st of ['', 'active', 'failed', 'done', 'complete']) {
+        S_story.quests = st ? { quest_wane_01:st } : {};
+        res[st || 'empty'] = QuestRuntime.canActivate('__probe_done');
+      }
+      delete QUEST_DB.__probe_done;
+      return res;
+    });
+    expect(r).toMatchObject({ empty:false, active:false, failed:false, done:true, complete:true });
+  });
+});

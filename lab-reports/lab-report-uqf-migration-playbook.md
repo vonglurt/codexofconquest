@@ -20,6 +20,7 @@ formats to Universal Quest Format (UQF v1.0)
 | Phase 3a | First quest migrated (`quest_wis_01`) + `mission_bit` bit kind + `passText` parity | `d7505ff` |
 | Phase 3b | `quest_wis_02`–`05` migrated (rest of the skill-checks) | `014fd00` |
 | Phase 3c | Declarative completion path (`canComplete`) + `wis_00/06/07` migrated → arc 100 % UQF | `fcd1e37` |
+| Wave 1a | Wane's Crown (`quest_wane_01`–`06`) + `gate.questsAttempted`/`questsDone` terms; `onPass` closure preserved via `_legacy_fn` | _this commit_ |
 
 **Proven properties:**
 - **Behavior parity** — every migrated quest produces byte-identical state
@@ -35,15 +36,29 @@ formats to Universal Quest Format (UQF v1.0)
   term, the compound completion gate (which resolved lab Open-Q #5 — compound
   AND/OR — **without** a boolean-expression language).
 
-### Quest landscape (measured 2026-06-28)
+### Quest landscape (measured 2026-06-28 — **CORRECTED**)
+
+> ⚠ The first pass of this report cited "284 quests / 113 skill_check." That came
+> from a survey that under-counted by ~9×. A reproducible **brace-walker** scan
+> (walk top-level `^  key: {` entries, balance braces to the matching close)
+> gives the true figures below. Treat the originals as void.
 
 ```
-TOTAL 284   |   UQF 8 (§WISDOM-01)   |   remaining 276
-By type:  side 129   skill_check 113   epic 40   combat 2
-skill_check with an onPass closure ........... 52   (full bit-chain transform)
-skill_check without onPass (checkPassFlag) ... 61   (simple transform)
-quests with a completeFn closure ............ 158   (→ declarative completion)
+TOTAL 2515  |  UQF 14 (§WISDOM-01 ×8 + Wane ×6)  |  remaining ~2501
+By type:  skill_check 2192   side 129   combat 71   epic 40
+          delivery 38   escort 22   hybrid 9   main 7   dialogue 7
+skill_check breakdown:
+  ├─ with an onPass closure ...............    78   (Wave 1 — full bit-chain transform)
+  └─ simple (checkPassFlag/xpAward only) ... ~2114  (Wave 2 — codemod bulk)
+with a completeFn closure .................   163   (→ declarative completion)
 ```
+
+**Implication for the plan:** Wave 2 is not ~61 hand-migrations — it is **~2149
+near-identical** simple skill_checks. One-by-one is infeasible; Wave 2 must be a
+**programmatic transform** (a codemod that rewrites `checkAbility/checkLabel/
+checkDC/checkPassFlag/xpAward/goldAward/onPass` into a `schema+gate+bits` shell)
+applied in batches, each batch parity-tested by the same harness. Wave 1 (78
+closures) stays hand-migrated arc-by-arc because the closures are bespoke.
 
 ---
 
@@ -89,15 +104,25 @@ to run per quest (and per arc):
 ### C. Engine gaps — generalize, never special-case
 10. If a quest needs a mechanic the registry lacks, add a **reusable** bit
     kind or gate term (with a `BIT_CONTRACTS` entry + handler), not a
-    quest-specific branch. So far this produced `mission_bit` and the `battles`
-    completion term; both immediately served multiple quests.
+    quest-specific branch. So far this produced: `mission_bit` bit kind, the
+    `battles` completion term, and (Wave 1a) the **`gate.questsAttempted`**
+    (`(quests[id]||'')!==''`, ×23 in QUEST_DB) + **`gate.questsDone`**
+    (`done`/`complete`) chain terms in `canActivate`. Each immediately served
+    multiple quests.
+11. **Imperative shared helpers** (e.g. `_addCroneMark()` = counter++ +
+    inn-kindness) that don't decompose cleanly into declarative bits are the
+    legitimate use of the **`_legacy_fn`** escape hatch: `{kind:'_legacy_fn',
+    fn:() => _helper()}` preserves byte-identical behavior while still moving the
+    quest onto the `schema+gate+bits` shell. Don't invent a one-off bit kind for
+    a single shared helper. (Order matters: emit `reward` before `_legacy_fn` to
+    mirror the legacy `xpAward`-then-`onPass()` sequence.)
 
 ### D. Verify & land (per quest/arc)
-11. **Syntax-check** the inline script (vm parse) after each edit.
-12. **Write parity tests** (section 3).
-13. Run `npx playwright test quest-runtime-uqf` + `npm run check:walk` +
+12. **Syntax-check** the inline script (vm parse) after each edit.
+13. **Write parity tests** (section 3).
+14. Run `npx playwright test quest-runtime-uqf` + `npm run check:walk` +
     `navigation debug autosave worldbuilder-quest-editor`.
-14. Update `plan.md`, commit, `say` the subject.
+15. Update `plan.md`, commit, `say` the subject.
 
 ---
 
@@ -137,20 +162,23 @@ game (`page.goto('/roll2hit-v3.html')`), and read **bare top-level globals**
 
 ## 4. Full-migration plan (waves)
 
-276 quests remain. Migrate in waves of rising complexity, each wave a series of
-arc-sized commits using the section-2 playbook. A wave is "done" when every
-quest in it is `schema:'UQF-1.0'`, parity-tested, and all suites green.
+~2501 quests remain. Migrate in waves of rising complexity. A wave is "done" when
+every quest in it is `schema:'UQF-1.0'`, parity-tested, and all suites green.
+**Wave 1 stays hand-migrated arc-by-arc** (bespoke closures); **Wave 2 must be a
+codemod** (the simple skill_checks are too numerous — ~2149 — to hand-edit).
 
 | Wave | Target | Count | Mechanic / new engine work |
 |------|--------|-------|----------------------------|
 | **0 ✅** | §WISDOM-01 pilot | 8 | proves skill_check + completion paths |
-| **1** | skill-check arcs **with** `onPass` closures | ~52 | full bit-chain transform (the wis_01–05 pattern). Arcs: `wane`, `whisper`, `glut`, `ceremonia_yael`, `spark`/`spark2`, `scar`, `d0201_a`–`d0210_a` (Ceremonia), `hunt`/`hunt2`, `bilge`, `sea`, `forge`, `sunken`, `alch`, the Acts skill-checks (`areopagus`, `ephesus_riot`, `prison_phillam`, `governor_cyprus`, `lame_lystra`, `stoning_lystra`, `ezzir`, `basket_damascus`, `shipwreck_melta`, `aurel_tide`/`calice_bridge`/`mireille_ami`/`solen_horizon`/`sea_overseer`, `1367_*` skill-checks, `inquisitor_*`, `sir_jullean`, `courier_release`, `crypt_survey`, `lxvii`, `sb_parley`/`sb_examine`, `df`, `sk`, `shore`, `muffat`, `iodine`, `guide`) |
-| **2** | skill-checks **without** `onPass` (checkPassFlag/xpAward only) | ~61 | simple transform: `checkPassFlag`→`mission_bit`, `xpAward`→`reward.xp`, `goldAward`→`reward.gold`, `passText` already carried in the card. No narrative bit unless one existed. |
-| **3** | `side` quests (completeFn) | ~129 | declarative `completion` gates. Needs **one new bit/term**: `completeItems` (inventory-required) → finalize the `item_check` gate term. Per-id hardcoded completion side-effects in `storyCheckQuests` (e.g. `quest_slums_cleanup` gold+favor) move into completion bit chains. Arcs: `cat`, `tour`, `wm`, `math`, `va`, `ng`, `tl`, `la_riva`, `vs`, `inn`, fishing (`fish`/`horned_shark`/`shale_drop`/`night_eel`/`fishing_guide`/…), the Acts `side` beats, and singletons. |
-| **4** | `combat` quests | 2 | `1367_a_najera`, `1367_f_plague` — needs a `combat`-resolution path (the `combat` bit kind exists; wire a UQF combat-quest resolver mirroring the legacy combat-quest completion). |
-| **5** | `epic` quests | 40 | `e*_primary` / `e*_return` (Monster/element epics). **Different lifecycle** — excluded from the activation loop (`if (q.type==='epic') return;`), activated explicitly via modal/defeat. Needs an epic-specific gate/resolution design before transform; investigate first. |
-| **6 (Phase 4)** | retire legacy paths | — | once waves 1–5 land: remove the legacy branches of `_rollCeremonia` and the `completeFn`/per-id side-effects in `storyCheckQuests`; `adaptLegacyQuest` becomes a no-op. Full suite gate before removal. |
-| **7 (Phase 5)** | canonicalize | — | QUEST_DB is the single source of truth; storyRender holds pure display only; worldbuilder exports a fully functional UQF arc. |
+| **1a ✅** | Wane's Crown (`quest_wane_01`–`06`) | 6 | full bit-chain transform; added `gate.questsAttempted`/`questsDone` chain terms; `onPass:()=>_addCroneMark()` preserved via `_legacy_fn`; `xpAward`→`reward`. |
+| **1** | skill-check arcs **with** `onPass` closures | **78** | full bit-chain transform (the wis/wane pattern). Remaining arcs: `whisper`(5), `glut`(5), `ceremonia_yael`(5), `1367_*`(4), `d0205`–`d0210`(15), `inn`(3), `spark`/`spark2`, `inquisitor`(3), `sea`, `sb`, `hunt`/`hunt2`, `bilge`, `alch`, `scar` + ~13 singletons (`basket_damascus`, `iodine`, `shore`, `forge`, `sunken`, `df`, `sk`, `lxvii67`, `guide_04`, `d0201_a5`/`d0204_a5`/`d0210_a5`). |
+| **2** | simple skill-checks (checkPassFlag/xpAward only) | **~2149** | **codemod, not hand-migration.** Mechanical rewrite `{checkAbility,checkLabel,checkDC,checkPassFlag,xpAward,goldAward}` → `schema+gate+bits:[{skill_check, onPass:[mission_bit?, reward?]}]`. Run in batches; parity-test each batch with the existing harness. The dominant chain gate `(quests['prev']||'')!==''` is already covered by `gate.questsAttempted`. |
+| **3** | `side` quests (completeFn) | 129 | declarative `completion` gates. Needs `item_check` gate term finalized; per-id hardcoded completion side-effects in `storyCheckQuests` move into completion bit chains. |
+| **4** | `combat` quests | 71 | needs a UQF combat-quest resolver (the `combat` bit kind exists; wire resolution mirroring legacy combat-quest completion). Largest non-skill bucket — was mis-counted as 2 in the first survey. |
+| **5** | other types: `delivery` 38 · `escort` 22 · `hybrid` 9 · `main` 7 · `dialogue` 7 | 83 | each is its own resolution/completion shape; needs a per-type design pass (delivery/escort likely fold into `item_check`/waypoint completion; `main`/`dialogue` may need new terms). Investigate before transform. |
+| **6** | `epic` quests | 40 | **Different lifecycle** — excluded from the activation loop (`if (q.type==='epic') return;`), activated explicitly via modal/defeat. Needs an epic-specific design before transform; investigate first. |
+| **7 (Phase 4)** | retire legacy paths | — | once waves 1–6 land: remove the legacy branches of `_rollCeremonia` and the `completeFn`/per-id side-effects in `storyCheckQuests`; `adaptLegacyQuest` becomes a no-op. Full suite gate before removal. |
+| **8 (Phase 5)** | canonicalize | — | QUEST_DB is the single source of truth; storyRender holds pure display only; worldbuilder exports a fully functional UQF arc. |
 
 ### Sequencing rules
 - **Arc-sized commits.** One arc per commit, parity-tested, suites green, `say`.
