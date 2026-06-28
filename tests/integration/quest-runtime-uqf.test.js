@@ -746,3 +746,100 @@ test.describe('§ARCH-01 Wave 1 — Whisper\'s Crown arc (quest_whisper_01..06)'
     expect(r.innKindness).toBeGreaterThanOrEqual(1);   // onComplete's _innKindness(1) ran
   });
 });
+
+// ── §ARCH-01 Wave 1 — Glut's Crown arc (quest_glut_01..06) ──
+//
+// Third crone arc. Five skill_checks (01–05) on the wane/whisper pattern. The
+// twist: glut_05 (the fifth check) carries NO crown computation — the crown flag
+// lives on glut_06 instead. quest_glut_06 (type:'side') has a FLAG activation
+// gate (`glut_gift_held`, not a chain) and a multi-effect `onComplete` (returns
+// the gift: clears the held flag, removes the inventory item, inn-kindness, sets
+// glutCrownComplete) preserved verbatim.
+
+test.describe('§ARCH-01 Wave 1 — Glut\'s Crown arc (quest_glut_01..06)', () => {
+  const SKILL = ['quest_glut_01','quest_glut_02','quest_glut_03','quest_glut_04','quest_glut_05'];
+
+  test('five skill_checks + the side quest all validate as UQF', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((skill) => {
+      const sc = skill.map(id => {
+        const q = QUEST_DB[id]; const bit = q.bits[0];
+        return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, dc:bit.dc,
+                 xp:(bit.onPass||[]).find(b=>b.kind==='reward').xp, hasLegacy:(bit.onPass||[]).some(b=>b.kind==='_legacy_fn') };
+      });
+      const s6 = QUEST_DB.quest_glut_06;
+      return { sc, side:{ schema:s6.schema, valid:validateQuest(s6).valid,
+               gateFlags:(s6.gate&&s6.gate.flags)||[], completionFlags:(s6.completion&&s6.completion.flags)||[],
+               bits:s6.bits.length, onComplete:typeof s6.onComplete } };
+    }, SKILL);
+    expect(r.sc.every(x => x.schema==='UQF-1.0' && x.valid && x.hasLegacy)).toBe(true);
+    expect(r.sc).toMatchObject([
+      { id:'quest_glut_01', stat:'WIS', dc:13, xp:150 },
+      { id:'quest_glut_02', stat:'CHA', dc:13, xp:175 },
+      { id:'quest_glut_03', stat:'INT', dc:14, xp:200 },
+      { id:'quest_glut_04', stat:'WIS', dc:13, xp:200 },
+      { id:'quest_glut_05', stat:'WIS', dc:15, xp:225 },
+    ]);
+    // side quest: FLAG activation gate + flag completion gate, onComplete kept live
+    expect(r.side).toMatchObject({ schema:'UQF-1.0', valid:true, gateFlags:['glut_gift_held'],
+      completionFlags:['glutGiftReturned'], bits:0, onComplete:'function' });
+  });
+
+  test('each skill_check PASS marks done, grants exact xp, runs _addCroneMark', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const got = await page.evaluate((skill) => {
+      const xp = { quest_glut_01:150, quest_glut_02:175, quest_glut_03:200, quest_glut_04:200, quest_glut_05:225 };
+      const out = {};
+      for (const id of skill) {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 1000000; S_story.day = 1; S_story.croneMarks = 0;
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        out[id] = { status:S_story.quests[id], dxp:S_story.xp - 1000000, croneMarks:S_story.croneMarks };
+      }
+      return { out, xp };
+    }, SKILL);
+    for (const id of SKILL) {
+      expect(got.out[id].status, id).toBe('done');
+      expect(got.out[id].dxp, id).toBe(got.xp[id]);
+      expect(got.out[id].croneMarks, id).toBe(1);
+    }
+  });
+
+  test('glut_06 (side): flag gate, completion via glutGiftReturned, onComplete returns the gift + sets glutCrownComplete', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // FLAG activation gate: needs glut_gift_held (not a quest-chain)
+      S_story.quests = {}; delete S_story.glut_gift_held; delete S_story.glutGiftReturned;
+      const blocked = QuestRuntime.canActivate('quest_glut_06');
+      S_story.glut_gift_held = true;
+      const open = QuestRuntime.canActivate('quest_glut_06');
+      // drive activation + completion through storyCheckQuests
+      S_story.quests = { quest_glut_06:'active' };
+      S_story.inventory = [{ name:"Glut's Gift", icon:'🍯' }, { name:'Rope' }];
+      S_story.innmotherKindness = 0; delete S_story.glutCrownComplete;
+      storyCheckQuests({ code:'__none' });                 // glutGiftReturned still false ⇒ stays active
+      const stillActive = S_story.quests.quest_glut_06;
+      S_story.glutGiftReturned = true;
+      storyCheckQuests({ code:'__none' });                 // completes ⇒ onComplete fires
+      return {
+        blocked, open, stillActive,
+        status: S_story.quests.quest_glut_06,
+        crown: S_story.glutCrownComplete,
+        giftHeldCleared: S_story.glut_gift_held === false,
+        giftRemoved: !S_story.inventory.some(i => i.name === "Glut's Gift"),
+        ropeKept: S_story.inventory.some(i => i.name === 'Rope'),
+        kindness: S_story.innmotherKindness,
+      };
+    });
+    expect(r.blocked).toBe(false);          // no glut_gift_held ⇒ gate shut
+    expect(r.open).toBe(true);              // flag set ⇒ gate open
+    expect(r.stillActive).toBe('active');   // completion flag not yet set
+    expect(r.status).toBe('complete');
+    expect(r.crown).toBe(true);             // onComplete set glutCrownComplete
+    expect(r.giftHeldCleared).toBe(true);
+    expect(r.giftRemoved).toBe(true);       // "Glut's Gift" spliced from inventory
+    expect(r.ropeKept).toBe(true);          // unrelated item untouched
+    expect(r.kindness).toBeGreaterThanOrEqual(1);
+  });
+});

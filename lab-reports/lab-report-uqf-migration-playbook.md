@@ -21,7 +21,8 @@ formats to Universal Quest Format (UQF v1.0)
 | Phase 3b | `quest_wis_02`–`05` migrated (rest of the skill-checks) | `014fd00` |
 | Phase 3c | Declarative completion path (`canComplete`) + `wis_00/06/07` migrated → arc 100 % UQF | `fcd1e37` |
 | Wave 1a | Wane's Crown (`quest_wane_01`–`06`) + `gate.questsAttempted`/`questsDone` terms; `onPass` closure preserved via `_legacy_fn` | `24becb6` |
-| Wave 1b | Whisper's Crown (`quest_whisper_01`–`06`); first Wave-1 `side` quest (`whisper_05`: `completeFn`→`completion` gate, `onComplete` kept as live hook); flaky-FAIL-test fix | _this commit_ |
+| Wave 1b | Whisper's Crown (`quest_whisper_01`–`06`); first Wave-1 `side` quest (`whisper_05`: `completeFn`→`completion` gate, `onComplete` kept as live hook); flaky-FAIL-test fix | `7b69ce7` |
+| Wave 1c | Glut's Crown (`quest_glut_01`–`06`); `side` quest with a **flag** activation gate + multi-effect `onComplete` (inventory splice + crown flag). All 3 crone Crowns now 100% UQF. | _this commit_ |
 
 **Proven properties:**
 - **Behavior parity** — every migrated quest produces byte-identical state
@@ -188,6 +189,7 @@ codemod** (the simple skill_checks are too numerous — ~2149 — to hand-edit).
 | **0 ✅** | §WISDOM-01 pilot | 8 | proves skill_check + completion paths |
 | **1a ✅** | Wane's Crown (`quest_wane_01`–`06`) | 6 | full bit-chain transform; added `gate.questsAttempted`/`questsDone` chain terms; `onPass:()=>_addCroneMark()` preserved via `_legacy_fn`; `xpAward`→`reward`. |
 | **1b ✅** | Whisper's Crown (`quest_whisper_01`–`06`) | 6 | same pattern ×5 skill_checks; **first Wave-1 `side` quest** (`whisper_05`): `completeFn`→`completion:{flags}`, `onComplete` **kept verbatim** (fires from `storyCheckQuests` for any schema — see §C.note). |
+| **1c ✅** | Glut's Crown (`quest_glut_01`–`06`) | 6 | ×5 skill_checks; `side` quest (`glut_06`) with a **flag** activation gate (`gate:{flags:['glut_gift_held']}`) + a multi-effect `onComplete` (inventory splice of "Glut's Gift" + crown flag), kept verbatim. Confirms the side-quest pattern generalizes across flag-gated and chain-gated activation. |
 | **1** | skill-check arcs **with** `onPass` closures | **78** | full bit-chain transform (the wis/wane pattern). Remaining arcs: `whisper`(5), `glut`(5), `ceremonia_yael`(5), `1367_*`(4), `d0205`–`d0210`(15), `inn`(3), `spark`/`spark2`, `inquisitor`(3), `sea`, `sb`, `hunt`/`hunt2`, `bilge`, `alch`, `scar` + ~13 singletons (`basket_damascus`, `iodine`, `shore`, `forge`, `sunken`, `df`, `sk`, `lxvii67`, `guide_04`, `d0201_a5`/`d0204_a5`/`d0210_a5`). |
 | **2** | simple skill-checks (checkPassFlag/xpAward only) | **~2149** | **codemod, not hand-migration.** Mechanical rewrite `{checkAbility,checkLabel,checkDC,checkPassFlag,xpAward,goldAward}` → `schema+gate+bits:[{skill_check, onPass:[mission_bit?, reward?]}]`. Run in batches; parity-test each batch with the existing harness. The dominant chain gate `(quests['prev']||'')!==''` is already covered by `gate.questsAttempted`. |
 | **3** | `side` quests (completeFn) | 129 | declarative `completion` gates. Needs `item_check` gate term finalized; per-id hardcoded completion side-effects in `storyCheckQuests` move into completion bit chains. |
