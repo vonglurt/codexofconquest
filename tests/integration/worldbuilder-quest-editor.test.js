@@ -140,6 +140,27 @@ test.describe('Quest Creator — itemChain visual editor wiring (§EDITOR-01-D-F
       '{action:"takeBit",flag:"harmonyChainComplete"}]');
   });
 
+  test('rich grant (bonus/readText) authored via the widget exports valid JS', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    await page.evaluate(() => window.switchTab('editor'));
+    await page.evaluate(() => {
+      const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
+      set('ed-id', 'quest_rich'); set('ed-type', 'side');
+      document.getElementById('ed-type').dispatchEvent(new Event('change'));
+      window.__edChain.setSteps([{
+        action: 'grant', name: 'Field Tome', icon: '📗', type: 'tome', sell: 0,
+        bonus: { deathSave: 1 }, readText: 'a', silent: true,
+      }]);
+    });
+    await page.click('#ed-btn-export');
+    const out = await page.inputValue('#ed-export-out');
+    // bonus serializes as JSON (the b1 fix — not "[object Object]"); silent + readText carried.
+    expect(out).toContain('itemChain:[{action:"grant",name:"Field Tome"');
+    expect(out).toContain('bonus:{"deathSave":1}');
+    expect(out).toContain('readText:"a"');
+    expect(out).toContain('silent:true');
+  });
+
   test('grant.once unchecked in the widget serializes once:false', async ({ page }) => {
     await page.goto('/worldbuilder.html');
     await page.evaluate(() => window.switchTab('editor'));

@@ -60,6 +60,24 @@ S.inventory = [];
 apply({ itemChain: [{ action: 'grant', name: 'Glow', icon: '🟡', type: 'key', sell: 50, desc: 'shiny' }] });
 ok(JSON.stringify(S.inventory[0]) === JSON.stringify({ name: 'Glow', icon: '🟡', type: 'key', sell: 50, desc: 'shiny' }), 'grant passes through all fields incl. desc');
 
+// ── grant: rich-field allow-list passthrough (§FU-b1) ───────────────────────
+S.inventory = [];
+apply({ itemChain: [{ action: 'grant', name: 'Tome', icon: '📗', type: 'tome', sell: 0,
+  description: 'margin note', bonus: { deathSave: 1 }, readText: 'long text',
+  readable: true, readableKey: 'k', passive: true, uses: 3, minLevel: 2,
+  atkBonus: 1, dmgDie: 4, dmgCount: 1, dmgFlat: 0 }] });
+{
+  const it = S.inventory[0];
+  ok(it.description === 'margin note' && JSON.stringify(it.bonus) === '{"deathSave":1}', 'grant passes description + bonus through');
+  ok(it.readText === 'long text' && it.readable === true && it.readableKey === 'k', 'grant passes readText/readable/readableKey');
+  ok(it.passive === true && it.uses === 3 && it.minLevel === 2, 'grant passes passive/uses/minLevel');
+  ok(it.atkBonus === 1 && it.dmgDie === 4 && it.dmgCount === 1 && it.dmgFlat === 0, 'grant passes weapon stats');
+}
+// off-allow-list keys are dropped (no arbitrary passthrough)
+S.inventory = [];
+apply({ itemChain: [{ action: 'grant', name: 'Plain', evil: 'no', __proto__hack: 1 }] });
+ok(!('evil' in S.inventory[0]) && !('__proto__hack' in S.inventory[0]), 'grant drops fields outside the allow-list');
+
 // ── grant: silent suppresses the auto message but still adds the item (§FU-b) ──
 S.inventory = [];
 let sm = apply({ itemChain: [{ action: 'grant', name: 'Quiet Trophy', silent: true }] });
@@ -105,6 +123,8 @@ WBAPI.load(GAME);
 const anyQ = Object.keys(WBAPI.questDb)[0];
 const chain = [
   { action: 'grant', name: 'Pip Bead', icon: '🪵', type: 'misc', sell: 1, desc: "O'Brien's gift" },
+  // §FU-b1: a rich grant must survive the source patch too (readText + bonus + silent)
+  { action: 'grant', name: 'Field Tome', icon: '📗', type: 'tome', sell: 0, readText: 'a\nb', bonus: { deathSave: 1 }, silent: true },
   { action: 'take', name: "Smalt's Trust" },
   { action: 'grantBit', flag: 'harmonyChainComplete', label: 'Harmony Chain' },
   { action: 'takeBit', flag: 'harmonyChainComplete' },

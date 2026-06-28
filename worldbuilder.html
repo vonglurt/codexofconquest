@@ -9180,11 +9180,16 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 
 // Per-kind field schema — a superset of the pipe grammar (adds grant.once).
 const CHAIN_KINDS = {
-  grant:    [ {f:'name',req:true}, {f:'icon'}, {f:'type'}, {f:'sell',num:true}, {f:'desc'}, {f:'once',chk:true,def:true} ],
+  grant:    [ {f:'name',req:true}, {f:'icon'}, {f:'type'}, {f:'sell',num:true}, {f:'desc'}, {f:'once',chk:true,def:true}, {f:'silent',chk:true} ],
   take:     [ {f:'name',req:true}, {f:'all',chk:true} ],
   grantBit: [ {f:'flag',req:true}, {f:'label'} ],
   takeBit:  [ {f:'flag',req:true} ],
 };
+// §EDITOR-01-D-FU(b1): rich grant fields the scalar inputs can't hold — authored as a JSON
+// object in the per-row "advanced" field and merged on read. Kept in lockstep with
+// _applyItemChain's allow-list + check-itemchain. `desc` lives in the scalar inputs, so it's
+// excluded here to avoid two sources for one key.
+const GRANT_RICH = ['description','readText','readableKey','readable','passive','bonus','uses','minLevel','atkBonus','dmgDie','dmgCount','dmgFlat'];
 
 function buildChainEditor(host, opts) {
   opts = opts || {};
@@ -9215,6 +9220,19 @@ function buildChainEditor(host, opts) {
       if (step && step[spec.f] != null) inp.value = step[spec.f];
       inp.addEventListener('input', fire);
       fieldsDiv.appendChild(inp);
+    }
+    // §EDITOR-01-D-FU(b1): grant rows get an "advanced (JSON)" field carrying the rich
+    // allow-list (readText/bonus/passive/weapon-stats/…) the scalar inputs can't express.
+    if (kind === 'grant') {
+      const adv = document.createElement('input');
+      adv.type = 'text'; adv.className = 'fi fi-sm'; adv.dataset.cf = 'adv';
+      adv.placeholder = 'advanced JSON: {"bonus":{…},"readText":"…"}';
+      adv.style.flex = '1 1 100%';
+      const rich = {};
+      if (step) for (const k of GRANT_RICH) if (step[k] !== undefined) rich[k] = step[k];
+      if (Object.keys(rich).length) adv.value = JSON.stringify(rich);
+      adv.addEventListener('input', fire);
+      fieldsDiv.appendChild(adv);
     }
   }
 
@@ -9266,6 +9284,10 @@ function buildChainEditor(host, opts) {
       if (get('type')) step.type = get('type');
       const sell = get('sell'); if (sell !== '') step.sell = +sell || 0;
       if (get('desc')) step.desc = get('desc');
+      // §EDITOR-01-D-FU(b1): merge the advanced-JSON rich fields (allow-listed; invalid JSON ignored).
+      const advRaw = get('adv');
+      if (advRaw) { try { const o = JSON.parse(advRaw); for (const k of GRANT_RICH) if (o[k] !== undefined) step[k] = o[k]; } catch (e) {} }
+      if (get('silent') === true) step.silent = true;  // §FU-b: default false → emit only when checked
       if (get('once') === false) step.once = false;   // default true → only emit when toggled off
       return step;
     }
@@ -9602,7 +9624,9 @@ function edGenerateExport() {
     if (q.passText)     out += `    passText:${s(q.passText)},\n`;
   }
   if (q.itemChain?.length) out += `    itemChain:[${q.itemChain.map(st =>
-    `{${Object.entries(st).map(([k,v]) => `${k}:${typeof v === 'string' ? s(v) : v}`).join(',')}}`).join(',')}],\n`; // §EDITOR-01-D
+    // §EDITOR-01-D / FU-b1: strings via s() (single-quote style); numbers/booleans/objects
+    // (e.g. a rich grant's bonus:{…}) via JSON.stringify so object fields don't coerce to "[object Object]".
+    `{${Object.entries(st).map(([k,v]) => `${k}:${typeof v === 'string' ? s(v) : JSON.stringify(v)}`).join(',')}}`).join(',')}],\n`;
   if (q.bits?.length) {
     const bitsJson = JSON.stringify(q.bits, null, 4);
     out += `    bits:${bitsJson.replace(/\n/g,'\n    ')},\n`;

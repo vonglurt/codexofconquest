@@ -23556,7 +23556,14 @@ function _applyItemChain(q) {
       case 'grant': {
         if (s.once !== false && inv.some(i => i.name === s.name)) break;
         const item = { name: s.name, icon: s.icon || '📦', type: s.type || 'misc', sell: s.sell || 0 };
-        if (s.desc) item.desc = s.desc;
+        // §EDITOR-01-D-FU(b1): rich item-field allow-list — copy each through when present so
+        // declarative grants can carry the full item shape the reward ladder used (readText,
+        // tome bonus, passive, readable, weapon stats, …). Anything off-list is intentionally
+        // dropped. Kept in lockstep with the worldbuilder widget + scripts/check-itemchain.js.
+        for (const f of ['desc', 'description', 'readText', 'readableKey', 'readable', 'passive',
+                         'bonus', 'uses', 'minLevel', 'atkBonus', 'dmgDie', 'dmgCount', 'dmgFlat']) {
+          if (s[f] !== undefined) item[f] = s[f];
+        }
         inv.push(item);
         // §EDITOR-01-D-FU(b): silent grants suppress the auto "obtained." line so a migrated
         // reward-ladder branch can keep its own verbatim narrative message without doubling it.

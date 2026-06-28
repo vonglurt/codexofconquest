@@ -99,6 +99,61 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
     expect(out.fromWidget).toEqual(out.parsed);
   });
 
+  // ── §EDITOR-01-D-FU(b1) — rich grant fields via the advanced-JSON row ──────────
+  test('rich grant fields round-trip through setSteps → getSteps (advanced JSON)', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    const out = await page.evaluate(() => {
+      const initial = [{
+        action: 'grant', name: 'Field Tome', icon: '📗', type: 'tome', sell: 0,
+        description: 'margin note', bonus: { deathSave: 1 }, readText: 'a\nb',
+        passive: true, uses: 3, atkBonus: 1, dmgDie: 4,
+      }];
+      const ed = window.buildChainEditor(null, { initial });
+      const adv = ed.el.querySelector('.chain-row [data-cf="adv"]');
+      return { steps: ed.getSteps(), advValue: adv ? adv.value : null };
+    });
+    // The scalar fields stay in their inputs; the rich fields ride the advanced JSON and survive.
+    expect(out.advValue).toBeTruthy();
+    expect(out.steps).toEqual([{
+      action: 'grant', name: 'Field Tome', icon: '📗', type: 'tome', sell: 0,
+      description: 'margin note', bonus: { deathSave: 1 }, readText: 'a\nb',
+      passive: true, uses: 3, atkBonus: 1, dmgDie: 4,
+    }]);
+  });
+
+  test('grant.silent round-trips (unchecked omits; seeded true survives)', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    const out = await page.evaluate(() => {
+      const plain = window.buildChainEditor(null, { initial: [{ action: 'grant', name: 'A' }] });
+      const silent = window.buildChainEditor(null, { initial: [{ action: 'grant', name: 'B', silent: true }] });
+      return { plain: plain.getSteps()[0], silent: silent.getSteps()[0] };
+    });
+    expect('silent' in out.plain).toBe(false);              // default unchecked → omitted
+    expect(out.silent).toEqual({ action: 'grant', name: 'B', silent: true });
+  });
+
+  test('invalid advanced JSON is ignored — scalar fields still read', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    const out = await page.evaluate(() => {
+      const ed = window.buildChainEditor(null, { initial: [{ action: 'grant', name: 'X' }] });
+      const adv = ed.el.querySelector('.chain-row [data-cf="adv"]');
+      adv.value = '{not valid json'; adv.dispatchEvent(new Event('input'));
+      return ed.getSteps();
+    });
+    expect(out).toEqual([{ action: 'grant', name: 'X' }]);   // no throw, rich merge skipped
+  });
+
+  test('off-allow-list keys in advanced JSON are dropped', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    const out = await page.evaluate(() => {
+      const ed = window.buildChainEditor(null, { initial: [{ action: 'grant', name: 'X' }] });
+      const adv = ed.el.querySelector('.chain-row [data-cf="adv"]');
+      adv.value = JSON.stringify({ bonus: { x: 1 }, evil: 'no' }); adv.dispatchEvent(new Event('input'));
+      return ed.getSteps();
+    });
+    expect(out).toEqual([{ action: 'grant', name: 'X', bonus: { x: 1 } }]);   // evil dropped
+  });
+
   test('factory returns independent instances (no shared singleton state)', async ({ page }) => {
     await page.goto('/worldbuilder.html');
     const out = await page.evaluate(() => {
