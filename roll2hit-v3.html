@@ -19714,68 +19714,66 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   // ── Ceremonia Arc: Yael Scheidemann (5 acts) ──
   quest_ceremonia_yael_01: { id:'quest_ceremonia_yael_01', type:'skill_check', title:'The Watch',
     hint:"Yael is sizing you up. Make the thirty seconds count.",
+    schema:'UQF-1.0',
     activateNode:'LHR',
-    activateCond:() => (S_story.npcFavorability||{}).yael >= 1 && (S_story.quests||{}).quest_slums_cleanup === 'complete',
-    checkAbility:'cha', checkLabel:'Persuasion', checkDC:10, retryable:true, retryGateDays:1,
-    xpAward:75, checkPassFlag:'ceremoniaPassed_yael_01',
+    gate:{ favorMin:{ yael:1 }, questsDone:['quest_slums_cleanup'] },
+    retryable:true, retryGateDays:1,
     vignetteText:"She checks her watch once more while you are talking. Quarter-hour. She has been doing this since before you arrived. You say what you came to say. She does not look up from the logbook. The watch is back in her coat pocket. You have thirty seconds before the shift changes.",
     passText:'She writes something in the logbook. You do not see what.',
     failText:'The logbook closes. "Next time," she says, which means: try again.',
-    completeItems:[],
-    onPass:() => { S_story.ceremoniaYaelAct = 1; } },
+    bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:10,
+      onPass:[{ kind:'mission_bit', flag:'ceremoniaPassed_yael_01' }, { kind:'reward', xp:75 }, { kind:'_legacy_fn', fn:() => { S_story.ceremoniaYaelAct = 1; } }], onFail:[] }] },
   quest_ceremonia_yael_02: { id:'quest_ceremonia_yael_02', type:'skill_check', title:'The Route',
     hint:"The patrol route is in her sleeve. Read it correctly.",
+    schema:'UQF-1.0',
     activateNode:'LHR',
-    activateCond:() => !!(S_story.ceremoniaPassed_yael_01),
-    checkAbility:'wis', checkLabel:'Insight', checkDC:12, retryable:true, retryGateDays:1,
-    xpAward:100, checkPassFlag:'ceremoniaPassed_yael_02',
+    gate:{ flags:['ceremoniaPassed_yael_01'] },
+    retryable:true, retryGateDays:1,
     vignetteText:"She passes close enough that you see the edge of paper where she keeps the patrol route — rolled tight in her left sleeve, the way a soldier carries a map that must survive the weather. She pulls it out without being asked. She smooths it against the wall beside you. She is not looking at you.",
     passText:'You read it the way she intended. She rolls it back up.',
     failText:'You are still looking when she rolls it back. You have the shape of the district but not the detail.',
-    completeItems:[],
-    onPass:() => { S_story.ceremoniaYaelAct = 2; } },
+    bits:[{ kind:'skill_check', stat:'WIS', skill:'Insight', dc:12,
+      onPass:[{ kind:'mission_bit', flag:'ceremoniaPassed_yael_02' }, { kind:'reward', xp:100 }, { kind:'_legacy_fn', fn:() => { S_story.ceremoniaYaelAct = 2; } }], onFail:[] }] },
   quest_ceremonia_yael_03: { id:'quest_ceremonia_yael_03', type:'skill_check', title:'The Crate',
     hint:"She is moving a crate across the Slums square. She is not asking.",
+    schema:'UQF-1.0',
     activateNode:'BMA',
-    activateCond:() => !!(S_story.ceremoniaPassed_yael_02),
-    checkAbility:'str', checkLabel:'Athletics', checkDC:12, retryable:true, retryGateDays:1,
-    xpAward:100, checkPassFlag:'ceremoniaPassed_yael_03',
+    gate:{ flags:['ceremoniaPassed_yael_02'] },
+    retryable:true, retryGateDays:1,
     vignetteText:"The crate is half her height. She has it moving on the cobblestones — dragging, not lifting, her hands wrapped in a leather cord. You are at the corner. She has not looked up. The crate stops at a seam in the stone. She straightens, breathes once, bends again.",
     passText:'The crate reaches the far wall. She looks at her hands. She does not say anything.',
     failText:'It moves another meter. She does not stop, and you do not try again today.',
-    completeItems:[],
-    onPass:() => { S_story.ceremoniaYaelAct = 3; } },
+    bits:[{ kind:'skill_check', stat:'STR', skill:'Athletics', dc:12,
+      onPass:[{ kind:'mission_bit', flag:'ceremoniaPassed_yael_03' }, { kind:'reward', xp:100 }, { kind:'_legacy_fn', fn:() => { S_story.ceremoniaYaelAct = 3; } }], onFail:[] }] },
   quest_ceremonia_yael_04: { id:'quest_ceremonia_yael_04', type:'skill_check', title:'The Report',
     hint:"Your name is in the wrong column of today's duty log.",
+    schema:'UQF-1.0',
     activateNode:'LHR',
-    activateCond:() => !!(S_story.ceremoniaPassed_yael_03),
-    checkAbility:'cha', checkLabel:'Persuasion', checkDC:14, retryable:false,
-    xpAward:125,
-    checkPassFlag:'ceremoniaPassed_yael_04',
-    checkFailFlag:'ceremonia_yael_04_failed',
+    gate:{ flags:['ceremoniaPassed_yael_03'] },
+    retryable:false,
     vignetteText:"The captain has the log. Your name is in today's entries — wrong district, recorded by someone who noticed. Yael is at the table. The pen is in her hand. The captain is waiting for her to sign. She has not yet.",
     passText:'The pen moves. Your name is not there when the captain reads it back.',
     failText:'The pen moves. Your name stays. She does not look at you.',
-    completeItems:[],
-    onPass:() => { S_story.ceremoniaYaelAct = 4; } },
+    bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:14,
+      onPass:[{ kind:'mission_bit', flag:'ceremoniaPassed_yael_04' }, { kind:'reward', xp:125 }, { kind:'_legacy_fn', fn:() => { S_story.ceremoniaYaelAct = 4; } }],
+      onFail:[{ kind:'mission_bit', flag:'ceremonia_yael_04_failed' }] }] },
   quest_ceremonia_yael_05: { id:'quest_ceremonia_yael_05', type:'skill_check', title:'The Name',
     hint:"She has been carrying your name since the first morning.",
+    schema:'UQF-1.0',
     activateNode:'LHR',
-    activateCond:() => !!(S_story.ceremoniaPassed_yael_04 || S_story.ceremonia_yael_04_failed) && (S_story.npcFavorability||{}).yael >= 3,
-    checkAbility:'cha', checkLabel:'Persuasion', checkDC:15, retryable:false,
-    xpAward:150,
-    checkPassFlag:'ceremonia_yael_complete',
+    gate:{ flagsAny:['ceremoniaPassed_yael_04','ceremonia_yael_04_failed'], favorMin:{ yael:3 } },
+    retryable:false,
     vignetteText:'You told her your name outside the mortuary, the first morning. She has not used it since. Now it is the end of shift. She is putting on her coat. She says it — your name, not the title, not "you" — the way you say a word you have been holding for a while to make sure you had it right.',
     vignetteTextAlt:'"I heard about the report," she says. She is putting on her coat. The name in the duty log is your problem now, not hers. You are still here. So is she.',
     passText:'She finishes buttoning her coat. She goes.',
     failText:'She finishes buttoning her coat. She goes. She does not look back.',
-    completeItems:[],
-    onPass:() => {
+    bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:15,
+      onPass:[{ kind:'mission_bit', flag:'ceremonia_yael_complete' }, { kind:'reward', xp:150 }, { kind:'_legacy_fn', fn:() => {
       S_story.ceremoniaYaelAct = 5;
       S_story.ceremonia_yael_complete = true;
       _setNpcFavor('yael', 3);
       (S_story.inventory = S_story.inventory || []).push({name:"Yael's Watch Token",icon:'🪙',type:'token',sell:0,desc:'A small brass coin, worn smooth. Guard issue, retired. She gave it to you without explanation.'});
-    } },
+    } }], onFail:[] }] },
   // ── §DUNGEON-01: Codex Inquisitor (D02-02) — inline WM gate quest ──
   quest_inquisitor_handshake: { id:'quest_inquisitor_handshake', type:'skill_check', title:'The Handshake',
     hint:'The construct has been waiting three centuries. You are the first qualified applicant.',
@@ -20252,6 +20250,9 @@ const QuestRuntime = {
     const QS = S_story.quests || {};
     if (g.questsAttempted && !g.questsAttempted.every(id => (QS[id] || '') !== '')) return false;
     if (g.questsDone && !g.questsDone.every(id => QS[id] === 'done' || QS[id] === 'complete')) return false;
+    // NPC-favor threshold (replaces `(S_story.npcFavorability||{}).<npc> >= n`):
+    // favorMin → object of { npcKey: minFavor }, all required.
+    if (g.favorMin) { const fav = S_story.npcFavorability || {}; for (const npc in g.favorMin) if ((fav[npc] || 0) < g.favorMin[npc]) return false; }
     return true;
   },
 
@@ -30048,7 +30049,11 @@ function storyRender(node, prefix) {
           const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
           const modStr = (mod + prof >= 0 ? '+' : '') + (mod + prof);
           // Act V alt text (legacy only)
-          const vText = scBit ? (q.vignetteText || q.hint || '') : ((q.vignetteTextAlt && S_story.ceremonia_yael_04_failed) ? q.vignetteTextAlt : q.vignetteText);
+          // vignetteTextAlt (shown when the player failed yael_04) is honored on
+          // BOTH the legacy and UQF paths so a migrated quest keeps its alt text.
+          const vText = (q.vignetteTextAlt && S_story.ceremonia_yael_04_failed)
+            ? q.vignetteTextAlt
+            : (scBit ? (q.vignetteText || q.hint || '') : q.vignetteText);
           const att = (S_story.skillCheckAttempts || {})[id];
           const retryDay = att ? att.lastDay + (q.retryGateDays || 1) : null;
           body.appendChild(_mkCard({

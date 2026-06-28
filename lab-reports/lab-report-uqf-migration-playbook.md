@@ -22,7 +22,8 @@ formats to Universal Quest Format (UQF v1.0)
 | Phase 3c | Declarative completion path (`canComplete`) + `wis_00/06/07` migrated → arc 100 % UQF | `fcd1e37` |
 | Wave 1a | Wane's Crown (`quest_wane_01`–`06`) + `gate.questsAttempted`/`questsDone` terms; `onPass` closure preserved via `_legacy_fn` | `24becb6` |
 | Wave 1b | Whisper's Crown (`quest_whisper_01`–`06`); first Wave-1 `side` quest (`whisper_05`: `completeFn`→`completion` gate, `onComplete` kept as live hook); flaky-FAIL-test fix | `7b69ce7` |
-| Wave 1c | Glut's Crown (`quest_glut_01`–`06`); `side` quest with a **flag** activation gate + multi-effect `onComplete` (inventory splice + crown flag). All 3 crone Crowns now 100% UQF. | _this commit_ |
+| Wave 1c | Glut's Crown (`quest_glut_01`–`06`); `side` quest with a **flag** activation gate + multi-effect `onComplete` (inventory splice + crown flag). All 3 crone Crowns now 100% UQF. | `ee58181` |
+| Wave 1d | Ceremonia: Yael arc (`quest_ceremonia_yael_01`–`05`); + `gate.favorMin` term, `checkFailFlag`→`onFail:[mission_bit]`, vignetteTextAlt render parity fix | _this commit_ |
 
 **Proven properties:**
 - **Behavior parity** — every migrated quest produces byte-identical state
@@ -107,10 +108,23 @@ to run per quest (and per arc):
 10. If a quest needs a mechanic the registry lacks, add a **reusable** bit
     kind or gate term (with a `BIT_CONTRACTS` entry + handler), not a
     quest-specific branch. So far this produced: `mission_bit` bit kind, the
-    `battles` completion term, and (Wave 1a) the **`gate.questsAttempted`**
+    `battles` completion term, (Wave 1a) the **`gate.questsAttempted`**
     (`(quests[id]||'')!==''`, ×23 in QUEST_DB) + **`gate.questsDone`**
-    (`done`/`complete`) chain terms in `canActivate`. Each immediately served
-    multiple quests.
+    (`done`/`complete`) chain terms, and (Wave 1d) **`gate.favorMin`**
+    (`{npc:n}` ← `(npcFavorability||{}).x >= n`) — all in `canActivate`. Each
+    immediately served multiple quests.
+
+> **§C note — fail flags & the onFail chain.** The legacy non-retryable fail
+> path grants `checkFailFlag` via `_grantMissionBit(checkFailFlag, bitLabel)`
+> (`_rollCeremonia`, ~L6308) — but `_resolveQuestUQF` does NOT replicate that.
+> So a quest with a `checkFailFlag` must carry an explicit
+> `onFail:[{kind:'mission_bit', flag:<checkFailFlag>}]`. (Safe because such
+> quests are non-retryable: every fail is terminal, so the onFail chain runs
+> exactly once — matching the legacy `else` branch.) Likewise `checkPassFlag`
+> ⇒ an `onPass` `mission_bit` (the engine applies neither check*Flag itself).
+> `retryGateDays` needs no migration: the retry helpers read `q.retryGateDays`
+> directly (schema-agnostic), and `_resolveQuestUQF` records `skillCheckAttempts`
+> identically to legacy.
 11. **Imperative shared helpers** (e.g. `_addCroneMark()` = counter++ +
     inn-kindness) that don't decompose cleanly into declarative bits are the
     legitimate use of the **`_legacy_fn`** escape hatch: `{kind:'_legacy_fn',
@@ -161,6 +175,12 @@ game (`page.goto('/roll2hit-v3.html')`), and read **bare top-level globals**
   completion loop) so dispatch, render, and gates are all exercised.
 - **Throwaway fixtures** for engine-only tests: inject a synthetic quest into
   `QUEST_DB`, assert, then `delete` it (fresh page per test makes this safe).
+- **Assert on the rendered container, NOT `document.body`.** When a test checks
+  rendered panel text, read `document.getElementById('story-info-row').innerHTML`
+  (the quest-panel container), not `document.body.innerHTML` — the latter
+  includes the inline `<script>` source, so every quest's literal strings (e.g.
+  both `vignetteText` AND `vignetteTextAlt`) always "match" and the assertion is
+  meaningless. (Wave 1d's render test hit exactly this.)
 - **Assert byte-level parity** against the legacy source values: status `done`,
   the page flag `true`, the **mission-bit token** present
   (`inventory.find(i => i.flagRef === flag && i.type === 'mission_bit')`), exact
@@ -190,7 +210,8 @@ codemod** (the simple skill_checks are too numerous — ~2149 — to hand-edit).
 | **1a ✅** | Wane's Crown (`quest_wane_01`–`06`) | 6 | full bit-chain transform; added `gate.questsAttempted`/`questsDone` chain terms; `onPass:()=>_addCroneMark()` preserved via `_legacy_fn`; `xpAward`→`reward`. |
 | **1b ✅** | Whisper's Crown (`quest_whisper_01`–`06`) | 6 | same pattern ×5 skill_checks; **first Wave-1 `side` quest** (`whisper_05`): `completeFn`→`completion:{flags}`, `onComplete` **kept verbatim** (fires from `storyCheckQuests` for any schema — see §C.note). |
 | **1c ✅** | Glut's Crown (`quest_glut_01`–`06`) | 6 | ×5 skill_checks; `side` quest (`glut_06`) with a **flag** activation gate (`gate:{flags:['glut_gift_held']}`) + a multi-effect `onComplete` (inventory splice of "Glut's Gift" + crown flag), kept verbatim. Confirms the side-quest pattern generalizes across flag-gated and chain-gated activation. |
-| **1** | skill-check arcs **with** `onPass` closures | **78** | full bit-chain transform (the wis/wane pattern). Remaining arcs: `whisper`(5), `glut`(5), `ceremonia_yael`(5), `1367_*`(4), `d0205`–`d0210`(15), `inn`(3), `spark`/`spark2`, `inquisitor`(3), `sea`, `sb`, `hunt`/`hunt2`, `bilge`, `alch`, `scar` + ~13 singletons (`basket_damascus`, `iodine`, `shore`, `forge`, `sunken`, `df`, `sk`, `lxvii67`, `guide_04`, `d0201_a5`/`d0204_a5`/`d0210_a5`). |
+| **1d ✅** | Ceremonia: Yael romance arc (`quest_ceremonia_yael_01`–`05`) | 5 | richest arc yet — real `checkPassFlag`→`mission_bit`, `checkFailFlag`→`onFail:[mission_bit]` (the legacy non-retryable fail path grants the fail flag; `_resolveQuestUQF` does not, so make it an explicit onFail bit), numeric `onPass` counter + favor/item closure via `_legacy_fn`. **New `gate.favorMin`** term; **vignetteTextAlt render parity fix** (UQF path now honors it). |
+| **1** | skill-check arcs **with** `onPass` closures | **78** (done: wane 6, whisper 5, glut 5, ceremonia_yael 5 = **21**) | full bit-chain transform (the wis/wane pattern). Remaining arcs: `1367_*`(4), `d0205`–`d0210`(15), `inn`(3), `spark`/`spark2`, `inquisitor`(3), `sea`, `sb`, `hunt`/`hunt2`, `bilge`, `alch`, `scar` + ~13 singletons (`basket_damascus`, `iodine`, `shore`, `forge`, `sunken`, `df`, `sk`, `lxvii67`, `guide_04`, `d0201_a5`/`d0204_a5`/`d0210_a5`). |
 | **2** | simple skill-checks (checkPassFlag/xpAward only) | **~2149** | **codemod, not hand-migration.** Mechanical rewrite `{checkAbility,checkLabel,checkDC,checkPassFlag,xpAward,goldAward}` → `schema+gate+bits:[{skill_check, onPass:[mission_bit?, reward?]}]`. Run in batches; parity-test each batch with the existing harness. The dominant chain gate `(quests['prev']||'')!==''` is already covered by `gate.questsAttempted`. |
 | **3** | `side` quests (completeFn) | 129 | declarative `completion` gates. Needs `item_check` gate term finalized; per-id hardcoded completion side-effects in `storyCheckQuests` move into completion bit chains. |
 | **4** | `combat` quests | 71 | needs a UQF combat-quest resolver (the `combat` bit kind exists; wire resolution mirroring legacy combat-quest completion). Largest non-skill bucket — was mis-counted as 2 in the first survey. |

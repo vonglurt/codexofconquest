@@ -843,3 +843,175 @@ test.describe('§ARCH-01 Wave 1 — Glut\'s Crown arc (quest_glut_01..06)', () =
     expect(r.kindness).toBeGreaterThanOrEqual(1);
   });
 });
+
+// ── §ARCH-01 Wave 1 — Ceremonia: Yael romance arc (quest_ceremonia_yael_01..05) ──
+//
+// Richer than the crones — exercises most of the registry at once:
+//  • real checkPassFlag → mission_bit token+flag on PASS (yael_01..05)
+//  • checkFailFlag      → mission_bit on FAIL (yael_04, non-retryable)
+//  • numeric onPass counter (ceremoniaYaelAct=N) → kept via _legacy_fn
+//  • yael_05 onPass also grants favor + an inventory token (verbatim closure)
+//  • NEW gate term `favorMin` (replaces `(npcFavorability||{}).yael >= n`)
+//  • retryable:true (yael_01..03) vs false (yael_04..05)
+//  • vignetteTextAlt now honored on the UQF render path (parity fix)
+
+test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01..05)', () => {
+  const IDS = ['quest_ceremonia_yael_01','quest_ceremonia_yael_02','quest_ceremonia_yael_03','quest_ceremonia_yael_04','quest_ceremonia_yael_05'];
+
+  test('all five validate as UQF with mission_bit + reward + transcription', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((ids) => ids.map(id => {
+      const q = QUEST_DB[id]; const bit = q.bits[0];
+      const mb = (bit.onPass||[]).find(b => b.kind==='mission_bit');
+      const rw = (bit.onPass||[]).find(b => b.kind==='reward');
+      return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, dc:bit.dc,
+               passFlag:mb && mb.flag, xp:rw && rw.xp, retryable:q.retryable,
+               failFlag:((bit.onFail||[]).find(b=>b.kind==='mission_bit')||{}).flag };
+    }), IDS);
+    expect(r.every(x => x.schema==='UQF-1.0' && x.valid && x.passFlag)).toBe(true);
+    expect(r).toMatchObject([
+      { id:'quest_ceremonia_yael_01', stat:'CHA', dc:10, xp:75,  passFlag:'ceremoniaPassed_yael_01', retryable:true },
+      { id:'quest_ceremonia_yael_02', stat:'WIS', dc:12, xp:100, passFlag:'ceremoniaPassed_yael_02', retryable:true },
+      { id:'quest_ceremonia_yael_03', stat:'STR', dc:12, xp:100, passFlag:'ceremoniaPassed_yael_03', retryable:true },
+      { id:'quest_ceremonia_yael_04', stat:'CHA', dc:14, xp:125, passFlag:'ceremoniaPassed_yael_04', retryable:false, failFlag:'ceremonia_yael_04_failed' },
+      { id:'quest_ceremonia_yael_05', stat:'CHA', dc:15, xp:150, passFlag:'ceremonia_yael_complete', retryable:false },
+    ]);
+  });
+
+  test('each PASS grants the mission-bit token+flag, exact xp, and runs the act-counter closure', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const got = await page.evaluate((ids) => {
+      const meta = {
+        quest_ceremonia_yael_01:{ flag:'ceremoniaPassed_yael_01', xp:75,  act:1 },
+        quest_ceremonia_yael_02:{ flag:'ceremoniaPassed_yael_02', xp:100, act:2 },
+        quest_ceremonia_yael_03:{ flag:'ceremoniaPassed_yael_03', xp:100, act:3 },
+        quest_ceremonia_yael_04:{ flag:'ceremoniaPassed_yael_04', xp:125, act:4 },
+        quest_ceremonia_yael_05:{ flag:'ceremonia_yael_complete', xp:150, act:5 },
+      };
+      const out = {};
+      for (const id of ids) {
+        const m = meta[id];
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 1000000; S_story.day = 1;
+        S_story.inventory = []; S_story.ceremoniaYaelAct = 0;
+        delete S_story[m.flag];
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        out[id] = {
+          status: S_story.quests[id],
+          flag: !!S_story[m.flag],
+          token: !!S_story.inventory.find(i => i.flagRef === m.flag && i.type === 'mission_bit'),
+          dxp: S_story.xp - 1000000,
+          act: S_story.ceremoniaYaelAct,
+        };
+      }
+      // yael_05 extras: favor bump + Watch Token item
+      out.yael05favor = (S_story.npcFavorability||{}).yael || 0;
+      out.yael05token = !!S_story.inventory.find(i => i.name === "Yael's Watch Token");
+      return { out, meta };
+    }, IDS);
+    for (const id of IDS) {
+      expect(got.out[id].status, id).toBe('done');
+      expect(got.out[id].flag, id).toBe(true);
+      expect(got.out[id].token, id).toBe(true);
+      expect(got.out[id].dxp, id).toBe(got.meta[id].xp);
+      expect(got.out[id].act, id).toBe(got.meta[id].act);
+    }
+    expect(got.out.yael05favor).toBeGreaterThanOrEqual(3);   // _setNpcFavor('yael',3)
+    expect(got.out.yael05token).toBe(true);                   // Yael's Watch Token granted
+  });
+
+  test('yael_04 non-retryable FAIL → failed + grants the checkFailFlag mission-bit', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { cha:-100 };                  // deterministic fail
+      S_story.level = 1; S_story.day = 1; S_story.inventory = [];
+      delete S_story.ceremonia_yael_04_failed; delete S_story.ceremoniaPassed_yael_04;
+      S_story.quests = { quest_ceremonia_yael_04:'active' };
+      _rollCeremonia('quest_ceremonia_yael_04');
+      return {
+        status: S_story.quests.quest_ceremonia_yael_04,
+        failFlag: !!S_story.ceremonia_yael_04_failed,
+        failToken: !!S_story.inventory.find(i => i.flagRef === 'ceremonia_yael_04_failed' && i.type === 'mission_bit'),
+        passFlag: !!S_story.ceremoniaPassed_yael_04,
+      };
+    });
+    expect(r.status).toBe('failed');
+    expect(r.failFlag).toBe(true);     // checkFailFlag → onFail mission_bit
+    expect(r.failToken).toBe(true);
+    expect(r.passFlag).toBe(false);
+  });
+
+  test('yael_01 retryable FAIL → stays active, records an attempt, grants no flag', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { cha:-100 };
+      S_story.level = 1; S_story.day = 5; S_story.inventory = [];
+      delete S_story.ceremoniaPassed_yael_01; S_story.skillCheckAttempts = {};
+      S_story.quests = { quest_ceremonia_yael_01:'active' };
+      _rollCeremonia('quest_ceremonia_yael_01');
+      return {
+        status: S_story.quests.quest_ceremonia_yael_01,
+        attemptDay: (S_story.skillCheckAttempts.quest_ceremonia_yael_01||{}).lastDay,
+        failures: (S_story.skillCheckAttempts.quest_ceremonia_yael_01||{}).failures,
+        flag: !!S_story.ceremoniaPassed_yael_01,
+      };
+    });
+    expect(r.status).toBe('active');   // retryable ⇒ not locked
+    expect(r.attemptDay).toBe(5);
+    expect(r.failures).toBe(1);
+    expect(r.flag).toBe(false);
+  });
+
+  test('favorMin gate term: yael_01 (favor∧quest) and yael_05 (flagsAny∧favor)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const set = (favor, obj) => { S_story.npcFavorability = { yael:favor }; S_story.quests = {};
+        ['ceremoniaPassed_yael_04','ceremonia_yael_04_failed'].forEach(f => delete S_story[f]);
+        Object.assign(S_story, obj || {}); };
+      // yael_01: needs favor>=1 AND quest_slums_cleanup done
+      set(0, {}); const y1_noFavorNoQuest = QuestRuntime.canActivate('quest_ceremonia_yael_01');
+      set(1, {}); const y1_favorNoQuest = QuestRuntime.canActivate('quest_ceremonia_yael_01');
+      set(1, {}); S_story.quests = { quest_slums_cleanup:'complete' }; const y1_both = QuestRuntime.canActivate('quest_ceremonia_yael_01');
+      // yael_05: needs (pass04 OR fail04) AND favor>=3
+      set(2, { ceremonia_yael_04_failed:true }); const y5_lowFavor = QuestRuntime.canActivate('quest_ceremonia_yael_05');
+      set(3, { ceremonia_yael_04_failed:true }); const y5_viaFail = QuestRuntime.canActivate('quest_ceremonia_yael_05');
+      set(3, { ceremoniaPassed_yael_04:true });  const y5_viaPass = QuestRuntime.canActivate('quest_ceremonia_yael_05');
+      set(3, {}); const y5_noFlag = QuestRuntime.canActivate('quest_ceremonia_yael_05');
+      return { y1_noFavorNoQuest, y1_favorNoQuest, y1_both, y5_lowFavor, y5_viaFail, y5_viaPass, y5_noFlag };
+    });
+    expect(r).toMatchObject({
+      y1_noFavorNoQuest:false, y1_favorNoQuest:false, y1_both:true,
+      y5_lowFavor:false, y5_viaFail:true, y5_viaPass:true, y5_noFlag:false,
+    });
+  });
+
+  test('vignetteTextAlt is shown on the UQF render path when yael_04 was failed', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { cha:14 }; S_story.level = 1; S_story.currentCode = 'LHR';
+      const render = (failed) => {
+        S_story.ceremonia_yael_04_failed = failed;
+        S_story.quests = { quest_ceremonia_yael_05:'active' };
+        storyRender(NODE_MAP['LHR']);
+        // read the rendered quest-panel container only — NOT document.body, whose
+        // innerHTML includes the <script> source (where both literals also live).
+        return document.getElementById('story-info-row').innerHTML;
+      };
+      const altPart = 'I heard about the report';      // from vignetteTextAlt
+      const mainPart = 'You told her your name outside the mortuary'; // from vignetteText
+      const failedHtml = render(true);
+      const passHtml   = render(false);
+      return {
+        failShowsAlt: failedHtml.includes(altPart),
+        failHidesMain: !failedHtml.includes(mainPart),
+        passShowsMain: passHtml.includes(mainPart),
+        passHidesAlt: !passHtml.includes(altPart),
+      };
+    });
+    expect(r.failShowsAlt).toBe(true);
+    expect(r.failHidesMain).toBe(true);
+    expect(r.passShowsMain).toBe(true);
+    expect(r.passHidesAlt).toBe(true);
+  });
+});
