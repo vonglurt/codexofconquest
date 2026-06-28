@@ -169,7 +169,7 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 ### §WALK-2-FU — Mover follow-ups (opened 2026-06-26)
 
 - [x] **Pre-commit hook bug — `cleanup-cruft.sh` `PRUNE_LIST[@]: unbound variable`** ✅ **DONE 2026-06-26.** Root cause: **bash 3.2** (macOS default; `env bash`=3.2.57) treats `"${arr[@]}"` on an EMPTY array as unbound under `set -u`. The two `finalize_archive` loops expanded `PRUNE_LIST` unguarded; the `--no-archive` loop runs unconditionally and the archive-staging loop runs whenever a log was capped (`has_log_snapshots=1`) even with `pruned=0`. (`PRUNE_LIST=()` was already declared — declaration is fine; only empty-array *expansion* errors on 3.2.) Fix: guarded both expansions with `${PRUNE_LIST[@]+"${PRUNE_LIST[@]}"}` (lines 140, 156). The old script masked its own failure (EXIT-trap `rm` reset `$?` to 0, so commits landed but the archive build + prune-removal were **skipped** that run). **Verified**: `bash -n` clean; sandbox before/after — old prints `unbound variable` and skips the archive, fixed completes (log capped, archive built, exit 0). Other `[@]` expansions (arcs/patches/heat/rw/snaps) are all guarded by `${#…}` count checks. (~~wire server `terrainAt`/`encounterRate`~~ ✅ §WALK-5 Inc 1.)
-- [ ] **`terrainAt`/`encounterRate` on the server world** — `getMoverWorld()` omits them (server encounters are §WALK-5). When §WALK-5 lands, wire them so `MoveResult.encounter` is populated server-side and the instanced-encounter roll (§7.1) can read it.
+- [x] **`terrainAt`/`encounterRate` on the server world** ✅ **DONE — §WALK-5 Inc 1** (`getMoverWorld()` wires `terrainAt`/`encounterRate`/`getSeaLanes()`; kernel reports real `encounter.baseRate`, `scripts/check-terrain-parity.js` guards it). `MoveResult.encounter` is populated server-side and the instanced roll reads it.
 - [x] **Ferry hook removed** ✅ (§WALK-5-FU, 2026-06-26) — `mover.js`'s `world.ferryEdges` branch is **deleted**, not data-authored: §WALK-1.5 carries every crossing as a SEA_LANES land-bridge (passable cell), so a `FERRY_EDGES` table would be a redundant parallel mechanism. Dropped `viaFerry` + unused `fromKey` from both byte-identical MOVER:CORE copies (`via` is now always `'step'`; no consumer branched on `'ferry'`); rewrote the doc-comments in `mover.js`/`roll2hit-v3.html`/`wbapi-server.js`. `check:walk` green (parity 1847B identical), MUD harness 24/24. See lab report §4.5.
 
 ### Mechanics & Systems
@@ -216,6 +216,41 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 **For reference — §WALK-5 (the prior op) ✅ COMPLETE** (`lab-reports/lab-report-walk5-mud-harness.md`): Inc 1 world inputs + `check-terrain-parity.js`, Inc 2 per-session seeded RNG + instanced roll at `s.encounter`, Inc 3 `tests/mud-harness.mjs` (`npm run test:mud`; fixed a `session/say` double-send), Inc 4 idle-TTL-prune assert + CI `mud` job. Harness **24/24**. §WALK-5-FU (ferry) closed by deleting the inert kernel branch.
 
 ### All outstanding work (index into the sections above)
+
+**✅ Closed (do not reopen):** §WALK-1→5 + §WALK-1.5-FU + §WALK-2-FU + §WALK-5-FU · §TIMELESS-01 + FU · §CELL-14 (+§CELL-14-FU Dunfall→DNF) · §WBAPI-01 ph1–5 + ph4-FU · §EDITOR-01-D core (Inc 1–4) · **§EDITOR-01-D-FU (a)+(b)** (visual `buildChainEditor` + 22-branch ladder→itemChain) · §EDITOR-02 core (Inc 1–4).
+
+**⏳ OPEN — complete checklist (consolidated 2026-06-27, in execution order). Every code item is one-increment-per-"continue"; every Game-content arc needs a `lab-report-*.md` locking data shapes BEFORE any HTML edit.**
+
+_Tooling (the active arc — lowest-friction first):_
+- [ ] **§EDITOR-02-FU** — Mission Builder follow-ups: branching arcs, drag-reorder (reuses the §EDITOR-01-D-FU(a) widget), whole-arc UQF export (→ feeds §EDITOR-03). Pure worldbuilder; no lab report needed to start.
+- [ ] **§WALK-G extensions** — terrain-color dots, act filter, in-context node creation, compass rose (worldbuilder map UI). No engine change.
+- [ ] **§WORLDBUILDER-01** — visual grid editor: canvas node map, bidirectional exit wiring, collision detection. Larger; API-first (all graph mutations via WBAPI per [[feedback_api_only_connections]]).
+- [ ] **§EDITOR-03 — Worldbuilder UQF export** — "export UQF" button in worldbuilder.html. **Gated on §ARCH-01 landing** (needs the UQF schema).
+
+_Data / Architecture (big levers — each needs a lab report first):_
+- [ ] **§DATA-01-REVERTED** — restore the quest data/code separation (`QUEST_EFFECTS`/`QUEST_HOOKS`/`applyQuestEffects`) that index.md once claimed but is **absent from code**. This is the declarative **effects layer** that would subsume the §EDITOR-01-D-FU(b) residue — the 19 gold/favor/XP/flag ladder branches, the 2 dynamic-item branches (`tl_01`/`tl_03`), and `wm_01`'s count-limited seal removal. Overlaps §ARCH-01. Prereq: lab report. See `project_data01_reverted`.
+- [ ] **§ARCH-01 — Universal Quest Format (UQF v1.0)** — unify the 3 incompatible quest formats. Phase 0 ✅ (anchors + worldbuilder). Remaining: P1 `SCHEMA_VERSION`+`QuestRuntime`+`adaptLegacyQuest` (inert) → P2 new arcs in UQF → P3 arc-by-arc migration (§WISDOM-01 first) → P4 remove legacy path → P5 QUEST_DB = single source of truth. Prereq: `lab-report-quest-api-architecture.md`. See `project_quest_api`.
+
+_Game-content arcs (each REQUIRES a `lab-report-*.md` before HTML edits):_
+- [ ] **§GR — La Riva grief arc** — design-complete (2026-05-26), Layer 78+; corruption→grief causal chain; node AMS (design: FR). See `project_grief_arc`.
+- [ ] **§DESIGN-03 — Ceremonia Roll + starting-city expansion** — `d20+abilityMod+profBonus≥DC` skill checks, `type:'skill_check'` quests, Yael 5-act romantic vignette arc, 4 new Birka missions. See `project_ceremonia_roll`.
+- [ ] **§DUNGEON-01 — 10 dungeon themes** — priority D01-03 hero-origin canon (player = trapped Scholar King Apprentice; Prior Carrier NPC at NUE); Mimic Meadows (Node LIM), Loop Heart, Shifting Labyrinth, Sacrifice Gates, Scholar Workshop. See `project_dungeon_themes`.
+- [ ] **§MATH-01 — Mathematical world** — group-theory overlay; nodes EHZ (Event Horizon) + MONS (Monster's Manifold ~8×10^53); counting quest; Adventure Time register for EHZ/MONS. See `project_math_world`.
+- [ ] **§1367 — Historical 1367 AD integration** — 6 events → quest seeds (Nájera/routiers, Tamerlane, Ottoman Balkans, Hanseatic peak, Wycliffe, Black Death). **8 clarification questions gate integration.** See `project_1367_setting`.
+- [ ] **§FUTURE-01 — Saul→Paul arc** — unscheduled; Middle East node map; Acts/Pauline fidelity; Damascus-Road conversion mechanic rewrites quest availability (combat→rhetoric); 13 nodes, 9 quests. See `project_future_saul_paul`.
+- [ ] **§GR-D — Froberger Entry 42** — blank page filled on second playthrough. **Blocked: requires NG+ state tracking (currently unsupported).**
+
+_Mechanics & systems:_
+- [ ] **§MBIT-02 — mission-bit follow-ups** — `bitLabel` cleanup (Paul-arc quests), `_takeMissionBit` call sites for consumed tokens, worldbuilder schema update, token timeline in journal. See `project_mission_bit_tokens`.
+- [ ] **Global monster drop nerf (−3→0 floor)** — design intent (fishing = the exclusive positive-magic-loot vector) never shipped; monster drops still yield 0..+3. See `project_open_gaps`.
+- [ ] **`fishmongerRowRestored` visual rebuild** — flag sets on `quest_la_riva_03` but AMS node has no `partial_market` "after restoration" text variant. **Blocks on §GR.**
+- [ ] **UI gaps** — `[INVESTIGATE]` buttons don't highlight on node entry (root cause unknown); reading-circle has no progress UI. See `project_open_gaps`.
+
+_Design decisions (pending — resolve before the systems they touch):_
+- [ ] **Arc ID as first-class UQF field** — add explicit `arc:'quest_wis'` to quest objects (enables arc sorting without string-splitting). Folds into §ARCH-01.
+- [ ] **§MBIT-02-E token/gate ontology** — keep `KEY_EVENTS` items and mission-bit tokens separate (different ontology) vs unify. Decision pending; gates §MBIT-02 schema work.
+
+_Retrospective (closed milestones, kept for context — see the ✅ line above):_
 
 - **§TIMELESS-01:** Inc A ✅ + Inc B ✅ + Inc C ✅ + Inc D ✅ + FU ✅ — **fully complete** (incl. the deep Hunt-residue doc sweep across all 7 deeper spec docs). Spec: `lab-reports/lab-report-timeless-movement-hunt-removal.md`.
 - **§WALK series (sequential): ✅ FULLY CLOSED.** §WALK-3 ✅ + §WALK-4 ✅ + **§WALK-5 ✅** (MUD multi-client harness — Inc 1 world inputs + parity guard, Inc 2 seeded RNG + instanced roll, Inc 3 `tests/mud-harness.mjs`, Inc 4 idle-TTL assert + CI `mud` job; **24/24**) + **§WALK-5-FU ✅** (ferry kernel branch deleted). No open §WALK items remain.
