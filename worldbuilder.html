@@ -9333,6 +9333,7 @@ window.buildChainEditor = buildChainEditor;
 //   arcDraft = { arcId, arcLabel, activateNode, steps:[Step] }
 //   Step     = { type, title, desc, hint, activateNode?,        // common
 //                gateMode:'auto'|'manual'|'none', activateCond?, // chaining
+//                gateAfter?,                                     // §FU branch: fork off step # (1-based)
 //                checkStat,checkSkill,checkDC,xpAward,onPass,onFail,checkPassFlag, // skill_check
 //                completeItems,targetMonsterKeys,killGoals,completeFn,passText,    // side (csv / line text)
 //                itemChain }                                     // §EDITOR-01-D textarea grammar
@@ -9350,6 +9351,15 @@ function edArcProducerFlag(step, i, arcId) {
 }
 function edArcEffectiveGate(step, i) {
   return (step && step.gateMode) || (i === 0 ? 'none' : 'auto');
+}
+// §EDITOR-02-FU branching: an auto-gated step normally reads the immediately-
+// previous step's producer flag, but may fork off ANY earlier step via
+// `gateAfter` (1-based step number). Empty/forward/invalid → previous (i-1),
+// so a plain linear arc is unchanged. Returns the 0-based predecessor index.
+function edArcGateIndex(step, i) {
+  const raw = step && step.gateAfter;
+  const p = (raw == null || String(raw).trim() === '') ? i - 1 : (parseInt(raw, 10) - 1);
+  return (Number.isInteger(p) && p >= 0 && p < i) ? p : i - 1;
 }
 function buildArcQuests(arcDraft) {
   const draft  = arcDraft || {};
@@ -9372,9 +9382,11 @@ function buildArcQuests(arcDraft) {
     if (gate === 'manual') {
       if (sval(step.activateCond)) q.activateCond = sval(step.activateCond);
     } else if (gate === 'auto' && i > 0) {
-      // Read the previous step's producer flag. Emit an arrow-fn SOURCE string —
+      // Read the producer flag of the resolved predecessor (prev by default, or a
+      // forked-from earlier step via gateAfter). Emit an arrow-fn SOURCE string —
       // never a bare identifier, or the save-abort guard (wbapi-core.js) fires.
-      q.activateCond = `(s)=>s.${edArcProducerFlag(steps[i - 1], i - 1, arcId)}`;
+      const p = edArcGateIndex(step, i);
+      q.activateCond = `(s)=>s.${edArcProducerFlag(steps[p], p, arcId)}`;
     } // 'none' → no activateCond
 
     // ── type-specific fields ──
@@ -9403,8 +9415,9 @@ function buildArcQuests(arcDraft) {
     // ── itemChain: author steps + (non-skill) producer flag iff consumed downstream ──
     let chain = parseItemChainText(sval(step.itemChain));
     if (type !== 'skill_check') {
-      const next = steps[i + 1];
-      const consumed = next && edArcEffectiveGate(next, i + 1) === 'auto';
+      // Materialise the producer grantBit iff SOME later auto step forks off this
+      // one (branching widens "the next step" → "any downstream step gating here").
+      const consumed = steps.some((nx, k) => k > i && edArcEffectiveGate(nx, k) === 'auto' && edArcGateIndex(nx, k) === i);
       if (consumed) {
         const flag = edArcProducerFlag(step, i, arcId);
         if (!chain.some(c => c.action === 'grantBit' && c.flag === flag))
@@ -9802,6 +9815,7 @@ edUpdatePreview();
         <select class="mb-gate" style="${sty};flex:0 0 110px" title="How this step activates">
           <option value="auto">gate: auto</option><option value="none">gate: none</option><option value="manual">gate: manual</option>
         </select>
+        <input class="mb-after" type="number" min="1" placeholder="after # (prev)" title="Auto-gate: fork off which earlier step's completion (blank = previous step)" style="${sty};flex:0 0 120px">
         <input class="mb-cond" placeholder="(s)=>s.flag" style="${sty};flex:1;display:none">
       </div>
       <div class="mb-skill" style="display:none;gap:6px;flex-wrap:wrap">
@@ -9824,11 +9838,14 @@ edUpdatePreview();
       row.querySelector('.mb-side').style.display  = isSkill ? 'none' : 'flex';
     };
     typeSel.addEventListener('change', sync); sync();
-    // gate manual → reveal activateCond input
+    // gate → manual reveals activateCond; auto reveals the branch "after #" picker
     const gateSel = row.querySelector('.mb-gate');
-    gateSel.addEventListener('change', () => {
-      row.querySelector('.mb-cond').style.display = gateSel.value === 'manual' ? '' : 'none';
-    });
+    const gateSync = () => {
+      const g = gateSel.value;
+      row.querySelector('.mb-cond').style.display  = g === 'manual' ? '' : 'none';
+      row.querySelector('.mb-after').style.display = g === 'auto'   ? '' : 'none';
+    };
+    gateSel.addEventListener('change', gateSync); gateSync();
     row.querySelector('.mb-rm').addEventListener('click', () => { row.remove(); mbRenumber(); });
     // §EDITOR-02-FU: reorder steps — ▲/▼ (canonical, testable) + grip drag (additive).
     // buildArcQuests numbers by DOM position, so reordering + re-Build re-wires the
@@ -9866,6 +9883,7 @@ edUpdatePreview();
         title:        v(row, '.mb-title'),
         activateNode: v(row, '.mb-node'),
         gateMode:     v(row, '.mb-gate'),
+        gateAfter:    v(row, '.mb-after'),
         activateCond: v(row, '.mb-cond'),
         checkStat:    v(row, '.mb-stat'),
         checkSkill:   v(row, '.mb-skill-name'),

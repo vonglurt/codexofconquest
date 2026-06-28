@@ -118,6 +118,45 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02)', () =>
     expect(qs2[1].activateCond).toBe('(s)=>s.customFlag');
   });
 
+  // ── §EDITOR-02-FU — branching: a step forks off an arbitrary EARLIER step ──
+  test('branching: gateAfter forks two steps off the same predecessor', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    const qs = await page.evaluate(() => window.buildArcQuests({
+      arcId: 'quest_branch', activateNode: 'BMA',
+      steps: [
+        { type: 'side', title: 'Root' },                       // _1 — fork point
+        { type: 'side', title: 'Branch X' },                   // _2 — gates on prev (_1)
+        { type: 'side', title: 'Branch Y', gateAfter: '1' },   // _3 — forks back to _1
+      ],
+    }));
+    // Both branches read step 1's producer flag.
+    expect(qs[1].activateCond).toBe('(s)=>s.quest_branch_1_done');
+    expect(qs[2].activateCond).toBe('(s)=>s.quest_branch_1_done');
+    // Step 1 is consumed by two downstream steps → exactly one grantBit producer.
+    expect(qs[0].itemChain).toEqual([{ action: 'grantBit', flag: 'quest_branch_1_done' }]);
+    // The two leaf branches are terminal → no stray producer token.
+    expect('itemChain' in qs[1]).toBe(false);
+    expect('itemChain' in qs[2]).toBe(false);
+  });
+
+  test('branching: blank / forward / out-of-range gateAfter falls back to previous', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    const qs = await page.evaluate(() => window.buildArcQuests({
+      arcId: 'quest_fb', activateNode: 'BMA',
+      steps: [
+        { type: 'side', title: 'A' },
+        { type: 'side', title: 'B', gateAfter: '9' },   // out of range → prev (_1)
+        { type: 'side', title: 'C', gateAfter: '5' },   // forward/oob → prev (_2)
+      ],
+    }));
+    expect(qs[1].activateCond).toBe('(s)=>s.quest_fb_1_done');
+    expect(qs[2].activateCond).toBe('(s)=>s.quest_fb_2_done');
+    // Linear fallback chain: each non-leaf gets its producer grantBit.
+    expect(qs[0].itemChain).toEqual([{ action: 'grantBit', flag: 'quest_fb_1_done' }]);
+    expect(qs[1].itemChain).toEqual([{ action: 'grantBit', flag: 'quest_fb_2_done' }]);
+    expect('itemChain' in qs[2]).toBe(false);
+  });
+
   // ── Inc 3 — the tab UI: fill a 2-step arc, Build Chain, inspect the preview ──
   test('Mission tab: Build Chain renders the resolved chain + connector flag', async ({ page }) => {
     await page.goto('/worldbuilder.html');
@@ -188,6 +227,29 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02)', () =>
     // ▲ on the top row is a no-op (no previous sibling).
     await page.click('#mb-steps .mb-step:nth-child(1) .mb-up');
     expect(await page.locator('#mb-steps .mb-step:nth-child(1) .mb-title').inputValue()).toBe('Beta');
+  });
+
+  test('Mission tab: "after #" picker forks a step off an earlier one (§EDITOR-02-FU)', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    await page.evaluate(() => (window.switchTab('mission'), document.getElementById('welcome-screen').classList.add('hidden')));
+    await page.fill('#mb-arcId', 'quest_ui');
+    await page.fill('#mb-steps .mb-step:nth-child(1) .mb-title', 'Root');
+    await page.click('#mb-add');
+    await page.fill('#mb-steps .mb-step:nth-child(2) .mb-title', 'Branch X');
+    await page.click('#mb-add');
+    await page.fill('#mb-steps .mb-step:nth-child(3) .mb-title', 'Branch Y');
+    // The after-# picker is visible for auto-gated steps; fork step 3 back to step 1.
+    await expect(page.locator('#mb-steps .mb-step:nth-child(3) .mb-after')).toBeVisible();
+    await page.fill('#mb-steps .mb-step:nth-child(3) .mb-after', '1');
+    // Switching that step's gate to manual hides the picker.
+    await page.selectOption('#mb-steps .mb-step:nth-child(2) .mb-gate', 'manual');
+    await expect(page.locator('#mb-steps .mb-step:nth-child(2) .mb-after')).toBeHidden();
+    await expect(page.locator('#mb-steps .mb-step:nth-child(2) .mb-cond')).toBeVisible();
+    await page.selectOption('#mb-steps .mb-step:nth-child(2) .mb-gate', 'auto');
+    await page.click('#mb-build');
+    const compiled = await page.evaluate(() => window.__mbCompiled());
+    expect(compiled[1].activateCond).toBe('(s)=>s.quest_ui_1_done');   // step 2 → prev (step 1)
+    expect(compiled[2].activateCond).toBe('(s)=>s.quest_ui_1_done');   // step 3 forked → step 1
   });
 
   // ── Inc 4 — POST All wiring: sequential create, skip-existing, stop-on-error ──
