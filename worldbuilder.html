@@ -2672,20 +2672,8 @@ function renderMap() {
   // dots
   ctx.fillStyle='#1e2530';
   for(let r=1;r<=maxR+2;r++) for(let c=1;c<=maxC+2;c++) ctx.fillRect(c*S-1,r*S-1,2,2);
-  // edges
-  const dirs={N:[0,-1],S:[0,1],E:[1,0],W:[-1,0]};
-  const drawn=new Set();
-  for(const [code,node] of Object.entries(nodes)){
-    const p=coords[code]; if(!p) continue;
-    for(const [d,[dc,dr]] of Object.entries(dirs)){
-      const nb=node[d]; if(!nb||!coords[nb]) continue;
-      const key=[code,nb].sort().join('|');
-      if(drawn.has(key)) continue; drawn.add(key);
-      const np=coords[nb];
-      ctx.beginPath(); ctx.strokeStyle=(inAct(code)&&inAct(nb))?'#2d333b':'#191f26'; ctx.lineWidth=1.5;
-      ctx.moveTo(p.c*S,p.r*S); ctx.lineTo(np.c*S,np.r*S); ctx.stroke();
-    }
-  }
+  // §WORLDBUILDER-01: edges retired — navigation is cell-first (§CELL/§WALK);
+  // nodes have no N/S/E/W exit pointers, so adjacency is geo (r±1,c), not drawn links.
   // nodes
   for(const [code,node] of Object.entries(nodes)){
     const p=coords[code]; if(!p) continue;
@@ -2801,12 +2789,12 @@ function renderNodeDetail(code){
   const ds=DIFF.status(code);
   $('nd-diff-ind').innerHTML=ds?`<span class="badge ${ds==='added'?'green':'yellow'}">${ds}</span>`:'';
   const body=$('nd-body'); body.innerHTML='';
-  // Degree badge + auto-junction warning
-  const deg = ['N','S','E','W'].filter(d=>node[d]).length;
-  const degCol = deg<=2?'var(--green)':deg===3?'var(--orange)':'var(--red)';
-  const junctionBadge = node.junction ? '<span style="font-size:9px;background:#58a6ff22;color:#58a6ff;padding:1px 5px;border-radius:3px;margin-left:6px">JUNCTION</span>' : '';
-  const degBadge = `<span style="font-size:9px;color:${degCol};margin-left:6px" title="connections used / 4">${deg}/4 connections${deg>=3?' — junction-first rule applies':''}${deg>=4?' (FULL)':''}</span>${junctionBadge}`;
-  const degRow=document.createElement('div'); degRow.style.cssText='padding:2px 12px 6px;font-size:11px'; degRow.innerHTML=degBadge; body.appendChild(degRow);
+  // §WORLDBUILDER-01: degree badge + junction badge retired — the old N/S/E/W
+  // degree/junction-first model is gone under cell-first navigation.
+  const cellRow=document.createElement('div'); cellRow.style.cssText='padding:2px 12px 6px;font-size:11px;color:var(--muted)';
+  const cc=WBAPI.nodeCoords[code];
+  cellRow.textContent=cc?`⌖ cell (${cc.r}, ${cc.c})${cc.virtual?' — off-grid (drag/place to position)':''}`:'⌖ no coords — use 📍 Place node on the map';
+  body.appendChild(cellRow);
 
   const F=['label','name','act','npc','loot','text'];
   for(const key of F){
@@ -2828,42 +2816,10 @@ function renderNodeDetail(code){
     }
     body.appendChild(div);
   }
-  // Junction toggle
-  const jG=document.createElement('div'); jG.className='fg row';
-  const jChkId=`_nd_junc_${code}`;
-  jG.innerHTML=`<div class="fg" style="flex:0 0 auto"><div class="fl">Junction</div>
-    <input type="checkbox" id="${jChkId}" ${node.junction?'checked':''} style="margin-top:4px">
-  </div><div style="font-size:9px;color:var(--muted);padding-top:14px;margin-left:8px">
-    Junction nodes get signpost text. Deg-3 rule auto-creates one.</div>`;
-  body.appendChild(jG);
-  document.getElementById(jChkId)?.addEventListener('change', e => mapEditBuf.junction = e.target.checked);
-
-  // Exits — with broken-edge indicators
-  const coordA = WBAPI.nodeCoords[code];
-  const exG=document.createElement('div'); exG.className='fg';
-  exG.innerHTML='<div class="fl">Exits N/S/E/W</div>';
-  const eg=document.createElement('div'); eg.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:4px';
-  for(const d of ['N','S','E','W']){
-    const tgt = node[d];
-    const isBroken = tgt && coordA && WBAPI.nodeCoords[tgt] ? (() => {
-      const cb = WBAPI.nodeCoords[tgt];
-      const isNS = d==='N'||d==='S';
-      const off  = isNS ? Math.abs(cb.c-coordA.c) : Math.abs(cb.r-coordA.r);
-      const dist = isNS ? Math.abs(cb.r-coordA.r) : Math.abs(cb.c-coordA.c);
-      return off>0||dist<1||dist>4;
-    })() : false;
-    const wrap=document.createElement('div');
-    const indicator = tgt ? (isBroken ? '⚠' : '✓') : '';
-    const indicatorColor = isBroken ? 'var(--red)' : 'var(--green)';
-    wrap.innerHTML=`<div style="font-size:9px;color:var(--muted);display:flex;justify-content:space-between">${d}<span style="color:${indicatorColor};font-size:8px">${indicator}</span></div>`;
-    const inp=document.createElement('input'); inp.type='text';
-    inp.style.cssText=`width:100%;font-size:11px;background:var(--bg3);border:1px solid ${isBroken?'var(--red)':'var(--border)'};border-radius:3px;font-weight:700;padding:2px 4px;font-family:inherit;text-align:center`;
-    inp.value=tgt||''; inp.placeholder=d;
-    inp.style.color=tgt?(isBroken?'var(--red)':'var(--orange)'):'var(--muted)';
-    inp.addEventListener('input',()=>{ mapEditBuf[d]=inp.value||null; inp.style.color=inp.value?'var(--orange)':'var(--muted)'; inp.classList.toggle('chg',inp.value!==(node[d]||'')); });
-    wrap.appendChild(inp); eg.appendChild(wrap);
-  }
-  exG.appendChild(eg); body.appendChild(exG);
+  // §WORLDBUILDER-01: junction toggle + "Exits N/S/E/W" panel retired. The game
+  // is cell-first (§CELL/§WALK) — nodes have no N/S/E/W exit pointers and no
+  // junction flag, so editing them here only re-injected dead fields on save.
+  // Position is set by coordinates (Map tab: 📍 Place node), not exit links.
   // Sleep
   const sleepG=document.createElement('div'); sleepG.className='fg row';
   sleepG.innerHTML=`<div class="fg" style="flex:0"><div class="fl">Inn</div><input type="checkbox" ${node.sleep?'checked':''} id="_nd_sleep"></div>
@@ -2981,7 +2937,7 @@ function createNodeAt(code, coord){
   code=(code||'').toUpperCase().trim();
   if(!code||!/^[A-Z0-9_]{1,6}$/.test(code)){ alert('Invalid code — 1-6 of A-Z 0-9 _'); return false; }
   if(WBAPI.nodeMap[code]||DIFF.added[code]){ alert(`${code} already exists.`); return false; }
-  const n={num:9000+Object.keys(DIFF.added).length,code,name:'new_terrain',label:'New Node',act:1,N:null,S:null,E:null,W:null,text:'',npc:null,battle:null,loot:null,sleep:false};
+  const n={num:9000+Object.keys(DIFF.added).length,code,name:'new_terrain',label:'New Node',act:1,text:'',npc:null,battle:null,loot:null,sleep:false}; // §WORLDBUILDER-01: cell-first — no N/S/E/W exit fields
   DIFF.added[code]=n; WBAPI.nodeMap[code]=n;
   WBAPI.nodeCoords[code]=coord ? {r:coord.r,c:coord.c} : {r:50+Object.keys(DIFF.added).length*2,c:64,virtual:true};
   updateDiffBadge(); renderMapNodeList(); renderMap(); selectMapNode(code);
@@ -3851,12 +3807,8 @@ function renderRelGraph(type, centerId, container) {
   nodes.push({ rid:centerRid, type, key:centerId, label:cLabel, isCurrent:true });
 
   if (type === 'node') {
-    const node = WBAPI.nodeMap[centerId] || {};
-    for (const dir of ['N','S','E','W']) {
-      const adj = node[dir]; if (!adj || !WBAPI.nodeMap[adj]) continue;
-      const lbl = adj+(WBAPI.nodeMap[adj].label?' '+WBAPI.nodeMap[adj].label.slice(0,5):'');
-      addEdge(centerRid, addNode('node', adj, lbl), dir);
-    }
+    // §WORLDBUILDER-01: N/S/E/W node-node edges retired (cell-first: no exit
+    // pointers). Quest/NPC relationship edges below are unaffected.
     for (const qid of (WBAPI._questsByNode[centerId]||[]).slice(0,6))
       addEdge(centerRid, addNode('quest', qid, qid));
     for (const n of WBAPI.npcs.byNode(centerId).slice(0,3))
@@ -5288,7 +5240,8 @@ battle       object   Fixed encounter: {label, key:monsterKey, count:number}
 loot         string   Loot flavour text shown on encounter completion.
 sleep        boolean  Can the player rest here?
 sleepCost    number   Gold cost to rest (only when sleep:true).
-N/S/E/W      string   Adjacent node codes (cardinal directions).
+position     {r,c}    Geo-grid cell (set on the Map tab). Cell-first nav:
+             adjacency is (r±1, c) — no stored N/S/E/W exit pointers.
 ──────────────────────────────────────────────────────────────
 * required field`,
 
@@ -6059,8 +6012,8 @@ window._onServerActivated = () => {
 (function(){
   const CRUD_TYPES = {
     node: {
-      cols: ['id','label','terrain','act','N','E','S','W'],
-      colLabels: { id:'Code', label:'Label', terrain:'Terrain', act:'Act', N:'N', E:'E', S:'S', W:'W' },
+      cols: ['id','label','terrain','act'],
+      colLabels: { id:'Code', label:'Label', terrain:'Terrain', act:'Act' },
       listUrl: (f) => `/api/list/node?${new URLSearchParams(f)}`,
       getUrl:  (id) => `/api/node/${encodeURIComponent(id)}`,
       putUrl:  (id) => `/api/node/${encodeURIComponent(id)}`,
@@ -6071,7 +6024,6 @@ window._onServerActivated = () => {
         { key:'terrain',    label:'Terrain',   type:'text',   placeholder:'e.g. forest' },
         { key:'q',          label:'Search',    type:'text',   placeholder:'label / code' },
         { key:'has_quests', label:'Has quests',type:'select', options:['','true','false'] },
-        { key:'junction',   label:'Junction',  type:'select', options:['','true','false'] },
         { key:'no_coords',  label:'No coords', type:'select', options:['','true'] },
       ],
       fields: [
@@ -6084,10 +6036,9 @@ window._onServerActivated = () => {
         { key:'loot',  label:'Loot', note:'Loot flavour text' },
         { key:'sleep', label:'Sleep', type:'select', options:['','true','false'], note:'Can player rest here?' },
         { key:'sleepCost', label:'Sleep cost', type:'number', note:'Gold cost' },
-        { key:'N', label:'N link' }, { key:'E', label:'E link' },
-        { key:'S', label:'S link' }, { key:'W', label:'W link' },
+        // §WORLDBUILDER-01: N/E/S/W link fields retired — cell-first nav has no exit pointers.
       ],
-      rowData: (r) => ({ id:r.id, label:r.label, terrain:r.terrain, act:r.act, N:r.connections?.find(c=>c.dir==='N')?.to||'', E:r.connections?.find(c=>c.dir==='E')?.to||'', S:r.connections?.find(c=>c.dir==='S')?.to||'', W:r.connections?.find(c=>c.dir==='W')?.to||'' }),
+      rowData: (r) => ({ id:r.id, label:r.label, terrain:r.terrain, act:r.act }),
     },
     quest: {
       cols: ['id','title','type','activateNode','npc'],
@@ -7591,17 +7542,9 @@ window._onServerActivated = () => {
 
   // ── Audit extra ops ────────────────────────────────────────────────────────
   function opNextError(body)         { mkServerOp(body,'/api/next-error','GET next-error'); }
-  function opMapAuditRun(body) {
-    const fields = document.createElement('div'); fields.className = 'op-row-fields';
-    const btn = mkBtn('RUN MAP AUDIT','primary sm'); fields.appendChild(btn);
-    const res = document.createElement('pre'); res.className='op-result';
-    body.appendChild(fields); body.appendChild(res);
-    btn.addEventListener('click', async () => {
-      if (!SERVER.active) return showResult(res,'Server not connected',true);
-      try { const r = await fetch(`${SERVER.url}/api/audit/map`); showResult(res,await r.json(),!r.ok); }
-      catch(e) { showResult(res,'Error: '+e.message,true); }
-    });
-  }
+  // §WORLDBUILDER-01: opMapAuditRun (N/E/S/W bidirectional-link audit) retired —
+  // cell-first navigation has no exit pointers to validate. Use the reachability
+  // land-flood (GET /api/graph/reachability, §WALK-3) for connectivity instead.
 
   function mkNote(txt) {
     const d = document.createElement('div');
@@ -7696,7 +7639,6 @@ window._onServerActivated = () => {
     el.appendChild(mkSection('🔍 Audit', [
       mkOpRow('GET',  'Next Error',             'First failing validation item + fix suggestion',       opNextError),
       mkOpRow('GET',  'Full Integrity Audit',   'Check for broken refs, missing data, dead flags',     opAuditRun),
-      mkOpRow('GET',  'Map Connectivity Audit', 'Check all N/E/S/W bidirectional links',               opMapAuditRun),
     ]));
   }
 
