@@ -12054,6 +12054,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_cat_03: { id:'quest_cat_03', type:'side', title:'Sandy: Honcho Problems',
+    itemChain:[{action:'grant',name:'Rhinestone Collar',icon:'💎',type:'trophy',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — let them merge and you\'re dealing with a Taz Devil.",
     hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
     targetMonsterKeys:['honcho_cat_m','honcho_cat_f'],
@@ -12070,6 +12071,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_cat_04: { id:'quest_cat_04', type:'side', title:'Jimmy: When the Tornado Comes',
+    itemChain:[{action:'grant',name:'Furball Crown',icon:'🌀',type:'trophy',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Two Honchos merged. A Taz Devil — Furball Tornado — is loose in the Cat Quarter. Take it down.",
     hint:'Defeat the Taz Devil at the Cat Quarter.',
     activateNode:null, completeItems:[], completeFn:() => !!S_story.defeatedBattles['CQ_TAZ'],
@@ -12081,6 +12083,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_cat_05: { id:'quest_cat_05', type:'side', title:"Sandy: Fat Cats Don't Tip",
+    itemChain:[{action:'grant',name:"The Don's Signet Ring",icon:'💍',type:'trophy',sell:35,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
     hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
     targetMonsterKeys:['fat_merchant_cat'],
@@ -12097,6 +12100,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_cat_06: { id:'quest_cat_06', type:'side', title:'Tommy: The Cat-King Cometh',
+    itemChain:[{action:'grant',name:"Cat-King's Claw Fragment",icon:'👑',type:'trophy',sell:50,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Three Taz Devils merged at the fish market. The Cat-King has awoken. You\'re the hero. You go.",
     hint:'Defeat The Cat-King at the Cat Quarter.',
     activateNode:null, completeItems:[], completeFn:() => !!S_story.catKingDefeated,
@@ -12205,6 +12209,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_night_eel: { id:'quest_night_eel', type:'side', title:'Night Water', // §XLVIII
+    itemChain:[{action:'grant',name:'Eel Skin Pouch',icon:'🏮',type:'trinket',sell:35,desc:'+1 Type bonus on all fishing casts. The light never fully goes out.',silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"After dark, Yugurt Lake becomes a different lake. The familiar geometry of the bank and the reeds still holds. But the fish that come up are not the ones that come up at noon. Something luminescent hunts the deep water after dark. You have seen the light. The lake has seen you looking.",
     hint:'Fish at Yugurt Lake after dark (hour ≥ 20 or ≤ 5) and defeat the Lantern Eel.',
     activateNode:'BOO', completeItems:[],
@@ -19560,6 +19565,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completeFn:() => !!S_story.brynnFirewoodDelivered,
     completeItems:[] },
   quest_brynn_ledger: { id:'quest_brynn_ledger', type:'side', title:"Brynn: Missing Ledger",
+    itemChain:[{action:'take',name:'Worn Ledger Book',all:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Brynn Clerambault keeps her accounts in a worn ledger that has been written in, crossed out, and written in again for six years. She lent it to a merchant with good credit and bad judgment and she has been setting a table with one fewer place since. The ledger is in the Slums. She asked you to find it without saying what it actually contains — which means she trusts you with it more than she trusts the asking.",
     hint:'Search the Birka Slums — the ledger may be on a fallen enemy.',
     activateNode:'TLL', completeItems:[], completeFn:() => (S_story.inventory||[]).some(i => i.name === 'Worn Ledger Book') && S_story.currentCode === 'TLL',
@@ -19576,18 +19582,21 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:"He tells you Benedikt's full history. Two days old and already with opinions. He says this like it explains everything. It does not explain everything. He offers you some of the trough ale.\n\nYou consider it longer than you should.",
     disposition:"'She doesn't need me. You're absolutely right.' — Sir Jullean, adjusting his coat, approximately three seconds before the drainage ditch." },
   quest_couperin_lute: { id:'quest_couperin_lute', type:'side', npc:'quill', title:"Quill: The Pawned Lute",
+    itemChain:[{action:'take',name:"Quill's Lute",all:true},{action:'grant',name:'Cipher Scrap',icon:'📜',type:'key',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Tomas Couperin's lute has been in Pachelbel's inventory for eleven days. He pawned it against a drink tab — a transaction he does not regret exactly, but which he replays in a particular way every morning. The lute does not play without him. The drink is gone. The tab is the only thing that remained, and now the lute is not his. The asking is the part he cannot bring himself to do.",
     hint:'Talk to Pachelbel at the Rough Bar and retrieve the lute.',
     activateNode:'MHQ', completeItems:[], completeFn:() => (S_story.inventory||[]).some(i => i.name === "Quill's Lute") && S_story.currentCode === 'MHQ',
     waypointNode:'LLA', reward:40,
     disposition: '"The guild licenses five songs. Five. For the whole of human experience. I don\'t know if that\'s arrogance or optimism." — Tomas Couperin' },
   quest_pachelbel_shipment: { id:'quest_pachelbel_shipment', type:'side', npc:'pachelbel', title:'Pachelbel: Scholar Box',
+    itemChain:[{action:'take',name:'Sealed Scholar Box',all:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Pachelbel does not deal in debts he did not originate. The Scholar Box has been in his back inventory for four months — sealed, addressed, belonging to someone who paid for it and then stopped existing in any record he can find. He wants it out of his problem. He does not say why it bothers him that it is still there. You can see that it does.",
     hint:'Look for the Scholar Box in the Birka Crypt.',
     activateNode:'LLA', completeItems:[], completeFn:() => (S_story.inventory||[]).some(i => i.name === 'Sealed Scholar Box') && S_story.currentCode === 'LLA',
     waypointNode:'KRN', reward:60,
     disposition: '"I don\'t deal in debts I didn\'t originate. The Scholar Box is someone else\'s debt. I just want it out of my inventory." — Pachelbel' },
   quest_pit_training: { id:'quest_pit_training', type:'side', npc:'crov', title:'Weckmann: Pit Training',
+    itemChain:[{action:'grant',name:'Pit Legend Token',icon:'🏆',type:'token',sell:30,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Weckmann trains whoever survives the floor. Not whoever asks. Not whoever pays. Whoever survives. He will be watching. He will correct what he sees. He will not encourage, because encouragement is for people who need to be told they are doing it right. He corrects because he believes you can do it right. Three fights in the Neon Undercity.",
     hint:'Win 3 battles at the Neon Undercity.',
     activateNode:'HKG', completeItems:[], completeFn:() => (S_story.pitTrainingWins || 0) >= 3,
@@ -23549,11 +23558,15 @@ function _applyItemChain(q) {
         const item = { name: s.name, icon: s.icon || '📦', type: s.type || 'misc', sell: s.sell || 0 };
         if (s.desc) item.desc = s.desc;
         inv.push(item);
-        msgs.push(item.icon + ' ' + s.name + ' obtained.');
+        // §EDITOR-01-D-FU(b): silent grants suppress the auto "obtained." line so a migrated
+        // reward-ladder branch can keep its own verbatim narrative message without doubling it.
+        if (!s.silent) msgs.push(item.icon + ' ' + s.name + ' obtained.');
         break;
       }
       case 'take':
-        if (s.all) S_story.inventory = inv.filter(i => i.name !== s.name);
+        // Splice in place (not reassign) so `inv` stays === S_story.inventory and a
+        // later grant in the same chain still pushes into the live array. §EDITOR-01-D-FU(b)
+        if (s.all) { for (let i = inv.length - 1; i >= 0; i--) if (inv[i].name === s.name) inv.splice(i, 1); }
         else { const i = inv.findIndex(x => x.name === s.name); if (i !== -1) inv.splice(i, 1); }
         break;
       case 'grantBit': _grantMissionBit(s.flag, s.label); break; // emits its own storyMsg
@@ -25874,10 +25887,10 @@ function storyCheckQuests(node) {
       // Layer 41 quest completion side effects
       if (id === 'quest_slums_cleanup') { S_story.gold += 80; _setNpcFavor('yael',1); msgs.push('💰 +80gp from Yael. Guard Favor granted.'); }
       if (id === 'quest_brynn_firewood') { _setNpcFavor('brynn', Math.min(3, (_npcFavor('brynn') || 0) + 1)); msgs.push('🪵 Brynn noted the pile is full. She will not forget.'); }
-      if (id === 'quest_brynn_ledger') { S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== 'Worn Ledger Book'); _setNpcFavor('brynn',1); msgs.push('🛏 Brynn offers 3 free nights. Friendly!'); }
-      if (id === 'quest_couperin_lute') { S_story.gold += 40; S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== "Quill's Lute"); _setNpcFavor('quill',1); msgs.push('💰 +40gp + cipher scrap from Quill.'); S_story.inventory.push({name:'Cipher Scrap',icon:'📜',type:'key',sell:0}); }
-      if (id === 'quest_pachelbel_shipment') { S_story.gold += 60; S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== 'Sealed Scholar Box'); _setNpcFavor('pachelbel',1); msgs.push('💰 +60gp from Pachelbel. Friendly!'); }
-      if (id === 'quest_pit_training') { _setNpcFavor('crov',1); S_story.inventory.push({name:'Pit Legend Token',icon:'🏆',type:'token',sell:30}); msgs.push('🏆 Pit Legend Token earned. Weckmann is impressed.'); }
+      if (id === 'quest_brynn_ledger') { _setNpcFavor('brynn',1); msgs.push('🛏 Brynn offers 3 free nights. Friendly!'); } // §EDITOR-01-D-FU(b) b2a: Worn Ledger Book take → itemChain
+      if (id === 'quest_couperin_lute') { S_story.gold += 40; _setNpcFavor('quill',1); msgs.push('💰 +40gp + cipher scrap from Quill.'); } // §EDITOR-01-D-FU(b) b2a: Quill's Lute take + Cipher Scrap grant → itemChain
+      if (id === 'quest_pachelbel_shipment') { S_story.gold += 60; _setNpcFavor('pachelbel',1); msgs.push('💰 +60gp from Pachelbel. Friendly!'); } // §EDITOR-01-D-FU(b) b2a: Sealed Scholar Box take → itemChain
+      if (id === 'quest_pit_training') { _setNpcFavor('crov',1); msgs.push('🏆 Pit Legend Token earned. Weckmann is impressed.'); } // §EDITOR-01-D-FU(b) b2a: Pit Legend Token grant → itemChain
       // §DESIGN-03: new Birka quest rewards
       if (id === 'quest_city_watch_patrol') { S_story.gold += 50; _setNpcFavor('yael', Math.min(3, (_npcFavor('yael') || 0) + 1)); S_story.xp += 150; _checkLevelUp(); msgs.push('💰 +50gp + 150 XP. Yael notes the route was covered.'); }
       if (id === 'quest_pit_debut') { S_story.gold += 100; S_story.xp += 250; _checkLevelUp(); msgs.push('🥊 First Blood! +100gp +250 XP — The Pit knows your face now.'); }
@@ -25885,15 +25898,15 @@ function storyCheckQuests(node) {
       // Layer 44: Ally Cat Arc quest completion rewards
       if (id === 'quest_cat_01') { S_story.gold += 200; msgs.push('💰 +200gp from Jimmy. The Cat Quarter breathes easier.'); }
       if (id === 'quest_cat_02') { S_story.gold += 350; msgs.push('💰 +350gp from Jimmy. Sandy Scratchpad Mewlino has joined the Cat Quarter.'); }
-      if (id === 'quest_cat_03') { S_story.gold += 500; S_story.inventory.push({name:'Rhinestone Collar',icon:'💎',type:'trophy',sell:0}); msgs.push('💰 +500gp + Rhinestone Collar trophy.'); }
-      if (id === 'quest_cat_04') { S_story.gold += 750; S_story.inventory.push({name:'Furball Crown',icon:'🌀',type:'trophy',sell:0}); msgs.push('💰 +750gp + Furball Crown trophy. Tommy No-Ears has seen enough.'); }
-      if (id === 'quest_cat_05') { S_story.gold += 900; S_story.inventory.push({name:"The Don's Signet Ring",icon:'💍',type:'trophy',sell:35}); msgs.push("💰 +900gp + The Don's Signet Ring. Kenickie's Black Market is open."); }
-      if (id === 'quest_cat_06') { S_story.gold += 1500; S_story.inventory.push({name:"Cat-King's Claw Fragment",icon:'👑',type:'trophy',sell:50}); msgs.push("💰 +1500gp + Cat-King's Claw Fragment. You are honorary Ally Cat."); }
+      if (id === 'quest_cat_03') { S_story.gold += 500; msgs.push('💰 +500gp + Rhinestone Collar trophy.'); } // §EDITOR-01-D-FU(b) b2a: trophy grant → itemChain
+      if (id === 'quest_cat_04') { S_story.gold += 750; msgs.push('💰 +750gp + Furball Crown trophy. Tommy No-Ears has seen enough.'); } // §EDITOR-01-D-FU(b) b2a: trophy grant → itemChain
+      if (id === 'quest_cat_05') { S_story.gold += 900; msgs.push("💰 +900gp + The Don's Signet Ring. Kenickie's Black Market is open."); } // §EDITOR-01-D-FU(b) b2a: trophy grant → itemChain
+      if (id === 'quest_cat_06') { S_story.gold += 1500; msgs.push("💰 +1500gp + Cat-King's Claw Fragment. You are honorary Ally Cat."); } // §EDITOR-01-D-FU(b) b2a: trophy grant → itemChain
       if (id === 'quest_cat_void') { S_story.gold += 400; msgs.push('💰 +400gp from Sandy. The Void Strays are cleared.'); }
       if (id === 'quest_fishing_guide') { S_story.inventory.push({ name:'Fishing Guide', icon:'📖', type:'readable', sell:0, readText:FISHING_GUIDE_TEXT }); msgs.push('📖 Fishing Guide received. Zone DCs now visible in the fishing modal.'); }
       if (id === 'quest_fish_01') { S_story.gold += 200; S_story.fishingYugurtFavour = true; msgs.push("💰 +200gp. 🎣 Yugurt's Favour granted — +1 on all future catch rolls."); }
       if (id === 'quest_horned_shark') { S_story.gold += 300; msgs.push('💰 +300gp. 🦷 The Noon Point is yours now.'); }
-      if (id === 'quest_night_eel') { S_story.gold += 150; S_story.eelSkinPouchActive = true; if (!S_story.inventory) S_story.inventory = []; S_story.inventory.push({ name:'Eel Skin Pouch', icon:'🏮', type:'trinket', sell:35, desc:'+1 Type bonus on all fishing casts. The light never fully goes out.' }); msgs.push("💰 +150gp. 🏮 Eel Skin Pouch acquired — +1 Type on all future casts."); } // §XLVIII
+      if (id === 'quest_night_eel') { S_story.gold += 150; S_story.eelSkinPouchActive = true; msgs.push("💰 +150gp. 🏮 Eel Skin Pouch acquired — +1 Type on all future casts."); } // §XLVIII — §EDITOR-01-D-FU(b) b2a: Eel Skin Pouch grant → itemChain
       if (id === 'quest_shale_drop') { S_story.gold += 250; if (!S_story.inventory) S_story.inventory = []; S_story.inventory.push({ name:'Y. Gurt Field Survey', icon:'📋', type:'readable', sell:0, readText:"Y. GURT — YUGURT LAKE SURVEY\nFirst Circle Field Record, Pre-Codex Year 3\nClassification: Naturalist Assessment — Freshwater Taxonomy\n\nLake dimensions: 2.4km × 0.9km. Maximum depth: 31 meters at the northwest basin. The shale formation below the northwest bank extends below the waterline for an undetermined depth — further survey required.\n\nDocumented species: 20 surface and mid-water, 3 confirmed deep-water (unclassified), 1 depth specimen observed on descent into northwest shale formation. See Annex 4: 'the light-producing variety; do not pursue below 25m without additional crew.'\n\nSurveyor notation (Y. Gurt, Nat. First Circle): The lake has developed a self-regulating predator hierarchy without Scholar Kings intervention. I recommend no intervention. It is doing this correctly on its own. I also recommend I be permitted to stay here rather than return to the archive for the classification review. The archive will continue without me. The lake will require observation.\n\nThe request was not approved.\n\nI stayed anyway." }); msgs.push('💰 +250gp. 📋 Y. Gurt Field Survey found.'); } // §XLIX
       // §GUIDE-01: Rod of Self-Discovery + WIS +1
       if (id === 'quest_guide_06') {

@@ -134,7 +134,18 @@ for (const q of Object.values(WBAPI.questDb)) {
 //     takes:['Item Name', …] }            // names removed by the old branch
 // Field set on a grant must match exactly what the old ladder pushed (allow-list only).
 const MIGRATION_MANIFEST = [
-  // — populated by later increments —
+  // ── Wave b2a (Inc 3) — 10 expressible-now branches, less wm_01 (its seal removal is
+  //    conditional + count-limited to 3, which a simple `take` can't express → stays code).
+  //    Each grant is silent:true; gold/favor/XP/flag/msg stay in the ladder branch.
+  { quest: 'quest_cat_03', grants: [{ name: 'Rhinestone Collar', icon: '💎', type: 'trophy', sell: 0 }] },
+  { quest: 'quest_cat_04', grants: [{ name: 'Furball Crown', icon: '🌀', type: 'trophy', sell: 0 }] },
+  { quest: 'quest_cat_05', grants: [{ name: "The Don's Signet Ring", icon: '💍', type: 'trophy', sell: 35 }] },
+  { quest: 'quest_cat_06', grants: [{ name: "Cat-King's Claw Fragment", icon: '👑', type: 'trophy', sell: 50 }] },
+  { quest: 'quest_night_eel', grants: [{ name: 'Eel Skin Pouch', icon: '🏮', type: 'trinket', sell: 35, desc: '+1 Type bonus on all fishing casts. The light never fully goes out.' }] },
+  { quest: 'quest_pit_training', grants: [{ name: 'Pit Legend Token', icon: '🏆', type: 'token', sell: 30 }] },
+  { quest: 'quest_couperin_lute', grants: [{ name: 'Cipher Scrap', icon: '📜', type: 'key', sell: 0 }], takes: ["Quill's Lute"] },
+  { quest: 'quest_brynn_ledger', takes: ['Worn Ledger Book'] },
+  { quest: 'quest_pachelbel_shipment', takes: ['Sealed Scholar Box'] },
 ];
 
 // Field allow-list a migrated grant may carry (lab report §3.1). `silent` is authoring-only.

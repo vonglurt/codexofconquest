@@ -60,6 +60,20 @@ S.inventory = [];
 apply({ itemChain: [{ action: 'grant', name: 'Glow', icon: '🟡', type: 'key', sell: 50, desc: 'shiny' }] });
 ok(JSON.stringify(S.inventory[0]) === JSON.stringify({ name: 'Glow', icon: '🟡', type: 'key', sell: 50, desc: 'shiny' }), 'grant passes through all fields incl. desc');
 
+// ── grant: silent suppresses the auto message but still adds the item (§FU-b) ──
+S.inventory = [];
+let sm = apply({ itemChain: [{ action: 'grant', name: 'Quiet Trophy', silent: true }] });
+ok(S.inventory.some(i => i.name === 'Quiet Trophy'), 'silent grant still adds the item');
+ok(sm.length === 0, 'silent grant emits no "obtained." message');
+
+// ── take all:true then grant in the SAME chain — grant must survive (§FU-b fix) ──
+// Regression: take-all used to reassign S_story.inventory, orphaning the cached ref so a
+// later grant pushed into the dead array. Now take splices in place.
+S.inventory = [{ name: 'Old Lute' }];
+apply({ itemChain: [{ action: 'take', name: 'Old Lute', all: true }, { action: 'grant', name: 'New Scrap' }] });
+ok(!S.inventory.some(i => i.name === 'Old Lute'), 'take-all removes the item');
+ok(S.inventory.some(i => i.name === 'New Scrap'), 'grant after take-all lands in the live inventory');
+
 // ── take: first-match vs all ────────────────────────────────────────────────
 S.inventory = [{ name: 'A' }, { name: 'B' }, { name: 'A' }];
 apply({ itemChain: [{ action: 'take', name: 'A' }] });
