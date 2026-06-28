@@ -504,6 +504,10 @@ select.fi{appearance:none;}
             <option value="5">Act V — Visby</option><option value="6">Act VI — Desert</option>
             <option value="7">Act VII — Mythic Circuit</option><option value="8">Act VIII — The Reckoning</option>
           </select>
+          <select id="map-color-mode" class="fi fi-sm" style="width:100%;margin-top:4px" title="How node dots are colored">
+            <option value="act">Color: by Act</option>
+            <option value="terrain">Color: by Terrain</option>
+          </select>
         </div>
         <div class="sidebar-body" id="map-node-list"></div>
       </div>
@@ -2515,6 +2519,16 @@ async function doEntityPut(type, key, fields) {
 const $ = id => document.getElementById(id);
 let _rawSource = null;
 const ACT_COLORS = ['#8b949e','#58a6ff','#3fb950','#d29922','#f78166','#bc8cff','#ffa657','#39d353','#f85149'];
+// §WALK-G terrain-color dots: a stable, distinct-ish color per terrain key
+// (node.name). Deterministic HSL hash → no 40-entry palette to maintain and new
+// terrains get a color for free; tuned sat/light for legibility on the dark map.
+function terrainColor(key) {
+  if (!key) return '#8b949e';
+  let h = 0;
+  for (let i = 0; i < key.length; i++) h = (h * 31 + key.charCodeAt(i)) >>> 0;
+  return `hsl(${h % 360}, ${55 + (h >> 9) % 25}%, ${52 + (h >> 16) % 14}%)`;
+}
+window.terrainColor = terrainColor;   // bridge for §WALK-G tests
 const TIER_ORDER = ['trivial','easy','medium','hard','deadly','boss'];
 
 function loadFile(text) {
@@ -2608,6 +2622,7 @@ function afterAPILoad() {
 // ═══════════════════════════════════════════════════════════════════════════
 let mapScale = 18;
 let mapSelected = null;
+let mapColorMode = 'act';   // §WALK-G: 'act' | 'terrain' — how node dots are colored
 let mapEditBuf = {};
 
 function getEffNode(code) {
@@ -2653,7 +2668,8 @@ function renderMap() {
     const p=coords[code]; if(!p) continue;
     if(DIFF.deleted.has(code)) continue;
     const cx=p.c*S, cy=p.r*S;
-    const act=node.act||0, base=ACT_COLORS[act]||'#8b949e';
+    const act=node.act||0;
+    const base=mapColorMode==='terrain' ? terrainColor(node.name) : (ACT_COLORS[act]||'#8b949e');
     const ds=DIFF.status(code), isSel=(code===mapSelected);
     const r=isSel?11:7;
     if(ds){
@@ -2681,7 +2697,7 @@ $('map-canvas').addEventListener('mousemove', e=>{
   if(code){
     const n=getEffNode(code);
     tt.style.display='block'; tt.style.left=(e.clientX+14)+'px'; tt.style.top=(e.clientY+10)+'px';
-    tt.innerHTML=`<b>${code}</b> — ${n.label||''}`+(n.npc?`<br>NPC: ${n.npc}`:'')+
+    tt.innerHTML=`<b>${code}</b> — ${n.label||''}`+(n.name?`<br>⛰ ${n.name}`:'')+(n.npc?`<br>NPC: ${n.npc}`:'')+
       (n.battle?`<br>⚔ ${n.battle.label||n.battle.key}`:'')+
       (n.sleep?`<br>🛏 Inn (${n.sleepCost}gp)`:'');
     $('map-canvas').style.cursor='pointer';
@@ -2953,6 +2969,7 @@ function renderMapNodeList(){
 }
 $('map-search').addEventListener('input',renderMapNodeList);
 $('map-act-filter').addEventListener('change',renderMapNodeList);
+$('map-color-mode').addEventListener('change',e=>{ mapColorMode=e.target.value; renderMap(); });
 
 // ── Diff panel ──
 $('btn-diff').addEventListener('click',()=>{ renderDiffPanel(); $('diff-panel').classList.toggle('open'); });
