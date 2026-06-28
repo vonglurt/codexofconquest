@@ -139,3 +139,140 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
     expect(r.noAutoRun).toBe(true);
   });
 });
+
+// ── §ARCH-01 Phase 2 — dual-path dispatch (engine now drives UQF quests) ──────
+//
+// Phase 2 wires the engine into the live quest path: _rollCeremonia (the real
+// skill-check button entry) delegates to QuestRuntime when a quest carries
+// schema:'UQF-1.0', the quest panel renders a Roll card for such quests, and
+// storyCheckQuests honors the declarative gate on activation. Every legacy
+// quest stays byte-for-byte on the old closure path. We use DC 1 (always pass)
+// / DC 99 (always fail) to make the d20 roll deterministic.
+
+test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
+  // Each test seeds a clean, minimal S_story, injects throwaway quests, drives
+  // the REAL entry points, then deletes the synthetic quests.
+
+  test('_rollCeremonia routes a passing UQF skill_check through the engine', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = {};
+      S_story.abilityScores = { str:10, dex:10, con:10, int:10, wis:14, cha:10 };
+      S_story.level = 1; S_story.xp = 0; S_story.gold = 0; S_story.day = 1;
+      S_story.inventory = []; S_story.knowledge = [];
+      QUEST_DB.__uqf_pass = { id:'__uqf_pass', schema:'UQF-1.0', title:'UQF Pass Demo',
+        activateNode:'DK', retryable:false, bits:[
+          { kind:'skill_check', stat:'WIS', skill:'Insight', dc:1,
+            onPass:[
+              { kind:'flag_write', set:['uqfPassFlag'] },
+              { kind:'reward', xp:100, gold:40, items:[{ name:'UQF Token', icon:'📦', sell:0, type:'token' }], knowledge:'UQF works.' },
+              { kind:'narrative', msg:'UQF pass narrative.' },
+            ],
+            onFail:[{ kind:'narrative', msg:'UQF fail narrative.' }] }] };
+      S_story.quests.__uqf_pass = 'active';
+      _rollCeremonia('__uqf_pass');                       // the real skill-check button entry
+      const out = {
+        status: S_story.quests.__uqf_pass,
+        flag: S_story.uqfPassFlag, xp: S_story.xp, gold: S_story.gold,
+        item: (S_story.inventory.find(i => i.name === 'UQF Token') || {}).name,
+        know: S_story.knowledge.includes('UQF works.'),
+      };
+      delete QUEST_DB.__uqf_pass;
+      return out;
+    });
+    expect(r.status).toBe('done');
+    expect(r.flag).toBe(true);
+    expect(r.xp).toBe(100);
+    expect(r.gold).toBe(40);
+    expect(r.item).toBe('UQF Token');
+    expect(r.know).toBe(true);
+  });
+
+  test('_rollCeremonia routes a failing UQF skill_check: non-retryable → failed, retryable → stays', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const mk = (id, retryable) => ({ id, schema:'UQF-1.0', title:id, activateNode:'DK', retryable, bits:[
+        { kind:'skill_check', stat:'WIS', dc:99,           // unreachable DC → always fail
+          onPass:[{ kind:'narrative', msg:'never' }],
+          onFail:[{ kind:'flag_write', set:['uqfFailFlag'] }, { kind:'narrative', msg:'failed' }] }] });
+      S_story.quests = {}; S_story.abilityScores = { wis:14 }; S_story.level = 1; S_story.day = 1;
+      S_story.inventory = []; delete S_story.uqfFailFlag; delete S_story.skillCheckAttempts;
+      QUEST_DB.__uqf_fail = mk('__uqf_fail', false);
+      QUEST_DB.__uqf_retry = mk('__uqf_retry', true);
+      S_story.quests.__uqf_fail = 'active'; S_story.quests.__uqf_retry = 'active';
+      _rollCeremonia('__uqf_fail');
+      _rollCeremonia('__uqf_retry');
+      const out = {
+        failStatus: S_story.quests.__uqf_fail,
+        retryStatus: S_story.quests.__uqf_retry,
+        onFailRan: S_story.uqfFailFlag,
+        attemptLogged: !!(S_story.skillCheckAttempts || {}).__uqf_retry,
+      };
+      delete QUEST_DB.__uqf_fail; delete QUEST_DB.__uqf_retry;
+      return out;
+    });
+    expect(r.failStatus).toBe('failed');
+    expect(r.retryStatus).toBe('active');     // retryable failures don't lock the quest
+    expect(r.onFailRan).toBe(true);
+    expect(r.attemptLogged).toBe(true);
+  });
+
+  test('a legacy skill_check still resolves on the legacy path (checkPassFlag granted)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = {}; S_story.abilityScores = { wis:14 }; S_story.level = 1; S_story.xp = 0; S_story.day = 1;
+      S_story.inventory = []; delete S_story.__legacyDone;
+      // No schema field → must take the legacy branch of _rollCeremonia.
+      QUEST_DB.__legacy = { id:'__legacy', type:'skill_check', title:'Legacy Demo', activateNode:'DK',
+        checkAbility:'wis', checkLabel:'Insight', checkDC:1, checkPassFlag:'__legacyDone',
+        xpAward:10, passText:'legacy pass', failText:'legacy fail', retryable:false };
+      S_story.quests.__legacy = 'active';
+      _rollCeremonia('__legacy');
+      const out = {
+        status: S_story.quests.__legacy,
+        legacyFlag: S_story.__legacyDone,        // set only by the legacy checkPassFlag path
+        xp: S_story.xp,                          // legacy xpAward path
+      };
+      delete QUEST_DB.__legacy;
+      return out;
+    });
+    expect(r.status).toBe('done');
+    expect(r.legacyFlag).toBe(true);    // proves the legacy branch ran, not the UQF one
+    expect(r.xp).toBe(10);
+  });
+
+  test('the quest panel renders a Roll Ceremonia card for a UQF skill_check', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const html = await page.evaluate(() => {
+      S_story.quests = {}; S_story.abilityScores = { wis:14 }; S_story.level = 1;
+      QUEST_DB.__uqf_panel = { id:'__uqf_panel', schema:'UQF-1.0', title:'Panel Demo', activateNode:'DK',
+        hint:'A test vignette.', bits:[{ kind:'skill_check', stat:'WIS', skill:'Insight', dc:13, onPass:[], onFail:[] }] };
+      S_story.quests.__uqf_panel = 'active';
+      storyRender(NODE_MAP[S_story.currentCode]);
+      const out = (document.getElementById('story-content') || document.body).innerHTML;
+      delete QUEST_DB.__uqf_panel;
+      return out;
+    });
+    expect(html).toContain('Panel Demo');                       // the UQF quest title
+    expect(html).toContain('Roll Ceremonia — Insight DC 13');   // a working roll button, DC from the bit
+  });
+
+  test('storyCheckQuests honors a UQF declarative gate on activation', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = {}; delete S_story.gateOpen;
+      QUEST_DB.__uqf_gate = { id:'__uqf_gate', schema:'UQF-1.0', title:'Gate Demo',
+        activateNode:'DK', gate:{ flags:['gateOpen'] }, bits:[{ kind:'narrative', msg:'x' }] };
+      const node = { code:'DK' };
+      storyCheckQuests(node);                       // gate flag unset → must NOT activate
+      const before = S_story.quests.__uqf_gate;
+      S_story.gateOpen = true;
+      storyCheckQuests(node);                       // gate satisfied → activates
+      const after = S_story.quests.__uqf_gate;
+      delete QUEST_DB.__uqf_gate;
+      return { before, after };
+    });
+    expect(r.before).toBeUndefined();   // declarative gate blocked activation
+    expect(r.after).toBe('active');     // opened once the flag was set
+  });
+});

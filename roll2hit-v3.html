@@ -6219,9 +6219,50 @@ function _ceremoRetryBlocked(questId) {
   return S_story.day < att.lastDay + (q.retryGateDays || 1);
 }
 
+/* §ARCH-01 Phase 2 — resolve a UQF v1.0 skill_check quest through QuestRuntime.
+   Renders the same roll hcard + status update + re-render as the legacy
+   resolver, but draws every side effect (flags, rewards, narrative) from the
+   quest's declarative onPass/onFail bit chains rather than legacy closures.
+   Only reached for quests carrying schema:'UQF-1.0'; legacy quests never enter. */
+function _resolveQuestUQF(questId) {
+  const q = QUEST_DB[questId];
+  if (!q || q.schema !== 'UQF-1.0') return false;
+  const sc = (q.bits || []).find(b => b.kind === 'skill_check');
+  if (!sc) { console.warn('[UQF] no skill_check bit in', questId); return false; }
+  const roll = QuestRuntime._rollSkill(sc.stat);
+  const pass = roll.total >= sc.dc;
+  const modStr   = (roll.mod >= 0 ? '+' : '') + roll.mod;
+  const iodineStr = roll.iodineBonus > 0 ? ' + Iodine(+' + roll.iodineBonus + ')' : '';
+  const lmStr     = roll.lmAll > 0 ? ' + LakeMagic(+' + roll.lmAll + ')' : '';
+  _appendStoryHcard({
+    round: 'Day ' + (S_story.day || 1),
+    actor: 'ROLL',
+    formula: 'd20(' + roll.d20 + ') + ' + (sc.skill || sc.stat) + '(' + modStr + ') + Prof(+' + roll.prof + ')' + iodineStr + lmStr,
+    outcome: roll.total + ' vs DC ' + sc.dc + ' — ' + (pass ? 'PASS ✓' : 'FAIL'),
+  });
+  if (pass) {
+    S_story.quests[questId] = 'done';
+    QuestRuntime.execBits(sc.onPass || [], { questId });
+  } else {
+    QuestRuntime.execBits(sc.onFail || [], { questId });
+    if (q.retryable) {
+      S_story.skillCheckAttempts = S_story.skillCheckAttempts || {};
+      const prev = S_story.skillCheckAttempts[questId] || {};
+      S_story.skillCheckAttempts[questId] = { lastDay: S_story.day, failures: (prev.failures || 0) + 1 };
+    } else {
+      S_story.quests[questId] = 'failed';
+    }
+  }
+  storyUpdateStatus();
+  storyRender(NODE_MAP[S_story.currentCode]);
+  return true;
+}
+
 function _rollCeremonia(questId) {
   const q = QUEST_DB[questId];
-  if (!q || q.type !== 'skill_check') return;
+  if (!q) return;
+  if (q.schema === 'UQF-1.0') { _resolveQuestUQF(questId); return; }   // §ARCH-01 Phase 2 dual-path dispatch
+  if (q.type !== 'skill_check') return;
   const ability = q.checkAbility;
   const abilityVal = ((S_story.abilityScores || {})[ability] || 10);
   const mod  = Math.floor((abilityVal - 10) / 2);
@@ -20195,11 +20236,12 @@ const QuestRuntime = {
     }
   },
 
-  /* Resolve a skill_check bit. Mirrors _rollCeremonia()'s real roll math:
-     mod = ⌊(score-10)/2⌋, prof = 2+⌊(level-1)/4⌋, plus iodine + lake-magic
-     bonuses, total ≥ dc. Routes into the onPass / onFail sub-chains. */
-  resolveSkillCheck(bit, ctx) {
-    const ability   = String(bit.stat || '').toLowerCase();
+  /* Pure roll — single source of the skill-check math, mirroring
+     _rollCeremonia(): mod = ⌊(score-10)/2⌋, prof = 2+⌊(level-1)/4⌋, plus the
+     one-shot iodine buff (consumed here, exactly like the legacy resolver) and
+     the lake-magic all-ability bonus. Returns every component for display. */
+  _rollSkill(stat) {
+    const ability    = String(stat || '').toLowerCase();
     const abilityVal = ((S_story.abilityScores || {})[ability] || 10);
     const mod  = Math.floor((abilityVal - 10) / 2);
     const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
@@ -20207,10 +20249,15 @@ const QuestRuntime = {
     const iodineBonus = S_story.iodineBuffActive ? (S_story.iodineBuffBonus || 3) : 0;
     if (S_story.iodineBuffActive) { S_story.iodineBuffActive = false; S_story.iodineBuffBonus = 0; }
     const lmAll = (typeof _lakeMagicBonuses === 'function') ? (_lakeMagicBonuses().allAbility || 0) : 0;
-    const total = d20 + mod + prof + iodineBonus + lmAll;
-    const pass  = total >= bit.dc;
+    return { d20, mod, prof, iodineBonus, lmAll, total: d20 + mod + prof + iodineBonus + lmAll };
+  },
+
+  /* Resolve a skill_check bit: roll, then route into onPass / onFail. */
+  resolveSkillCheck(bit, ctx) {
+    const r = QuestRuntime._rollSkill(bit.stat);
+    const pass = r.total >= bit.dc;
     QuestRuntime.execBits(pass ? (bit.onPass || []) : (bit.onFail || []), ctx);
-    return { d20, total, pass };
+    return { d20: r.d20, total: r.total, pass };
   },
 
   /* Each handler is bound to the real game state/functions (see header). */
@@ -26012,6 +26059,7 @@ function storyCheckQuests(node) {
     if (q.type === 'epic') return;
     if (!S_story.quests[q.id] && q.activateNode === node.code) {
       if (q.activateCond && !q.activateCond()) return;
+      if (q.schema === 'UQF-1.0' && !QuestRuntime.canActivate(q.id)) return;   // §ARCH-01 Phase 2 — declarative gate
       S_story.quests[q.id] = 'active';
       msgs.push('📋 ' + q.title);
     }
@@ -26756,8 +26804,9 @@ function storyRenderQuests() {
         const q = QUEST_DB[id];
         if (!q) return;
         const div = document.createElement('div');
-        div.className = 'quest-item ' + (q.type === 'main' ? 'main-quest' : 'side-quest') + (completed ? ' done' : '');
-        const badge = completed ? '<span class="quest-badge done-b">✓ DONE</span>' : '<span class="quest-badge ' + q.type + '">' + q.type.toUpperCase() + '</span>';
+        const _qtype = q.type || 'side';   // §ARCH-01 Phase 2: UQF quests carry no legacy 'type'
+        div.className = 'quest-item ' + (_qtype === 'main' ? 'main-quest' : 'side-quest') + (completed ? ' done' : '');
+        const badge = completed ? '<span class="quest-badge done-b">✓ DONE</span>' : '<span class="quest-badge ' + _qtype + '">' + _qtype.toUpperCase() + '</span>';
         const isActiveWp = S_story.waypoint === q.waypointNode && q.waypointNode;
         const atDest = q.waypointNode && S_story.currentCode === q.waypointNode;
         const wpNode = q.waypointNode ? NODE_MAP[q.waypointNode] : null;
@@ -26786,8 +26835,8 @@ function storyRenderQuests() {
             + '</div>';
         }
         div.innerHTML = '<div class="quest-title"><span>' + q.title + '</span>' + badge + '</div>'
-          + '<div class="quest-desc">' + q.desc + '</div>'
-          + (completed ? '' : '<div class="quest-hint">▶ ' + q.hint + '</div>' + progressHtml + wpBtnHtml);
+          + '<div class="quest-desc">' + (q.desc || '') + '</div>'
+          + (completed ? '' : '<div class="quest-hint">▶ ' + (q.hint || '') + '</div>' + progressHtml + wpBtnHtml);
         if (q.disposition) {
           const dRow = document.createElement('div');
           dRow.style.cssText = 'font-style:italic;font-size:11px;color:#3A2010;margin-top:4px;border-left:2px solid #5c3311;padding-left:6px;';
@@ -29937,14 +29986,21 @@ function storyRender(node, prefix) {
       const { sec, body } = _mkSection(null, '📋', 'Quests');
       activeEntries.slice(0, 6).forEach(({ id, q }) => {
         // ── skill_check quests: Ceremonia Roll card ──
-        if (q.type === 'skill_check') {
+        // §ARCH-01 Phase 2: a UQF v1.0 quest carrying a skill_check bit renders
+        // the same card, with stat/skill/dc read from the bit instead of the
+        // legacy q.check* fields. scBit === null ⇒ legacy path, byte-identical.
+        const scBit = (q.schema === 'UQF-1.0') ? (q.bits || []).find(b => b.kind === 'skill_check') : null;
+        if (q.type === 'skill_check' || scBit) {
           const blocked = _ceremoRetryBlocked(id);
-          const abilityVal = ((S_story.abilityScores || {})[q.checkAbility] || 10);
+          const _ability = scBit ? String(scBit.stat || '').toLowerCase() : q.checkAbility;
+          const _label   = scBit ? (scBit.skill || scBit.stat) : q.checkLabel;
+          const _dc      = scBit ? scBit.dc : q.checkDC;
+          const abilityVal = ((S_story.abilityScores || {})[_ability] || 10);
           const mod  = Math.floor((abilityVal - 10) / 2);
           const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
           const modStr = (mod + prof >= 0 ? '+' : '') + (mod + prof);
-          // Act V alt text
-          const vText = (q.vignetteTextAlt && S_story.ceremonia_yael_04_failed) ? q.vignetteTextAlt : q.vignetteText;
+          // Act V alt text (legacy only)
+          const vText = scBit ? (q.vignetteText || q.hint || '') : ((q.vignetteTextAlt && S_story.ceremonia_yael_04_failed) ? q.vignetteTextAlt : q.vignetteText);
           const att = (S_story.skillCheckAttempts || {})[id];
           const retryDay = att ? att.lastDay + (q.retryGateDays || 1) : null;
           body.appendChild(_mkCard({
@@ -29953,8 +30009,8 @@ function storyRender(node, prefix) {
             sub: vText || '',
             hint: blocked
               ? '⏳ Retry available: Day ' + retryDay
-              : q.checkLabel + ' (' + modStr + ') vs DC ' + q.checkDC,
-            btn: blocked ? null : 'Roll Ceremonia — ' + q.checkLabel + ' DC ' + q.checkDC,
+              : _label + ' (' + modStr + ') vs DC ' + _dc,
+            btn: blocked ? null : 'Roll Ceremonia — ' + _label + ' DC ' + _dc,
             btnClass: 'btn-talk',
             btnClick: blocked ? null : () => _rollCeremonia(id),
           }));
@@ -29969,7 +30025,7 @@ function storyRender(node, prefix) {
                 main: (_hasCharged ? '⚡🧂 Burn Charged Iodine Salt (+5)' : '🧂 Burn Iodine Salt (+3)'),
                 sub: 'Atlantean clarity method. Consumes one dose.',
                 hint: _hasCharged ? '+5 to roll — charged reduction' : '+3 to roll — plain reduction',
-                btn: _hasCharged ? 'Burn & Roll (+5) — ' + q.checkLabel : 'Burn & Roll (+3) — ' + q.checkLabel,
+                btn: _hasCharged ? 'Burn & Roll (+5) — ' + _label : 'Burn & Roll (+3) — ' + _label,
                 btnClass: 'btn-rest',
                 btnClick: () => _burnIodineSalt(id),
               }));
