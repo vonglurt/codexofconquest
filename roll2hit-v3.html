@@ -11870,12 +11870,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── §WISDOM-01: The Book of Human Nature ──
-  quest_wis_00: { id:'quest_wis_00', type:'side',
+  // §ARCH-01 Phase 3 — migrated legacy → UQF v1.0 (2026-06-28). Passive side
+  // quest: declarative gate (activation) + completion (replaces completeFn).
+  quest_wis_00: { id:'quest_wis_00', schema:'UQF-1.0', type:'side',
     title:'The Manuscript Hook',
     desc:'Roen has appeared in Visby with a tattered portfolio. The underground guild archive holds a copy of a suppressed text: "A Complete Account of Human Nature in Its Unreformed State, Vol. I" by Master Fenn Ardley — a court historian dismissed after naming the court treasurer\'s behavior patterns publicly. The treasurer scattered the text. Sixteen years later, his family lost the city dock contracts to a Baltic competitor who had read a dispersed copy. Six more sections survive, scattered across the world. Roen: "He was right. That\'s why they scattered it."',
     hint:'Find Roen in Visby to begin collecting Ardley\'s fragments.',
-    activateNode:'VS', activateCond:() => !!S_story.personalLegendComplete,
-    completeItems:[], completeFn:() => !!S_story.wisHookReceived,
+    activateNode:'VS', gate:{ flags:['personalLegendComplete'] },
+    completion:{ flags:['wisHookReceived'] }, bits:[],
     waypointNode:'VS', reward:0,
     disposition:'"The laws worked whether or not anyone wanted them to." — Roen',
     passText:"The laws worked whether or not anyone wanted them to. Roen has the portfolio. The fragment hunt begins.",
@@ -12009,12 +12011,15 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"deacon_nikolaos_ath",
   },
 
-  quest_wis_06: { id:'quest_wis_06', type:'side',
+  // §ARCH-01 Phase 3 — migrated legacy → UQF v1.0 (2026-06-28). completion is an
+  // OR-group: the wisPage6_shadow flag (accept the reflection) OR defeating the
+  // VS_SHADOW construct (fight) — set by the VS storyRender block, unchanged.
+  quest_wis_06: { id:'quest_wis_06', schema:'UQF-1.0', type:'side',
     title:'The Shadow Room',
     desc:'Ardley W6 — The Law of Repression: "The parts of yourself you have refused to examine do not disappear. They operate below the surface. They surface as overreactions, as inexplicable preferences, as patterns you cannot explain. The shadow is not your enemy — it is the part of you that has been waiting to be named." Roen: "There is a room in the lower level I have been in four times now. It shows you something. I will not say what it showed me. It was accurate, though. I gave it a formal nod. It seemed appropriate." The shadow room at Visby. Accept the reflection (Shadow Shard awarded) or fight the shadow construct.',
     hint:'Enter the shadow room in Visby. Use the story panel at VS to choose: accept or fight.',
-    activateNode:'VS', activateCond:() => !!S_story.visbyUnderground,
-    completeItems:[], completeFn:() => !!(S_story.wisPage6_shadow || (S_story.defeatedBattles||{})['VS_SHADOW']),
+    activateNode:'VS', gate:{ flags:['visbyUnderground'] },
+    completion:{ flagsAny:['wisPage6_shadow'], battles:['VS_SHADOW'] }, bits:[],
     waypointNode:'VS', reward:0,
     disposition:'"I gave it a formal nod. It seemed appropriate." — Roen',
     passText:"I gave it a formal nod. It seemed appropriate. The shadow room has been faced.",
@@ -12022,12 +12027,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
 
-  quest_wis_07: { id:'quest_wis_07', type:'side',
+  // §ARCH-01 Phase 3 — migrated legacy → UQF v1.0 (2026-06-28). completion is the
+  // compound AND(all five page flags) ∧ (wisPage6_shadow OR defeated VS_SHADOW).
+  quest_wis_07: { id:'quest_wis_07', schema:'UQF-1.0', type:'side',
     title:"Ardley's Book",
     desc:"Roen is at the Visby archive with all six sections of Ardley's manuscript laid out. He has been arranging them by theme, then by date, then by theme again. All six sections were written in the same year — the year before Ardley was dismissed. He says the treasurer's dynasty held the dock contracts for sixteen years, then lost them to a Baltic competitor who had read a dispersed copy of the text. Roen: \"The laws worked whether or not anyone wanted them to.\"",
     hint:'Return to Visby with all six Ardley fragments found.',
-    activateNode:'VS', activateCond:() => !!S_story.wisHookReceived,
-    completeItems:[], completeFn:() => !!(S_story.wisPage1_masks && S_story.wisPage2_aggression && S_story.wisPage3_thumbscrew && S_story.wisPage4_sight && S_story.wisPage5_form && (S_story.wisPage6_shadow || (S_story.defeatedBattles||{})['VS_SHADOW'])),
+    activateNode:'VS', gate:{ flags:['wisHookReceived'] },
+    completion:{ flags:['wisPage1_masks','wisPage2_aggression','wisPage3_thumbscrew','wisPage4_sight','wisPage5_form'], flagsAny:['wisPage6_shadow'], battles:['VS_SHADOW'] }, bits:[],
     waypointNode:'VS', reward:0,
     disposition:'"He was right. That\'s why they scattered it." — Roen, closing the book',
     passText:"He was right. That is why they scattered it. All six sections are assembled. The book is closed.",
@@ -20183,7 +20190,8 @@ function validateQuest(q) {
   if (!q || typeof q !== 'object') return { valid:false, errors:['Quest is not an object'] };
   if (!q.schema)            errors.push('Missing schema version');
   if (!q.id)                errors.push('Missing id');
-  if (!q.bits || !q.bits.length) errors.push('No mission bits defined');
+  // A quest needs a bit chain OR a declarative completion gate (passive side quest).
+  if ((!q.bits || !q.bits.length) && !q.completion) errors.push('No mission bits defined');
   for (const bit of (q.bits || [])) {
     const c = BIT_CONTRACTS[bit.kind];
     if (!c) { errors.push('Unknown bit kind: ' + bit.kind); continue; }
@@ -20236,6 +20244,24 @@ const QuestRuntime = {
     if (g.flagsAny && g.flagsAny.length && !g.flagsAny.some(f => !!S_story[f])) return false;
     if (g.notFlags && g.notFlags.some(f => !!S_story[f]))  return false;
     if (g.nodes    && !g.nodes.every(n => (S_story.visited || S_story.visitedNodes || {})[n])) return false;
+    return true;
+  },
+
+  /* Declarative completion gate for UQF side quests (replaces completeFn).
+     `flags` are ALL-required (AND); `flagsAny` + `battles` form a single
+     OR-group (any one satisfies it); `notFlags` are NONE-allowed. `battles`
+     entries match defeated-combat codes in S_story.defeatedBattles. This
+     models the compound "AND(pages) ∧ (flag OR defeated-battle)" condition
+     (lab Open-Q #5) without a boolean-expression language. */
+  canComplete(questId) {
+    const q = QUEST_DB[questId];
+    if (!q || !q.completion) return false;
+    const g = q.completion;
+    if (g.flags && !g.flags.every(f => !!S_story[f])) return false;
+    const orList = (g.flagsAny || []).map(f => !!S_story[f])
+      .concat((g.battles || []).map(b => !!(S_story.defeatedBattles || {})[b]));
+    if (((g.flagsAny || []).length + (g.battles || []).length) && !orList.some(Boolean)) return false;
+    if (g.notFlags && g.notFlags.some(f => !!S_story[f])) return false;
     return true;
   },
 
@@ -26091,6 +26117,7 @@ function storyCheckQuests(node) {
     const q = QUEST_DB[id];
     if (!q) return;
     const done = (q.completeFn && q.completeFn()) ||
+      (q.schema === 'UQF-1.0' && q.completion && QuestRuntime.canComplete(id)) ||   // §ARCH-01 Phase 3 — declarative completion
       (q.completeItems && q.completeItems.length > 0 && q.completeItems.some(ci =>
         S_story.inventory.some(inv => inv.name.includes(ci) || ci.includes(inv.name))));
     if (done) {

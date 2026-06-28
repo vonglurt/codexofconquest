@@ -441,3 +441,81 @@ test.describe('§WISDOM-01 wis_02–05 migrated to UQF (§ARCH-01 Phase 3)', () 
     expect(r.full).toBe('active');
   });
 });
+
+// ── §ARCH-01 Phase 3 — §WISDOM-01 side quests wis_00/06/07 (declarative completion) ──
+//
+// The arc's three type:'side' quests complete passively (no skill roll) when a
+// flag/battle condition holds. Their completeFn is replaced by a declarative
+// `completion` gate evaluated by QuestRuntime.canComplete in storyCheckQuests.
+// wis_07 is the compound case the lab flagged (Open-Q #5): AND(five page flags)
+// ∧ (wisPage6_shadow OR defeated VS_SHADOW), expressed via flags + flagsAny +
+// battles — no boolean-expression language needed.
+
+test.describe('§WISDOM-01 side quests wis_00/06/07 → UQF (§ARCH-01 Phase 3)', () => {
+  test('all three validate as UQF (completion gate, empty bits allowed)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => ['quest_wis_00','quest_wis_06','quest_wis_07'].map(id => {
+      const q = QUEST_DB[id];
+      return { id, schema:q.schema, completion:!!q.completion, bits:q.bits.length, valid:validateQuest(q).valid };
+    }));
+    expect(r.every(x => x.schema === 'UQF-1.0' && x.completion && x.bits === 0 && x.valid)).toBe(true);
+  });
+
+  test('canComplete models wis_07 compound AND(pages) ∧ (flag OR battle)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const pages = ['wisPage1_masks','wisPage2_aggression','wisPage3_thumbscrew','wisPage4_sight','wisPage5_form'];
+      const reset = (obj) => { S_story.defeatedBattles = {}; [...pages,'wisPage6_shadow'].forEach(f => delete S_story[f]); Object.assign(S_story, obj || {}); };
+      const five = { wisPage1_masks:true, wisPage2_aggression:true, wisPage3_thumbscrew:true, wisPage4_sight:true, wisPage5_form:true };
+      reset({}); const none = QuestRuntime.canComplete('quest_wis_07');
+      reset(five); const fiveOnly = QuestRuntime.canComplete('quest_wis_07');            // pages, no OR-group
+      reset({ ...five, wisPage6_shadow:true }); const viaFlag = QuestRuntime.canComplete('quest_wis_07');
+      reset(five); S_story.defeatedBattles = { VS_SHADOW:true }; const viaBattle = QuestRuntime.canComplete('quest_wis_07');
+      reset({ wisPage1_masks:true, wisPage6_shadow:true }); const missingPages = QuestRuntime.canComplete('quest_wis_07');
+      return { none, fiveOnly, viaFlag, viaBattle, missingPages };
+    });
+    expect(r.none).toBe(false);
+    expect(r.fiveOnly).toBe(false);       // five pages but neither shadow flag nor battle ⇒ incomplete
+    expect(r.viaFlag).toBe(true);         // five pages + wisPage6_shadow
+    expect(r.viaBattle).toBe(true);       // five pages + defeated VS_SHADOW
+    expect(r.missingPages).toBe(false);   // OR-group satisfied but only one page ⇒ incomplete
+  });
+
+  test('storyCheckQuests auto-completes wis_06 via either OR branch', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = (setup) => {
+        S_story.quests = { quest_wis_06:'active' }; S_story.inventory = [];
+        S_story.defeatedBattles = {}; delete S_story.wisPage6_shadow;
+        setup();
+        storyCheckQuests({ code:'__none' });
+        return S_story.quests.quest_wis_06;
+      };
+      return {
+        neither: run(() => {}),
+        viaFlag: run(() => { S_story.wisPage6_shadow = true; }),
+        viaBattle: run(() => { S_story.defeatedBattles = { VS_SHADOW:true }; }),
+      };
+    });
+    expect(r.neither).toBe('active');     // condition unmet ⇒ stays active
+    expect(r.viaFlag).toBe('complete');
+    expect(r.viaBattle).toBe('complete');
+  });
+
+  test('wis_00 gates activation (personalLegendComplete) then completion (wisHookReceived)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = {}; S_story.inventory = [];
+      delete S_story.personalLegendComplete; delete S_story.wisHookReceived;
+      storyCheckQuests({ code:'VS' }); const noActivate = S_story.quests.quest_wis_00;
+      S_story.personalLegendComplete = true;
+      storyCheckQuests({ code:'VS' }); const activated = S_story.quests.quest_wis_00;
+      S_story.wisHookReceived = true;
+      storyCheckQuests({ code:'VS' }); const completed = S_story.quests.quest_wis_00;
+      return { noActivate, activated, completed };
+    });
+    expect(r.noActivate).toBeUndefined();   // gate blocks activation
+    expect(r.activated).toBe('active');
+    expect(r.completed).toBe('complete');   // declarative completion fired
+  });
+});
