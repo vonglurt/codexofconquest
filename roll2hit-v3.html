@@ -20086,27 +20086,163 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 };
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
-/* §ARCH-01 Phase 1 — UQF skeleton (inert — no behavior change) */
+/* ════════════════════════════════════════════════════════════════════════
+   §ARCH-01 Phase 1 — Universal Quest Format (UQF v1.0) runtime
+   ────────────────────────────────────────────────────────────────────────
+   INERT by design: nothing in the live game calls QuestRuntime / validateQuest
+   / adaptLegacyQuest yet. The legacy path (_rollCeremonia, completeFn closures,
+   storyRender blocks) remains the sole driver of quest behavior. This block
+   only DEFINES the declarative engine that Phase 2 will begin routing new arcs
+   through. Handlers are bound to the REAL game functions/state so that the day
+   they are first called they already work — no landmines, no rebind.
+   Ref: lab-reports/lab-report-quest-api-architecture.md
+   ════════════════════════════════════════════════════════════════════════ */
 const SCHEMA_VERSION = 'UQF-1.0';
 
-const QuestRuntime = {
-  _schema: SCHEMA_VERSION,
-  // Stub: will execute UQF v1.0 quests once Phase 2 migration begins.
-  run(quest, state) { return { ok:false, reason:'not implemented — legacy path still active' }; },
-  // Adapt a legacy QUEST_DB entry into a minimal UQF-compatible shape.
-  adaptLegacyQuest(id, q) {
-    return {
-      schema: '0.legacy',
-      id,
-      type: q.type,
-      title: q.title,
-      gate: q.activateCond ? { _legacy: true } : {},
-      bits: [],
-      _source: q,
-    };
-  },
+/* Bit contracts — required/optional fields + a structural validator per kind.
+   Used by validateQuest() (and, later, the worldbuilder's Quest Editor). */
+const BIT_CONTRACTS = {
+  skill_check: { required:['stat','dc'],        optional:['skill','adv','onPass','onFail'],
+    validate: b => ['STR','DEX','CON','INT','WIS','CHA'].includes(String(b.stat).toUpperCase()) && typeof b.dc === 'number' && (b.onPass || b.onFail) },
+  flag_write:  { required:[],                    optional:['set','clear'],
+    validate: b => ((b.set||[]).length + (b.clear||[]).length) > 0 },
+  reward:      { required:[],                    optional:['xp','gold','items','knowledge'],
+    validate: b => !!(b.xp || b.gold || (b.items && b.items.length) || b.knowledge) },
+  combat:      { required:['key','label'],       optional:['count','nodeCode'],
+    validate: b => typeof b.key === 'string' && typeof b.label === 'string' },
+  narrative:   { required:[],                    optional:['msg','template'],
+    validate: b => !!(b.msg || b.template) },
+  item_remove: { required:['name'],              optional:[],
+    validate: b => typeof b.name === 'string' && b.name.length > 0 },
+  item_check:  { required:['name'],              optional:['count'],   // lab Open-Q #3
+    validate: b => typeof b.name === 'string' && b.name.length > 0 },
+  unlock:      { required:[],                    optional:['quests','npcs'],
+    validate: b => ((b.quests||[]).length + (b.npcs||[]).length) > 0 },
+  choice:      { required:['prompt','options'],  optional:[],
+    validate: b => Array.isArray(b.options) && b.options.length >= 2 && b.options.every(o => o.label && Array.isArray(o.bits)) },
+  _legacy_fn:  { required:['fn'],                optional:[],          // adapter escape hatch
+    validate: b => typeof b.fn === 'function' || b.fn == null },
 };
-/* end §ARCH-01 Phase 1 */
+
+/* Validate a UQF quest object against the bit registry. Pure — no side effects. */
+function validateQuest(q) {
+  const errors = [];
+  if (!q || typeof q !== 'object') return { valid:false, errors:['Quest is not an object'] };
+  if (!q.schema)            errors.push('Missing schema version');
+  if (!q.id)                errors.push('Missing id');
+  if (!q.bits || !q.bits.length) errors.push('No mission bits defined');
+  for (const bit of (q.bits || [])) {
+    const c = BIT_CONTRACTS[bit.kind];
+    if (!c) { errors.push('Unknown bit kind: ' + bit.kind); continue; }
+    for (const req of c.required) if (bit[req] === undefined) errors.push('Bit "' + bit.kind + '" missing required field: ' + req);
+    if (!c.validate(bit)) errors.push('Bit "' + bit.kind + '" failed contract validation');
+  }
+  return { valid: errors.length === 0, errors };
+}
+
+/* Wrap a legacy QUEST_DB entry in a UQF-compatible shell. The legacy
+   activateCond / onPass / onFail closures are PRESERVED verbatim (not parsed)
+   behind _legacy markers, so behavior is identical if ever executed. */
+function adaptLegacyQuest(id, q) {
+  if (q && q.schema) return q;                       // already UQF — pass through
+  const adapted = {
+    schema: '0.legacy',
+    id, type: q.type,
+    arc: String(id).split('_').slice(0, 2).join('_'),
+    activateNode: q.activateNode, waypointNode: q.waypointNode,
+    gate: q.activateCond ? { _legacyFn: q.activateCond } : {},
+    bits: [],
+    title: q.title, hint: q.hint, retryable: q.retryable, disposition: q.disposition,
+    _source: q,
+  };
+  if (q.type === 'skill_check') {
+    adapted.bits.push({
+      kind:'skill_check',
+      stat: String(q.checkAbility || q.checkStat || '').toUpperCase(),
+      skill: q.checkLabel || q.checkSkill, dc: q.checkDC,
+      onPass: q.onPass ? [{ kind:'_legacy_fn', fn:q.onPass }] : [],
+      onFail: q.onFail ? [{ kind:'_legacy_fn', fn:q.onFail }] : [],
+    });
+  }
+  return adapted;
+}
+
+const QuestRuntime = {
+  SCHEMA_VERSION,
+  _schema: SCHEMA_VERSION,   // back-compat alias for the prior stub field
+
+  /* Declarative activation gate (replaces the activateCond arrow function).
+     No gate, or only a legacy-wrapped gate, evaluates permissively here —
+     legacy quests keep using their own activateCond on the live path. */
+  canActivate(questId) {
+    const q = QUEST_DB[questId];
+    if (!q) return false;
+    const g = q.gate;
+    if (!g || g._legacyFn) return true;
+    if (g.flags    && !g.flags.every(f => !!S_story[f]))   return false;
+    if (g.flagsAny && g.flagsAny.length && !g.flagsAny.some(f => !!S_story[f])) return false;
+    if (g.notFlags && g.notFlags.some(f => !!S_story[f]))  return false;
+    if (g.nodes    && !g.nodes.every(n => (S_story.visited || S_story.visitedNodes || {})[n])) return false;
+    return true;
+  },
+
+  /* Execute an ordered bit chain. Unknown kinds are warned + skipped. */
+  execBits(bits, ctx) {
+    for (const bit of (bits || [])) {
+      const h = QuestRuntime.HANDLERS[bit.kind];
+      if (!h) { console.warn('[UQF] unknown bit kind:', bit.kind); continue; }
+      h(bit, ctx || {});
+    }
+  },
+
+  /* Resolve a skill_check bit. Mirrors _rollCeremonia()'s real roll math:
+     mod = ⌊(score-10)/2⌋, prof = 2+⌊(level-1)/4⌋, plus iodine + lake-magic
+     bonuses, total ≥ dc. Routes into the onPass / onFail sub-chains. */
+  resolveSkillCheck(bit, ctx) {
+    const ability   = String(bit.stat || '').toLowerCase();
+    const abilityVal = ((S_story.abilityScores || {})[ability] || 10);
+    const mod  = Math.floor((abilityVal - 10) / 2);
+    const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
+    const d20  = Math.ceil(Math.random() * 20);
+    const iodineBonus = S_story.iodineBuffActive ? (S_story.iodineBuffBonus || 3) : 0;
+    if (S_story.iodineBuffActive) { S_story.iodineBuffActive = false; S_story.iodineBuffBonus = 0; }
+    const lmAll = (typeof _lakeMagicBonuses === 'function') ? (_lakeMagicBonuses().allAbility || 0) : 0;
+    const total = d20 + mod + prof + iodineBonus + lmAll;
+    const pass  = total >= bit.dc;
+    QuestRuntime.execBits(pass ? (bit.onPass || []) : (bit.onFail || []), ctx);
+    return { d20, total, pass };
+  },
+
+  /* Each handler is bound to the real game state/functions (see header). */
+  HANDLERS: {
+    skill_check(bit, ctx) { QuestRuntime.resolveSkillCheck(bit, ctx); },
+    flag_write(bit)       { (bit.set || []).forEach(f => S_story[f] = true); (bit.clear || []).forEach(f => S_story[f] = false); },
+    reward(bit) {
+      if (bit.xp)   { S_story.xp = (S_story.xp || 0) + bit.xp; if (typeof _checkLevelUp === 'function') _checkLevelUp(); }
+      if (bit.gold) { S_story.gold = (S_story.gold || 0) + bit.gold; }
+      if (bit.items && bit.items.length) { S_story.inventory = S_story.inventory || []; bit.items.forEach(i => S_story.inventory.push({ ...i })); }
+      if (bit.knowledge) { S_story.knowledge = S_story.knowledge || []; S_story.knowledge.push(bit.knowledge); }
+    },
+    combat(bit) { if (typeof storyPreBattle === 'function') storyPreBattle({ ...NODE_MAP[S_story.currentCode], code: bit.nodeCode || bit.key, battle: { label: bit.label, key: bit.key, count: bit.count || 1 } }); },
+    narrative(bit) { if (bit.msg && typeof storyMsg === 'function') storyMsg(bit.msg); /* template path: Phase 2 renderNamedTemplate */ },
+    item_remove(bit) { const inv = S_story.inventory || []; const i = inv.findIndex(x => x.name === bit.name); if (i > -1) inv.splice(i, 1); },
+    item_check(bit, ctx) { const inv = S_story.inventory || []; ctx._itemCheck = inv.filter(x => x.name === bit.name).length >= (bit.count || 1); },
+    unlock(bit) { (bit.quests || []).forEach(qid => { S_story.quests = S_story.quests || {}; if (!S_story.quests[qid]) S_story.quests[qid] = 'active'; }); },
+    choice(bit, ctx) { /* Phase 2: renderChoiceBlock(bit.prompt, bit.options, ctx) */ },
+    _legacy_fn(bit) { if (typeof bit.fn === 'function') bit.fn(S_story); },
+  },
+
+  validateQuest, adaptLegacyQuest,
+};
+
+// Expose for the worldbuilder bridge + Playwright (inert references only).
+if (typeof window !== 'undefined') {
+  window.QuestRuntime    = QuestRuntime;
+  window.validateQuest   = validateQuest;
+  window.adaptLegacyQuest = adaptLegacyQuest;
+  window.BIT_CONTRACTS   = BIT_CONTRACTS;
+}
+/* end §ARCH-01 Phase 1 — UQF runtime (inert) */
 
 /* ── Layer 5: Void Tide Events ── */
 const VOID_TIDE_EVENTS = { // → doc: world.md §Void Tide
