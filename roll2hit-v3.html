@@ -9819,6 +9819,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"archivus_sweelinck",
   },
   quest_wm_02: { id:'quest_wm_02', type:'side', title:'Isolde: Lower Archive',
+    itemChain:[{action:'grant',name:"Froberger's Field Notes", icon:'📗', type:'tome', sell:0, bonus:{ deathSave:1 }, description:'Margin: "The pressure is survivable if you know it\'s coming."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Three documents in the lower archive. The revocation letter, the field report, the personnel file. Read all three.",
     hint:'Visit the Scholar\'s Quarter and examine the archive documents.',
     activateNode:null, completeItems:[], completeFn:() => !!(S_story.wmDoc1Read && S_story.wmDoc2Read && S_story.wmDoc3Read),
@@ -9827,6 +9828,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_wm_03: { id:'quest_wm_03', type:'side', title:'Benedikt: The Reading Circle',
+    itemChain:[{action:'grant',name:"Scholar Kings' History", icon:'📘', type:'tome', sell:0, bonus:{ initiative:2 }, description:'"First knowledge, then decision, then action. Never the other order."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt Rasp runs a reading circle from a bookbinder\'s stall. Three sessions — three different days.",
     hint:'Attend 3 reading circle sessions at the Scholar\'s Quarter (one per day).',
     activateNode:null, completeItems:[], completeFn:() => !!(S_story.wmBenediktCircleComplete),
@@ -9835,6 +9837,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_wm_04: { id:'quest_wm_04', type:'side', title:'Benedikt: The First Researcher',
+    itemChain:[{action:'grant',name:"Benedikt's Annotated Copy", icon:'📙', type:'tome', sell:0, bonus:{ atkWhileQuestActive:1 }, description:'"He was right about this one too." — B. Rasp',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt knows who the First Researcher was. He waited three sessions to be sure you were the kind of person to be told.",
     hint:'Return to the lower archive and read the unredacted personnel file.',
     activateNode:null, completeItems:[], completeFn:() => !!(S_story.wmFirstResearcherKnown),
@@ -9862,6 +9865,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_va_02: { id:'quest_va_02', type:'side', title:"The Architecture: Constructor's Log",
+    itemChain:[{action:'grant',name:"The Constructor's Log", icon:'📜', type:'readable', sell:0, readable: true, readableKey:'constructors_log', description:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.',silent:true},{action:'grant',name:'Antecedent Seal', icon:'🏛️', type:'relic', sell:0, description:'"Antecedent Containment Protocol. Seal 7. Activated."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"A fourth document has appeared in the lower archive. It was not there when Isolde catalogued the collection — or it was there and not visible, which is a distinction the archive does not officially recognize. Seven entries. Her handwriting. The last entry reads: 'If someone is reading this, the sealing mechanism has activated. The cage is closed. I am sorry.' She wrote that line and then walked out of the archive knowing she would not be back to see if anyone found it.",
     hint:'Return to the Scholar\'s Quarter lower archive.',
     activateNode:null, completeItems:[], completeFn:() => !!(S_story.vaLogFound),
@@ -9934,6 +9938,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   // ── §LVIII: Cycle 4 ──
   quest_muffat_05: { id:'quest_muffat_05', type:'side', title:'Cycle 4',
+    itemChain:[{action:'grant',name:'Scholar Kings Requisition (Handwritten)', icon:'📜', type:'readable', sell:0, readText:"SCHOLAR KINGS — INTERNAL ROUTING\nHandwritten. Class 3. No copy to be made.\n\nStation 7 monitoring capacity is to be maintained through the current cycle and expanded in advance of Cycle 4. The Antecedent Containment Protocol requires adjustment at the interval. Equipment delivered per the attached schedule is adequate for the extension only. Cycle 4 components to follow under separate authority.\n\nAuthorization: Conclave Archivist.\nNo countersignature required.\nNo date required.\n\n[Below the fold, a single line in different ink:]\nThe archive knows what it holds.\nDo not let the archive answer.",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Muffat has had three Scholar Kings crates on her shelf for two years, unopened. The stamp prevented harbor search. The question is closed now. She opens one. The receiver array inside is expected. The handwritten requisition note in the packing material is not.",
     hint:'Return to Magistra Muffat at the Harbor Docks — she has something to show you.',
     activateNode:'LCY', activateCond:() => !!S_story.antecedentMet, // CO-002: activates same visit as Solm direction
@@ -9946,6 +9951,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   // ── §LVII: The Field Analyst ──
   quest_solm_01: { id:'quest_solm_01', type:'side', title:'The Field Analyst',
+    itemChain:[{action:'grant',name:'Analyst Solm Field File', icon:'📋', type:'readable', sell:0, readText:"FIELD FILE — ANALYST I. SOLM\nStation 7, Frequency 14.225 Monitoring Assignment\nClass 3, Scholar Kings Research Division\n\n[Vol. 1, Day 1 — three months prior:]\nTransmission cut mid-entry. Suppressor origin: CY access corridor. Operator unknown to me. I do not believe the suppression was deliberate interference — the timing and mechanism suggest an automated device, not a hand on a dial. I have nonetheless lost the fourth transmission before it completed.\n\nI cannot return to Station 7. The Scholar Kings will not acknowledge the record. I am here instead, where things that cannot be officially held are held unofficially.\n\n[Vol. 1, Days 2–87:]\nTransmission confirmed, bearing 047°, no repeat. [repeated daily, same hand, same composure]\n\n[Vol. 1, Day 88 — closing entry, ink slightly different pressure:]\nRecord from the terminus received. Source confirmed: contained, non-hostile, question answered. Absence confirmed on 14.225. The archive still has an archivist.\n\nFile closed.\n\n— I. Solm",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"The Station 7 operator went to Magistra Muffat three months ago with classified knowledge she could no longer safely carry. Muffat sent her to the Map Shop. Dusk holds things without asking why. He has been holding her.",
     hint:'Find Analyst Solm at the Map Shop. She has been waiting for someone who finished what she could not.',
     activateNode:'LCY', activateCond:() => !!S_story.antecedentMet,
@@ -9968,6 +9974,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   // ── §LIV: The Warrant ──
   quest_signal_01: { id:'quest_signal_01', type:'side', title:'The Warrant',
+    itemChain:[{action:'grant',name:'Warrant Suppressor Log', icon:'📡', type:'readable', sell:0, readText:"WARRANT SUPPRESSOR — AUTOMATIC SIGNAL LOG\nDevice ID: WSP-CY-04 (Neon Undercity, Station Corridor)\nOperator: Commander S. Bruhns (unaware of logging function)\n\n[Months 1–41: 14.225 monitored. No structured transmission detected. Log: confirmed absent. Cross-reference with Frequency Row Vol. 1–41: consistent.]\n\nDay 3, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 0.4s, character: non-mechanical, subsurface origin — depth est. 18m, bearing 047° from HM. Suppression effective. Signal terminated.\nDay 9, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 1.1s, character: non-mechanical, partial internal structure. Suppression effective. Signal terminated.\nDay 14, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 3.1s, character: non-mechanical, structured content, transmission in progress at suppression. Suppression effective. Signal terminated mid-transmission.\n\n[Post-Day 14: 14.225 monitored. No structured transmission detected. Source remains at bearing 047°, depth 18m.]\n\nAuto-assessment: Signal suppression achieved. Source has not repeated transmission.\n\nNote: Either source ceased voluntarily, or source is aware of suppression.\n\n[End of log. Device continues active monitoring.]",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Station 7's log ends mid-entry. Bearing 047° points at the Neon Undercity. Seraphine Bruhns has been running a Warrant suppressor at CY since before you arrived. The suppressor fires automatically on structured transmissions. It keeps a log. She did not know it kept a log.",
     hint:'Return to Commander Seraphine Bruhns at the Neon Undercity and ask about the suppressor log.',
     activateNode:'HKG', activateCond:() => !!S_story.station7LogRead,
@@ -9980,6 +9987,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   // ── §LIII: Station 7 ──
   quest_muffat_03: { id:'quest_muffat_03', type:'side', title:'The Dark Station',
+    itemChain:[{action:'grant',name:'Station 7 Transmission Log', icon:'📡', type:'readable', sell:0, readText:"STATION 7 — AUTOMATED TRANSMISSION LOG\nFrequency 14.225 — Scholar Kings Monitoring Annex (Class 3)\nOperator: [field redacted per Class 3 protocol]\n\n[Volumes 1–40: confirmed absence. Cross-referenced with Frequency Row Vol. 1–40. Consistent.]\n\nVol. 41, Day 3: SIGNAL DETECTED — 14.225 — Duration: 0.4s — Character: non-mechanical — Source: subsurface, bearing 047° — Repeat: none. Logged per protocol. Notified Class 3 oversight. No response from oversight.\nVol. 41, Day 4: Absence confirmed.\nVol. 41, Day 9: SIGNAL DETECTED — 14.225 — Duration: 1.1s — Character: non-mechanical — Source: subsurface, bearing 047° — Repeat: none. Signal contains partial structure. Not noise. Logged. No response from oversight.\nVol. 41, Day 14: SIGNAL DETECTED — 14.225 — Duration: 3.1s — Character: non-mechanical — Source: subsurface, bearing 047° — Signal contains—\n\n[Log ends. The entry is incomplete. The pen is in the output tray. The receiver is still active. Bearing 047° from Station 7 points toward the Neon Undercity access corridor.]",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Station 7 is listed in the manifest as the delivery terminus. The station that went dark. The manifest has an address. Bertha's logs have a changed absence. The station has a transmission log that ends mid-entry.",
     hint:'Find Station 7 east of Frequency Row and read the transmission log.',
     activateNode:'LCY', activateCond:() => !!S_story.muffatManifestRead,
@@ -9992,6 +10000,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   // ── §LII: Muffat — The Distribution Pattern ──
   quest_muffat_02: { id:'quest_muffat_02', type:'side', title:'The Distribution Pattern',
+    itemChain:[{action:'grant',name:'Shipping Manifest (Intercepted)', icon:'📦', type:'readable', sell:0, readText:"SCHOLAR KINGS DISTRIBUTION — INTERNAL ROUTING\nStamp: Non-Standard Clearance (Class 3 Seal)\nOrigin: Tilbury Harbor, Third Berth\nDestination: Station 7 (Frequency Row Monitoring Annex)\nDelivery Frequency: Every 6 weeks\nContents: Monitoring equipment, Category 4 (no itemisation required)\nDistribution Reference: Frequency 14.225 — passive reception array maintenance\n\n[Handwritten annotation, margin:]\nStation 7 last confirmed operational — see Freq. Row log, Vol. 38.\nStation 7 status as of Vol. 41: no confirmation received.\nField note: Station may have been decommissioned without notice to monitoring staff.\n\n[Second annotation, different hand:]\nStation 7 was not decommissioned.\n—M.E.M.",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"The crate Muffat has on her shelf has a distribution stamp and a frequency reference: 14.225. That is Bertha No-Bank's frequency. The one with nothing on it. Forty-one volumes of nothing.",
     hint:'Find Bertha No-Bank at Frequency Row and ask about the changed absence on 14.225.',
     activateNode:'LCY', activateCond:() => !!S_story.muffatBerthReached,
@@ -12197,6 +12206,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_shale_drop: { id:'quest_shale_drop', type:'side', title:'The Shale Drop', // §XLIX
+    itemChain:[{action:'grant',name:'Y. Gurt Field Survey', icon:'📋', type:'readable', sell:0, readText:"Y. GURT — YUGURT LAKE SURVEY\nFirst Circle Field Record, Pre-Codex Year 3\nClassification: Naturalist Assessment — Freshwater Taxonomy\n\nLake dimensions: 2.4km × 0.9km. Maximum depth: 31 meters at the northwest basin. The shale formation below the northwest bank extends below the waterline for an undetermined depth — further survey required.\n\nDocumented species: 20 surface and mid-water, 3 confirmed deep-water (unclassified), 1 depth specimen observed on descent into northwest shale formation. See Annex 4: 'the light-producing variety; do not pursue below 25m without additional crew.'\n\nSurveyor notation (Y. Gurt, Nat. First Circle): The lake has developed a self-regulating predator hierarchy without Scholar Kings intervention. I recommend no intervention. It is doing this correctly on its own. I also recommend I be permitted to stay here rather than return to the archive for the classification review. The archive will continue without me. The lake will require observation.\n\nThe request was not approved.\n\nI stayed anyway.",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"There is a crack in the bank at Yugurt Lake where the shale drops away below the waterline. You have been past it without a light. The Eel Skin Pouch gives you one. The lake floor is older than the water above it. What has been sitting in the dark down there has been sitting in the dark for a very long time.",
     hint:'Enter The Shale Drop from Yugurt Lake (requires Eel Skin Pouch) and defeat the Cave Lurker.',
     activateNode:'BOO', completeItems:[],
@@ -12330,6 +12340,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:"The threshold has not been crossed. Return to Yugurt Cabin after the unconscious cast.",
   },
   quest_guide_06: { id:"quest_guide_06", type:"side", title:"Just Be Yourself", desc:"The Fisherman brings the rod out from inside the cabin. It was not visible before. He sets it on the table between you. Emmer says: Wait, shouldn't I — The Fisherman goes back inside. The fire is still going. The rod is in your hands. You have been trying to be the person you want to become. This morning you already are. You will need to try to be the person you want to become. And then, one morning, you already are. Make one more cast. The lake will register it.", hint:"Make one more cast at Yugurt Lake to close the arc.", disposition:"\"You will need to try to be the person you want to become. And then, one morning, you already are.\" — The Fisherman", npc:"The Fisherman", activateNode:"SSJ", waypointNode:"BOO", xpAward:400, reward:0, activateCond:() => S_story.quests["quest_guide_05"] === "done", completeFn:() => (S_story.fishingCatchLog||[]).length >= 6,
+    itemChain:[{action:'grant',name:'Rod of Self-Discovery', icon:'🎣', type:'weapon', atkBonus:1, dmgDie:4, dmgCount:1, dmgFlat:0, minLevel:1, sell:0, desc:'+1 ATK, 1d4. The rod the Fisherman kept inside. It was not a fishing rod. It was a proof of concept.',silent:true}], // §EDITOR-01-D-FU(b) b2b
     passText:"You will need to try to be the person you want to become. And then, one morning, you already are. The arc is closed.",
     failText:"One more cast at Yugurt Lake is needed to close the arc. The lake will register it.",
   },
@@ -12337,6 +12348,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   quest_scar_02: { id:"quest_scar_02", type:"skill_check", title:"The Labyrinth", desc:"There is a man in the lower reading room who has been explaining at considerable volume why a young copyist's margin annotations are incorrect. The annotations are not incorrect. His hands are moving too much. Gret said: there is a man who is very angry and doesn't know yet that the anger is not about the books. This is the man. You know this shape before he finishes his sentence.", hint:"Read the man's behavior — WIS Insight DC 12. Find the wound inside the anger.", passText:"You read it. Workshop fire, three years ago. Guild papers lost, unrecoverable. No formal complaint because there was nothing left to prove. He has been inside the labyrinth since the morning the workshop burned and has not found the exit because he hasn't been told one exists. You say: There's a way through. I've been where you are. He stops. He looks at you as if you have said something in a language he stopped expecting to hear. He doesn't answer. He nods once. The young copyist goes back to work.", failText:"A difficult man being difficult. Some people are just like this. You cannot find the wound inside the behavior.", disposition:"\"There's a way out, brother. I have been where you are.\" — passed forward", npc:"Pier Falk", activateNode:"NUE", waypointNode:"NUE", checkAbility:"wis", checkLabel:"Insight", vignetteText:"The man is at the reading table. He has been there two hours explaining, at considerable volume, why a young copyist's margin annotations are incorrect. The annotations are not incorrect — you can see this from the doorway. He is holding a quill he is not using. His hands are moving too much. His voice drops one register when he says the word workshop. That is the tell. The workshop burned three years ago. The guild papers went with it. The younger scribes have their papers in good standing and remind him of it by existing. The anger is not about the annotations. Gret said: he doesn't know yet that the anger is not about the books. There's a way through. Someone showed me once.", xpAward:200, checkDC:12, retryGateDays:1, retryable:true, activateCond:() => !!S_story.gretMet, onPass:() => { S_story.gretLabyrinth = true; S_story.pierFalkWarm = true; }, onFail:() => {} },
   quest_scar_03: { id:"quest_scar_03", type:"skill_check", title:"The Shock", desc:"Ren Hamm stands in the doorway of Gret's study. He is thirty, holding a discarded draft with her handwriting on it. He found it in his father's estate papers. He has read it. He knows. He wants Gret to testify before the Academy — not full credit for her, but partial restoration of his father's name: confused, not corrupt. Gret gets nothing formal. She reopens the wound. She looks at you. She has already decided. She needs to say it to someone first.", hint:"Counsel Gret — WIS Insight DC 11. Absorb the shock or pass it on.", passText:"You see what the choice is — not revenge versus mercy but whether the wound gets a witness or stays private. Go. Show up. That's the real good. Gret is quiet for a moment. Yes. I think so too. I was hoping you would say that. A pause. Not because I couldn't decide. Because I needed to say it to someone first. She closes the manuscript and puts on her coat.", failText:"You owe him nothing. Protect yourself. Gret is still. You're right. I don't owe him anything. That is exactly right. A long silence. And yet. She does not move toward the door. She does not move away from it either. The wound stays where it is.", disposition:"\"The weak good says I forgive you. The real good shows up anyway.\" — Gret Orrens", npc:"Gret Orrens", activateNode:"NUE", waypointNode:"NUE", checkAbility:"wis", checkLabel:"Insight", vignetteText:"Ren Hamm is thirty, earnest, carrying his father's shame. He found the discarded draft in the estate papers. He knows what his father did. He is not here to defend it — he is here to ask Gret to say that Aldric acted without full understanding. Not corrupt. Merely confused. The Academy might accept this. Gret's name would not appear on the work. She would gain nothing formal and lose three days of peace and the particular quiet that twelve years of not reopening the wound has produced. She is looking at you. She already knows what she wants to do. She needs to say it to someone first. The question the wound is asking: do you absorb the shock or pass it on?", xpAward:250, checkDC:11, retryGateDays:0, retryable:false, activateCond:() => !!S_story.gretLabyrinth && !S_story.gretChoice, onPass:() => { S_story.gretChoice = "help"; }, onFail:() => { S_story.gretChoice = "refuse"; } },
   quest_scar_04: { id:"quest_scar_04", type:"side", title:"The Star", desc:"She returns from the Academy. She does not say what happened. She sits down, opens her manuscript, and writes one sentence. Then she reaches into her coat and sets something on the table between you — a small pendant, warm. Not from her hands. It has been warm longer than that. She does not look up. Keep it. You pick it up. The manuscript is still open. The chapter on obligation, that one especially. It is never the same. That is the point.", hint:"Return to the Scholar's Quarter to receive the arc's close.", disposition:"\"It is never the same. That is the point.\" — The Scar's Light", npc:"Gret Orrens", activateNode:"NUE", waypointNode:"NUE", xpAward:350, reward:500, activateCond:() => !!S_story.gretChoice, completeFn:() => !!S_story.gretChoice && S_story.currentCode === "NUE",
+    itemChain:[{action:'grant',name:"The Scar's Light", icon:'🕯', type:'amulet', sell:0, passive:true, desc:'Passive — when HP ≤ 75% max, +1 ATK and +1 DMG on all attacks. Hard-won goodness.',silent:true},{action:'grant',name:'Orrens Manuscript', icon:'📕', type:'readable', sell:0, readText:"ORRENS — ON OBLIGATION\nWorking Draft, Third Edition\n\nThe scar does not go back to being skin. That is how you know it was real.\n\nThe wound that does not go back to unscarred is the same wound that can become the thing you give to someone else. Not the pain. The knowledge that the labyrinth has an exit.\n\nI was shown the exit by someone who had been in it longer than I had and found their way out and came back. That is the chain. That is the only mechanism that works.\n\nYou cannot give what you do not have. But you always have the scar. The scar is the credential.\n\nThe chapter on obligation, that one especially.",silent:true}], // §EDITOR-01-D-FU(b) b2b
     passText:"It is never the same. That is the point. The pendant is warm. The arc is closed.",
     failText:"The Scholar Quarter visit that closes this arc has not been made yet.",
   },
@@ -19603,6 +19615,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     waypointNode:'HKG', reward:0,
     disposition: '"The promoters tried to fix a fight here last year. I shut the pit rather than host it. Some things cost more to keep than to lose." — Weckmann' },
   quest_void_below: { id:'quest_void_below', type:'side', title:'Auros: Void Below',
+    itemChain:[{action:'grant',name:"Scholar's Note",icon:'📋',type:'key',sell:0,silent:true},{action:'grant',name:'EMP Grenade',icon:'💥',type:'flashbang',sell:50,uses:1,silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Commander Bruhns found the Void corruption node three weeks ago and has been writing maintenance requests to the Council since. The Council approved it in principle. The Void does not wait for implementation. She will not send anyone into the undercity depths alone — not because the regulations require two, but because she has already lost people in there and she knows what alone means in that context. She is asking you. She is not accustomed to asking.",
     hint:'Clear the Void corruption node in the undercity depths.',
     activateNode:'HKG', completeItems:[], completeFn:() => !!S_story.defeatedBattles['CY_VOID'],
@@ -25901,7 +25914,7 @@ function storyCheckQuests(node) {
       // §DESIGN-03: new Birka quest rewards
       if (id === 'quest_city_watch_patrol') { S_story.gold += 50; _setNpcFavor('yael', Math.min(3, (_npcFavor('yael') || 0) + 1)); S_story.xp += 150; _checkLevelUp(); msgs.push('💰 +50gp + 150 XP. Yael notes the route was covered.'); }
       if (id === 'quest_pit_debut') { S_story.gold += 100; S_story.xp += 250; _checkLevelUp(); msgs.push('🥊 First Blood! +100gp +250 XP — The Pit knows your face now.'); }
-      if (id === 'quest_void_below') { _setNpcFavor('auros',2); S_story.inventory.push({name:"Scholar's Note",icon:'📋',type:'key',sell:0}); S_story.inventory.push({name:'EMP Grenade',icon:'💥',type:'flashbang',sell:50,uses:1}); msgs.push("📋 Scholar's Note + EMP Grenade from Auros. Dear Friend!"); S_story.bruhnsDepthsReported = true; _checkDearFriendUpgrade('auros'); }
+      if (id === 'quest_void_below') { _setNpcFavor('auros',2); msgs.push("📋 Scholar's Note + EMP Grenade from Auros. Dear Friend!"); S_story.bruhnsDepthsReported = true; _checkDearFriendUpgrade('auros'); }
       // Layer 44: Ally Cat Arc quest completion rewards
       if (id === 'quest_cat_01') { S_story.gold += 200; msgs.push('💰 +200gp from Jimmy. The Cat Quarter breathes easier.'); }
       if (id === 'quest_cat_02') { S_story.gold += 350; msgs.push('💰 +350gp from Jimmy. Sandy Scratchpad Mewlino has joined the Cat Quarter.'); }
@@ -25914,20 +25927,15 @@ function storyCheckQuests(node) {
       if (id === 'quest_fish_01') { S_story.gold += 200; S_story.fishingYugurtFavour = true; msgs.push("💰 +200gp. 🎣 Yugurt's Favour granted — +1 on all future catch rolls."); }
       if (id === 'quest_horned_shark') { S_story.gold += 300; msgs.push('💰 +300gp. 🦷 The Noon Point is yours now.'); }
       if (id === 'quest_night_eel') { S_story.gold += 150; S_story.eelSkinPouchActive = true; msgs.push("💰 +150gp. 🏮 Eel Skin Pouch acquired — +1 Type on all future casts."); } // §XLVIII — §EDITOR-01-D-FU(b) b2a: Eel Skin Pouch grant → itemChain
-      if (id === 'quest_shale_drop') { S_story.gold += 250; if (!S_story.inventory) S_story.inventory = []; S_story.inventory.push({ name:'Y. Gurt Field Survey', icon:'📋', type:'readable', sell:0, readText:"Y. GURT — YUGURT LAKE SURVEY\nFirst Circle Field Record, Pre-Codex Year 3\nClassification: Naturalist Assessment — Freshwater Taxonomy\n\nLake dimensions: 2.4km × 0.9km. Maximum depth: 31 meters at the northwest basin. The shale formation below the northwest bank extends below the waterline for an undetermined depth — further survey required.\n\nDocumented species: 20 surface and mid-water, 3 confirmed deep-water (unclassified), 1 depth specimen observed on descent into northwest shale formation. See Annex 4: 'the light-producing variety; do not pursue below 25m without additional crew.'\n\nSurveyor notation (Y. Gurt, Nat. First Circle): The lake has developed a self-regulating predator hierarchy without Scholar Kings intervention. I recommend no intervention. It is doing this correctly on its own. I also recommend I be permitted to stay here rather than return to the archive for the classification review. The archive will continue without me. The lake will require observation.\n\nThe request was not approved.\n\nI stayed anyway." }); msgs.push('💰 +250gp. 📋 Y. Gurt Field Survey found.'); } // §XLIX
+      if (id === 'quest_shale_drop') { S_story.gold += 250; if (!S_story.inventory) S_story.inventory = []; msgs.push('💰 +250gp. 📋 Y. Gurt Field Survey found.'); } // §XLIX
       // §GUIDE-01: Rod of Self-Discovery + WIS +1
       if (id === 'quest_guide_06') {
-        if (!S_story.inventory) S_story.inventory = [];
-        if (!S_story.inventory.some(i => i.name === 'Rod of Self-Discovery')) S_story.inventory.push({ name:'Rod of Self-Discovery', icon:'🎣', type:'weapon', atkBonus:1, dmgDie:4, dmgCount:1, dmgFlat:0, minLevel:1, sell:0, desc:'+1 ATK, 1d4. The rod the Fisherman kept inside. It was not a fishing rod. It was a proof of concept.' });
         if (!S_story.guide01WisGranted) { S_story.abilityScores = S_story.abilityScores || {}; S_story.abilityScores.wis = Math.min(20, (S_story.abilityScores.wis || 12) + 1); S_story.guide01WisGranted = true; }
         S_story.emmerComplete = true; _setNpcFavor('emmer', 2);
         msgs.push('🎣 Rod of Self-Discovery obtained. WIS +1. Emmer is Dear Friend.');
       }
       // §SCAR-01: The Scar\'s Light + Orrens Manuscript; mercy path grants WIS +1
       if (id === 'quest_scar_04') {
-        if (!S_story.inventory) S_story.inventory = [];
-        if (!S_story.inventory.some(i => i.name === "The Scar's Light")) S_story.inventory.push({ name:"The Scar's Light", icon:'🕯', type:'amulet', sell:0, passive:true, desc:'Passive — when HP ≤ 75% max, +1 ATK and +1 DMG on all attacks. Hard-won goodness.' });
-        if (!S_story.inventory.some(i => i.name === 'Orrens Manuscript')) S_story.inventory.push({ name:'Orrens Manuscript', icon:'📕', type:'readable', sell:0, readText:"ORRENS — ON OBLIGATION\nWorking Draft, Third Edition\n\nThe scar does not go back to being skin. That is how you know it was real.\n\nThe wound that does not go back to unscarred is the same wound that can become the thing you give to someone else. Not the pain. The knowledge that the labyrinth has an exit.\n\nI was shown the exit by someone who had been in it longer than I had and found their way out and came back. That is the chain. That is the only mechanism that works.\n\nYou cannot give what you do not have. But you always have the scar. The scar is the credential.\n\nThe chapter on obligation, that one especially." });
         if (S_story.gretChoice === 'help' && !S_story.scar01WisGranted) { S_story.abilityScores = S_story.abilityScores || {}; S_story.abilityScores.wis = Math.min(20, (S_story.abilityScores.wis || 12) + 1); S_story.scar01WisGranted = true; msgs.push("📕 Orrens Manuscript + 🕯 The Scar's Light obtained. WIS +1 (mercy path)."); } else { msgs.push("📕 Orrens Manuscript + 🕯 The Scar's Light obtained."); }
         S_story.gretComplete = true; _setNpcFavor('gret', 2);
       }
@@ -25951,42 +25959,27 @@ function storyCheckQuests(node) {
       if (id === 'quest_wm_02') {
         S_story.wmArchiveComplete = true;
         _setNpcFavor('isolde_voss', 1);
-        S_story.inventory.push({ name:"Froberger's Field Notes", icon:'📗', type:'tome', sell:0,
-          bonus:{ deathSave:1 },
-          description:'Margin: "The pressure is survivable if you know it\'s coming."' });
         msgs.push('📗 Froberger\'s Field Notes (Tome) obtained. Isolde is Friendly.');
       }
       if (id === 'quest_wm_03') {
         S_story.wmBenediktCircleComplete = true;
         _setNpcFavor('benedikt_rasp', 1);
-        S_story.inventory.push({ name:"Scholar Kings' History", icon:'📘', type:'tome', sell:0,
-          bonus:{ initiative:2 },
-          description:'"First knowledge, then decision, then action. Never the other order."' });
         msgs.push('📘 Scholar Kings\' History (Tome) obtained. Benedikt is Dear Friend.');
         S_story.wmDoc3Unredacted = true;
       }
       if (id === 'quest_wm_04') {
         S_story.wmFirstResearcherKnown = true;
         S_story.gold += 300;
-        S_story.inventory.push({ name:"Benedikt's Annotated Copy", icon:'📙', type:'tome', sell:0,
-          bonus:{ atkWhileQuestActive:1 },
-          description:'"He was right about this one too." — B. Rasp' });
         msgs.push('📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.');
       }
       if (id === 'quest_wm_05') { S_story.gold += 200; msgs.push('💰 +200gp. 📋 The Gurt file is still open. It has been filed, and refiled, and it will not close.'); } // §L
       if (id === 'quest_muffat_05') { // §LVIII
         S_story.gold += 200;
         S_story.cycle4NoteRead = true;
-        if (!S_story.inventory) S_story.inventory = [];
-        S_story.inventory.push({ name:'Scholar Kings Requisition (Handwritten)', icon:'📜', type:'readable', sell:0,
-          readText:"SCHOLAR KINGS — INTERNAL ROUTING\nHandwritten. Class 3. No copy to be made.\n\nStation 7 monitoring capacity is to be maintained through the current cycle and expanded in advance of Cycle 4. The Antecedent Containment Protocol requires adjustment at the interval. Equipment delivered per the attached schedule is adequate for the extension only. Cycle 4 components to follow under separate authority.\n\nAuthorization: Conclave Archivist.\nNo countersignature required.\nNo date required.\n\n[Below the fold, a single line in different ink:]\nThe archive knows what it holds.\nDo not let the archive answer." });
         msgs.push('💰 +200gp. 📜 Scholar Kings Requisition obtained — Cycle 4, Conclave Archivist authorization. "Do not let the archive answer."');
       }
       if (id === 'quest_solm_01') { // §LVII
         S_story.gold += 150;
-        if (!S_story.inventory) S_story.inventory = [];
-        S_story.inventory.push({ name:'Analyst Solm Field File', icon:'📋', type:'readable', sell:0,
-          readText:"FIELD FILE — ANALYST I. SOLM\nStation 7, Frequency 14.225 Monitoring Assignment\nClass 3, Scholar Kings Research Division\n\n[Vol. 1, Day 1 — three months prior:]\nTransmission cut mid-entry. Suppressor origin: CY access corridor. Operator unknown to me. I do not believe the suppression was deliberate interference — the timing and mechanism suggest an automated device, not a hand on a dial. I have nonetheless lost the fourth transmission before it completed.\n\nI cannot return to Station 7. The Scholar Kings will not acknowledge the record. I am here instead, where things that cannot be officially held are held unofficially.\n\n[Vol. 1, Days 2–87:]\nTransmission confirmed, bearing 047°, no repeat. [repeated daily, same hand, same composure]\n\n[Vol. 1, Day 88 — closing entry, ink slightly different pressure:]\nRecord from the terminus received. Source confirmed: contained, non-hostile, question answered. Absence confirmed on 14.225. The archive still has an archivist.\n\nFile closed.\n\n— I. Solm" });
         msgs.push('💰 +150gp. 📋 Analyst Solm Field File obtained. File closed. The archive still has an archivist.');
       }
       if (id === 'quest_road_damascus') { // §LIX
@@ -26026,36 +26019,22 @@ function storyCheckQuests(node) {
       if (id === 'quest_signal_01') { // §LIV
         S_story.gold += 300;
         S_story.suppressorLogRead = true;
-        if (!S_story.inventory) S_story.inventory = [];
-        S_story.inventory.push({ name:'Warrant Suppressor Log', icon:'📡', type:'readable', sell:0,
-          readText:"WARRANT SUPPRESSOR — AUTOMATIC SIGNAL LOG\nDevice ID: WSP-CY-04 (Neon Undercity, Station Corridor)\nOperator: Commander S. Bruhns (unaware of logging function)\n\n[Months 1–41: 14.225 monitored. No structured transmission detected. Log: confirmed absent. Cross-reference with Frequency Row Vol. 1–41: consistent.]\n\nDay 3, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 0.4s, character: non-mechanical, subsurface origin — depth est. 18m, bearing 047° from HM. Suppression effective. Signal terminated.\nDay 9, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 1.1s, character: non-mechanical, partial internal structure. Suppression effective. Signal terminated.\nDay 14, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 3.1s, character: non-mechanical, structured content, transmission in progress at suppression. Suppression effective. Signal terminated mid-transmission.\n\n[Post-Day 14: 14.225 monitored. No structured transmission detected. Source remains at bearing 047°, depth 18m.]\n\nAuto-assessment: Signal suppression achieved. Source has not repeated transmission.\n\nNote: Either source ceased voluntarily, or source is aware of suppression.\n\n[End of log. Device continues active monitoring.]" });
         msgs.push('💰 +300gp. 📡 Warrant Suppressor Log recovered — three suppressions, Day 14 cut mid-transmission. Source at bearing 047°, depth 18m. Source has not repeated.');
       }
       if (id === 'quest_muffat_03') { // §LIII
         S_story.gold += 350;
         S_story.station7LogRead = true;
-        if (!S_story.inventory) S_story.inventory = [];
-        S_story.inventory.push({ name:'Station 7 Transmission Log', icon:'📡', type:'readable', sell:0,
-          readText:"STATION 7 — AUTOMATED TRANSMISSION LOG\nFrequency 14.225 — Scholar Kings Monitoring Annex (Class 3)\nOperator: [field redacted per Class 3 protocol]\n\n[Volumes 1–40: confirmed absence. Cross-referenced with Frequency Row Vol. 1–40. Consistent.]\n\nVol. 41, Day 3: SIGNAL DETECTED — 14.225 — Duration: 0.4s — Character: non-mechanical — Source: subsurface, bearing 047° — Repeat: none. Logged per protocol. Notified Class 3 oversight. No response from oversight.\nVol. 41, Day 4: Absence confirmed.\nVol. 41, Day 9: SIGNAL DETECTED — 14.225 — Duration: 1.1s — Character: non-mechanical — Source: subsurface, bearing 047° — Repeat: none. Signal contains partial structure. Not noise. Logged. No response from oversight.\nVol. 41, Day 14: SIGNAL DETECTED — 14.225 — Duration: 3.1s — Character: non-mechanical — Source: subsurface, bearing 047° — Signal contains—\n\n[Log ends. The entry is incomplete. The pen is in the output tray. The receiver is still active. Bearing 047° from Station 7 points toward the Neon Undercity access corridor.]" });
         msgs.push('💰 +350gp. 📡 Station 7 Transmission Log recovered — three detections, bearing 047°, log ends mid-entry.');
       }
       if (id === 'quest_muffat_02') { // §LII
         S_story.gold += 300;
         S_story.muffatManifestRead = true;
-        if (!S_story.inventory) S_story.inventory = [];
-        S_story.inventory.push({ name:'Shipping Manifest (Intercepted)', icon:'📦', type:'readable', sell:0,
-          readText:"SCHOLAR KINGS DISTRIBUTION — INTERNAL ROUTING\nStamp: Non-Standard Clearance (Class 3 Seal)\nOrigin: Tilbury Harbor, Third Berth\nDestination: Station 7 (Frequency Row Monitoring Annex)\nDelivery Frequency: Every 6 weeks\nContents: Monitoring equipment, Category 4 (no itemisation required)\nDistribution Reference: Frequency 14.225 — passive reception array maintenance\n\n[Handwritten annotation, margin:]\nStation 7 last confirmed operational — see Freq. Row log, Vol. 38.\nStation 7 status as of Vol. 41: no confirmation received.\nField note: Station may have been decommissioned without notice to monitoring staff.\n\n[Second annotation, different hand:]\nStation 7 was not decommissioned.\n—M.E.M." });
         msgs.push('💰 +300gp. 📦 Shipping Manifest (Intercepted) obtained — Station 7, 14.225, six-week schedule. The pattern is complete.');
       }
       // Layer 52: Void Archaeology quest rewards
       if (id === 'quest_va_01') { msgs.push('🏛️ Five marks found. The pattern is complete.'); }
       if (id === 'quest_va_02') {
         S_story.vaLogFound = true;
-        S_story.inventory.push({ name:"The Constructor's Log", icon:'📜', type:'readable', sell:0,
-          readable: true, readableKey:'constructors_log',
-          description:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.' });
-        S_story.inventory.push({ name:'Antecedent Seal', icon:'🏛️', type:'relic', sell:0,
-          description:'"Antecedent Containment Protocol. Seal 7. Activated."' });
         msgs.push("📜 The Constructor's Log and Antecedent Seal obtained.");
       }
       if (id === 'quest_va_03') { S_story.vaLastWardVisited = true; S_story.gold += 200; msgs.push('🏛️ +200gp. The tunnel is open. The Antecedent was here.'); }

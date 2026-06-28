@@ -146,6 +146,39 @@ const MIGRATION_MANIFEST = [
   { quest: 'quest_couperin_lute', grants: [{ name: 'Cipher Scrap', icon: '📜', type: 'key', sell: 0 }], takes: ["Quill's Lute"] },
   { quest: 'quest_brynn_ledger', takes: ['Worn Ledger Book'] },
   { quest: 'quest_pachelbel_shipment', takes: ['Sealed Scholar Box'] },
+
+  // ── Wave b2b (Inc 5) — 13 rich-field branches, migrated via the b1-widened grant grammar.
+  //    fishing_guide is excluded: its readText is FISHING_GUIDE_TEXT, a const defined AFTER
+  //    QUEST_DB (line 24017 vs 9373) — a TDZ reference in a data literal — so it stays code
+  //    (logged residue, lab report §6). Each grant is silent:true; gold/favor/XP/flag/ability
+  //    writes + the verbatim narrative msg stay in the ladder branch.
+  //
+  //    NOTE on the manifest grant fields: long readText blobs and long description prose are
+  //    OMITTED here on purpose — they were moved byte-for-byte by the mechanical transform, and
+  //    fieldsEqual only checks fields present in `want`. The short STRUCTURED rich fields (bonus,
+  //    uses, passive, weapon stats, readable/readableKey) ARE asserted — they're the parity-
+  //    sensitive ones b1 exists to carry. grant-exists / silent / no-double-push / name-
+  //    preservation are asserted for every entry regardless.
+  { quest: 'quest_void_below', grants: [
+    { name: "Scholar's Note", icon: '📋', type: 'key', sell: 0 },
+    { name: 'EMP Grenade', icon: '💥', type: 'flashbang', sell: 50, uses: 1 } ] },
+  { quest: 'quest_shale_drop', grants: [{ name: 'Y. Gurt Field Survey', icon: '📋', type: 'readable', sell: 0 }] },
+  { quest: 'quest_guide_06', grants: [{ name: 'Rod of Self-Discovery', icon: '🎣', type: 'weapon', sell: 0,
+    atkBonus: 1, dmgDie: 4, dmgCount: 1, dmgFlat: 0, minLevel: 1 }] },
+  { quest: 'quest_scar_04', grants: [
+    { name: "The Scar's Light", icon: '🕯', type: 'amulet', sell: 0, passive: true },
+    { name: 'Orrens Manuscript', icon: '📕', type: 'readable', sell: 0 } ] },
+  { quest: 'quest_wm_02', grants: [{ name: "Froberger's Field Notes", icon: '📗', type: 'tome', sell: 0, bonus: { deathSave: 1 } }] },
+  { quest: 'quest_wm_03', grants: [{ name: "Scholar Kings' History", icon: '📘', type: 'tome', sell: 0, bonus: { initiative: 2 } }] },
+  { quest: 'quest_wm_04', grants: [{ name: "Benedikt's Annotated Copy", icon: '📙', type: 'tome', sell: 0, bonus: { atkWhileQuestActive: 1 } }] },
+  { quest: 'quest_muffat_05', grants: [{ name: 'Scholar Kings Requisition (Handwritten)', icon: '📜', type: 'readable', sell: 0 }] },
+  { quest: 'quest_solm_01', grants: [{ name: 'Analyst Solm Field File', icon: '📋', type: 'readable', sell: 0 }] },
+  { quest: 'quest_signal_01', grants: [{ name: 'Warrant Suppressor Log', icon: '📡', type: 'readable', sell: 0 }] },
+  { quest: 'quest_muffat_03', grants: [{ name: 'Station 7 Transmission Log', icon: '📡', type: 'readable', sell: 0 }] },
+  { quest: 'quest_muffat_02', grants: [{ name: 'Shipping Manifest (Intercepted)', icon: '📦', type: 'readable', sell: 0 }] },
+  { quest: 'quest_va_02', grants: [
+    { name: "The Constructor's Log", icon: '📜', type: 'readable', sell: 0, readable: true, readableKey: 'constructors_log' },
+    { name: 'Antecedent Seal', icon: '🏛️', type: 'relic', sell: 0 } ] },
 ];
 
 // Field allow-list a migrated grant may carry (lab report §3.1). `silent` is authoring-only.
