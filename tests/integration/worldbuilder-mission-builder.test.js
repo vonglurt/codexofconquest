@@ -121,7 +121,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02)', () =>
   // ── Inc 3 — the tab UI: fill a 2-step arc, Build Chain, inspect the preview ──
   test('Mission tab: Build Chain renders the resolved chain + connector flag', async ({ page }) => {
     await page.goto('/worldbuilder.html');
-    await page.evaluate(() => window.switchTab('mission'));
+    await page.evaluate(() => (window.switchTab('mission'), document.getElementById('welcome-screen').classList.add('hidden')));
     // Arc header + the seeded step #1 (defaults to type "side").
     await page.fill('#mb-arcId', 'quest_demo');
     await page.fill('#mb-arcLabel', 'Demo arc');
@@ -156,7 +156,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02)', () =>
 
   test('Mission tab: removing a step renumbers the rows', async ({ page }) => {
     await page.goto('/worldbuilder.html');
-    await page.evaluate(() => window.switchTab('mission'));
+    await page.evaluate(() => (window.switchTab('mission'), document.getElementById('welcome-screen').classList.add('hidden')));
     await page.click('#mb-add');               // now 2 steps (1 seeded + 1)
     await page.click('#mb-add');               // 3 steps
     await expect(page.locator('#mb-steps .mb-step')).toHaveCount(3);
@@ -166,11 +166,35 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02)', () =>
     expect(await page.locator('#mb-steps .mb-step:nth-child(2) .mb-num').textContent()).toBe('#2');
   });
 
+  test('Mission tab: ▲/▼ reorders steps + re-wires the compiled chain order (§EDITOR-02-FU)', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    await page.evaluate(() => (window.switchTab('mission'), document.getElementById('welcome-screen').classList.add('hidden')));
+    await page.fill('#mb-arcId', 'quest_ord');
+    await page.fill('#mb-steps .mb-step:nth-child(1) .mb-title', 'Alpha');
+    await page.click('#mb-add');
+    await page.fill('#mb-steps .mb-step:nth-child(2) .mb-title', 'Beta');
+    // Move step 2 (Beta) up → Beta becomes #1, Alpha #2.
+    await page.click('#mb-steps .mb-step:nth-child(2) .mb-up');
+    expect(await page.locator('#mb-steps .mb-step:nth-child(1) .mb-title').inputValue()).toBe('Beta');
+    expect(await page.locator('#mb-steps .mb-step:nth-child(2) .mb-title').inputValue()).toBe('Alpha');
+    // Numbers re-sequence with the new order.
+    expect(await page.locator('#mb-steps .mb-step:nth-child(1) .mb-num').textContent()).toBe('#1');
+    expect(await page.locator('#mb-steps .mb-step:nth-child(2) .mb-num').textContent()).toBe('#2');
+    // Build → seq ids + titles follow the reordered DOM (position-numbered).
+    await page.click('#mb-build');
+    const compiled = await page.evaluate(() => window.__mbCompiled());
+    expect(compiled.map(q => q.id)).toEqual(['quest_ord_1', 'quest_ord_2']);
+    expect(compiled.map(q => q.title)).toEqual(['Beta', 'Alpha']);
+    // ▲ on the top row is a no-op (no previous sibling).
+    await page.click('#mb-steps .mb-step:nth-child(1) .mb-up');
+    expect(await page.locator('#mb-steps .mb-step:nth-child(1) .mb-title').inputValue()).toBe('Beta');
+  });
+
   // ── Inc 4 — POST All wiring: sequential create, skip-existing, stop-on-error ──
   // We mock WBAPI.quests.create so the flow is exercised without a server or real
   // world mutation, and seed WBAPI.questDb to drive the already-posted skip.
   async function mbBuildTwoStep(page) {
-    await page.evaluate(() => window.switchTab('mission'));
+    await page.evaluate(() => (window.switchTab('mission'), document.getElementById('welcome-screen').classList.add('hidden')));
     await page.fill('#mb-arcId', 'quest_post');
     await page.fill('#mb-arcLabel', 'Post arc');
     await page.fill('#mb-node', 'BMA');

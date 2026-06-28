@@ -9786,12 +9786,15 @@ edUpdatePreview();
     row.style.cssText = 'background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:8px;display:flex;flex-direction:column;gap:6px';
     row.innerHTML = `
       <div style="display:flex;gap:6px;align-items:center">
+        <span class="mb-grip" title="Drag to reorder" style="cursor:grab;color:var(--muted);user-select:none;flex:0 0 auto">⠿</span>
         <span class="mb-num" style="font-size:11px;font-weight:700;color:var(--accent)">#</span>
         <select class="mb-type" style="${sty};flex:0 0 120px">
           <option value="side">side</option><option value="skill_check">skill_check</option>
           <option value="main">main</option><option value="epic">epic</option>
         </select>
         <input class="mb-title" placeholder="Step title" style="${sty};flex:1">
+        <button class="btn sm mb-up" title="Move up">▲</button>
+        <button class="btn sm mb-dn" title="Move down">▼</button>
         <button class="btn sm mb-rm" title="Remove step">✕</button>
       </div>
       <div style="display:flex;gap:6px">
@@ -9827,6 +9830,23 @@ edUpdatePreview();
       row.querySelector('.mb-cond').style.display = gateSel.value === 'manual' ? '' : 'none';
     });
     row.querySelector('.mb-rm').addEventListener('click', () => { row.remove(); mbRenumber(); });
+    // §EDITOR-02-FU: reorder steps — ▲/▼ (canonical, testable) + grip drag (additive).
+    // buildArcQuests numbers by DOM position, so reordering + re-Build re-wires the
+    // seq ids + activateCond flags; nothing else to sync (preview rebuilds on click).
+    row.querySelector('.mb-up').addEventListener('click', () => { const p = row.previousElementSibling; if (p) { MB('mb-steps').insertBefore(row, p); mbRenumber(); } });
+    row.querySelector('.mb-dn').addEventListener('click', () => { const n = row.nextElementSibling; if (n) { MB('mb-steps').insertBefore(n, row); mbRenumber(); } });
+    const grip = row.querySelector('.mb-grip'); grip.draggable = true;
+    grip.addEventListener('dragstart', e => { row.classList.add('mb-drag'); row.style.opacity = '.5'; if (e.dataTransfer) e.dataTransfer.setData('text/plain', ''); });
+    grip.addEventListener('dragend',   () => { row.classList.remove('mb-drag'); row.style.opacity = ''; });
+    row.addEventListener('dragover',  e => e.preventDefault());
+    row.addEventListener('drop',      e => {
+      e.preventDefault();
+      const dragging = MB('mb-steps').querySelector('.mb-drag'); if (!dragging || dragging === row) return;
+      const list = [...MB('mb-steps').children];
+      if (list.indexOf(dragging) < list.indexOf(row)) MB('mb-steps').insertBefore(dragging, row.nextElementSibling);
+      else MB('mb-steps').insertBefore(dragging, row);
+      mbRenumber();
+    });
     return row;
   }
   function mbRenumber() {
