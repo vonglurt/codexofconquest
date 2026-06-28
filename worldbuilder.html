@@ -31,6 +31,7 @@ body{background:var(--bg);color:var(--text);font-family:'SF Mono','Consolas',mon
 .btn.primary{background:#1f6feb;border-color:#388bfd;color:#fff;}
 .btn.primary:hover{background:#388bfd;}
 .btn.sm{padding:2px 7px;font-size:11px;}
+.btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
 .badge{padding:1px 7px;border-radius:10px;font-size:11px;font-weight:600;}
 .badge.yellow{background:var(--yellow);color:#000;}
 .badge.green{background:var(--added);color:var(--green);border:1px solid var(--green);}
@@ -536,6 +537,7 @@ select.fi{appearance:none;}
           <text class="mc-lbl" x="12" y="35">W</text>
         </svg>
         <div id="map-footer">
+          <button class="btn sm" id="btn-place-node" disabled title="§WALK-G: drop a new node onto an empty map cell">📍 Place node</button>
           <span>Scroll to zoom</span>
           <span id="map-scale-info">Scale: 18px/cell</span>
           <span id="map-hover-info"></span>
@@ -2559,7 +2561,7 @@ function loadFile(text) {
   $('npc-cnt').textContent = WBAPI.npcs.all().filter(n=>!n._inline).length;
   $('map-empty').style.display = 'none';
   ['btn-diff','btn-apply-patch','btn-run-audit'].forEach(id => $(id).disabled = false);
-  ['btn-save-node','btn-delete-node','btn-add-node'].forEach(id => $(id).disabled = false);
+  ['btn-save-node','btn-delete-node','btn-add-node','btn-place-node'].forEach(id => $(id).disabled = false);
   renderMapNodeList();
   renderMap();
   renderTerrainList();
@@ -2618,7 +2620,7 @@ function afterAPILoad() {
   $('btn-diff').disabled = true;
   $('btn-apply-patch').textContent = 'Save to File';
   $('btn-apply-patch').disabled = false;
-  ['btn-save-node','btn-delete-node','btn-add-node','btn-run-audit'].forEach(id => { const el=$(id); if(el) el.disabled=false; });
+  ['btn-save-node','btn-delete-node','btn-add-node','btn-place-node','btn-run-audit'].forEach(id => { const el=$(id); if(el) el.disabled=false; });
   renderMapNodeList();
   renderMap();
   renderTerrainList();
@@ -2639,6 +2641,7 @@ function afterAPILoad() {
 let mapScale = 18;
 let mapSelected = null;
 let mapColorMode = 'act';   // §WALK-G: 'act' | 'terrain' — how node dots are colored
+let mapPlaceMode = false;   // §WALK-G: when true, clicking an empty cell creates a node there
 let mapEditBuf = {};
 
 function getEffNode(code) {
@@ -2710,8 +2713,10 @@ function renderMap() {
 
 $('map-canvas').addEventListener('click', e=>{
   const rect=$('map-canvas').getBoundingClientRect();
-  const code=hitNode(e.clientX-rect.left, e.clientY-rect.top);
-  if(code) selectMapNode(code);
+  const px=e.clientX-rect.left, py=e.clientY-rect.top;
+  const code=hitNode(px,py);
+  if(code){ selectMapNode(code); if(mapPlaceMode) setPlaceMode(false); return; }  // §WALK-G: clicking a node exits place mode
+  if(mapPlaceMode) placeNodeAtPx(px,py);
 });
 $('map-canvas').addEventListener('mousemove', e=>{
   const rect=$('map-canvas').getBoundingClientRect();
@@ -2725,6 +2730,10 @@ $('map-canvas').addEventListener('mousemove', e=>{
       (n.sleep?`<br>🛏 Inn (${n.sleepCost}gp)`:'');
     $('map-canvas').style.cursor='pointer';
     $('map-hover-info').textContent=code+' — '+(n.label||'');
+  }else if(mapPlaceMode){ // §WALK-G: live target-cell readout while placing
+    tt.style.display='none';
+    const {r,c}=cellFromPx(e.clientX-rect.left, e.clientY-rect.top);
+    $('map-canvas').style.cursor='copy'; $('map-hover-info').textContent=`＋ place at cell (${r}, ${c})`;
   }else{ tt.style.display='none'; $('map-canvas').style.cursor='crosshair'; $('map-hover-info').textContent=''; }
 });
 $('map-canvas').addEventListener('mouseleave',()=>{ $('tooltip').style.display='none'; });
@@ -2964,16 +2973,49 @@ $('btn-delete-node').addEventListener('click',()=>{
   const code=mapSelected; if(!code||!confirm(`Delete ${code}?`)) return;
   DIFF.del(code); mapSelected=null; $('map-detail-pane').style.display='none'; renderMapNodeList(); renderMap();
 });
-$('btn-add-node').addEventListener('click',()=>{
-  const code=(prompt('Node code (1-6 uppercase):')||'').toUpperCase().trim();
-  if(!code||!/^[A-Z0-9_]{1,6}$/.test(code)){ alert('Invalid.'); return; }
-  if(WBAPI.nodeMap[code]||DIFF.added[code]){ alert('Already exists.'); return; }
+// §WALK-G: shared node-creation core — validates the code (alerts + returns
+// false on bad/duplicate), inserts into DIFF.added + nodeMap, places at `coord`
+// ({r,c}; falls back to an off-grid virtual cell when omitted), re-renders and
+// selects. Used by both "+ Add" (off-grid) and place-mode (clicked cell).
+function createNodeAt(code, coord){
+  code=(code||'').toUpperCase().trim();
+  if(!code||!/^[A-Z0-9_]{1,6}$/.test(code)){ alert('Invalid code — 1-6 of A-Z 0-9 _'); return false; }
+  if(WBAPI.nodeMap[code]||DIFF.added[code]){ alert(`${code} already exists.`); return false; }
   const n={num:9000+Object.keys(DIFF.added).length,code,name:'new_terrain',label:'New Node',act:1,N:null,S:null,E:null,W:null,text:'',npc:null,battle:null,loot:null,sleep:false};
   DIFF.added[code]=n; WBAPI.nodeMap[code]=n;
-  const ks=Object.keys(DIFF.added).length;
-  WBAPI.nodeCoords[code]={r:50+ks*2,c:64,virtual:true};
+  WBAPI.nodeCoords[code]=coord ? {r:coord.r,c:coord.c} : {r:50+Object.keys(DIFF.added).length*2,c:64,virtual:true};
   updateDiffBadge(); renderMapNodeList(); renderMap(); selectMapNode(code);
-});
+  return true;
+}
+window.__createNodeAt = createNodeAt;   // §WALK-G test hook
+$('btn-add-node').addEventListener('click',()=>{ createNodeAt(prompt('Node code (1-6 uppercase):')); });
+
+// §WALK-G in-context node creation — place mode
+function cellFromPx(px,py){ const S=mapScale; return {r:Math.round(py/S), c:Math.round(px/S)}; }
+function cellOccupied(r,c){
+  for(const [code,p] of Object.entries(WBAPI.nodeCoords)){
+    if(!WBAPI.nodeMap[code]||DIFF.deleted.has(code)) continue;
+    if(p.r===r && p.c===c) return code;
+  }
+  return null;
+}
+function setPlaceMode(on){
+  mapPlaceMode=!!on;
+  $('btn-place-node').classList.toggle('active',mapPlaceMode);
+  $('map-canvas').style.cursor=mapPlaceMode?'copy':'crosshair';
+  if(!mapPlaceMode) $('map-hover-info').textContent='';
+}
+window.__setPlaceMode = setPlaceMode;   // §WALK-G test hook
+function placeNodeAtPx(px,py){
+  const {r,c}=cellFromPx(px,py);
+  if(r<1||c<1) return;                                  // off the grid
+  const occ=cellOccupied(r,c);
+  if(occ){ alert(`Cell (${r}, ${c}) is occupied by ${occ}.`); return; }
+  const code=prompt(`New node code at cell (${r}, ${c}):`);
+  if(code===null) return;                               // cancelled → stay in place mode
+  if(createNodeAt(code,{r,c})) setPlaceMode(false);     // one-shot: exit on a successful drop
+}
+$('btn-place-node').addEventListener('click',()=>setPlaceMode(!mapPlaceMode));
 
 function renderMapNodeList(){
   const q=($('map-search').value||'').toLowerCase(), act=$('map-act-filter').value;
