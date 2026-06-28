@@ -1015,3 +1015,83 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01
     expect(r.passHidesAlt).toBe(true);
   });
 });
+
+// ── §ARCH-01 Wave 1 — §1367 historical skill-checks (4 of 6) ──
+//
+// The 1367 arc has 6 quests; the 4 skill_checks migrate here (the 2 combat
+// quests — a_najera, f_plague — are Wave 4). These have NO checkPassFlag (no
+// mission_bit), independent gates (activateCond:()=>true → gate:{}), and onPass/
+// onFail closures that nudge clamped faction/faith TRACK COUNTERS — preserved
+// verbatim behind _legacy_fn. quest_1367_d_hansa is the first Wave-1 quest with
+// a real onFail effect (faction_hansa -1 on a failed, retryable check).
+
+test.describe('§ARCH-01 Wave 1 — §1367 skill-checks (quest_1367_{e,b,c,d})', () => {
+  const IDS = ['quest_1367_e_wycliffe','quest_1367_b_tamerlane','quest_1367_c_ottoman','quest_1367_d_hansa'];
+
+  test('all four validate as UQF skill_checks (no mission_bit, exact stat/dc/xp)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((ids) => ids.map(id => {
+      const q = QUEST_DB[id]; const bit = q.bits[0];
+      return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, dc:bit.dc,
+               xp:(bit.onPass||[]).find(b=>b.kind==='reward').xp,
+               hasMissionBit:(bit.onPass||[]).some(b=>b.kind==='mission_bit'),
+               gateEmpty: JSON.stringify(q.gate)==='{}' };
+    }), IDS);
+    expect(r.every(x => x.schema==='UQF-1.0' && x.valid && !x.hasMissionBit && x.gateEmpty)).toBe(true);
+    expect(r).toMatchObject([
+      { id:'quest_1367_e_wycliffe',  stat:'CHA', dc:13, xp:110 },
+      { id:'quest_1367_b_tamerlane', stat:'WIS', dc:13, xp:120 },
+      { id:'quest_1367_c_ottoman',   stat:'CHA', dc:14, xp:130 },
+      { id:'quest_1367_d_hansa',     stat:'CHA', dc:15, xp:140 },
+    ]);
+  });
+
+  test('each PASS grants exact xp and nudges the right clamped track counter', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const got = await page.evaluate((ids) => {
+      const meta = {
+        quest_1367_e_wycliffe:  { track:'faith_reform',   xp:110, inc:1 },
+        quest_1367_b_tamerlane: { track:'faith_folk',     xp:120, inc:1 },
+        quest_1367_c_ottoman:   { track:'faith_orthodox', xp:130, inc:1 },
+        quest_1367_d_hansa:     { track:'faction_hansa',  xp:140, inc:2 },
+      };
+      const out = {};
+      for (const id of ids) {
+        const m = meta[id];
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 1000000; S_story.day = 1;
+        S_story[m.track] = 0;
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        out[id] = { status:S_story.quests[id], dxp:S_story.xp - 1000000, track:S_story[m.track] };
+      }
+      // clamp preserved: faction_hansa onPass is min(5, cur+2) ⇒ from 4 → 5, not 6
+      S_story.faction_hansa = 4; S_story.quests = { quest_1367_d_hansa:'active' };
+      S_story.abilityScores = { cha:40 }; _rollCeremonia('quest_1367_d_hansa');
+      out.hansaClamp = S_story.faction_hansa;
+      return { out, meta };
+    }, IDS);
+    for (const id of IDS) {
+      expect(got.out[id].status, id).toBe('done');
+      expect(got.out[id].dxp, id).toBe(got.meta[id].xp);
+      expect(got.out[id].track, id).toBe(got.meta[id].inc);
+    }
+    expect(got.out.hansaClamp).toBe(5);   // Math.min(5, 4+2) clamp held
+  });
+
+  test('d_hansa FAIL runs its onFail (faction_hansa -1) and, being retryable, stays active', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { cha:-100 };           // deterministic fail
+      S_story.level = 1; S_story.day = 3; S_story.skillCheckAttempts = {};
+      S_story.faction_hansa = 0;
+      S_story.quests = { quest_1367_d_hansa:'active' };
+      _rollCeremonia('quest_1367_d_hansa');
+      return { status:S_story.quests.quest_1367_d_hansa, hansa:S_story.faction_hansa,
+               failures:(S_story.skillCheckAttempts.quest_1367_d_hansa||{}).failures };
+    });
+    expect(r.status).toBe('active');   // retryable ⇒ not locked
+    expect(r.hansa).toBe(-1);          // onFail ran exactly once
+    expect(r.failures).toBe(1);
+  });
+});
