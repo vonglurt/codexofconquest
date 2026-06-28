@@ -362,3 +362,82 @@ test.describe('§WISDOM-01 migrated to UQF — quest_wis_01 (§ARCH-01 Phase 3)'
     expect(r.xp).toBe(0);
   });
 });
+
+// ── §ARCH-01 Phase 3 — remaining §WISDOM-01 skill-checks (wis_02–05) ──────────
+//
+// The same legacy→UQF transform applied to the rest of the arc's skill checks.
+// Each must keep byte-level parity: correct page flag + its mission-bit token,
+// exact xp (and zero gold — only wis_01 awarded gold), the right Ardley
+// knowledge entry. wis_05 additionally sets the wisArchiveLetter flag.
+
+test.describe('§WISDOM-01 wis_02–05 migrated to UQF (§ARCH-01 Phase 3)', () => {
+  test('all four validate as UQF with a skill_check bit', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => ['quest_wis_02','quest_wis_03','quest_wis_04','quest_wis_05'].map(id => {
+      const q = QUEST_DB[id];
+      return { id, schema:q.schema, bit:q.bits[0].kind, stat:q.bits[0].stat, dc:q.bits[0].dc,
+               valid: validateQuest(q).valid, gateFlags:(q.gate&&q.gate.flags)||[] };
+    }));
+    expect(r.every(x => x.schema === 'UQF-1.0' && x.bit === 'skill_check' && x.valid)).toBe(true);
+    // spot-check the stat/dc transcription
+    expect(r.find(x => x.id==='quest_wis_03')).toMatchObject({ stat:'INT', dc:11 });
+    expect(r.find(x => x.id==='quest_wis_05').gateFlags).toEqual(['wisHookReceived','roenAlchemistMet']);
+  });
+
+  test('each PASS keeps byte-level parity (flag + token + exact xp/gold + knowledge)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const got = await page.evaluate(() => {
+      const cases = [
+        { id:'quest_wis_02', flag:'wisPage2_aggression', xp:250, gold:0, know:'Ardley W2 — The Leak' },
+        { id:'quest_wis_03', flag:'wisPage3_thumbscrew', xp:300, gold:0, know:'Ardley W3 — The Thumbscrew' },
+        { id:'quest_wis_04', flag:'wisPage4_sight',      xp:300, gold:0, know:'Ardley W4 — The Long View' },
+        { id:'quest_wis_05', flag:'wisPage5_form',       xp:300, gold:0, know:'Ardley W5 — Formlessness' },
+      ];
+      const out = {};
+      for (const c of cases) {
+        S_story.abilityScores = { wis:40, int:40 };   // both high ⇒ any DC passes regardless of stat
+        S_story.level = 20; S_story.xp = 1000000; S_story.gold = 500;
+        S_story.inventory = []; S_story.knowledge = [];
+        delete S_story[c.flag]; delete S_story.wisArchiveLetter;
+        S_story.quests = { [c.id]:'active' };
+        _rollCeremonia(c.id);
+        out[c.id] = {
+          status: S_story.quests[c.id],
+          flag: !!S_story[c.flag],
+          token: !!S_story.inventory.find(i => i.flagRef === c.flag && i.type === 'mission_bit'),
+          dxp: S_story.xp - 1000000, dgold: S_story.gold - 500,
+          know: S_story.knowledge.some(k => k.startsWith(c.know)),
+          archiveLetter: !!S_story.wisArchiveLetter,
+        };
+      }
+      return { out, cases };
+    });
+    for (const c of got.cases) {
+      const r = got.out[c.id];
+      expect(r.status, c.id).toBe('done');
+      expect(r.flag, c.id).toBe(true);
+      expect(r.token, c.id).toBe(true);
+      expect(r.dxp, c.id).toBe(c.xp);
+      expect(r.dgold, c.id).toBe(c.gold);
+      expect(r.know, c.id).toBe(true);
+    }
+    // wis_05 alone sets the extra archive-letter flag on pass
+    expect(got.out['quest_wis_05'].archiveLetter).toBe(true);
+  });
+
+  test('wis_02 honors its two-flag gate (needs wisHookReceived AND saltwickAccessed)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = {}; delete S_story.wisHookReceived; delete S_story.saltwickAccessed;
+      const node = { code:'MME' };
+      S_story.wisHookReceived = true;                 // only one of two flags
+      storyCheckQuests(node);
+      const partial = S_story.quests.quest_wis_02;
+      S_story.saltwickAccessed = true;                // now both
+      storyCheckQuests(node);
+      return { partial, full: S_story.quests.quest_wis_02 };
+    });
+    expect(r.partial).toBeUndefined();   // AND-gate: one flag is not enough
+    expect(r.full).toBe('active');
+  });
+});

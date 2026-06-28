@@ -11911,97 +11911,98 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
 
-  quest_wis_02: { id:'quest_wis_02', type:'skill_check',
+  // §ARCH-01 Phase 3 — migrated legacy → UQF v1.0 (2026-06-28). Parity: +250xp, no gold.
+  quest_wis_02: { id:'quest_wis_02', schema:'UQF-1.0', type:'skill_check',
     title:'What Dorit Already Knew',
     desc:'Ardley W2 — The Law of Aggression: "Aggression does not announce itself. It dresses as patience, as courtesy, as professional neutrality. The tell is small: voice drops one register when they say a name, they touch an object before they answer. These are the leak." Roen: "Dorit touched the docking ledger four times while you were talking. Not to write anything. Just to touch it. I have been thinking about what that means for several days." WIS Insight DC 12: read what she is protecting.',
     hint:'Read Dorit\'s body language at the Saltwick dock. WIS Insight DC 12.',
-    activateNode:'MME', activateCond:() => !!(S_story.wisHookReceived && S_story.saltwickAccessed),
-    checkStat:'wis', checkSkill:'Insight', checkDC:12, retryable:false,
-    checkPassFlag:'wisPage2_aggression',
-    onPass:() => {
-      S_story.wisPage2_aggression = true;
-      S_story.xp = (S_story.xp||0) + 250;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Ardley W2 — The Leak: Dorit at Saltwick is protecting the dry dock contracts. Her politeness is real — no personal animus. But the contracts are contingent on Aldous Wren-Pembury\'s old Eastern Reach seal remaining unexamined. Every irregular vessel docked under the Letter of True Passage is a ledger entry that assumes the seal was valid. If examined officially, the dry dock contracts go with it. She touches the ledger because it is everything that could disappear. Her aggression is structural, not personal.');
-      storyMsg('👁️ Dorit\'s voice drops a register when she says "commission." Not the commission — any commission. The hand goes flat-palm to the ledger cover. Not a nervous habit.\n\nShe is not hostile to you. She is hostile to the context: irregular arrivals, Letters of True Passage, docking without paperwork.\n\nAldous\'s old seal holds the dry dock contracts together. An official examination unwinds all of it. She cannot say this. She touches the ledger instead.\n\nArdley\'s W2 fragment collected. Knowledge entry added. +250 XP.');
-    },
-    onFail:() => {
-      storyMsg('Dorit is professional and contained. The ledger touch is deliberate — something about her posture is controlled — but the source of the control isn\'t readable from this position.');
-    },
-    xpAward:0,
+    activateNode:'MME', gate:{ flags:['wisHookReceived','saltwickAccessed'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Insight', dc:12,
+        onPass:[
+          { kind:'mission_bit', flag:'wisPage2_aggression' },
+          { kind:'reward', xp:250, knowledge:'Ardley W2 — The Leak: Dorit at Saltwick is protecting the dry dock contracts. Her politeness is real — no personal animus. But the contracts are contingent on Aldous Wren-Pembury\'s old Eastern Reach seal remaining unexamined. Every irregular vessel docked under the Letter of True Passage is a ledger entry that assumes the seal was valid. If examined officially, the dry dock contracts go with it. She touches the ledger because it is everything that could disappear. Her aggression is structural, not personal.' },
+          { kind:'narrative', msg:'👁️ Dorit\'s voice drops a register when she says "commission." Not the commission — any commission. The hand goes flat-palm to the ledger cover. Not a nervous habit.\n\nShe is not hostile to you. She is hostile to the context: irregular arrivals, Letters of True Passage, docking without paperwork.\n\nAldous\'s old seal holds the dry dock contracts together. An official examination unwinds all of it. She cannot say this. She touches the ledger instead.\n\nArdley\'s W2 fragment collected. Knowledge entry added. +250 XP.' },
+        ],
+        onFail:[
+          { kind:'narrative', msg:'Dorit is professional and contained. The ledger touch is deliberate — something about her posture is controlled — but the source of the control isn\'t readable from this position.' },
+        ],
+      },
+    ],
     disposition:'"Everything in that ledger is legal. Every one of those entries is legal." — Dorit (she says \'legal\' twice)',
     passText:"Every one of those entries is legal. She says legal twice. The ledger touch is read. Dorit protection is understood.",
     failText:"Dorit body language at the Saltwick dock has not been read yet. WIS Insight DC 12 required.",
     npc:"long_john_silver_sen",
   },
 
-  quest_wis_03: { id:'quest_wis_03', type:'skill_check',
+  // §ARCH-01 Phase 3 — migrated legacy → UQF v1.0 (2026-06-28). INT Investigation DC 11, +300xp.
+  quest_wis_03: { id:'quest_wis_03', schema:'UQF-1.0', type:'skill_check',
     title:'The Chart Room',
     desc:'Ardley W3 — Discover Each Man\'s Thumbscrew: "Every person has one thing they are trying to protect above all others. Look for the thing they never mention — the omission is more revealing than the declaration. Their thumbscrew is the thing that makes them go quiet." Roen: "Keel talked about the commission. She talked about the eastern run. She talked about the date. She did not talk about the navigator. Not once." SB chart room. INT Investigation DC 11: read what she left and what she took.',
     hint:'Examine the SB chart room. INT Investigation DC 11.',
-    activateNode:'GCI', activateCond:() => !!(S_story.wisHookReceived && S_story.sbResolved),
-    checkStat:'int', checkSkill:'Investigation', checkDC:11, retryable:false,
-    checkPassFlag:'wisPage3_thumbscrew',
-    onPass:() => {
-      S_story.wisPage3_thumbscrew = true;
-      S_story.xp = (S_story.xp||0) + 300;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Ardley W3 — The Thumbscrew: Vera Keel left the Letter of Marque deliberately (commission was void; she knew). She took the navigator\'s notes: survey data for a Baltic route through the northern straits that would redirect Highland timber through the Eastern Reach, cutting Tilbury\'s dock out of the primary timber trade entirely. Her test of the Star\'s crew was to see if anyone read the commission date — the date was bait. She was here to see who on this route was paying attention. The navigator\'s notes are gone. She found what she came for.');
-      storyMsg('🔍 The commission documentation is here — she left it deliberately. One survey tube slot is empty. Dust ring says the missing tube was taller than standard charts.\n\nNavigator\'s survey notes. Taken.\n\nThe notes predate the commission. Separate cargo. Whatever route they survey runs north of the standard lane. Baltic approach.\n\nKeel never mentioned the navigator once across any exchange. The commission was bait to see who read dates. The route data was the actual cargo.\n\nArdley\'s W3 fragment collected. Knowledge entry added. +300 XP.');
-    },
-    onFail:() => {
-      storyMsg('The chart room is orderly. The commission papers are present. The survey charts look standard. The absence isn\'t obvious from a quick search — something is missing but the shape of the gap isn\'t reading clearly.');
-    },
-    xpAward:0,
+    activateNode:'GCI', gate:{ flags:['wisHookReceived','sbResolved'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'INT', skill:'Investigation', dc:11,
+        onPass:[
+          { kind:'mission_bit', flag:'wisPage3_thumbscrew' },
+          { kind:'reward', xp:300, knowledge:'Ardley W3 — The Thumbscrew: Vera Keel left the Letter of Marque deliberately (commission was void; she knew). She took the navigator\'s notes: survey data for a Baltic route through the northern straits that would redirect Highland timber through the Eastern Reach, cutting Tilbury\'s dock out of the primary timber trade entirely. Her test of the Star\'s crew was to see if anyone read the commission date — the date was bait. She was here to see who on this route was paying attention. The navigator\'s notes are gone. She found what she came for.' },
+          { kind:'narrative', msg:'🔍 The commission documentation is here — she left it deliberately. One survey tube slot is empty. Dust ring says the missing tube was taller than standard charts.\n\nNavigator\'s survey notes. Taken.\n\nThe notes predate the commission. Separate cargo. Whatever route they survey runs north of the standard lane. Baltic approach.\n\nKeel never mentioned the navigator once across any exchange. The commission was bait to see who read dates. The route data was the actual cargo.\n\nArdley\'s W3 fragment collected. Knowledge entry added. +300 XP.' },
+        ],
+        onFail:[
+          { kind:'narrative', msg:'The chart room is orderly. The commission papers are present. The survey charts look standard. The absence isn\'t obvious from a quick search — something is missing but the shape of the gap isn\'t reading clearly.' },
+        ],
+      },
+    ],
     disposition:'"She talked about everything except the navigator." — Roen',
     passText:"She talked about everything except the navigator. The chart room is read. The omission is the evidence.",
     failText:"The SB chart room has not been examined. INT Investigation DC 11 required.",
     npc:"long_john_silver_sen",
   },
 
-  quest_wis_04: { id:'quest_wis_04', type:'skill_check',
+  // §ARCH-01 Phase 3 — migrated legacy → UQF v1.0 (2026-06-28). INT Investigation DC 12, +300xp.
+  quest_wis_04: { id:'quest_wis_04', schema:'UQF-1.0', type:'skill_check',
     title:'The Stalemate Cost',
     desc:'Ardley W4 — The Law of Shortsightedness: "The present moment is always vivid and always incomplete. The person who can ask \'what will this look like in three years?\' is rare. The guild man who takes the good deal today rarely asks what it will cost his successor." Roen: "The warlord and the shaman have been watching each other for six months. I asked the barman what they\'re waiting for. He said: \'for the other one to move first.\' I asked what happens if neither moves. He did not know." At Visby\'s Broken Tooth: INT Investigation DC 12. Name what the stalemate is actually costing.',
     hint:'Read the Mordus-shaman stalemate at Visby\'s Broken Tooth Tavern. INT Investigation DC 12.',
-    activateNode:'BK', activateCond:() => !!S_story.wisHookReceived,
-    checkStat:'int', checkSkill:'Investigation', checkDC:12, retryable:false,
-    checkPassFlag:'wisPage4_sight',
-    onPass:() => {
-      S_story.wisPage4_sight = true;
-      S_story.xp = (S_story.xp||0) + 300;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Ardley W4 — The Long View: The Mordus-shaman stalemate at Visby has lasted six months. In that time: three goblin clans have reorganized under Hollow Hands influence; the Warrant Hall above has issued seventeen independent rulings without Mordus\'s review; the shaman has not needed to act because the stalemate does his work for him. Mordus controls the floor. The shaman controls every decision Mordus makes by refusing to be confronted. The stalemate is not a standoff — it is the shaman winning in slow motion.');
-      storyMsg('🔍 Mordus\'s table has a sightline to both exits. Optimal for the immediate room.\n\nThe Warrant Hall upstairs in six months: seventeen independent rulings. No Mordus review. The shaman has not needed to descend. The structure is changing while both of them watch the door.\n\nMordus is not losing the stalemate. He lost it three months ago and has not looked up the stairs.\n\nRoen, quietly: "The floor is not the battlefield."\n\nArdley\'s W4 fragment collected. Knowledge entry added. +300 XP.');
-    },
-    onFail:() => {
-      storyMsg('The power balance between Mordus\'s floor and the Warrant Hall above is clear in the room\'s tension. Both figures are focused on the immediate. The longer timeline and what the stalemate is costing isn\'t resolving from this angle.');
-    },
-    xpAward:0,
+    activateNode:'BK', gate:{ flags:['wisHookReceived'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'INT', skill:'Investigation', dc:12,
+        onPass:[
+          { kind:'mission_bit', flag:'wisPage4_sight' },
+          { kind:'reward', xp:300, knowledge:'Ardley W4 — The Long View: The Mordus-shaman stalemate at Visby has lasted six months. In that time: three goblin clans have reorganized under Hollow Hands influence; the Warrant Hall above has issued seventeen independent rulings without Mordus\'s review; the shaman has not needed to act because the stalemate does his work for him. Mordus controls the floor. The shaman controls every decision Mordus makes by refusing to be confronted. The stalemate is not a standoff — it is the shaman winning in slow motion.' },
+          { kind:'narrative', msg:'🔍 Mordus\'s table has a sightline to both exits. Optimal for the immediate room.\n\nThe Warrant Hall upstairs in six months: seventeen independent rulings. No Mordus review. The shaman has not needed to descend. The structure is changing while both of them watch the door.\n\nMordus is not losing the stalemate. He lost it three months ago and has not looked up the stairs.\n\nRoen, quietly: "The floor is not the battlefield."\n\nArdley\'s W4 fragment collected. Knowledge entry added. +300 XP.' },
+        ],
+        onFail:[
+          { kind:'narrative', msg:'The power balance between Mordus\'s floor and the Warrant Hall above is clear in the room\'s tension. Both figures are focused on the immediate. The longer timeline and what the stalemate is costing isn\'t resolving from this angle.' },
+        ],
+      },
+    ],
     disposition:'"He is playing for next month. The shaman is playing for next year." — Roen, looking at the ceiling',
     passText:"He is playing for next month. The shaman is playing for next year. The stalemate cost is named.",
     failText:"The Mordus-shaman stalemate at Visby Broken Tooth Tavern has not been read yet. INT Investigation DC 12 required.",
     npc:"long_john_silver_sen",
   },
 
-  quest_wis_05: { id:'quest_wis_05', type:'skill_check',
+  // §ARCH-01 Phase 3 — migrated legacy → UQF v1.0 (2026-06-28). Also sets the
+  // extra wisArchiveLetter flag (separate flag_write bit) alongside +300xp.
+  quest_wis_05: { id:'quest_wis_05', schema:'UQF-1.0', type:'skill_check',
     title:'The Philosopher\'s Pivot',
     desc:'Ardley W5 — Assume Formlessness: "The man who has committed to a position and found it untenable has two choices: defend it anyway, or release it. The first is called dignity. The second is called intelligence. They feel identical from the outside. Only the person inside knows which one they are doing." Roen: "The philosopher and I argued for two hours about whether gold has intrinsic value or is a social agreement. I was right, then wrong, then right again from the other direction. At some point I stopped knowing which direction I was arguing from. This felt like progress." At Athens — a Stoic has a position that was correct three premises ago. WIS Insight DC 12: recognize when to release it.',
     hint:'Enter the philosophical debate at Athens. WIS Insight DC 12.',
-    activateNode:'ATH', activateCond:() => !!(S_story.wisHookReceived && S_story.roenAlchemistMet),
-    checkStat:'wis', checkSkill:'Insight', checkDC:12, retryable:false,
-    checkPassFlag:'wisPage5_form',
-    onPass:() => {
-      S_story.wisPage5_form = true;
-      S_story.xp = (S_story.xp||0) + 300;
-      S_story.wisArchiveLetter = true;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Ardley W5 — Formlessness: The Stoic at Athens argued that persistence in argument is virtue — changing positions is capitulation. Roen noted the Stoic had changed positions twice in the last hour and called both changes \'refinements.\' The Stoic fell silent. Roen: "Releasing the argument is not capitulation if the argument was wrong." The Stoic wrote this down and offered a letter of introduction to the Visby archive — the only library that keeps Ardley\'s full catalogue.');
-      storyMsg('🧠 The Stoic\'s argument has three layers. The epistemological claim that arrived twenty minutes ago contradicts the property rights layer. He has been arguing two incompatible positions without noticing.\n\nYou ask which layer he began with.\n\nHe pauses. Then: "I see it."\n\nRoen: "Releasing the argument is not capitulation if the argument was wrong."\n\nThe Stoic writes this down. He hands you a letter of introduction to the Visby archive. The archivist there keeps Ardley\'s full catalogue.\n\nArdley\'s W5 fragment collected. Knowledge entry added. Stoic\'s archive letter acquired. +300 XP.');
-    },
-    onFail:() => {
-      storyMsg('The debate structure has three layers but the incompatibility between them isn\'t visible from inside the argument yet. The Stoic is committed to all three simultaneously. The pivot moment hasn\'t surfaced.');
-    },
-    xpAward:0,
+    activateNode:'ATH', gate:{ flags:['wisHookReceived','roenAlchemistMet'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Insight', dc:12,
+        onPass:[
+          { kind:'mission_bit', flag:'wisPage5_form' },
+          { kind:'flag_write', set:['wisArchiveLetter'] },
+          { kind:'reward', xp:300, knowledge:'Ardley W5 — Formlessness: The Stoic at Athens argued that persistence in argument is virtue — changing positions is capitulation. Roen noted the Stoic had changed positions twice in the last hour and called both changes \'refinements.\' The Stoic fell silent. Roen: "Releasing the argument is not capitulation if the argument was wrong." The Stoic wrote this down and offered a letter of introduction to the Visby archive — the only library that keeps Ardley\'s full catalogue.' },
+          { kind:'narrative', msg:'🧠 The Stoic\'s argument has three layers. The epistemological claim that arrived twenty minutes ago contradicts the property rights layer. He has been arguing two incompatible positions without noticing.\n\nYou ask which layer he began with.\n\nHe pauses. Then: "I see it."\n\nRoen: "Releasing the argument is not capitulation if the argument was wrong."\n\nThe Stoic writes this down. He hands you a letter of introduction to the Visby archive. The archivist there keeps Ardley\'s full catalogue.\n\nArdley\'s W5 fragment collected. Knowledge entry added. Stoic\'s archive letter acquired. +300 XP.' },
+        ],
+        onFail:[
+          { kind:'narrative', msg:'The debate structure has three layers but the incompatibility between them isn\'t visible from inside the argument yet. The Stoic is committed to all three simultaneously. The pivot moment hasn\'t surfaced.' },
+        ],
+      },
+    ],
     disposition:'"Releasing the argument is not capitulation if the argument was wrong." — Roen (the Stoic wrote this down)',
     passText:"Releasing the argument is not capitulation if the argument was wrong. The Stoic wrote this down. The pivot is made.",
     failText:"The philosophical debate at Athens has not been engaged. WIS Insight DC 12 required.",
