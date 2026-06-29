@@ -2234,3 +2234,90 @@ test.describe('§ARCH-01 Wave 1q — The Personal Legend (quest_alch_01..07)', (
     expect(r.status).toBe('active'); expect(r.xp).toBe(0); expect(r.flag).toBe(false); expect(r.fails).toBe(1);
   });
 });
+
+// ── §ARCH-01 Wave 1r — The Scar (§SCAR-01 Gret Orrens, quest_scar_01..04) ──
+//
+// checkAbility quests (pure parity), NO checkPassFlag (closures set flags →
+// _legacy_fn; xpAward→reward{xp}). scar_03 is a moral BRANCH: onPass sets
+// gretChoice='help', onFail sets 'refuse' (retryable:false → locks 'failed' but
+// still progresses, since scar_04 gates on gretChoice truthy). scar_04 (side)
+// keeps its itemChain (Scar's Light + Orrens Manuscript) + xpAward:350 + the
+// per-id WIS handler — all schema-agnostic; completion = flags:['gretChoice'] ∧
+// atNode:'NUE'.
+
+test.describe('§ARCH-01 Wave 1r — The Scar (quest_scar_01..04)', () => {
+  test('all 4 validate; 3 checkAbility skill_checks (no mission_bit) + scar_04 side (flags+atNode completion)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const sk = ['quest_scar_01','quest_scar_02','quest_scar_03'].map(id => {
+        const q = QUEST_DB[id]; const b = q.bits[0];
+        return { id, schema:q.schema, valid:validateQuest(q).valid, stat:b.stat, skill:b.skill, dc:b.dc,
+                 hasMissionBit:(b.onPass||[]).some(x=>x.kind==='mission_bit'),
+                 xp:(b.onPass||[]).find(x=>x.kind==='reward')?.xp,
+                 gate:JSON.stringify(q.gate), retryable:q.retryable,
+                 failFn:(b.onFail||[]).some(x=>x.kind==='_legacy_fn') };
+      });
+      const s4 = QUEST_DB.quest_scar_04;
+      return { sk, s4:{ schema:s4.schema, type:s4.type, valid:validateQuest(s4).valid, gate:JSON.stringify(s4.gate), completion:JSON.stringify(s4.completion), hasItemChain:Array.isArray(s4.itemChain)&&s4.itemChain.length===2, xpAward:s4.xpAward } };
+    });
+    expect(r.sk.every(x => x.schema==='UQF-1.0' && x.valid && !x.hasMissionBit)).toBe(true);
+    expect(r.sk).toMatchObject([
+      { id:'quest_scar_01', stat:'INT', skill:'Investigation', dc:8,  xp:100, gate:'{}',                                           retryable:true,  failFn:false },
+      { id:'quest_scar_02', stat:'WIS', skill:'Insight',       dc:12, xp:200, gate:'{"flags":["gretMet"]}',                        retryable:true,  failFn:false },
+      { id:'quest_scar_03', stat:'WIS', skill:'Insight',       dc:11, xp:250, gate:'{"flags":["gretLabyrinth"],"notFlags":["gretChoice"]}', retryable:false, failFn:true },
+    ]);
+    expect(r.s4).toEqual({ schema:'UQF-1.0', type:'side', valid:true, gate:'{"flags":["gretChoice"]}', completion:'{"flags":["gretChoice"],"atNode":"NUE"}', hasItemChain:true, xpAward:350 });
+  });
+
+  test('scar_01/02 PASS: done + flag(s) + exact xp (no token, no checkPassFlag)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = (id) => {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 0; S_story.inventory = [];
+        S_story.gretMet = false; S_story.gretLabyrinth = false; S_story.pierFalkWarm = false;
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        return { status:S_story.quests[id], xp:S_story.xp, tokens:S_story.inventory.length };
+      };
+      const a = run('quest_scar_01'); const met = S_story.gretMet;
+      const b = run('quest_scar_02'); const lab = S_story.gretLabyrinth; const warm = S_story.pierFalkWarm;
+      return { a, met, b, lab, warm };
+    });
+    expect(r.a).toEqual({ status:'done', xp:100, tokens:0 }); expect(r.met).toBe(true);
+    expect(r.b).toEqual({ status:'done', xp:200, tokens:0 }); expect(r.lab).toBe(true); expect(r.warm).toBe(true);
+  });
+
+  test('scar_03 BRANCH: PASS→gretChoice=help (+250xp, done); FAIL→gretChoice=refuse (locks failed, no xp), both let scar_04 activate', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const pass = (() => {
+        S_story.abilityScores = { wis:40 }; S_story.level = 20; S_story.xp = 0;
+        S_story.gretChoice = ''; S_story.quests = { quest_scar_03:'active' };
+        _rollCeremonia('quest_scar_03');
+        return { status:S_story.quests.quest_scar_03, choice:S_story.gretChoice, xp:S_story.xp, s4:QuestRuntime.canActivate('quest_scar_04') };
+      })();
+      const fail = (() => {
+        S_story.abilityScores = { wis:-100 }; S_story.level = 1; S_story.day = 1; S_story.skillCheckAttempts = {}; S_story.xp = 0;
+        S_story.gretChoice = ''; S_story.gretLabyrinth = true; S_story.quests = { quest_scar_03:'active' };
+        _rollCeremonia('quest_scar_03');
+        return { status:S_story.quests.quest_scar_03, choice:S_story.gretChoice, xp:S_story.xp, s4:QuestRuntime.canActivate('quest_scar_04') };
+      })();
+      return { pass, fail };
+    });
+    expect(r.pass).toEqual({ status:'done',   choice:'help',   xp:250, s4:true });
+    expect(r.fail).toEqual({ status:'failed', choice:'refuse', xp:0,   s4:true });
+  });
+
+  test('scar_04 completion.atNode: needs gretChoice AND currentCode===NUE', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.gretChoice = 'help';
+      S_story.currentCode = 'LHR'; const wrongNode = QuestRuntime.canComplete('quest_scar_04');
+      S_story.currentCode = 'NUE'; const atNUE = QuestRuntime.canComplete('quest_scar_04');
+      S_story.gretChoice = ''; const noChoice = QuestRuntime.canComplete('quest_scar_04');
+      return { wrongNode, atNUE, noChoice };
+    });
+    expect(r).toEqual({ wrongNode:false, atNUE:true, noChoice:false });
+  });
+});
