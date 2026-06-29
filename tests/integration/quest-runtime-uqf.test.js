@@ -2895,3 +2895,68 @@ test.describe('§ARCH-01 Wave 2 — hav_* family (bulk-migrated, 30 acts)', () =
     }
   });
 });
+
+// §ARCH-01 Wave 2b — ada* family (235 acts, the single largest legacy
+// skill_check family). Maximally uniform: all checkStat + checkPassFlag (no
+// bitLabel/xp/gold), non-retryable, and NO activateCond on any act → all
+// gate:{} (independently activatable, matching legacy). Self-contained.
+test.describe('§ARCH-01 Wave 2b — ada* family (bulk-migrated, 235 acts)', () => {
+  test('every ada* skill_check is UQF-1.0, validates, gate:{}, onPass:[mission_bit](no label), onFail:[]', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const ada = Object.values(QUEST_DB).filter(q => /^ada/.test(q.id) && q.type === 'skill_check');
+      return ada.map(q => {
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        return { id:q.id, schema:q.schema, valid:validateQuest(q).valid, gateEmpty:JSON.stringify(q.gate) === '{}',
+          hasStat:!!(b && b.stat), hasDc:typeof (b && b.dc) === 'number',
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          mbHasLabel:b ? ('label' in (b.onPass.find(x => x.kind === 'mission_bit') || {})) : null };
+      });
+    });
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(235);
+    for (const q of r) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.gateEmpty).toBe(true);
+      expect(q.hasStat).toBe(true);
+      expect(q.hasDc).toBe(true);
+      expect(q.onPassK).toEqual(['mission_bit']);
+      expect(q.onFailLen).toBe(0);
+      expect(q.mbHasLabel).toBe(false);
+    }
+  });
+
+  test('PASS/FAIL parity across all 235: pass→done+flag+_flagToLabel token; fail→failed+no flag/token', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const ada = Object.values(QUEST_DB).filter(q => /^ada/.test(q.id) && q.type === 'skill_check');
+      let passBad = [], failBad = [];
+      for (const q of ada) {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const flag = b.onPass.find(x => x.kind === 'mission_bit').flag;
+        // PASS
+        S_story.abilityScores = { [b.stat.toLowerCase()]: 40 };
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        const tok = S_story.inventory.find(i => i.flagRef === flag);
+        if (!(S_story.quests[q.id] === 'done' && S_story[flag] === true && tok &&
+              tok.name === _flagToLabel(flag) + ' Token' && tok.type === 'mission_bit' &&
+              S_story.xp === 0 && S_story.gold === 0 && S_story.inventory.length === 1)) passBad.push(q.id);
+        // FAIL
+        S_story.abilityScores = { [b.stat.toLowerCase()]: -100 };
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (!(S_story.quests[q.id] === 'failed' && S_story[flag] === false && S_story.inventory.length === 0)) failBad.push(q.id);
+      }
+      return { count:ada.length, passBad, failBad };
+    });
+    expect(r.count).toBe(235);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+  });
+});
