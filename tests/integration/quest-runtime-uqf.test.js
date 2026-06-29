@@ -2321,3 +2321,107 @@ test.describe('§ARCH-01 Wave 1r — The Scar (quest_scar_01..04)', () => {
     expect(r).toEqual({ wrongNode:false, atNUE:true, noChoice:false });
   });
 });
+
+// ── §ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIREN-01) ──
+//
+// 5 skill_checks (LC1 aurel, LC2 calice, LC3 mireille, LC4 solen, LSO overseer),
+// all retryable:false, pure parity, fully decomposed (NO onPass closures existed):
+// checkPassFlag→onPass mission_bit{flag,label}; xpAward→reward; checkFailFlag→
+// onFail mission_bit with the SAME bitLabel (mirrors legacy _grantMissionBit(
+// failFlag, q.bitLabel)). solen_horizon had no checkFailFlag → onFail:[]. The
+// pass/fail flags are read directly by the LC1–LC4/LSO NPC quoteFns + the
+// LJ3/betrayalCount blocks; mission_bit sets the flag + grants the token, so
+// those reads keep working byte-for-byte.
+
+const SIREN = [
+  { id:'quest_aurel_tide',    stat:'WIS', skill:'Insight',       dc:12, xp:150, passFlag:'aurelTideRead',       label:'Aurel Seal',     failFlag:'betrayalThought' },
+  { id:'quest_calice_bridge', stat:'INT', skill:'Investigation', dc:13, xp:175, passFlag:'caliceBridgeCrossed', label:'Calice Crossing', failFlag:'betrayalWord' },
+  { id:'quest_mireille_ami',  stat:'CHA', skill:'Persuasion',    dc:14, xp:200, passFlag:'mireilleAmiNamed',    label:'Mireille Named', failFlag:'betrayalDeed' },
+  { id:'quest_solen_horizon', stat:'WIS', skill:'Insight',       dc:13, xp:225, passFlag:'solenSoonRead',       label:'Solen Truth',    failFlag:null },
+  { id:'quest_sea_overseer',  stat:'WIS', skill:'Insight',       dc:15, xp:250, passFlag:'charmResisted',       label:'Charm Resisted', failFlag:'seaOverseerMet' },
+];
+
+test.describe('§ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIREN-01)', () => {
+  test('all 5 validate as UQF skill_checks; gate:{}, retryable:false, onPass mission_bit{flag,label}+reward, onFail mission_bit (solen onFail:[])', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((SIREN) => SIREN.map(s => {
+      const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
+      const pb = (b.onPass || []).find(x => x.kind === 'mission_bit');
+      const rw = (b.onPass || []).find(x => x.kind === 'reward');
+      const fb = (b.onFail || []).find(x => x.kind === 'mission_bit');
+      return { id:s.id, schema:q.schema, valid:validateQuest(q).valid, type:q.type,
+               gate:JSON.stringify(q.gate), retryable:q.retryable,
+               stat:b.stat, skill:b.skill, dc:b.dc,
+               passFlag:pb && pb.flag, passLabel:pb && pb.label, xp:rw && rw.xp,
+               failFlag:fb ? fb.flag : null, failLabel:fb ? fb.label : null,
+               failLen:(b.onFail || []).length };
+    }), SIREN);
+    for (const s of SIREN) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toMatchObject({
+        schema:'UQF-1.0', valid:true, type:'skill_check', gate:'{}', retryable:false,
+        stat:s.stat, skill:s.skill, dc:s.dc,
+        passFlag:s.passFlag, passLabel:s.label, xp:s.xp,
+      });
+      if (s.failFlag) expect(got).toMatchObject({ failFlag:s.failFlag, failLabel:s.label });
+      else expect(got.failLen).toBe(0);
+    }
+  });
+
+  test('activation gate:{} — all 5 activatable from a fresh slate', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((SIREN) => {
+      S_story.quests = {};
+      return SIREN.map(s => ({ id:s.id, can:QuestRuntime.canActivate(s.id) }));
+    }, SIREN);
+    expect(r.every(x => x.can === true)).toBe(true);
+  });
+
+  test('PASS parity: done + pass flag true + token{flagRef,name} + exact xp delta', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((SIREN) => SIREN.map(s => {
+      S_story.abilityScores = { [s.stat.toLowerCase()]: 40 };
+      S_story.level = 20; S_story.xp = 0; S_story.inventory = [];
+      S_story[s.passFlag] = false; if (s.failFlag) S_story[s.failFlag] = false;
+      S_story.quests = { [s.id]:'active' };
+      _rollCeremonia(s.id);
+      const tok = S_story.inventory.find(i => i.type === 'mission_bit' && i.flagRef === s.passFlag);
+      return { id:s.id, status:S_story.quests[s.id], flag:S_story[s.passFlag], xp:S_story.xp,
+               tokName:tok && tok.name, failFlagSet:s.failFlag ? S_story[s.failFlag] : null };
+    }), SIREN);
+    for (const s of SIREN) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toEqual({ id:s.id, status:'done', flag:true, xp:s.xp,
+                            tokName:s.label + ' Token', failFlagSet:s.failFlag ? false : null });
+    }
+  });
+
+  test('FAIL parity (non-retryable): failed + fail flag/token (same bitLabel), pass flag false, no xp; solen grants nothing', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((SIREN) => SIREN.map(s => {
+      S_story.abilityScores = { [s.stat.toLowerCase()]: -100 };
+      S_story.level = 1; S_story.day = 1; S_story.skillCheckAttempts = {};
+      S_story.xp = 0; S_story.inventory = [];
+      S_story[s.passFlag] = false; if (s.failFlag) S_story[s.failFlag] = false;
+      S_story.quests = { [s.id]:'active' };
+      _rollCeremonia(s.id);
+      const failTok = s.failFlag ? S_story.inventory.find(i => i.type === 'mission_bit' && i.flagRef === s.failFlag) : null;
+      return { id:s.id, status:S_story.quests[s.id], passFlag:S_story[s.passFlag], xp:S_story.xp,
+               failFlagSet:s.failFlag ? S_story[s.failFlag] : null,
+               failTokName:failTok ? failTok.name : null, tokens:S_story.inventory.length };
+    }), SIREN);
+    for (const s of SIREN) {
+      const got = r.find(x => x.id === s.id);
+      expect(got.status).toBe('failed');
+      expect(got.passFlag).toBe(false);
+      expect(got.xp).toBe(0);
+      if (s.failFlag) {
+        expect(got.failFlagSet).toBe(true);
+        expect(got.failTokName).toBe(s.label + ' Token');
+        expect(got.tokens).toBe(1);
+      } else {
+        expect(got.tokens).toBe(0); // solen: no checkFailFlag, onFail:[]
+      }
+    }
+  });
+});
