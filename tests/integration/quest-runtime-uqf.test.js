@@ -5395,3 +5395,105 @@ test.describe('§ARCH-01 Wave 2aa — ams_* family (bulk-migrated, 35 acts; unif
     expect(r.gateBad).toEqual([]);
   });
 });
+
+// §ARCH-01 Wave 2ab / §SKILLFIX-02 — bgw_* family (37 skill_check acts;
+// `bgw_cNaM` chapters — the Genie Contract arc). SECOND genuine §SKILLFIX-02
+// family (after ist_, Wave 2i): every checkStat holds a D&D SKILL NAME
+// (Deception/History/Insight/Investigation/Nature/Persuasion), which legacy read
+// as abilityScores[name] → undefined → +0 mod. The migrator maps the skill to its
+// governing ability (D&D 5e) into `stat`, keeping the name in `skill` — a
+// deliberate BEHAVIOR CHANGE (the check now rolls the mapped ability mod), so
+// parity is asserted on DISPLAY (untouched) + structure + the mapping, NOT vs the
+// legacy +0 roll. All 37 flag-bearing → onPass:[mission_bit{flag}]; gates all
+// empty {flags:0, empty:37}. The transform type-gates out 3 combat siblings
+// (bgw_c1a3/c6a4/c8a4). Self-contained.
+test.describe('§ARCH-01 Wave 2ab / §SKILLFIX-02 — bgw_* family (skill→ability mapped, 37 acts)', () => {
+  const ABILITIES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
+  const SKILL_TO_ABILITY = {
+    ATHLETICS:'STR', ACROBATICS:'DEX', 'SLEIGHT OF HAND':'DEX', STEALTH:'DEX',
+    ARCANA:'INT', HISTORY:'INT', INVESTIGATION:'INT', NATURE:'INT', RELIGION:'INT',
+    'ANIMAL HANDLING':'WIS', INSIGHT:'WIS', MEDICINE:'WIS', PERCEPTION:'WIS', SURVIVAL:'WIS',
+    DECEPTION:'CHA', INTIMIDATION:'CHA', PERFORMANCE:'CHA', PERSUASION:'CHA', COURAGE:'CHA', PRESENCE:'CHA',
+  };
+
+  test('every bgw_* skill_check is UQF-1.0, validates, stat is a real ability, skill→ability mapping holds', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const bgw = Object.values(QUEST_DB).filter(q => /^bgw_/.test(q.id) && q.type === 'skill_check');
+      return bgw.map(q => {
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        const mb = b && b.onPass.find(x => x.kind === 'mission_bit');
+        const gate = q.gate || {};
+        return { id:q.id, schema:q.schema, valid:validateQuest(q).valid, stat:b ? b.stat : null, skill:(b && b.skill) || null,
+          noAC: typeof q.activateCond === 'undefined',
+          gateShape: gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other'),
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          mbHasLabel:mb ? ('label' in mb) : null };
+      });
+    });
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(37);
+    const gateShapes = { flags:0, empty:0 };
+    let mappedSkills = 0;
+    for (const q of r) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(ABILITIES).toContain(q.stat);              // §SKILLFIX-02: stat is always a real ability
+      expect(q.noAC).toBe(true);
+      expect(['flags', 'empty']).toContain(q.gateShape);
+      expect(q.onPassK).toEqual(['mission_bit']);        // bgw all flag-bearing
+      expect(q.onFailLen).toBe(0);
+      expect(q.mbHasLabel).toBe(false);
+      if (q.skill) {                                      // mapping durability: skill's ability === stat
+        expect(SKILL_TO_ABILITY[q.skill.toUpperCase()], `${q.id} skill ${q.skill}`).toBe(q.stat);
+        mappedSkills++;
+      }
+      gateShapes[q.gateShape]++;
+    }
+    expect(gateShapes).toEqual({ flags:0, empty:37 });
+    expect(mappedSkills).toBe(37);                        // all 37 carry a mapped skill name
+  });
+
+  test('NEW behavior (post-§SKILLFIX-02): the mapped ability mod drives the roll — forced PASS/FAIL + gate', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
+      const bgw = Object.values(QUEST_DB).filter(q => /^bgw_/.test(q.id) && q.type === 'skill_check');
+      let passBad = [], failBad = [], gateBad = [];
+      for (const q of bgw) {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const flag = b.onPass.find(x => x.kind === 'mission_bit').flag;
+        // PASS — seed the MAPPED ability high
+        S_story.abilityScores = seed(b.stat, 40);
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        const tok = S_story.inventory.find(i => i.flagRef === flag);
+        if (!(S_story.quests[q.id] === 'done' && S_story[flag] === true && tok &&
+              tok.name === _flagToLabel(flag) + ' Token' && tok.type === 'mission_bit' &&
+              S_story.xp === 0 && S_story.gold === 0 && S_story.inventory.length === 1)) passBad.push(q.id);
+        // FAIL — seed the mapped ability very low
+        S_story.abilityScores = seed(b.stat, -100);
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (!(S_story.quests[q.id] === 'failed' && S_story[flag] === false && S_story.inventory.length === 0)) failBad.push(q.id);
+        // GATE
+        const g = q.gate || {};
+        if (g.flags && g.flags.length) {
+          const gf = g.flags[0];
+          S_story[gf] = false; const c0 = QuestRuntime.canActivate(q.id);
+          S_story[gf] = true;  const c1 = QuestRuntime.canActivate(q.id);
+          if (!(c0 === false && c1 === true)) gateBad.push(q.id);
+        } else if (QuestRuntime.canActivate(q.id) !== true) gateBad.push(q.id);
+      }
+      return { count:bgw.length, passBad, failBad, gateBad };
+    });
+    expect(r.count).toBe(37);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+    expect(r.gateBad).toEqual([]);
+  });
+});
