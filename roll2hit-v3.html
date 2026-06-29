@@ -11505,67 +11505,87 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── §HUNT-02: The Eastern Bend quests ──
-  quest_hunt2_01: { id:'quest_hunt2_01', type:'side',
+  // §ARCH-01 Wave 1o — migrated legacy → UQF v1.0 (2026-06-28). The two Lake/Relay Monster Hunt
+  // arcs (hunt2 = Night Hag relay road; hunt = lake drowners). Identical shape: structural hook side
+  // (_01), 2 skill_checks (_02/_03, checkStat → pure parity), lair-clear side (_04 battle completion).
+  // ⚠ hunt2_04 & hunt_04 share the sb_fight latent double-count (onComplete +Nxp ∧ xpAward:N) → kept
+  // verbatim (see project_open_gaps memory).
+  quest_hunt2_01: { id:'quest_hunt2_01', schema:'UQF-1.0', type:'side',
     title:'The Relay Road Warning',
     desc:"Tessie has run the J1 fork road six years. Yesterday the relay horses stopped two hundred paces before the bend and refused to go further. Road wardens say bandits. Tessie doesn't believe it. Neither does the mud.",
     hint:'Follow up on Tessie\'s warning. Examine the road north of the fork.',
-    activateNode:'WRO', completeItems:[], completeFn:() => !!(S_story.huntHook2Received),
-    waypointNode:'WRO', reward:0,
+    activateNode:'WRO', gate:{},
+    completion:{ flags:['huntHook2Received'] }, bits:[],
+    completeItems:[], waypointNode:'WRO', reward:0,
     disposition:'"Six years on this road. There are no bandits in those fields. The horses know something the road wardens don\'t." — Tessie, already walking',
     passText:"The road north of the fork has been examined. The horses knew. There are no bandits in those fields.",
     failText:"Tessie warning has not been followed up. The relay road north of the J1 fork needs investigation.",
     npc:"long_john_silver_sen",
   },
-  quest_hunt2_02: { id:'quest_hunt2_02', type:'skill_check',
+  quest_hunt2_02: { id:'quest_hunt2_02', schema:'UQF-1.0', type:'skill_check',
     title:'Reading the Road',
     desc:"The hoof marks in the bend mud tell a specific story. The horses didn't panic — they stopped. WIS Perception DC 11 to read what stopped them.",
     hint:'Examine the hoof marks at the J1 crossroads heading north. WIS Perception DC 11.',
-    activateNode:'WRO', activateCond:() => !!S_story.huntHook2Received,
-    checkStat:'wis', checkSkill:'Perception', checkDC:11, retryable:false,
-    checkPassFlag:'bendRoadClue',
-    onPass:() => {
-      S_story.bendRoadClue = true;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push("Relay Road Investigation: The relay horses stop precisely 200 paces from the sleeping post. Not random fear — a territorial line. Something operates from the sleeping post northward. Night hag territory markings are invisible to humans but horses perceive them. The road wardens' bandit theory is wrong.");
-      S_story.xp = (S_story.xp||0) + 150;
-      storyMsg('The hoof marks are consistent: every horse stopped at the same point. Not together — different horses, different days. They all stopped at the same invisible line two hundred paces south of the sleeping post.\n\nThis is territorial behavior from the horses\' side. Something has marked that stretch as dangerous in a way horses can perceive and humans cannot. The road wardens\' bandit fires theory does not explain a precise stopping line.\n\nKnowledge entry added: Relay Road Investigation. +150 XP. Relay road north accessible.');
-    },
-    onFail:() => {
-      storyMsg('The mud is too churned by the relay traffic to read clearly. The bend is just north — the evidence may be clearer at the source.');
-    },
-    xpAward:0,
+    activateNode:'WRO', gate:{ flags:['huntHook2Received'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Perception', dc:11,
+        onPass:[
+          { kind:'mission_bit', flag:'bendRoadClue' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.bendRoadClue = true;
+            S_story.knowledge = S_story.knowledge || [];
+            S_story.knowledge.push("Relay Road Investigation: The relay horses stop precisely 200 paces from the sleeping post. Not random fear — a territorial line. Something operates from the sleeping post northward. Night hag territory markings are invisible to humans but horses perceive them. The road wardens' bandit theory is wrong.");
+            S_story.xp = (S_story.xp||0) + 150;
+            storyMsg('The hoof marks are consistent: every horse stopped at the same point. Not together — different horses, different days. They all stopped at the same invisible line two hundred paces south of the sleeping post.\n\nThis is territorial behavior from the horses\' side. Something has marked that stretch as dangerous in a way horses can perceive and humans cannot. The road wardens\' bandit fires theory does not explain a precise stopping line.\n\nKnowledge entry added: Relay Road Investigation. +150 XP. Relay road north accessible.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            storyMsg('The mud is too churned by the relay traffic to read clearly. The bend is just north — the evidence may be clearer at the source.');
+          } },
+        ],
+      },
+    ],
     disposition:'"The horses know. They always know first." — Tessie',
     passText:"The horses stopped, they did not panic. The hoof marks are read. Tessie was right about what the mud said.",
     failText:"The hoof marks at the J1 crossroads have not been examined. WIS Perception DC 11 required.",
     npc:"long_john_silver_sen",
   },
-  quest_hunt2_03: { id:'quest_hunt2_03', type:'skill_check',
+  quest_hunt2_03: { id:'quest_hunt2_03', schema:'UQF-1.0', type:'skill_check',
     title:'The Sleeping Post',
     desc:'The tether rings at the relay sleeping post have been worn in an unusual pattern. INT Investigation DC 13 to understand what used them.',
     hint:'Examine the sleeping post at the Eastern Bend. INT Investigation DC 13.',
-    activateNode:'BNX', activateCond:() => !!S_story.bendRoadClue,
-    checkStat:'int', checkSkill:'Investigation', checkDC:13, retryable:false,
-    checkPassFlag:'bendLairFound',
-    onPass:() => {
-      S_story.bendLairFound = true;
-      S_story.xp = (S_story.xp||0) + 200;
-      storyMsg('The tether rings have been worn in a spiral pattern — not the linear wear of horses pulling against them, but circular, as if something circled the post repeatedly over several nights.\n\nIn the soil beside the post: a handprint. Too long in the fingers. The weight distribution is wrong for a human — the heel sank deep, the fingers left no marks. A night hag moves this way — all heel, no toe, light-fingered in both senses.\n\nThe fires the road wardens saw are the hag\'s working light. She rides the sleeping horses at night from this post, draining them. The exhausted horses refuse the road the following day — not because they\'re afraid of the road, but because they remember what happened at the post.\n\n+200 XP. Night Hag confirmed. The source is here.');
-    },
-    onFail:() => {
-      storyMsg('The post\'s wear pattern is unusual but inconclusive. The evidence is in the soil beside it — look more carefully.');
-    },
-    xpAward:0,
+    activateNode:'BNX', gate:{ flags:['bendRoadClue'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'INT', skill:'Investigation', dc:13,
+        onPass:[
+          { kind:'mission_bit', flag:'bendLairFound' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.bendLairFound = true;
+            S_story.xp = (S_story.xp||0) + 200;
+            storyMsg('The tether rings have been worn in a spiral pattern — not the linear wear of horses pulling against them, but circular, as if something circled the post repeatedly over several nights.\n\nIn the soil beside the post: a handprint. Too long in the fingers. The weight distribution is wrong for a human — the heel sank deep, the fingers left no marks. A night hag moves this way — all heel, no toe, light-fingered in both senses.\n\nThe fires the road wardens saw are the hag\'s working light. She rides the sleeping horses at night from this post, draining them. The exhausted horses refuse the road the following day — not because they\'re afraid of the road, but because they remember what happened at the post.\n\n+200 XP. Night Hag confirmed. The source is here.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            storyMsg('The post\'s wear pattern is unusual but inconclusive. The evidence is in the soil beside it — look more carefully.');
+          } },
+        ],
+      },
+    ],
     disposition:'"The fires moved every night. Bandits build camps and stay. This one moved." — Road Warden, reconsidering',
     passText:"The fires moved every night. This was not bandits. The tether ring wear pattern confirms it.",
     failText:"The sleeping post at the Eastern Bend has not been examined. INT Investigation DC 13 required.",
     npc:"long_john_silver_sen",
   },
-  quest_hunt2_04: { id:'quest_hunt2_04', type:'side',
+  // §ARCH-01 Wave 1o — side, battle completion. ⚠ onComplete(+600xp) ∧ xpAward:600 → +1200xp
+  // double-count, preserved verbatim (see project_open_gaps).
+  quest_hunt2_04: { id:'quest_hunt2_04', schema:'UQF-1.0', type:'side',
     title:'Drive the Hag Out',
     desc:'A Night Hag has been riding the relay horses from the sleeping post at the bend. The horses cannot use this road while she holds the territory. Clear the post.',
     hint:'Confront the Night Hag at the Eastern Bend.',
-    activateNode:'BNX', activateCond:() => !!S_story.bendLairFound,
-    completeFn:() => !!((S_story.defeatedBattles||{})['BN_NIGHTHAG']),
+    activateNode:'BNX', gate:{ flags:['bendLairFound'] },
+    completion:{ battles:['BN_NIGHTHAG'] }, bits:[],
     onComplete:() => {
       S_story.hagDefeated2 = true;
       S_story.gold = (S_story.gold||0) + 400;
@@ -11584,67 +11604,82 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── §HUNT-01: What's In The Lake quests ──
-  quest_hunt_01: { id:'quest_hunt_01', type:'side',
+  quest_hunt_01: { id:'quest_hunt_01', schema:'UQF-1.0', type:'side',
     title:'Something in the Lake',
     desc:'Three fishing boats have not returned from the north end of the lake. The Guild has placed spirit offerings. The Elder Fisherwoman does not believe in the spirit. She believes in the drag marks.',
     hint:'Speak to the Elder Fisherwoman at the south shore dock.',
-    activateNode:'HFT', completeItems:[], completeFn:() => !!(S_story.huntHookReceived),
-    waypointNode:'HFT', reward:0,
+    activateNode:'HFT', gate:{},
+    completion:{ flags:['huntHookReceived'] }, bits:[],
+    completeItems:[], waypointNode:'HFT', reward:0,
     disposition:'"The Guild is wrong. You cannot appease what ate those boats with dried fish." — The Elder Fisherwoman',
     passText:"The Elder Fisherwoman has been heard. The drag marks are the evidence. The Guild is wrong about the spirit.",
     failText:"The Elder Fisherwoman at the south shore dock has not been spoken to yet.",
     npc:"long_john_silver_sen",
   },
-  quest_hunt_02: { id:'quest_hunt_02', type:'skill_check',
+  quest_hunt_02: { id:'quest_hunt_02', schema:'UQF-1.0', type:'skill_check',
     title:'Scale Marks on the Hull',
     desc:'A recovered boat from the north end has marks on its hull. The Guild reads them as spirit signs. INT Investigation DC 12 to read them correctly.',
     hint:'Examine the recovered hull at the Lake Harbor. INT Investigation DC 12.',
-    activateNode:'KSU', activateCond:() => !!S_story.huntHookReceived,
-    checkStat:'int', checkSkill:'Investigation', checkDC:12, retryable:false,
-    checkPassFlag:'lakeClueFound',
-    onPass:() => {
-      S_story.lakeClueFound = true;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Lake Investigation: The hull marks are physical — claw drag at waterline. Not spirit-made. Consistent with a creature large enough to capsize a fishing boat from below. The Guild\'s spirit offering theory is incorrect.');
-      S_story.xp = (S_story.xp||0) + 200;
-      storyMsg('The marks are not spirit signs. They are physical impressions — claw drag at the waterline, consistent with something that approached from below and gripped the hull.\n\nThe Guild\'s assessment is wrong. The creature is real, large, and has been living at the north end. The boats did not drift — they were stopped.\n\nKnowledge entry added: Lake Investigation. +200 XP.');
-    },
-    onFail:() => {
-      storyMsg('The marks are unclear from this angle. The hull is damaged further toward the bow — more evidence is on the north shore path.');
-    },
-    xpAward:0,
+    activateNode:'KSU', gate:{ flags:['huntHookReceived'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'INT', skill:'Investigation', dc:12,
+        onPass:[
+          { kind:'mission_bit', flag:'lakeClueFound' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.lakeClueFound = true;
+            S_story.knowledge = S_story.knowledge || [];
+            S_story.knowledge.push('Lake Investigation: The hull marks are physical — claw drag at waterline. Not spirit-made. Consistent with a creature large enough to capsize a fishing boat from below. The Guild\'s spirit offering theory is incorrect.');
+            S_story.xp = (S_story.xp||0) + 200;
+            storyMsg('The marks are not spirit signs. They are physical impressions — claw drag at the waterline, consistent with something that approached from below and gripped the hull.\n\nThe Guild\'s assessment is wrong. The creature is real, large, and has been living at the north end. The boats did not drift — they were stopped.\n\nKnowledge entry added: Lake Investigation. +200 XP.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            storyMsg('The marks are unclear from this angle. The hull is damaged further toward the bow — more evidence is on the north shore path.');
+          } },
+        ],
+      },
+    ],
     disposition:'"Those are not offering-marks. Those are grip-marks. Something held the boat." — Harbor Guild Master, reading the hull a second time',
     passText:"Those are grip-marks. Something held the boat. The Guild Master read the hull a second time.",
     failText:"The recovered hull at the Lake Harbor has not been examined. INT Investigation DC 12 required.",
     npc:"long_john_silver_sen",
   },
-  quest_hunt_03: { id:'quest_hunt_03', type:'skill_check',
+  quest_hunt_03: { id:'quest_hunt_03', schema:'UQF-1.0', type:'skill_check',
     title:'Drag Tracks North',
     desc:'The north shore path shows disturbance. WIS Perception DC 13 to read the track pattern and locate where the creature returns to den.',
     hint:'Track from the North Shore Path. WIS Perception DC 13.',
-    activateNode:'ALF', activateCond:() => !!S_story.lakeClueFound,
-    checkStat:'wis', checkSkill:'Perception', checkDC:13, retryable:false,
-    checkPassFlag:'lakeLairLocated',
-    onPass:() => {
-      S_story.lakeLairLocated = true;
-      S_story.xp = (S_story.xp||0) + 250;
-      storyMsg('The tracks are consistent — something heavy, moving in and out of the water at the north end of the path. The drag marks lead to where the shelf collapsed. That is where it denned after the collapse opened the space.\n\nThe lair is north of here. Three of them, from the track spacing. They moved in this season.\n\nNorth Shore Den is now accessible. +250 XP.');
-    },
-    onFail:() => {
-      storyMsg('The mud is scuffed. The disturbance is there but the pattern is unclear from the path. Move further along the shelf to get a cleaner read.');
-    },
-    xpAward:0,
+    activateNode:'ALF', gate:{ flags:['lakeClueFound'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Perception', dc:13,
+        onPass:[
+          { kind:'mission_bit', flag:'lakeLairLocated' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.lakeLairLocated = true;
+            S_story.xp = (S_story.xp||0) + 250;
+            storyMsg('The tracks are consistent — something heavy, moving in and out of the water at the north end of the path. The drag marks lead to where the shelf collapsed. That is where it denned after the collapse opened the space.\n\nThe lair is north of here. Three of them, from the track spacing. They moved in this season.\n\nNorth Shore Den is now accessible. +250 XP.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            storyMsg('The mud is scuffed. The disturbance is there but the pattern is unclear from the path. Move further along the shelf to get a cleaner read.');
+          } },
+        ],
+      },
+    ],
     disposition:'"North. Past where the shelf fell in. They nest where the rock came down." — Elder Fisherwoman, from memory alone',
     passText:"North. Past where the shelf fell in. The track is read. The den location is confirmed.",
     failText:"The north shore path disturbance has not been tracked. WIS Perception DC 13 required.",
     npc:"long_john_silver_sen",
   },
-  quest_hunt_04: { id:'quest_hunt_04', type:'side',
+  // §ARCH-01 Wave 1o — side, battle completion. ⚠ onComplete(+500xp) ∧ xpAward:500 → +1000xp
+  // double-count, preserved verbatim (see project_open_gaps).
+  quest_hunt_04: { id:'quest_hunt_04', schema:'UQF-1.0', type:'side',
     title:'The North Den',
     desc:'Three drowners have denned at the shelf collapse since the rock fell this season. The boats stopped returning after they moved in. Clear the den.',
     hint:'Travel north to the Den and clear it.',
-    activateNode:'VAW', activateCond:() => !!S_story.lakeLairLocated,
-    completeFn:() => !!((S_story.defeatedBattles||{})['LD_DROWNERS']),
+    activateNode:'VAW', gate:{ flags:['lakeLairLocated'] },
+    completion:{ battles:['LD_DROWNERS'] }, bits:[],
     onComplete:() => {
       S_story.drownersDefeated = true;
       S_story.gold = (S_story.gold||0) + 500;

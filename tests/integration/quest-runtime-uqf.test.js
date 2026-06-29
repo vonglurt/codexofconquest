@@ -2025,3 +2025,84 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
     expect(r.xpAward).toBe(400);   // engine's side-quest path adds another +400 on completion (latent double-count, parity-preserved)
   });
 });
+
+// ── §ARCH-01 Wave 1o — Lake/Relay Monster Hunt arcs (quest_hunt_* / quest_hunt2_*) ──
+//
+// Two structurally identical investigate→clear arcs: hunt2 (Night Hag relay
+// road, WRO→BNX) and hunt (lake drowners, HFT→VAW). Each: structural hook side
+// (_01, gate:{}), 2 retryable:false skill_checks (_02/_03, checkStat → pure
+// parity, mission_bit{flag}+onPass/onFail _legacy_fn), and a lair-clear side
+// (_04, battle completion). ⚠ hunt_04/hunt2_04 share the sb_fight latent
+// double-count (onComplete +Nxp ∧ xpAward:N) — preserved verbatim.
+
+test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / quest_hunt2_*)', () => {
+  const SKILL = [
+    { id:'quest_hunt2_02', stat:'WIS', skill:'Perception',    dc:11, flag:'bendRoadClue',   gate:'{"flags":["huntHook2Received"]}', xp:150, knowledge:1 },
+    { id:'quest_hunt2_03', stat:'INT', skill:'Investigation', dc:13, flag:'bendLairFound',   gate:'{"flags":["bendRoadClue"]}',      xp:200, knowledge:0 },
+    { id:'quest_hunt_02',  stat:'INT', skill:'Investigation', dc:12, flag:'lakeClueFound',   gate:'{"flags":["huntHookReceived"]}',  xp:200, knowledge:1 },
+    { id:'quest_hunt_03',  stat:'WIS', skill:'Perception',    dc:13, flag:'lakeLairLocated', gate:'{"flags":["lakeClueFound"]}',     xp:250, knowledge:0 },
+  ];
+
+  test('all 8 validate; 4 skill_checks (no mission_bit label) + 4 side quests (hooks gate:{}, lairs battle-completion)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const sk = ['quest_hunt2_02','quest_hunt2_03','quest_hunt_02','quest_hunt_03'].map(id => {
+        const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit');
+        return { id, schema:q.schema, valid:validateQuest(q).valid, stat:b.stat, skill:b.skill, dc:b.dc, mbFlag:mb&&mb.flag, mbLabel:mb&&(mb.label||null), gate:JSON.stringify(q.gate), failFn:(b.onFail||[]).some(x=>x.kind==='_legacy_fn') };
+      });
+      const side = ['quest_hunt2_01','quest_hunt2_04','quest_hunt_01','quest_hunt_04'].map(id => {
+        const q = QUEST_DB[id];
+        return { id, schema:q.schema, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion), onComplete:typeof q.onComplete==='function' };
+      });
+      return { sk, side };
+    });
+    expect(r.sk.every(x => x.schema==='UQF-1.0' && x.valid && x.mbLabel===null && x.failFn)).toBe(true);
+    expect(r.sk).toMatchObject([
+      { id:'quest_hunt2_02', stat:'WIS', skill:'Perception',    dc:11, mbFlag:'bendRoadClue',   gate:'{"flags":["huntHook2Received"]}' },
+      { id:'quest_hunt2_03', stat:'INT', skill:'Investigation', dc:13, mbFlag:'bendLairFound',   gate:'{"flags":["bendRoadClue"]}' },
+      { id:'quest_hunt_02',  stat:'INT', skill:'Investigation', dc:12, mbFlag:'lakeClueFound',   gate:'{"flags":["huntHookReceived"]}' },
+      { id:'quest_hunt_03',  stat:'WIS', skill:'Perception',    dc:13, mbFlag:'lakeLairLocated', gate:'{"flags":["lakeClueFound"]}' },
+    ]);
+    expect(r.side).toMatchObject([
+      { id:'quest_hunt2_01', schema:'UQF-1.0', valid:true, gate:'{}',                        completion:'{"flags":["huntHook2Received"]}', onComplete:false },
+      { id:'quest_hunt2_04', schema:'UQF-1.0', valid:true, gate:'{"flags":["bendLairFound"]}',  completion:'{"battles":["BN_NIGHTHAG"]}',    onComplete:true },
+      { id:'quest_hunt_01',  schema:'UQF-1.0', valid:true, gate:'{}',                        completion:'{"flags":["huntHookReceived"]}',  onComplete:false },
+      { id:'quest_hunt_04',  schema:'UQF-1.0', valid:true, gate:'{"flags":["lakeLairLocated"]}', completion:'{"battles":["LD_DROWNERS"]}',  onComplete:true },
+    ]);
+  });
+
+  test('every skill_check PASS: done + flag + token + exact xp + knowledge count', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const got = await page.evaluate((SKILL) => {
+      const out = {};
+      for (const s of SKILL) {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 0; S_story.inventory = []; S_story.knowledge = [];
+        S_story[s.flag] = false; S_story.quests = { [s.id]:'active' };
+        _rollCeremonia(s.id);
+        out[s.id] = { status:S_story.quests[s.id], xp:S_story.xp, flag:S_story[s.flag],
+                      token:S_story.inventory.some(i=>i.flagRef===s.flag), knowledge:S_story.knowledge.length };
+      }
+      return out;
+    }, SKILL);
+    for (const s of SKILL) {
+      expect(got[s.id], s.id).toEqual({ status:'done', xp:s.xp, flag:true, token:true, knowledge:s.knowledge });
+    }
+  });
+
+  test('lair-clear onComplete closures grant item + knowledge + gold/xp (and xpAward still set → latent double-count)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = (id) => {
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.knowledge = [];
+        QUEST_DB[id].onComplete();
+        return { xp:S_story.xp, gold:S_story.gold, knowledge:S_story.knowledge.length, inv:S_story.inventory.map(i=>i.name), xpAward:QUEST_DB[id].xpAward };
+      };
+      return { hag:run('quest_hunt2_04'), den:run('quest_hunt_04') };
+    });
+    expect(r.hag.xp).toBe(600); expect(r.hag.gold).toBe(400); expect(r.hag.knowledge).toBe(1);
+    expect(r.hag.inv).toContain('Relay Station Token'); expect(r.hag.xpAward).toBe(600);  // engine adds another +600
+    expect(r.den.xp).toBe(500); expect(r.den.gold).toBe(500); expect(r.den.knowledge).toBe(1);
+    expect(r.den.inv).toContain('Drowned Compass'); expect(r.den.xpAward).toBe(500);      // engine adds another +500
+  });
+});
