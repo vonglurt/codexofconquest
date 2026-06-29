@@ -11815,71 +11815,90 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── §WHODUNIT-01: The Bilge Mystery ──
-  quest_bilge_01: { id:'quest_bilge_01', type:'side',
+  // §ARCH-01 Wave 1p — migrated legacy → UQF v1.0 (2026-06-28). The §WHODUNIT-01 Bilge Mystery —
+  // same investigate→clear shape as the hunt arcs (Wave 1o): hook side (_01), 2 retryable:false
+  // checkStat skill_checks (_02/_03), lair-clear side (_04, battle completion). Pure parity.
+  // ⚠ bilge_04 shares the sb_fight/hunt_04 latent double-count (onComplete +600xp ∧ xpAward:600 →
+  // +1200xp) — kept verbatim (see project_open_gaps).
+  quest_bilge_01: { id:'quest_bilge_01', schema:'UQF-1.0', type:'side',
     title:'Missing from the Hold',
     desc:'Three items are gone from the Tilbury Star\'s cargo hold: a cask of rendered tallow, two rope coils, and the eastern crossing charts. Crewman Delt was found in the bilge with no memory of six hours. The cook says it was the passenger.',
     hint:'Investigate the missing cargo aboard the Tilbury Star.',
-    activateNode:'SEN', activateCond:() => !!S_story.saltwickAccessed,
-    completeItems:[], completeFn:() => !!(S_story.whodunit2HookReceived),
-    waypointNode:'SEN', reward:0,
+    activateNode:'SEN', gate:{ flags:['saltwickAccessed'] },
+    completion:{ flags:['whodunit2HookReceived'] }, bits:[],
+    completeItems:[], waypointNode:'SEN', reward:0,
     disposition:'"The passenger came aboard at Saltwick. Nobody from Saltwick uses their real name." — The Cook, pointing at a closed cabin door',
     passText:"The passenger came aboard at Saltwick. Nobody from Saltwick uses their real name. The missing cargo investigation begins.",
     failText:"Three items are missing from the hold and have not been investigated yet.",
     npc:"long_john_silver_sen",
   },
 
-  quest_bilge_02: { id:'quest_bilge_02', type:'skill_check',
+  quest_bilge_02: { id:'quest_bilge_02', schema:'UQF-1.0', type:'skill_check',
     title:'The Port Drain',
     desc:'The bilge drain on the port side has been disturbed — the iron grate moved from inside. Cold-water smell underneath that is not standard bilge. INT Investigation DC 12 to identify what came through.',
     hint:'Examine the port bilge drain on the Tilbury Star. INT Investigation DC 12.',
-    activateNode:'SEN', activateCond:() => !!S_story.whodunit2HookReceived,
-    checkStat:'int', checkSkill:'Investigation', checkDC:12, retryable:false,
-    checkPassFlag:'whodunit2ClueFound',
-    onPass:() => {
-      S_story.whodunit2ClueFound = true;
-      S_story.xp = (S_story.xp||0) + 200;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Bilge Mystery: Port drain grate moved from inside. Scale residue: dark grey, translucent, two inches — sea spawn. Entered during Saltwick hull repair while ballast access was open three hours. Cook\'s theory (passenger Ord) is wrong. The passenger has been in his cabin.');
-      storyMsg('🔍 The grate was moved from inside. Scale residue on the iron: dark grey, translucent, two inches across. Sea spawn scales.\n\nThe creature entered through the drain during the hull repair at Saltwick — the ballast access was open for three hours while the strake was replaced. The creature used it.\n\nThe passenger Ord has been in his cabin. The creature has been in the bilge. The cook\'s theory is wrong.\n\nKnowledge entry added. +200 XP. Quest: What Delt Remembers now active.');
-    },
-    onFail:() => {
-      storyMsg('The drain channel is partially flooded — the morning tide moved the smaller evidence. The grate position is wrong for natural movement. Interview the crewman before the physical evidence degrades further.');
-    },
-    xpAward:0,
+    activateNode:'SEN', gate:{ flags:['whodunit2HookReceived'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'INT', skill:'Investigation', dc:12,
+        onPass:[
+          { kind:'mission_bit', flag:'whodunit2ClueFound' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.whodunit2ClueFound = true;
+            S_story.xp = (S_story.xp||0) + 200;
+            S_story.knowledge = S_story.knowledge || [];
+            S_story.knowledge.push('Bilge Mystery: Port drain grate moved from inside. Scale residue: dark grey, translucent, two inches — sea spawn. Entered during Saltwick hull repair while ballast access was open three hours. Cook\'s theory (passenger Ord) is wrong. The passenger has been in his cabin.');
+            storyMsg('🔍 The grate was moved from inside. Scale residue on the iron: dark grey, translucent, two inches across. Sea spawn scales.\n\nThe creature entered through the drain during the hull repair at Saltwick — the ballast access was open for three hours while the strake was replaced. The creature used it.\n\nThe passenger Ord has been in his cabin. The creature has been in the bilge. The cook\'s theory is wrong.\n\nKnowledge entry added. +200 XP. Quest: What Delt Remembers now active.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            storyMsg('The drain channel is partially flooded — the morning tide moved the smaller evidence. The grate position is wrong for natural movement. Interview the crewman before the physical evidence degrades further.');
+          } },
+        ],
+      },
+    ],
     disposition:'"The passenger didn\'t go below deck. I watched the door all three nights." — First Mate Carrow, reconsidering',
     passText:"The grate was moved from inside. The passenger did not go below deck. The drain tells a different story.",
     failText:"The port bilge drain on the Tilbury Star has not been examined. INT Investigation DC 12 required.",
     npc:"long_john_silver_sen",
   },
 
-  quest_bilge_03: { id:'quest_bilge_03', type:'skill_check',
+  quest_bilge_03: { id:'quest_bilge_03', schema:'UQF-1.0', type:'skill_check',
     title:'What Delt Remembers',
     desc:'Delt remembers cold from below — not darkness. A smell he cannot place. A sound he describes as "a reading sound." The eastern charts were on top of the tallow cask; the creature moved them aside. WIS Insight DC 13 to confirm what his sensory memories describe.',
     hint:'Interview Delt about his time in the bilge. WIS Insight DC 13.',
-    activateNode:'SEN', activateCond:() => !!S_story.whodunit2ClueFound,
-    checkStat:'wis', checkSkill:'Insight', checkDC:13, retryable:false,
-    checkPassFlag:'whodunit2WitnessRead',
-    onPass:() => {
-      S_story.whodunit2WitnessRead = true;
-      S_story.xp = (S_story.xp||0) + 200;
-      storyMsg('🎯 Delt\'s recall is specific. Cold from below, not the air. The smell is ocean-deep — not tidal, not harbor. Something from deep water in a confined space. The "reading sound" is sea spawn handling objects — they move things with gill-finned arms in a pattern that sounds like paper.\n\nThey took the tallow (food). The rope (nesting material). The charts were on top of the tallow and got displaced in the process.\n\nTwo creatures — the second followed the first through the drain within the first day. Delt was sedated by the proximity paralytic sea spawn use on prey. It disperses in air. He was not harmed. He was just in the way.\n\n+200 XP. Quest: Clear the Bilge now active.');
-    },
-    onFail:() => {
-      storyMsg('Delt\'s memory is still fragmented — whatever affected him is still clearing. He can describe the cold and the sound but not the source. The drain evidence is cleaner than the witness right now.');
-    },
-    xpAward:0,
+    activateNode:'SEN', gate:{ flags:['whodunit2ClueFound'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Insight', dc:13,
+        onPass:[
+          { kind:'mission_bit', flag:'whodunit2WitnessRead' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.whodunit2WitnessRead = true;
+            S_story.xp = (S_story.xp||0) + 200;
+            storyMsg('🎯 Delt\'s recall is specific. Cold from below, not the air. The smell is ocean-deep — not tidal, not harbor. Something from deep water in a confined space. The "reading sound" is sea spawn handling objects — they move things with gill-finned arms in a pattern that sounds like paper.\n\nThey took the tallow (food). The rope (nesting material). The charts were on top of the tallow and got displaced in the process.\n\nTwo creatures — the second followed the first through the drain within the first day. Delt was sedated by the proximity paralytic sea spawn use on prey. It disperses in air. He was not harmed. He was just in the way.\n\n+200 XP. Quest: Clear the Bilge now active.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            storyMsg('Delt\'s memory is still fragmented — whatever affected him is still clearing. He can describe the cold and the sound but not the source. The drain evidence is cleaner than the witness right now.');
+          } },
+        ],
+      },
+    ],
     disposition:'"Cold. And something that sounded like paper. I thought I was losing my mind." — Delt, crewman of the Tilbury Star',
     passText:"Cold. And something that sounded like paper. Delt was not losing his mind. The sensory memories confirm the intruder.",
     failText:"Delt interview is incomplete. WIS Insight DC 13 required to confirm what he heard in the bilge.",
     npc:"long_john_silver_sen",
   },
 
-  quest_bilge_04: { id:'quest_bilge_04', type:'side',
+  // §ARCH-01 Wave 1p — side, battle completion. ⚠ onComplete(+600xp) ∧ xpAward:600 → +1200xp
+  // double-count, preserved verbatim (see project_open_gaps).
+  quest_bilge_04: { id:'quest_bilge_04', schema:'UQF-1.0', type:'side',
     title:'Clear the Bilge',
     desc:'Two sea spawn entered the Tilbury Star\'s bilge through the port drain during the Saltwick hull repair. The cook\'s theory was wrong. Clear the bilge before the eastern crossing.',
     hint:'Descend to the bilge and clear the sea spawn.',
-    activateNode:'SEN', activateCond:() => !!S_story.whodunit2WitnessRead,
-    completeFn:() => !!((S_story.defeatedBattles||{})['MS_BILGE']),
+    activateNode:'SEN', gate:{ flags:['whodunit2WitnessRead'] },
+    completion:{ battles:['MS_BILGE'] }, bits:[],
     onComplete:() => {
       S_story.whodunit2Solved = true;
       S_story.gold = (S_story.gold||0) + 600;

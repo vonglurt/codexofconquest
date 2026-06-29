@@ -2106,3 +2106,65 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
     expect(r.den.inv).toContain('Drowned Compass'); expect(r.den.xpAward).toBe(500);      // engine adds another +500
   });
 });
+
+// ── §ARCH-01 Wave 1p — Bilge Mystery (§WHODUNIT-01, quest_bilge_01..04) ──
+//
+// Same investigate→clear shape as the hunt arcs: hook side (_01, flag gate),
+// 2 retryable:false checkStat skill_checks (_02 INT Investigation DC12, _03 WIS
+// Insight DC13; mission_bit{flag} no-label + onPass/onFail _legacy_fn), lair-clear
+// side (_04, battle completion + verbatim onComplete). ⚠ bilge_04 shares the
+// sb_fight/hunt_04 latent double-count (onComplete +600 ∧ xpAward:600 → +1200xp).
+
+test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => {
+  test('all 4 validate; 2 skill_checks (no label) + hook side (flag gate) + lair side (battle completion)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const sk = ['quest_bilge_02','quest_bilge_03'].map(id => {
+        const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit');
+        return { id, schema:q.schema, valid:validateQuest(q).valid, stat:b.stat, skill:b.skill, dc:b.dc, mbFlag:mb&&mb.flag, mbLabel:mb&&(mb.label||null), gate:JSON.stringify(q.gate), retryable:q.retryable, failFn:(b.onFail||[]).some(x=>x.kind==='_legacy_fn') };
+      });
+      const side = ['quest_bilge_01','quest_bilge_04'].map(id => {
+        const q = QUEST_DB[id];
+        return { id, schema:q.schema, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion), onComplete:typeof q.onComplete==='function' };
+      });
+      return { sk, side };
+    });
+    expect(r.sk.every(x => x.schema==='UQF-1.0' && x.valid && x.mbLabel===null && !x.retryable && x.failFn)).toBe(true);
+    expect(r.sk).toMatchObject([
+      { id:'quest_bilge_02', stat:'INT', skill:'Investigation', dc:12, mbFlag:'whodunit2ClueFound',   gate:'{"flags":["whodunit2HookReceived"]}' },
+      { id:'quest_bilge_03', stat:'WIS', skill:'Insight',       dc:13, mbFlag:'whodunit2WitnessRead', gate:'{"flags":["whodunit2ClueFound"]}' },
+    ]);
+    expect(r.side).toMatchObject([
+      { id:'quest_bilge_01', schema:'UQF-1.0', valid:true, gate:'{"flags":["saltwickAccessed"]}',   completion:'{"flags":["whodunit2HookReceived"]}', onComplete:false },
+      { id:'quest_bilge_04', schema:'UQF-1.0', valid:true, gate:'{"flags":["whodunit2WitnessRead"]}', completion:'{"battles":["MS_BILGE"]}',           onComplete:true },
+    ]);
+  });
+
+  test('both skill_check PASSes: done + flag + token + 200xp (03 no knowledge, 02 +1)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = (id, flag) => {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 0; S_story.inventory = []; S_story.knowledge = [];
+        S_story[flag] = false; S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        return { status:S_story.quests[id], xp:S_story.xp, flag:S_story[flag], token:S_story.inventory.some(i=>i.flagRef===flag), knowledge:S_story.knowledge.length };
+      };
+      return { c:run('quest_bilge_02','whodunit2ClueFound'), w:run('quest_bilge_03','whodunit2WitnessRead') };
+    });
+    expect(r.c).toEqual({ status:'done', xp:200, flag:true, token:true, knowledge:1 });
+    expect(r.w).toEqual({ status:'done', xp:200, flag:true, token:true, knowledge:0 });
+  });
+
+  test('bilge_04 onComplete: +600gp/+600xp closure + Sea Spawn Scale Fragment + knowledge + solved flag (xpAward:600 → latent +1200)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.knowledge = []; S_story.whodunit2Solved = false;
+      QUEST_DB.quest_bilge_04.onComplete();
+      return { xp:S_story.xp, gold:S_story.gold, knowledge:S_story.knowledge.length, solved:S_story.whodunit2Solved,
+               frag:S_story.inventory.some(i=>i.name==='Sea Spawn Scale Fragment'), xpAward:QUEST_DB.quest_bilge_04.xpAward };
+    });
+    expect(r.xp).toBe(600); expect(r.gold).toBe(600); expect(r.knowledge).toBe(1);
+    expect(r.solved).toBe(true); expect(r.frag).toBe(true); expect(r.xpAward).toBe(600);  // engine adds another +600 on completion
+  });
+});
