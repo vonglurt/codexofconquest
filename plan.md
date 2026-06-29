@@ -42,6 +42,25 @@
 - "Adjacent" means `(r±1, c)` or `(r, c±1)` — not stored edge links.
 - Quest activation checks: `CELL_GRID[\`${s.r},${s.c}\`] === quest.activateNode`.
 
+### Free-Movement / Mission-Gating Policy
+
+**The world is freely traversable. Quests never block movement. "Gating" applies only to the *mission list*, never to a *road*.**
+
+This is a hard invariant, not a preference. Two distinct, non-overlapping mechanisms — keep them separate:
+
+1. **Movement gating = terrain/geometry ONLY.** A step is refused for exactly two reasons (`mover.js` / inlined `moverMove`): `'oob'` (off the grid) and `'sea'` (destination cell is in the `impassable` set — sea + `IMPASSABLE_CELLS`). **No quest, flag, `S_story` field, mission bit, or item may ever cause a step to be refused.** There is no "blocked road," no "locked gate on a path," no "come back when you've done quest X to pass here." Water crossings are carried as **SEA_LANES land bridges** (passable cells), not as conditional barriers. If a future feature needs a place to feel impassable until something happens, it must do so by **changing terrain/`CELL_GRID`/`IMPASSABLE_CELLS` state** (the cell genuinely becomes/stops-being sea), *not* by consulting quest state inside the mover.
+
+2. **Mission gating = quest `gate` ONLY (listing, not traversal).** A quest's `gate` (UQF) / legacy `activateCond` decides **whether a mission is *offered/listed* when you arrive at its `activateNode`** — consulted in exactly one place, `storyCheckQuests` (`if (q.schema==='UQF-1.0' && !QuestRuntime.canActivate(q.id)) return;`). An unsatisfied gate means the quest simply isn't added to your journal yet (e.g. act 2 of an arc lists only after act 1 passes — sequential **mission availability**). You always reached the node freely; only the *listing* was deferred. `gate:{}` = always listed; `gate:{flags:[…]}` = listed once the prior flag is set. **`gate` is mission metadata; it must never be read by the mover or any movement/entry code.**
+
+**Allowed:** gating mission *listing* (sequential arc unlock, prerequisite missions, flag/node/battle-conditioned availability). **Forbidden:** gating *movement* on quest/flag state (a quest that bars a road, an exit that won't open until a mission is done, an NPC who physically blocks a cell).
+
+**Enforcement / audit (run before shipping any movement or quest-availability change):**
+- `grep -nE "canActivate|\.gate\b" mover.js` → must stay **0** (the movement kernel never reads quest gates).
+- The only `__moverBlocked` reasons may be `'oob'` and `'sea'`; adding a quest/flag-derived block reason is a policy violation.
+- `QuestRuntime.canActivate` / `q.gate` may be referenced only by quest-listing/journal code (`storyCheckQuests`), never by `moverMove` / `_enterEmptyCell` / any entry handler.
+
+*(Verified true as of Wave 2g, 2026-06-29: mover has 0 gate refs; `canActivate` is called only in `storyCheckQuests`; the bulk UQF migration moves `activateCond`→`gate` 1:1, so it changes mission-listing logic only and touches movement nowhere.)*
+
 ### Incremental Recitation Rule
 
 While writing vignette content, speak short segments aloud via `say` as you produce them — every page or every couple of paragraphs. Read the element type first, then its text.
