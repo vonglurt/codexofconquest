@@ -11616,91 +11616,116 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── §SPARK-02: The Dunfall Harmony Chain ──
-  quest_spark2_01: { id:'quest_spark2_01', type:'side',
+  // §ARCH-01 Wave 1k — migrated legacy → UQF v1.0 (2026-06-28). Pure parity. The three
+  // hook/waypoint side quests (01/03/05) carry NO onComplete — completion flags are set by
+  // story interaction elsewhere — so they migrate purely structurally: gate ← activateCond,
+  // completion ← completeFn, bits:[]. reward:0/waypointNode/completeItems kept as-is.
+  quest_spark2_01: { id:'quest_spark2_01', schema:'UQF-1.0', type:'side',
     title:'The Commissioner\'s Problem',
     desc:'A Commissioner of the Inland Revenue has arrived at Dunfall by Crown directive to assess harbor taxes. His credentials are inconsistent. The dock cat has been sitting directly on the assessment ledger since he arrived.',
     hint:'Speak to Commissioner Halvard Fehn at Dunfall.',
-    activateNode:'DNF', activateCond:() => !!S_story.dunfallAccessed,
-    completeItems:[], completeFn:() => !!(S_story.spark2HookReceived),
-    waypointNode:'DNF', reward:0,
+    activateNode:'DNF', gate:{ flags:['dunfallAccessed'] },
+    completion:{ flags:['spark2HookReceived'] }, bits:[],
+    completeItems:[], waypointNode:'DNF', reward:0,
     disposition:'"By order of the Inland Revenue, the animal currently impeding the tax ledger must be — it is sitting on my pen." — Commissioner Halvard Fehn',
     passText:"The Commissioner has been engaged. The dock cat is still on the pen. By order of the Inland Revenue — the animal must be. It is sitting on my pen.",
     failText:"Commissioner Halvard Fehn at Dunfall has not been spoken to yet.",
     npc:"long_john_silver_sen",
   },
 
-  quest_spark2_02: { id:'quest_spark2_02', type:'skill_check',
+  // §ARCH-01 Wave 1k — migrated legacy → UQF v1.0 (2026-06-28). Pure parity. checkPassFlag has
+  // no bitLabel → mission_bit{flag} falls back to _flagToLabel. _legacy_fn carries +150xp / Bram's
+  // Fish Scale / msg; onFail (msg only) via _legacy_fn. retryable:true.
+  quest_spark2_02: { id:'quest_spark2_02', schema:'UQF-1.0', type:'skill_check',
     title:'Bram and the Ledger',
     desc:'The dock cat is Bram. He has been on Mairén\'s ledger for three years. He watches a specific point on the south dock wall. WIS Animal Handling DC 11 to understand what Bram is watching — it is not the Commissioner.',
     hint:'Read what Bram is watching at Dunfall dock. WIS Animal Handling DC 11.',
-    activateNode:'DNF', activateCond:() => !!S_story.spark2HookReceived,
-    checkStat:'wis', checkSkill:'Animal Handling', checkDC:11, retryable:true,
-    checkPassFlag:'bramBefriended',
-    onPass:() => {
-      S_story.bramBefriended = true;
-      S_story.xp = (S_story.xp||0) + 150;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:"Bram's Fish Scale", icon:'🐟', type:'misc', desc:'A single scale from the morning catch. Bram placed it near your hand — not a gift, an endorsement. Dunfall cats give these only to people who notice what they are actually watching.', sell:0 });
-      storyMsg('🐟 Bram is not watching the Commissioner. He is watching a point on the south dock wall — where the fish market sweep leaves grain husks at the joint where stone meets wood.\n\nSomething is there. Something small.\n\nBram places one fish scale near your hand with the gravity of a cat making a formal statement.\n\nThe Commissioner notes you are "communicating with the obstruction." His appointment certificate, visible in his open case, lists the Western Revenue Office, Third Circuit — an office that closed thirteen years ago.\n\nBram\'s Fish Scale added. +150 XP. Quest: Bram Leads South now active.');
-    },
-    onFail:() => {
-      storyMsg('Bram does not respond. He is watching something with the focused certainty of a cat who has a very specific reason. The reason is not yet apparent.');
-    },
-    xpAward:0,
+    activateNode:'DNF', gate:{ flags:['spark2HookReceived'] }, retryable:true,
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Animal Handling', dc:11,
+        onPass:[
+          { kind:'mission_bit', flag:'bramBefriended' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.bramBefriended = true;
+            S_story.xp = (S_story.xp||0) + 150;
+            const inv = S_story.inventory = S_story.inventory || [];
+            inv.push({ name:"Bram's Fish Scale", icon:'🐟', type:'misc', desc:'A single scale from the morning catch. Bram placed it near your hand — not a gift, an endorsement. Dunfall cats give these only to people who notice what they are actually watching.', sell:0 });
+            storyMsg('🐟 Bram is not watching the Commissioner. He is watching a point on the south dock wall — where the fish market sweep leaves grain husks at the joint where stone meets wood.\n\nSomething is there. Something small.\n\nBram places one fish scale near your hand with the gravity of a cat making a formal statement.\n\nThe Commissioner notes you are "communicating with the obstruction." His appointment certificate, visible in his open case, lists the Western Revenue Office, Third Circuit — an office that closed thirteen years ago.\n\nBram\'s Fish Scale added. +150 XP. Quest: Bram Leads South now active.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            storyMsg('Bram does not respond. He is watching something with the focused certainty of a cat who has a very specific reason. The reason is not yet apparent.');
+          } },
+        ],
+      },
+    ],
     disposition:'"That is a fish scale. He gave you a fish scale. What does that mean?" — Commissioner Halvard Fehn',
     passText:"Bram gave you a fish scale. The Commissioner does not understand what that means. But you do.",
     failText:"Bram has not been read yet. WIS Animal Handling DC 11 required at the Dunfall dock.",
     npc:"long_john_silver_sen",
   },
 
-  quest_spark2_03: { id:'quest_spark2_03', type:'side',
+  // §ARCH-01 Wave 1k — migrated legacy → UQF v1.0 (2026-06-28). Structural side quest, no onComplete.
+  quest_spark2_03: { id:'quest_spark2_03', schema:'UQF-1.0', type:'side',
     title:'Bram Leads South',
     desc:'Bram leads you to the fish market sweep pile — a grain-husk mound behind the south dock wall joint. At the center: Oat. A harbor mouse, white-gray, sitting in someone else\'s grain with complete serenity.',
     hint:'Follow Bram to Oat at the Dunfall south dock.',
-    activateNode:'DNF', activateCond:() => !!S_story.bramBefriended,
-    completeItems:[], completeFn:() => !!(S_story.oatMet),
-    waypointNode:'DNF', reward:0,
+    activateNode:'DNF', gate:{ flags:['bramBefriended'] },
+    completion:{ flags:['oatMet'] }, bits:[],
+    completeItems:[], waypointNode:'DNF', reward:0,
     disposition:'"A cat and a mouse. Sitting together. I was told this was a standard harbor assessment." — Commissioner Halvard Fehn',
     passText:"A cat and a mouse sitting together. Bram led you to Oat. The Commissioner was told this was a standard harbor assessment.",
     failText:"Bram has not led south yet. Follow the dock cat to the fish market sweep pile.",
     npc:"long_john_silver_sen",
   },
 
-  quest_spark2_04: { id:'quest_spark2_04', type:'skill_check',
+  // §ARCH-01 Wave 1k — migrated legacy → UQF v1.0 (2026-06-28). Pure parity. **retryable:false** —
+  // a FAIL runs the onFail msg then locks ('failed'), exactly as legacy. checkPassFlag (no bitLabel)
+  // → mission_bit{flag}; _legacy_fn carries +200xp / knowledge / Oat's Harbor Bead splice / Dunfall
+  // Drift Spore / msg.
+  quest_spark2_04: { id:'quest_spark2_04', schema:'UQF-1.0', type:'skill_check',
     title:'What Oat Carries',
     desc:'Oat has a faint amber glow on his left ear — a drift spore colony from the loch shallows. Related to the Deep Warmth Eel chemistry, but airborne. INT Nature DC 12 to identify what the colony is doing to the dock ecosystem.',
     hint:'Identify the drift spore on Oat\'s ear. INT Nature DC 12.',
-    activateNode:'DNF', activateCond:() => !!S_story.oatMet,
-    checkStat:'int', checkSkill:'Nature', checkDC:12, retryable:false,
-    checkPassFlag:'brimFound',
-    onPass:() => {
-      S_story.brimFound = true;
-      S_story.xp = (S_story.xp||0) + 200;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Dunfall Drift Spore: A loch-shore spore colony related to Warmth Eel bioluminescence. Colonizes small mammals; produces airborne chemistry of mild social harmonization within six feet. Not mind control — gentling. Commissioner Fehn has been in the drift radius for two days. His three inconsistent identities are authentic — a man trying to remember which name he is using today.');
-      const inv = S_story.inventory = S_story.inventory || [];
-      const obIdx = inv.findIndex(i => i.name === "Oat's Harbor Bead");
-      if (obIdx !== -1) inv.splice(obIdx, 1);
-      inv.push({ name:'Dunfall Drift Spore', icon:'✨', type:'misc', desc:'A pinch of amber spore in a small clay vial — harvested from Oat\'s left ear by Bram, using one claw with unusual precision. Related to Deep Warmth Eel chemistry. Airborne. Mild social harmonization. Do not inhale more than necessary.', sell:0 });
-      storyMsg('✨ The glow on Oat\'s ear is a drift spore colony from the loch shallows. Same chemistry family as Clot\'s Glow and the Deep Warmth Eel — but airborne, dispersed by small mammals in the shore reeds.\n\nWithin six feet: mild social harmonization. Gentling, not compulsion.\n\nThe Commissioner has been in the drift radius for two days. His inconsistencies are not deception — they are three identities held simultaneously by a man who was given a new name and cannot entirely let go of the other two.\n\nBram harvests the spore from Oat\'s ear with one claw. He places the sealed vial on the dock ledge. Oat watches. The Commissioner says something about his grandfather\'s commission.\n\nOat\'s Harbor Bead consumed. Dunfall Drift Spore added. Knowledge entry added. +200 XP.');
-    },
-    onFail:() => {
-      storyMsg('The amber glow is there — not Bram\'s eye-shine. Something biological on Oat\'s fur. The chemistry is at the edge of identification. Oat holds perfectly still while you look. This is unusual for a harbor mouse.');
-    },
-    xpAward:0,
+    activateNode:'DNF', gate:{ flags:['oatMet'] }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'INT', skill:'Nature', dc:12,
+        onPass:[
+          { kind:'mission_bit', flag:'brimFound' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.brimFound = true;
+            S_story.xp = (S_story.xp||0) + 200;
+            S_story.knowledge = S_story.knowledge || [];
+            S_story.knowledge.push('Dunfall Drift Spore: A loch-shore spore colony related to Warmth Eel bioluminescence. Colonizes small mammals; produces airborne chemistry of mild social harmonization within six feet. Not mind control — gentling. Commissioner Fehn has been in the drift radius for two days. His three inconsistent identities are authentic — a man trying to remember which name he is using today.');
+            const inv = S_story.inventory = S_story.inventory || [];
+            const obIdx = inv.findIndex(i => i.name === "Oat's Harbor Bead");
+            if (obIdx !== -1) inv.splice(obIdx, 1);
+            inv.push({ name:'Dunfall Drift Spore', icon:'✨', type:'misc', desc:'A pinch of amber spore in a small clay vial — harvested from Oat\'s left ear by Bram, using one claw with unusual precision. Related to Deep Warmth Eel chemistry. Airborne. Mild social harmonization. Do not inhale more than necessary.', sell:0 });
+            storyMsg('✨ The glow on Oat\'s ear is a drift spore colony from the loch shallows. Same chemistry family as Clot\'s Glow and the Deep Warmth Eel — but airborne, dispersed by small mammals in the shore reeds.\n\nWithin six feet: mild social harmonization. Gentling, not compulsion.\n\nThe Commissioner has been in the drift radius for two days. His inconsistencies are not deception — they are three identities held simultaneously by a man who was given a new name and cannot entirely let go of the other two.\n\nBram harvests the spore from Oat\'s ear with one claw. He places the sealed vial on the dock ledge. Oat watches. The Commissioner says something about his grandfather\'s commission.\n\nOat\'s Harbor Bead consumed. Dunfall Drift Spore added. Knowledge entry added. +200 XP.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            storyMsg('The amber glow is there — not Bram\'s eye-shine. Something biological on Oat\'s fur. The chemistry is at the edge of identification. Oat holds perfectly still while you look. This is unusual for a harbor mouse.');
+          } },
+        ],
+      },
+    ],
     disposition:'"My grandfather was the First Commodore of the Highland Fleet. This is a relevant credential." — Commissioner Halvard Fehn (there is no Highland Fleet)',
     passText:"The drift spore on Oat ear is identified. The Commissioner mentions a Highland Fleet. There is no Highland Fleet.",
     failText:"The drift spore colony on Oat ear has not been identified. INT Nature DC 12 required.",
     npc:"long_john_silver_sen",
   },
 
-  quest_spark2_05: { id:'quest_spark2_05', type:'side',
+  // §ARCH-01 Wave 1k — migrated legacy → UQF v1.0 (2026-06-28). Structural side quest, no onComplete.
+  quest_spark2_05: { id:'quest_spark2_05', schema:'UQF-1.0', type:'side',
     title:'Commissioner Fehn\'s Three Names',
     desc:'Three inconsistencies: the Inland Revenue Division that does not exist, the Highland Fleet his grandfather commanded that does not exist, the appointment certificate from an office that closed before his appointment date. Commissioner Halvard Fehn is holding three identities and losing track of which one he is today.',
     hint:'Confront Commissioner Fehn with the three inconsistencies at Dunfall.',
-    activateNode:'DNF', activateCond:() => !!S_story.brimFound,
-    completeItems:[], completeFn:() => !!(S_story.fehnConfessed),
-    waypointNode:'DNF', reward:0,
+    activateNode:'DNF', gate:{ flags:['brimFound'] },
+    completion:{ flags:['fehnConfessed'] }, bits:[],
+    completeItems:[], waypointNode:'DNF', reward:0,
     disposition:'"I was told to use the name until the investigation closed. It has been nine years. I am not certain anyone is still watching." — Commissioner Halvard Fehn',
     passText:"He was told to use the name until the investigation closed. It has been nine years. He is not certain anyone is still watching.",
     failText:"The three inconsistencies in Commissioner Fehn identity have not been confronted yet.",

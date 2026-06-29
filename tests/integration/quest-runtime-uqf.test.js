@@ -1691,3 +1691,90 @@ test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', 
     expect(r.fails).toBe(1);
   });
 });
+
+// ── §ARCH-01 Wave 1k — Spark2: the Dunfall Harmony Chain (quest_spark2_01..05) ──
+//
+// The Bram/Oat/Fehn arc at Dunfall (DNF). Two skill_checks: 02 (WIS Animal
+// Handling DC11, retryable) and 04 (INT Nature DC12, **non-retryable** — a FAIL
+// runs the onFail msg then locks). Both checkPassFlags have no bitLabel →
+// _flagToLabel fallback. The three side quests (01/03/05) are pure hook/waypoint
+// gates with NO onComplete — completion flags set by story interaction elsewhere.
+
+test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_01..05)', () => {
+  test('the two skill_checks validate with exact stat/skill/dc, mission_bit (no label), gates, retryability', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => ['quest_spark2_02','quest_spark2_04'].map(id => {
+      const q = QUEST_DB[id]; const bit = q.bits[0];
+      const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
+      return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, skill:bit.skill, dc:bit.dc,
+               mbFlag:mb && mb.flag, mbLabel:mb && (mb.label||null),
+               hasLegacyFnPass:(bit.onPass||[]).some(b=>b.kind==='_legacy_fn'),
+               hasLegacyFnFail:(bit.onFail||[]).some(b=>b.kind==='_legacy_fn'),
+               gate:JSON.stringify(q.gate), retryable:q.retryable };
+    }));
+    expect(r.every(x => x.schema==='UQF-1.0' && x.valid && x.hasLegacyFnPass && x.hasLegacyFnFail)).toBe(true);
+    expect(r).toMatchObject([
+      { id:'quest_spark2_02', stat:'WIS', skill:'Animal Handling', dc:11, mbFlag:'bramBefriended', mbLabel:null, gate:'{"flags":["spark2HookReceived"]}', retryable:true },
+      { id:'quest_spark2_04', stat:'INT', skill:'Nature',          dc:12, mbFlag:'brimFound',       mbLabel:null, gate:'{"flags":["oatMet"]}',             retryable:false },
+    ]);
+  });
+
+  test('the three side quests validate as structural completion gates (no onComplete)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => ['quest_spark2_01','quest_spark2_03','quest_spark2_05'].map(id => {
+      const q = QUEST_DB[id];
+      return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid,
+               gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion),
+               hasOnComplete:typeof q.onComplete==='function' };
+    }));
+    expect(r).toMatchObject([
+      { id:'quest_spark2_01', schema:'UQF-1.0', type:'side', valid:true, gate:'{"flags":["dunfallAccessed"]}', completion:'{"flags":["spark2HookReceived"]}', hasOnComplete:false },
+      { id:'quest_spark2_03', schema:'UQF-1.0', type:'side', valid:true, gate:'{"flags":["bramBefriended"]}',  completion:'{"flags":["oatMet"]}',            hasOnComplete:false },
+      { id:'quest_spark2_05', schema:'UQF-1.0', type:'side', valid:true, gate:'{"flags":["brimFound"]}',       completion:'{"flags":["fehnConfessed"]}',     hasOnComplete:false },
+    ]);
+  });
+
+  test('spark2_02 PASS: done, bramBefriended flag+token, Bram\'s Fish Scale, +150xp', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+      S_story.level = 20; S_story.xp = 0; S_story.inventory = [];
+      S_story.bramBefriended = false; S_story.quests = { quest_spark2_02:'active' };
+      _rollCeremonia('quest_spark2_02');
+      return { status:S_story.quests.quest_spark2_02, flag:S_story.bramBefriended, xp:S_story.xp,
+               hasToken:S_story.inventory.some(i=>i.flagRef==='bramBefriended'),
+               hasScale:S_story.inventory.some(i=>i.name==="Bram's Fish Scale") };
+    });
+    expect(r).toEqual({ status:'done', flag:true, xp:150, hasToken:true, hasScale:true });
+  });
+
+  test('spark2_04 PASS: +200xp, knowledge, splices Oat\'s Harbor Bead → Dunfall Drift Spore, sets brimFound', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+      S_story.level = 20; S_story.xp = 0; S_story.knowledge = [];
+      S_story.inventory = [{ name:"Oat's Harbor Bead", icon:'🔮', type:'misc', sell:0 }];
+      S_story.brimFound = false; S_story.quests = { quest_spark2_04:'active' };
+      _rollCeremonia('quest_spark2_04');
+      return { status:S_story.quests.quest_spark2_04, flag:S_story.brimFound, xp:S_story.xp, knowledge:S_story.knowledge.length,
+               beadGone:!S_story.inventory.some(i=>i.name==="Oat's Harbor Bead"),
+               hasSpore:S_story.inventory.some(i=>i.name==='Dunfall Drift Spore') };
+    });
+    expect(r).toEqual({ status:'done', flag:true, xp:200, knowledge:1, beadGone:true, hasSpore:true });
+  });
+
+  test('spark2_04 non-retryable FAIL: runs onFail msg then locks, no flag/reward', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { int:-100 };       // deterministic fail
+      S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+      S_story.xp = 0; S_story.knowledge = []; S_story.inventory = [];
+      S_story.brimFound = false; S_story.quests = { quest_spark2_04:'active' };
+      _rollCeremonia('quest_spark2_04');
+      return { status:S_story.quests.quest_spark2_04, flag:S_story.brimFound, xp:S_story.xp,
+               knowledge:S_story.knowledge.length, hasSpore:S_story.inventory.some(i=>i.name==='Dunfall Drift Spore') };
+    });
+    expect(r.status).toBe('failed');   // retryable:false ⇒ locked
+    expect(r.flag).toBe(false); expect(r.xp).toBe(0); expect(r.knowledge).toBe(0); expect(r.hasSpore).toBe(false);
+  });
+});
