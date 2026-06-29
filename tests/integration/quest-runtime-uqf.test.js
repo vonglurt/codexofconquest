@@ -2543,3 +2543,99 @@ test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket
     expect(r).toEqual({ status:'active', esc:false, rope:false, xp:0, tokens:0, failures:1 });
   });
 });
+
+// ── §ARCH-01 Wave 1u — Atlantean iodine chain (iodine_01, shore_02, forge_01, sunken_01) ──
+//
+// The four skill_checks of the §CROWN-01 iodine reduction chain (INN→DS1→DSF→DA1).
+// All retryable:true, NO checkPassFlag/checkFailFlag — each carries a rich onPass closure
+// (item push / gold / knowledge / storyMsg + flag set) preserved verbatim as a single
+// _legacy_fn ordered AFTER reward{xp} (mirrors legacy xpAward-then-onPass()). No onFail → [].
+// Gates: iodine_01 {questsAttempted:['quest_inn_01']}; forge_01 {flags:['atlanteanProcessKnown']};
+// shore_02/sunken_01 {} (were () => true). The side acts (iodine_02/03, shore_01, forge_02,
+// sunken_02) stay legacy.
+const IODINE = [
+  { id:'quest_iodine_01', stat:'int', dc:11, xp:100, gold:0,   skill:'INT Investigation', flag:null,             items:['Iodine Salt'],              knowledge:0 },
+  { id:'quest_shore_02',  stat:'wis', dc:12, xp:150, gold:150, skill:'WIS Perception',    flag:'kelpBedsCharted', items:['Swamp Kelp','Swamp Kelp'], knowledge:0 },
+  { id:'quest_forge_01',  stat:'int', dc:14, xp:300, gold:300, skill:'INT Arcana',        flag:'forgeActivated',  items:[],                           knowledge:0 },
+  { id:'quest_sunken_01', stat:'int', dc:13, xp:250, gold:250, skill:'INT Arcana',        flag:'inscriptionRead', items:[],                           knowledge:1 },
+];
+
+test.describe('§ARCH-01 Wave 1u — Atlantean iodine chain (iodine_01/shore_02/forge_01/sunken_01)', () => {
+  test('all 4 validate as UQF skill_checks; retryable:true, onPass [reward{xp}, _legacy_fn], onFail:[]', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((IODINE) => IODINE.map(s => {
+      const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
+      const rw = (b.onPass || []).find(x => x.kind === 'reward');
+      return { id:s.id, schema:q.schema, valid:validateQuest(q).valid, type:q.type,
+               retryable:q.retryable, stat:b.stat, skill:b.skill, dc:b.dc,
+               onPassKinds:(b.onPass || []).map(x => x.kind), xp:rw && rw.xp,
+               onFailLen:(b.onFail || []).length };
+    }), IODINE);
+    for (const s of IODINE) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toEqual({ id:s.id, schema:'UQF-1.0', valid:true, type:'skill_check',
+        retryable:true, stat:s.stat.toUpperCase(), skill:s.skill, dc:s.dc,
+        onPassKinds:['reward', '_legacy_fn'], xp:s.xp, onFailLen:0 });
+    }
+  });
+
+  test('declarative gates: iodine_01 needs quest_inn_01 attempted, forge_01 needs atlanteanProcessKnown, shore_02/sunken_01 always', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = {}; S_story.atlanteanProcessKnown = false;
+      const closed = {};
+      ['quest_iodine_01','quest_shore_02','quest_forge_01','quest_sunken_01'].forEach(id => closed[id] = QuestRuntime.canActivate(id));
+      S_story.quests = { quest_inn_01:'active' }; S_story.atlanteanProcessKnown = true;
+      const open = {};
+      ['quest_iodine_01','quest_shore_02','quest_forge_01','quest_sunken_01'].forEach(id => open[id] = QuestRuntime.canActivate(id));
+      return { closed, open };
+    });
+    expect(r.closed).toEqual({ quest_iodine_01:false, quest_shore_02:true, quest_forge_01:false, quest_sunken_01:true });
+    expect(r.open).toEqual({ quest_iodine_01:true, quest_shore_02:true, quest_forge_01:true, quest_sunken_01:true });
+  });
+
+  test('PASS parity: done + exact xp/gold + onPass closure side effects (items / flag / knowledge)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((IODINE) => IODINE.map(s => {
+      S_story.abilityScores = { [s.stat]: 40 };
+      S_story.level = 20; S_story.xp = 0; S_story.gold = 0;
+      S_story.inventory = []; S_story.knowledge = [];
+      if (s.flag) S_story[s.flag] = false;
+      S_story.quests = { [s.id]:'active' };
+      _rollCeremonia(s.id);
+      return { id:s.id, status:S_story.quests[s.id], xp:S_story.xp, gold:S_story.gold,
+               flag: s.flag ? S_story[s.flag] : null,
+               items: S_story.inventory.map(i => i.name), knowledge: S_story.knowledge.length };
+    }), IODINE);
+    for (const s of IODINE) {
+      const got = r.find(x => x.id === s.id);
+      expect(got.status).toBe('done');
+      expect(got.xp).toBe(s.xp);
+      expect(got.gold).toBe(s.gold);
+      expect(got.flag).toBe(s.flag ? true : null);
+      expect(got.items).toEqual(s.items);
+      expect(got.knowledge).toBe(s.knowledge);
+    }
+  });
+
+  test('FAIL parity (retryable): stays active, no xp/gold, no closure effects, attempt recorded', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((IODINE) => IODINE.map(s => {
+      S_story.abilityScores = { [s.stat]: -100 };
+      S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+      S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.knowledge = [];
+      if (s.flag) S_story[s.flag] = false;
+      S_story.quests = { [s.id]:'active' };
+      _rollCeremonia(s.id);
+      return { id:s.id, status:S_story.quests[s.id], xp:S_story.xp, gold:S_story.gold,
+               flag: s.flag ? S_story[s.flag] : null, items:S_story.inventory.length,
+               knowledge:S_story.knowledge.length,
+               failures:(S_story.skillCheckAttempts[s.id] || {}).failures };
+    }), IODINE);
+    for (const s of IODINE) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toEqual({ id:s.id, status:'active', xp:0, gold:0,
+        flag: s.flag ? false : null, items:0, knowledge:0, failures:1 });
+    }
+  });
+});

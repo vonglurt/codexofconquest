@@ -10852,22 +10852,32 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── §CROWN-01 Amendment A: Iodine track ──
+  // §ARCH-01 Wave 1u — the four iodine-chain skill_checks (iodine_01 INN, shore_02 DS1,
+  // forge_01 DSF, sunken_01 DA1) migrated legacy → UQF v1.0 (2026-06-29). All retryable:true,
+  // no checkPassFlag/checkFailFlag. Each has a rich onPass closure (item push / gold / knowledge /
+  // storyMsg + flag set) that resists clean decomposition → kept verbatim as a single _legacy_fn,
+  // ordered AFTER reward{xp} (mirrors legacy xpAward-then-onPass()). No onFail closures → onFail:[].
+  // activateCond → gate: iodine_01 {questsAttempted:['quest_inn_01']}; forge_01 {flags:
+  // ['atlanteanProcessKnown']}; shore_02/sunken_01 () => true → {}. The side acts iodine_02/03,
+  // shore_01, forge_02, sunken_02 stay legacy (onComplete path) — only the skill_checks migrate.
   quest_iodine_01: { id:'quest_iodine_01', type:'skill_check',
     title:'The Salt Test',
     desc:'The Innmother is burning something at the hearth. The smoke smells of the sea at low tide — concentrated. Iodine.',
     hint:'Identify the process: kelp reduction to iodine salt.',
-    activateNode:'INN', activateCond:() => (S_story.quests['quest_inn_01']||'') !== '',
-    checkAbility:'int', checkLabel:'INT Investigation', checkDC:11, retryable:true,
-    xpAward:100,
+    schema:'UQF-1.0',
+    activateNode:'INN',
+    gate:{ questsAttempted:['quest_inn_01'] },
+    retryable:true,
     vignetteText:"The hearth smoke has a character that is not wood smoke — the smell of the sea at low tide on a hot day, concentrated. The salt in the ash tray has the texture of sea salt but the color of charred residue. She skims it with a flat tool and stores it in a jar she does not label.\n\nShe is burning kelp. The process is coastal in origin — craftspeople used the same reduction along the Atlantean shore routes. The kelp burns to iodine salt. The iodine was a byproduct of their metalwork. She is using it for something else. The result is the same salt.",
     passText:"You name the compound before she explains it. 'You know the process,' she says. The jar is yours.",
     failText:"You ask what she is burning. She says: kelp. You ask why. She describes the result without naming it. You receive the information but not the recognition.",
-    completeItems:[],
-    onPass:() => {
-      S_story.inventory = S_story.inventory || [];
-      S_story.inventory.push({ name:'Iodine Salt', icon:'🧂', sell:5, type:'craft', desc:'+3 to any skill check when burned before rolling. Coastal reduction product — the Atlantean clarity method.' });
-      _innKindness(1);
-    },
+    bits:[{ kind:'skill_check', stat:'INT', skill:'INT Investigation', dc:11,
+      onPass:[{ kind:'reward', xp:100 }, { kind:'_legacy_fn', fn:() => {
+        S_story.inventory = S_story.inventory || [];
+        S_story.inventory.push({ name:'Iodine Salt', icon:'🧂', sell:5, type:'craft', desc:'+3 to any skill check when burned before rolling. Coastal reduction product — the Atlantean clarity method.' });
+        _innKindness(1);
+      } }],
+      onFail:[] }],
     disposition:'"The reduction is the same each time. Once you know the smell you cannot not know it." — The Innmother\'s Hall',
     npc:"long_john_silver_sen",
   },
@@ -10940,21 +10950,23 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'The Bed Register',
     desc:'The kelp beds offshore are shifting south. The Tide Reader has been tracking the pattern. It points to something under the bottom.',
     hint:'At The Drowned Shore, read the tide register — WIS Perception DC 12.',
-    activateNode:'DS1', activateCond:() => true,
-    checkAbility:'wis', checkLabel:'WIS Perception', checkDC:12, retryable:true,
-    xpAward:150,
+    schema:'UQF-1.0',
+    activateNode:'DS1',
+    gate:{},
+    retryable:true,
     vignetteText:"The kelp beds sit thirty feet offshore. The Tide Reader's notebook is open on the bank — forty years of morning positions, each entry in the same handwriting, each entry slightly further south than the one before it.\n\nThe pattern in the notebook is not drift. Drift is random. This is directional, consistent, accelerating over the last decade. The beds are being drawn. Something south of the bedrock is producing a tidal pull too small for the charts but large enough for forty years of morning entries.\n\nYou read the notebook. The last entry has a bearing.",
     passText:"The bearing in the notebook matches the forge's position. She marked it six years ago and has not mentioned it. She was waiting for someone who could confirm what she already knew.",
     failText:"The notebook entries blur together — the pattern is there, but the instrument for reading it isn't assembled yet. She says: come back when the water has done another turn.",
-    completeItems:[],
-    onPass:() => {
-      S_story.kelpBedsCharted = true;
-      S_story.gold = (S_story.gold||0) + 150;
-      S_story.inventory = S_story.inventory || [];
-      S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the tidal beds. Burns to iodine salt at a hearth or forge.' });
-      S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the tidal beds. Burns to iodine salt at a hearth or forge.' });
-      storyMsg("🌿🌿 Two bundles of Swamp Kelp taken from the tidal beds. 150gp.");
-    },
+    bits:[{ kind:'skill_check', stat:'WIS', skill:'WIS Perception', dc:12,
+      onPass:[{ kind:'reward', xp:150 }, { kind:'_legacy_fn', fn:() => {
+        S_story.kelpBedsCharted = true;
+        S_story.gold = (S_story.gold||0) + 150;
+        S_story.inventory = S_story.inventory || [];
+        S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the tidal beds. Burns to iodine salt at a hearth or forge.' });
+        S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the tidal beds. Burns to iodine salt at a hearth or forge.' });
+        storyMsg("🌿🌿 Two bundles of Swamp Kelp taken from the tidal beds. 150gp.");
+      } }],
+      onFail:[] }],
     disposition:'"The beds do not shift without reason. The reason has a location." — The Tide Reader, Drowned Shore',
     npc:"long_john_silver_sen",
   },
@@ -10963,18 +10975,20 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'The Mechanism',
     desc:'The Atlantean Forge is sealed. The mechanism requires the knowledge of the process — not force.',
     hint:'At The Atlantean Forge, unlock the mechanism — INT Arcana DC 14. Requires knowing the Atlantean Process.',
-    activateNode:'DSF', activateCond:() => !!S_story.atlanteanProcessKnown,
-    checkAbility:'int', checkLabel:'INT Arcana', checkDC:14, retryable:true,
-    xpAward:300,
+    schema:'UQF-1.0',
+    activateNode:'DSF',
+    gate:{ flags:['atlanteanProcessKnown'] },
+    retryable:true,
     vignetteText:"The mechanism is recessed into the working surface. Three channels, each one a different depth, each one corresponding to a step in the reduction sequence: kelp bed, salt tray, charged element. The Atlantean smiths built their unlock into the process itself — the mechanism only yields to someone who has run the sequence.\n\nYou have run the sequence. The burns are in the salt marks on your hands. The charged reduction is a thing you know, not a thing you remember.\n\nYou apply the knowledge in the correct order. The mechanism recognizes the sequence.",
     passText:"The forge unlocks from the inside — the bellows engage, the ventilation clears, the surface temperature rises to working heat. It has been waiting for this for a long time. The waiting was not patience. It was accuracy.",
     failText:"The sequence is almost right. One step is inverted — you have the knowledge but not yet the order. The mechanism holds. Try again when the order is clearer.",
-    completeItems:[],
-    onPass:() => {
-      S_story.forgeActivated = true;
-      S_story.gold = (S_story.gold||0) + 300;
-      storyMsg("🔥 The Atlantean Forge activates. The bellows engage. The heat rises from below. +300gp.");
-    },
+    bits:[{ kind:'skill_check', stat:'INT', skill:'INT Arcana', dc:14,
+      onPass:[{ kind:'reward', xp:300 }, { kind:'_legacy_fn', fn:() => {
+        S_story.forgeActivated = true;
+        S_story.gold = (S_story.gold||0) + 300;
+        storyMsg("🔥 The Atlantean Forge activates. The bellows engage. The heat rises from below. +300gp.");
+      } }],
+      onFail:[] }],
     disposition:'"The mechanism does not ask for skill. It asks for the sequence in the correct order. You have run the sequence." — The Atlantean Forge',
     npc:"long_john_silver_sen",
   },
@@ -11028,20 +11042,22 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     title:'The Foundation',
     desc:'The inscription above the ventilation channel describes the Gate — what it holds, what opens it, and why it was built here.',
     hint:'Read the Atlantean inscription at The Sunken Hall — INT Arcana DC 13.',
-    activateNode:'DA1', activateCond:() => true,
-    checkAbility:'int', checkLabel:'INT Arcana', checkDC:13, retryable:true,
-    xpAward:250,
+    schema:'UQF-1.0',
+    activateNode:'DA1',
+    gate:{},
+    retryable:true,
     vignetteText:"The inscription is carved in the pre-Codex register — not the Scholar Kings' classification notation, not the Conclave's administrative shorthand. Older than both. The letter-forms predate the current archive system by several centuries.\n\nThe text describes a mechanism. Specifically: a gate installed at a location chosen because something very old and question-asking was already there, had been there since before the coastal civilization, and needed a structure capable of holding a question in place long enough for the answer to arrive.\n\nThe mechanism requires a specific alloy. The alloy is produced by a specific reduction sequence. The reduction sequence begins with kelp.",
     passText:"The inscription resolves completely. You recognize every step — the kelp beds, the hearth reduction, the charged element, the forge. The chain was laid from this end outward, by people who knew what would eventually be needed to return to it. They did not know who would follow the chain. They knew someone would.",
     failText:"The letter-forms are readable but the technical register is partially opaque. The mechanism description is clear; the context for why this location is unclear. Try again when the reduction sequence has more time to settle.",
-    completeItems:[],
-    onPass:() => {
-      S_story.inscriptionRead = true;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Atlantean Foundation: the Tide Gate was installed at bearing 047°, depth 18m, to hold something older than the coastal civilization itself. The chain of iodine reduction points here.');
-      S_story.gold = (S_story.gold||0) + 250;
-      storyMsg("📋 Atlantean Foundation added to the Necklace of Knowledge. +250gp.");
-    },
+    bits:[{ kind:'skill_check', stat:'INT', skill:'INT Arcana', dc:13,
+      onPass:[{ kind:'reward', xp:250 }, { kind:'_legacy_fn', fn:() => {
+        S_story.inscriptionRead = true;
+        S_story.knowledge = S_story.knowledge || [];
+        S_story.knowledge.push('Atlantean Foundation: the Tide Gate was installed at bearing 047°, depth 18m, to hold something older than the coastal civilization itself. The chain of iodine reduction points here.');
+        S_story.gold = (S_story.gold||0) + 250;
+        storyMsg("📋 Atlantean Foundation added to the Necklace of Knowledge. +250gp.");
+      } }],
+      onFail:[] }],
     disposition:'"The chain was laid from this end. It points outward toward whoever is following it inward." — The Stone Inscription, Sunken Hall',
     npc:"long_john_silver_sen",
   },
