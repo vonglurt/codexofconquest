@@ -130,7 +130,26 @@ const targets = [];
 }
 if (!targets.length) { console.error('no skill_check targets matched'); process.exit(1); }
 
-let migrated = 0, skipped = 0, keptLegacyGate = 0;
+// §SKILLFIX-02 (user-approved 2026-06-29): ~176 legacy skill_checks put a D&D
+// SKILL NAME (or a full ability word) in checkStat instead of one of the 6
+// ability abbreviations. The legacy resolver read abilityScores[checkStat] →
+// undefined → +0 ability mod (a latent bug; §SKILLFIX-01 did not reach these).
+// The UQF skill_check contract REQUIRES stat ∈ {STR,DEX,CON,INT,WIS,CHA}, so we
+// map the skill to its governing ability (D&D 5e standard) and keep the skill
+// name in `skill` (display + proficiency). This is a deliberate BEHAVIOR CHANGE
+// — the check now rolls ability-mod + proficiency, the intended D&D behavior.
+const ABILITIES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
+const ABILITY_WORD = { STRENGTH:'STR', DEXTERITY:'DEX', CONSTITUTION:'CON', INTELLIGENCE:'INT', WISDOM:'WIS', CHARISMA:'CHA' };
+const SKILL_TO_ABILITY = {
+  ATHLETICS:'STR',
+  ACROBATICS:'DEX', 'SLEIGHT OF HAND':'DEX', STEALTH:'DEX',
+  ARCANA:'INT', HISTORY:'INT', INVESTIGATION:'INT', NATURE:'INT', RELIGION:'INT',
+  'ANIMAL HANDLING':'WIS', INSIGHT:'WIS', MEDICINE:'WIS', PERCEPTION:'WIS', SURVIVAL:'WIS',
+  DECEPTION:'CHA', INTIMIDATION:'CHA', PERFORMANCE:'CHA', PERSUASION:'CHA',
+  COURAGE:'CHA', PRESENCE:'CHA',   // homebrew stats → CHA (user-approved)
+};
+
+let migrated = 0, skipped = 0, keptLegacyGate = 0, skillMapped = 0;
 const report = [];
 
 for (const id of targets) {
@@ -139,8 +158,21 @@ for (const id of targets) {
   let body = lit.text;
   if (/schema:\s*["']UQF-1\.0["']/.test(body)) { skipped++; continue; }
 
-  const stat  = (readStr(body, 'checkAbility') || readStr(body, 'checkStat') || '').toUpperCase();
-  const skill = readStr(body, 'checkLabel') || readStr(body, 'checkSkill') || null;
+  const rawStat = readStr(body, 'checkAbility') || readStr(body, 'checkStat') || '';
+  const statU = rawStat.toUpperCase();
+  let skill = readStr(body, 'checkLabel') || readStr(body, 'checkSkill') || null;
+  let stat;
+  if (ABILITIES.includes(statU)) {
+    stat = statU;                                  // already an ability abbrev
+  } else if (ABILITY_WORD[statU]) {
+    stat = ABILITY_WORD[statU];                    // full ability word → abbrev, not a skill
+  } else if (SKILL_TO_ABILITY[statU]) {            // §SKILLFIX-02: skill → governing ability
+    stat = SKILL_TO_ABILITY[statU];
+    if (!skill) skill = rawStat;                   // preserve original skill name (display + proficiency)
+    skillMapped++;
+  } else {
+    stat = '';                                     // triggers the not-well-formed guard below
+  }
   const dc    = readNum(body, 'checkDC');
   const passFlag = readStr(body, 'checkPassFlag');
   const bitLabel = readStr(body, 'bitLabel');
@@ -148,6 +180,7 @@ for (const id of targets) {
   const xp    = readNum(body, 'xpAward');
   const gold  = readNum(body, 'goldAward');
 
+  if (!stat && rawStat) { console.error('UNMAPPED checkStat (not an ability or known D&D skill — extend SKILL_TO_ABILITY):', id, JSON.stringify(rawStat)); process.exit(1); }
   if (!stat || typeof dc !== 'number') { console.error('NOT WELL-FORMED (no stat/dc):', id); process.exit(1); }
   if (failFlag) { console.error('checkFailFlag present — out of Wave-2 scope:', id); process.exit(1); }
 
@@ -198,5 +231,5 @@ if (dry) {
   console.log(JSON.stringify({ targets: targets.length, migrated, skipped, keptLegacyGate, report }, null, 2));
 } else {
   fs.writeFileSync(FILE, src);
-  console.log(`migrated ${migrated}, skipped(already UQF) ${skipped}, kept-legacy-gate ${keptLegacyGate}, targets ${targets.length}`);
+  console.log(`migrated ${migrated}, skipped(already UQF) ${skipped}, kept-legacy-gate ${keptLegacyGate}, skill→ability mapped ${skillMapped}, targets ${targets.length}`);
 }
