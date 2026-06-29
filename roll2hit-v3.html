@@ -19578,48 +19578,52 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   // ── §D01-07 — "The Maintenance Plate" (HKG — Neon Undercity Scholar King arc) ──
   quest_d0207_a1: { id:'quest_d0207_a1', type:'skill_check', title:'Act I — The Plate',
     hint:'First entry to CY. The neon is loud. The plate on the wall is quiet.',
-    activateNode:'HKG', activateCond:() => !S_story.d0207_a1_passed,
-    checkAbility:'wis', checkLabel:'Perception', checkDC:10, retryable:true, retryGateDays:0,
-    xpAward:50, goldAward:0, checkPassFlag:'d0207_a1_passed',
+    schema:'UQF-1.0',
+    activateNode:'HKG', gate:{ notFlags:['d0207_a1_passed'] },
+    retryable:true, retryGateDays:0,
     vignetteText:'First entry to CY. The neon is loud. A copper plate on the wall is quiet. Dated three centuries ago. Scholar King cipher. You should not be able to read this.',
     passText:'You see it. It is there. The neon does not erase it.',
     failText:'Your attention is pulled by the neon. Retry — the plate doesn\'t move.',
-    completeItems:[], onPass:null },
+    bits:[{ kind:'skill_check', stat:'WIS', skill:'Perception', dc:10,
+      onPass:[{ kind:'mission_bit', flag:'d0207_a1_passed' }, { kind:'reward', xp:50 }], onFail:[] }] },
   quest_d0207_a2: { id:'quest_d0207_a2', type:'side', title:'Act II — The Madness Save',
     hint:'The CY aesthetic makes no sense. A fantasy city should not have neon.',
-    activateNode:'HKG', activateCond:() => !!S_story.d0207_a1_passed,
-    completeItems:[], completeFn:() => !!S_story.cyMadnessRoll,
+    schema:'UQF-1.0',
+    activateNode:'HKG', gate:{ flags:['d0207_a1_passed'] },
+    completion:{ flags:['cyMadnessRoll'] }, bits:[],
     reward:0, waypointNode:'HKG',
     desc:'The WIS save fires on first CY entry (already handled). Both results — clear or fractured — leave the plate visible. This act completes when the save has resolved.' },
   quest_d0207_a3: { id:'quest_d0207_a3', type:'side', title:'Act III — The Data Wraith',
     hint:'The Data Wraith investigates the plate at the same moment you do.',
-    activateNode:'HKG', activateCond:() => !!S_story.cyMadnessRoll && !!S_story.d0207_a1_passed,
-    completeItems:[], completeFn:() => !!S_story.defeatedBattles['HKG'],
+    schema:'UQF-1.0',
+    activateNode:'HKG', gate:{ flags:['cyMadnessRoll','d0207_a1_passed'] },
+    completion:{ battles:['HKG'] }, bits:[],
     reward:0, waypointNode:'HKG',
     desc:'The Data Wraith moves toward the plate at the same moment you do. There is only one plate. Win the CY node battle to examine it safely.' },
   quest_d0207_a4: { id:'quest_d0207_a4', type:'skill_check', title:'Act IV — The Cipher',
     hint:'The maintenance log names the original builder in Scholar King cipher.',
-    activateNode:'HKG', activateCond:() => !!S_story.defeatedBattles['HKG'] && !!S_story.d0207_a1_passed,
-    checkAbility:'int', checkLabel:'Arcana', checkDC:13, retryable:true, retryGateDays:1,
-    xpAward:100, goldAward:0, checkPassFlag:'cyMaintenanceDecoded',
+    schema:'UQF-1.0',
+    activateNode:'HKG', gate:{ flags:['d0207_a1_passed'], battles:['HKG'] },
+    retryable:true, retryGateDays:1,
     vignetteText:'The maintenance log names the original builder. The name is a Scholar King designation that matches a fragment Froberger held. The cipher is legible if you know what alphabet to use.',
     passText:'The builder designation matches the cipher fragment from Froberger\'s Journal. The connection is established.',
     failText:'The cipher scrambles. Retry next day.',
-    completeItems:[], onPass:() => { S_story.cyMaintenanceDecoded = true; } },
+    bits:[{ kind:'skill_check', stat:'INT', skill:'Arcana', dc:13,
+      onPass:[{ kind:'mission_bit', flag:'cyMaintenanceDecoded' }, { kind:'reward', xp:100 }, { kind:'_legacy_fn', fn:() => { S_story.cyMaintenanceDecoded = true; } }], onFail:[] }] },
   quest_d0207_a5: { id:'quest_d0207_a5', type:'skill_check', title:'Act V — The Name on the Log',
     hint:'The builder\'s designation, fully decoded, translates to your name.',
-    activateNode:'HKG', activateCond:() => !!S_story.cyMaintenanceDecoded,
-    checkAbility:'cha', checkLabel:'Persuasion', checkDC:12, retryable:true, retryGateDays:1,
-    xpAward:200, goldAward:0, checkPassFlag:'cyOriginKnown',
+    schema:'UQF-1.0',
+    activateNode:'HKG', gate:{ flags:['cyMaintenanceDecoded'] },
+    retryable:true, retryGateDays:1,
     vignetteText:'The builder\'s designation, fully decoded, translates to a name in the Scholar King\'s naming convention. It is yours — not your current name, but the name you had before. The Neon Undercity is, in a very specific sense, yours.',
     passText:'Scholar King\'s Name Plate added. The Neon Undercity is yours.',
     failText:'"The translation is inconclusive. This is the most comfortable explanation available to you." Retry tomorrow.',
-    completeItems:[],
-    onPass:() => {
+    bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:12,
+      onPass:[{ kind:'mission_bit', flag:'cyOriginKnown' }, { kind:'reward', xp:200 }, { kind:'_legacy_fn', fn:() => {
       S_story.cyOriginKnown = true;
       S_story.inventory = S_story.inventory || [];
       S_story.inventory.push({name:"Scholar King's Name Plate",icon:'🪧',type:'flavor',sell:0,desc:'A copper plate with a Scholar King designation. Fully decoded, it is your name. You built this city. You forgot. The plate did not.'});
-    } },
+    } }], onFail:[] }] },
 
   tbs_c9a5: { id:"tbs_c9a5", type:"skill_check", title:"Historical Record — Not a Deed", desc:"Archivus Sweelinck reads the ledger fragment. He reads the transaction entry: the specific date, the description of the prisoner, the price, the destination. He is quiet for a long time. 'This is a crime,' he says. 'Documented in a commercial ledger by the person who profited from it. And someone wants to use it as a deed of property.' He sets it on the table. 'Historical Records — Documents of Captivity. The archive receives this as a primary document of a specific illegal act of captivity, c.1200s, recording the forced transfer of a Georgian noblewoman. Cross-reference: TBS cycles 1-7, the Knight in the Panther's Skin — the events this ledger documents, and the rescue that followed, are the subject of Rustaveli's poem. The poem is in the archive. The crime the poem describes is now in the archive too.' He writes one more line in the intake record: 'Receipt by this archive does not constitute evidence of property title. A record of illegal captivity is not a deed. Any legal claim based on this document should cite this notation alongside the document itself.' He closes the ledger. 'The claimant can read that when he applies for access.'", passText:"You let Sweelinck write the notation. The crime is documented. The archive knows what it is. The claimant's property claim has lost its instrument — the archive has received the ledger, but the receipt includes its own refusal to be complicit. Hakob Mkhitaryan's family is protected. The historical record is filed correctly.", failText:"You mention the claimant's legal team and what they tried. Sweelinck writes a second notation: 'This document was subject to suppression and conversion attempts during archival transfer. Both attempts failed.' He looks at you. 'The archive records its own provenance.' He closes the intake file.", npc:"archivus_sweelinck", activateNode:"WM", checkStat:"WIS", checkPassFlag:"tbs_c9a5", checkDC:11, activateCond:() => !!S_story.tbs_c9a4 },
 
@@ -20253,6 +20257,10 @@ const QuestRuntime = {
     // NPC-favor threshold (replaces `(S_story.npcFavorability||{}).<npc> >= n`):
     // favorMin → object of { npcKey: minFavor }, all required.
     if (g.favorMin) { const fav = S_story.npcFavorability || {}; for (const npc in g.favorMin) if ((fav[npc] || 0) < g.favorMin[npc]) return false; }
+    // Defeated-battle prerequisite (replaces `!!S_story.defeatedBattles[code]` in
+    // activateCond); ALL listed battle codes must be defeated. Mirrors the
+    // `battles` term in canComplete but as an AND-gate on activation.
+    if (g.battles && !g.battles.every(b => !!(S_story.defeatedBattles || {})[b])) return false;
     return true;
   },
 

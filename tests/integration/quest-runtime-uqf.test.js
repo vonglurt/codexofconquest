@@ -1095,3 +1095,111 @@ test.describe('§ARCH-01 Wave 1 — §1367 skill-checks (quest_1367_{e,b,c,d})',
     expect(r.failures).toBe(1);
   });
 });
+
+// ── §ARCH-01 Wave 1 — Ceremonia d0207 arc (5-act, FULLY migrated) ──
+//
+// First complete d02xx arc migrated end-to-end (skill_check + side, like
+// §WISDOM-01). Exercises: notFlags activation (a1), flag completion (a2),
+// battle completion (a3 → completion:{battles}), and the NEW battle-gated
+// ACTIVATION term gate.battles (a4 needs defeatedBattles['HKG']). a1 has a
+// checkPassFlag but no onPass closure; a4/a5 keep their onPass via _legacy_fn.
+
+test.describe('§ARCH-01 Wave 1 — Ceremonia d0207 arc (5-act, fully UQF)', () => {
+  const ALL = ['quest_d0207_a1','quest_d0207_a2','quest_d0207_a3','quest_d0207_a4','quest_d0207_a5'];
+
+  test('all five acts validate as UQF (3 skill_check + 2 side)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((ids) => ids.map(id => {
+      const q = QUEST_DB[id];
+      return { id, type:q.type, schema:q.schema, valid:validateQuest(q).valid,
+               isSkill:(q.bits||[]).some(b=>b.kind==='skill_check'),
+               hasCompletion:!!q.completion };
+    }), ALL);
+    expect(r.every(x => x.schema==='UQF-1.0' && x.valid)).toBe(true);
+    expect(r.filter(x=>x.isSkill).map(x=>x.id)).toEqual(['quest_d0207_a1','quest_d0207_a4','quest_d0207_a5']);
+    expect(r.filter(x=>x.hasCompletion).map(x=>x.id)).toEqual(['quest_d0207_a2','quest_d0207_a3']);
+  });
+
+  test('a1 notFlags gate: activatable until d0207_a1_passed, then closed; PASS grants flag+token+50xp', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      delete S_story.d0207_a1_passed;
+      const before = QuestRuntime.canActivate('quest_d0207_a1');
+      S_story.d0207_a1_passed = true;
+      const after = QuestRuntime.canActivate('quest_d0207_a1');
+      // PASS path
+      delete S_story.d0207_a1_passed;
+      S_story.abilityScores = { wis:40 }; S_story.level = 20; S_story.xp = 1000000;
+      S_story.inventory = []; S_story.quests = { quest_d0207_a1:'active' };
+      _rollCeremonia('quest_d0207_a1');
+      return { before, after, status:S_story.quests.quest_d0207_a1, flag:!!S_story.d0207_a1_passed,
+               token:!!S_story.inventory.find(i=>i.flagRef==='d0207_a1_passed'&&i.type==='mission_bit'),
+               dxp:S_story.xp-1000000 };
+    });
+    expect(r.before).toBe(true);          // notFlags satisfied (flag unset)
+    expect(r.after).toBe(false);          // notFlags violated (flag set)
+    expect(r.status).toBe('done');
+    expect(r.flag).toBe(true);
+    expect(r.token).toBe(true);
+    expect(r.dxp).toBe(50);
+  });
+
+  test('gate.battles: a4 activates only after HKG is defeated (and a1 passed)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.d0207_a1_passed = true; S_story.defeatedBattles = {};
+      const noBattle = QuestRuntime.canActivate('quest_d0207_a4');
+      S_story.defeatedBattles = { HKG:true };
+      const withBattle = QuestRuntime.canActivate('quest_d0207_a4');
+      delete S_story.d0207_a1_passed;
+      const battleButNoFlag = QuestRuntime.canActivate('quest_d0207_a4');  // AND: needs both
+      return { noBattle, withBattle, battleButNoFlag };
+    });
+    expect(r.noBattle).toBe(false);        // battle prerequisite unmet
+    expect(r.withBattle).toBe(true);       // battle + flag ⇒ open
+    expect(r.battleButNoFlag).toBe(false); // flag missing ⇒ still shut
+  });
+
+  test('side acts complete declaratively: a2 via cyMadnessRoll flag, a3 via defeated HKG battle', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // a2: completion {flags:['cyMadnessRoll']}
+      delete S_story.cyMadnessRoll; S_story.defeatedBattles = {};
+      const a2_pre = QuestRuntime.canComplete('quest_d0207_a2');
+      S_story.cyMadnessRoll = true;
+      const a2_post = QuestRuntime.canComplete('quest_d0207_a2');
+      // a3: completion {battles:['HKG']}
+      const a3_pre = QuestRuntime.canComplete('quest_d0207_a3');     // no battle yet
+      S_story.defeatedBattles = { HKG:true };
+      const a3_post = QuestRuntime.canComplete('quest_d0207_a3');
+      // storyCheckQuests drives a2 active → complete
+      S_story.quests = { quest_d0207_a2:'active' }; S_story.cyMadnessRoll = true;
+      storyCheckQuests({ code:'__none' });
+      return { a2_pre, a2_post, a3_pre, a3_post, a2status:S_story.quests.quest_d0207_a2 };
+    });
+    expect(r.a2_pre).toBe(false);
+    expect(r.a2_post).toBe(true);
+    expect(r.a3_pre).toBe(false);
+    expect(r.a3_post).toBe(true);
+    expect(r.a2status).toBe('complete');
+  });
+
+  test('a5 PASS grants cyOriginKnown token + 200xp and pushes the Name Plate item', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { cha:40 }; S_story.level = 20; S_story.xp = 1000000;
+      S_story.inventory = []; delete S_story.cyOriginKnown;
+      S_story.quests = { quest_d0207_a5:'active' };
+      _rollCeremonia('quest_d0207_a5');
+      return { status:S_story.quests.quest_d0207_a5, flag:!!S_story.cyOriginKnown,
+               token:!!S_story.inventory.find(i=>i.flagRef==='cyOriginKnown'&&i.type==='mission_bit'),
+               plate:!!S_story.inventory.find(i=>i.name==="Scholar King's Name Plate"),
+               dxp:S_story.xp-1000000 };
+    });
+    expect(r.status).toBe('done');
+    expect(r.flag).toBe(true);
+    expect(r.token).toBe(true);
+    expect(r.plate).toBe(true);     // _legacy_fn pushed the flavor item
+    expect(r.dxp).toBe(200);
+  });
+});

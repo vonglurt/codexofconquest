@@ -24,7 +24,8 @@ formats to Universal Quest Format (UQF v1.0)
 | Wave 1b | Whisper's Crown (`quest_whisper_01`–`06`); first Wave-1 `side` quest (`whisper_05`: `completeFn`→`completion` gate, `onComplete` kept as live hook); flaky-FAIL-test fix | `7b69ce7` |
 | Wave 1c | Glut's Crown (`quest_glut_01`–`06`); `side` quest with a **flag** activation gate + multi-effect `onComplete` (inventory splice + crown flag). All 3 crone Crowns now 100% UQF. | `ee58181` |
 | Wave 1d | Ceremonia: Yael arc (`quest_ceremonia_yael_01`–`05`); + `gate.favorMin` term, `checkFailFlag`→`onFail:[mission_bit]`, vignetteTextAlt render parity fix | `c164fe2` |
-| Wave 1e | §1367 skill-checks (4 of 6: `e_wycliffe`/`b_tamerlane`/`c_ottoman`/`d_hansa`); clamped faction/faith track counters via `_legacy_fn`; first real `onFail` track effect (`d_hansa`) | _this commit_ |
+| Wave 1e | §1367 skill-checks (4 of 6: `e_wycliffe`/`b_tamerlane`/`c_ottoman`/`d_hansa`); clamped faction/faith track counters via `_legacy_fn`; first real `onFail` track effect (`d_hansa`) | `e98feb7` |
+| Wave 1f | Ceremonia d0207 arc (5 acts, first full d02xx arc); + `gate.battles` term, `notFlags`/flag/battle completion patterns | _this commit_ |
 
 **Proven properties:**
 - **Behavior parity** — every migrated quest produces byte-identical state
@@ -111,9 +112,10 @@ to run per quest (and per arc):
     quest-specific branch. So far this produced: `mission_bit` bit kind, the
     `battles` completion term, (Wave 1a) the **`gate.questsAttempted`**
     (`(quests[id]||'')!==''`, ×23 in QUEST_DB) + **`gate.questsDone`**
-    (`done`/`complete`) chain terms, and (Wave 1d) **`gate.favorMin`**
-    (`{npc:n}` ← `(npcFavorability||{}).x >= n`) — all in `canActivate`. Each
-    immediately served multiple quests.
+    (`done`/`complete`) chain terms, (Wave 1d) **`gate.favorMin`**
+    (`{npc:n}` ← `(npcFavorability||{}).x >= n`), and (Wave 1f) **`gate.battles`**
+    (`['CODE']` ← `!!defeatedBattles[code]` in activateCond; ALL required) — all
+    in `canActivate`. Each immediately served multiple quests.
 
 > **§C note — fail flags & the onFail chain.** The legacy non-retryable fail
 > path grants `checkFailFlag` via `_grantMissionBit(checkFailFlag, bitLabel)`
@@ -213,7 +215,8 @@ codemod** (the simple skill_checks are too numerous — ~2149 — to hand-edit).
 | **1c ✅** | Glut's Crown (`quest_glut_01`–`06`) | 6 | ×5 skill_checks; `side` quest (`glut_06`) with a **flag** activation gate (`gate:{flags:['glut_gift_held']}`) + a multi-effect `onComplete` (inventory splice of "Glut's Gift" + crown flag), kept verbatim. Confirms the side-quest pattern generalizes across flag-gated and chain-gated activation. |
 | **1d ✅** | Ceremonia: Yael romance arc (`quest_ceremonia_yael_01`–`05`) | 5 | richest arc yet — real `checkPassFlag`→`mission_bit`, `checkFailFlag`→`onFail:[mission_bit]` (the legacy non-retryable fail path grants the fail flag; `_resolveQuestUQF` does not, so make it an explicit onFail bit), numeric `onPass` counter + favor/item closure via `_legacy_fn`. **New `gate.favorMin`** term; **vignetteTextAlt render parity fix** (UQF path now honors it). |
 | **1e ✅** | §1367 historical skill-checks (4 of 6) | 4 | `e_wycliffe`/`b_tamerlane`/`c_ottoman`/`d_hansa`. No `checkPassFlag` (no mission_bit); `gate:{}` (independent); `onPass`/`onFail` adjust **clamped faction/faith track counters** via `_legacy_fn`; `d_hansa` first real `onFail` track effect. The 2 combat quests (`a_najera`, `f_plague`) deferred to Wave 4. |
-| **1** | skill-check arcs **with** `onPass` closures | **78** (done: wane 6, whisper 5, glut 5, ceremonia_yael 5, 1367 skill 4 = **25**) | full bit-chain transform (the wis/wane pattern). Remaining arcs: `d0205`–`d0210`(15), `inn`(3), `spark`/`spark2`, `inquisitor`(3), `sea`, `sb`, `hunt`/`hunt2`, `bilge`, `alch`, `scar` + ~13 singletons (`basket_damascus`, `iodine`, `shore`, `forge`, `sunken`, `df`, `sk`, `lxvii67`, `guide_04`, `d0201_a5`/`d0204_a5`/`d0210_a5`). |
+| **1f ✅** | Ceremonia **d0207** arc (5 acts) | 5 | first FULL d02xx arc (3 skill_check + 2 side), migrated end-to-end like §WISDOM-01. New: **`gate.battles`** activation term (a4 needs `defeatedBattles['HKG']`); `notFlags` activation (a1); flag completion (a2); **battle completion** (a3 → `completion:{battles}`). a5 onPass pushes a flavor item via `_legacy_fn`. **Template for the other 8 d02xx arcs (40 quests total).** |
+| **1** | skill-check arcs **with** `onPass` closures (now migrating whole arcs incl. their `side` acts) | **78** onPass-closures (done: wane 6, whisper 5, glut 5, ceremonia_yael 5, 1367 skill 4, d0207 a4/a5 = **27**) | full bit-chain transform (the wis/wane pattern). **d02xx family** (9 arcs × 5 = 40 quests) now migrated arc-complete per the d0207 template: **d0207 ✅ (5/40)**, remaining d0201/d0204/d0205/d0206/d0208/d0209/d0210. Other arcs: `inn`(3), `spark`/`spark2`, `inquisitor`(3), `sea`, `sb`, `hunt`/`hunt2`, `bilge`, `alch`, `scar` + ~10 singletons. |
 | **2** | simple skill-checks (checkPassFlag/xpAward only) | **~2149** | **codemod, not hand-migration.** Mechanical rewrite `{checkAbility,checkLabel,checkDC,checkPassFlag,xpAward,goldAward}` → `schema+gate+bits:[{skill_check, onPass:[mission_bit?, reward?]}]`. Run in batches; parity-test each batch with the existing harness. The dominant chain gate `(quests['prev']||'')!==''` is already covered by `gate.questsAttempted`. |
 | **3** | `side` quests (completeFn) | 129 | declarative `completion` gates. Needs `item_check` gate term finalized; per-id hardcoded completion side-effects in `storyCheckQuests` move into completion bit chains. |
 | **4** | `combat` quests | 71 | needs a UQF combat-quest resolver (the `combat` bit kind exists; wire resolution mirroring legacy combat-quest completion). Largest non-skill bucket — was mis-counted as 2 in the first survey. |
