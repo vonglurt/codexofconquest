@@ -2799,3 +2799,99 @@ test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-cu
     }
   });
 });
+
+// ══════════════════════════════════════════════════════════════════════════
+// §ARCH-01 Wave 2 — bulk script-assisted migration (scripts/uqf-bulk-migrate.js).
+// First family: hav_* (The Articles / Havorn corsair-papers arcs, 30 acts). All
+// checkStat + checkPassFlag(no bitLabel) + no xp/gold + non-retryable; every
+// activateCond is the trivial `() => !!S_story.<flag>` shape → decomposed to
+// gate:{flags:[…]} (act1 openers → gate:{}). Self-contained: enumerates the
+// family from QUEST_DB and asserts structure + pass/fail parity + gate chaining.
+// ══════════════════════════════════════════════════════════════════════════
+test.describe('§ARCH-01 Wave 2 — hav_* family (bulk-migrated, 30 acts)', () => {
+  test('every hav_* skill_check is UQF-1.0, validates, onPass:[mission_bit], onFail:[]', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const hav = Object.values(QUEST_DB).filter(q => /^hav_/.test(q.id) && q.type === 'skill_check');
+      return hav.map(q => {
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        return { id:q.id, schema:q.schema, valid:validateQuest(q).valid,
+          hasStat:!!(b && b.stat), hasDc:typeof (b && b.dc) === 'number',
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          mbHasLabel:b ? ('label' in (b.onPass.find(x => x.kind === 'mission_bit') || {})) : null };
+      });
+    });
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(30);
+    for (const q of r) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.hasStat).toBe(true);
+      expect(q.hasDc).toBe(true);
+      expect(q.onPassK).toEqual(['mission_bit']);  // no xp/gold in this family
+      expect(q.onFailLen).toBe(0);
+      expect(q.mbHasLabel).toBe(false);            // label omitted ⇒ _flagToLabel parity
+    }
+  });
+
+  test('PASS parity: done + checkPassFlag true + bone token (name = _flagToLabel + " Token"), no xp/gold', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const hav = Object.values(QUEST_DB).filter(q => /^hav_/.test(q.id) && q.type === 'skill_check');
+      return hav.map(q => {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const flag = b.onPass.find(x => x.kind === 'mission_bit').flag;
+        S_story.abilityScores = { [b.stat.toLowerCase()]: 40 };
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        const tok = S_story.inventory.find(i => i.flagRef === flag);
+        return { id:q.id, status:S_story.quests[q.id], flag:S_story[flag], xp:S_story.xp, gold:S_story.gold,
+          tokenOk: !!tok && tok.name === _flagToLabel(flag) + ' Token' && tok.type === 'mission_bit',
+          items:S_story.inventory.length };
+      });
+    });
+    for (const q of r) {
+      expect(q).toEqual({ id:q.id, status:'done', flag:true, xp:0, gold:0, tokenOk:true, items:1 });
+    }
+  });
+
+  test('FAIL parity (non-retryable): failed + flag false + no token', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const hav = Object.values(QUEST_DB).filter(q => /^hav_/.test(q.id) && q.type === 'skill_check');
+      return hav.map(q => {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const flag = b.onPass.find(x => x.kind === 'mission_bit').flag;
+        S_story.abilityScores = { [b.stat.toLowerCase()]: -100 };
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        return { id:q.id, status:S_story.quests[q.id], flag:S_story[flag], items:S_story.inventory.length };
+      });
+    });
+    for (const q of r) {
+      expect(q).toEqual({ id:q.id, status:'failed', flag:false, items:0 });
+    }
+  });
+
+  test('gate decomposition: act1 openers gate:{}, act2..N gate.flags === prior act pass-flag', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const hav = Object.values(QUEST_DB).filter(q => /^hav_/.test(q.id) && q.type === 'skill_check');
+      return hav.map(q => ({ id:q.id, gate:q.gate,
+        priorFlag: (() => {
+          const m = q.id.match(/^(hav_\d+)_act(\d+)$/); if (!m || m[2] === '1') return null;
+          const prev = QUEST_DB[`${m[1]}_act${+m[2]-1}`];
+          const pb = prev && prev.bits && prev.bits.find(x => x.kind === 'skill_check');
+          return pb ? (pb.onPass.find(x => x.kind === 'mission_bit')||{}).flag : null;
+        })() }));
+    });
+    for (const q of r) {
+      if (/_act1$/.test(q.id)) { expect(q.gate).toEqual({}); }
+      else { expect(q.gate.flags).toEqual([q.priorFlag]); }
+    }
+  });
+});
