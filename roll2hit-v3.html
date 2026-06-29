@@ -2527,6 +2527,10 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .wmc-epic         { background: #8b0000; color: #ffaaaa; border: 1px solid #cc2222; box-shadow: 0 0 4px rgba(180,0,0,0.8); }
 .wmc-epic-visited { background: #3a0000; color: #cc5555; border: 1px solid #770000; }
 .wmc-epic-unvis   { background: #200808; color: #4a1a1a; }
+/* §MAP-COLOR legend */
+#world-map-legend { display: flex; flex-wrap: wrap; gap: 1px 6px; width: 185px; margin-top: 3px; }
+.wm-leg { display: flex; align-items: center; gap: 2px; font-size: 6px; line-height: 1; color: #b89058; font-family: monospace; }
+.wm-leg i { width: 6px; height: 6px; display: inline-block; border: 1px solid rgba(0,0,0,0.4); flex-shrink: 0; }
 
 /* NSEW exit links block (light theme) */
 #story-nsew { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; min-width: 0; overflow: hidden; }
@@ -4255,6 +4259,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div id="story-world-map">
           <div id="world-map-title" style="display:none">◉ WORLD MAP</div>
           <div id="world-map-grid"></div>
+          <div id="world-map-legend"></div>
         </div>
       </div>
     </div>
@@ -32703,6 +32708,26 @@ function _renderMiniMap() {
   }
 }
 
+// §MAP-COLOR: bucket a terrain key into a land-type family colour so the minimap
+// reads as a coloured landmass (walkable land vs water). Ordered specific→generic.
+// Impassable sea is handled separately by the caller (distinct dark navy); this
+// returns the colour for *passable* terrain (incl. crossable open-water lanes).
+function _terrainColor(t) {
+  t = String(t || '').toLowerCase();
+  if (/cosmic|heaven|cloud|astral|void|celestial|star/.test(t))            return '#5a4585'; // cosmic — purple
+  if (/crypt|catacomb|sewer|cave|cavern|dungeon|tomb|vault|mine|lair/.test(t)) return '#33291f'; // underground — dark brown
+  if (/beach|coast|shore|island|atlantis/.test(t))                          return '#c2a85e'; // coast/isle — sand
+  if (/ocean|deep_sea|deep_trench|trench|_sea\b|sea_|lake|river|fjord|harbor|harbour/.test(t)) return '#1d6a8f'; // open water (passable) — mid blue
+  if (/swamp|bog|marsh|hag|fen|mire/.test(t))                               return '#45521f'; // swamp — olive
+  if (/forest|jungle|wood|grove|tree|thicket/.test(t))                      return '#1f5f33'; // forest — green
+  if (/desert|sand|dune|caravan|waste/.test(t))                             return '#b08a3e'; // desert — tan
+  if (/arctic|snow|ice|tundra|frost|glacier|polar/.test(t))                 return '#a8c0cc'; // arctic — pale
+  if (/mountain|highland|peak|cliff|crag|ridge|alp/.test(t))                return '#6a6058'; // mountains — slate
+  if (/city|slum|alley|dock|market|quarter|street|agora|palace|camelot|town|castle|fort|keep|inn|bar|tavern|shop|store|smith|scholar|cyber/.test(t)) return '#7a7a82'; // urban — grey
+  if (/midland|plain|grass|field|meadow|steppe|land|highl/.test(t))         return '#6e7a30'; // plains — yellow-green
+  return '#55602c'; // generic land — muted green
+}
+
 function _renderWorldMiniMap() {
   const grid = document.getElementById('world-map-grid');
   if (!grid) return;
@@ -32721,6 +32746,12 @@ function _renderWorldMiniMap() {
       const code = cellCode(key);
       const cell = document.createElement('div');
       cell.className = 'wmc';
+      // §MAP-COLOR: terrain/sea base layer so land types read at a glance and
+      // walkable land contrasts with impassable water.
+      const _imp     = IMPASSABLE_CELLS.has(key);
+      const _terr    = (code && NODE_MAP[code]) ? NODE_MAP[code].name : _inferTerrain(r, c);
+      const _seaCol  = '#0a2a4a';                       // impassable open sea — dark navy
+      const _landCol = _imp ? _seaCol : _terrainColor(_terr);
       if (code && NODE_MAP[code]) {
         const isCurrent  = (r === playerR && c === playerC);
         const isTrail    = trailSet.has(code);
@@ -32741,12 +32772,22 @@ function _renderWorldMiniMap() {
           cell.classList.add('wmc-visited');
           cell.innerHTML = '<span class="wmc-icon">' + _mapIcon(code) + '</span>';
         } else {
+          // unvisited node — tint by its terrain, keep a bright border so it pops
           cell.classList.add('wmc-node');
+          cell.style.background  = _landCol;
+          cell.style.borderColor = 'rgba(240,230,200,0.45)';
           cell.innerHTML = '<span class="wmc-icon wmc-unvis">·</span>';
         }
-      } else if (visitedCells[key]) {
-        // §CELL-10: visited empty cell — dim background dot
-        cell.classList.add('wmc-empty-visited');
+      } else {
+        // §MAP-COLOR: empty cell — paint terrain, or navy for impassable sea.
+        // Stepped cells read at full strength + a faint border; unexplored land
+        // is slightly muted so the trail/explored area stands out.
+        cell.style.background = _landCol;
+        if (visitedCells[key]) {
+          cell.style.borderColor = 'rgba(240,230,200,0.3)';
+        } else if (!_imp) {
+          cell.style.opacity = '0.72';
+        }
       }
       // Player position if on an empty cell
       if (r === playerR && c === playerC && !code) {
@@ -32755,6 +32796,17 @@ function _renderWorldMiniMap() {
       }
       grid.appendChild(cell);
     }
+  }
+  // §MAP-COLOR: legend (built once) — keep keys in sync with _terrainColor().
+  const leg = document.getElementById('world-map-legend');
+  if (leg && !leg.childElementCount) {
+    const LEG = [
+      ['Sea', '#0a2a4a'], ['Water', '#1d6a8f'], ['City', '#7a7a82'], ['Forest', '#1f5f33'],
+      ['Plains', '#6e7a30'], ['Desert', '#b08a3e'], ['Mtn', '#6a6058'], ['Swamp', '#45521f'],
+      ['Snow', '#a8c0cc'], ['Coast', '#c2a85e'],
+    ];
+    leg.innerHTML = LEG.map(([n, c]) =>
+      '<span class="wm-leg"><i style="background:' + c + '"></i>' + n + '</span>').join('');
   }
 }
 
