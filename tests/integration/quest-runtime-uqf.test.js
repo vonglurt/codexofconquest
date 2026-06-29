@@ -2960,3 +2960,86 @@ test.describe('§ARCH-01 Wave 2b — ada* family (bulk-migrated, 235 acts)', () 
     expect(r.failBad).toEqual([]);
   });
 });
+
+// §ARCH-01 Wave 2c — ath* family (113 skill_check acts; the ath_c1a* Trojan-cycle
+// chapters + ath_NN_act* arcs). Mixed gates: 72 with no activateCond → gate:{},
+// 41 with trivial `()=>!!S_story.<priorFlag>` → gate:{flags:[…]}. Notably, ~3 acts
+// (ath_c1a2/c1a4/c1a5) carried a DUPLICATE activateCond — the real function form
+// PLUS a dead string copy `activateCond:"() => …"`; JS last-key-wins made the
+// parsed value a STRING, so the legacy activation site `q.activateCond()` THREW a
+// TypeError at runtime (a live crash on those nodes). The bulk migrator strips both
+// forms and decomposes the intended gate, so this also FIXES that latent crash —
+// asserted here via canActivate gate behavior + the no-activateCond invariant.
+test.describe('§ARCH-01 Wave 2c — ath* family (bulk-migrated, 113 acts; fixes string-activateCond crash)', () => {
+  test('every ath* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const ath = Object.values(QUEST_DB).filter(q => /^ath/.test(q.id) && q.type === 'skill_check');
+      return ath.map(q => {
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        const gate = q.gate || {};
+        return { id:q.id, schema:q.schema, valid:validateQuest(q).valid,
+          noAC: typeof q.activateCond === 'undefined',
+          gateShape: gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other'),
+          hasStat:!!(b && b.stat), hasDc:typeof (b && b.dc) === 'number',
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          mbHasLabel:b ? ('label' in (b.onPass.find(x => x.kind === 'mission_bit') || {})) : null };
+      });
+    });
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(113);
+    for (const q of r) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.noAC).toBe(true);                          // string/function activateCond fully removed
+      expect(['flags', 'empty']).toContain(q.gateShape);  // no _legacyFn fallbacks in this family
+      expect(q.hasStat).toBe(true);
+      expect(q.hasDc).toBe(true);
+      expect(q.onPassK).toEqual(['mission_bit']);
+      expect(q.onFailLen).toBe(0);
+      expect(q.mbHasLabel).toBe(false);
+    }
+  });
+
+  test('PASS/FAIL parity across all 113 + gate behavior (flags ⇒ activatable iff flag set; {} ⇒ always)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const ath = Object.values(QUEST_DB).filter(q => /^ath/.test(q.id) && q.type === 'skill_check');
+      let passBad = [], failBad = [], gateBad = [];
+      for (const q of ath) {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const flag = b.onPass.find(x => x.kind === 'mission_bit').flag;
+        // PASS
+        S_story.abilityScores = { [b.stat.toLowerCase()]: 40 };
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        const tok = S_story.inventory.find(i => i.flagRef === flag);
+        if (!(S_story.quests[q.id] === 'done' && S_story[flag] === true && tok &&
+              tok.name === _flagToLabel(flag) + ' Token' && S_story.xp === 0 && S_story.gold === 0 &&
+              S_story.inventory.length === 1)) passBad.push(q.id);
+        // FAIL
+        S_story.abilityScores = { [b.stat.toLowerCase()]: -100 };
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (!(S_story.quests[q.id] === 'failed' && S_story[flag] === false && S_story.inventory.length === 0)) failBad.push(q.id);
+        // GATE
+        const g = q.gate || {};
+        if (g.flags && g.flags.length) {
+          const gf = g.flags[0];
+          S_story[gf] = false; const c0 = QuestRuntime.canActivate(q.id);
+          S_story[gf] = true;  const c1 = QuestRuntime.canActivate(q.id);
+          if (!(c0 === false && c1 === true)) gateBad.push(q.id);
+        } else if (QuestRuntime.canActivate(q.id) !== true) gateBad.push(q.id);
+      }
+      return { count:ath.length, passBad, failBad, gateBad };
+    });
+    expect(r.count).toBe(113);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+    expect(r.gateBad).toEqual([]);
+  });
+});

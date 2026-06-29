@@ -105,8 +105,15 @@ function delScalar(body, key) {
 }
 
 // Match the trivial `() => !!S_story.<flag>` activateCond → its flag, else null.
+// The optional `"?` around the arrow body also matches the STRING-literal form
+// `activateCond:"() => !!S_story.X"` — a data-generation bug present in ~36
+// auto-generated quests that carry activateCond TWICE (the real function form
+// plus a dead string copy; JS last-key-wins makes the parsed value the string,
+// so the legacy activation site `q.activateCond()` THROWS at runtime). Either
+// form yields the same intended flag. The lookahead `(?=[,}])` requires the flag
+// to be the COMPLETE arrow body so a compound `() => …X && …` is not misread.
 function trivialGateFlag(body) {
-  const m = /activateCond:\s*\(\)\s*=>\s*!!\s*S_story\.([A-Za-z0-9_$]+)\s*,/.exec(body);
+  const m = /activateCond:\s*"?\(\)\s*=>\s*!!\s*S_story\.([A-Za-z0-9_$]+)"?\s*(?=[,}])/.exec(body);
   return m ? m[1] : null;
 }
 function hasActivateCond(body) { return /(?:^|[,{\s])activateCond:/.test(body); }
@@ -169,7 +176,15 @@ for (const id of targets) {
   for (const k of ['checkStat','checkSkill','checkLabel','checkAbility','checkDC','checkPassFlag','checkFailFlag','bitLabel','xpAward','goldAward']) {
     body = delScalar(body, k);
   }
-  if (decomposed) body = body.replace(/,?\s*activateCond:\s*\(\)\s*=>\s*!!\s*S_story\.[A-Za-z0-9_$]+\s*(?=,)/, '');
+  // Remove the trivial activateCond(s) together with their leading comma. The /g
+  // flag + optional `"?` strips BOTH the function form and any dead string-copy
+  // duplicate (see trivialGateFlag) in one pass; whatever follows (another field's
+  // comma, or the closing brace) is left intact. Post-condition below asserts none
+  // survived, so a decomposed quest can never ship a dangling (throwing) activateCond.
+  if (decomposed) {
+    body = body.replace(/,\s*activateCond:\s*"?\(\)\s*=>\s*!!\s*S_story\.[A-Za-z0-9_$]+"?/g, '');
+    if (/activateCond\s*:/.test(body)) { console.error('RESIDUAL activateCond after decompose:', id, '\n', body.slice(0, 400)); process.exit(1); }
+  }
 
   // insert schema + gate + bits right after `type:"skill_check",`
   body = body.replace(/(type:\s*["']skill_check["'],)/, `$1 schema:'UQF-1.0', gate:${gate}, ${bits}`);
