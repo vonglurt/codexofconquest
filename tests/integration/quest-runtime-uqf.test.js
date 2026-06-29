@@ -2168,3 +2168,69 @@ test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => 
     expect(r.solved).toBe(true); expect(r.frag).toBe(true); expect(r.xpAward).toBe(600);  // engine adds another +600 on completion
   });
 });
+
+// ── §ARCH-01 Wave 1q — The Personal Legend (§ALCHEMY-01, quest_alch_01..07) ──
+//
+// Roen's pilgrimage (Coelho's Alchemist retold). 5 structural waypoint side
+// quests (01/02/03/06/07 — flag-chained gate + completion, NO onComplete) + 2
+// retryable checkStat skill_checks (04 CHA Persuasion DC11, 05 WIS Insight DC12;
+// mission_bit{flag} no-label + onPass/onFail _legacy_fn). The arc's terminal flag
+// personalLegendComplete gates the §WISDOM-01 wis arc. Zero engine changes.
+
+test.describe('§ARCH-01 Wave 1q — The Personal Legend (quest_alch_01..07)', () => {
+  test('all 7 validate; 5 chained side quests (no onComplete) + 2 skill_checks (no label)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const side = ['quest_alch_01','quest_alch_02','quest_alch_03','quest_alch_06','quest_alch_07'].map(id => {
+        const q = QUEST_DB[id];
+        return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion), onComplete:typeof q.onComplete==='function' };
+      });
+      const sk = ['quest_alch_04','quest_alch_05'].map(id => {
+        const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit');
+        return { id, schema:q.schema, valid:validateQuest(q).valid, stat:b.stat, skill:b.skill, dc:b.dc, mbFlag:mb&&mb.flag, mbLabel:mb&&(mb.label||null), gate:JSON.stringify(q.gate), retryable:q.retryable };
+      });
+      return { side, sk };
+    });
+    expect(r.side.every(x => x.schema==='UQF-1.0' && x.valid && x.type==='side' && !x.onComplete)).toBe(true);
+    expect(r.side).toMatchObject([
+      { id:'quest_alch_01', gate:'{}',                            completion:'{"flags":["roenMet"]}' },
+      { id:'quest_alch_02', gate:'{"flags":["roenMet"]}',         completion:'{"flags":["roenMidlandsWisdom"]}' },
+      { id:'quest_alch_03', gate:'{"flags":["roenMidlandsWisdom"]}', completion:'{"flags":["roenAtSea"]}' },
+      { id:'quest_alch_06', gate:'{"flags":["roenMaltaCrisis"]}', completion:'{"flags":["roenAlchemistMet"]}' },
+      { id:'quest_alch_07', gate:'{"flags":["roenAlchemistMet"]}', completion:'{"flags":["personalLegendComplete"]}' },
+    ]);
+    expect(r.sk.every(x => x.schema==='UQF-1.0' && x.valid && x.mbLabel===null && x.retryable===true)).toBe(true);
+    expect(r.sk).toMatchObject([
+      { id:'quest_alch_04', stat:'CHA', skill:'Persuasion', dc:11, mbFlag:'roenOracleRead',  gate:'{"flags":["roenAtSea"]}' },
+      { id:'quest_alch_05', stat:'WIS', skill:'Insight',    dc:12, mbFlag:'roenMaltaCrisis', gate:'{"flags":["roenOracleRead"]}' },
+    ]);
+  });
+
+  test('alch_04/05 PASS: done + flag + token + exact xp/gold (05 also +250gp)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = (id, flag) => {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        return { status:S_story.quests[id], xp:S_story.xp, gold:S_story.gold, flag:S_story[flag], token:S_story.inventory.some(i=>i.flagRef===flag) };
+      };
+      return { o:run('quest_alch_04','roenOracleRead'), m:run('quest_alch_05','roenMaltaCrisis') };
+    });
+    expect(r.o).toEqual({ status:'done', xp:300, gold:0,   flag:true, token:true });
+    expect(r.m).toEqual({ status:'done', xp:350, gold:250, flag:true, token:true });
+  });
+
+  test('alch_04 retryable FAIL: stays active, no flag/xp', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { cha:-100 };       // deterministic fail
+      S_story.level = 1; S_story.day = 2; S_story.skillCheckAttempts = {};
+      S_story.xp = 0; S_story.roenOracleRead = false; S_story.quests = { quest_alch_04:'active' };
+      _rollCeremonia('quest_alch_04');
+      return { status:S_story.quests.quest_alch_04, xp:S_story.xp, flag:S_story.roenOracleRead, fails:(S_story.skillCheckAttempts.quest_alch_04||{}).failures };
+    });
+    expect(r.status).toBe('active'); expect(r.xp).toBe(0); expect(r.flag).toBe(false); expect(r.fails).toBe(1);
+  });
+});

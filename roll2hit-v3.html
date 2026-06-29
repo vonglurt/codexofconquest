@@ -11917,110 +11917,127 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── §ALCHEMY-01: The Personal Legend ──
-  quest_alch_01: { id:'quest_alch_01', type:'side',
+  // §ARCH-01 Wave 1q — migrated legacy → UQF v1.0 (2026-06-28). Roen's pilgrimage (Coelho's
+  // Alchemist retold). 5 structural waypoint side quests (01/02/03/06/07 — gate←activateCond,
+  // completion←completeFn, NO onComplete) + 2 checkStat skill_checks (04/05, pure parity:
+  // mission_bit{flag} no-label + onPass/onFail _legacy_fn). This arc SETS personalLegendComplete
+  // (alch_07), which gates the §WISDOM-01 wis arc. Zero engine changes.
+  quest_alch_01: { id:'quest_alch_01', schema:'UQF-1.0', type:'side',
     title:'The Shepherd\'s Dream',
     desc:'A shepherd from the Irish Highlands has been waiting at the crossroads since dawn. He has a smooth stone his grandmother gave him and a fortune teller\'s reading that says the gold is "below the water that has already been cleared." He wants to follow someone who looks like they know where they\'re going.',
     hint:'Meet Roen at the Irish Highlands crossroads.',
-    activateNode:'KIR', activateCond:() => true,
-    completeItems:[], completeFn:() => !!(S_story.roenMet),
-    waypointNode:'KIR', reward:0,
+    activateNode:'KIR', gate:{},
+    completion:{ flags:['roenMet'] }, bits:[],
+    completeItems:[], waypointNode:'KIR', reward:0,
     disposition:'"The stone knows where the gold is. I\'ve been arguing with the stone for forty years and it\'s never said anything, which I now think is the message." — Roen',
     passText:"Roen has joined you. The stone has not said anything in forty years, which he now thinks is the message.",
     failText:"Roen is still waiting at the Irish Highlands crossroads. He has not yet been met.",
     npc:"long_john_silver_sen",
   },
 
-  quest_alch_02: { id:'quest_alch_02', type:'side',
+  quest_alch_02: { id:'quest_alch_02', schema:'UQF-1.0', type:'side',
     title:'The Noon Plain',
     desc:'Roen is standing in the noon plain watching his shadow disappear. He has a theory about this. The theory connects to his grandmother, the shadow of the self, and the second agreement. He would like to discuss it.',
     hint:'Travel with Roen through the Plains and Midlands.',
-    activateNode:'MAN', activateCond:() => !!S_story.roenMet,
-    completeItems:[], completeFn:() => !!(S_story.roenMidlandsWisdom),
-    waypointNode:'MAN', reward:0,
+    activateNode:'MAN', gate:{ flags:['roenMet'] },
+    completion:{ flags:['roenMidlandsWisdom'] }, bits:[],
+    completeItems:[], waypointNode:'MAN', reward:0,
     disposition:'"Don\'t take the shadow personally. My grandmother said this. I applied it to a noonwraith. It mostly worked." — Roen',
     passText:"Do not take the shadow personally. Roen applied his grandmother advice to a noonwraith. It mostly worked.",
     failText:"The noon plain has not been crossed with Roen yet.",
     npc:"long_john_silver_sen",
   },
 
-  quest_alch_03: { id:'quest_alch_03', type:'side',
+  quest_alch_03: { id:'quest_alch_03', schema:'UQF-1.0', type:'side',
     title:'The Ship Remembers',
     desc:'Roen at the rail of the Tilbury Star. The stone is heavy in his pocket over open water. He has observations about ships, assumptions, and the difference between going somewhere and knowing where you are going.',
     hint:'Cross the sea with Roen aboard the Tilbury Star.',
-    activateNode:'SEN', activateCond:() => !!S_story.roenMidlandsWisdom,
-    completeItems:[], completeFn:() => !!(S_story.roenAtSea),
-    waypointNode:'SEN', reward:0,
+    activateNode:'SEN', gate:{ flags:['roenMidlandsWisdom'] },
+    completion:{ flags:['roenAtSea'] }, bits:[],
+    completeItems:[], waypointNode:'SEN', reward:0,
     disposition:'"The ship doesn\'t make assumptions about where the sea ends. I have spent forty years making assumptions about where the gold is. The ship is doing better than I am." — Roen',
     passText:"The ship does not make assumptions about where the sea ends. Roen has forty years of assumptions. The sea crossing is made.",
     failText:"The sea crossing with Roen aboard the Tilbury Star has not been completed.",
     npc:"long_john_silver_sen",
   },
 
-  quest_alch_04: { id:'quest_alch_04', type:'skill_check',
+  quest_alch_04: { id:'quest_alch_04', schema:'UQF-1.0', type:'skill_check',
     title:'The Oracle\'s Reading',
     desc:'The Oracle has given Roen a reading. It uses almost exactly the same words as the fortune teller in Birka. Roen is convinced this means the Mediterranean. CHA Persuasion DC 11 to help him hear what the oracle actually said.',
     hint:'Interpret the oracle\'s reading with Roen at the Oracle\'s Island. CHA Persuasion DC 11.',
-    activateNode:'PDL', activateCond:() => !!S_story.roenAtSea,
-    checkStat:'cha', checkSkill:'Persuasion', checkDC:11, retryable:true,
-    checkPassFlag:'roenOracleRead',
-    onPass:() => {
-      S_story.roenOracleRead = true;
-      S_story.xp = (S_story.xp||0) + 300;
-      storyMsg('🐑 "\'Below the water that has already been cleared.\'" Roen reads it again. "I\'ve been thinking this means the floor of a sea that\'s been drained somehow. But: water that has been cleared. The loch. The kelpie."\n\nHe is very still.\n\n"The Highland loch is the only body of water in my range of experience that has been cleared. The kelpie was removed. The ford opened. The water was — cleared. By you, actually." He looks at you. "My grandmother\'s backyard. She was describing the backyard." He folds both readings together. "She was not speaking in metaphors. She was speaking about Highland geography. In very compressed language."\n\n+300 XP. Quest: The Lost Stone activates at Malta.');
-    },
-    onFail:() => {
-      storyMsg('Roen listens carefully and then says: "I understand what you\'re saying but I still think it\'s somewhere in the Mediterranean. The Mediterranean has a lot of water. Some of it has probably been cleared. I am keeping my options open."');
-    },
-    xpAward:0,
+    activateNode:'PDL', gate:{ flags:['roenAtSea'] }, retryable:true,
+    bits:[
+      { kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:11,
+        onPass:[
+          { kind:'mission_bit', flag:'roenOracleRead' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.roenOracleRead = true;
+            S_story.xp = (S_story.xp||0) + 300;
+            storyMsg('🐑 "\'Below the water that has already been cleared.\'" Roen reads it again. "I\'ve been thinking this means the floor of a sea that\'s been drained somehow. But: water that has been cleared. The loch. The kelpie."\n\nHe is very still.\n\n"The Highland loch is the only body of water in my range of experience that has been cleared. The kelpie was removed. The ford opened. The water was — cleared. By you, actually." He looks at you. "My grandmother\'s backyard. She was describing the backyard." He folds both readings together. "She was not speaking in metaphors. She was speaking about Highland geography. In very compressed language."\n\n+300 XP. Quest: The Lost Stone activates at Malta.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            storyMsg('Roen listens carefully and then says: "I understand what you\'re saying but I still think it\'s somewhere in the Mediterranean. The Mediterranean has a lot of water. Some of it has probably been cleared. I am keeping my options open."');
+          } },
+        ],
+      },
+    ],
     disposition:'"The oracle and the fortune teller said the same thing. Either they both know something, or there is a very consistent error in oracle training programs." — Roen',
     passText:"Either they both know something, or there is a very consistent error in oracle training programs. The reading has been interpreted.",
     failText:"The oracle reading with Roen has not been interpreted yet. CHA Persuasion DC 11 required.",
     npc:"long_john_silver_sen",
   },
 
-  quest_alch_05: { id:'quest_alch_05', type:'skill_check',
+  quest_alch_05: { id:'quest_alch_05', schema:'UQF-1.0', type:'skill_check',
     title:'The Lost Stone',
     desc:'Roen dropped the Philosophy Stone into the Malta harbor. He can see it on the floor. He\'s sitting on the dock having an existential crisis about what it means. WIS Insight DC 12 to help him count what he has instead of what\'s on the harbor floor.',
     hint:'Help Roen through his crisis at Malta. WIS Insight DC 12.',
-    activateNode:'MLA', activateCond:() => !!S_story.roenOracleRead,
-    checkStat:'wis', checkSkill:'Insight', checkDC:12, retryable:true,
-    checkPassFlag:'roenMaltaCrisis',
-    onPass:() => {
-      S_story.roenMaltaCrisis = true;
-      S_story.gold = (S_story.gold||0) + 250;
-      S_story.xp = (S_story.xp||0) + 350;
-      storyMsg('🐑 You point out what Roen has: forty years of paying attention, five thousand miles of following an instinct, a correct interpretation of two oracles, and a grandmother who spoke in geographic coordinates.\n\nA local fisherman has dived for the stone without being asked and is already swimming back. He surfaces. Hands it over. "You dropped it." He charges nothing. He has gone back to his work before Roen remembers to thank him.\n\nRoen holds the stone. "Always do your best. He did his best. That was enough for the whole harbor." He pauses. "I should do my best. That will be enough for the whole journey." He is much steadier now. "Also I notice the stone was warm in the water. Warmer than the harbor temperature explains. This is new information." It is. "I need to get back to the Highlands."\n\n+250gp (fisherman refused it; went to the party coffers). +350 XP. Quest: The Stoic\'s Gold activates at Athens.');
-    },
-    onFail:() => {
-      storyMsg('Roen looks at the harbor floor. "I have walked four thousand miles. I have spoken to two oracles. I have interpreted a grandmother\'s gardening advice as metaphysical instruction. And then I dropped the stone in a harbor." He is not ready to count what he has yet.');
-    },
-    xpAward:0,
+    activateNode:'MLA', gate:{ flags:['roenOracleRead'] }, retryable:true,
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Insight', dc:12,
+        onPass:[
+          { kind:'mission_bit', flag:'roenMaltaCrisis' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.roenMaltaCrisis = true;
+            S_story.gold = (S_story.gold||0) + 250;
+            S_story.xp = (S_story.xp||0) + 350;
+            storyMsg('🐑 You point out what Roen has: forty years of paying attention, five thousand miles of following an instinct, a correct interpretation of two oracles, and a grandmother who spoke in geographic coordinates.\n\nA local fisherman has dived for the stone without being asked and is already swimming back. He surfaces. Hands it over. "You dropped it." He charges nothing. He has gone back to his work before Roen remembers to thank him.\n\nRoen holds the stone. "Always do your best. He did his best. That was enough for the whole harbor." He pauses. "I should do my best. That will be enough for the whole journey." He is much steadier now. "Also I notice the stone was warm in the water. Warmer than the harbor temperature explains. This is new information." It is. "I need to get back to the Highlands."\n\n+250gp (fisherman refused it; went to the party coffers). +350 XP. Quest: The Stoic\'s Gold activates at Athens.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            storyMsg('Roen looks at the harbor floor. "I have walked four thousand miles. I have spoken to two oracles. I have interpreted a grandmother\'s gardening advice as metaphysical instruction. And then I dropped the stone in a harbor." He is not ready to count what he has yet.');
+          } },
+        ],
+      },
+    ],
     disposition:'"He dived in for a stranger\'s stone. Without hesitation. And charged nothing. I have been learning to do my best. He already does his best. That\'s the whole lesson right there." — Roen, watching the fisherman\'s retreating boat',
     passText:"He dived in for a stranger stone without hesitation and charged nothing. Roen has learned what he came forty years to find.",
     failText:"Roen is still on the Malta dock in crisis. The stone is on the harbor floor. WIS Insight DC 12 required.",
     npc:"long_john_silver_sen",
   },
 
-  quest_alch_06: { id:'quest_alch_06', type:'side',
+  quest_alch_06: { id:'quest_alch_06', schema:'UQF-1.0', type:'side',
     title:'The Stoic\'s Gold',
     desc:'At the Areopagus in Athens, near the altar to an unknown god: an old man who has been on the same stone since before the city\'s current magistrates were born. He heard Roen\'s problem and immediately said: "You\'ve already found it." He has more to say.',
     hint:'Bring Roen to the Areopagus in Athens.',
-    activateNode:'ATH', activateCond:() => !!S_story.roenMaltaCrisis,
-    completeItems:[], completeFn:() => !!(S_story.roenAlchemistMet),
-    waypointNode:'ATH', reward:0,
+    activateNode:'ATH', gate:{ flags:['roenMaltaCrisis'] },
+    completion:{ flags:['roenAlchemistMet'] }, bits:[],
+    completeItems:[], waypointNode:'ATH', reward:0,
     disposition:'"Shepherds rarely use metaphors. They use directions." — The Old Man at the Areopagus',
     passText:"Shepherds rarely use metaphors. They use directions. You have already found it. The old man at the Areopagus has spoken.",
     failText:"Roen has not yet reached the Areopagus in Athens.",
     npc:"deacon_nikolaos_ath",
   },
 
-  quest_alch_07: { id:'quest_alch_07', type:'side',
+  quest_alch_07: { id:'quest_alch_07', schema:'UQF-1.0', type:'side',
     title:'The Gold Was Home',
     desc:'Roen has returned to the Irish Highlands. The kelpie is gone. The loch is clear. His grandmother\'s Philosophy Stone has been a loch-stone all along — a fragment of the bioluminescent colony below the loch that concentrates trace gold from the highland runoff. The fortune teller was right. The grandmother was right. He needs to put it in the water.',
     hint:'Return to the Irish Highlands with Roen and watch him drop the stone into the loch.',
-    activateNode:'KIR', activateCond:() => !!S_story.roenAlchemistMet,
-    completeItems:[], completeFn:() => !!(S_story.personalLegendComplete),
-    waypointNode:'KIR', reward:0,
+    activateNode:'KIR', gate:{ flags:['roenAlchemistMet'] },
+    completion:{ flags:['personalLegendComplete'] }, bits:[],
+    completeItems:[], waypointNode:'KIR', reward:0,
     disposition:'"She said it was in the backyard. I walked four thousand miles to confirm that she was correct. I would do it again. I understand it now." — Roen, at the loch edge',
     passText:"She said it was in the backyard. He walked four thousand miles to confirm she was correct. He would do it again. The stone is in the loch.",
     failText:"Roen has not yet returned to the Irish Highlands loch with the stone.",
