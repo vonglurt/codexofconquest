@@ -1870,3 +1870,66 @@ test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor
     expect(r.status).toBe('done'); expect(r.flag).toBe(true); expect(r.xp).toBe(50);
   });
 });
+
+// ── §ARCH-01 Wave 1m — Sea: The Warmth Calm (quest_sea_01..03) ──
+//
+// The Deep Warmth Eel arc. sea_01 is a waypoint-arrival side quest exercising
+// the NEW completion term `atNode:'NWI'` (← completeFn:()=>currentCode==='NWI').
+// sea_02 (INT Investigation DC13) + sea_03 (WIS Nature DC14) are pure-parity
+// skill_checks: checkPassFlag→mission_bit{flag} (no label) + rich onPass via
+// _legacy_fn. All checkStat/checkSkill → pure parity since §SKILLFIX-01.
+
+test.describe('§ARCH-01 Wave 1m — Sea: The Warmth Calm (quest_sea_01..03)', () => {
+  test('the new completion.atNode term: sea_01 completes only while currentCode===NWI', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const q = QUEST_DB.quest_sea_01;
+      S_story.currentCode = 'SEN';
+      const elsewhere = QuestRuntime.canComplete('quest_sea_01');
+      S_story.currentCode = 'NWI';
+      const atNWI = QuestRuntime.canComplete('quest_sea_01');
+      return { schema:q.schema, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate),
+               completion:JSON.stringify(q.completion), hasOnComplete:typeof q.onComplete==='function',
+               elsewhere, atNWI };
+    });
+    expect(r).toMatchObject({ schema:'UQF-1.0', valid:true, gate:'{}', completion:'{"atNode":"NWI"}', hasOnComplete:true });
+    expect(r.elsewhere).toBe(false);
+    expect(r.atNWI).toBe(true);
+  });
+
+  test('the two skill_checks validate with exact stat/skill/dc + mission_bit (no label) + gates', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => ['quest_sea_02','quest_sea_03'].map(id => {
+      const q = QUEST_DB[id]; const bit = q.bits[0];
+      const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
+      return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, skill:bit.skill, dc:bit.dc,
+               mbFlag:mb&&mb.flag, mbLabel:mb&&(mb.label||null),
+               hasLegacyFn:(bit.onPass||[]).some(b=>b.kind==='_legacy_fn'), gate:JSON.stringify(q.gate) };
+    }));
+    expect(r.every(x => x.schema==='UQF-1.0' && x.valid && x.hasLegacyFn)).toBe(true);
+    expect(r).toMatchObject([
+      { id:'quest_sea_02', stat:'INT', skill:'Investigation', dc:13, mbFlag:'warmthEelFound',    mbLabel:null, gate:'{"flags":["seaStrangenessNoticed"]}' },
+      { id:'quest_sea_03', stat:'WIS', skill:'Nature',        dc:14, mbFlag:'warmthEelEscorted', mbLabel:null, gate:'{"flags":["warmthEelFound"]}' },
+    ]);
+  });
+
+  test('sea_02/03 PASS: exact gold/xp, flags, knowledge (02), Joint Pirate Debt Note + ally flag (03)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = (id) => {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.gold = 0; S_story.xp = 0; S_story.inventory = []; S_story.knowledge = [];
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        return { status:S_story.quests[id], gold:S_story.gold, xp:S_story.xp, knowledge:S_story.knowledge.length };
+      };
+      const s2 = run('quest_sea_02'); const f2 = S_story.warmthEelFound;
+      const s3 = run('quest_sea_03'); const f3 = S_story.warmthEelEscorted; const ally = S_story.pirateCrew_allied;
+      const note = S_story.inventory.some(i=>i.name==='Joint Pirate Debt Note');
+      return { s2, f2, s3, f3, ally, note };
+    });
+    expect(r.s2).toEqual({ status:'done', gold:200, xp:200, knowledge:1 }); expect(r.f2).toBe(true);
+    expect(r.s3).toEqual({ status:'done', gold:400, xp:400, knowledge:0 });
+    expect(r.f3).toBe(true); expect(r.ally).toBe(true); expect(r.note).toBe(true);
+  });
+});

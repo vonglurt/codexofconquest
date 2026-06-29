@@ -11219,12 +11219,17 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── §SPARK-01 SEA: The Warmth Calm ──
-  quest_sea_01: { id:'quest_sea_01', type:'side',
+  // §ARCH-01 Wave 1m — migrated legacy → UQF v1.0 (2026-06-28). sea_01 is a waypoint-arrival side
+  // quest: gate:{} ← activateCond:()=>true, and a NEW completion term **`atNode:'NWI'`** ←
+  // completeFn:()=>S_story.currentCode==='NWI' (completes when the player sails into NWI). onComplete
+  // (seaStrangenessNoticed + 100xp + msg) kept verbatim — engine fires it on the UQF completion path.
+  quest_sea_01: { id:'quest_sea_01', schema:'UQF-1.0', type:'side',
     title:'The Calm Sea',
     desc:'Three miles east of Tilbury the sea stops moving. Two pirate ships — the Redmast and the Saltwick Dockmasters\' brig — are anchored together. One crew is teaching the other to splice rope. This is not normal.',
     hint:'Sail east from the Tilbury Star into the open water.',
-    activateNode:'SEN', activateCond:() => true,
-    completeItems:[], completeFn:() => S_story.currentCode === 'NWI',
+    activateNode:'SEN', gate:{},
+    completion:{ atNode:'NWI' }, bits:[],
+    completeItems:[],
     onComplete:() => {
       S_story.seaStrangenessNoticed = true;
       S_story.xp = (S_story.xp||0) + 100;
@@ -11237,45 +11242,60 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
 
-  quest_sea_02: { id:'quest_sea_02', type:'skill_check',
+  // §ARCH-01 Wave 1m — migrated legacy → UQF v1.0 (2026-06-28). Pure parity. checkPassFlag (no
+  // bitLabel) → mission_bit{flag}; _legacy_fn carries +200gp/+200xp/knowledge/msg.
+  quest_sea_02: { id:'quest_sea_02', schema:'UQF-1.0', type:'skill_check',
     title:'The Warmth Eel',
     desc:'Something is below the hull. Amber glow, fifty feet down, longer than both ships. It has been here for eight days. The calm is its doing. Investigate.',
     hint:'Study the water and the glow. INT Investigation DC 13.',
-    activateNode:'NWI', activateCond:() => !!S_story.seaStrangenessNoticed,
-    checkStat:'int', checkSkill:'Investigation', checkDC:13, retryable:true,
-    checkPassFlag:'warmthEelFound',
-    onPass:() => {
-      S_story.warmthEelFound = true;
-      S_story.gold = (S_story.gold||0) + 200;
-      S_story.xp = (S_story.xp||0) + 200;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push("The Deep Warmth Eel: progenitor organism of The Warmth colony. CR 4. Bioluminescent. Non-aggressive. Produces a three-mile calm radius of social bonding chemistry in the water. Related to Clot's Glow — same organism, different scale. Has been at this location for eight days. Predator/prey disruption: fish clustering, pirate cooperation, unusual gull absence. Not dangerous. Extremely content.");
-      storyMsg('🟡 The eel is sixty feet long. Bioluminescent amber — the same chemistry as Clot\'s Glow, the same organism at a different scale. It has been here eight days because the water temperature at this depth is ideal for colony blooming.\n\nThe predator/prey chain within its radius: disrupted. The fish are clustering oddly. The gulls have gone where things are less warm. The pirates stopped fighting because nothing within three miles of this eel wants to fight anything.\n\nThe Saltwick Dockmasters\' crew, notably, includes three men who testified against Aldous and four who did not. They are playing cards.\n\nKnowledge entry added: The Deep Warmth Eel. +200gp. +200 XP.');
-    },
-    xpAward:0,
+    activateNode:'NWI', gate:{ flags:['seaStrangenessNoticed'] }, retryable:true,
+    bits:[
+      { kind:'skill_check', stat:'INT', skill:'Investigation', dc:13,
+        onPass:[
+          { kind:'mission_bit', flag:'warmthEelFound' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.warmthEelFound = true;
+            S_story.gold = (S_story.gold||0) + 200;
+            S_story.xp = (S_story.xp||0) + 200;
+            S_story.knowledge = S_story.knowledge || [];
+            S_story.knowledge.push("The Deep Warmth Eel: progenitor organism of The Warmth colony. CR 4. Bioluminescent. Non-aggressive. Produces a three-mile calm radius of social bonding chemistry in the water. Related to Clot's Glow — same organism, different scale. Has been at this location for eight days. Predator/prey disruption: fish clustering, pirate cooperation, unusual gull absence. Not dangerous. Extremely content.");
+            storyMsg('🟡 The eel is sixty feet long. Bioluminescent amber — the same chemistry as Clot\'s Glow, the same organism at a different scale. It has been here eight days because the water temperature at this depth is ideal for colony blooming.\n\nThe predator/prey chain within its radius: disrupted. The fish are clustering oddly. The gulls have gone where things are less warm. The pirates stopped fighting because nothing within three miles of this eel wants to fight anything.\n\nThe Saltwick Dockmasters\' crew, notably, includes three men who testified against Aldous and four who did not. They are playing cards.\n\nKnowledge entry added: The Deep Warmth Eel. +200gp. +200 XP.');
+          } },
+        ],
+        onFail:[],
+      },
+    ],
     disposition:'"It goes right under us. Every few hours. I tried to be frightened about it on day one. By day three I just watched." — Saltwick Dockmasters\' Mate',
     passText:"It goes right under us. The warmth eel has been circling for eight days. The calm is its doing. You have seen it.",
     failText:"Something is below the hull but has not been identified. The amber glow has not been studied.",
     npc:"long_john_silver_sen",
   },
 
-  quest_sea_03: { id:'quest_sea_03', type:'skill_check',
+  // §ARCH-01 Wave 1m — migrated legacy → UQF v1.0 (2026-06-28). Pure parity. checkPassFlag (no
+  // bitLabel) → mission_bit{flag}; _legacy_fn carries pirateCrew_allied + 400gp/400xp + Joint Pirate
+  // Debt Note + msg.
+  quest_sea_03: { id:'quest_sea_03', schema:'UQF-1.0', type:'skill_check',
     title:'The Escort',
     desc:'The Warmth Eel belongs in deep water — far enough that it cannot disrupt the trade lane, warm enough to stay content. The fish stocks and the shipping route both require it to move. Moving it requires patience and the right approach.',
     hint:'Guide the eel toward deeper water. WIS Nature DC 14.',
-    activateNode:'NWI', activateCond:() => !!S_story.warmthEelFound,
-    checkStat:'wis', checkSkill:'Nature', checkDC:14, retryable:true,
-    checkPassFlag:'warmthEelEscorted',
-    onPass:() => {
-      S_story.warmthEelEscorted = true;
-      S_story.pirateCrew_allied = true;
-      S_story.gold = (S_story.gold||0) + 400;
-      S_story.xp = (S_story.xp||0) + 400;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:'Joint Pirate Debt Note', icon:'⚓', type:'misc', desc:'Signed by both the Redmast Quartermaster and the Saltwick Dockmasters\' First Mate. Redeemable for one favour each at sea. The two crews agreed on this without being asked.', sell:0 });
-      storyMsg('⚓ The eel responds to the approach: slow movement parallel to its direction, no sudden actions, presence acknowledged but not threatening. After forty minutes it adjusts its arc, heading south into the trench depth.\n\nThe water begins to chop again within twenty minutes. The gulls return. A fish breaks the surface.\n\nThe Redmast Quartermaster and the Saltwick First Mate both come to the rail. They have apparently discussed this.\n\n"You moved it without hurting it," the Quartermaster says. "We owe you."\n\n"Both of us," says the Mate. He looks like this surprises him somewhat.\n\nThey produce a joint note, which they sign together. The ink is slightly different colours.\n\nJoint Pirate Debt Note added. +400gp. +400 XP. Sea route OW→LW now clear. Both pirate crews: allied.');
-    },
-    xpAward:0,
+    activateNode:'NWI', gate:{ flags:['warmthEelFound'] }, retryable:true,
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Nature', dc:14,
+        onPass:[
+          { kind:'mission_bit', flag:'warmthEelEscorted' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.warmthEelEscorted = true;
+            S_story.pirateCrew_allied = true;
+            S_story.gold = (S_story.gold||0) + 400;
+            S_story.xp = (S_story.xp||0) + 400;
+            const inv = S_story.inventory = S_story.inventory || [];
+            inv.push({ name:'Joint Pirate Debt Note', icon:'⚓', type:'misc', desc:'Signed by both the Redmast Quartermaster and the Saltwick Dockmasters\' First Mate. Redeemable for one favour each at sea. The two crews agreed on this without being asked.', sell:0 });
+            storyMsg('⚓ The eel responds to the approach: slow movement parallel to its direction, no sudden actions, presence acknowledged but not threatening. After forty minutes it adjusts its arc, heading south into the trench depth.\n\nThe water begins to chop again within twenty minutes. The gulls return. A fish breaks the surface.\n\nThe Redmast Quartermaster and the Saltwick First Mate both come to the rail. They have apparently discussed this.\n\n"You moved it without hurting it," the Quartermaster says. "We owe you."\n\n"Both of us," says the Mate. He looks like this surprises him somewhat.\n\nThey produce a joint note, which they sign together. The ink is slightly different colours.\n\nJoint Pirate Debt Note added. +400gp. +400 XP. Sea route OW→LW now clear. Both pirate crews: allied.');
+          } },
+        ],
+        onFail:[],
+      },
+    ],
     disposition:'"We have been wanting to fight each other for three years. We will get back to that. But not today." — Redmast Quartermaster, waving from the rail as you sail east',
     passText:"The eel moved east into deeper water. The Redmast and the Saltwick brig are already drifting apart. They will get back to fighting each other. But not today.",
     failText:"The Warmth Eel is still beneath the hull. The trade lane is still disrupted.",
@@ -20372,6 +20392,9 @@ const QuestRuntime = {
     const orCount = (g.flagsAny || []).length + (g.battles || []).length + (g.questsComplete || []).length;
     if (orCount && !orList.some(Boolean)) return false;
     if (g.notFlags && g.notFlags.some(f => !!S_story[f])) return false;
+    // atNode → completes only while the player is currently standing at this node
+    // (replaces completeFn:()=>S_story.currentCode==='CODE'; waypoint-arrival completion).
+    if (g.atNode && S_story.currentCode !== g.atNode) return false;
     return true;
   },
 
