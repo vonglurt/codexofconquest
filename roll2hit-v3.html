@@ -11303,23 +11303,31 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── §NAVAL-01: The Intercept quests ──
-  quest_sb_01: { id:'quest_sb_01', type:'side',
+  // §ARCH-01 Wave 1n — migrated legacy → UQF v1.0 (2026-06-28). The Naval Intercept is a role-choice
+  // branch (sbChosenRole ∈ fight/parley/examine). sb_01 is the structural hook side quest:
+  // gate (activateNode-only, no activateCond) → gate:{}, completion ← completeFn:()=>!!sbApproachSeen.
+  // The three branch quests gate on a NEW term **`flagEquals:{ sbChosenRole:'…' }`** (strict equality)
+  // alongside flags:['sbApproachSeen']. ⚠ sb_fight carries BOTH an onComplete that adds +400xp AND
+  // xpAward:400 (the side-quest xpAward engine path) → a latent **+800xp double-count** preserved
+  // verbatim for parity (flagged in docs, not fixed).
+  quest_sb_01: { id:'quest_sb_01', schema:'UQF-1.0', type:'side',
     title:'A Privateer Commission',
     desc:'Captain Vera Keel of the intercept brig holds a Commission pennant. She claims the right to search and retain the Tilbury Star for undeclared cargo. The gap between the ships is still open. Choose your station.',
     hint:'Choose your crew role at the intercept. Three options: speak, examine, or fight.',
-    activateNode:'GCI', completeItems:[], completeFn:() => !!(S_story.sbApproachSeen),
-    waypointNode:'GCI', reward:0,
+    activateNode:'GCI', gate:{},
+    completion:{ flags:['sbApproachSeen'] }, bits:[],
+    completeItems:[], waypointNode:'GCI', reward:0,
     disposition:'"The Commission authorizes search and retention. We both know what the eastern run carries." — Captain Vera Keel, holding the pennant where you can read it',
     passText:"You have taken your station. The intercept is engaged. Speak, examine, or fight — the choice is made.",
     failText:"Captain Keel is waiting. The gap between the ships is still open. A station has not been chosen.",
     npc:"long_john_silver_sen",
   },
-  quest_sb_fight: { id:'quest_sb_fight', type:'side',
+  quest_sb_fight: { id:'quest_sb_fight', schema:'UQF-1.0', type:'side',
     title:'Board and Clear',
     desc:'The gangplanks are out. The privateer crew is coming across. Clear the intercept brig.',
     hint:'Defeat the privateer crew at the intercept node.',
-    activateNode:'GCI', activateCond:() => !!S_story.sbApproachSeen && S_story.sbChosenRole === 'fight',
-    completeFn:() => !!((S_story.defeatedBattles||{})['SB_PRIVATEER']),
+    activateNode:'GCI', gate:{ flags:['sbApproachSeen'], flagEquals:{ sbChosenRole:'fight' } },
+    completion:{ battles:['SB_PRIVATEER'] }, bits:[],
     onComplete:() => {
       S_story.sbResolved = true;
       S_story.gold = (S_story.gold||0) + 200;
@@ -11334,52 +11342,71 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:"The privateer crew is still aboard. The intercept brig has not been cleared.",
     npc:"long_john_silver_sen",
   },
-  quest_sb_parley: { id:'quest_sb_parley', type:'skill_check',
+  // §ARCH-01 Wave 1n — migrated legacy → UQF v1.0 (2026-06-28). Pure parity. retryable:false.
+  // checkPassFlag (no bitLabel) → mission_bit{flag}; onPass via _legacy_fn (−80gp / +350xp / Letter
+  // of Marque); onFail via _legacy_fn flips sbChosenRole→'fight' (then the resolver locks 'failed',
+  // and sb_fight's flagEquals gate now activates — the branch fallthrough is preserved).
+  quest_sb_parley: { id:'quest_sb_parley', schema:'UQF-1.0', type:'skill_check',
     title:'Speak to Their Captain',
     desc:"Keel came to the rail herself. That's unusual — privateers send their first officer for boarding calls. She wants a conversation. CHA Persuasion DC 12 to negotiate passage without grappling hooks.",
     hint:'Negotiate with Captain Keel before the gangplank goes out. CHA Persuasion DC 12.',
-    activateNode:'GCI', activateCond:() => !!S_story.sbApproachSeen && S_story.sbChosenRole === 'parley',
-    checkStat:'cha', checkSkill:'Persuasion', checkDC:12, retryable:false,
-    checkPassFlag:'sbParleySucceeded',
-    onPass:() => {
-      S_story.sbParleySucceeded = true;
-      S_story.sbResolved = true;
-      S_story.gold = (S_story.gold||0) - 80;
-      S_story.xp = (S_story.xp||0) + 350;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:'Letter of Marque (Keel)', icon:'📜', type:'misc', desc:"Captain Vera Keel's Commission letter, endorsed and counter-signed. Authorizes bearer to claim passage rights on the eastern run. Keel added a personal notation: 'not to be used against the Saltwick route.' She seemed amused by her own generosity.", sell:0 });
-      storyMsg('Keel keeps the pennant raised throughout the conversation. She is not threatening — she is establishing the frame.\n\nYou name the frame back to her: she is not here for the Star\'s cargo. She is here because someone told her the Star has been running a specific item for three crossings and she wants to know what it is.\n\nKeel is quiet.\n\n"Eighty gold," she says. "For the crossing question not becoming a boarding question." She lowers the pennant. "And I\'ll sign the Commission letter for you. You\'ll find it useful at the eastern ports." She sounds sincere. She probably is.\n\nThe gap stays open. The gangplanks stay racked.\n\n-80gp. Letter of Marque (Keel) added. +350 XP. No boarding.');
-    },
-    onFail:() => {
-      S_story.sbChosenRole = 'fight';
-      storyMsg('Keel nods once, slowly, the way someone nods when a conversation has reached its end.\n\n"Gangplanks out," she says to her first officer. She does not raise her voice.\n\nThe fight option is now the only option. See the encounter panel.');
-    },
-    xpAward:0,
+    activateNode:'GCI', gate:{ flags:['sbApproachSeen'], flagEquals:{ sbChosenRole:'parley' } }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:12,
+        onPass:[
+          { kind:'mission_bit', flag:'sbParleySucceeded' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.sbParleySucceeded = true;
+            S_story.sbResolved = true;
+            S_story.gold = (S_story.gold||0) - 80;
+            S_story.xp = (S_story.xp||0) + 350;
+            const inv = S_story.inventory = S_story.inventory || [];
+            inv.push({ name:'Letter of Marque (Keel)', icon:'📜', type:'misc', desc:"Captain Vera Keel's Commission letter, endorsed and counter-signed. Authorizes bearer to claim passage rights on the eastern run. Keel added a personal notation: 'not to be used against the Saltwick route.' She seemed amused by her own generosity.", sell:0 });
+            storyMsg('Keel keeps the pennant raised throughout the conversation. She is not threatening — she is establishing the frame.\n\nYou name the frame back to her: she is not here for the Star\'s cargo. She is here because someone told her the Star has been running a specific item for three crossings and she wants to know what it is.\n\nKeel is quiet.\n\n"Eighty gold," she says. "For the crossing question not becoming a boarding question." She lowers the pennant. "And I\'ll sign the Commission letter for you. You\'ll find it useful at the eastern ports." She sounds sincere. She probably is.\n\nThe gap stays open. The gangplanks stay racked.\n\n-80gp. Letter of Marque (Keel) added. +350 XP. No boarding.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            S_story.sbChosenRole = 'fight';
+            storyMsg('Keel nods once, slowly, the way someone nods when a conversation has reached its end.\n\n"Gangplanks out," she says to her first officer. She does not raise her voice.\n\nThe fight option is now the only option. See the encounter panel.');
+          } },
+        ],
+      },
+    ],
     disposition:'"Eighty gold for the question not becoming a boarding. I am being generous." — Captain Vera Keel',
     passText:"Eighty gold for the question not becoming a boarding. Keel was generous. The gangplank did not go out.",
     failText:"Captain Keel is at the rail. The negotiation is not yet resolved.",
     npc:"long_john_silver_sen",
   },
-  quest_sb_examine: { id:'quest_sb_examine', type:'skill_check',
+  // §ARCH-01 Wave 1n — migrated legacy → UQF v1.0 (2026-06-28). Pure parity. retryable:false. Same
+  // shape as sb_parley: mission_bit{flag} (no label) + onPass _legacy_fn (+300xp / Letter of Marque),
+  // onFail _legacy_fn flips sbChosenRole→'fight'.
+  quest_sb_examine: { id:'quest_sb_examine', schema:'UQF-1.0', type:'skill_check',
     title:'Read the Letter of Marque',
     desc:'Keel held the Commission long enough to read. INT Investigation DC 11 to find the flaw — every forged Letter of Marque has one.',
     hint:'Examine the Commission pennant from the rail. INT Investigation DC 11.',
-    activateNode:'GCI', activateCond:() => !!S_story.sbApproachSeen && S_story.sbChosenRole === 'examine',
-    checkStat:'int', checkSkill:'Investigation', checkDC:11, retryable:false,
-    checkPassFlag:'sbPapersRead',
-    onPass:() => {
-      S_story.sbPapersRead = true;
-      S_story.sbResolved = true;
-      S_story.xp = (S_story.xp||0) + 300;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:'Letter of Marque (Keel)', icon:'📜', type:'misc', desc:"Captain Vera Keel's Commission letter. The issuing authority seal is from the Eastern Reach harbor office — which has been dissolved for fourteen months. Keel knew you would find it. She was testing whether you would say so.", sell:0 });
-      storyMsg('The Commission seal is from the Eastern Reach harbor office.\n\nThe Eastern Reach harbor office dissolved fourteen months ago. A dissolved office cannot issue an active Commission. Keel\'s Letter of Marque is not forged — it was real when it was issued — but it has no standing authority behind it now.\n\nYou call it across the gap. You say it exactly once, without elaboration.\n\nKeel is quiet for a long time.\n\n"You read fast." She throws the Letter across the gap. It lands on the Star\'s deck with the seal face up. "Keep it. It\'ll get you past three eastern ports that haven\'t updated their records yet."\n\nThe intercept brig comes about. The pennant comes down.\n\nLetter of Marque (Keel) added. +300 XP. No boarding. The flaw was planted — she was testing you.');
-    },
-    onFail:() => {
-      S_story.sbChosenRole = 'fight';
-      storyMsg('The letter is held at the right distance and the right angle for reading. The flaw is there but it requires knowing what to look for. You don\'t have enough — yet.\n\nKeel notices that you looked. She comes to the rail.\n\n"Gangplanks out," she says.');
-    },
-    xpAward:0,
+    activateNode:'GCI', gate:{ flags:['sbApproachSeen'], flagEquals:{ sbChosenRole:'examine' } }, retryable:false,
+    bits:[
+      { kind:'skill_check', stat:'INT', skill:'Investigation', dc:11,
+        onPass:[
+          { kind:'mission_bit', flag:'sbPapersRead' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.sbPapersRead = true;
+            S_story.sbResolved = true;
+            S_story.xp = (S_story.xp||0) + 300;
+            const inv = S_story.inventory = S_story.inventory || [];
+            inv.push({ name:'Letter of Marque (Keel)', icon:'📜', type:'misc', desc:"Captain Vera Keel's Commission letter. The issuing authority seal is from the Eastern Reach harbor office — which has been dissolved for fourteen months. Keel knew you would find it. She was testing whether you would say so.", sell:0 });
+            storyMsg('The Commission seal is from the Eastern Reach harbor office.\n\nThe Eastern Reach harbor office dissolved fourteen months ago. A dissolved office cannot issue an active Commission. Keel\'s Letter of Marque is not forged — it was real when it was issued — but it has no standing authority behind it now.\n\nYou call it across the gap. You say it exactly once, without elaboration.\n\nKeel is quiet for a long time.\n\n"You read fast." She throws the Letter across the gap. It lands on the Star\'s deck with the seal face up. "Keep it. It\'ll get you past three eastern ports that haven\'t updated their records yet."\n\nThe intercept brig comes about. The pennant comes down.\n\nLetter of Marque (Keel) added. +300 XP. No boarding. The flaw was planted — she was testing you.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            S_story.sbChosenRole = 'fight';
+            storyMsg('The letter is held at the right distance and the right angle for reading. The flaw is there but it requires knowing what to look for. You don\'t have enough — yet.\n\nKeel notices that you looked. She comes to the rail.\n\n"Gangplanks out," she says.');
+          } },
+        ],
+      },
+    ],
     disposition:'"You read fast." — Captain Vera Keel, throwing the Letter across the gap',
     passText:"You read fast. The forgery is found. Keel threw the Letter across the gap and signaled her crew to stand down.",
     failText:"The Commission has not been examined. Keel is still holding it at the rail.",
@@ -20346,6 +20373,9 @@ const QuestRuntime = {
     if (g.flags    && !g.flags.every(f => !!S_story[f]))   return false;
     if (g.flagsAny && g.flagsAny.length && !g.flagsAny.some(f => !!S_story[f])) return false;
     if (g.notFlags && g.notFlags.some(f => !!S_story[f]))  return false;
+    // flagEquals → { field: value }, strict equality on an S_story field (ALL required).
+    // Replaces enum/branch-state gates like `S_story.sbChosenRole === 'fight'` (role choices).
+    if (g.flagEquals) { for (const k in g.flagEquals) if (S_story[k] !== g.flagEquals[k]) return false; }
     if (g.nodes    && !g.nodes.every(n => (S_story.visited || S_story.visitedNodes || {})[n])) return false;
     // Sequential-arc chaining (replaces `(S_story.quests['prev']||'') !== ''` and `=== 'done'`):
     // questsAttempted → every listed quest has a non-empty status (active/done/failed/complete);

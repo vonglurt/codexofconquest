@@ -1933,3 +1933,95 @@ test.describe('§ARCH-01 Wave 1m — Sea: The Warmth Calm (quest_sea_01..03)', (
     expect(r.f3).toBe(true); expect(r.ally).toBe(true); expect(r.note).toBe(true);
   });
 });
+
+// ── §ARCH-01 Wave 1n — Naval Intercept: the role-choice branch (quest_sb_*) ──
+//
+// Captain Keel's intercept. sb_01 is the structural hook side quest. The three
+// branch quests (fight/parley/examine) gate on the NEW `flagEquals` term
+// ({ sbChosenRole:'…' }, strict equality) + flags:['sbApproachSeen']. parley/
+// examine are retryable:false skill_checks whose onFail flips sbChosenRole→
+// 'fight' (the branch fallthrough — then sb_fight's gate activates). ⚠ sb_fight
+// carries BOTH onComplete(+400xp) AND xpAward:400 → a latent +800xp double-count
+// preserved verbatim for parity (the side-quest xpAward engine path is unchanged).
+
+test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () => {
+  test('the new flagEquals gate term: branch quests activate only on the matching sbChosenRole', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const probe = (id, seen, role) => { S_story.sbApproachSeen = seen; S_story.sbChosenRole = role; return QuestRuntime.canActivate(id); };
+      return {
+        parleyNoApproach: probe('quest_sb_parley', false, 'parley'),
+        parleyWrongRole:  probe('quest_sb_parley', true,  'fight'),
+        parleyMatch:      probe('quest_sb_parley', true,  'parley'),
+        examineMatch:     probe('quest_sb_examine', true, 'examine'),
+        fightMatch:       probe('quest_sb_fight',   true, 'fight'),
+        fightWrongRole:   probe('quest_sb_fight',   true, 'parley'),
+      };
+    });
+    expect(r).toEqual({ parleyNoApproach:false, parleyWrongRole:false, parleyMatch:true, examineMatch:true, fightMatch:true, fightWrongRole:false });
+  });
+
+  test('all four validate; sb_01 structural side, sb_fight battle-completion, parley/examine skill_checks', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const get = (id) => { const q = QUEST_DB[id]; return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:q.completion?JSON.stringify(q.completion):null }; };
+      const sc = (id) => { const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit'); return { id, stat:b.stat, skill:b.skill, dc:b.dc, mbFlag:mb&&mb.flag, mbLabel:mb&&(mb.label||null), failFlips:(b.onFail||[]).some(x=>x.kind==='_legacy_fn'), retryable:q.retryable }; };
+      return { meta:[get('quest_sb_01'),get('quest_sb_fight')], checks:[sc('quest_sb_parley'),sc('quest_sb_examine')] };
+    });
+    expect(r.meta).toMatchObject([
+      { id:'quest_sb_01',    schema:'UQF-1.0', type:'side', valid:true, gate:'{}',                                                          completion:'{"flags":["sbApproachSeen"]}' },
+      { id:'quest_sb_fight', schema:'UQF-1.0', type:'side', valid:true, gate:'{"flags":["sbApproachSeen"],"flagEquals":{"sbChosenRole":"fight"}}', completion:'{"battles":["SB_PRIVATEER"]}' },
+    ]);
+    expect(r.checks).toMatchObject([
+      { id:'quest_sb_parley',  stat:'CHA', skill:'Persuasion',    dc:12, mbFlag:'sbParleySucceeded', mbLabel:null, failFlips:true, retryable:false },
+      { id:'quest_sb_examine', stat:'INT', skill:'Investigation', dc:11, mbFlag:'sbPapersRead',      mbLabel:null, failFlips:true, retryable:false },
+    ]);
+  });
+
+  test('parley PASS: −80gp, +350xp, Letter of Marque, sbResolved+flag', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+      S_story.level = 20; S_story.gold = 1000; S_story.xp = 0; S_story.inventory = [];
+      S_story.sbParleySucceeded = false; S_story.sbResolved = false;
+      S_story.quests = { quest_sb_parley:'active' };
+      _rollCeremonia('quest_sb_parley');
+      return { status:S_story.quests.quest_sb_parley, gold:S_story.gold, xp:S_story.xp,
+               flag:S_story.sbParleySucceeded, resolved:S_story.sbResolved,
+               letter:S_story.inventory.some(i=>i.name==='Letter of Marque (Keel)') };
+    });
+    expect(r).toEqual({ status:'done', gold:920, xp:350, flag:true, resolved:true, letter:true });
+  });
+
+  test('parley FAIL (non-retryable): locks, flips sbChosenRole→fight (sb_fight then activatable)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { cha:-100 };       // deterministic fail
+      S_story.level = 1; S_story.day = 2; S_story.skillCheckAttempts = {};
+      S_story.gold = 1000; S_story.xp = 0; S_story.inventory = [];
+      S_story.sbApproachSeen = true; S_story.sbChosenRole = 'parley';
+      S_story.sbParleySucceeded = false; S_story.quests = { quest_sb_parley:'active' };
+      _rollCeremonia('quest_sb_parley');
+      const fightNowActivatable = QuestRuntime.canActivate('quest_sb_fight');
+      return { status:S_story.quests.quest_sb_parley, role:S_story.sbChosenRole,
+               gold:S_story.gold, xp:S_story.xp, flag:S_story.sbParleySucceeded, fightNowActivatable };
+    });
+    expect(r.status).toBe('failed');           // retryable:false ⇒ locked
+    expect(r.role).toBe('fight');              // onFail flipped the branch
+    expect(r.gold).toBe(1000); expect(r.xp).toBe(0); expect(r.flag).toBe(false);
+    expect(r.fightNowActivatable).toBe(true);  // the fallthrough now opens the fight quest
+  });
+
+  test('sb_fight onComplete grants +400xp closure portion + Letter of Marque + sbResolved (xpAward:400 still set for the engine path → latent +800 total)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.sbResolved = false;
+      QUEST_DB.quest_sb_fight.onComplete();   // the closure portion only
+      return { xp:S_story.xp, gold:S_story.gold, resolved:S_story.sbResolved,
+               letter:S_story.inventory.some(i=>i.name==='Letter of Marque (Keel)'),
+               xpAward:QUEST_DB.quest_sb_fight.xpAward };
+    });
+    expect(r.xp).toBe(400); expect(r.gold).toBe(200); expect(r.resolved).toBe(true); expect(r.letter).toBe(true);
+    expect(r.xpAward).toBe(400);   // engine's side-quest path adds another +400 on completion (latent double-count, parity-preserved)
+  });
+});
