@@ -94,7 +94,7 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 
 ### §RESUME — Continue Here
 
-> **Updated 2026-06-29 · branch `main` · last commit `_this commit_` (Wave 2g).** Active work = **§ARCH-01 Phase 3 UQF migration**, **Wave 2 (script-assisted bulk)** in progress, **one family/cluster per "continue"** per the Directive. Each increment: migrate the next family via `scripts/uqf-bulk-migrate.js` → commit → `say` the subject → sync plan.md / index.md / the migration playbook → `npx playwright test quest-runtime-uqf` + `npm run check:walk` + `npx playwright test navigation`.
+> **Updated 2026-06-29 · branch `main` · last commit `b689956` (Wave 2g).** Active work = **§ARCH-01 Phase 3 UQF migration**, **Wave 2 (script-assisted bulk)** in progress, **one family/cluster per "continue"** per the Directive. Each increment: migrate the next family via `scripts/uqf-bulk-migrate.js` → commit → `say` the subject → sync plan.md / index.md / the migration playbook → `npx playwright test quest-runtime-uqf` + `npm run check:walk` + `npx playwright test navigation`.
 >
 > **Verification (current):** `quest-runtime-uqf` **138 passed** (Wave 2 ×3-repeat clean); `check:walk` green; `navigation` 14/14. **Wave 1 COMPLETE** (~115 quests). **Wave 2 in progress:** **`hav_*`** (30) + **`ada*`** (235) + **`ath*`** (113) + **`lis*`** (89) + **`zth*`** (75) + **`flr*`** (71) + **`hft_*`** (50, first mixed flag/flagless) families bulk-migrated, each parity-verified byte-for-byte vs a pre-migration golden capture. **~663 of ~2350 well-formed legacy skill_checks migrated; ~1685 remain.** Docs synced.
 >
