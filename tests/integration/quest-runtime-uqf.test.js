@@ -3134,3 +3134,93 @@ test.describe('§ARCH-01 Wave 2d — lis* family (bulk-migrated, 89 acts)', () =
     expect(r.gateBad).toEqual([]);
   });
 });
+
+// §ARCH-01 Wave 2e — zth* family (75 skill_check acts; the Zürich arcs —
+// zthNN_actN 11 arcs × 5 + zth_NN_actN 4 arcs × 4 (act5 of those is a
+// `delivery`, out of skill_check scope) + 4 zth_c1a* singletons (zth_c1a3 is a
+// `type:"hybrid"`, correctly skipped)). Mixed gates: 60 with no activateCond →
+// gate:{}, 15 with trivial `()=>!!S_story.<priorFlag>` → gate:{flags:[…]}.
+// Like lis (Wave 2d), an UPPERCASE-checkStat family (CHA/CON/INT/STR/WIS): the
+// legacy resolver read abilityScores[checkStat] raw-case (keys are lowercase ⇒
+// silent +0 modifier, the §SKILLFIX-01 bug); the UQF resolver lowercases ⇒
+// applies the real modifier. Parity was verified pre-migration vs a golden
+// seeded under BOTH cases; the seed() helper below mirrors that. Self-contained.
+test.describe('§ARCH-01 Wave 2e — zth* family (bulk-migrated, 75 acts)', () => {
+  test('every zth* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const zth = Object.values(QUEST_DB).filter(q => /^zth/.test(q.id) && q.type === 'skill_check');
+      return zth.map(q => {
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        const gate = q.gate || {};
+        return { id:q.id, schema:q.schema, valid:validateQuest(q).valid,
+          noAC: typeof q.activateCond === 'undefined',
+          gateShape: gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other'),
+          hasStat:!!(b && b.stat), hasDc:typeof (b && b.dc) === 'number',
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          mbHasLabel:b ? ('label' in (b.onPass.find(x => x.kind === 'mission_bit') || {})) : null };
+      });
+    });
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(75);
+    const shapes = { flags:0, empty:0 };
+    for (const q of r) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.noAC).toBe(true);                          // function/string activateCond fully removed
+      expect(['flags', 'empty']).toContain(q.gateShape);  // no _legacyFn fallbacks in this family
+      expect(q.hasStat).toBe(true);
+      expect(q.hasDc).toBe(true);
+      expect(q.onPassK).toEqual(['mission_bit']);
+      expect(q.onFailLen).toBe(0);
+      expect(q.mbHasLabel).toBe(false);
+      shapes[q.gateShape]++;
+    }
+    expect(shapes).toEqual({ flags:15, empty:60 });
+  });
+
+  test('PASS/FAIL parity across all 75 + gate behavior (flags ⇒ activatable iff flag set; {} ⇒ always)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // checkStat is uppercase but abilityScores keys are lowercase; the UQF
+      // resolver lowercases, so seed both cases for a deterministic extreme.
+      const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
+      const zth = Object.values(QUEST_DB).filter(q => /^zth/.test(q.id) && q.type === 'skill_check');
+      let passBad = [], failBad = [], gateBad = [];
+      for (const q of zth) {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const flag = b.onPass.find(x => x.kind === 'mission_bit').flag;
+        // PASS
+        S_story.abilityScores = seed(b.stat, 40);
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        const tok = S_story.inventory.find(i => i.flagRef === flag);
+        if (!(S_story.quests[q.id] === 'done' && S_story[flag] === true && tok &&
+              tok.name === _flagToLabel(flag) + ' Token' && tok.type === 'mission_bit' &&
+              S_story.xp === 0 && S_story.gold === 0 && S_story.inventory.length === 1)) passBad.push(q.id);
+        // FAIL
+        S_story.abilityScores = seed(b.stat, -100);
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false; S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (!(S_story.quests[q.id] === 'failed' && S_story[flag] === false && S_story.inventory.length === 0)) failBad.push(q.id);
+        // GATE
+        const g = q.gate || {};
+        if (g.flags && g.flags.length) {
+          const gf = g.flags[0];
+          S_story[gf] = false; const c0 = QuestRuntime.canActivate(q.id);
+          S_story[gf] = true;  const c1 = QuestRuntime.canActivate(q.id);
+          if (!(c0 === false && c1 === true)) gateBad.push(q.id);
+        } else if (QuestRuntime.canActivate(q.id) !== true) gateBad.push(q.id);
+      }
+      return { count:zth.length, passBad, failBad, gateBad };
+    });
+    expect(r.count).toBe(75);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+    expect(r.gateBad).toEqual([]);
+  });
+});
