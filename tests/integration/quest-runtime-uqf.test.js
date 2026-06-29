@@ -1778,3 +1778,95 @@ test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_
     expect(r.flag).toBe(false); expect(r.xp).toBe(0); expect(r.knowledge).toBe(0); expect(r.hasSpore).toBe(false);
   });
 });
+
+// ── §ARCH-01 Wave 1l — Codex Inquisitor 3-question gauntlet (quest_inquisitor_*) ──
+//
+// At NUE. These are `checkAbility`/`checkLabel` quests (the ~30 that worked
+// pre-§SKILLFIX-01) → pure parity. Fully DECOMPOSED (no onPass _legacy_fn):
+// checkPassFlag→mission_bit{flag} (no label), xpAward→reward{xp}, and final's
+// onPass item-push → reward{items:[Archive Key]}. Only `questions` keeps an
+// onFail _legacy_fn (hp−10 psychic damage — no declarative damage bit). The
+// gates chain: handshake←wmLowerArchiveUnlocked, questions←handshakePassed,
+// final←questionsPassed. retryGateDays (0/0/1) kept top-level.
+
+test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor_*)', () => {
+  const IDS = ['quest_inquisitor_handshake','quest_inquisitor_questions','quest_inquisitor_final'];
+
+  test('all three validate; exact stat/skill/dc, mission_bit (no label), reward xp, gates, retryGateDays', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((ids) => ids.map(id => {
+      const q = QUEST_DB[id]; const bit = q.bits[0];
+      const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
+      const rw = (bit.onPass||[]).find(b=>b.kind==='reward');
+      return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, skill:bit.skill, dc:bit.dc,
+               mbFlag:mb&&mb.flag, mbLabel:mb&&(mb.label||null), xp:rw&&rw.xp,
+               gate:JSON.stringify(q.gate), retryGateDays:q.retryGateDays,
+               hasOnPassLegacyFn:(bit.onPass||[]).some(b=>b.kind==='_legacy_fn') };
+    }), IDS);
+    expect(r.every(x => x.schema==='UQF-1.0' && x.valid && !x.hasOnPassLegacyFn)).toBe(true);
+    expect(r).toMatchObject([
+      { id:'quest_inquisitor_handshake', stat:'CHA', skill:'Persuasion', dc:10, mbFlag:'inquisitorHandshakePassed', mbLabel:null, xp:50,  gate:'{"flags":["wmLowerArchiveUnlocked"]}',     retryGateDays:0 },
+      { id:'quest_inquisitor_questions', stat:'WIS', skill:'Insight',    dc:12, mbFlag:'inquisitorQuestionsPassed', mbLabel:null, xp:75,  gate:'{"flags":["inquisitorHandshakePassed"]}', retryGateDays:0 },
+      { id:'quest_inquisitor_final',     stat:'CHA', skill:'Persuasion', dc:12, mbFlag:'inquisitorPassed',          mbLabel:null, xp:200, gate:'{"flags":["inquisitorQuestionsPassed"]}', retryGateDays:1 },
+    ]);
+  });
+
+  test('each PASS marks done, sets its flag+token, grants exact xp; final grants Archive Key', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((ids) => {
+      const xpById = { quest_inquisitor_handshake:50, quest_inquisitor_questions:75, quest_inquisitor_final:200 };
+      const flagById = { quest_inquisitor_handshake:'inquisitorHandshakePassed', quest_inquisitor_questions:'inquisitorQuestionsPassed', quest_inquisitor_final:'inquisitorPassed' };
+      const out = {};
+      for (const id of ids) {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 1000000; S_story.inventory = [];
+        S_story[flagById[id]] = false; S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        out[id] = { status:S_story.quests[id], dxp:S_story.xp - 1000000, flag:S_story[flagById[id]],
+                    token:S_story.inventory.some(i=>i.flagRef===flagById[id]),
+                    archiveKey:S_story.inventory.some(i=>i.name==='Archive Key') };
+      }
+      return { out, xpById };
+    }, IDS);
+    for (const id of IDS) {
+      expect(r.out[id].status, id).toBe('done');
+      expect(r.out[id].dxp, id).toBe(r.xpById[id]);
+      expect(r.out[id].flag, id).toBe(true);
+      expect(r.out[id].token, id).toBe(true);
+    }
+    expect(r.out['quest_inquisitor_final'].archiveKey).toBe(true);
+    expect(r.out['quest_inquisitor_handshake'].archiveKey).toBe(false);   // only the final grants it
+  });
+
+  test('questions retryable FAIL: stays active, onFail docks 10 hp, no flag/xp', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { wis:-100 };       // deterministic fail
+      S_story.level = 1; S_story.day = 4; S_story.skillCheckAttempts = {};
+      S_story.xp = 0; S_story.hp = 30; S_story.inquisitorQuestionsPassed = false;
+      S_story.quests = { quest_inquisitor_questions:'active' };
+      _rollCeremonia('quest_inquisitor_questions');
+      return { status:S_story.quests.quest_inquisitor_questions, hp:S_story.hp, xp:S_story.xp,
+               flag:S_story.inquisitorQuestionsPassed,
+               fails:(S_story.skillCheckAttempts.quest_inquisitor_questions||{}).failures };
+    });
+    expect(r.status).toBe('active');   // retryable ⇒ stays active
+    expect(r.hp).toBe(20);             // onFail _legacy_fn docked 10 psychic
+    expect(r.xp).toBe(0); expect(r.flag).toBe(false); expect(r.fails).toBe(1);
+  });
+
+  test('the §D01-02 NUE handshake button still drives the migrated quest through _rollCeremonia', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // simulate the button handler's body (L28442-28446) against the migrated quest
+      S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+      S_story.level = 20; S_story.xp = 0; S_story.inventory = [];
+      S_story.inquisitorMet = true; S_story.quests = S_story.quests || {};
+      S_story.inquisitorHandshakePassed = false;
+      if (!S_story.quests['quest_inquisitor_handshake']) S_story.quests['quest_inquisitor_handshake'] = 'active';
+      _rollCeremonia('quest_inquisitor_handshake');
+      return { status:S_story.quests.quest_inquisitor_handshake, flag:S_story.inquisitorHandshakePassed, xp:S_story.xp };
+    });
+    expect(r.status).toBe('done'); expect(r.flag).toBe(true); expect(r.xp).toBe(50);
+  });
+});

@@ -19834,47 +19834,59 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
       (S_story.inventory = S_story.inventory || []).push({name:"Yael's Watch Token",icon:'🪙',type:'token',sell:0,desc:'A small brass coin, worn smooth. Guard issue, retired. She gave it to you without explanation.'});
     } }], onFail:[] }] },
   // ── §DUNGEON-01: Codex Inquisitor (D02-02) — inline WM gate quest ──
-  quest_inquisitor_handshake: { id:'quest_inquisitor_handshake', type:'skill_check', title:'The Handshake',
+  // §ARCH-01 Wave 1l — migrated legacy → UQF v1.0 (2026-06-28). The Codex Inquisitor 3-question
+  // gauntlet at NUE. These are `checkAbility`/`checkLabel` quests (the ~30 that always worked) →
+  // pure parity. Each fully decomposes: `checkPassFlag`→`mission_bit{flag}` (no bitLabel →
+  // _flagToLabel), `xpAward`→`reward{xp}`, and the final's onPass push → `reward{items:[Archive Key]}`
+  // (the closure also set inquisitorPassed=true, now covered by mission_bit). `retryGateDays` kept
+  // top-level (read by the retry helpers, schema-agnostic). handshake's onPass was a no-op comment.
+  // The §D01-02 NUE story-render handshake button (`_rollCeremonia('quest_inquisitor_handshake')`,
+  // ~L28446) dispatches transparently through the UQF resolver — unchanged.
+  quest_inquisitor_handshake: { id:'quest_inquisitor_handshake', schema:'UQF-1.0', type:'skill_check', title:'The Handshake',
     hint:'The construct has been waiting three centuries. You are the first qualified applicant.',
     activateNode:'NUE',
-    activateCond:() => !!S_story.wmLowerArchiveUnlocked,
-    checkAbility:'cha', checkLabel:'Persuasion', checkDC:10, retryable:true, retryGateDays:0,
-    xpAward:50, goldAward:0,
-    checkPassFlag:'inquisitorHandshakePassed',
+    gate:{ flags:['wmLowerArchiveUnlocked'] },
+    retryable:true, retryGateDays:0,
     vignetteText:'The Inquisitor\'s hand has been extended since the archive was sealed. Three centuries. Whoever shakes it must be willing to be questioned. The chair is on the other side of the desk.',
     passText:'You shake the hand. The construct activates. The chair is waiting.',
     failText:'The construct waits. It will wait another three centuries. Try again.',
     completeItems:[],
-    onPass:() => { /* inquisitorMet already set; handshake is the first of three questions */ } },
-  quest_inquisitor_questions: { id:'quest_inquisitor_questions', type:'skill_check', title:'The Two Questions',
+    bits:[
+      { kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:10,
+        onPass:[ { kind:'mission_bit', flag:'inquisitorHandshakePassed' }, { kind:'reward', xp:50 } ],
+        onFail:[] },
+    ] },
+  quest_inquisitor_questions: { id:'quest_inquisitor_questions', schema:'UQF-1.0', type:'skill_check', title:'The Two Questions',
     hint:'The construct reads your state — it knows if you\'re lying.',
     activateNode:'NUE',
-    activateCond:() => !!S_story.inquisitorHandshakePassed,
-    checkAbility:'wis', checkLabel:'Insight', checkDC:12, retryable:true, retryGateDays:0,
-    xpAward:75, goldAward:0,
-    checkPassFlag:'inquisitorQuestionsPassed',
+    gate:{ flags:['inquisitorHandshakePassed'] },
+    retryable:true, retryGateDays:0,
     vignetteText:'"Name someone you helped." Then: "Name something you sacrificed." The construct reads your state — it knows if you\'re lying. The npcFavorability record and defeatedBattles log are open books to it.',
     passText:'"Acknowledged." The third question prepares.',
     failText:'"The record disagrees." [10 psychic damage] Answer with what is true.',
     completeItems:[],
-    onPass:() => {},
-    onFail:() => { S_story.hp = Math.max(1, (S_story.hp || 1) - 10); } },
-  quest_inquisitor_final: { id:'quest_inquisitor_final', type:'skill_check', title:'The Third Question',
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Insight', dc:12,
+        onPass:[ { kind:'mission_bit', flag:'inquisitorQuestionsPassed' }, { kind:'reward', xp:75 } ],
+        onFail:[ { kind:'_legacy_fn', fn:() => { S_story.hp = Math.max(1, (S_story.hp || 1) - 10); } } ] },
+    ] },
+  quest_inquisitor_final: { id:'quest_inquisitor_final', schema:'UQF-1.0', type:'skill_check', title:'The Third Question',
     hint:'"Why are you still here after everything?" The construct measures conviction, not content.',
     activateNode:'NUE',
-    activateCond:() => !!S_story.inquisitorQuestionsPassed,
-    checkAbility:'cha', checkLabel:'Persuasion', checkDC:12, retryable:true, retryGateDays:1,
-    xpAward:200, goldAward:0,
-    checkPassFlag:'inquisitorPassed',
+    gate:{ flags:['inquisitorQuestionsPassed'] },
+    retryable:true, retryGateDays:1,
     vignetteText:'"Why are you still here after everything?" There is no wrong answer. The construct measures conviction, not content.',
     passText:'The door opens. Archive key acquired. The construct\'s outstretched hand goes still. "The previous applicant answered none of them correctly. He came back seventeen times."',
     failText:'"You\'ll need to mean it." Retry tomorrow.',
     completeItems:[],
-    onPass:() => {
-      S_story.inquisitorPassed = true;
-      S_story.inventory = S_story.inventory || [];
-      S_story.inventory.push({name:'Archive Key',icon:'🗝',type:'key_item',sell:0,desc:'The lower archive is open. The Prior Carrier is in the cell beyond it.'});
-    } },
+    bits:[
+      { kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:12,
+        onPass:[
+          { kind:'mission_bit', flag:'inquisitorPassed' },
+          { kind:'reward', xp:200, items:[{name:'Archive Key',icon:'🗝',type:'key_item',sell:0,desc:'The lower archive is open. The Prior Carrier is in the cell beyond it.'}] },
+        ],
+        onFail:[] },
+    ] },
   // ── §D02-01 — "The Drowned Page" (AT — Abyssal Scriptorium approach) ──
   quest_d0201_a1: { id:'quest_d0201_a1', type:'skill_check', title:'Act I — The Page Afloat',
     hint:'The entrance to the Scriptorium is three inches of ink-black water. Something floats at the surface.',
