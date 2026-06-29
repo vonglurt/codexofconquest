@@ -1458,3 +1458,86 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (20 q
     expect(r.tribbleCount).toBe(3);
   });
 });
+
+// ── §ARCH-01 Wave 1 — Innmother's Hall skill-checks (quest_inn_02..04) ──
+//
+// The inn arc's 3 skill_checks migrate here. Like §1367 they have NO
+// checkPassFlag (no mission_bit), but unlike §1367 they share a NEW gate term
+// `sleptAt:['INN']` (replaces activateCond:()=>!!sleptAtNodes['INN']) and their
+// onPass nudges the innmotherKindness counter via _innKindness(1), preserved
+// verbatim behind _legacy_fn. The side quests (inn_01/05/06) stay legacy.
+
+test.describe('§ARCH-01 Wave 1 — Innmother skill-checks (quest_inn_{02,03,04})', () => {
+  const IDS = ['quest_inn_02','quest_inn_03','quest_inn_04'];
+
+  test('all three validate as UQF skill_checks (no mission_bit, sleptAt gate, exact stat/dc/xp)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((ids) => ids.map(id => {
+      const q = QUEST_DB[id]; const bit = q.bits[0];
+      return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, skill:bit.skill, dc:bit.dc,
+               xp:(bit.onPass||[]).find(b=>b.kind==='reward').xp,
+               hasMissionBit:(bit.onPass||[]).some(b=>b.kind==='mission_bit'),
+               gate:q.gate };
+    }), IDS);
+    expect(r.every(x => x.schema==='UQF-1.0' && x.valid && !x.hasMissionBit)).toBe(true);
+    expect(r.every(x => JSON.stringify(x.gate)==='{"sleptAt":["INN"]}')).toBe(true);
+    expect(r).toMatchObject([
+      { id:'quest_inn_02', stat:'WIS', skill:'Insight',    dc:12, xp:150 },
+      { id:'quest_inn_03', stat:'CHA', skill:'Persuasion', dc:13, xp:175 },
+      { id:'quest_inn_04', stat:'WIS', skill:'Insight',    dc:12, xp:150 },
+    ]);
+  });
+
+  test('the new sleptAt gate term: inactive until slept at INN, then activates', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.sleptAtNodes = {};
+      const before = QuestRuntime.canActivate('quest_inn_02');
+      S_story.sleptAtNodes = { INN:true };
+      const after = QuestRuntime.canActivate('quest_inn_02');
+      S_story.sleptAtNodes = { BK:true };
+      const wrongNode = QuestRuntime.canActivate('quest_inn_02');
+      return { before, after, wrongNode };
+    });
+    expect(r.before).toBe(false);
+    expect(r.after).toBe(true);
+    expect(r.wrongNode).toBe(false);
+  });
+
+  test('each PASS marks done, grants exact xp, and runs _innKindness(+1)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const got = await page.evaluate((ids) => {
+      const xpById = { quest_inn_02:150, quest_inn_03:175, quest_inn_04:150 };
+      const out = {};
+      for (const id of ids) {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 1000000; S_story.day = 1;
+        S_story.innmotherKindness = 0; S_story.freeBookingUnlocked = false;
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        out[id] = { status:S_story.quests[id], dxp:S_story.xp - 1000000, kindness:S_story.innmotherKindness };
+      }
+      return { out, xpById };
+    }, IDS);
+    for (const id of IDS) {
+      expect(got.out[id].status, id).toBe('done');
+      expect(got.out[id].dxp, id).toBe(got.xpById[id]);
+      expect(got.out[id].kindness, id).toBe(1);   // _innKindness(1) ran exactly once
+    }
+  });
+
+  test('a non-retryable FAIL locks the quest and grants no xp or kindness', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { wis:-100 };          // deterministic fail even on a nat 20
+      S_story.level = 1; S_story.day = 3; S_story.skillCheckAttempts = {};
+      S_story.xp = 1000000; S_story.innmotherKindness = 0;
+      S_story.quests = { quest_inn_02:'active' };
+      _rollCeremonia('quest_inn_02');
+      return { status:S_story.quests.quest_inn_02, dxp:S_story.xp - 1000000, kindness:S_story.innmotherKindness };
+    });
+    expect(r.status).toBe('failed');   // retryable:false ⇒ locked
+    expect(r.dxp).toBe(0);
+    expect(r.kindness).toBe(0);
+  });
+});
