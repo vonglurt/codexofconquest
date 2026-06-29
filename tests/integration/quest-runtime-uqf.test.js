@@ -2425,3 +2425,121 @@ test.describe('§ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIRE
     }
   });
 });
+
+// ── §ARCH-01 Wave 1t — Biblical singletons (quest_stoning_lystra, quest_basket_damascus) ──
+//
+// Two Acts/Pauline skill_checks closing out the biblical Wave-1 cluster.
+//   stoning_lystra (KYA, STR Athletics DC13, retryable:false): SHARED pass/fail flag
+//     stoningEvent (bitLabel 'Lystra Stoning') — the same mission_bit grants on BOTH outcomes;
+//     the legacy onFail hp→1 closure rides as a _legacy_fn ordered before the bit. gate
+//     {questsDone:['quest_lame_lystra']}.
+//   basket_damascus (DAM, STR Athletics DC12, retryable:true/retryGateDays:1): onPass fully
+//     decomposed into TWO mission_bits (escapedDamascus 'Damascus Escape' + basketRopeComplete
+//     'Basket Rope') + reward; onFail:[] (retryable → no terminal fail flag). gate
+//     {flags:['anathSightRestored']}.
+test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket_damascus)', () => {
+  test('both validate as UQF skill_checks with correct gate / stat / dc / onPass / onFail shape', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const dump = (id) => {
+        const q = QUEST_DB[id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        return { id, schema:q.schema, valid:validateQuest(q).valid, type:q.type,
+                 gate:JSON.stringify(q.gate), retryable:q.retryable, retryGateDays:q.retryGateDays,
+                 stat:b.stat, skill:b.skill, dc:b.dc,
+                 onPass:b.onPass.map(x => x.kind === 'mission_bit' ? 'mb:' + x.flag + ':' + x.label
+                                       : x.kind === 'reward' ? 'xp:' + x.xp : x.kind),
+                 onFail:b.onFail.map(x => x.kind === 'mission_bit' ? 'mb:' + x.flag + ':' + x.label : x.kind) };
+      };
+      return { stoning:dump('quest_stoning_lystra'), basket:dump('quest_basket_damascus') };
+    });
+    expect(r.stoning).toMatchObject({
+      schema:'UQF-1.0', valid:true, type:'skill_check',
+      gate:'{"questsDone":["quest_lame_lystra"]}', retryable:false,
+      stat:'STR', skill:'Athletics', dc:13,
+      onPass:['mb:stoningEvent:Lystra Stoning', 'xp:150'],
+      onFail:['_legacy_fn', 'mb:stoningEvent:Lystra Stoning'],
+    });
+    expect(r.basket).toMatchObject({
+      schema:'UQF-1.0', valid:true, type:'skill_check',
+      gate:'{"flags":["anathSightRestored"]}', retryable:true, retryGateDays:1,
+      stat:'STR', skill:'Athletics', dc:12,
+      onPass:['mb:escapedDamascus:Damascus Escape', 'xp:150', 'mb:basketRopeComplete:Basket Rope'],
+      onFail:[],
+    });
+  });
+
+  test('declarative gates open only when their prerequisite is met', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = {}; S_story.anathSightRestored = false;
+      const closed = { stoning:QuestRuntime.canActivate('quest_stoning_lystra'),
+                       basket:QuestRuntime.canActivate('quest_basket_damascus') };
+      S_story.quests = { quest_lame_lystra:'done' }; S_story.anathSightRestored = true;
+      const open = { stoning:QuestRuntime.canActivate('quest_stoning_lystra'),
+                     basket:QuestRuntime.canActivate('quest_basket_damascus') };
+      return { closed, open };
+    });
+    expect(r.closed).toEqual({ stoning:false, basket:false });
+    expect(r.open).toEqual({ stoning:true, basket:true });
+  });
+
+  test('stoning PASS parity: done + stoningEvent true + Lystra token + xp+150', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { str:40 }; S_story.level = 20; S_story.xp = 0;
+      S_story.hp = 30; S_story.inventory = []; S_story.stoningEvent = false;
+      S_story.quests = { quest_stoning_lystra:'active' };
+      _rollCeremonia('quest_stoning_lystra');
+      const tok = S_story.inventory.find(i => i.type === 'mission_bit' && i.flagRef === 'stoningEvent');
+      return { status:S_story.quests.quest_stoning_lystra, flag:S_story.stoningEvent,
+               xp:S_story.xp, hp:S_story.hp, tokName:tok && tok.name, tokens:S_story.inventory.length };
+    });
+    expect(r).toEqual({ status:'done', flag:true, xp:150, hp:30, tokName:'Lystra Stoning Token', tokens:1 });
+  });
+
+  test('stoning FAIL parity (non-retryable): failed + stoningEvent true (shared flag) + token + hp→1 + no xp', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { str:-100 }; S_story.level = 1; S_story.xp = 0;
+      S_story.hp = 30; S_story.inventory = []; S_story.stoningEvent = false;
+      S_story.quests = { quest_stoning_lystra:'active' };
+      _rollCeremonia('quest_stoning_lystra');
+      const tok = S_story.inventory.find(i => i.type === 'mission_bit' && i.flagRef === 'stoningEvent');
+      return { status:S_story.quests.quest_stoning_lystra, flag:S_story.stoningEvent,
+               xp:S_story.xp, hp:S_story.hp, tokName:tok && tok.name, tokens:S_story.inventory.length };
+    });
+    expect(r).toEqual({ status:'failed', flag:true, xp:0, hp:1, tokName:'Lystra Stoning Token', tokens:1 });
+  });
+
+  test('basket PASS parity: done + both flags + two tokens + xp+150', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { str:40 }; S_story.level = 20; S_story.xp = 0;
+      S_story.inventory = []; S_story.escapedDamascus = false; S_story.basketRopeComplete = false;
+      S_story.quests = { quest_basket_damascus:'active' };
+      _rollCeremonia('quest_basket_damascus');
+      const t1 = S_story.inventory.find(i => i.type === 'mission_bit' && i.flagRef === 'escapedDamascus');
+      const t2 = S_story.inventory.find(i => i.type === 'mission_bit' && i.flagRef === 'basketRopeComplete');
+      return { status:S_story.quests.quest_basket_damascus, esc:S_story.escapedDamascus,
+               rope:S_story.basketRopeComplete, xp:S_story.xp,
+               t1:t1 && t1.name, t2:t2 && t2.name, tokens:S_story.inventory.length };
+    });
+    expect(r).toEqual({ status:'done', esc:true, rope:true, xp:150,
+                        t1:'Damascus Escape Token', t2:'Basket Rope Token', tokens:2 });
+  });
+
+  test('basket FAIL parity (retryable): stays active, no flags, no tokens, no xp, attempt recorded', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { str:-100 }; S_story.level = 1; S_story.day = 5; S_story.xp = 0;
+      S_story.skillCheckAttempts = {}; S_story.inventory = [];
+      S_story.escapedDamascus = false; S_story.basketRopeComplete = false;
+      S_story.quests = { quest_basket_damascus:'active' };
+      _rollCeremonia('quest_basket_damascus');
+      return { status:S_story.quests.quest_basket_damascus, esc:S_story.escapedDamascus,
+               rope:S_story.basketRopeComplete, xp:S_story.xp, tokens:S_story.inventory.length,
+               failures:(S_story.skillCheckAttempts.quest_basket_damascus || {}).failures };
+    });
+    expect(r).toEqual({ status:'active', esc:false, rope:false, xp:0, tokens:0, failures:1 });
+  });
+});

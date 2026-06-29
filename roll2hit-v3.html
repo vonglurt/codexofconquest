@@ -10154,18 +10154,24 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── §LXIV: Left for Dead ──
+  // §ARCH-01 Wave 1t — migrated legacy → UQF v1.0 (2026-06-29). Pure parity. activateCond
+  // (quest_lame_lystra done) → gate{questsDone}. Shared pass/fail flag stoningEvent (bitLabel
+  // 'Lystra Stoning'): retryable:false, so the same mission_bit grants on BOTH onPass and onFail.
+  // The onFail hp→1 closure rides as a _legacy_fn (ordered before the bit, mirroring legacy
+  // onFail()-then-_grantMissionBit). stoningEvent read directly at LT render + the KYA HP cap.
   quest_stoning_lystra: { id:'quest_stoning_lystra', type:'skill_check', title:'Left for Dead',
     desc:"The crowd that called Paul a god has become the crowd that stones one. Both responses are to the same event — they had expected a god; what they got was a correction. Some crowds do not accept corrections.\n\nThe square is filling. They know his face. They do not know yours yet.",
     hint:'Create an opening in the crowd. Get Paul through before the first stone is thrown.',
-    activateNode:'KYA', activateCond:() => !!(S_story.quests && S_story.quests['quest_lame_lystra'] === 'done'),
-    checkAbility:'str', checkLabel:'Athletics', checkDC:13,
+    schema:'UQF-1.0',
+    activateNode:'KYA',
+    gate:{ questsDone:['quest_lame_lystra'] },
     retryable:false,
-    xpAward:150,
     vignetteText:'The crowd has stopped being a crowd and started being a direction. You can see where it intends to go. You are between it and him.\n\nThe south gate is forty feet to your left. He is standing, which is already unusual behavior for a man who has just realized what is about to happen. He is not moving — he is still in the mode of addressing the crowd. You are the one who is going to have to move.',
     passText:'You make the opening. Shoulder, then body, then the space where a person stood. He comes through it without being asked. The south gate.\n\nThe road northeast runs out of Lythros past the south gate marker. He takes it. He gets up from the square first, and then he takes it. The sequence matters.\n\n"He got up and went back into the city."',
     failText:'The first stone is not aimed — it is thrown by someone who wanted to be part of something. The second is aimed. Paul takes the hit before you close the distance. You get him to the gate. He is down. Then he gets up. Timael watches this from across the square and decides something.',
-    completeItems:[], checkPassFlag:'stoningEvent', checkFailFlag:'stoningEvent', bitLabel:'Lystra Stoning',
-    onFail:() => { S_story.hp = Math.min(S_story.hp || 1, 1); },
+    bits:[{ kind:'skill_check', stat:'STR', skill:'Athletics', dc:13,
+      onPass:[{ kind:'mission_bit', flag:'stoningEvent', label:'Lystra Stoning' }, { kind:'reward', xp:150 }],
+      onFail:[{ kind:'_legacy_fn', fn:() => { S_story.hp = Math.min(S_story.hp || 1, 1); } }, { kind:'mission_bit', flag:'stoningEvent', label:'Lystra Stoning' }] }],
     disposition:'"He got up. Everyone else left. I decided to stay." — Timael',
     npc:"long_john_silver_sen",
   },
@@ -10263,18 +10269,24 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── §LX: Basket escape ──
+  // §ARCH-01 Wave 1t — migrated legacy → UQF v1.0 (2026-06-29). Pure parity. activateCond
+  // (anathSightRestored) → gate{flags}. retryable:true (retryGateDays:1 kept) so no fail flag →
+  // onFail:[]. onPass fully decomposed: checkPassFlag escapedDamascus → mission_bit; xpAward →
+  // reward; the onPass _grantMissionBit('basketRopeComplete') closure → a second mission_bit
+  // (same order). Both flags read directly by render/HP consumers — token-grant is identical.
   quest_basket_damascus: { id:'quest_basket_damascus', type:'skill_check', title:'Over the Wall',
     desc:"The magistrate of Damascus has issued a detention order. The warrant authority has turned against the warrant-carrier. The gate is watched. The wall is not.\n\nThe rope is knotted cloth — not planned, improvised from what is in the room. You make seven knots yourself and test each one against the window frame. The basket is market-grade, meant for vegetables. It will hold the weight if the descent is controlled. You know this because you have lowered things before and you know what controlled means.",
     hint:'Lower him over the wall. Hold the rope. The watch is on the gate, not the wall — not yet.',
-    activateNode:'DAM', activateCond:() => !!S_story.anathSightRestored,
-    checkAbility:'str', checkLabel:'Athletics', checkDC:12,
+    schema:'UQF-1.0',
+    activateNode:'DAM',
+    gate:{ flags:['anathSightRestored'] },
     retryable:true, retryGateDays:1,
-    xpAward:150,
     vignetteText:'He gets in. He is not heavy. He does not speak. There is nothing to say at this moment — the guards at the eastern gate change at the third hour; you are ahead of the change; the window points west; the mathematics are in your favor if the knots hold.\n\nYou hold the knots.',
     passText:'Down. Controlled. The last three feet you lower slowly because you can hear him breathing. He lands and crouches and then he is moving. You pull the rope back up. You do not watch him go — you are watching the eastern gate.\n\nThe gate guard does not turn.\n\nThe facts are accurate. They do not include the knots.',
     failText:'The rope shifts under the load. You brace and recover — but there is noise. You pull back before clearing the wall. The window remains. So does the watch. Tomorrow the knots will hold.',
-    completeItems:[], checkPassFlag:'escapedDamascus', bitLabel:'Damascus Escape',
-    onPass:() => { _grantMissionBit('basketRopeComplete', 'Basket Rope'); },
+    bits:[{ kind:'skill_check', stat:'STR', skill:'Athletics', dc:12,
+      onPass:[{ kind:'mission_bit', flag:'escapedDamascus', label:'Damascus Escape' }, { kind:'reward', xp:150 }, { kind:'mission_bit', flag:'basketRopeComplete', label:'Basket Rope' }],
+      onFail:[] }],
     disposition:'"Through a window in the wall his disciples lowered him in a basket."',
     npc:"ibrahim_al_tawil_cai",
   },
