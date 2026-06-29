@@ -11465,29 +11465,41 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:"The Dunfall harbor is still closed. The ford has not been cleared.",
     npc:"long_john_silver_sen",
   },
-  quest_df_02: { id:'quest_df_02', type:'skill_check',
+  // §ARCH-01 Wave 1v — migrated legacy → UQF v1.0 (2026-06-29). Highland trade pair
+  // (df_02 Dunfall barter, sk_02 Saltwick consignment — both checkStat skill_checks carrying a
+  // checkPassFlag + a rich gold/xp/item/storyMsg onPass closure and a fail-only storyMsg).
+  // Mapping: activateCond → gate.flags; checkPassFlag → onPass mission_bit (NO explicit label, so
+  // _grantMissionBit falls through to _flagToLabel exactly as legacy did with q.bitLabel===undefined),
+  // ordered BEFORE the closure (mirrors legacy _grantMissionBit-then-onPass()); xpAward was 0 — all
+  // reward (gold+xp+item) lives inside the closure, kept verbatim as a single _legacy_fn; onFail = the
+  // fail storyMsg closure (retryable:true ⇒ no fail flag). Pure parity, zero engine changes.
+  quest_df_02: { id:'quest_df_02', type:'skill_check', schema:'UQF-1.0',
     title:'The Salt Price',
     desc:"Dunfall's market runs on barter. Mairén will trade Highland herb pouches — medicinal, rare on the coast — for a fair exchange. WIS Insight DC 11 to understand what fair means in a loch-harbor economy.",
     hint:'Trade with Mairén at Dunfall. WIS Insight DC 11.',
-    activateNode:'DNF', activateCond:() => !!S_story.dunfallAccessed,
-    checkStat:'wis', checkSkill:'Insight', checkDC:11, retryable:true,
-    checkPassFlag:'dfBarterLearned',
-    onPass:() => {
-      S_story.dfBarterLearned = true;
-      S_story.gold = (S_story.gold||0) + 100;
-      S_story.xp = (S_story.xp||0) + 250;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:'Highland Herb Pouch', icon:'🌿', type:'consumable', desc:'Dried moorland herbs from the Dunfall upper pasture — yarrow, bog myrtle, and something Mairén will not name. Medicinal on the coast. Trade value: high. Available only through Dunfall.', sell:40 });
-      storyMsg('The exchange Mairén is looking for is not gold-to-goods — it is acknowledgment-to-goods. She wants to know that you understand the three men who did not come back, that the closed-door period was real, that the harbor opening is a decision not a default.\n\nYou understand this without being told. She notices.\n\nShe places the herb pouch on the dock ledge.\n\n"The myrtle is from the upper pasture. You won\'t find it below the loch. The name of the third ingredient is Dunfall\'s." She does not say it is secret. She says it is theirs.\n\nHighland Herb Pouch added. +100gp equivalent. +250 XP.');
-    },
-    onFail:() => {
-      storyMsg('Mairén looks at the gold. She does not reach for it.\n\n"Come back when you\'ve walked the ford path. Not the road — the ford, where the water comes up to the knee and you can see the crossing markers the village set three generations ago." She turns back to the ledger.\n\nThe exchange requires something the gold cannot offer yet.');
-    },
-    xpAward:0,
+    activateNode:'DNF', gate:{ flags:['dunfallAccessed'] },
+    retryable:true,
     disposition:'"The name of the third ingredient is Dunfall\'s." — Mairén Fionn',
     passText:"The trade is made. The name of the third ingredient is Dunfall property. Mairen does not give that freely.",
     failText:"The trade with Mairen has not been completed. The herb pouches are still on her side.",
     npc:"long_john_silver_sen",
+    bits:[{ kind:'skill_check', stat:'WIS', skill:'Insight', dc:11,
+      onPass:[
+        { kind:'mission_bit', flag:'dfBarterLearned' },
+        { kind:'_legacy_fn', fn:() => {
+          S_story.dfBarterLearned = true;
+          S_story.gold = (S_story.gold||0) + 100;
+          S_story.xp = (S_story.xp||0) + 250;
+          const inv = S_story.inventory = S_story.inventory || [];
+          inv.push({ name:'Highland Herb Pouch', icon:'🌿', type:'consumable', desc:'Dried moorland herbs from the Dunfall upper pasture — yarrow, bog myrtle, and something Mairén will not name. Medicinal on the coast. Trade value: high. Available only through Dunfall.', sell:40 });
+          storyMsg('The exchange Mairén is looking for is not gold-to-goods — it is acknowledgment-to-goods. She wants to know that you understand the three men who did not come back, that the closed-door period was real, that the harbor opening is a decision not a default.\n\nYou understand this without being told. She notices.\n\nShe places the herb pouch on the dock ledge.\n\n"The myrtle is from the upper pasture. You won\'t find it below the loch. The name of the third ingredient is Dunfall\'s." She does not say it is secret. She says it is theirs.\n\nHighland Herb Pouch added. +100gp equivalent. +250 XP.');
+        } },
+      ],
+      onFail:[
+        { kind:'_legacy_fn', fn:() => {
+          storyMsg('Mairén looks at the gold. She does not reach for it.\n\n"Come back when you\'ve walked the ford path. Not the road — the ford, where the water comes up to the knee and you can see the crossing markers the village set three generations ago." She turns back to the ledger.\n\nThe exchange requires something the gold cannot offer yet.');
+        } },
+      ] }],
   },
 
   // ── §PORT-01: Saltwick quests ──
@@ -11519,29 +11531,36 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:"The Tilbury Star cracked strake has not been repaired. Saltwick dry dock is available for 200gp.",
     npc:"long_john_silver_sen",
   },
-  quest_sk_02: { id:'quest_sk_02', type:'skill_check',
+  // §ARCH-01 Wave 1v — migrated legacy → UQF v1.0 (2026-06-29). See the df_02 header above for the
+  // full Highland-trade mapping; sk_02 is identical in shape (checkPassFlag → label-less mission_bit,
+  // gold/xp/item/storyMsg closure → _legacy_fn, fail storyMsg → onFail, retryable ⇒ no fail flag).
+  quest_sk_02: { id:'quest_sk_02', type:'skill_check', schema:'UQF-1.0',
     title:'The Missing Consignment',
     desc:"While the Saltwick Dockmasters' brig was at the Warmth Calm, a consignment went missing from the Saltwick dock warehouse. Dorit knows what it was. She needs someone who can ask the right questions at Tilbury without producing paperwork.",
     hint:'Ask Dorit about the missing consignment at Saltwick. CHA Persuasion DC 12.',
-    activateNode:'MME', activateCond:() => !!S_story.saltwickAccessed,
-    checkStat:'cha', checkSkill:'Persuasion', checkDC:12, retryable:true,
-    checkPassFlag:'saltwickJobAccepted',
-    onPass:() => {
-      S_story.saltwickJobAccepted = true;
-      S_story.gold = (S_story.gold||0) + 600;
-      S_story.xp = (S_story.xp||0) + 400;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:'Saltwick Bill of Lading', icon:'📄', type:'misc', desc:'A Saltwick bill of lading — unsigned, undated, and valid at six ports that share Dorit\'s definition of \'valid\'. Goods listed: \'sundries\'. The sundries are yours to define.', sell:0 });
-      storyMsg('Dorit closes her ledger — the one in her head.\n\n"The consignment was twelve crates of amber glass. Decorative. No value except to whoever ordered them. The buyer was using a Tilbury address. The Tilbury address was a chandler\'s shop that closed the morning of the delivery."\n\nShe looks at you.\n\n"The chandler\'s name was Pembury. No relation, probably. There are a lot of Pemburys."\n\nShe opens a drawer. Places a bill of lading on the dock ledge between you.\n\n"For your trouble. Goods: sundries. You decide what that means."\n\nSaltwick Bill of Lading added. +600gp. +400 XP.');
-    },
-    onFail:() => {
-      storyMsg('Dorit looks at you without expression for a long moment.\n\n"Come back when you\'ve been vouched by someone else. One column isn\'t always enough for the second conversation."');
-    },
-    xpAward:0,
+    activateNode:'MME', gate:{ flags:['saltwickAccessed'] },
+    retryable:true,
     disposition:'"The chandler\'s name was Pembury. No relation, probably. There are a lot of Pemburys." — Harbormaster Dorit',
     passText:"The chandler name was Pembury. No relation, probably. There are a lot of Pemburys. Dorit has given you the lead.",
     failText:"Dorit has not yet shared the missing consignment details. Persuasion DC 12 at Saltwick.",
     npc:"long_john_silver_sen",
+    bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:12,
+      onPass:[
+        { kind:'mission_bit', flag:'saltwickJobAccepted' },
+        { kind:'_legacy_fn', fn:() => {
+          S_story.saltwickJobAccepted = true;
+          S_story.gold = (S_story.gold||0) + 600;
+          S_story.xp = (S_story.xp||0) + 400;
+          const inv = S_story.inventory = S_story.inventory || [];
+          inv.push({ name:'Saltwick Bill of Lading', icon:'📄', type:'misc', desc:'A Saltwick bill of lading — unsigned, undated, and valid at six ports that share Dorit\'s definition of \'valid\'. Goods listed: \'sundries\'. The sundries are yours to define.', sell:0 });
+          storyMsg('Dorit closes her ledger — the one in her head.\n\n"The consignment was twelve crates of amber glass. Decorative. No value except to whoever ordered them. The buyer was using a Tilbury address. The Tilbury address was a chandler\'s shop that closed the morning of the delivery."\n\nShe looks at you.\n\n"The chandler\'s name was Pembury. No relation, probably. There are a lot of Pemburys."\n\nShe opens a drawer. Places a bill of lading on the dock ledge between you.\n\n"For your trouble. Goods: sundries. You decide what that means."\n\nSaltwick Bill of Lading added. +600gp. +400 XP.');
+        } },
+      ],
+      onFail:[
+        { kind:'_legacy_fn', fn:() => {
+          storyMsg('Dorit looks at you without expression for a long moment.\n\n"Come back when you\'ve been vouched by someone else. One column isn\'t always enough for the second conversation."');
+        } },
+      ] }],
   },
 
   // ── §HUNT-02: The Eastern Bend quests ──
@@ -12594,7 +12613,15 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   quest_1367_f_plague: { id:"quest_1367_f_plague", type:"combat", title:"The Empty Village", desc:"Clear Sainte-Marthe-des-Pres of 4 Plague Walkers and 1 Hollow Reeve. plague_exposed risk on fail. faith_folk track.", hint:"The Hollow Reeve does not want to fight. It wants to be acknowledged. That is different.", passText:"The Plague Walkers dissolve when the Hollow Reeve sits down on the stone at the edge of the pit and then is not there. Cecile seals the pit, writes her report, recommends the cousin's claim. She adds the village to a list she keeps of places visited. She does not know why she keeps the list. She thinks it is for the same reason the carver carved the names: so something remembers where the empty places are.", failText:"The Hollow Reeve does not dissolve. You retreat with a wound that smells wrong. Roll CON DC 13 or gain plague_exposed. The village is still empty. The cousin waits.", disposition:"The sky counts them. But someone has to give them to the sky.", activateNode:"HKG", vignetteText:"The village has been empty for nineteen years. The plague took it in three weeks in 1348. The property belongs now to a distant cousin whose claim Cecile is here to certify, if the village is inhabitable, which requires the village to be cleared, which is why there is a notary's commission in her satchel and a sword at her belt that she did not have before she took this work.", xpAward:160, retryGateDays:0, retryable:true, activateCond:() => true, onPass:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 1); }, onFail:() => { if (Math.random() > 0.5) S_story.plague_exposed = true; },
     npc:"auros",
   },
-  quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", title:"The Jester's Crossroads", desc:"The jester does not ask a question. Two must arrive alone and answer it anyway. DC 10 Insight. Self-serve. No Help action.", hint:"The answer is not written anywhere. You already know it.", passText:"You write the number on a scrap of paper and set it on the stone. He catches the coin, does not look at it, nods once. One. Someone else will be the second. When the second arrives and writes the same number, he stands up and dabs. Completely sincere. The post opens. There is a carved coin inside: LXVII on one face, 67 on the other.", failText:"You write a different number. He takes the paper, folds it carefully, puts it in his coat. He collects wrong answers. Not to shame them. Wrong answers need somewhere to go too. Come back when you know.", disposition:"67 > 69. taps chest. self-serve. double dab. ⁶⁷", activateNode:"HKG", checkAbility:"wis", checkLabel:"Insight", vignetteText:"A painted post at a fork in the road. No sign. A jester on a stone, tossing a coin. He does not speak. He holds up two fingers. The coin goes up and up. The question he is not asking is: do you know the answer to the question I am not asking? The answer is 67. You have to arrive at it yourself.", xpAward:67, checkDC:10, retryGateDays:0, retryable:true, activateCond:() => (S_story.faith_folk || 0) >= 1, onPass:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 1); }, onFail:() => {},
+  // §ARCH-01 Wave 1v — migrated legacy → UQF v1.0 (2026-06-29). Folk-wisdom pair (lxvii67 jester,
+  // guide_04 U-curve). Both are checkAbility/checkLabel skill_checks with xpAward + a single simple
+  // onPass flag-set closure (NO checkPassFlag ⇒ legacy granted no token, so the flag set rides as a
+  // _legacy_fn, NOT a mission_bit). Mapping: checkAbility→stat (upper), checkLabel→skill, xpAward→
+  // reward{xp} ordered before the closure (mirrors legacy xpAward-then-onPass()), empty onFail→[].
+  // lxvii67's faith_folk>=1 gate is not expressible in canActivate's term set ⇒ gate:{_legacyFn:true}
+  // keeps activateCond load-bearing (canActivate returns true for _legacyFn gates; activateCond still
+  // runs at the activation site). guide_04's quest-done gate (below) maps cleanly to questsDone.
+  quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", schema:"UQF-1.0", title:"The Jester's Crossroads", desc:"The jester does not ask a question. Two must arrive alone and answer it anyway. DC 10 Insight. Self-serve. No Help action.", hint:"The answer is not written anywhere. You already know it.", passText:"You write the number on a scrap of paper and set it on the stone. He catches the coin, does not look at it, nods once. One. Someone else will be the second. When the second arrives and writes the same number, he stands up and dabs. Completely sincere. The post opens. There is a carved coin inside: LXVII on one face, 67 on the other.", failText:"You write a different number. He takes the paper, folds it carefully, puts it in his coat. He collects wrong answers. Not to shame them. Wrong answers need somewhere to go too. Come back when you know.", disposition:"67 > 69. taps chest. self-serve. double dab. ⁶⁷", activateNode:"HKG", checkAbility:"wis", checkLabel:"Insight", vignetteText:"A painted post at a fork in the road. No sign. A jester on a stone, tossing a coin. He does not speak. He holds up two fingers. The coin goes up and up. The question he is not asking is: do you know the answer to the question I am not asking? The answer is 67. You have to arrive at it yourself.", checkDC:10, retryGateDays:0, retryable:true, activateCond:() => (S_story.faith_folk || 0) >= 1, gate:{ _legacyFn:true }, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:10, onPass:[{ kind:"reward", xp:67 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 1); } }], onFail:[] }],
     npc:"auros",
   },
   quest_guide_01: { id:"quest_guide_01", type:"side", title:"The Fool's First Cast", desc:"A young man arrived at Yugurt Cabin this morning with a market rod, a broken guide ring, and total confidence. He cast immediately without asking anything. The line went sideways. He said: Is that normal? He was smiling. He has never fished a lake. He does not know he has never fished a lake. The Fisherman watched from the cabin steps and said nothing. You are holding it like a question.", hint:"Go to Yugurt Lake and make your first catch.", disposition:"\"Is that normal?\" — Emmer Finch", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:50, reward:0, activateCond:() => (S_story.inventory||[]).some(i => (i.name||'')
@@ -12607,7 +12634,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     passText:"You are thinking about every move. Good. You will not always have to. Five catches completed.",
     failText:"Practice is not finished. Fish at Yugurt Lake three more times — five total catches required.",
   },
-  quest_guide_04: { id:"quest_guide_04", type:"skill_check", title:"The Middle Way Sneers", desc:"Bog Mudwhistle watches Emmer cast from across the bank. Emmer's cast is deliberate now — you can see him thinking through each step. Bog says: Trying too hard. Either you have it or you don't. He addresses the lake, not Emmer. Emmer hears him. The Fisherman continues fishing. He has been at this lake eleven years. He knows what Bog is doing. He has been where Bog is standing. He did not stay there.", hint:"See through the mockery — WIS Insight DC 11.", passText:"You see it — the U-curve. The fool who has never tried and the sage who has passed through trying arrive at the same simplicity. The middle sneers at the effort because effort is embarrassing when you are in the middle. Bog has fished thirty years without improvement because he stopped at competence and called it mastery. The Fisherman passed through the same stage and kept going. Emmer is in the middle now. The middle is not the destination. Let it sneer. Walk through it.", failText:"Bog's words land wrong. Maybe the trying IS the problem. Maybe competence cannot be taught — maybe you either have it or you don't and Emmer doesn't and all of this is just embarrassing. The Fisherman casts again. He does not look up. You cannot yet see what he sees.", disposition:"\"The wisest king in the old stories said there is nothing better than to eat and be glad. The men in the middle laughed. He was right.\" — The Fisherman", npc:"Bog Mudwhistle", activateNode:"SSJ", waypointNode:"SSJ", checkAbility:"wis", checkLabel:"Insight", vignetteText:"Bog Mudwhistle is at the far bank, rod propped against his knee, watching Emmer cast. The cast is deliberate — each step visible, the grip consciously adjusted, the line arc calculated before release. Bog has been fishing this lake for thirty years without thinking about any of those steps. From a distance, this looks like the same skill expressed differently. From close, it looks like effort. Bog knows the difference and says so, to no one in particular: Trying too hard. Either you have it or you don't. The Fisherman does not respond. He casts. The line goes where it needs to go. He has been where Bog is standing — not the physical location, the knowledge location. He decided not to stay. You are watching all three men at once and only one of them understands what he is watching.", xpAward:250, checkDC:11, retryGateDays:0, retryable:true, activateCond:() => S_story.quests["quest_guide_03"] === "done", onPass:() => { S_story.emmerStage4a = true; }, onFail:() => {} },
+  quest_guide_04: { id:"quest_guide_04", type:"skill_check", title:"The Middle Way Sneers", desc:"Bog Mudwhistle watches Emmer cast from across the bank. Emmer's cast is deliberate now — you can see him thinking through each step. Bog says: Trying too hard. Either you have it or you don't. He addresses the lake, not Emmer. Emmer hears him. The Fisherman continues fishing. He has been at this lake eleven years. He knows what Bog is doing. He has been where Bog is standing. He did not stay there.", hint:"See through the mockery — WIS Insight DC 11.", passText:"You see it — the U-curve. The fool who has never tried and the sage who has passed through trying arrive at the same simplicity. The middle sneers at the effort because effort is embarrassing when you are in the middle. Bog has fished thirty years without improvement because he stopped at competence and called it mastery. The Fisherman passed through the same stage and kept going. Emmer is in the middle now. The middle is not the destination. Let it sneer. Walk through it.", failText:"Bog's words land wrong. Maybe the trying IS the problem. Maybe competence cannot be taught — maybe you either have it or you don't and Emmer doesn't and all of this is just embarrassing. The Fisherman casts again. He does not look up. You cannot yet see what he sees.", disposition:"\"The wisest king in the old stories said there is nothing better than to eat and be glad. The men in the middle laughed. He was right.\" — The Fisherman", npc:"Bog Mudwhistle", activateNode:"SSJ", waypointNode:"SSJ", checkAbility:"wis", checkLabel:"Insight", vignetteText:"Bog Mudwhistle is at the far bank, rod propped against his knee, watching Emmer cast. The cast is deliberate — each step visible, the grip consciously adjusted, the line arc calculated before release. Bog has been fishing this lake for thirty years without thinking about any of those steps. From a distance, this looks like the same skill expressed differently. From close, it looks like effort. Bog knows the difference and says so, to no one in particular: Trying too hard. Either you have it or you don't. The Fisherman does not respond. He casts. The line goes where it needs to go. He has been where Bog is standing — not the physical location, the knowledge location. He decided not to stay. You are watching all three men at once and only one of them understands what he is watching.", checkDC:11, retryGateDays:0, retryable:true, schema:"UQF-1.0", gate:{ questsDone:['quest_guide_03'] }, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:11, onPass:[{ kind:"reward", xp:250 }, { kind:"_legacy_fn", fn:() => { S_story.emmerStage4a = true; } }], onFail:[] }] },
   quest_guide_05: { id:"quest_guide_05", type:"side", title:"The Cast That Didn't Think", desc:"Emmer stands at the shore. He does not choose a spot. He does not look at the water first. He casts. The form is clean. He does not know it is clean until the fish is running. He holds the line correctly — has been holding it this way for several mornings without noticing that he started. Later he says: I did not think about it. I just cast. Then the fish was there. He looks slightly surprised at himself. The Fisherman nods from the cabin steps. Neither did I, once.", hint:"Return to Yugurt Cabin. The threshold has been crossed.", disposition:"\"He didn't think about it. Neither did I, once.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"SSJ", xpAward:300, reward:0, activateCond:() => !!S_story.emmerStage4a, completeFn:() => !!S_story.emmerStage4a && S_story.currentCode === "SSJ",
     passText:"He did not think about it. Neither did I, once. The cast that did not think has been made.",
     failText:"The threshold has not been crossed. Return to Yugurt Cabin after the unconscious cast.",

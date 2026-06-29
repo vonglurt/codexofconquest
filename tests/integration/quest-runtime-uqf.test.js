@@ -2639,3 +2639,163 @@ test.describe('§ARCH-01 Wave 1u — Atlantean iodine chain (iodine_01/shore_02/
     }
   });
 });
+
+// ══════════════════════════════════════════════════════════════════════════
+// §ARCH-01 Wave 1v — final Wave-1 singletons: Highland trade + folk wisdom.
+// ══════════════════════════════════════════════════════════════════════════
+
+const HIGHLAND = [
+  { id:'quest_df_02', stat:'wis', skill:'Insight',    dc:11, flag:'dfBarterLearned',    token:'Df Barter Learned Token',    gateFlag:'dunfallAccessed',  gold:100, xp:250, item:'Highland Herb Pouch' },
+  { id:'quest_sk_02', stat:'cha', skill:'Persuasion', dc:12, flag:'saltwickJobAccepted', token:'Saltwick Job Accepted Token', gateFlag:'saltwickAccessed', gold:600, xp:400, item:'Saltwick Bill of Lading' },
+];
+
+test.describe('§ARCH-01 Wave 1v — Highland trade (df_02 / sk_02)', () => {
+  test('both validate as UQF skill_checks; checkPassFlag → onPass [mission_bit(no label), _legacy_fn], onFail [_legacy_fn]', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((HIGHLAND) => HIGHLAND.map(s => {
+      const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
+      const mb = (b.onPass || []).find(x => x.kind === 'mission_bit');
+      return { id:s.id, schema:q.schema, valid:validateQuest(q).valid, type:q.type,
+               retryable:q.retryable, stat:b.stat, skill:b.skill, dc:b.dc,
+               onPassKinds:(b.onPass || []).map(x => x.kind),
+               onFailKinds:(b.onFail || []).map(x => x.kind),
+               mbFlag:mb.flag, mbHasLabel:('label' in mb) };
+    }), HIGHLAND);
+    for (const s of HIGHLAND) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toEqual({ id:s.id, schema:'UQF-1.0', valid:true, type:'skill_check',
+        retryable:true, stat:s.stat.toUpperCase(), skill:s.skill, dc:s.dc,
+        onPassKinds:['mission_bit', '_legacy_fn'], onFailKinds:['_legacy_fn'],
+        mbFlag:s.flag, mbHasLabel:false });  // no explicit label ⇒ _grantMissionBit falls through to _flagToLabel
+    }
+  });
+
+  test('declarative gates: df_02 needs dunfallAccessed, sk_02 needs saltwickAccessed', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((HIGHLAND) => HIGHLAND.map(s => {
+      S_story[s.gateFlag] = false; const closed = QuestRuntime.canActivate(s.id);
+      S_story[s.gateFlag] = true;  const open   = QuestRuntime.canActivate(s.id);
+      return { id:s.id, closed, open };
+    }), HIGHLAND);
+    for (const s of HIGHLAND) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toEqual({ id:s.id, closed:false, open:true });
+    }
+  });
+
+  test('PASS parity: done + flag set + bone token (flagRef + _flagToLabel name) + gold + xp + item', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((HIGHLAND) => HIGHLAND.map(s => {
+      S_story.abilityScores = { [s.stat]: 40 };
+      S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+      S_story[s.flag] = false; S_story.quests = { [s.id]:'active' };
+      _rollCeremonia(s.id);
+      const tok = S_story.inventory.find(i => i.flagRef === s.flag);
+      return { id:s.id, status:S_story.quests[s.id], flag:S_story[s.flag],
+               xp:S_story.xp, gold:S_story.gold,
+               tokenName: tok && tok.name, tokenType: tok && tok.type,
+               hasItem: S_story.inventory.some(i => i.name === s.item) };
+    }), HIGHLAND);
+    for (const s of HIGHLAND) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toEqual({ id:s.id, status:'done', flag:true, xp:s.xp, gold:s.gold,
+        tokenName:s.token, tokenType:'mission_bit', hasItem:true });
+    }
+  });
+
+  test('FAIL parity (retryable): stays active, no flag/token/gold/xp/item, attempt recorded', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((HIGHLAND) => HIGHLAND.map(s => {
+      S_story.abilityScores = { [s.stat]: -100 };
+      S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+      S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+      S_story[s.flag] = false; S_story.quests = { [s.id]:'active' };
+      _rollCeremonia(s.id);
+      return { id:s.id, status:S_story.quests[s.id], flag:S_story[s.flag],
+               xp:S_story.xp, gold:S_story.gold, items:S_story.inventory.length,
+               failures:(S_story.skillCheckAttempts[s.id] || {}).failures };
+    }), HIGHLAND);
+    for (const s of HIGHLAND) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toEqual({ id:s.id, status:'active', flag:false, xp:0, gold:0, items:0, failures:1 });
+    }
+  });
+});
+
+const FOLK = [
+  { id:'quest_lxvii67',  stat:'wis', skill:'Insight', dc:10, xp:67,  passFlag:'faith_folk',   passVal:1,    legacyGate:true  },
+  { id:'quest_guide_04', stat:'wis', skill:'Insight', dc:11, xp:250, passFlag:'emmerStage4a', passVal:true, legacyGate:false },
+];
+
+test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-curve)', () => {
+  test('both validate; xpAward → onPass [reward{xp}, _legacy_fn] (no token), onFail:[]', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((FOLK) => FOLK.map(s => {
+      const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
+      const rw = (b.onPass || []).find(x => x.kind === 'reward');
+      return { id:s.id, schema:q.schema, valid:validateQuest(q).valid, type:q.type,
+               retryable:q.retryable, stat:b.stat, skill:b.skill, dc:b.dc,
+               onPassKinds:(b.onPass || []).map(x => x.kind), xp:rw && rw.xp,
+               onFailLen:(b.onFail || []).length,
+               hasMissionBit:(b.onPass || []).some(x => x.kind === 'mission_bit') };
+    }), FOLK);
+    for (const s of FOLK) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toEqual({ id:s.id, schema:'UQF-1.0', valid:true, type:'skill_check',
+        retryable:true, stat:s.stat.toUpperCase(), skill:s.skill, dc:s.dc,
+        onPassKinds:['reward', '_legacy_fn'], xp:s.xp, onFailLen:0, hasMissionBit:false });
+    }
+  });
+
+  test('gates: guide_04 → questsDone[quest_guide_03]; lxvii67 keeps load-bearing activateCond behind a _legacyFn gate (faith_folk>=1 inexpressible)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = {}; const g04closed = QuestRuntime.canActivate('quest_guide_04');
+      S_story.quests = { quest_guide_03:'done' }; const g04open = QuestRuntime.canActivate('quest_guide_04');
+      const lq = QUEST_DB['quest_lxvii67'];
+      const gateLegacy = !!(lq.gate && lq.gate._legacyFn);
+      const caAlways = QuestRuntime.canActivate('quest_lxvii67');
+      S_story.faith_folk = 0; const acClosed = lq.activateCond();
+      S_story.faith_folk = 1; const acOpen = lq.activateCond();
+      return { g04closed, g04open, gateLegacy, caAlways, acClosed, acOpen };
+    });
+    expect(r).toEqual({ g04closed:false, g04open:true, gateLegacy:true, caAlways:true, acClosed:false, acOpen:true });
+  });
+
+  test('PASS parity: done + xp + onPass flag effect (faith_folk++ / emmerStage4a) + NO token', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((FOLK) => FOLK.map(s => {
+      S_story.abilityScores = { [s.stat]: 40 };
+      S_story.level = 20; S_story.xp = 0; S_story.inventory = [];
+      S_story.faith_folk = 0; S_story.emmerStage4a = false;
+      S_story.quests = { [s.id]:'active' };
+      _rollCeremonia(s.id);
+      return { id:s.id, status:S_story.quests[s.id], xp:S_story.xp,
+               passVal:S_story[s.passFlag], tokens:S_story.inventory.filter(i => i.type === 'mission_bit').length };
+    }), FOLK);
+    for (const s of FOLK) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toEqual({ id:s.id, status:'done', xp:s.xp, passVal:s.passVal, tokens:0 });
+    }
+  });
+
+  test('FAIL parity (retryable): stays active, xp 0, flag unchanged, attempt recorded', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((FOLK) => FOLK.map(s => {
+      S_story.abilityScores = { [s.stat]: -100 };
+      S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+      S_story.xp = 0; S_story.inventory = [];
+      S_story.faith_folk = 0; S_story.emmerStage4a = false;
+      S_story.quests = { [s.id]:'active' };
+      _rollCeremonia(s.id);
+      return { id:s.id, status:S_story.quests[s.id], xp:S_story.xp,
+               faith_folk:S_story.faith_folk, emmerStage4a:S_story.emmerStage4a,
+               items:S_story.inventory.length,
+               failures:(S_story.skillCheckAttempts[s.id] || {}).failures };
+    }), FOLK);
+    for (const s of FOLK) {
+      const got = r.find(x => x.id === s.id);
+      expect(got).toEqual({ id:s.id, status:'active', xp:0, faith_folk:0, emmerStage4a:false, items:0, failures:1 });
+    }
+  });
+});
