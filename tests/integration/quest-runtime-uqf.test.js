@@ -1343,3 +1343,118 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0201/d0205/d0209 arcs (15 quests)
     expect(r.mazeEntered).toBe(true);
   });
 });
+
+// ── §ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (codemod #2) ──
+//
+// Final 4 d02xx arcs (20 quests). Needed FOUR new engine terms: gate.shardsMin,
+// gate.notBattles, gate.restedAtMin (canActivate) + completion.questsComplete
+// (canComplete OR-group, strict ===\'complete\'). Per a deliberate user decision,
+// the previously-DEAD completeItems on these skill_checks (Memory Token /
+// Blueprint Roll / Baby Mimic / Loop Closure Seal — never granted in legacy
+// because skill_checks never enter the completeItems completion loop) are now
+// converted to onPass reward.items so they ARE granted. THIS WAVE IS NOT PURE
+// PARITY — it intentionally fixes that latent bug. Live onPass closures (wand,
+// cache, tribbles, flags) stay verbatim via _legacy_fn.
+
+test.describe('§ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (20 quests)', () => {
+  const ALL = [];
+  for (const arc of ['d0204','d0206','d0208','d0210']) for (const a of ['a1','a2','a3','a4','a5']) ALL.push('quest_'+arc+'_'+a);
+
+  test('all 20 validate as UQF', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((ids) => ids.map(id => {
+      const q = QUEST_DB[id];
+      return { id, schema:q.schema, valid:validateQuest(q).valid };
+    }), ALL);
+    const bad = r.filter(x => x.schema !== 'UQF-1.0' || !x.valid);
+    expect(bad).toEqual([]);
+  });
+
+  test('new gate terms: shardsMin + notBattles (d0210_a1), restedAtMin (d0206_a3)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // d0210_a1: shardsMin:6, notBattles:['TLS']
+      S_story.defeatedBattles = {};
+      S_story.shards = 5; const lowShards = QuestRuntime.canActivate('quest_d0210_a1');
+      S_story.shards = 6; const enoughShards = QuestRuntime.canActivate('quest_d0210_a1');
+      S_story.defeatedBattles = { TLS:true }; const battleDone = QuestRuntime.canActivate('quest_d0210_a1');
+      // d0206_a3: flags['d0206_a2_passed'] + restedAtMin:{SZG:1}
+      S_story.d0206_a2_passed = true; S_story.shortRestedAtNodes = {};
+      const noRest = QuestRuntime.canActivate('quest_d0206_a3');
+      S_story.shortRestedAtNodes = { SZG:1 };
+      const rested = QuestRuntime.canActivate('quest_d0206_a3');
+      return { lowShards, enoughShards, battleDone, noRest, rested };
+    });
+    expect(r.lowShards).toBe(false);     // <6 shards
+    expect(r.enoughShards).toBe(true);   // >=6 and TLS not defeated
+    expect(r.battleDone).toBe(false);    // notBattles violated (TLS defeated)
+    expect(r.noRest).toBe(false);        // not rested at SZG
+    expect(r.rested).toBe(true);
+  });
+
+  test('questsComplete completion term (d0204_a3): strict ===complete, OR flag — a2 \'done\' is NOT enough', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const reset = () => { S_story.quests = {}; delete S_story.memorGateBypassUsed; };
+      reset(); const none = QuestRuntime.canComplete('quest_d0204_a3');
+      reset(); S_story.quests = { quest_d0204_a2:'done' }; const a2done = QuestRuntime.canComplete('quest_d0204_a3');
+      reset(); S_story.quests = { quest_d0204_a2:'complete' }; const a2complete = QuestRuntime.canComplete('quest_d0204_a3');
+      reset(); S_story.memorGateBypassUsed = true; const viaBypass = QuestRuntime.canComplete('quest_d0204_a3');
+      return { none, a2done, a2complete, viaBypass };
+    });
+    expect(r.none).toBe(false);
+    expect(r.a2done).toBe(false);      // strict: 'done' ≠ 'complete' (parity with legacy quirk)
+    expect(r.a2complete).toBe(true);
+    expect(r.viaBypass).toBe(true);
+  });
+
+  test('BUG-FIX: a5 finales now grant their (formerly dead) completeItems + xp/gold', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const got = await page.evaluate(() => {
+      const cases = [
+        { id:'quest_d0204_a5', item:'Memory Token',      xp:250, gold:100 },
+        { id:'quest_d0206_a5', item:'Blueprint Roll',     xp:400, gold:150 },
+        { id:'quest_d0208_a5', item:'Baby Mimic',         xp:300, gold:100 },
+        { id:'quest_d0210_a5', item:'Loop Closure Seal',  xp:500, gold:200 },
+      ];
+      const out = {};
+      for (const c of cases) {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 1000000; S_story.gold = 500; S_story.day = 1; S_story.inventory = [];
+        S_story.quests = { [c.id]:'active' };
+        _rollCeremonia(c.id);
+        out[c.id] = { status:S_story.quests[c.id], item:!!S_story.inventory.find(i=>i.name===c.item),
+                      dxp:S_story.xp-1000000, dgold:S_story.gold-500 };
+      }
+      return { out, cases };
+    });
+    for (const c of got.cases) {
+      expect(got.out[c.id].status, c.id).toBe('done');
+      expect(got.out[c.id].item, c.id).toBe(true);     // formerly never granted — now granted
+      expect(got.out[c.id].dxp, c.id).toBe(c.xp);
+      expect(got.out[c.id].dgold, c.id).toBe(c.gold);
+    }
+  });
+
+  test('live onPass closures preserved: d0206_a2 wand, d0208_a4 cache + 3 tribbles', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+      S_story.level = 20; S_story.xp = 1000000;
+      // d0206_a2 → Prototype Wand
+      S_story.inventory = []; S_story.quests = { quest_d0206_a2:'active' };
+      _rollCeremonia('quest_d0206_a2');
+      const wand = !!S_story.inventory.find(i => i.name === "Scholar King's Prototype Wand");
+      // d0208_a4 → Mimic's Cache + tribbles, tribbleCount += 3
+      S_story.inventory = []; S_story.tribbleCount = 0; S_story.quests = { quest_d0208_a4:'active' };
+      _rollCeremonia('quest_d0208_a4');
+      const cache = !!S_story.inventory.find(i => i.name === "Mimic's Cache");
+      const tribbles = S_story.inventory.filter(i => i.name === 'Fuzzy Tribble').length;
+      return { wand, cache, tribbles, tribbleCount:S_story.tribbleCount };
+    });
+    expect(r.wand).toBe(true);
+    expect(r.cache).toBe(true);
+    expect(r.tribbles).toBe(3);
+    expect(r.tribbleCount).toBe(3);
+  });
+});

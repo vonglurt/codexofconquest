@@ -26,7 +26,8 @@ formats to Universal Quest Format (UQF v1.0)
 | Wave 1d | Ceremonia: Yael arc (`quest_ceremonia_yael_01`–`05`); + `gate.favorMin` term, `checkFailFlag`→`onFail:[mission_bit]`, vignetteTextAlt render parity fix | `c164fe2` |
 | Wave 1e | §1367 skill-checks (4 of 6: `e_wycliffe`/`b_tamerlane`/`c_ottoman`/`d_hansa`); clamped faction/faith track counters via `_legacy_fn`; first real `onFail` track effect (`d_hansa`) | `e98feb7` |
 | Wave 1f | Ceremonia d0207 arc (5 acts, first full d02xx arc); + `gate.battles` term, `notFlags`/flag/battle completion patterns | `e8f7d59` |
-| Wave 1g | d0201+d0205+d0209 (3 full d02xx arcs, 15 quests) via **codemod**; onFail closures, reward.gold, side onComplete; zero engine changes | _this commit_ |
+| Wave 1g | d0201+d0205+d0209 (3 full d02xx arcs, 15 quests) via **codemod**; onFail closures, reward.gold, side onComplete; zero engine changes | `7583772` |
+| Wave 1h | d0204+d0206+d0208+d0210 (final 4 d02xx arcs, 20 quests) via codemod #2 → **d02xx 40/40**; + `gate.shardsMin`/`notBattles`/`restedAtMin` + `completion.questsComplete`; **deliberate bug-fix** (dead completeItems → reward.items) | _this commit_ |
 
 **Proven properties:**
 - **Behavior parity** — every migrated quest produces byte-identical state
@@ -127,9 +128,13 @@ to run per quest (and per arc):
     `battles` completion term, (Wave 1a) the **`gate.questsAttempted`**
     (`(quests[id]||'')!==''`, ×23 in QUEST_DB) + **`gate.questsDone`**
     (`done`/`complete`) chain terms, (Wave 1d) **`gate.favorMin`**
-    (`{npc:n}` ← `(npcFavorability||{}).x >= n`), and (Wave 1f) **`gate.battles`**
-    (`['CODE']` ← `!!defeatedBattles[code]` in activateCond; ALL required) — all
-    in `canActivate`. Each immediately served multiple quests.
+    (`{npc:n}` ← `(npcFavorability||{}).x >= n`), (Wave 1f) **`gate.battles`**
+    (`['CODE']` ← `!!defeatedBattles[code]`; ALL required), and (Wave 1h)
+    **`gate.notBattles`** (`!defeatedBattles[code]`), **`gate.shardsMin`**
+    (`(shards||0)>=n`), **`gate.restedAtMin`** (`{node:n}` ←
+    `shortRestedAtNodes[node]>=n`) in `canActivate` + **`completion.questsComplete`**
+    (strict `==='complete'` OR-term, for chaining off a *side* quest) in
+    `canComplete`. Each immediately served multiple quests.
 
 > **§C note — fail flags & the onFail chain.** The legacy non-retryable fail
 > path grants `checkFailFlag` via `_grantMissionBit(checkFailFlag, bitLabel)`
@@ -231,7 +236,8 @@ codemod** (the simple skill_checks are too numerous — ~2149 — to hand-edit).
 | **1e ✅** | §1367 historical skill-checks (4 of 6) | 4 | `e_wycliffe`/`b_tamerlane`/`c_ottoman`/`d_hansa`. No `checkPassFlag` (no mission_bit); `gate:{}` (independent); `onPass`/`onFail` adjust **clamped faction/faith track counters** via `_legacy_fn`; `d_hansa` first real `onFail` track effect. The 2 combat quests (`a_najera`, `f_plague`) deferred to Wave 4. |
 | **1f ✅** | Ceremonia **d0207** arc (5 acts) | 5 | first FULL d02xx arc (3 skill_check + 2 side), migrated end-to-end like §WISDOM-01. New: **`gate.battles`** activation term (a4 needs `defeatedBattles['HKG']`); `notFlags` activation (a1); flag completion (a2); **battle completion** (a3 → `completion:{battles}`). a5 onPass pushes a flavor item via `_legacy_fn`. **Template for the other 8 d02xx arcs (40 quests total).** |
 | **1g ✅** | d0201 + d0205 + d0209 (3 full arcs) | 15 | **first script-assisted batch** — a one-shot within-block codemod (structural fragments only, never narrative), verified by syntax+structure+tests. Zero engine changes (only already-supported terms). Handled onFail closures (`voidPressure+1`), `reward.gold` finales, and a side-quest `onComplete`. d02xx now **20/40**. |
-| **1** | skill-check arcs **with** `onPass` closures (now migrating whole arcs incl. their `side` acts) | **78** onPass-closures (done: wane 6, whisper 5, glut 5, ceremonia_yael 5, 1367 skill 4, d0207/d0201/d0205/d0209 = **~40 quests**) | full bit-chain transform (the wis/wane pattern). **d02xx family** (9 arcs × 5 = 40 quests) migrated arc-complete: **d0207+d0201+d0205+d0209 ✅ (20/40)**; remaining d0204/d0206/d0208/d0210 **need new engine terms** (see Wave-1g next-op). Other arcs: `inn`(3), `spark`/`spark2`, `inquisitor`(3), `sea`, `sb`, `hunt`/`hunt2`, `bilge`, `alch`, `scar` + ~10 singletons. |
+| **1h ✅** | d0204 + d0206 + d0208 + d0210 (final 4 arcs) | 20 | codemod #2 → **d02xx 40/40 COMPLETE**. + 4 engine terms: `gate.shardsMin`/`gate.notBattles`/`gate.restedAtMin` (canActivate), `completion.questsComplete` (strict `==='complete'` OR-term). **Deliberate bug-fix (not pure parity):** dead `completeItems` on skill_checks (never granted in legacy) → `onPass reward.items`, so 4 items are now granted. §DUNGEON-01 follow-up logged (per-id `==='complete'` handlers for skill_checks remain dead). |
+| **1** | skill-check arcs **with** `onPass` closures (now migrating whole arcs incl. their `side` acts) | **78** onPass-closures (done: wane 6, whisper 5, glut 5, ceremonia_yael 5, 1367 skill 4, d0207/d0201/d0205/d0209 = **~40 quests**) | full bit-chain transform (the wis/wane pattern). **d02xx family** (9 arcs × 5 = 40 quests) **✅ 40/40 COMPLETE** (d0207+d0201+d0205+d0209+d0204+d0206+d0208+d0210). Remaining Wave-1 arcs: `inn`(3), `spark`/`spark2`, `inquisitor`(3), `sea`, `sb`, `hunt`/`hunt2`, `bilge`, `alch`, `scar` + ~10 singletons. |
 | **2** | simple skill-checks (checkPassFlag/xpAward only) | **~2149** | **codemod, not hand-migration.** Mechanical rewrite `{checkAbility,checkLabel,checkDC,checkPassFlag,xpAward,goldAward}` → `schema+gate+bits:[{skill_check, onPass:[mission_bit?, reward?]}]`. Run in batches; parity-test each batch with the existing harness. The dominant chain gate `(quests['prev']||'')!==''` is already covered by `gate.questsAttempted`. |
 | **3** | `side` quests (completeFn) | 129 | declarative `completion` gates. Needs `item_check` gate term finalized; per-id hardcoded completion side-effects in `storyCheckQuests` move into completion bit chains. |
 | **4** | `combat` quests | 71 | needs a UQF combat-quest resolver (the `combat` bit kind exists; wire resolution mirroring legacy combat-quest completion). Largest non-skill bucket — was mis-counted as 2 in the first survey. |
