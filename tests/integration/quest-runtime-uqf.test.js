@@ -1595,3 +1595,99 @@ test.describe('§ARCH-01 Wave 1 — Innmother skill-checks (quest_inn_{02,03,04}
     expect(r.kindness).toBe(0);
   });
 });
+
+// ── §ARCH-01 Wave 1j — Spark: the Harmony Chain (quest_spark_01..05) ──
+//
+// The Smalt/Pip/Clot/Warmth/Aldous arc. Three skill_checks (01 CHA Persuasion
+// DC10 retryable; 03 WIS Medicine DC13; 04 INT Investigation DC14) each carry a
+// mission_bit (01 with bitLabel, 03/04 fall back to _flagToLabel) + a _legacy_fn
+// holding the verbatim onPass closure (gold/xp/item/knowledge/msg). The two side
+// quests (02/05) become completion gates that keep their onComplete closure — the
+// engine fires it on the UQF completion path. checkStat resolves the modifier
+// since §SKILLFIX-01, so the whole arc is pure parity.
+
+test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', () => {
+  test('the three skill_checks validate with exact stat/skill/dc and mission_bit + gates', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => ['quest_spark_01','quest_spark_03','quest_spark_04'].map(id => {
+      const q = QUEST_DB[id]; const bit = q.bits[0];
+      const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
+      return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, skill:bit.skill, dc:bit.dc,
+               mbFlag:mb && mb.flag, mbLabel:mb && (mb.label||null),
+               hasLegacyFn:(bit.onPass||[]).some(b=>b.kind==='_legacy_fn'),
+               gate:JSON.stringify(q.gate), retryable:q.retryable };
+    }));
+    expect(r.every(x => x.schema==='UQF-1.0' && x.valid && x.hasLegacyFn)).toBe(true);
+    expect(r).toMatchObject([
+      { id:'quest_spark_01', stat:'CHA', skill:'Persuasion',    dc:10, mbFlag:'smaltBefriended',            mbLabel:'Smalt Befriended', gate:'{}',                                     retryable:true },
+      { id:'quest_spark_03', stat:'WIS', skill:'Medicine',      dc:13, mbFlag:'bioluminescentParasiteFound', mbLabel:null,                gate:'{"flags":["pipMet"]}',                   retryable:true },
+      { id:'quest_spark_04', stat:'INT', skill:'Investigation', dc:14, mbFlag:'whodunitSolved',              mbLabel:null,                gate:'{"flags":["bioluminescentParasiteFound"]}', retryable:true },
+    ]);
+  });
+
+  test('the two side quests validate as UQF completion gates that retain onComplete', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => ['quest_spark_02','quest_spark_05'].map(id => {
+      const q = QUEST_DB[id];
+      return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid,
+               gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion),
+               hasOnComplete:typeof q.onComplete==='function' };
+    }));
+    expect(r).toMatchObject([
+      { id:'quest_spark_02', schema:'UQF-1.0', type:'side', valid:true, gate:'{"flags":["smaltBefriended"]}',                                  completion:'{"flags":["pipMet"]}',          hasOnComplete:true },
+      { id:'quest_spark_05', schema:'UQF-1.0', type:'side', valid:true, gate:'{"flags":["whodunitSolved","wrenpemburyInconsistencyNoticed"]}', completion:'{"flags":["aldousConfessed"]}', hasOnComplete:true },
+    ]);
+  });
+
+  test('spark_01 PASS: done, smaltBefriended flag+token, Smalt\'s Trust, +100gp/+100xp', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+      S_story.level = 20; S_story.gold = 0; S_story.xp = 0; S_story.inventory = [];
+      S_story.smaltBefriended = false; S_story.quests = { quest_spark_01:'active' };
+      _rollCeremonia('quest_spark_01');
+      return { status:S_story.quests.quest_spark_01, flag:S_story.smaltBefriended,
+               gold:S_story.gold, xp:S_story.xp,
+               hasToken:S_story.inventory.some(i=>i.flagRef==='smaltBefriended'),
+               hasTrust:S_story.inventory.some(i=>i.name==="Smalt's Trust") };
+    });
+    expect(r).toEqual({ status:'done', flag:true, gold:100, xp:100, hasToken:true, hasTrust:true });
+  });
+
+  test('spark_03/04 PASS: exact gold/xp, item, knowledge, mission flag', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = (id) => {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.gold = 0; S_story.xp = 0; S_story.inventory = []; S_story.knowledge = [];
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        return { status:S_story.quests[id], gold:S_story.gold, xp:S_story.xp, knowledge:S_story.knowledge.length };
+      };
+      const s3 = run('quest_spark_03'); const glow = S_story.inventory.some(i=>i.name==="Clot's Glow"); const f3 = S_story.bioluminescentParasiteFound;
+      const s4 = run('quest_spark_04'); const letter = S_story.inventory.some(i=>i.name==='Letter of Safe Passage'); const f4 = S_story.whodunitSolved;
+      return { s3, glow, f3, s4, letter, f4 };
+    });
+    expect(r.s3).toEqual({ status:'done', gold:200, xp:200, knowledge:1 });
+    expect(r.glow).toBe(true); expect(r.f3).toBe(true);
+    expect(r.s4).toEqual({ status:'done', gold:300, xp:300, knowledge:0 });
+    expect(r.letter).toBe(true); expect(r.f4).toBe(true);
+  });
+
+  test('spark_01 retryable FAIL: not locked, hp-1, attempt recorded, no flag/reward', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { cha:-100 };       // deterministic fail
+      S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+      S_story.gold = 0; S_story.xp = 0; S_story.hp = 10; S_story.inventory = [];
+      S_story.smaltBefriended = false; S_story.quests = { quest_spark_01:'active' };
+      _rollCeremonia('quest_spark_01');
+      return { status:S_story.quests.quest_spark_01, hp:S_story.hp, gold:S_story.gold, xp:S_story.xp,
+               flag:S_story.smaltBefriended, fails:(S_story.skillCheckAttempts.quest_spark_01||{}).failures };
+    });
+    expect(r.status).toBe('active');   // retryable ⇒ stays active, NOT 'failed'
+    expect(r.hp).toBe(9);              // onFail closure docked 1
+    expect(r.gold).toBe(0); expect(r.xp).toBe(0); expect(r.flag).toBe(false);
+    expect(r.fails).toBe(1);
+  });
+});

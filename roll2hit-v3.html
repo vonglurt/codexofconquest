@@ -11068,39 +11068,53 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── §SPARK-01: The Harmony Chain (Tilbury) ──
-  quest_spark_01: { id:'quest_spark_01', type:'skill_check',
+  // §ARCH-01 Wave 1j — migrated legacy → UQF v1.0 (2026-06-28). Pure parity (§SKILLFIX-01
+  // makes checkStat resolve the CHA modifier). gate:{} ← activateCond:()=>true. The skill_check
+  // bit's onPass mirrors the legacy order: mission_bit (= _grantMissionBit checkPassFlag/bitLabel)
+  // then _legacy_fn (the verbatim onPass closure: +100gp/+100xp/Smalt's Trust/msg). onFail wraps
+  // the hp-1 closure. retryable:true preserved → resolver records the attempt, no 'failed' lock.
+  quest_spark_01: { id:'quest_spark_01', schema:'UQF-1.0', type:'skill_check',
     title:'Smalt',
     desc:'Inspector Wren-Pembury of the King\'s Port Sanitation Commission demands the harbor cat removed from the third berth. The cat has been sitting on cargo manifests since Tuesday. The Inspector has a counterfeit writ and a very specific vision of how this ends.',
     hint:'Approach the cat with kindness rather than force. CHA Persuasion DC 10.',
-    activateNode:'LCY', activateCond:() => true,
-    checkStat:'cha', checkSkill:'Persuasion', checkDC:10, retryable:true,
-    checkPassFlag:'smaltBefriended', bitLabel:'Smalt Befriended',
-    onPass:() => {
-      S_story.smaltBefriended = true;
-      S_story.gold = (S_story.gold||0) + 100;
-      S_story.xp = (S_story.xp||0) + 100;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:"Smalt's Trust", icon:'🐟', type:'misc', desc:"A dried salt fish, dropped by Smalt the harbor cat when befriended. First token of the Harmony Chain. Smalt will consume it later as an endorsement.", sell:5 });
-      storyMsg('🐟 Smalt considers you for a long moment. Then she drops the dried salt fish she was sitting on and steps onto your boot.\n\nShe is not afraid. She never was. She was waiting for someone to stop trying to fix her and simply arrive.\n\nInspector Wren-Pembury makes a note in his ledger. The note is wrong.\n\nSmalt\'s Trust added to inventory. +100gp. +100 XP.');
-    },
-    onFail:() => {
-      S_story.hp = Math.max(1, (S_story.hp||10) - 1);
-      storyMsg('Smalt bites your hand — one quick snap, entirely reasonable — and returns to the cargo manifest. The Inspector says nothing. He does not need to.\n\n1 damage. You may try again. The cat is still there.');
-    },
-    xpAward:0,
+    activateNode:'LCY', gate:{}, retryable:true,
+    bits:[
+      { kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:10,
+        onPass:[
+          { kind:'mission_bit', flag:'smaltBefriended', label:'Smalt Befriended' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.smaltBefriended = true;
+            S_story.gold = (S_story.gold||0) + 100;
+            S_story.xp = (S_story.xp||0) + 100;
+            const inv = S_story.inventory = S_story.inventory || [];
+            inv.push({ name:"Smalt's Trust", icon:'🐟', type:'misc', desc:"A dried salt fish, dropped by Smalt the harbor cat when befriended. First token of the Harmony Chain. Smalt will consume it later as an endorsement.", sell:5 });
+            storyMsg('🐟 Smalt considers you for a long moment. Then she drops the dried salt fish she was sitting on and steps onto your boot.\n\nShe is not afraid. She never was. She was waiting for someone to stop trying to fix her and simply arrive.\n\nInspector Wren-Pembury makes a note in his ledger. The note is wrong.\n\nSmalt\'s Trust added to inventory. +100gp. +100 XP.');
+          } },
+        ],
+        onFail:[
+          { kind:'_legacy_fn', fn:() => {
+            S_story.hp = Math.max(1, (S_story.hp||10) - 1);
+            storyMsg('Smalt bites your hand — one quick snap, entirely reasonable — and returns to the cargo manifest. The Inspector says nothing. He does not need to.\n\n1 damage. You may try again. The cat is still there.');
+          } },
+        ],
+      },
+    ],
     disposition:'"The Pembury estate in the Eastern Reach has been in our family three hundred years. I was born there. The cat is a public health matter." — Inspector Aldous Wren-Pembury, Scene 1',
     passText:"The harbor cat left the third berth willingly. Inspector Pembury claims a public health victory. The manifests are clear.",
     failText:"The harbor cat is still on the third berth manifests. Inspector Pembury is waiting.",
     npc:"long_john_silver_sen",
   },
 
-  quest_spark_02: { id:'quest_spark_02', type:'side',
+  // §ARCH-01 Wave 1j — migrated legacy → UQF v1.0 (2026-06-28). Side quest: gate ← activateCond,
+  // completion ← completeFn. onComplete kept verbatim — storyCheckQuests fires q.onComplete() for
+  // UQF side quests on the same completion path as legacy (+150xp, msg). Pure parity.
+  quest_spark_02: { id:'quest_spark_02', schema:'UQF-1.0', type:'side',
     title:'The Overture',
     desc:'Smalt has something to show you. The harbor cat knows her way to a specific corner of the Market Quarter entrance. The Inspector appears again, with a different family history.',
     hint:'Follow Smalt south along the dock wall. Speak to the Inspector when he arrives.',
-    activateNode:'LCY', activateCond:() => !!S_story.smaltBefriended,
+    activateNode:'LCY', gate:{ flags:['smaltBefriended'] },
+    completion:{ flags:['pipMet'] }, bits:[],
     completeItems:[],
-    completeFn:() => !!S_story.pipMet,
     onComplete:() => {
       storyMsg('🪵 The bead is in your hand. Smalt eats the fish without ceremony — an endorsement, not a meal.\n\nPip watches you with the calm of something that has never needed to be afraid. You understand, looking at the two of them, that they have been friends for a while. No one told them they couldn\'t be.\n\n+150 XP.');
       S_story.xp = (S_story.xp||0) + 150;
@@ -11112,59 +11126,78 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
 
-  quest_spark_03: { id:'quest_spark_03', type:'skill_check',
+  // §ARCH-01 Wave 1j — migrated legacy → UQF v1.0 (2026-06-28). Pure parity. checkPassFlag has
+  // no bitLabel → mission_bit{flag} falls back to _flagToLabel, exactly as legacy
+  // _grantMissionBit(flag, undefined). _legacy_fn carries +200gp/+200xp/Clot's Glow/knowledge/msg.
+  quest_spark_03: { id:'quest_spark_03', schema:'UQF-1.0', type:'skill_check',
     title:"Clot's Revelation",
     desc:"Pip travels with you aboard the Tilbury Star. On Pip's left ear: Clot, a blood tick, large for its kind, with an amber glow on its dorsal side. The rat catcher Brannick is in the hold. He is surrounded by rats. The rats are calm.",
     hint:'Examine the blood tick. WIS Medicine or Nature DC 13.',
-    activateNode:'SEN', activateCond:() => !!S_story.pipMet,
-    checkStat:'wis', checkSkill:'Medicine', checkDC:13, retryable:true,
-    checkPassFlag:'bioluminescentParasiteFound',
-    onPass:() => {
-      S_story.bioluminescentParasiteFound = true;
-      S_story.gold = (S_story.gold||0) + 200;
-      S_story.xp = (S_story.xp||0) + 200;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:"Clot's Glow", icon:'🟡', type:'misc', desc:"A bioluminescent pustule left by the blood tick Clot. The Warmth made visible. Warm amber light, 30ft radius, 1 hour. Single use.", sell:50 });
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push("The Warmth: a colonial microorganism producing mild social bonding chemistry. Transmits through close contact. Non-toxic. Makes hosts warmly friendly toward creatures they encounter. Thrives in warm liquid environments. Not hostile. Extremely agreeable.");
-      storyMsg('🟡 Clot detaches cleanly when you examine it — no resistance. The pustule it leaves glows warm amber.\n\nThe organism inside is colonial. Under examination: it produces a compound structurally similar to oxytocin. It makes hosts feel warmly friendly toward other creatures they encounter. Clot has been on Pip for two months. Pip and Smalt have been friends for two months.\n\nBrannick has been in the hold for ten days. The rats have not bitten him once.\n\nThe Warmth identified. Knowledge entry added. Clot\'s Glow added to inventory. +200gp. +200 XP.');
-    },
-    xpAward:0,
+    activateNode:'SEN', gate:{ flags:['pipMet'] }, retryable:true,
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Medicine', dc:13,
+        onPass:[
+          { kind:'mission_bit', flag:'bioluminescentParasiteFound' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.bioluminescentParasiteFound = true;
+            S_story.gold = (S_story.gold||0) + 200;
+            S_story.xp = (S_story.xp||0) + 200;
+            const inv = S_story.inventory = S_story.inventory || [];
+            inv.push({ name:"Clot's Glow", icon:'🟡', type:'misc', desc:"A bioluminescent pustule left by the blood tick Clot. The Warmth made visible. Warm amber light, 30ft radius, 1 hour. Single use.", sell:50 });
+            S_story.knowledge = S_story.knowledge || [];
+            S_story.knowledge.push("The Warmth: a colonial microorganism producing mild social bonding chemistry. Transmits through close contact. Non-toxic. Makes hosts warmly friendly toward creatures they encounter. Thrives in warm liquid environments. Not hostile. Extremely agreeable.");
+            storyMsg('🟡 Clot detaches cleanly when you examine it — no resistance. The pustule it leaves glows warm amber.\n\nThe organism inside is colonial. Under examination: it produces a compound structurally similar to oxytocin. It makes hosts feel warmly friendly toward other creatures they encounter. Clot has been on Pip for two months. Pip and Smalt have been friends for two months.\n\nBrannick has been in the hold for ten days. The rats have not bitten him once.\n\nThe Warmth identified. Knowledge entry added. Clot\'s Glow added to inventory. +200gp. +200 XP.');
+          } },
+        ],
+        onFail:[],
+      },
+    ],
     disposition:'"They never bit me once. Even when I had the net. It didn\'t feel right to use the net after a while." — Brannick, rat catcher, Tilbury Star hold',
     passText:"Clot’s amber glow is not decay. Brannick’s rats have not bitten anyone. The tick is a carrier, not a pest.",
     failText:"The blood tick on Pip’s ear has not been examined. Brannick is still in the hold with his calm rats.",
     npc:"long_john_silver_sen",
   },
 
-  quest_spark_04: { id:'quest_spark_04', type:'skill_check',
+  // §ARCH-01 Wave 1j — migrated legacy → UQF v1.0 (2026-06-28). Pure parity. mission_bit{flag}
+  // (no bitLabel) + _legacy_fn (+300gp/+300xp/Letter of Safe Passage/msg).
+  quest_spark_04: { id:'quest_spark_04', schema:'UQF-1.0', type:'skill_check',
     title:'The Steamboat Who Done It',
     desc:"The captain of the Tilbury Star needs answers. The imported perfume cargo has spoiled commercially. It smells warm, personal, and extremely agreeable — not what perfume merchants ordered. This is a who done it. The monster is somewhere in the hold.",
     hint:'Investigate the cargo hold. Trace the chain from Clot to the perfume vats. INT Investigation DC 14.',
-    activateNode:'SEN', activateCond:() => !!S_story.bioluminescentParasiteFound,
-    checkStat:'int', checkSkill:'Investigation', checkDC:14, retryable:true,
-    checkPassFlag:'whodunitSolved',
-    onPass:() => {
-      S_story.whodunitSolved = true;
-      S_story.gold = (S_story.gold||0) + 300;
-      S_story.xp = (S_story.xp||0) + 300;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:'Letter of Safe Passage', icon:'📜', type:'misc', desc:"Signed by the captain of the Tilbury Star. Valid at Tilbury and connected ports. Acknowledges the player's service in resolving the Warmth incident.", sell:0 });
-      storyMsg('🔍 The chain runs: Clot (Pip\'s tick, 2 months) → Pip wandering the hold during the voyage → the warm perfume vats (ideal colony environment) → full Warmth bloom in three casks.\n\nThe "murder victim" is forty-seven bottles of Merchant\'s Reserve Floral. They now smell like the feeling of finding someone you didn\'t know you missed.\n\nThe monster is identified. It is not dangerous. It makes things friendly. The perfumes are commercially ruined and spiritually interesting.\n\nBrannick says: "I was going to file a report. I kept not wanting to."\n\nLetter of Safe Passage received from the captain. +300gp. +300 XP.');
-    },
-    xpAward:0,
+    activateNode:'SEN', gate:{ flags:['bioluminescentParasiteFound'] }, retryable:true,
+    bits:[
+      { kind:'skill_check', stat:'INT', skill:'Investigation', dc:14,
+        onPass:[
+          { kind:'mission_bit', flag:'whodunitSolved' },
+          { kind:'_legacy_fn', fn:() => {
+            S_story.whodunitSolved = true;
+            S_story.gold = (S_story.gold||0) + 300;
+            S_story.xp = (S_story.xp||0) + 300;
+            const inv = S_story.inventory = S_story.inventory || [];
+            inv.push({ name:'Letter of Safe Passage', icon:'📜', type:'misc', desc:"Signed by the captain of the Tilbury Star. Valid at Tilbury and connected ports. Acknowledges the player's service in resolving the Warmth incident.", sell:0 });
+            storyMsg('🔍 The chain runs: Clot (Pip\'s tick, 2 months) → Pip wandering the hold during the voyage → the warm perfume vats (ideal colony environment) → full Warmth bloom in three casks.\n\nThe "murder victim" is forty-seven bottles of Merchant\'s Reserve Floral. They now smell like the feeling of finding someone you didn\'t know you missed.\n\nThe monster is identified. It is not dangerous. It makes things friendly. The perfumes are commercially ruined and spiritually interesting.\n\nBrannick says: "I was going to file a report. I kept not wanting to."\n\nLetter of Safe Passage received from the captain. +300gp. +300 XP.');
+          } },
+        ],
+        onFail:[],
+      },
+    ],
     disposition:'"You solved it without removing anything." — Inspector Wren-Pembury, watching from the deck, thinking about himself',
     passText:"You solved it without removing anything. The chain from Clot to the perfume vats is traced.",
     failText:"The source of the warm scent has not been identified. The cargo hold investigation is incomplete.",
     npc:"long_john_silver_sen",
   },
 
-  quest_spark_05: { id:'quest_spark_05', type:'side',
+  // §ARCH-01 Wave 1j — migrated legacy → UQF v1.0 (2026-06-28). Side quest: compound gate ←
+  // activateCond (whodunitSolved ∧ wrenpemburyInconsistencyNoticed), completion ← completeFn
+  // (aldousConfessed). onComplete kept verbatim — engine fires it on the UQF completion path
+  // (+400gp/+400xp/Writ splice/Letter of True Passage/harmonyChainComplete/msg). Pure parity.
+  quest_spark_05: { id:'quest_spark_05', schema:'UQF-1.0', type:'side',
     title:'Aldous Comes Clean',
     desc:'Three claims. One: the Pembury estate, Eastern Reach, three hundred years. Two: the Admiral father, naval family, always been. Three: Saltwick, six months ago, adjusting. These are not the same person. Inspector Wren-Pembury has been watching you show kindness to increasingly strange things without flinching. He cannot maintain the performance.',
     hint:'Return to the Harbor Docks and confront the Inspector with the three inconsistencies.',
-    activateNode:'LCY', activateCond:() => !!S_story.whodunitSolved && !!S_story.wrenpemburyInconsistencyNoticed,
+    activateNode:'LCY', gate:{ flags:['whodunitSolved','wrenpemburyInconsistencyNoticed'] },
+    completion:{ flags:['aldousConfessed'] }, bits:[],
     completeItems:[],
-    completeFn:() => !!S_story.aldousConfessed,
     onComplete:() => {
       S_story.aldousConfessed = true;
       S_story.gold = (S_story.gold||0) + 400;
