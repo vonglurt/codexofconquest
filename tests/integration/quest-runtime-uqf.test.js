@@ -1203,3 +1203,143 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0207 arc (5-act, fully UQF)', () 
     expect(r.dxp).toBe(200);
   });
 });
+
+// ── §ARCH-01 Wave 1 — Ceremonia d0201/d0205/d0209 arcs (3 full arcs, codemod-migrated) ──
+//
+// 15 quests across three 5-act arcs, migrated by scripts/_codemod_d02_batch.js
+// (the first script-assisted batch). Each arc = 3 skill_check + 2 side (or 4+1),
+// using only already-supported engine terms (flags/notFlags/battles gates,
+// flag/battle completion). New wrinkles vs d0207: onFail closures (d0201 a2/a4
+// voidPressure+1), reward.gold on the a5 finales, and a side-quest onComplete
+// (d0205_a3 sets mazeSolvedChecks + voidMazeEntered).
+
+test.describe('§ARCH-01 Wave 1 — Ceremonia d0201/d0205/d0209 arcs (15 quests)', () => {
+  const ALL = [];
+  for (const arc of ['d0201','d0205','d0209']) for (const a of ['a1','a2','a3','a4','a5']) ALL.push('quest_'+arc+'_'+a);
+
+  test('all 15 validate as UQF; the a3 acts are declarative-completion side quests', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((ids) => ids.map(id => {
+      const q = QUEST_DB[id];
+      return { id, schema:q.schema, valid:validateQuest(q).valid, type:q.type,
+               isSkill:(q.bits||[]).some(b=>b.kind==='skill_check'), hasCompletion:!!q.completion };
+    }), ALL);
+    expect(r.every(x => x.schema==='UQF-1.0' && x.valid)).toBe(true);
+    // a3 of each arc is the side quest with a completion gate
+    expect(r.filter(x=>x.hasCompletion).map(x=>x.id).sort())
+      .toEqual(['quest_d0201_a3','quest_d0205_a3','quest_d0209_a3']);
+    expect(r.filter(x=>x.isSkill).length).toBe(12);
+  });
+
+  test('every skill_check PASS: done + flag + token + exact xp/gold', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const got = await page.evaluate(() => {
+      const cases = [
+        { id:'quest_d0201_a1', flag:'d0201_a1_passed', xp:50,  gold:0 },
+        { id:'quest_d0201_a2', flag:'d0201_a2_passed', xp:75,  gold:0 },
+        { id:'quest_d0201_a4', flag:'d0201_a4_passed', xp:100, gold:0 },
+        { id:'quest_d0201_a5', flag:'scriptorium_approach_complete', xp:250, gold:100 },
+        { id:'quest_d0205_a1', flag:'d0205_a1_passed', xp:50,  gold:0 },
+        { id:'quest_d0205_a2', flag:'d0205_a2_passed', xp:75,  gold:0 },
+        { id:'quest_d0205_a4', flag:'d0205_a4_passed', xp:100, gold:0 },
+        { id:'quest_d0205_a5', flag:'d0205_complete',  xp:250, gold:75 },
+        { id:'quest_d0209_a1', flag:'d0209_a1_passed', xp:50,  gold:0 },
+        { id:'quest_d0209_a2', flag:'d0209_a2_passed', xp:75,  gold:0 },
+        { id:'quest_d0209_a4', flag:'voidFluxScrollChanged', xp:100, gold:0 },
+        { id:'quest_d0209_a5', flag:'d0209_complete',  xp:200, gold:75 },
+      ];
+      const out = {};
+      for (const c of cases) {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 1000000; S_story.gold = 500; S_story.day = 1;
+        S_story.inventory = []; delete S_story[c.flag];
+        S_story.quests = { [c.id]:'active' };
+        _rollCeremonia(c.id);
+        out[c.id] = { status:S_story.quests[c.id], flag:!!S_story[c.flag],
+                      token:!!S_story.inventory.find(i=>i.flagRef===c.flag&&i.type==='mission_bit'),
+                      dxp:S_story.xp-1000000, dgold:S_story.gold-500 };
+      }
+      return { out, cases };
+    });
+    for (const c of got.cases) {
+      const r = got.out[c.id];
+      expect(r.status, c.id).toBe('done');
+      expect(r.flag, c.id).toBe(true);
+      expect(r.token, c.id).toBe(true);
+      expect(r.dxp, c.id).toBe(c.xp);
+      expect(r.dgold, c.id).toBe(c.gold);
+    }
+  });
+
+  test('onPass closures fire: maze counter, void-flux toggles, immunity choice', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = (id, setup) => {
+        S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
+        S_story.level = 20; S_story.xp = 1000000; S_story.inventory = [];
+        setup && setup();
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+      };
+      run('quest_d0205_a1', () => { S_story.mazeSolvedChecks = 0; });
+      const maze1 = S_story.mazeSolvedChecks;
+      run('quest_d0209_a1', () => { S_story.voidFluxActive = false; });
+      const fluxOn = S_story.voidFluxActive;
+      run('quest_d0209_a2', () => { delete S_story.voidFluxImmunityChoice; });
+      const immunity = S_story.voidFluxImmunityChoice;
+      run('quest_d0209_a5', () => { S_story.voidFluxActive = true; });
+      const fluxOff = S_story.voidFluxActive;
+      return { maze1, fluxOn, immunity, fluxOff };
+    });
+    expect(r.maze1).toBe(1);          // d0205_a1 closure: mazeSolvedChecks → 1
+    expect(r.fluxOn).toBe(true);      // d0209_a1 closure: voidFluxActive → true
+    expect(r.immunity).toBe('fire'); // d0209_a2 closure default
+    expect(r.fluxOff).toBe(false);   // d0209_a5 closure: voidFluxActive → false
+  });
+
+  test('onFail closure: d0201_a2 FAIL bumps voidPressure and (retryable) stays active', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.abilityScores = { dex:-100 };       // deterministic fail
+      S_story.level = 1; S_story.day = 2; S_story.voidPressure = 0; S_story.skillCheckAttempts = {};
+      S_story.quests = { quest_d0201_a2:'active' };
+      _rollCeremonia('quest_d0201_a2');
+      return { status:S_story.quests.quest_d0201_a2, vp:S_story.voidPressure,
+               failures:(S_story.skillCheckAttempts.quest_d0201_a2||{}).failures, flag:!!S_story.d0201_a2_passed };
+    });
+    expect(r.status).toBe('active');   // retryable
+    expect(r.vp).toBe(1);              // onFail _legacy_fn ran
+    expect(r.failures).toBe(1);
+    expect(r.flag).toBe(false);
+  });
+
+  test('side acts complete declaratively; d0205_a3 onComplete sets maze flags', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // d0201_a3 via battle RAI
+      delete S_story.defeatedBattles; S_story.defeatedBattles = {};
+      const a3_201_pre = QuestRuntime.canComplete('quest_d0201_a3');
+      S_story.defeatedBattles = { RAI:true };
+      const a3_201 = QuestRuntime.canComplete('quest_d0201_a3');
+      // d0209_a3 via flag
+      delete S_story.voidFluxCleared;
+      const a3_209_pre = QuestRuntime.canComplete('quest_d0209_a3');
+      S_story.voidFluxCleared = true;
+      const a3_209 = QuestRuntime.canComplete('quest_d0209_a3');
+      // d0205_a3 via battle BK, driven through storyCheckQuests so onComplete fires
+      S_story.quests = { quest_d0205_a3:'active' }; S_story.defeatedBattles = { BK:true };
+      delete S_story.voidMazeEntered; S_story.mazeSolvedChecks = 0;
+      storyCheckQuests({ code:'__none' });
+      return { a3_201_pre, a3_201, a3_209_pre, a3_209,
+               a3_205status:S_story.quests.quest_d0205_a3,
+               maze3:S_story.mazeSolvedChecks, mazeEntered:S_story.voidMazeEntered };
+    });
+    expect(r.a3_201_pre).toBe(false);
+    expect(r.a3_201).toBe(true);
+    expect(r.a3_209_pre).toBe(false);
+    expect(r.a3_209).toBe(true);
+    expect(r.a3_205status).toBe('complete');
+    expect(r.maze3).toBe(3);             // onComplete kept verbatim
+    expect(r.mazeEntered).toBe(true);
+  });
+});
