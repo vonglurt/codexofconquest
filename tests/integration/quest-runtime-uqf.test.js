@@ -1459,6 +1459,60 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (20 q
   });
 });
 
+// ── §SKILLFIX-01 — legacy resolver reads checkStat/checkSkill ──
+//
+// _rollCeremonia historically read only q.checkAbility/q.checkLabel, but ~2443
+// skill_check quests define checkStat/checkSkill (the convention adaptLegacyQuest
+// already reads). Those rolled with a flat +0 ability mod and an "undefined" skill
+// label. The fix aliases checkAbility||checkStat and checkLabel||checkSkill at all
+// read sites (roll math + panel render); the ~30 checkAbility quests are unchanged.
+
+test.describe('§SKILLFIX-01 — legacy _rollCeremonia applies checkStat ability mod', () => {
+  test('a checkStat quest now applies the real ability modifier (not +0) and a named label', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const cards = [];
+      const orig = window._appendStoryHcard;
+      window._appendStoryHcard = (c) => { cards.push(c); };
+      S_story.abilityScores = { cha:20 };   // mod +5
+      S_story.level = 1; S_story.day = 1; S_story.iodineBuffActive = false;
+      S_story.quests = { quest_spark_01:'active' };
+      _rollCeremonia('quest_spark_01');
+      window._appendStoryHcard = orig;
+      return cards[0] ? { formula:cards[0].formula } : null;
+    });
+    // CHA 20 → +5 mod, Prof +2, skill label "Persuasion" (was "undefined(+0)")
+    expect(r.formula).toContain('Persuasion(+5)');
+    expect(r.formula).toContain('Prof(+2)');
+    expect(r.formula).not.toContain('undefined');
+  });
+
+  test('a checkAbility quest is unchanged (the alias does not disturb the working convention)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // Find a still-legacy checkAbility quest dynamically (robust to future migrations).
+      const id = Object.keys(QUEST_DB).find(k => {
+        const q = QUEST_DB[k];
+        return q.type === 'skill_check' && q.schema !== 'UQF-1.0' && q.checkAbility && q.checkLabel;
+      });
+      if (!id) return { skipped:true };
+      const q = QUEST_DB[id];
+      const cards = [];
+      const orig = window._appendStoryHcard;
+      window._appendStoryHcard = (c) => { cards.push(c); };
+      S_story.abilityScores = { [q.checkAbility]:20 };   // +5
+      S_story.level = 1; S_story.day = 1; S_story.iodineBuffActive = false;
+      S_story.quests = { [id]:'active' };
+      _rollCeremonia(id);
+      window._appendStoryHcard = orig;
+      return { id, label:q.checkLabel, formula:cards[0] && cards[0].formula };
+    });
+    if (r.skipped) return;
+    expect(r.formula).toContain(r.label + '(+5)');
+    expect(r.formula).not.toContain('undefined');
+  });
+});
+
 // ── §ARCH-01 Wave 1 — Innmother's Hall skill-checks (quest_inn_02..04) ──
 //
 // The inn arc's 3 skill_checks migrate here. Like §1367 they have NO

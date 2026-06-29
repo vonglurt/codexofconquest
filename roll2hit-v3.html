@@ -6269,7 +6269,10 @@ function _rollCeremonia(questId) {
   if (!q) return;
   if (q.schema === 'UQF-1.0') { _resolveQuestUQF(questId); return; }   // §ARCH-01 Phase 2 dual-path dispatch
   if (q.type !== 'skill_check') return;
-  const ability = q.checkAbility;
+  // §SKILLFIX-01: ~2443 skill_check quests use checkStat/checkSkill (the convention
+  // adaptLegacyQuest already reads); only ~30 use checkAbility/checkLabel. Alias both
+  // so the ability modifier actually applies (was silently +0 / "undefined" label).
+  const ability = q.checkAbility || q.checkStat;
   const abilityVal = ((S_story.abilityScores || {})[ability] || 10);
   const mod  = Math.floor((abilityVal - 10) / 2);
   const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
@@ -6286,7 +6289,7 @@ function _rollCeremonia(questId) {
   _appendStoryHcard({
     round: 'Day ' + (S_story.day || 1),
     actor: 'ROLL',
-    formula: 'd20(' + d20 + ') + ' + q.checkLabel + '(' + modStr + ') + Prof(+' + prof + ')' + iodineStr + (_lmAllAbility > 0 ? ' + LakeMagic(+' + _lmAllAbility + ')' : ''),
+    formula: 'd20(' + d20 + ') + ' + (q.checkLabel || q.checkSkill) + '(' + modStr + ') + Prof(+' + prof + ')' + iodineStr + (_lmAllAbility > 0 ? ' + LakeMagic(+' + _lmAllAbility + ')' : ''),
     outcome: total + ' vs DC ' + q.checkDC + ' — ' + (passed ? 'PASS ✓' : 'FAIL'),
     dmg: passed ? (typeof q.passText === 'function' ? q.passText() : q.passText) : (typeof q.failText === 'function' ? q.failText() : q.failText),
   });
@@ -30069,8 +30072,8 @@ function storyRender(node, prefix) {
         const scBit = (q.schema === 'UQF-1.0') ? (q.bits || []).find(b => b.kind === 'skill_check') : null;
         if (q.type === 'skill_check' || scBit) {
           const blocked = _ceremoRetryBlocked(id);
-          const _ability = scBit ? String(scBit.stat || '').toLowerCase() : q.checkAbility;
-          const _label   = scBit ? (scBit.skill || scBit.stat) : q.checkLabel;
+          const _ability = scBit ? String(scBit.stat || '').toLowerCase() : (q.checkAbility || q.checkStat);
+          const _label   = scBit ? (scBit.skill || scBit.stat) : (q.checkLabel || q.checkSkill);
           const _dc      = scBit ? scBit.dc : q.checkDC;
           const abilityVal = ((S_story.abilityScores || {})[_ability] || 10);
           const mod  = Math.floor((abilityVal - 10) / 2);
