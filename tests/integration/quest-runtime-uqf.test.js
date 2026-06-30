@@ -5599,3 +5599,123 @@ test.describe('§ARCH-01 Wave 2ac / §SKILLFIX-02 — cai_* family (skill→abil
     expect(r.gateBad).toEqual([]);
   });
 });
+
+// §ARCH-01 Wave 2ad — blq_* family SPLIT (59 skill_check acts: 29 well-formed
+// migrated via an explicit id-list + 30 degenerate book-stubs left LEGACY, out of
+// scope). The well-formed 29 are arcs blq_01/02/03/04/11/12 × ~5 acts (the Belluno
+// legal-courier arc — guild counting house, communal court filings). RECLASSIFIED
+// CLEAN: `checkStat`s are lowercase ability abbrevs (wis/cha/int/dex/str), 0
+// skill-names, `skill→ability mapped 0` ⇒ NOT §SKILLFIX-02, pure pass/fail parity
+// (like waw/ams). UNIFORM-flag — all 29 carry checkPassFlag → onPass:[mission_bit]
+// (0 flagless); gates split {flags:23, empty:6} (the 6 arc-opener act1s ungated; 23
+// chained on the prior act's passFlag — incl. blq_02_act5 gating on blq02RoadCleared,
+// a flag set by the OUT-OF-SCOPE non-skill_check blq_02_act4, which the migrator
+// keeps verbatim as gate.flags). The 30 degenerate blq_05–blq_10 book-stubs (the
+// Decameron "Falcon's Inventory" stubs: reward:NaN, activateCond:()=>!!S_story.null,
+// no checkStat/checkDC) MUST stay legacy — `--prefix blq` would have crashed the
+// migrator's well-formedness guard, so the migration used an explicit id-list. This
+// block inlines that allowlist so the 30 stubs are excluded by construction, and
+// asserts they remain un-migrated. Self-contained.
+const BLQ_WF_IDS = [
+  'blq_01_act1','blq_01_act2','blq_01_act3','blq_01_act4','blq_01_act5',
+  'blq_02_act1','blq_02_act2','blq_02_act3','blq_02_act5',
+  'blq_03_act1','blq_03_act2','blq_03_act3','blq_03_act4','blq_03_act5',
+  'blq_04_act1','blq_04_act2','blq_04_act3','blq_04_act4','blq_04_act5',
+  'blq_11_act1','blq_11_act2','blq_11_act3','blq_11_act4','blq_11_act5',
+  'blq_12_act1','blq_12_act2','blq_12_act3','blq_12_act4','blq_12_act5',
+];
+test.describe('§ARCH-01 Wave 2ad — blq_* family SPLIT (29 well-formed migrated; 30 degenerate stubs left legacy)', () => {
+  test('every well-formed blq act is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit; the 30 stubs stay legacy', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((wfIds) => {
+      const wfSet = new Set(wfIds);
+      const allBlq = Object.values(QUEST_DB).filter(q => /^blq/.test(q.id) && q.type === 'skill_check');
+      const wf = allBlq.filter(q => wfSet.has(q.id));
+      // the degenerate stubs = blq skill_checks NOT in the allowlist; must stay legacy
+      const stubsUQF = allBlq.filter(q => !wfSet.has(q.id) && q.schema === 'UQF-1.0').map(q => q.id);
+      return {
+        stubCount: allBlq.length - wf.length,
+        stubsUQF,
+        acts: wf.map(q => {
+          const b = (q.bits || []).find(x => x.kind === 'skill_check');
+          const mb = b && b.onPass.find(x => x.kind === 'mission_bit');
+          const gate = q.gate || {};
+          return { id:q.id, schema:q.schema, valid:validateQuest(q).valid,
+            noAC: typeof q.activateCond === 'undefined',
+            gateShape: gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other'),
+            hasStat:!!(b && b.stat), abilOk: b ? ['STR','DEX','CON','INT','WIS','CHA'].includes(b.stat) : false,
+            hasDc:typeof (b && b.dc) === 'number', noSkill: b ? !('skill' in b) : false,
+            onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+            mbHasLabel:mb ? ('label' in mb) : null };
+        }),
+      };
+    }, BLQ_WF_IDS);
+    expect(errs).toEqual([]);
+    expect(r.acts.length).toBe(29);
+    expect(r.stubCount).toBe(30);          // the Decameron book-stubs are present…
+    expect(r.stubsUQF).toEqual([]);        // …and NONE of them were migrated
+    const gateShapes = { flags:0, empty:0 };
+    for (const q of r.acts) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.noAC).toBe(true);
+      expect(['flags', 'empty']).toContain(q.gateShape);
+      expect(q.hasStat).toBe(true);
+      expect(q.abilOk).toBe(true);         // CLEAN family — stat is a real ability abbrev
+      expect(q.noSkill).toBe(true);        // not §SKILLFIX-02 — no skill name retained
+      expect(q.hasDc).toBe(true);
+      expect(q.onFailLen).toBe(0);
+      expect(q.onPassK).toEqual(['mission_bit']);
+      expect(q.mbHasLabel).toBe(false);
+      gateShapes[q.gateShape]++;
+    }
+    expect(gateShapes).toEqual({ flags:23, empty:6 });
+  });
+
+  test('PASS/FAIL parity across all 29 + gate behavior; every act grants a token on pass', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((wfIds) => {
+      const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
+      const wfSet = new Set(wfIds);
+      const blq = Object.values(QUEST_DB).filter(q => /^blq/.test(q.id) && q.type === 'skill_check' && wfSet.has(q.id));
+      let passBad = [], failBad = [], gateBad = [];
+      for (const q of blq) {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const mb = b.onPass.find(x => x.kind === 'mission_bit');
+        const flag = mb.flag;
+        // PASS
+        S_story.abilityScores = seed(b.stat, 40);
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        const tok = S_story.inventory.find(i => i.flagRef === flag);
+        if (!(S_story.quests[q.id] === 'done' && S_story[flag] === true && tok &&
+              tok.name === _flagToLabel(flag) + ' Token' && tok.type === 'mission_bit' &&
+              S_story.xp === 0 && S_story.gold === 0 && S_story.inventory.length === 1)) passBad.push(q.id);
+        // FAIL
+        S_story.abilityScores = seed(b.stat, -100);
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (!(S_story.quests[q.id] === 'failed' && S_story[flag] === false && S_story.inventory.length === 0)) failBad.push(q.id);
+        // GATE
+        const g = q.gate || {};
+        if (g.flags && g.flags.length) {
+          const gf = g.flags[0];
+          S_story[gf] = false; const c0 = QuestRuntime.canActivate(q.id);
+          S_story[gf] = true;  const c1 = QuestRuntime.canActivate(q.id);
+          if (!(c0 === false && c1 === true)) gateBad.push(q.id);
+        } else if (QuestRuntime.canActivate(q.id) !== true) gateBad.push(q.id);
+      }
+      return { count:blq.length, passBad, failBad, gateBad };
+    }, BLQ_WF_IDS);
+    expect(r.count).toBe(29);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+    expect(r.gateBad).toEqual([]);
+  });
+});
