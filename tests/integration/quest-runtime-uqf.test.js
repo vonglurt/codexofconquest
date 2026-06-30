@@ -7390,3 +7390,98 @@ test.describe('§ARCH-01 Wave 2au — hty_* family (bulk-migrated, 33 acts; mixe
     expect(r.gateBad).toEqual([]);
   });
 });
+
+// §ARCH-01 Wave 2av — fro_* family (32 skill_check acts — 7 chapters × 5 acts
+// minus 3 siblings: 2 hybrid (`fro_c1a3`, `fro_c5a3`) + 1 combat (`fro_c2a4`),
+// single `fro_cNaM` ids). SEVENTH head of the CLEAN mid-tail. UNIFORM-flag —
+// all 32 carry a checkPassFlag → onPass:[mission_bit{flag}] (0 flagless). Gates
+// form SEVEN per-chapter internal chains (each chapter's act1 ungated → 7
+// `gate:{}`; the other 25 trivial `()=>!!S_story.<priorFlag>` → gate:{flags:[…]},
+// chaining act→act WITHIN a chapter) ⇒ split {flags:25, empty:7}. UPPERCASE-
+// checkStat (WIS 14, CHA 9, INT 5, DEX 3, CON 1). CLEAN — 0 skill-names, NOT
+// §SKILLFIX-02. THREE type-gated siblings (2 hybrid + 1 combat, correctly skipped).
+// No prefix bleed. Self-contained.
+test.describe('§ARCH-01 Wave 2av — fro_* family (bulk-migrated, 32 acts; uniform flag-bearing)', () => {
+  test('every fro_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const fro = Object.values(QUEST_DB).filter(q => /^fro_/.test(q.id) && q.type === 'skill_check');
+      return fro.map(q => {
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        const mb = b && b.onPass.find(x => x.kind === 'mission_bit');
+        const gate = q.gate || {};
+        return { id:q.id, schema:q.schema, valid:validateQuest(q).valid,
+          noAC: typeof q.activateCond === 'undefined',
+          gateShape: gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other'),
+          hasStat:!!(b && b.stat), abilOk: b ? ['STR','DEX','CON','INT','WIS','CHA'].includes(b.stat) : false,
+          hasDc:typeof (b && b.dc) === 'number', noSkill: b ? !('skill' in b) : false,
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          mbHasLabel:mb ? ('label' in mb) : null };
+      });
+    });
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(32);
+    const gateShapes = { flags:0, empty:0 };
+    for (const q of r) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.noAC).toBe(true);
+      expect(['flags', 'empty']).toContain(q.gateShape);
+      expect(q.hasStat).toBe(true);
+      expect(q.abilOk).toBe(true);
+      expect(q.noSkill).toBe(true);
+      expect(q.hasDc).toBe(true);
+      expect(q.onFailLen).toBe(0);
+      expect(q.onPassK).toEqual(['mission_bit']);
+      expect(q.mbHasLabel).toBe(false);
+      gateShapes[q.gateShape]++;
+    }
+    expect(gateShapes).toEqual({ flags:25, empty:7 });
+  });
+
+  test('PASS/FAIL parity across all 32 + gate behavior; every act grants a token on pass', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
+      const fro = Object.values(QUEST_DB).filter(q => /^fro_/.test(q.id) && q.type === 'skill_check');
+      let passBad = [], failBad = [], gateBad = [];
+      for (const q of fro) {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const mb = b.onPass.find(x => x.kind === 'mission_bit');
+        const flag = mb ? mb.flag : null;
+        // PASS
+        S_story.abilityScores = seed(b.stat, 40);
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        const tok = S_story.inventory.find(i => i.flagRef === flag);
+        if (!(S_story.quests[q.id] === 'done' && S_story[flag] === true && tok &&
+              tok.name === _flagToLabel(flag) + ' Token' && tok.type === 'mission_bit' &&
+              S_story.xp === 0 && S_story.gold === 0 && S_story.inventory.length === 1)) passBad.push(q.id);
+        // FAIL
+        S_story.abilityScores = seed(b.stat, -100);
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (!(S_story.quests[q.id] === 'failed' && S_story[flag] === false && S_story.inventory.length === 0)) failBad.push(q.id);
+        // GATE
+        const g = q.gate || {};
+        if (g.flags && g.flags.length) {
+          const gf = g.flags[0];
+          S_story[gf] = false; const c0 = QuestRuntime.canActivate(q.id);
+          S_story[gf] = true;  const c1 = QuestRuntime.canActivate(q.id);
+          if (!(c0 === false && c1 === true)) gateBad.push(q.id);
+        } else if (QuestRuntime.canActivate(q.id) !== true) gateBad.push(q.id);
+      }
+      return { count:fro.length, passBad, failBad, gateBad };
+    });
+    expect(r.count).toBe(32);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+    expect(r.gateBad).toEqual([]);
+  });
+});
