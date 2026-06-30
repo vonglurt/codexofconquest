@@ -7279,3 +7279,114 @@ test.describe('§ARCH-01 Wave 2at — lbc_* family (bulk-migrated, 33 acts; unif
     expect(r.gateBad).toEqual([]);
   });
 });
+
+// §ARCH-01 Wave 2au — hty_* family (33 skill_check acts — 7 chapters × 5 acts
+// minus 2 combat siblings, no-underscore `htyNN_actN` ids). SIXTH head of the CLEAN
+// mid-tail; FIRST MIXED flag/flagless mid-tail family. 26 acts carry a
+// checkPassFlag → onPass:[mission_bit{flag}]; 7 acts (each chapter's act5 finale)
+// have NO checkPassFlag → onPass:[] (legacy pass→done granted nothing; reproduced
+// byte-for-byte). Gates form SEVEN per-chapter internal chains (each chapter's act1
+// ungated → 7 `gate:{}`; the other 26 trivial `()=>!!S_story.<priorFlag>` →
+// gate:{flags:[…]}) ⇒ split {flags:26, empty:7}. LOWERCASE-checkStat (cha/int/wis —
+// 3 abilities) ⇒ legacy reads the real mod (no §SKILLFIX-01 silent +0); golden
+// seeded under BOTH cases anyway. CLEAN — `skill→ability mapped 0`, 0 skill-names,
+// NOT §SKILLFIX-02. TWO `combat` type-gated siblings (`hty02_act4`, `hty06_act4`,
+// correctly skipped — skill_check filter excludes them, so c2 has a1/a2/a3/a5 and
+// c6 has a1/a2/a3/a5). No prefix bleed. Self-contained.
+test.describe('§ARCH-01 Wave 2au — hty_* family (bulk-migrated, 33 acts; mixed flag/flagless)', () => {
+  test('every hty* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const hty = Object.values(QUEST_DB).filter(q => /^hty/.test(q.id) && q.type === 'skill_check');
+      return hty.map(q => {
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        const mb = b && b.onPass.find(x => x.kind === 'mission_bit');
+        const gate = q.gate || {};
+        return { id:q.id, schema:q.schema, valid:validateQuest(q).valid,
+          noAC: typeof q.activateCond === 'undefined',
+          gateShape: gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other'),
+          hasStat:!!(b && b.stat), abilOk: b ? ['STR','DEX','CON','INT','WIS','CHA'].includes(b.stat) : false,
+          hasDc:typeof (b && b.dc) === 'number', noSkill: b ? !('skill' in b) : false,
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          mbHasLabel:mb ? ('label' in mb) : null };
+      });
+    });
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(33);
+    const gateShapes = { flags:0, empty:0 };
+    const passShapes = { mission_bit:0, none:0 };
+    for (const q of r) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.noAC).toBe(true);
+      expect(['flags', 'empty']).toContain(q.gateShape);
+      expect(q.hasStat).toBe(true);
+      expect(q.abilOk).toBe(true);         // CLEAN family — stat is a real ability abbrev
+      expect(q.noSkill).toBe(true);        // not §SKILLFIX-02 — no skill name retained
+      expect(q.hasDc).toBe(true);
+      expect(q.onFailLen).toBe(0);
+      if (q.onPassK.length) {
+        expect(q.onPassK).toEqual(['mission_bit']);
+        expect(q.mbHasLabel).toBe(false);
+        passShapes.mission_bit++;
+      } else {
+        expect(q.onPassK).toEqual([]);
+        passShapes.none++;
+      }
+      gateShapes[q.gateShape]++;
+    }
+    expect(gateShapes).toEqual({ flags:26, empty:7 });
+    expect(passShapes).toEqual({ mission_bit:26, none:7 });
+  });
+
+  test('PASS/FAIL parity across all 33 + gate behavior; flag-bearing grant a token, flagless grant nothing', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
+      const hty = Object.values(QUEST_DB).filter(q => /^hty/.test(q.id) && q.type === 'skill_check');
+      let passBad = [], failBad = [], gateBad = [];
+      for (const q of hty) {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const mb = b.onPass.find(x => x.kind === 'mission_bit');
+        const flag = mb ? mb.flag : null;
+        // PASS
+        S_story.abilityScores = seed(b.stat, 40);
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (flag) {
+          const tok = S_story.inventory.find(i => i.flagRef === flag);
+          if (!(S_story.quests[q.id] === 'done' && S_story[flag] === true && tok &&
+                tok.name === _flagToLabel(flag) + ' Token' && tok.type === 'mission_bit' &&
+                S_story.xp === 0 && S_story.gold === 0 && S_story.inventory.length === 1)) passBad.push(q.id);
+        } else {  // flagless: pass→done, NO token, NO xp/gold
+          if (!(S_story.quests[q.id] === 'done' && S_story.xp === 0 && S_story.gold === 0 &&
+                S_story.inventory.length === 0)) passBad.push(q.id);
+        }
+        // FAIL
+        S_story.abilityScores = seed(b.stat, -100);
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (!(S_story.quests[q.id] === 'failed' && (!flag || S_story[flag] === false) && S_story.inventory.length === 0)) failBad.push(q.id);
+        // GATE
+        const g = q.gate || {};
+        if (g.flags && g.flags.length) {
+          const gf = g.flags[0];
+          S_story[gf] = false; const c0 = QuestRuntime.canActivate(q.id);
+          S_story[gf] = true;  const c1 = QuestRuntime.canActivate(q.id);
+          if (!(c0 === false && c1 === true)) gateBad.push(q.id);
+        } else if (QuestRuntime.canActivate(q.id) !== true) gateBad.push(q.id);
+      }
+      return { count:hty.length, passBad, failBad, gateBad };
+    });
+    expect(r.count).toBe(33);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+    expect(r.gateBad).toEqual([]);
+  });
+});
