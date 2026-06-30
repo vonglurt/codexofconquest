@@ -6595,3 +6595,101 @@ test.describe('§ARCH-01 Wave 2am — cdg_* family (bulk-migrated, 35 acts; unif
     expect(r.gateBad).toEqual([]);
   });
 });
+
+// §ARCH-01 Wave 2an — vie_* family (35 skill_check acts — 7 chapters × 5 acts,
+// single `vie_NN_actN` convention, `vieCNAMDone` flags; Goethe's Faust arc —
+// Margarete's Account / the Perjured Record / the Scholar's Confession / the
+// Widow's Contract / the Mayor's Commission / the Wager's Record / the Undelivered
+// Release). TENTH head from the post-blq re-scope (twin of inv_*/bhd_*/sdq_*/plw_*/
+// gdn_*/boo_*/alf_*/ksu_*/cdg_*). STRUCTURAL TWIN of inv_*/…/gci_*/lcy_*/lgw_*:
+// UNIFORM-flag — all 35 carry a checkPassFlag → onPass:[mission_bit{flag}] (0
+// flagless); gates form ONE linear 35-act chain (only vie_01_act1 ungated; the
+// other 34 trivial `()=>!!S_story.<priorFlag>` → gate:{flags:[…]}, chaining act→act
+// AND chapter→chapter) ⇒ split {flags:34, empty:1}. UPPERCASE-checkStat (STR/DEX/
+// CON/WIS/CHA); legacy raw-case read ⇒ silent +0 mod (§SKILLFIX-01), UQF lowercases
+// ⇒ real mod; golden seeded under BOTH cases. CLEAN — `skill→ability mapped 0`, 0
+// skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed. Self-contained.
+test.describe('§ARCH-01 Wave 2an — vie_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
+  test('every vie_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const vie = Object.values(QUEST_DB).filter(q => /^vie_/.test(q.id) && q.type === 'skill_check');
+      return vie.map(q => {
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        const mb = b && b.onPass.find(x => x.kind === 'mission_bit');
+        const gate = q.gate || {};
+        return { id:q.id, schema:q.schema, valid:validateQuest(q).valid,
+          noAC: typeof q.activateCond === 'undefined',
+          gateShape: gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other'),
+          hasStat:!!(b && b.stat), abilOk: b ? ['STR','DEX','CON','INT','WIS','CHA'].includes(b.stat) : false,
+          hasDc:typeof (b && b.dc) === 'number', noSkill: b ? !('skill' in b) : false,
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          mbHasLabel:mb ? ('label' in mb) : null };
+      });
+    });
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(35);
+    const gateShapes = { flags:0, empty:0 };
+    for (const q of r) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.noAC).toBe(true);
+      expect(['flags', 'empty']).toContain(q.gateShape);
+      expect(q.hasStat).toBe(true);
+      expect(q.abilOk).toBe(true);         // CLEAN family — stat is a real ability abbrev
+      expect(q.noSkill).toBe(true);        // not §SKILLFIX-02 — no skill name retained
+      expect(q.hasDc).toBe(true);
+      expect(q.onFailLen).toBe(0);
+      expect(q.onPassK).toEqual(['mission_bit']);
+      expect(q.mbHasLabel).toBe(false);
+      gateShapes[q.gateShape]++;
+    }
+    expect(gateShapes).toEqual({ flags:34, empty:1 });
+  });
+
+  test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
+      const vie = Object.values(QUEST_DB).filter(q => /^vie_/.test(q.id) && q.type === 'skill_check');
+      let passBad = [], failBad = [], gateBad = [];
+      for (const q of vie) {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const mb = b.onPass.find(x => x.kind === 'mission_bit');
+        const flag = mb ? mb.flag : null;
+        // PASS
+        S_story.abilityScores = seed(b.stat, 40);
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        const tok = S_story.inventory.find(i => i.flagRef === flag);
+        if (!(S_story.quests[q.id] === 'done' && S_story[flag] === true && tok &&
+              tok.name === _flagToLabel(flag) + ' Token' && tok.type === 'mission_bit' &&
+              S_story.xp === 0 && S_story.gold === 0 && S_story.inventory.length === 1)) passBad.push(q.id);
+        // FAIL
+        S_story.abilityScores = seed(b.stat, -100);
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (!(S_story.quests[q.id] === 'failed' && S_story[flag] === false && S_story.inventory.length === 0)) failBad.push(q.id);
+        // GATE
+        const g = q.gate || {};
+        if (g.flags && g.flags.length) {
+          const gf = g.flags[0];
+          S_story[gf] = false; const c0 = QuestRuntime.canActivate(q.id);
+          S_story[gf] = true;  const c1 = QuestRuntime.canActivate(q.id);
+          if (!(c0 === false && c1 === true)) gateBad.push(q.id);
+        } else if (QuestRuntime.canActivate(q.id) !== true) gateBad.push(q.id);
+      }
+      return { count:vie.length, passBad, failBad, gateBad };
+    });
+    expect(r.count).toBe(35);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+    expect(r.gateBad).toEqual([]);
+  });
+});
