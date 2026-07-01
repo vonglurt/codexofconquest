@@ -7582,6 +7582,102 @@ test.describe('§ARCH-01 Wave 2aw — mol* family (bulk-migrated, 30 acts; unifo
   });
 });
 
+// §ARCH-01 Wave 2bb — stn_* family (11 skill_check acts — mixed-type chapters, stn_cNaN ids).
+// THIRD & LAST §SKILLFIX-02 family of the trio. UNIFORM-flag — all 11 carry a
+// mission_bit onPass (0 flagless). Gates: 5 empty (chapter act1s) + 6 flags ⇒
+// {flags:6, empty:5}. Many type-gated siblings (escort/dialogue/combat per chapter).
+// §SKILLFIX-02: 10/11 use D&D skill names; 1 uses full ability word "Wisdom" →
+// WIS (direct ability check — migrator sets stat:WIS, skill:null for this one).
+// skill→ability mapped 10. Self-contained.
+test.describe('§ARCH-01 Wave 2bb — stn_* family (bulk-migrated, 11 acts; §SKILLFIX-02)', () => {
+  test('every stn_* skill_check is UQF-1.0, validates, onFail:[], ability mapped; 10 have skill name + 1 raw-ability', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const ABILS = new Set(['STR','DEX','CON','INT','WIS','CHA']);
+      const stn = Object.values(QUEST_DB).filter(q => /^stn_c/.test(q.id) && q.type === 'skill_check');
+      return stn.map(q => {
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        const mb = b && b.onPass.find(x => x.kind === 'mission_bit');
+        const gate = q.gate || {};
+        return { id:q.id, schema:q.schema, valid:validateQuest(q).valid,
+          noAC: typeof q.activateCond === 'undefined',
+          gateShape: gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other'),
+          hasStat:!!(b && b.stat), abilOk: b ? ABILS.has(b.stat) : false,
+          hasDc:typeof (b && b.dc) === 'number',
+          hasSkill: b ? ('skill' in b && b.skill !== null) : false,
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          mbHasLabel:mb ? ('label' in mb) : null };
+      });
+    });
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(11);
+    const gateShapes = { flags:0, empty:0 };
+    let skillCount = 0;
+    for (const q of r) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.noAC).toBe(true);
+      expect(['flags', 'empty']).toContain(q.gateShape);
+      expect(q.hasStat).toBe(true);
+      expect(q.abilOk).toBe(true);
+      expect(q.hasDc).toBe(true);
+      expect(q.onFailLen).toBe(0);
+      expect(q.onPassK).toEqual(['mission_bit']);
+      expect(q.mbHasLabel).toBe(false);
+      gateShapes[q.gateShape]++;
+      if (q.hasSkill) skillCount++;
+    }
+    expect(gateShapes).toEqual({ flags:6, empty:5 });
+    expect(skillCount).toBe(10); // 10 skill names; 1 raw-ability ("Wisdom"→WIS, skill:null)
+  });
+
+  test('PASS/FAIL parity across all 11 + gate behavior; every act grants a token on pass', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
+      const stn = Object.values(QUEST_DB).filter(q => /^stn_c/.test(q.id) && q.type === 'skill_check');
+      let passBad = [], failBad = [], gateBad = [];
+      for (const q of stn) {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const mb = b.onPass.find(x => x.kind === 'mission_bit');
+        const flag = mb ? mb.flag : null;
+        // PASS — seed by governing ability (b.stat)
+        S_story.abilityScores = seed(b.stat, 40);
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        const tok = S_story.inventory.find(i => i.flagRef === flag);
+        if (!(S_story.quests[q.id] === 'done' && S_story[flag] === true && tok &&
+              tok.name === _flagToLabel(flag) + ' Token' && tok.type === 'mission_bit' &&
+              S_story.xp === 0 && S_story.gold === 0 && S_story.inventory.length === 1)) passBad.push(q.id);
+        // FAIL
+        S_story.abilityScores = seed(b.stat, -100);
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (!(S_story.quests[q.id] === 'failed' && S_story[flag] === false && S_story.inventory.length === 0)) failBad.push(q.id);
+        // GATE
+        const g = q.gate || {};
+        if (g.flags && g.flags.length) {
+          const gf = g.flags[0];
+          S_story[gf] = false; const c0 = QuestRuntime.canActivate(q.id);
+          S_story[gf] = true;  const c1 = QuestRuntime.canActivate(q.id);
+          if (!(c0 === false && c1 === true)) gateBad.push(q.id);
+        } else if (QuestRuntime.canActivate(q.id) !== true) gateBad.push(q.id);
+      }
+      return { count:stn.length, passBad, failBad, gateBad };
+    });
+    expect(r.count).toBe(11);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+    expect(r.gateBad).toEqual([]);
+  });
+});
+
 // §ARCH-01 Wave 2ba — sen_* family (19 skill_check acts — 7 chapters, sen_cNaN ids).
 // SECOND §SKILLFIX-02 family of the trio. UNIFORM-flag — all 19 carry a mission_bit
 // onPass (0 flagless). Gates form SEVEN per-chapter internal chains (each chapter's
