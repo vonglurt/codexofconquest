@@ -7582,6 +7582,91 @@ test.describe('§ARCH-01 Wave 2aw — mol* family (bulk-migrated, 30 acts; unifo
   });
 });
 
+// §ARCH-01 Wave 2ay — clr_* family (5 skill_check acts — single chapter × 5 acts,
+// `clr_01_actN` ids). TENTH & LAST head of the CLEAN mid-tail. UNIFORM-flag —
+// all 5 carry a mission_bit onPass (0 flagless). ALL OPEN GATES — no chaining
+// between acts, every act is always-available ⇒ split {flags:0, empty:5}. Stats:
+// INT(2) + WIS(2) + CHA(1). CLEAN — 0 skill-names, NOT §SKILLFIX-02. Zero
+// type-gated siblings. Pre-migrated (UQF at authoring time; bulk migrator
+// reports skipped:5). Self-contained.
+test.describe('§ARCH-01 Wave 2ay — clr_* family (pre-migrated, 5 acts; uniform flag-bearing)', () => {
+  test('every clr_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const clr = Object.values(QUEST_DB).filter(q => /^clr_/.test(q.id) && q.type === 'skill_check');
+      return clr.map(q => {
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        const mb = b && b.onPass.find(x => x.kind === 'mission_bit');
+        const gate = q.gate || {};
+        return { id:q.id, schema:q.schema, valid:validateQuest(q).valid,
+          noAC: typeof q.activateCond === 'undefined',
+          gateShape: gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other'),
+          hasStat:!!(b && b.stat), abilOk: b ? ['STR','DEX','CON','INT','WIS','CHA'].includes(b.stat) : false,
+          hasDc:typeof (b && b.dc) === 'number',
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          mbHasLabel:mb ? ('label' in mb) : null };
+      });
+    });
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(5);
+    const gateShapes = { flags:0, empty:0 };
+    for (const q of r) {
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.noAC).toBe(true);
+      expect(q.gateShape).toBe('empty');
+      expect(q.hasStat).toBe(true);
+      expect(q.abilOk).toBe(true);
+      expect(q.hasDc).toBe(true);
+      expect(q.onFailLen).toBe(0);
+      expect(q.onPassK).toEqual(['mission_bit']);
+      expect(q.mbHasLabel).toBe(false);
+      gateShapes[q.gateShape]++;
+    }
+    expect(gateShapes).toEqual({ flags:0, empty:5 });
+  });
+
+  test('PASS/FAIL parity across all 5 + gate behavior (all open); every act grants a token on pass', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
+      const clr = Object.values(QUEST_DB).filter(q => /^clr_/.test(q.id) && q.type === 'skill_check');
+      let passBad = [], failBad = [], gateBad = [];
+      for (const q of clr) {
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const mb = b.onPass.find(x => x.kind === 'mission_bit');
+        const flag = mb ? mb.flag : null;
+        // PASS
+        S_story.abilityScores = seed(b.stat, 40);
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        const tok = S_story.inventory.find(i => i.flagRef === flag);
+        if (!(S_story.quests[q.id] === 'done' && S_story[flag] === true && tok &&
+              tok.name === _flagToLabel(flag) + ' Token' && tok.type === 'mission_bit' &&
+              S_story.xp === 0 && S_story.gold === 0 && S_story.inventory.length === 1)) passBad.push(q.id);
+        // FAIL
+        S_story.abilityScores = seed(b.stat, -100);
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [q.id]:'active' };
+        _rollCeremonia(q.id);
+        if (!(S_story.quests[q.id] === 'failed' && S_story[flag] === false && S_story.inventory.length === 0)) failBad.push(q.id);
+        // GATE — all clr_* are ungated (gate:{})
+        if (QuestRuntime.canActivate(q.id) !== true) gateBad.push(q.id);
+      }
+      return { count:clr.length, passBad, failBad, gateBad };
+    });
+    expect(r.count).toBe(5);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+    expect(r.gateBad).toEqual([]);
+  });
+});
+
 // §ARCH-01 Wave 2ax — cph* family (29 skill_check acts — 7 chapters × 5 acts
 // minus 6 combat siblings, no-underscore `cphNNN_actN` ids). NINTH head of the
 // CLEAN mid-tail. UNIFORM-flag — all 29 carry a checkPassFlag →
