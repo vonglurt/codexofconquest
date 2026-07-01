@@ -7582,6 +7582,105 @@ test.describe('§ARCH-01 Wave 2aw — mol* family (bulk-migrated, 30 acts; unifo
   });
 });
 
+// §ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated skill_check quests out of 82 total;
+// 71 already UQF, 11 legacy). MIXED gates: 7 _legacyFn (complex activateCond preserved) + 3 flags
+// + 1 empty. ALL have xpAward → onPass includes 'reward'; 10/11 also have a mission_bit passFlag
+// (quest_sir_jullean is flagless). 3 also have goldAward. Skills via checkAbility (lowercase abbrev)
+// or checkStat; skill→ability mapped 0 (all were already abilities). Self-contained.
+test.describe('§ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated; xp/gold rewards, mixed gates)', () => {
+  test('every newly-migrated quest_* is UQF-1.0, validates, onFail:[], has reward bit; mission_bit where flagged', async ({ page }) => {
+    const errs = []; page.on('pageerror', e => errs.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+    const NEWLY_MIGRATED = new Set([
+      'quest_muffat_01','quest_ezzir','quest_governor_cyprus','quest_lame_lystra',
+      'quest_prison_phillam','quest_areopagus','quest_ephesus_riot','quest_shipwreck_melta',
+      'quest_sir_jullean','quest_courier_release','quest_crypt_survey',
+    ]);
+    const r = await page.evaluate((ids) => {
+      const ABILS = new Set(['STR','DEX','CON','INT','WIS','CHA']);
+      return [...ids].map(id => {
+        const q = QUEST_DB[id];
+        if (!q) return { id, missing: true };
+        const b = (q.bits || []).find(x => x.kind === 'skill_check');
+        const mb = b && b.onPass.find(x => x.kind === 'mission_bit');
+        const rw = b && b.onPass.find(x => x.kind === 'reward');
+        const gate = q.gate || {};
+        return { id, schema:q.schema, valid:validateQuest(q).valid,
+          noAC: typeof q.activateCond === 'undefined',
+          gateShape: gate._legacyFn ? 'legacyFn' : (gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other')),
+          hasStat:!!(b && b.stat), abilOk: b ? ABILS.has(b.stat) : false,
+          hasDc:typeof (b && b.dc) === 'number',
+          hasReward: !!rw, hasMb: !!mb,
+          onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null };
+      });
+    }, [...NEWLY_MIGRATED]);
+    expect(errs).toEqual([]);
+    expect(r.length).toBe(11);
+    const gateShapes = { legacyFn:0, flags:0, empty:0 };
+    let withMb = 0;
+    for (const q of r) {
+      expect(q.missing).toBeFalsy();
+      expect(q.schema).toBe('UQF-1.0');
+      expect(q.valid).toBe(true);
+      expect(q.hasStat).toBe(true);
+      expect(q.abilOk).toBe(true);
+      expect(q.hasDc).toBe(true);
+      expect(q.hasReward).toBe(true);
+      expect(q.onFailLen).toBe(0);
+      expect(q.onPassK).toContain('reward');
+      gateShapes[q.gateShape] = (gateShapes[q.gateShape] || 0) + 1;
+      if (q.hasMb) withMb++;
+    }
+    expect(gateShapes).toEqual({ legacyFn:7, flags:3, empty:1 });
+    expect(withMb).toBe(10); // quest_sir_jullean is flagless
+  });
+
+  test('PASS/FAIL parity across all 11; xp/gold granted on pass, nothing on fail', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const NEWLY_MIGRATED = [
+      'quest_muffat_01','quest_ezzir','quest_governor_cyprus','quest_lame_lystra',
+      'quest_prison_phillam','quest_areopagus','quest_ephesus_riot','quest_shipwreck_melta',
+      'quest_sir_jullean','quest_courier_release','quest_crypt_survey',
+    ];
+    const r = await page.evaluate((ids) => {
+      const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
+      let passBad = [], failBad = [];
+      for (const id of ids) {
+        const q = QUEST_DB[id];
+        const b = q.bits.find(x => x.kind === 'skill_check');
+        const mb = b.onPass.find(x => x.kind === 'mission_bit');
+        const rw = b.onPass.find(x => x.kind === 'reward');
+        const flag = mb ? mb.flag : null;
+        // PASS
+        S_story.abilityScores = seed(b.stat, 40);
+        S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        const passXpOk = rw ? S_story.xp === rw.xp : true;
+        const passGoldOk = rw && rw.gold ? S_story.gold === rw.gold : true;
+        const passFlagOk = flag ? S_story[flag] === true : true;
+        if (!(S_story.quests[id] === 'done' && passXpOk && passGoldOk && passFlagOk)) passBad.push(id);
+        // FAIL
+        S_story.abilityScores = seed(b.stat, -100);
+        S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
+        S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+        if (flag) S_story[flag] = false;
+        S_story.quests = { [id]:'active' };
+        _rollCeremonia(id);
+        const failFlagOk = flag ? S_story[flag] === false : true;
+        // retryable quests stay 'active' on fail (not 'failed'); non-retryable → 'failed'
+        const failStatusOk = q.retryable ? S_story.quests[id] !== 'done' : S_story.quests[id] === 'failed';
+        if (!(failStatusOk && S_story.xp === 0 && S_story.gold === 0 && failFlagOk)) failBad.push(id);
+      }
+      return { count:ids.length, passBad, failBad };
+    }, NEWLY_MIGRATED);
+    expect(r.count).toBe(11);
+    expect(r.passBad).toEqual([]);
+    expect(r.failBad).toEqual([]);
+  });
+});
+
 // §ARCH-01 Wave 2bb — stn_* family (11 skill_check acts — mixed-type chapters, stn_cNaN ids).
 // THIRD & LAST §SKILLFIX-02 family of the trio. UNIFORM-flag — all 11 carry a
 // mission_bit onPass (0 flagless). Gates: 5 empty (chapter act1s) + 6 flags ⇒
