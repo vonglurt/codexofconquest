@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 # Lab Report — §MESH-01: Multiuser MUD (presence rendering · self-discovering server mesh · tracker · no-dupe economy)
 
-**Status:** 🔒 **DESIGN LOCKED (2026-07-02).** No code shipped yet — this report is the Lab Report Policy prerequisite for §MESH-01 implementation (multi-system redesign trigger). Increments (a)–(i) below, one per "continue."
+**Status:** 🔒 **DESIGN LOCKED (2026-07-02)** · **Inc (a) ✅ SHIPPED `acd9b77` (2026-07-02)** — client presence on one server, exactly as §3.1: 🌐 opt-in toggle + `MP` module, `POST /api/session/pos` beacon (display-only, rolls nothing), `session/start` newcomer announce, minimap ☺ dots; gates mud-harness 35 / 2-browser smoke 2/2 / navigation 29/29 / `check:walk` green. *Inc (a) residue → Inc (b): `session/end` sends no `player_left` (presence self-corrects on the next beacon).* Next: **Inc (b)** — serverId/worldHash + 2-server exchange over static `--peer`.
 **Parent design:** `plan.md §MESH-01` (idea logged 2026-07-01; extended same day with tracker enablement, gameplay ladder, no-dupe economy).
 **Predecessors:** `lab-reports/lab-report-walk5-mud-harness.md` (§WALK-5 instanced encounters + `tests/mud-harness.mjs`, 24/24) · `lab-reports/lab-report-cell-map-mud-redesign.md` §CELL-07 (SESSIONS store + SSE broadcast) · `plan.md §NAV-01` L4 room layer (`describeCell` ROOMS:CORE) + L8 MUD parity (Inc f).
 

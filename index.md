@@ -124,6 +124,7 @@ Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI serve
 | `tests/integration/fishing.test.js` | Fishing modal flow, cast/catch/XP loop, miss/recast cycle, throw-back | ~10 tests |
 | `tests/integration/autosave.spec.js` | Autosave on navigation, save-and-verify discipline (§UNIFY-09) | ~4 tests |
 | `tests/integration/worldbuilder-walk.test.js` | **§WALK** tab in worldbuilder.html — load/nav/chips/D-pad/keyboard/neighbor list/edit form/dirty tracking/quest panel/coord index/cross-tab buttons | **73 tests** |
+| `tests/integration/multiplayer-presence.test.js` | **§MESH-01a** two-browser presence smoke — spawns a throwaway wbapi-server; connect via 🌐, "Also here:", exactly-once SSE chat, player_left on departure, strict opt-in | 2 tests |
 
 ### Completed Work Registry
 
