@@ -113,6 +113,13 @@ case "$CMD" in
   start)   do_start ;;
   stop)    do_stop ;;
   restart) do_stop; sleep 0.4; PID=''; do_start ;;
+  tracker)
+    # §MESH-01d: rendezvous-only role on its own port (default 1368) —
+    # serves /api/tracker/announce + /peers (+ ping/manifest), nothing else.
+    TPORT="${2:-1368}"
+    echo "Starting TRACKER on :$TPORT (rendezvous only — never a relay)…"
+    TRACKER_MODE=1 PORT="$TPORT" nohup node "$DIR/wbapi-server.js" --tracker-mode >> "$DIR/wbapi-tracker.log" 2>&1 &
+    echo "Tracker PID $! — announce: POST http://localhost:$TPORT/api/tracker/announce · browse: GET /api/tracker/peers[?wh=…&format=txt]" ;;
   status)
     if [ -n "$PID" ]; then echo "Running (PID $PID) — http://localhost:1367"
     else echo "Stopped."; fi ;;

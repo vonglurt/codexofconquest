@@ -343,6 +343,41 @@ async function main() {
   });
   check(gAcl.status === 403, 'allowlist-mode ACL refuses an unlisted (compatible) peer with 403');
 
+  // ════════ (f) §MESH-01d — tracker discovery + world grouping + bootstrap URL ════════
+  console.log('\n[F] §MESH-01d — tracker rendezvous, compat grouping, BOOTSTRAP_URLS');
+  const trk = await startServer(PORT + 6, { TRACKER_MODE: '1', MESH_SERVER_ID: 'e'.repeat(32), PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 6}.json`) });
+  check((await jget('/ping', trk.base)).ok === true, 'tracker answers /api/ping');
+  check((await jget('/session/who', trk.base)).ok === false, 'tracker-mode refuses non-tracker routes (rendezvous only, never a relay)');
+
+  const mE = await startServer(PORT + 7, mkEnv(PORT + 7, 'f'.repeat(32), { TRACKER_URL: trk.base, MESH_ANNOUNCE_MS: '150' }));
+  const mF = await startServer(PORT + 8, mkEnv(PORT + 8, '9'.repeat(32), { TRACKER_URL: trk.base, MESH_ANNOUNCE_MS: '150' }));
+  await jpost('/session/start', { name: 'Eve', seed: 51 }, mE.base);
+  let eveSeen = false;
+  for (let i = 0; i < 40 && !eveSeen; i++) {
+    await sleep(200);
+    eveSeen = (((await jget('/session/who', mF.base)).remotes) || []).some((p) => p.name === 'Eve');
+  }
+  check(eveSeen, 'two strangers sharing only a tracker URL discover each other and sync (Eve visible on F)');
+  check((await jget(`/tracker/peers?wh=${manA.worldHash}`, trk.base)).count >= 2, 'tracker lists both announced servers in the world group');
+  const txt = await (await fetch(trk.base + `/api/tracker/peers?wh=${manA.worldHash}&format=txt`)).text();
+  check(txt.includes(`localhost:${PORT + 7}`), 'tracker emits the peers.txt bootstrap format (format=txt — the gist backup source)');
+
+  await startServer(PORT + 9, mkEnv(PORT + 9, '8'.repeat(32), { TRACKER_URL: trk.base, MESH_ANNOUNCE_MS: '150', MESH_WORLDHASH_OVERRIDE: 'deadbeefdeadbeef' }));
+  await sleep(700);
+  const tpReal = await jget(`/tracker/peers?wh=${manA.worldHash}`, trk.base);
+  check(!(tpReal.servers || []).some((s) => s.worldHash === 'deadbeefdeadbeef'), 'world grouping: the incompatible server never appears in the real-world group');
+  check((await jget('/tracker/peers?wh=deadbeefdeadbeef', trk.base)).count === 1, 'the incompatible server is tracked in its OWN world group (segregated, not dropped)');
+
+  const mH = await startServer(PORT + 10, mkEnv(PORT + 10, '7'.repeat(32), {
+    BOOTSTRAP_URLS: `${trk.base}/api/tracker/peers?wh=${manA.worldHash}&format=txt`,
+  }));
+  let eveSeenH = false;
+  for (let i = 0; i < 40 && !eveSeenH; i++) {
+    await sleep(200);
+    eveSeenH = (((await jget('/session/who', mH.base)).remotes) || []).some((p) => p.name === 'Eve');
+  }
+  check(eveSeenH, 'a plain text file over HTTP alone bootstraps a stranger into the mesh (BOOTSTRAP_URLS gist-style backup)');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});

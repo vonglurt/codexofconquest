@@ -348,7 +348,64 @@ function persistPeerCache() {
   if (!live.length && !fs.existsSync(PEERS_CACHE_FILE)) return;   // never create an empty cache
   try { fs.writeFileSync(PEERS_CACHE_FILE, JSON.stringify({ savedAt: new Date().toISOString(), addrs: live }, null, 2)); } catch {}
 }
-// ══ end §MESH-01 b/c mesh layer ══════════════════════════════════════════════
+// ── §MESH-01d: tracker — rendezvous only, NEVER a relay ─────────────────────
+// A tracker is a ROLE of this same codebase (`--tracker-mode` serves only
+// ping/manifest/tracker routes). It groups announcements by the full
+// compatibility identity (proto, engineVer, worldHash) so incompatible servers
+// are segregated into separate world groups — they can see their own group,
+// never each other's. The mesh survives tracker death (gossip + peer cache).
+const TRACKER_MODE = process.env.TRACKER_MODE === '1' || process.argv.includes('--tracker-mode');
+const TRACKER = new Map();   // serverId → {addr, proto, engineVer, worldHash, playerCount, name, lastSeen}
+const TRACKER_TTL = parseInt(process.env.TRACKER_TTL_MS || '', 10) || 120_000;
+function trackerSweep() {
+  const now = Date.now();
+  for (const [id, r] of TRACKER) if (now - r.lastSeen > TRACKER_TTL) TRACKER.delete(id);
+}
+// Game-server side: announce to every configured tracker (~30 s) and merge the
+// returned same-world peers into the gossip table.
+const TRACKER_URLS = (process.env.TRACKER_URL || '').split(',').map((s) => s.trim()).filter(Boolean);
+process.argv.forEach((a, i) => { if (process.argv[i - 1] === '--tracker') TRACKER_URLS.push(a); });
+const MESH_ANNOUNCE_MS = parseInt(process.env.MESH_ANNOUNCE_MS || '', 10) || 30_000;
+async function trackerAnnounceRound() {
+  if (TRACKER_MODE) return;   // a tracker doesn't announce to itself
+  const urls = [...new Set([...TRACKER_URLS, ...MESH_TRACKER_URLS])];
+  if (!urls.length) return;
+  const m = getManifest();
+  for (const u of urls) {
+    try {
+      const resp = await fetch(u.replace(/\/+$/, '') + '/api/tracker/announce', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serverId: getServerId(), addr: meshAdvertise(), proto: m.proto,
+          engineVer: m.engineVer, worldHash: m.worldHash, playerCount: SESSIONS.size }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data.ok)
+        for (const p of data.peers || [])
+          if (p && p.addr && p.addr !== meshAdvertise() && !MESH.peers.has(p.addr))
+            MESH.peers.set(p.addr, { serverId: p.serverId || null, lastSeen: 0, lastErr: null });
+    } catch { /* tracker down — the mesh carries on via gossip/cache */ }
+  }
+}
+// §MESH-01d bootstrap backup: BOOTSTRAP_URLS = comma-separated plain-text URLs
+// in the peers.txt format (a GitHub Gist raw URL, a PHP echo, an scp'd file —
+// any dumb host). Read-only by design: there is no write path to it.
+async function fetchBootstrapUrls() {
+  const urls = (process.env.BOOTSTRAP_URLS || '').split(',').map((s) => s.trim()).filter(Boolean);
+  for (const u of urls) {
+    try {
+      const txt = await (await fetch(u)).text();
+      for (const line of txt.split('\n')) {
+        const t = line.trim();
+        if (!t || t.startsWith('#')) continue;
+        if (t.startsWith('tracker ')) { MESH_TRACKER_URLS.push(t.slice(8).trim()); continue; }
+        const a = t.split(/\s+/)[0];
+        if (/^[\w.-]+:\d+$/.test(a) && a !== meshAdvertise() && !MESH.peers.has(a))
+          MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });
+      }
+    } catch { /* backup host unreachable — lower rungs of the ladder still apply */ }
+  }
+}
+// ══ end §MESH-01 mesh layer ═══════════════════════════════════════════════════
 
 // ── GEO-anchored node codes (single source of truth for geo-seed + rip-and-connect) ──
 // These nodes have authoritative lat/lon positions; rip-and-connect must NOT relocate them.
@@ -1421,6 +1478,12 @@ async function route(req, res) {
     return;
   }
 
+  // ── §MESH-01d: tracker mode — rendezvous only, never a relay, never an API ──
+  if (TRACKER_MODE && !['ping', 'manifest', 'tracker', 'help'].includes(parts[0])) {
+    logResponse(method, url.pathname, 410, 'tracker-mode');
+    return json(res, 410, { ok: false, error: 'tracker-mode: only /api/ping, /api/manifest, /api/tracker/* are served here' });
+  }
+
   const qs = url.search ? url.search.slice(1) : '';
   logReq(method, url.pathname, qs);
 
@@ -2331,6 +2394,50 @@ async function route(req, res) {
     logResponse(method, url.pathname, 200, `manifest ${m.engineVer} wh:${m.worldHash}`);
     return json(res, 200, { ok: true, serverId: getServerId(), addr: meshAdvertise(), ...m,
       peers: [...MESH.peers.keys()], remoteOrigins: MESH.remote.size });
+  }
+
+  // ── §MESH-01d: tracker routes — announce + peers (rendezvous only) ──
+  if (parts[0] === 'tracker' && parts[1] === 'announce' && method === 'POST') {
+    let tb;
+    try { tb = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
+    trackerSweep();
+    const { serverId, addr, proto, engineVer, worldHash } = tb || {};
+    if (!/^[0-9a-f]{32}$/.test(serverId || '') || !/^[\w.-]+:\d+$/.test(addr || '') || !proto || !engineVer || !worldHash) {
+      logResponse(method, url.pathname, 400, 'tracker/announce: bad fields');
+      return json(res, 400, { ok: false, error: 'serverId, addr, proto, engineVer, worldHash required' });
+    }
+    if (!aclAllows({ serverId, ip: req.socket.remoteAddress, worldHash })) {
+      logResponse(method, url.pathname, 403, `tracker/announce refused by ACL: ${serverId.slice(0, 8)}`);
+      return json(res, 403, { ok: false, reason: 'acl' });
+    }
+    TRACKER.set(serverId, { addr, proto, engineVer, worldHash, playerCount: (tb.playerCount | 0), name: String(tb.name || '').slice(0, 60), lastSeen: Date.now() });
+    // Same-group peers only — incompatible worlds are segregated, never mixed.
+    const group = [];
+    for (const [id, r] of TRACKER)
+      if (id !== serverId && r.proto === proto && r.engineVer === engineVer && r.worldHash === worldHash)
+        group.push({ serverId: id, addr: r.addr, playerCount: r.playerCount });
+    const peers = group.sort(() => 0.5 - Math.random()).slice(0, 8);
+    logResponse(method, url.pathname, 200, `announce ${serverId.slice(0, 8)} @${addr} wh:${String(worldHash).slice(0, 8)} → ${peers.length} peer(s)`);
+    return json(res, 200, { ok: true, peers, ttlMs: TRACKER_TTL });
+  }
+  if (parts[0] === 'tracker' && parts[1] === 'peers' && method === 'GET') {
+    trackerSweep();
+    const wh = url.searchParams.get('wh'), ev = url.searchParams.get('ev'), pr = url.searchParams.get('p');
+    const rows = [];
+    for (const [id, r] of TRACKER)
+      if ((!wh || r.worldHash === wh) && (!ev || r.engineVer === ev) && (!pr || String(r.proto) === pr))
+        rows.push({ serverId: id, ...r });
+    if ((url.searchParams.get('format') || '') === 'txt') {
+      cors(res);
+      res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+      logResponse(method, url.pathname, 200, `peers txt: ${rows.length} row(s)`);
+      return res.end([
+        `# r2h mesh bootstrap — generated by tracker ${getServerId().slice(0, 8)} at ${new Date().toISOString()}`,
+        ...rows.map((r) => `${r.addr} ${r.engineVer} ${r.worldHash}`), '',
+      ].join('\n'));
+    }
+    logResponse(method, url.pathname, 200, `peers: ${rows.length} row(s)`);
+    return json(res, 200, { ok: true, count: rows.length, servers: rows });
   }
 
   // ── §MESH-01: gossip ingress — compat gate → ACL → single-writer merge ──
@@ -9599,6 +9706,11 @@ server.listen(PORT, process.env.BIND_ADDR || '127.0.0.1', () => {
   // so a solo dev server (:1367) is completely unaffected.
   loadStaticPeers();
   setInterval(() => { meshGossipRound(); persistPeerCache(); }, MESH_GOSSIP_MS).unref();
+  // §MESH-01d: pull the text-file backup (gist/PHP/scp'd file), then start the
+  // tracker announce heartbeat. Both are no-ops when nothing is configured.
+  fetchBootstrapUrls().then(() => trackerAnnounceRound());
+  setInterval(trackerAnnounceRound, MESH_ANNOUNCE_MS).unref();
+  if (TRACKER_MODE) console.log(`  Mode:      TRACKER (rendezvous only — /api/tracker/announce + /peers; worlds grouped by proto/engineVer/worldHash)`);
   if (MESH.peers.size) console.log(`  Mesh:      ${MESH.peers.size} bootstrap peer(s) · serverId ${getServerId().slice(0, 8)} · worldHash ${getManifest().worldHash}`);
   const line = '═'.repeat(60);
   console.log(`\n${C.bold}${C.magenta}${line}${C.reset}`);
