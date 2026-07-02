@@ -389,6 +389,28 @@ function getSeaLanes() {
   return _laneCache;
 }
 
+// §NAV-01b — ROAD_RUNS parsed from the game's generated RLE literal (same shape as
+// SEA_RUNS). Road cells infer 'road' (encounter rate 0) on both client and server;
+// scripts/check-terrain-parity.js asserts the parse round-trips. Cached by source ref.
+let _roadCacheSrc = null, _roadCache = null;
+function getRoadCells() {
+  const src = WBAPI._rawSrc || '';
+  if (src !== _roadCacheSrc) {
+    _roadCacheSrc = src;
+    const set = new Set();
+    const m = src.match(/const\s+ROAD_RUNS\s*=\s*(\{[\s\S]*?\});/);
+    if (m) {
+      try {
+        const runs = (new Function('return ' + m[1]))();  // trusted local source
+        for (const [r, rr] of Object.entries(runs))
+          for (const [a, b] of rr) for (let c = a; c <= b; c++) set.add(`${r},${c}`);
+      } catch { /* leave empty */ }
+    }
+    _roadCache = set;
+  }
+  return _roadCache;
+}
+
 // §WALK-5 Inc 1 — TERRAIN_ENCOUNTER_RATE parsed from the game literal (a flat
 // numeric table with a `_default`). The server keeps no copy of its own so it
 // cannot drift; scripts/check-terrain-parity.js asserts the parse round-trips.
@@ -412,6 +434,7 @@ function getEncounterRateTable() {
 // 'midlands'. Same neighbour order (MOVES4) + tie-break as the client for parity.
 function terrainAt(r, c) {
   if (getSeaLanes().has(`${r},${c}`)) return 'ocean';
+  if (getRoadCells().has(`${r},${c}`)) return 'road';   // §NAV-01b
   const lg = getLocaleGrid(), nm = WBAPI.nodeMap;
   const names = [];
   for (const [dr, dc] of MOVES4) {

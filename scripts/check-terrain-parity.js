@@ -123,14 +123,40 @@ if (!serverLanes) {
   for (const k of clientLanes) if (!serverLanes.has(k)) { fails.push(`A2: server SEA_LANES missing ${k}`); break; }
 }
 
+// ── A3. ROAD_RUNS round-trip (§NAV-01b) ──────────────────────────────────────
+// client truth = the generated RLE literal expanded exactly as the game IIFE does;
+// server truth = wbapi-server getRoadCells()'s exact parse-regex on the same source.
+function expandRuns(runs) {
+  const s = new Set();
+  for (const [r, rr] of Object.entries(runs))
+    for (const [a, b] of rr) for (let c = a; c <= b; c++) s.add(`${r},${c}`);
+  return s;
+}
+let clientRoads = null, serverRoads = null;
+try { clientRoads = expandRuns(objLiteral(GAME, 'ROAD_RUNS')); } catch {}
+{
+  const sm = GAME.match(/const\s+ROAD_RUNS\s*=\s*(\{[\s\S]*?\});/); // verbatim from wbapi-server.js
+  if (sm) { try { serverRoads = expandRuns((new Function('return ' + sm[1]))()); } catch {} }
+}
+if (!clientRoads) fails.push('A3: could not read client ROAD_RUNS literal');
+if (!serverRoads) {
+  fails.push('A3: server ROAD_RUNS regex matched nothing — road set would be empty');
+} else if (clientRoads) {
+  if (clientRoads.size !== serverRoads.size)
+    fails.push(`A3: ROAD_RUNS size differs — client ${clientRoads.size} vs server ${serverRoads.size}`);
+  for (const k of clientRoads) if (!serverRoads.has(k)) { fails.push(`A3: server ROAD_CELLS missing ${k}`); break; }
+}
+
 // ── B. ALGORITHM parity — run BOTH real source functions over the band ────────
-// _inferTerrain (HTML) closes over module-scope SEA_LANES / NODE_MAP / cellCode.
+// _inferTerrain (HTML) closes over module-scope SEA_LANES / ROAD_CELLS / NODE_MAP / cellCode.
 const SEA_LANES = clientLanes || new Set();
+const ROAD_CELLS = clientRoads || new Set();
 const clientInfer = eval('(' + extractFn(GAME, '_inferTerrain') + ')');
-// terrainAt (server) closes over these IIFE-scope deps (getSeaLanes/getLocaleGrid/
-// WBAPI/MOVES4) via direct eval — same shapes the live server hands it.
+// terrainAt (server) closes over these IIFE-scope deps (getSeaLanes/getRoadCells/
+// getLocaleGrid/WBAPI/MOVES4) via direct eval — same shapes the live server hands it.
 const serverTerrainAt = (function () {
   const getSeaLanes = () => (serverLanes || SEA_LANES);
+  const getRoadCells = () => (serverRoads || ROAD_CELLS);
   const getLocaleGrid = () => CELL_GRID;
   const WBAPI = { nodeMap: NODE_MAP };
   const MOVES4 = [[-1, 0], [1, 0], [0, 1], [0, -1]];
@@ -158,6 +184,7 @@ if (diffs.length) {
 console.log('§WALK-5 server↔client terrain/encounter parity');
 console.log(`  A   rate-table keys=${Object.keys(clientRates).length}  (client==server: ${!fails.some(f => f.startsWith('A:'))})`);
 console.log(`  A2  SEA_LANES cells=${clientLanes ? clientLanes.size : '?'}  (client==server: ${!fails.some(f => f.startsWith('A2:'))})`);
+console.log(`  A3  ROAD_CELLS cells=${clientRoads ? clientRoads.size : '?'}  (client==server: ${!fails.some(f => f.startsWith('A3:'))})`);
 console.log(`  B   terrainAt agree=${agree}/${checked}  diffs=${diffs.length}`);
 
 if (fails.length) {
