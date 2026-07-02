@@ -164,6 +164,7 @@ All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
 | **§WORLDBUILDER-01** | Canvas node map editor — click node to edit, click empty cell to create, bidirectional exit wiring, collision detection. Depends on §WORLDBUILDER-02 Ph1 ✅ |
 | **§1367** | Historical year 1367 AD integration — `GAME_YEAR=1367`, plague mechanic, Hanseatic faction score, faith triple-track (orthodox/reform/folk), 4 new Baltic nodes (LB/DZ/RG/BG), 6 arc seeds, historical NPCs. Full spec in `Year1367AD.md`. |
 | **§EDITOR-02-FU** | Mission Builder follow-ups — branching arcs, drag-reorder step list (shared w/ §EDITOR-01-D-FU), whole-arc UQF export → §EDITOR-03. (Core Inc 1–4 ✅ shipped 2026-06-27 — see Implemented Features.) |
+| **§NAV-01** | Navigable World: MUD-coherent map + fungal road net — measured diagnosis (235 named cells / 27,610 passable; median 33 blind steps from start), current-flow + layered L0–L8 flowcharts, `ROAD_RUNS` road net, room layer (`describeCell`), auto-travel, worldbuilder drag-&-lock cities + draggable road-net editor. Spec: `plan.md §NAV-01` (2026-07-01), increments a–h. |
 
 ### Version Snapshots
 

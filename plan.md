@@ -113,6 +113,8 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 
 ### §RESUME — Continue Here
 
+> **⟶ ACTIVE WORK REDIRECTED 2026-07-01 (user directive): §NAV-01 — Navigable World / MUD-coherent map + fungal road net (see its section below).** Increment order a→h, one per "continue". UQF Wave 3 (side quests → declarative completion) resumes after §NAV-01 or on explicit request; everything below this line is the UQF migration context, kept verbatim for that resume.
+>
 > **Updated 2026-06-30 · branch `main` · last commit `e602d92` (Wave 2bc / `quest_*` singletons).** Wave 2bc migrated 11 `quest_*` singletons (out of 82 total — 71 already UQF, 11 legacy); mixed gates: 7 `_legacyFn` + 3 flags + 1 empty; all have xpAward → `reward` bit; 10/11 also have `mission_bit`; 3 with goldAward; retryable quests stay `active` on fail. Wave 2bb migrated `stn` (11, THIRD & LAST §SKILLFIX-02 family; 10/11 skill-name mapped, 1 "Wisdom"→WIS direct; **§SKILLFIX-02 trio COMPLETE**). Wave 2ba migrated `sen` (19, SECOND §SKILLFIX-02 family; gate split 12/7). Wave 2ax migrated `cph` (29, 9th head of the CLEAN mid-tail — no-underscore `cphNNN_actN` ids, 7 chapters × 5 acts minus 6 combat siblings (c1 has 2 at act2+act4; c2/c3/c5/c7 each have 1); SEVEN per-chapter internal chains gate split 22/7; UPPERCASE checkStat WIS/CHA only; CLEAN, mapped 0). Wave 2aw migrated `mol` (30, 8th head of the CLEAN mid-tail — Laxdæla saga arc, no-underscore `molNNN_actN` ids, 7 chapters × 5 acts minus 5 combat siblings (one act3 per chapter in c1/c4/c5/c6/c7; c2/c3 have all 5 acts); SEVEN per-chapter internal chains gate split 23/7; UPPERCASE checkStat WIS/CHA/DEX/STR; CLEAN, mapped 0). Wave 2av migrated `fro` (32, 7th head of the CLEAN mid-tail — Völsunga saga arc, single `fro_cNaM` ids, 7 chapters × 5 acts minus 3 type-gated siblings: 2 hybrid `fro_c1a3`/`fro_c5a3` + 1 combat `fro_c2a4`; SEVEN per-chapter internal chains gate split 25/7; UPPERCASE checkStat WIS/CHA/INT/DEX/CON; CLEAN, mapped 0). Wave 2au migrated `hty` (33, 6th head of the CLEAN mid-tail, FIRST MIXED flag/flagless mid-tail family — no-underscore `htyNN_actN` ids, 26 flag-bearing + 7 flagless (each chapter's act5 → `onPass:[]`), SEVEN per-chapter internal chains gate split 26/7; LOWERCASE checkStat cha/int/wis → real mod; CLEAN, mapped 0; TWO combat type-gated siblings `hty02_act4`/`hty06_act4` skipped). Wave 2at migrated `lbc` (33, 5th head of the CLEAN mid-tail, STRUCTURAL TWIN of `mse`/`lhr`/`cid` — `lbc_cNaM` ids, SEVEN per-chapter internal chains gate split 26/7; UPPERCASE checkStat ALL SIX abilities; CLEAN, mapped 0; TWO hybrid type-gated siblings `lbc_c1a3`/`lbc_c5a4` skipped). Wave 2as migrated `cid` (34, 4th head of the CLEAN mid-tail, STRUCTURAL TWIN of `mse`/`lhr` — `cid_cNaM` ids, SEVEN per-chapter internal chains gate split 27/7; UPPERCASE checkStat ALL SIX abilities; CLEAN, mapped 0; ONE combat type-gated sibling `cid_c2a4` skipped). Wave 2ar migrated `lhr` (34, 3rd head of the CLEAN mid-tail, STRUCTURAL TWIN of `mse` — `lhr_NN_actN` ids, SEVEN per-chapter internal chains gate split 27/7; UPPERCASE checkStat CHA/INT/STR/WIS; CLEAN, mapped 0; ONE combat type-gated sibling `lhr_02_act2` skipped). Wave 2aq migrated `mse` (34, 2nd head of the CLEAN mid-tail — Theseus/tournament classical arc; single `mse_cNaM` ids, SEVEN per-chapter internal chains, gate split 27/7; UPPERCASE checkStat CHA/CON/INT/STR/WIS; CLEAN, mapped 0; ONE combat type-gated sibling `mse_c2a4` skipped). Wave 2ap migrated `mla` (34, first head of the CLEAN mid-tail — Renaissance/classical-lives "Comparisons"/Tiro/Alcibiades/Gracchus arc; 7 sub-arcs chained into ONE cross-arc linear chain, gate split 33/1; LOWERCASE checkStat dex/cha/int/wis → real mod; CLEAN, mapped 0). Active work = **§ARCH-01 Phase 3 UQF migration**, **Wave 2 (script-assisted bulk)** in progress, **one family/cluster per "continue"** per the Directive. Each increment: migrate the next family via `scripts/uqf-bulk-migrate.js` → commit → `say` the subject → sync plan.md / index.md / the migration playbook → `npx playwright test quest-runtime-uqf` + `npm run check:walk` + `npx playwright test navigation`.
 >
 > **Verification (current):** `quest-runtime-uqf` **234 passed** (incl. Wave 2bc `quest_*` +2); `check:walk` green (0 content mismatches); `navigation` 14/14. **~2462 quests on UQF.** **§SKILLFIX-02 trio COMPLETE (man+sen+stn). Wave 2 COMPLETE.** **Wave 1 COMPLETE** (~115 quests). **Wave 2 in progress:** **`hav_*`** (30) + **`ada*`** (235) + **`ath*`** (113) + **`lis*`** (89) + **`zth*`** (75) + **`flr*`** (71) + **`hft_*`** (50) + **`rkv_*`** (50) + **`ist_*`** (48) + **`rix_*`** (47) + **`ost_*`** (46) + **`arn_*`** (43) families bulk-migrated (hft/rkv/rix/ost/arn = mixed flag/flagless; ist = first §SKILLFIX-02; rix/ost/arn = no §SKILLFIX-02). **§SKILLFIX-02 (user-approved):** ~176 skill_checks store a D&D **skill name** in `checkStat` (legacy rolled them at +0 ability mod — a latent bug; the UQF contract needs a real ability), so the migrator now **maps skill→governing ability** (the `skill` field keeps the name for display+proficiency); a deliberate behavior fix, parity asserted on display+structure+mapping. **~897 of ~2350 well-formed legacy skill_checks migrated; ~1451 remain.** Docs synced.
@@ -131,6 +133,96 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 > 6. **Gates:** `npx playwright test quest-runtime-uqf` (expect +N), then `... --grep "Wave 2" --repeat-each=3` (roll-outcome stability), `npm run check:walk`, `npx playwright test navigation` (14/14).
 > 7. **Commit** (stage only `roll2hit-v3.html` + the test file + `plan.md` + the playbook — NOT `playwright-report/`/`salvage/`), with the `Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>` trailer. **`say`** the subject. **Sync docs:** backfill the prior wave's `b299595` → its real hash in the playbook, add the new wave's row (Section-1 + Section-4 tables), bump counts/last-commit in this §RESUME + the §ARCH-01 entry.
 > **Latent decision deferred to W6/W7:** Wave 2 leaves `gate:{}`/`gate:{flags:[…]}` driving activation but the legacy `activateCond` was *deleted* only when trivial — there are none kept here (0 complex), so nothing is dual-gated. The `mission_bit` token-on-pass is now the single grant path; no consumer reads these passFlags as anything but `S_story.<flag>` booleans (re-confirm with a grep if a family's flags look load-bearing).
+
+### §NAV-01 — Navigable World: MUD-Coherent Map + Fungal Road Net (⚠️ PLANNED 2026-07-01 · Inc a/b IN PROGRESS)
+
+> **User directive (2026-07-01):** make the map playable *like a MUD* — walkable paths between cells, quests + locations connected by roads; worldbuilder gains drag-and-lock city placement and a draggable road "net" (chain links, intersections, T-junctions — "fungal roads" / world highways). This supersedes UQF Wave 3 as the active work item.
+
+#### 1. Diagnosis — why the map is not navigable (measured 2026-07-01)
+
+The §WALK series is genuinely done (`check:walk` green, mover parity byte-identical, 0 junction stubs, 235/235 named cells reachable from Birka). **The kernel works; the game layer above it is a featureless raster.** Measured on the live file:
+
+- **410 nodes collapse into 235 occupied cells** — 0.85% of the 27,610 passable band cells. Cities cluster (median nearest-neighbor = **1 step**), but the clusters float in a void: from the LHR/Birka start the **median named cell is 33 blind steps away, p90 = 66, max = 102 (MLN)**. 2,829 quests across 353 activateNodes sit on the far side of that void.
+- **Every empty cell is textually identical** — `_enterEmptyCell` always prints *"The path continues. No named location marks this ground."* + raw `Row r, Col c`. No landmark, no direction, no distance. >99% of walkable space carries zero information.
+- **Every empty step is an encounter roll** (0.10–0.35 by terrain). A 33-step trip ≈ 5–8 forced battles. `TERRAIN_ENCOUNTER_RATE.road = 0` exists but **no cell ever resolves to `road`** — there is no road data.
+- **No auto-travel.** The WP button (`storyWaypoint`) moves exactly **one cell per click**. `_bfsGridPath` computes a full route and nothing executes it.
+- **BUG — stale waypoint origin:** `_bfsGridDir(S_story.currentCode, wp)` routes from the *last named node* (`NODE_COORDS[fromCode]`), not from `playerR/playerC` — `cellMove` never updates `currentCode` on empty cells, so the WP arrow/D-pad highlight is wrong for the entire wilderness leg of a journey.
+- **BUG — pre-§WALK-1.5 bounds:** `_updateExitLinks` (~32795) and `_bfsGridPath` (~33022) still clamp to the **old 500×500 grid** (`nr>=1 && nc<=500`, no E/W wrap) while the kernel walks 90×360-with-wrap. Exit UI and BFS disagree with the mover at row 0 and the antimeridian.
+- **Minimap/world map show unvisited nodes as `?`**, fog past distance 3, no waypoint marker, no road rendering. Quest "📍 Navigate →" sets a waypoint but never shows distance or direction.
+
+**Root cause in one line:** a MUD is *rooms + exits + descriptions*; we built accurate geography but only 235 rooms and no exits worth describing — the space between locations is undifferentiated, dangerous, and unsigned.
+
+#### 2. Current navigation flow (as-built)
+
+```mermaid
+flowchart TD
+  K[Keyboard N/S/E/W · D-pad btn-N/S/E/W · exit-line click] --> CM["cellMove(dir)  (~26152)"]
+  WPB[WP button · storyWaypoint ~33052] -->|ONE step per click| CM
+  WPB -.-> BFS["_bfsGridDir/_bfsGridPath (~33004)
+⚠ origin = last named node, not player pos
+⚠ 500×500 bounds, no E/W wrap"]
+  CM --> MV{"Mover.move (mover.js kernel)
+oob? sea?"}
+  MV -->|blocked| BLK["storyBlock('No path leads that way.')"]
+  MV -->|"ok → named cell"| SR["currentCode = dest; storyRender(node)
+quests · NPCs · battle · vignettes"]
+  MV -->|"ok → empty cell"| EC["_enterEmptyCell (~26219)
+'The path continues…' (identical everywhere)
+currentCode NOT updated"]
+  EC --> ENC{"Math.random() < rate(terrain)
+0.10–0.35"}
+  ENC -->|yes| BAT[_startStoryBattle]
+  EC --> MM["_renderMiniMap 11×17, fog>3, no target marker"]
+  EC --> EX["_updateExitLinks — 1-cell lookahead only
+⚠ 500×500 bounds"]
+```
+
+#### 3. Target layered architecture
+
+```mermaid
+flowchart BT
+  L0["L0 GEOMETRY — GEO_PROJ 90×360 equirect 1°, mover.js kernel (FROZEN — untouched by §NAV-01)"]
+  L1["L1 PASSABILITY — SEA_RUNS→IMPASSABLE_CELLS · SEA_LANES (FROZEN)"]
+  L2["L2 TERRAIN FIELD — _inferTerrain / server terrainAt / WORLD_DB / encounter rates
++ NEW: ROAD_CELLS override → 'road' (rate 0)"]
+  L3["L3 ROAD GRAPH (NEW) — ROAD_RUNS fungal net: BFS trunk corridors, intersections, T-junctions
+generated by scripts/build-roads.js, committed as RLE data block (like SEA_RUNS)"]
+  L4["L4 ROOMS (NEW) — describeCell(r,c) → {title, prose, exits[], signposts[]}
+deterministic per-terrain prose · road signage 'toward X (n)' · ROOMS:CORE shared client+server"]
+  L5["L5 ROUTING & TRAVEL — pos-origin geo-BFS (wrap, band clamp) · road-weighted pathing · auto-travel loop"]
+  L6["L6 QUEST WAYFINDING — Navigate→waypoint + distance/direction readout · arrival detection · journal hints"]
+  L7["L7 PRESENTATION — exits panel w/ signage · minimap roads + waypoint ★ · D-pad · travel button"]
+  L8["L8 MUD SERVER — session/move + look return the same L4 room description · SSE co-presence"]
+  L0 --> L1 --> L2 --> L3 --> L4 --> L5 --> L6 --> L7
+  L4 --> L8
+```
+
+**Layer contract:** each layer reads only layers below it. The mover kernel (L0/L1) is never edited — roads are *terrain*, not permissions, so the Free-Movement invariant (`__moverBlocked` reasons stay exactly `'oob'`/`'sea'`; 0 gate refs in mover) is preserved by construction. Roads make travel *safer and legible*, never *required*.
+
+#### 4. Data shapes (locked)
+
+- **`ROAD_RUNS`** (game file, after `SEA_LANES`): RLE `{row:[[c0,c1],…]}` exactly like `SEA_RUNS`; builds `ROAD_CELLS` Set at load. Server parses the literal (new `getRoadCells()`, same pattern as `getSeaLanes()`). **Generator `scripts/build-roads.js`:** settlement graph = 235 occupied cells; edges = k-nearest (k≤3, BFS dist ≤ 30) + MST over the cluster graph (guarantees one component); corridor = BFS shortest path where **already-roaded cells cost 0.5** — trunk reuse is what makes the net *fungal* (organic trunks, natural intersections + T-junctions instead of 235² spaghetti). Excludes named cells + sea; SEA_LANES stay `ocean` (crossings keep their 0.10 risk — a deliberate texture). Deterministic; committed as data.
+- **`_inferTerrain` / server `terrainAt` precedence:** `SEA_LANES → 'ocean'` ▸ `ROAD_CELLS → 'road'` ▸ majority-of-named-neighbors ▸ `'midlands'`. Both copies + `scripts/check-terrain-parity.js` updated in the same increment.
+- **`describeCell(r,c) → room`** (Inc c, ROOMS:CORE inlined byte-identically like MOVER:CORE): `{icon, title, sub, body, exits:[{dir, kind:'node'|'road'|'terrain'|'blocked', label, hint}], signposts:[{label, dir, steps}]}`. Prose = 3–5 variants per terrain keyed by `hash(r,c)` (no `Math.random` — deterministic for MUD parity + tests). Road cells describe the highway and name the **next settlement along the road** in each road direction; every empty cell lists nearest landmarks within BFS radius 12.
+- **Waypoint/travel state:** `S_story.waypoint` (exists) + travel loop flag; origin for all routing = `{r:S_story.playerR, c:S_story.playerC}` — **never** `NODE_COORDS[currentCode]`.
+- **Worldbuilder net editor data:** `roads-pins.json` (repo root) — user-authored pins `{pins:[{r,c}], links:[[cellA,cellB]], locked:['CODE',…]}`; build-roads.js consumes pins as mandatory road vertices; `locked` codes are never moved by geo-seed/regeneration. New endpoints `GET/PUT /api/roads` (regenerate + patch ROAD_RUNS block), `PUT /api/coords` already exists for drag-drop city placement.
+
+#### 5. Increments (one per "continue", each: implement → gates → commit → `say` → sync docs)
+
+| Inc | Scope | Gates |
+|-----|-------|-------|
+| **a** | **Wayfinding correctness (game file only):** `_bfsGridPath`/`_bfsGridDir` take a `{r,c}` origin (player pos), geo bounds `0≤r<90` + E/W wrap (mirror `__moverStep`); `_updateExitLinks` passability = kernel rule (band clamp + wrap + IMPASSABLE), not 500×500; `storyWaypoint` routes from player pos. | `npx playwright test navigation` 14/14 · `check:walk` |
+| **b** | **Fungal road net:** `scripts/build-roads.js` → `ROAD_RUNS` block; `_inferTerrain` + server `terrainAt` road override; parity script updated; minimap road glyph (exists) now reachable; new `scripts/check-roads.js` invariants — R1 all 235 settlement cells on the road component, R2 single component, R3 road∩sea = ∅, road∩SEA_LANES = ∅, R4 road fraction < 10% of passable band. | `check:walk` (incl. terrain parity) · `check-roads` · navigation 14/14 |
+| **c** | **Room layer:** `describeCell` (ROOMS:CORE, new `rooms.js` + inline + parity check); `_enterEmptyCell` renders it (terrain prose variants, signposts, exits-with-signage); region name replaces raw `Row r, Col c`. | new `navigation` cases (deterministic prose, signpost correctness) · parity |
+| **d** | **Auto-travel:** WP button = travel loop along road-weighted BFS path (~120 ms/step, minimap+status update per step), interrupts on encounter/arrival/any-input/blocked; Shift+WP = single step (old behavior). Quest "Navigate →" starts travel. | navigation cases: travel reaches target, battle interrupts, input interrupts |
+| **e** | **Wayfinding UI:** exits panel shows `E→ road — toward Visby (4)`; minimap draws roads + waypoint ★ (edge-of-window direction when off-screen); quest journal + Navigate button show `(n steps, NE)`; world-map sheet renders road net. | navigation UI cases green |
+| **f** | **MUD server parity:** `session/move` + `look` responses carry the L4 room description; mud-harness asserts room text + signposts identical to client for same cell. | `npm run test:mud` 24/24 + new room cases |
+| **g** | **Worldbuilder — drag & lock cities:** Walk/Map tab: drag a node marker (ghost preview), drop → `PUT /api/coords` (existing endpoint; 1-node/cell guard per [[feedback_api_only_connections]]); lat/lon entry field converts via `row=floor(70−lat)`, `col=(floor(lon)+180)%360`; 🔒 lock toggle persists `locked` into `roads-pins.json`/gazetteer so regeneration never moves a locked city. | worldbuilder Playwright suite |
+| **h** | **Worldbuilder — road-net editor ("place the net"):** render ROAD_RUNS as a draggable chain-link overlay; drag a link vertex → pin (`roads-pins.json`); palette to add **+ intersections** and **T-junctions**; **Reweave Net** button = run build-roads.js with pins → `PUT /api/roads` patches the ROAD_RUNS block in-place. All mutations API-first. | worldbuilder suite + `check-roads` after every reweave |
+
+**Docs sync on close:** maps.md (road net section), docs-node-network.md (L0–L8 stack), mechanics.md, index.md registry row, `lab-reports/lab-report-nav01-navigable-world.md` (this diagnosis + the locked shapes above).
+
+**Non-goals / guard-rails:** no stored node-to-node edge lists (roads are cells, resurrecting no §CELL-era pointer graph); no movement gating ever (roads are sugar, the open field stays walkable); no re-projection (coords are settled — §NAV-01g moves individual cities only, via API); mover.js untouched.
 
 ### Tooling
 
