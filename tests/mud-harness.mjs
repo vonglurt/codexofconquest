@@ -432,6 +432,28 @@ async function main() {
   await waitFor(() => /MESH REACHABILITY/.test(mK.stderr), 2000);
   check(/MESH REACHABILITY/.test(mK.stderr), 'the reachability warning is printed loudly at startup');
 
+  // ════════ (i) §MESH-01-FU 2 — world name/tag + server-browser data ════════
+  console.log('\n[I] §MESH-01-FU 2 — WORLD_NAME tag + tracker server-browser rows');
+  const manMain = await jget('/manifest');
+  check(manMain.worldName === 'Roll2Hit'
+    && manMain.worldTag === 'Roll2Hit-' + manMain.worldHash.slice(0, 5),
+    'manifest parses WORLD_NAME from the game file and derives worldTag <name>-<hash5>');
+  // A named server announces → the tracker row carries name + worldName + worldTag.
+  await startServer(PORT + 16, mkEnv(PORT + 16, '1'.repeat(32),
+    { TRACKER_URL: trk.base, MESH_ANNOUNCE_MS: '150', SERVER_NAME: 'Hub Alpha' }));
+  let hubRow = null;
+  for (let i = 0; i < 40 && !hubRow; i++) {
+    await sleep(150);
+    hubRow = ((await jget(`/tracker/peers?wh=${manMain.worldHash}`, trk.base)).servers || [])
+      .find((s) => s.name === 'Hub Alpha');
+  }
+  check(!!hubRow && hubRow.worldName === 'Roll2Hit'
+    && hubRow.worldTag === 'Roll2Hit-' + manMain.worldHash.slice(0, 5),
+    'tracker rows carry server name + worldName + worldTag (the server-browser data)');
+  const stTrk = await jget('/mesh/status', trk.base);
+  check((stTrk.trackerGroups || []).some((g) => g.worldTag === 'Roll2Hit-' + manMain.worldHash.slice(0, 5)),
+    'tracker world groups are tagged (mesh/status.trackerGroups[].worldTag)');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});

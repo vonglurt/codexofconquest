@@ -105,6 +105,11 @@ const PORT      = parseInt(process.env.PORT || '1367');
 const BIND_ADDR = process.env.BIND_ADDR
   || process.argv.find((a, i) => process.argv[i-1] === '--bind')
   || '127.0.0.1';
+// §MESH-01-FU 2 — human-facing server name for tracker announces / the server
+// browser (the tracker already stores + returns a `name` per announce record).
+const SERVER_NAME = String(process.env.SERVER_NAME
+  || process.argv.find((a, i) => process.argv[i-1] === '--name')
+  || require('os').hostname() || 'r2h-server').slice(0, 60);
 const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(__dirname, 'roll2hit-v3.html');
@@ -181,12 +186,20 @@ function getManifest() {
   }
   const evm = src.match(/const\s+ENGINE_VER\s*=\s*['"]([^'"]+)['"]/);
   const engineVer = (evm && evm[1]) || 'unversioned';
+  // §MESH-01-FU: WORLD_NAME is a DISPLAY tag parsed from the game file (mods
+  // rename their world there). Deliberately NOT hashed — renaming a world never
+  // forks the swarm; identity stays (proto, engineVer, worldHash).
+  const wnm = src.match(/const\s+WORLD_NAME\s*=\s*['"]([^'"]+)['"]/);
+  const worldName = ((wnm && wnm[1]) || 'world').slice(0, 40);
   // MESH_WORLDHASH_OVERRIDE exists ONLY for the harness incompatibility test.
   const worldHash = process.env.MESH_WORLDHASH_OVERRIDE
     || sha16(engineVer + '|' + MANIFEST_PARTS.map((n) => parts[n.toLowerCase()]).join('|'));
-  _mani = { proto: MESH_PROTO, engineVer, worldHash, parts };
+  _mani = { proto: MESH_PROTO, engineVer, worldName, worldTag: worldTag(worldName, worldHash), worldHash, parts };
   return _mani;
 }
+// The human-facing world handle: `NextWorldMod-131ea` — easy name + enough
+// hash to tell two same-named (or renamed same-data) worlds apart at a glance.
+function worldTag(name, hash) { return `${name || 'world'}-${String(hash).slice(0, 5)}`; }
 
 // ACL — mesh-acl.json (repo root, hot-reloaded on mtime change). Applied to
 // gossip ingress, gossip responses, and dial-out. mode:'allowlist' = private
@@ -418,7 +431,7 @@ function trackerRecordsOut() {
   const now = Date.now();
   return [...TRACKER.entries()].map(([id, r]) => ({
     serverId: id, addr: r.addr, proto: r.proto, engineVer: r.engineVer, worldHash: r.worldHash,
-    playerCount: r.playerCount, name: r.name, ageMs: now - r.lastSeen,
+    playerCount: r.playerCount, name: r.name, worldName: r.worldName, ageMs: now - r.lastSeen,
   }));
 }
 function trackerMergeRecords(records, ip) {
@@ -434,7 +447,8 @@ function trackerMergeRecords(records, ip) {
     if (!existing && TRACKER.size >= TRACKER_MAX_RECORDS) continue;       // full — updates only
     TRACKER.set(rec.serverId, {
       addr: rec.addr, proto: rec.proto, engineVer: rec.engineVer, worldHash: rec.worldHash,
-      playerCount: rec.playerCount | 0, name: String(rec.name || '').slice(0, 60), lastSeen,
+      playerCount: rec.playerCount | 0, name: String(rec.name || '').slice(0, 60),
+      worldName: String(rec.worldName || '').slice(0, 40), lastSeen,
     });
     merged++;
   }
@@ -473,7 +487,8 @@ async function trackerAnnounceRound() {
       const resp = await fetch(u.replace(/\/+$/, '') + '/api/tracker/announce', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ serverId: getServerId(), addr: meshAdvertise(), proto: m.proto,
-          engineVer: m.engineVer, worldHash: m.worldHash, playerCount: SESSIONS.size }),
+          engineVer: m.engineVer, worldHash: m.worldHash, worldName: m.worldName,
+          playerCount: SESSIONS.size, name: SERVER_NAME }),
       });
       const data = await resp.json().catch(() => ({}));
       if (resp.ok && data.ok) {
@@ -2517,7 +2532,8 @@ async function route(req, res) {
       logResponse(method, url.pathname, 503, 'tracker full');
       return json(res, 503, { ok: false, reason: 'tracker-full' });
     }
-    TRACKER.set(serverId, { addr, proto, engineVer, worldHash, playerCount: (tb.playerCount | 0), name: String(tb.name || '').slice(0, 60), lastSeen: Date.now() });
+    TRACKER.set(serverId, { addr, proto, engineVer, worldHash, playerCount: (tb.playerCount | 0),
+      name: String(tb.name || '').slice(0, 60), worldName: String(tb.worldName || '').slice(0, 40), lastSeen: Date.now() });
     pushTraffic('in', 'announce', addr, true, `${serverId.slice(0, 8)} · wh:${String(worldHash).slice(0, 8)} · ${tb.playerCount | 0} player(s)`);
     // Same-group peers only — incompatible worlds are segregated, never mixed.
     const group = [];
@@ -2554,7 +2570,7 @@ async function route(req, res) {
     const rows = [];
     for (const [id, r] of TRACKER)
       if ((!wh || r.worldHash === wh) && (!ev || r.engineVer === ev) && (!pr || String(r.proto) === pr))
-        rows.push({ serverId: id, ...r });
+        rows.push({ serverId: id, ...r, worldTag: worldTag(r.worldName, r.worldHash) });
     if ((url.searchParams.get('format') || '') === 'txt') {
       cors(res);
       res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
@@ -2605,14 +2621,17 @@ async function route(req, res) {
     const groups = {};
     for (const [, r] of TRACKER) {
       const k = `${r.engineVer} · ${r.worldHash}`;
-      groups[k] = groups[k] || { engineVer: r.engineVer, worldHash: r.worldHash, servers: 0, players: 0 };
+      groups[k] = groups[k] || { engineVer: r.engineVer, worldHash: r.worldHash,
+        worldTag: worldTag(r.worldName, r.worldHash), servers: 0, players: 0 };
       groups[k].servers++; groups[k].players += r.playerCount || 0;
     }
     logResponse(method, url.pathname, 200, `mesh status: ${peers.length} peer(s) · ${remotePlayers.length} remote player(s) · ${MESH.traffic.length} pkt(s)`);
     return json(res, 200, {
       ok: true, trackerMode: TRACKER_MODE, serverId: getServerId().slice(0, 8), addr: meshAdvertise(),
+      name: SERVER_NAME,
       reachability: { bind: BIND_ADDR, advertise: meshAdvertise(), warnings: meshReachabilityWarnings() },
-      proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash, parts: m.parts,
+      proto: m.proto, engineVer: m.engineVer, worldName: m.worldName, worldTag: m.worldTag,
+      worldHash: m.worldHash, parts: m.parts,
       trackerUrls: [...new Set([...TRACKER_URLS, ...MESH_TRACKER_URLS])],
       acl: { mode: getAcl().mode || 'open', file: path.basename(ACL_FILE) },
       localPlayers: SESSIONS.size, peers, remotePlayers,

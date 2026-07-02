@@ -9849,6 +9849,11 @@ window.wkGo        = wkGo;
       </div>
     </div>
     <div>
+      <div class="mesh-hd">🔭 Server browser — live servers per configured tracker
+        <button class="btn sm" style="margin-left:8px" onclick="meshBrowse()">refresh + ping</button></div>
+      <div id="mesh-browser" class="mesh-box"><div style="color:var(--muted)">press refresh — needs a configured tracker</div></div>
+    </div>
+    <div>
       <div class="mesh-hd">📦 Information passed — most recent first <span id="mesh-pkt-count"></span></div>
       <div id="mesh-traffic" class="mesh-box" style="max-height:340px;overflow-y:auto;font-family:ui-monospace,monospace;font-size:10px;line-height:1.7"></div>
     </div>
@@ -9887,16 +9892,19 @@ window.wkGo        = wkGo;
   const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const ago = (ms) => ms == null ? '' : (ms < 1500 ? 'now' : Math.round(ms / 1000) + 's ago');
 
+  let _lastStatus = null;   // §MESH-01-FU 2: meshBrowse() reads trackerUrls/worldHash from here
   function renderMeshStatus(d) {
+    _lastStatus = d;
     const el = (id) => document.getElementById(id);
     el('mesh-identity').innerHTML = (d.trackerMode ? '<b>TRACKER MODE</b> (rendezvous only) · ' : '') +
+      (d.worldTag ? `🌍 <b>${esc(d.worldTag)}</b> · ` : '') +
       `serverId <b>${esc(d.serverId)}</b> @ ${esc(d.addr)} · ${esc(d.engineVer)} · worldHash <b>${esc(d.worldHash)}</b> · proto ${esc(d.proto)}` +
       ` · ${d.localPlayers | 0} local player(s) · ACL <b>${esc(d.acl && d.acl.mode)}</b>`;
     el('mesh-trackers').innerHTML = [
       ...((d.trackerUrls && d.trackerUrls.length)
         ? d.trackerUrls.map((u) => `<div>📡 announce → ${esc(u)}</div>`)
         : ['<div style="color:var(--muted)">no tracker configured — set TRACKER_URL, a `tracker` line in peers.txt, or BOOTSTRAP_URLS</div>']),
-      ...(d.trackerGroups || []).map((g) => `<div>🌍 ${esc(g.engineVer)} · <b>${esc(g.worldHash)}</b> — ${g.servers} server(s), ${g.players} player(s)</div>`),
+      ...(d.trackerGroups || []).map((g) => `<div>🌍 ${g.worldTag ? `<b>${esc(g.worldTag)}</b> · ` : ''}${esc(g.engineVer)} · <b>${esc(g.worldHash)}</b> — ${g.servers} server(s), ${g.players} player(s)</div>`),
     ].join('');
     el('mesh-peers').innerHTML = (d.peers && d.peers.length)
       ? d.peers.map((p) => `<div>${p.live ? '🟢' : (p.lastErr ? '🔴' : '⚪')} <b>${esc(p.addr)}</b>` +
@@ -9969,7 +9977,45 @@ window.wkGo        = wkGo;
       st.textContent = `Download failed: ${e.message}`;
     }
   };
-  window.__meshTest = { renderMeshStatus };   // server-free hook for the Playwright spec
+  // §MESH-01-FU 2 — server browser: asks each configured tracker for its live
+  // servers and pings each from the browser. On-demand (button), not on the 2 s
+  // status poll — pings are real traffic to other people's servers.
+  function renderServerBrowser(rows, ownWorldHash) {
+    const box = document.getElementById('mesh-browser');
+    rows = (rows || []).filter((s) => s && /^[\w.-]+:\d+$/.test(s.addr || ''));
+    if (!rows.length) { box.innerHTML = '<div style="color:var(--muted)">tracker(s) answered, but no live servers announced</div>'; return; }
+    box.innerHTML = rows.map((s, i) =>
+      `<div>🖥 <b>${esc(s.name || s.addr)}</b>` +
+      (s.worldTag ? ` · 🌍 <b>${esc(s.worldTag)}</b>` : '') +
+      ` · ${esc(s.addr)} · 👥 ${s.playerCount | 0}` +
+      (ownWorldHash && s.worldHash !== ownWorldHash ? ' · <span style="color:var(--yellow,#d4a017)">different world</span>' : '') +
+      ` · <span id="mesh-srv-ping-${i}">… ms</span>` +
+      ` · <a href="#" style="color:var(--accent)" onclick="navigator.clipboard&&navigator.clipboard.writeText('${esc(s.addr)}');this.textContent='copied';return false">copy addr</a></div>`).join('');
+    rows.forEach(async (s, i) => {
+      const el = () => document.getElementById(`mesh-srv-ping-${i}`);
+      try {
+        const t0 = performance.now();
+        const r = await fetch(`http://${s.addr}/api/ping`);
+        if (!r.ok) throw new Error();
+        if (el()) el().textContent = `${Math.max(1, Math.round(performance.now() - t0))} ms`;
+      } catch { if (el()) { el().textContent = 'unreachable'; el().style.color = 'var(--red,#e05555)'; } }
+    });
+  }
+  window.meshBrowse = async () => {
+    const box = document.getElementById('mesh-browser');
+    const urls = (_lastStatus && _lastStatus.trackerUrls) || [];
+    if (!urls.length) { box.innerHTML = '<div style="color:var(--muted)">no tracker configured — set TRACKER_URL, a `tracker` line in peers.txt, or BOOTSTRAP_URLS</div>'; return; }
+    box.innerHTML = '<div style="color:var(--muted)">asking tracker(s)…</div>';
+    const seen = new Map();
+    for (const u of urls) {
+      try {
+        const data = await (await fetch(`${u.replace(/\/+$/, '')}/api/tracker/peers`)).json();
+        for (const s of (data.servers || [])) if (!seen.has(s.serverId)) seen.set(s.serverId, s);
+      } catch {}
+    }
+    renderServerBrowser([...seen.values()], _lastStatus && _lastStatus.worldHash);
+  };
+  window.__meshTest = { renderMeshStatus, renderServerBrowser };   // server-free hooks for the Playwright spec
 })();
 </script>
 </body>
