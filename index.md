@@ -83,7 +83,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `froberger-journal-all-entries.txt` | All 41 Froberger journal entries verbatim | ✅ Verified 41/41 (2026-05-24) |
 | `ux-first-battles.md` | First battles UX walkthrough, 10 UX fixes, wimper/flee flow | ✅ Accurate for L0–37 |
 | `5thOrgan.html` | Standalone polyphonic pipe organ synthesizer (72 oscillators, Beethoven canon) | ✅ 2026-05-24 |
-| `worldbuilder.html` | World Builder UI — 16 tabs: Map, Bestiary, Loot, NPCs, Quests, Dice Lab, CRUD, API, Audit, Stats, Endpoints, Builder, Wizard, Grid, ✏ Editor (§EDITOR-01), 🚶 Walk (§WALK) | ✅ 2026-06-15 |
+| `worldbuilder.html` | World Builder UI — 17 tabs: Map, Bestiary, Loot, NPCs, Quests, Dice Lab, CRUD, API, Audit, Stats, Endpoints, Builder, Wizard, ✏ Editor (§EDITOR-01), ⛓ Mission (§EDITOR-02), 🚶 Walk (§WALK), 🌐 Mesh (§MESH-01) | ✅ 2026-07-02 |
 | `Saul2Paul.txt` | §FUTURE-01 reference text — Paul's journey from Acts/Pauline letters, itinerary notes | ✅ |
 | `littoral-courts-story.txt` | §SIREN-01 vignette prose — Littoral Courts story text, French register source | ✅ |
 
@@ -125,6 +125,7 @@ Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI serve
 | `tests/integration/autosave.spec.js` | Autosave on navigation, save-and-verify discipline (§UNIFY-09) | ~4 tests |
 | `tests/integration/worldbuilder-walk.test.js` | **§WALK** tab in worldbuilder.html — load/nav/chips/D-pad/keyboard/neighbor list/edit form/dirty tracking/quest panel/coord index/cross-tab buttons | **73 tests** |
 | `tests/integration/multiplayer-presence.test.js` | **§MESH-01a** two-browser presence smoke — spawns a throwaway wbapi-server; connect via 🌐, "Also here:", exactly-once SSE chat, player_left on departure, strict opt-in | 2 tests |
+| `tests/integration/worldbuilder-mesh.test.js` | **§MESH-01 UI** 🌐 Mesh tab — fixture-driven render (identity/trackers/peers/remotes/packet log) + offline fallback | 2 tests |
 
 ### Completed Work Registry
 
