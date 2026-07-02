@@ -13,23 +13,7 @@
 4. **Restart server after adding endpoints** — `./wbapi-toggle.sh restart` (or `start` if stopped).
 5. **When adding items to plan.md** — cross-reference current state with `./api.sh audit` and `./api.sh list <type>` to confirm what actually exists vs. what the plan assumes.
 
-**CLI quick reference (`./api.sh`):**
-```bash
-./api.sh ping                              # health check
-./api.sh get node LHR                      # fetch node + connections + _meta
-./api.sh list quest --node LHR             # quests at a node
-./api.sh list npc --node LHR               # NPCs at a node
-./api.sh list monster --terrain city       # monsters by terrain
-./api.sh put quest quest_wis_01 passText="..." # update field
-./api.sh post quest id=q_foo npc=aldric type=side activateNode=CY title="..." # create
-./api.sh del quest quest_old_01            # delete (nonce auto-handled)
-./api.sh audit                             # full integrity scan (includes §ARCH-02 bits advisory)
-./api.sh chain quest_wis_01               # quest dependency chain
-./api.sh advise quest_wis_01              # quest fields + chain + advisory in one call
-./api.sh export quest_db --out quests.json # dump collection to file
-./api.sh location CY                       # composite node view
-./api.sh --ai "how do I link two nodes?"  # ask Claude (ANTHROPIC_API_KEY)
-```
+> *«cli-quick-reference» archived to plan-archive.md (2026-07-02). Day-to-day: ./api.sh help. Full reference: wbapi-help.md + API-README.md.*
 
 **Single source of truth:** `roll2hit-v3.html` is the entire game. The API reads its text directly and writes mutations back in-place. `wbapi-server.js` and `worldbuilder.html` are authoring tools — the game requires neither at runtime.
 
@@ -54,18 +38,9 @@ This is a hard invariant, not a preference. Two distinct, non-overlapping mechan
 
 **Allowed:** gating mission *listing* (sequential arc unlock, prerequisite missions, flag/node/battle-conditioned availability). **Forbidden:** gating *movement* on quest/flag state (a quest that bars a road, an exit that won't open until a mission is done, an NPC who physically blocks a cell).
 
-**Enforcement / audit (run before shipping any movement or quest-availability change):**
-- `grep -nE "canActivate|\.gate\b" mover.js` → must stay **0** (the movement kernel never reads quest gates).
-- The only `__moverBlocked` reasons may be `'oob'` and `'sea'`; adding a quest/flag-derived block reason is a policy violation.
-- `QuestRuntime.canActivate` / `q.gate` may be referenced only by quest-listing/journal code (`storyCheckQuests`), never by `moverMove` / `_enterEmptyCell` / any entry handler.
+> *«free-movement-enforcement-audit» archived to plan-archive.md (2026-07-02). Re-run the mover-gate greps (archived) before shipping any movement or quest-availability change.*
 
-*(Verified true as of Wave 2g, 2026-06-29: mover has 0 gate refs; `canActivate` is called only in `storyCheckQuests`; the bulk UQF migration moves `activateCond`→`gate` 1:1, so it changes mission-listing logic only and touches movement nowhere.)*
-
-### Incremental Recitation Rule
-
-While writing vignette content, speak short segments aloud via `say` as you produce them — every page or every couple of paragraphs. Read the element type first, then its text.
-
-Run `say` blocking (no `&`) so each announcement completes before writing continues. Write to file incrementally — after each act, save and run the next `say` call. After every full vignette, commit and speak the commit subject.
+> *«incremental-recitation-rule» archived to plan-archive.md (2026-07-02). Applies only when writing vignette content: say each segment aloud, write incrementally, commit + speak per vignette.*
 
 ### Loop vs. Ask Rule
 
