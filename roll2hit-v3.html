@@ -2421,6 +2421,9 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #bot-compass { width: 130px; }
 #bot-local   { width: 162px; }
 #bot-world   { width: 202px; }
+#bot-globe   { width: 242px; }
+#globe-map-canvas { image-rendering: pixelated; border: 1px solid var(--border); border-radius: 3px; background: #0a2a4a; }
+#bot-globe .bot-section-hd { background: var(--c5); color: var(--c1); }
 #bot-exits   { width: 170px; }
 
 /* Vertical Aztec separator between nav and combat log */
@@ -4273,6 +4276,14 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           <div id="world-map-grid"></div>
           <div id="world-map-legend"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- Globe — the ENTIRE world (§NAV-01e) -->
+    <div class="bot-section" id="bot-globe">
+      <div class="bot-section-hd">GLOBE</div>
+      <div class="bot-section-body" style="display:flex;align-items:center;justify-content:center;flex:1;padding:4px">
+        <canvas id="globe-map-canvas" width="232" height="180"></canvas>
       </div>
     </div>
 
@@ -26513,8 +26524,12 @@ function _enterEmptyCell(r, c) {
       setTimeout(() => _startStoryBattle(monster, `Wild ${monster.name}`), 300);
     }
   }
-  // §CELL-10: refresh local minimap after entering empty cell
+  // §CELL-10 / §NAV-01e: refresh all three map panels after entering an empty
+  // cell — the world panel and globe previously went stale for the whole
+  // wilderness leg (they only re-rendered on named-cell arrivals).
   _renderMiniMap();
+  _renderWorldMiniMap();
+  _renderGlobeMap();
   _updateExitLinks();
 }
 
@@ -32201,6 +32216,7 @@ function storyRender(node, prefix) {
   storyCheckVictory(node);
   _renderMiniMap();
   _renderWorldMiniMap();
+  _renderGlobeMap();
   _updateExitLinks();
   _updateWaypointBtn();
 }
@@ -32836,17 +32852,17 @@ function _renderMapGrid() {
   _renderFullMap(cr, cc);   // §NAV-01e: full-world canvas below the radius grid
 }
 
-// §NAV-01e — FULL world map (canvas, rows 0–89 × cols 140–255 at 4 px/cell).
-// The static terrain layer is drawn once and cached as ImageData; each render
+// §NAV-01e — FULL world painter (canvas, rows 0–89 × cols 140–255). The static
+// terrain layer is drawn once per canvas and cached as ImageData; each render
 // re-stamps it and traces the two live viewports: the world panel (41×61,
 // gold) and the local map (11×17, bright gold), plus the player cell in red.
-let _fullMapBase = null;
-function _renderFullMap(pr, pc) {
-  const cv = document.getElementById('full-map-canvas');
-  if (!cv) return;
+// Used by the map tab (#full-map-canvas, 4 px/cell) and the story bottom bar's
+// GLOBE panel (#globe-map-canvas, 2 px/cell).
+const _fullMapBaseCache = {};
+function _paintFullWorld(cv, PX, pr, pc) {
   const ctx = cv.getContext('2d');
-  const C0 = 140, R0 = 0, PX = 4;
-  if (!_fullMapBase) {
+  const C0 = 140, R0 = 0;
+  if (!_fullMapBaseCache[cv.id]) {
     for (let r = 0; r <= 89; r++) {
       for (let c = 140; c <= 255; c++) {
         const key = r + ',' + c;
@@ -32855,15 +32871,18 @@ function _renderFullMap(pr, pc) {
         const terr = (code && NODE_MAP[code]) ? NODE_MAP[code].name : _inferTerrain(r, c);
         ctx.fillStyle = imp ? '#0a2a4a' : _terrainColor(terr);
         ctx.fillRect((c - C0) * PX, (r - R0) * PX, PX, PX);
-        if (code) {   // settlement — cream marker so the constellation reads
+        if (code && PX >= 3) {   // settlement — cream marker so the constellation reads
           ctx.fillStyle = '#f0e6c8';
           ctx.fillRect((c - C0) * PX + 1, (r - R0) * PX + 1, PX - 2, PX - 2);
+        } else if (code) {       // at 2 px/cell the marker is the whole cell
+          ctx.fillStyle = '#f0e6c8';
+          ctx.fillRect((c - C0) * PX, (r - R0) * PX, PX, PX);
         }
       }
     }
-    _fullMapBase = ctx.getImageData(0, 0, cv.width, cv.height);
+    _fullMapBaseCache[cv.id] = ctx.getImageData(0, 0, cv.width, cv.height);
   } else {
-    ctx.putImageData(_fullMapBase, 0, 0);
+    ctx.putImageData(_fullMapBaseCache[cv.id], 0, 0);
   }
   // world-panel viewport (matches _renderWorldMiniMap's wm_r0/wm_c0 window)
   const wr0 = Math.max(1, pr - 20), wc0 = Math.max(1, pc - 30);
@@ -32875,7 +32894,22 @@ function _renderFullMap(pr, pc) {
   ctx.strokeRect((pc - 8 - C0) * PX + 0.5, (pr - 5 - R0) * PX + 0.5, 17 * PX - 1, 11 * PX - 1);
   // player
   ctx.fillStyle = '#ff5030';
-  ctx.fillRect((pc - C0) * PX, (pr - R0) * PX, PX, PX);
+  ctx.fillRect((pc - C0) * PX, (pr - R0) * PX, Math.max(PX, 2), Math.max(PX, 2));
+}
+
+function _renderFullMap(pr, pc) {
+  const cv = document.getElementById('full-map-canvas');
+  if (cv) _paintFullWorld(cv, 4, pr, pc);
+}
+
+// §NAV-01e — GLOBE panel in the story bottom bar: the entire world at 2 px/cell
+function _renderGlobeMap() {
+  const cv = document.getElementById('globe-map-canvas');
+  if (!cv) return;
+  const nc_ = NODE_COORDS[S_story.currentCode];
+  const pr = S_story.playerR || (nc_ && nc_.r) || 0;
+  const pc = S_story.playerC || (nc_ && nc_.c) || 0;
+  _paintFullWorld(cv, 2, pr, pc);
 }
 
 // §NAV-01e — nodes that offer at least one quest (lazy, built once per session)

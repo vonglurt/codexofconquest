@@ -234,6 +234,30 @@ test.describe('§NAV-01 D-pad buttons move the player', () => {
     expect(m.innIcon).toBe('🛏');                     // amenity icons live
   });
 
+  test('GLOBE panel paints the entire world and tracks empty-cell steps (§NAV-01e)', async ({ page }) => {
+    const painted = await page.evaluate(() => {
+      const cv = document.getElementById('globe-map-canvas');
+      const px = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+      let n = 0;
+      for (let i = 0; i < px.length; i += 4) if (px[i] || px[i + 1] || px[i + 2]) n++;
+      return n;
+    });
+    expect(painted).toBeGreaterThan(5000);   // whole-world terrain layer drawn on load
+    // step into wilderness — the player marker (red) must move with you
+    const marker = await page.evaluate(() => {
+      const cv = document.getElementById('globe-map-canvas');
+      const at = (r, c) => {
+        const d = cv.getContext('2d').getImageData((c - 140) * 2, r * 2, 1, 1).data;
+        return d[0] > 200 && d[1] < 120;   // red-ish player pixel
+      };
+      const before = at(9, 197);
+      const o = Math.random; Math.random = () => 1; cellMove('N'); Math.random = o;
+      return { before, after: at(9, 197) };
+    });
+    expect(marker.before).toBe(false);
+    expect(marker.after).toBe(true);
+  });
+
   test('local minimap paints terrain colours like the world map (§NAV-01e)', async ({ page }) => {
     const mm = await page.evaluate(() => {
       _renderMiniMap();
