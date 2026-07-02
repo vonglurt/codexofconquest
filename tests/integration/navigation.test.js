@@ -217,6 +217,23 @@ test.describe('§NAV-01 D-pad buttons move the player', () => {
     expect(s.r).toBe(10); expect(s.c).toBe(197);
   });
 
+  test('map tab renders 15×21 terrain-painted window + full-world canvas (§NAV-01e)', async ({ page }) => {
+    const m = await page.evaluate(() => {
+      storyMapToggle();
+      const cells = [...document.querySelectorAll('#map-grid .mc')];
+      const painted = cells.filter(el => el.style.background && el.style.background !== '').length;
+      const cv = document.getElementById('full-map-canvas');
+      const px = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
+      let nonZero = 0;
+      for (let i = 0; i < px.length; i += 4) if (px[i] || px[i + 1] || px[i + 2]) nonZero++;
+      return { total: cells.length, painted, canvasPainted: nonZero, innIcon: _mapIcon('TLL') };
+    });
+    expect(m.total).toBe(15 * 21);                    // bigger window
+    expect(m.painted).toBeGreaterThan(m.total / 2);   // terrain base layer
+    expect(m.canvasPainted).toBeGreaterThan(10000);   // full-world canvas drawn
+    expect(m.innIcon).toBe('🛏');                     // amenity icons live
+  });
+
   test('local minimap paints terrain colours like the world map (§NAV-01e)', async ({ page }) => {
     const mm = await page.evaluate(() => {
       _renderMiniMap();
