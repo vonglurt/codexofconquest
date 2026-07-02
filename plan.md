@@ -88,9 +88,9 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 
 ### §RESUME — Continue Here
 
-> **⟶ ACTIVE WORK: §NAV-01 — Navigable World / MUD-coherent map + fungal road net.** Inc a/b/c/d + map suite + GLOBE panel shipped (last commit `3cd3f62`, 2026-07-01) — **resume from the "§NAV-01 — UNFINISHED TASKS" section at the END of this file** (next: Inc e remainder — exits signage / minimap waypoint ★ / distance readouts; then Inc f MUD room parity, Inc g/h worldbuilder editors). Full spec + locked data shapes in the §NAV-01 section below.
+> **⟶ ACTIVE WORK: §MESH-01 — multiuser MUD mesh** (user-prioritized 2026-07-02, superseding §NAV-01 Inc e as active). **Shipped 2026-07-02: Inc a ✅ `acd9b77` (client presence) · b/c ✅ `80526b1` (gossip mesh + manifest + ACL) · d ✅ `d00faea` (tracker discovery) · d2 ✅ `ca284e6` (tracker federation) · d3 ✅ `8543e63` (world download + world-diff) · Mesh tab UI ✅ `6908504`.** Gates at checkpoint: mud-harness **63** · Playwright presence 2/2 + mesh tab 3/3 + navigation 29/29 · `check:walk` 6/6. **Next on "continue": Inc (e)** — 3-server+tracker convergence/exactly-once/partition-heal harness hardening — then the gameplay ladder (f)–(j). Full spec + increment history in the Multiplayer §MESH-01 section below + `lab-reports/lab-report-mesh-multiuser.md`; **session follow-up ideas in §MESH-01-FU below it**.
 >
-> **Then:** **§MESH-01 — multiuser MUD mesh** (Multiplayer section below; prereq lab report `lab-reports/lab-report-mesh-multiuser.md` per the Lab Report Policy), then **UQF Wave 3**.
+> **Then:** **§NAV-01 Inc e remainder** (exits signage / minimap waypoint ★ / distance readouts; then Inc f MUD room parity — note §MESH server `look` still lacks the L4 room object — then Inc g/h worldbuilder editors; see "§NAV-01 — UNFINISHED TASKS" at the END of this file), then **UQF Wave 3**.
 >
 > **UQF migration status (Waves 1+2 ✅ COMPLETE, 2026-06-30):** ~2,462 quests on UQF · `quest-runtime-uqf` 234 passed · `check:walk` green · navigation green · §SKILLFIX-02 trio complete. Next UQF work = **Wave 3** (side quests → declarative completion), then W4 combat / W5 epics / W6 retire the legacy path / W7 QUEST_DB single source of truth — see the §ARCH-01 entry under Data / Architecture.
 > **Full wave-by-wave history + the per-family migration runbook** (golden-capture parity protocol, §SKILLFIX gotchas, `scripts/uqf-bulk-migrate.js` usage): `plan-archive.md` (§ARCH-01 UQF archive section) + `lab-reports/lab-report-uqf-migration-playbook.md`. A fresh session resuming Wave 3+ should read the playbook first.
@@ -220,6 +220,23 @@ deterministic per-terrain prose · road signage 'toward X (n)' · ROOMS:CORE sha
 - [ ] **§MBIT-02-E token/gate unification** — leaning toward keeping KEY_EVENTS items and mission bit tokens separate (different ontology). Decision pending.
 
 ### Multiplayer
+
+- [ ] **§MESH-01-FU — session follow-up ideas (checkpoint 2026-07-02, shutdown; ordered roughly by value/effort):**
+  1. **LAN/WAN reachability** — server binds `127.0.0.1` unless `BIND_ADDR` is set, and `meshAdvertise()` defaults to `localhost:<port>`: a real cross-machine mesh needs `BIND_ADDR=0.0.0.0` + `ADVERTISE_ADDR=<lan-ip>:<port>` documented (or a `--bind`/`--advertise` flag pair + a startup warning when peers are configured but the bind is loopback).
+  2. **Join-by-magnet + server browser (client)** — magnet v2 COPY exists (Mesh tab); the PARSE side doesn't: paste `r2h:?...` into the game's 🌐 flow → resolve tracker → pick a same-world server → set `mpServer`. A tracker-backed server-browser list (name, players, ping) in both the game client and the Mesh tab.
+  3. **Client presence identity** — `MP.players` is keyed by display NAME (two "Bob"s collide; leave/arrive can misattribute). Key by pid (`server:sessionId`) end-to-end; show `name@server` on collision only.
+  4. **Remote players on minimap in real time** — `MP.nearby` refreshes only on your own beacon; SSE arrivals don't update it between steps. Push remote cell coords over SSE (or piggyback on chat/arrive events) + repaint; also draw remote players on the WORLD/GLOBE panels, not just the local map.
+  5. **Auto-reconnect** — `sessionStorage.mpSession` is written but never used on load; offer "resume multiplayer?" (re-`look`, reopen SSE) instead of a fresh session per reload.
+  6. **Manifest scope decision** — worldHash covers 8 collections; NPC/dialogue/journal tables (NPC_DIALOGUES, BIRKA_NPC_PROFILES, FROBERGER_JOURNAL, KEY_EVENTS…) are NOT hashed, so pure-dialogue mods don't fork the swarm. Decide: widen the manifest (strict) or document the boundary as intended (spatial+mechanical data only). Currently undocumented behavior.
+  7. **`scripts/publish-bootstrap.sh`** — one-liner helper: curl the tracker's `/api/tracker/peers?format=txt` → print/scp/gist-paste instructions (the designed manual publish path, items 9 in Extended design 2 — not yet scripted).
+  8. **Ingress rate limiting** — gossip/announce/sync accept unauthenticated POSTs; ACL + 500-record cap exist, but a per-IP token bucket would blunt floods before JSON parse.
+  9. **world-diff depth** — `keysOf` is an indent-regex approximation; deep-parse via wbapi-core `extractObj` for exact per-entry field diffs + a `--json` mode for tooling; optionally wire a `check:worlddiff --selftest` into CI.
+  10. **`./api.sh mesh` commands** — `mesh status` / `mesh peers` / `mesh tracker <url>` CLI wrappers over the new endpoints (API-first parity with the Mesh tab).
+  11. **`mesh-acl.json.example`** — commented template beside peers.txt (mode/allow/block shapes are only documented in the lab report today).
+  12. **Tracker persistence + tracker bootstrap** — the announce table is in-memory (fine: servers re-announce ≤30 s; a restarted tracker heals fast) and a tracker can't yet BOOTSTRAP_URLS its *federation* peers; both are small.
+  13. **Chat backlog on join** — fresh-event fanout is capped at 10 s, so a joining player gets no chat history; an optional "last N chat lines at this cell" on `session/start`/`look`.
+  14. **Docs close-out** — mechanics.md/docs-node-network.md/maps.md have no §MESH section yet; full two-way sync (incl. the wbapi-help.md endpoint list: session/pos, mesh/*, tracker/*, world/download, manifest) belongs with §MESH-01 close, alongside the §NAV-01 docs-sync item.
+  15. **Then the designed ladder:** (e) partition-heal harness → (f) co-presence buffs + party loot share → (g) hireling guide bot → (h) sentry bots → (i) no-dupe ledger → (j) consensual PvP duels (item 14; DUEL:CORE shapes into the lab report first).
 
 - [ ] **§MESH-01 — Multiuser MUD: presence rendering + self-discovering server mesh + tracker** (idea logged 2026-07-01; builds on §CELL-07 single-server sessions/SSE and the §NAV-01 L4 room layer / L8 MUD parity).
   **What exists:** `wbapi-server.js` already has `SESSIONS`, per-session SSE streams, cell-scoped `broadcastCell` (player_arrived/chat), `/api/session/{start,move,look,who,say,end,events}`. Missing: the game client never consumes the stream, and there is no server-to-server sync.
