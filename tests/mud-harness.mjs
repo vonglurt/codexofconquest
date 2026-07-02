@@ -158,6 +158,39 @@ async function main() {
   check(countEv(sseB, 'player_arrived', (d) => d.name === 'Cara') === 1, 'Bob (at BMA) gets exactly one player_arrived naming Cara');
   check(countEv(sseA, 'player_arrived', (d) => d.name === 'Cara') === 0, 'Alice (hub) gets no player_arrived for Cara');
 
+  // ════════ (a3) §MESH-01a pos beacon — display-only, validated, rolls nothing ════════
+  // Browser clients report position via /session/pos (they roll their own
+  // encounters locally); the beacon must validate passability, broadcast
+  // player_left + player_arrived, and never touch s.encounter.
+  console.log('\n[B2] §MESH-01a position beacon (browser-client presence)');
+  const aPos = await jpost('/session/pos', { sessionId: alice.sessionId, r: alice.r, c: alice.c + 1 }); // hub → BMA (Bob + Cara there)
+  check(aPos.ok === true && aPos.moved === true, 'pos accepts a passable cell and reports moved');
+  check((aPos.players || []).map((p) => p.name).sort().join(',') === 'Bob,Cara', 'pos response lists Bob + Cara co-present');
+  check(aPos.encounter == null, 'pos response carries no encounter (beacon rolls nothing)');
+  await waitFor(() => countEv(sseB, 'player_arrived', (d) => d.name === 'Alice') >= 1);
+  await sleep(100);
+  check(countEv(sseB, 'player_arrived', (d) => d.name === 'Alice') === 1, 'Bob gets exactly one player_arrived for the beaconed Alice');
+  const aBack = await jpost('/session/pos', { sessionId: alice.sessionId, r: alice.r, c: alice.c });     // back to the hub
+  check(aBack.ok === true && aBack.moved === true, 'pos moves Alice back to the hub');
+  await waitFor(() => countEv(sseB, 'player_left', (d) => d.name === 'Alice') >= 1);
+  await sleep(100);
+  check(countEv(sseB, 'player_left', (d) => d.name === 'Alice') === 1, 'Bob gets exactly one player_left when Alice beacons away');
+  const aStay = await jpost('/session/pos', { sessionId: alice.sessionId, r: alice.r, c: alice.c });     // unchanged cell
+  check(aStay.ok === true && aStay.moved === false, 'same-cell beacon reports moved:false (idempotent re-render ping)');
+  const seaPos = await jpost('/session/pos', { sessionId: alice.sessionId, r: alice.r + 1, c: alice.c }); // S of hub = sea
+  check(seaPos.ok === false && seaPos.reason === 'sea', 'pos rejects a sea cell (no ghosts in the ocean)');
+  const oobPos = await jpost('/session/pos', { sessionId: alice.sessionId, r: -3, c: 5 });
+  check(oobPos.ok === false && oobPos.reason === 'oob', 'pos rejects an off-band row');
+  const whoPos = await jget('/session/who');
+  const aliceW = whoPos.sessions.find((x) => x.name === 'Alice');
+  check(aliceW.r === alice.r && aliceW.c === alice.c, 'rejected beacons leave the session position unchanged');
+  check(aliceW.encounter == null, 'pos never sets an encounter (display-only beacon)');
+  const pete = await jpost('/session/start', { name: 'Pete', seed: 5005 });          // spawns at the hub, where Alice is
+  await waitFor(() => countEv(sseA, 'player_arrived', (d) => d.name === 'Pete') >= 1);
+  await sleep(100);
+  check(countEv(sseA, 'player_arrived', (d) => d.name === 'Pete') === 1, 'session/start announces the newcomer to players already at the spawn cell');
+  await jpost('/session/end', { sessionId: pete.sessionId });
+
   // ════════ (b) instancing / no cross-session encounter bleed ════════
   console.log('\n[C] instanced encounters — session-private, seed-deterministic, no SSE bleed');
   const PATH = []; for (let i = 0; i < 30; i++) PATH.push('N', 'S'); // each N = an empty-cell roll, each S returns to the named hub

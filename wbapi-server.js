@@ -7602,6 +7602,10 @@ async function route(req, res) {
         encounter:  null,        // pending instanced encounter (null = none); hub is a named cell
       };
       SESSIONS.set(sessionId, s);
+      // §MESH-01a: announce the newcomer to players already at the spawn cell
+      // (browser clients immediately re-beacon to their real cell, which then
+      // emits the matching player_left from here — the sequence stays consistent).
+      broadcastCell(s.r, s.c, 'player_arrived', { name: playerName, from: null, to: { r: s.r, c: s.c }, node: hub }, sessionId);
       const look = buildLook(s);
       logRow('session', `${playerName}  ·  id:${sessionId.slice(0,8)}…  ·  spawn:(${s.r},${s.c})=${hub}`);
       logResponse(method, url.pathname, 201, `session started for "${playerName}"`);
@@ -7659,6 +7663,53 @@ async function route(req, res) {
       return json(res, 200, { ok: true, dir, ...look, encounter: s.encounter });
     }
 
+    // ── POST /api/session/pos ──────────────────────────────────────────────
+    // §MESH-01a — display-only position beacon for BROWSER clients. The SP game
+    // is authoritative for its own movement and rolls its own encounters
+    // client-side (_enterEmptyCell); mirroring through session/move would
+    // double-roll against the §WALK-5 instanced server roll. pos validates the
+    // cell with the same mover world (no ghosts in the ocean), moves the
+    // session, broadcasts player_left / player_arrived, and rolls NOTHING —
+    // s.encounter is untouched. Response = the standard look (players[] = the
+    // co-present list) plus `nearby` (players within the local-map viewport,
+    // Δr≤5 / Δc≤8, for minimap dots).
+    if (sub === 'pos') {
+      if (!Number.isFinite(+body.r) || !Number.isFinite(+body.c)) {
+        logResponse(method, url.pathname, 400, 'session/pos: numeric r,c required');
+        return json(res, 400, { ok: false, error: 'body.r and body.c (numbers) required' });
+      }
+      const world = getMoverWorld();
+      const ROWS = world.proj.ROWS, COLS = world.proj.COLS;
+      const r = +body.r | 0;
+      const c = (((+body.c | 0) % COLS) + COLS) % COLS;   // E↔W wrap, same as the kernel
+      if (r < 0 || r >= ROWS) {
+        logResponse(method, url.pathname, 409, `session/pos: (${body.r},${body.c}) off the band`);
+        return json(res, 409, { ok: false, error: `(${body.r},${body.c}) is off the grid`, reason: 'oob' });
+      }
+      if (world.impassable.has(`${r},${c}`)) {
+        logResponse(method, url.pathname, 409, `session/pos: (${r},${c}) is open sea`);
+        return json(res, 409, { ok: false, error: `(${r},${c}) is open sea`, reason: 'sea' });
+      }
+      const prevR = s.r, prevC = s.c;
+      const moved = prevR !== r || prevC !== c;
+      s.r = r; s.c = c;
+      s.nodeCode = (world.cellCodes(r, c) || [])[0] || null;
+      if (moved) {
+        broadcastCell(prevR, prevC, 'player_left',    { name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, sessionId);
+        broadcastCell(r, c, 'player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c }, node: s.nodeCode }, sessionId);
+      }
+      const nearby = [];
+      for (const [id2, s2] of SESSIONS) {
+        if (id2 === s.id) continue;
+        const dcRaw = Math.abs(s2.c - c);
+        const dc = Math.min(dcRaw, COLS - dcRaw);   // E↔W wrap distance
+        if (Math.abs(s2.r - r) <= 5 && dc <= 8) nearby.push({ name: s2.playerName, r: s2.r, c: s2.c });
+      }
+      const look = buildLook(s);
+      logResponse(method, url.pathname, 200, `session pos: (${r},${c}) ${s.nodeCode || 'empty'}${moved ? '' : ' (unchanged)'}`);
+      return json(res, 200, { ok: true, moved, nearby, ...look });
+    }
+
     // ── POST /api/session/say ──────────────────────────────────────────────
     if (sub === 'say') {
       const msg = (body.msg || body.message || '').trim();
@@ -7692,7 +7743,7 @@ async function route(req, res) {
     }
 
     logResponse(method, url.pathname, 404, `unknown session sub-route "${sub}"`);
-    return json(res, 404, { error: `Unknown session sub-route "${sub}"`, available: ['start', 'move', 'look', 'who', 'say', 'end', 'events'] });
+    return json(res, 404, { error: `Unknown session sub-route "${sub}"`, available: ['start', 'move', 'pos', 'look', 'who', 'say', 'end', 'events'] });
   }
 
   // ── Single entity ─────────────────────────────────────────────────────────

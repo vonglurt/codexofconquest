@@ -1286,6 +1286,22 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 #story-move-msg.msg-shake { animation: msg-shake 0.32s ease; }
 
+/* ── §MESH-01a: multiplayer strip ─── */
+#mp-bar {
+  display: flex; align-items: center; gap: 8px;
+  padding: 2px 10px; font-size: 12px; color: var(--muted, #8a8377);
+  min-height: 20px;
+}
+#mp-bar button {
+  background: none; border: 1px solid rgba(240,230,200,0.25); border-radius: 4px;
+  color: inherit; cursor: pointer; font-size: 12px; padding: 0 6px; line-height: 18px;
+}
+#mp-bar button:hover { border-color: rgba(240,230,200,0.6); }
+#mp-presence { flex: 1; color: #7fd4ff; }
+#mp-chat-input {
+  background: rgba(0,0,0,0.25); border: 1px solid rgba(240,230,200,0.25); border-radius: 4px;
+  color: inherit; font: inherit; padding: 1px 6px; width: 180px;
+}
 
 /* ── Layer 2: Inventory ─── */
 #sheet-inventory {
@@ -3958,6 +3974,15 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       </div>
 
       <div id="story-move-msg"></div>
+
+      <!-- §MESH-01a — multiplayer strip (display-only; hidden logic never touches the mover) -->
+      <div id="mp-bar">
+        <button id="mp-toggle" onclick="mpToggle()" title="Multiplayer — connect to a world server">🌐</button>
+        <span id="mp-status">off</span>
+        <span id="mp-presence"></span>
+        <input id="mp-chat-input" placeholder="say…" maxlength="500" style="display:none"
+               onkeydown="if(event.key==='Enter')mpSay()">
+      </div>
 
       <!-- nav moved to #story-history-panel bottom row -->
 
@@ -26470,6 +26495,7 @@ function cellMove(dir) {
     _pendingFarewell = null;
     _enterEmptyCell(nr, nc);
   }
+  mpBeacon();   // §MESH-01a: fire-and-forget presence beacon (no-op unless 🌐 connected)
 }
 
 // §CELL-04: infer terrain for an unnamed cell by majority vote of named neighbors
@@ -26548,6 +26574,7 @@ function storyPortal() {
   S_story.log.push(S_story.currentCode);
   S_story.currentCode = dest;
   storyRender(NODE_MAP[dest], '⚡ Portal activated!');
+  mpBeacon();   // §MESH-01a: storyRender has refreshed playerR/C to the portal dest
 }
 
 function storyMsg(txt) {
@@ -26564,6 +26591,118 @@ function storyBlock(txt) {
   el.classList.add('msg-shake');
   clearTimeout(el._bt);
   el._bt = setTimeout(() => el.classList.remove('msg-block', 'msg-shake'), 3000);
+}
+
+// ══ §MESH-01a — Multiplayer presence (client) ═══════════════════════════════
+// Strictly OPT-IN: nothing here runs until the player presses 🌐. Presence is
+// DISPLAY-ONLY — the mover never reads MP state (Free-Movement invariant) — and
+// MP state is transient module state + sessionStorage (never in S_story: a save
+// file must not carry a dead sessionId). Browser clients report position via
+// POST /api/session/pos, a beacon that validates passability and rolls NOTHING;
+// session/move stays exclusive to headless MUD clients so the §WALK-5 server
+// encounter roll can never double the client's own (_enterEmptyCell) roll.
+const MP = { base: null, session: null, name: null, es: null, players: [], nearby: [], on: false };
+
+function _mpBase() {
+  try { return localStorage.getItem('mpServer') || 'http://localhost:1367'; }
+  catch { return 'http://localhost:1367'; }
+}
+async function _mpFetch(path, body) {
+  const opts = body
+    ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
+    : undefined;
+  const resp = await fetch(MP.base + path, opts);
+  return resp.json();
+}
+async function mpToggle() {
+  if (MP.on) return mpDisconnect('🌐 Multiplayer off.');
+  MP.base = _mpBase();
+  try {
+    const name = S_story.playerName || ('Wanderer-' + Math.floor(Math.random() * 900 + 100));
+    const start = await _mpFetch('/api/session/start', { name });
+    if (!start.ok) throw new Error(start.error || 'start failed');
+    MP.session = start.sessionId; MP.name = start.name; MP.on = true;
+    try { sessionStorage.setItem('mpSession', MP.session); } catch {}
+    _mpOpenStream();
+    await mpBeacon();               // sync the fresh session (spawns at hub) to the real player cell
+    _mpSetStatus('🟢 ' + MP.name);
+    const inp = document.getElementById('mp-chat-input');
+    if (inp) inp.style.display = 'inline-block';
+    storyMsg('🌐 Multiplayer connected as ' + MP.name + '.');
+  } catch (e) {
+    MP.on = false; MP.session = null;
+    _mpSetStatus('🔴 no server');
+    storyMsg('🌐 No world server at ' + MP.base + ' — start one with ./wbapi-toggle.sh start.');
+  }
+}
+function mpDisconnect(msg) {
+  if (MP.session) _mpFetch('/api/session/end', { sessionId: MP.session }).catch(() => {});
+  if (MP.es) { try { MP.es.close(); } catch {} }
+  MP.es = null; MP.session = null; MP.on = false; MP.players = []; MP.nearby = [];
+  try { sessionStorage.removeItem('mpSession'); } catch {}
+  _mpSetStatus('off');
+  const inp = document.getElementById('mp-chat-input');
+  if (inp) inp.style.display = 'none';
+  _mpRenderPresence();
+  if (msg) storyMsg(msg);
+}
+function _mpOpenStream() {
+  const es = new EventSource(MP.base + '/api/session/events?sessionId=' + MP.session);
+  MP.es = es;
+  es.addEventListener('player_arrived', ev => {
+    const d = JSON.parse(ev.data);
+    if (!MP.players.some(p => p.name === d.name)) MP.players.push({ name: d.name });
+    storyMsg('🌐 ' + d.name + ' arrives.');
+    _mpRenderPresence();
+  });
+  es.addEventListener('player_left', ev => {
+    const d = JSON.parse(ev.data);
+    MP.players = MP.players.filter(p => p.name !== d.name);
+    storyMsg('🌐 ' + d.name + ' leaves.');
+    _mpRenderPresence();
+  });
+  es.addEventListener('chat', ev => {
+    const d = JSON.parse(ev.data);
+    storyMsg('💬 ' + d.name + ': ' + d.msg);
+  });
+  es.onerror = () => { if (MP.on) _mpSetStatus('🟠 reconnecting…'); };
+}
+// Fire-and-forget position beacon after each successful local step. The pos
+// response refreshes the co-present list (players) + viewport list (nearby);
+// arrivals/leaves BETWEEN steps come in over SSE.
+async function mpBeacon() {
+  if (!MP.on || !MP.session) return;
+  try {
+    const look = await _mpFetch('/api/session/pos', { sessionId: MP.session, r: S_story.playerR, c: S_story.playerC });
+    if (look && look.ok) {
+      MP.players = look.players || [];
+      MP.nearby = look.nearby || [];
+      _mpSetStatus('🟢 ' + MP.name);
+      _mpRenderPresence();
+    } else if (look && look.error && /Session not found/.test(look.error)) {
+      mpDisconnect('🌐 Session expired — reconnect with 🌐.');
+    }
+  } catch { _mpSetStatus('🟠 reconnecting…'); }
+}
+function mpSay() {
+  const inp = document.getElementById('mp-chat-input');
+  const msg = (inp && inp.value || '').trim();
+  if (!msg || !MP.on) return;
+  inp.value = '';
+  // No local echo: the server broadcast includes the sender exactly once
+  // (§WALK-5 harness property) and renders through the SSE chat handler.
+  _mpFetch('/api/session/say', { sessionId: MP.session, msg }).catch(() => {});
+}
+function _mpSetStatus(txt) {
+  const el = document.getElementById('mp-status');
+  if (el) el.textContent = txt;
+}
+function _mpRenderPresence() {
+  const el = document.getElementById('mp-presence');
+  if (!el) return;
+  el.textContent = (MP.on && MP.players.length)
+    ? '👥 Also here: ' + MP.players.map(p => p.name).join(', ')
+    : '';
 }
 
 function _rollKeyEvent(id) {
@@ -33045,6 +33184,13 @@ function _renderMiniMap() {
           cell.style.opacity = '0.72';
           if (glyph === '─') cell.textContent = glyph;   // highways stay legible unexplored
         }
+      }
+
+      // §MESH-01a: other players in view (display-only multiplayer presence)
+      if (!isPlayer && MP.on && MP.nearby.some(p => p.r === r && p.c === c)) {
+        cell.textContent = '☺';
+        cell.style.color = '#7fd4ff';
+        cell.style.fontWeight = 'bold';
       }
 
       // L44-R: Void's First Sign at row 4, col 3 — flickers in Act I, traversable in Act V
