@@ -474,6 +474,30 @@ async function main() {
   check((lookJ2.players || []).filter((p) => p.name === 'Twin').length === 1,
     'after one Twin ends, exactly one Twin remains (pid-keyed, not name-keyed)');
 
+  // ════════ (k) §MESH-01-FU 4 — worldwide player_moved push ════════
+  console.log('\n[K] §MESH-01-FU 4 — realtime map dots (player_moved is worldwide, display-only)');
+  const kw = await jpost('/session/start', { name: 'WatcherK', seed: 91 });
+  const km = await jpost('/session/start', { name: 'MoverK', seed: 92 });
+  const sseKW = await openSSE(kw.sessionId); openClients.push(sseKW);
+  await sleep(100);
+  // Mover beacons one cell east (known passable); the watcher stays at the hub —
+  // after the move they are NOT co-present, yet the watcher must hear about it.
+  await jpost('/session/pos', { sessionId: km.sessionId, r: km.r, c: km.c + 1 });
+  await waitFor(() => countEv(sseKW, 'player_moved', (d) => d.pid === km.pid) >= 1);
+  check(countEv(sseKW, 'player_moved', (d) => d.pid === km.pid && d.to && d.to.c === km.c + 1) === 1,
+    'a watcher in a different cell receives player_moved with pid + destination (worldwide push)');
+  const kPos = await jpost('/session/pos', { sessionId: kw.sessionId, r: kw.r, c: kw.c });
+  check((kPos.world || []).some((p) => p.pid === km.pid && p.r === km.r && p.c === km.c + 1),
+    'pos response world[] lists far players with live coords (world/globe panel seed)');
+  await jpost('/session/end', { sessionId: km.sessionId });
+  await waitFor(() => countEv(sseKW, 'player_moved', (d) => d.pid === km.pid && !d.to) === 1);
+  check(countEv(sseKW, 'player_moved', (d) => d.pid === km.pid && !d.to) === 1,
+    'session end pushes player_moved to:null (worldwide dot removal)');
+  // Cross-server: Ben's single [E] beacon must have fanned player_moved to Ann
+  // (different server, different cell) exactly once — vv dedup across replays.
+  check(countEv(sseAnn, 'player_moved', (d) => d.name === 'Ben' && d.remote === true) === 1,
+    'cross-server pos beacon fans player_moved to remote watchers exactly once');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});

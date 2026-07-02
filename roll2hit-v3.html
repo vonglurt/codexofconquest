@@ -26662,7 +26662,10 @@ function storyBlock(txt) {
 // encounter roll can never double the client's own (_enterEmptyCell) roll.
 // §MESH-01-FU 3: players are keyed by pid (`server:sessionId`), NEVER by display
 // name — two "Bob"s must coexist, and a leave must only remove the Bob who left.
-const MP = { base: null, session: null, pid: null, name: null, es: null, players: [], nearby: [], on: false };
+// §MESH-01-FU 4: `remotes` is the pid-keyed WORLDWIDE track (seeded by the pos
+// beacon's world[], updated live by player_moved SSE); `nearby` is its viewport
+// subset (minimap dots); world/globe panels draw all of `remotes`.
+const MP = { base: null, session: null, pid: null, name: null, es: null, players: [], nearby: [], remotes: {}, on: false };
 
 function _mpBase() {
   try { return localStorage.getItem('mpServer') || 'http://localhost:1367'; }
@@ -26701,7 +26704,7 @@ async function mpToggle(ev) {
 function mpDisconnect(msg) {
   if (MP.session) _mpFetch('/api/session/end', { sessionId: MP.session }).catch(() => {});
   if (MP.es) { try { MP.es.close(); } catch {} }
-  MP.es = null; MP.session = null; MP.pid = null; MP.on = false; MP.players = []; MP.nearby = [];
+  MP.es = null; MP.session = null; MP.pid = null; MP.on = false; MP.players = []; MP.nearby = []; MP.remotes = {};
   try { sessionStorage.removeItem('mpSession'); } catch {}
   _mpSetStatus('off');
   const inp = document.getElementById('mp-chat-input');
@@ -26716,14 +26719,27 @@ function _mpOpenStream() {
     const d = JSON.parse(ev.data);
     if (d.pid === MP.pid) return;   // never track yourself
     if (!MP.players.some(p => p.pid === d.pid)) MP.players.push({ pid: d.pid, name: d.name, server: d.server });
+    if (d.pid && d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server };
     storyMsg('🌐 ' + d.name + ' arrives.');
     _mpRenderPresence();
+    _mpRepaintMaps();
   });
   es.addEventListener('player_left', ev => {
     const d = JSON.parse(ev.data);
     MP.players = MP.players.filter(p => p.pid !== d.pid);   // pid-keyed: only the leaver goes
+    if (d.pid) { if (d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server }; else delete MP.remotes[d.pid]; }
     storyMsg('🌐 ' + d.name + ' leaves.');
     _mpRenderPresence();
+    _mpRepaintMaps();
+  });
+  // §MESH-01-FU 4: worldwide movement push — dots move BETWEEN own beacons.
+  // Display-layer only: no storyMsg, just the pid-keyed track + a repaint.
+  es.addEventListener('player_moved', ev => {
+    const d = JSON.parse(ev.data);
+    if (!d.pid || d.pid === MP.pid) return;
+    if (d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server };
+    else delete MP.remotes[d.pid];
+    _mpRepaintMaps();
   });
   es.addEventListener('chat', ev => {
     const d = JSON.parse(ev.data);
@@ -26741,6 +26757,9 @@ async function mpBeacon() {
     if (look && look.ok) {
       MP.players = look.players || [];
       MP.nearby = look.nearby || [];
+      // §MESH-01-FU 4: full worldwide re-seed each beacon (SSE keeps it live between)
+      MP.remotes = {};
+      for (const p of look.world || []) if (p.pid) MP.remotes[p.pid] = p;
       _mpSetStatus('🟢 ' + MP.name);
       _mpRenderPresence();
     } else if (look && look.error && /Session not found/.test(look.error)) {
@@ -26772,6 +26791,24 @@ function _mpRenderPresence() {
   el.textContent = (MP.on && MP.players.length)
     ? '👥 Also here: ' + MP.players.map(label).join(', ')
     : '';
+}
+
+// §MESH-01-FU 4 — SSE-driven map refresh. `nearby` (minimap) is recomputed
+// client-side from the worldwide track between beacons; world/globe painters
+// read MP.remotes directly. Display-only, same wrap distance as the server.
+function _mpRecomputeNearby() {
+  const cr = S_story.playerR || 0, cc = S_story.playerC || 0;
+  MP.nearby = Object.values(MP.remotes).filter(p => {
+    const dc = Math.abs(p.c - cc);
+    return Math.abs(p.r - cr) <= 5 && Math.min(dc, GEO_PROJ.COLS - dc) <= 8;
+  });
+}
+function _mpRepaintMaps() {
+  if (!MP.on) return;
+  _mpRecomputeNearby();
+  _renderMiniMap();
+  _renderFullMap(S_story.playerR || 0, S_story.playerC || 0);
+  _renderGlobeMap();
 }
 
 // ── §MESH-01-FU 2 — join-by-magnet + server browser ─────────────────────────
@@ -33215,6 +33252,13 @@ function _paintFullWorld(cv, PX, pr, pc) {
   // local-map viewport (11×17 centred on the player)
   ctx.strokeStyle = '#ffd700';
   ctx.strokeRect((pc - 8 - C0) * PX + 0.5, (pr - 5 - R0) * PX + 0.5, 17 * PX - 1, 11 * PX - 1);
+  // §MESH-01-FU 4: remote players worldwide (cyan, display-only) — drawn before
+  // the local player so @ always wins a shared cell.
+  if (MP.on) {
+    ctx.fillStyle = '#7fd4ff';
+    for (const p of Object.values(MP.remotes || {}))
+      ctx.fillRect((p.c - C0) * PX, (p.r - R0) * PX, Math.max(PX, 2), Math.max(PX, 2));
+  }
   // player
   ctx.fillStyle = '#ff5030';
   ctx.fillRect((pc - C0) * PX, (pr - R0) * PX, Math.max(PX, 2), Math.max(PX, 2));

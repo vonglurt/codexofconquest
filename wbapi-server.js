@@ -76,7 +76,9 @@ function sessionPrune() {
       SESSIONS.delete(id);
       // §MESH-01c: a pruned ghost also departs, locally and to the mesh
       broadcastCell(s.r, s.c, 'player_left', { pid: pidOf(id), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, id);
+      broadcastAll('player_moved', { pid: pidOf(id), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, id);
       if (typeof emitMeshEvent === 'function') emitMeshEvent('player_left', { pid: pidOf(id), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, s.r, s.c);
+      if (typeof emitMeshEvent === 'function') emitMeshEvent('player_moved', { pid: pidOf(id), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, s.r, s.c);
       const sse = SSE_CLIENTS.get(id);
       if (sse) { try { sse.end(); } catch {} SSE_CLIENTS.delete(id); }
     }
@@ -99,6 +101,17 @@ function broadcastCell(r, c, event, data, excludeId) {
       const sse = SSE_CLIENTS.get(id);
       if (sse) sseSend(sse, event, data);
     }
+  }
+}
+// §MESH-01-FU 4 — worldwide broadcast for the DISPLAY layer (`player_moved`):
+// map dots need moves the watcher's cell never hears about. Cell-scoped
+// arrive/left/chat semantics (the §WALK-5 co-presence property) are untouched —
+// this is a separate event type, filtered client-side by viewport.
+function broadcastAll(event, data, excludeId) {
+  for (const [id] of SESSIONS) {
+    if (id === excludeId) continue;
+    const sse = SSE_CLIENTS.get(id);
+    if (sse) sseSend(sse, event, data);
   }
 }
 
@@ -293,8 +306,13 @@ function meshMergeEvents(originId, events) {
     last = ev.seq;
     // Fan fresh remote events out to co-located LOCAL sessions only; replayed
     // history still advances the version vector (dedup) but stays silent.
-    if (now - (ev.ts || 0) <= MESH_FANOUT_MAX_AGE && ['player_arrived', 'player_left', 'chat'].includes(ev.type))
-      broadcastCell(ev.r, ev.c, ev.type, { ...ev.data, remote: true, server: originId.slice(0, 8) }, null);
+    // §MESH-01-FU 4: player_moved is the display-layer exception — worldwide.
+    if (now - (ev.ts || 0) <= MESH_FANOUT_MAX_AGE) {
+      if (ev.type === 'player_moved')
+        broadcastAll(ev.type, { ...ev.data, remote: true, server: originId.slice(0, 8) }, null);
+      else if (['player_arrived', 'player_left', 'chat'].includes(ev.type))
+        broadcastCell(ev.r, ev.c, ev.type, { ...ev.data, remote: true, server: originId.slice(0, 8) }, null);
+    }
   }
   MESH.vv[originId] = last;
 }
@@ -8248,8 +8266,10 @@ async function route(req, res) {
       }
       // Broadcast to players now in the same cell (not the mover themselves)
       broadcastCell(newR, newC, 'player_arrived', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, sessionId);
+      broadcastAll('player_moved', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC } }, sessionId);
       emitMeshEvent('player_left', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC } }, prevR, prevC);
       emitMeshEvent('player_arrived', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, newR, newC);
+      emitMeshEvent('player_moved', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC } }, newR, newC);
       const look = buildLook(s);
       logRow('move', `${s.playerName}  ·  ${dir}  →  (${newR},${newC}) ${newCode || 'empty'}${s.encounter ? '  ⚔ ' + s.encounter.name : ''}`);
       logResponse(method, url.pathname, 200, `session move: ${dir} → ${newCode || 'empty'}${s.encounter ? ' (encounter: ' + s.encounter.name + ')' : ''}`);
@@ -8290,25 +8310,31 @@ async function route(req, res) {
       if (moved) {
         broadcastCell(prevR, prevC, 'player_left',    { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, sessionId);
         broadcastCell(r, c, 'player_arrived', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c }, node: s.nodeCode }, sessionId);
+        broadcastAll('player_moved', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, sessionId);
         emitMeshEvent('player_left', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, prevR, prevC);
         emitMeshEvent('player_arrived', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c }, node: s.nodeCode }, r, c);
+        emitMeshEvent('player_moved', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, r, c);
       }
-      const nearby = [];
       const inView = (pr, pc) => {
         const dcRaw = Math.abs(pc - c);
         return Math.abs(pr - r) <= 5 && Math.min(dcRaw, COLS - dcRaw) <= 8;   // E↔W wrap distance
       };
+      // §MESH-01-FU 4: `world` = EVERY other player with coords (local + remote
+      // replicas) — seeds the client's worldwide track (world/globe panel dots);
+      // `nearby` stays the viewport subset the minimap reads.
+      const worldPlayers = [];
       for (const [id2, s2] of SESSIONS)
-        if (id2 !== s.id && inView(s2.r, s2.c)) nearby.push({ pid: pidOf(id2), name: s2.playerName, r: s2.r, c: s2.c });
-      const _mnow = Date.now();   // §MESH-01c: same-world peers' players in view
+        if (id2 !== s.id) worldPlayers.push({ pid: pidOf(id2), name: s2.playerName, r: s2.r, c: s2.c });
+      const _mnow = Date.now();   // §MESH-01c: same-world peers' replicated players
       for (const [oid, rec] of MESH.remote) {
         if (_mnow - rec.lastSeen > MESH_ORIGIN_TTL) continue;
         for (const [sid, p] of rec.sessions)
-          if (inView(p.r, p.c)) nearby.push({ pid: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8) });
+          worldPlayers.push({ pid: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8) });
       }
+      const nearby = worldPlayers.filter((p) => inView(p.r, p.c));
       const look = buildLook(s);
       logResponse(method, url.pathname, 200, `session pos: (${r},${c}) ${s.nodeCode || 'empty'}${moved ? '' : ' (unchanged)'}`);
-      return json(res, 200, { ok: true, moved, nearby, ...look });
+      return json(res, 200, { ok: true, moved, nearby, world: worldPlayers, ...look });
     }
 
     // ── POST /api/session/say ──────────────────────────────────────────────
@@ -8340,7 +8366,9 @@ async function route(req, res) {
       // §MESH-01c (Inc-a residue): departing players now announce player_left,
       // locally and to the mesh.
       broadcastCell(s.r, s.c, 'player_left', { pid: pidOf(sessionId), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, sessionId);
+      broadcastAll('player_moved', { pid: pidOf(sessionId), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, sessionId);
       emitMeshEvent('player_left', { pid: pidOf(sessionId), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, s.r, s.c);
+      emitMeshEvent('player_moved', { pid: pidOf(sessionId), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, s.r, s.c);
       const sse = SSE_CLIENTS.get(sessionId);
       if (sse) { try { sse.end(); } catch {} SSE_CLIENTS.delete(sessionId); }
       logRow('ended', `session ${sessionId.slice(0,8)}…  ·  player: ${s.playerName}`);

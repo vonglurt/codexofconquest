@@ -151,6 +151,35 @@ test.describe('§MESH-01a — multiplayer presence (two real clients)', () => {
     await obs.ctx.close(); await b1.ctx.close(); await b2.ctx.close();
   });
 
+  test('remote players move on the watcher’s minimap in real time (§MESH-01-FU 4)', async ({ browser }) => {
+    const w = await loadPlayer(browser, 'Watcher');
+    const m = await loadPlayer(browser, 'Mover');
+    await w.page.click('#mp-toggle');
+    await expect(w.page.locator('#mp-status')).toContainText('🟢 Watcher');
+    await m.page.click('#mp-toggle');
+    await expect(m.page.locator('#mp-status')).toContainText('🟢 Mover');
+    await expect(w.page.locator('#mp-presence')).toContainText('Mover');
+
+    const moverPid = await m.page.evaluate(() => MP.pid);
+    const wCol = await w.page.evaluate(() => S_story.playerC);
+
+    // The mover steps east. The watcher does NOTHING — its worldwide track,
+    // viewport list, and minimap ☺ must all update from the SSE push alone.
+    await m.page.click('#btn-E');
+    await expect.poll(() => w.page.evaluate((pid) => (MP.remotes[pid] || {}).c, moverPid))
+      .toBe(wCol + 1);
+    await expect.poll(() => w.page.evaluate((pid) => MP.nearby.some((p) => p.pid === pid), moverPid)).toBe(true);
+    expect(await w.page.evaluate(() =>
+      [...document.querySelectorAll('#mini-map-grid .mmc')].some((cell) => cell.textContent === '☺')
+    )).toBe(true);
+
+    // The mover disconnects → to:null removes the dot from the watcher's track.
+    await m.page.click('#mp-toggle');
+    await expect.poll(() => w.page.evaluate((pid) => pid in MP.remotes, moverPid)).toBe(false);
+
+    await w.ctx.close(); await m.ctx.close();
+  });
+
   test('multiplayer is strictly opt-in — no MP state without the 🌐 click', async ({ browser }) => {
     const c = await loadPlayer(browser, 'Cezar');
     await expect(c.page.locator('#mp-status')).toHaveText('off');
