@@ -258,6 +258,18 @@ deterministic per-terrain prose · road signage 'toward X (n)' · ROOMS:CORE sha
 - [ ] **Arc ID as first-class UQF field** — add `arc: 'quest_wis'` explicitly to quest objects; enables arc sorting without string-splitting heuristics
 - [ ] **§MBIT-02-E token/gate unification** — leaning toward keeping KEY_EVENTS items and mission bit tokens separate (different ontology). Decision pending.
 
+### Multiplayer
+
+- [ ] **§MESH-01 — Multiuser MUD: presence rendering + self-discovering server mesh + tracker** (idea logged 2026-07-01; builds on §CELL-07 single-server sessions/SSE and the §NAV-01 L4 room layer / L8 MUD parity).
+  **What exists:** `wbapi-server.js` already has `SESSIONS`, per-session SSE streams, cell-scoped `broadcastCell` (player_arrived/chat), `/api/session/{start,move,look,who,say,end,events}`. Missing: the game client never consumes the stream, and there is no server-to-server sync.
+  **Locked design decisions:**
+  1. **Presence rendering (client):** story UI opens `GET /api/session/events` when WBAPI is reachable (multiplayer strictly opt-in — single-file game unaffected offline); room output gains an "Also here: <names>" line (surfaced through the L4 room object, not a separate panel), minimap dots for players inside the viewport, `say` chat in the story log.
+  2. **Mesh (self-discovering):** each server has a persistent random 16-byte `serverId` + a `worldHash` (CELL_GRID + ROAD_RUNS + file version); servers mesh ONLY with same-`worldHash` peers (prevents ghost players on non-existent cells). Gossip rounds (~2s) push presence deltas to a few random peers AND exchange peer lists (PEX) — one live peer address bootstraps the whole mesh; topology self-heals. Transport = plain HTTP POST server-to-server, new `/api/mesh/{gossip,peers}` endpoints.
+  3. **Tracker (`tracker.js`, separate tiny process, one open port):** rendezvous only, never a relay. `POST /announce {serverId, host, port, worldHash, playerCount}` every ~30s → returns K random same-world live peers to seed the peer table. Not on the hot path: mesh survives tracker death via gossip + a cached last-known-peers file (DHT-bootstrap style fallback).
+  4. **Deduplication (the load-bearing invariant): every presence record is SINGLE-WRITER** — only the origin server mutates its own sessions; replicas are read-only. Event id = `(originServerId, monotonic per-origin seq)`; player id = `(originServerId, sessionId)`, never display name. Receivers keep a version vector `maxSeqSeen[originId]` — anything ≤ is a dup: dropped AND not re-gossiped (this + hop TTL stops flood loops). Anti-entropy = periodic version-vector exchange, pull only missing ranges. No CRDTs/LWW needed (no concurrent writers per record); records expire on TTL when origin stops heartbeating.
+  **Deferred hard problem (out of scope):** cross-mesh WORLD mutations (WBAPI writes to the HTML) are multi-writer and need real conflict resolution — §MESH-01 syncs ephemeral presence/chat only.
+  **Increment sketch:** (a) client presence rendering on one server → (b) serverId/worldHash + 2-server presence exchange over static peer config → (c) gossip+PEX+version-vector dedup (self-discovering) → (d) tracker.js announce/peers bootstrap → (e) harness: spin 3 servers + tracker, assert convergence, exactly-once delivery, partition heal. Prereq on implementation start: `lab-report-mesh-multiuser.md` (Lab Report Policy: multi-system design). Free-Movement invariant untouched (presence is display-only; mover never consults it).
+
 ---
 
 ## §NAV-01 — UNFINISHED TASKS (session checkpoint 2026-07-01, resume here)
