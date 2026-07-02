@@ -375,6 +375,59 @@ function trackerSweep() {
   const now = Date.now();
   for (const [id, r] of TRACKER) if (now - r.lastSeen > TRACKER_TTL) TRACKER.delete(id);
 }
+// §MESH-01d2 — tracker federation: an operator MANUALLY connects tracker A to
+// tracker B (`--tracker-peer <url>` / TRACKER_PEERS env); the two then merge
+// announce tables every round. Same single-writer discipline as gossip: each
+// record is owned by the ANNOUNCING game server; freshness travels as ageMs
+// (clock-skew safe) and the younger record wins. Idempotent state exchange —
+// no flood loops by construction. ACL applies to every merged record.
+const TRACKER_PEER_URLS = (process.env.TRACKER_PEERS || '').split(',').map((s) => s.trim()).filter(Boolean);
+process.argv.forEach((a, i) => { if (process.argv[i - 1] === '--tracker-peer') TRACKER_PEER_URLS.push(a); });
+const TRACKER_MAX_RECORDS = 500;   // spam backstop: updates always land, new ids drop when full
+function trackerRecordsOut() {
+  const now = Date.now();
+  return [...TRACKER.entries()].map(([id, r]) => ({
+    serverId: id, addr: r.addr, proto: r.proto, engineVer: r.engineVer, worldHash: r.worldHash,
+    playerCount: r.playerCount, name: r.name, ageMs: now - r.lastSeen,
+  }));
+}
+function trackerMergeRecords(records, ip) {
+  const now = Date.now();
+  let merged = 0;
+  for (const rec of records || []) {
+    if (!rec || !/^[0-9a-f]{32}$/.test(rec.serverId || '') || !/^[\w.-]+:\d+$/.test(rec.addr || '')) continue;
+    if (!rec.proto || !rec.engineVer || !rec.worldHash || rec.serverId === getServerId()) continue;
+    if (!aclAllows({ serverId: rec.serverId, ip, worldHash: rec.worldHash })) continue;
+    const lastSeen = now - Math.max(0, Math.min(rec.ageMs | 0, TRACKER_TTL));
+    const existing = TRACKER.get(rec.serverId);
+    if (existing && existing.lastSeen >= lastSeen) continue;              // ours is fresher
+    if (!existing && TRACKER.size >= TRACKER_MAX_RECORDS) continue;       // full — updates only
+    TRACKER.set(rec.serverId, {
+      addr: rec.addr, proto: rec.proto, engineVer: rec.engineVer, worldHash: rec.worldHash,
+      playerCount: rec.playerCount | 0, name: String(rec.name || '').slice(0, 60), lastSeen,
+    });
+    merged++;
+  }
+  return merged;
+}
+async function trackerFederateRound() {
+  if (!TRACKER_MODE || !TRACKER_PEER_URLS.length) return;
+  trackerSweep();
+  for (const u of TRACKER_PEER_URLS) {
+    try {
+      const resp = await fetch(u.replace(/\/+$/, '') + '/api/tracker/sync', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serverId: getServerId(), records: trackerRecordsOut() }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data.ok) {
+        const merged = trackerMergeRecords(data.records, null);
+        pushTraffic('out', 'federate', u, true, `⇄ sent ${TRACKER.size} · merged ${merged} back`);
+      } else pushTraffic('out', 'federate', u, false, `refused: ${data.reason || resp.status}`);
+    } catch (e) { pushTraffic('out', 'federate', u, false, e.code || 'unreachable'); }
+  }
+}
+
 // Game-server side: announce to every configured tracker (~30 s) and merge the
 // returned same-world peers into the gossip table.
 const TRACKER_URLS = (process.env.TRACKER_URL || '').split(',').map((s) => s.trim()).filter(Boolean);
@@ -2428,6 +2481,10 @@ async function route(req, res) {
       logResponse(method, url.pathname, 403, `tracker/announce refused by ACL: ${serverId.slice(0, 8)}`);
       return json(res, 403, { ok: false, reason: 'acl' });
     }
+    if (!TRACKER.has(serverId) && TRACKER.size >= TRACKER_MAX_RECORDS) {
+      logResponse(method, url.pathname, 503, 'tracker full');
+      return json(res, 503, { ok: false, reason: 'tracker-full' });
+    }
     TRACKER.set(serverId, { addr, proto, engineVer, worldHash, playerCount: (tb.playerCount | 0), name: String(tb.name || '').slice(0, 60), lastSeen: Date.now() });
     pushTraffic('in', 'announce', addr, true, `${serverId.slice(0, 8)} · wh:${String(worldHash).slice(0, 8)} · ${tb.playerCount | 0} player(s)`);
     // Same-group peers only — incompatible worlds are segregated, never mixed.
@@ -2439,6 +2496,26 @@ async function route(req, res) {
     logResponse(method, url.pathname, 200, `announce ${serverId.slice(0, 8)} @${addr} wh:${String(worldHash).slice(0, 8)} → ${peers.length} peer(s)`);
     return json(res, 200, { ok: true, peers, ttlMs: TRACKER_TTL });
   }
+  // ── §MESH-01d2: tracker↔tracker federation sync (bidirectional exchange) ──
+  if (parts[0] === 'tracker' && parts[1] === 'sync' && method === 'POST') {
+    let sb;
+    try { sb = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
+    if (!/^[0-9a-f]{32}$/.test((sb && sb.serverId) || '')) {
+      logResponse(method, url.pathname, 400, 'tracker/sync: bad serverId');
+      return json(res, 400, { ok: false, error: 'serverId required' });
+    }
+    if (!aclAllows({ serverId: sb.serverId, ip: req.socket.remoteAddress })) {
+      pushTraffic('in', 'federate', sb.serverId.slice(0, 8), false, 'refused: ACL');
+      logResponse(method, url.pathname, 403, 'tracker/sync refused by ACL');
+      return json(res, 403, { ok: false, reason: 'acl' });
+    }
+    trackerSweep();
+    const merged = trackerMergeRecords(sb.records, req.socket.remoteAddress);
+    pushTraffic('in', 'federate', sb.serverId.slice(0, 8), true, `merged ${merged} of ${(sb.records || []).length} · table ${TRACKER.size}`);
+    logResponse(method, url.pathname, 200, `tracker sync ⇄ ${sb.serverId.slice(0, 8)}: merged ${merged}, table ${TRACKER.size}`);
+    return json(res, 200, { ok: true, merged, records: trackerRecordsOut() });
+  }
+
   if (parts[0] === 'tracker' && parts[1] === 'peers' && method === 'GET') {
     trackerSweep();
     const wh = url.searchParams.get('wh'), ev = url.searchParams.get('ev'), pr = url.searchParams.get('p');
@@ -9762,6 +9839,12 @@ server.listen(PORT, process.env.BIND_ADDR || '127.0.0.1', () => {
   // tracker announce heartbeat. Both are no-ops when nothing is configured.
   fetchBootstrapUrls().then(() => trackerAnnounceRound());
   setInterval(trackerAnnounceRound, MESH_ANNOUNCE_MS).unref();
+  // §MESH-01d2: tracker federation heartbeat (tracker-mode + --tracker-peer only)
+  if (TRACKER_MODE && TRACKER_PEER_URLS.length) {
+    trackerFederateRound();
+    setInterval(trackerFederateRound, MESH_ANNOUNCE_MS).unref();
+    console.log(`  Federate:  ${TRACKER_PEER_URLS.join(', ')}`);
+  }
   if (TRACKER_MODE) console.log(`  Mode:      TRACKER (rendezvous only — /api/tracker/announce + /peers; worlds grouped by proto/engineVer/worldHash)`);
   if (MESH.peers.size) console.log(`  Mesh:      ${MESH.peers.size} bootstrap peer(s) · serverId ${getServerId().slice(0, 8)} · worldHash ${getManifest().worldHash}`);
   const line = '═'.repeat(60);

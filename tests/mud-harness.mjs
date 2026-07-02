@@ -378,6 +378,27 @@ async function main() {
   }
   check(eveSeenH, 'a plain text file over HTTP alone bootstraps a stranger into the mesh (BOOTSTRAP_URLS gist-style backup)');
 
+  // ════════ (g) §MESH-01d2 — tracker federation ════════
+  // Server Ida announces ONLY to tracker A; server J announces ONLY to tracker
+  // B, which federates with A. J must still discover Ida — proof that manually
+  // connecting two trackers implicitly shares both server lists.
+  console.log('\n[G] §MESH-01d2 — tracker federation (announce tables merge)');
+  const trkA2 = await startServer(PORT + 11, { TRACKER_MODE: '1', MESH_SERVER_ID: '6'.repeat(32), MESH_ANNOUNCE_MS: '150', PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 11}.json`) });
+  const trkB2 = await startServer(PORT + 12, { TRACKER_MODE: '1', MESH_SERVER_ID: '5'.repeat(32), MESH_ANNOUNCE_MS: '150', TRACKER_PEERS: trkA2.base, PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 12}.json`) });
+  const mI = await startServer(PORT + 13, mkEnv(PORT + 13, '4'.repeat(32), { TRACKER_URL: trkA2.base, MESH_ANNOUNCE_MS: '150' }));
+  const mJ = await startServer(PORT + 14, mkEnv(PORT + 14, '3'.repeat(32), { TRACKER_URL: trkB2.base, MESH_ANNOUNCE_MS: '150' }));
+  await jpost('/session/start', { name: 'Ida', seed: 61 }, mI.base);
+  let idaSeen = false;
+  for (let i = 0; i < 50 && !idaSeen; i++) {
+    await sleep(200);
+    idaSeen = (((await jget('/session/who', mJ.base)).remotes) || []).some((p) => p.name === 'Ida');
+  }
+  check(idaSeen, 'federated trackers: a server announced only to tracker A is discovered via tracker B (Ida visible on J)');
+  check((await jget(`/tracker/peers?wh=${manA.worldHash}`, trkB2.base)).count >= 2,
+    'tracker B holds both servers in its announce table after the federation merge');
+  const stB = await jget('/mesh/status', trkB2.base);
+  check((stB.traffic || []).some((t) => t.kind === 'federate' && t.ok), 'federation packets appear in tracker B’s information-passed log');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});
