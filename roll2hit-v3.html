@@ -9215,6 +9215,258 @@ function _moverWorld() {
   };
 }
 
+
+// §NAV-01c — unified room-description kernel. The block between the ROOMS:CORE
+// sentinels is inlined BYTE-IDENTICALLY from rooms.js (the MUD server require()s
+// the same source); scripts/check-rooms-parity.js asserts the two copies match.
+// Edit rooms.js, not this copy, then re-run: node scripts/check-rooms-parity.js
+// ◆◆◆ ROOMS:CORE:START ◆◆◆
+const __ROOM_DIRS = { N: [-1, 0], S: [1, 0], E: [0, 1], W: [0, -1] };
+const __ROOM_DIRWORD = { N: 'north', S: 'south', E: 'east', W: 'west' };
+
+// Deterministic per-cell hash — prose must be identical across client/server/tests.
+function __roomHash(r, c) {
+  let h = ((r * 73856093) ^ (c * 19349663)) >>> 0;
+  h = Math.imul(h ^ (h >>> 13), 0x5bd1e995) >>> 0;
+  return (h ^ (h >>> 15)) >>> 0;
+}
+
+// Same topology as the mover kernel: rows clamp at the band edges, cols wrap E↔W.
+function __roomStep(proj, r, c, dr, dc) {
+  const nr = r + dr;
+  const nc = (((c + dc) % proj.COLS) + proj.COLS) % proj.COLS;
+  return { nr, nc, oob: nr < 0 || nr >= proj.ROWS };
+}
+
+// Display labels are often "Name — Epithet"; signage wants just the name.
+function __roomShortLabel(label) { return String(label).split(' — ')[0]; }
+
+// Per-terrain prose variants ({label} is substituted with the terrain's display
+// label, so the _default set reads sensibly for all 60+ terrain keys).
+const __ROOM_PROSE = {
+  road: [
+    'The old highway runs straight and sure here, its stones worn smooth by centuries of boots and cartwheels.',
+    'A paved road cuts through the country, verges cropped short, milestones squatting in the grass like patient toads.',
+    'The road is quiet. Wind, wheel-ruts, and the far-off smell of someone else\'s cooking fire.',
+    'Flagstones underfoot — the highway holds its line across the land, and nothing on it means you harm.',
+  ],
+  ocean: [
+    'Open water. The lane holds — a channel of slack sea where the ferrymen swear the crossing is honest.',
+    'Grey swell on either side. You follow the sea-lane, and the sea, for now, permits it.',
+    'Salt spray and gull-cry. The crossing runs true; land is a rumor in the haze ahead.',
+  ],
+  midlands: [
+    'Rolling open country — hedgerows, larks, and a horizon that promises more of the same.',
+    'Grassland stretches out, seamed with old field-walls no one has claimed in a generation.',
+    'A wide green nowhere. Good walking, no shelter, and the sky watching everything.',
+    'Meadow and thistle. Somewhere far off a dog barks twice, then thinks better of it.',
+  ],
+  forest: [
+    'The trees close in — resin, birdsong, and a green light that keeps its own counsel.',
+    'Old forest. Roots ridge the ground like knuckles, and the canopy swallows the sky whole.',
+    'Deadfall and fern. Every hundred paces something small stops moving until you pass.',
+  ],
+  highlands: [
+    'The land tilts upward — scree, heather, and wind with an opinion.',
+    'High country. Stone shoulders through thin turf, and the cold arrives before the view does.',
+    'A ridge line staggers on ahead. The valleys below hold their mist like a grudge.',
+  ],
+  swamp: [
+    'The ground goes soft and dishonest. Black water pools in every low place.',
+    'Reed and rot. Each step makes a sound like the marsh tasting you.',
+    'Mosquito haze over standing water. Whatever path there was is a matter of faith now.',
+  ],
+  hag_swamp: [
+    'The marsh here is wrong — the water too still, the reeds bent as if listening.',
+    'Rag-strips knotted in the willows. Someone marks territory here, and it is not the birds.',
+  ],
+  desert: [
+    'Sand and shale under a flat, punishing sky. Distances lie to you here.',
+    'The dunes keep their silence. Your shadow is the only companion that stays.',
+    'Heat shimmer bends the horizon. Somewhere beneath the grit, an older road sleeps.',
+  ],
+  jungle: [
+    'Green walls on every side — vines, wet heat, and the constant argument of unseen birds.',
+    'The undergrowth fights for every yard. Something bright and venomous watches from a leaf.',
+  ],
+  beach: [
+    'Hard wet sand and wrack-line salvage. The tide keeps its ledger either way.',
+    'Dune grass and driftwood. The sea worries the shore like it forgot something here.',
+  ],
+  city: [
+    'Outskirts — kitchen gardens, wash-lines, and walls close enough to smell the smoke.',
+    'The traffic thickens: handcarts, gossip, and the particular mud of a town\'s doorstep.',
+  ],
+  city_slums: [
+    'Lean-tos and patched tarpaulin. The city\'s shadow is longer than its walls.',
+    'Narrow tracks between shanties. Eyes count your gear from doorways without doors.',
+  ],
+  alley: [
+    'A pinched back-way between walls, all puddles and painted-over warnings.',
+    'The alley smells of cats and old arguments. Keep your purse on the inside.',
+  ],
+  _default: [
+    'The land here answers to {label}. The path continues, and the country keeps its thoughts to itself.',
+    '{label}, mile after mile of it. No signpost claims this ground, but the walking is fair.',
+    'Open country in the manner of {label}. Nothing marks this place except your passing through it.',
+  ],
+};
+
+// Follow the road/lane net from the neighbour cell in `dir` to the nearest named
+// cell (BFS constrained to road∪lane∪named cells, never back through the origin).
+// Returns {code, steps} or null. Deterministic: FIFO BFS, N/S/E/W expansion order.
+function __roadDestination(world, pos, dir, maxSteps) {
+  const d0 = __ROOM_DIRS[dir];
+  if (!d0) return null;
+  const s0 = __roomStep(world.proj, pos.r, pos.c, d0[0], d0[1]);
+  if (s0.oob) return null;
+  const originKey = pos.r + ',' + pos.c;
+  const startKey = s0.nr + ',' + s0.nc;
+  const onNet = (k, r, c) => world.roadCells.has(k) || world.laneCells.has(k) ||
+                             (world.cellCodes(r, c) || []).length > 0;
+  if (!onNet(startKey, s0.nr, s0.nc)) return null;
+  const seen = new Set([originKey, startKey]);
+  let frontier = [[s0.nr, s0.nc]];
+  for (let steps = 1; steps <= (maxSteps || 40) && frontier.length; steps++) {
+    const next = [];
+    for (const [r, c] of frontier) {
+      const codes = world.cellCodes(r, c) || [];
+      if (codes.length) return { code: codes[0], steps };
+      for (const dk of ['N', 'S', 'E', 'W']) {
+        const dd = __ROOM_DIRS[dk];
+        const s = __roomStep(world.proj, r, c, dd[0], dd[1]);
+        if (s.oob) continue;
+        const k = s.nr + ',' + s.nc;
+        if (seen.has(k) || world.impassable.has(k) || !onNet(k, s.nr, s.nc)) continue;
+        seen.add(k);
+        next.push([s.nr, s.nc]);
+      }
+    }
+    frontier = next;
+  }
+  return null;
+}
+
+// Nearest named cells over open ground (BFS over passable cells, radius maxR).
+// Each: {code, steps, dir} where dir is the first step taken from the origin.
+// Deterministic: results sorted by (steps, code), truncated to maxN.
+function __nearestLandmarks(world, pos, maxR, maxN) {
+  const found = [];
+  const seen = new Set([pos.r + ',' + pos.c]);
+  let frontier = [];
+  for (const dk of ['N', 'S', 'E', 'W']) {
+    const dd = __ROOM_DIRS[dk];
+    const s = __roomStep(world.proj, pos.r, pos.c, dd[0], dd[1]);
+    if (s.oob) continue;
+    const k = s.nr + ',' + s.nc;
+    if (world.impassable.has(k)) continue;
+    seen.add(k);
+    frontier.push([s.nr, s.nc, dk]);
+  }
+  for (let steps = 1; steps <= (maxR || 12) && frontier.length; steps++) {
+    const next = [];
+    for (const [r, c, dir0] of frontier) {
+      const codes = world.cellCodes(r, c) || [];
+      if (codes.length) { found.push({ code: codes[0], steps, dir: dir0 }); continue; }
+      for (const dk of ['N', 'S', 'E', 'W']) {
+        const dd = __ROOM_DIRS[dk];
+        const s = __roomStep(world.proj, r, c, dd[0], dd[1]);
+        if (s.oob) continue;
+        const k = s.nr + ',' + s.nc;
+        if (seen.has(k) || world.impassable.has(k)) continue;
+        seen.add(k);
+        next.push([s.nr, s.nc, dir0]);
+      }
+    }
+    frontier = next;
+  }
+  found.sort((a, b) => a.steps - b.steps || (a.code < b.code ? -1 : 1));
+  return found.slice(0, maxN || 3);
+}
+
+// describeCell(world, pos) -> Room  (§NAV-01c locked signature)
+function describeCell(world, pos) {
+  const r = pos.r, c = pos.c;
+  const key = r + ',' + c;
+  const codes = world.cellCodes(r, c) || [];
+  const terrain = world.terrainAt(r, c);
+  const info = world.terrainInfo(terrain);
+
+  // exits — one per compass direction, kernel topology
+  const exits = [];
+  for (const dk of ['N', 'S', 'E', 'W']) {
+    const dd = __ROOM_DIRS[dk];
+    const s = __roomStep(world.proj, r, c, dd[0], dd[1]);
+    if (s.oob) { exits.push({ dir: dk, kind: 'blocked', label: 'the edge of the known world', hint: null, steps: null }); continue; }
+    const nk = s.nr + ',' + s.nc;
+    if (world.impassable.has(nk)) { exits.push({ dir: dk, kind: 'blocked', label: 'open sea', hint: null, steps: null }); continue; }
+    const nCodes = world.cellCodes(s.nr, s.nc) || [];
+    if (nCodes.length) {
+      exits.push({ dir: dk, kind: 'node', label: world.nodeLabel(nCodes[0]), hint: null, steps: 1 });
+    } else if (world.roadCells.has(nk) || world.laneCells.has(nk)) {
+      const kind = world.roadCells.has(nk) ? 'road' : 'lane';
+      const dest = __roadDestination(world, pos, dk, 40);
+      const word = kind === 'lane' ? 'sea-lane' : 'road';
+      exits.push({
+        dir: dk, kind,
+        label: word,
+        hint: dest ? 'toward ' + __roomShortLabel(world.nodeLabel(dest.code)) + ' (' + dest.steps + ')' : 'an unmarked stretch',
+        steps: dest ? dest.steps : null,
+      });
+    } else {
+      exits.push({ dir: dk, kind: 'terrain', label: world.terrainInfo(world.terrainAt(s.nr, s.nc)).label, hint: null, steps: null });
+    }
+  }
+
+  // signposts — road/lane signage first; falls back to the nearest landmark
+  const signposts = [];
+  for (const e of exits) {
+    if ((e.kind === 'road' || e.kind === 'lane') && e.steps != null) {
+      const word = e.kind === 'lane' ? 'sea-lane' : 'road';
+      signposts.push('The ' + word + ' runs ' + __ROOM_DIRWORD[e.dir] + ' ' + e.hint + '.');
+    }
+  }
+  const landmarks = __nearestLandmarks(world, pos, 12, 3);
+  if (!signposts.length && landmarks.length) {
+    const lm = landmarks[0];
+    signposts.push(__roomShortLabel(world.nodeLabel(lm.code)) + ' lies ' + lm.steps +
+      (lm.steps === 1 ? ' step ' : ' steps ') + __ROOM_DIRWORD[lm.dir] + ' of here.');
+  }
+
+  // prose — deterministic variant, {label} substituted
+  const variants = __ROOM_PROSE[terrain] || __ROOM_PROSE._default;
+  const prose = variants[__roomHash(r, c) % variants.length].replace(/\{label\}/g, info.label);
+
+  // title/sub — named cells title by primary node; empty cells by terrain,
+  // located relative to the nearest landmark (replaces the raw Row/Col line)
+  let title, sub;
+  if (codes.length) {
+    title = world.nodeLabel(codes[0]);
+    sub = codes.length > 1 ? codes.length + ' locales share this ground' : info.label;
+  } else {
+    title = info.label;
+    sub = landmarks.length
+      ? 'Near ' + __roomShortLabel(world.nodeLabel(landmarks[0].code)) + ' · ' + r + ',' + c
+      : 'Deep wilderness · ' + r + ',' + c;
+  }
+
+  return { icon: info.icon, title, sub, terrain, prose, exits, signposts, landmarks };
+}
+// ◆◆◆ ROOMS:CORE:END ◆◆◆
+
+// §NAV-01c — room world: the mover world plus the lookups describeCell needs.
+function _roomWorld() {
+  const w = _moverWorld();
+  w.roadCells = ROAD_CELLS;
+  w.laneCells = SEA_LANES;
+  w.nodeLabel = (code) => (NODE_MAP[code] && NODE_MAP[code].label) || code;
+  w.terrainInfo = (key) => {
+    const t = WORLD_DB[key] || WORLD_DB.midlands;
+    return { label: (t && t.label) || key, icon: (t && t.icon) || '·' };
+  };
+  return w;
+}
+
 // §TIMELESS-01: HUNTING_GROUNDS removed with the Hunt/Stalk feature.
 
 /* ── Layer 42: NPC World-Truth Dialogue System ── */
@@ -26232,19 +26484,16 @@ function _renderNodeShell(numBadge, nameText, actText, badgeText, bodyText) {
 }
 
 function _enterEmptyCell(r, c) {
-  const terrain      = _inferTerrain(r, c);
-  const terrainEntry = WORLD_DB[terrain] || WORLD_DB.midlands;
-  const _label       = terrainEntry.label || terrain;
-  _renderNodeShell(
-    terrainEntry.icon || '·',
-    _label,
-    'Row ' + r + ', Col ' + c,
-    '— ' + _label + ' —',
-    'The path continues. No named location marks this ground.'
-  );
+  // §NAV-01c — MUD room layer: deterministic terrain prose, road signage toward the
+  // next settlement, nearest-landmark line, region name instead of raw coordinates.
+  const room = describeCell(_roomWorld(), { r, c });
+  const body = room.prose +
+    (room.signposts.length ? '\n\n' + room.signposts.map(s => '🪧 ' + s).join('\n') : '');
+  _renderNodeShell(room.icon, room.title, room.sub, '— ' + room.title + ' —', body);
   document.getElementById('story-move-msg').textContent = '';
 
   // §CELL-09 / §TIMELESS-01: encounter rolls at the terrain's base rate on each step.
+  const terrain = room.terrain;
   const baseRate = TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default;
   if (Math.random() < baseRate) {
     const monster = _weightedMonsterPick(terrain);
@@ -32613,9 +32862,14 @@ function _renderMiniMap() {
       const key = `${r},${c}`;
       const code = cellCode(key);
       const isPlayer = (dr === 0 && dc === 0);
-      const dist = Math.max(Math.abs(dr), Math.abs(dc));
       const cell = document.createElement('div');
       cell.className = 'mmc';
+
+      // §NAV-01e / §MAP-COLOR: same terrain base layer as the WORLD map, zoomed in —
+      // land types read as colour, impassable sea is dark navy, roads pale flagstone.
+      const _imp     = IMPASSABLE_CELLS.has(key);
+      const _terr    = (code && NODE_MAP[code]) ? NODE_MAP[code].name : _inferTerrain(r, c);
+      const _landCol = _imp ? '#0a2a4a' : _terrainColor(_terr);
 
       if (isPlayer) {
         const curNode = NODE_MAP[S_story.currentCode];
@@ -32629,28 +32883,32 @@ function _renderMiniMap() {
         const ebDef   = isEB && !!(S_story.defeatedBattles && S_story.defeatedBattles[code]);
         if (isEB) {
           cell.classList.add(ebDef ? 'mmc-epic-visited' : (isVis || isTrail ? 'mmc-epic' : 'mmc-epic-unvis'));
-          cell.textContent = (isVis || isTrail) ? code.slice(0,2) : '?';
+          cell.textContent = (isVis || isTrail) ? code.slice(0,2) : '·';
         } else if (isVis || isTrail) {
           cell.classList.add(isTrail ? 'mmc-trail' : 'mmc-visited');
           const warmColor = _getNodeMapColor(code);
           if (warmColor !== '#555') cell.style.background = warmColor;
           cell.textContent = code.slice(0,2);
         } else {
-          cell.classList.add('mmc-node');
-          cell.textContent = '?';
+          // unvisited node — terrain tint + bright border, like the world map
+          cell.style.background = _landCol;
+          cell.style.border = '1px solid rgba(240,230,200,0.45)';
+          cell.style.color = '#0e0a04';
+          cell.textContent = '·';
         }
-      } else if (visitedCells[key]) {
-        // Visited empty cell — show terrain glyph
-        const terrain = _inferTerrain(r, c);
-        cell.classList.add('mmc-empty-visited');
-        cell.textContent = _MMC_TERRAIN_GLYPHS[terrain] || _MMC_TERRAIN_GLYPHS._default;
-      } else if (dist <= 3) {
-        // Within sight radius — partially known
-        cell.classList.add('mmc-partial');
-        cell.textContent = '·';
       } else {
-        // Full fog
-        cell.classList.add('mmc-fog-cell');
+        // empty cell — terrain paint; explored full strength + faint border,
+        // unexplored slightly muted (same treatment as the world map)
+        cell.style.background = _landCol;
+        cell.style.color = 'rgba(14,10,4,0.85)';
+        const glyph = _MMC_TERRAIN_GLYPHS[_terr];
+        if (visitedCells[key]) {
+          cell.style.border = '1px solid rgba(240,230,200,0.3)';
+          if (glyph && glyph !== '·') cell.textContent = glyph;
+        } else if (!_imp) {
+          cell.style.opacity = '0.72';
+          if (glyph === '─') cell.textContent = glyph;   // highways stay legible unexplored
+        }
       }
 
       // L44-R: Void's First Sign at row 4, col 3 — flickers in Act I, traversable in Act V
@@ -32681,6 +32939,7 @@ function _renderMiniMap() {
 // returns the colour for *passable* terrain (incl. crossable open-water lanes).
 function _terrainColor(t) {
   t = String(t || '').toLowerCase();
+  if (t === 'road')                                                         return '#c8b98c'; // §NAV-01b highway — pale flagstone
   if (/cosmic|heaven|cloud|astral|void|celestial|star/.test(t))            return '#5a4585'; // cosmic — purple
   if (/crypt|catacomb|sewer|cave|cavern|dungeon|tomb|vault|mine|lair/.test(t)) return '#33291f'; // underground — dark brown
   if (/beach|coast|shore|island|atlantis/.test(t))                          return '#c2a85e'; // coast/isle — sand
@@ -32768,9 +33027,9 @@ function _renderWorldMiniMap() {
   const leg = document.getElementById('world-map-legend');
   if (leg && !leg.childElementCount) {
     const LEG = [
-      ['Sea', '#0a2a4a'], ['Water', '#1d6a8f'], ['City', '#7a7a82'], ['Forest', '#1f5f33'],
-      ['Plains', '#6e7a30'], ['Desert', '#b08a3e'], ['Mtn', '#6a6058'], ['Swamp', '#45521f'],
-      ['Snow', '#a8c0cc'], ['Coast', '#c2a85e'],
+      ['Sea', '#0a2a4a'], ['Water', '#1d6a8f'], ['Road', '#c8b98c'], ['City', '#7a7a82'],
+      ['Forest', '#1f5f33'], ['Plains', '#6e7a30'], ['Desert', '#b08a3e'], ['Mtn', '#6a6058'],
+      ['Swamp', '#45521f'], ['Snow', '#a8c0cc'], ['Coast', '#c2a85e'],
     ];
     leg.innerHTML = LEG.map(([n, c]) =>
       '<span class="wm-leg"><i style="background:' + c + '"></i>' + n + '</span>').join('');

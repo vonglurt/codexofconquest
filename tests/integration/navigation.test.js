@@ -97,24 +97,137 @@ test.describe('Empty-cell render shell (_enterEmptyCell)', () => {
     await moveNoEncounter(page, 'N');   // LHR → empty (9,197)
     expect(pageErrors).toEqual([]);
 
-    // The shell reuses the named-node slots. Body is the constant stub; the
-    // header reflects the cell coords + inferred terrain (derived in-page so the
-    // assertion survives terrain re-tuning).
+    // §NAV-01c: the shell renders the room layer — deterministic prose + signage
+    // from describeCell (derived in-page so assertions survive prose re-tuning).
     const shell = await page.evaluate(() => {
-      const terrain = _inferTerrain(9, 197);
-      const label = (WORLD_DB[terrain] || WORLD_DB.midlands).label;
+      const room = describeCell(_roomWorld(), { r: 9, c: 197 });
+      const expectedBody = room.prose +
+        (room.signposts.length ? '\n\n' + room.signposts.map(s => '🪧 ' + s).join('\n') : '');
       return {
         name: document.getElementById('s-node-name').textContent,
         act: document.getElementById('s-node-act').textContent,
         badge: document.getElementById('story-act-badge').textContent,
         body: document.getElementById('story-text-box').textContent,
-        expectLabel: label,
+        room, expectedBody,
       };
     });
-    expect(shell.body).toBe('The path continues. No named location marks this ground.');
-    expect(shell.act).toBe('Row 9, Col 197');
-    expect(shell.name).toBe(shell.expectLabel);
-    expect(shell.badge).toBe('— ' + shell.expectLabel + ' —');
+    expect(shell.body).toBe(shell.expectedBody);
+    expect(shell.room.prose.length).toBeGreaterThan(20);
+    expect(shell.name).toBe(shell.room.title);
+    expect(shell.act).toBe(shell.room.sub);
+    expect(shell.badge).toBe('— ' + shell.room.title + ' —');
+  });
+});
+
+// ── §NAV-01c — room layer (describeCell) ─────────────────────────────────────
+
+test.describe('§NAV-01c room layer (describeCell)', () => {
+  test.beforeEach(async ({ page }) => {
+    await seedAndLoad(page, seedAt(LHR));
+    await dismissContinue(page);
+  });
+
+  test('describeCell is deterministic — two calls return identical rooms', async ({ page }) => {
+    const [a, b] = await page.evaluate(() => [
+      describeCell(_roomWorld(), { r: 9, c: 197 }),
+      describeCell(_roomWorld(), { r: 9, c: 197 }),
+    ]);
+    expect(a).toEqual(b);
+  });
+
+  test('a road cell describes the highway; road exits carry "toward X (n)" signage', async ({ page }) => {
+    const road = await page.evaluate(() => {
+      const key = [...ROAD_CELLS][0];
+      const [r, c] = key.split(',').map(Number);
+      const room = describeCell(_roomWorld(), { r, c });
+      return { key, room, isRoadProse: /road|highway|flagstone/i.test(room.prose) };
+    });
+    expect(road.room.terrain).toBe('road');
+    expect(road.isRoadProse).toBe(true);
+    for (const e of road.room.exits) {
+      expect(['node', 'road', 'lane', 'terrain', 'blocked']).toContain(e.kind);
+      if ((e.kind === 'road' || e.kind === 'lane') && e.steps != null) {
+        expect(e.hint).toMatch(/^toward .+ \(\d+\)$/);
+      }
+    }
+  });
+
+  test('an empty cell near a city names its landmark in the header + a signpost', async ({ page }) => {
+    const room = await page.evaluate(() => describeCell(_roomWorld(), { r: 9, c: 197 }));
+    expect(room.landmarks.length).toBeGreaterThan(0);
+    expect(room.landmarks[0].steps).toBeGreaterThanOrEqual(1);
+    expect(room.sub).toMatch(/^Near .+ · 9,197$/);
+    expect(room.signposts.length).toBeGreaterThan(0);
+  });
+
+  test('rooms differ across cells (no more identical wilderness)', async ({ page }) => {
+    const [p1, p2] = await page.evaluate(() => {
+      const a = describeCell(_roomWorld(), { r: 9, c: 197 });
+      const b = describeCell(_roomWorld(), { r: 15, c: 194 });
+      return [a.prose + '|' + a.sub, b.prose + '|' + b.sub];
+    });
+    expect(p1).not.toBe(p2);
+  });
+});
+
+// ── §NAV-01 verify — the real movement buttons drive the player ──────────────
+
+test.describe('§NAV-01 D-pad buttons move the player', () => {
+  test.beforeEach(async ({ page }) => {
+    await seedAndLoad(page, seedAt(LHR));
+    await dismissContinue(page);
+  });
+
+  test('clicking #btn-E moves one cell east onto BMA and re-renders', async ({ page }) => {
+    await page.evaluate(() => { window.__rr = Math.random; Math.random = () => 1; });
+    await page.click('#btn-E');
+    await page.evaluate(() => { Math.random = window.__rr; });
+    const s = await page.evaluate(() => ({
+      r: S_story.playerR, c: S_story.playerC, code: S_story.currentCode,
+      name: document.getElementById('s-node-name').textContent,
+    }));
+    expect(s.r).toBe(10); expect(s.c).toBe(198); expect(s.code).toBe('BMA');
+    expect(s.name.length).toBeGreaterThan(0);
+  });
+
+  test('clicking #btn-N steps into open terrain and the room text changes', async ({ page }) => {
+    const before = await page.evaluate(() => document.getElementById('story-text-box').textContent);
+    await page.evaluate(() => { window.__rr = Math.random; Math.random = () => 1; });
+    await page.click('#btn-N');
+    await page.evaluate(() => { Math.random = window.__rr; });
+    const after = await page.evaluate(() => ({
+      r: S_story.playerR, c: S_story.playerC,
+      body: document.getElementById('story-text-box').textContent,
+    }));
+    expect(after.r).toBe(9); expect(after.c).toBe(197);
+    expect(after.body).not.toBe(before);
+    expect(after.body.length).toBeGreaterThan(20);
+  });
+
+  test('blocked direction (S into sea) disables the D-pad button and its exit line', async ({ page }) => {
+    // _updateExitLinks disables impossible moves outright — the button cannot
+    // even be clicked (and the kernel would refuse the step anyway).
+    const s = await page.evaluate(() => ({
+      disabled: document.getElementById('btn-S').disabled,
+      exitLine: document.getElementById('exit-S').textContent,
+      r: S_story.playerR, c: S_story.playerC,
+    }));
+    expect(s.disabled).toBe(true);
+    expect(s.exitLine).toContain('(none)');
+    expect(s.r).toBe(10); expect(s.c).toBe(197);
+  });
+
+  test('local minimap paints terrain colours like the world map (§NAV-01e)', async ({ page }) => {
+    const mm = await page.evaluate(() => {
+      _renderMiniMap();
+      const cells = [...document.querySelectorAll('#mini-map-grid .mmc')];
+      const painted = cells.filter(el => el.style.background && el.style.background !== '').length;
+      const fogged = cells.filter(el => el.classList.contains('mmc-fog-cell') || el.classList.contains('mmc-partial')).length;
+      return { total: cells.length, painted, fogged };
+    });
+    expect(mm.total).toBe(11 * 17);
+    expect(mm.fogged).toBe(0);                        // fog classes retired (§NAV-01e)
+    expect(mm.painted).toBeGreaterThan(mm.total / 2); // terrain base layer present
   });
 });
 
