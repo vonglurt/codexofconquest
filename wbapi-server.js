@@ -207,7 +207,12 @@ function aclAllows({ serverId, ip, worldHash }) {
 // server's own outbound event ring (we are the single writer of these).
 const MESH = {
   peers: new Map(), remote: new Map(), vv: {}, log: [], seq: 0,
+  traffic: [],   // §MESH-01 UI: ring of recent packets {ts, dir:'in'|'out', kind, peer, ok, note}
 };
+function pushTraffic(dir, kind, peer, ok, note) {
+  MESH.traffic.push({ ts: Date.now(), dir, kind, peer: String(peer || '').slice(0, 60), ok: !!ok, note: String(note || '').slice(0, 120) });
+  if (MESH.traffic.length > 200) MESH.traffic.shift();
+}
 const MESH_GOSSIP_MS  = parseInt(process.env.MESH_GOSSIP_MS || '', 10) || 2000;
 const MESH_ORIGIN_TTL = 90_000;        // drop a remote origin after 90 s of silence
 const MESH_FANOUT_MAX_AGE = 10_000;    // replayed history advances vv but is not re-announced
@@ -266,12 +271,18 @@ function meshPayload() {
 // response). Compatibility gate first, ACL second, then single-writer merge.
 function meshIngest(p, ip) {
   const m = getManifest();
-  if (!p || p.proto !== m.proto || p.engineVer !== m.engineVer || p.worldHash !== m.worldHash)
+  const from = (p && p.addr) || ip;
+  if (!p || p.proto !== m.proto || p.engineVer !== m.engineVer || p.worldHash !== m.worldHash) {
+    pushTraffic('in', 'gossip', from, false, `refused: incompatible (${p && p.engineVer}/${String(p && p.worldHash).slice(0, 8)})`);
     return { status: 409, body: { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash } } };
+  }
   if (!p.serverId || p.serverId === getServerId())
     return { status: 400, body: { ok: false, reason: 'bad-serverId' } };
-  if (!aclAllows({ serverId: p.serverId, ip, worldHash: p.worldHash }))
+  if (!aclAllows({ serverId: p.serverId, ip, worldHash: p.worldHash })) {
+    pushTraffic('in', 'gossip', from, false, `refused: ACL (${String(p.serverId).slice(0, 8)})`);
     return { status: 403, body: { ok: false, reason: 'acl' } };
+  }
+  pushTraffic('in', 'gossip', from, true, `${(p.events || []).length} ev · snap ${(p.snapshot && p.snapshot.sessions || []).length} · ${(p.peers || []).length} px · ${String(p.serverId).slice(0, 8)}`);
   if (p.addr && p.addr !== meshAdvertise()) {
     const rec = MESH.peers.get(p.addr) || {};
     MESH.peers.set(p.addr, { ...rec, serverId: p.serverId, lastSeen: Date.now(), lastErr: null });
@@ -308,12 +319,15 @@ async function meshGossipRound() {
           for (const a of data.peers || [])
             if (typeof a === 'string' && a && a !== meshAdvertise() && !MESH.peers.has(a))
               MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });
+          pushTraffic('out', 'gossip', addr, true, `⇄ ${(data.events || []).length} ev · snap ${(data.snapshot && data.snapshot.sessions || []).length} · ${(data.peers || []).length} px`);
         } else {
           MESH.peers.set(addr, { ...rec, lastErr: data.reason || `http-${resp.status}` });
+          pushTraffic('out', 'gossip', addr, false, `refused: ${data.reason || resp.status}`);
         }
       } catch (e) {
         const rec = MESH.peers.get(addr) || {};
         MESH.peers.set(addr, { ...rec, lastErr: e.code || 'unreachable' });
+        pushTraffic('out', 'gossip', addr, false, e.code || 'unreachable');
       }
     }
     // Expire origins that stopped heartbeating.
@@ -379,11 +393,13 @@ async function trackerAnnounceRound() {
           engineVer: m.engineVer, worldHash: m.worldHash, playerCount: SESSIONS.size }),
       });
       const data = await resp.json().catch(() => ({}));
-      if (resp.ok && data.ok)
+      if (resp.ok && data.ok) {
         for (const p of data.peers || [])
           if (p && p.addr && p.addr !== meshAdvertise() && !MESH.peers.has(p.addr))
             MESH.peers.set(p.addr, { serverId: p.serverId || null, lastSeen: 0, lastErr: null });
-    } catch { /* tracker down — the mesh carries on via gossip/cache */ }
+        pushTraffic('out', 'announce', u, true, `${SESSIONS.size} player(s) → ${(data.peers || []).length} peer(s) back`);
+      } else pushTraffic('out', 'announce', u, false, `refused: ${data.reason || resp.status}`);
+    } catch (e) { pushTraffic('out', 'announce', u, false, e.code || 'unreachable'); /* mesh carries on via gossip/cache */ }
   }
 }
 // §MESH-01d bootstrap backup: BOOTSTRAP_URLS = comma-separated plain-text URLs
@@ -402,7 +418,8 @@ async function fetchBootstrapUrls() {
         if (/^[\w.-]+:\d+$/.test(a) && a !== meshAdvertise() && !MESH.peers.has(a))
           MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });
       }
-    } catch { /* backup host unreachable — lower rungs of the ladder still apply */ }
+      pushTraffic('in', 'bootstrap', u, true, `${MESH.peers.size} peer(s) after parse`);
+    } catch (e) { pushTraffic('in', 'bootstrap', u, false, e.code || 'unreachable'); /* lower ladder rungs still apply */ }
   }
 }
 // ══ end §MESH-01 mesh layer ═══════════════════════════════════════════════════
@@ -1479,7 +1496,8 @@ async function route(req, res) {
   }
 
   // ── §MESH-01d: tracker mode — rendezvous only, never a relay, never an API ──
-  if (TRACKER_MODE && !['ping', 'manifest', 'tracker', 'help'].includes(parts[0])) {
+  if (TRACKER_MODE && !['ping', 'manifest', 'tracker', 'help'].includes(parts[0])
+      && !(parts[0] === 'mesh' && parts[1] === 'status')) {   // status stays visible for the 🌐 Mesh tab
     logResponse(method, url.pathname, 410, 'tracker-mode');
     return json(res, 410, { ok: false, error: 'tracker-mode: only /api/ping, /api/manifest, /api/tracker/* are served here' });
   }
@@ -2411,6 +2429,7 @@ async function route(req, res) {
       return json(res, 403, { ok: false, reason: 'acl' });
     }
     TRACKER.set(serverId, { addr, proto, engineVer, worldHash, playerCount: (tb.playerCount | 0), name: String(tb.name || '').slice(0, 60), lastSeen: Date.now() });
+    pushTraffic('in', 'announce', addr, true, `${serverId.slice(0, 8)} · wh:${String(worldHash).slice(0, 8)} · ${tb.playerCount | 0} player(s)`);
     // Same-group peers only — incompatible worlds are segregated, never mixed.
     const group = [];
     for (const [id, r] of TRACKER)
@@ -2438,6 +2457,39 @@ async function route(req, res) {
     }
     logResponse(method, url.pathname, 200, `peers: ${rows.length} row(s)`);
     return json(res, 200, { ok: true, count: rows.length, servers: rows });
+  }
+
+  // ── §MESH-01 UI: one-call mesh status for the worldbuilder 🌐 Mesh tab ──
+  if (parts[0] === 'mesh' && parts[1] === 'status' && method === 'GET') {
+    trackerSweep();
+    const m = getManifest();
+    const now = Date.now();
+    const peers = [...MESH.peers.entries()].map(([addr, r]) => ({
+      addr, serverId: r.serverId ? r.serverId.slice(0, 8) : null,
+      live: !!(r.lastSeen && now - r.lastSeen < 3 * MESH_GOSSIP_MS + 2000),
+      lastSeenMs: r.lastSeen ? now - r.lastSeen : null, lastErr: r.lastErr || null,
+    }));
+    const remotePlayers = [];
+    for (const [oid, rec] of MESH.remote) {
+      if (now - rec.lastSeen > MESH_ORIGIN_TTL) continue;
+      for (const [, p] of rec.sessions) remotePlayers.push({ name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8) });
+    }
+    const groups = {};
+    for (const [, r] of TRACKER) {
+      const k = `${r.engineVer} · ${r.worldHash}`;
+      groups[k] = groups[k] || { engineVer: r.engineVer, worldHash: r.worldHash, servers: 0, players: 0 };
+      groups[k].servers++; groups[k].players += r.playerCount || 0;
+    }
+    logResponse(method, url.pathname, 200, `mesh status: ${peers.length} peer(s) · ${remotePlayers.length} remote player(s) · ${MESH.traffic.length} pkt(s)`);
+    return json(res, 200, {
+      ok: true, trackerMode: TRACKER_MODE, serverId: getServerId().slice(0, 8), addr: meshAdvertise(),
+      proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash, parts: m.parts,
+      trackerUrls: [...new Set([...TRACKER_URLS, ...MESH_TRACKER_URLS])],
+      acl: { mode: getAcl().mode || 'open', file: path.basename(ACL_FILE) },
+      localPlayers: SESSIONS.size, peers, remotePlayers,
+      trackerGroups: Object.values(groups),
+      traffic: MESH.traffic.slice(-100).reverse(),
+    });
   }
 
   // ── §MESH-01: gossip ingress — compat gate → ACL → single-writer merge ──

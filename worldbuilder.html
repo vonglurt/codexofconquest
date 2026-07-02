@@ -415,6 +415,7 @@ select.fi{appearance:none;}
   <div class="nav-tab" data-tab="editor">✏ Editor</div>
   <div class="nav-tab" data-tab="mission">⛓ Mission</div>
   <div class="nav-tab" data-tab="walk">🚶 Walk</div>
+  <div class="nav-tab" data-tab="mesh">🌐 Mesh</div>
   <div class="nav-sep"></div>
   <div id="topbar-right">
     <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
@@ -4689,6 +4690,7 @@ function switchTab(name){
   document.querySelectorAll('.nav-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id===`tab-${name}`));
   if (name === 'loot' && WBAPI.loaded) lootTabActivated();
+  if (name === 'mesh' && window.meshTabActivated) meshTabActivated();   // §MESH-01 UI
 }
 document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.tab)));
 
@@ -9820,6 +9822,92 @@ Object.defineProperty(window, 'wkCur', { get: () => wkCur, configurable: true })
 window.wkNeighbors = wkNeighbors;
 window.wkGo        = wkGo;
 
+})();
+</script>
+
+<!-- ══ §MESH-01 UI — 🌐 Mesh tab: trackers, peers, remote players, packet log ══ -->
+<div class="panel" id="tab-mesh">
+  <style>
+    .mesh-hd  { font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+    .mesh-box { border:1px solid var(--border); border-radius:6px; padding:8px 10px; font-size:11px; line-height:1.8; min-height:44px; }
+    .mesh-box b { color: var(--accent); }
+  </style>
+  <div style="padding:14px 16px;display:flex;flex-direction:column;gap:14px;height:100%;overflow-y:auto">
+    <div id="mesh-identity" style="font-size:11px;color:var(--muted)">Loading mesh status…</div>
+    <div style="display:flex;gap:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:280px">
+        <div class="mesh-hd">🛰 Trackers &amp; world groups</div>
+        <div id="mesh-trackers" class="mesh-box"></div>
+      </div>
+      <div style="flex:1;min-width:280px">
+        <div class="mesh-hd">🤝 Peers</div>
+        <div id="mesh-peers" class="mesh-box"></div>
+      </div>
+      <div style="flex:1;min-width:280px">
+        <div class="mesh-hd">👥 Remote players</div>
+        <div id="mesh-remotes" class="mesh-box"></div>
+      </div>
+    </div>
+    <div>
+      <div class="mesh-hd">📦 Information passed — most recent first <span id="mesh-pkt-count"></span></div>
+      <div id="mesh-traffic" class="mesh-box" style="max-height:340px;overflow-y:auto;font-family:ui-monospace,monospace;font-size:10px;line-height:1.7"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// §MESH-01 UI — polls GET /api/mesh/status every 2 s while the tab is active
+// (same pattern as the API queue screen: server is the single source of truth,
+// the tab is a pure read-only view of it).
+(() => {
+  let meshTimer = null;
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const ago = (ms) => ms == null ? '' : (ms < 1500 ? 'now' : Math.round(ms / 1000) + 's ago');
+
+  function renderMeshStatus(d) {
+    const el = (id) => document.getElementById(id);
+    el('mesh-identity').innerHTML = (d.trackerMode ? '<b>TRACKER MODE</b> (rendezvous only) · ' : '') +
+      `serverId <b>${esc(d.serverId)}</b> @ ${esc(d.addr)} · ${esc(d.engineVer)} · worldHash <b>${esc(d.worldHash)}</b> · proto ${esc(d.proto)}` +
+      ` · ${d.localPlayers | 0} local player(s) · ACL <b>${esc(d.acl && d.acl.mode)}</b>`;
+    el('mesh-trackers').innerHTML = [
+      ...((d.trackerUrls && d.trackerUrls.length)
+        ? d.trackerUrls.map((u) => `<div>📡 announce → ${esc(u)}</div>`)
+        : ['<div style="color:var(--muted)">no tracker configured — set TRACKER_URL, a `tracker` line in peers.txt, or BOOTSTRAP_URLS</div>']),
+      ...(d.trackerGroups || []).map((g) => `<div>🌍 ${esc(g.engineVer)} · <b>${esc(g.worldHash)}</b> — ${g.servers} server(s), ${g.players} player(s)</div>`),
+    ].join('');
+    el('mesh-peers').innerHTML = (d.peers && d.peers.length)
+      ? d.peers.map((p) => `<div>${p.live ? '🟢' : (p.lastErr ? '🔴' : '⚪')} <b>${esc(p.addr)}</b>` +
+          `${p.serverId ? ' · ' + esc(p.serverId) : ''}${p.live ? ' · seen ' + ago(p.lastSeenMs) : ''}` +
+          `${p.lastErr ? ' · <span style="color:var(--red)">' + esc(p.lastErr) + '</span>' : ''}</div>`).join('')
+      : '<div style="color:var(--muted)">no peers yet — --peer host:port, peers.txt, or a tracker</div>';
+    el('mesh-remotes').innerHTML = (d.remotePlayers && d.remotePlayers.length)
+      ? d.remotePlayers.map((p) => `<div>👤 <b>${esc(p.name)}</b> @ (${p.r},${p.c}) · via ${esc(p.server)}</div>`).join('')
+      : '<div style="color:var(--muted)">no remote players in the mesh</div>';
+    el('mesh-pkt-count').textContent = `· ${(d.traffic || []).length} shown`;
+    el('mesh-traffic').innerHTML = (d.traffic && d.traffic.length)
+      ? d.traffic.map((t) => `<div>${esc(new Date(t.ts).toLocaleTimeString())} ${t.dir === 'in' ? '⬅ in ' : '➡ out'} ` +
+          `<b>${esc(t.kind)}</b> ${t.ok ? '✅' : '⛔'} ${esc(t.peer)} — ${esc(t.note)}</div>`).join('')
+      : '<div style="color:var(--muted)">no packets yet</div>';
+  }
+
+  async function meshPoll() {
+    try {
+      const d = await (await fetch('/api/mesh/status')).json();
+      if (d.ok) renderMeshStatus(d);
+    } catch {
+      document.getElementById('mesh-identity').textContent = '🔌 WBAPI server unreachable — start it with ./wbapi-toggle.sh start.';
+    }
+  }
+  window.meshTabActivated = () => {
+    meshPoll();
+    if (meshTimer) return;
+    meshTimer = setInterval(() => {
+      const pane = document.getElementById('tab-mesh');
+      if (pane && pane.classList.contains('active')) meshPoll();
+      else { clearInterval(meshTimer); meshTimer = null; }
+    }, 2000);
+  };
+  window.__meshTest = { renderMeshStatus };   // server-free hook for the Playwright spec
 })();
 </script>
 </body>
