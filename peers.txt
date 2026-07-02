@@ -1,0 +1,20 @@
+# r2h mesh bootstrap — static peer list (§MESH-01 b/c)
+# One entry per line. Lines starting with # are ignored.
+#
+#   <host:port> [engineVer] [worldHash]     — a game server to gossip with
+#   tracker <url>                           — a tracker to announce to (§MESH-01d)
+#
+# The full bootstrap ladder, in order:
+#   1. --peer host:port CLI flags
+#   2. MESH_PEERS env (comma-separated)
+#   3. peers-cache.json   (last-known live peers, written automatically)
+#   4. this file
+#   5. tracker / BOOTSTRAP_URLS (§MESH-01d)
+#
+# Only servers with an IDENTICAL (proto, engineVer, worldHash) will ever sync —
+# see GET /api/manifest for yours. Publish your own list with:
+#   curl localhost:1367/api/manifest
+#
+# Examples (commented out):
+# 192.168.1.20:1367
+# tracker http://tracker.example.org:1368

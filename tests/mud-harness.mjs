@@ -19,6 +19,8 @@
 import http from 'node:http';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
+import fs from 'node:fs';
+import os from 'node:os';
 import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -260,6 +262,86 @@ async function main() {
   check(sseG.closed === true, 'pruned Ghost’s SSE stream was closed by the server');
   const ghostLook = await jget(`/session/look?sessionId=${ghost.sessionId}`, ttl.base);
   check(ghostLook.ok === false, 'pruned Ghost session is gone (look 404s)');
+
+  // ════════ (e) §MESH-01 b/c — manifest identity + 2-server gossip mesh ════════
+  // Two servers over the SAME game file gossip presence (single-writer records,
+  // version-vector dedup, snapshot anti-entropy); an incompatible-worldHash
+  // server never merges; an allowlist ACL refuses even a compatible peer.
+  console.log('\n[E] §MESH-01 b/c — manifest identity + gossip mesh');
+  const tmp = os.tmpdir();
+  const mkEnv = (port, sid, extra = {}) => ({
+    MESH_SERVER_ID: sid, ADVERTISE_ADDR: `localhost:${port}`, MESH_GOSSIP_MS: '120',
+    PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${port}.json`), ...extra,
+  });
+  const mA = await startServer(PORT + 2, mkEnv(PORT + 2, 'a'.repeat(32)));
+  const mB = await startServer(PORT + 3, mkEnv(PORT + 3, 'b'.repeat(32), { MESH_PEERS: `localhost:${PORT + 2}` }));
+
+  const manA = await jget('/manifest', mA.base);
+  const manB = await jget('/manifest', mB.base);
+  check(manA.ok === true && /^[0-9a-f]{16}$/.test(manA.worldHash), 'manifest exposes a 16-hex worldHash');
+  check(Object.keys(manA.parts || {}).length === 8 && !Object.values(manA.parts).includes('missing'),
+    'manifest hashes all 8 data collections (nodes/coords/sea/lanes/roads/quests/monsters/world)');
+  check(manA.engineVer !== 'unversioned' && manA.engineVer === manB.engineVer && manA.worldHash === manB.worldHash,
+    'same game file ⇒ identical (engineVer, worldHash) — ENGINE_VER parsed from the HTML');
+
+  const ann = await jpost('/session/start', { name: 'Ann', seed: 41 }, mA.base);
+  const sseAnn = await openSSE(ann.sessionId, mA.base); openClients.push(sseAnn);
+  await sleep(150);
+  const ben = await jpost('/session/start', { name: 'Ben', seed: 42 }, mB.base);
+
+  let benSeen = false;
+  for (let i = 0; i < 40 && !benSeen; i++) {
+    await sleep(150);
+    benSeen = (((await jget(`/session/look?sessionId=${ann.sessionId}`, mA.base)).players) || []).some((p) => p.name === 'Ben' && p.server);
+  }
+  check(benSeen, 'Ann (server A) sees Ben (server B) co-present at the hub — gossip replica in look');
+  const lookBen = await jget(`/session/look?sessionId=${ben.sessionId}`, mB.base);
+  check((lookBen.players || []).some((p) => p.name === 'Ann' && p.server), 'Ben (server B) sees Ann (server A) — symmetric');
+  check((((await jget('/session/who', mA.base)).remotes) || []).some((p) => p.name === 'Ben'), 'who on A lists Ben as a remote replica');
+  await sleep(700);   // several extra gossip rounds — every replay must be deduped
+  check(countEv(sseAnn, 'player_arrived', (d) => d.name === 'Ben' && d.remote === true) === 1,
+    'Ann hears Ben arrive over SSE exactly once (version-vector dedup across rounds)');
+
+  await jpost('/session/say', { sessionId: ben.sessionId, msg: 'cross-server-hello' }, mB.base);
+  await waitFor(() => countEv(sseAnn, 'chat', (d) => d.msg === 'cross-server-hello') >= 1, 4000, 100);
+  await sleep(600);
+  check(countEv(sseAnn, 'chat', (d) => d.msg === 'cross-server-hello') === 1,
+    'cross-server chat reaches Ann exactly once (deduped across gossip rounds)');
+
+  await jpost('/session/pos', { sessionId: ben.sessionId, r: ben.r, c: ben.c + 1 }, mB.base);
+  await waitFor(() => countEv(sseAnn, 'player_left', (d) => d.name === 'Ben') >= 1, 4000, 100);
+  await sleep(400);
+  check(countEv(sseAnn, 'player_left', (d) => d.name === 'Ben') === 1, 'Ann hears Ben leave the hub exactly once (cross-server pos beacon)');
+  let benGone = false;
+  for (let i = 0; i < 20 && !benGone; i++) {
+    await sleep(150);
+    benGone = !(((await jget(`/session/look?sessionId=${ann.sessionId}`, mA.base)).players) || []).some((p) => p.name === 'Ben');
+  }
+  check(benGone, 'snapshot anti-entropy moves Ben off the hub in Ann’s look');
+
+  // Incompatible world: overridden worldHash (harness-only env) never merges.
+  const mC = await startServer(PORT + 4, mkEnv(PORT + 4, 'c'.repeat(32), {
+    MESH_PEERS: `localhost:${PORT + 2}`, MESH_WORLDHASH_OVERRIDE: 'deadbeefdeadbeef',
+  }));
+  await jpost('/session/start', { name: 'Carl', seed: 43 }, mC.base);
+  await sleep(800);
+  check(!(((await jget('/session/who', mA.base)).remotes) || []).some((p) => p.name === 'Carl'),
+    'incompatible worldHash never syncs — Carl stays invisible on A');
+  const gBad = await fetch(mA.base + '/api/mesh/gossip', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ serverId: 'c'.repeat(32), proto: manA.proto, engineVer: manA.engineVer, worldHash: 'deadbeefdeadbeef' }),
+  });
+  check(gBad.status === 409, 'gossip ingress refuses a mismatched worldHash with 409');
+
+  // ACL: allowlist-mode server refuses even a compatible, unlisted peer.
+  const aclPath = path.join(tmp, `r2h-acl-${PORT}.json`);
+  fs.writeFileSync(aclPath, JSON.stringify({ mode: 'allowlist', allowServerIds: [] }));
+  const mD = await startServer(PORT + 5, mkEnv(PORT + 5, 'd'.repeat(32), { MESH_ACL_FILE: aclPath }));
+  const gAcl = await fetch(mD.base + '/api/mesh/gossip', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ serverId: 'a'.repeat(32), proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash }),
+  });
+  check(gAcl.status === 403, 'allowlist-mode ACL refuses an unlisted (compatible) peer with 403');
 
   // ── teardown ──
   openClients.forEach(closeSSE);

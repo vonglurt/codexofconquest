@@ -74,6 +74,9 @@ function sessionPrune() {
   for (const [id, s] of SESSIONS) {
     if (now - s.lastSeen > SESSION_TTL) {
       SESSIONS.delete(id);
+      // §MESH-01c: a pruned ghost also departs, locally and to the mesh
+      broadcastCell(s.r, s.c, 'player_left', { name: s.playerName, from: { r: s.r, c: s.c }, to: null }, id);
+      if (typeof emitMeshEvent === 'function') emitMeshEvent('player_left', { name: s.playerName, from: { r: s.r, c: s.c }, to: null }, s.r, s.c);
       const sse = SSE_CLIENTS.get(id);
       if (sse) { try { sse.end(); } catch {} SSE_CLIENTS.delete(id); }
     }
@@ -98,6 +101,254 @@ const PORT      = parseInt(process.env.PORT || '1367');
 const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(__dirname, 'roll2hit-v3.html');
+
+// ══ §MESH-01 b/c — identity · world manifest · ACL · gossip mesh ═════════════
+// Design: lab-reports/lab-report-mesh-multiuser.md. Presence records are
+// SINGLE-WRITER (only the origin server mutates its own sessions); receivers
+// dedup with a per-origin version vector; a periodic full snapshot per origin
+// is the anti-entropy floor (event loss can delay but never corrupt state).
+const MESH_PROTO = 1;
+
+// Persistent random identity. MESH_SERVER_ID env override exists ONLY so the
+// harness can boot several servers from one directory; prod uses the id file.
+const SERVER_ID_FILE = process.env.SERVER_ID_FILE || path.join(__dirname, '.wbapi-server-id');
+let _serverId = null;
+function getServerId() {
+  if (_serverId) return _serverId;
+  if (/^[0-9a-f]{32}$/.test(process.env.MESH_SERVER_ID || '')) return (_serverId = process.env.MESH_SERVER_ID);
+  try { _serverId = (fs.readFileSync(SERVER_ID_FILE, 'utf8').trim().match(/^[0-9a-f]{32}$/) || [])[0] || null; } catch {}
+  if (!_serverId) {
+    _serverId = crypto.randomBytes(16).toString('hex');
+    try { fs.writeFileSync(SERVER_ID_FILE, _serverId + '\n'); } catch {}
+  }
+  return _serverId;
+}
+
+// Raw source span of `const NAME = {…} / […] / new Set([…])` — comment- and
+// string-aware bracket scan (same discipline as wbapi-core extractObj), used to
+// hash the data collections exactly as they sit in the file.
+function rawSpan(src, name) {
+  const m = new RegExp(`(?:const|let|var)\\s+${name}\\s*=\\s*`).exec(src);
+  if (!m) return null;
+  let i = m.index + m[0].length;
+  while (i < src.length && !'{[('.includes(src[i])) {
+    if (src[i] === '\n' || src[i] === ';') return null;   // scalar/other — not a collection literal
+    i++;
+  }
+  if (i >= src.length) return null;
+  const open = src[i], close = { '{': '}', '[': ']', '(': ')' }[open];
+  let depth = 0, inStr = null, j = i;
+  while (j < src.length) {
+    const c = src[j];
+    if (inStr) {
+      if (c === '\\' && inStr !== '`') { j += 2; continue; }
+      if (c === inStr) inStr = null;
+    } else if (c === '/' && src[j + 1] === '/') { while (j < src.length && src[j] !== '\n') j++; continue; }
+    else if (c === '/' && src[j + 1] === '*') { j += 2; while (j < src.length && !(src[j] === '*' && src[j + 1] === '/')) j++; j += 2; continue; }
+    else {
+      if (c === '"' || c === "'" || c === '`') inStr = c;
+      else if (c === open) depth++;
+      else if (c === close) { depth--; if (depth === 0) return src.slice(m.index, j + 1); }
+    }
+    j++;
+  }
+  return null;
+}
+
+// World manifest — "all quests and data summed." worldHash covers EVERY data
+// collection + ENGINE_VER (parsed from the game file — each game version is a
+// separate, incompatible swarm). Per-part hashes let mismatched operators see
+// WHERE two worlds differ (the modification set), but sync requires equality
+// of (proto, engineVer, worldHash) — never a partial match.
+const sha16 = (s) => crypto.createHash('sha256').update(s).digest('hex').slice(0, 16);
+const MANIFEST_PARTS = ['NODE_MAP', 'NODE_COORDS', 'SEA_RUNS', 'SEA_LANES', 'ROAD_RUNS', 'QUEST_DB', 'MONSTER_POOL', 'WORLD_DB'];
+let _maniSrc = null, _mani = null;
+function getManifest() {
+  const src = WBAPI._rawSrc || '';
+  if (src === _maniSrc && _mani) return _mani;
+  _maniSrc = src;
+  const parts = {};
+  for (const name of MANIFEST_PARTS) {
+    const span = rawSpan(src, name);
+    parts[name.toLowerCase()] = span ? sha16(span) : 'missing';
+  }
+  const evm = src.match(/const\s+ENGINE_VER\s*=\s*['"]([^'"]+)['"]/);
+  const engineVer = (evm && evm[1]) || 'unversioned';
+  // MESH_WORLDHASH_OVERRIDE exists ONLY for the harness incompatibility test.
+  const worldHash = process.env.MESH_WORLDHASH_OVERRIDE
+    || sha16(engineVer + '|' + MANIFEST_PARTS.map((n) => parts[n.toLowerCase()]).join('|'));
+  _mani = { proto: MESH_PROTO, engineVer, worldHash, parts };
+  return _mani;
+}
+
+// ACL — mesh-acl.json (repo root, hot-reloaded on mtime change). Applied to
+// gossip ingress, gossip responses, and dial-out. mode:'allowlist' = private
+// friends mesh; default open with empty blocklists.
+const ACL_FILE = process.env.MESH_ACL_FILE || path.join(__dirname, 'mesh-acl.json');
+let _aclMtime = -1, _acl = null;
+function getAcl() {
+  try {
+    const st = fs.statSync(ACL_FILE);
+    if (st.mtimeMs !== _aclMtime) { _aclMtime = st.mtimeMs; _acl = JSON.parse(fs.readFileSync(ACL_FILE, 'utf8')); }
+  } catch { _acl = null; _aclMtime = -1; }
+  return _acl || { mode: 'open' };
+}
+function aclAllows({ serverId, ip, worldHash }) {
+  const a = getAcl();
+  const has = (arr, v) => Array.isArray(arr) && v != null && arr.includes(v);
+  if (has(a.blockServerIds, serverId) || has(a.blockIps, ip) || has(a.blockWorldHashes, worldHash)) return false;
+  if (a.mode === 'allowlist')
+    return has(a.allowServerIds, serverId) || has(a.allowIps, ip) || has(a.allowWorldHashes, worldHash);
+  return true;
+}
+
+// Mesh state. peers: addr → liveness/identity. remote: originId → replicated
+// read-only session map. vv: originId → highest event seq ingested. log: this
+// server's own outbound event ring (we are the single writer of these).
+const MESH = {
+  peers: new Map(), remote: new Map(), vv: {}, log: [], seq: 0,
+};
+const MESH_GOSSIP_MS  = parseInt(process.env.MESH_GOSSIP_MS || '', 10) || 2000;
+const MESH_ORIGIN_TTL = 90_000;        // drop a remote origin after 90 s of silence
+const MESH_FANOUT_MAX_AGE = 10_000;    // replayed history advances vv but is not re-announced
+const PEERS_CACHE_FILE = process.env.PEERS_CACHE_FILE || path.join(__dirname, 'peers-cache.json');
+function meshAdvertise() { return process.env.ADVERTISE_ADDR || ('localhost:' + PORT); }
+
+function emitMeshEvent(type, data, r, c) {
+  MESH.seq++;
+  MESH.log.push({ seq: MESH.seq, ts: Date.now(), type, data, r, c });
+  if (MESH.log.length > 500) MESH.log.shift();
+}
+function localSnapshot() {
+  return { seq: MESH.seq, sessions: [...SESSIONS.values()].map((s) => ({ sid: s.id, name: s.playerName, r: s.r, c: s.c })) };
+}
+function remotePlayersAt(r, c) {
+  const out = [], now = Date.now();
+  for (const [oid, rec] of MESH.remote) {
+    if (now - rec.lastSeen > MESH_ORIGIN_TTL) continue;
+    for (const [sid, p] of rec.sessions)
+      if (p.r === r && p.c === c) out.push({ id: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, server: oid.slice(0, 8) });
+  }
+  return out;
+}
+function meshMergeEvents(originId, events) {
+  const now = Date.now();
+  let last = MESH.vv[originId] || 0;
+  for (const ev of (events || []).slice().sort((a, b) => a.seq - b.seq)) {
+    if (!ev || typeof ev.seq !== 'number' || ev.seq <= last) continue;
+    last = ev.seq;
+    // Fan fresh remote events out to co-located LOCAL sessions only; replayed
+    // history still advances the version vector (dedup) but stays silent.
+    if (now - (ev.ts || 0) <= MESH_FANOUT_MAX_AGE && ['player_arrived', 'player_left', 'chat'].includes(ev.type))
+      broadcastCell(ev.r, ev.c, ev.type, { ...ev.data, remote: true, server: originId.slice(0, 8) }, null);
+  }
+  MESH.vv[originId] = last;
+}
+function meshMergeSnapshot(originId, snap) {
+  if (!snap || typeof snap.seq !== 'number') return;
+  let rec = MESH.remote.get(originId);
+  if (!rec) { rec = { sessions: new Map(), snapSeq: -1, lastSeen: 0 }; MESH.remote.set(originId, rec); }
+  if (snap.seq < rec.snapSeq) return;   // stale snapshot from an older round
+  rec.snapSeq = snap.seq;
+  rec.lastSeen = Date.now();
+  rec.sessions = new Map((snap.sessions || []).map((s) => [s.sid, { name: s.name, r: s.r, c: s.c }]));
+}
+function meshPayload() {
+  const m = getManifest();
+  return {
+    serverId: getServerId(), proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash,
+    addr: meshAdvertise(), vv: MESH.vv,
+    events: MESH.log.slice(-100), snapshot: localSnapshot(),
+    peers: [...MESH.peers.keys()].slice(0, 20),
+  };
+}
+// Ingest one gossip payload (from an inbound POST or an outbound round's
+// response). Compatibility gate first, ACL second, then single-writer merge.
+function meshIngest(p, ip) {
+  const m = getManifest();
+  if (!p || p.proto !== m.proto || p.engineVer !== m.engineVer || p.worldHash !== m.worldHash)
+    return { status: 409, body: { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash } } };
+  if (!p.serverId || p.serverId === getServerId())
+    return { status: 400, body: { ok: false, reason: 'bad-serverId' } };
+  if (!aclAllows({ serverId: p.serverId, ip, worldHash: p.worldHash }))
+    return { status: 403, body: { ok: false, reason: 'acl' } };
+  if (p.addr && p.addr !== meshAdvertise()) {
+    const rec = MESH.peers.get(p.addr) || {};
+    MESH.peers.set(p.addr, { ...rec, serverId: p.serverId, lastSeen: Date.now(), lastErr: null });
+  }
+  meshMergeEvents(p.serverId, p.events);
+  meshMergeSnapshot(p.serverId, p.snapshot);
+  for (const a of p.peers || [])
+    if (typeof a === 'string' && a && a !== meshAdvertise() && !MESH.peers.has(a))
+      MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });   // PEX candidate — dialed next round
+  return { status: 200, body: { ok: true, ...meshPayload() } };
+}
+let _meshRoundBusy = false;
+async function meshGossipRound() {
+  if (_meshRoundBusy || MESH.peers.size === 0) return;
+  _meshRoundBusy = true;
+  try {
+    const addrs = [...MESH.peers.entries()]
+      .filter(([, rec]) => aclAllows({ serverId: rec.serverId }))
+      .map(([a]) => a)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3);
+    for (const addr of addrs) {
+      try {
+        const resp = await fetch(`http://${addr}/api/mesh/gossip`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(meshPayload()),
+        });
+        const data = await resp.json().catch(() => ({}));
+        const rec = MESH.peers.get(addr) || {};
+        if (resp.ok && data.ok && data.serverId && aclAllows({ serverId: data.serverId, worldHash: data.worldHash })) {
+          MESH.peers.set(addr, { ...rec, serverId: data.serverId, lastSeen: Date.now(), lastErr: null });
+          meshMergeEvents(data.serverId, data.events);
+          meshMergeSnapshot(data.serverId, data.snapshot);
+          for (const a of data.peers || [])
+            if (typeof a === 'string' && a && a !== meshAdvertise() && !MESH.peers.has(a))
+              MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });
+        } else {
+          MESH.peers.set(addr, { ...rec, lastErr: data.reason || `http-${resp.status}` });
+        }
+      } catch (e) {
+        const rec = MESH.peers.get(addr) || {};
+        MESH.peers.set(addr, { ...rec, lastErr: e.code || 'unreachable' });
+      }
+    }
+    // Expire origins that stopped heartbeating.
+    const now = Date.now();
+    for (const [oid, rec] of MESH.remote) if (now - rec.lastSeen > MESH_ORIGIN_TTL) MESH.remote.delete(oid);
+  } finally { _meshRoundBusy = false; }
+}
+// Bootstrap ladder: --peer flags → MESH_PEERS env → peers-cache.json → peers.txt.
+// (Tracker + BOOTSTRAP_URLS are §MESH-01d.) `tracker <url>` lines are parsed
+// and held for Inc d; `#` comments ignored.
+const MESH_TRACKER_URLS = [];
+function loadStaticPeers() {
+  const add = (a) => { if (a && /^[\w.-]+:\d+$/.test(a) && a !== meshAdvertise() && !MESH.peers.has(a)) MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null }); };
+  process.argv.forEach((a, i) => { if (process.argv[i - 1] === '--peer') add(a); });
+  (process.env.MESH_PEERS || '').split(',').map((s) => s.trim()).forEach(add);
+  try { (JSON.parse(fs.readFileSync(PEERS_CACHE_FILE, 'utf8')).addrs || []).forEach(add); } catch {}
+  try {
+    for (const line of fs.readFileSync(path.join(__dirname, 'peers.txt'), 'utf8').split('\n')) {
+      const t = line.trim();
+      if (!t || t.startsWith('#')) continue;
+      if (t.startsWith('tracker ')) { MESH_TRACKER_URLS.push(t.slice(8).trim()); continue; }
+      add(t.split(/\s+/)[0]);
+    }
+  } catch {}
+}
+let _peersCacheTimer = 0;
+function persistPeerCache() {
+  const now = Date.now();
+  if (now - _peersCacheTimer < 30_000) return;
+  _peersCacheTimer = now;
+  const live = [...MESH.peers.entries()].filter(([, r]) => r.lastSeen && now - r.lastSeen < 300_000).map(([a]) => a);
+  if (!live.length && !fs.existsSync(PEERS_CACHE_FILE)) return;   // never create an empty cache
+  try { fs.writeFileSync(PEERS_CACHE_FILE, JSON.stringify({ savedAt: new Date().toISOString(), addrs: live }, null, 2)); } catch {}
+}
+// ══ end §MESH-01 b/c mesh layer ══════════════════════════════════════════════
 
 // ── GEO-anchored node codes (single source of truth for geo-seed + rip-and-connect) ──
 // These nodes have authoritative lat/lon positions; rip-and-connect must NOT relocate them.
@@ -2072,6 +2323,24 @@ async function route(req, res) {
     logRow(`${nNodes} nodes  ·  ${nQuests} quests  ·  ${nMonsters} monsters  ·  ${nTerrains} terrains  ·  ${nFish} fish`);
     logResponse(method, url.pathname, 200, 'ok');
     return json(res, 200, resp);
+  }
+
+  // ── §MESH-01: world manifest (compatibility identity + per-part mod diagnosis) ──
+  if (parts[0] === 'manifest' && method === 'GET') {
+    const m = getManifest();
+    logResponse(method, url.pathname, 200, `manifest ${m.engineVer} wh:${m.worldHash}`);
+    return json(res, 200, { ok: true, serverId: getServerId(), addr: meshAdvertise(), ...m,
+      peers: [...MESH.peers.keys()], remoteOrigins: MESH.remote.size });
+  }
+
+  // ── §MESH-01: gossip ingress — compat gate → ACL → single-writer merge ──
+  if (parts[0] === 'mesh' && parts[1] === 'gossip' && method === 'POST') {
+    let gbody;
+    try { gbody = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
+    const out = meshIngest(gbody, req.socket.remoteAddress);
+    logResponse(method, url.pathname, out.status,
+      out.status === 200 ? `gossip ok ⇄ ${String(gbody && gbody.serverId).slice(0, 8)}` : `gossip refused: ${out.body.reason}`);
+    return json(res, out.status, out.body);
   }
 
   // ── Mode (fast | debug | trace) ──
@@ -7498,6 +7767,7 @@ async function route(req, res) {
       for (const [id2, s2] of SESSIONS)
         if (id2 !== s.id && s2.r === s.r && s2.c === s.c)
           players.push({ id: id2, name: s2.playerName });
+      players.push(...remotePlayersAt(s.r, s.c));   // §MESH-01c: replicated same-world peers
       return {
         r: s.r, c: s.c,
         node: code ? { code, label: node.label, terrain: node.name, act: node.act } : null,
@@ -7510,8 +7780,15 @@ async function route(req, res) {
       const all = [];
       for (const [id2, s] of SESSIONS)
         all.push({ id: id2, name: s.playerName, r: s.r, c: s.c, nodeCode: s.nodeCode, state: s.state, seed: s.seed, encounter: s.encounter || null, lastSeen: s.lastSeen });
-      logResponse(method, url.pathname, 200, `${all.length} sessions active`);
-      return json(res, 200, { count: all.length, sessions: all });
+      // §MESH-01c: read-only replicas of same-world peers' sessions
+      const remotes = [];
+      const _now = Date.now();
+      for (const [oid, rec] of MESH.remote) {
+        if (_now - rec.lastSeen > MESH_ORIGIN_TTL) continue;
+        for (const [sid, p] of rec.sessions) remotes.push({ id: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8) });
+      }
+      logResponse(method, url.pathname, 200, `${all.length} sessions active · ${remotes.length} remote`);
+      return json(res, 200, { count: all.length, sessions: all, remotes });
     }
 
     // ── GET /api/session/look?sessionId= ──────────────────────────────────
@@ -7606,6 +7883,7 @@ async function route(req, res) {
       // (browser clients immediately re-beacon to their real cell, which then
       // emits the matching player_left from here — the sequence stays consistent).
       broadcastCell(s.r, s.c, 'player_arrived', { name: playerName, from: null, to: { r: s.r, c: s.c }, node: hub }, sessionId);
+      emitMeshEvent('player_arrived', { name: playerName, from: null, to: { r: s.r, c: s.c }, node: hub }, s.r, s.c);
       const look = buildLook(s);
       logRow('session', `${playerName}  ·  id:${sessionId.slice(0,8)}…  ·  spawn:(${s.r},${s.c})=${hub}`);
       logResponse(method, url.pathname, 201, `session started for "${playerName}"`);
@@ -7657,6 +7935,8 @@ async function route(req, res) {
       }
       // Broadcast to players now in the same cell (not the mover themselves)
       broadcastCell(newR, newC, 'player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, sessionId);
+      emitMeshEvent('player_left', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC } }, prevR, prevC);
+      emitMeshEvent('player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, newR, newC);
       const look = buildLook(s);
       logRow('move', `${s.playerName}  ·  ${dir}  →  (${newR},${newC}) ${newCode || 'empty'}${s.encounter ? '  ⚔ ' + s.encounter.name : ''}`);
       logResponse(method, url.pathname, 200, `session move: ${dir} → ${newCode || 'empty'}${s.encounter ? ' (encounter: ' + s.encounter.name + ')' : ''}`);
@@ -7697,13 +7977,21 @@ async function route(req, res) {
       if (moved) {
         broadcastCell(prevR, prevC, 'player_left',    { name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, sessionId);
         broadcastCell(r, c, 'player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c }, node: s.nodeCode }, sessionId);
+        emitMeshEvent('player_left', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, prevR, prevC);
+        emitMeshEvent('player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c }, node: s.nodeCode }, r, c);
       }
       const nearby = [];
-      for (const [id2, s2] of SESSIONS) {
-        if (id2 === s.id) continue;
-        const dcRaw = Math.abs(s2.c - c);
-        const dc = Math.min(dcRaw, COLS - dcRaw);   // E↔W wrap distance
-        if (Math.abs(s2.r - r) <= 5 && dc <= 8) nearby.push({ name: s2.playerName, r: s2.r, c: s2.c });
+      const inView = (pr, pc) => {
+        const dcRaw = Math.abs(pc - c);
+        return Math.abs(pr - r) <= 5 && Math.min(dcRaw, COLS - dcRaw) <= 8;   // E↔W wrap distance
+      };
+      for (const [id2, s2] of SESSIONS)
+        if (id2 !== s.id && inView(s2.r, s2.c)) nearby.push({ name: s2.playerName, r: s2.r, c: s2.c });
+      const _mnow = Date.now();   // §MESH-01c: same-world peers' players in view
+      for (const [oid, rec] of MESH.remote) {
+        if (_mnow - rec.lastSeen > MESH_ORIGIN_TTL) continue;
+        for (const [, p] of rec.sessions)
+          if (inView(p.r, p.c)) nearby.push({ name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8) });
       }
       const look = buildLook(s);
       logResponse(method, url.pathname, 200, `session pos: (${r},${c}) ${s.nodeCode || 'empty'}${moved ? '' : ' (unchanged)'}`);
@@ -7727,6 +8015,7 @@ async function route(req, res) {
       // redundant second sseSend to the sender that double-delivered the sender's
       // own chat (the harness asserts each co-present session receives it once).
       broadcastCell(s.r, s.c, 'chat', chatData, null);
+      emitMeshEvent('chat', { name: s.playerName, msg, r: s.r, c: s.c }, s.r, s.c);
       logRow('say', `${s.playerName}  ·  "${msg.slice(0,60)}"`);
       logResponse(method, url.pathname, 200, `session say: "${msg.slice(0,40)}"`);
       return json(res, 200, { ok: true, broadcast: chatData, recipientCount: [...SESSIONS.values()].filter(s2 => s2.r === s.r && s2.c === s.c).length });
@@ -7735,6 +8024,10 @@ async function route(req, res) {
     // ── POST /api/session/end ──────────────────────────────────────────────
     if (sub === 'end') {
       SESSIONS.delete(sessionId);
+      // §MESH-01c (Inc-a residue): departing players now announce player_left,
+      // locally and to the mesh.
+      broadcastCell(s.r, s.c, 'player_left', { name: s.playerName, from: { r: s.r, c: s.c }, to: null }, sessionId);
+      emitMeshEvent('player_left', { name: s.playerName, from: { r: s.r, c: s.c }, to: null }, s.r, s.c);
       const sse = SSE_CLIENTS.get(sessionId);
       if (sse) { try { sse.end(); } catch {} SSE_CLIENTS.delete(sessionId); }
       logRow('ended', `session ${sessionId.slice(0,8)}…  ·  player: ${s.playerName}`);
@@ -9300,7 +9593,13 @@ server.on('error', (err) => {
   process.exit(1);
 });
 
-server.listen(PORT, '127.0.0.1', () => {
+server.listen(PORT, process.env.BIND_ADDR || '127.0.0.1', () => {
+  // §MESH-01 b/c: seed the peer table from the static bootstrap ladder and start
+  // the gossip heartbeat. With no peers configured every round is a cheap no-op,
+  // so a solo dev server (:1367) is completely unaffected.
+  loadStaticPeers();
+  setInterval(() => { meshGossipRound(); persistPeerCache(); }, MESH_GOSSIP_MS).unref();
+  if (MESH.peers.size) console.log(`  Mesh:      ${MESH.peers.size} bootstrap peer(s) · serverId ${getServerId().slice(0, 8)} · worldHash ${getManifest().worldHash}`);
   const line = '═'.repeat(60);
   console.log(`\n${C.bold}${C.magenta}${line}${C.reset}`);
   console.log(`${C.bold}  WBAPI Server  —  http://localhost:${PORT}/api${C.reset}`);

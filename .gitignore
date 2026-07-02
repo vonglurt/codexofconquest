@@ -78,3 +78,7 @@ milepoints/archive/cleanup-*.tar.gz
 
 # ── _last.html / _last.name ARE tracked (current game state pointer) ─────────
 # (not ignored — intentionally committed)
+
+# ── §MESH-01: per-machine mesh identity + peer cache — never commit ─────────
+.wbapi-server-id
+peers-cache.json

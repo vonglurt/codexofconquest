@@ -9198,6 +9198,11 @@ const TERRAIN_ENCOUNTER_RATE = {
 // then re-run: node scripts/check-mover-parity.js
 const GEO_PROJ = { ROWS: 90, COLS: 360 };   // §2.1 equirectangular 1° grid
 
+// §MESH-01b: game build identity — the mesh treats every version as a separate,
+// incompatible swarm. The server parses this const into the world manifest
+// (GET /api/manifest); bump it on any release that changes engine behavior.
+const ENGINE_VER = 'r2h-3.104.0';
+
 // ◆◆◆ MOVER:CORE:START ◆◆◆
 const __MOVER_DELTAS = { N: [-1, 0], S: [1, 0], E: [0, 1], W: [0, -1] };
 
