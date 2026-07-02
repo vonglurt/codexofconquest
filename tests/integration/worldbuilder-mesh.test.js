@@ -49,6 +49,26 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
     await expect(pkts.nth(1)).toContainText('refused: incompatible');
   });
 
+  test('⬇ world sits behind the BIG WARNING modal (§MESH-01d3)', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    await page.click('.nav-tab[data-tab="mesh"]');
+    await page.evaluate((d) => window.__meshTest.renderMeshStatus(d), FIXTURE);
+    // magnet link lands on the identity strip (assert before the 2s offline
+    // poll overwrites the strip — this static test host has no WBAPI behind it)
+    await expect(page.locator('#mesh-identity')).toContainText('copy magnet');
+    // live peer row carries the download button; dead peer does not
+    await expect(page.locator('#mesh-peers button')).toHaveCount(1);
+    await page.click('#mesh-peers button');
+    const modal = page.locator('#mesh-dl-modal');
+    await expect(modal).toBeVisible();
+    await expect(modal).toContainText("SOMEONE ELSE'S CODE");
+    await expect(modal).toContainText('MIT-licensed');
+    await expect(modal).toContainText('world-diff.js');
+    await expect(modal).toContainText('localhost:2367');
+    await page.click('#mesh-dl-modal button:has-text("Cancel")');
+    await expect(modal).toBeHidden();
+  });
+
   test('empty status renders friendly placeholders (no peers / no packets)', async ({ page }) => {
     await page.goto('/worldbuilder.html');
     await page.click('.nav-tab[data-tab="mesh"]');

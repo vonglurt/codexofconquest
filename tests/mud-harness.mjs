@@ -399,6 +399,16 @@ async function main() {
   const stB = await jget('/mesh/status', trkB2.base);
   check((stB.traffic || []).some((t) => t.kind === 'federate' && t.ok), 'federation packets appear in tracker B’s information-passed log');
 
+  // ── §MESH-01d3 — world download endpoint ──
+  const dl = await fetch(mI.base + '/api/world/download');
+  check(dl.status === 200 && (dl.headers.get('content-type') || '').includes('text/html')
+    && dl.headers.get('x-r2h-worldhash') === manA.worldHash
+    && /^attachment; filename="world-/.test(dl.headers.get('content-disposition') || ''),
+    'world download serves the game file with identity headers + attachment filename');
+  const dlTxt = await dl.text();
+  check(dlTxt.includes("const ENGINE_VER = '") && dlTxt.length > 1_000_000, 'downloaded world is the full single-file game');
+  check((await fetch(trkA2.base + '/api/world/download')).status === 410, 'tracker-mode refuses world download (rendezvous only, never a relay)');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});

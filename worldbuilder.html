@@ -9853,6 +9853,29 @@ window.wkGo        = wkGo;
       <div id="mesh-traffic" class="mesh-box" style="max-height:340px;overflow-y:auto;font-family:ui-monospace,monospace;font-size:10px;line-height:1.7"></div>
     </div>
   </div>
+
+  <!-- §MESH-01d3 — BIG WARNING before downloading a peer's world (their CODE) -->
+  <div id="mesh-dl-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:900;align-items:center;justify-content:center">
+    <div style="max-width:560px;background:var(--panel,#16131c);border:2px solid var(--red,#e05555);border-radius:10px;padding:22px 26px;font-size:12px;line-height:1.75">
+      <div style="font-size:15px;font-weight:800;color:var(--red,#e05555);margin-bottom:10px">⚠️ YOU ARE ABOUT TO DOWNLOAD SOMEONE ELSE'S CODE</div>
+      <p>A Roll2Hit world is a <b>complete HTML + JavaScript program</b>, not just data.
+         You are about to fetch it from <b id="mesh-dl-addr"></b>.</p>
+      <p style="margin-top:8px"><b>Before you ever open it:</b></p>
+      <ol style="margin:6px 0 6px 18px">
+        <li>Run <code>node scripts/world-diff.js roll2hit-v3.html &lt;downloaded file&gt;</code> —
+            it shows the <b>modification set</b> per collection and prints a loud
+            <b>CODE DIFFERS</b> block if any JavaScript changed. Review every non-data change by hand.</li>
+        <li>It is <b>MIT-licensed</b> — attribution carries with the file.</li>
+        <li>The download is saved as a <b>separate file</b>; it never touches your own world. Keep it that way.</li>
+      </ol>
+      <p style="color:var(--muted)">Inspect. Be responsible.</p>
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:14px">
+        <button class="btn sm" onclick="meshDlCancel()">Cancel</button>
+        <button class="btn sm" id="mesh-dl-confirm" style="border-color:var(--red,#e05555);color:var(--red,#e05555)" onclick="meshDlConfirm()">I understand — download</button>
+      </div>
+      <div id="mesh-dl-status" style="margin-top:8px;color:var(--muted)"></div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -9878,8 +9901,13 @@ window.wkGo        = wkGo;
     el('mesh-peers').innerHTML = (d.peers && d.peers.length)
       ? d.peers.map((p) => `<div>${p.live ? '🟢' : (p.lastErr ? '🔴' : '⚪')} <b>${esc(p.addr)}</b>` +
           `${p.serverId ? ' · ' + esc(p.serverId) : ''}${p.live ? ' · seen ' + ago(p.lastSeenMs) : ''}` +
-          `${p.lastErr ? ' · <span style="color:var(--red)">' + esc(p.lastErr) + '</span>' : ''}</div>`).join('')
+          `${p.lastErr ? ' · <span style="color:var(--red)">' + esc(p.lastErr) + '</span>' : ''}` +
+          `${p.live ? ` <button class="btn sm" style="margin-left:6px" onclick="meshDownloadWorld('${esc(p.addr)}')">⬇ world</button>` : ''}</div>`).join('')
       : '<div style="color:var(--muted)">no peers yet — --peer host:port, peers.txt, or a tracker</div>';
+    // §MESH-01d3: magnet v2 for this world (uses the first configured tracker)
+    const magnet = `r2h:?p=${encodeURIComponent(d.proto)}&ev=${encodeURIComponent(d.engineVer)}&wh=${encodeURIComponent(d.worldHash)}` +
+      (d.trackerUrls && d.trackerUrls[0] ? `&tr=${encodeURIComponent(d.trackerUrls[0])}` : '');
+    el('mesh-identity').innerHTML += ` · <a href="#" style="color:var(--accent)" onclick="navigator.clipboard&&navigator.clipboard.writeText('${esc(magnet)}');this.textContent='🔗 copied';return false">🔗 copy magnet</a>`;
     el('mesh-remotes').innerHTML = (d.remotePlayers && d.remotePlayers.length)
       ? d.remotePlayers.map((p) => `<div>👤 <b>${esc(p.name)}</b> @ (${p.r},${p.c}) · via ${esc(p.server)}</div>`).join('')
       : '<div style="color:var(--muted)">no remote players in the mesh</div>';
@@ -9906,6 +9934,37 @@ window.wkGo        = wkGo;
       if (pane && pane.classList.contains('active')) meshPoll();
       else { clearInterval(meshTimer); meshTimer = null; }
     }, 2000);
+  };
+  // §MESH-01d3 — peer world download, gated behind the BIG WARNING modal.
+  // Pure browser download to a separate file; there is no path that writes the
+  // local game file.
+  let _dlAddr = null;
+  window.meshDownloadWorld = (addr) => {
+    _dlAddr = addr;
+    document.getElementById('mesh-dl-addr').textContent = addr;
+    document.getElementById('mesh-dl-status').textContent = '';
+    document.getElementById('mesh-dl-modal').style.display = 'flex';
+  };
+  window.meshDlCancel = () => { document.getElementById('mesh-dl-modal').style.display = 'none'; _dlAddr = null; };
+  window.meshDlConfirm = async () => {
+    if (!_dlAddr) return;
+    const st = document.getElementById('mesh-dl-status');
+    st.textContent = 'Downloading…';
+    try {
+      const resp = await fetch(`http://${_dlAddr}/api/world/download`);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const sid = resp.headers.get('X-R2H-ServerId') || 'unknown';
+      const wh = resp.headers.get('X-R2H-WorldHash') || 'unknown';
+      const blob = await resp.blob();
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `world-${sid.slice(0, 8)}-${wh}.html`;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      st.innerHTML = `Saved as <b>${a.download}</b> — now run: <code>node scripts/world-diff.js roll2hit-v3.html ~/Downloads/${a.download}</code>`;
+    } catch (e) {
+      st.textContent = `Download failed: ${e.message}`;
+    }
   };
   window.__meshTest = { renderMeshStatus };   // server-free hook for the Playwright spec
 })();

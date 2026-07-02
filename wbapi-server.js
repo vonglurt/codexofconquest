@@ -1144,6 +1144,8 @@ function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,DELETE,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Nonce');
+  // §MESH-01d3: let the worldbuilder read world-download identity headers cross-origin
+  res.setHeader('Access-Control-Expose-Headers', 'X-R2H-ServerId, X-R2H-WorldHash, X-R2H-EngineVer, Content-Disposition');
 }
 
 function json(res, status, body) {
@@ -2534,6 +2536,25 @@ async function route(req, res) {
     }
     logResponse(method, url.pathname, 200, `peers: ${rows.length} row(s)`);
     return json(res, 200, { ok: true, count: rows.length, servers: rows });
+  }
+
+  // ── §MESH-01d3: world download — the single file IS the server ──
+  // Serves this server's roll2hit-v3.html verbatim with identity headers. The
+  // RECEIVING side carries the safety story: the worldbuilder ⬇ button sits
+  // behind a BIG WARNING modal (someone else's CODE, MIT, inspect first) and
+  // scripts/world-diff.js shows the modification set. Never a write path.
+  if (parts[0] === 'world' && parts[1] === 'download' && method === 'GET') {
+    const m = getManifest();
+    const src = WBAPI._rawSrc || '';
+    cors(res);
+    res.writeHead(200, {
+      'Content-Type': 'text/html; charset=utf-8',
+      'Content-Disposition': `attachment; filename="world-${getServerId().slice(0, 8)}-${m.worldHash}.html"`,
+      'X-R2H-ServerId': getServerId(), 'X-R2H-WorldHash': m.worldHash, 'X-R2H-EngineVer': m.engineVer,
+    });
+    pushTraffic('out', 'world', req.socket.remoteAddress, true, `download served (${src.length} B)`);
+    logResponse(method, url.pathname, 200, `world download (${src.length} B)`);
+    return res.end(src);
   }
 
   // ── §MESH-01 UI: one-call mesh status for the worldbuilder 🌐 Mesh tab ──
