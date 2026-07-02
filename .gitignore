@@ -82,3 +82,10 @@ milepoints/archive/cleanup-*.tar.gz
 # ── §MESH-01: per-machine mesh identity + peer cache — never commit ─────────
 .wbapi-server-id
 peers-cache.json
+
+# ── Playwright artifacts — regenerated every test run ────────────────────────
+playwright-report/
+test-results/
+
+# ── §MESH tracker log (wbapi-toggle.sh tracker) ──────────────────────────────
+wbapi-tracker.log
