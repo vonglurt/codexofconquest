@@ -498,6 +498,118 @@ async function main() {
   check(countEv(sseAnn, 'player_moved', (d) => d.name === 'Ben' && d.remote === true) === 1,
     'cross-server pos beacon fans player_moved to remote watchers exactly once');
 
+  // ════════ (l) §MESH-01e — partition-heal harness: 3 servers + tracker ════════
+  // The mesh's promised hardening gate. Topology: tracker T + servers P/Q/R who
+  // know ONLY the tracker URL. Partition = hot-reloaded block ACL on R (cuts
+  // BOTH directions: R's dial-out filter skips blocked peers, R's ingress 403s
+  // them — one file is a full bidirectional partition). Heal = rewrite the ACL
+  // to open; the next 120 ms gossip round reconnects. Asserts: convergence,
+  // exactly-once across the partition (vv dedup vs the 100-event tail replayed
+  // EVERY round), stale-replica availability during the split, snapshot
+  // anti-entropy correcting position after it, incompat-refusal + ACL in the
+  // same 3-server topology.
+  console.log('\n[L] §MESH-01e — partition heal (3 servers + tracker: converge · split · heal · exactly-once)');
+  const idP = '1a'.repeat(16), idQ = '2b'.repeat(16), idR = '3c'.repeat(16);
+  const aclR = path.join(tmp, `r2h-acl-partition-${PORT}.json`);
+  fs.writeFileSync(aclR, JSON.stringify({ mode: 'open' }));           // deterministic start (tmp persists across runs)
+  for (const p of [17, 18, 19, 20, 21]) fs.rmSync(path.join(tmp, `r2h-peers-${PORT + p}.json`), { force: true }); // no stale bootstrap
+  const trkL = await startServer(PORT + 17, { TRACKER_MODE: '1', MESH_SERVER_ID: '4d'.repeat(16), PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 17}.json`) });
+  const mP = await startServer(PORT + 18, mkEnv(PORT + 18, idP, { TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150' }));
+  const mQ = await startServer(PORT + 19, mkEnv(PORT + 19, idQ, { TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150' }));
+  const mR = await startServer(PORT + 20, mkEnv(PORT + 20, idR, { TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150', MESH_ACL_FILE: aclR }));
+
+  const pia  = await jpost('/session/start', { name: 'Pia',  seed: 111 }, mP.base);
+  const quin = await jpost('/session/start', { name: 'Quin', seed: 222 }, mQ.base);
+  const rex  = await jpost('/session/start', { name: 'Rex',  seed: 333 }, mR.base);
+  const ssePia = await openSSE(pia.sessionId, mP.base); openClients.push(ssePia);
+  const sseRex = await openSSE(rex.sessionId, mR.base); openClients.push(sseRex);
+
+  // (1) convergence from the tracker alone: every server replicates the other two
+  const remoteNames = async (base) => ((((await jget('/session/who', base)).remotes) || []).map((p) => p.name));
+  const seesBoth = async (base, a, b) => { const n = await remoteNames(base); return n.includes(a) && n.includes(b); };
+  let converged = false;
+  for (let i = 0; i < 50 && !converged; i++) {
+    await sleep(200);
+    converged = (await seesBoth(mP.base, 'Quin', 'Rex')) && (await seesBoth(mQ.base, 'Pia', 'Rex')) && (await seesBoth(mR.base, 'Pia', 'Quin'));
+  }
+  check(converged, '3 servers sharing only a tracker URL fully converge — each replicates the other two players');
+
+  // (2) baseline exactly-once on the healthy mesh (all three co-present at the hub)
+  await jpost('/session/say', { sessionId: quin.sessionId, msg: 'mesh-baseline' }, mQ.base);
+  await waitFor(() => countEv(ssePia, 'chat', (d) => d.msg === 'mesh-baseline') >= 1
+                   && countEv(sseRex, 'chat', (d) => d.msg === 'mesh-baseline') >= 1, 5000, 100);
+  await sleep(600);   // several replay rounds — the 100-event tail is resent every round
+  check(countEv(ssePia, 'chat', (d) => d.msg === 'mesh-baseline') === 1, 'healthy 3-mesh: Pia hears the chat exactly once');
+  check(countEv(sseRex, 'chat', (d) => d.msg === 'mesh-baseline') === 1, 'healthy 3-mesh: Rex hears the chat exactly once');
+
+  // (3) PARTITION — block P and Q on R via the hot-reloaded ACL, verify the split is tight
+  fs.writeFileSync(aclR, JSON.stringify({ blockServerIds: [idP, idQ] }));
+  let splitSeen = false;
+  for (let i = 0; i < 40 && !splitSeen; i++) {
+    await sleep(150);
+    const pPeers = (await jget('/mesh/status', mP.base)).peers || [];
+    const qPeers = (await jget('/mesh/status', mQ.base)).peers || [];
+    splitSeen = pPeers.some((p) => p.addr.endsWith(':' + (PORT + 20)) && p.lastErr === 'acl')
+             && qPeers.some((p) => p.addr.endsWith(':' + (PORT + 20)) && p.lastErr === 'acl');
+  }
+  check(splitSeen, 'hot-reloaded block ACL partitions R: P and Q both record lastErr acl on the R peer');
+  check(((await jget('/mesh/status', mR.base)).traffic || []).some((t) => t.kind === 'gossip' && !t.ok && /ACL/.test(t.note)),
+    'partitioned R logs the refusals in its information-passed ring');
+  const gSplit = await fetch(mR.base + '/api/mesh/gossip', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ serverId: idP, proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, addr: `localhost:${PORT + 18}` }),
+  });
+  check(gSplit.status === 403, 'gossip from a blocked serverId is refused with 403 (the partition mechanism itself)');
+
+  // Events DURING the split — kept brief so partition-era events are still
+  // fresh (< MESH_FANOUT_MAX_AGE) when the link heals and they first cross it.
+  await jpost('/session/say', { sessionId: quin.sessionId, msg: 'thru-partition-pq' }, mQ.base);
+  await jpost('/session/say', { sessionId: rex.sessionId,  msg: 'behind-partition-r' }, mR.base);
+  await jpost('/session/pos', { sessionId: rex.sessionId, r: rex.r, c: rex.c + 1 }, mR.base);   // Rex steps E, unseen
+  await waitFor(() => countEv(ssePia, 'chat', (d) => d.msg === 'thru-partition-pq') >= 1, 4000, 100);
+  await sleep(500);
+  check(countEv(ssePia, 'chat', (d) => d.msg === 'thru-partition-pq') === 1, 'the surviving P–Q link still delivers exactly once during the split');
+  check(countEv(ssePia, 'chat', (d) => d.msg === 'behind-partition-r') === 0, 'Rex’s chat does NOT cross the partition');
+  check(countEv(sseRex, 'chat', (d) => d.msg === 'thru-partition-pq') === 0, 'isolated R hears nothing from the majority side');
+  check(countEv(ssePia, 'player_moved', (d) => d.name === 'Rex') === 0, 'Rex’s move does not cross the partition');
+  check((((await jget('/session/who', mP.base)).remotes) || []).some((p) => p.name === 'Rex' && p.r === rex.r && p.c === rex.c),
+    'split ≤ origin-TTL: P keeps the stale Rex replica at his last known cell (availability over freshness)');
+
+  // (4) HEAL — reopen the ACL; the next gossip round reconnects
+  fs.writeFileSync(aclR, JSON.stringify({ mode: 'open' }));
+  await waitFor(() => countEv(ssePia, 'chat', (d) => d.msg === 'behind-partition-r') >= 1, 8000, 100);
+  await sleep(700);   // many post-heal rounds: the partition-era events replay in every tail
+  check(countEv(ssePia, 'chat', (d) => d.msg === 'behind-partition-r') === 1,
+    'heal: the partition-era chat crosses exactly once, despite the event tail replaying every round');
+  check(countEv(ssePia, 'player_moved', (d) => d.name === 'Rex' && d.to && d.to.c === rex.c + 1) === 1,
+    'heal: the partition-era move fans out exactly once (vv dedup across the healed link)');
+  let rexFixed = false;
+  for (let i = 0; i < 20 && !rexFixed; i++) {
+    await sleep(150);
+    rexFixed = (((await jget('/session/who', mP.base)).remotes) || []).some((p) => p.name === 'Rex' && p.c === rex.c + 1);
+  }
+  check(rexFixed, 'heal: snapshot anti-entropy corrects the stale replica to Rex’s true cell');
+  check(countEv(sseRex, 'chat', (d) => d.msg === 'mesh-baseline') === 1,
+    'pre-partition history replayed across the heal is never re-delivered (exactly-once across partitions)');
+  check(countEv(ssePia, 'chat', (d) => d.msg === 'thru-partition-pq') === 1, 'majority-side delivery count is unchanged by the heal');
+  let reconverged = false;
+  for (let i = 0; i < 30 && !reconverged; i++) {
+    await sleep(200);
+    reconverged = await seesBoth(mR.base, 'Pia', 'Quin');
+  }
+  check(reconverged, 'heal: the isolated server re-converges — R replicates both majority-side players again');
+
+  // (5) incompat-refusal in the same topology: a mismatched world knocks on the healed mesh
+  await startServer(PORT + 21, mkEnv(PORT + 21, '5e'.repeat(16), {
+    TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150', MESH_PEERS: `localhost:${PORT + 18}`, MESH_WORLDHASH_OVERRIDE: 'feedfacefeedface',
+  }));
+  await jpost('/session/start', { name: 'Xeno', seed: 444 }, `http://127.0.0.1:${PORT + 21}`);
+  await sleep(800);
+  check(!(await remoteNames(mP.base)).includes('Xeno') && !(await remoteNames(mR.base)).includes('Xeno'),
+    'an incompatible world never joins the healed mesh — Xeno invisible on P and R');
+  check((await jget('/tracker/peers?wh=feedfacefeedface', trkL.base)).count === 1,
+    'the tracker segregates the incompatible server into its own world group');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});
