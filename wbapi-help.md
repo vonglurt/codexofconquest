@@ -13,9 +13,10 @@
 ## Start the server
 
 ```bash
-./wbapi-toggle.sh start      # background, auto-restart
+./wbapi-toggle.sh start      # background (one-shot — the server never self-restarts)
 ./wbapi-toggle.sh status     # PID + port
 ./wbapi-toggle.sh restart    # after server-code changes
+./wbapi-toggle.sh tracker    # §MESH tracker role on :1368 (rendezvous only)
 ./api.sh ping                # verify it's up
 ```
 
@@ -118,9 +119,13 @@ curl -XPOST http://localhost:1367/api/session/start -d '{"name":"PlayerName"}'
 curl http://localhost:1367/api/session/look?sessionId=<id>
 # → { r, c, node, desc, exits, players: [{id, name}, ...] }
 
-# Move one step
+# Move one step (headless MUD clients — rolls the instanced encounter)
 curl -XPOST http://localhost:1367/api/session/move -d '{"sessionId":"<id>","dir":"N"}'
-# → { r, c, node, desc, exits, players }  — 409 if no exit in that direction
+# → { r, c, node, desc, exits, players, encounter }  — 409 if no exit in that direction
+
+# Position beacon (browser clients — display-only, validated, NEVER rolls; §MESH-01a)
+curl -XPOST http://localhost:1367/api/session/pos -d '{"sessionId":"<id>","r":10,"c":197}'
+# → { ok, moved, pid, name, players, nearby, world }  — ok:false reason sea|oob on bad cells
 
 # Say something to players in the same cell
 curl -XPOST http://localhost:1367/api/session/say -d '{"sessionId":"<id>","msg":"Hello!"}'
@@ -135,6 +140,54 @@ curl http://localhost:1367/api/session/who
 # End your session
 curl -XPOST http://localhost:1367/api/session/end -d '{"sessionId":"<id>"}'
 ```
+
+SSE events: `connected`, `player_arrived` / `player_left` / `chat` (cell-scoped),
+`player_moved` (worldwide, display layer). All carry `pid` (`<serverId8>:<sessionId8>`);
+remote-server events add `remote: true` + `server`.
+
+---
+
+## Mesh API — server-to-server presence (§MESH-01)
+
+Full reference: `docs-node-network.md §12` + `lab-reports/lab-report-mesh-sync-architecture.md`.
+(`./api.sh mesh` CLI wrappers are planned — FU 10; until then these are the raw endpoints.)
+
+```bash
+# Start / wire up (see also "Start the server" above)
+./wbapi-toggle.sh start                  # game server :1367 (loads .env — TRACKER_URL etc.)
+./wbapi-toggle.sh tracker [port]         # tracker role :1368 — rendezvous ONLY, never a relay
+node wbapi-server.js --peer host:1367 --bind 0.0.0.0 --advertise <lan-ip>:1367 --name "Hub"
+# Bootstrap ladder: --peer → MESH_PEERS → peers-cache.json → peers.txt → TRACKER_URL/BOOTSTRAP_URLS
+
+# Identity + world manifest (what forks a swarm: proto + engineVer + worldHash)
+curl http://localhost:1367/api/manifest
+# → { proto, engineVer, worldName, worldTag, worldHash, parts: {8 collection hashes} }
+
+# One-call mesh status (worldbuilder 🌐 Mesh tab source; also served in tracker-mode)
+curl http://localhost:1367/api/mesh/status
+# → { serverId, addr, reachability{warnings}, acl, peers[], remotePlayers[],
+#     trackerGroups[], traffic[] ("information passed" packet ring) }
+
+# Gossip ingress (servers call this on each other — shown for debugging only)
+curl -XPOST http://localhost:1367/api/mesh/gossip -d '{...meshPayload}'
+# → 200 (merged, reply payload) | 409 incompatible world | 403 ACL refused
+
+# Tracker (rendezvous)
+curl -XPOST http://localhost:1368/api/tracker/announce -d '{...manifest+addr}'
+curl http://localhost:1368/api/tracker/peers                       # all world groups
+curl "http://localhost:1368/api/tracker/peers?wh=<hash>&format=txt"  # peers.txt bootstrap format
+curl -XPOST http://localhost:1368/api/tracker/sync -d '{...}'      # federation (tracker↔tracker)
+
+# World download + mod inspection (tracker-mode refuses with 410)
+curl -O http://localhost:1367/api/world/download   # game file + X-R2H-* identity headers
+node scripts/world-diff.js mine.html theirs.html   # per-collection mod set; LOUD if CODE differs
+```
+
+**ACL:** `mesh-acl.json` at repo root (or `MESH_ACL_FILE`), hot-reloaded on mtime —
+`{blockServerIds|blockIps|blockWorldHashes: [...]}` or `{"mode":"allowlist", allowServerIds: [...]}`.
+Applies to gossip ingress (403), dial-out, and tracker merges.
+
+**Test gate:** `npm run test:mud` — 98 checks incl. the [L] partition-heal harness.
 
 ---
 

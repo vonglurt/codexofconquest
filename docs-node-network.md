@@ -3,7 +3,7 @@
 # roll2hit.com — Node Network Technical Reference
 
 **File:** `roll2hit-v3.html`  
-**Last updated:** 2026-06-15 §CELL-13  
+**Last updated:** 2026-07-02 §MESH-01 (multiplayer mesh, §12)  
 **Node count:** 422 named nodes with grid coordinates (reachable via `cellMove`). The 268 zombie J-stubs with no `r,c` were purged in §CELL-05b.
 
 ---
@@ -375,6 +375,36 @@ GL    3   15  Old Guard's Corner
 6. Update docs: `story.md`, `maps.md`, `plan.md`.
 
 Preferred path: use `POST /api/node` via WBAPI (rejects duplicate coordinates and rejects N/S/E/W fields).
+
+---
+
+## 12. Multiplayer Mesh (§MESH-01, ✅ Incs a–e 2026-07-02)
+
+Server-to-server presence replication over the node network. Player-facing view: `mechanics.md` "Multiplayer — Mesh Presence"; endpoint quick reference: `wbapi-help.md`; design: `lab-reports/lab-report-mesh-multiuser.md` + `lab-reports/lab-report-mesh-sync-architecture.md`. All state is in `wbapi-server.js` (no game-file changes beyond `ENGINE_VER`/`WORLD_NAME` consts and the opt-in `MP` client module).
+
+### Sessions and the beacon/move dichotomy
+
+- `SESSIONS` (in-memory, 30 min idle TTL) hold `(r, c)` positions validated against the mover world. Per-session SSE streams (`GET /api/session/events`) carry cell-scoped `player_arrived` / `player_left` / `chat` and the worldwide display-layer exception `player_moved`.
+- **`POST /api/session/pos`** — browser-client beacon: passability-validated, display-only, **rolls nothing**; returns `nearby` + `world[]`. **`POST /api/session/move`** — headless MUD clients only: performs the §WALK-5 instanced encounter roll.
+- Every presence surface is **pid-keyed** (`<serverId8>:<sessionId8>`), never name-keyed.
+
+### Replication (single-writer gossip)
+
+- Each server is the **single writer** of its own sessions; peers hold read-only replicas (`MESH.remote`). No relay: gossip payloads carry only the sender's own event log tail (≤100) + full snapshot; the mesh becomes fully connected via PEX instead.
+- Rounds every `MESH_GOSSIP_MS` (2 s prod) to ≤3 random peers. Receivers dedup with a per-origin **version vector**; fresh events (≤10 s, `MESH_FANOUT_MAX_AGE`) fan out to local SSE, replays advance the vv silently. Per-origin **snapshots** are the anti-entropy floor — event loss can delay but never corrupt state. Origins silent > 90 s (`MESH_ORIGIN_TTL`) expire.
+- **Compatibility gate before everything**: `(proto, engineVer, worldHash)` must match exactly (else 409). `worldHash` = SHA-256/16 over the 8 spatial/mechanical collection source spans + `ENGINE_VER`; narrative tables deliberately unhashed (see `mechanics.md`). Then **ACL** (`mesh-acl.json`, hot-reloaded on mtime: block/allow serverIds/ips/worldHashes, `mode:'allowlist'` for private meshes; applied to ingress → 403, dial-out, and response ingest — one blocklist entry is a full bidirectional partition, which is exactly how the partition-heal harness simulates splits).
+
+### Rendezvous, bootstrap, reachability
+
+- **Tracker** = a role of the same binary (`--tracker-mode` / `./wbapi-toggle.sh tracker [port]`): rendezvous only, never a relay — serves only ping/manifest/tracker routes (410 otherwise). Announce table groups by full compatibility identity, so incompatible worlds are segregated, never mixed. Trackers federate manually (`--tracker-peer` / `TRACKER_PEERS`, `ageMs` clock-skew-safe younger-wins merge).
+- **Bootstrap ladder**: `--peer` flags → `MESH_PEERS` env → `peers-cache.json` → `peers.txt` (incl. `tracker <url>` lines) → `TRACKER_URL` / `BOOTSTRAP_URLS` (plain-text peer lists over HTTP).
+- **Reachability**: binds `127.0.0.1` by default; a real LAN/WAN mesh needs `--bind 0.0.0.0` + `--advertise <lan-ip>:<port>`, warned loudly at startup and surfaced in `GET /api/mesh/status.reachability`.
+
+### Where remote players surface
+
+`look.players` / `who.remotes` / `pos.nearby` + `world[]` (all carry `server` + `pid`), SSE events with `remote: true`, and the worldbuilder 🌐 Mesh tab (`GET /api/mesh/status`: identity, peers w/ liveness, remote players, "information passed" packet ring).
+
+**Test gates:** `npm run test:mud` — 98 checks across sections [A]–[L], including the Inc (e) partition-heal harness (3 servers + tracker: convergence, exactly-once across partitions via ACL-file split/heal, stale-replica availability, snapshot re-convergence, incompat-refusal + world-group segregation). Playwright: `multiplayer-presence.test.js` 7/7, `worldbuilder-mesh.test.js` + mesh tab 4/4.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

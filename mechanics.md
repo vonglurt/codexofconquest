@@ -869,6 +869,36 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 
 ---
 
+## Multiplayer — Mesh Presence (§MESH-01, ✅ Incs a–e shipped 2026-07-02)
+
+Roll2Hit is single-player-first: multiplayer is a strictly **opt-in presence layer** on top of the unchanged solo game. Full design: `lab-reports/lab-report-mesh-multiuser.md` (spec) and `lab-reports/lab-report-mesh-sync-architecture.md` (architecture write-up); server/API detail: `docs-node-network.md §12`; map surfaces: `maps.md`.
+
+### What the player experiences
+
+- **🌐 opt-in toggle** in Story Mode. Nothing multiplayer runs — no network key exists in the tab — until it is clicked. The single HTML file stays fully playable offline.
+- **"Also here:" strip** under the move message lists players co-present on your cell (local and remote-server alike); **☺ dots** on the minimap and **cyan dots** on the WORLD map / GLOBE panels track everyone worldwide in real time (`player_moved` SSE).
+- **Chat**: `say` reaches players on your cell — exactly once, including across servers.
+- **Auto-reconnect**: reloading the page resumes the same session (sessionStorage id probed via the `pos` beacon); a dead id falls back to a fresh connect under the same tab opt-in.
+- **Server browser / magnet links**: Shift+🌐 (or a failed connect) opens the browser — paste an `r2h:?…` magnet, a tracker URL, or a server URL; rows show server name, 🌍 world tag, player count, ping, and a ⚠ build-mismatch flag.
+- **Same display name never misattributes**: every presence surface is keyed by `pid` (`<serverId8>:<sessionId8>`), so two "Bob"s stay distinct (an `@server` suffix renders only on a name collision).
+
+### What multiplayer never does (invariants)
+
+- **Presence is display-only.** The browser reports position via the `POST /api/session/pos` beacon, which validates passability and broadcasts arrivals/departures but **rolls nothing** — your encounters are always your own client's rolls. (`session/move`, which does roll, is exclusive to headless MUD clients.)
+- **Encounters are instanced** — session-private, seed-deterministic, never delivered over SSE (§WALK-5 property, enforced by the mud-harness).
+- **Free-Movement is untouched** — the mover never consults presence.
+- **Stale beats absent**: during a network split you keep seeing a peer's last known position (up to a 90 s origin TTL) rather than players blinking out; snapshot anti-entropy corrects positions on heal (partition-heal harness, Inc e).
+
+### World identity — what forks a swarm and what doesn't
+
+Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `worldHash` covers the **eight spatial/mechanical data collections** — `NODE_MAP`, `NODE_COORDS`, `SEA_RUNS`, `SEA_LANES`, `ROAD_RUNS`, `QUEST_DB`, `MONSTER_POOL`, `WORLD_DB` — hashed as raw source spans, plus `ENGINE_VER`. **This boundary is intentional** (decided in the architecture report §III.A): *hash what determines where players can stand and what they can fight*. Narrative tables — `NPC_DIALOGUES`, `BIRKA_NPC_PROFILES`, `FROBERGER_JOURNAL`, `KEY_EVENTS`, and other prose — are deliberately **not** hashed, so a pure-dialogue mod does not fork the swarm. Likewise `WORLD_NAME` is a display-only tag (rendered as `worldTag` = `<name>-<hash5>`, e.g. `Roll2Hit-915aa`): renaming a world never forks it — identity is what a world *is* (data), the tag is what it's *called*. Incompatible worlds are refused at gossip ingress (409) and segregated into their own tracker world groups; mod inspection goes through `GET /api/world/download` + `scripts/world-diff.js`.
+
+### Planned gameplay ladder (not yet shipped)
+
+(f) co-presence buffs (+1 to hit per co-located ally, cap +2; halved encounter rate) + party loot share → (g) hireling guide bot → (h) sentry bots → (i) no-dupe trade ledger → (j) consensual PvP duels. See plan.md §MESH-01.
+
+---
+
 ## State Fields Reference
 
 | Field | Type | Purpose |

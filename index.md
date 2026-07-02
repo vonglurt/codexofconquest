@@ -16,7 +16,7 @@
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-07-02 — doc-simplification pass: UQF wave history + sync-pass history archived to `plan-archive.md`; stale counts fixed; §MESH-01 indexed. Prior detail (§EDITOR-01-D/-FU, §EDITOR-02, §WALK close-out): `plan-archive.md` + `lab-reports/lab-report-editor01d-*.md` | ✅ |
+| Last sync pass | 2026-07-02 — §MESH docs close-out (audit A3+A4): §MESH sections added to `mechanics.md` (presence mechanics + FU 6 manifest-scope boundary), `docs-node-network.md §12` (gossip/vv/tracker/ACL), `maps.md` (multiplayer map surfaces), `wbapi-help.md` (session/pos + Mesh API); cross-ref row added. Prior pass: doc-simplification (UQF wave history archived to `plan-archive.md`) | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -55,13 +55,13 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `mechanics-combat.md` | Battle Mode: combat flow, 1.5 AP economy, weapons, loot, leveling, defeat screens, save system | ✅ Split 2026-05-25 |
 | `mechanics-economy.md` | Story Mode: vendor system, NPC favorability, EB, NG+, state fields, F4 function reference | ✅ Split 2026-05-25 |
 | `combat.md` | Battle engine reference: initiative, overlay, Champion features, death saves, flee | ✅ §API-02 line-verified 2026-05-25 |
-| `maps.md` | World map: cell grid + extended areas, 410 node codes + coordinates, cell-adjacency network, gate locks | ✅ Updated 2026-05-28 |
+| `maps.md` | World map: cell grid + extended areas, 410 node codes + coordinates, cell-adjacency network, gate locks, §MESH multiplayer map surfaces | ✅ Updated 2026-07-02 |
 | `story.md` | Main quest narrative: 42 story nodes across 8 acts, 7 Epic NPC profiles, prologue, endings, NG+ | ✅ 76 nodes covered |
 | `world.md` | DM manual: world history, 4 factions, 7 Epic NPC profiles, quest motivation, survival pressure | ✅ Reviewed 2026-05-24 |
 | `monsters.md` | 370 monsters: stat blocks by tier and terrain pool, 20 EB bosses, fish pool | ✅ Verified 2026-05-24 |
 | `quest.md` | Master quest register — all quests organized by location (implemented + planned) | ✅ |
-| `mechanics.md` | High-level game mechanics overview — links to mechanics-combat.md and mechanics-economy.md | ✅ |
-| `docs-node-network.md` | Node network technical reference — cell grid, adjacency, code conventions, `cellMove` navigation | ✅ |
+| `mechanics.md` | High-level game mechanics overview — links to mechanics-combat.md and mechanics-economy.md; §MESH-01 multiplayer presence + world-identity boundary | ✅ Updated 2026-07-02 |
+| `docs-node-network.md` | Node network technical reference — cell grid, adjacency, code conventions, `cellMove` navigation, §12 multiplayer mesh (gossip/vv/tracker/ACL) | ✅ Updated 2026-07-02 |
 | `mover.js` | **§WALK-2** unified mover kernel — pure `move(world,pos,dir)→MoveResult` (geo wrap/clamp/sea/locale per lab report §4.1; no DOM/SSE/RNG). The `MOVER:CORE` block is inlined byte-identically into `roll2hit-v3.html` and `require()`d by `wbapi-server.js` — single source of movement truth shared by SP client (`cellMove`) + MUD server (`POST /api/session/move`) | ✅ done 2026-06-26 |
 | `Year1367AD.md` | Canonical year 1367 AD — historical events, source texts, quest vignettes for §1367 integration | ✅ |
 
@@ -106,7 +106,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `wbapi-cli.js` | Low-level CLI — direct in-process reads/writes against `roll2hit-v3.html` (use `api.sh` for day-to-day work) |
 | `wbapi-server.js` | Local HTTP server — REST endpoints for worldbuilder.html at port 1367 |
 | `wbapi-toggle.sh` | Shell helper — start/stop wbapi-server |
-| `wbapi-help.md` | WBAPI usage reference — endpoint list, anchor syntax, example calls |
+| `wbapi-help.md` | WBAPI usage reference — endpoint list, anchor syntax, example calls; session/pos + Mesh API (manifest, gossip, tracker, world/download, ACL) |
 | `parse-nodes.js` | Standalone node parser — extracts NODE_MAP entries for external tooling |
 | `scripts/check-mover-parity.js` | **§WALK-2** structural walk-parity — asserts the `MOVER:CORE` block is byte-identical in `mover.js` and `roll2hit-v3.html` |
 | `scripts/check-mover-behaviour.js` | **§WALK-2** behavioural walk-parity — replays real `CELL_GRID`/`IMPASSABLE_CELLS` through old `cellMove` logic vs `mover.js`; asserts 0 content-affecting decision mismatches |
@@ -394,6 +394,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **MIT License / Quest -1** | `story.md §XIV` | `lab-reports/lab-report-quest-minus-one-world-creator.md` |
 | **Monster pool (370)** | `monsters.md` | `plan.md §II (MONSTER_POOL)` · `spec-world.md` |
 | **Mordus (Warlord)** | `story.md` · `world.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` |
+| **Multiplayer mesh (§MESH-01)** | `mechanics.md §Multiplayer` · `docs-node-network.md §12` | `lab-reports/lab-report-mesh-multiuser.md` · `lab-reports/lab-report-mesh-sync-architecture.md` · `maps.md §Multiplayer` · `wbapi-help.md §Mesh API` |
 | **MT Mountain Pass** | `maps.md` · `story-flowchart.md` | `story-arc-investigation.md` (§XVII + §XXI intersection) |
 | **NPC cross-references** | `world.md` | `lab-reports/lab-report-web-of-connections.md` |
 | **NPC dialogue system** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-npc-dialogue-system.md` · `lab-reports/lab-report-birka-beginner-arc.md` |

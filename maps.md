@@ -673,6 +673,22 @@ Behavior sequence:
 
 Sets `s55MapLineDelivered = true` on render. Style: `color: #bbb; font-style: italic; font-size: 0.9em`.
 
+---
+
+## MULTIPLAYER ON THE MAPS (§MESH-01, ✅ 2026-07-02)
+
+When the player opts in via the 🌐 toggle, other players appear on every map surface — a **display-only** layer (see `mechanics.md` "Multiplayer — Mesh Presence"; server mesh: `docs-node-network.md §12`). Remote players from other servers in the mesh flow through the same surfaces as local ones.
+
+| Surface | Marker | Data source |
+|---------|--------|-------------|
+| Minimap (11×17 viewport) | ☺ dot on the player's cell | `pos.nearby` (viewport subset) + `player_moved` SSE between own steps |
+| "Also here:" strip under `#story-move-msg` | names, cell-scoped | `pos.players` / SSE `player_arrived`/`player_left` |
+| WORLD map (full canvas) + GLOBE panel | cyan dot per player, worldwide | `pos.world[]` (all live coords) + worldwide `player_moved` SSE |
+
+- Repaints happen via `MP.remotes` (pid-keyed worldwide track) + `_mpRepaintMaps()` — a watcher's maps update with zero actions of their own.
+- `player_moved` is the one **worldwide** SSE event (map dots need global scope); `player_arrived`/`player_left`/`chat` remain strictly cell-scoped (§WALK-5 co-presence property).
+- Positions are beacon-validated server-side against the same passability rules as `cellMove` — no ghosts on sea cells or off-band rows.
+- During a network split between servers, remote dots freeze at their last known cell (up to 90 s) and snap to true positions when the mesh heals.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
