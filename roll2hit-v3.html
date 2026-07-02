@@ -3107,6 +3107,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   background: var(--panel2); border-color: var(--gold); color: var(--gold);
 }
 #btn-waypoint.at-waypoint { border-color: var(--grn-lt); color: var(--grn-lt); background: rgba(58,122,58,0.08); }
+#btn-waypoint.travelling  { border-color: #c8b98c; color: #c8b98c; background: rgba(200,185,140,0.10); }
 /* ── Character Sheet (light theme) ── */
 #sheet-character { background: var(--bg); }
 #char-sheet-header { border-bottom: 2px solid var(--border); padding-bottom: 6px; flex-shrink: 0; }
@@ -26438,6 +26439,9 @@ function storyCheckVictory(node) {
 
 // §CELL-03: MUD-style one-cell-per-move navigation
 function cellMove(dir) {
+  // §NAV-01d: any user-initiated move (D-pad, keyboard, exit-line click) halts
+  // auto-travel — only the travel loop's own steps set _travelStepping.
+  if (_travelActive() && !_travelStepping) { _travelStop('Travel halted.'); return; }
   // §WALK-2: bounds/wrap/sea decisions live in the shared mover kernel (mover.js).
   // cellMove is now a thin caller that applies the SP side effects to the result.
   const res = Mover.move(_moverWorld(), { r: S_story.playerR || 0, c: S_story.playerC || 0 }, dir);
@@ -26513,7 +26517,10 @@ function _enterEmptyCell(r, c) {
   const body = room.prose +
     (room.signposts.length ? '\n\n' + room.signposts.map(s => '🪧 ' + s).join('\n') : '');
   _renderNodeShell(room.icon, room.title, room.sub, '— ' + room.title + ' —', body);
-  document.getElementById('story-move-msg').textContent = '';
+  // §NAV-01d: while auto-travelling, the move-msg line is a persistent status strip.
+  document.getElementById('story-move-msg').textContent = _travelStepping
+    ? '🐎 Travelling to ' + (NODE_MAP[S_story.waypoint] ? NODE_MAP[S_story.waypoint].label : S_story.waypoint) + ' — any input halts.'
+    : '';
 
   // §CELL-09 / §TIMELESS-01: encounter rolls at the terrain's base rate on each step.
   const terrain = room.terrain;
@@ -26521,6 +26528,7 @@ function _enterEmptyCell(r, c) {
   if (Math.random() < baseRate) {
     const monster = _weightedMonsterPick(terrain);
     if (monster) {
+      _encounterQueued = true;   // §NAV-01d: halts auto-travel before the battle fires
       setTimeout(() => _startStoryBattle(monster, `Wild ${monster.name}`), 300);
     }
   }
@@ -33186,7 +33194,7 @@ function _updateExitLinks() {
   let wpDir = null;
   const wp = S_story.waypoint;
   if (wp && wp !== S_story.currentCode) {
-    wpDir = _bfsGridDir({ r: pr, c: pc }, wp);   // §NAV-01a: route from the player, not the last named node
+    wpDir = _roadGridDir({ r: pr, c: pc }, wp);  // §NAV-01a: route from the player · §NAV-01d: road-weighted, matches auto-travel
   }
   // Highlight dpad buttons toward waypoint
   ['N','S','E','W'].forEach(d => {
@@ -33479,6 +33487,125 @@ function _bfsGridDir(from, toCode) {
   return dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
 }
 
+// §NAV-01d — road-weighted route (Dijkstra over Dial buckets): road/sea-lane
+// cells cost 1, everything else 2, so the route snaps to the encounter-rate-0
+// highway net whenever the detour is under 2× the beeline (mirrors the
+// trunk-reuse costing in scripts/build-roads.js). Topology identical to
+// _bfsGridPath: rows clamp at the band edges, columns wrap E↔W.
+function _roadGridPath(from, toCode) {
+  if (!toCode || !NODE_COORDS[toCode]) return [];
+  const endCoord = NODE_COORDS[toCode];
+  const startCoord = (from && typeof from === 'object') ? from
+                   : (NODE_COORDS[from] || _playerPos());
+  if (!startCoord || startCoord.r == null) return [];
+  const startKey = `${startCoord.r},${startCoord.c}`;
+  const endKey = `${endCoord.r},${endCoord.c}`;
+  if (startKey === endKey) return [];
+  const ROWS = GEO_PROJ.ROWS, COLS = GEO_PROJ.COLS;
+  const dist = new Map([[startKey, 0]]);
+  const prev = new Map([[startKey, null]]);
+  const buckets = [[startKey]];
+  for (let d = 0; d < buckets.length; d++) {
+    const bucket = buckets[d];
+    if (!bucket) continue;
+    for (const key of bucket) {
+      if (dist.get(key) !== d) continue;                // stale queue entry
+      if (key === endKey) {
+        const path = [];
+        for (let cur = key; cur !== startKey; cur = prev.get(cur)) {
+          const i = cur.indexOf(',');
+          path.push({ r: +cur.slice(0, i), c: +cur.slice(i + 1), code: cellCode(cur) });
+        }
+        return path.reverse();
+      }
+      const ci = key.indexOf(',');
+      const r = +key.slice(0, ci), c = +key.slice(ci + 1);
+      for (const [dr, dc] of [[-1,0],[1,0],[0,1],[0,-1]]) {
+        const nr = r + dr;
+        const nc = (((c + dc) % COLS) + COLS) % COLS;   // E↔W wrap
+        if (nr < 0 || nr >= ROWS) continue;             // band clamp (no pole wrap)
+        const k = `${nr},${nc}`;
+        if (IMPASSABLE_CELLS.has(k)) continue;
+        const nd = d + ((ROAD_CELLS.has(k) || SEA_LANES.has(k)) ? 1 : 2);
+        if (dist.has(k) && dist.get(k) <= nd) continue;
+        dist.set(k, nd);
+        prev.set(k, key);
+        (buckets[nd] || (buckets[nd] = [])).push(k);
+      }
+    }
+  }
+  return [];
+}
+
+// First-step compass direction of the road-weighted route (antimeridian-adjusted).
+function _roadGridDir(from, toCode) {
+  const start = (from && typeof from === 'object') ? from
+              : (NODE_COORDS[from] || _playerPos());
+  const path = _roadGridPath(start, toCode);
+  if (!path.length) return null;
+  const dr = path[0].r - start.r;
+  let dc = path[0].c - start.c;
+  if (dc > 1) dc = -1; else if (dc < -1) dc = 1;        // antimeridian wrap-adjust
+  return dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
+}
+
+/* ── §NAV-01d: Auto-travel ──
+   WP click walks the whole route (~120 ms/step, setTimeout chain — never a
+   blocking loop); halted by a battle, arrival, a blocked step, or any player
+   input. Shift+WP keeps the old one-step nudge. Travel state is transient
+   module state, never persisted — a reload resumes standing still. */
+let _travelTimer = null;      // pending setTimeout id; null = not travelling
+let _travelStepping = false;  // true only while the loop's own cellMove runs
+let _encounterQueued = false; // set by _enterEmptyCell's roll (battle fires ~300ms later)
+
+function _travelActive() { return _travelTimer !== null; }
+
+function _travelStop(msg) {
+  if (_travelTimer !== null) { clearTimeout(_travelTimer); _travelTimer = null; }
+  const btn = document.getElementById('btn-waypoint');
+  if (btn) btn.classList.remove('travelling');
+  if (msg) storyMsg(msg);
+}
+
+function _travelStart() {
+  if (_travelTimer !== null || !S_story.active) return;
+  if (!S_story.waypoint) { storyQuestToggle(); return; }
+  _encounterQueued = false;
+  const btn = document.getElementById('btn-waypoint');
+  if (btn) btn.classList.add('travelling');
+  _travelTick();
+}
+
+function _travelTick() {
+  _travelTimer = null;
+  const wp = S_story.waypoint;
+  if (!wp || !S_story.active) { _travelStop(); return; }
+  // Arrival = standing on the waypoint's CELL (mirrors storyWaypoint: co-located
+  // locale nodes share a cell, so currentCode equality alone can miss it).
+  const wpCo = NODE_COORDS[wp];
+  const pos = _playerPos();
+  if (S_story.currentCode === wp || (wpCo && pos.r === wpCo.r && pos.c === wpCo.c)) {
+    _travelStop();
+    S_story.waypoint = null;
+    _updateWaypointBtn();
+    storyMsg('📍 You have reached the waypoint: ' + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '!');
+    storyQuestToggle();
+    return;
+  }
+  const dir = _roadGridDir(pos, wp);
+  if (!dir) { _travelStop('📍 No path to waypoint found. Move manually toward ' + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '.'); return; }
+  _travelStepping = true;
+  try { cellMove(dir); } finally { _travelStepping = false; }
+  const now = _playerPos();
+  if ((now.r === pos.r && now.c === pos.c)          // blocked step (kernel refused)
+      || _encounterQueued || S_story.pendingBattle  // encounter rolled / battle begun
+      || !S_story.active) {                         // left story mode
+    _travelStop();
+    return;
+  }
+  _travelTimer = setTimeout(_travelTick, 120);
+}
+
 function _updateWaypointBtn() {
   const btn = document.getElementById('btn-waypoint');
   if (!btn) return;
@@ -33502,7 +33629,7 @@ function storyWaypoint() {
     storyQuestToggle();
     return;
   }
-  const dir = _bfsGridDir(pos, wp);
+  const dir = _roadGridDir(pos, wp);   // §NAV-01d: same road-weighted route as auto-travel
   if (!dir) { storyMsg('📍 No path to waypoint found. Move manually toward ' + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '.'); return; }
   cellMove(dir);
 }
@@ -33546,12 +33673,18 @@ function storySetWaypoint(nodeCode) {
   _updateWaypointBtn();
   const dest = NODE_MAP[nodeCode];
   storyMsg('📍 Waypoint set: ' + (dest ? dest.label : nodeCode));
+  // §NAV-01d: "Navigate →" starts the journey, not just the flag. Surface the
+  // story sheet so the travel is visible, then walk.
+  switchSheet('sheet-story');
+  _travelStart();
 }
 
 /* ── Story keyboard shortcuts ── */
 document.addEventListener('keydown', e => {
   if (!S_story.active) return;
   if (['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)) return;
+  // §NAV-01d: ANY key halts auto-travel; the keystroke is consumed by the halt.
+  if (_travelActive()) { e.preventDefault(); _travelStop('Travel halted.'); return; }
   const dirMap = { ArrowUp:'N', ArrowDown:'S', ArrowRight:'E', ArrowLeft:'W',
                    n:'N', s:'S', e:'E', w:'W',
                    N:'N', S:'S', E:'E', W:'W' };
@@ -33623,6 +33756,8 @@ function _weightedMonsterPick(terrain) {
 
 // §CELL-04: called from _enterEmptyCell to start a random wilderness battle
 function _startStoryBattle(monster, label) {
+  _encounterQueued = false;
+  _travelStop();               // §NAV-01d: battle start always halts auto-travel
   S_story.pendingBattle = { nodeCode: null, name: monster.name, label: label, corridor: true };
   loadWorldMonster(monster);
   storyExit();
@@ -33685,7 +33820,13 @@ document.getElementById('btn-continue-new').addEventListener('click', _showCharC
 document.getElementById('btn-gameover-respawn').addEventListener('click', storyRespawnFromCheckpoint);
 document.getElementById('btn-gameover-new').addEventListener('click', _showCharCreate);
 document.getElementById('btn-defeat-new').addEventListener('click', storyNewGame);
-document.getElementById('btn-waypoint').addEventListener('click', storyWaypoint);
+document.getElementById('btn-waypoint').addEventListener('click', e => {
+  // §NAV-01d: WP click = start/stop auto-travel · Shift+WP = single step (old behavior)
+  if (_travelActive()) { _travelStop('Travel halted.'); return; }
+  if (e.shiftKey) { storyWaypoint(); return; }
+  if (!S_story.waypoint) { storyQuestToggle(); return; }
+  _travelStart();
+});
 document.getElementById('btn-character').addEventListener('click', storyCharToggle);
 document.getElementById('btn-char-close').addEventListener('click', storyCharToggle);
 document.getElementById('btn-inventory').addEventListener('click', storyInventoryToggle);

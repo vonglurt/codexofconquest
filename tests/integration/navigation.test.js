@@ -367,6 +367,78 @@ test.describe('Navigation — waypoint follow (storyWaypoint)', () => {
   });
 });
 
+// ── 6b — Auto-travel (§NAV-01d) ──────────────────────────────────────────────
+//
+// Ground truth (current geo): NUE (20,191) → MGR (18,192) is 3 steps; every
+// shortest route passes (18,191) or (19,192), both EMPTY cells, so a
+// rate-1 encounter override is guaranteed to fire mid-route. LHR (10,197) is
+// ~16 steps away — far enough that an interrupt always lands mid-journey.
+// Math.random is pinned to 0.999999 (not 1: array picks index len-1, in
+// bounds) so no step ever rolls an encounter unless the test forces rates.
+
+test.describe('Navigation — auto-travel (§NAV-01d)', () => {
+  test.beforeEach(async ({ page }) => {
+    await seedAndLoad(page, seedAt(NUE));
+    await dismissContinue(page);
+  });
+
+  test('WP click travels NUE → MGR (3 cells) and clears the waypoint on arrival', async ({ page }) => {
+    await page.evaluate(() => {
+      Math.random = () => 0.999999;
+      S_story.waypoint = 'MGR';
+      _updateWaypointBtn();
+    });
+    await page.click('#btn-waypoint');           // plain click = start travel loop
+    await page.waitForFunction(() => S_story.waypoint === null, null, { timeout: 15000 });
+    const done = await page.evaluate(() => ({
+      active: _travelActive(),
+      code: S_story.currentCode,
+      r: S_story.playerR, c: S_story.playerC,
+    }));
+    expect(done.active).toBe(false);
+    expect(done.code).toBe('MGR');
+    expect([done.r, done.c]).toEqual([18, 192]);
+  });
+
+  test('a wilderness encounter halts auto-travel before the battle fires', async ({ page }) => {
+    await page.evaluate(() => {
+      Math.random = () => 0;                     // every empty-cell step rolls an encounter
+      Object.keys(TERRAIN_ENCOUNTER_RATE).forEach(k => { TERRAIN_ENCOUNTER_RATE[k] = 1; });
+      S_story.waypoint = 'LHR';
+      _travelStart();
+    });
+    await page.waitForFunction(() => S_story.pendingBattle !== null, null, { timeout: 10000 });
+    expect(await page.evaluate(() => _travelActive())).toBe(false);
+    expect(await readStory(page, 'waypoint')).toBe('LHR');   // journey unfinished
+  });
+
+  test('any keypress halts auto-travel (waypoint kept)', async ({ page }) => {
+    await page.evaluate(() => {
+      Math.random = () => 0.999999;
+      S_story.waypoint = 'LHR';                  // ~16 steps: interrupt lands mid-journey
+      _travelStart();
+    });
+    expect(await page.evaluate(() => _travelActive())).toBe(true);
+    await page.keyboard.press('ArrowUp');
+    expect(await page.evaluate(() => _travelActive())).toBe(false);
+    expect(await readStory(page, 'waypoint')).toBe('LHR');   // halt ≠ cancel waypoint
+  });
+
+  test('Shift+WP takes a single step (old behavior), no travel loop', async ({ page }) => {
+    await page.evaluate(() => { Math.random = () => 0.999999; S_story.waypoint = 'MUC'; });
+    await page.click('#btn-waypoint', { modifiers: ['Shift'] });
+    expect(await page.evaluate(() => _travelActive())).toBe(false);
+    expect(await readStory(page, 'currentCode')).toBe('MUC'); // exactly one step S
+  });
+
+  test('quest "Navigate →" (storySetWaypoint) starts travel and arrives', async ({ page }) => {
+    await page.evaluate(() => { Math.random = () => 0.999999; storySetWaypoint('MGR'); });
+    expect(await page.evaluate(() => _travelActive())).toBe(true);
+    await page.waitForFunction(() => S_story.waypoint === null, null, { timeout: 15000 });
+    expect(await readStory(page, 'currentCode')).toBe('MGR');
+  });
+});
+
 // ── 7 — Status bar render (storyUpdateStatus) ────────────────────────────────
 // storyUpdateStatus() reflects S_story into the HUD on each render.
 // (The old §UNIFY-03 gold-mutation test was dropped: storyRender no longer calls
