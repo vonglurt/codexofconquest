@@ -11,8 +11,8 @@
 | Metric | Value | Status |
 |--------|-------|--------|
 | HTML line count | 34,172 | ✅ |
-| Lab reports on disk | 77 | ✅ |
-| Lab reports in index | 77 | ✅ |
+| Lab reports on disk | 78 | ✅ |
+| Lab reports in index | 78 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
@@ -204,7 +204,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 ---
 
-## Lab Report Index (All 77 Reports)
+## Lab Report Index (All 78 Reports)
 
 > Six historical reports moved to `archive/` (plan-cleanup v13/v17/world-builder-arc, timeline-history, api-01-02 review, loot-drop-weapon-economy) — rows below point there.
 
@@ -242,6 +242,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-reports/lab-report-editor01d-fu-chain-ui.md` | §EDITOR-01-D-FU(a) | Visual itemChain editor widget (`buildChainEditor`) — Quest Creator + CRUD form wiring |
 | `lab-reports/lab-report-editor01d-fu-b-ladder-migration.md` | §EDITOR-01-D-FU(b) | Reward-ladder → itemChain migration — 61-branch classification, manifest-driven parity guard, silent grants |
 | `lab-reports/lab-report-editor02-mission-builder.md` | §EDITOR-02 | Mission Builder tab — arc compiler (`buildArcQuests`), chain preview, sequential POST All |
+| `lab-reports/lab-report-mesh-multiuser.md` | §MESH-01 (🔒 design locked) | Multiuser MUD — client presence rendering, gossip/PEX mesh + `worldHash` scoping, single-writer version-vector dedup, tracker mode + `r2h:` magnets, gameplay ladder, no-dupe trade ledger; increments (a)–(i) |
 
 ### Combat & Mechanics
 
