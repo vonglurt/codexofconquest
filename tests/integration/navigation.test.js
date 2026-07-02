@@ -272,6 +272,120 @@ test.describe('§NAV-01 D-pad buttons move the player', () => {
   });
 });
 
+// ── §NAV-01e remainder — wayfinding UI (exits signage · waypoint ★ · distance) ─
+
+test.describe('§NAV-01e wayfinding UI', () => {
+  test('empty-neighbour exit lines carry room signage, never flat "open terrain"', async ({ page }) => {
+    await seedAndLoad(page, seedAt(LHR));
+    await dismissContinue(page);
+    // LHR N → (9,197) is empty land: the line must name the terrain (or a
+    // road/lane with destination hint) from the same describeCell data the
+    // room text uses — the flat "open terrain" placeholder is retired.
+    const s = await page.evaluate(() => {
+      _updateExitLinks();
+      const room = describeCell(_roomWorld(), _playerPos());
+      return { line: document.getElementById('exit-N').textContent, exitN: room.exits.find(x => x.dir === 'N') };
+    });
+    expect(s.line).not.toContain('open terrain');
+    if (s.exitN.kind === 'road' || s.exitN.kind === 'lane') {
+      expect(s.line).toContain(s.exitN.label);          // "road — toward X (n)"
+      if (s.exitN.hint) expect(s.line).toContain(s.exitN.hint);
+    } else {
+      expect(s.line).toContain(s.exitN.label);          // terrain label, e.g. "City Streets"
+    }
+  });
+
+  test('road-adjacent cell renders "road — toward X (n)" in the exit line', async ({ page }) => {
+    await seedAndLoad(page, seedAt(LHR));
+    await dismissContinue(page);
+    const s = await page.evaluate(() => {
+      // Stand on a road cell whose E/W neighbour is another empty road cell —
+      // consecutive run cells guarantee one exists.
+      const DELTAS = { N: [-1, 0], S: [1, 0], E: [0, 1], W: [0, -1] };
+      for (const key of ROAD_CELLS) {
+        const [r, c] = key.split(',').map(Number);
+        for (const d of ['N', 'S', 'E', 'W']) {
+          const nr = r + DELTAS[d][0], nc = c + DELTAS[d][1];
+          if (ROAD_CELLS.has(`${nr},${nc}`) && !cellCode(`${nr},${nc}`)) {
+            S_story.playerR = r; S_story.playerC = c;
+            _updateExitLinks();
+            return { dir: d, line: document.getElementById('exit-' + d).textContent };
+          }
+        }
+      }
+      return null;
+    });
+    expect(s).not.toBeNull();
+    expect(s.line).toMatch(/road/);
+    expect(s.line).toMatch(/toward .+ \(\d+\)|an unmarked stretch/);
+  });
+
+  test('waypoint renders ★ on the local minimap and gold on the globe canvas', async ({ page }) => {
+    await seedAndLoad(page, seedAt(NUE));
+    await dismissContinue(page);
+    const s = await page.evaluate(() => {
+      S_story.waypoint = 'MUC';                        // 1 step S — inside the 11×17 window
+      _renderMiniMap();
+      _renderGlobeMap();
+      const star = [...document.querySelectorAll('#mini-map-grid .mmc')].find(el => el.textContent === '★');
+      const co = NODE_COORDS.MUC;
+      const px = document.getElementById('globe-map-canvas')
+        .getContext('2d').getImageData((co.c - 140) * 2, co.r * 2, 1, 1).data;
+      return { hasStar: !!star, starTitle: star && star.title, px: [...px] };
+    });
+    expect(s.hasStar).toBe(true);
+    expect(s.starTitle).toContain('Waypoint');
+    // gold #ffd700 at the waypoint cell (drawn under the player, who is 1 cell away)
+    expect(s.px[0]).toBeGreaterThan(200);
+    expect(s.px[1]).toBeGreaterThan(150);
+    expect(s.px[2]).toBeLessThan(100);
+  });
+
+  test('no waypoint → no ★ on the minimap', async ({ page }) => {
+    await seedAndLoad(page, seedAt(NUE));
+    await dismissContinue(page);
+    const hasStar = await page.evaluate(() => {
+      S_story.waypoint = null;
+      _renderMiniMap();
+      return [...document.querySelectorAll('#mini-map-grid .mmc')].some(el => el.textContent === '★');
+    });
+    expect(hasStar).toBe(false);
+  });
+
+  test('_wpDistTag renders "(n steps, bearing)" — BFS length + wrap-safe compass', async ({ page }) => {
+    await seedAndLoad(page, seedAt(NUE));
+    await dismissContinue(page);
+    const s = await page.evaluate(() => ({
+      oneStep: _wpDistTag('MUC'),     // NUE → MUC: 1 step due south
+      far: _wpDistTag('LHR'),         // NUE (20,191) → LHR (10,197): north-east
+      noCoords: _wpDistTag('NOPE'),   // unknown node → empty
+      self: _wpDistTag('NUE'),        // standing on it → empty
+    }));
+    expect(s.oneStep).toMatch(/\(1 step, S\)/);
+    expect(s.far).toMatch(/\(\d+ steps, NE\)/);
+    expect(s.noCoords).toBe('');
+    expect(s.self).toBe('');
+  });
+
+  test('quest journal Navigate button carries the distance readout', async ({ page }) => {
+    await seedAndLoad(page, seedAt(NUE));
+    await dismissContinue(page);
+    const s = await page.evaluate(() => {
+      // Give one active quest a waypoint and render the journal.
+      const q = Object.values(QUEST_DB).find(x => x && x.activateNode === 'LHR' && x.waypointNode);
+      const anyQ = q || Object.values(QUEST_DB).find(x => x && x.waypointNode && x.waypointNode !== 'NUE');
+      if (!anyQ) return null;
+      S_story.activeQuests = [anyQ.id];
+      S_story.completedQuests = [];
+      storyRenderQuests();
+      const btn = [...document.querySelectorAll('.quest-set-wp-btn')].find(b => /Navigate|Waypoint/.test(b.textContent));
+      return btn ? btn.textContent : null;
+    });
+    expect(s).not.toBeNull();
+    expect(s).toMatch(/\(\d+ steps?, [NSEW]{1,2}\)/);
+  });
+});
+
 // ── 4 — Sea-block gate (§WALK-1.5 terrain field) ─────────────────────────────
 
 test.describe('Navigation — sea-blocked move (§WALK-1.5)', () => {

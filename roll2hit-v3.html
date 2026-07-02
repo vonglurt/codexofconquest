@@ -27809,9 +27809,10 @@ function storyRenderQuests() {
               + (isFinal ? '🔥 Final Fight' : '⚔ Fight Now') + '</button>';
           } else if (!atDest) {
             const destLabel = wpNode ? wpNode.label.split(' — ')[0] : q.waypointNode;
+            const distTag = _wpDistTag(q.waypointNode);   // §NAV-01e: '(12 steps, NE)'
             wpBtnHtml = '<button class="quest-set-wp-btn' + (isActiveWp ? ' active-wp' : '') + '" '
               + 'onclick="storySetWaypoint(\'' + q.waypointNode + '\')">'
-              + (isActiveWp ? '📍 Waypoint Active' : '📍 Navigate → ' + destLabel) + '</button>';
+              + (isActiveWp ? '📍 Waypoint Active' : '📍 Navigate → ' + destLabel) + distTag + '</button>';
           }
         }
         let progressHtml = '';
@@ -27848,7 +27849,7 @@ function storyRenderQuests() {
       const dest = NODE_MAP[customWp.node];
       div.innerHTML = '<div class="quest-title"><span>Hunt: ' + customWp.label + '</span><span class="quest-badge side">CUSTOM</span></div>'
         + '<div class="quest-desc">Navigate to ' + (dest ? dest.label : customWp.node) + ' to explore ' + customWp.label + ' terrain.</div>'
-        + '<button class="quest-set-wp-btn active-wp" onclick="S_story.waypoint=\'' + customWp.node + '\';_updateWaypointBtn()">📍 Active Waypoint</button>'
+        + '<button class="quest-set-wp-btn active-wp" onclick="S_story.waypoint=\'' + customWp.node + '\';_updateWaypointBtn()">📍 Active Waypoint' + _wpDistTag(customWp.node) + '</button>'
         + ' <button class="quest-set-wp-btn" onclick="S_story.waypoint=null;S_story.customQuestTerrain=null;_updateWaypointBtn();storyRenderQuests()" style="border-color:#c21717;color:#c21717">✕ Clear</button>';
       list.appendChild(div);
     }
@@ -33299,6 +33300,13 @@ function _paintFullWorld(cv, PX, pr, pc) {
     for (const p of Object.values(MP.remotes || {}))
       ctx.fillRect((p.c - C0) * PX, (p.r - R0) * PX, Math.max(PX, 2), Math.max(PX, 2));
   }
+  // §NAV-01e: waypoint — gold marker on both panels (drawn before the player so
+  // @ wins a shared cell; cells outside the canvas window clip harmlessly)
+  const wpc = S_story.waypoint ? NODE_COORDS[S_story.waypoint] : null;
+  if (wpc) {
+    ctx.fillStyle = '#ffd700';
+    ctx.fillRect((wpc.c - C0) * PX, (wpc.r - R0) * PX, Math.max(PX, 2), Math.max(PX, 2));
+  }
   // player
   ctx.fillStyle = '#ff5030';
   ctx.fillRect((pc - C0) * PX, (pr - R0) * PX, Math.max(PX, 2), Math.max(PX, 2));
@@ -33388,6 +33396,9 @@ function _renderMiniMap() {
 
   const trailSet    = new Set((S_story.log || []).slice(-20));
   const visitedCells = S_story.visitedCells || {};
+  // §NAV-01e: waypoint cell, marked ★ when inside the 11×17 window (off-window
+  // direction is already conveyed by the d-pad WP highlight + exit-line ▶ WP tag)
+  const wpCoord = S_story.waypoint ? NODE_COORDS[S_story.waypoint] : null;
   grid.innerHTML = '';
 
   // 11 rows (dr -5..+5) × 17 cols (dc -8..+8)
@@ -33451,6 +33462,14 @@ function _renderMiniMap() {
         cell.textContent = '☺';
         cell.style.color = '#7fd4ff';
         cell.style.fontWeight = 'bold';
+      }
+
+      // §NAV-01e: waypoint ★ (drawn after presence — the destination outranks a dot)
+      if (!isPlayer && wpCoord && r === wpCoord.r && c === wpCoord.c) {
+        cell.textContent = '★';
+        cell.style.color = '#ffd700';
+        cell.style.fontWeight = 'bold';
+        cell.title = 'Waypoint: ' + (NODE_MAP[S_story.waypoint] ? NODE_MAP[S_story.waypoint].label : S_story.waypoint);
       }
 
       // L44-R: Void's First Sign at row 4, col 3 — flickers in Act I, traversable in Act V
@@ -33607,6 +33626,11 @@ function _updateExitLinks() {
     const btn = document.getElementById('btn-' + d);
     if (btn) btn.classList.toggle('dpad-wp', d === wpDir);
   });
+  // §NAV-01e: room-layer signage for empty neighbours — the same describeCell
+  // data the story room text renders (road/lane destination hints, terrain
+  // labels) replaces the flat "open terrain" line.
+  let roomExits = null;
+  try { roomExits = describeCell(_roomWorld(), { r: pr, c: pc }).exits; } catch {}
   // Cardinal exits: one cell only — show what is immediately adjacent
   ['N','S','E','W'].forEach(d => {
     const el  = document.getElementById('exit-' + d);
@@ -33639,8 +33663,14 @@ function _updateExitLinks() {
         + (isWp ? '<span class="exit-wp-tag">▶ WP</span>' : '')
         + (terrain ? '<br><span style="font-size:9px;color:#4A2010;padding-left:18px">' + terrain + '</span>' : '');
     } else {
+      const rx = roomExits && roomExits.find(x => x.dir === d);
+      let signage = 'open terrain';
+      if (rx && (rx.kind === 'road' || rx.kind === 'lane'))
+        signage = rx.label + (rx.hint ? ' — ' + rx.hint : '');      // e.g. "road — toward Visby (4)"
+      else if (rx && rx.kind === 'terrain')
+        signage = rx.label;                                          // e.g. "Highlands"
       el.innerHTML = '<span class="exit-arrow">' + ARROWS[d] + '</span> '
-        + '<span style="font-size:11px;color:var(--dim);">open terrain</span>'
+        + '<span style="font-size:11px;color:var(--dim);">' + signage + '</span>'
         + (isWp ? '<span class="exit-wp-tag">▶ WP</span>' : '');
     }
   });
@@ -33891,6 +33921,23 @@ function _bfsGridDir(from, toCode) {
   let dc = path[0].c - start.c;
   if (dc > 1) dc = -1; else if (dc < -1) dc = 1;        // antimeridian wrap-adjust
   return dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
+}
+
+// §NAV-01e — journal wayfinding readout: ' (12 steps, NE)'. Grid-BFS length +
+// an 8-way bearing (wrap-adjusted to the shorter way round). Empty string when
+// unreachable or already standing on the destination cell.
+function _wpDistTag(destCode) {
+  const dest = NODE_COORDS[destCode];
+  if (!dest) return '';
+  const pos = _playerPos();
+  const steps = _bfsGridPath(pos, destCode).length;
+  if (!steps) return '';
+  let dr = dest.r - pos.r, dc = dest.c - pos.c;
+  const COLS = GEO_PROJ.COLS;
+  if (dc > COLS / 2) dc -= COLS; else if (dc < -COLS / 2) dc += COLS;
+  const bearing = ((Math.abs(dr) >= Math.abs(dc) / 2 && dr !== 0 ? (dr < 0 ? 'N' : 'S') : '')
+                 + (Math.abs(dc) >= Math.abs(dr) / 2 && dc !== 0 ? (dc > 0 ? 'E' : 'W') : '')) || 'here';
+  return ' <span style="opacity:0.75;font-size:10px">(' + steps + (steps === 1 ? ' step, ' : ' steps, ') + bearing + ')</span>';
 }
 
 // §NAV-01d — road-weighted route (Dijkstra over Dial buckets): road/sea-lane
