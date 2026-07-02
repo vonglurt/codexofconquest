@@ -75,8 +75,8 @@ function sessionPrune() {
     if (now - s.lastSeen > SESSION_TTL) {
       SESSIONS.delete(id);
       // §MESH-01c: a pruned ghost also departs, locally and to the mesh
-      broadcastCell(s.r, s.c, 'player_left', { name: s.playerName, from: { r: s.r, c: s.c }, to: null }, id);
-      if (typeof emitMeshEvent === 'function') emitMeshEvent('player_left', { name: s.playerName, from: { r: s.r, c: s.c }, to: null }, s.r, s.c);
+      broadcastCell(s.r, s.c, 'player_left', { pid: pidOf(id), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, id);
+      if (typeof emitMeshEvent === 'function') emitMeshEvent('player_left', { pid: pidOf(id), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, s.r, s.c);
       const sse = SSE_CLIENTS.get(id);
       if (sse) { try { sse.end(); } catch {} SSE_CLIENTS.delete(id); }
     }
@@ -86,6 +86,12 @@ function sessionPrune() {
 function sseSend(res, event, data) {
   try { res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`); } catch {}
 }
+
+// §MESH-01-FU 3 — the player id every presence surface carries: origin server +
+// session, never the display name (two "Bob"s must never misattribute a leave).
+// Matches the remote-replica id shape (`oid8:sid8`) so local and remote players
+// key identically client-side.
+function pidOf(sessionId) { return getServerId().slice(0, 8) + ':' + String(sessionId).slice(0, 8); }
 
 function broadcastCell(r, c, event, data, excludeId) {
   for (const [id, s] of SESSIONS) {
@@ -275,7 +281,7 @@ function remotePlayersAt(r, c) {
   for (const [oid, rec] of MESH.remote) {
     if (now - rec.lastSeen > MESH_ORIGIN_TTL) continue;
     for (const [sid, p] of rec.sessions)
-      if (p.r === r && p.c === c) out.push({ id: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, server: oid.slice(0, 8) });
+      if (p.r === r && p.c === c) out.push({ id: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, pid: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, server: oid.slice(0, 8) });
   }
   return out;
 }
@@ -8073,7 +8079,7 @@ async function route(req, res) {
       const players = [];
       for (const [id2, s2] of SESSIONS)
         if (id2 !== s.id && s2.r === s.r && s2.c === s.c)
-          players.push({ id: id2, name: s2.playerName });
+          players.push({ id: id2, pid: pidOf(id2), name: s2.playerName });
       players.push(...remotePlayersAt(s.r, s.c));   // §MESH-01c: replicated same-world peers
       return {
         r: s.r, c: s.c,
@@ -8086,13 +8092,13 @@ async function route(req, res) {
     if (sub === 'who' && method === 'GET') {
       const all = [];
       for (const [id2, s] of SESSIONS)
-        all.push({ id: id2, name: s.playerName, r: s.r, c: s.c, nodeCode: s.nodeCode, state: s.state, seed: s.seed, encounter: s.encounter || null, lastSeen: s.lastSeen });
+        all.push({ id: id2, pid: pidOf(id2), name: s.playerName, r: s.r, c: s.c, nodeCode: s.nodeCode, state: s.state, seed: s.seed, encounter: s.encounter || null, lastSeen: s.lastSeen });
       // §MESH-01c: read-only replicas of same-world peers' sessions
       const remotes = [];
       const _now = Date.now();
       for (const [oid, rec] of MESH.remote) {
         if (_now - rec.lastSeen > MESH_ORIGIN_TTL) continue;
-        for (const [sid, p] of rec.sessions) remotes.push({ id: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8) });
+        for (const [sid, p] of rec.sessions) remotes.push({ id: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, pid: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8) });
       }
       logResponse(method, url.pathname, 200, `${all.length} sessions active · ${remotes.length} remote`);
       return json(res, 200, { count: all.length, sessions: all, remotes });
@@ -8189,12 +8195,12 @@ async function route(req, res) {
       // §MESH-01a: announce the newcomer to players already at the spawn cell
       // (browser clients immediately re-beacon to their real cell, which then
       // emits the matching player_left from here — the sequence stays consistent).
-      broadcastCell(s.r, s.c, 'player_arrived', { name: playerName, from: null, to: { r: s.r, c: s.c }, node: hub }, sessionId);
-      emitMeshEvent('player_arrived', { name: playerName, from: null, to: { r: s.r, c: s.c }, node: hub }, s.r, s.c);
+      broadcastCell(s.r, s.c, 'player_arrived', { pid: pidOf(sessionId), name: playerName, from: null, to: { r: s.r, c: s.c }, node: hub }, sessionId);
+      emitMeshEvent('player_arrived', { pid: pidOf(sessionId), name: playerName, from: null, to: { r: s.r, c: s.c }, node: hub }, s.r, s.c);
       const look = buildLook(s);
       logRow('session', `${playerName}  ·  id:${sessionId.slice(0,8)}…  ·  spawn:(${s.r},${s.c})=${hub}`);
       logResponse(method, url.pathname, 201, `session started for "${playerName}"`);
-      return json(res, 201, { ok: true, sessionId, name: playerName, ...look,
+      return json(res, 201, { ok: true, sessionId, pid: pidOf(sessionId), name: playerName, ...look,
         _hint: 'Subscribe to GET /api/session/events?sessionId=... for real-time events.' });
     }
 
@@ -8241,9 +8247,9 @@ async function route(req, res) {
         s.encounter = null;
       }
       // Broadcast to players now in the same cell (not the mover themselves)
-      broadcastCell(newR, newC, 'player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, sessionId);
-      emitMeshEvent('player_left', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC } }, prevR, prevC);
-      emitMeshEvent('player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, newR, newC);
+      broadcastCell(newR, newC, 'player_arrived', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, sessionId);
+      emitMeshEvent('player_left', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC } }, prevR, prevC);
+      emitMeshEvent('player_arrived', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r: newR, c: newC }, node: newCode }, newR, newC);
       const look = buildLook(s);
       logRow('move', `${s.playerName}  ·  ${dir}  →  (${newR},${newC}) ${newCode || 'empty'}${s.encounter ? '  ⚔ ' + s.encounter.name : ''}`);
       logResponse(method, url.pathname, 200, `session move: ${dir} → ${newCode || 'empty'}${s.encounter ? ' (encounter: ' + s.encounter.name + ')' : ''}`);
@@ -8282,10 +8288,10 @@ async function route(req, res) {
       s.r = r; s.c = c;
       s.nodeCode = (world.cellCodes(r, c) || [])[0] || null;
       if (moved) {
-        broadcastCell(prevR, prevC, 'player_left',    { name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, sessionId);
-        broadcastCell(r, c, 'player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c }, node: s.nodeCode }, sessionId);
-        emitMeshEvent('player_left', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, prevR, prevC);
-        emitMeshEvent('player_arrived', { name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c }, node: s.nodeCode }, r, c);
+        broadcastCell(prevR, prevC, 'player_left',    { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, sessionId);
+        broadcastCell(r, c, 'player_arrived', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c }, node: s.nodeCode }, sessionId);
+        emitMeshEvent('player_left', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c } }, prevR, prevC);
+        emitMeshEvent('player_arrived', { pid: pidOf(sessionId), name: s.playerName, from: { r: prevR, c: prevC }, to: { r, c }, node: s.nodeCode }, r, c);
       }
       const nearby = [];
       const inView = (pr, pc) => {
@@ -8293,12 +8299,12 @@ async function route(req, res) {
         return Math.abs(pr - r) <= 5 && Math.min(dcRaw, COLS - dcRaw) <= 8;   // E↔W wrap distance
       };
       for (const [id2, s2] of SESSIONS)
-        if (id2 !== s.id && inView(s2.r, s2.c)) nearby.push({ name: s2.playerName, r: s2.r, c: s2.c });
+        if (id2 !== s.id && inView(s2.r, s2.c)) nearby.push({ pid: pidOf(id2), name: s2.playerName, r: s2.r, c: s2.c });
       const _mnow = Date.now();   // §MESH-01c: same-world peers' players in view
       for (const [oid, rec] of MESH.remote) {
         if (_mnow - rec.lastSeen > MESH_ORIGIN_TTL) continue;
-        for (const [, p] of rec.sessions)
-          if (inView(p.r, p.c)) nearby.push({ name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8) });
+        for (const [sid, p] of rec.sessions)
+          if (inView(p.r, p.c)) nearby.push({ pid: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8) });
       }
       const look = buildLook(s);
       logResponse(method, url.pathname, 200, `session pos: (${r},${c}) ${s.nodeCode || 'empty'}${moved ? '' : ' (unchanged)'}`);
@@ -8316,7 +8322,7 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, 'session/say: msg too long (max 500)');
         return json(res, 400, { ok: false, error: 'msg too long — max 500 characters' });
       }
-      const chatData = { name: s.playerName, sessionId, msg, r: s.r, c: s.c };
+      const chatData = { pid: pidOf(sessionId), name: s.playerName, sessionId, msg, r: s.r, c: s.c };
       // excludeId=null → delivered to EVERY session at this cell, including the
       // sender (their own session is at s.r,s.c). §WALK-5 Inc 3 fix: dropped a
       // redundant second sseSend to the sender that double-delivered the sender's
@@ -8333,8 +8339,8 @@ async function route(req, res) {
       SESSIONS.delete(sessionId);
       // §MESH-01c (Inc-a residue): departing players now announce player_left,
       // locally and to the mesh.
-      broadcastCell(s.r, s.c, 'player_left', { name: s.playerName, from: { r: s.r, c: s.c }, to: null }, sessionId);
-      emitMeshEvent('player_left', { name: s.playerName, from: { r: s.r, c: s.c }, to: null }, s.r, s.c);
+      broadcastCell(s.r, s.c, 'player_left', { pid: pidOf(sessionId), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, sessionId);
+      emitMeshEvent('player_left', { pid: pidOf(sessionId), name: s.playerName, from: { r: s.r, c: s.c }, to: null }, s.r, s.c);
       const sse = SSE_CLIENTS.get(sessionId);
       if (sse) { try { sse.end(); } catch {} SSE_CLIENTS.delete(sessionId); }
       logRow('ended', `session ${sessionId.slice(0,8)}…  ·  player: ${s.playerName}`);

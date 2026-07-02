@@ -127,6 +127,30 @@ test.describe('§MESH-01a — multiplayer presence (two real clients)', () => {
     await d.ctx.close();
   });
 
+  test('same display name: pid-keyed presence never misattributes a leave (§MESH-01-FU 3)', async ({ browser }) => {
+    const obs = await loadPlayer(browser, 'Ola');
+    const b1  = await loadPlayer(browser, 'Bob');
+    const b2  = await loadPlayer(browser, 'Bob');
+    await obs.page.click('#mp-toggle');
+    await expect(obs.page.locator('#mp-status')).toContainText('🟢 Ola');
+    await b1.page.click('#mp-toggle');
+    await b2.page.click('#mp-toggle');
+
+    // The observer tracks BOTH Bobs (name-keyed would collapse them into one)
+    // and the strip disambiguates the collision with an @server suffix.
+    await expect.poll(() => obs.page.evaluate(() => MP.players.filter((p) => p.name === 'Bob').length)).toBe(2);
+    await expect(obs.page.locator('#mp-presence')).toContainText('Bob@');
+
+    // One Bob disconnects — ONLY that Bob goes (name-keyed removed both), and
+    // with the collision gone the survivor renders as plain "Bob" again.
+    await b1.page.click('#mp-toggle');
+    await expect.poll(() => obs.page.evaluate(() => MP.players.filter((p) => p.name === 'Bob').length)).toBe(1);
+    await expect(obs.page.locator('#mp-presence')).toContainText('Bob');
+    await expect(obs.page.locator('#mp-presence')).not.toContainText('Bob@');
+
+    await obs.ctx.close(); await b1.ctx.close(); await b2.ctx.close();
+  });
+
   test('multiplayer is strictly opt-in — no MP state without the 🌐 click', async ({ browser }) => {
     const c = await loadPlayer(browser, 'Cezar');
     await expect(c.page.locator('#mp-status')).toHaveText('off');

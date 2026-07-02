@@ -26660,7 +26660,9 @@ function storyBlock(txt) {
 // POST /api/session/pos, a beacon that validates passability and rolls NOTHING;
 // session/move stays exclusive to headless MUD clients so the §WALK-5 server
 // encounter roll can never double the client's own (_enterEmptyCell) roll.
-const MP = { base: null, session: null, name: null, es: null, players: [], nearby: [], on: false };
+// §MESH-01-FU 3: players are keyed by pid (`server:sessionId`), NEVER by display
+// name — two "Bob"s must coexist, and a leave must only remove the Bob who left.
+const MP = { base: null, session: null, pid: null, name: null, es: null, players: [], nearby: [], on: false };
 
 function _mpBase() {
   try { return localStorage.getItem('mpServer') || 'http://localhost:1367'; }
@@ -26681,7 +26683,7 @@ async function mpToggle(ev) {
     const name = S_story.playerName || ('Wanderer-' + Math.floor(Math.random() * 900 + 100));
     const start = await _mpFetch('/api/session/start', { name });
     if (!start.ok) throw new Error(start.error || 'start failed');
-    MP.session = start.sessionId; MP.name = start.name; MP.on = true;
+    MP.session = start.sessionId; MP.pid = start.pid || null; MP.name = start.name; MP.on = true;
     try { sessionStorage.setItem('mpSession', MP.session); } catch {}
     _mpOpenStream();
     await mpBeacon();               // sync the fresh session (spawns at hub) to the real player cell
@@ -26699,7 +26701,7 @@ async function mpToggle(ev) {
 function mpDisconnect(msg) {
   if (MP.session) _mpFetch('/api/session/end', { sessionId: MP.session }).catch(() => {});
   if (MP.es) { try { MP.es.close(); } catch {} }
-  MP.es = null; MP.session = null; MP.on = false; MP.players = []; MP.nearby = [];
+  MP.es = null; MP.session = null; MP.pid = null; MP.on = false; MP.players = []; MP.nearby = [];
   try { sessionStorage.removeItem('mpSession'); } catch {}
   _mpSetStatus('off');
   const inp = document.getElementById('mp-chat-input');
@@ -26712,13 +26714,14 @@ function _mpOpenStream() {
   MP.es = es;
   es.addEventListener('player_arrived', ev => {
     const d = JSON.parse(ev.data);
-    if (!MP.players.some(p => p.name === d.name)) MP.players.push({ name: d.name });
+    if (d.pid === MP.pid) return;   // never track yourself
+    if (!MP.players.some(p => p.pid === d.pid)) MP.players.push({ pid: d.pid, name: d.name, server: d.server });
     storyMsg('🌐 ' + d.name + ' arrives.');
     _mpRenderPresence();
   });
   es.addEventListener('player_left', ev => {
     const d = JSON.parse(ev.data);
-    MP.players = MP.players.filter(p => p.name !== d.name);
+    MP.players = MP.players.filter(p => p.pid !== d.pid);   // pid-keyed: only the leaver goes
     storyMsg('🌐 ' + d.name + ' leaves.');
     _mpRenderPresence();
   });
@@ -26761,8 +26764,13 @@ function _mpSetStatus(txt) {
 function _mpRenderPresence() {
   const el = document.getElementById('mp-presence');
   if (!el) return;
+  // §MESH-01-FU 3: plain names normally; on a display-name collision, suffix
+  // @server (the pid's origin half) so the two entries are tellable apart.
+  const counts = {};
+  for (const p of MP.players) counts[p.name] = (counts[p.name] || 0) + 1;
+  const label = p => (counts[p.name] > 1 && p.pid) ? p.name + '@' + p.pid.split(':')[0] : p.name;
   el.textContent = (MP.on && MP.players.length)
-    ? '👥 Also here: ' + MP.players.map(p => p.name).join(', ')
+    ? '👥 Also here: ' + MP.players.map(label).join(', ')
     : '';
 }
 

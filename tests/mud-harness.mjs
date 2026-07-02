@@ -454,6 +454,26 @@ async function main() {
   check((stTrk.trackerGroups || []).some((g) => g.worldTag === 'Roll2Hit-' + manMain.worldHash.slice(0, 5)),
     'tracker world groups are tagged (mesh/status.trackerGroups[].worldTag)');
 
+  // ════════ (j) §MESH-01-FU 3 — pid-keyed presence ════════
+  console.log('\n[J] §MESH-01-FU 3 — pid identity (same display name never misattributes)');
+  const twin1 = await jpost('/session/start', { name: 'Twin', seed: 71 });
+  const twin2 = await jpost('/session/start', { name: 'Twin', seed: 72 });
+  const olaJ  = await jpost('/session/start', { name: 'OlaJ', seed: 73 });
+  check(/^[0-9a-f]{8}:[0-9a-f]{8}$/.test(twin1.pid || '') && twin1.pid !== twin2.pid,
+    'session/start returns a pid (server8:session8); same-name sessions get distinct pids');
+  const sseOla = await openSSE(olaJ.sessionId); openClients.push(sseOla);
+  const lookJ = await jget(`/session/look?sessionId=${olaJ.sessionId}`);
+  const twins = (lookJ.players || []).filter((p) => p.name === 'Twin');
+  check(twins.length === 2 && twins[0].pid !== twins[1].pid && twins.every((p) => /^[0-9a-f]{8}:[0-9a-f]{8}$/.test(p.pid)),
+    'look lists BOTH same-name players with distinct pids');
+  await jpost('/session/end', { sessionId: twin1.sessionId });
+  await waitFor(() => countEv(sseOla, 'player_left', (d) => d.pid === twin1.pid) === 1);
+  check(countEv(sseOla, 'player_left', (d) => d.pid === twin1.pid) === 1,
+    'player_left carries the leaver’s pid');
+  const lookJ2 = await jget(`/session/look?sessionId=${olaJ.sessionId}`);
+  check((lookJ2.players || []).filter((p) => p.name === 'Twin').length === 1,
+    'after one Twin ends, exactly one Twin remains (pid-keyed, not name-keyed)');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});
