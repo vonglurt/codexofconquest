@@ -22407,6 +22407,7 @@ function storyLoadContinue() {
   storyUpdateStatus();
   storyRender(NODE_MAP[S_story.currentCode]);
   if (S_story.pendingBattle) storyShowOutcome();
+  _mpResume();   // §MESH-01-FU 5: position is final now — rejoin a live mesh session
 }
 
 function storyNewGame(startScores) {
@@ -22445,6 +22446,7 @@ function storyNewGame(startScores) {
   document.getElementById('story-defeat-modal').classList.remove('visible');
   storyUpdateStatus();
   storyRender(NODE_MAP['LHR']);
+  _mpResume();   // §MESH-01-FU 5: new-game-from-modal path — rejoin under the same tab opt-in
 }
 
 /* ── Layer 43-U/W: NG+ Preservation + Title Overlay ── */
@@ -22483,6 +22485,7 @@ function storyNewGamePlus() {
   document.getElementById('story-defeat-modal').classList.remove('visible');
   storyUpdateStatus();
   storyRender(NODE_MAP['LHR']);
+  _mpResume();   // §MESH-01-FU 5: new-game-from-modal path — rejoin under the same tab opt-in
 }
 
 /* ── Layer 27: Vendor Auto-Sell ── */
@@ -26653,7 +26656,9 @@ function storyBlock(txt) {
 }
 
 // ══ §MESH-01a — Multiplayer presence (client) ═══════════════════════════════
-// Strictly OPT-IN: nothing here runs until the player presses 🌐. Presence is
+// Strictly OPT-IN: nothing here runs until the player presses 🌐 (or, §MESH-01-
+// FU 5, reloads a tab where they already had — _mpResume only acts on a
+// sessionStorage key that a 🌐 connect in the same tab wrote). Presence is
 // DISPLAY-ONLY — the mover never reads MP state (Free-Movement invariant) — and
 // MP state is transient module state + sessionStorage (never in S_story: a save
 // file must not carry a dead sessionId). Browser clients report position via
@@ -26766,6 +26771,41 @@ async function mpBeacon() {
       mpDisconnect('🌐 Session expired — reconnect with 🌐.');
     }
   } catch { _mpSetStatus('🟠 reconnecting…'); }
+}
+// §MESH-01-FU 5 — auto-reconnect on page load. sessionStorage.mpSession is
+// per-tab and survives a reload but not a new tab, so its presence means the
+// player opted in in THIS tab and the page unloaded while connected. Resume
+// probes with the pos beacon (validates the stored id AND syncs the reloaded
+// position in one round trip; the response's pid/name restore identity). A
+// dead/expired id falls back to a fresh connect — the opt-in still stands, the
+// session is just gone. An unreachable server keeps the id quietly so the next
+// reload retries; the game stays fully playable offline (Free-Movement
+// invariant: nothing here gates the mover).
+async function _mpResume() {
+  let sid = null;
+  try { sid = sessionStorage.getItem('mpSession'); } catch {}
+  if (!sid || MP.on) return;
+  MP.base = _mpBase();
+  try {
+    const look = await _mpFetch('/api/session/pos', { sessionId: sid, r: S_story.playerR, c: S_story.playerC });
+    if (look && look.ok) {
+      MP.session = sid; MP.pid = look.pid || null; MP.name = look.name || S_story.playerName || 'Wanderer'; MP.on = true;
+      MP.players = look.players || [];
+      MP.nearby = look.nearby || [];
+      MP.remotes = {};
+      for (const p of look.world || []) if (p.pid) MP.remotes[p.pid] = p;
+      _mpOpenStream();
+      _mpSetStatus('🟢 ' + MP.name);
+      const inp = document.getElementById('mp-chat-input');
+      if (inp) inp.style.display = 'inline-block';
+      _mpRenderPresence();
+      _mpRepaintMaps();
+      storyMsg('🌐 Multiplayer resumed as ' + MP.name + '.');
+    } else if (look && look.error && /Session not found/.test(look.error)) {
+      try { sessionStorage.removeItem('mpSession'); } catch {}
+      await mpToggle();   // server up, session expired → fresh connect under the same tab opt-in
+    }
+  } catch { _mpSetStatus('🔴 no server'); }   // key kept — a later reload retries
 }
 function mpSay() {
   const inp = document.getElementById('mp-chat-input');
@@ -34135,6 +34175,11 @@ function _startStoryBattle(monster, label) {
 
 /* ── Auto-enter story mode on load ── */
 storyEnter();
+/* §MESH-01-FU 5: rejoin a live mesh session after reload. While the continue
+   modal is up S_story's position isn't final (the save only loads on the
+   Continue click), so those paths call _mpResume() from their handlers; the
+   gameover path restores S_story inside storyCheckContinue, so boot is safe. */
+if (!document.getElementById('story-continue-modal').classList.contains('visible')) _mpResume();
 
 /* ── Wire Story Mode button ── */
 document.getElementById('story-mode-btn').addEventListener('click', storyToggle);

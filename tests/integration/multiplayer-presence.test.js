@@ -180,6 +180,53 @@ test.describe('§MESH-01a — multiplayer presence (two real clients)', () => {
     await w.ctx.close(); await m.ctx.close();
   });
 
+  test('page reload auto-resumes the SAME session — no abandoned ghost (§MESH-01-FU 5)', async ({ browser }) => {
+    const p = await loadPlayer(browser, 'Odys');
+    await p.page.click('#mp-toggle');
+    await expect(p.page.locator('#mp-status')).toContainText('🟢 Odys');
+    const sid = await p.page.evaluate(() => MP.session);
+
+    // A real browser keeps localStorage across a reload, but seedAndLoad's init
+    // script clears it on every navigation — re-plant mpServer from a second
+    // init script (they run in order, so this lands after the clear).
+    await p.page.addInitScript((port) => localStorage.setItem('mpServer', `http://localhost:${port}`), MP_PORT);
+    await p.page.reload();
+    await dismissContinue(p.page);   // Continue → storyLoadContinue → _mpResume (position now final)
+
+    await expect(p.page.locator('#mp-status')).toContainText('🟢 Odys');
+    expect(await p.page.evaluate(() => MP.session)).toBe(sid);       // SAME session, not a fresh one
+    expect(await p.page.evaluate(() => !!MP.es)).toBe(true);         // SSE stream reopened
+    await expect(p.page.locator('#mp-chat-input')).toBeVisible();
+    // Server-side: exactly one Odys session — the reload leaked no ghost.
+    const who = await (await fetch(`http://localhost:${MP_PORT}/api/session/who`)).json();
+    expect(who.sessions.filter((s) => s.name === 'Odys')).toHaveLength(1);
+    await p.ctx.close();
+  });
+
+  test('dead stored session falls back to a fresh connect on reload (§MESH-01-FU 5)', async ({ browser }) => {
+    const p = await loadPlayer(browser, 'Nell');
+    await p.page.click('#mp-toggle');
+    await expect(p.page.locator('#mp-status')).toContainText('🟢 Nell');
+    const sid = await p.page.evaluate(() => MP.session);
+
+    // Kill the session server-side (stand-in for TTL expiry), then reload.
+    await fetch(`http://localhost:${MP_PORT}/api/session/end`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId: sid }),
+    });
+    await p.page.addInitScript((port) => localStorage.setItem('mpServer', `http://localhost:${port}`), MP_PORT);
+    await p.page.reload();
+    await dismissContinue(p.page);
+
+    // The tab's opt-in still stands → fresh session under the same name, new id,
+    // and the stored key now points at the live session.
+    await expect(p.page.locator('#mp-status')).toContainText('🟢 Nell');
+    const sid2 = await p.page.evaluate(() => MP.session);
+    expect(sid2).not.toBe(sid);
+    expect(await p.page.evaluate(() => sessionStorage.getItem('mpSession'))).toBe(sid2);
+    await p.ctx.close();
+  });
+
   test('multiplayer is strictly opt-in — no MP state without the 🌐 click', async ({ browser }) => {
     const c = await loadPlayer(browser, 'Cezar');
     await expect(c.page.locator('#mp-status')).toHaveText('off');

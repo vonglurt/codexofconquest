@@ -8334,7 +8334,10 @@ async function route(req, res) {
       const nearby = worldPlayers.filter((p) => inView(p.r, p.c));
       const look = buildLook(s);
       logResponse(method, url.pathname, 200, `session pos: (${r},${c}) ${s.nodeCode || 'empty'}${moved ? '' : ' (unchanged)'}`);
-      return json(res, 200, { ok: true, moved, nearby, world: worldPlayers, ...look });
+      // §MESH-01-FU 5: pid/name identify the session's OWN player so a client
+      // resuming a stored sessionId after reload can restore its identity from
+      // the same beacon that validates the id (no separate resume endpoint).
+      return json(res, 200, { ok: true, pid: pidOf(sessionId), name: s.playerName, moved, nearby, world: worldPlayers, ...look });
     }
 
     // ── POST /api/session/say ──────────────────────────────────────────────
