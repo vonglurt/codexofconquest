@@ -98,6 +98,13 @@ function broadcastCell(r, c, event, data, excludeId) {
 
 // ── Config ──────────────────────────────────────────────────────────────────
 const PORT      = parseInt(process.env.PORT || '1367');
+// §MESH-01-FU 1 — LAN/WAN reachability. Default bind stays loopback (a solo dev
+// server is never exposed by accident); a cross-machine mesh needs BOTH:
+//   --bind 0.0.0.0            (or BIND_ADDR env)      — accept remote dials
+//   --advertise <lan-ip>:port (or ADVERTISE_ADDR env) — what peers/trackers dial back
+const BIND_ADDR = process.env.BIND_ADDR
+  || process.argv.find((a, i) => process.argv[i-1] === '--bind')
+  || '127.0.0.1';
 const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(__dirname, 'roll2hit-v3.html');
@@ -217,7 +224,30 @@ const MESH_GOSSIP_MS  = parseInt(process.env.MESH_GOSSIP_MS || '', 10) || 2000;
 const MESH_ORIGIN_TTL = 90_000;        // drop a remote origin after 90 s of silence
 const MESH_FANOUT_MAX_AGE = 10_000;    // replayed history advances vv but is not re-announced
 const PEERS_CACHE_FILE = process.env.PEERS_CACHE_FILE || path.join(__dirname, 'peers-cache.json');
-function meshAdvertise() { return process.env.ADVERTISE_ADDR || ('localhost:' + PORT); }
+const ADVERTISE_ADDR = process.env.ADVERTISE_ADDR
+  || process.argv.find((a, i) => process.argv[i-1] === '--advertise')
+  || '';
+function meshAdvertise() { return ADVERTISE_ADDR || ('localhost:' + PORT); }
+
+// §MESH-01-FU 1 — a mesh is CONFIGURED (peers/trackers/federation) but this
+// server is unreachable from another machine: loopback bind means nobody can
+// dial in, and a localhost advertise addr means gossip/announce hands peers a
+// dial-back address that points at THEIR OWN machine. Warned at startup and
+// surfaced in GET /api/mesh/status.reachability (Mesh tab).
+function meshConfigured() {
+  return MESH.peers.size > 0 || TRACKER_URLS.length > 0
+    || MESH_TRACKER_URLS.length > 0 || TRACKER_PEER_URLS.length > 0
+    || !!(process.env.BOOTSTRAP_URLS || '').trim();
+}
+function meshReachabilityWarnings() {
+  if (!meshConfigured()) return [];
+  const warnings = [];
+  if (/^(127\.|localhost$|::1$)/.test(BIND_ADDR))
+    warnings.push(`bind is loopback (${BIND_ADDR}) — remote machines cannot reach this server. Start with --bind 0.0.0.0 (or BIND_ADDR=0.0.0.0).`);
+  if (!TRACKER_MODE && /^(localhost:|127\.|\[::1\])/.test(meshAdvertise()))
+    warnings.push(`advertise addr is ${meshAdvertise()} — peers/trackers will be told to dial localhost (their own machine). Set --advertise <lan-ip>:${PORT} (or ADVERTISE_ADDR).`);
+  return warnings;
+}
 
 function emitMeshEvent(type, data, r, c) {
   MESH.seq++;
@@ -2581,6 +2611,7 @@ async function route(req, res) {
     logResponse(method, url.pathname, 200, `mesh status: ${peers.length} peer(s) · ${remotePlayers.length} remote player(s) · ${MESH.traffic.length} pkt(s)`);
     return json(res, 200, {
       ok: true, trackerMode: TRACKER_MODE, serverId: getServerId().slice(0, 8), addr: meshAdvertise(),
+      reachability: { bind: BIND_ADDR, advertise: meshAdvertise(), warnings: meshReachabilityWarnings() },
       proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash, parts: m.parts,
       trackerUrls: [...new Set([...TRACKER_URLS, ...MESH_TRACKER_URLS])],
       acl: { mode: getAcl().mode || 'open', file: path.basename(ACL_FILE) },
@@ -9850,7 +9881,7 @@ server.on('error', (err) => {
   process.exit(1);
 });
 
-server.listen(PORT, process.env.BIND_ADDR || '127.0.0.1', () => {
+server.listen(PORT, BIND_ADDR, () => {
   // §MESH-01 b/c: seed the peer table from the static bootstrap ladder and start
   // the gossip heartbeat. With no peers configured every round is a cheap no-op,
   // so a solo dev server (:1367) is completely unaffected.
@@ -9868,6 +9899,9 @@ server.listen(PORT, process.env.BIND_ADDR || '127.0.0.1', () => {
   }
   if (TRACKER_MODE) console.log(`  Mode:      TRACKER (rendezvous only — /api/tracker/announce + /peers; worlds grouped by proto/engineVer/worldHash)`);
   if (MESH.peers.size) console.log(`  Mesh:      ${MESH.peers.size} bootstrap peer(s) · serverId ${getServerId().slice(0, 8)} · worldHash ${getManifest().worldHash}`);
+  if (meshConfigured()) console.log(`  Reach:     bind ${BIND_ADDR} · advertise ${meshAdvertise()}`);
+  for (const w of meshReachabilityWarnings())
+    console.warn(`${C.bold}${C.yellow}  ⚠ MESH REACHABILITY:${C.reset}${C.yellow} ${w}${C.reset}`);
   const line = '═'.repeat(60);
   console.log(`\n${C.bold}${C.magenta}${line}${C.reset}`);
   console.log(`${C.bold}  WBAPI Server  —  http://localhost:${PORT}/api${C.reset}`);

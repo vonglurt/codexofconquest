@@ -11,6 +11,9 @@ const FIXTURE = {
   ok: true, trackerMode: false, serverId: 'a1b2c3d4', addr: 'localhost:1367',
   proto: 1, engineVer: 'r2h-3.104.0', worldHash: 'feedfacefeedface',
   acl: { mode: 'open', file: 'mesh-acl.json' }, localPlayers: 2,
+  reachability: { bind: '127.0.0.1', advertise: 'localhost:1367', warnings: [
+    'bind is loopback (127.0.0.1) — remote machines cannot reach this server. Start with --bind 0.0.0.0 (or BIND_ADDR=0.0.0.0).',
+  ] },
   trackerUrls: ['http://tracker.example:1368'],
   trackerGroups: [{ engineVer: 'r2h-3.104.0', worldHash: 'feedfacefeedface', servers: 3, players: 7 }],
   peers: [
@@ -35,6 +38,8 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
     await page.evaluate((d) => window.__meshTest.renderMeshStatus(d), FIXTURE);
     await expect(page.locator('#mesh-identity')).toContainText('a1b2c3d4');
     await expect(page.locator('#mesh-identity')).toContainText('feedfacefeedface');
+    // §MESH-01-FU 1: reachability warnings surface on the identity strip
+    await expect(page.locator('#mesh-identity')).toContainText('⚠ bind is loopback');
     await expect(page.locator('#mesh-trackers')).toContainText('http://tracker.example:1368');
     await expect(page.locator('#mesh-trackers')).toContainText('3 server(s), 7 player(s)');
     await expect(page.locator('#mesh-peers')).toContainText('localhost:2367');

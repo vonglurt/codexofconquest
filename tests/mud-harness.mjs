@@ -88,13 +88,13 @@ async function pingOk(base, ms = 400) {
   try { const r = await fetch(base + '/api/ping', ctl ? { signal: ctl } : {}); return r.ok; } catch { return false; }
 }
 const servers = [];
-async function startServer(port, extraEnv = {}) {
+async function startServer(port, extraEnv = {}, extraArgs = []) {
   const base = `http://127.0.0.1:${port}`;
   if (await pingOk(base)) {
     console.error(`✗ port ${port} is already in use — set MUD_HARNESS_PORT to a free port.`);
     stopAllServers(); process.exit(1);
   }
-  const proc = spawn('node', ['wbapi-server.js'], {
+  const proc = spawn('node', ['wbapi-server.js', ...extraArgs], {
     cwd: ROOT, env: { ...process.env, PORT: String(port), ...extraEnv }, stdio: ['ignore', 'ignore', 'pipe'],
   });
   const srv = { port, base, proc, stderr: '' };
@@ -408,6 +408,29 @@ async function main() {
   const dlTxt = await dl.text();
   check(dlTxt.includes("const ENGINE_VER = '") && dlTxt.length > 1_000_000, 'downloaded world is the full single-file game');
   check((await fetch(trkA2.base + '/api/world/download')).status === 410, 'tracker-mode refuses world download (rendezvous only, never a relay)');
+
+  // ════════ (h) §MESH-01-FU 1 — LAN/WAN reachability ════════
+  console.log('\n[H] §MESH-01-FU 1 — --bind/--advertise flags + loopback reachability warnings');
+  // The main harness server has no peers/trackers configured: a solo dev
+  // server must boot warning-free (loopback is the CORRECT default there).
+  check((((await jget('/mesh/status')).reachability || {}).warnings || []).length === 0,
+    'solo server (no peers/trackers configured) reports zero reachability warnings');
+  // mB is the canonical misconfig: peers configured, loopback bind, localhost advertise.
+  const stMisconfig = await jget('/mesh/status', mB.base);
+  check((stMisconfig.reachability.warnings || []).length === 2,
+    'peers + loopback bind + localhost advertise → both warnings (bind AND advertise)');
+  // Flags: ADVERTISE_ADDR:'' forces the env fallback so --advertise is what's read.
+  const mK = await startServer(PORT + 15,
+    mkEnv(PORT + 15, '2'.repeat(32), { ADVERTISE_ADDR: '', MESH_PEERS: `localhost:${PORT + 2}` }),
+    ['--bind', '127.0.0.1', '--advertise', `10.0.0.5:${PORT + 15}`]);
+  const stK = await jget('/mesh/status', mK.base);
+  check(stK.addr === `10.0.0.5:${PORT + 15}` && stK.reachability.advertise === stK.addr,
+    '--advertise flag is honored (gossip/announce hand out the LAN addr)');
+  check(stK.reachability.bind === '127.0.0.1'
+    && (stK.reachability.warnings || []).length === 1 && /loopback/.test(stK.reachability.warnings[0]),
+    'LAN advertise + loopback --bind → exactly one warning (bind), none for the advertise addr');
+  await waitFor(() => /MESH REACHABILITY/.test(mK.stderr), 2000);
+  check(/MESH REACHABILITY/.test(mK.stderr), 'the reachability warning is printed loudly at startup');
 
   // ── teardown ──
   openClients.forEach(closeSSE);

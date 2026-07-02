@@ -9908,6 +9908,9 @@ window.wkGo        = wkGo;
     const magnet = `r2h:?p=${encodeURIComponent(d.proto)}&ev=${encodeURIComponent(d.engineVer)}&wh=${encodeURIComponent(d.worldHash)}` +
       (d.trackerUrls && d.trackerUrls[0] ? `&tr=${encodeURIComponent(d.trackerUrls[0])}` : '');
     el('mesh-identity').innerHTML += ` · <a href="#" style="color:var(--accent)" onclick="navigator.clipboard&&navigator.clipboard.writeText('${esc(magnet)}');this.textContent='🔗 copied';return false">🔗 copy magnet</a>`;
+    // §MESH-01-FU 1: LAN/WAN reachability warnings (loopback bind / localhost advertise)
+    for (const w of ((d.reachability && d.reachability.warnings) || []))
+      el('mesh-identity').innerHTML += `<div style="color:var(--yellow,#d4a017)">⚠ ${esc(w)}</div>`;
     el('mesh-remotes').innerHTML = (d.remotePlayers && d.remotePlayers.length)
       ? d.remotePlayers.map((p) => `<div>👤 <b>${esc(p.name)}</b> @ (${p.r},${p.c}) · via ${esc(p.server)}</div>`).join('')
       : '<div style="color:var(--muted)">no remote players in the mesh</div>';

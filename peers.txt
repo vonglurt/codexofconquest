@@ -15,6 +15,14 @@
 # see GET /api/manifest for yours. Publish your own list with:
 #   curl localhost:1367/api/manifest
 #
+# Cross-machine reachability (§MESH-01-FU 1): the server binds 127.0.0.1 by
+# default, so a real LAN/WAN mesh needs BOTH of:
+#   --bind 0.0.0.0             (or BIND_ADDR=0.0.0.0)     — accept remote dials
+#   --advertise <lan-ip>:1367  (or ADVERTISE_ADDR=…)      — what peers/trackers dial back
+# With peers configured but a loopback bind (or localhost advertise) the server
+# prints a ⚠ MESH REACHABILITY warning at startup and surfaces it on the
+# worldbuilder Mesh tab (GET /api/mesh/status → reachability.warnings).
+#
 # Examples (commented out):
 # 192.168.1.20:1367
 # tracker http://tracker.example.org:1368
