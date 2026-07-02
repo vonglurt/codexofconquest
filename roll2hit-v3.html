@@ -23749,7 +23749,7 @@ function storyShortRest(nodeCode) {
     const sleepCodes = Object.keys(NODE_MAP).filter(c => NODE_MAP[c].sleep);
     let bestCode = null, bestLen = Infinity;
     sleepCodes.forEach(c => {
-      const path = _bfsGridPath(S_story.currentCode, c);
+      const path = _bfsGridPath(_playerPos(), c);   // §NAV-01a: from the player, not the last named node
       if (path.length > 0 && path.length < bestLen) { bestLen = path.length; bestCode = c; }
     });
     if (bestCode) {
@@ -32778,7 +32778,7 @@ function _updateExitLinks() {
   let wpDir = null;
   const wp = S_story.waypoint;
   if (wp && wp !== S_story.currentCode) {
-    wpDir = _bfsGridDir(S_story.currentCode, wp);
+    wpDir = _bfsGridDir({ r: pr, c: pc }, wp);   // §NAV-01a: route from the player, not the last named node
   }
   // Highlight dpad buttons toward waypoint
   ['N','S','E','W'].forEach(d => {
@@ -32791,8 +32791,10 @@ function _updateExitLinks() {
     const btn = document.getElementById('btn-' + d);
     if (!el) return;
     const [dr, dc] = DELTAS[d];
-    const nr = pr + dr, nc = pc + dc;
-    const passable = nr >= 1 && nc >= 1 && nr <= 500 && nc <= 500 && !IMPASSABLE_CELLS.has(`${nr},${nc}`);
+    // §NAV-01a: mirror the mover kernel — rows clamp at the band edges, cols wrap E↔W
+    const nr = pr + dr;
+    const nc = (((pc + dc) % GEO_PROJ.COLS) + GEO_PROJ.COLS) % GEO_PROJ.COLS;
+    const passable = nr >= 0 && nr < GEO_PROJ.ROWS && !IMPASSABLE_CELLS.has(`${nr},${nc}`);
     if (!passable) {
       if (btn) btn.disabled = true;
       el.className = 'exit-line';
@@ -33001,42 +33003,71 @@ function storyRenderCharSheet() {
 /* ── Waypoint System ── */
 
 // §CELL-09: grid BFS — walks CELL_GRID one cell at a time; returns [{r,c,code}] path
-function _bfsGridPath(fromCode, toCode) {
+// §NAV-01a — the player's true grid position. All routing starts here: cellMove
+// never updates currentCode on empty cells, so NODE_COORDS[currentCode] is stale
+// for the whole wilderness leg of a journey (the pre-§NAV-01 waypoint-arrow bug).
+function _playerPos() {
+  if (S_story.playerR != null && S_story.playerC != null)
+    return { r: S_story.playerR, c: S_story.playerC };
+  const co = NODE_COORDS[S_story.currentCode];
+  return co ? { r: co.r, c: co.c } : { r: 0, c: 0 };
+}
+
+// §NAV-01a — geo-grid BFS. `from` is a node code or a {r,c} position; topology
+// mirrors the mover kernel (__moverStep): rows clamp at the band edges, columns
+// wrap E↔W mod COLS. Predecessor-map reconstruction (no per-cell path copies).
+function _bfsGridPath(from, toCode) {
   if (!toCode || !NODE_COORDS[toCode]) return [];
   const endCoord = NODE_COORDS[toCode];
-  const startCoord = NODE_COORDS[fromCode] || { r: S_story.playerR, c: S_story.playerC };
+  const startCoord = (from && typeof from === 'object') ? from
+                   : (NODE_COORDS[from] || _playerPos());
   if (!startCoord || startCoord.r == null) return [];
   if (startCoord.r === endCoord.r && startCoord.c === endCoord.c) return [];
 
-  const visited = new Set();
+  const ROWS = GEO_PROJ.ROWS, COLS = GEO_PROJ.COLS;
+  const endKey = `${endCoord.r},${endCoord.c}`;
   const startKey = `${startCoord.r},${startCoord.c}`;
-  visited.add(startKey);
-  const queue = [{ r: startCoord.r, c: startCoord.c, path: [] }];
+  const prev = new Map([[startKey, null]]);
+  let frontier = [startKey];
 
-  while (queue.length) {
-    const { r, c, path } = queue.shift();
-    for (const [dr, dc] of [[-1,0],[1,0],[0,1],[0,-1]]) {
-      const nr = r + dr, nc = c + dc;
-      const k = `${nr},${nc}`;
-      if (visited.has(k) || IMPASSABLE_CELLS.has(k)) continue;
-      if (nr < 1 || nc < 1 || nr > 500 || nc > 500) continue;
-      visited.add(k);
-      const step = { r: nr, c: nc, code: cellCode(k) };
-      const newPath = [...path, step];
-      if (nr === endCoord.r && nc === endCoord.c) return newPath;
-      queue.push({ r: nr, c: nc, path: newPath });
+  while (frontier.length) {
+    const next = [];
+    for (const key of frontier) {
+      const ci = key.indexOf(',');
+      const r = +key.slice(0, ci), c = +key.slice(ci + 1);
+      for (const [dr, dc] of [[-1,0],[1,0],[0,1],[0,-1]]) {
+        const nr = r + dr;
+        const nc = (((c + dc) % COLS) + COLS) % COLS;   // E↔W wrap
+        if (nr < 0 || nr >= ROWS) continue;             // band clamp (no pole wrap)
+        const k = `${nr},${nc}`;
+        if (prev.has(k) || IMPASSABLE_CELLS.has(k)) continue;
+        prev.set(k, key);
+        if (k === endKey) {
+          const path = [];
+          for (let cur = k; cur !== startKey; cur = prev.get(cur)) {
+            const i = cur.indexOf(',');
+            path.push({ r: +cur.slice(0, i), c: +cur.slice(i + 1), code: cellCode(cur) });
+          }
+          return path.reverse();
+        }
+        next.push(k);
+      }
     }
+    frontier = next;
   }
   return [];
 }
 
-// Returns the compass direction of the first grid BFS step toward toCode, or null
-function _bfsGridDir(fromCode, toCode) {
-  const path = _bfsGridPath(fromCode, toCode);
+// Returns the compass direction of the first grid BFS step toward toCode, or null.
+// `from` is a node code or a {r,c} position (§NAV-01a).
+function _bfsGridDir(from, toCode) {
+  const start = (from && typeof from === 'object') ? from
+              : (NODE_COORDS[from] || _playerPos());
+  const path = _bfsGridPath(start, toCode);
   if (!path.length) return null;
-  const startCoord = NODE_COORDS[fromCode] || { r: S_story.playerR, c: S_story.playerC };
-  const dr = path[0].r - startCoord.r;
-  const dc = path[0].c - startCoord.c;
+  const dr = path[0].r - start.r;
+  let dc = path[0].c - start.c;
+  if (dc > 1) dc = -1; else if (dc < -1) dc = 1;        // antimeridian wrap-adjust
   return dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
 }
 
@@ -33052,14 +33083,18 @@ function _updateWaypointBtn() {
 function storyWaypoint() {
   const wp = S_story.waypoint;
   if (!wp) { storyQuestToggle(); return; }
-  if (S_story.currentCode === wp) {
+  // §NAV-01a: arrival = standing on the waypoint's CELL (co-located locale nodes
+  // share a cell, so currentCode equality alone can miss a genuine arrival).
+  const wpCo = NODE_COORDS[wp];
+  const pos = _playerPos();
+  if (S_story.currentCode === wp || (wpCo && pos.r === wpCo.r && pos.c === wpCo.c)) {
     storyMsg('📍 You have reached the waypoint: ' + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '!');
     S_story.waypoint = null;
     _updateWaypointBtn();
     storyQuestToggle();
     return;
   }
-  const dir = _bfsGridDir(S_story.currentCode, wp);
+  const dir = _bfsGridDir(pos, wp);
   if (!dir) { storyMsg('📍 No path to waypoint found. Move manually toward ' + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '.'); return; }
   cellMove(dir);
 }
