@@ -665,7 +665,7 @@ test.describe('§ARCH-01 Wave 1 — Whisper\'s Crown arc (quest_whisper_01..06)'
                  xp:(bit.onPass||[]).find(b=>b.kind==='reward').xp, hasLegacy:(bit.onPass||[]).some(b=>b.kind==='_legacy_fn') };
       });
       const side = QUEST_DB.quest_whisper_05;
-      return { sc, side:{ schema:side.schema, valid:validateQuest(side).valid, completion:!!(side.completion&&side.completion.flags), bits:side.bits.length, onComplete:typeof side.onComplete } };
+      return { sc, side:{ schema:side.schema, valid:validateQuest(side).valid, completion:!!(side.completion&&side.completion.flags), bits:side.bits.length, onComplete:Array.isArray(side.onComplete) } };
     }, SKILL);
     expect(r.sc.every(x => x.schema==='UQF-1.0' && x.valid && x.bit==='skill_check' && x.hasLegacy)).toBe(true);
     expect(r.sc).toMatchObject([
@@ -675,8 +675,8 @@ test.describe('§ARCH-01 Wave 1 — Whisper\'s Crown arc (quest_whisper_01..06)'
       { id:'quest_whisper_04', stat:'WIS', dc:14, xp:200 },
       { id:'quest_whisper_06', stat:'CHA', dc:13, xp:225 },
     ]);
-    // side quest: declarative completion gate, empty bits, onComplete kept as a live hook
-    expect(r.side).toMatchObject({ schema:'UQF-1.0', valid:true, completion:true, bits:0, onComplete:'function' });
+    // side quest: declarative completion gate, empty bits, onComplete is a W7b completion bit chain
+    expect(r.side).toMatchObject({ schema:'UQF-1.0', valid:true, completion:true, bits:0, onComplete:true });
   });
 
   test('each skill_check PASS marks done, grants exact xp, runs _addCroneMark', async ({ page }) => {
@@ -770,7 +770,7 @@ test.describe('§ARCH-01 Wave 1 — Glut\'s Crown arc (quest_glut_01..06)', () =
       const s6 = QUEST_DB.quest_glut_06;
       return { sc, side:{ schema:s6.schema, valid:validateQuest(s6).valid,
                gateFlags:(s6.gate&&s6.gate.flags)||[], completionFlags:(s6.completion&&s6.completion.flags)||[],
-               bits:s6.bits.length, onComplete:typeof s6.onComplete } };
+               bits:s6.bits.length, onComplete:Array.isArray(s6.onComplete) } };
     }, SKILL);
     expect(r.sc.every(x => x.schema==='UQF-1.0' && x.valid && x.hasLegacy)).toBe(true);
     expect(r.sc).toMatchObject([
@@ -780,9 +780,9 @@ test.describe('§ARCH-01 Wave 1 — Glut\'s Crown arc (quest_glut_01..06)', () =
       { id:'quest_glut_04', stat:'WIS', dc:13, xp:200 },
       { id:'quest_glut_05', stat:'WIS', dc:15, xp:225 },
     ]);
-    // side quest: FLAG activation gate + flag completion gate, onComplete kept live
+    // side quest: FLAG activation gate + flag completion gate, onComplete is a W7b bit chain
     expect(r.side).toMatchObject({ schema:'UQF-1.0', valid:true, gateFlags:['glut_gift_held'],
-      completionFlags:['glutGiftReturned'], bits:0, onComplete:'function' });
+      completionFlags:['glutGiftReturned'], bits:0, onComplete:true });
   });
 
   test('each skill_check PASS marks done, grants exact xp, runs _addCroneMark', async ({ page }) => {
@@ -1631,7 +1631,7 @@ test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', 
       const q = QUEST_DB[id];
       return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid,
                gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion),
-               hasOnComplete:typeof q.onComplete==='function' };
+               hasOnComplete:Array.isArray(q.onComplete) };
     }));
     expect(r).toMatchObject([
       { id:'quest_spark_02', schema:'UQF-1.0', type:'side', valid:true, gate:'{"flags":["smaltBefriended"]}',                                  completion:'{"flags":["pipMet"]}',          hasOnComplete:true },
@@ -1725,7 +1725,7 @@ test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_
       const q = QUEST_DB[id];
       return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid,
                gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion),
-               hasOnComplete:typeof q.onComplete==='function' };
+               hasOnComplete:Array.isArray(q.onComplete) };
     }));
     expect(r).toMatchObject([
       { id:'quest_spark2_01', schema:'UQF-1.0', type:'side', valid:true, gate:'{"flags":["dunfallAccessed"]}', completion:'{"flags":["spark2HookReceived"]}', hasOnComplete:false },
@@ -1889,7 +1889,7 @@ test.describe('§ARCH-01 Wave 1m — Sea: The Warmth Calm (quest_sea_01..03)', (
       S_story.currentCode = 'NWI';
       const atNWI = QuestRuntime.canComplete('quest_sea_01');
       return { schema:q.schema, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate),
-               completion:JSON.stringify(q.completion), hasOnComplete:typeof q.onComplete==='function',
+               completion:JSON.stringify(q.completion), hasOnComplete:Array.isArray(q.onComplete),
                elsewhere, atNWI };
     });
     expect(r).toMatchObject({ schema:'UQF-1.0', valid:true, gate:'{}', completion:'{"atNode":"NWI"}', hasOnComplete:true });
@@ -2016,7 +2016,7 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.sbResolved = false;
-      QUEST_DB.quest_sb_fight.onComplete();   // the closure portion only
+      QuestRuntime.execBits(QUEST_DB.quest_sb_fight.onComplete, {});   // the bit-chain portion only (W7b)
       return { xp:S_story.xp, gold:S_story.gold, resolved:S_story.sbResolved,
                letter:S_story.inventory.some(i=>i.name==='Letter of Marque (Keel)'),
                xpAward:QUEST_DB.quest_sb_fight.xpAward };
@@ -2052,7 +2052,7 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
       });
       const side = ['quest_hunt2_01','quest_hunt2_04','quest_hunt_01','quest_hunt_04'].map(id => {
         const q = QUEST_DB[id];
-        return { id, schema:q.schema, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion), onComplete:typeof q.onComplete==='function' };
+        return { id, schema:q.schema, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion), onComplete:Array.isArray(q.onComplete) };
       });
       return { sk, side };
     });
@@ -2095,7 +2095,7 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
     const r = await page.evaluate(() => {
       const run = (id) => {
         S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.knowledge = [];
-        QUEST_DB[id].onComplete();
+        QuestRuntime.execBits(QUEST_DB[id].onComplete, {});   // W7b bit chain
         return { xp:S_story.xp, gold:S_story.gold, knowledge:S_story.knowledge.length, inv:S_story.inventory.map(i=>i.name), xpAward:QUEST_DB[id].xpAward };
       };
       return { hag:run('quest_hunt2_04'), den:run('quest_hunt_04') };
@@ -2125,7 +2125,7 @@ test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => 
       });
       const side = ['quest_bilge_01','quest_bilge_04'].map(id => {
         const q = QUEST_DB[id];
-        return { id, schema:q.schema, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion), onComplete:typeof q.onComplete==='function' };
+        return { id, schema:q.schema, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion), onComplete:Array.isArray(q.onComplete) };
       });
       return { sk, side };
     });
@@ -2160,7 +2160,7 @@ test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => 
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.knowledge = []; S_story.whodunit2Solved = false;
-      QUEST_DB.quest_bilge_04.onComplete();
+      QuestRuntime.execBits(QUEST_DB.quest_bilge_04.onComplete, {});   // W7b bit chain
       return { xp:S_story.xp, gold:S_story.gold, knowledge:S_story.knowledge.length, solved:S_story.whodunit2Solved,
                frag:S_story.inventory.some(i=>i.name==='Sea Spawn Scale Fragment'), xpAward:QUEST_DB.quest_bilge_04.xpAward };
     });
@@ -2183,7 +2183,7 @@ test.describe('§ARCH-01 Wave 1q — The Personal Legend (quest_alch_01..07)', (
     const r = await page.evaluate(() => {
       const side = ['quest_alch_01','quest_alch_02','quest_alch_03','quest_alch_06','quest_alch_07'].map(id => {
         const q = QUEST_DB[id];
-        return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion), onComplete:typeof q.onComplete==='function' };
+        return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:JSON.stringify(q.completion), onComplete:Array.isArray(q.onComplete) };
       });
       const sk = ['quest_alch_04','quest_alch_05'].map(id => {
         const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit');
@@ -8904,5 +8904,95 @@ test.describe('§ARCH-01 W7 — completion-bit execution point (Phase 4)', () =>
       return document.getElementById('story-move-msg').textContent;
     });
     expect(r).toContain('W7 direct narrative');
+  });
+});
+
+// ── §ARCH-01 Wave 7b — the 27 QUEST_DB onComplete closures → completion bit chains ──
+//
+// Every function-valued onComplete in QUEST_DB is now an ARRAY of bits executed by
+// the W7a execution point. Decomposition: flag sets → flag_write, xp/gold/items/
+// knowledge → reward, exact-name removals → item_remove, storyMsg → narrative
+// (rides the msgs stream, same presentation as the per-id block). _legacy_fn keeps
+// the inexpressible parts (_innKindness threshold key grant, charged-vs-plain
+// iodine preference, INT+1 ability bump, numeric mazeSolvedChecks). The known xp
+// double-counts (sb_fight/hunt_04/hunt2_04/bilge_04/sk_hull: bit xp ∧ xpAward)
+// are PRESERVED, not fixed.
+
+test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit chains', () => {
+  test('no function-valued onComplete remains in QUEST_DB; all chains validate', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const carriers = Object.values(QUEST_DB).filter(q => q.onComplete);
+      const fns = carriers.filter(q => typeof q.onComplete === 'function').map(q => q.id);
+      const arrays = carriers.filter(q => Array.isArray(q.onComplete));
+      const invalid = arrays.map(q => ({ id:q.id, v: validateQuest(q) })).filter(x => !x.v.valid);
+      return { total: carriers.length, fns, arrayCount: arrays.length,
+               invalid: invalid.map(x => x.id + ': ' + x.v.errors.join('; ')) };
+    });
+    expect(r.fns).toEqual([]);              // zero closures left
+    expect(r.arrayCount).toBe(r.total);     // every carrier is an array chain
+    expect(r.arrayCount).toBe(27);
+    expect(r.invalid).toEqual([]);          // every chain passes bit contracts
+  });
+
+  test('glut_06 full-chain parity: flags, gift removal, kindness, crown flag', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = { quest_glut_06:'active' };
+      S_story.inventory = [{ name:"Glut's Gift", icon:'🫙', sell:0 }];
+      S_story.glut_gift_held = true; S_story.innmotherKindness = 0;
+      delete S_story.glutGiftReturned; delete S_story.glutCrownComplete;
+      S_story.glutGiftReturned = true;                     // completion flag (set by story beat)
+      storyCheckQuests({ code:'__none' });
+      return { status: S_story.quests.quest_glut_06,
+               giftGone: !(S_story.inventory || []).some(i => i.name === "Glut's Gift"),
+               heldCleared: S_story.glut_gift_held === false,
+               kindness: S_story.innmotherKindness,
+               crown: !!S_story.glutCrownComplete };
+    });
+    expect(r.status).toBe('complete');
+    expect(r.giftGone).toBe(true);
+    expect(r.heldCleared).toBe(true);
+    expect(r.kindness).toBe(1);
+    expect(r.crown).toBe(true);
+  });
+
+  test('sb_fight battle completion: bit chain fires AND the xpAward double-count is preserved', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = { quest_sb_fight:'active' };
+      S_story.inventory = []; S_story.xp = 0; S_story.gold = 0; S_story.level = 20; // level cap avoids level-up churn
+      delete S_story.sbResolved;
+      S_story.defeatedBattles = { SB_PRIVATEER: true };
+      const msgs = storyCheckQuests({ code:'__none' });
+      return { status: S_story.quests.quest_sb_fight,
+               resolved: !!S_story.sbResolved, gold: S_story.gold, xp: S_story.xp,
+               letter: (S_story.inventory || []).some(i => i.name === 'Letter of Marque (Keel)'),
+               narrativeShown: msgs.some(m => /privateer crew is cleared/.test(m)) };
+    });
+    expect(r.status).toBe('complete');
+    expect(r.resolved).toBe(true);
+    expect(r.gold).toBe(200);
+    expect(r.xp).toBe(800);                 // 400 (reward bit) + 400 (xpAward) — latent double-count preserved
+    expect(r.letter).toBe(true);
+    expect(r.narrativeShown).toBe(true);
+  });
+
+  test('iodine_02 counted consumption: exactly 2 of 3 Swamp Kelp removed, 2 Iodine Salt granted', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const kelp = () => ({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft' });
+      S_story.quests = { quest_iodine_02:'active' };
+      S_story.inventory = [kelp(), kelp(), kelp()];
+      S_story.innmotherKindness = 0; S_story.currentCode = 'INN';
+      storyCheckQuests({ code:'INN' });
+      const inv = S_story.inventory || [];
+      return { status: S_story.quests.quest_iodine_02,
+               kelpLeft: inv.filter(i => i.name === 'Swamp Kelp').length,
+               salt: inv.filter(i => i.name === 'Iodine Salt').length };
+    });
+    expect(r.status).toBe('complete');
+    expect(r.kelpLeft).toBe(1);
+    expect(r.salt).toBe(2);
   });
 });

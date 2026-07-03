@@ -10811,7 +10811,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Bear witness to her hidden care without being asked.',
     activateNode:'HW1', gate:{ questsAttempted:['quest_whisper_01'] },
     completion:{ flags:['whisperSaintSeen'] }, bits:[],
-    onComplete:() => { S_story.whisperSaintSeen = true; _innKindness(1); },
+    onComplete:[ { kind:'flag_write', set:['whisperSaintSeen'] }, { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"It is not a temple. It does not require an audience. You were there anyway." — The Still Water, Whisper\'s Crown',
     passText:"It is not a temple. It does not require an audience. You were there anyway.",
     failText:"Whisper has not yet tended the cairn on this visit. Watch the still water edge.",
@@ -10908,13 +10908,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:"Return Glut's Gift to the feeding pool.",
     activateNode:'HG1', gate:{ flags:['glut_gift_held'] },
     completion:{ flags:['glutGiftReturned'] }, bits:[],
-    onComplete:() => {
-      S_story.glutGiftReturned = true;
-      S_story.glut_gift_held = false;
-      S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== "Glut's Gift");
-      _innKindness(1);
-      S_story.glutCrownComplete = true;
-    },
+    onComplete:[
+      { kind:'flag_write', set:['glutGiftReturned'], clear:['glut_gift_held'] },
+      { kind:'item_remove', name:"Glut's Gift" },
+      { kind:'_legacy_fn', fn:() => _innKindness(1) },
+      { kind:'flag_write', set:['glutCrownComplete'] },
+    ],
     disposition:'"You gave it back. Most people keep the jar. The jar is not the gift — the returning is the gift." — The Feeding Pool, Glut\'s Crown',
     passText:"You gave it back. Most people keep the jar. The jar is not the gift — the returning is the gift.",
     failText:"Glut gift is still in your coat. The pool is here. The jar has not been returned yet.",
@@ -11011,7 +11010,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Sleep at The Innmother\'s Hall.',
     activateNode:'INN', 
     completeItems:[], 
-    onComplete:() => _innKindness(1),
+    onComplete:[ { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"You slept in the bad room and came back in the morning. No one does that." — The Innmother\'s Hall',
     passText:"You slept in the bad room and came back in the morning. No one does that.",
     failText:"The room at the end of the hall is still waiting. You have not slept at The Innmother Hall yet.",
@@ -11058,7 +11057,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Leave The Innmother\'s Hall and return.',
     activateNode:'INN', 
     completeItems:[], 
-    onComplete:() => _innKindness(1),
+    onComplete:[ { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"You came back. No one has come back before you." — The Innmother\'s Hall',
     passText:"You came back. No one has come back before you. She notes this.",
     failText:"You have not yet left the hall and returned. She is waiting to note it.",
@@ -11082,7 +11081,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Kill the Kelpie in the still water\'s east shallows.',
     activateNode:'HW1', 
     completeItems:[], 
-    onComplete:() => { _innKindness(1); },
+    onComplete:[ { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"You found it. You followed it. Now you know what silence that moves looks like." — The Still Water',
     passText:"You found it. You followed it. The Kelpie circles. You circle with it. Now you know what silence that moves looks like.",
     failText:"The east shallows are moving when they should be still. The Kelpie has not been tracked yet.",
@@ -11095,7 +11094,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Catch the Mudcrab at the mire\'s edge and return it to the feeding pool.',
     activateNode:'HG1', 
     completeItems:[], 
-    onComplete:() => { _innKindness(1); },
+    onComplete:[ { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"It was enough. It knew when to stop. I keep it here now. I feed it more than it wants. This is fine." — The Feeding Pool',
     passText:"The mudcrab is returned. It was enough. It knew when to stop. Glut feeds it more than it wants. This is fine.",
     failText:"The mudcrab is at the mire edge. It ate enough and left. It has not been returned yet.",
@@ -11108,7 +11107,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Kill the Sea Spawn beneath the stone. The DC on the stone task will drop.',
     activateNode:'HN1', 
     completeItems:[], 
-    onComplete:() => { S_story.waneStoneDCReduced = true; _innKindness(1); },
+    onComplete:[ { kind:'flag_write', set:['waneStoneDCReduced'] }, { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"It had been carrying the same thing for years. Now it is not carrying anything. The stone is lighter." — The Drained Mire',
     passText:"It had been carrying the same thing for years. Now it is not. The stone is lighter.",
     failText:"The Sea Spawn is still beneath the stone location. The stone has not been cleared yet.",
@@ -11122,12 +11121,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Kill the Sea Witch in the deep still water.',
     activateNode:'HW1', 
     completeItems:[], 
-    onComplete:() => {
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push("Sea Witch's Tome — The witch hoarded secrets. You found them anyway. INT checks +1.");
-      _innKindness(1);
-      storyMsg("📖 Sea Witch's Tome added to knowledge. INT checks +1.");
-    },
+    onComplete:[
+      { kind:'reward', knowledge:"Sea Witch's Tome — The witch hoarded secrets. You found them anyway. INT checks +1." },
+      { kind:'_legacy_fn', fn:() => _innKindness(1) },
+      { kind:'narrative', msg:"📖 Sea Witch's Tome added to knowledge. INT checks +1." },
+    ],
     disposition:'"It is gone. The water knows. I knew what it was the entire time. That was the problem." — The Still Water',
     passText:"It is gone. The water knows. Whisper knew what it was the entire time. That was the problem.",
     failText:"The deep section has a surface problem. The Sea Witch has been there for two seasons. Whisper has not looked directly at it.",
@@ -11140,14 +11138,15 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Kill the Giant Octopus at the east crossing of the feeding pool.',
     activateNode:'HG1', 
     completeItems:[], 
-    onComplete:() => {
-      S_story.inventory = S_story.inventory || [];
-      S_story.inventory.push({ name:"Glut's Hoard Fragment", icon:'🪴', sell:45, type:'loot', desc:'The octopus was sitting on this. It had been there long enough to consider itself the owner.' });
-      S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the feeding pool. Burns to iodine salt.' });
-      S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the feeding pool. Burns to iodine salt.' });
-      _innKindness(1);
-      storyMsg("🪴 The east crossing is clear. Glut's Hoard Fragment + 2× Swamp Kelp recovered.");
-    },
+    onComplete:[
+      { kind:'reward', items:[
+        { name:"Glut's Hoard Fragment", icon:'🪴', sell:45, type:'loot', desc:'The octopus was sitting on this. It had been there long enough to consider itself the owner.' },
+        { name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the feeding pool. Burns to iodine salt.' },
+        { name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Sea kelp from the feeding pool. Burns to iodine salt.' },
+      ] },
+      { kind:'_legacy_fn', fn:() => _innKindness(1) },
+      { kind:'narrative', msg:"🪴 The east crossing is clear. Glut's Hoard Fragment + 2× Swamp Kelp recovered." },
+    ],
     disposition:'"I fed it too much. It grew. You removed it. I have not stopped feeding what comes to the pool." — The Feeding Pool',
     passText:"The Giant Octopus is gone from the east passage. Glut is still feeding what comes to the pool. This is useful information about her.",
     failText:"The Giant Octopus is blocking the east passage. It grew from the feeding. It has not been cleared yet.",
@@ -11160,15 +11159,13 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Kill the Sea Demon in the sub-channel below the drained mire.',
     activateNode:'HN1', 
     completeItems:[], 
-    onComplete:() => {
-      S_story.atlanteanProcessKnown = true;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Atlantean Kelp Scroll — The coastal reduction process. Kelp burned with an electric catalyst produces Charged Iodine Salt. Teaches the iodine smelting method.');
-      S_story.inventory = S_story.inventory || [];
-      S_story.inventory.push({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Mire kelp retrieved from the sub-channel.' });
-      _innKindness(1);
-      storyMsg("📜 Atlantean Kelp Scroll learned. Charged reduction process now known. Swamp Kelp recovered from the channel.");
-    },
+    onComplete:[
+      { kind:'flag_write', set:['atlanteanProcessKnown'] },
+      { kind:'reward', knowledge:'Atlantean Kelp Scroll — The coastal reduction process. Kelp burned with an electric catalyst produces Charged Iodine Salt. Teaches the iodine smelting method.' },
+      { kind:'reward', items:[{ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft', desc:'Mire kelp retrieved from the sub-channel.' }] },
+      { kind:'_legacy_fn', fn:() => _innKindness(1) },
+      { kind:'narrative', msg:"📜 Atlantean Kelp Scroll learned. Charged reduction process now known. Swamp Kelp recovered from the channel." },
+    ],
     disposition:'"It was better at this than I am. I am aware. Thank you for not pointing it out directly." — The Drained Mire',
     passText:"It was better at this than she is. She is aware. Thank you for not pointing it out directly.",
     failText:"The Sea Demon is still in the sub-channel below the mire. It has been more efficient than Wane. She finds this unacceptable.",
@@ -11181,13 +11178,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Go below the inn and kill the Giant Eel in the drainage channel.',
     activateNode:'INN', 
     completeItems:[], 
-    onComplete:() => {
-      S_story.electricEelOrganHeld = true;
-      S_story.inventory = S_story.inventory || [];
-      S_story.inventory.push({ name:'Electric Eel Organ', icon:'⚡', sell:15, type:'craft', desc:'Bioluminescent organ from the eel beneath the inn. Catalyzes iodine extraction — produces Charged Iodine Salt.' });
-      _innKindness(1);
-      storyMsg("⚡ Electric Eel Organ recovered. The south corridor no longer smells like the sea. The Innmother says nothing.");
-    },
+    onComplete:[
+      { kind:'flag_write', set:['electricEelOrganHeld'] },
+      { kind:'reward', items:[{ name:'Electric Eel Organ', icon:'⚡', sell:15, type:'craft', desc:'Bioluminescent organ from the eel beneath the inn. Catalyzes iodine extraction — produces Charged Iodine Salt.' }] },
+      { kind:'_legacy_fn', fn:() => _innKindness(1) },
+      { kind:'narrative', msg:"⚡ Electric Eel Organ recovered. The south corridor no longer smells like the sea. The Innmother says nothing." },
+    ],
     disposition:'"The smell is gone. The room to the south is the same room. It is a better room now." — The Innmother\'s Hall',
     passText:"The smell is gone. The room to the south is the same room. It is a better room now.",
     failText:"The Giant Eel is still in the drainage channel beneath the south corridor. The Innmother has not dealt with it.",
@@ -11232,14 +11228,16 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'INN', 
     completeItems:[],
     
-    onComplete:() => {
-      let removed = 0;
-      S_story.inventory = (S_story.inventory||[]).filter(i => { if (i.name === 'Swamp Kelp' && removed < 2) { removed++; return false; } return true; });
-      S_story.inventory.push({ name:'Iodine Salt', icon:'🧂', sell:5, type:'craft', desc:'+3 to any skill check when burned before rolling.' });
-      S_story.inventory.push({ name:'Iodine Salt', icon:'🧂', sell:5, type:'craft', desc:'+3 to any skill check when burned before rolling.' });
-      _innKindness(1);
-      storyMsg("🧂 Two doses of Iodine Salt produced. The hearth smells like the sea for an hour afterward.");
-    },
+    onComplete:[
+      { kind:'item_remove', name:'Swamp Kelp' },
+      { kind:'item_remove', name:'Swamp Kelp' },
+      { kind:'reward', items:[
+        { name:'Iodine Salt', icon:'🧂', sell:5, type:'craft', desc:'+3 to any skill check when burned before rolling.' },
+        { name:'Iodine Salt', icon:'🧂', sell:5, type:'craft', desc:'+3 to any skill check when burned before rolling.' },
+      ] },
+      { kind:'_legacy_fn', fn:() => _innKindness(1) },
+      { kind:'narrative', msg:"🧂 Two doses of Iodine Salt produced. The hearth smells like the sea for an hour afterward." },
+    ],
     disposition:'"The reduction is the same each time. The smell tells you when it is done." — The Innmother\'s Hall',
     passText:"The reduction is the same each time. Once you know the smell you cannot not know it. The salt is in your hands.",
     failText:"Gather 2 Swamp Kelp from the mire and return to the Innmother hearth. The burn has not happened yet.",
@@ -11253,15 +11251,15 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'INN', 
     completeItems:[],
     
-    onComplete:() => {
-      S_story.electricEelOrganHeld = false;
-      let kelpRemoved = false;
-      S_story.inventory = (S_story.inventory||[]).filter(i => { if (i.name === 'Electric Eel Organ') return false; if (i.name === 'Swamp Kelp' && !kelpRemoved) { kelpRemoved = true; return false; } return true; });
-      S_story.atlanteanProcessKnown = true;
-      S_story.inventory.push({ name:'Charged Iodine Salt', icon:'⚡🧂', sell:12, type:'craft', desc:'+5 to any skill check when burned before rolling. Atlantean catalyzed reduction — the electric charge accelerates the iodine separation.' });
-      _innKindness(1);
-      storyMsg("⚡🧂 The organ ignites the kelp blue-white. The salt that settles is faintly luminescent. The Innmother: 'The coastal people knew this. They found it from the other direction.'");
-    },
+    onComplete:[
+      { kind:'flag_write', clear:['electricEelOrganHeld'] },
+      { kind:'item_remove', name:'Electric Eel Organ' },
+      { kind:'item_remove', name:'Swamp Kelp' },
+      { kind:'flag_write', set:['atlanteanProcessKnown'] },
+      { kind:'reward', items:[{ name:'Charged Iodine Salt', icon:'⚡🧂', sell:12, type:'craft', desc:'+5 to any skill check when burned before rolling. Atlantean catalyzed reduction — the electric charge accelerates the iodine separation.' }] },
+      { kind:'_legacy_fn', fn:() => _innKindness(1) },
+      { kind:'narrative', msg:"⚡🧂 The organ ignites the kelp blue-white. The salt that settles is faintly luminescent. The Innmother: 'The coastal people knew this. They found it from the other direction.'" },
+    ],
     disposition:'"You found it from the salt. They found it from the metal. The sequence does not matter. The reduction is the same." — The Innmother\'s Hall',
     passText:"The coastal people knew this. They found it from the other direction. You found it from the salt and found the metal underneath. The sequence does not matter.",
     failText:"The Electric Eel Organ has not been brought to the Innmother hearth yet. The charged reduction has not been done.",
@@ -11276,11 +11274,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'HCA', 
     completeItems:[],
     
-    onComplete:() => {
-      S_story.shorePathFound = true;
-      S_story.gold = (S_story.gold||0) + 200;
-      storyMsg("200gp found along the shore path — old coin, Atlantean mint, corroded but real.");
-    },
+    onComplete:[
+      { kind:'flag_write', set:['shorePathFound'] },
+      { kind:'reward', gold:200 },
+      { kind:'narrative', msg:"200gp found along the shore path — old coin, Atlantean mint, corroded but real." },
+    ],
     xpAward:200,
     waypointNode:'DS0',
     disposition:'"The path was always there. The Leviathan was in front of it." — The Deeper Clearing',
@@ -11343,17 +11341,20 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'DSF', 
     completeItems:[],
     
-    onComplete:() => {
-      const inv = S_story.inventory || [];
-      const chargedIdx = inv.findIndex(i => i.name === 'Charged Iodine Salt');
-      const plainIdx   = inv.findIndex(i => i.name === 'Iodine Salt');
-      if (chargedIdx !== -1) inv.splice(chargedIdx, 1);
-      else if (plainIdx !== -1) inv.splice(plainIdx, 1);
-      S_story.seaElementCrafted = true;
-      S_story.gold = (S_story.gold||0) + 400;
-      S_story.inventory.push({ name:'Sea Element', icon:'🔱', type:'weapon', atkBonus:2, dmgDie:8, dmgCount:1, dmgFlat:0, minLevel:1, sell:500, desc:'Atlantean alloy. Holds the tide\'s force in the metal. +2 ATK, 1d8 damage.' });
-      storyMsg("🔱 Sea Element smelted. The alloy cools to a color that is not quite any color. +2 ATK, 1d8. +400gp.");
-    },
+    onComplete:[
+      // charged-preferred iodine consumption (if/else across two names) is inexpressible
+      // as item_remove bits — kept whole behind _legacy_fn.
+      { kind:'_legacy_fn', fn:() => {
+        const inv = S_story.inventory || [];
+        const chargedIdx = inv.findIndex(i => i.name === 'Charged Iodine Salt');
+        const plainIdx   = inv.findIndex(i => i.name === 'Iodine Salt');
+        if (chargedIdx !== -1) inv.splice(chargedIdx, 1);
+        else if (plainIdx !== -1) inv.splice(plainIdx, 1);
+      } },
+      { kind:'flag_write', set:['seaElementCrafted'] },
+      { kind:'reward', gold:400, items:[{ name:'Sea Element', icon:'🔱', type:'weapon', atkBonus:2, dmgDie:8, dmgCount:1, dmgFlat:0, minLevel:1, sell:500, desc:'Atlantean alloy. Holds the tide\'s force in the metal. +2 ATK, 1d8 damage.' }] },
+      { kind:'narrative', msg:"🔱 Sea Element smelted. The alloy cools to a color that is not quite any color. +2 ATK, 1d8. +400gp." },
+    ],
     disposition:'"It was the last useful thing we left. The alloy holds." — The Forge Echo, Atlantean Forge',
     passText:"The alloy holds. The forge took the reduction and sealed the Sea Element into something the Atlanteans could not finish alone.",
     failText:"The forge is active but the Sea Element is not reduced. Bring Iodine Salt and try again.",
@@ -11368,10 +11369,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'LCY', 
     completeItems:[],
     
-    onComplete:() => {
-      S_story.gold = (S_story.gold||0) + 300;
-      storyMsg("300gp. The Conclave's post-event protocol is complete. The interval is confirmed.");
-    },
+    onComplete:[
+      { kind:'reward', gold:300 },
+      { kind:'narrative', msg:"300gp. The Conclave's post-event protocol is complete. The interval is confirmed." },
+    ],
     xpAward:300,
     waypointNode:'CAN',
     disposition:'"The archive has an archivist. The interval is confirmed. Cycle 4 proceeds." — Conclave Archivist, Post-Event Note',
@@ -11412,16 +11413,13 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'DA2', 
     completeItems:[],
     
-    onComplete:() => {
-      S_story.tideGateOpened = true;
-      const inv = S_story.inventory || [];
-      const seIdx = inv.findIndex(i => i.name === 'Sea Element');
-      if (seIdx !== -1) inv.splice(seIdx, 1);
-      S_story.abilityScores = S_story.abilityScores || {};
-      S_story.abilityScores.int = (S_story.abilityScores.int || 10) + 1;
-      S_story.gold = (S_story.gold||0) + 500;
-      storyMsg("🔱 The Sea Element fits the mechanism in the correct order. The Gate opens inward and down. Bearing 047°. Depth 18m. The chain closes. INT +1 (permanent). +500gp.");
-    },
+    onComplete:[
+      { kind:'flag_write', set:['tideGateOpened'] },
+      { kind:'item_remove', name:'Sea Element' },
+      { kind:'_legacy_fn', fn:() => { S_story.abilityScores = S_story.abilityScores || {}; S_story.abilityScores.int = (S_story.abilityScores.int || 10) + 1; } },
+      { kind:'reward', gold:500 },
+      { kind:'narrative', msg:"🔱 The Sea Element fits the mechanism in the correct order. The Gate opens inward and down. Bearing 047°. Depth 18m. The chain closes. INT +1 (permanent). +500gp." },
+    ],
     xpAward:500,
     disposition:'"The Gate was waiting for whoever followed the chain. The chain closes." — The Tide Gate, Sunken Hall',
     passText:"The Gate was waiting for whoever followed the chain. The chain closes.",
@@ -11437,12 +11435,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'DA2', 
     completeItems:[],
     
-    onComplete:() => {
-      S_story.antecedentDepthMet = true;
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push("Constructor Design: Both the Antecedent's archival installation (CY→AC) and the tidal installation (DA3, bearing 047°, depth 18m) were built on the same foundation. The Constructor required one person to close both chains — the archival question and the tidal question are independent but the answer to each requires the same archivist.");
-      storyMsg('⚓ Both chains close. The archival question (is the archive maintained?) was answered at AC. The tidal question (does the chain have an end?) is answered here. The Constructor built both gates on the same foundation knowing that whoever followed one chain could follow the other.\n\nKnowledge entry added: Constructor Design.\n\n+500 XP.');
-    },
+    onComplete:[
+      { kind:'flag_write', set:['antecedentDepthMet'] },
+      { kind:'reward', knowledge:"Constructor Design: Both the Antecedent's archival installation (CY→AC) and the tidal installation (DA3, bearing 047°, depth 18m) were built on the same foundation. The Constructor required one person to close both chains — the archival question and the tidal question are independent but the answer to each requires the same archivist." },
+      { kind:'narrative', msg:'⚓ Both chains close. The archival question (is the archive maintained?) was answered at AC. The tidal question (does the chain have an end?) is answered here. The Constructor built both gates on the same foundation knowing that whoever followed one chain could follow the other.\n\nKnowledge entry added: Constructor Design.\n\n+500 XP.' },
+    ],
     xpAward:500,
     disposition:'"The question is not different from here. The answer is not different from here. The foundation is the same. The chain is the same. You are the same." — The Antecedent, Tidal Configuration',
     passText:"The question is not different from here. The foundation is the same. The chain is the same. You are the same.",
@@ -11489,8 +11486,8 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // §ARCH-01 Wave 1j — migrated legacy → UQF v1.0 (2026-06-28). Side quest: gate ← activateCond,
-  // completion ← completeFn. onComplete kept verbatim — storyCheckQuests fires q.onComplete() for
-  // UQF side quests on the same completion path as legacy (+150xp, msg). Pure parity.
+  // completion ← completeFn. W7b: the onComplete closure decomposed into a completion bit chain
+  // (narrative + reward{xp:150}) executed by storyCheckQuests via QuestRuntime.execBits.
   quest_spark_02: { id:'quest_spark_02', schema:'UQF-1.0', type:'side',
     title:'The Overture',
     desc:'Smalt has something to show you. The harbor cat knows her way to a specific corner of the Market Quarter entrance. The Inspector appears again, with a different family history.',
@@ -11498,10 +11495,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'LCY', gate:{ flags:['smaltBefriended'] },
     completion:{ flags:['pipMet'] }, bits:[],
     completeItems:[],
-    onComplete:() => {
-      storyMsg('🪵 The bead is in your hand. Smalt eats the fish without ceremony — an endorsement, not a meal.\n\nPip watches you with the calm of something that has never needed to be afraid. You understand, looking at the two of them, that they have been friends for a while. No one told them they couldn\'t be.\n\n+150 XP.');
-      S_story.xp = (S_story.xp||0) + 150;
-    },
+    onComplete:[
+      { kind:'narrative', msg:'🪵 The bead is in your hand. Smalt eats the fish without ceremony — an endorsement, not a meal.\n\nPip watches you with the calm of something that has never needed to be afraid. You understand, looking at the two of them, that they have been friends for a while. No one told them they couldn\'t be.\n\n+150 XP.' },
+      { kind:'reward', xp:150 },
+    ],
     xpAward:0,
     disposition:'"My father — the late Admiral Pembury — we are a naval family, always have been." — Inspector Aldous Wren-Pembury, Scene 2 (the Eastern Reach has no coastline)',
     passText:"Smalt led you there. The Inspector offered a second contradiction. The Eastern Reach has no coastline.",
@@ -11572,8 +11569,8 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 
   // §ARCH-01 Wave 1j — migrated legacy → UQF v1.0 (2026-06-28). Side quest: compound gate ←
   // activateCond (whodunitSolved ∧ wrenpemburyInconsistencyNoticed), completion ← completeFn
-  // (aldousConfessed). onComplete kept verbatim — engine fires it on the UQF completion path
-  // (+400gp/+400xp/Writ splice/Letter of True Passage/harmonyChainComplete/msg). Pure parity.
+  // (aldousConfessed). W7b: the onComplete closure decomposed into a completion bit chain
+  // (+400gp/+400xp/Writ item_remove/Letter of True Passage/harmonyChainComplete/msg).
   quest_spark_05: { id:'quest_spark_05', schema:'UQF-1.0', type:'side',
     title:'Aldous Comes Clean',
     desc:'Three claims. One: the Pembury estate, Eastern Reach, three hundred years. Two: the Admiral father, naval family, always been. Three: Saltwick, six months ago, adjusting. These are not the same person. Inspector Wren-Pembury has been watching you show kindness to increasingly strange things without flinching. He cannot maintain the performance.',
@@ -11581,19 +11578,15 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'LCY', gate:{ flags:['whodunitSolved','wrenpemburyInconsistencyNoticed'] },
     completion:{ flags:['aldousConfessed'] }, bits:[],
     completeItems:[],
-    onComplete:() => {
-      S_story.aldousConfessed = true;
-      S_story.gold = (S_story.gold||0) + 400;
-      S_story.xp = (S_story.xp||0) + 400;
-      const inv = S_story.inventory = S_story.inventory || [];
-      // Remove the King's Writ (Counterfeit) if present
-      const wIdx = inv.findIndex(i => i.name === "King's Writ (Counterfeit)");
-      if (wIdx !== -1) inv.splice(wIdx, 1);
-      // Remove Pip's Friendship Bead (returned, then kept — net zero, bead stays)
-      inv.push({ name:'Letter of True Passage', icon:'📜', type:'misc', desc:"Aldous the Fencer's real authority document. Valid at six ports including Tilbury, Visby, and Malta. A genuine credential from a genuine black market contact.", sell:0 });
-      S_story.harmonyChainComplete = true;
-      storyMsg('📜 Aldous tears the King\'s Writ.\n\nHe does it slowly — one careful tear, then another, then he folds what remains and sets it on the dock bollard. He picks up Pip\'s Friendship Bead from his coat pocket (he has been carrying it since the Tilbury Star) and places it in your hand.\n\n"My name is Aldous. The Admiral does not exist. The estate does not exist. Saltwick exists — I would prefer it didn\'t. I have been here six months because there are people who would like me to be here for considerably fewer. I gave testimony. The crown gave me a printing press and a new name. Wren-Pembury was the first combination that sounded important enough."\n\nHe writes the Letter of True Passage without being asked.\n\n"I have contacts in six ports. If you need something that is not on any manifest, I am who you speak to."\n\nThe Harmony Chain is complete: Smalt, Pip, Clot, The Warmth, Aldous — five creatures, all friends now.\n\nLetter of True Passage added. +400gp. +400 XP. Aldous is an ally.');
-    },
+    onComplete:[
+      { kind:'flag_write', set:['aldousConfessed'] },
+      { kind:'reward', xp:400, gold:400 },
+      { kind:'item_remove', name:"King's Writ (Counterfeit)" },
+      // (Pip's Friendship Bead: returned, then kept — net zero, bead stays)
+      { kind:'reward', items:[{ name:'Letter of True Passage', icon:'📜', type:'misc', desc:"Aldous the Fencer's real authority document. Valid at six ports including Tilbury, Visby, and Malta. A genuine credential from a genuine black market contact.", sell:0 }] },
+      { kind:'flag_write', set:['harmonyChainComplete'] },
+      { kind:'narrative', msg:'📜 Aldous tears the King\'s Writ.\n\nHe does it slowly — one careful tear, then another, then he folds what remains and sets it on the dock bollard. He picks up Pip\'s Friendship Bead from his coat pocket (he has been carrying it since the Tilbury Star) and places it in your hand.\n\n"My name is Aldous. The Admiral does not exist. The estate does not exist. Saltwick exists — I would prefer it didn\'t. I have been here six months because there are people who would like me to be here for considerably fewer. I gave testimony. The crown gave me a printing press and a new name. Wren-Pembury was the first combination that sounded important enough."\n\nHe writes the Letter of True Passage without being asked.\n\n"I have contacts in six ports. If you need something that is not on any manifest, I am who you speak to."\n\nThe Harmony Chain is complete: Smalt, Pip, Clot, The Warmth, Aldous — five creatures, all friends now.\n\nLetter of True Passage added. +400gp. +400 XP. Aldous is an ally.' },
+    ],
     xpAward:0,
     disposition:'"You showed kindness to a cat. Then a mouse. Then a tick. Then a parasite that spoiled forty-seven bottles of perfume by making them smell too much like love. I have been watching. I cannot keep doing the voice." — Aldous, formerly Wren-Pembury',
     passText:"I cannot keep doing the voice. Aldous has put down the performance. Three contradictions, one person, no longer hiding.",
@@ -11613,11 +11606,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'SEN', gate:{},
     completion:{ atNode:'NWI' }, bits:[],
     completeItems:[],
-    onComplete:() => {
-      S_story.seaStrangenessNoticed = true;
-      S_story.xp = (S_story.xp||0) + 100;
-      storyMsg('⚓ The Tilbury Star drifts into still water. The crew goes quiet.\n\nTwo wanted ships, anchored together. No boarding. No shouting. A Redmast sailor is explaining knot types with evident enthusiasm. The Saltwick man is taking notes.\n\nBelow the hull: amber. Moving. Large.\n\nSeaStrangenessNoticed. +100 XP. Quest: Warmth Eel Investigation now active.');
-    },
+    onComplete:[
+      { kind:'flag_write', set:['seaStrangenessNoticed'] },
+      { kind:'reward', xp:100 },
+      { kind:'narrative', msg:'⚓ The Tilbury Star drifts into still water. The crew goes quiet.\n\nTwo wanted ships, anchored together. No boarding. No shouting. A Redmast sailor is explaining knot types with evident enthusiasm. The Saltwick man is taking notes.\n\nBelow the hull: amber. Moving. Large.\n\nSeaStrangenessNoticed. +100 XP. Quest: Warmth Eel Investigation now active.' },
+    ],
     xpAward:0,
     disposition:'"It has been like this for eight days. We stopped trying to fight on day two. I\'m not sure we could anymore — it just doesn\'t seem important." — Redmast Quartermaster',
     passText:"The Redmast crew is teaching rope splicing. The calm has been here eight days. It just does not seem important anymore.",
@@ -11711,14 +11704,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Defeat the privateer crew at the intercept node.',
     activateNode:'GCI', gate:{ flags:['sbApproachSeen'], flagEquals:{ sbChosenRole:'fight' } },
     completion:{ battles:['SB_PRIVATEER'] }, bits:[],
-    onComplete:() => {
-      S_story.sbResolved = true;
-      S_story.gold = (S_story.gold||0) + 200;
-      S_story.xp = (S_story.xp||0) + 400;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:'Letter of Marque (Keel)', icon:'📜', type:'misc', desc:"Captain Vera Keel's Commission letter — recovered from the privateer brig's chart room after the intercept. The Eastern Reach seal date is fourteen months stale. Valid at three eastern ports that haven\'t checked the records.", sell:15 });
-      storyMsg('✅ The privateer crew is cleared. The brig is yours for the crossing.\n\nIn the chart room: the Commission letter. The Eastern Reach seal. The date is fourteen months stale — the issuing office dissolved before this Commission was presented.\n\nThe Tilbury Star\'s captain retrieves the letter and sets it on the chart table. She does not say anything about Keel. She sets course east.\n\nLetter of Marque (Keel) added. +200gp. +400 XP.');
-    },
+    onComplete:[
+      { kind:'flag_write', set:['sbResolved'] },
+      { kind:'reward', xp:400, gold:200 },
+      { kind:'reward', items:[{ name:'Letter of Marque (Keel)', icon:'📜', type:'misc', desc:"Captain Vera Keel's Commission letter — recovered from the privateer brig's chart room after the intercept. The Eastern Reach seal date is fourteen months stale. Valid at three eastern ports that haven\'t checked the records.", sell:15 }] },
+      { kind:'narrative', msg:'✅ The privateer crew is cleared. The brig is yours for the crossing.\n\nIn the chart room: the Commission letter. The Eastern Reach seal. The date is fourteen months stale — the issuing office dissolved before this Commission was presented.\n\nThe Tilbury Star\'s captain retrieves the letter and sets it on the chart table. She does not say anything about Keel. She sets course east.\n\nLetter of Marque (Keel) added. +200gp. +400 XP.' },
+    ],
     xpAward:400,
     disposition:'"She was testing the eastern run. Whatever she was looking for — she didn\'t find it here." — Tilbury Star Captain, afterward',
     passText:"She was testing the eastern run. Whatever she was looking for, she did not find it here. The brig is clear.",
@@ -11863,11 +11854,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Have the Tilbury Star repaired at Saltwick\'s dry dock. Cost: 200gp.',
     activateNode:'MME', 
     
-    onComplete:() => {
-      S_story.shipRepaired = true;
-      S_story.xp = (S_story.xp||0) + 200;
-      storyMsg('✅ The cracked strake is replaced. The dry dock uses highland timber from Dunfall — closer and better-grained than lowland oak. The captain inspects the work without comment, which is the highest endorsement she gives.\n\nThe Star is running clean for the first time in three crossings.\n\n+200 XP. Tilbury Star: hull repaired.');
-    },
+    onComplete:[
+      { kind:'flag_write', set:['shipRepaired'] },
+      { kind:'reward', xp:200 },
+      { kind:'narrative', msg:'✅ The cracked strake is replaced. The dry dock uses highland timber from Dunfall — closer and better-grained than lowland oak. The captain inspects the work without comment, which is the highest endorsement she gives.\n\nThe Star is running clean for the first time in three crossings.\n\n+200 XP. Tilbury Star: hull repaired.' },
+    ],
     xpAward:200,
     disposition:'"The timber\'s from the Highland Loch. Better grain. She\'ll hold the deep crossing without complaint now." — Saltwick Dry Dock Worker',
     passText:"Better grain. Highland Loch timber. She will hold the deep crossing without complaint now.",
@@ -11988,16 +11979,13 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Confront the Night Hag at the Eastern Bend.',
     activateNode:'BNX', gate:{ flags:['bendLairFound'] },
     completion:{ battles:['BN_NIGHTHAG'] }, bits:[],
-    onComplete:() => {
-      S_story.hagDefeated2 = true;
-      S_story.gold = (S_story.gold||0) + 400;
-      S_story.xp = (S_story.xp||0) + 600;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:'Relay Station Token', icon:'🪙', type:'misc', desc:'A brass token stamped with the Birka relay authority mark. The station master gives one to anyone who clears a road obstruction. Redeemable for one night\'s lodging at any relay station on the eastern road.', sell:20 });
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push("Night Hag, Eastern Bend: A night hag had claimed the relay sleeping post north of J1, riding the station horses nightly and leaving them unable to work. The road warden bandit theory was wrong. Investigation: territory line + spiral tether wear + heel-only handprint. Resolution: hag driven out, relay road open.");
-      storyMsg('✅ The hag is gone from the sleeping post.\n\nThe relay station master arrives within the hour. He has brought a brass token — the Birka relay authority mark. He gives it without ceremony. "The horses went past the bend this morning. First time in four days."\n\nHe says nothing about the road wardens\' bandit theory.\n\nRelay Station Token added to inventory. +400gp. +600 XP. Eastern relay road: clear.');
-    },
+    onComplete:[
+      { kind:'flag_write', set:['hagDefeated2'] },
+      { kind:'reward', xp:600, gold:400 },
+      { kind:'reward', items:[{ name:'Relay Station Token', icon:'🪙', type:'misc', desc:'A brass token stamped with the Birka relay authority mark. The station master gives one to anyone who clears a road obstruction. Redeemable for one night\'s lodging at any relay station on the eastern road.', sell:20 }],
+        knowledge:"Night Hag, Eastern Bend: A night hag had claimed the relay sleeping post north of J1, riding the station horses nightly and leaving them unable to work. The road warden bandit theory was wrong. Investigation: territory line + spiral tether wear + heel-only handprint. Resolution: hag driven out, relay road open." },
+      { kind:'narrative', msg:'✅ The hag is gone from the sleeping post.\n\nThe relay station master arrives within the hour. He has brought a brass token — the Birka relay authority mark. He gives it without ceremony. "The horses went past the bend this morning. First time in four days."\n\nHe says nothing about the road wardens\' bandit theory.\n\nRelay Station Token added to inventory. +400gp. +600 XP. Eastern relay road: clear.' },
+    ],
     xpAward:600,
     disposition:'"The horses went past the bend this morning. First time in four days." — Relay Station Master',
     passText:"The horses went past the bend this morning. First time in four days. The post is clear.",
@@ -12082,16 +12070,13 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Travel north to the Den and clear it.',
     activateNode:'VAW', gate:{ flags:['lakeLairLocated'] },
     completion:{ battles:['LD_DROWNERS'] }, bits:[],
-    onComplete:() => {
-      S_story.drownersDefeated = true;
-      S_story.gold = (S_story.gold||0) + 500;
-      S_story.xp = (S_story.xp||0) + 500;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:'Drowned Compass', icon:'🧭', type:'misc', desc:'Found in the den with the wrecked boat timbers. A brass compass sealed in lake sediment. Still points north. The Guild captain\'s name is scratched into the case.', sell:80 });
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Lake Monster Hunt: Three drowners moved into the north shore shelf den after the rock collapse this season. All three boats were taken from below. The Guild captain\'s compass was in the den. The Guild\'s spirit theory was wrong from the first offering.');
-      storyMsg('✅ The den is clear.\n\nThe three drowners were opportunistic — they arrived with the rock fall and established themselves at the north end while the Guild was offering fish at the south shore.\n\nIn the wreckage at the base of the shelf: a brass compass. Sealed in sediment. Still reading north. The Guild captain\'s name is scratched into the case.\n\nDrowned Compass added to inventory. +500gp. +500 XP. Knowledge entry added.');
-    },
+    onComplete:[
+      { kind:'flag_write', set:['drownersDefeated'] },
+      { kind:'reward', xp:500, gold:500 },
+      { kind:'reward', items:[{ name:'Drowned Compass', icon:'🧭', type:'misc', desc:'Found in the den with the wrecked boat timbers. A brass compass sealed in lake sediment. Still points north. The Guild captain\'s name is scratched into the case.', sell:80 }],
+        knowledge:'Lake Monster Hunt: Three drowners moved into the north shore shelf den after the rock collapse this season. All three boats were taken from below. The Guild captain\'s compass was in the den. The Guild\'s spirit theory was wrong from the first offering.' },
+      { kind:'narrative', msg:'✅ The den is clear.\n\nThe three drowners were opportunistic — they arrived with the rock fall and established themselves at the north end while the Guild was offering fish at the south shore.\n\nIn the wreckage at the base of the shelf: a brass compass. Sealed in sediment. Still reading north. The Guild captain\'s name is scratched into the case.\n\nDrowned Compass added to inventory. +500gp. +500 XP. Knowledge entry added.' },
+    ],
     xpAward:500,
     disposition:'"The Guild will dispute this for two seasons before agreeing you were right and the spirit theory was wrong. That is what Guilds do." — Elder Fisherwoman',
     passText:"The den is cleared. The Guild will dispute this for two seasons before agreeing. That is what Guilds do.",
@@ -12301,16 +12286,13 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Descend to the bilge and clear the sea spawn.',
     activateNode:'SEN', gate:{ flags:['whodunit2WitnessRead'] },
     completion:{ battles:['MS_BILGE'] }, bits:[],
-    onComplete:() => {
-      S_story.whodunit2Solved = true;
-      S_story.gold = (S_story.gold||0) + 600;
-      S_story.xp = (S_story.xp||0) + 600;
-      const inv = S_story.inventory = S_story.inventory || [];
-      inv.push({ name:'Sea Spawn Scale Fragment', icon:'🐚', type:'misc', desc:'Dark grey scale from the bilge sea spawn — evidence of the hull breach. The captain added to the ship\'s log: "Port drain sealed with copper mesh." The passenger Ord is owed an apology. The cook has declined to give one.', sell:13 });
-      S_story.knowledge = S_story.knowledge || [];
-      S_story.knowledge.push('Bilge Mystery Solved: Two sea spawn entered the Tilbury Star during the Saltwick hull repair. Took tallow (food) and rope (nesting). Charts displaced but undamaged. Crewman Delt proximity-sedated, not harmed. Cook\'s theory (passenger Ord) was wrong. The cook has not acknowledged this.');
-      storyMsg('✅ The bilge is clear.\n\nTwo sea spawn, not one — the second followed through the drain within the first day. Rope coils in the ballast corner: a temporary nest. The tallow cask is hollowed. The charts are in a pile, undamaged.\n\nOrd the passenger emerges from his cabin when the all-clear is given. He looks at the bilge access. He looks at the cook. The cook does not apologize. Ord does not press it. He asks for the tallow cask as a souvenir. The captain says no. He accepts this with equanimity.\n\nSea Spawn Scale Fragment added. +600gp. +600 XP. Knowledge entry added. Bilge clear. Eastern crossing unobstructed.');
-    },
+    onComplete:[
+      { kind:'flag_write', set:['whodunit2Solved'] },
+      { kind:'reward', xp:600, gold:600 },
+      { kind:'reward', items:[{ name:'Sea Spawn Scale Fragment', icon:'🐚', type:'misc', desc:'Dark grey scale from the bilge sea spawn — evidence of the hull breach. The captain added to the ship\'s log: "Port drain sealed with copper mesh." The passenger Ord is owed an apology. The cook has declined to give one.', sell:13 }],
+        knowledge:'Bilge Mystery Solved: Two sea spawn entered the Tilbury Star during the Saltwick hull repair. Took tallow (food) and rope (nesting). Charts displaced but undamaged. Crewman Delt proximity-sedated, not harmed. Cook\'s theory (passenger Ord) was wrong. The cook has not acknowledged this.' },
+      { kind:'narrative', msg:'✅ The bilge is clear.\n\nTwo sea spawn, not one — the second followed through the drain within the first day. Rope coils in the ballast corner: a temporary nest. The tallow cask is hollowed. The charts are in a pile, undamaged.\n\nOrd the passenger emerges from his cabin when the all-clear is given. He looks at the bilge access. He looks at the cook. The cook does not apologize. Ord does not press it. He asks for the tallow cask as a souvenir. The captain says no. He accepts this with equanimity.\n\nSea Spawn Scale Fragment added. +600gp. +600 XP. Knowledge entry added. Bilge clear. Eastern crossing unobstructed.' },
+    ],
     xpAward:600,
     disposition:'"I\'ve been cook on this ship seven years. I have never been more wrong about anything." — The Cook, to the first mate, quietly',
     passText:"The bilge is clear. The Cook was wrong about the passenger. Seven years on this ship and never more wrong about anything.",
@@ -20446,7 +20428,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     completion:{ battles:['BK'] }, bits:[],
     reward:0, waypointNode:'BK',
     desc:'The construct patrols the maze\'s center. While it lives, the maze does not shift. Defeating it is, paradoxically, the only way to end the maze\'s coherence.\n\nWin the BK battle.',
-    onComplete:() => { S_story.mazeSolvedChecks = 3; S_story.voidMazeEntered = true; } },
+    onComplete:[ { kind:'_legacy_fn', fn:() => { S_story.mazeSolvedChecks = 3; } }, { kind:'flag_write', set:['voidMazeEntered'] } ] },
   quest_d0205_a4: { id:'quest_d0205_a4', type:'skill_check', title:'Act IV — The Last Shift',
     hint:'One last rotation before the maze accepts its defeat.',
     schema:'UQF-1.0',
