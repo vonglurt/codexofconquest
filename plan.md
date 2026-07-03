@@ -62,6 +62,11 @@ say "<commit subject line>"
 
 Read the **subject line only** aloud via macOS `say`. This confirms the commit completed and anchors the session.
 
+### Test-Run Rules (learned 2026-07-03, §NAV-01h session)
+
+1. **Never trust a piped test run's exit code.** `npx playwright test … | tail -N` (or `| grep`, `| tee` without `pipefail`) returns the LAST pipe stage's exit code — a suite with 46 failures reported `exit 0` twice this way and the failure list scrolled past the tail window. Either run the suite bare and check `$?`, or redirect to a file (`> run.txt 2>&1; echo exit=$?`) and read the summary line (`N failed / N passed`) from the file. The pass/fail verdict comes from the summary counts, never from a truncated tail.
+2. **Stop the WBAPI server before running Playwright suites** (`./wbapi-toggle.sh stop`). A live server on :1367 lets the boot-time `probeServer()` auto-load replace the injected mock world in every non-hermetic describe — 46 false failures + ~8 min retry burn; the same walk suite is 89/89 in 22 s with the server stopped. (Known inverse: 2–3 `worldbuilder-crud-arrays.test.js` itemChain tests currently *need* the server to dismiss the welcome screen — §NAV-01 follow-up 5 migrates them to the hermetic pattern.) Restart the server after the run.
+
 ### Lab Report Policy
 
 Write a new `lab-report-<title>.md` when any of the following is true:
@@ -90,7 +95,7 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 
 > **⟶ ACTIVE: §NAV-01 docs close-out + lab report** (last Inc h ✅ shipped `0b341d1` 2026-07-03 — see §NAV-01 below for the checklist). Then **UQF Wave 3** (side quests → declarative completion — see §ARCH-01; a fresh session should read `lab-reports/lab-report-uqf-migration-playbook.md` first). The §MESH-01 gameplay ladder (f–j, under Multiplayer) queues after that unless redirected.
 >
-> **Test-run rule (learned 2026-07-03): stop the WBAPI server before running the Playwright suites.** With a live server on :1367, the boot-time `probeServer()` auto-load replaces the injected mock world in every non-hermetic describe — 46 false failures + 7.9 min of retry burn; with the server stopped the same walk suite is 89/89 in 22 s. (Conversely, `worldbuilder-crud-arrays.test.js` has 2–3 tests that *need* the live server to dismiss the welcome screen — pre-existing schism, see §NAV-01 follow-up 5.) Pipe-safety corollary: `npx playwright test … | tail` masks the exit code — check the summary line, not `$?`.
+> Before running any test gate, re-read **Test-Run Rules** (§I above): piped exit codes lie, and the WBAPI server must be stopped for Playwright.
 >
 > All previously-listed shipped work (§NAV-01 Inc a–g, §MESH-01 core + FU 1–6/14 + partition-heal harness + hygiene batch, UQF Waves 1+2) was **re-verified and archived 2026-07-03** → `plan-archive.md` §"Archived 2026-07-03". Gates at archive time: mud-harness **119/119** · `check:walk` **6/6** (incl. check:roads R1–R4, rooms parity).
 
