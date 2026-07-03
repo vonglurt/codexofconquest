@@ -214,6 +214,10 @@ to inspect the grid without scanning NODE_MAP manually.
 - `POST /api/node` rejects N, E, S, W fields — place node at (r,c) instead
 - `PUT /api/node/:code` rejects N, E, S, W, junction fields — use `PUT /api/coords/:code`
 
+**Worldbuilder drag-&-lock cities (§NAV-01g):**
+- `GET /api/roads/pins` — `roads-pins.json` as `{pins, links, locked}` (empty defaults if the file is absent)
+- `PUT /api/roads/lock` — body `{code, locked:boolean}`; 🔒 locked cities keep their coords through `POST /api/layout/geo-seed` (reported as `lockedKept`). Drag-drop and lat/lon placement in the worldbuilder Walk tab go through `PUT /api/coords/:code`.
+
 ---
 
 ## Need a feature curl can do but api.sh can't?
