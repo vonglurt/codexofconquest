@@ -575,7 +575,7 @@ MILEPOINT D  destCode = res.destCodes[0]
 MILEPOINT E  mpBeacon() — fire-and-forget presence beacon (no-op unless 🌐 connected)
 ```
 
-**⚠️ Jump-travel status (flagged 2026-07-03):** §CELL-13 recorded Portal (`storyPortal`), transmort scroll (`storyUseTransmort`), and hearth home as removed, but **all three are live in the current code** (grep-verified; `storyPortal` even carries a §MESH-01a beacon call) — the removal was partially reverted, the same pattern as §DATA-01. Restore-the-removal vs. accept-and-document is an open decision: plan.md §CELL-13-REVERTED.
+**No special exits (§CELL-13, re-applied 2026-07-03):** Portal (`storyPortal`), transmort scroll (`storyUseTransmort`), hearth home, and the spire special-exit block are removed. The §CELL-13 removal had been partially reverted by a snapshot rollback; it was re-applied and grep-verified 2026-07-03 (user directive: jump travel must not be present). All travel is `cellMove` one step at a time; `checkpointNode` (death respawn) is the only warp.
 
 ---
 

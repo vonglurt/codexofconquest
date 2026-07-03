@@ -3,20 +3,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · 34,630 lines · 410 nodes · 392 monsters · ~2,830 quests · 80 lab reports · §WALK ✅ · §ARCH-01 UQF Waves 1+2 ✅ (~2,462 quests migrated) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ · full ✅ registry in the Completed Work table below · ⚠️ §DATA-01 REVERTED (recorded done, never re-shipped — see plan.md §DATA-01-REVERTED) · ⚠️ §CELL-13 jump-travel removal PARTIALLY REVERTED (portal/transmort/hearth live in code — flagged 2026-07-03)
+**Status:** Layers 0–104 implemented · 34,542 lines · 410 nodes · 392 monsters · ~2,830 quests · 80 lab reports · §WALK ✅ · §ARCH-01 UQF Waves 1+2 ✅ (~2,462 quests migrated) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · ⚠️ §DATA-01 REVERTED (recorded done, never re-shipped — see plan.md §DATA-01-REVERTED)
 **Last updated:** 2026-07-03
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 34,630 | ✅ |
+| HTML line count | 34,542 | ✅ |
 | Lab reports on disk | 80 | ✅ |
 | Lab reports in index | 80 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-07-03 — §NAV-01 docs close-out: `lab-reports/lab-report-nav01-navigable-world.md` written; road-net + room-layer sections added to `maps.md` (+ FL1/FL9/FL12 flows re-verified against code, stale GATE_LOCKS section retired), `docs-node-network.md §13` (L0–L8 layer stack; §4/§9 rewritten to mover-kernel reality), `mechanics.md` (Roads, Rooms & Auto-Travel). **Sync findings:** `GATE_LOCKS` gone from code (docs claimed 4 live gates); §CELL-13 jump-travel removal partially reverted (`storyPortal`/`storyUseTransmort`/hearth live) → plan.md §CELL-13-REVERTED. Prior pass: 2026-07-02 §MESH docs close-out | ✅ |
+| Last sync pass | 2026-07-03 — §NAV-01 docs close-out: `lab-reports/lab-report-nav01-navigable-world.md` written; road-net + room-layer sections added to `maps.md` (+ FL1/FL9/FL12 flows re-verified against code, stale GATE_LOCKS section retired), `docs-node-network.md §13` (L0–L8 layer stack; §4/§9 rewritten to mover-kernel reality), `mechanics.md` (Roads, Rooms & Auto-Travel). **Sync findings:** `GATE_LOCKS` gone from code (docs claimed 4 live gates); §CELL-13 jump-travel removal partially reverted (`storyPortal`/`storyUseTransmort`/hearth live) → **resolved same day: user directed re-removal** (all jump-travel code cut from HTML; mechanics.md/mechanics-economy.md sections replaced with removal notes; gates check:walk 6/6, nav+autosave+fishing 48/48). Prior pass: 2026-07-02 §MESH docs close-out | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -772,7 +772,7 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 ---
 
 *Last updated: 2026-07-02*
-*Codebase: `roll2hit-v3.html` · 34,630 lines · Layers 0–104 complete · 410 nodes · 392 monsters · ~2,830 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF Waves 1+2 · §MESH-01 core*
+*Codebase: `roll2hit-v3.html` · 34,542 lines · Layers 0–104 complete · 410 nodes · 392 monsters · ~2,830 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF Waves 1+2 · §MESH-01 core · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---

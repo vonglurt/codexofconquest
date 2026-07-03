@@ -69,41 +69,9 @@ Costs scale exponentially (~3× per tier) to match the exponential growth of exp
 
 Potions are stored in inventory. Use the **🍺 Drink** button in the Inventory overlay to consume one at any time.
 
-#### Buying Transmort Scrolls
+### Hearth Home & Transmort Scroll — ❌ REMOVED (§CELL-13, re-applied 2026-07-03)
 
-| Item | Cost | Effect |
-|---|---|---|
-| 📜 Transmort Scroll | 200gp | Instantly recall to Hearth Home inn |
-
----
-
-### Hearth Home
-
-**Purpose**: Set a "home base" inn where your Transmort Scroll returns you.
-
-**Setting it**: At any inn node (🛏 chip visible), click the **🔥 Set as Home** chip next to the INN chip. The selected inn becomes your Hearth Home. A gold 🔥 HEARTH badge replaces the chip at that location.
-
-**Default**: Starts at City Inn (CI).
-
-**Persists** across sessions via autosave.
-
----
-
-### Transmort Scroll
-
-**Purpose**: Emergency teleport back to safety.
-
-**Acquiring**: Buy from any vendor for 200gp. Also potentially found as world loot.
-
-**Using**: Open Inventory (I or 📦 button), click **📜 Use** next to the Transmort Scroll.
-
-**Effect**:
-- The scroll is consumed (removed from inventory).
-- You are immediately transported to your Hearth Home node.
-- The move is logged as a navigation step.
-- The destination renders normally — loot, quests, and journal entries trigger as expected.
-
-**Tactical use**: Use when surrounded, when a gate blocks your path back, or when the Void Tide timer is critical and you need to rest immediately.
+Jump travel does not exist. The Transmort Scroll vendor item, the Hearth Home system, and all teleport code were removed per §CELL-13 (removal re-applied 2026-07-03 after a partial snapshot-rollback revert — see `mechanics.md` for the full note). Vendors sell the four potion tiers, shields, and flashbangs only. `checkpointNode` (death respawn) is the only warp in the game.
 
 ---
 
@@ -256,7 +224,6 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 | `S_story.abilityScores` | object | STR/DEX/CON/INT/WIS/CHA scores; set by character creation (base {str:10,dex:10,con:10,int:8,wis:8,cha:8} + point-buy); legacy saves fall back to {str:16,dex:12,con:14,int:10,wis:12,cha:8} |
 | `S_story.shortRests` | number | Remaining short rest charges today (0–3) |
 | `S_story.knowledge` | array | Necklace of Knowledge beads (one per unique rest location) |
-| `S_story.hearthHome` | string (node code) | Transmort Scroll destination |
 | `S_story.checkpointNode` | string | Last inn slept at — respawn point for combat death |
 | `S_story.dropsCollected` | number | Trophy drop counter for sq_battling; also feeds notoriety |
 | `S_story.defeatedBattles` | object | Map of nodeCode → true; counts sq_leveling battles; feeds notoriety |

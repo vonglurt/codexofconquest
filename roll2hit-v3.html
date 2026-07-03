@@ -120,9 +120,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 }
 .rts-btn-heal:hover { background: #0f2a0f; }
 .rts-btn-heal:disabled { opacity: 0.4; cursor: default; }
-.info-chip.hearth-set { border-color: #5a3a00; color: #6A4808; cursor: pointer; }
-.info-chip.hearth-set:hover { border-color: #c08030; background: var(--panel2); }
-.info-chip.hearth-home { border-color: #c08030; color: #7A5010; cursor: default; }
 
 /* ── Main Content Area ─────────────────────────────────── */
 #main-body {
@@ -1221,8 +1218,6 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .info-chip.loot-collected { border-color: var(--muted); color: var(--muted); }
 .info-chip.battle-chip { border-color: var(--red-lt); color: var(--red); cursor: pointer; }
 .info-chip.battle-chip:hover { background: rgba(192,48,32,0.08); border-color: var(--red); }
-.info-chip.portal-chip { border-color: #7a5a9a; color: var(--border); cursor: pointer; }
-.info-chip.portal-chip:hover { background: rgba(122,90,154,0.08); }
 .info-chip.rest-chip { border-color: var(--sky); color: var(--sky-dk); cursor: pointer; }
 .info-chip.rest-chip:hover { background: rgba(123,170,184,0.15); border-color: var(--sky-dk); }
 .info-chip.rest-chip-empty { border-color: var(--muted); color: var(--muted); cursor: default; }
@@ -2648,16 +2643,11 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .info-chip.loot-collected { border-color: var(--muted); color: var(--muted); }
 .info-chip.battle-chip { border-left: 3px solid var(--red-lt); color: var(--red); }
 .info-chip.battle-chip:hover { background: rgba(192,48,32,0.07); }
-.info-chip.portal-chip { border-left: 3px solid var(--sky); color: var(--sky-dk); }
-.info-chip.portal-chip:hover { background: rgba(123,170,184,0.1); }
 .info-chip.rest-chip   { border-left: 3px solid var(--sky-dk); color: var(--sky-dk); }
 .info-chip.rest-chip:hover { background: rgba(123,170,184,0.12); }
 .info-chip.rest-chip-empty { border-color: var(--muted); color: var(--muted); }
 .info-chip.corpse-chip { border-left: 3px solid var(--border); color: var(--dim); }
 .info-chip.corpse-chip:hover { background: var(--panel2); }
-.info-chip.hearth-set  { border-left: 3px solid var(--gold); color: var(--gold); cursor: pointer; }
-.info-chip.hearth-set:hover { background: rgba(184,124,40,0.08); }
-.info-chip.hearth-home { border-left: 3px solid var(--gold-lt); color: var(--gold); }
 .info-chip.battle-defeated { border-color: var(--muted); color: var(--muted); }
 .info-chip.final-battle-chip { border-left: 4px solid var(--gold); border-color: var(--gold); color: var(--gold); font-weight: 900; animation: pulse-gold 1.5s infinite; }
 @keyframes pulse-gold { 0%,100%{ box-shadow:0 0 4px rgba(254,167,18,0.3); } 50%{ box-shadow:0 0 14px rgba(254,167,18,0.7); } }
@@ -4152,13 +4142,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
             </div>
             <button class="btn-buy-potion" data-tier="superior">Buy</button>
           </div>
-          <div class="buy-item" style="margin-top:6px">
-            <div>
-              <div class="buy-item-desc">📜 Transmort Scroll — 200gp</div>
-              <div class="buy-item-heal">Instantly recall to your Hearth Home inn</div>
-            </div>
-            <button class="btn-buy-potion" data-tier="transmort">Buy</button>
-          </div>
           <div id="vendor-shield-list" style="border-top:1px solid var(--border);padding-top:8px;margin-top:10px"></div>
           <div class="buy-item" style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px">
             <div>
@@ -4271,8 +4254,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           <span style="color:#b0a080">☠ Epic</span>
           <span style="color:#b0a080">🧙 NPC</span>
           <span style="color:#b0a080">❗ Quests</span>
-          <span style="color:#b0a080">⚡ Portal</span>
-          <span style="color:#b0a080">🔥 Hearth</span>
         </div>
         <div id="map-main-area">
           <div id="map-grid"></div>
@@ -21585,7 +21566,6 @@ let S_story = {
   battleDis: 0,
   dropsCollected: 0,
   checkpointNode: 'LHR',
-  hearthHome: 'LHR',
   lastExitDir: null,
   lastExitCode: null,
   battleTurn: 'player',
@@ -21630,7 +21610,7 @@ const _S_DEFAULTS = () => ({
   log: [], inventory: [], visited: {}, quests: {}, journalRead: {},
   defeatedBattles: {}, pendingBattle: null,
   sleptAtNodes: {}, shortRestedAtNodes: {}, countedMissedInns: {}, missedSleeps: 0, battleDis: 0, dropsCollected: 0,
-  checkpointNode: 'LHR', hearthHome: 'LHR',
+  checkpointNode: 'LHR',
   lastExitDir: null, lastExitCode: null,
   battleTurn: 'player', battlePRoll: 0, battleERoll: 0, battleRound: 1,
   usedMainAttack: false, usedBonusAction: false, usedRealAttack: false, surpriseAdvantage: false,
@@ -22746,7 +22726,6 @@ const POTION_TIERS = { // → doc: mechanics-economy.md §Vendor System
   healing:  { name:'Healing Potion',          icon:'🫧', heal:25,  cost:150  },
   greater:  { name:'Greater Healing Potion',  icon:'💜', heal:50,  cost:400  },
   superior: { name:'Superior Healing Potion', icon:'✨', heal:100, cost:1000 },
-  transmort:{ name:'Transmort Scroll',        icon:'📜', heal:0,   cost:200  },
 };
 
 function storyBuyPotion(tier) {
@@ -22754,14 +22733,10 @@ function storyBuyPotion(tier) {
   if (!p) return;
   if (S_story.gold < p.cost) { storyBlock('💰 Not enough gold. ' + p.name + ' costs ' + p.cost + 'gp.'); return; }
   S_story.gold -= p.cost;
-  const itemType = (tier === 'transmort') ? 'item' : 'potion';
-  S_story.inventory.push({ name:p.name, icon:p.icon, type:itemType, code:'vendor', sell:0 });
+  S_story.inventory.push({ name:p.name, icon:p.icon, type:'potion', code:'vendor', sell:0 });
   storyUpdateStatus();
   storyRenderVendor();
-  const useHint = tier === 'transmort'
-    ? 'Use it from inventory to recall to your Hearth Home.'
-    : 'Drink it from inventory to restore ' + p.heal + ' HP.';
-  storyMsg(p.icon + ' Bought ' + p.name + '. ' + useHint);
+  storyMsg(p.icon + ' Bought ' + p.name + '. Drink it from inventory to restore ' + p.heal + ' HP.');
 }
 
 function storyBuyShield(tier) {
@@ -23288,7 +23263,6 @@ function _renderSboPotions() {
   if (!row) return;
   row.innerHTML = '';
   Object.entries(POTION_TIERS).forEach(([tier, p]) => {
-    if (!p.heal) return; // skip transmort
     const count = S_story.inventory.filter(i => i.name === p.name).length;
     if (!count) return;
     const btn = document.createElement('button');
@@ -24333,23 +24307,8 @@ function _storyRetrieveCorpse(questId) {
     + q.items.length + ' item(s) returned · +' + q.goldDropped + ' gp recovered.');
 }
 
-function storySetHearthHome(nodeCode) {
-  S_story.hearthHome = nodeCode;
-  const node = NODE_MAP[nodeCode];
-  storyMsg('🔥 Hearth Home set to ' + (node ? node.label.split(' — ')[0] : nodeCode) + '. Your Transmort Scroll will recall here.');
-  storyRender(NODE_MAP[S_story.currentCode]);
-}
-
-function storyUseTransmort() {
-  const home = NODE_MAP[S_story.hearthHome];
-  if (!home) { storyBlock('No Hearth Home set. Talk to an innkeeper first.'); return; }
-  const idx = S_story.inventory.findIndex(i => i.name === 'Transmort Scroll');
-  if (idx < 0) { storyBlock('No Transmort Scroll in inventory.'); return; }
-  S_story.inventory.splice(idx, 1);
-  S_story.log.push(S_story.currentCode);
-  S_story.currentCode = S_story.hearthHome;
-  storyRender(home, '📜 Transmort — recalled to ' + home.label.split(' — ')[0] + '!');
-}
+// §CELL-13 (re-applied 2026-07-03): storySetHearthHome / storyUseTransmort removed —
+// no jump travel. checkpointNode (death respawn) is the only warp in the game.
 
 function storyExit() {
   S_story.active = false;
@@ -26629,15 +26588,8 @@ function _enterEmptyCell(r, c) {
   _updateExitLinks();
 }
 
-function storyPortal() {
-  const node = NODE_MAP[S_story.currentCode];
-  if (!node.portal) return;
-  const dest = node.portal;
-  S_story.log.push(S_story.currentCode);
-  S_story.currentCode = dest;
-  storyRender(NODE_MAP[dest], '⚡ Portal activated!');
-  mpBeacon();   // §MESH-01a: storyRender has refreshed playerR/C to the portal dest
-}
+// §CELL-13 (re-applied 2026-07-03): storyPortal removed — no node carries a `portal`
+// field (stripped by /api/admin/strip-edges) and no jump travel exists.
 
 function storyMsg(txt) {
   const el = document.getElementById('story-move-msg');
@@ -28048,19 +28000,11 @@ function storyRenderInventory() {
 
   // ── 3. Quest & key items ──
   const questItems = S_story.inventory.filter(i => i.type === 'shard' || i.type === 'key'
-    || i.type === 'item' || i.name === 'Transmort Scroll');
+    || i.type === 'item');
   if (questItems.length) {
     makeSection('🗝 Quest Items');
     questItems.forEach(item => {
-      makeItemRow(item, (div, it) => {
-        if (it.name === 'Transmort Scroll') {
-          const useBtn = document.createElement('button');
-          useBtn.className = 'inv-use-btn';
-          useBtn.textContent = '📜 Use';
-          useBtn.addEventListener('click', storyUseTransmort);
-          div.appendChild(useBtn);
-        }
-      });
+      makeItemRow(item);
     });
   }
 
@@ -28249,7 +28193,7 @@ function storyRenderInventory() {
   const knownTypes = new Set(['potion','spell','flashbang','shard','key','item','shield','weapon','mainweapon','knowledge','key_item','readable','consumable','mission_bit']);
   const potionNames = new Set(Object.values(POTION_TIERS).map(p => p.name));
   const otherItems = S_story.inventory.filter(i =>
-    !knownTypes.has(i.type) && !potionNames.has(i.name) && i.name !== 'Transmort Scroll');
+    !knownTypes.has(i.type) && !potionNames.has(i.name));
   if (otherItems.length) {
     makeSection('🏆 Trophies & Other');
     otherItems.forEach(item => makeItemRow(item, null));
@@ -31098,14 +31042,6 @@ function storyRender(node, prefix) {
           btnClick: () => storySleep(node)
         }));
       }
-      // Hearth
-      const isHome = S_story.hearthHome === node.code;
-      body.appendChild(_mkCard({
-        lbl: 'HEARTH', main: isHome ? '🔥 Home set here' : '🔥 Set as Home Inn',
-        tag: isHome ? '✓ Set' : '',
-        tagClass: isHome ? 'transferred' : '',
-        clickable: !isHome, click: isHome ? null : () => storySetHearthHome(node.code)
-      }));
     } else {
       // Not at inn — show nearest inn hint
       const innNodes = Object.values(NODE_MAP).filter(n => n.sleep);
@@ -31303,13 +31239,6 @@ function storyRender(node, prefix) {
         lbl: 'SHOP', main: '🛒 Vendor: ' + (node.npc || 'Merchant'),
         btn: 'Shop', btnClass: 'btn-talk',
         btnClick: storyVendorToggle
-      }));
-    }
-    if (node.portal) {
-      worldCards.push(_mkCard({
-        lbl: 'PORTAL', main: '🌀 Activate portal → ' + node.portal,
-        btn: 'Activate', btnClass: 'btn-rest',
-        btnClick: storyPortal
       }));
     }
     if (worldCards.length) {
@@ -33337,17 +33266,14 @@ function _questNodes() {
   return _questNodeSet;
 }
 
-// §NAV-01e — amenity icons, most-specific first (hearth > epic > battle > inn >
-// portal > spire > NPC > quests). Shared by the map tab and the world panel.
+// §NAV-01e — amenity icons, most-specific first (epic > battle > inn > NPC >
+// quests). Shared by the map tab and the world panel.
 function _mapIcon(code) {
   const n = NODE_MAP[code];
   if (!n) return '·';
-  if (code === S_story.hearthHome) return '🔥';
   if (n.isEpicBattleground) return (S_story.defeatedBattles && S_story.defeatedBattles[code]) ? '💀' : '☠';
   if (n.battle && !S_story.defeatedBattles[code]) return '⚔';
   if (n.sleep) return '🛏';
-  if (n.portal) return '⚡';
-  if (n.spire) return '⬡';
   if (n.npc) return '🧙';
   if (_questNodes().has(code)) return '❗';
   return '·';
@@ -33674,24 +33600,10 @@ function _updateExitLinks() {
         + (isWp ? '<span class="exit-wp-tag">▶ WP</span>' : '');
     }
   });
-  // Special exits: only node.spire survives as a non-NSEW portal exit
+  // §CELL-13 (re-applied 2026-07-03): no special exits — spire/portal jump exits
+  // removed; the four cardinal cellMove directions are the only exits.
   const extraEl = document.getElementById('exit-extra');
-  if (extraEl) {
-    const spireCode = node.spire;
-    const spireDest = spireCode ? NODE_MAP[spireCode] : null;
-    if (spireDest) {
-      extraEl.style.display = '';
-      extraEl.className = 'exit-line';
-      extraEl.removeAttribute('onclick');
-      extraEl.innerHTML = '<span class="exit-extra-item" onclick="cellMove(\'spire\')">'
-        + '<span class="exit-arrow">⬡ spire</span> '
-        + '<span class="exit-num">' + String(spireDest.num).padStart(2,'0') + '</span>'
-        + ' <a>' + spireDest.label + '</a>'
-        + '</span>';
-    } else {
-      extraEl.style.display = 'none';
-    }
-  }
+  if (extraEl) extraEl.style.display = 'none';
 }
 
 /* ── Character Sheet ── */

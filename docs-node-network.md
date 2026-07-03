@@ -241,9 +241,9 @@ Epic Battleground nodes (E*) all have exactly one grid neighbor — their parent
 
 ---
 
-## 8. Jump-Travel Removal (§CELL-13, 2026-06-15) — ⚠️ PARTIALLY REVERTED
+## 8. Jump-Travel Removal (§CELL-13, 2026-06-15 · ✅ re-applied 2026-07-03)
 
-> **Flagged 2026-07-03:** `storyPortal()`, `storyUseTransmort()`, `storySetHearthHome()` and the `hearthHome` state field are **live in the current code** (the portal even carries a §MESH-01a `mpBeacon()` call), contradicting the removal recorded below — the same snapshot-rollback pattern as §DATA-01. The N/S/E/W edge-field strip and corridor removal DID persist. Decision (re-remove vs. accept + document) tracked in plan.md §CELL-13-REVERTED. The table below records the *intended* §CELL-13 state.
+> **History:** a snapshot rollback had partially reverted this removal — `storyPortal()`, `storyUseTransmort()`, `storySetHearthHome()`/`hearthHome`, and the spire special-exit block resurfaced in code (found 2026-07-03 during the §NAV-01 docs sync; same rollback era as §DATA-01). On the user's directive ("jump travel is not present") the removal was **re-applied 2026-07-03**: all functions, the vendor Transmort stock, the inventory Use button, the HEARTH inn chip, map-legend/`_mapIcon` entries, `hearthHome` state defaults, and the portal/hearth CSS are gone — grep-verified 0 live references. Gates: `check:walk` 6/6 · navigation/autosave/fishing 48/48. Old saves: a carried `hearthHome` field is ignored; Transmort Scrolls become inert quest items.
 
 All non-cell-grid travel mechanisms were removed. Navigation is strictly one adjacent cell per move.
 

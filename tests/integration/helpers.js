@@ -19,7 +19,6 @@ const SEED_STATE = {
   active: true,
   currentCode: 'BOO',
   checkpointNode: 'BOO',
-  hearthHome: 'LHR',
   hp: 80, hpMax: 80,
   gold: 500,
   xp: 0,
