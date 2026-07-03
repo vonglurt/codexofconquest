@@ -9380,6 +9380,10 @@ const VIEW_R = Math.floor(MAP_H / SCALE); // cells tall in view
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let wkCur = null;     // current node code
+// §NAV-01g — drag-&-lock state
+let wkLocked = new Set();   // codes locked in roads-pins.json (loaded when the tab opens)
+let wkDrag = null;          // { code, sx, sy, moved, cell:{r,c}|null } — active marker drag
+let wkClickSquelch = false; // a completed drag must not also fire the click-teleport
 let wkRev = {};       // "r,c" → code
 
 // ── Insert HTML ───────────────────────────────────────────────────────────────
@@ -9467,6 +9471,20 @@ WK('tab-editor').insertAdjacentHTML('afterend', `
           <pre id="wk-put-result" class="op-result" style="display:none"></pre>
         </div>
 
+        <!-- §NAV-01g — position: drag the marker on the mini-map, place by lat/lon, 🔒 lock -->
+        <div id="wk-coords-sec" style="display:none;margin-top:12px">
+          <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Position</div>
+          <div id="wk-pos-line" style="font-size:11px;margin-bottom:6px">—</div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <input class="wk-fi" id="we-lat" placeholder="lat" style="flex:1;min-width:0">
+            <input class="wk-fi" id="we-lon" placeholder="lon" style="flex:1;min-width:0">
+            <button class="btn sm" id="wk-btn-place">Place</button>
+          </div>
+          <div id="wk-ll-preview" style="font-size:10px;color:var(--muted);min-height:14px;margin-top:3px"></div>
+          <button class="btn sm" id="wk-btn-lock" style="width:100%;margin-top:6px">🔒 Lock position</button>
+          <pre id="wk-coords-result" class="op-result" style="display:none"></pre>
+        </div>
+
         <!-- Quests at node -->
         <div id="wk-quests-sec" style="display:none;margin-top:12px">
           <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;display:flex;align-items:center;gap:6px">
@@ -9481,7 +9499,7 @@ WK('tab-editor').insertAdjacentHTML('afterend', `
   </div><!-- /3-col -->
 
   <!-- Status bar -->
-  <div id="wk-statusbar">Arrow keys / WASD to move · Click mini-map to teleport · Click neighbor to jump</div>
+  <div id="wk-statusbar">Arrow keys / WASD to move · Click mini-map to teleport · Drag a marker to re-place it · Click neighbor to jump</div>
 
 </div><!-- /tab-walk -->
 `);
@@ -9550,6 +9568,20 @@ function wkDrawMap() {
       ctx.textAlign = 'center';
       ctx.fillText(code, x, y - r - 2);
     }
+    // §NAV-01g — 🔒 gold ring on locked cities (roads-pins.json `locked`)
+    if (wkLocked.has(code)) {
+      ctx.strokeStyle = '#e3b341'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(x, y, r + 2.5, 0, Math.PI*2); ctx.stroke();
+    }
+  }
+
+  // §NAV-01g — drag ghost: dashed marker at the drop cell + "CODE → r,c" readout
+  if (wkDrag && wkDrag.moved && wkDrag.cell) {
+    const gx = (wkDrag.cell.c - oC)*S + S/2, gy = (wkDrag.cell.r - oR)*S + S/2;
+    ctx.setLineDash([3, 2]); ctx.strokeStyle = '#e3b341'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(gx, gy, 5, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#e3b341'; ctx.font = 'bold 8px monospace'; ctx.textAlign = 'center';
+    ctx.fillText(`${wkDrag.code} → ${wkDrag.cell.r},${wkDrag.cell.c}`, gx, gy - 10);
   }
 }
 
@@ -9667,6 +9699,30 @@ function wkRenderEdit() {
     row.addEventListener('click', () => { switchTab('quests'); selectQuest(qid); });
     ql.appendChild(row);
   }
+
+  wkRenderCoords();   // §NAV-01g position section
+}
+
+// §NAV-01g — position section: current cell + derived lat/lon, lock-button state.
+// The lat/lon entry fields are only reset when the node CHANGES — re-renders of
+// the same node (lock refresh, background loads) must not eat in-progress input.
+let wkCoordsShownFor = null;
+function wkRenderCoords() {
+  const p = WBAPI.nodeCoords[wkCur];
+  WK('wk-coords-sec').style.display = '';
+  if (p) {
+    const ll = wkCellToLL(p.r, p.c);
+    WK('wk-pos-line').textContent = `r ${p.r} · c ${p.c}   (≈ lat ${ll.lat}, lon ${ll.lon})`;
+  } else {
+    WK('wk-pos-line').textContent = 'no coordinates yet — place by lat/lon below';
+  }
+  WK('wk-btn-lock').textContent = wkLocked.has(wkCur) ? '🔓 Unlock position' : '🔒 Lock position';
+  if (wkCoordsShownFor !== wkCur) {
+    wkCoordsShownFor = wkCur;
+    WK('we-lat').value = ''; WK('we-lon').value = '';
+    WK('wk-ll-preview').textContent = '';
+    WK('wk-coords-result').style.display = 'none';
+  }
 }
 
 // ── Full render ───────────────────────────────────────────────────────────────
@@ -9766,22 +9822,148 @@ for (const fid of ['we-label','we-name','we-act','we-terrain','we-npc','we-battl
   const el = WK(fid); if (el) el.addEventListener('input', () => el.classList.add('dirty'));
 }
 
-// Mini-map click — teleport to nearest node
-WK('wk-map-canvas').addEventListener('click', e => {
-  if (!WBAPI.loaded || !wkCur) return;
+// ── §NAV-01g — drag-&-lock city placement ─────────────────────────────────────
+// Drag a node marker on the mini-map (ghost preview) → drop calls PUT /api/coords
+// (client guard mirrors the server's 1-node/cell 409); lat/lon entry converts
+// row=floor(70−lat), col=(floor(lon)+180)%360; 🔒 lock persists into roads-pins.json
+// via PUT /api/roads/lock so geo-seed regeneration never moves a locked city.
+// All mutations API-first — the game file is never edited from here.
+const wkLLToCell = (lat, lon) => ({ r: Math.floor(70 - lat), c: (((Math.floor(lon) + 180) % 360) + 360) % 360 });
+const wkCellToLL = (r, c) => ({ lat: 70 - r, lon: c - 180 });
+
+function wkCanvasPt(e) {
   const rect = WK('wk-map-canvas').getBoundingClientRect();
-  const mx = e.clientX - rect.left, my = e.clientY - rect.top;
-  const cur = WBAPI.nodeCoords[wkCur]; if (!cur) return;
-  const halfC = Math.floor(VIEW_C/2), halfR = Math.floor(VIEW_R/2);
-  const oR = cur.r - halfR, oC = cur.c - halfC;
+  return { mx: e.clientX - rect.left, my: e.clientY - rect.top };
+}
+function wkViewOrigin() {
+  const cur = WBAPI.nodeCoords[wkCur]; if (!cur) return null;
+  return { oR: cur.r - Math.floor(VIEW_R/2), oC: cur.c - Math.floor(VIEW_C/2) };
+}
+function wkHitNode(mx, my) {
+  const o = wkViewOrigin(); if (!o) return null;
   let best = null, bestD = Infinity;
   for (const [code, p] of Object.entries(WBAPI.nodeCoords)) {
-    const nx = (p.c - oC)*SCALE + SCALE/2, ny = (p.r - oR)*SCALE + SCALE/2;
+    const nx = (p.c - o.oC)*SCALE + SCALE/2, ny = (p.r - o.oR)*SCALE + SCALE/2;
     const d = Math.hypot(mx-nx, my-ny);
     if (d < bestD && d < SCALE*1.5) { bestD = d; best = code; }
   }
+  return best;
+}
+
+function wkCoordsMsg(m, isErr) {
+  const el = WK('wk-coords-result');
+  el.style.display = ''; el.className = 'op-result ' + (isErr ? 'err' : 'ok');
+  el.textContent = typeof m === 'string' ? m : JSON.stringify(m, null, 2);
+  WK('wk-move-msg').textContent = typeof m === 'string' ? m : '';
+}
+
+// Move a node to (r,c) via the API. Guards (locked / occupied / no server) fire
+// BEFORE any request so a refused drop never leaves half-applied state.
+async function wkMoveNode(code, r, c) {
+  if (!code || !WBAPI.nodeMap[code]) return false;
+  if (wkLocked.has(code)) { wkCoordsMsg(`${code} is 🔒 locked — unlock it to move it.`, true); return false; }
+  const occ = wkRev[`${r},${c}`];
+  if (occ && occ !== code) { wkCoordsMsg(`(${r},${c}) is occupied by ${occ} — one node per cell.`, true); return false; }
+  if (!SERVER.active) { wkCoordsMsg('Server not connected — start the WBAPI server first.', true); return false; }
+  try {
+    const res = await fetch(`${SERVER.url}/api/coords/${code}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ r, c }),
+    });
+    const data = await res.json();
+    if (data.ok === false || data.error) { wkCoordsMsg(data.error || JSON.stringify(data), true); return false; }
+    WBAPI.nodeCoords[code] = { r, c };
+    wkBuildRev();
+    wkRender(`${code} → (${r},${c}) ✓`);
+    return true;
+  } catch (err) { wkCoordsMsg(String(err), true); return false; }
+}
+
+// Marker drag: mousedown on a marker arms it; >½-cell movement turns it into a
+// drag (ghost via wkDrawMap); mouseup drops. A short press stays a click-teleport.
+WK('wk-map-canvas').addEventListener('mousedown', e => {
+  if (!WBAPI.loaded || !wkCur) return;
+  const { mx, my } = wkCanvasPt(e);
+  const code = wkHitNode(mx, my);
+  if (code) wkDrag = { code, sx: mx, sy: my, moved: false, cell: null };
+});
+WK('wk-map-canvas').addEventListener('mousemove', e => {
+  if (!wkDrag) return;
+  const { mx, my } = wkCanvasPt(e);
+  if (!wkDrag.moved && Math.hypot(mx - wkDrag.sx, my - wkDrag.sy) < SCALE/2) return;
+  wkDrag.moved = true;
+  const o = wkViewOrigin(); if (!o) return;
+  wkDrag.cell = { r: o.oR + Math.floor(my/SCALE), c: o.oC + Math.floor(mx/SCALE) };
+  const k = `${wkDrag.cell.r},${wkDrag.cell.c}`, occ = wkRev[k];
+  WK('wk-move-msg').textContent = wkLocked.has(wkDrag.code)
+    ? `${wkDrag.code} is 🔒 locked — unlock to move`
+    : `Move ${wkDrag.code} → (${k})${occ && occ !== wkDrag.code ? ` — occupied by ${occ}` : ''}`;
+  wkDrawMap();
+});
+WK('wk-map-canvas').addEventListener('mouseup', async () => {
+  if (!wkDrag) return;
+  const d = wkDrag; wkDrag = null;
+  if (!d.moved) return;              // plain press → the click handler teleports
+  wkClickSquelch = true;
+  if (d.cell) await wkMoveNode(d.code, d.cell.r, d.cell.c);
+  wkDrawMap();
+});
+WK('wk-map-canvas').addEventListener('mouseleave', () => {
+  if (wkDrag && wkDrag.moved) { WK('wk-move-msg').textContent = ''; wkDrag = null; wkDrawMap(); }
+  else wkDrag = null;
+});
+
+// Mini-map click — teleport to nearest node (suppressed right after a drag)
+WK('wk-map-canvas').addEventListener('click', e => {
+  if (wkClickSquelch) { wkClickSquelch = false; return; }
+  if (!WBAPI.loaded || !wkCur) return;
+  const { mx, my } = wkCanvasPt(e);
+  const best = wkHitNode(mx, my);
   if (best) wkGo(best, `Teleport → ${best}`);
 });
+
+// Lat/lon placement + live cell preview
+function wkLLRead() {
+  const lat = parseFloat(WK('we-lat').value), lon = parseFloat(WK('we-lon').value);
+  if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+  return wkLLToCell(lat, lon);
+}
+WK('wk-btn-place').addEventListener('click', () => {
+  if (!wkCur) return;
+  const cell = wkLLRead();
+  if (!cell) { wkCoordsMsg('Enter numeric lat and lon (e.g. 59.3 / 17.6).', true); return; }
+  if (cell.r < 0 || cell.r >= 90) { wkCoordsMsg(`lat out of band — row ${cell.r} is off the 90-row grid (70°N…20°S).`, true); return; }
+  wkMoveNode(wkCur, cell.r, cell.c);
+});
+for (const fid of ['we-lat', 'we-lon']) WK(fid).addEventListener('input', () => {
+  const cell = wkLLRead();
+  const occ = cell ? wkRev[`${cell.r},${cell.c}`] : null;
+  WK('wk-ll-preview').textContent = cell
+    ? `→ cell (${cell.r}, ${cell.c})${occ && occ !== wkCur ? ` — occupied by ${occ}` : ''}` : '';
+});
+
+// 🔒 lock — persisted server-side in roads-pins.json (geo-seed skips locked codes)
+async function wkLoadLocked() {
+  if (!SERVER.active) return;
+  try {
+    const d = await (await fetch(`${SERVER.url}/api/roads/pins`)).json();
+    if (d && d.ok) { wkLocked = new Set(d.locked || []); if (wkCur) wkRender(''); }
+  } catch { /* server gone mid-session — keep the last known set */ }
+}
+async function wkLockToggle() {
+  if (!wkCur) return;
+  if (!SERVER.active) { wkCoordsMsg('Server not connected — start the WBAPI server first.', true); return; }
+  const locked = !wkLocked.has(wkCur);
+  try {
+    const res = await fetch(`${SERVER.url}/api/roads/lock`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: wkCur, locked }),
+    });
+    const data = await res.json();
+    if (data.ok === false || data.error) { wkCoordsMsg(data.error || JSON.stringify(data), true); return; }
+    wkLocked = new Set(data.locked || []);
+    wkRender(locked ? `${wkCur} 🔒 locked — geo regeneration keeps it in place` : `${wkCur} unlocked`);
+  } catch (err) { wkCoordsMsg(String(err), true); }
+}
+WK('wk-btn-lock').addEventListener('click', wkLockToggle);
 
 // Keyboard navigation (only when Walk tab is active and focus not in a field)
 document.addEventListener('keydown', e => {
@@ -9800,6 +9982,7 @@ window.switchTab = function(name) {
   _wkPrev(name);
   if (name === 'walk' && WBAPI.loaded) {
     wkBuildRev();
+    wkLoadLocked();   // §NAV-01g — refresh the 🔒 set from roads-pins.json
     if (!wkCur) {
       const first = Object.keys(WBAPI.nodeCoords)[0];
       if (first) wkGo(first, '');
@@ -9821,6 +10004,11 @@ Object.defineProperty(window, 'wkRev', { get: () => wkRev, configurable: true })
 Object.defineProperty(window, 'wkCur', { get: () => wkCur, configurable: true });
 window.wkNeighbors = wkNeighbors;
 window.wkGo        = wkGo;
+// §NAV-01g drag-&-lock hooks
+window.__walkG = {
+  llToCell: wkLLToCell, cellToLL: wkCellToLL, moveNode: wkMoveNode, loadLocked: wkLoadLocked,
+  lockedSet: () => wkLocked, setLocked: (codes) => { wkLocked = new Set(codes); if (wkCur) wkRender(''); },
+};
 
 })();
 </script>

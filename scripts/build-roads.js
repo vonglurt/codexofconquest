@@ -21,8 +21,11 @@
 // Usage:  node scripts/build-roads.js          # dry-run: stats only
 //         node scripts/build-roads.js --apply  # patch/replace the ROAD_RUNS
 //                                              # block in roll2hit-v3.html
-// Pins:   roads-pins.json (repo root, optional) — {"links":[["r,c","r,c"],…]}
-//         forces extra corridors (worldbuilder §NAV-01h authors this file).
+// Pins:   roads-pins.json (repo root, optional) — full schema:
+//         { pins:[{r,c}], links:[["r,c","r,c"]], locked:["CODE",…] }
+//         `links` forces extra corridors here (worldbuilder §NAV-01h authors them);
+//         `locked` is consumed by the server's geo-seed (§NAV-01g 🔒 toggle,
+//         PUT /api/roads/lock) — locked cities keep their coords, not a road input.
 'use strict';
 const fs = require('fs');
 const path = require('path');

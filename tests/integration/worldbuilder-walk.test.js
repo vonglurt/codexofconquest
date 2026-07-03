@@ -642,3 +642,122 @@ test.describe('§WALK internal — wkCur state variable', () => {
   });
 
 });
+
+// ── 13 — §NAV-01g drag-&-lock cities ─────────────────────────────────────────
+// Drag a marker on the mini-map (ghost readout) → PUT /api/coords; lat/lon entry
+// converts row=floor(70−lat), col=(floor(lon)+180)%360; 🔒 lock persists via
+// PUT /api/roads/lock. HERMETIC: every request to the WBAPI origin is intercepted
+// BEFORE page load — the boot-time probeServer auto-load can never fire, a live
+// dev server on :1367 can never replace the injected mock world, and every
+// mutation is asserted at the request level (API-first, no file edits).
+
+async function armApiStub(page) {
+  const stub = { handlers: {}, calls: [] };
+  await page.route('http://localhost:1367/**', async (route) => {
+    const req = route.request();
+    const cors = {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE,OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+    };
+    if (req.method() === 'OPTIONS') return route.fulfill({ status: 204, headers: cors });
+    const key = `${req.method()} ${new URL(req.url()).pathname}`;
+    const body = req.postData() ? JSON.parse(req.postData()) : null;
+    stub.calls.push({ key, body });
+    const h = stub.handlers[key];
+    if (!h) return route.fulfill({ status: 404, headers: cors, contentType: 'application/json', body: JSON.stringify({ error: `unstubbed ${key}` }) });
+    const out = typeof h === 'function' ? h(body) : h;
+    return route.fulfill({ status: 200, headers: cors, contentType: 'application/json', body: JSON.stringify(out) });
+  });
+  return stub;
+}
+
+test.describe('§NAV-01g — drag-&-lock cities', () => {
+
+  let stub;
+  test.beforeEach(async ({ page }) => {
+    stub = await armApiStub(page);   // firewall :1367 BEFORE the page boots
+    await loadWalkTab(page);
+  });
+  const putCalls = (key) => stub.calls.filter((c) => c.key === key).map((c) => c.body);
+
+  test('lat/lon → cell conversion matches the locked formula', async ({ page }) => {
+    const out = await page.evaluate(() => [
+      window.__walkG.llToCell(59.3, 17.6),   // Birka → (10,197)
+      window.__walkG.llToCell(60.5, -0.1),   // floor(-0.1) = -1 → col 179 (W wrap)
+      window.__walkG.llToCell(70, -180),     // NW corner of the band → (0,0)
+    ]);
+    expect(out[0]).toEqual({ r: 10, c: 197 });
+    expect(out[1]).toEqual({ r: 9, c: 179 });
+    expect(out[2]).toEqual({ r: 0, c: 0 });
+  });
+
+  test('position section shows the current cell + derived lat/lon', async ({ page }) => {
+    await expect(page.locator('#wk-coords-sec')).toBeVisible();
+    const line = await page.locator('#wk-pos-line').textContent();
+    expect(line).toContain('r 10 · c 10');          // A at (10,10)
+    expect(line).toContain('lat 60, lon -170');     // 70−10 / 10−180
+  });
+
+  test('Place by lat/lon previews the cell and PUTs the conversion', async ({ page }) => {
+    stub.handlers['PUT /api/coords/A'] = (b) => ({ ok: true, code: 'A', coords: b });
+    await page.evaluate(() => { SERVER.active = true; });
+    await page.fill('#we-lat', '60.5');
+    await page.fill('#we-lon', '-170');
+    await expect(page.locator('#wk-ll-preview')).toContainText('(9, 10)');   // floor(70−60.5)=9 · (−170+180)=10
+    await page.click('#wk-btn-place');
+    await expect(page.locator('#wk-move-msg')).toContainText('A → (9,10) ✓');
+    expect(putCalls('PUT /api/coords/A')).toEqual([{ r: 9, c: 10 }]);
+    expect(await page.evaluate(() => WBAPI.nodeCoords.A)).toEqual({ r: 9, c: 10 });
+  });
+
+  test('occupied cell is refused client-side — no request leaves the page', async ({ page }) => {
+    stub.handlers['PUT /api/coords/A'] = { ok: true };
+    await page.evaluate(() => { SERVER.active = true; });
+    const ok = await page.evaluate(() => window.__walkG.moveNode('A', 10, 11));   // B's cell
+    expect(ok).toBe(false);
+    await expect(page.locator('#wk-coords-result')).toContainText('occupied by B');
+    expect(putCalls('PUT /api/coords/A')).toEqual([]);
+  });
+
+  test('drag a marker: ghost readout while moving, PUT on drop, click still teleports', async ({ page }) => {
+    stub.handlers['PUT /api/coords/B'] = (b) => ({ ok: true, code: 'B', coords: b });
+    await page.evaluate(() => { SERVER.active = true; });
+    // wkCur=A(10,10) → view origin oR=-10, oC=1. B(10,11) → px(105,205); empty (9,11) → px(105,195).
+    await page.locator('#wk-map-canvas').scrollIntoViewIfNeeded();   // #panels boots h-scrolled off-viewport
+    const box = await page.locator('#wk-map-canvas').boundingBox();
+    await page.mouse.move(box.x + 105, box.y + 205);
+    await page.mouse.down();
+    await page.mouse.move(box.x + 105, box.y + 195, { steps: 3 });
+    await expect(page.locator('#wk-move-msg')).toContainText('Move B → (9,11)');
+    await page.mouse.up();
+    await expect(page.locator('#wk-move-msg')).toContainText('B → (9,11) ✓');
+    expect(putCalls('PUT /api/coords/B')).toEqual([{ r: 9, c: 11 }]);
+    expect(await page.evaluate(() => WBAPI.nodeCoords.B)).toEqual({ r: 9, c: 11 });
+    expect(await page.evaluate(() => window.wkCur)).toBe('A');   // dropping ≠ teleporting
+    await page.mouse.click(box.x + 105, box.y + 195);            // plain click on B's new marker
+    await expect(page.locator('#wk-code')).toHaveText('B');      // …still teleports
+  });
+
+  test('🔒 locked node refuses moves; toggle round-trips through the lock API', async ({ page }) => {
+    stub.handlers['PUT /api/roads/lock'] = (b) => ({ ok: true, code: b.code, nowLocked: b.locked, locked: b.locked ? ['A'] : [] });
+    stub.handlers['PUT /api/coords/A'] = { ok: true };
+    await page.evaluate(() => { SERVER.active = true; window.__walkG.setLocked(['A']); });
+    await expect(page.locator('#wk-btn-lock')).toHaveText('🔓 Unlock position');
+    const ok = await page.evaluate(() => window.__walkG.moveNode('A', 9, 10));
+    expect(ok).toBe(false);
+    await expect(page.locator('#wk-coords-result')).toContainText('🔒 locked');
+    expect(putCalls('PUT /api/coords/A')).toEqual([]);
+    await page.click('#wk-btn-lock');                            // unlock via the API
+    await expect(page.locator('#wk-btn-lock')).toHaveText('🔒 Lock position');
+    expect(putCalls('PUT /api/roads/lock')).toEqual([{ code: 'A', locked: false }]);
+    expect(await page.evaluate(() => [...window.__walkG.lockedSet()])).toEqual([]);
+  });
+
+  test('lock toggle without a server shows the connect hint', async ({ page }) => {
+    await page.evaluate(() => { SERVER.active = false; });
+    await page.click('#wk-btn-lock');
+    await expect(page.locator('#wk-coords-result')).toContainText('Server not connected');
+  });
+
+});

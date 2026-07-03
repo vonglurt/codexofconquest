@@ -556,6 +556,19 @@ async function fetchBootstrapUrls() {
 }
 // ══ end §MESH-01 mesh layer ═══════════════════════════════════════════════════
 
+// ── §NAV-01g — roads-pins.json (worldbuilder pins: forced road links + locked cities) ──
+// Schema (plan.md §NAV-01 locked shapes): { pins:[{r,c}], links:[["r,c","r,c"]], locked:["CODE",…] }.
+// scripts/build-roads.js consumes pins/links at reweave (§NAV-01h); `locked` is honored
+// by POST /api/layout/geo-seed — locked codes keep their coords through regeneration.
+// Mutated ONLY via PUT /api/roads/lock (worldbuilder 🔒 toggle); env override for tests.
+const ROADS_PINS_FILE = process.env.ROADS_PINS_FILE || path.join(__dirname, 'roads-pins.json');
+function readRoadsPins() {
+  try {
+    const p = JSON.parse(fs.readFileSync(ROADS_PINS_FILE, 'utf8'));
+    return { pins: p.pins || [], links: p.links || [], locked: p.locked || [] };
+  } catch { return { pins: [], links: [], locked: [] }; }
+}
+
 // ── GEO-anchored node codes (single source of truth for geo-seed + rip-and-connect) ──
 // These nodes have authoritative lat/lon positions; rip-and-connect must NOT relocate them.
 // Update this set whenever a new entry is added to the GEO2 / GEO tables.
@@ -6754,6 +6767,40 @@ async function route(req, res) {
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
+  // ── §NAV-01g: /api/roads — worldbuilder road-net pins + locked cities ──────
+  if (parts[0] === 'roads') {
+    // GET /api/roads/pins — current pins file (empty defaults if absent)
+    if (method === 'GET' && parts[1] === 'pins') {
+      const p = readRoadsPins();
+      logResponse(method, url.pathname, 200, `${p.links.length} links · ${p.locked.length} locked`);
+      return json(res, 200, { ok: true, file: ROADS_PINS_FILE, ...p });
+    }
+    // PUT /api/roads/lock — body {code, locked:boolean} → toggle a city's 🔒.
+    // Locked codes are skipped by POST /api/layout/geo-seed (regeneration never
+    // moves them); an explicit PUT /api/coords stays allowed — lock guards the
+    // bulk re-placement, not deliberate single-node edits.
+    if (method === 'PUT' && parts[1] === 'lock') {
+      let body; try { body = await readBody(req); } catch(e) { return json(res, 400, { error: 'Invalid JSON' }); }
+      const code = String(body.code || '').trim();
+      if (!code || !WBAPI.nodeMap[code]) {
+        logResponse(method, url.pathname, 404, `lock: node "${code}" not in NODE_MAP`);
+        return json(res, 404, { ok: false, error: `Node "${code}" not found in NODE_MAP` });
+      }
+      if (typeof body.locked !== 'boolean') {
+        return json(res, 400, { ok: false, error: 'body must contain {code, locked:boolean}' });
+      }
+      const p = readRoadsPins();
+      const set = new Set(p.locked);
+      body.locked ? set.add(code) : set.delete(code);
+      p.locked = [...set].sort();
+      try { fs.writeFileSync(ROADS_PINS_FILE, JSON.stringify(p, null, 2) + '\n'); }
+      catch (e) { return json(res, 500, { ok: false, error: `pins write failed: ${e.message}` }); }
+      logResponse(method, url.pathname, 200, `${code} ${body.locked ? 'locked 🔒' : 'unlocked'} (${p.locked.length} total)`);
+      return json(res, 200, { ok: true, code, nowLocked: body.locked, locked: p.locked });
+    }
+    return json(res, 404, { error: 'Unknown roads sub-route. Available: GET /api/roads/pins  PUT /api/roads/lock' });
+  }
+
   if (parts[0] === 'coords') {
     const coordAction = parts[1]; // undefined | 'near' | <nodeCode>
 
@@ -7350,7 +7397,13 @@ async function route(req, res) {
       const occ = new Map();          // "r,c" → first code placed there (for collision reporting)
       const collisions = [];          // §WALK-1.5: collisions are EXPECTED at 1° → locale lists, NOT nudged
       const bySrc = { geo2:0, real:0, anchor:0, anchored:0 };
+      // §NAV-01g: locked cities (roads-pins.json, worldbuilder 🔒) keep their
+      // current coords — regeneration never moves them. Only meaningful for
+      // nodes that HAVE coords; a locked code without coords still seeds.
+      const lockedSet = new Set(readRoadsPins().locked);
+      const lockedKept = [];
       for (const code of Object.keys(nm)) {
+        if (lockedSet.has(code) && WBAPI.nodeCoords[code]) { lockedKept.push(code); continue; }
         const ll = latlon[code];
         if (!ll) { skipped.push(code); continue; }
         const r = Math.max(0, Math.min(rows - 1, Math.floor(latN - ll.lat)));
@@ -7364,9 +7417,9 @@ async function route(req, res) {
       }
 
       if (dryRun) {
-        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} placed (${JSON.stringify(bySrc)}), ${collisions.length} collisions, ${skipped.length} skipped`);
+        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} placed (${JSON.stringify(bySrc)}), ${collisions.length} collisions, ${skipped.length} skipped, ${lockedKept.length} locked kept`);
         return json(res, 200, { ok:true, dryRun:true, projection:'equirectangular-1deg', latN, latS, rows, cols,
-          seeded:seeded.length, bySrc, distinctCells:occ.size, skipped, collisions, coords });
+          seeded:seeded.length, bySrc, distinctCells:occ.size, skipped, lockedKept, collisions, coords });
       }
 
       // Apply
@@ -7379,8 +7432,8 @@ async function route(req, res) {
       for (const [ec,ep] of allEntries){const band=Math.floor(ep.r/8)*8;if(band!==prevBand&&prevBand!==-999)newSec+='\n';newSec+=`  ${ec}:{r:${ep.r},c:${ep.c}},\n`;prevBand=band;}
       newSec+=`};\n`;
       WBAPI._rawSrc=WBAPI._rawSrc.slice(0,sI)+newSec+WBAPI._rawSrc.slice(eI);
-      logResponse(method, url.pathname, 200, `geo-seed applied: ${seeded.length} cities`);
-      return saveAndRestart(res, 200, { ok:true, dryRun:false, seeded:seeded.length, skipped, coords });
+      logResponse(method, url.pathname, 200, `geo-seed applied: ${seeded.length} cities (${lockedKept.length} locked kept)`);
+      return saveAndRestart(res, 200, { ok:true, dryRun:false, seeded:seeded.length, skipped, lockedKept, coords });
     }
 
     return json(res, 404, { error:'Unknown layout route. Available: GET /api/layout/solve  POST /api/layout/apply  GET /api/layout/worldmap  POST /api/layout/geo-seed' });
@@ -10017,6 +10070,8 @@ server.listen(PORT, BIND_ADDR, () => {
     ['POST',   '/api/audit/map/fix                   body: {} (all) or {check,code,dir,target} (one)'],
     ['GET',    '/api/layout/solve[?step=8&root=TLS]  → BFS grid layout: proposed {r,c} for every node'],
     ['POST',   '/api/layout/apply                    body: {coords:{code:{r,c},...}} → mass-update NODE_COORDS'],
+    ['GET',    '/api/roads/pins                      → roads-pins.json: {pins, links, locked} (§NAV-01g worldbuilder)'],
+    ['PUT',    '/api/roads/lock                      body: {code, locked} → 🔒 toggle; geo-seed never moves locked cities'],
     ['GET',    '/api/cell/:r/:c                      → node at grid cell (code, terrain, exits)'],
     ['GET',    '/api/cell/:r/:c/neighbors            → N/E/S/W neighbors of cell (code, terrain, passable)'],
     ['GET',    '/api/grid/region?r1=&c1=&r2=&c2=    → 2D array of cells in bounding box'],

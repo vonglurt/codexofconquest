@@ -48,6 +48,10 @@ async function jpost(p, body, base = BASE) {
   return r.json();
 }
 async function jget(p, base = BASE) { return (await fetch(base + '/api' + p)).json(); }
+async function jput(p, body, base = BASE) {
+  const r = await fetch(base + '/api' + p, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+  return r.json();
+}
 
 // ── SSE client — parses `event:`/`data:` frames into client.events[] ──────────
 function openSSE(sessionId, base = BASE) {
@@ -704,6 +708,36 @@ async function main() {
     check(inWild.room.sub.startsWith('Near '), 'wilderness sub locates by nearest landmark, not raw coordinates');
   }
   await jpost('/session/end', { sessionId: mia.sessionId });
+
+  // ════════ (n) §NAV-01g — roads-pins lock API + geo-seed honors locked ════════
+  // The worldbuilder 🔒 toggle persists locked:[codes] into roads-pins.json via
+  // PUT /api/roads/lock; POST /api/layout/geo-seed must then keep a locked
+  // city's coords through regeneration (dry-run asserted — no file writes).
+  console.log('\n[N] §NAV-01g — roads-pins lock API + geo-seed keeps locked cities');
+  const pinsFile = path.join(os.tmpdir(), `r2h-roads-pins-${PORT}.json`);
+  fs.rmSync(pinsFile, { force: true });
+  const srvN = await startServer(PORT + 22, { ROADS_PINS_FILE: pinsFile });
+  const pins0 = await jget('/roads/pins', srvN.base);
+  check(pins0.ok === true && Array.isArray(pins0.locked) && pins0.locked.length === 0
+     && Array.isArray(pins0.links) && Array.isArray(pins0.pins), 'pins file absent → empty {pins,links,locked} defaults, not an error');
+  const lockBad = await jput('/roads/lock', { code: 'NOPE', locked: true }, srvN.base);
+  check(lockBad.ok === false, 'locking an unknown node code is refused');
+  const lock1 = await jput('/roads/lock', { code: 'LHR', locked: true }, srvN.base);
+  const lock2 = await jput('/roads/lock', { code: 'VBY', locked: true }, srvN.base);
+  check(lock1.ok && lock2.ok && JSON.stringify(lock2.locked) === JSON.stringify(['LHR', 'VBY']),
+    'PUT /api/roads/lock accumulates a sorted locked list');
+  check(fs.existsSync(pinsFile) && JSON.stringify(JSON.parse(fs.readFileSync(pinsFile, 'utf8')).locked) === JSON.stringify(['LHR', 'VBY']),
+    'the lock persists to the pins file on disk');
+  const lhrBefore = (await jget('/coords', srvN.base)).coords.LHR;
+  const seedLocked = await jpost('/layout/geo-seed', { dryRun: true }, srvN.base);
+  check(seedLocked.ok && (seedLocked.lockedKept || []).includes('LHR') && seedLocked.coords.LHR === undefined,
+    'geo-seed dry-run keeps a locked city: LHR in lockedKept, absent from the re-seed coords');
+  const unlock = await jput('/roads/lock', { code: 'LHR', locked: false }, srvN.base);
+  check(unlock.ok && JSON.stringify(unlock.locked) === JSON.stringify(['VBY']), 'unlock removes only the one code');
+  const seedOpen = await jpost('/layout/geo-seed', { dryRun: true }, srvN.base);
+  check(seedOpen.ok && seedOpen.coords.LHR && seedOpen.coords.LHR.r === lhrBefore.r && seedOpen.coords.LHR.c === lhrBefore.c,
+    'unlocked again → geo-seed re-projects LHR (to its true geo cell)');
+  fs.rmSync(pinsFile, { force: true });
 
   // ── teardown ──
   openClients.forEach(closeSSE);
