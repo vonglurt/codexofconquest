@@ -8737,3 +8737,78 @@ test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main par
     expect(r.esc).toEqual({ status:'failed', flag:false });
   });
 });
+
+// ── §ARCH-01 Wave 6 — epic quests (40 = 20 EB primary/return pairs, parity) ──
+//
+// Unlike W4/W5, epics were ALIVE: their lifecycle machinery lives OUTSIDE the
+// quest objects (EB NPC modal activates _primary, the boss-victory hook
+// activates _return, _storyEbReturnBeat sets ebReturnDone, and the schema-
+// agnostic completion loop runs their completeFns). The quests themselves are
+// passive completion watchers — the W3 side-quest shape — so W6 is a pure
+// parity migration onto EXISTING terms: defeatedBattles[X] → completion.battles,
+// ebReturnDone[X] → completion.flagsPath. Zero engine changes; the epic
+// activation exclusion (`if (q.type==='epic') return;`) is untouched.
+test.describe('§ARCH-01 Wave 6 — epic quests (EB pairs, parity completion, 40 migrated)', () => {
+  test('all 40 epics are UQF-1.0 + valid: 20 battles-completions, 20 flagsPath-completions, fields kept', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const epics = Object.values(QUEST_DB).filter(q => q.type === 'epic');
+      const bad = [];
+      let battles = 0, paths = 0, rewards = 0;
+      for (const q of epics) {
+        if (q.schema !== 'UQF-1.0') { bad.push(q.id + ':schema'); continue; }
+        if (!validateQuest(q).valid) bad.push(q.id + ':invalid');
+        if (q.completeFn) bad.push(q.id + ':completeFn-residue');
+        if ((q.bits || []).length) bad.push(q.id + ':bits');
+        if (!q.waypointNode || !q.npc) bad.push(q.id + ':fields-lost');
+        if ((q.completion.battles || []).length === 1) battles++;
+        if ((q.completion.flagsPath || []).length === 1) paths++;
+        if (typeof q.reward === 'number') rewards++;
+      }
+      return { total: epics.length, bad, battles, paths, rewards };
+    });
+    expect(r.bad).toEqual([]);
+    expect(r.total).toBe(40);
+    expect(r.battles).toBe(20);          // primaries: defeatedBattles[X]
+    expect(r.paths).toBe(20);            // returns: ebReturnDone.X
+    expect(r.rewards).toBe(20);          // return payment field kept verbatim
+  });
+
+  test('epic activation exclusion untouched: storyCheckQuests never auto-activates an epic', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      delete S_story.quests.quest_ef_primary;
+      storyCheckQuests({ code: QUEST_DB.quest_ef_primary.activateNode });   // FRO — would activate any non-epic
+      return { activated: S_story.quests.quest_ef_primary || '(not activated)' };
+    });
+    expect(r.activated).toBe('(not activated)');
+  });
+
+  test('primary parity: active + boss defeated → storyCheckQuests flips to complete', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests.quest_ef_primary = 'active';
+      const before = QuestRuntime.canComplete('quest_ef_primary');
+      storyCheckQuests({ code:'ZZZ' });
+      const stillActive = S_story.quests.quest_ef_primary;
+      S_story.defeatedBattles.PRN = true;
+      const can = QuestRuntime.canComplete('quest_ef_primary');
+      storyCheckQuests({ code:'ZZZ' });
+      return { before, stillActive, can, after: S_story.quests.quest_ef_primary };
+    });
+    expect(r).toEqual({ before:false, stillActive:'active', can:true, after:'complete' });
+  });
+
+  test('return parity: ebReturnDone.PRN drives completion via flagsPath', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests.quest_ef_return = 'active';
+      const before = QuestRuntime.canComplete('quest_ef_return');
+      S_story.ebReturnDone = { PRN: true };
+      const can = QuestRuntime.canComplete('quest_ef_return');
+      storyCheckQuests({ code:'ZZZ' });
+      return { before, can, after: S_story.quests.quest_ef_return };
+    });
+    expect(r).toEqual({ before:false, can:true, after:'complete' });
+  });
+});
