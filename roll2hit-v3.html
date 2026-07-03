@@ -9836,20 +9836,20 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'NUE', completeItems:['VICTORY'], waypointNode:'TLS',
     npc:"archivus_sweelinck",
   },
-  sq_1: { id:'sq_1', type:'side', title:'The Disappeared Merchants',
+  sq_1: { id:'sq_1', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ items:['Trade Seal (Shard #1)'] }, title:'The Disappeared Merchants',
     desc:"Innkeeper Brynn's two merchants vanished near the harbor. Something isn't right with the Trade Seal.",
     hint:'Ask Magistra Muffat at the Tilbury docks.',
     passText:'The Trade Seal is not just a merchant document. Muffat explains this quietly while you stand at her counter. It never was.',
     failText:'The harbor has no record of two merchants by those names. The investigation continues.',
-    activateNode:'TLL', completeItems:['Trade Seal (Shard #1)'], waypointNode:'LCY',
+    activateNode:'TLL', waypointNode:'LCY',
     npc:"brynn",
   },
-  sq_2: { id:'sq_2', type:'side', title:'Kelpie in the Loch',
+  sq_2: { id:'sq_2', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ items:['Highland Horse'] }, title:'Kelpie in the Loch',
     desc:"Elder Fionn's village has been terrorised for two seasons. The kelpie controls the water road.",
     hint:'Battle at the loch crossing in the Irish Highlands.',
     passText:'The kelpie does not leave the loch. It sinks. The water road is clear. Elder Fionn says thank you by not saying anything at all.',
     failText:'The kelpie is still in the shallows. The village does not cross the loch after dark.',
-    activateNode:'KIR', completeItems:['Highland Horse'], waypointNode:'KIR',
+    activateNode:'KIR', waypointNode:'KIR',
     npc:"yael",
   },
   sq_battling: { id:'sq_battling', type:'side', title:'Battling — Earn Your Reputation',
@@ -10199,18 +10199,18 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     disposition:'"The journal says: the world does not reset. The people do not reset. Only the monsters reset. You have always been here." — Froberger, Entry 41 marginal note',
     npc:"long_john_silver_sen",
   },
-  quest_ng_02: { id:'quest_ng_02', type:'side', title:'Froberger: The Open Page',
+  quest_ng_02: { id:'quest_ng_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['entry42Written'] }, title:'Froberger: The Open Page',
     desc:"Froberger's journal ends at forty-one. The forty-second page is blank — not torn, not missing, blank. He stopped there on purpose. You can tell because the previous entry ends mid-thought and the blank page comes after it like an answer to a question he decided not to answer himself. He knew someone would come back a second time with enough of the story to fill it. That someone is whoever is holding this journal now.",
     hint:'Visit the City Inn to find the open page.',
-    activateNode:null, completeItems:[], completeFn:() => !!S_story.entry42Written,
+    activateNode:null, completeItems:[], 
     waypointNode:'LHR', reward:0,
     disposition:'"Forty-two. I stopped there on purpose. Someone else will finish this one." — Froberger\'s margin note',
     npc:"long_john_silver_sen",
   },
-  quest_ng_03: { id:'quest_ng_03', type:'side', title:'Froberger: The Letter',
+  quest_ng_03: { id:'quest_ng_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['frobergerLetterFound'] }, title:'Froberger: The Letter',
     desc:"A sealed letter is at the Coastal Observatory. Froberger's handwriting — you know it now well enough to recognize it before you see the name. It was not there on your first run, because on your first run you were not the person it was addressed to. The observatory is the place the arc ends. The letter is what it leaves behind for whoever arrives a second time having already done the work of the first.",
     hint:'Return to the Coastal Observatory.',
-    activateNode:null, completeItems:[], completeFn:() => !!S_story.frobergerLetterFound,
+    activateNode:null, completeItems:[], 
     waypointNode:'TLS', reward:300,
     disposition:'"If you are reading this, you completed the run once already. I am sorry about the ending. You deserved a better one." — Froberger\'s sealed letter',
     npc:"long_john_silver_sen",
@@ -10227,92 +10227,92 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     disposition:'"You\'re asking about Froberger. Everyone who comes here lately is asking about Froberger. His access was revoked pursuant to the Scholar Kings Protocol on Speculative Endangerment." — Archivist Isolde Voss',
     npc:"archivus_sweelinck",
   },
-  quest_wm_02: { id:'quest_wm_02', type:'side', title:'Isolde: Lower Archive',
+  quest_wm_02: { id:'quest_wm_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['wmDoc1Read','wmDoc2Read','wmDoc3Read'] }, title:'Isolde: Lower Archive',
     itemChain:[{action:'grant',name:"Froberger's Field Notes", icon:'📗', type:'tome', sell:0, bonus:{ deathSave:1 }, description:'Margin: "The pressure is survivable if you know it\'s coming."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Three documents in the lower archive. The revocation letter, the field report, the personnel file. Read all three.",
     hint:'Visit the Scholar\'s Quarter and examine the archive documents.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.wmDoc1Read && S_story.wmDoc2Read && S_story.wmDoc3Read),
+    activateNode:null, completeItems:[], 
     waypointNode:'NUE', reward:0,
     disposition:'"He left his research notes in the lower archive. I moved them there myself. I told myself it was protocol. I\'ve been thinking about that since you came in." — Isolde Voss (Friendly)',
     npc:"long_john_silver_sen",
   },
-  quest_wm_03: { id:'quest_wm_03', type:'side', title:'Benedikt: The Reading Circle',
+  quest_wm_03: { id:'quest_wm_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['wmBenediktCircleComplete'] }, title:'Benedikt: The Reading Circle',
     itemChain:[{action:'grant',name:"Scholar Kings' History", icon:'📘', type:'tome', sell:0, bonus:{ initiative:2 }, description:'"First knowledge, then decision, then action. Never the other order."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt Rasp runs a reading circle from a bookbinder\'s stall. Three sessions — three different days.",
     hint:'Attend 3 reading circle sessions at the Scholar\'s Quarter (one per day).',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.wmBenediktCircleComplete),
+    activateNode:null, completeItems:[], 
     waypointNode:'NUE', reward:0,
     disposition:'"The third one\'s always the hardest. Not because the material is harder — because by then you realize the first two were already enough and you stayed anyway." — Benedikt Rasp',
     npc:"long_john_silver_sen",
   },
-  quest_wm_04: { id:'quest_wm_04', type:'side', title:'Benedikt: The First Researcher',
+  quest_wm_04: { id:'quest_wm_04', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['wmFirstResearcherKnown'] }, title:'Benedikt: The First Researcher',
     itemChain:[{action:'grant',name:"Benedikt's Annotated Copy", icon:'📙', type:'tome', sell:0, bonus:{ atkWhileQuestActive:1 }, description:'"He was right about this one too." — B. Rasp',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt knows who the First Researcher was. He waited three sessions to be sure you were the kind of person to be told.",
     hint:'Return to the lower archive and read the unredacted personnel file.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.wmFirstResearcherKnown),
+    activateNode:null, completeItems:[], 
     waypointNode:'NUE', reward:300,
     disposition:'"The Scholar Kings didn\'t erase her. They just stopped saying the name. Froberger said it in his margin notes every time. That\'s how I found her. And now you know how I found him." — Benedikt Rasp',
     npc:"long_john_silver_sen",
   },
-  quest_wm_05: { id:'quest_wm_05', type:'side', title:'The Open File', // §L
+  quest_wm_05: { id:'quest_wm_05', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flags:['wmGurtFileRead'] }, title:'The Open File', // §L
     desc:"The lower archive has a fifth document you were not looking for. A personnel file that has never been closed — because the Scholar Kings' filing system does not have a category for someone who chose the field over the archive and kept sending data anyway. The Y. Gurt file is still active. It has been active for a very long time.",
     hint:'Return to the Weimar lower archive with the Y. Gurt Field Survey.',
     activateNode:'NUE', completeItems:[],
     activateCond:() => !!(S_story.wmLowerArchiveUnlocked && (S_story.inventory||[]).some(i => i.name === 'Y. Gurt Field Survey')),
-    completeFn:() => !!S_story.wmGurtFileRead,
+    
     xpAward:200, waypointNode:'NUE', reward:200,
     disposition:'"We continue to file them." — Scholar Kings Personnel Record, Y. Gurt (Field Absence: Ongoing)',
     npc:"archivus_sweelinck",
   },
   // ── Layer 52: Void Archaeology quests ──
-  quest_va_01: { id:'quest_va_01', type:'side', title:'The Architecture: Five Marks',
+  quest_va_01: { id:'quest_va_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vaAllMarksFound'] }, title:'The Architecture: Five Marks',
     desc:"Someone passed through five sites two hundred years ago and left marks. The marks are at nodes you have already visited — you walked past them without knowing. No one told you they were there because no one who knew is still alive to tell. What you have instead are Froberger's margin notes, which mention the marks in the way a person mentions something they saw in passing and could not explain and never went back for. Follow the track. Each site will say where he was and how long ago.",
     hint:'Investigate: City Inn, Birka Slums, Defiant Fields, Scholar\'s Quarter, Mountain Pass.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vaAllMarksFound),
+    activateNode:null, completeItems:[], 
     waypointNode:'LHR', reward:0,
     disposition:'"Five marks. One pattern. She was everywhere before anyone was looking." — Froberger, Entry 7 marginal note (between the lines)',
     npc:"long_john_silver_sen",
   },
-  quest_va_02: { id:'quest_va_02', type:'side', title:"The Architecture: Constructor's Log",
+  quest_va_02: { id:'quest_va_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vaLogFound'] }, title:"The Architecture: Constructor's Log",
     itemChain:[{action:'grant',name:"The Constructor's Log", icon:'📜', type:'readable', sell:0, readable: true, readableKey:'constructors_log', description:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.',silent:true},{action:'grant',name:'Antecedent Seal', icon:'🏛️', type:'relic', sell:0, description:'"Antecedent Containment Protocol. Seal 7. Activated."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"A fourth document has appeared in the lower archive. It was not there when Isolde catalogued the collection — or it was there and not visible, which is a distinction the archive does not officially recognize. Seven entries. Her handwriting. The last entry reads: 'If someone is reading this, the sealing mechanism has activated. The cage is closed. I am sorry.' She wrote that line and then walked out of the archive knowing she would not be back to see if anyone found it.",
     hint:'Return to the Scholar\'s Quarter lower archive.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vaLogFound),
+    activateNode:null, completeItems:[], 
     waypointNode:'NUE', reward:0,
     disposition:'"If someone is reading this, the sealing mechanism has activated. The cage is closed. I am sorry. I did not have a better answer." — The Constructor\'s Log, Entry 7',
     npc:"long_john_silver_sen",
   },
-  quest_va_03: { id:'quest_va_03', type:'side', title:'The Architecture: The Sealed Tunnel',
+  quest_va_03: { id:'quest_va_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vaLastWardVisited'] }, title:'The Architecture: The Sealed Tunnel',
     desc:"There is a tunnel at the Mountain Pass sealed from the inside. No record in any archive shows it being opened. No record shows it being built — it was sealed before the Scholar Kings existed and before Froberger was born and before any of the names you have learned on this run were written down anywhere. It will open for you now. Sealed things are not locked to everyone — only to those who haven't earned the opening.",
     hint:'Take the tunnel at the Mountain Pass.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vaLastWardVisited),
+    activateNode:null, completeItems:[], 
     waypointNode:'GVA', reward:200,
     disposition:'"The Antecedent was here. It is not anymore. You know where it is now." — Sealed chamber inscription',
     npc:"long_john_silver_sen",
   },
-  quest_va_04: { id:'quest_va_04', type:'side', title:'The Architecture: The Chain',
+  quest_va_04: { id:'quest_va_04', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vaArchitectureKnown'] }, title:'The Architecture: The Chain',
     desc:"Benedikt Rasp has been assembling something for three weeks, since the last time you were in his reading circle. He has the Constructor's Log, Froberger's margin notes, your name, and one other piece he waited to confirm before speaking. He waited because he wanted to be certain you were the kind of person the message should go to. He has decided you are. Return to the Scholar's Quarter. He says it is about a chain. He means it is about what holds.",
     hint:'Return to the Scholar\'s Quarter.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vaArchitectureKnown),
+    activateNode:null, completeItems:[], 
     waypointNode:'NUE', reward:500,
     disposition:'"She built it. You closed it. Froberger found the mechanism. You followed him. Entry 42 is the fourth link. Four links is a chain. A chain holds." — Benedikt Rasp',
     npc:"long_john_silver_sen",
   },
   // ── Layer 54: Tilbury Harbor Arc quests ──
-  quest_tl_01: { id:'quest_tl_01', type:'side', title:'Rennau: The Ledger',
+  quest_tl_01: { id:'quest_tl_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['tlLedgerRead'] }, title:'Rennau: The Ledger',
     desc:"Harbor Master Rennau keeps the ledger of ships that haven\'t come back. The Harrow is the most recent. Find its manifest.",
     hint:'Search the Storefront docks for the Harrow manifest (loot or monster drop).',
-    activateNode:"LCY", completeItems:[], completeFn:() => !!(S_story.tlLedgerRead),
+    activateNode:"LCY", completeItems:[], 
     waypointNode:'STN', reward:0,
     disposition:'"The Conclave calls the ones that haven\'t come back \'weather losses.\' I stopped calling them that six weeks ago." — Harbor Master Rennau',
     passText:"Rennau shows you the ledger entry. The Harrow Manifest is in your hands now. She adds your name to the inquiry.",
     failText:"The Harrow Manifest is somewhere in the harbor records. Harbor Master Rennau is at the shipyard.",
     npc:"long_john_silver_sen",
   },
-  quest_tl_02: { id:'quest_tl_02', type:'side', title:'Rennau: The Embargo',
+  quest_tl_02: { id:'quest_tl_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flagsAny:['tlEmbargoChallenged','tlEmbargoDismissed'] }, title:'Rennau: The Embargo',
     desc:"The harbor has been closed for three weeks under Emergency Trade Protocol 7. Adjutant Vonn enforces it politely and completely — he is not wrong about the protocol, only about whether the protocol is right. The manifest proves ships have gone missing. The embargo prevents finding out why. Both things are true at the same time and the Conclave considers this a policy matter above Vonn's grade. Rennau has the ledger and no leverage. Decide what to do with the manifest.",
     hint:'Speak with Adjutant Vonn at Tilbury, then choose how to handle the ship manifest.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.tlEmbargoChallenged || S_story.tlEmbargoDismissed),
+    activateNode:null, completeItems:[], 
     waypointNode:'TL', reward:0,
     disposition:'"The embargo is a legitimate Conclave instrument. The fact that it\'s bad policy is above my grade." — Adjutant Vonn',
     passText:"Vonn is polite about the whole thing. The harbor stays closed. You decided what to do with the manifest.",
@@ -10320,10 +10320,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:"TL",
     npc:"long_john_silver_sen",
   },
-  quest_tl_03: { id:'quest_tl_03', type:'side', title:'Rennau: The Missing Ship',
+  quest_tl_03: { id:'quest_tl_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['tlMissingShipSolved'] }, title:'Rennau: The Missing Ship',
     desc:"A survivor from the Harrow has arrived in Tilbury. Three weeks on foot. Her name is Ori. She knows what happened.",
     hint:'Speak with Ori at the Storefront (Act IV+). Bring her account to Rennau.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.tlMissingShipSolved),
+    activateNode:null, completeItems:[], 
     waypointNode:'STN', reward:300,
     disposition:'"Ori said the thing that boarded them didn\'t have a name. Things that don\'t have names are the Void\'s specialty." — Harbor Master Rennau',
     passText:"Ori gives her account. Rennau reads it without stopping. She adds the name to the ledger in a different column — the one with answers.",
@@ -10344,12 +10344,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── §LVIII: Cycle 4 ──
-  quest_muffat_05: { id:'quest_muffat_05', type:'side', title:'Cycle 4',
+  quest_muffat_05: { id:'quest_muffat_05', type:'side', schema:'UQF-1.0', gate:{ flags:['antecedentMet'] }, bits:[], completion:{ flags:['cycle4NoteRead'] }, title:'Cycle 4',
     itemChain:[{action:'grant',name:'Scholar Kings Requisition (Handwritten)', icon:'📜', type:'readable', sell:0, readText:"SCHOLAR KINGS — INTERNAL ROUTING\nHandwritten. Class 3. No copy to be made.\n\nStation 7 monitoring capacity is to be maintained through the current cycle and expanded in advance of Cycle 4. The Antecedent Containment Protocol requires adjustment at the interval. Equipment delivered per the attached schedule is adequate for the extension only. Cycle 4 components to follow under separate authority.\n\nAuthorization: Conclave Archivist.\nNo countersignature required.\nNo date required.\n\n[Below the fold, a single line in different ink:]\nThe archive knows what it holds.\nDo not let the archive answer.",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Muffat has had three Scholar Kings crates on her shelf for two years, unopened. The stamp prevented harbor search. The question is closed now. She opens one. The receiver array inside is expected. The handwritten requisition note in the packing material is not.",
     hint:'Return to Magistra Muffat at the Harbor Docks — she has something to show you.',
-    activateNode:'LCY', activateCond:() => !!S_story.antecedentMet, // CO-002: activates same visit as Solm direction
-    completeFn:() => !!S_story.cycle4NoteRead,
+    activateNode:'LCY', // CO-002: activates same visit as Solm direction
+    
     xpAward:150, waypointNode:'LCY', reward:200,
     disposition:'"They were not reacting to the signal. They were already in motion." — Magistra Elara Muffat',
     passText:"Muffat reads the handwritten note twice. She does not recognize the hand. The Conclave Archivist authorization stamp is real.",
@@ -10357,22 +10357,22 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── §LVII: The Field Analyst ──
-  quest_solm_01: { id:'quest_solm_01', type:'side', title:'The Field Analyst',
+  quest_solm_01: { id:'quest_solm_01', type:'side', schema:'UQF-1.0', gate:{ flags:['antecedentMet'] }, bits:[], completion:{ flags:['solmFound'] }, title:'The Field Analyst',
     itemChain:[{action:'grant',name:'Analyst Solm Field File', icon:'📋', type:'readable', sell:0, readText:"FIELD FILE — ANALYST I. SOLM\nStation 7, Frequency 14.225 Monitoring Assignment\nClass 3, Scholar Kings Research Division\n\n[Vol. 1, Day 1 — three months prior:]\nTransmission cut mid-entry. Suppressor origin: CY access corridor. Operator unknown to me. I do not believe the suppression was deliberate interference — the timing and mechanism suggest an automated device, not a hand on a dial. I have nonetheless lost the fourth transmission before it completed.\n\nI cannot return to Station 7. The Scholar Kings will not acknowledge the record. I am here instead, where things that cannot be officially held are held unofficially.\n\n[Vol. 1, Days 2–87:]\nTransmission confirmed, bearing 047°, no repeat. [repeated daily, same hand, same composure]\n\n[Vol. 1, Day 88 — closing entry, ink slightly different pressure:]\nRecord from the terminus received. Source confirmed: contained, non-hostile, question answered. Absence confirmed on 14.225. The archive still has an archivist.\n\nFile closed.\n\n— I. Solm",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"The Station 7 operator went to Magistra Muffat three months ago with classified knowledge she could no longer safely carry. Muffat sent her to the Map Shop. Dusk holds things without asking why. He has been holding her.",
     hint:'Find Analyst Solm at the Map Shop. She has been waiting for someone who finished what she could not.',
-    activateNode:'LCY', activateCond:() => !!S_story.antecedentMet,
-    completeFn:() => !!S_story.solmFound,
+    activateNode:'LCY', 
+    
     xpAward:200, waypointNode:'STN', reward:150,
     disposition:'"Confirmed. That\'s sufficient." — Analyst I. Solm, closing entry, Field File Vol. 1',
     npc:"long_john_silver_sen",
   },
   // ── §LV: The Antecedent ──
-  quest_antecedent_01: { id:'quest_antecedent_01', type:'side', title:'The Question',
+  quest_antecedent_01: { id:'quest_antecedent_01', type:'side', schema:'UQF-1.0', gate:{ flags:['suppressorLogRead'] }, bits:[], completion:{ flags:['antecedentMet'] }, title:'The Question',
     desc:"Bearing 047°, depth 18m. The Antecedent Seal activates the receiving array. The thing that has been asking for forty-one volumes is still there. It was waiting for an answer, not an archivist. It turns out those are the same thing.",
     hint:'Descend past the CY checkpoint with the Antecedent Seal. The chamber is south.',
-    activateNode:'HKG', activateCond:() => !!S_story.suppressorLogRead,
-    completeFn:() => !!S_story.antecedentMet,
+    activateNode:'HKG', 
+    
     xpAward:400, waypointNode:'HAJ', reward:0,
     disposition:'"The question is closed." — The Antecedent',
     passText:"The question is closed. The receiving array goes dark. Forty-one volumes, and then this.",
@@ -10380,12 +10380,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"auros",
   },
   // ── §LIV: The Warrant ──
-  quest_signal_01: { id:'quest_signal_01', type:'side', title:'The Warrant',
+  quest_signal_01: { id:'quest_signal_01', type:'side', schema:'UQF-1.0', gate:{ flags:['station7LogRead'] }, bits:[], completion:{ flags:['suppressorLogRead'] }, title:'The Warrant',
     itemChain:[{action:'grant',name:'Warrant Suppressor Log', icon:'📡', type:'readable', sell:0, readText:"WARRANT SUPPRESSOR — AUTOMATIC SIGNAL LOG\nDevice ID: WSP-CY-04 (Neon Undercity, Station Corridor)\nOperator: Commander S. Bruhns (unaware of logging function)\n\n[Months 1–41: 14.225 monitored. No structured transmission detected. Log: confirmed absent. Cross-reference with Frequency Row Vol. 1–41: consistent.]\n\nDay 3, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 0.4s, character: non-mechanical, subsurface origin — depth est. 18m, bearing 047° from HM. Suppression effective. Signal terminated.\nDay 9, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 1.1s, character: non-mechanical, partial internal structure. Suppression effective. Signal terminated.\nDay 14, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 3.1s, character: non-mechanical, structured content, transmission in progress at suppression. Suppression effective. Signal terminated mid-transmission.\n\n[Post-Day 14: 14.225 monitored. No structured transmission detected. Source remains at bearing 047°, depth 18m.]\n\nAuto-assessment: Signal suppression achieved. Source has not repeated transmission.\n\nNote: Either source ceased voluntarily, or source is aware of suppression.\n\n[End of log. Device continues active monitoring.]",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Station 7's log ends mid-entry. Bearing 047° points at the Neon Undercity. Seraphine Bruhns has been running a Warrant suppressor at CY since before you arrived. The suppressor fires automatically on structured transmissions. It keeps a log. She did not know it kept a log.",
     hint:'Return to Commander Seraphine Bruhns at the Neon Undercity and ask about the suppressor log.',
-    activateNode:'HKG', activateCond:() => !!S_story.station7LogRead,
-    completeFn:() => !!S_story.suppressorLogRead,
+    activateNode:'HKG', 
+    
     xpAward:250, waypointNode:'HKG', reward:300,
     disposition:'"Either the source ceased voluntarily, or the source is aware of suppression." — Warrant Suppressor Log, auto-entry, Day 14',
     passText:"Seraphine reads the log entry twice. She did not know it kept records. The entry says: either source ceased voluntarily, or source is aware of suppression.",
@@ -10393,12 +10393,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"auros",
   },
   // ── §LIII: Station 7 ──
-  quest_muffat_03: { id:'quest_muffat_03', type:'side', title:'The Dark Station',
+  quest_muffat_03: { id:'quest_muffat_03', type:'side', schema:'UQF-1.0', gate:{ flags:['muffatManifestRead'] }, bits:[], completion:{ flags:['station7LogRead'] }, title:'The Dark Station',
     itemChain:[{action:'grant',name:'Station 7 Transmission Log', icon:'📡', type:'readable', sell:0, readText:"STATION 7 — AUTOMATED TRANSMISSION LOG\nFrequency 14.225 — Scholar Kings Monitoring Annex (Class 3)\nOperator: [field redacted per Class 3 protocol]\n\n[Volumes 1–40: confirmed absence. Cross-referenced with Frequency Row Vol. 1–40. Consistent.]\n\nVol. 41, Day 3: SIGNAL DETECTED — 14.225 — Duration: 0.4s — Character: non-mechanical — Source: subsurface, bearing 047° — Repeat: none. Logged per protocol. Notified Class 3 oversight. No response from oversight.\nVol. 41, Day 4: Absence confirmed.\nVol. 41, Day 9: SIGNAL DETECTED — 14.225 — Duration: 1.1s — Character: non-mechanical — Source: subsurface, bearing 047° — Repeat: none. Signal contains partial structure. Not noise. Logged. No response from oversight.\nVol. 41, Day 14: SIGNAL DETECTED — 14.225 — Duration: 3.1s — Character: non-mechanical — Source: subsurface, bearing 047° — Signal contains—\n\n[Log ends. The entry is incomplete. The pen is in the output tray. The receiver is still active. Bearing 047° from Station 7 points toward the Neon Undercity access corridor.]",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Station 7 is listed in the manifest as the delivery terminus. The station that went dark. The manifest has an address. Bertha's logs have a changed absence. The station has a transmission log that ends mid-entry.",
     hint:'Find Station 7 east of Frequency Row and read the transmission log.',
-    activateNode:'LCY', activateCond:() => !!S_story.muffatManifestRead,
-    completeFn:() => !!S_story.station7LogRead,
+    activateNode:'LCY', 
+    
     xpAward:300, waypointNode:'SVO', reward:350,
     disposition:'"The signal character was non-mechanical. Three occurrences, each longer than the last. The fourth was long enough to contain something. We do not know what it contained. The station operator does." — Magistra Elara Muffat',
     passText:"The log ends mid-entry. The pen is still in the output tray. The operator knew something was answering. We do not know where the operator is.",
@@ -10406,12 +10406,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── §LII: Muffat — The Distribution Pattern ──
-  quest_muffat_02: { id:'quest_muffat_02', type:'side', title:'The Distribution Pattern',
+  quest_muffat_02: { id:'quest_muffat_02', type:'side', schema:'UQF-1.0', gate:{ flags:['muffatBerthReached'] }, bits:[], completion:{ flags:['muffatManifestRead'] }, title:'The Distribution Pattern',
     itemChain:[{action:'grant',name:'Shipping Manifest (Intercepted)', icon:'📦', type:'readable', sell:0, readText:"SCHOLAR KINGS DISTRIBUTION — INTERNAL ROUTING\nStamp: Non-Standard Clearance (Class 3 Seal)\nOrigin: Tilbury Harbor, Third Berth\nDestination: Station 7 (Frequency Row Monitoring Annex)\nDelivery Frequency: Every 6 weeks\nContents: Monitoring equipment, Category 4 (no itemisation required)\nDistribution Reference: Frequency 14.225 — passive reception array maintenance\n\n[Handwritten annotation, margin:]\nStation 7 last confirmed operational — see Freq. Row log, Vol. 38.\nStation 7 status as of Vol. 41: no confirmation received.\nField note: Station may have been decommissioned without notice to monitoring staff.\n\n[Second annotation, different hand:]\nStation 7 was not decommissioned.\n—M.E.M.",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"The crate Muffat has on her shelf has a distribution stamp and a frequency reference: 14.225. That is Bertha No-Bank's frequency. The one with nothing on it. Forty-one volumes of nothing.",
     hint:'Find Bertha No-Bank at Frequency Row and ask about the changed absence on 14.225.',
-    activateNode:'LCY', activateCond:() => !!S_story.muffatBerthReached,
-    completeFn:() => !!S_story.muffatManifestRead,
+    activateNode:'LCY', 
+    
     xpAward:250, waypointNode:'DUS', reward:300,
     disposition:'"Volume forty-one is when the absence changed. I do not know what changed it. I logged the change. That is the function of the log." — Bertha No-Bank',
     passText:"The manifest names Station 7 at 14.225 as the terminus. Station 7 went dark three months ago. Bertha has been logging the changed absence without knowing what changed.",
@@ -10419,24 +10419,24 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── §LIX: The Road to Damascus ──
-  quest_road_damascus: { id:'quest_road_damascus', type:'side', title:'The Light at Noon',
+  quest_road_damascus: { id:'quest_road_damascus', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flags:['saulConverted'] }, title:'The Light at Noon',
     desc:"The road to Damascus is well-maintained for the first half day. After the stones give way to packed earth, the escort falls back and the dust is the same colour as the sky at noon. The warrants are in your coat. He leaves at first light.",
     hint:'Take the road east from Jerusalem to Damascus.',
     activateNode:'JRS',
     activateCond:() => (S_story.inventory||[]).some(i => i.name === 'Three Jerusalem Warrants'),
-    completeFn:() => !!S_story.saulConverted,
+    
     xpAward:200, waypointNode:'DAM', reward:0,
     disposition:'"He says: Lead me to the city. He means Damascus. He means: I cannot complete this journey on my own and I require assistance. Both things are true for the first time simultaneously." — The road to Damascus',
     passText:"At noon a light struck the road. He fell. A voice said his name. When he rose, he could not see.",
     failText:"The road to Damascus stretches east from Jerusalem. He has the warrants in his coat.",
     npc:"long_john_silver_sen",
   },
-  quest_anath: { id:'quest_anath', type:'side', title:'The House on the Lower Road',
+  quest_anath: { id:'quest_anath', type:'side', schema:'UQF-1.0', gate:{ flags:['saulConverted'] }, bits:[], completion:{ flags:['anathSightRestored'] }, title:'The House on the Lower Road',
     desc:"Three days in a house on the lower road. The innkeeper brings food at noon and does not ask questions about his eyes. Someone else's servant brings water in the morning. He has not asked for it. He has not told anyone he cannot see. On the third morning, someone knocks.",
     hint:'Wait. Speak to Anath when he arrives on the third day.',
     activateNode:'DAM',
-    activateCond:() => !!S_story.saulConverted,
-    completeFn:() => !!S_story.anathSightRestored,
+    
+    
     xpAward:300, waypointNode:'DAM', reward:0,
     disposition:'"Brother Saul, the Lord Jesus, who appeared to you on the road, has sent me so that you may see again." — Anath',
     passText:"Anath puts his hands on him. Something like scales falls from his eyes. He can see. He stands and is baptized.",
@@ -10444,22 +10444,22 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"ibrahim_al_tawil_cai",
   },
   // ── §LXI: Jerusalem return + Tarsus ──
-  quest_hellenists_jerusalem: { id:'quest_hellenists_jerusalem', type:'side', title:'Fifteen Days',
+  quest_hellenists_jerusalem: { id:'quest_hellenists_jerusalem', type:'side', schema:'UQF-1.0', gate:{ flags:['barnachVouchedHR'] }, bits:[], completion:{ flags:['hellenistsThreaten'] }, title:'Fifteen Days',
     desc:"He stays fifteen days. He speaks in the assembly halls. He argues with people who disagree with him — he is very good at arguing, and the conversion did not change this about him, which is a point of some reflection. On the fifteenth day, the Hellenists gather near the gate. Barnach says: go.",
     hint:'Stay in Jerusalem. Wait for Barnach\'s word — fifteen days.',
-    activateNode:'JRS', activateCond:() => !!S_story.barnachVouchedHR,
-    completeFn:() => !!S_story.hellenistsThreaten,
+    activateNode:'JRS', 
+    
     xpAward:150, waypointNode:'JRS', reward:0,
     disposition:'"Fifteen days is how long Jerusalem was prepared to hold this tension. It has held. Now it is releasing." — Barnach',
     passText:"On the fifteenth day the Hellenists gather near the gate. Barnach says: go. He goes.",
     failText:"He is still in Jerusalem, still arguing. The Hellenists have not yet made their move.",
     npc:"long_john_silver_sen",
   },
-  quest_barnach_finds: { id:'quest_barnach_finds', type:'side', title:'A Year Looking',
+  quest_barnach_finds: { id:'quest_barnach_finds', type:'side', schema:'UQF-1.0', gate:{ flags:['hellenistsThreaten'] }, bits:[], completion:{ flags:['barnachFoundPaul'] }, title:'A Year Looking',
     desc:"Barnach has been looking for a year. He found him in the tentmaking quarter in the afternoon. He said: it\'s time. There was no skill check. No argument. Just: it\'s time. That was sufficient.",
     hint:'Speak to Barnach at Tarsus.',
-    activateNode:'ADA', activateCond:() => !!S_story.hellenistsThreaten,
-    completeFn:() => !!S_story.barnachFoundPaul,
+    activateNode:'ADA', 
+    
     xpAward:100, waypointNode:'ADA', reward:0,
     disposition:'"I have been looking for you for a year. It\'s time." — Barnach',
     passText:"Barnach says: it is time. There is no argument. Paul sets down the work and goes.",
@@ -10527,11 +10527,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── §LXII: The Sending ──
-  quest_antioch_commission: { id:'quest_antioch_commission', type:'side', title:'The Sending',
+  quest_antioch_commission: { id:'quest_antioch_commission', type:'side', schema:'UQF-1.0', gate:{ flags:['barnachFoundPaul'] }, bits:[], completion:{ flags:['commissionReceived'] }, title:'The Sending',
     desc:"Antioch is where the first journey forms. Barnach is here. Silar is here. The commission comes from the assembly — the first time Paul has been sent somewhere by a body of people rather than going by his own authority. He is accountable to the people who sent him and to the people he will find. He finds this clarifying.",
     hint:'Speak to Assembly Elder Joach at Antioch.',
-    activateNode:'HTY', activateCond:() => !!S_story.barnachFoundPaul,
-    completeFn:() => !!S_story.commissionReceived,
+    activateNode:'HTY', 
+    
     xpAward:150, waypointNode:'HTY', reward:0,
     disposition:'"The mandate is simple because the work isn\'t." — Assembly Elder Joach',
     passText:"The assembly sends them. He is accountable now to the people who sent him and to those he will find. He finds this clarifying.",
@@ -10539,11 +10539,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── §LXV: Philippi — Lyra's Conversion + The Prison ──
-  quest_philippi: { id:'quest_philippi', type:'side', title:'The Purple Merchant',
+  quest_philippi: { id:'quest_philippi', type:'side', schema:'UQF-1.0', gate:{ flags:['commissionReceived'] }, bits:[], completion:{ flags:['lyraConverted'] }, title:'The Purple Merchant',
     desc:"Lyra sells purple cloth from the bridge. She has been watching Paul from across the bridge for two days before she speaks. When she speaks it is because she has already decided. The earthquake comes later. Every door opens.",
     hint:'Speak to Lyra at Philippi.',
-    activateNode:'KVA', activateCond:() => !!S_story.commissionReceived,
-    completeFn:() => !!S_story.lyraConverted,
+    activateNode:'KVA', 
+    
     xpAward:150, waypointNode:'KVA', reward:0,
     disposition:'"I decided before I spoke. The speaking was the confirmation." — Lyra',
     passText:"The Lord opens her heart. She had already decided before she spoke. Her household is baptized. The earthquake comes later. Every door opens.",
@@ -10590,11 +10590,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── §LXVIII: Corinth — The Letters ──
-  quest_corinth_letters: { id:'quest_corinth_letters', type:'side', title:'Tent Canvas & Letters',
+  quest_corinth_letters: { id:'quest_corinth_letters', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['corinthLettersWritten'] }, title:'Tent Canvas & Letters',
     desc:"Prisca and Akil hire Paul when he arrives because he knows the tentmaking trade. He earns his room in canvas. He stays eighteen months. He writes letters to the cities he has already been to. Some of them are the most important things he will ever write. He does not know which ones yet.",
     hint:'Stay in Corinth with Prisca and Akil.',
-    activateNode:'ZTH', activateCond:() => true,
-    completeFn:() => !!S_story.corinthLettersWritten,
+    activateNode:'ZTH', 
+    
     xpAward:200, waypointNode:'ZTH', reward:0,
     disposition:'"He earned his room. He was good with canvas. The letters — we could hear him working on them at night." — Prisca',
     passText:"Eighteen months of canvas and letters. Some of the letters are the most important things he will ever write. He does not know which ones yet.",
@@ -10602,11 +10602,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── §LXIX: Rome — House Arrest ──
-  quest_rome_arrest: { id:'quest_rome_arrest', type:'side', title:'The Rented House',
+  quest_rome_arrest: { id:'quest_rome_arrest', type:'side', schema:'UQF-1.0', gate:{ flags:['maltaSnakeEvent'] }, bits:[], completion:{ flags:['romeArrestBegun'] }, title:'The Rented House',
     desc:"House arrest in a rented house. He can receive visitors, which he does, constantly. He can write letters, which he does, constantly. He cannot leave, which he does not. The arc does not end here. It stops here.",
     hint:'Reach Rome and speak to Timael.',
-    activateNode:'FCO', activateCond:() => !!S_story.maltaSnakeEvent,
-    completeFn:() => !!S_story.romeArrestBegun,
+    activateNode:'FCO', 
+    
     xpAward:300, waypointNode:'FCO', reward:0,
     disposition:'"He got up. From Lystra, from every place after. The counting was real." — Timael',
     passText:"He receives everyone who comes. He writes everyone who cannot come. The rented house becomes the center of something. The arc does not end here. It stops here.",
@@ -10649,11 +10649,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:'long_john_silver_sen',
   },
   // ── §PAUL-01: Malta — The Snake ──
-  quest_snake_melta: { id:'quest_snake_melta', type:'side', title:'It Did Nothing',
+  quest_snake_melta: { id:'quest_snake_melta', type:'side', schema:'UQF-1.0', gate:{ flags:['shipwreckSurvived'] }, bits:[], completion:{ flags:['maltaSnakeEvent'] }, title:'It Did Nothing',
     desc:"A viper comes out of the brush when the wood is gathered for the fire. The heat of the fire, the disturbance of 276 people making camp on an unfamiliar beach. It fastens to his hand.\n\nThe islanders have reached a theory: he is a murderer. He survived the sea, so the sea did not judge him — but the land has found him at the fire. This theory is internally consistent given what the islanders know, which is what they can see from the beach.\n\nHe shakes the snake into the fire.\n\nHis hand does not swell. He does not fall. He goes back to building the fire.",
     hint:'Watch. No action required from you this time.',
-    activateNode:'MLA', activateCond:() => !!S_story.shipwreckSurvived,
-    completeFn:() => !!S_story.maltaSnakeEvent,
+    activateNode:'MLA', 
+    
     xpAward:150, waypointNode:'MLA', reward:0,
     passText:'The islanders change their theory twice in one afternoon — first: murderer. Then: god. He corrects neither of these. He has been counting people all night and the count is correct and the fire is what the 276 need right now.\n\n"The islanders showed us unusual kindness."\n\nYou have seen this before — a place with no reason to be kind that is kind anyway. It moves the same way every time.',
     failText:'The snake is in the brush. The fire has not been built yet.',
@@ -11053,22 +11053,22 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     disposition:'"You named it. I was not expecting to be named." — The Innmother\'s Hall',
     npc:"long_john_silver_sen",
   },
-  quest_inn_05: { id:'quest_inn_05', type:'side', title:'The Return',
+  quest_inn_05: { id:'quest_inn_05', type:'side', schema:'UQF-1.0', gate:{ sleptAt:['INN'] }, bits:[], completion:{ flags:['innDeparted'], atNode:'INN' }, title:'The Return',
     desc:'You left the hall. You came back. She notes this.',
     hint:'Leave The Innmother\'s Hall and return.',
-    activateNode:'INN', activateCond:() => !!(S_story.sleptAtNodes||{})['INN'],
-    completeItems:[], completeFn:() => !!(S_story.innDeparted && S_story.currentCode === 'INN'),
+    activateNode:'INN', 
+    completeItems:[], 
     onComplete:() => _innKindness(1),
     disposition:'"You came back. No one has come back before you." — The Innmother\'s Hall',
     passText:"You came back. No one has come back before you. She notes this.",
     failText:"You have not yet left the hall and returned. She is waiting to note it.",
     npc:"long_john_silver_sen",
   },
-  quest_inn_06: { id:'quest_inn_06', type:'side', title:'The Free Booking',
+  quest_inn_06: { id:'quest_inn_06', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flags:['freeBookingUnlocked'] }, title:'The Free Booking',
     desc:'The Kindness Meter has reached its threshold. She gives you the key. Sleep is free here for the remainder of the run.',
     hint:'Reach Kindness ≥ 5 through genuine acts at the Inn and the Crown domains.',
     activateNode:'INN', activateCond:() => (S_story.innmotherKindness||0) >= 5,
-    completeItems:[], completeFn:() => !!S_story.freeBookingUnlocked,
+    completeItems:[], 
     disposition:'"Sleep is free. The meals are still what they are." — The Innmother\'s Hall',
     passText:"She gives you the key. Sleep is free here for the remainder of the run.",
     failText:"The Kindness Meter has not yet reached its threshold. The key is still behind the desk.",
@@ -11077,11 +11077,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 
   // ── §CROWN-01 Amendment A: Failure dispatches ──
   quest_whisper_kelpie: { id:'quest_whisper_kelpie', type:'side',
-    title:'Track the Silent One',
+    schema:'UQF-1.0', gate:{ questsAttempted:['quest_whisper_01'] }, bits:[], completion:{ battles:['HW1_KELPIE'] }, title:'Track the Silent One',
     desc:'Whisper gestures east — toward a part of the pool that has been moving when the water should be still. "The thing that moves there. Find it."',
     hint:'Kill the Kelpie in the still water\'s east shallows.',
-    activateNode:'HW1', activateCond:() => (S_story.quests['quest_whisper_01']||'') !== '',
-    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HW1_KELPIE']),
+    activateNode:'HW1', 
+    completeItems:[], 
     onComplete:() => { _innKindness(1); },
     disposition:'"You found it. You followed it. Now you know what silence that moves looks like." — The Still Water',
     passText:"You found it. You followed it. The Kelpie circles. You circle with it. Now you know what silence that moves looks like.",
@@ -11090,11 +11090,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_glut_mudcrab: { id:'quest_glut_mudcrab', type:'side',
-    title:'Find What Left',
+    schema:'UQF-1.0', gate:{ questsAttempted:['quest_glut_01'] }, bits:[], completion:{ battles:['HG1_MUDCRAB'] }, title:'Find What Left',
     desc:'The Mudcrab ate enough and left the feeding pool. Glut needs you to find it and bring it back. It is a mudcrab.',
     hint:'Catch the Mudcrab at the mire\'s edge and return it to the feeding pool.',
-    activateNode:'HG1', activateCond:() => (S_story.quests['quest_glut_01']||'') !== '',
-    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HG1_MUDCRAB']),
+    activateNode:'HG1', 
+    completeItems:[], 
     onComplete:() => { _innKindness(1); },
     disposition:'"It was enough. It knew when to stop. I keep it here now. I feed it more than it wants. This is fine." — The Feeding Pool',
     passText:"The mudcrab is returned. It was enough. It knew when to stop. Glut feeds it more than it wants. This is fine.",
@@ -11103,11 +11103,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_wane_spawn: { id:'quest_wane_spawn', type:'side',
-    title:'What Moved It Before You',
+    schema:'UQF-1.0', gate:{ questsAttempted:['quest_wane_02'] }, bits:[], completion:{ battles:['HN1_SPAWN'] }, title:'What Moved It Before You',
     desc:'Something moved the stone once, a long time ago, and put it back wrong. Find what moved it.',
     hint:'Kill the Sea Spawn beneath the stone. The DC on the stone task will drop.',
-    activateNode:'HN1', activateCond:() => (S_story.quests['quest_wane_02']||'') !== '',
-    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HN1_SPAWN']),
+    activateNode:'HN1', 
+    completeItems:[], 
     onComplete:() => { S_story.waneStoneDCReduced = true; _innKindness(1); },
     disposition:'"It had been carrying the same thing for years. Now it is not carrying anything. The stone is lighter." — The Drained Mire',
     passText:"It had been carrying the same thing for years. Now it is not. The stone is lighter.",
@@ -11117,11 +11117,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 
   // ── §CROWN-01 Amendment A: Hag commissions ──
   quest_whisper_witch: { id:'quest_whisper_witch', type:'side',
-    title:'The Unnamed Thing',
+    schema:'UQF-1.0', gate:{ questsAttempted:['quest_whisper_03'] }, bits:[], completion:{ battles:['HW1_WITCH'] }, title:'The Unnamed Thing',
     desc:'The still water has a surface problem. A Sea Witch has been living in the deep section for two seasons. Whisper will not name it.',
     hint:'Kill the Sea Witch in the deep still water.',
-    activateNode:'HW1', activateCond:() => (S_story.quests['quest_whisper_03']||'') !== '',
-    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HW1_WITCH']),
+    activateNode:'HW1', 
+    completeItems:[], 
     onComplete:() => {
       S_story.knowledge = S_story.knowledge || [];
       S_story.knowledge.push("Sea Witch's Tome — The witch hoarded secrets. You found them anyway. INT checks +1.");
@@ -11135,11 +11135,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_glut_octopus: { id:'quest_glut_octopus', type:'side',
-    title:'What I Fed',
+    schema:'UQF-1.0', gate:{ questsAttempted:['quest_glut_03'] }, bits:[], completion:{ battles:['HG1_OCTOPUS'] }, title:'What I Fed',
     desc:'A Giant Octopus grew fat on Glut\'s feeding and now blocks the eastern crossing of the pool. She describes it as: "The passage on the east. It is blocked."',
     hint:'Kill the Giant Octopus at the east crossing of the feeding pool.',
-    activateNode:'HG1', activateCond:() => (S_story.quests['quest_glut_03']||'') !== '',
-    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HG1_OCTOPUS']),
+    activateNode:'HG1', 
+    completeItems:[], 
     onComplete:() => {
       S_story.inventory = S_story.inventory || [];
       S_story.inventory.push({ name:"Glut's Hoard Fragment", icon:'🪴', sell:45, type:'loot', desc:'The octopus was sitting on this. It had been there long enough to consider itself the owner.' });
@@ -11155,11 +11155,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_wane_demon: { id:'quest_wane_demon', type:'side',
-    title:'The Better Drainer',
+    schema:'UQF-1.0', gate:{ questsAttempted:['quest_wane_03'] }, bits:[], completion:{ battles:['HN1_DEMON'] }, title:'The Better Drainer',
     desc:'Something below the mire drains more efficiently than the mire itself. Wane finds this unacceptable.',
     hint:'Kill the Sea Demon in the sub-channel below the drained mire.',
-    activateNode:'HN1', activateCond:() => (S_story.quests['quest_wane_03']||'') !== '',
-    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['HN1_DEMON']),
+    activateNode:'HN1', 
+    completeItems:[], 
     onComplete:() => {
       S_story.atlanteanProcessKnown = true;
       S_story.knowledge = S_story.knowledge || [];
@@ -11176,11 +11176,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_inn_eel: { id:'quest_inn_eel', type:'side',
-    title:'The Smell in the South Corridor',
+    schema:'UQF-1.0', gate:{ questsAttempted:['quest_inn_03'] }, bits:[], completion:{ battles:['INN_EEL'] }, title:'The Smell in the South Corridor',
     desc:'There is a Giant Eel in the drainage channel beneath the inn. It has been there since autumn. The Innmother has not dealt with it.',
     hint:'Go below the inn and kill the Giant Eel in the drainage channel.',
-    activateNode:'INN', activateCond:() => (S_story.quests['quest_inn_03']||'') !== '',
-    completeItems:[], completeFn:() => !!((S_story.defeatedBattles||{})['INN_EEL']),
+    activateNode:'INN', 
+    completeItems:[], 
     onComplete:() => {
       S_story.electricEelOrganHeld = true;
       S_story.inventory = S_story.inventory || [];
@@ -11270,12 +11270,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 
   // ── §LXX: The Atlantean Shore quests ──
   quest_shore_01: { id:'quest_shore_01', type:'side',
-    title:'The Path Opens',
+    schema:'UQF-1.0', gate:{ battles:['HCA_BOSS'] }, bits:[], completion:{ atNode:'DS0' }, title:'The Path Opens',
     desc:'The Deeper Clearing has a path going south. It did not have one before.',
     hint:'Follow the path south of HCA to the Shore Road.',
-    activateNode:'HCA', activateCond:() => !!((S_story.defeatedBattles||{})['HCA_BOSS']),
+    activateNode:'HCA', 
     completeItems:[],
-    completeFn:() => S_story.currentCode === 'DS0',
+    
     onComplete:() => {
       S_story.shorePathFound = true;
       S_story.gold = (S_story.gold||0) + 200;
@@ -11362,12 +11362,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 
   // ── §LXXII: The Conclave Annex quest ──
   quest_ca_01: { id:'quest_ca_01', type:'side',
-    title:'The Adjusted Timeline',
+    schema:'UQF-1.0', gate:{ flags:['tideGateOpened','cycle4NoteRead'] }, bits:[], completion:{ flags:['conclaveResponseRead'] }, title:'The Adjusted Timeline',
     desc:'The Conclave Annex in the Scholar\'s Quarter opened when the Tide Gate opened. The Archivist left something there.',
     hint:'Find the Conclave Annex (west of the Scholar\'s Quarter) and read the post-event document.',
-    activateNode:'LCY', activateCond:() => !!S_story.tideGateOpened && !!S_story.cycle4NoteRead,
+    activateNode:'LCY', 
     completeItems:[],
-    completeFn:() => !!S_story.conclaveResponseRead,
+    
     onComplete:() => {
       S_story.gold = (S_story.gold||0) + 300;
       storyMsg("300gp. The Conclave's post-event protocol is complete. The interval is confirmed.");
@@ -11431,12 +11431,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 
   // ── §LXXIII: The Depth ──
   quest_depth_01: { id:'quest_depth_01', type:'side',
-    title:'The Depth — 18 Meters',
+    schema:'UQF-1.0', gate:{ flags:['tideGateOpened'] }, bits:[], completion:{ atNode:'DA3' }, title:'The Depth — 18 Meters',
     desc:'The Gate opened downward. Eighteen meters below, the signal that Station 7 monitored has reached its terminus. The Antecedent has a second configuration — the tidal question, built on the same foundation as the archival one.',
     hint:'Descend through the open Gate to the depth below.',
-    activateNode:'DA2', activateCond:() => !!S_story.tideGateOpened,
+    activateNode:'DA2', 
     completeItems:[],
-    completeFn:() => S_story.currentCode === 'DA3',
+    
     onComplete:() => {
       S_story.antecedentDepthMet = true;
       S_story.knowledge = S_story.knowledge || [];
@@ -11798,10 +11798,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 
   // ── §PORT-02: Dunfall quests ──
   quest_df_01: { id:'quest_df_01', type:'side',
-    title:'The Open Harbor',
+    schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['dunfallAccessed'] }, title:'The Open Harbor',
     desc:'Dunfall kept its doors closed while the kelpie held the ford. Three men did not come back. With the kelpie gone, the harbor is open again and Mairén Fionn is at the dock.',
     hint:'Arrive at Dunfall after clearing the kelpie at the Highland loch.',
-    activateNode:'DNF', completeItems:[], completeFn:() => !!(S_story.dunfallAccessed),
+    activateNode:'DNF', completeItems:[], 
     waypointNode:'DNF', reward:0,
     disposition:'"You cleared the ford. We opened the doors." — Mairén Fionn, the entire explanation',
     passText:"You cleared the ford. We opened the doors. Mairen Fionn does not waste words.",
@@ -11847,10 +11847,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 
   // ── §PORT-01: Saltwick quests ──
   quest_sk_01: { id:'quest_sk_01', type:'side',
-    title:'The Unwritten Port',
+    schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['saltwickAccessed'] }, title:'The Unwritten Port',
     desc:"Saltwick runs on vouches. A Letter of True Passage from Aldous works here — he listed Saltwick as one of his six valid ports. So does the joint debt note from the pirate crews. Either credential opens the dock. Neither is paperwork the Crown can read.",
     hint:'Arrive at Saltwick with a credential. Aldous\'s letter or the joint pirate note both work.',
-    activateNode:'MME', completeItems:[], completeFn:() => !!(S_story.saltwickAccessed),
+    activateNode:'MME', completeItems:[], 
     waypointNode:'MME', reward:0,
     disposition:'"You\'re in Aldous\'s column. That\'s enough." — Harbormaster Dorit',
     passText:"You are in Aldous column. That is enough. Harbormaster Dorit has opened the dock.",
@@ -11858,11 +11858,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_sk_hull: { id:'quest_sk_hull', type:'side',
-    title:'The Cracked Strake',
+    schema:'UQF-1.0', gate:{ flags:['saltwickAccessed'] }, bits:[], completion:{ flags:['shipRepaired'] }, title:'The Cracked Strake',
     desc:"The Tilbury Star has been running with a cracked strake on the port hull for three crossings. The captain knows. She hasn't reported it because Tilbury dry dock costs more than the revenue margin. Saltwick has a dry dock that doesn't ask about the cargo while the ship is in it.",
     hint:'Have the Tilbury Star repaired at Saltwick\'s dry dock. Cost: 200gp.',
-    activateNode:'MME', activateCond:() => !!S_story.saltwickAccessed,
-    completeFn:() => !!(S_story.shipRepaired),
+    activateNode:'MME', 
+    
     onComplete:() => {
       S_story.shipRepaired = true;
       S_story.xp = (S_story.xp||0) + 200;
@@ -12620,20 +12620,20 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   // ── Layer 55: Visby Underground quests ──
-  quest_vs_01: { id:'quest_vs_01', type:'side', title:'Solvak: The Collector',
+  quest_vs_01: { id:'quest_vs_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vsDebtProbed'] }, title:'Solvak: The Collector',
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
     hint:'Enter Visby and speak to Warlord Mordus about the missing weapons shipment.',
-    activateNode:'VS', completeItems:[], completeFn:() => !!(S_story.vsDebtProbed),
+    activateNode:'VS', completeItems:[], 
     waypointNode:'VS', reward:0,
     disposition:'"The debt will be paid when the weapons are returned. The weapons will be returned when I know where they went. I do not know where they went." — Warlord Mordus',
     passText:"The debt will be paid when the weapons are returned. Mordus has spoken. The investigation path into Visby is open.",
     failText:"Warlord Mordus has not been spoken to yet about the missing weapons shipment.",
     npc:"long_john_silver_sen",
   },
-  quest_vs_02: { id:'quest_vs_02', type:'side', title:'Yva: The Broker',
+  quest_vs_02: { id:'quest_vs_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vsWeaponsFound'] }, title:'Yva: The Broker',
     desc:"Yva is inside the Goblin Caves. The Hollow Hands have marked her stall. She knows where the weapons went — for 50gp.",
     hint:'Find Yva inside the Goblin Caves.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vsWeaponsFound),
+    activateNode:null, completeItems:[], 
     waypointNode:'TRD', reward:0,
     disposition:'"I don\'t know who they answer to. I know what the mark means." — Yva',
     passText:"I do not know who they answer to. I know what the mark means. Yva has taken the 50gp and given the lead.",
@@ -12641,10 +12641,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:"VS",
     npc:"long_john_silver_sen",
   },
-  quest_vs_03: { id:'quest_vs_03', type:'side', title:'Mordus Pays',
+  quest_vs_03: { id:'quest_vs_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vsDebtSettled'] }, title:'Mordus Pays',
     desc:"Mordus saw the Hollow Hands Seal. He paid sideways. Bring the transit seal to Solvak.",
     hint:'Return to Solvak outside Visby with the Hollow Hands Seal.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.vsDebtSettled),
+    activateNode:null, completeItems:[], 
     waypointNode:'VS', reward:400,
     disposition:'"The Hollow Hands are mine to deal with now that I know what they are." — Warlord Mordus',
     passText:"The Hollow Hands are mine to deal with now that I know what they are. Mordus has paid. Solvak has the seal.",
@@ -12653,10 +12653,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── Layer 56: Void Shaman quest ──
-  quest_vs_warden: { id:'quest_vs_warden', type:'side', title:'The Warden',
+  quest_vs_warden: { id:'quest_vs_warden', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['wardensLegacyKnown'] }, title:'The Warden',
     desc:"The Warden has been at the Mountain Pass for two hundred years, executing a mandate that was already wrong when it arrived. Everyone who has come close enough to understand this has been turned away or worse. You have the Constructor's Log. You have Froberger's notes. You have the names of all four links in the chain. The Warden does not know any of this. The question is not whether you can explain it — the question is whether something that has been wrong for two centuries can recognize its own wrongness when someone finally holds up the record.",
     hint:'Enter the MT tunnel and confront the Warden. Bring the Constructor\'s Log if you have it.',
-    activateNode:null, completeItems:[], completeFn:() => !!(S_story.wardensLegacyKnown),
+    activateNode:null, completeItems:[], 
     waypointNode:'GVA', reward:600,
     disposition:'"If I\'m wrong, then I needed to be stopped. That\'s — that\'s actually fine." — The Warden',
     passText:"If I am wrong, then I needed to be stopped. That is actually fine. The Warden has accepted the record.",
@@ -12714,11 +12714,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_cat_04: { id:'quest_cat_04', type:'side', title:'Jimmy: When the Tornado Comes',
+  quest_cat_04: { id:'quest_cat_04', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ battles:['CQ_TAZ'] }, title:'Jimmy: When the Tornado Comes',
     itemChain:[{action:'grant',name:'Furball Crown',icon:'🌀',type:'trophy',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Two Honchos merged. A Taz Devil — Furball Tornado — is loose in the Cat Quarter. Take it down.",
     hint:'Defeat the Taz Devil at the Cat Quarter.',
-    activateNode:null, completeItems:[], completeFn:() => !!S_story.defeatedBattles['CQ_TAZ'],
+    activateNode:null, completeItems:[], 
     waypointNode:'CDG', reward:750,
     disposition:'"Oh you think you TOUGH now? You killed ONE Taz? ONE? There\'s THREE more building up past the fish market right now and when they merge — WHEN THEY MERGE, buddy — that ain\'t a Taz no more. That\'s a KING." — Tommy No-Ears DeVito',
     passText:"You think you TOUGH now? You killed ONE Taz. There are THREE more building past the fish market. When they merge that is not a Taz anymore. That is a KING.",
@@ -12743,11 +12743,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_cat_06: { id:'quest_cat_06', type:'side', title:'Tommy: The Cat-King Cometh',
+  quest_cat_06: { id:'quest_cat_06', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['catKingDefeated'] }, title:'Tommy: The Cat-King Cometh',
     itemChain:[{action:'grant',name:"Cat-King's Claw Fragment",icon:'👑',type:'trophy',sell:50,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Three Taz Devils merged at the fish market. The Cat-King has awoken. You\'re the hero. You go.",
     hint:'Defeat The Cat-King at the Cat Quarter.',
-    activateNode:null, completeItems:[], completeFn:() => !!S_story.catKingDefeated,
+    activateNode:null, completeItems:[], 
     waypointNode:'CDG', reward:1500,
     disposition:'"Listen. I want you to know something. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody. It ain\'t a thing we advertise." — Jimmy Two-Tails',
     passText:"You did good. Real good. You are honorary Ally Cat now. Do not tell nobody. It is not a thing they advertise.",
@@ -12769,10 +12769,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── Layer 78: La Riva — Fishmonger's Row quests ──
-  quest_la_riva_01: { id:'quest_la_riva_01', type:'side', title:"Kenickie: What Remains",
+  quest_la_riva_01: { id:'quest_la_riva_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['connieMet'] }, title:"Kenickie: What Remains",
     desc:"Kenickie mentioned Fishmonger's Row. Three city blocks. Nobody's been back — except Connie has. She's still there.",
     hint:"Go east from the Cat Quarter to Fishmonger's Row. Find Connie Tuna.",
-    activateNode:null, completeItems:[], completeFn:() => !!S_story.connieMet,
+    activateNode:null, completeItems:[], 
     waypointNode:'AMS', reward:0,
     disposition:'"She\'s still there. That\'s the whole of it." — Kenickie Clawnickie Mancuso',
     passText:"She is still there. That is the whole of it. Connie Tuna has been found at Fishmonger Row.",
@@ -12793,11 +12793,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:"AMS",
     npc:"long_john_silver_sen",
   },
-  quest_la_riva_03: { id:'quest_la_riva_03', type:'side', title:"Aldo: The Account Book",
+  quest_la_riva_03: { id:'quest_la_riva_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['laRivaComplete'] }, title:"Aldo: The Account Book",
     desc:"Aldo Sardino has kept the account book since the row came down. Vincenzo's page is the last completed entry. He wants it to go to someone who knew Vincenzo.",
     hint:"Deliver the Old Tuna Account Book to Kenickie at the Cat Quarter.",
     activateNode:null, completeItems:[],
-    completeFn:() => !!S_story.laRivaComplete,
+    
     waypointNode:'CDG', reward:0,
     disposition:'"Yeah. Okay. I\'ll hold onto this." — Kenickie Clawnickie Mancuso',
     passText:"Yeah. Okay. I will hold onto this. Kenickie has the account book. Vincenzo page delivered.",
@@ -12828,48 +12828,48 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:"A Rank 15 fish at Yugurt Lake has not been landed. The deep threshold has not been crossed.",
     npc:"emmer",
   },
-  quest_horned_shark: { id:'quest_horned_shark', type:'side', title:'The Noon Point',
+  quest_horned_shark: { id:'quest_horned_shark', type:'side', schema:'UQF-1.0', gate:{ flags:['fishingYugurtFavour'] }, bits:[], completion:{ flags:['hornedSharkSlain'] }, title:'The Noon Point',
     desc:"The Noon Point marker stands where the bank rope ends and the shark's territory begins. Every angler at Yugurt knows it. The ones who fish past it are not more skilled — they have simply decided the marker is someone else's problem. You have been past it. The lake has registered you. The shark hunts this water. You are in this water.",
     hint:'Hunt the Horned Shark at Yugurt Lake.',
     activateNode:'BOO', completeItems:[],
-    activateCond:() => !!S_story.fishingYugurtFavour,
-    completeFn:() => !!S_story.hornedSharkSlain,
+    
+    
     xpAward:500, waypointNode:'BOO', reward:300,
     disposition:'"You got the shark. That\'s a different kind of fishing." — The Fisherman',
     passText:"You got the shark. That is a different kind of fishing. The lake has registered it.",
     failText:"The Horned Shark still hunts the water past the Noon Point marker at Yugurt Lake.",
     npc:"long_john_silver_sen",
   },
-  quest_shale_drop: { id:'quest_shale_drop', type:'side', title:'The Shale Drop', // §XLIX
+  quest_shale_drop: { id:'quest_shale_drop', type:'side', schema:'UQF-1.0', gate:{ flags:['eelSkinPouchActive'] }, bits:[], completion:{ flags:['shaleDropFound'] }, title:'The Shale Drop', // §XLIX
     itemChain:[{action:'grant',name:'Y. Gurt Field Survey', icon:'📋', type:'readable', sell:0, readText:"Y. GURT — YUGURT LAKE SURVEY\nFirst Circle Field Record, Pre-Codex Year 3\nClassification: Naturalist Assessment — Freshwater Taxonomy\n\nLake dimensions: 2.4km × 0.9km. Maximum depth: 31 meters at the northwest basin. The shale formation below the northwest bank extends below the waterline for an undetermined depth — further survey required.\n\nDocumented species: 20 surface and mid-water, 3 confirmed deep-water (unclassified), 1 depth specimen observed on descent into northwest shale formation. See Annex 4: 'the light-producing variety; do not pursue below 25m without additional crew.'\n\nSurveyor notation (Y. Gurt, Nat. First Circle): The lake has developed a self-regulating predator hierarchy without Scholar Kings intervention. I recommend no intervention. It is doing this correctly on its own. I also recommend I be permitted to stay here rather than return to the archive for the classification review. The archive will continue without me. The lake will require observation.\n\nThe request was not approved.\n\nI stayed anyway.",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"There is a crack in the bank at Yugurt Lake where the shale drops away below the waterline. You have been past it without a light. The Eel Skin Pouch gives you one. The lake floor is older than the water above it. What has been sitting in the dark down there has been sitting in the dark for a very long time.",
     hint:'Enter The Shale Drop from Yugurt Lake (requires Eel Skin Pouch) and defeat the Cave Lurker.',
     activateNode:'BOO', completeItems:[],
-    activateCond:() => !!S_story.eelSkinPouchActive,
-    completeFn:() => !!S_story.shaleDropFound,
+    
+    
     xpAward:300, waypointNode:'MJF', reward:250,
     disposition:'"He doesn\'t react when you come back up. He already knew what was down there." — The Fisherman',
     passText:"He does not react when you come back up. He already knew what was down there. The Shale Drop is cleared.",
     failText:"The Shale Drop below the waterline at Yugurt Lake has not been entered. Eel Skin Pouch required.",
     npc:"long_john_silver_sen",
   },
-  quest_night_eel: { id:'quest_night_eel', type:'side', title:'Night Water', // §XLVIII
+  quest_night_eel: { id:'quest_night_eel', type:'side', schema:'UQF-1.0', gate:{ flags:['hornedSharkSlain'] }, bits:[], completion:{ flags:['lanternEelLanded'] }, title:'Night Water', // §XLVIII
     itemChain:[{action:'grant',name:'Eel Skin Pouch',icon:'🏮',type:'trinket',sell:35,desc:'+1 Type bonus on all fishing casts. The light never fully goes out.',silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"After dark, Yugurt Lake becomes a different lake. The familiar geometry of the bank and the reeds still holds. But the fish that come up are not the ones that come up at noon. Something luminescent hunts the deep water after dark. You have seen the light. The lake has seen you looking.",
     hint:'Fish at Yugurt Lake after dark (hour ≥ 20 or ≤ 5) and defeat the Lantern Eel.',
     activateNode:'BOO', completeItems:[],
-    activateCond:() => !!S_story.hornedSharkSlain,
-    completeFn:() => !!S_story.lanternEelLanded,
+    
+    
     xpAward:400, waypointNode:'BOO', reward:150,
     disposition:'"Some fish don\'t exist in daylight." — The Fisherman',
     passText:"Some fish do not exist in daylight. The Lantern Eel has been defeated in the dark water.",
     failText:"The Lantern Eel hunts after dark. Fish at Yugurt Lake between hour 20 and 5 to find it.",
     npc:"long_john_silver_sen",
   },
-  quest_no_fishing_sign: { id:'quest_no_fishing_sign', type:'side', title:'The No-Fishing Sign',
+  quest_no_fishing_sign: { id:'quest_no_fishing_sign', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['fishingRodCouponRedeemed'] }, title:'The No-Fishing Sign',
     desc:"A city ordinance notice bolted to the lamppost near the gate. Underneath the official text, someone has added a handwritten pull-tab advertising free fishing at Yugurt Lake.",
     hint:'Take the coupon to The Fisherman at Yugurt Cabin and redeem it for a free fishing rod.',
-    activateNode:null, completeItems:[], completeFn:() => !!S_story.fishingRodCouponRedeemed,
+    activateNode:null, completeItems:[], 
     xpAward:50, waypointNode:'SSJ', reward:0,
     disposition:'"...Nice Day For Fishing. Yugurt!" — The Fisherman',
     passText:"Nice Day For Fishing. Yugurt! The free rod has been redeemed.",
@@ -12978,7 +12978,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:"Practice is not finished. Fish at Yugurt Lake three more times — five total catches required.",
   },
   quest_guide_04: { id:"quest_guide_04", type:"skill_check", title:"The Middle Way Sneers", desc:"Bog Mudwhistle watches Emmer cast from across the bank. Emmer's cast is deliberate now — you can see him thinking through each step. Bog says: Trying too hard. Either you have it or you don't. He addresses the lake, not Emmer. Emmer hears him. The Fisherman continues fishing. He has been at this lake eleven years. He knows what Bog is doing. He has been where Bog is standing. He did not stay there.", hint:"See through the mockery — WIS Insight DC 11.", passText:"You see it — the U-curve. The fool who has never tried and the sage who has passed through trying arrive at the same simplicity. The middle sneers at the effort because effort is embarrassing when you are in the middle. Bog has fished thirty years without improvement because he stopped at competence and called it mastery. The Fisherman passed through the same stage and kept going. Emmer is in the middle now. The middle is not the destination. Let it sneer. Walk through it.", failText:"Bog's words land wrong. Maybe the trying IS the problem. Maybe competence cannot be taught — maybe you either have it or you don't and Emmer doesn't and all of this is just embarrassing. The Fisherman casts again. He does not look up. You cannot yet see what he sees.", disposition:"\"The wisest king in the old stories said there is nothing better than to eat and be glad. The men in the middle laughed. He was right.\" — The Fisherman", npc:"Bog Mudwhistle", activateNode:"SSJ", waypointNode:"SSJ", checkAbility:"wis", checkLabel:"Insight", vignetteText:"Bog Mudwhistle is at the far bank, rod propped against his knee, watching Emmer cast. The cast is deliberate — each step visible, the grip consciously adjusted, the line arc calculated before release. Bog has been fishing this lake for thirty years without thinking about any of those steps. From a distance, this looks like the same skill expressed differently. From close, it looks like effort. Bog knows the difference and says so, to no one in particular: Trying too hard. Either you have it or you don't. The Fisherman does not respond. He casts. The line goes where it needs to go. He has been where Bog is standing — not the physical location, the knowledge location. He decided not to stay. You are watching all three men at once and only one of them understands what he is watching.", checkDC:11, retryGateDays:0, retryable:true, schema:"UQF-1.0", gate:{ questsDone:['quest_guide_03'] }, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:11, onPass:[{ kind:"reward", xp:250 }, { kind:"_legacy_fn", fn:() => { S_story.emmerStage4a = true; } }], onFail:[] }] },
-  quest_guide_05: { id:"quest_guide_05", type:"side", title:"The Cast That Didn't Think", desc:"Emmer stands at the shore. He does not choose a spot. He does not look at the water first. He casts. The form is clean. He does not know it is clean until the fish is running. He holds the line correctly — has been holding it this way for several mornings without noticing that he started. Later he says: I did not think about it. I just cast. Then the fish was there. He looks slightly surprised at himself. The Fisherman nods from the cabin steps. Neither did I, once.", hint:"Return to Yugurt Cabin. The threshold has been crossed.", disposition:"\"He didn't think about it. Neither did I, once.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"SSJ", xpAward:300, reward:0, activateCond:() => !!S_story.emmerStage4a, completeFn:() => !!S_story.emmerStage4a && S_story.currentCode === "SSJ",
+  quest_guide_05: { id:"quest_guide_05", type:"side", schema:'UQF-1.0', gate:{ flags:['emmerStage4a'] }, bits:[], completion:{ flags:['emmerStage4a'], atNode:'SSJ' }, title:"The Cast That Didn't Think", desc:"Emmer stands at the shore. He does not choose a spot. He does not look at the water first. He casts. The form is clean. He does not know it is clean until the fish is running. He holds the line correctly — has been holding it this way for several mornings without noticing that he started. Later he says: I did not think about it. I just cast. Then the fish was there. He looks slightly surprised at himself. The Fisherman nods from the cabin steps. Neither did I, once.", hint:"Return to Yugurt Cabin. The threshold has been crossed.", disposition:"\"He didn't think about it. Neither did I, once.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"SSJ", xpAward:300, reward:0, 
     passText:"He did not think about it. Neither did I, once. The cast that did not think has been made.",
     failText:"The threshold has not been crossed. Return to Yugurt Cabin after the unconscious cast.",
   },
@@ -20191,11 +20191,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'LHR', completeItems:[], completeFn:() => (S_story.slStalksWon || 0) >= 3,
     waypointNode:'BMA', reward:80,
     disposition: '"The commissioners don\'t read field reports about the Slums. They have city-level priorities. The Slums are a city-level priority that doesn\'t appear on their list." — Yael Scheidemann' },
-  quest_brynn_firewood: { id:'quest_brynn_firewood', type:'side', title:"Brynn: The Firewood",
+  quest_brynn_firewood: { id:'quest_brynn_firewood', type:'side', schema:'UQF-1.0', gate:{ favorMin:{ brynn:1 } }, bits:[], completion:{ flags:['brynnFirewoodDelivered'] }, title:"Brynn: The Firewood",
     desc:"The woodpile behind the inn is lower than it should be for the season. Brynn has not mentioned it. She has been watching the pile the way she watches everything — noting, not asking. It is cold in the upper rooms on the east side. She put the guests who asked no questions on the east side.",
     hint:"Help Brynn split and stack firewood at the First Inn.",
-    activateNode:'TLL', activateCond:() => (_npcFavor('brynn') || 0) >= 1,
-    completeFn:() => !!S_story.brynnFirewoodDelivered,
+    activateNode:'TLL', 
+    
     completeItems:[] },
   quest_brynn_ledger: { id:'quest_brynn_ledger', type:'side', title:"Brynn: Missing Ledger",
     itemChain:[{action:'take',name:'Worn Ledger Book',all:true}], // §EDITOR-01-D-FU(b) b2a
@@ -20234,11 +20234,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'HKG', completeItems:[], completeFn:() => (S_story.pitTrainingWins || 0) >= 3,
     waypointNode:'HKG', reward:0,
     disposition: '"The promoters tried to fix a fight here last year. I shut the pit rather than host it. Some things cost more to keep than to lose." — Weckmann' },
-  quest_void_below: { id:'quest_void_below', type:'side', title:'Auros: Void Below',
+  quest_void_below: { id:'quest_void_below', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ battles:['CY_VOID'] }, title:'Auros: Void Below',
     itemChain:[{action:'grant',name:"Scholar's Note",icon:'📋',type:'key',sell:0,silent:true},{action:'grant',name:'EMP Grenade',icon:'💥',type:'flashbang',sell:50,uses:1,silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Commander Bruhns found the Void corruption node three weeks ago and has been writing maintenance requests to the Council since. The Council approved it in principle. The Void does not wait for implementation. She will not send anyone into the undercity depths alone — not because the regulations require two, but because she has already lost people in there and she knows what alone means in that context. She is asking you. She is not accustomed to asking.",
     hint:'Clear the Void corruption node in the undercity depths.',
-    activateNode:'HKG', completeItems:[], completeFn:() => !!S_story.defeatedBattles['CY_VOID'],
+    activateNode:'HKG', completeItems:[], 
     waypointNode:'HKG', reward:0,
     disposition: '"The Council approved the maintenance request six months ago. In principle. The Void doesn\'t wait for implementation." — Commander Bruhns' },
   // ── §DESIGN-03: Ceremonia Roll + Birka Skill Check Quests ──
@@ -20256,11 +20256,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     passText:"The chamber is mapped. The marks you make are a cleaner hand than Froberger's.",
     failText:'The light fails before you finish. The chalk is still here tomorrow.',
     completeItems:[] },
-  quest_city_watch_patrol: { id:'quest_city_watch_patrol', type:'side', title:"The Route",
+  quest_city_watch_patrol: { id:'quest_city_watch_patrol', type:'side', schema:'UQF-1.0', gate:{ favorMin:{ yael:1 } }, bits:[], completion:{ flags:['patrolRouteComplete'] }, title:"The Route",
     hint:"Walk Yael's patrol route: City Streets (CI) → Inn (IN) → Tavern (TV) in sequence.",
     activateNode:'LHR',
-    activateCond:() => (S_story.npcFavorability||{}).yael >= 1,
-    completeFn:() => !!(S_story.patrolRouteComplete),
+    
+    
     completeItems:[] },
   quest_pit_debut: { id:'quest_pit_debut', type:'side', title:'First Blood',
     hint:'Win your first pit fight at the Neon Undercity.',
@@ -20866,10 +20866,14 @@ const QuestRuntime = {
     const QS = S_story.quests || {};
     // OR-group: any of flagsAny / defeated battles / questsComplete (strict
     // `=== 'complete'`, for chaining off a *side* quest's completion) satisfies it.
+    // items → §ARCH-01 W3 item_check term (replaces legacy `completeItems`): each
+    // listed name is one OR entry, matched with the SAME fuzzy two-way substring
+    // rule as the legacy storyCheckQuests check (`inv.name.includes(ci) || ci.includes(inv.name)`).
     const orList = (g.flagsAny || []).map(f => !!S_story[f])
       .concat((g.battles || []).map(b => !!(S_story.defeatedBattles || {})[b]))
-      .concat((g.questsComplete || []).map(id => QS[id] === 'complete'));
-    const orCount = (g.flagsAny || []).length + (g.battles || []).length + (g.questsComplete || []).length;
+      .concat((g.questsComplete || []).map(id => QS[id] === 'complete'))
+      .concat((g.items || []).map(ci => (S_story.inventory || []).some(inv => inv.name.includes(ci) || ci.includes(inv.name))));
+    const orCount = (g.flagsAny || []).length + (g.battles || []).length + (g.questsComplete || []).length + (g.items || []).length;
     if (orCount && !orList.some(Boolean)) return false;
     if (g.notFlags && g.notFlags.some(f => !!S_story[f])) return false;
     // atNode → completes only while the player is currently standing at this node

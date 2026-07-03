@@ -8150,3 +8150,162 @@ test.describe('§ARCH-01 Wave 2ax — cph* family (bulk-migrated, 29 acts; unifo
     expect(r.gateBad).toEqual([]);
   });
 });
+
+// ── §ARCH-01 Wave 3a — side quests → declarative completion (61 migrated) ────
+//
+// The first Wave-3 batch: every legacy `side` quest whose completeFn/completeItems
+// was expressible with existing canComplete terms plus the NEW `completion.items`
+// OR-term (fuzzy two-way substring, mirroring the legacy completeItems check
+// byte-for-byte). Sides keep `onComplete`/`xpAward`/itemChain verbatim — those
+// fire schema-agnostically from storyCheckQuests (no completion-bit execution
+// point exists yet; that is the deferred Wave-3 engine task). 38 sides with
+// counter/nested-path/item-count completeFns stay legacy for Wave 3b.
+
+test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migrated + items term)', () => {
+  const W3A = ['sq_1','sq_2','quest_ng_02','quest_ng_03','quest_wm_02','quest_wm_03','quest_wm_04','quest_wm_05',
+    'quest_va_01','quest_va_02','quest_va_03','quest_va_04','quest_tl_01','quest_tl_02','quest_tl_03',
+    'quest_muffat_05','quest_solm_01','quest_antecedent_01','quest_signal_01','quest_muffat_03','quest_muffat_02',
+    'quest_road_damascus','quest_anath','quest_hellenists_jerusalem','quest_barnach_finds','quest_antioch_commission',
+    'quest_philippi','quest_corinth_letters','quest_rome_arrest','quest_snake_melta','quest_inn_05','quest_inn_06',
+    'quest_whisper_kelpie','quest_glut_mudcrab','quest_wane_spawn','quest_whisper_witch','quest_glut_octopus',
+    'quest_wane_demon','quest_inn_eel','quest_shore_01','quest_ca_01','quest_depth_01','quest_df_01','quest_sk_01',
+    'quest_sk_hull','quest_vs_01','quest_vs_02','quest_vs_03','quest_vs_warden','quest_cat_04','quest_cat_06',
+    'quest_la_riva_01','quest_la_riva_03','quest_horned_shark','quest_shale_drop','quest_night_eel',
+    'quest_no_fishing_sign','quest_guide_05','quest_brynn_firewood','quest_void_below','quest_city_watch_patrol'];
+  const W3B = ['sq_battling','sq_leveling','quest_ng_01','quest_wm_01','quest_inn_01','quest_iodine_02','quest_iodine_03',
+    'quest_forge_02','quest_sunken_02','quest_cat_01','quest_cat_02','quest_cat_03','quest_cat_05','quest_cat_void',
+    'quest_la_riva_02','quest_fishing_guide','quest_fish_01','quest_tour_01','quest_tour_02','quest_tour_03',
+    'quest_tour_04','quest_tour_05','quest_tour_06','quest_guide_01','quest_guide_02','quest_guide_03','quest_guide_06',
+    'quest_slums_cleanup','quest_brynn_ledger','quest_couperin_lute','quest_pachelbel_shipment','quest_pit_training',
+    'quest_pit_debut','quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
+  const GATE_KEPT = ['quest_wm_05','quest_road_damascus','quest_inn_06'];
+
+  test('all 61 are UQF-1.0, validate, bits:[], completion present, no completeFn; W3b list untouched', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(({ w3a, w3b, kept }) => {
+      const bad = [];
+      for (const id of w3a) {
+        const q = QUEST_DB[id];
+        if (!q) { bad.push(id + ':missing'); continue; }
+        if (q.schema !== 'UQF-1.0') bad.push(id + ':schema');
+        if (!validateQuest(q).valid) bad.push(id + ':invalid');
+        if (!q.completion) bad.push(id + ':no-completion');
+        if ((q.bits || []).length) bad.push(id + ':bits');
+        if (q.completeFn) bad.push(id + ':completeFn-residue');
+        if (q.type !== 'side') bad.push(id + ':type');
+        if (kept.includes(id)) {
+          if (typeof q.activateCond !== 'function') bad.push(id + ':lost-activateCond');
+          if (!q.gate || q.gate._legacyFn !== true) bad.push(id + ':gate-not-legacyFn');
+        }
+      }
+      const legacyStill = w3b.filter(id => QUEST_DB[id] && QUEST_DB[id].schema === undefined);
+      return { bad, legacyCount: legacyStill.length };
+    }, { w3a: W3A, w3b: W3B, kept: GATE_KEPT });
+    expect(r.bad).toEqual([]);
+    expect(r.legacyCount).toBe(W3B.length);
+  });
+
+  test('completion.items engine term: fuzzy two-way OR matching, composes with flags AND-group', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      QUEST_DB.q_w3_items = { schema:'UQF-1.0', id:'q_w3_items', type:'side', title:'x',
+        gate:{}, bits:[], completion:{ flags:['w3Gate'], items:['Trade Seal (Shard #9)','Ghost Rope'] } };
+      const out = {};
+      S_story.inventory = []; S_story.w3Gate = true;
+      out.noItem = QuestRuntime.canComplete('q_w3_items');                       // OR-group unsatisfied
+      S_story.inventory = [{ name:'Trade Seal' }];                               // ci.includes(inv.name)
+      out.invSubstr = QuestRuntime.canComplete('q_w3_items');
+      S_story.inventory = [{ name:'Old Ghost Rope of the Fen' }];                // inv.name.includes(ci)
+      out.ciSubstr = QuestRuntime.canComplete('q_w3_items');
+      S_story.inventory = [{ name:'Unrelated Thing' }];
+      out.wrongItem = QuestRuntime.canComplete('q_w3_items');
+      S_story.inventory = [{ name:'Ghost Rope' }]; S_story.w3Gate = false;       // AND-group must still hold
+      out.flagUnmet = QuestRuntime.canComplete('q_w3_items');
+      delete QUEST_DB.q_w3_items; delete S_story.w3Gate;
+      return out;
+    });
+    expect(r).toEqual({ noItem:false, invSubstr:true, ciSubstr:true, wrongItem:false, flagUnmet:false });
+  });
+
+  test('flag1 + per-id effect parity: quest_wm_04 completes on flag, grants +300 gold via the id-keyed block', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20; S_story.gold = 10000;
+      S_story.quests.quest_wm_04 = 'active';
+      storyCheckQuests({ code:'ZZZ' });                                          // flag unset → stays active
+      const before = S_story.quests.quest_wm_04;
+      S_story.wmFirstResearcherKnown = true;
+      storyCheckQuests({ code:'ZZZ' });
+      return { before, after: S_story.quests.quest_wm_04, goldDelta: S_story.gold - 10000 };
+    });
+    expect(r).toEqual({ before:'active', after:'complete', goldDelta:300 });
+  });
+
+  test('flagAND truth-table (quest_wm_02) + flagsAny either-branch (quest_tl_02)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const out = {};
+      S_story.quests.quest_wm_02 = 'active';
+      S_story.wmDoc1Read = true; S_story.wmDoc2Read = true;                      // 2 of 3
+      storyCheckQuests({ code:'ZZZ' });
+      out.twoOfThree = S_story.quests.quest_wm_02;
+      S_story.wmDoc3Read = true;
+      storyCheckQuests({ code:'ZZZ' });
+      out.allThree = S_story.quests.quest_wm_02;
+      S_story.quests.quest_tl_02 = 'active';
+      out.tlNeither = QuestRuntime.canComplete('quest_tl_02');
+      S_story.tlEmbargoDismissed = true;                                         // either branch alone
+      out.tlOne = QuestRuntime.canComplete('quest_tl_02');
+      return out;
+    });
+    expect(r).toEqual({ twoOfThree:'active', allThree:'complete', tlNeither:false, tlOne:true });
+  });
+
+  test('battle completion + questsAttempted gate (quest_inn_eel): lists only after inn_03 attempted, completes on INN_EEL', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const q = QUEST_DB.quest_inn_eel;
+      const node = { code: q.activateNode };
+      const out = {};
+      storyCheckQuests(node);                                                    // inn_03 never attempted
+      out.gatedOut = S_story.quests.quest_inn_eel || '(not listed)';
+      S_story.quests.quest_inn_03 = 'active';
+      storyCheckQuests(node);
+      out.listed = S_story.quests.quest_inn_eel;
+      storyCheckQuests(node);                                                    // battle not fought yet
+      out.beforeBattle = S_story.quests.quest_inn_eel;
+      S_story.defeatedBattles.INN_EEL = true;
+      storyCheckQuests(node);
+      return { ...out, afterBattle: S_story.quests.quest_inn_eel };
+    });
+    expect(r).toEqual({ gatedOut:'(not listed)', listed:'active', beforeBattle:'active', afterBattle:'complete' });
+  });
+
+  test('atNode (quest_shore_01, gate battles) + flag∧atNode (quest_inn_05) + items-only (sq_1 fuzzy)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const out = {};
+      out.shoreGateClosed = QuestRuntime.canActivate('quest_shore_01');          // HCA_BOSS not defeated
+      S_story.defeatedBattles.HCA_BOSS = true;
+      out.shoreGateOpen = QuestRuntime.canActivate('quest_shore_01');
+      S_story.quests.quest_shore_01 = 'active';
+      S_story.currentCode = 'LHR';
+      out.shoreElsewhere = QuestRuntime.canComplete('quest_shore_01');
+      S_story.currentCode = 'DS0';
+      out.shoreAtNode = QuestRuntime.canComplete('quest_shore_01');
+      S_story.quests.quest_inn_05 = 'active';
+      S_story.currentCode = 'INN';
+      out.innFlagUnset = QuestRuntime.canComplete('quest_inn_05');               // at node but not departed
+      S_story.innDeparted = true; S_story.currentCode = 'LHR';
+      out.innWrongNode = QuestRuntime.canComplete('quest_inn_05');               // departed but elsewhere
+      S_story.currentCode = 'INN';
+      out.innBoth = QuestRuntime.canComplete('quest_inn_05');
+      S_story.quests.sq_1 = 'active';
+      S_story.inventory = [{ name:'Trade Seal (Shard #1)' }];                    // legacy fuzzy behavior
+      out.sq1 = QuestRuntime.canComplete('sq_1');
+      return out;
+    });
+    expect(r).toEqual({ shoreGateClosed:false, shoreGateOpen:true, shoreElsewhere:false, shoreAtNode:true,
+      innFlagUnset:false, innWrongNode:false, innBoth:true, sq1:true });
+  });
+});
