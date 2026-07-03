@@ -3,20 +3,20 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · 34,172 lines · 410 nodes · 392 monsters · ~2,830 quests · 77 lab reports · §WALK ✅ · §ARCH-01 UQF Waves 1+2 ✅ (~2,462 quests migrated) · **§NAV-01 IN PROGRESS** (Inc a–d ✅, next Inc e) · full ✅ registry in the Completed Work table below · ⚠️ §DATA-01 REVERTED (recorded done, never re-shipped — see plan.md §DATA-01-REVERTED)
-**Last updated:** 2026-07-02
+**Status:** Layers 0–104 implemented · 34,630 lines · 410 nodes · 392 monsters · ~2,830 quests · 80 lab reports · §WALK ✅ · §ARCH-01 UQF Waves 1+2 ✅ (~2,462 quests migrated) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ · full ✅ registry in the Completed Work table below · ⚠️ §DATA-01 REVERTED (recorded done, never re-shipped — see plan.md §DATA-01-REVERTED) · ⚠️ §CELL-13 jump-travel removal PARTIALLY REVERTED (portal/transmort/hearth live in code — flagged 2026-07-03)
+**Last updated:** 2026-07-03
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 34,172 | ✅ |
-| Lab reports on disk | 78 | ✅ |
-| Lab reports in index | 78 | ✅ |
+| HTML line count | 34,630 | ✅ |
+| Lab reports on disk | 80 | ✅ |
+| Lab reports in index | 80 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-07-02 — §MESH docs close-out (audit A3+A4): §MESH sections added to `mechanics.md` (presence mechanics + FU 6 manifest-scope boundary), `docs-node-network.md §12` (gossip/vv/tracker/ACL), `maps.md` (multiplayer map surfaces), `wbapi-help.md` (session/pos + Mesh API); cross-ref row added. Prior pass: doc-simplification (UQF wave history archived to `plan-archive.md`) | ✅ |
+| Last sync pass | 2026-07-03 — §NAV-01 docs close-out: `lab-reports/lab-report-nav01-navigable-world.md` written; road-net + room-layer sections added to `maps.md` (+ FL1/FL9/FL12 flows re-verified against code, stale GATE_LOCKS section retired), `docs-node-network.md §13` (L0–L8 layer stack; §4/§9 rewritten to mover-kernel reality), `mechanics.md` (Roads, Rooms & Auto-Travel). **Sync findings:** `GATE_LOCKS` gone from code (docs claimed 4 live gates); §CELL-13 jump-travel removal partially reverted (`storyPortal`/`storyUseTransmort`/hearth live) → plan.md §CELL-13-REVERTED. Prior pass: 2026-07-02 §MESH docs close-out | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -116,12 +116,12 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 
 Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI server needed).
 
-> ✅ **Rebuilt in §WALK-4 (2026-06-26)** against current geo, extended by §NAV-01 (auto-travel cases). Current: navigation **29/29** · autosave 4/4 · fishing green · worldbuilder suites green. Walk-invariant CI gate: `npm run check:walk` (invariants, mover parity ×2, terrain parity incl. roads, check:roads, rooms parity). MUD server protocol tests live outside Playwright: `npm run test:mud` (24/24 HTTP+SSE harness).
+> ✅ **Rebuilt in §WALK-4 (2026-06-26)** against current geo, extended by §NAV-01 (room render, auto-travel, wayfinding, road-net editor cases). Current at §NAV-01 close (2026-07-03): walk suite **89/89** (navigation 37 + worldbuilder walk specs) · autosave 4/4 · fishing green. Walk-invariant CI gate: `npm run check:walk` **6/6** (invariants, mover parity ×2, terrain parity incl. roads, check:roads R1–R4, rooms parity). MUD server protocol tests live outside Playwright: `npm run test:mud` (**119** checks, sections [A]–[N]). ⚠️ Before any Playwright run, re-read plan.md §I Test-Run Rules: stop the WBAPI server first, never trust piped exit codes.
 
 | File | Coverage | Count |
 |------|---------|-------|
 | `tests/integration/helpers.js` | Shared helpers: `seedAndLoad`, `dismissContinue`, `readStory`, `SEED_STATE` | — |
-| `tests/integration/navigation.test.js` | `cellMove`, geo BFS (`_bfsGridPath`), road-weighted auto-travel (`_roadGridPath` + `_travelTick` interrupts), `storyWaypoint`, empty-cell room render (§NAV-01c), sea-block, status bar | 29 tests |
+| `tests/integration/navigation.test.js` | `cellMove`, geo BFS (`_bfsGridPath`), road-weighted auto-travel (`_roadGridPath` + `_travelTick` interrupts), `storyWaypoint`, empty-cell room render (§NAV-01c), wayfinding UI (§NAV-01e: signage, waypoint ★, readouts), sea-block, status bar | 37 tests |
 | `tests/integration/fishing.test.js` | Fishing modal flow, cast/catch/XP loop, miss/recast cycle, throw-back | ~10 tests |
 | `tests/integration/autosave.spec.js` | Autosave on navigation, save-and-verify discipline (§UNIFY-09) | ~4 tests |
 | `tests/integration/worldbuilder-walk.test.js` | **§WALK** tab in worldbuilder.html — load/nav/chips/D-pad/keyboard/neighbor list/edit form/dirty tracking/quest panel/coord index/cross-tab buttons | **73 tests** |
@@ -167,7 +167,7 @@ All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
 | **§WORLDBUILDER-01** | Canvas node map editor — click node to edit, click empty cell to create, bidirectional exit wiring, collision detection. Depends on §WORLDBUILDER-02 Ph1 ✅ |
 | **§1367** | Historical year 1367 AD integration — `GAME_YEAR=1367`, plague mechanic, Hanseatic faction score, faith triple-track (orthodox/reform/folk), 4 new Baltic nodes (LB/DZ/RG/BG), 6 arc seeds, historical NPCs. Full spec in `Year1367AD.md`. |
 | **§EDITOR-02-FU** | Mission Builder follow-ups — branching arcs, drag-reorder step list (shared w/ §EDITOR-01-D-FU), whole-arc UQF export → §EDITOR-03. (Core Inc 1–4 ✅ shipped 2026-06-27 — see Implemented Features.) |
-| **§NAV-01** | Navigable World: MUD-coherent map + fungal road net — **IN PROGRESS: Inc a–g ✅** (pos-origin BFS, `ROAD_RUNS` net 400 cells / 88 junctions, `describeCell` room layer, road-weighted auto-travel, wayfinding UI, §NAV-01f MUD server room parity — `room` on all session look surfaces, byte-equal to client `describeCell`, mud-harness [M] — and §NAV-01g worldbuilder drag-&-lock cities: marker drag + lat/lon placement → `PUT /api/coords`, 🔒 lock → `/api/roads` endpoints + `roads-pins.json`, geo-seed keeps locked cities) + map suite + GLOBE panel. Remaining: Inc h worldbuilder road-net editor. Spec: `plan.md §NAV-01`. |
+| **§NAV-01** | Navigable World: MUD-coherent map + fungal road net — **✅ COMPLETE 2026-07-03 (Inc a–h)**: pos-origin BFS (geo bounds + wrap), `ROAD_RUNS` net (400 cells / 88 junctions, encounter rate 0, `check:roads` R1–R4), `describeCell` room layer (ROOMS:CORE `rooms.js`, deterministic prose + signposts), road-weighted auto-travel (`_roadGridPath` + `_travelTick`, 4 interrupt classes), wayfinding UI (exits signage, waypoint ★, `(n steps, NE)`), map suite + GLOBE panel, Inc f MUD server room parity (`room` on all four look surfaces, byte-equal to client, mud-harness [M]), Inc g worldbuilder drag-&-lock cities (`PUT /api/coords`, 🔒 → `roads-pins.json`), Inc h road-net editor (chain-link overlay, pin drag, ✚/┬/🔗/🗑 palette, ♻ Reweave Net = `PUT /api/roads` with auto-rollback). Gates at close: walk suite 89/89 · check:walk 6/6 · mud-harness 119. Lab report: `lab-reports/lab-report-nav01-navigable-world.md` · archive: plan-archive.md §2026-07-03. |
 | **§MESH-01** | Multiuser MUD: client presence rendering (SSE "Also here:" line, minimap dots, chat), self-discovering server mesh (gossip/PEX, `worldHash` scoping, single-writer version-vector dedup), tracker mode + `r2h:` world magnet links, co-presence buffs → hireling/sentry bots → no-dupe trade ledger (mint-id + hash-chained per-player logs). Design locked in `plan.md §MESH-01`; prereq `lab-reports/lab-report-mesh-multiuser.md` before implementation. |
 
 ### Version Snapshots
@@ -263,6 +263,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 | File | Layer(s) | Topic |
 |------|---------|-------|
+| `lab-reports/lab-report-nav01-navigable-world.md` | §NAV-01 | Navigable World close-out — diagnosis (median 33 blind steps), L0–L8 layer stack, ROAD_RUNS fungal net, ROOMS:CORE kernel, auto-travel, MUD room parity, worldbuilder road-net editor, increment record a–h |
 | `lab-reports/lab-report-movement-by-cells.md` | §CELL-01–§CELL-12 | Cell-grid navigation architecture — full program flow, wbapi-server/worldmap/runtime layers, BFS reachability, Playwright + Node test suite spec |
 | `lab-reports/lab-report-cell-map-mud-redesign.md` | §CELL-01–§CELL-11 | Cell map redesign — 11-section grid migration, MUD session layer, 419 nodes, dead-code removal |
 | `lab-reports/lab-report-map-audit-layout-tooling.md` | §CELL | Map audit, grid layout solver, tooling infrastructure — coordinate audit, gap analysis, reachability |
@@ -381,7 +382,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Pier Falk (BQ — trapped person)** | `plan.md §SCAR-01-D` | `plan.md §SCAR-01` |
 | **Froberger journal (41 entries)** | `froberger-journal-all-entries.txt` | `lab-reports/lab-report-game-story-codex-of-conquest.md` · `story.md §PROLOGUE` |
 | **Froberger traces** | `world.md` | `lab-reports/lab-report-web-of-connections.md` |
-| **Gate locks (4 passages)** | `maps.md` · `story.md §Gate Locks` | `plan.md §II (GATE_LOCKS)` |
+| **Gate locks** *(removed — Free-Movement Policy; `GATE_LOCKS` = 0 in code, verified 2026-07-03)* | `maps.md §GATE LOCKS (removal notice)` | `plan.md §I (Free-Movement / Mission-Gating Policy)` |
 | **Hollow Hands sub-clan** | `story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` · `lab-reports/lab-report-void-shaman.md` |
 | **Hunt Mode / stalk** *(retired §TIMELESS-01)* | `mechanics-combat.md §Stalk / Hunt (retired)` | `lab-reports/lab-report-timeless-movement-hunt-removal.md` · `lab-reports/lab-report-battleground-circuit-path-quest.md` |
 | **Inn Dreams** | `story.md §XXIII stub` | `lab-reports/lab-report-void-archaeology.md §H` |
@@ -396,6 +397,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Monster pool (370)** | `monsters.md` | `plan.md §II (MONSTER_POOL)` · `spec-world.md` |
 | **Mordus (Warlord)** | `story.md` · `world.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` |
 | **Multiplayer mesh (§MESH-01)** | `mechanics.md §Multiplayer` · `docs-node-network.md §12` | `lab-reports/lab-report-mesh-multiuser.md` · `lab-reports/lab-report-mesh-sync-architecture.md` · `maps.md §Multiplayer` · `wbapi-help.md §Mesh API` |
+| **Navigable world — roads, rooms, auto-travel (§NAV-01)** | `docs-node-network.md §13` · `maps.md §ROAD NET & ROOM LAYER` | `lab-reports/lab-report-nav01-navigable-world.md` · `mechanics.md §Roads, Rooms & Auto-Travel` · `wbapi-help.md` (roads/pins endpoints) · `rooms.js` · `scripts/build-roads.js` |
 | **MT Mountain Pass** | `maps.md` · `story-flowchart.md` | `story-arc-investigation.md` (§XVII + §XXI intersection) |
 | **NPC cross-references** | `world.md` | `lab-reports/lab-report-web-of-connections.md` |
 | **NPC dialogue system** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-npc-dialogue-system.md` · `lab-reports/lab-report-birka-beginner-arc.md` |
@@ -770,7 +772,7 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 ---
 
 *Last updated: 2026-07-02*
-*Codebase: `roll2hit-v3.html` · 34,172 lines · Layers 0–104 complete · 410 nodes · 392 monsters · ~2,830 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel) · §ARCH-01 UQF Waves 1+2 · all jump-travel removed*
+*Codebase: `roll2hit-v3.html` · 34,630 lines · Layers 0–104 complete · 410 nodes · 392 monsters · ~2,830 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF Waves 1+2 · §MESH-01 core*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---

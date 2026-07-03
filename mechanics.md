@@ -646,17 +646,29 @@ Bare Hook fallback: if `equippedBait === null` and `tacklebox` is empty, predato
 
 ### Cell Movement (§CELL-03)
 
-Navigation is **cell-based**: pressing N/E/S/W moves the player exactly one grid cell `(r±1, c)` or `(r, c±1)` per keypress. The function `cellMove(dir)` handles all movement.
+Navigation is **cell-based**: pressing N/E/S/W moves the player exactly one grid cell `(r±1, c)` or `(r, c±1)` per keypress. `cellMove(dir)` is a thin caller over the shared `mover.js` kernel (§WALK-2), which decides band bounds (`0≤r<90`), E/W wrap at the antimeridian, and sea blocking. A step is refused for exactly two reasons — `'oob'` and `'sea'`. **No gate locks, no quest checks** (Free-Movement Policy, plan.md §I).
 
-**Node entry:** If the destination cell has an entry in `CELL_GRID`, the player enters that named node and `storyRender(node)` fires (quests, encounters, NPC dialogue, loot). If the destination cell is empty, `_enterEmptyCell(r, c)` fires (§CELL-04) — terrain is inferred from `_inferTerrain(r, c)` and an encounter roll is made.
+**Node entry:** If the destination cell has an entry in `CELL_GRID`, the player enters that named node and `storyRender(node)` fires (quests, encounters, NPC dialogue, loot). If the destination cell is empty, `_enterEmptyCell(r, c)` fires — since §NAV-01c it renders a full MUD room (see next section).
 
-**Encounters:** There is no Hunt Mode toggle (removed in §TIMELESS-01). Stepping into an empty cell always makes a single encounter roll against the terrain's `TERRAIN_ENCOUNTER_RATE` inside `_enterEmptyCell` — on hit, `_weightedMonsterPick(terrain)` starts a "Wild …" battle. Movement itself is timeless (no clock advance). Named-node entry does not roll an open-cell encounter; it runs the node's own `storyRender` battle/quest logic.
-
-**Quest waypoints:** BFS over the cell grid (not node edges) finds the shortest path to a quest's `activateNode`. The minimap highlights this path.
+**Encounters:** There is no Hunt Mode toggle (removed in §TIMELESS-01). Stepping into an empty cell always makes a single encounter roll against the terrain's `TERRAIN_ENCOUNTER_RATE` inside `_enterEmptyCell` — on hit, `_weightedMonsterPick(terrain)` starts a "Wild …" battle. **Road cells roll at rate 0** — highways are safe. Movement itself is timeless (no clock advance). Named-node entry does not roll an open-cell encounter; it runs the node's own `storyRender` battle/quest logic.
 
 **Exits:** Exits from a node are derived at runtime from `CELL_GRID` adjacency — whichever of the four cardinal neighbors is occupied. They are **not stored** on the node object. `PUT /api/node/:code` rejects `N/E/S/W` field submissions; change a node's connections by moving it with `PUT /api/coords/:code`.
 
 There is no corridor dialog, no Manhattan-distance gating, and no "Hunt/Warp" overlay. The corridor travel system was removed in §CELL-05.
+
+---
+
+### Roads, Rooms & Auto-Travel (§NAV-01, ✅ 2026-07-03)
+
+> Design + diagnosis: `lab-reports/lab-report-nav01-navigable-world.md` · layer stack: `docs-node-network.md §13` · map surfaces: `maps.md` "ROAD NET & ROOM LAYER".
+
+**Roads (what the player experiences):** a fungal highway net (400 road cells, 88 intersections/T-junctions) connects every settlement. Road cells are terrain `'road'` — **encounter rate 0** — so following the road is the safe way to cross the wilderness; striking out overland is always allowed but rolls the local terrain's encounter rate (0.10–0.35). Sea-lane crossings stay `ocean` at 0.10 — boats are never free. Roads are pure terrain: they never gate movement, and the open field stays fully walkable.
+
+**Rooms:** every empty cell renders as a MUD room via `describeCell` — deterministic terrain prose (no RNG; same text every visit, and byte-identical on the MUD server), a region-name title instead of raw coordinates, 🪧 signposts on road cells naming the next settlement in each road direction, and a nearest-landmarks line (BFS radius 12).
+
+**Auto-travel:** set a waypoint (map click or quest "📍 Navigate →") and press **WP** — the player walks the road-weighted route automatically (~120 ms/step; road/lane cost 1 vs open land 2, so routes hug the highways). Travel halts on: an encounter roll, arrival, **any input**, or a blocked step. **Shift+WP** = single step. The journal and Navigate button show `(n steps, NE)`; a waypoint ★ marks the destination on the minimap and world canvases (edge-of-window arrow when off-screen).
+
+**Authoring:** worldbuilder.html drags & locks cities (`PUT /api/coords`, 🔒 → `roads-pins.json`) and edits the net itself — pins, ✚/┬ junction palette, 🔗 links, ♻ Reweave Net (`PUT /api/roads`, auto-rollback on a red `check:roads`). Never hand-edit `ROAD_RUNS`.
 
 ---
 

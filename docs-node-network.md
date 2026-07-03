@@ -114,26 +114,29 @@ Navigation is **MUD-style cell grid**: pressing N/E/S/W always moves exactly one
 ```
 Player presses N/E/S/W
   │
-  ├─ cellMove(dir) called
-  │   ├─ Compute (nr, nc) = (playerR ± 1, playerC ± 1)
-  │   ├─ Bounds check: nr/nc must be 1–500
-  │   ├─ IMPASSABLE_CELLS check (water — populated in §CELL-10)
-  │   ├─ Gate-lock checks (TLS shards, Damascus gate, etc.)
-  │   ├─ destCode = CELL_GRID["nr,nc"]
+  ├─ cellMove(dir) — thin caller (halts auto-travel first if the input isn't the travel loop's)
+  │   ├─ Mover.move(_moverWorld(), {r,c}, dir)   ← shared mover.js kernel (§WALK-2):
+  │   │     band bounds 0 ≤ r < 90 · E/W wrap at the antimeridian · sea/IMPASSABLE_CELLS
+  │   │     refusal reasons are exactly 'oob' | 'sea' — NO gate locks, NO quest checks
+  │   │     (Free-Movement Policy, plan.md §I)
+  │   ├─ blocked → storyBlock('No path leads that way.')
+  │   ├─ destCode = res.destCodes[0]
   │   │
-  │   ├─ destCode found in NODE_MAP → storyRender(NODE_MAP[destCode])
-  │   └─ destCode not found → _enterEmptyCell(nr, nc)
+  │   ├─ named node → _setActivePath(); currentCode = destCode; storyRender(node)
+  │   └─ empty cell → _enterEmptyCell(nr, nc)   (currentCode unchanged)
   │
-  └─ S_story.playerR / playerC updated; visitedCells["r,c"] = true
+  ├─ S_story.playerR / playerC updated; visitedCells["r,c"] = true (timeless — no clock advance)
+  └─ mpBeacon() — presence beacon, no-op unless 🌐 connected
 ```
 
 ### Empty cell traversal (§CELL-04, ✅ active)
 
 When the player steps on a cell with no named node:
 
-1. `_inferTerrain(r, c)` — polls the four cardinal neighbors in `CELL_GRID`; returns the majority terrain (`NODE_MAP[code].name`), fallback `'midlands'`.
-2. Exits list — all four cardinal directions are shown with labels if a named node is adjacent.
-3. Random encounter — rolls against `TERRAIN_ENCOUNTER_RATE[terrain]`; if triggered, picks a monster from `WORLD_DB[terrain].monsters` and calls `_startStoryBattle`.
+1. `describeCell(_roomWorld(), {r,c})` (§NAV-01c ROOMS:CORE) — renders the room: deterministic terrain prose (hash-keyed variants, no `Math.random`), region-name title, 🪧 road signage toward the next settlement, nearest-landmark line. Terrain precedence inside: `SEA_LANES → 'ocean'` ▸ `ROAD_CELLS → 'road'` (encounter rate 0) ▸ majority-of-named-neighbors (`_inferTerrain`) ▸ `'midlands'`.
+2. Exits — the d-pad/exit panel shows signage per direction (`E→ road — toward Visby (4)`; blocked directions labelled, e.g. "open sea").
+3. Random encounter — rolls against `TERRAIN_ENCOUNTER_RATE[room.terrain]`; if triggered, `_weightedMonsterPick(terrain)` starts the battle after 300 ms and `_encounterQueued` halts any auto-travel.
+4. All three map panels + the GLOBE canvas refresh (§NAV-01e).
 
 ```js
 const TERRAIN_ENCOUNTER_RATE = {
@@ -153,9 +156,9 @@ const TERRAIN_ENCOUNTER_RATE = {
 
 `storyRender()` syncs `playerR`/`playerC` from `NODE_COORDS` on every named-node entry, so saves from before §CELL-03 are automatically corrected on first render.
 
-### Gate locks
+### Gate locks — ❌ removed
 
-All gate-lock checks from the old `storyMove` are preserved verbatim in `cellMove`, using `destCode` (from `CELL_GRID`) rather than `node[dir]`. See `cellMove()` in the HTML (~143404).
+No gate locks exist. `GATE_LOCKS` greps to 0 in the current file and `cellMove` has no gate branch — movement is refused only for `'oob'`/`'sea'` (Free-Movement Policy, plan.md §I). Story gating happens at the mission-listing level (quest `gate`/`activateCond` in `storyCheckQuests`), never at a road.
 
 ---
 
@@ -238,7 +241,9 @@ Epic Battleground nodes (E*) all have exactly one grid neighbor — their parent
 
 ---
 
-## 8. Jump-Travel Removal (§CELL-13, 2026-06-15)
+## 8. Jump-Travel Removal (§CELL-13, 2026-06-15) — ⚠️ PARTIALLY REVERTED
+
+> **Flagged 2026-07-03:** `storyPortal()`, `storyUseTransmort()`, `storySetHearthHome()` and the `hearthHome` state field are **live in the current code** (the portal even carries a §MESH-01a `mpBeacon()` call), contradicting the removal recorded below — the same snapshot-rollback pattern as §DATA-01. The N/S/E/W edge-field strip and corridor removal DID persist. Decision (re-remove vs. accept + document) tracked in plan.md §CELL-13-REVERTED. The table below records the *intended* §CELL-13 state.
 
 All non-cell-grid travel mechanisms were removed. Navigation is strictly one adjacent cell per move.
 
@@ -272,7 +277,9 @@ function _bfsGridDir(fromCode, toCode, startR, startC) {
 }
 ```
 
-Both `_updateExitLinks()` and `storyWaypoint()` pass `(pr, pc)` — the actual player grid position — as `startR/startC`. This ensures waypoint directions are correct when the player is standing on an unnamed empty cell (where `currentCode` still points to the last named node). `storyWaypoint()` calls `cellMove(dir)` — one step per button press, not a teleport.
+Both `_updateExitLinks()` and `storyWaypoint()` pass `(pr, pc)` — the actual player grid position — as `startR/startC` (helper: `_playerPos()`, §NAV-01a). This ensures waypoint directions are correct when the player is standing on an unnamed empty cell (where `currentCode` still points to the last named node). Since §NAV-01a, BFS uses kernel-identical passability: band clamp `0≤r<90` and E/W wrap with antimeridian direction adjust — not the pre-§WALK 500×500 bounds.
+
+**Auto-travel (§NAV-01d/e):** the WP button no longer nudges one step — it toggles a travel loop. `_roadGridPath(_playerPos(), toCode)` runs a road-weighted Dijkstra (road/sea-lane cells cost 1, open land 2 — routes prefer the §NAV-01b road net), and `_travelTick()` executes one `cellMove` per ~120 ms until: an encounter roll fires (`_encounterQueued`), the player arrives, any user input lands, or a step is blocked. Shift+WP keeps the old single-step nudge. Quest "📍 Navigate →" (`storySetWaypoint`) starts travel directly; journal and Navigate button show `(n steps, NE)` readouts and a waypoint ★ is drawn on the minimap and both world canvases.
 
 **Empty-cell encounters:** `_enterEmptyCell` always rolls once at the terrain's `TERRAIN_ENCOUNTER_RATE` (no Hunt-Mode toggle — `S_story.huntMode` and the guaranteed-encounter `effectiveRate = 1.0` path were removed in §TIMELESS-01). On a hit, `_weightedMonsterPick(terrain)` selects the monster; the old quest-stalked `_stalkedMonsterPick` is gone. Named-node battles are unchanged.
 
@@ -405,7 +412,31 @@ Server-to-server presence replication over the node network. Player-facing view:
 
 `look.players` / `who.remotes` / `pos.nearby` + `world[]` (all carry `server` + `pid`), SSE events with `remote: true`, and the worldbuilder 🌐 Mesh tab (`GET /api/mesh/status`: identity, peers w/ liveness, remote players, "information passed" packet ring).
 
-**Test gates:** `npm run test:mud` — 98 checks across sections [A]–[L], including the Inc (e) partition-heal harness (3 servers + tracker: convergence, exactly-once across partitions via ACL-file split/heal, stale-replica availability, snapshot re-convergence, incompat-refusal + world-group segregation). Playwright: `multiplayer-presence.test.js` 7/7, `worldbuilder-mesh.test.js` + mesh tab 4/4.
+**Test gates:** `npm run test:mud` — 119 checks across sections [A]–[N] ([M] §NAV-01f room parity, [N] §NAV-01g roads/pins endpoints), including the Inc (e) partition-heal harness (3 servers + tracker: convergence, exactly-once across partitions via ACL-file split/heal, stale-replica availability, snapshot re-convergence, incompat-refusal + world-group segregation). Playwright: `multiplayer-presence.test.js` 7/7, `worldbuilder-mesh.test.js` + mesh tab 4/4.
+
+---
+
+## 13. Navigable World — §NAV-01 Layer Stack (✅ closed 2026-07-03)
+
+> Full diagnosis, data shapes, and increment record: `lab-reports/lab-report-nav01-navigable-world.md`. Player-facing surfaces: `maps.md` "ROAD NET & ROOM LAYER"; mechanics: `mechanics.md` "Roads, Rooms & Auto-Travel".
+
+§NAV-01 turned the geometrically correct §WALK world (median named cell 33 blind steps from start, every empty cell identical, every step an encounter roll) into a navigable MUD: rooms + exits + descriptions + safe highways + auto-travel. Nine layers, each reading only the layers below it:
+
+| Layer | Contents | Status |
+|-------|----------|--------|
+| **L0 GEOMETRY** | `GEO_PROJ` 90×360 equirect 1°, `mover.js` kernel | **FROZEN** — untouched by §NAV-01 |
+| **L1 PASSABILITY** | `SEA_RUNS`→`IMPASSABLE_CELLS` · `SEA_LANES` land bridges | **FROZEN** |
+| **L2 TERRAIN FIELD** | `_inferTerrain` / server `terrainAt` / `WORLD_DB` / encounter rates; precedence `SEA_LANES→ocean` ▸ `ROAD_CELLS→road` ▸ neighbors ▸ `midlands` | extended (road override) |
+| **L3 ROAD GRAPH** | `ROAD_RUNS` RLE fungal net — 400 cells (1.4% of passable), 88 junctions, built by `scripts/build-roads.js` (MST + trunk-reuse Dijkstra), pins in `roads-pins.json`, verified by `check:roads` R1–R4 | NEW (§NAV-01b/h) |
+| **L4 ROOMS** | `describeCell(world,pos)` → `{icon,title,sub,prose,exits,signposts}` — ROOMS:CORE in `rooms.js`, inlined byte-identically into the HTML (`check:roomsparity`), `require()`d by the server | NEW (§NAV-01c) |
+| **L5 ROUTING & TRAVEL** | pos-origin geo-BFS (wrap + band clamp) · road-weighted `_roadGridPath` · `_travelTick` auto-travel loop with 4 interrupt classes | NEW (§NAV-01a/d) |
+| **L6 QUEST WAYFINDING** | Navigate → waypoint, `(n steps, NE)` readouts, arrival detection | NEW (§NAV-01d/e) |
+| **L7 PRESENTATION** | exits signage, minimap roads + waypoint ★, map tab 15×21 + amenities, WORLD/GLOBE canvases | NEW (§NAV-01e + map suite) |
+| **L8 MUD SERVER** | `session/start\|move\|look\|pos` all carry the same L4 `room` via shared `buildLook` — byte-equal to the SP client (mud-harness [M]) | NEW (§NAV-01f) |
+
+**Authoring (worldbuilder.html):** §NAV-01g drag-&-lock cities (marker drag / lat-lon → `PUT /api/coords`; 🔒 lock persists into `roads-pins.json.locked`, geo-seed never moves locked cities) · §NAV-01h road-net editor (ROAD_RUNS chain-link overlay; vertex drag → pin; ✚ intersection / ┬ T-junction palette; 🔗 link toggle; 🗑 delete; **♻ Reweave Net** = `PUT /api/roads` → `build-roads.js --apply` → `check:roads`, red check rolls the game file back). CLI: `./api.sh roads | reweave`.
+
+**Guard-rails:** mover.js untouched (refusals stay exactly `'oob'`/`'sea'`) · roads are terrain, never permissions · no stored node-to-node edge lists · never hand-edit `ROAD_RUNS` — always ♻ Reweave.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
