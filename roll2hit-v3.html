@@ -9852,20 +9852,20 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'KIR', waypointNode:'KIR',
     npc:"yael",
   },
-  sq_battling: { id:'sq_battling', type:'side', title:'Battling — Earn Your Reputation',
+  sq_battling: { id:'sq_battling', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'dropsCollected', min:3 }] }, title:'Battling — Earn Your Reputation',
     desc:'You have won battles. Now collect the proof — take 3 weapon drops from fallen enemies.',
     hint:'Defeat enemies in story battles and return to Story Mode for the Victory outcome.',
     passText:'The fence at the Rough Bar takes the weapons without appraising them. He already knows what they are worth. So do you.',
     failText:'Three drops. You need three. The fence is still waiting.',
-    activateNode:'LHR', completeItems:[], completeFn: () => (S_story.dropsCollected || 0) >= 3, waypointNode:null,
+    activateNode:'LHR', completeItems:[], waypointNode:null,
     npc:"yael",
   },
-  sq_leveling: { id:'sq_leveling', type:'side', title:'Leveling — The Spoils of War',
+  sq_leveling: { id:'sq_leveling', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'defeatedBattles', min:5 }] }, title:'Leveling — The Spoils of War',
     desc:'Survive 5 story battles. Experience is written in blood and victory.',
     hint:'Win 5 battles via the Victory outcome in Story Mode.',
     passText:'Five battles. You have survived enough to be dangerous. The fifth one felt different — not easier, but cleaner.',
     failText:'Not five yet. Keep moving.',
-    activateNode:'LHR', completeItems:[], completeFn: () => Object.keys(S_story.defeatedBattles).length >= 5, waypointNode:null,
+    activateNode:'LHR', completeItems:[], waypointNode:null,
     npc:"yael",
   },
   // ── Layer 39 — Epic Battleground primary quests (activate at npcNode; reward comes from return quest) ──
@@ -10191,10 +10191,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── Layer 50: §XV NG+ Remembrance quests (activateNode:null — triggered in storyRender) ──
-  quest_ng_01: { id:'quest_ng_01', type:'side', title:'Froberger: The Remembered Path',
+  quest_ng_01: { id:'quest_ng_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'ngMemoryDelivered', min:3 }] }, title:'Froberger: The Remembered Path',
     desc:"You have been here before. The city does not announce this — the city does not announce anything. But the three people who matter have been here too, and they looked up when you came around the corner before you were close enough to be recognized, and this is how you know the city remembers. Go to them. They are not the same as when you left. Neither are you. This is not a problem. This is what the second visit is for.",
     hint:'Visit three NPCs you have reached Dear Friend status with.',
-    activateNode:null, completeItems:[], completeFn:() => Object.keys(S_story.ngMemoryDelivered || {}).length >= 3,
+    activateNode:null, completeItems:[], 
     waypointNode:'LHR', reward:500,
     disposition:'"The journal says: the world does not reset. The people do not reset. Only the monsters reset. You have always been here." — Froberger, Entry 41 marginal note',
     npc:"long_john_silver_sen",
@@ -11006,11 +11006,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // — Inn (INN) —
-  quest_inn_01: { id:'quest_inn_01', type:'side', title:'The First Night',
+  quest_inn_01: { id:'quest_inn_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flagsPath:['sleptAtNodes.INN'] }, title:'The First Night',
     desc:'The room is at the end of the hall. The second bed is the one that works. Sleep happens — not comfortably, not badly. You came back in the morning.',
     hint:'Sleep at The Innmother\'s Hall.',
-    activateNode:'INN', activateCond:() => true,
-    completeItems:[], completeFn:() => !!(S_story.sleptAtNodes||{})['INN'],
+    activateNode:'INN', 
+    completeItems:[], 
     onComplete:() => _innKindness(1),
     disposition:'"You slept in the bad room and came back in the morning. No one does that." — The Innmother\'s Hall',
     passText:"You slept in the bad room and came back in the morning. No one does that.",
@@ -11226,12 +11226,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_iodine_02: { id:'quest_iodine_02', type:'side',
-    title:'The Gathered Burn',
+    schema:'UQF-1.0', gate:{ questsAttempted:['quest_iodine_01'] }, bits:[], completion:{ itemsAll:[{ name:'Swamp Kelp', min:2 }], atNode:'INN' }, title:'The Gathered Burn',
     desc:'Gather Swamp Kelp from the mire and return to the Innmother\'s hearth to burn it down to Iodine Salt.',
     hint:'Carry 2× Swamp Kelp to the inn and burn them. Kelp drops from sea monsters in the swamp.',
-    activateNode:'INN', activateCond:() => (S_story.quests['quest_iodine_01']||'') !== '',
+    activateNode:'INN', 
     completeItems:[],
-    completeFn:() => (S_story.inventory||[]).filter(i => i.name === 'Swamp Kelp').length >= 2 && S_story.currentCode === 'INN',
+    
     onComplete:() => {
       let removed = 0;
       S_story.inventory = (S_story.inventory||[]).filter(i => { if (i.name === 'Swamp Kelp' && removed < 2) { removed++; return false; } return true; });
@@ -11247,12 +11247,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_iodine_03: { id:'quest_iodine_03', type:'side',
-    title:'The Charged Reduction',
+    schema:'UQF-1.0', gate:{ flags:['electricEelOrganHeld'], questsAttempted:['quest_iodine_01'] }, bits:[], completion:{ flags:['electricEelOrganHeld'], itemsAll:['Swamp Kelp'], atNode:'INN' }, title:'The Charged Reduction',
     desc:'The Electric Eel Organ catalyzes the burn — charged iodine salt, significantly more potent. The Atlantean smelting secret.',
     hint:'Bring the Electric Eel Organ to the inn hearth while carrying Swamp Kelp.',
-    activateNode:'INN', activateCond:() => !!S_story.electricEelOrganHeld && (S_story.quests['quest_iodine_01']||'') !== '',
+    activateNode:'INN', 
     completeItems:[],
-    completeFn:() => !!S_story.electricEelOrganHeld && (S_story.inventory||[]).some(i => i.name === 'Swamp Kelp') && S_story.currentCode === 'INN',
+    
     onComplete:() => {
       S_story.electricEelOrganHeld = false;
       let kelpRemoved = false;
@@ -11337,12 +11337,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_forge_02: { id:'quest_forge_02', type:'side',
-    title:'The Smelting',
+    schema:'UQF-1.0', gate:{ flags:['forgeActivated'] }, bits:[], completion:{ flags:['forgeActivated'], items:['Charged Iodine Salt','Iodine Salt'], atNode:'DSF' }, title:'The Smelting',
     desc:'The forge is active. The Atlantean Sea Element requires iodine reduction in the forge heat — the secret of Atlantas.',
     hint:'Bring Iodine Salt to the forge and smelt the Sea Element.',
-    activateNode:'DSF', activateCond:() => !!S_story.forgeActivated,
+    activateNode:'DSF', 
     completeItems:[],
-    completeFn:() => !!S_story.forgeActivated && ((S_story.inventory||[]).some(i => i.name === 'Charged Iodine Salt') || (S_story.inventory||[]).some(i => i.name === 'Iodine Salt')) && S_story.currentCode === 'DSF',
+    
     onComplete:() => {
       const inv = S_story.inventory || [];
       const chargedIdx = inv.findIndex(i => i.name === 'Charged Iodine Salt');
@@ -11406,12 +11406,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_sunken_02: { id:'quest_sunken_02', type:'side',
-    title:'The Tide Gate',
+    schema:'UQF-1.0', gate:{ flags:['inscriptionRead'] }, bits:[], completion:{ flags:['inscriptionRead'], itemsAll:['Sea Element'], atNode:'DA2' }, title:'The Tide Gate',
     desc:'The Gate mechanism requires the Sea Element — the Atlantean alloy forged from the reduction sequence. The forge made the key. You are the last step.',
     hint:'Bring the Sea Element to The Tide Gate. The mechanism accepts the alloy.',
-    activateNode:'DA2', activateCond:() => !!S_story.inscriptionRead,
+    activateNode:'DA2', 
     completeItems:[],
-    completeFn:() => !!(S_story.inscriptionRead) && (S_story.inventory||[]).some(i => i.name === 'Sea Element') && S_story.currentCode === 'DA2',
+    
     onComplete:() => {
       S_story.tideGateOpened = true;
       const inv = S_story.inventory || [];
@@ -12665,31 +12665,24 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── Layer 44 — Ally Cat Arc quests ──
-  quest_cat_01: { id:'quest_cat_01', type:'side', title:'Jimmy: The New Scratch',
+  quest_cat_01: { id:'quest_cat_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'catKills.stray_alley_cat', min:5 },{ path:'catKills.fluffy_cat', min:3 }] }, title:'Jimmy: The New Scratch',
     desc:"Jimmy Two-Tails wants the Cat Quarter settled. Clear the riff-raff — 5 strays and 3 fluffies.",
     hint:'Fight in the Cat Quarter until the quota is filled.',
     targetMonsterKeys:['stray_alley_cat','fluffy_cat'],
     killGoals:[{key:'stray_alley_cat',need:5,label:'Stray'},{key:'fluffy_cat',need:3,label:'Fluffy'}],
-    activateNode:'CDG', completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.stray_alley_cat || 0) >= 5 && (k.fluffy_cat || 0) >= 3;
-    },
+    activateNode:'CDG', completeItems:[], 
     waypointNode:'CDG', reward:200,
     disposition:'"You done good, kid. Real professional. The neighborhood\'s already calmer. Relatively. For cats." — Jimmy Two-Tails',
     passText:"You done good, kid. Real professional. The neighborhood is already calmer. Relatively. For cats.",
     failText:"The Cat Quarter still has strays and fluffies. Clear 5 strays and 3 fluffies for Jimmy Two-Tails.",
     npc:"long_john_silver_sen",
   },
-  quest_cat_02: { id:'quest_cat_02', type:'side', title:'Jimmy: Beefy Business',
+  quest_cat_02: { id:'quest_cat_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'catKills.beefy_tom', min:3 }], itemsAll:[{ name:'Cracked Claw', min:3 }] }, title:'Jimmy: Beefy Business',
     desc:"Three Beefy Toms are running muscle for a rival outfit. Take them down and collect the proof.",
     hint:'Kill 3 Beefy Toms and collect their Cracked Claws.',
     targetMonsterKeys:['beefy_tom'],
     killGoals:[{key:'beefy_tom',need:3,label:'Beefy Tom'}],
-    activateNode:null, completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.beefy_tom || 0) >= 3
-        && (S_story.inventory || []).filter(i => i.name === 'Cracked Claw').length >= 3;
-    },
+    activateNode:null, completeItems:[], 
     waypointNode:'CDG', reward:350,
     disposition:'"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart." — Sandy Scratchpad Mewlino',
     passText:"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart.",
@@ -12697,16 +12690,13 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_cat_03: { id:'quest_cat_03', type:'side', title:'Sandy: Honcho Problems',
+  quest_cat_03: { id:'quest_cat_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'catKills.honcho_cat_m', min:1 },{ path:'catKills.honcho_cat_f', min:1 }] }, title:'Sandy: Honcho Problems',
     itemChain:[{action:'grant',name:'Rhinestone Collar',icon:'💎',type:'trophy',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — let them merge and you\'re dealing with a Taz Devil.",
     hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
     targetMonsterKeys:['honcho_cat_m','honcho_cat_f'],
     killGoals:[{key:'honcho_cat_m',need:1,label:'Honcho Capo'},{key:'honcho_cat_f',need:1,label:'Boss Lady'}],
-    activateNode:null, completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.honcho_cat_m || 0) >= 1 && (k.honcho_cat_f || 0) >= 1;
-    },
+    activateNode:null, completeItems:[], 
     waypointNode:'CDG', reward:500,
     disposition:'"Kid, I told you. SEPARATE. You kill \'em SEPARATE. The merge thing is NOT a mechanic I enjoy." — Jimmy Two-Tails',
     passText:"I told you. SEPARATE. The merge thing is NOT a mechanic I enjoy. They are down and separate.",
@@ -12726,16 +12716,13 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_cat_05: { id:'quest_cat_05', type:'side', title:"Sandy: Fat Cats Don't Tip",
+  quest_cat_05: { id:'quest_cat_05', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'catKills.fat_merchant_cat', min:4 }], battles:['CQ_BOSS'] }, title:"Sandy: Fat Cats Don't Tip",
     itemChain:[{action:'grant',name:"The Don's Signet Ring",icon:'💍',type:'trophy',sell:35,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
     hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
     targetMonsterKeys:['fat_merchant_cat'],
     killGoals:[{key:'fat_merchant_cat',need:4,label:'Merchant Cat'}],
-    activateNode:null, completeItems:[], completeFn:() => {
-      const k = S_story.catKills || {};
-      return (k.fat_merchant_cat || 0) >= 4 && !!S_story.defeatedBattles['CQ_BOSS'];
-    },
+    activateNode:null, completeItems:[], 
     waypointNode:'CDG', reward:900,
     disposition:'"The merchants have been using Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin. I don\'t like it in my neighborhood." — Sandy Scratchpad Mewlino',
     passText:"The merchants used Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin. Sandy does not like it in her neighborhood. Don Fluffissimo is down.",
@@ -12755,12 +12742,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_cat_void: { id:'quest_cat_void', type:'side', title:'Sandy: Void Strays',
+  quest_cat_void: { id:'quest_cat_void', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'catKills.corrupted_cat', min:5 }] }, title:'Sandy: Void Strays',
     desc:"Strays near the DF node have gone wrong. Wrong eyes, wrong fur. Sandy doesn\'t like it in her neighborhood.",
     hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
     targetMonsterKeys:['corrupted_cat'],
     killGoals:[{key:'corrupted_cat',need:5,label:'Corrupted Cat'}],
-    activateNode:null, completeItems:[], completeFn:() => (S_story.catKills || {}).corrupted_cat >= 5,
+    activateNode:null, completeItems:[], 
     waypointNode:'CDG', reward:400,
     disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG. Wrong eyes. Wrong fur. Not touching anything from that block." — Sandy Scratchpad Mewlino',
     passText:"The strays near DF are gone. Sandy does not say thank you. She says: good.",
@@ -12780,12 +12767,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_la_riva_02: { id:'quest_la_riva_02', type:'side', title:"Connie: The Weight of a Net",
+  quest_la_riva_02: { id:'quest_la_riva_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'frCatKillCount', min:5 }], itemsAll:["Vincenzo's Net"] }, title:"Connie: The Weight of a Net",
     desc:"The Corrupted Cats have settled into the rubble of Fishmonger's Row. They're not just feral — they're holding something. Five of them. Find what they're carrying.",
     hint:"Kill 5 Corrupted Cats at Fishmonger's Row. Find what's in the rubble.",
     targetMonsterKeys:['corrupted_cat'],
     activateNode:null, completeItems:[],
-    completeFn:() => (S_story.frCatKillCount || 0) >= 5 && (S_story.inventory || []).some(i => i.name === "Vincenzo's Net"),
+    
     waypointNode:'AMS', reward:500,
     disposition:'"He built that rack himself, the second season." — Connie Tuna',
     passText:"He built that rack himself, the second season. The rubble has been cleared. The Corrupted Cats are gone.",
@@ -12806,22 +12793,22 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── Layer 47: Fishing Guide (Q-BAIT-00) ──
-  quest_fishing_guide: { id:'quest_fishing_guide', type:'side', title:'The Fisherman: Listen Closely',
+  quest_fishing_guide: { id:'quest_fishing_guide', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:1 }], atNode:'SSJ' }, title:'The Fisherman: Listen Closely',
     desc:"The Fisherman at Yugurt Cabin has a guide. Not a pamphlet — eleven years of fieldwork compressed into something small enough to fold. He doesn\'t offer it to people who ask. He offers it to people who have already been out on the lake and come back with the particular look of someone who now understands what they didn\'t know before they went.",
     hint:'Cast your line at Yugurt Lake at least once, then return to the Fisherman.',
-    activateNode:'SSJ', completeItems:[], completeFn:() => (S_story.fishingCatchLog||[]).length > 0 && S_story.currentCode === 'SSJ',
+    activateNode:'SSJ', completeItems:[], 
     waypointNode:'BOO', reward:0,
     disposition:'"The lake knows the difference. The guide tells you what the difference is." — The Fisherman',
     passText:"The lake knows the difference. The guide tells you what the difference is. The Fisherman has given you the fieldwork.",
     failText:"The Fisherman does not give the guide to people who ask. Cast at Yugurt Lake first, then return.",
     npc:"emmer",
   },
-  quest_fish_01: { id:'quest_fish_01', type:'side', title:'The Leviathan Class',
+  quest_fish_01: { id:'quest_fish_01', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flagsPath:['fishingQuestFlags.landed15Plus'] }, title:'The Leviathan Class',
     desc:"There is a point at which fishing becomes something else. Rank 15 is the threshold — the water changes quality, the fight changes weight, and what comes up on the line is not a catch but a confrontation. The Fisherman has not spoken about this directly. He has not needed to.",
     hint:'Land and defeat a Rank 15+ fish using real bait at Yugurt Lake.',
     activateNode:'SSJ', completeItems:[],
     activateCond:() => (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod')) && (S_story.fishingCatchLog||[]).length > 0,
-    completeFn:() => !!(S_story.fishingQuestFlags||{}).landed15Plus,
+    
     xpAward:750, waypointNode:'BOO', reward:200,
     disposition:'"You went deep." — The Fisherman',
     passText:"You went deep. The Fisherman says nothing more. A Rank 15 fish is a confrontation, not a catch.",
@@ -12878,61 +12865,61 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // §XLV — Yugurt Tournament chain (activate at YC when Fishing Rod present; cascade on each win)
-  quest_tour_01: { id:'quest_tour_01', type:'side', title:"Pip's Challenge",
+  quest_tour_01: { id:'quest_tour_01', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flagsPath:['yugurtTourBeat.pip'] }, title:"Pip's Challenge",
     desc:"A kid at Yugurt Cabin has issued a fishing challenge. Stake: 50gp. He uses a stick and string. He's been practicing.",
     hint:'Beat Pip in a 1v1 cast at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
     activateCond:() => (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod')),
-    completeFn:() => !!(S_story.yugurtTourBeat||{}).pip, xpAward:100, waypointNode:'SSJ', reward:50,
+    xpAward:100, waypointNode:'SSJ', reward:50,
     disposition:'"I have been practicing. Every day."  — Pip',
     passText:"I have been practicing. Every day. The challenge is met. The 50gp stake is won.",
     failText:"Pip at Yugurt Cabin has not been beaten yet. He has been practicing every day.",
     npc:"emmer",
   },
-  quest_tour_02: { id:'quest_tour_02', type:'side', title:'The Spreadsheet Casts',
+  quest_tour_02: { id:'quest_tour_02', type:'side', schema:'UQF-1.0', gate:{ flagsPath:['yugurtTourBeat.pip'] }, bits:[], completion:{ flagsPath:['yugurtTourBeat.renard'] }, title:'The Spreadsheet Casts',
     desc:"Renard Castwell from the Accounting Department is at the lake on a corporate wellness retreat. He has a spreadsheet and is terrible at fishing.",
     hint:'Beat Renard at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
-    activateCond:() => !!(S_story.yugurtTourBeat||{}).pip,
-    completeFn:() => !!(S_story.yugurtTourBeat||{}).renard, xpAward:150, waypointNode:'SSJ', reward:75,
+    
+    xpAward:150, waypointNode:'SSJ', reward:75,
     disposition:'"This counts as a team-building exercise per company policy."  — Renard Castwell',
     passText:"This counts as a team-building exercise per company policy. Renard has been beaten. The spreadsheet was not useful.",
     failText:"Renard Castwell from the Accounting Department is still at the lake. Beat him at Yugurt Cabin.",
     npc:"emmer",
   },
-  quest_tour_03: { id:'quest_tour_03', type:'side', title:"Bog's Terms",
+  quest_tour_03: { id:'quest_tour_03', type:'side', schema:'UQF-1.0', gate:{ flagsPath:['yugurtTourBeat.renard'] }, bits:[], completion:{ flagsPath:['yugurtTourBeat.bog'] }, title:"Bog's Terms",
     desc:"Bog Mudwhistle fishes to eat. He eats what he catches. The lake has eaten parts of him too. Fair exchange.",
     hint:'Beat Bog at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
-    activateCond:() => !!(S_story.yugurtTourBeat||{}).renard,
-    completeFn:() => !!(S_story.yugurtTourBeat||{}).bog, xpAward:200, waypointNode:'SSJ', reward:150,
+    
+    xpAward:200, waypointNode:'SSJ', reward:150,
     disposition:'"I don\'t think the lake has a mood anymore. I think we\'re the ones who want it to mean something." — Bog Mudwhistle',
     passText:"The lake does not have a mood. We are the ones who want it to mean something. Bog Mudwhistle has been beaten.",
     failText:"Bog Mudwhistle is still undefeated at Yugurt Cabin.",
     npc:"emmer",
   }, // CO-001
-  quest_tour_04: { id:'quest_tour_04', type:'side', title:"Vera's Rulebook",
+  quest_tour_04: { id:'quest_tour_04', type:'side', schema:'UQF-1.0', gate:{ flagsPath:['yugurtTourBeat.bog'] }, bits:[], completion:{ flagsPath:['yugurtTourBeat.vera'] }, title:"Vera's Rulebook",
     desc:"Vera Hookline has a laminated rulebook. She will read rule twelve to you if you lose.",
     hint:'Beat Vera at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
-    activateCond:() => !!(S_story.yugurtTourBeat||{}).bog,
-    completeFn:() => !!(S_story.yugurtTourBeat||{}).vera, xpAward:300, waypointNode:'SSJ', reward:300,
+    
+    xpAward:300, waypointNode:'SSJ', reward:300,
     disposition:'"The fish does not care about your feelings."  — Vera Hookline',
     passText:"The fish does not care about your feelings. Vera Hookline has been beaten. Rule twelve was not read.",
     failText:"Vera Hookline is still undefeated at Yugurt Cabin. Lose and she will read rule twelve.",
     npc:"emmer",
   },
-  quest_tour_05: { id:'quest_tour_05', type:'side', title:'Tonnage',
+  quest_tour_05: { id:'quest_tour_05', type:'side', schema:'UQF-1.0', gate:{ flagsPath:['yugurtTourBeat.vera'] }, bits:[], completion:{ flagsPath:['yugurtTourBeat.dirk'] }, title:'Tonnage',
     desc:"Dirk Troutslap has moved forty thousand pounds of fish retail weight this season. He is here for exactly one reason.",
     hint:'Beat Dirk at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
-    activateCond:() => !!(S_story.yugurtTourBeat||{}).vera,
-    completeFn:() => !!(S_story.yugurtTourBeat||{}).dirk, xpAward:500, waypointNode:'SSJ', reward:600,
+    
+    xpAward:500, waypointNode:'SSJ', reward:600,
     disposition:'"I do not fish for fun. I fish for tonnage."  — Dirk Troutslap',
     passText:"I do not fish for fun. I fish for tonnage. Dirk Troutslap has been beaten.",
     failText:"Dirk Troutslap is still undefeated at Yugurt Cabin. He fishes for tonnage, not fun.",
     npc:"emmer",
   },
-  quest_tour_06: { id:'quest_tour_06', type:'side', title:"The Fisherman's Tournament",
+  quest_tour_06: { id:'quest_tour_06', type:'side', schema:'UQF-1.0', gate:{ flagsPath:['yugurtTourBeat.dirk'] }, bits:[], completion:{ flagsPath:['yugurtTourBeat.master'] }, title:"The Fisherman's Tournament",
     desc:"The Master of Yugurt will fish against you. Stake: 1,500gp. He has been here eleven years. The lake may be on his side.",
     hint:'Beat The Fisherman at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
-    activateCond:() => !!(S_story.yugurtTourBeat||{}).dirk,
-    completeFn:() => !!(S_story.yugurtTourBeat||{}).master, xpAward:1000, waypointNode:'SSJ', reward:1500,
+    
+    xpAward:1000, waypointNode:'SSJ', reward:1500,
     disposition:'"...Nice Day For Fishing. Yugurt!"  — The Fisherman',
     passText:"Nice Day For Fishing. Yugurt! The Fisherman has been beaten. Eleven years and the lake was not enough.",
     failText:"The Fisherman at Yugurt Cabin has not been beaten. He has been here eleven years. The lake may be on his side.",
@@ -12967,13 +12954,13 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", schema:"UQF-1.0", title:"The Jester's Crossroads", desc:"The jester does not ask a question. Two must arrive alone and answer it anyway. DC 10 Insight. Self-serve. No Help action.", hint:"The answer is not written anywhere. You already know it.", passText:"You write the number on a scrap of paper and set it on the stone. He catches the coin, does not look at it, nods once. One. Someone else will be the second. When the second arrives and writes the same number, he stands up and dabs. Completely sincere. The post opens. There is a carved coin inside: LXVII on one face, 67 on the other.", failText:"You write a different number. He takes the paper, folds it carefully, puts it in his coat. He collects wrong answers. Not to shame them. Wrong answers need somewhere to go too. Come back when you know.", disposition:"67 > 69. taps chest. self-serve. double dab. ⁶⁷", activateNode:"HKG", checkAbility:"wis", checkLabel:"Insight", vignetteText:"A painted post at a fork in the road. No sign. A jester on a stone, tossing a coin. He does not speak. He holds up two fingers. The coin goes up and up. The question he is not asking is: do you know the answer to the question I am not asking? The answer is 67. You have to arrive at it yourself.", checkDC:10, retryGateDays:0, retryable:true, activateCond:() => (S_story.faith_folk || 0) >= 1, gate:{ _legacyFn:true }, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:10, onPass:[{ kind:"reward", xp:67 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 1); } }], onFail:[] }],
     npc:"auros",
   },
-  quest_guide_01: { id:"quest_guide_01", type:"side", title:"The Fool's First Cast", desc:"A young man arrived at Yugurt Cabin this morning with a market rod, a broken guide ring, and total confidence. He cast immediately without asking anything. The line went sideways. He said: Is that normal? He was smiling. He has never fished a lake. He does not know he has never fished a lake. The Fisherman watched from the cabin steps and said nothing. You are holding it like a question.", hint:"Go to Yugurt Lake and make your first catch.", disposition:"\"Is that normal?\" — Emmer Finch", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:50, reward:0, activateCond:() => (S_story.inventory||[]).some(i => (i.name||'')
-.toLowerCase().includes("fishing rod")) && !S_story.quests["quest_guide_01"], completeFn:() => (S_story.fishingCatchLog||[]).length >= 1, passText:"Emmer Finch made his first cast and it went sideways. He was smiling. He asked: is that normal?", failText:"The first catch at Yugurt Lake has not been made. Go and try the rod." },
-  quest_guide_02: { id:"quest_guide_02", type:"side", title:"The Weight of the Hook", desc:"The hook caught something large. The rod bent correctly for the first time. Emmer did everything wrong in sequence — pulled when he should wait, stood when he should kneel — and the fish was gone. He stood at the water for a long moment. Then: I think I have been doing it wrong the whole time. He turned around and found this interesting. The Fisherman was watching from the cabin steps. He said one sentence. This is not a terminal diagnosis. This is how it starts.", hint:"Fish again at Yugurt Lake. The second catch closes the recognition beat.", disposition:"\"Now you can start.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:150, reward:0, activateCond:() => S_story.quests["quest_guide_01"] === "done" && (S_story.fishingCatchLog||[]).length >= 1, completeFn:() => (S_story.fishingCatchLog||[]).length >= 2,
+  quest_guide_01: { id:"quest_guide_01", type:"side", schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:1 }] }, title:"The Fool's First Cast", desc:"A young man arrived at Yugurt Cabin this morning with a market rod, a broken guide ring, and total confidence. He cast immediately without asking anything. The line went sideways. He said: Is that normal? He was smiling. He has never fished a lake. He does not know he has never fished a lake. The Fisherman watched from the cabin steps and said nothing. You are holding it like a question.", hint:"Go to Yugurt Lake and make your first catch.", disposition:"\"Is that normal?\" — Emmer Finch", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:50, reward:0, activateCond:() => (S_story.inventory||[]).some(i => (i.name||'')
+.toLowerCase().includes("fishing rod")) && !S_story.quests["quest_guide_01"], passText:"Emmer Finch made his first cast and it went sideways. He was smiling. He asked: is that normal?", failText:"The first catch at Yugurt Lake has not been made. Go and try the rod." },
+  quest_guide_02: { id:"quest_guide_02", type:"side", schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:2 }] }, title:"The Weight of the Hook", desc:"The hook caught something large. The rod bent correctly for the first time. Emmer did everything wrong in sequence — pulled when he should wait, stood when he should kneel — and the fish was gone. He stood at the water for a long moment. Then: I think I have been doing it wrong the whole time. He turned around and found this interesting. The Fisherman was watching from the cabin steps. He said one sentence. This is not a terminal diagnosis. This is how it starts.", hint:"Fish again at Yugurt Lake. The second catch closes the recognition beat.", disposition:"\"Now you can start.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:150, reward:0, activateCond:() => S_story.quests["quest_guide_01"] === "done" && (S_story.fishingCatchLog||[]).length >= 1, 
     passText:"Now you can start. The Fisherman said one sentence. This is not a terminal diagnosis.",
     failText:"The recognition beat has not been completed. Fish again at Yugurt Lake for the second catch.",
   },
-  quest_guide_03: { id:"quest_guide_03", type:"side", title:"Morning Repetitions", desc:"The Fisherman says nothing instructional. He fishes. Emmer fishes alongside him and watches. The watching is the instruction. Emmer's grip is wrong, then less wrong, then right — and he does not notice it has changed. This is how it works. Not from wishing or hoping or accepting yourself as you are. From returning to the same water, the same rod, the same motion, day after day. Disciplined effort in a consistent direction. You will not always have to think about it. But you do now. Keep going.", hint:"Fish at Yugurt Lake three more times — practice the form.", disposition:"\"You're thinking about every move. Good. You won't always have to.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:250, reward:0, activateCond:() => S_story.quests["quest_guide_02"] === "done", completeFn:() => (S_story.fishingCatchLog||[]).length >= 5,
+  quest_guide_03: { id:"quest_guide_03", type:"side", schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:5 }] }, title:"Morning Repetitions", desc:"The Fisherman says nothing instructional. He fishes. Emmer fishes alongside him and watches. The watching is the instruction. Emmer's grip is wrong, then less wrong, then right — and he does not notice it has changed. This is how it works. Not from wishing or hoping or accepting yourself as you are. From returning to the same water, the same rod, the same motion, day after day. Disciplined effort in a consistent direction. You will not always have to think about it. But you do now. Keep going.", hint:"Fish at Yugurt Lake three more times — practice the form.", disposition:"\"You're thinking about every move. Good. You won't always have to.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:250, reward:0, activateCond:() => S_story.quests["quest_guide_02"] === "done", 
     passText:"You are thinking about every move. Good. You will not always have to. Five catches completed.",
     failText:"Practice is not finished. Fish at Yugurt Lake three more times — five total catches required.",
   },
@@ -12982,7 +12969,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     passText:"He did not think about it. Neither did I, once. The cast that did not think has been made.",
     failText:"The threshold has not been crossed. Return to Yugurt Cabin after the unconscious cast.",
   },
-  quest_guide_06: { id:"quest_guide_06", type:"side", title:"Just Be Yourself", desc:"The Fisherman brings the rod out from inside the cabin. It was not visible before. He sets it on the table between you. Emmer says: Wait, shouldn't I — The Fisherman goes back inside. The fire is still going. The rod is in your hands. You have been trying to be the person you want to become. This morning you already are. You will need to try to be the person you want to become. And then, one morning, you already are. Make one more cast. The lake will register it.", hint:"Make one more cast at Yugurt Lake to close the arc.", disposition:"\"You will need to try to be the person you want to become. And then, one morning, you already are.\" — The Fisherman", npc:"The Fisherman", activateNode:"SSJ", waypointNode:"BOO", xpAward:400, reward:0, activateCond:() => S_story.quests["quest_guide_05"] === "done", completeFn:() => (S_story.fishingCatchLog||[]).length >= 6,
+  quest_guide_06: { id:"quest_guide_06", type:"side", schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:6 }] }, title:"Just Be Yourself", desc:"The Fisherman brings the rod out from inside the cabin. It was not visible before. He sets it on the table between you. Emmer says: Wait, shouldn't I — The Fisherman goes back inside. The fire is still going. The rod is in your hands. You have been trying to be the person you want to become. This morning you already are. You will need to try to be the person you want to become. And then, one morning, you already are. Make one more cast. The lake will register it.", hint:"Make one more cast at Yugurt Lake to close the arc.", disposition:"\"You will need to try to be the person you want to become. And then, one morning, you already are.\" — The Fisherman", npc:"The Fisherman", activateNode:"SSJ", waypointNode:"BOO", xpAward:400, reward:0, activateCond:() => S_story.quests["quest_guide_05"] === "done", 
     itemChain:[{action:'grant',name:'Rod of Self-Discovery', icon:'🎣', type:'weapon', atkBonus:1, dmgDie:4, dmgCount:1, dmgFlat:0, minLevel:1, sell:0, desc:'+1 ATK, 1d4. The rod the Fisherman kept inside. It was not a fishing rod. It was a proof of concept.',silent:true}], // §EDITOR-01-D-FU(b) b2b
     passText:"You will need to try to be the person you want to become. And then, one morning, you already are. The arc is closed.",
     failText:"One more cast at Yugurt Lake is needed to close the arc. The lake will register it.",
@@ -20185,10 +20172,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   tbs_c9a5: { id:"tbs_c9a5", type:"skill_check", schema:'UQF-1.0', gate:{ flags:['tbs_c9a4'] }, bits:[{ kind:'skill_check', stat:'WIS', dc:11, onPass:[{ kind:'mission_bit', flag:'tbs_c9a5' }], onFail:[] }], title:"Historical Record — Not a Deed", desc:"Archivus Sweelinck reads the ledger fragment. He reads the transaction entry: the specific date, the description of the prisoner, the price, the destination. He is quiet for a long time. 'This is a crime,' he says. 'Documented in a commercial ledger by the person who profited from it. And someone wants to use it as a deed of property.' He sets it on the table. 'Historical Records — Documents of Captivity. The archive receives this as a primary document of a specific illegal act of captivity, c.1200s, recording the forced transfer of a Georgian noblewoman. Cross-reference: TBS cycles 1-7, the Knight in the Panther's Skin — the events this ledger documents, and the rescue that followed, are the subject of Rustaveli's poem. The poem is in the archive. The crime the poem describes is now in the archive too.' He writes one more line in the intake record: 'Receipt by this archive does not constitute evidence of property title. A record of illegal captivity is not a deed. Any legal claim based on this document should cite this notation alongside the document itself.' He closes the ledger. 'The claimant can read that when he applies for access.'", passText:"You let Sweelinck write the notation. The crime is documented. The archive knows what it is. The claimant's property claim has lost its instrument — the archive has received the ledger, but the receipt includes its own refusal to be complicit. Hakob Mkhitaryan's family is protected. The historical record is filed correctly.", failText:"You mention the claimant's legal team and what they tried. Sweelinck writes a second notation: 'This document was subject to suppression and conversion attempts during archival transfer. Both attempts failed.' He looks at you. 'The archive records its own provenance.' He closes the intake file.", npc:"archivus_sweelinck", activateNode:"WM" },
 
   // ── §NPC_DIALOGUE batch rescue — Layer 41 Birka Arc + dungeon approach quests ──
-  quest_slums_cleanup: { id:'quest_slums_cleanup', type:'side', title:'Yael: Slums Cleanup',
+  quest_slums_cleanup: { id:'quest_slums_cleanup', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'slStalksWon', min:3 }] }, title:'Yael: Slums Cleanup',
     desc:"Yael Scheidemann runs the Birka Slums detail because she asked for it and because nobody else did. She will know when it is done because she always knows — she has been watching this street since before you arrived on it. Three encounters. Come back when it is finished and she will not say thank you, which in her particular register means something closer to it than most people's explicit gratitude.",
     hint:'Head north to the Birka Slums and clear vermin.',
-    activateNode:'LHR', completeItems:[], completeFn:() => (S_story.slStalksWon || 0) >= 3,
+    activateNode:'LHR', completeItems:[], 
     waypointNode:'BMA', reward:80,
     disposition: '"The commissioners don\'t read field reports about the Slums. They have city-level priorities. The Slums are a city-level priority that doesn\'t appear on their list." — Yael Scheidemann' },
   quest_brynn_firewood: { id:'quest_brynn_firewood', type:'side', schema:'UQF-1.0', gate:{ favorMin:{ brynn:1 } }, bits:[], completion:{ flags:['brynnFirewoodDelivered'] }, title:"Brynn: The Firewood",
@@ -20197,11 +20184,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'TLL', 
     
     completeItems:[] },
-  quest_brynn_ledger: { id:'quest_brynn_ledger', type:'side', title:"Brynn: Missing Ledger",
+  quest_brynn_ledger: { id:'quest_brynn_ledger', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ itemsAll:['Worn Ledger Book'], atNode:'TLL' }, title:"Brynn: Missing Ledger",
     itemChain:[{action:'take',name:'Worn Ledger Book',all:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Brynn Clerambault keeps her accounts in a worn ledger that has been written in, crossed out, and written in again for six years. She lent it to a merchant with good credit and bad judgment and she has been setting a table with one fewer place since. The ledger is in the Slums. She asked you to find it without saying what it actually contains — which means she trusts you with it more than she trusts the asking.",
     hint:'Search the Birka Slums — the ledger may be on a fallen enemy.',
-    activateNode:'TLL', completeItems:[], completeFn:() => (S_story.inventory||[]).some(i => i.name === 'Worn Ledger Book') && S_story.currentCode === 'TLL',
+    activateNode:'TLL', completeItems:[], 
     waypointNode:'BMA', reward:0,
     disposition: '"Rove had good credit. That\'s the part I keep coming back to. Good credit and bad judgment and I trusted the credit." — Brynn Clerambault' },
   quest_sir_jullean: { id:'quest_sir_jullean', type:'skill_check', schema:'UQF-1.0', gate:{}, bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:10, onPass:[{ kind:'reward', xp:25 }], onFail:[] }], title:'Sir Jullean and the Pigeon',
@@ -20213,25 +20200,25 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     passText:"He listens. He actually listens. He says: 'You're right. She doesn't need me.'\n\nHe stands. He adjusts his coat with great dignity — smoothing the front, squaring the shoulders — and turns toward the lane home.\n\nHe walks directly into the drainage ditch.\n\nThe pigeon watches this.\n\nYou watch the pigeon watch this.\n\nHe waves from inside the ditch. He is fine. The ditch is shallow. Benedikt goes back to the ale.",
     failText:"He tells you Benedikt's full history. Two days old and already with opinions. He says this like it explains everything. It does not explain everything. He offers you some of the trough ale.\n\nYou consider it longer than you should.",
     disposition:"'She doesn't need me. You're absolutely right.' — Sir Jullean, adjusting his coat, approximately three seconds before the drainage ditch." },
-  quest_couperin_lute: { id:'quest_couperin_lute', type:'side', npc:'quill', title:"Quill: The Pawned Lute",
+  quest_couperin_lute: { id:'quest_couperin_lute', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ itemsAll:["Quill's Lute"], atNode:'MHQ' }, npc:'quill', title:"Quill: The Pawned Lute",
     itemChain:[{action:'take',name:"Quill's Lute",all:true},{action:'grant',name:'Cipher Scrap',icon:'📜',type:'key',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Tomas Couperin's lute has been in Pachelbel's inventory for eleven days. He pawned it against a drink tab — a transaction he does not regret exactly, but which he replays in a particular way every morning. The lute does not play without him. The drink is gone. The tab is the only thing that remained, and now the lute is not his. The asking is the part he cannot bring himself to do.",
     hint:'Talk to Pachelbel at the Rough Bar and retrieve the lute.',
-    activateNode:'MHQ', completeItems:[], completeFn:() => (S_story.inventory||[]).some(i => i.name === "Quill's Lute") && S_story.currentCode === 'MHQ',
+    activateNode:'MHQ', completeItems:[], 
     waypointNode:'LLA', reward:40,
     disposition: '"The guild licenses five songs. Five. For the whole of human experience. I don\'t know if that\'s arrogance or optimism." — Tomas Couperin' },
-  quest_pachelbel_shipment: { id:'quest_pachelbel_shipment', type:'side', npc:'pachelbel', title:'Pachelbel: Scholar Box',
+  quest_pachelbel_shipment: { id:'quest_pachelbel_shipment', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ itemsAll:['Sealed Scholar Box'], atNode:'LLA' }, npc:'pachelbel', title:'Pachelbel: Scholar Box',
     itemChain:[{action:'take',name:'Sealed Scholar Box',all:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Pachelbel does not deal in debts he did not originate. The Scholar Box has been in his back inventory for four months — sealed, addressed, belonging to someone who paid for it and then stopped existing in any record he can find. He wants it out of his problem. He does not say why it bothers him that it is still there. You can see that it does.",
     hint:'Look for the Scholar Box in the Birka Crypt.',
-    activateNode:'LLA', completeItems:[], completeFn:() => (S_story.inventory||[]).some(i => i.name === 'Sealed Scholar Box') && S_story.currentCode === 'LLA',
+    activateNode:'LLA', completeItems:[], 
     waypointNode:'KRN', reward:60,
     disposition: '"I don\'t deal in debts I didn\'t originate. The Scholar Box is someone else\'s debt. I just want it out of my inventory." — Pachelbel' },
-  quest_pit_training: { id:'quest_pit_training', type:'side', npc:'crov', title:'Weckmann: Pit Training',
+  quest_pit_training: { id:'quest_pit_training', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'pitTrainingWins', min:3 }] }, npc:'crov', title:'Weckmann: Pit Training',
     itemChain:[{action:'grant',name:'Pit Legend Token',icon:'🏆',type:'token',sell:30,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Weckmann trains whoever survives the floor. Not whoever asks. Not whoever pays. Whoever survives. He will be watching. He will correct what he sees. He will not encourage, because encouragement is for people who need to be told they are doing it right. He corrects because he believes you can do it right. Three fights in the Neon Undercity.",
     hint:'Win 3 battles at the Neon Undercity.',
-    activateNode:'HKG', completeItems:[], completeFn:() => (S_story.pitTrainingWins || 0) >= 3,
+    activateNode:'HKG', completeItems:[], 
     waypointNode:'HKG', reward:0,
     disposition: '"The promoters tried to fix a fight here last year. I shut the pit rather than host it. Some things cost more to keep than to lose." — Weckmann' },
   quest_void_below: { id:'quest_void_below', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ battles:['CY_VOID'] }, title:'Auros: Void Below',
@@ -20262,10 +20249,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     
     
     completeItems:[] },
-  quest_pit_debut: { id:'quest_pit_debut', type:'side', title:'First Blood',
+  quest_pit_debut: { id:'quest_pit_debut', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'pitTrainingWins', min:1 }] }, title:'First Blood',
     hint:'Win your first pit fight at the Neon Undercity.',
-    activateNode:'HKG', activateCond:() => true,
-    completeFn:() => (S_story.pitTrainingWins||0) >= 1,
+    activateNode:'HKG', 
+    
     completeItems:[] },
   // ── Ceremonia Arc: Yael Scheidemann (5 acts) ──
   quest_ceremonia_yael_01: { id:'quest_ceremonia_yael_01', type:'skill_check', title:'The Watch',
@@ -20849,6 +20836,9 @@ const QuestRuntime = {
     // sleptAt → array of node codes that must each have a truthy S_story.sleptAtNodes[code]
     // (replaces `!!(S_story.sleptAtNodes||{})[code]` in activateCond).
     if (g.sleptAt && !g.sleptAt.every(nd => !!(S_story.sleptAtNodes || {})[nd])) return false;
+    // flagsPath → dot-paths from S_story, ALL truthy (§ARCH-01 W3b; same semantics as
+    // the canComplete term — nested flag objects like `yugurtTourBeat.pip`).
+    if (g.flagsPath && !g.flagsPath.every(p => !!p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), S_story))) return false;
     return true;
   },
 
@@ -20879,6 +20869,26 @@ const QuestRuntime = {
     // atNode → completes only while the player is currently standing at this node
     // (replaces completeFn:()=>S_story.currentCode==='CODE'; waypoint-arrival completion).
     if (g.atNode && S_story.currentCode !== g.atNode) return false;
+    // §ARCH-01 W3b terms (all AND-position):
+    // flagsPath → dot-paths from S_story, ALL truthy — nested flag objects like
+    // `yugurtTourBeat.pip` (replaces `!!(S_story.yugurtTourBeat||{}).pip`).
+    if (g.flagsPath && !g.flagsPath.every(p => !!p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), S_story))) return false;
+    // countMin → [{path, min}], ALL required. Value coerced like the legacy counters:
+    // number → itself · array → length · object → key count · missing → 0
+    // (replaces `(S_story.pitTrainingWins||0)>=3`, `(fishingCatchLog||[]).length>=n`,
+    // `Object.keys(defeatedBattles).length>=n`, `(catKills||{}).beefy_tom>=n`).
+    if (g.countMin && !g.countMin.every(c => {
+      const v = c.path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), S_story);
+      const num = (typeof v === 'number') ? v : Array.isArray(v) ? v.length : (v && typeof v === 'object') ? Object.keys(v).length : 0;
+      return num >= c.min;
+    })) return false;
+    // itemsAll → AND-position exact-name inventory requirement (vs the fuzzy OR `items`
+    // term above): each entry is a name string (≥1 copy) or {name, min} (≥min copies);
+    // exact `.some(i => i.name === X)` / `.filter(...).length >= min` parity.
+    if (g.itemsAll && !g.itemsAll.every(e => {
+      const name = (typeof e === 'string') ? e : e.name, min = (typeof e === 'string') ? 1 : (e.min || 1);
+      return (S_story.inventory || []).filter(i => i.name === name).length >= min;
+    })) return false;
     return true;
   },
 

@@ -8172,15 +8172,12 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
     'quest_sk_hull','quest_vs_01','quest_vs_02','quest_vs_03','quest_vs_warden','quest_cat_04','quest_cat_06',
     'quest_la_riva_01','quest_la_riva_03','quest_horned_shark','quest_shale_drop','quest_night_eel',
     'quest_no_fishing_sign','quest_guide_05','quest_brynn_firewood','quest_void_below','quest_city_watch_patrol'];
-  const W3B = ['sq_battling','sq_leveling','quest_ng_01','quest_wm_01','quest_inn_01','quest_iodine_02','quest_iodine_03',
-    'quest_forge_02','quest_sunken_02','quest_cat_01','quest_cat_02','quest_cat_03','quest_cat_05','quest_cat_void',
-    'quest_la_riva_02','quest_fishing_guide','quest_fish_01','quest_tour_01','quest_tour_02','quest_tour_03',
-    'quest_tour_04','quest_tour_05','quest_tour_06','quest_guide_01','quest_guide_02','quest_guide_03','quest_guide_06',
-    'quest_slums_cleanup','quest_brynn_ledger','quest_couperin_lute','quest_pachelbel_shipment','quest_pit_training',
-    'quest_pit_debut','quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
+  // Wave 3b later migrated 32 of the original 38 skips; the terminal legacy
+  // holdouts are wm_01 (bespoke function-body OR) + the 5 math placeholders.
+  const W3B = ['quest_wm_01','quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
   const GATE_KEPT = ['quest_wm_05','quest_road_damascus','quest_inn_06'];
 
-  test('all 61 are UQF-1.0, validate, bits:[], completion present, no completeFn; W3b list untouched', async ({ page }) => {
+  test('all 61 are UQF-1.0, validate, bits:[], completion present, no completeFn; legacy holdouts untouched', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(({ w3a, w3b, kept }) => {
       const bad = [];
@@ -8307,5 +8304,147 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
     });
     expect(r).toEqual({ shoreGateClosed:false, shoreGateOpen:true, shoreElsewhere:false, shoreAtNode:true,
       innFlagUnset:false, innWrongNode:false, innBoth:true, sq1:true });
+  });
+});
+
+// ── §ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 migrated) ────
+//
+// Three new AND-position canComplete terms, each serving many quests:
+// countMin (dot-path threshold; number/array-length/object-size coercion),
+// itemsAll (exact-name inventory requirement, optional min copies — vs the fuzzy
+// OR `items` term), flagsPath (nested dot-path flags, also added to canActivate
+// for the tour gates). Holdouts stay legacy by design: quest_wm_01 (bespoke
+// function-body OR) + quest_math_01–05 (no completion mechanism — §MATH-01 gap).
+// guide_02/03/06 keep their `quests.X === 'done'` activateConds verbatim behind
+// gate:{_legacyFn:true} — suspected DEAD gates (side quests reach 'complete',
+// never 'done') — flagged in plan.md, parity preserved.
+
+test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 migrated + 3 terms)', () => {
+  const W3B = ['sq_battling','sq_leveling','quest_ng_01','quest_inn_01','quest_iodine_02','quest_iodine_03',
+    'quest_forge_02','quest_sunken_02','quest_cat_01','quest_cat_02','quest_cat_03','quest_cat_05','quest_cat_void',
+    'quest_la_riva_02','quest_fishing_guide','quest_fish_01','quest_tour_01','quest_tour_02','quest_tour_03',
+    'quest_tour_04','quest_tour_05','quest_tour_06','quest_guide_01','quest_guide_02','quest_guide_03',
+    'quest_guide_06','quest_slums_cleanup','quest_brynn_ledger','quest_couperin_lute','quest_pachelbel_shipment',
+    'quest_pit_training','quest_pit_debut'];
+  const HOLDOUTS = ['quest_wm_01','quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
+  const GATE_KEPT = ['quest_fish_01','quest_tour_01','quest_guide_01','quest_guide_02','quest_guide_03','quest_guide_06'];
+
+  test('all 32 are UQF-1.0, validate, bits:[], completion, no completeFn; holdouts stay legacy', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(({ w3b, holdouts, kept }) => {
+      const bad = [];
+      for (const id of w3b) {
+        const q = QUEST_DB[id];
+        if (!q) { bad.push(id + ':missing'); continue; }
+        if (q.schema !== 'UQF-1.0') bad.push(id + ':schema');
+        if (!validateQuest(q).valid) bad.push(id + ':invalid');
+        if (!q.completion) bad.push(id + ':no-completion');
+        if ((q.bits || []).length) bad.push(id + ':bits');
+        if (q.completeFn) bad.push(id + ':completeFn-residue');
+        if (kept.includes(id) && (typeof q.activateCond !== 'function' || q.gate._legacyFn !== true))
+          bad.push(id + ':gate-kept-broken');
+      }
+      const stillLegacy = holdouts.filter(id => QUEST_DB[id] && QUEST_DB[id].schema === undefined);
+      return { bad, legacyCount: stillLegacy.length };
+    }, { w3b: W3B, holdouts: HOLDOUTS, kept: GATE_KEPT });
+    expect(r.bad).toEqual([]);
+    expect(r.legacyCount).toBe(HOLDOUTS.length);
+  });
+
+  test('countMin coercion truth-table: number, array length, object keys, nested path, missing', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      QUEST_DB.q_w3_count = { schema:'UQF-1.0', id:'q_w3_count', type:'side', title:'x', gate:{}, bits:[],
+        completion:{ countMin:[{ path:'w3Num', min:3 }, { path:'w3Deep.k', min:2 }] } };
+      const out = {};
+      out.missing = QuestRuntime.canComplete('q_w3_count');                       // both absent → 0
+      S_story.w3Num = 3; S_story.w3Deep = { k: 1 };
+      out.oneShort = QuestRuntime.canComplete('q_w3_count');                      // nested below min
+      S_story.w3Deep.k = 2;
+      out.bothMet = QuestRuntime.canComplete('q_w3_count');
+      QUEST_DB.q_w3_count.completion = { countMin:[{ path:'w3Arr', min:2 }, { path:'w3Obj', min:2 }] };
+      S_story.w3Arr = ['a']; S_story.w3Obj = { a:1, b:2 };
+      out.arrShort = QuestRuntime.canComplete('q_w3_count');                      // array length 1 < 2
+      S_story.w3Arr.push('b');
+      out.arrObj = QuestRuntime.canComplete('q_w3_count');                        // length 2, keys 2
+      delete QUEST_DB.q_w3_count; delete S_story.w3Num; delete S_story.w3Deep; delete S_story.w3Arr; delete S_story.w3Obj;
+      return out;
+    });
+    expect(r).toEqual({ missing:false, oneShort:false, bothMet:true, arrShort:false, arrObj:true });
+  });
+
+  test('itemsAll exact-name AND semantics with min copies (vs fuzzy items): cat_02 + iodine_02 truth-tables', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const out = {};
+      S_story.quests.quest_cat_02 = 'active';
+      S_story.catKills = { beefy_tom: 3 };
+      S_story.inventory = [{ name:'Cracked Claw' }, { name:'Cracked Claw' }];
+      out.twoClaws = QuestRuntime.canComplete('quest_cat_02');                    // needs 3 copies
+      S_story.inventory.push({ name:'Cracked Claw Fragment' });                   // exact-name: does NOT count
+      out.fuzzyRejected = QuestRuntime.canComplete('quest_cat_02');
+      S_story.inventory.push({ name:'Cracked Claw' });
+      out.threeClaws = QuestRuntime.canComplete('quest_cat_02');
+      S_story.catKills.beefy_tom = 2;                                             // counter side of the AND
+      out.counterShort = QuestRuntime.canComplete('quest_cat_02');
+      S_story.quests.quest_iodine_02 = 'active';
+      S_story.inventory = [{ name:'Swamp Kelp' }, { name:'Swamp Kelp' }];
+      S_story.currentCode = 'INN';
+      out.kelpAtInn = QuestRuntime.canComplete('quest_iodine_02');                // {min:2} + atNode
+      S_story.currentCode = 'LHR';
+      out.kelpElsewhere = QuestRuntime.canComplete('quest_iodine_02');
+      return out;
+    });
+    expect(r).toEqual({ twoClaws:false, fuzzyRejected:false, threeClaws:true, counterShort:false,
+      kelpAtInn:true, kelpElsewhere:false });
+  });
+
+  test('flagsPath in gate AND completion: tour chain listing + storyCheckQuests flip', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const q = QUEST_DB.quest_tour_02;
+      const node = { code: q.activateNode };
+      const out = {};
+      storyCheckQuests(node);                                                     // pip not beaten → gated out
+      out.gatedOut = S_story.quests.quest_tour_02 || '(not listed)';
+      S_story.yugurtTourBeat = { pip: true };
+      storyCheckQuests(node);
+      out.listed = S_story.quests.quest_tour_02;
+      storyCheckQuests(node);                                                     // renard not beaten yet
+      out.beforeRenard = S_story.quests.quest_tour_02;
+      S_story.yugurtTourBeat.renard = true;
+      S_story.level = 20; const xp0 = S_story.xp;
+      storyCheckQuests(node);
+      out.afterRenard = S_story.quests.quest_tour_02;
+      out.xpAwardFired = (S_story.xp - xp0) === 150;                              // side xpAward stays live
+      return out;
+    });
+    expect(r).toEqual({ gatedOut:'(not listed)', listed:'active', beforeRenard:'active',
+      afterRenard:'complete', xpAwardFired:true });
+  });
+
+  test('real counter flips: pit_debut via pitTrainingWins; forge_02 fuzzy-OR items + flags + atNode', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const out = {};
+      S_story.level = 20; S_story.gold = 10000;
+      S_story.quests.quest_pit_debut = 'active';
+      storyCheckQuests({ code:'ZZZ' });
+      out.noWins = S_story.quests.quest_pit_debut;
+      S_story.pitTrainingWins = 1;
+      storyCheckQuests({ code:'ZZZ' });
+      out.oneWin = S_story.quests.quest_pit_debut;
+      out.perIdGold = S_story.gold - 10000;                                       // +100 from the id-keyed block
+      S_story.quests.quest_forge_02 = 'active';
+      S_story.forgeActivated = true; S_story.currentCode = 'DSF';
+      S_story.inventory = [{ name:'Iodine Salt' }];                               // either salt satisfies the OR
+      out.plainSalt = QuestRuntime.canComplete('quest_forge_02');
+      S_story.inventory = [{ name:'Charged Iodine Salt' }];
+      out.chargedSalt = QuestRuntime.canComplete('quest_forge_02');
+      S_story.inventory = [];
+      out.noSalt = QuestRuntime.canComplete('quest_forge_02');
+      return out;
+    });
+    expect(r).toEqual({ noWins:'active', oneWin:'complete', perIdGold:100, plainSalt:true, chargedSalt:true, noSalt:false });
   });
 });
