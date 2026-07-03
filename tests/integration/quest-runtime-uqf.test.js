@@ -8327,7 +8327,9 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
     'quest_guide_06','quest_slums_cleanup','quest_brynn_ledger','quest_couperin_lute','quest_pachelbel_shipment',
     'quest_pit_training','quest_pit_debut'];
   const HOLDOUTS = ['quest_wm_01','quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
-  const GATE_KEPT = ['quest_fish_01','quest_tour_01','quest_guide_01','quest_guide_02','quest_guide_03','quest_guide_06'];
+  // §ARCH-01 W4: guide_02/03/06 moved OFF the _legacyFn gate — their `=== 'done'`
+  // activateConds were DEAD (side quests only reach 'complete'); now gate.questsDone.
+  const GATE_KEPT = ['quest_fish_01','quest_tour_01','quest_guide_01'];
 
   test('all 32 are UQF-1.0, validate, bits:[], completion, no completeFn; holdouts stay legacy', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
@@ -8446,5 +8448,175 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
       return out;
     });
     expect(r).toEqual({ noWins:'active', oneWin:'complete', perIdGold:100, plainSalt:true, chargedSalt:true, noSalt:false });
+  });
+});
+
+// ── §ARCH-01 Wave 4 — combat quests → fight-roll resolver (78 migrated) ──────
+//
+// Recon finding (2026-07-03): ALL legacy type:'combat' quests were DEAD in live
+// play — _rollCeremonia refused non-skill_check types, no combat quest carried
+// completeFn/completeItems/waypointNode, and nothing else ever set their
+// checkPassFlags. Every arc stalled at its combat act. The user-approved W4
+// design resolves them through the same roll machinery as skill checks but
+// presents a FIGHT card (⚔, 'Fight — STAT DC n'); placeholder checkStat:null /
+// checkDC:0 and absent stat/DC default to STR DC 12. There is NO legacy roll
+// behavior to golden-capture (the resolver was unreachable), so these tests
+// assert structure + display intact + NEW deterministic behavior, per the
+// §SKILLFIX-02 protocol.
+test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migrated)', () => {
+  test('all 78 type:combat quests are UQF-1.0, valid, skill_check bit, no legacy residue', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const combats = Object.values(QUEST_DB).filter(q => q.type === 'combat');
+      const bad = [];
+      let withFlag = 0, gateFlags = 0, gateEmpty = 0;
+      for (const q of combats) {
+        if (q.schema !== 'UQF-1.0') { bad.push(q.id + ':schema'); continue; }
+        if (!validateQuest(q).valid) bad.push(q.id + ':invalid');
+        const sc = (q.bits || []).find(b => b.kind === 'skill_check');
+        if (!sc) { bad.push(q.id + ':no-bit'); continue; }
+        if (!['STR','DEX','CON','INT','WIS','CHA'].includes(sc.stat)) bad.push(q.id + ':stat');
+        if (typeof sc.dc !== 'number' || sc.dc < 1) bad.push(q.id + ':dc');
+        for (const f of ['checkStat','checkPassFlag','checkDC','activateCond','onPass','onFail'])
+          if (f in q) bad.push(q.id + ':residual-' + f);
+        if ((sc.onPass || []).some(b => b.kind === 'mission_bit')) withFlag++;
+        if ((q.gate.flags || []).length) gateFlags++; else if (!q.gate._legacyFn) gateEmpty++;
+      }
+      return { total: combats.length, bad, withFlag, gateFlags, gateEmpty };
+    });
+    expect(r.bad).toEqual([]);
+    expect(r.total).toBe(78);
+    expect(r.withFlag).toBe(63);            // checkPassFlag carriers → mission_bit onPass
+    expect(r.gateFlags).toBe(57);           // trivial ()=>!!S_story.flag activateConds
+    expect(r.gateEmpty).toBe(21);           // ungated + ()=>true
+  });
+
+  test('placeholder + defaulted stats: null/0 and absent stat/DC became STR DC 12', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const pick = id => { const b = QUEST_DB[id].bits.find(x => x.kind === 'skill_check'); return b.stat + ' ' + b.dc; };
+      return {
+        nullStat: pick('ost_01_act2'),      // was checkStat:null, checkDC:0
+        noStat:   pick('sen_c6a2'),         // never had checkStat/checkDC
+        kept:     pick('hty02_act4'),       // "str"/12 → STR 12 (real value, not default)
+        keptWis:  pick('mol001_act3'),      // "wis"/12
+        flag:     QUEST_DB.sen_c6a2.bits[0].onPass[0].flag,
+      };
+    });
+    expect(r.nullStat).toBe('STR 12');
+    expect(r.noStat).toBe('STR 12');
+    expect(r.kept).toBe('STR 12');
+    expect(r.keptWis).toBe('WIS 12');
+    expect(r.flag).toBe('sen6A2Passed');
+  });
+
+  test('FIGHT card renders for an active combat quest (⚔ + Fight button, not ROLL)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = { hty02_act4: 'active' };   // isolate: the card list renders only the first 6 active quests
+      storyRender(NODE_MAP[S_story.currentCode]);
+      const html = document.getElementById('story-info-row').innerHTML;
+      return {
+        hasFightLbl: html.includes('FIGHT'),
+        hasFightBtn: html.includes('Fight — STR DC 12'),
+        noRollBtnForIt: !html.includes('Roll Ceremonia — STR DC 12'),
+        hasSword: html.includes('⚔ Draupadi'),
+      };
+    });
+    expect(r).toEqual({ hasFightLbl:true, hasFightBtn:true, noRollBtnForIt:true, hasSword:true });
+  });
+
+  test('PASS grants the pass flag + token and opens the downstream sibling gate', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20; S_story.xp = 100000;                 // suppress level-up noise
+      S_story.abilityScores = { ...S_story.abilityScores, str: 40 };  // guaranteed pass
+      S_story.quests.hty02_act4 = 'active';
+      const beforeGate = QuestRuntime.canActivate('hty02_act5');
+      _rollCeremonia('hty02_act4');
+      return {
+        beforeGate,
+        status: S_story.quests.hty02_act4,
+        flag: !!S_story.hty02a4,
+        token: !!(S_story.inventory || []).find(i => i.flagRef === 'hty02a4' && i.type === 'mission_bit'),
+        afterGate: QuestRuntime.canActivate('hty02_act5'),
+      };
+    });
+    expect(r).toEqual({ beforeGate:false, status:'done', flag:true, token:true, afterGate:true });
+  });
+
+  test('FAIL on a non-retryable fight → failed, grants nothing; 1367 retryable fight → stays active', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20; S_story.xp = 100000;
+      S_story.abilityScores = { ...S_story.abilityScores, str: -100 }; // mod −55: fails any DC
+      S_story.hty02a4 = false;
+      S_story.quests.hty02_act4 = 'active';
+      _rollCeremonia('hty02_act4');
+      const bulk = { status: S_story.quests.hty02_act4, flag: !!S_story.hty02a4 };
+      S_story.quests.quest_1367_a_najera = 'active';
+      _rollCeremonia('quest_1367_a_najera');
+      const najFail = {
+        status: S_story.quests.quest_1367_a_najera,
+        attempts: !!(S_story.skillCheckAttempts || {}).quest_1367_a_najera,
+      };
+      return { bulk, najFail };
+    });
+    expect(r.bulk).toEqual({ status:'failed', flag:false });
+    expect(r.najFail).toEqual({ status:'active', attempts:true });   // retryable:true
+  });
+
+  test('1367 najera PASS: reward xp then faction_hansa −1 via _legacy_fn (legacy order)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20; S_story.xp = 100000;
+      S_story.abilityScores = { ...S_story.abilityScores, str: 40 };
+      S_story.faction_hansa = 0;
+      const xp0 = S_story.xp;
+      S_story.quests.quest_1367_a_najera = 'active';
+      _rollCeremonia('quest_1367_a_najera');
+      return {
+        status: S_story.quests.quest_1367_a_najera,
+        xpDelta: S_story.xp - xp0,
+        hansa: S_story.faction_hansa,
+      };
+    });
+    expect(r).toEqual({ status:'done', xpDelta:150, hansa:-1 });
+  });
+
+  test('guide_02/03/06 dead gates fixed: questsDone accepts complete; countMin gate term works', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const out = {};
+      out.g2NoPrior = QuestRuntime.canActivate('quest_guide_02');
+      S_story.quests.quest_guide_01 = 'complete';               // side quests only reach 'complete'
+      out.g2NoCatch = QuestRuntime.canActivate('quest_guide_02'); // countMin conjunct still unmet
+      S_story.fishingCatchLog = [{ fish:'x' }];
+      out.g2Ready = QuestRuntime.canActivate('quest_guide_02');
+      out.g3Before = QuestRuntime.canActivate('quest_guide_03');
+      S_story.quests.quest_guide_02 = 'complete';
+      out.g3After = QuestRuntime.canActivate('quest_guide_03');
+      out.g6Before = QuestRuntime.canActivate('quest_guide_06');
+      S_story.quests.quest_guide_05 = 'complete';
+      out.g6After = QuestRuntime.canActivate('quest_guide_06');
+      // no residual activateCond on the fixed three
+      out.residue = ['quest_guide_02','quest_guide_03','quest_guide_06']
+        .filter(id => typeof QUEST_DB[id].activateCond === 'function');
+      return out;
+    });
+    expect(r).toEqual({ g2NoPrior:false, g2NoCatch:false, g2Ready:true, g3Before:false, g3After:true,
+      g6Before:false, g6After:true, residue:[] });
+  });
+
+  test('worldbuilder-export artifact purged: no string-typed activateCond dups (ath/zth/cid crash fix)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const strCond = Object.values(QUEST_DB).filter(q => typeof q.activateCond === 'string').map(q => q.id);
+      // the two hybrids keep their FUNCTION gate (behavior-restoring, not a re-gate)
+      return { strCond,
+        athFn: typeof QUEST_DB.ath_c1a3.activateCond === 'function',
+        zthFn: typeof QUEST_DB.zth_c1a3.activateCond === 'function' };
+    });
+    expect(r).toEqual({ strCond:[], athFn:true, zthFn:true });
   });
 });
