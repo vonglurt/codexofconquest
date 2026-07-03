@@ -9370,6 +9370,13 @@ document.head.insertAdjacentHTML('beforeend', `<style>
 /* Mini-map */
 #wk-map-wrap { background:#060c12; position:relative; flex-shrink:0; border-right:1px solid var(--border); }
 #wk-map-empty { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:11px; text-align:center; padding:12px; pointer-events:none; }
+/* §NAV-01h — road-net palette */
+#wk-road-palette { display:flex; gap:3px; padding:3px 4px; border-bottom:1px solid var(--border); background:var(--bg2); }
+.wk-rp-btn { width:26px; height:24px; border-radius:4px; background:var(--bg3); border:1px solid var(--border); color:var(--text); font-size:12px; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+.wk-rp-btn:hover:not(:disabled) { border-color:var(--accent); }
+.wk-rp-btn:disabled { opacity:.35; cursor:default; }
+.wk-rp-btn.armed { border-color:var(--yellow); background:rgba(227,179,65,.18); }
+.wk-rp-btn.on { border-color:var(--accent); background:rgba(88,166,255,.15); }
 </style>`);
 
 // ── Constants ─────────────────────────────────────────────────────────────────
@@ -9385,6 +9392,14 @@ let wkLocked = new Set();   // codes locked in roads-pins.json (loaded when the 
 let wkDrag = null;          // { code, sx, sy, moved, cell:{r,c}|null } — active marker drag
 let wkClickSquelch = false; // a completed drag must not also fire the click-teleport
 let wkRev = {};       // "r,c" → code
+// §NAV-01h — road-net editor state (GET /api/roads; mutations via PUT /api/roads/pins)
+let wkRoads = new Set();    // road cells "r,c" expanded from ROAD_RUNS
+let wkPins  = [];           // roads-pins.json pins:[{r,c}]
+let wkLinks = [];           // roads-pins.json links:[["r,c","r,c"]]
+let wkRoadsOn = true;       // 🛣 overlay toggle
+let wkTool = null;          // armed palette tool: 'pin4' | 'pin3' | 'link' | 'del' | null
+let wkLinkFrom = null;      // 🔗 first endpoint "r,c" awaiting the second click
+let wkNetDrag = null;       // { kind:'pin'|'vertex', idx|fromKey, sx, sy, moved, cell } — pin/road-vertex drag
 
 // ── Insert HTML ───────────────────────────────────────────────────────────────
 WK('tab-editor').insertAdjacentHTML('afterend', `
@@ -9407,6 +9422,15 @@ WK('tab-editor').insertAdjacentHTML('afterend', `
 
     <!-- LEFT: mini-map canvas -->
     <div id="wk-map-wrap" style="width:${MAP_W}px;">
+      <!-- §NAV-01h — road-net palette: overlay toggle, pin tools, link, delete, reweave -->
+      <div id="wk-road-palette">
+        <button class="wk-rp-btn on" id="wk-rd-toggle" title="Toggle the road-net overlay (ROAD_RUNS + pins)">🛣</button>
+        <button class="wk-rp-btn" id="wk-rd-pin4" title="+ intersection: click the map to drop a pin linked to the 4 nearest cities">✚</button>
+        <button class="wk-rp-btn" id="wk-rd-pin3" title="+ T-junction: click the map to drop a pin linked to the 3 nearest cities">┬</button>
+        <button class="wk-rp-btn" id="wk-rd-link" title="Link: click two endpoints (pin or city) to toggle a forced corridor">🔗</button>
+        <button class="wk-rp-btn" id="wk-rd-del" title="Delete: click a pin to remove it and its links">🗑</button>
+        <button class="wk-rp-btn" id="wk-rd-reweave" title="Reweave Net: regenerate ROAD_RUNS through the pins (PUT /api/roads → build-roads.js + check:roads)">♻</button>
+      </div>
       <canvas id="wk-map-canvas" width="${MAP_W}" height="${MAP_H}" style="display:block;cursor:crosshair;"></canvas>
       <div id="wk-map-empty">Load a file to see the map</div>
     </div>
@@ -9499,7 +9523,7 @@ WK('tab-editor').insertAdjacentHTML('afterend', `
   </div><!-- /3-col -->
 
   <!-- Status bar -->
-  <div id="wk-statusbar">Arrow keys / WASD to move · Click mini-map to teleport · Drag a marker to re-place it · Click neighbor to jump</div>
+  <div id="wk-statusbar">Arrow keys / WASD to move · Click mini-map to teleport · Drag a marker to re-place it · Drag a road/pin to shape the net, then ♻ Reweave</div>
 
 </div><!-- /tab-walk -->
 `);
@@ -9530,6 +9554,59 @@ function wkDrawMap() {
   const oR = cur.r - halfR, oC = cur.c - halfC;
 
   const toXY = p => [(p.c - oC)*S + S/2, (p.r - oR)*S + S/2];
+
+  // §NAV-01h — road-net overlay (under everything else): ROAD_RUNS as a
+  // chain-link raster, forced links dashed, pins as gold diamonds.
+  if (wkRoadsOn && wkRoads.size) {
+    const kXY = k => { const ci = k.indexOf(','); return toXY({ r: +k.slice(0, ci), c: +k.slice(ci + 1) }); };
+    const inView = ([x, y]) => x >= -S && x <= MAP_W + S && y >= -S && y <= MAP_H + S;
+    const conn = k => wkRoads.has(k) || wkRev[k] !== undefined;   // roads chain into settlements
+    ctx.strokeStyle = '#6e532e'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+    for (const k of wkRoads) {
+      const [x, y] = kXY(k); if (!inView([x, y])) continue;
+      const ci = k.indexOf(','), r = +k.slice(0, ci), c = +k.slice(ci + 1);
+      ctx.fillStyle = '#6e532e'; ctx.fillRect(x - 1.5, y - 1.5, 3, 3);
+      // E/S cover road↔road pairs once; N/W only chain into settlements (no double-draw)
+      const dirs = [
+        [`${r},${(c + 1) % 360}`, true], [`${r + 1},${c}`, true],
+        [`${r - 1},${c}`, false], [`${r},${(c + 359) % 360}`, false],
+      ];
+      for (const [nk, roadOk] of dirs) {
+        if (!(roadOk ? conn(nk) : wkRev[nk] !== undefined)) continue;
+        const [nx, ny] = kXY(nk);
+        ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(nx, ny); ctx.stroke();
+      }
+    }
+    ctx.lineCap = 'butt';
+  }
+  if (wkRoadsOn) {
+    const kXY = k => { const ci = k.indexOf(','); return toXY({ r: +k.slice(0, ci), c: +k.slice(ci + 1) }); };
+    // forced links (authored corridors) — dashed gold
+    ctx.setLineDash([4, 3]); ctx.strokeStyle = '#a3812f'; ctx.lineWidth = 1;
+    for (const [a, b] of wkLinks) {
+      const [x1, y1] = kXY(a), [x2, y2] = kXY(b);
+      if (Math.max(x1, x2) < 0 || Math.min(x1, x2) > MAP_W) continue;
+      if (Math.max(y1, y2) < 0 || Math.min(y1, y2) > MAP_H) continue;
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    // pins — gold diamonds (drag to move; 🗑 to delete)
+    for (const p of wkPins) {
+      const [x, y] = toXY(p);
+      if (x < -S || x > MAP_W + S || y < -S || y > MAP_H + S) continue;
+      ctx.beginPath();
+      ctx.moveTo(x, y - 4.5); ctx.lineTo(x + 4.5, y); ctx.lineTo(x, y + 4.5); ctx.lineTo(x - 4.5, y);
+      ctx.closePath();
+      ctx.fillStyle = '#e3b341'; ctx.fill();
+      ctx.strokeStyle = '#060c12'; ctx.lineWidth = 1; ctx.stroke();
+    }
+    // 🔗 first endpoint highlight
+    if (wkLinkFrom) {
+      const [x, y] = kXY(wkLinkFrom);
+      ctx.strokeStyle = '#e3b341'; ctx.lineWidth = 1.5;
+      ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.stroke();
+    }
+  }
 
   // Edges
   ctx.lineWidth = 1;
@@ -9582,6 +9659,17 @@ function wkDrawMap() {
     ctx.beginPath(); ctx.arc(gx, gy, 5, 0, Math.PI*2); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle = '#e3b341'; ctx.font = 'bold 8px monospace'; ctx.textAlign = 'center';
     ctx.fillText(`${wkDrag.code} → ${wkDrag.cell.r},${wkDrag.cell.c}`, gx, gy - 10);
+  }
+
+  // §NAV-01h — net-drag ghost: dashed diamond at the drop cell + "📌 → r,c" readout
+  if (wkNetDrag && wkNetDrag.moved && wkNetDrag.cell) {
+    const gx = (wkNetDrag.cell.c - oC)*S + S/2, gy = (wkNetDrag.cell.r - oR)*S + S/2;
+    ctx.setLineDash([3, 2]); ctx.strokeStyle = '#e3b341'; ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(gx, gy - 5.5); ctx.lineTo(gx + 5.5, gy); ctx.lineTo(gx, gy + 5.5); ctx.lineTo(gx - 5.5, gy);
+    ctx.closePath(); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = '#e3b341'; ctx.font = 'bold 8px monospace'; ctx.textAlign = 'center';
+    ctx.fillText(`📌 → ${wkNetDrag.cell.r},${wkNetDrag.cell.c}`, gx, gy - 10);
   }
 }
 
@@ -9880,26 +9968,56 @@ async function wkMoveNode(code, r, c) {
 
 // Marker drag: mousedown on a marker arms it; >½-cell movement turns it into a
 // drag (ghost via wkDrawMap); mouseup drops. A short press stays a click-teleport.
+// §NAV-01h — hit priority: armed tool (click handles it) > pin > city marker >
+// road vertex. A pin drag moves the pin; a road-vertex drag mints one.
 WK('wk-map-canvas').addEventListener('mousedown', e => {
   if (!WBAPI.loaded || !wkCur) return;
+  if (wkTool) return;                                  // tools act on click, not drag
   const { mx, my } = wkCanvasPt(e);
+  if (wkRoadsOn) {
+    const pi = wkHitPin(mx, my);
+    if (pi != null) { wkNetDrag = { kind: 'pin', idx: pi, sx: mx, sy: my, moved: false, cell: null }; return; }
+  }
   const code = wkHitNode(mx, my);
-  if (code) wkDrag = { code, sx: mx, sy: my, moved: false, cell: null };
+  if (code) { wkDrag = { code, sx: mx, sy: my, moved: false, cell: null }; return; }
+  if (wkRoadsOn) {
+    const cell = wkCellAtPt(mx, my);
+    const k = cell && `${cell.r},${cell.c}`;
+    if (k && wkRoads.has(k)) wkNetDrag = { kind: 'vertex', fromKey: k, sx: mx, sy: my, moved: false, cell: null };
+  }
 });
 WK('wk-map-canvas').addEventListener('mousemove', e => {
-  if (!wkDrag) return;
+  const drag = wkDrag || wkNetDrag;
+  if (!drag) return;
   const { mx, my } = wkCanvasPt(e);
-  if (!wkDrag.moved && Math.hypot(mx - wkDrag.sx, my - wkDrag.sy) < SCALE/2) return;
-  wkDrag.moved = true;
+  if (!drag.moved && Math.hypot(mx - drag.sx, my - drag.sy) < SCALE/2) return;
+  drag.moved = true;
   const o = wkViewOrigin(); if (!o) return;
-  wkDrag.cell = { r: o.oR + Math.floor(my/SCALE), c: o.oC + Math.floor(mx/SCALE) };
-  const k = `${wkDrag.cell.r},${wkDrag.cell.c}`, occ = wkRev[k];
-  WK('wk-move-msg').textContent = wkLocked.has(wkDrag.code)
-    ? `${wkDrag.code} is 🔒 locked — unlock to move`
-    : `Move ${wkDrag.code} → (${k})${occ && occ !== wkDrag.code ? ` — occupied by ${occ}` : ''}`;
+  drag.cell = { r: o.oR + Math.floor(my/SCALE), c: o.oC + Math.floor(mx/SCALE) };
+  const k = `${drag.cell.r},${drag.cell.c}`, occ = wkRev[k];
+  if (wkDrag) {
+    WK('wk-move-msg').textContent = wkLocked.has(wkDrag.code)
+      ? `${wkDrag.code} is 🔒 locked — unlock to move`
+      : `Move ${wkDrag.code} → (${k})${occ && occ !== wkDrag.code ? ` — occupied by ${occ}` : ''}`;
+  } else {
+    WK('wk-move-msg').textContent = wkNetDrag.kind === 'pin'
+      ? `📌 pin → (${k})${occ ? ` — ${occ}'s cell` : ''}`
+      : `📌 pin the road through (${k})${occ ? ` — ${occ}'s cell` : ''}`;
+  }
   wkDrawMap();
 });
 WK('wk-map-canvas').addEventListener('mouseup', async () => {
+  if (wkNetDrag) {
+    const d = wkNetDrag; wkNetDrag = null;
+    if (!d.moved) { wkDrawMap(); return; }             // stray press on the net — no click semantics
+    wkClickSquelch = true;
+    if (d.cell) {
+      if (d.kind === 'pin') await wkDropPin(d.idx, d.cell.r, d.cell.c);
+      else                  await wkDropVertex(d.fromKey, d.cell.r, d.cell.c);
+    }
+    wkDrawMap();
+    return;
+  }
   if (!wkDrag) return;
   const d = wkDrag; wkDrag = null;
   if (!d.moved) return;              // plain press → the click handler teleports
@@ -9908,15 +10026,19 @@ WK('wk-map-canvas').addEventListener('mouseup', async () => {
   wkDrawMap();
 });
 WK('wk-map-canvas').addEventListener('mouseleave', () => {
-  if (wkDrag && wkDrag.moved) { WK('wk-move-msg').textContent = ''; wkDrag = null; wkDrawMap(); }
-  else wkDrag = null;
+  if ((wkDrag && wkDrag.moved) || (wkNetDrag && wkNetDrag.moved)) WK('wk-move-msg').textContent = '';
+  const redraw = (wkDrag && wkDrag.moved) || (wkNetDrag && wkNetDrag.moved);
+  wkDrag = null; wkNetDrag = null;
+  if (redraw) wkDrawMap();
 });
 
-// Mini-map click — teleport to nearest node (suppressed right after a drag)
+// Mini-map click — armed tool acts; otherwise teleport to nearest node
+// (suppressed right after a drag)
 WK('wk-map-canvas').addEventListener('click', e => {
   if (wkClickSquelch) { wkClickSquelch = false; return; }
   if (!WBAPI.loaded || !wkCur) return;
   const { mx, my } = wkCanvasPt(e);
+  if (wkTool) { wkToolClick(mx, my); return; }         // §NAV-01h palette tools
   const best = wkHitNode(mx, my);
   if (best) wkGo(best, `Teleport → ${best}`);
 });
@@ -9965,6 +10087,231 @@ async function wkLockToggle() {
 }
 WK('wk-btn-lock').addEventListener('click', wkLockToggle);
 
+// ── §NAV-01h — road-net editor ("place the net") ──────────────────────────────
+// ROAD_RUNS renders as a chain-link overlay (GET /api/roads). Authoring writes
+// pins + forced links into roads-pins.json via PUT /api/roads/pins; ♻ Reweave Net
+// (PUT /api/roads) re-runs the generator through the pins and re-checks R1–R4.
+// Roads stay TERRAIN — the editor shapes where corridors grow, never permissions.
+
+function wkNetMsg(m, isErr) {
+  WK('wk-move-msg').textContent = (isErr ? '✗ ' : '') + m;
+}
+
+async function wkLoadRoads() {
+  if (!SERVER.active) return;
+  try {
+    const d = await (await fetch(`${SERVER.url}/api/roads`)).json();
+    if (!d || d.ok === false) return;
+    const set = new Set();
+    for (const [r, rr] of Object.entries(d.runs || {}))
+      for (const [a, b] of rr) for (let c = a; c <= b; c++) set.add(`${r},${c}`);
+    wkRoads = set;
+    wkPins  = d.pins  || [];
+    wkLinks = d.links || [];
+    if (Array.isArray(d.locked)) wkLocked = new Set(d.locked);
+    if (wkCur) wkRender('');
+  } catch { /* server gone mid-session — keep the last known net */ }
+}
+
+// Persist the authored net. Server re-validates (sea/settlement/range) and
+// preserves `locked`; local state is replaced from the response.
+async function wkPutPins(pins, links) {
+  if (!SERVER.active) { wkNetMsg('Server not connected — start the WBAPI server first.', true); return false; }
+  try {
+    const res = await fetch(`${SERVER.url}/api/roads/pins`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pins, links }),
+    });
+    const data = await res.json();
+    if (data.ok === false || data.error) { wkNetMsg(data.error || JSON.stringify(data), true); return false; }
+    wkPins = data.pins || []; wkLinks = data.links || [];
+    wkDrawMap();
+    return true;
+  } catch (err) { wkNetMsg(String(err), true); return false; }
+}
+
+// The two nearest settlement cells reached from a road cell by BFS along the
+// net — the corridor's effective endpoints when a vertex is dragged into a pin.
+function wkRoadAnchors(startKey) {
+  const seen = new Set([startKey]);
+  let frontier = [startKey];
+  const anchors = [];
+  while (frontier.length && anchors.length < 2) {
+    const next = [];
+    for (const k of frontier) {
+      const ci = k.indexOf(','), r = +k.slice(0, ci), c = +k.slice(ci + 1);
+      const nbs = [`${r},${(c + 1) % 360}`, `${r},${(c + 359) % 360}`];
+      if (r > 0)  nbs.push(`${r - 1},${c}`);
+      if (r < 89) nbs.push(`${r + 1},${c}`);
+      for (const nk of nbs) {
+        if (seen.has(nk)) continue;
+        seen.add(nk);
+        if (wkRev[nk] !== undefined) { if (anchors.length < 2) anchors.push(nk); continue; }
+        if (wkRoads.has(nk)) next.push(nk);
+      }
+    }
+    frontier = next;
+  }
+  return anchors;
+}
+
+// N nearest distinct settlement cells by euclidean distance (columns wrap).
+function wkNearestSettlements(r, c, n) {
+  const seen = new Set(), out = [];
+  const scored = Object.values(WBAPI.nodeCoords).map(p => {
+    const dc = Math.min(Math.abs(p.c - c), 360 - Math.abs(p.c - c));
+    return { k: `${p.r},${p.c}`, d: Math.hypot(p.r - r, dc) };
+  }).sort((a, b) => a.d - b.d || (a.k < b.k ? -1 : 1));
+  for (const s of scored) {
+    if (seen.has(s.k)) continue;
+    seen.add(s.k); out.push(s.k);
+    if (out.length >= n) break;
+  }
+  return out;
+}
+
+// ✚/┬ — drop a pin at (r,c) linked to its `linkN` nearest cities. Both are
+// "just pins" (plan §NAV-01h): the link count is the only X-vs-T difference.
+async function wkPlacePin(r, c, linkN) {
+  const k = `${r},${c}`;
+  if (wkRev[k] !== undefined) { wkNetMsg(`(${k}) is ${wkRev[k]}'s cell — cities are anchors already.`, true); return false; }
+  if (wkPins.some(p => `${p.r},${p.c}` === k)) { wkNetMsg(`(${k}) already has a pin.`, true); return false; }
+  const anchors = wkNearestSettlements(r, c, linkN);
+  if (!anchors.length) { wkNetMsg('No settlements to link the pin to.', true); return false; }
+  const ok = await wkPutPins([...wkPins, { r, c }], [...wkLinks, ...anchors.map(a => [a, k])]);
+  if (ok) wkNetMsg(`📌 pin at (${k}) linked to ${anchors.length} cities — ♻ Reweave Net to carve it`);
+  return ok;
+}
+
+// 🔗 — toggle a forced link between two endpoints (pin or settlement cell).
+async function wkToggleLink(a, b) {
+  const idx = wkLinks.findIndex(([x, y]) => (x === a && y === b) || (x === b && y === a));
+  const links = idx >= 0 ? wkLinks.filter((_, i) => i !== idx) : [...wkLinks, [a, b]];
+  const ok = await wkPutPins(wkPins, links);
+  if (ok) wkNetMsg(idx >= 0 ? `🔗 link (${a})↔(${b}) removed` : `🔗 link (${a})↔(${b}) added — ♻ Reweave Net to carve it`);
+  return ok;
+}
+
+// 🗑 — remove a pin and every link that touches it.
+async function wkDeletePin(idx) {
+  const p = wkPins[idx]; if (!p) return false;
+  const k = `${p.r},${p.c}`;
+  const ok = await wkPutPins(wkPins.filter((_, i) => i !== idx), wkLinks.filter(([a, b]) => a !== k && b !== k));
+  if (ok) wkNetMsg(`🗑 pin (${k}) and its links removed — ♻ Reweave Net to apply`);
+  return ok;
+}
+
+// Drag drops. A road VERTEX drag mints a pin at the drop cell wired through the
+// corridor's two BFS anchors; a PIN drag moves the pin and re-points its links.
+async function wkDropVertex(fromKey, r, c) {
+  const k = `${r},${c}`;
+  if (wkRev[k] !== undefined) { wkNetMsg(`(${k}) is ${wkRev[k]}'s cell — cities are anchors already.`, true); return false; }
+  const anchors = wkRoadAnchors(fromKey);
+  if (!anchors.length) { wkNetMsg(`No settlement anchors found along the road at (${fromKey}).`, true); return false; }
+  const links = anchors.length === 2 ? [[anchors[0], k], [k, anchors[1]]] : [[anchors[0], k]];
+  const ok = await wkPutPins([...wkPins, { r, c }], [...wkLinks, ...links]);
+  if (ok) wkNetMsg(`📌 road pinned through (${k}) [${anchors.join(' ↔ ')}] — ♻ Reweave Net to carve it`);
+  return ok;
+}
+async function wkDropPin(idx, r, c) {
+  const p = wkPins[idx]; if (!p) return false;
+  const oldK = `${p.r},${p.c}`, k = `${r},${c}`;
+  if (wkRev[k] !== undefined) { wkNetMsg(`(${k}) is ${wkRev[k]}'s cell — cities are anchors already.`, true); return false; }
+  const pins  = wkPins.map((q, i) => i === idx ? { r, c } : q);
+  const links = wkLinks.map(([a, b]) => [a === oldK ? k : a, b === oldK ? k : b]);
+  const ok = await wkPutPins(pins, links);
+  if (ok) wkNetMsg(`📌 pin (${oldK}) → (${k}) — ♻ Reweave Net to re-carve`);
+  return ok;
+}
+
+// ♻ Reweave Net — regenerate ROAD_RUNS through the pins, then check:roads.
+// A red check rolls the game file back server-side; the overlay refreshes either way.
+async function wkReweave() {
+  if (!SERVER.active) { wkNetMsg('Server not connected — start the WBAPI server first.', true); return; }
+  wkNetMsg('♻ Reweaving… (build-roads.js --apply + check:roads)');
+  WK('wk-rd-reweave').disabled = true;
+  try {
+    const res = await fetch(`${SERVER.url}/api/roads`, { method: 'PUT' });
+    const data = await res.json();
+    if (data.ok === false || data.error) { wkNetMsg(data.error || JSON.stringify(data), true); return; }
+    await wkLoadRoads();
+    wkNetMsg(`♻ net rewoven: ${data.cells} cells · ${data.junctions} junctions · ${data.check} ✓`);
+  } catch (err) { wkNetMsg(String(err), true); }
+  finally { WK('wk-rd-reweave').disabled = false; }
+}
+
+// Palette arming — single-shot tools (disarm after one use or on re-click).
+const WK_TOOL_BTN  = { pin4: 'wk-rd-pin4', pin3: 'wk-rd-pin3', link: 'wk-rd-link', del: 'wk-rd-del' };
+const WK_TOOL_HINT = {
+  pin4: '✚ click the map to drop an intersection pin (links to the 4 nearest cities)',
+  pin3: '┬ click the map to drop a T-junction pin (links to the 3 nearest cities)',
+  link: '🔗 click the first endpoint (pin or city)…',
+  del:  '🗑 click a pin to remove it and its links',
+};
+function wkSetTool(t) {
+  wkTool = (wkTool === t) ? null : t;
+  wkLinkFrom = null;
+  for (const [name, id] of Object.entries(WK_TOOL_BTN)) WK(id).classList.toggle('armed', wkTool === name);
+  wkNetMsg(wkTool ? WK_TOOL_HINT[wkTool] : '');
+  wkDrawMap();
+}
+
+// Cell under a canvas point (wrap columns; null off the 90-row band).
+function wkCellAtPt(mx, my) {
+  const o = wkViewOrigin(); if (!o) return null;
+  const r = o.oR + Math.floor(my / SCALE), c = ((o.oC + Math.floor(mx / SCALE)) % 360 + 360) % 360;
+  return (r < 0 || r >= 90) ? null : { r, c };
+}
+// Nearest pin index within 1.2 cells of a canvas point (null = none).
+function wkHitPin(mx, my) {
+  const o = wkViewOrigin(); if (!o) return null;
+  let best = null, bestD = Infinity;
+  wkPins.forEach((p, i) => {
+    const nx = (p.c - o.oC) * SCALE + SCALE / 2, ny = (p.r - o.oR) * SCALE + SCALE / 2;
+    const d = Math.hypot(mx - nx, my - ny);
+    if (d < bestD && d < SCALE * 1.2) { bestD = d; best = i; }
+  });
+  return best;
+}
+// 🔗 endpoint snap: nearest pin or settlement cell within 1.5 cells.
+function wkHitEndpoint(mx, my) {
+  const pi = wkHitPin(mx, my);
+  if (pi != null) return `${wkPins[pi].r},${wkPins[pi].c}`;
+  const code = wkHitNode(mx, my);
+  if (code) { const p = WBAPI.nodeCoords[code]; return `${p.r},${p.c}`; }
+  return null;
+}
+
+// Tool clicks (fired from the canvas click handler; teleport is suppressed).
+async function wkToolClick(mx, my) {
+  const t = wkTool;
+  if (t === 'pin4' || t === 'pin3') {
+    const cell = wkCellAtPt(mx, my);
+    if (!cell) { wkNetMsg('Off the 90-row band.', true); return; }
+    wkSetTool(null);
+    await wkPlacePin(cell.r, cell.c, t === 'pin4' ? 4 : 3);
+  } else if (t === 'link') {
+    const k = wkHitEndpoint(mx, my);
+    if (!k) { wkNetMsg('🔗 no pin or city there — click closer to an endpoint.', true); return; }
+    if (!wkLinkFrom) { wkLinkFrom = k; wkNetMsg(`🔗 (${k}) — now click the second endpoint`); wkDrawMap(); return; }
+    const a = wkLinkFrom;
+    wkSetTool(null);
+    if (a !== k) await wkToggleLink(a, k);
+  } else if (t === 'del') {
+    const pi = wkHitPin(mx, my);
+    wkSetTool(null);
+    if (pi == null) { wkNetMsg('🗑 no pin there.', true); return; }
+    await wkDeletePin(pi);
+  }
+}
+
+WK('wk-rd-toggle').addEventListener('click', () => {
+  wkRoadsOn = !wkRoadsOn;
+  WK('wk-rd-toggle').classList.toggle('on', wkRoadsOn);
+  wkDrawMap();
+});
+for (const [name, id] of Object.entries(WK_TOOL_BTN)) WK(id).addEventListener('click', () => wkSetTool(name));
+WK('wk-rd-reweave').addEventListener('click', wkReweave);
+
 // Keyboard navigation (only when Walk tab is active and focus not in a field)
 document.addEventListener('keydown', e => {
   if (!WK('tab-walk').classList.contains('active')) return;
@@ -9983,6 +10330,7 @@ window.switchTab = function(name) {
   if (name === 'walk' && WBAPI.loaded) {
     wkBuildRev();
     wkLoadLocked();   // §NAV-01g — refresh the 🔒 set from roads-pins.json
+    wkLoadRoads();    // §NAV-01h — refresh the road-net overlay (ROAD_RUNS + pins)
     if (!wkCur) {
       const first = Object.keys(WBAPI.nodeCoords)[0];
       if (first) wkGo(first, '');
@@ -10008,6 +10356,16 @@ window.wkGo        = wkGo;
 window.__walkG = {
   llToCell: wkLLToCell, cellToLL: wkCellToLL, moveNode: wkMoveNode, loadLocked: wkLoadLocked,
   lockedSet: () => wkLocked, setLocked: (codes) => { wkLocked = new Set(codes); if (wkCur) wkRender(''); },
+  // §NAV-01h road-net editor hooks
+  roads: () => wkRoads, pins: () => wkPins, links: () => wkLinks,
+  setNet: ({ cells = [], pins = [], links = [] } = {}) => {
+    wkRoads = new Set(cells); wkPins = pins; wkLinks = links;
+    if (wkCur) wkRender('');
+  },
+  loadRoads: wkLoadRoads, roadAnchors: wkRoadAnchors, nearestSettlements: wkNearestSettlements,
+  placePin: wkPlacePin, toggleLink: wkToggleLink, deletePin: wkDeletePin,
+  dropVertex: wkDropVertex, dropPin: wkDropPin, reweave: wkReweave,
+  setTool: wkSetTool, tool: () => wkTool,
 };
 
 })();

@@ -568,6 +568,8 @@ function readRoadsPins() {
     return { pins: p.pins || [], links: p.links || [], locked: p.locked || [] };
   } catch { return { pins: [], links: [], locked: [] }; }
 }
+// §NAV-01h — one reweave at a time (PUT /api/roads shells out to build-roads.js)
+const REWEAVE = { busy: false };
 
 // ── GEO-anchored node codes (single source of truth for geo-seed + rip-and-connect) ──
 // These nodes have authoritative lat/lon positions; rip-and-connect must NOT relocate them.
@@ -879,6 +881,24 @@ function getRoadCells() {
     _roadCache = set;
   }
   return _roadCache;
+}
+
+// §NAV-01h — intersection/T-junction census over the parsed road set: a road
+// cell with ≥3 neighbours in road∪settlement (same rule as build-roads.js).
+// Grid topology: 90 rows clamp, 360 cols wrap (kernel topology).
+function roadJunctionCount() {
+  const roads = getRoadCells(), grid = getCellGrid();
+  let n = 0;
+  for (const k of roads) {
+    const ci = k.indexOf(','), r = +k.slice(0, ci), c = +k.slice(ci + 1);
+    const nb = [`${r},${(c + 1) % 360}`, `${r},${(c + 359) % 360}`];
+    if (r > 0)  nb.push(`${r - 1},${c}`);
+    if (r < 89) nb.push(`${r + 1},${c}`);
+    let deg = 0;
+    for (const kk of nb) if (roads.has(kk) || grid[kk] !== undefined) deg++;
+    if (deg >= 3) n++;
+  }
+  return n;
 }
 
 // §WALK-5 Inc 1 — TERRAIN_ENCOUNTER_RATE parsed from the game literal (a flat
@@ -6767,8 +6787,20 @@ async function route(req, res) {
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
-  // ── §NAV-01g: /api/roads — worldbuilder road-net pins + locked cities ──────
+  // ── §NAV-01g/h: /api/roads — worldbuilder road-net overlay, pins, reweave ──
   if (parts[0] === 'roads') {
+    // GET /api/roads — §NAV-01h: the full road net for the worldbuilder overlay:
+    // ROAD_RUNS parsed from the game (RLE runs + cell/junction census) merged
+    // with the pins file (pins, links, locked) so the client needs one fetch.
+    if (method === 'GET' && !parts[1]) {
+      let runs = {};
+      const m = (WBAPI._rawSrc || '').match(/const\s+ROAD_RUNS\s*=\s*(\{[\s\S]*?\});/);
+      if (m) { try { runs = (new Function('return ' + m[1]))(); } catch { runs = {}; } }  // trusted local source
+      const p = readRoadsPins();
+      const cells = getRoadCells().size, junctions = roadJunctionCount();
+      logResponse(method, url.pathname, 200, `${cells} road cells · ${junctions} junctions · ${p.pins.length} pins · ${p.links.length} links`);
+      return json(res, 200, { ok: true, cells, junctions, runs, ...p });
+    }
     // GET /api/roads/pins — current pins file (empty defaults if absent)
     if (method === 'GET' && parts[1] === 'pins') {
       const p = readRoadsPins();
@@ -6798,7 +6830,91 @@ async function route(req, res) {
       logResponse(method, url.pathname, 200, `${code} ${body.locked ? 'locked 🔒' : 'unlocked'} (${p.locked.length} total)`);
       return json(res, 200, { ok: true, code, nowLocked: body.locked, locked: p.locked });
     }
-    return json(res, 404, { error: 'Unknown roads sub-route. Available: GET /api/roads/pins  PUT /api/roads/lock' });
+    // PUT /api/roads/pins — §NAV-01h: replace the authored net (pins + links).
+    // `locked` is preserved (it belongs to the 🔒 toggle, not the net editor).
+    // Pins are road vertices {r,c}; links force corridors between "r,c" endpoints
+    // (each endpoint must be a pin cell or a settlement cell). Saving does NOT
+    // touch the game file — PUT /api/roads (Reweave Net) carves them in.
+    if (method === 'PUT' && parts[1] === 'pins') {
+      let body; try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'Invalid JSON' }); }
+      if (!Array.isArray(body.pins) || !Array.isArray(body.links))
+        return json(res, 400, { ok: false, error: 'body must contain {pins:[{r,c},…], links:[["r,c","r,c"],…]}' });
+      if (body.pins.length > 500 || body.links.length > 1000)
+        return json(res, 400, { ok: false, error: 'sanity cap: ≤500 pins, ≤1000 links' });
+      const sea = getImpassable(), lanes = getSeaLanes(), grid = getCellGrid();
+      const pins = [];
+      for (const raw of body.pins) {
+        const r = Number(raw && raw.r), c = Number(raw && raw.c);
+        if (!Number.isInteger(r) || !Number.isInteger(c) || r < 0 || r >= 90 || c < 0 || c >= 360)
+          return json(res, 400, { ok: false, error: `pin ${JSON.stringify(raw)} is not an in-band integer {r,c} (rows 0–89, cols 0–359)` });
+        const k = `${r},${c}`;
+        if (sea.has(k) && !lanes.has(k))
+          return json(res, 400, { ok: false, error: `pin (${k}) is impassable sea — roads cannot pass there` });
+        if (grid[k] !== undefined)
+          return json(res, 400, { ok: false, error: `pin (${k}) is ${grid[k]}'s cell — settlements are anchors already, not pins` });
+        pins.push({ r, c });
+      }
+      const pinSet = new Set(pins.map(p => `${p.r},${p.c}`));
+      const links = [];
+      for (const raw of body.links) {
+        if (!Array.isArray(raw) || raw.length !== 2)
+          return json(res, 400, { ok: false, error: `link ${JSON.stringify(raw)} is not a ["r,c","r,c"] pair` });
+        const [a, b] = raw.map(String);
+        for (const e of [a, b]) {
+          if (!/^\d+,\d+$/.test(e))
+            return json(res, 400, { ok: false, error: `link endpoint "${e}" is not an "r,c" cell key` });
+          if (!pinSet.has(e) && grid[e] === undefined)
+            return json(res, 400, { ok: false, error: `link endpoint (${e}) is neither a pin nor a settlement cell` });
+        }
+        if (a === b) return json(res, 400, { ok: false, error: `link (${a}) connects a cell to itself` });
+        links.push([a, b]);
+      }
+      const out = { pins, links, locked: readRoadsPins().locked };
+      try { fs.writeFileSync(ROADS_PINS_FILE, JSON.stringify(out, null, 2) + '\n'); }
+      catch (e) { return json(res, 500, { ok: false, error: `pins write failed: ${e.message}` }); }
+      logResponse(method, url.pathname, 200, `net saved: ${pins.length} pins · ${links.length} links (locked preserved: ${out.locked.length})`);
+      return json(res, 200, { ok: true, ...out, note: 'saved — PUT /api/roads (Reweave Net) regenerates ROAD_RUNS with these pins' });
+    }
+    // PUT /api/roads — §NAV-01h "Reweave Net": regenerate ROAD_RUNS in-place.
+    // Runs scripts/build-roads.js --apply (patches between the ◆ §NAV-01b markers),
+    // then scripts/check-roads.js (R1–R4). A red check rolls the game file back —
+    // the on-disk game always passes check:roads. Memory is hot-reloaded after.
+    if (method === 'PUT' && !parts[1]) {
+      if (REWEAVE.busy) return json(res, 409, { ok: false, error: 'a reweave is already running — retry when it finishes' });
+      REWEAVE.busy = true;
+      try {
+        const { execFile } = require('child_process');
+        const run = (script) => new Promise((resolve) => {
+          execFile(process.execPath, [path.join(__dirname, 'scripts', script), ...(script === 'build-roads.js' ? ['--apply'] : [])],
+            { cwd: __dirname, timeout: 120000 },
+            (err, stdout, stderr) => resolve({ err, out: String(stdout || '') + String(stderr || '') }));
+        });
+        const snapshot = fs.readFileSync(GAME_FILE, 'utf8');
+        const gen = await run('build-roads.js');
+        if (gen.err) {   // generator writes only at the very end — a throw leaves the file untouched
+          logResponse(method, url.pathname, 500, 'build-roads.js failed (game file untouched)');
+          return json(res, 500, { ok: false, error: 'build-roads.js failed — game file untouched', detail: gen.out.trim().split('\n').slice(-8) });
+        }
+        const chk = await run('check-roads.js');
+        if (chk.err) {
+          fs.writeFileSync(GAME_FILE, snapshot);
+          reload();
+          logResponse(method, url.pathname, 500, 'check:roads FAILED — ROAD_RUNS rolled back');
+          return json(res, 500, { ok: false, error: 'check:roads failed — new net rolled back, fix the pins and reweave again', detail: chk.out.trim().split('\n').slice(-12) });
+        }
+        reload();
+        const p = readRoadsPins();
+        const cells = getRoadCells().size, junctions = roadJunctionCount();
+        logResponse(method, url.pathname, 200, `net rewoven: ${cells} road cells · ${junctions} junctions · check:roads green`);
+        return json(res, 200, {
+          ok: true, applied: true, cells, junctions,
+          pins: p.pins.length, links: p.links.length,
+          check: 'R1–R4 green',
+          generator: gen.out.trim().split('\n').slice(-4),
+        });
+      } finally { REWEAVE.busy = false; }
+    }
+    return json(res, 404, { error: 'Unknown roads sub-route. Available: GET /api/roads  GET /api/roads/pins  PUT /api/roads/pins  PUT /api/roads/lock  PUT /api/roads (reweave)' });
   }
 
   if (parts[0] === 'coords') {
@@ -10070,7 +10186,10 @@ server.listen(PORT, BIND_ADDR, () => {
     ['POST',   '/api/audit/map/fix                   body: {} (all) or {check,code,dir,target} (one)'],
     ['GET',    '/api/layout/solve[?step=8&root=TLS]  → BFS grid layout: proposed {r,c} for every node'],
     ['POST',   '/api/layout/apply                    body: {coords:{code:{r,c},...}} → mass-update NODE_COORDS'],
+    ['GET',    '/api/roads                           → road net for the overlay: ROAD_RUNS + cells/junctions + pins file (§NAV-01h)'],
     ['GET',    '/api/roads/pins                      → roads-pins.json: {pins, links, locked} (§NAV-01g worldbuilder)'],
+    ['PUT',    '/api/roads/pins                      body: {pins, links} → save the authored net (locked preserved; §NAV-01h)'],
+    ['PUT',    '/api/roads                           Reweave Net: build-roads.js --apply + check:roads (rollback on red; §NAV-01h)'],
     ['PUT',    '/api/roads/lock                      body: {code, locked} → 🔒 toggle; geo-seed never moves locked cities'],
     ['GET',    '/api/cell/:r/:c                      → node at grid cell (code, terrain, exits)'],
     ['GET',    '/api/cell/:r/:c/neighbors            → N/E/S/W neighbors of cell (code, terrain, passable)'],

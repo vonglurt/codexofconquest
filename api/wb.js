@@ -262,6 +262,8 @@ The game is a D&D 5e world stored in a single HTML file. The API manages: nodes 
   ./api.sh location [code]                      composite view (no code = list all)
   ./api.sh speak <npc> "<prompt>" --state neutral|friendly|dearFriend
   ./api.sh import <file.json>                   bulk import nodes + quest cycles  [--out file]
+  ./api.sh roads [pins]                         road net summary / pins file (§NAV-01h)
+  ./api.sh reweave                              regenerate ROAD_RUNS from roads-pins.json + check:roads
 
 Reply in 1–3 lines. Lead with a concrete ./api.sh command when applicable.`;
 
@@ -437,6 +439,34 @@ const CMD = {
     const r = await request('GET', `/api/quest/${encodeURIComponent(id)}/chain`);
     if (r.status !== 200) { printError(r); process.exit(1); }
     printResult(r.body, flags);
+  },
+
+  // §NAV-01h — road net: GET /api/roads (overlay data) / pins subcommand
+  async roads(pos, flags) {
+    await requireServer();
+    if (pos[1] === 'pins') {
+      const r = await request('GET', '/api/roads/pins');
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      printResult(r.body, flags);
+      return;
+    }
+    const r = await request('GET', '/api/roads');
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    if (flags.json) { printResult(r.body, flags); return; }
+    const b = r.body;
+    ok(`road net: ${b.cells} cells · ${b.junctions} junctions · ${b.pins.length} pins · ${b.links.length} links · ${b.locked.length} locked 🔒`);
+    info('full runs: ./api.sh roads --json   pins file: ./api.sh roads pins');
+  },
+
+  // §NAV-01h — Reweave Net: PUT /api/roads (build-roads.js --apply + check:roads)
+  async reweave(pos, flags) {
+    await requireServer();
+    info('reweaving the road net (build-roads.js --apply + check:roads)…');
+    const r = await request('PUT', '/api/roads');
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    const b = r.body;
+    ok(`net rewoven: ${b.cells} cells · ${b.junctions} junctions · ${b.pins} pins · ${b.links} links · ${b.check}`);
+    for (const line of b.generator || []) if (line) info(line);
   },
 
   // §ARCH-02 Phase 5 — composite advise: quest fields + chain check in one call
@@ -1671,6 +1701,8 @@ ${C.bold}═══════════════════════�
   ${C.green}export${C.reset} <collection>    Export data as JSON / JS / ES module
   ${C.green}import${C.reset} <file.json>     Bulk import nodes + quest cycles
   ${C.green}speak${C.reset} <npc> "<prompt>" Claude-voiced NPC dialogue
+  ${C.green}roads${C.reset} [pins]           Road net summary (§NAV-01h; --json for full runs)
+  ${C.green}reweave${C.reset}                Regenerate ROAD_RUNS from pins (build-roads + check:roads)
   ${C.green}nonce${C.reset} <type> <id>      Get a one-time write token
   ${C.green}ai${C.reset} "<question>"        Ask Claude about the API
 

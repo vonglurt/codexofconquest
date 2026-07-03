@@ -761,3 +761,168 @@ test.describe('§NAV-01g — drag-&-lock cities', () => {
   });
 
 });
+
+// ── 14 — §NAV-01h road-net editor ("place the net") ──────────────────────────
+// ROAD_RUNS renders as a chain-link overlay; dragging a road vertex mints a pin
+// wired through the corridor's two BFS settlement anchors; ✚/┬ palette pins link
+// to the 4/3 nearest cities; 🔗 toggles forced links; 🗑 deletes a pin; ♻ Reweave
+// Net PUTs /api/roads. HERMETIC (same firewall as §13): every mutation asserted
+// at the request level — the game file and roads-pins.json are never touched.
+//
+// Road fixture: run row 14 cols 9–13, flanked by settlements E(14,8) / F(14,14).
+// wkCur = A(10,10) → view origin (oR −10, oC 1): px(cell) = ((c−1)·10+5, (r+10)·10+5).
+
+test.describe('§NAV-01h — road-net editor', () => {
+
+  const ROAD_NODES = {
+    extraNodes:  { E: { label: 'Echo', name: 'plains', act: 1 }, F: { label: 'Fox', name: 'plains', act: 1 } },
+    extraCoords: { E: { r: 14, c: 8 }, F: { r: 14, c: 14 } },
+  };
+  const ROAD_CELLS = ['14,9', '14,10', '14,11', '14,12', '14,13'];
+
+  let stub;
+  test.beforeEach(async ({ page }) => {
+    stub = await armApiStub(page);   // firewall :1367 BEFORE the page boots
+    await loadWalkTab(page, ROAD_NODES);
+    await page.locator('#wk-map-canvas').scrollIntoViewIfNeeded();   // #panels boots h-scrolled off-viewport
+  });
+  const putCalls = (key) => stub.calls.filter((c) => c.key === key).map((c) => c.body);
+  const armNet = async (page, { pins = [], links = [] } = {}) => page.evaluate(({ cells, pins, links }) => {
+    SERVER.active = true;
+    window.__walkG.setNet({ cells, pins, links });
+  }, { cells: ROAD_CELLS, pins, links });
+
+  test('GET /api/roads populates the overlay: runs expanded, pins, links, locked', async ({ page }) => {
+    stub.handlers['GET /api/roads'] = {
+      ok: true, cells: 5, junctions: 0, runs: { 14: [[9, 13]] },
+      pins: [{ r: 13, c: 11 }], links: [['14,8', '13,11']], locked: ['A'],
+    };
+    await page.evaluate(() => { SERVER.active = true; });
+    await page.evaluate(() => window.__walkG.loadRoads());
+    const state = await page.evaluate(() => ({
+      roads: [...window.__walkG.roads()].sort(),
+      pins: window.__walkG.pins(), links: window.__walkG.links(),
+      locked: [...window.__walkG.lockedSet()],
+    }));
+    expect(state.roads).toEqual(['14,10', '14,11', '14,12', '14,13', '14,9']);
+    expect(state.pins).toEqual([{ r: 13, c: 11 }]);
+    expect(state.links).toEqual([['14,8', '13,11']]);
+    expect(state.locked).toEqual(['A']);
+  });
+
+  test('dragging a road vertex mints a pin wired through the two BFS anchors', async ({ page }) => {
+    stub.handlers['PUT /api/roads/pins'] = (b) => ({ ok: true, pins: b.pins, links: b.links });
+    await armNet(page);
+    const box = await page.locator('#wk-map-canvas').boundingBox();
+    await page.mouse.move(box.x + 105, box.y + 245);        // road vertex (14,11)
+    await page.mouse.down();
+    await page.mouse.move(box.x + 105, box.y + 235, { steps: 3 });   // → (13,11)
+    await expect(page.locator('#wk-move-msg')).toContainText('pin the road through (13,11)');
+    await page.mouse.up();
+    await expect(page.locator('#wk-move-msg')).toContainText('road pinned through (13,11)');
+    // BFS from (14,11) along the run reaches F(14,14) then E(14,8) — corridor rewired A↔pin↔B
+    expect(putCalls('PUT /api/roads/pins')).toEqual([
+      { pins: [{ r: 13, c: 11 }], links: [['14,14', '13,11'], ['13,11', '14,8']] },
+    ]);
+    expect(await page.evaluate(() => window.__walkG.pins())).toEqual([{ r: 13, c: 11 }]);
+    expect(await page.evaluate(() => window.wkCur)).toBe('A');   // pinning ≠ teleporting
+  });
+
+  test('✚ intersection: click drops a pin linked to the 4 nearest cities', async ({ page }) => {
+    stub.handlers['PUT /api/roads/pins'] = (b) => ({ ok: true, pins: b.pins, links: b.links });
+    await armNet(page);
+    await page.click('#wk-rd-pin4');
+    await expect(page.locator('#wk-rd-pin4')).toHaveClass(/armed/);
+    await expect(page.locator('#wk-move-msg')).toContainText('4 nearest cities');
+    const box = await page.locator('#wk-map-canvas').boundingBox();
+    await page.mouse.click(box.x + 105, box.y + 225);       // empty cell (12,11)
+    await expect(page.locator('#wk-move-msg')).toContainText('pin at (12,11) linked to 4 cities');
+    // nearest by euclid+wrap: D(11,10) √2 · B(10,11) 2 · then the A/C tie breaks by key
+    expect(putCalls('PUT /api/roads/pins')).toEqual([{
+      pins: [{ r: 12, c: 11 }],
+      links: [['11,10', '12,11'], ['10,11', '12,11'], ['10,10', '12,11'], ['10,12', '12,11']],
+    }]);
+    expect(await page.evaluate(() => window.__walkG.tool())).toBe(null);   // single-shot
+  });
+
+  test('┬ T-junction: same pin, 3 links', async ({ page }) => {
+    stub.handlers['PUT /api/roads/pins'] = (b) => ({ ok: true, pins: b.pins, links: b.links });
+    await armNet(page);
+    await page.click('#wk-rd-pin3');
+    const box = await page.locator('#wk-map-canvas').boundingBox();
+    await page.mouse.click(box.x + 105, box.y + 225);       // empty cell (12,11)
+    await expect(page.locator('#wk-move-msg')).toContainText('pin at (12,11) linked to 3 cities');
+    expect(putCalls('PUT /api/roads/pins')).toEqual([{
+      pins: [{ r: 12, c: 11 }],
+      links: [['11,10', '12,11'], ['10,11', '12,11'], ['10,10', '12,11']],
+    }]);
+  });
+
+  test('🔗 link toggles: pin→city adds, second pass removes', async ({ page }) => {
+    stub.handlers['PUT /api/roads/pins'] = (b) => ({ ok: true, pins: b.pins, links: b.links });
+    await armNet(page, { pins: [{ r: 13, c: 11 }] });
+    const box = await page.locator('#wk-map-canvas').boundingBox();
+    await page.click('#wk-rd-link');
+    await page.mouse.click(box.x + 105, box.y + 235);       // pin (13,11)
+    await expect(page.locator('#wk-move-msg')).toContainText('second endpoint');
+    await page.mouse.click(box.x + 95, box.y + 205);        // city A (10,10)
+    await expect(page.locator('#wk-move-msg')).toContainText('added');
+    await page.click('#wk-rd-link');                        // toggle the same pair off
+    await page.mouse.click(box.x + 105, box.y + 235);
+    await page.mouse.click(box.x + 95, box.y + 205);
+    await expect(page.locator('#wk-move-msg')).toContainText('removed');
+    expect(putCalls('PUT /api/roads/pins')).toEqual([
+      { pins: [{ r: 13, c: 11 }], links: [['13,11', '10,10']] },
+      { pins: [{ r: 13, c: 11 }], links: [] },
+    ]);
+  });
+
+  test('dragging a pin moves it and re-points its links', async ({ page }) => {
+    stub.handlers['PUT /api/roads/pins'] = (b) => ({ ok: true, pins: b.pins, links: b.links });
+    await armNet(page, { pins: [{ r: 13, c: 11 }], links: [['14,8', '13,11'], ['13,11', '14,14']] });
+    const box = await page.locator('#wk-map-canvas').boundingBox();
+    await page.mouse.move(box.x + 105, box.y + 235);        // pin (13,11)
+    await page.mouse.down();
+    await page.mouse.move(box.x + 115, box.y + 235, { steps: 3 });   // → (13,12)
+    await page.mouse.up();
+    await expect(page.locator('#wk-move-msg')).toContainText('pin (13,11) → (13,12)');
+    expect(putCalls('PUT /api/roads/pins')).toEqual([
+      { pins: [{ r: 13, c: 12 }], links: [['14,8', '13,12'], ['13,12', '14,14']] },
+    ]);
+  });
+
+  test('🗑 delete removes the pin and every link touching it', async ({ page }) => {
+    stub.handlers['PUT /api/roads/pins'] = (b) => ({ ok: true, pins: b.pins, links: b.links });
+    await armNet(page, {
+      pins: [{ r: 13, c: 11 }],
+      links: [['14,8', '13,11'], ['13,11', '14,14'], ['10,10', '10,11']],
+    });
+    await page.click('#wk-rd-del');
+    const box = await page.locator('#wk-map-canvas').boundingBox();
+    await page.mouse.click(box.x + 105, box.y + 235);       // pin (13,11)
+    await expect(page.locator('#wk-move-msg')).toContainText('removed');
+    expect(putCalls('PUT /api/roads/pins')).toEqual([
+      { pins: [], links: [['10,10', '10,11']] },            // the unrelated link survives
+    ]);
+  });
+
+  test('♻ Reweave Net PUTs /api/roads then refreshes the overlay', async ({ page }) => {
+    stub.handlers['PUT /api/roads'] = { ok: true, applied: true, cells: 12, junctions: 3, pins: 1, links: 2, check: 'R1–R4 green', generator: [] };
+    stub.handlers['GET /api/roads'] = { ok: true, cells: 2, junctions: 0, runs: { 20: [[5, 6]] }, pins: [], links: [], locked: [] };
+    await page.evaluate(() => { SERVER.active = true; });
+    await page.click('#wk-rd-reweave');
+    await expect(page.locator('#wk-move-msg')).toContainText('net rewoven: 12 cells · 3 junctions · R1–R4 green');
+    expect(stub.calls.some((c) => c.key === 'PUT /api/roads')).toBe(true);
+    expect(await page.evaluate(() => [...window.__walkG.roads()].sort())).toEqual(['20,5', '20,6']);
+  });
+
+  test('🛣 toggles the overlay; reweave without a server shows the connect hint', async ({ page }) => {
+    await expect(page.locator('#wk-rd-toggle')).toHaveClass(/on/);
+    await page.click('#wk-rd-toggle');
+    await expect(page.locator('#wk-rd-toggle')).not.toHaveClass(/on/);
+    await page.evaluate(() => { SERVER.active = false; });
+    await page.click('#wk-rd-reweave');
+    await expect(page.locator('#wk-move-msg')).toContainText('Server not connected');
+  });
+
+});

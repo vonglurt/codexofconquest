@@ -218,6 +218,12 @@ to inspect the grid without scanning NODE_MAP manually.
 - `GET /api/roads/pins` — `roads-pins.json` as `{pins, links, locked}` (empty defaults if the file is absent)
 - `PUT /api/roads/lock` — body `{code, locked:boolean}`; 🔒 locked cities keep their coords through `POST /api/layout/geo-seed` (reported as `lockedKept`). Drag-drop and lat/lon placement in the worldbuilder Walk tab go through `PUT /api/coords/:code`.
 
+**Worldbuilder road-net editor (§NAV-01h):**
+- `GET /api/roads` — the full net for the overlay: parsed `ROAD_RUNS` (`runs` RLE + `cells`/`junctions` census) merged with the pins file (`pins`, `links`, `locked`)
+- `PUT /api/roads/pins` — body `{pins:[{r,c}], links:[["r,c","r,c"]]}`; replaces the authored net (`locked` preserved). Endpoints must be a pin cell or a settlement cell; pins are rejected on sea and on settlement cells. Saving does **not** touch the game file.
+- `PUT /api/roads` — **Reweave Net**: runs `scripts/build-roads.js --apply` (patches the `◆ §NAV-01b` ROAD_RUNS block in-place), then `scripts/check-roads.js` (R1–R4). A red check **rolls the game file back** — the on-disk game always passes `check:roads`. One reweave at a time (409 while busy).
+- CLI: `./api.sh roads [pins] [--json]` · `./api.sh reweave`
+
 ---
 
 ## Need a feature curl can do but api.sh can't?
