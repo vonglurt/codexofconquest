@@ -8812,3 +8812,97 @@ test.describe('§ARCH-01 Wave 6 — epic quests (EB pairs, parity completion, 40
     expect(r).toEqual({ before:false, can:true, after:'complete' });
   });
 });
+
+// ── §ARCH-01 Wave 7 (Phase 4) — completion-bit execution point ──
+//
+// W7a builds the gatekeeper deferred since Wave 3: when storyCheckQuests flips a
+// quest to 'complete', an ARRAY-valued onComplete is executed as a UQF bit chain
+// (QuestRuntime.execBits) instead of being called as a closure. Narrative bits
+// route into the storyCheckQuests msgs stream (ctx.pushMsg) — same presentation
+// as the per-id hardcoded effects block — and validateQuest now walks the
+// completion chain too. Function-valued onComplete is byte-identical legacy.
+
+test.describe('§ARCH-01 W7 — completion-bit execution point (Phase 4)', () => {
+  test('an array-valued onComplete executes as a bit chain on completion', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      QUEST_DB.quest___w7a = { id:'quest___w7a', type:'side', schema:'UQF-1.0', gate:{},
+        bits:[], completion:{ flags:['__w7aReady'] }, title:'W7a Probe',
+        onComplete:[
+          { kind:'reward', xp:120, gold:45 },
+          { kind:'mission_bit', flag:'__w7aBitGranted' },
+          { kind:'flag_write', set:['__w7aFlagSet'] },
+          { kind:'narrative', msg:'🧪 W7a completion narrative' },
+        ] };
+      S_story.quests = { quest___w7a:'active' };
+      S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
+      delete S_story.__w7aReady; delete S_story.__w7aBitGranted; delete S_story.__w7aFlagSet;
+      const preMsgs = storyCheckQuests({ code:'__none' });          // gate unmet ⇒ no fire
+      const stillActive = S_story.quests.quest___w7a;
+      const xpPre = S_story.xp;
+      S_story.__w7aReady = true;
+      const msgs = storyCheckQuests({ code:'__none' });
+      const out = { preMsgs, stillActive, xpPre,
+        status: S_story.quests.quest___w7a, xp: S_story.xp, gold: S_story.gold,
+        bitGranted: !!S_story.__w7aBitGranted, flagSet: !!S_story.__w7aFlagSet,
+        tokenInInv: (S_story.inventory || []).some(i => i.type === 'mission_bit'),
+        narrativeInMsgs: msgs.some(m => /W7a completion narrative/.test(m)) };
+      delete QUEST_DB.quest___w7a;
+      return out;
+    });
+    expect(r.preMsgs).toEqual([]);
+    expect(r.stillActive).toBe('active');
+    expect(r.xpPre).toBe(0);
+    expect(r.status).toBe('complete');
+    expect(r.xp).toBe(120);
+    expect(r.gold).toBe(45);
+    expect(r.bitGranted).toBe(true);
+    expect(r.flagSet).toBe(true);
+    expect(r.tokenInInv).toBe(true);                    // mission_bit went through _grantMissionBit
+    expect(r.narrativeInMsgs).toBe(true);               // narrative rode the msgs stream, not storyMsg
+  });
+
+  test('a function-valued onComplete still fires as a legacy closure (unchanged path)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      QUEST_DB.quest___w7b = { id:'quest___w7b', type:'side', schema:'UQF-1.0', gate:{},
+        bits:[], completion:{ flags:['__w7bReady'] }, title:'W7b Probe',
+        onComplete:() => { S_story.__w7bClosureRan = true; } };
+      S_story.quests = { quest___w7b:'active' };
+      delete S_story.__w7bReady; delete S_story.__w7bClosureRan;
+      S_story.__w7bReady = true;
+      storyCheckQuests({ code:'__none' });
+      const out = { status: S_story.quests.quest___w7b, closureRan: !!S_story.__w7bClosureRan };
+      delete QUEST_DB.quest___w7b;
+      return out;
+    });
+    expect(r.status).toBe('complete');
+    expect(r.closureRan).toBe(true);
+  });
+
+  test('validateQuest walks an array-valued onComplete chain', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const good = validateQuest({ id:'x', schema:'UQF-1.0', completion:{ flags:['f'] },
+        onComplete:[{ kind:'reward', xp:10 }] });
+      const badKind = validateQuest({ id:'x', schema:'UQF-1.0', completion:{ flags:['f'] },
+        onComplete:[{ kind:'teleport' }] });
+      const badContract = validateQuest({ id:'x', schema:'UQF-1.0', completion:{ flags:['f'] },
+        onComplete:[{ kind:'reward' }] });                        // empty reward fails contract
+      return { good, badKind, badContract };
+    });
+    expect(r.good.valid).toBe(true);
+    expect(r.badKind.valid).toBe(false);
+    expect(r.badKind.errors.some(e => /Unknown bit kind: teleport/.test(e))).toBe(true);
+    expect(r.badContract.valid).toBe(false);
+  });
+
+  test('narrative bits outside a msgs context still fall back to storyMsg', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      QuestRuntime.execBits([{ kind:'narrative', msg:'🧪 W7 direct narrative' }], {});
+      return document.getElementById('story-move-msg').textContent;
+    });
+    expect(r).toContain('W7 direct narrative');
+  });
+});

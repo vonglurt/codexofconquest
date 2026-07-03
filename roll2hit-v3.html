@@ -20757,7 +20757,8 @@ function validateQuest(q) {
   if (!q.id)                errors.push('Missing id');
   // A quest needs a bit chain OR a declarative completion gate (passive side quest).
   if ((!q.bits || !q.bits.length) && !q.completion) errors.push('No mission bits defined');
-  for (const bit of (q.bits || [])) {
+  // §ARCH-01 W7: an array-valued onComplete is a completion bit chain — validate it too.
+  for (const bit of [...(q.bits || []), ...(Array.isArray(q.onComplete) ? q.onComplete : [])]) {
     const c = BIT_CONTRACTS[bit.kind];
     if (!c) { errors.push('Unknown bit kind: ' + bit.kind); continue; }
     for (const req of c.required) if (bit[req] === undefined) errors.push('Bit "' + bit.kind + '" missing required field: ' + req);
@@ -20942,7 +20943,7 @@ const QuestRuntime = {
       if (bit.knowledge) { S_story.knowledge = S_story.knowledge || []; S_story.knowledge.push(bit.knowledge); }
     },
     combat(bit) { if (typeof storyPreBattle === 'function') storyPreBattle({ ...NODE_MAP[S_story.currentCode], code: bit.nodeCode || bit.key, battle: { label: bit.label, key: bit.key, count: bit.count || 1 } }); },
-    narrative(bit) { if (bit.msg && typeof storyMsg === 'function') storyMsg(bit.msg); /* template path: Phase 2 renderNamedTemplate */ },
+    narrative(bit, ctx) { if (!bit.msg) return; if (ctx && ctx.pushMsg) ctx.pushMsg(bit.msg); else if (typeof storyMsg === 'function') storyMsg(bit.msg); /* template path: Phase 2 renderNamedTemplate */ },
     item_remove(bit) { const inv = S_story.inventory || []; const i = inv.findIndex(x => x.name === bit.name); if (i > -1) inv.splice(i, 1); },
     mission_bit(bit) { if (typeof _grantMissionBit === 'function') _grantMissionBit(bit.flag, bit.label); else S_story[bit.flag] = true; },
     item_check(bit, ctx) { const inv = S_story.inventory || []; ctx._itemCheck = inv.filter(x => x.name === bit.name).length >= (bit.count || 1); },
@@ -27044,7 +27045,11 @@ function storyCheckQuests(node) {
         S_story.inventory.some(inv => inv.name.includes(ci) || ci.includes(inv.name))));
     if (done) {
       S_story.quests[id] = 'complete';
-      if (q.onComplete) q.onComplete();
+      // §ARCH-01 W7 — completion-bit execution point: an ARRAY-valued onComplete is a
+      // UQF bit chain (executed via the registry, narrative bits land in this msgs
+      // stream); a FUNCTION-valued onComplete is the legacy closure, called as before.
+      if (Array.isArray(q.onComplete)) QuestRuntime.execBits(q.onComplete, { questId: id, pushMsg: m => msgs.push(m) });
+      else if (q.onComplete) q.onComplete();
       msgs.push(..._applyItemChain(q)); // §EDITOR-01-D
       msgs.push('✓ ' + q.title);
       if (q.passText) { const pt = typeof q.passText === 'function' ? q.passText() : q.passText; if (pt) msgs.push(pt); }
