@@ -8612,11 +8612,128 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       const strCond = Object.values(QUEST_DB).filter(q => typeof q.activateCond === 'string').map(q => q.id);
-      // the two hybrids keep their FUNCTION gate (behavior-restoring, not a re-gate)
+      // W4 kept the two hybrids' FUNCTION gates; W5 then migrated them fully:
+      // the same condition now lives in gate.flags (no activateCond at all).
       return { strCond,
-        athFn: typeof QUEST_DB.ath_c1a3.activateCond === 'function',
-        zthFn: typeof QUEST_DB.zth_c1a3.activateCond === 'function' };
+        athGate: (QUEST_DB.ath_c1a3.gate.flags || []).join(','),
+        zthGate: (QUEST_DB.zth_c1a3.gate.flags || []).join(','),
+        residue: ['ath_c1a3','zth_c1a3'].filter(id => 'activateCond' in QUEST_DB[id]) };
     });
-    expect(r).toEqual({ strCond:[], athFn:true, zthFn:true });
+    expect(r).toEqual({ strCond:[], athGate:'athC1A2Done', zthGate:'zthC1A2Done', residue:[] });
+  });
+});
+
+// ── §ARCH-01 Wave 5 — delivery/escort/dialogue/hybrid/main (106 migrated) ────
+//
+// Same recon result as W4: the 99 delivery/escort/dialogue/hybrid quests were
+// ALL DEAD in legacy (no resolver accepted their types, no completion path).
+// User-approved design: typed default rolls — delivery → CHA DC 12 (📦 DELIVER
+// card), escort → STR DC 12 (🛡 ESCORT), dialogue → real skill-name stat via
+// SKILL_TO_ABILITY (💬 TALK), hybrid → real stat (plain 🎲 ROLL card). The 7
+// main quests (mq_1–7) were ALIVE via completeItems → pure-parity
+// completion:{items} migration (fuzzy-OR term = the legacy matching rule).
+test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main parity, 106 migrated)', () => {
+  test('all 99 dead-type quests are UQF-1.0 + valid with typed defaults; no legacy residue', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const bad = [];
+      const byType = { delivery:0, escort:0, dialogue:0, hybrid:0 };
+      let deliveryDefault = 0, escortDefault = 0, dialogueSkill = 0;
+      for (const q of Object.values(QUEST_DB)) {
+        if (!(q.type in byType)) continue;
+        byType[q.type]++;
+        if (q.schema !== 'UQF-1.0') { bad.push(q.id + ':schema'); continue; }
+        if (!validateQuest(q).valid) bad.push(q.id + ':invalid');
+        const sc = (q.bits || []).find(b => b.kind === 'skill_check');
+        if (!sc) { bad.push(q.id + ':no-bit'); continue; }
+        if (!['STR','DEX','CON','INT','WIS','CHA'].includes(sc.stat)) bad.push(q.id + ':stat');
+        for (const f of ['checkStat','checkPassFlag','checkDC','activateCond'])
+          if (f in q) bad.push(q.id + ':residual-' + f);
+        if (q.type === 'delivery' && sc.stat === 'CHA' && sc.dc === 12) deliveryDefault++;
+        if (q.type === 'escort' && sc.stat === 'STR' && sc.dc === 12) escortDefault++;
+        if (q.type === 'dialogue' && sc.skill) dialogueSkill++;
+      }
+      return { bad, byType, deliveryDefault, escortDefault, dialogueSkill };
+    });
+    expect(r.bad).toEqual([]);
+    expect(r.byType).toEqual({ delivery:57, escort:22, dialogue:7, hybrid:13 });
+    expect(r.deliveryDefault).toBe(57);      // no delivery carried a stat/DC → all defaulted
+    expect(r.escortDefault).toBe(22);        // ditto escorts
+    expect(r.dialogueSkill).toBe(6);         // 6 stn dialogues keep skill names; stn_c7a2 carried a raw ability (WIS)
+  });
+
+  test('skill-name mapping: stn dialogue + cai hybrid stats govern correctly', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const pick = id => { const b = QUEST_DB[id].bits.find(x => x.kind === 'skill_check'); return [b.stat, b.skill || null, b.dc].join('|'); };
+      return {
+        toll: pick('stn_c1a2'),        // Persuasion 12 → CHA
+        insight: pick('stn_c5a1'),     // Insight 14 → WIS
+        caiAth: pick('cai_c1a3'),      // Athletics 10 → STR
+        lbcCha: pick('lbc_c1a3'),      // real ability CHA 14 → no skill field
+      };
+    });
+    expect(r.toll).toBe('CHA|Persuasion|12');
+    expect(r.insight).toBe('WIS|Insight|14');
+    expect(r.caiAth).toBe('STR|Athletics|10');
+    expect(r.lbcCha).toBe('CHA||14');       // no skill field — join renders null as ''
+  });
+
+  test('main quests mq_1–7: pure-parity completion:{items}; canComplete matches the legacy fuzzy rule', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const bad = [];
+      for (let i = 1; i <= 7; i++) {
+        const q = QUEST_DB['mq_' + i];
+        if (!q || q.schema !== 'UQF-1.0') { bad.push('mq_' + i + ':schema'); continue; }
+        if (!validateQuest(q).valid) bad.push('mq_' + i + ':invalid');
+        if (!(q.completion && (q.completion.items || []).length)) bad.push('mq_' + i + ':no-items');
+        if ('completeItems' in q) bad.push('mq_' + i + ':residual');
+        if (!q.waypointNode) bad.push('mq_' + i + ':waypoint-lost');
+      }
+      S_story.quests.mq_1 = 'active';
+      S_story.inventory = [];
+      const before = QuestRuntime.canComplete('mq_1');
+      S_story.inventory.push({ name:'Trade Seal (Shard #1)' });
+      const exact = QuestRuntime.canComplete('mq_1');
+      S_story.inventory = [{ name:'Trade Seal' }];                    // fuzzy two-way substring — matches legacy
+      const fuzzy = QuestRuntime.canComplete('mq_1');
+      return { bad, before, exact, fuzzy };
+    });
+    expect(r.bad).toEqual([]);
+    expect(r).toMatchObject({ before:false, exact:true, fuzzy:true });
+  });
+
+  test('typed cards render: DELIVER, ESCORT, TALK with typed buttons', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests = { zth_08_act5:'active', stn_c1a1:'active', stn_c1a2:'active' };
+      storyRender(NODE_MAP[S_story.currentCode]);
+      const html = document.getElementById('story-info-row').innerHTML;
+      return {
+        deliver: html.includes('DELIVER') && html.includes('Deliver — CHA DC 12'),
+        escort: html.includes('ESCORT') && html.includes('Escort — STR DC 12'),
+        talk: html.includes('TALK') && html.includes('Talk — Persuasion DC 12'),
+      };
+    });
+    expect(r).toEqual({ deliver:true, escort:true, talk:true });
+  });
+
+  test('delivery PASS grants flag + token; escort FAIL is terminal and grants nothing', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20; S_story.xp = 100000;
+      S_story.abilityScores = { ...S_story.abilityScores, cha: 40, str: -100 };
+      S_story.quests.zth_08_act5 = 'active';
+      _rollCeremonia('zth_08_act5');                                  // CHA 40 → guaranteed pass
+      const del = { status: S_story.quests.zth_08_act5, flag: !!S_story.zth_08_act5,
+        token: !!(S_story.inventory || []).find(i => i.flagRef === 'zth_08_act5' && i.type === 'mission_bit') };
+      S_story.quests.stn_c1a1 = 'active';
+      _rollCeremonia('stn_c1a1');                                     // STR −100 → guaranteed fail
+      const esc = { status: S_story.quests.stn_c1a1, flag: !!S_story.stn_c1a1_done };
+      return { del, esc };
+    });
+    expect(r.del).toEqual({ status:'done', flag:true, token:true });
+    expect(r.esc).toEqual({ status:'failed', flag:false });
   });
 });
