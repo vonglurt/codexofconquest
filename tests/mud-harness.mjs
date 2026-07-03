@@ -22,6 +22,8 @@ import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
 import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+const requireCjs = createRequire(import.meta.url);   // §NAV-01f: rooms.js + wbapi-core are CJS
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const PORT = parseInt(process.env.MUD_HARNESS_PORT || '13679');
@@ -609,6 +611,99 @@ async function main() {
     'an incompatible world never joins the healed mesh — Xeno invisible on P and R');
   check((await jget('/tracker/peers?wh=feedfacefeedface', trkL.base)).count === 1,
     'the tracker segregates the incompatible server into its own world group');
+
+  // ════════ (m) §NAV-01f — MUD server room parity ════════
+  // The server's `room` (returned by start/move/look/pos via the shared
+  // buildLook) must be BYTE-EQUAL to what the SP client renders for the same
+  // cell. Reference = rooms.js describeCell (byte-identical to the client copy
+  // by check:roomsparity) over a world built here the way the CLIENT builds it
+  // (literals re-parsed from roll2hit-v3.html, client fallbacks reproduced) —
+  // an independent construction, so server-side world-assembly drift fails.
+  console.log('\n[M] §NAV-01f — server room ≡ client describeCell (byte-equal)');
+  const Rooms = requireCjs(path.join(ROOT, 'rooms.js'));
+  const CORE  = requireCjs(path.join(ROOT, 'wbapi-core.js'));
+  CORE.load(path.join(ROOT, 'roll2hit-v3.html'));
+  const gameSrc = CORE._rawSrc;
+  const lit = (re) => { const m = gameSrc.match(re); return m ? (new Function('return ' + m[1]))() : null; };
+  const expandRuns = (runs) => { const s = new Set(); for (const [r, rr] of Object.entries(runs || {})) for (const [a, b] of rr) for (let c = a; c <= b; c++) s.add(`${r},${c}`); return s; };
+  const IMPASSABLE = expandRuns(lit(/const\s+SEA_RUNS\s*=\s*(\{[\s\S]*?\});/));
+  const ROAD_CELLS = expandRuns(lit(/const\s+ROAD_RUNS\s*=\s*(\{[\s\S]*?\});/));
+  const SEA_LANES  = new Set(lit(/const\s+SEA_LANES\s*=\s*new Set\(\s*(\[[\s\S]*?\])\s*\)\s*;/) || []);
+  const CELL_GRID = {};   // client §CELL-02: first-wins locale list in NODE_MAP key order
+  for (const code of Object.keys(CORE.nodeMap)) {
+    const coord = CORE.nodeCoords[code] || { r: CORE.nodeMap[code].r, c: CORE.nodeMap[code].c };
+    if (coord && coord.r != null && coord.c != null) (CELL_GRID[`${coord.r},${coord.c}`] ??= []).push(code);
+  }
+  const inferTerrain = (r, c) => {   // client _inferTerrain: majority vote of named neighbours
+    if (SEA_LANES.has(`${r},${c}`)) return 'ocean';
+    if (ROAD_CELLS.has(`${r},${c}`)) return 'road';
+    const names = [[-1, 0], [1, 0], [0, 1], [0, -1]]
+      .map(([dr, dc]) => (CELL_GRID[`${r + dr},${c + dc}`] || [])[0])
+      .filter(Boolean).map((code) => CORE.nodeMap[code] && CORE.nodeMap[code].name).filter(Boolean);
+    if (!names.length) return 'midlands';
+    const freq = {}; let best = 'midlands', bestN = 0;
+    for (const t of names) { freq[t] = (freq[t] || 0) + 1; if (freq[t] > bestN) { bestN = freq[t]; best = t; } }
+    return best;
+  };
+  const refWorld = {   // client _roomWorld(), field-for-field
+    proj: { ROWS: 90, COLS: 360 },
+    impassable: IMPASSABLE,
+    cellCodes: (r, c) => CELL_GRID[`${r},${c}`] || [],
+    terrainAt: inferTerrain,
+    roadCells: ROAD_CELLS,
+    laneCells: SEA_LANES,
+    nodeLabel: (code) => (CORE.nodeMap[code] && CORE.nodeMap[code].label) || code,
+    terrainInfo: (key) => { const t = CORE.worldDb[key] || CORE.worldDb.midlands; return { label: (t && t.label) || key, icon: (t && t.icon) || '·' }; },
+  };
+  const refRoom = (r, c) => Rooms.describeCell(refWorld, { r, c });
+  const bytes = (o) => JSON.stringify(o);
+
+  const mia = await jpost('/session/start', { name: 'Mia', seed: 7007 });
+  check(mia.room && typeof mia.room.prose === 'string' && Array.isArray(mia.room.exits), 'session/start returns the room object (icon/title/prose/exits)');
+  check(bytes(mia.room) === bytes(refRoom(mia.r, mia.c)), 'hub room is byte-equal to the client describeCell (title/sub/prose/exits/signposts/landmarks)');
+  check(mia.room.title === refWorld.nodeLabel('LHR'), 'hub room titles by the node display label');
+  const lookM1 = await jget(`/session/look?sessionId=${mia.sessionId}`);
+  const lookM2 = await jget(`/session/look?sessionId=${mia.sessionId}`);
+  check(bytes(lookM1.room) === bytes(mia.room) && bytes(lookM2.room) === bytes(lookM1.room), 'look returns the same room, byte-stable across calls (deterministic prose hash)');
+  check(lookM1.room.exits.some((e) => e.kind === 'blocked' && e.label === 'open sea'), 'hub exits sign the sea-blocked direction as "open sea"');
+
+  const miaMove = await jpost('/session/move', { sessionId: mia.sessionId, dir: 'E' });   // hub → BMA
+  check(miaMove.ok && bytes(miaMove.room) === bytes(refRoom(miaMove.r, miaMove.c)), 'move returns the destination room, byte-equal to the client');
+  check(miaMove.room.title === (miaMove.node && miaMove.node.label), 'named-cell room title matches the node the move reports');
+  check(typeof miaMove.desc === 'string' && miaMove.exits && miaMove.room, 'move keeps the legacy desc/exits surface alongside room (no breaking change)');
+
+  // road cell: first unnamed passable road cell (ROAD_RUNS order) with signage
+  let roadCell = null;
+  for (const k of ROAD_CELLS) {
+    const [r, c] = k.split(',').map(Number);
+    if (IMPASSABLE.has(k) || (CELL_GRID[k] || []).length) continue;
+    const rr = refRoom(r, c);
+    if (rr.signposts.length) { roadCell = { r, c, ref: rr }; break; }
+  }
+  check(!!roadCell, 'a signposted road cell exists to probe');
+  if (roadCell) {
+    const onRoad = await jpost('/session/pos', { sessionId: mia.sessionId, r: roadCell.r, c: roadCell.c });
+    check(onRoad.ok && onRoad.room.terrain === 'road', 'pos onto the road net reports road terrain');
+    check(bytes(onRoad.room) === bytes(roadCell.ref), 'road room (incl. "The road runs …" signposts) is byte-equal to the client');
+  }
+
+  // empty wilderness cell near the hub: unnamed, off-net, passable, with a landmark
+  let wildCell = null;
+  outer: for (let radius = 1; radius <= 12 && !wildCell; radius++)
+    for (let dr = -radius; dr <= radius; dr++) for (let dc = -radius; dc <= radius; dc++) {
+      if (Math.max(Math.abs(dr), Math.abs(dc)) !== radius) continue;
+      const r = mia.r + dr, c = mia.c + dc, k = `${r},${c}`;
+      if (r < 0 || r >= 90 || IMPASSABLE.has(k) || ROAD_CELLS.has(k) || SEA_LANES.has(k) || (CELL_GRID[k] || []).length) continue;
+      const rr = refRoom(r, c);
+      if (rr.landmarks.length) { wildCell = { r, c, ref: rr }; break outer; }
+    }
+  check(!!wildCell, 'an empty wilderness cell with a landmark exists near the hub');
+  if (wildCell) {
+    const inWild = await jpost('/session/pos', { sessionId: mia.sessionId, r: wildCell.r, c: wildCell.c });
+    check(inWild.ok && bytes(inWild.room) === bytes(wildCell.ref), 'wilderness room (terrain prose + nearest-landmark line) is byte-equal to the client');
+    check(inWild.room.sub.startsWith('Near '), 'wilderness sub locates by nearest landmark, not raw coordinates');
+  }
+  await jpost('/session/end', { sessionId: mia.sessionId });
 
   // ── teardown ──
   openClients.forEach(closeSSE);

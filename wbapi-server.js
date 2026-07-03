@@ -35,6 +35,7 @@ const path      = require('path');
 const crypto    = require('crypto');
 const WBAPI     = require('./wbapi-core');
 const Mover     = require('./mover');   // §WALK-2 shared movement kernel (also inlined in roll2hit-v3.html)
+const Rooms     = require('./rooms');   // §NAV-01f shared room-description kernel (also inlined in roll2hit-v3.html)
 const Anthropic = require('@anthropic-ai/sdk');
 
 // ── Nonce registry (one-time delete tokens, 5-min TTL) ───────────────────────
@@ -919,6 +920,22 @@ function getMoverWorld() {
     terrainAt,
     encounterRate: (key) => rates[key] ?? rates._default,
   };
+}
+
+// §NAV-01f — room world: the mover world plus the lookups describeCell needs.
+// Mirrors the client _roomWorld() (roll2hit-v3.html) field-for-field — same
+// fallbacks, same label sources — so the server's room text is byte-equal to
+// the client's for the same cell (asserted by mud-harness section [M]).
+function getRoomWorld() {
+  const w = getMoverWorld();
+  w.roadCells = getRoadCells();
+  w.laneCells = getSeaLanes();
+  w.nodeLabel = (code) => (WBAPI.nodeMap[code] && WBAPI.nodeMap[code].label) || code;
+  w.terrainInfo = (key) => {
+    const t = WBAPI.worldDb[key] || WBAPI.worldDb.midlands;
+    return { label: (t && t.label) || key, icon: (t && t.icon) || '·' };
+  };
+  return w;
 }
 
 // ── §WALK-5 Inc 2: per-session instanced encounter resolution ────────────────
@@ -8108,10 +8125,14 @@ async function route(req, res) {
         if (id2 !== s.id && s2.r === s.r && s2.c === s.c)
           players.push({ id: id2, pid: pidOf(id2), name: s2.playerName });
       players.push(...remotePlayersAt(s.r, s.c));   // §MESH-01c: replicated same-world peers
+      // §NAV-01f — the L4 room object (icon/title/sub/prose/exits/signposts/
+      // landmarks) from the shared kernel. buildLook is the one look surface,
+      // so start/move/look/pos all carry it (audit A5: no per-route drift).
+      const room = Rooms.describeCell(getRoomWorld(), { r: s.r, c: s.c });
       return {
         r: s.r, c: s.c,
         node: code ? { code, label: node.label, terrain: node.name, act: node.act } : null,
-        desc, exits, players,
+        desc, exits, players, room,
       };
     }
 
@@ -10002,8 +10023,8 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/grid/heatmap                    → all cells with adjacency heat (0-4)'],
     ['GET',    '/api/grid/reachability[?hub=LHR]     → reachable vs unreachable cells from hub'],
     ['POST',   '/api/session/start                   body: {name, seed?} → {sessionId, r, c, node, desc, exits}'],
-    ['POST',   '/api/session/move                    body: {sessionId, dir} → {r, c, node, desc, exits, players, encounter}'],
-    ['GET',    '/api/session/look?sessionId=          → current cell + exits + co-present players'],
+    ['POST',   '/api/session/move                    body: {sessionId, dir} → {r, c, node, desc, exits, players, room, encounter}'],
+    ['GET',    '/api/session/look?sessionId=          → current cell + exits + co-present players + room (§NAV-01f MUD room object)'],
     ['GET',    '/api/session/who                     → all active sessions'],
     ['POST',   '/api/session/say                     body: {sessionId, msg} → chat broadcast'],
     ['POST',   '/api/session/end                     body: {sessionId} → remove session'],
