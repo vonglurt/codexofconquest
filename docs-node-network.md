@@ -386,6 +386,7 @@ Server-to-server presence replication over the node network. Player-facing view:
 
 - `SESSIONS` (in-memory, 30 min idle TTL) hold `(r, c)` positions validated against the mover world. Per-session SSE streams (`GET /api/session/events`) carry cell-scoped `player_arrived` / `player_left` / `chat` and the worldwide display-layer exception `player_moved`.
 - **`POST /api/session/pos`** — browser-client beacon: passability-validated, display-only, **rolls nothing**; returns `nearby` + `world[]`. **`POST /api/session/move`** — headless MUD clients only: performs the §WALK-5 instanced encounter roll.
+- **§NAV-01f room parity** — every look surface (`start`/`move`/`look`/`pos`, all via the shared `buildLook`) carries `room`: the L4 room object from the shared `rooms.js` kernel (icon/title/sub/terrain/prose/exits/signposts/landmarks), byte-equal to the SP client's `describeCell` for the same cell (mud-harness section [M] asserts this against an independently built client-mirror world).
 - Every presence surface is **pid-keyed** (`<serverId8>:<sessionId8>`), never name-keyed.
 
 ### Replication (single-writer gossip)

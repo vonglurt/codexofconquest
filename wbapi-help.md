@@ -113,19 +113,23 @@ Sessions expire after 30 minutes of idle.
 ```bash
 # Start a session (spawns at LHR)
 curl -XPOST http://localhost:1367/api/session/start -d '{"name":"PlayerName"}'
-# → { sessionId, r, c, node, desc, exits, _hint }
+# → { sessionId, r, c, node, desc, exits, room, _hint }
 
 # Look at your current cell
 curl http://localhost:1367/api/session/look?sessionId=<id>
-# → { r, c, node, desc, exits, players: [{id, name}, ...] }
+# → { r, c, node, desc, exits, players: [{id, name}, ...], room }
 
 # Move one step (headless MUD clients — rolls the instanced encounter)
 curl -XPOST http://localhost:1367/api/session/move -d '{"sessionId":"<id>","dir":"N"}'
-# → { r, c, node, desc, exits, players, encounter }  — 409 if no exit in that direction
+# → { r, c, node, desc, exits, players, room, encounter }  — 409 if no exit in that direction
 
 # Position beacon (browser clients — display-only, validated, NEVER rolls; §MESH-01a)
 curl -XPOST http://localhost:1367/api/session/pos -d '{"sessionId":"<id>","r":10,"c":197}'
-# → { ok, moved, pid, name, players, nearby, world }  — ok:false reason sea|oob on bad cells
+# → { ok, moved, pid, name, players, nearby, world, room }  — ok:false reason sea|oob on bad cells
+
+# room (§NAV-01f) — the MUD room object from the shared rooms.js kernel, byte-equal to
+# the SP client's describeCell for the same cell (asserted by mud-harness section [M]):
+# { icon, title, sub, terrain, prose, exits:[{dir,kind,label,hint,steps}], signposts, landmarks }
 
 # Say something to players in the same cell
 curl -XPOST http://localhost:1367/api/session/say -d '{"sessionId":"<id>","msg":"Hello!"}'
