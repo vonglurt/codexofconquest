@@ -25,7 +25,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
     expect(r.hasGate).toBe(true);
     expect(r.hasExec).toBe(true);
     // Every bit kind in the registry has a handler.
-    expect(r.kinds).toBe('_legacy_fn,choice,combat,flag_write,item_check,item_remove,mission_bit,narrative,reward,skill_check,unlock');
+    expect(r.kinds).toBe('_legacy_fn,choice,combat,favor,flag_write,item_check,item_remove,mission_bit,narrative,reward,skill_check,unlock');   // favor added in W7c
   });
 
   test('validateQuest enforces bit contracts', async ({ page }) => {
@@ -8224,7 +8224,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
     expect(r).toEqual({ noItem:false, invSubstr:true, ciSubstr:true, wrongItem:false, flagUnmet:false });
   });
 
-  test('flag1 + per-id effect parity: quest_wm_04 completes on flag, grants +300 gold via the id-keyed block', async ({ page }) => {
+  test('flag1 + per-id effect parity: quest_wm_04 completes on flag, grants +300 gold via its W7c onComplete chain', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       S_story.level = 20; S_story.gold = 10000;
@@ -8436,7 +8436,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
       S_story.pitTrainingWins = 1;
       storyCheckQuests({ code:'ZZZ' });
       out.oneWin = S_story.quests.quest_pit_debut;
-      out.perIdGold = S_story.gold - 10000;                                       // +100 from the id-keyed block
+      out.perIdGold = S_story.gold - 10000;                                       // +100 from the W7c onComplete chain
       S_story.quests.quest_forge_02 = 'active';
       S_story.forgeActivated = true; S_story.currentCode = 'DSF';
       S_story.inventory = [{ name:'Iodine Salt' }];                               // either salt satisfies the OR
@@ -8925,13 +8925,23 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
       const carriers = Object.values(QUEST_DB).filter(q => q.onComplete);
       const fns = carriers.filter(q => typeof q.onComplete === 'function').map(q => q.id);
       const arrays = carriers.filter(q => Array.isArray(q.onComplete));
-      const invalid = arrays.map(q => ({ id:q.id, v: validateQuest(q) })).filter(x => !x.v.valid);
-      return { total: carriers.length, fns, arrayCount: arrays.length,
+      // validateQuest is a whole-quest UQF check; the one legacy-holdout carrier
+      // (quest_wm_01, W7c) validates its chain against BIT_CONTRACTS directly below.
+      const uqf = arrays.filter(q => q.schema === 'UQF-1.0');
+      const invalid = uqf.map(q => ({ id:q.id, v: validateQuest(q) })).filter(x => !x.v.valid);
+      const nonUqf = arrays.filter(q => q.schema !== 'UQF-1.0').map(q => q.id);
+      const wm01BadBits = (QUEST_DB.quest_wm_01.onComplete || []).filter(b => {
+        const c = BIT_CONTRACTS[b.kind];
+        return !c || c.required.some(f => b[f] === undefined) || !c.validate(b);
+      }).length;
+      return { total: carriers.length, fns, arrayCount: arrays.length, nonUqf, wm01BadBits,
                invalid: invalid.map(x => x.id + ': ' + x.v.errors.join('; ')) };
     });
     expect(r.fns).toEqual([]);              // zero closures left
     expect(r.arrayCount).toBe(r.total);     // every carrier is an array chain
-    expect(r.arrayCount).toBe(27);
+    expect(r.arrayCount).toBe(88);          // 27 (W7b closures) + 61 (W7c per-id block)
+    expect(r.nonUqf).toEqual(['quest_wm_01']);  // the deliberate legacy holdout still carries a W7c chain
+    expect(r.wm01BadBits).toBe(0);
     expect(r.invalid).toEqual([]);          // every chain passes bit contracts
   });
 
@@ -8994,5 +9004,198 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
     expect(r.status).toBe('complete');
     expect(r.kelpLeft).toBe(1);
     expect(r.salt).toBe(2);
+  });
+});
+
+// ── §ARCH-01 Wave 7c — the storyCheckQuests per-id effects block → onComplete chains ──
+//
+// The 61-id hardcoded effects block ("Layer 41 quest completion side effects" …
+// "Layer 81: Mimic Meadows") is DELETED from storyCheckQuests; every effect now
+// lives on its quest as a W7a-executed onComplete bit chain. New `favor` bit
+// kind wraps _setNpcFavor (set = absolute level, add = increment clamped to
+// cap, default 3; _setNpcFavor itself never lowers). _legacy_fn handlers now
+// receive ctx, so conditional entries (scar_04 mercy branch, vs_warden
+// three-way, lame_lystra, wm_01 seal spend, tl_01/tl_03 runtime items,
+// fishing_guide's lazy FISHING_GUIDE_TEXT) keep exact legacy behavior.
+// Known presentation-only change: chain messages print BEFORE the '✓ title'
+// line (the legacy block printed after it). Entries that were dead in legacy
+// (skill_check quests with no completion gate: basket_damascus, ezzir,
+// governor_cyprus, lame_lystra, stoning_lystra, d0206_a5, d0208_a4/a5) stay
+// dead — storyCheckQuests never flips them to 'complete'.
+
+test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete chains', () => {
+  test('the id-keyed block is gone from storyCheckQuests', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => storyCheckQuests.toString().includes("if (id === '"));
+    expect(r).toBe(false);
+  });
+
+  test('favor bit kind: set / add-with-cap semantics ride the monotonic _setNpcFavor', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const out = {};
+      S_story.npcFavorability = {};
+      QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', set:1 }], {});
+      out.set1 = _npcFavor('__w7c');
+      QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', add:1 }], {});
+      out.add1 = _npcFavor('__w7c');
+      QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', add:5 }], {});
+      out.capDefault3 = _npcFavor('__w7c');
+      QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', set:1 }], {});
+      out.neverLowers = _npcFavor('__w7c');
+      S_story.npcFavorability.__w7c2 = 0;
+      QuestRuntime.execBits([{ kind:'favor', npc:'__w7c2', add:5, cap:2 }], {});
+      out.explicitCap = _npcFavor('__w7c2');
+      const mk = bits => validateQuest({ id:'x', schema:'UQF-1.0', completion:{ flags:['f'] }, onComplete:bits }).valid;
+      out.validSet   = mk([{ kind:'favor', npc:'x', set:1 }]);
+      out.validAdd   = mk([{ kind:'favor', npc:'x', add:1 }]);
+      out.noMode     = mk([{ kind:'favor', npc:'x' }]);
+      out.noNpc      = mk([{ kind:'favor', set:1 }]);
+      delete S_story.npcFavorability.__w7c; delete S_story.npcFavorability.__w7c2;
+      return out;
+    });
+    expect(r).toEqual({ set1:1, add1:2, capDefault3:3, neverLowers:3, explicitCap:2,
+      validSet:true, validAdd:true, noMode:false, noNpc:false });
+  });
+
+  test('slums_cleanup parity flip: +80 gold, yael favor 1, message in the msgs stream', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20; S_story.gold = 0; S_story.xp = 0;
+      S_story.npcFavorability = {};
+      S_story.quests = { quest_slums_cleanup:'active' };
+      S_story.slStalksWon = 3;
+      const msgs = storyCheckQuests({ code:'__none' });
+      return { status: S_story.quests.quest_slums_cleanup, gold: S_story.gold, xp: S_story.xp,
+               yael: _npcFavor('yael'), msg: msgs.some(m => /\+80gp from Yael/.test(m)) };
+    });
+    expect(r).toEqual({ status:'complete', gold:80, xp:0, yael:1, msg:true });
+  });
+
+  test('city_watch_patrol: reward gold+xp, favor add raises 2→3 and clamps at 3', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = startFavor => {
+        S_story.level = 20; S_story.gold = 0; S_story.xp = 0;
+        S_story.npcFavorability = { yael: startFavor };
+        S_story.quests = { quest_city_watch_patrol:'active' };
+        S_story.patrolRouteComplete = true;
+        storyCheckQuests({ code:'__none' });
+        return { gold: S_story.gold, xp: S_story.xp, yael: _npcFavor('yael') };
+      };
+      return { from2: run(2), from3: run(3) };
+    });
+    expect(r.from2).toEqual({ gold:50, xp:150, yael:3 });
+    expect(r.from3).toEqual({ gold:50, xp:150, yael:3 });   // Math.min(3, 3+1) → no-op
+  });
+
+  test('scar_04 branches: mercy path grants one-shot WIS+1 + mercy message; refuse path plain', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = (choice, preGranted) => {
+        S_story.level = 20; S_story.xp = 0;
+        S_story.abilityScores = { wis: 12 };
+        S_story.gretChoice = choice; S_story.currentCode = 'NUE';
+        S_story.scar01WisGranted = preGranted; if (!preGranted) delete S_story.scar01WisGranted;
+        delete S_story.gretComplete;
+        S_story.npcFavorability = {};
+        S_story.quests = { quest_scar_04:'active' };
+        const msgs = storyCheckQuests({ code:'__none' });
+        return { wis: S_story.abilityScores.wis, granted: !!S_story.scar01WisGranted,
+                 gret: _npcFavor('gret'), gretComplete: !!S_story.gretComplete, xp: S_story.xp,
+                 mercy: msgs.some(m => /WIS \+1 \(mercy path\)/.test(m)),
+                 plain: msgs.some(m => /Light obtained\.$/.test(m)) };
+      };
+      return { help: run('help', false), refuse: run('refuse', false), helpAgain: run('help', true) };
+    });
+    // mercy path: WIS 12→13, one-shot flag set, mercy message, favor 2, xpAward 350 still fires
+    expect(r.help).toEqual({ wis:13, granted:true, gret:2, gretComplete:true, xp:350, mercy:true, plain:false });
+    // refuse path: no WIS change, plain message
+    expect(r.refuse).toEqual({ wis:12, granted:false, gret:2, gretComplete:true, xp:350, mercy:false, plain:true });
+    // help path with the WIS already granted: plain message, no second bump
+    expect(r.helpAgain).toEqual({ wis:12, granted:true, gret:2, gretComplete:true, xp:350, mercy:false, plain:true });
+  });
+
+  test('vs_warden three-way resolution message (neither / persuaded / defeated)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const run = (persuaded, defeated) => {
+        S_story.vsShamanPersuaded = persuaded; S_story.vshamanDefeated = defeated;
+        S_story.wardensLegacyKnown = true;
+        S_story.quests = { quest_vs_warden:'active' };
+        const msgs = storyCheckQuests({ code:'__none' });
+        return msgs.filter(m => m.startsWith('🔑'))[0];
+      };
+      return { neither: run(false, false), persuaded: run(true, false), defeated: run(false, true) };
+    });
+    expect(r.neither).toMatch(/mandate is resolved/);
+    expect(r.persuaded).toMatch(/Persuasion path/);
+    expect(r.defeated).toMatch(/Combat path/);
+  });
+
+  test('fishing_guide: lazy _legacy_fn grants the readable with the real FISHING_GUIDE_TEXT', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20;
+      S_story.quests = { quest_fishing_guide:'active' };
+      S_story.inventory = [];
+      S_story.fishingCatchLog = [{ name:'Perch' }];
+      S_story.currentCode = 'SSJ';
+      const msgs = storyCheckQuests({ code:'__none' });
+      const item = (S_story.inventory || []).find(i => i.name === 'Fishing Guide');
+      return { status: S_story.quests.quest_fishing_guide, hasItem: !!item,
+               textOk: !!item && item.readText === FISHING_GUIDE_TEXT && item.readText.length > 0,
+               msg: msgs.some(m => /Fishing Guide received/.test(m)) };
+    });
+    expect(r).toEqual({ status:'complete', hasItem:true, textOk:true, msg:true });
+  });
+
+  test('wm_01 (legacy holdout) chain: 3 seals spent on the seal path, kept on the letter path', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const seal = () => ({ name:"Scholar Kings' Seal", icon:'📜', sell:0 });
+      const run = viaLetter => {
+        S_story.level = 20;
+        S_story.archiveLetterObtained = viaLetter; if (!viaLetter) delete S_story.archiveLetterObtained;
+        delete S_story.wmLowerArchiveUnlocked;
+        S_story.inventory = [seal(), seal(), seal(), seal()];
+        S_story.quests = { quest_wm_01:'active' };
+        const msgs = storyCheckQuests({ code:'__none' });
+        return { status: S_story.quests.quest_wm_01,
+                 unlocked: !!S_story.wmLowerArchiveUnlocked,
+                 sealsLeft: S_story.inventory.filter(i => i.name === "Scholar Kings' Seal").length,
+                 msg: msgs.some(m => /Lower Archive access granted/.test(m)) };
+      };
+      return { seals: run(false), letter: run(true) };
+    });
+    expect(r.seals).toEqual({ status:'complete', unlocked:true, sealsLeft:1, msg:true });
+    expect(r.letter).toEqual({ status:'complete', unlocked:true, sealsLeft:4, msg:true });
+  });
+
+  test('void_below chain: auros favor 2, bruhnsDepthsReported flag, narrative in stream', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20;
+      S_story.npcFavorability = {};
+      delete S_story.bruhnsDepthsReported;
+      S_story.quests = { quest_void_below:'active' };
+      S_story.defeatedBattles = { CY_VOID: true };
+      const msgs = storyCheckQuests({ code:'__none' });
+      return { status: S_story.quests.quest_void_below, auros: _npcFavor('auros'),
+               reported: !!S_story.bruhnsDepthsReported,
+               msg: msgs.some(m => /EMP Grenade from Auros/.test(m)) };
+    });
+    expect(r).toEqual({ status:'complete', auros:2, reported:true, msg:true });
+  });
+
+  test('_legacy_fn handlers receive ctx (pushMsg routing) and still get S_story first', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const got = [];
+      QuestRuntime.execBits([{ kind:'_legacy_fn', fn:(S, ctx) => ctx.pushMsg('ctx-ok:' + (S === S_story)) }],
+        { pushMsg: m => got.push(m) });
+      return got;
+    });
+    expect(r).toEqual(['ctx-ok:true']);
   });
 });
