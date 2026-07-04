@@ -6352,51 +6352,12 @@ function _rollCeremonia(questId) {
   const q = QUEST_DB[questId];
   if (!q) return;
   if (q.schema === 'UQF-1.0') { _resolveQuestUQF(questId); return; }   // §ARCH-01 Phase 2 dual-path dispatch
-  if (q.type !== 'skill_check') return;
-  // §SKILLFIX-01: ~2443 skill_check quests use checkStat/checkSkill (the convention
-  // adaptLegacyQuest already reads); only ~30 use checkAbility/checkLabel. Alias both
-  // so the ability modifier actually applies (was silently +0 / "undefined" label).
-  const ability = q.checkAbility || q.checkStat;
-  const abilityVal = ((S_story.abilityScores || {})[ability] || 10);
-  const mod  = Math.floor((abilityVal - 10) / 2);
-  const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
-  const d20  = Math.ceil(Math.random() * 20);
-  // §CROWN-01 Amendment A: Iodine Salt clarity bonus
-  const iodineBonus = S_story.iodineBuffActive ? (S_story.iodineBuffBonus || 3) : 0;
-  const iodineName  = S_story.iodineBuffBonus >= 5 ? 'Charged Iodine' : 'Iodine Salt';
-  if (S_story.iodineBuffActive) { S_story.iodineBuffActive = false; S_story.iodineBuffBonus = 0; }
-  const _lmAllAbility = _lakeMagicBonuses().allAbility; // §DROP-03
-  const total = d20 + mod + prof + iodineBonus + _lmAllAbility;
-  const passed = total >= q.checkDC;
-  const modStr = (mod >= 0 ? '+' : '') + mod;
-  const iodineStr = iodineBonus > 0 ? ' + ' + iodineName + '(+' + iodineBonus + ')' : '';
-  _appendStoryHcard({
-    round: 'Day ' + (S_story.day || 1),
-    actor: 'ROLL',
-    formula: 'd20(' + d20 + ') + ' + (q.checkLabel || q.checkSkill) + '(' + modStr + ') + Prof(+' + prof + ')' + iodineStr + (_lmAllAbility > 0 ? ' + LakeMagic(+' + _lmAllAbility + ')' : ''),
-    outcome: total + ' vs DC ' + q.checkDC + ' — ' + (passed ? 'PASS ✓' : 'FAIL'),
-    dmg: passed ? (typeof q.passText === 'function' ? q.passText() : q.passText) : (typeof q.failText === 'function' ? q.failText() : q.failText),
-  });
-  if (passed) {
-    S_story.quests[questId] = 'done';
-    if (q.checkPassFlag) _grantMissionBit(q.checkPassFlag, q.bitLabel);
-    if (q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }
-    if (q.goldAward) S_story.gold += q.goldAward;
-    if (q.onPass) q.onPass();
-    _applyItemChain(q).forEach(m => storyMsg(m)); // §EDITOR-01-D
-  } else {
-    if (q.onFail) q.onFail();
-    if (q.retryable) {
-      S_story.skillCheckAttempts = S_story.skillCheckAttempts || {};
-      const prev = S_story.skillCheckAttempts[questId] || {};
-      S_story.skillCheckAttempts[questId] = { lastDay: S_story.day, failures: (prev.failures || 0) + 1 };
-    } else {
-      S_story.quests[questId] = 'failed';
-      if (q.checkFailFlag) _grantMissionBit(q.checkFailFlag, q.bitLabel);
-    }
-  }
-  storyUpdateStatus();
-  storyRender(NODE_MAP[S_story.currentCode]);
+  // §ARCH-01 W7d — the legacy roll body (checkStat/checkDC/checkPassFlag/onPass/onFail
+  // resolution) is RETIRED: every live skill_check is UQF and resolves via
+  // _resolveQuestUQF above. The only non-UQF skill_checks left are the 30 dead
+  // blq_05–blq_10 book-stubs (Wave 2ad split: no checkDC, gates never true — kept
+  // legacy by the permanent Wave-2ad test). A roll on one is a warned no-op.
+  console.warn('[UQF] _rollCeremonia: legacy roll path retired (§ARCH-01 W7d) — non-UQF quest not rolled:', questId);
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -10219,18 +10180,18 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   // ── Layer 51: Weimar Scholar Gate quests ──
-  quest_wm_01: { id:'quest_wm_01', type:'side', title:'Isolde: The Revocation Record',
-    onComplete:[ // §ARCH-01 W7c — legacy-holdout quest, but onComplete chains are schema-agnostic; seal spend stays _legacy_fn (conditional counted removal)
+  quest_wm_01: { id:'quest_wm_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], title:'Isolde: The Revocation Record',
+    // §ARCH-01 W7d — the LAST completeFn retired: "archiveLetterObtained OR ≥3 exact-name
+    // seals" → completion OR-group flagsAny + the new itemsMinAny term (exact-name count).
+    completion:{ flagsAny:['archiveLetterObtained'], itemsMinAny:[{ name:"Scholar Kings' Seal", min:3 }] },
+    onComplete:[ // §ARCH-01 W7c — seal spend stays _legacy_fn (conditional counted removal)
       { kind:'flag_write', set:['wmLowerArchiveUnlocked'] },
       { kind:'_legacy_fn', fn:S => { if (!S.archiveLetterObtained) { let removed = 0; S.inventory = (S.inventory || []).filter(i => { if (removed < 3 && i.name === "Scholar Kings' Seal") { removed++; return false; } return true; }); } } },
       { kind:'narrative', msg:'📚 Lower Archive access granted.' },
     ],
     desc:"Archivist Isolde Voss controls access to the Scholar Kings\' lower archive. The Froberger revocation record is there. Gain access.",
     hint:'Collect 3 Scholar Kings\' Seals from Scholar\'s Guards — or bring the archive letter from the Blue Shutters Archive.',
-    activateNode:'NUE', completeItems:[], completeFn:() => {
-      if (S_story.archiveLetterObtained) return true;
-      return (S_story.inventory || []).filter(i => i.name === "Scholar Kings' Seal").length >= 3;
-    },
+    activateNode:'NUE', completeItems:[],
     waypointNode:'NUE', reward:0,
     disposition:'"You\'re asking about Froberger. Everyone who comes here lately is asking about Froberger. His access was revoked pursuant to the Scholar Kings Protocol on Speculative Endangerment." — Archivist Isolde Voss',
     npc:"archivus_sweelinck",
@@ -20813,15 +20774,16 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 // ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
 
 /* ════════════════════════════════════════════════════════════════════════
-   §ARCH-01 Phase 1 — Universal Quest Format (UQF v1.0) runtime
+   §ARCH-01 — Universal Quest Format (UQF v1.0) runtime
    ────────────────────────────────────────────────────────────────────────
-   INERT by design: nothing in the live game calls QuestRuntime / validateQuest
-   / adaptLegacyQuest yet. The legacy path (_rollCeremonia, completeFn closures,
-   storyRender blocks) remains the sole driver of quest behavior. This block
-   only DEFINES the declarative engine that Phase 2 will begin routing new arcs
-   through. Handlers are bound to the REAL game functions/state so that the day
-   they are first called they already work — no landmines, no rebind.
-   Ref: lab-reports/lab-report-quest-api-architecture.md
+   THE quest engine (Phase 1 defined it inert; Phase 2 wired dispatch; Phase 3
+   migrated all quest types; W7 made onComplete chains + completion gates the
+   only execution paths; W7d retired the legacy branches — _rollCeremonia's
+   roll body, storyCheckQuests' completeFn/completeItems terms, and the
+   adaptLegacyQuest shim are gone). canActivate/canComplete/execBits drive
+   every live quest. Handlers are bound to the REAL game functions/state.
+   Ref: lab-reports/lab-report-quest-api-architecture.md +
+        lab-reports/lab-report-uqf-migration-playbook.md
    ════════════════════════════════════════════════════════════════════════ */
 const SCHEMA_VERSION = 'UQF-1.0';
 
@@ -20872,31 +20834,13 @@ function validateQuest(q) {
   return { valid: errors.length === 0, errors };
 }
 
-/* Wrap a legacy QUEST_DB entry in a UQF-compatible shell. The legacy
-   activateCond / onPass / onFail closures are PRESERVED verbatim (not parsed)
-   behind _legacy markers, so behavior is identical if ever executed. */
+/* §ARCH-01 W7d — NO-OP. The legacy→UQF wrapping shim is retired with the legacy
+   execution paths: Phase 3 is type-complete, so there is nothing left to adapt
+   (the surviving non-UQF entries — quest_math_01–05 §MATH-01 gap + the 30 dead
+   blq_05–10 book-stubs — are activate-only and never execute). Kept as an
+   identity passthrough because it is exported on QuestRuntime + window. */
 function adaptLegacyQuest(id, q) {
-  if (q && q.schema) return q;                       // already UQF — pass through
-  const adapted = {
-    schema: '0.legacy',
-    id, type: q.type,
-    arc: String(id).split('_').slice(0, 2).join('_'),
-    activateNode: q.activateNode, waypointNode: q.waypointNode,
-    gate: q.activateCond ? { _legacyFn: q.activateCond } : {},
-    bits: [],
-    title: q.title, hint: q.hint, retryable: q.retryable, disposition: q.disposition,
-    _source: q,
-  };
-  if (q.type === 'skill_check') {
-    adapted.bits.push({
-      kind:'skill_check',
-      stat: String(q.checkAbility || q.checkStat || '').toUpperCase(),
-      skill: q.checkLabel || q.checkSkill, dc: q.checkDC,
-      onPass: q.onPass ? [{ kind:'_legacy_fn', fn:q.onPass }] : [],
-      onFail: q.onFail ? [{ kind:'_legacy_fn', fn:q.onFail }] : [],
-    });
-  }
-  return adapted;
+  return q;
 }
 
 const QuestRuntime = {
@@ -20971,11 +20915,17 @@ const QuestRuntime = {
     // items → §ARCH-01 W3 item_check term (replaces legacy `completeItems`): each
     // listed name is one OR entry, matched with the SAME fuzzy two-way substring
     // rule as the legacy storyCheckQuests check (`inv.name.includes(ci) || ci.includes(inv.name)`).
+    // itemsMinAny → §ARCH-01 W7d OR-position exact-name count entries [{name, min}]:
+    // one OR entry per requirement, satisfied when the inventory holds ≥min exact-name
+    // copies (`.filter(i => i.name === name).length >= min` — the itemsAll matcher, but
+    // in the OR-group). Added for quest_wm_01's "archive letter OR ≥3 Scholar Kings'
+    // Seals" — the last completeFn, inexpressible in OR position by any prior term.
     const orList = (g.flagsAny || []).map(f => !!S_story[f])
       .concat((g.battles || []).map(b => !!(S_story.defeatedBattles || {})[b]))
       .concat((g.questsComplete || []).map(id => QS[id] === 'complete'))
-      .concat((g.items || []).map(ci => (S_story.inventory || []).some(inv => inv.name.includes(ci) || ci.includes(inv.name))));
-    const orCount = (g.flagsAny || []).length + (g.battles || []).length + (g.questsComplete || []).length + (g.items || []).length;
+      .concat((g.items || []).map(ci => (S_story.inventory || []).some(inv => inv.name.includes(ci) || ci.includes(inv.name))))
+      .concat((g.itemsMinAny || []).map(e => (S_story.inventory || []).filter(i => i.name === e.name).length >= (e.min || 1)));
+    const orCount = (g.flagsAny || []).length + (g.battles || []).length + (g.questsComplete || []).length + (g.items || []).length + (g.itemsMinAny || []).length;
     if (orCount && !orList.some(Boolean)) return false;
     if (g.notFlags && g.notFlags.some(f => !!S_story[f])) return false;
     // atNode → completes only while the player is currently standing at this node
@@ -27154,10 +27104,12 @@ function storyCheckQuests(node) {
     if (S_story.quests[id] !== 'active') return;
     const q = QUEST_DB[id];
     if (!q) return;
-    const done = (q.completeFn && q.completeFn()) ||
-      (q.schema === 'UQF-1.0' && q.completion && QuestRuntime.canComplete(id)) ||   // §ARCH-01 Phase 3 — declarative completion
-      (q.completeItems && q.completeItems.length > 0 && q.completeItems.some(ci =>
-        S_story.inventory.some(inv => inv.name.includes(ci) || ci.includes(inv.name))));
+    // §ARCH-01 W7d — the legacy completeFn / completeItems terms are RETIRED: the
+    // declarative completion gate is the ONLY completion path. Zero quests carried a
+    // non-empty completeItems and quest_wm_01 (the last completeFn) is now UQF; the
+    // remaining non-UQF entries (quest_math_01–05 §MATH-01 gap, the 30 dead blq_05–10
+    // book-stubs) never had a completion mechanism and stay activate-only.
+    const done = q.schema === 'UQF-1.0' && q.completion && QuestRuntime.canComplete(id);
     if (done) {
       S_story.quests[id] = 'complete';
       // §ARCH-01 W7 — completion-bit execution point: an ARRAY-valued onComplete is a

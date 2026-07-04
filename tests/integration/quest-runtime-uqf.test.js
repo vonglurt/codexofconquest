@@ -58,34 +58,25 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
     expect(r.noSchema.errors).toContain('Missing schema version');
   });
 
-  test('adaptLegacyQuest wraps a real legacy skill_check without parsing its closures', async ({ page }) => {
+  test('adaptLegacyQuest is a §W7d no-op: identity passthrough for legacy AND UQF entries', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
-      // quest_wis_01-style legacy entry: skill_check with checkAbility + closures.
+      // Pre-W7d this wrapped legacy entries in a '0.legacy' UQF shell; the shim is
+      // retired with the legacy execution paths (nothing left to adapt).
       const legacy = { id:'quest_demo', type:'skill_check', title:'Demo',
         activateNode:'DK', activateCond:()=>true,
         checkAbility:'wis', checkLabel:'Insight', checkDC:13,
         onPass:(S)=>{ S.demoPassed = true; }, onFail:(S)=>{}, retryable:false };
-      const a = adaptLegacyQuest('quest_demo', legacy);
+      const uqf = { schema:'UQF-1.0', id:'x' };
       return {
-        schema: a.schema, id: a.id, arc: a.arc,
-        gateLegacy: typeof a.gate._legacyFn === 'function',
-        bitKind: a.bits[0].kind, stat: a.bits[0].stat, dc: a.bits[0].dc,
-        onPassWrapped: a.bits[0].onPass[0].kind,           // _legacy_fn — closure preserved verbatim
-        sourcePreserved: a._source === legacy,
-        // already-UQF passes through untouched
-        passthrough: adaptLegacyQuest('x', { schema:'UQF-1.0', id:'x' }).schema,
+        stillExported: typeof adaptLegacyQuest === 'function' && QuestRuntime.adaptLegacyQuest === adaptLegacyQuest,
+        legacyIdentity: adaptLegacyQuest('quest_demo', legacy) === legacy,   // returned unwrapped
+        uqfIdentity: adaptLegacyQuest('x', uqf) === uqf,
       };
     });
-    expect(r.schema).toBe('0.legacy');
-    expect(r.arc).toBe('quest_demo');
-    expect(r.gateLegacy).toBe(true);
-    expect(r.bitKind).toBe('skill_check');
-    expect(r.stat).toBe('WIS');                            // uppercased from checkAbility:'wis'
-    expect(r.dc).toBe(13);
-    expect(r.onPassWrapped).toBe('_legacy_fn');
-    expect(r.sourcePreserved).toBe(true);
-    expect(r.passthrough).toBe('UQF-1.0');
+    expect(r.stillExported).toBe(true);
+    expect(r.legacyIdentity).toBe(true);
+    expect(r.uqfIdentity).toBe(true);
   });
 
   test('canActivate evaluates a declarative gate against S_story flags', async ({ page }) => {
@@ -217,28 +208,34 @@ test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
     expect(r.attemptLogged).toBe(true);
   });
 
-  test('a legacy skill_check still resolves on the legacy path (checkPassFlag granted)', async ({ page }) => {
+  test('§W7d: the legacy roll path is RETIRED — a non-UQF skill_check roll is a warned no-op', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       S_story.quests = {}; S_story.abilityScores = { wis:14 }; S_story.level = 1; S_story.xp = 0; S_story.day = 1;
       S_story.inventory = []; delete S_story.__legacyDone;
-      // No schema field → must take the legacy branch of _rollCeremonia.
+      // Pre-W7d this DC-1 legacy quest resolved to 'done' + flag + xp on the legacy
+      // branch. The branch is retired: no state may change.
       QUEST_DB.__legacy = { id:'__legacy', type:'skill_check', title:'Legacy Demo', activateNode:'DK',
         checkAbility:'wis', checkLabel:'Insight', checkDC:1, checkPassFlag:'__legacyDone',
         xpAward:10, passText:'legacy pass', failText:'legacy fail', retryable:false };
       S_story.quests.__legacy = 'active';
+      const warns = [];
+      const origWarn = console.warn; console.warn = (...a) => warns.push(a.join(' '));
       _rollCeremonia('__legacy');
+      console.warn = origWarn;
       const out = {
-        status: S_story.quests.__legacy,
-        legacyFlag: S_story.__legacyDone,        // set only by the legacy checkPassFlag path
-        xp: S_story.xp,                          // legacy xpAward path
+        status: S_story.quests.__legacy,         // untouched — still active
+        legacyFlag: S_story.__legacyDone,        // never granted
+        xp: S_story.xp,                          // never awarded
+        warned: warns.some(w => /legacy roll path retired/.test(w) && /__legacy/.test(w)),
       };
       delete QUEST_DB.__legacy;
       return out;
     });
-    expect(r.status).toBe('done');
-    expect(r.legacyFlag).toBe(true);    // proves the legacy branch ran, not the UQF one
-    expect(r.xp).toBe(10);
+    expect(r.status).toBe('active');
+    expect(r.legacyFlag).toBeUndefined();
+    expect(r.xp).toBe(0);
+    expect(r.warned).toBe(true);
   });
 
   test('the quest panel renders a Roll Ceremonia card for a UQF skill_check', async ({ page }) => {
@@ -8172,9 +8169,10 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
     'quest_sk_hull','quest_vs_01','quest_vs_02','quest_vs_03','quest_vs_warden','quest_cat_04','quest_cat_06',
     'quest_la_riva_01','quest_la_riva_03','quest_horned_shark','quest_shale_drop','quest_night_eel',
     'quest_no_fishing_sign','quest_guide_05','quest_brynn_firewood','quest_void_below','quest_city_watch_patrol'];
-  // Wave 3b later migrated 32 of the original 38 skips; the terminal legacy
-  // holdouts are wm_01 (bespoke function-body OR) + the 5 math placeholders.
-  const W3B = ['quest_wm_01','quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
+  // Wave 3b later migrated 32 of the original 38 skips; W7d migrated wm_01 (the
+  // last completeFn → flagsAny + the new itemsMinAny OR-term). Terminal legacy
+  // holdouts: the 5 math placeholders (§MATH-01 completion-design gap).
+  const W3B = ['quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
   const GATE_KEPT = ['quest_wm_05','quest_road_damascus','quest_inn_06'];
 
   test('all 61 are UQF-1.0, validate, bits:[], completion present, no completeFn; legacy holdouts untouched', async ({ page }) => {
@@ -8313,8 +8311,9 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
 // countMin (dot-path threshold; number/array-length/object-size coercion),
 // itemsAll (exact-name inventory requirement, optional min copies — vs the fuzzy
 // OR `items` term), flagsPath (nested dot-path flags, also added to canActivate
-// for the tour gates). Holdouts stay legacy by design: quest_wm_01 (bespoke
-// function-body OR) + quest_math_01–05 (no completion mechanism — §MATH-01 gap).
+// for the tour gates). Holdouts stayed legacy by design: quest_wm_01 (bespoke
+// function-body OR — migrated in W7d via the itemsMinAny OR-term) +
+// quest_math_01–05 (no completion mechanism — §MATH-01 gap, still legacy).
 // guide_02/03/06 keep their `quests.X === 'done'` activateConds verbatim behind
 // gate:{_legacyFn:true} — suspected DEAD gates (side quests reach 'complete',
 // never 'done') — flagged in plan.md, parity preserved.
@@ -8326,7 +8325,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
     'quest_tour_04','quest_tour_05','quest_tour_06','quest_guide_01','quest_guide_02','quest_guide_03',
     'quest_guide_06','quest_slums_cleanup','quest_brynn_ledger','quest_couperin_lute','quest_pachelbel_shipment',
     'quest_pit_training','quest_pit_debut'];
-  const HOLDOUTS = ['quest_wm_01','quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
+  const HOLDOUTS = ['quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
   // §ARCH-01 W4: guide_02/03/06 moved OFF the _legacyFn gate — their `=== 'done'`
   // activateConds were DEAD (side quests only reach 'complete'); now gate.questsDone.
   const GATE_KEPT = ['quest_fish_01','quest_tour_01','quest_guide_01'];
@@ -8925,23 +8924,19 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
       const carriers = Object.values(QUEST_DB).filter(q => q.onComplete);
       const fns = carriers.filter(q => typeof q.onComplete === 'function').map(q => q.id);
       const arrays = carriers.filter(q => Array.isArray(q.onComplete));
-      // validateQuest is a whole-quest UQF check; the one legacy-holdout carrier
-      // (quest_wm_01, W7c) validates its chain against BIT_CONTRACTS directly below.
+      // §W7d: quest_wm_01 (the last legacy carrier) is now UQF, so EVERY carrier
+      // whole-quest-validates — no BIT_CONTRACTS side-channel needed anymore.
       const uqf = arrays.filter(q => q.schema === 'UQF-1.0');
       const invalid = uqf.map(q => ({ id:q.id, v: validateQuest(q) })).filter(x => !x.v.valid);
       const nonUqf = arrays.filter(q => q.schema !== 'UQF-1.0').map(q => q.id);
-      const wm01BadBits = (QUEST_DB.quest_wm_01.onComplete || []).filter(b => {
-        const c = BIT_CONTRACTS[b.kind];
-        return !c || c.required.some(f => b[f] === undefined) || !c.validate(b);
-      }).length;
-      return { total: carriers.length, fns, arrayCount: arrays.length, nonUqf, wm01BadBits,
+      return { total: carriers.length, fns, arrayCount: arrays.length, nonUqf, uqfCount: uqf.length,
                invalid: invalid.map(x => x.id + ': ' + x.v.errors.join('; ')) };
     });
     expect(r.fns).toEqual([]);              // zero closures left
     expect(r.arrayCount).toBe(r.total);     // every carrier is an array chain
     expect(r.arrayCount).toBe(88);          // 27 (W7b closures) + 61 (W7c per-id block)
-    expect(r.nonUqf).toEqual(['quest_wm_01']);  // the deliberate legacy holdout still carries a W7c chain
-    expect(r.wm01BadBits).toBe(0);
+    expect(r.nonUqf).toEqual([]);           // §W7d — the last legacy carrier (wm_01) migrated
+    expect(r.uqfCount).toBe(88);
     expect(r.invalid).toEqual([]);          // every chain passes bit contracts
   });
 
@@ -9197,5 +9192,91 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
       return got;
     });
     expect(r).toEqual(['ctx-ok:true']);
+  });
+});
+
+// ── §ARCH-01 Wave 7d — legacy branches retired ───────────────────────────────
+//
+// The declarative engine is now the ONLY quest execution surface: _rollCeremonia's
+// legacy roll body is gone (warned no-op for non-UQF ids — see the rewritten
+// Phase-2 test), storyCheckQuests' completeFn/completeItems completion terms are
+// gone, and adaptLegacyQuest is an identity no-op (rewritten Phase-1 test).
+// quest_wm_01 — the last completeFn carrier — migrated via the new OR-position
+// completion term `itemsMinAny` (exact-name inventory count, [{name, min}]).
+// Remaining non-UQF entries by design: quest_math_01–05 (activate-only, §MATH-01
+// completion-design gap) + the 30 dead blq_05–blq_10 book-stubs (Wave 2ad).
+
+test.describe('§ARCH-01 W7d — legacy branches retired; wm_01 migrated via itemsMinAny', () => {
+  test('itemsMinAny truth table: exact-name count in OR position, composes with the OR-group', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const seal = () => ({ name:"Scholar Kings' Seal" });
+      QUEST_DB.q_w7d_min = { schema:'UQF-1.0', id:'q_w7d_min', type:'side', title:'x', gate:{}, bits:[],
+        completion:{ flagsAny:['w7dLetter'], itemsMinAny:[{ name:"Scholar Kings' Seal", min:3 }] } };
+      const out = {};
+      delete S_story.w7dLetter; S_story.inventory = [seal(), seal()];
+      out.twoSeals = QuestRuntime.canComplete('q_w7d_min');                    // 2 < 3, no flag
+      S_story.inventory = [seal(), seal(), seal()];
+      out.threeSeals = QuestRuntime.canComplete('q_w7d_min');                  // count met
+      S_story.inventory = [{ name:"Scholar Kings' Seal Fragment" }, seal(), seal()];
+      out.fuzzyRejected = QuestRuntime.canComplete('q_w7d_min');               // EXACT name — no substring match
+      S_story.inventory = []; S_story.w7dLetter = true;
+      out.flagAlone = QuestRuntime.canComplete('q_w7d_min');                   // OR-group: flag satisfies
+      // default min = 1 when omitted
+      QUEST_DB.q_w7d_min.completion = { itemsMinAny:[{ name:'Lone Token' }] };
+      delete S_story.w7dLetter; S_story.inventory = [{ name:'Lone Token' }];
+      out.defaultMin = QuestRuntime.canComplete('q_w7d_min');
+      delete QUEST_DB.q_w7d_min; delete S_story.w7dLetter;
+      return out;
+    });
+    expect(r).toEqual({ twoSeals:false, threeSeals:true, fuzzyRejected:false, flagAlone:true, defaultMin:true });
+  });
+
+  test('quest_wm_01 is UQF: validates, completion is the letter-OR-3-seals gate, no completeFn residue', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const q = QUEST_DB.quest_wm_01;
+      return { schema: q.schema, valid: validateQuest(q).valid, noFn: !('completeFn' in q),
+               flagsAny: q.completion.flagsAny, minEntry: q.completion.itemsMinAny[0],
+               chainKept: Array.isArray(q.onComplete) && q.onComplete.length === 3 };
+    });
+    expect(r.schema).toBe('UQF-1.0');
+    expect(r.valid).toBe(true);
+    expect(r.noFn).toBe(true);
+    expect(r.flagsAny).toEqual(['archiveLetterObtained']);
+    expect(r.minEntry).toEqual({ name:"Scholar Kings' Seal", min:3 });
+    expect(r.chainKept).toBe(true);
+  });
+
+  test('storyCheckQuests no longer honors legacy completeFn / completeItems terms', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20; S_story.inventory = [{ name:'Relic Token' }];
+      // Pre-W7d both of these would complete on this pass; the terms are retired.
+      QUEST_DB.__w7d_fn = { id:'__w7d_fn', type:'side', title:'fn', completeFn:() => true };
+      QUEST_DB.__w7d_items = { id:'__w7d_items', type:'side', title:'it', completeItems:['Relic Token'] };
+      S_story.quests = { __w7d_fn:'active', __w7d_items:'active' };
+      storyCheckQuests({ code:'__none' });
+      const out = { fn: S_story.quests.__w7d_fn, items: S_story.quests.__w7d_items };
+      delete QUEST_DB.__w7d_fn; delete QUEST_DB.__w7d_items;
+      return out;
+    });
+    expect(r).toEqual({ fn:'active', items:'active' });   // neither completes anymore
+  });
+
+  test('the full non-UQF residue is exactly math×5 + the 30 blq stubs (all activate-only, no completion surface)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const nonUqf = Object.values(QUEST_DB).filter(q => q.schema !== 'UQF-1.0');
+      return {
+        ids: nonUqf.map(q => q.id).sort(),
+        withCompletionSurface: nonUqf.filter(q =>
+          q.completeFn || (q.completeItems || []).length || q.completion).map(q => q.id),
+      };
+    });
+    expect(r.ids.length).toBe(35);
+    expect(r.ids.filter(id => /^quest_math_/.test(id)).length).toBe(5);
+    expect(r.ids.filter(id => /^blq_(05|06|07|08|09|10)_/.test(id)).length).toBe(30);
+    expect(r.withCompletionSurface).toEqual([]);   // none of them can ever complete — nothing rides the retired terms
   });
 });
