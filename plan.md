@@ -161,7 +161,6 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 - [ ] **§MESH-01-REVIEW — remaining audit items:**
   - **`nearby`+`world[]` are pos-only** — the `room` half of the surface asymmetry closed with §NAV-01f (`buildLook` shared on start/move/look/pos); fold presence arrays into a shared builder only if a MUD client ever needs them on `move`/`look`. Minor.
   - **Presence Playwright tests share one server** — sessions from closed contexts linger to the 30-min TTL; one cross-test leak already caused a flake. **Rule: assert by pid, never by count**; consider a `session/end` sweep in test teardown.
-  - **Untracked stray at repo root:** `salvage/` (one worktree-agent patch file, content already shipped in `66584db`) — user decision: commit, fold in, or delete.
   - **Refactors (larger, schedule deliberately):** extract the mesh layer to `mesh.js` (~450 self-contained lines, `mover.js`/`rooms.js` precedent — `wbapi-server.js` is 10k+ lines and mesh is the most separable slice); `_mpRepaintMaps` ~100 ms debounce (every remote `player_moved` rebuilds the minimap DOM + 2 canvases — churns at 10 movers); `_mpBase()` should derive from `location.origin` when the page has an http origin (the `http://localhost:1367` default is wrong for a downloaded world served by a friend); if `MESH.log` pressure ever shows, derive `moved` from `arrived` at fanout instead of a third event per move.
 
 ---
