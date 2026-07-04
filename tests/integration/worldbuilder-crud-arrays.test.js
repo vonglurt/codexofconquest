@@ -73,7 +73,9 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
     await page.click('#btn-crud-new');
 
     // The csv/objlines array fields render as text controls; itemChain now mounts the visual widget.
-    await expect(page.locator('#crud-field-completeItems')).toHaveCount(1);
+    // §EDITOR-03 W8b: the completeItems row is GONE — the field is retired (W8a
+    // sweep); item completion is authored as completion:{items} via the editors.
+    await expect(page.locator('#crud-field-completeItems')).toHaveCount(0);
     await expect(page.locator('#crud-field-targetMonsterKeys')).toHaveCount(1);
     expect(await page.locator('#crud-field-killGoals').evaluate(el => el.tagName)).toBe('TEXTAREA');
     // §EDITOR-01-D-FU(a) Inc 4: the itemChain textarea is gone — a buildChainEditor host stands in.
@@ -83,7 +85,6 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
     // Fill scalar + text-array fields, seed the chain widget, then collect — arrays must come out parsed.
     await page.fill('#crud-field-id', 'quest_test_crud_hunt');
     await page.fill('#crud-field-title', 'CRUD Hunt');
-    await page.fill('#crud-field-completeItems', 'Trophy Pelt, Bounty Token');
     await page.fill('#crud-field-targetMonsterKeys', 'stray_alley_cat, fluffy_cat');
     await page.fill('#crud-field-killGoals', 'stray_alley_cat:5:Stray\nfluffy_cat:3:Fluffy');
     await page.evaluate(() => {
@@ -94,7 +95,7 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
     });
 
     const body = await page.evaluate(() => window.__crudTest.collectFormData());
-    expect(body.completeItems).toEqual(['Trophy Pelt', 'Bounty Token']);
+    expect('completeItems' in body).toBe(false);   // retired field never emitted
     expect(body.targetMonsterKeys).toEqual(['stray_alley_cat', 'fluffy_cat']);
     expect(body.killGoals).toEqual([
       { key: 'stray_alley_cat', need: 5, label: 'Stray' },

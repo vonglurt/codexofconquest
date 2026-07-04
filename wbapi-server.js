@@ -1178,7 +1178,7 @@ const SCHEMAS = {
   },
   quest: {
     _section: 'QUEST_DB',
-    _description: 'Quest database. Contains all 210 quests. Function bodies (activateCond, completeFn) are preserved as raw JS — not editable via API. Text fields are fully editable.',
+    _description: 'Quest database (UQF-1.0). Declarative gate/bits/completion/onComplete are JSON — fully editable via API. The legacy activateCond function body is preserved as raw JS (escape hatch, not editable); completeFn/onPass/onFail roots are RETIRED (§ARCH-01 W7d).',
     fields: {
       title:       { type:'string',  required:true,  editable:true,  note:'Display title shown in quest log.' },
       type:        { type:'string',  required:true,  editable:true,
@@ -1195,17 +1195,17 @@ const SCHEMAS = {
       waypointNode:{ type:'string',  required:false, editable:true,  note:'Node code where quest objective is located.' },
       xpAward:     { type:'number',  required:false, editable:true,  note:'XP granted on completion.' },
       reward:      { type:'number',  required:false, editable:true,  note:'Gold reward on completion.' },
-      checkDC:     { type:'number',  required:false, editable:true,  note:'Difficulty Class for skill_check quests. Player rolls d20+mod vs DC.' },
+      schema:      { type:'string',  required:false, editable:true,  note:"'UQF-1.0' — quests without it have NO completion path post-W7d (only the deliberate math/blq holdouts)." },
+      gate:        { type:'object',  required:false, editable:true,  note:'UQF activation gate (JSON): flags/flagsAny/notFlags/flagEquals/nodes/questsDone/questsAttempted/favorMin/battles/notBattles/shardsMin/restedAtMin/sleptAt/flagsPath/countMin. {} = always listed.' },
+      bits:        { type:'array',   required:false, editable:true,  note:'UQF mission bits (JSON). skill_check quests carry [{kind:"skill_check",stat,skill?,dc,onPass:[…],onFail:[…]}] — resolved via the roll card.' },
+      completion:  { type:'object',  required:false, editable:true,  note:'UQF completion gate (JSON): flags/flagsAny/notFlags/items/itemsAll/itemsMinAny/battles/questsComplete/atNode/flagsPath/countMin. Required for a side quest to ever complete.' },
+      onComplete:  { type:'array',   required:false, editable:true,  note:'UQF completion bit chain (JSON array): reward/narrative/flag_write/mission_bit/favor/unlock/… executed once when the completion gate passes.' },
+      checkDC:     { type:'number',  required:false, editable:true,  note:'RETIRED root (W8a) — a skill_check quest\'s DC lives in its skill_check bit.' },
       checkStat:   { type:'string',  required:false, editable:true,  values:['WIS','INT','CHA','STR','DEX','CON'],
-                     note:'Ability score used for the skill check.' },
-      checkSkill:  { type:'string',  required:false, editable:true,  note:'Specific skill name for the check (optional).' },
-      checkPassFlag:{ type:'string', required:false, editable:true,  note:'Flag name set true on pass. Also triggers _grantMissionBit — creates a mission_bit token in player inventory.' },
-      checkFailFlag:{ type:'string', required:false, editable:true,  note:'Flag name set true on fail (for non-retryable quests). Also triggers _grantMissionBit.' },
-      bitLabel:    { type:'string',  required:false, editable:true,  note:'Human-readable label for the mission bit token. Defaults to camelCase expansion of checkPassFlag. Token name = bitLabel + " Token".' },
-      activateCond:{ type:'function',required:false, editable:false, note:'JS arrow function (S) => bool. Evaluated at runtime to decide if quest is visible. Not editable via API — edit in source.' },
-      completeFn:  { type:'function',required:false, editable:false, note:'JS arrow function (S) => {...}. Runs on quest completion to set story flags, grant items, etc. Not editable via API.' },
-      onPass:      { type:'function',required:false, editable:false, note:'Alternative to completeFn. Runs on successful skill_check.' },
-      onFail:      { type:'function',required:false, editable:false, note:'Runs on failed skill_check.' },
+                     note:'RETIRED root (W8a) — the stat lives in the skill_check bit.' },
+      checkSkill:  { type:'string',  required:false, editable:true,  note:'RETIRED root (W8a) — the skill lives in the skill_check bit.' },
+      activateCond:{ type:'function',required:false, editable:false, note:'Legacy JS gate () => bool — still evaluated, but prefer gate:{…}. Not editable via API — edit in source.' },
+      completeFn:  { type:'function',required:false, editable:false, note:'RETIRED (§ARCH-01 W7d) — the declarative completion gate is the only completion path. Use completion + onComplete.' },
     },
   },
   fish: {
@@ -1463,16 +1463,26 @@ function insertAfterLastParsedNode(entry) {
 }
 
 function serializeQuestLiteral(id, body) {
-  const STR  = ['type','title','desc','hint','hook','passText','failText','rewardText',
+  // §EDITOR-03 (UQF W8b): UQF quests carry schema/gate/bits/completion/onComplete —
+  // pure-JSON structures serialized verbatim. The legacy check*/completeFn root
+  // fields are RETIRED at runtime (W7d/W8a) but the writer still passes the check*
+  // strings through untouched for old callers; they author dead fields and the
+  // validate/advise layer flags them.
+  const STR  = ['schema','type','title','arc','desc','hint','hook','passText','failText','rewardText',
     'disposition','npc','activateNode','waypointNode','checkAbility','checkLabel',
-    'checkStat','checkPassFlag','vignetteText'];
+    'checkStat','checkSkill','checkPassFlag','vignetteText'];
   const NUM  = ['xpAward','reward','checkDC','retryGateDays'];
   const BOOL = ['retryable'];
+  const JSONF = ['gate','bits','completion','itemChain','targetMonsterKeys','killGoals'];
   const FN   = ['activateCond','completeFn','onPass','onFail'];
   const parts = [`  ${id}: { id:${JSON.stringify(id)}`];
   for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
   for (const f of NUM)  if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
   for (const f of BOOL) if (body[f] !== undefined) parts.push(`${f}:${!!body[f]}`);
+  for (const f of JSONF) if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
+  // onComplete: an ARRAY is a UQF completion bit chain (JSON); a string falls
+  // through to the FN passthrough below (legacy closure source — dead post-W7d).
+  if (Array.isArray(body.onComplete)) parts.push(`onComplete:${JSON.stringify(body.onComplete)}`);
   for (const f of FN) {
     if (typeof body[f] !== 'string') continue;
     const v = body[f].trimStart();
@@ -7749,9 +7759,11 @@ async function route(req, res) {
       if (npcQ)          list = list.filter(qu => qu.npc === npcQ);
       if (hasNpcQ==='true')  list = list.filter(qu => !!qu.npc);
       if (hasNpcQ==='false') list = list.filter(qu => !qu.npc);
+      // §EDITOR-03 W8b: 'complete' filters on the UQF completion gate (the old
+      // questComplete flag matched nothing — zero quests carry it post-W7d).
       const completeQ = url.searchParams.get('complete');
-      if (completeQ==='true')  list = list.filter(qu => !!qu.questComplete);
-      if (completeQ==='false') list = list.filter(qu => !qu.questComplete);
+      if (completeQ==='true')  list = list.filter(qu => !!qu.completion);
+      if (completeQ==='false') list = list.filter(qu => !qu.completion);
       const monsterQ = url.searchParams.get('monster');
       if (monsterQ) list = list.filter(qu => qu.monster === monsterQ);
 
@@ -7776,7 +7788,7 @@ async function route(req, res) {
           {param:'act',      example:'1',                   desc:'Quests whose activateNode is in this act'},
           {param:'npc',      example:'yael',                desc:'Quests assigned to a specific NPC key'},
           {param:'has_npc',  example:'true',                desc:'true = has NPC, false = no NPC'},
-          {param:'complete', example:'true',                desc:'true = has questComplete flag set'},
+          {param:'complete', example:'true',                desc:'true = has a UQF completion gate'},
           {param:'monster',  example:'wolf',                desc:'Quests referencing a specific monster key'},
           {param:'ids',      example:'true',                desc:'Return only array of ID strings'},
         ],
@@ -8704,23 +8716,27 @@ async function route(req, res) {
         if (WBAPI.questDb[id]) { results.questsSkipped.push(id); continue; }
         const missing = ['title','activateNode','desc','passText','failText'].filter(f => !act[f]);
         if (missing.length) { results.errors.push({ type:'quest', id, error:`missing: ${missing.join(', ')}` }); continue; }
+        // §EDITOR-03 (UQF W8b): cycles compile to UQF — a skill_check (or W4-style
+        // combat fight-roll) bit whose onPass writes the act's pass flag; a bare-
+        // identifier activateCond becomes gate:{flags:[…]}, real JS passes through.
+        // (Legacy check*/monster* roots are retired; monsterHP/AC were already
+        // dropped silently by the old serializer.)
+        const passFlag = act.checkPassFlag || `${id}_passed`;
+        const bareCond = act.activateCond && /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(String(act.activateCond).trim());
         const questBody = {
           id,
+          schema: 'UQF-1.0',
           type: (act.monster && !act.checkStat) ? 'combat' : 'skill_check',
           title:        act.title,
           desc:         act.desc,
           passText:     act.passText,
           failText:     act.failText,
           activateNode: act.activateNode,
-          checkStat:    act.checkStat  || null,
-          checkDC:      act.checkDC    || 0,
-          ...(act.npc           && { npc:           act.npc           }),
-          ...(act.checkPassFlag && { checkPassFlag: act.checkPassFlag }),
-          ...(act.activateCond  && { activateCond:  act.activateCond  }),
-          ...(act.questComplete && { questComplete: true }),
-          ...(act.monster       && { monster:       act.monster       }),
-          ...(act.monsterHP     && { monsterHP:     act.monsterHP     }),
-          ...(act.monsterAC     && { monsterAC:     act.monsterAC     }),
+          gate: bareCond ? { flags: [String(act.activateCond).trim()] } : {},
+          bits: [{ kind: 'skill_check', stat: act.checkStat || 'str', dc: act.checkDC || 12,
+                   onPass: [{ kind: 'flag_write', set: [passFlag] }], onFail: [] }],
+          ...(act.npc && { npc: act.npc }),
+          ...(act.activateCond && !bareCond && { activateCond: act.activateCond }),
         };
         const entry = serializeQuestLiteral(id, questBody);
         const ins   = insertBeforeSectionClose('QUEST_DB', entry);
@@ -8855,16 +8871,23 @@ async function route(req, res) {
         const npcKey = body.npc || body.npcKey;
         if (npcKey && !_npcOk(npcKey))
           worldErrors.push(`npc "${npcKey}" not found in BIRKA_NPC or NODE_MAP`);
-        for (const bit of (body.bits || [])) {
-          const p = `bit[${bit.kind}]`;
-          if (['talk_at','kill_at','navigate','escort','investigate'].includes(bit.kind)) {
-            if (bit.node     && !nodeKeys.has(bit.node))     worldErrors.push(`${p}: node "${bit.node}" not in NODE_MAP`);
-            if (bit.fromNode && !nodeKeys.has(bit.fromNode)) worldErrors.push(`${p}: fromNode "${bit.fromNode}" not in NODE_MAP`);
-            if (bit.toNode   && !nodeKeys.has(bit.toNode))   worldErrors.push(`${p}: toNode "${bit.toNode}" not in NODE_MAP`);
+        // §EDITOR-03 (UQF W8b): walk the RUNTIME bit vocabulary — q.bits, an
+        // array-valued onComplete, and skill_check onPass/onFail outcome chains.
+        const _walkBits = (arr, path, fn) => (Array.isArray(arr) ? arr : []).forEach((bit, i) => {
+          fn(bit, `${path}[${i}] ${bit.kind}`);
+          if (bit.kind === 'skill_check') { _walkBits(bit.onPass, `${path}[${i}].onPass`, fn); _walkBits(bit.onFail, `${path}[${i}].onFail`, fn); }
+          if (bit.kind === 'choice') (bit.options || []).forEach((o, j) => _walkBits(o.bits, `${path}[${i}].options[${j}]`, fn));
+        });
+        const _checkBit = (bit, p) => {
+          if (bit.kind === 'combat') {
+            if (bit.nodeCode && !nodeKeys.has(bit.nodeCode)) worldErrors.push(`${p}: nodeCode "${bit.nodeCode}" not in NODE_MAP`);
+            if (bit.key && !monKeys.has(bit.key)) worldErrors.push(`${p}: monster key "${bit.key}" not in MONSTER_POOL`);
           }
-          if (bit.kind === 'kill_at' && bit.monsterKey && !monKeys.has(bit.monsterKey))
-            worldErrors.push(`${p}: monsterKey "${bit.monsterKey}" not in MONSTER_POOL`);
-        }
+          if (bit.kind === 'favor' && bit.npc && !_npcOk(bit.npc))
+            worldErrors.push(`${p}: npc "${bit.npc}" not found in BIRKA_NPC or NODE_MAP`);
+        };
+        _walkBits(body.bits, 'bit', _checkBit);
+        if (Array.isArray(body.onComplete)) _walkBits(body.onComplete, 'onComplete', _checkBit);
         if (worldErrors.length) {
           logResponse(method, url.pathname, 422, `world-logic: ${worldErrors[0]}`);
           return json(res, 422, { ok:false, error:'World-logic check failed', worldErrors, hint:'Fix all worldErrors before resubmitting. Run ./api.sh audit to confirm world state.' });

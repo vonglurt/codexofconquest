@@ -429,39 +429,34 @@ function respliceSection(rawSrc, sectionName, newContent) {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// §ARCH-02: Operand Registry — 12 atomic quest bit contracts
+// §ARCH-02 / §EDITOR-03 (UQF W8b): Operand Registry — the LIVE runtime bit
+// vocabulary, mirroring the game's BIT_CONTRACTS (QuestRuntime registry). The
+// pre-Phase-1 design vocabulary (talk_at / navigate / kill_at / …) is retired —
+// those kinds never had runtime handlers.
 // ═══════════════════════════════════════════════════════════════════════════
 const OPERAND_CONTRACTS = {
-  talk_at:      { required:['node'],
-                  optional:['npcKey','objectKey','requiresItem','dialogue'],
-                  gate:'S.currentNode === node', complete:'talked flag set' },
-  skill_check:  { required:['ability','dc','label','passText','failText'],
-                  optional:['retryable','retryGateDays','passFlag'],
-                  gate:'player at activateNode', complete:'rolled, result recorded' },
-  navigate:     { required:['fromNode','toNode'], optional:['hint'],
-                  gate:'S.currentNode === fromNode', complete:'S.currentNode === toNode' },
-  kill_at:      { required:['node','monsterKey'], optional:['count','targetLabel','killFlag'],
-                  gate:'at node with battle field', complete:'kill flag set' },
-  escort:       { required:['npcKey','fromNode','toNode'],
-                  optional:['partySlot','combatRisk','failFlag'],
-                  gate:'at fromNode, party slot empty', complete:'at toNode with NPC in party' },
-  talk_party:   { required:['npcKey'],
-                  optional:['partySlot','trigger','dialogue','talkFlag'],
-                  gate:'NPC in party slot', complete:'talkFlag set' },
-  deliver:      { required:['item','toNode'],
-                  optional:['fromNode','recipient','consumeOnDeliver'],
-                  gate:'item in inventory', complete:'at toNode' },
-  collect_item: { required:['item'], optional:['icon','sell','unique'],
-                  gate:'previous operand complete', complete:'item in inventory' },
-  consume_item: { required:['item'], optional:['failText'],
-                  gate:'item in inventory', complete:'item removed' },
-  investigate:  { required:['node','target'],
-                  optional:['skillCheck','reveals','narrativeText','investigateFlag'],
-                  gate:'S.currentNode === node', complete:'investigateFlag set' },
-  flag_gate:    { required:[], optional:['requires','requiresAny','blocks'],
-                  gate:'evaluated against S_story', complete:'gate passes (not an action)' },
-  choice:       { required:['prompt','options'], optional:[],
-                  gate:'previous operand complete', complete:'one option chosen and resolved' },
+  skill_check: { required:['stat','dc'],       optional:['skill','adv','onPass','onFail'],
+                 gate:'resolved via the quest roll card', complete:'pass → status done + onPass bits; fail → onFail bits' },
+  flag_write:  { required:[],                  optional:['set','clear'],
+                 gate:'—', complete:'sets/clears the listed S_story flags' },
+  reward:      { required:[],                  optional:['xp','gold','items','knowledge'],
+                 gate:'—', complete:'grants xp / gold / items / knowledge' },
+  narrative:   { required:[],                  optional:['msg','template'],
+                 gate:'—', complete:'prints msg into the story stream' },
+  mission_bit: { required:['flag'],            optional:['label'],
+                 gate:'—', complete:'sets flag + grants a mission-bit inventory token' },
+  item_remove: { required:['name'],            optional:[],
+                 gate:'—', complete:'removes the first exact-name inventory item' },
+  item_check:  { required:['name'],            optional:['count'],
+                 gate:'—', complete:'records exact-name inventory count ≥ count in ctx' },
+  favor:       { required:['npc'],             optional:['set','add','cap'],
+                 gate:'—', complete:'sets or increments NPC favorability (cap default 3)' },
+  unlock:      { required:[],                  optional:['quests','npcs'],
+                 gate:'—', complete:'activates the listed quest ids' },
+  combat:      { required:['key','label'],     optional:['count','nodeCode'],
+                 gate:'—', complete:'launches storyPreBattle with this battle spec' },
+  choice:      { required:['prompt','options'],optional:[],
+                 gate:'—', complete:'one option chosen; its bits execute' },
 };
 
 // ── §WORLDBUILDER-02 Phase 2: operational-class classifier ──────────────────
@@ -745,22 +740,26 @@ const WBAPI = {
       delete WBAPI.questDb[k]; return {ok:true,key:k};
     },
 
-    // §ARCH-02 Phase 1 — field-level validity check
+    // §ARCH-02 Phase 1 — field-level validity check (§EDITOR-03 W8b: UQF-aware —
+    // a skill_check quest's stat/dc live in its skill_check BIT, not at root)
     validate(id) {
       const q = WBAPI.questDb[id]; if (!q) return {ok:false,errors:[`quest "${id}" not found`]};
       const errors = [];
       const VALID_TYPES = ['side','skill_check','main','epic','combat','hybrid','escort','dialogue','delivery'];
       if (!q.title) errors.push('missing title');
       if (!VALID_TYPES.includes(q.type)) errors.push(`invalid type "${q.type}" — expected: ${VALID_TYPES.join(', ')}`);
-      if (!q.activateNode) errors.push('missing activateNode');
+      if (!q.activateNode && q.type !== 'epic') errors.push('missing activateNode');
       if (q.type === 'skill_check') {
         const VA = ['wis','int','str','dex','con','cha'];
-        if (!q.checkAbility) errors.push('skill_check missing checkAbility');
-        else if (!VA.includes(q.checkAbility)) errors.push(`invalid checkAbility "${q.checkAbility}"`);
-        if (q.checkDC == null) errors.push('skill_check missing checkDC');
-        else if (typeof q.checkDC !== 'number') errors.push('checkDC must be a number');
+        const sc = (q.bits || []).find(b => b.kind === 'skill_check');
+        if (!sc) errors.push('type skill_check but no skill_check bit — dead quest post-W7d');
+        else {
+          if (!sc.stat || !VA.includes(String(sc.stat).toLowerCase())) errors.push(`invalid skill_check bit stat "${sc.stat}"`);
+          if (typeof sc.dc !== 'number') errors.push('skill_check bit dc missing or not a number');
+        }
       }
       if (q.xpAward != null && typeof q.xpAward !== 'number') errors.push('xpAward must be a number');
+      if (q.xpAward != null && q.type !== 'side') errors.push('xpAward is live only on side quests — award XP via a reward bit');
       return {ok: errors.length === 0, errors};
     },
 
@@ -776,6 +775,12 @@ const WBAPI = {
         const inMap   = Object.values(WBAPI.nodeMap).some(n => n.npc && n.npc.toLowerCase().replace(/\s/g,'_') === npcKey);
         if (!inBirka && !inMap) warnings.push(`npc "${npcKey}" not found in BIRKA_NPC or NODE_MAP`);
       }
+      // §EDITOR-03 W8b — UQF shape advisories (legacy authoring is dead post-W7d)
+      if (q.schema !== 'UQF-1.0') warnings.push('not schema UQF-1.0 — legacy quests have no completion path post-W7d');
+      if (q.type === 'skill_check' && !(q.bits || []).some(b => b.kind === 'skill_check'))
+        warnings.push('type skill_check but no skill_check bit — the roll card cannot render');
+      if (q.completeFn || (q.completeItems || []).length)
+        warnings.push('completeFn/completeItems are RETIRED (W7d) — use completion:{items/flags/…}');
       const chain = WBAPI.quests.chain(id);
       return {ok: warnings.length === 0, warnings, chain};
     },
@@ -789,8 +794,12 @@ const WBAPI = {
         bits.push({kind:'flag_gate', requires:[...flags.reads], _note:'inferred from flag reads'});
       if (q.activateNode && q.waypointNode && q.activateNode !== q.waypointNode)
         bits.push({kind:'navigate', fromNode:q.activateNode, toNode:q.waypointNode, hint:q.hint||undefined});
-      if (q.type === 'skill_check' && q.checkAbility && q.checkDC != null)
-        bits.push({kind:'skill_check', ability:q.checkAbility, dc:q.checkDC, label:q.checkLabel||'', passText:q.passText||'', failText:q.failText||'', retryable:q.retryable||false});
+      // §EDITOR-03 W8b: roll spec lives in the skill_check BIT (root check* swept in W8a)
+      const scBit = (q.bits || []).find(b => b.kind === 'skill_check');
+      const _ab = (scBit && scBit.stat ? String(scBit.stat).toLowerCase() : null) || q.checkAbility;
+      const _dc = scBit ? scBit.dc : q.checkDC;
+      if (q.type === 'skill_check' && _ab && _dc != null)
+        bits.push({kind:'skill_check', ability:_ab, dc:_dc, label:(scBit && scBit.skill)||q.checkLabel||'', passText:q.passText||'', failText:q.failText||'', retryable:q.retryable||false});
       if (bits.filter(b=>b.kind!=='flag_gate'&&b.kind!=='navigate').length === 0 && q.activateNode)
         bits.push({kind:'talk_at', node:q.waypointNode||q.activateNode, npcKey:q.npc||q.npcKey||undefined});
       return {id, type:q.type, bits};

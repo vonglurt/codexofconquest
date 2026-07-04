@@ -1,20 +1,20 @@
 'use strict';
 const { test, expect } = require('@playwright/test');
 
-// ── §WBAPI-01 ph4 — Quest Creator array-field support ─────────────────────────
+// ── §WBAPI-01 ph4 / §EDITOR-03 W8b — Quest Creator UQF emit ───────────────────
 //
-// The ✏ Editor tab (§EDITOR-01) gained targetMonsterKeys + killGoals inputs
-// (it already had completeItems). These feed edBuildQuestObj → Export JS / POST.
+// The ✏ Editor tab (§EDITOR-01) authors quests as UQF-1.0: item/kill completion
+// becomes a declarative completion gate, skill checks live in a skill_check bit,
+// and outcome effects are bit chains (On Pass / On Fail / On Complete widgets).
 // Export JS is fully client-side (no server), so we fill the form, click
-// ◇ Export JS, and assert the generated QUEST_DB entry serializes all three
-// array fields correctly (killGoals as an object array).
+// ◇ Export JS, and assert the generated QUEST_DB entry.
 
-test.describe('Quest Creator — array fields (§WBAPI-01 ph4)', () => {
-  test('Export JS serializes completeItems, targetMonsterKeys, and killGoals', async ({ page }) => {
+test.describe('Quest Creator — UQF emit (§EDITOR-03 W8b)', () => {
+  test('Export JS: items + killGoals become the completion gate (no legacy roots)', async ({ page }) => {
     await page.goto('/worldbuilder.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
 
-    // Fill the side-quest form including the two new array fields.
+    // Fill the side-quest form including the two array fields.
     await page.evaluate(() => {
       const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
       set('ed-id', 'quest_test_hunt');
@@ -28,9 +28,51 @@ test.describe('Quest Creator — array fields (§WBAPI-01 ph4)', () => {
     await page.click('#ed-btn-export');
 
     const out = await page.inputValue('#ed-export-out');
-    expect(out).toContain('completeItems:["Trophy Pelt","Bounty Token"]');
+    expect(out).toContain("schema:'UQF-1.0'");
+    expect(out).toContain('gate:{}');
+    expect(out).toContain('completion:{"items":["Trophy Pelt","Bounty Token"],"countMin":[{"path":"catKills.stray_alley_cat","min":5},{"path":"catKills.fluffy_cat","min":3}]}');
     expect(out).toContain('targetMonsterKeys:["stray_alley_cat","fluffy_cat"]');
     expect(out).toContain('killGoals:[{key:"stray_alley_cat",need:5,label:"Stray"},{key:"fluffy_cat",need:3,label:"Fluffy"}]');
+    expect(out).not.toContain('completeItems:');
+    expect(out).not.toContain('completeFn:');
+  });
+
+  test('Export JS: skill_check emits a UQF bit with onPass flag_write/reward + onFail bits', async ({ page }) => {
+    await page.goto('/worldbuilder.html');
+    await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
+    await page.evaluate(() => {
+      const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
+      set('ed-id', 'quest_test_roll');
+      set('ed-type', 'skill_check');
+      document.getElementById('ed-type').dispatchEvent(new Event('change'));
+      set('ed-title', 'Test Roll');
+      set('ed-checkStat', 'cha');
+      set('ed-checkSkill', 'Persuasion');
+      set('ed-checkDC', '13');
+      set('ed-checkPassFlag', 'rollPassed');
+      set('ed-xpAward', '250');
+      document.getElementById('ed-retryable').checked = true;
+    });
+    // Author one On Fail narrative bit through the live widget DOM.
+    await page.click('#ed-add-onfail');
+    await page.fill('#ed-onfail-bits [data-bit-field="msg"]', 'It flinches away.');
+    await page.click('#ed-btn-export');
+
+    const out = await page.inputValue('#ed-export-out');
+    expect(out).toContain("schema:'UQF-1.0'");
+    expect(out).toContain('"kind": "skill_check"');
+    expect(out).toContain('"stat": "cha"');
+    expect(out).toContain('"skill": "Persuasion"');
+    expect(out).toContain('"dc": 13');
+    expect(out).toContain('"kind": "flag_write"');       // checkPassFlag → onPass flag_write
+    expect(out).toContain('"rollPassed"');
+    expect(out).toContain('"xp": 250');                  // xpAward → onPass reward bit
+    expect(out).toContain('"msg": "It flinches away."'); // onFail narrative bit
+    expect(out).toContain('retryable:true');
+    // no legacy roots
+    for (const dead of ['checkStat:', 'checkDC:', 'checkPassFlag:', 'xpAward:', 'onPass:() =>', 'onFail:() =>']) {
+      expect(out).not.toContain(dead);
+    }
   });
 
   // ── §EDITOR-01-D — Quest Creator itemChain authoring ───────────────────────
@@ -88,6 +130,8 @@ test.describe('Quest Creator — array fields (§WBAPI-01 ph4)', () => {
     await page.click('#ed-btn-export');
     const out = await page.inputValue('#ed-export-out');
     expect(out).toContain('killGoals:[{key:"beefy_tom",need:1,label:"beefy_tom"}]');
+    // §EDITOR-03 W8b: the kill quota is also the declarative completion gate
+    expect(out).toContain('completion:{"countMin":[{"path":"catKills.beefy_tom","min":1}]}');
   });
 });
 

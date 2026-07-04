@@ -1365,40 +1365,63 @@ select.fi{appearance:none;}
 
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
-// §ARCH-02: Operand Registry — 12 atomic quest bit contracts
+// §ARCH-02 / §EDITOR-03 (UQF W8b): Operand Registry — the LIVE runtime bit
+// vocabulary. This mirrors the game's BIT_CONTRACTS (QuestRuntime registry);
+// the pre-Phase-1 design vocabulary (talk_at / navigate / kill_at / …) is
+// retired — those kinds never had runtime handlers and authored dead bits.
 // ═══════════════════════════════════════════════════════════════════════════
 const OPERAND_CONTRACTS = {
-  talk_at:      { required:['node'],
-                  optional:['npcKey','objectKey','requiresItem','dialogue'],
-                  gate:'S.currentNode === node', complete:'talked flag set' },
-  skill_check:  { required:['ability','dc','label','passText','failText'],
-                  optional:['retryable','retryGateDays','passFlag'],
-                  gate:'player at activateNode', complete:'rolled, result recorded' },
-  navigate:     { required:['fromNode','toNode'], optional:['hint'],
-                  gate:'S.currentNode === fromNode', complete:'S.currentNode === toNode' },
-  kill_at:      { required:['node','monsterKey'], optional:['count','targetLabel','killFlag'],
-                  gate:'at node with battle field', complete:'kill flag set' },
-  escort:       { required:['npcKey','fromNode','toNode'],
-                  optional:['partySlot','combatRisk','failFlag'],
-                  gate:'at fromNode, party slot empty', complete:'at toNode with NPC in party' },
-  talk_party:   { required:['npcKey'],
-                  optional:['partySlot','trigger','dialogue','talkFlag'],
-                  gate:'NPC in party slot', complete:'talkFlag set' },
-  deliver:      { required:['item','toNode'],
-                  optional:['fromNode','recipient','consumeOnDeliver'],
-                  gate:'item in inventory', complete:'at toNode' },
-  collect_item: { required:['item'], optional:['icon','sell','unique'],
-                  gate:'previous operand complete', complete:'item in inventory' },
-  consume_item: { required:['item'], optional:['failText'],
-                  gate:'item in inventory', complete:'item removed' },
-  investigate:  { required:['node','target'],
-                  optional:['skillCheck','reveals','narrativeText','investigateFlag'],
-                  gate:'S.currentNode === node', complete:'investigateFlag set' },
-  flag_gate:    { required:[], optional:['requires','requiresAny','blocks'],
-                  gate:'evaluated against S_story', complete:'gate passes (not an action)' },
-  choice:       { required:['prompt','options'], optional:[],
-                  gate:'previous operand complete', complete:'one option chosen and resolved' },
+  skill_check: { required:['stat','dc'],       optional:['skill','adv','onPass','onFail'],
+                 gate:'resolved via the quest roll card', complete:'pass → status done + onPass bits; fail → onFail bits' },
+  flag_write:  { required:[],                  optional:['set','clear'],
+                 gate:'—', complete:'sets/clears the listed S_story flags' },
+  reward:      { required:[],                  optional:['xp','gold','items','knowledge'],
+                 gate:'—', complete:'grants xp / gold / items / knowledge' },
+  narrative:   { required:[],                  optional:['msg','template'],
+                 gate:'—', complete:'prints msg into the story stream' },
+  mission_bit: { required:['flag'],            optional:['label'],
+                 gate:'—', complete:'sets flag + grants a mission-bit inventory token' },
+  item_remove: { required:['name'],            optional:[],
+                 gate:'—', complete:'removes the first exact-name inventory item' },
+  item_check:  { required:['name'],            optional:['count'],
+                 gate:'—', complete:'records exact-name inventory count ≥ count in ctx' },
+  favor:       { required:['npc'],             optional:['set','add','cap'],
+                 gate:'—', complete:'sets or increments NPC favorability (cap default 3)' },
+  unlock:      { required:[],                  optional:['quests','npcs'],
+                 gate:'—', complete:'activates the listed quest ids' },
+  combat:      { required:['key','label'],     optional:['count','nodeCode'],
+                 gate:'—', complete:'launches storyPreBattle with this battle spec' },
+  choice:      { required:['prompt','options'],optional:[],
+                 gate:'—', complete:'one option chosen; its bits execute' },
 };
+
+// §EDITOR-03 W8b — per-kind authoring fields for bit cards: [field, type] with
+// type ∈ str · num · csv (comma-separated → string array). Shared by the ops-tab
+// quest form and the ✏ Editor "Mission Bits" section. `choice` (nested option
+// bits) and `_legacy_fn` are deliberately not card-authorable.
+const UQF_BIT_FIELDS = {
+  skill_check: [['stat','str'],['skill','str'],['dc','num']],
+  flag_write:  [['set','csv'],['clear','csv']],
+  reward:      [['xp','num'],['gold','num'],['knowledge','str']],
+  narrative:   [['msg','str']],
+  mission_bit: [['flag','str'],['label','str']],
+  item_remove: [['name','str']],
+  item_check:  [['name','str'],['count','num']],
+  favor:       [['npc','str'],['set','num'],['add','num'],['cap','num']],
+  unlock:      [['quests','csv']],
+  combat:      [['key','str'],['label','str'],['count','num'],['nodeCode','str']],
+};
+// Coerce one card's raw string fields into a contract-valid bit object.
+function uqfCoerceBit(kind, rawFields) {
+  const bit = { kind };
+  for (const [f, t] of (UQF_BIT_FIELDS[kind] || [])) {
+    const v = rawFields[f]; if (v === undefined || v === '') continue;
+    bit[f] = t === 'num' ? +v : t === 'csv' ? v.split(',').map(s => s.trim()).filter(Boolean) : v;
+  }
+  // A bare skill_check bit still needs an outcome chain slot (contract: onPass || onFail).
+  if (kind === 'skill_check' && !bit.onPass && !bit.onFail) bit.onPass = [];
+  return bit;
+}
 
 // ── §WORLDBUILDER-02 Phase 2: operational-class classifier (browser-side mirror) ──
 function _classifyQuestWB(q) {
@@ -1411,7 +1434,10 @@ function _classifyQuestWB(q) {
   if (t === 'escort')      return 'escort';
   if (t === 'dialogue')    return 'talk_chain';
   if (t === 'hybrid')      return 'investigation';
-  const hasItems    = !!(q.completeItems && q.completeItems.length > 0);
+  // §EDITOR-03 W8b: item completion lives in the UQF completion gate (the legacy
+  // completeItems root was swept in W8a; kept as a fallback for old snapshots).
+  const c = q.completion || {};
+  const hasItems    = !!((c.items && c.items.length) || (c.itemsAll && c.itemsAll.length) || (q.completeItems && q.completeItems.length > 0));
   const hasWaypoint = !!(q.waypointNode && q.waypointNode !== q.activateNode);
   if (t === 'side') {
     if (hasItems && hasWaypoint) return 'collect';
@@ -1901,22 +1927,26 @@ const WBAPI = {
       return { ok:true, key };
     },
 
-    // §ARCH-02 Phase 1 — field-level validity check
+    // §ARCH-02 Phase 1 — field-level validity check (§EDITOR-03 W8b: UQF-aware —
+    // a skill_check quest's stat/dc live in its skill_check BIT, not at root)
     validate(id) {
       const q = WBAPI.questDb[id]; if (!q) return {ok:false,errors:[`quest "${id}" not found`]};
       const errors = [];
-      const VALID_TYPES = ['side','skill_check','main','epic'];
+      const VALID_TYPES = ['side','skill_check','main','epic','combat','hybrid','escort','dialogue','delivery'];
       if (!q.title) errors.push('missing title');
       if (!VALID_TYPES.includes(q.type)) errors.push(`invalid type "${q.type}" — expected: ${VALID_TYPES.join(', ')}`);
-      if (!q.activateNode) errors.push('missing activateNode');
+      if (!q.activateNode && q.type !== 'epic') errors.push('missing activateNode');
       if (q.type === 'skill_check') {
         const VA = ['wis','int','str','dex','con','cha'];
-        if (!q.checkAbility) errors.push('skill_check missing checkAbility');
-        else if (!VA.includes(q.checkAbility)) errors.push(`invalid checkAbility "${q.checkAbility}"`);
-        if (q.checkDC == null) errors.push('skill_check missing checkDC');
-        else if (typeof q.checkDC !== 'number') errors.push('checkDC must be a number');
+        const sc = (q.bits || []).find(b => b.kind === 'skill_check');
+        if (!sc) errors.push('type skill_check but no skill_check bit — dead quest post-W7d');
+        else {
+          if (!sc.stat || !VA.includes(String(sc.stat).toLowerCase())) errors.push(`invalid skill_check bit stat "${sc.stat}"`);
+          if (typeof sc.dc !== 'number') errors.push('skill_check bit dc missing or not a number');
+        }
       }
       if (q.xpAward != null && typeof q.xpAward !== 'number') errors.push('xpAward must be a number');
+      if (q.xpAward != null && q.type !== 'side') errors.push('xpAward is live only on side quests — award XP via a reward bit');
       return {ok: errors.length === 0, errors};
     },
 
@@ -1941,56 +1971,53 @@ const WBAPI = {
       const npcKey = q.npc || q.npcKey;
       if (npcKey && !_npcOk(npcKey)) warnings.push(`npc "${npcKey}" not found in BIRKA_NPC or NODE_MAP`);
 
-      // Bits advisory (§ARCH-02 Phase 5)
-      const VALID_ABILITIES = VA;
-      let hasFinalReward = false;
-      (q.bits || []).forEach((bit, i) => {
-        const prefix = `bit[${i}] ${bit.kind}`;
+      // Bits advisory — §EDITOR-03 W8b: the RUNTIME bit vocabulary (game
+      // BIT_CONTRACTS), walked recursively through skill_check onPass/onFail.
+      const _walkBits = (arr, path, fn) => (arr || []).forEach((bit, i) => {
+        fn(bit, `${path}[${i}] ${bit.kind}`);
+        if (bit.kind === 'skill_check') { _walkBits(bit.onPass, `${path}[${i}].onPass`, fn); _walkBits(bit.onFail, `${path}[${i}].onFail`, fn); }
+        if (bit.kind === 'choice') (bit.options || []).forEach((o, j) => _walkBits(o.bits, `${path}[${i}].options[${j}]`, fn));
+      });
+      let hasOutcome = false;
+      const _adviseBit = (bit, prefix) => {
+        if (!OPERAND_CONTRACTS[bit.kind] && bit.kind !== '_legacy_fn') { errors.push(`${prefix}: unknown bit kind — no runtime handler`); return; }
         switch (bit.kind) {
-          case 'talk_at':
-            if (!_nodeOk(bit.node))         errors.push(`${prefix}: node "${bit.node}" not in NODE_MAP`);
-            if (bit.npcKey && !_npcOk(bit.npcKey)) warnings.push(`${prefix}: npcKey "${bit.npcKey}" not in BIRKA_NPC or NODE_MAP`);
-            break;
-          case 'kill_at': {
-            if (!_nodeOk(bit.node))         errors.push(`${prefix}: node "${bit.node}" not in NODE_MAP`);
-            if (bit.node && WBAPI.nodeMap[bit.node] && !WBAPI.nodeMap[bit.node].battle)
-              warnings.push(`${prefix}: node "${bit.node}" has no battle field — kill_at may never fire`);
-            if (bit.monsterKey && !_monOk(bit.monsterKey)) errors.push(`${prefix}: monsterKey "${bit.monsterKey}" not in MONSTER_POOL`);
-            break;
-          }
-          case 'navigate':
-            if (!_nodeOk(bit.fromNode))     errors.push(`${prefix}: fromNode "${bit.fromNode}" not in NODE_MAP`);
-            if (!_nodeOk(bit.toNode))       errors.push(`${prefix}: toNode "${bit.toNode}" not in NODE_MAP`);
-            if (!bit.hint) warnings.push(`${prefix}: no hint — player has no waypoint guidance`);
-            break;
-          case 'escort':
-            if (!_nodeOk(bit.fromNode))     errors.push(`${prefix}: fromNode "${bit.fromNode}" not in NODE_MAP`);
-            if (!_nodeOk(bit.toNode))       errors.push(`${prefix}: toNode "${bit.toNode}" not in NODE_MAP`);
-            if (bit.npcKey && !_npcOk(bit.npcKey)) warnings.push(`${prefix}: npcKey "${bit.npcKey}" not in BIRKA_NPC or NODE_MAP`);
-            if (bit.combatRisk && !bit.failFlag) warnings.push(`${prefix}: combatRisk:true but no failFlag — combat outcome untracked`);
-            break;
-          case 'talk_party':
-            if (bit.npcKey && !_npcOk(bit.npcKey)) warnings.push(`${prefix}: npcKey "${bit.npcKey}" not in BIRKA_NPC or NODE_MAP`);
-            break;
-          case 'investigate':
-            if (!_nodeOk(bit.node))         errors.push(`${prefix}: node "${bit.node}" not in NODE_MAP`);
-            break;
           case 'skill_check':
-            if (bit.ability && !VALID_ABILITIES.has(bit.ability)) errors.push(`${prefix}: ability "${bit.ability}" not in [str,dex,con,int,wis,cha]`);
-            if (bit.dc != null && (bit.dc < 5 || bit.dc > 25))   warnings.push(`${prefix}: DC ${bit.dc} outside advisory range 5–25`);
+            if (bit.stat && !VA.has(String(bit.stat).toLowerCase())) errors.push(`${prefix}: stat "${bit.stat}" not in [str,dex,con,int,wis,cha]`);
+            if (bit.dc == null || typeof bit.dc !== 'number') errors.push(`${prefix}: dc missing or not a number`);
+            else if (bit.dc < 5 || bit.dc > 25) warnings.push(`${prefix}: DC ${bit.dc} outside advisory range 5–25`);
             break;
-          case 'collect_item':
-          case 'flag_write':
-            hasFinalReward = true;
+          case 'combat':
+            if (bit.nodeCode && !_nodeOk(bit.nodeCode)) errors.push(`${prefix}: nodeCode "${bit.nodeCode}" not in NODE_MAP`);
+            break;
+          case 'unlock':
+            (bit.quests || []).forEach(qid => { if (!WBAPI.questDb[qid]) warnings.push(`${prefix}: quest "${qid}" not in QUEST_DB (yet)`); });
+            break;
+          case 'favor':
+            if (bit.npc && !_npcOk(bit.npc)) warnings.push(`${prefix}: npc "${bit.npc}" not found in BIRKA_NPC or NODE_MAP`);
+            break;
+          case 'reward': case 'mission_bit': case 'flag_write': case 'narrative':
+            hasOutcome = true;
             break;
         }
-      });
-      if ((q.bits||[]).length > 0 && !hasFinalReward)
-        warnings.push('no collect_item or flag_write bit — player gets no completion signal');
+      };
+      _walkBits(q.bits, 'bit', _adviseBit);
+      if (Array.isArray(q.onComplete)) _walkBits(q.onComplete, 'onComplete', _adviseBit);
 
-      // skill_check quest with no passFlag
-      if (q.type === 'skill_check' && !q.checkPassFlag)
-        warnings.push('skill_check with no checkPassFlag — downstream quests cannot gate on this result');
+      // UQF quest-shape advisory (§EDITOR-03 W8b)
+      const scBit = (q.bits || []).find(b => b.kind === 'skill_check');
+      if (q.type === 'skill_check' && !scBit)
+        errors.push('type skill_check but no skill_check bit — the roll card cannot render (dead quest)');
+      if (q.schema === 'UQF-1.0' && q.type !== 'skill_check' && !q.completion && q.type !== 'epic')
+        warnings.push('no completion gate — this quest can activate but never complete');
+      if (q.completeFn || (q.completeItems || []).length)
+        errors.push('completeFn/completeItems are RETIRED (W7d) — use completion:{items/flags/…}');
+      if (q.schema !== 'UQF-1.0')
+        warnings.push('not schema UQF-1.0 — legacy quests have no completion path post-W7d');
+      if ((q.bits || []).length && q.type !== 'skill_check' && !scBit)
+        warnings.push('q.bits on a non-skill_check quest never execute — did you mean onComplete?');
+      if (q.type === 'skill_check' && scBit && !(scBit.onPass || []).length && !(scBit.onFail || []).length && !hasOutcome)
+        warnings.push('skill_check with empty onPass/onFail — the roll has no effect beyond status');
 
       const chain = !isObj ? WBAPI.quests.chain(id) : null;
       return {ok: errors.length === 0, errors, warnings, ...(chain ? {chain} : {})};
@@ -2001,15 +2028,19 @@ const WBAPI = {
       const q = WBAPI.questDb[id]; if (!q) return null;
       const bits = [];
       const flags = WBAPI._questFlags[id];
-      // handle both checkAbility (canonical) and checkStat (legacy) field names
-      const ability = q.checkAbility || (q.checkStat ? q.checkStat.toLowerCase() : null);
-      const label   = q.checkLabel   || q.checkSkill || '';
+      // §EDITOR-03 W8b: the roll spec lives in the skill_check BIT (root check*
+      // was swept in W8a); legacy root names kept as a fallback for old snapshots.
+      const scBit   = (q.bits || []).find(b => b.kind === 'skill_check');
+      const ability = (scBit && scBit.stat ? String(scBit.stat).toLowerCase() : null)
+        || q.checkAbility || (q.checkStat ? q.checkStat.toLowerCase() : null);
+      const dc      = scBit ? scBit.dc : q.checkDC;
+      const label   = (scBit && scBit.skill) || q.checkLabel || q.checkSkill || '';
       if (flags && flags.reads.size > 0)
         bits.push({kind:'flag_gate', requires:[...flags.reads], _note:'inferred from flag reads'});
       if (q.activateNode && q.waypointNode && q.activateNode !== q.waypointNode)
         bits.push({kind:'navigate', fromNode:q.activateNode, toNode:q.waypointNode, hint:q.hint||undefined});
-      if (q.type === 'skill_check' && ability && q.checkDC != null)
-        bits.push({kind:'skill_check', ability, dc:q.checkDC, label, passText:q.passText||'', failText:q.failText||'', retryable:q.retryable||false});
+      if (q.type === 'skill_check' && ability && dc != null)
+        bits.push({kind:'skill_check', ability, dc, label, passText:q.passText||'', failText:q.failText||'', retryable:q.retryable||false});
       if (bits.filter(b=>b.kind!=='flag_gate'&&b.kind!=='navigate').length === 0 && q.activateNode)
         bits.push({kind:'talk_at', node:q.waypointNode||q.activateNode, npcKey:q.npc||q.npcKey||undefined});
       return {id, type:q.type, bits};
@@ -2023,12 +2054,14 @@ const WBAPI = {
       if (!title)        return { ok: false, error: 'Missing required field: title' };
       if (!activateNode) return { ok: false, error: 'Missing required field: activateNode' };
       if (WBAPI.questDb[id]) return { ok: false, error: `Quest "${id}" already exists` };
-      // Bit contract validation (field types)
-      if (questObj.bits) {
-        for (const bit of questObj.bits) {
-          const bv = WBAPI.operands.validate(bit);
-          if (!bv.ok) return { ok: false, error: `Bit [${bit.kind}]: ${bv.errors.join('; ')}` };
-        }
+      // Bit contract validation (field types) — §EDITOR-03 W8b: covers q.bits,
+      // q.onComplete, and skill_check onPass/onFail outcome chains.
+      const _allBits = [];
+      const _collect = (arr) => { for (const b of (arr || [])) { _allBits.push(b); if (b.kind === 'skill_check') { _collect(b.onPass); _collect(b.onFail); } } };
+      _collect(questObj.bits); _collect(Array.isArray(questObj.onComplete) ? questObj.onComplete : []);
+      for (const bit of _allBits) {
+        const bv = WBAPI.operands.validate(bit);
+        if (!bv.ok) return { ok: false, error: `Bit [${bit.kind}]: ${bv.errors.join('; ')}` };
       }
       // §ARCH-02 Phase 5 — world-logic advisory: hard-block on errors
       if (WBAPI.loaded) {
@@ -4222,7 +4255,7 @@ function selectQuest(id){
   const mkFlagDetail = (flagSet, cls, role, relRole) => {
     if (!flagSet.size) return;
     const fg = document.createElement('div'); fg.className='fg';
-    const lbl = document.createElement('div'); lbl.className='fl'; lbl.textContent = role === 'reads' ? 'Reads Flags (activateCond)' : 'Writes Flags (onPass / completeFn)';
+    const lbl = document.createElement('div'); lbl.className='fl'; lbl.textContent = role === 'reads' ? 'Reads Flags (gate / activateCond)' : 'Writes Flags (bit chains)';
     fg.appendChild(lbl);
     for (const f of flagSet) {
       const row = document.createElement('div'); row.style.cssText='display:flex;align-items:flex-start;gap:6px;margin-bottom:4px;flex-wrap:wrap;';
@@ -5074,7 +5107,7 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
       { label:'Quests — by arc prefix',   url:'/api/list/quest?arc={v}',             param:'Arc prefix (e.g. mq_ or sq_)' },
       { label:'Quests — with NPC',        url:'/api/list/quest?has_npc=true' },
       { label:'Quests — no NPC',          url:'/api/list/quest?has_npc=false' },
-      { label:'Quests — with completeFn', url:'/api/list/quest?complete=true' },
+      { label:'Quests — with completion gate', url:'/api/list/quest?complete=true' },
       { label:'Monsters — by terrain',    url:'/api/list/monster?terrain={v}',       param:'Terrain key (e.g. crypt)' },
       { label:'Monsters — by tier',       url:'/api/list/monster?tier={v}',          param:'Tier (trivial|easy|medium|hard|boss)' },
       { label:'Monsters — with drops',    url:'/api/list/monster?has_drop=true' },
@@ -5264,9 +5297,9 @@ checkDC      number   Difficulty Class (skill_check type only).
 checkStat    string   WIS | INT | CHA | STR | DEX | CON
 checkSkill   string   Specific skill name for the check.
 ──────────────────────────────────────────────────────────────
-activateCond function  (S) => bool  — NOT editable via API
-completeFn   function  (S) => {...} — NOT editable via API
-onPass/onFail function                NOT editable via API`,
+activateCond function  () => bool — legacy escape hatch, NOT editable via API
+completeFn / onPass / onFail — RETIRED (§ARCH-01 W7d): use the UQF fields
+gate / bits / completion / onComplete — JSON, fully editable via API`,
 
   npc:     `── BIRKA_NPC (6 named NPCs) ──────────────────────────────────
 key*         string   Internal key (yael, brynn, quill, pachelbel, crov, auros)
@@ -6068,7 +6101,6 @@ window._onServerActivated = () => {
         { key:'hint',         label:'Hint',         ta:true },
         { key:'passText',     label:'Pass text',    ta:true },
         { key:'failText',     label:'Fail text',    ta:true },
-        { key:'completeItems',     label:'Complete items',  arr:'csv',     note:'Comma-separated item names' },
         { key:'targetMonsterKeys', label:'Target monsters', arr:'csv',     note:'Comma-separated monster keys (hunt quests)' },
         { key:'killGoals',         label:'Kill goals',      arr:'objlines',ta:true, note:'One per line — key:need:label (need→1, label→key by default)' },
         { key:'itemChain',         label:'Item chain',      arr:'itemchain',ta:true, note:'On completion — add steps (grant / take / grantBit / takeBit), fill each kind’s fields, reorder with ▲/▼ or drag.' },
@@ -6517,7 +6549,7 @@ window._onServerActivated = () => {
         {name:'npc', type:'string', desc:'NPC key assigned to quest'},
         {name:'monster', type:'string', desc:'Monster key referenced in quest'},
         {name:'has_npc', type:'bool', desc:'Filter by NPC presence (true|false)'},
-        {name:'complete', type:'bool', desc:'Filter by completeFn presence'},
+        {name:'complete', type:'bool', desc:'Filter by completion-gate presence'},
         {name:'q', type:'string', desc:'Text search on title / id'},
         {name:'ids', type:'bool', desc:'Return IDs only'},
     ]},
@@ -7114,25 +7146,11 @@ window._onServerActivated = () => {
     body.appendChild(bitsHd);
     const bitsList = document.createElement('div'); bitsList.style.cssText = 'display:flex;flex-direction:column;gap:6px;';
     body.appendChild(bitsList);
-    const BIT_FIELDS = {
-      talk_at:     ['node','npcKey','objectKey'],
-      skill_check: ['ability','dc','label','passText','failText'],
-      navigate:    ['fromNode','toNode','hint'],
-      kill_at:     ['node','monsterKey','count'],
-      escort:      ['npcKey','fromNode','toNode'],
-      talk_party:  ['npcKey','talkFlag'],
-      deliver:     ['item','toNode','fromNode'],
-      collect_item:['item','icon'],
-      consume_item:['item'],
-      investigate: ['node','target','investigateFlag'],
-      flag_gate:   ['requires','requiresAny'],
-      choice:      ['prompt','options'],
-    };
     function addBitCard(defaultKind) {
       const card = document.createElement('div');
       card.style.cssText = 'display:flex;align-items:flex-start;gap:6px;padding:7px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;flex-wrap:wrap;';
       const kindSel = document.createElement('select'); kindSel.className = 'fi'; kindSel.style.flex = '0 0 120px';
-      for (const k of Object.keys(OPERAND_CONTRACTS)) {
+      for (const k of Object.keys(UQF_BIT_FIELDS)) {
         const o = document.createElement('option'); o.value = k; o.textContent = k;
         if (k === defaultKind) o.selected = true;
         kindSel.appendChild(o);
@@ -7142,25 +7160,25 @@ window._onServerActivated = () => {
       card.appendChild(fieldsDiv);
       function renderBitFields(kind) {
         fieldsDiv.innerHTML = '';
-        for (const f of (BIT_FIELDS[kind] || [])) {
+        for (const [f] of (UQF_BIT_FIELDS[kind] || [])) {
           const inp = document.createElement('input'); inp.type = 'text'; inp.className = 'fi';
           inp.placeholder = f; inp.dataset.bitField = f; inp.style.flex = '1 1 80px';
           fieldsDiv.appendChild(inp);
         }
       }
-      renderBitFields(defaultKind || 'talk_at');
+      renderBitFields(defaultKind || 'narrative');
       kindSel.addEventListener('change', () => renderBitFields(kindSel.value));
       const rm = mkBtn('✕', 'sm'); rm.addEventListener('click', () => card.remove());
       card.appendChild(rm);
       bitsList.appendChild(card);
     }
     const addBitBtn = mkBtn('+ Add Bit', 'sm'); addBitBtn.style.marginTop = '4px';
-    addBitBtn.addEventListener('click', () => addBitCard('talk_at'));
+    addBitBtn.addEventListener('click', () => addBitCard('narrative'));
     body.appendChild(addBitBtn);
     const postBtn = mkBtn('POST Quest', 'primary sm'); postBtn.style.marginTop = '8px';
     const res = document.createElement('pre'); res.className = 'op-result';
     body.appendChild(postBtn); body.appendChild(res);
-    body.appendChild(mkNote('Required: id, type, title, activateNode, desc, passText, failText. Bits are optional — stored as questObj.bits, runtime support in Phase 3.'));
+    body.appendChild(mkNote('Required: id, type, title, activateNode, desc, passText, failText. Bits are optional — skill_check quests carry them as q.bits; other types run them at completion (q.onComplete). Emitted as UQF-1.0 (§EDITOR-03).'));
     postBtn.addEventListener('click', async () => {
       if (!WBAPI.loaded) return showResult(res, 'Load a file first.', true);
       const f = getFields(body);
@@ -7169,15 +7187,19 @@ window._onServerActivated = () => {
       for (const card of bitsList.children) {
         const kindSel = card.querySelector('select');
         const kind = kindSel?.value; if (!kind) continue;
-        const bit = { kind };
+        const raw = {};
         for (const inp of card.querySelectorAll('[data-bit-field]')) {
-          const v = inp.value.trim(); if (v) bit[inp.dataset.bitField] = v;
+          const v = inp.value.trim(); if (v) raw[inp.dataset.bitField] = v;
         }
-        bits.push(bit);
+        bits.push(uqfCoerceBit(kind, raw));
       }
+      const type = f.type?.value || 'side';
       const questObj = {
         id:           f.id.value.trim(),
-        type:         f.type?.value || 'side',
+        type,
+        schema:       'UQF-1.0',
+        gate:         {},
+        bits:         [],
         title:        f.title?.value?.trim() || '',
         activateNode: f.activateNode.value.trim().toUpperCase(),
         desc:         f.desc?.value?.trim() || '',
@@ -7185,7 +7207,12 @@ window._onServerActivated = () => {
         failText:     f.failText?.value?.trim() || '',
       };
       if (f.arc?.value?.trim()) questObj.arc = f.arc.value.trim();
-      if (bits.length) questObj.bits = bits;
+      // skill_check quests execute q.bits via the roll card; every other type
+      // only executes bits at completion — route the cards accordingly.
+      if (bits.length) {
+        if (type === 'skill_check') questObj.bits = bits;
+        else questObj.onComplete = bits;
+      }
       const result = await WBAPI.quests.create(questObj);
       showResult(res, result, !result.ok);
       if (result.ok) { WBAPI._buildIndexes(); renderQuestList(); switchTab('quests'); selectQuest(questObj.id); }
@@ -8055,21 +8082,11 @@ const ED_TYPE_COLOR = { side:'#58a6ff', skill_check:'#3fb950', main:'#d29922', e
 const SKILLS_ALL = ['Acrobatics','Animal Handling','Arcana','Athletics','Deception',
   'History','Insight','Intimidation','Investigation','Medicine','Nature',
   'Perception','Performance','Persuasion','Religion','Sleight of Hand','Stealth','Survival'];
-const BIT_FIELDS = {
-  talk_at:     ['node','npcKey','objectKey'],
-  skill_check: ['ability','dc','label','passText','failText'],
-  navigate:    ['fromNode','toNode','hint'],
-  kill_at:     ['node','monsterKey','count'],
-  escort:      ['npcKey','fromNode','toNode'],
-  talk_party:  ['npcKey','talkFlag'],
-  deliver:     ['item','toNode','fromNode'],
-  collect_item:['item','icon'],
-  consume_item:['item'],
-  investigate: ['node','target','investigateFlag'],
-  flag_gate:   ['requires'],
-  flag_write:  ['flag','value'],
-  choice:      ['prompt','options'],
-};
+// §EDITOR-03 W8b: bit authoring uses the runtime vocabulary — UQF_BIT_FIELDS +
+// uqfCoerceBit (defined with OPERAND_CONTRACTS in the first script block). The
+// old design-vocabulary BIT_FIELDS (talk_at / navigate / kill_at / …) is retired.
+// Preset bit keys (onPassBits / onFailBits / onCompleteBits) feed the three
+// outcome bit-list widgets; everything else feeds edSet('ed-'+k).
 const PRESET_BLANK = { type:'side', checkStat:'wis', checkSkill:'Perception', checkDC:'12' };
 const PRESETS = {
   blank: {},
@@ -8078,13 +8095,14 @@ const PRESETS = {
     hint:'Talk to the creature near the water\'s edge.',
     disposition:'It moves differently than any creature you know. Not threatening. Curious.',
     desc:'Something alive is watching you from the shallows.',
-    completeFn:'S_story.xp = (S_story.xp||0) + 150;\nstoryMsg("You made contact.");',
+    onCompleteBits:[ { kind:'reward', xp:150 }, { kind:'narrative', msg:'You made contact.' } ],
   },
   spark_skill: {
     type:'skill_check', checkStat:'wis', checkSkill:'Animal Handling', checkDC:'11',
-    retryable:true, xpAward:'0',
-    onPass:'S_story.creatureBefriended = true;\nS_story.xp = (S_story.xp||0) + 250;\nstoryMsg("The creature relaxes. You have its trust.");',
-    onFail:'storyMsg("It flinches away. Try again later.");',
+    retryable:true,
+    onPassBits:[ { kind:'flag_write', set:['creatureBefriended'] }, { kind:'reward', xp:250 },
+                 { kind:'narrative', msg:'The creature relaxes. You have its trust.' } ],
+    onFailBits:[ { kind:'narrative', msg:'It flinches away. Try again later.' } ],
   },
   hunt_setup: {
     type:'side',
@@ -8095,26 +8113,29 @@ const PRESETS = {
   hunt_invest: {
     type:'skill_check', checkStat:'int', checkSkill:'Investigation', checkDC:'12',
     retryable:false,
-    onPass:'S_story.realCulpritFound = true;\nS_story.xp = (S_story.xp||0) + 300;\nstoryMsg("The wound pattern is wrong. No animal made this.");',
-    onFail:'storyMsg("The evidence is confusing. You need another approach.");',
+    onPassBits:[ { kind:'flag_write', set:['realCulpritFound'] }, { kind:'reward', xp:300 },
+                 { kind:'narrative', msg:'The wound pattern is wrong. No animal made this.' } ],
+    onFailBits:[ { kind:'narrative', msg:'The evidence is confusing. You need another approach.' } ],
   },
   whodunit_drain: {
     type:'skill_check', checkStat:'int', checkSkill:'Investigation', checkDC:'12',
     retryable:false,
-    onPass:'S_story.clueFound = true;\nS_story.xp = (S_story.xp||0) + 200;\nstoryMsg("The detail clicks. You write it down.");',
-    onFail:'storyMsg("Nothing useful. The room gives up nothing.");',
+    onPassBits:[ { kind:'flag_write', set:['clueFound'] }, { kind:'reward', xp:200 },
+                 { kind:'narrative', msg:'The detail clicks. You write it down.' } ],
+    onFailBits:[ { kind:'narrative', msg:'Nothing useful. The room gives up nothing.' } ],
   },
   alchemy_beat: {
     type:'side',
     desc:'Fragment found. It connects to nothing you have read yet.',
     disposition:'The page is torn, the margin annotated in a hand you do not recognise.',
-    completeFn:'S_story.xp = (S_story.xp||0) + 250;\nstoryMsg("Fragment catalogued.");',
+    onCompleteBits:[ { kind:'reward', xp:250 }, { kind:'narrative', msg:'Fragment catalogued.' } ],
   },
   wisdom_frag: {
     type:'skill_check', checkStat:'int', checkSkill:'Arcana', checkDC:'10',
     retryable:false,
-    onPass:'S_story.fragmentRead = true;\nS_story.xp = (S_story.xp||0) + 200;\nstoryMsg("The Ardley text confirms it. Roen\'s commentary in the margin disagrees.");',
-    onFail:'storyMsg("The language resists you. Return when you have more context.");',
+    onPassBits:[ { kind:'flag_write', set:['fragmentRead'] }, { kind:'reward', xp:200 },
+                 { kind:'narrative', msg:'The Ardley text confirms it. Roen\'s commentary in the margin disagrees.' } ],
+    onFailBits:[ { kind:'narrative', msg:'The language resists you. Return when you have more context.' } ],
   },
 };
 
@@ -8253,33 +8274,37 @@ EG('tab-wizard').insertAdjacentHTML('afterend', (function(){
           </div>
         </div>
         <div class="fg" style="margin-top:6px">
-          <div class="fl">onPass body</div>
-          <textarea class="fi" id="ed-onPass" name="onPass" rows="4" placeholder="S_story.flagC = true;&#10;S_story.xp = (S_story.xp||0) + 250;&#10;storyMsg('...');"></textarea>
+          <div class="fl">On Pass bits — run when the roll meets the DC <button class="btn sm" id="ed-add-onpass" type="button">+ bit</button></div>
+          <div id="ed-onpass-bits" style="display:flex;flex-direction:column;gap:6px"></div>
         </div>
         <div class="fg" style="margin-top:6px">
-          <div class="fl">onFail body</div>
-          <textarea class="fi" id="ed-onFail" name="onFail" rows="2" placeholder="storyMsg('...');"></textarea>
+          <div class="fl">On Fail bits — run when the roll misses <button class="btn sm" id="ed-add-onfail" type="button">+ bit</button></div>
+          <div id="ed-onfail-bits" style="display:flex;flex-direction:column;gap:6px"></div>
         </div>
       </div>
 
-      <!-- side/main/epic fields -->
+      <!-- side/main/epic fields (§EDITOR-03 W8b: declarative completion + onComplete bits) -->
       <div class="ed-section" id="ed-sec-side" style="display:none">
         <div class="ed-shd">Side / Main / Epic Fields</div>
         <div class="fg">
-          <div class="fl">Complete Items (comma-separated)</div>
+          <div class="fl">Completion Items (comma-separated) → <code>completion:{items}</code> — any one in inventory completes</div>
           <input class="fi" id="ed-completeItems" name="completeItems" placeholder="Bloodstained Map, Trade Seal…">
+        </div>
+        <div class="fg" style="margin-top:6px">
+          <div class="fl">Completion Flags (comma-separated) → <code>completion:{flags}</code> — ALL must be set</div>
+          <input class="fi" id="ed-completionFlags" name="completionFlags" placeholder="catKingDefeated, rowRestored…">
         </div>
         <div class="fg" style="margin-top:6px">
           <div class="fl">Target Monster Keys (comma-separated) — §HUNT / kill quests</div>
           <input class="fi" id="ed-targetMonsterKeys" name="targetMonsterKeys" placeholder="stray_alley_cat, fluffy_cat">
         </div>
         <div class="fg" style="margin-top:6px">
-          <div class="fl">Kill Goals (one per line: <code>key:need:label</code>)</div>
+          <div class="fl">Kill Goals (one per line: <code>key:need:label</code>) → journal progress + <code>completion:{countMin}</code></div>
           <textarea class="fi" id="ed-killGoals" name="killGoals" rows="2" placeholder="stray_alley_cat:5:Stray&#10;fluffy_cat:3:Fluffy"></textarea>
         </div>
         <div class="fg" style="margin-top:6px">
-          <div class="fl">completeFn body</div>
-          <textarea class="fi" id="ed-completeFn" name="completeFn" rows="4" placeholder="S_story.xp = (S_story.xp||0) + 300;&#10;S_story.flagName = true;&#10;storyMsg('...');"></textarea>
+          <div class="fl">On Complete bits — run once when the quest completes <button class="btn sm" id="ed-add-oncomplete" type="button">+ bit</button></div>
+          <div id="ed-oncomplete-bits" style="display:flex;flex-direction:column;gap:6px"></div>
         </div>
         <div class="fg" style="margin-top:6px">
           <div class="fl">passText</div>
@@ -8294,15 +8319,6 @@ EG('tab-wizard').insertAdjacentHTML('afterend', (function(){
           <div class="fl">Per step pick a kind, fill its fields: <code>grant</code> (name·icon·type·sell·desc·once) · <code>take</code> (name·all) · <code>grantBit</code> (flag·label) · <code>takeBit</code> (flag). Reorder with ▲/▼ or drag.</div>
           <div id="ed-itemChain-editor"></div>
         </div>
-      </div>
-
-      <!-- Operand bits -->
-      <div class="ed-section">
-        <div class="ed-shd">
-          <span>Operand Bits</span>
-          <button class="btn sm" id="ed-add-bit">+ Add Bit</button>
-        </div>
-        <div id="ed-bits-list" style="display:flex;flex-direction:column;gap:6px"></div>
       </div>
 
     </div><!-- /ed-form -->
@@ -8333,7 +8349,7 @@ EG('tab-wizard').insertAdjacentHTML('afterend', (function(){
       <!-- Flag dependencies -->
       <div class="ed-section">
         <div class="ed-shd">Flag Dependencies</div>
-        <div id="ed-flags" style="font-size:11px;line-height:1.7;color:var(--muted)">Fill in activateCond or onPass / completeFn to see reads/writes.</div>
+        <div id="ed-flags" style="font-size:11px;line-height:1.7;color:var(--muted)">Fill in activateCond, completion flags, or flag-writing bits to see reads/writes.</div>
       </div>
 
       <!-- storyRender skeleton -->
@@ -8405,24 +8421,32 @@ function edKnownFlags() {
   return s;
 }
 
-function edGetBits() {
+// §EDITOR-03 W8b — outcome bit-list widgets (On Pass / On Fail / On Complete).
+// Cards use the runtime bit vocabulary (UQF_BIT_FIELDS) and coerce through
+// uqfCoerceBit, so getBits() returns contract-valid bit objects. The nested
+// kinds (skill_check, choice) are not card-authorable and are excluded here.
+const ED_BIT_LIST_IDS = ['ed-onpass-bits', 'ed-onfail-bits', 'ed-oncomplete-bits'];
+const ED_OUTCOME_KINDS = Object.keys(UQF_BIT_FIELDS).filter(k => k !== 'skill_check');
+
+function edGetBitsFrom(containerId) {
+  const el = EG(containerId); if (!el) return [];
   const bits = [];
-  for (const card of EG('ed-bits-list').children) {
+  for (const card of el.children) {
     const kind = card.querySelector('select')?.value; if (!kind) continue;
-    const bit = { kind };
+    const raw = {};
     for (const inp of card.querySelectorAll('[data-bit-field]')) {
-      const v = inp.value.trim(); if (v) bit[inp.dataset.bitField] = v;
+      const v = inp.value.trim(); if (v) raw[inp.dataset.bitField] = v;
     }
-    bits.push(bit);
+    bits.push(uqfCoerceBit(kind, raw));
   }
   return bits;
 }
 
-function edAddBitCard(defaultKind) {
+function edAddBitCard(containerId, defaultKind, prefill) {
   const card = document.createElement('div'); card.className = 'ed-bit-card';
   const kindSel = document.createElement('select'); kindSel.className = 'fi fi-sm';
   kindSel.style.flex = '0 0 120px';
-  for (const k of Object.keys(BIT_FIELDS)) {
+  for (const k of ED_OUTCOME_KINDS) {
     const o = document.createElement('option'); o.value = k; o.textContent = k;
     if (k === defaultKind) o.selected = true;
     kindSel.appendChild(o);
@@ -8431,18 +8455,32 @@ function edAddBitCard(defaultKind) {
   fieldsDiv.style.cssText = 'display:flex;flex-wrap:wrap;gap:5px;flex:1;';
   function renderFields(kind) {
     fieldsDiv.innerHTML = '';
-    for (const f of (BIT_FIELDS[kind] || [])) {
+    for (const [f] of (UQF_BIT_FIELDS[kind] || [])) {
       const inp = document.createElement('input'); inp.type = 'text'; inp.className = 'fi fi-sm';
       inp.placeholder = f; inp.dataset.bitField = f; inp.style.flex = '1 1 80px';
       fieldsDiv.appendChild(inp);
     }
   }
-  renderFields(defaultKind || 'talk_at');
+  renderFields(defaultKind || 'narrative');
   kindSel.addEventListener('change', () => { renderFields(kindSel.value); edSchedule(); });
   const rm = document.createElement('button'); rm.className = 'btn sm'; rm.textContent = '✕'; rm.type = 'button';
   rm.addEventListener('click', () => { card.remove(); edSchedule(); });
   card.appendChild(kindSel); card.appendChild(fieldsDiv); card.appendChild(rm);
-  EG('ed-bits-list').appendChild(card);
+  EG(containerId).appendChild(card);
+  if (prefill) {   // preset load: fill the card's inputs from a bit object (csv arrays re-joined)
+    for (const inp of card.querySelectorAll('[data-bit-field]')) {
+      const v = prefill[inp.dataset.bitField];
+      if (v !== undefined) inp.value = Array.isArray(v) ? v.join(', ') : String(v);
+    }
+  }
+  return card;
+}
+
+function edClearBitLists() { for (const id of ED_BIT_LIST_IDS) { const el = EG(id); if (el) el.innerHTML = ''; } }
+function edSetBitList(containerId, bits) {
+  const el = EG(containerId); if (!el) return;
+  el.innerHTML = '';
+  for (const b of (bits || [])) edAddBitCard(containerId, b.kind, b);
 }
 
 // §EDITOR-01-D: pipe-delimited item-chain grammar ⇄ Step[] (shared by the Quest
@@ -8670,16 +8708,18 @@ window.buildChainEditor = buildChainEditor;
 //   Step     = { type, title, desc, hint, activateNode?,        // common
 //                gateMode:'auto'|'manual'|'none', activateCond?, // chaining
 //                gateAfter?,                                     // §FU branch: fork off step # (1-based)
-//                checkStat,checkSkill,checkDC,xpAward,onPass,onFail,checkPassFlag, // skill_check
-//                completeItems,targetMonsterKeys,killGoals,completeFn,passText,    // side (csv / line text)
+//                checkStat,checkSkill,checkDC,xpAward,checkPassFlag, // skill_check (draft fields → bits)
+//                completeItems,killGoals,passText,               // side (csv / line text)
 //                itemChain }                                     // §EDITOR-01-D textarea grammar
 //
-// Producer flag (what the NEXT step reads): skill_check → checkPassFlag
-// (auto `<arcId>_<n>_passed`); non-skill → `<arcId>_<n>_done`, materialised by
-// appending a `grantBit` to that step's itemChain — but ONLY when a downstream
-// auto-gated step actually consumes it, so the last/unread step gets no stray
-// mission-bit token. skill_check checkPassFlag is always emitted (it carries no
-// inventory token, and documents the pass result for the Audit tab).
+// §EDITOR-03 W8b: compiles to UQF-1.0 — gate:{flags} chain wiring, skill_check
+// bit with onPass flag_write, completion:{items/countMin/atNode} for sides.
+// Producer flag (what the NEXT step's gate reads): skill_check →
+// `<arcId>_<n>_passed` (or the step's checkPassFlag override), written by an
+// onPass flag_write bit (no inventory token); non-skill → `<arcId>_<n>_done`,
+// materialised by appending a `grantBit` to that step's itemChain — but ONLY
+// when a downstream auto-gated step actually consumes it, so the last/unread
+// step gets no stray mission-bit token.
 function edArcProducerFlag(step, i, arcId) {
   if (step && step.type === 'skill_check')
     return (step.checkPassFlag && String(step.checkPassFlag).trim()) || `${arcId}_${i + 1}_passed`;
@@ -8713,39 +8753,56 @@ function buildArcQuests(arcDraft) {
     if (sval(step.desc))       q.desc = sval(step.desc);
     if (sval(step.hint))       q.hint = sval(step.hint);
 
-    // ── chain wiring ──
+    // ── chain wiring (§EDITOR-03 W8b: declarative gate.flags) ──
+    // The old '(s)=>s.<flag>' activateCond SOURCE strings were dead at runtime:
+    // storyCheckQuests calls q.activateCond() with no argument, so the arrow's
+    // `s` was undefined and the gate threw / never opened. gate:{flags:[…]} is
+    // the UQF equivalent, evaluated by QuestRuntime.canActivate.
+    q.schema = 'UQF-1.0';
+    q.gate = {};
     const gate = edArcEffectiveGate(step, i);
     if (gate === 'manual') {
+      // Author-owned JS escape hatch — passed through verbatim (must be a real
+      // zero-arg arrow like ()=>!!S_story.flag; the save-abort guard rejects bare identifiers).
       if (sval(step.activateCond)) q.activateCond = sval(step.activateCond);
     } else if (gate === 'auto' && i > 0) {
       // Read the producer flag of the resolved predecessor (prev by default, or a
-      // forked-from earlier step via gateAfter). Emit an arrow-fn SOURCE string —
-      // never a bare identifier, or the save-abort guard (wbapi-core.js) fires.
+      // forked-from earlier step via gateAfter).
       const p = edArcGateIndex(step, i);
-      q.activateCond = `(s)=>s.${edArcProducerFlag(steps[p], p, arcId)}`;
-    } // 'none' → no activateCond
+      q.gate = { flags: [edArcProducerFlag(steps[p], p, arcId)] };
+    } // 'none' → gate:{} (always listed)
 
-    // ── type-specific fields ──
+    // ── type-specific fields (§EDITOR-03 W8b: emit UQF, no legacy check*/completeFn roots) ──
     if (type === 'skill_check') {
-      if (sval(step.checkStat))  q.checkStat  = sval(step.checkStat);
-      if (sval(step.checkSkill)) q.checkSkill = sval(step.checkSkill);
-      if (sval(step.checkDC) !== '')  q.checkDC  = +step.checkDC;
-      if (sval(step.xpAward) !== '')  q.xpAward  = +step.xpAward;
-      if (sval(step.onPass))     q.onPass = sval(step.onPass);
-      if (sval(step.onFail))     q.onFail = sval(step.onFail);
-      q.checkPassFlag = edArcProducerFlag(step, i, arcId);    // always (no token, documents result)
+      // Producer pass-flag rides the skill_check bit's onPass chain (flag_write —
+      // no inventory token, same as the old checkPassFlag semantics). Unauthored
+      // stat/DC default to WIS 12 (the W4/W5 placeholder-roll convention).
+      const passFlag = edArcProducerFlag(step, i, arcId);
+      const onPass = [{ kind: 'flag_write', set: [passFlag] }];
+      if (sval(step.xpAward) !== '') onPass.push({ kind: 'reward', xp: +step.xpAward });
+      const bit = { kind: 'skill_check', stat: sval(step.checkStat) || 'wis',
+                    dc: sval(step.checkDC) !== '' ? +step.checkDC : 12, onPass, onFail: [] };
+      if (sval(step.checkSkill)) bit.skill = sval(step.checkSkill);
+      q.bits = [bit];
     } else {
+      const completion = {};
       const items = sval(step.completeItems);
-      if (items) q.completeItems = items.split(',').map(s => s.trim()).filter(Boolean);
-      const tmk = sval(step.targetMonsterKeys);
-      if (tmk) q.targetMonsterKeys = tmk.split(',').map(s => s.trim()).filter(Boolean);
+      if (items) completion.items = items.split(',').map(s => s.trim()).filter(Boolean);
       const kg = sval(step.killGoals);
-      if (kg) q.killGoals = kg.split('\n').map(l => l.trim()).filter(Boolean).map(l => {
-        const [key, need, label] = l.split(':').map(x => x.trim());
-        return { key, need: +need || 1, label: label || key };
-      });
-      if (sval(step.completeFn)) q.completeFn = sval(step.completeFn);
+      if (kg) {
+        q.killGoals = kg.split('\n').map(l => l.trim()).filter(Boolean).map(l => {
+          const [key, need, label] = l.split(':').map(x => x.trim());
+          return { key, need: +need || 1, label: label || key };
+        });
+        q.targetMonsterKeys = q.killGoals.map(g => g.key);   // journal progress display
+        completion.countMin = q.killGoals.map(g => ({ path: `catKills.${g.key}`, min: g.need }));
+      }
       if (sval(step.passText))   q.passText   = sval(step.passText);
+      // No authored completion term → arrival beat: the quest activates and
+      // completes on the quest sweep at its node, so the chain always advances
+      // (legacy completeFn authoring is retired — W7d).
+      if (!Object.keys(completion).length && node) completion.atNode = node;
+      if (Object.keys(completion).length) q.completion = completion;
     }
 
     // ── itemChain: author steps + (non-skill) producer flag iff consumed downstream ──
@@ -8766,47 +8823,60 @@ function buildArcQuests(arcDraft) {
 }
 window.buildArcQuests = buildArcQuests;   // bridge for tests + the Inc 3 tab UI
 
+// §EDITOR-03 W8b — assembles a UQF-1.0 quest: skill_check → q.bits (roll card),
+// side/main/epic → completion:{…} + onComplete bit chain. No legacy
+// check*/completeFn/completeItems roots (dead at runtime since W7d/W8a).
 function edBuildQuestObj() {
   const type = edVal('ed-type');
   const q = {};
   const add = (k, v) => { if (v !== '' && v != null && v !== false) q[k] = v; };
   add('id',           edVal('ed-id'));
   add('type',         type);
+  q.schema = 'UQF-1.0';
+  q.gate = {};
   add('title',        edVal('ed-title'));
   add('arc',          edVal('ed-arc'));
   const an = edVal('ed-activateNode'); if (an) q.activateNode = an;
   const wn = edVal('ed-waypointNode'); if (wn) q.waypointNode = wn;
-  add('activateCond', edVal('ed-activateCond'));
+  add('activateCond', edVal('ed-activateCond'));   // author-owned JS escape hatch (zero-arg arrow)
   add('hint',         edVal('ed-hint'));
   const rew = edVal('ed-reward'); if (rew) q.reward = +rew;
   add('disposition',  edVal('ed-disposition'));
   add('desc',         edVal('ed-desc'));
   if (type === 'skill_check') {
-    add('checkStat',     edVal('ed-checkStat'));
-    add('checkSkill',    edVal('ed-checkSkill'));
-    const dc = edVal('ed-checkDC'); if (dc) q.checkDC = +dc;
+    const onPass = [];
+    const pf = edVal('ed-checkPassFlag'); if (pf) onPass.push({ kind:'flag_write', set:[pf] });
+    const xp = edVal('ed-xpAward'); if (xp !== '' && +xp > 0) onPass.push({ kind:'reward', xp:+xp });
+    onPass.push(...edGetBitsFrom('ed-onpass-bits'));
+    const bit = { kind:'skill_check', stat: edVal('ed-checkStat') || 'wis',
+                  dc: edVal('ed-checkDC') !== '' ? +edVal('ed-checkDC') : 12,
+                  onPass, onFail: edGetBitsFrom('ed-onfail-bits') };
+    const sk = edVal('ed-checkSkill'); if (sk) bit.skill = sk;
+    q.bits = [bit];
     q.retryable = !!edVal('ed-retryable');
-    add('checkPassFlag', edVal('ed-checkPassFlag'));
-    const xp = edVal('ed-xpAward'); if (xp !== '') q.xpAward = +xp;
-    add('onPass', edVal('ed-onPass'));
-    add('onFail', edVal('ed-onFail'));
   } else {
+    const completion = {};
     const items = edVal('ed-completeItems');
-    if (items) q.completeItems = items.split(',').map(s=>s.trim()).filter(Boolean);
+    if (items) completion.items = items.split(',').map(s=>s.trim()).filter(Boolean);
+    const cflags = edVal('ed-completionFlags');
+    if (cflags) completion.flags = cflags.split(',').map(s=>s.trim()).filter(Boolean);
     const tmk = edVal('ed-targetMonsterKeys');
     if (tmk) q.targetMonsterKeys = tmk.split(',').map(s=>s.trim()).filter(Boolean);
     const kg = edVal('ed-killGoals');
-    if (kg) q.killGoals = kg.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
-      const [key,need,label] = l.split(':').map(x=>x.trim());
-      return { key, need: +need||1, label: label||key };
-    });
-    add('completeFn', edVal('ed-completeFn'));
+    if (kg) {
+      q.killGoals = kg.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
+        const [key,need,label] = l.split(':').map(x=>x.trim());
+        return { key, need: +need||1, label: label||key };
+      });
+      completion.countMin = q.killGoals.map(g => ({ path:`catKills.${g.key}`, min:g.need }));
+    }
+    if (Object.keys(completion).length) q.completion = completion;
+    const oc = edGetBitsFrom('ed-oncomplete-bits');
+    if (oc.length) q.onComplete = oc;   // XP for sides: author a reward bit here
     add('passText',   edVal('ed-passText'));
   }
   const ic = edChain.getSteps(); // §EDITOR-01-D-FU(a) visual editor (all quest types)
   if (ic.length) q.itemChain = ic;
-  const bits = edGetBits();
-  if (bits.length) q.bits = bits;
   return q;
 }
 
@@ -8851,20 +8921,26 @@ function edCheckId() {
 
 // ── Flag dependency analysis ──────────────────────────────────────────────────
 function edUpdateFlags() {
+  // §EDITOR-03 W8b: writes come from the outcome bit lists (flag_write set/clear,
+  // mission_bit flag) + checkPassFlag; reads from the activateCond escape hatch
+  // + the completion-flags gate.
   const reads = new Set(), writes = new Set();
-  const reFlagWrite = /S_story\.([A-Za-z_][A-Za-z0-9_]*)\s*=/g;
-  const reFlagRead  = /S_story\.([A-Za-z_][A-Za-z0-9_]*)/g;
+  const reFlagRead = /S_story\.([A-Za-z_][A-Za-z0-9_]*)/g;
   const cond = edVal('ed-activateCond');
   for (const m of cond.matchAll(reFlagRead)) reads.add(m[1]);
+  edVal('ed-completionFlags').split(',').map(s=>s.trim()).filter(Boolean).forEach(f => reads.add(f));
   const cpf = edVal('ed-checkPassFlag'); if (cpf) writes.add(cpf);
-  for (const src of [edVal('ed-onPass'), edVal('ed-onFail'), edVal('ed-completeFn')]) {
-    for (const m of src.matchAll(reFlagWrite)) writes.add(m[1]);
-    for (const m of src.matchAll(reFlagRead))  reads.add(m[1]);
+  for (const listId of ED_BIT_LIST_IDS) {
+    for (const bit of edGetBitsFrom(listId)) {
+      (bit.set || []).forEach(f => writes.add(f));
+      (bit.clear || []).forEach(f => writes.add(f));
+      if (bit.kind === 'mission_bit' && bit.flag) writes.add(bit.flag);
+    }
   }
   writes.forEach(w => reads.delete(w));
   const el = EG('ed-flags');
   if (reads.size === 0 && writes.size === 0) {
-    el.textContent = 'Fill in activateCond or onPass / completeFn to see reads/writes.';
+    el.textContent = 'Fill in activateCond, completion flags, or flag-writing bits to see reads/writes.';
     el.style.color = 'var(--muted)'; return;
   }
   const known = edKnownFlags();
@@ -8936,12 +9012,12 @@ function edGenerateStoryRender() {
   EG('ed-btn-story-copy').style.display = '';
 }
 
-// ── JS Export ─────────────────────────────────────────────────────────────────
+// ── JS Export (§EDITOR-03 W8b: paste-ready UQF-1.0 entry) ─────────────────────
 function edGenerateExport() {
   const q = edBuildQuestObj();
   if (!q.id) { alert('Quest ID is required for export.'); return; }
   const s = v => JSON.stringify(v);
-  let out = `  ${q.id}: { id:${s(q.id)}, type:${s(q.type||'side')},\n`;
+  let out = `  ${q.id}: { id:${s(q.id)}, type:${s(q.type||'side')}, schema:'UQF-1.0', gate:${JSON.stringify(q.gate||{})},\n`;
   if (q.title)        out += `    title:${s(q.title)},\n`;
   if (q.arc)          out += `    arc:${s(q.arc)},\n`;
   if (q.desc)         out += `    desc:${s(q.desc)},\n`;
@@ -8956,35 +9032,31 @@ function edGenerateExport() {
     out += `,\n`;
   }
   if (q.waypointNode) out += `    waypointNode:${s(q.waypointNode)},\n`;
-  if (q.type === 'skill_check') {
-    if (q.checkStat)     out += `    checkStat:${s(q.checkStat)},\n`;
-    if (q.checkSkill)    out += `    checkSkill:${s(q.checkSkill)},\n`;
-    if (q.checkDC)       out += `    checkDC:${q.checkDC},\n`;
-    out +=                       `    retryable:${!!q.retryable},\n`;
-    if (q.checkPassFlag) out += `    checkPassFlag:${s(q.checkPassFlag)},\n`;
-    if (q.onPass)        out += `    onPass:() => {\n      ${q.onPass.split('\n').join('\n      ')}\n    },\n`;
-    if (q.onFail)        out += `    onFail:() => { ${q.onFail.replace(/\n/g,' ')} },\n`;
-    out +=                       `    xpAward:${q.xpAward??0},\n`;
-  } else {
-    if (q.completeItems?.length) out += `    completeItems:[${q.completeItems.map(s).join(',')}],\n`;
-    if (q.targetMonsterKeys?.length) out += `    targetMonsterKeys:[${q.targetMonsterKeys.map(s).join(',')}],\n`;
-    if (q.killGoals?.length) out += `    killGoals:[${q.killGoals.map(g=>`{key:${s(g.key)},need:${g.need},label:${s(g.label)}}`).join(',')}],\n`;
-    if (q.completeFn)   out += `    completeFn:() => {\n      ${q.completeFn.split('\n').join('\n      ')}\n    },\n`;
-    if (q.passText)     out += `    passText:${s(q.passText)},\n`;
-  }
-  if (q.itemChain?.length) out += `    itemChain:[${q.itemChain.map(st =>
-    // §EDITOR-01-D / FU-b1: strings via s() (single-quote style); numbers/booleans/objects
-    // (e.g. a rich grant's bonus:{…}) via JSON.stringify so object fields don't coerce to "[object Object]".
-    `{${Object.entries(st).map(([k,v]) => `${k}:${typeof v === 'string' ? s(v) : JSON.stringify(v)}`).join(',')}}`).join(',')}],\n`;
   if (q.bits?.length) {
     const bitsJson = JSON.stringify(q.bits, null, 4);
     out += `    bits:${bitsJson.replace(/\n/g,'\n    ')},\n`;
   }
+  if (q.type === 'skill_check') out += `    retryable:${!!q.retryable},\n`;
+  if (q.completion)   out += `    completion:${JSON.stringify(q.completion)},\n`;
+  if (q.onComplete?.length) {
+    const ocJson = JSON.stringify(q.onComplete, null, 4);
+    out += `    onComplete:${ocJson.replace(/\n/g,'\n    ')},\n`;
+  }
+  if (q.targetMonsterKeys?.length) out += `    targetMonsterKeys:[${q.targetMonsterKeys.map(s).join(',')}],\n`;
+  if (q.killGoals?.length) out += `    killGoals:[${q.killGoals.map(g=>`{key:${s(g.key)},need:${g.need},label:${s(g.label)}}`).join(',')}],\n`;
+  if (q.passText)     out += `    passText:${s(q.passText)},\n`;
+  if (q.itemChain?.length) out += `    itemChain:[${q.itemChain.map(st =>
+    // §EDITOR-01-D / FU-b1: strings via s() (single-quote style); numbers/booleans/objects
+    // (e.g. a rich grant's bonus:{…}) via JSON.stringify so object fields don't coerce to "[object Object]".
+    `{${Object.entries(st).map(([k,v]) => `${k}:${typeof v === 'string' ? s(v) : JSON.stringify(v)}`).join(',')}}`).join(',')}],\n`;
   if (q.reward)       out += `    reward:${q.reward},\n`;
   if (q.disposition)  out += `    disposition:${s(q.disposition)} },\n`;
   else                out += `  },\n`;
 
-  const placeholders = [...out.matchAll(/\[.*?\]/g)].map(m => m[0]);
+  // Placeholder = bracketed prose like [NPC NAME] — not the JSON arrays the UQF
+  // emit now always contains (bits/onComplete/killGoals), so exclude anything
+  // with quotes/braces inside and empty [] chains.
+  const placeholders = [...out.matchAll(/\[[^\[\]"'{}]+\]/g)].map(m => m[0]);
   EG('ed-export-badge').innerHTML = placeholders.length
     ? `<span style="color:var(--yellow)">${placeholders.length} unfilled placeholder${placeholders.length>1?'s':''}</span>`
     : '<span style="color:var(--green)">✓ ready to paste</span>';
@@ -9000,15 +9072,20 @@ function edApplyPreset(key) {
   // Reset to blank defaults first
   for (const [k,v] of Object.entries(PRESET_BLANK)) edSet(`ed-${k}`, v);
   for (const id of ['ed-id','ed-title','ed-arc','ed-activateCond','ed-hint','ed-reward',
-                     'ed-disposition','ed-desc','ed-checkPassFlag','ed-onPass','ed-onFail',
-                     'ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-completeFn','ed-passText','ed-xpAward']) {
+                     'ed-disposition','ed-desc','ed-checkPassFlag',
+                     'ed-completeItems','ed-completionFlags','ed-targetMonsterKeys','ed-killGoals','ed-passText','ed-xpAward']) {
     edSet(id, '');
   }
   edSet('ed-retryable', false);
   edChain.setSteps([]);                 // §EDITOR-01-D-FU(a): clear the item-chain rows
-  EG('ed-bits-list').innerHTML = '';
-  // Apply preset values
-  for (const [k,v] of Object.entries(p)) edSet(`ed-${k}`, v);
+  edClearBitLists();                    // §EDITOR-03 W8b: clear the outcome bit lists
+  // Apply preset values (bit keys feed the outcome widgets, the rest feed inputs)
+  for (const [k,v] of Object.entries(p)) {
+    if (k === 'onPassBits')          edSetBitList('ed-onpass-bits', v);
+    else if (k === 'onFailBits')     edSetBitList('ed-onfail-bits', v);
+    else if (k === 'onCompleteBits') edSetBitList('ed-oncomplete-bits', v);
+    else edSet(`ed-${k}`, v);
+  }
   edUpdateType(); edSchedule();
 }
 
@@ -9034,7 +9111,9 @@ window.__edChain = edChain;   // test hook (§EDITOR-01-D-FU a)
 
 // ── Wire events ───────────────────────────────────────────────────────────────
 EG('ed-type').addEventListener('change', () => { edUpdateType(); edSchedule(); });
-EG('ed-add-bit').addEventListener('click', () => edAddBitCard('talk_at'));
+EG('ed-add-onpass').addEventListener('click', () => edAddBitCard('ed-onpass-bits', 'narrative'));
+EG('ed-add-onfail').addEventListener('click', () => edAddBitCard('ed-onfail-bits', 'narrative'));
+EG('ed-add-oncomplete').addEventListener('click', () => edAddBitCard('ed-oncomplete-bits', 'reward'));
 EG('ed-btn-advise').addEventListener('click', () => { edRunAdvise(); edUpdateFlags(); edCheckId(); });
 EG('ed-btn-storygen').addEventListener('click', edGenerateStoryRender);
 EG('ed-btn-export').addEventListener('click', edGenerateExport);
@@ -9064,8 +9143,8 @@ for (const [btnId, key] of Object.entries(presetMap)) {
 
 // Live update on form change
 const liveIds = ['ed-id','ed-title','ed-activateCond','ed-hint','ed-disposition','ed-desc',
-                 'ed-checkPassFlag','ed-onPass','ed-onFail','ed-completeFn','ed-reward',
-                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-targetMonsterKeys','ed-killGoals','ed-passText'];
+                 'ed-checkPassFlag','ed-reward',
+                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-completionFlags','ed-targetMonsterKeys','ed-killGoals','ed-passText'];
 for (const id of liveIds) {
   const el = EG(id); if (el) el.addEventListener('input', edSchedule);
 }
@@ -9162,7 +9241,7 @@ edUpdatePreview();
         <input class="mb-passflag" placeholder="checkPassFlag (auto)" style="${sty};flex:1 1 140px">
       </div>
       <div class="mb-side" style="display:flex;gap:6px;flex-wrap:wrap">
-        <input class="mb-items" placeholder="completeItems (csv)" style="${sty};flex:1 1 160px">
+        <input class="mb-items" placeholder="completion items (csv)" style="${sty};flex:1 1 160px">
         <textarea class="mb-kills" rows="1" placeholder="killGoals — key:need:label per line" style="${sty};flex:1 1 160px"></textarea>
       </div>
       <textarea class="mb-chain" rows="1" placeholder="itemChain — grant|name|icon… · take|name|all? · grantBit|flag|label · takeBit|flag" style="${sty}"></textarea>`;
@@ -9250,8 +9329,11 @@ edUpdatePreview();
         : adv.errors.length ? `<span style="color:var(--red);font-size:10px">🔴 ${adv.errors.join('; ')}</span>`
         : adv.warnings.length ? `<span style="color:var(--yellow);font-size:10px">🟡 ${adv.warnings.join('; ')}</span>`
         : '<span style="color:var(--green);font-size:10px">✓ ok</span>';
-      const reads = (q.activateCond || '').match(/s\.([A-Za-z0-9_]+)/);
-      if (i > 0) html += `<div style="font-size:10px;color:var(--muted);margin:1px 0 1px 10px">↓ ${reads ? 'reads <code>' + reads[1] + '</code>' : '(no gate)'}</div>`;
+      // §EDITOR-03 W8b: the chain connector is gate.flags (UQF); manual-mode
+      // activateCond JS still shows its first S_story read as a fallback.
+      const gateFlag = (q.gate && q.gate.flags && q.gate.flags[0])
+        || ((q.activateCond || '').match(/S_story\.([A-Za-z0-9_]+)/) || [])[1];
+      if (i > 0) html += `<div style="font-size:10px;color:var(--muted);margin:1px 0 1px 10px">↓ ${gateFlag ? 'reads <code>' + gateFlag + '</code>' : '(no gate)'}</div>`;
       html += `<div class="chain-link" style="cursor:default">
         <span style="color:var(--purple)">${q.id}</span>
         <span style="color:var(--muted)"> — </span>${q.title || '<em>(untitled)</em>'}
