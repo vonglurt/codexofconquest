@@ -9264,6 +9264,24 @@ test.describe('§ARCH-01 W7d — legacy branches retired; wm_01 migrated via ite
     expect(r).toEqual({ fn:'active', items:'active' });   // neither completes anymore
   });
 
+  test('§W8a canonical fields: no QUEST_DB entry carries a dead legacy field (completeItems / root check* / bitLabel / goldAward)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // Root-level legacy fields swept in W8a. NB checkStat/checkDC etc. are fine
+      // INSIDE bits (that is the UQF home for stat/dc) — this checks quest roots only.
+      const DEAD = ['completeItems','completeFn','checkStat','checkSkill','checkLabel',
+                    'checkAbility','checkDC','checkPassFlag','checkFailFlag','bitLabel','goldAward'];
+      const bad = [];
+      for (const q of Object.values(QUEST_DB))
+        for (const f of DEAD) if (f in q) bad.push(q.id + ':' + f);
+      // xpAward is LIVE only as the side-quest completion award — nowhere else.
+      const xpNonSide = Object.values(QUEST_DB).filter(q => 'xpAward' in q && q.type !== 'side').map(q => q.id);
+      return { bad, xpNonSide };
+    });
+    expect(r.bad).toEqual([]);
+    expect(r.xpNonSide).toEqual([]);
+  });
+
   test('the full non-UQF residue is exactly math×5 + the 30 blq stubs (all activate-only, no completion surface)', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {

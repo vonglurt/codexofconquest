@@ -9818,7 +9818,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Defeat enemies in story battles and return to Story Mode for the Victory outcome.',
     passText:'The fence at the Rough Bar takes the weapons without appraising them. He already knows what they are worth. So do you.',
     failText:'Three drops. You need three. The fence is still waiting.',
-    activateNode:'LHR', completeItems:[], waypointNode:null,
+    activateNode:'LHR', waypointNode:null,
     npc:"yael",
   },
   sq_leveling: { id:'sq_leveling', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'defeatedBattles', min:5 }] }, title:'Leveling — The Spoils of War',
@@ -9826,7 +9826,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Win 5 battles via the Victory outcome in Story Mode.',
     passText:'Five battles. You have survived enough to be dangerous. The fifth one felt different — not easier, but cleaner.',
     failText:'Not five yet. Keep moving.',
-    activateNode:'LHR', completeItems:[], waypointNode:null,
+    activateNode:'LHR', waypointNode:null,
     npc:"yael",
   },
   // ── Layer 39 — Epic Battleground primary quests (activate at npcNode; reward comes from return quest) ──
@@ -10156,7 +10156,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'reward', gold:500 }, { kind:'narrative', msg:'💰 +500gp. The city remembers. So do they.' } ], // §ARCH-01 W7c
     desc:"You have been here before. The city does not announce this — the city does not announce anything. But the three people who matter have been here too, and they looked up when you came around the corner before you were close enough to be recognized, and this is how you know the city remembers. Go to them. They are not the same as when you left. Neither are you. This is not a problem. This is what the second visit is for.",
     hint:'Visit three NPCs you have reached Dear Friend status with.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'LHR', reward:500,
     disposition:'"The journal says: the world does not reset. The people do not reset. Only the monsters reset. You have always been here." — Froberger, Entry 41 marginal note',
     npc:"long_john_silver_sen",
@@ -10165,7 +10165,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'narrative', msg:'📖 Entry 42 is in the journal.' } ], // §ARCH-01 W7c — reward is the act itself
     desc:"Froberger's journal ends at forty-one. The forty-second page is blank — not torn, not missing, blank. He stopped there on purpose. You can tell because the previous entry ends mid-thought and the blank page comes after it like an answer to a question he decided not to answer himself. He knew someone would come back a second time with enough of the story to fill it. That someone is whoever is holding this journal now.",
     hint:'Visit the City Inn to find the open page.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'LHR', reward:0,
     disposition:'"Forty-two. I stopped there on purpose. Someone else will finish this one." — Froberger\'s margin note',
     npc:"long_john_silver_sen",
@@ -10174,7 +10174,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'reward', gold:300 }, { kind:'flag_write', set:['frobergerLetterFound'] }, { kind:'narrative', msg:'💰 +300gp. The letter is yours now.' } ], // §ARCH-01 W7c
     desc:"A sealed letter is at the Coastal Observatory. Froberger's handwriting — you know it now well enough to recognize it before you see the name. It was not there on your first run, because on your first run you were not the person it was addressed to. The observatory is the place the arc ends. The letter is what it leaves behind for whoever arrives a second time having already done the work of the first.",
     hint:'Return to the Coastal Observatory.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'TLS', reward:300,
     disposition:'"If you are reading this, you completed the run once already. I am sorry about the ending. You deserved a better one." — Froberger\'s sealed letter',
     npc:"long_john_silver_sen",
@@ -10191,7 +10191,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     ],
     desc:"Archivist Isolde Voss controls access to the Scholar Kings\' lower archive. The Froberger revocation record is there. Gain access.",
     hint:'Collect 3 Scholar Kings\' Seals from Scholar\'s Guards — or bring the archive letter from the Blue Shutters Archive.',
-    activateNode:'NUE', completeItems:[],
+    activateNode:'NUE', 
     waypointNode:'NUE', reward:0,
     disposition:'"You\'re asking about Froberger. Everyone who comes here lately is asking about Froberger. His access was revoked pursuant to the Scholar Kings Protocol on Speculative Endangerment." — Archivist Isolde Voss',
     npc:"archivus_sweelinck",
@@ -10201,7 +10201,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'grant',name:"Froberger's Field Notes", icon:'📗', type:'tome', sell:0, bonus:{ deathSave:1 }, description:'Margin: "The pressure is survivable if you know it\'s coming."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Three documents in the lower archive. The revocation letter, the field report, the personnel file. Read all three.",
     hint:'Visit the Scholar\'s Quarter and examine the archive documents.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'NUE', reward:0,
     disposition:'"He left his research notes in the lower archive. I moved them there myself. I told myself it was protocol. I\'ve been thinking about that since you came in." — Isolde Voss (Friendly)',
     npc:"long_john_silver_sen",
@@ -10211,7 +10211,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'grant',name:"Scholar Kings' History", icon:'📘', type:'tome', sell:0, bonus:{ initiative:2 }, description:'"First knowledge, then decision, then action. Never the other order."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt Rasp runs a reading circle from a bookbinder\'s stall. Three sessions — three different days.",
     hint:'Attend 3 reading circle sessions at the Scholar\'s Quarter (one per day).',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'NUE', reward:0,
     disposition:'"The third one\'s always the hardest. Not because the material is harder — because by then you realize the first two were already enough and you stayed anyway." — Benedikt Rasp',
     npc:"long_john_silver_sen",
@@ -10221,7 +10221,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'grant',name:"Benedikt's Annotated Copy", icon:'📙', type:'tome', sell:0, bonus:{ atkWhileQuestActive:1 }, description:'"He was right about this one too." — B. Rasp',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt knows who the First Researcher was. He waited three sessions to be sure you were the kind of person to be told.",
     hint:'Return to the lower archive and read the unredacted personnel file.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'NUE', reward:300,
     disposition:'"The Scholar Kings didn\'t erase her. They just stopped saying the name. Froberger said it in his margin notes every time. That\'s how I found her. And now you know how I found him." — Benedikt Rasp',
     npc:"long_john_silver_sen",
@@ -10230,9 +10230,8 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'reward', gold:200 }, { kind:'narrative', msg:'💰 +200gp. 📋 The Gurt file is still open. It has been filed, and refiled, and it will not close.' } ], // §ARCH-01 W7c
     desc:"The lower archive has a fifth document you were not looking for. A personnel file that has never been closed — because the Scholar Kings' filing system does not have a category for someone who chose the field over the archive and kept sending data anyway. The Y. Gurt file is still active. It has been active for a very long time.",
     hint:'Return to the Weimar lower archive with the Y. Gurt Field Survey.',
-    activateNode:'NUE', completeItems:[],
+    activateNode:'NUE', 
     activateCond:() => !!(S_story.wmLowerArchiveUnlocked && (S_story.inventory||[]).some(i => i.name === 'Y. Gurt Field Survey')),
-    
     xpAward:200, waypointNode:'NUE', reward:200,
     disposition:'"We continue to file them." — Scholar Kings Personnel Record, Y. Gurt (Field Absence: Ongoing)',
     npc:"archivus_sweelinck",
@@ -10242,7 +10241,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'narrative', msg:'🏛️ Five marks found. The pattern is complete.' } ], // §ARCH-01 W7c
     desc:"Someone passed through five sites two hundred years ago and left marks. The marks are at nodes you have already visited — you walked past them without knowing. No one told you they were there because no one who knew is still alive to tell. What you have instead are Froberger's margin notes, which mention the marks in the way a person mentions something they saw in passing and could not explain and never went back for. Follow the track. Each site will say where he was and how long ago.",
     hint:'Investigate: City Inn, Birka Slums, Defiant Fields, Scholar\'s Quarter, Mountain Pass.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'LHR', reward:0,
     disposition:'"Five marks. One pattern. She was everywhere before anyone was looking." — Froberger, Entry 7 marginal note (between the lines)',
     npc:"long_john_silver_sen",
@@ -10252,7 +10251,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'grant',name:"The Constructor's Log", icon:'📜', type:'readable', sell:0, readable: true, readableKey:'constructors_log', description:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.',silent:true},{action:'grant',name:'Antecedent Seal', icon:'🏛️', type:'relic', sell:0, description:'"Antecedent Containment Protocol. Seal 7. Activated."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"A fourth document has appeared in the lower archive. It was not there when Isolde catalogued the collection — or it was there and not visible, which is a distinction the archive does not officially recognize. Seven entries. Her handwriting. The last entry reads: 'If someone is reading this, the sealing mechanism has activated. The cage is closed. I am sorry.' She wrote that line and then walked out of the archive knowing she would not be back to see if anyone found it.",
     hint:'Return to the Scholar\'s Quarter lower archive.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'NUE', reward:0,
     disposition:'"If someone is reading this, the sealing mechanism has activated. The cage is closed. I am sorry. I did not have a better answer." — The Constructor\'s Log, Entry 7',
     npc:"long_john_silver_sen",
@@ -10261,7 +10260,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'flag_write', set:['vaLastWardVisited'] }, { kind:'reward', gold:200 }, { kind:'narrative', msg:'🏛️ +200gp. The tunnel is open. The Antecedent was here.' } ], // §ARCH-01 W7c
     desc:"There is a tunnel at the Mountain Pass sealed from the inside. No record in any archive shows it being opened. No record shows it being built — it was sealed before the Scholar Kings existed and before Froberger was born and before any of the names you have learned on this run were written down anywhere. It will open for you now. Sealed things are not locked to everyone — only to those who haven't earned the opening.",
     hint:'Take the tunnel at the Mountain Pass.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'GVA', reward:200,
     disposition:'"The Antecedent was here. It is not anymore. You know where it is now." — Sealed chamber inscription',
     npc:"long_john_silver_sen",
@@ -10275,7 +10274,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     ],
     desc:"Benedikt Rasp has been assembling something for three weeks, since the last time you were in his reading circle. He has the Constructor's Log, Froberger's margin notes, your name, and one other piece he waited to confirm before speaking. He waited because he wanted to be certain you were the kind of person the message should go to. He has decided you are. Return to the Scholar's Quarter. He says it is about a chain. He means it is about what holds.",
     hint:'Return to the Scholar\'s Quarter.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'NUE', reward:500,
     disposition:'"She built it. You closed it. Froberger found the mechanism. You followed him. Entry 42 is the fourth link. Four links is a chain. A chain holds." — Benedikt Rasp',
     npc:"long_john_silver_sen",
@@ -10292,7 +10291,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     ],
     desc:"Harbor Master Rennau keeps the ledger of ships that haven\'t come back. The Harrow is the most recent. Find its manifest.",
     hint:'Search the Storefront docks for the Harrow manifest (loot or monster drop).',
-    activateNode:"LCY", completeItems:[], 
+    activateNode:"LCY", 
     waypointNode:'STN', reward:0,
     disposition:'"The Conclave calls the ones that haven\'t come back \'weather losses.\' I stopped calling them that six weeks ago." — Harbor Master Rennau',
     passText:"Rennau shows you the ledger entry. The Harrow Manifest is in your hands now. She adds your name to the inquiry.",
@@ -10303,7 +10302,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'narrative', msg:'📋 Embargo decision logged.' } ], // §ARCH-01 W7c
     desc:"The harbor has been closed for three weeks under Emergency Trade Protocol 7. Adjutant Vonn enforces it politely and completely — he is not wrong about the protocol, only about whether the protocol is right. The manifest proves ships have gone missing. The embargo prevents finding out why. Both things are true at the same time and the Conclave considers this a policy matter above Vonn's grade. Rennau has the ledger and no leverage. Decide what to do with the manifest.",
     hint:'Speak with Adjutant Vonn at Tilbury, then choose how to handle the ship manifest.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'TL', reward:0,
     disposition:'"The embargo is a legitimate Conclave instrument. The fact that it\'s bad policy is above my grade." — Adjutant Vonn',
     passText:"Vonn is polite about the whole thing. The harbor stays closed. You decided what to do with the manifest.",
@@ -10323,7 +10322,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     ],
     desc:"A survivor from the Harrow has arrived in Tilbury. Three weeks on foot. Her name is Ori. She knows what happened.",
     hint:'Speak with Ori at the Storefront (Act IV+). Bring her account to Rennau.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'STN', reward:300,
     disposition:'"Ori said the thing that boarded them didn\'t have a name. Things that don\'t have names are the Void\'s specialty." — Harbor Master Rennau',
     passText:"Ori gives her account. Rennau reads it without stopping. She adds the name to the ledger in a different column — the one with answers.",
@@ -10338,7 +10337,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:"The third berth has been wrong since Tuesday. The manifest says ballast. The crane operators won\'t take that side. Muffat has been watching the Scholar Kings clearance stamp on the hold for three days — it prevents harbor search and she knows it. You have the Trade Seal, which gets you onto the dock. The harbor watch works the main berths. The third is close enough to the crane rigging that the shadow covers the approach. Close enough.",
     passText:"The crate is there. Scholar Kings Distribution stamp, no matching manifest number. You bring it to Muffat. She sets it on the counter and looks at it the way she looks at manifests: correctly, and with no illusions about what that means.",
     failText:'The watch catches the movement before you clear the shadow line. You pull back. The crate stays where it is. The watch makes a note in the margin of the wrong ledger.',
-    completeItems:[],
     disposition:'"There are three things on that berth that should not be there. The crate is one of them." — Magistra Elara Muffat',
     desc:"Magistra Muffat has been watching the third berth for three days. A Scholar Kings clearance stamp on the hold keeps harbor search away. You have the Trade Seal. The crane rigging casts shadow over the approach. The watch works the main berths, not the third. This is the window.",
     npc:"long_john_silver_sen",
@@ -10350,7 +10348,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"Muffat has had three Scholar Kings crates on her shelf for two years, unopened. The stamp prevented harbor search. The question is closed now. She opens one. The receiver array inside is expected. The handwritten requisition note in the packing material is not.",
     hint:'Return to Magistra Muffat at the Harbor Docks — she has something to show you.',
     activateNode:'LCY', // CO-002: activates same visit as Solm direction
-    
     xpAward:150, waypointNode:'LCY', reward:200,
     disposition:'"They were not reacting to the signal. They were already in motion." — Magistra Elara Muffat',
     passText:"Muffat reads the handwritten note twice. She does not recognize the hand. The Conclave Archivist authorization stamp is real.",
@@ -10364,7 +10361,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"The Station 7 operator went to Magistra Muffat three months ago with classified knowledge she could no longer safely carry. Muffat sent her to the Map Shop. Dusk holds things without asking why. He has been holding her.",
     hint:'Find Analyst Solm at the Map Shop. She has been waiting for someone who finished what she could not.',
     activateNode:'LCY', 
-    
     xpAward:200, waypointNode:'STN', reward:150,
     disposition:'"Confirmed. That\'s sufficient." — Analyst I. Solm, closing entry, Field File Vol. 1',
     npc:"long_john_silver_sen",
@@ -10375,7 +10371,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"Bearing 047°, depth 18m. The Antecedent Seal activates the receiving array. The thing that has been asking for forty-one volumes is still there. It was waiting for an answer, not an archivist. It turns out those are the same thing.",
     hint:'Descend past the CY checkpoint with the Antecedent Seal. The chamber is south.',
     activateNode:'HKG', 
-    
     xpAward:400, waypointNode:'HAJ', reward:0,
     disposition:'"The question is closed." — The Antecedent',
     passText:"The question is closed. The receiving array goes dark. Forty-one volumes, and then this.",
@@ -10389,7 +10384,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"Station 7's log ends mid-entry. Bearing 047° points at the Neon Undercity. Seraphine Bruhns has been running a Warrant suppressor at CY since before you arrived. The suppressor fires automatically on structured transmissions. It keeps a log. She did not know it kept a log.",
     hint:'Return to Commander Seraphine Bruhns at the Neon Undercity and ask about the suppressor log.',
     activateNode:'HKG', 
-    
     xpAward:250, waypointNode:'HKG', reward:300,
     disposition:'"Either the source ceased voluntarily, or the source is aware of suppression." — Warrant Suppressor Log, auto-entry, Day 14',
     passText:"Seraphine reads the log entry twice. She did not know it kept records. The entry says: either source ceased voluntarily, or source is aware of suppression.",
@@ -10403,7 +10397,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"Station 7 is listed in the manifest as the delivery terminus. The station that went dark. The manifest has an address. Bertha's logs have a changed absence. The station has a transmission log that ends mid-entry.",
     hint:'Find Station 7 east of Frequency Row and read the transmission log.',
     activateNode:'LCY', 
-    
     xpAward:300, waypointNode:'SVO', reward:350,
     disposition:'"The signal character was non-mechanical. Three occurrences, each longer than the last. The fourth was long enough to contain something. We do not know what it contained. The station operator does." — Magistra Elara Muffat',
     passText:"The log ends mid-entry. The pen is still in the output tray. The operator knew something was answering. We do not know where the operator is.",
@@ -10417,7 +10410,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"The crate Muffat has on her shelf has a distribution stamp and a frequency reference: 14.225. That is Bertha No-Bank's frequency. The one with nothing on it. Forty-one volumes of nothing.",
     hint:'Find Bertha No-Bank at Frequency Row and ask about the changed absence on 14.225.',
     activateNode:'LCY', 
-    
     xpAward:250, waypointNode:'DUS', reward:300,
     disposition:'"Volume forty-one is when the absence changed. I do not know what changed it. I logged the change. That is the function of the log." — Bertha No-Bank',
     passText:"The manifest names Station 7 at 14.225 as the terminus. Station 7 went dark three months ago. Bertha has been logging the changed absence without knowing what changed.",
@@ -10431,7 +10423,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Take the road east from Jerusalem to Damascus.',
     activateNode:'JRS',
     activateCond:() => (S_story.inventory||[]).some(i => i.name === 'Three Jerusalem Warrants'),
-    
     xpAward:200, waypointNode:'DAM', reward:0,
     disposition:'"He says: Lead me to the city. He means Damascus. He means: I cannot complete this journey on my own and I require assistance. Both things are true for the first time simultaneously." — The road to Damascus',
     passText:"At noon a light struck the road. He fell. A voice said his name. When he rose, he could not see.",
@@ -10443,8 +10434,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"Three days in a house on the lower road. The innkeeper brings food at noon and does not ask questions about his eyes. Someone else's servant brings water in the morning. He has not asked for it. He has not told anyone he cannot see. On the third morning, someone knocks.",
     hint:'Wait. Speak to Anath when he arrives on the third day.',
     activateNode:'DAM',
-    
-    
     xpAward:300, waypointNode:'DAM', reward:0,
     disposition:'"Brother Saul, the Lord Jesus, who appeared to you on the road, has sent me so that you may see again." — Anath',
     passText:"Anath puts his hands on him. Something like scales falls from his eyes. He can see. He stands and is baptized.",
@@ -10457,7 +10446,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"He stays fifteen days. He speaks in the assembly halls. He argues with people who disagree with him — he is very good at arguing, and the conversion did not change this about him, which is a point of some reflection. On the fifteenth day, the Hellenists gather near the gate. Barnach says: go.",
     hint:'Stay in Jerusalem. Wait for Barnach\'s word — fifteen days.',
     activateNode:'JRS', 
-    
     xpAward:150, waypointNode:'JRS', reward:0,
     disposition:'"Fifteen days is how long Jerusalem was prepared to hold this tension. It has held. Now it is releasing." — Barnach',
     passText:"On the fifteenth day the Hellenists gather near the gate. Barnach says: go. He goes.",
@@ -10469,7 +10457,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"Barnach has been looking for a year. He found him in the tentmaking quarter in the afternoon. He said: it\'s time. There was no skill check. No argument. Just: it\'s time. That was sufficient.",
     hint:'Speak to Barnach at Tarsus.',
     activateNode:'ADA', 
-    
     xpAward:100, waypointNode:'ADA', reward:0,
     disposition:'"I have been looking for you for a year. It\'s time." — Barnach',
     passText:"Barnach says: it is time. There is no argument. Paul sets down the work and goes.",
@@ -10487,7 +10474,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'He is precisely positioned between Paul and the governor. This is not an accident — Ezzir has been in rooms before and knows where to stand. The governor is watching.\n\nEzzir speaks first. He is very good at speaking first.',
     passText:'Ezzir\'s words stop working. This is visible. The governor has been watching for exactly this kind of evidence — an argument that stops another argument by being more true. The door is no longer blocked.',
     failText:'Ezzir gets the first word and the second word. Paul gets to recover from both. Tomorrow the door is still there.',
-    completeItems:[],
     disposition:'"I have been serving this governor for six years. You have been here eleven hours." — Ezzir',
     npc:"long_john_silver_sen",
   },
@@ -10501,7 +10487,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'The governor has the particular quality of someone who has made their career on good judgment about ideas — he knows the difference between an argument and a description. He has been waiting for a description.\n\nThe altar in the corner is three hundred years old. He maintains it. He does not know why.',
     passText:'He sits down. He looks at the altar. "I have been maintaining it longer than I have understood why." He looks at Paul. "Tell me."',
     failText:'The governor is interested but not convinced. He is curious rather than resistant. He will hear the description again tomorrow.',
-    completeItems:[],
     disposition:'"He said things I could not explain by the methods I usually use to explain things. I find this interesting rather than threatening. It is possible I find it interesting because it is true." — Governor of Cyprus',
     npc:"long_john_silver_sen",
   },
@@ -10520,7 +10505,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'He has been here his whole life. He is not asking for anything. He is watching the road with the patience of someone who has already accepted his situation.\n\nHe is watching Paul specifically.',
     passText:'Paul looks at him. Not at the crowd. He says: stand.\n\nThe man stands.\n\nThe crowd witnesses this. The crowd\'s response is immediate and wrong — they call Paul a god. Paul corrects them. At length. The crowd had come expecting a god and is now being asked to reconsider their entire cosmological framework in an afternoon. They are disappointed. Some of them are angry.',
     failText:'The man does not stand. Paul continues through the gate. The city is unchanged. The man goes home.',
-    completeItems:[],
     disposition:'"He looked at me. He did not look at the crowd. He looked at me and said: stand. I have been told to stand before. No one has ever meant it this way." — The Man at the Gate',
     npc:"long_john_silver_sen",
   },
@@ -10554,7 +10538,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"Antioch is where the first journey forms. Barnach is here. Silar is here. The commission comes from the assembly — the first time Paul has been sent somewhere by a body of people rather than going by his own authority. He is accountable to the people who sent him and to the people he will find. He finds this clarifying.",
     hint:'Speak to Assembly Elder Joach at Antioch.',
     activateNode:'HTY', 
-    
     xpAward:150, waypointNode:'HTY', reward:0,
     disposition:'"The mandate is simple because the work isn\'t." — Assembly Elder Joach',
     passText:"The assembly sends them. He is accountable now to the people who sent him and to those he will find. He finds this clarifying.",
@@ -10566,7 +10549,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"Lyra sells purple cloth from the bridge. She has been watching Paul from across the bridge for two days before she speaks. When she speaks it is because she has already decided. The earthquake comes later. Every door opens.",
     hint:'Speak to Lyra at Philippi.',
     activateNode:'KVA', 
-    
     xpAward:150, waypointNode:'KVA', reward:0,
     disposition:'"I decided before I spoke. The speaking was the confirmation." — Lyra',
     passText:"The Lord opens her heart. She had already decided before she spoke. Her household is baptized. The earthquake comes later. Every door opens.",
@@ -10582,7 +10564,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'The doors are open. The dark is the specific dark of a room where the lamps have gone out, not the dark of a room that never had them.\n\nThe jailer is across the corridor. He has the sword out. His hands are not steady. You have three seconds — four if the hand does not stop shaking. Paul\'s voice is still going. The other prisoners are listening.\n\nYou know what the sword is for. The question is whether you get there before he uses it on himself.',
     passText:'"Do yourself no harm." Paul says this before you reach the doorway. He does not need to be loud. The jailer lowers the sword.\n\nYou are still moving when the sword goes down. You stop.\n\nHe brings you upstairs to his house. His household eats together in the middle of the night — the jailer, his family, Paul, Silar, you. After, Paul invokes Roman citizenship for the record: not for release, which has already happened, but to establish that they were beaten uncondemned. The magistrates come personally to walk them out.\n\n"He was filled with joy because he had come to believe in God — he and his whole household."',
     failText:'You reach the door a second late. The jailer has made his decision. Paul\'s voice stops the hand — not your movement, but his voice. The sword goes down. The household eats together. The story comes out right. But you know it was one second, and you know what that second was.',
-    completeItems:[],
     disposition:'"About midnight Paul and Silas were praying and singing hymns to God, and the other prisoners were listening."',
     npc:"long_john_silver_sen",
   },
@@ -10595,7 +10576,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'The altar is at the east end of the market. The inscription: TO AN UNKNOWN ONE. Two hundred years of upkeep. The priests who maintain it don\'t know who built it. The city maintains it anyway — on the principle that a city that maintains all the altars has covered all its bases.\n\nPaul has been standing in front of it for a long time. You have been watching the square.\n\nThe Market Steward approaches. He has the manner of a man who administers forty shrines and has heard every interpretation of every one of them. He has not heard this interpretation.\n\nYou position yourself at the base of the steps. South exit is twelve paces left.',
     passText:'The Areopagus is the speaking hill above the market. The council meets there. They invite Paul because they are curious, not because they agree — Athens runs on the formal exchange of new ideas as a civic institution.\n\nHe begins with the altar. He does not begin with a correction. He begins: I see that you maintain what you do not fully know. I want to tell you what I know about what you have been maintaining.\n\nSome laugh. Some leave. Some say: we want to hear this again. Dionysius stays. Damaris stays. They stay for the rest of the conversation and then for longer than that.\n\nYou watch the exits. No one closes them.',
     failText:'The Market Steward listens with the patience of a man who has managed the theological opinions of forty altars. He does not argue. He does not agree. He says: the inscription is maintained. It has been maintained for two hundred years. We will continue to maintain it.\n\nThe council does not invite him to the Areopagus. The south exit stays open. The altar continues to be maintained.',
-    completeItems:[],
     disposition:'"To an Unknown God. What therefore you worship as unknown, this I proclaim to you."',
     npc:"deacon_nikolaos_ath",
   },
@@ -10608,7 +10588,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'Demetrius\'s voice is the loudest in the square. He is not wrong about the economics: three years of Paul in Ephesus, and silver temple sales are down. He is also not just about economics — there is a theological argument underneath the economic one. He is making both simultaneously. The crowd is responding to both.\n\nThe theater holds twenty-five thousand people. The crowd is moving toward the theater. The city clerk is trying to reach the front.',
     passText:'The city clerk gets to the front. He is a bureaucrat with perfect institutional memory and the specific kind of calm that comes from administering a city that has had riots before.\n\nHe says: these men have not robbed the temple. They have not blasphemed the goddess. If Demetrius has a charge, the courts are open. If Demetrius does not have a charge, this assembly is illegal and Rome will want to know about it.\n\nThe crowd considers this. The crowd is not wrong about the economics. But the clerk is right about the courts. The theater empties before dark. The charges are never filed.',
     failText:'The theater fills. Twenty-five thousand people, all of them shouting the same thing at once — not at Paul specifically, but in the direction of everything Paul represents. The shouting continues for two hours. The city clerk cannot get to the front.\n\nPaul leaves Ephesus the next morning. He had planned to stay longer.',
-    completeItems:[],
     disposition:'"This craft is our wealth. The woman is demoted from magnificence by this man." — Demetrius, craftsmen\'s guild, Ephesus',
     npc:"long_john_silver_sen",
   },
@@ -10617,7 +10596,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"Prisca and Akil hire Paul when he arrives because he knows the tentmaking trade. He earns his room in canvas. He stays eighteen months. He writes letters to the cities he has already been to. Some of them are the most important things he will ever write. He does not know which ones yet.",
     hint:'Stay in Corinth with Prisca and Akil.',
     activateNode:'ZTH', 
-    
     xpAward:200, waypointNode:'ZTH', reward:0,
     disposition:'"He earned his room. He was good with canvas. The letters — we could hear him working on them at night." — Prisca',
     passText:"Eighteen months of canvas and letters. Some of the letters are the most important things he will ever write. He does not know which ones yet.",
@@ -10629,7 +10607,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"House arrest in a rented house. He can receive visitors, which he does, constantly. He can write letters, which he does, constantly. He cannot leave, which he does not. The arc does not end here. It stops here.",
     hint:'Reach Rome and speak to Timael.',
     activateNode:'FCO', 
-    
     xpAward:300, waypointNode:'FCO', reward:0,
     disposition:'"He got up. From Lystra, from every place after. The counting was real." — Timael',
     passText:"He receives everyone who comes. He writes everyone who cannot come. The rented house becomes the center of something. The arc does not end here. It stops here.",
@@ -10669,7 +10646,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:"The hull goes on the sandbar at speed. The wood shudders but holds — it will not hold until morning.\n\nEveryone in the water. Some have planks. Some don't. The sea is cold enough that the swim to shore is a problem for the exhausted and the old. You are neither.\n\nPaul is counting. He has been counting since the last leg of the journey. He wants the number at the start to match the number at the end. He has asked you, without asking, to help with the math.",
     passText:'You get to shore after most of the others. You have been in the water longer than anyone else.\n\nThe count is correct. Two hundred and seventy-six people reach the shore before dawn. You know the count because you asked the ship\'s log keeper on the second day, and you have been watching since.\n\n"Therefore I urge you to take some food. You need it to survive. Not one of you will lose a single hair from his head."',
     failText:'You lose track of someone in the water — not to death, to distance. They reach shore at the south end of the beach, separated. Paul counts twice before he finds the number correct. It takes longer than it should. The count is correct. It just takes longer.',
-    completeItems:[],
     disposition:'"Two hundred and seventy-six people. Your man — he was counting. All night. He was still counting when you hit the shore." — Malta Shore Elder',
     npc:'long_john_silver_sen',
   },
@@ -10678,7 +10654,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"A viper comes out of the brush when the wood is gathered for the fire. The heat of the fire, the disturbance of 276 people making camp on an unfamiliar beach. It fastens to his hand.\n\nThe islanders have reached a theory: he is a murderer. He survived the sea, so the sea did not judge him — but the land has found him at the fire. This theory is internally consistent given what the islanders know, which is what they can see from the beach.\n\nHe shakes the snake into the fire.\n\nHis hand does not swell. He does not fall. He goes back to building the fire.",
     hint:'Watch. No action required from you this time.',
     activateNode:'MLA', 
-    
     xpAward:150, waypointNode:'MLA', reward:0,
     passText:'The islanders change their theory twice in one afternoon — first: murderer. Then: god. He corrects neither of these. He has been counting people all night and the count is correct and the fire is what the 276 need right now.\n\n"The islanders showed us unusual kindness."\n\nYou have seen this before — a place with no reason to be kind that is kind anyway. It moves the same way every time.',
     failText:'The snake is in the brush. The fire has not been built yet.',
@@ -11034,7 +11009,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'The room is at the end of the hall. The second bed is the one that works. Sleep happens — not comfortably, not badly. You came back in the morning.',
     hint:'Sleep at The Innmother\'s Hall.',
     activateNode:'INN', 
-    completeItems:[], 
     onComplete:[ { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"You slept in the bad room and came back in the morning. No one does that." — The Innmother\'s Hall',
     passText:"You slept in the bad room and came back in the morning. No one does that.",
@@ -11081,7 +11055,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'You left the hall. You came back. She notes this.',
     hint:'Leave The Innmother\'s Hall and return.',
     activateNode:'INN', 
-    completeItems:[], 
     onComplete:[ { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"You came back. No one has come back before you." — The Innmother\'s Hall',
     passText:"You came back. No one has come back before you. She notes this.",
@@ -11092,7 +11065,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'The Kindness Meter has reached its threshold. She gives you the key. Sleep is free here for the remainder of the run.',
     hint:'Reach Kindness ≥ 5 through genuine acts at the Inn and the Crown domains.',
     activateNode:'INN', activateCond:() => (S_story.innmotherKindness||0) >= 5,
-    completeItems:[], 
     disposition:'"Sleep is free. The meals are still what they are." — The Innmother\'s Hall',
     passText:"She gives you the key. Sleep is free here for the remainder of the run.",
     failText:"The Kindness Meter has not yet reached its threshold. The key is still behind the desk.",
@@ -11105,7 +11077,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'Whisper gestures east — toward a part of the pool that has been moving when the water should be still. "The thing that moves there. Find it."',
     hint:'Kill the Kelpie in the still water\'s east shallows.',
     activateNode:'HW1', 
-    completeItems:[], 
     onComplete:[ { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"You found it. You followed it. Now you know what silence that moves looks like." — The Still Water',
     passText:"You found it. You followed it. The Kelpie circles. You circle with it. Now you know what silence that moves looks like.",
@@ -11118,7 +11089,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'The Mudcrab ate enough and left the feeding pool. Glut needs you to find it and bring it back. It is a mudcrab.',
     hint:'Catch the Mudcrab at the mire\'s edge and return it to the feeding pool.',
     activateNode:'HG1', 
-    completeItems:[], 
     onComplete:[ { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"It was enough. It knew when to stop. I keep it here now. I feed it more than it wants. This is fine." — The Feeding Pool',
     passText:"The mudcrab is returned. It was enough. It knew when to stop. Glut feeds it more than it wants. This is fine.",
@@ -11131,7 +11101,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'Something moved the stone once, a long time ago, and put it back wrong. Find what moved it.',
     hint:'Kill the Sea Spawn beneath the stone. The DC on the stone task will drop.',
     activateNode:'HN1', 
-    completeItems:[], 
     onComplete:[ { kind:'flag_write', set:['waneStoneDCReduced'] }, { kind:'_legacy_fn', fn:() => _innKindness(1) } ],
     disposition:'"It had been carrying the same thing for years. Now it is not carrying anything. The stone is lighter." — The Drained Mire',
     passText:"It had been carrying the same thing for years. Now it is not. The stone is lighter.",
@@ -11145,7 +11114,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'The still water has a surface problem. A Sea Witch has been living in the deep section for two seasons. Whisper will not name it.',
     hint:'Kill the Sea Witch in the deep still water.',
     activateNode:'HW1', 
-    completeItems:[], 
     onComplete:[
       { kind:'reward', knowledge:"Sea Witch's Tome — The witch hoarded secrets. You found them anyway. INT checks +1." },
       { kind:'_legacy_fn', fn:() => _innKindness(1) },
@@ -11162,7 +11130,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'A Giant Octopus grew fat on Glut\'s feeding and now blocks the eastern crossing of the pool. She describes it as: "The passage on the east. It is blocked."',
     hint:'Kill the Giant Octopus at the east crossing of the feeding pool.',
     activateNode:'HG1', 
-    completeItems:[], 
     onComplete:[
       { kind:'reward', items:[
         { name:"Glut's Hoard Fragment", icon:'🪴', sell:45, type:'loot', desc:'The octopus was sitting on this. It had been there long enough to consider itself the owner.' },
@@ -11183,7 +11150,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'Something below the mire drains more efficiently than the mire itself. Wane finds this unacceptable.',
     hint:'Kill the Sea Demon in the sub-channel below the drained mire.',
     activateNode:'HN1', 
-    completeItems:[], 
     onComplete:[
       { kind:'flag_write', set:['atlanteanProcessKnown'] },
       { kind:'reward', knowledge:'Atlantean Kelp Scroll — The coastal reduction process. Kelp burned with an electric catalyst produces Charged Iodine Salt. Teaches the iodine smelting method.' },
@@ -11202,7 +11168,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'There is a Giant Eel in the drainage channel beneath the inn. It has been there since autumn. The Innmother has not dealt with it.',
     hint:'Go below the inn and kill the Giant Eel in the drainage channel.',
     activateNode:'INN', 
-    completeItems:[], 
     onComplete:[
       { kind:'flag_write', set:['electricEelOrganHeld'] },
       { kind:'reward', items:[{ name:'Electric Eel Organ', icon:'⚡', sell:15, type:'craft', desc:'Bioluminescent organ from the eel beneath the inn. Catalyzes iodine extraction — produces Charged Iodine Salt.' }] },
@@ -11251,8 +11216,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'Gather Swamp Kelp from the mire and return to the Innmother\'s hearth to burn it down to Iodine Salt.',
     hint:'Carry 2× Swamp Kelp to the inn and burn them. Kelp drops from sea monsters in the swamp.',
     activateNode:'INN', 
-    completeItems:[],
-    
     onComplete:[
       { kind:'item_remove', name:'Swamp Kelp' },
       { kind:'item_remove', name:'Swamp Kelp' },
@@ -11274,8 +11237,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'The Electric Eel Organ catalyzes the burn — charged iodine salt, significantly more potent. The Atlantean smelting secret.',
     hint:'Bring the Electric Eel Organ to the inn hearth while carrying Swamp Kelp.',
     activateNode:'INN', 
-    completeItems:[],
-    
     onComplete:[
       { kind:'flag_write', clear:['electricEelOrganHeld'] },
       { kind:'item_remove', name:'Electric Eel Organ' },
@@ -11297,8 +11258,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'The Deeper Clearing has a path going south. It did not have one before.',
     hint:'Follow the path south of HCA to the Shore Road.',
     activateNode:'HCA', 
-    completeItems:[],
-    
     onComplete:[
       { kind:'flag_write', set:['shorePathFound'] },
       { kind:'reward', gold:200 },
@@ -11364,8 +11323,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'The forge is active. The Atlantean Sea Element requires iodine reduction in the forge heat — the secret of Atlantas.',
     hint:'Bring Iodine Salt to the forge and smelt the Sea Element.',
     activateNode:'DSF', 
-    completeItems:[],
-    
     onComplete:[
       // charged-preferred iodine consumption (if/else across two names) is inexpressible
       // as item_remove bits — kept whole behind _legacy_fn.
@@ -11392,8 +11349,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'The Conclave Annex in the Scholar\'s Quarter opened when the Tide Gate opened. The Archivist left something there.',
     hint:'Find the Conclave Annex (west of the Scholar\'s Quarter) and read the post-event document.',
     activateNode:'LCY', 
-    completeItems:[],
-    
     onComplete:[
       { kind:'reward', gold:300 },
       { kind:'narrative', msg:"300gp. The Conclave's post-event protocol is complete. The interval is confirmed." },
@@ -11436,8 +11391,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'The Gate mechanism requires the Sea Element — the Atlantean alloy forged from the reduction sequence. The forge made the key. You are the last step.',
     hint:'Bring the Sea Element to The Tide Gate. The mechanism accepts the alloy.',
     activateNode:'DA2', 
-    completeItems:[],
-    
     onComplete:[
       { kind:'flag_write', set:['tideGateOpened'] },
       { kind:'item_remove', name:'Sea Element' },
@@ -11458,8 +11411,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:'The Gate opened downward. Eighteen meters below, the signal that Station 7 monitored has reached its terminus. The Antecedent has a second configuration — the tidal question, built on the same foundation as the archival one.',
     hint:'Descend through the open Gate to the depth below.',
     activateNode:'DA2', 
-    completeItems:[],
-    
     onComplete:[
       { kind:'flag_write', set:['antecedentDepthMet'] },
       { kind:'reward', knowledge:"Constructor Design: Both the Antecedent's archival installation (CY→AC) and the tidal installation (DA3, bearing 047°, depth 18m) were built on the same foundation. The Constructor required one person to close both chains — the archival question and the tidal question are independent but the answer to each requires the same archivist." },
@@ -11519,7 +11470,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Follow Smalt south along the dock wall. Speak to the Inspector when he arrives.',
     activateNode:'LCY', gate:{ flags:['smaltBefriended'] },
     completion:{ flags:['pipMet'] }, bits:[],
-    completeItems:[],
     onComplete:[
       { kind:'narrative', msg:'🪵 The bead is in your hand. Smalt eats the fish without ceremony — an endorsement, not a meal.\n\nPip watches you with the calm of something that has never needed to be afraid. You understand, looking at the two of them, that they have been friends for a while. No one told them they couldn\'t be.\n\n+150 XP.' },
       { kind:'reward', xp:150 },
@@ -11602,7 +11552,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Return to the Harbor Docks and confront the Inspector with the three inconsistencies.',
     activateNode:'LCY', gate:{ flags:['whodunitSolved','wrenpemburyInconsistencyNoticed'] },
     completion:{ flags:['aldousConfessed'] }, bits:[],
-    completeItems:[],
     onComplete:[
       { kind:'flag_write', set:['aldousConfessed'] },
       { kind:'reward', xp:400, gold:400 },
@@ -11630,7 +11579,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Sail east from the Tilbury Star into the open water.',
     activateNode:'SEN', gate:{},
     completion:{ atNode:'NWI' }, bits:[],
-    completeItems:[],
     onComplete:[
       { kind:'flag_write', set:['seaStrangenessNoticed'] },
       { kind:'reward', xp:100 },
@@ -11717,7 +11665,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Choose your crew role at the intercept. Three options: speak, examine, or fight.',
     activateNode:'GCI', gate:{},
     completion:{ flags:['sbApproachSeen'] }, bits:[],
-    completeItems:[], waypointNode:'GCI', reward:0,
+    waypointNode:'GCI', reward:0,
     disposition:'"The Commission authorizes search and retention. We both know what the eastern run carries." — Captain Vera Keel, holding the pennant where you can read it',
     passText:"You have taken your station. The intercept is engaged. Speak, examine, or fight — the choice is made.",
     failText:"Captain Keel is waiting. The gap between the ships is still open. A station has not been chosen.",
@@ -11817,7 +11765,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['dunfallAccessed'] }, title:'The Open Harbor',
     desc:'Dunfall kept its doors closed while the kelpie held the ford. Three men did not come back. With the kelpie gone, the harbor is open again and Mairén Fionn is at the dock.',
     hint:'Arrive at Dunfall after clearing the kelpie at the Highland loch.',
-    activateNode:'DNF', completeItems:[], 
+    activateNode:'DNF', 
     waypointNode:'DNF', reward:0,
     disposition:'"You cleared the ford. We opened the doors." — Mairén Fionn, the entire explanation',
     passText:"You cleared the ford. We opened the doors. Mairen Fionn does not waste words.",
@@ -11866,7 +11814,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['saltwickAccessed'] }, title:'The Unwritten Port',
     desc:"Saltwick runs on vouches. A Letter of True Passage from Aldous works here — he listed Saltwick as one of his six valid ports. So does the joint debt note from the pirate crews. Either credential opens the dock. Neither is paperwork the Crown can read.",
     hint:'Arrive at Saltwick with a credential. Aldous\'s letter or the joint pirate note both work.',
-    activateNode:'MME', completeItems:[], 
+    activateNode:'MME', 
     waypointNode:'MME', reward:0,
     disposition:'"You\'re in Aldous\'s column. That\'s enough." — Harbormaster Dorit',
     passText:"You are in Aldous column. That is enough. Harbormaster Dorit has opened the dock.",
@@ -11878,7 +11826,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"The Tilbury Star has been running with a cracked strake on the port hull for three crossings. The captain knows. She hasn't reported it because Tilbury dry dock costs more than the revenue margin. Saltwick has a dry dock that doesn't ask about the cargo while the ship is in it.",
     hint:'Have the Tilbury Star repaired at Saltwick\'s dry dock. Cost: 200gp.',
     activateNode:'MME', 
-    
     onComplete:[
       { kind:'flag_write', set:['shipRepaired'] },
       { kind:'reward', xp:200 },
@@ -11934,7 +11881,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Follow up on Tessie\'s warning. Examine the road north of the fork.',
     activateNode:'WRO', gate:{},
     completion:{ flags:['huntHook2Received'] }, bits:[],
-    completeItems:[], waypointNode:'WRO', reward:0,
+    waypointNode:'WRO', reward:0,
     disposition:'"Six years on this road. There are no bandits in those fields. The horses know something the road wardens don\'t." — Tessie, already walking',
     passText:"The road north of the fork has been examined. The horses knew. There are no bandits in those fields.",
     failText:"Tessie warning has not been followed up. The relay road north of the J1 fork needs investigation.",
@@ -12025,7 +11972,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Speak to the Elder Fisherwoman at the south shore dock.',
     activateNode:'HFT', gate:{},
     completion:{ flags:['huntHookReceived'] }, bits:[],
-    completeItems:[], waypointNode:'HFT', reward:0,
+    waypointNode:'HFT', reward:0,
     disposition:'"The Guild is wrong. You cannot appease what ate those boats with dried fish." — The Elder Fisherwoman',
     passText:"The Elder Fisherwoman has been heard. The drag marks are the evidence. The Guild is wrong about the spirit.",
     failText:"The Elder Fisherwoman at the south shore dock has not been spoken to yet.",
@@ -12113,14 +12060,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   // §ARCH-01 Wave 1k — migrated legacy → UQF v1.0 (2026-06-28). Pure parity. The three
   // hook/waypoint side quests (01/03/05) carry NO onComplete — completion flags are set by
   // story interaction elsewhere — so they migrate purely structurally: gate ← activateCond,
-  // completion ← completeFn, bits:[]. reward:0/waypointNode/completeItems kept as-is.
+  // completion ← completeFn, bits:[]. reward:0/waypointNode kept as-is (inert completeItems:[] swept in W8a).
   quest_spark2_01: { id:'quest_spark2_01', schema:'UQF-1.0', type:'side',
     title:'The Commissioner\'s Problem',
     desc:'A Commissioner of the Inland Revenue has arrived at Dunfall by Crown directive to assess harbor taxes. His credentials are inconsistent. The dock cat has been sitting directly on the assessment ledger since he arrived.',
     hint:'Speak to Commissioner Halvard Fehn at Dunfall.',
     activateNode:'DNF', gate:{ flags:['dunfallAccessed'] },
     completion:{ flags:['spark2HookReceived'] }, bits:[],
-    completeItems:[], waypointNode:'DNF', reward:0,
+    waypointNode:'DNF', reward:0,
     disposition:'"By order of the Inland Revenue, the animal currently impeding the tax ledger must be — it is sitting on my pen." — Commissioner Halvard Fehn',
     passText:"The Commissioner has been engaged. The dock cat is still on the pen. By order of the Inland Revenue — the animal must be. It is sitting on my pen.",
     failText:"Commissioner Halvard Fehn at Dunfall has not been spoken to yet.",
@@ -12167,7 +12114,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Follow Bram to Oat at the Dunfall south dock.',
     activateNode:'DNF', gate:{ flags:['bramBefriended'] },
     completion:{ flags:['oatMet'] }, bits:[],
-    completeItems:[], waypointNode:'DNF', reward:0,
+    waypointNode:'DNF', reward:0,
     disposition:'"A cat and a mouse. Sitting together. I was told this was a standard harbor assessment." — Commissioner Halvard Fehn',
     passText:"A cat and a mouse sitting together. Bram led you to Oat. The Commissioner was told this was a standard harbor assessment.",
     failText:"Bram has not led south yet. Follow the dock cat to the fish market sweep pile.",
@@ -12219,7 +12166,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Confront Commissioner Fehn with the three inconsistencies at Dunfall.',
     activateNode:'DNF', gate:{ flags:['brimFound'] },
     completion:{ flags:['fehnConfessed'] }, bits:[],
-    completeItems:[], waypointNode:'DNF', reward:0,
+    waypointNode:'DNF', reward:0,
     disposition:'"I was told to use the name until the investigation closed. It has been nine years. I am not certain anyone is still watching." — Commissioner Halvard Fehn',
     passText:"He was told to use the name until the investigation closed. It has been nine years. He is not certain anyone is still watching.",
     failText:"The three inconsistencies in Commissioner Fehn identity have not been confronted yet.",
@@ -12238,7 +12185,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Investigate the missing cargo aboard the Tilbury Star.',
     activateNode:'SEN', gate:{ flags:['saltwickAccessed'] },
     completion:{ flags:['whodunit2HookReceived'] }, bits:[],
-    completeItems:[], waypointNode:'SEN', reward:0,
+    waypointNode:'SEN', reward:0,
     disposition:'"The passenger came aboard at Saltwick. Nobody from Saltwick uses their real name." — The Cook, pointing at a closed cabin door',
     passText:"The passenger came aboard at Saltwick. Nobody from Saltwick uses their real name. The missing cargo investigation begins.",
     failText:"Three items are missing from the hold and have not been investigated yet.",
@@ -12337,7 +12284,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Meet Roen at the Irish Highlands crossroads.',
     activateNode:'KIR', gate:{},
     completion:{ flags:['roenMet'] }, bits:[],
-    completeItems:[], waypointNode:'KIR', reward:0,
+    waypointNode:'KIR', reward:0,
     disposition:'"The stone knows where the gold is. I\'ve been arguing with the stone for forty years and it\'s never said anything, which I now think is the message." — Roen',
     passText:"Roen has joined you. The stone has not said anything in forty years, which he now thinks is the message.",
     failText:"Roen is still waiting at the Irish Highlands crossroads. He has not yet been met.",
@@ -12350,7 +12297,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Travel with Roen through the Plains and Midlands.',
     activateNode:'MAN', gate:{ flags:['roenMet'] },
     completion:{ flags:['roenMidlandsWisdom'] }, bits:[],
-    completeItems:[], waypointNode:'MAN', reward:0,
+    waypointNode:'MAN', reward:0,
     disposition:'"Don\'t take the shadow personally. My grandmother said this. I applied it to a noonwraith. It mostly worked." — Roen',
     passText:"Do not take the shadow personally. Roen applied his grandmother advice to a noonwraith. It mostly worked.",
     failText:"The noon plain has not been crossed with Roen yet.",
@@ -12363,7 +12310,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Cross the sea with Roen aboard the Tilbury Star.',
     activateNode:'SEN', gate:{ flags:['roenMidlandsWisdom'] },
     completion:{ flags:['roenAtSea'] }, bits:[],
-    completeItems:[], waypointNode:'SEN', reward:0,
+    waypointNode:'SEN', reward:0,
     disposition:'"The ship doesn\'t make assumptions about where the sea ends. I have spent forty years making assumptions about where the gold is. The ship is doing better than I am." — Roen',
     passText:"The ship does not make assumptions about where the sea ends. Roen has forty years of assumptions. The sea crossing is made.",
     failText:"The sea crossing with Roen aboard the Tilbury Star has not been completed.",
@@ -12433,7 +12380,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Bring Roen to the Areopagus in Athens.',
     activateNode:'ATH', gate:{ flags:['roenMaltaCrisis'] },
     completion:{ flags:['roenAlchemistMet'] }, bits:[],
-    completeItems:[], waypointNode:'ATH', reward:0,
+    waypointNode:'ATH', reward:0,
     disposition:'"Shepherds rarely use metaphors. They use directions." — The Old Man at the Areopagus',
     passText:"Shepherds rarely use metaphors. They use directions. You have already found it. The old man at the Areopagus has spoken.",
     failText:"Roen has not yet reached the Areopagus in Athens.",
@@ -12446,7 +12393,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Return to the Irish Highlands with Roen and watch him drop the stone into the loch.',
     activateNode:'KIR', gate:{ flags:['roenAlchemistMet'] },
     completion:{ flags:['personalLegendComplete'] }, bits:[],
-    completeItems:[], waypointNode:'KIR', reward:0,
+    waypointNode:'KIR', reward:0,
     disposition:'"She said it was in the backyard. I walked four thousand miles to confirm that she was correct. I would do it again. I understand it now." — Roen, at the loch edge',
     passText:"She said it was in the backyard. He walked four thousand miles to confirm she was correct. He would do it again. The stone is in the loch.",
     failText:"Roen has not yet returned to the Irish Highlands loch with the stone.",
@@ -12631,7 +12578,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'flag_write', set:['vsDebtProbed'] }, { kind:'favor', npc:'solvak', set:1 }, { kind:'narrative', msg:'💬 Mordus\'s position recorded. Solvak is Friendly.' } ], // §ARCH-01 W7c
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
     hint:'Enter Visby and speak to Warlord Mordus about the missing weapons shipment.',
-    activateNode:'VS', completeItems:[], 
+    activateNode:'VS', 
     waypointNode:'VS', reward:0,
     disposition:'"The debt will be paid when the weapons are returned. The weapons will be returned when I know where they went. I do not know where they went." — Warlord Mordus',
     passText:"The debt will be paid when the weapons are returned. Mordus has spoken. The investigation path into Visby is open.",
@@ -12642,7 +12589,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'flag_write', set:['vsWeaponsFound'] }, { kind:'favor', npc:'yva', set:1 }, { kind:'narrative', msg:'🖤 Hollow Hands weapons trail found. Yva is Friendly.' } ], // §ARCH-01 W7c
     desc:"Yva is inside the Goblin Caves. The Hollow Hands have marked her stall. She knows where the weapons went — for 50gp.",
     hint:'Find Yva inside the Goblin Caves.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'TRD', reward:0,
     disposition:'"I don\'t know who they answer to. I know what the mark means." — Yva',
     passText:"I do not know who they answer to. I know what the mark means. Yva has taken the 50gp and given the lead.",
@@ -12654,7 +12601,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'flag_write', set:['vsDebtSettled','vsShamanKnown'] }, { kind:'reward', gold:400 }, { kind:'narrative', msg:'💰 +400gp from Solvak. Debt settled. The shaman is named — but not found.' } ], // §ARCH-01 W7c
     desc:"Mordus saw the Hollow Hands Seal. He paid sideways. Bring the transit seal to Solvak.",
     hint:'Return to Solvak outside Visby with the Hollow Hands Seal.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'VS', reward:400,
     disposition:'"The Hollow Hands are mine to deal with now that I know what they are." — Warlord Mordus',
     passText:"The Hollow Hands are mine to deal with now that I know what they are. Mordus has paid. Solvak has the seal.",
@@ -12673,7 +12620,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     ],
     desc:"The Warden has been at the Mountain Pass for two hundred years, executing a mandate that was already wrong when it arrived. Everyone who has come close enough to understand this has been turned away or worse. You have the Constructor's Log. You have Froberger's notes. You have the names of all four links in the chain. The Warden does not know any of this. The question is not whether you can explain it — the question is whether something that has been wrong for two centuries can recognize its own wrongness when someone finally holds up the record.",
     hint:'Enter the MT tunnel and confront the Warden. Bring the Constructor\'s Log if you have it.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'GVA', reward:600,
     disposition:'"If I\'m wrong, then I needed to be stopped. That\'s — that\'s actually fine." — The Warden',
     passText:"If I am wrong, then I needed to be stopped. That is actually fine. The Warden has accepted the record.",
@@ -12688,7 +12635,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Fight in the Cat Quarter until the quota is filled.',
     targetMonsterKeys:['stray_alley_cat','fluffy_cat'],
     killGoals:[{key:'stray_alley_cat',need:5,label:'Stray'},{key:'fluffy_cat',need:3,label:'Fluffy'}],
-    activateNode:'CDG', completeItems:[], 
+    activateNode:'CDG', 
     waypointNode:'CDG', reward:200,
     disposition:'"You done good, kid. Real professional. The neighborhood\'s already calmer. Relatively. For cats." — Jimmy Two-Tails',
     passText:"You done good, kid. Real professional. The neighborhood is already calmer. Relatively. For cats.",
@@ -12701,7 +12648,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Kill 3 Beefy Toms and collect their Cracked Claws.',
     targetMonsterKeys:['beefy_tom'],
     killGoals:[{key:'beefy_tom',need:3,label:'Beefy Tom'}],
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'CDG', reward:350,
     disposition:'"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart." — Sandy Scratchpad Mewlino',
     passText:"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart.",
@@ -12716,7 +12663,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
     targetMonsterKeys:['honcho_cat_m','honcho_cat_f'],
     killGoals:[{key:'honcho_cat_m',need:1,label:'Honcho Capo'},{key:'honcho_cat_f',need:1,label:'Boss Lady'}],
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'CDG', reward:500,
     disposition:'"Kid, I told you. SEPARATE. You kill \'em SEPARATE. The merge thing is NOT a mechanic I enjoy." — Jimmy Two-Tails',
     passText:"I told you. SEPARATE. The merge thing is NOT a mechanic I enjoy. They are down and separate.",
@@ -12729,7 +12676,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'grant',name:'Furball Crown',icon:'🌀',type:'trophy',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Two Honchos merged. A Taz Devil — Furball Tornado — is loose in the Cat Quarter. Take it down.",
     hint:'Defeat the Taz Devil at the Cat Quarter.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'CDG', reward:750,
     disposition:'"Oh you think you TOUGH now? You killed ONE Taz? ONE? There\'s THREE more building up past the fish market right now and when they merge — WHEN THEY MERGE, buddy — that ain\'t a Taz no more. That\'s a KING." — Tommy No-Ears DeVito',
     passText:"You think you TOUGH now? You killed ONE Taz. There are THREE more building past the fish market. When they merge that is not a Taz anymore. That is a KING.",
@@ -12744,7 +12691,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
     targetMonsterKeys:['fat_merchant_cat'],
     killGoals:[{key:'fat_merchant_cat',need:4,label:'Merchant Cat'}],
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'CDG', reward:900,
     disposition:'"The merchants have been using Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin. I don\'t like it in my neighborhood." — Sandy Scratchpad Mewlino',
     passText:"The merchants used Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin. Sandy does not like it in her neighborhood. Don Fluffissimo is down.",
@@ -12757,7 +12704,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'grant',name:"Cat-King's Claw Fragment",icon:'👑',type:'trophy',sell:50,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Three Taz Devils merged at the fish market. The Cat-King has awoken. You\'re the hero. You go.",
     hint:'Defeat The Cat-King at the Cat Quarter.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'CDG', reward:1500,
     disposition:'"Listen. I want you to know something. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody. It ain\'t a thing we advertise." — Jimmy Two-Tails',
     passText:"You did good. Real good. You are honorary Ally Cat now. Do not tell nobody. It is not a thing they advertise.",
@@ -12771,7 +12718,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
     targetMonsterKeys:['corrupted_cat'],
     killGoals:[{key:'corrupted_cat',need:5,label:'Corrupted Cat'}],
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'CDG', reward:400,
     disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG. Wrong eyes. Wrong fur. Not touching anything from that block." — Sandy Scratchpad Mewlino',
     passText:"The strays near DF are gone. Sandy does not say thank you. She says: good.",
@@ -12783,7 +12730,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   quest_la_riva_01: { id:'quest_la_riva_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['connieMet'] }, title:"Kenickie: What Remains",
     desc:"Kenickie mentioned Fishmonger's Row. Three city blocks. Nobody's been back — except Connie has. She's still there.",
     hint:"Go east from the Cat Quarter to Fishmonger's Row. Find Connie Tuna.",
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     waypointNode:'AMS', reward:0,
     disposition:'"She\'s still there. That\'s the whole of it." — Kenickie Clawnickie Mancuso',
     passText:"She is still there. That is the whole of it. Connie Tuna has been found at Fishmonger Row.",
@@ -12795,8 +12742,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"The Corrupted Cats have settled into the rubble of Fishmonger's Row. They're not just feral — they're holding something. Five of them. Find what they're carrying.",
     hint:"Kill 5 Corrupted Cats at Fishmonger's Row. Find what's in the rubble.",
     targetMonsterKeys:['corrupted_cat'],
-    activateNode:null, completeItems:[],
-    
+    activateNode:null, 
     waypointNode:'AMS', reward:500,
     disposition:'"He built that rack himself, the second season." — Connie Tuna',
     passText:"He built that rack himself, the second season. The rubble has been cleared. The Corrupted Cats are gone.",
@@ -12807,8 +12753,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   quest_la_riva_03: { id:'quest_la_riva_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['laRivaComplete'] }, title:"Aldo: The Account Book",
     desc:"Aldo Sardino has kept the account book since the row came down. Vincenzo's page is the last completed entry. He wants it to go to someone who knew Vincenzo.",
     hint:"Deliver the Old Tuna Account Book to Kenickie at the Cat Quarter.",
-    activateNode:null, completeItems:[],
-    
+    activateNode:null, 
     waypointNode:'CDG', reward:0,
     disposition:'"Yeah. Okay. I\'ll hold onto this." — Kenickie Clawnickie Mancuso',
     passText:"Yeah. Okay. I will hold onto this. Kenickie has the account book. Vincenzo page delivered.",
@@ -12824,7 +12769,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     ],
     desc:"The Fisherman at Yugurt Cabin has a guide. Not a pamphlet — eleven years of fieldwork compressed into something small enough to fold. He doesn\'t offer it to people who ask. He offers it to people who have already been out on the lake and come back with the particular look of someone who now understands what they didn\'t know before they went.",
     hint:'Cast your line at Yugurt Lake at least once, then return to the Fisherman.',
-    activateNode:'SSJ', completeItems:[], 
+    activateNode:'SSJ', 
     waypointNode:'BOO', reward:0,
     disposition:'"The lake knows the difference. The guide tells you what the difference is." — The Fisherman',
     passText:"The lake knows the difference. The guide tells you what the difference is. The Fisherman has given you the fieldwork.",
@@ -12835,9 +12780,8 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'reward', gold:200 }, { kind:'flag_write', set:['fishingYugurtFavour'] }, { kind:'narrative', msg:"💰 +200gp. 🎣 Yugurt's Favour granted — +1 on all future catch rolls." } ], // §ARCH-01 W7c
     desc:"There is a point at which fishing becomes something else. Rank 15 is the threshold — the water changes quality, the fight changes weight, and what comes up on the line is not a catch but a confrontation. The Fisherman has not spoken about this directly. He has not needed to.",
     hint:'Land and defeat a Rank 15+ fish using real bait at Yugurt Lake.',
-    activateNode:'SSJ', completeItems:[],
+    activateNode:'SSJ', 
     activateCond:() => (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod')) && (S_story.fishingCatchLog||[]).length > 0,
-    
     xpAward:750, waypointNode:'BOO', reward:200,
     disposition:'"You went deep." — The Fisherman',
     passText:"You went deep. The Fisherman says nothing more. A Rank 15 fish is a confrontation, not a catch.",
@@ -12848,9 +12792,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'reward', gold:300 }, { kind:'narrative', msg:'💰 +300gp. 🦷 The Noon Point is yours now.' } ], // §ARCH-01 W7c
     desc:"The Noon Point marker stands where the bank rope ends and the shark's territory begins. Every angler at Yugurt knows it. The ones who fish past it are not more skilled — they have simply decided the marker is someone else's problem. You have been past it. The lake has registered you. The shark hunts this water. You are in this water.",
     hint:'Hunt the Horned Shark at Yugurt Lake.',
-    activateNode:'BOO', completeItems:[],
-    
-    
+    activateNode:'BOO', 
     xpAward:500, waypointNode:'BOO', reward:300,
     disposition:'"You got the shark. That\'s a different kind of fishing." — The Fisherman',
     passText:"You got the shark. That is a different kind of fishing. The lake has registered it.",
@@ -12862,9 +12804,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'grant',name:'Y. Gurt Field Survey', icon:'📋', type:'readable', sell:0, readText:"Y. GURT — YUGURT LAKE SURVEY\nFirst Circle Field Record, Pre-Codex Year 3\nClassification: Naturalist Assessment — Freshwater Taxonomy\n\nLake dimensions: 2.4km × 0.9km. Maximum depth: 31 meters at the northwest basin. The shale formation below the northwest bank extends below the waterline for an undetermined depth — further survey required.\n\nDocumented species: 20 surface and mid-water, 3 confirmed deep-water (unclassified), 1 depth specimen observed on descent into northwest shale formation. See Annex 4: 'the light-producing variety; do not pursue below 25m without additional crew.'\n\nSurveyor notation (Y. Gurt, Nat. First Circle): The lake has developed a self-regulating predator hierarchy without Scholar Kings intervention. I recommend no intervention. It is doing this correctly on its own. I also recommend I be permitted to stay here rather than return to the archive for the classification review. The archive will continue without me. The lake will require observation.\n\nThe request was not approved.\n\nI stayed anyway.",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"There is a crack in the bank at Yugurt Lake where the shale drops away below the waterline. You have been past it without a light. The Eel Skin Pouch gives you one. The lake floor is older than the water above it. What has been sitting in the dark down there has been sitting in the dark for a very long time.",
     hint:'Enter The Shale Drop from Yugurt Lake (requires Eel Skin Pouch) and defeat the Cave Lurker.',
-    activateNode:'BOO', completeItems:[],
-    
-    
+    activateNode:'BOO', 
     xpAward:300, waypointNode:'MJF', reward:250,
     disposition:'"He doesn\'t react when you come back up. He already knew what was down there." — The Fisherman',
     passText:"He does not react when you come back up. He already knew what was down there. The Shale Drop is cleared.",
@@ -12876,9 +12816,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'grant',name:'Eel Skin Pouch',icon:'🏮',type:'trinket',sell:35,desc:'+1 Type bonus on all fishing casts. The light never fully goes out.',silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"After dark, Yugurt Lake becomes a different lake. The familiar geometry of the bank and the reeds still holds. But the fish that come up are not the ones that come up at noon. Something luminescent hunts the deep water after dark. You have seen the light. The lake has seen you looking.",
     hint:'Fish at Yugurt Lake after dark (hour ≥ 20 or ≤ 5) and defeat the Lantern Eel.',
-    activateNode:'BOO', completeItems:[],
-    
-    
+    activateNode:'BOO', 
     xpAward:400, waypointNode:'BOO', reward:150,
     disposition:'"Some fish don\'t exist in daylight." — The Fisherman',
     passText:"Some fish do not exist in daylight. The Lantern Eel has been defeated in the dark water.",
@@ -12888,7 +12826,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   quest_no_fishing_sign: { id:'quest_no_fishing_sign', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['fishingRodCouponRedeemed'] }, title:'The No-Fishing Sign',
     desc:"A city ordinance notice bolted to the lamppost near the gate. Underneath the official text, someone has added a handwritten pull-tab advertising free fishing at Yugurt Lake.",
     hint:'Take the coupon to The Fisherman at Yugurt Cabin and redeem it for a free fishing rod.',
-    activateNode:null, completeItems:[], 
+    activateNode:null, 
     xpAward:50, waypointNode:'SSJ', reward:0,
     disposition:'"...Nice Day For Fishing. Yugurt!" — The Fisherman',
     passText:"Nice Day For Fishing. Yugurt! The free rod has been redeemed.",
@@ -12899,7 +12837,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   // §XLV — Yugurt Tournament chain (activate at YC when Fishing Rod present; cascade on each win)
   quest_tour_01: { id:'quest_tour_01', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flagsPath:['yugurtTourBeat.pip'] }, title:"Pip's Challenge",
     desc:"A kid at Yugurt Cabin has issued a fishing challenge. Stake: 50gp. He uses a stick and string. He's been practicing.",
-    hint:'Beat Pip in a 1v1 cast at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
+    hint:'Beat Pip in a 1v1 cast at Yugurt Cabin.', activateNode:'SSJ', 
     activateCond:() => (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod')),
     xpAward:100, waypointNode:'SSJ', reward:50,
     disposition:'"I have been practicing. Every day."  — Pip',
@@ -12909,8 +12847,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   quest_tour_02: { id:'quest_tour_02', type:'side', schema:'UQF-1.0', gate:{ flagsPath:['yugurtTourBeat.pip'] }, bits:[], completion:{ flagsPath:['yugurtTourBeat.renard'] }, title:'The Spreadsheet Casts',
     desc:"Renard Castwell from the Accounting Department is at the lake on a corporate wellness retreat. He has a spreadsheet and is terrible at fishing.",
-    hint:'Beat Renard at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
-    
+    hint:'Beat Renard at Yugurt Cabin.', activateNode:'SSJ', 
     xpAward:150, waypointNode:'SSJ', reward:75,
     disposition:'"This counts as a team-building exercise per company policy."  — Renard Castwell',
     passText:"This counts as a team-building exercise per company policy. Renard has been beaten. The spreadsheet was not useful.",
@@ -12919,8 +12856,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   quest_tour_03: { id:'quest_tour_03', type:'side', schema:'UQF-1.0', gate:{ flagsPath:['yugurtTourBeat.renard'] }, bits:[], completion:{ flagsPath:['yugurtTourBeat.bog'] }, title:"Bog's Terms",
     desc:"Bog Mudwhistle fishes to eat. He eats what he catches. The lake has eaten parts of him too. Fair exchange.",
-    hint:'Beat Bog at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
-    
+    hint:'Beat Bog at Yugurt Cabin.', activateNode:'SSJ', 
     xpAward:200, waypointNode:'SSJ', reward:150,
     disposition:'"I don\'t think the lake has a mood anymore. I think we\'re the ones who want it to mean something." — Bog Mudwhistle',
     passText:"The lake does not have a mood. We are the ones who want it to mean something. Bog Mudwhistle has been beaten.",
@@ -12929,8 +12865,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   }, // CO-001
   quest_tour_04: { id:'quest_tour_04', type:'side', schema:'UQF-1.0', gate:{ flagsPath:['yugurtTourBeat.bog'] }, bits:[], completion:{ flagsPath:['yugurtTourBeat.vera'] }, title:"Vera's Rulebook",
     desc:"Vera Hookline has a laminated rulebook. She will read rule twelve to you if you lose.",
-    hint:'Beat Vera at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
-    
+    hint:'Beat Vera at Yugurt Cabin.', activateNode:'SSJ', 
     xpAward:300, waypointNode:'SSJ', reward:300,
     disposition:'"The fish does not care about your feelings."  — Vera Hookline',
     passText:"The fish does not care about your feelings. Vera Hookline has been beaten. Rule twelve was not read.",
@@ -12939,8 +12874,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   quest_tour_05: { id:'quest_tour_05', type:'side', schema:'UQF-1.0', gate:{ flagsPath:['yugurtTourBeat.vera'] }, bits:[], completion:{ flagsPath:['yugurtTourBeat.dirk'] }, title:'Tonnage',
     desc:"Dirk Troutslap has moved forty thousand pounds of fish retail weight this season. He is here for exactly one reason.",
-    hint:'Beat Dirk at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
-    
+    hint:'Beat Dirk at Yugurt Cabin.', activateNode:'SSJ', 
     xpAward:500, waypointNode:'SSJ', reward:600,
     disposition:'"I do not fish for fun. I fish for tonnage."  — Dirk Troutslap',
     passText:"I do not fish for fun. I fish for tonnage. Dirk Troutslap has been beaten.",
@@ -12949,8 +12883,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   quest_tour_06: { id:'quest_tour_06', type:'side', schema:'UQF-1.0', gate:{ flagsPath:['yugurtTourBeat.dirk'] }, bits:[], completion:{ flagsPath:['yugurtTourBeat.master'] }, title:"The Fisherman's Tournament",
     desc:"The Master of Yugurt will fish against you. Stake: 1,500gp. He has been here eleven years. The lake may be on his side.",
-    hint:'Beat The Fisherman at Yugurt Cabin.', activateNode:'SSJ', completeItems:[],
-    
+    hint:'Beat The Fisherman at Yugurt Cabin.', activateNode:'SSJ', 
     xpAward:1000, waypointNode:'SSJ', reward:1500,
     disposition:'"...Nice Day For Fishing. Yugurt!"  — The Fisherman',
     passText:"Nice Day For Fishing. Yugurt! The Fisherman has been beaten. Eleven years and the lake was not enough.",
@@ -12983,7 +12916,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   // lxvii67's faith_folk>=1 gate is not expressible in canActivate's term set ⇒ gate:{_legacyFn:true}
   // keeps activateCond load-bearing (canActivate returns true for _legacyFn gates; activateCond still
   // runs at the activation site). guide_04's quest-done gate (below) maps cleanly to questsDone.
-  quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", schema:"UQF-1.0", title:"The Jester's Crossroads", desc:"The jester does not ask a question. Two must arrive alone and answer it anyway. DC 10 Insight. Self-serve. No Help action.", hint:"The answer is not written anywhere. You already know it.", passText:"You write the number on a scrap of paper and set it on the stone. He catches the coin, does not look at it, nods once. One. Someone else will be the second. When the second arrives and writes the same number, he stands up and dabs. Completely sincere. The post opens. There is a carved coin inside: LXVII on one face, 67 on the other.", failText:"You write a different number. He takes the paper, folds it carefully, puts it in his coat. He collects wrong answers. Not to shame them. Wrong answers need somewhere to go too. Come back when you know.", disposition:"67 > 69. taps chest. self-serve. double dab. ⁶⁷", activateNode:"HKG", checkAbility:"wis", checkLabel:"Insight", vignetteText:"A painted post at a fork in the road. No sign. A jester on a stone, tossing a coin. He does not speak. He holds up two fingers. The coin goes up and up. The question he is not asking is: do you know the answer to the question I am not asking? The answer is 67. You have to arrive at it yourself.", checkDC:10, retryGateDays:0, retryable:true, activateCond:() => (S_story.faith_folk || 0) >= 1, gate:{ _legacyFn:true }, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:10, onPass:[{ kind:"reward", xp:67 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 1); } }], onFail:[] }],
+  quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", schema:"UQF-1.0", title:"The Jester's Crossroads", desc:"The jester does not ask a question. Two must arrive alone and answer it anyway. DC 10 Insight. Self-serve. No Help action.", hint:"The answer is not written anywhere. You already know it.", passText:"You write the number on a scrap of paper and set it on the stone. He catches the coin, does not look at it, nods once. One. Someone else will be the second. When the second arrives and writes the same number, he stands up and dabs. Completely sincere. The post opens. There is a carved coin inside: LXVII on one face, 67 on the other.", failText:"You write a different number. He takes the paper, folds it carefully, puts it in his coat. He collects wrong answers. Not to shame them. Wrong answers need somewhere to go too. Come back when you know.", disposition:"67 > 69. taps chest. self-serve. double dab. ⁶⁷", activateNode:"HKG", vignetteText:"A painted post at a fork in the road. No sign. A jester on a stone, tossing a coin. He does not speak. He holds up two fingers. The coin goes up and up. The question he is not asking is: do you know the answer to the question I am not asking? The answer is 67. You have to arrive at it yourself.", retryGateDays:0, retryable:true, activateCond:() => (S_story.faith_folk || 0) >= 1, gate:{ _legacyFn:true }, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:10, onPass:[{ kind:"reward", xp:67 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 1); } }], onFail:[] }],
     npc:"auros",
   },
   quest_guide_01: { id:"quest_guide_01", type:"side", schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:1 }] }, title:"The Fool's First Cast", desc:"A young man arrived at Yugurt Cabin this morning with a market rod, a broken guide ring, and total confidence. He cast immediately without asking anything. The line went sideways. He said: Is that normal? He was smiling. He has never fished a lake. He does not know he has never fished a lake. The Fisherman watched from the cabin steps and said nothing. You are holding it like a question.", hint:"Go to Yugurt Lake and make your first catch.", disposition:"\"Is that normal?\" — Emmer Finch", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"BOO", xpAward:50, reward:0, activateCond:() => (S_story.inventory||[]).some(i => (i.name||'')
@@ -12996,7 +12929,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     passText:"You are thinking about every move. Good. You will not always have to. Five catches completed.",
     failText:"Practice is not finished. Fish at Yugurt Lake three more times — five total catches required.",
   },
-  quest_guide_04: { id:"quest_guide_04", type:"skill_check", title:"The Middle Way Sneers", desc:"Bog Mudwhistle watches Emmer cast from across the bank. Emmer's cast is deliberate now — you can see him thinking through each step. Bog says: Trying too hard. Either you have it or you don't. He addresses the lake, not Emmer. Emmer hears him. The Fisherman continues fishing. He has been at this lake eleven years. He knows what Bog is doing. He has been where Bog is standing. He did not stay there.", hint:"See through the mockery — WIS Insight DC 11.", passText:"You see it — the U-curve. The fool who has never tried and the sage who has passed through trying arrive at the same simplicity. The middle sneers at the effort because effort is embarrassing when you are in the middle. Bog has fished thirty years without improvement because he stopped at competence and called it mastery. The Fisherman passed through the same stage and kept going. Emmer is in the middle now. The middle is not the destination. Let it sneer. Walk through it.", failText:"Bog's words land wrong. Maybe the trying IS the problem. Maybe competence cannot be taught — maybe you either have it or you don't and Emmer doesn't and all of this is just embarrassing. The Fisherman casts again. He does not look up. You cannot yet see what he sees.", disposition:"\"The wisest king in the old stories said there is nothing better than to eat and be glad. The men in the middle laughed. He was right.\" — The Fisherman", npc:"Bog Mudwhistle", activateNode:"SSJ", waypointNode:"SSJ", checkAbility:"wis", checkLabel:"Insight", vignetteText:"Bog Mudwhistle is at the far bank, rod propped against his knee, watching Emmer cast. The cast is deliberate — each step visible, the grip consciously adjusted, the line arc calculated before release. Bog has been fishing this lake for thirty years without thinking about any of those steps. From a distance, this looks like the same skill expressed differently. From close, it looks like effort. Bog knows the difference and says so, to no one in particular: Trying too hard. Either you have it or you don't. The Fisherman does not respond. He casts. The line goes where it needs to go. He has been where Bog is standing — not the physical location, the knowledge location. He decided not to stay. You are watching all three men at once and only one of them understands what he is watching.", checkDC:11, retryGateDays:0, retryable:true, schema:"UQF-1.0", gate:{ questsDone:['quest_guide_03'] }, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:11, onPass:[{ kind:"reward", xp:250 }, { kind:"_legacy_fn", fn:() => { S_story.emmerStage4a = true; } }], onFail:[] }] },
+  quest_guide_04: { id:"quest_guide_04", type:"skill_check", title:"The Middle Way Sneers", desc:"Bog Mudwhistle watches Emmer cast from across the bank. Emmer's cast is deliberate now — you can see him thinking through each step. Bog says: Trying too hard. Either you have it or you don't. He addresses the lake, not Emmer. Emmer hears him. The Fisherman continues fishing. He has been at this lake eleven years. He knows what Bog is doing. He has been where Bog is standing. He did not stay there.", hint:"See through the mockery — WIS Insight DC 11.", passText:"You see it — the U-curve. The fool who has never tried and the sage who has passed through trying arrive at the same simplicity. The middle sneers at the effort because effort is embarrassing when you are in the middle. Bog has fished thirty years without improvement because he stopped at competence and called it mastery. The Fisherman passed through the same stage and kept going. Emmer is in the middle now. The middle is not the destination. Let it sneer. Walk through it.", failText:"Bog's words land wrong. Maybe the trying IS the problem. Maybe competence cannot be taught — maybe you either have it or you don't and Emmer doesn't and all of this is just embarrassing. The Fisherman casts again. He does not look up. You cannot yet see what he sees.", disposition:"\"The wisest king in the old stories said there is nothing better than to eat and be glad. The men in the middle laughed. He was right.\" — The Fisherman", npc:"Bog Mudwhistle", activateNode:"SSJ", waypointNode:"SSJ", vignetteText:"Bog Mudwhistle is at the far bank, rod propped against his knee, watching Emmer cast. The cast is deliberate — each step visible, the grip consciously adjusted, the line arc calculated before release. Bog has been fishing this lake for thirty years without thinking about any of those steps. From a distance, this looks like the same skill expressed differently. From close, it looks like effort. Bog knows the difference and says so, to no one in particular: Trying too hard. Either you have it or you don't. The Fisherman does not respond. He casts. The line goes where it needs to go. He has been where Bog is standing — not the physical location, the knowledge location. He decided not to stay. You are watching all three men at once and only one of them understands what he is watching.", retryGateDays:0, retryable:true, schema:"UQF-1.0", gate:{ questsDone:['quest_guide_03'] }, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:11, onPass:[{ kind:"reward", xp:250 }, { kind:"_legacy_fn", fn:() => { S_story.emmerStage4a = true; } }], onFail:[] }] },
   quest_guide_05: { id:"quest_guide_05", type:"side", schema:'UQF-1.0', gate:{ flags:['emmerStage4a'] }, bits:[], completion:{ flags:['emmerStage4a'], atNode:'SSJ' }, title:"The Cast That Didn't Think", desc:"Emmer stands at the shore. He does not choose a spot. He does not look at the water first. He casts. The form is clean. He does not know it is clean until the fish is running. He holds the line correctly — has been holding it this way for several mornings without noticing that he started. Later he says: I did not think about it. I just cast. Then the fish was there. He looks slightly surprised at himself. The Fisherman nods from the cabin steps. Neither did I, once.", hint:"Return to Yugurt Cabin. The threshold has been crossed.", disposition:"\"He didn't think about it. Neither did I, once.\" — The Fisherman", npc:"Emmer Finch", activateNode:"SSJ", waypointNode:"SSJ", xpAward:300, reward:0, 
     passText:"He did not think about it. Neither did I, once. The cast that did not think has been made.",
     failText:"The threshold has not been crossed. Return to Yugurt Cabin after the unconscious cast.",
@@ -20218,7 +20151,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'reward', gold:80 }, { kind:'favor', npc:'yael', set:1 }, { kind:'narrative', msg:'💰 +80gp from Yael. Guard Favor granted.' } ], // §ARCH-01 W7c
     desc:"Yael Scheidemann runs the Birka Slums detail because she asked for it and because nobody else did. She will know when it is done because she always knows — she has been watching this street since before you arrived on it. Three encounters. Come back when it is finished and she will not say thank you, which in her particular register means something closer to it than most people's explicit gratitude.",
     hint:'Head north to the Birka Slums and clear vermin.',
-    activateNode:'LHR', completeItems:[], 
+    activateNode:'LHR', 
     waypointNode:'BMA', reward:80,
     disposition: '"The commissioners don\'t read field reports about the Slums. They have city-level priorities. The Slums are a city-level priority that doesn\'t appear on their list." — Yael Scheidemann' },
   quest_brynn_firewood: { id:'quest_brynn_firewood', type:'side', schema:'UQF-1.0', gate:{ favorMin:{ brynn:1 } }, bits:[], completion:{ flags:['brynnFirewoodDelivered'] }, title:"Brynn: The Firewood",
@@ -20226,20 +20159,19 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     desc:"The woodpile behind the inn is lower than it should be for the season. Brynn has not mentioned it. She has been watching the pile the way she watches everything — noting, not asking. It is cold in the upper rooms on the east side. She put the guests who asked no questions on the east side.",
     hint:"Help Brynn split and stack firewood at the First Inn.",
     activateNode:'TLL', 
-    
-    completeItems:[] },
+    },
   quest_brynn_ledger: { id:'quest_brynn_ledger', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ itemsAll:['Worn Ledger Book'], atNode:'TLL' }, title:"Brynn: Missing Ledger",
     onComplete:[ { kind:'favor', npc:'brynn', set:1 }, { kind:'narrative', msg:'🛏 Brynn offers 3 free nights. Friendly!' } ], // §ARCH-01 W7c
     itemChain:[{action:'take',name:'Worn Ledger Book',all:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Brynn Clerambault keeps her accounts in a worn ledger that has been written in, crossed out, and written in again for six years. She lent it to a merchant with good credit and bad judgment and she has been setting a table with one fewer place since. The ledger is in the Slums. She asked you to find it without saying what it actually contains — which means she trusts you with it more than she trusts the asking.",
     hint:'Search the Birka Slums — the ledger may be on a fallen enemy.',
-    activateNode:'TLL', completeItems:[], 
+    activateNode:'TLL', 
     waypointNode:'BMA', reward:0,
     disposition: '"Rove had good credit. That\'s the part I keep coming back to. Good credit and bad judgment and I trusted the credit." — Brynn Clerambault' },
   quest_sir_jullean: { id:'quest_sir_jullean', type:'skill_check', schema:'UQF-1.0', gate:{}, bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:10, onPass:[{ kind:'reward', xp:25 }], onFail:[] }], title:'Sir Jullean and the Pigeon',
     desc:"A man sits on the low wall beside the Birka gate trough, methodically explaining something to a pigeon. He has been doing this for some time. The pigeon is eating barley soaked in ale from the trough. The man is also eating barley soaked in ale from the trough. He introduces himself: Sir Jullean. He says this with enormous dignity. The pigeon's name is Benedikt. He has had Benedikt for two days.",
     hint:"Sir Jullean needs to go home. The pigeon will manage.",
-    activateNode:'LHR', completeItems:[],
+    activateNode:'LHR', 
     retryable:true, retryGateDays:1,
     vignetteText:"He's not hostile. He's not lost. He found something that listens without argument. He keeps topping up Benedikt's share from a flask he has no business still having.",
     passText:"He listens. He actually listens. He says: 'You're right. She doesn't need me.'\n\nHe stands. He adjusts his coat with great dignity — smoothing the front, squaring the shoulders — and turns toward the lane home.\n\nHe walks directly into the drainage ditch.\n\nThe pigeon watches this.\n\nYou watch the pigeon watch this.\n\nHe waves from inside the ditch. He is fine. The ditch is shallow. Benedikt goes back to the ale.",
@@ -20250,7 +20182,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'take',name:"Quill's Lute",all:true},{action:'grant',name:'Cipher Scrap',icon:'📜',type:'key',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Tomas Couperin's lute has been in Pachelbel's inventory for eleven days. He pawned it against a drink tab — a transaction he does not regret exactly, but which he replays in a particular way every morning. The lute does not play without him. The drink is gone. The tab is the only thing that remained, and now the lute is not his. The asking is the part he cannot bring himself to do.",
     hint:'Talk to Pachelbel at the Rough Bar and retrieve the lute.',
-    activateNode:'MHQ', completeItems:[], 
+    activateNode:'MHQ', 
     waypointNode:'LLA', reward:40,
     disposition: '"The guild licenses five songs. Five. For the whole of human experience. I don\'t know if that\'s arrogance or optimism." — Tomas Couperin' },
   quest_pachelbel_shipment: { id:'quest_pachelbel_shipment', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ itemsAll:['Sealed Scholar Box'], atNode:'LLA' }, npc:'pachelbel', title:'Pachelbel: Scholar Box',
@@ -20258,7 +20190,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'take',name:'Sealed Scholar Box',all:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Pachelbel does not deal in debts he did not originate. The Scholar Box has been in his back inventory for four months — sealed, addressed, belonging to someone who paid for it and then stopped existing in any record he can find. He wants it out of his problem. He does not say why it bothers him that it is still there. You can see that it does.",
     hint:'Look for the Scholar Box in the Birka Crypt.',
-    activateNode:'LLA', completeItems:[], 
+    activateNode:'LLA', 
     waypointNode:'KRN', reward:60,
     disposition: '"I don\'t deal in debts I didn\'t originate. The Scholar Box is someone else\'s debt. I just want it out of my inventory." — Pachelbel' },
   quest_pit_training: { id:'quest_pit_training', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'pitTrainingWins', min:3 }] }, npc:'crov', title:'Weckmann: Pit Training',
@@ -20266,7 +20198,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'grant',name:'Pit Legend Token',icon:'🏆',type:'token',sell:30,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Weckmann trains whoever survives the floor. Not whoever asks. Not whoever pays. Whoever survives. He will be watching. He will correct what he sees. He will not encourage, because encouragement is for people who need to be told they are doing it right. He corrects because he believes you can do it right. Three fights in the Neon Undercity.",
     hint:'Win 3 battles at the Neon Undercity.',
-    activateNode:'HKG', completeItems:[], 
+    activateNode:'HKG', 
     waypointNode:'HKG', reward:0,
     disposition: '"The promoters tried to fix a fight here last year. I shut the pit rather than host it. Some things cost more to keep than to lose." — Weckmann' },
   quest_void_below: { id:'quest_void_below', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ battles:['CY_VOID'] }, title:'Auros: Void Below',
@@ -20279,7 +20211,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     itemChain:[{action:'grant',name:"Scholar's Note",icon:'📋',type:'key',sell:0,silent:true},{action:'grant',name:'EMP Grenade',icon:'💥',type:'flashbang',sell:50,uses:1,silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Commander Bruhns found the Void corruption node three weeks ago and has been writing maintenance requests to the Council since. The Council approved it in principle. The Void does not wait for implementation. She will not send anyone into the undercity depths alone — not because the regulations require two, but because she has already lost people in there and she knows what alone means in that context. She is asking you. She is not accustomed to asking.",
     hint:'Clear the Void corruption node in the undercity depths.',
-    activateNode:'HKG', completeItems:[], 
+    activateNode:'HKG', 
     waypointNode:'HKG', reward:0,
     disposition: '"The Council approved the maintenance request six months ago. In principle. The Void doesn\'t wait for implementation." — Commander Bruhns' },
   // ── §DESIGN-03: Ceremonia Roll + Birka Skill Check Quests ──
@@ -20289,27 +20221,24 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:"The guard has noted the courier's name in the morning log. The body was city property until released — a formality, but one he is entitled to enforce. You are the one with the map. He is the one who can make this official.",
     passText:'He closes the log. The entry reads: Released to local agent. No further inquiry.',
     failText:'"Twenty gold or a writ from the Watch Commander." He turns the log face-down.',
-    completeItems:[] },
+    },
   quest_crypt_survey: { id:'quest_crypt_survey', type:'skill_check', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[{ kind:'skill_check', stat:'WIS', skill:'Perception', dc:12, onPass:[{ kind:'mission_bit', flag:'cryptSurveyed' }, { kind:'reward', xp:200, gold:75 }], onFail:[] }], title:'The Survey',
     hint:"Map the second chamber for the surveyor's guild.",
     activateNode:'KRN', activateCond:() => true, retryable:true, retryGateDays:1,
     vignetteText:"The chalk marks are still here — the surveyor who made them fifteen years ago is not. The second chamber runs deeper than the first, and something has been digging from below since the last report. The guild wants the measurements updated.",
     passText:"The chamber is mapped. The marks you make are a cleaner hand than Froberger's.",
     failText:'The light fails before you finish. The chalk is still here tomorrow.',
-    completeItems:[] },
+    },
   quest_city_watch_patrol: { id:'quest_city_watch_patrol', type:'side', schema:'UQF-1.0', gate:{ favorMin:{ yael:1 } }, bits:[], completion:{ flags:['patrolRouteComplete'] }, title:"The Route",
     onComplete:[ { kind:'reward', gold:50, xp:150 }, { kind:'favor', npc:'yael', add:1 }, { kind:'narrative', msg:'💰 +50gp + 150 XP. Yael notes the route was covered.' } ], // §ARCH-01 W7c
     hint:"Walk Yael's patrol route: City Streets (CI) → Inn (IN) → Tavern (TV) in sequence.",
     activateNode:'LHR',
-    
-    
-    completeItems:[] },
+    },
   quest_pit_debut: { id:'quest_pit_debut', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'pitTrainingWins', min:1 }] }, title:'First Blood',
     onComplete:[ { kind:'reward', gold:100, xp:250 }, { kind:'narrative', msg:'🥊 First Blood! +100gp +250 XP — The Pit knows your face now.' } ], // §ARCH-01 W7c
     hint:'Win your first pit fight at the Neon Undercity.',
     activateNode:'HKG', 
-    
-    completeItems:[] },
+    },
   // ── Ceremonia Arc: Yael Scheidemann (5 acts) ──
   quest_ceremonia_yael_01: { id:'quest_ceremonia_yael_01', type:'skill_check', title:'The Watch',
     hint:"Yael is sizing you up. Make the thirty seconds count.",
@@ -20390,7 +20319,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'The Inquisitor\'s hand has been extended since the archive was sealed. Three centuries. Whoever shakes it must be willing to be questioned. The chair is on the other side of the desk.',
     passText:'You shake the hand. The construct activates. The chair is waiting.',
     failText:'The construct waits. It will wait another three centuries. Try again.',
-    completeItems:[],
     bits:[
       { kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:10,
         onPass:[ { kind:'mission_bit', flag:'inquisitorHandshakePassed' }, { kind:'reward', xp:50 } ],
@@ -20404,7 +20332,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'"Name someone you helped." Then: "Name something you sacrificed." The construct reads your state — it knows if you\'re lying. The npcFavorability record and defeatedBattles log are open books to it.',
     passText:'"Acknowledged." The third question prepares.',
     failText:'"The record disagrees." [10 psychic damage] Answer with what is true.',
-    completeItems:[],
     bits:[
       { kind:'skill_check', stat:'WIS', skill:'Insight', dc:12,
         onPass:[ { kind:'mission_bit', flag:'inquisitorQuestionsPassed' }, { kind:'reward', xp:75 } ],
@@ -20418,7 +20345,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     vignetteText:'"Why are you still here after everything?" There is no wrong answer. The construct measures conviction, not content.',
     passText:'The door opens. Archive key acquired. The construct\'s outstretched hand goes still. "The previous applicant answered none of them correctly. He came back seventeen times."',
     failText:'"You\'ll need to mean it." Retry tomorrow.',
-    completeItems:[],
     bits:[
       { kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:12,
         onPass:[
@@ -30828,26 +30754,26 @@ function storyRender(node, prefix) {
     if (activeEntries.length) {
       const { sec, body } = _mkSection(null, '📋', 'Quests');
       activeEntries.slice(0, 6).forEach(({ id, q }) => {
-        // ── skill_check quests: Ceremonia Roll card ──
-        // §ARCH-01 Phase 2: a UQF v1.0 quest carrying a skill_check bit renders
-        // the same card, with stat/skill/dc read from the bit instead of the
-        // legacy q.check* fields. scBit === null ⇒ legacy path, byte-identical.
+        // ── roll-resolved quests: Ceremonia Roll card ──
+        // §ARCH-01 W8a: stat/skill/dc are read from the quest's skill_check bit —
+        // the ONLY roll-card source (the legacy q.check* display fallback is gone
+        // with the fields; a non-UQF skill_check — only the 30 dead blq stubs —
+        // falls through to the standard quest card).
         const scBit = (q.schema === 'UQF-1.0') ? (q.bits || []).find(b => b.kind === 'skill_check') : null;
-        if (q.type === 'skill_check' || scBit) {
+        if (scBit) {
           const blocked = _ceremoRetryBlocked(id);
-          const _ability = scBit ? String(scBit.stat || '').toLowerCase() : (q.checkAbility || q.checkStat);
-          const _label   = scBit ? (scBit.skill || scBit.stat) : (q.checkLabel || q.checkSkill);
-          const _dc      = scBit ? scBit.dc : q.checkDC;
+          const _ability = String(scBit.stat || '').toLowerCase();
+          const _label   = scBit.skill || scBit.stat;
+          const _dc      = scBit.dc;
           const abilityVal = ((S_story.abilityScores || {})[_ability] || 10);
           const mod  = Math.floor((abilityVal - 10) / 2);
           const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
           const modStr = (mod + prof >= 0 ? '+' : '') + (mod + prof);
-          // Act V alt text (legacy only)
-          // vignetteTextAlt (shown when the player failed yael_04) is honored on
-          // BOTH the legacy and UQF paths so a migrated quest keeps its alt text.
+          // vignetteTextAlt (shown when the player failed yael_04) keeps a migrated
+          // quest's alt text.
           const vText = (q.vignetteTextAlt && S_story.ceremonia_yael_04_failed)
             ? q.vignetteTextAlt
-            : (scBit ? (q.vignetteText || q.hint || '') : q.vignetteText);
+            : (q.vignetteText || q.hint || '');
           const att = (S_story.skillCheckAttempts || {})[id];
           const retryDay = att ? att.lastDay + (q.retryGateDays || 1) : null;
           // §ARCH-01 W4/W5: typed quest cards — combat/delivery/escort/dialogue UQF
