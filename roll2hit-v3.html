@@ -30291,8 +30291,11 @@ function storyRender(node, prefix) {
                 S_story.fishingRodCouponRedeemed = true;
                 S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== 'Free Rod Coupon');
                 S_story.inventory.push({ name:rod.name, icon:rod.icon, type:'tool', sell:rod.sell, code:'SSJ', rodBonus:rod.rodBonus, desc:rod.desc });
-                S_story.xp = (S_story.xp || 0) + 50; _checkLevelUp();
-                if ((S_story.quests||{})['quest_no_fishing_sign'] === 'active') S_story.quests['quest_no_fishing_sign'] = 'complete';
+                // §ARCH-01 W8c — the engine is the SOLE completer. The fishingRodCouponRedeemed
+                // flag set just above satisfies quest_no_fishing_sign's completion:{flags:[…]}, so
+                // storyCheckQuests completes it and fires its xpAward:50 (== the old inline +50).
+                // The rod grant above is the redemption action, not the quest reward, so it stays.
+                storyCheckQuests(node);
                 storyMsg("The Fisherman takes the tab. He looks at it — he made the tab — but he looks at it like it's new each time.\n\n\"...Nice Day For Fishing. Yugurt!\"\n\nHe hands you the rod that was propped by the door.\n\n🎣 Fishing Rod obtained. ✓ Quest complete — The No-Fishing Sign. +50 XP.");
                 sub.remove(); shopBtn.disabled = false; shopBtn.style.opacity = ''; storyAutoSave();
               });
@@ -30991,14 +30994,12 @@ function storyRender(node, prefix) {
                 if (!S_story.yugurtTourBeat) S_story.yugurtTourBeat = {};
                 S_story.yugurtTourBeat[opp.key] = true;
                 S_story.yugurtTourTitle = TOUR_TITLES[opp.key];
-                // Complete active quest + activate next
-                const qId = 'quest_tour_0' + opp.order;
-                if ((S_story.quests||{})[qId] === 'active') {
-                  S_story.quests[qId] = 'complete';
-                  S_story.xp = (S_story.xp||0) + opp.xp;
-                  _checkLevelUp();
-                }
-                storyCheckQuests(node); // activate next quest in chain
+                // §ARCH-01 W8c — the engine is the SOLE completer. The yugurtTourBeat[opp.key]
+                // flag set just above satisfies quest_tour_0N's completion:{flagsPath:['yugurtTourBeat.<key>']},
+                // so storyCheckQuests completes the active act and fires its xpAward — which is
+                // exactly opp.xp for every act (pip 100 … master 1000, verified equal). The old
+                // inline '=complete'+opp.xp shortcut was a redundant second completion path.
+                storyCheckQuests(node); // complete this act (engine) + activate the next in the chain
                 html += '✓ <strong>YOU WIN</strong> — +'+opp.stake+'gp · <em>'+TOUR_TITLES[opp.key]+'</em>';
                 if (opp.key === 'bog') { // CO-001: Bog's losing beat
                   S_story.bogDefeated = true;

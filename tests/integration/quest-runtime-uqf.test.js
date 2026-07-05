@@ -9298,3 +9298,72 @@ test.describe('§ARCH-01 W7d — legacy branches retired; wm_01 migrated via ite
     expect(r.withCompletionSurface).toEqual([]);   // none of them can ever complete — nothing rides the retired terms
   });
 });
+
+// ── §ARCH-01 W8c — storyRender audit: the engine is the SOLE quest-completer ──
+//
+// The storyRender per-node hooks are UI wiring — they set world flags/status the
+// engine observes; NONE read a legacy quest-execution field (checkStat/onPass/
+// completeFn/… all grep to 0 outside QuestRuntime + storyCheckQuests). W8c removed
+// the last two REDUNDANT inline completion shortcuts: the Yugurt tournament win
+// (quest_tour_0N) and the free-rod coupon redemption (quest_no_fishing_sign) each
+// set '=complete'+xp inline AND carried a live, tested engine completion gate
+// (completion:{flagsPath|flags} + xpAward). The two xp values are identical for
+// every act (opp.xp === xpAward: pip 100 … master 1000; coupon +50 === xpAward:50),
+// so deleting the inline shortcut is behaviour-preserving and leaves the engine the
+// single completion authority. quest_la_riva_02 is the sole documented exception —
+// its inline AMS hook grants +500g / the account book / +Aldo favor / activates
+// la_riva_03, rewards its engine completion:{countMin,itemsAll} gate does NOT carry
+// (no onComplete / no xpAward), so formalising it is deferred §GR work (lab-report
+// gated); it stays inline-authoritative by design.
+test.describe('§ARCH-01 W8c — storyRender audit: engine is the sole completer', () => {
+  test('tour + no_fishing_sign are engine-completable, and opp.xp === xpAward for every act (no divergence)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const bad = [];
+      for (const id of ['quest_tour_01','quest_tour_02','quest_tour_03','quest_tour_04',
+                        'quest_tour_05','quest_tour_06','quest_no_fishing_sign']) {
+        const q = QUEST_DB[id];
+        if (!q.completion) bad.push(id + ':no-completion');
+        if (typeof q.xpAward !== 'number') bad.push(id + ':no-xpAward');
+      }
+      // the inline value the shortcut used to grant must equal the engine's xpAward
+      const mismatches = NPC_TOUR_OPPONENTS
+        .filter(o => QUEST_DB['quest_tour_0' + o.order].xpAward !== o.xp)
+        .map(o => o.key + ':' + o.xp + '!=' + QUEST_DB['quest_tour_0' + o.order].xpAward);
+      return { bad, mismatches };
+    });
+    expect(r.bad).toEqual([]);
+    expect(r.mismatches).toEqual([]);
+  });
+
+  test('engine completes tour_01 + no_fishing_sign with a SINGLE xpAward grant (a re-added inline shortcut would double it)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20;                                   // avoid level-up churn; xp is cumulative
+      // tour_01: completion flagsPath yugurtTourBeat.pip, xpAward 100
+      S_story.quests = { quest_tour_01: 'active' };
+      S_story.yugurtTourBeat = { pip: true };
+      let xp0 = S_story.xp;
+      storyCheckQuests({ code: 'SSJ' });
+      const tour = { status: S_story.quests.quest_tour_01, xpDelta: S_story.xp - xp0 };
+      // no_fishing_sign: completion flags fishingRodCouponRedeemed, xpAward 50
+      S_story.quests = { quest_no_fishing_sign: 'active' };
+      S_story.yugurtTourBeat = {};                          // clear so tour_01 can't re-complete and pollute the delta
+      S_story.fishingRodCouponRedeemed = true;
+      xp0 = S_story.xp;
+      storyCheckQuests({ code: 'SSJ' });
+      const fish = { status: S_story.quests.quest_no_fishing_sign, xpDelta: S_story.xp - xp0 };
+      return { tour, fish };
+    });
+    expect(r.tour).toEqual({ status: 'complete', xpDelta: 100 });
+    expect(r.fish).toEqual({ status: 'complete', xpDelta: 50 });
+  });
+
+  test('the two inline completion shortcuts are gone from source; la_riva_02 remains the documented inline exception', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const src = await page.evaluate(() => document.documentElement.outerHTML);
+    expect(src.includes("S_story.quests[qId] = 'complete'")).toBe(false);                     // tournament win — engine now
+    expect(src.includes("S_story.quests['quest_no_fishing_sign'] = 'complete'")).toBe(false); // coupon redeem — engine now
+    expect(src.includes("S_story.quests['quest_la_riva_02'] = 'complete'")).toBe(true);       // §GR inline reward — deferred by design
+  });
+});
