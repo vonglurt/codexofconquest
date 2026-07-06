@@ -410,7 +410,7 @@ Server-to-server presence replication over the node network. Player-facing view:
 
 ### Where remote players surface
 
-`look.players` / `who.remotes` / `pos.nearby` + `world[]` (all carry `server` + `pid`), SSE events with `remote: true`, and the worldbuilder 🌐 Mesh tab (`GET /api/mesh/status`: identity, peers w/ liveness, remote players, "information passed" packet ring).
+`look.players` / `who.remotes` / `pos.nearby` + `world[]` (all carry `server` + `pid`), SSE events with `remote: true`, and the worldbuilder 🌐 Mesh tab (`GET /api/mesh/status`: identity, peers w/ liveness, remote players, "information passed" packet ring). CLI parity (§MESH-01-FU 10): `./api.sh mesh status` / `mesh peers` / `mesh tracker [url]` — same data, terminal-first, `--json` for tooling (see `wbapi-help.md` §Mesh API).
 
 ### Sentry bots (§MESH-01h)
 
@@ -418,7 +418,7 @@ Server-to-server presence replication over the node network. Player-facing view:
 - **Encounter suppression** — `/session/move` nulls the freshly-rolled `s.encounter` when a sentry occupies the destination cell (RNG stream still advances, so the instanced trace stays deterministic; only the result is voided). The response carries `sentryGuard: <name>` when it fired.
 - **Auto-assist + economy are client-side** — the browser reads the co-present sentry off presence to add an extra attacker die (`_sentryStrike`) and suppress its own `_enterEmptyCell` roll (`_partyEncounterRate → 0`). The player bankrolls their own posts (`S_story.sentries`: upfront cost + a daily upkeep on rest, recalled if unpaid) — the server only hosts the bot.
 
-**Test gates:** `npm run test:mud` — [A]–[N] + [H] §MESH-01h sentry cases (deploy→presence, deterministic encounter suppression, recall→leave, prune-immunity), including the Inc (e) partition-heal harness (3 servers + tracker: convergence, exactly-once across partitions via ACL-file split/heal, stale-replica availability, snapshot re-convergence, incompat-refusal + world-group segregation). Playwright: `multiplayer-presence.test.js` 7/7, `mesh-sentry.test.js` 7/7 (client half), `mesh-copresence-buff.test.js` 6/6, `mesh-hireling-guide.test.js` 6/6, `worldbuilder-mesh.test.js` + mesh tab 4/4.
+**Test gates:** `npm run test:mud` — 239 checks, sections [A]–[P] (incl. [P] rate limiting and the `./api.sh mesh` CLI wrappers) + [H] §MESH-01h sentry cases (deploy→presence, deterministic encounter suppression, recall→leave, prune-immunity), including the Inc (e) partition-heal harness (3 servers + tracker: convergence, exactly-once across partitions via ACL-file split/heal, stale-replica availability, snapshot re-convergence, incompat-refusal + world-group segregation). Playwright: `multiplayer-presence.test.js` 7/7, `mesh-sentry.test.js` 7/7 (client half), `mesh-copresence-buff.test.js` 6/6, `mesh-hireling-guide.test.js` 6/6, `worldbuilder-mesh.test.js` + mesh tab 4/4.
 
 ---
 

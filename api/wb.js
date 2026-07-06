@@ -264,6 +264,7 @@ The game is a D&D 5e world stored in a single HTML file. The API manages: nodes 
   ./api.sh import <file.json>                   bulk import nodes + quest cycles  [--out file]
   ./api.sh roads [pins]                         road net summary / pins file (§NAV-01h)
   ./api.sh reweave                              regenerate ROAD_RUNS from roads-pins.json + check:roads
+  ./api.sh mesh status|peers|tracker [url]      multiplayer mesh: identity/peers/server browser (§MESH-01)
 
 Reply in 1–3 lines. Lead with a concrete ./api.sh command when applicable.`;
 
@@ -467,6 +468,78 @@ const CMD = {
     const b = r.body;
     ok(`net rewoven: ${b.cells} cells · ${b.junctions} junctions · ${b.pins} pins · ${b.links} links · ${b.check}`);
     for (const line of b.generator || []) if (line) info(line);
+  },
+
+  // §MESH-01-FU 10 — mesh status / peers / tracker: API-first parity with the 🌐 Mesh tab
+  async mesh(pos, flags) {
+    const sub = pos[1];
+    if (!sub || !['status', 'peers', 'tracker'].includes(sub))
+      die('Usage: ./api.sh mesh status | mesh peers | mesh tracker [url]   [--json]');
+    await requireServer();
+    const r = await request('GET', '/api/mesh/status');
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    const s = r.body;
+    const ago = (ms) => ms == null ? 'never' : ms < 1500 ? 'now' : ms < 90_000 ? `${Math.round(ms / 1000)} s ago` : `${Math.round(ms / 60_000)} min ago`;
+
+    if (sub === 'status') {
+      if (flags.json) { printResult(s, flags); return; }
+      ok(`${s.trackerMode ? 'tracker' : 'server'} ${s.serverId} @ ${s.addr}${s.name ? `  ·  "${s.name}"` : ''}`);
+      ok(`world: ${s.worldTag ? `${s.worldTag} · ` : ''}${s.engineVer} · wh:${s.worldHash} · proto ${s.proto}`);
+      ok(`acl: ${s.acl.mode} (${s.acl.file})  ·  rate: ${s.rate.limit} req/s, burst ${s.rate.burst}`);
+      const live = (s.peers || []).filter(p => p.live).length;
+      ok(`players: ${s.localPlayers} local · ${(s.remotePlayers || []).length} remote  ·  peers: ${live}/${(s.peers || []).length} live  ·  trackers: ${(s.trackerUrls || []).length}`);
+      for (const g of s.trackerGroups || [])
+        info(`tracker group: ${g.worldTag ? `${g.worldTag} · ` : ''}${g.engineVer} · ${g.worldHash} — ${g.servers} server(s), ${g.players} player(s)`);
+      for (const w of (s.reachability && s.reachability.warnings) || [])
+        stderr(`${C.yellow}⚠${C.reset} ${w}\n`);
+      info('full JSON: ./api.sh mesh status --json  ·  ./api.sh mesh peers  ·  ./api.sh mesh tracker [url]');
+      return;
+    }
+
+    if (sub === 'peers') {
+      const peers = s.peers || [], remote = s.remotePlayers || [];
+      if (flags.json) { printResult({ ok: true, count: peers.length, peers, remotePlayers: remote }, flags); return; }
+      if (!peers.length) {
+        ok('no gossip peers (add via peers.txt, BOOTSTRAP_URLS, or tracker discovery)');
+        return;
+      }
+      ok(`${peers.length} gossip peer(s):`);
+      for (const p of peers) {
+        const dot = p.live ? `${C.green}●${C.reset}` : `${C.red}○${C.reset}`;
+        process.stdout.write(`  ${dot} ${p.addr}  ·  ${p.serverId || '(id unknown)'}  ·  ${ago(p.lastSeenMs)}${p.lastErr ? `  ·  ${C.yellow}${p.lastErr}${C.reset}` : ''}\n`);
+      }
+      if (remote.length) {
+        ok(`${remote.length} remote player(s):`);
+        for (const p of remote) process.stdout.write(`  👤 ${p.name} @ (${p.r},${p.c})  ·  server ${p.server}\n`);
+      }
+      return;
+    }
+
+    // tracker — server browser: ask tracker(s) for their live server table
+    const urls = pos[2] ? [pos[2]]
+      : (s.trackerUrls || []).length ? s.trackerUrls
+      : s.trackerMode ? [BASE] : [];   // a tracker with no upstream browses itself
+    if (!urls.length)
+      die('no tracker configured — pass one: ./api.sh mesh tracker <url>\n  (or set TRACKER_URL / a `tracker` line in peers.txt / BOOTSTRAP_URLS)');
+    const seen = new Map(), errs = [];
+    for (const u0 of urls) {
+      const u = (/^https?:\/\//.test(u0) ? u0 : `http://${u0}`).replace(/\/+$/, '');
+      try {
+        const rr = await doHTTP('GET', `${u}/api/tracker/peers`, null);
+        if (rr.status !== 200 || !rr.body || rr.body.ok === false) { errs.push(`${u0}: HTTP ${rr.status}`); continue; }
+        for (const srv of rr.body.servers || []) if (!seen.has(srv.serverId)) seen.set(srv.serverId, srv);
+      } catch (e) { errs.push(`${u0}: ${e.code || e.message}`); }
+    }
+    const servers = [...seen.values()];
+    if (flags.json) { printResult({ ok: errs.length < urls.length, trackers: urls, errors: errs, count: servers.length, servers }, flags); return; }
+    for (const e of errs) stderr(`${C.yellow}⚠${C.reset} tracker ${e}\n`);
+    if (errs.length === urls.length) die('no tracker reachable');
+    if (!servers.length) { ok(`tracker(s) answered, but no live servers announced  (${urls.join(', ')})`); return; }
+    ok(`${servers.length} server(s) announced across ${urls.length} tracker(s):`);
+    for (const srv of servers) {
+      const diff = s.worldHash && srv.worldHash && srv.worldHash !== s.worldHash ? `  ${C.yellow}≠ different world${C.reset}` : '';
+      process.stdout.write(`  🖥 ${srv.name || srv.addr}  ·  🌍 ${srv.worldTag || srv.worldHash}  ·  ${srv.engineVer}  ·  ${srv.addr}  ·  👥 ${srv.playerCount | 0}${diff}\n`);
+    }
   },
 
   // §ARCH-02 Phase 5 — composite advise: quest fields + chain check in one call
@@ -2741,6 +2814,29 @@ ${C.bold}═══════════════════════�
   re-anchor lat/lon or carve a sea-lane (§WALK-1.5).
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
+  MULTIPLAYER MESH  (§MESH-01)
+═══════════════════════════════════════════════════════════════════${C.reset}
+
+  API-first parity with the worldbuilder 🌐 Mesh tab. All read-only.
+
+  One-call status (identity, world hash, ACL + rate limits, peers, players):
+    ./api.sh mesh status
+    ./api.sh mesh status --json          full GET /api/mesh/status payload
+
+  Gossip peer table (live/dead, last seen, last error) + remote players:
+    ./api.sh mesh peers
+    ./api.sh mesh peers --json
+
+  Server browser — ask a tracker for its live server table:
+    ./api.sh mesh tracker                queries this server's configured tracker(s)
+    ./api.sh mesh tracker lan-host:1367  query an explicit tracker
+    ./api.sh mesh tracker --json
+    → servers on a different worldHash than yours are flagged "≠ different world"
+
+  Mesh config lives server-side: peers.txt, mesh-acl.json, TRACKER_URL /
+  BOOTSTRAP_URLS / --advertise. Design: lab-reports/lab-report-mesh-multiuser.md.
+
+${C.bold}═══════════════════════════════════════════════════════════════════
   SERVER LIFECYCLE
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
@@ -2846,6 +2942,11 @@ const SYNOPSIS = [
   `  ${C.green}fix-bidirectional${C.reset} [--execute]         fix all one-way links (A→B but B doesn't point back)`,
   `  ${C.green}cluster-bridge${C.reset} [--execute]             connect remaining isolated clusters`,
   `  ${C.green}migrate strip-exit-fields${C.reset} [--execute]   §CELL-14: strip dead N/S/E/W/portal/spire from NODE_MAP`,
+  ``,
+  `  ${C.bold}── Multiplayer Mesh (§MESH-01) ─────────────────────────────────────────${C.reset}`,
+  `  ${C.green}mesh status${C.reset}                        identity · world hash · ACL/rate · peers · players  [--json]`,
+  `  ${C.green}mesh peers${C.reset}                         gossip peer table + remote players  [--json]`,
+  `  ${C.green}mesh tracker${C.reset} [url]                 server browser: live servers on tracker(s)  [--json]`,
   ``,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,

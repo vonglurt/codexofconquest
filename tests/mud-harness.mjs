@@ -18,7 +18,7 @@
 // `MUD_HARNESS_PORT=… node tests/mud-harness.mjs`). Exit 0 if all pass, else 1.
 import http from 'node:http';
 import crypto from 'node:crypto';
-import { spawn } from 'node:child_process';
+import { spawn, execFile } from 'node:child_process';
 import path from 'node:path';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -85,6 +85,16 @@ function openSSE(sessionId, base = BASE) {
   });
 }
 const closeSSE = (c) => { try { c.req.destroy(); } catch {} };
+
+// ── CLI runner — §MESH-01-FU 10: ./api.sh mesh wrappers, pointed at a throwaway
+// server via --server. Not a TTY, so wb.js keeps stdout to pure payload.
+function cli(args) {
+  return new Promise((resolve) => {
+    execFile('node', [path.join(ROOT, 'api', 'wb.js'), ...args], { cwd: ROOT }, (err, stdout, stderr) => {
+      resolve({ code: err ? (err.code ?? 1) : 0, stdout, stderr });
+    });
+  });
+}
 // count delivered events of `type` whose data matches `pred` (excludes the
 // initial 'connected' frame, which carries no event payload of interest).
 const countEv = (c, type, pred = () => true) => c.events.filter((e) => e.event === type && pred(e.data)).length;
@@ -373,6 +383,19 @@ async function main() {
   check((await jget(`/tracker/peers?wh=${manA.worldHash}`, trk.base)).count >= 2, 'tracker lists both announced servers in the world group');
   const txt = await (await fetch(trk.base + `/api/tracker/peers?wh=${manA.worldHash}&format=txt`)).text();
   check(txt.includes(`localhost:${PORT + 7}`), 'tracker emits the peers.txt bootstrap format (format=txt — the gist backup source)');
+
+  // ── §MESH-01-FU 10 — ./api.sh mesh CLI wrappers ride the same live mesh ──
+  const cliSt = await cli(['mesh', 'status', '--json', '--server', mE.base]);
+  let cliStJ = {}; try { cliStJ = JSON.parse(cliSt.stdout); } catch {}
+  check(cliSt.code === 0 && cliStJ.ok === true && cliStJ.serverId === 'f'.repeat(8),
+    'CLI: mesh status --json returns the live /api/mesh/status identity');
+  let cliPe = {}; try { cliPe = JSON.parse((await cli(['mesh', 'peers', '--json', '--server', mE.base])).stdout); } catch {}
+  check((cliPe.peers || []).some((p) => p.addr === `localhost:${PORT + 8}`),
+    'CLI: mesh peers lists the tracker-discovered gossip peer');
+  let cliTr = {}; try { cliTr = JSON.parse((await cli(['mesh', 'tracker', trk.base, '--json', '--server', mE.base])).stdout); } catch {}
+  check(cliTr.count >= 2 && (cliTr.servers || []).some((s) => s.addr === `localhost:${PORT + 8}`),
+    'CLI: mesh tracker <url> browses the tracker’s live server table');
+  check((await cli(['mesh', 'bogus'])).code === 1, 'CLI: mesh rejects an unknown subcommand (usage, exit 1)');
 
   await startServer(PORT + 9, mkEnv(PORT + 9, '8'.repeat(32), { TRACKER_URL: trk.base, MESH_ANNOUNCE_MS: '150', MESH_WORLDHASH_OVERRIDE: 'deadbeefdeadbeef' }));
   await sleep(700);

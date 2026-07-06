@@ -261,9 +261,14 @@ co-signed trades (parties on different servers) are the remaining §MESH-01i run
 ## Mesh API — server-to-server presence (§MESH-01)
 
 Full reference: `docs-node-network.md §12` + `lab-reports/lab-report-mesh-sync-architecture.md`.
-(`./api.sh mesh` CLI wrappers are planned — FU 10; until then these are the raw endpoints.)
 
 ```bash
+# CLI wrappers (§MESH-01-FU 10) — the preferred read surface; all read-only
+./api.sh mesh status                     # identity · world hash · ACL/rate · peers · players  [--json]
+./api.sh mesh peers                      # gossip peer table (live/dead, last seen, last error) + remote players
+./api.sh mesh tracker [url]              # server browser: live servers on the configured tracker(s), or an explicit one
+#   → servers on a different worldHash are flagged "≠ different world"; --json for tooling
+
 # Start / wire up (see also "Start the server" above)
 ./wbapi-toggle.sh start                  # game server :1367 (loads .env — TRACKER_URL etc.)
 ./wbapi-toggle.sh tracker [port]         # tracker role :1368 — rendezvous ONLY, never a relay
@@ -313,7 +318,7 @@ default 120); a healthy peer spends ~0.5 token/s, so the defaults leave ~60×
 headroom. Current config is surfaced in `GET /api/mesh/status → rate`, and
 the traffic ring logs one `rate` row per flood.
 
-**Test gate:** `npm run test:mud` — 235 checks incl. the [L] partition-heal harness and [P] rate limiting.
+**Test gate:** `npm run test:mud` — 239 checks incl. the [L] partition-heal harness, [P] rate limiting, and the `./api.sh mesh` CLI wrappers.
 
 ---
 

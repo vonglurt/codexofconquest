@@ -32,6 +32,7 @@ on:
       - 'scripts/check-ladder-migration.js'
       - 'scripts/world-diff.js'
       - 'tests/mud-harness.mjs'
+      - 'api/wb.js'
       - 'package.json'
       - '.github/workflows/walk-invariants.yml'
   pull_request:
@@ -49,6 +50,7 @@ on:
       - 'scripts/check-ladder-migration.js'
       - 'scripts/world-diff.js'
       - 'tests/mud-harness.mjs'
+      - 'api/wb.js'
       - 'package.json'
       - '.github/workflows/walk-invariants.yml'
 

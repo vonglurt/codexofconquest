@@ -199,6 +199,15 @@ echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 ./api.sh speak egil_thorvaldsen "Tell me more." --state friendly
 ```
 
+### Multiplayer Mesh (§MESH-01) — read-only
+
+```bash
+./api.sh mesh status                   # identity · world hash · ACL/rate · peers · players  [--json]
+./api.sh mesh peers                    # gossip peer table + remote players  [--json]
+./api.sh mesh tracker                  # server browser via configured tracker(s)
+./api.sh mesh tracker lan-host:1368    # ...or an explicit tracker  [--json]
+```
+
 ---
 
 ## Map and Coordinate Commands
