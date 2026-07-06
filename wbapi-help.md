@@ -287,6 +287,7 @@ curl -XPOST http://localhost:1367/api/mesh/gossip -d '{...meshPayload}'
 curl -XPOST http://localhost:1368/api/tracker/announce -d '{...manifest+addr}'
 curl http://localhost:1368/api/tracker/peers                       # all world groups
 curl "http://localhost:1368/api/tracker/peers?wh=<hash>&format=txt"  # peers.txt bootstrap format
+scripts/publish-bootstrap.sh http://tracker:1368 [--wh h] > bootstrap.txt  # snapshot + manual-publish howto (never auto-publishes)
 curl -XPOST http://localhost:1368/api/tracker/sync -d '{...}'      # federation (tracker↔tracker)
 
 # World download + mod inspection (tracker-mode refuses with 410)
