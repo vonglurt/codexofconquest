@@ -70,9 +70,25 @@ const SSE_CLIENTS = new Map(); // sessionId → Response (SSE stream)
 // in every real deployment, so this is identically the 30-minute default there.
 const SESSION_TTL = parseInt(process.env.SESSION_TTL_MS || '', 10) || 30 * 60 * 1000;
 
+// ── §MESH-01h — sentry bots ──────────────────────────────────────────────────
+// Server-owned bot sessions stationed at a road junction. They live in SESSIONS
+// (bot:true, kind:'sentry') so they ride EVERY presence surface for free — a
+// co-located player sees them in buildLook.players / who / player_arrived, and
+// the client reads that to suppress encounters + auto-assist battles in the
+// sentry's cell (roll2hit-v3.html §MESH-01h). Single-writer holds: only THIS
+// origin mutates its own sentries, exactly like a player session. Bots never
+// idle-expire (sessionPrune skips them) and never roll encounters (they never
+// call /session/move) — they are recalled explicitly via POST /api/sentry/recall.
+const SENTRY_DEFAULTS = { dailyFee: 20 };
+function sentryAt(r, c) {
+  for (const s of SESSIONS.values()) if (s.bot && s.r === r && s.c === c) return s;
+  return null;
+}
+
 function sessionPrune() {
   const now = Date.now();
   for (const [id, s] of SESSIONS) {
+    if (s.bot) continue;   // §MESH-01h: sentry bots never idle-expire
     if (now - s.lastSeen > SESSION_TTL) {
       SESSIONS.delete(id);
       // §MESH-01c: a pruned ghost also departs, locally and to the mesh
@@ -8304,7 +8320,7 @@ async function route(req, res) {
       const players = [];
       for (const [id2, s2] of SESSIONS)
         if (id2 !== s.id && s2.r === s.r && s2.c === s.c)
-          players.push({ id: id2, pid: pidOf(id2), name: s2.playerName });
+          players.push({ id: id2, pid: pidOf(id2), name: s2.playerName, kind: s2.kind || 'player' });
       players.push(...remotePlayersAt(s.r, s.c));   // §MESH-01c: replicated same-world peers
       // §NAV-01f — the L4 room object (icon/title/sub/prose/exits/signposts/
       // landmarks) from the shared kernel. buildLook is the one look surface,
@@ -8321,7 +8337,7 @@ async function route(req, res) {
     if (sub === 'who' && method === 'GET') {
       const all = [];
       for (const [id2, s] of SESSIONS)
-        all.push({ id: id2, pid: pidOf(id2), name: s.playerName, r: s.r, c: s.c, nodeCode: s.nodeCode, state: s.state, seed: s.seed, encounter: s.encounter || null, lastSeen: s.lastSeen });
+        all.push({ id: id2, pid: pidOf(id2), name: s.playerName, r: s.r, c: s.c, nodeCode: s.nodeCode, state: s.state, kind: s.kind || 'player', seed: s.seed, encounter: s.encounter || null, lastSeen: s.lastSeen });
       // §MESH-01c: read-only replicas of same-world peers' sessions
       const remotes = [];
       const _now = Date.now();
@@ -8476,6 +8492,11 @@ async function route(req, res) {
       } else {
         s.encounter = null;
       }
+      // §MESH-01h: a sentry bot stationed on the destination cell suppresses the
+      // encounter (its whole point). The RNG stream still advanced above, so the
+      // instanced trace stays deterministic — the sentry only voids the result.
+      let sentryGuard = null;
+      if (s.encounter && (sentryGuard = sentryAt(newR, newC))) s.encounter = null;
       // Broadcast to players now in the same cell (not the mover themselves).
       // NOTE: deliberately no local player_left to the old cell (harness [B]
       // asserts silence there); the mesh still carries it for remote replicas.
@@ -8488,7 +8509,7 @@ async function route(req, res) {
       const look = buildLook(s);
       logRow('move', `${s.playerName}  ·  ${dir}  →  (${newR},${newC}) ${newCode || 'empty'}${s.encounter ? '  ⚔ ' + s.encounter.name : ''}`);
       logResponse(method, url.pathname, 200, `session move: ${dir} → ${newCode || 'empty'}${s.encounter ? ' (encounter: ' + s.encounter.name + ')' : ''}`);
-      return json(res, 200, { ok: true, dir, ...look, encounter: s.encounter });
+      return json(res, 200, { ok: true, dir, ...look, encounter: s.encounter, sentryGuard: sentryGuard ? sentryGuard.playerName : null });
     }
 
     // ── POST /api/session/pos ──────────────────────────────────────────────
@@ -8598,6 +8619,108 @@ async function route(req, res) {
 
     logResponse(method, url.pathname, 404, `unknown session sub-route "${sub}"`);
     return json(res, 404, { error: `Unknown session sub-route "${sub}"`, available: ['start', 'move', 'pos', 'look', 'who', 'say', 'end', 'events'] });
+  }
+
+  // ── §MESH-01h: Sentry bot endpoints ───────────────────────────────────────
+  // Server-owned bots stationed at a junction. deploy/recall are the single-writer
+  // mutations of THIS origin's sentries; list is read-only. A sentry is a SESSION
+  // (bot:true) so presence, who, and player_arrived/left carry it for free.
+  if (parts[0] === 'sentry') {
+    sessionPrune();
+    const sub = parts[1]; // deploy | recall | list
+
+    // ── GET /api/sentry/list ───────────────────────────────────────────────
+    if (sub === 'list' && method === 'GET') {
+      const sentries = [];
+      for (const [id, s] of SESSIONS)
+        if (s.bot) sentries.push({ sentryId: id, pid: pidOf(id), name: s.playerName, node: s.nodeCode, r: s.r, c: s.c, dailyFee: s.dailyFee, deployedTs: s.deployedTs });
+      logResponse(method, url.pathname, 200, `${sentries.length} sentries deployed`);
+      return json(res, 200, { count: sentries.length, sentries });
+    }
+
+    if (method !== 'POST') {
+      logResponse(method, url.pathname, 405, `sentry/${sub} requires POST`);
+      return json(res, 405, { error: `POST required for /api/sentry/${sub}` });
+    }
+    let body;
+    try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'Invalid JSON' }); }
+
+    // ── POST /api/sentry/deploy  body: {node} | {r,c} ─────────────────────
+    // Station a sentry at a junction — either a named node code (`node`) or raw
+    // coords (`r,c`) for an unnamed road junction. Rejects an unknown node, an
+    // off-grid/sea cell (mover-validated), or a cell already garrisoned.
+    if (sub === 'deploy') {
+      const world = getMoverWorld();
+      const ROWS = world.proj.ROWS, COLS = world.proj.COLS;
+      let r, c, node = null;
+      if (body.node != null && String(body.node).trim()) {
+        node = String(body.node).trim().toUpperCase();
+        const coord = WBAPI.nodeCoords[node];
+        if (!coord || !WBAPI.nodeMap[node]) {
+          logResponse(method, url.pathname, 400, `sentry/deploy: unknown node "${node}"`);
+          return json(res, 400, { ok: false, error: `Unknown node "${node}" — deploy at a named junction (its code, e.g. LHR) or pass {r,c}.` });
+        }
+        r = coord.r; c = coord.c;
+      } else if (Number.isFinite(+body.r) && Number.isFinite(+body.c)) {
+        r = +body.r | 0;
+        c = (((+body.c | 0) % COLS) + COLS) % COLS;   // E↔W wrap, same as the kernel
+        if (r < 0 || r >= ROWS) {
+          logResponse(method, url.pathname, 409, `sentry/deploy: (${body.r},${body.c}) off the band`);
+          return json(res, 409, { ok: false, error: `(${body.r},${body.c}) is off the grid`, reason: 'oob' });
+        }
+        node = (world.cellCodes(r, c) || [])[0] || null;
+      } else {
+        logResponse(method, url.pathname, 400, 'sentry/deploy: node or r,c required');
+        return json(res, 400, { ok: false, error: 'body.node (code) or body.{r,c} (coords) required' });
+      }
+      if (world.impassable.has(`${r},${c}`)) {
+        logResponse(method, url.pathname, 409, `sentry/deploy: (${r},${c}) is open sea`);
+        return json(res, 409, { ok: false, error: `(${r},${c}) is open sea — cannot garrison.`, reason: 'sea' });
+      }
+      if (sentryAt(r, c)) {
+        logResponse(method, url.pathname, 409, `sentry/deploy: (${r},${c}) already garrisoned`);
+        return json(res, 409, { ok: false, error: `A sentry already guards ${node || `(${r},${c})`}.`, reason: 'occupied' });
+      }
+      const sentryId = crypto.randomBytes(16).toString('hex');
+      const name = (String(body.name || '').trim() || `Sentry@${node || `${r},${c}`}`).slice(0, 60);
+      const dailyFee = Number.isFinite(+body.dailyFee) ? Math.max(0, +body.dailyFee | 0) : SENTRY_DEFAULTS.dailyFee;
+      const s = {
+        id: sentryId, playerName: name, kind: 'sentry', bot: true,
+        r, c, nodeCode: node, state: 'active',
+        lastSeen: Date.now(), deployedTs: Date.now(), dailyFee,
+        seed: 0, rngState: 0, encounter: null,
+      };
+      SESSIONS.set(sentryId, s);
+      // Ride the mesh: announce the newcomer to players already at the cell.
+      const evt = presenceEvt(sentryId, name, null, { r, c });
+      broadcastCell(r, c, 'player_arrived', { ...evt, node, kind: 'sentry' }, sentryId);
+      broadcastAll('player_moved', { ...evt, kind: 'sentry' }, sentryId);
+      emitMeshEvent('player_arrived', { ...evt, node, kind: 'sentry' }, r, c);
+      logRow('sentry', `deploy ${name}  ·  id:${sentryId.slice(0,8)}…  ·  ${node || `(${r},${c})`}  ·  ${dailyFee}g/day`);
+      logResponse(method, url.pathname, 201, `sentry deployed at ${node || `(${r},${c})`}`);
+      return json(res, 201, { ok: true, sentryId, pid: pidOf(sentryId), name, node, r, c, dailyFee });
+    }
+
+    // ── POST /api/sentry/recall  body: {sentryId} ──────────────────────────
+    if (sub === 'recall') {
+      const sentryId = body.sentryId;
+      const s = sentryId && SESSIONS.get(sentryId);
+      if (!s || !s.bot) {
+        logResponse(method, url.pathname, 404, 'sentry/recall: not found');
+        return json(res, 404, { ok: false, error: 'Sentry not found (already recalled or bad id).' });
+      }
+      SESSIONS.delete(sentryId);
+      const evt = presenceEvt(sentryId, s.playerName, { r: s.r, c: s.c }, null);
+      broadcastCell(s.r, s.c, 'player_left', { ...evt, kind: 'sentry' }, sentryId);
+      broadcastAll('player_moved', { ...evt, kind: 'sentry' }, sentryId);
+      emitMeshEvent('player_left', { ...evt, kind: 'sentry' }, s.r, s.c);
+      logRow('sentry', `recall ${s.playerName}  ·  id:${sentryId.slice(0,8)}…  ·  ${s.nodeCode}`);
+      logResponse(method, url.pathname, 200, `sentry recalled from ${s.nodeCode}`);
+      return json(res, 200, { ok: true, recalled: sentryId, node: s.nodeCode });
+    }
+
+    logResponse(method, url.pathname, 404, `unknown sentry sub-route "${sub}"`);
+    return json(res, 404, { error: `Unknown sentry sub-route "${sub}"`, available: ['deploy', 'recall', 'list'] });
   }
 
   // ── Single entity ─────────────────────────────────────────────────────────
@@ -10226,6 +10349,9 @@ server.listen(PORT, BIND_ADDR, () => {
     ['POST',   '/api/session/say                     body: {sessionId, msg} → chat broadcast'],
     ['POST',   '/api/session/end                     body: {sessionId} → remove session'],
     ['GET',    '/api/session/events?sessionId=        → SSE stream (player_arrived, chat)'],
+    ['POST',   '/api/sentry/deploy                   body: {node, dailyFee?} → station a §MESH-01h sentry bot at a junction (suppresses encounters + auto-assists there)'],
+    ['POST',   '/api/sentry/recall                   body: {sentryId} → recall a sentry'],
+    ['GET',    '/api/sentry/list                     → all deployed sentries'],
     ['GET',    '/api/schema[/{type}]                → canonical field schema'],
     ['GET',    '/api/flags                          → list _S_DEFAULTS flags'],
     ['POST',   '/api/flags                          body: {name, defaultValue, comment?}'],

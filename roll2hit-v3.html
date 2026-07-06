@@ -2614,10 +2614,10 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #btn-create-quest:hover { background: rgba(184,124,40,0.12); }
 /* ── §MESH-01g: Hired Guide (hireling bot) ── */
 #hireling-section { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 6px; }
-#hireling-body { padding: 4px 0; font-size: 11px; color: var(--text); }
-#hireling-body .hire-status { color: var(--dim); font-style: italic; margin-bottom: 5px; }
+#hireling-body, #sentry-body { padding: 4px 0; font-size: 11px; color: var(--text); }
+#hireling-body .hire-status, #sentry-body .hire-status { color: var(--dim); font-style: italic; margin-bottom: 5px; }
 #hireling-body .hire-name { color: var(--gold); font-weight: 700; font-style: normal; }
-#hireling-body .hire-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+#hireling-body .hire-btns, #sentry-body .hire-btns { display: flex; gap: 6px; flex-wrap: wrap; }
 .hire-btn { background: transparent; border: 1px solid var(--grn-lt); color: var(--grn-lt); padding: 3px 9px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 700; white-space: nowrap; }
 .hire-btn:hover { background: rgba(58,122,58,0.12); }
 .hire-btn.dismiss { border-color: var(--red-lt); color: var(--red-lt); }
@@ -4233,6 +4233,12 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div id="hireling-section">
           <div class="quest-section-hd">🧭 Hired Guide</div>
           <div id="hireling-body"></div>
+        </div>
+        <!-- §MESH-01h: sentry bots — server-owned guards posted at a junction that
+             suppress encounters + auto-assist any battle in their cell. -->
+        <div id="sentry-section">
+          <div class="quest-section-hd">🛡 Sentries</div>
+          <div id="sentry-body"></div>
         </div>
       </div>
 
@@ -23555,6 +23561,11 @@ function _storyEnemyTurn() {
     _hirelingStrike();
     if (S.opp.hp <= 0) { S_story.usedRealAttack = true; _storyBattleVictory(); return; }
   }
+  // §MESH-01h: a sentry stationed in this cell auto-assists — a second extra die.
+  if (_sentryHere()) {
+    _sentryStrike();
+    if (S.opp.hp <= 0) { S_story.usedRealAttack = true; _storyBattleVictory(); return; }
+  }
   const d20Val  = Math.ceil(Math.random() * 20);
   const atkTotal = d20Val + S.enemy.atk;
   const isCrit  = d20Val === 20;
@@ -26682,11 +26693,28 @@ const MP = { base: null, session: null, pid: null, name: null, es: null, players
 // roll adjustment in _enterEmptyCell, not a movement gate (Free-Movement). Every
 // buff is guarded on MP.on, so multiplayer-off is byte-for-byte unchanged.
 function _mpAllyCount() {
-  return (MP && MP.on && Array.isArray(MP.players)) ? MP.players.length : 0;
+  // §MESH-01h: sentry bots share the cell but are NOT party allies — they never
+  // grant the +1-per-ally hit/loot buff (that's for co-present PLAYERS). Filter
+  // them out so a garrisoned junction doesn't inflate the party bonus.
+  return (MP && MP.on && Array.isArray(MP.players))
+    ? MP.players.filter(p => p && p.kind !== 'sentry').length : 0;
 }
 function _partyHitBonus(allies) { return Math.min(2, Math.max(0, allies | 0)); }       // +1 to hit per ally, cap +2
 function _partyLootMult(allies) { return 1 + 0.1 * _partyHitBonus(allies); }            // +10% XP/gold per ally, cap +20%
-function _partyEncounterRate(base) { return _mpAllyCount() > 0 ? base * 0.5 : base; }   // encounter rate halved on shared cells
+
+// §MESH-01h — is a server-owned sentry bot stationed in the current cell? (Reads
+// server presence only, so single-player / disconnected is always false.) A
+// sentry suppresses wilderness encounters here and auto-assists any battle.
+function _sentryHere() {
+  return !!(MP && MP.on && Array.isArray(MP.players) && MP.players.some(p => p && p.kind === 'sentry'));
+}
+// Encounter rate: a stationed sentry suppresses encounters outright (0); else a
+// co-present party halves the base rate; else unchanged. Client-side roll
+// adjustment only — the mover never reads it (Free-Movement holds).
+function _partyEncounterRate(base) {
+  if (_sentryHere()) return 0;
+  return _mpAllyCount() > 0 ? base * 0.5 : base;
+}
 
 // §MESH-01g — hireling guide bot. SINGLE-PLAYER-FIRST (not gated on MP.on): a
 // hired-hand NPC that (1) costs an upfront wage + a daily fee ticked on the day
@@ -26777,6 +26805,38 @@ function _hirelingStrike() {
   return dmg;
 }
 
+// §MESH-01h — sentry auto-assist. When a server sentry is stationed in the
+// player's cell, it joins the battle as one extra attacker die, exactly like the
+// hireling but sourced from server presence (not S_story) and free to the
+// player. Gated on _sentryHere() so single-player / disconnected is a no-op.
+const SENTRY_SPEC = { name: 'Road Sentry', atkBonus: 5, dmgDie: 8, dmgCount: 1, dmgFlat: 2 };
+function _sentryStrike() {
+  if (!_sentryHere() || typeof S === 'undefined' || !S || !S.opp || !S.enemy || S.opp.hp <= 0) return 0;
+  const h = SENTRY_SPEC;
+  const d20 = Math.ceil(Math.random() * 20);
+  const res = _hirelingResolve(h, d20, S.enemy.ac);
+  let dmg = 0, msg;
+  if (res.nat1) {
+    msg = '✗ ' + h.name + ' NAT 1 — misses.';
+  } else if (!res.hit) {
+    msg = '✗ ' + h.name + ' misses. ' + res.total + ' vs AC ' + S.enemy.ac;
+  } else {
+    const count = res.crit ? (h.dmgCount || 1) * 2 : (h.dmgCount || 1);
+    const rolls = rollN(h.dmgDie || 8, count);
+    const raw = Math.max(0, rolls.reduce((a, b) => a + b, 0) + (h.dmgFlat || 0));
+    dmg = applyDmgMod(raw, S.opp.dmgMod);
+    S.opp.hp = Math.max(0, S.opp.hp - dmg);
+    if (typeof refreshLeftPanel === 'function') refreshLeftPanel();
+    msg = (res.crit ? '★ ' + h.name + ' CRIT! ' : '✓ ' + h.name + ' hits! ') + res.total + ' vs AC ' + S.enemy.ac + ' — ' + dmg + ' dmg.';
+  }
+  appendCard({ round: S.round, actor: 'SENTRY',
+    formula: 'd20(' + res.d20 + ')+' + (h.atkBonus || 0) + '=' + res.total,
+    outcome: res.nat1 ? 'NAT 1 — MISS' : (res.hit ? (res.crit ? '★ CRIT' : '✓ HIT') + ' vs AC ' + S.enemy.ac : '✗ MISS'),
+    dmg: dmg ? 'Enemy HP: ' + S.opp.hp + '/' + S.opp.maxHp : '' });
+  _sboLog('SENTRY: ' + msg);
+  return dmg;
+}
+
 // Quest-guide target: the target node of the first active quest that resolves to
 // a real node (waypoint → completion.atNode → activateNode). Pure over
 // S_story.quests + QUEST_DB, so "follow me" is testable without walking.
@@ -26844,6 +26904,105 @@ function _renderHirelingSection() {
   }
 }
 
+// ══ §MESH-01h — sentry economy (the player's OWN deployed sentries) ══════════
+// A sentry is a SERVER bot (see wbapi-server.js) that any co-present player reads
+// off presence for suppression + auto-assist. Paying is separate: YOU bankroll
+// the sentries YOU deploy. Records live in S_story.sentries (persist in the save)
+// as {id, node, dailyFee}; the day tick draws the fee on rest, recalling any you
+// can no longer pay — the same lifecycle shape as the §MESH-01g hireling wage.
+const SENTRY_ECON = { deployCost: 120, dailyFee: 20 };
+
+function _sentryOwned() { return (S_story && Array.isArray(S_story.sentries)) ? S_story.sentries : []; }
+function _sentryOwnedAt(node) { return _sentryOwned().find(s => s && s.node === node) || null; }
+
+// Pure deploy charge: pay the upfront cost + stamp the record. Refuses (null) on
+// an unaffordable cost or a duplicate id — the only two non-mutating failures.
+function _sentryDeployCharge(id, node, dailyFee) {
+  if (!S_story || !id) return null;
+  if (!Array.isArray(S_story.sentries)) S_story.sentries = [];
+  if (S_story.sentries.some(s => s && s.id === id)) return null;
+  if ((S_story.gold || 0) < SENTRY_ECON.deployCost) return null;
+  S_story.gold -= SENTRY_ECON.deployCost;
+  const rec = { id, node, dailyFee: Number.isFinite(+dailyFee) ? +dailyFee : SENTRY_ECON.dailyFee };
+  S_story.sentries.push(rec);
+  return rec;
+}
+function _sentryForget(id) {
+  if (!S_story || !Array.isArray(S_story.sentries)) return false;
+  const before = S_story.sentries.length;
+  S_story.sentries = S_story.sentries.filter(s => s && s.id !== id);
+  return S_story.sentries.length < before;
+}
+
+// Daily upkeep — called from storyConfirmSleep AFTER the day advances. Pays the
+// summed fee if affordable; otherwise drops the newest sentries one at a time
+// (cheapest to keep the oldest posts) until the bill fits. Returns the fee paid
+// and the ids to recall server-side. Gold never goes negative. No-op unhired.
+function _sentryDayTick() {
+  const list = _sentryOwned();
+  if (!list.length) return { active: false, paid: false, fee: 0, dropped: [] };
+  const dropped = [];
+  const keep = list.slice();
+  let fee = keep.reduce((a, s) => a + (s.dailyFee || 0), 0);
+  while (fee > (S_story.gold || 0) && keep.length) {
+    const gone = keep.pop();                 // drop the most recently posted first
+    dropped.push(gone.id);
+    fee -= (gone.dailyFee || 0);
+  }
+  for (const id of dropped) _sentryForget(id);
+  S_story.gold = Math.max(0, (S_story.gold || 0) - fee);
+  return { active: keep.length > 0, paid: fee > 0, fee, dropped };
+}
+
+// Network wrapper: deploy a sentry at the current node. Requires a live server
+// connection (a sentry only exists as server presence) and an affordable cost.
+async function mpDeploySentry() {
+  if (!MP.on || !MP.session) { storyMsg('🛡 Connect to a world server (🌐) to post a sentry.'); return; }
+  const node = S_story.currentCode;
+  if (!node || !NODE_MAP[node]) { storyMsg('🛡 Stand at a junction town to post a sentry.'); return; }
+  if (_sentryOwnedAt(node)) { storyMsg('🛡 You already keep a sentry here.'); return; }
+  if ((S_story.gold || 0) < SENTRY_ECON.deployCost) { storyMsg('🛡 A sentry costs ' + SENTRY_ECON.deployCost + 'g to post.'); return; }
+  try {
+    const r = await _mpFetch('/api/sentry/deploy', { node, dailyFee: SENTRY_ECON.dailyFee });
+    if (!r.ok) { storyMsg('🛡 ' + (r.error || 'Could not post a sentry here.')); return; }
+    const rec = _sentryDeployCharge(r.sentryId, node, r.dailyFee);
+    if (!rec) { _mpFetch('/api/sentry/recall', { sentryId: r.sentryId }).catch(() => {}); storyMsg('🛡 You cannot afford the posting.'); return; }
+    storyMsg('🛡 Sentry posted at ' + (NODE_MAP[node] ? NODE_MAP[node].label : node) + ' — ' + SENTRY_ECON.deployCost + 'g, then ' + rec.dailyFee + 'g/day.');
+    storyUpdateStatus(); storyRenderQuests();
+  } catch { storyMsg('🛡 No world server — start one with ./wbapi-toggle.sh start.'); }
+}
+async function mpRecallSentry(id) {
+  if (id) _mpFetch('/api/sentry/recall', { sentryId: id }).catch(() => {});
+  _sentryForget(id);
+  storyMsg('🛡 Sentry recalled.');
+  storyRenderQuests();
+}
+
+// Quest-panel UI: your posted sentries + a "post here" control.
+function _renderSentrySection() {
+  const body = document.getElementById('sentry-body');
+  if (!body) return;
+  const owned = _sentryOwned();
+  const here = S_story && S_story.currentCode;
+  const atHere = here && NODE_MAP[here];
+  let html = '';
+  if (owned.length) {
+    html += '<div class="hire-status">🛡 Sentries posted: ' + owned.map(s =>
+      (NODE_MAP[s.node] ? NODE_MAP[s.node].label : s.node) + ' (' + s.dailyFee + 'g/day)').join(', ') + '</div>';
+    html += '<div class="hire-btns">' + owned.map(s =>
+      '<button class="hire-btn dismiss" data-recall="' + s.id + '">✕ Recall ' + (NODE_MAP[s.node] ? NODE_MAP[s.node].label : s.node) + '</button>').join('') + '</div>';
+  } else {
+    html += '<div class="hire-status">No sentries posted. A sentry guards its junction — no wild encounters there, and it fights beside anyone who battles in its cell. ' +
+      SENTRY_ECON.deployCost + 'g to post, then ' + SENTRY_ECON.dailyFee + 'g/day.</div>';
+  }
+  const canPost = MP.on && atHere && !_sentryOwnedAt(here) && (S_story.gold || 0) >= SENTRY_ECON.deployCost;
+  html += '<div class="hire-btns"><button class="hire-btn" id="btn-sentry-deploy"' + (canPost ? '' : ' disabled') + '>🛡 Post sentry here (' + SENTRY_ECON.deployCost + 'g)</button></div>';
+  body.innerHTML = html;
+  const dBtn = document.getElementById('btn-sentry-deploy');
+  if (dBtn) dBtn.onclick = mpDeploySentry;
+  body.querySelectorAll('[data-recall]').forEach(b => { b.onclick = () => mpRecallSentry(b.getAttribute('data-recall')); });
+}
+
 function _mpBase() {
   try { return localStorage.getItem('mpServer') || 'http://localhost:1367'; }
   catch { return 'http://localhost:1367'; }
@@ -26895,9 +27054,9 @@ function _mpOpenStream() {
   es.addEventListener('player_arrived', ev => {
     const d = JSON.parse(ev.data);
     if (d.pid === MP.pid) return;   // never track yourself
-    if (!MP.players.some(p => p.pid === d.pid)) MP.players.push({ pid: d.pid, name: d.name, server: d.server });
-    if (d.pid && d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server };
-    storyMsg('🌐 ' + d.name + ' arrives.');
+    if (!MP.players.some(p => p.pid === d.pid)) MP.players.push({ pid: d.pid, name: d.name, server: d.server, kind: d.kind || 'player' });
+    if (d.pid && d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server, kind: d.kind || 'player' };
+    storyMsg(d.kind === 'sentry' ? '🛡 A sentry takes up post here.' : '🌐 ' + d.name + ' arrives.');
     _mpRenderPresence();
     _mpRepaintMaps();
   });
@@ -26905,7 +27064,7 @@ function _mpOpenStream() {
     const d = JSON.parse(ev.data);
     MP.players = MP.players.filter(p => p.pid !== d.pid);   // pid-keyed: only the leaver goes
     if (d.pid) { if (d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server }; else delete MP.remotes[d.pid]; }
-    storyMsg('🌐 ' + d.name + ' leaves.');
+    storyMsg(d.kind === 'sentry' ? '🛡 The sentry stands down.' : '🌐 ' + d.name + ' leaves.');
     _mpRenderPresence();
     _mpRepaintMaps();
   });
@@ -27877,6 +28036,7 @@ function storyRenderQuests() {
 
   // §MESH-01g: hireling guide status + Hire/Dismiss/Follow controls
   _renderHirelingSection();
+  _renderSentrySection();
 }
 
 function storyRenderInventory() {
@@ -32781,6 +32941,14 @@ function storyConfirmSleep() {
     const _wage = _hirelingDayTick();
     if (_wage.paid) setTimeout(() => storyMsg('🧭 Paid your guide ' + _wage.fee + 'g for the day.'), 200);
     else if (_wage.dismissed) setTimeout(() => storyMsg('🧭 Your guide left — no gold for the day\'s wage.'), 200);
+  }
+  // §MESH-01h: sentry upkeep on the day tick. Recall server-side any the player
+  // can no longer afford (the pure tick already dropped their local records).
+  if (_sentryOwned().length) {
+    const _s = _sentryDayTick();
+    for (const _id of _s.dropped) _mpFetch('/api/sentry/recall', { sentryId: _id }).catch(() => {});
+    if (_s.dropped.length) setTimeout(() => storyMsg('🛡 ' + _s.dropped.length + ' sentr' + (_s.dropped.length === 1 ? 'y stood' : 'ies stood') + ' down — unpaid upkeep.'), 250);
+    else if (_s.paid) setTimeout(() => storyMsg('🛡 Paid ' + _s.fee + 'g in sentry upkeep.'), 250);
   }
   _checkWorldProgressionEvents();
   // Narrative wait counters — sleep-based triggers (gates removed)

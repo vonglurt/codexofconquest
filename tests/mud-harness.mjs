@@ -739,6 +739,94 @@ async function main() {
     'unlocked again → geo-seed re-projects LHR (to its true geo cell)');
   fs.rmSync(pinsFile, { force: true });
 
+  // ════════ (h) §MESH-01h — sentry bots: presence + encounter suppression ════════
+  // A server-owned bot session stationed at a junction. It must (1) ride EVERY
+  // presence surface for free (player_arrived/look/who carry it, tagged
+  // kind:'sentry'), (2) suppress the instanced encounter roll in its cell, and
+  // (3) never idle-expire (sessionPrune skips bots). Deploy/recall are the
+  // single-writer mutations of THIS origin's sentries.
+  console.log('\n[H] §MESH-01h — sentry bots (deploy → presence, suppression, recall, prune-immunity)');
+  const cellN = { r: alice.r - 1, c: alice.c };   // empty, encounter-eligible cell N of the hub (see [C])
+
+  // H1 — baseline: a fresh seed-7 session rolls encounters at cell N with NO sentry.
+  // Same seed + same path reproduces exactly ([C]), so this count is the oracle the
+  // guarded run must suppress to zero.
+  const nsPath = []; for (let i = 0; i < 30; i++) nsPath.push('N', 'S');
+  const walkTrace = async (id) => {
+    let enc = 0, guarded = 0;
+    for (const dir of nsPath) {
+      const r = await jpost('/session/move', { sessionId: id, dir });
+      if (r.ok && r.encounter) enc++;
+      if (r.ok && r.sentryGuard) guarded++;
+    }
+    return { enc, guarded };
+  };
+  const baseSess = await jpost('/session/start', { name: 'SentryBase', seed: 7 });
+  const baseline = await walkTrace(baseSess.sessionId);
+  check(baseline.enc > 0, `baseline seed-7 session rolls encounters at cell N (${baseline.enc}) — suppression is non-vacuous`);
+  check(baseline.guarded === 0, 'baseline sees no sentryGuard (no sentry deployed yet)');
+  await jpost('/session/end', { sessionId: baseSess.sessionId });
+
+  // H2 — a watcher at cell N, then deploy: the bot rides presence.
+  const watch = await jpost('/session/start', { name: 'Watch', seed: 91 });
+  const wMove = await jpost('/session/move', { sessionId: watch.sessionId, dir: 'N' });
+  check(wMove.ok && wMove.r === cellN.r && wMove.c === cellN.c, 'watcher steps N off the hub to the empty cell');
+  const sseW = await openSSE(watch.sessionId); openClients.push(sseW);
+  await sleep(120);
+  const dep = await jpost('/sentry/deploy', { r: cellN.r, c: cellN.c, dailyFee: 25 });
+  check(dep.ok === true && /^[0-9a-f]{32}$/.test(dep.sentryId || ''), 'deploy returns a 32-hex sentryId');
+  check(dep.r === cellN.r && dep.c === cellN.c && dep.dailyFee === 25, 'sentry lands on the requested cell with the given daily fee');
+  await waitFor(() => countEv(sseW, 'player_arrived', (d) => d.kind === 'sentry') >= 1);
+  await sleep(80);
+  check(countEv(sseW, 'player_arrived', (d) => d.kind === 'sentry') === 1, 'co-present watcher gets exactly one player_arrived tagged kind:sentry');
+  const wLook = await jget(`/session/look?sessionId=${watch.sessionId}`);
+  check((wLook.players || []).some((p) => p.kind === 'sentry'), 'watcher look.players carries the sentry, tagged kind:sentry');
+  const whoH = await jget('/session/who');
+  check((whoH.sessions || []).some((x) => x.kind === 'sentry'), 'who lists the sentry with kind:sentry');
+  const listed = await jget('/sentry/list');
+  check(listed.count >= 1 && listed.sentries.some((x) => x.sentryId === dep.sentryId && x.dailyFee === 25), 'sentry/list reports the deployed sentry + its fee');
+
+  // H3 — rejections.
+  const dupDep = await jpost('/sentry/deploy', { r: cellN.r, c: cellN.c });
+  check(dupDep.ok === false && dupDep.reason === 'occupied', 'a second deploy on the same cell is refused (occupied)');
+  const badDep = await jpost('/sentry/deploy', { node: 'NOPE' });
+  check(badDep.ok === false, 'deploy at an unknown node code is refused');
+
+  // H4 — suppression: seed-7 guarded run suppresses EVERY encounter the baseline
+  // rolled at cell N (deterministic: the RNG stream still advances, only the
+  // result is voided), so guarded.enc === 0 and guarded.guarded === baseline.enc.
+  const guardSess = await jpost('/session/start', { name: 'SentryGuarded', seed: 7 });
+  const guarded = await walkTrace(guardSess.sessionId);
+  check(guarded.enc === 0, `sentry suppresses all wilderness encounters in its cell (guarded enc=${guarded.enc})`);
+  check(guarded.guarded === baseline.enc, `every baseline encounter is accounted for as a sentryGuard suppression (${guarded.guarded} === ${baseline.enc})`);
+  await jpost('/session/end', { sessionId: guardSess.sessionId });
+
+  // H5 — recall: the bot leaves presence.
+  const recall = await jpost('/sentry/recall', { sentryId: dep.sentryId });
+  check(recall.ok === true && recall.recalled === dep.sentryId, 'recall removes the sentry');
+  await waitFor(() => countEv(sseW, 'player_left', (d) => d.kind === 'sentry') >= 1);
+  await sleep(80);
+  check(countEv(sseW, 'player_left', (d) => d.kind === 'sentry') === 1, 'co-present watcher gets exactly one player_left tagged kind:sentry');
+  check((await jget('/sentry/list')).count === 0, 'sentry/list is empty after recall');
+  check(!(await jget('/session/who')).sessions.some((x) => x.kind === 'sentry'), 'who no longer lists the sentry');
+  const recallGone = await jpost('/sentry/recall', { sentryId: dep.sentryId });
+  check(recallGone.ok === false, 'recalling an already-gone sentry is a clean 404');
+  await jpost('/session/end', { sessionId: watch.sessionId });
+
+  // H6 — prune immunity: on a short-TTL server, an idle PLAYER session is pruned
+  // but a sentry bot at the same idle age survives (sessionPrune skips bots).
+  console.log('\n[H6] sentry bots survive the idle-session prune');
+  const sTtl = await startServer(PORT + 30, { SESSION_TTL_MS: '600' });
+  const idlePlayer = await jpost('/session/start', { name: 'IdleGhost', seed: 44 }, sTtl.base);
+  const sBot = await jpost('/sentry/deploy', { node: 'LHR', dailyFee: 10 }, sTtl.base);
+  check(sBot.ok === true, 'sentry deploys on the short-TTL server (via node code)');
+  await sleep(900);   // both sit idle past the 600ms TTL
+  await jget('/session/who', sTtl.base);   // any /session/* request triggers the prune sweep
+  const whoTtl = await jget('/session/who', sTtl.base);
+  check(!whoTtl.sessions.some((x) => x.name === 'IdleGhost'), 'the idle player session is pruned past its TTL');
+  check(whoTtl.sessions.some((x) => x.kind === 'sentry'), 'the sentry bot survives the prune (bots never idle-expire)');
+  check((await jget('/sentry/list', sTtl.base)).count === 1, 'sentry/list still reports the bot after the prune sweep');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});
