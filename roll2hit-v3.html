@@ -2612,6 +2612,17 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #quest-terrain-select { background: var(--panel2); color: var(--text); border: 1px solid var(--border); border-radius: 4px; padding: 4px 6px; font-size: 11px; flex: 1; min-width: 120px; }
 #btn-create-quest { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 4px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 700; white-space: nowrap; }
 #btn-create-quest:hover { background: rgba(184,124,40,0.12); }
+/* ── §MESH-01g: Hired Guide (hireling bot) ── */
+#hireling-section { border-top: 1px solid var(--border); margin-top: 10px; padding-top: 6px; }
+#hireling-body { padding: 4px 0; font-size: 11px; color: var(--text); }
+#hireling-body .hire-status { color: var(--dim); font-style: italic; margin-bottom: 5px; }
+#hireling-body .hire-name { color: var(--gold); font-weight: 700; font-style: normal; }
+#hireling-body .hire-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.hire-btn { background: transparent; border: 1px solid var(--grn-lt); color: var(--grn-lt); padding: 3px 9px; border-radius: 4px; font-size: 11px; cursor: pointer; font-weight: 700; white-space: nowrap; }
+.hire-btn:hover { background: rgba(58,122,58,0.12); }
+.hire-btn.dismiss { border-color: var(--red-lt); color: var(--red-lt); }
+.hire-btn.dismiss:hover { background: rgba(122,26,26,0.12); }
+.hire-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ── Story Center (light theme) ──────────────────────── */
 #story-center { background: var(--bg); }
@@ -4216,6 +4227,12 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
             </select>
             <button id="btn-create-quest">📍 Set Waypoint</button>
           </div>
+        </div>
+        <!-- §MESH-01g: hireling guide bot — single-player companion (daily fee, extra
+             attacker die, "follow me" auto-travel to the active quest). -->
+        <div id="hireling-section">
+          <div class="quest-section-hd">🧭 Hired Guide</div>
+          <div id="hireling-body"></div>
         </div>
       </div>
 
@@ -21635,6 +21652,7 @@ const _S_DEFAULTS = () => ({
   shieldTier: null, equippedWeapon: null, equippedMainWeapon: null, levelUpLog: [], tattoos: [],
   lastAutoSellNode: null, surgeCharges: 0, indomitableCharges: 0,
   waypoint: null, customQuestTerrain: null,
+  hireling: null,   // §MESH-01g: hired guide bot (single-player; persists in save)
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [], ebReturnsCompleted: {},
   npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, cycle4NoteRead: false, bogDefeated: false, // §LI–§LVIII + CO-001
@@ -23531,6 +23549,12 @@ function _overlayOffhandAttack() {
 
 function _storyEnemyTurn() {
   if (S.opp.hp <= 0) return;
+  // §MESH-01g: the hired guide strikes first — an extra attacker die each round,
+  // resolved before the enemy acts. A killing blow ends the fight in your favor.
+  if (_hirelingActive()) {
+    _hirelingStrike();
+    if (S.opp.hp <= 0) { S_story.usedRealAttack = true; _storyBattleVictory(); return; }
+  }
   const d20Val  = Math.ceil(Math.random() * 20);
   const atkTotal = d20Val + S.enemy.atk;
   const isCrit  = d20Val === 20;
@@ -26664,6 +26688,162 @@ function _partyHitBonus(allies) { return Math.min(2, Math.max(0, allies | 0)); }
 function _partyLootMult(allies) { return 1 + 0.1 * _partyHitBonus(allies); }            // +10% XP/gold per ally, cap +20%
 function _partyEncounterRate(base) { return _mpAllyCount() > 0 ? base * 0.5 : base; }   // encounter rate halved on shared cells
 
+// §MESH-01g — hireling guide bot. SINGLE-PLAYER-FIRST (not gated on MP.on): a
+// hired-hand NPC that (1) costs an upfront wage + a daily fee ticked on the day
+// advance (sleep), (2) joins every battle as one extra attacker die striking at
+// the top of the enemy turn, and (3) as a quest guide drives the §NAV-01d auto-
+// travel loop toward the active quest ("follow me"). Because it is single-player
+// the record lives in S_story (persists in the save), unlike the transient
+// §MESH-01f co-presence buffs. The guide NEVER gates movement — "follow me" just
+// sets the same waypoint the player could set by hand, then runs the normal
+// travel loop (Free-Movement holds).
+const HIRELING_SPEC = { name: 'Bram the Trailhand', hireCost: 60, dailyFee: 12, atkBonus: 4, dmgDie: 6, dmgCount: 1, dmgFlat: 2 };
+
+function _hirelingActive() { return !!(typeof S_story !== 'undefined' && S_story && S_story.hireling); }
+
+// Hire: pay the upfront wage, stamp the record into S_story. Refuses (returns
+// null) if one is already hired or the wage is unaffordable — the ONLY two
+// failure modes, both non-mutating.
+function _hirelingHire(spec) {
+  spec = spec || HIRELING_SPEC;
+  if (!S_story || S_story.hireling) return null;
+  if ((S_story.gold || 0) < spec.hireCost) return null;
+  S_story.gold -= spec.hireCost;
+  S_story.hireling = {
+    name: spec.name, hiredDay: S_story.day || 1, dailyFee: spec.dailyFee,
+    atkBonus: spec.atkBonus, dmgDie: spec.dmgDie, dmgCount: spec.dmgCount, dmgFlat: spec.dmgFlat,
+  };
+  return S_story.hireling;
+}
+
+function _hirelingDismiss(reason) {
+  if (!S_story || !S_story.hireling) return false;
+  const name = S_story.hireling.name;
+  S_story.hireling = null;
+  if (reason) storyMsg('🧭 ' + name + ' ' + reason);
+  return true;
+}
+
+// Daily wage tick — called from storyConfirmSleep AFTER the day advances. Pays
+// the fee if affordable; otherwise the hand walks (auto-dismiss). Returns a
+// status object for the caller/tests. No-op (and no charge) when unhired.
+function _hirelingDayTick() {
+  const h = S_story && S_story.hireling;
+  if (!h) return { active: false, paid: false };
+  const fee = h.dailyFee || 0;
+  if ((S_story.gold || 0) >= fee) {
+    S_story.gold -= fee;
+    return { active: true, paid: true, fee };
+  }
+  _hirelingDismiss('leaves your service — the day\'s wage went unpaid.');
+  return { active: false, paid: false, dismissed: true, fee };
+}
+
+// Pure to-hit resolver (nat1 auto-miss, nat20 auto-crit, else total vs AC) so
+// the combat outcome is unit-testable without rolling.
+function _hirelingResolve(h, d20, enemyAc) {
+  const nat1 = d20 === 1, crit = d20 === 20;
+  const total = d20 + (h.atkBonus || 0);
+  const hit = crit || (!nat1 && total >= enemyAc);
+  return { d20, total, nat1, crit, hit };
+}
+
+// The extra attacker die: one strike against the current enemy. No-op when
+// unhired or when there is no live enemy. Returns damage dealt (0 on miss).
+function _hirelingStrike() {
+  const h = S_story && S_story.hireling;
+  if (!h || typeof S === 'undefined' || !S || !S.opp || !S.enemy || S.opp.hp <= 0) return 0;
+  const d20 = Math.ceil(Math.random() * 20);
+  const res = _hirelingResolve(h, d20, S.enemy.ac);
+  let dmg = 0, msg;
+  if (res.nat1) {
+    msg = '✗ ' + h.name + ' NAT 1 — misses.';
+  } else if (!res.hit) {
+    msg = '✗ ' + h.name + ' misses. ' + res.total + ' vs AC ' + S.enemy.ac;
+  } else {
+    const count = res.crit ? (h.dmgCount || 1) * 2 : (h.dmgCount || 1);
+    const rolls = rollN(h.dmgDie || 6, count);
+    const raw = Math.max(0, rolls.reduce((a, b) => a + b, 0) + (h.dmgFlat || 0));
+    dmg = applyDmgMod(raw, S.opp.dmgMod);
+    S.opp.hp = Math.max(0, S.opp.hp - dmg);
+    if (typeof refreshLeftPanel === 'function') refreshLeftPanel();
+    msg = (res.crit ? '★ ' + h.name + ' CRIT! ' : '✓ ' + h.name + ' hits! ') + res.total + ' vs AC ' + S.enemy.ac + ' — ' + dmg + ' dmg.';
+  }
+  appendCard({ round: S.round, actor: 'ALLY',
+    formula: 'd20(' + res.d20 + ')+' + (h.atkBonus || 0) + '=' + res.total,
+    outcome: res.nat1 ? 'NAT 1 — MISS' : (res.hit ? (res.crit ? '★ CRIT' : '✓ HIT') + ' vs AC ' + S.enemy.ac : '✗ MISS'),
+    dmg: dmg ? 'Enemy HP: ' + S.opp.hp + '/' + S.opp.maxHp : '' });
+  _sboLog('HIRELING: ' + msg);
+  return dmg;
+}
+
+// Quest-guide target: the target node of the first active quest that resolves to
+// a real node (waypoint → completion.atNode → activateNode). Pure over
+// S_story.quests + QUEST_DB, so "follow me" is testable without walking.
+function _hirelingQuestTarget() {
+  if (!S_story || !S_story.quests) return null;
+  const activeIds = Object.keys(S_story.quests).filter(id => S_story.quests[id] === 'active');
+  for (const id of activeIds) {
+    const q = QUEST_DB[id];
+    if (!q) continue;
+    const node = q.waypointNode || (q.completion && q.completion.atNode) || q.activateNode;
+    if (node && NODE_MAP[node]) return node;
+  }
+  return null;
+}
+
+// "Follow me" — point the guide at the active quest and run the normal travel
+// loop. Sets the same S_story.waypoint the player could set by hand; the mover
+// is untouched (Free-Movement).
+function _hirelingGuide() {
+  if (!_hirelingActive()) { storyMsg('🧭 Hire a guide first.'); return; }
+  const target = _hirelingQuestTarget();
+  if (!target) { storyMsg('🧭 ' + S_story.hireling.name + ': "No active quest to follow — take one first."'); return; }
+  if (S_story.currentCode === target) { storyMsg('🧭 You are already at the quest\'s destination.'); return; }
+  S_story.waypoint = target;
+  S_story.customQuestTerrain = null;
+  _updateWaypointBtn();
+  const dest = NODE_MAP[target];
+  storyMsg('🧭 ' + S_story.hireling.name + ': "Follow me — this way to ' + (dest ? dest.label : target) + '."');
+  if (typeof switchSheet === 'function') switchSheet('sheet-story');
+  _travelStart();
+}
+
+// Quest-panel UI: status line + Hire / Dismiss / Follow buttons. Re-rendered by
+// storyRenderQuests so gold changes and hire/dismiss reflect immediately.
+function _renderHirelingSection() {
+  const body = document.getElementById('hireling-body');
+  if (!body) return;
+  const h = S_story && S_story.hireling;
+  if (h) {
+    const days = (S_story.day || 1) - (h.hiredDay || 0);
+    body.innerHTML =
+      '<div class="hire-status"><span class="hire-name">' + h.name + '</span> · +' + h.atkBonus +
+      ' to hit, d' + h.dmgDie + '+' + h.dmgFlat + ' extra die · ' + h.dailyFee + 'g/day' +
+      (days > 0 ? ' · ' + days + ' day' + (days === 1 ? '' : 's') + ' in service' : '') + '</div>' +
+      '<div class="hire-btns">' +
+        '<button class="hire-btn" id="btn-hire-follow">🧭 Follow me</button>' +
+        '<button class="hire-btn dismiss" id="btn-hire-dismiss">✕ Dismiss</button>' +
+      '</div>';
+    const fBtn = document.getElementById('btn-hire-follow');
+    if (fBtn) fBtn.onclick = _hirelingGuide;
+    const dBtn = document.getElementById('btn-hire-dismiss');
+    if (dBtn) dBtn.onclick = () => { _hirelingDismiss('is dismissed. "Safe roads."'); storyRenderQuests(); };
+  } else {
+    const afford = (S_story && (S_story.gold || 0) >= HIRELING_SPEC.hireCost);
+    body.innerHTML =
+      '<div class="hire-status">No guide hired. ' + HIRELING_SPEC.name + ' — ' + HIRELING_SPEC.hireCost +
+      'g up front, then ' + HIRELING_SPEC.dailyFee + 'g/day. Fights beside you and can lead you to your quest.</div>' +
+      '<div class="hire-btns"><button class="hire-btn" id="btn-hire-hire"' + (afford ? '' : ' disabled') + '>🤝 Hire (' + HIRELING_SPEC.hireCost + 'g)</button></div>';
+    const hBtn = document.getElementById('btn-hire-hire');
+    if (hBtn) hBtn.onclick = () => {
+      const rec = _hirelingHire();
+      if (rec) { storyMsg('🤝 ' + rec.name + ' joins you. ' + HIRELING_SPEC.dailyFee + 'g/day, paid when you rest.'); storyUpdateStatus(); storyRenderQuests(); }
+      else storyMsg('🧭 You cannot afford the wage right now.');
+    };
+  }
+}
+
 function _mpBase() {
   try { return localStorage.getItem('mpServer') || 'http://localhost:1367'; }
   catch { return 'http://localhost:1367'; }
@@ -27694,6 +27874,9 @@ function storyRenderQuests() {
   if (createBtn) {
     createBtn.onclick = storyCreateCustomQuest;
   }
+
+  // §MESH-01g: hireling guide status + Hire/Dismiss/Follow controls
+  _renderHirelingSection();
 }
 
 function storyRenderInventory() {
@@ -32592,6 +32775,13 @@ function storyConfirmSleep() {
   // Advance day
   S_story.day = Math.min(49, S_story.day + 1);
   S_story.gameDay = (S_story.gameDay || 0) + 1;
+  // §MESH-01g: the hired guide draws a day's wage on the day tick; if you can't
+  // pay, the hand walks off (auto-dismiss). No-op when no guide is hired.
+  if (_hirelingActive()) {
+    const _wage = _hirelingDayTick();
+    if (_wage.paid) setTimeout(() => storyMsg('🧭 Paid your guide ' + _wage.fee + 'g for the day.'), 200);
+    else if (_wage.dismissed) setTimeout(() => storyMsg('🧭 Your guide left — no gold for the day\'s wage.'), 200);
+  }
   _checkWorldProgressionEvents();
   // Narrative wait counters — sleep-based triggers (gates removed)
   if (nodeCode === 'DAM' && S_story.saulConverted && !S_story.anathSightRestored)
