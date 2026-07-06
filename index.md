@@ -3,7 +3,7 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · 34,542 lines · 410 nodes · 392 monsters · ~2,830 quests · 80 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + gameplay ladder f/g/h ✅ + **(i) no-dupe ledger ✅ COMPLETE incl. cross-origin trades (2026-07-06)** · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · ⚠️ §DATA-01 REVERTED (recorded done, never re-shipped — see plan.md §DATA-01-REVERTED)
+**Status:** Layers 0–104 implemented · 34,542 lines · 410 nodes · 392 monsters · ~2,830 quests · 80 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + **§MESH-01 gameplay ladder (f–j) ✅ COMPLETE 2026-07-06** (buffs · hireling · sentries · no-dupe ledger incl. cross-origin trades · PvP duels) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · ⚠️ §DATA-01 REVERTED (recorded done, never re-shipped — see plan.md §DATA-01-REVERTED)
 **Last updated:** 2026-07-03
 
 ### Doc Health Badge
@@ -64,6 +64,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `docs-node-network.md` | Node network technical reference — cell grid, adjacency, code conventions, `cellMove` navigation, §12 multiplayer mesh (gossip/vv/tracker/ACL) | ✅ Updated 2026-07-02 |
 | `mover.js` | **§WALK-2** unified mover kernel — pure `move(world,pos,dir)→MoveResult` (geo wrap/clamp/sea/locale per lab report §4.1; no DOM/SSE/RNG). The `MOVER:CORE` block is inlined byte-identically into `roll2hit-v3.html` and `require()`d by `wbapi-server.js` — single source of movement truth shared by SP client (`cellMove`) + MUD server (`POST /api/session/move`) | ✅ done 2026-06-26 |
 | `rooms.js` | **§NAV-01c/f** unified room-description kernel — pure `describeCell(world,pos)→Room` (deterministic prose hash, exits-with-signage, road/lane signposts, nearest landmarks). The `ROOMS:CORE` block is inlined byte-identically into `roll2hit-v3.html` (`check:roomsparity`) and `require()`d by `wbapi-server.js` — `room` on all session look surfaces, byte-equal SP/MUD (mud-harness [M]) | ✅ done 2026-07-02 |
+| `duel.js` | **§MESH-01j** unified duel-resolution kernel — pure `DUEL.run(statA,statB,duelSeed)→{transcript,winner,…}` (mulberry32 over the commit-reveal seed; own pure-JS sha256 so commit hashing never diverges; `checkBounds` impossible-stats gate). The `DUEL:CORE` block is inlined byte-identically into `roll2hit-v3.html` (`check:duelparity`) and `require()`d by `wbapi-server.js` — client replays + verifies every server verdict | ✅ done 2026-07-06 |
 | `Year1367AD.md` | Canonical year 1367 AD — historical events, source texts, quest vignettes for §1367 integration | ✅ |
 
 ### Story Arc Files
@@ -111,12 +112,13 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `parse-nodes.js` | Standalone node parser — extracts NODE_MAP entries for external tooling |
 | `scripts/check-mover-parity.js` | **§WALK-2** structural walk-parity — asserts the `MOVER:CORE` block is byte-identical in `mover.js` and `roll2hit-v3.html` |
 | `scripts/check-mover-behaviour.js` | **§WALK-2** behavioural walk-parity — replays real `CELL_GRID`/`IMPASSABLE_CELLS` through old `cellMove` logic vs `mover.js`; asserts 0 content-affecting decision mismatches |
+| `scripts/check-duel-parity.js` | **§MESH-01j** structural duel-parity — asserts the `DUEL:CORE` block is byte-identical in `duel.js` and `roll2hit-v3.html` |
 
 ### Integration Tests (Playwright)
 
 Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI server needed).
 
-> ✅ **Rebuilt in §WALK-4 (2026-06-26)** against current geo, extended by §NAV-01 (room render, auto-travel, wayfinding, road-net editor cases). Current at §NAV-01 close (2026-07-03): walk suite **89/89** (navigation 37 + worldbuilder walk specs) · autosave 4/4 · fishing green. Walk-invariant CI gate: `npm run check:walk` **6/6** (invariants, mover parity ×2, terrain parity incl. roads, check:roads R1–R4, rooms parity). MUD server protocol tests live outside Playwright: `npm run test:mud` (**202** checks, sections [A]–[N] + §MESH-01h sentry [H]/[H6] + §MESH-01i ledger [I]/[I2]/[I3] incl. cross-origin trades). At 2026-07-06 (§MESH-01i slice 1): full Playwright **501 passed** (4 known `worldbuilder-crud-arrays` fails = the §NAV-01-FU-5 server dependency). ⚠️ Before any Playwright run, re-read plan.md §I Test-Run Rules: stop the WBAPI server first, never trust piped exit codes.
+> ✅ **Rebuilt in §WALK-4 (2026-06-26)** against current geo, extended by §NAV-01 (room render, auto-travel, wayfinding, road-net editor cases). Current at §NAV-01 close (2026-07-03): walk suite **89/89** (navigation 37 + worldbuilder walk specs) · autosave 4/4 · fishing green. Walk-invariant CI gate: `npm run check:walk` **6/6** (invariants, mover parity ×2, terrain parity incl. roads, check:roads R1–R4, rooms parity). MUD server protocol tests live outside Playwright: `npm run test:mud` (**224** checks, sections [A]–[O]: sentry [H]/[H6] · ledger [I]/[I2]/[I3] incl. cross-origin trades · duels [O]). At 2026-07-06 (§MESH-01i slice 1): full Playwright **501 passed** (4 known `worldbuilder-crud-arrays` fails = the §NAV-01-FU-5 server dependency). ⚠️ Before any Playwright run, re-read plan.md §I Test-Run Rules: stop the WBAPI server first, never trust piped exit codes.
 
 | File | Coverage | Count |
 |------|---------|-------|
@@ -168,7 +170,7 @@ All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
 | **§1367** | Historical year 1367 AD integration — `GAME_YEAR=1367`, plague mechanic, Hanseatic faction score, faith triple-track (orthodox/reform/folk), 4 new Baltic nodes (LB/DZ/RG/BG), 6 arc seeds, historical NPCs. Full spec in `Year1367AD.md`. |
 | **§EDITOR-02-FU** | ✅ COMPLETE — branching arcs + drag-reorder shipped 2026-06-27; whole-arc UQF export shipped 2026-07-03 with §EDITOR-03 (§ARCH-01 W8b). Archived: plan-archive.md §"Archived 2026-07-06". |
 | **§NAV-01** | Navigable World: MUD-coherent map + fungal road net — **✅ COMPLETE 2026-07-03 (Inc a–h)**: pos-origin BFS (geo bounds + wrap), `ROAD_RUNS` net (400 cells / 88 junctions, encounter rate 0, `check:roads` R1–R4), `describeCell` room layer (ROOMS:CORE `rooms.js`, deterministic prose + signposts), road-weighted auto-travel (`_roadGridPath` + `_travelTick`, 4 interrupt classes), wayfinding UI (exits signage, waypoint ★, `(n steps, NE)`), map suite + GLOBE panel, Inc f MUD server room parity (`room` on all four look surfaces, byte-equal to client, mud-harness [M]), Inc g worldbuilder drag-&-lock cities (`PUT /api/coords`, 🔒 → `roads-pins.json`), Inc h road-net editor (chain-link overlay, pin drag, ✚/┬/🔗/🗑 palette, ♻ Reweave Net = `PUT /api/roads` with auto-rollback). Gates at close: walk suite 89/89 · check:walk 6/6 · mud-harness 119. Lab report: `lab-reports/lab-report-nav01-navigable-world.md` · archive: plan-archive.md §2026-07-03. |
-| **§MESH-01** | Multiuser MUD — **core ✅ SHIPPED** (client presence, gossip/PEX mesh + `worldHash` scoping, tracker + federation, world download/diff, Mesh tab; archived 2026-07-03) · **gameplay ladder (f) buffs ✅ · (g) hireling ✅ · (h) sentry bots ✅ · (i) no-dupe ledger ✅ COMPLETE 2026-07-06 (all rungs)** (durable hash chains `ledger/<origin>.jsonl`, mint + two-phase trade + pure lowest-hash dupe-void resolver; durable playerKey identity + cross-mesh gossip replication; client mint-stamping + ⇄ trade UI; **cross-ORIGIN co-signed trades** via `POST /api/trade/relay`, proposer's origin authors the one dual-sig event — mud-harness [I]/[I2]/[I3] 202 + `mesh-ledger-client.test.js` 8 incl. a two-server cross-origin E2E). Remaining: (j) consensual duels (`DUEL:CORE` shapes ready — lab report §6.3). See plan.md §MESH-01 ladder. |
+| **§MESH-01** | Multiuser MUD — **core ✅ SHIPPED** (client presence, gossip/PEX mesh + `worldHash` scoping, tracker + federation, world download/diff, Mesh tab; archived 2026-07-03) · **gameplay ladder (f) buffs ✅ · (g) hireling ✅ · (h) sentry bots ✅ · (i) no-dupe ledger ✅ COMPLETE 2026-07-06 (all rungs)** (durable hash chains `ledger/<origin>.jsonl`, mint + two-phase trade + pure lowest-hash dupe-void resolver; durable playerKey identity + cross-mesh gossip replication; client mint-stamping + ⇄ trade UI; **cross-ORIGIN co-signed trades** via `POST /api/trade/relay`, proposer's origin authors the one dual-sig event — mud-harness [I]/[I2]/[I3] 202 + `mesh-ledger-client.test.js` 8 incl. a two-server cross-origin E2E). · **(j) consensual PvP duels ✅ 2026-07-06** (`duel.js` DUEL:CORE kernel + `check:duelparity`, commit-reveal `duel/challenge|accept|reveal`, dual-chain `kind:'duel'` events, ⚔ client UI with verified replay, `S_story.pvpOff` opt-out, forfeit-on-walk-off never blocks a step — mud-harness [O] 22 + `mesh-duel-client.test.js` 5 incl. two-browser E2E). **THE LADDER (f–j) IS COMPLETE.** See plan.md §MESH-01 ladder. |
 
 ### Version Snapshots
 
@@ -551,6 +553,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.s8VargaWatches` | number | Varga observation count (S8 mechanic, 0–3) |
 | `S_story.archiveVisited` | boolean | Blue Shutters Archive entered |
 | `S_story.playerKey` | string | Private 32-hex durable trade identity (§MESH-01i 2b); generated once on first 🌐 connect, save-persisted; server derives ledger pid from its sha256 |
+| `S_story.pvpOff` | boolean | §MESH-01j global duel opt-out (🚫 decline all duels); presented at session/start — an off player is unchallengeable |
 | `S_story.s29LineDelivered` | boolean | Auros/Froberger theory line delivered |
 | `S_story.s49BrynnDelivered` | boolean | Brynn Entry-41 reaction delivered |
 | `S_story.raisonToolsUsed` | boolean | Raison's Tools assessment used |
@@ -773,7 +776,7 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 ---
 
 *Last updated: 2026-07-02*
-*Codebase: `roll2hit-v3.html` · 34,542 lines · Layers 0–104 complete · 410 nodes · 392 monsters · ~2,830 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF ✅ CLOSED · §MESH-01 core + ladder f/g/h + (i) ledger complete (cross-origin trades) · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
+*Codebase: `roll2hit-v3.html` · 34,542 lines · Layers 0–104 complete · 410 nodes · 392 monsters · ~2,830 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF ✅ CLOSED · §MESH-01 core + full gameplay ladder f–j (ledger trades incl. cross-origin, PvP duels) · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---

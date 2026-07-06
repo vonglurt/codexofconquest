@@ -195,6 +195,26 @@ curl -XPOST http://localhost:1367/api/trade/cancel -d '{"tradeId":"<t>"}'
 # Requires the two servers to be mutually dialable mesh peers; a counterparty
 # on a never-gossiped origin is refused with reason "peer-unreachable".
 
+# Consensual PvP duels (§MESH-01j) — commit-reveal, DUEL:CORE pure resolver
+# (duel.js, inlined byte-identical in the game; npm run check:duelparity),
+# outcome event (kind:'duel') into BOTH players' chains. Same-origin v1.
+curl -XPOST http://localhost:1367/api/duel/challenge \
+  -d '{"sessionId":"<idA>","to":"<ledgerPidB>"}'          # → {duelId, ttlMs:30000}; refused on pvp:off,
+                                                          #   different cells, or a cross-origin pid
+curl -XPOST http://localhost:1367/api/duel/accept \
+  -d '{"duelId":"<d>","sessionId":"<id>","commit":"<sha256(nonce‖sha256(canonical(statBlock)))>"}'
+  # the CHALLENGED player commits first (their accept), the challenger second
+curl -XPOST http://localhost:1367/api/duel/reveal \
+  -d '{"duelId":"<d>","sessionId":"<id>","nonce":"<hex>","statBlock":{...}}'
+  # reveal must hash to the commit; statBlock must pass DUEL.checkBounds
+  # (impossible stats rejected). Second reveal → duelSeed =
+  # sha256(nonceA‖nonceB‖duelId) → DUEL.run → ONE dual-chain event; the
+  # transcript is NOT stored — replay DUEL.run(statA, statB, duelSeed) to verify.
+curl "http://localhost:1367/api/duel/list?pid=<pid>"      # pending duels
+# SSE to both parties: duel_challenged / duel_accepted / duel_commit_ready /
+# duel_completed / duel_cancelled. Walking off the duel cell after committing
+# forfeits (the step itself always succeeds — Free-Movement).
+
 curl http://localhost:1367/api/ledger/chain?pid=<pid>    # a player's hash chain
 curl "http://localhost:1367/api/ledger/owned?pid=<pid>"  # everything a pid owns now
 # → { items: [{mintId, mintKey, item, tipHash}] }  — the trade UI's read surface

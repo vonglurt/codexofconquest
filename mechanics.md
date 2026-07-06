@@ -879,7 +879,15 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 - **(g) hireling guide bot** ✅ — a single-player companion (60g + 12g/day) that fights beside you (one extra attacker die) and, on "follow me", leads you to your active quest via auto-travel.
 - **(h) sentry bots** ✅ — server-owned guards you post at a road junction. A sentry rides presence for free (anyone co-present sees it), **suppresses wilderness encounters in its cell**, and **auto-assists any battle there** (a second extra attacker die). You bankroll the sentries you post: **120g up front, then 20g/day upkeep** drawn on rest — a post you can no longer pay stands down (auto-recalled). Post/recall from the **🛡 Sentries** panel in Story Mode (requires a live server connection; the sentry only exists as server presence). A sentry never idle-expires — only recall removes it.
 - **(i) no-dupe trade ledger** ✅ — player-to-player item trading, backed by a tamper-evident economy ledger (below).
-- **(j) consensual PvP duels** — planned; see plan.md §MESH-01.
+- **(j) consensual PvP duels** ✅ — challenge a co-present player to a provably fair duel (below).
+
+### Duels (§MESH-01j — how it plays)
+
+- **Challenge**: click the **⚔** button next to a co-present player's name (same server, v1). They get 30 seconds to accept. Nobody can be dueled without saying yes — and the **🚫 decline all duels** checkbox in the duel window makes you unchallengeable entirely (takes effect on your next connect).
+- **Provably fair**: accepting locks in your current stats as a hidden *commitment* (a hash). Only after both sides commit does anyone reveal — then the dice seed is derived from both players' secret nonces together, so **neither side can steer the rolls or tailor their build to yours**. The server rejects impossible stat blocks outright (a level-20 build with 9,999 HP never fights).
+- **The fight resolves itself**: a shared pure resolver (the same `DUEL:CORE` code runs in your game and on the server, byte-identical) plays out initiative, attack rolls, crits and damage from the committed inputs. Your client **replays the whole duel locally and verifies the verdict** — the transcript you watch ends with "Replay verified ✓" because it literally re-derived the winner.
+- **No stakes in v1**: winning or losing changes nothing in your save — no HP, gold, XP or item movement. The outcome is written into both players' ledger chains (as durable as a trade), so bragging rights are on the permanent record.
+- **Walking away**: leaving the shared cell before accepting just cancels the challenge; leaving after you've committed counts as a **forfeit** — the move itself is never blocked (Free-Movement holds even mid-duel).
 
 ### Trading (§MESH-01i — how it plays)
 

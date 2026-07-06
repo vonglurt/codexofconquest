@@ -16,6 +16,7 @@
     "check:terrain": "node scripts/check-terrain-parity.js",
     "check:roads": "node scripts/check-roads.js",
     "check:roomsparity": "node scripts/check-rooms-parity.js",
+    "check:duelparity": "node scripts/check-duel-parity.js",
     "check:arraypatch": "node scripts/check-array-patch.js",
     "check:itemchain": "node scripts/check-itemchain.js",
     "check:laddermigration": "node scripts/check-ladder-migration.js",

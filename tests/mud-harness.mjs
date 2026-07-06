@@ -1110,6 +1110,107 @@ async function main() {
   const badX = await jpost('/trade/propose', { sessionId: gil.sessionId, to: 'deadbeef:cafebabe', give: [shieldM.mintKey], want: [] }, gA.base);
   check(badX.ok === false && badX.reason === 'peer-unreachable', 'a counterparty on an unknown origin is refused with a clear peer-unreachable error');
 
+  // ── [O] §MESH-01j — consensual PvP duels (commit-reveal + DUEL:CORE) ──────
+  // gil and hal are co-present on gA. The kernel is pure (lab report §6.3):
+  // duelSeed = sha256(nonceA‖nonceB‖duelId) — neither party alone steers the
+  // dice — and the outcome event carries everything needed to REPLAY the duel
+  // and independently agree on the winner.
+  console.log('\n[O] §MESH-01j — consensual PvP duels (commit-reveal, DUEL:CORE replay, forfeit)');
+  const DUEL = requireCjs('../duel.js');
+
+  // (1) kernel invariants: sha256 ≡ node:crypto, determinism, bounds.
+  check(['', 'abc', 'ünïcode ⚔ 🗡'].every((m) => DUEL.sha256(m) === crypto.createHash('sha256').update(m, 'utf8').digest('hex')),
+    'the kernel’s pure-JS sha256 agrees with node:crypto (commit hashes portable across environments)');
+  const sbGil = { level: 3, hp: 44, ac: 15, atkBonus: 5, dmgDie: 8, dmgFlat: 3, abilityScores: { str: 16, dex: 12, con: 14, int: 10, wis: 12, cha: 8 } };
+  const sbHal = { level: 3, hp: 40, ac: 14, atkBonus: 6, dmgDie: 6, dmgFlat: 2, abilityScores: { str: 14, dex: 14, con: 12, int: 10, wis: 10, cha: 10 } };
+  const kseed = DUEL.seedOf('a'.repeat(32), 'b'.repeat(32), 'c'.repeat(32));
+  check(JSON.stringify(DUEL.run(sbGil, sbHal, kseed)) === JSON.stringify(DUEL.run(sbGil, sbHal, kseed))
+      && JSON.stringify(DUEL.run(sbGil, sbHal, kseed)) !== JSON.stringify(DUEL.run(sbGil, sbHal, DUEL.seedOf('9'.repeat(32), 'b'.repeat(32), 'c'.repeat(32)))),
+    'DUEL.run is deterministic per seed and diverges across seeds');
+  check(DUEL.checkBounds(sbGil) === null && !!DUEL.checkBounds({ ...sbGil, level: 21 }) && !!DUEL.checkBounds({ ...sbGil, dmgDie: 7 }),
+    'checkBounds passes a legal statBlock and rejects impossible ones');
+
+  // (2) handshake ordering + commit-reveal integrity.
+  const halSSE = await openSSE(hal.sessionId, gA.base);
+  openClients.push(halSSE);
+  const du1 = await jpost('/duel/challenge', { sessionId: gil.sessionId, to: hal.ledgerPid }, gA.base);
+  check(du1.ok === true && !!du1.duelId, 'a co-present same-origin challenge opens a duel');
+  check(await waitFor(() => countEv(halSSE, 'duel_challenged', (d) => d.duelId === du1.duelId) === 1, 4000),
+    'the challenged player is notified over SSE');
+  const nGil1 = 'a1'.repeat(16), nHal1 = 'b2'.repeat(16);
+  const early = await jpost('/duel/accept', { duelId: du1.duelId, sessionId: gil.sessionId, commit: DUEL.commitOf(nGil1, sbGil) }, gA.base);
+  check(early.ok === false, 'the challenger cannot commit before the challenged player accepts');
+  check((await jpost('/duel/accept', { duelId: du1.duelId, sessionId: hal.sessionId, commit: DUEL.commitOf(nHal1, sbHal) }, gA.base)).ok === true, 'the challenged player accepts with their commit');
+  const gc1 = await jpost('/duel/accept', { duelId: du1.duelId, sessionId: gil.sessionId, commit: DUEL.commitOf(nGil1, sbGil) }, gA.base);
+  check(gc1.ok === true && gc1.phase === 'revealing', 'both commits in → reveal phase');
+  const doctored = await jpost('/duel/reveal', { duelId: du1.duelId, sessionId: gil.sessionId, nonce: nGil1, statBlock: { ...sbGil, atkBonus: 8 } }, gA.base);
+  check(doctored.ok === false && doctored.reason === 'reveal-mismatch', 'a reveal that does not hash to its commit is rejected (commit-reveal integrity)');
+  check(await waitFor(() => countEv(halSSE, 'duel_cancelled', (d) => d.duelId === du1.duelId && d.reason === 'reveal-mismatch') === 1, 4000),
+    'the tampered duel dies loudly for both parties — no event is written');
+
+  // (3) the clean duel: reveal → ONE dual-chain event, replay-agreement.
+  const du2 = await jpost('/duel/challenge', { sessionId: gil.sessionId, to: hal.ledgerPid }, gA.base);
+  const nGil2 = 'c3'.repeat(16), nHal2 = 'd4'.repeat(16);
+  await jpost('/duel/accept', { duelId: du2.duelId, sessionId: hal.sessionId, commit: DUEL.commitOf(nHal2, sbHal) }, gA.base);
+  await jpost('/duel/accept', { duelId: du2.duelId, sessionId: gil.sessionId, commit: DUEL.commitOf(nGil2, sbGil) }, gA.base);
+  const rv1 = await jpost('/duel/reveal', { duelId: du2.duelId, sessionId: gil.sessionId, nonce: nGil2, statBlock: sbGil }, gA.base);
+  check(rv1.ok === true && rv1.waiting === true, 'the first reveal waits for the second');
+  const rv2 = await jpost('/duel/reveal', { duelId: du2.duelId, sessionId: hal.sessionId, nonce: nHal2, statBlock: sbHal }, gA.base);
+  const dEvt = rv2.event;
+  check(rv2.ok === true && dEvt && dEvt.kind === 'duel' && !!dEvt.chain[gil.ledgerPid] && !!dEvt.chain[hal.ledgerPid],
+    'the second reveal resolves: ONE duel event linked into BOTH players’ chains');
+  check(dEvt && dEvt.body.duelSeed === DUEL.seedOf(nGil2, nHal2, du2.duelId),
+    'duelSeed = sha256(nonceA‖nonceB‖duelId) — neither party alone chose it');
+  const replay = dEvt && DUEL.run(dEvt.body.statA, dEvt.body.statB, dEvt.body.duelSeed);
+  check(replay && replay.winner === dEvt.body.winner && replay.rounds === dEvt.body.rounds,
+    'REPLAY AGREEMENT: re-running DUEL:CORE from the event reproduces the recorded winner');
+  check(await waitFor(() => countEv(halSSE, 'duel_completed', (d) => d.duelId === du2.duelId) === 1, 4000),
+    'both parties hear duel_completed over SSE');
+  check(await until(async () => {
+    const ch = await jget(`/ledger/chain?pid=${gil.ledgerPid}`, gB.base);
+    return (ch.events || []).some((e) => e.hash === dEvt.hash);
+  }), 'the duel event replicates to a peer server over the durable ledger channel (as permanent as a trade)');
+
+  // (4) bounds enforcement at reveal — impossible stats are refused.
+  const du3 = await jpost('/duel/challenge', { sessionId: gil.sessionId, to: hal.ledgerPid }, gA.base);
+  const sbCheat = { ...sbHal, level: 20, hp: 431, atkBonus: 29 };   // 1 past the level-20 caps (30+20·20 hp, 8+20 atk)
+  const nC = 'e5'.repeat(16);
+  await jpost('/duel/accept', { duelId: du3.duelId, sessionId: hal.sessionId, commit: DUEL.commitOf(nC, sbCheat) }, gA.base);
+  await jpost('/duel/accept', { duelId: du3.duelId, sessionId: gil.sessionId, commit: DUEL.commitOf(nGil2, sbGil) }, gA.base);
+  const cheat = await jpost('/duel/reveal', { duelId: du3.duelId, sessionId: hal.sessionId, nonce: nC, statBlock: sbCheat }, gA.base);
+  check(cheat.ok === false && cheat.reason === 'bounds', 'an over-world-max statBlock is rejected at reveal (impossible-stats anti-cheat)');
+
+  // (5) pvp:off + co-presence + cross-origin guards.
+  const eve2 = await jpost('/session/start', { name: 'Eve2', seed: 111, playerKey: '9a9a'.repeat(8), pvp: 'off' }, gA.base);
+  const pvpRef = await jpost('/duel/challenge', { sessionId: gil.sessionId, to: eve2.ledgerPid }, gA.base);
+  check(pvpRef.ok === false && pvpRef.reason === 'pvp-off', 'a pvp:off player is unchallengeable');
+  const frank = await jpost('/session/start', { name: 'Frank', seed: 112, playerKey: '8b8b'.repeat(8) }, gA.base);
+  await jpost('/session/pos', { sessionId: frank.sessionId, r: frank.r, c: frank.c + 1 }, gA.base);
+  const farRef = await jpost('/duel/challenge', { sessionId: gil.sessionId, to: frank.ledgerPid }, gA.base);
+  check(farRef.ok === false && farRef.reason === 'not-co-present', 'a duel needs a shared cell (walk to them first)');
+  const xoRef = await jpost('/duel/challenge', { sessionId: gil.sessionId, to: benX.ledgerPid }, gA.base);
+  check(xoRef.ok === false && xoRef.reason === 'cross-origin', 'cross-origin duels are refused clearly (same-server v1)');
+
+  // (6) forfeit: walking off the duel cell mid-handshake loses on the record —
+  // and the STEP IS NEVER REFUSED (Free-Movement holds absolutely).
+  const du4 = await jpost('/duel/challenge', { sessionId: gil.sessionId, to: hal.ledgerPid }, gA.base);
+  const nG4 = 'f6'.repeat(16), nH4 = 'a7'.repeat(16);
+  await jpost('/duel/accept', { duelId: du4.duelId, sessionId: hal.sessionId, commit: DUEL.commitOf(nH4, sbHal) }, gA.base);
+  await jpost('/duel/accept', { duelId: du4.duelId, sessionId: gil.sessionId, commit: DUEL.commitOf(nG4, sbGil) }, gA.base);
+  const flee = await jpost('/session/pos', { sessionId: hal.sessionId, r: gil.r, c: gil.c + 1 }, gA.base);
+  check(flee.ok === true, 'the fleeing step itself succeeds — a duel never gates movement');
+  check(await waitFor(() => countEv(halSSE, 'duel_completed', (d) => d.duelId === du4.duelId && d.event && d.event.body.forfeit === true && d.event.body.winner === gil.ledgerPid) === 1, 4000),
+    'the walk-off resolves as a forfeit: the stayer wins on the record');
+
+  // (7) TTL: a challenge nobody answers expires (fast-TTL throwaway server).
+  const dT = await startServer(PORT + 36, { LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'r2h-duelttl-')), MESH_SERVER_ID: '2e'.repeat(16), DUEL_TTL_MS: '250', PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 36}-${process.pid}.json`) });
+  const tia = await jpost('/session/start', { name: 'Tia', seed: 5, playerKey: '7c7c'.repeat(8) }, dT.base);
+  const uri = await jpost('/session/start', { name: 'Uri', seed: 6, playerKey: '6d6d'.repeat(8) }, dT.base);
+  const duT = await jpost('/duel/challenge', { sessionId: tia.sessionId, to: uri.ledgerPid }, dT.base);
+  await sleep(450);
+  const late = await jpost('/duel/accept', { duelId: duT.duelId, sessionId: uri.sessionId, commit: DUEL.commitOf('5e'.repeat(16), sbHal) }, dT.base);
+  check(late.ok === false, 'an unanswered challenge expires at the TTL');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});

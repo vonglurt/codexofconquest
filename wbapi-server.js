@@ -36,6 +36,7 @@ const crypto    = require('crypto');
 const WBAPI     = require('./wbapi-core');
 const Mover     = require('./mover');   // §WALK-2 shared movement kernel (also inlined in roll2hit-v3.html)
 const Rooms     = require('./rooms');   // §NAV-01f shared room-description kernel (also inlined in roll2hit-v3.html)
+const Duel      = require('./duel');    // §MESH-01j shared duel-resolution kernel (also inlined in roll2hit-v3.html)
 const Anthropic = require('@anthropic-ai/sdk');
 
 // ── Nonce registry (one-time delete tokens, 5-min TTL) ───────────────────────
@@ -518,6 +519,63 @@ function tradePrune() {
 function ledgerNotifyPid(pid, event, data) {
   for (const [id] of SESSIONS)
     if (ledgerPidOf(id) === pid) { const sse = SSE_CLIENTS.get(id); if (sse) sseSend(sse, event, data); }
+}
+
+// ── §MESH-01j — consensual PvP duels (lab report §6.3) ───────────────────────
+// Challenge → accept → COMMIT (hash only) → REVEAL → DUEL:CORE pure resolver →
+// outcome event (kind:'duel') into BOTH players' chains. The commit-reveal
+// seed (sha256(nonceA‖nonceB‖duelId)) means neither party alone steers the
+// RNG; the bounds check at reveal rejects impossible statBlocks; and because
+// DUEL.run is a pure function of committed inputs, any server that replays
+// the event MUST agree on the winner. Free-Movement holds absolutely: a duel
+// is a modal overlay — walking off the shared cell forfeits (the resolver
+// records it), the step itself is NEVER refused. Same-origin parties in v1
+// (both sessions on this server); cross-origin duels can reuse the trade
+// relay + cosigner machinery later.
+const DUEL_TTL = parseInt(process.env.DUEL_TTL_MS || '', 10) || 30 * 1000;   // per phase
+const DUELS = new Map();   // duelId → {from,to,cell:{r,c},phase,commits:{},reveals:{},expires}
+function duelPrune() {
+  const now = Date.now();
+  for (const [id, d] of DUELS)
+    if (d.expires < now) {
+      DUELS.delete(id);
+      ledgerNotifyPid(d.from, 'duel_cancelled', { duelId: id, reason: 'expired' });
+      ledgerNotifyPid(d.to, 'duel_cancelled', { duelId: id, reason: 'expired' });
+    }
+}
+// Author + fan out the outcome event. statA/statB carry pid (the §6.3 replay
+// contract: winner/loser in the event ARE pids, derivable by re-running
+// DUEL.run on the recorded inputs).
+function duelComplete(duelId, d, body) {
+  const evt = ledgerEvent('duel', [d.from, d.to], { duelId, parties: [d.from, d.to], ...body });
+  DUELS.delete(duelId);
+  ledgerNotifyPid(d.from, 'duel_completed', { duelId, event: evt });
+  ledgerNotifyPid(d.to, 'duel_completed', { duelId, event: evt });
+  logRow('duel', `${body.forfeit ? 'forfeit' : 'resolved'} ${duelId.slice(0, 8)}…  ·  winner ${body.winner}  ·  ${body.rounds} round(s)  ·  evt ${evt.hash.slice(0, 12)}…`);
+  return evt;
+}
+// Forfeit hook — called AFTER a successful move/pos step (never before, never
+// blocking: Free-Movement). Leaving the duel cell mid-handshake = flee: a
+// challenged-phase walk-off just cancels (no event); once anyone has
+// committed, the walker forfeits and the stayer wins on the record.
+function duelForfeitCheck(sessionId, r, c) {
+  const pid = ledgerPidOf(sessionId);
+  for (const [id, d] of DUELS) {
+    if (d.from !== pid && d.to !== pid) continue;
+    if (d.cell.r === r && d.cell.c === c) continue;
+    if (d.phase === 'challenged' && !Object.keys(d.commits).length) {
+      DUELS.delete(id);
+      ledgerNotifyPid(d.from, 'duel_cancelled', { duelId: id, reason: 'walked-away' });
+      ledgerNotifyPid(d.to, 'duel_cancelled', { duelId: id, reason: 'walked-away' });
+      continue;
+    }
+    const winner = d.from === pid ? d.to : d.from;
+    duelComplete(id, d, {
+      forfeit: true, winner, loser: pid, rounds: 0, duelSeed: null,
+      statA: (d.reveals[d.from] && d.reveals[d.from].statBlock) || null,
+      statB: (d.reveals[d.to] && d.reveals[d.to].statBlock) || null,
+    });
+  }
 }
 
 // Raw source span of `const NAME = {…} / […] / new Set([…])` — comment- and
@@ -8823,6 +8881,7 @@ async function route(req, res) {
         rngState:   seed,        // mutable RNG stream, advanced per encounter roll
         encounter:  null,        // pending instanced encounter (null = none); hub is a named cell
         player8,                 // §MESH-01i slice 2: durable identity half of the ledger pid (null = keyless)
+        pvpOff:     body.pvp === 'off' || body.pvpOff === true,   // §MESH-01j: global duel opt-out — unchallengeable
       };
       SESSIONS.set(sessionId, s);
       // §MESH-01a: announce the newcomer to players already at the spawn cell
@@ -8894,6 +8953,9 @@ async function route(req, res) {
       emitMeshEvent('player_left', evt, prevR, prevC);
       emitMeshEvent('player_arrived', { ...evt, node: newCode }, newR, newC);
       emitMeshEvent('player_moved', evt, newR, newC);
+      // §MESH-01j: leaving a duel cell mid-handshake forfeits — checked AFTER
+      // the step succeeded, and the step itself is never refused (Free-Movement).
+      duelForfeitCheck(sessionId, newR, newC);
       const look = buildLook(s);
       logRow('move', `${s.playerName}  ·  ${dir}  →  (${newR},${newC}) ${newCode || 'empty'}${s.encounter ? '  ⚔ ' + s.encounter.name : ''}`);
       logResponse(method, url.pathname, 200, `session move: ${dir} → ${newCode || 'empty'}${s.encounter ? ' (encounter: ' + s.encounter.name + ')' : ''}`);
@@ -8939,6 +9001,7 @@ async function route(req, res) {
         emitMeshEvent('player_left', evt, prevR, prevC);
         emitMeshEvent('player_arrived', { ...evt, node: s.nodeCode }, r, c);
         emitMeshEvent('player_moved', evt, r, c);
+        duelForfeitCheck(sessionId, r, c);   // §MESH-01j: walk-off forfeit — after the step, never blocking
       }
       const inView = (pr, pc) => {
         const dcRaw = Math.abs(pc - c);
@@ -9587,6 +9650,184 @@ async function route(req, res) {
 
     logResponse(method, url.pathname, 404, `unknown trade sub-route "${sub}"`);
     return json(res, 404, { error: `Unknown trade sub-route "${sub}"`, available: ['propose', 'accept', 'cancel', 'list', 'relay'] });
+  }
+
+  // ── §MESH-01j: Consensual PvP duels — challenge / accept(commit) / reveal ─
+  // Design: mesh lab report §6.3. Commit-reveal: each party COMMITS
+  // sha256(nonce‖statHash) before either REVEALS, so neither can steer the
+  // seed or tailor stats to the opponent's. On the second reveal the server
+  // derives duelSeed = sha256(nonceA‖nonceB‖duelId), runs the pure DUEL:CORE
+  // resolver, and appends ONE dual-chain outcome event — the transcript is
+  // NOT stored: anyone replays DUEL.run(statA, statB, duelSeed) and must get
+  // the same winner. v1 = same-origin parties + auto-resolve playback.
+  if (parts[0] === 'duel') {
+    sessionPrune();
+    duelPrune();
+    const sub = parts[1]; // challenge | accept | reveal | list
+
+    // ── GET /api/duel/list?pid= — pending duels (debug / client poll) ──────
+    if (sub === 'list' && method === 'GET') {
+      const pid = url.searchParams.get('pid');
+      const duels = [...DUELS.entries()]
+        .filter(([, d]) => !pid || d.from === pid || d.to === pid)
+        .map(([duelId, d]) => ({ duelId, from: d.from, to: d.to, phase: d.phase, cell: d.cell,
+          committed: Object.keys(d.commits), revealed: Object.keys(d.reveals), expires: d.expires }));
+      logResponse(method, url.pathname, 200, `${duels.length} pending duels`);
+      return json(res, 200, { ok: true, count: duels.length, duels });
+    }
+
+    if (method !== 'POST') {
+      logResponse(method, url.pathname, 405, `duel/${sub} requires POST`);
+      return json(res, 405, { error: `POST required for /api/duel/${sub}` });
+    }
+    let body;
+    try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'Invalid JSON' }); }
+
+    // ── POST /api/duel/challenge  body: {sessionId, to:<ledgerPid>} ────────
+    if (sub === 'challenge') {
+      const s = body.sessionId && SESSIONS.get(body.sessionId);
+      if (!s || s.bot) {
+        logResponse(method, url.pathname, 404, 'duel/challenge: session not found');
+        return json(res, 404, { ok: false, error: 'Live player session required to challenge (body.sessionId).' });
+      }
+      s.lastSeen = Date.now();
+      const from = ledgerPidOf(body.sessionId);
+      const to = String(body.to || '').trim();
+      if (!to || to === from) {
+        logResponse(method, url.pathname, 400, 'duel/challenge: bad counterparty');
+        return json(res, 400, { ok: false, error: 'body.to (counterparty ledger pid) required, and you cannot duel yourself.' });
+      }
+      if (to.split(':')[0] !== getServerId().slice(0, 8)) {
+        logResponse(method, url.pathname, 400, 'duel/challenge: cross-origin');
+        return json(res, 400, { ok: false, error: 'Cross-origin duels are not supported yet — both players must be connected to the same server (v1).', reason: 'cross-origin' });
+      }
+      let ts = null;
+      for (const [id2, s2] of SESSIONS) if (!s2.bot && ledgerPidOf(id2) === to) { ts = s2; break; }
+      if (!ts) {
+        logResponse(method, url.pathname, 404, 'duel/challenge: counterparty offline');
+        return json(res, 404, { ok: false, error: 'That player has no live session on this server.' });
+      }
+      if (s.pvpOff || ts.pvpOff) {
+        logResponse(method, url.pathname, 403, 'duel/challenge: pvp off');
+        return json(res, 403, { ok: false, error: s.pvpOff ? 'You have PvP switched off.' : 'That player has PvP switched off.', reason: 'pvp-off' });
+      }
+      if (ts.r !== s.r || ts.c !== s.c) {
+        logResponse(method, url.pathname, 409, 'duel/challenge: not co-present');
+        return json(res, 409, { ok: false, error: 'You must share a cell to duel — walk to them first.', reason: 'not-co-present' });
+      }
+      const duelId = crypto.randomBytes(16).toString('hex');
+      DUELS.set(duelId, { from, to, cell: { r: s.r, c: s.c }, phase: 'challenged', commits: {}, reveals: {}, expires: Date.now() + DUEL_TTL });
+      ledgerNotifyPid(to, 'duel_challenged', { duelId, from, to, fromName: s.playerName, ttlMs: DUEL_TTL });
+      logRow('duel', `challenge ${duelId.slice(0, 8)}…  ·  ${from} ⚔ ${to}  ·  cell (${s.r},${s.c})`);
+      logResponse(method, url.pathname, 201, `duel challenged ${from} ⚔ ${to}`);
+      return json(res, 201, { ok: true, duelId, from, to, ttlMs: DUEL_TTL });
+    }
+
+    // ── POST /api/duel/accept  body: {duelId, sessionId, commit} ───────────
+    // Consent + COMMIT in one call: the CHALLENGED player commits first (their
+    // accept), then the challenger commits (their follow-up on duel_accepted).
+    // Hash only — nobody reveals anything until both are locked in.
+    if (sub === 'accept') {
+      const d = body.duelId && DUELS.get(body.duelId);
+      if (!d) {
+        logResponse(method, url.pathname, 404, 'duel/accept: not found');
+        return json(res, 404, { ok: false, error: 'Duel not found (expired, cancelled, or bad duelId).' });
+      }
+      const s = body.sessionId && SESSIONS.get(body.sessionId);
+      const pid = s && !s.bot ? ledgerPidOf(body.sessionId) : null;
+      if (!pid || (pid !== d.from && pid !== d.to)) {
+        logResponse(method, url.pathname, 403, 'duel/accept: not a party');
+        return json(res, 403, { ok: false, error: 'Only the two duel parties may commit.' });
+      }
+      s.lastSeen = Date.now();
+      const commit = String(body.commit || '').toLowerCase();
+      if (!/^[0-9a-f]{64}$/.test(commit)) {
+        logResponse(method, url.pathname, 400, 'duel/accept: bad commit');
+        return json(res, 400, { ok: false, error: 'body.commit must be 64 hex chars: sha256(nonce‖sha256(canonical(statBlock))).' });
+      }
+      if (pid === d.from && !d.commits[d.to]) {
+        logResponse(method, url.pathname, 409, 'duel/accept: challenger before acceptor');
+        return json(res, 409, { ok: false, error: 'The challenged player has not accepted yet — they commit first.' });
+      }
+      if (d.commits[pid]) {
+        logResponse(method, url.pathname, 409, 'duel/accept: already committed');
+        return json(res, 409, { ok: false, error: 'You have already committed to this duel.' });
+      }
+      d.commits[pid] = commit;
+      d.expires = Date.now() + DUEL_TTL;
+      if (pid === d.to) {
+        d.phase = 'committing';
+        ledgerNotifyPid(d.from, 'duel_accepted', { duelId: body.duelId, by: pid });
+      }
+      if (d.commits[d.from] && d.commits[d.to]) {
+        d.phase = 'revealing';
+        ledgerNotifyPid(d.from, 'duel_commit_ready', { duelId: body.duelId });
+        ledgerNotifyPid(d.to, 'duel_commit_ready', { duelId: body.duelId });
+      }
+      logRow('duel', `commit ${body.duelId.slice(0, 8)}…  ·  by ${pid}  ·  phase ${d.phase}`);
+      logResponse(method, url.pathname, 200, `duel commit by ${pid} (${d.phase})`);
+      return json(res, 200, { ok: true, duelId: body.duelId, phase: d.phase });
+    }
+
+    // ── POST /api/duel/reveal  body: {duelId, sessionId, nonce, statBlock} ─
+    if (sub === 'reveal') {
+      const d = body.duelId && DUELS.get(body.duelId);
+      if (!d) {
+        logResponse(method, url.pathname, 404, 'duel/reveal: not found');
+        return json(res, 404, { ok: false, error: 'Duel not found (expired, cancelled, or bad duelId).' });
+      }
+      if (d.phase !== 'revealing') {
+        logResponse(method, url.pathname, 409, 'duel/reveal: not in reveal phase');
+        return json(res, 409, { ok: false, error: 'Both parties must commit before anyone reveals.' });
+      }
+      const s = body.sessionId && SESSIONS.get(body.sessionId);
+      const pid = s && !s.bot ? ledgerPidOf(body.sessionId) : null;
+      if (!pid || (pid !== d.from && pid !== d.to)) {
+        logResponse(method, url.pathname, 403, 'duel/reveal: not a party');
+        return json(res, 403, { ok: false, error: 'Only the two duel parties may reveal.' });
+      }
+      s.lastSeen = Date.now();
+      const nonce = String(body.nonce || '').toLowerCase();
+      const sb = body.statBlock;
+      // Commit-reveal integrity: a reveal that doesn't hash to its commit is a
+      // tamper attempt (or a broken client) — the duel dies loudly, no event.
+      if (!/^[0-9a-f]{16,64}$/.test(nonce) || Duel.commitOf(nonce, sb) !== d.commits[pid]) {
+        DUELS.delete(body.duelId);
+        ledgerNotifyPid(d.from, 'duel_cancelled', { duelId: body.duelId, reason: 'reveal-mismatch' });
+        ledgerNotifyPid(d.to, 'duel_cancelled', { duelId: body.duelId, reason: 'reveal-mismatch' });
+        logResponse(method, url.pathname, 409, 'duel/reveal: reveal does not match commit');
+        return json(res, 409, { ok: false, error: 'Reveal does not match your commit — duel cancelled.', reason: 'reveal-mismatch' });
+      }
+      // §IX.B: impossible stats are the tractable half of anti-cheat — bounds
+      // are derivable from the shared world data (worldHash equality holds).
+      const bad = Duel.checkBounds(sb);
+      if (bad) {
+        DUELS.delete(body.duelId);
+        ledgerNotifyPid(d.from, 'duel_cancelled', { duelId: body.duelId, reason: 'bounds' });
+        ledgerNotifyPid(d.to, 'duel_cancelled', { duelId: body.duelId, reason: 'bounds' });
+        logResponse(method, url.pathname, 409, `duel/reveal: statBlock out of bounds (${bad})`);
+        return json(res, 409, { ok: false, error: `statBlock rejected: ${bad}`, reason: 'bounds' });
+      }
+      d.reveals[pid] = { nonce, statBlock: sb };
+      d.expires = Date.now() + DUEL_TTL;
+      if (!d.reveals[d.from] || !d.reveals[d.to]) {
+        logResponse(method, url.pathname, 200, `duel reveal by ${pid} (waiting for the other)`);
+        return json(res, 200, { ok: true, duelId: body.duelId, waiting: true });
+      }
+      // Both revealed: derive the seed neither party alone chose, resolve pure.
+      const duelSeed = Duel.seedOf(d.reveals[d.from].nonce, d.reveals[d.to].nonce, body.duelId);
+      const statA = { ...d.reveals[d.from].statBlock, pid: d.from };
+      const statB = { ...d.reveals[d.to].statBlock, pid: d.to };
+      const out = Duel.run(statA, statB, duelSeed);
+      const evt = duelComplete(body.duelId, d, {
+        statA, statB, duelSeed, winner: out.winner, loser: out.loser, rounds: out.rounds, first: out.first,
+      });
+      logResponse(method, url.pathname, 201, `duel resolved: ${out.winner} wins in ${out.rounds}`);
+      return json(res, 201, { ok: true, duelId: body.duelId, event: evt });
+    }
+
+    logResponse(method, url.pathname, 404, `unknown duel sub-route "${sub}"`);
+    return json(res, 404, { error: `Unknown duel sub-route "${sub}"`, available: ['challenge', 'accept', 'reveal', 'list'] });
   }
 
   // ── Single entity ─────────────────────────────────────────────────────────
