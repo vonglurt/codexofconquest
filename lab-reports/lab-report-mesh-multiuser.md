@@ -184,7 +184,20 @@ DUEL:CORE(statA, statB, duelSeed) → { transcript: [ {round, attacker, d20, tot
 
 **Duel harness cases**: `check:duelparity` (byte-identical `duel.js`) · determinism (same `(statA,statB,seed)` → identical transcript across a fresh client eval and the server) · commit-reveal (a mismatched reveal is rejected) · bounds (an over-max statBlock is rejected at reveal) · **replay-agreement** (a third server replays the duel event and agrees on `winner`) · forfeit (walking off-cell forfeits and never blocks the move).
 
-### 6.4 Invariants this slice must preserve
+### 6.4 Durable player identity — persistent player key (LOCKED 2026-07-06, user call)
+
+**The problem.** Slice 1 chains key on `pid = (origin8, session8)`, but sessions idle-expire after 30 minutes — a player's chain (and the tradeability of every item they minted) strands when the session dies. The ledger is permanent; its identity cannot be rented from an ephemeral table.
+
+**The decision (user call, 2026-07-06): persistent player key.** Rejected alternatives: session-resume tokens (server must persist the session table; a lost token still strands the chain) and chain-rebind events (the dead session can't co-sign the rebind — proof needs its own mechanism).
+
+- **Client:** on first `session/start` while connected, generate `S_story.playerKey` once — 32 hex chars from `crypto.getRandomValues` — and persist it in the save file (exported/imported with it, like any other S_story field). Every subsequent `session/start` sends it.
+- **Server:** derives the durable half of the pid from the key, never storing the raw key — `player8 = sha256(playerKey).slice(0,8)`; **ledger/duel pid = `(origin8, player8)`**. The session table maps live `sessionId → player8`; mint/trade/duel endpoints keep taking the sessionId (session-bound as shipped) and resolve it to the durable pid at append time. The §6.1 envelope is unchanged — only the *definition* of `<pid>` in `chain:{}` moves from session8 to player8.
+- **Presence untouched:** presence records stay session-keyed and TTL-bounded (display-only — losing one blinks a dot, not a fact). Only the durable chains (§6.1's one new invariant) use the durable pid. The asymmetry is deliberate and mirrors the ring-vs-chain split.
+- **Trust model:** the key is a bearer credential — whoever presents it owns the chain. That is §IX.B's social-trust posture verbatim (a stolen save file already *is* the player in a client-authoritative game); no PKI, consistent with HMAC-not-signature in §6.1.
+- **Migration:** none needed — slice 1 shipped with harness-only data; no live economy exists on session-keyed chains. Slice 2 starts clean on `(origin8, player8)`.
+- **Collision note:** 32 bits of player8 per origin is negligible for a friends-mesh; the server keeps the full sha256 in its session map and rejects a `session/start` whose full hash differs from a colliding player8's recorded hash (first-writer wins, log loudly).
+
+### 6.5 Invariants this slice must preserve
 
 - **Single-writer per record still holds** — each player's chain is appended only by *their own* origin; a trade/duel is two single-writer appends (one per origin) of the *same* co-signed event, not a shared mutable record. No CRDT, no consensus.
 - **Determinism substitutes for consensus** — ownership resolution, fork-choice, and `DUEL:CORE` are all pure functions of the merged event set, so every honest server converges to the identical verdict with zero coordination messages.
