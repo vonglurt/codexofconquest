@@ -941,6 +941,90 @@ async function main() {
   const m3 = await jpost('/ledger/mint', { sessionId: cara2.sessionId, item: { key: 'boots', name: 'Boots' } }, led.base);
   check(m3.ok === true && m3.mintId[1] > preRestart.seq, `post-restart mint continues the monotonic seq (${m3.mintId[1]} > ${preRestart.seq}) — no id reuse`);
 
+  // ════════ (i2) §MESH-01i slice 2 — durable identity + ledger gossip replication ════════
+  // Persistent playerKey → durable ledgerPid that survives session death (lab
+  // report §6.4), and the parallel durable gossip channel: ledgerVV piggybacks
+  // on presence gossip; anti-entropy range pull (/ledger/sync) + push
+  // (/ledger/ingest) replicate the chains cross-mesh with no TTL and no age
+  // cap — then the pure fork-choice yields identical verdicts everywhere.
+  console.log('\n[I2] §MESH-01i slice 2 — persistent player key + ledger gossip replication');
+  const until = async (fn, ms = 6000, step = 100) => {
+    const t0 = Date.now();
+    for (;;) { if (await fn().catch(() => false)) return true; if (Date.now() - t0 > ms) return false; await sleep(step); }
+  };
+
+  // I8 — durable identity on the (restarted) single ledger server.
+  const KEY = '5eed'.repeat(8);   // the client-generated 32-hex save-file key
+  const d1 = await jpost('/session/start', { name: 'Dana', seed: 55, playerKey: KEY }, led.base);
+  check(d1.ok === true && /^[0-9a-f]{8}:[0-9a-f]{8}$/.test(d1.ledgerPid) && d1.ledgerPid !== d1.pid, 'session/start with a playerKey returns a durable ledgerPid distinct from the session pid');
+  check((await jpost('/session/start', { name: 'Eve', seed: 66, playerKey: 'not-hex' }, led.base)).ok === false, 'a malformed playerKey is refused');
+  const same = await jpost('/session/start', { name: 'Dana2', seed: 57, playerKey: KEY }, led.base);
+  check(same.ledgerPid === d1.ledgerPid, 'the same key always maps to the same durable pid');
+  await jpost('/session/end', { sessionId: same.sessionId }, led.base);
+  const md = await jpost('/ledger/mint', { sessionId: d1.sessionId, item: { key: 'lute', name: 'Lute' } }, led.base);
+  check(md.ok === true && !!md.event.chain[d1.ledgerPid], 'a mint chains on the durable pid, not the session pid');
+  await jpost('/session/end', { sessionId: d1.sessionId }, led.base);
+  const d2 = await jpost('/session/start', { name: 'Dana', seed: 58, playerKey: KEY }, led.base);
+  check(d2.sessionId !== d1.sessionId && d2.ledgerPid === d1.ledgerPid, 'a NEW session with the same key resumes the same durable pid after the old session died');
+  check((await jget(`/ledger/owner?mintId=${md.mintKey}`, led.base)).owner === d2.ledgerPid, 'the dead session’s mint is still owned by the durable identity');
+  const pd = await jpost('/trade/propose', { sessionId: d2.sessionId, to: benL.pid, give: [md.mintKey], want: [] }, led.base);
+  check(pd.ok === true, 'the resumed identity can still trade its pre-death mint (no stranded chain)');
+  await jpost('/trade/cancel', { tradeId: pd.tradeId }, led.base);
+
+  // I9 — replication over REAL gossip: a mint on A appears on peered B via the
+  // parallel durable channel (vv piggyback → anti-entropy), verdicts identical.
+  const gid = (n) => String(n).repeat(32).slice(0, 32);
+  const mkLedEnv = (port, sid, extra = {}) => ({
+    LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'r2h-ledgas-')), MESH_SERVER_ID: sid,
+    ADVERTISE_ADDR: `localhost:${port}`, MESH_GOSSIP_MS: '120', ...extra,
+  });
+  const gA = await startServer(PORT + 33, mkLedEnv(PORT + 33, gid(3)));
+  const gB = await startServer(PORT + 34, mkLedEnv(PORT + 34, gid(4), { MESH_PEERS: `localhost:${PORT + 33}` }));
+  const gil = await jpost('/session/start', { name: 'Gil', seed: 77, playerKey: 'ab12'.repeat(8) }, gA.base);
+  const hal = await jpost('/session/start', { name: 'Hal', seed: 88, playerKey: 'cd34'.repeat(8) }, gA.base);
+  const gm = await jpost('/ledger/mint', { sessionId: gil.sessionId, item: { key: 'gem', name: 'Gem' } }, gA.base);
+  check(await until(async () => (await jget(`/ledger/owner?mintId=${gm.mintKey}`, gB.base)).owner === gil.ledgerPid),
+    'a mint on A replicates to peered B over the durable gossip channel and resolves identically');
+  const gp = await jpost('/trade/propose', { sessionId: gil.sessionId, to: hal.ledgerPid, give: [gm.mintKey], want: [] }, gA.base);
+  await jpost('/trade/accept', { tradeId: gp.tradeId, sessionId: hal.sessionId }, gA.base);
+  check(await until(async () => (await jget(`/ledger/owner?mintId=${gm.mintKey}`, gB.base)).owner === hal.ledgerPid),
+    'the trade replicates too — ownership flips to the receiver on the remote server');
+  check((await jget('/mesh/status', gB.base)).traffic.some((t) => t.kind === 'ledger' && t.ok),
+    'the Mesh traffic ring records the ledger channel packets');
+
+  // I10 — anti-entropy catch-up: server C joins AFTER the history was written.
+  // The presence ring can never do this (10 s fanout cap, 500-event ring); the
+  // ledger range-pull back-fills everything from seq 1.
+  const gC = await startServer(PORT + 35, mkLedEnv(PORT + 35, gid(5), { MESH_PEERS: `localhost:${PORT + 33}` }));
+  const aStat = await jget('/ledger/status', gA.base);
+  check(await until(async () => (await jget('/ledger/status', gC.base)).events === aStat.events),
+    `late-joining C back-fills the full ${aStat.events}-event history it never witnessed (anti-entropy range pull)`);
+  check((await jget(`/ledger/owner?mintId=${gm.mintKey}`, gC.base)).owner === hal.ledgerPid,
+    'C resolves the back-filled item to the same owner');
+
+  // I11 — dupe-void over REAL replication: a doctored origin's conflicting
+  // branches ingested at A propagate mesh-wide; every server voids the same
+  // branch (pure fork-choice, zero coordination).
+  const Y = 'ee'.repeat(16);
+  const pY1 = 'eeeeeeee:aaaa1111', pY2 = 'eeeeeeee:bbbb2222', pY3 = 'eeeeeeee:cccc3333';
+  const mintY = sealed({ kind: 'mint', id: [Y, 1], ts: 1700000000010, chain: { [pY1]: { height: 0, prevHash: null } },
+    body: { player: pY1, item: { key: 'crown_dupe', name: 'Duped Crown', qty: 1 }, mintId: [Y, 1] } });
+  const forkOf = (seq, toPid, tradeId) => sealed({ kind: 'trade', id: [Y, seq], ts: 1700000000011, chain: {
+      [pY1]: { height: 1, prevHash: mintY.hash }, [toPid]: { height: 0, prevHash: null } },
+    body: { tradeId, parties: [pY1, toPid], transfers: [{ mintId: [Y, 1], from: pY1, to: toPid, priorEventHash: mintY.hash }] } });
+  const forkA = forkOf(2, pY2, 'cc'.repeat(16));
+  const forkB = forkOf(3, pY3, 'dd'.repeat(16));
+  const loserY = forkA.hash < forkB.hash ? forkB : forkA;
+  await jpost('/ledger/ingest', { events: [mintY, forkA, forkB] }, gA.base);
+  const verdictOn = async (base) => jget(`/ledger/owner?mintId=${Y}:1`, base);
+  check(await until(async () => (await verdictOn(gC.base)).voided && (await verdictOn(gB.base)).voided
+      && (await verdictOn(gB.base)).owner === (await verdictOn(gA.base)).owner
+      && (await verdictOn(gC.base)).owner === (await verdictOn(gA.base)).owner),
+    'the doctored double-spend propagates mesh-wide; A, B and C converge on one owner');
+  const [vA, vB, vC] = [await verdictOn(gA.base), await verdictOn(gB.base), await verdictOn(gC.base)];
+  check(vA.voided.includes(loserY.hash) && vB.voided.includes(loserY.hash) && vC.voided.includes(loserY.hash),
+    'all three servers void the identical losing branch (lowest-hash fork-choice, no coordination)');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});

@@ -192,9 +192,14 @@ function getServerId() {
 // canonical sorted-key JSON. Ownership + double-spend fork-choice
 // (lowest-hash wins, losers voided) are PURE functions of the merged event set
 // — every server reaches the identical verdict with zero coordination.
-// THIS SLICE: local chains + mint + same-origin trade + resolver + a validated
-// /ledger/ingest (the future gossip receive path). The parallel gossip channel
-// + anti-entropy (cross-mesh replication) are the next rung.
+// SLICE 1: local chains + mint + same-origin trade + resolver + a validated
+// /ledger/ingest. SLICE 2 (server half): durable player identity (persistent
+// playerKey → pid = origin8:player8, lab report §6.4) + the parallel durable
+// gossip channel — ledger version vectors piggyback on presence gossip
+// payloads (`ledgerVV`); a mismatch triggers anti-entropy per-origin range
+// PULL (POST /api/ledger/sync) and/or PUSH (POST /api/ledger/ingest), so
+// replication converges regardless of which side is dialable. Cross-ORIGIN
+// co-signed trades (both origins sig one event) remain the next rung.
 const LEDGER_DIR = process.env.LEDGER_DIR || path.join(__dirname, 'ledger');
 const TRADE_TTL = parseInt(process.env.LEDGER_TRADE_TTL_MS || '', 10) || 60 * 1000;
 const LEDGER = {
@@ -206,6 +211,43 @@ const LEDGER = {
   tips: new Map(),    // pid → {height, hash} — each player's chain tip (for OUR appends)
 };
 const TRADES = new Map();  // tradeId → {from, to, give, want, expires} — pending proposals (no event until accept)
+
+// ── §MESH-01i slice 2 — durable player identity (lab report §6.4) ────────────
+// A session is rented (30-min idle TTL) but a ledger chain is permanent, so
+// chains key on pid = origin8:player8 where player8 = sha256(playerKey).slice(0,8)
+// — the client generates S_story.playerKey once (32 hex) and presents it on
+// every session/start. The raw key is never stored; the full sha256 is kept in
+// ledger/players.json so a player8 collision is detected across restarts
+// (first-writer wins, refused loudly). Keyless sessions fall back to the
+// session-scoped pid: still mintable, but the chain strands with the session.
+const PLAYER_KEYS = { loaded: false, map: new Map() };   // player8 → full sha256
+function playerKeysFile() { return path.join(LEDGER_DIR, 'players.json'); }
+function playerKeysLoad() {
+  if (PLAYER_KEYS.loaded) return;
+  PLAYER_KEYS.loaded = true;
+  try { for (const [k, v] of Object.entries(JSON.parse(fs.readFileSync(playerKeysFile(), 'utf8')))) PLAYER_KEYS.map.set(k, v); } catch {}
+}
+function playerKeyRegister(playerKey) {
+  playerKeysLoad();
+  const full = crypto.createHash('sha256').update(playerKey).digest('hex');
+  const player8 = full.slice(0, 8);
+  const known = PLAYER_KEYS.map.get(player8);
+  if (known && known !== full) return { error: `player8 collision on ${player8} — this key maps to an id already claimed by a different key` };
+  if (!known) {
+    PLAYER_KEYS.map.set(player8, full);
+    try {
+      fs.mkdirSync(LEDGER_DIR, { recursive: true });
+      fs.writeFileSync(playerKeysFile(), JSON.stringify(Object.fromEntries(PLAYER_KEYS.map), null, 2));
+    } catch (e) { log('WARN', `ledger: could not persist players.json (${e.message})`); }
+  }
+  return { player8 };
+}
+// The pid ledger/duel chains key on. Durable when the session presented a
+// playerKey; otherwise the same origin8:session8 string as presence pidOf.
+function ledgerPidOf(sessionId) {
+  const s = SESSIONS.get(sessionId);
+  return getServerId().slice(0, 8) + ':' + ((s && s.player8) || String(sessionId).slice(0, 8));
+}
 
 // Canonical JSON: recursive stable key order, so client/server/peers compute
 // identical digests (the worldHash discipline). No undefined/functions in events.
@@ -307,6 +349,76 @@ function ledgerValidate(evt) {
   return null;
 }
 
+// Shared ingest loop: validate + dedup + persist a batch of foreign events.
+// Used by POST /api/ledger/ingest (inbound push) and the anti-entropy pull.
+function ledgerIngestEvents(events) {
+  ledgerLoad();
+  let accepted = 0, dup = 0;
+  const rejected = [];
+  for (const evt of (Array.isArray(events) ? events : [])) {
+    if (evt && LEDGER.byHash.has(evt.hash)) { dup++; continue; }
+    const bad = ledgerValidate(evt);
+    if (bad) { rejected.push({ hash: evt && evt.hash || null, reason: bad }); continue; }
+    if (evt.id[0] === getServerId()) { rejected.push({ hash: evt.hash, reason: 'own-origin' }); continue; }   // single-writer: nobody authors OUR events
+    ledgerAppend(evt);
+    accepted++;
+  }
+  return { accepted, dup, rejected };
+}
+
+// ── §MESH-01i slice 2 — the parallel durable gossip channel (anti-entropy) ───
+// The ledger does NOT ride the bounded presence ring: its version vector
+// piggybacks on every presence gossip payload (`ledgerVV`), and a mismatch
+// triggers per-origin RANGE transfer — pull what the peer holds above our vv
+// (POST their /api/ledger/sync), push what we hold above theirs (POST their
+// /api/ledger/ingest). Both directions run so replication converges even when
+// only one side can dial (NAT'd server pushes out; joiner pulls history).
+// No TTL, no age cap — a server joining years late back-fills everything.
+const LEDGER_SYNC_CAP = 500;   // events per response; the next round continues (vv advances)
+function ledgerVVObj() { ledgerLoad(); return Object.fromEntries(LEDGER.vv); }
+function ledgerEventsSince(vv, cap = LEDGER_SYNC_CAP) {
+  ledgerLoad();
+  const out = [];
+  for (const e of LEDGER.events) { const [o, q] = e.id; if (q > ((vv || {})[o] || 0)) out.push(e); }
+  out.sort((a, b) => (a.id[0] < b.id[0] ? -1 : a.id[0] > b.id[0] ? 1 : a.id[1] - b.id[1]));
+  return { events: out.slice(0, cap), truncated: out.length > cap };
+}
+const _ledgerSyncBusy = new Set();
+async function ledgerSyncWith(addr, peerVV) {
+  if (!addr || _ledgerSyncBusy.has(addr)) return;
+  const ours = ledgerVVObj();
+  const peerHasMore = Object.entries(peerVV || {}).some(([o, q]) => q > (ours[o] || 0));
+  const missing = ledgerEventsSince(peerVV);
+  if (!peerHasMore && !missing.events.length) return;
+  _ledgerSyncBusy.add(addr);
+  try {
+    const m = getManifest();
+    if (peerHasMore) {
+      const resp = await fetch(`http://${addr}/api/ledger/sync`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
+          worldHash: m.worldHash, addr: meshAdvertise(), vv: ours }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data.ok) {
+        const r = ledgerIngestEvents(data.events);
+        pushTraffic('in', 'ledger', addr, true, `pulled ${r.accepted} ev · ${r.dup} dup · ${r.rejected.length} rejected${data.truncated ? ' (more queued)' : ''}`);
+      } else pushTraffic('in', 'ledger', addr, false, `pull refused: ${data.reason || resp.status}`);
+    }
+    if (missing.events.length) {
+      const resp = await fetch(`http://${addr}/api/ledger/ingest`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ events: missing.events }),
+      });
+      const data = await resp.json().catch(() => ({}));
+      if (resp.ok && data.ok) pushTraffic('out', 'ledger', addr, true, `pushed ${data.accepted} ev · ${data.dup} dup${missing.truncated ? ' (more queued)' : ''}`);
+      else pushTraffic('out', 'ledger', addr, false, `push refused: ${resp.status}`);
+    }
+  } catch (e) {
+    pushTraffic('out', 'ledger', addr, false, e.code || 'unreachable');
+  } finally { _ledgerSyncBusy.delete(addr); }
+}
+
 // ── Ownership resolution + fork-choice — a PURE function of LEDGER.events ────
 // owner(mintId) = endpoint of the longest valid transfer path rooted at the
 // mint event (each hop: priorEventHash === previous owning event's hash AND
@@ -355,9 +467,10 @@ function tradePrune() {
   for (const [id, t] of TRADES) if (t.expires < now) TRADES.delete(id);
 }
 // SSE-notify a party if they have a live local session (client rung wiring).
+// Matches on the LEDGER pid — a durable identity can have any live session.
 function ledgerNotifyPid(pid, event, data) {
   for (const [id] of SESSIONS)
-    if (pidOf(id) === pid) { const sse = SSE_CLIENTS.get(id); if (sse) sseSend(sse, event, data); }
+    if (ledgerPidOf(id) === pid) { const sse = SSE_CLIENTS.get(id); if (sse) sseSend(sse, event, data); }
 }
 
 // Raw source span of `const NAME = {…} / […] / new Set([…])` — comment- and
@@ -537,6 +650,7 @@ function meshPayload() {
     addr: meshAdvertise(), vv: MESH.vv,
     events: MESH.log.slice(-100), snapshot: localSnapshot(),
     peers: [...MESH.peers.keys()].slice(0, 20),
+    ledgerVV: ledgerVVObj(),   // §MESH-01i slice 2: advertises the durable-chain frontier; a mismatch triggers anti-entropy
   };
 }
 // Ingest one gossip payload (from an inbound POST or an outbound round's
@@ -564,6 +678,9 @@ function meshIngest(p, ip) {
   for (const a of p.peers || [])
     if (typeof a === 'string' && a && a !== meshAdvertise() && !MESH.peers.has(a))
       MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });   // PEX candidate — dialed next round
+  // §MESH-01i slice 2: ledger anti-entropy off the inbound frontier (fire-and-
+  // forget — the dialer's own round covers us if p.addr isn't dialable back).
+  if (p.ledgerVV && p.addr) ledgerSyncWith(p.addr, p.ledgerVV).catch(() => {});
   return { status: 200, body: { ok: true, ...meshPayload() } };
 }
 let _meshRoundBusy = false;
@@ -591,6 +708,7 @@ async function meshGossipRound() {
           for (const a of data.peers || [])
             if (typeof a === 'string' && a && a !== meshAdvertise() && !MESH.peers.has(a))
               MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });
+          if (data.ledgerVV) ledgerSyncWith(addr, data.ledgerVV).catch(() => {});   // §MESH-01i slice 2
           pushTraffic('out', 'gossip', addr, true, `⇄ ${(data.events || []).length} ev · snap ${(data.snapshot && data.snapshot.sessions || []).length} · ${(data.peers || []).length} px`);
         } else {
           MESH.peers.set(addr, { ...rec, lastErr: data.reason || `http-${resp.status}` });
@@ -8594,6 +8712,24 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, 'session/start: name required');
         return json(res, 400, { ok: false, error: 'body.name required' });
       }
+      // §MESH-01i slice 2 (lab report §6.4): an optional persistent playerKey
+      // gives this session a DURABLE ledger pid that survives session death —
+      // without it, ledger chains key on the session and strand at the TTL.
+      let player8 = null;
+      if (body.playerKey != null && body.playerKey !== '') {
+        const pk = String(body.playerKey).trim().toLowerCase();
+        if (!/^[0-9a-f]{32}$/.test(pk)) {
+          logResponse(method, url.pathname, 400, 'session/start: malformed playerKey');
+          return json(res, 400, { ok: false, error: 'body.playerKey must be 32 lowercase hex chars (client-generated once, kept in the save file).' });
+        }
+        const reg = playerKeyRegister(pk);
+        if (reg.error) {
+          log('WARN', `session/start: ${reg.error}`);
+          logResponse(method, url.pathname, 409, 'session/start: playerKey collision');
+          return json(res, 409, { ok: false, error: reg.error });
+        }
+        player8 = reg.player8;
+      }
       const hub      = 'LHR';
       const hubCoord = WBAPI.nodeCoords[hub] || { r: 64, c: 224 };
       const sessionId = crypto.randomBytes(16).toString('hex');
@@ -8614,6 +8750,7 @@ async function route(req, res) {
         seed,                    // §WALK-5 Inc 2
         rngState:   seed,        // mutable RNG stream, advanced per encounter roll
         encounter:  null,        // pending instanced encounter (null = none); hub is a named cell
+        player8,                 // §MESH-01i slice 2: durable identity half of the ledger pid (null = keyless)
       };
       SESSIONS.set(sessionId, s);
       // §MESH-01a: announce the newcomer to players already at the spawn cell
@@ -8625,7 +8762,7 @@ async function route(req, res) {
       const look = buildLook(s);
       logRow('session', `${playerName}  ·  id:${sessionId.slice(0,8)}…  ·  spawn:(${s.r},${s.c})=${hub}`);
       logResponse(method, url.pathname, 201, `session started for "${playerName}"`);
-      return json(res, 201, { ok: true, sessionId, pid: pidOf(sessionId), name: playerName, ...look,
+      return json(res, 201, { ok: true, sessionId, pid: pidOf(sessionId), ledgerPid: ledgerPidOf(sessionId), name: playerName, ...look,
         _hint: 'Subscribe to GET /api/session/events?sessionId=... for real-time events.' });
     }
 
@@ -8922,7 +9059,8 @@ async function route(req, res) {
       logResponse(method, url.pathname, 200, `ledger: ${LEDGER.events.length} events · seq ${LEDGER.seq}`);
       return json(res, 200, {
         ok: true, serverId: getServerId(), seq: LEDGER.seq, events: LEDGER.events.length,
-        players: players.size, origins: Object.fromEntries(LEDGER.vv), voided: voided.size,
+        players: players.size, keyedPlayers: (playerKeysLoad(), PLAYER_KEYS.map.size),
+        origins: Object.fromEntries(LEDGER.vv), voided: voided.size,
         dir: LEDGER_DIR, pendingTrades: (tradePrune(), TRADES.size),
       });
     }
@@ -8973,7 +9111,7 @@ async function route(req, res) {
         return json(res, 400, { ok: false, error: 'body.item {key, name[, qty]} required' });
       }
       s.lastSeen = Date.now();
-      const pid = pidOf(body.sessionId);
+      const pid = ledgerPidOf(body.sessionId);   // durable when the session presented a playerKey (§6.4)
       const evt = ledgerEvent('mint', [pid], { player: pid, item });
       logRow('ledger', `mint ${item.name} ×${item.qty}  ·  ${mintKeyOf(evt.body.mintId).slice(0, 12)}…  ·  → ${pid}`);
       logResponse(method, url.pathname, 201, `minted ${item.key} → ${pid}`);
@@ -8987,24 +9125,42 @@ async function route(req, res) {
     // this endpoint is its ingest half, and lets the harness exercise the
     // dupe-void fork-choice with a doctored origin today.
     if (sub === 'ingest') {
-      ledgerLoad();
-      const events = Array.isArray(body.events) ? body.events : [];
-      let accepted = 0, dup = 0;
-      const rejected = [];
-      for (const evt of events) {
-        if (evt && LEDGER.byHash.has(evt.hash)) { dup++; continue; }
-        const bad = ledgerValidate(evt);
-        if (bad) { rejected.push({ hash: evt && evt.hash || null, reason: bad }); continue; }
-        if (evt.id[0] === getServerId()) { rejected.push({ hash: evt.hash, reason: 'own-origin' }); continue; }   // single-writer: nobody authors OUR events
-        ledgerAppend(evt);
-        accepted++;
-      }
+      const { accepted, dup, rejected } = ledgerIngestEvents(body.events);
       logResponse(method, url.pathname, 200, `ledger ingest: ${accepted} accepted · ${dup} dup · ${rejected.length} rejected`);
       return json(res, 200, { ok: true, accepted, dup, rejected });
     }
 
+    // ── POST /api/ledger/sync  body: {serverId, proto, engineVer, worldHash, addr?, vv} ─
+    // The anti-entropy PULL half of the parallel durable gossip channel: the
+    // caller sends its ledger version vector and receives every event it lacks
+    // (per-origin seq order, capped per response — the next round continues).
+    // Same compatibility gate + ACL as presence gossip; no TTL, no age cap.
+    if (sub === 'sync') {
+      const m = getManifest();
+      const ip = req.socket.remoteAddress;
+      const from = (body && body.addr) || ip;
+      if (!body || body.proto !== m.proto || body.engineVer !== m.engineVer || body.worldHash !== m.worldHash) {
+        pushTraffic('in', 'ledger', from, false, `sync refused: incompatible (${body && body.engineVer}/${String(body && body.worldHash).slice(0, 8)})`);
+        logResponse(method, url.pathname, 409, 'ledger/sync: incompatible');
+        return json(res, 409, { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash } });
+      }
+      if (!body.serverId || body.serverId === getServerId()) {
+        logResponse(method, url.pathname, 400, 'ledger/sync: bad serverId');
+        return json(res, 400, { ok: false, reason: 'bad-serverId' });
+      }
+      if (!aclAllows({ serverId: body.serverId, ip, worldHash: body.worldHash })) {
+        pushTraffic('in', 'ledger', from, false, `sync refused: ACL (${String(body.serverId).slice(0, 8)})`);
+        logResponse(method, url.pathname, 403, 'ledger/sync: ACL');
+        return json(res, 403, { ok: false, reason: 'acl' });
+      }
+      const { events, truncated } = ledgerEventsSince(body.vv);
+      if (events.length) pushTraffic('in', 'ledger', from, true, `sync: served ${events.length} ev${truncated ? ' (more queued)' : ''} · ${String(body.serverId).slice(0, 8)}`);
+      logResponse(method, url.pathname, 200, `ledger sync: served ${events.length} event(s)${truncated ? ' (truncated)' : ''}`);
+      return json(res, 200, { ok: true, serverId: getServerId(), vv: ledgerVVObj(), events, truncated });
+    }
+
     logResponse(method, url.pathname, 404, `unknown ledger sub-route "${sub}"`);
-    return json(res, 404, { error: `Unknown ledger sub-route "${sub}"`, available: ['status', 'chain', 'owner', 'mint', 'ingest'] });
+    return json(res, 404, { error: `Unknown ledger sub-route "${sub}"`, available: ['status', 'chain', 'owner', 'mint', 'ingest', 'sync'] });
   }
 
   // ── §MESH-01i: Trade handshake — two-phase, ONE co-signed event on accept ─
@@ -9054,7 +9210,7 @@ async function route(req, res) {
         return json(res, 404, { ok: false, error: 'Live player session required to propose (body.sessionId).' });
       }
       s.lastSeen = Date.now();
-      const from = pidOf(body.sessionId);
+      const from = ledgerPidOf(body.sessionId);   // durable when the session presented a playerKey (§6.4)
       const to = String(body.to || '').trim();
       const give = Array.isArray(body.give) ? body.give.map(mintKeyOf) : [];
       const want = Array.isArray(body.want) ? body.want.map(mintKeyOf) : [];
@@ -9088,7 +9244,7 @@ async function route(req, res) {
         return json(res, 404, { ok: false, error: 'Trade not found (expired, cancelled, or bad tradeId).' });
       }
       const s = body.sessionId && SESSIONS.get(body.sessionId);
-      if (!s || s.bot || pidOf(body.sessionId) !== t.to) {
+      if (!s || s.bot || ledgerPidOf(body.sessionId) !== t.to) {
         logResponse(method, url.pathname, 403, 'trade/accept: not the counterparty');
         return json(res, 403, { ok: false, error: 'Only the proposed counterparty session may accept this trade.' });
       }
@@ -10752,7 +10908,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/grid/region?r1=&c1=&r2=&c2=    → 2D array of cells in bounding box'],
     ['GET',    '/api/grid/heatmap                    → all cells with adjacency heat (0-4)'],
     ['GET',    '/api/grid/reachability[?hub=LHR]     → reachable vs unreachable cells from hub'],
-    ['POST',   '/api/session/start                   body: {name, seed?} → {sessionId, r, c, node, desc, exits}'],
+    ['POST',   '/api/session/start                   body: {name, seed?, playerKey?} → {sessionId, pid, ledgerPid, r, c, node, desc, exits} (playerKey: 32 hex, gives a durable ledgerPid)'],
     ['POST',   '/api/session/move                    body: {sessionId, dir} → {r, c, node, desc, exits, players, room, encounter}'],
     ['GET',    '/api/session/look?sessionId=          → current cell + exits + co-present players + room (§NAV-01f MUD room object)'],
     ['GET',    '/api/session/who                     → all active sessions'],
@@ -10766,7 +10922,8 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/ledger/owner?mintId=            → ownership resolution (pure fn of the chains; carries the voided double-spend hashes)'],
     ['GET',    '/api/ledger/chain[?pid=]             → a player’s hash chain (or the full event log)'],
     ['GET',    '/api/ledger/status                   → ledger seq/events/origins/pending trades'],
-    ['POST',   '/api/ledger/ingest                   body: {events:[…]} → validated foreign-event ingest (the gossip receive path)'],
+    ['POST',   '/api/ledger/ingest                   body: {events:[…]} → validated foreign-event ingest (the gossip PUSH receive path)'],
+    ['POST',   '/api/ledger/sync                     body: {serverId, proto, engineVer, worldHash, addr?, vv} → events above the caller’s vv (anti-entropy PULL; compat+ACL gated)'],
     ['POST',   '/api/trade/propose                   body: {sessionId, to, give:[mintId…], want:[mintId…]} → {tradeId, ttlMs} (60s)'],
     ['POST',   '/api/trade/accept                    body: {tradeId, sessionId} → ONE co-signed dual-chain trade event'],
     ['POST',   '/api/trade/cancel                    body: {tradeId} → drop the proposal (no event)'],

@@ -192,10 +192,32 @@ curl http://localhost:1367/api/ledger/status             # seq / events / origin
 ```
 
 The counterparty is notified over their session SSE stream (`trade_proposed`,
-`trade_completed`, `trade_cancelled`). `/api/ledger/ingest` accepts validated
-foreign events (shape + hash recompute + per-origin HMAC self-consistency,
-version-vector dedup) — it is the receive half of the cross-mesh ledger gossip
-channel, which is the next §MESH-01i rung (this slice is single-server).
+`trade_completed`, `trade_cancelled`).
+
+**Durable player identity (slice 2, lab report §6.4).** Sessions idle-expire in
+30 min, but ledger chains are permanent — so `session/start` takes an optional
+`playerKey` (32 hex chars the client generates ONCE and keeps in the save file):
+
+```bash
+curl -XPOST http://localhost:1367/api/session/start \
+  -d '{"name":"Ann","playerKey":"<32-hex-from-the-save-file>"}'
+# → { pid, ledgerPid, … }  — ledgerPid = origin8:sha256(playerKey)[0:8] is what
+#   chains key on; a NEW session with the same key resumes the same chain.
+```
+
+The raw key is never stored (`ledger/players.json` keeps the full sha256 for
+collision detection); presence stays session-keyed. Keyless sessions still mint,
+but their chains strand when the session dies.
+
+**Cross-mesh replication (slice 2).** The ledger rides a parallel durable gossip
+channel: every presence gossip payload advertises `ledgerVV` (the per-origin
+event frontier), and a mismatch triggers anti-entropy — pull what the peer holds
+above our vv (`POST /api/ledger/sync`, compat + ACL gated like presence gossip)
+and push what we hold above theirs (`POST /api/ledger/ingest`: shape + hash
+recompute + per-origin HMAC self-consistency, version-vector dedup). No TTL, no
+age cap — a late-joining server back-fills the full history, and the pure
+fork-choice yields the identical dupe-void verdict on every server. Cross-ORIGIN
+co-signed trades (parties on different servers) are the remaining §MESH-01i rung.
 
 ---
 
