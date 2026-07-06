@@ -664,6 +664,39 @@ function aclAllows({ serverId, ip, worldHash }) {
   return true;
 }
 
+// §MESH-01-FU 8 — ingress rate limiting. The server↔server mesh POSTs
+// (mesh/gossip, tracker/announce, tracker/sync, ledger/sync, ledger/ingest,
+// trade/relay) are unauthenticated by design (the ACL needs the PARSED
+// serverId), so each is metered by a per-IP token bucket checked BEFORE the
+// body is read — a flood costs a flat 429 {reason:'rate'} instead of JSON
+// parse + merge work. Healthy cadence for scale: one gossip POST per peer per
+// MESH_GOSSIP_MS (2 s default) ≈ 0.5 token/s, so the defaults leave ~60×
+// headroom even with several peers sharing one IP (a LAN, or the test
+// harness's localhost fleet at MESH_GOSSIP_MS=120).
+// MESH_RATE_LIMIT tokens/s sustained (default 30; 0 disables) ·
+// MESH_RATE_BURST bucket capacity (default 120).
+const MESH_RATE_LIMIT = (() => { const v = parseFloat(process.env.MESH_RATE_LIMIT); return Number.isFinite(v) ? Math.max(0, v) : 30; })();
+const MESH_RATE_BURST = parseInt(process.env.MESH_RATE_BURST || '', 10) || 120;
+const RATE_BUCKETS = new Map(); // ip → {tokens, last, warnedAt}
+function meshRateAllows(ip) {
+  if (!MESH_RATE_LIMIT) return true;
+  const now = Date.now();
+  let b = RATE_BUCKETS.get(ip);
+  if (!b) {
+    // TCP source addresses are hard to spoof; cap the table anyway so it can't balloon
+    if (RATE_BUCKETS.size >= 10_000) RATE_BUCKETS.delete(RATE_BUCKETS.keys().next().value);
+    RATE_BUCKETS.set(ip, b = { tokens: MESH_RATE_BURST, last: now, warnedAt: 0 });
+  }
+  b.tokens = Math.min(MESH_RATE_BURST, b.tokens + ((now - b.last) / 1000) * MESH_RATE_LIMIT);
+  b.last = now;
+  if (b.tokens >= 1) { b.tokens -= 1; return true; }
+  if (now - b.warnedAt > 5000) { // one traffic-ring row per flood, not one per dropped packet
+    b.warnedAt = now;
+    pushTraffic('in', 'rate', ip, false, `rate limited (sustained > ${MESH_RATE_LIMIT}/s, burst ${MESH_RATE_BURST})`);
+  }
+  return false;
+}
+
 // Mesh state. peers: addr → liveness/identity. remote: originId → replicated
 // read-only session map. vv: originId → highest event seq ingested. log: this
 // server's own outbound event ring (we are the single writer of these).
@@ -3047,6 +3080,10 @@ async function route(req, res) {
 
   // ── §MESH-01d: tracker routes — announce + peers (rendezvous only) ──
   if (parts[0] === 'tracker' && parts[1] === 'announce' && method === 'POST') {
+    if (!meshRateAllows(req.socket.remoteAddress)) {
+      logResponse(method, url.pathname, 429, 'tracker/announce: rate limited');
+      return json(res, 429, { ok: false, reason: 'rate' });
+    }
     let tb;
     try { tb = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
     trackerSweep();
@@ -3077,6 +3114,10 @@ async function route(req, res) {
   }
   // ── §MESH-01d2: tracker↔tracker federation sync (bidirectional exchange) ──
   if (parts[0] === 'tracker' && parts[1] === 'sync' && method === 'POST') {
+    if (!meshRateAllows(req.socket.remoteAddress)) {
+      logResponse(method, url.pathname, 429, 'tracker/sync: rate limited');
+      return json(res, 429, { ok: false, reason: 'rate' });
+    }
     let sb;
     try { sb = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
     if (!/^[0-9a-f]{32}$/.test((sb && sb.serverId) || '')) {
@@ -3165,6 +3206,7 @@ async function route(req, res) {
       worldHash: m.worldHash, parts: m.parts,
       trackerUrls: [...new Set([...TRACKER_URLS, ...MESH_TRACKER_URLS])],
       acl: { mode: getAcl().mode || 'open', file: path.basename(ACL_FILE) },
+      rate: { limit: MESH_RATE_LIMIT, burst: MESH_RATE_BURST },
       localPlayers: SESSIONS.size, peers, remotePlayers,
       trackerGroups: Object.values(groups),
       traffic: MESH.traffic.slice(-100).reverse(),
@@ -3173,6 +3215,10 @@ async function route(req, res) {
 
   // ── §MESH-01: gossip ingress — compat gate → ACL → single-writer merge ──
   if (parts[0] === 'mesh' && parts[1] === 'gossip' && method === 'POST') {
+    if (!meshRateAllows(req.socket.remoteAddress)) {
+      logResponse(method, url.pathname, 429, 'gossip: rate limited');
+      return json(res, 429, { ok: false, reason: 'rate' });
+    }
     let gbody;
     try { gbody = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
     const out = meshIngest(gbody, req.socket.remoteAddress);
@@ -9248,6 +9294,12 @@ async function route(req, res) {
       logResponse(method, url.pathname, 405, `ledger/${sub} requires POST`);
       return json(res, 405, { error: `POST required for /api/ledger/${sub}` });
     }
+    // sync + ingest are the server↔server (unauthenticated) subs — token-bucket
+    // them before the parse; mint stays client-facing (session-bound already).
+    if ((sub === 'sync' || sub === 'ingest') && !meshRateAllows(req.socket.remoteAddress)) {
+      logResponse(method, url.pathname, 429, `ledger/${sub}: rate limited`);
+      return json(res, 429, { ok: false, reason: 'rate' });
+    }
     let body;
     try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'Invalid JSON' }); }
 
@@ -9348,6 +9400,12 @@ async function route(req, res) {
     if (method !== 'POST') {
       logResponse(method, url.pathname, 405, `trade/${sub} requires POST`);
       return json(res, 405, { error: `POST required for /api/trade/${sub}` });
+    }
+    // relay is the server↔server (unauthenticated) sub — token-bucket it before
+    // the parse; propose/accept/cancel stay client-facing (session-bound already).
+    if (sub === 'relay' && !meshRateAllows(req.socket.remoteAddress)) {
+      logResponse(method, url.pathname, 429, 'trade/relay: rate limited');
+      return json(res, 429, { ok: false, reason: 'rate' });
     }
     let body;
     try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'Invalid JSON' }); }

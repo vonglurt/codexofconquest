@@ -281,7 +281,7 @@ curl http://localhost:1367/api/mesh/status
 
 # Gossip ingress (servers call this on each other — shown for debugging only)
 curl -XPOST http://localhost:1367/api/mesh/gossip -d '{...meshPayload}'
-# → 200 (merged, reply payload) | 409 incompatible world | 403 ACL refused
+# → 200 (merged, reply payload) | 409 incompatible world | 403 ACL refused | 429 rate limited
 
 # Tracker (rendezvous)
 curl -XPOST http://localhost:1368/api/tracker/announce -d '{...manifest+addr}'
@@ -299,7 +299,18 @@ node scripts/world-diff.js mine.html theirs.html   # per-collection mod set; LOU
 `{blockServerIds|blockIps|blockWorldHashes: [...]}` or `{"mode":"allowlist", allowServerIds: [...]}`.
 Applies to gossip ingress (403), dial-out, and tracker merges.
 
-**Test gate:** `npm run test:mud` — 98 checks incl. the [L] partition-heal harness.
+**Rate limiting (§MESH-01-FU 8):** the unauthenticated server↔server POSTs
+(`mesh/gossip`, `tracker/announce`, `tracker/sync`, `ledger/sync`,
+`ledger/ingest`, `trade/relay`) sit behind a per-IP token bucket checked
+*before* the JSON body is read — a flood gets a flat `429 {reason:'rate'}` at
+near-zero cost, while GETs and client-facing routes (sessions, mint, trade
+propose/accept) are never metered. Tune with `MESH_RATE_LIMIT` (tokens/s
+sustained, default 30; `0` disables) and `MESH_RATE_BURST` (bucket size,
+default 120); a healthy peer spends ~0.5 token/s, so the defaults leave ~60×
+headroom. Current config is surfaced in `GET /api/mesh/status → rate`, and
+the traffic ring logs one `rate` row per flood.
+
+**Test gate:** `npm run test:mud` — 235 checks incl. the [L] partition-heal harness and [P] rate limiting.
 
 ---
 

@@ -1211,6 +1211,41 @@ async function main() {
   const late = await jpost('/duel/accept', { duelId: duT.duelId, sessionId: uri.sessionId, commit: DUEL.commitOf('5e'.repeat(16), sbHal) }, dT.base);
   check(late.ok === false, 'an unanswered challenge expires at the TTL');
 
+  // ── [P] §MESH-01-FU 8 — ingress rate limiting (per-IP token bucket) ───────
+  // The unauthenticated server↔server POSTs (gossip/announce/sync/ingest/relay)
+  // are metered per IP BEFORE the body is read: a flood gets a flat
+  // {reason:'rate'} 429, while GETs, client-facing routes, and well-behaved
+  // peers (one gossip per MESH_GOSSIP_MS) are never touched. Tight limits via
+  // env so the flood fits in a test.
+  console.log('\n[P] §MESH-01-FU 8 — ingress rate limiting (per-IP token bucket before JSON parse)');
+  const rl = await startServer(PORT + 37, {
+    MESH_RATE_LIMIT: '5', MESH_RATE_BURST: '8', MESH_SERVER_ID: '3f'.repeat(16),
+    LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'r2h-rate-')),
+    PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 37}-${process.pid}.json`),
+  });
+  const g1 = await jpost('/mesh/gossip', { serverId: 'zz' }, rl.base);
+  check(g1.ok === false && g1.reason !== 'rate', 'inside the burst budget a bad gossip is refused by the real gate (compat), not the bucket');
+  const flood = [];
+  for (let i = 0; i < 30; i++) flood.push(await jpost('/mesh/gossip', { serverId: 'zz' }, rl.base));
+  check(flood.filter((r) => r.reason === 'rate').length >= 15 && flood[flood.length - 1].reason === 'rate',
+    'a 30-POST flood drains the 8-token bucket and the tail is flat-refused with reason:rate');
+  check((await jpost('/tracker/announce', {}, rl.base)).reason === 'rate', 'tracker/announce shares the drained per-IP bucket (refused before field validation)');
+  check((await jpost('/tracker/sync', {}, rl.base)).reason === 'rate', 'tracker/sync shares it');
+  check((await jpost('/ledger/sync', {}, rl.base)).reason === 'rate', 'ledger/sync shares it');
+  check((await jpost('/ledger/ingest', {}, rl.base)).reason === 'rate', 'ledger/ingest shares it');
+  check((await jpost('/trade/relay', {}, rl.base)).reason === 'rate', 'trade/relay shares it');
+  const rai = await jpost('/session/start', { name: 'Rai', seed: 9 }, rl.base);
+  check(!!rai.sessionId, 'session/start still works on an empty bucket — players are never rate limited');
+  const rst = await jget('/mesh/status', rl.base);
+  check(rst.ok === true && rst.rate && rst.rate.limit === 5 && rst.rate.burst === 8,
+    'GET routes still serve while drained; mesh/status surfaces the configured limits');
+  const rateRows = rst.traffic.filter((t) => t.kind === 'rate');
+  check(rateRows.length >= 1 && rateRows.length <= 2 && rateRows.every((t) => t.ok === false),
+    'the traffic ring records the flood — throttled to ~one row, not one per dropped packet');
+  await sleep(1300);   // 5 tokens/s refill → ~6 tokens back
+  const g2 = await jpost('/mesh/gossip', { serverId: 'zz' }, rl.base);
+  check(g2.reason !== 'rate', 'the bucket refills — a peer that backs off is served again about a second later');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});
