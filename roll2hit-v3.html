@@ -23051,6 +23051,12 @@ function _storyRollInit() {
   S_story._firstStrikeFired    = false; // §DROP-03: reset per encounter
   // surgeCharges persist across battles (rest-gated); no reset here
   _statTally('battlesAttempted', 1);
+  // §MESH-01f: snapshot co-present allies at battle start — read ONCE here (design:
+  // "reads MP.players at battle start") so a party member wandering off mid-fight
+  // can't strip a buff already earned. Transient battle state (S, never S_story):
+  // a save file must not carry mesh state. Zero when multiplayer is off.
+  S.partyAllies   = _mpAllyCount();
+  S.partyHitBonus = _partyHitBonus(S.partyAllies);
   S_story.hour = ((S_story.hour || 0) + 1) % 24;
   S_story.hoursElapsed    = (S_story.hoursElapsed    || 0) + 1;
   S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
@@ -23418,6 +23424,7 @@ function _overlayPlayerAttack() {
   const lvlAtk       = (S_story.atkBonus || 0) + _tomeBonuses().atk + _lakeMagicBonuses().atk; // §DROP-03
   const weaponAtk    = S_story.equippedWeapon     ? (S_story.equippedWeapon.atkBonus     || 0) : 0;
   const mainWeaponAtk= S_story.equippedMainWeapon ? (S_story.equippedMainWeapon.magicBonus|| 0) : 0;
+  const allyAtk      = S.partyHitBonus || 0;   // §MESH-01f: +1/co-present ally, cap +2 (0 in single-player)
 
   // Resolve advantage — consumed on first roll only
   let firstAdv;
@@ -23436,7 +23443,7 @@ function _overlayPlayerAttack() {
     const d20Res  = rollD20(adv);
     const d20Val  = d20Res.result;
     const _scarsLight = (S_story.inventory || []).some(i => i.name === "The Scar's Light") && S_story.hp <= Math.floor((S_story.hpMax || 30) * 0.75) ? 1 : 0;
-    const atkTotal = d20Val + atkMod + profB + lvlAtk + weaponAtk + mainWeaponAtk + _scarsLight;
+    const atkTotal = d20Val + atkMod + profB + lvlAtk + weaponAtk + mainWeaponAtk + _scarsLight + allyAtk;
     const isCrit  = d20Val >= critMin;
     const isNat1  = d20Val === 1;
     const isHit   = isCrit || (!isNat1 && atkTotal >= S.enemy.ac);
@@ -23467,7 +23474,7 @@ function _overlayPlayerAttack() {
       logMsg = lbl + (isCrit ? '★ CRIT! ' : '✓ HIT! ') + atkTotal + ' vs AC ' + S.enemy.ac + ' — ' + finalDmg + ' dmg dealt.' + (_fsBonus > 0 ? ' [+' + _fsBonus + ' first strike]' : '');
     }
     appendCard({ round: S.round, actor:'YOU',
-      formula: 'd20(' + d20Val + ')+' + atkMod + '(mod)+' + profB + '(prof)=' + atkTotal,
+      formula: 'd20(' + d20Val + ')+' + atkMod + '(mod)+' + profB + '(prof)' + (allyAtk ? '+' + allyAtk + '(ally)' : '') + '=' + atkTotal,
       outcome: isNat1 ? 'NAT 1 — MISS' : (isHit ? (isCrit?'★ CRIT':'✓ HIT') + ' vs AC ' + S.enemy.ac : '✗ MISS'),
       dmg: finalDmg ? 'Enemy HP: ' + S.opp.hp + '/' + S.opp.maxHp : '' });
     _sboLog('YOUR ATTACK: ' + logMsg);
@@ -23494,7 +23501,8 @@ function _overlayOffhandAttack() {
   const d20Val   = Math.ceil(Math.random() * 20);
   const atkMod   = getAtkAbilityMod();
   const profB    = S.weapon.prof ? getProfBonus() : 0;
-  const atkTotal = d20Val + atkMod + profB;
+  const allyB    = S.partyHitBonus || 0;   // §MESH-01f: co-presence to-hit buff also applies to the off-hand strike
+  const atkTotal = d20Val + atkMod + profB + allyB;
   const isCrit   = d20Val === 20;
   const isNat1   = d20Val === 1;
   const isHit    = isCrit || (!isNat1 && atkTotal >= S.enemy.ac);
@@ -23585,8 +23593,13 @@ function _storyBattleVictory() {
   // ── Layer 64: Pit Championship bypass ──
   if (pb && pb.champion) { S_story.pendingBattle = null; _onPitChampionWin(); return; }
 
+  // §MESH-01f: party loot/XP share — co-present allies at battle start grant a
+  // cooperative-spoils multiplier (+10% per ally, cap +20%). Each fights their own
+  // client-local instance (no synced turn engine in v1); the multiplier is the
+  // "share". Snapshot (S.partyAllies) taken in _storyRollInit; 1.0 in single-player.
+  const partyMult = _partyLootMult(S.partyAllies || 0);
   // XP = AC × maxHP; queue level-ups for modal processing after loot screen
-  const xpAward = (S.enemy.ac || 10) * (S.opp.maxHp || 10);
+  const xpAward = Math.round((S.enemy.ac || 10) * (S.opp.maxHp || 10) * partyMult);
   S_story.xp          += xpAward;
   S_story.xpLastBattle = xpAward;
   _statTally('kills', 1);
@@ -23604,8 +23617,8 @@ function _storyBattleVictory() {
 
   // Heal + gold: HPGive = goldDrop = 0.1 × AC × HPLoss (HPLoss = maxHP on kill)
   const reward   = Math.floor((S.enemy.ac || 10) * (S.opp.maxHp || 10) * 0.1);
-  const healAmt  = reward;
-  const goldDrop = reward;
+  const healAmt  = reward;                              // heal stays at base — party bonus is loot, not survivability
+  const goldDrop = Math.floor(reward * partyMult);      // §MESH-01f: gold loot gets the party-share multiplier
   S_story.hp    = Math.min(S_story.hpMax, Math.max(1, S.player.hp) + healAmt);
   S.player.hp   = S_story.hp;
   S_story.gold += goldDrop;
@@ -26582,8 +26595,10 @@ function _enterEmptyCell(r, c) {
     : '';
 
   // §CELL-09 / §TIMELESS-01: encounter rolls at the terrain's base rate on each step.
+  // §MESH-01f: travelling with co-present allies halves that rate (client-side roll
+  // adjustment only — the mover never sees it; Free-Movement invariant holds).
   const terrain = room.terrain;
-  const baseRate = TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default;
+  const baseRate = _partyEncounterRate(TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default);
   if (Math.random() < baseRate) {
     const monster = _weightedMonsterPick(terrain);
     if (monster) {
@@ -26635,6 +26650,19 @@ function storyBlock(txt) {
 // beacon's world[], updated live by player_moved SSE); `nearby` is its viewport
 // subset (minimap dots); world/globe panels draw all of `remotes`.
 const MP = { base: null, session: null, pid: null, name: null, es: null, players: [], nearby: [], remotes: {}, on: false };
+
+// §MESH-01f — co-presence combat buffs ("traveling with allies"). Pure
+// derivations off MP.players (server-filtered to the current cell, self already
+// excluded) so the buff is unit-testable without a live battle. Presence stays
+// DISPLAY-ONLY: the mover NEVER reads these — encounter halving is a client-side
+// roll adjustment in _enterEmptyCell, not a movement gate (Free-Movement). Every
+// buff is guarded on MP.on, so multiplayer-off is byte-for-byte unchanged.
+function _mpAllyCount() {
+  return (MP && MP.on && Array.isArray(MP.players)) ? MP.players.length : 0;
+}
+function _partyHitBonus(allies) { return Math.min(2, Math.max(0, allies | 0)); }       // +1 to hit per ally, cap +2
+function _partyLootMult(allies) { return 1 + 0.1 * _partyHitBonus(allies); }            // +10% XP/gold per ally, cap +20%
+function _partyEncounterRate(base) { return _mpAllyCount() > 0 ? base * 0.5 : base; }   // encounter rate halved on shared cells
 
 function _mpBase() {
   try { return localStorage.getItem('mpServer') || 'http://localhost:1367'; }
