@@ -292,7 +292,10 @@ curl -XPOST http://localhost:1368/api/tracker/sync -d '{...}'      # federation 
 
 # World download + mod inspection (tracker-mode refuses with 410)
 curl -O http://localhost:1367/api/world/download   # game file + X-R2H-* identity headers
-node scripts/world-diff.js mine.html theirs.html   # per-collection mod set; LOUD if CODE differs
+node scripts/world-diff.js mine.html theirs.html   # DEEP per-entry diff (exact field paths,
+                                                   # fn bodies compared by source); LOUD if CODE differs
+node scripts/world-diff.js a.html b.html --json    # machine-readable report (tooling)
+npm run check:worlddiff                            # selftest (synthetic worlds; in CI)
 ```
 
 **ACL:** `mesh-acl.json` at repo root (or `MESH_ACL_FILE`), hot-reloaded on mtime —

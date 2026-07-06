@@ -17,31 +17,34 @@ const ok = (c, m) => { if (c) { pass++; } else { fail++; console.log('  ✗ FAIL
 
 WBAPI.load(GAME);
 const q = WBAPI.questDb;
-const findQ = (field) => Object.keys(q).find(id => Array.isArray(q[id][field]) && q[id][field].length);
-const qCI = findQ('completeItems');
-const qTM = findQ('targetMonsterKeys');
-const qKG = findQ('killGoals');
+// §ARCH-01 repoint (2026-07-06): this guard originally rode `completeItems` —
+// W7d/W8a swept that legacy field from QUEST_DB entirely, so the string-array
+// cases now ride `targetMonsterKeys` (two different quests so the edits don't
+// collide). The machinery under test is unchanged.
+const findQ = (field) => Object.keys(q).filter(id => Array.isArray(q[id][field]) && q[id][field].length);
+const [qTM1, qTM2] = findQ('targetMonsterKeys');
+const [qKG] = findQ('killGoals');
 
 // [1] edits succeed via the structured path
-let r = WBAPI.editStructuredField('quest', qCI, 'completeItems', ['New Item A', "O'Brien's Token", 'multi\nline']);
-ok(r.ok && r.strategy === 'editStructuredField', 'completeItems (string array) edit: ' + (r.error || ''));
+let r = WBAPI.editStructuredField('quest', qTM1, 'targetMonsterKeys', ['New Item A', "O'Brien's Token", 'multi\nline']);
+ok(r.ok && r.strategy === 'editStructuredField', 'string array (escape-heavy) edit: ' + (r.error || ''));
 r = WBAPI.editStructuredField('quest', qKG, 'killGoals', [{ key: 'test_mob', need: 7, label: "O'Test" }, { key: 'm2', need: 1, label: 'Two' }]);
 ok(r.ok, 'killGoals (object array) edit: ' + (r.error || ''));
-r = WBAPI.editStructuredField('quest', qTM, 'targetMonsterKeys', ['alpha', 'beta']);
-ok(r.ok, 'targetMonsterKeys edit: ' + (r.error || ''));
+r = WBAPI.editStructuredField('quest', qTM2, 'targetMonsterKeys', ['alpha', 'beta']);
+ok(r.ok, 'plain string array edit: ' + (r.error || ''));
 
 // [2] _rawSrc patched at source level (single-quoted, escaped, unquoted obj keys)
-ok(WBAPI._rawSrc.includes("completeItems:['New Item A','O\\'Brien\\'s Token','multi\\nline']"), 'completeItems literal in _rawSrc');
+ok(WBAPI._rawSrc.includes("targetMonsterKeys:['New Item A','O\\'Brien\\'s Token','multi\\nline']"), 'escape-heavy literal in _rawSrc');
 ok(WBAPI._rawSrc.includes("killGoals:[{key:'test_mob',need:7,label:'O\\'Test'},{key:'m2',need:1,label:'Two'}]"), 'killGoals literal in _rawSrc');
 
 // [3] round-trip: reload the patched source, re-read parsed values
 WBAPI.load(WBAPI._rawSrc);
-ok(JSON.stringify(WBAPI.questDb[qCI].completeItems) === JSON.stringify(['New Item A', "O'Brien's Token", 'multi\nline']), 'completeItems round-trips');
+ok(JSON.stringify(WBAPI.questDb[qTM1].targetMonsterKeys) === JSON.stringify(['New Item A', "O'Brien's Token", 'multi\nline']), 'escape-heavy string array round-trips');
 ok(JSON.stringify(WBAPI.questDb[qKG].killGoals) === JSON.stringify([{ key: 'test_mob', need: 7, label: "O'Test" }, { key: 'm2', need: 1, label: 'Two' }]), 'killGoals round-trips');
-ok(JSON.stringify(WBAPI.questDb[qTM].targetMonsterKeys) === JSON.stringify(['alpha', 'beta']), 'targetMonsterKeys round-trips');
+ok(JSON.stringify(WBAPI.questDb[qTM2].targetMonsterKeys) === JSON.stringify(['alpha', 'beta']), 'plain string array round-trips');
 
 // [4] function-valued field rejected (not §DATA-01 territory)
-r = WBAPI.editStructuredField('quest', qCI, 'completeFn', function () { return true; });
+r = WBAPI.editStructuredField('quest', qTM1, 'completeFn', function () { return true; });
 ok(!r.ok, 'function value rejected');
 
 // [5] insert absent array field

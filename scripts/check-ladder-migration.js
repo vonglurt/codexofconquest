@@ -198,7 +198,13 @@ function fieldsEqual(got, want) {
 ok(typeof apply === 'function', '_applyItemChain lifted and callable');
 { S.inventory = []; apply({ itemChain: [{ action: 'grant', name: '__smoke__' }] });
   ok(S.inventory.some(i => i.name === '__smoke__'), '_applyItemChain grant works in-sandbox'); }
-ok(LADDER.size >= 30, `reward ladder parsed (${LADDER.size} branches found)`);
+// §ARCH-01 W7c (`a79c76a`, 2026-07-03) migrated every remaining ladder branch to
+// declarative onComplete chains and DELETED the per-id reward block. This guard's
+// migration-era baseline (`size >= 30`) is therefore inverted: it now pins the
+// ladder GONE — red means someone reintroduced an `if (id === 'quest_…')` reward
+// branch in storyCheckQuests. The manifest parity checks below still verify the
+// migrated itemChains against the recorded ladder effects.
+ok(LADDER.size === 0, `reward ladder stays deleted (§ARCH-01 W7c) — found ${LADDER.size} reintroduced branch(es)`);
 ok(KEY_EVENT_ITEMS.size > 0, `KEY_EVENTS item names parsed (${KEY_EVENT_ITEMS.size})`);
 ok(Object.keys(WBAPI.questDb).length > 0, 'QUEST_DB loaded');
 // Manifest internal consistency.

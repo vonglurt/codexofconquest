@@ -20,6 +20,7 @@
     "check:arraypatch": "node scripts/check-array-patch.js",
     "check:itemchain": "node scripts/check-itemchain.js",
     "check:laddermigration": "node scripts/check-ladder-migration.js",
+    "check:worlddiff": "node scripts/world-diff.js --selftest",
     "test:mud": "node tests/mud-harness.mjs",
     "check:walk": "npm run check:invariants && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity"
   },

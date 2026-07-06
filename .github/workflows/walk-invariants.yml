@@ -30,6 +30,7 @@ on:
       - 'scripts/check-array-patch.js'
       - 'scripts/check-itemchain.js'
       - 'scripts/check-ladder-migration.js'
+      - 'scripts/world-diff.js'
       - 'tests/mud-harness.mjs'
       - 'package.json'
       - '.github/workflows/walk-invariants.yml'
@@ -46,6 +47,7 @@ on:
       - 'scripts/check-array-patch.js'
       - 'scripts/check-itemchain.js'
       - 'scripts/check-ladder-migration.js'
+      - 'scripts/world-diff.js'
       - 'tests/mud-harness.mjs'
       - 'package.json'
       - '.github/workflows/walk-invariants.yml'
@@ -76,6 +78,10 @@ jobs:
       # stdlib-only (vm + wbapi-core), loads the committed HTML read-only.
       - name: Run ladder-migration parity guard
         run: npm run check:laddermigration
+      # §MESH-01-FU 9: world-diff deep-diff selftest — stdlib-only (crypto +
+      # wbapi-core), synthetic in-memory worlds, no HTML load.
+      - name: Run world-diff selftest
+        run: npm run check:worlddiff
 
   mud:
     runs-on: ubuntu-latest
