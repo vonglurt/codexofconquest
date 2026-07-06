@@ -147,7 +147,24 @@ curl -XPOST http://localhost:1367/api/session/end -d '{"sessionId":"<id>"}'
 
 SSE events: `connected`, `player_arrived` / `player_left` / `chat` (cell-scoped),
 `player_moved` (worldwide, display layer). All carry `pid` (`<serverId8>:<sessionId8>`);
-remote-server events add `remote: true` + `server`.
+remote-server events add `remote: true` + `server`. Sentry-bot arrivals/leaves add
+`kind: "sentry"` so clients can tell a garrison from a player.
+
+```bash
+# Sentry bots (§MESH-01h) — server-owned guards stationed at a junction. They
+# ride presence for free (co-present players see them in look/who, kind:'sentry'),
+# suppress the encounter roll in their cell, and auto-assist battles there.
+curl -XPOST http://localhost:1367/api/sentry/deploy -d '{"node":"LHR","dailyFee":20}'
+curl -XPOST http://localhost:1367/api/sentry/deploy -d '{"r":63,"c":224}'   # unnamed junction cell
+curl http://localhost:1367/api/sentry/list
+curl -XPOST http://localhost:1367/api/sentry/recall -d '{"sentryId":"<id>"}'
+```
+
+A sentry is a `bot:true` session: it never idle-expires (the prune sweep skips
+bots) and is removed only by `recall`. In the browser game the sentries you post
+are bankrolled from your own gold (an upfront cost + a daily upkeep drawn on rest,
+recalled if unpaid — see mechanics.md §Multiplayer); the server just hosts the
+bot's presence + suppression.
 
 ---
 

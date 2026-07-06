@@ -873,9 +873,12 @@ Roll2Hit is single-player-first: multiplayer is a strictly **opt-in presence lay
 
 Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `worldHash` covers the **eight spatial/mechanical data collections** — `NODE_MAP`, `NODE_COORDS`, `SEA_RUNS`, `SEA_LANES`, `ROAD_RUNS`, `QUEST_DB`, `MONSTER_POOL`, `WORLD_DB` — hashed as raw source spans, plus `ENGINE_VER`. **This boundary is intentional** (decided in the architecture report §III.A): *hash what determines where players can stand and what they can fight*. Narrative tables — `NPC_DIALOGUES`, `BIRKA_NPC_PROFILES`, `FROBERGER_JOURNAL`, `KEY_EVENTS`, and other prose — are deliberately **not** hashed, so a pure-dialogue mod does not fork the swarm. Likewise `WORLD_NAME` is a display-only tag (rendered as `worldTag` = `<name>-<hash5>`, e.g. `Roll2Hit-915aa`): renaming a world never forks it — identity is what a world *is* (data), the tag is what it's *called*. Incompatible worlds are refused at gossip ingress (409) and segregated into their own tracker world groups; mod inspection goes through `GET /api/world/download` + `scripts/world-diff.js`.
 
-### Planned gameplay ladder (not yet shipped)
+### Gameplay ladder
 
-(f) co-presence buffs (+1 to hit per co-located ally, cap +2; halved encounter rate) + party loot share → (g) hireling guide bot → (h) sentry bots → (i) no-dupe trade ledger → (j) consensual PvP duels. See plan.md §MESH-01.
+- **(f) co-presence buffs + party loot share** ✅ — co-located players get "traveling with allies": +1 to hit per ally (cap +2), the wilderness encounter rate halved on shared cells, and +10% XP/gold per ally (cap +20%) on victory. All guarded on the connection, so single-player is unchanged.
+- **(g) hireling guide bot** ✅ — a single-player companion (60g + 12g/day) that fights beside you (one extra attacker die) and, on "follow me", leads you to your active quest via auto-travel.
+- **(h) sentry bots** ✅ — server-owned guards you post at a road junction. A sentry rides presence for free (anyone co-present sees it), **suppresses wilderness encounters in its cell**, and **auto-assists any battle there** (a second extra attacker die). You bankroll the sentries you post: **120g up front, then 20g/day upkeep** drawn on rest — a post you can no longer pay stands down (auto-recalled). Post/recall from the **🛡 Sentries** panel in Story Mode (requires a live server connection; the sentry only exists as server presence). A sentry never idle-expires — only recall removes it.
+- **(i) no-dupe trade ledger → (j) consensual PvP duels** — planned; see plan.md §MESH-01.
 
 ---
 
