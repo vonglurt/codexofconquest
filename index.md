@@ -3,7 +3,7 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · 34,542 lines · 410 nodes · 392 monsters · ~2,830 quests · 80 lab reports · §WALK ✅ · §ARCH-01 UQF Waves 1+2 ✅ (~2,462 quests migrated) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · ⚠️ §DATA-01 REVERTED (recorded done, never re-shipped — see plan.md §DATA-01-REVERTED)
+**Status:** Layers 0–104 implemented · 34,542 lines · 410 nodes · 392 monsters · ~2,830 quests · 80 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + gameplay ladder f/g/h ✅ + no-dupe ledger slice 1 ✅ (2026-07-06) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · ⚠️ §DATA-01 REVERTED (recorded done, never re-shipped — see plan.md §DATA-01-REVERTED)
 **Last updated:** 2026-07-03
 
 ### Doc Health Badge
@@ -116,7 +116,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 
 Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI server needed).
 
-> ✅ **Rebuilt in §WALK-4 (2026-06-26)** against current geo, extended by §NAV-01 (room render, auto-travel, wayfinding, road-net editor cases). Current at §NAV-01 close (2026-07-03): walk suite **89/89** (navigation 37 + worldbuilder walk specs) · autosave 4/4 · fishing green. Walk-invariant CI gate: `npm run check:walk` **6/6** (invariants, mover parity ×2, terrain parity incl. roads, check:roads R1–R4, rooms parity). MUD server protocol tests live outside Playwright: `npm run test:mud` (**119** checks, sections [A]–[N]). ⚠️ Before any Playwright run, re-read plan.md §I Test-Run Rules: stop the WBAPI server first, never trust piped exit codes.
+> ✅ **Rebuilt in §WALK-4 (2026-06-26)** against current geo, extended by §NAV-01 (room render, auto-travel, wayfinding, road-net editor cases). Current at §NAV-01 close (2026-07-03): walk suite **89/89** (navigation 37 + worldbuilder walk specs) · autosave 4/4 · fishing green. Walk-invariant CI gate: `npm run check:walk` **6/6** (invariants, mover parity ×2, terrain parity incl. roads, check:roads R1–R4, rooms parity). MUD server protocol tests live outside Playwright: `npm run test:mud` (**168** checks, sections [A]–[N] + §MESH-01h sentry [H]/[H6] + §MESH-01i ledger [I]). At 2026-07-06 (§MESH-01i slice 1): full Playwright **501 passed** (4 known `worldbuilder-crud-arrays` fails = the §NAV-01-FU-5 server dependency). ⚠️ Before any Playwright run, re-read plan.md §I Test-Run Rules: stop the WBAPI server first, never trust piped exit codes.
 
 | File | Coverage | Count |
 |------|---------|-------|
@@ -166,9 +166,9 @@ All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
 |------|-------------|
 | **§WORLDBUILDER-01** | Canvas node map editor — click node to edit, click empty cell to create, bidirectional exit wiring, collision detection. Depends on §WORLDBUILDER-02 Ph1 ✅ |
 | **§1367** | Historical year 1367 AD integration — `GAME_YEAR=1367`, plague mechanic, Hanseatic faction score, faith triple-track (orthodox/reform/folk), 4 new Baltic nodes (LB/DZ/RG/BG), 6 arc seeds, historical NPCs. Full spec in `Year1367AD.md`. |
-| **§EDITOR-02-FU** | Mission Builder follow-ups — branching arcs, drag-reorder step list (shared w/ §EDITOR-01-D-FU), whole-arc UQF export → §EDITOR-03. (Core Inc 1–4 ✅ shipped 2026-06-27 — see Implemented Features.) |
+| **§EDITOR-02-FU** | ✅ COMPLETE — branching arcs + drag-reorder shipped 2026-06-27; whole-arc UQF export shipped 2026-07-03 with §EDITOR-03 (§ARCH-01 W8b). Archived: plan-archive.md §"Archived 2026-07-06". |
 | **§NAV-01** | Navigable World: MUD-coherent map + fungal road net — **✅ COMPLETE 2026-07-03 (Inc a–h)**: pos-origin BFS (geo bounds + wrap), `ROAD_RUNS` net (400 cells / 88 junctions, encounter rate 0, `check:roads` R1–R4), `describeCell` room layer (ROOMS:CORE `rooms.js`, deterministic prose + signposts), road-weighted auto-travel (`_roadGridPath` + `_travelTick`, 4 interrupt classes), wayfinding UI (exits signage, waypoint ★, `(n steps, NE)`), map suite + GLOBE panel, Inc f MUD server room parity (`room` on all four look surfaces, byte-equal to client, mud-harness [M]), Inc g worldbuilder drag-&-lock cities (`PUT /api/coords`, 🔒 → `roads-pins.json`), Inc h road-net editor (chain-link overlay, pin drag, ✚/┬/🔗/🗑 palette, ♻ Reweave Net = `PUT /api/roads` with auto-rollback). Gates at close: walk suite 89/89 · check:walk 6/6 · mud-harness 119. Lab report: `lab-reports/lab-report-nav01-navigable-world.md` · archive: plan-archive.md §2026-07-03. |
-| **§MESH-01** | Multiuser MUD: client presence rendering (SSE "Also here:" line, minimap dots, chat), self-discovering server mesh (gossip/PEX, `worldHash` scoping, single-writer version-vector dedup), tracker mode + `r2h:` world magnet links, co-presence buffs → hireling/sentry bots → no-dupe trade ledger (mint-id + hash-chained per-player logs). Design locked in `plan.md §MESH-01`; prereq `lab-reports/lab-report-mesh-multiuser.md` before implementation. |
+| **§MESH-01** | Multiuser MUD — **core ✅ SHIPPED** (client presence, gossip/PEX mesh + `worldHash` scoping, tracker + federation, world download/diff, Mesh tab; archived 2026-07-03) · **gameplay ladder (f) buffs ✅ · (g) hireling ✅ · (h) sentry bots ✅ · (i) no-dupe ledger slice 1 ✅ 2026-07-06** (durable hash chains `ledger/<origin>.jsonl`, mint + two-phase trade + pure lowest-hash dupe-void resolver, mud-harness [I]). Remaining: (i) slice 2 (durable gossip channel + anti-entropy + client trade UI; durable-player-identity design call first) · (j) consensual duels (`DUEL:CORE` shapes ready — lab report §6.3). See plan.md §MESH-01 ladder. |
 
 ### Version Snapshots
 
@@ -245,7 +245,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-reports/lab-report-editor01d-fu-chain-ui.md` | §EDITOR-01-D-FU(a) | Visual itemChain editor widget (`buildChainEditor`) — Quest Creator + CRUD form wiring |
 | `lab-reports/lab-report-editor01d-fu-b-ladder-migration.md` | §EDITOR-01-D-FU(b) | Reward-ladder → itemChain migration — 61-branch classification, manifest-driven parity guard, silent grants |
 | `lab-reports/lab-report-editor02-mission-builder.md` | §EDITOR-02 | Mission Builder tab — arc compiler (`buildArcQuests`), chain preview, sequential POST All |
-| `lab-reports/lab-report-mesh-multiuser.md` | §MESH-01 (🔒 design locked) | Multiuser MUD — client presence rendering, gossip/PEX mesh + `worldHash` scoping, single-writer version-vector dedup, tracker mode + `r2h:` magnets, gameplay ladder, no-dupe trade ledger; increments (a)–(i) |
+| `lab-reports/lab-report-mesh-multiuser.md` | §MESH-01 (core + f/g/h + ledger slice 1 ✅) | Multiuser MUD — presence, gossip/PEX mesh + `worldHash` scoping, tracker + magnets, gameplay ladder (f)–(j); §6 data shapes for the (i) no-dupe ledger + (j) `DUEL:CORE` duels; §4 increment table tracks ship status |
 
 ### Combat & Mechanics
 
@@ -463,7 +463,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `CELL_GRID` | Reverse grid lookup; key `"r,c"` → **node-code list** (§WALK-1.5 locale lists); computed at startup from `NODE_MAP`; `cellCode(key)`=primary, `cellCodes(key)`=full list; `getCellGrid()` in server caches it per `WBAPI.nodeMap` reference |
 | `GEO_PROJ` | §2.1 equirectangular 1° grid dims `{ROWS:90, COLS:360}`; passed to the mover kernel as `world.proj` for N/S clamp + E↔W wrap |
 | `Mover` / `_moverWorld()` | §WALK-2 client handle to `mover.js` (`Mover.move(world,pos,dir)`); `_moverWorld()` builds the read-only world snapshot (`proj`/`impassable`/`cellCodes`/`terrainAt`/`encounterRate`) per move. See `mover.js` in Core Reference |
-| `QUEST_DB` | Quest definitions: activateNode, objectiveText, reward, completionCheck; ~2,830 quests (~2,462 on UQF-1.0 after §ARCH-01 Waves 1+2) |
+| `QUEST_DB` | Quest definitions (UQF-1.0: `gate`/`bits`/`completion`/`onComplete`); ~2,830 quests — ALL UQF after §ARCH-01 close 2026-07-05 except `quest_math_01–05` (activate-only, §MATH-01) + 30 dead `blq` stubs |
 | `GATE_LOCKS` | 4 passage locks + shard gate; each entry: `{from, to, item, label}` |
 | `CONDITION_ITEMS` | 11 condition items: name, icon, effect, sell value |
 | `CONDITION_GOLD` | Pre-battle cost per condition (flat gold, not inventory) |
@@ -772,7 +772,7 @@ This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops
 ---
 
 *Last updated: 2026-07-02*
-*Codebase: `roll2hit-v3.html` · 34,542 lines · Layers 0–104 complete · 410 nodes · 392 monsters · ~2,830 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF Waves 1+2 · §MESH-01 core · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
+*Codebase: `roll2hit-v3.html` · 34,542 lines · Layers 0–104 complete · 410 nodes · 392 monsters · ~2,830 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF ✅ CLOSED · §MESH-01 core + ladder f/g/h + ledger slice 1 · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---
