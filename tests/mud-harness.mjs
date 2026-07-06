@@ -17,6 +17,7 @@
 // Pure HTTP + SSE, no Playwright. Run: `npm run test:mud` (or
 // `MUD_HARNESS_PORT=… node tests/mud-harness.mjs`). Exit 0 if all pass, else 1.
 import http from 'node:http';
+import crypto from 'node:crypto';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 import fs from 'node:fs';
@@ -826,6 +827,119 @@ async function main() {
   check(!whoTtl.sessions.some((x) => x.name === 'IdleGhost'), 'the idle player session is pruned past its TTL');
   check(whoTtl.sessions.some((x) => x.kind === 'sentry'), 'the sentry bot survives the prune (bots never idle-expire)');
   check((await jget('/sentry/list', sTtl.base)).count === 1, 'sentry/list still reports the bot after the prune sweep');
+
+  // ════════ (i) §MESH-01i — no-dupe economy ledger (single-server slice) ════════
+  // Durable per-player hash chains (ledger/<origin>.jsonl), server-side mint,
+  // two-phase same-origin trade → ONE dual-chain event, pure ownership
+  // resolution, deterministic lowest-hash dupe-void, and durability across a
+  // restart — the property presence deliberately lacks. Lab report §6.1–6.2.
+  console.log('\n[I] §MESH-01i — no-dupe ledger (mint, provenance, trade, dupe-void, durability)');
+  const ledDir = fs.mkdtempSync(path.join(tmp, 'r2h-ledger-'));
+  const ledId = 'ab'.repeat(16);
+  const ledEnv = { LEDGER_DIR: ledDir, MESH_SERVER_ID: ledId, LEDGER_TRADE_TTL_MS: '900' };
+  let led = await startServer(PORT + 31, ledEnv);
+
+  // Harness-side twin of the server's canonical/sig/hash discipline — the
+  // doctored-origin events below must be byte-compatible with ledgerValidate.
+  const canon = (v) => v === null || typeof v !== 'object' ? JSON.stringify(v)
+    : Array.isArray(v) ? '[' + v.map(canon).join(',') + ']'
+    : '{' + Object.keys(v).sort().map((k) => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}';
+  const hashOf = (e) => { const { hash, ...r } = e; return crypto.createHash('sha256').update(canon(r)).digest('hex'); };
+  const sigOf = (e, signer) => { const { sig, hash, ...r } = e; return crypto.createHmac('sha256', signer).update(canon(r)).digest('hex'); };
+  const sealed = (e) => { e.sig = { [e.id[0]]: sigOf(e, e.id[0]) }; e.hash = hashOf(e); return e; };
+
+  // I1 — mint: session-bound, monotonic distinct ids, chain linkage from genesis.
+  const annL = await jpost('/session/start', { name: 'Ann', seed: 11 }, led.base);
+  const benL = await jpost('/session/start', { name: 'Ben', seed: 22 }, led.base);
+  const sseBen = await openSSE(benL.sessionId, led.base); openClients.push(sseBen);
+  const m1 = await jpost('/ledger/mint', { sessionId: annL.sessionId, item: { key: 'sword_iron', name: 'Iron Sword' } }, led.base);
+  const m2 = await jpost('/ledger/mint', { sessionId: annL.sessionId, item: { key: 'ring_gold', name: 'Gold Ring' } }, led.base);
+  check(m1.ok === true && m2.ok === true && m1.mintKey !== m2.mintKey, 'two mints get distinct mintIds (origin-wide monotonic seq)');
+  check(m1.event.chain[annL.pid].height === 0 && m1.event.chain[annL.pid].prevHash === null, 'first mint is the genesis of Ann’s chain (height 0, prevHash null)');
+  check(m2.event.chain[annL.pid].height === 1 && m2.event.chain[annL.pid].prevHash === m1.event.hash, 'second mint chains onto the first (height 1, prevHash = mint1.hash)');
+  check((await jpost('/ledger/mint', { sessionId: 'nope', item: { key: 'x', name: 'X' } }, led.base)).ok === false, 'mint without a live session is refused');
+  check((await jget(`/ledger/owner?mintId=${m1.mintKey}`, led.base)).owner === annL.pid, 'freshly minted item resolves to its minter');
+
+  // I2 — provenance-reject: an unminted item fails trade/propose (§6.2).
+  const fakeProp = await jpost('/trade/propose', { sessionId: annL.sessionId, to: benL.pid, give: ['ff'.repeat(16) + ':7'], want: [] }, led.base);
+  check(fakeProp.ok === false && fakeProp.reason === 'provenance', 'trade/propose refuses an unminted item (no mint lineage)');
+
+  // I3 — honest trade: propose notifies B over SSE; accept co-signs ONE event
+  // into BOTH chains; ownership flips; the giver can no longer trade it away.
+  const prop = await jpost('/trade/propose', { sessionId: annL.sessionId, to: benL.pid, give: [m1.mintKey], want: [] }, led.base);
+  check(prop.ok === true && !!prop.tradeId, 'trade/propose returns a tradeId + TTL');
+  await waitFor(() => countEv(sseBen, 'trade_proposed', (d) => d.tradeId === prop.tradeId) >= 1);
+  check(countEv(sseBen, 'trade_proposed', (d) => d.tradeId === prop.tradeId) === 1, 'counterparty gets exactly one trade_proposed over SSE');
+  check((await jpost('/trade/accept', { tradeId: prop.tradeId, sessionId: annL.sessionId }, led.base)).ok === false, 'only the counterparty session may accept (proposer refused)');
+  const acc = await jpost('/trade/accept', { tradeId: prop.tradeId, sessionId: benL.sessionId }, led.base);
+  check(acc.ok === true && Object.keys(acc.event.chain).length === 2, 'accept appends ONE co-signed event carrying BOTH players’ chain linkage');
+  check(acc.event.body.transfers[0].priorEventHash === m1.event.hash, 'the transfer references the giver’s prior owning event (the mint)');
+  const owned = await jget(`/ledger/owner?mintId=${m1.mintKey}`, led.base);
+  check(owned.owner === benL.pid && owned.hops === 1, 'ownership resolves to the receiver after the trade (1 hop from mint)');
+  const staleProp = await jpost('/trade/propose', { sessionId: annL.sessionId, to: benL.pid, give: [m1.mintKey], want: [] }, led.base);
+  check(staleProp.ok === false && staleProp.reason === 'provenance', 'the giver cannot re-trade an item they no longer own');
+
+  // I4 — cancel + TTL expiry: neither leaves an event.
+  const p2 = await jpost('/trade/propose', { sessionId: annL.sessionId, to: benL.pid, give: [m2.mintKey], want: [] }, led.base);
+  check((await jpost('/trade/cancel', { tradeId: p2.tradeId }, led.base)).ok === true, 'trade/cancel drops the pending proposal');
+  check((await jpost('/trade/accept', { tradeId: p2.tradeId, sessionId: benL.sessionId }, led.base)).ok === false, 'accept after cancel is refused');
+  const p3 = await jpost('/trade/propose', { sessionId: annL.sessionId, to: benL.pid, give: [m2.mintKey], want: [] }, led.base);
+  await sleep(1000);   // past the 900ms harness TTL
+  check((await jpost('/trade/accept', { tradeId: p3.tradeId, sessionId: benL.sessionId }, led.base)).ok === false, 'an expired proposal cannot be accepted (60s TTL, shortened here)');
+
+  // I5 — ingest validation: bad sig and own-origin forgeries are dropped;
+  // a well-formed foreign event is accepted and deduped on replay.
+  const X = 'cd'.repeat(16);
+  const pX1 = 'cdcdcdcd:11111111', pX2 = 'cdcdcdcd:22222222', pX3 = 'cdcdcdcd:33333333';
+  const mintX = sealed({ kind: 'mint', id: [X, 1], ts: 1700000000000, chain: { [pX1]: { height: 0, prevHash: null } },
+    body: { player: pX1, item: { key: 'amulet_dupe', name: 'Duped Amulet', qty: 1 }, mintId: [X, 1] } });
+  const tampered = { ...mintX, sig: { [X]: 'ff'.repeat(32) } };
+  tampered.hash = hashOf(tampered);
+  const ingBad = await jpost('/ledger/ingest', { events: [tampered] }, led.base);
+  check(ingBad.accepted === 0 && ingBad.rejected.length === 1 && ingBad.rejected[0].reason === 'bad-sig', 'ingest drops a self-inconsistent (bad HMAC) event');
+  const forged = sealed({ kind: 'mint', id: [ledId, 999], ts: 1700000000001, chain: { [pX1]: { height: 0, prevHash: null } },
+    body: { player: pX1, item: { key: 'forge', name: 'Forged', qty: 1 }, mintId: [ledId, 999] } });
+  check((await jpost('/ledger/ingest', { events: [forged] }, led.base)).rejected[0].reason === 'own-origin', 'ingest refuses an event forged in OUR origin’s name (single-writer)');
+  const ingOk = await jpost('/ledger/ingest', { events: [mintX] }, led.base);
+  const ingDup = await jpost('/ledger/ingest', { events: [mintX] }, led.base);
+  check(ingOk.accepted === 1 && ingDup.dup === 1, 'a valid foreign event is accepted once and deduped on replay');
+
+  // I6 — dupe-void determinism: a doctored origin signs TWO transfers of one
+  // mintId off the SAME priorEventHash. Fork-choice: lowest event hash wins,
+  // the loser is voided — and an independent second server, given the same
+  // events, reaches the identical verdict with zero coordination.
+  const dupeTrade = (seq, toPid, tradeId) => sealed({ kind: 'trade', id: [X, seq], ts: 1700000000002, chain: {
+      [pX1]: { height: 1, prevHash: mintX.hash }, [toPid]: { height: 0, prevHash: null } },
+    body: { tradeId, parties: [pX1, toPid], transfers: [{ mintId: [X, 1], from: pX1, to: toPid, priorEventHash: mintX.hash }] } });
+  const branchA = dupeTrade(2, pX2, 'aa'.repeat(16));
+  const branchB = dupeTrade(3, pX3, 'bb'.repeat(16));
+  const winner = branchA.hash < branchB.hash ? branchA : branchB;
+  const loser  = branchA.hash < branchB.hash ? branchB : branchA;
+  await jpost('/ledger/ingest', { events: [branchA, branchB] }, led.base);
+  const verdict = await jget(`/ledger/owner?mintId=${X}:1`, led.base);
+  check(verdict.owner === winner.body.transfers[0].to, `fork-choice: lowest event hash wins the double-spent item (${winner === branchA ? 'A' : 'B'})`);
+  check(verdict.voided.includes(loser.hash) && !verdict.voided.includes(winner.hash), 'the losing branch is voided; the winner is not');
+  const led2 = await startServer(PORT + 32, { LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'r2h-ledger2-')), MESH_SERVER_ID: 'ef'.repeat(16) });
+  await jpost('/ledger/ingest', { events: [branchB, branchA, mintX] }, led2.base);   // different arrival order, same event set
+  const verdict2 = await jget(`/ledger/owner?mintId=${X}:1`, led2.base);
+  check(verdict2.owner === verdict.owner && verdict2.voided.includes(loser.hash), 'an independent server reaches the identical verdict from a different arrival order');
+
+  // I7 — durability: the persisted log survives a restart (same LEDGER_DIR +
+  // server id) — ownership, the foreign replica, the void verdict, and the
+  // monotonic seq all reload. Presence deliberately lacks this property.
+  const preRestart = await jget('/ledger/status', led.base);
+  led.proc.kill('SIGTERM');
+  await waitFor(() => led.proc.exitCode !== null, 4000);
+  for (let i = 0; i < 40 && await pingOk(led.base); i++) await sleep(50);   // port must be free (waitFor is sync-only)
+  led = await startServer(PORT + 31, ledEnv);
+  const postRestart = await jget('/ledger/status', led.base);
+  check(postRestart.events === preRestart.events, `all ${preRestart.events} ledger events survive the restart (fsync’d jsonl reload)`);
+  const reOwned = await jget(`/ledger/owner?mintId=${m1.mintKey}`, led.base);
+  check(reOwned.owner === benL.pid, 'ownership still resolves to the receiver after the restart');
+  check((await jget(`/ledger/owner?mintId=${X}:1`, led.base)).voided.includes(loser.hash), 'the dupe-void verdict is reproduced from the reloaded log (pure function of the events)');
+  const cara2 = await jpost('/session/start', { name: 'Cara2', seed: 33 }, led.base);
+  const m3 = await jpost('/ledger/mint', { sessionId: cara2.sessionId, item: { key: 'boots', name: 'Boots' } }, led.base);
+  check(m3.ok === true && m3.mintId[1] > preRestart.seq, `post-restart mint continues the monotonic seq (${m3.mintId[1]} > ${preRestart.seq}) — no id reuse`);
 
   // ── teardown ──
   openClients.forEach(closeSSE);

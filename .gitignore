@@ -83,6 +83,9 @@ milepoints/archive/cleanup-*.tar.gz
 .wbapi-server-id
 peers-cache.json
 
+# ── §MESH-01i: per-deployment economy ledger (durable hash-chain log) ────────
+ledger/
+
 # ── Playwright artifacts — regenerated every test run ────────────────────────
 playwright-report/
 test-results/

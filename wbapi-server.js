@@ -181,6 +181,185 @@ function getServerId() {
   return _serverId;
 }
 
+// ══ §MESH-01i — no-dupe economy ledger (single-server mint+trade slice) ══════
+// Design: lab-reports/lab-report-mesh-multiuser.md §6.1–6.2. Unlike the
+// presence ring (bounded 500, display-only), ledger events are DURABLE economy
+// facts: an append-only, per-origin hash-chained log persisted to
+// ledger/<originServerId>.jsonl (one JSON line per event, fsync on append), no
+// TTL, no size cap. Every event carries per-player {height,prevHash} chain
+// linkage, an HMAC sig per participating origin (not PKI — it makes a
+// self-INCONSISTENT origin detectable, §IX.B), and a sha256 identity hash over
+// canonical sorted-key JSON. Ownership + double-spend fork-choice
+// (lowest-hash wins, losers voided) are PURE functions of the merged event set
+// — every server reaches the identical verdict with zero coordination.
+// THIS SLICE: local chains + mint + same-origin trade + resolver + a validated
+// /ledger/ingest (the future gossip receive path). The parallel gossip channel
+// + anti-entropy (cross-mesh replication) are the next rung.
+const LEDGER_DIR = process.env.LEDGER_DIR || path.join(__dirname, 'ledger');
+const TRADE_TTL = parseInt(process.env.LEDGER_TRADE_TTL_MS || '', 10) || 60 * 1000;
+const LEDGER = {
+  loaded: false,
+  seq: 0,             // OUR origin's monotonic event seq (max own seq on load)
+  events: [],         // every accepted event, all origins
+  byHash: new Map(),  // hash → event (dedup + lookup)
+  vv: new Map(),      // originServerId → max seq seen (version vector, gossip dedup)
+  tips: new Map(),    // pid → {height, hash} — each player's chain tip (for OUR appends)
+};
+const TRADES = new Map();  // tradeId → {from, to, give, want, expires} — pending proposals (no event until accept)
+
+// Canonical JSON: recursive stable key order, so client/server/peers compute
+// identical digests (the worldHash discipline). No undefined/functions in events.
+function ledgerCanonical(v) {
+  if (v === null || typeof v !== 'object') return JSON.stringify(v);
+  if (Array.isArray(v)) return '[' + v.map(ledgerCanonical).join(',') + ']';
+  return '{' + Object.keys(v).sort().map((k) => JSON.stringify(k) + ':' + ledgerCanonical(v[k])).join(',') + '}';
+}
+// hash preimage excludes `hash` only (so it covers sig); sig preimage excludes
+// both `sig` and `hash` — the order pinned in the lab report §6.1 envelope.
+function ledgerHashOf(evt) {
+  const { hash, ...rest } = evt;
+  return crypto.createHash('sha256').update(ledgerCanonical(rest)).digest('hex');
+}
+function ledgerSigOf(evt, signerId) {
+  const { sig, hash, ...rest } = evt;
+  return crypto.createHmac('sha256', signerId).update(ledgerCanonical(rest)).digest('hex');
+}
+const mintKeyOf = (mintId) => Array.isArray(mintId) ? `${mintId[0]}:${mintId[1]}` : String(mintId || '');
+
+function ledgerFileFor(originId) { return path.join(LEDGER_DIR, originId + '.jsonl'); }
+
+// Index an already-validated event into memory (no disk write).
+function ledgerIndex(evt) {
+  LEDGER.events.push(evt);
+  LEDGER.byHash.set(evt.hash, evt);
+  const [oid, seq] = evt.id;
+  if ((LEDGER.vv.get(oid) || 0) < seq) LEDGER.vv.set(oid, seq);
+  if (oid === getServerId() && seq > LEDGER.seq) LEDGER.seq = seq;
+  for (const [pid, link] of Object.entries(evt.chain || {})) {
+    const tip = LEDGER.tips.get(pid);
+    if (!tip || link.height > tip.height) LEDGER.tips.set(pid, { height: link.height, hash: evt.hash });
+  }
+}
+
+// Load every ledger/<origin>.jsonl once (lazy — a server that never trades
+// never touches the directory). A line whose hash doesn't recompute is skipped
+// with a warning, never fatal: the resolver treats broken lineage as unowned.
+function ledgerLoad() {
+  if (LEDGER.loaded) return;
+  LEDGER.loaded = true;
+  let files = [];
+  try { files = fs.readdirSync(LEDGER_DIR).filter((f) => f.endsWith('.jsonl')); } catch { return; }
+  for (const f of files) {
+    let src = '';
+    try { src = fs.readFileSync(path.join(LEDGER_DIR, f), 'utf8'); } catch { continue; }
+    for (const line of src.split('\n')) {
+      if (!line.trim()) continue;
+      let evt = null;
+      try { evt = JSON.parse(line); } catch {}
+      if (!evt || !evt.hash || evt.hash !== ledgerHashOf(evt)) { log('WARN', `ledger: corrupt line skipped in ${f}`); continue; }
+      if (LEDGER.byHash.has(evt.hash)) continue;
+      ledgerIndex(evt);
+    }
+  }
+}
+
+// Append: persist to the event's ORIGIN file (fsync — the durability floor),
+// then index. Both local appends and ingested replicas land here.
+function ledgerAppend(evt) {
+  try { fs.mkdirSync(LEDGER_DIR, { recursive: true }); } catch {}
+  const fd = fs.openSync(ledgerFileFor(evt.id[0]), 'a');
+  try { fs.writeSync(fd, JSON.stringify(evt) + '\n'); fs.fsyncSync(fd); } finally { fs.closeSync(fd); }
+  ledgerIndex(evt);
+}
+
+// Author a new event on THIS origin: assign [serverId, ++seq], link each
+// participant's chain tip, sign, hash, persist. Single-writer holds — this is
+// the only author of our origin's events. In the single-server slice both
+// trade parties share this origin, so `sig` carries one entry; cross-origin
+// trades (next rung) add the counterparty origin's sig.
+function ledgerEvent(kind, pids, body) {
+  ledgerLoad();
+  const oid = getServerId();
+  const evt = { kind, id: [oid, LEDGER.seq + 1], ts: Date.now(), chain: {}, body, sig: {} };
+  for (const pid of pids) {
+    const tip = LEDGER.tips.get(pid) || { height: -1, hash: null };
+    evt.chain[pid] = { height: tip.height + 1, prevHash: tip.hash };
+  }
+  if (kind === 'mint') evt.body = { ...body, mintId: evt.id };   // mintId === event.id (§6.2)
+  evt.sig[oid] = ledgerSigOf(evt, oid);
+  evt.hash = ledgerHashOf(evt);
+  ledgerAppend(evt);
+  return evt;
+}
+
+// Validate a foreign event for ingest (the gossip receive path). Sig is HMAC
+// keyed by the claimed origin id — forgeable by design (friends-mesh, §IX.B);
+// its job is dropping SELF-inconsistent records, not authenticating strangers.
+function ledgerValidate(evt) {
+  if (!evt || typeof evt !== 'object') return 'not-an-object';
+  if (evt.kind !== 'mint' && evt.kind !== 'trade' && evt.kind !== 'duel') return 'bad-kind';
+  if (!Array.isArray(evt.id) || !/^[0-9a-f]{32}$/.test(evt.id[0] || '') || !Number.isInteger(evt.id[1]) || evt.id[1] < 1) return 'bad-id';
+  if (!evt.chain || typeof evt.chain !== 'object' || !Object.keys(evt.chain).length) return 'bad-chain';
+  if (!evt.body || typeof evt.body !== 'object') return 'bad-body';
+  if (evt.hash !== ledgerHashOf(evt)) return 'bad-hash';
+  if (!evt.sig || typeof evt.sig !== 'object' || !Object.keys(evt.sig).length) return 'bad-sig';
+  for (const [signer, mac] of Object.entries(evt.sig)) if (mac !== ledgerSigOf(evt, signer)) return 'bad-sig';
+  return null;
+}
+
+// ── Ownership resolution + fork-choice — a PURE function of LEDGER.events ────
+// owner(mintId) = endpoint of the longest valid transfer path rooted at the
+// mint event (each hop: priorEventHash === previous owning event's hash AND
+// from === previous owner). Conflict (two transfers off one priorEventHash) =
+// double-spend → LOWEST event hash wins; the losers and everything transitively
+// descending from them are voided. Fixpoint loop makes the verdict independent
+// of iteration order: identical on every server, no coordination.
+function ledgerResolve() {
+  ledgerLoad();
+  const mints = new Map();          // mintKey → mint event
+  const transfers = [];             // {evt, t}
+  for (const e of LEDGER.events) {
+    if (e.kind === 'mint' && e.body.mintId) mints.set(mintKeyOf(e.body.mintId), e);
+    else if (e.kind === 'trade' && Array.isArray(e.body.transfers))
+      for (const t of e.body.transfers) transfers.push({ evt: e, t });
+  }
+  const voided = new Set();
+  const voidBranch = (h) => {   // void an event + all transfer-lineage descendants
+    if (voided.has(h)) return;
+    voided.add(h);
+    for (const { evt, t } of transfers) if (t.priorEventHash === h) voidBranch(evt.hash);
+  };
+  const owners = new Map();         // mintKey → {owner, tipHash, hops, item}
+  let prevVoided = -1;
+  while (voided.size !== prevVoided) {
+    prevVoided = voided.size;
+    owners.clear();
+    for (const [key, mintEvt] of mints) {
+      let owner = mintEvt.body.player, tip = mintEvt.hash, hops = 0;
+      for (;;) {
+        const next = transfers.filter(({ evt, t }) =>
+          mintKeyOf(t.mintId) === key && t.priorEventHash === tip && t.from === owner && !voided.has(evt.hash));
+        if (!next.length) break;
+        next.sort((a, b) => (a.evt.hash < b.evt.hash ? -1 : 1));
+        for (const lose of next.slice(1)) voidBranch(lose.evt.hash);
+        owner = next[0].t.to; tip = next[0].evt.hash; hops++;
+      }
+      owners.set(key, { owner, tipHash: tip, hops, item: mintEvt.body.item });
+    }
+  }
+  return { owners, voided };
+}
+
+function tradePrune() {
+  const now = Date.now();
+  for (const [id, t] of TRADES) if (t.expires < now) TRADES.delete(id);
+}
+// SSE-notify a party if they have a live local session (client rung wiring).
+function ledgerNotifyPid(pid, event, data) {
+  for (const [id] of SESSIONS)
+    if (pidOf(id) === pid) { const sse = SSE_CLIENTS.get(id); if (sse) sseSend(sse, event, data); }
+}
+
 // Raw source span of `const NAME = {…} / […] / new Set([…])` — comment- and
 // string-aware bracket scan (same discipline as wbapi-core extractObj), used to
 // hash the data collections exactly as they sit in the file.
@@ -8723,6 +8902,237 @@ async function route(req, res) {
     return json(res, 404, { error: `Unknown sentry sub-route "${sub}"`, available: ['deploy', 'recall', 'list'] });
   }
 
+  // ── §MESH-01i: No-dupe economy ledger (single-server mint+trade slice) ────
+  // Design: mesh lab report §6.1–6.2. Mint stamps `mintId = [serverId, seq]`
+  // onto an item at acquisition-while-connected — only minted items are
+  // tradeable (bytes without lineage are worthless in trade, the Diablo-dupe
+  // fix). Ownership + double-spend fork-choice are pure functions of the
+  // merged chains (ledgerResolve). Single-player/offline items simply carry no
+  // mintId and stay local-only.
+  if (parts[0] === 'ledger') {
+    sessionPrune();
+    const sub = parts[1]; // status | chain | owner | mint | ingest
+
+    // ── GET /api/ledger/status ─────────────────────────────────────────────
+    if (sub === 'status' && method === 'GET') {
+      ledgerLoad();
+      const players = new Set();
+      for (const e of LEDGER.events) for (const pid of Object.keys(e.chain || {})) players.add(pid);
+      const { voided } = ledgerResolve();
+      logResponse(method, url.pathname, 200, `ledger: ${LEDGER.events.length} events · seq ${LEDGER.seq}`);
+      return json(res, 200, {
+        ok: true, serverId: getServerId(), seq: LEDGER.seq, events: LEDGER.events.length,
+        players: players.size, origins: Object.fromEntries(LEDGER.vv), voided: voided.size,
+        dir: LEDGER_DIR, pendingTrades: (tradePrune(), TRADES.size),
+      });
+    }
+
+    // ── GET /api/ledger/chain?pid= — one player's hash chain (or the full log) ─
+    if (sub === 'chain' && method === 'GET') {
+      ledgerLoad();
+      const pid = url.searchParams.get('pid');
+      const events = pid ? LEDGER.events.filter((e) => e.chain && e.chain[pid]) : LEDGER.events;
+      logResponse(method, url.pathname, 200, `ledger chain: ${events.length} events${pid ? ` for ${pid}` : ''}`);
+      return json(res, 200, { ok: true, pid: pid || null, count: events.length, events });
+    }
+
+    // ── GET /api/ledger/owner?mintId=<origin>:<seq> — ownership resolution ─
+    if (sub === 'owner' && method === 'GET') {
+      const key = mintKeyOf(url.searchParams.get('mintId'));
+      const { owners, voided } = ledgerResolve();
+      const rec = owners.get(key) || null;
+      logResponse(method, url.pathname, 200, `owner(${key}) = ${rec ? rec.owner : 'unminted'}`);
+      return json(res, 200, {
+        ok: true, mintId: key, minted: !!rec,
+        owner: rec ? rec.owner : null, hops: rec ? rec.hops : 0,
+        tipHash: rec ? rec.tipHash : null, item: rec ? rec.item : null,
+        voided: [...voided],
+      });
+    }
+
+    if (method !== 'POST') {
+      logResponse(method, url.pathname, 405, `ledger/${sub} requires POST`);
+      return json(res, 405, { error: `POST required for /api/ledger/${sub}` });
+    }
+    let body;
+    try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'Invalid JSON' }); }
+
+    // ── POST /api/ledger/mint  body: {sessionId, item:{key,name,qty}} ──────
+    // Server-side minting for a live session's acquisition. The response event
+    // carries the mintId the client stamps onto its S_story item.
+    if (sub === 'mint') {
+      const s = body.sessionId && SESSIONS.get(body.sessionId);
+      if (!s || s.bot) {
+        logResponse(method, url.pathname, 404, 'ledger/mint: session not found');
+        return json(res, 404, { ok: false, error: 'Live player session required to mint (POST /api/session/start).' });
+      }
+      const it = body.item || {};
+      const item = { key: String(it.key || '').trim(), name: String(it.name || '').trim(), qty: Math.max(1, +it.qty | 0 || 1) };
+      if (!item.key || !item.name) {
+        logResponse(method, url.pathname, 400, 'ledger/mint: item.key + item.name required');
+        return json(res, 400, { ok: false, error: 'body.item {key, name[, qty]} required' });
+      }
+      s.lastSeen = Date.now();
+      const pid = pidOf(body.sessionId);
+      const evt = ledgerEvent('mint', [pid], { player: pid, item });
+      logRow('ledger', `mint ${item.name} ×${item.qty}  ·  ${mintKeyOf(evt.body.mintId).slice(0, 12)}…  ·  → ${pid}`);
+      logResponse(method, url.pathname, 201, `minted ${item.key} → ${pid}`);
+      return json(res, 201, { ok: true, mintId: evt.body.mintId, mintKey: mintKeyOf(evt.body.mintId), event: evt });
+    }
+
+    // ── POST /api/ledger/ingest  body: {events:[…]} — the gossip receive path ─
+    // Validated foreign events (shape, hash recompute, per-origin HMAC self-
+    // consistency), deduped by hash + version vector, persisted per origin.
+    // The parallel gossip CHANNEL (push/anti-entropy) is the cross-mesh rung;
+    // this endpoint is its ingest half, and lets the harness exercise the
+    // dupe-void fork-choice with a doctored origin today.
+    if (sub === 'ingest') {
+      ledgerLoad();
+      const events = Array.isArray(body.events) ? body.events : [];
+      let accepted = 0, dup = 0;
+      const rejected = [];
+      for (const evt of events) {
+        if (evt && LEDGER.byHash.has(evt.hash)) { dup++; continue; }
+        const bad = ledgerValidate(evt);
+        if (bad) { rejected.push({ hash: evt && evt.hash || null, reason: bad }); continue; }
+        if (evt.id[0] === getServerId()) { rejected.push({ hash: evt.hash, reason: 'own-origin' }); continue; }   // single-writer: nobody authors OUR events
+        ledgerAppend(evt);
+        accepted++;
+      }
+      logResponse(method, url.pathname, 200, `ledger ingest: ${accepted} accepted · ${dup} dup · ${rejected.length} rejected`);
+      return json(res, 200, { ok: true, accepted, dup, rejected });
+    }
+
+    logResponse(method, url.pathname, 404, `unknown ledger sub-route "${sub}"`);
+    return json(res, 404, { error: `Unknown ledger sub-route "${sub}"`, available: ['status', 'chain', 'owner', 'mint', 'ingest'] });
+  }
+
+  // ── §MESH-01i: Trade handshake — two-phase, ONE co-signed event on accept ─
+  // propose/cancel are ephemeral (no event); accept validates ownership of
+  // every transfer, then appends a single dual-chain trade event (both
+  // players' {height,prevHash} linkage) and gossips it. In this single-server
+  // slice both parties live on this origin, so one origin sig covers the event.
+  if (parts[0] === 'trade') {
+    sessionPrune();
+    tradePrune();
+    const sub = parts[1]; // propose | accept | cancel | list
+
+    // ── GET /api/trade/list?pid= — pending proposals (debug / client poll) ──
+    if (sub === 'list' && method === 'GET') {
+      const pid = url.searchParams.get('pid');
+      const trades = [...TRADES.entries()]
+        .filter(([, t]) => !pid || t.from === pid || t.to === pid)
+        .map(([tradeId, t]) => ({ tradeId, ...t }));
+      logResponse(method, url.pathname, 200, `${trades.length} pending trades`);
+      return json(res, 200, { ok: true, count: trades.length, trades });
+    }
+
+    if (method !== 'POST') {
+      logResponse(method, url.pathname, 405, `trade/${sub} requires POST`);
+      return json(res, 405, { error: `POST required for /api/trade/${sub}` });
+    }
+    let body;
+    try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'Invalid JSON' }); }
+
+    // Shared ownership check: every given/wanted mintId must be minted, and
+    // currently resolve to the expected owner. Returns an error string or null.
+    function checkOwnership(mintIds, expectedOwner, owners) {
+      for (const raw of mintIds) {
+        const key = mintKeyOf(raw);
+        const rec = owners.get(key);
+        if (!rec) return `item ${key} has no mint lineage (unminted items are untradeable)`;
+        if (rec.owner !== expectedOwner) return `item ${key} is not owned by ${expectedOwner} (owner: ${rec.owner})`;
+      }
+      return null;
+    }
+
+    // ── POST /api/trade/propose  body: {sessionId, to, give:[mintId…], want:[mintId…]} ─
+    if (sub === 'propose') {
+      const s = body.sessionId && SESSIONS.get(body.sessionId);
+      if (!s || s.bot) {
+        logResponse(method, url.pathname, 404, 'trade/propose: session not found');
+        return json(res, 404, { ok: false, error: 'Live player session required to propose (body.sessionId).' });
+      }
+      s.lastSeen = Date.now();
+      const from = pidOf(body.sessionId);
+      const to = String(body.to || '').trim();
+      const give = Array.isArray(body.give) ? body.give.map(mintKeyOf) : [];
+      const want = Array.isArray(body.want) ? body.want.map(mintKeyOf) : [];
+      if (!to || to === from) {
+        logResponse(method, url.pathname, 400, 'trade/propose: bad counterparty');
+        return json(res, 400, { ok: false, error: 'body.to (counterparty pid) required, and you cannot trade with yourself.' });
+      }
+      if (!give.length && !want.length) {
+        logResponse(method, url.pathname, 400, 'trade/propose: empty trade');
+        return json(res, 400, { ok: false, error: 'body.give and/or body.want (mintId lists) required.' });
+      }
+      const { owners } = ledgerResolve();
+      const bad = checkOwnership(give, from, owners) || checkOwnership(want, to, owners);
+      if (bad) {
+        logResponse(method, url.pathname, 409, `trade/propose refused: ${bad}`);
+        return json(res, 409, { ok: false, error: bad, reason: 'provenance' });
+      }
+      const tradeId = crypto.randomBytes(16).toString('hex');
+      TRADES.set(tradeId, { from, to, give, want, expires: Date.now() + TRADE_TTL });
+      ledgerNotifyPid(to, 'trade_proposed', { tradeId, from, to, give, want, ttlMs: TRADE_TTL });
+      logRow('trade', `propose ${tradeId.slice(0, 8)}…  ·  ${from} → ${to}  ·  give ${give.length} / want ${want.length}`);
+      logResponse(method, url.pathname, 201, `trade proposed ${from} → ${to}`);
+      return json(res, 201, { ok: true, tradeId, from, to, give, want, ttlMs: TRADE_TTL });
+    }
+
+    // ── POST /api/trade/accept  body: {tradeId, sessionId} — by the counterparty ─
+    if (sub === 'accept') {
+      const t = body.tradeId && TRADES.get(body.tradeId);
+      if (!t) {
+        logResponse(method, url.pathname, 404, 'trade/accept: not found');
+        return json(res, 404, { ok: false, error: 'Trade not found (expired, cancelled, or bad tradeId).' });
+      }
+      const s = body.sessionId && SESSIONS.get(body.sessionId);
+      if (!s || s.bot || pidOf(body.sessionId) !== t.to) {
+        logResponse(method, url.pathname, 403, 'trade/accept: not the counterparty');
+        return json(res, 403, { ok: false, error: 'Only the proposed counterparty session may accept this trade.' });
+      }
+      s.lastSeen = Date.now();
+      // Re-validate ownership AT ACCEPT (it may have moved since propose),
+      // and capture each item's current owning-event hash as priorEventHash.
+      const { owners } = ledgerResolve();
+      const bad = checkOwnership(t.give, t.from, owners) || checkOwnership(t.want, t.to, owners);
+      if (bad) {
+        TRADES.delete(body.tradeId);
+        logResponse(method, url.pathname, 409, `trade/accept refused: ${bad}`);
+        return json(res, 409, { ok: false, error: bad, reason: 'provenance' });
+      }
+      const transfers = [
+        ...t.give.map((key) => ({ mintId: key.split(':').map((v, i) => i ? +v : v), from: t.from, to: t.to, priorEventHash: owners.get(key).tipHash })),
+        ...t.want.map((key) => ({ mintId: key.split(':').map((v, i) => i ? +v : v), from: t.to, to: t.from, priorEventHash: owners.get(key).tipHash })),
+      ];
+      const evt = ledgerEvent('trade', [t.from, t.to], { tradeId: body.tradeId, parties: [t.from, t.to], transfers });
+      TRADES.delete(body.tradeId);
+      ledgerNotifyPid(t.from, 'trade_completed', { tradeId: body.tradeId, event: evt });
+      ledgerNotifyPid(t.to, 'trade_completed', { tradeId: body.tradeId, event: evt });
+      logRow('trade', `accept ${body.tradeId.slice(0, 8)}…  ·  ${transfers.length} transfer(s)  ·  evt ${evt.hash.slice(0, 12)}…`);
+      logResponse(method, url.pathname, 201, `trade accepted: ${transfers.length} transfer(s)`);
+      return json(res, 201, { ok: true, tradeId: body.tradeId, event: evt });
+    }
+
+    // ── POST /api/trade/cancel  body: {tradeId} — drop the proposal, no event ─
+    if (sub === 'cancel') {
+      const t = body.tradeId && TRADES.get(body.tradeId);
+      if (!t) {
+        logResponse(method, url.pathname, 404, 'trade/cancel: not found');
+        return json(res, 404, { ok: false, error: 'Trade not found (expired, already cancelled, or bad tradeId).' });
+      }
+      TRADES.delete(body.tradeId);
+      ledgerNotifyPid(t.from, 'trade_cancelled', { tradeId: body.tradeId });
+      ledgerNotifyPid(t.to, 'trade_cancelled', { tradeId: body.tradeId });
+      logResponse(method, url.pathname, 200, `trade cancelled`);
+      return json(res, 200, { ok: true, cancelled: body.tradeId });
+    }
+
+    logResponse(method, url.pathname, 404, `unknown trade sub-route "${sub}"`);
+    return json(res, 404, { error: `Unknown trade sub-route "${sub}"`, available: ['propose', 'accept', 'cancel', 'list'] });
+  }
+
   // ── Single entity ─────────────────────────────────────────────────────────
   const [type, rawId, action] = parts;
 
@@ -10352,6 +10762,14 @@ server.listen(PORT, BIND_ADDR, () => {
     ['POST',   '/api/sentry/deploy                   body: {node, dailyFee?} → station a §MESH-01h sentry bot at a junction (suppresses encounters + auto-assists there)'],
     ['POST',   '/api/sentry/recall                   body: {sentryId} → recall a sentry'],
     ['GET',    '/api/sentry/list                     → all deployed sentries'],
+    ['POST',   '/api/ledger/mint                     body: {sessionId, item:{key,name,qty?}} → §MESH-01i mint event (mintId = [serverId, seq]; only minted items trade)'],
+    ['GET',    '/api/ledger/owner?mintId=            → ownership resolution (pure fn of the chains; carries the voided double-spend hashes)'],
+    ['GET',    '/api/ledger/chain[?pid=]             → a player’s hash chain (or the full event log)'],
+    ['GET',    '/api/ledger/status                   → ledger seq/events/origins/pending trades'],
+    ['POST',   '/api/ledger/ingest                   body: {events:[…]} → validated foreign-event ingest (the gossip receive path)'],
+    ['POST',   '/api/trade/propose                   body: {sessionId, to, give:[mintId…], want:[mintId…]} → {tradeId, ttlMs} (60s)'],
+    ['POST',   '/api/trade/accept                    body: {tradeId, sessionId} → ONE co-signed dual-chain trade event'],
+    ['POST',   '/api/trade/cancel                    body: {tradeId} → drop the proposal (no event)'],
     ['GET',    '/api/schema[/{type}]                → canonical field schema'],
     ['GET',    '/api/flags                          → list _S_DEFAULTS flags'],
     ['POST',   '/api/flags                          body: {name, defaultValue, comment?}'],

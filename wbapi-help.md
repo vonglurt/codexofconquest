@@ -166,6 +166,37 @@ are bankrolled from your own gold (an upfront cost + a daily upkeep drawn on res
 recalled if unpaid — see mechanics.md §Multiplayer); the server just hosts the
 bot's presence + suppression.
 
+```bash
+# No-dupe economy ledger (§MESH-01i) — durable per-player hash chains persisted
+# to ledger/<serverId>.jsonl (fsync on append, no TTL — unlike presence, these
+# are permanent economy facts). Only MINTED items are tradeable: bytes without
+# lineage are worthless in trade. Design: lab-report-mesh-multiuser.md §6.1–6.2.
+curl -XPOST http://localhost:1367/api/ledger/mint \
+  -d '{"sessionId":"<id>","item":{"key":"sword_iron","name":"Iron Sword"}}'
+# → { mintId: ["<serverId>", seq], event }  — stamp mintId onto the item
+
+curl "http://localhost:1367/api/ledger/owner?mintId=<serverId>:<seq>"
+# → { owner, hops, tipHash, voided:[…] }  — pure fn of the merged chains:
+#   longest valid transfer path from the mint; double-spends resolve by
+#   LOWEST event hash, losers voided — every server reaches the same verdict.
+
+# Two-phase trade — propose/cancel are ephemeral; accept appends ONE co-signed
+# event into BOTH players' chains (the counterparty session must accept):
+curl -XPOST http://localhost:1367/api/trade/propose \
+  -d '{"sessionId":"<idA>","to":"<pidB>","give":["<mintId>"],"want":[]}'   # → {tradeId, ttlMs:60000}
+curl -XPOST http://localhost:1367/api/trade/accept -d '{"tradeId":"<t>","sessionId":"<idB>"}'
+curl -XPOST http://localhost:1367/api/trade/cancel -d '{"tradeId":"<t>"}'
+
+curl http://localhost:1367/api/ledger/chain?pid=<pid>    # a player's hash chain
+curl http://localhost:1367/api/ledger/status             # seq / events / origins / pending trades
+```
+
+The counterparty is notified over their session SSE stream (`trade_proposed`,
+`trade_completed`, `trade_cancelled`). `/api/ledger/ingest` accepts validated
+foreign events (shape + hash recompute + per-origin HMAC self-consistency,
+version-vector dedup) — it is the receive half of the cross-mesh ledger gossip
+channel, which is the next §MESH-01i rung (this slice is single-server).
+
 ---
 
 ## Mesh API — server-to-server presence (§MESH-01)
