@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 # Lab Report — §MESH-01: Multiuser MUD (presence rendering · self-discovering server mesh · tracker · no-dupe economy)
 
-**Status:** 🔒 **DESIGN LOCKED (2026-07-02)** · **Inc (a) ✅ SHIPPED `acd9b77` (2026-07-02)** — client presence on one server, exactly as §3.1: 🌐 opt-in toggle + `MP` module, `POST /api/session/pos` beacon (display-only, rolls nothing), `session/start` newcomer announce, minimap ☺ dots; gates mud-harness 35 / 2-browser smoke 2/2 / navigation 29/29 / `check:walk` green. **Inc (b/c) ✅ SHIPPED `80526b1` (2026-07-02)** — identity, manifest (worldHash v2 over all 8 data collections + per-part hashes), static bootstrap ladder (`--peer`/`MESH_PEERS`/`peers.txt`/`peers-cache.json`), gossip mesh (single-writer events, version-vector dedup, snapshot anti-entropy, PEX), remote replicas in `look`/`who`/`pos`, `mesh-acl.json`, end/prune `player_left` (closes the Inc-a residue); harness [E] 13 checks. **Extended design 2 locked in plan.md §MESH-01 items 8–13** (compat identity, bootstrap text-file ladder incl. Gist-raw `BOOTSTRAP_URLS`, tracker federation, ACLs, world download + BIG WARNING + `world-diff`, magnet v2). **Inc (d) ✅ SHIPPED `d00faea` (2026-07-02)** — tracker discovery: `--tracker-mode` rendezvous role, announce/peers grouped by the full compat identity (incompatible worlds segregated), `format=txt` bootstrap output, 30 s announce heartbeat, `BOOTSTRAP_URLS` text-file pull, `./wbapi-toggle.sh tracker`; harness [F] 8 checks (56 total). **Inc (d2) ✅ SHIPPED `ca284e6` (2026-07-02)** — tracker federation (`--tracker-peer`, `POST /api/tracker/sync` anti-entropy merge, ageMs freshness, per-record ACL, 500-record backstop; harness [G] 3 checks, 60 total). **Mesh tab UI ✅ `6908504`** (`GET /api/mesh/status` + traffic ring). **Inc (d3) ✅ SHIPPED `8543e63` (2026-07-02)** — `GET /api/world/download` w/ identity headers, ⬇ world behind the BIG WARNING modal, `scripts/world-diff.js` (0/1/2 exit contract verified), magnet-v2 copy link; harness 63. Next: **(e)** 3-server+tracker convergence/partition-heal harness → (f) co-presence buffs → … → (j) PvP duels.
+**Status:** 🔒 **DESIGN LOCKED (2026-07-02)** · **Inc (a) ✅ SHIPPED `acd9b77` (2026-07-02)** — client presence on one server, exactly as §3.1: 🌐 opt-in toggle + `MP` module, `POST /api/session/pos` beacon (display-only, rolls nothing), `session/start` newcomer announce, minimap ☺ dots; gates mud-harness 35 / 2-browser smoke 2/2 / navigation 29/29 / `check:walk` green. **Inc (b/c) ✅ SHIPPED `80526b1` (2026-07-02)** — identity, manifest (worldHash v2 over all 8 data collections + per-part hashes), static bootstrap ladder (`--peer`/`MESH_PEERS`/`peers.txt`/`peers-cache.json`), gossip mesh (single-writer events, version-vector dedup, snapshot anti-entropy, PEX), remote replicas in `look`/`who`/`pos`, `mesh-acl.json`, end/prune `player_left` (closes the Inc-a residue); harness [E] 13 checks. **Extended design 2 locked in plan.md §MESH-01 items 8–13** (compat identity, bootstrap text-file ladder incl. Gist-raw `BOOTSTRAP_URLS`, tracker federation, ACLs, world download + BIG WARNING + `world-diff`, magnet v2). **Inc (d) ✅ SHIPPED `d00faea` (2026-07-02)** — tracker discovery: `--tracker-mode` rendezvous role, announce/peers grouped by the full compat identity (incompatible worlds segregated), `format=txt` bootstrap output, 30 s announce heartbeat, `BOOTSTRAP_URLS` text-file pull, `./wbapi-toggle.sh tracker`; harness [F] 8 checks (56 total). **Inc (d2) ✅ SHIPPED `ca284e6` (2026-07-02)** — tracker federation (`--tracker-peer`, `POST /api/tracker/sync` anti-entropy merge, ageMs freshness, per-record ACL, 500-record backstop; harness [G] 3 checks, 60 total). **Mesh tab UI ✅ `6908504`** (`GET /api/mesh/status` + traffic ring). **Inc (d3) ✅ SHIPPED `8543e63` (2026-07-02)** — `GET /api/world/download` w/ identity headers, ⬇ world behind the BIG WARNING modal, `scripts/world-diff.js` (0/1/2 exit contract verified), magnet-v2 copy link; harness 63. **Inc (e) ✅ SHIPPED (partition-heal harness)** · **gameplay ladder (f) co-presence buffs ✅ `a07b281` · (g) hireling guide bot ✅ `26bfed0` · (h) sentry bots ✅ `ff413f6` (2026-07-06)** — all three in plan.md §MESH-01 ladder rows. **Next: (i) no-dupe economy ledger / (j) consensual PvP duels — CONCRETE DATA SHAPES now specified in §6 below (this design pass unblocks the code; both were code-gated on it).**
 **Parent design:** `plan.md §MESH-01` (idea logged 2026-07-01; extended same day with tracker enablement, gameplay ladder, no-dupe economy).
 **Predecessors:** `lab-reports/lab-report-walk5-mud-harness.md` (§WALK-5 instanced encounters + `tests/mud-harness.mjs`, 24/24) · `lab-reports/lab-report-cell-map-mud-redesign.md` §CELL-07 (SESSIONS store + SSE broadcast) · `plan.md §NAV-01` L4 room layer (`describeCell` ROOMS:CORE) + L8 MUD parity (Inc f).
 
@@ -62,7 +62,7 @@
 
 ### 3.4 Gameplay ladder — Inc (f)–(h)
 
-(i) **Co-presence buffs**: co-located players get "traveling with allies" — +1 to hit per ally (cap +2), encounter rate halved on shared cells. (ii) **Party loot/XP share** on same-cell battles — each fights their own client-local instance; party bonus applies; **no synced turn engine in v1**. (iii) **Hireling guide bot** (single-player-first): daily-fee NPC, extra attacker die in battles, and as *quest guide* drives the §NAV-01d auto-travel loop toward the active quest's waypoint ("follow me"). (iv) **Sentry bots**: server-side bot sessions (origin = the server, same presence schema — they ride the mesh for free) stationed at road junctions; suppress encounters in their cell + auto-assist battles there; daily fee. (v) **Shared turn-based party combat — DEFERRED** (server-authoritative battle instance; own design pass).
+(i) **Co-presence buffs ✅ SHIPPED (f)**: co-located players get "traveling with allies" — +1 to hit per ally (cap +2), encounter rate halved on shared cells. (ii) **Party loot/XP share ✅ SHIPPED (f)** on same-cell battles — each fights their own client-local instance; party bonus applies; **no synced turn engine in v1**. (iii) **Hireling guide bot ✅ SHIPPED (g)** (single-player-first): daily-fee NPC, extra attacker die in battles, and as *quest guide* drives the §NAV-01d auto-travel loop toward the active quest's waypoint ("follow me"). (iv) **Sentry bots ✅ SHIPPED (h)**: server-owned bot sessions (`bot:true`/`kind:'sentry'`, same presence schema — they ride the mesh for free) stationed at junctions; suppress encounters in their cell + auto-assist battles there; daily upkeep. Deterministic suppression: `/session/move` voids `s.encounter` on a sentry's cell AFTER the RNG stream advanced, so the instanced trace stays byte-deterministic. (v) **Shared turn-based party combat — DEFERRED** (server-authoritative battle instance; own design pass — see also duel v2 in §6.3).
 
 ### 3.5 No-dupe economy — Inc (i)
 
@@ -79,10 +79,11 @@ No PoW, no blocks, no global consensus — ordering + identity only: (a) every d
 | **c** | Gossip + PEX + version-vector dedup (self-discovering; hop TTL; anti-entropy pull; peer cache file). | 3-server harness: convergence, exactly-once, no flood loops |
 | **d** | `--tracker-mode` + `/announce` + `/peers` + `r2h:` magnet parse in client. | tracker harness: announce/resolve; mesh survives tracker kill |
 | **e** | **Mesh harness hardening:** 3 servers + tracker — convergence, exactly-once, partition-heal (kill a peer, rejoin, vv catch-up). | new `npm run test:mesh` green ×3 runs, CI job |
-| **f** | Co-presence buffs + party loot/XP share (client-local, reads `MP.players` at battle start). | navigation/fishing suites green; buff unit cases |
-| **g** | Hireling guide bot (single-player: fee on day tick, extra die, drives auto-travel). | navigation travel cases green |
-| **h** | Sentry bots (server-side sessions at road junctions; encounter suppression + assist). | mud-harness sentry cases |
-| **i** | No-dupe ledger: mint-id on drops, per-player hash chain, trade handshake, fork-choice void. | ledger harness: dupe-void case, honest-trade case |
+| **f** ✅ | Co-presence buffs + party loot/XP share (client-local, reads `MP.players` at battle start). | ✅ `a07b281` — copresence 6/6 |
+| **g** ✅ | Hireling guide bot (single-player: fee on day tick, extra die, drives auto-travel). | ✅ `26bfed0` — hireling 6/6 |
+| **h** ✅ | Sentry bots (server-owned bot sessions at junctions; encounter suppression + assist). | ✅ `ff413f6` — mud-harness [H]/[H6] 22 + mesh-sentry 7/7 |
+| **i** | No-dupe ledger: mint-id on drops, per-player hash chain, trade handshake, fork-choice void. **Data shapes: §6.1–6.2.** | ledger harness: dupe-void case, honest-trade case, provenance-reject, durability |
+| **j** | Consensual PvP duels: challenge/accept + commit-reveal seed + `DUEL:CORE` pure resolver, outcome into both chains. **Data shapes: §6.1, §6.3.** | `check:duelparity` (byte-identical `duel.js`) + duel harness: determinism, commit-reveal, bounds, replay-agreement, forfeit |
 
 **Docs sync on close:** plan.md §MESH-01 → Completed Work registry row in index.md; mechanics.md (multiplayer section); this report → status COMPLETE.
 
@@ -98,3 +99,94 @@ No PoW, no blocks, no global consensus — ordering + identity only: (a) every d
 - **Loopback is the default on purpose (§MESH-01-FU 1).** A solo dev server must never be exposed by accident, so `127.0.0.1` stays the default bind; a real cross-machine mesh is an explicit opt-in with BOTH `--bind 0.0.0.0` (or `BIND_ADDR`) and `--advertise <lan-ip>:<port>` (or `ADVERTISE_ADDR`) — bind without advertise hands peers a `localhost:` dial-back that points at *their own* machine. Misconfig (peers configured + loopback bind/advertise) warns loudly at startup and in `GET /api/mesh/status → reachability.warnings` (Mesh tab).
 - **Sentries are just sessions.** Server-origin bot sessions reuse the §WALK-5 session schema and ride the same gossip — no second presence system.
 - **Battle stays client-local through Inc (f)–(h).** "Party combat" in v1 = same-cell players each fighting their own instance with shared bonuses; a synced turn engine is deferred to its own design pass.
+
+---
+
+## 6. Data shapes for the multi-writer slice — (i) ledger + (j) duels (design pass, 2026-07-06)
+
+> **Why this section exists.** (i) and (j) are the only two rungs where **two parties co-author one fact**, so they were code-gated on a concrete-shape design pass (plan.md §MESH-01 ladder (j) note: *"extend the mesh lab report with DUEL:CORE data shapes before any code"*). §3.5 and the sync-architecture report §IX.C lock the *concepts*; this section pins the **record schemas, endpoint signatures, resolver contract, and harness cases** a coder implements against. Nothing here is shipped. It reuses the report's three primitives — owned records, monotonic sequence, deterministic identity — and adds **no new infrastructure class**.
+
+### 6.1 Shared primitives (both rungs)
+
+**The durable chain vs the ephemeral ring — the one new invariant.** Presence events live in a **bounded (500) ring** and are *display-only*: losing one blinks a dot, not a fact. Ledger/duel events are **durable economy facts** — a lost trade event is a lost item. So they do **not** ride the presence ring. Each origin keeps a **persisted, append-only, per-player hash chain** on disk (`ledger/<serverId>.jsonl`, one line per event, fsync on append), replicated over a **parallel gossip channel** that reuses the *same* peer set, ACL, and `(proto,engineVer,worldHash)` compat gate as presence, but with its own version vector and **no TTL / no size cap** (the economy is permanent). Anti-entropy is the existing shape: exchange per-origin `maxSeq`, pull missing ranges; snapshots are the durability floor.
+
+**Event envelope** (every ledger/duel event; single-writer = the `origin` server is the sole appender to *its own* players' chains):
+
+```
+{ kind: 'mint'|'trade'|'duel',
+  id:      [originServerId, seq],   // origin-wide monotonic seq — the same id scheme as presence; the version vector dedups on it
+  ts,                                // wall clock (advisory; ordering is by chain height, not ts)
+  chain:  { <pid>: { height, prevHash } , ... },   // per-player linkage; 1 entry for mint, 2 for trade/duel (dual-membership)
+  body:   { … kind-specific … },
+  sig:    { <serverId>: hmac } ,     // each participating ORIGIN signs the canonical event; 1 for mint, 2 for trade/duel
+  hash:    sha256(canonical(event \ {hash}))        // the event's identity for fork-choice + prevHash linkage
+}
+```
+
+- **`height`/`prevHash`** are the per-player chain position and the hash of that player's *previous* chain event — this makes each player's history a tamper-evident Lamport-height chain independent of wall-clock.
+- **`hash`** is over the canonical JSON with a **stable key order** (sort keys; `sig`/`hash` excluded from `sig`'s and `hash`'s own preimage in that order) so client and server compute identical digests — the same discipline `worldHash` already uses.
+- **`sig`** is an HMAC keyed by the signer's `serverId` (not a real PKI — friends-mesh trust is social, §IX.B). Its job is not "prove identity to a stranger" but "make a *self-inconsistent* origin detectable": a signature that doesn't verify against the claimed origin's own prior events is dropped at ingest.
+
+### 6.2 (i) No-dupe economy ledger — data shapes
+
+**Item lifecycle.** An S_story inventory item is a plain local object until an origin server **mints** it; only minted items are tradeable across the mesh (an unminted item fails `trade/propose` — the Diablo-dupe fix: bytes without lineage are worthless in trade). Minting happens server-side at acquisition **while connected** (drop/quest-reward → the origin issues a `mint` event stamping `mintId=[serverId,seq]` onto the item). Single-player / offline items simply have no `mintId` and are local-only until registered.
+
+```
+mint.body  = { player: <pid>, item: { key, name, qty }, mintId: [serverId, seq] }   // mintId === event.id
+trade.body = { tradeId,
+               parties: [pidA, pidB],
+               transfers: [ { mintId, from: pidA, to: pidB, priorEventHash } , … ],   // priorEventHash = the giver's last event that owned this mintId
+               // dual-signed: sig has both origins; chain has both players' {height,prevHash}
+             }
+```
+
+**Trade handshake** (two-phase, both origins co-sign one event):
+
+```
+POST /api/trade/propose  { from:pidA, to:pidB, give:[mintId…], want:[mintId…] }  → { tradeId, ttl:60s }
+POST /api/trade/accept   { tradeId, by:pidB }                                     → both origins validate ownership,
+                                                                                     co-sign ONE trade event, append to
+                                                                                     BOTH chains, gossip it
+POST /api/trade/cancel   { tradeId }                                              → drop the pending proposal (no event)
+```
+
+**Ownership resolution** (pure function over the merged chains): `owner(mintId)` = the endpoint of the **longest valid transfer path** rooted at the `mint` event, where each `transfer.priorEventHash` equals the previous owning-event's `hash` and `transfer.from` equals the previous owner. An item whose lineage does not root at a `mint` event is **not owned by anyone** (untradeable).
+
+**Double-spend → deterministic fork-choice.** Under single-writer, a double-spend requires the giver's *own origin* to sign **two** transfers of one `mintId` from the **same** `priorEventHash` (an honest origin serializes its player's trades and never does this). When both branches reach a third server via gossip, it is detected at merge (two transfers share a `priorEventHash`) and resolved by **lowest `hash` wins**; the losing branch and everything transitively descending from it are marked `voided:true`. Because the rule is a pure function of the events, **every server reaches the identical verdict** with no coordination — detect-and-void on merge, optimistic because honest double-spends never occur.
+
+**Ledger harness cases** (`npm run test:mesh` extension): mint-id uniqueness across two origins · honest trade converges (item leaves A's chain, resolves to B on a third server) · **dupe-void determinism** (a doctored origin signs two conflicting transfers; three servers independently void the same branch) · provenance-reject (`trade/propose` refuses an unminted item) · **durability** (a ledger event survives a peer restart via the persisted log + anti-entropy re-pull — the property presence deliberately lacks).
+
+### 6.3 (j) Consensual PvP duels — `DUEL:CORE` data shapes
+
+**Handshake + commit-reveal** (neither side can steer the RNG or pre-see the opponent's build):
+
+```
+POST /api/duel/challenge { from:pidA, to:pidB }                 → { duelId, ttl:30s }   (refused if either has pvp:off)
+POST /api/duel/accept    { duelId, commit: sha256(nonce‖statHash) }   // B then A each COMMIT (hash only)
+POST /api/duel/reveal    { duelId, nonce, statBlock }                 // both REVEAL; each reveal must match its commit
+```
+
+- **`statBlock`** = the committing player's derivable combat state `{ level, hp, ac, atkBonus, dmgDie, dmgFlat, abilityScores }`. On reveal, each origin **validates the counterparty's statBlock against bounds derivable from the shared world data** — legal because `worldHash` equality is a precondition, so both servers provably hold the same level/monster/XP tables; a statBlock exceeding the world-max for its level is rejected (§IX.B: impossible stats are the tractable half of anti-cheat). A reveal whose `sha256(nonce‖statHash)` ≠ its commit is rejected (commit-reveal integrity).
+- **Seed**: `duelSeed = sha256(nonceA ‖ nonceB ‖ duelId)` — both nonces feed it, so neither party alone chooses it.
+
+**`DUEL:CORE` — a shared pure kernel** (the `mover.js` / `rooms.js` precedent): a new `duel.js`, inlined verbatim into `roll2hit-v3.html` and `require`d by the server, guarded by a **`check:duelparity`** gate (byte-identical, exactly like `check:parity`/`check:roomsparity` for MOVER/ROOMS:CORE).
+
+```
+DUEL:CORE(statA, statB, duelSeed) → { transcript: [ {round, attacker, d20, total, hit, dmg, hpA, hpB} … ],
+                                      winner: pid, loser: pid, rounds }
+```
+
+- Deterministic: a `mulberry32` seeded by `duelSeed` (the same RNG discipline as `seededNext`) drives every d20; initiative, hit resolution, and damage are pure over `(statA, statB, seed)`. **Same inputs → byte-identical transcript on client and server.** A cheater is therefore *"a machine that disagrees with a pure function of committed inputs"* — any observer replays `DUEL:CORE` from the duel event and verifies the winner.
+- **Outcome event** (`kind:'duel'`) carries `{ duelId, parties, statA, statB, duelSeed, winner, rounds }`, dual-signed, appended to **both** players' chains (so a duel record is as durable and replay-checkable as a trade). Rewards/standings derive from `winner`; **no stakes-transfer in v1** (if duels ever wager items, the stake is expressed as a `trade` event conditioned on `winner` — reusing §6.2, no new primitive).
+- **Free-Movement holds**: a duel is a modal overlay, never a mover gate. Walking off the shared cell mid-duel = **flee/forfeit** (the resolver records a forfeit outcome); the move itself is never blocked. Global `pvp:off` toggle makes a player unchallengeable.
+
+**Staging.** **v1** = auto-resolve transcript playback (both reveal → `DUEL:CORE` runs → the transcript animates client-side, both clients replaying the same pure result). **v1.5** = per-round commit-reveal (each round's chosen action committed then revealed, defeating pre-computation of a losing line). **v2** = server-authoritative shared combat instance — the same deferred design as the party-combat turn engine (§3.4.v); out of scope here.
+
+**Duel harness cases**: `check:duelparity` (byte-identical `duel.js`) · determinism (same `(statA,statB,seed)` → identical transcript across a fresh client eval and the server) · commit-reveal (a mismatched reveal is rejected) · bounds (an over-max statBlock is rejected at reveal) · **replay-agreement** (a third server replays the duel event and agrees on `winner`) · forfeit (walking off-cell forfeits and never blocks the move).
+
+### 6.4 Invariants this slice must preserve
+
+- **Single-writer per record still holds** — each player's chain is appended only by *their own* origin; a trade/duel is two single-writer appends (one per origin) of the *same* co-signed event, not a shared mutable record. No CRDT, no consensus.
+- **Determinism substitutes for consensus** — ownership resolution, fork-choice, and `DUEL:CORE` are all pure functions of the merged event set, so every honest server converges to the identical verdict with zero coordination messages.
+- **Free-Movement + client-authoritative SP untouched** — the ledger protects *trades*, the duel kernel protects *duel outcomes*; neither gates the mover, and offline single-player carries no chain (items are plain local objects until minted).
+- **The economy is the only durable, uncapped, disk-persisted replica** — every other replica in the system stays TTL-bounded and disposable. That asymmetry is the price of the two multi-writer facts, and it is quarantined to exactly these two rungs.
