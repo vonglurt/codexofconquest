@@ -276,9 +276,14 @@ async function main() {
   // server never merges; an allowlist ACL refuses even a compatible peer.
   console.log('\n[E] §MESH-01 b/c — manifest identity + gossip mesh');
   const tmp = os.tmpdir();
+  // PEERS_CACHE_FILE is pid-scoped: port-only names survive ACROSS runs, and
+  // the [G] reachability server advertises a fake LAN addr (10.0.0.5) into the
+  // mesh — cached at shutdown, it poisoned [E] on every SUBSEQUENT run (each
+  // gossip round stalled dialing it; found 2026-07-06). Within one run the
+  // cache still persists per port, which is what the restart cases need.
   const mkEnv = (port, sid, extra = {}) => ({
     MESH_SERVER_ID: sid, ADVERTISE_ADDR: `localhost:${port}`, MESH_GOSSIP_MS: '120',
-    PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${port}.json`), ...extra,
+    PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${process.pid}-${port}.json`), ...extra,
   });
   const mA = await startServer(PORT + 2, mkEnv(PORT + 2, 'a'.repeat(32)));
   const mB = await startServer(PORT + 3, mkEnv(PORT + 3, 'b'.repeat(32), { MESH_PEERS: `localhost:${PORT + 2}` }));
@@ -1024,6 +1029,25 @@ async function main() {
   const [vA, vB, vC] = [await verdictOn(gA.base), await verdictOn(gB.base), await verdictOn(gC.base)];
   check(vA.voided.includes(loserY.hash) && vB.voided.includes(loserY.hash) && vC.voided.includes(loserY.hash),
     'all three servers void the identical losing branch (lowest-hash fork-choice, no coordination)');
+
+  // I12 — §MESH-01i slice 2b: the client rung's server read surface. The
+  // browser client restores its trade identity from the pos beacon, picks
+  // trade targets from the co-present list's ledgerPid, and reads item names
+  // from /ledger/owned — pin all three.
+  console.log('\n[I2] I12 — client-rung read surface (pos ledgerPid · co-present ledgerPid · ledger/owned)');
+  const gilPos = await jpost('/session/pos', { sessionId: gil.sessionId, r: gil.r, c: gil.c }, gA.base);
+  check(gilPos.ok === true && gilPos.ledgerPid === gil.ledgerPid,
+    'session/pos carries the durable ledgerPid (the reload-resume path restores the trade identity)');
+  await jpost('/session/pos', { sessionId: hal.sessionId, r: gil.r, c: gil.c }, gA.base);
+  const gilPos2 = await jpost('/session/pos', { sessionId: gil.sessionId, r: gil.r, c: gil.c }, gA.base);
+  check((gilPos2.players || []).some((p) => p.ledgerPid === hal.ledgerPid),
+    'the co-present players[] entries carry ledgerPid (the trade-target picker)');
+  const halOwned = await jget(`/ledger/owned?pid=${hal.ledgerPid}`, gA.base);
+  check(halOwned.ok === true && halOwned.items.some((t) => t.mintKey === gm.mintKey && t.item && t.item.name === 'Gem'),
+    'ledger/owned lists the receiver’s traded-in item with its name (the trade UI read surface)');
+  const gilOwned = await jget(`/ledger/owned?pid=${gil.ledgerPid}`, gA.base);
+  check(gilOwned.ok === true && !gilOwned.items.some((t) => t.mintKey === gm.mintKey),
+    'ledger/owned no longer lists the item for the giver after the trade');
 
   // ── teardown ──
   openClients.forEach(closeSSE);

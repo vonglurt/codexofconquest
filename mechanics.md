@@ -878,7 +878,16 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 - **(f) co-presence buffs + party loot share** ✅ — co-located players get "traveling with allies": +1 to hit per ally (cap +2), the wilderness encounter rate halved on shared cells, and +10% XP/gold per ally (cap +20%) on victory. All guarded on the connection, so single-player is unchanged.
 - **(g) hireling guide bot** ✅ — a single-player companion (60g + 12g/day) that fights beside you (one extra attacker die) and, on "follow me", leads you to your active quest via auto-travel.
 - **(h) sentry bots** ✅ — server-owned guards you post at a road junction. A sentry rides presence for free (anyone co-present sees it), **suppresses wilderness encounters in its cell**, and **auto-assists any battle there** (a second extra attacker die). You bankroll the sentries you post: **120g up front, then 20g/day upkeep** drawn on rest — a post you can no longer pay stands down (auto-recalled). Post/recall from the **🛡 Sentries** panel in Story Mode (requires a live server connection; the sentry only exists as server presence). A sentry never idle-expires — only recall removes it.
-- **(i) no-dupe trade ledger → (j) consensual PvP duels** — planned; see plan.md §MESH-01.
+- **(i) no-dupe trade ledger** ✅ — player-to-player item trading, backed by a tamper-evident economy ledger (below).
+- **(j) consensual PvP duels** — planned; see plan.md §MESH-01.
+
+### Trading (§MESH-01i — how it plays)
+
+- **Your trade identity travels with your save.** The first time you connect, the game generates a private `playerKey` and keeps it in your save file. It gives you a durable trade identity on each server — sessions can expire, tabs can close, and everything you own on the ledger is still yours when you reconnect. Guard your save: whoever holds the key owns the items (the same trust as the save file itself).
+- **Items become tradeable by being *minted*.** Loot you pick up **while connected** is minted on the server and shows a 🔗 mark in your inventory. Items found offline are yours to use as always, but they have no ledger lineage, so they can't be traded — that's the anti-duplication rule: only items whose history roots at a mint can change hands. Story-progression items (shards, key items, mission-bit tokens) never mint and never trade.
+- **To trade**: click the **⇄** button next to a player's name in the "Also here:" strip. Tick what you give and what you ask for, then **Propose** — they get the offer instantly and have **60 seconds** to accept before it expires. Either side can cancel; walking away costs nothing. On accept the server re-checks that both sides still own what they promised, then writes **one co-signed event into both players' chains** — the trade is atomic: both halves happen or neither does.
+- **No dupes, ever**: every server that hears about a trade independently verifies the item's full ownership history. A doctored double-spend is detected on merge and voided identically everywhere — no moderator needed.
+- The ledger protects **trades**, not stats — Roll2Hit stays a client-authoritative single-file game among friends.
 
 ---
 
@@ -949,6 +958,8 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `S_story.roughWhiskeyUsed` | boolean | true after Rough Whiskey drunk-pit-fight scene fires |
 | `S_story.pitTrainingWins` | number | CY battle wins while quest_pit_training active |
 | `S_story.archiveVisited` | boolean | Blue Shutters Archive entered (S7 mechanic) |
+| `S_story.playerKey` | string | Private 32-hex durable trade identity (§MESH-01i); generated once on first connect, save-persisted; server derives ledger pid `(origin8, sha256(key)[:8])` |
+| `item.mintId / item.mintKey` | array / string | Ledger mint id `[originServerId, seq]` (+ `"origin:seq"` string form) stamped on an inventory item minted while connected; 🔗 in inventory = tradeable |
 | `NPC_DIALOGUES` | const object | 6 NPCs × 4 states × 5 quotes; `_getNPCDialogue()` priority chain |
 | `FROBERGER_JOURNAL` | const array | 17 entries; 5 read-aloud at key nodes + 12 collectible |
 | `EPIC_BOSS_POOL` | const object | 20 Deadly bosses keyed by slug; all EB encounters |

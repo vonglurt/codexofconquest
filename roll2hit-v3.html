@@ -1330,6 +1330,40 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .mp-srv-row b { color: #cde0f0; }
 .mp-srv-row .mp-srv-join { margin-left: auto; }
 
+/* ── §MESH-01i slice 2b: trade modal + presence trade button ─── */
+#mp-trade-modal {
+  position: fixed; inset: 0; z-index: 320;
+  background: rgba(0,0,0,0.88); display: none;
+  align-items: center; justify-content: center; padding: 20px;
+}
+#mp-trade-modal.visible { display: flex; }
+#mp-trade-card {
+  background: #060b10; border: 2px solid #2a4a6a;
+  border-radius: 8px; padding: 22px 26px; max-width: 560px; width: 100%;
+  display: flex; flex-direction: column; gap: 10px;
+  box-shadow: 0 8px 40px rgba(0,60,120,0.45);
+}
+#mp-trade-card h3 { margin: 0; font-size: 14px; color: #8fc0f0; letter-spacing: 1px; }
+#mp-trade-card .mp-hint { font-size: 11px; color: #7a8a9a; line-height: 1.6; }
+#mp-trade-card button {
+  background: #0a1a2a; border: 1px solid #2a4a6a; border-radius: 4px;
+  color: #8fc0f0; cursor: pointer; font-size: 12px; padding: 4px 12px;
+}
+#mp-trade-card button:hover { border-color: #5a8aba; }
+#mp-trade-cols { display: flex; gap: 14px; }
+#mp-trade-cols > div { flex: 1; min-width: 0; }
+.mp-trade-hd { font-size: 11px; color: #8fc0f0; letter-spacing: 1px; margin-bottom: 4px; }
+#mp-trade-give, #mp-trade-want {
+  display: flex; flex-direction: column; gap: 3px;
+  max-height: 220px; overflow-y: auto; font-size: 12px; color: #9ab0c4;
+}
+.mp-trade-row { display: block; border: 1px solid #1a2a3a; border-radius: 4px; padding: 3px 6px; cursor: pointer; }
+.mp-trade-btn {
+  background: none; border: 1px solid rgba(127,212,255,0.4); border-radius: 3px;
+  color: #7fd4ff; cursor: pointer; font-size: 10px; padding: 0 4px; line-height: 14px;
+}
+.mp-trade-btn:hover { border-color: #7fd4ff; }
+
 /* ── Layer 2: Inventory ─── */
 #sheet-inventory {
   background: var(--bg);
@@ -4034,6 +4068,22 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         </div>
       </div>
 
+      <!-- §MESH-01i slice 2b — trade modal (ledger-backed; server-authoritative) -->
+      <div id="mp-trade-modal">
+        <div id="mp-trade-card">
+          <h3 id="mp-trade-title">⇄ TRADE</h3>
+          <div id="mp-trade-note" class="mp-hint"></div>
+          <div id="mp-trade-cols">
+            <div><div class="mp-trade-hd">You give</div><div id="mp-trade-give"></div></div>
+            <div><div class="mp-trade-hd">You receive</div><div id="mp-trade-want"></div></div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button id="mp-trade-primary" onclick="mpTradePrimary()">Propose</button>
+            <button onclick="mpTradeCancel()">✕ Close</button>
+          </div>
+        </div>
+      </div>
+
       <!-- nav moved to #story-history-panel bottom row -->
 
       </div><!-- /sheet-story -->
@@ -6429,7 +6479,9 @@ function battKillEvent() {
       if (eligible.length) {
         const granted = eligible[Math.floor(Math.random() * eligible.length)];
         S_story.inventory = S_story.inventory || [];
-        S_story.inventory.push({ ...granted });
+        const lmItem = { ...granted };
+        S_story.inventory.push(lmItem);
+        mpMintStamp(lmItem);   // §MESH-01i slice 2b — lake magic is the flagship trade good
         storyMsg('✨ Lake magic item found: ' + granted.icon + ' ' + granted.name + ' — ' + granted.desc);
       }
     }
@@ -20943,7 +20995,9 @@ const QuestRuntime = {
     reward(bit) {
       if (bit.xp)   { S_story.xp = (S_story.xp || 0) + bit.xp; if (typeof _checkLevelUp === 'function') _checkLevelUp(); }
       if (bit.gold) { S_story.gold = (S_story.gold || 0) + bit.gold; }
-      if (bit.items && bit.items.length) { S_story.inventory = S_story.inventory || []; bit.items.forEach(i => S_story.inventory.push({ ...i })); }
+      // mpMintStamp — §MESH-01i slice 2b: acquisition-while-connected mints the
+      // item (async; stamps mintId on the pushed copy). No-op offline/SP.
+      if (bit.items && bit.items.length) { S_story.inventory = S_story.inventory || []; bit.items.forEach(i => { const it = { ...i }; S_story.inventory.push(it); mpMintStamp(it); }); }
       if (bit.knowledge) { S_story.knowledge = S_story.knowledge || []; S_story.knowledge.push(bit.knowledge); }
     },
     combat(bit) { if (typeof storyPreBattle === 'function') storyPreBattle({ ...NODE_MAP[S_story.currentCode], code: bit.nodeCode || bit.key, battle: { label: bit.label, key: bit.key, count: bit.count || 1 } }); },
@@ -23746,6 +23800,7 @@ function _storyBattleVictory() {
     const d = S._pendingDrop;
     const dropItem = { name:d.name, code: pb ? pb.nodeCode : S_story.currentCode, icon:d.icon, type:'item', sell:d.sell };
     S_story.inventory.push(dropItem);
+    mpMintStamp(dropItem);   // §MESH-01i slice 2b — acquisition-while-connected
     dropsThisBattle.push(dropItem);
     S_story.dropsCollected = (S_story.dropsCollected || 0) + 1;
     S._pendingDrop = null;
@@ -23760,6 +23815,7 @@ function _storyBattleVictory() {
   } else {
     const lootDrop = { ...lootResult, code:'drop' };
     S_story.inventory.push(lootDrop);
+    mpMintStamp(lootDrop);   // §MESH-01i slice 2b
     dropsThisBattle.push(lootDrop);
   }
 
@@ -23768,6 +23824,7 @@ function _storyBattleVictory() {
   const _wpDrop = _rollMonsterWeaponDrop(_monDmgDie);
   if (_wpDrop) {
     const _wpCopy = Object.assign({}, _wpDrop, { code: 'drop' });
+    mpMintStamp(_wpCopy);   // §MESH-01i slice 2b — stamped whether equipped or bagged (the object travels)
     const _curScore = S_story.equippedMainWeapon ? _weaponScore(S_story.equippedMainWeapon) : -1;
     const _dropScore = _weaponScore(_wpCopy);
     const _autoEquip = _dropScore > _curScore;
@@ -26684,7 +26741,7 @@ function storyBlock(txt) {
 // §MESH-01-FU 4: `remotes` is the pid-keyed WORLDWIDE track (seeded by the pos
 // beacon's world[], updated live by player_moved SSE); `nearby` is its viewport
 // subset (minimap dots); world/globe panels draw all of `remotes`.
-const MP = { base: null, session: null, pid: null, name: null, es: null, players: [], nearby: [], remotes: {}, on: false };
+const MP = { base: null, session: null, pid: null, ledgerPid: null, name: null, es: null, players: [], nearby: [], remotes: {}, on: false, trade: null };
 
 // §MESH-01f — co-presence combat buffs ("traveling with allies"). Pure
 // derivations off MP.players (server-filtered to the current cell, self already
@@ -27014,15 +27071,36 @@ async function _mpFetch(path, body) {
   const resp = await fetch(MP.base + path, opts);
   return resp.json();
 }
+// §MESH-01i slice 2b (lab report §6.4) — the durable half of the trade
+// identity. Generated ONCE, 32 hex chars from crypto.getRandomValues, kept in
+// the save file like any other S_story field; every session/start presents it
+// and the server derives ledgerPid = (origin8, sha256(key).slice(0,8)). A
+// bearer credential — whoever holds the save owns the chain (§IX.B trust).
+function _mpPlayerKey() {
+  if (!/^[0-9a-f]{32}$/.test(S_story.playerKey || '')) {
+    const b = new Uint8Array(16);
+    crypto.getRandomValues(b);
+    S_story.playerKey = Array.from(b, x => x.toString(16).padStart(2, '0')).join('');
+  }
+  return S_story.playerKey;
+}
 async function mpToggle(ev) {
   if (ev && ev.shiftKey) return mpBrowserOpen();   // §MESH-01-FU 2: Shift+🌐 = server browser
   if (MP.on) return mpDisconnect('🌐 Multiplayer off.');
   MP.base = _mpBase();
   try {
     const name = S_story.playerName || ('Wanderer-' + Math.floor(Math.random() * 900 + 100));
-    const start = await _mpFetch('/api/session/start', { name });
+    let start = await _mpFetch('/api/session/start', { name, playerKey: _mpPlayerKey() });
+    if (!start.ok && /collision/i.test(start.error || '')) {
+      // §6.4 first-writer-wins: OUR player8 is claimed by a different key on
+      // THIS server. Never regenerate the durable key (it owns chains on other
+      // servers) — connect keyless here and say so loudly.
+      console.warn('[ledger] playerKey collision on this server — connecting keyless:', start.error);
+      storyMsg('⚠ This server refused your trade identity (id collision) — connected without it; trades here use a temporary id.');
+      start = await _mpFetch('/api/session/start', { name });
+    }
     if (!start.ok) throw new Error(start.error || 'start failed');
-    MP.session = start.sessionId; MP.pid = start.pid || null; MP.name = start.name; MP.on = true;
+    MP.session = start.sessionId; MP.pid = start.pid || null; MP.ledgerPid = start.ledgerPid || null; MP.name = start.name; MP.on = true;
     try { sessionStorage.setItem('mpSession', MP.session); } catch {}
     _mpOpenStream();
     await mpBeacon();               // sync the fresh session (spawns at hub) to the real player cell
@@ -27040,7 +27118,8 @@ async function mpToggle(ev) {
 function mpDisconnect(msg) {
   if (MP.session) _mpFetch('/api/session/end', { sessionId: MP.session }).catch(() => {});
   if (MP.es) { try { MP.es.close(); } catch {} }
-  MP.es = null; MP.session = null; MP.pid = null; MP.on = false; MP.players = []; MP.nearby = []; MP.remotes = {};
+  MP.es = null; MP.session = null; MP.pid = null; MP.ledgerPid = null; MP.on = false; MP.players = []; MP.nearby = []; MP.remotes = {}; MP.trade = null;
+  mpTradeClose();
   try { sessionStorage.removeItem('mpSession'); } catch {}
   _mpSetStatus('off');
   const inp = document.getElementById('mp-chat-input');
@@ -27081,6 +27160,27 @@ function _mpOpenStream() {
     const d = JSON.parse(ev.data);
     storyMsg('💬 ' + d.name + ': ' + d.msg);
   });
+  // §MESH-01i slice 2b — the trade rung reads the server's SSE notifications.
+  // The SERVER is authoritative for the trade (two-phase, 60s TTL, ownership
+  // re-validated at accept); the client only mirrors the verdict into
+  // S_story.inventory and the modal.
+  es.addEventListener('trade_proposed', ev => {
+    const d = JSON.parse(ev.data);
+    storyMsg('⇄ Trade offer from ' + (d.from || 'a player') + ' — 60s to answer.');
+    mpTradeIncoming(d);
+  });
+  es.addEventListener('trade_completed', ev => {
+    const d = JSON.parse(ev.data);
+    if (MP.trade && MP.trade.tradeId === d.tradeId) { MP.trade = null; mpTradeClose(); }
+    _mpTradeApply(d.event);
+  });
+  es.addEventListener('trade_cancelled', ev => {
+    const d = JSON.parse(ev.data);
+    if (MP.trade && MP.trade.tradeId === d.tradeId) {
+      MP.trade = null; mpTradeClose();
+      storyMsg('⇄ Trade cancelled.');
+    }
+  });
   es.onerror = () => { if (MP.on) _mpSetStatus('🟠 reconnecting…'); };
 }
 // Fire-and-forget position beacon after each successful local step. The pos
@@ -27120,7 +27220,7 @@ async function _mpResume() {
   try {
     const look = await _mpFetch('/api/session/pos', { sessionId: sid, r: S_story.playerR, c: S_story.playerC });
     if (look && look.ok) {
-      MP.session = sid; MP.pid = look.pid || null; MP.name = look.name || S_story.playerName || 'Wanderer'; MP.on = true;
+      MP.session = sid; MP.pid = look.pid || null; MP.ledgerPid = look.ledgerPid || null; MP.name = look.name || S_story.playerName || 'Wanderer'; MP.on = true;
       MP.players = look.players || [];
       MP.nearby = look.nearby || [];
       MP.remotes = {};
@@ -27159,9 +27259,16 @@ function _mpRenderPresence() {
   const counts = {};
   for (const p of MP.players) counts[p.name] = (counts[p.name] || 0) + 1;
   const label = p => (counts[p.name] > 1 && p.pid) ? p.name + '@' + p.pid.split(':')[0] : p.name;
-  el.textContent = (MP.on && MP.players.length)
-    ? '👥 Also here: ' + MP.players.map(label).join(', ')
-    : '';
+  if (!MP.on || !MP.players.length) { el.textContent = ''; return; }
+  // §MESH-01i slice 2b: a ⇄ trade button per co-present PLAYER. Only entries
+  // with a ledgerPid qualify (local-origin, from the last beacon — cross-origin
+  // trades are the next rung; sentries and SSE-only arrivals have none yet).
+  // Index-addressed onclick so player names never enter the JS attribute.
+  el.innerHTML = '👥 Also here: ' + MP.players.map((p, i) =>
+    _mpEsc(label(p)) + (p.ledgerPid && p.kind !== 'sentry'
+      ? ' <button class="mp-trade-btn" title="Offer a trade" onclick="mpTradeOpen(MP.players[' + i + '])">⇄</button>'
+      : '')
+  ).join(', ');
 }
 
 // §MESH-01-FU 4 — SSE-driven map refresh. `nearby` (minimap) is recomputed
@@ -27289,6 +27396,141 @@ function mpJoin(addr) {
   mpToggle();
 }
 
+// ── §MESH-01i slice 2b — client ledger rung: mint stamping + trade UI ───────
+// Design: mesh lab report §6.2/§6.4. An inventory item is a plain local object
+// until the origin server MINTS it; only minted items (item.mintKey) trade.
+// Minting happens at acquisition-while-connected — fire-and-forget: the mint
+// response stamps mintId onto the SAME object sitting in S_story.inventory
+// (reference mutation), so it persists with the save. Offline/SP acquisitions
+// carry no mintId and stay local-only — the Diablo-dupe fix: bytes without
+// lineage are worthless in trade. Progression items never mint (a shard or
+// mission-bit token leaving the save would strand the story).
+const _MINT_SKIP_TYPES = new Set(['shard', 'key_item', 'key', 'mission_bit', 'quest']);
+function mpMintStamp(item) {
+  if (!MP.on || !MP.session || !item || !item.name || item.mintKey) return;
+  if (_MINT_SKIP_TYPES.has(item.type)) return;
+  const key = String(item.name).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'item';
+  _mpFetch('/api/ledger/mint', { sessionId: MP.session, item: { key, name: item.name, qty: 1 } })
+    .then(r => { if (r && r.ok) { item.mintId = r.mintId; item.mintKey = r.mintKey; } })
+    .catch(() => {});
+}
+function _mpTradeableInv() {
+  return (S_story.inventory || []).filter(i => i.mintKey && !_MINT_SKIP_TYPES.has(i.type));
+}
+function _mpTradeRow(side, mintKey, name, icon) {
+  return '<label class="mp-trade-row"><input type="checkbox" data-side="' + side + '" data-mint="' + _mpEsc(mintKey) + '"> '
+    + (icon ? _mpEsc(icon) + ' ' : '') + _mpEsc(name) + '</label>';
+}
+// Outgoing offer: tick give (my minted items, known locally) and want (theirs,
+// read from the ledger's owned surface), then Propose. `p` is a co-present
+// roster entry; an SSE-only arrival may lack ledgerPid until the next beacon,
+// so refresh once before giving up.
+async function mpTradeOpen(p) {
+  if (!MP.on || !p) return;
+  if (!p.ledgerPid) { await mpBeacon(); p = MP.players.find(q => q.pid === p.pid) || p; }
+  if (!p.ledgerPid) { storyMsg('⇄ ' + (p.name || 'That player') + ' has no trade identity here yet (another server’s player?).'); return; }
+  MP.trade = { dir: 'out', to: p.ledgerPid, toName: p.name, tradeId: null };
+  let theirs = [];
+  try { const r = await _mpFetch('/api/ledger/owned?pid=' + encodeURIComponent(p.ledgerPid)); if (r && r.ok) theirs = r.items || []; } catch {}
+  _mpTradeRender({
+    title: '⇄ TRADE WITH ' + (p.name || p.ledgerPid),
+    note: 'Tick what you give and what you ask for, then Propose. Only minted (🔗) items can trade; the offer expires in 60 seconds.',
+    give: _mpTradeableInv().map(i => _mpTradeRow('give', i.mintKey, i.name, i.icon)),
+    want: theirs.map(t => _mpTradeRow('want', t.mintKey, (t.item && t.item.name) || t.mintKey)),
+    primary: 'Propose',
+  });
+}
+// Incoming offer (over SSE trade_proposed): d.give = items the proposer hands
+// over, d.want = MY items they ask for. Names resolve from the local inventory
+// (my side) and the proposer's owned list (their side).
+async function mpTradeIncoming(d) {
+  if (MP.trade && MP.trade.tradeId && MP.trade.tradeId !== d.tradeId) return;   // already mid-trade
+  MP.trade = { dir: 'in', tradeId: d.tradeId, from: d.from };
+  const names = {};
+  try {
+    const r = await _mpFetch('/api/ledger/owned?pid=' + encodeURIComponent(d.from));
+    if (r && r.ok) for (const t of r.items || []) names[t.mintKey] = (t.item && t.item.name) || t.mintKey;
+  } catch {}
+  const mineByKey = {};
+  for (const i of (S_story.inventory || [])) if (i.mintKey) mineByKey[i.mintKey] = i.name;
+  _mpTradeRender({
+    title: '⇄ TRADE OFFER',
+    note: (d.from || 'A player') + ' proposes a trade — Accept or ✕ to decline. The offer expires in 60 seconds.',
+    give: (d.want || []).map(k => '<div class="mp-trade-row">' + _mpEsc(mineByKey[k] || k) + '</div>'),
+    want: (d.give || []).map(k => '<div class="mp-trade-row">' + _mpEsc(names[k] || k) + '</div>'),
+    primary: 'Accept',
+  });
+}
+function _mpTradeRender(v) {
+  const modal = document.getElementById('mp-trade-modal');
+  if (!modal) return;
+  document.getElementById('mp-trade-title').textContent = v.title;
+  document.getElementById('mp-trade-note').textContent = v.note;
+  document.getElementById('mp-trade-give').innerHTML = v.give.join('') || '<div class="mp-hint">— nothing —</div>';
+  document.getElementById('mp-trade-want').innerHTML = v.want.join('') || '<div class="mp-hint">— nothing —</div>';
+  const btn = document.getElementById('mp-trade-primary');
+  btn.textContent = v.primary; btn.style.display = '';
+  modal.classList.add('visible');
+}
+function mpTradeClose() {
+  const modal = document.getElementById('mp-trade-modal');
+  if (modal) modal.classList.remove('visible');
+}
+// ✕ — cancel the pending proposal (either direction; the server notifies both
+// parties over SSE) and close. A never-proposed outgoing draft just closes.
+function mpTradeCancel() {
+  const t = MP.trade;
+  if (t && t.tradeId) _mpFetch('/api/trade/cancel', { tradeId: t.tradeId }).catch(() => {});
+  MP.trade = null;
+  mpTradeClose();
+}
+async function mpTradePrimary() {
+  const t = MP.trade;
+  if (!t || !MP.session) return mpTradeClose();
+  if (t.dir === 'in') {
+    // Accept: the server re-validates ownership and appends ONE co-signed
+    // dual-chain event; inventory updates arrive via trade_completed SSE.
+    const r = await _mpFetch('/api/trade/accept', { tradeId: t.tradeId, sessionId: MP.session }).catch(() => null);
+    if (!r || !r.ok) { storyMsg('⇄ Trade failed: ' + ((r && r.error) || 'server unreachable') + '.'); MP.trade = null; mpTradeClose(); }
+    return;
+  }
+  const checked = side => Array.from(document.querySelectorAll('#mp-trade-modal input[data-side="' + side + '"]:checked')).map(el => el.dataset.mint);
+  const give = checked('give'), want = checked('want');
+  if (!give.length && !want.length) { storyMsg('⇄ Tick at least one item to trade.'); return; }
+  const r = await _mpFetch('/api/trade/propose', { sessionId: MP.session, to: t.to, give, want }).catch(() => null);
+  if (!r || !r.ok) { storyMsg('⇄ Proposal refused: ' + ((r && r.error) || 'server unreachable') + '.'); return; }
+  t.tradeId = r.tradeId;
+  document.getElementById('mp-trade-note').textContent = 'Offer sent to ' + (t.toName || t.to) + ' — waiting for their answer (60s)…';
+  document.getElementById('mp-trade-primary').style.display = 'none';
+}
+// Mirror a completed trade event into the local inventory: remove what I gave
+// (matched by mintKey), fetch + add what I received. The LEDGER stays the
+// source of truth for ownership — this is inventory/display sync only.
+async function _mpTradeApply(evt) {
+  const me = MP.ledgerPid;
+  if (!me || !evt || !evt.body) return;
+  const inv = S_story.inventory = S_story.inventory || [];
+  const gained = [], lost = [];
+  for (const t of (evt.body.transfers || [])) {
+    const key = Array.isArray(t.mintId) ? t.mintId[0] + ':' + t.mintId[1] : String(t.mintId);
+    if (t.from === me) {
+      const idx = inv.findIndex(i => i.mintKey === key);
+      if (idx >= 0) lost.push(inv.splice(idx, 1)[0].name);
+    } else if (t.to === me) {
+      let name = 'Traded item';
+      try { const r = await _mpFetch('/api/ledger/owner?mintId=' + encodeURIComponent(key)); if (r && r.item && r.item.name) name = r.item.name; } catch {}
+      inv.push({ name, code: 'trade', icon: _itemIcon(name), type: _itemType(name), mintId: t.mintId, mintKey: key });
+      gained.push(name);
+    }
+  }
+  if (gained.length || lost.length) {
+    storyMsg('⇄ Trade complete' + (lost.length ? ' — gave ' + lost.join(', ') : '')
+      + (gained.length ? (lost.length ? '; received ' : ' — received ') + gained.join(', ') : '') + '.');
+    try { storyRenderInventory(); } catch {}
+    storyAutoSave();
+  }
+}
+
 function _rollKeyEvent(id) {
   const evt = KEY_EVENTS.find(e => e.id === id);
   if (!evt || S_story[evt.flag]) return;
@@ -27345,7 +27587,9 @@ function storyCollectLoot(node) {
     const name = raw.trim();
     if (!name) return;
     const type = _itemType(name);
-    S_story.inventory.push({ name, code: node.code, icon: _itemIcon(name), type });
+    const lootItem = { name, code: node.code, icon: _itemIcon(name), type };
+    S_story.inventory.push(lootItem);
+    mpMintStamp(lootItem);   // §MESH-01i slice 2b — no-op offline; shard/key types skip inside
     added.push(name);
     if (type === 'shard') {
       S_story.shards = Math.min(7, S_story.shards + 1);
@@ -28058,7 +28302,9 @@ function storyRenderInventory() {
       + (item.type === 'key'     ? ' key-item'      : '')
       + (item.type === 'shield'  ? ' shield-item'   : '');
     div.innerHTML = '<span class="inv-icon">' + item.icon + '</span>'
-      + '<span class="inv-name">' + item.name + '</span>'
+      + '<span class="inv-name">' + item.name
+      + (item.mintKey ? ' <span class="inv-tag" title="Minted on the ledger — tradeable in multiplayer">🔗</span>' : '')
+      + '</span>'
       + '<span class="inv-src">' + (node ? node.name : (item.code || '')) + '</span>';
     if (extraBtns) extraBtns(div, item);
     list.appendChild(div);

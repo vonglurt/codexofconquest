@@ -695,9 +695,14 @@ async function meshGossipRound() {
       .slice(0, 3);
     for (const addr of addrs) {
       try {
+        // Bounded dial: rounds run SERIALLY, so without a timeout one dead
+        // LAN/cached peer stalls every round for the OS connect timeout
+        // (~10-75 s) and starves presence sync mesh-wide (found 2026-07-06:
+        // a stale peers-cache addr slowed 120 ms rounds to ~10 s).
         const resp = await fetch(`http://${addr}/api/mesh/gossip`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(meshPayload()),
+          signal: AbortSignal.timeout(3000),
         });
         const data = await resp.json().catch(() => ({}));
         const rec = MESH.peers.get(addr) || {};
@@ -716,8 +721,9 @@ async function meshGossipRound() {
         }
       } catch (e) {
         const rec = MESH.peers.get(addr) || {};
-        MESH.peers.set(addr, { ...rec, lastErr: e.code || 'unreachable' });
-        pushTraffic('out', 'gossip', addr, false, e.code || 'unreachable');
+        const err = (e && e.name === 'TimeoutError') ? 'timeout' : (e && e.code) || 'unreachable';
+        MESH.peers.set(addr, { ...rec, lastErr: err });
+        pushTraffic('out', 'gossip', addr, false, err);
       }
     }
     // Expire origins that stopped heartbeating.
@@ -8617,7 +8623,11 @@ async function route(req, res) {
       const players = [];
       for (const [id2, s2] of SESSIONS)
         if (id2 !== s.id && s2.r === s.r && s2.c === s.c)
-          players.push({ id: id2, pid: pidOf(id2), name: s2.playerName, kind: s2.kind || 'player' });
+          // ledgerPid — §MESH-01i slice 2b: the co-present list is the trade
+          // target picker, and trades key on the LEDGER pid (durable when the
+          // player presented a playerKey), not the presence pid. Local
+          // sessions only: cross-origin trades are the rung after slice 2.
+          players.push({ id: id2, pid: pidOf(id2), ledgerPid: ledgerPidOf(id2), name: s2.playerName, kind: s2.kind || 'player' });
       players.push(...remotePlayersAt(s.r, s.c));   // §MESH-01c: replicated same-world peers
       // §NAV-01f — the L4 room object (icon/title/sub/prose/exits/signposts/
       // landmarks) from the shared kernel. buildLook is the one look surface,
@@ -8890,7 +8900,9 @@ async function route(req, res) {
       // §MESH-01-FU 5: pid/name identify the session's OWN player so a client
       // resuming a stored sessionId after reload can restore its identity from
       // the same beacon that validates the id (no separate resume endpoint).
-      return json(res, 200, { ok: true, pid: pidOf(sessionId), name: s.playerName, moved, nearby, world: worldPlayers, ...look });
+      // ledgerPid — §MESH-01i slice 2b: the resume path restores the trade
+      // identity the same way (durable when the session carries a player8).
+      return json(res, 200, { ok: true, pid: pidOf(sessionId), ledgerPid: ledgerPidOf(sessionId), name: s.playerName, moved, nearby, world: worldPlayers, ...look });
     }
 
     // ── POST /api/session/say ──────────────────────────────────────────────
@@ -9086,6 +9098,25 @@ async function route(req, res) {
         tipHash: rec ? rec.tipHash : null, item: rec ? rec.item : null,
         voided: [...voided],
       });
+    }
+
+    // ── GET /api/ledger/owned?pid= — every item a pid currently owns ───────
+    // §MESH-01i slice 2b: the trade UI's read surface — lists a counterparty's
+    // tradeable items (and resolves item names for received transfers) without
+    // the client re-implementing ledgerResolve. Same pure verdict as /owner.
+    if (sub === 'owned' && method === 'GET') {
+      const pid = url.searchParams.get('pid');
+      if (!pid) {
+        logResponse(method, url.pathname, 400, 'ledger/owned: pid required');
+        return json(res, 400, { ok: false, error: '?pid=<origin8:player8> required' });
+      }
+      const { owners } = ledgerResolve();
+      const items = [];
+      for (const [key, rec] of owners)
+        if (rec.owner === pid)
+          items.push({ mintId: key.split(':').map((v, i) => i ? +v : v), mintKey: key, item: rec.item, tipHash: rec.tipHash });
+      logResponse(method, url.pathname, 200, `ledger owned(${pid}) = ${items.length} item(s)`);
+      return json(res, 200, { ok: true, pid, count: items.length, items });
     }
 
     if (method !== 'POST') {
@@ -10920,6 +10951,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/sentry/list                     → all deployed sentries'],
     ['POST',   '/api/ledger/mint                     body: {sessionId, item:{key,name,qty?}} → §MESH-01i mint event (mintId = [serverId, seq]; only minted items trade)'],
     ['GET',    '/api/ledger/owner?mintId=            → ownership resolution (pure fn of the chains; carries the voided double-spend hashes)'],
+    ['GET',    '/api/ledger/owned?pid=               → every item a pid currently owns [{mintId, mintKey, item, tipHash}] (the trade UI read surface)'],
     ['GET',    '/api/ledger/chain[?pid=]             → a player’s hash chain (or the full event log)'],
     ['GET',    '/api/ledger/status                   → ledger seq/events/origins/pending trades'],
     ['POST',   '/api/ledger/ingest                   body: {events:[…]} → validated foreign-event ingest (the gossip PUSH receive path)'],

@@ -188,11 +188,18 @@ curl -XPOST http://localhost:1367/api/trade/accept -d '{"tradeId":"<t>","session
 curl -XPOST http://localhost:1367/api/trade/cancel -d '{"tradeId":"<t>"}'
 
 curl http://localhost:1367/api/ledger/chain?pid=<pid>    # a player's hash chain
+curl "http://localhost:1367/api/ledger/owned?pid=<pid>"  # everything a pid owns now
+# → { items: [{mintId, mintKey, item, tipHash}] }  — the trade UI's read surface
+#   (slice 2b: lists a counterparty's tradeable items + resolves received names)
 curl http://localhost:1367/api/ledger/status             # seq / events / origins / pending trades
 ```
 
 The counterparty is notified over their session SSE stream (`trade_proposed`,
-`trade_completed`, `trade_cancelled`).
+`trade_completed`, `trade_cancelled`). The in-game client (slice 2b) rides
+exactly these surfaces: co-present `players[]` entries carry `ledgerPid` (the
+⇄ trade-target picker), `session/pos` echoes your own `ledgerPid` on resume,
+and loot acquired while connected is minted + stamped automatically (🔗 in the
+inventory).
 
 **Durable player identity (slice 2, lab report §6.4).** Sessions idle-expire in
 30 min, but ledger chains are permanent — so `session/start` takes an optional
