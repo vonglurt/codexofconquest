@@ -142,6 +142,26 @@ function broadcastAll(event, data, excludeId) {
   }
 }
 
+// §MESH-01-FU 13 — chat backlog on join. SSE fanout only reaches sessions that
+// are ALREADY at the cell, so a joining player used to get no history. Every
+// chat line (local say + fresh remote mesh chat) lands in one bounded ring;
+// buildLook serves the last MESH_CHAT_BACKLOG lines at the session's cell, so
+// start/move/look/pos all carry it (the one-look-surface rule). Display-only:
+// nothing here is consulted by the mover or quest code.
+const MESH_CHAT_BACKLOG = (() => { const v = parseInt(process.env.MESH_CHAT_BACKLOG || '', 10); return Number.isFinite(v) ? Math.max(0, Math.min(50, v)) : 10; })();
+const CHAT_LOG = [];   // {ts, name, msg, r, c, pid?, server?} — ring, cap 200
+function pushChat(entry) {
+  CHAT_LOG.push(entry);
+  if (CHAT_LOG.length > 200) CHAT_LOG.shift();
+}
+function chatBacklogAt(r, c) {
+  if (!MESH_CHAT_BACKLOG) return [];
+  const out = [];
+  for (let i = CHAT_LOG.length - 1; i >= 0 && out.length < MESH_CHAT_BACKLOG; i--)
+    if (CHAT_LOG[i].r === r && CHAT_LOG[i].c === c) out.push(CHAT_LOG[i]);
+  return out.reverse();   // oldest → newest, reading order
+}
+
 // ── Config ──────────────────────────────────────────────────────────────────
 const PORT      = parseInt(process.env.PORT || '1367');
 // §MESH-01-FU 1 — LAN/WAN reachability. Default bind stays loopback (a solo dev
@@ -651,7 +671,16 @@ let _aclMtime = -1, _acl = null;
 function getAcl() {
   try {
     const st = fs.statSync(ACL_FILE);
-    if (st.mtimeMs !== _aclMtime) { _aclMtime = st.mtimeMs; _acl = JSON.parse(fs.readFileSync(ACL_FILE, 'utf8')); }
+    if (st.mtimeMs !== _aclMtime) {
+      _aclMtime = st.mtimeMs;
+      // §MESH-01-FU 11: a file that EXISTS but fails to parse must not silently
+      // open a mesh its operator believes is allowlisted — warn once per change.
+      try { _acl = JSON.parse(fs.readFileSync(ACL_FILE, 'utf8')); }
+      catch (e) {
+        _acl = null;
+        console.warn(`${C.bold}${C.yellow}  ⚠ MESH ACL:${C.reset}${C.yellow} ${path.basename(ACL_FILE)} exists but is not valid JSON (${e.message}) — ACL DISABLED, mesh is OPEN. Template: mesh-acl.json.example${C.reset}`);
+      }
+    }
   } catch { _acl = null; _aclMtime = -1; }
   return _acl || { mode: 'open' };
 }
@@ -780,8 +809,13 @@ function meshMergeEvents(originId, events) {
     if (now - (ev.ts || 0) <= MESH_FANOUT_MAX_AGE) {
       if (ev.type === 'player_moved')
         broadcastAll(ev.type, { ...ev.data, remote: true, server: originId.slice(0, 8) }, null);
-      else if (['player_arrived', 'player_left', 'chat'].includes(ev.type))
+      else if (['player_arrived', 'player_left', 'chat'].includes(ev.type)) {
         broadcastCell(ev.r, ev.c, ev.type, { ...ev.data, remote: true, server: originId.slice(0, 8) }, null);
+        // §MESH-01-FU 13: fresh cross-server chat joins the backlog ring too —
+        // replayed history stays out (vv already advanced past it once).
+        if (ev.type === 'chat')
+          pushChat({ ts: ev.ts || now, name: ev.data.name, msg: ev.data.msg, r: ev.r, c: ev.c, server: originId.slice(0, 8) });
+      }
     }
   }
   MESH.vv[originId] = last;
@@ -887,6 +921,15 @@ async function meshGossipRound() {
 // (Tracker + BOOTSTRAP_URLS are §MESH-01d.) `tracker <url>` lines are parsed
 // and held for Inc d; `#` comments ignored.
 const MESH_TRACKER_URLS = [];
+// §MESH-01-FU 12 — one intake for `tracker <url>` lines (peers.txt +
+// BOOTSTRAP_URLS): a GAME server announces to them; a TRACKER federates with
+// them (before this, tracker lines were dead in tracker mode — federation
+// could only be wired by hand via --tracker-peer/TRACKER_PEERS).
+function addTrackerUrl(u) {
+  if (!u) return;
+  const list = TRACKER_MODE ? TRACKER_PEER_URLS : MESH_TRACKER_URLS;
+  if (!list.includes(u)) list.push(u);
+}
 function loadStaticPeers() {
   const add = (a) => { if (a && /^[\w.-]+:\d+$/.test(a) && a !== meshAdvertise() && !MESH.peers.has(a)) MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null }); };
   process.argv.forEach((a, i) => { if (process.argv[i - 1] === '--peer') add(a); });
@@ -896,7 +939,7 @@ function loadStaticPeers() {
     for (const line of fs.readFileSync(path.join(__dirname, 'peers.txt'), 'utf8').split('\n')) {
       const t = line.trim();
       if (!t || t.startsWith('#')) continue;
-      if (t.startsWith('tracker ')) { MESH_TRACKER_URLS.push(t.slice(8).trim()); continue; }
+      if (t.startsWith('tracker ')) { addTrackerUrl(t.slice(8).trim()); continue; }
       add(t.split(/\s+/)[0]);
     }
   } catch {}
@@ -922,6 +965,33 @@ const TRACKER_TTL = parseInt(process.env.TRACKER_TTL_MS || '', 10) || 120_000;
 function trackerSweep() {
   const now = Date.now();
   for (const [id, r] of TRACKER) if (now - r.lastSeen > TRACKER_TTL) TRACKER.delete(id);
+}
+// §MESH-01-FU 12 — announce-table persistence. Belt-and-braces: servers
+// re-announce every ≤30 s anyway, so the cache only matters in the window
+// right after a QUICK tracker restart — peers are served immediately instead
+// of an empty table. Records are saved with ageMs and re-aged by the tracker's
+// downtime on load, so a long outage honestly expires them (stale addrs are
+// junk, not history). Throttled + dirty-flagged: an idle tracker writes nothing.
+const TRACKER_CACHE_FILE = process.env.TRACKER_CACHE_FILE || path.join(__dirname, 'tracker-cache.json');
+const TRACKER_PERSIST_MS = parseInt(process.env.TRACKER_PERSIST_MS || '', 10) || 30_000;
+let _trackerDirty = false;
+function trackerPersist() {
+  if (!_trackerDirty) return;
+  _trackerDirty = false;
+  trackerSweep();
+  if (!TRACKER.size && !fs.existsSync(TRACKER_CACHE_FILE)) return;   // never create an empty cache
+  try { fs.writeFileSync(TRACKER_CACHE_FILE, JSON.stringify({ savedAt: new Date().toISOString(), records: trackerRecordsOut() }, null, 2)); } catch {}
+}
+function trackerLoadCache() {
+  try {
+    const j = JSON.parse(fs.readFileSync(TRACKER_CACHE_FILE, 'utf8'));
+    const downMs = Math.max(0, Date.now() - (Date.parse(j.savedAt) || Date.now()));
+    const alive = (j.records || [])
+      .map((r) => ({ ...r, ageMs: (r.ageMs | 0) + downMs }))
+      .filter((r) => r.ageMs < TRACKER_TTL);
+    const n = trackerMergeRecords(alive, null);   // same validation + ACL as a live sync
+    if (n) console.log(`  Tracker:   ${n} announce record(s) restored from ${path.basename(TRACKER_CACHE_FILE)}`);
+  } catch {}
 }
 // §MESH-01d2 — tracker federation: an operator MANUALLY connects tracker A to
 // tracker B (`--tracker-peer <url>` / TRACKER_PEERS env); the two then merge
@@ -957,6 +1027,7 @@ function trackerMergeRecords(records, ip) {
     });
     merged++;
   }
+  if (merged) _trackerDirty = true;   // §MESH-01-FU 12
   return merged;
 }
 async function trackerFederateRound() {
@@ -1016,7 +1087,7 @@ async function fetchBootstrapUrls() {
       for (const line of txt.split('\n')) {
         const t = line.trim();
         if (!t || t.startsWith('#')) continue;
-        if (t.startsWith('tracker ')) { MESH_TRACKER_URLS.push(t.slice(8).trim()); continue; }
+        if (t.startsWith('tracker ')) { addTrackerUrl(t.slice(8).trim()); continue; }
         const a = t.split(/\s+/)[0];
         if (/^[\w.-]+:\d+$/.test(a) && a !== meshAdvertise() && !MESH.peers.has(a))
           MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });
@@ -3102,6 +3173,7 @@ async function route(req, res) {
     }
     TRACKER.set(serverId, { addr, proto, engineVer, worldHash, playerCount: (tb.playerCount | 0),
       name: String(tb.name || '').slice(0, 60), worldName: String(tb.worldName || '').slice(0, 40), lastSeen: Date.now() });
+    _trackerDirty = true;   // §MESH-01-FU 12
     pushTraffic('in', 'announce', addr, true, `${serverId.slice(0, 8)} · wh:${String(worldHash).slice(0, 8)} · ${tb.playerCount | 0} player(s)`);
     // Same-group peers only — incompatible worlds are segregated, never mixed.
     const group = [];
@@ -3205,6 +3277,8 @@ async function route(req, res) {
       proto: m.proto, engineVer: m.engineVer, worldName: m.worldName, worldTag: m.worldTag,
       worldHash: m.worldHash, parts: m.parts,
       trackerUrls: [...new Set([...TRACKER_URLS, ...MESH_TRACKER_URLS])],
+      // §MESH-01-FU 12: who this tracker federates with (flags + peers.txt + bootstrap)
+      ...(TRACKER_MODE ? { federationPeers: [...new Set(TRACKER_PEER_URLS)] } : {}),
       acl: { mode: getAcl().mode || 'open', file: path.basename(ACL_FILE) },
       rate: { limit: MESH_RATE_LIMIT, burst: MESH_RATE_BURST },
       localPlayers: SESSIONS.size, peers, remotePlayers,
@@ -8803,6 +8877,7 @@ async function route(req, res) {
         r: s.r, c: s.c,
         node: code ? { code, label: node.label, terrain: node.name, act: node.act } : null,
         desc, exits, players, room,
+        chat: chatBacklogAt(s.r, s.c),   // §MESH-01-FU 13: last few chat lines here (join context)
       };
     }
 
@@ -9094,6 +9169,7 @@ async function route(req, res) {
       // own chat (the harness asserts each co-present session receives it once).
       broadcastCell(s.r, s.c, 'chat', chatData, null);
       emitMeshEvent('chat', { name: s.playerName, msg, r: s.r, c: s.c }, s.r, s.c);
+      pushChat({ ts: Date.now(), pid: chatData.pid, name: s.playerName, msg, r: s.r, c: s.c });   // §MESH-01-FU 13
       logRow('say', `${s.playerName}  ·  "${msg.slice(0,60)}"`);
       logResponse(method, url.pathname, 200, `session say: "${msg.slice(0,40)}"`);
       return json(res, 200, { ok: true, broadcast: chatData, recipientCount: [...SESSIONS.values()].filter(s2 => s2.r === s.r && s2.c === s.c).length });
@@ -11461,13 +11537,19 @@ server.listen(PORT, BIND_ADDR, () => {
   setInterval(() => { meshGossipRound(); persistPeerCache(); }, MESH_GOSSIP_MS).unref();
   // §MESH-01d: pull the text-file backup (gist/PHP/scp'd file), then start the
   // tracker announce heartbeat. Both are no-ops when nothing is configured.
-  fetchBootstrapUrls().then(() => trackerAnnounceRound());
+  // §MESH-01-FU 12: in tracker mode the bootstrap's `tracker <url>` lines feed
+  // FEDERATION (addTrackerUrl), so the post-fetch round is the federate one.
+  fetchBootstrapUrls().then(() => TRACKER_MODE ? trackerFederateRound() : trackerAnnounceRound());
   setInterval(trackerAnnounceRound, MESH_ANNOUNCE_MS).unref();
-  // §MESH-01d2: tracker federation heartbeat (tracker-mode + --tracker-peer only)
-  if (TRACKER_MODE && TRACKER_PEER_URLS.length) {
+  // §MESH-01d2: tracker federation heartbeat. Started unconditionally in
+  // tracker mode (a round with no peers is a no-op) — peers.txt/BOOTSTRAP_URLS
+  // can add federation peers at/after boot, not just --tracker-peer flags.
+  if (TRACKER_MODE) {
+    trackerLoadCache();   // §MESH-01-FU 12: serve peers immediately after a quick restart
+    setInterval(trackerPersist, TRACKER_PERSIST_MS).unref();
     trackerFederateRound();
     setInterval(trackerFederateRound, MESH_ANNOUNCE_MS).unref();
-    console.log(`  Federate:  ${TRACKER_PEER_URLS.join(', ')}`);
+    if (TRACKER_PEER_URLS.length) console.log(`  Federate:  ${TRACKER_PEER_URLS.join(', ')}`);
   }
   if (TRACKER_MODE) console.log(`  Mode:      TRACKER (rendezvous only — /api/tracker/announce + /peers; worlds grouped by proto/engineVer/worldHash)`);
   if (MESH.peers.size) console.log(`  Mesh:      ${MESH.peers.size} bootstrap peer(s) · serverId ${getServerId().slice(0, 8)} · worldHash ${getManifest().worldHash}`);
@@ -11511,7 +11593,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['POST',   '/api/session/move                    body: {sessionId, dir} → {r, c, node, desc, exits, players, room, encounter}'],
     ['GET',    '/api/session/look?sessionId=          → current cell + exits + co-present players + room (§NAV-01f MUD room object)'],
     ['GET',    '/api/session/who                     → all active sessions'],
-    ['POST',   '/api/session/say                     body: {sessionId, msg} → chat broadcast'],
+    ['POST',   '/api/session/say                     body: {sessionId, msg} → chat broadcast (look/start replay the last few lines per cell)'],
     ['POST',   '/api/session/end                     body: {sessionId} → remove session'],
     ['GET',    '/api/session/events?sessionId=        → SSE stream (player_arrived, chat)'],
     ['POST',   '/api/sentry/deploy                   body: {node, dailyFee?} → station a §MESH-01h sentry bot at a junction (suppresses encounters + auto-assists there)'],

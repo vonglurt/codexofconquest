@@ -857,7 +857,7 @@ Roll2Hit is single-player-first: multiplayer is a strictly **opt-in presence lay
 
 - **🌐 opt-in toggle** in Story Mode. Nothing multiplayer runs — no network key exists in the tab — until it is clicked. The single HTML file stays fully playable offline.
 - **"Also here:" strip** under the move message lists players co-present on your cell (local and remote-server alike); **☺ dots** on the minimap and **cyan dots** on the WORLD map / GLOBE panels track everyone worldwide in real time (`player_moved` SSE).
-- **Chat**: `say` reaches players on your cell — exactly once, including across servers.
+- **Chat**: `say` reaches players on your cell — exactly once, including across servers. On connect/resume you also get "🕰 Earlier here:" — the last ~10 lines said at your cell before you joined (§MESH-01-FU 13), so you land mid-conversation instead of in silence.
 - **Auto-reconnect**: reloading the page resumes the same session (sessionStorage id probed via the `pos` beacon); a dead id falls back to a fresh connect under the same tab opt-in.
 - **Server browser / magnet links**: Shift+🌐 (or a failed connect) opens the browser — paste an `r2h:?…` magnet, a tracker URL, or a server URL; rows show server name, 🌍 world tag, player count, ping, and a ⚠ build-mismatch flag.
 - **Same display name never misattributes**: every presence surface is keyed by `pid` (`<serverId8>:<sessionId8>`), so two "Bob"s stay distinct (an `@server` suffix renders only on a name collision).

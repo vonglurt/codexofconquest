@@ -367,7 +367,7 @@ async function main() {
 
   // ════════ (f) §MESH-01d — tracker discovery + world grouping + bootstrap URL ════════
   console.log('\n[F] §MESH-01d — tracker rendezvous, compat grouping, BOOTSTRAP_URLS');
-  const trk = await startServer(PORT + 6, { TRACKER_MODE: '1', MESH_SERVER_ID: 'e'.repeat(32), PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 6}.json`) });
+  const trk = await startServer(PORT + 6, { TRACKER_MODE: '1', MESH_SERVER_ID: 'e'.repeat(32), PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 6}.json`), TRACKER_CACHE_FILE: path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 6}.json`) });
   check((await jget('/ping', trk.base)).ok === true, 'tracker answers /api/ping');
   check((await jget('/session/who', trk.base)).ok === false, 'tracker-mode refuses non-tracker routes (rendezvous only, never a relay)');
 
@@ -418,8 +418,8 @@ async function main() {
   // B, which federates with A. J must still discover Ida — proof that manually
   // connecting two trackers implicitly shares both server lists.
   console.log('\n[G] §MESH-01d2 — tracker federation (announce tables merge)');
-  const trkA2 = await startServer(PORT + 11, { TRACKER_MODE: '1', MESH_SERVER_ID: '6'.repeat(32), MESH_ANNOUNCE_MS: '150', PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 11}.json`) });
-  const trkB2 = await startServer(PORT + 12, { TRACKER_MODE: '1', MESH_SERVER_ID: '5'.repeat(32), MESH_ANNOUNCE_MS: '150', TRACKER_PEERS: trkA2.base, PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 12}.json`) });
+  const trkA2 = await startServer(PORT + 11, { TRACKER_MODE: '1', MESH_SERVER_ID: '6'.repeat(32), MESH_ANNOUNCE_MS: '150', PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 11}.json`), TRACKER_CACHE_FILE: path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 11}.json`) });
+  const trkB2 = await startServer(PORT + 12, { TRACKER_MODE: '1', MESH_SERVER_ID: '5'.repeat(32), MESH_ANNOUNCE_MS: '150', TRACKER_PEERS: trkA2.base, PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 12}.json`), TRACKER_CACHE_FILE: path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 12}.json`) });
   const mI = await startServer(PORT + 13, mkEnv(PORT + 13, '4'.repeat(32), { TRACKER_URL: trkA2.base, MESH_ANNOUNCE_MS: '150' }));
   const mJ = await startServer(PORT + 14, mkEnv(PORT + 14, '3'.repeat(32), { TRACKER_URL: trkB2.base, MESH_ANNOUNCE_MS: '150' }));
   await jpost('/session/start', { name: 'Ida', seed: 61 }, mI.base);
@@ -548,7 +548,7 @@ async function main() {
   const aclR = path.join(tmp, `r2h-acl-partition-${PORT}.json`);
   fs.writeFileSync(aclR, JSON.stringify({ mode: 'open' }));           // deterministic start (tmp persists across runs)
   for (const p of [17, 18, 19, 20, 21]) fs.rmSync(path.join(tmp, `r2h-peers-${PORT + p}.json`), { force: true }); // no stale bootstrap
-  const trkL = await startServer(PORT + 17, { TRACKER_MODE: '1', MESH_SERVER_ID: '4d'.repeat(16), PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 17}.json`) });
+  const trkL = await startServer(PORT + 17, { TRACKER_MODE: '1', MESH_SERVER_ID: '4d'.repeat(16), PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 17}.json`), TRACKER_CACHE_FILE: path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 17}.json`) });
   const mP = await startServer(PORT + 18, mkEnv(PORT + 18, idP, { TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150' }));
   const mQ = await startServer(PORT + 19, mkEnv(PORT + 19, idQ, { TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150' }));
   const mR = await startServer(PORT + 20, mkEnv(PORT + 20, idR, { TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150', MESH_ACL_FILE: aclR }));
@@ -1268,6 +1268,85 @@ async function main() {
   await sleep(1300);   // 5 tokens/s refill → ~6 tokens back
   const g2 = await jpost('/mesh/gossip', { serverId: 'zz' }, rl.base);
   check(g2.reason !== 'rate', 'the bucket refills — a peer that backs off is served again about a second later');
+
+  // ════════ (q) §MESH-01-FU 11–13 — ACL template · tracker persistence +
+  // federation bootstrap · chat backlog on join ════════
+  console.log('\n[Q] §MESH-01-FU 11–13 — ACL template · tracker cache + federation bootstrap · chat backlog');
+
+  // FU 11 — the committed template must be valid JSON that keeps the mesh open verbatim.
+  const aclEx = JSON.parse(fs.readFileSync(path.join(ROOT, 'mesh-acl.json.example'), 'utf8'));
+  check(aclEx.mode === 'open'
+    && ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes']
+      .every((k) => Array.isArray(aclEx[k]) && aclEx[k].length === 0),
+    'mesh-acl.json.example is valid JSON: mode open + all six allow/block lists present and empty (safe to copy verbatim)');
+  const aclQ = path.join(tmp, `r2h-acl-example-${process.pid}.json`);
+  fs.copyFileSync(path.join(ROOT, 'mesh-acl.json.example'), aclQ);
+  const mQ2 = await startServer(PORT + 38, mkEnv(PORT + 38, '6f'.repeat(16), { MESH_ACL_FILE: aclQ }));
+  check((await jget('/mesh/status', mQ2.base)).acl.mode === 'open', 'a server running the copied template reports acl mode open');
+  await sleep(20);
+  fs.writeFileSync(aclQ, '{ mode: allowlist ');   // malformed on purpose
+  check((await jget('/mesh/status', mQ2.base)).acl.mode === 'open', 'a malformed ACL file fails OPEN (the documented caveat), never half-applied');
+  await waitFor(() => /MESH ACL/.test(mQ2.stderr), 2000);
+  check(/MESH ACL/.test(mQ2.stderr) && /OPEN/.test(mQ2.stderr), 'the malformed-ACL fallback is warned loudly on the server console');
+
+  // FU 12 — announce-table persistence: the announcer speaks exactly ONCE (600s
+  // cadence), so anything served after the tracker restart can only be the cache.
+  const trkCache = path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 39}.json`);
+  fs.rmSync(trkCache, { force: true });
+  const trkEnvQ = { TRACKER_MODE: '1', MESH_SERVER_ID: '7a'.repeat(16), TRACKER_PERSIST_MS: '100',
+    TRACKER_CACHE_FILE: trkCache, PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${process.pid}-${PORT + 39}.json`) };
+  let trkQ = await startServer(PORT + 39, trkEnvQ);
+  await startServer(PORT + 40, mkEnv(PORT + 40, '8b'.repeat(16), { TRACKER_URL: trkQ.base, MESH_ANNOUNCE_MS: '600000' }));
+  await waitFor(() => { try { return (JSON.parse(fs.readFileSync(trkCache, 'utf8')).records || []).length >= 1; } catch { return false; } }, 5000, 50);
+  let cacheJ = {}; try { cacheJ = JSON.parse(fs.readFileSync(trkCache, 'utf8')); } catch {}
+  check((cacheJ.records || []).some((r) => r.addr === `localhost:${PORT + 40}`),
+    'the tracker persists its announce table to TRACKER_CACHE_FILE (throttled, dirty-flagged)');
+  trkQ.proc.kill('SIGTERM');
+  await waitFor(() => trkQ.proc.exitCode !== null, 3000);
+  trkQ = await startServer(PORT + 39, trkEnvQ);
+  const tpQ = await jget(`/tracker/peers?wh=${manA.worldHash}`, trkQ.base);
+  check(tpQ.count >= 1 && (tpQ.servers || []).some((sv) => sv.addr === `localhost:${PORT + 40}`),
+    'a restarted tracker serves the table from the cache immediately — no re-announce needed');
+
+  // FU 12 — federation bootstrap: a tracker wired ONLY by a `tracker <url>`
+  // text-file line (no --tracker-peer flag) still federates.
+  const bootSrv = http.createServer((_q, sres) => { sres.setHeader('Content-Type', 'text/plain'); sres.end(`# r2h bootstrap\ntracker ${trkQ.base}\n`); });
+  await new Promise((r) => bootSrv.listen(PORT + 42, '127.0.0.1', r));
+  const trkR = await startServer(PORT + 41, { TRACKER_MODE: '1', MESH_SERVER_ID: '9c'.repeat(16), MESH_ANNOUNCE_MS: '150',
+    BOOTSTRAP_URLS: `http://127.0.0.1:${PORT + 42}/boot.txt`,
+    TRACKER_CACHE_FILE: path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 41}.json`),
+    PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${process.pid}-${PORT + 41}.json`) });
+  let fedSeen = false;
+  for (let i = 0; i < 40 && !fedSeen; i++) {
+    await sleep(150);
+    fedSeen = (((await jget(`/tracker/peers?wh=${manA.worldHash}`, trkR.base)).servers) || []).some((sv) => sv.addr === `localhost:${PORT + 40}`);
+  }
+  check(fedSeen, 'a tracker bootstrapped only by a text file (tracker <url> line) federates and merges the peer tracker’s table');
+  check(((await jget('/mesh/status', trkR.base)).federationPeers || []).includes(trkQ.base),
+    'mesh/status on a tracker lists its federation peers (bootstrap-fed ones included)');
+  bootSrv.close();
+
+  // FU 13 — chat backlog on join: cell-scoped history on the one look surface.
+  const saya = await jpost('/session/start', { name: 'Saya', seed: 131 });
+  await jpost('/session/say', { sessionId: saya.sessionId, msg: 'backlog-one' });
+  await jpost('/session/say', { sessionId: saya.sessionId, msg: 'backlog-two' });
+  const newt = await jpost('/session/start', { name: 'Newt', seed: 132 });
+  const tailQ = (newt.chat || []).slice(-2);
+  check(tailQ.length === 2 && tailQ[0].msg === 'backlog-one' && tailQ[1].msg === 'backlog-two' && tailQ.every((l) => l.name === 'Saya'),
+    'session/start replays the last chat lines at the spawn cell, oldest→newest, attributed (join context)');
+  const lookQ = await jget(`/session/look?sessionId=${newt.sessionId}`);
+  check(JSON.stringify((lookQ.chat || []).slice(-2)) === JSON.stringify(tailQ), 'look serves the same backlog (one look surface, no per-route drift)');
+  const newtE = await jpost('/session/move', { sessionId: newt.sessionId, dir: 'E' });   // hub → BMA
+  check((newtE.chat || []).some((l) => l.msg === 'slums-solo') && !(newtE.chat || []).some((l) => /backlog-/.test(l.msg)),
+    'backlog is cell-scoped: BMA replays its own earlier chat, never the hub’s');
+  // Cross-server: Ben's [E] hub chat on server B must reach a fresh joiner's
+  // backlog on server A, tagged with its origin.
+  const lateQ = await jpost('/session/start', { name: 'LateQ', seed: 133 }, mA.base);
+  check((lateQ.chat || []).some((l) => l.msg === 'cross-server-hello' && l.server === 'b'.repeat(8)),
+    'cross-server chat lands in the backlog too, tagged with its origin server');
+  await jpost('/session/end', { sessionId: saya.sessionId });
+  await jpost('/session/end', { sessionId: newt.sessionId });
+  await jpost('/session/end', { sessionId: lateQ.sessionId }, mA.base);
 
   // ── teardown ──
   openClients.forEach(closeSSE);

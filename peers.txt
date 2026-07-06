@@ -2,7 +2,9 @@
 # One entry per line. Lines starting with # are ignored.
 #
 #   <host:port> [engineVer] [worldHash]     — a game server to gossip with
-#   tracker <url>                           — a tracker to announce to (§MESH-01d)
+#   tracker <url>                           — a tracker to announce to (§MESH-01d);
+#                                             in --tracker-mode this line instead names a
+#                                             FEDERATION peer to sync tables with (§MESH-01-FU 12)
 #
 # The full bootstrap ladder, in order:
 #   1. --peer host:port CLI flags

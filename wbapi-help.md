@@ -274,6 +274,7 @@ Full reference: `docs-node-network.md §12` + `lab-reports/lab-report-mesh-sync-
 ./wbapi-toggle.sh tracker [port]         # tracker role :1368 — rendezvous ONLY, never a relay
 node wbapi-server.js --peer host:1367 --bind 0.0.0.0 --advertise <lan-ip>:1367 --name "Hub"
 # Bootstrap ladder: --peer → MESH_PEERS → peers-cache.json → peers.txt → TRACKER_URL/BOOTSTRAP_URLS
+cp mesh-acl.json.example mesh-acl.json   # private/blocklisted mesh — commented template, hot-reloaded
 
 # Identity + world manifest (what forks a swarm: proto + engineVer + worldHash)
 curl http://localhost:1367/api/manifest
@@ -303,9 +304,27 @@ node scripts/world-diff.js a.html b.html --json    # machine-readable report (to
 npm run check:worlddiff                            # selftest (synthetic worlds; in CI)
 ```
 
-**ACL:** `mesh-acl.json` at repo root (or `MESH_ACL_FILE`), hot-reloaded on mtime —
+**ACL (§MESH-01-FU 11):** `mesh-acl.json` at repo root (or `MESH_ACL_FILE`), hot-reloaded on mtime —
 `{blockServerIds|blockIps|blockWorldHashes: [...]}` or `{"mode":"allowlist", allowServerIds: [...]}`.
-Applies to gossip ingress (403), dial-out, and tracker merges.
+Applies to gossip ingress (403), dial-out, tracker announce/sync merges, ledger sync/ingest, and the
+trade relay. **Start from the commented template:** `cp mesh-acl.json.example mesh-acl.json` — it is
+valid JSON as-is (`"//"`-keys are ignored comments) and documents every field. Caveat: a file that
+exists but fails `JSON.parse` **disables the ACL entirely (mesh OPEN)** — the server warns loudly on
+console and `mesh/status → acl.mode` shows `open`.
+
+**Tracker persistence + federation bootstrap (§MESH-01-FU 12):** a tracker persists its announce
+table to `tracker-cache.json` (or `TRACKER_CACHE_FILE`; throttle `TRACKER_PERSIST_MS`, default 30 s,
+dirty-flagged — an idle tracker never writes). On restart the records are re-aged by the downtime and
+restored through the same validation+ACL path as a live sync, so a QUICK restart serves peers
+immediately while a long outage honestly expires them. `tracker <url>` lines in `peers.txt` /
+`BOOTSTRAP_URLS` now also work **in tracker mode**: they become *federation* peers (before, federation
+was `--tracker-peer`/`TRACKER_PEERS` only) — `mesh/status → federationPeers` lists the merged set.
+
+**Chat backlog on join (§MESH-01-FU 13):** every look surface (`session/start`/`move`/`look`/`pos`)
+carries `chat: [{ts, name, msg, r, c, server?}]` — the last `MESH_CHAT_BACKLOG` (default 10, `0`
+disables, max 50) chat lines said *at that cell*, local + cross-server (origin-tagged), oldest→newest.
+The game client replays them once per connect/resume ("🕰 Earlier here:"); fresh lines still arrive
+live over SSE. Display-only, bounded (200-line ring), never consulted by the mover.
 
 **Rate limiting (§MESH-01-FU 8):** the unauthenticated server↔server POSTs
 (`mesh/gossip`, `tracker/announce`, `tracker/sync`, `ledger/sync`,
@@ -318,7 +337,7 @@ default 120); a healthy peer spends ~0.5 token/s, so the defaults leave ~60×
 headroom. Current config is surfaced in `GET /api/mesh/status → rate`, and
 the traffic ring logs one `rate` row per flood.
 
-**Test gate:** `npm run test:mud` — 239 checks incl. the [L] partition-heal harness, [P] rate limiting, and the `./api.sh mesh` CLI wrappers.
+**Test gate:** `npm run test:mud` — 251 checks incl. the [L] partition-heal harness, [P] rate limiting, the `./api.sh mesh` CLI wrappers, and [Q] ACL template / tracker cache+bootstrap / chat backlog (§MESH-01-FU 11–13).
 
 ---
 

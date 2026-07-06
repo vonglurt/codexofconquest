@@ -1,0 +1,19 @@
+{
+  "//":   "mesh-acl.json.example (§MESH-01-FU 11) — copy to mesh-acl.json beside wbapi-server.js to activate (or point MESH_ACL_FILE at it). Hot-reloaded on file mtime: edits apply on the next mesh packet, no restart. This copy is valid JSON as-is ('//'-prefixed keys are ignored comments); mode 'open' + empty blocklists = the server's default behavior. CAUTION: if the file exists but is NOT valid JSON, the ACL is disabled and the mesh is OPEN (the server warns loudly on console).",
+
+  "//0":  "Applied to every server-to-server surface: gossip ingress + responses, gossip dial-out, tracker announce, tracker federation sync (per merged record), ledger sync/ingest, and the cross-origin trade relay. Refusals answer 403 {reason:'acl'} and land in the Mesh-tab traffic ring. Players/sessions are NEVER ACL'd — this gates servers, not people.",
+
+  "//1":  "mode: 'open' (default — everyone compatible may sync, minus the blocklists) or 'allowlist' (private friends mesh — ONLY peers matching at least one allow* list may sync; blocklists still win).",
+  "mode": "open",
+
+  "//2":  "Block lists — always checked first, a match refuses even an allowlisted peer.",
+  "//3":  "serverId = the peer's 32-hex identity (GET /api/manifest → serverId, or ./api.sh mesh peers). ip = the raw socket address as the server sees it (may be IPv6-mapped, e.g. '::ffff:192.168.1.20' — check the traffic ring). worldHash = 16-hex world identity (blocks every server of that world).",
+  "blockServerIds": [],
+  "blockIps": [],
+  "blockWorldHashes": [],
+
+  "//4":  "Allow lists — consulted only in allowlist mode; ANY single match admits the peer.",
+  "allowServerIds": [],
+  "allowIps": [],
+  "allowWorldHashes": []
+}
