@@ -27267,8 +27267,13 @@ function _renderSentrySection() {
 }
 
 function _mpBase() {
-  try { return localStorage.getItem('mpServer') || 'http://localhost:1367'; }
-  catch { return 'http://localhost:1367'; }
+  // §MESH-01-REVIEW: a world downloaded from a friend is served from THAT
+  // server's origin — default there when the page has an http(s) origin.
+  // file:// pages keep the localhost dev default. An explicit localStorage
+  // choice (magnet Join / server browser) always wins over either.
+  const fallback = /^https?:$/.test(location.protocol) ? location.origin : 'http://localhost:1367';
+  try { return localStorage.getItem('mpServer') || fallback; }
+  catch { return fallback; }
 }
 async function _mpFetch(path, body) {
   const opts = body
@@ -27539,12 +27544,21 @@ function _mpRecomputeNearby() {
     return Math.abs(p.r - cr) <= 5 && Math.min(dc, GEO_PROJ.COLS - dc) <= 8;
   });
 }
+// §MESH-01-REVIEW: debounced ~100 ms — every remote player_moved rebuilds the
+// minimap DOM + 2 canvases, which churns with 10 movers; a burst of SSE events
+// coalesces into one repaint. MP.on is re-checked at fire time so a
+// disconnect inside the window paints nothing.
+let _mpRepaintTimer = null;
 function _mpRepaintMaps() {
-  if (!MP.on) return;
-  _mpRecomputeNearby();
-  _renderMiniMap();
-  _renderFullMap(S_story.playerR || 0, S_story.playerC || 0);
-  _renderGlobeMap();
+  if (!MP.on || _mpRepaintTimer) return;
+  _mpRepaintTimer = setTimeout(() => {
+    _mpRepaintTimer = null;
+    if (!MP.on) return;
+    _mpRecomputeNearby();
+    _renderMiniMap();
+    _renderFullMap(S_story.playerR || 0, S_story.playerC || 0);
+    _renderGlobeMap();
+  }, 100);
 }
 
 // ── §MESH-01-FU 2 — join-by-magnet + server browser ─────────────────────────
