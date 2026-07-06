@@ -1049,6 +1049,67 @@ async function main() {
   check(gilOwned.ok === true && !gilOwned.items.some((t) => t.mintKey === gm.mintKey),
     'ledger/owned no longer lists the item for the giver after the trade');
 
+  // ── [I3] §MESH-01i last rung — CROSS-ORIGIN co-signed trades ──────────────
+  // Parties on different servers: gil lives on gA, Ben on gB (peered, real
+  // gossip). The propose relays gA→gB, the accept relays back, and gA (the
+  // proposer's origin) authors ONE event co-signed by both origins; gC (a
+  // third server) replays it to the same verdict.
+  console.log('\n[I3] §MESH-01i — cross-origin co-signed trades (propose/accept relay, dual-origin sig)');
+
+  const benX = await jpost('/session/start', { name: 'Ben', seed: 99, playerKey: 'ef56'.repeat(8) }, gB.base);
+  check(benX.ok === true && benX.ledgerPid.split(':')[0] === gid(4).slice(0, 8), 'Ben holds a durable identity on HIS origin (gB)');
+
+  // (1) presence carries the remote trade identity: Ben's p8 rides gB→gA gossip.
+  await jpost('/session/pos', { sessionId: benX.sessionId, r: gil.r, c: gil.c }, gB.base);
+  check(await until(async () => {
+    const p = await jpost('/session/pos', { sessionId: gil.sessionId, r: gil.r, c: gil.c }, gA.base);
+    return (p.players || []).some((q) => q.ledgerPid === benX.ledgerPid && q.server);
+  }), 'the co-present roster on A carries the REMOTE player’s ledgerPid (p8 rides the presence snapshot)');
+
+  // (2) mints on each origin, then the cross-origin swap.
+  const swordM = await jpost('/ledger/mint', { sessionId: gil.sessionId, item: { key: 'sword', name: 'Sword' } }, gA.base);
+  const shieldM = await jpost('/ledger/mint', { sessionId: benX.sessionId, item: { key: 'shield', name: 'Shield' } }, gB.base);
+  const benSSE = await openSSE(benX.sessionId, gB.base);
+  openClients.push(benSSE);
+  const xp = await jpost('/trade/propose', { sessionId: gil.sessionId, to: benX.ledgerPid, give: [swordM.mintKey], want: [shieldM.mintKey] }, gA.base);
+  check(xp.ok === true && xp.remote === true, 'a cross-origin proposal validates (vv pull covers the fresh foreign mint) and relays to the counterparty’s origin');
+  check((await jget(`/trade/list?pid=${benX.ledgerPid}`, gB.base)).count === 1, 'the pending offer exists on the counterparty’s origin');
+  check(await waitFor(() => countEv(benSSE, 'trade_proposed', (d) => d.tradeId === xp.tradeId) === 1, 4000),
+    'the counterparty is notified over SSE on THEIR server');
+
+  // (3) only the counterparty, on their own origin, may accept.
+  const wrong = await jpost('/trade/accept', { tradeId: xp.tradeId, sessionId: hal.sessionId }, gA.base);
+  check(wrong.ok === false, 'a third player on the proposer origin cannot accept the cross-origin offer');
+  const xa = await jpost('/trade/accept', { tradeId: xp.tradeId, sessionId: benX.sessionId }, gB.base);
+  check(xa.ok === true && xa.event && xa.event.id[0] === gid(3), 'the accept relays back and the PROPOSER’s origin authors the one trade event');
+  check(xa.event && Object.keys(xa.event.sig || {}).sort().join(',') === [gid(3), gid(4)].sort().join(','),
+    'the event carries BOTH origins’ signatures (co-signed)');
+  check(xa.event && !!xa.event.chain[gil.ledgerPid] && !!xa.event.chain[benX.ledgerPid],
+    'the event links BOTH players’ chains (dual-membership across origins)');
+  check(await waitFor(() => countEv(benSSE, 'trade_completed', (d) => d.tradeId === xp.tradeId) === 1, 4000),
+    'the accepting party hears trade_completed exactly once (ingest-hook SSE, hash-deduped)');
+
+  // (4) the swap converges to the identical verdict on A, B and bystander C.
+  check(await until(async () => (await jget(`/ledger/owner?mintId=${swordM.mintKey}`, gA.base)).owner === benX.ledgerPid
+      && (await jget(`/ledger/owner?mintId=${shieldM.mintKey}`, gA.base)).owner === gil.ledgerPid),
+    'ownership flips BOTH ways on the proposer origin');
+  check(await until(async () => (await jget(`/ledger/owner?mintId=${swordM.mintKey}`, gB.base)).owner === benX.ledgerPid
+      && (await jget(`/ledger/owner?mintId=${shieldM.mintKey}`, gB.base)).owner === gil.ledgerPid),
+    'the counterparty origin agrees');
+  check(await until(async () => (await jget(`/ledger/owner?mintId=${swordM.mintKey}`, gC.base)).owner === benX.ledgerPid),
+    'a third server replays the co-signed event to the same owner (no coordination)');
+
+  // (5) cancel relays: the pending copy disappears on the OTHER origin too.
+  const xp2 = await jpost('/trade/propose', { sessionId: gil.sessionId, to: benX.ledgerPid, give: [], want: [swordM.mintKey] }, gA.base);
+  check(xp2.ok === true, 'a second cross-origin proposal (want-only, the traded sword) is accepted');
+  await jpost('/trade/cancel', { tradeId: xp2.tradeId }, gA.base);
+  check(await until(async () => (await jget(`/trade/list?pid=${benX.ledgerPid}`, gB.base)).count === 0),
+    'a cancel on the proposer origin relays — the counterparty’s pending copy goes too');
+
+  // (6) an unknown / never-gossiped origin is refused up front.
+  const badX = await jpost('/trade/propose', { sessionId: gil.sessionId, to: 'deadbeef:cafebabe', give: [shieldM.mintKey], want: [] }, gA.base);
+  check(badX.ok === false && badX.reason === 'peer-unreachable', 'a counterparty on an unknown origin is refused with a clear peer-unreachable error');
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});

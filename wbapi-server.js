@@ -198,8 +198,11 @@ function getServerId() {
 // gossip channel — ledger version vectors piggyback on presence gossip
 // payloads (`ledgerVV`); a mismatch triggers anti-entropy per-origin range
 // PULL (POST /api/ledger/sync) and/or PUSH (POST /api/ledger/ingest), so
-// replication converges regardless of which side is dialable. Cross-ORIGIN
-// co-signed trades (both origins sig one event) remain the next rung.
+// replication converges regardless of which side is dialable. CROSS-ORIGIN
+// co-signed trades (the last rung): parties on different servers — the
+// proposer's origin relays the offer to the counterparty's origin over
+// POST /api/trade/relay, the accept relays back, and the proposer's origin
+// authors ONE event carrying both origins' sigs + both players' chain links.
 const LEDGER_DIR = process.env.LEDGER_DIR || path.join(__dirname, 'ledger');
 const TRADE_TTL = parseInt(process.env.LEDGER_TRADE_TTL_MS || '', 10) || 60 * 1000;
 const LEDGER = {
@@ -316,10 +319,12 @@ function ledgerAppend(evt) {
 
 // Author a new event on THIS origin: assign [serverId, ++seq], link each
 // participant's chain tip, sign, hash, persist. Single-writer holds — this is
-// the only author of our origin's events. In the single-server slice both
-// trade parties share this origin, so `sig` carries one entry; cross-origin
-// trades (next rung) add the counterparty origin's sig.
-function ledgerEvent(kind, pids, body) {
+// the only author of our origin's events. Cross-origin trades pass the
+// counterparty origin as a cosigner: sig then carries BOTH origins (§6.1 —
+// the HMAC key is the public serverId, so either side can compute either
+// entry; the counterparty's ASSENT is the relayed accept itself, and the
+// second sig makes the event self-verify against both origins at any ingest).
+function ledgerEvent(kind, pids, body, cosigners = []) {
   ledgerLoad();
   const oid = getServerId();
   const evt = { kind, id: [oid, LEDGER.seq + 1], ts: Date.now(), chain: {}, body, sig: {} };
@@ -329,6 +334,7 @@ function ledgerEvent(kind, pids, body) {
   }
   if (kind === 'mint') evt.body = { ...body, mintId: evt.id };   // mintId === event.id (§6.2)
   evt.sig[oid] = ledgerSigOf(evt, oid);
+  for (const cid of cosigners) if (cid && cid !== oid) evt.sig[cid] = ledgerSigOf(evt, cid);
   evt.hash = ledgerHashOf(evt);
   ledgerAppend(evt);
   return evt;
@@ -362,6 +368,13 @@ function ledgerIngestEvents(events) {
     if (evt.id[0] === getServerId()) { rejected.push({ hash: evt.hash, reason: 'own-origin' }); continue; }   // single-writer: nobody authors OUR events
     ledgerAppend(evt);
     accepted++;
+    // §MESH-01i cross-origin trades: a locally-hosted party hears about their
+    // trade on FIRST ingest, whichever channel delivered it (the relay-accept
+    // response or, if that reply was lost, the durable gossip catch-up).
+    // Hash-dedup above guarantees this fires at most once per event.
+    if (evt.kind === 'trade' && evt.body.tradeId)
+      for (const pid of Object.keys(evt.chain || {}))
+        ledgerNotifyPid(pid, 'trade_completed', { tradeId: evt.body.tradeId, event: evt });
   }
   return { accepted, dup, rejected };
 }
@@ -383,14 +396,15 @@ function ledgerEventsSince(vv, cap = LEDGER_SYNC_CAP) {
   out.sort((a, b) => (a.id[0] < b.id[0] ? -1 : a.id[0] > b.id[0] ? 1 : a.id[1] - b.id[1]));
   return { events: out.slice(0, cap), truncated: out.length > cap };
 }
-const _ledgerSyncBusy = new Set();
+const _ledgerSyncBusy = new Map();   // addr → in-flight promise (awaitable, so a trade relay can block on it)
 async function ledgerSyncWith(addr, peerVV) {
-  if (!addr || _ledgerSyncBusy.has(addr)) return;
+  if (!addr) return;
+  if (_ledgerSyncBusy.has(addr)) return _ledgerSyncBusy.get(addr);
   const ours = ledgerVVObj();
   const peerHasMore = Object.entries(peerVV || {}).some(([o, q]) => q > (ours[o] || 0));
   const missing = ledgerEventsSince(peerVV);
   if (!peerHasMore && !missing.events.length) return;
-  _ledgerSyncBusy.add(addr);
+  const run = (async () => {
   try {
     const m = getManifest();
     if (peerHasMore) {
@@ -417,6 +431,39 @@ async function ledgerSyncWith(addr, peerVV) {
   } catch (e) {
     pushTraffic('out', 'ledger', addr, false, e.code || 'unreachable');
   } finally { _ledgerSyncBusy.delete(addr); }
+  })();
+  _ledgerSyncBusy.set(addr, run);
+  return run;
+}
+// §MESH-01i cross-origin trades: one direct PULL from a specific peer — POST
+// their /api/ledger/sync with our vv, ingest what comes back. Used by a
+// cross-origin propose to see the counterparty's freshest mints before the
+// ownership verdict (the background channel would deliver them a round later).
+async function ledgerPullFrom(addr) {
+  const m = getManifest();
+  const resp = await fetch(`http://${addr}/api/ledger/sync`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
+      worldHash: m.worldHash, addr: meshAdvertise(), vv: ledgerVVObj() }),
+    signal: AbortSignal.timeout(5000),
+  });
+  const data = await resp.json().catch(() => ({}));
+  if (resp.ok && data.ok) {
+    const r = ledgerIngestEvents(data.events);
+    if (r.accepted) pushTraffic('in', 'ledger', addr, true, `pulled ${r.accepted} ev (pre-trade)`);
+  }
+}
+// §MESH-01i cross-origin trades: block until our replica COVERS the caller's
+// advertised frontier (an in-flight background sync may have started before
+// the peer's newest events, so awaiting it once is not enough — re-check and
+// re-pull, bounded). Used by the trade relay before any ownership verdict.
+async function ledgerSyncCover(addr, peerVV) {
+  for (let i = 0; i < 3; i++) {
+    const ours = ledgerVVObj();
+    if (!Object.entries(peerVV || {}).some(([o, q]) => q > (ours[o] || 0))) return true;
+    await ledgerSyncWith(addr, peerVV);
+  }
+  return !Object.entries(peerVV || {}).some(([o, q]) => q > (ledgerVVObj()[o] || 0));
 }
 
 // ── Ownership resolution + fork-choice — a PURE function of LEDGER.events ────
@@ -605,16 +652,30 @@ function emitMeshEvent(type, data, r, c) {
   if (MESH.log.length > 500) MESH.log.shift();
 }
 function localSnapshot() {
-  return { seq: MESH.seq, sessions: [...SESSIONS.values()].map((s) => ({ sid: s.id, name: s.playerName, r: s.r, c: s.c })) };
+  // p8 — §MESH-01i cross-origin trades: the durable identity half rides the
+  // presence snapshot so remote rosters can offer the ⇄ trade target
+  // (ledgerPid = origin8:p8). Presence itself stays session-keyed/display-only.
+  return { seq: MESH.seq, sessions: [...SESSIONS.values()].map((s) => ({ sid: s.id, name: s.playerName, r: s.r, c: s.c, p8: s.player8 || null })) };
 }
 function remotePlayersAt(r, c) {
   const out = [], now = Date.now();
   for (const [oid, rec] of MESH.remote) {
     if (now - rec.lastSeen > MESH_ORIGIN_TTL) continue;
     for (const [sid, p] of rec.sessions)
-      if (p.r === r && p.c === c) out.push({ id: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, pid: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, server: oid.slice(0, 8) });
+      if (p.r === r && p.c === c) out.push({ id: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, pid: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, server: oid.slice(0, 8),
+        ...(p.p8 ? { ledgerPid: `${oid.slice(0, 8)}:${p.p8}` } : {}) });   // §MESH-01i: cross-origin trade target
   }
   return out;
+}
+// §MESH-01i cross-origin trades: resolve a pid's origin8 to a dialable peer
+// (freshest gossip win). Trades relay server↔server, so an origin we have
+// never successfully gossiped with is not a valid trade counterparty yet.
+function meshAddrForOrigin8(o8) {
+  let best = null;
+  for (const [addr, rec] of MESH.peers)
+    if (rec.serverId && rec.serverId.slice(0, 8) === o8 && rec.lastSeen && (!best || rec.lastSeen > best.lastSeen))
+      best = { addr, serverId: rec.serverId, lastSeen: rec.lastSeen };
+  return best;
 }
 function meshMergeEvents(originId, events) {
   const now = Date.now();
@@ -641,7 +702,7 @@ function meshMergeSnapshot(originId, snap) {
   if (snap.seq < rec.snapSeq) return;   // stale snapshot from an older round
   rec.snapSeq = snap.seq;
   rec.lastSeen = Date.now();
-  rec.sessions = new Map((snap.sessions || []).map((s) => [s.sid, { name: s.name, r: s.r, c: s.c }]));
+  rec.sessions = new Map((snap.sessions || []).map((s) => [s.sid, { name: s.name, r: s.r, c: s.c, p8: s.p8 || null }]));
 }
 function meshPayload() {
   const m = getManifest();
@@ -8625,8 +8686,9 @@ async function route(req, res) {
         if (id2 !== s.id && s2.r === s.r && s2.c === s.c)
           // ledgerPid — §MESH-01i slice 2b: the co-present list is the trade
           // target picker, and trades key on the LEDGER pid (durable when the
-          // player presented a playerKey), not the presence pid. Local
-          // sessions only: cross-origin trades are the rung after slice 2.
+          // player presented a playerKey), not the presence pid. Remote
+          // entries carry theirs too (p8 rides the presence snapshot), so the
+          // ⇄ button works across origins — the propose then relays.
           players.push({ id: id2, pid: pidOf(id2), ledgerPid: ledgerPidOf(id2), name: s2.playerName, kind: s2.kind || 'player' });
       players.push(...remotePlayersAt(s.r, s.c));   // §MESH-01c: replicated same-world peers
       // §NAV-01f — the L4 room object (icon/title/sub/prose/exits/signposts/
@@ -9197,8 +9259,14 @@ async function route(req, res) {
   // ── §MESH-01i: Trade handshake — two-phase, ONE co-signed event on accept ─
   // propose/cancel are ephemeral (no event); accept validates ownership of
   // every transfer, then appends a single dual-chain trade event (both
-  // players' {height,prevHash} linkage) and gossips it. In this single-server
-  // slice both parties live on this origin, so one origin sig covers the event.
+  // players' {height,prevHash} linkage) and gossips it. Same-origin parties:
+  // one origin sig covers the event. CROSS-ORIGIN parties (the last rung):
+  // the proposer's origin relays the offer to the counterparty's origin
+  // (/api/trade/relay op:propose — that server hosts their session + SSE),
+  // the accept relays back (op:accept), and the PROPOSER'S ORIGIN authors the
+  // one event co-signed by both origins. Every relay leg carries the caller's
+  // ledger vv and both sides pull-before-validate, so a propose right after a
+  // fresh mint never races replication.
   if (parts[0] === 'trade') {
     sessionPrune();
     tradePrune();
@@ -9253,6 +9321,23 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, 'trade/propose: empty trade');
         return json(res, 400, { ok: false, error: 'body.give and/or body.want (mintId lists) required.' });
       }
+      // §MESH-01i cross-origin: the counterparty lives on another origin.
+      // Resolve their server FIRST and pull its ledger frontier, so a mint
+      // made there seconds ago is visible to the ownership verdict below;
+      // then relay the offer to THEIR server (it hosts their session + SSE)
+      // and remember the peer so accept/cancel route back. Their side
+      // re-validates ownership on its own replica before listing the offer.
+      const toO8 = to.split(':')[0];
+      const crossOrigin = to.includes(':') && toO8 !== getServerId().slice(0, 8);
+      let peer = null;
+      if (crossOrigin) {
+        peer = meshAddrForOrigin8(toO8);
+        if (!peer) {
+          logResponse(method, url.pathname, 502, `trade/propose: origin ${toO8} not dialable`);
+          return json(res, 502, { ok: false, error: `The counterparty's server (origin ${toO8}) is not a known dialable mesh peer — trades need both servers reachable.`, reason: 'peer-unreachable' });
+        }
+        await ledgerPullFrom(peer.addr).catch(() => {});
+      }
       const { owners } = ledgerResolve();
       const bad = checkOwnership(give, from, owners) || checkOwnership(want, to, owners);
       if (bad) {
@@ -9260,6 +9345,31 @@ async function route(req, res) {
         return json(res, 409, { ok: false, error: bad, reason: 'provenance' });
       }
       const tradeId = crypto.randomBytes(16).toString('hex');
+      if (crossOrigin) {
+        const m = getManifest();
+        let relayed = null;
+        try {
+          const resp = await fetch(`http://${peer.addr}/api/trade/relay`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ op: 'propose', serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
+              worldHash: m.worldHash, addr: meshAdvertise(), vv: ledgerVVObj(),
+              tradeId, from, to, give, want, ttlMs: TRADE_TTL }),
+            signal: AbortSignal.timeout(5000),
+          });
+          relayed = await resp.json().catch(() => ({}));
+        } catch (e) { relayed = { ok: false, error: (e && e.name === 'TimeoutError') ? 'timeout' : (e && e.code) || 'unreachable' }; }
+        if (!relayed || relayed.ok !== true) {
+          pushTraffic('out', 'trade', peer.addr, false, `propose relay refused: ${relayed && (relayed.error || relayed.reason) || '?'}`);
+          logResponse(method, url.pathname, 502, `trade/propose relay refused: ${relayed && (relayed.error || relayed.reason)}`);
+          return json(res, 502, { ok: false, error: `The counterparty's server refused the proposal: ${relayed && (relayed.error || relayed.reason) || 'unreachable'}`, reason: relayed && relayed.reason || 'relay-failed' });
+        }
+        TRADES.set(tradeId, { from, to, give, want, expires: Date.now() + TRADE_TTL,
+          remote: { originId: peer.serverId, addr: peer.addr, role: 'proposer' } });
+        pushTraffic('out', 'trade', peer.addr, true, `propose ${tradeId.slice(0, 8)}… relayed → ${to}`);
+        logRow('trade', `propose ${tradeId.slice(0, 8)}…  ·  ${from} → ${to} (cross-origin via ${peer.addr})  ·  give ${give.length} / want ${want.length}`);
+        logResponse(method, url.pathname, 201, `cross-origin trade proposed ${from} → ${to}`);
+        return json(res, 201, { ok: true, tradeId, from, to, give, want, ttlMs: TRADE_TTL, remote: true });
+      }
       TRADES.set(tradeId, { from, to, give, want, expires: Date.now() + TRADE_TTL });
       ledgerNotifyPid(to, 'trade_proposed', { tradeId, from, to, give, want, ttlMs: TRADE_TTL });
       logRow('trade', `propose ${tradeId.slice(0, 8)}…  ·  ${from} → ${to}  ·  give ${give.length} / want ${want.length}`);
@@ -9280,6 +9390,46 @@ async function route(req, res) {
         return json(res, 403, { ok: false, error: 'Only the proposed counterparty session may accept this trade.' });
       }
       s.lastSeen = Date.now();
+      // §MESH-01i cross-origin: we host the COUNTERPARTY of an offer relayed
+      // in from the proposer's origin. That origin authors the one co-signed
+      // event — relay the accept back (with our ledger frontier, so it can
+      // pull anything we hold that it hasn't replicated yet), then ingest the
+      // returned event. The ingest hook fires trade_completed to our party;
+      // if the reply is lost after the event was authored, durable gossip
+      // back-fills it and the same hook still fires exactly once.
+      if (t.remote && t.remote.role === 'acceptor') {
+        const m = getManifest();
+        let data = null;
+        try {
+          const resp = await fetch(`http://${t.remote.addr}/api/trade/relay`, {
+            method: 'POST', headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ op: 'accept', serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
+              worldHash: m.worldHash, addr: meshAdvertise(), vv: ledgerVVObj(),
+              tradeId: body.tradeId, by: t.to }),
+            signal: AbortSignal.timeout(8000),
+          });
+          data = await resp.json().catch(() => ({}));
+        } catch (e) { data = { ok: false, error: (e && e.name === 'TimeoutError') ? 'timeout' : (e && e.code) || 'unreachable' }; }
+        if (!data || data.ok !== true || !data.event) {
+          // Provenance rejections are final (the proposer origin dropped the
+          // trade); transport failures keep the offer pending until TTL.
+          if (data && data.reason === 'provenance') TRADES.delete(body.tradeId);
+          pushTraffic('out', 'trade', t.remote.addr, false, `accept relay failed: ${data && (data.error || data.reason) || '?'}`);
+          logResponse(method, url.pathname, 502, `trade/accept relay failed: ${data && (data.error || data.reason)}`);
+          return json(res, 502, { ok: false, error: `The proposer's server did not confirm the trade: ${data && (data.error || data.reason) || 'unreachable'}`, reason: data && data.reason || 'relay-failed' });
+        }
+        const ing = ledgerIngestEvents([data.event]);   // fires trade_completed to our local party
+        if (ing.accepted !== 1 && !ing.dup) {
+          pushTraffic('out', 'trade', t.remote.addr, false, `co-signed event failed validation: ${JSON.stringify(ing.rejected)}`);
+          logResponse(method, url.pathname, 502, 'trade/accept: returned event failed validation');
+          return json(res, 502, { ok: false, error: 'The proposer\'s server returned an event that failed validation — trade not applied here.', reason: 'bad-event' });
+        }
+        TRADES.delete(body.tradeId);
+        pushTraffic('out', 'trade', t.remote.addr, true, `accept ${body.tradeId.slice(0, 8)}… ⇄ co-signed evt ${String(data.event.hash).slice(0, 12)}…`);
+        logRow('trade', `accept ${body.tradeId.slice(0, 8)}… (cross-origin)  ·  evt ${String(data.event.hash).slice(0, 12)}…`);
+        logResponse(method, url.pathname, 201, 'cross-origin trade accepted');
+        return json(res, 201, { ok: true, tradeId: body.tradeId, event: data.event });
+      }
       // Re-validate ownership AT ACCEPT (it may have moved since propose),
       // and capture each item's current owning-event hash as priorEventHash.
       const { owners } = ledgerResolve();
@@ -9310,14 +9460,133 @@ async function route(req, res) {
         return json(res, 404, { ok: false, error: 'Trade not found (expired, already cancelled, or bad tradeId).' });
       }
       TRADES.delete(body.tradeId);
+      // §MESH-01i cross-origin: tell the other origin so ITS pending copy and
+      // party notification go too (best-effort — TTL expiry is the backstop).
+      if (t.remote && t.remote.addr) {
+        const m = getManifest();
+        fetch(`http://${t.remote.addr}/api/trade/relay`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ op: 'cancel', serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
+            worldHash: m.worldHash, addr: meshAdvertise(), tradeId: body.tradeId }),
+          signal: AbortSignal.timeout(3000),
+        }).catch(() => {});
+      }
       ledgerNotifyPid(t.from, 'trade_cancelled', { tradeId: body.tradeId });
       ledgerNotifyPid(t.to, 'trade_cancelled', { tradeId: body.tradeId });
       logResponse(method, url.pathname, 200, `trade cancelled`);
       return json(res, 200, { ok: true, cancelled: body.tradeId });
     }
 
+    // ── POST /api/trade/relay — server↔server leg of a CROSS-ORIGIN trade ──
+    // Never called by a browser client. Same compat + ACL gate as presence
+    // gossip / ledger sync; the caller's ledger frontier (body.vv) is pulled
+    // BEFORE any ownership verdict so fresh mints on the other side are
+    // visible here. Ops: propose (offer relayed in — we host the counterparty),
+    // accept (relayed back — WE proposed, so we author + co-sign the event),
+    // cancel (drop our pending copy).
+    if (sub === 'relay') {
+      const m = getManifest();
+      const ip = req.socket.remoteAddress;
+      const rFrom = (body && body.addr) || ip;
+      if (!body || body.proto !== m.proto || body.engineVer !== m.engineVer || body.worldHash !== m.worldHash) {
+        pushTraffic('in', 'trade', rFrom, false, `relay refused: incompatible (${body && body.engineVer}/${String(body && body.worldHash).slice(0, 8)})`);
+        logResponse(method, url.pathname, 409, 'trade/relay: incompatible');
+        return json(res, 409, { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash } });
+      }
+      if (!/^[0-9a-f]{32}$/.test(body.serverId || '') || body.serverId === getServerId()) {
+        logResponse(method, url.pathname, 400, 'trade/relay: bad serverId');
+        return json(res, 400, { ok: false, reason: 'bad-serverId' });
+      }
+      if (!aclAllows({ serverId: body.serverId, ip, worldHash: body.worldHash })) {
+        pushTraffic('in', 'trade', rFrom, false, `relay refused: ACL (${body.serverId.slice(0, 8)})`);
+        logResponse(method, url.pathname, 403, 'trade/relay: ACL');
+        return json(res, 403, { ok: false, reason: 'acl' });
+      }
+      if (body.vv && body.addr) await ledgerSyncCover(body.addr, body.vv).catch(() => {});
+
+      if (body.op === 'propose') {
+        const tradeId = String(body.tradeId || '');
+        const pFrom = String(body.from || ''), pTo = String(body.to || '');
+        const give = Array.isArray(body.give) ? body.give.map(mintKeyOf) : [];
+        const want = Array.isArray(body.want) ? body.want.map(mintKeyOf) : [];
+        if (!/^[0-9a-f]{32}$/.test(tradeId) || !pFrom || !pTo) {
+          logResponse(method, url.pathname, 400, 'trade/relay propose: tradeId/from/to required');
+          return json(res, 400, { ok: false, error: 'tradeId (32 hex), from and to required' });
+        }
+        if (pFrom.split(':')[0] !== body.serverId.slice(0, 8)) {
+          logResponse(method, url.pathname, 403, 'trade/relay propose: pid/origin mismatch');
+          return json(res, 403, { ok: false, error: 'proposer pid does not belong to the relaying origin' });
+        }
+        if (pTo.split(':')[0] !== getServerId().slice(0, 8)) {
+          logResponse(method, url.pathname, 404, 'trade/relay propose: counterparty not hosted here');
+          return json(res, 404, { ok: false, error: 'counterparty pid is not hosted on this origin' });
+        }
+        const { owners } = ledgerResolve();
+        const bad = checkOwnership(give, pFrom, owners) || checkOwnership(want, pTo, owners);
+        if (bad) {
+          logResponse(method, url.pathname, 409, `trade/relay propose refused: ${bad}`);
+          return json(res, 409, { ok: false, error: bad, reason: 'provenance' });
+        }
+        const ttl = Math.min(Math.max(+body.ttlMs || TRADE_TTL, 1000), TRADE_TTL);
+        TRADES.set(tradeId, { from: pFrom, to: pTo, give, want, expires: Date.now() + ttl,
+          remote: { originId: body.serverId, addr: body.addr || null, role: 'acceptor' } });
+        ledgerNotifyPid(pTo, 'trade_proposed', { tradeId, from: pFrom, to: pTo, give, want, ttlMs: ttl });
+        pushTraffic('in', 'trade', rFrom, true, `propose ${tradeId.slice(0, 8)}… relayed in · ${pFrom} → ${pTo}`);
+        logRow('trade', `propose ${tradeId.slice(0, 8)}…  ·  ${pFrom} → ${pTo} (relayed in from ${body.serverId.slice(0, 8)})`);
+        logResponse(method, url.pathname, 201, `cross-origin proposal relayed in`);
+        return json(res, 201, { ok: true, tradeId });
+      }
+
+      if (body.op === 'accept') {
+        const t = body.tradeId && TRADES.get(body.tradeId);
+        if (!t || !t.remote || t.remote.role !== 'proposer') {
+          logResponse(method, url.pathname, 404, 'trade/relay accept: not found');
+          return json(res, 404, { ok: false, error: 'Trade not found here (expired, cancelled, or not proposed from this origin).' });
+        }
+        if (t.remote.originId !== body.serverId || body.by !== t.to) {
+          logResponse(method, url.pathname, 403, 'trade/relay accept: not the counterparty origin');
+          return json(res, 403, { ok: false, error: 'Only the counterparty\'s origin may relay the accept, for its own hosted pid.' });
+        }
+        const { owners } = ledgerResolve();
+        const bad = checkOwnership(t.give, t.from, owners) || checkOwnership(t.want, t.to, owners);
+        if (bad) {
+          TRADES.delete(body.tradeId);
+          logResponse(method, url.pathname, 409, `trade/relay accept refused: ${bad}`);
+          return json(res, 409, { ok: false, error: bad, reason: 'provenance' });
+        }
+        const transfers = [
+          ...t.give.map((key) => ({ mintId: key.split(':').map((v, i) => i ? +v : v), from: t.from, to: t.to, priorEventHash: owners.get(key).tipHash })),
+          ...t.want.map((key) => ({ mintId: key.split(':').map((v, i) => i ? +v : v), from: t.to, to: t.from, priorEventHash: owners.get(key).tipHash })),
+        ];
+        const evt = ledgerEvent('trade', [t.from, t.to], { tradeId: body.tradeId, parties: [t.from, t.to], transfers }, [body.serverId]);
+        TRADES.delete(body.tradeId);
+        ledgerNotifyPid(t.from, 'trade_completed', { tradeId: body.tradeId, event: evt });
+        pushTraffic('in', 'trade', rFrom, true, `accept ${String(body.tradeId).slice(0, 8)}… ⇄ authored co-signed evt ${evt.hash.slice(0, 12)}…`);
+        logRow('trade', `accept ${String(body.tradeId).slice(0, 8)}… (relayed in)  ·  ${transfers.length} transfer(s)  ·  evt ${evt.hash.slice(0, 12)}… co-signed by ${body.serverId.slice(0, 8)}`);
+        logResponse(method, url.pathname, 201, `cross-origin trade accepted: ${transfers.length} transfer(s)`);
+        return json(res, 201, { ok: true, tradeId: body.tradeId, event: evt });
+      }
+
+      if (body.op === 'cancel') {
+        const t = body.tradeId && TRADES.get(body.tradeId);
+        if (!t || !t.remote || t.remote.originId !== body.serverId) {
+          logResponse(method, url.pathname, 404, 'trade/relay cancel: not found');
+          return json(res, 404, { ok: false, error: 'Trade not found here.' });
+        }
+        TRADES.delete(body.tradeId);
+        ledgerNotifyPid(t.from, 'trade_cancelled', { tradeId: body.tradeId });
+        ledgerNotifyPid(t.to, 'trade_cancelled', { tradeId: body.tradeId });
+        pushTraffic('in', 'trade', rFrom, true, `cancel ${String(body.tradeId).slice(0, 8)}… relayed in`);
+        logResponse(method, url.pathname, 200, 'cross-origin trade cancelled');
+        return json(res, 200, { ok: true, cancelled: body.tradeId });
+      }
+
+      logResponse(method, url.pathname, 400, `trade/relay: unknown op "${body.op}"`);
+      return json(res, 400, { ok: false, error: 'body.op must be propose | accept | cancel' });
+    }
+
     logResponse(method, url.pathname, 404, `unknown trade sub-route "${sub}"`);
-    return json(res, 404, { error: `Unknown trade sub-route "${sub}"`, available: ['propose', 'accept', 'cancel', 'list'] });
+    return json(res, 404, { error: `Unknown trade sub-route "${sub}"`, available: ['propose', 'accept', 'cancel', 'list', 'relay'] });
   }
 
   // ── Single entity ─────────────────────────────────────────────────────────

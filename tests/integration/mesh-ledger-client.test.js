@@ -271,3 +271,108 @@ test.describe('§MESH-01i slice 2b — end-to-end trade (two real clients)', () 
     await b.ctx.close();
   });
 });
+
+// ── End-to-end: CROSS-ORIGIN trade — two real clients on two peered servers ──
+// The §MESH-01i last rung through the actual UI: the counterparty's ⇄ button
+// comes from a REMOTE presence entry (p8 rides the gossip snapshot), the
+// propose relays proposer-origin → counterparty-origin, the accept relays
+// back, ONE event carries both origins' sigs, and BOTH ledgers resolve the
+// item to its new owner. Protocol internals are gated by mud-harness [I3].
+const XO_PORT_A = 13894, XO_PORT_B = 13895;
+let xoSrvs = [];
+
+test.describe('§MESH-01i last rung — cross-origin co-signed trade (two servers, two real clients)', () => {
+  test.beforeAll(async () => {
+    const spawnSrv = (port, sid, extra = {}) => {
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'r2h-xo-'));
+      return spawn(process.execPath, ['wbapi-server.js'], {
+        env: { ...process.env, PORT: String(port), MESH_SERVER_ID: sid, LEDGER_DIR: dir,
+          ADVERTISE_ADDR: `localhost:${port}`, MESH_GOSSIP_MS: '120',
+          PEERS_CACHE_FILE: path.join(dir, 'peers-cache.json'), ...extra },
+        stdio: 'ignore',
+      });
+    };
+    xoSrvs = [
+      spawnSrv(XO_PORT_A, 'a1'.repeat(16)),
+      spawnSrv(XO_PORT_B, 'b2'.repeat(16), { MESH_PEERS: `localhost:${XO_PORT_A}` }),
+    ];
+    for (const port of [XO_PORT_A, XO_PORT_B]) {
+      let ok = false;
+      for (let i = 0; i < 100 && !ok; i++) {
+        try { ok = (await fetch(`http://localhost:${port}/api/ping`)).ok; } catch {}
+        if (!ok) await new Promise((r) => setTimeout(r, 100));
+      }
+      if (!ok) throw new Error(`throwaway wbapi-server did not answer on :${port}`);
+    }
+  });
+  test.afterAll(() => { for (const s of xoSrvs) { try { s.kill('SIGTERM'); } catch {} } });
+
+  async function loadPlayer(browser, name, port) {
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    await seedAndLoad(page, { playerName: name, currentCode: 'LHR', checkpointNode: 'LHR', visited: { LHR: true } });
+    await dismissContinue(page);
+    await page.evaluate((p) => localStorage.setItem('mpServer', `http://localhost:${p}`), port);
+    return { ctx, page };
+  }
+
+  test('remote roster ⇄ → relayed propose → co-signed accept → BOTH ledgers agree', async ({ browser }) => {
+    const a = await loadPlayer(browser, 'Xena', XO_PORT_A);     // owns the item, server A
+    const b = await loadPlayer(browser, 'Yorick', XO_PORT_B);   // asks for it, server B
+
+    await a.page.click('#mp-toggle');
+    await expect(a.page.locator('#mp-status')).toContainText('🟢 Xena');
+    await b.page.click('#mp-toggle');
+    await expect(b.page.locator('#mp-status')).toContainText('🟢 Yorick');
+
+    // Xena acquires + mints a flask on HER server.
+    await a.page.evaluate(() => {
+      const it = { name: 'Poison Extract Flask', icon: '🧪', type: 'lake_magic', sell: 0 };
+      S_story.inventory.push(it);
+      mpMintStamp(it);
+    });
+    await a.page.waitForFunction(() => !!S_story.inventory.find(i => i.name === 'Poison Extract Flask' && i.mintKey));
+
+    // Yorick's roster on the OTHER server shows Xena WITH a ⇄ button — her p8
+    // rode the presence gossip. Beacons refresh the roster only on movement,
+    // so nudge one per poll round.
+    await expect.poll(async () => b.page.evaluate(async () => {
+      await mpBeacon();
+      return MP.players.some(p => p.ledgerPid && p.name === 'Xena');
+    }), { timeout: 20000 }).toBe(true);
+    // …and her mint has replicated to B (the modal reads the want-list once).
+    const pidA = await a.page.evaluate(() => MP.ledgerPid);
+    await expect.poll(async () => {
+      const r = await (await fetch(`http://localhost:${XO_PORT_B}/api/ledger/owned?pid=${pidA}`)).json();
+      return (r.items || []).length;
+    }, { timeout: 15000 }).toBeGreaterThan(0);
+    await b.page.click('#mp-presence .mp-trade-btn');
+
+    // Her mint has replicated to B, so the want-side lists it by name.
+    await expect(b.page.locator('#mp-trade-modal')).toBeVisible();
+    await expect(b.page.locator('#mp-trade-want')).toContainText('Poison Extract Flask');
+    await b.page.locator('#mp-trade-want input[data-side="want"]').check();
+    await b.page.click('#mp-trade-primary');
+
+    // Xena's incoming modal opens over SSE on HER server; she accepts.
+    await expect(a.page.locator('#mp-trade-modal')).toBeVisible({ timeout: 15000 });
+    await expect(a.page.locator('#mp-trade-give')).toContainText('Poison Extract Flask');
+    await a.page.click('#mp-trade-primary');
+
+    // The co-signed event mirrors into BOTH inventories.
+    await a.page.waitForFunction(() => !S_story.inventory.some(i => i.name === 'Poison Extract Flask'));
+    await b.page.waitForFunction(() => S_story.inventory.some(i => i.name === 'Poison Extract Flask' && i.mintKey));
+
+    // And BOTH servers resolve the flask to Yorick's durable pid.
+    const pidB = await b.page.evaluate(() => MP.ledgerPid);
+    for (const port of [XO_PORT_A, XO_PORT_B]) {
+      await expect.poll(async () => {
+        const r = await (await fetch(`http://localhost:${port}/api/ledger/owned?pid=${pidB}`)).json();
+        return (r.items || []).some(t => t.item && t.item.name === 'Poison Extract Flask');
+      }, { timeout: 15000 }).toBe(true);
+    }
+
+    await a.ctx.close();
+    await b.ctx.close();
+  });
+});

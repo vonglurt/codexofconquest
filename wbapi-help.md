@@ -187,6 +187,14 @@ curl -XPOST http://localhost:1367/api/trade/propose \
 curl -XPOST http://localhost:1367/api/trade/accept -d '{"tradeId":"<t>","sessionId":"<idB>"}'
 curl -XPOST http://localhost:1367/api/trade/cancel -d '{"tradeId":"<t>"}'
 
+# CROSS-ORIGIN trades (§MESH-01i last rung) — when `to` belongs to another
+# origin, the same three calls work unchanged: your server pulls the peer's
+# ledger frontier, relays the offer over POST /api/trade/relay (server↔server
+# only — compat + ACL gated like gossip), the accept relays back, and the
+# PROPOSER's origin authors the one event carrying BOTH origins' HMAC sigs.
+# Requires the two servers to be mutually dialable mesh peers; a counterparty
+# on a never-gossiped origin is refused with reason "peer-unreachable".
+
 curl http://localhost:1367/api/ledger/chain?pid=<pid>    # a player's hash chain
 curl "http://localhost:1367/api/ledger/owned?pid=<pid>"  # everything a pid owns now
 # → { items: [{mintId, mintKey, item, tipHash}] }  — the trade UI's read surface
@@ -195,9 +203,11 @@ curl http://localhost:1367/api/ledger/status             # seq / events / origin
 ```
 
 The counterparty is notified over their session SSE stream (`trade_proposed`,
-`trade_completed`, `trade_cancelled`). The in-game client (slice 2b) rides
-exactly these surfaces: co-present `players[]` entries carry `ledgerPid` (the
-⇄ trade-target picker), `session/pos` echoes your own `ledgerPid` on resume,
+`trade_completed`, `trade_cancelled`) — on THEIR OWN server when the trade is
+cross-origin. The in-game client (slice 2b) rides exactly these surfaces:
+co-present `players[]` entries carry `ledgerPid` (the ⇄ trade-target picker —
+REMOTE entries too, their durable `p8` rides the presence snapshot),
+`session/pos` echoes your own `ledgerPid` on resume,
 and loot acquired while connected is minted + stamped automatically (🔗 in the
 inventory).
 

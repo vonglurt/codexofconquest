@@ -27261,8 +27261,9 @@ function _mpRenderPresence() {
   const label = p => (counts[p.name] > 1 && p.pid) ? p.name + '@' + p.pid.split(':')[0] : p.name;
   if (!MP.on || !MP.players.length) { el.textContent = ''; return; }
   // §MESH-01i slice 2b: a ⇄ trade button per co-present PLAYER. Only entries
-  // with a ledgerPid qualify (local-origin, from the last beacon — cross-origin
-  // trades are the next rung; sentries and SSE-only arrivals have none yet).
+  // with a ledgerPid qualify — local AND cross-origin (a remote player's p8
+  // rides the presence gossip; the propose relays between the two servers).
+  // Sentries and SSE-only arrivals have none yet.
   // Index-addressed onclick so player names never enter the JS attribute.
   el.innerHTML = '👥 Also here: ' + MP.players.map((p, i) =>
     _mpEsc(label(p)) + (p.ledgerPid && p.kind !== 'sentry'
@@ -27428,7 +27429,7 @@ function _mpTradeRow(side, mintKey, name, icon) {
 async function mpTradeOpen(p) {
   if (!MP.on || !p) return;
   if (!p.ledgerPid) { await mpBeacon(); p = MP.players.find(q => q.pid === p.pid) || p; }
-  if (!p.ledgerPid) { storyMsg('⇄ ' + (p.name || 'That player') + ' has no trade identity here yet (another server’s player?).'); return; }
+  if (!p.ledgerPid) { storyMsg('⇄ ' + (p.name || 'That player') + ' has no trade identity yet (their game may not carry a player key).'); return; }
   MP.trade = { dir: 'out', to: p.ledgerPid, toName: p.name, tradeId: null };
   let theirs = [];
   try { const r = await _mpFetch('/api/ledger/owned?pid=' + encodeURIComponent(p.ledgerPid)); if (r && r.ok) theirs = r.items || []; } catch {}
