@@ -9562,3 +9562,74 @@ test.describe('§MBIT-02 — _flagToLabel expander', () => {
                        'Ephesus Riot', 'Damascus Escape', 'Basket Rope', 'Malta Wreck']);
   });
 });
+
+// ── §MBIT-02 — _takeMissionBit: spend the token, never un-witness a gated event ──
+//
+// A mission bit is a permanent receipt of something that happened (§MBIT-02-E,
+// keep-separate ontology). Its flag can be load-bearing for a downstream mission's
+// gate (canActivate reads flags / flagsAny / notFlags). So SPENDING a token must
+// always remove the physical item, but may clear the flag ONLY when no gate reads
+// it — otherwise spending a token would retroactively open/close an arc's gate.
+// There are no hardcoded _takeMissionBit call sites by design; the only author path
+// is the declarative `takeBit` itemChain action, which this guard makes safe.
+test.describe('§MBIT-02 — _takeMissionBit spends the token without un-gating an arc', () => {
+  test('_gateFlagSet() collects flags/flagsAny/notFlags and includes a known gate flag', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => ({
+      size: _gateFlagSet().size,
+      hasEzzir: _gateFlagSet().has('ezzirConfronted'),   // gate:{flags:['ezzirConfronted']} on quest_governor_cyprus
+    }));
+    expect(r.size).toBeGreaterThan(20);
+    expect(r.hasEzzir).toBe(true);
+  });
+
+  test('non-gating flag: token spent AND marker flag fully revoked', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.inventory = [];
+      const flag = 'mbitTestNonGatingXyz';               // referenced by no gate
+      _grantMissionBit(flag, 'Test Marker');
+      const before = { flag: !!S_story[flag], tok: S_story.inventory.some(i => i.flagRef === flag) };
+      _takeMissionBit(flag);
+      return { before, gated: _gateFlagSet().has(flag),
+               flag: !!S_story[flag], tok: S_story.inventory.some(i => i.flagRef === flag) };
+    });
+    expect(r.before).toEqual({ flag: true, tok: true });
+    expect(r.gated).toBe(false);
+    expect(r.tok).toBe(false);    // token spent
+    expect(r.flag).toBe(false);   // non-gating marker → safe full revoke
+  });
+
+  test('gate-referenced flag: token spent, witnessed event (flag) preserved, warns', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.inventory = [];
+      const warns = [];
+      const orig = console.warn; console.warn = (m) => warns.push(String(m));
+      const flag = 'ezzirConfronted';                    // gates quest_governor_cyprus
+      _grantMissionBit(flag, 'Ezzir Standoff');
+      _takeMissionBit(flag);
+      console.warn = orig;
+      return { gated: _gateFlagSet().has(flag), flag: !!S_story[flag],
+               tok: S_story.inventory.some(i => i.flagRef === flag),
+               warned: warns.some(w => w.includes(flag) && /§MBIT-02-E/.test(w)) };
+    });
+    expect(r.gated).toBe(true);
+    expect(r.tok).toBe(false);    // physical token spent
+    expect(r.flag).toBe(true);    // event stands → downstream gate intact
+    expect(r.warned).toBe(true);
+  });
+
+  test('the takeBit itemChain action (only author path) routes through the guard', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.inventory = [];
+      const flag = 'lyraConverted';                      // gate-referenced (2 gates)
+      _grantMissionBit(flag, 'Lyra Converted');
+      _applyItemChain({ itemChain: [{ action: 'takeBit', flag }] });
+      return { flag: !!S_story[flag], tok: S_story.inventory.some(i => i.flagRef === flag) };
+    });
+    expect(r.tok).toBe(false);    // token spent via the declarative path
+    expect(r.flag).toBe(true);    // arc gate survives the spend
+  });
+});

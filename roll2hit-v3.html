@@ -24940,14 +24940,43 @@ function _grantMissionBit(flagName, label) {
   storyMsg('🪬 Token received: ' + tokenName + '.');
 }
 
-// §MBIT-02 / §EDITOR-01-D: clear a mission-bit flag and remove its token.
+// §MBIT-02: flags that any quest gate depends on (flags / flagsAny / notFlags —
+// the three flag terms canActivate reads). Lazy + cached like _questNodes();
+// QUEST_DB is static at runtime. A flag in this set is load-bearing for downstream
+// mission listing — clearing it would retroactively open or close a gate.
+let _gateFlagCache = null;
+function _gateFlagSet() {
+  if (!_gateFlagCache) {
+    _gateFlagCache = new Set();
+    for (const q of Object.values(QUEST_DB)) {
+      const g = q && q.gate;
+      if (!g) continue;
+      for (const key of ['flags', 'flagsAny', 'notFlags'])
+        if (Array.isArray(g[key])) for (const f of g[key]) _gateFlagCache.add(f);
+    }
+  }
+  return _gateFlagCache;
+}
+
+// §MBIT-02 / §EDITOR-01-D: SPEND a mission-bit token. The physical token always
+// leaves inventory. The flag — the witnessed EVENT — is cleared only when no quest
+// gate depends on it: a mission bit is a permanent receipt of something that
+// happened (§MBIT-02-E, keep-separate ontology), so an event that unlocks a
+// downstream mission can never be un-witnessed. No hardcoded call sites exist by
+// design; the sole author path is the declarative `takeBit` itemChain action,
+// which this guard makes safe against silently un-gating an arc.
 function _takeMissionBit(flagName) {
   if (!flagName) return;
-  S_story[flagName] = false;
   if (S_story.inventory) {
     S_story.inventory = S_story.inventory.filter(
       i => !(i.type === 'mission_bit' && i.flagRef === flagName));
   }
+  if (_gateFlagSet().has(flagName)) {   // gate-load-bearing → the fact stands
+    console.warn('_takeMissionBit: kept gate-referenced flag "' + flagName +
+                 '" — token spent, witnessed event preserved (§MBIT-02-E)');
+    return;
+  }
+  S_story[flagName] = false;            // non-gating marker → full revoke is safe
 }
 
 // §EDITOR-01-D: apply a quest's declarative itemChain (grant/take/grantBit/takeBit).
