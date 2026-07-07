@@ -87,7 +87,7 @@ Each quest entry uses the following tags:
 | `quest_pit_training` | "Pit Training" | [BATTLE] ×3 wins | 1 | Pit Legend Token + Weckmann Friendly | [✅ LIVE] |
 | `quest_void_below` | "Void Below" | [BATTLE] CY_VOID clear | 1 | EMP Grenade + Scholar's Note + Auros Dear Friend | [✅ LIVE] |
 | `quest_pit_debut` | "First Blood" | [ACCOMPLISHMENT] | 1 | 100gp + 250 XP + flavor | [✅ LIVE §DESIGN-03] |
-| `quest_cy_madness_gate` | "The Maintenance Plate" | [SKILL CHECK]+[BATTLE] | 5 acts | `cyOriginKnown` + Name Plate item | [✅ LIVE §D02-07] |
+| `quest_d0207_a1–a5` *(design: quest_cy_madness_gate)* | "The Maintenance Plate" | [SKILL CHECK]+[BATTLE] | 5 acts | `cyOriginKnown` + Name Plate item | [✅ LIVE §D02-07] |
 
 **`quest_cy_madness_gate` — "The Maintenance Plate"** *(5-act, see §D02-07)*
 *Node: CY. Trigger: first visit. Object: the copper maintenance plate dated 300 years ago.*
@@ -128,7 +128,7 @@ Each quest entry uses the following tags:
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_mimic_colony` | "Colony Curation" | [SKILL CHECK]+[BATTLE if provoked] | 5 acts | 200gp + Mimic's Wax + Baby Mimic + `tribbleGladesFed` | [✅ LIVE §D02-08] |
+| `quest_d0208_a1–a5` *(design: quest_mimic_colony)* | "Colony Curation" | [SKILL CHECK]+[BATTLE if provoked] | 5 acts | 200gp + Mimic's Wax + Baby Mimic + `tribbleGladesFed` | [✅ LIVE §D02-08] |
 
 **`quest_mimic_colony` — "The Dropped Coin"** *(5-act, see §D02-08)*
 *Node: MM. Trigger: first visit. Object: a shiny coin dropped by the baby chest mimic.*
@@ -141,26 +141,26 @@ Each quest entry uses the following tags:
 
 ---
 
-### Ceremonia Arc — Yael Scheidemann (BA, SL)
+### Ceremonia Arc — Yael Scheidemann (LHR, BMA)
 
 | Quest ID | Title | Node | Type | DC | Status |
 |----------|-------|------|------|----|--------|
-| `quest_ceremonia_yael_01` | "The Watch" | BA | [SKILL CHECK] CHA | 10 | [✅ LIVE §DESIGN-03] |
-| `quest_ceremonia_yael_02` | "The Route" | BA | [SKILL CHECK] WIS | 12 | [✅ LIVE §DESIGN-03] |
-| `quest_ceremonia_yael_03` | "The Crate" | SL | [SKILL CHECK] STR | 12 | [✅ LIVE §DESIGN-03] |
-| `quest_ceremonia_yael_04` | "The Report" | BA | [SKILL CHECK] CHA | 14 | [✅ LIVE §DESIGN-03] |
-| `quest_ceremonia_yael_05` | "The Name" | BA | [SKILL CHECK] CHA | 15 | [✅ LIVE §DESIGN-03] |
+| `quest_ceremonia_yael_01` | "The Watch" | LHR | [SKILL CHECK] CHA | 10 | [✅ LIVE §DESIGN-03] |
+| `quest_ceremonia_yael_02` | "The Route" | LHR | [SKILL CHECK] WIS | 12 | [✅ LIVE §DESIGN-03] |
+| `quest_ceremonia_yael_03` | "The Crate" | BMA | [SKILL CHECK] STR | 12 | [✅ LIVE §DESIGN-03] |
+| `quest_ceremonia_yael_04` | "The Report" | LHR | [SKILL CHECK] CHA | 14 | [✅ LIVE §DESIGN-03] |
+| `quest_ceremonia_yael_05` | "The Name" | LHR | [SKILL CHECK] CHA | 15 | [✅ LIVE §DESIGN-03] |
 
 ---
 
-## WEIMAR — Act VII (Nodes: WM, scholars_qtr, SW)
+## WEIMAR — Act VII (Nodes: NUE `scholars_qtr`, SZG `workshop`)
 
 ### Weimar Archive (WM)
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_inquisitor` | "The Extended Hand" | [SKILL CHECK]+[BATTLE if lying] | 5 acts | Archive key + `inquisitorPassed` | [✅ LIVE §D02-02] |
-| `quest_prior_carrier` | "The Worn Boots" | [SKILL CHECK]+[BATTLE] | 5 acts | Prior Carrier's Token + `priorCarrierSeen` | [✅ LIVE §D02-03] |
+| `quest_inquisitor_handshake` + `_questions` + `_final` *(design: quest_inquisitor)* | "The Extended Hand" | [SKILL CHECK]+[BATTLE if lying] | 3-quest gauntlet (NUE) | Archive key + `inquisitorPassed` | [✅ LIVE §D02-02] |
+| *(node-woven at NUE — no quest ids; story-render interaction behind the Archive Key, sets `priorCarrierSeen/Spoke`)* | "The Worn Boots" | [STORY] | node interaction | Prior Carrier's Token + `priorCarrierSeen` | [✅ LIVE §D02-03] |
 
 **`quest_inquisitor` — "The Extended Hand"** *(5-act, see §D02-02)*
 *Node: WM. Trigger: `wmLowerArchiveUnlocked`. Object: the construct's outstretched hand.*
@@ -184,7 +184,7 @@ Each quest entry uses the following tags:
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_scholar_workshop` | "The Blueprint Roll" | [SKILL CHECK]+[BATTLE/SPIRIT] | 5 acts | Prototype Wand + `aurosBlueprintKnown` + `scholarWorkshopComplete` | [✅ LIVE §D02-06] |
+| `quest_d0206_a1–a5` *(design: quest_scholar_workshop)* | "The Blueprint Roll" | [SKILL CHECK]+[BATTLE/SPIRIT] | 5 acts | Prototype Wand + `aurosBlueprintKnown` + `scholarWorkshopComplete` | [✅ LIVE §D02-06] |
 
 **`quest_scholar_workshop` — "The Blueprint Roll"** *(5-act, see §D02-06)*
 *Node: SW. Trigger: first SW visit. Object: blueprint roll — plans for Auros's armor.*
@@ -286,7 +286,7 @@ A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mi
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_scriptorium_approach` | "The Drowned Page" | [SKILL CHECK]+[BATTLE] | 5 acts | Shard path unlock + `scriptorium_approach_complete` | [✅ LIVE §D02-01] |
+| `quest_d0201_a1–a5` *(design: quest_scriptorium_approach)* | "The Drowned Page" | [SKILL CHECK]+[BATTLE] | 5 acts | Shard path unlock + `scriptorium_approach_complete` | [✅ LIVE §D02-01] |
 
 **`quest_scriptorium_approach` — "The Drowned Page"** *(5-act, see §D02-01)*
 *Node: AT approach. Trigger: first AT entry. Object: drowned manuscript page, Froberger's hand.*
@@ -300,7 +300,7 @@ A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mi
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_void_maze` | "The Chalk Mark" | [SKILL CHECK]+[BATTLE] | 5 acts | `mazeSolvedChecks: 3` + boss room unlocked | [✅ LIVE §D02-05] |
+| `quest_d0205_a1–a5` *(design: quest_void_maze)* | "The Chalk Mark" | [SKILL CHECK]+[BATTLE] | 5 acts | `mazeSolvedChecks: 3` + boss room unlocked | [✅ LIVE §D02-05] |
 
 **`quest_void_maze` — "The Chalk Mark"** *(5-act, see §D02-05)*
 *Node: BK approach — Void Fracture Maze. Object: chalk mark on the first wall.*
@@ -314,7 +314,7 @@ A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mi
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_void_flux` | "The Spell Scroll" | [SKILL CHECK]+[BATTLE] | 5 acts | Dual-use scroll + `voidFluxCleared` | [✅ LIVE §D02-09] |
+| `quest_d0209_a1–a5` *(design: quest_void_flux)* | "The Spell Scroll" | [SKILL CHECK]+[BATTLE] | 5 acts | Dual-use scroll + `voidFluxCleared` | [✅ LIVE §D02-09] |
 
 **`quest_void_flux` — "The Spell Scroll"** *(5-act, see §D02-09)*
 *Node: AT mid-chamber or CY_VOID. Object: a spell scroll in the player's pack.*
@@ -332,7 +332,7 @@ A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mi
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_memory_gate` | "The Journal Entry" | [SKILL CHECK]+[BATTLE bypass] | 5 acts | Passage + `memorGatePassedEntry` | [✅ LIVE §D02-04] |
+| `quest_d0204_a1–a5` *(design: quest_memory_gate)* | "The Journal Entry" | [SKILL CHECK]+[BATTLE bypass] | 5 acts | Passage + `memorGatePassedEntry` | [✅ LIVE §D02-04] |
 
 **`quest_memory_gate` — "The Journal Entry"** *(5-act, see §D02-04)*
 *Node: CO approach — catacombs. Object: a journal entry, chosen to be offered.*
@@ -346,7 +346,7 @@ A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mi
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_loop_heart` | "The Seventh Shard" | [SKILL CHECK]+[BATTLE] | 5 acts | Shard + ending variant set + `codexCoreChosen` | [✅ LIVE §D02-10] |
+| `quest_d0210_a1–a5` *(design: quest_loop_heart)* | "The Seventh Shard" | [SKILL CHECK]+[BATTLE] | 5 acts | Shard + ending variant set + `codexCoreChosen` | [✅ LIVE §D02-10] |
 
 **`quest_loop_heart` — "The Seventh Shard"** *(5-act, see §D02-10)*
 *Node: CO pre-boss chamber. Object: the seventh Shard inside the pulsing column.*
@@ -470,7 +470,7 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 |--------|-------|
 | ✅ Live (main story) | ~35 |
 | ✅ Live §DESIGN-03 | 9 (4 Birka Ceremonia + 5-act Yael arc) |
-| ✅ Live §DUNGEON-01/02 | 11 (10 five-act chains + D02-11 framework) |
+| ✅ Live §DUNGEON-01/02 | 43 quests (8 five-act `d02xx` arcs + 3-quest Inquisitor gauntlet) + node-woven Prior Carrier + D02-11 framework |
 | ✅ Live §GR | 3 (La Riva: Q-FR-01/02/03) |
 | ✅ Live §LXV–§LXIX | 5 (Mediterranean Paul arc) |
 | ✅ Live §SIREN-01 | 5 (Littoral Courts + Overseer) |
