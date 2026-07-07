@@ -34741,6 +34741,9 @@ function _renderMapGrid() {
   const grid = document.getElementById('map-grid');
   const info = document.getElementById('map-node-info');
   grid.innerHTML = '';
+  // §NAV-01-FU (3): built once per render; road-cell hover names where the road
+  // leads by reusing describeCell's per-direction __roadDestination hints.
+  const _rw = _roomWorld();
 
   // §NAV-01e: 15×21 window (was 11×11), terrain-painted like the world panel
   for (let dr = -7; dr <= 7; dr++) {
@@ -34814,6 +34817,16 @@ function _renderMapGrid() {
         }
         if (!_imp && _terr === 'road') {
           cell.innerHTML = '<div class="mc-icon" style="font-size:10px;opacity:.85;color:#0e0a04">─</div>';
+          cell.addEventListener('mouseenter', () => {
+            let txt = '🛣 Road';
+            try {
+              const dests = [...new Set(describeCell(_rw, { r, c }).exits
+                .filter(e => (e.kind === 'road' || e.kind === 'lane') && e.steps != null && e.hint)
+                .map(e => e.hint.replace(/^toward /, '')))];
+              if (dests.length) txt = '🛣 Road — toward ' + dests.join('  ·  ');
+            } catch {}
+            info.textContent = txt;
+          });
         }
       }
 
