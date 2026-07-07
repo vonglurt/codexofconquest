@@ -1846,6 +1846,17 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   border-radius: 3px; cursor: pointer; margin-left: 6px; transition: background .12s;
 }
 .inv-use-btn:hover { background: rgba(58,122,58,0.2); }
+/* §XVII Void Archaeology — draw the eye to an available [INVESTIGATE] on node entry */
+.inv-investigate-glow {
+  border-color: var(--gold); color: var(--gold);
+  background: rgba(254,167,18,0.08);
+  animation: inv-investigate-pulse 1.8s ease-in-out infinite;
+}
+.inv-investigate-glow:hover { background: rgba(254,167,18,0.18); }
+@keyframes inv-investigate-pulse {
+  0%,100% { box-shadow: 0 0 3px rgba(254,167,18,0.25); }
+  50%     { box-shadow: 0 0 12px rgba(254,167,18,0.65); }
+}
 
 /* ── Map Sheet ── */
 #map-main-area {
@@ -30225,14 +30236,14 @@ function storyRender(node, prefix) {
       LHR: { flag:'vaCI', text:'In the back of the Blue Shutters Archive — a partial shelf record. Researcher Category: Containment. Date: [REDACTED]. The same shelf that held the archive letter. She worked here. The marks start here.' },
       BMA: { flag:'vaSL', text:'A carved marker on a corner building in the Birka Slums. The pattern matches the stones at the Defiant Fields exactly. This building predates the city by 80 years — predates the Scholar Kings. The mark was here before there was anyone to put it there.' },
       ZRH: { flag:'vaDF', text:'A stone alignment in the scorched terrain of the Defiant Fields. Not random — spaced to a mathematical interval. The battle happened at the activation point. This is where the sealing mechanism triggered. You didn\'t choose this spot. She chose it, 200 years before you arrived.' },
-      WM: { flag:'vaWM', text:'Document 3 in the lower archive — but now the project codename is visible: ANTECEDENT CONTAINMENT PROTOCOL. The word "Void" appears nowhere in the original documents. She never called it that. She called it what it was: a cage.' },
+      NUE: { flag:'vaWM', text:'Document 3 in the lower archive — but now the project codename is visible: ANTECEDENT CONTAINMENT PROTOCOL. The word "Void" appears nowhere in the original documents. She never called it that. She called it what it was: a cage.' },
       GVA: { flag:'vaMT', text:'A sealed access tunnel at the Mountain Pass. Never opened by anyone in the records. Sealed before the Scholar Kings existed. Not collapsed — sealed from inside. The seal is intact. It is waiting.' },
     };
     if (_vaReady && _vaSites[node.code]) {
       const _site = _vaSites[node.code];
       if (!S_story[_site.flag]) {
         const invBtn = document.createElement('button');
-        invBtn.className = 'inv-use-btn';
+        invBtn.className = 'inv-use-btn inv-investigate-glow';
         invBtn.textContent = '🏛️ Investigate.';
         invBtn.style.cssText = 'margin-top:6px;';
         invBtn.addEventListener('click', () => {
