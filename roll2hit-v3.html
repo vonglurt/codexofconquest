@@ -1303,6 +1303,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .mp-chat-line { line-height: 1.6; }
 .mp-chat-ts { color: var(--dim, #6a6357); font-size: 10px; }
 .mp-chat-srv { color: #7fd4ff; font-size: 10px; margin-left: 2px; }
+.mp-chat-fp { color: var(--dim, #6a6357); font-style: italic; }   /* §MESH-02(j) footprints */
 #mp-chat-badge { color: #e0c040; font-size: 10px; margin-left: 2px; }
 #mp-bar button {
   background: none; border: 1px solid rgba(240,230,200,0.25); border-radius: 4px;
@@ -27012,7 +27013,7 @@ function _mpChatRender() {
   if (!list) return;
   const hhmm = ts => { const d = new Date(ts); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
   list.innerHTML = MP.chat.map(e =>
-    '<div class="mp-chat-line"><span class="mp-chat-ts">' + hhmm(e.ts) + '</span> <b>' + _mpEsc(e.name) + '</b>' +
+    '<div class="mp-chat-line' + (String(e.msg).startsWith('👣') ? ' mp-chat-fp' : '') + '"><span class="mp-chat-ts">' + hhmm(e.ts) + '</span> <b>' + _mpEsc(e.name) + '</b>' +
     (e.server ? '<span class="mp-chat-srv">@' + _mpEsc(String(e.server).slice(0, 8)) + '</span>' : '') +
     ': ' + _mpEsc(e.msg) + '</div>').join('')
     || '<div class="mp-chat-line" style="color:var(--dim)">No chat yet. Connect (🌐) and say something.</div>';
@@ -27402,6 +27403,7 @@ async function mpToggle(ev) {
     const firstLook = await mpBeacon();   // sync the fresh session (spawns at hub) to the real player cell
     _mpChatBacklog(firstLook);            // §MESH-01-FU 13: replay recent chat at this cell, once per connect
     _mpChatHistory();                     // §MESH-02(h): merge the server's global chat ring into the history log
+    _mpFootprints(firstLook);             // §MESH-02(j): who passed through your cell while you were away
     _mpSetStatus('🟢 ' + MP.name);
     const inp = document.getElementById('mp-chat-input');
     if (inp) inp.style.display = 'inline-block';
@@ -27416,7 +27418,7 @@ async function mpToggle(ev) {
 function mpDisconnect(msg) {
   if (MP.session) _mpFetch('/api/session/end', { sessionId: MP.session }).catch(() => {});
   if (MP.es) { try { MP.es.close(); } catch {} }
-  MP.es = null; MP.session = null; MP.pid = null; MP.ledgerPid = null; MP.on = false; MP.players = []; MP.nearby = []; MP.remotes = {}; MP.trade = null; MP.duel = null;
+  MP.es = null; MP.session = null; MP.pid = null; MP.ledgerPid = null; MP.on = false; MP.players = []; MP.nearby = []; MP.remotes = {}; MP.trade = null; MP.duel = null; MP._fpCell = null;
   mpTradeClose();
   mpDuelClose();
   try { sessionStorage.removeItem('mpSession'); } catch {}
@@ -27531,6 +27533,7 @@ async function mpBeacon() {
       for (const p of look.world || []) if (p.pid) MP.remotes[p.pid] = p;
       _mpSetStatus('🟢 ' + MP.name);
       _mpRenderPresence();
+      _mpFootprints(look);   // §MESH-02(j): announce recent passers-by, once per cell
       return look;
     } else if (look && look.error && /Session not found/.test(look.error)) {
       mpDisconnect('🌐 Session expired — reconnect with 🌐.');
@@ -27547,6 +27550,24 @@ function _mpChatBacklog(look) {
   if (!lines.length) return;
   storyMsg('🕰 Earlier here:');
   for (const ln of lines) { storyMsg('💬 ' + ln.name + ': ' + ln.msg); _mpChatPush(ln); }   // §MESH-02(h)
+}
+// §MESH-02(j) — footprints: the look carries who stepped through this cell in
+// the last 30 min. Announced once per cell arrival (not per beacon), self and
+// co-present players excluded — you can see THEM; prints are for who you
+// missed. The chat-history line carries the passage's real timestamp, so the
+// 2-min dedupe in _mpChatPush folds repeat sightings of the same passage.
+function _mpFootprints(look) {
+  if (!look || !look.footprints) return;
+  const key = look.r + ',' + look.c;
+  if (MP._fpCell === key) return;
+  MP._fpCell = key;
+  const here = new Set((look.players || []).map(p => p.pid));
+  for (const f of look.footprints) {
+    if (!f.pid || f.pid === MP.pid || here.has(f.pid)) continue;
+    const ago = f.agoMs < 90000 ? 'moments ago' : Math.round(f.agoMs / 60000) + ' min ago';
+    storyMsg('👣 ' + f.name + ' passed through here ' + ago + '.');
+    _mpChatPush({ pid: f.pid, name: f.name, msg: '👣 passed through (' + look.r + ',' + look.c + ')', ts: Date.now() - f.agoMs });
+  }
 }
 // §MESH-01-FU 5 — auto-reconnect on page load. sessionStorage.mpSession is
 // per-tab and survives a reload but not a new tab, so its presence means the
@@ -27579,6 +27600,7 @@ async function _mpResume() {
       storyMsg('🌐 Multiplayer resumed as ' + MP.name + '.');
       _mpChatBacklog(look);   // §MESH-01-FU 13: a reloaded tab missed the SSE stream too
       _mpChatHistory();       // §MESH-02(h): and the history log catches up the same way
+      _mpFootprints(look);    // §MESH-02(j)
     } else if (look && look.error && /Session not found/.test(look.error)) {
       try { sessionStorage.removeItem('mpSession'); } catch {}
       await mpToggle();   // server up, session expired → fresh connect under the same tab opt-in

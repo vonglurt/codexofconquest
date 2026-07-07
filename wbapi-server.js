@@ -162,6 +162,38 @@ function chatBacklogAt(r, c) {
   return out.reverse();   // oldest → newest, reading order
 }
 
+// §MESH-02(j) — footprints. Every step (session/move + session/pos) stamps the
+// ARRIVAL cell with {pid, name, ts}; one entry per player per cell (a re-pass
+// refreshes the ts), newest-last, ≤8 per cell, 30-min TTL. buildLook carries
+// the current cell's fresh prints so a later arrival reads "X passed through
+// here recently" in chat. Display-only, like all presence — the mover and the
+// quest code never consult footprints (Free-Movement invariant).
+const FOOTPRINT_TTL = 30 * 60 * 1000, FOOTPRINT_PER_CELL = 8;
+const FOOTPRINTS = new Map();   // "r,c" → [{pid, name, ts}]
+function recordFootprint(pid, name, r, c) {
+  const k = `${r},${c}`;
+  let arr = FOOTPRINTS.get(k);
+  if (!arr) { arr = []; FOOTPRINTS.set(k, arr); }
+  const i = arr.findIndex(f => f.pid === pid);
+  if (i >= 0) arr.splice(i, 1);
+  arr.push({ pid, name, ts: Date.now() });
+  if (arr.length > FOOTPRINT_PER_CELL) arr.shift();
+  // Bounded by construction per cell; a rare full sweep keeps the key count sane.
+  if (FOOTPRINTS.size > 4000) {
+    const now = Date.now();
+    for (const [key, a] of FOOTPRINTS) {
+      const live = a.filter(f => now - f.ts < FOOTPRINT_TTL);
+      if (live.length) FOOTPRINTS.set(key, live); else FOOTPRINTS.delete(key);
+    }
+  }
+}
+function footprintsAt(r, c) {
+  const k = `${r},${c}`, now = Date.now();
+  const live = (FOOTPRINTS.get(k) || []).filter(f => now - f.ts < FOOTPRINT_TTL);
+  if (live.length) FOOTPRINTS.set(k, live); else FOOTPRINTS.delete(k);
+  return live.map(f => ({ pid: f.pid, name: f.name, agoMs: now - f.ts }));
+}
+
 // ── Config ──────────────────────────────────────────────────────────────────
 const PORT      = parseInt(process.env.PORT || '1367');
 // §MESH-01-FU 1 — LAN/WAN reachability. Default bind stays loopback (a solo dev
@@ -8553,6 +8585,7 @@ async function route(req, res) {
         node: code ? { code, label: node.label, terrain: node.name, act: node.act } : null,
         desc, exits, players, room,
         chat: chatBacklogAt(s.r, s.c),   // §MESH-01-FU 13: last few chat lines here (join context)
+        footprints: footprintsAt(s.r, s.c),   // §MESH-02(j): who passed through here recently
       };
     }
 
@@ -8762,6 +8795,7 @@ async function route(req, res) {
       emitMeshEvent('player_left', evt, prevR, prevC);
       emitMeshEvent('player_arrived', { ...evt, node: newCode }, newR, newC);
       emitMeshEvent('player_moved', evt, newR, newC);
+      recordFootprint(pidOf(sessionId), s.playerName, newR, newC);   // §MESH-02(j)
       // §MESH-01j: leaving a duel cell mid-handshake forfeits — checked AFTER
       // the step succeeded, and the step itself is never refused (Free-Movement).
       duelForfeitCheck(sessionId, newR, newC);
@@ -8810,6 +8844,7 @@ async function route(req, res) {
         emitMeshEvent('player_left', evt, prevR, prevC);
         emitMeshEvent('player_arrived', { ...evt, node: s.nodeCode }, r, c);
         emitMeshEvent('player_moved', evt, r, c);
+        recordFootprint(pidOf(sessionId), s.playerName, r, c);   // §MESH-02(j)
         duelForfeitCheck(sessionId, r, c);   // §MESH-01j: walk-off forfeit — after the step, never blocking
       }
       const inView = (pr, pc) => {
