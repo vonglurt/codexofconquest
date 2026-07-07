@@ -24894,7 +24894,31 @@ function _hasItem(keyword) {
 
 /* ── Mission Bit Tokens — physical proof of witnessed events ── */
 function _flagToLabel(f) {
-  return f.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase()).trim();
+  // §MBIT-02: chain/act-aware expansion — 'athC1A1Done'→'ATH C1 A1 Done',
+  // 'lis_08_act1'→'LIS 08 Act 1', 'wisPage1_masks'→'WIS Page 1 Masks',
+  // 'blq02GatePassed'→'BLQ 02 Gate Passed'; plain camelCase is unchanged
+  // ('bramBefriended'→'Bram Befriended'). Explicit bit labels always win upstream.
+  const runs = [];
+  for (const raw of f.split('_')) {
+    for (const run of raw.match(/[A-Za-z]+|\d+/g) || []) {
+      if (/\d/.test(run)) { runs.push(run); continue; }
+      runs.push(...run.replace(/([a-z])([A-Z])/g, '$1 $2')
+                      .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2').split(' '));
+    }
+  }
+  const parts = [];                                              // C+1 → C1, a+1 → A1
+  for (let i = 0; i < runs.length; i++) {
+    if (/^[A-Za-z]$/.test(runs[i]) && /^\d+$/.test(runs[i + 1] || '')) {
+      parts.push((runs[i] + runs[i + 1]).toUpperCase()); i++;
+    } else parts.push(runs[i]);
+  }
+  const hasDigit = /\d/.test(f);
+  return parts.map((w, i) => {
+    if (/^\d/.test(w) || w === w.toUpperCase()) return w;        // digits + WAW stay
+    if (i === 0 && /^[a-z]+$/.test(w) && (w.length <= 2 || (hasDigit && w.length <= 4)))
+      return w.toUpperCase();                                    // sb/df + blq02/ath-style chain codes
+    return w[0].toUpperCase() + w.slice(1);
+  }).join(' ').trim();
 }
 
 function _grantMissionBit(flagName, label) {

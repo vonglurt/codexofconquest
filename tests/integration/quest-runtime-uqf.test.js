@@ -2642,7 +2642,7 @@ test.describe('§ARCH-01 Wave 1u — Atlantean iodine chain (iodine_01/shore_02/
 // ══════════════════════════════════════════════════════════════════════════
 
 const HIGHLAND = [
-  { id:'quest_df_02', stat:'wis', skill:'Insight',    dc:11, flag:'dfBarterLearned',    token:'Df Barter Learned Token',    gateFlag:'dunfallAccessed',  gold:100, xp:250, item:'Highland Herb Pouch' },
+  { id:'quest_df_02', stat:'wis', skill:'Insight',    dc:11, flag:'dfBarterLearned',    token:'DF Barter Learned Token',   /* §MBIT-02 expander: df → DF */    gateFlag:'dunfallAccessed',  gold:100, xp:250, item:'Highland Herb Pouch' },
   { id:'quest_sk_02', stat:'cha', skill:'Persuasion', dc:12, flag:'saltwickJobAccepted', token:'Saltwick Job Accepted Token', gateFlag:'saltwickAccessed', gold:600, xp:400, item:'Saltwick Bill of Lading' },
 ];
 
@@ -9497,5 +9497,68 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
     });
     expect(r.away).toBe(false);
     expect(r.there).toBe(true);
+  });
+});
+
+// ══════════════════════════════════════════════════════════════════════════
+// §MBIT-02 — _flagToLabel chain/act-aware expansion. Explicit bit labels
+// always win upstream; this pins the FALLBACK names for the ~2,400
+// label-less mission_bits (city-chain act flags, blq/d02xx generated ids).
+// ══════════════════════════════════════════════════════════════════════════
+
+test.describe('§MBIT-02 — _flagToLabel expander', () => {
+  test('chain/act flags expand cleanly; plain camelCase is unchanged', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => [
+      'athC1A1Done', 'bgw_c1a1_passed', 'lis_08_act1', 'WAW_002_act1Pass',
+      'wisPage1_masks', 'blq02GatePassed', 'ams01a1', 'sbParleySucceeded',
+      'dfBarterLearned', 'whodunit2ClueFound', 'ceremoniaPassed_yael_01',
+      'bramBefriended', 'stoningEvent', 'catKingDefeated',
+    ].map(_flagToLabel));
+    expect(r).toEqual([
+      'ATH C1 A1 Done', 'BGW C1 A1 Passed', 'LIS 08 Act 1', 'WAW 002 Act 1 Pass',
+      'WIS Page 1 Masks', 'BLQ 02 Gate Passed', 'AMS 01 A1', 'SB Parley Succeeded',
+      'DF Barter Learned', 'Whodunit 2 Clue Found', 'Ceremonia Passed Yael 01',
+      'Bram Befriended', 'Stoning Event', 'Cat King Defeated',
+    ]);
+  });
+
+  test('no fallback label in QUEST_DB is left with raw underscores or glued letter-digit runs', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const flags = new Set();
+      const walk = (bits) => (bits || []).forEach(b => {
+        if (b.kind === 'mission_bit' && !b.label) flags.add(b.flag);
+        walk(b.onPass); walk(b.onFail);
+      });
+      Object.values(QUEST_DB).forEach(q => walk(q.bits));
+      const bad = [];
+      for (const f of flags) {
+        const l = _flagToLabel(f);
+        if (/_/.test(l) || /[a-z]\d|\d[a-z]/.test(l) || /\s\s/.test(l) || !/^[A-Z0-9]/.test(l)) bad.push(f + ' -> ' + l);
+      }
+      return { total: flags.size, bad };
+    });
+    expect(r.total).toBeGreaterThan(2000);   // census 2026-07-07: 2,420 label-less mission_bits
+    expect(r.bad).toEqual([]);
+  });
+
+  test('Paul-arc mission_bits all carry explicit labels (fallback never used)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const ids = ['quest_ezzir', 'quest_governor_cyprus', 'quest_lame_lystra', 'quest_stoning_lystra',
+                   'quest_prison_phillam', 'quest_areopagus', 'quest_ephesus_riot', 'quest_basket_damascus',
+                   'quest_shipwreck_melta'];
+      const labels = [];
+      const walk = (bits) => (bits || []).forEach(b => {
+        if (b.kind === 'mission_bit') labels.push(b.label || null);
+        walk(b.onPass); walk(b.onFail);
+      });
+      ids.forEach(id => walk(QUEST_DB[id].bits));
+      return labels;
+    });
+    expect(r).toEqual(['Ezzir Standoff', 'Governor of Cyprus', 'Gate Healing',
+                       'Lystra Stoning', 'Lystra Stoning', 'Philippi Jailer', 'Areopagus Speech',
+                       'Ephesus Riot', 'Damascus Escape', 'Basket Rope', 'Malta Wreck']);
   });
 });
