@@ -38,6 +38,12 @@ const MOCK_QUEST_DB = {
 
 // ── Helper: load worldbuilder, inject data, switch to Walk tab ────────────────
 async function loadWalkTab(page, opts = {}) {
+  // §NAV-01-FU (5): firewall the WBAPI origin BEFORE navigation so the boot-time
+  // probeServer() auto-load can never reach a live :1367 dev server and win the
+  // race that clobbers the injected mock world (the "Yugurt Lake" ≠ 'Alpha'
+  // failure). Callers needing custom endpoint handlers pass their own pre-armed
+  // stub (opts.stub); every other describe gets a bare 404-firewall here.
+  if (!opts.stub) await armApiStub(page);
   await page.goto('/worldbuilder.html');
 
   await page.evaluate(({ nm, nc, qd }) => {
@@ -677,7 +683,7 @@ test.describe('§NAV-01g — drag-&-lock cities', () => {
   let stub;
   test.beforeEach(async ({ page }) => {
     stub = await armApiStub(page);   // firewall :1367 BEFORE the page boots
-    await loadWalkTab(page);
+    await loadWalkTab(page, { stub }); // pass the pre-armed stub so it isn't re-armed
   });
   const putCalls = (key) => stub.calls.filter((c) => c.key === key).map((c) => c.body);
 
@@ -783,7 +789,7 @@ test.describe('§NAV-01h — road-net editor', () => {
   let stub;
   test.beforeEach(async ({ page }) => {
     stub = await armApiStub(page);   // firewall :1367 BEFORE the page boots
-    await loadWalkTab(page, ROAD_NODES);
+    await loadWalkTab(page, { ...ROAD_NODES, stub }); // pass the stub so loadWalkTab doesn't re-arm a 2nd (empty) firewall
     await page.locator('#wk-map-canvas').scrollIntoViewIfNeeded();   // #panels boots h-scrolled off-viewport
   });
   const putCalls = (key) => stub.calls.filter((c) => c.key === key).map((c) => c.body);
