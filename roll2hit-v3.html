@@ -20706,7 +20706,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     },
   quest_city_watch_patrol: { id:'quest_city_watch_patrol', type:'side', schema:'UQF-1.0', gate:{ favorMin:{ yael:1 } }, bits:[], completion:{ flags:['patrolRouteComplete'] }, title:"The Route",
     onComplete:[ { kind:'reward', gold:50, xp:150 }, { kind:'favor', npc:'yael', add:1 }, { kind:'narrative', msg:'💰 +50gp + 150 XP. Yael notes the route was covered.' } ], // §ARCH-01 W7c
-    hint:"Walk Yael's patrol route: City Streets (CI) → Inn (IN) → Tavern (TV) in sequence.",
+    hint:"Walk Yael's patrol route: City Streets (LHR) → The First Inn (TLL) → Birka Tavern (MHQ) in sequence.",
     activateNode:'LHR',
     },
   quest_pit_debut: { id:'quest_pit_debut', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'pitTrainingWins', min:1 }] }, title:'First Blood',
