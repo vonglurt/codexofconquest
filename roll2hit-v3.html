@@ -2055,12 +2055,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   width: 28px; height: 28px; border-radius: 3px;
   transition: background 0.5s;
 }
-.void-flicker { animation: void-flicker 4s ease-in-out infinite; }
-@keyframes void-flicker {
-  0%, 100% { background: #1a1a2a; }
-  50% { background: #1e1e36; }
-}
-
 /* ── Layer 4: Pre-Battle + Outcome ── */
 .info-chip.battle-defeated { border-color: #2a3a2a; color: var(--dim); cursor: default; }
 #story-prebatt-overlay {
@@ -22162,7 +22156,7 @@ const _S_DEFAULTS = () => ({
   visitedCells: {},          // §CELL-04: "r,c" → true — all cells stepped on (used by §CELL-10 minimap)
   gameDay: 0, couperiDebtDegraded: false, worldEventsFired: [],
   brynThirdStepFixed: false, brynFirewoodBrought: false, brynPantryRestocked: false,
-  brynLedgerBalance: -8, voidSignClicked: false,
+  brynLedgerBalance: -8,
   brynnsJournalRead: false, pachelbelPaidBack: false, quillQuestComplete: false,
   actNumber: 1, actThreeWeightApplied: false, romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},
   s29LineDelivered: false, s49BrynnDelivered: false, s49SweelinckDelivered: false,
@@ -35048,23 +35042,6 @@ function _renderMiniMap() {
         cell.style.color = '#ffd700';
         cell.style.fontWeight = 'bold';
         cell.title = 'Waypoint: ' + (NODE_MAP[S_story.waypoint] ? NODE_MAP[S_story.waypoint].label : S_story.waypoint);
-      }
-
-      // L44-R: Void's First Sign at row 4, col 3 — flickers in Act I, traversable in Act V
-      if (r === 4 && c === 3) {
-        const act = S_story.actNumber || 1;
-        if (act === 1) {
-          cell.classList.remove('mmc-fog-cell', 'mmc-partial');
-          cell.classList.add('void-flicker');
-          cell.style.cursor = 'pointer';
-          cell.addEventListener('click', () => { S_story.voidSignClicked = true; });
-        } else if (act >= 5) {
-          cell.classList.remove('mmc-fog-cell', 'mmc-partial');
-          cell.classList.add('mmc-visited');
-          cell.style.cursor = 'pointer';
-          cell.title = 'You saw this before. It was waiting for you to be ready.';
-          cell.addEventListener('click', () => storyMsg('You saw this before. It was waiting for you to be ready.'));
-        }
       }
 
       grid.appendChild(cell);
