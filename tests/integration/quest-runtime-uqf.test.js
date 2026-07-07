@@ -1937,9 +1937,10 @@ test.describe('§ARCH-01 Wave 1m — Sea: The Warmth Calm (quest_sea_01..03)', (
 // branch quests (fight/parley/examine) gate on the NEW `flagEquals` term
 // ({ sbChosenRole:'…' }, strict equality) + flags:['sbApproachSeen']. parley/
 // examine are retryable:false skill_checks whose onFail flips sbChosenRole→
-// 'fight' (the branch fallthrough — then sb_fight's gate activates). ⚠ sb_fight
-// carries BOTH onComplete(+400xp) AND xpAward:400 → a latent +800xp double-count
-// preserved verbatim for parity (the side-quest xpAward engine path is unchanged).
+// 'fight' (the branch fallthrough — then sb_fight's gate activates). sb_fight
+// formerly carried BOTH onComplete(+400xp) AND xpAward:400 → a latent +800xp
+// double-count; the redundant top-level xpAward was removed 2026-07-07 (open-gaps
+// item 4), leaving the onComplete reward{xp:400} as the sole vector → +400 total.
 
 test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () => {
   test('the new flagEquals gate term: branch quests activate only on the matching sbChosenRole', async ({ page }) => {
@@ -2009,7 +2010,7 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
     expect(r.fightNowActivatable).toBe(true);  // the fallthrough now opens the fight quest
   });
 
-  test('sb_fight onComplete grants +400xp closure portion + Letter of Marque + sbResolved (xpAward:400 still set for the engine path → latent +800 total)', async ({ page }) => {
+  test('sb_fight onComplete grants +400xp + Letter of Marque + sbResolved (double-count fixed: xpAward removed → +400 total, not +800)', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.sbResolved = false;
@@ -2019,7 +2020,7 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
                xpAward:QUEST_DB.quest_sb_fight.xpAward };
     });
     expect(r.xp).toBe(400); expect(r.gold).toBe(200); expect(r.resolved).toBe(true); expect(r.letter).toBe(true);
-    expect(r.xpAward).toBe(400);   // engine's side-quest path adds another +400 on completion (latent double-count, parity-preserved)
+    expect(r.xpAward).toBeUndefined();   // redundant xpAward removed 2026-07-07 — the side-quest engine path no longer double-adds
   });
 });
 
@@ -2029,8 +2030,9 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
 // road, WRO→BNX) and hunt (lake drowners, HFT→VAW). Each: structural hook side
 // (_01, gate:{}), 2 retryable:false skill_checks (_02/_03, checkStat → pure
 // parity, mission_bit{flag}+onPass/onFail _legacy_fn), and a lair-clear side
-// (_04, battle completion). ⚠ hunt_04/hunt2_04 share the sb_fight latent
-// double-count (onComplete +Nxp ∧ xpAward:N) — preserved verbatim.
+// (_04, battle completion). hunt_04/hunt2_04 formerly shared the sb_fight latent
+// double-count (onComplete +Nxp ∧ xpAward:N) — the redundant xpAward was removed
+// 2026-07-07 (open-gaps item 4), so onComplete reward{xp} is now the sole vector.
 
 test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / quest_hunt2_*)', () => {
   const SKILL = [
@@ -2087,7 +2089,7 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
     }
   });
 
-  test('lair-clear onComplete closures grant item + knowledge + gold/xp (and xpAward still set → latent double-count)', async ({ page }) => {
+  test('lair-clear onComplete closures grant item + knowledge + gold/xp (double-count fixed: xpAward removed → single-count)', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       const run = (id) => {
@@ -2098,9 +2100,9 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
       return { hag:run('quest_hunt2_04'), den:run('quest_hunt_04') };
     });
     expect(r.hag.xp).toBe(600); expect(r.hag.gold).toBe(400); expect(r.hag.knowledge).toBe(1);
-    expect(r.hag.inv).toContain('Relay Station Token'); expect(r.hag.xpAward).toBe(600);  // engine adds another +600
+    expect(r.hag.inv).toContain('Relay Station Token'); expect(r.hag.xpAward).toBeUndefined();  // xpAward removed — no second +600
     expect(r.den.xp).toBe(500); expect(r.den.gold).toBe(500); expect(r.den.knowledge).toBe(1);
-    expect(r.den.inv).toContain('Drowned Compass'); expect(r.den.xpAward).toBe(500);      // engine adds another +500
+    expect(r.den.inv).toContain('Drowned Compass'); expect(r.den.xpAward).toBeUndefined();      // xpAward removed — no second +500
   });
 });
 
@@ -2109,8 +2111,9 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
 // Same investigate→clear shape as the hunt arcs: hook side (_01, flag gate),
 // 2 retryable:false checkStat skill_checks (_02 INT Investigation DC12, _03 WIS
 // Insight DC13; mission_bit{flag} no-label + onPass/onFail _legacy_fn), lair-clear
-// side (_04, battle completion + verbatim onComplete). ⚠ bilge_04 shares the
-// sb_fight/hunt_04 latent double-count (onComplete +600 ∧ xpAward:600 → +1200xp).
+// side (_04, battle completion + verbatim onComplete). bilge_04 formerly shared
+// the sb_fight/hunt_04 latent double-count (onComplete +600 ∧ xpAward:600 → +1200xp);
+// xpAward removed 2026-07-07 (open-gaps item 4) → onComplete +600 is the sole vector.
 
 test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => {
   test('all 4 validate; 2 skill_checks (no label) + hook side (flag gate) + lair side (battle completion)', async ({ page }) => {
@@ -2153,7 +2156,7 @@ test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => 
     expect(r.w).toEqual({ status:'done', xp:200, flag:true, token:true, knowledge:0 });
   });
 
-  test('bilge_04 onComplete: +600gp/+600xp closure + Sea Spawn Scale Fragment + knowledge + solved flag (xpAward:600 → latent +1200)', async ({ page }) => {
+  test('bilge_04 onComplete: +600gp/+600xp + Sea Spawn Scale Fragment + knowledge + solved flag (double-count fixed: xpAward removed → +600, not +1200)', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.knowledge = []; S_story.whodunit2Solved = false;
@@ -2162,7 +2165,39 @@ test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => 
                frag:S_story.inventory.some(i=>i.name==='Sea Spawn Scale Fragment'), xpAward:QUEST_DB.quest_bilge_04.xpAward };
     });
     expect(r.xp).toBe(600); expect(r.gold).toBe(600); expect(r.knowledge).toBe(1);
-    expect(r.solved).toBe(true); expect(r.frag).toBe(true); expect(r.xpAward).toBe(600);  // engine adds another +600 on completion
+    expect(r.solved).toBe(true); expect(r.frag).toBe(true); expect(r.xpAward).toBeUndefined();  // xpAward removed — no second +600 on completion
+  });
+});
+
+// ── open-gaps item 3 — dead skill_check '=== complete' gate on the mimic rename ──
+//
+// quest_d0208_a5 (Mimic Meadows Act V) is a skill_check: on PASS the resolver sets
+// S_story.quests[id]='done' (L6647) — skill_checks never reach 'complete'. The LIM
+// (Mimic Meadows) render gated the "name your mimic" prompt on '=== complete', so it
+// was dead — the player could never rename the Baby Mimic. Fixed to '=== done'.
+test.describe('open-gaps item 3 — mimic rename prompt (skill_check terminal is "done")', () => {
+  test('LIM render shows the rename prompt when d0208_a5 is done + still named Baby Mimic; hidden while active', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const renderWith = (status) => {
+        S_story.currentCode = 'LIM';
+        S_story.quests = { quest_d0208_a5: status };
+        S_story.mimicPetName = 'Baby Mimic';
+        const old = document.getElementById('mm-panel'); if (old) old.remove();
+        storyRender(NODE_MAP['LIM']);
+        const panel = document.getElementById('mm-panel');
+        return panel ? panel.innerHTML : '';
+      };
+      return {
+        doneShowsPrompt:   renderWith('done').includes('Give a name'),
+        activeHidesPrompt: renderWith('active').includes('Give a name'),
+        // the old buggy value must NOT satisfy the gate — proves the terminal is 'done', not 'complete'
+        completeHidesPrompt: renderWith('complete').includes('Give a name'),
+      };
+    });
+    expect(r.doneShowsPrompt).toBe(true);
+    expect(r.activeHidesPrompt).toBe(false);
+    expect(r.completeHidesPrompt).toBe(false);
   });
 });
 
@@ -8963,7 +8998,7 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
     expect(r.crown).toBe(true);
   });
 
-  test('sb_fight battle completion: bit chain fires AND the xpAward double-count is preserved', async ({ page }) => {
+  test('sb_fight battle completion: bit chain fires; xpAward double-count fixed (removed) → single +400', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       S_story.quests = { quest_sb_fight:'active' };
@@ -8979,7 +9014,7 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
     expect(r.status).toBe('complete');
     expect(r.resolved).toBe(true);
     expect(r.gold).toBe(200);
-    expect(r.xp).toBe(800);                 // 400 (reward bit) + 400 (xpAward) — latent double-count preserved
+    expect(r.xp).toBe(400);                 // 400 (reward bit) only — redundant xpAward removed 2026-07-07 (open-gaps item 4), no double-count
     expect(r.letter).toBe(true);
     expect(r.narrativeShown).toBe(true);
   });

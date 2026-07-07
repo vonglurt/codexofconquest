@@ -12159,7 +12159,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
       { kind:'reward', items:[{ name:'Letter of Marque (Keel)', icon:'📜', type:'misc', desc:"Captain Vera Keel's Commission letter — recovered from the privateer brig's chart room after the intercept. The Eastern Reach seal date is fourteen months stale. Valid at three eastern ports that haven\'t checked the records.", sell:15 }] },
       { kind:'narrative', msg:'✅ The privateer crew is cleared. The brig is yours for the crossing.\n\nIn the chart room: the Commission letter. The Eastern Reach seal. The date is fourteen months stale — the issuing office dissolved before this Commission was presented.\n\nThe Tilbury Star\'s captain retrieves the letter and sets it on the chart table. She does not say anything about Keel. She sets course east.\n\nLetter of Marque (Keel) added. +200gp. +400 XP.' },
     ],
-    xpAward:400,
     disposition:'"She was testing the eastern run. Whatever she was looking for — she didn\'t find it here." — Tilbury Star Captain, afterward',
     passText:"She was testing the eastern run. Whatever she was looking for, she did not find it here. The brig is clear.",
     failText:"The privateer crew is still aboard. The intercept brig has not been cleared.",
@@ -12307,7 +12306,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
       { kind:'reward', xp:200 },
       { kind:'narrative', msg:'✅ The cracked strake is replaced. The dry dock uses highland timber from Dunfall — closer and better-grained than lowland oak. The captain inspects the work without comment, which is the highest endorsement she gives.\n\nThe Star is running clean for the first time in three crossings.\n\n+200 XP. Tilbury Star: hull repaired.' },
     ],
-    xpAward:200,
     disposition:'"The timber\'s from the Highland Loch. Better grain. She\'ll hold the deep crossing without complaint now." — Saltwick Dry Dock Worker',
     passText:"Better grain. Highland Loch timber. She will hold the deep crossing without complaint now.",
     failText:"The Tilbury Star cracked strake has not been repaired. Saltwick dry dock is available for 200gp.",
@@ -12434,7 +12432,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
         knowledge:"Night Hag, Eastern Bend: A night hag had claimed the relay sleeping post north of J1, riding the station horses nightly and leaving them unable to work. The road warden bandit theory was wrong. Investigation: territory line + spiral tether wear + heel-only handprint. Resolution: hag driven out, relay road open." },
       { kind:'narrative', msg:'✅ The hag is gone from the sleeping post.\n\nThe relay station master arrives within the hour. He has brought a brass token — the Birka relay authority mark. He gives it without ceremony. "The horses went past the bend this morning. First time in four days."\n\nHe says nothing about the road wardens\' bandit theory.\n\nRelay Station Token added to inventory. +400gp. +600 XP. Eastern relay road: clear.' },
     ],
-    xpAward:600,
     disposition:'"The horses went past the bend this morning. First time in four days." — Relay Station Master',
     passText:"The horses went past the bend this morning. First time in four days. The post is clear.",
     failText:"The Night Hag still holds the Eastern Bend. The relay horses cannot pass.",
@@ -12525,7 +12522,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
         knowledge:'Lake Monster Hunt: Three drowners moved into the north shore shelf den after the rock collapse this season. All three boats were taken from below. The Guild captain\'s compass was in the den. The Guild\'s spirit theory was wrong from the first offering.' },
       { kind:'narrative', msg:'✅ The den is clear.\n\nThe three drowners were opportunistic — they arrived with the rock fall and established themselves at the north end while the Guild was offering fish at the south shore.\n\nIn the wreckage at the base of the shelf: a brass compass. Sealed in sediment. Still reading north. The Guild captain\'s name is scratched into the case.\n\nDrowned Compass added to inventory. +500gp. +500 XP. Knowledge entry added.' },
     ],
-    xpAward:500,
     disposition:'"The Guild will dispute this for two seasons before agreeing you were right and the spirit theory was wrong. That is what Guilds do." — Elder Fisherwoman',
     passText:"The den is cleared. The Guild will dispute this for two seasons before agreeing. That is what Guilds do.",
     failText:"The drowners still hold the den at the north shelf collapse. The lake boats cannot return safely.",
@@ -12741,7 +12737,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
         knowledge:'Bilge Mystery Solved: Two sea spawn entered the Tilbury Star during the Saltwick hull repair. Took tallow (food) and rope (nesting). Charts displaced but undamaged. Crewman Delt proximity-sedated, not harmed. Cook\'s theory (passenger Ord) was wrong. The cook has not acknowledged this.' },
       { kind:'narrative', msg:'✅ The bilge is clear.\n\nTwo sea spawn, not one — the second followed through the drain within the first day. Rope coils in the ballast corner: a temporary nest. The tallow cask is hollowed. The charts are in a pile, undamaged.\n\nOrd the passenger emerges from his cabin when the all-clear is given. He looks at the bilge access. He looks at the cook. The cook does not apologize. Ord does not press it. He asks for the tallow cask as a souvenir. The captain says no. He accepts this with equanimity.\n\nSea Spawn Scale Fragment added. +600gp. +600 XP. Knowledge entry added. Bilge clear. Eastern crossing unobstructed.' },
     ],
-    xpAward:600,
     disposition:'"I\'ve been cook on this ship seven years. I have never been more wrong about anything." — The Cook, to the first mate, quietly',
     passText:"The bilge is clear. The Cook was wrong about the passenger. Seven years on this ship and never more wrong about anything.",
     failText:"Two sea spawn are still in the bilge. The eastern crossing cannot begin safely.",
@@ -31164,8 +31159,10 @@ function storyRender(node, prefix) {
       _tcEl.textContent = '🧸 Fuzzy Tribbles in pack: ' + _tc + (_tc >= 10 ? ' — Brynn says they\'re on the ceiling.' : _tc >= 5 ? ' — They have opinions about battles.' : '');
       _mmDiv.appendChild(_tcEl);
     }
-    // Mimic pet name prompt (after A5 passes)
-    if ((S_story.quests||{})['quest_d0208_a5'] === 'complete' && S_story.mimicPetName === 'Baby Mimic') {
+    // Mimic pet name prompt (after A5 passes). quest_d0208_a5 is a skill_check,
+    // whose terminal status is 'done' (set at _rollCeremonia L6647), never 'complete'
+    // — the old '=== complete' gate was dead, so the rename never appeared. (open-gaps item 3, 2026-07-07)
+    if ((S_story.quests||{})['quest_d0208_a5'] === 'done' && S_story.mimicPetName === 'Baby Mimic') {
       const _nameDiv = document.createElement('div');
       _nameDiv.style.cssText = 'display:flex;gap:6px;align-items:center;flex-wrap:wrap;';
       const _nameInput = document.createElement('input');
