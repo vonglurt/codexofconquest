@@ -6103,7 +6103,7 @@ window._onServerActivated = () => {
         { key:'failText',     label:'Fail text',    ta:true },
         { key:'targetMonsterKeys', label:'Target monsters', arr:'csv',     note:'Comma-separated monster keys (hunt quests)' },
         { key:'killGoals',         label:'Kill goals',      arr:'objlines',ta:true, note:'One per line — key:need:label (need→1, label→key by default)' },
-        { key:'itemChain',         label:'Item chain',      arr:'itemchain',ta:true, note:'On completion — add steps (grant / take / grantBit / takeBit), fill each kind’s fields, reorder with ▲/▼ or drag.' },
+        { key:'itemChain',         label:'Item chain',      arr:'itemchain',ta:true, note:'On completion — add steps (grant / take / grantBit / takeBit), fill each kind’s fields, reorder with ▲/▼ or drag. takeBit spends the token; a flag that gates a later mission is preserved (the event stands, §MBIT-02-E), a non-gating flag is cleared.' },
       ],
       rowData: (r) => ({ id:r.id, title:r.title, type:r.type, activateNode:r.activateNode, npc:r.npc||'' }),
     },
@@ -8316,7 +8316,7 @@ EG('tab-wizard').insertAdjacentHTML('afterend', (function(){
       <div class="ed-section">
         <div class="ed-shd">Item Chain — on completion</div>
         <div class="fg">
-          <div class="fl">Per step pick a kind, fill its fields: <code>grant</code> (name·icon·type·sell·desc·once) · <code>take</code> (name·all) · <code>grantBit</code> (flag·label) · <code>takeBit</code> (flag). Reorder with ▲/▼ or drag.</div>
+          <div class="fl">Per step pick a kind, fill its fields: <code>grant</code> (name·icon·type·sell·desc·once) · <code>take</code> (name·all) · <code>grantBit</code> (flag·label) · <code>takeBit</code> (flag — spends the token; a flag that gates a later mission is kept, a non-gating flag is cleared). Reorder with ▲/▼ or drag.</div>
           <div id="ed-itemChain-editor"></div>
         </div>
       </div>
@@ -8488,7 +8488,8 @@ function edSetBitList(containerId, bits) {
 //   grant | name | icon | type | sell | desc      (trailing fields optional; | allowed in desc)
 //   take | name | all?                              (all|true|1 → remove every match)
 //   grantBit | flag | label                         (label optional)
-//   takeBit | flag
+//   takeBit | flag                                   (§MBIT-02: spends the token; runtime keeps a
+//                                                      gate-referenced flag, clears a non-gating one)
 function parseItemChainText(txt) {
   return (txt || '').split('\n').map(l => l.trim()).filter(Boolean).map(line => {
     const p = line.split('|').map(s => s.trim());
@@ -9244,7 +9245,7 @@ edUpdatePreview();
         <input class="mb-items" placeholder="completion items (csv)" style="${sty};flex:1 1 160px">
         <textarea class="mb-kills" rows="1" placeholder="killGoals — key:need:label per line" style="${sty};flex:1 1 160px"></textarea>
       </div>
-      <textarea class="mb-chain" rows="1" placeholder="itemChain — grant|name|icon… · take|name|all? · grantBit|flag|label · takeBit|flag" style="${sty}"></textarea>`;
+      <textarea class="mb-chain" rows="1" placeholder="itemChain — grant|name|icon… · take|name|all? · grantBit|flag|label · takeBit|flag (spends token; gate flag kept)" style="${sty}"></textarea>`;
     // type → show skill vs side block
     const typeSel = row.querySelector('.mb-type');
     const sync = () => {
