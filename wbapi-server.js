@@ -10928,15 +10928,14 @@ async function route(req, res) {
       if (typeof value === 'string' || value === null) {
         const r = WBAPI.editField(type, resolvedKey, field, value);
         results.push({ field, ok: r.ok, error: r.error, inserted: r.inserted || false, removed: r.removed || false, strategy: 'editField' });
-      } else if (Array.isArray(value) || typeof value === 'number' || typeof value === 'boolean') {
-        // §WBAPI-01 ph3: arrays/numbers/booleans patch _rawSrc at source level (persist through save()).
+      } else if (Array.isArray(value) || typeof value === 'number' || typeof value === 'boolean' || typeof value === 'object') {
+        // §WBAPI-01 ph3 (+§MATH-01: plain objects too — serializeJsLiteral already handles
+        // them; the old ns.put path was memory-only and silently lost on file-watch reload):
+        // arrays/objects/numbers/booleans patch _rawSrc at source level (persist through save()).
         const r = WBAPI.editStructuredField(type, resolvedKey, field, value);
         results.push({ field, ok: r.ok, error: r.error, inserted: r.inserted || false, strategy: 'editStructuredField' });
       } else {
-        // Plain objects still go through ns.put — in-memory only, requires /api/save
-        const ns = { node:WBAPI.nodes, quest:WBAPI.quests, monster:WBAPI.monsters, npc:WBAPI.npcs }[type];
-        const r = ns ? ns.put(resolvedKey, { [field]: value }) : { ok:false, error:'unknown type' };
-        results.push({ field, ok: r.ok, strategy: 'put-memory-only', note: 'object value; call POST /api/save to persist' });
+        results.push({ field, ok: false, error: `unsupported value type: ${typeof value}` });
       }
     }
 

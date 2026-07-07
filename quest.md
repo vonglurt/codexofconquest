@@ -100,6 +100,20 @@ Each quest entry uses the following tags:
 
 ---
 
+### The Mathematics Pocket (EHZ, ZERO, MONS, CNTR) — NE of the Undercity — §MATH-01
+
+*Four-node walkable pocket anchored on HKG "Neon Undercity" (29,246): EHZ "Event Horizon — Math Station" through the east panel (29,247), ZERO "The Zero Corridor" north of the station (28,247), MONS "The Monster's Manifold" east (29,248), CNTR "Cantor's Attic" northeast (28,248). All five quests are UQF collect quests — the document is the node's first-visit loot; completion fires at the collect node. Gold rides `onComplete` reward bits; XP is the engine's side-quest award. Design: `lab-reports/lab-report-math01-completions.md`.*
+
+| Quest ID | Title | Type | Activate → Collect | Reward | Status |
+|----------|-------|------|--------------------|--------|--------|
+| `quest_math_01` | "The Number That Means Nothing" | [COLLECT] Zero Treatise | JRS → ZERO | 300gp + 350 XP | [✅ LIVE §MATH-01] |
+| `quest_math_02` | "What the Snowflake Knows" | [COLLECT] 12-Symmetry Manuscript | EHZ → MONS | 350gp + 400 XP | [✅ LIVE §MATH-01] |
+| `quest_math_03` | "The Quintic's Impossibility" | [COLLECT] Hamadani Failure Record | OST → EHZ | 350gp + 400 XP | [✅ LIVE §MATH-01] |
+| `quest_math_04` | "The Counting Quest" | [COLLECT] Counting Document Bundle | JRS → ZERO | 500gp + 500 XP | [✅ LIVE §MATH-01] |
+| `quest_math_05` | "The Moonshine Memo" | [COLLECT] Moonshine Memo | MONS → CNTR | 600gp + 600 XP | [✅ LIVE §MATH-01] |
+
+---
+
 ### Cat Quarter (CQ) — NODE 77
 
 | Quest ID | Title | Type | Acts | Reward | Status |
@@ -472,6 +486,7 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 | ✅ Live §DESIGN-03 | 9 (4 Birka Ceremonia + 5-act Yael arc) |
 | ✅ Live §DUNGEON-01/02 | 43 quests (8 five-act `d02xx` arcs + 3-quest Inquisitor gauntlet) + node-woven Prior Carrier + D02-11 framework |
 | ✅ Live §GR | 3 (La Riva: Q-FR-01/02/03) |
+| ✅ Live §MATH-01 | 5 (Mathematical World collect quests — Undercity pocket) |
 | ✅ Live §LXV–§LXIX | 5 (Mediterranean Paul arc) |
 | ✅ Live §SIREN-01 | 5 (Littoral Courts + Overseer) |
 | ✅ Live §CROWN-01 | 24 (Whisper ×6, Glut ×6, Wane ×6, Inn ×6) |
@@ -480,7 +495,7 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 | ✅ Live §LXXI | 2 (Sunken Hall inscription + Tide Gate activation) |
 | ✅ Live §LXXII | 1 (Conclave Annex post-event note) |
 | ✅ Live §LXXIII | 1 (The Depth — 18 Meters: both-chains closure) |
-| **Total live** | **~110** |
+| **Total live** | **~115** |
 | ✅ Live §SPARK-01 | 5 (Smalt + Overture + Clot + Who Done It + Aldous Comes Clean) |
 | ✅ Live §SPARK-01 SEA | 3 (Calm Sea + Warmth Eel + The Escort) |
 | ✅ Live §HUNT-01 | 4 (Hook + Hull Investigation + Trail + Den Confrontation) |

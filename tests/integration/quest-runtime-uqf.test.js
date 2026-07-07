@@ -8170,8 +8170,9 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
     'quest_la_riva_01','quest_la_riva_03','quest_horned_shark','quest_shale_drop','quest_night_eel',
     'quest_no_fishing_sign','quest_guide_05','quest_brynn_firewood','quest_void_below','quest_city_watch_patrol'];
   // Wave 3b later migrated 32 of the original 38 skips; W7d migrated wm_01 (the
-  // last completeFn → flagsAny + the new itemsMinAny OR-term). Terminal legacy
-  // holdouts: the 5 math placeholders (§MATH-01 completion-design gap).
+  // last completeFn → flagsAny + the new itemsMinAny OR-term). The 5 math
+  // placeholders (the terminal legacy holdouts) migrated 2026-07-07 (§MATH-01
+  // completions ship) — legacyCount pin flipped 5 → 0.
   const W3B = ['quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
   const GATE_KEPT = ['quest_wm_05','quest_road_damascus','quest_inn_06'];
 
@@ -8197,7 +8198,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
       return { bad, legacyCount: legacyStill.length };
     }, { w3a: W3A, w3b: W3B, kept: GATE_KEPT });
     expect(r.bad).toEqual([]);
-    expect(r.legacyCount).toBe(W3B.length);
+    expect(r.legacyCount).toBe(0);   // §MATH-01 2026-07-07: the last 5 legacy holdouts are UQF now
   });
 
   test('completion.items engine term: fuzzy two-way OR matching, composes with flags AND-group', async ({ page }) => {
@@ -8349,7 +8350,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
       return { bad, legacyCount: stillLegacy.length };
     }, { w3b: W3B, holdouts: HOLDOUTS, kept: GATE_KEPT });
     expect(r.bad).toEqual([]);
-    expect(r.legacyCount).toBe(HOLDOUTS.length);
+    expect(r.legacyCount).toBe(0);   // §MATH-01 2026-07-07: math holdouts migrated (see §MATH-01 describe)
   });
 
   test('countMin coercion truth-table: number, array length, object keys, nested path, missing', async ({ page }) => {
@@ -8934,9 +8935,9 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
     });
     expect(r.fns).toEqual([]);              // zero closures left
     expect(r.arrayCount).toBe(r.total);     // every carrier is an array chain
-    expect(r.arrayCount).toBe(88);          // 27 (W7b closures) + 61 (W7c per-id block)
+    expect(r.arrayCount).toBe(93);          // 27 (W7b closures) + 61 (W7c per-id block) + 5 (§MATH-01 gold chains)
     expect(r.nonUqf).toEqual([]);           // §W7d — the last legacy carrier (wm_01) migrated
-    expect(r.uqfCount).toBe(88);
+    expect(r.uqfCount).toBe(93);
     expect(r.invalid).toEqual([]);          // every chain passes bit contracts
   });
 
@@ -9282,7 +9283,7 @@ test.describe('§ARCH-01 W7d — legacy branches retired; wm_01 migrated via ite
     expect(r.xpNonSide).toEqual([]);
   });
 
-  test('the full non-UQF residue is exactly math×5 + the 30 blq stubs (all activate-only, no completion surface)', async ({ page }) => {
+  test('the full non-UQF residue is exactly the 30 blq stubs (all activate-only, no completion surface)', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       const nonUqf = Object.values(QUEST_DB).filter(q => q.schema !== 'UQF-1.0');
@@ -9292,8 +9293,9 @@ test.describe('§ARCH-01 W7d — legacy branches retired; wm_01 migrated via ite
           q.completeFn || (q.completeItems || []).length || q.completion).map(q => q.id),
       };
     });
-    expect(r.ids.length).toBe(35);
-    expect(r.ids.filter(id => /^quest_math_/.test(id)).length).toBe(5);
+    // §MATH-01 2026-07-07: quest_math_01–05 migrated to UQF — residue 35 → 30.
+    expect(r.ids.length).toBe(30);
+    expect(r.ids.filter(id => /^quest_math_/.test(id)).length).toBe(0);
     expect(r.ids.filter(id => /^blq_(05|06|07|08|09|10)_/.test(id)).length).toBe(30);
     expect(r.withCompletionSurface).toEqual([]);   // none of them can ever complete — nothing rides the retired terms
   });
@@ -9365,5 +9367,135 @@ test.describe('§ARCH-01 W8c — storyRender audit: engine is the sole completer
     expect(src.includes("S_story.quests[qId] = 'complete'")).toBe(false);                     // tournament win — engine now
     expect(src.includes("S_story.quests['quest_no_fishing_sign'] = 'complete'")).toBe(false); // coupon redeem — engine now
     expect(src.includes("S_story.quests['quest_la_riva_02'] = 'complete'")).toBe(true);       // §GR inline reward — deferred by design
+  });
+});
+
+// ─── §MATH-01 (2026-07-07) — Mathematical World completions ─────────────────
+// The five quest_math quests migrated from legacy activate-only to UQF collect
+// quests: completion:{ itemsAll:[<document>], atNode:<collect node> }, gold via
+// onComplete reward bits, xpAward paid by the engine. Nodes EHZ/ZERO/MONS/CNTR
+// moved to the walkable 2×2 pocket NE of HKG "Neon Undercity" (29,247 / 28,247 /
+// 29,248 / 28,248) — each the sole code on its cell, so activation and node.loot
+// pickup work. Design: lab-reports/lab-report-math01-completions.md.
+test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
+  const SHAPES = {
+    quest_math_01: { item: 'Zero Treatise',            at: 'ZERO', gold: 300, xp: 350 },
+    quest_math_02: { item: '12-Symmetry Manuscript',   at: 'MONS', gold: 350, xp: 400 },
+    quest_math_03: { item: 'Hamadani Failure Record',  at: 'EHZ',  gold: 350, xp: 400 },
+    quest_math_04: { item: 'Counting Document Bundle', at: 'ZERO', gold: 500, xp: 500 },
+    quest_math_05: { item: 'Moonshine Memo',           at: 'CNTR', gold: 600, xp: 600 },
+  };
+
+  test('all five are UQF-1.0, validate, gate:{}, bits:[], itemsAll+atNode shapes as designed', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((shapes) => {
+      const bad = [];
+      for (const [id, s] of Object.entries(shapes)) {
+        const q = QUEST_DB[id];
+        if (!q) { bad.push(id + ':missing'); continue; }
+        if (q.schema !== 'UQF-1.0') bad.push(id + ':schema');
+        if (!validateQuest(q).valid) bad.push(id + ':invalid');
+        if (!q.gate || Object.keys(q.gate).length) bad.push(id + ':gate');
+        if ((q.bits || []).length) bad.push(id + ':bits');
+        const c = q.completion || {};
+        if (!Array.isArray(c.itemsAll) || c.itemsAll[0] !== s.item) bad.push(id + ':itemsAll');
+        if (c.atNode !== s.at) bad.push(id + ':atNode');
+        const gold = (q.onComplete || []).find(b => b.kind === 'reward');
+        if (!gold || gold.gold !== s.gold) bad.push(id + ':gold');
+        if (q.xpAward !== s.xp) bad.push(id + ':xpAward');
+        if (q.completeFn || q.activateCond) bad.push(id + ':legacy-residue');
+      }
+      return bad;
+    }, SHAPES);
+    expect(r).toEqual([]);
+  });
+
+  test('math nodes occupy the HKG pocket, one code per cell, cells passable; node.loot carries the documents', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const want = { EHZ: '29,247', ZERO: '28,247', MONS: '29,248', CNTR: '28,248' };
+      const bad = [];
+      for (const [code, key] of Object.entries(want)) {
+        const cs = CELL_GRID[key] || [];
+        if (cs.length !== 1 || cs[0] !== code) bad.push(code + ':cell=' + cs.join('/'));
+        if (IMPASSABLE_CELLS.has(key)) bad.push(code + ':impassable');
+        const co = NODE_COORDS[code];
+        if (!co || `${co.r},${co.c}` !== key) bad.push(code + ':coords');
+      }
+      const loot = {
+        EHZ: 'Hamadani Failure Record', MONS: '12-Symmetry Manuscript',
+        ZERO: 'Zero Treatise · Counting Document Bundle', CNTR: 'Moonshine Memo · ∞-Fragment',
+      };
+      for (const [code, l] of Object.entries(loot))
+        if (NODE_MAP[code].loot !== l) bad.push(code + ':loot');
+      return bad;
+    });
+    expect(r).toEqual([]);
+  });
+
+  test('functional: arrival at ZERO grants both documents and completes active math_01 + math_04 same visit (xp+gold)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20; S_story.gold = 1000; S_story.xp = 0;
+      S_story.inventory = []; S_story.visited = {};
+      S_story.quests.quest_math_01 = 'active';
+      S_story.quests.quest_math_04 = 'active';
+      S_story.currentCode = 'ZERO';
+      const node = { ...NODE_MAP.ZERO, code: 'ZERO' };
+      const lootMsg = storyCollectLoot(node);
+      const msgs = storyCheckQuests(node);
+      return {
+        lootMsg,
+        inv: S_story.inventory.map(i => i.name),
+        q1: S_story.quests.quest_math_01, q4: S_story.quests.quest_math_04,
+        gold: S_story.gold, xp: S_story.xp,
+        msgs: msgs.join(' | '),
+      };
+    });
+    expect(r.inv).toContain('Zero Treatise');
+    expect(r.inv).toContain('Counting Document Bundle');
+    expect(r.q1).toBe('complete');
+    expect(r.q4).toBe('complete');
+    expect(r.gold).toBe(1000 + 300 + 500);
+    expect(r.xp).toBe(350 + 500);
+    expect(r.msgs).toContain('✓ The Number That Means Nothing');
+    expect(r.msgs).toContain('✓ The Counting Quest');
+  });
+
+  test('functional: math_02 activates at EHZ, does NOT complete there, completes at MONS on pickup', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.level = 20; S_story.gold = 0; S_story.xp = 0;
+      S_story.inventory = []; S_story.visited = {};
+      S_story.currentCode = 'EHZ';
+      const ehz = { ...NODE_MAP.EHZ, code: 'EHZ' };
+      storyCollectLoot(ehz);
+      storyCheckQuests(ehz);
+      const afterEhz = S_story.quests.quest_math_02;
+      S_story.currentCode = 'MONS';
+      const mons = { ...NODE_MAP.MONS, code: 'MONS' };
+      storyCollectLoot(mons);
+      storyCheckQuests(mons);
+      return { afterEhz, afterMons: S_story.quests.quest_math_02,
+               canBefore: afterEhz === 'active', gold: S_story.gold };
+    });
+    expect(r.afterEhz).toBe('active');
+    expect(r.afterMons).toBe('complete');
+    expect(r.gold).toBe(350);
+  });
+
+  test('functional: atNode holds — holding the Moonshine Memo does not complete math_05 away from CNTR', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.quests.quest_math_05 = 'active';
+      S_story.inventory = [{ name: 'Moonshine Memo' }];
+      S_story.currentCode = 'MONS';
+      const away = QuestRuntime.canComplete('quest_math_05');
+      S_story.currentCode = 'CNTR';
+      const there = QuestRuntime.canComplete('quest_math_05');
+      return { away, there };
+    });
+    expect(r.away).toBe(false);
+    expect(r.there).toBe(true);
   });
 });

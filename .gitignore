@@ -94,3 +94,4 @@ test-results/
 
 # ── §MESH tracker log (wbapi-toggle.sh tracker) ──────────────────────────────
 wbapi-tracker.log
+milepoints/wbapi-server.error
