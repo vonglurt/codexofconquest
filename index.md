@@ -414,7 +414,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Cell map (410 nodes)** | `maps.md` | `plan.md §II (NODE_MAP · NODE_COORDS · CELL_GRID)` · `story-flowchart.md` · `docs-node-network.md` |
 | **Overseer (The Fog Bank / LSO)** | `world.md` · `story.md Layer 104b` | `lab-reports/lab-report-littoral-courts.md §III` |
 | **Pachelbel / Deacon** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
-| **Paul's Mediterranean Journey (§LXV–§LXIX)** | `story.md Layer 104a` · `maps.md` | `lab-reports/lab-report-saul-paul-travel-reference.md` · `lab-reports/lab-report-saul-paul-vignette-spec.md` |
+| **Saul→Paul arc (§LIX–§LXIX + §PAUL-01; §FUTURE-01 ✅ closed 2026-07-07)** | `story.md Layer 104a` · `maps.md` · `quest.md` §THE SAUL→PAUL ARC (18-quest table) | `lab-reports/lab-report-saul-paul-travel-reference.md` · `lab-reports/lab-report-saul-paul-vignette-spec.md` |
 | **Pit training / Weckmann** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `lab-reports/lab-report-kenickie-chronicle.md` |
 | **Polyphonic organ** | `5thOrgan.html` | `lab-reports/lab-report-Polyphonic-Organ-Synth.md` |
 | **Potions (4 tiers)** | `mechanics-economy.md` | `plan.md §II (POTION_TIERS)` |

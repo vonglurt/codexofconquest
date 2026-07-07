@@ -372,33 +372,48 @@ A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mi
 
 ---
 
-## PAUL'S MEDITERRANEAN JOURNEYS — Act IV (§LXV–§LXIX)
-*(Nodes: PL, AE, EF2, KR, ST — implemented 2026-05-28)*
+## THE SAUL→PAUL ARC — Act IV (§LIX–§LXIX + §PAUL-01)
+*(Live nodes: JRS, DAM, RUH, ADA, HTY, CI2, KYA, KVA, ATH, EF2, ZTH, MLA, FCO — design-era codes HR/KS/DR/TS/AO/LT/PL/AE/KR/EF/MT/ST from `lab-report-saul-paul-vignette-spec.md` shipped under real-world names. Full-chain doc sync 2026-07-07 (§FUTURE-01 audit): the 13 conversion-chain/Malta quests below were live but undocumented.)*
 
-All quests activate on first node visit. All use Ceremonia Roll skill-check system or side-quest `completeFn` flag checks. NPC dialogue mutations handle state on first interaction.
+Skill checks use the Ceremonia Roll system; accomplishment quests complete on `S_story` flags set by node arrival (`storyRender` — the DAM conversion, the MLA snake), NPC first-interaction mutations (`NPC_DIALOGUE` quoteFn ladders — Anath, Barnach), or the sleep-day counters (`storyConfirmSleep` — 3 blind days at DAM, 15 Hellenist days at JRS). The conversion is the availability rewrite: every quest below (except the opener) is flag-gated downstream of `saulConverted`, set on first DAM arrival. Post-conversion, `Thorn (Permanent)` appears on the character sheet — no mechanical penalty, no tooltip, no removal quest.
 
 | Quest ID | Title | Type | Check | DC | Pass Flag | XP | Status |
 |----------|-------|------|-------|----|-----------|----|--------|
-| `quest_philippi` | "The Purple Merchant" | [ACCOMPLISHMENT] | — | — | `lyraConverted` | 150 | [✅ LIVE §LXV] |
-| `quest_areopagus` | "To An Unknown One" | [SKILL CHECK] | CHA Persuasion | 13 | `areopagusSpeech` | 200 | [✅ LIVE §LXVI] |
-| `quest_ephesus_riot` | "The Silversmith's Meeting" | [SKILL CHECK] | CHA Persuasion | 12 | `demetriusRiotEscaped` | 175 | [✅ LIVE §LXVII] |
-| `quest_corinth_letters` | "Tent Canvas & Letters" | [ACCOMPLISHMENT] | — | — | `corinthLettersWritten` | 200 | [✅ LIVE §LXVIII] |
-| `quest_rome_arrest` | "The Rented House" | [ACCOMPLISHMENT] | — | — | `romeArrestBegun` | 300 | [✅ LIVE §LXIX] |
+| `quest_road_damascus` | "The Light at Noon" | [ACCOMPLISHMENT] | — | — | `saulConverted` | 200 | [✅ LIVE §LIX — JRS→DAM; needs Three Jerusalem Warrants] |
+| `quest_anath` | "The House on the Lower Road" | [ACCOMPLISHMENT] | — | — | `anathSightRestored` | 300 | [✅ LIVE §LIX — DAM; 3 blind sleep-days, Anath arrives day 3] |
+| `quest_basket_damascus` | "Over the Wall" | [SKILL CHECK] | STR Athletics | 12 | `escapedDamascus` + `basketRopeComplete` | 150 | [✅ LIVE §LX — DAM; retryable, 1-day gate] |
+| `quest_hellenists_jerusalem` | "Fifteen Days" | [ACCOMPLISHMENT] | — | — | `hellenistsThreaten` | 150 | [✅ LIVE §LXI — JRS; 15 sleep-days after Barnach vouches] |
+| `quest_barnach_finds` | "A Year Looking" | [ACCOMPLISHMENT] | — | — | `barnachFoundPaul` | 100 | [✅ LIVE §LXI — ADA (Tarsus)] |
+| `quest_antioch_commission` | "The Sending" | [ACCOMPLISHMENT] | — | — | `commissionReceived` | 150 | [✅ LIVE §LXII — HTY] |
+| `quest_ezzir` | "The Sorcerer's Opposition" | [SKILL CHECK] | WIS Insight | 14 | `ezzirConfronted` | 200 | [✅ LIVE §LXIII — CI2; retryable, 1-day gate] |
+| `quest_governor_cyprus` | "The Governor Listens" | [SKILL CHECK] | CHA Persuasion | 11 | `govCopperConverted` | 250 | [✅ LIVE §LXIII — CI2; retryable, same-day] |
+| `quest_lame_lystra` | "The Gate" | [SKILL CHECK] | WIS Faith | 10 | `lameManHealed` | 200 | [✅ LIVE §LXIV — KYA; non-retryable, fail is narrative] |
+| `quest_stoning_lystra` | "Left for Dead" | [SKILL CHECK] | STR Athletics | 13 | `stoningEvent` (both paths; fail → HP capped 1 at KYA) | 150 | [✅ LIVE §LXIV — KYA] |
+| `quest_philippi` | "The Purple Merchant" | [ACCOMPLISHMENT] | — | — | `lyraConverted` | 150 | [✅ LIVE §LXV — KVA] |
+| `quest_prison_phillam` | "Seven Stairs, Then Five" | [SKILL CHECK] | WIS Insight | 12 | `phillippiJailerConverted` | 200 | [✅ LIVE §PAUL-01 — KVA] |
+| `quest_areopagus` | "To An Unknown One" | [SKILL CHECK] | CHA Persuasion | 13 | `areopagusSpeech` | 200 | [✅ LIVE §LXVI — ATH] |
+| `quest_ephesus_riot` | "The Silversmith's Meeting" | [SKILL CHECK] | CHA Persuasion | 12 | `demetriusRiotEscaped` | 175 | [✅ LIVE §LXVII — EF2] |
+| `quest_corinth_letters` | "Tent Canvas & Letters" | [ACCOMPLISHMENT] | — | — | `corinthLettersWritten` | 200 | [✅ LIVE §LXVIII — ZTH] |
+| `quest_shipwreck_melta` | "Two Hundred and Seventy-Six" | [SKILL CHECK] | STR Athletics | 12 | `shipwreckSurvived` | 250 | [✅ LIVE §PAUL-01 — MLA] |
+| `quest_snake_melta` | "It Did Nothing" | [ACCOMPLISHMENT] | — | — | `maltaSnakeEvent` | 150 | [✅ LIVE §PAUL-01 — MLA; fires on arrival, no roll, no explanation] |
+| `quest_rome_arrest` | "The Rented House" | [ACCOMPLISHMENT] | — | — | `romeArrestBegun` | 300 | [✅ LIVE §LXIX — FCO] |
 
-**`quest_philippi` — "The Purple Merchant"** *(Node: PL. Object: the purple cloth arranged on the bridge stall.)*
+**Chain order (flag-gated availability, movement never gated):** `road_damascus` (warrants) → `saulConverted` → `anath` → `anathSightRestored` → `basket_damascus` · then `barnachVouchedHR` (JRS Barnach NPC) → `hellenists_jerusalem` → `barnach_finds` → `antioch_commission` → `commissionReceived` → `ezzir` → `governor_cyprus` · `philippi` → `prison_phillam` · `shipwreck_melta` → `snake_melta` → `rome_arrest`. `lame_lystra` → `stoning_lystra` (questsDone gate).
+
+**`quest_philippi` — "The Purple Merchant"** *(Node: KVA — design PL. Object: the purple cloth arranged on the bridge stall.)*
 Lyra has been watching from across the bridge for two days before she speaks. When she speaks, it is because she has already decided. NPC first-visit mutation sets `lyraConverted: true`. Quest completes on flag. The earthquake (every door of the city prison opens) is narrated in the NPC text; it is not a separate event.
 
-**`quest_areopagus` — "To An Unknown One"** *(Node: AE. Object: the inscription — TO AN UNKNOWN ONE.)*
+**`quest_areopagus` — "To An Unknown One"** *(Node: ATH — design AE. Object: the inscription — TO AN UNKNOWN ONE.)*
 The altar has been maintained for two hundred years. Paul has been standing in front of it for a long time. CHA Persuasion DC 13: begin with the altar, not with a correction. Pass: Dionysius stays; Damaris stays. Fail: the steward receives the interpretation politely; the council does not invite him to speak.
 
 **`quest_ephesus_riot` — "The Silversmith's Meeting"** *(Node: EF2. Object: the guild meeting notice, larger than the hall.)*
 Demetrius's argument is economic and theological simultaneously. The theater fills. CHA Persuasion DC 12: the city clerk reaches the front and names the legal position before the charges can be filed. Pass: the theater empties before dark; the charges are never filed. Fail: Paul leaves Ephesus the next morning.
 
-**`quest_corinth_letters` — "Tent Canvas & Letters"** *(Node: KR. Object: the letters written at night, canvas on the frame behind.)*
+**`quest_corinth_letters` — "Tent Canvas & Letters"** *(Node: ZTH — design KR. Object: the letters written at night, canvas on the frame behind.)*
 Prisca and Akil hire him because he knows the trade. NPC first-visit mutation sets `corinthLettersWritten: true` and delivers the 18-month compressed narrative. Some of the letters written here are the most important things he will ever write. He does not know which ones yet.
 
-**`quest_rome_arrest` — "The Rented House"** *(Node: ST. Object: the door that cannot be opened from the inside.)*
-Requires `maltaSnakeEvent: true` (Malta arc fires first on arrival at ML). NPC first-visit mutation by Timael sets `romeArrestBegun: true`. Visitors every day. Letters every night. The arc does not end here. It stops here. Disposition: *"Where are you going next?"*
+**`quest_rome_arrest` — "The Rented House"** *(Node: FCO — design ST. Object: the door that cannot be opened from the inside.)*
+Requires `maltaSnakeEvent: true` (Malta arc fires first on arrival at MLA). NPC first-visit mutation by Timael sets `romeArrestBegun: true`. Visitors every day. Letters every night. The arc does not end here. It stops here. Disposition: *"Where are you going next?"*
 
 ---
 
@@ -487,7 +502,7 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 | ✅ Live §DUNGEON-01/02 | 43 quests (8 five-act `d02xx` arcs + 3-quest Inquisitor gauntlet) + node-woven Prior Carrier + D02-11 framework |
 | ✅ Live §GR | 3 (La Riva: Q-FR-01/02/03) |
 | ✅ Live §MATH-01 | 5 (Mathematical World collect quests — Undercity pocket) |
-| ✅ Live §LXV–§LXIX | 5 (Mediterranean Paul arc) |
+| ✅ Live §LIX–§LXIX + §PAUL-01 | 18 (Saul→Paul arc — conversion chain + Mediterranean journeys; full-chain doc sync 2026-07-07) |
 | ✅ Live §SIREN-01 | 5 (Littoral Courts + Overseer) |
 | ✅ Live §CROWN-01 | 24 (Whisper ×6, Glut ×6, Wane ×6, Inn ×6) |
 | ✅ Live §CROWN-01 Amendment A | 10 (3 failure dispatches + 4 hag commissions + 3 iodine track) |
@@ -495,7 +510,7 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 | ✅ Live §LXXI | 2 (Sunken Hall inscription + Tide Gate activation) |
 | ✅ Live §LXXII | 1 (Conclave Annex post-event note) |
 | ✅ Live §LXXIII | 1 (The Depth — 18 Meters: both-chains closure) |
-| **Total live** | **~115** |
+| **Total live** | **~128** |
 | ✅ Live §SPARK-01 | 5 (Smalt + Overture + Clot + Who Done It + Aldous Comes Clean) |
 | ✅ Live §SPARK-01 SEA | 3 (Calm Sea + Warmth Eel + The Escort) |
 | ✅ Live §HUNT-01 | 4 (Hook + Hull Investigation + Trail + Den Confrontation) |
