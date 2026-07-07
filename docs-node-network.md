@@ -3,7 +3,7 @@
 # roll2hit.com — Node Network Technical Reference
 
 **File:** `roll2hit-v3.html`  
-**Last updated:** 2026-07-02 §MESH-01 (multiplayer mesh, §12)  
+**Last updated:** 2026-07-07 §MESH-02 (connection center + operator endpoints, §12)  
 **Node count:** 422 named nodes with grid coordinates (reachable via `cellMove`). The 268 zombie J-stubs with no `r,c` were purged in §CELL-05b.
 
 ---
@@ -385,7 +385,7 @@ Preferred path: use `POST /api/node` via WBAPI (rejects duplicate coordinates an
 
 ---
 
-## 12. Multiplayer Mesh (§MESH-01, ✅ Incs a–e 2026-07-02)
+## 12. Multiplayer Mesh (§MESH-01, ✅ Incs a–e 2026-07-02 · §MESH-02 connection center 2026-07-07)
 
 Server-to-server presence replication over the node network. Player-facing view: `mechanics.md` "Multiplayer — Mesh Presence"; endpoint quick reference: `wbapi-help.md`; design: `lab-reports/lab-report-mesh-multiuser.md` + `lab-reports/lab-report-mesh-sync-architecture.md`. All state is server-side (no game-file changes beyond `ENGINE_VER`/`WORLD_NAME` consts and the opt-in `MP` client module); since 2026-07-06 (§MESH-01-REVIEW) the mesh kernel — ACL, ingress rate limit, gossip, tracker/federation/bootstrap — lives in `mesh.js`, a factory `require()`d by `wbapi-server.js`, which keeps sessions, SSE fanout, the ledger, and all HTTP routes.
 
@@ -418,7 +418,11 @@ Server-to-server presence replication over the node network. Player-facing view:
 - **Encounter suppression** — `/session/move` nulls the freshly-rolled `s.encounter` when a sentry occupies the destination cell (RNG stream still advances, so the instanced trace stays deterministic; only the result is voided). The response carries `sentryGuard: <name>` when it fired.
 - **Auto-assist + economy are client-side** — the browser reads the co-present sentry off presence to add an extra attacker die (`_sentryStrike`) and suppress its own `_enterEmptyCell` roll (`_partyEncounterRate → 0`). The player bankrolls their own posts (`S_story.sentries`: upfront cost + a daily upkeep on rest, recalled if unpaid) — the server only hosts the bot.
 
-**Test gates:** `npm run test:mud` — 251 checks, sections [A]–[Q] (incl. [P] rate limiting, the `./api.sh mesh` CLI wrappers, and [Q] §MESH-01-FU 11–13 ACL template / tracker cache+bootstrap / chat backlog) + [H] §MESH-01h sentry cases (deploy→presence, deterministic encounter suppression, recall→leave, prune-immunity), including the Inc (e) partition-heal harness (3 servers + tracker: convergence, exactly-once across partitions via ACL-file split/heal, stale-replica availability, snapshot re-convergence, incompat-refusal + world-group segregation). Playwright: `multiplayer-presence.test.js` 7/7, `mesh-sentry.test.js` 7/7 (client half), `mesh-copresence-buff.test.js` 6/6, `mesh-hireling-guide.test.js` 6/6, `worldbuilder-mesh.test.js` + mesh tab 4/4.
+### Connection center + operator endpoints (§MESH-02)
+
+The game's Map sheet carries the multiplayer UI as sub-tabs (🗺 Map · 🌐 Connect · 🔭 Discover · 🛡 Lists) — player-facing walkthrough: `mechanics.md §Multiplayer` "Connection center"; design + locked decisions (D2/D3/D4/D6/D7): `lab-reports/lab-report-mesh02-connections-ui.md`. Server surfaces added for it: **`GET/PUT /api/mesh/acl`** (validated merge-write ACL editor over `MESH_ACL_FILE`, comment keys preserved, hot-reload) · **`GET /api/mesh/blocklist`** (403 until the `shareBlocklist` opt-in; publishes the three block* lists only — peers preview and merge manually, never automatically) · **`POST /api/mesh/connect`** (runtime peer/tracker dial, same shapes as `--peer`/`TRACKER_URL`, dials in the same request, outbound ACL-gated) · **`GET /api/session/chat[?limit=&r=&c=]`** (global chat-history ring for the 💬 panel) · footprints on `buildLook` (§MESH-02j — per-cell `[{pid,name,agoMs}]`, ≤8/cell, 30-min TTL, display-only). CLI parity (§MESH-02g): `./api.sh mesh acl|blocklist|connect` — see `wbapi-help.md §Mesh API`. Everything here is connection/display layer: the mover reads none of it.
+
+**Test gates:** `npm run test:mud` — 270 checks, sections [A]–[R] (incl. [R] §MESH-02a ACL editor + blocklist share flip) (incl. [P] rate limiting, the `./api.sh mesh` CLI wrappers, and [Q] §MESH-01-FU 11–13 ACL template / tracker cache+bootstrap / chat backlog) + [H] §MESH-01h sentry cases (deploy→presence, deterministic encounter suppression, recall→leave, prune-immunity), including the Inc (e) partition-heal harness (3 servers + tracker: convergence, exactly-once across partitions via ACL-file split/heal, stale-replica availability, snapshot re-convergence, incompat-refusal + world-group segregation). Playwright: `multiplayer-presence.test.js` 7/7, `mesh-sentry.test.js` 7/7 (client half), `mesh-copresence-buff.test.js` 6/6, `mesh-hireling-guide.test.js` 6/6, `worldbuilder-mesh.test.js` + mesh tab 4/4, `mesh-connections-ui.test.js` 8/8 (§MESH-02f — hermetic connection-center UI, `:1367` route-blocked).
 
 ---
 

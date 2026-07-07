@@ -1,8 +1,21 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 # Lab Report — §MESH-02: Map-Tab Connection Center (sub-tabs · discovery · ACL UI · shared blocklists)
 
-**Date:** 2026-07-06 · **Status:** design locked → implementing
+**Date:** 2026-07-06 · **Status:** ✅ SHIPPED 2026-07-07 (increments a–j; ship records in plan.md §MESH-02)
 **Parents:** §MESH-01 (closed; `lab-report-mesh-multiuser.md`), mesh-acl (§MESH-01-FU 11)
+
+| Inc | What | Shipped |
+|-----|------|---------|
+| (a) | Server endpoints — `GET/PUT /api/mesh/acl` + `GET /api/mesh/blocklist` (§3.1) | ✅ 2026-07-06 |
+| (b) | Map-sheet sub-tab shell (`#map-subtab-bar`, 4 panes, `msubSwitch`, `window.__mesh02`) | ✅ 2026-07-06 |
+| (c) | Connect pane — status card + one connect path via `mpJoin`/`mpToggle`/`mpResolveMagnet(ui)` | ✅ 2026-07-06 |
+| (d) | Discover pane — D6 local scan, Find, list sources + D4 whitelist-gated auto-load | ✅ 2026-07-07 |
+| (e) | Lists pane — client black/whitelist, server ACL editor, D2/D3 peer preview→explicit merge | ✅ 2026-07-07 |
+| (f) | Committed tests — mud-harness [R] (19 checks) + hermetic `mesh-connections-ui.test.js` (8) | ✅ 2026-07-07 |
+| (g) | Docs + CLI parity — `./api.sh mesh acl\|blocklist\|connect`; wbapi-help/mechanics/docs-node-network/index | ✅ 2026-07-07 |
+| (h) | 💬 multi-user chat history (`GET /api/session/chat`, `MP.chat` ring + panel) | ✅ 2026-07-06 |
+| (i) | Runtime mesh connect (`POST /api/mesh/connect`, worldbuilder 🔌 box) | ✅ 2026-07-06 |
+| (j) | 👣 footprints (`FOOTPRINTS` ring on `buildLook`, once-per-cell client announce) | ✅ 2026-07-07 |
 
 ## 1. Problem
 

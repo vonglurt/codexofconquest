@@ -265,6 +265,7 @@ The game is a D&D 5e world stored in a single HTML file. The API manages: nodes 
   ./api.sh roads [pins]                         road net summary / pins file (§NAV-01h)
   ./api.sh reweave                              regenerate ROAD_RUNS from roads-pins.json + check:roads
   ./api.sh mesh status|peers|tracker [url]      multiplayer mesh: identity/peers/server browser (§MESH-01)
+  ./api.sh mesh acl|blocklist|connect ...       mesh ACL editor, blocklist share/preview, runtime dial (§MESH-02)
 
 Reply in 1–3 lines. Lead with a concrete ./api.sh command when applicable.`;
 
@@ -471,11 +472,70 @@ const CMD = {
   },
 
   // §MESH-01-FU 10 — mesh status / peers / tracker: API-first parity with the 🌐 Mesh tab
+  // §MESH-02g — mesh acl / blocklist / connect: parity with the Map-tab connection center
   async mesh(pos, flags) {
     const sub = pos[1];
-    if (!sub || !['status', 'peers', 'tracker'].includes(sub))
-      die('Usage: ./api.sh mesh status | mesh peers | mesh tracker [url]   [--json]');
+    if (!sub || !['status', 'peers', 'tracker', 'acl', 'blocklist', 'connect'].includes(sub))
+      die('Usage: ./api.sh mesh status | peers | tracker [url] | acl [k=v ...] | blocklist [host:port] | connect <host:port|http(s)://tracker>   [--json]');
     await requireServer();
+
+    // ── §MESH-02a/g — acl: GET (no args) or validated merge-PUT (k=v args) ──
+    if (sub === 'acl') {
+      const body = parseKV(pos.slice(2));
+      const LISTS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes'];
+      for (const k of LISTS)   // comma-split string → array (JSON arrays pass through)
+        if (k in body && typeof body[k] === 'string') body[k] = body[k].split(',').map(v => v.trim()).filter(Boolean);
+      const editing = Object.keys(body).length > 0;
+      const r = await request(editing ? 'PUT' : 'GET', '/api/mesh/acl', editing ? body : null);
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      const a = r.body.acl;
+      if (flags.json) { printResult(r.body, flags); return; }
+      ok(`${editing ? 'acl updated' : 'acl'} (${r.body.file}${r.body.exists === false ? ' — no file yet, defaults' : ''}): mode ${a.mode} · shareBlocklist ${a.shareBlocklist}`);
+      for (const k of LISTS) if ((a[k] || []).length) process.stdout.write(`  ${k}: ${a[k].join(', ')}\n`);
+      if (!editing) info('edit: ./api.sh mesh acl mode=allowlist shareBlocklist=true blockIps=1.2.3.4,5.6.7.8  (merge-write; lists comma-split)');
+      return;
+    }
+
+    // ── §MESH-02e/g — blocklist: this server's shared list, or PREVIEW a peer's
+    // (read-only — D2: a peer's blocklist is never auto-imported; merging is an
+    // explicit click in the game's 🛡 Lists pane) ──
+    if (sub === 'blocklist') {
+      const peer = pos[2];
+      let r;
+      if (peer) {
+        const u = (/^https?:\/\//.test(peer) ? peer : `http://${peer}`).replace(/\/+$/, '');
+        try { r = await doHTTP('GET', `${u}/api/mesh/blocklist`, null); }
+        catch (e) { die(`peer unreachable: ${e.code || e.message}`); }
+      } else {
+        r = await request('GET', '/api/mesh/blocklist');
+      }
+      if (r.status === 403) die(`${peer || 'this server'} does not share its blocklist (shareBlocklist opt-in is off — D3)`);
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      if (flags.json) { printResult(r.body, flags); return; }
+      const b = r.body;
+      const n = ['blockServerIds', 'blockIps', 'blockWorldHashes'].reduce((s, k) => s + (b[k] || []).length, 0);
+      ok(`${peer ? `peer ${peer}` : `server ${String(b.serverId).slice(0, 8)}`} shares ${n} blocklist entrie(s)  ·  ${b.engineVer}`);
+      for (const k of ['blockServerIds', 'blockIps', 'blockWorldHashes'])
+        if ((b[k] || []).length) process.stdout.write(`  ${k}: ${b[k].join(', ')}\n`);
+      if (peer) info('preview only — merge into YOUR client blacklist via the game map tab → 🛡 Lists (explicit click, D2)');
+      return;
+    }
+
+    // ── §MESH-02i/g — connect: dial a peer or add a tracker at runtime ──
+    if (sub === 'connect') {
+      const target = pos[2];
+      if (!target) die('Usage: ./api.sh mesh connect <host:port>  (gossip peer)  |  mesh connect http(s)://tracker  (announce target)');
+      const body = /^https?:\/\//.test(target) ? { tracker: target.replace(/\/+$/, '') } : { addr: target };
+      const r = await request('POST', '/api/mesh/connect', body);
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      if (flags.json) { printResult(r.body, flags); return; }
+      const b = r.body;
+      if (b.addr) ok(`peer ${b.addr}: ${b.peer.live ? `${C.green}●${C.reset} live · ${b.peer.serverId}` : `${C.red}○${C.reset} added, not answering yet${b.peer.lastErr ? ` (${b.peer.lastErr})` : ''}`}`);
+      if (b.tracker) ok(`tracker ${b.tracker} added  ·  now announcing to: ${(b.trackerUrls || []).join(', ')}`);
+      info('connect-added peers persist via the peers cache — connect once, remembered');
+      return;
+    }
+
     const r = await request('GET', '/api/mesh/status');
     if (r.status !== 200) { printError(r); process.exit(1); }
     const s = r.body;
@@ -2814,10 +2874,11 @@ ${C.bold}═══════════════════════�
   re-anchor lat/lon or carve a sea-lane (§WALK-1.5).
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
-  MULTIPLAYER MESH  (§MESH-01)
+  MULTIPLAYER MESH  (§MESH-01 · §MESH-02)
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  API-first parity with the worldbuilder 🌐 Mesh tab. All read-only.
+  API-first parity with the worldbuilder 🌐 Mesh tab and the game's
+  map-tab connection center (🌐 Connect · 🔭 Discover · 🛡 Lists).
 
   One-call status (identity, world hash, ACL + rate limits, peers, players):
     ./api.sh mesh status
@@ -2833,8 +2894,24 @@ ${C.bold}═══════════════════════�
     ./api.sh mesh tracker --json
     → servers on a different worldHash than yours are flagged "≠ different world"
 
-  Mesh config lives server-side: peers.txt, mesh-acl.json, TRACKER_URL /
-  BOOTSTRAP_URLS / --advertise. Design: lab-reports/lab-report-mesh-multiuser.md.
+  ACL editor (§MESH-02a — GET/PUT /api/mesh/acl, validated merge-write,
+  comment keys in the file survive, hot-reloaded — no restart):
+    ./api.sh mesh acl                    show mode · shareBlocklist · six allow/block lists
+    ./api.sh mesh acl mode=allowlist shareBlocklist=true blockIps=1.2.3.4,5.6.7.8
+    → lists are comma-split; blockIps= (empty) clears a list; unknown field/bad mode → 400
+
+  Blocklist share + preview (D2/D3 — share-OUT is opt-in, import is manual):
+    ./api.sh mesh blocklist              what THIS server shares (403 until shareBlocklist=true)
+    ./api.sh mesh blocklist host:1367    preview a PEER's shared blocklist (read-only —
+                                         merging is an explicit click in the game's 🛡 Lists pane)
+
+  Runtime connect (§MESH-02i — no restart; persists via the peers cache):
+    ./api.sh mesh connect lan-host:1367          dial a gossip peer now
+    ./api.sh mesh connect http://tracker:1367    add an announce target now
+
+  Mesh config lives server-side: peers.txt, mesh-acl.json (MESH_ACL_FILE),
+  TRACKER_URL / BOOTSTRAP_URLS / --advertise. Design:
+  lab-reports/lab-report-mesh-multiuser.md + lab-report-mesh02-connections-ui.md.
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   SERVER LIFECYCLE
@@ -2947,6 +3024,9 @@ const SYNOPSIS = [
   `  ${C.green}mesh status${C.reset}                        identity · world hash · ACL/rate · peers · players  [--json]`,
   `  ${C.green}mesh peers${C.reset}                         gossip peer table + remote players  [--json]`,
   `  ${C.green}mesh tracker${C.reset} [url]                 server browser: live servers on tracker(s)  [--json]`,
+  `  ${C.green}mesh acl${C.reset} [k=v ...]                 show / merge-edit mesh-acl.json (mode, shareBlocklist, 6 lists)  [--json]`,
+  `  ${C.green}mesh blocklist${C.reset} [host:port]         this server's shared blocklist, or preview a peer's (read-only)  [--json]`,
+  `  ${C.green}mesh connect${C.reset} <addr|tracker-url>    dial a gossip peer / add a tracker at runtime (no restart)  [--json]`,
   ``,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,

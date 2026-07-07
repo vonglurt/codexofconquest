@@ -849,18 +849,29 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 
 ---
 
-## Multiplayer — Mesh Presence (§MESH-01, ✅ Incs a–e shipped 2026-07-02)
+## Multiplayer — Mesh Presence (§MESH-01, ✅ Incs a–e shipped 2026-07-02 · §MESH-02 connection center 2026-07-07)
 
-Roll2Hit is single-player-first: multiplayer is a strictly **opt-in presence layer** on top of the unchanged solo game. Full design: `lab-reports/lab-report-mesh-multiuser.md` (spec) and `lab-reports/lab-report-mesh-sync-architecture.md` (architecture write-up); server/API detail: `docs-node-network.md §12`; map surfaces: `maps.md`.
+Roll2Hit is single-player-first: multiplayer is a strictly **opt-in presence layer** on top of the unchanged solo game. Full design: `lab-reports/lab-report-mesh-multiuser.md` (spec) and `lab-reports/lab-report-mesh-sync-architecture.md` (architecture write-up); connection-center UI: `lab-reports/lab-report-mesh02-connections-ui.md`; server/API detail: `docs-node-network.md §12`; map surfaces: `maps.md`.
 
 ### What the player experiences
 
 - **🌐 opt-in toggle** in Story Mode. Nothing multiplayer runs — no network key exists in the tab — until it is clicked. The single HTML file stays fully playable offline.
 - **"Also here:" strip** under the move message lists players co-present on your cell (local and remote-server alike); **☺ dots** on the minimap and **cyan dots** on the WORLD map / GLOBE panels track everyone worldwide in real time (`player_moved` SSE).
-- **Chat**: `say` reaches players on your cell — exactly once, including across servers. On connect/resume you also get "🕰 Earlier here:" — the last ~10 lines said at your cell before you joined (§MESH-01-FU 13), so you land mid-conversation instead of in silence.
+- **Chat**: `say` reaches players on your cell — exactly once, including across servers. On connect/resume you also get "🕰 Earlier here:" — the last ~10 lines said at your cell before you joined (§MESH-01-FU 13), so you land mid-conversation instead of in silence. The **💬 toggle** in the mp-bar opens the full chat history panel (§MESH-02h): a persistent, timestamped log (cap 200, survives reloads) fed by live SSE, per-cell backlogs, and a global history fetch under one dedupe — cross-server lines carry an `@origin8` tag; an unread badge counts what you haven't opened.
+- **Footprints (§MESH-02j)**: every step stamps the arrival cell server-side (≤8 per cell, 30-min TTL). Arriving somewhere a player recently passed announces "👣 *Name* passed through here N min ago" — once per cell, self and co-present players excluded (prints are who you *missed*). Display-only; local-server only for now.
 - **Auto-reconnect**: reloading the page resumes the same session (sessionStorage id probed via the `pos` beacon); a dead id falls back to a fresh connect under the same tab opt-in.
-- **Server browser / magnet links**: Shift+🌐 (or a failed connect) opens the browser — paste an `r2h:?…` magnet, a tracker URL, or a server URL; rows show server name, 🌍 world tag, player count, ping, and a ⚠ build-mismatch flag.
+- **Server browser / magnet links**: Shift+🌐 (or a failed connect) opens the browser — paste an `r2h:?…` magnet, a tracker URL, or a server URL; rows show server name, 🌍 world tag, player count, ping, and a ⚠ build-mismatch flag. The same resolver also powers the map tab's Connect and Discover panes (below).
 - **Same display name never misattributes**: every presence surface is keyed by `pid` (`<serverId8>:<sessionId8>`), so two "Bob"s stay distinct (an `@server` suffix renders only on a name collision).
+
+### Connection center (§MESH-02 — the Map sheet's sub-tabs)
+
+The Map sheet carries a sub-tab bar — **🗺 Map · 🌐 Connect · 🔭 Discover · 🛡 Lists** — making discovery, list sources, and the server ACL first-class UI. Everything here is connection/display layer: the mover never reads any of it (Free-Movement), and presence stays single-writer. The 🌐 strip and Shift+🌐 modal remain as shortcuts.
+
+- **🌐 Connect** — a live status card (server base, 🟢/🔴 state, 🌍 world tag, mesh-peer count, engine version with a ⚠ build-mismatch flag; offline → "no server" hint) plus a server-or-magnet input with **🔌 Connect / 🔭 Find / ✕ Disconnect**. One connect path: everything delegates to the same join/resolve code as the 🌐 strip.
+- **🔭 Discover** — three ways to find servers: **🖥 local scan** (parallel manifest probes of `localhost:1360–1380` — a browser can only probe, never listen), **🔭 Find** (magnet/tracker/server input through the shared resolver), and **server-list sources** (subscribe to a plain-text or JSON list URL; one `host:port` / URL / magnet per line, `#` comments). Sources marked **auto** load when the pane opens — but **only if their host is on your whitelist** (D4); a non-whitelisted auto source shows ⚠ and is never fetched.
+- **🛡 Lists** — your client **blacklist** (matched by address, host, server id, or world hash — blacklisted servers vanish from every row list and Join refuses them) and **whitelist** (which hosts may auto-load, D4); the **server ACL editor** (mode, `shareBlocklist`, all six allow/block lists — a validated merge-write over `GET/PUT /api/mesh/acl`, offline → hint); and **peer blocklist preview** (D2/D3): fetch a peer's shared blocklist — 403 means they haven't opted in — see a counted preview, and merge into your own blacklist **only on an explicit click**. Nothing is ever auto-imported.
+
+**Quick-start — two players, one machine:** run one server (`./wbapi-toggle.sh start`), open `roll2hit-v3.html` in **two browser windows** (two local clients = one server), click 🌐 in each, pick different names. You'll see each other in "Also here:", on the map dots, and in 💬. A friend on your LAN instead runs nothing: they open the game, map tab → 🌐 Connect, and enter `your-lan-ip:1367` (or you send them an `r2h:?…` magnet); serve them the world itself via `GET /api/world/download`. CLI parity for everything above: `./api.sh mesh status|peers|tracker|acl|blocklist|connect` (§MESH-02g).
 
 ### What multiplayer never does (invariants)
 

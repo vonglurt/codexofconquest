@@ -258,9 +258,10 @@ co-signed trades (parties on different servers) are the remaining §MESH-01i run
 
 ---
 
-## Mesh API — server-to-server presence (§MESH-01)
+## Mesh API — server-to-server presence (§MESH-01 · §MESH-02)
 
-Full reference: `docs-node-network.md §12` + `lab-reports/lab-report-mesh-sync-architecture.md`.
+Full reference: `docs-node-network.md §12` + `lab-reports/lab-report-mesh-sync-architecture.md`;
+connection-center UI + ACL/blocklist design: `lab-reports/lab-report-mesh02-connections-ui.md`.
 
 ```bash
 # CLI wrappers (§MESH-01-FU 10) — the preferred read surface; all read-only
@@ -268,6 +269,16 @@ Full reference: `docs-node-network.md §12` + `lab-reports/lab-report-mesh-sync-
 ./api.sh mesh peers                      # gossip peer table (live/dead, last seen, last error) + remote players
 ./api.sh mesh tracker [url]              # server browser: live servers on the configured tracker(s), or an explicit one
 #   → servers on a different worldHash are flagged "≠ different world"; --json for tooling
+
+# CLI wrappers (§MESH-02g) — connection-center parity; acl/connect WRITE to the server
+./api.sh mesh acl                        # show mode · shareBlocklist · six allow/block lists  [--json]
+./api.sh mesh acl mode=allowlist shareBlocklist=true blockIps=1.2.3.4,5.6.7.8
+#   → validated merge-PUT (lists comma-split; k= empty clears a list; bad field/mode → 400)
+./api.sh mesh blocklist                  # what THIS server shares (403 until shareBlocklist=true)
+./api.sh mesh blocklist host:1367        # preview a PEER's shared blocklist — read-only (D2: merging
+#                                          into your client blacklist is an explicit click in 🛡 Lists)
+./api.sh mesh connect lan-host:1367      # dial a gossip peer NOW (no restart; persists via peers cache)
+./api.sh mesh connect http://trk:1368    # add a tracker announce target NOW
 
 # Start / wire up (see also "Start the server" above)
 ./wbapi-toggle.sh start                  # game server :1367 (loads .env — TRACKER_URL etc.)
@@ -289,6 +300,28 @@ curl http://localhost:1367/api/mesh/status
 curl -XPOST http://localhost:1367/api/mesh/gossip -d '{...meshPayload}'
 # → 200 (merged, reply payload) | 409 incompatible world | 403 ACL refused | 429 rate limited
 
+# ACL editor (§MESH-02a — the game's 🛡 Lists pane + ./api.sh mesh acl ride these)
+curl http://localhost:1367/api/mesh/acl
+# → { ok, file, exists, acl: {mode, shareBlocklist, block*/allow* ×6} }  (no file → safe defaults)
+curl -XPUT http://localhost:1367/api/mesh/acl -d '{"mode":"allowlist","blockIps":["1.2.3.4"]}'
+# → validated MERGE-write to MESH_ACL_FILE ("//"-comment keys survive; hot-reloaded — no restart);
+#   unknown field / bad mode / non-boolean shareBlocklist / bad list → 400, file untouched
+
+# Blocklist share-out (§MESH-02a, D2/D3 — opt-in via acl.shareBlocklist; never auto-imported)
+curl http://localhost:1367/api/mesh/blocklist
+# → 403 {reason:'not-shared'} by default | 200 { serverId, engineVer, blockServerIds, blockIps,
+#   blockWorldHashes } — the three block* lists only, never the allow* lists
+
+# Runtime connect (§MESH-02i — same shapes as the boot flags --peer / TRACKER_URL)
+curl -XPOST http://localhost:1367/api/mesh/connect -d '{"addr":"lan-host:1367"}'      # seed a gossip peer
+curl -XPOST http://localhost:1367/api/mesh/connect -d '{"tracker":"http://trk:1368"}' # add announce target
+# → dials in the SAME request: { ok, addr, peer:{serverId,live,lastErr} } / { ok, tracker, trackerUrls }
+#   outbound still ACL-gated (allowlist mode with an empty allow list dials nobody)
+
+# Global chat history (§MESH-02h — display-only, no session needed; the 💬 panel's backfill)
+curl "http://localhost:1367/api/session/chat?limit=50"          # whole CHAT_LOG ring, oldest→newest
+curl "http://localhost:1367/api/session/chat?r=10&c=197"        # optional cell filter
+
 # Tracker (rendezvous)
 curl -XPOST http://localhost:1368/api/tracker/announce -d '{...manifest+addr}'
 curl http://localhost:1368/api/tracker/peers                       # all world groups
@@ -304,13 +337,17 @@ node scripts/world-diff.js a.html b.html --json    # machine-readable report (to
 npm run check:worlddiff                            # selftest (synthetic worlds; in CI)
 ```
 
-**ACL (§MESH-01-FU 11):** `mesh-acl.json` at repo root (or `MESH_ACL_FILE`), hot-reloaded on mtime —
+**ACL (§MESH-01-FU 11 · §MESH-02a):** `mesh-acl.json` at repo root (or `MESH_ACL_FILE`), hot-reloaded on mtime —
 `{blockServerIds|blockIps|blockWorldHashes: [...]}` or `{"mode":"allowlist", allowServerIds: [...]}`.
 Applies to gossip ingress (403), dial-out, tracker announce/sync merges, ledger sync/ingest, and the
 trade relay. **Start from the commented template:** `cp mesh-acl.json.example mesh-acl.json` — it is
-valid JSON as-is (`"//"`-keys are ignored comments) and documents every field. Caveat: a file that
-exists but fails `JSON.parse` **disables the ACL entirely (mesh OPEN)** — the server warns loudly on
-console and `mesh/status → acl.mode` shows `open`.
+valid JSON as-is (`"//"`-keys are ignored comments) and documents every field — or skip the file
+entirely and edit through `./api.sh mesh acl` / the game's map tab → 🛡 Lists pane (both ride
+`GET/PUT /api/mesh/acl`; the PUT merge-write creates the file on first edit and preserves comment
+keys). `shareBlocklist:true` additionally publishes the three block* lists at `/api/mesh/blocklist`
+(D3 opt-in; D2: peers only ever *preview* it — importing is an explicit merge click, never automatic).
+Caveat: a file that exists but fails `JSON.parse` **disables the ACL entirely (mesh OPEN)** — the
+server warns loudly on console and `mesh/status → acl.mode` shows `open`.
 
 **Tracker persistence + federation bootstrap (§MESH-01-FU 12):** a tracker persists its announce
 table to `tracker-cache.json` (or `TRACKER_CACHE_FILE`; throttle `TRACKER_PERSIST_MS`, default 30 s,
@@ -337,7 +374,7 @@ default 120); a healthy peer spends ~0.5 token/s, so the defaults leave ~60×
 headroom. Current config is surfaced in `GET /api/mesh/status → rate`, and
 the traffic ring logs one `rate` row per flood.
 
-**Test gate:** `npm run test:mud` — 251 checks incl. the [L] partition-heal harness, [P] rate limiting, the `./api.sh mesh` CLI wrappers, and [Q] ACL template / tracker cache+bootstrap / chat backlog (§MESH-01-FU 11–13).
+**Test gate:** `npm run test:mud` — 270 checks incl. the [L] partition-heal harness, [P] rate limiting, the `./api.sh mesh` CLI wrappers, [Q] ACL template / tracker cache+bootstrap / chat backlog (§MESH-01-FU 11–13), and [R] the §MESH-02a ACL editor endpoints + blocklist share flip; client side: `tests/integration/mesh-connections-ui.test.js` (hermetic connection-center UI).
 
 ---
 
