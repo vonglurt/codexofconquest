@@ -10477,6 +10477,16 @@ window.__walkG = {
       </div>
     </div>
     <div>
+      <div class="mesh-hd">🔌 Connect — dial a peer or tracker now, no restart (§MESH-02)</div>
+      <div class="mesh-box" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input id="mesh-connect-input" placeholder="peer host:port  ·  or tracker http(s)://host:port"
+               style="flex:1;min-width:240px;background:rgba(0,0,0,0.25);border:1px solid var(--border);border-radius:4px;color:inherit;font-size:11px;padding:3px 8px"
+               onkeydown="if(event.key==='Enter')meshConnect()">
+        <button class="btn sm" onclick="meshConnect()">Connect</button>
+        <span id="mesh-connect-note" style="color:var(--muted)"></span>
+      </div>
+    </div>
+    <div>
       <div class="mesh-hd">🔭 Server browser — live servers per configured tracker
         <button class="btn sm" style="margin-left:8px" onclick="meshBrowse()">refresh + ping</button></div>
       <div id="mesh-browser" class="mesh-box"><div style="color:var(--muted)">press refresh — needs a configured tracker</div></div>
@@ -10642,6 +10652,30 @@ window.__walkG = {
       } catch {}
     }
     renderServerBrowser([...seen.values()], _lastStatus && _lastStatus.worldHash);
+  };
+  // §MESH-02(i) — Connect button: POST /api/mesh/connect with {addr} (host:port
+  // peer) or {tracker} (http(s) URL), auto-detected from the input shape. The
+  // server seeds the peer/tracker and dials it in the same request, so the
+  // result (live/refused/unreachable) is known immediately; the 2 s status poll
+  // then shows it in the Peers / Trackers boxes like any boot-time flag.
+  window.meshConnect = async () => {
+    const inp = document.getElementById('mesh-connect-input');
+    const note = document.getElementById('mesh-connect-note');
+    const raw = (inp.value || '').trim();
+    if (!raw) { note.textContent = 'paste a host:port or a tracker URL'; return; }
+    const body = /^https?:\/\//.test(raw) ? { tracker: raw } : { addr: raw.replace(/^\/+|\/+$/g, '') };
+    note.textContent = '🔌 dialing…';
+    try {
+      const d = await (await fetch('/api/mesh/connect', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+      })).json();
+      if (!d.ok) { note.textContent = '⛔ ' + (d.error || d.reason || 'refused'); return; }
+      if (d.addr) note.textContent = d.peer && d.peer.live ? `🟢 connected to ${d.addr} (${d.peer.serverId ? d.peer.serverId.slice(0, 8) : '?'})`
+        : `⚪ ${d.addr} added — ${d.peer && d.peer.lastErr ? d.peer.lastErr : 'no answer yet, retrying each gossip round'}`;
+      else note.textContent = `📡 tracker added (${(d.trackerUrls || []).length} configured) — announcing`;
+      inp.value = '';
+      meshPoll();
+    } catch { note.textContent = '🔌 WBAPI server unreachable'; }
   };
   window.__meshTest = { renderMeshStatus, renderServerBrowser };   // server-free hooks for the Playwright spec
 })();

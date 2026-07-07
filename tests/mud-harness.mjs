@@ -132,7 +132,12 @@ function stopAllServers() {
 // ── the harness run ───────────────────────────────────────────────────────────
 const openClients = [];
 async function main() {
-  await startServer(PORT);
+  // pid-scoped peers cache for the MAIN server too — the repo-root default
+  // (peers-cache.json) is written by any live dev server, and a stale addr in
+  // it makes this "solo" server boot configured → [H] reachability-warning
+  // check fails (same poisoning class as the [E]/[G] note below; found 2026-07-06
+  // when a §MESH-02 connect test left localhost:1368 behind).
+  await startServer(PORT, { PEERS_CACHE_FILE: path.join(os.tmpdir(), `r2h-peers-${process.pid}-${PORT}.json`) });
 
   // ════════ (a/c) co-presence at the hub ════════
   console.log('\n[A] co-presence chat + who/look at the hub');

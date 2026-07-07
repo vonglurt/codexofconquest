@@ -1821,7 +1821,7 @@ async function route(req, res) {
   // ── §MESH-01d: tracker mode — rendezvous only, never a relay, never an API ──
   if (TRACKER_MODE && !['ping', 'manifest', 'tracker', 'help'].includes(parts[0])
       // status stays visible for the 🌐 Mesh tab; a tracker has an ACL + shareable blocklist too (§MESH-02)
-      && !(parts[0] === 'mesh' && ['status', 'acl', 'blocklist'].includes(parts[1]))) {
+      && !(parts[0] === 'mesh' && ['status', 'acl', 'blocklist', 'connect'].includes(parts[1]))) {
     logResponse(method, url.pathname, 410, 'tracker-mode');
     return json(res, 410, { ok: false, error: 'tracker-mode: only /api/ping, /api/manifest, /api/tracker/* are served here' });
   }
@@ -2926,6 +2926,40 @@ async function route(req, res) {
     const lists = { blockServerIds: pick('blockServerIds'), blockIps: pick('blockIps'), blockWorldHashes: pick('blockWorldHashes') };
     logResponse(method, url.pathname, 200, `mesh blocklist shared: ${lists.blockServerIds.length + lists.blockIps.length + lists.blockWorldHashes.length} entrie(s)`);
     return json(res, 200, { ok: true, serverId: getServerId(), engineVer: getManifest().engineVer, ...lists });
+  }
+
+  // ── §MESH-02(i): runtime connect — dial a peer or tracker without a restart ──
+  // {addr:'host:port'} seeds a gossip peer (dialed by the round we trigger here);
+  // {tracker:'http(s)://…'} adds an announce target. Same shapes the boot-time
+  // flags feed (--peer / TRACKER_URL) — this is the worldbuilder Mesh tab's
+  // Connect button. Outbound dials still pass the ACL like any gossip round.
+  if (parts[0] === 'mesh' && parts[1] === 'connect' && method === 'POST') {
+    let cb;
+    try { cb = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
+    const addr = String(cb.addr || '').trim().replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    const tracker = String(cb.tracker || '').trim().replace(/\/+$/, '');
+    if (!addr && !tracker) {
+      logResponse(method, url.pathname, 400, 'mesh connect: addr or tracker required');
+      return json(res, 400, { ok: false, error: "body.addr ('host:port') or body.tracker ('http(s)://…') required" });
+    }
+    if (addr) {
+      if (!/^[\w.-]+:\d+$/.test(addr)) return json(res, 400, { ok: false, error: "addr must be 'host:port'" });
+      if (addr === meshAdvertise()) return json(res, 400, { ok: false, error: 'that is this server' });
+      if (!MESH.peers.has(addr)) MESH.peers.set(addr, { serverId: null, lastSeen: 0, lastErr: null });
+      pushTraffic('out', 'connect', addr, true, 'peer added via /api/mesh/connect');
+    }
+    if (tracker) {
+      if (!/^https?:\/\/[\w.-]+(:\d+)?$/.test(tracker)) return json(res, 400, { ok: false, error: "tracker must be 'http(s)://host[:port]'" });
+      addTrackerUrl(tracker);
+      pushTraffic('out', 'connect', tracker, true, 'tracker added via /api/mesh/connect');
+    }
+    // Dial NOW instead of waiting out the interval — connect should feel instant.
+    try { if (addr) await meshGossipRound(); } catch {}
+    try { if (tracker) await (TRACKER_MODE ? trackerFederateRound() : trackerAnnounceRound()); } catch {}
+    const peer = addr ? MESH.peers.get(addr) : null;
+    logResponse(method, url.pathname, 200, `mesh connect: ${[addr && `peer ${addr}`, tracker && `tracker ${tracker}`].filter(Boolean).join(' + ')}`);
+    return json(res, 200, { ok: true, ...(addr ? { addr, peer: { serverId: peer && peer.serverId, lastErr: peer && peer.lastErr, live: !!(peer && peer.lastSeen && Date.now() - peer.lastSeen < 3 * MESH_GOSSIP_MS + 2000) } } : {}),
+      ...(tracker ? { tracker, trackerUrls: [...new Set([...TRACKER_URLS, ...MESH_TRACKER_URLS, ...TRACKER_PEER_URLS])] } : {}) });
   }
 
   // ── §MESH-01: gossip ingress — compat gate → ACL → single-writer merge ──
@@ -8536,6 +8570,19 @@ async function route(req, res) {
       }
       logResponse(method, url.pathname, 200, `${all.length} sessions active · ${remotes.length} remote`);
       return json(res, 200, { count: all.length, sessions: all, remotes });
+    }
+
+    // ── GET /api/session/chat[?limit=&r=&c=] — §MESH-02(h) chat history ────
+    // The whole CHAT_LOG ring (global multi-user history), oldest → newest;
+    // optional cell filter. Display-only, like all presence — no session needed.
+    if (sub === 'chat' && method === 'GET') {
+      const limit = Math.max(1, Math.min(200, parseInt(url.searchParams.get('limit') || '100', 10) || 100));
+      const rq = url.searchParams.get('r'), cq = url.searchParams.get('c');
+      let lines = CHAT_LOG;
+      if (rq !== null && cq !== null) lines = lines.filter(e => e.r === +rq && e.c === +cq);
+      lines = lines.slice(-limit);
+      logResponse(method, url.pathname, 200, `chat history: ${lines.length} line(s)${rq !== null ? ` @(${rq},${cq})` : ''}`);
+      return json(res, 200, { ok: true, count: lines.length, chat: lines });
     }
 
     // ── GET /api/session/look?sessionId= ──────────────────────────────────
