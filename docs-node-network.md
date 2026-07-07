@@ -387,7 +387,7 @@ Preferred path: use `POST /api/node` via WBAPI (rejects duplicate coordinates an
 
 ## 12. Multiplayer Mesh (§MESH-01, ✅ Incs a–e 2026-07-02)
 
-Server-to-server presence replication over the node network. Player-facing view: `mechanics.md` "Multiplayer — Mesh Presence"; endpoint quick reference: `wbapi-help.md`; design: `lab-reports/lab-report-mesh-multiuser.md` + `lab-reports/lab-report-mesh-sync-architecture.md`. All state is in `wbapi-server.js` (no game-file changes beyond `ENGINE_VER`/`WORLD_NAME` consts and the opt-in `MP` client module).
+Server-to-server presence replication over the node network. Player-facing view: `mechanics.md` "Multiplayer — Mesh Presence"; endpoint quick reference: `wbapi-help.md`; design: `lab-reports/lab-report-mesh-multiuser.md` + `lab-reports/lab-report-mesh-sync-architecture.md`. All state is server-side (no game-file changes beyond `ENGINE_VER`/`WORLD_NAME` consts and the opt-in `MP` client module); since 2026-07-06 (§MESH-01-REVIEW) the mesh kernel — ACL, ingress rate limit, gossip, tracker/federation/bootstrap — lives in `mesh.js`, a factory `require()`d by `wbapi-server.js`, which keeps sessions, SSE fanout, the ledger, and all HTTP routes.
 
 ### Sessions and the beacon/move dichotomy
 
