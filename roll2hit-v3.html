@@ -28623,9 +28623,25 @@ function storyRenderQuests() {
               }).join(' · ')
             + '</div>';
         }
-        div.innerHTML = '<div class="quest-title"><span>' + q.title + '</span>' + badge + '</div>'
-          + '<div class="quest-desc">' + (q.desc || '') + '</div>'
-          + (completed ? '' : '<div class="quest-hint">▶ ' + (q.hint || '') + '</div>' + progressHtml + wpBtnHtml);
+        // §DATA-01 residual: quest-authored strings go in via textContent, never innerHTML
+        const titleRow = document.createElement('div');
+        titleRow.className = 'quest-title';
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = q.title;
+        titleRow.appendChild(titleSpan);
+        titleRow.insertAdjacentHTML('beforeend', badge);
+        div.appendChild(titleRow);
+        const descDiv = document.createElement('div');
+        descDiv.className = 'quest-desc';
+        descDiv.textContent = q.desc || '';
+        div.appendChild(descDiv);
+        if (!completed) {
+          const hintDiv = document.createElement('div');
+          hintDiv.className = 'quest-hint';
+          hintDiv.textContent = '▶ ' + (q.hint || '');
+          div.appendChild(hintDiv);
+          div.insertAdjacentHTML('beforeend', progressHtml + wpBtnHtml);
+        }
         if (q.disposition) {
           const dRow = document.createElement('div');
           dRow.style.cssText = 'font-style:italic;font-size:11px;color:#3A2010;margin-top:4px;border-left:2px solid #5c3311;padding-left:6px;';
