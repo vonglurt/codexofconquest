@@ -22554,7 +22554,9 @@ function storyLoadSave(key) {
   try {
     const raw = localStorage.getItem(key);
     if (!raw) return false;
-    Object.assign(S_story, JSON.parse(raw));
+    // Defaults first: saves written before a field existed (e.g. pre-§CELL-04
+    // visitedCells) must not leave it undefined — cellMove crashed on such saves.
+    Object.assign(S_story, _S_DEFAULTS(), JSON.parse(raw));
     return true;
   } catch(e) { return false; }
 }
@@ -22570,7 +22572,7 @@ function storyCheckContinue() {
     if (!raw) return false;
     const save = JSON.parse(raw);
     if (save.hp === 0) {
-      Object.assign(S_story, save);
+      Object.assign(S_story, _S_DEFAULTS(), save);
       const cpNode = NODE_MAP[S_story.checkpointNode] || NODE_MAP['LHR'];
       document.getElementById('gameover-cp').textContent = 'Last checkpoint: ' + (cpNode.label.split(' — ')[0]);
       _populateGameoverChronicle();
