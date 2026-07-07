@@ -1200,6 +1200,25 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #msub-map { gap: 0; overflow-y: auto; }
 #msub-connect, #msub-discover, #msub-lists { padding: 12px; overflow-y: auto; gap: 10px; }
 .msub-placeholder { color: var(--dim); font-size: 12px; font-style: italic; padding: 8px 0; }
+/* ── §MESH-02c: Connect pane (mirrors the mp-browser-card idiom) ── */
+#mc-status-card {
+  border: 1px solid #2a4a6a; border-radius: 6px; background: rgba(10,20,35,0.45);
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;
+  font-size: 12px; color: #9ab0c4; max-width: 560px;
+}
+#mc-status-card .mc-k { display: inline-block; width: 62px; color: #7a8a9a; font-weight: 700; }
+#msub-connect .mp-hint { font-size: 11px; color: #7a8a9a; line-height: 1.6; max-width: 560px; }
+#mc-server-input {
+  background: #0a1220; border: 1px solid #2a4a6a; border-radius: 4px;
+  color: #cde0f0; font: inherit; font-size: 12px; padding: 6px 8px;
+  width: 100%; box-sizing: border-box; max-width: 560px;
+}
+#msub-connect button {
+  background: #0a1a2a; border: 1px solid #2a4a6a; border-radius: 4px;
+  color: #8fc0f0; cursor: pointer; font-size: 12px; padding: 4px 12px;
+}
+#msub-connect button:hover { border-color: #5a8aba; }
+#mc-server-rows { display: flex; flex-direction: column; gap: 6px; max-width: 560px; }
 #story-node-header {
   display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
 }
@@ -4449,7 +4468,25 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         </div>
         </div><!-- /msub-map -->
         <div id="msub-connect" class="map-subpane">
-          <div class="msub-placeholder">🌐 Connect — server status &amp; connect controls arrive in §MESH-02(c).</div>
+          <!-- §MESH-02c: status card + connect controls; reuses mpToggle/mpJoin/mpResolveMagnet -->
+          <div id="mc-status-card">
+            <div><span class="mc-k">Server</span><span id="mc-server">—</span></div>
+            <div><span class="mc-k">Status</span><span id="mc-state">🔴 not connected</span></div>
+            <div><span class="mc-k">World</span><span id="mc-world">—</span></div>
+            <div><span class="mc-k">Build</span><span id="mc-build">—</span></div>
+          </div>
+          <div class="mp-hint">Paste a server (<code>host:port</code> or URL) or a friend's magnet (<code>r2h:?…</code>).
+            Connect joins a server directly; Find servers asks a tracker for same-world servers.
+            Joining only sets your multiplayer server — it never changes your game.</div>
+          <input id="mc-server-input" placeholder="http://host:1367  ·  host:1367  ·  r2h:?p=…&amp;wh=…&amp;tr=…"
+                 onkeydown="if(event.key==='Enter')mcConnect()">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button id="mc-btn-connect" onclick="mcConnect()">🔌 Connect</button>
+            <button id="mc-btn-find" onclick="mcFind()">🔭 Find servers</button>
+            <button id="mc-btn-disconnect" onclick="mcDisconnect()">✕ Disconnect</button>
+          </div>
+          <div id="mc-note" class="mp-hint"></div>
+          <div id="mc-server-rows"></div>
         </div>
         <div id="msub-discover" class="map-subpane">
           <div class="msub-placeholder">🔭 Discover — local port scan &amp; server-list sources arrive in §MESH-02(d).</div>
@@ -27663,6 +27700,7 @@ function mpSay() {
 function _mpSetStatus(txt) {
   const el = document.getElementById('mp-status');
   if (el) el.textContent = txt;
+  _mcRenderStatus();   // §MESH-02c: Connect-pane card tracks the strip (no-op while the pane is hidden)
 }
 function _mpRenderPresence() {
   const el = document.getElementById('mp-presence');
@@ -27751,7 +27789,7 @@ async function _mpPing(base) {
 // tracker/peers record ({addr, name, worldTag, playerCount, engineVer}) or a
 // synthesized direct-URL row. The tag (`NextWorldMod-131ea`) is the human
 // handle for a world — name from the world file, 5 hash chars to disambiguate.
-function _mpServerRowHtml(s, i) {
+function _mpServerRowHtml(s, i, pingPfx) {
   const evOk = !s.engineVer || s.engineVer === ENGINE_VER;
   const tag = s.worldTag || (s.worldName && s.worldHash ? s.worldName + '-' + String(s.worldHash).slice(0, 5) : '');
   return '<div class="mp-srv-row" data-addr="' + _mpEsc(s.addr) + '">' +
@@ -27759,26 +27797,33 @@ function _mpServerRowHtml(s, i) {
     (tag ? '<span style="color:#8fc0f0">🌍 ' + _mpEsc(tag) + '</span>' : '') +
     '<span>' + _mpEsc(s.addr) + '</span>' +
     '<span>👥 ' + (s.playerCount | 0) + '</span>' +
-    '<span id="mp-srv-ping-' + i + '">… ms</span>' +
+    '<span id="' + (pingPfx || 'mp-srv-ping-') + i + '">… ms</span>' +
     (evOk ? '' : '<span style="color:#d4a017" title="different game build (' + _mpEsc(s.engineVer) + ' vs ' + _mpEsc(ENGINE_VER) + ')">⚠ build</span>') +
     '<button class="mp-srv-join" onclick="mpJoin(\'' + _mpEsc(s.addr) + '\')">Join</button></div>';
 }
-function _mpRenderServerRows(rows) {
-  const cont = document.getElementById('mp-server-rows');
+// §MESH-02c: parameterized by container so the Connect pane reuses the SAME
+// renderer as the Shift+🌐 modal — ping-span ids stay per-container unique.
+function _mpRenderServerRows(rows, contId) {
+  contId = contId || 'mp-server-rows';
+  const pingPfx = contId === 'mp-server-rows' ? 'mp-srv-ping-' : contId + '-ping-';
+  const cont = document.getElementById(contId);
   // addr shape-check mirrors the server's announce validation — a hostile
   // tracker/manifest can't smuggle markup or quotes into the Join onclick.
   rows = rows.filter(s => s && /^[\w.-]+:\d+$/.test(s.addr || ''));
-  cont.innerHTML = rows.map((s, i) => _mpServerRowHtml(s, i)).join('');
+  cont.innerHTML = rows.map((s, i) => _mpServerRowHtml(s, i, pingPfx)).join('');
   rows.forEach(async (s, i) => {
-    const el = () => document.getElementById('mp-srv-ping-' + i);
+    const el = () => document.getElementById(pingPfx + i);
     try { const ms = await _mpPing('http://' + s.addr); if (el()) el().textContent = ms + ' ms'; }
     catch { if (el()) { el().textContent = 'unreachable'; el().style.color = '#c05555'; } }
   });
 }
-async function mpResolveMagnet() {
-  const raw = (document.getElementById('mp-magnet-input').value || '').trim();
-  const note = document.getElementById('mp-browser-note');
-  document.getElementById('mp-server-rows').innerHTML = '';
+// §MESH-02c: ui = {input, note, rows} element ids — defaults are the Shift+🌐
+// modal; the Connect pane passes its own trio. One resolver, two surfaces.
+async function mpResolveMagnet(ui) {
+  ui = ui || { input: 'mp-magnet-input', note: 'mp-browser-note', rows: 'mp-server-rows' };
+  const raw = (document.getElementById(ui.input).value || '').trim();
+  const note = document.getElementById(ui.note);
+  document.getElementById(ui.rows).innerHTML = '';
   const mag = mpParseMagnet(raw);
   if (mag) { try { localStorage.setItem('mpMagnet', raw); } catch {} }
   let url = mag ? (mag.tr || '') : raw;
@@ -27799,7 +27844,7 @@ async function mpResolveMagnet() {
     if (data.ok && Array.isArray(data.servers)) {
       if (!data.servers.length) { note.textContent = 'Tracker is up, but no live server matches this world right now.'; return; }
       note.textContent = data.servers.length + ' server(s)' + (mag && mag.wh ? ' for world ' + mag.wh : '') + ':';
-      _mpRenderServerRows(data.servers);
+      _mpRenderServerRows(data.servers, ui.rows);
       return;
     }
   } catch {}
@@ -27808,7 +27853,7 @@ async function mpResolveMagnet() {
     if (man.ok) {
       note.textContent = 'Direct server:';
       _mpRenderServerRows([{ addr: man.addr || url.replace(/^https?:\/\//, ''), name: man.addr || url,
-        playerCount: 0, engineVer: man.engineVer, worldTag: man.worldTag }]);
+        playerCount: 0, engineVer: man.engineVer, worldTag: man.worldTag }], ui.rows);
       return;
     }
   } catch {}
@@ -27821,6 +27866,56 @@ function mpJoin(addr) {
   if (MP.on) mpDisconnect();
   mpToggle();
 }
+
+// ── §MESH-02c — Connect pane (#msub-connect) ────────────────────────────────
+// Display/connection layer only (D7): a status card over /api/manifest plus
+// Connect/Find/Disconnect that REUSE mpToggle/mpJoin/mpResolveMagnet — no
+// second connect path. The card re-renders through _mpSetStatus, so it tracks
+// every state change the 🌐 strip sees; it fetches nothing while hidden.
+function _mcRenderStatus() {
+  const pane = document.getElementById('msub-connect');
+  if (!pane || !pane.classList.contains('msub-active')) return;
+  const inp = document.getElementById('mc-server-input');
+  if (inp && !inp.value) {
+    let last = null; try { last = localStorage.getItem('mpMagnet'); } catch {}
+    inp.value = last || _mpBase();
+  }
+  const base = MP.on ? MP.base : _mpBase();
+  const set = (id, txt, color) => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = txt; el.style.color = color || ''; }
+  };
+  set('mc-server', base);
+  set('mc-state', MP.on
+    ? '🟢 connected as ' + MP.name + ' · pid ' + (MP.pid || '—') + ' · session ' + String(MP.session || '').slice(0, 8) + '…'
+    : '🔴 not connected');
+  set('mc-world', '…'); set('mc-build', '…');
+  fetch(base + '/api/manifest').then(r => r.json()).then(man => {
+    if (!man.ok) throw new Error('bad manifest');
+    set('mc-world', '🌍 ' + (man.worldTag || man.worldName || '?')
+      + (man.peers && man.peers.length ? ' · ' + man.peers.length + ' mesh peer(s)' : ''));
+    const evOk = man.engineVer === ENGINE_VER;
+    set('mc-build', evOk ? man.engineVer + ' ✓ matches yours'
+      : '⚠ ' + man.engineVer + ' — yours is ' + ENGINE_VER, evOk ? '' : '#d4a017');
+  }).catch(() => {
+    set('mc-world', '—');
+    set('mc-build', '🔴 no server at ' + base + ' — start one with ./wbapi-toggle.sh start', '#c05555');
+  });
+}
+function mcConnect() {
+  const raw = (document.getElementById('mc-server-input').value || '').trim();
+  const note = document.getElementById('mc-note');
+  if (note) note.textContent = '';
+  if (!raw) { if (!MP.on) mpToggle(); return; }
+  if (mpParseMagnet(raw)) return mcFind();   // a magnet names a WORLD, not a server — resolve to joinable rows
+  if (!/^https?:\/\//.test(raw) && !/^[\w.-]+:\d+$/.test(raw)) {
+    if (note) note.textContent = 'Not a server address (host:port / URL) or magnet — try 🔭 Find servers.';
+    return;
+  }
+  mpJoin(raw);
+}
+function mcFind() { return mpResolveMagnet({ input: 'mc-server-input', note: 'mc-note', rows: 'mc-server-rows' }); }
+function mcDisconnect() { if (MP.on) mpDisconnect('🌐 Multiplayer off.'); else _mcRenderStatus(); }
 
 // ── §MESH-01i slice 2b — client ledger rung: mint stamping + trade UI ───────
 // Design: mesh lab report §6.2/§6.4. An inventory item is a plain local object
@@ -34121,6 +34216,7 @@ const _MAP_OPP = {N:'S', S:'N', E:'W', W:'E'};
 function msubSwitch(id) {
   document.querySelectorAll('#sheet-map .map-subpane').forEach(p => p.classList.toggle('msub-active', p.id === id));
   document.querySelectorAll('#map-subtab-bar .map-subtab').forEach(t => t.classList.toggle('msub-active', t.dataset.msub === id));
+  if (id === 'msub-connect') _mcRenderStatus();   // §MESH-02c: fresh manifest + state on pane open
 }
 
 function storyMapToggle() {
@@ -35258,7 +35354,7 @@ document.getElementById('btn-map-sheet-close').addEventListener('click', storyMa
 document.querySelectorAll('#map-subtab-bar .map-subtab').forEach(t => {
   t.addEventListener('click', () => msubSwitch(t.dataset.msub));
 });
-window.__mesh02 = Object.assign(window.__mesh02 || {}, { msubSwitch });
+window.__mesh02 = Object.assign(window.__mesh02 || {}, { msubSwitch, mcConnect, mcFind, mcDisconnect, _mcRenderStatus });
 document.getElementById('btn-inv-close').addEventListener('click', storyInventoryToggle);
 document.getElementById('btn-quest').addEventListener('click', storyQuestToggle);
 document.getElementById('btn-quest-close').addEventListener('click', storyQuestToggle);
