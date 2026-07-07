@@ -8437,6 +8437,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   },
   // ── Layer 78: La Riva — Fishmonger's Row ──
   AMS:{ num:79, code:'AMS', name:'ruins', label:"Fishmonger's Row", act:1, text:"Three city blocks of collapsed stalls. The Cat-King's work: still visible in the way the brick fell — not inward from age but outward from impact, each pile oriented away from the fish market's center. The hook racks are down. The ice boxes are split. Someone has maintained a narrow cleared path through the rubble — not wide enough for a cart, just wide enough for a person who comes here regularly.\n\nThe Corrupted Cats have settled into the dark spaces between the piles. They are thin here — the Cat-King's death reduced the void pressure feeding them — but they hold the space with the particular confidence of things that have been somewhere long enough to consider it theirs.\n\nAt the far end of the cleared path, a woman stands with her back to you, looking at what used to be the south stall.\n\nA faint smell of salt and old wood. The brick remembers eleven years of fish market whether anything is here or not.", npc:'Connie Tuna', battle:{label:'Corrupted Cat × 4', key:'corrupted_cat', count:4}, loot:null, sleep:false,
+    textVariants:[{flag:'fishmongerRowRestored',text:'Two of the three blocks are still rubble. The third has a market in it — one stall, new boards over old brick, the smell of cut pine over the salt. The cleared path has been widened to cart-width. Vincenzo\'s hook rack hangs on the far post: nobody rebuilt it. It was under the rubble the whole time, and it held.\n\nThe Corrupted Cats are gone from the dark spaces between the piles. What is left is cats — ordinary harbor strays, the kind that sit on warm brick and watch the fish come in. They left after the grief was witnessed, not before. Aldo would call that an observation, not poetry.\n\nConnie is behind the counter. Not looking at the stall — working it. Aldo still comes every two weeks, the same interval he kept when he thought she didn\'t know, except now he comes in the front, and she says something to him, and he answers.\n\nA smell of salt and new wood, in that order. The brick remembers eleven years of fish market. It is no longer the only thing here that does.'}],
   },
   // ── Layer 61: Corelli — Roadside waypoint (Act III, between J6 and MI) ──
   // ── §HUNT-02: The Eastern Bend — Night Hag at the relay road ──
@@ -22029,6 +22030,8 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   khalid_kya: { key:"khalid_kya", name:"Khalid ibn Ahmad al-Zargar", occupation:"Dying guild master of the Anjuman-i Zargar, Tabriz goldsmith's brotherhood; keeper of seventeen folios recording every Sassanian king's addition to the Derafsh Kaviani banner from the 6th to 10th century; six dynasties used the same phrase acknowledging Kavah's craftsman-origin each time; the incoming guild master will file it without reading it; commissioned the Fighter to carry the Guild Ledger to Weimar before he dies", node:"TBZ" },
   ardeshir_kya: { key:"ardeshir_kya", name:"Ardeshir", occupation:"Junior fire-keeper and inventory officer at the Azar Yazdan temple, Yazd, twenty years in post; has known about the sealed ivory case since his first audit and has never opened it; the waqf dispute from the temple's property case threatens to make it exhibit evidence in a hearing; commissioned the Fighter to carry the palm-sized ivory case — inventory claiming one Símúrgh feather, Alberz mountain provenance — to Constantinople for scholarly assessment and then to Weimar sealed and unopened", node:"YAZ" },
   watcher_gvw: { key:"watcher_gvw", name:"The Greenwood Watcher", occupation:"Natural historian of cognition, forest warden", node:"GVW" },
+  connie_tuna: { key:"connie_tuna", name:"Connie Tuna", occupation:"fishmonger — Vincenzo's widow", node:"AMS", neutral:{ greeting:"She stands at the end of the cleared path, back to you, looking at what used to be the south stall.", dialogue:"\"Watch the path. It took a while to clear.\"" }, friendly:{ greeting:"She turns when she hears you on the path now. She nods at a spot beside her, which is as much invitation as she makes.", dialogue:"\"You can stand here. The view doesn't change. That's not why I come.\"" }, dearFriend:{ greeting:"She is at the counter before you reach it. Whatever is freshest is already wrapped.", dialogue:"\"The key still opens the lock. Some things hold.\"" } },
+  aldo_sardino: { key:"aldo_sardino", name:"Aldo Sardino", occupation:"fishmonger — south stall, keeper of the records", node:"AMS", neutral:{ greeting:"A man in a fish-scaled apron stands at the south stall's brick, not pretending he isn't checking on something.", dialogue:"\"Mind the brick. It's the only part of the stall that's still load-bearing.\"" }, friendly:{ greeting:"Aldo nods at you the way he nods at people whose names are in his book with no debts beside them.", dialogue:"\"I keep the records. Someone has to keep the records.\"" }, dearFriend:{ greeting:"He is turning the pages of a new account book. There are entries in it. He shows you without being asked.", dialogue:"\"The new book has a first page. It's not blank anymore. That's the whole of the news.\"" } },
 };
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
@@ -29824,8 +29827,13 @@ function storyRender(node, prefix) {
   document.getElementById('s-node-num').textContent = String(node.num).padStart(2,'0');
   document.getElementById('s-node-name').textContent = node.label + (_terrain ? ' · ' + _terrain : '');
   document.getElementById('s-node-act').textContent = ACT_NAMES[node.act];
-  // Story text
-  document.getElementById('story-text-box').textContent = node.text;
+  // Story text — §GR payoff: data-driven node text variants. A node may carry
+  // textVariants:[{flag,text}] (authored via the API); the first entry whose
+  // S_story flag is truthy replaces node.text. Display-only.
+  { let _nt = node.text;
+    for (const _v of (node.textVariants || [])) { if (_v && _v.flag && S_story[_v.flag] && _v.text) { _nt = _v.text; break; } }
+    document.getElementById('story-text-box').textContent = _nt;
+  }
   // Layer 59: void flavor line
   { const _vfl = _voidFlavorLine(node.code);
     if (_vfl) document.getElementById('story-text-box').textContent += '\n\n' + _vfl;
