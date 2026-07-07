@@ -29770,20 +29770,37 @@ function storyRenderInventory() {
     });
   }
 
-  // ── 8. Mission Bit Tokens ──
+  // ── 8. Mission Bit Tokens — timeline grouped/sorted by day earned (§MBIT-02) ──
   const missionBits = S_story.inventory.filter(i => i.type === 'mission_bit');
   if (missionBits.length) {
     makeSection('🪬 Mission Tokens');
-    const bitGrid = document.createElement('div');
-    bitGrid.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;padding:4px 0;';
+    // Group by day earned (token.day is stamped at grant; legacy tokens w/o a
+    // stamp fall to day 1). Preserve grant order within a day.
+    const byDay = new Map();
     missionBits.forEach(item => {
-      const chip = document.createElement('div');
-      chip.style.cssText = 'display:flex;align-items:center;gap:5px;padding:4px 9px;background:#0e0b06;border:1px solid #4a3a18;border-radius:12px;font-size:11px;color:#b89040;cursor:default;';
-      chip.title = item.desc || '';
-      chip.innerHTML = '<span style="font-size:13px">🪬</span><span>' + item.name.replace(' Token','') + '</span>';
-      bitGrid.appendChild(chip);
+      const d = item.day || 1;
+      if (!byDay.has(d)) byDay.set(d, []);
+      byDay.get(d).push(item);
     });
-    list.appendChild(bitGrid);
+    const days = Array.from(byDay.keys()).sort((a, b) => a - b);
+    days.forEach(d => {
+      const dayRow = document.createElement('div');
+      dayRow.style.cssText = 'display:flex;align-items:center;gap:6px;padding:6px 0 3px;font-size:10px;letter-spacing:0.5px;text-transform:uppercase;color:#7a5f2c;';
+      dayRow.innerHTML = '<span>Day ' + d + '</span>'
+        + '<span style="flex:1;height:1px;background:#3a2c12;"></span>'
+        + '<span style="color:#5a481f">' + byDay.get(d).length + '</span>';
+      list.appendChild(dayRow);
+      const bitGrid = document.createElement('div');
+      bitGrid.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px;padding:2px 0 4px;';
+      byDay.get(d).forEach(item => {
+        const chip = document.createElement('div');
+        chip.style.cssText = 'display:flex;align-items:center;gap:5px;padding:4px 9px;background:#0e0b06;border:1px solid #4a3a18;border-radius:12px;font-size:11px;color:#b89040;cursor:default;';
+        chip.title = item.desc || '';
+        chip.innerHTML = '<span style="font-size:13px">🪬</span><span>' + item.name.replace(' Token','') + '</span>';
+        bitGrid.appendChild(chip);
+      });
+      list.appendChild(bitGrid);
+    });
   }
 
   // ── 9. Other items (trophies, etc.) ──

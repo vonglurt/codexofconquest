@@ -9633,3 +9633,60 @@ test.describe('§MBIT-02 — _takeMissionBit spends the token without un-gating 
     expect(r.flag).toBe(true);    // arc gate survives the spend
   });
 });
+
+// ── §MBIT-02 — journal token timeline: Mission Tokens grouped/sorted by day ──
+//
+// _grantMissionBit stamps token.day; the inventory render groups tokens under a
+// "Day N" divider, days ascending, grant order preserved within a day. This drives
+// the real storyRenderInventory() into #inv-list and reads back the rendered order.
+test.describe('§MBIT-02 — Mission Tokens journal timeline (grouped by day earned)', () => {
+  test('tokens render grouped under ascending Day dividers, grant order within a day', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.inventory = [];
+      // Grant out of day order to prove the render sorts, not insertion order.
+      S_story.day = 3; _grantMissionBit('mbitTL_c', 'Third');
+      S_story.day = 1; _grantMissionBit('mbitTL_a', 'First');
+      S_story.day = 1; _grantMissionBit('mbitTL_b', 'Second');   // same day, later grant
+      storyRenderInventory();
+      const list = document.getElementById('inv-list');
+      // Walk children after the "🪬 Mission Tokens" section header.
+      const kids = Array.from(list.children);
+      const hdIdx = kids.findIndex(k => k.className === 'inv-section-hd' && /Mission Tokens/.test(k.textContent));
+      const seq = [];
+      for (let i = hdIdx + 1; i < kids.length; i++) {
+        const k = kids[i];
+        if (k.className === 'inv-section-hd') break;           // next section ends the block
+        // Day divider: its DIRECT children are spans; first is exactly "Day N".
+        const firstSpan = k.querySelector(':scope > span');
+        const dayHd = firstSpan && firstSpan.textContent.match(/^Day (\d+)$/);
+        if (dayHd) { seq.push('DAY:' + dayHd[1]); continue; }
+        // otherwise a grid of chips → record chip labels (skip the 🪬 icon span)
+        Array.from(k.querySelectorAll('span')).forEach(s => {
+          if (s.textContent && s.textContent !== '🪬') seq.push('CHIP:' + s.textContent);
+        });
+      }
+      return seq;
+    });
+    // Day 1 group (First, then Second — grant order), then Day 3 group (Third).
+    expect(r).toEqual([
+      'DAY:1', 'CHIP:First', 'CHIP:Second',
+      'DAY:3', 'CHIP:Third',
+    ]);
+  });
+
+  test('legacy tokens without a day stamp fall into Day 1', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      S_story.inventory = [
+        { name: 'Old Token', icon: '🪬', type: 'mission_bit', flagRef: 'mbitLegacy' }, // no .day
+      ];
+      storyRenderInventory();
+      const list = document.getElementById('inv-list');
+      const kids = Array.from(list.children);
+      const hdIdx = kids.findIndex(k => k.className === 'inv-section-hd' && /Mission Tokens/.test(k.textContent));
+      return { dayLabel: kids[hdIdx + 1] && kids[hdIdx + 1].textContent.startsWith('Day 1') };
+    });
+    expect(r.dayLabel).toBe(true);
+  });
+});
