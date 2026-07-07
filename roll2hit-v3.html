@@ -1207,18 +1207,18 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   font-size: 12px; color: #9ab0c4; max-width: 560px;
 }
 #mc-status-card .mc-k { display: inline-block; width: 62px; color: #7a8a9a; font-weight: 700; }
-#msub-connect .mp-hint, #msub-discover .mp-hint { font-size: 11px; color: #7a8a9a; line-height: 1.6; max-width: 560px; }
-#mc-server-input, #msub-discover input[type="text"], #md-find-input, #md-source-input {
+#msub-connect .mp-hint, #msub-discover .mp-hint, #msub-lists .mp-hint { font-size: 11px; color: #7a8a9a; line-height: 1.6; max-width: 560px; }
+#mc-server-input, #msub-discover input:not([type="checkbox"]), #msub-lists input:not([type="checkbox"]) {
   background: #0a1220; border: 1px solid #2a4a6a; border-radius: 4px;
   color: #cde0f0; font: inherit; font-size: 12px; padding: 6px 8px;
   width: 100%; box-sizing: border-box; max-width: 560px;
 }
-#msub-connect button, #msub-discover button {
+#msub-connect button, #msub-discover button, #msub-lists button {
   background: #0a1a2a; border: 1px solid #2a4a6a; border-radius: 4px;
   color: #8fc0f0; cursor: pointer; font-size: 12px; padding: 4px 12px;
 }
-#msub-connect button:hover, #msub-discover button:hover { border-color: #5a8aba; }
-#mc-server-rows, #md-server-rows, #md-source-rows { display: flex; flex-direction: column; gap: 6px; max-width: 560px; }
+#msub-connect button:hover, #msub-discover button:hover, #msub-lists button:hover { border-color: #5a8aba; }
+#mc-server-rows, #md-server-rows, #md-source-rows, #ml-black-rows, #ml-white-rows, #ml-peer-preview { display: flex; flex-direction: column; gap: 6px; max-width: 560px; }
 /* ── §MESH-02d: Discover pane (local scan · tracker resolve · list sources) ── */
 .md-sec-hd { font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; margin-top: 4px; }
 .md-src-row {
@@ -1229,6 +1229,20 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .md-src-row .md-src-url { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .md-src-row label { display: flex; align-items: center; gap: 3px; color: #7a8a9a; font-size: 11px; cursor: pointer; white-space: nowrap; }
 .md-src-row button { padding: 2px 8px; }
+/* ── §MESH-02e: Lists pane (quick-lists · server ACL editor · peer blocklist) ── */
+#ml-acl-editor { flex-direction: column; gap: 8px; max-width: 560px; }
+#ml-acl-editor > div:first-child label { display: flex; align-items: center; gap: 5px; color: #9ab0c4; font-size: 12px; cursor: pointer; white-space: nowrap; }
+#ml-acl-mode {
+  background: #0a1220; border: 1px solid #2a4a6a; border-radius: 4px;
+  color: #cde0f0; font: inherit; font-size: 12px; padding: 3px 6px;
+}
+#ml-acl-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 8px; }
+#ml-acl-grid label { display: flex; flex-direction: column; gap: 3px; font-size: 10px; font-weight: 700; color: #7a8a9a; }
+#ml-acl-grid textarea {
+  background: #0a1220; border: 1px solid #2a4a6a; border-radius: 4px;
+  color: #cde0f0; font: inherit; font-size: 11px; padding: 4px 6px;
+  min-height: 64px; resize: vertical;
+}
 #story-node-header {
   display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
 }
@@ -4520,7 +4534,52 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           <div id="md-source-rows"></div>
         </div>
         <div id="msub-lists" class="map-subpane">
-          <div class="msub-placeholder">🛡 Lists — client quick-lists &amp; server ACL editor arrive in §MESH-02(e).</div>
+          <!-- §MESH-02e: client quick-lists · server ACL editor · peer blocklist preview→merge (D2/D3) -->
+          <div class="mp-hint">Quick-lists live in this browser and shape what you see and join. The server ACL
+            is the mesh gate itself, edited on your own server. A friend's shared blocklist is fetched,
+            previewed, and merged only when you click — never auto-imported.</div>
+          <div class="md-sec-hd">🚫 MY BLACKLIST</div>
+          <div class="mp-hint">Hidden from every server list; Join refuses them. Entries: <code>host:port</code>, serverId, or world hash.</div>
+          <input id="ml-black-input" placeholder="host:port · serverId · world hash"
+                 onkeydown="if(event.key==='Enter')mlAddEntry('black')">
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="ml-black-add" onclick="mlAddEntry('black')">＋ Add</button></div>
+          <div id="ml-black-rows"></div>
+          <div class="md-sec-hd">✅ MY WHITELIST</div>
+          <div class="mp-hint">Hosts trusted to auto-load server-list sources in 🔭 Discover. Entries: <code>host</code> or <code>host:port</code>.</div>
+          <input id="ml-white-input" placeholder="host · host:port"
+                 onkeydown="if(event.key==='Enter')mlAddEntry('white')">
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="ml-white-add" onclick="mlAddEntry('white')">＋ Add</button></div>
+          <div id="ml-white-rows"></div>
+          <div class="md-sec-hd">🛡 SERVER ACL (mesh-acl.json)</div>
+          <div id="ml-acl-note" class="mp-hint"></div>
+          <div id="ml-acl-editor" style="display:none">
+            <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+              <label>mode
+                <select id="ml-acl-mode">
+                  <option value="open">open</option>
+                  <option value="allowlist">allowlist</option>
+                </select></label>
+              <label><input type="checkbox" id="ml-acl-share"> share my blocklist</label>
+              <button id="ml-acl-save" onclick="mlAclSave()">💾 Save to server</button>
+            </div>
+            <div id="ml-acl-grid">
+              <label>block serverIds<textarea id="ml-acl-blockServerIds" placeholder="one per line"></textarea></label>
+              <label>block IPs<textarea id="ml-acl-blockIps" placeholder="one per line"></textarea></label>
+              <label>block world hashes<textarea id="ml-acl-blockWorldHashes" placeholder="one per line"></textarea></label>
+              <label>allow serverIds<textarea id="ml-acl-allowServerIds" placeholder="one per line"></textarea></label>
+              <label>allow IPs<textarea id="ml-acl-allowIps" placeholder="one per line"></textarea></label>
+              <label>allow world hashes<textarea id="ml-acl-allowWorldHashes" placeholder="one per line"></textarea></label>
+            </div>
+            <div id="ml-acl-save-note" class="mp-hint"></div>
+          </div>
+          <div class="md-sec-hd">📥 A FRIEND'S SHARED BLOCKLIST</div>
+          <div class="mp-hint">Fetch a peer's published blocklist (sharing is their opt-in), preview the counts,
+            then merge into <b>your</b> blacklist — only on your click.</div>
+          <input id="ml-peer-input" placeholder="http://host:port  ·  host:port"
+                 onkeydown="if(event.key==='Enter')mlPeerFetch()">
+          <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="ml-peer-fetch" onclick="mlPeerFetch()">📥 Fetch</button></div>
+          <div id="ml-peer-note" class="mp-hint"></div>
+          <div id="ml-peer-preview"></div>
         </div>
       </div>
 
@@ -27838,6 +27897,7 @@ function _mpRenderServerRows(rows, contId) {
   // addr shape-check mirrors the server's announce validation — a hostile
   // tracker/manifest can't smuggle markup or quotes into the Join onclick.
   rows = rows.filter(s => s && /^[\w.-]+:\d+$/.test(s.addr || ''));
+  rows = rows.filter(s => !_mpBlacklisted(s));   // §MESH-02e: the client blacklist hides rows on every surface
   cont.innerHTML = rows.map((s, i) => _mpServerRowHtml(s, i, pingPfx)).join('');
   rows.forEach(async (s, i) => {
     const el = () => document.getElementById(pingPfx + i);
@@ -27890,6 +27950,8 @@ async function mpResolveMagnet(ui) {
   note.textContent = '🔴 Nothing answered at ' + url + ' — not a tracker or world server.';
 }
 function mpJoin(addr) {
+  // §MESH-02e: the client blacklist refuses Join no matter which surface asked
+  if (_mpBlacklisted(addr)) { storyMsg('🚫 ' + addr + ' is on your blacklist — remove it in 🛡 Lists to join.'); return; }
   const base = /^https?:\/\//.test(addr) ? addr : 'http://' + addr;
   try { localStorage.setItem('mpServer', base); } catch {}
   mpBrowserClose();
@@ -28115,6 +28177,139 @@ async function _mdOnOpen() {
   }
   _mdShowRows(rows, auto.length + ' auto source(s)');
 }
+
+// ── §MESH-02e — Lists pane (#msub-lists) ────────────────────────────────────
+// Client quick-lists (localStorage, this browser): mpBlacklist hides rows in
+// every server list AND makes mpJoin refuse; mpWhitelist marks source hosts
+// trusted for D4 auto-load. The server ACL (mesh-acl.json) is the real mesh
+// gate, edited over GET/PUT /api/mesh/acl — no server is a hint, not an error;
+// the quick-lists still work. A peer's shared blocklist is fetch → count
+// preview → EXPLICIT merge into the client blacklist, never auto-imported
+// (D2), and the peer must have opted in (D3 — 403 not-shared otherwise).
+// Display/connection layer only (D7): the mover reads none of this.
+const _ML_KEYS = { black: 'mpBlacklist', white: 'mpWhitelist' };
+const _ML_ACL_LISTS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes'];
+// A target is blacklisted if its addr, bare host, serverId, or worldHash is
+// listed — rows carry all four when a tracker supplied them; a plain addr
+// string (mpJoin) can only match the first two.
+function _mpBlacklisted(s) {
+  const bl = _mpClientLists().black;
+  if (!bl.length) return false;
+  const r = typeof s === 'string' ? { addr: s } : (s || {});
+  const addr = String(r.addr || '').replace(/^https?:\/\//, '').replace(/\/+$/, '');
+  return bl.includes(addr) || bl.includes(addr.split(':')[0])
+    || (r.serverId ? bl.includes(r.serverId) : false)
+    || (r.worldHash ? bl.includes(r.worldHash) : false);
+}
+function mlAddEntry(which) {
+  const inp = document.getElementById('ml-' + which + '-input');
+  const v = (inp.value || '').trim();
+  if (!v) return;
+  const list = _mpClientLists()[which];
+  if (!list.includes(v)) { list.push(v); _mpSaveList(_ML_KEYS[which], list); }
+  inp.value = '';
+  _mlRenderClientLists();
+}
+function mlRemoveEntry(which, i) {
+  const list = _mpClientLists()[which];
+  list.splice(i, 1);
+  _mpSaveList(_ML_KEYS[which], list);
+  _mlRenderClientLists();
+}
+function _mlRenderClientLists() {
+  for (const which of ['black', 'white']) {
+    const cont = document.getElementById('ml-' + which + '-rows');
+    if (!cont) continue;
+    const list = _mpClientLists()[which];
+    cont.innerHTML = list.length ? list.map((v, i) =>
+      '<div class="md-src-row"><span class="md-src-url" title="' + _mpEsc(v) + '">' + _mpEsc(v) + '</span>' +
+      '<button onclick="mlRemoveEntry(\'' + which + '\',' + i + ')" title="remove">✕</button></div>').join('')
+      : '<div class="msub-placeholder">empty</div>';
+  }
+}
+async function _mlAclLoad() {
+  const note = document.getElementById('ml-acl-note');
+  const ed = document.getElementById('ml-acl-editor');
+  const base = MP.on ? MP.base : _mpBase();
+  note.textContent = '… reading ' + base + '/api/mesh/acl…';
+  let data = null;
+  try { data = await (await fetch(base + '/api/mesh/acl')).json(); } catch {}
+  if (!data || !data.ok) {   // offline → hint, not an error — the quick-lists above still work
+    ed.style.display = 'none';
+    note.textContent = '🔌 No server at ' + base + ' — start yours (./wbapi-toggle.sh start) to edit its ACL.';
+    return;
+  }
+  ed.style.display = 'flex';
+  note.textContent = '✏️ ' + (data.file || 'mesh-acl.json') + ' on ' + base + (data.exists ? '' : ' (defaults — no file written yet)');
+  document.getElementById('ml-acl-mode').value = data.acl.mode;
+  document.getElementById('ml-acl-share').checked = !!data.acl.shareBlocklist;
+  for (const k of _ML_ACL_LISTS) document.getElementById('ml-acl-' + k).value = (data.acl[k] || []).join('\n');
+  document.getElementById('ml-acl-save-note').textContent = '';
+}
+async function mlAclSave() {
+  const note = document.getElementById('ml-acl-save-note');
+  const base = MP.on ? MP.base : _mpBase();
+  const body = { mode: document.getElementById('ml-acl-mode').value,
+    shareBlocklist: document.getElementById('ml-acl-share').checked };
+  for (const k of _ML_ACL_LISTS)
+    body[k] = document.getElementById('ml-acl-' + k).value.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  note.textContent = '💾 saving…';
+  try {
+    const r = await fetch(base + '/api/mesh/acl', { method: 'PUT',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const data = await r.json();
+    if (!data.ok) { note.textContent = '🔴 server refused: ' + (data.error || r.status); return; }
+    for (const k of _ML_ACL_LISTS) document.getElementById('ml-acl-' + k).value = (data.acl[k] || []).join('\n');
+    note.textContent = '✅ saved — mode ' + data.acl.mode + ', blocklist '
+      + (data.acl.shareBlocklist ? 'shared' : 'private') + '; applies on the next mesh packet (hot-reload).';
+  } catch { note.textContent = '🔴 could not reach ' + base + ' — is the server still up?'; }
+}
+let _ML_PEER = null;   // last fetched peer blocklist awaiting the explicit merge click (D2)
+async function mlPeerFetch() {
+  const note = document.getElementById('ml-peer-note');
+  const prev = document.getElementById('ml-peer-preview');
+  prev.innerHTML = ''; _ML_PEER = null;
+  let url = (document.getElementById('ml-peer-input').value || '').trim();
+  if (/^[\w.-]+:\d+$/.test(url)) url = 'http://' + url;
+  if (!/^https?:\/\//i.test(url)) { note.textContent = 'A peer is host:port or an http(s) URL.'; return; }
+  url = url.replace(/\/+$/, '');
+  note.textContent = '📥 asking ' + url + '…';
+  let data = null, status = 0;
+  try { const r = await fetch(url + '/api/mesh/blocklist'); status = r.status; data = await r.json(); } catch {}
+  if (!data) { note.textContent = '🔴 Nothing answered at ' + url + '.'; return; }
+  if (!data.ok) {
+    note.textContent = data.reason === 'not-shared'
+      ? '🤐 ' + url + ' does not share its blocklist (sharing is the operator’s opt-in).'
+      : '🔴 ' + url + ' refused (' + (data.reason || status) + ').';
+    return;
+  }
+  _ML_PEER = { url, data };
+  const n = k => (data[k] || []).length;
+  const total = n('blockServerIds') + n('blockIps') + n('blockWorldHashes');
+  note.textContent = '';
+  prev.innerHTML = '<div class="md-src-row"><span class="md-src-url">'
+    + _mpEsc(url.replace(/^https?:\/\//, '')) + ' shares ' + total + ' entrie(s) — '
+    + n('blockServerIds') + ' serverId · ' + n('blockIps') + ' IP · ' + n('blockWorldHashes') + ' world hash</span>'
+    + (total ? '<button onclick="mlPeerMerge()">Merge into my blacklist</button>' : '') + '</div>';
+}
+function mlPeerMerge() {
+  if (!_ML_PEER) return;
+  const list = _mpClientLists().black;
+  let added = 0;
+  for (const k of ['blockServerIds', 'blockIps', 'blockWorldHashes'])
+    for (const v of (_ML_PEER.data[k] || [])) {
+      const s = String(v).trim();
+      if (s && !list.includes(s)) { list.push(s); added++; }
+    }
+  _mpSaveList('mpBlacklist', list);
+  _mlRenderClientLists();
+  document.getElementById('ml-peer-note').textContent = added
+    ? '✅ merged ' + added + ' new entrie(s) into your blacklist.'
+    : '✅ nothing new — every entry was already on your blacklist.';
+  document.getElementById('ml-peer-preview').innerHTML = '';
+  _ML_PEER = null;
+}
+function _mlOnOpen() { _mlRenderClientLists(); _mlAclLoad(); }
 
 // ── §MESH-01i slice 2b — client ledger rung: mint stamping + trade UI ───────
 // Design: mesh lab report §6.2/§6.4. An inventory item is a plain local object
@@ -34417,6 +34612,7 @@ function msubSwitch(id) {
   document.querySelectorAll('#map-subtab-bar .map-subtab').forEach(t => t.classList.toggle('msub-active', t.dataset.msub === id));
   if (id === 'msub-connect') _mcRenderStatus();   // §MESH-02c: fresh manifest + state on pane open
   if (id === 'msub-discover') _mdOnOpen();        // §MESH-02d: sources list + D4 auto-load on pane open
+  if (id === 'msub-lists') _mlOnOpen();           // §MESH-02e: quick-lists + server ACL on pane open
 }
 
 function storyMapToggle() {
@@ -35556,7 +35752,8 @@ document.querySelectorAll('#map-subtab-bar .map-subtab').forEach(t => {
 });
 window.__mesh02 = Object.assign(window.__mesh02 || {}, { msubSwitch, mcConnect, mcFind, mcDisconnect, _mcRenderStatus,
   mpParseServerList, _mpClientLists, _mpSaveList, mdScanLocal, mdFind, mdAddSource, mdRemoveSource, mdLoadSource,
-  _mdRenderSources, _mdHostApproved, _mdOnOpen });
+  _mdRenderSources, _mdHostApproved, _mdOnOpen,
+  _mpBlacklisted, mlAddEntry, mlRemoveEntry, _mlRenderClientLists, _mlAclLoad, mlAclSave, mlPeerFetch, mlPeerMerge, _mlOnOpen });
 document.getElementById('btn-inv-close').addEventListener('click', storyInventoryToggle);
 document.getElementById('btn-quest').addEventListener('click', storyQuestToggle);
 document.getElementById('btn-quest-close').addEventListener('click', storyQuestToggle);
