@@ -134,10 +134,12 @@ Do **not** write a lab report for: a single monster/quest addition, a value corr
 > *`fishmongerRowRestored` visual rebuild ✅ SHIPPED 2026-07-07 (`85faf9b`) — the §GR payoff via the new data-driven `node.textVariants:[{flag,text}]` mechanism in `storyRender` (display-only, API-authored; reusable for any "node changes after an event"). Ship record: plan-archive.md §"Archived 2026-07-07".*
 - [ ] **UI gaps** — `[INVESTIGATE]` buttons don't highlight on node entry (root cause unknown); reading-circle has no progress UI. See `project_open_gaps`.
 
-### Design Decisions (pending)
+### Design Decisions
 
-- [ ] **Arc ID as first-class UQF field** — add `arc: 'quest_wis'` explicitly to quest objects; enables arc sorting without string-splitting heuristics
-- [ ] **§MBIT-02-E token/gate unification** — leaning toward keeping KEY_EVENTS items and mission bit tokens separate (different ontology). Decision pending.
+> *Both pending decisions RESOLVED 2026-07-07 (user-ratified after code audit) — **do not build, per YAGNI + ontology.***
+
+- [x] **Arc ID as first-class UQF field — DEFERRED (decided 2026-07-07).** Code audit: **zero** quests carry `arc:` today and there is **no arc-grouping/sort consumer anywhere** (journal doesn't group by arc; the only `id.split('_')` in the file is `_flagToLabel`, mission-bit display, not arc detection). The field's stated benefit ("arc sorting without string-splitting") describes a reader that doesn't exist. Ship the field **together with** an arc-grouped journal view whenever that's actually built — not ahead of it. Not backlog work until then.
+- [x] **§MBIT-02-E token/gate unification — CLOSED: keep separate (decided 2026-07-07).** KEY_EVENTS (`ke_*`, 8 events) and mission bit tokens (`_grantMissionBit`, 2,441 sites) are **inverse data flows**: a KEY_EVENT item is a *precondition consumed* (`consumeItem` + ability check + DC → world change at a gate); a mission bit is a *postcondition granted* (a kept receipt with `flagRef`/`bitLabel` handed over after a witnessed event). Different ontology → no unification. Decision ratified.
 
 ### Multiplayer
 
