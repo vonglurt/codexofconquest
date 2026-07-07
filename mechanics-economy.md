@@ -253,7 +253,7 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 | `LOOT_TABLE` | *(removed)* | Old d20 drop table — replaced by `_D100_TABLE` (§DROP-01 2026-06-05); definition now a comment stub |
 | `XP_LEVELS` | const array[20] | Cumulative XP thresholds for levels 1–20 |
 | `SHIELD_ITEMS` | const array | 6 tiers: Small +1 → Kite +2 → Magic +3 → Large Magic +4 → Legendary +5 → Ancient +6; `_magicTierAllowed()` gates drops |
-| `DAGGER_ITEMS` | const array | 4 tiers: +1 Royal (Lv3) / +2 Painite (Lv7) / +3 Gaping (Lv13) / +4 Voidsteel (Lv20); drop-only |
+| `DAGGER_ITEMS` | const array | 4 tiers: +1 Royal (Lv3) / +2 Painite (Lv7) / +3 Gaping (Lv13) / +4 Voidsteel (Lv20); **no random drop** since the §FC06 nerf (removed from d100) — authored-reward-only pool; vestigial `cost` field is unread |
 | `WEAPON_ITEMS` | const array[70] | 14 base types × 5 magic tiers (0–+4); `STARTER_POINTY_STICK` is a standalone copy for new game |
 | `STARTER_POINTY_STICK` | const object | Starting main weapon `{tier:'pointy_stick', die:4, count:1, magicBonus:0}`; set on storyNewGame() |
 | `STARTER_FLINT_DAGGER` | const object | Starting offhand `{tier:'flint_dagger', atkBonus:-3}`; crude stone blade; set on storyNewGame() |
@@ -338,6 +338,9 @@ MILEPOINT C  Item type branch:
              flashbang → Flashbang (sell:75)
              gold → random 50–249gp, type='_goldcache', _gold field
              dagger / mainweapon → _magicTierAllowed(magic) gate; pool filtered by lv + not owned
+               (INERT since the §FC06 nerf: the consumables-only _D100_TABLE emits no dagger/
+                mainweapon rows, so these branches never fire. Kept so a re-added row via
+                PUT /api/loot still resolves; the ownedDaggers/ownedWeapons sets feed only them.)
              If pool empty or tier not allowed → retry; after 3 fails → Minor Healing Potion fallback
 
 MILEPOINT D  _autoSellDuplicates() fires on next node entry
@@ -412,7 +415,7 @@ MILEPOINT D  Sell path:
 
 MILEPOINT E  _magicTierAllowed(magic) — single line: level >= magic * 5
              Gates: +1 needs Lv5 | +2 needs Lv10 | +3 needs Lv15 | +4 needs Lv20
-             Applied in vendor shield display, _rollD100Loot() dagger/weapon rolls
+             Applied in vendor shield display + the now-inert _rollD100Loot() dagger/weapon branches (§FC06)
 ```
 
 ---

@@ -23432,22 +23432,13 @@ function _magicTierAllowed(magic) {
 // Unified d100 drop table — each entry: { weight, _type, _magic? }
 // _type: 'potion_minor'|'potion'|'potion_greater'|'potion_superior'|'scroll'|'flashbang'|'dagger'|'mainweapon'|'gold'
 const _D100_TABLE = [ // → doc: mechanics-combat.md §Loot Table
-  { weight:25, _type:'potion_minor' },
-  { weight:12, _type:'potion' },
-  { weight:8,  _type:'potion_greater' },
-  { weight:3,  _type:'potion_superior' },
-  { weight:6,  _type:'scroll' },
-  { weight:4,  _type:'flashbang' },
-  { weight:6,  _type:'gold' },
-  { weight:5,  _type:'dagger',     _magic:1 },
-  { weight:4,  _type:'dagger',     _magic:2 },
-  { weight:3,  _type:'dagger',     _magic:3 },
-  { weight:1,  _type:'dagger',     _magic:4 },
-  { weight:8,  _type:'mainweapon', _magic:0 },
-  { weight:6,  _type:'mainweapon', _magic:1 },
-  { weight:4,  _type:'mainweapon', _magic:2 },
-  { weight:3,  _type:'mainweapon', _magic:3 },
-  { weight:2,  _type:'mainweapon', _magic:4 },
+  { weight:35, _type:"potion_minor" },
+  { weight:18, _type:"potion" },
+  { weight:14, _type:"potion_greater" },
+  { weight:6, _type:"potion_superior" },
+  { weight:11, _type:"scroll" },
+  { weight:6, _type:"flashbang" },
+  { weight:10, _type:"gold" },
 ]; // total weight = 100
 // ◆◆◆ WORLDBUILDER:D100_TABLE:END ◆◆◆
 
@@ -23515,8 +23506,9 @@ function _rollMonsterWeaponDrop(monsterDmgDie) {
   if (!pool.length) pool = WEAPON_ITEMS.filter(w => w.magicBonus === 0 && !ownedTiers.has(w.tier));
   if (!pool.length) return null;
   const base = pool[Math.floor(Math.random() * pool.length)];
-  const deg = Math.floor(Math.random() * 4) - 3; // −3 to 0
-  const pfx = ['Rusted ','Chipped ','Worn ',''][deg + 3];
+  const d6  = Math.ceil(Math.random() * 6);
+  const deg = Math.min(0, d6 - 5); // 1→−4, 2→−3, 3→−2, 4→−1, 5–6→0
+  const pfx = ['Wrecked ','Rusted ','Chipped ','Worn ','',''][d6 - 1];
   return pfx ? {...base, name: pfx + base.name, magicBonus: deg} : base;
 }
 

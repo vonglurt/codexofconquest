@@ -492,28 +492,28 @@ total = d20 + proficiencyBonus + S_story.atkBonus (level)
 
 ### Main Hand Weapons (WEAPON_ITEMS)
 
-42 entries: 14 base weapon types × 3 magic tiers (base, +1, +2). +3 and +4 tiers are planned for Layers 25+.
+70 entries: 14 base weapon types × 5 magic tiers (base, +1, +2, +3, +4).
 
 **14 base types (die size ascending):** Pointy Stick d4 Lv1, Sickle d4 Lv1, Axe d6 Lv1, Bow d6 Lv2, Scimitar d6 Lv2, Flail d8 Lv3, Long Sword d8 Lv3, Morningstar d8 Lv4, Rapier d8 Lv4, Crossbow d10 Lv5, Glaive d10 Lv5, Halberd d10 Lv6, Maul 2d6 Lv7, Lance d12 Lv8.
 
 **Magic tiers:** `minLevel = baseLv + magic × 4`. A +1 Axe requires Lv5; a +2 Axe requires Lv9.
 
-Drop chance: **15% per battle** via `_rollMainWeaponDrop()`. Duplicate tiers already owned are excluded from the eligible pool.
+**Acquisition (§FC06 nerf — fishing-exclusive positive magic):** Only the **base tier (magicBonus 0)** drops from combat, via `_rollMonsterWeaponDrop()` (see §Equipment Drops — one guaranteed weapon per battle, d6 quality −4..0). The +1..+4 tiers **no longer drop from any monster kill** — the old `_rollMainWeaponDrop()` 15%/battle path is retired and the d100 table is consumables-only. Positive-magic gear reaches the player only from **Yugurt Lake fishing** (`LAKE_MAGIC_DB` passive trinkets) and **hand-authored quest/Epic-Boss rewards** (e.g. Sea Element +2, Rod of Self-Discovery +1). The +N `WEAPON_ITEMS` pool remains defined for save reconstruction and possible future authored grants, but nothing rolls it.
 
 ---
 
 ### Dagger Drops (DAGGER_ITEMS)
 
-Daggers are offhand weapons that drop from battle — they are not sold at vendor nodes.
+Daggers are offhand weapons — they are not sold at vendor nodes. `DAGGER_ITEMS` carries a vestigial `cost` field that no purchase flow reads.
 
 | Dagger | ATK Bonus | Min Level | Sell |
 |---|---|---|---|
 | 🗡 +1 Royal Dagger | +1 | Lv3 | 150gp |
 | 🗡 +2 Painite Dagger | +2 | Lv7 | 450gp |
 | 🗡 +3 Gaping Dagger | +3 | Lv13 | 1,250gp |
-| 🗡 +4 Voidsteel Dagger | +4 | Lv20 | — (planned) |
+| 🗡 +4 Voidsteel Dagger | +4 | Lv20 | 3,000gp |
 
-Drop chance: **12% per battle** via `_rollWeaponDrop()`. Always drops the lowest tier the player doesn't yet own and qualifies for. The `atkBonus` adds to every attack roll when the dagger is equipped in the offhand slot.
+**Acquisition (§FC06 nerf):** these magic daggers **no longer drop from combat** — the old `_rollWeaponDrop()` 12%/battle path is retired and the d100 table is consumables-only. As positive-magic gear they are fishing-exclusive by policy; the generic `DAGGER_ITEMS` pool is now granted only by any future hand-authored quest reward that references it (no random vector). The `atkBonus` adds to every attack roll when a dagger is equipped in the offhand slot. The starting 🗡 Flint Dagger (atkBonus −3) is the only offhand a new game guarantees.
 
 ---
 
