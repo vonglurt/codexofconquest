@@ -1207,18 +1207,28 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   font-size: 12px; color: #9ab0c4; max-width: 560px;
 }
 #mc-status-card .mc-k { display: inline-block; width: 62px; color: #7a8a9a; font-weight: 700; }
-#msub-connect .mp-hint { font-size: 11px; color: #7a8a9a; line-height: 1.6; max-width: 560px; }
-#mc-server-input {
+#msub-connect .mp-hint, #msub-discover .mp-hint { font-size: 11px; color: #7a8a9a; line-height: 1.6; max-width: 560px; }
+#mc-server-input, #msub-discover input[type="text"], #md-find-input, #md-source-input {
   background: #0a1220; border: 1px solid #2a4a6a; border-radius: 4px;
   color: #cde0f0; font: inherit; font-size: 12px; padding: 6px 8px;
   width: 100%; box-sizing: border-box; max-width: 560px;
 }
-#msub-connect button {
+#msub-connect button, #msub-discover button {
   background: #0a1a2a; border: 1px solid #2a4a6a; border-radius: 4px;
   color: #8fc0f0; cursor: pointer; font-size: 12px; padding: 4px 12px;
 }
-#msub-connect button:hover { border-color: #5a8aba; }
-#mc-server-rows { display: flex; flex-direction: column; gap: 6px; max-width: 560px; }
+#msub-connect button:hover, #msub-discover button:hover { border-color: #5a8aba; }
+#mc-server-rows, #md-server-rows, #md-source-rows { display: flex; flex-direction: column; gap: 6px; max-width: 560px; }
+/* ── §MESH-02d: Discover pane (local scan · tracker resolve · list sources) ── */
+.md-sec-hd { font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; margin-top: 4px; }
+.md-src-row {
+  display: flex; align-items: center; gap: 8px; font-size: 12px; color: #9ab0c4;
+  border: 1px solid #2a4a6a; border-radius: 4px; background: rgba(10,20,35,0.45);
+  padding: 4px 8px;
+}
+.md-src-row .md-src-url { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.md-src-row label { display: flex; align-items: center; gap: 3px; color: #7a8a9a; font-size: 11px; cursor: pointer; white-space: nowrap; }
+.md-src-row button { padding: 2px 8px; }
 #story-node-header {
   display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
 }
@@ -4489,7 +4499,25 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           <div id="mc-server-rows"></div>
         </div>
         <div id="msub-discover" class="map-subpane">
-          <div class="msub-placeholder">🔭 Discover — local port scan &amp; server-list sources arrive in §MESH-02(d).</div>
+          <!-- §MESH-02d: local port scan (D6) · tracker/magnet resolve · server-list sources (D4) -->
+          <div class="mp-hint">Find servers three ways: scan this machine's ports (1360–1380), ask a tracker
+            or magnet, or load a server list from a URL. A source marked <b>auto</b> loads when this pane
+            opens — but only if its host is on your whitelist (🛡 Lists). Joining never changes your game.</div>
+          <input id="md-find-input" placeholder="tracker / server URL  ·  host:port  ·  r2h:?…"
+                 onkeydown="if(event.key==='Enter')mdFind()">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button id="md-btn-scan" onclick="mdScanLocal()">🖥 Scan this machine</button>
+            <button id="md-btn-find" onclick="mdFind()">🔭 Find servers</button>
+          </div>
+          <div id="md-note" class="mp-hint"></div>
+          <div id="md-server-rows"></div>
+          <div class="md-sec-hd">📜 SERVER-LIST SOURCES</div>
+          <input id="md-source-input" placeholder="https://example.com/servers.txt  — host:port / URL / r2h:?… per line, or a JSON array"
+                 onkeydown="if(event.key==='Enter')mdAddSource()">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button id="md-btn-addsrc" onclick="mdAddSource()">＋ Add source</button>
+          </div>
+          <div id="md-source-rows"></div>
         </div>
         <div id="msub-lists" class="map-subpane">
           <div class="msub-placeholder">🛡 Lists — client quick-lists &amp; server ACL editor arrive in §MESH-02(e).</div>
@@ -27817,6 +27845,10 @@ function _mpRenderServerRows(rows, contId) {
     catch { if (el()) { el().textContent = 'unreachable'; el().style.color = '#c05555'; } }
   });
 }
+// Magnet fields → tracker /peers query string ('' when no magnet) — shared by
+// the resolver and the §MESH-02d list-source loader.
+const _mpTrackerQuery = mag => mag ? '?' + new URLSearchParams(Object.entries({ wh: mag.wh, ev: mag.ev, p: mag.p })
+  .filter(([, v]) => v).reduce((o, [k, v]) => (o[k] = v, o), {})) : '';
 // §MESH-02c: ui = {input, note, rows} element ids — defaults are the Shift+🌐
 // modal; the Connect pane passes its own trio. One resolver, two surfaces.
 async function mpResolveMagnet(ui) {
@@ -27838,9 +27870,7 @@ async function mpResolveMagnet(ui) {
   // A tracker answers /api/tracker/peers; a plain game server 410s it (or has
   // no announce table) — fall back to treating the URL as the server itself.
   try {
-    const q = mag ? '?' + new URLSearchParams(Object.entries({ wh: mag.wh, ev: mag.ev, p: mag.p })
-      .filter(([, v]) => v).reduce((o, [k, v]) => (o[k] = v, o), {})) : '';
-    const data = await (await fetch(url + '/api/tracker/peers' + q)).json();
+    const data = await (await fetch(url + '/api/tracker/peers' + _mpTrackerQuery(mag))).json();
     if (data.ok && Array.isArray(data.servers)) {
       if (!data.servers.length) { note.textContent = 'Tracker is up, but no live server matches this world right now.'; return; }
       note.textContent = data.servers.length + ' server(s)' + (mag && mag.wh ? ' for world ' + mag.wh : '') + ':';
@@ -27916,6 +27946,175 @@ function mcConnect() {
 }
 function mcFind() { return mpResolveMagnet({ input: 'mc-server-input', note: 'mc-note', rows: 'mc-server-rows' }); }
 function mcDisconnect() { if (MP.on) mpDisconnect('🌐 Multiplayer off.'); else _mcRenderStatus(); }
+
+// ── §MESH-02d — Discover pane (#msub-discover) ──────────────────────────────
+// Three discovery surfaces, all display/connection layer (D7 — the mover never
+// reads any of it): 🖥 local port scan (D6: parallel /api/manifest probes of
+// localhost:1360–1380 — a browser can't listen, only probe; the Node server
+// stays the only listener), tracker/magnet resolve (the SAME mpResolveMagnet
+// as the modal and Connect pane), and server-list sources — URLs serving a
+// text/JSON list of servers, kept in localStorage mpListSources [{url,auto}].
+// A source marked auto loads on pane open ONLY if its host is on the client
+// whitelist (D4); everything else loads on explicit click.
+function _mpClientLists() {
+  const get = k => { try { const v = JSON.parse(localStorage.getItem(k) || 'null'); return Array.isArray(v) ? v : []; } catch { return []; } };
+  return { black: get('mpBlacklist'), white: get('mpWhitelist'), sources: get('mpListSources') };
+}
+function _mpSaveList(key, arr) { try { localStorage.setItem(key, JSON.stringify(arr)); } catch {} }
+// One list format, two encodings (design §3.3): text = one entry per line
+// (host:port · http(s) URL · r2h:?… magnet; # comments), or a JSON array of
+// strings / {addr,name} objects. → [{addr|url|magnet, name?}], deduped.
+function mpParseServerList(text) {
+  const t = String(text || '').trim();
+  let raw = [];
+  if (t[0] === '[') {
+    try {
+      const arr = JSON.parse(t);
+      if (Array.isArray(arr)) raw = arr.map(e => typeof e === 'string' ? { v: e }
+        : e && typeof e.addr === 'string' ? { v: e.addr, name: e.name } : null).filter(Boolean);
+    } catch { return []; }
+  } else {
+    raw = t.split(/\r?\n/).map(l => l.trim()).filter(l => l && l[0] !== '#')
+      .map(l => ({ v: l.split(/\s+#/)[0].trim() }));
+  }
+  const out = [], seen = new Set();
+  for (const { v, name } of raw) {
+    let e = null;
+    if (/^r2h:/i.test(v)) e = { magnet: v };
+    else if (/^https?:\/\//i.test(v)) e = { url: v.replace(/\/+$/, '') };
+    else if (/^[\w.-]+:\d+$/.test(v)) e = { addr: v };
+    if (!e) continue;
+    if (name) e.name = String(name);
+    const k = e.magnet || e.url || e.addr;
+    if (!seen.has(k)) { seen.add(k); out.push(e); }
+  }
+  return out;
+}
+async function _mdProbeManifest(base, ms) {
+  const ctl = new AbortController();
+  const t = setTimeout(() => ctl.abort(), ms || 600);
+  try {
+    const man = await (await fetch(base + '/api/manifest', { signal: ctl.signal })).json();
+    return man && man.ok ? man : null;
+  } catch { return null; }
+  finally { clearTimeout(t); }
+}
+const _MD_SCAN_PORTS = [1360, 1380];   // D6: inclusive localhost probe range
+async function mdScanLocal() {
+  const note = document.getElementById('md-note');
+  note.textContent = '🖥 probing localhost:' + _MD_SCAN_PORTS[0] + '–' + _MD_SCAN_PORTS[1] + '…';
+  document.getElementById('md-server-rows').innerHTML = '';
+  const ports = [];
+  for (let p = _MD_SCAN_PORTS[0]; p <= _MD_SCAN_PORTS[1]; p++) ports.push(p);
+  const rows = (await Promise.all(ports.map(async p => {
+    const man = await _mdProbeManifest('http://localhost:' + p);
+    // join by the probed localhost addr — man.addr is the mesh-advertise identity, shown as the name
+    return man ? { addr: 'localhost:' + p, name: man.addr || 'localhost:' + p,
+      worldTag: man.worldTag, engineVer: man.engineVer, playerCount: 0 } : null;
+  }))).filter(Boolean);
+  note.textContent = rows.length ? rows.length + ' local server(s):'
+    : 'No WBAPI server listening on localhost:' + _MD_SCAN_PORTS[0] + '–' + _MD_SCAN_PORTS[1] + '.';
+  _mpRenderServerRows(rows, 'md-server-rows');
+}
+function mdFind() { return mpResolveMagnet({ input: 'md-find-input', note: 'md-note', rows: 'md-server-rows' }); }
+// D4: a source's host must be on the client whitelist for its auto flag to be
+// honored — entries match either the bare hostname or hostname:port.
+function _mdHostApproved(url) {
+  try { const u = new URL(url); const w = _mpClientLists().white; return w.includes(u.hostname) || w.includes(u.host); }
+  catch { return false; }
+}
+function mdAddSource() {
+  const inp = document.getElementById('md-source-input');
+  const note = document.getElementById('md-note');
+  const url = (inp.value || '').trim().replace(/\/+$/, '');
+  if (!/^https?:\/\//i.test(url)) { note.textContent = 'A source is an http(s) URL serving a server list.'; return; }
+  const sources = _mpClientLists().sources;
+  if (sources.some(s => s.url === url)) { note.textContent = 'Already on the list.'; return; }
+  sources.push({ url, auto: false });
+  _mpSaveList('mpListSources', sources);
+  inp.value = ''; note.textContent = '';
+  _mdRenderSources();
+}
+function mdRemoveSource(i) {
+  const sources = _mpClientLists().sources;
+  sources.splice(i, 1);
+  _mpSaveList('mpListSources', sources);
+  _mdRenderSources();
+}
+function _mdRenderSources() {
+  const cont = document.getElementById('md-source-rows');
+  if (!cont) return;
+  const sources = _mpClientLists().sources;
+  if (!sources.length) { cont.innerHTML = '<div class="msub-placeholder">No sources yet — add a list URL above.</div>'; return; }
+  cont.innerHTML = sources.map((s, i) =>
+    '<div class="md-src-row"><span class="md-src-url" title="' + _mpEsc(s.url) + '">' + _mpEsc(s.url) + '</span>' +
+    '<label title="load automatically when this pane opens — honored only for whitelisted hosts">' +
+    '<input type="checkbox" class="md-src-auto" data-i="' + i + '"' + (s.auto ? ' checked' : '') + '> auto</label>' +
+    (s.auto && !_mdHostApproved(s.url) ? '<span style="color:#d4a017" title="host not on your whitelist (🛡 Lists) — will NOT auto-load">⚠</span>' : '') +
+    '<button onclick="mdLoadSource(' + i + ')">📥 Load</button>' +
+    '<button onclick="mdRemoveSource(' + i + ')" title="remove source">✕</button></div>').join('');
+  cont.querySelectorAll('.md-src-auto').forEach(cb => cb.addEventListener('change', () => {
+    const src = _mpClientLists().sources, i = +cb.dataset.i;
+    if (src[i]) { src[i].auto = cb.checked; _mpSaveList('mpListSources', src); _mdRenderSources(); }
+  }));
+}
+// One parsed list entry → joinable rows. addr → manifest probe enriches the
+// row (an unreachable addr still lists — the ping column marks it); url /
+// magnet → the resolver's tracker-then-manifest fallback.
+async function _mdResolveEntry(e) {
+  if (e.addr) {
+    const man = await _mdProbeManifest('http://' + e.addr, 1500);
+    return [man ? { addr: e.addr, name: e.name || man.addr || e.addr, worldTag: man.worldTag, engineVer: man.engineVer, playerCount: 0 }
+                : { addr: e.addr, name: e.name || e.addr, playerCount: 0 }];
+  }
+  const mag = e.magnet ? mpParseMagnet(e.magnet) : null;
+  let url = mag ? (mag.tr || '') : (e.url || '');
+  if (!/^https?:\/\//i.test(url)) return [];
+  url = url.replace(/\/+$/, '');
+  try {
+    const data = await (await fetch(url + '/api/tracker/peers' + _mpTrackerQuery(mag))).json();
+    if (data.ok && Array.isArray(data.servers)) return data.servers;
+  } catch {}
+  const man = await _mdProbeManifest(url, 1500);
+  return man ? [{ addr: man.addr || url.replace(/^https?:\/\//, ''), name: e.name || man.addr || url,
+    playerCount: 0, engineVer: man.engineVer, worldTag: man.worldTag }] : [];
+}
+function _mdShowRows(rows, label) {
+  const note = document.getElementById('md-note');
+  const seen = new Set();
+  rows = rows.filter(r => r && r.addr && !seen.has(r.addr) && seen.add(r.addr));
+  note.textContent = rows.length ? rows.length + ' server(s) from ' + label + ':' : 'Nothing joinable in ' + label + '.';
+  _mpRenderServerRows(rows, 'md-server-rows');
+}
+async function mdLoadSource(i) {
+  const note = document.getElementById('md-note');
+  const s = _mpClientLists().sources[i];
+  if (!s) return;
+  note.textContent = '📥 loading ' + s.url + '…';
+  let text = '';
+  try { const r = await fetch(s.url); if (!r.ok) throw new Error(r.status); text = await r.text(); }
+  catch { note.textContent = '🔴 Could not fetch ' + s.url + '.'; return; }
+  const entries = mpParseServerList(text);
+  if (!entries.length) { note.textContent = 'No server entries in that list (host:port / URL / r2h:?… per line, or a JSON array).'; return; }
+  _mdShowRows((await Promise.all(entries.map(_mdResolveEntry))).flat(), s.url);
+}
+// Pane open: paint the source list, then auto-load every source that is BOTH
+// flagged auto AND host-whitelisted (D4), merged into one deduped row set.
+async function _mdOnOpen() {
+  _mdRenderSources();
+  const auto = _mpClientLists().sources.filter(s => s.auto && _mdHostApproved(s.url));
+  if (!auto.length) return;
+  const note = document.getElementById('md-note');
+  note.textContent = '📥 auto-loading ' + auto.length + ' whitelisted source(s)…';
+  const rows = [];
+  for (const s of auto) {
+    try {
+      const r = await fetch(s.url); if (!r.ok) continue;
+      for (const e of mpParseServerList(await r.text())) rows.push(...await _mdResolveEntry(e));
+    } catch {}
+  }
+  _mdShowRows(rows, auto.length + ' auto source(s)');
+}
 
 // ── §MESH-01i slice 2b — client ledger rung: mint stamping + trade UI ───────
 // Design: mesh lab report §6.2/§6.4. An inventory item is a plain local object
@@ -34217,6 +34416,7 @@ function msubSwitch(id) {
   document.querySelectorAll('#sheet-map .map-subpane').forEach(p => p.classList.toggle('msub-active', p.id === id));
   document.querySelectorAll('#map-subtab-bar .map-subtab').forEach(t => t.classList.toggle('msub-active', t.dataset.msub === id));
   if (id === 'msub-connect') _mcRenderStatus();   // §MESH-02c: fresh manifest + state on pane open
+  if (id === 'msub-discover') _mdOnOpen();        // §MESH-02d: sources list + D4 auto-load on pane open
 }
 
 function storyMapToggle() {
@@ -35354,7 +35554,9 @@ document.getElementById('btn-map-sheet-close').addEventListener('click', storyMa
 document.querySelectorAll('#map-subtab-bar .map-subtab').forEach(t => {
   t.addEventListener('click', () => msubSwitch(t.dataset.msub));
 });
-window.__mesh02 = Object.assign(window.__mesh02 || {}, { msubSwitch, mcConnect, mcFind, mcDisconnect, _mcRenderStatus });
+window.__mesh02 = Object.assign(window.__mesh02 || {}, { msubSwitch, mcConnect, mcFind, mcDisconnect, _mcRenderStatus,
+  mpParseServerList, _mpClientLists, _mpSaveList, mdScanLocal, mdFind, mdAddSource, mdRemoveSource, mdLoadSource,
+  _mdRenderSources, _mdHostApproved, _mdOnOpen });
 document.getElementById('btn-inv-close').addEventListener('click', storyInventoryToggle);
 document.getElementById('btn-quest').addEventListener('click', storyQuestToggle);
 document.getElementById('btn-quest-close').addEventListener('click', storyQuestToggle);
