@@ -1353,6 +1353,77 @@ async function main() {
   await jpost('/session/end', { sessionId: newt.sessionId });
   await jpost('/session/end', { sessionId: lateQ.sessionId }, mA.base);
 
+  // ════════ (r) §MESH-02a — ACL editor endpoints + opt-in blocklist share ════════
+  // Dedicated server on a scratch MESH_ACL_FILE. GET serves safe defaults with
+  // no file; PUT merge-writes (validated, deduped, trimmed, operator comment
+  // keys survive) and the file lands on disk; GET /api/mesh/blocklist is 403
+  // not-shared until the D3 shareBlocklist opt-in flips it to 200 (ACL
+  // hot-reloads via mtime — no restart between the flip and the read). Design:
+  // lab-reports/lab-report-mesh02-connections-ui.md §3.1.
+  console.log('\n[R] §MESH-02a — mesh ACL GET/PUT + blocklist 403→200 share flip');
+  const aclR2 = path.join(tmp, `r2h-acl-mesh02-${process.pid}.json`);
+  fs.rmSync(aclR2, { force: true });
+  const mR2 = await startServer(PORT + 43, mkEnv(PORT + 43, '5a'.repeat(16), { MESH_ACL_FILE: aclR2 }));
+  const ACL_LISTS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes'];
+
+  // R1 — GET with no file on disk: defaults, never an error.
+  const acl0 = await jget('/mesh/acl', mR2.base);
+  check(acl0.ok === true && acl0.exists === false && acl0.acl.mode === 'open' && acl0.acl.shareBlocklist === false,
+    'GET with no ACL file → exists:false, mode open, share off (defaults, not an error)');
+  check(ACL_LISTS.every((k) => Array.isArray(acl0.acl[k]) && acl0.acl[k].length === 0),
+    'all six allow/block lists default to empty arrays');
+
+  // R2 — PUT roundtrip: the response echoes the merged ACL, the file is written.
+  const put1 = await jput('/mesh/acl', { mode: 'allowlist', blockIps: [' 9.9.9.9 ', '9.9.9.9', '8.8.8.8'] }, mR2.base);
+  check(put1.ok === true && put1.acl.mode === 'allowlist' && JSON.stringify(put1.acl.blockIps) === '["9.9.9.9","8.8.8.8"]',
+    'PUT echoes the merged ACL with entries trimmed + deduped');
+  const disk1 = JSON.parse(fs.readFileSync(aclR2, 'utf8'));
+  check(disk1.mode === 'allowlist' && JSON.stringify(disk1.blockIps) === '["9.9.9.9","8.8.8.8"]',
+    'the PUT is persisted to the scratch MESH_ACL_FILE on disk');
+  // Merge-write: an operator's comment key survives a later unrelated PUT.
+  disk1['// note'] = 'operator comment';
+  fs.writeFileSync(aclR2, JSON.stringify(disk1, null, 2));
+  await sleep(20);   // distinct mtimeMs for the hot-reload stat
+  const put2 = await jput('/mesh/acl', { mode: 'open' }, mR2.base);
+  check(put2.ok === true && put2.acl.mode === 'open' && JSON.stringify(put2.acl.blockIps) === '["9.9.9.9","8.8.8.8"]',
+    'a later PUT merges over the file — untouched fields survive');
+  check(JSON.parse(fs.readFileSync(aclR2, 'utf8'))['// note'] === 'operator comment',
+    'operator comment keys in the file survive the merge-write');
+  const aclNow = await jget('/mesh/acl', mR2.base);
+  check(aclNow.exists === true && aclNow.acl.mode === 'open', 'GET reflects the round-tripped file (exists:true)');
+
+  // R3 — validation 400s (status via raw fetch; jput strips it).
+  const putRaw = async (body) => (await fetch(mR2.base + '/api/mesh/acl',
+    { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).status;
+  check(await putRaw({ mode: 'banhammer' }) === 400, 'PUT a bad mode → 400');
+  check(await putRaw({ frobnicate: true }) === 400, 'PUT an unknown field → 400');
+  check(await putRaw({ shareBlocklist: 'yes' }) === 400, 'PUT a non-boolean shareBlocklist → 400');
+  check(await putRaw({ blockIps: 'not-an-array' }) === 400, 'PUT a non-array list → 400');
+  check(await putRaw({ blockIps: ['ok', ''] }) === 400, 'PUT a list holding an empty string → 400');
+  check(JSON.parse(fs.readFileSync(aclR2, 'utf8')).mode === 'open', 'no rejected PUT touched the file');
+
+  // R4 — blocklist share flip: 403 by default, 200 after the opt-in, 403 again off.
+  const bl403 = await fetch(mR2.base + '/api/mesh/blocklist');
+  check(bl403.status === 403 && (await bl403.json()).reason === 'not-shared',
+    'blocklist is NOT shared by default — 403 not-shared (D2/D3: share-out is opt-in)');
+  await sleep(20);
+  await jput('/mesh/acl', { shareBlocklist: true, blockServerIds: ['badid1', 'badid2'], blockWorldHashes: ['deadhash'] }, mR2.base);
+  const bl200 = await fetch(mR2.base + '/api/mesh/blocklist');
+  const blJ = await bl200.json();
+  check(bl200.status === 200 && blJ.ok === true,
+    'after the PUT share flip the blocklist serves 200 (ACL hot-reload, no restart)');
+  check(JSON.stringify(blJ.blockServerIds) === '["badid1","badid2"]'
+    && JSON.stringify(blJ.blockIps) === '["9.9.9.9","8.8.8.8"]'
+    && JSON.stringify(blJ.blockWorldHashes) === '["deadhash"]',
+    'the shared payload carries exactly the three block* lists');
+  check(blJ.serverId === '5a'.repeat(16) && typeof blJ.engineVer === 'string' && blJ.engineVer.length > 0
+    && !('allowServerIds' in blJ),
+    'the payload is attributed (full serverId + engineVer) and never leaks the allow* lists');
+  await sleep(20);
+  await jput('/mesh/acl', { shareBlocklist: false }, mR2.base);
+  check((await fetch(mR2.base + '/api/mesh/blocklist')).status === 403, 'flipping the share back off restores the 403');
+  fs.rmSync(aclR2, { force: true });
+
   // ── teardown ──
   openClients.forEach(closeSSE);
   await jpost('/session/end', { sessionId: alice.sessionId }).catch(() => {});
