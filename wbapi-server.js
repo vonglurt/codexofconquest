@@ -1820,7 +1820,8 @@ async function route(req, res) {
 
   // ── §MESH-01d: tracker mode — rendezvous only, never a relay, never an API ──
   if (TRACKER_MODE && !['ping', 'manifest', 'tracker', 'help'].includes(parts[0])
-      && !(parts[0] === 'mesh' && parts[1] === 'status')) {   // status stays visible for the 🌐 Mesh tab
+      // status stays visible for the 🌐 Mesh tab; a tracker has an ACL + shareable blocklist too (§MESH-02)
+      && !(parts[0] === 'mesh' && ['status', 'acl', 'blocklist'].includes(parts[1]))) {
     logResponse(method, url.pathname, 410, 'tracker-mode');
     return json(res, 410, { ok: false, error: 'tracker-mode: only /api/ping, /api/manifest, /api/tracker/* are served here' });
   }
@@ -2873,6 +2874,58 @@ async function route(req, res) {
       trackerGroups: Object.values(groups),
       traffic: MESH.traffic.slice(-100).reverse(),
     });
+  }
+
+  // ── §MESH-02: ACL read/edit + opt-in blocklist sharing ──
+  // Design: lab-reports/lab-report-mesh02-connections-ui.md §3.1. Blocklists are
+  // share-OUT only (D2): this server never fetches or auto-imports a peer's list.
+  if (parts[0] === 'mesh' && parts[1] === 'acl' && (method === 'GET' || method === 'PUT')) {
+    const ACL_LIST_KEYS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes'];
+    const readAclFile = () => { try { return JSON.parse(fs.readFileSync(ACL_FILE, 'utf8')); } catch { return null; } };
+    const publicAcl = raw => {
+      const a = raw || {};
+      const out = { mode: a.mode === 'allowlist' ? 'allowlist' : 'open', shareBlocklist: a.shareBlocklist === true };
+      for (const k of ACL_LIST_KEYS) out[k] = Array.isArray(a[k]) ? a[k].filter(v => typeof v === 'string') : [];
+      return out;
+    };
+    if (method === 'GET') {
+      const raw = readAclFile();
+      logResponse(method, url.pathname, 200, `mesh acl: mode=${publicAcl(raw).mode}${raw !== null ? '' : ' (no file — defaults)'}`);
+      return json(res, 200, { ok: true, file: path.basename(ACL_FILE), exists: raw !== null, acl: publicAcl(raw) });
+    }
+    let ab;
+    try { ab = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
+    const allowed = new Set(['mode', 'shareBlocklist', ...ACL_LIST_KEYS]);
+    for (const k of Object.keys(ab || {})) {
+      if (!allowed.has(k)) {
+        logResponse(method, url.pathname, 400, `mesh acl: unknown field ${k}`);
+        return json(res, 400, { ok: false, error: `unknown field: ${k}` });
+      }
+    }
+    if ('mode' in ab && !['open', 'allowlist'].includes(ab.mode))
+      return json(res, 400, { ok: false, error: "mode must be 'open' or 'allowlist'" });
+    if ('shareBlocklist' in ab && typeof ab.shareBlocklist !== 'boolean')
+      return json(res, 400, { ok: false, error: 'shareBlocklist must be boolean' });
+    for (const k of ACL_LIST_KEYS)
+      if (k in ab && !(Array.isArray(ab[k]) && ab[k].length <= 200 && ab[k].every(v => typeof v === 'string' && v.trim())))
+        return json(res, 400, { ok: false, error: `${k} must be an array of ≤200 non-empty strings` });
+    // Merge over the existing file so '//'-comment keys and unknown operator notes survive.
+    const cur = readAclFile() || {};
+    for (const k of Object.keys(ab)) cur[k] = Array.isArray(ab[k]) ? [...new Set(ab[k].map(v => v.trim()))] : ab[k];
+    fs.writeFileSync(ACL_FILE, JSON.stringify(cur, null, 2) + '\n');   // mtime bump → mesh.js hot-reloads on next packet
+    logResponse(method, url.pathname, 200, `mesh acl updated (${Object.keys(ab).join(', ')}) → mode=${publicAcl(cur).mode}`);
+    return json(res, 200, { ok: true, file: path.basename(ACL_FILE), acl: publicAcl(cur) });
+  }
+  if (parts[0] === 'mesh' && parts[1] === 'blocklist' && method === 'GET') {
+    const a = getAcl();
+    if (a.shareBlocklist !== true) {
+      logResponse(method, url.pathname, 403, 'mesh blocklist: not shared');
+      return json(res, 403, { ok: false, reason: 'not-shared' });
+    }
+    const pick = k => (Array.isArray(a[k]) ? a[k] : []);
+    const lists = { blockServerIds: pick('blockServerIds'), blockIps: pick('blockIps'), blockWorldHashes: pick('blockWorldHashes') };
+    logResponse(method, url.pathname, 200, `mesh blocklist shared: ${lists.blockServerIds.length + lists.blockIps.length + lists.blockWorldHashes.length} entrie(s)`);
+    return json(res, 200, { ok: true, serverId: getServerId(), engineVer: getManifest().engineVer, ...lists });
   }
 
   // ── §MESH-01: gossip ingress — compat gate → ACL → single-writer merge ──

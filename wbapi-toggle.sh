@@ -53,7 +53,9 @@ _run_once() {
     echo "[wbapi-toggle] Deferring — not starting."
     return 0
   fi
-  if lsof -ti tcp:1367 >/dev/null 2>&1; then
+  # -sTCP:LISTEN: only a live LISTENER blocks a start — a browser's lingering
+  # half-closed client socket to :1367 must not false-positive this check.
+  if lsof -ti tcp:1367 -sTCP:LISTEN >/dev/null 2>&1; then
     echo "[wbapi-toggle] Port 1367 already in use — another instance owns it. Not starting."
     return 0
   fi

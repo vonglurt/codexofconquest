@@ -12,6 +12,9 @@
   "blockIps": [],
   "blockWorldHashes": [],
 
+  "//3b": "shareBlocklist (§MESH-02): true = GET /api/mesh/blocklist publishes the three block* lists (share-OUT only — this server never fetches or auto-imports a peer's list). Default false/absent = 403 not-shared. Ignored by the ACL gate itself.",
+  "shareBlocklist": false,
+
   "//4":  "Allow lists — consulted only in allowlist mode; ANY single match admits the peer.",
   "allowServerIds": [],
   "allowIps": [],
