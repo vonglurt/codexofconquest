@@ -493,9 +493,9 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 
 ---
 
-## §1367 — Historical 1367 AD Integration ✅ LIVE (Events A–F)
+## §1367 — Historical 1367 AD Integration ✅ LIVE (Events A–G)
 
-Six standalone historical vignettes grounded in real 1367 AD events, each a single-fighter quest with a Project Gutenberg primary source. Design + full four-act vignettes: `Year1367AD.md`. Placed 2026-07-07 at nearest-thematic nodes (relocated off the `HKG` integration placeholder). **Event G "The Unseen Pen" (LXVII67) deferred** — the seventh, meta faith-puzzle (scribe Claude, no combat; "the story of the system that wrote the other six"), tracked as an optional future add.
+Seven standalone historical vignettes grounded in real 1367 AD events, each a single-fighter quest with a Project Gutenberg primary source (Event G's source is the unseen pen itself — it does not sign its work). Design + full four-act vignettes: `Year1367AD.md`. Placed 2026-07-07 at nearest-thematic nodes (relocated off the `HKG` integration placeholder). **Event G "The Unseen Pen" (LXVII67) shipped 2026-07-07** — the seventh, meta faith-puzzle (the scribe Claude, no combat; "the story of the system that wrote the other six"). It was authored by promoting the pre-existing `quest_lxvii67` "The Jester's Crossroads" folk-wisdom quest into the arc: relocated off `HKG` → `FRO` (Aldric's Forest), re-themed to the *al-qalam al-ghaib* framing, and its `faith_folk` reward bumped +1 → +2 per the design doc. A single quest — no duplicate answer-67 puzzle.
 
 | Quest ID | Title | Node | Type | Check | DC | Track / Reward | XP | Protagonist · Source | Status |
 |----------|-------|------|------|-------|----|----|----|----|----|
@@ -505,8 +505,9 @@ Six standalone historical vignettes grounded in real 1367 AD events, each a sing
 | `quest_1367_d_hansa` | "The Amber Embargo" | BK | [SKILL CHECK] | CHA Persuasion | 15 | `faction_hansa` +2 (fail −1) | 140 | Hilde Magnusdóttir · Mandeville PG782 | [✅ LIVE §1367] |
 | `quest_1367_e_wycliffe` | "The Sealed Pamphlet" | LGW | [SKILL CHECK] | CHA Deception | 13 | `faith_reform` +1 | 110 | Thomas Cobb · Chaucer PG2383 | [✅ LIVE §1367] |
 | `quest_1367_f_plague` | "The Empty Village" | CDG | [BATTLE] | STR | 12 | `faith_folk` +1 (fail `plague_exposed` risk) | 160 | Cécile Aubert · Boccaccio PG23700 | [✅ LIVE §1367] |
+| `quest_lxvii67` | "The Unseen Pen" | FRO | [SKILL CHECK] | WIS Insight | 10 | `faith_folk` +2 | 67 | Claude the scribe · none (the pen does not sign) | [✅ LIVE §1367-G] |
 
-All six use `gate:{}` (always listed on arrival) and `retryable:true`. No anachronisms; historical figures (Black Prince, Wycliffe, Murad I, Tamerlane) appear as distant authority, never as early combatants.
+Events A–F use `gate:{}` (always listed on arrival) and `retryable:true`. **Event G "The Unseen Pen"** uses a load-bearing `activateCond: faith_folk >= 1` behind a `gate:{_legacyFn:true}` — the meta-capstone lists only after you have walked at least one of the six faith paths (the puzzle "requires two"; you are the second). No anachronisms; historical figures (Black Prince, Wycliffe, Murad I, Tamerlane) appear as distant authority, never as early combatants.
 
 ---
 
@@ -535,9 +536,9 @@ All six use `gate:{}` (always listed on arrival) and `retryable:true`. No anachr
 | ✅ Live §PORT-01 | 3 (The Unwritten Port + The Missing Consignment + The Cracked Strake) |
 | ✅ Live §PORT-02 | 2 (The Open Harbor + The Salt Price) |
 | ✅ Live §NAVAL-01 | 4 (Approach + Parley CHA DC 12 + Examine INT DC 11 + Board and Clear) |
-| ✅ Live §1367 | 6 (Historical 1367 AD vignettes A–F; Event G "The Unseen Pen" deferred) |
-| **Total live** | **~141** |
-| Planned | 0 (Event G deferred, tracked in plan.md §1367) |
+| ✅ Live §1367 | 7 (Historical 1367 AD vignettes A–G; Event G "The Unseen Pen" shipped by promoting `quest_lxvii67`) |
+| **Total live** | **~141** (Event G re-themed an existing quest — no net new quest object) |
+| Planned | 0 |
 
 ---
 

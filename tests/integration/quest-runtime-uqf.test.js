@@ -2755,7 +2755,7 @@ test.describe('§ARCH-01 Wave 1v — Highland trade (df_02 / sk_02)', () => {
 });
 
 const FOLK = [
-  { id:'quest_lxvii67',  stat:'wis', skill:'Insight', dc:10, xp:67,  passFlag:'faith_folk',   passVal:1,    legacyGate:true  },
+  { id:'quest_lxvii67',  stat:'wis', skill:'Insight', dc:10, xp:67,  passFlag:'faith_folk',   passVal:2,    legacyGate:true  },
   { id:'quest_guide_04', stat:'wis', skill:'Insight', dc:11, xp:250, passFlag:'emmerStage4a', passVal:true, legacyGate:false },
 ];
 
