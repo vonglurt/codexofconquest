@@ -493,6 +493,23 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 
 ---
 
+## §1367 — Historical 1367 AD Integration ✅ LIVE (Events A–F)
+
+Six standalone historical vignettes grounded in real 1367 AD events, each a single-fighter quest with a Project Gutenberg primary source. Design + full four-act vignettes: `Year1367AD.md`. Placed 2026-07-07 at nearest-thematic nodes (relocated off the `HKG` integration placeholder). **Event G "The Unseen Pen" (LXVII67) deferred** — the seventh, meta faith-puzzle (scribe Claude, no combat; "the story of the system that wrote the other six"), tracked as an optional future add.
+
+| Quest ID | Title | Node | Type | Check | DC | Track / Reward | XP | Protagonist · Source | Status |
+|----------|-------|------|------|-------|----|----|----|----|----|
+| `quest_1367_a_najera` | "The Free Company" | MLA | [BATTLE] | STR | 12 | `faction_hansa` −1 | 150 | Renaud le Bâtard · Froissart PG61710 | [✅ LIVE §1367] |
+| `quest_1367_b_tamerlane` | "The Warlord on the Eastern Wind" | DAM | [SKILL CHECK] | WIS Perception | 13 | `faith_folk` +1 | 120 | Marta of Ragusa · Mandeville PG782 | [✅ LIVE §1367] |
+| `quest_1367_c_ottoman` | "The Patchwork of Adrianople" | ATH | [SKILL CHECK] | CHA Deception | 14 | `faith_orthodox` +1 | 130 | Bogdan · Arabian Nights PG128 | [✅ LIVE §1367] |
+| `quest_1367_d_hansa` | "The Amber Embargo" | BK | [SKILL CHECK] | CHA Persuasion | 15 | `faction_hansa` +2 (fail −1) | 140 | Hilde Magnusdóttir · Mandeville PG782 | [✅ LIVE §1367] |
+| `quest_1367_e_wycliffe` | "The Sealed Pamphlet" | LGW | [SKILL CHECK] | CHA Deception | 13 | `faith_reform` +1 | 110 | Thomas Cobb · Chaucer PG2383 | [✅ LIVE §1367] |
+| `quest_1367_f_plague` | "The Empty Village" | CDG | [BATTLE] | STR | 12 | `faith_folk` +1 (fail `plague_exposed` risk) | 160 | Cécile Aubert · Boccaccio PG23700 | [✅ LIVE §1367] |
+
+All six use `gate:{}` (always listed on arrival) and `retryable:true`. No anachronisms; historical figures (Black Prince, Wycliffe, Murad I, Tamerlane) appear as distant authority, never as early combatants.
+
+---
+
 ## QUEST COUNT SUMMARY
 
 | Status | Count |
@@ -518,8 +535,9 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 | ✅ Live §PORT-01 | 3 (The Unwritten Port + The Missing Consignment + The Cracked Strake) |
 | ✅ Live §PORT-02 | 2 (The Open Harbor + The Salt Price) |
 | ✅ Live §NAVAL-01 | 4 (Approach + Parley CHA DC 12 + Examine INT DC 11 + Board and Clear) |
-| **Total live** | **~135** |
-| Planned | 0 |
+| ✅ Live §1367 | 6 (Historical 1367 AD vignettes A–F; Event G "The Unseen Pen" deferred) |
+| **Total live** | **~141** |
+| Planned | 0 (Event G deferred, tracked in plan.md §1367) |
 
 ---
 
