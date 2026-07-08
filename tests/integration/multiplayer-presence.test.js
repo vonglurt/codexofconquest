@@ -40,6 +40,23 @@ test.afterAll(() => {
   for (const p of [server, tracker]) if (p) { try { p.kill('SIGTERM'); } catch {} }
 });
 
+// §MESH-01-REVIEW — every test in this file shares the ONE throwaway server, and
+// ctx.close()/disconnect only fire player_left; the session itself lingers in
+// SESSIONS to the 30-min TTL. That let a leaked session from a prior test bleed a
+// phantom pid/name into the next test's /api/session/who — the documented flake.
+// Sweep every local session after each test so who returns a clean slate. Assert
+// by pid, never by raw count (a leak inflates the count but never forges a pid).
+test.afterEach(async () => {
+  try {
+    const who = await (await fetch(`http://localhost:${MP_PORT}/api/session/who`)).json();
+    await Promise.all((who.sessions || []).map((s) =>
+      fetch(`http://localhost:${MP_PORT}/api/session/end`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: s.id }),
+      }).catch(() => {})));
+  } catch { /* server already gone in afterAll — nothing to sweep */ }
+});
+
 // Load a seeded game at the LHR hub and point its MP module at the throwaway
 // server. mpServer is read from localStorage at CONNECT time (mpToggle), so
 // setting it post-load avoids fighting seedAndLoad's localStorage.clear().
@@ -185,6 +202,7 @@ test.describe('§MESH-01a — multiplayer presence (two real clients)', () => {
     await p.page.click('#mp-toggle');
     await expect(p.page.locator('#mp-status')).toContainText('🟢 Odys');
     const sid = await p.page.evaluate(() => MP.session);
+    const pid = await p.page.evaluate(() => MP.pid);   // stable across resume (pid = pidOf(sid))
 
     // A real browser keeps localStorage across a reload, but seedAndLoad's init
     // script clears it on every navigation — re-plant mpServer from a second
@@ -197,9 +215,12 @@ test.describe('§MESH-01a — multiplayer presence (two real clients)', () => {
     expect(await p.page.evaluate(() => MP.session)).toBe(sid);       // SAME session, not a fresh one
     expect(await p.page.evaluate(() => !!MP.es)).toBe(true);         // SSE stream reopened
     await expect(p.page.locator('#mp-chat-input')).toBeVisible();
-    // Server-side: exactly one Odys session — the reload leaked no ghost.
+    // Server-side: the reload leaked no ghost. Assert by pid — the set of pids
+    // carrying the name Odys must be exactly our resumed pid. A ghost session
+    // would surface a SECOND, different pid under the name; a cross-test leak
+    // (already swept in afterEach) could inflate a raw count but never forge pid.
     const who = await (await fetch(`http://localhost:${MP_PORT}/api/session/who`)).json();
-    expect(who.sessions.filter((s) => s.name === 'Odys')).toHaveLength(1);
+    expect(who.sessions.filter((s) => s.name === 'Odys').map((s) => s.pid)).toEqual([pid]);
     await p.ctx.close();
   });
 
