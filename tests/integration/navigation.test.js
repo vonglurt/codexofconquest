@@ -222,6 +222,9 @@ test.describe('§NAV-01 D-pad buttons move the player', () => {
       storyMapToggle();
       const cells = [...document.querySelectorAll('#map-grid .mc')];
       const painted = cells.filter(el => el.style.background && el.style.background !== '').length;
+      // §MP-MAPTABS: the full-world canvas now lives in its own 🛰 Full sub-tab,
+      // painted on tab activation (not under the Local grid). Switch to it first.
+      msubSwitch('msub-full');
       const cv = document.getElementById('full-map-canvas');
       const px = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data;
       let nonZero = 0;

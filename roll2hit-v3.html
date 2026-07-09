@@ -1079,6 +1079,14 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .battle-start-btn { width:100%;margin-top:4px;font-size:13px;font-weight:700; }
 .battle-retreat-link { display:block;font-size:11px;color:var(--dim);text-align:center;margin-top:7px;cursor:pointer; }
 .battle-retreat-link:hover { color:var(--text); }
+/* §CEREMO-ACC: Ceremonia Roll accordion — mirrors the battle-card slide-down */
+.ceremonia-accordion.open { max-height: 540px; padding: 10px 14px 13px; }
+.ceremonia-vignette { font-size:12px;line-height:1.6;font-style:italic;color:var(--text);padding:2px 0 9px;border-bottom:1px solid var(--border);margin-bottom:9px; }
+.ceremonia-breakdown { font-size:12px;color:var(--dim);padding-bottom:9px;line-height:1.5; }
+.ceremonia-stat { font-weight:700;letter-spacing:0.5px;color:var(--sky-dk); }
+.ceremonia-odds { font-weight:600;color:var(--grn-lt); }
+.ceremonia-roll-btn { width:100%;margin-top:4px;font-size:13px;font-weight:700; }
+.ceremonia-iodine-btn { width:100%;margin-bottom:7px;font-size:12px;font-weight:700; }
 .story-card-btn.btn-active { box-shadow:inset 0 0 0 2px currentColor;opacity:1; }
 .story-card-done { color: var(--muted); text-decoration: line-through; opacity: 0.7; }
 
@@ -1197,8 +1205,13 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .map-subtab .st-icon { font-size: 11px; line-height: 1; }
 .map-subpane { display: none; flex: 1; min-height: 0; }
 .map-subpane.msub-active { display: flex; flex-direction: column; }
-#msub-map { gap: 0; overflow-y: auto; }
+#msub-map { gap: 0; overflow: hidden; padding: 8px 12px; }
 #msub-connect, #msub-discover, #msub-lists { padding: 12px; overflow-y: auto; gap: 10px; }
+/* §MP-MAPTABS: World + Full canvas panes — canvas fills the pane, click-to-travel */
+#msub-world, #msub-full { padding: 8px 12px; gap: 6px; overflow: hidden; }
+.maptab-hd { font-size: 10px; font-weight: 700; color: var(--dim); letter-spacing: 0.5px; flex-shrink: 0; }
+#world-tab-wrap, #full-map-wrap { flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+#world-tab-canvas, #full-map-canvas { image-rendering: pixelated; border: 1px solid var(--border); border-radius: 3px; background: #0a2a4a; cursor: pointer; display: block; max-width: 100%; max-height: 100%; }
 .msub-placeholder { color: var(--dim); font-size: 12px; font-style: italic; padding: 8px 0; }
 /* ── §MESH-02c: Connect pane (mirrors the mp-browser-card idiom) ── */
 #mc-status-card {
@@ -1219,6 +1232,17 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 #msub-connect button:hover, #msub-discover button:hover, #msub-lists button:hover { border-color: #5a8aba; }
 #mc-server-rows, #md-server-rows, #md-source-rows, #ml-black-rows, #ml-white-rows, #ml-peer-preview { display: flex; flex-direction: column; gap: 6px; max-width: 560px; }
+/* ── §MP-MAP: multiplayer presence + chat hub on the map's Multiplayer pane ── */
+.mp-section-hd { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #7a8a9a; border-bottom: 1px solid #2a4a6a; padding-bottom: 4px; margin-top: 8px; }
+.mp-adv-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #cde0f0; cursor: pointer; max-width: 560px; }
+.mp-adv-row input { cursor: pointer; }
+.mp-map-presence { font-size: 12px; color: #cde0f0; min-height: 18px; line-height: 1.7; max-width: 560px; }
+#mp-chat-scope-bar { display: flex; gap: 6px; }
+#mp-chat-scope-bar .mp-scope-btn { font-size: 11px; padding: 4px 14px; border: 1px solid #2a4a6a; border-radius: 6px; background: #0a1a2a; color: #7a8a9a; cursor: pointer; }
+#mp-chat-scope-bar .mp-scope-btn.mp-scope-active { border-color: #5a8aba; color: #9abada; background: rgba(90,138,186,0.14); }
+.mp-map-chat-list { max-height: 220px; min-height: 90px; overflow-y: auto; border: 1px solid #2a4a6a; border-radius: 6px; padding: 6px 8px; background: #0a1220; max-width: 560px; }
+.mp-map-chat-list .mp-chat-line { line-height: 1.6; font-size: 12px; }
+#mp-map-chat-input { background: #0a1220; border: 1px solid #2a4a6a; border-radius: 4px; color: #cde0f0; font: inherit; font-size: 12px; padding: 6px 8px; width: 100%; box-sizing: border-box; max-width: 560px; }
 /* ── §MESH-02d: Discover pane (local scan · tracker resolve · list sources) ── */
 .md-sec-hd { font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; margin-top: 4px; }
 .md-src-row {
@@ -1321,6 +1345,10 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   color: var(--muted); text-align: center; padding: 2px 0;
 }
 .dpad-center-spacer { display: block; }
+/* §KG-01: Hunt Mode toggle sits in the d-pad center — dim when off, gold-lit when armed. */
+.dpad-btn.dpad-hunt { font-size: 13px; padding: 0; background: var(--panel2); border-color: var(--border); color: var(--dim); }
+.dpad-btn.dpad-hunt:hover:not(:disabled) { background: var(--panel3); border-color: var(--gold); color: var(--gold); }
+.dpad-btn.dpad-hunt.hunting { background: rgba(184,124,40,0.2); border-color: var(--gold); color: var(--gold-lt); box-shadow: 0 0 7px rgba(200,150,40,0.45); }
 .dpad-btn.dpad-wp { background: rgba(40,120,60,0.18); border-color: var(--grn-lt); color: var(--grn-lt); font-weight: 900; box-shadow: 0 0 6px rgba(80,200,100,0.3); }
 .dpad-btn.dpad-wp:hover:not(:disabled) { background: rgba(40,120,60,0.28); }
 .dpad-corner {
@@ -1859,23 +1887,27 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 
 /* ── Map Sheet ── */
+/* §MP-MAPTABS: Local pane fills the sub-tab area; cells scale to fill the WIDTH
+   (big, readable) and the grid scrolls vertically, auto-centered on the player. */
 #map-main-area {
-  display: flex; flex-direction: row; align-items: flex-start;
-  gap: 14px; width: 100%; max-width: 740px;
+  flex: 1; min-height: 0; width: 100%;
+  display: flex; align-items: start; justify-content: center; overflow: auto;
 }
 #map-title { font-size: 1rem; color: #5A4010; font-weight: bold; letter-spacing: 0.5px; }
 #map-legend {
   display: flex; gap: 14px; margin-bottom: 10px;
   font-size: 0.68rem; flex-wrap: wrap; justify-content: center;
 }
+/* §MP-MAPTABS: cell px is driven by --mcpx (set by _fitLocalGrid to fill the pane) */
 #map-grid {
+  --mcpx: 36px;
   display: grid;
-  grid-template-columns: repeat(21, 36px);   /* §NAV-01e: 15×21 window (was 11×11) */
-  grid-template-rows: repeat(15, 36px);
-  gap: 2px; margin-bottom: 10px;
+  grid-template-columns: repeat(21, var(--mcpx));   /* 15×21 window */
+  grid-template-rows: repeat(15, var(--mcpx));
+  gap: 2px;
 }
 .mc {
-  width: 36px; height: 36px;
+  width: var(--mcpx); height: var(--mcpx);
   border: 1px solid #111118; border-radius: 3px;
   position: relative; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
@@ -1890,20 +1922,17 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   background: #141400; border: 2px solid #e0c040;
   box-shadow: 0 0 10px rgba(224,192,64,0.35); cursor: default;
 }
+/* §MP-MAPTABS: cell fonts scale with --mcpx (base sizes hold at the 36px default) */
 .mc-code {
-  font-size: 9px; font-weight: 700; letter-spacing: 0.3px;
+  font-size: calc(var(--mcpx) * 0.25); font-weight: 700; letter-spacing: 0.3px;
   color: #2a6a9a; line-height: 1;
 }
 .mc-visited .mc-code { color: #50b0e0; }
-.mc-current .mc-code { color: #e0c040; font-size: 9.5px; }
+.mc-current .mc-code { color: #e0c040; font-size: calc(var(--mcpx) * 0.26); }
 .mc-trail .mc-code { color: #2A7A2A; }
-.mc-icon { font-size: 11px; line-height: 1; }
-.mc-current .mc-icon { font-size: 13px; }
-.mc-fog-icon { font-size: 11px; color: #2A2A3A; }
-/* §NAV-01e — full-world canvas below the radius grid */
-#full-map-wrap { margin-top: 10px; }
-#full-map-hd { font-size: 10px; font-weight: 700; color: var(--dim); margin-bottom: 4px; letter-spacing: 1px; }
-#full-map-canvas { image-rendering: pixelated; border: 1px solid var(--border); border-radius: 3px; background: #0a2a4a; }
+.mc-icon { font-size: calc(var(--mcpx) * 0.3); line-height: 1; }
+.mc-current .mc-icon { font-size: calc(var(--mcpx) * 0.36); }
+.mc-fog-icon { font-size: calc(var(--mcpx) * 0.3); color: #2A2A3A; }
 .mc-exits { position: absolute; inset: 0; pointer-events: none; }
 .mc-exit { position: absolute; font-size: 7px; line-height: 1; }
 .mc-exit.available { color: #1A5070; }
@@ -1913,15 +1942,13 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .mc-exit.dir-e { right: 1px;  top: 50%;  transform: translateY(-50%); }
 .mc-exit.dir-w { left: 1px;   top: 50%;  transform: translateY(-50%); }
 .mc-exit-active { color: #e0c040 !important; font-weight: 900 !important; text-shadow: 0 0 5px #c8a800; }
+/* §MP-MAPTABS: black-on-tan so the node/hover text (e.g. the unexplored-settlement
+   hint) reads clearly instead of low-contrast tan-on-tan. */
 #map-node-info {
-  max-width: 540px; width: 100%;
-  background: rgba(61,110,122,0.18); border: 1px solid var(--sky-dk);
-  border-radius: 4px; padding: 7px 12px;
-  font-size: 11px; color: var(--sky-lt); min-height: 28px; text-align: center;
-}
-#map-status-bar {
-  font-size: 10px; color: #1A1A1A; margin-top: 8px;
-  text-align: center; letter-spacing: 0.3px;
+  max-width: 560px; width: 100%;
+  background: #cdbb8c; border: 1px solid #a08a5a;
+  border-radius: 4px; padding: 7px 12px; margin: 8px auto 0;
+  font-size: 12px; color: #12100a; font-weight: 600; min-height: 28px; text-align: center; flex-shrink: 0;
 }
 #btn-story-map {
   padding: 7px 10px; font-size: 12px; font-weight: 600;
@@ -3136,16 +3163,22 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 /* ── Inventory Overlay ───────────────────────────────── */
 #sheet-inventory, #sheet-quests, #story-vendor-overlay { background: #1e0802; }
 .inv-section-hd { color: #E76219; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 900; border-left: 4px solid #FEA712; padding-left: 6px; }
-.inv-item { background: #3d1510; border: 2px solid #562717; border-radius: 8px; }
+.inv-item { background: #2a0f0a; border: 2px solid #7a4022; border-radius: 8px; margin-left: 16px; }
 .inv-item:nth-child(5n+1) { border-color: #FDDCA9; }
-.inv-item:nth-child(5n+2) { border-color: #C21717; }
-.inv-item:nth-child(5n+3) { border-color: #E76219; }
+.inv-item:nth-child(5n+2) { border-color: #E85A5A; }
+.inv-item:nth-child(5n+3) { border-color: #F0791F; }
 .inv-item:nth-child(5n+4) { border-color: #FEA712; }
-.inv-item-name { color: #FDDCA9; font-weight: 700; }
+/* High-contrast text for the dark inventory overlay (rendered classes: .inv-name/.inv-src/.inv-tag/.inv-use-btn) */
+.inv-item .inv-name { color: #FBEACB; font-weight: 700; }
+.inv-item .inv-src  { color: #F1B26A; font-weight: 600; }
+.inv-item .inv-tag  { color: #FFDD96; border-color: #C87A2A; background: rgba(0,0,0,0.3); }
+.inv-item.shard-item .inv-name { color: #C79BF0; }
+.inv-item.key-item   .inv-name { color: #FEC94A; }
+.inv-item-knowledge  .inv-name { color: #BE96EA; }
+.inv-item .inv-use-btn { color: #85E7A2; border-color: #3f9557; background: rgba(63,149,87,0.18); }
+.inv-item .inv-use-btn:hover { background: rgba(63,149,87,0.42); color: #B4F7C6; }
 .inv-item-sell { color: #FEA712; font-size: 10px; }
-.inv-item-btn { background: #562717; border: 2px solid #E76219; color: #FDDCA9; border-radius: 6px; font-weight: 700; text-transform: uppercase; font-size: 10px; }
-.inv-item-btn:hover { background: #E76219; color: #120600; border-color: #FEA712; }
-.inv-sep { border-color: #562717; }
+.inv-sep { border-color: #7a4022; }
 
 /* ── Quest Overlay ───────────────────────────────────── */
 .quest-card { background: #3d1510; border: 2px solid #E76219; border-radius: 8px; }
@@ -3198,6 +3231,11 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .npc-talk-accordion { background: #1c0c04; border-color: #5c2c10; }
 .hunt-accordion     { background: #1c0c04; border-color: #5c2c10; }
 .battle-accordion   { background: #1c0404; border-color: #5c0a0a; }
+.ceremonia-accordion { background: #1c0c04; border-color: #5c2c10; }
+.ceremonia-vignette { color: #FDDCA9; border-color: #5c2c10; }
+.ceremonia-breakdown { color: #b07040; }
+.ceremonia-stat { color: #FEA712; }
+.ceremonia-odds { color: #7ac088; }
 .npc-talk-quote { color: #FDDCA9; }
 .npc-talk-name  { color: #FEA712; }
 .battle-threat-row { color: #b07040; border-color: #5c2c10; }
@@ -4459,43 +4497,34 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <!-- ── Sheet: World Map ── -->
       <div id="sheet-map" class="story-sheet">
         <div id="sheet-map-hd">
-          <span id="map-title">🗺 World Map — 15×21</span>
+          <span id="map-title">🗺 Maps</span>
           <button id="btn-map-sheet-close">✕ Close [M]</button>
         </div>
         <!-- §MESH-02b: Map-sheet sub-tabs — Connect/Discover/Lists panes filled by §MESH-02 c/d/e -->
         <div id="map-subtab-bar">
-          <button class="map-subtab msub-active" data-msub="msub-map"><span class="st-icon">🗺</span> Map</button>
-          <button class="map-subtab" data-msub="msub-connect"><span class="st-icon">🌐</span> Connect</button>
+          <button class="map-subtab msub-active" data-msub="msub-map"><span class="st-icon">🗺</span> Local</button>
+          <button class="map-subtab" data-msub="msub-world"><span class="st-icon">🌍</span> World</button>
+          <button class="map-subtab" data-msub="msub-full"><span class="st-icon">🛰</span> Full</button>
+          <button class="map-subtab" data-msub="msub-connect"><span class="st-icon">🌐</span> Multiplayer</button>
           <button class="map-subtab" data-msub="msub-discover"><span class="st-icon">🔭</span> Discover</button>
           <button class="map-subtab" data-msub="msub-lists"><span class="st-icon">🛡</span> Lists</button>
         </div>
         <div id="msub-map" class="map-subpane msub-active">
-        <div id="map-legend">
-          <span style="color:#e0c040">◉ You</span>
-          <span style="color:#50b0e0">□ Visited</span>
-          <span style="color:#3a7a3a">· Trail</span>
-          <span style="color:#c8b98c">─ Road</span>
-          <span style="color:#5a7a9a">▒ Sea</span>
-          <span style="color:#b0a080">🛏 Inn</span>
-          <span style="color:#b0a080">⚔ Battle</span>
-          <span style="color:#b0a080">☠ Epic</span>
-          <span style="color:#b0a080">🧙 NPC</span>
-          <span style="color:#b0a080">❗ Quests</span>
-        </div>
         <div id="map-main-area">
           <div id="map-grid"></div>
-          <div id="map-node-info">Hover a node to see its name.</div>
-          <div id="map-status-bar"></div>
-          <div id="full-map-wrap">
-            <div id="full-map-hd">🌍 FULL WORLD — <span style="color:#e0c040">▭ world panel</span> · <span style="color:#ffd700">▭ local map</span> · <span style="color:#ff5030">■ you</span></div>
-            <canvas id="full-map-canvas" width="464" height="360"></canvas>
-          </div>
-          <div id="map-travel-log">
-            <div id="map-travel-log-hd">📍 Location History</div>
-            <div id="map-travel-log-list"></div>
-          </div>
         </div>
+        <div id="map-node-info">Click any tile to travel there. Hover to see its name.</div>
         </div><!-- /msub-map -->
+        <div id="msub-world" class="map-subpane">
+          <!-- §MP-MAPTABS: player-centered regional overview (61×41 window), responsive + click-to-travel -->
+          <div id="world-tab-hd" class="maptab-hd">🌍 REGIONAL WORLD — <span style="color:#ff5030">■ you</span> · click any tile to travel</div>
+          <div id="world-tab-wrap"><canvas id="world-tab-canvas" width="600" height="400" title="Click a tile to travel"></canvas></div>
+        </div><!-- /msub-world -->
+        <div id="msub-full" class="map-subpane">
+          <!-- §MP-MAPTABS: the whole world (rows 0–89 × cols 140–255), responsive + click-to-travel -->
+          <div id="full-map-hd" class="maptab-hd">🛰 FULL WORLD — <span style="color:#e0c040">▭ world panel</span> · <span style="color:#ffd700">▭ local map</span> · <span style="color:#ff5030">■ you</span> · click any tile to travel</div>
+          <div id="full-map-wrap"><canvas id="full-map-canvas" width="464" height="360" title="Click a tile to travel"></canvas></div>
+        </div><!-- /msub-full -->
         <div id="msub-connect" class="map-subpane">
           <!-- §MESH-02c: status card + connect controls; reuses mpToggle/mpJoin/mpResolveMagnet -->
           <div id="mc-status-card">
@@ -4516,6 +4545,25 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           </div>
           <div id="mc-note" class="mp-hint"></div>
           <div id="mc-server-rows"></div>
+
+          <!-- §MP-MAP: presence toggle + who's-here -->
+          <div class="mp-section-hd">📢 Presence</div>
+          <label class="mp-adv-row"><input type="checkbox" id="mp-advertise-cb" checked onchange="mpSetAdvertise(this.checked)">
+            <span>Advertise my position</span>
+            <span class="mp-hint" style="margin-left:auto">off = you stop moving on others' maps</span></label>
+          <div id="mp-map-presence" class="mp-map-presence">Not connected.</div>
+
+          <!-- §MP-MAP: local + world chat -->
+          <div class="mp-section-hd">💬 Chat</div>
+          <div id="mp-chat-scope-bar">
+            <button class="mp-scope-btn mp-scope-active" data-scope="local" onclick="mpChatScope('local')">📍 Local</button>
+            <button class="mp-scope-btn" data-scope="world" onclick="mpChatScope('world')">🌍 World</button>
+          </div>
+          <div id="mp-map-chat-list" class="mp-map-chat-list"></div>
+          <input id="mp-map-chat-input" placeholder="say to the room… (Enter)" maxlength="500"
+                 onkeydown="if(event.key==='Enter')mpSayMap()">
+          <div class="mp-hint">Local = players within ~10 cells of you · World = everyone. Chat is never saved to your
+            game — it lives in your browser cache (last 200 lines, oldest dropped first).</div>
         </div>
         <div id="msub-discover" class="map-subpane">
           <!-- §MESH-02d: local port scan (D6) · tracker/magnet resolve · server-list sources (D4) -->
@@ -4620,7 +4668,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
             <button class="dpad-btn" id="btn-N">↑ N</button>
             <button class="dpad-btn dpad-corner" id="btn-waypoint" title="Waypoint">WP</button>
             <button class="dpad-btn" id="btn-W">← W</button>
-            <span class="dpad-center-spacer"></span><!-- §TIMELESS-01: hunt toggle removed; spacer keeps the 3×3 d-pad grid -->
+            <button class="dpad-btn dpad-hunt" id="btn-hunt" title="Hunt Mode — favor lower-level monsters, more encounters">🎯</button><!-- §KG-01: Hunt Mode toggle -->
             <button class="dpad-btn" id="btn-E">E →</button>
             <button class="dpad-btn dpad-corner" id="btn-dpad-rest" title="Short Rest">🛌</button>
             <button class="dpad-btn" id="btn-S">↓ S</button>
@@ -8069,17 +8117,17 @@ document.addEventListener('DOMContentLoaded', () => {
 // ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆
 const NODE_MAP = { // → doc: maps.md §NODE_MAP
   // ── ACT I — BIRKA
-  LHR:{ num:1,  code:'LHR', name:'city',            label:"City Streets — Birka",       act:1, text:"The courier is already dead. He made it to the gate lamp and no further; the map he was carrying is in your hand now. You don't remember being given it.\n\nAround him, the city continues. A cart adjusts its wheel line. Guard Captain Yael notes the body's position from the corner — does not approach. The notice board behind her: lower districts sealed, three consecutive nights. Rationale field: blank.\n\nShe looks at the map. Then at you.\n\n\"Where did he come from?\"", npc:'City Guard Captain', battle:null, loot:'Bloodstained Map', sleep:false,
+  LHR:{ num:1,  code:'LHR', name:'city',            label:"City Streets — Birka",       act:1, text:"Birka wakes in layers. The market carts come first, wheels finding the same ruts they found yesterday, and the gate lamps still burn pale against a sky that hasn't decided on morning. Cobbles slick with the night's damp; the smell of tar and fish and cold stone.\n\nThe city keeps a rhythm — corner posts, lamplighters, the watch changing without a word. On one corner stands the guard captain, Yael Scheidemann: square-shouldered in city colours, a duty log open in one hand, marking the street the way other people breathe. She misses nothing and hurries at nothing.\n\nNotices flutter on the board by the fountain. Down the hill the lower districts stay shuttered. Up here the day simply begins, the way it always does, whether or not anyone is ready for it.", npc:'City Guard Captain', battle:null, loot:'Bloodstained Map', sleep:false,
   },
   BMA:{ num:51, code:'BMA', name:'city_slums',     label:'Birka Slums',                act:1, text:"The alleys north of the Birka market are too narrow for carts and too cramped for anything to move through quickly. This is their primary defense. The refuse heaps at each junction attract every pest the city produces — rats in the lower layers, cockroach swarms in the dry section above, wasps where the heat concentrates in the overhang. The city does not come here to clean. The city does not come here.\n\nThree children are playing a dare game at the gutter crossroads when you arrive. The rules are visible in how they stand: one touches the leech-covered stones, two watch. They have run this game long enough to know exactly how close you can get before a leech detaches and looks for warmer purchase.\n\nThey don't look at you when you pass. In the slums, ignoring strangers is the social courtesy — it means you have decided not to be a problem.\n\nThe road north goes to the Defiant Fields. The children don't go north.", npc:null, battle:null, loot:null, sleep:false,
   },
   TLL:{ num:2,  code:'TLL', name:'inn',             label:'The First Inn',                 act:1, text:"The breakfast is already waiting when you sit down. She hasn't asked what you take in your tea.\n\nInnkeeper Brynn wipes the same section of counter she wiped when you walked in. Two stools down, a ledger sits open to an entry that hasn't been filled — harbor arrivals, last Tuesday. Two names in the margin. No departure columns.\n\nShe sets the journal in front of you. Forty-one entries. The author's name is Froberger.\n\n\"Free,\" she says. \"The room's free too, if you need it.\"\n\nShe goes back to the counter.", npc:'Innkeeper Brynn', battle:null, loot:"Merchant Ledger · Froberger's Journal", sleep:true, sleepCost:5,
   },
-  MHQ:{ num:3,  code:'MHQ', name:'tavern',          label:'Birka Tavern',                act:1, text:"The bard at the back is singing something that doesn't repeat. You catch yourself counting the intervals. The man at the bar does the same — you can tell by how he holds his cup: not drinking, calculating.\n\nThe two men who watched you take the ledger at the inn are two steps behind you. They came in during the verse. They ordered nothing.\n\nBard Tomas Couperin reaches the third line of the cipher and looks up.\n\nHe has been watching the door since before you arrived.", npc:'Bard Tomas Couperin', battle:{label:'Thug ×2', key:'thug', count:2}, loot:'Cipher Scrap', sleep:false,
+  MHQ:{ num:3,  code:'MHQ', name:'tavern',          label:'Birka Tavern',                act:1, text:"Low ceiling, low light, the warmth of too many bodies and a fire that's been fed all night. The air is brown with peat-smoke and spilled ale. Cups knock, someone laughs too loud in a corner, and under it all runs the steady murmur of a room where everyone half-listens to everyone else.\n\nAt the back sits the bard — Tomas Couperin, the unlicensed one — a scrawl of notes at his elbow and an instrument worn pale where his hand falls. He plays something that turns back on itself, never quite repeating, the kind of tune you catch yourself following without meaning to.\n\nThe bench by the door is the cold seat; the one by the hearth is spoken for. Everything in the room has already decided where it belongs, and it takes a while before it decides anything about you.", npc:'Bard Tomas Couperin', battle:{label:'Thug ×2', key:'thug', count:2}, loot:'Cipher Scrap', sleep:false,
   },
   LLA:{ num:4,  code:'LLA', name:'bar',             label:'The Rough Bar',                 act:1, text:"The back wall is older than the building. The door set into it opens onto the crypt and has never been locked. Newcomers find this out on their own — the bar doesn't announce it.\n\nPachelbel works the back room. Tilbury Conclave passes, fifteen gold. He has heard everything this city produces and stopped reacting to it years ago.\n\nThe vermin work the drain trench and the alley side: kobolds in the gutter, wererats below the boards, cockroach swarms behind the bottle shelf. What rises from the crypt door behind them is a different scale — ghouls that move slow, wights that don't until they must, shadows that use the unlocked door as a corridor. The bar has stayed open through all of it.", npc:'City Fence', battle:null, loot:'Conclave Pass (buy 15gp)', sleep:false,
   },
-  KRN:{ num:5,  code:'KRN', name:'crypt',           label:'The Birka Crypt',             act:1, text:"The torches at the bottom of the stair were lit recently — wax still running, not yet pooled. Someone came down here in the last half hour and did not stay.\n\nThe first chamber holds twelve tombs. Three are disturbed: lids displaced, stone face-down on the floor. The scratches on the underside face upward.\n\nIn the far corner, a shadow that has no source shifts when you don't look at it directly.\n\nFrom the second chamber, below the drip of water: a slower sound. The deliberate kind that comes from something that has time.\n\nA sexton crosses the grating overhead, lantern swinging. He does not look down.\n\nThe three skeletons in the first chamber have already stood. The shadow is waiting for you to choose a direction.", npc:null, battle:{label:'Skeleton ×3 + Shadow', key:'skeleton', count:3}, loot:'Crypt Key · Void Scratch Note', sleep:false,
+  KRN:{ num:5,  code:'KRN', name:'crypt',           label:'The Birka Crypt',             act:1, text:"The stair goes down into a cold that has a taste — old stone, standing water, the mineral breath of a place the sun has never reached. Torches burn at the bottom, lit recently, the wax still running and not yet pooled.\n\nThe first chamber holds twelve tombs in two rows. A few of the lids sit askew, one stone slab face-down on the floor, and the scratches on its underside face the wrong way. Water drips somewhere past the reach of the light, patient and unhurried.\n\nIn the far corner a shadow lies where nothing stands to cast it, and it seems to settle whenever you look at it straight. Overhead a sexton's lantern crosses the grating and moves on, and does not look down. The dark down here does not feel empty. It feels occupied — and in no particular hurry.", npc:null, battle:{label:'Skeleton ×3 + Shadow', key:'skeleton', count:3}, loot:'Crypt Key · Void Scratch Note', sleep:false,
   },
   HKG:{ num:6,  code:'HKG', name:'cyberpunk_streets', label:'Neon Undercity',             act:1, text:"The descent from the crypt floor takes thirty steps. At the bottom the stone ends and the conduit begins — cable bundles thick as your arm running the corridor's length, neon strips casting everything in a blue the eye reads as cold.\n\nThe passage was a transit corridor once. The turnstiles at the far end are still set to reject; three have been forced and bent back. Someone came through recently, and the path they cleared is the one you will use.\n\nTwo androids hold the mid-point checkpoint, heads tracking in the slow arc of a thing that runs on schedule. Between them, a data wraith — light that moves wrong, a signal that chose to persist rather than terminate. The androids are the vermin here. The wraiths are what a corridor produces when it runs long enough without maintenance.\n\nCommander Bruhns is already past the checkpoint. You can tell because the androids are still in reset posture, not yet returned to neutral scan.\n\nHe did not wait.", npc:'Commander Bruhns', battle:{label:'Android ×2 + Data Wraith', key:'corrupted_android', count:2}, loot:'Signal Jammer · EMP Grenade · Commander Token', sleep:false,
   },
@@ -9026,6 +9074,13 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   ZERO: { num:63669, name:"scholars_qtr", label:"The Zero Corridor", text:"Two doors. Left: MXLVII. Right: 1047. They open onto the same room.\n\nThis is the point.\n\nZero traveled from India to Baghdad in the seventh century. Al-Khwarizmi used it in 830. Fibonacci encountered it in North Africa and brought it to Europe in Liber Abaci in 1202, where it eventually replaced the Roman numeral system entirely. The Roman door and the Arabic door lead to the same room because they always did — zero was always possible; it simply had not been written down yet.\n\nAn Archmage occupies the reading alcove. It was placed here by someone who understood that a room containing zero requires defense precisely because zero is the number that enables all the others.\n\nOn the reading stand: the Zero Treatise, describing nothing with tremendous precision. Beside it: the Counting Document Bundle — three manuscripts, three civilizations, one number they were all trying to reach.\n\nBelow the treatise, in Fibonacci's handwriting: \"Zero is not the absence of number. It is the number that permits absence to be counted.\"", npc:null, loot:"Zero Treatise · Counting Document Bundle", act:4, sleep:false, battle:{"label":"Archmage","key":"archmage","count":1} },
   CNTR: { num:63670, name:"crypt", label:"Cantor's Attic", text:"The ladder to the attic is infinite. You reach the attic anyway. This is ℵ₀ — aleph-null, the first infinity — and it has a floor.\n\nGeorg Cantor's shade stands at the window. He has the specific look of a man who proved something true, was told he was wrong for thirty years, spent time in a sanatorium in 1884, returned to the same proof, died in 1918, and has since been proved so thoroughly right that his diagonal argument is taught in the first week of every real analysis course.\n\n\"The infinite hotel,\" he says, \"has infinite rooms. All occupied. New guest arrives. Shift everyone up one room. Room one is now free. This seems impossible. It is not.\" He does not sound bitter. He sounds like someone who has explained this many times and finds it genuinely interesting each time.\n\nVoid Walkers inhabit the higher attics — ℵ₁, ℵ₂, beyond — the uncountable infinities Cantor proved exist above the countable ones. They find the first attic small.\n\nOn the floor, in chalk: the diagonal argument, complete. The set of all real numbers between zero and one, proved larger than the set of natural numbers. The proof is correct. The chalk is fresh.", npc:"Cantor's Shade", loot:"Moonshine Memo · ∞-Fragment", act:6, sleep:false, battle:{"label":"Void Walker ×3","key":"void_walker","count":3} },
   GVW: { num:63987, name:"forest", label:"Greenwood Watcher's Clearing", text:"A clearing in old-growth forest, not on any map. The trees have grown around the house without touching it. The woman who lives here never advertised her presence — but the ones who need to find her do.", act:1 },
+  TGS: { num:63988, name:"forest", label:"The Tungas", act:1,
+    S:"J14",
+  },
+  J14: { num:63989, name:"junction", label:"Tungas Road Waypoint", text:"Signpost says: The The Tungas–Station 7 (Dark) Road. Follow this road between The Tungas and Station 7 (Dark).", npc:null, loot:null, N:"TGS", act:1, sleep:false, junction:true,
+    S:"J15",
+  },
+  J15: { num:63990, name:"junction", label:"Tungas Road Waypoint", text:"Signpost says: The The Tungas–Station 7 (Dark) Road. Follow this road between The Tungas and Station 7 (Dark).", npc:null, loot:null, N:"J14", act:1, sleep:false, junction:true },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -9451,6 +9506,9 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   RAI:{r:55,c:156},
 
   MLN:{r:73,c:220},
+  TGS:{r:7,c:217},
+  J14:{r:8,c:217},
+  J15:{r:9,c:217},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -22066,6 +22124,8 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:END ◆◆◆
 
 /* ── Story State ── */
+// §STATE-INIT: seed only — replaced with the canonical `_S_DEFAULTS()` shape right after that
+// function is defined below. Do not rely on these values; keep _S_DEFAULTS() authoritative.
 let S_story = {
   active: false,
   currentCode: 'LHR',
@@ -22145,6 +22205,7 @@ const _S_DEFAULTS = () => ({
   shieldTier: null, equippedWeapon: null, equippedMainWeapon: null, levelUpLog: [], tattoos: [],
   lastAutoSellNode: null, surgeCharges: 0, indomitableCharges: 0,
   waypoint: null, customQuestTerrain: null,
+  huntMode: false,  // §KG-01: Hunt Mode — ×2 encounter rate + 80/20 bias toward monsters at/below your level
   hireling: null,   // §MESH-01g: hired guide bot (single-player; persists in save)
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [], ebReturnsCompleted: {},
@@ -22454,6 +22515,14 @@ const _S_DEFAULTS = () => ({
     hav06HiredRidersDefeated: false,
     hav06TestimonyFiled: false,
 });
+
+// §STATE-INIT: _S_DEFAULTS() is the single source of truth for a fresh S_story shape.
+// The literal above at `let S_story = {…}` is only a seed to declare the binding; it had
+// drifted and was missing fields (e.g. visitedCells / playerR / playerC), so the fresh-load
+// path (storyEnter → no autosave → storyRender, which never merges defaults) left those
+// undefined and cellMove crashed on the first move. Normalize to the full default shape here
+// so every entry path starts complete; New Game / Continue / respawn still overwrite as usual.
+S_story = _S_DEFAULTS();
 
 /* ── Layer 48: Luck — Seventh Stat ── */
 // Layer 51: §XVI — Aggregate tome bonuses from inventory
@@ -27084,7 +27153,8 @@ function storyCheckVictory(node) {
 function cellMove(dir) {
   // §NAV-01d: any user-initiated move (D-pad, keyboard, exit-line click) halts
   // auto-travel — only the travel loop's own steps set _travelStepping.
-  if (_travelActive() && !_travelStepping) { _travelStop('Travel halted.'); return; }
+  // §MP-MAPTABS: this covers click-to-travel too (both share _travelStepping).
+  if (_travelActive() && !_travelStepping) { _travelStop('Travel halted.'); _navStop(); return; }
   // §WALK-2: bounds/wrap/sea decisions live in the shared mover kernel (mover.js).
   // cellMove is now a thin caller that applies the SP side effects to the result.
   const res = Mover.move(_moverWorld(), { r: S_story.playerR || 0, c: S_story.playerC || 0 }, dir);
@@ -27098,6 +27168,7 @@ function cellMove(dir) {
   if (S_story.log.length > 20) S_story.log.shift();
   S_story.playerR = nr;
   S_story.playerC = nc;
+  if (!S_story.visitedCells) S_story.visitedCells = {};  // defensive: never throw here again (§STATE-INIT)
   S_story.visitedCells[`${nr},${nc}`] = true;
   _statTally('exitsTaken', 1);
   // §TIMELESS-01: movement is timeless — stepping one cell N/E/S/W no longer
@@ -27170,7 +27241,11 @@ function _enterEmptyCell(r, c) {
   // §MESH-01f: travelling with co-present allies halves that rate (client-side roll
   // adjustment only — the mover never sees it; Free-Movement invariant holds).
   const terrain = room.terrain;
-  const baseRate = _partyEncounterRate(TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default);
+  let baseRate = _partyEncounterRate(TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default);
+  // §KG-01: Hunt Mode roughly doubles the wilderness encounter rate (capped) so
+  // you can grind low-level fights on purpose. Roads/junctions stay at rate 0
+  // (2 × 0 = 0) and a deployed sentry still suppresses to 0 (applied above).
+  if (S_story.huntMode) baseRate = Math.min(0.8, baseRate * 2);
   if (Math.random() < baseRate) {
     const monster = _weightedMonsterPick(terrain);
     if (monster) {
@@ -27221,7 +27296,12 @@ function storyBlock(txt) {
 // §MESH-01-FU 4: `remotes` is the pid-keyed WORLDWIDE track (seeded by the pos
 // beacon's world[], updated live by player_moved SSE); `nearby` is its viewport
 // subset (minimap dots); world/globe panels draw all of `remotes`.
-const MP = { base: null, session: null, pid: null, ledgerPid: null, name: null, es: null, players: [], nearby: [], remotes: {}, on: false, trade: null, duel: null, chat: [], chatUnread: 0 };
+const MP = { base: null, session: null, pid: null, ledgerPid: null, name: null, es: null, players: [], nearby: [], remotes: {}, on: false, trade: null, duel: null, chat: [], chatUnread: 0, advertise: true, chatScope: 'local' };
+// §MP-MAP: presence-advertising is opt-OUT (default on); persisted client-side so
+// the choice survives reloads. Chat scope (local proximity vs world) is a pure
+// display filter over the same shared MP.chat log — also client-persisted.
+try { MP.advertise = (localStorage.getItem('mpAdvertise') !== '0'); } catch {}
+try { const cs = localStorage.getItem('mpChatScope'); if (cs === 'local' || cs === 'world') MP.chatScope = cs; } catch {}
 
 // ── §MESH-02(h) — accumulating multi-user chat history ──────────────────────
 // One client-side log fed by every chat source (live SSE, own sends via the
@@ -27242,13 +27322,16 @@ function _mpChatPush(e) {
   const ts = e.ts || Date.now();
   const who = e.pid || e.name || '?';
   if (MP.chat.some(x => (x.pid || x.name || '?') === who && x.msg === e.msg && Math.abs(x.ts - ts) < 120000)) return;
-  MP.chat.push({ ts, pid: e.pid || null, name: e.name || '?', msg: String(e.msg), r: e.r, c: e.c, server: e.server || null });
+  MP.chat.push({ ts, pid: e.pid || null, name: e.name || '?', msg: String(e.msg), r: e.r, c: e.c, server: e.server || null, scope: e.scope || null });
   MP.chat.sort((a, b) => a.ts - b.ts);
   if (MP.chat.length > MP_CHAT_CAP) MP.chat.splice(0, MP.chat.length - MP_CHAT_CAP);
   _mpChatSave();
   const panel = document.getElementById('mp-chat-panel');
   if (panel && panel.style.display !== 'none') _mpChatRender();
   else { MP.chatUnread++; _mpChatBadge(); }
+  // §MP-MAP: keep the map pane's chat live too when it's the open subpane
+  const mpane = document.getElementById('msub-connect');
+  if (mpane && mpane.classList.contains('msub-active')) _mpMapChatRender();
 }
 function _mpChatBadge() {
   const b = document.getElementById('mp-chat-badge');
@@ -27259,7 +27342,7 @@ function _mpChatRender() {
   if (!list) return;
   const hhmm = ts => { const d = new Date(ts); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
   list.innerHTML = MP.chat.map(e =>
-    '<div class="mp-chat-line' + (String(e.msg).startsWith('👣') ? ' mp-chat-fp' : '') + '"><span class="mp-chat-ts">' + hhmm(e.ts) + '</span> <b>' + _mpEsc(e.name) + '</b>' +
+    '<div class="mp-chat-line' + (String(e.msg).startsWith('👣') ? ' mp-chat-fp' : '') + '"><span class="mp-chat-ts">' + hhmm(e.ts) + '</span> ' + (e.scope === 'world' ? '🌍 ' : '') + '<b>' + _mpEsc(e.name) + '</b>' +
     (e.server ? '<span class="mp-chat-srv">@' + _mpEsc(String(e.server).slice(0, 8)) + '</span>' : '') +
     ': ' + _mpEsc(e.msg) + '</div>').join('')
     || '<div class="mp-chat-line" style="color:var(--dim)">No chat yet. Connect (🌐) and say something.</div>';
@@ -27280,6 +27363,89 @@ async function _mpChatHistory() {
   } catch {}
 }
 _mpChatLoad();   // boot: yesterday's conversation is still there before any connect
+
+// ══ §MP-MAP — Multiplayer hub on the map's Multiplayer pane ══════════════════
+// Everything here is DISPLAY-ONLY (like all presence): a position-advertise
+// opt-out, a Local/World chat view over the shared MP.chat log, and a mirrored
+// presence list. The mover never reads any of it (Free-Movement invariant).
+
+// Is a chat entry "local" — spoken within ~10 cells of the player? Reuses the
+// column-wrap distance the minimap uses so the antimeridian doesn't read as far.
+function _mpChatIsLocal(e) {
+  if (e == null || e.r == null || e.c == null) return false;   // no coords → world-only
+  const cr = S_story.playerR || 0, cc = S_story.playerC || 0;
+  const dcRaw = Math.abs(e.c - cc);
+  const dc = (typeof GEO_PROJ !== 'undefined' && GEO_PROJ.COLS) ? Math.min(dcRaw, GEO_PROJ.COLS - dcRaw) : dcRaw;
+  return Math.abs(e.r - cr) <= 10 && dc <= 10;
+}
+
+// Render MP.chat into the map pane's chat list, filtered by the active scope.
+function _mpMapChatRender() {
+  const list = document.getElementById('mp-map-chat-list');
+  if (!list) return;
+  const hhmm = ts => { const d = new Date(ts); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
+  const rows = (MP.chatScope === 'local') ? MP.chat.filter(_mpChatIsLocal) : MP.chat;
+  list.innerHTML = rows.map(e =>
+    '<div class="mp-chat-line' + (String(e.msg).startsWith('👣') ? ' mp-chat-fp' : '') + '"><span class="mp-chat-ts">' + hhmm(e.ts) + '</span> ' + (e.scope === 'world' ? '🌍 ' : '') + '<b>' + _mpEsc(e.name) + '</b>' +
+    (e.server ? '<span class="mp-chat-srv">@' + _mpEsc(String(e.server).slice(0, 8)) + '</span>' : '') +
+    ': ' + _mpEsc(e.msg) + '</div>').join('')
+    || '<div class="mp-chat-line" style="color:var(--dim)">' +
+       (MP.chatScope === 'local' ? 'Nobody nearby has spoken. Switch to 🌍 World to hear everyone.' : 'No chat yet. Connect (🌐) and say something.') + '</div>';
+  list.scrollTop = list.scrollHeight;
+}
+
+// Switch the map chat between Local (proximity) and World (everyone).
+function mpChatScope(scope) {
+  MP.chatScope = (scope === 'world') ? 'world' : 'local';
+  try { localStorage.setItem('mpChatScope', MP.chatScope); } catch {}
+  document.querySelectorAll('#mp-chat-scope-bar .mp-scope-btn').forEach(b =>
+    b.classList.toggle('mp-scope-active', b.dataset.scope === MP.chatScope));
+  // §MP-CHAT-GLOBAL: the channel you're viewing is the channel you send into —
+  // reflect it in the input's placeholder so the destination is unambiguous.
+  const inp = document.getElementById('mp-map-chat-input');
+  if (inp) inp.placeholder = (MP.chatScope === 'world') ? '🌍 say to the WORLD… (Enter)' : '📍 say to the room… (Enter)';
+  _mpMapChatRender();
+}
+
+// Toggle position advertising. Persisted; when re-enabled while connected, fire
+// one forced beacon so the player reappears on others' maps immediately.
+function mpSetAdvertise(on) {
+  MP.advertise = !!on;
+  try { localStorage.setItem('mpAdvertise', MP.advertise ? '1' : '0'); } catch {}
+  const cb = document.getElementById('mp-advertise-cb');
+  if (cb) cb.checked = MP.advertise;
+  if (MP.advertise && MP.on) mpBeacon({ force: true });
+  if (!MP.advertise && MP.on) storyMsg('📢 Position hidden — others will stop seeing you move.');
+}
+
+// Mirror the co-present roster into the map pane (fuller than the strip line).
+function _mpRenderMapPresence() {
+  const el = document.getElementById('mp-map-presence');
+  if (!el) return;
+  if (!MP.on) { el.textContent = 'Not connected. Join a server above to see who else is out there.'; return; }
+  const players = (MP.players || []).filter(p => p && p.kind !== 'sentry');
+  const remotes = Object.values(MP.remotes || {}).filter(p => p && p.kind !== 'sentry').length;
+  if (!players.length) {
+    el.textContent = '🟢 Connected as ' + (MP.name || '?') + ' · nobody else in this cell'
+      + (remotes ? ' · ' + remotes + ' traveler(s) elsewhere in the world.' : '.');
+    return;
+  }
+  el.innerHTML = '🟢 <b>' + _mpEsc(MP.name || '?') + '</b> · Also here: '
+    + players.map(p => _mpEsc(p.name)).join(', ')
+    + (remotes > players.length ? ' · ' + (remotes) + ' traveler(s) worldwide.' : '.');
+}
+
+// Send from the map pane's chat input (mirrors mpSay, different input element).
+function mpSayMap() {
+  const inp = document.getElementById('mp-map-chat-input');
+  const msg = (inp && inp.value || '').trim();
+  if (!msg) return;
+  if (!MP.on) { storyMsg('🌐 Connect to a world server first (Multiplayer pane, above).'); return; }
+  inp.value = '';
+  // §MP-CHAT-GLOBAL: the channel you're reading is the channel you speak into —
+  // 🌍 World sends worldwide (broadcastAll + mesh), 📍 Local stays proximity.
+  _mpFetch('/api/session/say', { sessionId: MP.session, msg, scope: MP.chatScope }).catch(() => {});
+}
 
 // §MESH-01f — co-presence combat buffs ("traveling with allies"). Pure
 // derivations off MP.players (server-filtered to the current cell, self already
@@ -27646,7 +27812,7 @@ async function mpToggle(ev) {
     MP.session = start.sessionId; MP.pid = start.pid || null; MP.ledgerPid = start.ledgerPid || null; MP.name = start.name; MP.on = true;
     try { sessionStorage.setItem('mpSession', MP.session); } catch {}
     _mpOpenStream();
-    const firstLook = await mpBeacon();   // sync the fresh session (spawns at hub) to the real player cell
+    const firstLook = await mpBeacon({ force: true });   // sync the fresh session (spawns at hub) to the real player cell
     _mpChatBacklog(firstLook);            // §MESH-01-FU 13: replay recent chat at this cell, once per connect
     _mpChatHistory();                     // §MESH-02(h): merge the server's global chat ring into the history log
     _mpFootprints(firstLook);             // §MESH-02(j): who passed through your cell while you were away
@@ -27705,7 +27871,7 @@ function _mpOpenStream() {
   });
   es.addEventListener('chat', ev => {
     const d = JSON.parse(ev.data);
-    storyMsg('💬 ' + d.name + ': ' + d.msg);
+    storyMsg((d.scope === 'world' ? '🌍 ' : '💬 ') + d.name + ': ' + d.msg);   // §MP-CHAT-GLOBAL
     _mpChatPush(d);   // §MESH-02(h): every live line lands in the history log
   });
   // §MESH-01i slice 2b — the trade rung reads the server's SSE notifications.
@@ -27767,8 +27933,14 @@ function _mpOpenStream() {
 // Fire-and-forget position beacon after each successful local step. The pos
 // response refreshes the co-present list (players) + viewport list (nearby);
 // arrivals/leaves BETWEEN steps come in over SSE.
-async function mpBeacon() {
+async function mpBeacon(opts) {
   if (!MP.on || !MP.session) return;
+  // §MP-MAP: when the player has turned off "advertise my position", suppress the
+  // per-move position broadcast so their marker stops trailing them on other
+  // players' maps (it goes stale at the last-broadcast cell and expires by TTL).
+  // Forced beacons (connect handshake, pre-trade ledger sync) still run — those
+  // need the round trip's co-present list, chat backlog, and ledgerPid.
+  if (!MP.advertise && !(opts && opts.force)) return null;
   try {
     const look = await _mpFetch('/api/session/pos', { sessionId: MP.session, r: S_story.playerR, c: S_story.playerC });
     if (look && look.ok) {
@@ -27860,7 +28032,8 @@ function mpSay() {
   inp.value = '';
   // No local echo: the server broadcast includes the sender exactly once
   // (§WALK-5 harness property) and renders through the SSE chat handler.
-  _mpFetch('/api/session/say', { sessionId: MP.session, msg }).catch(() => {});
+  // §MP-CHAT-GLOBAL: send into the active scope (📍 Local proximity / 🌍 World).
+  _mpFetch('/api/session/say', { sessionId: MP.session, msg, scope: MP.chatScope }).catch(() => {});
 }
 function _mpSetStatus(txt) {
   const el = document.getElementById('mp-status');
@@ -27868,6 +28041,7 @@ function _mpSetStatus(txt) {
   _mcRenderStatus();   // §MESH-02c: Connect-pane card tracks the strip (no-op while the pane is hidden)
 }
 function _mpRenderPresence() {
+  _mpRenderMapPresence();   // §MP-MAP: keep the map pane's roster in sync
   const el = document.getElementById('mp-presence');
   if (!el) return;
   // §MESH-01-FU 3: plain names normally; on a display-name collision, suffix
@@ -27913,8 +28087,12 @@ function _mpRepaintMaps() {
     if (!MP.on) return;
     _mpRecomputeNearby();
     _renderMiniMap();
-    _renderFullMap(S_story.playerR || 0, S_story.playerC || 0);
     _renderGlobeMap();
+    // §MP-MAPTABS: the full-world canvas moved into the 🛰 Full sub-tab and is now
+    // responsive — repaint whichever map pane is open (skips when the sheet is
+    // closed / the pane is hidden), so remote movers refresh at the right size.
+    const _sheet = document.getElementById('sheet-map');
+    if (_sheet && _sheet.classList.contains('active')) _renderActiveMapPane();
   }, 100);
 }
 
@@ -28420,7 +28598,7 @@ function _mpTradeRow(side, mintKey, name, icon) {
 // so refresh once before giving up.
 async function mpTradeOpen(p) {
   if (!MP.on || !p) return;
-  if (!p.ledgerPid) { await mpBeacon(); p = MP.players.find(q => q.pid === p.pid) || p; }
+  if (!p.ledgerPid) { await mpBeacon({ force: true }); p = MP.players.find(q => q.pid === p.pid) || p; }
   if (!p.ledgerPid) { storyMsg('⇄ ' + (p.name || 'That player') + ' has no trade identity yet (their game may not carry a player key).'); return; }
   MP.trade = { dir: 'out', to: p.ledgerPid, toName: p.name, tradeId: null };
   let theirs = [];
@@ -32561,39 +32739,93 @@ function storyRender(node, prefix) {
           // §ARCH-01 W4/W5: typed quest cards — combat/delivery/escort/dialogue UQF
           // quests resolve through the same roll machinery with a typed presentation
           // (hybrid + skill_check keep the plain ROLL card).
-          const _flav = ({ combat:   { lbl:'FIGHT',   icon:'⚔ ',  verb:'Fight — ',   cls:'btn-fight' },
-                           delivery: { lbl:'DELIVER', icon:'📦 ', verb:'Deliver — ', cls:'btn-hunt' },
-                           escort:   { lbl:'ESCORT',  icon:'🛡 ', verb:'Escort — ',  cls:'btn-hunt' },
-                           dialogue: { lbl:'TALK',    icon:'💬 ', verb:'Talk — ',    cls:'btn-talk' } })[q.type]
-                        || { lbl:'ROLL', icon:'🎲 ', verb:'Roll Ceremonia — ', cls:'btn-talk' };
-          body.appendChild(_mkCard({
+          const _flav = ({ combat:   { lbl:'FIGHT',   icon:'⚔ ',  verb:'Fight',          cls:'btn-fight' },
+                           delivery: { lbl:'DELIVER', icon:'📦 ', verb:'Deliver',        cls:'btn-hunt' },
+                           escort:   { lbl:'ESCORT',  icon:'🛡 ', verb:'Escort',         cls:'btn-hunt' },
+                           dialogue: { lbl:'TALK',    icon:'💬 ', verb:'Talk',           cls:'btn-talk' } })[q.type]
+                        || { lbl:'ROLL', icon:'🎲 ', verb:'Roll Ceremonia', cls:'btn-talk' };
+          // §CEREMO-ACC: the roll no longer fires straight off the card button.
+          // Tapping it accordions the details down (vignette · roll breakdown ·
+          // pass-odds · iodine boost) and the actual roll is confirmed inside —
+          // matching the battle card's expand-to-container pattern.
+          const totalMod = mod + prof;
+          const _need = _dc - totalMod;
+          const _oddsPct = Math.round(Math.max(0, Math.min(20, 21 - _need)) / 20 * 100);
+          let _ceremAcc = null;
+          const _closeCerem = () => {
+            if (!_ceremAcc) return;
+            _ceremAcc.classList.remove('open');
+            const _c = _ceremAcc; setTimeout(() => _c.remove(), 270);
+            _ceremAcc = null;
+          };
+          const _ceremCard = _mkCard({
             lbl: _flav.lbl,
             main: _flav.icon + q.title,
-            sub: vText || '',
             hint: blocked
               ? '⏳ Retry available: Day ' + retryDay
               : _label + ' (' + modStr + ') vs DC ' + _dc,
-            btn: blocked ? null : _flav.verb + _label + ' DC ' + _dc,
+            tag: blocked ? null : 'DC ' + _dc,
+            btn: blocked ? null : _flav.verb,
             btnClass: _flav.cls,
-            btnClick: blocked ? null : () => _rollCeremonia(id),
-          }));
-          // §CROWN-01 Amendment A: Iodine Salt boost button for skill checks
-          if (!blocked) {
-            const _inv = S_story.inventory || [];
-            const _hasCharged = _inv.some(i => i.name === 'Charged Iodine Salt');
-            const _hasPlain   = _inv.some(i => i.name === 'Iodine Salt');
-            if (_hasCharged || _hasPlain) {
-              body.appendChild(_mkCard({
-                lbl: 'IODINE',
-                main: (_hasCharged ? '⚡🧂 Burn Charged Iodine Salt (+5)' : '🧂 Burn Iodine Salt (+3)'),
-                sub: 'Atlantean clarity method. Consumes one dose.',
-                hint: _hasCharged ? '+5 to roll — charged reduction' : '+3 to roll — plain reduction',
-                btn: _hasCharged ? 'Burn & Roll (+5) — ' + _label : 'Burn & Roll (+3) — ' + _label,
-                btnClass: 'btn-rest',
-                btnClick: () => _burnIodineSalt(id),
-              }));
-            }
-          }
+            btnClick: blocked ? null : () => {
+              const _btn = _ceremCard.querySelector('.story-card-btn');
+              if (_ceremAcc) { _closeCerem(); if (_btn) _btn.textContent = _flav.verb; return; }
+              const acc = document.createElement('div');
+              acc.className = 'npc-talk-accordion ceremonia-accordion';
+
+              // Vignette narrative
+              if (vText) {
+                const vRow = document.createElement('div');
+                vRow.className = 'ceremonia-vignette';
+                vRow.textContent = vText;
+                acc.appendChild(vRow);
+              }
+
+              // Roll breakdown + pass odds
+              const brRow = document.createElement('div');
+              brRow.className = 'ceremonia-breakdown';
+              brRow.innerHTML = '<span class="ceremonia-stat">' + String(_label).toUpperCase() + '</span>'
+                + ' — d20 ' + modStr + ' &nbsp;<span style="opacity:0.75">(' + _ability.toUpperCase()
+                + ' ' + (mod >= 0 ? '+' : '') + mod + ' · Prof +' + prof + ')</span>'
+                + ' &nbsp;vs&nbsp; DC ' + _dc
+                + ' &nbsp;·&nbsp; <span class="ceremonia-odds">~' + _oddsPct + '% to pass</span>';
+              acc.appendChild(brRow);
+
+              // §CROWN-01 Amendment A: Iodine Salt boost — burns a dose then rolls
+              const _inv = S_story.inventory || [];
+              const _hasCharged = _inv.some(i => i.name === 'Charged Iodine Salt');
+              const _hasPlain   = _inv.some(i => i.name === 'Iodine Salt');
+              if (_hasCharged || _hasPlain) {
+                const iodineBtn = document.createElement('button');
+                iodineBtn.className = 'story-card-btn btn-rest ceremonia-iodine-btn';
+                iodineBtn.textContent = _hasCharged
+                  ? '⚡🧂 Burn Charged Iodine Salt (+5) & Roll'
+                  : '🧂 Burn Iodine Salt (+3) & Roll';
+                iodineBtn.addEventListener('click', () => { _closeCerem(); _burnIodineSalt(id); });
+                acc.appendChild(iodineBtn);
+              }
+
+              // Confirm roll
+              const rollBtn = document.createElement('button');
+              rollBtn.className = 'story-card-btn ' + _flav.cls + ' ceremonia-roll-btn';
+              rollBtn.textContent = '🎲 ' + _flav.verb + ' — ' + _label + ' DC ' + _dc;
+              rollBtn.addEventListener('click', () => { _closeCerem(); _rollCeremonia(id); });
+              acc.appendChild(rollBtn);
+
+              // Cancel
+              const cancelEl = document.createElement('div');
+              cancelEl.className = 'battle-retreat-link';
+              cancelEl.textContent = '← Not yet';
+              cancelEl.addEventListener('click', () => { _closeCerem(); if (_btn) _btn.textContent = _flav.verb; });
+              acc.appendChild(cancelEl);
+
+              _ceremAcc = acc;
+              _ceremCard.insertAdjacentElement('afterend', acc);
+              requestAnimationFrame(() => _ceremAcc && _ceremAcc.classList.add('open'));
+              if (_btn) _btn.textContent = 'Close';
+            },
+          });
+          body.appendChild(_ceremCard);
           return;
         }
         // ── standard quests ──
@@ -32656,16 +32888,19 @@ function storyRender(node, prefix) {
     if (node.sleep) {
       const slept = !!S_story.sleptAtNodes[node.code];
       const cost = node.sleepCost === 0 ? 'free' : node.sleepCost + 'gp';
-      if (slept) {
-        body.appendChild(_mkCard({ lbl: 'INN', main: 'Rested here — Day ' + S_story.day, tag: '✓ Done', tagClass: 'transferred', done: true }));
-      } else {
-        body.appendChild(_mkCard({
-          lbl: 'INN', main: 'Long Rest (' + cost + ')',
-          hint: '⏱ 8 hours · full HP recovery · resets fatigue',
-          tag: '8h', btn: 'Rest', btnClass: 'btn-rest',
-          btnClick: () => storySleep(node)
-        }));
-      }
+      // §REST-AGAIN: sleptAtNodes is a permanent "first-rest double-heal claimed"
+      // flag, not a per-day lock — inns are reusable (storyConfirmSleep handles the
+      // revisit roll). Always offer another rest instead of dead-ending on "Done".
+      body.appendChild(_mkCard({
+        lbl: 'INN',
+        main: (slept ? 'Rest Again (' : 'Long Rest (') + cost + ')',
+        hint: slept
+          ? '⏱ 8h · heal to full & advance a day — rest as often as you need'
+          : '⏱ 8 hours · full HP recovery · 🏕 first rest = double heal',
+        tag: slept ? '✓ Rested' : '8h', tagClass: slept ? 'transferred' : '',
+        btn: slept ? 'Rest Again' : 'Rest', btnClass: 'btn-rest',
+        btnClick: () => storySleep(node)
+      }));
     } else {
       // Not at inn — show nearest inn hint
       const innNodes = Object.values(NODE_MAP).filter(n => n.sleep);
@@ -32675,12 +32910,28 @@ function storyRender(node, prefix) {
         if (p.length > 0 && p.length < nearestDist) { nearestDist = p.length; nearest = n; }
       });
       if (nearest) {
+        // §REST-WP: reflect active-waypoint state so the button doesn't look like
+        // it blindly re-routes on every tap. Set → En route (Clear); unset → Waypoint.
+        const wpSetHere = S_story.waypoint === nearest.code;
         body.appendChild(_mkCard({
           lbl: 'INN', main: 'Nearest Inn: ' + nearest.label.split(' — ')[0] + ' (' + nearest.code + ')',
-          hint: nearestDist + ' move' + (nearestDist !== 1 ? 's' : '') + ' away — set waypoint to navigate',
-          tag: nearestDist + ' moves',
-          btn: 'Waypoint', btnClass: 'btn-rest',
-          btnClick: () => { S_story.waypoint = nearest.code; storyMsg('📍 Waypoint set: ' + nearest.label); _updateWaypointBtn(); }
+          hint: wpSetHere
+            ? '📍 Waypoint active — tap WP or the arrows to travel here'
+            : nearestDist + ' move' + (nearestDist !== 1 ? 's' : '') + ' away — set waypoint to navigate',
+          tag: wpSetHere ? '📍 En route' : nearestDist + ' moves',
+          tagClass: wpSetHere ? 'transferred' : '',
+          btn: wpSetHere ? 'Clear' : 'Waypoint', btnClass: 'btn-rest',
+          btnClick: () => {
+            if (S_story.waypoint === nearest.code) {
+              S_story.waypoint = null;
+              storyMsg('📍 Waypoint cleared.');
+            } else {
+              S_story.waypoint = nearest.code;
+              storyMsg('📍 Waypoint set: ' + nearest.label);
+            }
+            _updateWaypointBtn();
+            storyRender(NODE_MAP[S_story.currentCode]);
+          }
         }));
       }
     }
@@ -34171,6 +34422,7 @@ function storyRender(node, prefix) {
   _renderGlobeMap();
   _updateExitLinks();
   _updateWaypointBtn();
+  _updateHuntBtn();   // §KG-01: reflect Hunt Mode state on the d-pad toggle (also after a save loads)
 }
 
 function storyUpdateStatus() {
@@ -34712,9 +34964,22 @@ const _MAP_OPP = {N:'S', S:'N', E:'W', W:'E'};
 function msubSwitch(id) {
   document.querySelectorAll('#sheet-map .map-subpane').forEach(p => p.classList.toggle('msub-active', p.id === id));
   document.querySelectorAll('#map-subtab-bar .map-subtab').forEach(t => t.classList.toggle('msub-active', t.dataset.msub === id));
-  if (id === 'msub-connect') _mcRenderStatus();   // §MESH-02c: fresh manifest + state on pane open
+  if (id === 'msub-connect') {
+    _mcRenderStatus();   // §MESH-02c: fresh manifest + state on pane open
+    // §MP-MAP: sync the advertise toggle + chat scope, then paint roster + chat
+    const cb = document.getElementById('mp-advertise-cb');
+    if (cb) cb.checked = MP.advertise;
+    document.querySelectorAll('#mp-chat-scope-bar .mp-scope-btn').forEach(b =>
+      b.classList.toggle('mp-scope-active', b.dataset.scope === MP.chatScope));
+    _mpRenderMapPresence();
+    _mpMapChatRender();
+  }
   if (id === 'msub-discover') _mdOnOpen();        // §MESH-02d: sources list + D4 auto-load on pane open
   if (id === 'msub-lists') _mlOnOpen();           // §MESH-02e: quick-lists + server ACL on pane open
+  // §MP-MAPTABS: fit + paint the map panes on open (they need a laid-out size)
+  if (id === 'msub-map')   { _fitLocalGrid(); _renderMapGrid(); }
+  if (id === 'msub-world') _renderWorldTab();
+  if (id === 'msub-full')  _renderFullTab();
 }
 
 function storyMapToggle() {
@@ -34725,8 +34990,8 @@ function storyMapToggle() {
       const el = document.getElementById(id);
       if (el) el.classList.remove('visible');
     });
-    _renderMapGrid();
     switchSheet('sheet-map');
+    _renderActiveMapPane();   // §MP-MAPTABS: fit+paint after the sheet is visible
   }
 }
 
@@ -34783,28 +35048,18 @@ function _renderMapGrid() {
           cell.addEventListener('mouseenter', () => {
             info.textContent = lbl + (n ? '  ·  Act ' + n.act : '');
           });
-          cell.addEventListener('click', () => {
-            const curCoord = NODE_COORDS[S_story.currentCode] || { r: S_story.playerR, c: S_story.playerC };
-            const dstCoord = NODE_COORDS[code];
-            if (curCoord && dstCoord) {
-              const dr = dstCoord.r - curCoord.r;
-              const dc = dstCoord.c - curCoord.c;
-              if (Math.abs(dr) + Math.abs(dc) === 1) {
-                const dir = dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
-                switchSheet('sheet-story');
-                cellMove(dir);
-                return;
-              }
-            }
-            info.textContent = code + ' — only an adjacent cell can be clicked to move there. Use the D-pad to travel toward it.';
-          });
+          // §MP-MAPTABS: click any tile → adjacent step or auto-travel there.
+          cell.style.cursor = 'pointer';
+          cell.addEventListener('click', () => _navClickCell(r, c));
         } else {
           // §NAV-01e: unexplored settlement — terrain tint + bright border (world-panel style)
           cell.classList.add('mc-node');
           cell.style.background = _landCol;
           cell.style.borderColor = 'rgba(240,230,200,0.5)';
+          cell.style.cursor = 'pointer';
           cell.innerHTML = '<div class="mc-icon" style="opacity:.75;color:#0e0a04">·</div>';
-          cell.addEventListener('mouseenter', () => { info.textContent = '??? — an unexplored settlement'; });
+          cell.addEventListener('mouseenter', () => { info.textContent = '??? — an unexplored settlement (click to travel)'; });
+          cell.addEventListener('click', () => _navClickCell(r, c));   // §MP-MAPTABS
         }
       } else {
         // §NAV-01e: empty cell — terrain paint; explored full strength + faint
@@ -34814,6 +35069,11 @@ function _renderMapGrid() {
           cell.style.borderColor = 'rgba(240,230,200,0.35)';
         } else if (!_imp) {
           cell.style.opacity = '0.75';
+        }
+        // §MP-MAPTABS: any walkable land tile is a travel target (sea excluded).
+        if (!_imp) {
+          cell.style.cursor = 'pointer';
+          cell.addEventListener('click', () => _navClickCell(r, c));
         }
         if (!_imp && _terr === 'road') {
           cell.innerHTML = '<div class="mc-icon" style="font-size:10px;opacity:.85;color:#0e0a04">─</div>';
@@ -34833,12 +35093,9 @@ function _renderMapGrid() {
       grid.appendChild(cell);
     }
   }
-
-  document.getElementById('map-status-bar').textContent =
-    'Day ' + S_story.day + ' of 49  ·  ' + S_story.shards + '/7 Shards  ·  ' +
-    S_story.hp + '/' + S_story.hpMax + ' HP  ·  ' + S_story.gold + 'gp';
-
-  _renderFullMap(cr, cc);   // §NAV-01e: full-world canvas below the radius grid
+  // §MP-MAPTABS: the day/shards/HP/gold status footer + Location History log were
+  // removed from the Local pane (they live in the main story HUD); the full-world
+  // canvas is its own 🛰 Full sub-tab (rendered on tab open by _renderFullTab).
 }
 
 // §NAV-01e — FULL world painter (canvas, rows 0–89 × cols 140–255). The static
@@ -34913,6 +35170,134 @@ function _renderGlobeMap() {
   const pr = S_story.playerR || (nc_ && nc_.r) || 0;
   const pc = S_story.playerC || (nc_ && nc_.c) || 0;
   _paintFullWorld(cv, 2, pr, pc);
+}
+
+/* ════ §MP-MAPTABS — responsive Local grid + World/Full canvas tabs ════════════
+   Display layer only; the mover is never consulted. Each map tab fits its canvas
+   or grid to the pane, then paints; clicks map pixel→cell→_navClickCell. */
+
+// Full-world extent (the same window _paintFullWorld draws) + the World crop span.
+const _FULL_EXT   = { r0: 0, c0: 140, rows: 90, cols: 116 };
+const _WORLD_SPAN = { rows: 41, cols: 61 };
+
+// Local DOM grid: scale cell px (21 cols × 15 rows) to fill the pane, clamped
+// legible (14–54px) and never overflowing. Font sizes follow via --mcpx (CSS).
+function _fitLocalGrid() {
+  const area = document.getElementById('map-main-area');
+  const grid = document.getElementById('map-grid');
+  if (!area || !grid) return;
+  const w = area.clientWidth, h = area.clientHeight;
+  if (w < 2) return;                                // pane not laid out yet (hidden)
+  const gap = 2;
+  // §MP-MAPTABS: with the status footer + history log gone, the Local grid gets
+  // the whole pane. Size cells to fill the WIDTH (21 cols) so they're large; the
+  // 15 rows scroll vertically when the pane is short, auto-centered on the player.
+  const px = Math.max(24, Math.min(88, Math.floor((w - gap * 20) / 21)));
+  grid.style.setProperty('--mcpx', px + 'px');
+  // center the player (the middle cell) in the scroll viewport
+  requestAnimationFrame(() => {
+    const gh = grid.scrollHeight, gw = grid.scrollWidth;
+    if (gh > area.clientHeight) area.scrollTop = Math.max(0, (gh - area.clientHeight) / 2);
+    if (gw > area.clientWidth)  area.scrollLeft = Math.max(0, (gw - area.clientWidth) / 2);
+  });
+}
+
+// Size a canvas to fill its wrap at an integer px/cell; invalidate the cached
+// base layer when the pixel size changes so it repaints crisp. Returns px.
+function _fitCanvas(cv, cols, rows) {
+  if (!cv) return 0;
+  const wrap = cv.parentElement;
+  const w = wrap ? wrap.clientWidth : 0, h = wrap ? wrap.clientHeight : 0;
+  if (w < 2 || h < 2) return 0;
+  const px = Math.max(1, Math.floor(Math.min(w / cols, h / rows)));
+  const nw = px * cols, nh = px * rows;
+  if (cv.width !== nw || cv.height !== nh) { cv.width = nw; cv.height = nh; delete _fullMapBaseCache[cv.id]; }
+  return px;
+}
+
+// 🛰 Full tab — the entire world, responsive, click-to-travel.
+function _renderFullTab() {
+  const cv = document.getElementById('full-map-canvas');
+  if (!cv) return;
+  const px = _fitCanvas(cv, _FULL_EXT.cols, _FULL_EXT.rows);
+  if (!px) return;
+  const pos = _playerPos();
+  _paintFullWorld(cv, px, pos.r, pos.c);
+  cv._win = { r0: _FULL_EXT.r0, c0: _FULL_EXT.c0, PX: px };   // click→cell mapping
+}
+
+// 🌍 World tab — a player-centered 61×41 crop, responsive, click-to-travel.
+function _paintWorldWindow(cv, PX, pr, pc) {
+  const ctx = cv.getContext('2d');
+  const ROWS = GEO_PROJ.ROWS, COLS = GEO_PROJ.COLS;
+  const r0 = Math.max(0, Math.min(ROWS - _WORLD_SPAN.rows, pr - 20));
+  const c0 = pc - 30;
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  const inWin = (dr, dc) => dr >= 0 && dr < _WORLD_SPAN.rows && dc >= 0 && dc < _WORLD_SPAN.cols;
+  const wrapDc = c => (((c - c0) % COLS) + COLS) % COLS;
+  for (let dr = 0; dr < _WORLD_SPAN.rows; dr++) {
+    const r = r0 + dr;
+    if (r < 0 || r >= ROWS) continue;
+    for (let dc = 0; dc < _WORLD_SPAN.cols; dc++) {
+      const c = (((c0 + dc) % COLS) + COLS) % COLS;
+      const key = r + ',' + c;
+      const code = cellCode(key);
+      const imp = IMPASSABLE_CELLS.has(key);
+      const terr = (code && NODE_MAP[code]) ? NODE_MAP[code].name : _inferTerrain(r, c);
+      ctx.fillStyle = imp ? '#0a2a4a' : _terrainColor(terr);
+      ctx.fillRect(dc * PX, dr * PX, PX, PX);
+      if (code) {                                    // settlement — cream marker
+        const inset = PX >= 5 ? 1 : 0;
+        ctx.fillStyle = '#f0e6c8';
+        ctx.fillRect(dc * PX + inset, dr * PX + inset, Math.max(1, PX - inset * 2), Math.max(1, PX - inset * 2));
+      }
+    }
+  }
+  if (MP.on) {                                       // remote travelers (cyan)
+    ctx.fillStyle = '#7fd4ff';
+    for (const p of Object.values(MP.remotes || {})) {
+      const dr = p.r - r0, dc = wrapDc(p.c);
+      if (inWin(dr, dc)) ctx.fillRect(dc * PX, dr * PX, Math.max(PX, 2), Math.max(PX, 2));
+    }
+  }
+  const wpc = S_story.waypoint ? NODE_COORDS[S_story.waypoint] : null;   // waypoint (gold)
+  if (wpc) { const dr = wpc.r - r0, dc = wrapDc(wpc.c); if (inWin(dr, dc)) { ctx.fillStyle = '#ffd700'; ctx.fillRect(dc * PX, dr * PX, Math.max(PX, 2), Math.max(PX, 2)); } }
+  ctx.fillStyle = '#ff5030';                         // player (red)
+  ctx.fillRect(wrapDc(pc) * PX, (pr - r0) * PX, Math.max(PX, 2), Math.max(PX, 2));
+  cv._win = { r0, c0, PX };                           // click→cell mapping
+}
+
+function _renderWorldTab() {
+  const cv = document.getElementById('world-tab-canvas');
+  if (!cv) return;
+  const px = _fitCanvas(cv, _WORLD_SPAN.cols, _WORLD_SPAN.rows);
+  if (!px) return;
+  const pos = _playerPos();
+  _paintWorldWindow(cv, px, pos.r, pos.c);
+}
+
+// Translate a canvas click to a world cell (accounts for CSS scaling + E↔W wrap).
+function _mapCanvasClick(cv, ev) {
+  const win = cv && cv._win;
+  if (!win) return;
+  const rect = cv.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  const x = (ev.clientX - rect.left) * (cv.width / rect.width);
+  const y = (ev.clientY - rect.top) * (cv.height / rect.height);
+  const COLS = GEO_PROJ.COLS;
+  const r = win.r0 + Math.floor(y / win.PX);
+  const c = (((win.c0 + Math.floor(x / win.PX)) % COLS) + COLS) % COLS;
+  _navClickCell(r, c);
+}
+
+// Render whichever map pane is active (used on sheet open + resize).
+function _renderActiveMapPane() {
+  const world = document.getElementById('msub-world');
+  const full  = document.getElementById('msub-full');
+  if (world && world.classList.contains('msub-active')) return _renderWorldTab();
+  if (full && full.classList.contains('msub-active'))  return _renderFullTab();
+  _fitLocalGrid();
+  _renderMapGrid();
 }
 
 // §NAV-01e — nodes that offer at least one quest (lazy, built once per session)
@@ -35499,12 +35884,10 @@ function _wpDistTag(destCode) {
 // highway net whenever the detour is under 2× the beeline (mirrors the
 // trunk-reuse costing in scripts/build-roads.js). Topology identical to
 // _bfsGridPath: rows clamp at the band edges, columns wrap E↔W.
-function _roadGridPath(from, toCode) {
-  if (!toCode || !NODE_COORDS[toCode]) return [];
-  const endCoord = NODE_COORDS[toCode];
-  const startCoord = (from && typeof from === 'object') ? from
-                   : (NODE_COORDS[from] || _playerPos());
-  if (!startCoord || startCoord.r == null) return [];
+// §MP-MAPTABS: BFS core generalized to an arbitrary END COORD (was code-only), so
+// click-to-travel can target an empty cell as well as a settlement node.
+function _roadGridPathCore(startCoord, endCoord) {
+  if (!startCoord || startCoord.r == null || !endCoord || endCoord.r == null) return [];
   const startKey = `${startCoord.r},${startCoord.c}`;
   const endKey = `${endCoord.r},${endCoord.c}`;
   if (startKey === endKey) return [];
@@ -35544,6 +35927,28 @@ function _roadGridPath(from, toCode) {
   return [];
 }
 
+// Node-code route (unchanged public contract): resolve code → coord, then core.
+function _roadGridPath(from, toCode) {
+  if (!toCode || !NODE_COORDS[toCode]) return [];
+  const startCoord = (from && typeof from === 'object') ? from : (NODE_COORDS[from] || _playerPos());
+  return _roadGridPathCore(startCoord, NODE_COORDS[toCode]);
+}
+// §MP-MAPTABS: route to a raw {r,c} cell (empty or named) for click-to-travel.
+function _cellRoute(from, endCoord) {
+  const startCoord = (from && typeof from === 'object') ? from : (NODE_COORDS[from] || _playerPos());
+  return _roadGridPathCore(startCoord, endCoord);
+}
+// First-step compass dir of the road-weighted route to a raw cell (antimeridian-adjusted).
+function _cellGridDir(from, endCoord) {
+  const start = (from && typeof from === 'object') ? from : (NODE_COORDS[from] || _playerPos());
+  const path = _cellRoute(start, endCoord);
+  if (!path.length) return null;
+  const dr = path[0].r - start.r;
+  let dc = path[0].c - start.c;
+  if (dc > 1) dc = -1; else if (dc < -1) dc = 1;        // antimeridian wrap-adjust
+  return dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
+}
+
 // First-step compass direction of the road-weighted route (antimeridian-adjusted).
 function _roadGridDir(from, toCode) {
   const start = (from && typeof from === 'object') ? from
@@ -35565,7 +35970,101 @@ let _travelTimer = null;      // pending setTimeout id; null = not travelling
 let _travelStepping = false;  // true only while the loop's own cellMove runs
 let _encounterQueued = false; // set by _enterEmptyCell's roll (battle fires ~300ms later)
 
-function _travelActive() { return _travelTimer !== null; }
+// §MP-MAPTABS: click-to-travel — a sibling of WP auto-travel that targets a raw
+// {r,c} CELL (any tile clicked on a map), not a persisted waypoint node. Same
+// road-weighted route + ~120 ms/step setTimeout chain; halted by battle, arrival,
+// a blocked step, or any player input. Transient module state, never persisted.
+let _navTimer = null;         // pending setTimeout id for click-travel; null = idle
+let _navTarget = null;        // {r,c} destination cell while click-travelling
+let _navOnMap = false;        // true when the walk was launched from the open Local map — animate the ◉ marker there each step
+
+function _travelActive() { return _travelTimer !== null || _navTimer !== null; }
+
+function _mapSheetOpen() { const el = document.getElementById('sheet-map'); return !!el && el.classList.contains('active'); }
+
+function _navStop(msg) {
+  if (_navTimer !== null) { clearTimeout(_navTimer); _navTimer = null; }
+  _navTarget = null;
+  _navOnMap = false;
+  if (msg) storyMsg(msg);
+}
+
+function _navTravelTo(r, c) {
+  if (!S_story.active) return;
+  const pos = _playerPos();
+  if (pos.r === r && pos.c === c) return;                     // already here
+  if (IMPASSABLE_CELLS.has(`${r},${c}`)) { storyMsg('🌊 That tile is open sea — no route there.'); return; }
+  if (_cellGridDir(pos, { r, c }) === null) {                 // unreachable land
+    storyMsg('📍 No path found to that tile. Move manually toward it.');
+    return;
+  }
+  _travelStop();                                             // supersede any WP travel
+  _navTarget = { r, c };
+  _navOnMap = _mapSheetOpen();                               // launched from the Local map → walk the ◉ there
+  _encounterQueued = false;
+  const dstCode = cellCode(`${r},${c}`);
+  const dstName = (dstCode && NODE_MAP[dstCode]) ? NODE_MAP[dstCode].label : `(${r},${c})`;
+  storyMsg('🧭 Traveling to ' + dstName + '…');
+  _navTick();
+}
+
+function _navTick() {
+  _navTimer = null;
+  const t = _navTarget;
+  if (!t || !S_story.active) { _navStop(); return; }
+  const pos = _playerPos();
+  if (pos.r === t.r && pos.c === t.c) {                       // arrival
+    const code = cellCode(`${t.r},${t.c}`);
+    if (_navOnMap && _mapSheetOpen()) _renderMapGrid();       // final marker position on the map
+    _navStop('📍 Arrived at ' + (code && NODE_MAP[code] ? NODE_MAP[code].label : `(${t.r},${t.c})`) + '.');
+    return;
+  }
+  const dir = _cellGridDir(pos, t);
+  if (!dir) { _navStop('📍 Route lost — move manually.'); return; }
+  _travelStepping = true;
+  try { cellMove(dir); } finally { _travelStepping = false; }
+  const now = _playerPos();
+  // Walk the ◉ marker one cell on the open Local map so the journey is visible.
+  if (_navOnMap && _mapSheetOpen()) _renderMapGrid();
+  const _encounter = _encounterQueued || S_story.pendingBattle;
+  if ((now.r === pos.r && now.c === pos.c)                   // blocked step (kernel refused)
+      || _encounter                                          // encounter rolled / battle begun
+      || !S_story.active) {                                  // left story mode
+    // An encounter needs the story/battle UI — leave the map so the player sees it.
+    if (_encounter && _mapSheetOpen()) switchSheet('sheet-story');
+    _navStop();
+    return;
+  }
+  _navTimer = setTimeout(_navTick, 120);
+}
+
+// Click any map tile → instant step if adjacent, else auto-travel there.
+function _navClickCell(r, c) {
+  if (!S_story.active) return;
+  const pos = _playerPos();
+  if (pos.r === r && pos.c === c) return;                     // clicked self
+  if (IMPASSABLE_CELLS.has(`${r},${c}`)) { storyMsg('🌊 That tile is open sea — no route there.'); return; }
+  const dr = r - pos.r;
+  let dc = c - pos.c;
+  const COLS = (typeof GEO_PROJ !== 'undefined' && GEO_PROJ.COLS) ? GEO_PROJ.COLS : 0;
+  if (COLS) { if (dc > COLS / 2) dc -= COLS; else if (dc < -COLS / 2) dc += COLS; }  // antimeridian
+  const onMap = _mapSheetOpen();
+  if (Math.abs(dr) + Math.abs(dc) === 1) {                    // adjacent → single step
+    const dir = dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
+    if (onMap) {                                              // stay on the map; walk the ◉ one cell
+      cellMove(dir);
+      _renderMapGrid();
+      // A step onto an encounter/battle needs the story/battle UI.
+      if ((_encounterQueued || S_story.pendingBattle) && _mapSheetOpen()) switchSheet('sheet-story');
+    } else {
+      switchSheet('sheet-story');
+      cellMove(dir);
+    }
+    return;
+  }
+  if (!onMap) switchSheet('sheet-story');                     // map closed → watch travel + encounters on the story sheet
+  _navTravelTo(r, c);
+}
 
 function _travelStop(msg) {
   if (_travelTimer !== null) { clearTimeout(_travelTimer); _travelTimer = null; }
@@ -35620,6 +36119,27 @@ function _updateWaypointBtn() {
   btn.textContent = 'WP';
   btn.classList.toggle('at-waypoint', !!wp && S_story.currentCode === wp);
   _updateExitLinks();
+}
+
+// §KG-01: Hunt Mode — paint the d-pad center toggle to match S_story.huntMode.
+function _updateHuntBtn() {
+  const btn = document.getElementById('btn-hunt');
+  if (!btn) return;
+  const on = !!S_story.huntMode;
+  btn.classList.toggle('hunting', on);
+  btn.title = on
+    ? 'Hunt Mode: ON — favoring monsters at/below your level, encounters ~2× more frequent. Click to stop.'
+    : 'Hunt Mode: OFF — click to hunt lower-level monsters (more frequent, easier fights).';
+}
+
+// §KG-01: flip Hunt Mode on/off. Persists in the save; a message confirms the change.
+function storyToggleHunt() {
+  S_story.huntMode = !S_story.huntMode;
+  _updateHuntBtn();
+  storyAutoSave();
+  storyMsg(S_story.huntMode
+    ? '🎯 Hunt Mode ON — you set out looking for weaker prey. Encounters come thick and fast, and most will be at or below your level (Lv ' + (S_story.level || 1) + '). Tougher foes can still find you.'
+    : '🎯 Hunt Mode OFF — you travel warily again. Encounter rate and monster mix return to normal.');
 }
 
 function storyWaypoint() {
@@ -35749,10 +36269,35 @@ function _notorietyWeights(n) {
   return               { trivial:0,  easy:5,  medium:25, hard:40, deadly:30 };
 }
 
+// §KG-01: a monster's average damage per attack (dice midpoint × count + flat).
+function _monsterAvgHit(m) {
+  return (m.dmgCount || 1) * (((m.dmgDie || 4) + 1) / 2) + (m.dmgFlat || 0);
+}
+
+// §KG-01: normalized 1–20 "monster level" — a threat metric combining Armor
+// Class, average Damage-dice output, and Hit Points. Calibrated against the pool
+// so the low band reads intuitively: Rabid Monkey→1, Kobold/Giant Rat→2,
+// Goblin/Skeleton→2–3, Orc→3, Thug→4, Ogre→6, Troll→7; apex monsters clamp at 20.
+// Used by Hunt Mode to compare a candidate encounter against the player's level.
+function _monsterLevel(m) {
+  if (!m) return 1;
+  const score = (m.ac || 10) + (m.hp || 1) * 0.35 + _monsterAvgHit(m) * 1.5;
+  return Math.max(1, Math.min(20, Math.round((score - 15) / 7.2 + 1)));
+}
+
 function _weightedMonsterPick(terrain) {
   const WEIGHTS = _notorietyWeights(_notoriety());
   const db      = WORLD_DB[terrain] || WORLD_DB['midlands'];
-  const pool    = db.monsters;
+  let pool      = db.monsters;
+  // §KG-01: Hunt Mode — 80% of picks favor monsters at or below the player's
+  // level (a fair or easy fight); the other 20% draws from the full terrain pool
+  // so genuinely hard enemies still appear. Falls back to the full pool if the
+  // terrain has nothing at/below the player's level.
+  if (S_story.huntMode && Math.random() < 0.8) {
+    const lv  = S_story.level || 1;
+    const low = pool.filter(m => _monsterLevel(m) <= lv);
+    if (low.length) pool = low;
+  }
   const weighted = [];
   pool.forEach(m => {
     const w = WEIGHTS[m.tier] || 10;
@@ -35809,6 +36354,7 @@ document.getElementById('btn-dpad-npc').addEventListener('click', () => {
 document.getElementById('btn-dpad-rest').addEventListener('click', () => {
   storyShortRest(S_story.currentCode);
 });
+document.getElementById('btn-hunt').addEventListener('click', storyToggleHunt);   // §KG-01: Hunt Mode toggle
 document.getElementById('btn-start-battle').addEventListener('click', storyCommitBattle);
 document.getElementById('btn-prebatt-cancel').addEventListener('click', () => {
   document.getElementById('story-prebatt-overlay').classList.remove('visible');
@@ -35848,6 +36394,26 @@ document.getElementById('btn-map-sheet-close').addEventListener('click', storyMa
 document.querySelectorAll('#map-subtab-bar .map-subtab').forEach(t => {
   t.addEventListener('click', () => msubSwitch(t.dataset.msub));
 });
+/* §MP-MAPTABS: click-to-travel on the World + Full canvases; resize refits the
+   active map pane (debounced). Registered once at boot; display-layer only. */
+(() => {
+  const wc = document.getElementById('world-tab-canvas');
+  const fc = document.getElementById('full-map-canvas');
+  if (wc) wc.addEventListener('click', ev => _mapCanvasClick(wc, ev));
+  if (fc) fc.addEventListener('click', ev => _mapCanvasClick(fc, ev));
+  let _rz = null;
+  window.addEventListener('resize', () => {
+    if (_rz) clearTimeout(_rz);
+    _rz = setTimeout(() => {
+      _rz = null;
+      const sheet = document.getElementById('sheet-map');
+      if (!sheet || !sheet.classList.contains('active')) return;
+      _renderActiveMapPane();
+    }, 120);
+  });
+})();
+window.__maptabs = { _fitLocalGrid, _fitCanvas, _renderFullTab, _renderWorldTab, _renderActiveMapPane,
+  _navClickCell, _navTravelTo, _cellRoute, _cellGridDir, _roadGridPathCore };
 window.__mesh02 = Object.assign(window.__mesh02 || {}, { msubSwitch, mcConnect, mcFind, mcDisconnect, _mcRenderStatus,
   mpParseServerList, _mpClientLists, _mpSaveList, mdScanLocal, mdFind, mdAddSource, mdRemoveSource, mdLoadSource,
   _mdRenderSources, _mdHostApproved, _mdOnOpen,
