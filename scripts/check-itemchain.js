@@ -37,6 +37,11 @@ function extractFn(name) {
 
 const sandbox = { S_story: { inventory: [], day: 3 }, msgs: [] };
 sandbox.storyMsg = (m) => sandbox.msgs.push(m);
+// §MBIT-02: _takeMissionBit consults _gateFlagSet() (which walks QUEST_DB); the sandbox
+// has no QUEST_DB, so stub it to the empty set — the test's beads are generic/non-gating,
+// which is exactly the empty-gate-set case (token leaves, flag clears). Repairs the crash
+// that _gateFlagSet-not-defined introduced when §MBIT-02 landed.
+sandbox._gateFlagSet = () => new Set();
 vm.createContext(sandbox);
 vm.runInContext(
   ['_flagToLabel', '_grantMissionBit', '_takeMissionBit', '_applyItemChain'].map(extractFn).join('\n') +
@@ -65,13 +70,14 @@ S.inventory = [];
 apply({ itemChain: [{ action: 'grant', name: 'Tome', icon: '📗', type: 'tome', sell: 0,
   description: 'margin note', bonus: { deathSave: 1 }, readText: 'long text',
   readable: true, readableKey: 'k', passive: true, uses: 3, minLevel: 2,
-  atkBonus: 1, dmgDie: 4, dmgCount: 1, dmgFlat: 0 }] });
+  atkBonus: 1, dmgDie: 4, dmgCount: 1, dmgFlat: 0, heal: 8 }] });
 {
   const it = S.inventory[0];
   ok(it.description === 'margin note' && JSON.stringify(it.bonus) === '{"deathSave":1}', 'grant passes description + bonus through');
   ok(it.readText === 'long text' && it.readable === true && it.readableKey === 'k', 'grant passes readText/readable/readableKey');
   ok(it.passive === true && it.uses === 3 && it.minLevel === 2, 'grant passes passive/uses/minLevel');
   ok(it.atkBonus === 1 && it.dmgDie === 4 && it.dmgCount === 1 && it.dmgFlat === 0, 'grant passes weapon stats');
+  ok(it.heal === 8, 'grant passes heal (§KG Inc 3 — heal-consumable rewards)');
 }
 // off-allow-list keys are dropped (no arbitrary passthrough)
 S.inventory = [];

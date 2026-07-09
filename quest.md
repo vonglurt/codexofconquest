@@ -511,11 +511,27 @@ Events A–F use `gate:{}` (always listed on arrival) and `retryable:true`. **Ev
 
 ---
 
-## §KG — Russia "Kindergarten" Corridor 🔜 Quest chain is Increment 3 (nodes LIVE)
+## §KG — Russia "Kindergarten" Corridor ✅ LIVE (all 3 increments shipped)
 
 **§KG Increment 2 (zones) is LIVE** — the St. Petersburg → Moscow corridor nodes (SPB/KMS/ZVD/FBR/TVR), 6 low-level "training" monsters (mLevel 1–4), and 5 Soviet-cyberpunk terrains all shipped. See world.md §"The St. Petersburg → Moscow Corridor" + monsters.md §"Soviet-Cyberpunk Training Tier."
 
-**Increment 3 (PLANNED): ~10–12 UQF-1.0 quests**, each anchored to a corridor NPC (audit enforces `npc`) — deliveries / talk / cull-3 / mini-boss, honor-central Soviet-cyberpunk. Anchors ready: **Recruiter Volkov** (SPB, cover story), **Commissar-Instructor Roshkova** (KMS, drill), **Pit-Master Grimka** (ZVD, honor duels), **Technician Iosif** (FBR, jack-in deliveries), **Quartermaster Lena** (TVR, road to Station 7). Each NPC currently carries a single signature `NPC_DIALOGUE` line; full dialogue trees land with the chain. Design: `lab-reports/lab-report-kg-russia-kindergarten-zones.md`.
+**§KG Increment 3 (the quest chain) is LIVE** — 11 UQF-1.0 side quests, honor-central, carrying a fresh L1 fighter east to ~L6 (mission *listing* gated W→E; movement always free). Each is anchored to one of the five corridor NPCs (audit-verified `npc` resolution). One new generic mechanic: a per-monster `monsterKills` counter (battle-win handler, in `_S_DEFAULTS`) read by the cull/duel quests' `completion.countMin` — reusable by any future arc. Design: `lab-reports/lab-report-kg-corridor-quest-chain.md`.
+
+| Quest | Node · NPC | Type | Completion | Reward |
+|-------|-----------|------|-----------|--------|
+| `quest_kg_01` Honest Work in the East | SPB · Volkov | cull | 3× `sparring_droid` | 120xp/30 + Guild Enlistment Papers → `kgEnlisted` |
+| `quest_kg_02` The Sealed Manifest | SPB · Volkov | delivery | Sealed Recruit Manifest @ KMS | 150xp → `kgManifestDelivered` |
+| `quest_kg_03` The Sparring Floor | KMS · Roshkova | cull | 4× `komsomol_cadet` | 200xp/40 + Red Star Pin |
+| `quest_kg_04` Lose Cleanly | KMS · Roshkova | skill_check | WIS/Insight DC10 (retryable) | 180xp → `kgFormsPassed` |
+| `quest_kg_05` First Bout | ZVD · Grimka | mini-boss | 1× `gladiator_bot` | 250xp/50 + Bout Token → `kgFirstBout` |
+| `quest_kg_06` A Clean Card | ZVD · Grimka | cull | 3× `gladiator_bot` + 3× `zavod_sparbot` | 300xp/60 + Clean-Card Trophy + Stripped Reactor Core |
+| `quest_kg_07` Core to the Fabrika | ZVD · Grimka | delivery | Stripped Reactor Core @ FBR | 220xp → `kgCoreDelivered` |
+| `quest_kg_08` Clearing the Floor | FBR · Iosif | cull | 3× `fabrika_enforcer` | 250xp/50 + Cortex Shunt |
+| `quest_kg_09` The Chair | FBR · Iosif | mini-boss | 1× `trainer_bot_prime` | 400xp/80 + Prime Core → `kgSimCleared` + Certified Skill-Chit |
+| `quest_kg_10` Certified and Resupplied | TVR · Lena | delivery | Certified Skill-Chit @ TVR | 220xp/40 + Field Ration (heal 20) |
+| `quest_kg_11` Why the Line Went Quiet | TVR · Lena | skill_check | INT/Investigation DC12 (retryable) | 500xp/100 → `kgCorridorCleared` |
+
+Gate spine (W→E, listing only): `{}` → `kgEnlisted` → `kgManifestDelivered` → `kg_03 done` → `kgFormsPassed` → `kg_05 done` → `kg_06 done` → `kgCoreDelivered` → `kg_08 done` → `kgSimCleared` → `kg_10 done`. Tail seeds the existing SVO / Station 7 thread (Lena's closing line).
 
 ---
 

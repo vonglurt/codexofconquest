@@ -8970,9 +8970,9 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
     });
     expect(r.fns).toEqual([]);              // zero closures left
     expect(r.arrayCount).toBe(r.total);     // every carrier is an array chain
-    expect(r.arrayCount).toBe(93);          // 27 (W7b closures) + 61 (W7c per-id block) + 5 (§MATH-01 gold chains)
+    expect(r.arrayCount).toBe(102);         // 27 (W7b closures) + 61 (W7c per-id block) + 5 (§MATH-01 gold chains) + 9 (§KG Inc 3: kg_01–03,05–10)
     expect(r.nonUqf).toEqual([]);           // §W7d — the last legacy carrier (wm_01) migrated
-    expect(r.uqfCount).toBe(93);
+    expect(r.uqfCount).toBe(102);
     expect(r.invalid).toEqual([]);          // every chain passes bit contracts
   });
 
