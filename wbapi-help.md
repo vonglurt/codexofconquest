@@ -133,6 +133,10 @@ curl -XPOST http://localhost:1367/api/session/pos -d '{"sessionId":"<id>","r":10
 
 # Say something to players in the same cell
 curl -XPOST http://localhost:1367/api/session/say -d '{"sessionId":"<id>","msg":"Hello!"}'
+# §MP-CHAT-GLOBAL — scope:'world' reaches EVERY connected session live (here +
+# across the mesh, like player_moved), not just co-located ones. Default 'local'.
+# World lines carry null coords (World-view only) + scope:'world'. (§MP-CHAT-GLOBAL)
+curl -XPOST http://localhost:1367/api/session/say -d '{"sessionId":"<id>","msg":"Hail, world!","scope":"world"}'
 
 # Subscribe to real-time events (SSE)
 curl -N http://localhost:1367/api/session/events?sessionId=<id>

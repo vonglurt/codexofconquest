@@ -182,6 +182,14 @@ function meshMergeEvents(originId, events) {
     if (now - (ev.ts || 0) <= MESH_FANOUT_MAX_AGE) {
       if (ev.type === 'player_moved')
         broadcastAll(ev.type, { ...ev.data, remote: true, server: originId.slice(0, 8) }, null);
+      else if (ev.type === 'chat_world') {
+        // §MP-CHAT-GLOBAL: world chat is the display layer's second worldwide
+        // event (a sibling of player_moved) — every connected LOCAL session hears
+        // it, coords null so it renders World-only. Fresh remote world chat also
+        // joins the backlog ring (replayed history stays out — vv already past).
+        broadcastAll('chat', { ...ev.data, r: null, c: null, scope: 'world', remote: true, server: originId.slice(0, 8) }, null);
+        pushChat({ ts: ev.ts || now, pid: ev.data.pid, name: ev.data.name, msg: ev.data.msg, r: null, c: null, scope: 'world', server: originId.slice(0, 8) });
+      }
       else if (['player_arrived', 'player_left', 'chat'].includes(ev.type)) {
         broadcastCell(ev.r, ev.c, ev.type, { ...ev.data, remote: true, server: originId.slice(0, 8) }, null);
         // §MESH-01-FU 13: fresh cross-server chat joins the backlog ring too —

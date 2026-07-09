@@ -44,7 +44,7 @@ async function loadHermetic(page) {
 
 test.describe('§MESH-02f — connection-center UI (hermetic, :1367 route-blocked)', () => {
 
-  test('sub-tab shell: 4 tabs / 4 panes, map default-active, click + hook switching both ways', async ({ page }) => {
+  test('sub-tab shell: 6 tabs / 6 panes, map default-active, click + hook switching both ways', async ({ page }) => {
     const pageErrors = await loadHermetic(page);
     const r = await page.evaluate(() => {
       const out = {};
@@ -65,8 +65,9 @@ test.describe('§MESH-02f — connection-center UI (hermetic, :1367 route-blocke
       out.hooked = active();
       return out;
     });
-    expect(r.tabIds).toBe('msub-map,msub-connect,msub-discover,msub-lists');
-    expect(r.paneIds).toBe('msub-map,msub-connect,msub-discover,msub-lists');
+    // §MP-MAPTABS: World + Full map tabs inserted between Local(map) and Multiplayer(connect)
+    expect(r.tabIds).toBe('msub-map,msub-world,msub-full,msub-connect,msub-discover,msub-lists');
+    expect(r.paneIds).toBe('msub-map,msub-world,msub-full,msub-connect,msub-discover,msub-lists');
     expect(r.boot).toEqual({ pane: 'msub-map', tab: 'msub-map' });
     expect(r.clicked).toEqual({ pane: 'msub-lists', tab: 'msub-lists' });
     expect(r.hooked).toEqual({ pane: 'msub-map', tab: 'msub-map' });

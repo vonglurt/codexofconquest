@@ -157,15 +157,36 @@ function parseSanitized(block, name) {
 // Avoids full re-serialization so function bodies are preserved.
 // ═══════════════════════════════════════════════════════════════════════════
 function patchStringField(sectionSrc, entryKey, field, newValue) {
-  const escaped = newValue.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  // Escape for a double-quoted JS literal: backslashes, quotes, and — critically —
+  // real newlines/CRs become \n/\r escapes so multi-paragraph values never inject a
+  // raw line break into the source (which would break the object literal).
+  const escaped = newValue
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r');
   // Use brace-depth tracking to find the true entry boundary (handles nested {} in completeFn).
   const b = findEntryBounds(sectionSrc, entryKey);
   if (!b) return null;
   const { openEnd, bodyEnd } = b;
   const body = sectionSrc.slice(openEnd, bodyEnd);
-  const fieldRe = new RegExp(`(\\b${field}\\s*:\\s*)(["\`'])(.*?)\\2`, 'm');
-  if (!fieldRe.test(body)) return null;
-  const patchedBody = body.replace(fieldRe, (_, pre, q) => `${pre}"${escaped}"`);
+  // Locate `field:` and its opening quote, then scan to the matching close quote while
+  // respecting backslash escapes — so an embedded \" inside the old value (e.g. a quoted
+  // line of dialogue) is not mistaken for the terminator, which would leave a corrupt tail.
+  const startRe = new RegExp(`(\\b${field}\\s*:\\s*)(["\`'])`, 'm');
+  const m = startRe.exec(body);
+  if (!m) return null;
+  const q = m[2];
+  const valStart = m.index + m[0].length;   // first char after the opening quote
+  let i = valStart;
+  while (i < body.length) {
+    const c = body[i];
+    if (c === '\\' && q !== '`') { i += 2; continue; }
+    if (c === q) break;
+    i++;
+  }
+  if (i >= body.length) return null;         // unterminated value — refuse rather than corrupt
+  const patchedBody = body.slice(0, m.index) + m[1] + `"${escaped}"` + body.slice(i + 1);
   return sectionSrc.slice(0, openEnd) + patchedBody + sectionSrc.slice(bodyEnd);
 }
 

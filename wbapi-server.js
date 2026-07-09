@@ -8885,17 +8885,36 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, 'session/say: msg too long (max 500)');
         return json(res, 400, { ok: false, error: 'msg too long — max 500 characters' });
       }
-      const chatData = { pid: pidOf(sessionId), name: s.playerName, sessionId, msg, r: s.r, c: s.c };
-      // excludeId=null → delivered to EVERY session at this cell, including the
-      // sender (their own session is at s.r,s.c). §WALK-5 Inc 3 fix: dropped a
-      // redundant second sseSend to the sender that double-delivered the sender's
-      // own chat (the harness asserts each co-present session receives it once).
-      broadcastCell(s.r, s.c, 'chat', chatData, null);
-      emitMeshEvent('chat', { name: s.playerName, msg, r: s.r, c: s.c }, s.r, s.c);
-      pushChat({ ts: Date.now(), pid: chatData.pid, name: s.playerName, msg, r: s.r, c: s.c });   // §MESH-01-FU 13
-      logRow('say', `${s.playerName}  ·  "${msg.slice(0,60)}"`);
-      logResponse(method, url.pathname, 200, `session say: "${msg.slice(0,40)}"`);
-      return json(res, 200, { ok: true, broadcast: chatData, recipientCount: [...SESSIONS.values()].filter(s2 => s2.r === s.r && s2.c === s.c).length });
+      // §MP-CHAT-GLOBAL: scope selects the delivery channel. 'local' (default) is
+      // the original proximity say (co-located cell only). 'world' reaches EVERY
+      // connected session live — here (broadcastAll) and across the mesh
+      // (chat_world event) — like the display-layer's worldwide player_moved.
+      const scope = (body.scope === 'world') ? 'world' : 'local';
+      const chatData = { pid: pidOf(sessionId), name: s.playerName, sessionId, msg, r: s.r, c: s.c, scope };
+      if (scope === 'world') {
+        // Display-only, like all presence. World lines carry NULL coords so they
+        // render in the World view (never a cell's proximity backlog) and are
+        // tagged scope:'world' for the client's 🌍 badge. excludeId=null → the
+        // sender hears their own line back exactly once (client dedupe folds the
+        // mesh echo; our own origin's events are never re-ingested locally).
+        broadcastAll('chat', { ...chatData, r: null, c: null }, null);
+        emitMeshEvent('chat_world', { name: s.playerName, msg, pid: chatData.pid }, s.r, s.c);
+        pushChat({ ts: Date.now(), pid: chatData.pid, name: s.playerName, msg, r: null, c: null, scope: 'world' });
+      } else {
+        // excludeId=null → delivered to EVERY session at this cell, including the
+        // sender (their own session is at s.r,s.c). §WALK-5 Inc 3 fix: dropped a
+        // redundant second sseSend to the sender that double-delivered the sender's
+        // own chat (the harness asserts each co-present session receives it once).
+        broadcastCell(s.r, s.c, 'chat', chatData, null);
+        emitMeshEvent('chat', { name: s.playerName, msg, r: s.r, c: s.c }, s.r, s.c);
+        pushChat({ ts: Date.now(), pid: chatData.pid, name: s.playerName, msg, r: s.r, c: s.c });   // §MESH-01-FU 13
+      }
+      logRow('say', `${scope === 'world' ? '🌍 ' : ''}${s.playerName}  ·  "${msg.slice(0,60)}"`);
+      logResponse(method, url.pathname, 200, `session say (${scope}): "${msg.slice(0,40)}"`);
+      const recipientCount = scope === 'world'
+        ? SESSIONS.size
+        : [...SESSIONS.values()].filter(s2 => s2.r === s.r && s2.c === s.c).length;
+      return json(res, 200, { ok: true, scope, broadcast: chatData, recipientCount });
     }
 
     // ── POST /api/session/end ──────────────────────────────────────────────
