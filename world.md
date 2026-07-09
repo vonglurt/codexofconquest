@@ -178,7 +178,7 @@ The lake itself does not change. The fish are still there. The sign still says Y
 **Their leverage:** Information networks, harbor access, forged documents, and Magistra Muffat's intelligence apparatus.
 **Player relationship:** Transactional at first; genuinely invested once Muffat believes the player is serious.
 
-#### ⚠️ PLANNED — Tilbury Harbor Arc (plan.md §XIX, Layer 54)
+#### ⚠️ PLANNED — Tilbury Harbor Arc (plan-archive.md §XIX, Layer 54)
 
 Two new named NPCs in the Tilbury harbor district (nodes TL + SF):
 - **Harbor Master Rennau** (SF docks) — keeps the ledger of ships that haven't come back; starts Impartial; Dear Friend after Q-TL-03. He has the ledger Road Companion Dessa (§XVIII) references.
@@ -189,7 +189,7 @@ Quest chain Q-TL-01 through Q-TL-03: "The Conclave's Weight"
 - Q-TL-02: choose how to handle the harbor embargo — report to Muffat (Q65 cross-ref), deliver to Birka contact, or leave it; sets `tlEmbargoChallenged` or `tlEmbargoDismissed`.
 - Q-TL-03: Act IV+ only; Ori (Harrow survivor) appears at SF docks; her account cross-references §XII apex predators if fishing overhaul is implemented; `ori_account` readable item; Rennau reaches Dear Friend.
 
-The `ship_manifest` cross-references §XVI: if `wmFirstResearcherKnown`, the consignee (Isolde Voss) is recognized. No new monsters. Two new readable items. See plan.md §XIX for full dialogue and state flags.
+The `ship_manifest` cross-references §XVI: if `wmFirstResearcherKnown`, the consignee (Isolde Voss) is recognized. No new monsters. Two new readable items. See plan-archive.md §XIX for full dialogue and state flags.
 
 ### The Ivory Circle (Weimar)
 **What they want:** Knowledge preserved and the world stable enough to keep studying it.
@@ -197,7 +197,7 @@ The `ship_manifest` cross-references §XVI: if `wmFirstResearcherKnown`, the con
 **Their leverage:** Ancient knowledge, the portal network, the golem gate, Weimar's inaccessibility.
 **Player relationship:** Reluctant trust. They will help anyone Sweelinck approves of.
 
-#### ⚠️ PLANNED — Weimar Scholar Gate (plan.md §XVI, Layer 51)
+#### ⚠️ PLANNED — Weimar Scholar Gate (plan-archive.md §XVI, Layer 51)
 
 Two new named NPCs within the Weimar lower district — outside the Ivory Circle hierarchy, adjacent to it:
 - **Archivist Isolde Voss** — Scholar Kings First Tier; controls gate access; holds Froberger's revocation record; Friendly after Q-WM-02; never reaches Dear Friend in first run
@@ -207,9 +207,9 @@ New item category **Tomes** (`type:'tome'`): passive inventory bonuses, unsellab
 
 New monster `scholars_guard` (medium) added to WM-area terrain. Drops Scholar Kings' Seal (sell:20).
 
-Q-WM-04 reveals a "First Researcher" who preceded Froberger — unnamed by the Scholar Kings, documented only in a redacted personnel file that Benedikt can unredact. See plan.md §XVI for full quest chain and state flags.
+Q-WM-04 reveals a "First Researcher" who preceded Froberger — unnamed by the Scholar Kings, documented only in a redacted personnel file that Benedikt can unredact. See plan-archive.md §XVI for full quest chain and state flags.
 
-#### ⚠️ PLANNED — Void Archaeology (plan.md §XVII, Layer 52)
+#### ⚠️ PLANNED — Void Archaeology (plan-archive.md §XVII, Layer 52)
 
 Prerequisites: NG+ run + `wmFirstResearcherKnown` + `entry42Written`.
 
@@ -219,13 +219,13 @@ New items: `void_architect_seal` (type: `relic`, sell: 0) and `constructor_log` 
 
 The **Constructor's Log** (7 entries, First Researcher's own words) surfaces as Document 4 in the WM lower archive after all five sites are visited. Benedikt Rasp delivers the final confirmation of the four-author chain: First Researcher → Froberger → Benedikt → player (Entry 42).
 
-See plan.md §XVII for the full Constructor's Log text, investigation site descriptions, state flags, and CO outro addendum.
+See plan-archive.md §XVII for the full Constructor's Log text, investigation site descriptions, state flags, and CO outro addendum.
 
 #### Living World: Junction Vignettes + Road Companion *(Layer 53 — ✅ Implemented)*
 
 J1–J7 named roadside nodes gain one first-visit NPC encounter: Tessie (J1), Old Faeron (J2), Mira (J3, Act III+), The Cartographer (J4), Wren (J5, Scholar Kings courier who stopped reading the messages), a pinned note reading *"Paid in full. —S."* (J6, Act VII+), and a child's toy with no explanation (J7). Optional `[HELP]` interaction at J1–J5 (10gp; Curse of Knowledge credit). No state flags, no quests.
 
-**Road Companion** — one named traveler per act section (Acts II–VI) appears in the first cell departing a hub node; delivers one piece of world lore, then is gone. No state tracking. See plan.md §XVIII for full dialogue and implementation spec.
+**Road Companion** — one named traveler per act section (Acts II–VI) appears in the first cell departing a hub node; delivers one piece of world lore, then is gone. No state tracking. See plan-archive.md §XVIII for full dialogue and implementation spec.
 
 ### The Crimson Warrant (Visby)
 **What they want:** Visby to remain independent, profitable, and ungoverned by outsiders.
@@ -233,7 +233,7 @@ J1–J7 named roadside nodes gain one first-visit NPC encounter: Tessie (J1), Ol
 **Their leverage:** Military strength, labyrinthine territory, and the respect of every bandit between the mountains and the coast.
 **Player relationship:** Strictly transactional. Mordus keeps deals. He expects the same.
 
-#### ⚠️ PLANNED — Visby Underground (plan.md §XX, Layer 55)
+#### ⚠️ PLANNED — Visby Underground (plan-archive.md §XX, Layer 55)
 
 Two new NPCs and one new monster in the Visby/Goblin Caves area (nodes VS + GC):
 - **Debt Agent Solvak** (VS node, outside Crimson Warrant perimeter) — Merchant's Conclave debt collector; has been waiting 6 weeks; starts Impartial; Friendly after Q-VS-01; leaves VS permanently after Q-VS-03.
@@ -246,9 +246,9 @@ Quest chain Q-VS-01 through Q-VS-03: "What Mordus Owes"
 - Q-VS-02: Yva reveals the Hollow Hands' Void-aligned shaman; fight `hollow_hands_guard`; obtain `hollow_hands_seal`; `vsWeaponsFound`.
 - Q-VS-03: deliver seal to Solvak; Mordus pays via proxy cache; `vsDebtSettled`; 400gp. Mordus's follow-up sets `vsShamanKnown` — the Void shaman exists as a named shadow threat but is not confronted in §XX.
 
-The shaman is Layer 56+ content. §XX names the threat; it does not resolve it. See plan.md §XX for full dialogue, state flags, monster spec, and insertion spec.
+The shaman is Layer 56+ content. §XX names the threat; it does not resolve it. See plan-archive.md §XX for full dialogue, state flags, monster spec, and insertion spec.
 
-#### ⚠️ PLANNED — The Void Shaman: The Antecedent's Last Warden (plan.md §XXI, Layer 56)
+#### ⚠️ PLANNED — The Void Shaman: The Antecedent's Last Warden (plan-archive.md §XXI, Layer 56)
 
 Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). The Warden has been living in the MT tunnel for 6 months.
 
@@ -258,13 +258,13 @@ Two outcomes: combat (fight `void_shaman` AC15/HP65) or persuasion (show `constr
 
 If persuaded: Benedikt Rasp (WM, Dear Friend after §XVI) reflects on the First Researcher planting the Warden without documenting it — *"She thought she was planting a safeguard. She planted a 200-year misunderstanding."*
 
-`void_shaman` monster is scripted only (`spawnsIn: []`). See plan.md §XXI for full dialogue, both outcome texts, and insertion spec.
+`void_shaman` monster is scripted only (`spawnsIn: []`). See plan-archive.md §XXI for full dialogue, both outcome texts, and insertion spec.
 
-#### ⚠️ PLANNED — Codex Shard Origin Stories (plan.md §XXII, Layer 57)
+#### ⚠️ PLANNED — Codex Shard Origin Stories (plan-archive.md §XXII, Layer 57)
 
 Seven readable items auto-added to inventory when each Codex Shard is collected. Each names the person who placed that shard and why. The 7 placers: Elder Couperin (Quill's ancestor), Scholar Marzena (Conclave-adjacent), Researcher Aldric (unaffiliated), Archivist Hendrika (Scholar Kings defector), the First Researcher (Shard 5, MT), the original Warden (Shard 6, WM — recognized if `wardensLegacyKnown`), and Froberger himself (Shard 7, CO — *"I couldn't carry it any further. Someone else will have to finish."*).
 
-Reading all 7 notes unlocks a FROBERGER_JOURNAL sidebar entry. No new monsters, quests, or nodes. See plan.md §XXII for full shard note text.
+Reading all 7 notes unlocks a FROBERGER_JOURNAL sidebar entry. No new monsters, quests, or nodes. See plan-archive.md §XXII for full shard note text.
 
 ### The Crones' Covenant (Hag Swamp)
 **What they want:** The swamp to remain theirs. The old ways to continue.
@@ -314,7 +314,7 @@ The bloodstained map is Froberger's. He made it himself, over three years, one d
 | Archivus Ptolemy Sweelinck | Weimar — Observatory | #7 Weimar Fragment | Node 35 |
 | High Commander Seraphine Bruhns | Birka — Cyberpunk undercity | Final anchor | Node 6 |
 
-**Commander Seraphine Bruhns (Auros) — §XXXVII PLANNED:** NPC key `'bruhns'` in NPC_DIALOGUES; key `'auros'` in profile system; same character. At CY: tactical analyst and depth survey researcher, known casually as "Auros." At CO: holds the military cordon — officially to contain the Void, actually to keep the Ivory Circle from permanently locking the Codex Cradle. For 11 years, her reports were classified. She held command because the Circle cannot remove a standing Commander without cause; a Commander defeated in direct engagement loses command legitimately. She has been waiting to be beaten by someone she trusts with the opening. Final boss: `BOSS_COMMANDER_AUROS` (AC 22, HP 300, ATK +12, 3d8+6). `BRUHNS_CO_SCENE` const delivers fav-gated pre-fight reveal (fav 1: brief acknowledgment; fav 2: full Circle/Codex motivation; fav 2 + `s29LineDelivered`: tactical trust addendum). Victory: *"Commander Bruhns lowers her sword and looks at you the way people look at history."* NPC_EPILOGUES fav 0: survey still reclassified; fav 2+: survey reaches a legitimate channel; fav 3: filed jointly, city acts. 1 new flag: `bruhnsCoSceneDelivered`. See `plan.md §XXXVII`.
+**Commander Seraphine Bruhns (Auros) — §XXXVII PLANNED:** NPC key `'bruhns'` in NPC_DIALOGUES; key `'auros'` in profile system; same character. At CY: tactical analyst and depth survey researcher, known casually as "Auros." At CO: holds the military cordon — officially to contain the Void, actually to keep the Ivory Circle from permanently locking the Codex Cradle. For 11 years, her reports were classified. She held command because the Circle cannot remove a standing Commander without cause; a Commander defeated in direct engagement loses command legitimately. She has been waiting to be beaten by someone she trusts with the opening. Final boss: `BOSS_COMMANDER_AUROS` (AC 22, HP 300, ATK +12, 3d8+6). `BRUHNS_CO_SCENE` const delivers fav-gated pre-fight reveal (fav 1: brief acknowledgment; fav 2: full Circle/Codex motivation; fav 2 + `s29LineDelivered`: tactical trust addendum). Victory: *"Commander Bruhns lowers her sword and looks at you the way people look at history."* NPC_EPILOGUES fav 0: survey still reclassified; fav 2+: survey reaches a legitimate channel; fav 3: filed jointly, city acts. 1 new flag: `bruhnsCoSceneDelivered`. See `plan-archive.md §XXXVII`.
 
 ---
 
@@ -496,11 +496,11 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 **Blue Shutters Archive** (CI, gated by Yael letter) — three-state button: blocked → ask Yael → enter. Grants Entry 33, Undercity Survey (Partial) key item. Survey deliverable to Auros at CY.
 
-**Varga at BA** (S8) — Ivory Circle informant at a regular BA table, monitoring the restricted shelves (Froberger and Void research materials). Three [Observe] clicks escalate ambient text across visits: watch 1 ("the same book open to the same page"), watch 2 ("wrote one line in a notebook, put it away"), watch 3 (pigeon launches north-northeast → `s8VargaClueUnlocked`). Tell Pachelbel at SH → she recognizes the forwarding route: *"Was it the Froberger shelf?"* +15gp → `s8PachelbelTold`. Cross-refs: Act I Town Crier line [3] (informants missing their corners); `yaelEscortDone` Town Crier line (informants run off north end). See `plan.md §XXXII` for full design.
+**Varga at BA** (S8) — Ivory Circle informant at a regular BA table, monitoring the restricted shelves (Froberger and Void research materials). Three [Observe] clicks escalate ambient text across visits: watch 1 ("the same book open to the same page"), watch 2 ("wrote one line in a notebook, put it away"), watch 3 (pigeon launches north-northeast → `s8VargaClueUnlocked`). Tell Pachelbel at SH → she recognizes the forwarding route: *"Was it the Froberger shelf?"* +15gp → `s8PachelbelTold`. Cross-refs: Act I Town Crier line [3] (informants missing their corners); `yaelEscortDone` Town Crier line (informants run off north end). See `plan-archive.md §XXXII` for full design.
 
 *(Layer 67a — ✅ Implemented. Inline at HTML 15345. Flag: `s6JointDelivered`. Weckmann/Auros joint conversation at CY when both Friendly+.)*
 
-**Auros Tactical Theory** (S29) — one-time dialogue at CY. Fires when `frobergerLastEntryRead && fav_auros >= 2`. Auros decodes Entry 41 from Void-advance tactical indicators: Froberger's last route covered Year Twelve flagged sectors in the correct sequence. *"He was mapping the negative space of the Void all along... He got to the end of the map. Then the Tide arrived."* Const: `S29_AUROS_THEORY`. Sets `s29LineDelivered`. See `plan.md §XXXII`.
+**Auros Tactical Theory** (S29) — one-time dialogue at CY. Fires when `frobergerLastEntryRead && fav_auros >= 2`. Auros decodes Entry 41 from Void-advance tactical indicators: Froberger's last route covered Year Twelve flagged sectors in the correct sequence. *"He was mapping the negative space of the Void all along... He got to the end of the map. Then the Tide arrived."* Const: `S29_AUROS_THEORY`. Sets `s29LineDelivered`. See `plan-archive.md §XXXII`.
 
 *(Layer 67b — ✅ Implemented. Const: `S29_AUROS_THEORY` (HTML 11659). Triggered at CY when `frobergerLastEntryRead && fav_auros >= 2`. Sets `s29LineDelivered`. HTML comment at 8628 labels this Layer 67b.)*
 
@@ -546,41 +546,41 @@ All three together bring the balance to exactly 0. When `brynLedgerBalance >= 0`
 
 **City at Night** (`NIGHT_AMBIENT`) — when `gameDay % 4 >= 2`, each Birka node shows a blue-tinted night ambient paragraph. Different per node.
 
-**Blue Shutters Archive** (S7, `archiveVisited` / `archiveLetterObtained` / `archiveUndercitySurveyTaken`) — CI node, northeast corner. Three-state: blocked (requires Yael letter, `fav_yael >= 1`) → letter pending → open. Contents on entry: Entry 33 with archival footnote (*"Entry author appears unaware of the correlation. No restriction required."* — Circle directive 1309-VII); `archive_letter` item (partial containment record, two archivists, second stopped mid-sentence — accepted by Isolde Voss in §XVI in place of Scholar Kings' Seal items); Undercity Survey (Partial) → deliverable to Auros at CY (+40gp, `undercitySurveyDelivered`). Survey shows Year Ten pressure data matching Auros's Year Twelve Void-advance indicators — the same sectors Froberger walked in Year Thirteen. See `plan.md §XXXIII`.
+**Blue Shutters Archive** (S7, `archiveVisited` / `archiveLetterObtained` / `archiveUndercitySurveyTaken`) — CI node, northeast corner. Three-state: blocked (requires Yael letter, `fav_yael >= 1`) → letter pending → open. Contents on entry: Entry 33 with archival footnote (*"Entry author appears unaware of the correlation. No restriction required."* — Circle directive 1309-VII); `archive_letter` item (partial containment record, two archivists, second stopped mid-sentence — accepted by Isolde Voss in §XVI in place of Scholar Kings' Seal items); Undercity Survey (Partial) → deliverable to Auros at CY (+40gp, `undercitySurveyDelivered`). Survey shows Year Ten pressure data matching Auros's Year Twelve Void-advance indicators — the same sectors Froberger walked in Year Thirteen. See `plan-archive.md §XXXIII`.
 
 *(Layer 68a — ✅ Implemented. Flags: `archiveLetterObtained` / `archiveVisited` / `archiveUndercitySurveyTaken` / `undercitySurveyDelivered` — all in `_S_DEFAULTS()` (HTML 8444). Note: correct flag name is `undercitySurveyDelivered`, not `surveyDeliveredToAuros`.)*
 
-**Raison's Tools** (S46, `raisonToolsUsed`) — sold by Pachelbel at BA, Dear Friend tier (fav >= 2), 50gp. Item: `raisons_tools` (usable). Using: +30gp (*"The lens clarifies something you've been carrying."*) + handle message (*"Whoever taught Raison to do this was very careful about what not to forget."*). Raison was Pachelbel's previous fence partner, arrested for unauthorized research access. Eldest taken for Ivory Circle "evaluation." Younger child escaped south by boat at night — likely Vonn in §XIX (Tilbury Harbor), connection unstated. Pachelbel bought the tools back at impound auction ("paid four times what they were worth, because I could"). `PACHELBEL_LEDGER` entries 2+3 (readable at BA, Dear Friend) tell this in full. See `plan.md §XXXIII`.
+**Raison's Tools** (S46, `raisonToolsUsed`) — sold by Pachelbel at BA, Dear Friend tier (fav >= 2), 50gp. Item: `raisons_tools` (usable). Using: +30gp (*"The lens clarifies something you've been carrying."*) + handle message (*"Whoever taught Raison to do this was very careful about what not to forget."*). Raison was Pachelbel's previous fence partner, arrested for unauthorized research access. Eldest taken for Ivory Circle "evaluation." Younger child escaped south by boat at night — likely Vonn in §XIX (Tilbury Harbor), connection unstated. Pachelbel bought the tools back at impound auction ("paid four times what they were worth, because I could"). `PACHELBEL_LEDGER` entries 2+3 (readable at BA, Dear Friend) tell this in full. See `plan-archive.md §XXXIII`.
 
 *(Layer 68b — ✅ Implemented. Const: `WECKMANN_TRAINING_LOG` (HTML 12402). `_buildWeckmannLog()` at 12242; `storyShowWeckmannLog()` at 12258. HTML comment at 11602 labels this Layer 68b.)*
 
 **S29 — Auros/Froberger theory** (`s29LineDelivered`) — one-time dialogue injection. Fires when the player visits Auros at CY after: (1) Froberger's last journal entry has been read AND (2) Auros is at Dear Friend (fav ≥ 2). Auros connects Froberger's final courier route to the Void advance, explains what the entry means in tactical terms. Fires once; `s29LineDelivered` prevents repeat.
 
-**S49 — Entry 41 delivery** (`s49BrynnDelivered`, `s49SweelinckDelivered`) — two parallel one-time scenes that fire after Froberger's last entry is read. At IN: Brynn reads Entry 41 twice (quietly), quotes the last line *"Come back"* and says: *"He was right. They do need the person. Glad you're not done yet."* At NUE: Sweelinck takes the journal, reads Entry 41 standing, closes it carefully, says: *"I'll keep it here. You know where to find me when you're done."* — and keeps it. Each fires independently on the next visit after `frobergerLastEntryRead = true`. Full scene text: `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts. Covenant Keeper patch: if `s49SweelinckDelivered`, `_buildSweelinckNamingSequence()` opening changes to *"You know where to find me. You found me. Good."* See `plan.md §XXX` for full design.
+**S49 — Entry 41 delivery** (`s49BrynnDelivered`, `s49SweelinckDelivered`) — two parallel one-time scenes that fire after Froberger's last entry is read. At IN: Brynn reads Entry 41 twice (quietly), quotes the last line *"Come back"* and says: *"He was right. They do need the person. Glad you're not done yet."* At NUE: Sweelinck takes the journal, reads Entry 41 standing, closes it carefully, says: *"I'll keep it here. You know where to find me when you're done."* — and keeps it. Each fires independently on the next visit after `frobergerLastEntryRead = true`. Full scene text: `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts. Covenant Keeper patch: if `s49SweelinckDelivered`, `_buildSweelinckNamingSequence()` opening changes to *"You know where to find me. You found me. Good."* See `plan-archive.md §XXX` for full design.
 
 *(Layer 65 — ✅ Implemented. Consts: `S49_BRYNN_SCENE` (HTML 11699), `S49_SWEELINCK_SCENE`. Trigger logic in HTML. Flags `s49BrynnDelivered` / `s49SweelinckDelivered` in `_S_DEFAULTS()` (HTML 8440).)*
 
-**S54 — Joint NPC moment** (`s54JointMomentDelivered`) — Yael and Brynn at CI together, Act VII+, both Friendly+. The player catches Brynn asking Yael: *"Still the same light?"* / *"Still the same light."* — a reference to the First Inn light that has burned since Act I. Both then address the player. The only scene where two Birka Six NPCs share the frame. Const: `S54_JOINT_MOMENT`. See `plan.md §XXXI` for full design.
+**S54 — Joint NPC moment** (`s54JointMomentDelivered`) — Yael and Brynn at CI together, Act VII+, both Friendly+. The player catches Brynn asking Yael: *"Still the same light?"* / *"Still the same light."* — a reference to the First Inn light that has burned since Act I. Both then address the player. The only scene where two Birka Six NPCs share the frame. Const: `S54_JOINT_MOMENT`. See `plan-archive.md §XXXI` for full design.
 
 *(Layer 66a — ✅ Implemented. Const: `S54_JOINT_MOMENT` (HTML 11680). Flag: `s54JointMomentDelivered` in `_S_DEFAULTS()` (HTML 8441).)*
 
-**S55 — Map reveal line** (`s55MapLineDelivered`) — a single caption line displayed during the 5-second `_renderFinalMap()` victory display. Base: *"He walked every corridor. So did you. The map remembers."* Conditional variant (if `s49SweelinckDelivered`): *"He walked every corridor. So did you. Sweelinck has the record."* Echoes the Froberger Memorial inscription. See `plan.md §XXXI` for full design.
+**S55 — Map reveal line** (`s55MapLineDelivered`) — a single caption line displayed during the 5-second `_renderFinalMap()` victory display. Base: *"He walked every corridor. So did you. The map remembers."* Conditional variant (if `s49SweelinckDelivered`): *"He walked every corridor. So did you. Sweelinck has the record."* Echoes the Froberger Memorial inscription. See `plan-archive.md §XXXI` for full design.
 
 *(Layer 66b — ✅ Implemented. Flag: `s55MapLineDelivered` in `_S_DEFAULTS()` (HTML 8441). Line injected at HTML 12209 during `_renderFinalMap()`.)*
 
-**Couperin Ledger / Quill's Arc** (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) — three-beat quest arc centered on Elder Couperin's lute and the debt he left behind. **Beat 1:** Player asks Pachelbel at BA or SH about Couperin's lute; Pachelbel hands it over free (*"He already knew someone would come for it."*); item: `quills_lute` (type:'quest'). **Beat 2:** Player visits Quill at TV with lute in inventory (fav_quill ≥ 1); Quill plays the family theme — still in tune after two months; +40gp (estate pays itself out); `couperiSongReceived = true`, `quillQuestComplete = true`; Dear Friend check. Note pattern echoes Shard 1 (§XXII). **Beat 3:** Next TV visit after quillQuestComplete; Quill reflects on the debt becoming *"just a number"*; `couperiDebtDegraded = true`; L44-E injected into Quill's impartial NPC_DIALOGUES pool: *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."* Town Crier fires quillQuestComplete line on next inn rest. **Act VIII BA cross-ref (§XXIV):** When Quill visits BA to close estate ledger, if quillQuestComplete: Pachelbel adds *"He found the lute, then."* — no extra flag required. See `plan.md §XXXIV`.
+**Couperin Ledger / Quill's Arc** (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) — three-beat quest arc centered on Elder Couperin's lute and the debt he left behind. **Beat 1:** Player asks Pachelbel at BA or SH about Couperin's lute; Pachelbel hands it over free (*"He already knew someone would come for it."*); item: `quills_lute` (type:'quest'). **Beat 2:** Player visits Quill at TV with lute in inventory (fav_quill ≥ 1); Quill plays the family theme — still in tune after two months; +40gp (estate pays itself out); `couperiSongReceived = true`, `quillQuestComplete = true`; Dear Friend check. Note pattern echoes Shard 1 (§XXII). **Beat 3:** Next TV visit after quillQuestComplete; Quill reflects on the debt becoming *"just a number"*; `couperiDebtDegraded = true`; L44-E injected into Quill's impartial NPC_DIALOGUES pool: *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."* Town Crier fires quillQuestComplete line on next inn rest. **Act VIII BA cross-ref (§XXIV):** When Quill visits BA to close estate ledger, if quillQuestComplete: Pachelbel adds *"He found the lute, then."* — no extra flag required. See `plan-archive.md §XXXIV`.
 
 *(Layer 69 — ✅ Implemented. Consts: `S34_QUILL_BEAT2` (HTML 11619), `S34_QUILL_BEAT3` (HTML 11631). All three flags `couperiSongReceived` / `couperiDebtDegraded` / `quillQuestComplete` in `_S_DEFAULTS()`.)*
 
-**The First Inn Light / Brynn's Vigil Arc** (`brynnKeeperStoryTold`, `brynnLightChoiceMade`, `brynnLightKept`) — Brynn lit the lamp at IN (First Inn, Birka) the night the player first arrived. She has tended it every night since. **Ambient:** IN room description always shows *"A lamp burns in the corner. It has been lit since your first night here."* — no flag required. **Beat 1 (fav_brynn ≥ 1, Act II+):** Player asks `[Ask Brynn about the lamp]`; Brynn explains she lit it because it seemed wrong to let the player come back to a dark room; follow-up reveals she'd meant to do the same for previous guests who didn't return, but this was the first time she actually did; `brynnKeeperStoryTold = true`. **Beat 2 (fav_brynn ≥ 2, after Beat 1):** Brynn asks what the player wants: `[Let it keep burning]` → `brynnLightKept = true` / `[It can rest when I'm done]` → `brynnLightKept = false`; both set `brynnLightChoiceMade = true`. **§XXV farewell branch:** four states — no story (abbreviated delivery), no choice made, light kept ("checked this morning"), light rested ("I'll tend it until you come back. After that — well. After that."). **§XXXI retroactive context:** "Still the same light?" / "Still the same light." — Yael knew; no §XXXI patch required. **§XXVII TC:** `TC_BRYNN_LAMP` line fires once when `brynnKeeperStoryTold`. Const: `BRYNN_KEEPER_STORY`. See `plan.md §XXXV`.
+**The First Inn Light / Brynn's Vigil Arc** (`brynnKeeperStoryTold`, `brynnLightChoiceMade`, `brynnLightKept`) — Brynn lit the lamp at IN (First Inn, Birka) the night the player first arrived. She has tended it every night since. **Ambient:** IN room description always shows *"A lamp burns in the corner. It has been lit since your first night here."* — no flag required. **Beat 1 (fav_brynn ≥ 1, Act II+):** Player asks `[Ask Brynn about the lamp]`; Brynn explains she lit it because it seemed wrong to let the player come back to a dark room; follow-up reveals she'd meant to do the same for previous guests who didn't return, but this was the first time she actually did; `brynnKeeperStoryTold = true`. **Beat 2 (fav_brynn ≥ 2, after Beat 1):** Brynn asks what the player wants: `[Let it keep burning]` → `brynnLightKept = true` / `[It can rest when I'm done]` → `brynnLightKept = false`; both set `brynnLightChoiceMade = true`. **§XXV farewell branch:** four states — no story (abbreviated delivery), no choice made, light kept ("checked this morning"), light rested ("I'll tend it until you come back. After that — well. After that."). **§XXXI retroactive context:** "Still the same light?" / "Still the same light." — Yael knew; no §XXXI patch required. **§XXVII TC:** `TC_BRYNN_LAMP` line fires once when `brynnKeeperStoryTold`. Const: `BRYNN_KEEPER_STORY`. See `plan-archive.md §XXXV`.
 
 *(Layer 70 — ✅ Implemented. All three flags `brynnKeeperStoryTold` / `brynnLightChoiceMade` / `brynnLightKept` in `_S_DEFAULTS()` (HTML 8458). `brynnKeeperStoryTold` wired at HTML 11510. `BRYNN_KEEPER_STORY` const exists in `brynnKeeperStoryTold` NPC_DIALOGUES pool (HTML 11393).)*
 
-**The Heartwood Letter / Brynn's Daughter Scene** (`brynnLetterSceneDelivered`) — Journal Entry 7 (read-aloud at IN) describes Froberger teaching Brynn's daughter to write "expedition": *"She wrote it back, larger than I wrote it, because she was still pressing hard."* Reading Entry 7 sets `brynnsJournalRead = true`, which triggers the existing `brynn_letter` world progression event at Act III+: *"A letter arrived for Brynn at the inn. The seal is from the Heartwood district."* §XXXVIII designs the scene that fires on the next IN visit: the daughter is now a surveyor's apprentice in the Heartwood district; she signed the letter *expedition* because she couldn't decide between patience and stubbornness. **fav 1:** Brynn mentions the letter, quotes the word. **fav 2:** Brynn reads the last line aloud; closes with *"The good room has a window that faces east"* — the same line as her neutral greeting, said differently. Cross-ref: Froberger's Last Note (*"The person you're becoming is visible from outside"*); §XXXV (lamp stays; daughter goes); §XXXVI epilogue addendum (`brynnLetterSceneDelivered`); NPC_EPILOGUES brynn fav 2 homecoming seeded here. Const: `BRYNN_HEARTWOOD_SCENE`. 1 new flag: `brynnLetterSceneDelivered`. See `plan.md §XXXVIII`.
+**The Heartwood Letter / Brynn's Daughter Scene** (`brynnLetterSceneDelivered`) — Journal Entry 7 (read-aloud at IN) describes Froberger teaching Brynn's daughter to write "expedition": *"She wrote it back, larger than I wrote it, because she was still pressing hard."* Reading Entry 7 sets `brynnsJournalRead = true`, which triggers the existing `brynn_letter` world progression event at Act III+: *"A letter arrived for Brynn at the inn. The seal is from the Heartwood district."* §XXXVIII designs the scene that fires on the next IN visit: the daughter is now a surveyor's apprentice in the Heartwood district; she signed the letter *expedition* because she couldn't decide between patience and stubbornness. **fav 1:** Brynn mentions the letter, quotes the word. **fav 2:** Brynn reads the last line aloud; closes with *"The good room has a window that faces east"* — the same line as her neutral greeting, said differently. Cross-ref: Froberger's Last Note (*"The person you're becoming is visible from outside"*); §XXXV (lamp stays; daughter goes); §XXXVI epilogue addendum (`brynnLetterSceneDelivered`); NPC_EPILOGUES brynn fav 2 homecoming seeded here. Const: `BRYNN_HEARTWOOD_SCENE`. 1 new flag: `brynnLetterSceneDelivered`. See `plan-archive.md §XXXVIII`.
 
 *(Layer 73 — ✅ Implemented. Const: `BRYNN_HEARTWOOD_SCENE` (HTML 12712). Trigger at HTML 15430 (IN, Act IV+, Entry 7 read). Flag: `brynnLetterSceneDelivered` stored as `s2DaughterDelivered` in `_S_DEFAULTS()` (HTML 8443).)*
 
-**Yael's Named Report Scene** (`yaelNamedReportDelivered`) — Three years before the current arc, a riot tore through Birka's lower district. Yael worked the investigation for six weeks: names, times, a transaction record that paid for it. Four weeks after she filed, the evidence was gone from the archive — not destroyed, reclassified. The riot was Circle-adjacent; the transaction record tied to the same operation funding undercity construction. Yael never stopped knowing what she knew. §XXXIX designs the scene that fires at a BA or CY visit (fav_yael ≥ 2, Act IV+, `yaelNamedReportFired` not set): Yael tells the player she is filing again, under her own name — three copies: Commissioner, Scholar Kings archivist in Weimar, Weckmann. His WECKMANN_TRAINING_LOG (already readable at CY) contains line items from the training program funded by the riot operation — the same funding chain, accidentally preserved in a document that looked like personnel records. **Player choice:** `[Hold a fourth copy]` → Yael trusts; `[Three is enough]` → Yael acknowledges witness is sufficient. Either sets `yaelNamedReportDelivered = true`. **Six-system Circle convergence:** S8 (Circle informant at BA), §XXXIII (archive suppression method), §XXXVII (Commander Bruhns CO scene, Circle's classification pattern), §XXXIX (Yael's evidence + Weckmann training log) — no single NPC ever names the Circle as the riot organizer; only assembled intelligence reveals it. **§XXXVI epilogue addendum:** `{ cond: () => S_story.yaelNamedReportDelivered, line: "Yael kept three copies of the second report. She knows exactly where each one is." }`. Const: `YAEL_NAMED_REPORT_SCENE`. 1 new flag: `yaelNamedReportDelivered`. See `plan.md §XXXIX`.
+**Yael's Named Report Scene** (`yaelNamedReportDelivered`) — Three years before the current arc, a riot tore through Birka's lower district. Yael worked the investigation for six weeks: names, times, a transaction record that paid for it. Four weeks after she filed, the evidence was gone from the archive — not destroyed, reclassified. The riot was Circle-adjacent; the transaction record tied to the same operation funding undercity construction. Yael never stopped knowing what she knew. §XXXIX designs the scene that fires at a BA or CY visit (fav_yael ≥ 2, Act IV+, `yaelNamedReportFired` not set): Yael tells the player she is filing again, under her own name — three copies: Commissioner, Scholar Kings archivist in Weimar, Weckmann. His WECKMANN_TRAINING_LOG (already readable at CY) contains line items from the training program funded by the riot operation — the same funding chain, accidentally preserved in a document that looked like personnel records. **Player choice:** `[Hold a fourth copy]` → Yael trusts; `[Three is enough]` → Yael acknowledges witness is sufficient. Either sets `yaelNamedReportDelivered = true`. **Six-system Circle convergence:** S8 (Circle informant at BA), §XXXIII (archive suppression method), §XXXVII (Commander Bruhns CO scene, Circle's classification pattern), §XXXIX (Yael's evidence + Weckmann training log) — no single NPC ever names the Circle as the riot organizer; only assembled intelligence reveals it. **§XXXVI epilogue addendum:** `{ cond: () => S_story.yaelNamedReportDelivered, line: "Yael kept three copies of the second report. She knows exactly where each one is." }`. Const: `YAEL_NAMED_REPORT_SCENE`. 1 new flag: `yaelNamedReportDelivered`. See `plan-archive.md §XXXIX`.
 
 *(Layer 74 — ✅ Implemented. Const: `YAEL_NAMED_REPORT_SCENE` (HTML 12704). Flag: `yaelNamedReportDelivered` in `_S_DEFAULTS()` (HTML 8460). `WECKMANN_TRAINING_LOG` second meaning applied retroactively.)*
 
@@ -590,7 +590,7 @@ All three together bring the balance to exactly 0. When `brynLedgerBalance >= 0`
 
 #### NPC_NG_MEMORY_LINES *(Layer 50 — ✅ Implemented)*
 
-Second-visit callbacks for Dear Friends in qualifying NG+ runs (ngPlusRun ≥ 1, fav ≥ 2 preserved, `questMinusOne` was set). Fires once per NPC per NG+ run (`ngMemoryDelivered[npcKey]`). A separate 6-entry const — not part of `NPC_DIALOGUES`. Each line acknowledges that the player was there before, that something changed, and that the NPC knows it. See plan.md §XV-E for full line text.
+Second-visit callbacks for Dear Friends in qualifying NG+ runs (ngPlusRun ≥ 1, fav ≥ 2 preserved, `questMinusOne` was set). Fires once per NPC per NG+ run (`ngMemoryDelivered[npcKey]`). A separate 6-entry const — not part of `NPC_DIALOGUES`. Each line acknowledges that the player was there before, that something changed, and that the NPC knows it. See plan-archive.md §XV-E for full line text.
 
 ### Cross-References
 
@@ -1144,7 +1144,7 @@ Read-only derived stat. Never stored in `S_story`. `_calcLuck()` = `⌈(STR×DEX
 
 ---
 
-## ⚠️ PLANNED — The Pressure Cascade: Void-Touched Monsters and NPC Reactions (plan.md §XXIV, Layer 59)
+## ⚠️ PLANNED — The Pressure Cascade: Void-Touched Monsters and NPC Reactions (plan-archive.md §XXIV, Layer 59)
 
 `voidPressure` reaching thresholds (3, 6, 9) produces visible world changes. See `story.md §XXIV stub` for the full flavor text and threshold event table. This section covers the world-layer additions: void-touched monster variants and NPC pressure responses.
 
@@ -1212,7 +1212,7 @@ Six one-time beats fire in Act VIII (actNumber === 8) when a player with Friendl
 | Auros (BK) | *"Be ready. What you bring to it matters. Not just the Shards."* — the only beat that looks toward CO rather than back. Ambiguous in retrospect, given her role in the final battle. | None |
 
 **Flags:** `act8FarewellYael/Brynn/Quill/Pachelbel/Weckmann/Auros` (6 booleans, default false, not NG+-preserved).  
-**New items:** `brynns_loaf`, `pachelbels_sketch`, `champions_tincture`. Full dialogue text in `plan.md §XXV`.
+**New items:** `brynns_loaf`, `pachelbels_sketch`, `champions_tincture`. Full dialogue text in `plan-archive.md §XXV`.
 
 ---
 

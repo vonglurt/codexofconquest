@@ -2,7 +2,7 @@
 
 # quest.md — The Shattered Codex: Master Quest Register
 
-> **Purpose:** Location-organized register of all quests — implemented, planned, and specced. For five-act quest elaborations see `plan.md §DUNGEON-02`. For skill check mechanic spec see `plan.md §DESIGN-03`. For grief arc quests see `plan.md §GR`.
+> **Purpose:** Location-organized register of all quests — implemented, planned, and specced. For five-act quest elaborations see `plan-archive.md §DUNGEON-02`. For skill check mechanic spec see `plan-archive.md §DESIGN-03`. For grief arc quests see `plan-archive.md §GR`.
 
 ---
 
@@ -212,7 +212,7 @@ Each quest entry uses the following tags:
 
 ## TILBURY — Act II (Nodes: docks, market_quarter, storefront, merchant_ship)
 
-*(Existing quests live. §SPARK-01 quests below: PLANNED — see plan.md §SPARK-01 for full spec.)*
+*(Existing quests live. §SPARK-01 quests below: PLANNED — see plan-archive.md §SPARK-01 for full spec.)*
 
 ### §SPARK-01 — The Harmony Chain (📋 PLANNED)
 
@@ -282,7 +282,7 @@ Each quest entry uses the following tags:
 
 ---
 
-### §SPARK-01 SEA Extension (📋 PLANNED — unscheduled, see plan.md §SPARK-01-H)
+### §SPARK-01 SEA Extension (📋 PLANNED — unscheduled, see plan-archive.md §SPARK-01-H)
 
 A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mile calm radius. Two pirate crews cooperating. Monster hunt: 4-phase structure. Resolution: escort the eel to deeper water. Reward: pirate crews owe a debt; sea route unlocks.
 
@@ -495,7 +495,7 @@ MINE (*À moi*). She corrects it again. The correction is the same each time. CH
 
 ## §1367 — Historical 1367 AD Integration ✅ LIVE (Events A–G)
 
-Seven standalone historical vignettes grounded in real 1367 AD events, each a single-fighter quest with a Project Gutenberg primary source (Event G's source is the unseen pen itself — it does not sign its work). Design + full four-act vignettes: `Year1367AD.md`. Placed 2026-07-07 at nearest-thematic nodes (relocated off the `HKG` integration placeholder). **Event G "The Unseen Pen" (LXVII67) shipped 2026-07-07** — the seventh, meta faith-puzzle (the scribe Claude, no combat; "the story of the system that wrote the other six"). It was authored by promoting the pre-existing `quest_lxvii67` "The Jester's Crossroads" folk-wisdom quest into the arc: relocated off `HKG` → `FRO` (Aldric's Forest), re-themed to the *al-qalam al-ghaib* framing, and its `faith_folk` reward bumped +1 → +2 per the design doc. A single quest — no duplicate answer-67 puzzle.
+Seven standalone historical vignettes grounded in real 1367 AD events, each a single-fighter quest with a Project Gutenberg primary source (Event G's source is the unseen pen itself — it does not sign its work). Design + full four-act vignettes: `docs/notes/Year1367AD.md`. Placed 2026-07-07 at nearest-thematic nodes (relocated off the `HKG` integration placeholder). **Event G "The Unseen Pen" (LXVII67) shipped 2026-07-07** — the seventh, meta faith-puzzle (the scribe Claude, no combat; "the story of the system that wrote the other six"). It was authored by promoting the pre-existing `quest_lxvii67` "The Jester's Crossroads" folk-wisdom quest into the arc: relocated off `HKG` → `FRO` (Aldric's Forest), re-themed to the *al-qalam al-ghaib* framing, and its `faith_folk` reward bumped +1 → +2 per the design doc. A single quest — no duplicate answer-67 puzzle.
 
 | Quest ID | Title | Node | Type | Check | DC | Track / Reward | XP | Protagonist · Source | Status |
 |----------|-------|------|------|-------|----|----|----|----|----|

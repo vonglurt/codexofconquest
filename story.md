@@ -1204,7 +1204,7 @@ The golem guards the gate to the scholars' quarter. It was built to recognise Iv
 **Exit Condition:** Shard #7 secured. Sweelinck's letter to be delivered to Commander Auros. Head to the Agora.
 **Next Node →** outhouse (Weimar shortcut)
 
-#### ✅ Layer 51 — Weimar Scholar Gate Quest Arc (plan.md §XVI, Implemented 2026-05-25)
+#### ✅ Layer 51 — Weimar Scholar Gate Quest Arc (plan-archive.md §XVI, Implemented 2026-05-25)
 
 Two new NPCs at the NUE node:
 - **Archivist Isolde Voss** (`isolde_voss`) — controls access to the Lower Archive; impartial → friendly after Q-WM-02. Starts guarding the gate. Quote: *"The revocation was filed correctly. I stopped being certain it was right about three months after he died."*
@@ -1370,9 +1370,9 @@ Sweelinck's letter, read by Auros, contains three lines:
 
 ---
 
-**[✅ Implemented — Layer 49] Quest -1: The Open Door** *(plan.md §XIV)*
+**[✅ Implemented — Layer 49] Quest -1: The Open Door** *(plan-archive.md §XIV)*
 
-After the victory screen resolves, if `S_story.level >= 20 && !S_story.questMinusOne`, a Froberger-style scroll (`🔓`) injects into the CO node description with the full Quest -1 text (verbatim in `plan.md §XIV-B`). The scroll explains:
+After the victory screen resolves, if `S_story.level >= 20 && !S_story.questMinusOne`, a Froberger-style scroll (`🔓`) injects into the CO node description with the full Quest -1 text (verbatim in `plan-archive.md §XIV-B`). The scroll explains:
 - Level 21 is architecturally undefined — `XP_LEVELS[20]` does not exist
 - The source file is readable JavaScript with named data structures
 - The MIT License requires no permission to fork
@@ -1381,7 +1381,7 @@ After the victory screen resolves, if `S_story.level >= 20 && !S_story.questMinu
 
 This injection is a one-time surface per run (not NG+-preserved). It fires only at CO after the Void is sealed. No journal entry. No reward. The console is the last dungeon.
 
-*Implementation note:* Add `questMinusOne: false` to `_S_DEFAULTS()`. Gate in `storyRender()` at CO. See `plan.md §XIV-G` for the 7-step implementation sequence.
+*Implementation note:* Add `questMinusOne: false` to `_S_DEFAULTS()`. Gate in `storyRender()` at CO. See `plan-archive.md §XIV-G` for the 7-step implementation sequence.
 
 ---
 
@@ -1612,7 +1612,7 @@ When `ngPlusRun > 0` and the player re-enters an Epic Battleground node, a one-t
 | EP | "Low tide, same as before. He's been guarding it since he died." |
 | EG | "Kazrath has been here since before the Codex shattered. This is a very long time." |
 
-#### ✅ Layer 50 — NG+ Remembrance Layer (plan.md §XV, Implemented 2026-05-25)
+#### ✅ Layer 50 — NG+ Remembrance Layer (plan-archive.md §XV, Implemented 2026-05-25)
 
 When `ngPlusRun >= 1` AND 3+ Dear Friends preserved AND `priorQuestMinusOne` is true (questMinusOne saved at NG+ transition):
 
@@ -1629,7 +1629,7 @@ When `ngPlusRun >= 1` AND 3+ Dear Friends preserved AND `priorQuestMinusOne` is 
 
 ---
 
-#### ✅ Layer 52 — Void Archaeology (plan.md §XVII, Implemented 2026-05-25)
+#### ✅ Layer 52 — Void Archaeology (plan-archive.md §XVII, Implemented 2026-05-25)
 
 Prerequisites: `ngPlusRun ≥ 1` + `wmFirstResearcherKnown` (from §XVI) + `entry42Written` (from §XV).
 
@@ -1652,7 +1652,7 @@ Two texture layers added to open-world traversal. No state flags on either syste
 
 ---
 
-#### ✅ Layer 54 — Tilbury Harbor Arc (plan.md §XIX, Implemented 2026-05-25)
+#### ✅ Layer 54 — Tilbury Harbor Arc (plan-archive.md §XIX, Implemented 2026-05-25)
 
 Nodes: TL (Tilbury) + SF (Storefront/docks). Two new NPCs, no new terrain monsters needed.
 
@@ -1665,7 +1665,7 @@ Nodes: TL (Tilbury) + SF (Storefront/docks). Two new NPCs, no new terrain monste
 
 ---
 
-#### ✅ Layer 55 — Visby Underground (plan.md §XX, Implemented 2026-05-25)
+#### ✅ Layer 55 — Visby Underground (plan-archive.md §XX, Implemented 2026-05-25)
 
 Nodes: VS (Visby) + GC (Goblin Caves). One new monster (`hollow_hands_guard`).
 
@@ -1680,7 +1680,7 @@ Nodes: VS (Visby) + GC (Goblin Caves). One new monster (`hollow_hands_guard`).
 
 ---
 
-#### ✅ Layer 56 — The Void Shaman: The Antecedent's Last Warden (plan.md §XXI)
+#### ✅ Layer 56 — The Void Shaman: The Antecedent's Last Warden (plan-archive.md §XXI)
 
 Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). Both required; neither alone triggers the encounter.
 
@@ -1699,7 +1699,7 @@ MT tunnel node block gated by `vsShamanKnown && vaLastWardVisited && !wardensLeg
 
 ---
 
-#### ✅ Implemented — Codex Shard Origin Stories (plan.md §XXII, Layer 57)
+#### ✅ Implemented — Codex Shard Origin Stories (plan-archive.md §XXII, Layer 57)
 
 `SHARD_NOTES` const (7 entries keyed 1–7). Each shard collected via `storyCollectLoot()` auto-adds a readable note to inventory. Notes appear in "📖 Origin Notes" inventory section with a Read button.
 
@@ -1717,7 +1717,7 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 ---
 
-#### ✅ Implemented — Inn Dreams (plan.md §XXIII, Layer 58)
+#### ✅ Implemented — Inn Dreams (plan-archive.md §XXIII, Layer 58)
 
 `INN_DREAMS` const keyed by `IN` and `NUE` (SF/IS have `sleep:false` in WORLD_DB). Fires via `setTimeout` after `storyConfirmSleep()`, prefixed `💤 ‹dream›`. Cycle: `gameDay % 3`. Conditionals checked first; first matching flag wins.
 
@@ -1727,7 +1727,7 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 ---
 
-#### ✅ Implemented — The Pressure Cascade: Visible Void Tide Events (plan.md §XXIV, Layer 59)
+#### ✅ Implemented — The Pressure Cascade: Visible Void Tide Events (plan-archive.md §XXIV, Layer 59)
 
 `_addVoidPressure()` helper wraps all pressure increments with threshold checks. `_voidFlavorLine(nodeCode)` returns flavor text by cluster; appended to `story-text-box` in `storyRender()`.
 
@@ -1741,7 +1741,7 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 ---
 
-#### ✅ Implemented — The Homecoming: Act VIII Farewell Beats (plan.md §XXV, Layer 60)
+#### ✅ Implemented — The Homecoming: Act VIII Farewell Beats (plan-archive.md §XXV, Layer 60)
 
 `ACT8_FAREWELL_BEATS` const (6 keys). Fires via `_renderNpcCard()` when `actNumber === 8 + fav ≥ 1 + flag unset`. Renders via `storyMsg()` with 🌅 prefix. Gift items auto-pushed to inventory.
 
@@ -2629,7 +2629,7 @@ MILEPOINT G  storyNewGamePlus() — NG+ reset
 
 ---
 
-## ✅ Implemented — The Froberger Memorial: A Living Stone at CI (plan.md §XXVIII, Layer 63)
+## ✅ Implemented — The Froberger Memorial: A Living Stone at CI (plan-archive.md §XXVIII, Layer 63)
 
 An optional interactive stone at CI. One `[Examine Memorial]` button at the CI NPC row; repurposes `froberger-note-overlay` div for the modal.
 
@@ -2653,7 +2653,7 @@ An optional interactive stone at CI. One `[Examine Memorial]` button at the CI N
 
 ---
 
-## ✅ Implemented — The Pit Championship: Finals at Crossroads Forge (plan.md §XXIX, Layer 64)
+## ✅ Implemented — The Pit Championship: Finals at Crossroads Forge (plan-archive.md §XXIX, Layer 64)
 
 One-time championship bout at CY node (Weckmann's actual node), triggered when `pitTrainingWins >= 5`. Weckmann offers the match; player faces Ogundimu, the Iron Standard — a retired city champion defined in const `PIT_CHAMPION_OGUNDIMU` (not in MONSTER_POOL). No XP, no gold, no drop.
 
@@ -2671,7 +2671,7 @@ One-time championship bout at CY node (Weckmann's actual node), triggered when `
 
 ---
 
-## ✅ Implemented — The Entry 41 Echo: Brynn and Sweelinck (plan.md §XXX, Layer 65)
+## ✅ Implemented — The Entry 41 Echo: Brynn and Sweelinck (plan-archive.md §XXX, Layer 65)
 
 Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Each fires on the first visit to its node after the flag is set. State flags `s49BrynnDelivered` and `s49SweelinckDelivered` pre-exist in `_S_DEFAULTS()`.
 
@@ -2685,7 +2685,7 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 ---
 
-## ✅ Implemented — The Joint Witness and the Map Caption (plan.md §XXXI, Layers 66a+66b)
+## ✅ Implemented — The Joint Witness and the Map Caption (plan-archive.md §XXXI, Layers 66a+66b)
 
 **S54 — Yael and Brynn at CI (Layer 66a):** Fires on first CI visit where `actNumber >= 7` AND `_npcFavor('yael') >= 1` AND `_npcFavor('brynn') >= 1` AND `!s54JointMomentDelivered`. `storyMsg(S54_JOINT_MOMENT)` via `setTimeout(400)`. Full scene: Brynn with delivery basket, Yael already at CI, *"Still the same light?" / "Still the same light."*, then both address the player. Sets `s54JointMomentDelivered = true`.
 
@@ -2695,7 +2695,7 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 ---
 
-## ✅ Implemented — Two Intelligence Feeds: The Varga Watch and the Auros Theory (plan.md §XXXII, Layers 67a+67b)
+## ✅ Implemented — Two Intelligence Feeds: The Varga Watch and the Auros Theory (plan-archive.md §XXXII, Layers 67a+67b)
 
 **S8 — Varga Watch at BA (Layer 67a):** Three-observation arc at BA already fully implemented in earlier layers. Three `👁 Watch him.` button escalations → `s8VargaClueUnlocked = true` at watch 3; pigeon direction note fires. Pachelbel tell at BA when `s8VargaClueUnlocked && !s8PachelbelTold && _npcFavor('pachelbel') >= 1` → full Pachelbel response + 15gp + `s8PachelbelTold = true`.
 
@@ -2703,7 +2703,7 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 ---
 
-## ✅ Implemented — The Archive and the Tools: Blue Shutters (S7) and Raison (S46) (plan.md §XXXIII, Layers 68a+68b)
+## ✅ Implemented — The Archive and the Tools: Blue Shutters (S7) and Raison (S46) (plan-archive.md §XXXIII, Layers 68a+68b)
 
 Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterObtained`, `archiveUndercitySurveyTaken`, `raisonToolsUsed`. Note: spec named a new flag `surveyDeliveredToAuros`; implementation uses the pre-existing `undercitySurveyDelivered` for the same concept.
 
@@ -2719,7 +2719,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
-## ✅ Implemented — Yael's Record: The Named Report Scene (plan.md §XXXIX, Layer 74)
+## ✅ Implemented — Yael's Record: The Named Report Scene (plan-archive.md §XXXIX, Layer 74)
 
 **Trigger:** CI node, `_npcFavor('yael') >= 2`, `actNumber >= 6`, `yaelEscortUsed`, `!yaelNamedReportDelivered`. Const: `YAEL_NAMED_REPORT_SCENE` (setup, decision, choiceHold, choiceThree). `yaelNamedReportDelivered: false` added to `_S_DEFAULTS()`.
 
@@ -2731,7 +2731,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
-## ✅ Implemented — The Heartwood Letter: Brynn's Daughter Scene (plan.md §XXXVIII, Layer 73)
+## ✅ Implemented — The Heartwood Letter: Brynn's Daughter Scene (plan-archive.md §XXXVIII, Layer 73)
 
 **Trigger:** IN node, `actNumber >= 4 && !s2DaughterDelivered && journalEntriesRead.includes(7)`. Patches the pre-existing S2 block. Per §XXXVIII reconciliation note: uses `s2DaughterDelivered` (pre-existing) not `brynnLetterSceneDelivered` (spec name). Const: `BRYNN_HEARTWOOD_SCENE` (keys: friendly, dearFriend).
 
@@ -2745,7 +2745,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
-## ✅ Implemented — The Final Confrontation: Commander Bruhns's CO Scene (plan.md §XXXVII, Layer 72)
+## ✅ Implemented — The Final Confrontation: Commander Bruhns's CO Scene (plan-archive.md §XXXVII, Layer 72)
 
 **Context:** Commander Seraphine Bruhns (key `'bruhns'` in NPC_DIALOGUES, key `'auros'` in BIRKA_NPC_PROFILES) is the final boss. `BRUHNS_CO_SCENE` const added. `bruhnsCoSceneDelivered: false` added to `_S_DEFAULTS()`. CO render block added before the Birka NPC cards section: checks `!defeatedBattles['CO'] && !bruhnsCoSceneDelivered` then `_npcFavor('bruhns')`.
 
@@ -2755,7 +2755,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
-## ✅ Implemented — Epilogue Integration Layer: Arcs to Scroll (plan.md §XXXVI, Layer 71)
+## ✅ Implemented — Epilogue Integration Layer: Arcs to Scroll (plan-archive.md §XXXVI, Layer 71)
 
 `_buildEpilogueScroll()` patched: after the `FROBERGER_EPILOGUE` push, `ARC_EPILOGUE_CONDITIONS.forEach(({ cond, line }) => { if (cond()) lines.push(line); })`. 14 entries, ADDITIVE alongside `NPC_EPILOGUES` tier lines. Flag corrections from spec: `pitChampionWon` used (not `defeatedBattles['CF']`); `undercitySurveyDelivered` used (not `surveyDeliveredToAuros`).
 
@@ -2777,7 +2777,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
-## ✅ Implemented — The First Inn Light: Brynn's Vigil Arc (plan.md §XXXV, Layer 70)
+## ✅ Implemented — The First Inn Light: Brynn's Vigil Arc (plan-archive.md §XXXV, Layer 70)
 
 **Ambient:** IN node S58 regulars block prepends *"A lamp burns in the corner. It has been lit since your first night here."* as the first line — no flag, no condition. `BRYNN_KEEPER_STORY` const holds all scene strings.
 
@@ -2793,7 +2793,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
-## ✅ Implemented — The Couperin Ledger: Quill's Three-Beat Arc (plan.md §XXXIV, Layer 69)
+## ✅ Implemented — The Couperin Ledger: Quill's Three-Beat Arc (plan-archive.md §XXXIV, Layer 69)
 
 **Trigger chain:** `quills_lute` item in inventory → Quill at TV → BA Act VIII farewell branch. No new state flags — all three (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-existed in `_S_DEFAULTS()`.
 
@@ -2809,7 +2809,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
-## ✅ Implemented — Town Crier: Inn Rest World-News Lines (plan.md §XXVII, Layer 62)
+## ✅ Implemented — Town Crier: Inn Rest World-News Lines (plan-archive.md §XXVII, Layer 62)
 
 `TOWN_CRIER_LINES` const (74 total lines). `_getTownCrierLine()` 5-tier selector fires in `storyConfirmSleep()` via `setTimeout(350ms)` as `📢 [Town rumor] "..."`. No new state flags.
 
@@ -2822,7 +2822,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ---
 
-## ✅ Implemented — Paul's Mediterranean Journey: Journey 2 + Malta + Rome (plan.md §FUTURE-01 / §LXV–§LXIX, Layer 104a)
+## ✅ Implemented — Paul's Mediterranean Journey: Journey 2 + Malta + Rome (plan-archive.md §FUTURE-01 / §LXV–§LXIX, Layer 104a)
 
 Six story nodes (PL/AE/EF2/KR/ML/ST) completing the Mediterranean commission arc begun in §LIX–§LXIV. Five quests, one storyRender event (Malta snake), six NPC quoteFn entries. All nodes Act IV.
 
@@ -2856,7 +2856,7 @@ Fires once at ML when `!S_story.maltaSnakeEvent` → sets flag → injects `<div
 
 ---
 
-## ✅ Implemented — The Four Courts of the Littoral Sea (plan.md §SIREN-01, Layer 104b)
+## ✅ Implemented — The Four Courts of the Littoral Sea (plan-archive.md §SIREN-01, Layer 104b)
 
 Ten-node sequential ocean arc. Entry via DS east probe (DS at r:25,c:10; LJ0 at r:25,c:14). Four courtly skill-check encounters, three sea battles, one parallel Overseer quest, one arc-close storyRender. Writing register: compressed French vignette, two perspectives implied per encounter, no declared manipulation.
 

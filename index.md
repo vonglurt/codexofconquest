@@ -3,20 +3,22 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · 34,542 lines · 410 nodes · 392 monsters · ~2,830 quests · 80 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + **§MESH-01 gameplay ladder (f–j) ✅ COMPLETE 2026-07-06** (buffs · hireling · sentries · no-dupe ledger incl. cross-origin trades · PvP duels) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · §DATA-01 ✅ RESOLVED 2026-07-06 (superseded by §ARCH-01 UQF; journal-renderer textContent residual shipped)
-**Last updated:** 2026-07-06
+**Status:** Layers 0–104 implemented · 36,933 lines · 410 nodes · 392 monsters · ~2,830 quests · 85 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + **§MESH-01 gameplay ladder (f–j) ✅ COMPLETE 2026-07-06** (buffs · hireling · sentries · no-dupe ledger incl. cross-origin trades · PvP duels) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · §DATA-01 ✅ RESOLVED 2026-07-06 (superseded by §ARCH-01 UQF; journal-renderer textContent residual shipped)
+**Last updated:** 2026-07-09 — repository reorganized (see below)
+
+> **📁 Repo reorganized 2026-07-09.** Root decluttered ~110 → ~35 files. `plan.md` split into `CONTRIBUTING.md` (dev policies) + `BACKLOG.md` (outstanding work). Historical docs moved under `docs/{spec,story,api,mechanics,notes}/`; importers → `importers/`, dev utilities → `tools/`, narrative texts → `sources/`. Core sync docs stay at root. Folder map + hosting/run instructions: **`README.md`**.
 
 ### Doc Health Badge
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 34,542 | ✅ |
-| Lab reports on disk | 80 | ✅ |
-| Lab reports in index | 80 | ✅ |
+| HTML line count | 36,933 | ✅ |
+| Lab reports on disk | 85 | ✅ |
+| Lab reports in index | 85 | ✅ |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-07-03 — §NAV-01 docs close-out: `lab-reports/lab-report-nav01-navigable-world.md` written; road-net + room-layer sections added to `maps.md` (+ FL1/FL9/FL12 flows re-verified against code, stale GATE_LOCKS section retired), `docs-node-network.md §13` (L0–L8 layer stack; §4/§9 rewritten to mover-kernel reality), `mechanics.md` (Roads, Rooms & Auto-Travel). **Sync findings:** `GATE_LOCKS` gone from code (docs claimed 4 live gates); §CELL-13 jump-travel removal partially reverted (`storyPortal`/`storyUseTransmort`/hearth live) → **resolved same day: user directed re-removal** (all jump-travel code cut from HTML; mechanics.md/mechanics-economy.md sections replaced with removal notes; gates check:walk 6/6, nav+autosave+fishing 48/48). Prior pass: 2026-07-02 §MESH docs close-out | ✅ |
+| Last sync pass | 2026-07-03 — §NAV-01 docs close-out: `lab-reports/lab-report-nav01-navigable-world.md` written; road-net + room-layer sections added to `maps.md` (+ FL1/FL9/FL12 flows re-verified against code, stale GATE_LOCKS section retired), `docs/notes/docs-node-network.md §13` (L0–L8 layer stack; §4/§9 rewritten to mover-kernel reality), `mechanics.md` (Roads, Rooms & Auto-Travel). **Sync findings:** `GATE_LOCKS` gone from code (docs claimed 4 live gates); §CELL-13 jump-travel removal partially reverted (`storyPortal`/`storyUseTransmort`/hearth live) → **resolved same day: user directed re-removal** (all jump-travel code cut from HTML; mechanics.md/mechanics-economy.md sections replaced with removal notes; gates check:walk 6/6, nav+autosave+fishing 48/48). Prior pass: 2026-07-02 §MESH docs close-out | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -26,7 +28,7 @@
 
 > Read this section at the start of every session.
 
-**Adding = Planning.** Write a spec in `plan.md`. Assign a Layer number. Mark it `⚠️ PLANNED`. Do not touch `roll2hit-v3.html`.
+**Adding = Planning.** Write a spec in `BACKLOG.md`. Assign a Layer number. Mark it `⚠️ PLANNED`. Do not touch `roll2hit-v3.html`. (Dev policies live in `CONTRIBUTING.md`.)
 
 **Implementing = Code + Sync.** Write JavaScript. Then sync every markdown doc that describes what changed. Both steps required.
 
@@ -50,41 +52,44 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 
 | File | Purpose | Status |
 |------|---------|--------|
-| `index.md` | This file — master index + cross-reference | ✅ Updated 2026-05-25 |
-| `plan.md` | Implementation directive + constants ref + state fields (193) + pending FC items | ✅ Updated 2026-05-26 (~3,400 lines) |
-| `mechanics-combat.md` | Battle Mode: combat flow, 1.5 AP economy, weapons, loot, leveling, defeat screens, save system | ✅ Split 2026-05-25 |
-| `mechanics-economy.md` | Story Mode: vendor system, NPC favorability, EB, NG+, state fields, F4 function reference | ✅ Split 2026-05-25 |
-| `combat.md` | Battle engine reference: initiative, overlay, Champion features, death saves, flee | ✅ §API-02 line-verified 2026-05-25 |
+| `README.md` | Project overview, how to open/host the game, run the API server (brew + node), full folder map | ✅ Rewritten 2026-07-09 |
+| `index.md` | This file — master index + cross-reference | ✅ Updated 2026-07-09 |
+| `docs/` | Reference docs (see `docs/README.md`): `spec/` `story/` `api/` `mechanics/` `notes/` | ✅ Created 2026-07-09 |
+| `CONTRIBUTING.md` | Development policies & directives (API-first, cell-first, free-movement, test-run rules, WBAPI hazards, lab-report policy) | ✅ Split from plan.md 2026-07-09 |
+| `BACKLOG.md` | Outstanding work — open/in-progress items + closed-for-context list | ✅ Split from plan.md 2026-07-09 |
+| `docs/mechanics/mechanics-combat.md` | Battle Mode: combat flow, 1.5 AP economy, weapons, loot, leveling, defeat screens, save system | ✅ Split 2026-05-25 |
+| `docs/mechanics/mechanics-economy.md` | Story Mode: vendor system, NPC favorability, EB, NG+, state fields, F4 function reference | ✅ Split 2026-05-25 |
+| `docs/spec/combat.md` | Battle engine reference: initiative, overlay, Champion features, death saves, flee | ✅ §API-02 line-verified 2026-05-25 |
 | `maps.md` | World map: cell grid + extended areas, 410 node codes + coordinates, cell-adjacency network, gate locks, §MESH multiplayer map surfaces | ✅ Updated 2026-07-02 |
 | `story.md` | Main quest narrative: 42 story nodes across 8 acts, 7 Epic NPC profiles, prologue, endings, NG+ | ✅ 76 nodes covered |
 | `world.md` | DM manual: world history, 4 factions, 7 Epic NPC profiles, quest motivation, survival pressure | ✅ Reviewed 2026-05-24 |
 | `monsters.md` | 370 monsters: stat blocks by tier and terrain pool, 20 EB bosses, fish pool | ✅ Verified 2026-05-24 |
 | `quest.md` | Master quest register — all quests organized by location (implemented + planned) | ✅ |
-| `mechanics.md` | High-level game mechanics overview — links to mechanics-combat.md and mechanics-economy.md; §MESH-01 multiplayer presence + world-identity boundary; §MESH-02 connection center (Map-tab sub-tabs, 💬 chat history, 👣 footprints, two-window quick-start) | ✅ Updated 2026-07-07 |
-| `docs-node-network.md` | Node network technical reference — cell grid, adjacency, code conventions, `cellMove` navigation, §12 multiplayer mesh (gossip/vv/tracker/ACL) + §MESH-02 operator endpoints (acl/blocklist/connect/chat) | ✅ Updated 2026-07-07 |
+| `mechanics.md` | High-level game mechanics overview — links to docs/mechanics/mechanics-combat.md and docs/mechanics/mechanics-economy.md; §MESH-01 multiplayer presence + world-identity boundary; §MESH-02 connection center (Map-tab sub-tabs, 💬 chat history, 👣 footprints, two-window quick-start) | ✅ Updated 2026-07-07 |
+| `docs/notes/docs-node-network.md` | Node network technical reference — cell grid, adjacency, code conventions, `cellMove` navigation, §12 multiplayer mesh (gossip/vv/tracker/ACL) + §MESH-02 operator endpoints (acl/blocklist/connect/chat) | ✅ Updated 2026-07-07 |
 | `mover.js` | **§WALK-2** unified mover kernel — pure `move(world,pos,dir)→MoveResult` (geo wrap/clamp/sea/locale per lab report §4.1; no DOM/SSE/RNG). The `MOVER:CORE` block is inlined byte-identically into `roll2hit-v3.html` and `require()`d by `wbapi-server.js` — single source of movement truth shared by SP client (`cellMove`) + MUD server (`POST /api/session/move`) | ✅ done 2026-06-26 |
 | `rooms.js` | **§NAV-01c/f** unified room-description kernel — pure `describeCell(world,pos)→Room` (deterministic prose hash, exits-with-signage, road/lane signposts, nearest landmarks). The `ROOMS:CORE` block is inlined byte-identically into `roll2hit-v3.html` (`check:roomsparity`) and `require()`d by `wbapi-server.js` — `room` on all session look surfaces, byte-equal SP/MUD (mud-harness [M]) | ✅ done 2026-07-02 |
 | `duel.js` | **§MESH-01j** unified duel-resolution kernel — pure `DUEL.run(statA,statB,duelSeed)→{transcript,winner,…}` (mulberry32 over the commit-reveal seed; own pure-JS sha256 so commit hashing never diverges; `checkBounds` impossible-stats gate). The `DUEL:CORE` block is inlined byte-identically into `roll2hit-v3.html` (`check:duelparity`) and `require()`d by `wbapi-server.js` — client replays + verifies every server verdict | ✅ done 2026-07-06 |
 | `mesh.js` | **§MESH-01-REVIEW** server↔server mesh layer extracted from `wbapi-server.js` — ACL (`mesh-acl.json` hot-reload, fail-open warning) · per-IP ingress rate limit · presence gossip (single-writer, version-vector dedup, PEX) · tracker announce/rendezvous + federation + announce-table cache · bootstrap ladder (`--peer` / `MESH_PEERS` / `peers-cache.json` / `peers.txt` / `BOOTSTRAP_URLS`). Factory `require('./mesh')(deps)`: the server passes its live surfaces (SESSIONS, SSE fanout, chat ring, manifest/serverId, ledger hooks) and destructures the same symbol names back, so every endpoint call site is unchanged. Server-only — never inlined into the HTML (unlike `mover.js`/`rooms.js`/`duel.js` there is no `:CORE` parity block) | ✅ done 2026-07-06 |
-| `Year1367AD.md` | Canonical year 1367 AD — historical events, source texts, quest vignettes for §1367 integration | ✅ |
+| `docs/notes/Year1367AD.md` | Canonical year 1367 AD — historical events, source texts, quest vignettes for §1367 integration | ✅ |
 
 ### Story Arc Files
 
 | File | Content | Intersection |
 |------|---------|-------------|
-| `story-flowchart.md` | Full story flowchart using two-letter node codes · arc overlays · intersection points ★ | All arcs |
-| `story-arc-investigation.md` | §XVI Weimar Scholar Gate + §XVII Void Archaeology + §XXI Void Shaman chain | SQ · MT · CI |
-| `story-arc-coastal.md` | §XIX Tilbury Harbor + §XX Visby Underground | DK · SF · GC |
-| `story-arc-ngplus.md` | §XV NG+ Remembrance · Entry 42 · quest_ng_01/02/03 | CI · SQ · CO |
-| `story-arc-npc-dialogues.md` | Birka Six NPC_DIALOGUES full transcript (120 quotes) · arc summary | CI · IN · TV · BA · CY |
-| `story-arc-epic-battlegrounds.md` | Q52–Q71 EB quest-giver dialogue (5 fields × 20 entries) | 20 dead-end nodes |
+| `docs/story/story-flowchart.md` | Full story flowchart using two-letter node codes · arc overlays · intersection points ★ | All arcs |
+| `docs/story/story-arc-investigation.md` | §XVI Weimar Scholar Gate + §XVII Void Archaeology + §XXI Void Shaman chain | SQ · MT · CI |
+| `docs/story/story-arc-coastal.md` | §XIX Tilbury Harbor + §XX Visby Underground | DK · SF · GC |
+| `docs/story/story-arc-ngplus.md` | §XV NG+ Remembrance · Entry 42 · quest_ng_01/02/03 | CI · SQ · CO |
+| `docs/story/story-arc-npc-dialogues.md` | Birka Six NPC_DIALOGUES full transcript (120 quotes) · arc summary | CI · IN · TV · BA · CY |
+| `docs/story/story-arc-epic-battlegrounds.md` | Q52–Q71 EB quest-giver dialogue (5 fields × 20 entries) | 20 dead-end nodes |
 
 ### Content Files
 
 | File | Content | Status |
 |------|---------|--------|
 | `froberger-journal-all-entries.txt` | All 41 Froberger journal entries verbatim | ✅ Verified 41/41 (2026-05-24) |
-| `ux-first-battles.md` | First battles UX walkthrough, 10 UX fixes, wimper/flee flow | ✅ Accurate for L0–37 |
+| `docs/notes/ux-first-battles.md` | First battles UX walkthrough, 10 UX fixes, wimper/flee flow | ✅ Accurate for L0–37 |
 | `5thOrgan.html` | Standalone polyphonic pipe organ synthesizer (72 oscillators, Beethoven canon) | ✅ 2026-05-24 |
 | `worldbuilder.html` | World Builder UI — 17 tabs: Map, Bestiary, Loot, NPCs, Quests, Dice Lab, CRUD, API, Audit, Stats, Endpoints, Builder, Wizard, ✏ Editor (§EDITOR-01), ⛓ Mission (§EDITOR-02), 🚶 Walk (§WALK), 🌐 Mesh (§MESH-01) | ✅ 2026-07-02 |
 | `Saul2Paul.txt` | §FUTURE-01 reference text — Paul's journey from Acts/Pauline letters, itinerary notes | ✅ |
@@ -94,11 +99,11 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 
 | File | Scope |
 |------|-------|
-| `spec-engine.md` | Layers 0–20 narrative engine design — all marked IMPLEMENTED |
-| `spec-corridors.md` | Layer 9 corridor system — all L9-A through L9-H ✅ — **⚠️ SUPERSEDED by §CELL-03** |
-| `spec-world.md` | WORLD_DB + MONSTER_POOL architecture — counts verified (66 terrains, 370 monsters) |
-| `spec-combat.md` | Phase 0/2 combat arena spec — historical |
-| `spec-migration.md` | Layers 0–8 IEEE migration report — all sections implemented |
+| `docs/spec/spec-engine.md` | Layers 0–20 narrative engine design — all marked IMPLEMENTED |
+| `docs/spec/spec-corridors.md` | Layer 9 corridor system — all L9-A through L9-H ✅ — **⚠️ SUPERSEDED by §CELL-03** |
+| `docs/spec/spec-world.md` | WORLD_DB + MONSTER_POOL architecture — counts verified (66 terrains, 370 monsters) |
+| `docs/spec/spec-combat.md` | Phase 0/2 combat arena spec — historical |
+| `docs/spec/spec-migration.md` | Layers 0–8 IEEE migration report — all sections implemented |
 
 ### WBAPI Toolchain
 
@@ -109,7 +114,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `wbapi-cli.js` | Low-level CLI — direct in-process reads/writes against `roll2hit-v3.html` (use `api.sh` for day-to-day work) |
 | `wbapi-server.js` | Local HTTP server — REST endpoints for worldbuilder.html at port 1367 |
 | `wbapi-toggle.sh` | Shell helper — start/stop wbapi-server |
-| `wbapi-help.md` | WBAPI usage reference — endpoint list, anchor syntax, example calls; session/pos + Mesh API (manifest, gossip, tracker, world/download, ACL) |
+| `docs/api/wbapi-help.md` | WBAPI usage reference — endpoint list, anchor syntax, example calls; session/pos + Mesh API (manifest, gossip, tracker, world/download, ACL) |
 | `parse-nodes.js` | Standalone node parser — extracts NODE_MAP entries for external tooling |
 | `scripts/check-mover-parity.js` | **§WALK-2** structural walk-parity — asserts the `MOVER:CORE` block is byte-identical in `mover.js` and `roll2hit-v3.html` |
 | `scripts/check-mover-behaviour.js` | **§WALK-2** behavioural walk-parity — replays real `CELL_GRID`/`IMPASSABLE_CELLS` through old `cellMove` logic vs `mover.js`; asserts 0 content-affecting decision mismatches |
@@ -119,7 +124,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 
 Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI server needed).
 
-> ✅ **Rebuilt in §WALK-4 (2026-06-26)** against current geo, extended by §NAV-01 (room render, auto-travel, wayfinding, road-net editor cases). Current at §NAV-01 close (2026-07-03): walk suite **89/89** (navigation 37 + worldbuilder walk specs) · autosave 4/4 · fishing green. Walk-invariant CI gate: `npm run check:walk` **6/6** (invariants, mover parity ×2, terrain parity incl. roads, check:roads R1–R4, rooms parity). MUD server protocol tests live outside Playwright: `npm run test:mud` (**224** checks, sections [A]–[O]: sentry [H]/[H6] · ledger [I]/[I2]/[I3] incl. cross-origin trades · duels [O]). At 2026-07-06 (§MESH-01i slice 1): full Playwright **501 passed** (4 known `worldbuilder-crud-arrays` fails = the §NAV-01-FU-5 server dependency). ⚠️ Before any Playwright run, re-read plan.md §I Test-Run Rules: stop the WBAPI server first, never trust piped exit codes.
+> ✅ **Rebuilt in §WALK-4 (2026-06-26)** against current geo, extended by §NAV-01 (room render, auto-travel, wayfinding, road-net editor cases). Current at §NAV-01 close (2026-07-03): walk suite **89/89** (navigation 37 + worldbuilder walk specs) · autosave 4/4 · fishing green. Walk-invariant CI gate: `npm run check:walk` **6/6** (invariants, mover parity ×2, terrain parity incl. roads, check:roads R1–R4, rooms parity). MUD server protocol tests live outside Playwright: `npm run test:mud` (**224** checks, sections [A]–[O]: sentry [H]/[H6] · ledger [I]/[I2]/[I3] incl. cross-origin trades · duels [O]). At 2026-07-06 (§MESH-01i slice 1): full Playwright **501 passed** (4 known `worldbuilder-crud-arrays` fails = the §NAV-01-FU-5 server dependency). ⚠️ Before any Playwright run, re-read CONTRIBUTING.md Test-Run Rules: stop the WBAPI server first, never trust piped exit codes.
 
 | File | Coverage | Count |
 |------|---------|-------|
@@ -135,7 +140,7 @@ Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI serve
 
 ### Completed Work Registry
 
-All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
+All finished §* items. Open/planned items live in `BACKLOG.md`.
 
 | Item | Date | What was built |
 |------|------|---------------|
@@ -170,11 +175,11 @@ All finished §* items. Open/planned items live in `plan.md §BACKLOG`.
 | Item | Description |
 |------|-------------|
 | **§WORLDBUILDER-01** | Canvas node map editor — click node to edit, click empty cell to create, bidirectional exit wiring, collision detection. Depends on §WORLDBUILDER-02 Ph1 ✅ |
-| **§1367** | Historical year 1367 AD integration — `GAME_YEAR=1367`, plague mechanic, Hanseatic faction score, faith triple-track (orthodox/reform/folk), 4 new Baltic nodes (LB/DZ/RG/BG), 6 arc seeds, historical NPCs. Full spec in `Year1367AD.md`. |
+| **§1367** | Historical year 1367 AD integration — `GAME_YEAR=1367`, plague mechanic, Hanseatic faction score, faith triple-track (orthodox/reform/folk), 4 new Baltic nodes (LB/DZ/RG/BG), 6 arc seeds, historical NPCs. Full spec in `docs/notes/Year1367AD.md`. |
 | **§EDITOR-02-FU** | ✅ COMPLETE — branching arcs + drag-reorder shipped 2026-06-27; whole-arc UQF export shipped 2026-07-03 with §EDITOR-03 (§ARCH-01 W8b). Archived: plan-archive.md §"Archived 2026-07-06". |
 | **§NAV-01** | Navigable World: MUD-coherent map + fungal road net — **✅ COMPLETE 2026-07-03 (Inc a–h)**: pos-origin BFS (geo bounds + wrap), `ROAD_RUNS` net (400 cells / 88 junctions, encounter rate 0, `check:roads` R1–R4), `describeCell` room layer (ROOMS:CORE `rooms.js`, deterministic prose + signposts), road-weighted auto-travel (`_roadGridPath` + `_travelTick`, 4 interrupt classes), wayfinding UI (exits signage, waypoint ★, `(n steps, NE)`), map suite + GLOBE panel, Inc f MUD server room parity (`room` on all four look surfaces, byte-equal to client, mud-harness [M]), Inc g worldbuilder drag-&-lock cities (`PUT /api/coords`, 🔒 → `roads-pins.json`), Inc h road-net editor (chain-link overlay, pin drag, ✚/┬/🔗/🗑 palette, ♻ Reweave Net = `PUT /api/roads` with auto-rollback). Gates at close: walk suite 89/89 · check:walk 6/6 · mud-harness 119. Lab report: `lab-reports/lab-report-nav01-navigable-world.md` · archive: plan-archive.md §2026-07-03. |
-| **§MESH-01** | Multiuser MUD — **core ✅ SHIPPED** (client presence, gossip/PEX mesh + `worldHash` scoping, tracker + federation, world download/diff, Mesh tab; archived 2026-07-03) · **gameplay ladder (f) buffs ✅ · (g) hireling ✅ · (h) sentry bots ✅ · (i) no-dupe ledger ✅ COMPLETE 2026-07-06 (all rungs)** (durable hash chains `ledger/<origin>.jsonl`, mint + two-phase trade + pure lowest-hash dupe-void resolver; durable playerKey identity + cross-mesh gossip replication; client mint-stamping + ⇄ trade UI; **cross-ORIGIN co-signed trades** via `POST /api/trade/relay`, proposer's origin authors the one dual-sig event — mud-harness [I]/[I2]/[I3] 202 + `mesh-ledger-client.test.js` 8 incl. a two-server cross-origin E2E). · **(j) consensual PvP duels ✅ 2026-07-06** (`duel.js` DUEL:CORE kernel + `check:duelparity`, commit-reveal `duel/challenge|accept|reveal`, dual-chain `kind:'duel'` events, ⚔ client UI with verified replay, `S_story.pvpOff` opt-out, forfeit-on-walk-off never blocks a step — mud-harness [O] 22 + `mesh-duel-client.test.js` 5 incl. two-browser E2E). **THE LADDER (f–j) IS COMPLETE.** See plan.md §MESH-01 ladder. |
-| **§MESH-02** | Map-Tab Connection Center — multiplayer menus as Map-sheet sub-tabs (🗺 Map · 🌐 Connect · 🔭 Discover · 🛡 Lists). **(a) ACL/blocklist endpoints ✅ · (b) sub-tab shell ✅ · (c) Connect pane ✅ · (d) Discover pane (local scan D6, find, list sources, D4 whitelist gating) ✅ · (e) Lists pane (client black/whitelist, server ACL editor, D2/D3 peer-blocklist preview→explicit merge) ✅ · (f) committed tests ✅ 2026-07-07 (mud-harness [R] + hermetic `mesh-connections-ui.test.js` 8) · (h) 💬 multi-user chat history ✅ · (i) runtime `POST /api/mesh/connect` ✅ · (j) 👣 footprints ✅** — (g) docs/CLI closes it. CLI: `./api.sh mesh acl\|blocklist\|connect`. Design: `lab-reports/lab-report-mesh02-connections-ui.md`; player view: `mechanics.md §Multiplayer` "Connection center"; operator view: `docs-node-network.md §12` + `wbapi-help.md §Mesh API`. |
+| **§MESH-01** | Multiuser MUD — **core ✅ SHIPPED** (client presence, gossip/PEX mesh + `worldHash` scoping, tracker + federation, world download/diff, Mesh tab; archived 2026-07-03) · **gameplay ladder (f) buffs ✅ · (g) hireling ✅ · (h) sentry bots ✅ · (i) no-dupe ledger ✅ COMPLETE 2026-07-06 (all rungs)** (durable hash chains `ledger/<origin>.jsonl`, mint + two-phase trade + pure lowest-hash dupe-void resolver; durable playerKey identity + cross-mesh gossip replication; client mint-stamping + ⇄ trade UI; **cross-ORIGIN co-signed trades** via `POST /api/trade/relay`, proposer's origin authors the one dual-sig event — mud-harness [I]/[I2]/[I3] 202 + `mesh-ledger-client.test.js` 8 incl. a two-server cross-origin E2E). · **(j) consensual PvP duels ✅ 2026-07-06** (`duel.js` DUEL:CORE kernel + `check:duelparity`, commit-reveal `duel/challenge|accept|reveal`, dual-chain `kind:'duel'` events, ⚔ client UI with verified replay, `S_story.pvpOff` opt-out, forfeit-on-walk-off never blocks a step — mud-harness [O] 22 + `mesh-duel-client.test.js` 5 incl. two-browser E2E). **THE LADDER (f–j) IS COMPLETE.** See BACKLOG.md §Multiplayer + plan-archive.md. |
+| **§MESH-02** | Map-Tab Connection Center — multiplayer menus as Map-sheet sub-tabs (🗺 Map · 🌐 Connect · 🔭 Discover · 🛡 Lists). **(a) ACL/blocklist endpoints ✅ · (b) sub-tab shell ✅ · (c) Connect pane ✅ · (d) Discover pane (local scan D6, find, list sources, D4 whitelist gating) ✅ · (e) Lists pane (client black/whitelist, server ACL editor, D2/D3 peer-blocklist preview→explicit merge) ✅ · (f) committed tests ✅ 2026-07-07 (mud-harness [R] + hermetic `mesh-connections-ui.test.js` 8) · (h) 💬 multi-user chat history ✅ · (i) runtime `POST /api/mesh/connect` ✅ · (j) 👣 footprints ✅** — (g) docs/CLI closes it. CLI: `./api.sh mesh acl\|blocklist\|connect`. Design: `lab-reports/lab-report-mesh02-connections-ui.md`; player view: `mechanics.md §Multiplayer` "Connection center"; operator view: `docs/notes/docs-node-network.md §12` + `docs/api/wbapi-help.md §Mesh API`. |
 
 ### Version Snapshots
 
@@ -236,7 +241,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-reports/lab-report-architecture-full.md` | 0–45 | Complete IEEE function catalog — every function, all subsystems, flow charts |
 | `lab-reports/lab-report-documentation-system-design.md` | — | Two-way sync architecture, plan.md purpose, task decomposition framework |
 | `lab-reports/lab-report-sp4-documentation-sync-pass.md` | SP4 | SP4 sync pass — 20 PLANNED markers, 67 annotations, F4/F6 re-verification, FC01–FC08 archive |
-| `archive/lab-report-api-01-02-mechanics-combat-review.md` | §API-01+02 | IEEE API review: mechanics.md (36 points) + combat.md F6 drift (+163 to +3,115 lines) |
+| `archive/lab-report-api-01-02-mechanics-combat-review.md` | §API-01+02 | IEEE API review: mechanics.md (36 points) + docs/spec/combat.md F6 drift (+163 to +3,115 lines) |
 | `archive/lab-report-plan-cleanup-world-builder-arc.md` | 48–77 | plan.md archaeology + arc from dice tracker to world builder |
 | `archive/lab-report-timeline-history-completed.md` | 0–45 | Complete layer-by-layer development timeline archive |
 | `lab-reports/lab-report-prompt-migration-arena-to-prototype.md` | 0–13 | Arena → Prototype: specification gravity, Cooperative DM Principle |
@@ -349,100 +354,100 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 | Keyword / Topic | Primary File | Elaboration |
 |----------------|-------------|-------------|
-| **Action economy (1.5 AP)** | `mechanics-combat.md` | `archive/lab-report-plan-cleanup-v17.md` |
-| **Ability scores** | `mechanics-combat.md` | `plan.md §III` |
-| **ASI table (d6)** | `mechanics-combat.md` | `plan.md §II` |
-| **Antecedent / cage** | `story-arc-investigation.md` | `lab-reports/lab-report-void-archaeology.md` · `lab-reports/lab-report-void-shaman.md` |
-| **Archive modal (Weimar)** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
-| **Benedikt Rasp** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` · `lab-reports/lab-report-void-archaeology.md` |
+| **Action economy (1.5 AP)** | `docs/mechanics/mechanics-combat.md` | `archive/lab-report-plan-cleanup-v17.md` |
+| **Ability scores** | `docs/mechanics/mechanics-combat.md` | `index.md` |
+| **ASI table (d6)** | `docs/mechanics/mechanics-combat.md` | `index.md` |
+| **Antecedent / cage** | `docs/story/story-arc-investigation.md` | `lab-reports/lab-report-void-archaeology.md` · `lab-reports/lab-report-void-shaman.md` |
+| **Archive modal (Weimar)** | `docs/story/story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
+| **Benedikt Rasp** | `docs/story/story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` · `lab-reports/lab-report-void-archaeology.md` |
 | **Betrayal mechanic (thought/word/deed)** | `story.md Layer 104b` | `lab-reports/lab-report-littoral-courts.md` · `world.md §SIREN-01` |
-| **Battle Mode engine** | `combat.md` | `lab-reports/lab-report-architecture-full.md` · `spec-combat.md` |
+| **Battle Mode engine** | `docs/spec/combat.md` | `lab-reports/lab-report-architecture-full.md` · `docs/spec/spec-combat.md` |
 | **BFS pathfinding** | `maps.md` | `lab-reports/lab-report-circuit-map-theory.md` · `lab-reports/lab-report-battleground-circuit-path-quest.md` |
-| **Birka Six NPCs** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `story-arc-npc-dialogues.md` |
-| **Brynn Clerambault** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-reports/lab-report-living-world.md` |
+| **Birka Six NPCs** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `docs/story/story-arc-npc-dialogues.md` |
+| **Brynn Clerambault** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-reports/lab-report-living-world.md` |
 | **Bruhns CO scene** | `story.md` | `lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` |
-| **Career/run stats (Chronicle)** | `lab-reports/lab-report-kenickie-chronicle.md` | `plan.md §III (careerStats/runStats)` |
+| **Career/run stats (Chronicle)** | `lab-reports/lab-report-kenickie-chronicle.md` | `index.md (careerStats/runStats)` |
 | **Cat Quarter / Ally Cat** | `story.md` | `lab-reports/lab-report-ally-cat.md` |
 | **Codex Shards (7)** | `story.md` | `lab-reports/lab-report-game-story-codex-of-conquest.md` |
-| **Conditions / CONDITION_GOLD** | `mechanics-combat.md` | `combat.md` · `lab-reports/lab-report-leveling-flashbang-condition-economy.md` |
-| **Constructor's Log** | `story-arc-investigation.md` | `lab-reports/lab-report-void-archaeology.md` · `lab-reports/lab-report-void-shaman.md` |
+| **Conditions / CONDITION_GOLD** | `docs/mechanics/mechanics-combat.md` | `docs/spec/combat.md` · `lab-reports/lab-report-leveling-flashbang-condition-economy.md` |
+| **Constructor's Log** | `docs/story/story-arc-investigation.md` | `lab-reports/lab-report-void-archaeology.md` · `lab-reports/lab-report-void-shaman.md` |
 | **Cooperative DM Principle** | `lab-reports/lab-report-drop-rates-balance-and-health.md` | `lab-reports/lab-report-prompt-migration-arena-to-prototype.md` |
-| **Corelli merchant** | `story.md §XXVI stub` | `lab-reports/lab-report-corelli-merchant.md` · `story-arc-coastal.md` |
+| **Corelli merchant** | `story.md §XXVI stub` | `lab-reports/lab-report-corelli-merchant.md` · `docs/story/story-arc-coastal.md` |
 | **Corinth / Korath (KR)** | `story.md Layer 104a` | `lab-reports/lab-report-saul-paul-travel-reference.md` |
-| **Cell movement system (§CELL-01–§CELL-11)** | `docs-node-network.md` | `spec-corridors.md` (archived) · `lab-reports/lab-report-cell-map-mud-redesign.md` · `lab-reports/lab-report-circuit-map-theory.md` |
+| **Cell movement system (§CELL-01–§CELL-11)** | `docs/notes/docs-node-network.md` | `docs/spec/spec-corridors.md` (archived) · `lab-reports/lab-report-cell-map-mud-redesign.md` · `lab-reports/lab-report-circuit-map-theory.md` |
 | **Curse score / Covenant Standing** | `story.md` | `lab-reports/lab-report-endings-and-echoes.md` · `lab-reports/lab-report-architecture-full.md` |
-| **Daggers (offhand)** | `mechanics-combat.md` | `plan.md §II` |
-| **Death saves** | `combat.md` | `archive/lab-report-plan-cleanup-v17.md` |
-| **defi_land cluster (DF/HM/GL)** | `maps.md` · `world.md` | `story-flowchart.md` |
-| **Drop rates / reward formula** | `mechanics-combat.md` | `lab-reports/lab-report-drop-rates-balance-and-health.md` |
-| **Entry 42** | `story-arc-ngplus.md` | `lab-reports/lab-report-ng-plus-remembrance.md` · `lab-reports/lab-report-void-archaeology.md` |
-| **Epic Battlegrounds** | `story-arc-epic-battlegrounds.md` | `lab-reports/lab-report-epic-battlegrounds.md` · `story-flowchart.md` |
+| **Daggers (offhand)** | `docs/mechanics/mechanics-combat.md` | `index.md` |
+| **Death saves** | `docs/spec/combat.md` | `archive/lab-report-plan-cleanup-v17.md` |
+| **defi_land cluster (DF/HM/GL)** | `maps.md` · `world.md` | `docs/story/story-flowchart.md` |
+| **Drop rates / reward formula** | `docs/mechanics/mechanics-combat.md` | `lab-reports/lab-report-drop-rates-balance-and-health.md` |
+| **Entry 42** | `docs/story/story-arc-ngplus.md` | `lab-reports/lab-report-ng-plus-remembrance.md` · `lab-reports/lab-report-void-archaeology.md` |
+| **Epic Battlegrounds** | `docs/story/story-arc-epic-battlegrounds.md` | `lab-reports/lab-report-epic-battlegrounds.md` · `docs/story/story-flowchart.md` |
 | **Endings / epilogue** | `story.md` | `lab-reports/lab-report-endings-and-echoes.md` |
-| **Fighter Champion features** | `mechanics-combat.md` | `plan.md §II (FIGHTER_FEATURES)` |
-| **First Researcher (Marta Eilene Vass)** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` · `lab-reports/lab-report-void-archaeology.md` |
+| **Fighter Champion features** | `docs/mechanics/mechanics-combat.md` | `index.md (FIGHTER_FEATURES)` |
+| **First Researcher (Marta Eilene Vass)** | `docs/story/story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` · `lab-reports/lab-report-void-archaeology.md` |
 | **Fishing / Yugurt Lake** | `monsters.md` | `lab-reports/lab-report-fish-with-dnd.md` · `lab-reports/lab-report-fishing-bait-prompting.md` · `maps.md` |
-| **Fishing Buddy / Emmer Finch (§GUIDE-01)** | `plan.md §GUIDE-01` | `lab-reports/lab-report-fish-with-dnd.md` · `plan.md §XLV` |
-| **Four Stages of Competence / Self-Discovery arc** | `plan.md §GUIDE-01` | `plan.md §WISDOM-01` · `plan.md §ALCHEMY-01` |
-| **Rod of Self-Discovery** | `plan.md §GUIDE-01-F` | `plan.md §XLV` (tournament wiring) |
-| **Scar into a Star / §SCAR-01** | `plan.md §SCAR-01` | `lab-reports/lab-report-weimar-scholar-gate.md` · `plan.md §XVI` |
-| **Gret Orrens (Philosopher NPC)** | `plan.md §SCAR-01-C` | `plan.md §SCAR-01` |
-| **The Scar's Light (passive amulet)** | `plan.md §SCAR-01-G` | `plan.md §SCAR-01-F` (wound_badge mechanic) |
-| **Pier Falk (BQ — trapped person)** | `plan.md §SCAR-01-D` | `plan.md §SCAR-01` |
+| **Fishing Buddy / Emmer Finch (§GUIDE-01)** | `plan-archive.md §GUIDE-01` | `lab-reports/lab-report-fish-with-dnd.md` · `plan-archive.md §XLV` |
+| **Four Stages of Competence / Self-Discovery arc** | `plan-archive.md §GUIDE-01` | `plan-archive.md §WISDOM-01` · `plan-archive.md §ALCHEMY-01` |
+| **Rod of Self-Discovery** | `plan-archive.md §GUIDE-01-F` | `plan-archive.md §XLV` (tournament wiring) |
+| **Scar into a Star / §SCAR-01** | `plan-archive.md §SCAR-01` | `lab-reports/lab-report-weimar-scholar-gate.md` · `plan-archive.md §XVI` |
+| **Gret Orrens (Philosopher NPC)** | `plan-archive.md §SCAR-01-C` | `plan-archive.md §SCAR-01` |
+| **The Scar's Light (passive amulet)** | `plan-archive.md §SCAR-01-G` | `plan-archive.md §SCAR-01-F` (wound_badge mechanic) |
+| **Pier Falk (BQ — trapped person)** | `plan-archive.md §SCAR-01-D` | `plan-archive.md §SCAR-01` |
 | **Froberger journal (41 entries)** | `froberger-journal-all-entries.txt` | `lab-reports/lab-report-game-story-codex-of-conquest.md` · `story.md §PROLOGUE` |
 | **Froberger traces** | `world.md` | `lab-reports/lab-report-web-of-connections.md` |
-| **Gate locks** *(removed — Free-Movement Policy; `GATE_LOCKS` = 0 in code, verified 2026-07-03)* | `maps.md §GATE LOCKS (removal notice)` | `plan.md §I (Free-Movement / Mission-Gating Policy)` |
-| **Hollow Hands sub-clan** | `story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` · `lab-reports/lab-report-void-shaman.md` |
-| **Hunt Mode / stalk** *(retired §TIMELESS-01)* | `mechanics-combat.md §Stalk / Hunt (retired)` | `lab-reports/lab-report-timeless-movement-hunt-removal.md` · `lab-reports/lab-report-battleground-circuit-path-quest.md` |
+| **Gate locks** *(removed — Free-Movement Policy; `GATE_LOCKS` = 0 in code, verified 2026-07-03)* | `maps.md §GATE LOCKS (removal notice)` | `CONTRIBUTING.md (Free-Movement / Mission-Gating Policy)` |
+| **Hollow Hands sub-clan** | `docs/story/story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` · `lab-reports/lab-report-void-shaman.md` |
+| **Hunt Mode / stalk** *(retired §TIMELESS-01)* | `docs/mechanics/mechanics-combat.md §Stalk / Hunt (retired)` | `lab-reports/lab-report-timeless-movement-hunt-removal.md` · `lab-reports/lab-report-battleground-circuit-path-quest.md` |
 | **Inn Dreams** | `story.md §XXIII stub` | `lab-reports/lab-report-void-archaeology.md §H` |
-| **Investigation chain arc** | `story-arc-investigation.md` | `story-flowchart.md` |
-| **Isolde Voss (Archivist)** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
+| **Investigation chain arc** | `docs/story/story-arc-investigation.md` | `docs/story/story-flowchart.md` |
+| **Isolde Voss (Archivist)** | `docs/story/story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
 | **Kenickie's market** | `lab-reports/lab-report-kenickie-chronicle.md` | `lab-reports/lab-report-ally-cat.md` |
-| **Lab report policy** | `index.md` · `plan.md §I` | `lab-reports/lab-report-documentation-system-design.md` |
+| **Lab report policy** | `index.md` · `CONTRIBUTING.md` | `lab-reports/lab-report-documentation-system-design.md` |
 | **Littoral Courts (§SIREN-01)** | `story.md Layer 104b` · `world.md` | `lab-reports/lab-report-littoral-courts.md` · `maps.md §SIREN-01` |
-| **Level-up system** | `mechanics-combat.md` | `lab-reports/lab-report-leveling-flashbang-condition-economy.md` · `lab-reports/lab-report-architecture-full.md` |
-| **Luck stat** | `mechanics-combat.md` | `lab-reports/lab-report-luck-seventh-stat.md` · `lab-reports/lab-report-fishing-bait-prompting.md` |
+| **Level-up system** | `docs/mechanics/mechanics-combat.md` | `lab-reports/lab-report-leveling-flashbang-condition-economy.md` · `lab-reports/lab-report-architecture-full.md` |
+| **Luck stat** | `docs/mechanics/mechanics-combat.md` | `lab-reports/lab-report-luck-seventh-stat.md` · `lab-reports/lab-report-fishing-bait-prompting.md` |
 | **MIT License / Quest -1** | `story.md §XIV` | `lab-reports/lab-report-quest-minus-one-world-creator.md` |
-| **Monster pool (370)** | `monsters.md` | `plan.md §II (MONSTER_POOL)` · `spec-world.md` |
+| **Monster pool (370)** | `monsters.md` | `index.md (MONSTER_POOL)` · `docs/spec/spec-world.md` |
 | **Mordus (Warlord)** | `story.md` · `world.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` |
-| **Multiplayer mesh (§MESH-01 · §MESH-02 connection center)** | `mechanics.md §Multiplayer` · `docs-node-network.md §12` | `lab-reports/lab-report-mesh-multiuser.md` · `lab-reports/lab-report-mesh-sync-architecture.md` · `lab-reports/lab-report-mesh02-connections-ui.md` · `maps.md §Multiplayer` · `wbapi-help.md §Mesh API` |
-| **Navigable world — roads, rooms, auto-travel (§NAV-01)** | `docs-node-network.md §13` · `maps.md §ROAD NET & ROOM LAYER` | `lab-reports/lab-report-nav01-navigable-world.md` · `mechanics.md §Roads, Rooms & Auto-Travel` · `wbapi-help.md` (roads/pins endpoints) · `rooms.js` · `scripts/build-roads.js` |
-| **MT Mountain Pass** | `maps.md` · `story-flowchart.md` | `story-arc-investigation.md` (§XVII + §XXI intersection) |
+| **Multiplayer mesh (§MESH-01 · §MESH-02 connection center)** | `mechanics.md §Multiplayer` · `docs/notes/docs-node-network.md §12` | `lab-reports/lab-report-mesh-multiuser.md` · `lab-reports/lab-report-mesh-sync-architecture.md` · `lab-reports/lab-report-mesh02-connections-ui.md` · `maps.md §Multiplayer` · `docs/api/wbapi-help.md §Mesh API` |
+| **Navigable world — roads, rooms, auto-travel (§NAV-01)** | `docs/notes/docs-node-network.md §13` · `maps.md §ROAD NET & ROOM LAYER` | `lab-reports/lab-report-nav01-navigable-world.md` · `mechanics.md §Roads, Rooms & Auto-Travel` · `docs/api/wbapi-help.md` (roads/pins endpoints) · `rooms.js` · `scripts/build-roads.js` |
+| **MT Mountain Pass** | `maps.md` · `docs/story/story-flowchart.md` | `docs/story/story-arc-investigation.md` (§XVII + §XXI intersection) |
 | **NPC cross-references** | `world.md` | `lab-reports/lab-report-web-of-connections.md` |
-| **NPC dialogue system** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-npc-dialogue-system.md` · `lab-reports/lab-report-birka-beginner-arc.md` |
-| **NPC favorability** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `plan.md §III` |
-| **NG+ system** | `story-arc-ngplus.md` | `lab-reports/lab-report-ng-plus-remembrance.md` · `lab-reports/lab-report-endings-and-echoes.md` |
-| **Cell map (410 nodes)** | `maps.md` | `plan.md §II (NODE_MAP · NODE_COORDS · CELL_GRID)` · `story-flowchart.md` · `docs-node-network.md` |
+| **NPC dialogue system** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-npc-dialogue-system.md` · `lab-reports/lab-report-birka-beginner-arc.md` |
+| **NPC favorability** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `index.md` |
+| **NG+ system** | `docs/story/story-arc-ngplus.md` | `lab-reports/lab-report-ng-plus-remembrance.md` · `lab-reports/lab-report-endings-and-echoes.md` |
+| **Cell map (410 nodes)** | `maps.md` | `index.md (NODE_MAP · NODE_COORDS · CELL_GRID)` · `docs/story/story-flowchart.md` · `docs/notes/docs-node-network.md` |
 | **Overseer (The Fog Bank / LSO)** | `world.md` · `story.md Layer 104b` | `lab-reports/lab-report-littoral-courts.md §III` |
-| **Pachelbel / Deacon** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
+| **Pachelbel / Deacon** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
 | **Saul→Paul arc (§LIX–§LXIX + §PAUL-01; §FUTURE-01 ✅ closed 2026-07-07)** | `story.md Layer 104a` · `maps.md` · `quest.md` §THE SAUL→PAUL ARC (18-quest table) | `lab-reports/lab-report-saul-paul-travel-reference.md` · `lab-reports/lab-report-saul-paul-vignette-spec.md` |
 | **Pit training / Weckmann** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `lab-reports/lab-report-kenickie-chronicle.md` |
 | **Polyphonic organ** | `5thOrgan.html` | `lab-reports/lab-report-Polyphonic-Organ-Synth.md` |
-| **Potions (4 tiers)** | `mechanics-economy.md` | `plan.md §II (POTION_TIERS)` |
-| **Quill / Couperin** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
+| **Potions (4 tiers)** | `docs/mechanics/mechanics-economy.md` | `index.md (POTION_TIERS)` |
+| **Quill / Couperin** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
 | **Quest -1 (Level 21)** | `story.md §XIV` | `lab-reports/lab-report-quest-minus-one-world-creator.md` |
-| **Quest system** | `world.md` | `plan.md §II (QUEST_DB)` · `lab-reports/lab-report-architecture-full.md` |
-| **Reward formula** | `mechanics-combat.md` | `lab-reports/lab-report-drop-rates-balance-and-health.md` |
+| **Quest system** | `world.md` | `index.md (QUEST_DB)` · `lab-reports/lab-report-architecture-full.md` |
+| **Reward formula** | `docs/mechanics/mechanics-combat.md` | `lab-reports/lab-report-drop-rates-balance-and-health.md` |
 | **Room 6 (joint NPC moment)** | `world.md` | `lab-reports/lab-report-web-of-connections.md` |
-| **Save / load system** | `mechanics-combat.md` | `lab-reports/lab-report-architecture-full.md` · `plan.md §III` |
+| **Save / load system** | `docs/mechanics/mechanics-combat.md` | `lab-reports/lab-report-architecture-full.md` · `index.md` |
 | **Shard origin stories** | `story.md §XXII stub` | `lab-reports/lab-report-void-archaeology.md` (shard notes table) |
-| **Shields (6 tiers)** | `mechanics-combat.md` | `plan.md §II (SHIELD_ITEMS)` |
+| **Shields (6 tiers)** | `docs/mechanics/mechanics-combat.md` | `index.md (SHIELD_ITEMS)` |
 | **Specification gravity** | `lab-reports/lab-report-prompt-migration-arena-to-prototype.md` | `lab-reports/lab-report-documentation-system-design.md` |
-| **State fields (193)** | `plan.md §III` | `lab-reports/lab-report-architecture-full.md` |
-| **Story arc split** | `story-flowchart.md` | All `story-arc-*.md` files |
+| **State fields (193)** | `index.md` | `lab-reports/lab-report-architecture-full.md` |
+| **Story arc split** | `docs/story/story-flowchart.md` | All `story-arc-*.md` files |
 | **Sweelinck / endings** | `story.md` | `lab-reports/lab-report-endings-and-echoes.md` · `lab-reports/lab-report-npc-dialogue-system.md` |
-| **Tattoos** | `lab-reports/lab-report-tattoo-progression-system.md` | `plan.md §III (S_story.tattoos)` |
-| **Tilbury Harbor Arc** | `story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` |
-| **Tomes (item type)** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
-| **Void Archaeology** | `story-arc-investigation.md` | `lab-reports/lab-report-void-archaeology.md` |
-| **Void pressure / Void Tide** | `mechanics-combat.md` | `plan.md §III (voidPressure)` · `lab-reports/lab-report-architecture-full.md` |
-| **Void Shaman / The Warden** | `story-arc-investigation.md` | `lab-reports/lab-report-void-shaman.md` |
-| **Visby Underground** | `story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` |
-| **Weapons (70 types)** | `mechanics-combat.md` | `plan.md §II (WEAPON_ITEMS)` |
-| **Weimar Scholar Gate** | `story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
+| **Tattoos** | `lab-reports/lab-report-tattoo-progression-system.md` | `index.md (S_story.tattoos)` |
+| **Tilbury Harbor Arc** | `docs/story/story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` |
+| **Tomes (item type)** | `docs/story/story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
+| **Void Archaeology** | `docs/story/story-arc-investigation.md` | `lab-reports/lab-report-void-archaeology.md` |
+| **Void pressure / Void Tide** | `docs/mechanics/mechanics-combat.md` | `index.md (voidPressure)` · `lab-reports/lab-report-architecture-full.md` |
+| **Void Shaman / The Warden** | `docs/story/story-arc-investigation.md` | `lab-reports/lab-report-void-shaman.md` |
+| **Visby Underground** | `docs/story/story-arc-coastal.md` | `lab-reports/lab-report-tilbury-visby-arcs.md` |
+| **Weapons (70 types)** | `docs/mechanics/mechanics-combat.md` | `index.md (WEAPON_ITEMS)` |
+| **Weimar Scholar Gate** | `docs/story/story-arc-investigation.md` | `lab-reports/lab-report-weimar-scholar-gate.md` |
 | **World builder arc** | `archive/lab-report-plan-cleanup-world-builder-arc.md` | `lab-reports/lab-report-quest-minus-one-world-creator.md` |
 | **World progression events** | `world.md` | `lab-reports/lab-report-living-world.md` |
-| **XP / leveling** | `mechanics-combat.md` | `plan.md §II (XP_LEVELS)` · `lab-reports/lab-report-leveling-flashbang-condition-economy.md` |
-| **Yael Scheidemann** | `story-arc-npc-dialogues.md` | `lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-reports/lab-report-web-of-connections.md` |
+| **XP / leveling** | `docs/mechanics/mechanics-combat.md` | `index.md (XP_LEVELS)` · `lab-reports/lab-report-leveling-flashbang-condition-economy.md` |
+| **Yael Scheidemann** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-reports/lab-report-web-of-connections.md` |
 | **Yugurt Lake / fishing** | `monsters.md` · `maps.md` | `lab-reports/lab-report-fish-with-dnd.md` |
 
 ---
@@ -456,13 +461,13 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Visby** | VS | V | IS / PC | SE · BK · GC · MC · CA · VC | Warlord Mordus |
 | **Weimar** | WM | VI | SQ | BQ · OU → GA · AR · MT | Archivus Sweelinck |
 
-> See `story-flowchart.md` for full node-to-node movement graph and arc overlays.
+> See `docs/story/story-flowchart.md` for full node-to-node movement graph and arc overlays.
 
 ---
 
 ## Design Constants Quick Reference
 
-> Moved from `plan.md §II`. Updated 2026-06-14 — reflects §CELL-01–§CELL-12 state.
+> Moved from `index.md`. Updated 2026-06-14 — reflects §CELL-01–§CELL-12 state.
 
 | Const | Purpose |
 |---|---|
@@ -504,7 +509,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 ## State Fields Quick Reference (S_story)
 
-> Moved from `plan.md §III`. All 193 `S_story` fields from `_S_DEFAULTS()`. Updated 2026-06-26 (§TIMELESS-01 removed `huntMode`).
+> Moved from `index.md`. All 193 `S_story` fields from `_S_DEFAULTS()`. Updated 2026-06-26 (§TIMELESS-01 removed `huntMode`).
 
 | Field | Type | Purpose |
 |---|---|---|
@@ -730,17 +735,17 @@ All previously logged conflicts resolved. Current known gaps:
 | story.md EB dialogs and NPC dialogs were inline (2660 lines) | `story.md` | ✅ Extracted to `story-arc-*.md` files 2026-05-25 |
 | Lab reports for Layers 48–77 missing from index | `index.md` | ✅ All 36 indexed 2026-05-25 |
 | Reverse lookup table missing | `index.md` | ✅ Added 2026-05-25 |
-| story-flowchart.md did not exist | — | ✅ Created 2026-05-25 |
-| FC01–FC05 documentation queue | `plan.md §V-B` | ✅ All complete 2026-05-25 |
-| F4 table line numbers all stale (+749–3119 drift) | `mechanics-economy.md` | ✅ All 26 entries corrected 2026-05-26 (SP4) |
-| 8 HTML consts missing home docs (romance system, BRYNN_MAINTENANCE_TASKS, etc.) | `mechanics-economy.md` · `world.md` · `story.md` | ✅ Reverse-scan pass SP4 2026-05-26 |
+| docs/story/story-flowchart.md did not exist | — | ✅ Created 2026-05-25 |
+| FC01–FC05 documentation queue | `plan-archive.md §V-B` | ✅ All complete 2026-05-25 |
+| F4 table line numbers all stale (+749–3119 drift) | `docs/mechanics/mechanics-economy.md` | ✅ All 26 entries corrected 2026-05-26 (SP4) |
+| 8 HTML consts missing home docs (romance system, BRYNN_MAINTENANCE_TASKS, etc.) | `docs/mechanics/mechanics-economy.md` · `world.md` · `story.md` | ✅ Reverse-scan pass SP4 2026-05-26 |
 | State fields count "107" stale; plan.md description "230 lines" stale | `index.md` | ✅ Fixed 2026-05-26 (SP4) |
 | 20 stale ⚠️ PLANNED markers (Layers 46–74) in world.md + story.md | `world.md` · `story.md` | ✅ All cleared 2026-05-26 (SP4 stale-PLANNED scan) |
 | 67 HTML public consts had no `// → doc:` pointer (27 → 94 total) | `roll2hit-v3.html` | ✅ Full reverse scan complete 2026-05-26 (SP4) |
-| F4 table re-drifted (+9–53 lines) after SP4 annotation pass | `mechanics-economy.md` | ✅ All 29 entries re-verified 2026-05-26 |
+| F4 table re-drifted (+9–53 lines) after SP4 annotation pass | `docs/mechanics/mechanics-economy.md` | ✅ All 29 entries re-verified 2026-05-26 |
 | `surveyDeliveredToAuros` flag name wrong in world.md §Blue Shutters Archive | `world.md` | ✅ Corrected to `undercitySurveyDelivered` 2026-05-26 |
 | 5 `// → doc:` annotations pointed to non-existent section names (§Inn Sleep, §Gate Locks, §Quiet Return, §Act III NPC Lines, §Sweelinck Naming Ceremony) | `roll2hit-v3.html` · `story.md` | ✅ All fixed 2026-05-26 — annotations corrected; `#### Gate Locks` section added to story.md |
-| OST code collision: `OST` node code was already used (Bruges — Cloth Hall), so La Chanson de Roland uses quest prefix `ost_` only; no OST hub node created | `1367-sources/plan.md` · `api-data-audit.md` | ✅ Resolved 2026-06-05 — 4 new nodes RON/PYR/AIX/FRS created; cycles 1–2 route RON/PYR/AIX/FRS naturally; cycles 3–7 hub at AIX or RON |
+| OST code collision: `OST` node code was already used (Bruges — Cloth Hall), so La Chanson de Roland uses quest prefix `ost_` only; no OST hub node created | `1367-sources/plan.md` · `docs/api/api-data-audit.md` | ✅ Resolved 2026-06-05 — 4 new nodes RON/PYR/AIX/FRS created; cycles 1–2 route RON/PYR/AIX/FRS naturally; cycles 3–7 hub at AIX or RON |
 
 ---
 
@@ -748,7 +753,7 @@ All previously logged conflicts resolved. Current known gaps:
 
 ## Data Audit Loop — Quest Text Backfill
 
-Procedure: `api-data-audit.md` — self-referential loop that runs until all errors and warnings are cleared.
+Procedure: `docs/api/api-data-audit.md` — self-referential loop that runs until all errors and warnings are cleared.
 
 **How it works:**
 1. `curl 'http://localhost:1367/api/next-error?severity=error'` → fix all errors first
@@ -767,11 +772,11 @@ say "continue, continue, continue!" &
 say "Fixed quest id. Verified on disk." &
 ```
 `say` runs blocking (no `&`) — each announcement completes before the next step.
-This rule applies to `api-data-audit.md`, `plan.md §TTS`, and all session loops.
+This rule applies to `docs/api/api-data-audit.md`, `plan-archive.md §TTS`, and all session loops.
 
 **Source fidelity:** When `1367-sources/{CODE}-*.md` exists, copy `scene:/successText:/failText:` fields verbatim. City names and geographic anchors in quest text must match the city referenced in the source file. The book authored as a 1367-source uses the city name in the title and the plan — those landmarks carry into the quest desc and hint.
 
-**Status (2026-06-05):** MQ/SQ/EPIC done. §IMPORT-102 RIX complete (449 nodes, 1695 quests). See `api-data-audit.md §Per-Book Queue`.
+**Status (2026-06-05):** MQ/SQ/EPIC done. §IMPORT-102 RIX complete (449 nodes, 1695 quests). See `docs/api/api-data-audit.md §Per-Book Queue`.
 
 **§IMPORT-99 OST nodes** (La Chanson de Roland, Anon, c.1100):
 - `RON` — Roncevaux Pass (r:110 c:128, highlands)

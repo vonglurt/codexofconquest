@@ -766,7 +766,7 @@ const CMD = {
                  : regionArg            ? ['--region', regionArg]
                  : ['--regions'];
       const result = spawnSync('node', [
-        require('path').join(__dirname, '..', 'worldmap.js'), ...args,
+        require('path').join(__dirname, '..', 'tools', 'worldmap.js'), ...args,
         '--port', String(flags.port || 1367),
       ], { stdio: 'inherit' });
       process.exit(result.status || 0);
@@ -877,7 +877,7 @@ const CMD = {
     } else {
       ok(`Geo-seeded ${d.seeded} cities to game grid.`);
       if (d.skipped?.length) info(`Skipped (not in node_map): ${d.skipped.join(', ')}`);
-      info(`Next: node layout-solve.js --apply  to propagate remaining nodes from geo anchors`);
+      info(`Next: node tools/layout-solve.js --apply  to propagate remaining nodes from geo anchors`);
     }
   },
 
@@ -1034,7 +1034,7 @@ const CMD = {
     } else {
       ok(`  ${C.red}FAIL${C.reset} — ${issues} issue(s) found`);
       if (collisions.length) ok(`  Collisions: re-anchor a colliding node's lat/lon, or hold both as a 1° locale list (§WALK-1.5)`);
-      ok(`  General:    ./api.sh clean --execute → ./api.sh geo-seed --execute → node layout-solve.js --apply → ./api.sh reachability`);
+      ok(`  General:    ./api.sh clean --execute → ./api.sh geo-seed --execute → node tools/layout-solve.js --apply → ./api.sh reachability`);
     }
   },
 
@@ -2777,7 +2777,7 @@ ${C.bold}═══════════════════════�
     ./api.sh geo-seed --execute
 
   After geo-seed, propagate all connected nodes:
-    node layout-solve.js --apply
+    node tools/layout-solve.js --apply
 
   Move a node's coordinates (swap if destination is occupied):
     ./api.sh move LHR 12 18
@@ -2864,7 +2864,7 @@ ${C.bold}═══════════════════════�
   Full world reset sequence (cell-first, §WALK-1.5 geo flood):
     ./api.sh clean --execute
     ./api.sh geo-seed --execute
-    node layout-solve.js --apply
+    node tools/layout-solve.js --apply
     ./api.sh verify
     ./api.sh reachability
 

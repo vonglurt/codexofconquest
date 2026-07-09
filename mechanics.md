@@ -260,7 +260,7 @@ XP accumulates across the run. On each victory, `_checkLevelUp()` fires — if X
 
 Cap is 195,000 XP (Level 20). A focused run (~150 battles) should reach Level 15–17.
 
-**Level 21 — ⚠️ PLANNED (plan.md §XIV):** `XP_LEVELS[20]` is undefined. The level check in `_checkLevelUp()` reads `XP_LEVELS[currentLevel]`; at Level 20 this returns `undefined` and the cap holds. Level 21 is architecturally open — extending `XP_LEVELS` with one more entry and adding a new `FIGHTER_FEATURES` row at Lv21 is the minimum to unlock it. See `plan.md §XIV` (World Creator Wizard) for the full extension guide, including shell tooling for safe HTML data structure editing.
+**Level 21 — ⚠️ PLANNED (plan-archive.md §XIV):** `XP_LEVELS[20]` is undefined. The level check in `_checkLevelUp()` reads `XP_LEVELS[currentLevel]`; at Level 20 this returns `undefined` and the cap holds. Level 21 is architecturally open — extending `XP_LEVELS` with one more entry and adding a new `FIGHTER_FEATURES` row at Lv21 is the minimum to unlock it. See `plan-archive.md §XIV` (World Creator Wizard) for the full extension guide, including shell tooling for safe HTML data structure editing.
 
 ---
 
@@ -646,7 +646,7 @@ Bare Hook fallback: if `equippedBait === null` and `tacklebox` is empty, predato
 
 ### Cell Movement (§CELL-03)
 
-Navigation is **cell-based**: pressing N/E/S/W moves the player exactly one grid cell `(r±1, c)` or `(r, c±1)` per keypress. `cellMove(dir)` is a thin caller over the shared `mover.js` kernel (§WALK-2), which decides band bounds (`0≤r<90`), E/W wrap at the antimeridian, and sea blocking. A step is refused for exactly two reasons — `'oob'` and `'sea'`. **No gate locks, no quest checks** (Free-Movement Policy, plan.md §I).
+Navigation is **cell-based**: pressing N/E/S/W moves the player exactly one grid cell `(r±1, c)` or `(r, c±1)` per keypress. `cellMove(dir)` is a thin caller over the shared `mover.js` kernel (§WALK-2), which decides band bounds (`0≤r<90`), E/W wrap at the antimeridian, and sea blocking. A step is refused for exactly two reasons — `'oob'` and `'sea'`. **No gate locks, no quest checks** (Free-Movement Policy, CONTRIBUTING.md).
 
 **Node entry:** If the destination cell has an entry in `CELL_GRID`, the player enters that named node and `storyRender(node)` fires (quests, encounters, NPC dialogue, loot). If the destination cell is empty, `_enterEmptyCell(r, c)` fires — since §NAV-01c it renders a full MUD room (see next section).
 
@@ -662,7 +662,7 @@ There is no corridor dialog, no Manhattan-distance gating, and no "Hunt/Warp" ov
 
 ### Roads, Rooms & Auto-Travel (§NAV-01, ✅ 2026-07-03)
 
-> Design + diagnosis: `lab-reports/lab-report-nav01-navigable-world.md` · layer stack: `docs-node-network.md §13` · map surfaces: `maps.md` "ROAD NET & ROOM LAYER".
+> Design + diagnosis: `lab-reports/lab-report-nav01-navigable-world.md` · layer stack: `docs/notes/docs-node-network.md §13` · map surfaces: `maps.md` "ROAD NET & ROOM LAYER".
 
 **Roads (what the player experiences):** a fungal highway net (400 road cells, 88 intersections/T-junctions) connects every settlement. Road cells are terrain `'road'` — **encounter rate 0** — so following the road is the safe way to cross the wilderness; striking out overland is always allowed but rolls the local terrain's encounter rate (0.10–0.35). Sea-lane crossings stay `ocean` at 0.10 — boats are never free. Roads are pure terrain: they never gate movement, and the open field stays fully walkable.
 
@@ -853,7 +853,7 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 
 ## Multiplayer — Mesh Presence (§MESH-01, ✅ Incs a–e shipped 2026-07-02 · §MESH-02 connection center 2026-07-07)
 
-Roll2Hit is single-player-first: multiplayer is a strictly **opt-in presence layer** on top of the unchanged solo game. Full design: `lab-reports/lab-report-mesh-multiuser.md` (spec) and `lab-reports/lab-report-mesh-sync-architecture.md` (architecture write-up); connection-center UI: `lab-reports/lab-report-mesh02-connections-ui.md`; server/API detail: `docs-node-network.md §12`; map surfaces: `maps.md`.
+Roll2Hit is single-player-first: multiplayer is a strictly **opt-in presence layer** on top of the unchanged solo game. Full design: `lab-reports/lab-report-mesh-multiuser.md` (spec) and `lab-reports/lab-report-mesh-sync-architecture.md` (architecture write-up); connection-center UI: `lab-reports/lab-report-mesh02-connections-ui.md`; server/API detail: `docs/notes/docs-node-network.md §12`; map surfaces: `maps.md`.
 
 ### What the player experiences
 
@@ -1010,7 +1010,7 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 
 ### FL2 — Standard Battle (pre-battle side)
 
-> The battle resolution side (Battle Mode) is documented in `combat.md` (F6). F4 owns the pre-battle setup, condition deduction, and post-battle loot.
+> The battle resolution side (Battle Mode) is documented in `docs/spec/combat.md` (F6). F4 owns the pre-battle setup, condition deduction, and post-battle loot.
 
 ```
 MILEPOINT A  Player arrives at battle node → storyPreBattle(node) called
@@ -1029,7 +1029,7 @@ MILEPOINT C  Player commits → storyCommitBattle()
              BOSS_COMMANDER_AUROS / EPIC_BOSS_POOL / MONSTER_POOL loaded via loadWorldMonster()
              Conditions applied to S.opp.cond + S.opp.adv via CONDITION_ADV lookup
 
-MILEPOINT D  [Battle Mode] — resolves in battle overlay; see combat.md FL2
+MILEPOINT D  [Battle Mode] — resolves in battle overlay; see docs/spec/combat.md FL2
 
 MILEPOINT E  storyApplyOutcome(won)
              Won: defeatedBattles[code] = true; XP awarded; _checkLevelUp() queued

@@ -415,7 +415,7 @@ LITTORAL COURTS (§SIREN-01 — extended south from DS, Act IV)
 
 ## GATE LOCKS — ❌ REMOVED (Free-Movement Policy)
 
-> **The `GATE_LOCKS` array and all item-gated passage checks are gone from the code** (verified 2026-07-03: `GATE_LOCKS` greps to 0 in `roll2hit-v3.html`; `cellMove` is a thin `Mover.move` caller with no gate branch). Movement is refused for exactly two reasons — `'oob'` and `'sea'` — per the Free-Movement / Mission-Gating Policy (plan.md §I). The old CR→CY / SC→FL / AL→SE / VC→DE item gates and the CO shard gate no longer block *movement*; story gating happens at the *mission-listing* level only (quest `gate` / `activateCond` in `storyCheckQuests`).
+> **The `GATE_LOCKS` array and all item-gated passage checks are gone from the code** (verified 2026-07-03: `GATE_LOCKS` greps to 0 in `roll2hit-v3.html`; `cellMove` is a thin `Mover.move` caller with no gate branch). Movement is refused for exactly two reasons — `'oob'` and `'sea'` — per the Free-Movement / Mission-Gating Policy (CONTRIBUTING.md). The old CR→CY / SC→FL / AL→SE / VC→DE item gates and the CO shard gate no longer block *movement*; story gating happens at the *mission-listing* level only (quest `gate` / `activateCond` in `storyCheckQuests`).
 
 ---
 
@@ -490,13 +490,13 @@ const CELL_GRID = (() => {
 
 ## ROAD NET & ROOM LAYER (§NAV-01, ✅ 2026-07-03)
 
-> Full design + diagnosis: `lab-reports/lab-report-nav01-navigable-world.md`. Layer stack: `docs-node-network.md §13`.
+> Full design + diagnosis: `lab-reports/lab-report-nav01-navigable-world.md`. Layer stack: `docs/notes/docs-node-network.md §13`.
 
 ### ROAD_RUNS — the fungal road net
 
 `ROAD_RUNS` (game file, after `SEA_LANES`) is an RLE block `{row:[[c0,c1],…]}` exactly like `SEA_RUNS`; it builds the `ROAD_CELLS` Set at load. Shipped net: **400 road cells (1.4% of passable), 88 intersections/T-junctions**, connecting all 235 settlement cells in one component (verified by `check:roads` R1–R4 inside `npm run check:walk`).
 
-- **Roads are terrain, not permissions** (Free-Movement, plan.md §I): a road cell resolves to terrain `'road'` with **encounter rate 0** — a safe, legible highway. The open field stays fully walkable; roads are sugar, never required.
+- **Roads are terrain, not permissions** (Free-Movement, CONTRIBUTING.md): a road cell resolves to terrain `'road'` with **encounter rate 0** — a safe, legible highway. The open field stays fully walkable; roads are sugar, never required.
 - Terrain precedence (client `_inferTerrain` + server `terrainAt`, parity-checked): `SEA_LANES → 'ocean'` ▸ `ROAD_CELLS → 'road'` ▸ majority-of-named-neighbors ▸ `'midlands'`. Sea-lanes stay `ocean` — crossings keep their 0.10 encounter risk as texture.
 - Generated deterministically by `scripts/build-roads.js` (k-nearest ≤3 + MST + local loops ≤8; trunk-reuse Dijkstra costs settlement 2 / road 4 / virgin 10 / lane 14). **Never hand-edit ROAD_RUNS** — regenerate via ♻ Reweave (`PUT /api/roads` or `./api.sh reweave`); a red `check:roads` rolls the game file back automatically.
 - User-authored net edits live in `roads-pins.json` `{pins, links, locked}` — pins are mandatory road vertices; `locked` city codes are never moved by geo-seed. Edited visually in worldbuilder.html (§NAV-01g/h): drag-&-lock cities, vertex drag → pin, ✚/┬ junction palette, 🔗 link toggle, 🗑 delete, ♻ Reweave Net.
@@ -533,7 +533,7 @@ Wire-glyph minimap rendering (`CORRIDOR_CELLS`) was removed in §CELL-05. `_rend
 - **Junction nodes (J1–J7 + thousands of J##### auto-generated nodes):** to be bulk-deleted in §CELL-05
 - **Active path highlight:** `_setActivePath()` still marks the last-traversed edge gold on the minimap; called by `cellMove`
 
-See `spec-corridors.md` for the full historical spec.
+See `docs/spec/spec-corridors.md` for the full historical spec.
 
 ---
 
@@ -566,7 +566,7 @@ MILEPOINT A  Player clicks N/E/S/W → cellMove(dir) called
 MILEPOINT B  Mover.move(_moverWorld(), {r,c}, dir) — the shared mover.js kernel decides:
              band bounds (0 ≤ r < 90), E/W wrap at the antimeridian, sea/impassable check.
              Refusal reasons are exactly 'oob' | 'sea' — NO gate locks, NO quest checks
-             (Free-Movement Policy, plan.md §I)
+             (Free-Movement Policy, CONTRIBUTING.md)
              └─ blocked → storyBlock('No path leads that way.')
 MILEPOINT C  S_story.playerR/playerC updated; visitedCells["r,c"] = true (timeless — no clock advance)
 MILEPOINT D  destCode = res.destCodes[0]
@@ -699,7 +699,7 @@ Behavior sequence:
 - Rendered into the victory sequence overlay, not the standard map panel
 - No interaction; display-only
 
-**⚠️ PLANNED — S55 Map Caption (plan.md §XXXI, Layer 66b):** A `<div id="final-map-caption">` is added to the overlay, centered below the warmth grid. Fades in at +400 ms after the grid (3500 ms total); fades out with the grid at 8100 ms. Text:
+**⚠️ PLANNED — S55 Map Caption (plan-archive.md §XXXI, Layer 66b):** A `<div id="final-map-caption">` is added to the overlay, centered below the warmth grid. Fades in at +400 ms after the grid (3500 ms total); fades out with the grid at 8100 ms. Text:
 
 | Condition | Caption |
 |-----------|---------|
@@ -712,7 +712,7 @@ Sets `s55MapLineDelivered = true` on render. Style: `color: #bbb; font-style: it
 
 ## MULTIPLAYER ON THE MAPS (§MESH-01, ✅ 2026-07-02)
 
-When the player opts in via the 🌐 toggle, other players appear on every map surface — a **display-only** layer (see `mechanics.md` "Multiplayer — Mesh Presence"; server mesh: `docs-node-network.md §12`). Remote players from other servers in the mesh flow through the same surfaces as local ones.
+When the player opts in via the 🌐 toggle, other players appear on every map surface — a **display-only** layer (see `mechanics.md` "Multiplayer — Mesh Presence"; server mesh: `docs/notes/docs-node-network.md §12`). Remote players from other servers in the mesh flow through the same surfaces as local ones.
 
 | Surface | Marker | Data source |
 |---------|--------|-------------|

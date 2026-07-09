@@ -692,7 +692,7 @@ The Stalk mechanic (`storyStalk` target picker, `_getQuestTargetKeys`,
 was removed with the rest of the Hunt feature in §TIMELESS-01. Quest kills now
 progress purely by winning the relevant node battles (e.g. `quest_slums_cleanup`
 completes after 3 BMA combat wins via `S_story.slStalksWon`). See
-`lab-reports/lab-report-timeless-movement-hunt-removal.md` and `mechanics-combat.md`
+`lab-reports/lab-report-timeless-movement-hunt-removal.md` and `docs/mechanics/mechanics-combat.md`
 §Stalk / Hunt (retired).
 
 ---

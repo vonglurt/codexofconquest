@@ -2,136 +2,227 @@
 
 # roll2hit.com
 
-A single-file Adventure RPG. No server. Open the file. Play.
+**A single-file adventure RPG.** The entire game — combat engine, world map, NPC
+dialogue, quest system, save system, hundreds of monsters, dozens of terrains,
+and 8 acts of story — lives inside one HTML file. No server, no build step, no
+install. Open it and play.
 
 ---
 
-## CODER INTRO
+## Quick start — just play
 
-### Running the Game
+Open **`roll2hit-v3.html`** in any modern browser (Chrome, Firefox, Safari,
+Edge) with JavaScript enabled.
 
-Download `roll2hit-v3.html` and open it in any modern browser with JavaScript enabled. That's it. The entire game — combat engine, world map, NPC dialogue, save system, 370 monsters, 66 terrain types, 8 acts of story — lives in one file. You can email it. Put it on a USB drive. Host it on any static file server.
+- **Double-click** the file, or drag it onto a browser window, or `File → Open`.
+- Everything runs locally. Save state lives in the browser's `localStorage` —
+  nothing is uploaded anywhere.
+- The file is self-contained: you can email it, drop it on a USB stick, or serve
+  it from any static host.
 
-Save state uses `localStorage`. Nothing leaves the browser.
+> `worldbuilder.html` is the **authoring tool** (a visual editor for the world
+> data). The game does **not** need it — it's only used when building content.
 
-### Documentation System
+---
 
-This directory maintains a **two-way sync** between the source HTML and the markdown files. Every data structure in `roll2hit-v3.html` has a home document. Every document entry traces back to a line in the HTML.
+## What this project is
 
-**Core documents — always kept in sync with the HTML:**
+`roll2hit-v3.html` is the single source of truth: a ~37,000-line HTML file that
+*is* the game. Everything else in this repository exists to **author, document,
+test, and host** that one file:
 
-| File | Contents |
-|------|----------|
-| `index.md` | Master index, cross-reference table, SP sync log |
-| `world.md` | NODE_MAP, WORLD_DB, NPC profiles, quest IDs, Birka |
-| `story.md` | All 71 nodes, 8 acts, full narrative flow, branching |
-| `mechanics.md` | Combat engine, XP table, conditions, economy, save format |
-| `monsters.md` | All 370 MONSTER_POOL entries, WORLD_DB terrain coverage |
-| `maps.md` | Grid layout, corridor map, node network, legend |
+- **Docs** keep a two-way sync with the HTML — every data structure has a home
+  document, every doc entry traces back to a line in the HTML.
+- **The WBAPI server** (`wbapi-server.js`) is an optional local REST API that
+  reads the HTML and writes edits back in place, so content can be authored via
+  `worldbuilder.html` / `./api.sh` instead of editing 37k lines by hand.
+- **Tests** (`tests/`, `scripts/`) guard the world's invariants.
 
-**Spec files — JavaScript architecture reference:**
+If you only want to play, you never need any of that — just open the HTML.
 
-- `spec-engine.md` — core combat loop, dice, initiative, action economy, cellMove navigation
-- `spec-corridors.md` — corridor grid history (⚠️ superseded by §CELL-03; kept as reference)
-- `spec-world.md` — WORLD_DB, MONSTER_POOL, terrain cascade UI
-- `spec-combat.md` — combat flow, conditions, death saves, Fighter features
-- `spec-migration.md` — full architecture overview, all data structures
+---
 
-**Lab reports** document design decisions, implementation findings, and system behavior. A new `lab-report-<title>.md` is written when:
+## Running it as a project
 
-- A **major collection** is added or redesigned — new monster group, terrain cluster, NPC faction, or item economy (e.g., the fishing bait sub-system, the Ally Cat Arc)
-- A **large redesign** touches multiple systems or rewrites an existing mechanic (e.g., weapon drop economy overhaul, Luck Stat integration)
-- A **new narrative theme or arc** spans multiple nodes, NPCs, or quest chains
-- A **design review** is needed before implementation — IEEE-format spec to lock in data shapes and flow before touching the HTML
-- A **session postmortem** captures decisions that aren't obvious from reading the code or the core docs
+### 1. Play locally (no tooling)
 
-A lab report is **not** needed for: adding a single monster or quest (sync the core docs), correcting a value (add an implementation note to the existing report), or small additions that fit cleanly into an existing doc section.
+Open `roll2hit-v3.html` in a browser. Done.
 
-Lab reports are archived — they reflect the system as understood at the time of writing. When shipped code diverges from the design, add an implementation note at the top rather than rewriting the archive. See `index.md` for the full list.
+### 2. Host it (share it with others)
 
-### Adding Content
-
-The shell tooling workflow:
+Because the game is a single static file, any static file server works:
 
 ```bash
-# Count current monsters
-grep -c "key:'" roll2hit-v3.html          # → 370
+# Python (already on macOS/Linux) — serves the current directory at :8000
+python3 -m http.server 8000
+# then visit http://localhost:8000/roll2hit-v3.html
 
-# Find MONSTER_POOL insertion point
-awk '/^const MONSTER_POOL/{found=1} found && /^};/{print NR-1; exit}' roll2hit-v3.html
-
-# After adding a monster, verify count increased by exactly 1
-AFTER=$(grep -c "key:'" roll2hit-v3.html)
-[ "$AFTER" -eq "$((BEFORE + 1))" ] && echo "✅" || echo "❌ COUNT MISMATCH"
-
-# Sync count to docs
-sed -i '' "s/${BEFORE} monsters/${AFTER} monsters/g" monsters.md index.md
+# …or Node's one-liner static server
+npx serve .
 ```
 
-See `plan.md §XIV — The World Creator Wizard` for the full tooling reference, data integrity promises, and the Quest -1 fork invitation.
+To publish on the web, upload `roll2hit-v3.html` to any static host (GitHub
+Pages, Netlify, an S3 bucket, a plain nginx/Apache directory). No backend
+required. Rename it to `index.html` if you want it served at the site root.
 
-### License
+### 3. Run the authoring / API server (content editing)
 
-MIT. Fork it. Extend it. Write Level 21. The source code is the last item in the inventory.
+The World Builder API server lets you edit the game's data programmatically and
+through `worldbuilder.html`. You need **Node.js**.
+
+```bash
+# Install Node (macOS, via Homebrew — https://brew.sh)
+brew install node
+
+# Install dev dependencies (Playwright for tests, Anthropic SDK)
+npm install
+
+# Start the WBAPI server on http://localhost:1367
+./wbapi-toggle.sh start        # start | stop | restart | status | fg
+#   (equivalently: npm start  →  node wbapi-server.js)
+
+# Talk to it from the CLI
+./api.sh ping
+./api.sh help
+./api.sh list node
+
+# Author visually: open worldbuilder.html in a browser while the server runs
+```
+
+The server reads and rewrites `roll2hit-v3.html` in place. See
+**[CONTRIBUTING.md](CONTRIBUTING.md)** for the API-first authoring workflow and
+the WBAPI hazards to know before editing, and **`docs/api/`** for the full API
+reference.
+
+### Tests
+
+```bash
+npm test                # Playwright integration suite
+npm run check:walk      # world-invariant CI gates (mover/terrain/roads/rooms)
+npm run test:mud        # MUD server-protocol harness
+```
+
+> ⚠️ Stop the WBAPI server before running Playwright suites
+> (`./wbapi-toggle.sh stop`) — see the Test-Run Rules in
+> [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
-## PLAYER INTRO
+## Repository layout
+
+```
+roll2hit-v3.html        ← THE GAME (single file — open this to play)
+worldbuilder.html       ← visual authoring tool (needs the WBAPI server)
+
+# Launch / ops scripts (root)
+api.sh                  ← WBAPI CLI wrapper  (→ api/wb.js)
+wbapi-toggle.sh         ← start/stop/restart the WBAPI server
+say.sh · sayd.sh        ← narration helpers
+monitor-snapshots.py · watch-snapshots.sh · archive-snapshots.sh
+                        ← snapshot pipeline + server keepalive (root-anchored)
+
+# WBAPI server bundle (Node — must stay at root together)
+wbapi-server.js         ← the REST API server (reads/writes the HTML)
+wbapi-core.js  mover.js  rooms.js  duel.js  mesh.js   ← required modules
+roads-pins.json  walk-geo-gazetteer.json  peers.txt   ← data the server reads
+package.json  node_modules/
+
+# Core documentation (kept in two-way sync with the HTML)
+index.md                ← master index + cross-reference table (start here)
+world.md  story.md  mechanics.md  monsters.md  maps.md  quest.md
+CONTRIBUTING.md         ← development policies & directives
+BACKLOG.md              ← outstanding work / to-do list
+plan-archive.md         ← archived completed work
+
+# Folders
+docs/                   ← reference docs: spec/ story/ api/ mechanics/ notes/
+lab-reports/            ← design lab reports (one per major arc/system)
+importers/              ← ⚠️ archaic one-shot content importers (historical)
+tools/                  ← standalone dev/CLI utilities
+sources/                ← narrative source texts
+1367-sources/           ← imported source-book material
+scripts/                ← invariant/CI check scripts (npm run check:*)
+tests/                  ← Playwright integration + MUD harness
+api/                    ← wb.js (the WBAPI CLI implementation)
+maps/ · milepoints/ · ledger/   ← map assets, snapshots/logs, economy ledger
+```
+
+---
+
+## Documentation system
+
+This repo maintains a **two-way sync** between `roll2hit-v3.html` and the
+markdown docs: every data structure in the HTML has a home document, and every
+documented item traces back to a line in the HTML.
+
+| Doc | Contents |
+|-----|----------|
+| **`index.md`** | Master index, cross-reference table, doc-health badge — **read this first** |
+| `world.md` | NODE_MAP, WORLD_DB, NPC profiles, quest IDs |
+| `story.md` | All nodes, acts, narrative flow, branching |
+| `mechanics.md` | Combat engine, XP table, conditions, economy, save format, multiplayer |
+| `monsters.md` | MONSTER_POOL entries + terrain coverage |
+| `maps.md` | Grid layout, road net, room layer, node network |
+| `quest.md` | Quest catalogue (UQF format) |
+| `CONTRIBUTING.md` | How to work in this repo — API-first, cell-first, free-movement, test rules, lab-report policy |
+| `BACKLOG.md` | Outstanding / planned work |
+
+Deeper reference lives under **`docs/`** (`spec/`, `story/`, `api/`,
+`mechanics/`, `notes/`), and **`lab-reports/`** captures design decisions and
+implementation findings per major arc or system. See `index.md` for the full
+list.
+
+---
+
+## Player guide
 
 ### Enter Story Mode
 
-When you open the game, click **Story Mode** to begin your quest. You arrive in Birka — a city on the edge of something wrong. The Void is rising. You have 49 days.
+Open the game and click **Story Mode**. You arrive in Birka — a city on the edge
+of something wrong. The Void is rising. You have 49 days.
 
-### Moving Through the World
+### Moving through the world
 
-The world is a MUD-style coordinate grid. Every press of N/E/S/W moves you exactly one cell. Named locations appear when your cell matches a known node. Between named locations you walk through open terrain — no corridor overlay, no jump.
+The world is a MUD-style coordinate grid. Each press of **N / E / S / W** moves
+you one cell. Named locations appear when your cell matches a known node; between
+them you walk through open terrain. The world is freely traversable — quests
+never block a road.
 
 | Command | Action |
 |---------|--------|
-| **N / E / S / W** | Move one grid cell in that direction |
-| **Wait** | Rest at your current location (costs time) |
-| **Hunt** | Enter the wilderness to find a monster encounter |
+| **N / E / S / W** | Move one grid cell |
+| **Wait** | Rest at your location (costs time) |
+| **Hunt** | Enter the wilderness to find an encounter |
 
-Open terrain shows your coordinates, the terrain type, and which adjacent cells lead to named locations. Dangerous terrain (jungle, swamp, hag-swamp) can trigger random encounters mid-travel.
-
-Move toward quest markers. Talk to everyone. Read what the NPCs say — it changes as your relationship with them grows.
+Move toward quest markers, talk to everyone, and read what NPCs say — their
+dialogue changes as your relationship with them grows. Click a distant map tile
+to auto-travel there.
 
 ### Combat
 
-When you encounter a monster (or choose to Hunt), combat begins automatically. You roll initiative, then take turns:
+Encounters (or choosing **Hunt**) start combat automatically. Roll initiative,
+then take turns: **Attack**, **Dodge**, **Use Item**, or **Flee**. A natural
+**20** crits (double damage dice); a **1** fumbles. At 0 HP you make **death
+saving throws** — three successes stabilize, three failures end the run (and drop
+your loose loot as a recoverable corpse where you fell).
 
-- **Attack** — roll to hit; damage if you connect
-- **Dodge** — impose disadvantage on the enemy's next attack
-- **Use Item** — potions, condition cures, grenades
-- **Flee** — escape the encounter (costs a turn)
+### Leveling & NPCs
 
-A roll of **20** is a critical hit (double damage dice). A roll of **1** is a fumble.
-
-If HP drops to 0, make **death saving throws** — three successes stabilize you, three failures end the run.
-
-### Leveling Up
-
-Defeating monsters earns XP. When you hit a threshold, you level up. Each level unlocks Fighter Champion features: Action Surge, Second Wind, Critical Hit improvements, and more. The cap is **Level 20**.
-
-What's at Level 21? That's undefined. See `plan.md §XIV`.
-
-### Quests and NPCs
-
-Talk to the six named NPCs in Birka: **Yael, Brynn, Quill, Pachelbel, Weckmann, Auros**. Each has quests. Completing them raises favorability. Higher favorability unlocks new dialogue, story context, and the best ending.
-
-The **Curse of Knowledge** score tracks whether you've shared what you've learned — not your kill count. The ending notices.
+Defeating monsters earns XP toward Fighter Champion features (Action Surge,
+Second Wind, crit improvements). The cap is **Level 20**. Raising an NPC's
+favorability unlocks new dialogue, story context, and the best ending. The
+ending notices what you *shared*, not just what you killed.
 
 ### Saving
 
-The game saves automatically to `localStorage` after every meaningful action. To back up a run, use the **Export Save** button. To restore, use **Import Save**.
-
-### Tips
-
-- Read the journal entries. Froberger documented this world so you wouldn't have to start from zero.
-- The terrain you're standing in determines what monsters you'll encounter when you Hunt.
-- Gold matters. Manage your condition economy — some debuffs cost gold to cure before battle.
-- The Void Tide advances daily. Don't wait too long.
-
+The game autosaves to `localStorage` after every meaningful action. Use
+**Export Save** to back up a run and **Import Save** to restore it.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+
+## License
+
+MIT. Fork it. Extend it. Write Level 21. See [LICENSE](LICENSE) for full text.
+
+---
+*© 2026 Paul Richeson — MIT License.*
