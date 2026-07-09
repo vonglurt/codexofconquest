@@ -108,6 +108,22 @@ A sub-district invisible to city records. Entry sign (hand-lettered on a cardboa
 
 ---
 
+### **[✅ §KG Increment 2]** The St. Petersburg → Moscow Corridor (Nodes SPB, KMS, ZVD, FBR, TVR)
+
+A compact **low-level "kindergarten" band** running east off the Birka start (TLL, The First Inn) to the dead station at Moscow (SVO). Honor-central **Soviet-cyberpunk** dressing over a second beginner ramp: designed to carry a fresh character **L1 → ~L6** with Hunt Mode (§KG-01) and a 1→4 monster-level ladder. The corridor is real road (encounter-free travel); grinding happens off-road near each zone node and at the signature node battles. Free-Movement absolute: the band is *offered* (level-scaled encounters), never gated.
+
+Geography (projection `col=180+°lon, row≈69.75−°lat`): `TLL(10,204) → SPB(10,210) → KMS(11,211) → ZVD(12,213) → FBR(13,215) → TVR(13,216) → SVO(14,217)`.
+
+- **SPB — Nevsky Checkpoint** (`soviet_checkpoint`, St. Petersburg): the cover story. **NPC: Recruiter Volkov** (Mercenary Guild) signing warm bodies for "honest work in the east."
+- **KMS — Komsomol School** (`komsomol_school`, Novgorod): the drill. **NPC: Commissar-Instructor Roshkova** — "a cadet who cannot lose cleanly cannot win cleanly."
+- **ZVD — Gulag Gladiator Zavod** (`gladiator_zavod`): honor duels vs decommissioned gladiator bots. **NPC: Pit-Master Grimka** (Weckmann-east clean-fight ethic). Signature battle: Honor Duel vs `gladiator_bot`.
+- **FBR — The Skill Fabrika** (`skill_fabrika`): cyberpunk jack-in "brain-download" trade school. **NPC: Technician Iosif.** Signature battle: Sim Overload vs `trainer_bot_prime` (mLevel-4 capstone).
+- **TVR — Rzhev Transit Waystation** (`soviet_transit`): rest stop (sleep) + the road to the dark Station 7. **NPC: Quartermaster Lena** (seeds the SVO thread).
+
+> **DM note:** No Codex Shard, no main-quest connection — optional Act I content, a second on-ramp for a fresh character. Reuses/extends the cyberpunk anchors HKG (Neon Undercity) + SVO (Station 7). Monsters: monsters.md §"Soviet-Cyberpunk Training Tier." **NPC dialogue trees + the ~10–12 UQF quest chain are §KG Increment 3.** Design: `lab-reports/lab-report-kg-russia-kindergarten-zones.md`.
+
+---
+
 ### Act III Optional Detour — Yugurt Lake (Nodes YL, YC)
 
 Reached by going south from J6 (Western Wilds Crossroads, Node 48) in the Midlands. Not on any quest path. The lake has no Codex Shard, no faction presence, and no road. The hand-painted sign on a stick at the shore says YUGURT. Nobody put it there recently.

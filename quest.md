@@ -511,6 +511,14 @@ Events A–F use `gate:{}` (always listed on arrival) and `retryable:true`. **Ev
 
 ---
 
+## §KG — Russia "Kindergarten" Corridor 🔜 Quest chain is Increment 3 (nodes LIVE)
+
+**§KG Increment 2 (zones) is LIVE** — the St. Petersburg → Moscow corridor nodes (SPB/KMS/ZVD/FBR/TVR), 6 low-level "training" monsters (mLevel 1–4), and 5 Soviet-cyberpunk terrains all shipped. See world.md §"The St. Petersburg → Moscow Corridor" + monsters.md §"Soviet-Cyberpunk Training Tier."
+
+**Increment 3 (PLANNED): ~10–12 UQF-1.0 quests**, each anchored to a corridor NPC (audit enforces `npc`) — deliveries / talk / cull-3 / mini-boss, honor-central Soviet-cyberpunk. Anchors ready: **Recruiter Volkov** (SPB, cover story), **Commissar-Instructor Roshkova** (KMS, drill), **Pit-Master Grimka** (ZVD, honor duels), **Technician Iosif** (FBR, jack-in deliveries), **Quartermaster Lena** (TVR, road to Station 7). Each NPC currently carries a single signature `NPC_DIALOGUE` line; full dialogue trees land with the chain. Design: `lab-reports/lab-report-kg-russia-kindergarten-zones.md`.
+
+---
+
 ## QUEST COUNT SUMMARY
 
 | Status | Count |

@@ -3913,6 +3913,11 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
                   <option value="blacksmith_qtr">🔨 Blacksmith Quarter</option>
                   <option value="scholars_qtr">📚 Scholar's Quarter</option>
                   <option value="cyberpunk_streets">🔌 Cyberpunk Neon Streets</option>
+                  <option value="soviet_checkpoint">☭ Nevsky Checkpoint</option>
+                  <option value="komsomol_school">🎖 Komsomol School</option>
+                  <option value="gladiator_zavod">⚙ Gulag Gladiator Zavod</option>
+                  <option value="skill_fabrika">🧠 The Skill Fabrika</option>
+                  <option value="soviet_transit">🚉 Rzhev Transit Waystation</option>
                 </optgroup>
                 <optgroup label="🍺 Social / Indoor">
                   <option value="storefront">🏪 Market District</option>
@@ -4424,6 +4429,11 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
               <option value="blacksmith_qtr">🔨 Blacksmith Quarter</option>
               <option value="scholars_qtr">📚 Scholar's Quarter</option>
               <option value="cyberpunk_streets">🔌 Cyberpunk Streets</option>
+              <option value="soviet_checkpoint">☭ Nevsky Checkpoint</option>
+              <option value="komsomol_school">🎖 Komsomol School</option>
+              <option value="gladiator_zavod">⚙ Gulag Gladiator Zavod</option>
+              <option value="skill_fabrika">🧠 The Skill Fabrika</option>
+              <option value="soviet_transit">🚉 Rzhev Transit Waystation</option>
               <option value="storefront">🏪 Market District</option>
               <option value="bar">🍺 Tavern Brawl</option>
               <option value="inn">🛏 Inn</option>
@@ -5434,6 +5444,13 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
   bullywug:            { key:'bullywug',             name:'Bullywug',               ac:15, hp:11,  atk:3,  dmgDie:6,  dmgCount:1, dmgFlat:1,  tier:'easy' },
   dwarf_warrior:       { key:'dwarf_warrior',        name:'Dwarf Warrior',          ac:16, hp:26,  atk:4,  dmgDie:6,  dmgCount:1, dmgFlat:2,  tier:'easy' },
   techno_thug:         { key:'techno_thug',          name:'Techno-Thug',            ac:12, hp:32,  atk:4,  dmgDie:6,  dmgCount:2, dmgFlat:2,  tier:'easy' },
+  // §KG Increment 2 — low-level "training" pool (mLevel 1–4), Soviet-cyberpunk corridor
+  sparring_droid:      { key:'sparring_droid',       name:'Sparring Droid',         ac:9,  hp:5,   atk:1,  dmgDie:4,  dmgCount:1, dmgFlat:0,  tier:'trivial' },
+  komsomol_cadet:      { key:'komsomol_cadet',       name:'Komsomol Cadet',         ac:12, hp:8,   atk:3,  dmgDie:6,  dmgCount:1, dmgFlat:1,  tier:'trivial' },
+  zavod_sparbot:       { key:'zavod_sparbot',        name:'Zavod Spar-Bot',         ac:13, hp:10,  atk:3,  dmgDie:6,  dmgCount:1, dmgFlat:2,  tier:'easy' },
+  gladiator_bot:       { key:'gladiator_bot',        name:'Rusted Gladiator Bot',   ac:14, hp:14,  atk:4,  dmgDie:6,  dmgCount:1, dmgFlat:2,  tier:'easy' },
+  fabrika_enforcer:    { key:'fabrika_enforcer',     name:'Fabrika Enforcer',       ac:13, hp:16,  atk:4,  dmgDie:8,  dmgCount:1, dmgFlat:1,  tier:'easy' },
+  trainer_bot_prime:   { key:'trainer_bot_prime',    name:'Malfunctioning Trainer-Bot',ac:15,hp:26, atk:5,  dmgDie:6,  dmgCount:2, dmgFlat:1,  tier:'easy' },
   // medium
   ogre:                { key:'ogre',                 name:'Ogre',                   ac:11, hp:59,  atk:6,  dmgDie:8,  dmgCount:2, dmgFlat:4,  tier:'medium' },
   bugbear:             { key:'bugbear',              name:'Bugbear',                ac:16, hp:27,  atk:4,  dmgDie:8,  dmgCount:2, dmgFlat:2,  tier:'medium' },
@@ -5848,6 +5865,12 @@ const MONSTER_DROPS = { // → doc: mechanics-combat.md §Monster Trophy Drops
   bullywug:             { name:'Bullywug Tongue',         icon:'🧪', sell:6  },
   dwarf_warrior:        { name:'Dwarf Axe Shard',         icon:'🪓', sell:9  },
   techno_thug:          { name:'Cyber Implant Chip',      icon:'💡', sell:9  },
+  sparring_droid:       { name:'Cracked Servo',           icon:'🔧', sell:3  },
+  komsomol_cadet:       { name:'Red Kerchief',            icon:'🧣', sell:4  },
+  zavod_sparbot:        { name:'Dented Plating',          icon:'🛡', sell:5  },
+  gladiator_bot:        { name:'Bent Gladius',            icon:'🗡', sell:7  },
+  fabrika_enforcer:     { name:'Cortex Shunt',            icon:'🧠', sell:8  },
+  trainer_bot_prime:    { name:'Prime Core',              icon:'⚙', sell:12 },
   nekker:               { name:'Nekker Claw',             icon:'🌿', sell:8  },
   plague_rat:           { name:'Plague Rat Tail',         icon:'🧪', sell:6  },
   snapping_turtle:      { name:'Turtle Shell Fragment',   icon:'🐚', sell:8  },
@@ -6174,6 +6197,12 @@ const WORLD_DB = { // → doc: world.md §WORLD_DB
   blacksmith_qtr:   { label:'Blacksmith Quarter',   icon:'🔨',  monsters:[ P.commoner, P.dwarf_warrior, P.guard, P.animated_armor, P.thug, P.veteran, P.shield_guardian, P.stone_golem, P.forge_elemental, P.iron_golem, P.hym ] },
   scholars_qtr:     { label:"Scholar's Quarter",    icon:'📚',  monsters:[ P.commoner, P.homunculus, P.mage, P.specter, P.ghost, P.intellect_dev, P.archmage, P.lich, P.library_ghost, P.hym, P.bone_naga, P.scholars_guard ] },
   cyberpunk_streets:{ label:'Cyberpunk Neon Streets',icon:'🔌',  monsters:[ P.techno_thug, P.hacker, P.corrupted_android, P.cyber_guard, P.street_samurai, P.virus_spawn, P.neon_golem, P.cyber_vampire, P.data_wraith, P.neural_predator ] },
+  // §KG Increment 2 — Soviet-cyberpunk low-level corridor (St. Petersburg → Moscow), pools deepen W→E
+  soviet_checkpoint:{ label:'Nevsky Checkpoint',      icon:'☭',  monsters:[ P.sparring_droid, P.komsomol_cadet, P.commoner ] },
+  komsomol_school:  { label:'Komsomol School',        icon:'🎖',  monsters:[ P.komsomol_cadet, P.sparring_droid, P.zavod_sparbot ] },
+  gladiator_zavod:  { label:'Gulag Gladiator Zavod',  icon:'⚙',  monsters:[ P.zavod_sparbot, P.gladiator_bot, P.trainer_bot_prime ] },
+  skill_fabrika:    { label:'The Skill Fabrika',      icon:'🧠',  monsters:[ P.fabrika_enforcer, P.gladiator_bot, P.trainer_bot_prime ] },
+  soviet_transit:   { label:'Rzhev Transit Waystation',icon:'🚉', monsters:[ P.komsomol_cadet, P.zavod_sparbot, P.commoner ] },
   // ── Social / Indoor ──────────────────────────────────────
   storefront:       { label:'Market District',      icon:'🏪',  monsters:[ P.commoner, P.bandit, P.spy, P.imp, P.homunculus, P.kenku, P.thug, P.mimic, P.intellect_dev, P.doppelganger, P.succubus, P.assassin, P.vampire, P.hym, P.botchling, P.ekimara ] },
   bar:              { label:'Tavern Brawl',          icon:'🍺',  monsters:[ P.commoner, P.thug, P.bandit, P.berserker, P.cult_fanatic, P.wererat, P.wereboar, P.werewolf, P.doppelganger, P.bandit_captain, P.gladiator, P.veteran, P.redcap, P.barghest, P.botchling ] },
@@ -9081,6 +9110,16 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
     S:"J15",
   },
   J15: { num:63990, name:"junction", label:"Tungas Road Waypoint", text:"Signpost says: The The Tungas–Station 7 (Dark) Road. Follow this road between The Tungas and Station 7 (Dark).", npc:null, loot:null, N:"J14", act:1, sleep:false, junction:true },
+  SPB: { num:63991, name:"soviet_checkpoint", label:"Nevsky Checkpoint", text:"The checkpoint straddles the old Nevsky causeway where the Baltic wind comes off the water and does not stop. Concrete barricades, a striped boom gate frozen half-raised, a recruiting kiosk with its neon still buzzing three letters of a six-letter word.\n\nRecruiter Volkov works the queue with a clipboard and a smile that has signed a thousand names. Behind him a poster: a cadet in silhouette, fist raised, MERCENARY GUILD — HONEST WORK IN THE EAST stencilled underneath in red.\n\nThe people in line are young, cold, and out of options. Volkov treats each one like the most promising recruit he has seen all week. Some of them believe it. The gate points east, toward the steppe, toward whatever the Guild calls honest work.", npc:"Recruiter Volkov", loot:null, act:1, sleep:false,
+  },
+  KMS: { num:63992, name:"komsomol_school", label:"Komsomol School", text:"The School occupies a requisitioned drill hall — high windows, a scuffed floor marked with the ghosts of a hundred sparring circles, portraits of Heroes of Labour watching from the walls with expressions that do not soften.\n\nCommissar-Instructor Roshkova runs the floor like a metronome. Cadets in red kerchiefs move through forms in ragged unison; a rack of practice weapons and a row of dormant sparring droids wait along the far wall. Nothing here is unkind. Nothing here is soft either.\n\nA banner over the door reads: A CADET WHO CANNOT LOSE CLEANLY CANNOT WIN CLEANLY. Roshkova believes it the way other people believe in gravity.", npc:"Commissar-Instructor Roshkova", loot:null, act:1, sleep:false,
+  },
+  ZVD: { num:63993, name:"gladiator_zavod", label:"Gulag Gladiator Zavod", text:"The Zavod was a machine works once; the presses are cold and the pit was cut into the foundry floor where the largest of them stood. Sand, floodlights, a wire fence, and a scoreboard that still keeps count.\n\nPit-Master Grimka meets every fighter at the rail. The opponents are gladiator bots — decommissioned military units, reactors stripped, reflexes rusted, dignified in their obsolescence. The Zavod fights them with honor because, Grimka will tell you, they were built with it.\n\nThe rules are posted and short: three duels, no poison, no ganging up, and you lose standing up. A rusted gladiator bot is already in the pit, gladius raised in the salute its programming will not let it forget.", npc:"Pit-Master Grimka", loot:null, act:1, sleep:false, battle:{"label":"Honor Duel — Rusted Gladiator Bot","key":"gladiator_bot","count":1},
+  },
+  FBR: { num:63994, name:"skill_fabrika", label:"The Skill Fabrika", text:"Down a stair lit in surgical white, the Fabrika hums. Rows of reclining chairs, each with a chrome halo and a bundle of fibre running into the ceiling — the jack-in rigs the district calls the chairs. This is where you buy skill the fast way: sit down, and the chair writes into you what would take years to earn.\n\nTechnician Iosif tends the rigs with the patience of a man who has seen the process go right and go wrong in roughly equal measure. Half the fighters east of here trained in these chairs. The other half, he says, are still in them.\n\nOne rig is seizing — its halo strobing, the training-bot it was calibrating jerking out of the loading cradle with its regulator cooked. The sim has overloaded. Something has to shut it down.", npc:"Technician Iosif", loot:null, act:1, sleep:false, battle:{"label":"Sim Overload — Malfunctioning Trainer-Bot","key":"trainer_bot_prime","count":1},
+  },
+  TVR: { num:63995, name:"soviet_transit", label:"Rzhev Transit Waystation", text:"The waystation is the last lit thing before the line goes dark. A platform, a samovar always on the boil, a board of departures where every entry but one has been chalked through. The one that remains reads: STATION 7 — NO SERVICE.\n\nQuartermaster Lena keeps the stores, the mail sack, and the kettle. Travellers heading east refill here, post the letters they are not sure will arrive, and rest on the benches she keeps clear for exactly that.\n\nShe will sell you what you need and tell you what she knows, which is little and unsettling: the line to Station 7 used to answer. Three months ago it stopped. Nobody the Guild sent to check has come back to say why.", npc:"Quartermaster Lena", loot:null, act:1, sleepCost:5, sleep:true,
+  },
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
@@ -9096,6 +9135,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   THK:{r:4,c:157},
   LGR:{r:4,c:158},
   LXF:{r:4,c:158},
+  RSS:{r:4,c:159},
   SSJ:{r:4,c:192},
   MJF:{r:4,c:193},
   LLA:{r:4,c:202},
@@ -9112,12 +9152,15 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   TRD:{r:6,c:190},
   ECF:{r:6,c:191},
   MOL:{r:7,c:187},
+  TGS:{r:7,c:217},
 
   FRO:{r:8,c:185},
   LYG:{r:8,c:189},
+  ING:{r:8,c:190},
   TUO:{r:8,c:207},
   KVF:{r:8,c:207},
   KVM:{r:8,c:207},
+  J14:{r:8,c:217},
   VLH:{r:9,c:185},
   FLM:{r:9,c:185},
   BLG:{r:9,c:185},
@@ -9125,7 +9168,9 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   ASG:{r:9,c:185},
   ALR:{r:9,c:185},
   HNJ:{r:9,c:185},
+  RNG:{r:9,c:190},
   MHQ:{r:9,c:199},
+  J15:{r:9,c:217},
   BWH:{r:10,c:185},
   TRF:{r:10,c:190},
   HFT:{r:10,c:191},
@@ -9138,6 +9183,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   LHR:{r:10,c:197},
   BMA:{r:10,c:198},
   TLL:{r:10,c:204},
+  SPB:{r:10,c:210},
+  KMS:{r:11,c:211},
   HLD:{r:12,c:174},
   INV:{r:12,c:175},
   STK:{r:12,c:188},
@@ -9151,11 +9198,14 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   VS:{r:12,c:198},
   VBY:{r:12,c:198},
   NAS:{r:12,c:198},
+  ZVD:{r:12,c:213},
   CNA:{r:13,c:174},
   LLM:{r:13,c:175},
   ABF:{r:13,c:175},
   GLN:{r:13,c:175},
   RIX:{r:13,c:204},
+  FBR:{r:13,c:215},
+  TVR:{r:13,c:216},
   GLA:{r:14,c:175},
   EDI:{r:14,c:176},
   DNS:{r:14,c:190},
@@ -9187,6 +9237,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   GMT:{r:16,c:179},
   LBC:{r:16,c:190},
   KIR:{r:17,c:170},
+  DNF:{r:17,c:171},
   HLG:{r:17,c:175},
   ARD:{r:17,c:175},
   RDV:{r:17,c:176},
@@ -9201,9 +9252,14 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   SHF:{r:17,c:178},
   ASH:{r:17,c:178},
   EMT:{r:17,c:178},
+  CHY:{r:17,c:179},
+  RVP:{r:17,c:180},
   NWI:{r:17,c:181},
   AMS:{r:17,c:184},
+  GLD:{r:17,c:188},
   HAJ:{r:17,c:189},
+  CI:{r:17,c:190},
+  CLK:{r:17,c:191},
   CHP:{r:17,c:201},
   WAW:{r:17,c:201},
   JUR:{r:17,c:201},
@@ -9235,7 +9291,12 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   MSE:{r:18,c:181},
   TVO:{r:18,c:183},
   OST:{r:18,c:183},
+  OKD:{r:18,c:184},
   DUS:{r:18,c:186},
+  CHC:{r:18,c:188},
+  STB:{r:18,c:189},
+  PRH:{r:18,c:190},
+  MGR:{r:18,c:192},
   WRO:{r:18,c:197},
   J13:{r:19,c:174},
   ACT:{r:19,c:175},
@@ -9248,27 +9309,10 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   LGE:{r:19,c:185},
   AIX:{r:19,c:186},
   KOL:{r:19,c:186},
-  RDW:{r:21,c:176},
-  STB:{r:18,c:189},
-  MGR:{r:18,c:192},
-  WM:{r:19,c:191},
-  RVP:{r:17,c:180},
-  PRH:{r:18,c:190},
-  ING:{r:8,c:190},
-  ERF:{r:19,c:191},
-  CNTR:{r:28,c:248},
-  CLK:{r:17,c:191},
-  CHY:{r:17,c:179},
-  RNG:{r:9,c:190},
-  OKD:{r:18,c:184},
-  RSS:{r:4,c:159},
-  GLD:{r:17,c:188},
-  GHC:{r:27,c:224},
-  CI:{r:17,c:190},
-  CHC:{r:18,c:188},
   DNG:{r:19,c:189},
-  PHY:{r:27,c:223},
   GVW:{r:19,c:190},
+  WM:{r:19,c:191},
+  ERF:{r:19,c:191},
   KRK:{r:19,c:199},
   GCI:{r:20,c:177},
   STP:{r:20,c:177},
@@ -9282,6 +9326,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   NUE:{r:20,c:191},
   RGS:{r:20,c:192},
   BRT:{r:21,c:175},
+  RDW:{r:21,c:176},
   CDG:{r:21,c:182},
   LIM:{r:21,c:182},
   FRK:{r:21,c:182},
@@ -9295,7 +9340,6 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   SAR:{r:21,c:224},
   ORL:{r:22,c:181},
   ZRH:{r:22,c:188},
-  DNF:{r:17,c:171},
   KTM:{r:22,c:191},
   INN:{r:22,c:191},
   SZG:{r:22,c:193},
@@ -9373,6 +9417,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   DBV:{r:27,c:198},
   PRN:{r:27,c:201},
   SOF:{r:27,c:203},
+  PHY:{r:27,c:223},
+  GHC:{r:27,c:224},
   ROM:{r:28,c:192},
   FCO:{r:28,c:192},
   SAU:{r:28,c:192},
@@ -9384,6 +9430,8 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   TBS:{r:28,c:224},
   TIF:{r:28,c:224},
   GEO:{r:28,c:224},
+  ZERO:{r:28,c:247},
+  CNTR:{r:28,c:248},
   MAD:{r:29,c:176},
   NAP:{r:29,c:194},
   BRI:{r:29,c:197},
@@ -9399,6 +9447,9 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   AMY:{r:29,c:215},
   TRB:{r:29,c:219},
   GNJ:{r:29,c:226},
+  HKG:{r:29,c:246},
+  EHZ:{r:29,c:247},
+  MONS:{r:29,c:248},
   TOL:{r:30,c:175},
   VLC:{r:30,c:179},
   PHC:{r:30,c:199},
@@ -9411,11 +9462,9 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   SIV:{r:30,c:217},
   ERZ:{r:30,c:219},
   BUK:{r:30,c:244},
-  HKG:{r:29,c:246},
-  BKK:{r:31,c:246},
   SJO:{r:30,c:245},
-  CTU:{r:30,c:247},
   SAM:{r:30,c:246},
+  CTU:{r:30,c:247},
   LHA:{r:31,c:170},
   MDN:{r:31,c:170},
   CVP:{r:31,c:170},
@@ -9425,6 +9474,7 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   ORC:{r:31,c:202},
   CHI:{r:31,c:206},
   TBZ:{r:31,c:226},
+  BKK:{r:31,c:246},
 
   PDL:{r:32,c:154},
   ZTH:{r:32,c:200},
@@ -9483,9 +9533,6 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   ALE:{r:38,c:209},
   SGA:{r:38,c:214},
   JRS:{r:38,c:215},
-  ZERO:{r:28,c:247},
-  EHZ:{r:29,c:247},
-  MONS:{r:29,c:248},
   PKR:{r:38,c:215},
   JAR:{r:38,c:215},
   OLN:{r:38,c:215},
@@ -9506,9 +9553,6 @@ const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
   RAI:{r:55,c:156},
 
   MLN:{r:73,c:220},
-  TGS:{r:7,c:217},
-  J14:{r:8,c:217},
-  J15:{r:9,c:217},
 };
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
 
@@ -9547,7 +9591,7 @@ const IMPASSABLE_CELLS = (() => {
 // Fungal road net: MST + local-loop corridors between all 235 settlement cells; trunk-reuse
 // Dijkstra grows shared highways with intersections/T-junctions. 400 road cells, 88 junctions.
 // Roads are TERRAIN (encounter rate 0), never permissions — the open field stays walkable (§NAV-01 guard-rail).
-const ROAD_RUNS = {2:[[195,199],[201,201]],3:[[193,194],[201,201]],4:[[160,165],[201,201]],5:[[163,163],[191,192]],7:[[186,186],[188,190]],8:[[186,186],[204,206]],9:[[204,204]],10:[[186,189],[192,196]],11:[[175,175],[188,188],[191,191],[204,204]],12:[[190,190],[204,204]],13:[[188,190]],14:[[174,174],[177,177],[189,189],[204,204]],15:[[189,189],[200,203],[217,217]],16:[[171,172],[189,189],[198,199],[201,201],[204,204],[217,217]],17:[[192,192],[198,200],[202,204],[217,217]],18:[[185,185],[187,187],[191,191],[193,196],[198,199],[204,204],[217,217]],19:[[183,183],[187,188],[196,196],[204,204],[217,217]],20:[[178,182],[186,187],[196,196],[199,199],[204,204],[217,217]],21:[[177,177],[181,181],[186,186],[188,189],[193,195],[197,199],[204,204],[217,217],[219,223]],22:[[186,186],[203,203],[214,218],[224,224]],23:[[181,181],[187,188],[191,191],[193,193],[201,202],[204,204],[214,214],[224,224]],24:[[179,179],[181,181],[186,188],[191,191],[194,197],[200,200],[203,203],[205,206],[214,214],[224,224]],25:[[185,186],[189,190],[198,199],[201,201],[203,203],[207,207],[224,224]],26:[[179,180],[182,182],[192,192],[198,199],[201,201],[203,203],[206,206],[224,224]],27:[[177,179],[192,193],[199,200],[202,202],[206,207],[222,222]],28:[[176,176],[179,179],[193,195],[199,199],[203,205],[207,207],[221,222],[225,226]],29:[[175,175],[177,179],[196,196],[199,199],[206,206],[210,214],[216,217],[220,221]],30:[[174,174],[200,200],[202,202],[208,208],[218,218],[220,220],[226,226],[242,243],[248,249]],31:[[171,174],[201,201],[207,208],[212,212],[217,217],[220,220],[242,242],[249,249]],32:[[174,174],[193,194],[201,201],[208,208],[213,215],[217,217],[221,225],[227,228],[249,249]],33:[[181,189],[213,213],[224,224],[239,242],[249,249]],34:[[174,174],[178,181],[216,216],[224,224],[228,228],[242,242],[249,249]],35:[[174,174],[176,178],[216,216],[224,227],[241,241]],36:[[172,174],[227,227],[241,241]],37:[[171,172],[227,227],[241,241]],38:[[170,171],[210,210],[227,233],[235,241]],39:[[170,170],[210,210],[212,214]],40:[[170,170],[211,211],[227,227]],41:[[169,170],[211,212],[227,227]],42:[[167,169],[212,212],[227,227]],43:[[166,167],[212,213],[227,227]],44:[[165,166],[213,214],[226,229]],45:[[165,165],[214,214],[230,230]],46:[[164,165],[214,215],[230,237]],47:[[164,164],[215,215]],48:[[164,164],[215,216]],49:[[164,164],[216,216]],50:[[164,164],[216,216]],51:[[164,164],[216,217]],52:[[164,164],[217,218]],53:[[163,164],[218,218]],54:[[218,219]],55:[[219,220]],56:[[220,220]],57:[[220,220]],58:[[220,220]],59:[[220,220]],60:[[220,220]],61:[[220,220]],62:[[220,220]],63:[[220,220]],64:[[220,220]],65:[[220,220]],66:[[220,220]],67:[[220,220]],68:[[220,220]],69:[[220,220]],70:[[220,220]],71:[[220,220]],72:[[220,220]]};
+const ROAD_RUNS = {2:[[195,199],[201,201]],3:[[193,194],[201,201]],4:[[160,165],[201,201]],5:[[163,163],[191,192]],7:[[186,186],[188,190]],8:[[186,186],[204,206]],9:[[204,204]],10:[[186,189],[192,196],[205,209]],11:[[175,175],[188,188],[191,191],[204,204],[210,210],[212,212]],12:[[190,190],[204,204],[212,212],[214,214]],13:[[188,190],[214,214]],14:[[174,174],[177,177],[189,189],[204,204],[216,216]],15:[[189,189],[200,203],[217,217]],16:[[171,172],[189,189],[198,199],[201,201],[204,204],[217,217]],17:[[192,192],[198,200],[202,204],[217,217]],18:[[185,185],[187,187],[191,191],[193,196],[198,199],[204,204],[217,217]],19:[[183,183],[187,188],[196,196],[204,204],[217,217]],20:[[178,182],[186,187],[196,196],[199,199],[204,204],[217,217]],21:[[177,177],[181,181],[186,186],[188,189],[193,195],[197,199],[204,204],[217,217],[219,223]],22:[[186,186],[203,203],[214,218],[224,224]],23:[[181,181],[187,188],[191,191],[193,193],[201,202],[204,204],[214,214],[224,224]],24:[[179,179],[181,181],[186,188],[191,191],[194,197],[200,200],[203,203],[205,206],[214,214],[224,224]],25:[[185,186],[189,190],[198,199],[201,201],[203,203],[207,207],[224,224]],26:[[179,180],[182,182],[192,192],[198,199],[201,201],[203,203],[206,206],[224,224]],27:[[177,179],[192,193],[199,200],[202,202],[206,207],[222,222]],28:[[176,176],[179,179],[193,195],[199,199],[203,205],[207,207],[221,222],[225,226]],29:[[175,175],[177,179],[196,196],[199,199],[206,206],[210,214],[216,217],[220,221]],30:[[174,174],[200,200],[202,202],[208,208],[218,218],[220,220],[226,226],[242,243],[248,249]],31:[[171,174],[201,201],[207,208],[212,212],[217,217],[220,220],[242,242],[249,249]],32:[[174,174],[193,194],[201,201],[208,208],[213,215],[217,217],[221,225],[227,228],[249,249]],33:[[181,189],[213,213],[224,224],[239,242],[249,249]],34:[[174,174],[178,181],[216,216],[224,224],[228,228],[242,242],[249,249]],35:[[174,174],[176,178],[216,216],[224,227],[241,241]],36:[[172,174],[227,227],[241,241]],37:[[171,172],[227,227],[241,241]],38:[[170,171],[210,210],[227,233],[235,241]],39:[[170,170],[210,210],[212,214]],40:[[170,170],[211,211],[227,227]],41:[[169,170],[211,212],[227,227]],42:[[167,169],[212,212],[227,227]],43:[[166,167],[212,213],[227,227]],44:[[165,166],[213,214],[226,229]],45:[[165,165],[214,214],[230,230]],46:[[164,165],[214,215],[230,237]],47:[[164,164],[215,215]],48:[[164,164],[215,216]],49:[[164,164],[216,216]],50:[[164,164],[216,216]],51:[[164,164],[216,217]],52:[[164,164],[217,218]],53:[[163,164],[218,218]],54:[[218,219]],55:[[219,220]],56:[[220,220]],57:[[220,220]],58:[[220,220]],59:[[220,220]],60:[[220,220]],61:[[220,220]],62:[[220,220]],63:[[220,220]],64:[[220,220]],65:[[220,220]],66:[[220,220]],67:[[220,220]],68:[[220,220]],69:[[220,220]],70:[[220,220]],71:[[220,220]],72:[[220,220]]};
 const ROAD_CELLS = (() => {
   const s = new Set();
   for (const [r, rr] of Object.entries(ROAD_RUNS))
@@ -21590,6 +21634,12 @@ const JOURNAL_ENTRIES = { // dead code — 5 node-specific Froberger quotes (ent
 const NPC_DIALOGUE = { // → doc: story.md §FL7
   LHR: { name:'City Guard Captain',              quote:'"Move along. The lower districts are sealed after dark — third night running. Whatever came out of the crypt, it\'s not going back in on its own."' },
   TLL: { name:'Innkeeper Brynn',                 quote:'"He left this in the room. Paid three nights ahead, didn\'t sleep the third one. I kept it. Felt like someone would come asking."' },
+  // §KG Increment 2 — St. Petersburg → Moscow corridor NPC anchors (dialogue trees + quests → Increment 3)
+  SPB: { name:'Recruiter Volkov',                quote:'"Guild pays in silver and skills, friend. Sign here. The east is honest work — you fight who they match you against, nothing more, nothing less. That\'s the honor of it."' },
+  KMS: { name:'Commissar-Instructor Roshkova',   quote:'"You arrive soft. The School does not judge soft — the School corrects it. Three forms, then you spar. A cadet who cannot lose cleanly cannot win cleanly."' },
+  ZVD: { name:'Pit-Master Grimka',               quote:'"These bots were gladiators before the Zavod stripped their reactors. We fight them with honor because they fought us with it. Three duels. No poison, no ganging. You lose, you lose standing up."' },
+  FBR: { name:'Technician Iosif',                quote:'"Sit. The chair reads what you know and writes what you don\'t — slowly, and it costs. Half the district trained here. The other half is still in the chair. Don\'t be the other half."' },
+  TVR: { name:'Quartermaster Lena',              quote:'"Last stop before the dead station. Refill, resupply, send your letters — the line to Station 7 runs quiet these days. Something out there stopped answering."' },
   MHQ: { name:'Bard Tomas Couperin',                quote:'"Song\'s old. Older than the city, older than the Conclave. The melody\'s simple but the words are a lock waiting for a key. Yours for a drink and a silver."' },
   LLA: { name:'City Fence',                      quote:'"No names, no receipts. If you have regrets, that\'s yours to carry. Show coin and we begin."' },
   HAJ: { name:'The Antecedent', quoteFn:() => { // §LV — one-time; flag set on read

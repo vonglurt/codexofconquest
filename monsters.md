@@ -548,6 +548,23 @@ Also appears in this terrain: **Commoner** (`commoner`) and **Giant Rat** (`gian
 
 ---
 
+## ☭ Soviet-Cyberpunk Training Tier — §KG Increment 2 (St. Petersburg → Moscow corridor)
+
+The low-level "training" pool for the §KG kindergarten zones (nodes SPB/KMS/ZVD/FBR/TVR). Calibrated to a clean **1→4 `_monsterLevel` ladder** (§KG-01 metric: `score = AC + 0.35·HP + 1.5·avgHit`) so a fresh L1 can grind to ~L6 with Hunt Mode. All entries are at/below the weakest cyberpunk monster (Techno-Thug, mLevel ~4) — this pool *is* the training tier that band was missing. Honor framing is in the prose (decommissioned/sparring/matched bouts), not the stats.
+
+| Name | Key | AC | HP | ATK | Damage | Tier | mLevel | Trophy (sell) |
+|------|-----|----|----|-----|--------|------|--------|---------------|
+| Sparring Droid | `sparring_droid` | 9 | 5 | +1 | 1d4+0 | trivial | 1 | Cracked Servo (3) |
+| Komsomol Cadet | `komsomol_cadet` | 12 | 8 | +3 | 1d6+1 | trivial | 2 | Red Kerchief (4) |
+| Zavod Spar-Bot | `zavod_sparbot` | 13 | 10 | +3 | 1d6+2 | easy | 2 | Dented Plating (5) |
+| Rusted Gladiator Bot | `gladiator_bot` | 14 | 14 | +4 | 1d6+2 | easy | 3 | Bent Gladius (7) |
+| Fabrika Enforcer | `fabrika_enforcer` | 13 | 16 | +4 | 1d8+1 | easy | 3 | Cortex Shunt (8) |
+| Malfunctioning Trainer-Bot | `trainer_bot_prime` | 15 | 26 | +5 | 2d6+1 | easy | 4 | Prime Core (12) |
+
+**Terrain pools (WORLD_DB, one per node, deepening W→E):** `soviet_checkpoint` (SPB) · `komsomol_school` (KMS) · `gladiator_zavod` (ZVD) · `skill_fabrika` (FBR) · `soviet_transit` (TVR). `commoner` (Rabid Monkey, mLevel 1) pads the two gentlest pools. **Signature node battles:** ZVD honor duel vs `gladiator_bot`; FBR sim-overload vs `trainer_bot_prime`. Design: `lab-reports/lab-report-kg-russia-kindergarten-zones.md`. Quest chain is §KG Increment 3.
+
+---
+
 ## Yugurt Lake Fish — Pool (fish_01–fish_20)
 
 Terrain: `yugurt_lake`. Used exclusively by the fishing system (2d20 cast; fish rank must fall within [lo, hi]). Not placed by the normal weighted-encounter picker. All 20 keys are in `MONSTER_POOL`.
