@@ -694,7 +694,7 @@ async function main() {
     coordData   = coordRes.coords || {};
   } catch (e) {
     log(`ERROR fetching from WBAPI: ${e.message}`);
-    log('Is WBAPI running? Try: node wbapi-server.js');
+    log('Is WBAPI running? Try: node js/wbapi-server.js');
     process.exit(1);
   }
 

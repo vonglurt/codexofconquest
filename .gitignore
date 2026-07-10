@@ -81,9 +81,9 @@ milepoints/archive/cleanup-*.tar.gz
 
 # ── §MESH-01: per-machine mesh identity + peer cache — never commit ─────────
 .wbapi-server-id
-peers-cache.json
-tracker-cache.json
-mesh-acl.json
+config/peers-cache.json
+config/tracker-cache.json
+config/mesh-acl.json
 
 # ── §MESH-01i: per-deployment economy ledger (durable hash-chain log) ────────
 ledger/

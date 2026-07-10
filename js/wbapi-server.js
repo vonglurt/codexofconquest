@@ -39,6 +39,10 @@ const Rooms     = require('./rooms');   // §NAV-01f shared room-description ker
 const Duel      = require('./duel');    // §MESH-01j shared duel-resolution kernel (also inlined in roll2hit-v3.html)
 const Anthropic = require('@anthropic-ai/sdk');
 
+// ── Repo layout (this file lives in js/; assets/data are one level up) ────────
+const ROOT = path.resolve(__dirname, '..');          // repo root
+const CFG  = path.join(ROOT, 'config');              // config/ — data + config files
+
 // ── Nonce registry (one-time delete tokens, 5-min TTL) ───────────────────────
 const NONCES   = new Map(); // token → { type, key, expires }
 const NONCE_TTL = 5 * 60 * 1000;
@@ -210,7 +214,7 @@ const SERVER_NAME = String(process.env.SERVER_NAME
   || require('os').hostname() || 'r2h-server').slice(0, 60);
 const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
-  || path.join(__dirname, 'roll2hit-v3.html');
+  || path.join(ROOT, 'roll2hit-v3.html');
 
 // ══ §MESH-01 b/c — identity · world manifest · ACL · gossip mesh ═════════════
 // Design: lab-reports/lab-report-mesh-multiuser.md. Presence records are
@@ -221,7 +225,7 @@ const MESH_PROTO = 1;
 
 // Persistent random identity. MESH_SERVER_ID env override exists ONLY so the
 // harness can boot several servers from one directory; prod uses the id file.
-const SERVER_ID_FILE = process.env.SERVER_ID_FILE || path.join(__dirname, '.wbapi-server-id');
+const SERVER_ID_FILE = process.env.SERVER_ID_FILE || path.join(ROOT, '.wbapi-server-id');
 let _serverId = null;
 function getServerId() {
   if (_serverId) return _serverId;
@@ -256,7 +260,7 @@ function getServerId() {
 // proposer's origin relays the offer to the counterparty's origin over
 // POST /api/trade/relay, the accept relays back, and the proposer's origin
 // authors ONE event carrying both origins' sigs + both players' chain links.
-const LEDGER_DIR = process.env.LEDGER_DIR || path.join(__dirname, 'ledger');
+const LEDGER_DIR = process.env.LEDGER_DIR || path.join(ROOT, 'ledger');
 const TRADE_TTL = parseInt(process.env.LEDGER_TRADE_TTL_MS || '', 10) || 60 * 1000;
 const LEDGER = {
   loaded: false,
@@ -723,7 +727,7 @@ const {
 // scripts/build-roads.js consumes pins/links at reweave (§NAV-01h); `locked` is honored
 // by POST /api/layout/geo-seed — locked codes keep their coords through regeneration.
 // Mutated ONLY via PUT /api/roads/lock (worldbuilder 🔒 toggle); env override for tests.
-const ROADS_PINS_FILE = process.env.ROADS_PINS_FILE || path.join(__dirname, 'roads-pins.json');
+const ROADS_PINS_FILE = process.env.ROADS_PINS_FILE || path.join(CFG, 'roads-pins.json');
 function readRoadsPins() {
   try {
     const p = JSON.parse(fs.readFileSync(ROADS_PINS_FILE, 'utf8'));
@@ -766,7 +770,7 @@ const GEO_ANCHORED = new Set([
 // Modes: fast (quiet) | debug (verbose) | trace (verbose + full algorithm trace)
 // Persisted in milepoints/wbapi-config.json; changed live via POST /api/mode.
 // Env vars WBAPI_VERBOSE / WBAPI_TRACE override the config on startup only.
-const CONFIG_FILE = path.join(__dirname, 'milepoints', 'wbapi-config.json');
+const CONFIG_FILE = path.join(ROOT, 'milepoints', 'wbapi-config.json');
 const MODES = {
   fast:  { verbose: false, trace: false },
   debug: { verbose: true,  trace: false },
@@ -806,9 +810,9 @@ function _applyMode(mode, save) {
 const PLACEHOLDER_NODES = new Set(['QUEST','TBD','TODO','UNKNOWN','NONE','XXX','PLACEHOLDER']);
 
 // ── Logging ──────────────────────────────────────────────────────────────────
-const LOG_FILE       = path.join(__dirname, 'milepoints', 'wbapi-server.log');
-const ERROR_FILE     = path.join(__dirname, 'milepoints', 'wbapi-server.error');
-const SPEAK_LOG_FILE = path.join(__dirname, 'milepoints', 'npc-speak.log');
+const LOG_FILE       = path.join(ROOT, 'milepoints', 'wbapi-server.log');
+const ERROR_FILE     = path.join(ROOT, 'milepoints', 'wbapi-server.error');
+const SPEAK_LOG_FILE = path.join(ROOT, 'milepoints', 'npc-speak.log');
 const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
 
 function writeError(msg, detail) {
@@ -2703,7 +2707,7 @@ async function route(req, res) {
     // cli topic — run ./api.sh --help live and return current output
     if (topic === 'cli') {
       const { execFile } = require('child_process');
-      const apiSh = path.join(__dirname, 'api.sh');
+      const apiSh = path.join(ROOT, 'api.sh');
       return new Promise(resolve => {
         execFile(apiSh, ['--help'], { timeout: 8000 }, (err, stdout, stderr) => {
           const output = (stdout || '') + (stderr || '');
@@ -7160,8 +7164,8 @@ async function route(req, res) {
       try {
         const { execFile } = require('child_process');
         const run = (script) => new Promise((resolve) => {
-          execFile(process.execPath, [path.join(__dirname, 'scripts', script), ...(script === 'build-roads.js' ? ['--apply'] : [])],
-            { cwd: __dirname, timeout: 120000 },
+          execFile(process.execPath, [path.join(ROOT, 'scripts', script), ...(script === 'build-roads.js' ? ['--apply'] : [])],
+            { cwd: ROOT, timeout: 120000 },
             (err, stdout, stderr) => resolve({ err, out: String(stdout || '') + String(stderr || '') }));
         });
         const snapshot = fs.readFileSync(GAME_FILE, 'utf8');
@@ -7766,7 +7770,7 @@ async function route(req, res) {
       //   GEO2 (155 true) → gazetteer.realPlaces (true) → gazetteer.anchors (approx);
       //   satellites + offEarth resolve to their parent/anchor's lat/lon (chained, cycle-safe).
       let GAZ = { realPlaces:{}, satellites:{}, anchors:{}, offEarth:{} };
-      try { GAZ = JSON.parse(fs.readFileSync(path.join(__dirname, 'walk-geo-gazetteer.json'), 'utf8')); }
+      try { GAZ = JSON.parse(fs.readFileSync(path.join(CFG, 'walk-geo-gazetteer.json'), 'utf8')); }
       catch (e) { logRow('geo-seed', `WARN: gazetteer not loaded (${e.message}) — GEO2-only`); }
       const latlon = {};
       for (const [k, v] of Object.entries(GEO2))                    latlon[k] = { lat:v.lat, lon:v.lon, src:'geo2' };

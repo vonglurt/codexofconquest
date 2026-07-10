@@ -111,7 +111,7 @@ async function startServer(port, extraEnv = {}, extraArgs = []) {
     console.error(`✗ port ${port} is already in use — set MUD_HARNESS_PORT to a free port.`);
     stopAllServers(); process.exit(1);
   }
-  const proc = spawn('node', ['wbapi-server.js', ...extraArgs], {
+  const proc = spawn('node', ['js/wbapi-server.js', ...extraArgs], {
     cwd: ROOT, env: { ...process.env, PORT: String(port), ...extraEnv }, stdio: ['ignore', 'ignore', 'pipe'],
   });
   const srv = { port, base, proc, stderr: '' };
@@ -658,8 +658,8 @@ async function main() {
   // (literals re-parsed from roll2hit-v3.html, client fallbacks reproduced) —
   // an independent construction, so server-side world-assembly drift fails.
   console.log('\n[M] §NAV-01f — server room ≡ client describeCell (byte-equal)');
-  const Rooms = requireCjs(path.join(ROOT, 'rooms.js'));
-  const CORE  = requireCjs(path.join(ROOT, 'wbapi-core.js'));
+  const Rooms = requireCjs(path.join(ROOT, 'js', 'rooms.js'));
+  const CORE  = requireCjs(path.join(ROOT, 'js', 'wbapi-core.js'));
   CORE.load(path.join(ROOT, 'roll2hit-v3.html'));
   const gameSrc = CORE._rawSrc;
   const lit = (re) => { const m = gameSrc.match(re); return m ? (new Function('return ' + m[1]))() : null; };
@@ -1279,13 +1279,13 @@ async function main() {
   console.log('\n[Q] §MESH-01-FU 11–13 — ACL template · tracker cache + federation bootstrap · chat backlog');
 
   // FU 11 — the committed template must be valid JSON that keeps the mesh open verbatim.
-  const aclEx = JSON.parse(fs.readFileSync(path.join(ROOT, 'mesh-acl.json.example'), 'utf8'));
+  const aclEx = JSON.parse(fs.readFileSync(path.join(ROOT, 'config', 'mesh-acl.json.example'), 'utf8'));
   check(aclEx.mode === 'open'
     && ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes']
       .every((k) => Array.isArray(aclEx[k]) && aclEx[k].length === 0),
     'mesh-acl.json.example is valid JSON: mode open + all six allow/block lists present and empty (safe to copy verbatim)');
   const aclQ = path.join(tmp, `r2h-acl-example-${process.pid}.json`);
-  fs.copyFileSync(path.join(ROOT, 'mesh-acl.json.example'), aclQ);
+  fs.copyFileSync(path.join(ROOT, 'config', 'mesh-acl.json.example'), aclQ);
   const mQ2 = await startServer(PORT + 38, mkEnv(PORT + 38, '6f'.repeat(16), { MESH_ACL_FILE: aclQ }));
   check((await jget('/mesh/status', mQ2.base)).acl.mode === 'open', 'a server running the copied template reports acl mode open');
   await sleep(20);

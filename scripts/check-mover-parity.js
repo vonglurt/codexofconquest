@@ -17,7 +17,7 @@ function core(file) {
   return src.slice(a, b + END.length);
 }
 
-const a = core('mover.js');
+const a = core('js/mover.js');
 const b = core('roll2hit-v3.html');
 if (a === b) {
   console.log(`✓ mover parity: MOVER:CORE identical in mover.js and roll2hit-v3.html (${a.length} bytes)`);

@@ -19,10 +19,10 @@ name: WALK invariants
 on:
   push:
     paths:
-      - 'mover.js'
+      - 'js/mover.js'
       - 'roll2hit-v3.html'
-      - 'wbapi-server.js'
-      - 'wbapi-core.js'
+      - 'js/wbapi-server.js'
+      - 'js/wbapi-core.js'
       - 'scripts/check-invariants.js'
       - 'scripts/check-mover-parity.js'
       - 'scripts/check-mover-behaviour.js'
@@ -37,10 +37,10 @@ on:
       - '.github/workflows/walk-invariants.yml'
   pull_request:
     paths:
-      - 'mover.js'
+      - 'js/mover.js'
       - 'roll2hit-v3.html'
-      - 'wbapi-server.js'
-      - 'wbapi-core.js'
+      - 'js/wbapi-server.js'
+      - 'js/wbapi-core.js'
       - 'scripts/check-invariants.js'
       - 'scripts/check-mover-parity.js'
       - 'scripts/check-mover-behaviour.js'

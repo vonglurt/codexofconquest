@@ -19,7 +19,7 @@ function core(file) {
   return src.slice(a, b + END.length);
 }
 
-const a = core('duel.js');
+const a = core('js/duel.js');
 const b = core('roll2hit-v3.html');
 if (a === b) {
   console.log(`✓ duel parity: DUEL:CORE identical in duel.js and roll2hit-v3.html (${a.length} bytes)`);

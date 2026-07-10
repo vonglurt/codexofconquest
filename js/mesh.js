@@ -26,6 +26,9 @@
 const fs = require('fs');
 const path = require('path');
 
+// This module lives in js/; its config/cache files live in config/ (one up).
+const CFG = path.join(path.resolve(__dirname, '..'), 'config');
+
 // The one styled operator warning this module emits (ACL parse failure).
 const C = { bold: '\x1b[1m', yellow: '\x1b[33m', reset: '\x1b[0m' };
 
@@ -39,7 +42,7 @@ module.exports = function createMesh({
 // ACL — mesh-acl.json (repo root, hot-reloaded on mtime change). Applied to
 // gossip ingress, gossip responses, and dial-out. mode:'allowlist' = private
 // friends mesh; default open with empty blocklists.
-const ACL_FILE = process.env.MESH_ACL_FILE || path.join(__dirname, 'mesh-acl.json');
+const ACL_FILE = process.env.MESH_ACL_FILE || path.join(CFG, 'mesh-acl.json');
 let _aclMtime = -1, _acl = null;
 function getAcl() {
   try {
@@ -113,7 +116,7 @@ function pushTraffic(dir, kind, peer, ok, note) {
 const MESH_GOSSIP_MS  = parseInt(process.env.MESH_GOSSIP_MS || '', 10) || 2000;
 const MESH_ORIGIN_TTL = 90_000;        // drop a remote origin after 90 s of silence
 const MESH_FANOUT_MAX_AGE = 10_000;    // replayed history advances vv but is not re-announced
-const PEERS_CACHE_FILE = process.env.PEERS_CACHE_FILE || path.join(__dirname, 'peers-cache.json');
+const PEERS_CACHE_FILE = process.env.PEERS_CACHE_FILE || path.join(CFG, 'peers-cache.json');
 const ADVERTISE_ADDR = process.env.ADVERTISE_ADDR
   || process.argv.find((a, i) => process.argv[i-1] === '--advertise')
   || '';
@@ -317,7 +320,7 @@ function loadStaticPeers() {
   (process.env.MESH_PEERS || '').split(',').map((s) => s.trim()).forEach(add);
   try { (JSON.parse(fs.readFileSync(PEERS_CACHE_FILE, 'utf8')).addrs || []).forEach(add); } catch {}
   try {
-    for (const line of fs.readFileSync(path.join(__dirname, 'peers.txt'), 'utf8').split('\n')) {
+    for (const line of fs.readFileSync(path.join(CFG, 'peers.txt'), 'utf8').split('\n')) {
       const t = line.trim();
       if (!t || t.startsWith('#')) continue;
       if (t.startsWith('tracker ')) { addTrackerUrl(t.slice(8).trim()); continue; }
@@ -353,7 +356,7 @@ function trackerSweep() {
 // of an empty table. Records are saved with ageMs and re-aged by the tracker's
 // downtime on load, so a long outage honestly expires them (stale addrs are
 // junk, not history). Throttled + dirty-flagged: an idle tracker writes nothing.
-const TRACKER_CACHE_FILE = process.env.TRACKER_CACHE_FILE || path.join(__dirname, 'tracker-cache.json');
+const TRACKER_CACHE_FILE = process.env.TRACKER_CACHE_FILE || path.join(CFG, 'tracker-cache.json');
 const TRACKER_PERSIST_MS = parseInt(process.env.TRACKER_PERSIST_MS || '', 10) || 30_000;
 let _trackerDirty = false;
 function trackerPersist() {

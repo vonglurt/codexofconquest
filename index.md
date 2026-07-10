@@ -4,9 +4,11 @@
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
 **Status:** Layers 0–104 implemented · 36,933 lines · 410 nodes · 392 monsters · ~2,830 quests · 85 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + **§MESH-01 gameplay ladder (f–j) ✅ COMPLETE 2026-07-06** (buffs · hireling · sentries · no-dupe ledger incl. cross-origin trades · PvP duels) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · §DATA-01 ✅ RESOLVED 2026-07-06 (superseded by §ARCH-01 UQF; journal-renderer textContent residual shipped)
-**Last updated:** 2026-07-09 — repository reorganized (see below)
+**Last updated:** 2026-07-09 — repository reorganized + structure simplified (see below)
 
 > **📁 Repo reorganized 2026-07-09.** Root decluttered ~110 → ~35 files. `plan.md` split into `CONTRIBUTING.md` (dev policies) + `BACKLOG.md` (outstanding work). Historical docs moved under `docs/{spec,story,api,mechanics,notes}/`; importers → `importers/`, dev utilities → `tools/`, narrative texts → `sources/`. Core sync docs stay at root. Folder map + hosting/run instructions: **`README.md`**.
+>
+> **🧹 Structure simplified 2026-07-09 (§CLEANUP-02).** Runtime JavaScript moved to **`js/`** (`wbapi-server.js`, `wbapi-core.js`, `mesh.js`, `mover.js`, `rooms.js`, `duel.js`); data + config moved to **`config/`** (`peers.txt`, `roads-pins.json`, `walk-geo-gazetteer.json`, `mesh-acl.json`, plus runtime caches). One launcher at root: **`./r2h`** (`serve` · `game` · `world` · `test` · `checks` · `api` · `tracker`). The single-file game bundle `roll2hit-v3.html`, `worldbuilder.html`, the core sync docs, and shell launch scripts stay at root. Start the server with `./r2h serve` (was `node wbapi-server.js`).
 
 ### Doc Health Badge
 

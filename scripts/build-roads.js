@@ -132,7 +132,7 @@ if (net.components !== 1) throw new Error(`road graph disconnected (${net.compon
 console.log(`edges: ${net.picked.length} (mst=${net.picked.filter(e => e.kind === 'mst').length}, local=${net.picked.filter(e => e.kind === 'local').length}), BFS cap=${cap}`);
 
 // optional worldbuilder pins (§NAV-01h)
-const pinsPath = path.join(ROOT, 'roads-pins.json');
+const pinsPath = path.join(ROOT, 'config', 'roads-pins.json');
 if (fs.existsSync(pinsPath)) {
   const pins = JSON.parse(fs.readFileSync(pinsPath, 'utf8'));
   for (const [a, b] of (pins.links || [])) net.picked.push({ a, b, d: 0, kind: 'pin' });

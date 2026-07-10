@@ -23,6 +23,27 @@ The vast majority of items below are **`[x]` closed** and retained only for cont
 
 > **⟶ RESUME HERE.** This is the active track. A root-declutter + doc-reorg pass shipped 2026-07-09; the continuation checklist (part B) is the next work. The three navigation docs to know: **`CONTRIBUTING.md`** (how-we-work policies — was `plan.md §I`), **`BACKLOG.md`** (this file — outstanding work), and **`index.md`** (master doc index + cross-reference table). Overview + folder map + run/host instructions live in **`README.md`**.
 
+**Part B — §CLEANUP-02 structure simplification (2026-07-09, active):**
+
+> Goal: get the *running* code + its data off the root and behind one launcher, without destabilising the live WBAPI server, CI, or the parity checks.
+
+Target layout:
+
+- **`js/`** — `mover.js`, `rooms.js`, `duel.js`, `mesh.js`, `wbapi-core.js`, `wbapi-server.js`. These `require('./…')` each other, so they relocate as a unit; only their `__dirname`-relative *asset* paths (the HTML bundle, `ledger/`, `milepoints/`, `api.sh`, `scripts/`, config) rewire to `path.join(ROOT, …)` via a new `ROOT = path.resolve(__dirname, '..')` constant.
+- **`config/`** — `peers.txt`, `roads-pins.json`, `walk-geo-gazetteer.json`, `mesh-acl.json` + `.example`, and the git-ignored runtime caches `peers-cache.json` / `tracker-cache.json`.
+- **`r2h`** (root launcher) — subcommands `serve` (`node js/wbapi-server.js`), `game`, `world`, `test`, `checks` (`npm run check:walk`), `api …` (→ `./api.sh`), `tracker` (→ `wbapi-toggle.sh`). One obvious entry point; everything else is discoverable from `r2h help`.
+
+Reference-update checklist (all mapped, 18 files):
+
+1. `js/wbapi-server.js` — add `ROOT`/`CFG`; rewire the 11 `__dirname` asset paths (HTML, `.wbapi-server-id`, `ledger`, `roads-pins.json`→`config/`, `walk-geo-gazetteer.json`→`config/`, `milepoints/*`, `api.sh`, `scripts/`). Inter-module `require('./…')` unchanged.
+2. `js/mesh.js` — add `ROOT`; rewire `mesh-acl.json`, `peers.txt`, `peers-cache.json`, `tracker-cache.json` → `config/`.
+3. `package.json` `start` → `node js/wbapi-server.js`.
+4. `scripts/`: `check-mover-behaviour` require, `check-array-patch`/`check-itemchain`/`check-ladder-migration`/`world-diff` `wbapi-core` paths, `check-terrain-parity` server read, three parity checks' `core('…')` args, `build-roads` pins path.
+5. `tools/wbapi-cli.js` `wbapi-core` require; `tools/layout-spring.js` help string.
+6. `tests/`: mud-harness (`rooms.js`/`wbapi-core.js` reads + server spawn + `mesh-acl.json.example`), 4 integration spawns of `wbapi-server.js`.
+7. `wbapi-toggle.sh` `SCRIPT` + tracker spawn path; `.github/workflows/walk-invariants.yml` path filters; `.gitignore` cache/acl paths; `api/wb.js` help strings.
+8. Fix `index.md` header + folder map; verify with `node --check`, `node -e require`, `npm run check:walk` + `check:arraypatch`/`itemchain`/`laddermigration`/`worlddiff`, `npm run test:mud`.
+
 **Part A — What shipped 2026-07-09 (record):**
 
 - **Root decluttered ~110 → 35 non-dir files.** Only the runtime bundle, launch scripts, the 7 core sync docs, and project-meta files remain at root (the "clear on start" set).

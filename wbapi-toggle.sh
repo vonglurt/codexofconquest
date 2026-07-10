@@ -16,7 +16,7 @@
 # or by running this script again. POST /api/restart exits the server cleanly
 # (exit 0); this script does NOT auto-relaunch on that.
 
-SCRIPT="wbapi-server.js"
+SCRIPT="js/wbapi-server.js"
 DIR="$(cd "$(dirname "$0")" && pwd)"
 CMD="${1:-toggle}"
 
@@ -120,7 +120,7 @@ case "$CMD" in
     # serves /api/tracker/announce + /peers (+ ping/manifest), nothing else.
     TPORT="${2:-1368}"
     echo "Starting TRACKER on :$TPORT (rendezvous only — never a relay)…"
-    TRACKER_MODE=1 PORT="$TPORT" nohup node "$DIR/wbapi-server.js" --tracker-mode >> "$DIR/wbapi-tracker.log" 2>&1 &
+    TRACKER_MODE=1 PORT="$TPORT" nohup node "$DIR/js/wbapi-server.js" --tracker-mode >> "$DIR/wbapi-tracker.log" 2>&1 &
     echo "Tracker PID $! — announce: POST http://localhost:$TPORT/api/tracker/announce · browse: GET /api/tracker/peers[?wh=…&format=txt]" ;;
   status)
     if [ -n "$PID" ]; then echo "Running (PID $PID) — http://localhost:1367"

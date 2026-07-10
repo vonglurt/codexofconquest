@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# r2h — one launcher for Roll2Hit. Run `./r2h help` for the menu.
+# Everything the project needs, behind short verbs. Keep it obvious.
+set -euo pipefail
+DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$DIR"
+
+PORT="${PORT:-1367}"
+open_url() { command -v open >/dev/null 2>&1 && open "$1" || xdg-open "$1"; }
+
+cmd="${1:-help}"; shift || true
+case "$cmd" in
+  serve)    echo "▶ WBAPI + game server on http://localhost:$PORT/  (Ctrl-C to stop)"
+            exec node js/wbapi-server.js "$@" ;;
+  game)     open_url "$DIR/roll2hit-v3.html" ;;            # single-file game (standalone)
+  world)    open_url "$DIR/worldbuilder.html" ;;           # world builder (needs `serve` for the API)
+  test)     exec npx playwright test "$@" ;;
+  checks)   exec npm run check:walk ;;
+  mud)      exec npm run test:mud ;;
+  api)      exec ./api.sh "$@" ;;                          # passthrough to the WBAPI CLI
+  tracker)  exec ./wbapi-toggle.sh tracker "$@" ;;
+  toggle)   exec ./wbapi-toggle.sh "$@" ;;                 # start|stop|restart|status
+  help|-h|--help|*)
+    cat <<EOF
+r2h — Roll2Hit launcher
+
+  ./r2h serve      start the WBAPI + game server (http://localhost:$PORT/)
+  ./r2h game       open the standalone game (roll2hit-v3.html) in a browser
+  ./r2h world      open the world builder (run 'serve' first for live API)
+  ./r2h test       run the Playwright suite
+  ./r2h checks     run the walk/parity invariants (npm run check:walk)
+  ./r2h mud        run the MUD harness (npm run test:mud)
+  ./r2h api ...    WBAPI CLI passthrough (./api.sh)
+  ./r2h tracker    start the mesh tracker
+  ./r2h toggle ... server daemon control (start|stop|restart|status)
+
+Layout: runtime JS → js/ · data + config → config/ · docs at root.
+EOF
+    ;;
+esac

@@ -12,7 +12,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const { move } = require('../mover.js');
+const { move } = require('../js/mover.js');
 
 const ROOT = path.resolve(__dirname, '..');
 const src = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');

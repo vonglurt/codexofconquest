@@ -6,7 +6,7 @@
   "private": true,
   "type": "commonjs",
   "scripts": {
-    "start": "node wbapi-server.js",
+    "start": "node js/wbapi-server.js",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:install": "playwright install chromium",

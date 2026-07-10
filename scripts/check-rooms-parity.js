@@ -17,7 +17,7 @@ function core(file) {
   return src.slice(a, b + END.length);
 }
 
-const a = core('rooms.js');
+const a = core('js/rooms.js');
 const b = core('roll2hit-v3.html');
 if (a === b) {
   console.log(`✓ rooms parity: ROOMS:CORE identical in rooms.js and roll2hit-v3.html (${a.length} bytes)`);

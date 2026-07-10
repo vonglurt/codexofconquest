@@ -15,12 +15,12 @@ let server, tracker;
 
 const TMP = require('os').tmpdir();
 test.beforeAll(async () => {
-  tracker = spawn(process.execPath, ['wbapi-server.js', '--tracker-mode'], {
+  tracker = spawn(process.execPath, ['js/wbapi-server.js', '--tracker-mode'], {
     env: { ...process.env, PORT: String(TRK_PORT), MESH_SERVER_ID: 'b'.repeat(32),
       PEERS_CACHE_FILE: `${TMP}/r2h-presence-trk-cache.json` },
     stdio: 'ignore',
   });
-  server = spawn(process.execPath, ['wbapi-server.js'], {
+  server = spawn(process.execPath, ['js/wbapi-server.js'], {
     env: { ...process.env, PORT: String(MP_PORT), MESH_SERVER_ID: 'a'.repeat(32),
       TRACKER_URL: `http://localhost:${TRK_PORT}`, MESH_ANNOUNCE_MS: '200',
       SERVER_NAME: 'Hub Alpha', PEERS_CACHE_FILE: `${TMP}/r2h-presence-srv-cache.json` },

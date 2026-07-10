@@ -25,7 +25,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const GAME = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
-const SERVER = fs.readFileSync(path.join(ROOT, 'wbapi-server.js'), 'utf8');
+const SERVER = fs.readFileSync(path.join(ROOT, 'js', 'wbapi-server.js'), 'utf8');
 
 const fails = [];
 

@@ -2930,19 +2930,19 @@ ${C.bold}═══════════════════════�
     → Request method/URL, response status, timing. No bodies.
 
   Verbose — full request + response bodies:
-    WBAPI_VERBOSE=1 node wbapi-server.js
+    WBAPI_VERBOSE=1 node js/wbapi-server.js
     WBAPI_VERBOSE=1 ./wbapi-toggle.sh fg
     → Every body printed to terminal AND log file.
 
   Trace — ultra-verbose algorithm decisions:
-    WBAPI_TRACE=1 node wbapi-server.js
+    WBAPI_TRACE=1 node js/wbapi-server.js
     WBAPI_TRACE=1 ./wbapi-toggle.sh fg
     → Logs every decision: auto-junction trigger, smart-connect candidate
       selection, PUT field processing, node creation details.
     → Completely independent of VERBOSE. Off by default.
 
   Both at once:
-    WBAPI_VERBOSE=1 WBAPI_TRACE=1 node wbapi-server.js
+    WBAPI_VERBOSE=1 WBAPI_TRACE=1 node js/wbapi-server.js
 
   Live log tail (all modes write here):
     tail -f milepoints/wbapi-server.log

@@ -34,7 +34,7 @@ const PARTS = ['NODE_MAP', 'NODE_COORDS', 'SEA_RUNS', 'SEA_LANES', 'ROAD_RUNS', 
 const sha16 = (s) => crypto.createHash('sha256').update(s).digest('hex').slice(0, 16);
 
 let CORE = null;
-try { CORE = require(path.join(__dirname, '..', 'wbapi-core.js'))._parse || null; } catch { CORE = null; }
+try { CORE = require(path.join(__dirname, '..', 'js', 'wbapi-core.js'))._parse || null; } catch { CORE = null; }
 
 function rawSpan(src, name) {
   const m = new RegExp(`(?:const|let|var)\\s+${name}\\s*=\\s*`).exec(src);

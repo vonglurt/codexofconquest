@@ -6,7 +6,7 @@
 
 const fs   = require('fs');
 const path = require('path');
-const WBAPI = require('./wbapi-core');
+const WBAPI = require('../js/wbapi-core');
 
 // ── Config ──────────────────────────────────────────────────────────────────
 const DEFAULT_GAME_FILE = path.join(__dirname, 'roll2hit-v3.html');
