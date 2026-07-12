@@ -1715,7 +1715,7 @@ function serializeNpcDialoguesSection() {
   const entries = Object.entries(WBAPI.npcDialogues)
     .map(([k, v]) => serializeNpcDialogueLiteral(k, v))
     .join('');
-  return `\nconst NPC_DIALOGUES = { // → doc: story-arc-npc-dialogues.md\n${entries}};\n`;
+  return `\nconst NPC_DIALOGUES = { // → doc: docs/story/story-arc-npc-dialogues.md\n${entries}};\n`;
 }
 
 function serializeNpcLiteral(key, body) {
@@ -1797,7 +1797,7 @@ function serializeD100Table(entries) {
     const magic = e._magic !== undefined ? `, _magic:${e._magic}` : '';
     return `  { weight:${e.weight}, _type:${JSON.stringify(e._type)}${magic} },`;
   }).join('\n');
-  return `\n// Unified d100 drop table — each entry: { weight, _type, _magic? }\n// _type: 'potion_minor'|'potion'|'potion_greater'|'potion_superior'|'scroll'|'flashbang'|'dagger'|'mainweapon'|'gold'\nconst _D100_TABLE = [ // → doc: mechanics-combat.md §Loot Table\n${rows}\n]; // total weight = ${total}\n`;
+  return `\n// Unified d100 drop table — each entry: { weight, _type, _magic? }\n// _type: 'potion_minor'|'potion'|'potion_greater'|'potion_superior'|'scroll'|'flashbang'|'dagger'|'mainweapon'|'gold'\nconst _D100_TABLE = [ // → doc: docs/mechanics/mechanics-combat.md §Loot Table\n${rows}\n]; // total weight = ${total}\n`;
 }
 
 function lootAnnotate(entries) {

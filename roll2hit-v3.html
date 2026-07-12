@@ -5324,7 +5324,7 @@ const S = {
 /* ══════════════════════════════════════════════════════════
    ENEMY DB
 ══════════════════════════════════════════════════════════ */
-const ENEMY_DB = { // → doc: combat.md §Enemy Scaling (all combat opponents incl. dummy/commoner; scaled by difficulty tier)
+const ENEMY_DB = { // → doc: docs/spec/combat.md §Enemy Scaling (all combat opponents incl. dummy/commoner; scaled by difficulty tier)
   dummy:         { name:'Training Dummy',  ac:10, hp:20,  atk:0,  dmgDie:4,  dmgCount:1, dmgFlat:0 },
   prone_commoner:{ name:'Prone Commoner',  ac:8,  hp:4,   atk:0,  dmgDie:4,  dmgCount:1, dmgFlat:0 },
   giant_rat:     { name:'Giant Rat',       ac:12, hp:7,   atk:4,  dmgDie:4,  dmgCount:1, dmgFlat:2 },
@@ -5794,7 +5794,7 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
    MONSTER DROPS  (Layer 8)
 ══════════════════════════════════════════════════════════ */
 // ◆◆◆ WORLDBUILDER:MONSTER_DROPS:START ◆◆◆
-const MONSTER_DROPS = { // → doc: mechanics-combat.md §Monster Trophy Drops
+const MONSTER_DROPS = { // → doc: docs/mechanics/mechanics-combat.md §Monster Trophy Drops
   // ── Yugurt Lake fish drops (rank scales value) ──
   fish_01: { name:'Minnow Barb',             icon:'🐟', sell:2  },
   fish_02: { name:'Gudgeon Spine',            icon:'🐟', sell:3  },
@@ -6269,7 +6269,7 @@ const MONSTER_DROPS = { // → doc: mechanics-combat.md §Monster Trophy Drops
 // ◆◆◆ WORLDBUILDER:MONSTER_DROPS:END ◆◆◆
 // ◆◆◆ WORLDBUILDER:MONSTER_POOL:END ◆◆◆
 
-const VENDOR_NODES = new Set(['LLA','LGW','STN','PDL','BK']); // → doc: mechanics-economy.md §Vendor System
+const VENDOR_NODES = new Set(['LLA','LGW','STN','PDL','BK']); // → doc: docs/mechanics/mechanics-economy.md §Vendor System
 
 /* ══════════════════════════════════════════════════════════
    WORLD DB  (S11)
@@ -7110,7 +7110,7 @@ function dmgModLabel(mod) {
 /* ── Condition → adv mapping ───────────────────────────────
    opp conditions that give ADV to attackers require S.opp.adv='dis'
    because resolveAdv mirrors: opp dis → player adv               */
-const CONDITION_ADV = { // → doc: combat.md §Conditions
+const CONDITION_ADV = { // → doc: docs/spec/combat.md §Conditions
   // ── opp debuffs (attackers gain ADV = set opp.adv 'dis') ──
   prone:         { side:'opp',    adv:'dis',  label:'PRONE',          cls:'adv-cond' },
   restrained:    { side:'opp',    adv:'dis',  label:'RESTRAINED',     cls:'adv-cond' },
@@ -10212,7 +10212,7 @@ const DUEL = {
 
 /* ── Layer 42: NPC World-Truth Dialogue System ── */
 // ◆◆◆ WORLDBUILDER:NPC_DIALOGUES:START ◆◆◆
-const NPC_DIALOGUES = { // → doc: story-arc-npc-dialogues.md
+const NPC_DIALOGUES = { // → doc: docs/story/story-arc-npc-dialogues.md
   yael: { meta: { name:"Yael Scheidemann", occupation:"city guard captain", worldTruth:"Every riot that gets suppressed becomes three quiet riots.", enemy:"Commissioners who scrub evidence of unrest.", missionBit:"yaelEscortUsed" }, impartial: ["\"You — yes, you. Don't walk past me. You're new to Birka and it shows. Stand still for a moment and listen, because I am only going to say this once. Check your MAP. The known world has forty-two nodes and you can get lost in it, badly, fast. Open your QUEST LOG when you arrive somewhere new — quests are not optional, they are how the city tells you what actually matters. Watch your HP. Sleep at the Inn or any rest node before you are desperate; buy potions before you need them, not during. The First Inn is your Hearth — go there when the world gets loud. Pull up your CHARACTER SHEET. You are Level 1. Fighter. Strength carries you into the fight; Constitution keeps you upright afterward. Dexterity is built slowly — and so is the only edge that will hold against what is actually coming for you. The smiths in this city cannot sell it; the lake can. Go north to Yugurt, to the cabin, and find the old man who keeps it — they call him the Fisherman. He hands the rod to anyone who will use it, free, and asks nothing back. The water gives up what no shop stocks. I tell you plainly because the last three who came through, I met once and after that only read their reports. Go to the lake early. Bring patience for the hook. Your Charisma is not decoration: half this city speaks coin but listens to character, so talk to vendors, barter, negotiate. You came here to fight demons. You will. Real ones, with claws. But the ones behind your own eyes are older and meaner, and that is the real fight. The friends you make in these streets will not appear in your inventory. They will not show on a score screen because there is no score screen worth reading. There is only the loop — the same day, the same city, the same courier dying at the same crossroads — until you learn what you came here to learn. The loop ends when you decide it does. That is what it means to be a proud adventurer: you do not grind for points. You walk forward for the people beside you. Now get moving. I have a city to keep.\"","\"If you see anything that shouldn't be in the Slums, you didn't see me not seeing it either.\"","\"Patrol routes don't change without reason. The route changed twice this week.\"","\"Skalder's been on that corner eleven years. Nivers, twenty-three. They're the city's memory. I'm the one who reads it.\"","\"Three reports filed in the last month. The same report. The commissioners stamp it 'Noted.' Then they note nothing.\""], questActive: ["\"Three encounters cleared means the Slums are safe for another week. Possibly two. Thank you.\"","\"I can't go in there officially. But you can. Whatever you find — I don't need details.\"","\"The vermin aren't the problem. The vermin are a symptom. Clear them anyway.\"","\"Four children live on the third alley. Their mother knows your name now. I told her you were reliable.\"","\"You're making progress. Skalder noticed. That's the closest to a commendation you'll get around here.\""], friendly: ["\"Nivers hasn't called in sick in twenty-three years. I asked her once why not. She said: 'The city doesn't get sick days.' I've been thinking about that for four years.\"","\"There was a riot in the Lower Crypt district three months ago. I filed the report. The report disappeared. I filed a second one. Still have the copy.\"","\"Varga — the information broker near the market — changed his pigeon route again. That's the third time this season. Coins are moving somewhere.\"","\"The city talks if you know the language. Most people pass through and hear noise. The noise has a grammar.\"","\"I've been here long enough to know which cracks in the wall are load-bearing. The one near the crypt entrance has been growing for two years. Nobody has asked me about it.\""], dearFriend: ["\"I filed the second report. The one about the Void encroachment in the lower crypt district. The commissioners don't read second reports. I kept a copy. Someone should know it existed.\"","\"The grammar of the city includes what people don't say. Skalder hasn't said anything about the eastern alley in three weeks. That alley talks constantly. Something changed.\"","\"You know what the hardest part of this job is? The people who leave. You learn the city's grammar through the people in it. Every time someone goes, a word disappears.\"","\"I walk the same route every morning. It used to be to see what changed. Now it's also to see what stayed. That's different. I didn't notice when it changed.\""], quote: "" },
   brynn: { meta: { name:"Brynn Clerambault", occupation:"innkeeper", worldTruth:"Safety is a thing people carry in, not a thing rooms provide.", enemy:"Merchants who disappear without settling the account — not for the gold, for the not knowing.", missionBit:"brynnsJournalRead" }, impartial: ["\"He left this in the room. Paid three nights ahead, didn't sleep the third one.\"","\"Two merchants gone last week. Harbormaster Tula would know — she tracks the manifests.\"","\"The good room is available. It has a window. Some guests prefer no window. I keep both.\"","\"Breakfast is included. The innkeeper before me said breakfast was separate. He had fewer repeat customers.\"","\"The journal was in the room. I kept it because it felt like something someone would come asking for.\""], questActive: ["\"The ledger has a crease on the third page — that's how I know it's mine. Worn spine, brown cover.\"","\"If you find it in the Slums, bring it here first. Before you do anything else with it.\"","\"I lent it to a merchant named Rove. He had good credit and bad judgment. The judgment was the problem.\"","\"You don't have to explain how you got it. I don't need the story. I just need the ledger.\"","\"The pages that matter are 23 through 31. The rest is routine. Those eight pages are not routine.\""], friendly: ["\"My daughter wrote 'expedition' in her notebook last week. Very hard pencil. She means it.\"","\"The inn has been in this building for forty years. The building has been here longer. The stories go with the walls, not the owners.\"","\"I know which guests are running from something and which are running toward it. The ones toward something eat better.\"","\"She asked about the Void. My daughter. I said: there are people who know more than me, and you should find them. She said: you know one. I said: yes.\"","\"Rove came back once, months later. Didn't have the ledger. Didn't explain. Paid his tab in full and left. I appreciated that.\""], dearFriend: ["\"She came back. My daughter. Three cities in six weeks. She had a notebook full of expedition notes and she asked me to read them.\" Brynn refills the cup. \"I read them twice.\"","\"The good room has had forty-seven guests in the last three years. I remember each one. You're the only one who came back more than twice without needing something specific.\"","\"Safety is a thing people carry in. I've known that since the first week. Some guests arrive already safe. Some arrive carrying the absence of it. I can't fix the absence but I can make sure the room doesn't add to it.\"","\"She asked me if you'd come back. My daughter. I said: I don't know. She said: I think they will. She's been right about these things before.\""], quote: "" },
   quill: { meta: { name:"Tomas Couperin", occupation:"unlicensed bard", worldTruth:"The best songs are the ones that take three listenings to understand.", enemy:"Licensed guild bards who play the same five songs on rotation and call it craft.", missionBit:"couperiSongReceived" }, impartial: ["\"Song's old. Older than the city. The words are a lock waiting for a key. Yours for a drink and a silver.\"","\"I don't have a guild license. The guild has standards. My standards are different from their standards.\"","\"Three chords are sufficient for most human experience. The fourth chord is for the parts most people pretend aren't there.\"","\"The bard before me played the same five songs for eleven years. People kept requesting them. I stopped playing requests.\"","\"The cipher in the song is real. I didn't put it there. I just learned to play it.\""], questActive: ["\"Pachelbel has the lute because I owed him for a bottle. The bottle was poor value. The lute is not. Please retrieve it.\"","\"It's tuned to a specific pitch. Don't let him retune it. He will try.\"","\"I've been writing something without the lute. It's not the same. You can hear the absence of the right instrument in the silence.\"","\"Tell him the tab is settled. I'll get him the coin by end of week. Tell him that specifically.\"","\"The lute has a notch on the fourth fret. That's how you'll know it's mine. Pachelbel will claim otherwise.\""], friendly: ["\"I've been working on something. Not the cipher song. Something I don't have a title for yet. It's about someone who keeps returning.\"","\"The guild plays what people already know they like. I play what they'd like if they'd heard it before. It's a distinction that mostly matters to me.\"","\"The cipher in the Scholar King's song is a navigational tool. The notes correspond to compass headings. I've been mapping it for six months.\"","\"There's a woman who comes in on Tuesdays and cries quietly at the third verse. She has never explained why. I have never asked. Some responses are sufficient.\"","\"I play better when someone is listening. Not because I perform differently — I play the same. But the listening makes it real in a different way.\""], dearFriend: ["\"It's called The Returning Kind. I finished it last Friday. I play it every Friday now.\" He sets the instrument down. \"It's about you. In the sense that the person in the song comes back and the city is still there and that turns out to matter.\"","\"The first three listenings to a song are the surface. The fourth is where you hear what the composer didn't know they were saying. I'm on my fourteenth listen of mine. Still finding things.\"","\"The guild sent someone to review my license status last month. He stayed for four songs, tipped well, and wrote 'non-compliant but substantial' in his report. I've framed it.\"","\"The cipher song ends on a note that resolves to nothing. I used to think that was a flaw. Now I think it's the point. The resolution is something the listener has to supply.\""], quote: "" },
@@ -21807,7 +21807,7 @@ const VOID_TIDE_EVENTS = { // → doc: world.md §Void Tide
 };
 
 /* ── §RESEARCH-01: Romance Quotes — inn flavor, Act III+, 15% per sleep, no repeat ── */
-const ROMANCE_QUOTES = [ // → doc: mechanics-economy.md §Romance Layer
+const ROMANCE_QUOTES = [ // → doc: docs/mechanics/mechanics-economy.md §Romance Layer
   // Erec/Enide register
   "She passed before him on a white palfrey and he watched until she was past the gate, and then watched the gate.",
   "He could not look at her enough: for the more he looks at her, the more she pleases him. He cannot help giving her a kiss.",
@@ -21837,7 +21837,7 @@ const ROMANCE_QUOTES = [ // → doc: mechanics-economy.md §Romance Layer
 ];
 
 /* ── Layer 4: Condition Item Registry ── */
-const CONDITION_ITEMS = [ // → doc: combat.md §Conditions (item name → condition + effect + icon; used in inventory condition-use flow)
+const CONDITION_ITEMS = [ // → doc: docs/spec/combat.md §Conditions (item name → condition + effect + icon; used in inventory condition-use flow)
   { match:'Earthbind Root',   condition:'Prone',       effect:'ADV on all attacks vs target; target speed 0',              icon:'🌿' },
   { match:'Binding Web',      condition:'Restrained',  effect:'ADV on attacks vs target; target speed 0',                  icon:'🌿' },
   { match:'Smoke Bomb',       condition:'Blinded',     effect:'ADV on attacks vs target; target has DIS on attacks',       icon:'💣' },
@@ -23631,7 +23631,7 @@ function storySellEquipment() {
   storyMsg('⚔ Sold ' + sellable.length + ' piece(s) of gear for ' + total + 'gp.');
 }
 
-const POTION_TIERS = { // → doc: mechanics-economy.md §Vendor System
+const POTION_TIERS = { // → doc: docs/mechanics/mechanics-economy.md §Vendor System
   minor:    { name:'Minor Healing Potion',    icon:'🧪', heal:10,  cost:50   },
   healing:  { name:'Healing Potion',          icon:'🫧', heal:25,  cost:150  },
   greater:  { name:'Greater Healing Potion',  icon:'💜', heal:50,  cost:400  },
@@ -23732,7 +23732,7 @@ const XP_BY_TIER = { trivial:25, easy:50, medium:100, hard:250, deadly:1000 };
 
 // Cumulative XP required to reach each level (index = level - 1).
 // Level 1 = 0 XP (start). Level 20 = 680,000 XP.
-const XP_LEVELS = [ // → doc: mechanics-combat.md §Character Levels & XP
+const XP_LEVELS = [ // → doc: docs/mechanics/mechanics-combat.md §Character Levels & XP
   0, 400, 1000, 2000, 3500, 5500, 8000, 11000, 15000, 20000,     // 1-10
   27000, 36000, 47000, 60000, 75000, 93000, 114000, 138000, 165000, 195000  // 11-20
 ];
@@ -23750,7 +23750,7 @@ const STARTER_DAGGER = { name:'Rusted Dagger', icon:'🗡', type:'item', sell:0,
 const STARTER_POINTY_STICK = { tier:'pointy_stick', name:'Pointy Stick', icon:'🪵', type:'mainweapon', die:4, count:1, magicBonus:0, sell:10, minLevel:1 };
 const STARTER_FLINT_DAGGER  = { tier:'flint_dagger',  name:'Flint Dagger',  icon:'🗡', type:'weapon',     atkBonus:-3, sell:5, minLevel:1 };
 
-const LOOT_TABLE = [ // → doc: mechanics-economy.md §D100 Loot Table (d100 result → item; used by _rollD100Loot())
+const LOOT_TABLE = [ // → doc: docs/mechanics/mechanics-economy.md §D100 Loot Table (d100 result → item; used by _rollD100Loot())
   ...Array(8).fill({ name:'Minor Healing Potion',   icon:'🧪', type:'potion', sell:25  }),
   ...Array(2).fill({ name:'Spell Scroll',           icon:'📜', type:'spell',  sell:50  }),
   ...Array(5).fill({ name:'Healing Potion',         icon:'🫧', type:'potion', sell:75  }),
@@ -23758,7 +23758,7 @@ const LOOT_TABLE = [ // → doc: mechanics-economy.md §D100 Loot Table (d100 re
   ...Array(2).fill({ name:'Superior Healing Potion',icon:'✨', type:'potion', sell:500 }),
 ];
 
-const SHIELD_ITEMS = [ // → doc: mechanics-combat.md §Combat Items
+const SHIELD_ITEMS = [ // → doc: docs/mechanics/mechanics-combat.md §Combat Items
   { tier:'small_shield',       name:'Small Shield',       icon:'🛡', type:'shield', acBonus:1, cost:50,   sell:30,   minLevel:1  },
   { tier:'kite_shield',        name:'Kite Shield',        icon:'🛡', type:'shield', acBonus:2, cost:150,  sell:90,   minLevel:1  },
   { tier:'magic_shield',       name:'Magic Shield',       icon:'✨', type:'shield', acBonus:3, cost:600,  sell:300,  minLevel:5  },
@@ -23767,14 +23767,14 @@ const SHIELD_ITEMS = [ // → doc: mechanics-combat.md §Combat Items
   { tier:'ancient_shield',     name:'Ancient Shield',     icon:'🌟', type:'shield', acBonus:6, cost:6000, sell:3000, minLevel:20 },
 ];
 
-const DAGGER_ITEMS = [ // → doc: mechanics-combat.md §Dagger Drops
+const DAGGER_ITEMS = [ // → doc: docs/mechanics/mechanics-combat.md §Dagger Drops
   { tier:'royal_dagger',    name:'+1 Royal Dagger',    icon:'🗡', type:'weapon', atkBonus:1, cost:300,  sell:150,  minLevel:5  },
   { tier:'painite_dagger',  name:'+2 Painite Dagger',  icon:'🗡', type:'weapon', atkBonus:2, cost:900,  sell:450,  minLevel:10 },
   { tier:'gaping_dagger',   name:'+3 Gaping Dagger',   icon:'🗡', type:'weapon', atkBonus:3, cost:2500, sell:1250, minLevel:15 },
   { tier:'voidsteel_dagger',name:'+4 Voidsteel Dagger',icon:'🗡', type:'weapon', atkBonus:4, cost:8000, sell:3000, minLevel:20 },
 ];
 
-const COMBAT_ITEMS = [ // → doc: mechanics-combat.md §Combat Items
+const COMBAT_ITEMS = [ // → doc: docs/mechanics/mechanics-combat.md §Combat Items
   { name:'Flashbang', icon:'💥', type:'flashbang', cost:150, sell:75 },
 ];
 
@@ -23803,7 +23803,7 @@ const _WEAPON_SELL = [
   lv => lv * 200,                 // +3
   lv => lv * 400,                 // +4
 ];
-const WEAPON_ITEMS = [0, 1, 2, 3, 4].flatMap(magic => // → doc: mechanics-combat.md §Main Hand Weapons
+const WEAPON_ITEMS = [0, 1, 2, 3, 4].flatMap(magic => // → doc: docs/mechanics/mechanics-combat.md §Main Hand Weapons
   _BASE_WEAPONS.map(w => ({
     tier: magic === 0 ? w.key : ('+' + magic + '_' + w.key),
     name: magic === 0 ? w.name : ('+' + magic + ' ' + w.name),
@@ -23825,7 +23825,7 @@ function _magicTierAllowed(magic) {
 // ◆◆◆ WORLDBUILDER:D100_TABLE:START ◆◆◆
 // Unified d100 drop table — each entry: { weight, _type, _magic? }
 // _type: 'potion_minor'|'potion'|'potion_greater'|'potion_superior'|'scroll'|'flashbang'|'dagger'|'mainweapon'|'gold'
-const _D100_TABLE = [ // → doc: mechanics-combat.md §Loot Table
+const _D100_TABLE = [ // → doc: docs/mechanics/mechanics-combat.md §Loot Table
   { weight:35, _type:"potion_minor" },
   { weight:18, _type:"potion" },
   { weight:14, _type:"potion_greater" },
@@ -23927,7 +23927,7 @@ function _calcPlayerAc() {
     + _lakeMagicBonuses().ac; // §DROP-03
 }
 
-const CONDITION_GOLD = { // → doc: mechanics-combat.md §Combat Flow
+const CONDITION_GOLD = { // → doc: docs/mechanics/mechanics-combat.md §Combat Flow
   'Earthbind Root':1500, 'Binding Web':1500, 'Smoke Bomb':2000, 'Flash Powder':2000,
   'Signal Jammer':3000, 'EMP Grenade':4000, 'Void Virus':3500, 'Snare Trap':1500,
   'Neurotoxin':4000, 'Thunderstone':3000, 'Basilisk Eye':5000, 'Feint Scroll':1000,
@@ -24813,7 +24813,7 @@ function autoSaveMaybe() {
 /* ── Level-Up System (Layer 21) ── */
 
 // Fighter Champion features by level (RAW 5e PHB p.70 + Champion p.72)
-const FIGHTER_FEATURES = { // → doc: mechanics-combat.md §Level-Up System
+const FIGHTER_FEATURES = { // → doc: docs/mechanics/mechanics-combat.md §Level-Up System
   2:  { name:'Action Surge I',            icon:'⚡',   tattooName:'Lightning Rune',   desc:'Once per short rest: spend a charge to reset your main action, gaining +1.5 AP this round.',                                    shortRest:true   },
   3:  { name:'Improved Critical',         icon:'🎯',   tattooName:'Edge of Fate',      desc:'Your weapon attacks score a critical hit on a roll of 19 or 20.'                                                                              },
   4:  { name:'Ability Score Improvement', icon:'📈',   tattooName:'Iron Discipline',   desc:'Relentless training sharpens your body and reflexes.',                                                                          asi:true         },
@@ -24835,10 +24835,10 @@ const FIGHTER_FEATURES = { // → doc: mechanics-combat.md §Level-Up System
   20: { name:'Extra Attack III',          icon:'⚔⚔⚔', tattooName:"Legend's Mark",     desc:'Your main action fires 4 independent attack rolls. With Superior Critical (Lv15) crits land on 17–20 — each roll, every surge.' },
 };
 
-const _ASI_LEVELS = new Set([4, 6, 8, 12, 14, 16, 19]); // → doc: mechanics-combat.md §Level-Up System
+const _ASI_LEVELS = new Set([4, 6, 8, 12, 14, 16, 19]); // → doc: docs/mechanics/mechanics-combat.md §Level-Up System
 
 // d6 ASI roll table — fighter-appropriate stat improvements
-const _ASI_TABLE = [ // → doc: mechanics-combat.md §Level-Up System
+const _ASI_TABLE = [ // → doc: docs/mechanics/mechanics-combat.md §Level-Up System
   { name:'Might',     icon:'⚔', delta:{ str:2 },         desc:'STR +2 — attack and carry weight improve.' },
   { name:'Endurance', icon:'🛡', delta:{ con:2 },         desc:'CON +2 — more HP every level from here on.' },
   { name:'Agility',   icon:'⚡', delta:{ dex:2 },         desc:'DEX +2 — quicker and harder to hit.' },
@@ -25555,7 +25555,7 @@ const KEY_EVENTS = [
 ];
 
 /* ── Layer 28: Final Boss — Commander Bruhns ── */
-const BOSS_COMMANDER_AUROS = { // → doc: mechanics-economy.md §Final Boss
+const BOSS_COMMANDER_AUROS = { // → doc: docs/mechanics/mechanics-economy.md §Final Boss
   name: 'Commander Seraphine Bruhns',
   tier: 'deadly',
   ac: 22, hp: 300, atk: 12,
@@ -25566,7 +25566,7 @@ const BOSS_COMMANDER_AUROS = { // → doc: mechanics-economy.md §Final Boss
 };
 
 /* ── Layer 39: Epic Boss Pool ── */
-const EPIC_BOSS_POOL = { // → doc: story-arc-epic-battlegrounds.md
+const EPIC_BOSS_POOL = { // → doc: docs/story/story-arc-epic-battlegrounds.md
   thornwood_king:      { key:'thornwood_king',      name:'Thornwood King',                  tier:'deadly', ac:18, hp:240, atk:10, dmgCount:3, dmgDie:8,  dmgFlat:8,  epicDesc:'A treant corrupted by three centuries of Void energy. It holds the fallen in its roots.' },
   highland_aboleth:    { key:'highland_aboleth',    name:'Highland Aboleth',                tier:'deadly', ac:17, hp:210, atk:9,  dmgCount:3, dmgDie:6,  dmgFlat:6,  epicDesc:'It has dwelt in this highland loch for sixty years, reshaping everything it touches.' },
   elder_hydra:         { key:'elder_hydra',         name:'Elder Hydra',                     tier:'deadly', ac:15, hp:225, atk:9,  dmgCount:4, dmgDie:8,  dmgFlat:5,  epicDesc:'Three seasons of growth since it claimed the sunken altar. Each head remembers a different century.' },
@@ -25608,7 +25608,7 @@ const EB_STORY_ITEMS = { // → doc: story.md §EB Wounds (EB encounter reward i
 
 /* ── Layer 39: Epic Battleground NPC Dialogue ──
    keyed by EB node code; npcNode = where NPC stands (differs from parent for ET→BQ, EG→BK) */
-const EB_NPC_DIALOGUE = { // → doc: story-arc-epic-battlegrounds.md §Quest-Giver Dialogue
+const EB_NPC_DIALOGUE = { // → doc: docs/story/story-arc-epic-battlegrounds.md §Quest-Giver Dialogue
   PRN: {
     npc:'Woodcutter Bram', occupation:'logger', npcNode:'FRO', category:'A',
     wound:"His crew of four went into the deep forest last Tuesday. He came back. They didn't. He's been sitting at the forest edge on a small rock, not moving.",
@@ -25813,7 +25813,7 @@ const EB_NPC_DIALOGUE = { // → doc: story-arc-epic-battlegrounds.md §Quest-Gi
 
 /* ── Yugurt Lake — Fish Pool (rank 1–20; rank matches index+1) ── */
 // ◆◆◆ WORLDBUILDER:FISH_DB:START ◆◆◆
-const FISH_POOL = [ // → doc: mechanics-combat.md §Fishing Items (20 ranks, Needle Minnow → Yugurt's Leviathan)
+const FISH_POOL = [ // → doc: docs/mechanics/mechanics-combat.md §Fishing Items (20 ranks, Needle Minnow → Yugurt's Leviathan)
   { rank:1,  key:'fish_01', name:'Needle Minnow',           desc:'Tiny. Barbed. Bites above its weight class.' },
   { rank:2,  key:'fish_02', name:'Barbed Gudgeon',          desc:'Bottom-feeder. Spines curve backward — impossible to unhook.' },
   { rank:3,  key:'fish_03', name:'Spine Dace',              desc:'Dorsal spines carry a mild irritant. Fishermen wear gloves.' },
@@ -25918,7 +25918,7 @@ const CORELLI_APPEARANCES = [ // → doc: world.md §Corelli the Wandering Merch
 ];
 
 /* ── Layer 47: Yugurt Lake Fishing Overhaul consts ── */
-const BAIT_TABLES = { // → doc: mechanics-combat.md §Fishing Items (3 zones × 6 entries; bank/reeds/deep)
+const BAIT_TABLES = { // → doc: docs/mechanics/mechanics-combat.md §Fishing Items (3 zones × 6 entries; bank/reeds/deep)
   bank: [
     { name:'Lakebed Worm',      icon:'🪱', catch:1, type:0, advantage:false, sizeUp:false },
     { name:'Void Grub',         icon:'🟤', catch:2, type:0, advantage:false, sizeUp:false },
@@ -25944,8 +25944,8 @@ const BAIT_TABLES = { // → doc: mechanics-combat.md §Fishing Items (3 zones �
     { name:'Void Bloom',          icon:'🌀', catch:0, type:0, advantage:false, sizeUp:true  },
   ],
 };
-// → doc: mechanics-combat.md §Fishing Guide
-const FISHING_GUIDE_TEXT = // → doc: mechanics-combat.md §Fishing Guide (quest_fishing_guide reward; readable item)
+// → doc: docs/mechanics/mechanics-combat.md §Fishing Guide
+const FISHING_GUIDE_TEXT = // → doc: docs/mechanics/mechanics-combat.md §Fishing Guide (quest_fishing_guide reward; readable item)
 `YUGURT LAKE — FIELD GUIDE (annotated copy)
 The Fisherman. Eleventh year.
 
@@ -25971,14 +25971,14 @@ DROPS
 The lake knows the difference between someone casting and someone fishing.
 After a few visits, so will you.`;
 
-const FISH_SIZE_TIERS = [ // → doc: mechanics-combat.md §Fishing Items (5 tiers: small/medium/large/very_large/legendary)
+const FISH_SIZE_TIERS = [ // → doc: docs/mechanics/mechanics-combat.md §Fishing Items (5 tiers: small/medium/large/very_large/legendary)
   { size:'small',      label:'Small',      minRank:1,  maxRank:4  },
   { size:'medium',     label:'Medium',     minRank:5,  maxRank:9  },
   { size:'large',      label:'Large',      minRank:10, maxRank:14 },
   { size:'very_large', label:'Very Large', minRank:15, maxRank:19 },
   { size:'legendary',  label:'Legendary',  minRank:20, maxRank:20 },
 ];
-const FISH_GOLD_VALUES = { // → doc: mechanics-combat.md §Fishing Items (sell value = size × rarity)
+const FISH_GOLD_VALUES = { // → doc: docs/mechanics/mechanics-combat.md §Fishing Items (sell value = size × rarity)
   small:      { common:2,  rare:5,   enchanted:8,   golden:15,  legendary:25  },
   medium:     { common:6,  rare:12,  enchanted:20,  golden:35,  legendary:55  },
   large:      { common:12, rare:25,  enchanted:40,  golden:65,  legendary:100 },
@@ -25994,7 +25994,7 @@ const FISHING_RODS = [
 ];
 
 // ── §XLV: Yugurt Tournament — Six Fishermen ──
-const NPC_TOUR_OPPONENTS = [ // → doc: plan.md §XLV (YC tournament; competence bonus drives NPC cast roll)
+const NPC_TOUR_OPPONENTS = [ // → doc: plan-archive.md §XLV (YC tournament; competence bonus drives NPC cast roll)
   { key:'pip',    name:'Pip',             title:'The Kid',            competence:'Novice',   bonus:-1, stake:50,   order:1, xp:100,
     quote:'"I have been practicing. Every day. Well. Most days. Some days I forgot my string."' },
   { key:'renard', name:'Renard Castwell', title:'Accounting Dept.',   competence:'Terrible', bonus:-3, stake:75,   order:2, xp:150,
@@ -26010,7 +26010,7 @@ const NPC_TOUR_OPPONENTS = [ // → doc: plan.md §XLV (YC tournament; competenc
 ];
 const TOUR_TITLES = { pip:'Lake Apprentice', renard:'Local Angler', bog:'Credible Fisher', vera:'Named Competitor', dirk:'Lake Champion', master:'Master of Yugurt' };
 
-function _tourRoll(bonus) { // → doc: plan.md §XLV-B (d20 + bonus → catch total → size tier → fish rank)
+function _tourRoll(bonus) { // → doc: plan-archive.md §XLV-B (d20 + bonus → catch total → size tier → fish rank)
   const die  = Math.ceil(Math.random() * 20);
   const tot  = die + bonus;
   const size = tot <= 5 ? null : tot <= 10 ? 'small' : tot <= 16 ? 'medium' : tot <= 19 ? 'large' : tot <= 21 ? 'very_large' : 'legendary';
@@ -26508,7 +26508,7 @@ const FROBERGER_JOURNAL = [ // → doc: froberger-journal-all-entries.txt
 ];
 
 // ── Layer 40: Sweelinck Dialogue Variants (by curse score bracket) ──
-const SWEELINCK_DIALOGUE_VARIANTS = [ // → doc: lab-report-endings-and-echoes.md
+const SWEELINCK_DIALOGUE_VARIANTS = [ // → doc: lab-reports/lab-report-endings-and-echoes.md
   { minScore:-99, maxScore:3,  text:"\"You've been busy. Not just with the Shards — with the world around them. Froberger was busy with the Shards. The difference is visible in the journal.\" He sets it on the table. \"He wrote about terrain. You've been creating the kind of problems you have to go back for.\"" },
   { minScore:4,   maxScore:9,  text:"\"Froberger's journal describes this route in the same order you've been walking it. He noticed things. Good things, accurate things. He stopped writing about people around Entry 22. Do you know which entry you're on?\" He doesn't wait for an answer. \"That's a question I'm asking you to carry, not one I expect you to answer now.\"" },
   { minScore:10,  maxScore:14, text:"\"The journal becomes a log around Entry 26. You can feel it — the handwriting steadies, the sentences shorten. He was getting efficient.\" A pause. \"I've been watching you from the notes people send me. Wren's county request. Tula's harbor logs. There are gaps where you were and then weren't.\" He looks at the journal. \"Froberger had gaps too.\"" },
@@ -26583,7 +26583,7 @@ const FROBERGER_EPILOGUE = { // → doc: story.md §Epilogue (Froberger memorial
   cursed:    "Froberger never finished his last entry. Someone found it and left it where you found it. That someone was also very good at their work. They did not stay long either."
 };
 
-const NPC_NG_PLUS_GREETINGS = { // → doc: story-arc-ngplus.md §NPC Memory Lines
+const NPC_NG_PLUS_GREETINGS = { // → doc: docs/story/story-arc-ngplus.md §NPC Memory Lines
   yael:     "You again. I wondered if you'd come back. I set the patrol route to account for it.",
   brynn:    "Oh. You're back. The corner room's been ready. I don't know why I kept it.",
   couperin: "I thought you might. I've been working on something new. It's not done. Come back when you've been to the pit.",
@@ -26593,7 +26593,7 @@ const NPC_NG_PLUS_GREETINGS = { // → doc: story-arc-ngplus.md §NPC Memory Lin
 };
 
 // ── Layer 50: §XV NPC Dear Friend memory lines (second NG+ visit, fav ≥ 2) ──
-const NPC_NG_MEMORY_LINES = { // → doc: story-arc-ngplus.md §NPC Memory Lines
+const NPC_NG_MEMORY_LINES = { // → doc: docs/story/story-arc-ngplus.md §NPC Memory Lines
   yael:     '"You came back to the slums. I thought you would. People who fix things usually come back to see if they stayed fixed."',
   brynn:    '"The ledger\'s still balanced. I check it every morning. Old habit. You taught me that."',
   quill:    '"I\'ve been playing the song you helped me get back. Different every night. I think that\'s the right way."',
@@ -26625,7 +26625,7 @@ const PIT_PERK_UNLOCKS = { // → doc: world.md §Pit Training Perks (5 perks; u
   }
 };
 
-const COVENANT_STANDING_LABELS = [ // → doc: mechanics-economy.md §Covenant Standing (score → label/desc; shown on character sheet)
+const COVENANT_STANDING_LABELS = [ // → doc: docs/mechanics/mechanics-economy.md §Covenant Standing (score → label/desc; shown on character sheet)
   { maxScore: -6,       label: "Covenant Keeper", desc: "The people you helped are the reason this works." },
   { maxScore:  0,       label: "Warden",          desc: "You carry the work with you. It shows." },
   { maxScore:  7,       label: "Keeper",           desc: "The seal holds. The cost is visible." },
@@ -26733,7 +26733,7 @@ const NPC_ACT_THREE_LINES = { // → doc: story.md §FL7 — NPC Dialogue Priori
 };
 
 /* ── §RESEARCH-01 §III.B: NPC Preamble Lines — one observable action per Dear Friend, fav ≥ 2 ── */
-const NPC_ROMANCE_PREAMBLES = { // → doc: mechanics-economy.md §Romance Layer
+const NPC_ROMANCE_PREAMBLES = { // → doc: docs/mechanics/mechanics-economy.md §Romance Layer
   yael:     'She looks up before you reach the corner.',
   brynn:    'The cup is already on the table.',
   quill:    'He is mid-phrase and does not stop playing, but he nods.',
@@ -26743,7 +26743,7 @@ const NPC_ROMANCE_PREAMBLES = { // → doc: mechanics-economy.md §Romance Layer
 };
 
 /* ── §RESEARCH-01 §III.A: Inn Vignettes — post-sleep dawn beat, fav ≥ 2, NPC node in last 3 moves, once per NPC per run ── */
-const NPC_ROMANCE_VIGNETTES = { // → doc: mechanics-economy.md §Romance Layer
+const NPC_ROMANCE_VIGNETTES = { // → doc: docs/mechanics/mechanics-economy.md §Romance Layer
   yael:     "You slept poorly. Before dawn the city makes a sound like breathing — the docks, the cart-wheels not yet moving, one dog somewhere two streets over. You have been to Yael's corner more than once now, and she always looks up before you arrive, as if she heard your step from farther away than makes sense. You have not spoken of this. Neither has she. Some things are more useful left as questions.",
   brynn:    "The inn is warm because you brought wood. You know this in a way that has no words. Brynn set a cup on the table before you asked, and you watched her hands — careful with small things, decisive with heavy ones. You think: a person who is precise with cups knows what they are doing with everything. You think: that is not a small thing to know about someone.",
   quill:    "Couperin played something last night that he said had no name. You woke at the third hour with the melody still in your head, which is strange because you cannot usually remember music. The song was about waiting, or about distance — you could not tell which. He never finishes anything. You are beginning to think that is not an accident.",
@@ -27184,7 +27184,7 @@ function _onPitChampionLoss() {
 }
 
 // S36: EB node NG+ first-lines (one per node, shown once on first NG+ revisit)
-const EB_NG_PLUS_LINES = { // → doc: story-arc-ngplus.md §EB NG+ Lines (per-node one-time NG+ recognition text at EB wounds)
+const EB_NG_PLUS_LINES = { // → doc: docs/story/story-arc-ngplus.md §EB NG+ Lines (per-node one-time NG+ recognition text at EB wounds)
   PRN: "The black bark again. It's the same.",
   INV: "The figures still walk below. They don't notice you're back.",
   SDR: "The altar stones unchanged. The water hasn't moved in centuries. You have.",

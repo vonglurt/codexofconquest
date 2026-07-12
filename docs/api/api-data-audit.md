@@ -333,7 +333,7 @@ Process GAME quests as a dedicated pass after all book imports are clean.
 | MAN  | MAN-ivanhoe.md                          |
 | SEN  | SEN-treasure-island.md                  |
 | STN  | STN-robin-hood.md                       |
-| MLA  | MLA-plutarchs-lives.md                  |
+| MLA  | MLA-plutarch-lives.md                   |
 | NWI  | NWI-anabasis.md                         |
 | WAW  | WAW-quo-vadis.md                        |
 | CRL  | CRL-froissart-boys.md                   |
