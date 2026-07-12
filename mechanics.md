@@ -163,7 +163,14 @@ XP is earned on every enemy kill, including open-cell encounters.
 
 XP accumulates in `S_story.xp` across the entire run (monotonic — never decremented in-run; NG+ resets). Shown on the victory overlay after each fight.
 
-**Effort XP (§XP-01, partial — planned to expand):** the principle is *all action earns XP; you never lose XP*. The tunable dial is **`EFFORT_XP_PCT`** (default `0.25`, by `XP_LEVELS`) — the fraction of a full success's XP a partial/failed action still earns. **Live now:** a **fled enemy** grants `round(AC·maxHp·EFFORT_XP_PCT)` (`_storyEnemyFlees`). **Planned:** the same dial applied to missed attacks (capped per battle) and failed skill-checks — see BACKLOG §XP-01.
+**Effort XP (§XP-01):** the principle is *all action earns XP; you never lose XP* — every "effort without success" surface pays a fraction of what the success would. Two dials:
+
+| Dial | Default | Applies to |
+|---|---|---|
+| `EFFORT_XP_PCT` | `0.25` | a **fled enemy** grants `round(AC·maxHp·EFFORT_XP_PCT)` (`_storyEnemyFlees`); a **failed skill-check** grants `round(rewardXp·EFFORT_XP_PCT)` of the reward the pass would have given, **once per quest** (`_resolveQuestUQF`; 0 if the check carries no reward bit) |
+| `EFFORT_MISS_PCT` | `0.02` | each **missed attack** grants `round(AC·maxHp·EFFORT_MISS_PCT)` (`_overlayPlayerAttack`), banked silently (no mid-fight level-up modal) |
+
+Combat misses are **capped per encounter** at the flee value — cumulative miss-XP in one fight cannot exceed `round(AC·maxHp·EFFORT_XP_PCT)` (25% of the kill), so miss-farming a weak enemy never out-earns fighting a real one, and a won fight yields at most ~125% of its kill XP. Effort XP is single-player story only (`S_story`); it never enters the synced PvP duel.
 
 ---
 

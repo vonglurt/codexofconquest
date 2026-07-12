@@ -157,6 +157,8 @@ XP is earned on every enemy kill, including random movement and corridor encount
 
 XP accumulates in `S_story.xp` across the entire run. Shown on the victory overlay after each fight.
 
+**Effort XP (§XP-01):** *all action earns XP; you never lose XP.* Beyond kills, partial/failed actions pay a fraction of the success value via two dials — `EFFORT_XP_PCT` (`0.25`: a fled enemy = `round(AC·maxHp·0.25)`; a failed skill-check = `round(rewardXp·0.25)`, once per quest) and `EFFORT_MISS_PCT` (`0.02`: each missed attack = `round(AC·maxHp·0.02)`, banked silently). Per-encounter miss-XP is capped at the flee value (25% of the kill), so miss-farming never out-earns a real fight. Single-player only — never enters the PvP duel.
+
 ---
 
 ### Heal on Kill & Gold Drop

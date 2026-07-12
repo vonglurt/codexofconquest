@@ -6813,6 +6813,21 @@ function _resolveQuestUQF(questId) {
     } else {
       S_story.quests[questId] = 'failed';
     }
+    // §XP-01: a failed check still earns effort XP — EFFORT_XP_PCT of the reward the
+    // pass would have granted, ONCE per quest (guarded so a retryable check can't farm it).
+    S_story.effortXpQuests = S_story.effortXpQuests || {};
+    if (!S_story.effortXpQuests[questId]) {
+      const rewardXp = ((sc.onPass || []).find(b => b.kind === 'reward') || {}).xp || 0;
+      const effXp = Math.round(rewardXp * EFFORT_XP_PCT);
+      S_story.effortXpQuests[questId] = true;
+      if (effXp > 0) {
+        S_story.xp += effXp;
+        _levelUpQueue = [];
+        _checkLevelUp();
+        storyMsg('The attempt was not wasted. +' + effXp + ' XP for the effort.');
+        if (_levelUpQueue.length > 0) _showLevelUpModal(_levelUpQueue.shift());
+      }
+    }
   }
   storyUpdateStatus();
   storyRender(NODE_MAP[S_story.currentCode]);
@@ -22520,6 +22535,7 @@ const _S_DEFAULTS = () => ({
   runStats:    { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0, battlesAttempted:0, attacksAttempted:0, attacksHit:0, exitsTaken:0, daysAdventuring:0 },
   // §DESIGN-03: Ceremonia Roll + Skill Check Quest System
   skillCheckAttempts: {},
+  effortXpQuests: {},   // §XP-01: quests that already granted failed-check effort XP (once-per-quest guard)
   ceremoniaYaelAct: 0,
   ceremonia_yael_04_failed: false,
   ceremonia_yael_complete: false,
@@ -23684,6 +23700,10 @@ const XP_LEVELS = [ // → doc: mechanics-combat.md §Character Levels & XP
 // earns XP; you never lose XP). Used now for a fled enemy; §XP-01 extends it to misses +
 // failed skill checks. Tune here (0..1). Kept a plain const so it's one obvious dial.
 const EFFORT_XP_PCT = 0.25;
+// §XP-01: a missed attack earns this (much smaller) fraction of the full kill XP —
+// tiny because a fight fires many attack rolls. Per-encounter miss-XP is capped at the
+// flee value (EFFORT_XP_PCT × kill), so miss-farming can never out-earn an actual kill.
+const EFFORT_MISS_PCT = 0.02;
 
 const STARTER_DAGGER = { name:'Rusted Dagger', icon:'🗡', type:'item', sell:0, code:'spawn' };
 const STARTER_POINTY_STICK = { tier:'pointy_stick', name:'Pointy Stick', icon:'🪵', type:'mainweapon', die:4, count:1, magicBonus:0, sell:10, minLevel:1 };
@@ -23888,6 +23908,7 @@ function _storyRollInit() {
   S_story.spellAdvantageReady  = false;
   S_story._firstStrikeFired    = false; // §DROP-03: reset per encounter
   S.opp.enraged                = false; // §PLAY-01-B: one-time low-HP Void enrage, per encounter
+  S.effortXpEarned             = 0;     // §XP-01: cumulative miss-XP this encounter (capped; transient, never saved)
   // surgeCharges persist across battles (rest-gated); no reset here
   _statTally('battlesAttempted', 1);
   // §MESH-01f: snapshot co-present allies at battle start — read ONCE here (design:
@@ -24250,6 +24271,23 @@ function _extraAttackCount() {
   return 1;
 }
 
+// §XP-01: a missed attack still earns effort XP (all action earns XP; you never lose XP).
+// Grants EFFORT_MISS_PCT of the full kill value, but cumulative miss-XP this encounter is
+// capped at the flee value (EFFORT_XP_PCT × kill) so misses can never out-earn a real kill.
+// Banks into S_story.xp immediately; the level-up celebration waits for battle resolution
+// (victory/flee/death all call _checkLevelUp) so no modal interrupts the attack loop.
+// Returns the granted amount (0 once the cap is reached) for the combat-log note.
+function _grantMissEffortXp() {
+  const kill = (S.enemy.ac || 10) * (S.opp.maxHp || 10);
+  const cap  = Math.round(kill * EFFORT_XP_PCT);
+  const remaining = cap - (S.effortXpEarned || 0);
+  if (remaining <= 0) return 0;
+  const xp = Math.min(remaining, Math.max(1, Math.round(kill * EFFORT_MISS_PCT)));
+  S.effortXpEarned = (S.effortXpEarned || 0) + xp;
+  S_story.xp += xp;
+  return xp;
+}
+
 function _overlayPlayerAttack() {
   if (S_story.battleTurn !== 'player') return;
   if (S_story.usedMainAttack) return;
@@ -24293,9 +24331,11 @@ function _overlayPlayerAttack() {
     const lbl = n > 1 ? 'Atk ' + (i+1) + '/' + n + ': ' : '';
 
     if (isNat1) {
-      logMsg = lbl + '✗ NAT 1 — Auto Miss!';
+      const _ex = _grantMissEffortXp();
+      logMsg = lbl + '✗ NAT 1 — Auto Miss!' + (_ex ? ' (+' + _ex + ' XP effort)' : '');
     } else if (!isHit) {
-      logMsg = lbl + '✗ Miss. ' + atkTotal + ' vs AC ' + S.enemy.ac;
+      const _ex = _grantMissEffortXp();
+      logMsg = lbl + '✗ Miss. ' + atkTotal + ' vs AC ' + S.enemy.ac + (_ex ? ' (+' + _ex + ' XP effort)' : '');
     } else {
       const dmgCount = (isCrit ? S.weapon.count * 2 : S.weapon.count) * S.dmgMultiplier;
       const dmgRolls = rollN(S.weapon.die, dmgCount);
