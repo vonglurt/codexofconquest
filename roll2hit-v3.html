@@ -1738,6 +1738,52 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 #btn-gameover-new:hover { border-color: var(--dim); color: var(--text); }
 
+/* ── §PLAY-01-A The Courier's Map — persistent objective chip (the map itself) ── */
+#objective-chip {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 8px; padding: 5px 10px; border-radius: 6px;
+  background: rgba(20,14,4,0.55); border: 1px solid rgba(224,192,96,0.35);
+  font-size: 11.5px; line-height: 1; cursor: help;
+}
+#objective-chip .obj-shards { letter-spacing: 1px; font-size: 12px; }
+#objective-chip .obj-shard { color: #f0c860; text-shadow: 0 0 4px rgba(240,200,96,0.5); }
+#objective-chip .obj-shard.empty { color: rgba(200,180,140,0.35); text-shadow: none; }
+#objective-chip .obj-leg { color: #c8b890; font-weight: 700; white-space: nowrap; }
+#objective-chip .obj-leg b { color: #e8dcb4; font-weight: 800; }
+#objective-chip .obj-leg.hit b { color: #7fe07f; }
+#objective-chip .obj-leg.warn b { color: #f0b040; }
+#objective-chip .obj-leg.danger b { color: #f05a3a; }
+#objective-chip .obj-sep { color: rgba(200,180,140,0.4); }
+
+/* ── §PLAY-01-A — one-time opening framing card (courier's voice) ── */
+#story-courier-modal {
+  position: fixed; inset: 0; z-index: 320;
+  background: rgba(12,6,0,0.96); display: none;
+  align-items: center; justify-content: center; padding: 20px;
+}
+#story-courier-modal.visible { display: flex; }
+#courier-card {
+  background: #140c04; border: 2px solid #5a4420;
+  border-radius: 8px; padding: 28px 32px; max-width: 460px; width: 100%;
+  display: flex; flex-direction: column; gap: 16px; text-align: left;
+  box-shadow: 0 8px 44px rgba(90,60,10,0.45);
+}
+#courier-hd { font-size: 18px; font-weight: 800; color: var(--gold); letter-spacing: 0.5px; text-align: center; }
+#courier-body { font-size: 13px; color: #d8c9a4; line-height: 1.7; }
+#courier-body em { color: #f0d890; font-style: italic; }
+#courier-goals {
+  margin: 2px 0; padding: 12px 14px; border-radius: 6px;
+  background: rgba(30,20,6,0.6); border: 1px solid rgba(224,192,96,0.28);
+  font-size: 12.5px; color: #e8dcb4; line-height: 1.9;
+}
+#courier-goals .cg-icon { display: inline-block; width: 20px; }
+#btn-courier-begin {
+  align-self: center; padding: 10px 22px; font-size: 13px; font-weight: 800;
+  background: #2a1c08; border: 2px solid var(--gold); color: var(--gold);
+  border-radius: 6px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; transition: all .15s;
+}
+#btn-courier-begin:hover { background: var(--gold); color: #120600; }
+
 /* ── Character Creation Modal ── */
 #story-charcreate-modal {
   position: fixed; inset: 0; z-index: 500;
@@ -4195,6 +4241,14 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
                 <span id="s-node-name">City Streets — Birka</span>
                 <span id="s-node-act">Act I</span>
               </div>
+              <!-- §PLAY-01-A The Courier's Map — persistent objective (Froberger's map) -->
+              <div id="objective-chip" title="Return all 7 Codex Shards, reach Level 20, and defeat Commander Auros at the Codex — before Day 49.">
+                <span class="obj-shards" id="obj-shards"></span>
+                <span class="obj-sep">·</span>
+                <span class="obj-leg" id="obj-lvl">⭐ Lv <b>1</b>/20</span>
+                <span class="obj-sep">·</span>
+                <span class="obj-leg" id="obj-day">☀ Day <b>1</b>/49</span>
+              </div>
             </div>
           </div>
           <div id="story-farewell" style="display:none;"></div>
@@ -4860,6 +4914,28 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <button id="btn-continue-load">▶ Continue Journey</button>
         <button id="btn-continue-new">New Game</button>
       </div>
+    </div>
+  </div>
+
+  <!-- ── §PLAY-01-A The Courier's Map — one-time opening frame (courier's voice) ── -->
+  <div id="story-courier-modal">
+    <div id="courier-card">
+      <div id="courier-hd">🗺 A Map Pressed Into Your Hand</div>
+      <div id="courier-body">
+        A young man in a brown courier's satchel rounds the corner too fast and collapses at your feet,
+        his coat dark with blood. He folds a stained map into your hand and says one word before his eyes
+        close: <em>"Sweelinck."</em><br><br>
+        The map shows four towns and seven symbols in faded ink. He found six of the seven Codex Shards and
+        died carrying the last leg. <em>The map had to reach someone. That someone is you.</em> Finish what
+        the courier could not:
+      </div>
+      <div id="courier-goals">
+        <div><span class="cg-icon">🔮</span> Recover all <b>7 Codex Shards</b> — the seven faded symbols.</div>
+        <div><span class="cg-icon">⭐</span> Grow strong enough to face what guards them — <b>reach Level 20</b>.</div>
+        <div><span class="cg-icon">⚔</span> Defeat <b>Commander Auros</b> at the Codex and seal the Void.</div>
+        <div><span class="cg-icon">☀</span> Do it all <b>before Day 49</b> — the Void's tide will not wait.</div>
+      </div>
+      <button id="btn-courier-begin">Take the map →</button>
     </div>
   </div>
 
@@ -22341,6 +22417,7 @@ let S_story = {
   shortRests: 3,
   knowledge: [],
   corpsesQuests: [],
+  courierMapSeen: false,   // §PLAY-01-A: one-time opening frame shown at fresh-game start
   storyDeathSaves: { successes: 0, failures: 0, active: false },
   abilityScores: { str:10, dex:8, con:8, int:8, wis:8, cha:8 },
   shieldTier: null,
@@ -23193,6 +23270,16 @@ function storyNewGame(startScores) {
   storyUpdateStatus();
   storyRender(NODE_MAP['LHR']);
   _mpResume();   // §MESH-01-FU 5: new-game-from-modal path — rejoin under the same tab opt-in
+  _showCourierMap();   // §PLAY-01-A: press Froberger's map (and the goal) into the player's hand
+}
+
+// §PLAY-01-A The Courier's Map — the one-time opening frame. Fresh-game only (called
+// from storyNewGame, never storyNewGamePlus); the flag guard makes a double-call a no-op.
+function _showCourierMap() {
+  if (S_story.courierMapSeen) return;
+  S_story.courierMapSeen = true;
+  const m = document.getElementById('story-courier-modal');
+  if (m) m.classList.add('visible');
 }
 
 /* ── Layer 43-U/W: NG+ Preservation + Title Overlay ── */
@@ -34692,6 +34779,28 @@ function storyUpdateStatus() {
     notEl.className = 'stat-val' + (n >= 31 ? ' danger' : n >= 11 ? ' warn' : '');
   }
   storyUpdateJournalCount();
+  _renderObjectiveChip();   // §PLAY-01-A: the Courier's Map — persistent goal
+}
+
+// §PLAY-01-A The Courier's Map — render the persistent objective chip. Display-only;
+// the seven symbols darken as Shards return (🔮 collected / ◇ still out there).
+const SHARD_GOAL = 7, LEVEL_GOAL = 20, DAY_DEADLINE = 49;
+function _renderObjectiveChip() {
+  const shEl = document.getElementById('obj-shards');
+  if (!shEl) return;                                   // chip absent (e.g. worldbuilder) — no-op
+  const got = Math.max(0, Math.min(SHARD_GOAL, S_story.shards || 0));
+  let sym = '';
+  for (let i = 0; i < SHARD_GOAL; i++)
+    sym += i < got ? '<span class="obj-shard">🔮</span>' : '<span class="obj-shard empty">◇</span>';
+  shEl.innerHTML = sym;
+  const lv = S_story.level || 1;
+  const lvEl = document.getElementById('obj-lvl');
+  lvEl.innerHTML = '⭐ Lv <b>' + lv + '</b>/' + LEVEL_GOAL;
+  lvEl.className = 'obj-leg' + (lv >= LEVEL_GOAL ? ' hit' : '');
+  const day = S_story.day || 1;
+  const dayEl = document.getElementById('obj-day');
+  dayEl.innerHTML = '☀ Day <b>' + day + '</b>/' + DAY_DEADLINE;
+  dayEl.className = 'obj-leg' + (day >= 42 ? ' danger' : day >= 35 ? ' warn' : '');
 }
 
 /* ── Layer 5: Sleep + Void Tide ── */
@@ -36861,6 +36970,11 @@ document.getElementById('btn-charcreate-begin').addEventListener('click', () => 
     : Object.assign({}, _cc_scores);
   document.getElementById('story-charcreate-modal').classList.remove('visible');
   storyNewGame(scores);
+});
+
+// §PLAY-01-A The Courier's Map — dismiss the opening frame
+document.getElementById('btn-courier-begin').addEventListener('click', () => {
+  document.getElementById('story-courier-modal').classList.remove('visible');
 });
 
 document.getElementById('btn-lu-continue').addEventListener('click', () => {
