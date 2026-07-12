@@ -1,7 +1,9 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# plan-archive.md — Completed Sections
+# plan-archive.md — Completed Sections (verbatim snapshot, thru 2026-06-12)
 
+> **⚠️ SUPERSEDED / VERBATIM SNAPSHOT.** This is the older, un-condensed archive (content through 2026-06-12), kept for its expanded verbatim design docs (§GR-A–G, §DESIGN-01 color theory, §FUTURE-01 node maps). The **current** rolling archive is `/plan-archive.md` at repo root. Renamed from `archive/plan-archive.md` on 2026-07-09 (§CLEANUP-01) so it no longer reads as a duplicate.
+>
 > Archived from plan.md. All sections here are ✅ implemented and complete. Preserved for historical reference, design record, and cross-reference.
 
 ---

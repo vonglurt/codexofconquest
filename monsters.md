@@ -2,7 +2,7 @@
 
 # roll2hit.com — Monster Reference
 
-**Total: 370 monsters** across 5 tiers, 8 source pools. All entries implemented in `MONSTER_POOL` in `roll2hit-v3.html`.
+**Total: 398 monsters** across 5 tiers, 8 source pools. All entries implemented in `MONSTER_POOL` in `roll2hit-v3.html`. *(Count verified 2026-07-09 against the live `GET /api/list/monster`.)*
 
 ---
 

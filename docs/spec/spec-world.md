@@ -853,7 +853,8 @@ Fetching a monsters JSON file from a server would reduce initial page weight but
 
 ```
 Phase 3 target: 42 terrains, 329 monsters in MONSTER_POOL
-Current (Layer 37): 66 terrains (46 base + 20 epic), 370 monsters in MONSTER_POOL
+As of Layer 37 (historical): 66 terrains (46 base + 20 epic), 370 monsters in MONSTER_POOL
+Live now (Layer 104, 2026-07-09): 111 terrains, 398 monsters — see monsters.md / index.md
 Average entry size ≈ 120 bytes source text
 Current MONSTER_POOL ≈ 370 entries × 120 B ≈ 44 KB
 No practical budget ceiling at single-file scale — browser loads sub-100 KB JS trivially.

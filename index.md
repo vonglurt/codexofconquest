@@ -3,7 +3,7 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · 36,933 lines · 410 nodes · 392 monsters · ~2,830 quests · 85 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + **§MESH-01 gameplay ladder (f–j) ✅ COMPLETE 2026-07-06** (buffs · hireling · sentries · no-dupe ledger incl. cross-origin trades · PvP duels) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · §DATA-01 ✅ RESOLVED 2026-07-06 (superseded by §ARCH-01 UQF; journal-renderer textContent residual shipped)
+**Status:** Layers 0–104 implemented · 36,933 lines · 418 nodes · 398 monsters · ~2,848 quests · 85 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + **§MESH-01 gameplay ladder (f–j) ✅ COMPLETE 2026-07-06** (buffs · hireling · sentries · no-dupe ledger incl. cross-origin trades · PvP duels) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · §DATA-01 ✅ RESOLVED 2026-07-06 (superseded by §ARCH-01 UQF; journal-renderer textContent residual shipped)
 **Last updated:** 2026-07-09 — repository reorganized + structure simplified (see below)
 
 > **📁 Repo reorganized 2026-07-09.** Root decluttered ~110 → ~35 files. `plan.md` split into `CONTRIBUTING.md` (dev policies) + `BACKLOG.md` (outstanding work). Historical docs moved under `docs/{spec,story,api,mechanics,notes}/`; importers → `importers/`, dev utilities → `tools/`, narrative texts → `sources/`. Core sync docs stay at root. Folder map + hosting/run instructions: **`README.md`**.
@@ -20,7 +20,8 @@
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Last sync pass | 2026-07-03 — §NAV-01 docs close-out: `lab-reports/lab-report-nav01-navigable-world.md` written; road-net + room-layer sections added to `maps.md` (+ FL1/FL9/FL12 flows re-verified against code, stale GATE_LOCKS section retired), `docs/notes/docs-node-network.md §13` (L0–L8 layer stack; §4/§9 rewritten to mover-kernel reality), `mechanics.md` (Roads, Rooms & Auto-Travel). **Sync findings:** `GATE_LOCKS` gone from code (docs claimed 4 live gates); §CELL-13 jump-travel removal partially reverted (`storyPortal`/`storyUseTransmort`/hearth live) → **resolved same day: user directed re-removal** (all jump-travel code cut from HTML; mechanics.md/mechanics-economy.md sections replaced with removal notes; gates check:walk 6/6, nav+autosave+fishing 48/48). Prior pass: 2026-07-02 §MESH docs close-out | ✅ |
+| Live entity counts | 418 nodes · 398 monsters · 111 terrains · ~2,848 quests · 204 NPCs | ✅ 2026-07-09 (`GET /api/list`) |
+| Last sync pass | 2026-07-09 — §CLEANUP-01 Part B doc-health: refreshed stale in-prose counts against the live `GET /api/list` parse — **monsters 370/392 → 398** (`monsters.md` header + `index.md` Status/footer/`MONSTER_POOL` row + spec-world row), **nodes 410 → 418** (Status/footer/cell-map row), **quests ~2,830 → ~2,848**, **footer line count 34,542 → 36,933**; terrain live count noted as 111 (check:invariants' 110 is its line-regex Set undercounting the JS-parse total by 1). `story.md`'s "42 story nodes" left as-is — it's a curated *narrative*-beat count, not the 418 world nodes (flagged for a narrative-owner review, not a mechanical overwrite). **Prior pass:** 2026-07-03 — §NAV-01 docs close-out: `lab-reports/lab-report-nav01-navigable-world.md` written; road-net + room-layer sections added to `maps.md` (+ FL1/FL9/FL12 flows re-verified against code, stale GATE_LOCKS section retired), `docs/notes/docs-node-network.md §13` (L0–L8 layer stack; §4/§9 rewritten to mover-kernel reality), `mechanics.md` (Roads, Rooms & Auto-Travel). **Sync findings:** `GATE_LOCKS` gone from code (docs claimed 4 live gates); §CELL-13 jump-travel removal partially reverted (`storyPortal`/`storyUseTransmort`/hearth live) → **resolved same day: user directed re-removal** (all jump-travel code cut from HTML; mechanics.md/mechanics-economy.md sections replaced with removal notes; gates check:walk 6/6, nav+autosave+fishing 48/48). Prior pass: 2026-07-02 §MESH docs close-out | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
 
@@ -65,7 +66,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `maps.md` | World map: cell grid + extended areas, 410 node codes + coordinates, cell-adjacency network, gate locks, §MESH multiplayer map surfaces | ✅ Updated 2026-07-02 |
 | `story.md` | Main quest narrative: 42 story nodes across 8 acts, 7 Epic NPC profiles, prologue, endings, NG+ | ✅ 76 nodes covered |
 | `world.md` | DM manual: world history, 4 factions, 7 Epic NPC profiles, quest motivation, survival pressure | ✅ Reviewed 2026-05-24 |
-| `monsters.md` | 370 monsters: stat blocks by tier and terrain pool, 20 EB bosses, fish pool | ✅ Verified 2026-05-24 |
+| `monsters.md` | 398 monsters: stat blocks by tier and terrain pool, 20 EB bosses, fish pool | ✅ Verified 2026-07-09 |
 | `quest.md` | Master quest register — all quests organized by location (implemented + planned) | ✅ |
 | `mechanics.md` | High-level game mechanics overview — links to docs/mechanics/mechanics-combat.md and docs/mechanics/mechanics-economy.md; §MESH-01 multiplayer presence + world-identity boundary; §MESH-02 connection center (Map-tab sub-tabs, 💬 chat history, 👣 footprints, two-window quick-start) | ✅ Updated 2026-07-07 |
 | `docs/notes/docs-node-network.md` | Node network technical reference — cell grid, adjacency, code conventions, `cellMove` navigation, §12 multiplayer mesh (gossip/vv/tracker/ACL) + §MESH-02 operator endpoints (acl/blocklist/connect/chat) | ✅ Updated 2026-07-07 |
@@ -103,7 +104,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 |------|-------|
 | `docs/spec/spec-engine.md` | Layers 0–20 narrative engine design — all marked IMPLEMENTED |
 | `docs/spec/spec-corridors.md` | Layer 9 corridor system — all L9-A through L9-H ✅ — **⚠️ SUPERSEDED by §CELL-03** |
-| `docs/spec/spec-world.md` | WORLD_DB + MONSTER_POOL architecture — counts verified (66 terrains, 370 monsters) |
+| `docs/spec/spec-world.md` | WORLD_DB + MONSTER_POOL architecture — live counts 111 terrains, 398 monsters (2026-07-09; the doc's in-body "66 terrains / 370 monsters" is a historical Layer-37 figure) |
 | `docs/spec/spec-combat.md` | Phase 0/2 combat arena spec — historical |
 | `docs/spec/spec-migration.md` | Layers 0–8 IEEE migration report — all sections implemented |
 
@@ -418,7 +419,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **NPC dialogue system** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-npc-dialogue-system.md` · `lab-reports/lab-report-birka-beginner-arc.md` |
 | **NPC favorability** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `index.md` |
 | **NG+ system** | `docs/story/story-arc-ngplus.md` | `lab-reports/lab-report-ng-plus-remembrance.md` · `lab-reports/lab-report-endings-and-echoes.md` |
-| **Cell map (410 nodes)** | `maps.md` | `index.md (NODE_MAP · NODE_COORDS · CELL_GRID)` · `docs/story/story-flowchart.md` · `docs/notes/docs-node-network.md` |
+| **Cell map (418 nodes)** | `maps.md` | `index.md (NODE_MAP · NODE_COORDS · CELL_GRID)` · `docs/story/story-flowchart.md` · `docs/notes/docs-node-network.md` |
 | **Overseer (The Fog Bank / LSO)** | `world.md` · `story.md Layer 104b` | `lab-reports/lab-report-littoral-courts.md §III` |
 | **Pachelbel / Deacon** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
 | **Saul→Paul arc (§LIX–§LXIX + §PAUL-01; §FUTURE-01 ✅ closed 2026-07-07)** | `story.md Layer 104a` · `maps.md` · `quest.md` §THE SAUL→PAUL ARC (18-quest table) | `lab-reports/lab-report-saul-paul-travel-reference.md` · `lab-reports/lab-report-saul-paul-vignette-spec.md` |
@@ -478,13 +479,13 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `CELL_GRID` | Reverse grid lookup; key `"r,c"` → **node-code list** (§WALK-1.5 locale lists); computed at startup from `NODE_MAP`; `cellCode(key)`=primary, `cellCodes(key)`=full list; `getCellGrid()` in server caches it per `WBAPI.nodeMap` reference |
 | `GEO_PROJ` | §2.1 equirectangular 1° grid dims `{ROWS:90, COLS:360}`; passed to the mover kernel as `world.proj` for N/S clamp + E↔W wrap |
 | `Mover` / `_moverWorld()` | §WALK-2 client handle to `mover.js` (`Mover.move(world,pos,dir)`); `_moverWorld()` builds the read-only world snapshot (`proj`/`impassable`/`cellCodes`/`terrainAt`/`encounterRate`) per move. See `mover.js` in Core Reference |
-| `QUEST_DB` | Quest definitions (UQF-1.0: `gate`/`bits`/`completion`/`onComplete`); ~2,830 quests — ALL UQF after §ARCH-01 close 2026-07-05 + the §MATH-01 migration 2026-07-07, except the 30 dead `blq` stubs |
+| `QUEST_DB` | Quest definitions (UQF-1.0: `gate`/`bits`/`completion`/`onComplete`); ~2,848 quests — ALL UQF after §ARCH-01 close 2026-07-05 + the §MATH-01 migration 2026-07-07, except the 30 dead `blq` stubs |
 | `GATE_LOCKS` | 4 passage locks + shard gate; each entry: `{from, to, item, label}` |
 | `CONDITION_ITEMS` | 11 condition items: name, icon, effect, sell value |
 | `CONDITION_GOLD` | Pre-battle cost per condition (flat gold, not inventory) |
 | `CONDITION_ADV` | Adv/DIS modifier keyed by lowercase-underscore condition name |
 | `WORLD_DB` | 66 terrain entries (46 base + 20 epic); each has `monsters: []` with full stat blocks |
-| `MONSTER_POOL` | 392 monsters across 8 source pools; keyed by monster key string |
+| `MONSTER_POOL` | 398 monsters across 8 source pools; keyed by monster key string |
 | `MONSTER_DROPS` | Trophy drop per monster key; `{name, icon, sell}` |
 | `EPIC_BOSS_POOL` | 20 deadly-tier bosses keyed by slug; AC/HP/ATK/dmg/epicDesc |
 | `EB_NPC_DIALOGUE` | 20 quest-giver NPC profiles; payment negotiation, return beat, specialItem |
@@ -789,7 +790,7 @@ This rule applies to `docs/api/api-data-audit.md`, `plan-archive.md §TTS`, and 
 ---
 
 *Last updated: 2026-07-02*
-*Codebase: `roll2hit-v3.html` · 34,542 lines · Layers 0–104 complete · 410 nodes · 392 monsters · ~2,830 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF ✅ CLOSED · §MESH-01 core + full gameplay ladder f–j (ledger trades incl. cross-origin, PvP duels) · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
+*Codebase: `roll2hit-v3.html` · 36,933 lines · Layers 0–104 complete · 418 nodes · 398 monsters · ~2,848 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF ✅ CLOSED · §MESH-01 core + full gameplay ladder f–j (ledger trades incl. cross-origin, PvP duels) · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---

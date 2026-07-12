@@ -1144,7 +1144,7 @@ async function main() {
   // dice — and the outcome event carries everything needed to REPLAY the duel
   // and independently agree on the winner.
   console.log('\n[O] §MESH-01j — consensual PvP duels (commit-reveal, DUEL:CORE replay, forfeit)');
-  const DUEL = requireCjs('../duel.js');
+  const DUEL = requireCjs('../js/duel.js');
 
   // (1) kernel invariants: sha256 ≡ node:crypto, determinism, bounds.
   check(['', 'abc', 'ünïcode ⚔ 🗡'].every((m) => DUEL.sha256(m) === crypto.createHash('sha256').update(m, 'utf8').digest('hex')),
