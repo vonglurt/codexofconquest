@@ -496,7 +496,7 @@ total = d20 + proficiencyBonus + S_story.atkBonus (level)
 
 **14 base types (die size ascending):** Pointy Stick d4 Lv1, Sickle d4 Lv1, Axe d6 Lv1, Bow d6 Lv2, Scimitar d6 Lv2, Flail d8 Lv3, Long Sword d8 Lv3, Morningstar d8 Lv4, Rapier d8 Lv4, Crossbow d10 Lv5, Glaive d10 Lv5, Halberd d10 Lv6, Maul 2d6 Lv7, Lance d12 Lv8.
 
-**Magic tiers:** `minLevel = baseLv + magic × 4`. A +1 Axe requires Lv5; a +2 Axe requires Lv9.
+**Magic-tier level gate:** `_magicTierAllowed(magic)` (`23755`) = player `level ≥ magic × 5` — so **+1 → Lv5, +2 → Lv10, +3 → Lv15, +4 → Lv20** (no `baseLv` term in the gate). Each item also carries a per-entry `minLevel = min(20, max(magic × 5, baseLv + magic × 4))` used for display/sort.
 
 **Acquisition (§FC06 nerf — fishing-exclusive positive magic):** Only the **base tier (magicBonus 0)** drops from combat, via `_rollMonsterWeaponDrop()` (see §Equipment Drops — one guaranteed weapon per battle, d6 quality −4..0). The +1..+4 tiers **no longer drop from any monster kill** — the old `_rollMainWeaponDrop()` 15%/battle path is retired and the d100 table is consumables-only. Positive-magic gear reaches the player only from **Yugurt Lake fishing** (`LAKE_MAGIC_DB` passive trinkets) and **hand-authored quest/Epic-Boss rewards** (e.g. Sea Element +2, Rod of Self-Discovery +1). The +N `WEAPON_ITEMS` pool remains defined for save reconstruction and possible future authored grants, but nothing rolls it.
 
@@ -519,7 +519,7 @@ Daggers are offhand weapons — they are not sold at vendor nodes. `DAGGER_ITEMS
 
 ### Starting Kit (New Game)
 
-Every new game begins at City Streets — Birka (CI) with:
+Every new game begins at City Streets — Birka (**`LHR`**, `num:1`, `8225`; set by `storyNewGame() → storyRender(NODE_MAP['LHR'])`) with:
 
 | Slot | Item | Stats | Notes |
 |---|---|---|---|
@@ -531,7 +531,7 @@ Every new game begins at City Streets — Birka (CI) with:
 
 **Starting attack bonus at Level 1:** STR +3 (score 16) + Prof +2 + Flint Dagger −3 = **+2 to hit**. Deliberately weak — the crude flint dagger makes early fights challenging and rewards upgrading to a better offhand.
 
-The nearest vendor is BA (City Fence) — one hop south then east from CI. The nearest inn is IN — one hop east.
+*(Note: the neighbouring-node codes for the City Fence vendor and the inn are pre-§WALK legacy codes pending a dedicated remap pass; only the `LHR` start node is code-verified here.)*
 
 ---
 

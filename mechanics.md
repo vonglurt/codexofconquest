@@ -487,19 +487,19 @@ total = d20 + proficiencyBonus + S_story.atkBonus (level)
 
 ### Main Hand Weapons (WEAPON_ITEMS)
 
-42 entries: 14 base weapon types × 3 magic tiers (base, +1, +2). +3 and +4 tiers are planned for Layers 25+.
+70 entries: 14 base weapon types × 5 magic tiers (base, +1, +2, +3, +4) — `[0,1,2,3,4].flatMap(...)` over `_BASE_WEAPONS` (`23740`).
 
 **14 base types (die size ascending):** Pointy Stick d4 Lv1, Sickle d4 Lv1, Axe d6 Lv1, Bow d6 Lv2, Scimitar d6 Lv2, Flail d8 Lv3, Long Sword d8 Lv3, Morningstar d8 Lv4, Rapier d8 Lv4, Crossbow d10 Lv5, Glaive d10 Lv5, Halberd d10 Lv6, Maul 2d6 Lv7, Lance d12 Lv8.
 
-**Magic tiers:** `minLevel = baseLv + magic × 4`. A +1 Axe requires Lv5; a +2 Axe requires Lv9.
+**Magic-tier level gate:** `_magicTierAllowed(magic)` (`23755`) = player `level ≥ magic × 5` — so **+1 → Lv5, +2 → Lv10, +3 → Lv15, +4 → Lv20** (note: no `baseLv` term in the gate). Each item also carries a per-entry `minLevel = min(20, max(magic × 5, baseLv + magic × 4))` used for display/sort.
 
-Drop chance: **15% per battle** via `_rollMainWeaponDrop()`. Duplicate tiers already owned are excluded from the eligible pool.
+**Acquisition (§FC06 nerf — fishing-exclusive positive magic):** only the **base tier (magicBonus 0)** drops from combat, via the one-guaranteed `_rollMonsterWeaponDrop()` (d6 quality −4..0; see §Equipment Drops). The +1..+4 tiers **no longer drop from any kill** — the old `_rollMainWeaponDrop()` 15%/battle path is **deleted** and the d100 table is consumables-only. Positive-magic weapons reach the player only via **Yugurt Lake fishing** (`LAKE_MAGIC_DB`) and **hand-authored quest / Epic-Boss rewards**. The +N `WEAPON_ITEMS` pool stays defined for save reconstruction + future authored grants, but nothing random rolls it.
 
 ---
 
 ### Dagger Drops (DAGGER_ITEMS)
 
-Daggers are offhand weapons that drop from battle — they are not sold at vendor nodes.
+Daggers are offhand weapons; they are not sold at vendor nodes.
 
 | Dagger | ATK Bonus | Min Level | Sell |
 |---|---|---|---|
@@ -508,13 +508,13 @@ Daggers are offhand weapons that drop from battle — they are not sold at vendo
 | 🗡 +3 Gaping Dagger | +3 | Lv13 | 1,250gp |
 | 🗡 +4 Voidsteel Dagger | +4 | Lv20 | — (planned) |
 
-Drop chance: **12% per battle** via `_rollWeaponDrop()`. Always drops the lowest tier the player doesn't yet own and qualifies for. The `atkBonus` adds to every attack roll when the dagger is equipped in the offhand slot.
+**Acquisition (§FC06 nerf):** these magic daggers **no longer drop from combat** — the old `_rollWeaponDrop()` 12%/battle path is **deleted** and the d100 table is consumables-only. As positive-magic gear they are fishing-exclusive by policy; the generic `DAGGER_ITEMS` pool is granted only by any hand-authored quest reward that references it (no random vector). The `atkBonus` adds to every attack roll when a dagger is equipped in the offhand slot.
 
 ---
 
 ### Starting Kit (New Game)
 
-Every new game begins at City Streets — Birka (CI) with:
+Every new game begins at City Streets — Birka (LHR) with:
 
 | Slot | Item | Stats | Notes |
 |---|---|---|---|
@@ -526,7 +526,7 @@ Every new game begins at City Streets — Birka (CI) with:
 
 **Starting attack bonus at Level 1:** STR +3 (score 16) + Prof +2 + Flint Dagger −3 = **+2 to hit**. Deliberately weak — the crude flint dagger makes early fights challenging and rewards upgrading to a better offhand.
 
-The nearest vendor is BA (City Fence) — one hop south then east from CI. The nearest inn is IN — one hop east.
+The start node is **`LHR`** ("City Streets — Birka", `num:1`, `8225`) — set by `storyNewGame() → storyRender(NODE_MAP['LHR'])`; `checkpointNode` also defaults to `LHR`. *(Note: the neighbouring-node codes below — the City Fence vendor, the inn, and the NPC codes in §Story Mode — are pre-§WALK legacy codes and still need a dedicated remap pass; only the `LHR` start node is code-verified here.)*
 
 ---
 
@@ -765,13 +765,13 @@ Potions do not stack effects — each is one item, one use. Buy multiples to car
 ### Sidequests: Battling & Leveling
 
 #### sq_battling — Earn Your Reputation
-- **Activates**: At Birka (CI) — first time you enter Story Mode
+- **Activates**: At Birka (LHR) — first time you enter Story Mode
 - **Objective**: Collect weapon drops from 3 combat victories
 - **Tracked by**: `S_story.dropsCollected >= 3`
 - **Flavor**: The fence at the Rough Bar will buy anything. Reputation is currency.
 
 #### sq_leveling — The Spoils of War
-- **Activates**: At Birka (CI) — alongside Battling
+- **Activates**: At Birka (LHR) — alongside Battling
 - **Objective**: Win 5 story battles (via Victory outcome)
 - **Tracked by**: `Object.keys(S_story.defeatedBattles).length >= 5`
 - **Flavor**: Five fights means you've survived enough to be dangerous.
@@ -847,7 +847,7 @@ After completing the game, `storyNewGamePlus()` starts a new run with:
 - `ngPlusRun` counter incremented
 - All other state reset
 
-On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first revisit. The EB nodes "remember" the player has been there. At CI on NG+ start, "Sweelinck is waiting." overlay fires.
+On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first revisit. The EB nodes "remember" the player has been there. At LHR (Birka) on NG+ start, "Sweelinck is waiting." overlay fires.
 
 ---
 
