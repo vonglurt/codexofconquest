@@ -569,6 +569,31 @@ Both defeat screens show a full **run summary**: level reached, XP earned, day r
 - **Respawn available** at last checkpoint (inn slept at), at half max HP
 - Checkpoint saves on every inn sleep via `r2h_checkpoint`
 
+#### The Corpse-Run — Death, Loot & the Grave (§DEATH-01)
+When you fail your death saves in a Story Battle (`_storyDeathSaveFall`), a lighter loss than the
+game-over path fires — you keep playing, but your body is left where you fell:
+
+- **What actually drops:** your **loose bagged items + 100% of your gold** are bagged into a
+  *corpse* at the death node (`S_story.corpsesQuests`, persisted). **Codex Shards and gate keys are
+  protected** (never drop). **Your equipped gear survives** — the main weapon, off-hand, and shield
+  live outside `inventory` and are untouched by death. You respawn at your `checkpointNode` (set by
+  sleeping at any `sleep:true` node; default Birka/LHR) at **1 HP**.
+- **The message tells the truth** (§DEATH-01 Inc A): it names what the body holds, states that your
+  equipped gear (and shards) stayed with you, and names where you woke — no false "a rusted dagger
+  is all you carry."
+- **The signal** (Inc B): a persistent **🦴 corpse chip** in the location card names where your
+  body is ("🦴 1 body at Rzhev"); clicking it opens the Map (a read-only view aid — **no warp**;
+  `checkpointNode` respawn is the only warp, §CELL-13). When the grave node is on-screen in the
+  Local map it also shows a 🦴 marker. You reclaim a body by returning to the node and pressing
+  **🦴 Remains → Retrieve** (or via the journal's ☠ Fallen Hero list).
+- **NG+ safety** (Inc C): New Game+ resets `corpsesQuests`. If you begin NG+ with an **unrecovered**
+  corpse, the game **warns and asks for confirmation** first (naming the items + gold at stake); a
+  decline aborts NG+ so nothing is lost silently.
+- **Atomicity:** the death + corpse persist the instant they happen — `_storyDeathSaveFall` ends in
+  `storyRender()`, whose terminal `storyAutoSave()` writes the state synchronously (no save-scum gap).
+
+A permanent **death tattoo** (day/hour/node + `corpseQuestId`) records every fall.
+
 ---
 
 ### Save System

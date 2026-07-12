@@ -560,6 +560,25 @@ Both defeat screens show a full **run summary**: level reached, XP earned, day r
 - **Respawn available** at last checkpoint (inn slept at), at half max HP
 - Checkpoint saves on every inn sleep via `r2h_checkpoint`
 
+#### The Corpse-Run — Death, Loot & the Grave (§DEATH-01)
+On a failed death-save fall (`_storyDeathSaveFall`) — a lighter loss than the game-over path — you
+keep playing but leave your body where you fell:
+
+- **Drops:** loose bagged items + **100% gold** → a *corpse* at the death node
+  (`S_story.corpsesQuests`, persisted). **Shards + gate keys are protected.** **Equipped gear
+  survives** (main weapon / off-hand / shield live outside `inventory`). Respawn at `checkpointNode`
+  at 1 HP.
+- **Honest message** (Inc A): names the body's contents, states equipped gear + shards stayed with
+  you, names the wake node — no false "a rusted dagger is all you carry."
+- **Signal** (Inc B): a persistent **🦴 corpse chip** in the location card names the grave
+  ("🦴 1 body at Rzhev") and opens the Map on click (read-only, **no warp** — §CELL-13); the Local
+  map marks the grave cell with 🦴 when it's in view. Reclaim via **🦴 Remains → Retrieve** at the
+  node or the journal ☠ Fallen Hero list.
+- **NG+ safety** (Inc C): NG+ warns + confirms before wiping an unrecovered corpse; decline aborts.
+- **Atomicity:** persisted synchronously via `storyRender()`'s terminal `storyAutoSave()`.
+
+A permanent **death tattoo** (day/hour/node + `corpseQuestId`) records every fall.
+
 ---
 
 ### Save System

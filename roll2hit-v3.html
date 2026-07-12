@@ -1755,6 +1755,21 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #objective-chip .obj-leg.danger b { color: #f05a3a; }
 #objective-chip .obj-sep { color: rgba(200,180,140,0.4); }
 
+/* ── §DEATH-01 Inc B — persistent corpse signal chip (bone/amber, clickable) ── */
+#corpse-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  margin-top: 6px; padding: 4px 10px; border-radius: 6px;
+  background: rgba(40,24,8,0.55); border: 1px solid #a07840;
+  color: #e6c48a; font-size: 11.5px; font-weight: 700; line-height: 1; cursor: pointer;
+}
+#corpse-chip:hover { background: rgba(160,120,64,0.18); border-color: #d0a860; color: #f4d9a6; }
+/* Local-grid grave marker */
+.mc.mc-grave { box-shadow: inset 0 0 0 1px #a07840; }
+.mc .mc-grave-mark {
+  position: absolute; top: 0; right: 1px; font-size: 9px; line-height: 1;
+  text-shadow: 0 0 3px rgba(0,0,0,0.9); pointer-events: none;
+}
+
 /* ── §PLAY-01-A — one-time opening framing card (courier's voice) ── */
 #story-courier-modal {
   position: fixed; inset: 0; z-index: 320;
@@ -4249,6 +4264,8 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
                 <span class="obj-sep">·</span>
                 <span class="obj-leg" id="obj-day">☀ Day <b>1</b>/49</span>
               </div>
+              <!-- §DEATH-01 Inc B — persistent "you have a body out there" signal; click opens the Map -->
+              <div id="corpse-chip" style="display:none" onclick="storyMapToggle()"></div>
             </div>
           </div>
           <div id="story-farewell" style="display:none;"></div>
@@ -23300,6 +23317,20 @@ function _showCourierMap() {
 
 /* ── Layer 43-U/W: NG+ Preservation + Title Overlay ── */
 function storyNewGamePlus() {
+  // §DEATH-01 Inc C (finding #4): NG+ wipes corpsesQuests + the autosave. Any unrecovered
+  // body would be lost forever and silently — the exact honesty gap. Warn + confirm first;
+  // a decline aborts NG+ cleanly (nothing wiped) so the player can go retrieve.
+  if ((S_story.corpsesQuests || []).length > 0) {
+    const bodies = S_story.corpsesQuests;
+    const gp     = bodies.reduce((s, q) => s + (q.goldDropped || 0), 0);
+    const items  = bodies.reduce((s, q) => s + ((q.items || []).length), 0);
+    const where  = [...new Set(bodies.map(q => q.nodeName))].join(', ');
+    const ok = window.confirm('⚠ You still have ' + bodies.length + ' unrecovered '
+      + (bodies.length === 1 ? 'body' : 'bodies') + ' out there (' + where + ') carrying '
+      + items + ' item(s) and ' + gp + ' gp. Beginning New Game+ leaves them behind forever.\n\n'
+      + 'Begin New Game+ anyway?');
+    if (!ok) return;   // player chose to retrieve first — NG+ aborted, nothing wiped
+  }
   const ngOverlay = document.getElementById('ng-plus-title-overlay');
   if (ngOverlay) {
     ngOverlay.style.display = 'flex';
@@ -25281,10 +25312,26 @@ function _storyDeathSaveFall() {
 
   storyEnter();
   storyUpdateStatus();
+  // §DEATH-01 Inc A (finding #1a): tell the truth. Equipped gear + shards survive death
+  // (they live outside S_story.inventory); only bagged loot + all gold go to the body.
+  const _cpNode = NODE_MAP[S_story.currentCode];
+  const _cpName = _cpNode ? _cpNode.label.split(' — ')[0] : (S_story.checkpointNode || 'your checkpoint');
+  const _bodyParts = [];
+  if (bodyItems.length)            _bodyParts.push(bodyItems.length + ' item(s)');
+  if (corpseQuest.goldDropped)     _bodyParts.push(corpseQuest.goldDropped + ' gp');
+  const _totalThings = bodyItems.length + (corpseQuest.goldDropped ? 1 : 0);
+  const _them = _totalThings > 1 ? 'them' : 'it';
+  const _kept = 'Your equipped gear' + (critItems.length ? ' and Codex shards' : '') + ' stayed with you.';
   storyRender(NODE_MAP[S_story.currentCode],
-    '☠ You have fallen at ' + nodeName + '. Your remains lie there — '
-    + bodyItems.length + ' item(s) and ' + corpseQuest.goldDropped + ' gp lost.'
-    + ' A rusted dagger is all you carry. Find your body.');
+    '☠ You fell at ' + nodeName + '. '
+    + (_bodyParts.length
+        ? 'Your body lies there with ' + _bodyParts.join(' and ') + ' — go back to reclaim ' + _them + '. '
+        : 'Your body lies there, though it carried nothing of value. ')
+    + _kept + ' You wake at ' + _cpName + ' with 1 HP.');
+  // §DEATH-01 finding #5 (non-atomic death save): already satisfied — the storyRender() call
+  // just above ends in storyAutoSave() (no await between the strip and the save), so the death
+  // + corpse persist synchronously the instant they happen. No extra save needed. (The audit
+  // claim that "no autosave fires" was stale — verified at HEAD.)
 }
 
 function _storyRetrieveCorpse(questId) {
@@ -34897,6 +34944,26 @@ function storyUpdateStatus() {
   }
   storyUpdateJournalCount();
   _renderObjectiveChip();   // §PLAY-01-A: the Courier's Map — persistent goal
+  _renderCorpseChip();      // §DEATH-01 Inc B: "you have a body out there" signal
+}
+
+// §DEATH-01 Inc B (finding #3) — the corpse signal the game never transmitted. A persistent
+// chip that NAMES where your body is; clicking opens the Map tab (a read-only view aid — no
+// warp; §CELL-13 stands, checkpointNode respawn is the only warp). The chip TEXT carries the
+// location because the map is player-centered (region-centering stays deferred, §NAV-01-FU 4).
+function _renderCorpseChip() {
+  const el = document.getElementById('corpse-chip');
+  if (!el) return;                                     // chip absent (e.g. worldbuilder) — no-op
+  const bodies = S_story.corpsesQuests || [];
+  if (!bodies.length) { el.style.display = 'none'; el.textContent = ''; return; }
+  const places = [...new Set(bodies.map(q => q.nodeName))];
+  const where  = places.length === 1 ? places[0] : places.length + ' places';
+  el.innerHTML = '🦴 ' + bodies.length + ' ' + (bodies.length === 1 ? 'body' : 'bodies')
+    + ' at ' + _mpEsc(where);
+  el.title = 'Your remains lie out in the world — click to open the map. '
+    + bodies.map(q => q.nodeName + ' (' + (q.items || []).length + ' item(s), '
+        + (q.goldDropped || 0) + ' gp)').join(' · ');
+  el.style.display = '';
 }
 
 // §PLAY-01-A The Courier's Map — render the persistent objective chip. Display-only;
@@ -35448,8 +35515,19 @@ function _renderMapGrid() {
             if (exitSpan) exitSpan.classList.add('mc-exit-active');
           }
           const lbl = n ? n.label : code;
+          // §DEATH-01 Inc B — mark the player's grave when it's in view (honest "getting
+          // warm" cue near the body; the chip carries the location from anywhere else).
+          const _graveHere = (S_story.corpsesQuests || []).filter(q => q.nodeCode === code);
+          let _graveInfo = '';
+          if (_graveHere.length) {
+            cell.classList.add('mc-grave');
+            cell.insertAdjacentHTML('beforeend', '<div class="mc-grave-mark">🦴</div>');
+            const gi = _graveHere.reduce((s, q) => s + (q.items || []).length, 0);
+            const gg = _graveHere.reduce((s, q) => s + (q.goldDropped || 0), 0);
+            _graveInfo = '  ·  🦴 Your remains — ' + gi + ' item(s), ' + gg + ' gp';
+          }
           cell.addEventListener('mouseenter', () => {
-            info.textContent = lbl + (n ? '  ·  Act ' + n.act : '');
+            info.textContent = lbl + (n ? '  ·  Act ' + n.act : '') + _graveInfo;
           });
           // §MP-MAPTABS: click any tile → adjacent step or auto-travel there.
           cell.style.cursor = 'pointer';
