@@ -4242,7 +4242,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
                 <span id="s-node-act">Act I</span>
               </div>
               <!-- §PLAY-01-A The Courier's Map — persistent objective (Froberger's map) -->
-              <div id="objective-chip" title="Return all 7 Codex Shards, reach Level 20, and defeat Commander Auros at the Codex — before Day 49.">
+              <div id="objective-chip" title="Return all 7 Codex Shards, reach Level 20, and defeat Commander Auros at the Codex. Time is generous — the seals hold well past any honest journey; the Void gains only slowly, and only while you sleep.">
                 <span class="obj-shards" id="obj-shards"></span>
                 <span class="obj-sep">·</span>
                 <span class="obj-leg" id="obj-lvl">⭐ Lv <b>1</b>/20</span>
@@ -4933,7 +4933,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div><span class="cg-icon">🔮</span> Recover all <b>7 Codex Shards</b> — the seven faded symbols.</div>
         <div><span class="cg-icon">⭐</span> Grow strong enough to face what guards them — <b>reach Level 20</b>.</div>
         <div><span class="cg-icon">⚔</span> Defeat <b>Commander Auros</b> at the Codex and seal the Void.</div>
-        <div><span class="cg-icon">☀</span> Do it all <b>before Day 49</b> — the Void's tide will not wait.</div>
+        <div><span class="cg-icon">☀</span> Take the <b>time you need</b> — the seals will hold a long while yet. The Void gains only slowly, and only while you sleep; it will not rush you.</div>
       </div>
       <button id="btn-courier-begin">Take the map →</button>
     </div>
@@ -34797,10 +34797,12 @@ function _renderObjectiveChip() {
   const lvEl = document.getElementById('obj-lvl');
   lvEl.innerHTML = '⭐ Lv <b>' + lv + '</b>/' + LEVEL_GOAL;
   lvEl.className = 'obj-leg' + (lv >= LEVEL_GOAL ? ' hit' : '');
+  // §PLAY-01-C: time is generous — the day is a horizon, not a doom countdown.
+  // No red alarm; only a soft amber within 3 days of the real (rarely-hit) cap.
   const day = S_story.day || 1;
   const dayEl = document.getElementById('obj-day');
   dayEl.innerHTML = '☀ Day <b>' + day + '</b>/' + DAY_DEADLINE;
-  dayEl.className = 'obj-leg' + (day >= 42 ? ' danger' : day >= 35 ? ' warn' : '');
+  dayEl.className = 'obj-leg' + (day >= DAY_DEADLINE - 3 ? ' warn' : '');
 }
 
 /* ── Layer 5: Sleep + Void Tide ── */

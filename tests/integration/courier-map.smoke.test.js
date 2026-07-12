@@ -20,8 +20,11 @@ test.describe('§PLAY-01-A — The Courier\'s Map (goal legibility)', () => {
       const modal = document.getElementById('story-courier-modal');
       out.frameVisible = modal.classList.contains('visible');
       const goalTxt = document.getElementById('courier-goals').textContent;
-      out.frameStatesGoal = ['7 Codex Shards', 'Level 20', 'Commander Auros', 'Day 49']
+      out.frameStatesGoal = ['7 Codex Shards', 'Level 20', 'Commander Auros']
         .every(s => goalTxt.includes(s));
+      // §PLAY-01-C: the deadline is reframed generous — no doom "will not wait" language
+      out.frameNoDoom = !goalTxt.includes('will not wait') && !goalTxt.includes('before Day 49');
+      out.frameGenerous = goalTxt.includes('time you need');
       out.seenFlag = S_story.courierMapSeen === true;
 
       // dismiss with the button
@@ -42,9 +45,13 @@ test.describe('§PLAY-01-A — The Courier\'s Map (goal legibility)', () => {
       S_story.shards = 7; storyUpdateStatus();
       out.fullAt7 = full();
 
-      // day threshold colouring agrees with the sidebar (danger at >= 42)
+      // §PLAY-01-C: the day is a generous horizon — never a red doom alarm.
       S_story.day = 45; storyUpdateStatus();
-      out.dayDanger = document.getElementById('obj-day').className.includes('danger');
+      out.dayNeverDanger = !document.getElementById('obj-day').className.includes('danger');
+      out.day45Calm = !document.getElementById('obj-day').className.includes('warn');  // still calm
+      S_story.day = 47; storyUpdateStatus();                                            // within 3 of cap
+      out.day47SoftWarn = document.getElementById('obj-day').className.includes('warn') &&
+        !document.getElementById('obj-day').className.includes('danger');
       // level goal hit turns gold
       S_story.level = 20; storyUpdateStatus();
       out.lvlHit = document.getElementById('obj-lvl').className.includes('hit');
@@ -53,6 +60,8 @@ test.describe('§PLAY-01-A — The Courier\'s Map (goal legibility)', () => {
 
     expect(r.frameVisible).toBe(true);
     expect(r.frameStatesGoal).toBe(true);
+    expect(r.frameNoDoom).toBe(true);
+    expect(r.frameGenerous).toBe(true);
     expect(r.seenFlag).toBe(true);
     expect(r.frameDismissed).toBe(true);
     expect(r.shardCount).toBe(7);
@@ -61,7 +70,9 @@ test.describe('§PLAY-01-A — The Courier\'s Map (goal legibility)', () => {
     expect(r.dayText).toBe('☀ Day 1/49');
     expect(r.fullAt3).toBe(3);
     expect(r.fullAt7).toBe(7);
-    expect(r.dayDanger).toBe(true);
+    expect(r.dayNeverDanger).toBe(true);
+    expect(r.day45Calm).toBe(true);
+    expect(r.day47SoftWarn).toBe(true);
     expect(r.lvlHit).toBe(true);
     expect(pageErrors).toEqual([]);
   });
