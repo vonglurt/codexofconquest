@@ -955,7 +955,7 @@ All 37 layers are implemented in `roll2hit-v3.html` (~143,000 lines). The single
 - §CELL-02 ✅ `CELL_GRID` + `IMPASSABLE_CELLS` added
 - §CELL-03 ✅ `cellMove()` replaces `storyMove` — MUD cell grid navigation live
 - §CELL-04 ✅ `_enterEmptyCell()` / `_inferTerrain()` / `TERRAIN_ENCOUNTER_RATE` — open terrain traversal
-- §CELL-01, §CELL-05 through §CELL-11 planned — see `plan.md §CELL`
+- §CELL-01, §CELL-05 through §CELL-11 planned — see `plan-archive.md §CELL`
 
 
 ---

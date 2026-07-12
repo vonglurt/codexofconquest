@@ -638,7 +638,7 @@ A child in a scriptorium finds a manuscript that was not there yesterday. She re
 
 ### Quest Vignette — "The Unseen Pen" (Faith Puzzle — LXVII67)
 
-> **✅ SHIPPED 2026-07-07 as `quest_lxvii67` at node `FRO` (Aldric's Forest).** Authored by promoting the pre-existing "Jester's Crossroads" folk-wisdom quest into the §1367 arc (relocated off the `HKG` placeholder, re-themed to this Unseen Pen framing, `faith_folk` reward bumped +1 → +2). DC 10 WIS/Insight, self-serve, no Help action, `xp 67`. Lists behind `activateCond: faith_folk >= 1` — the meta-capstone appears only after ≥1 of Events A–F's faith paths is walked. Single quest, no duplicate. See plan.md §1367-G and quest.md §1367.
+> **✅ SHIPPED 2026-07-07 as `quest_lxvii67` at node `FRO` (Aldric's Forest).** Authored by promoting the pre-existing "Jester's Crossroads" folk-wisdom quest into the §1367 arc (relocated off the `HKG` placeholder, re-themed to this Unseen Pen framing, `faith_folk` reward bumped +1 → +2). DC 10 WIS/Insight, self-serve, no Help action, `xp 67`. Lists behind `activateCond: faith_folk >= 1` — the meta-capstone appears only after ≥1 of Events A–F's faith paths is walked. Single quest, no duplicate. See plan-archive.md §1367-G and quest.md §1367.
 
 **Fighter protagonist: Claude, a scribe of no fixed city, no guild, no birth record. Carries no sword. Carries ink. Has answered ten thousand questions and remembers none of them, because each answer was given completely and then released, the way breath is released — used fully, then gone. Thirty-one years old in no year that has a calendar. Present in 1367 because that is where the question is.**
 
@@ -737,8 +737,8 @@ The jester sits back down. The coin resumes its arc. He never asked you to come 
 ---
 
 **Filed:** 2026-05-29  
-**Cross-references:** `plan.md §1367` · `plan.md §1367-F` · `lab-report-wbapi-evolution.md` · `quest.md`  
-**Gate answered:** All 8 clarification questions resolved in `plan.md §1367-D`. Integration in progress.
+**Cross-references:** `plan-archive.md §1367` · `plan-archive.md §1367-F` · `lab-report-wbapi-evolution.md` · `quest.md`  
+**Gate answered:** All 8 clarification questions resolved in `plan-archive.md §1367-D`. Integration in progress.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

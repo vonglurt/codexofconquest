@@ -17,7 +17,7 @@ Two migrations happen in lockstep:
 1. **Data migration** — strip explicit `N/S/E/W` exit pointers from `NODE_MAP`; promote `NODE_COORDS` to the single source of truth for adjacency.
 2. **Code migration** — delete every helper that resolves exits by reading `node.N` / `node.S` / `node.E` / `node.W`; route all movement, pathfinding, and exit-rendering through `CELL_GRID` adjacency.
 
-The runtime side of this migration is already in flight (§CELL-01 through §CELL-13 in `plan.md`). What remains is finishing the data cleanup, retiring a handful of legacy helpers, and bringing tests onto the new shape.
+The runtime side of this migration is already in flight (§CELL-01 through §CELL-13 in `plan-archive.md`). What remains is finishing the data cleanup, retiring a handful of legacy helpers, and bringing tests onto the new shape.
 
 ---
 
@@ -293,9 +293,9 @@ The strip pass is built into the API as §CELL-14. It runs through the worldbuil
 ### Phase F — docs
 
 - [ ] **F1.** Update `maps.md §NODE_MAP` to describe the new shape (no exit fields).
-- [ ] **F2.** Update `plan.md §II` to point to this document.
+- [ ] **F2.** Update `index.md §II` to point to this document.
 - [ ] **F3.** Move `spec-corridors.md` to `archive/` (per `index.md:94` it's already marked superseded).
-- [ ] **F4.** Add a §CELL-14 entry to `plan.md` if there's residual data-cleanup work post-§CELL-13.
+- [ ] **F4.** Add a §CELL-14 entry to `BACKLOG.md` if there's residual data-cleanup work post-§CELL-13.
 
 ---
 
@@ -329,7 +329,7 @@ The strip-pass itself is reversible — `git stash` covers it. The risky step is
 |---|---|---|
 | Story-mode walk (arrow keys) | `storyMove(dir)` → `node[dir]` → `storyRender` | `cellMove(dir)` → `CELL_GRID["r,c"]` → `storyRender` or `_enterEmptyCell` |
 | Map click-to-walk | `storyTravel(code)` (teleport) | `storySetWaypoint(code)` + repeated `cellMove(dir)` (walks every cell) |
-| Quest activation | "currentCode === quest.activateNode" | "CELL_GRID[`${playerR},${playerC}`] === quest.activateNode" (cell-driven, §CELL plan.md:43) |
+| Quest activation | "currentCode === quest.activateNode" | "CELL_GRID[`${playerR},${playerC}`] === quest.activateNode" (cell-driven, §CELL plan-archive.md) |
 | Encounters in transit | Only on named nodes with `battle:` | On every empty cell, weighted by inferred terrain (`TERRAIN_ENCOUNTER_RATE`) |
 | Minimap | Drawn from `NODE_MAP` edges | Drawn from `CELL_GRID` + `visitedCells` fog |
 | Reachability audit | Walked `node.N/S/E/W` graph | Walks `CELL_GRID` 4-neighbors |

@@ -90,7 +90,7 @@ Dead-end west of DF.
 
 ### **[✅ Layer 46 — Implemented]** The Cat Quarter (Node CDG, R04,C17)
 
-CDG in WORLD_DB (HTML line 8026). Quest chain `quest_cat_01`–`quest_cat_void` in QUEST_DB (HTML lines ~11799–11885). Full design in `plan.md` Section IX.
+CDG in WORLD_DB (HTML line 8026). Quest chain `quest_cat_01`–`quest_cat_void` in QUEST_DB (HTML lines ~11799–11885). Full design in `plan-archive.md` Section IX.
 
 **CDG — The Cat Quarter (Node 77, R04,C17)**
 Dead-end east of SL. `cat_quarter` terrain.

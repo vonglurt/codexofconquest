@@ -8,12 +8,12 @@
 > **Active navigation as of §CELL-03:** `cellMove(dir)` moves the player exactly one grid cell per keypress. Named nodes are entered when a cell has an entry in `CELL_GRID`. Empty cells are handled by `_enterEmptyCell(r, c)` (§CELL-04). There is no corridor dialog, no Manhattan-distance gating, and no "Hunt/Warp" choice on movement.  
 >
 > For the current movement spec see: `spec-engine.md` §Navigation / `docs-node-network.md`.  
-> For the §CELL redesign plan see: `plan.md §CELL`.  
+> For the §CELL redesign plan see: `plan-archive.md §CELL`.  
 > This document is kept as a historical reference for the corridor grid CSS, HTML overlay markup, and `_setActivePath` — all still present in the HTML — and for context on why the old system was replaced.
 
 ---
 
-**Depends on:** `plan.md` (architecture), `maps.md` (NODE_COORDS), existing `_renderMapGrid()`  
+**Depends on:** `plan-archive.md` (architecture), `maps.md` (NODE_COORDS), existing `_renderMapGrid()`  
 **Status:** ✅ COMPLETE — All L9-A through L9-H implemented (2026-05-21)  
 **Navigation status:** ⚠️ SUPERSEDED — `storyMove_LEGACY` retained until §CELL-05; `cellMove` is the live movement function  
 **File target:** `roll2hit-v3.html` (single-file rule)

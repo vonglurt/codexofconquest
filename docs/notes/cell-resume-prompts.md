@@ -13,7 +13,7 @@
 > to resume that exact increment. Each prompt assumes the previous sections are complete
 > unless the ordering note says otherwise.
 >
-> Full design spec: `plan.md §CELL`.
+> Full design spec: `plan-archive.md §CELL`.
 > Implementation order: 02 → 03 → 04 → 01 → 05 → 09 → 10 → **05b → 11A → 06 → 08 → 07 → 11B**.
 >
 > **Status (2026-06-14):** §CELL-02 ✅ · §CELL-03 ✅ · §CELL-04 ✅ · §CELL-01 ✅ · §CELL-05 ✅ (partial — 268 zombie J-stubs remain, no r/c, inert) · §CELL-09 ✅ · §CELL-10 ✅ · §CELL-05b next (purge zombies) → §CELL-11A (remove corridor dead code + _buildNodeExits) → §CELL-06 (server BFS — URGENT: reweave-all currently broken) → §CELL-08 → §CELL-07 → §CELL-11B
@@ -35,7 +35,7 @@ IMPASSABLE_CELLS as computed constants so the new movement engine has what it ne
 
 Working directory: /Users/user/code/roll2hit.com
 Primary file: roll2hit-v3.html (~143,000 lines)
-Full design spec: plan.md §CELL-02
+Full design spec: plan-archive.md §CELL-02
 
 The game's NODE_MAP already stores r and c on every node. NODE_COORDS is a parallel 
 object that also holds {r,c} per node code. We need a reverse lookup: given a grid 
@@ -96,7 +96,7 @@ This increment replaces storyMove with cellMove.
 
 Working directory: /Users/user/code/roll2hit.com
 Primary file: roll2hit-v3.html (~143,000 lines)
-Full design spec: plan.md §CELL-03
+Full design spec: plan-archive.md §CELL-03
 
 CONTEXT — current system:
 - storyMove(dir) is at line ~143168. It reads node[dir] (node.N / node.E / node.S / 
@@ -199,7 +199,7 @@ is called (currently a stub). This increment implements that function fully.
 
 Working directory: /Users/user/code/roll2hit.com
 Primary file: roll2hit-v3.html (~143,000 lines)
-Full design spec: plan.md §CELL-04
+Full design spec: plan-archive.md §CELL-04
 
 TASK:
 
@@ -310,7 +310,7 @@ cellMove never reads them. This increment strips them from the data.
 Working directory: /Users/user/code/roll2hit.com
 Primary file: roll2hit-v3.html (~143,000+ lines)
 Server: wbapi-server.js (WBAPI runs on port 1367)
-Full design spec: plan.md §CELL-01
+Full design spec: plan-archive.md §CELL-01
 
 === WHAT EXISTS AND WHAT STILL READS N/E/S/W ===
 
@@ -442,7 +442,7 @@ This increment removes junction nodes — the auto-generated J##### routing stub
 
 Working directory: /Users/user/code/roll2hit.com
 Primary file: roll2hit-v3.html (~143,000 lines)
-Full design spec: plan.md §CELL-05
+Full design spec: plan-archive.md §CELL-05
 
 CONTEXT:
 There are thousands of junction nodes in NODE_MAP (J1–J13, J91, J98, J14634, 
@@ -520,7 +520,7 @@ trigger mechanism and the BFS pathfinding for quest waypoints need updating.
 
 Working directory: /Users/user/code/roll2hit.com
 Primary file: roll2hit-v3.html (~143,000 lines)
-Full design spec: plan.md §CELL-09
+Full design spec: plan-archive.md §CELL-09
 
 CONTEXT:
 Quest activation was triggered by storyRender checking S_story.currentCode against
@@ -603,7 +603,7 @@ This increment updates the minimap to show a live player cursor and fog-of-war r
 
 Working directory: /Users/user/code/roll2hit.com
 Primary file: roll2hit-v3.html (~143,000 lines)
-Full design spec: plan.md §CELL-10
+Full design spec: plan-archive.md §CELL-10
 
 CONTEXT:
 There are two minimaps in roll2hit-v3.html:
@@ -676,7 +676,7 @@ unreachable by cellMove) but should be purged before §CELL-06.
 
 Working directory: /Users/user/code/roll2hit.com
 Server: wbapi-server.js (WBAPI runs on port 1367)
-Full design spec: plan.md §CELL-05b note
+Full design spec: plan-archive.md §CELL-05b note
 
 TASK:
 
@@ -738,7 +738,7 @@ every query. The reweave-all endpoint is currently broken.
 
 Working directory: /Users/user/code/roll2hit.com
 Server file: wbapi-server.js (~11,877 lines as of 2026-06-14)
-Full design spec: plan.md §CELL-06
+Full design spec: plan-archive.md §CELL-06
 
 EXACT LOCATIONS TO CHANGE (verified by grep 2026-06-14):
 
@@ -871,7 +871,7 @@ This increment adds REST endpoints for cell-based queries.
 Working directory: /Users/user/code/roll2hit.com
 Server file: wbapi-server.js (~8500 lines)
 CLI: api.sh
-Full design spec: plan.md §CELL-08
+Full design spec: plan-archive.md §CELL-08
 
 TASK:
 
@@ -940,7 +940,7 @@ This is the "multiplayer MUD" layer.
 
 Working directory: /Users/user/code/roll2hit.com
 Server file: wbapi-server.js (~8500 lines)
-Full design spec: plan.md §CELL-07
+Full design spec: plan-archive.md §CELL-07
 
 TASK:
 
@@ -1036,7 +1036,7 @@ cleanly severs the last in-memory edge-graph artifact.
 
 Working directory: /Users/user/code/roll2hit.com
 Primary file: roll2hit-v3.html (45,495 lines as of 2026-06-14)
-Full design spec: plan.md §CELL-11 Part A
+Full design spec: plan-archive.md §CELL-11 Part A
 
 CONFIRMED LOCATIONS TO REMOVE (all verified by grep 2026-06-14):
 
@@ -1129,7 +1129,7 @@ We are converting roll2hit.com to a MUD-style cell-based navigation system.
 all markdown documentation to reflect the new cell-based architecture.
 
 Working directory: /Users/user/code/roll2hit.com
-Full design spec: plan.md §CELL-11
+Full design spec: plan-archive.md §CELL-11
 
 Two-Way Sync Rule (from index.md): every item in the markdown docs traces back to
 roll2hit-v3.html. Everything in the HTML has a home doc.
@@ -1227,4 +1227,4 @@ After all docs are updated:
 
 *Cell redesign prompts — revised 2026-06-14 after code audit.*
 *Order: 02 → 03 → 04 → 01 → 05 → 09 → 10 → 05b → 11A → 06 → 08 → 07 → 11B.*
-*Full spec: plan.md §CELL.*
+*Full spec: plan-archive.md §CELL.*

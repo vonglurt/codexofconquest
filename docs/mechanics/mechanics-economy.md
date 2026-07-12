@@ -175,7 +175,7 @@ Three consts add an ambient emotional layer to NPC favorability at fav ≥ 2. No
 | `NPC_ROMANCE_VIGNETTES` | 12075 | `npcRomanceVignetteDelivered{}` | `fav ≥ 2` + NPC node nearby + once-per-run |
 | `ROMANCE_QUOTES` | 8164 | `romanceQuotesDelivered[]` | Act III+ · 15% per sleep · no repeat |
 
-See `plan.md §RESEARCH-01 §III` for full design notes and source texts.
+See `plan-archive.md §RESEARCH-01 §III` for full design notes and source texts.
 
 ---
 

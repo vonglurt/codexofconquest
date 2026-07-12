@@ -118,7 +118,7 @@ Player presses N/E/S/W
   │   ├─ Mover.move(_moverWorld(), {r,c}, dir)   ← shared mover.js kernel (§WALK-2):
   │   │     band bounds 0 ≤ r < 90 · E/W wrap at the antimeridian · sea/IMPASSABLE_CELLS
   │   │     refusal reasons are exactly 'oob' | 'sea' — NO gate locks, NO quest checks
-  │   │     (Free-Movement Policy, plan.md §I)
+  │   │     (Free-Movement Policy, CONTRIBUTING.md §I)
   │   ├─ blocked → storyBlock('No path leads that way.')
   │   ├─ destCode = res.destCodes[0]
   │   │
@@ -158,7 +158,7 @@ const TERRAIN_ENCOUNTER_RATE = {
 
 ### Gate locks — ❌ removed
 
-No gate locks exist. `GATE_LOCKS` greps to 0 in the current file and `cellMove` has no gate branch — movement is refused only for `'oob'`/`'sea'` (Free-Movement Policy, plan.md §I). Story gating happens at the mission-listing level (quest `gate`/`activateCond` in `storyCheckQuests`), never at a road.
+No gate locks exist. `GATE_LOCKS` greps to 0 in the current file and `cellMove` has no gate branch — movement is refused only for `'oob'`/`'sea'` (Free-Movement Policy, CONTRIBUTING.md §I). Story gating happens at the mission-listing level (quest `gate`/`activateCond` in `storyCheckQuests`), never at a road.
 
 ---
 
@@ -379,7 +379,7 @@ GL    3   15  Old Guard's Corner
 3. Add to `NODE_MAP` with `act`, `name` (WORLD_DB terrain key), `label`, `text`, etc. **Do not add N/S/E/W fields** — exits are derived from grid adjacency.
 4. Add to `NODE_COORDS`.
 5. `CELL_GRID` is rebuilt automatically at startup — no manual addition needed.
-6. Update docs: `story.md`, `maps.md`, `plan.md`.
+6. Update docs: `story.md`, `maps.md`, `BACKLOG.md`.
 
 Preferred path: use `POST /api/node` via WBAPI (rejects duplicate coordinates and rejects N/S/E/W fields).
 

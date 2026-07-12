@@ -263,7 +263,7 @@ XP accumulates across the run. On each victory, `_checkLevelUp()` fires — if X
 
 Cap is 195,000 XP (Level 20). A focused run (~150 battles) should reach Level 15–17.
 
-**Level 21 — ⚠️ PLANNED (plan.md §XIV):** `XP_LEVELS[20]` is undefined. The level check in `_checkLevelUp()` reads `XP_LEVELS[currentLevel]`; at Level 20 this returns `undefined` and the cap holds. Level 21 is architecturally open — extending `XP_LEVELS` with one more entry and adding a new `FIGHTER_FEATURES` row at Lv21 is the minimum to unlock it. See `plan.md §XIV` (World Creator Wizard) for the full extension guide, including shell tooling for safe HTML data structure editing.
+**Level 21 — ⚠️ PLANNED (plan-archive.md §XIV):** `XP_LEVELS[20]` is undefined. The level check in `_checkLevelUp()` reads `XP_LEVELS[currentLevel]`; at Level 20 this returns `undefined` and the cap holds. Level 21 is architecturally open — extending `XP_LEVELS` with one more entry and adding a new `FIGHTER_FEATURES` row at Lv21 is the minimum to unlock it. See `plan-archive.md §XIV` (World Creator Wizard) for the full extension guide, including shell tooling for safe HTML data structure editing.
 
 ---
 
@@ -370,7 +370,7 @@ At max practical luck (+3), average type roll shifts from ~10.5 → ~13.5 — mo
 
 **UI:** Displayed in character sheet as `🍀 Luck: 12 (Mod: +1)` below the six ability scores. Not shown on the status bar — derived on demand only.
 
-See `plan.md` §XIII for full implementation steps and flavor note.
+See `plan-archive.md` §XIII for full implementation steps and flavor note.
 
 ---
 

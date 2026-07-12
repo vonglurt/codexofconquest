@@ -843,7 +843,7 @@ Five additional NPCs will be present at YC alongside The Fisherman (who is the M
 | Pip | Kid | Novice | Using a stick and string |
 | Renard Castwell | Accounting Department | Terrible | Here on a corporate "wellness retreat" |
 
-**Tournament:** 1v1 betting, best-of-1 round. Player bets gold against opponent's stake. Opponent rolls their own cast using their competence tier as a bait bonus. Highest fish rank wins. Tie → Luck modifier tiebreaker. Win = gold + title upgrade. See `plan.md` §XII-N–XII-P for quest chain Q-TOUR-01 through Q-TOUR-06.
+**Tournament:** 1v1 betting, best-of-1 round. Player bets gold against opponent's stake. Opponent rolls their own cast using their competence tier as a bait bonus. Highest fish rank wins. Tie → Luck modifier tiebreaker. Win = gold + title upgrade. See `plan-archive.md` §XII-N–XII-P for quest chain Q-TOUR-01 through Q-TOUR-06.
 
 **[✅ Layer 47 — Fishing Guide implemented via quest_fishing_guide]**  
 The Outsider Merchant delivery mechanism (spec) was superseded. The Fisherman himself delivers the **Fishing Guide** after the player casts once at YL and returns to YC. Quest `quest_fishing_guide` (*"The Fisherman: Listen Closely"*) activates at node YC; completes when `(S_story.fishingCatchLog||[]).length > 0 && S_story.currentCode === 'YC'`. Reward: `Fishing Guide` readable item pushed to inventory. While in inventory, the fishing modal shows zone DCs (Shore DC 8 · Reeds DC 12 · Deep DC 16). `FISHING_GUIDE_TEXT` const holds the full annotated guide text.

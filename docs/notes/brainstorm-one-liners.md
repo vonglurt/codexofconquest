@@ -1,6 +1,6 @@
 # Brainstorm One-Liners — Idea Generator Output
 
-> Process (§IDEA-01 in plan.md): take a found-text list, dedupe, turn **every** line into a
+> Process (§IDEA-01 in BACKLOG.md): take a found-text list, dedupe, turn **every** line into a
 > quest-theme one-liner, file into categories. Seeds only — a seed gets promoted to its own
 > `§` entry + lab report before any HTML edit.
 >
