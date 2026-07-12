@@ -31822,7 +31822,7 @@ function storyRender(node, prefix) {
     const _ssjNpcs = S_story.emmerMet ? ['emmer'] : [];
     const _nueNpcs = ['gret'];
     if (S_story.pierFalkWarm) _nueNpcs.push('pier');
-    const birkaNpcs = { LHR:['yael'], IN:['brynn'], TV:['quill'], BA:['pachelbel'], CY:['crov','auros'], CQ:_cqNpcs, SQ:_sqNpcs, // §PLAY-01-D: CI→LHR — Yael's card was keyed to a dead pre-§WALK node code (no NODE_MAP 'CI'; her quests all activateNode:'LHR'), so it never rendered at the start node. IN/TV/BA/CY are the same legacy-code class — pending the §PLAY-01-G remap pass.
+    const birkaNpcs = { LHR:['yael'], TLL:['brynn'], MHQ:['quill'], LLA:['pachelbel'], HKG:['crov','auros'], CQ:_cqNpcs, SQ:_sqNpcs, // §PLAY-01-G: dead pre-§WALK sublocation codes remapped to real nodes, each proved by its NPC's quest activateNode — IN→TLL (brynn/"The First Inn"), TV→MHQ (quill/"Birka Tavern"), BA→LLA (pachelbel/"The Rough Bar"; the Varga ambient below already checks LLA), CY→HKG (crov Weckmann + auros Bruhns/"Neon Undercity"). LHR was the §PLAY-01-D CI→LHR fix (yael/start node). No NODE_MAP entry ever existed for CI/IN/TV/BA/CY, so these cards previously rendered nowhere.
       STN:['rennau'], TL:S_story.tlLedgerRead ? ['vonn'] : [],
       VS:S_story.vsDebtSettled ? [] : ['solvak'], GC:S_story.vsDebtProbed && !S_story.vsWeaponsFound ? ['yva'] : [],
       AMS:_frNpcs,
