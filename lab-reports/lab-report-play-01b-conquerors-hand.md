@@ -2,7 +2,7 @@
 # Lab Report — §PLAY-01-B *The Conqueror's Hand*: enemy AI per tier
 
 **Parent:** `lab-reports/lab-report-play-review.md` §PLAY-01-B · **Track:** BACKLOG.md §PLAY-01
-**Date:** 2026-07-12 · **Class:** enactment (carries design weight) · **Status:** SPEC — awaiting design sign-off before code
+**Date:** 2026-07-12 · **Class:** enactment (carries design weight) · **Status:** ✅ SHIPPED 2026-07-12 — user decisions: **(1) name/terrain heuristic · (2) flee earns effort XP → spun off §XP-01 · (3) one-time enrage**. See BACKLOG.md §PLAY-01-B for the ship record.
 
 ## 1. The say/do gap (verified in code)
 

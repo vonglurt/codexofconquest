@@ -141,6 +141,13 @@ In both cases: the battle is not marked defeated — no victory credit, no drops
 
 ---
 
+### Enemy Low-HP Behavior (§PLAY-01-B)
+
+At **≤30% HP** the enemy's turn (`_storyEnemyTurn`) branches on what kind of thing it is — enacting the story's "the Void advances where defenders are thin and retreats where they're strong." (Single-player only; the `DUEL:CORE` PvP kernel is untouched.)
+
+- **Void-touched enemies *press* (one-time enrage).** `_isVoidEnemy()` is a **heuristic**: Void/undead vocabulary in the name/key (void, corrupt, wraith, shade, revenant, wight, ghoul, lich, skeleton, necro, dread, abyss, blight, cursed, shadow, demon…) **or** a Void-ish current terrain. Once per fight (`S.opp.enraged`, reset each encounter in `_storyRollInit`) it gains `_voidEnrage(tier)`: **easy** +1 atk/+1 dmg … **deadly** +4 atk/+4 dmg **and an extra damage die** — then still attacks that turn. Makes "Deadly ⚠" read as a duel, not just big numbers.
+- **Mundane beasts *flee*.** With `_fleeChance(tier)` (easy 0.5 → deadly 0.1) the beast breaks and runs: `_storyEnemyFlees()` ends the fight — **no loot, node not cleared** — but the effort still earns XP (see below).
+
 ### XP System
 
 XP is earned on every enemy kill, including open-cell encounters.
@@ -154,7 +161,9 @@ XP is earned on every enemy kill, including open-cell encounters.
 | Orc Warlord | 16 | 93 | 1,488 |
 | Ancient Dragon | 22 | 367 | 8,074 |
 
-XP accumulates in `S_story.xp` across the entire run. Shown on the victory overlay after each fight.
+XP accumulates in `S_story.xp` across the entire run (monotonic — never decremented in-run; NG+ resets). Shown on the victory overlay after each fight.
+
+**Effort XP (§XP-01, partial — planned to expand):** the principle is *all action earns XP; you never lose XP*. The tunable dial is **`EFFORT_XP_PCT`** (default `0.25`, by `XP_LEVELS`) — the fraction of a full success's XP a partial/failed action still earns. **Live now:** a **fled enemy** grants `round(AC·maxHp·EFFORT_XP_PCT)` (`_storyEnemyFlees`). **Planned:** the same dial applied to missed attacks (capped per battle) and failed skill-checks — see BACKLOG §XP-01.
 
 ---
 
