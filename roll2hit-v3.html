@@ -4786,7 +4786,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
     <div class="bot-section" id="bot-globe">
       <div class="bot-section-hd">GLOBE</div>
       <div class="bot-section-body" style="display:flex;align-items:center;justify-content:center;flex:1;padding:4px">
-        <canvas id="globe-map-canvas" width="232" height="180" style="cursor:pointer" title="Open the full map" onclick="storyMapToggle()"></canvas>
+        <canvas id="globe-map-canvas" width="232" height="180" style="cursor:pointer" title="Click anywhere to travel there"></canvas>
       </div>
     </div>
 
@@ -35661,6 +35661,11 @@ function _renderGlobeMap() {
   const pr = S_story.playerR || (nc_ && nc_.r) || 0;
   const pc = S_story.playerC || (nc_ && nc_.c) || 0;
   _paintFullWorld(cv, 2, pr, pc);
+  // §MAP-NAV: click→cell mapping (same window _paintFullWorld draws: rows 0–89,
+  // cols 140–255 at 2 px/cell) so a click travels anywhere on the globe. Wired
+  // once; _mapCanvasClick handles CSS scaling + routes through _navClickCell.
+  cv._win = { r0: 0, c0: 140, PX: 2 };
+  if (!cv._navWired) { cv._navWired = true; cv.addEventListener('click', ev => _mapCanvasClick(cv, ev)); }
 }
 
 /* ════ §MP-MAPTABS — responsive Local grid + World/Full canvas tabs ════════════
@@ -35933,6 +35938,13 @@ function _renderMiniMap() {
         cell.title = 'Waypoint: ' + (NODE_MAP[S_story.waypoint] ? NODE_MAP[S_story.waypoint].label : S_story.waypoint);
       }
 
+      // §MAP-NAV: click any non-self, non-sea tile → adjacent step or auto-travel
+      // (reuses the map-tab click-travel loop; display-only, Free-Movement holds).
+      if (!isPlayer && !_imp) {
+        cell.style.cursor = 'pointer';
+        cell.addEventListener('click', () => _navClickCell(r, c));
+      }
+
       grid.appendChild(cell);
     }
   }
@@ -36030,6 +36042,11 @@ function _renderWorldMiniMap() {
       if (_ldr <= 5 && _ldc <= 8 && (_ldr === 5 || _ldc === 8)) {
         cell.style.outline = '1px solid rgba(224,192,64,0.85)';
         cell.style.outlineOffset = '-1px';
+      }
+      // §MAP-NAV: click any non-self, non-sea tile → adjacent step or auto-travel.
+      if (!(r === playerR && c === playerC) && !_imp) {
+        cell.style.cursor = 'pointer';
+        cell.addEventListener('click', () => _navClickCell(r, c));
       }
       grid.appendChild(cell);
     }

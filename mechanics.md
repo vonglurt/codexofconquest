@@ -916,6 +916,8 @@ The Map sheet's map view is split into three sub-tabs, all **click-to-travel** (
 
 Pathfinding: `_roadGridPathCore(startCoord,endCoord)` is the shared BFS; `_roadGridPath` targets a node code, `_cellRoute`/`_cellGridDir` target a raw `{r,c}` cell. Click-travel (`_navTravelTo`/`_navTick`) is a sibling of WP auto-travel and shares `_travelStepping`/`_encounterQueued`, so a user move halts either.
 
+**Story-bar mini maps are click-to-travel too (§MAP-NAV).** The three always-visible panels in the story bottom bar — **LOCAL** (`#mini-map-grid`, the 11×17 window), **WORLD** (`#world-map-grid`, the 41×61 overview), and **GLOBE** (`#globe-map-canvas`, the whole world at 2 px/cell) — each route a click through the same `_navClickCell` used by the Map sheet: a non-self, non-sea tile → one instant step if adjacent, else auto-travel the road-weighted route there (halting on encounter/block/battle/input). The grid panels wire a per-cell listener; the GLOBE canvas maps pixel→cell via `_mapCanvasClick` (`cv._win = {r0:0, c0:140, PX:2}`, wired once). Display-only — the mover is never gated (Free-Movement). *(The GLOBE no longer opens the full Map on click; open it from the map toggle elsewhere.)*
+
 ### Connection center (§MESH-02 — the Map sheet's sub-tabs)
 
 The Map sheet also carries connection sub-tabs — **🌐 Multiplayer · 🔭 Discover · 🛡 Lists** — making discovery, list sources, and the server ACL first-class UI. Everything here is connection/display layer: the mover never reads any of it (Free-Movement), and presence stays single-writer. The 🌐 strip and Shift+🌐 modal remain as shortcuts.
