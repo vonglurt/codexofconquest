@@ -31,7 +31,7 @@ const format       = getArg('format', 'table');
 const filterRaw    = getArg('filter', null);
 const showCorridors = hasFlag('corridors');
 
-const HTML_FILE = path.join(__dirname, 'roll2hit-v3.html');
+const HTML_FILE = path.join(__dirname, '..', 'roll2hit-v3.html');  // repo ROOT (tools/ is one level down)
 
 // ── Parse HTML source ─────────────────────────────────────────────────────────
 const src = fs.readFileSync(HTML_FILE, 'utf8');
