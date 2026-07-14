@@ -10,7 +10,7 @@ bundle. Nothing in `roll2hit-v3.html` or `wbapi-server.js` depends on these.
 | `layout-spring.js` | Force-directed layout experiment (standalone). |
 | `wbapi-cli.js` | Legacy WBAPI CLI (superseded by `../api/wb.js` / `./api.sh`). |
 | `parse-nodes.js` | One-off node-parsing helper. |
-| `remove-times.sh`, `remove_times.sh2` | Old one-shot text-cleanup utilities. |
+| `remove-times.sh` | Old one-shot text-cleanup utility (strips `digits:digits` timestamps, collapses whitespace). |
 
 Snapshot/lifecycle scripts (`monitor-snapshots.py`, `watch-snapshots.sh`,
 `archive-snapshots.sh`) stay at the repo **root** — they anchor to the root
