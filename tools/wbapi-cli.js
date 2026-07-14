@@ -9,7 +9,7 @@ const path = require('path');
 const WBAPI = require('../js/wbapi-core');
 
 // ── Config ──────────────────────────────────────────────────────────────────
-const DEFAULT_GAME_FILE = path.join(__dirname, 'roll2hit-v3.html');
+const DEFAULT_GAME_FILE = path.join(__dirname, '..', 'roll2hit-v3.html');  // repo ROOT (tools/ is one level down)
 const gameFile = process.env.ROLL2HIT_FILE || DEFAULT_GAME_FILE;
 
 // ── Arg parsing ──────────────────────────────────────────────────────────────
