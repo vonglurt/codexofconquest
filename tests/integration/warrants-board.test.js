@@ -201,4 +201,68 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
       }
     }
   });
+
+  test('§BOARD-01-FU4 — Yael\'s onboarding signposts the Warrant\'s Board (the mechanic is discoverable)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const line = NPC_DIALOGUES.yael.impartial[0];
+      // The onboarding monologue must NAME the board and place it (any inn/rest node),
+      // not just leave LHR's "notices flutter on the board" flavor with no pointer.
+      const namesBoard = /Warrant's Board/.test(line);
+      const placesIt = /(inn|rest node)/i.test(line);
+      // It must still be the GUARANTEED first-meeting delivery so the signpost actually reaches
+      // the player (the §PLAY-01-D one-time delivery; Slums quest would otherwise shadow it).
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      S_story.yaelOnboardingSeen = false; S_story.npcVisitCounts = {};
+      const first = _getNPCDialogue('yael');
+      return {
+        namesBoard,
+        placesIt,
+        firstVisitCarriesSignpost: /Warrant's Board/.test(first.quote),
+        // preserved: the §PLAY-01-D magic-path signpost still rides the same line
+        keepsMagicSignpost: /Yugurt/.test(line) && /Fisherman/.test(line),
+      };
+    });
+    expect(r.namesBoard).toBe(true);
+    expect(r.placesIt).toBe(true);
+    expect(r.firstVisitCarriesSignpost).toBe(true);
+    expect(r.keepsMagicSignpost).toBe(true);
+  });
+
+  test('§BOARD-01-FU5 — synthesized rumor derives from destination terrain; authored q.rumor still wins; deterministic', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      S_story.gameDay = 0;
+      const shown = _boardBounties(NODE_MAP.TLL, 4);
+      // (a) every card carries a non-flat, world-flavored line naming its destination place
+      const rows = shown.map(b => {
+        const dest = NODE_MAP[b.destCode];
+        const terr = (dest && WORLD_DB[dest.name] && WORLD_DB[dest.name].label) || b.destShort;
+        return {
+          line: b.rumorLine,
+          notFlat: b.rumorLine !== 'Posted by the Crimson Warrant.',
+          mentionsPlace: b.rumorLine.includes(terr),
+          authored: !!b.rumor,
+        };
+      });
+      // (b) deterministic within a (node, gameDay)
+      const again = _boardBounties(NODE_MAP.TLL, 4).map(b => b.rumorLine);
+      const stable = again.length === shown.length && again.every((l, i) => l === shown[i].rumorLine);
+      // (c) an authored q.rumor passes through verbatim (renderer prefers it)
+      const target = shown[0].id;
+      QUEST_DB[target].rumor = 'The fence in the underground has a name now.';
+      const authored = _boardBounties(NODE_MAP.TLL, 4).find(b => b.id === target);
+      const authoredWins = !!authored && authored.rumorLine === 'The fence in the underground has a name now.';
+      QUEST_DB[target].rumor = null;   // restore
+      return { rows, stable, authoredWins };
+    });
+    expect(r.rows.length).toBeGreaterThan(0);
+    for (const row of r.rows) {
+      expect(row.notFlat).toBe(true);
+      if (!row.authored) expect(row.mentionsPlace).toBe(true);   // synthesized line names the terrain/place
+    }
+    expect(r.stable).toBe(true);
+    expect(r.authoredWins).toBe(true);
+  });
 });
