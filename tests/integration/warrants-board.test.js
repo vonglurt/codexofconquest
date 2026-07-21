@@ -660,6 +660,126 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.geoJumpSrcToMerge).toBe(true);        // the convergence hop still jumps geography (LLA → VS)
   });
 
+  // ── §BOARD-01-FU6 (diamond) — the network's last missing shape: a GEO-SPANNING DIAMOND ──────
+  // Line, onPass-chronicle, fork, convergence, and through-flow all existed; the untried shape was a
+  // DIAMOND — a single source that SPLITS to two distant paths that then RECONVERGE on a shared
+  // capstone (split-then-merge across four distinct nodes). It composes FU6's fork primitive (the
+  // apex: one two-target unlock) with its convergence primitive (the base: two edges into one leaf).
+  // Honest bridging (not a forced theme): the Warrant trades in CLOSED CROSSINGS — waters and roads a
+  // predator has shut that officialdom explains away. The lake case (quest_hunt_01 @HFT: the Guild's
+  // "spirit" vs the Elder Fisherwoman's drag marks) forks to two more of the same shape — the highland
+  // loch's kelpie (sq_2 @KIR) and the relay road's denied hag (quest_hunt2_01 @WRO) — and both run down
+  // to the harbor closed the same way and reopened (quest_df_01 @DNF, the terminal capstone; its own
+  // hint canonically makes it the kelpie arm's aftermath). Drives the REAL onComplete chains through
+  // the REAL execBits, exactly as storyCheckQuests (29440) fires a completed side quest's onComplete.
+  test('§BOARD-01-FU6 (diamond) — one source splits to two distant paths that reconverge on a shared capstone', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const SRC = 'quest_hunt_01';                       // apex (the fork)
+      const ARMS = ['sq_2', 'quest_hunt2_01'];           // the two divergent paths (@KIR, @WRO)
+      const CAP = 'quest_df_01';                         // shared capstone (the merge, terminal @DNF)
+      const out = { missing: [] };
+      for (const id of [SRC, ...ARMS, CAP]) if (!QUEST_DB[id]) out.missing.push(id);
+
+      const unlockBitsOf = (q) => (q.onComplete || []).filter(b => b && b.kind === 'unlock');
+
+      // geo-spanning: four DISTINCT, real, distant nodes (source, two arms, capstone)
+      const nodes = [SRC, ...ARMS, CAP].map(id => QUEST_DB[id].activateNode);
+      out.fourDistinctNodes = new Set(nodes).size === 4;
+      out.allNodesReal = nodes.every(n => !!NODE_MAP[n]);
+
+      // ── apex: a SINGLE two-target unlock (the fork primitive) to the two arms ──
+      const apexUnlocks = unlockBitsOf(QUEST_DB[SRC]);
+      out.apexSingleBit = apexUnlocks.length === 1;
+      out.apexTargets = apexUnlocks.length === 1 ? apexUnlocks[0].quests.slice().sort() : [];
+
+      // ── base: EACH arm carries a single-target unlock to the SAME capstone (convergence) ──
+      out.arms = ARMS.map(id => {
+        const ub = unlockBitsOf(QUEST_DB[id]);
+        return { id, node: QUEST_DB[id].activateNode, oneBit: ub.length === 1,
+          toCapstone: ub.length === 1 && ub[0].quests.length === 1 && ub[0].quests[0] === CAP };
+      });
+      out.capInDegreeTwo = ARMS.every(id => unlockBitsOf(QUEST_DB[id]).some(b => (b.quests || []).includes(CAP)));
+      out.capIsLeaf = unlockBitsOf(QUEST_DB[CAP]).length === 0;   // terminal — no onward unlock, no cycle
+
+      // ── fresh-game legitimacy: every downstream bounty is in-sequence + not pre-started ──
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      S_story.gameDay = 0;
+      out.freshLegit = [...ARMS, CAP].map(id => ({ id,
+        unset: !(S_story.quests || {})[id], canActivate: QuestRuntime.canActivate(id) }));
+
+      // ── the fork fires: completing the source posts BOTH arms; ONE line names both leads + board ──
+      const forkMsgs = [];
+      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: m => forkMsgs.push(m) });
+      out.bothArmsPosted = ARMS.every(id => (S_story.quests || {})[id] === 'active');
+      out.capStillUnsetAfterFork = !(S_story.quests || {})[CAP];   // the base waits for an arm to COMPLETE
+      out.forkNamesBothLeads = forkMsgs.some(m => /Warrant's Board/.test(m) && /kelpie/i.test(m) && /relay road/i.test(m));
+
+      // ── LEFT path end-to-end (fresh): source → kelpie (sq_2) → harbor (capstone) ──
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} });
+      const leftMsgs = [];
+      QuestRuntime.execBits(QUEST_DB['sq_2'].onComplete, { questId: 'sq_2', pushMsg: m => leftMsgs.push(m) });
+      out.leftReachesCap = (S_story.quests || {})[CAP] === 'active';
+      out.leftReferralLine = leftMsgs.some(m => /Warrant's Board/.test(m) && /Dunfall/.test(m));
+
+      // ── RIGHT path end-to-end (fresh): source → road (hunt2_01) → harbor (capstone) ──
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} });
+      const rightMsgs = [];
+      QuestRuntime.execBits(QUEST_DB['quest_hunt2_01'].onComplete, { questId: 'quest_hunt2_01', pushMsg: m => rightMsgs.push(m) });
+      out.rightReachesCap = (S_story.quests || {})[CAP] === 'active';
+      out.rightReferralLine = rightMsgs.some(m => /Warrant's Board/.test(m) && /Dunfall/.test(m));
+
+      // ── the MERGE is order-independent: fire both arms on one game; the second is a safe no-op ──
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} });
+      let threw = false;
+      try {
+        QuestRuntime.execBits(QUEST_DB[ARMS[0]].onComplete, { questId: ARMS[0], pushMsg: () => {} });
+        const afterFirst = (S_story.quests || {})[CAP];
+        QuestRuntime.execBits(QUEST_DB[ARMS[1]].onComplete, { questId: ARMS[1], pushMsg: () => {} });
+        out.mergeAfterFirst = afterFirst;
+        out.mergeAfterSecond = (S_story.quests || {})[CAP];
+      } catch (e) { threw = true; }
+      out.mergeThrew = threw;
+
+      // reverse arm order → identical result (commutative merge, the in-degree-2 safety property)
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} });
+      QuestRuntime.execBits(QUEST_DB[ARMS[1]].onComplete, { questId: ARMS[1], pushMsg: () => {} });
+      QuestRuntime.execBits(QUEST_DB[ARMS[0]].onComplete, { questId: ARMS[0], pushMsg: () => {} });
+      out.reverseSameCap = (S_story.quests || {})[CAP] === 'active';
+      return out;
+    });
+    expect(r.missing).toEqual([]);
+    expect(r.fourDistinctNodes).toBe(true);       // geo-spanning: four distinct nodes (HFT/KIR/WRO/DNF)
+    expect(r.allNodesReal).toBe(true);
+    expect(r.apexSingleBit).toBe(true);           // the split is ONE two-target unlock (fork primitive)...
+    expect(r.apexTargets).toEqual(['quest_hunt2_01', 'sq_2']);
+    for (const a of r.arms) {
+      expect(a.oneBit, a.id).toBe(true);           // ...and each arm is a single-target unlock...
+      expect(a.toCapstone, a.id).toBe(true);       // ...to the ONE shared capstone (convergence)
+    }
+    expect(r.capInDegreeTwo).toBe(true);          // the base is a confluence (in-degree 2)
+    expect(r.capIsLeaf).toBe(true);               // the capstone terminates — no cycle
+    for (const f of r.freshLegit) {
+      expect(f.unset, f.id).toBe(true);            // no downstream bounty pre-started on a fresh game
+      expect(f.canActivate, f.id).toBe(true);      // ...each is a legitimate in-sequence unlock
+    }
+    expect(r.bothArmsPosted).toBe(true);          // one completion (the apex) posts BOTH arms
+    expect(r.capStillUnsetAfterFork).toBe(true);  // ...the capstone waits for an arm to COMPLETE
+    expect(r.forkNamesBothLeads).toBe(true);      // a single referral line names both leads + the board
+    expect(r.leftReachesCap).toBe(true);          // left path source→kelpie→harbor runs end-to-end
+    expect(r.leftReferralLine).toBe(true);
+    expect(r.rightReachesCap).toBe(true);         // right path source→road→harbor runs end-to-end
+    expect(r.rightReferralLine).toBe(true);
+    expect(r.mergeAfterFirst).toBe('active');     // first arm posts the capstone
+    expect(r.mergeAfterSecond).toBe('active');    // second arm is a safe no-op (stays active)
+    expect(r.mergeThrew).toBe(false);             // ...and never throws
+    expect(r.reverseSameCap).toBe(true);          // commutative merge — order-independent
+  });
+
   // ── §BOARD-01-FU7 — Warrant standing (reputation): the board becomes progression ──
   // Completing a board-ACCEPTED bounty raises S_story.warrantStanding; tiers gate the
   // board's QUALITY (slate size + a reward-ceiling for premium jobs), never a step.

@@ -2062,10 +2062,14 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
       { id:'quest_hunt_02',  stat:'INT', skill:'Investigation', dc:12, mbFlag:'lakeClueFound',   gate:'{"flags":["huntHookReceived"]}' },
       { id:'quest_hunt_03',  stat:'WIS', skill:'Perception',    dc:13, mbFlag:'lakeLairLocated', gate:'{"flags":["lakeClueFound"]}' },
     ]);
+    // §BOARD-01-FU6 (diamond): the two HOOK sides (hunt_01 @HFT, hunt2_01 @WRO) now carry a Warrant
+    // referral in onComplete (the diamond's fork apex + its right arm) → onComplete:true. The referral
+    // is purely additive (narrative + unlock bits, same kinds the fork/convergence edges use); gate:{}
+    // and completion are unchanged, so these stay valid gate:{} hooks. See warrants-board.test.js.
     expect(r.side).toMatchObject([
-      { id:'quest_hunt2_01', schema:'UQF-1.0', valid:true, gate:'{}',                        completion:'{"flags":["huntHook2Received"]}', onComplete:false },
+      { id:'quest_hunt2_01', schema:'UQF-1.0', valid:true, gate:'{}',                        completion:'{"flags":["huntHook2Received"]}', onComplete:true },
       { id:'quest_hunt2_04', schema:'UQF-1.0', valid:true, gate:'{"flags":["bendLairFound"]}',  completion:'{"battles":["BN_NIGHTHAG"]}',    onComplete:true },
-      { id:'quest_hunt_01',  schema:'UQF-1.0', valid:true, gate:'{}',                        completion:'{"flags":["huntHookReceived"]}',  onComplete:false },
+      { id:'quest_hunt_01',  schema:'UQF-1.0', valid:true, gate:'{}',                        completion:'{"flags":["huntHookReceived"]}',  onComplete:true },
       { id:'quest_hunt_04',  schema:'UQF-1.0', valid:true, gate:'{"flags":["lakeLairLocated"]}', completion:'{"battles":["LD_DROWNERS"]}',  onComplete:true },
     ]);
   });

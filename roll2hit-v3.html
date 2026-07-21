@@ -10504,6 +10504,15 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"brynn",
   },
   sq_2: { id:'sq_2', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ items:['Highland Horse'] }, title:'Kelpie in the Loch',
+    // §BOARD-01-FU6 (diamond) — LEFT arm. This kelpie case reconverges on the reopened harbor at
+    // Dunfall (quest_df_01 @DNF), which is canonically THIS loch's aftermath (df_01.hint: "after
+    // clearing the kelpie at the Highland loch"; disposition: "You cleared the ford. We opened the
+    // doors."). Single-target unlock; idempotent with the right arm's twin edge — both post df_01,
+    // so it has in-degree 2 (a confluence at the diamond's base), order-independent. df_01 carries
+    // no onward unlock → terminal leaf, no cycle. Referred here from the fork apex (quest_hunt_01).
+    onComplete:[
+      { kind:'narrative', msg:"🪧 The kelpie sinks and does not surface; the loch road is clear for the first time in two seasons. Word runs down the coast ahead of you: Dunfall — its doors shut all this while because the same water-thing held the ford below the town — has opened its harbor again, and Mairén Fionn is back at the dock. A bounty surfaces on the Warrant's Board." },
+      { kind:'unlock', quests:['quest_df_01'] } ], // §ARCH-01 W7c · §BOARD-01-FU6 diamond convergence (left arm)
     desc:"Elder Fionn's village has been terrorised for two seasons. The kelpie controls the water road.",
     hint:'Battle at the loch crossing in the Irish Highlands.',
     passText:'The kelpie does not leave the loch. It sinks. The water road is clear. Elder Fionn says thank you by not saying anything at all.',
@@ -12579,6 +12588,15 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Follow up on Tessie\'s warning. Examine the road north of the fork.',
     activateNode:'WRO', gate:{},
     completion:{ flags:['huntHook2Received'] }, bits:[],
+    // §BOARD-01-FU6 (diamond) — RIGHT arm. A DIFFERENT closed crossing (the relay road's night hag;
+    // completing this quest confirms the road is HELD — the wardens' "bandits" is denial, not
+    // diagnosis) reconverging on the SAME capstone as the kelpie arm: Dunfall's reopened harbor
+    // (quest_df_01 @DNF). NOT the same predator — the same PATTERN (a held crossing broken and
+    // reopened); the prose never claims otherwise. Twin of the left arm's edge → df_01 in-degree 2,
+    // idempotent/order-independent, terminal. Referred here from the fork apex (quest_hunt_01).
+    onComplete:[
+      { kind:'narrative', msg:"🪧 You read the bend the way Tessie's horses read it: the road is held, and 'bandits' is the word men use when they will not say the true one. The Warrant does not need the creature's name to know the shape. 'A crossing something has closed, that the wardens explain away — I have watched this end well exactly once.' It points you down the coast to Dunfall, a harbor shut the same way and open again, where Mairén Fionn can tell you what breaking a held crossing costs. A bounty surfaces on the Warrant's Board." },
+      { kind:'unlock', quests:['quest_df_01'] } ], // §ARCH-01 W7c · §BOARD-01-FU6 diamond convergence (right arm)
     waypointNode:'WRO', reward:0,
     disposition:'"Six years on this road. There are no bandits in those fields. The horses know something the road wardens don\'t." — Tessie, already walking',
     passText:"The road north of the fork has been examined. The horses knew. There are no bandits in those fields.",
@@ -12669,6 +12687,18 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Speak to the Elder Fisherwoman at the south shore dock.',
     activateNode:'HFT', gate:{},
     completion:{ flags:['huntHookReceived'] }, bits:[],
+    // §BOARD-01-FU6 (diamond) — the network's one missing shape: a geo-spanning DIAMOND
+    // (split-then-merge across FOUR distinct distant nodes). This is the SOURCE / fork apex.
+    // The Elder Fisherwoman's lake case is the exemplar of the Warrant's stock-in-trade — a
+    // crossing a predator has closed that officialdom explains away (the Guild's "spirit"). It
+    // forks (ONE two-target unlock — the branch primitive, unlock(bit) iterates bit.quests) to
+    // two more filed reports of the SAME shape at distant nodes: the highland loch's kelpie
+    // (sq_2 @KIR) and the relay road's denied hag (quest_hunt2_01 @WRO). BOTH arms then
+    // reconverge on the reopened harbor at Dunfall (quest_df_01 @DNF) — see the twin convergence
+    // edges on those two. Composes FU6's fork + confluence into the canonical true-graph diamond.
+    onComplete:[
+      { kind:'narrative', msg:"🪧 The Warrant reader hears the Elder Fisherwoman out — the drag marks, the stopped boats, the Guild's dried fish laid down for a spirit that was never a spirit — and does not write 'lake creature.' She writes: authority named the wrong cause; the marks named the true one. Then she slides two older reports across the table, both the same shape. A highland loch where a kelpie holds the water road and Elder Fionn's village will not cross after dark. A relay road north of the J1 fork where the horses refuse the bend, the wardens cry bandit, and the driver Tessie — and the mud — know better. 'Two crossings, both closed, both denied. Pull whichever thread you like.' Two bounties surface on the Warrant's Board." },
+      { kind:'unlock', quests:['sq_2','quest_hunt2_01'] } ], // §ARCH-01 W7c · §BOARD-01-FU6 diamond fork (apex)
     waypointNode:'HFT', reward:0,
     disposition:'"The Guild is wrong. You cannot appease what ate those boats with dried fish." — The Elder Fisherwoman',
     passText:"The Elder Fisherwoman has been heard. The drag marks are the evidence. The Guild is wrong about the spirit.",
