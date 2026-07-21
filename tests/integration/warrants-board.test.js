@@ -176,4 +176,29 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.toast).toContain('Bounty accepted');
     expect(r.toast).toContain('waypoint set');    // toast tells the player (never silent)
   });
+
+  test('§BOARD-01-FU3 — distance-labeled slate: each shown card carries a leg count from the live player position', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      S_story.gameDay = 0;
+      const shown = _boardBounties(NODE_MAP.TLL, 4);
+      // Truth reference: recompute legs independently the same way the render does.
+      const rows = shown.map(b => ({
+        legs: b.legs, legStr: b.legStr,
+        truth: _roadGridPath(null, b.destCode).length,
+        hasCoords: !!NODE_COORDS[b.destCode],
+      }));
+      return { count: shown.length, rows };
+    });
+    expect(r.count).toBeGreaterThan(0);
+    for (const row of r.rows) {
+      expect(row.legs).toBe(row.truth);                       // label matches the real road-weighted BFS
+      if (row.truth > 0) {
+        expect(row.legStr).toBe('~' + row.truth + (row.truth === 1 ? ' leg' : ' legs'));
+      } else {
+        expect(row.legStr).toBe('');                          // no coords / here ⇒ label omitted (never "~0 legs")
+      }
+    }
+  });
 });

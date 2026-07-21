@@ -33303,7 +33303,7 @@ function storyRender(node, prefix) {
       _bounties.forEach(b => body.appendChild(_mkCard({
         lbl: 'BOUNTY',
         main: '📜 ' + b.title,
-        sub: '→ ' + b.destShort + (b.rewardStr ? '  ·  ' + b.rewardStr : ''),
+        sub: '→ ' + b.destShort + (b.legStr ? '  ·  ' + b.legStr : '') + (b.rewardStr ? '  ·  ' + b.rewardStr : ''),
         hint: b.rumor || 'Posted by the Crimson Warrant.',
         btn: 'Take', btnClass: 'btn-rest',
         btnClick: ((id) => () => _acceptBounty(id))(b.id),
@@ -35893,7 +35893,18 @@ function _boardBounties(node, limit) {
     });
   }
   out.sort((a, b) => (a._k - b._k) || (a.id < b.id ? -1 : 1));   // deterministic rotation
-  return out.slice(0, limit || 4);
+  const shown = out.slice(0, limit || 4);
+  // §BOARD-01-FU3 — distance-labeled slate (label-only variant). Answer "is this
+  // trip worth it?" by pairing reward with a leg count. _roadGridPath is a grid
+  // BFS, so we run it ONLY over the ≤4 shown cards (never the ~249 candidates) —
+  // computed AFTER the slice on purpose. Road-weighted (same net auto-travel uses),
+  // from the live player position; 0 ⇒ no coords/here, so the label is omitted.
+  for (const b of shown) {
+    const legs = _roadGridPath(null, b.destCode).length;
+    b.legs = legs;
+    b.legStr = legs ? '~' + legs + (legs === 1 ? ' leg' : ' legs') : '';
+  }
+  return shown;
 }
 // §BOARD-01-B — accept a bounty. The file's FIRST live `unlock`: routed through the
 // VM (execBits), not a private state write — widen through the grammar, never around it.
