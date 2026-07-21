@@ -131,4 +131,49 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.buttonCount).toBeGreaterThan(0);
     expect(r.allBounty).toBe(true);
   });
+
+  test('§BOARD-01-FU1 — honest reward preview: side xpAward fallback + skill_check onPass reward, never the dead q.reward', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      // quest_scar_04: type:'side', pays via the LIVE top-level xpAward (granted at
+      // storyCheckQuests 29400); carries a DEAD display-only reward:500 (no engine
+      // consumer, see ~13762) and NO reward bit — so it must fall back to ⭐xpAward.
+      const sq = QUEST_DB['quest_scar_04'];
+      // quest_scar_01: type:'skill_check' — its reward bit is nested in bits[].onPass,
+      // which the pre-FU1 scan missed entirely (returned '').
+      const scq = QUEST_DB['quest_scar_01'];
+      return {
+        sideStr: _boardReward(sq),
+        sideXp: sq.xpAward,
+        sideDeadReward: sq.reward,
+        skillStr: _boardReward(scq),
+      };
+    });
+    // Side quest: shows the ⭐xp actually granted, and NEVER invents the dead gold.
+    expect(r.sideStr).toContain('⭐');
+    expect(r.sideStr).toContain(String(r.sideXp));                       // 350 — the real payout
+    expect(r.sideStr).not.toContain(String(r.sideDeadReward) + ' g');   // 500 g — must not appear
+    // skill_check: the nested onPass reward now surfaces (was blank before FU1).
+    expect(r.skillStr.length).toBeGreaterThan(0);
+    expect(r.skillStr).toContain('⭐');
+  });
+
+  test('§BOARD-01-FU2 — accepting a bounty auto-sets the waypoint to its destination (route only, no move)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      S_story.currentCode = 'TLL';
+      S_story.waypoint = null;
+      const posBefore = S_story.currentCode;
+      const b = _boardBounties(NODE_MAP.TLL, 4)[0];
+      _acceptBounty(b.id);
+      const toast = (document.getElementById('story-move-msg') || {}).textContent || '';
+      return { destCode: b.destCode, waypoint: S_story.waypoint, posBefore, posAfter: S_story.currentCode, toast };
+    });
+    expect(r.waypoint).toBe(r.destCode);          // arrows point at the card's own destination
+    expect(r.posAfter).toBe(r.posBefore);         // invariant: highlight only — no move, no jump travel (§CELL-13)
+    expect(r.toast).toContain('Bounty accepted');
+    expect(r.toast).toContain('waypoint set');    // toast tells the player (never silent)
+  });
 });
