@@ -20978,7 +20978,14 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'TLL', 
     },
   quest_brynn_ledger: { id:'quest_brynn_ledger', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ itemsAll:['Worn Ledger Book'], atNode:'TLL' }, title:"Brynn: Missing Ledger",
-    onComplete:[ { kind:'favor', npc:'brynn', set:1 }, { kind:'narrative', msg:'🛏 Brynn offers 3 free nights. Friendly!' } ], // §ARCH-01 W7c
+    onComplete:[ { kind:'favor', npc:'brynn', set:1 }, { kind:'narrative', msg:'🛏 Brynn offers 3 free nights. Friendly!' },
+      // §BOARD-01-FU6 branch edge — the network's FIRST FORK: one completion posts TWO onward
+      // bounties (a two-target `unlock`, the opcode's first multi-quest author). Brynn's recovered
+      // ledger has two open entries pointing two ways — the scholar's revoked record (Isolde @NUE)
+      // and the collector's live debt (Solvak @VS) — and, now that the Warrant trusts you (FU7), it
+      // lets you CHOOSE which thread to pull rather than routing you down a single line.
+      { kind:'narrative', msg:"🖋️ Brynn's recovered ledger is a book of debts, and two entries are still open — pointing two different directions. One is crossed out twice in a scholar's hand: a record revoked and sealed in the Scholar Kings' lower archive at Nuremberg, where Archivist Isolde Voss keeps the key. The other is a live account — a debt-collector named Solvak, six weeks cold outside Visby, chasing two thousand gold he has no leverage to claim. The Warrant reads both over your shoulder and, this time, does not choose for you: two bounties surface on the Warrant's Board — the scholar's record and the collector's debt. Pull whichever thread you like." },
+      { kind:'unlock', quests:['quest_wm_01','quest_vs_01'] } ], // §ARCH-01 W7c · §BOARD-01-FU6 branch fork
     itemChain:[{action:'take',name:'Worn Ledger Book',all:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Brynn Clerambault keeps her accounts in a worn ledger that has been written in, crossed out, and written in again for six years. She lent it to a merchant with good credit and bad judgment and she has been setting a table with one fewer place since. The ledger is in the Slums. She asked you to find it without saying what it actually contains — which means she trusts you with it more than she trusts the asking.",
     hint:'Search the Birka Slums — the ledger may be on a fallen enemy.',
@@ -21018,6 +21025,13 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'HKG', 
     waypointNode:'HKG', reward:0,
     disposition: '"The promoters tried to fix a fight here last year. I shut the pit rather than host it. Some things cost more to keep than to lose." — Weckmann' },
+  /* §BOARD-01-FU8 — Void-tide bounties: three clock-gated Warrant hunts. Each is a real, board-eligible
+     UQF combat quest with an activateCond WINDOW (disjoint, continuous day 21→49), so the same clock gate
+     enforces availability at both storyCheckQuests arrival AND the board pin. Reward xp + Void standing
+     bonus (see VOID_TIDE_FEATURED) escalate with the tide. Design: lab-reports/lab-report-void-tide-bounties.md */
+  quest_void_tide_21: { id:"quest_void_tide_21", type:"combat", schema:"UQF-1.0", gate:{}, activateNode:"VS", activateCond:() => (S_story.day || 1) >= 21 && (S_story.day || 1) < 35, retryable:true, retryGateDays:0, title:"The Uncollected Bounty", desc:"A Void Walker was sighted north of Visby — the price the Warrant posted has gone stale on the board because no one would take it. Run it down in the Fence Quarter before it walks through another wall and is gone.", hint:"It passes through stone. It does not pass through a blade held steady. Do not be the one who blinks.", disposition:"Posted a week. Still posted. That is not a bounty, that is an accusation. — the Crimson Warrant", vignetteText:"The notice in the Fence Quarter is water-stained and a week old. Below it, in fresh chalk: seen again last night, heading north between the warehouses, unhurried, as if it had already decided where it was going. You are the first to answer.", passText:"You corner it against the harbor wall where the stone runs out and there is nowhere left to phase through. It does not so much fall as decide to stop being there. The chalk notice can come down. Someone finally collected.", failText:"It reaches the wall a half-step ahead of you and is simply on the other side, gone north. You are left holding a blade and a week-old notice. The bounty stays posted. It always was going to be someone braver than tonight.", bits:[{ kind:"skill_check", stat:"STR", dc:13, onPass:[{ kind:"reward", xp:150 }], onFail:[] }] },
+  quest_void_tide_35: { id:"quest_void_tide_35", type:"combat", schema:"UQF-1.0", gate:{}, activateNode:"ECF", activateCond:() => (S_story.day || 1) >= 35 && (S_story.day || 1) < 42, retryable:true, retryGateDays:0, title:"The Thing at the Signal-Fire", desc:"Bruhns's signal fire burns on the coast north of Stiklestad and something has been circling it in the dark, testing the light. Kill it before it learns the fire is only a fire.", hint:"It is drawn to the flame and afraid of it in the same motion. Put yourself between the two.", disposition:"The pressure is everywhere now. But pressure has to have a shape somewhere, and tonight it has one on the north coast. — the Crimson Warrant", vignetteText:"The signal fire throws long shadows across the frozen farm. One of the shadows does not belong to anything the fire is casting. It has been out past the light for an hour, coming a little closer each time the flames gutter, learning.", passText:"You take it in the gap between two gusts, when the fire is low and it has come in too far to retreat. It goes out like a coal dropped in water. The signal fire keeps burning, which is the point — Bruhns needs it seen, and now it will be.", failText:"It reads the fire better than you read it, and slips back past the light before you close. The signal still burns. So does whatever is circling it, waiting for the wind to drop again.", bits:[{ kind:"skill_check", stat:"STR", dc:15, onPass:[{ kind:"reward", xp:220 }], onFail:[] }] },
+  quest_void_tide_42: { id:"quest_void_tide_42", type:"combat", schema:"UQF-1.0", gate:{}, activateNode:"RVP", activateCond:() => (S_story.day || 1) >= 42, retryable:true, retryGateDays:0, title:"The Outriders at the Crossing", desc:"The Void's outriders stand at every major crossing now — not hunting, just present. One holds the Willow-Bank ford. The Warrant's last posting: make the crossing yours again. There will not be another.", hint:"It is not standing there by accident and it will not move by request. This is the last call the board makes. Answer it all the way.", disposition:"Seven days. One posting left. After this the board is just a board again, whatever happens. — the Crimson Warrant", vignetteText:"The outrider has held the Willow-Bank crossing since before dawn, motionless in the middle of the ford, water breaking around its legs as if around a post. It is not waiting for you specifically. It is waiting the way the tide waits. You are the only one who came to the crossing anyway.", passText:"You take the ford from it stroke by stroke, giving no ground to the water or the thing standing in it, until it is the one that steps back — and then is not there at all. The crossing is a crossing again. The Warrant's board has nothing left to post. That, tonight, is a kind of victory.", failText:"It holds the middle of the ford and you cannot make it yield, and the water and the cold and the sheer patience of the thing drive you back to the near bank. The crossing stays its. There is no next posting to try instead.", bits:[{ kind:"skill_check", stat:"STR", dc:17, onPass:[{ kind:"reward", xp:320 }], onFail:[] }] },
   quest_void_below: { id:'quest_void_below', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ battles:['CY_VOID'] }, title:'Auros: Void Below',
     onComplete:[ // §ARCH-01 W7c
       { kind:'favor', npc:'auros', set:2 },
@@ -33313,11 +33327,13 @@ function storyRender(node, prefix) {
       const _wt = _warrantTier(S_story.warrantStanding);   // §BOARD-01-FU7 — show rank + count for progression legibility
       const { sec, body } = _mkSection('story-board-section', '📜', "The Warrant's Board — " + _wt.name + ' (' + (S_story.warrantStanding || 0) + ')');
       _bounties.forEach(b => body.appendChild(_mkCard({
-        lbl: 'BOUNTY',
-        main: '📜 ' + b.title,
-        sub: '→ ' + b.destShort + (b.legStr ? '  ·  ' + b.legStr : '') + (b.rewardStr ? '  ·  ' + b.rewardStr : ''),
+        // §BOARD-01-FU8 — the clock-tied Void-tide bounty reads as world-danger, not a menu row.
+        lbl: b.void ? '⚠️ VOID' : 'BOUNTY',
+        main: (b.void ? '⚠️ ' : '📜 ') + b.title,
+        sub: '→ ' + b.destShort + (b.legStr ? '  ·  ' + b.legStr : '') + (b.rewardStr ? '  ·  ' + b.rewardStr : '')
+             + (b.void && b.voidStanding ? '  ·  🗡️+' + b.voidStanding + ' standing' : ''),
         hint: b.rumorLine || 'Posted by the Crimson Warrant.',   // FU5: terrain-synthesized when no authored q.rumor
-        btn: 'Take', btnClass: 'btn-rest',
+        btn: b.void ? 'Hunt it' : 'Take', btnClass: 'btn-rest',
         btnClick: ((id) => () => _acceptBounty(id))(b.id),
       })));
       row.appendChild(sec);
@@ -35905,6 +35921,21 @@ function _boardRewardXp(q) {
   if (q.type === 'side' && q.xpAward) return q.xpAward;
   return 0;
 }
+// §BOARD-01-FU8 — Void-tide bounties: the featured roster that ties the board to the
+// doom clock. Keyed by tide day (the VOID_TIDE_EVENTS beats at 21821) → the real, board-
+// eligible quest it features + the escalated Warrant-standing bonus (vs the ordinary +1)
+// + the Crimson Warrant's dread hook. The quests carry their own disjoint activateCond
+// WINDOWS (see their defs), so this table is a const registry, never serialized. A featured
+// quest is EXCLUDED from the normal rotation pool (VOID_FEATURED_IDS) — it surfaces only as
+// the pin, only inside its window. Design: lab-reports/lab-report-void-tide-bounties.md.
+const VOID_TIDE_FEATURED = {
+  21: { quest:'quest_void_tide_21', standing:2, rumor:"⚠️ The Crimson Warrant reposts an old price: a Void Walker, sighted north of Visby. Nobody collected. Yet." },
+  35: { quest:'quest_void_tide_35', standing:3, rumor:"⚠️ Warrant priority: something circles Bruhns's signal-fire on the north coast. Put it down before the fire fails." },
+  42: { quest:'quest_void_tide_42', standing:4, rumor:"⚠️ The Warrant's last posting: an outrider holds the Willow-Bank crossing. Seven days left. Take it back." },
+};
+const VOID_FEATURED_IDS = new Set(Object.values(VOID_TIDE_FEATURED).map(v => v.quest));
+// A Void-tide bounty accrues its escalated standing bonus; every other bounty accrues +1.
+function _voidBonus(id) { for (const k in VOID_TIDE_FEATURED) if (VOID_TIDE_FEATURED[k].quest === id) return VOID_TIDE_FEATURED[k].standing; return 1; }
 // Credit Warrant standing when a board-ACCEPTED bounty is completed. A bounty can
 // finish at EITHER completion site (side/craft → storyCheckQuests onComplete 29408;
 // skill_check/combat/… → _resolveQuestUQF onPass 6829), so this is called from both,
@@ -35915,7 +35946,7 @@ function _creditWarrant(id) {
   if (!wa || wa[id] !== true) return '';                  // untagged (organic) or already credited
   wa[id] = 'credited';
   const before = _warrantTier(S_story.warrantStanding).name;
-  S_story.warrantStanding = (S_story.warrantStanding || 0) + 1;
+  S_story.warrantStanding = (S_story.warrantStanding || 0) + _voidBonus(id);   // §BOARD-01-FU8 — Void bounties accrue an escalated bonus
   const after = _warrantTier(S_story.warrantStanding);
   return after.name !== before
     ? '🗡️ The Crimson Warrant marks your name. Standing: ' + after.name + '.' : '';
@@ -35937,6 +35968,40 @@ function _boardRumorLine(b) {
   const place = b.destTerrain || b.destShort;                    // terrain type, else the node's own name
   return WARRANT_RUMOR_TPL[(b._k >>> 0) % WARRANT_RUMOR_TPL.length](place);
 }
+// §BOARD-01-FU8 — the shared legality predicate, factored out of _boardBounties' loop so the
+// Void-tide pin reuses the EXACT same gate (schema/type/distinct-dest/not-started/activateCond/
+// canActivate). Deliberately EXCLUDES the FU7 reward-ceiling (that is standing-dependent and the
+// pin bypasses it). Mirrors storyCheckQuests' arrival guards (29361–29362): a throwing
+// activateCond fails closed (skip).
+function _bountyPostable(q, node) {
+  if (!q || q.schema !== 'UQF-1.0' || !BOUNTY_TYPES.has(q.type)) return false;
+  if (!q.activateNode || q.activateNode === node.code) return false;
+  if ((S_story.quests || {})[q.id]) return false;             // not already active/done
+  if (!NODE_MAP[q.activateNode]) return false;                // destination must exist
+  if (q.activateCond) { let ok; try { ok = q.activateCond(); } catch (e) { ok = false; } if (!ok) return false; }
+  return QuestRuntime.canActivate(q.id);                      // gate satisfied ⇒ in-sequence
+}
+// §BOARD-01-FU8 — the active Void-tide bounty (or null). Each featured quest carries a disjoint
+// activateCond WINDOW (day 21→35→42), so at most one is _bountyPostable at a time — no day math
+// needed here. The pin BYPASSES the FU7 reward-ceiling: the clock's bounty always shows when its
+// window is live and the quest is completable (escalation is via threat + the standing bonus, not
+// by hiding the card). Read-only; a taken/expired bounty simply fails _bountyPostable → no pin.
+function _voidFeatured(node) {
+  if (!_boardHost(node)) return null;
+  for (const k in VOID_TIDE_FEATURED) {
+    const f = VOID_TIDE_FEATURED[k], q = QUEST_DB[f.quest];
+    if (!_bountyPostable(q, node)) continue;
+    const dest = NODE_MAP[q.activateNode];
+    return {
+      id: q.id, title: q.title, destCode: q.activateNode,
+      destShort: String(dest.label || q.activateNode).split(' — ')[0],
+      destTerrain: (WORLD_DB[dest.name] && WORLD_DB[dest.name].label) || null,
+      rumor: f.rumor, rumorLine: f.rumor, rewardStr: _boardReward(q),
+      void: true, voidStanding: f.standing, voidDay: +k, _k: 0,
+    };
+  }
+  return null;
+}
 // Pure, read-only postable-bounty selection over QUEST_DB (mirrors _questNodes()).
 // A bounty is postable iff: UQF, an allowlisted mission type, has a real activateNode
 // ELSEWHERE, not already started, and its gate is already satisfied (canActivate) so
@@ -35948,17 +36013,10 @@ function _boardBounties(node, limit) {
   const daySeed = _boardSeed(node.code + '|' + day);
   const out = [];
   for (const q of Object.values(QUEST_DB)) {
-    if (!q || q.schema !== 'UQF-1.0' || !BOUNTY_TYPES.has(q.type)) continue;
-    if (!q.activateNode || q.activateNode === node.code) continue;
-    if ((S_story.quests || {})[q.id]) continue;                 // not already active/done
-    const dest = NODE_MAP[q.activateNode];
-    if (!dest) continue;                                        // destination must exist
+    if (!_bountyPostable(q, node)) continue;                    // §BOARD-01-FU8 — shared legality gate (was the inline checks)
+    if (VOID_FEATURED_IDS.has(q.id)) continue;                  // §BOARD-01-FU8 — clock-gated: Void-tide quests surface only via the pin, only in-window
     if (_boardRewardXp(q) > tier.rewardCap) continue;           // §BOARD-01-FU7 — premium bounties reserved for higher Warrant standing
-    // Mirror storyCheckQuests' arrival guards EXACTLY (29361–29362) so `unlock` can
-    // never post a quest that arrival itself would refuse: legacy activateCond first,
-    // then the declarative UQF gate. A throwing activateCond fails closed (skip).
-    if (q.activateCond) { let ok; try { ok = q.activateCond(); } catch (e) { ok = false; } if (!ok) continue; }
-    if (!QuestRuntime.canActivate(q.id)) continue;              // gate satisfied ⇒ in-sequence
+    const dest = NODE_MAP[q.activateNode];
     out.push({
       id: q.id, title: q.title, destCode: q.activateNode,
       destShort: String(dest.label || q.activateNode).split(' — ')[0],
@@ -35979,6 +36037,14 @@ function _boardBounties(node, limit) {
     b.legs = legs;
     b.legStr = legs ? '~' + legs + (legs === 1 ? ' leg' : ' legs') : '';
     b.rumorLine = _boardRumorLine(b);                            // FU5: authored q.rumor, else terrain-synthesized
+  }
+  // §BOARD-01-FU8 — pin the active Void-tide bounty on top as an EXTRA row (past the slate slice),
+  // so the clock's bounty is always visible when its window is live and the quest is completable.
+  const vf = _voidFeatured(node);
+  if (vf) {
+    const legs = _roadGridPath(null, vf.destCode).length;
+    vf.legs = legs; vf.legStr = legs ? '~' + legs + (legs === 1 ? ' leg' : ' legs') : '';
+    shown.unshift(vf);
   }
   return shown;
 }

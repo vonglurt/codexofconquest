@@ -429,6 +429,84 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.referralVisible).toBe(true); // ENGINE FIX: the referral reached the player (not clobbered)
   });
 
+  // ── §BOARD-01-FU6 (branch) — the network's FIRST FORK ──────────────────────────
+  // Every prior referral was a LINE (one completion → one onward bounty). This is the one
+  // topology the network lacked: a FORK — one completion posts TWO onward bounties via a
+  // SINGLE two-target `unlock` (the opcode's first multi-quest author). Brynn's recovered
+  // ledger has two open entries pointing two ways: the scholar's revoked record (Isolde @NUE)
+  // and the collector's live debt (Solvak @VS). Now that the Warrant trusts you (FU7), it lets
+  // you CHOOSE which thread to pull. Drives the REAL onComplete chain through the REAL execBits,
+  // exactly as storyCheckQuests (29404) fires a completed side quest's onComplete.
+  test('§BOARD-01-FU6 (branch) — one completion forks to TWO onward bounties across distinct distant nodes', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const SRC = 'quest_brynn_ledger';
+      const FORKS = ['quest_wm_01', 'quest_vs_01'];
+      const out = { missing: [] };
+      for (const id of [SRC, ...FORKS]) if (!QUEST_DB[id]) out.missing.push(id);
+
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      S_story.gameDay = 0;
+      const qsrc = QUEST_DB[SRC];
+
+      // the fork is a SINGLE unlock bit carrying BOTH targets — the branch primitive
+      // (unlock(bit) at 21787 iterates bit.quests, so one bit posts many)
+      const unlockBits = (qsrc.onComplete || []).filter(b => b && b.kind === 'unlock');
+      out.srcHasOnCompleteArr = Array.isArray(qsrc.onComplete);
+      out.singleUnlockBit = unlockBits.length === 1;
+      out.forkArity = unlockBits.length === 1 ? (unlockBits[0].quests || []).length : 0;
+      out.forkTargets = unlockBits.length === 1 ? unlockBits[0].quests.slice() : [];
+
+      // pre-state: neither fork is active on a fresh game; both are legitimate in-sequence bounties
+      out.forks = FORKS.map(dst => {
+        const qdst = QUEST_DB[dst];
+        return {
+          dst,
+          beforeUnset: !(S_story.quests || {})[dst],
+          canActivate: QuestRuntime.canActivate(dst),
+          nodeExists: !!NODE_MAP[qdst.activateNode],
+          geoJumpFromSrc: qsrc.activateNode !== qdst.activateNode,
+        };
+      });
+      out.forksDistinct = QUEST_DB[FORKS[0]].activateNode !== QUEST_DB[FORKS[1]].activateNode;
+
+      // fire the source's completion exactly as storyCheckQuests (29404) does on a completed side quest
+      const msgs = [];
+      QuestRuntime.execBits(qsrc.onComplete, { questId: SRC, pushMsg: m => msgs.push(m) });
+      out.bothActive = FORKS.every(dst => (S_story.quests || {})[dst] === 'active');
+      // ONE referral line names BOTH leads and the board (the fork reads as a single choice)
+      out.referralNamesBoth = msgs.some(m => /Warrant's Board/.test(m) && /Isolde/.test(m) && /Solvak/.test(m));
+
+      // idempotency: a second completion leaves BOTH 'active' and does not throw
+      let threw = false;
+      try { QuestRuntime.execBits(qsrc.onComplete, { questId: SRC, pushMsg: () => {} }); } catch (e) { threw = true; }
+      out.idempotent = !threw && FORKS.every(dst => (S_story.quests || {})[dst] === 'active');
+
+      // leaves terminate: neither fork points onward with its own unlock (no runaway / no cycle back)
+      out.leavesTerminate = FORKS.every(dst => {
+        const oc = QUEST_DB[dst].onComplete;
+        return !(Array.isArray(oc) && oc.some(b => b && b.kind === 'unlock'));
+      });
+      return out;
+    });
+    expect(r.missing).toEqual([]);
+    expect(r.srcHasOnCompleteArr).toBe(true);
+    expect(r.singleUnlockBit).toBe(true);      // the fork is ONE unlock bit...
+    expect(r.forkArity).toBe(2);               // ...carrying TWO targets (the branch primitive)
+    expect(r.forkTargets).toEqual(['quest_wm_01', 'quest_vs_01']);
+    for (const f of r.forks) {
+      expect(f.beforeUnset, f.dst).toBe(true);        // target not pre-active on a fresh game
+      expect(f.canActivate, f.dst).toBe(true);        // force-activating a legitimately-gated bounty
+      expect(f.nodeExists, f.dst).toBe(true);         // ...at a real node (never a broken referral)
+      expect(f.geoJumpFromSrc, f.dst).toBe(true);     // each lead is a genuine geography jump
+    }
+    expect(r.forksDistinct).toBe(true);        // the two leads diverge to DIFFERENT distant nodes
+    expect(r.bothActive).toBe(true);           // one completion posted BOTH onward bounties
+    expect(r.referralNamesBoth).toBe(true);    // a single referral line names both leads + the board
+    expect(r.idempotent).toBe(true);           // re-completion is a safe no-op for both
+    expect(r.leavesTerminate).toBe(true);      // the fork's leaves don't chain onward (no cycle)
+  });
+
   // ── §BOARD-01-FU7 — Warrant standing (reputation): the board becomes progression ──
   // Completing a board-ACCEPTED bounty raises S_story.warrantStanding; tiers gate the
   // board's QUALITY (slate size + a reward-ceiling for premium jobs), never a step.
@@ -544,5 +622,136 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
       return { before, after };
     });
     expect(r.after).toEqual(r.before);   // no move, no jump travel — standing gates listing only (§CELL-13)
+  });
+
+  // ── §BOARD-01-FU8 — Void-tide bounties: the board tied to the doom clock ──────────
+  // Three clock-gated Warrant hunts (real UQF combat quests) surface as a pinned ⚠️ VOID
+  // posting, one at a time, inside disjoint day windows (21→35→42). Threat (DC) and reward
+  // (xp + Warrant standing) escalate with the tide. Design: lab-report-void-tide-bounties.md.
+  const VOID_IDS = ['quest_void_tide_21', 'quest_void_tide_35', 'quest_void_tide_42'];
+
+  test('§BOARD-01-FU8 — dormant before day 21; the pin appears and escalates in-window; bypasses slate + ceiling', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((VOID_IDS) => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      S_story.gameDay = 0;
+      const inn = NODE_MAP.TLL;
+      const pinAt = (day) => { S_story.day = day; const vf = _voidFeatured(inn); return vf; };
+      const all = VOID_IDS.map(id => !!QUEST_DB[id]);          // all three quests exist
+      // day 1 (fresh): no Void tide is live — the pin is dormant, board is all normal BOUNTY cards
+      S_story.day = 1;
+      const dormant = _voidFeatured(inn);
+      const cardsDay1 = _boardBounties(inn).map(b => ({ void: !!b.void }));
+      // in-window pins, one per tide
+      const p21 = pinAt(21), p35 = pinAt(35), p42 = pinAt(42);
+      const info = (p) => p && {
+        id: p.id, isVoid: p.void === true, standing: p.voidStanding,
+        rewardStr: p.rewardStr, rewardXp: _boardRewardXp(QUEST_DB[p.id]),
+        destOk: !!NODE_MAP[p.destCode] && p.destCode !== 'TLL',
+        canActivate: QuestRuntime.canActivate(p.id),
+      };
+      // ceiling bypass: at standing 0 (Unknown, cap 250) the day-42 pin (320xp) still shows
+      S_story.warrantStanding = 0; S_story.day = 42;
+      const board42 = _boardBounties(inn);   // no explicit limit ⇒ tier slate (4) + the pinned extra
+      return {
+        all, dormant, day1AnyVoid: cardsDay1.some(c => c.void),
+        i21: info(p21), i35: info(p35), i42: info(p42),
+        pinnedFirstIsVoid: board42[0] && board42[0].void === true,
+        pinnedId42: board42[0] && board42[0].id,
+      };
+    }, VOID_IDS);
+    expect(r.all).toEqual([true, true, true]);
+    expect(r.dormant).toBeNull();                 // no pin before the first Void tide
+    expect(r.day1AnyVoid).toBe(false);            // ...and no Void card on a fresh board
+    // each tide pins its mapped quest, flagged void, at a real distant node, canActivate
+    expect(r.i21.id).toBe('quest_void_tide_21'); expect(r.i21.isVoid).toBe(true); expect(r.i21.destOk).toBe(true); expect(r.i21.canActivate).toBe(true);
+    expect(r.i35.id).toBe('quest_void_tide_35');
+    expect(r.i42.id).toBe('quest_void_tide_42');
+    // reward escalates (xp) and standing escalates with the clock
+    expect(r.i21.rewardXp).toBe(150); expect(r.i35.rewardXp).toBe(220); expect(r.i42.rewardXp).toBe(320);
+    expect(r.i21.standing).toBe(2);   expect(r.i35.standing).toBe(3);   expect(r.i42.standing).toBe(4);
+    expect(r.i21.rewardStr).toContain('⭐');    // honest reward preview (never fake gold)
+    // ceiling bypass: the premium day-42 hunt is pinned first even for an Unknown-standing player
+    expect(r.pinnedFirstIsVoid).toBe(true);
+    expect(r.pinnedId42).toBe('quest_void_tide_42');
+  });
+
+  test('§BOARD-01-FU8 — closing window / missable: each hunt is live only in its own window, and never rotates into the normal pool', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((VOID_IDS) => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      const inn = NODE_MAP.TLL;
+      // the activateCond WINDOWS are the single source of truth (they gate BOTH arrival and the pin)
+      const condAt = (day) => { S_story.day = day; return VOID_IDS.map(id => QUEST_DB[id].activateCond()); };
+      const w20 = condAt(20), w21 = condAt(21), w34 = condAt(34), w35 = condAt(35), w41 = condAt(41), w42 = condAt(42), w49 = condAt(49);
+      const pinIdAt = (day) => { S_story.day = day; const vf = _voidFeatured(inn); return vf && vf.id; };
+      // at day 35 the day-21 hunt is gone: not pinned, and its own cond refuses it (arrival would too)
+      const day35Pin = pinIdAt(35);
+      S_story.day = 35;
+      const q21GoneAt35 = !QUEST_DB['quest_void_tide_21'].activateCond();
+      // excluded from the normal rotation pool: past every window, a huge slate never lists a Void id as a NORMAL card
+      S_story.day = 42; S_story.warrantStanding = 20;
+      const wide = _boardBounties(inn, 500);
+      const normalVoidLeak = wide.filter(b => !b.void).filter(b => VOID_IDS.includes(b.id));
+      const voidCards = wide.filter(b => b.void).map(b => b.id);
+      return { w20, w21, w34, w35, w41, w42, w49, day35Pin, q21GoneAt35, normalVoidLeakIds: normalVoidLeak.map(b => b.id), voidCards };
+    }, VOID_IDS);
+    // windows: [21,35) / [35,42) / [42,∞) — disjoint, continuous 21→49
+    expect(r.w20).toEqual([false, false, false]);   // before the first tide: nothing
+    expect(r.w21).toEqual([true, false, false]);
+    expect(r.w34).toEqual([true, false, false]);
+    expect(r.w35).toEqual([false, true, false]);     // handoff: 21 closes exactly as 35 opens
+    expect(r.w41).toEqual([false, true, false]);
+    expect(r.w42).toEqual([false, false, true]);     // handoff: 35 closes exactly as 42 opens
+    expect(r.w49).toEqual([false, false, true]);
+    expect(r.day35Pin).toBe('quest_void_tide_35');   // day 35 pins the current tide, not the missed one
+    expect(r.q21GoneAt35).toBe(true);                // the day-21 hunt is truly missable
+    expect(r.normalVoidLeakIds).toEqual([]);         // Void quests NEVER appear as a normal rotation card
+    expect(r.voidCards).toEqual(['quest_void_tide_42']);  // ...only ever as the single pinned card
+  });
+
+  test('§BOARD-01-FU8 — completing a Void hunt accrues the ESCALATED standing at the real onPass site; selection stays pure', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      const inn = NODE_MAP.TLL;
+      S_story.gameDay = 0; S_story.day = 42;
+      // purity: a live-tide selection mutates no S_story field
+      const before = JSON.stringify(S_story);
+      _boardBounties(inn); _voidFeatured(inn);
+      const pure = JSON.stringify(S_story) === before;
+      // accept the pinned Void hunt from the board, then complete it at the REAL resolve path
+      const pin = _boardBounties(inn)[0];             // the pinned day-42 hunt
+      _acceptBounty(pin.id);
+      const tagged = S_story.warrantAccepted[pin.id] === true;
+      const standingBefore = S_story.warrantStanding;
+      const q = QUEST_DB[pin.id];
+      const sc = q.bits.find(b => b.kind === 'skill_check');
+      S_story.currentCode = q.activateNode; S_story.playerR = 5; S_story.playerC = 9;
+      const posBefore = { c: S_story.currentCode, r: S_story.playerR, col: S_story.playerC };
+      const savedDc = sc.dc; sc.dc = -100;            // force a deterministic PASS
+      _rollCeremonia(pin.id);                          // REAL resolve → _resolveQuestUQF (onPass) → _creditWarrant
+      sc.dc = savedDc;
+      const posAfter = { c: S_story.currentCode, r: S_story.playerR, col: S_story.playerC };
+      // idempotency: a second credit must not double-apply
+      const standingAfterOne = S_story.warrantStanding;
+      _creditWarrant(pin.id);
+      return {
+        pure, pinId: pin.id, pinIsVoid: pin.void === true, tagged, standingBefore,
+        standingAfterOne, standingAfterTwice: S_story.warrantStanding,
+        tagAfter: S_story.warrantAccepted[pin.id], questDone: S_story.quests[pin.id] === 'done',
+        posBefore, posAfter,
+      };
+    });
+    expect(r.pure).toBe(true);                     // pure selection even with a live tide + pin
+    expect(r.pinId).toBe('quest_void_tide_42');
+    expect(r.pinIsVoid).toBe(true);
+    expect(r.tagged).toBe(true);                   // accept tagged it as Warrant work
+    expect(r.standingBefore).toBe(0);
+    expect(r.questDone).toBe(true);                // the forced pass completed it
+    expect(r.standingAfterOne).toBe(4);            // ESCALATED bonus (+4 for the day-42 hunt), not the flat +1
+    expect(r.tagAfter).toBe('credited');
+    expect(r.standingAfterTwice).toBe(4);          // idempotent — no double-credit
+    expect(r.posAfter).toEqual(r.posBefore);       // completing/crediting never moves the player
   });
 });
