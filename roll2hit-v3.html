@@ -33292,6 +33292,26 @@ function storyRender(node, prefix) {
     }
   }
 
+  // ── §BOARD-01: THE WARRANT'S BOARD (rumor/bounty discovery) ──────────────
+  // Data-driven section (node.board || node.sleep) — NOT a node.code special case
+  // (§VM-01-G direction). Posts hooks to distant nodes; "Take" fires the first
+  // live `unlock`. Gates listing only — no movement gate, no jump travel.
+  {
+    const _bounties = _boardBounties(node, 4);
+    if (_bounties.length) {
+      const { sec, body } = _mkSection('story-board-section', '📜', "The Warrant's Board");
+      _bounties.forEach(b => body.appendChild(_mkCard({
+        lbl: 'BOUNTY',
+        main: '📜 ' + b.title,
+        sub: '→ ' + b.destShort + (b.rewardStr ? '  ·  ' + b.rewardStr : ''),
+        hint: b.rumor || 'Posted by the Crimson Warrant.',
+        btn: 'Take', btnClass: 'btn-rest',
+        btnClick: ((id) => () => _acceptBounty(id))(b.id),
+      })));
+      row.appendChild(sec);
+    }
+  }
+
   // ── LOOT section ───────────────────────────────────
   if (node.loot && !node.loot.startsWith('VICTORY') && !node.loot.startsWith('Portal Key')) {
     const { sec, body } = _mkSection(null, '💰', 'Loot');
@@ -35805,6 +35825,76 @@ function _questNodes() {
   }
   return _questNodeSet;
 }
+
+// ── §BOARD-01: The Warrant's Board — rumor/bounty discovery ──────────────────
+// Social quest discovery: an in-world notice board (the Crimson Warrant) posts
+// hooks that point at DISTANT nodes and pre-activate the mission via the dead-
+// but-working `unlock` opcode (this is the file's first live use of it). Pure,
+// read-only selection; no movement gate; no jump travel; no new Math.random.
+// Design locked in lab-reports/lab-report-warrants-board.md.
+const BOUNTY_TYPES = new Set(['side','skill_check','craft','combat','hunt','delivery','escort','dialogue']);
+// host(node): opt-in `board:true`, else default = any rest node, unless `board:false` suppresses it.
+function _boardHost(node) { return !!node && (node.board === true || (node.board !== false && node.sleep === true)); }
+// FNV-1a hash — pure/replayable rotation seed (never Math.random; §VM-01-B-safe).
+function _boardSeed(str) {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  return h >>> 0;
+}
+// Reward preview from the quest's own reward bit (bits + array onComplete).
+function _boardReward(q) {
+  const bits = [...(q.bits || []), ...(Array.isArray(q.onComplete) ? q.onComplete : [])];
+  const r = bits.find(b => b.kind === 'reward');
+  if (!r) return '';
+  const parts = [];
+  if (r.xp) parts.push('⭐' + r.xp + ' xp');
+  if (r.gold) parts.push(r.gold + ' g');
+  if (r.items && r.items.length) parts.push(r.items[0].name);
+  return parts.join(' · ');
+}
+// Pure, read-only postable-bounty selection over QUEST_DB (mirrors _questNodes()).
+// A bounty is postable iff: UQF, an allowlisted mission type, has a real activateNode
+// ELSEWHERE, not already started, and its gate is already satisfied (canActivate) so
+// `unlock` never activates it out of sequence. Deterministic slate per (node, gameDay).
+function _boardBounties(node, limit) {
+  if (!_boardHost(node)) return [];
+  const day = (S_story.gameDay || 0);
+  const daySeed = _boardSeed(node.code + '|' + day);
+  const out = [];
+  for (const q of Object.values(QUEST_DB)) {
+    if (!q || q.schema !== 'UQF-1.0' || !BOUNTY_TYPES.has(q.type)) continue;
+    if (!q.activateNode || q.activateNode === node.code) continue;
+    if ((S_story.quests || {})[q.id]) continue;                 // not already active/done
+    const dest = NODE_MAP[q.activateNode];
+    if (!dest) continue;                                        // destination must exist
+    // Mirror storyCheckQuests' arrival guards EXACTLY (29361–29362) so `unlock` can
+    // never post a quest that arrival itself would refuse: legacy activateCond first,
+    // then the declarative UQF gate. A throwing activateCond fails closed (skip).
+    if (q.activateCond) { let ok; try { ok = q.activateCond(); } catch (e) { ok = false; } if (!ok) continue; }
+    if (!QuestRuntime.canActivate(q.id)) continue;              // gate satisfied ⇒ in-sequence
+    out.push({
+      id: q.id, title: q.title, destCode: q.activateNode,
+      destShort: String(dest.label || q.activateNode).split(' — ')[0],
+      rumor: q.rumor || null, rewardStr: _boardReward(q),
+      _k: (daySeed ^ _boardSeed(q.id + '|' + day)) >>> 0,
+    });
+  }
+  out.sort((a, b) => (a._k - b._k) || (a.id < b.id ? -1 : 1));   // deterministic rotation
+  return out.slice(0, limit || 4);
+}
+// §BOARD-01-B — accept a bounty. The file's FIRST live `unlock`: routed through the
+// VM (execBits), not a private state write — widen through the grammar, never around it.
+function _acceptBounty(id) {
+  const q = QUEST_DB[id];
+  if (!q) return;
+  if ((S_story.quests || {})[id]) return;                       // already started — no-op
+  QuestRuntime.execBits([{ kind: 'unlock', quests: [id] }], {});
+  const dest = NODE_MAP[q.activateNode];
+  const destShort = dest ? String(dest.label || q.activateNode).split(' — ')[0] : q.activateNode;
+  storyMsg('📌 Bounty accepted: ' + q.title + ' — ' + destShort);
+  storyRender(NODE_MAP[S_story.currentCode]);                   // refresh: card drops, journal updates
+}
+if (typeof window !== 'undefined') { window._boardBounties = _boardBounties; window._acceptBounty = _acceptBounty; }
 
 // §NAV-01e — amenity icons, most-specific first (epic > battle > inn > NPC >
 // quests). Shared by the map tab and the world panel.
