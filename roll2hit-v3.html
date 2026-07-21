@@ -6827,6 +6827,7 @@ function _resolveQuestUQF(questId) {
     S_story.quests[questId] = 'done';
     _passMsgs = [];
     QuestRuntime.execBits(sc.onPass || [], { questId, pushMsg: m => _passMsgs.push(m) });
+    { const _wp = _creditWarrant(questId); if (_wp) _passMsgs.push(_wp); }   // §BOARD-01-FU7 — a board-accepted skill_check/combat bounty raises Warrant standing
   } else {
     QuestRuntime.execBits(sc.onFail || [], { questId });
     if (q.retryable) {
@@ -22494,6 +22495,7 @@ const _S_DEFAULTS = () => ({
   shieldTier: null, equippedWeapon: null, equippedMainWeapon: null, levelUpLog: [], tattoos: [],
   lastAutoSellNode: null, surgeCharges: 0, indomitableCharges: 0,
   waypoint: null, customQuestTerrain: null,
+  warrantStanding: 0, warrantAccepted: {},   // §BOARD-01-FU7 — Warrant reputation: completed board-accepted bounties + the accept-tag map
   huntMode: false,  // §KG-01: Hunt Mode — ×2 encounter rate + 80/20 bias toward monsters at/below your level
   hireling: null,   // §MESH-01g: hired guide bot (single-player; persists in save)
   ebNegotiatedPayments: {}, ebReturnDone: {},
@@ -29406,6 +29408,7 @@ function storyCheckQuests(node) {
       if (q.passText) { const pt = typeof q.passText === 'function' ? q.passText() : q.passText; if (pt) msgs.push(pt); }
       // §D02 xpAward on side-type quest completion
       if (q.type === 'side' && q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }
+      { const _wp = _creditWarrant(id); if (_wp) msgs.push(_wp); }   // §BOARD-01-FU7 — a board-accepted bounty raises Warrant standing
     }
   });
   return msgs;
@@ -33305,9 +33308,10 @@ function storyRender(node, prefix) {
   // (§VM-01-G direction). Posts hooks to distant nodes; "Take" fires the first
   // live `unlock`. Gates listing only — no movement gate, no jump travel.
   {
-    const _bounties = _boardBounties(node, 4);
+    const _bounties = _boardBounties(node);   // §BOARD-01-FU7 — no fixed limit: slate size now comes from Warrant standing
     if (_bounties.length) {
-      const { sec, body } = _mkSection('story-board-section', '📜', "The Warrant's Board");
+      const _wt = _warrantTier(S_story.warrantStanding);   // §BOARD-01-FU7 — show rank + count for progression legibility
+      const { sec, body } = _mkSection('story-board-section', '📜', "The Warrant's Board — " + _wt.name + ' (' + (S_story.warrantStanding || 0) + ')');
       _bounties.forEach(b => body.appendChild(_mkCard({
         lbl: 'BOUNTY',
         main: '📜 ' + b.title,
@@ -35873,6 +35877,49 @@ function _boardReward(q) {
   if (!parts.length && q.type === 'side' && q.xpAward) parts.push('⭐' + q.xpAward + ' xp');
   return parts.join(' · ');
 }
+// §BOARD-01-FU7 — Warrant standing (reputation). Completing a board-ACCEPTED bounty
+// raises S_story.warrantStanding; tiers gate the board's QUALITY, never a step:
+// a higher rank widens the slate AND lifts the reward-ceiling so the Warrant's best
+// jobs surface only once you've earned its trust ("the Warrant vouches for you").
+// A const table (never serialized), so Infinity is safe. Design: lab-report-warrant-standing.md.
+const WARRANT_TIERS = [
+  { min: 0,  name: 'Unknown',       slate: 4, rewardCap: 250 },
+  { min: 3,  name: 'Marked',        slate: 5, rewardCap: 350 },
+  { min: 7,  name: 'Trusted',       slate: 6, rewardCap: 500 },
+  { min: 12, name: 'Sworn',         slate: 6, rewardCap: Infinity },
+  { min: 20, name: "Warrant's Own", slate: 7, rewardCap: Infinity },
+];
+function _warrantTier(standing) {
+  let t = WARRANT_TIERS[0]; const s = standing || 0;
+  for (const w of WARRANT_TIERS) if (s >= w.min) t = w;   // highest tier whose min is met
+  return t;
+}
+// Numeric twin of _boardReward's xp scan — the reward-ceiling gate reads a number,
+// not the display string. Same pools (bits / array onComplete / skill_check onPass),
+// same honest fallback to a side quest's live xpAward; gold is never counted (dead field).
+function _boardRewardXp(q) {
+  const pools = [q.bits, Array.isArray(q.onComplete) ? q.onComplete : null];
+  for (const b of (q.bits || [])) if (b && Array.isArray(b.onPass)) pools.push(b.onPass);
+  const r = pools.filter(Array.isArray).flat().find(b => b && b.kind === 'reward');
+  if (r && r.xp) return r.xp;
+  if (q.type === 'side' && q.xpAward) return q.xpAward;
+  return 0;
+}
+// Credit Warrant standing when a board-ACCEPTED bounty is completed. A bounty can
+// finish at EITHER completion site (side/craft → storyCheckQuests onComplete 29408;
+// skill_check/combat/… → _resolveQuestUQF onPass 6829), so this is called from both,
+// guarded by the accept tag and idempotent — the tag flips to a 'credited' sentinel
+// so a re-run of either site can never double-credit. Returns a tier-up line, or ''.
+function _creditWarrant(id) {
+  const wa = S_story.warrantAccepted;
+  if (!wa || wa[id] !== true) return '';                  // untagged (organic) or already credited
+  wa[id] = 'credited';
+  const before = _warrantTier(S_story.warrantStanding).name;
+  S_story.warrantStanding = (S_story.warrantStanding || 0) + 1;
+  const after = _warrantTier(S_story.warrantStanding);
+  return after.name !== before
+    ? '🗡️ The Crimson Warrant marks your name. Standing: ' + after.name + '.' : '';
+}
 // §BOARD-01-FU5 — characterful synthesized rumor. When a bounty has no authored
 // q.rumor, derive a Warrant-voiced hook from the DESTINATION TERRAIN (node.name →
 // WORLD_DB[..].label) so the board reads as world, not the flat "Posted by the
@@ -35897,6 +35944,7 @@ function _boardRumorLine(b) {
 function _boardBounties(node, limit) {
   if (!_boardHost(node)) return [];
   const day = (S_story.gameDay || 0);
+  const tier = _warrantTier(S_story.warrantStanding);         // §BOARD-01-FU7 — standing gates slate size + reward ceiling
   const daySeed = _boardSeed(node.code + '|' + day);
   const out = [];
   for (const q of Object.values(QUEST_DB)) {
@@ -35905,6 +35953,7 @@ function _boardBounties(node, limit) {
     if ((S_story.quests || {})[q.id]) continue;                 // not already active/done
     const dest = NODE_MAP[q.activateNode];
     if (!dest) continue;                                        // destination must exist
+    if (_boardRewardXp(q) > tier.rewardCap) continue;           // §BOARD-01-FU7 — premium bounties reserved for higher Warrant standing
     // Mirror storyCheckQuests' arrival guards EXACTLY (29361–29362) so `unlock` can
     // never post a quest that arrival itself would refuse: legacy activateCond first,
     // then the declarative UQF gate. A throwing activateCond fails closed (skip).
@@ -35919,7 +35968,7 @@ function _boardBounties(node, limit) {
     });
   }
   out.sort((a, b) => (a._k - b._k) || (a.id < b.id ? -1 : 1));   // deterministic rotation
-  const shown = out.slice(0, limit || 4);
+  const shown = out.slice(0, limit || tier.slate);            // §BOARD-01-FU7 — slate size scales with standing (explicit limit still overrides, e.g. tests)
   // §BOARD-01-FU3 — distance-labeled slate (label-only variant). Answer "is this
   // trip worth it?" by pairing reward with a leg count. _roadGridPath is a grid
   // BFS, so we run it ONLY over the ≤4 shown cards (never the ~249 candidates) —
@@ -35940,6 +35989,7 @@ function _acceptBounty(id) {
   if (!q) return;
   if ((S_story.quests || {})[id]) return;                       // already started — no-op
   QuestRuntime.execBits([{ kind: 'unlock', quests: [id] }], {});
+  (S_story.warrantAccepted = S_story.warrantAccepted || {})[id] = true;   // §BOARD-01-FU7 — tag as Warrant work so completing it accrues standing
   const dest = NODE_MAP[q.activateNode];
   const destShort = dest ? String(dest.label || q.activateNode).split(' — ')[0] : q.activateNode;
   // §BOARD-01-FU2 — accepting *is* choosing to go there, so auto-set the waypoint:

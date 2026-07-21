@@ -428,4 +428,121 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.dstActive).toBe(true);       // onPass unlock posted the follow-on bounty
     expect(r.referralVisible).toBe(true); // ENGINE FIX: the referral reached the player (not clobbered)
   });
+
+  // ── §BOARD-01-FU7 — Warrant standing (reputation): the board becomes progression ──
+  // Completing a board-ACCEPTED bounty raises S_story.warrantStanding; tiers gate the
+  // board's QUALITY (slate size + a reward-ceiling for premium jobs), never a step.
+  // Design: lab-reports/lab-report-warrant-standing.md.
+  test('§BOARD-01-FU7 — _creditWarrant accrues only on tagged bounties, is idempotent, announces on rank-up', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      const out = {};
+      // untagged (organic) completion → no bump, no announcement
+      S_story.warrantStanding = 0; S_story.warrantAccepted = {};
+      out.untaggedLine = _creditWarrant('quest_not_from_board');
+      out.untaggedStanding = S_story.warrantStanding;
+      // tagged bounty → +1, tag flips to the 'credited' idempotency sentinel
+      S_story.warrantAccepted = { quest_x: true };
+      out.line1 = _creditWarrant('quest_x');        // 0→1: still 'Unknown' ⇒ no announcement
+      out.afterFirst = S_story.warrantStanding;
+      out.tagAfter = S_story.warrantAccepted.quest_x;
+      // second call on the same id → safe no-op (must not double-credit)
+      out.line2 = _creditWarrant('quest_x');
+      out.afterSecond = S_story.warrantStanding;
+      // crossing a tier boundary (2→3 = enters 'Marked') announces
+      S_story.warrantStanding = 2; S_story.warrantAccepted = { quest_y: true };
+      out.rankUpLine = _creditWarrant('quest_y');
+      out.rankUpStanding = S_story.warrantStanding;
+      return out;
+    });
+    expect(r.untaggedLine).toBe('');
+    expect(r.untaggedStanding).toBe(0);            // organic discovery never counts
+    expect(r.afterFirst).toBe(1);
+    expect(r.tagAfter).toBe('credited');
+    expect(r.line1).toBe('');                      // 0→1 stays within 'Unknown'
+    expect(r.line2).toBe('');                      // idempotent
+    expect(r.afterSecond).toBe(1);                 // ...standing unchanged on the re-run
+    expect(r.rankUpStanding).toBe(3);
+    expect(r.rankUpLine).toContain('Marked');      // a rank-up announces the new standing
+    expect(r.rankUpLine).toContain('Warrant');
+  });
+
+  test('§BOARD-01-FU7 — _acceptBounty tags Warrant work; completing it at the REAL onPass site accrues standing', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      // A board-postable skill_check bounty (chronicle head): canActivate on a fresh game,
+      // completes via _resolveQuestUQF (onPass) — the harder of the two credit sites.
+      const id = 'quest_1367_a_najera';
+      _acceptBounty(id);
+      const tagged = S_story.warrantAccepted[id] === true;
+      const standingBefore = S_story.warrantStanding;
+      const q = QUEST_DB[id];
+      const sc = q.bits.find(b => b.kind === 'skill_check');
+      S_story.currentCode = q.activateNode;    // stand at the source node
+      const savedDc = sc.dc; sc.dc = -100;     // force a deterministic PASS
+      _rollCeremonia(id);                       // REAL resolve path → _resolveQuestUQF (onPass)
+      sc.dc = savedDc;
+      return {
+        tagged, standingBefore,
+        standingAfter: S_story.warrantStanding,
+        tagAfter: S_story.warrantAccepted[id],
+        questDone: S_story.quests[id] === 'done',
+      };
+    });
+    expect(r.tagged).toBe(true);           // accept tagged it as Warrant work
+    expect(r.standingBefore).toBe(0);
+    expect(r.questDone).toBe(true);        // the pass completed it
+    expect(r.standingAfter).toBe(1);       // ...and standing accrued at the onPass site (not just in a unit)
+    expect(r.tagAfter).toBe('credited');   // idempotency sentinel set
+  });
+
+  test('§BOARD-01-FU7 — standing gates slate SIZE + a reward CEILING (premium jobs), never emptying a newcomer board', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      S_story.gameDay = 0;
+      const inn = NODE_MAP.TLL;
+      const tier0 = _warrantTier(0), tierMax = _warrantTier(999);
+      // slate size grows with standing (no explicit limit ⇒ the tier drives it)
+      S_story.warrantStanding = 0;   const n0 = _boardBounties(inn).length;
+      S_story.warrantStanding = 7;   const n7 = _boardBounties(inn).length;
+      S_story.warrantStanding = 20;  const n20 = _boardBounties(inn).length;
+      // reward ceiling: inspect the CANDIDATE POOL (huge limit so the slice can't hide it)
+      const maxXpAt = (standing) => {
+        S_story.warrantStanding = standing;
+        return _boardBounties(inn, 500).reduce((m, b) => Math.max(m, _boardRewardXp(QUEST_DB[b.id])), 0);
+      };
+      return {
+        n0, n7, n20, slate0: tier0.slate, slateMax: tierMax.slate, cap0: tier0.rewardCap,
+        tier0Name: tier0.name, tierMaxName: tierMax.name,
+        maxXp0: maxXpAt(0), maxXpMax: maxXpAt(20),
+      };
+    });
+    expect(r.tier0Name).toBe('Unknown');
+    expect(r.tierMaxName).toBe("Warrant's Own");
+    expect(r.n0).toBeGreaterThan(0);              // NON-EMPTY guard — a newcomer's board still has cards
+    expect(r.n0).toBeLessThanOrEqual(r.slate0);   // ...capped at the tier-0 slate (4)
+    expect(r.n7).toBeGreaterThanOrEqual(r.n0);    // monotone: the slate widens (or holds) as standing climbs
+    expect(r.n20).toBeGreaterThanOrEqual(r.n7);
+    expect(r.n20).toBe(r.slateMax);               // top rank shows the full 7-card slate
+    expect(r.n20).toBeGreaterThan(r.n0);          // ...strictly wider than a newcomer's board
+    expect(r.maxXp0).toBeLessThanOrEqual(r.cap0); // tier-0 pool carries NO premium bounty (ceiling holds)
+    expect(r.maxXpMax).toBeGreaterThan(r.cap0);   // ...but the top rank surfaces the Warrant's premium work
+  });
+
+  test('§BOARD-01-FU7 — crediting standing never moves the player (gates quality, not a step)', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      S_story.currentCode = 'TLL'; S_story.playerR = 5; S_story.playerC = 9;
+      S_story.warrantAccepted = { quest_x: true };
+      const before = { c: S_story.currentCode, r: S_story.playerR, col: S_story.playerC };
+      _creditWarrant('quest_x');
+      const after = { c: S_story.currentCode, r: S_story.playerR, col: S_story.playerC };
+      return { before, after };
+    });
+    expect(r.after).toEqual(r.before);   // no move, no jump travel — standing gates listing only (§CELL-13)
+  });
 });
