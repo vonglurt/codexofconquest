@@ -13281,7 +13281,15 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_vs_02: { id:'quest_vs_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vsWeaponsFound'] }, title:'Yva: The Broker',
-    onComplete:[ { kind:'flag_write', set:['vsWeaponsFound'] }, { kind:'favor', npc:'yva', set:1 }, { kind:'narrative', msg:'🖤 Hollow Hands weapons trail found. Yva is Friendly.' } ], // §ARCH-01 W7c
+    onComplete:[ { kind:'flag_write', set:['vsWeaponsFound'] }, { kind:'favor', npc:'yva', set:1 }, { kind:'narrative', msg:'🖤 Hollow Hands weapons trail found. Yva is Friendly.' },
+      // §BOARD-01-FU6 (through-flow) — this quest is the referral graph's first THROUGH-NODE: it is
+      // BOTH a merge target (in-degree 2, from quest_pachelbel_shipment + quest_couperin_lute's
+      // convergence edges) AND a source (out-degree 1, here). That makes the network a general DAG —
+      // referral flow passes THROUGH merges, not just fans out into sinks. Yva reads the two marks →
+      // they are Hollow Hands paper → the debt behind them is Mordus's (quest_vs_03), the terminal
+      // LEAF (no onward unlock → acyclic). Purely additive; vs_03 keeps gate:{}, stays board-postable.
+      { kind:'narrative', msg:'🖋️ Yva turns the marks under her lamp and stops pretending she can\'t read them. "Hollow Hands — the same hand that sealed what you brought me also signed a transit seal I brokered for a warlord six weeks gone: Mordus, camped outside Visby, still owing on it and still not knowing what the mark will cost him." She names the debt behind the marks. A bounty surfaces on the Warrant\'s Board.' },
+      { kind:'unlock', quests:['quest_vs_03'] } ], // §ARCH-01 W7c · §BOARD-01-FU6 through-flow edge
     desc:"Yva is inside the Goblin Caves. The Hollow Hands have marked her stall. She knows where the weapons went — for 50gp.",
     hint:'Find Yva inside the Goblin Caves.',
     activateNode:null, 
@@ -21002,7 +21010,13 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:"He tells you Benedikt's full history. Two days old and already with opinions. He says this like it explains everything. It does not explain everything. He offers you some of the trough ale.\n\nYou consider it longer than you should.",
     disposition:"'She doesn't need me. You're absolutely right.' — Sir Jullean, adjusting his coat, approximately three seconds before the drainage ditch." },
   quest_couperin_lute: { id:'quest_couperin_lute', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ itemsAll:["Quill's Lute"], atNode:'MHQ' }, npc:'quill', title:"Quill: The Pawned Lute",
-    onComplete:[ { kind:'reward', gold:40 }, { kind:'favor', npc:'quill', set:1 }, { kind:'narrative', msg:'💰 +40gp + cipher scrap from Quill.' } ], // §ARCH-01 W7c
+    onComplete:[ { kind:'reward', gold:40 }, { kind:'favor', npc:'quill', set:1 }, { kind:'narrative', msg:'💰 +40gp + cipher scrap from Quill.' },
+      // §BOARD-01-FU6 (convergence) — the SECOND source that unlocks quest_vs_02 (Yva the Broker @VS).
+      // See the twin edge on quest_pachelbel_shipment: this cipher scrap and that sealed box both carry
+      // the same fence's mark, so both roads terminate at the one broker who can read it. Idempotent
+      // unlock → order-independent; vs_02 stays a leaf (no onward unlock, no cycle). Purely additive.
+      { kind:'narrative', msg:'🖋️ The Warrant reader tilts Quill\'s Cipher Scrap to the lamp and goes still — a broker\'s mark, inked small in the corner, the kind only one fence in the Baltic still signs. "That tab was never Pachelbel\'s to hold. It was brokered, and the broker signs her paper: Yva, Visby, the goblin caves. She reads marks the way you read a road." A matching bounty surfaces on the Warrant\'s Board.' },
+      { kind:'unlock', quests:['quest_vs_02'] } ], // §ARCH-01 W7c · §BOARD-01-FU6 convergence edge
     itemChain:[{action:'take',name:"Quill's Lute",all:true},{action:'grant',name:'Cipher Scrap',icon:'📜',type:'key',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Tomas Couperin's lute has been in Pachelbel's inventory for eleven days. He pawned it against a drink tab — a transaction he does not regret exactly, but which he replays in a particular way every morning. The lute does not play without him. The drink is gone. The tab is the only thing that remained, and now the lute is not his. The asking is the part he cannot bring himself to do.",
     hint:'Talk to Pachelbel at the Rough Bar and retrieve the lute.',
@@ -21010,7 +21024,15 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     waypointNode:'LLA', reward:40,
     disposition: '"The guild licenses five songs. Five. For the whole of human experience. I don\'t know if that\'s arrogance or optimism." — Tomas Couperin' },
   quest_pachelbel_shipment: { id:'quest_pachelbel_shipment', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ itemsAll:['Sealed Scholar Box'], atNode:'LLA' }, npc:'pachelbel', title:'Pachelbel: Scholar Box',
-    onComplete:[ { kind:'reward', gold:60 }, { kind:'favor', npc:'pachelbel', set:1 }, { kind:'narrative', msg:'💰 +60gp from Pachelbel. Friendly!' } ], // §ARCH-01 W7c
+    onComplete:[ { kind:'reward', gold:60 }, { kind:'favor', npc:'pachelbel', set:1 }, { kind:'narrative', msg:'💰 +60gp from Pachelbel. Friendly!' },
+      // §BOARD-01-FU6 (convergence) — one of TWO sources that unlock the SAME target (quest_vs_02,
+      // Yva the Broker @VS). The network's first CONFLUENCE: two distant Birka cases — this sealed box
+      // and Quill's cipher scrap — both yield an unreadable broker's mark, and only Yva reads marks.
+      // Two roads, one destination (in-degree 2). The unlock is idempotent (handler at ~21801 no-ops a
+      // target already posted), so whichever case you close SECOND is a safe no-op. vs_02 carries no
+      // onward unlock → the confluence terminates (no cycle). Purely additive; vs_02 keeps gate:{}.
+      { kind:'narrative', msg:'🖋️ The Warrant clerk turns the Sealed Scholar Box once and stops at the wax — a broker\'s mark, not a scholar\'s seal. "Addressed to a man the registers forgot. Only one hand in the Baltic still reads a seal cut like this: Yva, who keeps a stall in the Visby goblin caves and knows what every mark means. Take her the box." A matching bounty surfaces on the Warrant\'s Board.' },
+      { kind:'unlock', quests:['quest_vs_02'] } ], // §ARCH-01 W7c · §BOARD-01-FU6 convergence edge
     itemChain:[{action:'take',name:'Sealed Scholar Box',all:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Pachelbel does not deal in debts he did not originate. The Scholar Box has been in his back inventory for four months — sealed, addressed, belonging to someone who paid for it and then stopped existing in any record he can find. He wants it out of his problem. He does not say why it bothers him that it is still there. You can see that it does.",
     hint:'Look for the Scholar Box in the Birka Crypt.',

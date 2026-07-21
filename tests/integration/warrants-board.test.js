@@ -507,6 +507,159 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.leavesTerminate).toBe(true);      // the fork's leaves don't chain onward (no cycle)
   });
 
+  // ── §BOARD-01-FU6 (convergence) — the network's FIRST CONFLUENCE ────────────────
+  // The fork proved one→two; this proves two→one — the topology that makes the referral
+  // network a true GRAPH (a node with in-degree 2). Two distant Birka cases — Pachelbel's
+  // Sealed Scholar Box (@LLA) and Quill's Cipher Scrap (@MHQ) — both yield an unreadable
+  // broker's mark, so both unlock the SAME target: Yva the Broker (quest_vs_02 @VS), the fence
+  // who canonically "knows what the mark means". Each edge is a single-target unlock in the
+  // source's onComplete; the idempotent handler (~21801) makes the two edges order-independent.
+  test('§BOARD-01-FU6 (convergence) — two distant sources unlock ONE shared target; order-independent; no cycle', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const SRCS = ['quest_pachelbel_shipment', 'quest_couperin_lute'];
+      const TARGET = 'quest_vs_02';
+      const out = { missing: [] };
+      for (const id of [...SRCS, TARGET]) if (!QUEST_DB[id]) out.missing.push(id);
+
+      const unlockBitsOf = (q) => (q.onComplete || []).filter(b => b && b.kind === 'unlock');
+
+      // each source carries exactly ONE unlock bit, whose single target is the shared node
+      out.sources = SRCS.map(id => {
+        const q = QUEST_DB[id];
+        const ub = unlockBitsOf(q);
+        return {
+          id, node: q.activateNode,
+          hasOnCompleteArr: Array.isArray(q.onComplete),
+          oneUnlockBit: ub.length === 1,
+          targetsShared: ub.length === 1 && ub[0].quests && ub[0].quests.length === 1 && ub[0].quests[0] === TARGET,
+        };
+      });
+      // in-degree 2: BOTH sources point at the one target
+      out.inDegreeTwo = SRCS.every(id => unlockBitsOf(QUEST_DB[id]).some(b => (b.quests || []).includes(TARGET)));
+      // sources are genuinely distant from the target AND from each other (a real confluence, not a local trio)
+      const tNode = QUEST_DB[TARGET].activateNode;
+      out.targetNodeExists = !!NODE_MAP[tNode] && tNode !== 'TLL';
+      out.geoDistinct = new Set([QUEST_DB[SRCS[0]].activateNode, QUEST_DB[SRCS[1]].activateNode, tNode]).size === 3;
+
+      // legitimacy on a fresh game: target is a real, in-sequence, not-yet-started bounty
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      out.targetUnsetFresh = !(S_story.quests || {})[TARGET];
+      out.targetCanActivate = QuestRuntime.canActivate(TARGET);
+
+      // (1) EACH source independently posts the target on its own fresh game
+      out.eachPostsAlone = SRCS.map(src => {
+        storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+        const msgs = [];
+        QuestRuntime.execBits(QUEST_DB[src].onComplete, { questId: src, pushMsg: m => msgs.push(m) });
+        return {
+          src,
+          posted: (S_story.quests || {})[TARGET] === 'active',
+          // the referral names the shared broker (Yva) + the board — both roads read as one destination
+          referralNamesBrokerAndBoard: msgs.some(m => /Warrant's Board/.test(m) && /Yva/.test(m)),
+        };
+      });
+
+      // (2) CONVERGENCE / order-independence: fire A then B on ONE game — B is a safe no-op,
+      //     target stays 'active', nothing throws (the defining in-degree-2 safety property)
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      let threw = false;
+      try {
+        QuestRuntime.execBits(QUEST_DB[SRCS[0]].onComplete, { questId: SRCS[0], pushMsg: () => {} });
+        const afterFirst = (S_story.quests || {})[TARGET];
+        QuestRuntime.execBits(QUEST_DB[SRCS[1]].onComplete, { questId: SRCS[1], pushMsg: () => {} });
+        const afterSecond = (S_story.quests || {})[TARGET];
+        out.afterFirst = afterFirst; out.afterSecond = afterSecond;
+      } catch (e) { threw = true; }
+      out.convergeThrew = threw;
+
+      // (3) reverse order gives the same result (truly commutative)
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      QuestRuntime.execBits(QUEST_DB[SRCS[1]].onComplete, { questId: SRCS[1], pushMsg: () => {} });
+      QuestRuntime.execBits(QUEST_DB[SRCS[0]].onComplete, { questId: SRCS[0], pushMsg: () => {} });
+      out.reverseSameActive = (S_story.quests || {})[TARGET] === 'active';
+
+      // through-node (FU6 through-flow): the merge target now CONTINUES — it carries exactly one
+      // onward unlock to quest_vs_03 (so it is both a merge target AND a source: a general DAG node)
+      const tgtUnlocks = unlockBitsOf(QUEST_DB[TARGET]);
+      out.mergeContinues = tgtUnlocks.length === 1 && (tgtUnlocks[0].quests || []).length === 1 && tgtUnlocks[0].quests[0] === 'quest_vs_03';
+      // no cycle: the onward leaf terminates and never points back at the confluence or its sources
+      const leafUnlocks = unlockBitsOf(QUEST_DB['quest_vs_03']).flatMap(b => b.quests || []);
+      out.acyclic = leafUnlocks.length === 0 && !leafUnlocks.includes(TARGET) && !SRCS.some(s => leafUnlocks.includes(s));
+      return out;
+    });
+    expect(r.missing).toEqual([]);
+    for (const s of r.sources) {
+      expect(s.hasOnCompleteArr, s.id).toBe(true);
+      expect(s.oneUnlockBit, s.id).toBe(true);          // each edge is a single-target unlock...
+      expect(s.targetsShared, s.id).toBe(true);         // ...at the ONE shared confluence node
+    }
+    expect(r.inDegreeTwo).toBe(true);                   // the defining property: two edges into one target
+    expect(r.targetNodeExists).toBe(true);
+    expect(r.geoDistinct).toBe(true);                   // both sources + target are three distinct distant nodes
+    expect(r.targetUnsetFresh).toBe(true);
+    expect(r.targetCanActivate).toBe(true);
+    for (const e of r.eachPostsAlone) {
+      expect(e.posted, e.src).toBe(true);               // each source ALONE posts the shared bounty
+      expect(e.referralNamesBrokerAndBoard, e.src).toBe(true);
+    }
+    expect(r.afterFirst).toBe('active');                // first completion posts it
+    expect(r.afterSecond).toBe('active');               // second completion is a safe no-op (stays active)
+    expect(r.convergeThrew).toBe(false);                // ...and never throws
+    expect(r.reverseSameActive).toBe(true);             // commutative: B-then-A ≡ A-then-B
+    expect(r.mergeContinues).toBe(true);                // the confluence is a THROUGH-node (out-degree 1 → vs_03)
+    expect(r.acyclic).toBe(true);                       // ...and the onward leaf terminates — no cycle back
+  });
+
+  // ── §BOARD-01-FU6 (through-flow) — a merge node that CONTINUES (the graph is a full DAG) ──────
+  // The convergence made quest_vs_02 a merge (in-degree 2). This proves it is ALSO a source: the
+  // full flow source → Yva → Mordus runs end-to-end. Referral flow passes THROUGH the confluence,
+  // not just into a sink — the topological statement that the referral network is a general DAG.
+  test('§BOARD-01-FU6 (through-flow) — source → merge → onward leaf runs end-to-end and terminates', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const SRC = 'quest_pachelbel_shipment';   // either convergence source works; use one
+      const MERGE = 'quest_vs_02';               // in-degree 2 (convergence) AND out-degree 1 (here)
+      const LEAF = 'quest_vs_03';
+      const out = { missing: [] };
+      for (const id of [SRC, MERGE, LEAF]) if (!QUEST_DB[id]) out.missing.push(id);
+
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      out.leafUnsetFresh = !(S_story.quests || {})[LEAF];
+      out.mergeCanActivate = QuestRuntime.canActivate(MERGE);
+      out.leafCanActivate = QuestRuntime.canActivate(LEAF);
+
+      // hop 1: completing the SOURCE posts the MERGE (convergence edge) — but NOT the leaf yet
+      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} });
+      out.mergeActiveAfterSrc = (S_story.quests || {})[MERGE] === 'active';
+      out.leafStillUnsetAfterSrc = !(S_story.quests || {})[LEAF];   // the onward hop waits for the merge to COMPLETE
+
+      // hop 2: completing the MERGE posts the LEAF (the through/onward edge)
+      const msgs = [];
+      QuestRuntime.execBits(QUEST_DB[MERGE].onComplete, { questId: MERGE, pushMsg: m => msgs.push(m) });
+      out.leafActiveAfterMerge = (S_story.quests || {})[LEAF] === 'active';
+      out.onwardReferralLine = msgs.some(m => /Warrant's Board/.test(m) && /Mordus/.test(m));
+
+      // idempotent + terminal
+      QuestRuntime.execBits(QUEST_DB[MERGE].onComplete, { questId: MERGE, pushMsg: () => {} });
+      out.leafStillActive = (S_story.quests || {})[LEAF] === 'active';
+      out.leafHasNoUnlock = !(QUEST_DB[LEAF].onComplete || []).some(b => b && b.kind === 'unlock');
+      out.geoJumpSrcToMerge = QUEST_DB[SRC].activateNode !== QUEST_DB[MERGE].activateNode;
+      return out;
+    });
+    expect(r.missing).toEqual([]);
+    expect(r.leafUnsetFresh).toBe(true);
+    expect(r.mergeCanActivate).toBe(true);
+    expect(r.leafCanActivate).toBe(true);
+    expect(r.mergeActiveAfterSrc).toBe(true);      // convergence edge posts the merge
+    expect(r.leafStillUnsetAfterSrc).toBe(true);   // ...but the onward hop waits for the merge to COMPLETE
+    expect(r.leafActiveAfterMerge).toBe(true);     // the merge, once done, refers onward (through-node)
+    expect(r.onwardReferralLine).toBe(true);       // a characterful onward line names Mordus + the board
+    expect(r.leafStillActive).toBe(true);          // idempotent
+    expect(r.leafHasNoUnlock).toBe(true);          // the onward leaf terminates — full DAG, no cycle
+    expect(r.geoJumpSrcToMerge).toBe(true);        // the convergence hop still jumps geography (LLA → VS)
+  });
+
   // ── §BOARD-01-FU7 — Warrant standing (reputation): the board becomes progression ──
   // Completing a board-ACCEPTED bounty raises S_story.warrantStanding; tiers gate the
   // board's QUALITY (slate size + a reward-ceiling for premium jobs), never a step.
