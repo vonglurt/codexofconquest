@@ -332,4 +332,100 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     }
     for (const t of r.termini) expect(t.hasUnlock, t.id).toBe(false);   // chains terminate — no cycle
   });
+
+  // ── §BOARD-01-FU6 (1367 chronicle) — a CROSS-REGION referral sweep ──────────────
+  // Six standalone 1367 bounties (Spain → England → France → Baltic → Balkans → East)
+  // linked purely by Warrant reputation — the network reads as a faction, not a sub-arc.
+  // These are skill_check/combat quests: they carry NO `completion` gate, so they complete
+  // via _resolveQuestUQF (onPass), NOT storyCheckQuests (onComplete). The referral therefore
+  // lives in the skill_check bit's onPass — you are referred onward only when you SUCCEED.
+  const CHRONICLE = ['quest_1367_a_najera', 'quest_1367_e_wycliffe', 'quest_1367_f_plague', 'quest_1367_d_hansa', 'quest_1367_c_ottoman', 'quest_1367_b_tamerlane'];
+
+  test('§BOARD-01-FU6 (1367 chronicle) — completing a bounty refers you onward via onPass unlock, across distant regions', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate((CHAIN) => {
+      const out = { edges: [], missing: [], terminus: null };
+      for (const id of CHAIN) if (!QUEST_DB[id]) out.missing.push(id);
+      const scOf = q => (q.bits || []).find(b => b.kind === 'skill_check');
+      for (let i = 0; i < CHAIN.length - 1; i++) {
+        const src = CHAIN[i], dst = CHAIN[i + 1];
+        storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+        S_story.gameDay = 0;
+        const qsrc = QUEST_DB[src], qdst = QUEST_DB[dst];
+        const beforeDst = (S_story.quests || {})[dst] || null;
+        const dstCanActivate = QuestRuntime.canActivate(dst);   // referral target is a legitimate, in-sequence bounty
+        const dstNodeExists = !!NODE_MAP[qdst.activateNode];
+        // fire the source's onPass exactly as _resolveQuestUQF (6823) does on a passing roll
+        const msgs = [];
+        QuestRuntime.execBits(scOf(qsrc).onPass, { questId: src, pushMsg: m => msgs.push(m) });
+        const afterDst = (S_story.quests || {})[dst] || null;
+        // idempotency: a second pass must not throw and must leave the target 'active'
+        QuestRuntime.execBits(scOf(qsrc).onPass, { questId: src, pushMsg: () => {} });
+        const afterTwice = (S_story.quests || {})[dst] || null;
+        out.edges.push({
+          src, dst,
+          onPassIsArr: Array.isArray(scOf(qsrc).onPass),
+          beforeDstUnset: !beforeDst,
+          dstCanActivate, dstNodeExists,
+          unlockedActive: afterDst === 'active',
+          idempotent: afterTwice === 'active',
+          geoJump: qsrc.activateNode !== qdst.activateNode,     // genuinely distant destination
+          referralLine: msgs.some(m => /Warrant's Board/.test(m)),
+        });
+      }
+      // terminus: b_tamerlane closes the chronicle — a narrative but NO onward unlock (no cycle)
+      const last = CHAIN[CHAIN.length - 1];
+      const lastOnPass = scOf(QUEST_DB[last]).onPass;
+      out.terminus = {
+        id: last,
+        hasUnlock: lastOnPass.some(b => b && b.kind === 'unlock'),
+        hasClosingNarrative: lastOnPass.some(b => b && b.kind === 'narrative' && /1367/.test(b.msg || '')),
+      };
+      return out;
+    }, CHRONICLE);
+    expect(r.missing).toEqual([]);
+    expect(r.edges.length).toBe(5);   // six quests, five referral edges
+    for (const e of r.edges) {
+      const tag = e.src + '→' + e.dst;
+      expect(e.onPassIsArr, e.src).toBe(true);
+      expect(e.beforeDstUnset, e.dst).toBe(true);
+      expect(e.dstCanActivate, e.dst).toBe(true);
+      expect(e.dstNodeExists, e.dst).toBe(true);
+      expect(e.unlockedActive, tag).toBe(true);   // onPass unlock posted the follow-on
+      expect(e.idempotent, tag).toBe(true);        // second pass is a safe no-op
+      expect(e.geoJump, tag).toBe(true);           // distinct (distant) destination region
+      expect(e.referralLine, tag).toBe(true);      // a characterful Warrant referral line printed
+    }
+    expect(r.terminus.hasUnlock, r.terminus.id).toBe(false);          // chronicle terminates
+    expect(r.terminus.hasClosingNarrative, r.terminus.id).toBe(true); // ...but still gets a capstone
+  });
+
+  // Engine fix (rides with FU6): an onPass narrative bit must reach the player. Before this,
+  // _resolveQuestUQF wrote it via storyMsg, then its own storyRender tail overwrote
+  // #story-move-msg — so the line flashed and vanished (why no quest had ever used one).
+  // Now onPass narratives are collected and passed as storyRender's prefix; this drives the
+  // REAL resolve path (_rollCeremonia → _resolveQuestUQF) with a forced pass and reads the DOM.
+  test('§BOARD-01-FU6 (1367 chronicle) — onPass referral narrative survives storyRender into #story-move-msg', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      const src = 'quest_1367_a_najera', dst = 'quest_1367_e_wycliffe';
+      const q = QUEST_DB[src];
+      const sc = q.bits.find(b => b.kind === 'skill_check');
+      S_story.currentCode = q.activateNode;   // stand at the source node
+      S_story.quests[src] = 'active';
+      const savedDc = sc.dc; sc.dc = -100;    // force a deterministic PASS (no flaky d20)
+      _rollCeremonia(src);                     // REAL resolve path → _resolveQuestUQF
+      sc.dc = savedDc;                         // restore the real DC
+      const moveMsg = (document.getElementById('story-move-msg') || {}).textContent || '';
+      return {
+        questDone: S_story.quests[src] === 'done',
+        dstActive: S_story.quests[dst] === 'active',
+        referralVisible: /Warrant's Board/.test(moveMsg) && moveMsg.indexOf('🖋️') > -1,
+      };
+    });
+    expect(r.questDone).toBe(true);       // the pass marked it done
+    expect(r.dstActive).toBe(true);       // onPass unlock posted the follow-on bounty
+    expect(r.referralVisible).toBe(true); // ENGINE FIX: the referral reached the player (not clobbered)
+  });
 });
