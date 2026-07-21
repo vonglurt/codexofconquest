@@ -265,4 +265,71 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.stable).toBe(true);
     expect(r.authoredWins).toBe(true);
   });
+
+  // ── §BOARD-01-FU6 — `unlock` as a reward bit: geography-jumping referral chains ──
+  // Completing a Warrant bounty appends a referral (narrative + unlock) to its onComplete
+  // that posts a follow-on bounty at a DISTANT node. This is the file's first QUEST-authored
+  // `unlock` (Inc B was the first live call site; this is the first content author). Drives
+  // the REAL onComplete chains through the REAL execBits, exactly as storyCheckQuests does.
+  test('§BOARD-01-FU6 — completing a bounty refers you onward (unlock in onComplete) across distant nodes', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      // The authored referral chains (source → next). Terminus quests carry NO unlock.
+      const CHAINS = {
+        math:   ['quest_math_01', 'quest_math_02', 'quest_math_03', 'quest_math_04', 'quest_math_05'],
+        rennau: ['quest_tl_01', 'quest_tl_02', 'quest_tl_03'],
+      };
+      const out = { edges: [], termini: [], missing: [] };
+      for (const ids of Object.values(CHAINS)) for (const id of ids) if (!QUEST_DB[id]) out.missing.push(id);
+
+      for (const ids of Object.values(CHAINS)) {
+        for (let i = 0; i < ids.length - 1; i++) {
+          const src = ids[i], dst = ids[i + 1];
+          storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+          S_story.gameDay = 0;
+          const qsrc = QUEST_DB[src], qdst = QUEST_DB[dst];
+          const beforeDst = (S_story.quests || {})[dst] || null;
+          // legitimacy: the referral target is a real, in-sequence bounty on a fresh game
+          const dstCanActivate = QuestRuntime.canActivate(dst);
+          const dstNodeExists  = !!NODE_MAP[qdst.activateNode];
+          // fire the source's completion chain exactly as storyCheckQuests (29394) does
+          const msgs = [];
+          QuestRuntime.execBits(qsrc.onComplete, { questId: src, pushMsg: m => msgs.push(m) });
+          const afterDst = (S_story.quests || {})[dst] || null;
+          // idempotency: a second fire must not throw and must leave the target 'active'
+          QuestRuntime.execBits(qsrc.onComplete, { questId: src, pushMsg: () => {} });
+          const afterTwice = (S_story.quests || {})[dst] || null;
+          out.edges.push({
+            src, dst,
+            srcHasOnCompleteArr: Array.isArray(qsrc.onComplete),
+            beforeDstUnset: !beforeDst,
+            dstCanActivate, dstNodeExists,
+            unlockedActive: afterDst === 'active',
+            idempotent: afterTwice === 'active',
+            geoJump: qsrc.activateNode !== qdst.activateNode,
+            referralLine: msgs.some(m => /Warrant's Board/.test(m)),
+          });
+        }
+        // terminus: the last quest must NOT unlock anything (no cycle / no runaway chain)
+        const last = ids[ids.length - 1];
+        const oc = QUEST_DB[last].onComplete;
+        out.termini.push({ id: last, hasUnlock: Array.isArray(oc) && oc.some(b => b && b.kind === 'unlock') });
+      }
+      return out;
+    });
+    expect(r.missing).toEqual([]);
+    expect(r.edges.length).toBe(6);   // math: 4 edges + rennau: 2 edges
+    for (const e of r.edges) {
+      const tag = e.src + '→' + e.dst;
+      expect(e.srcHasOnCompleteArr, e.src).toBe(true);
+      expect(e.beforeDstUnset, e.dst).toBe(true);        // target not pre-active on a fresh game
+      expect(e.dstCanActivate, e.dst).toBe(true);        // force-activating a legitimately-gated bounty
+      expect(e.dstNodeExists, e.dst).toBe(true);         // ...at a real node (never a broken referral)
+      expect(e.unlockedActive, tag).toBe(true);          // the unlock posted the follow-on
+      expect(e.idempotent, tag).toBe(true);              // second completion is a safe no-op
+      expect(e.geoJump, tag).toBe(true);                 // distinct (distant) destination node
+      expect(e.referralLine, tag).toBe(true);            // a characterful referral line printed
+    }
+    for (const t of r.termini) expect(t.hasUnlock, t.id).toBe(false);   // chains terminate — no cycle
+  });
 });

@@ -10979,6 +10979,8 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
         description:'Cargo: 40 crates, Scholar Kings correspondence, sealed. Consignee: Weimar, Archivist I. Voss. Departure: Day 17. Expected arrival: Day 20. Status: Weather Loss.'
           + (S.wmFirstResearcherKnown ? '\n\nIsolde Voss\'s name on a ship manifest from eleven months ago. Before the revocation. Whatever she was sending arrived nowhere.' : '') }); } },
       { kind:'narrative', msg:'📄 The Harrow Manifest obtained. Rennau is Friendly.' },
+      { kind:'narrative', msg:'🪧 Rennau reads the manifest twice, then slides a second ledger across: the harbor has been shut three weeks under Emergency Protocol 7 — no lost ship gets chased through a closed port. Adjutant Vonn holds the seal at Tilbury. A new bounty surfaces on the Warrant\'s Board.' }, /* §BOARD-01-FU6 referral edge */
+      { kind:'unlock', quests:['quest_tl_02'] },
     ],
     desc:"Harbor Master Rennau keeps the ledger of ships that haven\'t come back. The Harrow is the most recent. Find its manifest.",
     hint:'Search the Storefront docks for the Harrow manifest (loot or monster drop).',
@@ -10990,7 +10992,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
   },
   quest_tl_02: { id:'quest_tl_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flagsAny:['tlEmbargoChallenged','tlEmbargoDismissed'] }, title:'Rennau: The Embargo',
-    onComplete:[ { kind:'narrative', msg:'📋 Embargo decision logged.' } ], // §ARCH-01 W7c
+    onComplete:[ { kind:'narrative', msg:'📋 Embargo decision logged.' }, { kind:'narrative', msg:'🪧 Then the docks deliver what no protocol could: a survivor of the Harrow, three weeks on foot, asking for the Harbor Master by name. Ori. Rennau wants you there when she talks. A new bounty surfaces on the Warrant\'s Board.' }, { kind:'unlock', quests:['quest_tl_03'] } ], // §ARCH-01 W7c · §BOARD-01-FU6 referral edge
     desc:"The harbor has been closed for three weeks under Emergency Trade Protocol 7. Adjutant Vonn enforces it politely and completely — he is not wrong about the protocol, only about whether the protocol is right. The manifest proves ships have gone missing. The embargo prevents finding out why. Both things are true at the same time and the Conclave considers this a policy matter above Vonn's grade. Rennau has the ledger and no leverage. Decide what to do with the manifest.",
     hint:'Speak with Adjutant Vonn at Tilbury, then choose how to handle the ship manifest.',
     activateNode:null, 
@@ -21497,28 +21499,28 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   quest_math_01: { id:"quest_math_01", type:"side", title:"The Number That Means Nothing", desc:"A scriptorium record in Jerusalem documents the moment zero arrived from Baghdad in the ninth century — one number that means nothing, enables everything. Al-Khwarizmi used it in 830. Fibonacci carried it west in 1202. The original treatise is now in the Zero Corridor, the passage where zero entered European mathematics. Collect it.", hint:"Find the Zero Treatise in the Zero Corridor, north of the Event Horizon Station.", passText:"Zero Treatise collected. The number that means nothing, retrieved from the corridor where it changed everything.", failText:"The Zero Treatise is in the Zero Corridor. Enter through the Neon Undercity east panel and climb to the Event Horizon Station, then north.", activateNode:"JRS", waypointNode:"ZERO", xpAward:350, reward:300,
     schema:"UQF-1.0",
     bits:[],
-    onComplete:[{kind:'reward',gold:300},{kind:'narrative',msg:'💰 +300gp — tucked into the treatise, a copyist\'s fee from the Liber Abaci ledger, uncollected since 1202.'}],
+    onComplete:[{kind:'reward',gold:300},{kind:'narrative',msg:'💰 +300gp — tucked into the treatise, a copyist\'s fee from the Liber Abaci ledger, uncollected since 1202.'},{kind:'narrative',msg:'🧮 In the treatise margin, a later hand: ask what the snowflake knows. A matching bounty surfaces on the Warrant\'s Board.'},{kind:'unlock',quests:['quest_math_02']}], /* §BOARD-01-FU6 referral edge */
     gate:{},
     completion:{itemsAll:['Zero Treatise'],atNode:'ZERO'},
   },
   quest_math_02: { id:"quest_math_02", type:"side", title:"What the Snowflake Knows", desc:"The station tells you: a snowflake has exactly twelve symmetries — six rotations, six reflections — which is dihedral group D6. This is the smallest non-trivial example of what the Monster's Manifold contains. The manuscript proving the connection is on the central plinth, east of the station. Collect it.", hint:"Find the 12-Symmetry Manuscript in the Monster's Manifold, east of the Event Horizon Station.", passText:"12-Symmetry Manuscript collected. The snowflake's six-fold symmetry, the small example of the Monster Group.", failText:"The 12-Symmetry Manuscript is in the Monster's Manifold, one step east of the Event Horizon Station.", activateNode:"EHZ", waypointNode:"MONS", xpAward:400, reward:350,
     schema:"UQF-1.0",
     bits:[],
-    onComplete:[{kind:'reward',gold:350},{kind:'narrative',msg:'💰 +350gp — the north wall, grudgingly: "You perceived three of them correctly. That deserves something."'}],
+    onComplete:[{kind:'reward',gold:350},{kind:'narrative',msg:'💰 +350gp — the north wall, grudgingly: "You perceived three of them correctly. That deserves something."'},{kind:'narrative',msg:'🧮 The manuscript folds open to a second plate: twelve symmetries were the small example — now weigh the quintic, the equation that defeats every radical. A new bounty surfaces on the Warrant\'s Board.'},{kind:'unlock',quests:['quest_math_03']}], /* §BOARD-01-FU6 referral edge */
     gate:{},
     completion:{itemsAll:['12-Symmetry Manuscript'],atNode:'MONS'},
   },
   quest_math_03: { id:"quest_math_03", type:"side", title:"The Quintic's Impossibility", desc:"A ledger entry at the Bruges Cloth Hall references the Hamadani Failure Record — a ninth-century Persian document logging seventeen attempts to solve the quintic equation by radicals. Hamadani failed. Abel proved in 1823 that failure was the only possible outcome: the quintic cannot be solved by radicals. The record is at the Event Horizon Station, filed under results that required five centuries to be understood.", hint:"Find the Hamadani Failure Record at the Event Horizon Station. Enter through the Neon Undercity east panel.", passText:"Hamadani Failure Record collected. Seventeen documented failures, each one a step toward the proof of impossibility.", failText:"The Hamadani Failure Record is at the Event Horizon Station. The panel is in the east wall of the Neon Undercity.", activateNode:"OST", waypointNode:"EHZ", xpAward:400, reward:350,
     schema:"UQF-1.0",
     bits:[],
-    onComplete:[{kind:'reward',gold:350},{kind:'narrative',msg:'💰 +350gp — the station: "Conservation law. Hamadani\'s effort is conserved. You carry it now."'}],
+    onComplete:[{kind:'reward',gold:350},{kind:'narrative',msg:'💰 +350gp — the station: "Conservation law. Hamadani\'s effort is conserved. You carry it now."'},{kind:'narrative',msg:'🧮 Impossibility, filed and understood. Pinned beneath the record: three counting systems, west in Jerusalem, still waiting for the number they never carried. A new bounty surfaces on the Warrant\'s Board.'},{kind:'unlock',quests:['quest_math_04']}], /* §BOARD-01-FU6 referral edge */
     gate:{},
     completion:{itemsAll:['Hamadani Failure Record'],atNode:'EHZ'},
   },
   quest_math_04: { id:"quest_math_04", type:"side", title:"The Counting Quest", desc:"Three counting systems passed through Jerusalem: Greek sphere reckoning from the Antikythera calculation tradition, Byzantine ledger numerals from the imperial tax offices, Roman surveyor notation from the engineering corps. Each system worked. None of them had zero. The documents were copied here and sent west, where they eventually met the number they had been missing. The complete bundle is in the Zero Corridor.", hint:"Find the Counting Document Bundle in the Zero Corridor, north of the Event Horizon Station.", passText:"Counting Document Bundle collected. Three civilizations counting toward the same number, finally assembled.", failText:"The Counting Document Bundle is in the Zero Corridor. Reach the Event Horizon Station through the Neon Undercity, then go north.", activateNode:"JRS", waypointNode:"ZERO", xpAward:500, reward:500,
     schema:"UQF-1.0",
     bits:[],
-    onComplete:[{kind:'reward',gold:500},{kind:'narrative',msg:'💰 +500gp — three surveyors\' wages, three civilizations, one settlement — compounded.'}],
+    onComplete:[{kind:'reward',gold:500},{kind:'narrative',msg:'💰 +500gp — three surveyors\' wages, three civilizations, one settlement — compounded.'},{kind:'narrative',msg:'🧮 Three civilizations, one settlement. One page remains, and it does not read like the others — a difference of exactly 1 that no one can explain, waiting in Cantor\'s Attic. A new bounty surfaces on the Warrant\'s Board.'},{kind:'unlock',quests:['quest_math_05']}], /* §BOARD-01-FU6 referral edge */
     gate:{},
     completion:{itemsAll:['Counting Document Bundle'],atNode:'ZERO'},
   },
