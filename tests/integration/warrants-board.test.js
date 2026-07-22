@@ -1027,4 +1027,47 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.standingAfterTwice).toBe(4);          // idempotent — no double-credit
     expect(r.posAfter).toEqual(r.posBefore);       // completing/crediting never moves the player
   });
+
+  // ── §BOARD-01 Inc C — authored rumors on the referral-network anchors ────────
+  // The FU6 topology quests (diamond / convergence+through-flow / fork / the three
+  // referral lines) are the board's signature multi-step jobs, so each carries a
+  // bespoke Crimson-Warrant q.rumor rather than the FU5 terrain-synthesized fallback.
+  // This guards against accidental loss (a serializer bug, a bad PUT) WITHOUT pinning
+  // exact wording: it asserts each anchor still has a non-empty authored rumor and that
+  // the render path (_boardRumorLine) prefers it verbatim over the synthesized line.
+  test('§BOARD-01 Inc C — referral-network anchors carry authored rumors the board surfaces verbatim', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const ANCHORS = [
+        'quest_hunt_01', 'sq_2', 'quest_hunt2_01', 'quest_df_01',                          // diamond (closed crossings)
+        'quest_pachelbel_shipment', 'quest_couperin_lute', 'quest_vs_02', 'quest_vs_03',   // convergence + through-flow
+        'quest_brynn_ledger', 'quest_wm_01', 'quest_vs_01',                                // fork (Brynn's ledger)
+        'quest_math_01', 'quest_math_02', 'quest_math_03', 'quest_math_04', 'quest_math_05', // Mathematician's Road
+        'quest_tl_01', 'quest_tl_02', 'quest_tl_03',                                       // Rennau's Harrow
+        'quest_1367_a_najera', 'quest_1367_e_wycliffe', 'quest_1367_f_plague',
+        'quest_1367_d_hansa', 'quest_1367_c_ottoman', 'quest_1367_b_tamerlane',            // the 1367 chronicle
+      ];
+      return ANCHORS.map(id => {
+        const q = QUEST_DB[id];
+        const rumor = q && q.rumor;
+        const authored = typeof rumor === 'string' && rumor.trim().length > 0;
+        // render path prefers the authored hook verbatim (never the flat/synth fallback)
+        const line = _boardRumorLine({ rumor, destTerrain: 'Nowhere', destShort: 'Nowhere', _k: 0 });
+        return {
+          id,
+          exists: !!q,
+          authored,
+          verbatim: authored && line === rumor,
+          noVoidMark: authored && rumor.indexOf('⚠') === -1,   // ⚠ is reserved for FU8 Void-tide pins
+        };
+      });
+    });
+    expect(r.length).toBe(25);
+    for (const row of r) {
+      expect(row.exists).toBe(true);      // the anchor quest still exists
+      expect(row.authored).toBe(true);    // …and still carries a bespoke hook (not lost to a serializer/PUT bug)
+      expect(row.verbatim).toBe(true);    // _boardRumorLine surfaces the authored rumor verbatim over the synth line
+      expect(row.noVoidMark).toBe(true);  // ordinary bounties never wear the Void ⚠ label (that is FU8-only)
+    }
+  });
 });
