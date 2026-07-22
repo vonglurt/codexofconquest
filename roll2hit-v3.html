@@ -29623,10 +29623,12 @@ function storyCollectLoot(node) {
 /* ── Layer 3: Quest + Journal ── */
 function storyCheckQuests(node) {
   const msgs = [];
-  // Activate quests at this node (epic quests activate explicitly via modal/defeat)
-  Object.values(QUEST_DB).forEach(q => {
-    if (q.type === 'epic') return;
-    if (!S_story.quests[q.id] && q.activateNode === node.code) {
+  // Activate quests at this node (epic quests activate explicitly via modal/defeat).
+  // §VM-01-F-FU — _questsByNode(node.code) replaces the old O(2,850) Object.values scan;
+  // it returns exactly the non-epic quests whose activateNode === node.code, so the
+  // epic + node filters are already applied and the msgs order is unchanged.
+  _questsByNode(node.code).forEach(q => {
+    if (!S_story.quests[q.id]) {
       if (q.activateCond && !q.activateCond()) return;
       if (q.schema === 'UQF-1.0' && !QuestRuntime.canActivate(q.id)) return;   // §ARCH-01 Phase 2 — declarative gate
       S_story.quests[q.id] = 'active';
@@ -36097,6 +36099,33 @@ function _questNodes() {
     for (const q of Object.values(QUEST_DB)) if (q && q.activateNode) _questNodeSet.add(q.activateNode);
   }
   return _questNodeSet;
+}
+
+// §VM-01-F-FU — activateNode → [quests] index, retiring storyCheckQuests' per-render
+// linear scan over all ~2,850 quests. Excludes epics (activated explicitly, not by
+// arrival) and quests with no activateNode, mirroring the scan's own filters. Size-
+// guarded: a rebuild fires whenever QUEST_DB's entry count changes. The shipped game's
+// QUEST_DB is a frozen const so this never fires there; the test harness, the world-
+// builder editor, and a future §MESH-delivered quest inject at runtime, and the size-
+// guard catches every such add/remove with NO injector cooperation — there is no cache
+// to invalidate. (A simultaneous add-one/remove-one that keeps the count fixed would go
+// stale; that never happens with a const DB and no test performs it.) Insertion order
+// is preserved — we push in Object.values order — so a multi-quest node activates its
+// quests in the same order as the old scan and the 📋 msgs stream stays byte-identical.
+let _questsByNodeIndex = null, _questsByNodeCount = -1;
+function _questsByNode(nodeCode) {
+  const n = Object.keys(QUEST_DB).length;
+  if (!_questsByNodeIndex || n !== _questsByNodeCount) {
+    _questsByNodeIndex = new Map();
+    for (const q of Object.values(QUEST_DB)) {
+      if (!q || q.type === 'epic' || !q.activateNode) continue;
+      let arr = _questsByNodeIndex.get(q.activateNode);
+      if (!arr) _questsByNodeIndex.set(q.activateNode, arr = []);
+      arr.push(q);
+    }
+    _questsByNodeCount = n;
+  }
+  return _questsByNodeIndex.get(nodeCode) || [];
 }
 
 // ── §BOARD-01: The Warrant's Board — rumor/bounty discovery ──────────────────
