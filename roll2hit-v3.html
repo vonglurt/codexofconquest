@@ -21703,6 +21703,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
    Ref: lab-reports/lab-report-quest-api-architecture.md +
         lab-reports/lab-report-uqf-migration-playbook.md
    ════════════════════════════════════════════════════════════════════════ */
+// ◆◆◆ QUEST:CORE:START ◆◆◆
 const SCHEMA_VERSION = 'UQF-1.0';
 
 /* Bit contracts — required/optional fields + a structural validator per kind.
@@ -21761,208 +21762,262 @@ function adaptLegacyQuest(id, q) {
   return q;
 }
 
-const QuestRuntime = {
-  SCHEMA_VERSION,
-  _schema: SCHEMA_VERSION,   // back-compat alias for the prior stub field
+/* §VM-01-D — kernel-internal migration shim: pump a bit-chain generator to
+   completion, THROWING on an unresolved ask. The pure twin of the host driver's
+   _uqfRunToCompletion (lab-report-vm01a §6.2); resolveSkillCheck's inner
+   synchronous pump uses it so a require('./quest') server needs no host driver.
+   Plain chains (every live skill_check onPass/onFail — scope-fenced against a
+   `choice`) pump straight through, byte-identical to the host driver. */
+function _questRunToCompletion(gen) {
+  let step = gen.next();
+  while (!step.done) {
+    if (step.value && step.value.ask) throw new Error('[UQF] runToCompletion hit an unresolved ask: ' + step.value.ask);
+    step = gen.next();
+  }
+}
 
-  /* Declarative activation gate (replaces the activateCond arrow function).
-     No gate, or only a legacy-wrapped gate, evaluates permissively here —
-     legacy quests keep using their own activateCond on the live path. */
-  canActivate(questId) {
-    const q = QUEST_DB[questId];
-    if (!q) return false;
-    const g = q.gate;
-    if (!g || g._legacyFn) return true;
-    if (g.flags    && !g.flags.every(f => !!S_story[f]))   return false;
-    if (g.flagsAny && g.flagsAny.length && !g.flagsAny.some(f => !!S_story[f])) return false;
-    if (g.notFlags && g.notFlags.some(f => !!S_story[f]))  return false;
-    // flagEquals → { field: value }, strict equality on an S_story field (ALL required).
-    // Replaces enum/branch-state gates like `S_story.sbChosenRole === 'fight'` (role choices).
-    if (g.flagEquals) { for (const k in g.flagEquals) if (S_story[k] !== g.flagEquals[k]) return false; }
-    if (g.nodes    && !g.nodes.every(n => (S_story.visited || S_story.visitedNodes || {})[n])) return false;
-    // Sequential-arc chaining (replaces `(S_story.quests['prev']||'') !== ''` and `=== 'done'`):
-    // questsAttempted → every listed quest has a non-empty status (active/done/failed/complete);
-    // questsDone      → every listed quest has reached a terminal pass status (done/complete).
-    const QS = S_story.quests || {};
-    if (g.questsAttempted && !g.questsAttempted.every(id => (QS[id] || '') !== '')) return false;
-    if (g.questsDone && !g.questsDone.every(id => QS[id] === 'done' || QS[id] === 'complete')) return false;
-    // NPC-favor threshold (replaces `(S_story.npcFavorability||{}).<npc> >= n`):
-    // favorMin → object of { npcKey: minFavor }, all required.
-    if (g.favorMin) { const fav = S_story.npcFavorability || {}; for (const npc in g.favorMin) if ((fav[npc] || 0) < g.favorMin[npc]) return false; }
-    // Defeated-battle prerequisite (replaces `!!S_story.defeatedBattles[code]` in
-    // activateCond); ALL listed battle codes must be defeated. Mirrors the
-    // `battles` term in canComplete but as an AND-gate on activation.
-    if (g.battles && !g.battles.every(b => !!(S_story.defeatedBattles || {})[b])) return false;
-    // notBattles → NONE of the listed battles may be defeated yet (`!defeatedBattles[code]`).
-    if (g.notBattles && g.notBattles.some(b => !!(S_story.defeatedBattles || {})[b])) return false;
-    // shardsMin → S_story.shards must meet a threshold (`(shards||0) >= n`).
-    if (g.shardsMin && (S_story.shards || 0) < g.shardsMin) return false;
-    // restedAtMin → { nodeCode: minRests } against S_story.shortRestedAtNodes, all required.
-    if (g.restedAtMin) { const rst = S_story.shortRestedAtNodes || {}; for (const nd in g.restedAtMin) if ((rst[nd] || 0) < g.restedAtMin[nd]) return false; }
-    // sleptAt → array of node codes that must each have a truthy S_story.sleptAtNodes[code]
-    // (replaces `!!(S_story.sleptAtNodes||{})[code]` in activateCond).
-    if (g.sleptAt && !g.sleptAt.every(nd => !!(S_story.sleptAtNodes || {})[nd])) return false;
-    // flagsPath → dot-paths from S_story, ALL truthy (§ARCH-01 W3b; same semantics as
-    // the canComplete term — nested flag objects like `yugurtTourBeat.pip`).
-    if (g.flagsPath && !g.flagsPath.every(p => !!p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), S_story))) return false;
-    // countMin → [{path, min}], ALL required (§ARCH-01 W4; same coercion as the
-    // canComplete term — number → itself · array → length · object → key count ·
-    // missing → 0). Activation thresholds like `(fishingCatchLog||[]).length >= 1`.
-    if (g.countMin && !g.countMin.every(c => {
-      const v = c.path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), S_story);
-      const num = (typeof v === 'number') ? v : Array.isArray(v) ? v.length : (v && typeof v === 'object') ? Object.keys(v).length : 0;
-      return num >= c.min;
-    })) return false;
-    return true;
-  },
+/* §VM-01-D — the quest VM as a host-injected kernel. `host.getState()` returns
+   the live progress state (resolved at CALL time, so §VM-01-C's per-call
+   execBits(chain,{state}) seam survives and a mutating load is always seen);
+   `host.effects` is the table of ~10 host side-effects, each a thunk carrying its
+   own `typeof`-guard. On the live path getState()===S_story and each effect calls
+   the same host fn it replaced, so the runtime is byte-identical to the pre-D
+   object literal — the whole quest-runtime regression is the no-op proof. */
+function createQuestRuntime(host) {
+  const H = host || {};
+  const E = H.effects || {};
+  const S = () => (typeof H.getState === 'function' ? H.getState() : undefined);
+  const rt = {
+    SCHEMA_VERSION,
+    _schema: SCHEMA_VERSION,   // back-compat alias for the prior stub field
 
-  /* Declarative completion gate for UQF side quests (replaces completeFn).
-     `flags` are ALL-required (AND); `flagsAny` + `battles` form a single
-     OR-group (any one satisfies it); `notFlags` are NONE-allowed. `battles`
-     entries match defeated-combat codes in S_story.defeatedBattles. This
-     models the compound "AND(pages) ∧ (flag OR defeated-battle)" condition
-     (lab Open-Q #5) without a boolean-expression language. */
-  canComplete(questId) {
-    const q = QUEST_DB[questId];
-    if (!q || !q.completion) return false;
-    const g = q.completion;
-    if (g.flags && !g.flags.every(f => !!S_story[f])) return false;
-    const QS = S_story.quests || {};
-    // OR-group: any of flagsAny / defeated battles / questsComplete (strict
-    // `=== 'complete'`, for chaining off a *side* quest's completion) satisfies it.
-    // items → §ARCH-01 W3 item_check term (replaces legacy `completeItems`): each
-    // listed name is one OR entry, matched with the SAME fuzzy two-way substring
-    // rule as the legacy storyCheckQuests check (`inv.name.includes(ci) || ci.includes(inv.name)`).
-    // itemsMinAny → §ARCH-01 W7d OR-position exact-name count entries [{name, min}]:
-    // one OR entry per requirement, satisfied when the inventory holds ≥min exact-name
-    // copies (`.filter(i => i.name === name).length >= min` — the itemsAll matcher, but
-    // in the OR-group). Added for quest_wm_01's "archive letter OR ≥3 Scholar Kings'
-    // Seals" — the last completeFn, inexpressible in OR position by any prior term.
-    const orList = (g.flagsAny || []).map(f => !!S_story[f])
-      .concat((g.battles || []).map(b => !!(S_story.defeatedBattles || {})[b]))
-      .concat((g.questsComplete || []).map(id => QS[id] === 'complete'))
-      .concat((g.items || []).map(ci => (S_story.inventory || []).some(inv => inv.name.includes(ci) || ci.includes(inv.name))))
-      .concat((g.itemsMinAny || []).map(e => (S_story.inventory || []).filter(i => i.name === e.name).length >= (e.min || 1)));
-    const orCount = (g.flagsAny || []).length + (g.battles || []).length + (g.questsComplete || []).length + (g.items || []).length + (g.itemsMinAny || []).length;
-    if (orCount && !orList.some(Boolean)) return false;
-    if (g.notFlags && g.notFlags.some(f => !!S_story[f])) return false;
-    // atNode → completes only while the player is currently standing at this node
-    // (replaces completeFn:()=>S_story.currentCode==='CODE'; waypoint-arrival completion).
-    if (g.atNode && S_story.currentCode !== g.atNode) return false;
-    // §ARCH-01 W3b terms (all AND-position):
-    // flagsPath → dot-paths from S_story, ALL truthy — nested flag objects like
-    // `yugurtTourBeat.pip` (replaces `!!(S_story.yugurtTourBeat||{}).pip`).
-    if (g.flagsPath && !g.flagsPath.every(p => !!p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), S_story))) return false;
-    // countMin → [{path, min}], ALL required. Value coerced like the legacy counters:
-    // number → itself · array → length · object → key count · missing → 0
-    // (replaces `(S_story.pitTrainingWins||0)>=3`, `(fishingCatchLog||[]).length>=n`,
-    // `Object.keys(defeatedBattles).length>=n`, `(catKills||{}).beefy_tom>=n`).
-    if (g.countMin && !g.countMin.every(c => {
-      const v = c.path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), S_story);
-      const num = (typeof v === 'number') ? v : Array.isArray(v) ? v.length : (v && typeof v === 'object') ? Object.keys(v).length : 0;
-      return num >= c.min;
-    })) return false;
-    // itemsAll → AND-position exact-name inventory requirement (vs the fuzzy OR `items`
-    // term above): each entry is a name string (≥1 copy) or {name, min} (≥min copies);
-    // exact `.some(i => i.name === X)` / `.filter(...).length >= min` parity.
-    if (g.itemsAll && !g.itemsAll.every(e => {
-      const name = (typeof e === 'string') ? e : e.name, min = (typeof e === 'string') ? 1 : (e.min || 1);
-      return (S_story.inventory || []).filter(i => i.name === name).length >= min;
-    })) return false;
-    return true;
-  },
-
-  /* Execute an ordered bit chain. §VM-01-A: this is now a GENERATOR — a handler
-     written as a function* (choice, below) may suspend by yielding an `ask`
-     envelope; a plain handler returns undefined and runs to completion exactly as
-     before. Unknown kinds are warned + skipped. Synchronous callers wrap the
-     returned generator in _uqfRunToCompletion() (which throws on an unresolved ask,
-     so plain chains are byte-identical to the old straight-line loop). */
-  *execBits(bits, ctx) {
-    const c = ctx || {};
-    if (!c.state) c.state = S_story;   // §VM-01-C: the _ENV — handlers write/read c.state, defaulting to the live S_story (no-op on the live path; an explicit {state} runs the chain against a scratch state, the seam D/E need)
-    for (const bit of (bits || [])) {
-      const h = QuestRuntime.HANDLERS[bit.kind];
-      if (!h) { console.warn('[UQF] unknown bit kind:', bit.kind); continue; }
-      const r = h(bit, c);
-      if (r && typeof r.next === 'function') yield* r;   // handler suspended → propagate its yields
-    }
-  },
-
-  /* Pure roll — single source of the skill-check math, mirroring
-     _rollCeremonia(): mod = ⌊(score-10)/2⌋, prof = 2+⌊(level-1)/4⌋, plus the
-     one-shot iodine buff (consumed here, exactly like the legacy resolver) and
-     the lake-magic all-ability bonus. Returns every component for display.
-     §VM-01-B: the d20 now draws the seeded stream (_seededNext), so the roll is
-     reproducible from a save — "Pure roll" is honest once the randomness is
-     threaded through explicit S_story.rngState rather than hidden global entropy. */
-  _rollSkill(stat) {
-    const ability    = String(stat || '').toLowerCase();
-    const abilityVal = ((S_story.abilityScores || {})[ability] || 10);
-    const mod  = Math.floor((abilityVal - 10) / 2);
-    const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
-    const d20  = Math.ceil(_seededNext() * 20);
-    const iodineBonus = S_story.iodineBuffActive ? (S_story.iodineBuffBonus || 3) : 0;
-    if (S_story.iodineBuffActive) { S_story.iodineBuffActive = false; S_story.iodineBuffBonus = 0; }
-    const lmAll = (typeof _lakeMagicBonuses === 'function') ? (_lakeMagicBonuses().allAbility || 0) : 0;
-    return { d20, mod, prof, iodineBonus, lmAll, total: d20 + mod + prof + iodineBonus + lmAll };
-  },
-
-  /* Resolve a skill_check bit: roll, then route into onPass / onFail. */
-  resolveSkillCheck(bit, ctx) {
-    const r = QuestRuntime._rollSkill(bit.stat);
-    const pass = r.total >= bit.dc;
-    _uqfRunToCompletion(QuestRuntime.execBits(pass ? (bit.onPass || []) : (bit.onFail || []), ctx));   // §VM-01-A (skill_check stays synchronous this increment — a choice in onPass/onFail throws, by scope-fence §10)
-    return { d20: r.d20, total: r.total, pass };
-  },
-
-  /* Each handler is bound to the real game state/functions (see header). */
-  HANDLERS: {
-    skill_check(bit, ctx) { QuestRuntime.resolveSkillCheck(bit, ctx); },
-    // §VM-01-C: state effects write ctx.state (the _ENV), not the S_story global. On the
-    // live path ctx.state IS S_story (execBits default), so this is byte-identical.
-    flag_write(bit, ctx)  { const st = ctx.state; (bit.set || []).forEach(f => st[f] = true); (bit.clear || []).forEach(f => st[f] = false); },
-    reward(bit, ctx) {
-      const st = ctx.state;   // §VM-01-C — progress state rides the env; _checkLevelUp/mpMintStamp stay host effects (§4.3)
-      if (bit.xp)   { st.xp = (st.xp || 0) + bit.xp; if (typeof _checkLevelUp === 'function') _checkLevelUp(); }
-      if (bit.gold) { st.gold = (st.gold || 0) + bit.gold; }
-      // mpMintStamp — §MESH-01i slice 2b: acquisition-while-connected mints the
-      // item (async; stamps mintId on the pushed copy). No-op offline/SP.
-      if (bit.items && bit.items.length) { st.inventory = st.inventory || []; bit.items.forEach(i => { const it = { ...i }; st.inventory.push(it); mpMintStamp(it); }); }
-      if (bit.knowledge) { st.knowledge = st.knowledge || []; st.knowledge.push(bit.knowledge); }
+    /* Declarative activation gate (replaces the activateCond arrow function).
+       No gate, or only a legacy-wrapped gate, evaluates permissively here —
+       legacy quests keep using their own activateCond on the live path. */
+    canActivate(questId) {
+      const q = E.getQuest ? E.getQuest(questId) : null;
+      if (!q) return false;
+      const g = q.gate;
+      if (!g || g._legacyFn) return true;
+      const st = S();
+      if (g.flags    && !g.flags.every(f => !!st[f]))   return false;
+      if (g.flagsAny && g.flagsAny.length && !g.flagsAny.some(f => !!st[f])) return false;
+      if (g.notFlags && g.notFlags.some(f => !!st[f]))  return false;
+      // flagEquals → { field: value }, strict equality on a state field (ALL required).
+      // Replaces enum/branch-state gates like `sbChosenRole === 'fight'` (role choices).
+      if (g.flagEquals) { for (const k in g.flagEquals) if (st[k] !== g.flagEquals[k]) return false; }
+      if (g.nodes    && !g.nodes.every(n => (st.visited || st.visitedNodes || {})[n])) return false;
+      // Sequential-arc chaining (replaces `(quests['prev']||'') !== ''` and `=== 'done'`):
+      // questsAttempted → every listed quest has a non-empty status (active/done/failed/complete);
+      // questsDone      → every listed quest has reached a terminal pass status (done/complete).
+      const QS = st.quests || {};
+      if (g.questsAttempted && !g.questsAttempted.every(id => (QS[id] || '') !== '')) return false;
+      if (g.questsDone && !g.questsDone.every(id => QS[id] === 'done' || QS[id] === 'complete')) return false;
+      // NPC-favor threshold (replaces `(npcFavorability||{}).<npc> >= n`):
+      // favorMin → object of { npcKey: minFavor }, all required.
+      if (g.favorMin) { const fav = st.npcFavorability || {}; for (const npc in g.favorMin) if ((fav[npc] || 0) < g.favorMin[npc]) return false; }
+      // Defeated-battle prerequisite (replaces `!!defeatedBattles[code]` in
+      // activateCond); ALL listed battle codes must be defeated. Mirrors the
+      // `battles` term in canComplete but as an AND-gate on activation.
+      if (g.battles && !g.battles.every(b => !!(st.defeatedBattles || {})[b])) return false;
+      // notBattles → NONE of the listed battles may be defeated yet (`!defeatedBattles[code]`).
+      if (g.notBattles && g.notBattles.some(b => !!(st.defeatedBattles || {})[b])) return false;
+      // shardsMin → shards must meet a threshold (`(shards||0) >= n`).
+      if (g.shardsMin && (st.shards || 0) < g.shardsMin) return false;
+      // restedAtMin → { nodeCode: minRests } against shortRestedAtNodes, all required.
+      if (g.restedAtMin) { const rst = st.shortRestedAtNodes || {}; for (const nd in g.restedAtMin) if ((rst[nd] || 0) < g.restedAtMin[nd]) return false; }
+      // sleptAt → array of node codes that must each have a truthy sleptAtNodes[code]
+      // (replaces `!!(sleptAtNodes||{})[code]` in activateCond).
+      if (g.sleptAt && !g.sleptAt.every(nd => !!(st.sleptAtNodes || {})[nd])) return false;
+      // flagsPath → dot-paths from the state, ALL truthy (§ARCH-01 W3b; same semantics as
+      // the canComplete term — nested flag objects like `yugurtTourBeat.pip`).
+      if (g.flagsPath && !g.flagsPath.every(p => !!p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st))) return false;
+      // countMin → [{path, min}], ALL required (§ARCH-01 W4; same coercion as the
+      // canComplete term — number → itself · array → length · object → key count ·
+      // missing → 0). Activation thresholds like `(fishingCatchLog||[]).length >= 1`.
+      if (g.countMin && !g.countMin.every(c => {
+        const v = c.path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st);
+        const num = (typeof v === 'number') ? v : Array.isArray(v) ? v.length : (v && typeof v === 'object') ? Object.keys(v).length : 0;
+        return num >= c.min;
+      })) return false;
+      return true;
     },
-    combat(bit) { if (typeof storyPreBattle === 'function') storyPreBattle({ ...NODE_MAP[S_story.currentCode], code: bit.nodeCode || bit.key, battle: { label: bit.label, key: bit.key, count: bit.count || 1 } }); },
-    narrative(bit, ctx) { if (!bit.msg) return; if (ctx && ctx.pushMsg) ctx.pushMsg(bit.msg); else if (typeof storyMsg === 'function') storyMsg(bit.msg); /* template path: Phase 2 renderNamedTemplate */ },
-    item_remove(bit, ctx) { const inv = ctx.state.inventory || []; const i = inv.findIndex(x => x.name === bit.name); if (i > -1) inv.splice(i, 1); },   // §VM-01-C: env inventory
-    mission_bit(bit, ctx) { if (typeof _grantMissionBit === 'function') _grantMissionBit(bit.flag, bit.label); else ctx.state[bit.flag] = true; },   // §VM-01-C: fallback writes the env; _grantMissionBit stays host
-    // §ARCH-01 W7c — NPC favorability: `set` writes an absolute level; `add`
-    // increments the current level, clamped to `cap` (default 3 = Dear Friend).
-    favor(bit) {
-      if (typeof _setNpcFavor !== 'function') return;
-      if (typeof bit.add === 'number') _setNpcFavor(bit.npc, Math.min(bit.cap == null ? 3 : bit.cap, (_npcFavor(bit.npc) || 0) + bit.add));
-      else _setNpcFavor(bit.npc, bit.set);
-    },
-    item_check(bit, ctx) { const inv = ctx.state.inventory || []; ctx._itemCheck = inv.filter(x => x.name === bit.name).length >= (bit.count || 1); },   // §VM-01-C: reads the env inventory
-    unlock(bit, ctx) { (bit.quests || []).forEach(qid => { const st = ctx.state; st.quests = st.quests || {}; if (!st.quests[qid]) st.quests[qid] = 'active'; }); },   // §VM-01-C: env quests
-    // §VM-01-A — the first SUSPENDING handler. Its contract already validates (choice
-    // in BIT_CONTRACTS: prompt + ≥2 options, each a {label, bits[]}). It yields an `ask`
-    // envelope; the driver renders the choice + resumes with the picked index; ONLY the
-    // chosen option's bits apply — AFTER the pick, so a tab-close mid-choice writes no
-    // partial state (lab report §6.3). The resume value is an index, so the data author
-    // never couples to presentation.
-    *choice(bit, ctx) {
-      const picked = yield { ask: 'choice', prompt: bit.prompt, options: (bit.options || []).map(o => o.label) };
-      const opt = (bit.options || [])[picked];
-      if (opt) yield* QuestRuntime.execBits(opt.bits || [], ctx || {});
-    },
-    // ctx is passed through (W7c) so conditional completion effects can route
-    // messages into the storyCheckQuests msgs stream via ctx.pushMsg; pre-W7c
-    // fns take (S) only and ignore it.
-    _legacy_fn(bit, ctx) { if (typeof bit.fn === 'function') bit.fn(ctx.state, ctx); },   // §VM-01-C: legacy fns receive the env (live path: ctx.state === S_story). Still runs arbitrary code — §VM-01-E's blocker.
-  },
 
-  validateQuest, adaptLegacyQuest,
-};
+    /* Declarative completion gate for UQF side quests (replaces completeFn).
+       `flags` are ALL-required (AND); `flagsAny` + `battles` form a single
+       OR-group (any one satisfies it); `notFlags` are NONE-allowed. `battles`
+       entries match defeated-combat codes in defeatedBattles. This models the
+       compound "AND(pages) ∧ (flag OR defeated-battle)" condition (lab Open-Q #5)
+       without a boolean-expression language. */
+    canComplete(questId) {
+      const q = E.getQuest ? E.getQuest(questId) : null;
+      if (!q || !q.completion) return false;
+      const g = q.completion;
+      const st = S();
+      if (g.flags && !g.flags.every(f => !!st[f])) return false;
+      const QS = st.quests || {};
+      // OR-group: any of flagsAny / defeated battles / questsComplete (strict
+      // `=== 'complete'`, for chaining off a *side* quest's completion) satisfies it.
+      // items → §ARCH-01 W3 item_check term (replaces legacy `completeItems`): each
+      // listed name is one OR entry, matched with the SAME fuzzy two-way substring
+      // rule as the legacy storyCheckQuests check (`inv.name.includes(ci) || ci.includes(inv.name)`).
+      // itemsMinAny → §ARCH-01 W7d OR-position exact-name count entries [{name, min}]:
+      // one OR entry per requirement, satisfied when the inventory holds ≥min exact-name
+      // copies (`.filter(i => i.name === name).length >= min` — the itemsAll matcher, but
+      // in the OR-group). Added for quest_wm_01's "archive letter OR ≥3 Scholar Kings'
+      // Seals" — the last completeFn, inexpressible in OR position by any prior term.
+      const orList = (g.flagsAny || []).map(f => !!st[f])
+        .concat((g.battles || []).map(b => !!(st.defeatedBattles || {})[b]))
+        .concat((g.questsComplete || []).map(id => QS[id] === 'complete'))
+        .concat((g.items || []).map(ci => (st.inventory || []).some(inv => inv.name.includes(ci) || ci.includes(inv.name))))
+        .concat((g.itemsMinAny || []).map(e => (st.inventory || []).filter(i => i.name === e.name).length >= (e.min || 1)));
+      const orCount = (g.flagsAny || []).length + (g.battles || []).length + (g.questsComplete || []).length + (g.items || []).length + (g.itemsMinAny || []).length;
+      if (orCount && !orList.some(Boolean)) return false;
+      if (g.notFlags && g.notFlags.some(f => !!st[f])) return false;
+      // atNode → completes only while the player is currently standing at this node
+      // (replaces completeFn:()=>currentCode==='CODE'; waypoint-arrival completion).
+      if (g.atNode && st.currentCode !== g.atNode) return false;
+      // §ARCH-01 W3b terms (all AND-position):
+      // flagsPath → dot-paths from the state, ALL truthy — nested flag objects like
+      // `yugurtTourBeat.pip` (replaces `!!(yugurtTourBeat||{}).pip`).
+      if (g.flagsPath && !g.flagsPath.every(p => !!p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st))) return false;
+      // countMin → [{path, min}], ALL required. Value coerced like the legacy counters:
+      // number → itself · array → length · object → key count · missing → 0
+      // (replaces `(pitTrainingWins||0)>=3`, `(fishingCatchLog||[]).length>=n`,
+      // `Object.keys(defeatedBattles).length>=n`, `(catKills||{}).beefy_tom>=n`).
+      if (g.countMin && !g.countMin.every(c => {
+        const v = c.path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st);
+        const num = (typeof v === 'number') ? v : Array.isArray(v) ? v.length : (v && typeof v === 'object') ? Object.keys(v).length : 0;
+        return num >= c.min;
+      })) return false;
+      // itemsAll → AND-position exact-name inventory requirement (vs the fuzzy OR `items`
+      // term above): each entry is a name string (≥1 copy) or {name, min} (≥min copies);
+      // exact `.some(i => i.name === X)` / `.filter(...).length >= min` parity.
+      if (g.itemsAll && !g.itemsAll.every(e => {
+        const name = (typeof e === 'string') ? e : e.name, min = (typeof e === 'string') ? 1 : (e.min || 1);
+        return (st.inventory || []).filter(i => i.name === name).length >= min;
+      })) return false;
+      return true;
+    },
+
+    /* Execute an ordered bit chain. §VM-01-A: this is a GENERATOR — a handler
+       written as a function* (choice, below) may suspend by yielding an `ask`
+       envelope; a plain handler returns undefined and runs to completion exactly as
+       before. §VM-01-C: ctx.state is the _ENV (defaults to the live state via
+       getState). Unknown kinds are warned + skipped. Synchronous callers wrap the
+       returned generator in a runToCompletion (throws on an unresolved ask, so
+       plain chains are byte-identical to the old straight-line loop). */
+    *execBits(bits, ctx) {
+      const c = ctx || {};
+      if (!c.state) c.state = S();   // §VM-01-C: the _ENV — handlers write/read c.state, defaulting to the live state
+      for (const bit of (bits || [])) {
+        const h = rt.HANDLERS[bit.kind];
+        if (!h) { console.warn('[UQF] unknown bit kind:', bit.kind); continue; }
+        const r = h(bit, c);
+        if (r && typeof r.next === 'function') yield* r;   // handler suspended → propagate its yields
+      }
+    },
+
+    /* Pure roll — single source of the skill-check math, mirroring
+       _rollCeremonia(): mod = ⌊(score-10)/2⌋, prof = 2+⌊(level-1)/4⌋, plus the
+       one-shot iodine buff (consumed here, exactly like the legacy resolver) and
+       the lake-magic all-ability bonus. Returns every component for display.
+       §VM-01-B: the d20 draws the injected seeded stream (effects.rng), so the roll
+       is reproducible from a save. §VM-01-D: the sheet + buff ride the live state
+       via getState (host-fence, §4.3) — the roll reads/consumes the real sheet. */
+    _rollSkill(stat) {
+      const st = S();
+      const ability    = String(stat || '').toLowerCase();
+      const abilityVal = ((st.abilityScores || {})[ability] || 10);
+      const mod  = Math.floor((abilityVal - 10) / 2);
+      const prof = 2 + Math.floor(((st.level || 1) - 1) / 4);
+      const d20  = Math.ceil(E.rng() * 20);
+      const iodineBonus = st.iodineBuffActive ? (st.iodineBuffBonus || 3) : 0;
+      if (st.iodineBuffActive) { st.iodineBuffActive = false; st.iodineBuffBonus = 0; }
+      const lmAll = E.lakeMagic ? ((E.lakeMagic() || {}).allAbility || 0) : 0;
+      return { d20, mod, prof, iodineBonus, lmAll, total: d20 + mod + prof + iodineBonus + lmAll };
+    },
+
+    /* Resolve a skill_check bit: roll, then route into onPass / onFail. */
+    resolveSkillCheck(bit, ctx) {
+      const r = rt._rollSkill(bit.stat);
+      const pass = r.total >= bit.dc;
+      _questRunToCompletion(rt.execBits(pass ? (bit.onPass || []) : (bit.onFail || []), ctx));   // §VM-01-A/D (skill_check stays synchronous — a choice in onPass/onFail throws, by scope-fence)
+      return { d20: r.d20, total: r.total, pass };
+    },
+
+    /* Each handler is bound to ctx.state (the _ENV) + the injected effects. */
+    HANDLERS: {
+      skill_check(bit, ctx) { rt.resolveSkillCheck(bit, ctx); },
+      // §VM-01-C: state effects write ctx.state (the _ENV). On the live path
+      // ctx.state IS the live state (execBits default), so this is byte-identical.
+      flag_write(bit, ctx)  { const st = ctx.state; (bit.set || []).forEach(f => st[f] = true); (bit.clear || []).forEach(f => st[f] = false); },
+      reward(bit, ctx) {
+        const st = ctx.state;   // §VM-01-C — progress state rides the env; checkLevelUp/mint stay host effects (§4.3)
+        if (bit.xp)   { st.xp = (st.xp || 0) + bit.xp; if (E.checkLevelUp) E.checkLevelUp(); }
+        if (bit.gold) { st.gold = (st.gold || 0) + bit.gold; }
+        // mint — §MESH-01i slice 2b: acquisition-while-connected mints the item
+        // (async; stamps mintId on the pushed copy). No-op offline/SP.
+        if (bit.items && bit.items.length) { st.inventory = st.inventory || []; bit.items.forEach(i => { const it = { ...i }; st.inventory.push(it); if (E.mint) E.mint(it); }); }
+        if (bit.knowledge) { st.knowledge = st.knowledge || []; st.knowledge.push(bit.knowledge); }
+      },
+      combat(bit) { if (E.preBattle) E.preBattle({ ...(E.getNode ? E.getNode(S().currentCode) : null), code: bit.nodeCode || bit.key, battle: { label: bit.label, key: bit.key, count: bit.count || 1 } }); },
+      narrative(bit, ctx) { if (!bit.msg) return; if (ctx && ctx.pushMsg) ctx.pushMsg(bit.msg); else if (E.msg) E.msg(bit.msg); /* template path: Phase 2 renderNamedTemplate */ },
+      item_remove(bit, ctx) { const inv = ctx.state.inventory || []; const i = inv.findIndex(x => x.name === bit.name); if (i > -1) inv.splice(i, 1); },   // §VM-01-C: env inventory
+      mission_bit(bit, ctx) { if (E.grantMissionBit) E.grantMissionBit(bit.flag, bit.label, ctx.state); else ctx.state[bit.flag] = true; },   // §VM-01-C/D: host grant, else env fallback
+      // §ARCH-01 W7c — NPC favorability: `set` writes an absolute level; `add`
+      // increments the current level, clamped to `cap` (default 3 = Dear Friend).
+      favor(bit) {
+        if (!E.setFavor) return;
+        if (typeof bit.add === 'number') E.setFavor(bit.npc, Math.min(bit.cap == null ? 3 : bit.cap, (E.getFavor ? E.getFavor(bit.npc) : 0) + bit.add));
+        else E.setFavor(bit.npc, bit.set);
+      },
+      item_check(bit, ctx) { const inv = ctx.state.inventory || []; ctx._itemCheck = inv.filter(x => x.name === bit.name).length >= (bit.count || 1); },   // §VM-01-C: reads the env inventory
+      unlock(bit, ctx) { (bit.quests || []).forEach(qid => { const st = ctx.state; st.quests = st.quests || {}; if (!st.quests[qid]) st.quests[qid] = 'active'; }); },   // §VM-01-C: env quests
+      // §VM-01-A — the first SUSPENDING handler. Its contract already validates (choice
+      // in BIT_CONTRACTS: prompt + ≥2 options, each a {label, bits[]}). It yields an `ask`
+      // envelope; the driver renders the choice + resumes with the picked index; ONLY the
+      // chosen option's bits apply — AFTER the pick, so a tab-close mid-choice writes no
+      // partial state. The resume value is an index, so the data author never couples to
+      // presentation.
+      *choice(bit, ctx) {
+        const picked = yield { ask: 'choice', prompt: bit.prompt, options: (bit.options || []).map(o => o.label) };
+        const opt = (bit.options || [])[picked];
+        if (opt) yield* rt.execBits(opt.bits || [], ctx || {});
+      },
+      // ctx is passed through (W7c) so conditional completion effects can route
+      // messages into the storyCheckQuests msgs stream via ctx.pushMsg; pre-W7c
+      // fns take (S) only and ignore it.
+      _legacy_fn(bit, ctx) { if (typeof bit.fn === 'function') bit.fn(ctx.state, ctx); },   // §VM-01-C: legacy fns receive the env. Still runs arbitrary code — §VM-01-E's blocker.
+    },
+
+    validateQuest, adaptLegacyQuest,
+  };
+  return rt;
+}
+// ◆◆◆ QUEST:CORE:END ◆◆◆
+
+// §VM-01-D — bind the QUEST:CORE kernel to the live host: getState returns the
+// live S_story; each effect is a thin, individually-guarded thunk around the real
+// host fn, so on the live path this createQuestRuntime(...) is byte-identical to
+// the pre-D QuestRuntime object literal. (The kernel itself names no global — that
+// is what lets js/quest.js run headless on the server; see check-quest-parity.js.)
+const QuestRuntime = createQuestRuntime({
+  getState: () => S_story,
+  effects: {
+    getQuest:  id => QUEST_DB[id],
+    getNode:   code => NODE_MAP[code],
+    rng:       () => _seededNext(),
+    lakeMagic: () => (typeof _lakeMagicBonuses === 'function' ? _lakeMagicBonuses() : {}),
+    checkLevelUp: () => { if (typeof _checkLevelUp === 'function') _checkLevelUp(); },
+    mint:      it => { if (typeof mpMintStamp === 'function') mpMintStamp(it); },
+    preBattle: n => { if (typeof storyPreBattle === 'function') storyPreBattle(n); },
+    msg:       t => { if (typeof storyMsg === 'function') storyMsg(t); },
+    grantMissionBit: (flag, label, st) => { if (typeof _grantMissionBit === 'function') _grantMissionBit(flag, label); else if (st) st[flag] = true; },
+    setFavor:  (npc, level) => { if (typeof _setNpcFavor === 'function') _setNpcFavor(npc, level); },
+    getFavor:  npc => (typeof _npcFavor === 'function' ? _npcFavor(npc) : 0),
+  },
+});
 
 // Expose for the worldbuilder bridge + Playwright (inert references only).
 if (typeof window !== 'undefined') {
