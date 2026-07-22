@@ -130,6 +130,7 @@ package.json  node_modules/
 # Core documentation (kept in two-way sync with the HTML)
 index.md                ← master index + cross-reference table (start here)
 world.md  story.md  mechanics.md  monsters.md  maps.md  quest.md
+prompt.md               ← operating directive: how to build/add content (read before contributing)
 CONTRIBUTING.md         ← development policies & directives
 BACKLOG.md              ← outstanding work / to-do list
 plan-archive.md         ← archived completed work
@@ -164,6 +165,7 @@ documented item traces back to a line in the HTML.
 | `monsters.md` | MONSTER_POOL entries + terrain coverage |
 | `maps.md` | Grid layout, road net, room layer, node network |
 | `quest.md` | Quest catalogue (UQF format) |
+| `prompt.md` | **Operating directive** — how to take a BACKLOG item from spec to shipped content (work loop · API · inserting pattern · invariants). Read before contributing. |
 | `CONTRIBUTING.md` | How to work in this repo — API-first, cell-first, free-movement, test rules, lab-report policy |
 | `BACKLOG.md` | Outstanding / planned work |
 
