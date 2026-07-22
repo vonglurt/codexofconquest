@@ -101,6 +101,125 @@ function _questRunToCompletion(gen) {
   }
 }
 
+/* §VM-01-F — the ACTIVATION gate leaf: the ~15 declarative activation terms,
+   ALL-required (implicit AND across the terms of one leaf object). Pure — reads
+   only the leaf `g` and the state `st`. Extracted verbatim from canActivate so a
+   bare gate (no all/any/not) dispatches straight here, byte-identical. */
+function _matchActivationLeaf(g, st) {
+  if (g.flags    && !g.flags.every(f => !!st[f]))   return false;
+  if (g.flagsAny && g.flagsAny.length && !g.flagsAny.some(f => !!st[f])) return false;
+  if (g.notFlags && g.notFlags.some(f => !!st[f]))  return false;
+  // flagEquals → { field: value }, strict equality on a state field (ALL required).
+  // Replaces enum/branch-state gates like `sbChosenRole === 'fight'` (role choices).
+  if (g.flagEquals) { for (const k in g.flagEquals) if (st[k] !== g.flagEquals[k]) return false; }
+  if (g.nodes    && !g.nodes.every(n => (st.visited || st.visitedNodes || {})[n])) return false;
+  // Sequential-arc chaining (replaces `(quests['prev']||'') !== ''` and `=== 'done'`):
+  // questsAttempted → every listed quest has a non-empty status (active/done/failed/complete);
+  // questsDone      → every listed quest has reached a terminal pass status (done/complete).
+  const QS = st.quests || {};
+  if (g.questsAttempted && !g.questsAttempted.every(id => (QS[id] || '') !== '')) return false;
+  if (g.questsDone && !g.questsDone.every(id => QS[id] === 'done' || QS[id] === 'complete')) return false;
+  // NPC-favor threshold (replaces `(npcFavorability||{}).<npc> >= n`):
+  // favorMin → object of { npcKey: minFavor }, all required.
+  if (g.favorMin) { const fav = st.npcFavorability || {}; for (const npc in g.favorMin) if ((fav[npc] || 0) < g.favorMin[npc]) return false; }
+  // Defeated-battle prerequisite (replaces `!!defeatedBattles[code]` in
+  // activateCond); ALL listed battle codes must be defeated. Mirrors the
+  // `battles` term in canComplete but as an AND-gate on activation.
+  if (g.battles && !g.battles.every(b => !!(st.defeatedBattles || {})[b])) return false;
+  // notBattles → NONE of the listed battles may be defeated yet (`!defeatedBattles[code]`).
+  if (g.notBattles && g.notBattles.some(b => !!(st.defeatedBattles || {})[b])) return false;
+  // shardsMin → shards must meet a threshold (`(shards||0) >= n`).
+  if (g.shardsMin && (st.shards || 0) < g.shardsMin) return false;
+  // restedAtMin → { nodeCode: minRests } against shortRestedAtNodes, all required.
+  if (g.restedAtMin) { const rst = st.shortRestedAtNodes || {}; for (const nd in g.restedAtMin) if ((rst[nd] || 0) < g.restedAtMin[nd]) return false; }
+  // sleptAt → array of node codes that must each have a truthy sleptAtNodes[code]
+  // (replaces `!!(sleptAtNodes||{})[code]` in activateCond).
+  if (g.sleptAt && !g.sleptAt.every(nd => !!(st.sleptAtNodes || {})[nd])) return false;
+  // flagsPath → dot-paths from the state, ALL truthy (§ARCH-01 W3b; same semantics as
+  // the canComplete term — nested flag objects like `yugurtTourBeat.pip`).
+  if (g.flagsPath && !g.flagsPath.every(p => !!p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st))) return false;
+  // countMin → [{path, min}], ALL required (§ARCH-01 W4; same coercion as the
+  // canComplete term — number → itself · array → length · object → key count ·
+  // missing → 0). Activation thresholds like `(fishingCatchLog||[]).length >= 1`.
+  if (g.countMin && !g.countMin.every(c => {
+    const v = c.path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st);
+    const num = (typeof v === 'number') ? v : Array.isArray(v) ? v.length : (v && typeof v === 'object') ? Object.keys(v).length : 0;
+    return num >= c.min;
+  })) return false;
+  return true;
+}
+
+/* §VM-01-F — the COMPLETION gate leaf (replaces completeFn). `flags` are ALL-required
+   (AND); `flagsAny` + `battles` + `questsComplete` + `items` form a single OR-group
+   (any one satisfies it); `notFlags` are NONE-allowed. Pure — reads only `g` + `st`.
+   Extracted verbatim from canComplete, minus the deleted single-use `itemsMinAny`
+   term (§VM-01-F: OR-position exact-name count is now `itemsAll` under `{any}`). */
+function _matchCompletionLeaf(g, st) {
+  if (g.flags && !g.flags.every(f => !!st[f])) return false;
+  const QS = st.quests || {};
+  // OR-group: any of flagsAny / defeated battles / questsComplete (strict
+  // `=== 'complete'`, for chaining off a *side* quest's completion) satisfies it.
+  // items → §ARCH-01 W3 item_check term (replaces legacy `completeItems`): each
+  // listed name is one OR entry, matched with the SAME fuzzy two-way substring
+  // rule as the legacy storyCheckQuests check (`inv.name.includes(ci) || ci.includes(inv.name)`).
+  const orList = (g.flagsAny || []).map(f => !!st[f])
+    .concat((g.battles || []).map(b => !!(st.defeatedBattles || {})[b]))
+    .concat((g.questsComplete || []).map(id => QS[id] === 'complete'))
+    .concat((g.items || []).map(ci => (st.inventory || []).some(inv => inv.name.includes(ci) || ci.includes(inv.name))));
+  const orCount = (g.flagsAny || []).length + (g.battles || []).length + (g.questsComplete || []).length + (g.items || []).length;
+  if (orCount && !orList.some(Boolean)) return false;
+  if (g.notFlags && g.notFlags.some(f => !!st[f])) return false;
+  // atNode → completes only while the player is currently standing at this node
+  // (replaces completeFn:()=>currentCode==='CODE'; waypoint-arrival completion).
+  if (g.atNode && st.currentCode !== g.atNode) return false;
+  // §ARCH-01 W3b terms (all AND-position):
+  // flagsPath → dot-paths from the state, ALL truthy — nested flag objects like
+  // `yugurtTourBeat.pip` (replaces `!!(yugurtTourBeat||{}).pip`).
+  if (g.flagsPath && !g.flagsPath.every(p => !!p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st))) return false;
+  // countMin → [{path, min}], ALL required. Value coerced like the legacy counters:
+  // number → itself · array → length · object → key count · missing → 0
+  // (replaces `(pitTrainingWins||0)>=3`, `(fishingCatchLog||[]).length>=n`,
+  // `Object.keys(defeatedBattles).length>=n`, `(catKills||{}).beefy_tom>=n`).
+  if (g.countMin && !g.countMin.every(c => {
+    const v = c.path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st);
+    const num = (typeof v === 'number') ? v : Array.isArray(v) ? v.length : (v && typeof v === 'object') ? Object.keys(v).length : 0;
+    return num >= c.min;
+  })) return false;
+  // itemsAll → AND-position exact-name inventory requirement (vs the fuzzy OR `items`
+  // term above): each entry is a name string (≥1 copy) or {name, min} (≥min copies);
+  // exact `.some(i => i.name === X)` / `.filter(...).length >= min` parity. §VM-01-F:
+  // also the OR-position exact-count matcher (place under `{any}`) — supersedes itemsMinAny.
+  if (g.itemsAll && !g.itemsAll.every(e => {
+    const name = (typeof e === 'string') ? e : e.name, min = (typeof e === 'string') ? 1 : (e.min || 1);
+    return (st.inventory || []).filter(i => i.name === name).length >= min;
+  })) return false;
+  return true;
+}
+
+/* §VM-01-F — the gate expression compiler. A gate NODE is either a boolean
+   combinator over child nodes — {all:[…]} (∧) · {any:[…]} (∨) · {not:node} (¬) —
+   or a LEAF: a bare object of the declarative terms above, evaluated by the mode's
+   leaf matcher. A bare gate (no all/any/not) is a single leaf, so all pre-F gates
+   compile to `st => _match…Leaf(g, st)` — byte-identical behaviour. Returns a
+   closure of `st`, so the compiled predicate closes over NOTHING runtime-specific
+   (safe to share across the live runtime and a headless scratch runtime). */
+function _compileGate(node, mode) {
+  if (node && node.all) { const k = node.all.map(n => _compileGate(n, mode)); return st => k.every(f => f(st)); }
+  if (node && node.any) { const k = node.any.map(n => _compileGate(n, mode)); return st => k.some(f => f(st)); }
+  if (node && node.not) { const c = _compileGate(node.not, mode);            return st => !c(st); }
+  return mode === 'complete' ? (st => _matchCompletionLeaf(node, st)) : (st => _matchActivationLeaf(node, st));
+}
+/* Compile-once memo — keyed by the immutable gate object, so a compiled predicate
+   is built the first time a gate is evaluated and reused every render thereafter
+   (don't interpret the tree per render). The key is authored data that never
+   mutates, so the cache is correct forever and needs no invalidation. */
+const _gateCache = new WeakMap();
+function _gatePred(node, mode) {
+  let f = _gateCache.get(node);
+  if (!f) { f = _compileGate(node, mode); _gateCache.set(node, f); }
+  return f;
+}
+
 /* §VM-01-D — the quest VM as a host-injected kernel. `host.getState()` returns
    the live progress state (resolved at CALL time, so §VM-01-C's per-call
    execBits(chain,{state}) seam survives and a mutating load is always seen);
@@ -118,111 +237,25 @@ function createQuestRuntime(host) {
 
     /* Declarative activation gate (replaces the activateCond arrow function).
        No gate, or only a legacy-wrapped gate, evaluates permissively here —
-       legacy quests keep using their own activateCond on the live path. */
+       legacy quests keep using their own activateCond on the live path.
+       §VM-01-F: the gate is compiled once (memoised by _gatePred) into a boolean
+       tree over the activation-leaf terms, then called with the live state. */
     canActivate(questId) {
       const q = E.getQuest ? E.getQuest(questId) : null;
       if (!q) return false;
       const g = q.gate;
       if (!g || g._legacyFn) return true;
-      const st = S();
-      if (g.flags    && !g.flags.every(f => !!st[f]))   return false;
-      if (g.flagsAny && g.flagsAny.length && !g.flagsAny.some(f => !!st[f])) return false;
-      if (g.notFlags && g.notFlags.some(f => !!st[f]))  return false;
-      // flagEquals → { field: value }, strict equality on a state field (ALL required).
-      // Replaces enum/branch-state gates like `sbChosenRole === 'fight'` (role choices).
-      if (g.flagEquals) { for (const k in g.flagEquals) if (st[k] !== g.flagEquals[k]) return false; }
-      if (g.nodes    && !g.nodes.every(n => (st.visited || st.visitedNodes || {})[n])) return false;
-      // Sequential-arc chaining (replaces `(quests['prev']||'') !== ''` and `=== 'done'`):
-      // questsAttempted → every listed quest has a non-empty status (active/done/failed/complete);
-      // questsDone      → every listed quest has reached a terminal pass status (done/complete).
-      const QS = st.quests || {};
-      if (g.questsAttempted && !g.questsAttempted.every(id => (QS[id] || '') !== '')) return false;
-      if (g.questsDone && !g.questsDone.every(id => QS[id] === 'done' || QS[id] === 'complete')) return false;
-      // NPC-favor threshold (replaces `(npcFavorability||{}).<npc> >= n`):
-      // favorMin → object of { npcKey: minFavor }, all required.
-      if (g.favorMin) { const fav = st.npcFavorability || {}; for (const npc in g.favorMin) if ((fav[npc] || 0) < g.favorMin[npc]) return false; }
-      // Defeated-battle prerequisite (replaces `!!defeatedBattles[code]` in
-      // activateCond); ALL listed battle codes must be defeated. Mirrors the
-      // `battles` term in canComplete but as an AND-gate on activation.
-      if (g.battles && !g.battles.every(b => !!(st.defeatedBattles || {})[b])) return false;
-      // notBattles → NONE of the listed battles may be defeated yet (`!defeatedBattles[code]`).
-      if (g.notBattles && g.notBattles.some(b => !!(st.defeatedBattles || {})[b])) return false;
-      // shardsMin → shards must meet a threshold (`(shards||0) >= n`).
-      if (g.shardsMin && (st.shards || 0) < g.shardsMin) return false;
-      // restedAtMin → { nodeCode: minRests } against shortRestedAtNodes, all required.
-      if (g.restedAtMin) { const rst = st.shortRestedAtNodes || {}; for (const nd in g.restedAtMin) if ((rst[nd] || 0) < g.restedAtMin[nd]) return false; }
-      // sleptAt → array of node codes that must each have a truthy sleptAtNodes[code]
-      // (replaces `!!(sleptAtNodes||{})[code]` in activateCond).
-      if (g.sleptAt && !g.sleptAt.every(nd => !!(st.sleptAtNodes || {})[nd])) return false;
-      // flagsPath → dot-paths from the state, ALL truthy (§ARCH-01 W3b; same semantics as
-      // the canComplete term — nested flag objects like `yugurtTourBeat.pip`).
-      if (g.flagsPath && !g.flagsPath.every(p => !!p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st))) return false;
-      // countMin → [{path, min}], ALL required (§ARCH-01 W4; same coercion as the
-      // canComplete term — number → itself · array → length · object → key count ·
-      // missing → 0). Activation thresholds like `(fishingCatchLog||[]).length >= 1`.
-      if (g.countMin && !g.countMin.every(c => {
-        const v = c.path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st);
-        const num = (typeof v === 'number') ? v : Array.isArray(v) ? v.length : (v && typeof v === 'object') ? Object.keys(v).length : 0;
-        return num >= c.min;
-      })) return false;
-      return true;
+      return _gatePred(g, 'activate')(S());   // §VM-01-C/D seam: state resolved at CALL time
     },
 
     /* Declarative completion gate for UQF side quests (replaces completeFn).
-       `flags` are ALL-required (AND); `flagsAny` + `battles` form a single
-       OR-group (any one satisfies it); `notFlags` are NONE-allowed. `battles`
-       entries match defeated-combat codes in defeatedBattles. This models the
-       compound "AND(pages) ∧ (flag OR defeated-battle)" condition (lab Open-Q #5)
-       without a boolean-expression language. */
+       §VM-01-F: compiled once (memoised by _gatePred) into a boolean tree over the
+       completion-leaf terms. The leaf models "AND(pages) ∧ (flag OR battle OR item)"
+       (lab Open-Q #5); {all}/{any}/{not} now compose leaves for any other shape. */
     canComplete(questId) {
       const q = E.getQuest ? E.getQuest(questId) : null;
       if (!q || !q.completion) return false;
-      const g = q.completion;
-      const st = S();
-      if (g.flags && !g.flags.every(f => !!st[f])) return false;
-      const QS = st.quests || {};
-      // OR-group: any of flagsAny / defeated battles / questsComplete (strict
-      // `=== 'complete'`, for chaining off a *side* quest's completion) satisfies it.
-      // items → §ARCH-01 W3 item_check term (replaces legacy `completeItems`): each
-      // listed name is one OR entry, matched with the SAME fuzzy two-way substring
-      // rule as the legacy storyCheckQuests check (`inv.name.includes(ci) || ci.includes(inv.name)`).
-      // itemsMinAny → §ARCH-01 W7d OR-position exact-name count entries [{name, min}]:
-      // one OR entry per requirement, satisfied when the inventory holds ≥min exact-name
-      // copies (`.filter(i => i.name === name).length >= min` — the itemsAll matcher, but
-      // in the OR-group). Added for quest_wm_01's "archive letter OR ≥3 Scholar Kings'
-      // Seals" — the last completeFn, inexpressible in OR position by any prior term.
-      const orList = (g.flagsAny || []).map(f => !!st[f])
-        .concat((g.battles || []).map(b => !!(st.defeatedBattles || {})[b]))
-        .concat((g.questsComplete || []).map(id => QS[id] === 'complete'))
-        .concat((g.items || []).map(ci => (st.inventory || []).some(inv => inv.name.includes(ci) || ci.includes(inv.name))))
-        .concat((g.itemsMinAny || []).map(e => (st.inventory || []).filter(i => i.name === e.name).length >= (e.min || 1)));
-      const orCount = (g.flagsAny || []).length + (g.battles || []).length + (g.questsComplete || []).length + (g.items || []).length + (g.itemsMinAny || []).length;
-      if (orCount && !orList.some(Boolean)) return false;
-      if (g.notFlags && g.notFlags.some(f => !!st[f])) return false;
-      // atNode → completes only while the player is currently standing at this node
-      // (replaces completeFn:()=>currentCode==='CODE'; waypoint-arrival completion).
-      if (g.atNode && st.currentCode !== g.atNode) return false;
-      // §ARCH-01 W3b terms (all AND-position):
-      // flagsPath → dot-paths from the state, ALL truthy — nested flag objects like
-      // `yugurtTourBeat.pip` (replaces `!!(yugurtTourBeat||{}).pip`).
-      if (g.flagsPath && !g.flagsPath.every(p => !!p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st))) return false;
-      // countMin → [{path, min}], ALL required. Value coerced like the legacy counters:
-      // number → itself · array → length · object → key count · missing → 0
-      // (replaces `(pitTrainingWins||0)>=3`, `(fishingCatchLog||[]).length>=n`,
-      // `Object.keys(defeatedBattles).length>=n`, `(catKills||{}).beefy_tom>=n`).
-      if (g.countMin && !g.countMin.every(c => {
-        const v = c.path.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st);
-        const num = (typeof v === 'number') ? v : Array.isArray(v) ? v.length : (v && typeof v === 'object') ? Object.keys(v).length : 0;
-        return num >= c.min;
-      })) return false;
-      // itemsAll → AND-position exact-name inventory requirement (vs the fuzzy OR `items`
-      // term above): each entry is a name string (≥1 copy) or {name, min} (≥min copies);
-      // exact `.some(i => i.name === X)` / `.filter(...).length >= min` parity.
-      if (g.itemsAll && !g.itemsAll.every(e => {
-        const name = (typeof e === 'string') ? e : e.name, min = (typeof e === 'string') ? 1 : (e.min || 1);
-        return (st.inventory || []).filter(i => i.name === name).length >= min;
-      })) return false;
-      return true;
+      return _gatePred(q.completion, 'complete')(S());   // §VM-01-C/D seam: state resolved at CALL time
     },
 
     /* Execute an ordered bit chain. §VM-01-A: this is a GENERATOR — a handler

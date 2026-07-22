@@ -9241,18 +9241,22 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
 // legacy roll body is gone (warned no-op for non-UQF ids — see the rewritten
 // Phase-2 test), storyCheckQuests' completeFn/completeItems completion terms are
 // gone, and adaptLegacyQuest is an identity no-op (rewritten Phase-1 test).
-// quest_wm_01 — the last completeFn carrier — migrated via the new OR-position
-// completion term `itemsMinAny` (exact-name inventory count, [{name, min}]).
-// Remaining non-UQF entries by design: quest_math_01–05 (activate-only, §MATH-01
-// completion-design gap) + the 30 dead blq_05–blq_10 book-stubs (Wave 2ad).
+// quest_wm_01 — the last completeFn carrier — migrated to a declarative completion
+// gate. §VM-01-F re-expressed it in the gate grammar: the single-use `itemsMinAny`
+// term is deleted, and "archive letter OR ≥3 seals" is now {any:[{flagsAny},
+// {itemsAll:[{name,min:3}]}]} — itemsAll's exact-name/≥min matcher lifted into OR
+// position by {any}. Remaining non-UQF entries by design: quest_math_01–05
+// (activate-only, §MATH-01 gap) + the 30 dead blq_05–blq_10 book-stubs (Wave 2ad).
 
-test.describe('§ARCH-01 W7d — legacy branches retired; wm_01 migrated via itemsMinAny', () => {
-  test('itemsMinAny truth table: exact-name count in OR position, composes with the OR-group', async ({ page }) => {
+test.describe('§ARCH-01 W7d / §VM-01-F — legacy branches retired; wm_01 in the gate grammar', () => {
+  test('AST {any} + itemsAll replaces the deleted itemsMinAny: same OR-position exact-count truth table', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       const seal = () => ({ name:"Scholar Kings' Seal" });
+      // §VM-01-F — the grammar equivalent of the deleted `itemsMinAny` OR-entry:
+      // itemsAll (exact-name/≥min) placed under {any} beside the flag.
       QUEST_DB.q_w7d_min = { schema:'UQF-1.0', id:'q_w7d_min', type:'side', title:'x', gate:{}, bits:[],
-        completion:{ flagsAny:['w7dLetter'], itemsMinAny:[{ name:"Scholar Kings' Seal", min:3 }] } };
+        completion:{ any:[ { flagsAny:['w7dLetter'] }, { itemsAll:[{ name:"Scholar Kings' Seal", min:3 }] } ] } };
       const out = {};
       delete S_story.w7dLetter; S_story.inventory = [seal(), seal()];
       out.twoSeals = QuestRuntime.canComplete('q_w7d_min');                    // 2 < 3, no flag
@@ -9261,9 +9265,9 @@ test.describe('§ARCH-01 W7d — legacy branches retired; wm_01 migrated via ite
       S_story.inventory = [{ name:"Scholar Kings' Seal Fragment" }, seal(), seal()];
       out.fuzzyRejected = QuestRuntime.canComplete('q_w7d_min');               // EXACT name — no substring match
       S_story.inventory = []; S_story.w7dLetter = true;
-      out.flagAlone = QuestRuntime.canComplete('q_w7d_min');                   // OR-group: flag satisfies
-      // default min = 1 when omitted
-      QUEST_DB.q_w7d_min.completion = { itemsMinAny:[{ name:'Lone Token' }] };
+      out.flagAlone = QuestRuntime.canComplete('q_w7d_min');                   // {any}: flag branch satisfies
+      // default min = 1 via itemsAll's string entry form
+      QUEST_DB.q_w7d_min.completion = { any:[ { itemsAll:['Lone Token'] } ] };
       delete S_story.w7dLetter; S_story.inventory = [{ name:'Lone Token' }];
       out.defaultMin = QuestRuntime.canComplete('q_w7d_min');
       delete QUEST_DB.q_w7d_min; delete S_story.w7dLetter;
@@ -9272,19 +9276,23 @@ test.describe('§ARCH-01 W7d — legacy branches retired; wm_01 migrated via ite
     expect(r).toEqual({ twoSeals:false, threeSeals:true, fuzzyRejected:false, flagAlone:true, defaultMin:true });
   });
 
-  test('quest_wm_01 is UQF: validates, completion is the letter-OR-3-seals gate, no completeFn residue', async ({ page }) => {
+  test('quest_wm_01 is UQF: validates, completion is the letter-OR-3-seals gate in the grammar, no completeFn residue', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       const q = QUEST_DB.quest_wm_01;
       return { schema: q.schema, valid: validateQuest(q).valid, noFn: !('completeFn' in q),
-               flagsAny: q.completion.flagsAny, minEntry: q.completion.itemsMinAny[0],
+               isAst: Array.isArray(q.completion.any) && q.completion.any.length === 2,
+               noItemsMinAny: !('itemsMinAny' in q.completion),
+               flagLeaf: q.completion.any[0].flagsAny, sealLeaf: q.completion.any[1].itemsAll[0],
                chainKept: Array.isArray(q.onComplete) && q.onComplete.length === 3 };
     });
     expect(r.schema).toBe('UQF-1.0');
     expect(r.valid).toBe(true);
     expect(r.noFn).toBe(true);
-    expect(r.flagsAny).toEqual(['archiveLetterObtained']);
-    expect(r.minEntry).toEqual({ name:"Scholar Kings' Seal", min:3 });
+    expect(r.isAst).toBe(true);
+    expect(r.noItemsMinAny).toBe(true);
+    expect(r.flagLeaf).toEqual(['archiveLetterObtained']);
+    expect(r.sealLeaf).toEqual({ name:"Scholar Kings' Seal", min:3 });
     expect(r.chainKept).toBe(true);
   });
 
