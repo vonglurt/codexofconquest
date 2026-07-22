@@ -101,10 +101,10 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       S_story.xp = 0; S_story.gold = 100; S_story.inventory = []; S_story.knowledge = []; delete S_story.chainFlag;
-      QuestRuntime.execBits([
+      _uqfRunToCompletion(QuestRuntime.execBits([   // §VM-01-A: execBits is now a generator — pump to completion (a plain chain never yields)
         { kind:'flag_write', set:['chainFlag'] },
         { kind:'reward', xp:50, gold:25, items:[{ name:'Test Token', icon:'📦', sell:0, type:'token' }], knowledge:'Learned a thing.' },
-      ], {});
+      ], {}));
       return {
         flag: S_story.chainFlag, xp: S_story.xp, gold: S_story.gold,
         invName: (S_story.inventory[0]||{}).name, know: S_story.knowledge[0],
@@ -2014,7 +2014,7 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.sbResolved = false;
-      QuestRuntime.execBits(QUEST_DB.quest_sb_fight.onComplete, {});   // the bit-chain portion only (W7b)
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB.quest_sb_fight.onComplete, {}));   // §VM-01-A pump. the bit-chain portion only (W7b)
       return { xp:S_story.xp, gold:S_story.gold, resolved:S_story.sbResolved,
                letter:S_story.inventory.some(i=>i.name==='Letter of Marque (Keel)'),
                xpAward:QUEST_DB.quest_sb_fight.xpAward };
@@ -2098,7 +2098,7 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
     const r = await page.evaluate(() => {
       const run = (id) => {
         S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.knowledge = [];
-        QuestRuntime.execBits(QUEST_DB[id].onComplete, {});   // W7b bit chain
+        _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[id].onComplete, {}));   // §VM-01-A pump. W7b bit chain
         return { xp:S_story.xp, gold:S_story.gold, knowledge:S_story.knowledge.length, inv:S_story.inventory.map(i=>i.name), xpAward:QUEST_DB[id].xpAward };
       };
       return { hag:run('quest_hunt2_04'), den:run('quest_hunt_04') };
@@ -2164,7 +2164,7 @@ test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => 
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.knowledge = []; S_story.whodunit2Solved = false;
-      QuestRuntime.execBits(QUEST_DB.quest_bilge_04.onComplete, {});   // W7b bit chain
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB.quest_bilge_04.onComplete, {}));   // §VM-01-A pump. W7b bit chain
       return { xp:S_story.xp, gold:S_story.gold, knowledge:S_story.knowledge.length, solved:S_story.whodunit2Solved,
                frag:S_story.inventory.some(i=>i.name==='Sea Spawn Scale Fragment'), xpAward:QUEST_DB.quest_bilge_04.xpAward };
     });
@@ -8939,7 +8939,7 @@ test.describe('§ARCH-01 W7 — completion-bit execution point (Phase 4)', () =>
   test('narrative bits outside a msgs context still fall back to storyMsg', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
-      QuestRuntime.execBits([{ kind:'narrative', msg:'🧪 W7 direct narrative' }], {});
+      _uqfRunToCompletion(QuestRuntime.execBits([{ kind:'narrative', msg:'🧪 W7 direct narrative' }], {}));   // §VM-01-A pump
       return document.getElementById('story-move-msg').textContent;
     });
     expect(r).toContain('W7 direct narrative');
@@ -9070,16 +9070,16 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
     const r = await page.evaluate(() => {
       const out = {};
       S_story.npcFavorability = {};
-      QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', set:1 }], {});
+      _uqfRunToCompletion(QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', set:1 }], {}));   // §VM-01-A pump
       out.set1 = _npcFavor('__w7c');
-      QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', add:1 }], {});
+      _uqfRunToCompletion(QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', add:1 }], {}));   // §VM-01-A pump
       out.add1 = _npcFavor('__w7c');
-      QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', add:5 }], {});
+      _uqfRunToCompletion(QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', add:5 }], {}));   // §VM-01-A pump
       out.capDefault3 = _npcFavor('__w7c');
-      QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', set:1 }], {});
+      _uqfRunToCompletion(QuestRuntime.execBits([{ kind:'favor', npc:'__w7c', set:1 }], {}));   // §VM-01-A pump
       out.neverLowers = _npcFavor('__w7c');
       S_story.npcFavorability.__w7c2 = 0;
-      QuestRuntime.execBits([{ kind:'favor', npc:'__w7c2', add:5, cap:2 }], {});
+      _uqfRunToCompletion(QuestRuntime.execBits([{ kind:'favor', npc:'__w7c2', add:5, cap:2 }], {}));   // §VM-01-A pump
       out.explicitCap = _npcFavor('__w7c2');
       const mk = bits => validateQuest({ id:'x', schema:'UQF-1.0', completion:{ flags:['f'] }, onComplete:bits }).valid;
       out.validSet   = mk([{ kind:'favor', npc:'x', set:1 }]);
@@ -9227,8 +9227,8 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       const got = [];
-      QuestRuntime.execBits([{ kind:'_legacy_fn', fn:(S, ctx) => ctx.pushMsg('ctx-ok:' + (S === S_story)) }],
-        { pushMsg: m => got.push(m) });
+      _uqfRunToCompletion(QuestRuntime.execBits([{ kind:'_legacy_fn', fn:(S, ctx) => ctx.pushMsg('ctx-ok:' + (S === S_story)) }],
+        { pushMsg: m => got.push(m) }));   // §VM-01-A pump
       return got;
     });
     expect(r).toEqual(['ctx-ok:true']);

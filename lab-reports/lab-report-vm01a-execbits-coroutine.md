@@ -254,6 +254,10 @@ Inc A ships the **mechanism** (`yield` + driver + `ask` envelope) and **one proo
 
 ## 11. Verdict
 
-**Locked and ready to implement on the next `continue`**, pending veto of the three §6 calls. The change is ~30 engine lines + five one-line call-site wraps; the risk is entirely in the regression being a true no-op, which the test plan is built to prove. Inc A is the keystone: once the VM can `yield`, every "the engine can't do that" in the §VM-01 track becomes "author it in data."
+**✅ SHIPPED 2026-07-22 exactly as locked** (not committed — user rule). The change landed at ~30 engine lines + five one-line call-site wraps; the three §6 design calls shipped as recommended. The regression is a **proven true no-op**: `quest-runtime-uqf` returned to **286 passed / 17 failed = the env baseline exactly** (0 NEW failures vs. an HTML-stashed run), and the new `tests/integration/uqf-coroutine.test.js` (**5/5**) drives a real `choice` chain end-to-end. `warrants-board` 25/25 · `courier-map` 1/1 · `enemy-ai` 4/4 · `kg-quest-chain` 4/4. HTML diff **+56/−9**, 0 kernel sentinels, no new `Math.random()`, no new movement-refusal.
+
+**One thing this report under-scoped (recorded for the next signature-changing increment):** §4.4 enumerated the **five production** callers that must wrap, but the **test files call `execBits` directly too** (7 sites in `quest-runtime-uqf.test.js`, 25 in `warrants-board.test.js`) — those exercise the old synchronous contract and broke identically. They were adapted to `_uqfRunToCompletion(...)` with assertions unchanged. The lesson: when an engine function's signature changes, "wrap every caller" includes the harness, and the only honest verdict is a **git-stash-diff of failing sets**, not a raw pass count.
+
+Inc A is the keystone: once the VM can `yield`, every "the engine can't do that" in the §VM-01 track becomes "author it in data." **Next consumers unblocked:** a live on-screen `choice` render (`renderChoiceBlock`), quest-acceptance-as-a-choice, the `skill_check` un-smuggle, and the `'abandoned'` status.
 
 *© 2026 Paul Richeson — MIT License.*

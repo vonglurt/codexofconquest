@@ -294,10 +294,10 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
           const dstNodeExists  = !!NODE_MAP[qdst.activateNode];
           // fire the source's completion chain exactly as storyCheckQuests (29394) does
           const msgs = [];
-          QuestRuntime.execBits(qsrc.onComplete, { questId: src, pushMsg: m => msgs.push(m) });
+          _uqfRunToCompletion(QuestRuntime.execBits(qsrc.onComplete, { questId: src, pushMsg: m => msgs.push(m) }));
           const afterDst = (S_story.quests || {})[dst] || null;
           // idempotency: a second fire must not throw and must leave the target 'active'
-          QuestRuntime.execBits(qsrc.onComplete, { questId: src, pushMsg: () => {} });
+          _uqfRunToCompletion(QuestRuntime.execBits(qsrc.onComplete, { questId: src, pushMsg: () => {} }));
           const afterTwice = (S_story.quests || {})[dst] || null;
           out.edges.push({
             src, dst,
@@ -357,10 +357,10 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
         const dstNodeExists = !!NODE_MAP[qdst.activateNode];
         // fire the source's onPass exactly as _resolveQuestUQF (6823) does on a passing roll
         const msgs = [];
-        QuestRuntime.execBits(scOf(qsrc).onPass, { questId: src, pushMsg: m => msgs.push(m) });
+        _uqfRunToCompletion(QuestRuntime.execBits(scOf(qsrc).onPass, { questId: src, pushMsg: m => msgs.push(m) }));
         const afterDst = (S_story.quests || {})[dst] || null;
         // idempotency: a second pass must not throw and must leave the target 'active'
-        QuestRuntime.execBits(scOf(qsrc).onPass, { questId: src, pushMsg: () => {} });
+        _uqfRunToCompletion(QuestRuntime.execBits(scOf(qsrc).onPass, { questId: src, pushMsg: () => {} }));
         const afterTwice = (S_story.quests || {})[dst] || null;
         out.edges.push({
           src, dst,
@@ -472,14 +472,14 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
 
       // fire the source's completion exactly as storyCheckQuests (29404) does on a completed side quest
       const msgs = [];
-      QuestRuntime.execBits(qsrc.onComplete, { questId: SRC, pushMsg: m => msgs.push(m) });
+      _uqfRunToCompletion(QuestRuntime.execBits(qsrc.onComplete, { questId: SRC, pushMsg: m => msgs.push(m) }));
       out.bothActive = FORKS.every(dst => (S_story.quests || {})[dst] === 'active');
       // ONE referral line names BOTH leads and the board (the fork reads as a single choice)
       out.referralNamesBoth = msgs.some(m => /Warrant's Board/.test(m) && /Isolde/.test(m) && /Solvak/.test(m));
 
       // idempotency: a second completion leaves BOTH 'active' and does not throw
       let threw = false;
-      try { QuestRuntime.execBits(qsrc.onComplete, { questId: SRC, pushMsg: () => {} }); } catch (e) { threw = true; }
+      try { _uqfRunToCompletion(QuestRuntime.execBits(qsrc.onComplete, { questId: SRC, pushMsg: () => {} })); } catch (e) { threw = true; }
       out.idempotent = !threw && FORKS.every(dst => (S_story.quests || {})[dst] === 'active');
 
       // leaves terminate: neither fork points onward with its own unlock (no runaway / no cycle back)
@@ -551,7 +551,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
       out.eachPostsAlone = SRCS.map(src => {
         storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
         const msgs = [];
-        QuestRuntime.execBits(QUEST_DB[src].onComplete, { questId: src, pushMsg: m => msgs.push(m) });
+        _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[src].onComplete, { questId: src, pushMsg: m => msgs.push(m) }));
         return {
           src,
           posted: (S_story.quests || {})[TARGET] === 'active',
@@ -565,9 +565,9 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       let threw = false;
       try {
-        QuestRuntime.execBits(QUEST_DB[SRCS[0]].onComplete, { questId: SRCS[0], pushMsg: () => {} });
+        _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[SRCS[0]].onComplete, { questId: SRCS[0], pushMsg: () => {} }));
         const afterFirst = (S_story.quests || {})[TARGET];
-        QuestRuntime.execBits(QUEST_DB[SRCS[1]].onComplete, { questId: SRCS[1], pushMsg: () => {} });
+        _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[SRCS[1]].onComplete, { questId: SRCS[1], pushMsg: () => {} }));
         const afterSecond = (S_story.quests || {})[TARGET];
         out.afterFirst = afterFirst; out.afterSecond = afterSecond;
       } catch (e) { threw = true; }
@@ -575,8 +575,8 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
 
       // (3) reverse order gives the same result (truly commutative)
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
-      QuestRuntime.execBits(QUEST_DB[SRCS[1]].onComplete, { questId: SRCS[1], pushMsg: () => {} });
-      QuestRuntime.execBits(QUEST_DB[SRCS[0]].onComplete, { questId: SRCS[0], pushMsg: () => {} });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[SRCS[1]].onComplete, { questId: SRCS[1], pushMsg: () => {} }));
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[SRCS[0]].onComplete, { questId: SRCS[0], pushMsg: () => {} }));
       out.reverseSameActive = (S_story.quests || {})[TARGET] === 'active';
 
       // through-node (FU6 through-flow): the merge target now CONTINUES — it carries exactly one
@@ -630,18 +630,18 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
       out.leafCanActivate = QuestRuntime.canActivate(LEAF);
 
       // hop 1: completing the SOURCE posts the MERGE (convergence edge) — but NOT the leaf yet
-      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} }));
       out.mergeActiveAfterSrc = (S_story.quests || {})[MERGE] === 'active';
       out.leafStillUnsetAfterSrc = !(S_story.quests || {})[LEAF];   // the onward hop waits for the merge to COMPLETE
 
       // hop 2: completing the MERGE posts the LEAF (the through/onward edge)
       const msgs = [];
-      QuestRuntime.execBits(QUEST_DB[MERGE].onComplete, { questId: MERGE, pushMsg: m => msgs.push(m) });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[MERGE].onComplete, { questId: MERGE, pushMsg: m => msgs.push(m) }));
       out.leafActiveAfterMerge = (S_story.quests || {})[LEAF] === 'active';
       out.onwardReferralLine = msgs.some(m => /Warrant's Board/.test(m) && /Mordus/.test(m));
 
       // idempotent + terminal
-      QuestRuntime.execBits(QUEST_DB[MERGE].onComplete, { questId: MERGE, pushMsg: () => {} });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[MERGE].onComplete, { questId: MERGE, pushMsg: () => {} }));
       out.leafStillActive = (S_story.quests || {})[LEAF] === 'active';
       out.leafHasNoUnlock = !(QUEST_DB[LEAF].onComplete || []).some(b => b && b.kind === 'unlock');
       out.geoJumpSrcToMerge = QUEST_DB[SRC].activateNode !== QUEST_DB[MERGE].activateNode;
@@ -710,35 +710,35 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
 
       // ── the fork fires: completing the source posts BOTH arms; ONE line names both leads + board ──
       const forkMsgs = [];
-      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: m => forkMsgs.push(m) });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: m => forkMsgs.push(m) }));
       out.bothArmsPosted = ARMS.every(id => (S_story.quests || {})[id] === 'active');
       out.capStillUnsetAfterFork = !(S_story.quests || {})[CAP];   // the base waits for an arm to COMPLETE
       out.forkNamesBothLeads = forkMsgs.some(m => /Warrant's Board/.test(m) && /kelpie/i.test(m) && /relay road/i.test(m));
 
       // ── LEFT path end-to-end (fresh): source → kelpie (sq_2) → harbor (capstone) ──
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
-      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} }));
       const leftMsgs = [];
-      QuestRuntime.execBits(QUEST_DB['sq_2'].onComplete, { questId: 'sq_2', pushMsg: m => leftMsgs.push(m) });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB['sq_2'].onComplete, { questId: 'sq_2', pushMsg: m => leftMsgs.push(m) }));
       out.leftReachesCap = (S_story.quests || {})[CAP] === 'active';
       out.leftReferralLine = leftMsgs.some(m => /Warrant's Board/.test(m) && /Dunfall/.test(m));
 
       // ── RIGHT path end-to-end (fresh): source → road (hunt2_01) → harbor (capstone) ──
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
-      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} }));
       const rightMsgs = [];
-      QuestRuntime.execBits(QUEST_DB['quest_hunt2_01'].onComplete, { questId: 'quest_hunt2_01', pushMsg: m => rightMsgs.push(m) });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB['quest_hunt2_01'].onComplete, { questId: 'quest_hunt2_01', pushMsg: m => rightMsgs.push(m) }));
       out.rightReachesCap = (S_story.quests || {})[CAP] === 'active';
       out.rightReferralLine = rightMsgs.some(m => /Warrant's Board/.test(m) && /Dunfall/.test(m));
 
       // ── the MERGE is order-independent: fire both arms on one game; the second is a safe no-op ──
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
-      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} }));
       let threw = false;
       try {
-        QuestRuntime.execBits(QUEST_DB[ARMS[0]].onComplete, { questId: ARMS[0], pushMsg: () => {} });
+        _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[ARMS[0]].onComplete, { questId: ARMS[0], pushMsg: () => {} }));
         const afterFirst = (S_story.quests || {})[CAP];
-        QuestRuntime.execBits(QUEST_DB[ARMS[1]].onComplete, { questId: ARMS[1], pushMsg: () => {} });
+        _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[ARMS[1]].onComplete, { questId: ARMS[1], pushMsg: () => {} }));
         out.mergeAfterFirst = afterFirst;
         out.mergeAfterSecond = (S_story.quests || {})[CAP];
       } catch (e) { threw = true; }
@@ -746,9 +746,9 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
 
       // reverse arm order → identical result (commutative merge, the in-degree-2 safety property)
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
-      QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} });
-      QuestRuntime.execBits(QUEST_DB[ARMS[1]].onComplete, { questId: ARMS[1], pushMsg: () => {} });
-      QuestRuntime.execBits(QUEST_DB[ARMS[0]].onComplete, { questId: ARMS[0], pushMsg: () => {} });
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[SRC].onComplete, { questId: SRC, pushMsg: () => {} }));
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[ARMS[1]].onComplete, { questId: ARMS[1], pushMsg: () => {} }));
+      _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB[ARMS[0]].onComplete, { questId: ARMS[0], pushMsg: () => {} }));
       out.reverseSameCap = (S_story.quests || {})[CAP] === 'active';
       return out;
     });

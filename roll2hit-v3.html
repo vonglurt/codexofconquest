@@ -6424,6 +6424,26 @@ function rollN(sides, count) {
   return rolls;
 }
 
+// §VM-01-B — client-side seeded PRNG stream (mulberry32), byte-identical to the
+// server's seededNext (js/wbapi-server.js:1147). rngState lives in S_story, so a
+// save fully determines the future stream: bug-repro from a save file, replayable
+// traces, server-verifiable rolls. Closes the SP/MP divergence the server documents
+// against itself ("a known SP/MP divergence", wbapi-server.js:1155). Feeds the four
+// game-state roll pipelines only (encounter · _rollSkill · loot/drop ·
+// _weightedMonsterPick); combat/fishing/cosmetic rolls stay on Math.random() (§6.3).
+function _seededNext() {
+  // Lazy one-time seed — a BOOTSTRAP, not a game-state roll: Date-derived, never
+  // Math.random(); thereafter the stream is deterministic and persisted. Covers
+  // fresh games AND pre-§VM-01-B saves (rngState defaults to 0 = "unseeded"). The
+  // advanced state can in principle land on 0 once every ~4e9 draws → a one-step
+  // re-bootstrap; observationally never, and harmless.
+  if (!S_story.rngState) S_story.rngState = (Date.now() >>> 0) || 1;
+  let t = (S_story.rngState = (S_story.rngState + 0x6D2B79F5) | 0);
+  t = Math.imul(t ^ (t >>> 15), t | 1);
+  t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
 function rollNExploding(sides, count) {
   const rolls = [];
   for (let i = 0; i < count; i++) {
@@ -6791,6 +6811,37 @@ function _ceremoRetryBlocked(questId) {
   return S_story.day < att.lastDay + (q.retryGateDays || 1);
 }
 
+/* ── §VM-01-A — the quest VM's coroutine driver ────────────────────────────
+   execBits (below, in QuestRuntime) is now a generator: a handler written as a
+   function* (choice) may suspend by yielding an `ask` envelope
+   { ask:'choice', prompt, options:string[] }. This driver pumps the generator and
+   parks it in the module-level slot _uqfPending when it suspends; the render layer
+   resumes it with the player's picked index. This is the HOST layer (it renders —
+   never a parity-fenced kernel; see lab-report-vm01a-execbits-coroutine.md §6.2).
+   The in-flight generator lives ONLY here, never in S_story — a coroutine is not
+   JSON-serializable, and by design a choice resolves within one interaction turn,
+   so no autosave (storyAutoSave, 23237) ever captures a suspension (§6.3). */
+let _uqfPending = null;
+/* Resume a suspended generator with `answer`; run until it next suspends or ends.
+   Returns the `ask` envelope when it parks on a choice, else null when done. */
+function _uqfPump(gen, answer) {
+  let step = gen.next(answer);
+  while (!step.done) {
+    if (step.value && step.value.ask) { _uqfPending = { gen, ask: step.value }; return step.value; }
+    step = gen.next();                 // a non-ask yield is a pass-through (none in Inc A)
+  }
+  _uqfPending = null; return null;     // chain complete
+}
+/* Migration shim: pump a bit-chain generator to completion, THROWING on an
+   unanswered ask. Every synchronous execBits call site wraps its call in this — and
+   since none of those chains contains a suspending bit today, it pumps straight
+   through with zero yields, so side effects + message order stay byte-identical to
+   the old straight-line execBits. */
+function _uqfRunToCompletion(gen) {
+  const ask = _uqfPump(gen);
+  if (ask) throw new Error('[UQF] runToCompletion hit an unresolved ask: ' + ask.ask);
+}
+
 /* §ARCH-01 Phase 2 — resolve a UQF v1.0 skill_check quest through QuestRuntime.
    Renders the same roll hcard + status update + re-render as the legacy
    resolver, but draws every side effect (flags, rewards, narrative) from the
@@ -6826,10 +6877,10 @@ function _resolveQuestUQF(questId) {
   if (pass) {
     S_story.quests[questId] = 'done';
     _passMsgs = [];
-    QuestRuntime.execBits(sc.onPass || [], { questId, pushMsg: m => _passMsgs.push(m) });
+    _uqfRunToCompletion(QuestRuntime.execBits(sc.onPass || [], { questId, pushMsg: m => _passMsgs.push(m) }));   // §VM-01-A
     { const _wp = _creditWarrant(questId); if (_wp) _passMsgs.push(_wp); }   // §BOARD-01-FU7 — a board-accepted skill_check/combat bounty raises Warrant standing
   } else {
-    QuestRuntime.execBits(sc.onFail || [], { questId });
+    _uqfRunToCompletion(QuestRuntime.execBits(sc.onFail || [], { questId }));   // §VM-01-A
     if (q.retryable) {
       S_story.skillCheckAttempts = S_story.skillCheckAttempts || {};
       const prev = S_story.skillCheckAttempts[questId] || {};
@@ -21821,25 +21872,36 @@ const QuestRuntime = {
     return true;
   },
 
-  /* Execute an ordered bit chain. Unknown kinds are warned + skipped. */
-  execBits(bits, ctx) {
+  /* Execute an ordered bit chain. §VM-01-A: this is now a GENERATOR — a handler
+     written as a function* (choice, below) may suspend by yielding an `ask`
+     envelope; a plain handler returns undefined and runs to completion exactly as
+     before. Unknown kinds are warned + skipped. Synchronous callers wrap the
+     returned generator in _uqfRunToCompletion() (which throws on an unresolved ask,
+     so plain chains are byte-identical to the old straight-line loop). */
+  *execBits(bits, ctx) {
+    const c = ctx || {};
+    if (!c.state) c.state = S_story;   // §VM-01-C: the _ENV — handlers write/read c.state, defaulting to the live S_story (no-op on the live path; an explicit {state} runs the chain against a scratch state, the seam D/E need)
     for (const bit of (bits || [])) {
       const h = QuestRuntime.HANDLERS[bit.kind];
       if (!h) { console.warn('[UQF] unknown bit kind:', bit.kind); continue; }
-      h(bit, ctx || {});
+      const r = h(bit, c);
+      if (r && typeof r.next === 'function') yield* r;   // handler suspended → propagate its yields
     }
   },
 
   /* Pure roll — single source of the skill-check math, mirroring
      _rollCeremonia(): mod = ⌊(score-10)/2⌋, prof = 2+⌊(level-1)/4⌋, plus the
      one-shot iodine buff (consumed here, exactly like the legacy resolver) and
-     the lake-magic all-ability bonus. Returns every component for display. */
+     the lake-magic all-ability bonus. Returns every component for display.
+     §VM-01-B: the d20 now draws the seeded stream (_seededNext), so the roll is
+     reproducible from a save — "Pure roll" is honest once the randomness is
+     threaded through explicit S_story.rngState rather than hidden global entropy. */
   _rollSkill(stat) {
     const ability    = String(stat || '').toLowerCase();
     const abilityVal = ((S_story.abilityScores || {})[ability] || 10);
     const mod  = Math.floor((abilityVal - 10) / 2);
     const prof = 2 + Math.floor(((S_story.level || 1) - 1) / 4);
-    const d20  = Math.ceil(Math.random() * 20);
+    const d20  = Math.ceil(_seededNext() * 20);
     const iodineBonus = S_story.iodineBuffActive ? (S_story.iodineBuffBonus || 3) : 0;
     if (S_story.iodineBuffActive) { S_story.iodineBuffActive = false; S_story.iodineBuffBonus = 0; }
     const lmAll = (typeof _lakeMagicBonuses === 'function') ? (_lakeMagicBonuses().allAbility || 0) : 0;
@@ -21850,26 +21912,29 @@ const QuestRuntime = {
   resolveSkillCheck(bit, ctx) {
     const r = QuestRuntime._rollSkill(bit.stat);
     const pass = r.total >= bit.dc;
-    QuestRuntime.execBits(pass ? (bit.onPass || []) : (bit.onFail || []), ctx);
+    _uqfRunToCompletion(QuestRuntime.execBits(pass ? (bit.onPass || []) : (bit.onFail || []), ctx));   // §VM-01-A (skill_check stays synchronous this increment — a choice in onPass/onFail throws, by scope-fence §10)
     return { d20: r.d20, total: r.total, pass };
   },
 
   /* Each handler is bound to the real game state/functions (see header). */
   HANDLERS: {
     skill_check(bit, ctx) { QuestRuntime.resolveSkillCheck(bit, ctx); },
-    flag_write(bit)       { (bit.set || []).forEach(f => S_story[f] = true); (bit.clear || []).forEach(f => S_story[f] = false); },
-    reward(bit) {
-      if (bit.xp)   { S_story.xp = (S_story.xp || 0) + bit.xp; if (typeof _checkLevelUp === 'function') _checkLevelUp(); }
-      if (bit.gold) { S_story.gold = (S_story.gold || 0) + bit.gold; }
+    // §VM-01-C: state effects write ctx.state (the _ENV), not the S_story global. On the
+    // live path ctx.state IS S_story (execBits default), so this is byte-identical.
+    flag_write(bit, ctx)  { const st = ctx.state; (bit.set || []).forEach(f => st[f] = true); (bit.clear || []).forEach(f => st[f] = false); },
+    reward(bit, ctx) {
+      const st = ctx.state;   // §VM-01-C — progress state rides the env; _checkLevelUp/mpMintStamp stay host effects (§4.3)
+      if (bit.xp)   { st.xp = (st.xp || 0) + bit.xp; if (typeof _checkLevelUp === 'function') _checkLevelUp(); }
+      if (bit.gold) { st.gold = (st.gold || 0) + bit.gold; }
       // mpMintStamp — §MESH-01i slice 2b: acquisition-while-connected mints the
       // item (async; stamps mintId on the pushed copy). No-op offline/SP.
-      if (bit.items && bit.items.length) { S_story.inventory = S_story.inventory || []; bit.items.forEach(i => { const it = { ...i }; S_story.inventory.push(it); mpMintStamp(it); }); }
-      if (bit.knowledge) { S_story.knowledge = S_story.knowledge || []; S_story.knowledge.push(bit.knowledge); }
+      if (bit.items && bit.items.length) { st.inventory = st.inventory || []; bit.items.forEach(i => { const it = { ...i }; st.inventory.push(it); mpMintStamp(it); }); }
+      if (bit.knowledge) { st.knowledge = st.knowledge || []; st.knowledge.push(bit.knowledge); }
     },
     combat(bit) { if (typeof storyPreBattle === 'function') storyPreBattle({ ...NODE_MAP[S_story.currentCode], code: bit.nodeCode || bit.key, battle: { label: bit.label, key: bit.key, count: bit.count || 1 } }); },
     narrative(bit, ctx) { if (!bit.msg) return; if (ctx && ctx.pushMsg) ctx.pushMsg(bit.msg); else if (typeof storyMsg === 'function') storyMsg(bit.msg); /* template path: Phase 2 renderNamedTemplate */ },
-    item_remove(bit) { const inv = S_story.inventory || []; const i = inv.findIndex(x => x.name === bit.name); if (i > -1) inv.splice(i, 1); },
-    mission_bit(bit) { if (typeof _grantMissionBit === 'function') _grantMissionBit(bit.flag, bit.label); else S_story[bit.flag] = true; },
+    item_remove(bit, ctx) { const inv = ctx.state.inventory || []; const i = inv.findIndex(x => x.name === bit.name); if (i > -1) inv.splice(i, 1); },   // §VM-01-C: env inventory
+    mission_bit(bit, ctx) { if (typeof _grantMissionBit === 'function') _grantMissionBit(bit.flag, bit.label); else ctx.state[bit.flag] = true; },   // §VM-01-C: fallback writes the env; _grantMissionBit stays host
     // §ARCH-01 W7c — NPC favorability: `set` writes an absolute level; `add`
     // increments the current level, clamped to `cap` (default 3 = Dear Friend).
     favor(bit) {
@@ -21877,13 +21942,23 @@ const QuestRuntime = {
       if (typeof bit.add === 'number') _setNpcFavor(bit.npc, Math.min(bit.cap == null ? 3 : bit.cap, (_npcFavor(bit.npc) || 0) + bit.add));
       else _setNpcFavor(bit.npc, bit.set);
     },
-    item_check(bit, ctx) { const inv = S_story.inventory || []; ctx._itemCheck = inv.filter(x => x.name === bit.name).length >= (bit.count || 1); },
-    unlock(bit) { (bit.quests || []).forEach(qid => { S_story.quests = S_story.quests || {}; if (!S_story.quests[qid]) S_story.quests[qid] = 'active'; }); },
-    choice(bit, ctx) { /* Phase 2: renderChoiceBlock(bit.prompt, bit.options, ctx) */ },
+    item_check(bit, ctx) { const inv = ctx.state.inventory || []; ctx._itemCheck = inv.filter(x => x.name === bit.name).length >= (bit.count || 1); },   // §VM-01-C: reads the env inventory
+    unlock(bit, ctx) { (bit.quests || []).forEach(qid => { const st = ctx.state; st.quests = st.quests || {}; if (!st.quests[qid]) st.quests[qid] = 'active'; }); },   // §VM-01-C: env quests
+    // §VM-01-A — the first SUSPENDING handler. Its contract already validates (choice
+    // in BIT_CONTRACTS: prompt + ≥2 options, each a {label, bits[]}). It yields an `ask`
+    // envelope; the driver renders the choice + resumes with the picked index; ONLY the
+    // chosen option's bits apply — AFTER the pick, so a tab-close mid-choice writes no
+    // partial state (lab report §6.3). The resume value is an index, so the data author
+    // never couples to presentation.
+    *choice(bit, ctx) {
+      const picked = yield { ask: 'choice', prompt: bit.prompt, options: (bit.options || []).map(o => o.label) };
+      const opt = (bit.options || [])[picked];
+      if (opt) yield* QuestRuntime.execBits(opt.bits || [], ctx || {});
+    },
     // ctx is passed through (W7c) so conditional completion effects can route
     // messages into the storyCheckQuests msgs stream via ctx.pushMsg; pre-W7c
     // fns take (S) only and ignore it.
-    _legacy_fn(bit, ctx) { if (typeof bit.fn === 'function') bit.fn(S_story, ctx); },
+    _legacy_fn(bit, ctx) { if (typeof bit.fn === 'function') bit.fn(ctx.state, ctx); },   // §VM-01-C: legacy fns receive the env (live path: ctx.state === S_story). Still runs arbitrary code — §VM-01-E's blocker.
   },
 
   validateQuest, adaptLegacyQuest,
@@ -22572,6 +22647,7 @@ let S_story = {
 /* ── Layer 6: Save / Load ── */
 const _S_DEFAULTS = () => ({
   active: false, currentCode: 'LHR',
+  rngState: 0,   // §VM-01-B: seeded-PRNG stream cell (0 = unseeded; _seededNext lazily bootstraps). Persisted → a save fully determines future encounter/skill/loot rolls.
   hp: 9, hpMax: 9, gold: 150, day: 1, shards: 0, voidPressure: 0,
   log: [], inventory: [], visited: {}, quests: {}, journalRead: {},
   defeatedBattles: {}, pendingBattle: null,
@@ -23959,7 +24035,7 @@ function _rollD100Loot() {
 
   // Up to 3 attempts; on failure fall back to Minor Healing Potion
   for (let attempt = 0; attempt < 3; attempt++) {
-    const roll = Math.min(99, Math.floor(Math.random() * 100) + Math.max(0, _luckMod())); // Layer 48: Luck bonus
+    const roll = Math.min(99, Math.floor(_seededNext() * 100) + Math.max(0, _luckMod())); // Layer 48: Luck bonus · §VM-01-B: seeded stream
     const row  = _d100Result(roll);
 
     if (row._type === 'potion_minor')    return { name:'Minor Healing Potion',    icon:'🧪', type:'potion',    sell:25  };
@@ -23969,7 +24045,7 @@ function _rollD100Loot() {
     if (row._type === 'scroll')          return { name:'Spell Scroll',             icon:'📜', type:'spell',     sell:50  };
     if (row._type === 'flashbang')       return { name:'Flashbang',                icon:'💥', type:'flashbang', sell:75  };
     if (row._type === 'gold') {
-      const gp = Math.floor(Math.random() * 200) + 50;
+      const gp = Math.floor(_seededNext() * 200) + 50;   // §VM-01-B: seeded stream
       return { name:`${gp} Gold Pieces`, icon:'💰', type:'_goldcache', sell:0, _gold:gp };
     }
     if (row._type === 'dagger') {
@@ -23982,7 +24058,7 @@ function _rollD100Loot() {
       if (!_magicTierAllowed(row._magic)) continue;
       const pool = WEAPON_ITEMS.filter(w => w.magicBonus === row._magic && lv >= w.minLevel && !ownedWeapons.has(w.tier));
       if (!pool.length) continue;
-      return pool[Math.floor(Math.random() * pool.length)];
+      return pool[Math.floor(_seededNext() * pool.length)];   // §VM-01-B: seeded stream
     }
   }
   // Fallback after 3 failed rerolls
@@ -24003,8 +24079,8 @@ function _rollMonsterWeaponDrop(monsterDmgDie) {
   let pool = WEAPON_ITEMS.filter(w => w.die <= monsterDmgDie && w.magicBonus === 0 && !ownedTiers.has(w.tier));
   if (!pool.length) pool = WEAPON_ITEMS.filter(w => w.magicBonus === 0 && !ownedTiers.has(w.tier));
   if (!pool.length) return null;
-  const base = pool[Math.floor(Math.random() * pool.length)];
-  const d6  = Math.ceil(Math.random() * 6);
+  const base = pool[Math.floor(_seededNext() * pool.length)];   // §VM-01-B: seeded stream
+  const d6  = Math.ceil(_seededNext() * 6);                     // §VM-01-B: seeded stream
   const deg = Math.min(0, d6 - 5); // 1→−4, 2→−3, 3→−2, 4→−1, 5–6→0
   const pfx = ['Wrecked ','Rusted ','Chipped ','Worn ','',''][d6 - 1];
   return pfx ? {...base, name: pfx + base.name, magicBonus: deg} : base;
@@ -27786,7 +27862,7 @@ function _enterEmptyCell(r, c) {
   // you can grind low-level fights on purpose. Roads/junctions stay at rate 0
   // (2 × 0 = 0) and a deployed sentry still suppresses to 0 (applied above).
   if (S_story.huntMode) baseRate = Math.min(0.8, baseRate * 2);
-  if (Math.random() < baseRate) {
+  if (_seededNext() < baseRate) {   // §VM-01-B: seeded stream — same event the server rolls (wbapi-server.js:8784), now byte-compatible + replayable
     const monster = _weightedMonsterPick(terrain);
     if (monster) {
       _encounterQueued = true;   // §NAV-01d: halts auto-travel before the battle fires
@@ -29495,7 +29571,7 @@ function storyCheckQuests(node) {
       // W7c folded the per-id hardcoded effects block (61 ids, formerly after the
       // xpAward step below) into these chains — their messages now print BEFORE the
       // '✓ title' line instead of after it (known presentation-only change).
-      if (Array.isArray(q.onComplete)) QuestRuntime.execBits(q.onComplete, { questId: id, pushMsg: m => msgs.push(m) });
+      if (Array.isArray(q.onComplete)) _uqfRunToCompletion(QuestRuntime.execBits(q.onComplete, { questId: id, pushMsg: m => msgs.push(m) }));   // §VM-01-A
       else if (q.onComplete) q.onComplete();
       msgs.push(..._applyItemChain(q)); // §EDITOR-01-D
       msgs.push('✓ ' + q.title);
@@ -36134,7 +36210,7 @@ function _acceptBounty(id) {
   const q = QUEST_DB[id];
   if (!q) return;
   if ((S_story.quests || {})[id]) return;                       // already started — no-op
-  QuestRuntime.execBits([{ kind: 'unlock', quests: [id] }], {});
+  _uqfRunToCompletion(QuestRuntime.execBits([{ kind: 'unlock', quests: [id] }], {}));   // §VM-01-A
   (S_story.warrantAccepted = S_story.warrantAccepted || {})[id] = true;   // §BOARD-01-FU7 — tag as Warrant work so completing it accrues standing
   const dest = NODE_MAP[q.activateNode];
   const destShort = dest ? String(dest.label || q.activateNode).split(' — ')[0] : q.activateNode;
@@ -37148,7 +37224,7 @@ function _weightedMonsterPick(terrain) {
   // level (a fair or easy fight); the other 20% draws from the full terrain pool
   // so genuinely hard enemies still appear. Falls back to the full pool if the
   // terrain has nothing at/below the player's level.
-  if (S_story.huntMode && Math.random() < 0.8) {
+  if (S_story.huntMode && _seededNext() < 0.8) {   // §VM-01-B: seeded stream
     const lv  = S_story.level || 1;
     const low = pool.filter(m => _monsterLevel(m) <= lv);
     if (low.length) pool = low;
@@ -37158,7 +37234,7 @@ function _weightedMonsterPick(terrain) {
     const w = WEIGHTS[m.tier] || 10;
     for (let i = 0; i < w; i++) weighted.push(m);
   });
-  return weighted.length ? weighted[Math.floor(Math.random() * weighted.length)] : null;
+  return weighted.length ? weighted[Math.floor(_seededNext() * weighted.length)] : null;   // §VM-01-B: seeded stream
 }
 
 // §CELL-04: called from _enterEmptyCell to start a random wilderness battle

@@ -46,6 +46,26 @@ This is a hard invariant, not a preference. Two distinct, non-overlapping mechan
 
 > *«incremental-recitation-rule» archived to plan-archive.md (2026-07-02). Applies only when writing vignette content: say each segment aloud, write incrementally, commit + speak per vignette.*
 
+### Host/Script Separation Policy (§VM-01)
+
+**`QUEST_DB` is script; `QuestRuntime` is the host. That boundary is the architecture — widen it through the grammar, never around it.**
+
+The file already runs this split twice, and both are worth protecting:
+
+1. **The three parity-fenced kernels** — `MOVER:CORE` (`9733`) · `ROOMS:CORE` (`9804`) · `DUEL:CORE` (`10057`). Pure, world-injected, byte-identical to `js/{mover,rooms,duel}.js`, asserted by `scripts/check-*-parity.js`. They take a `world` and return plain data; they never read `S_story` and never touch the DOM.
+2. **The UQF VM** — 2,850 quests (11,106 lines) executed by a 258-line `QuestRuntime` through the `BIT_CONTRACTS` opcode table (`21556`). A 43:1 data-to-engine ratio. This is an embedded scripting host in the Lua sense, and it should be treated as one.
+
+The rules that keep those true:
+
+- **Control flow belongs to the VM, never to a leaf handler.** `skill_check` currently smuggles its own branch (`resolveSkillCheck` → `execBits(pass ? bit.onPass : bit.onFail)`, `21750`) because `execBits` has no conditional of its own. That is the exception to retire (§VM-01-A), **not** the pattern to copy. Do not author a handler that branches, loops, or waits internally.
+- **New shapes go in the grammar, not in a new single-use term.** `itemsMinAny` was added for exactly one quest (`quest_wm_01`) because an OR was inexpressible in OR position. A term added per quest is the language asking for an expression evaluator (§VM-01-F). **Before adding a gate term, check whether `{all|any|not}` nesting would say it instead** — and if it would, open the §VM-01-F row rather than growing the vocabulary sideways.
+- **No arbitrary code in quest data.** `_legacy_fn` (contract at `21579`) is a *closing* escape hatch, not an extension point. Every `_legacy_fn` in `QUEST_DB` is a quest the soft-lock prover (§VM-01-E) cannot see through — e.g. `quest_1367_f_plague` (`13716`) rolls `Math.random() > 0.5` inside quest data. **Do not author new ones.** Port to a declarative bit, or open a §VM-01 row for the bit kind that's missing.
+- **Game-state randomness must come from the seeded stream.** The server rolls encounters from `seededNext(s)` off `s.rngState` (`js/wbapi-server.js:1147`, mulberry32, replayable); the client rolls the same encounter from `Math.random()` (`27685`). The server's own comment (`1155`) calls this *"a known SP/MP divergence."* Until §VM-01-B lands, **do not add `Math.random()` calls that affect game state** — encounter, skill roll, loot, drop, monster pick. Cosmetic/presentational randomness is fine and stays fine.
+- **Shared client/server logic uses the parity pattern or it does not ship.** Sentinel comments + a `js/*.js` twin + a `scripts/check-*-parity.js` wired into `npm run check:walk`. In a single file with no build step there is no fourth way to share code. **Never edit an inlined copy** — edit `js/<mod>.js`, then re-run the checker.
+- **Purity claims must be true.** `_rollSkill` is labelled *"Pure roll"* (`21730`) and both consumes the iodine buff and calls `Math.random()`. If a comment says pure, the function takes its inputs as arguments and returns its outputs — no exceptions, no "pure means single-source-of-the-math."
+
+> **Diagnosis + evidence:** `lab-reports/lab-report-javascript-mud.md` (structural read: five layers, four execution traces) plus the verification recorded in the §VM-01 track in **[BACKLOG.md](BACKLOG.md)**. One-line summary: *the VM has an opcode table and no jump instruction.*
+
 ### Loop vs. Ask Rule
 
 Before starting any task:
