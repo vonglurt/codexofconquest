@@ -281,7 +281,7 @@ function gateSat(node, pool) {
   if (node.questsComplete && !node.questsComplete.every(q => pool.quests.has(q))) return false;
   if (node.questsAttempted && !node.questsAttempted.every(q => pool.quests.has(q))) return false;
   if (node.flagsPath && !node.flagsPath.every(p => pool.flags.has(p.split('.')[0]))) return false;
-  return true;   // notFlags / battles / notBattles / shardsMin / nodes / sleptAt / restedAtMin / countMin — monotone-satisfiable
+  return true;   // notFlags / battles / notBattles / shardsMin / nodes / sleptAt / restedAtMin / countMin / dayMin·dayMax — monotone-satisfiable (the clock always reaches the window)
 }
 
 // ── HOST-CODE flag-write scan (§VM-01-E-FU). The write-set tree-walk above only

@@ -37,6 +37,7 @@ test.describe('§VM-01-F — gate expression AST', () => {
         if (g.sleptAt) t.push(g.sleptAt.every(nd => !!(st.sleptAtNodes || {})[nd]));
         if (g.flagsPath) t.push(g.flagsPath.every(p => !!pathVal(st, p)));
         if (g.countMin) t.push(g.countMin.every(c => asCount(pathVal(st, c.path)) >= c.min));
+        if (g.dayMin != null || g.dayMax != null) { const d = st.day || 1; t.push((g.dayMin == null || d >= g.dayMin) && (g.dayMax == null || d < g.dayMax)); }
         return t.every(Boolean);
       }
       function refCompletion(g, st) {
@@ -81,6 +82,7 @@ test.describe('§VM-01-F — gate expression AST', () => {
         (node.sleptAt || []).forEach(nd => { (st.sleptAtNodes = st.sleptAtNodes || {})[nd] = true; });
         (node.flagsPath || []).forEach(p => setPath(st, p, true));
         (node.countMin || []).forEach(c => setPath(st, c.path, c.min));
+        if (node.dayMin != null || node.dayMax != null) st.day = node.dayMin != null ? node.dayMin : (node.dayMax - 1);   // §BOARD-01-VOID-GATE — land inside the window
         (node.questsComplete || []).forEach(id => { (st.quests = st.quests || {})[id] = 'complete'; });
         (node.items || []).forEach(ci => { (st.inventory = st.inventory || []).push({ name: ci }); });
         (node.itemsAll || []).forEach(e => { const nm = (typeof e === 'string') ? e : e.name, mn = (typeof e === 'string') ? 1 : (e.min || 1); st.inventory = st.inventory || []; for (let i = 0; i < mn; i++) st.inventory.push({ name: nm }); });

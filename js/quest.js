@@ -146,6 +146,16 @@ function _matchActivationLeaf(g, st) {
     const num = (typeof v === 'number') ? v : Array.isArray(v) ? v.length : (v && typeof v === 'object') ? Object.keys(v).length : 0;
     return num >= c.min;
   })) return false;
+  // dayMin/dayMax → a doom-clock day window on the day counter (`st.day || 1`, the
+  // fresh-save default): dayMin is an INCLUSIVE lower bound, dayMax an EXCLUSIVE
+  // upper bound; either may be omitted for an open-ended window. §BOARD-01-VOID-GATE:
+  // replaces the §BOARD-01-FU8 Void-tide `activateCond` closures (`day>=21 && day<35`
+  // …) — a clock gate the grammar can now express, so no per-quest _legacy_fn.
+  if (g.dayMin != null || g.dayMax != null) {
+    const d = st.day || 1;
+    if (g.dayMin != null && d < g.dayMin) return false;
+    if (g.dayMax != null && d >= g.dayMax) return false;
+  }
   return true;
 }
 

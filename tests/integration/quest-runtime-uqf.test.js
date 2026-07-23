@@ -8516,12 +8516,12 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
 // assert structure + display intact + NEW deterministic behavior, per the
 // §SKILLFIX-02 protocol.
 test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migrated)', () => {
-  test('all 78 type:combat quests are UQF-1.0, valid, skill_check bit, no legacy residue', async ({ page }) => {
+  test('all 81 type:combat quests are UQF-1.0, valid, skill_check bit, no legacy residue', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       const combats = Object.values(QUEST_DB).filter(q => q.type === 'combat');
       const bad = [];
-      let withFlag = 0, gateFlags = 0, gateEmpty = 0;
+      let withFlag = 0, gateFlags = 0, gateEmpty = 0, gateDayWin = 0;
       for (const q of combats) {
         if (q.schema !== 'UQF-1.0') { bad.push(q.id + ':schema'); continue; }
         if (!validateQuest(q).valid) bad.push(q.id + ':invalid');
@@ -8532,15 +8532,18 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
         for (const f of ['checkStat','checkPassFlag','checkDC','activateCond','onPass','onFail'])
           if (f in q) bad.push(q.id + ':residual-' + f);
         if ((sc.onPass || []).some(b => b.kind === 'mission_bit')) withFlag++;
-        if ((q.gate.flags || []).length) gateFlags++; else if (!q.gate._legacyFn) gateEmpty++;
+        if ((q.gate.flags || []).length) gateFlags++;
+        else if (q.gate.dayMin != null || q.gate.dayMax != null) gateDayWin++;   // §BOARD-01-VOID-GATE — Void-tide day windows
+        else if (!q.gate._legacyFn) gateEmpty++;
       }
-      return { total: combats.length, bad, withFlag, gateFlags, gateEmpty };
+      return { total: combats.length, bad, withFlag, gateFlags, gateEmpty, gateDayWin };
     });
-    expect(r.bad).toEqual([]);
-    expect(r.total).toBe(78);
-    expect(r.withFlag).toBe(63);            // checkPassFlag carriers → mission_bit onPass
-    expect(r.gateFlags).toBe(57);           // trivial ()=>!!S_story.flag activateConds
-    expect(r.gateEmpty).toBe(21);           // ungated + ()=>true
+    expect(r.bad).toEqual([]);                 // §BOARD-01-VOID-GATE — the 3 Void-tide residual-activateCond entries are gone
+    expect(r.total).toBe(81);               // 78 original + the 3 §BOARD-01-FU8 Void-tide combat quests
+    expect(r.withFlag).toBe(63);            // checkPassFlag carriers → mission_bit onPass (Void hunts reward xp only)
+    expect(r.gateFlags).toBe(57);           // trivial ()=>!!S_story.flag → gate.flags
+    expect(r.gateDayWin).toBe(3);           // §BOARD-01-VOID-GATE — the 3 Void-tide gate:{dayMin,dayMax} windows
+    expect(r.gateEmpty).toBe(21);           // truly ungated / ()=>true  (57 + 3 + 21 = 81)
   });
 
   test('placeholder + defaulted stats: null/0 and absent stat/DC became STR DC 12', async ({ page }) => {

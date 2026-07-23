@@ -909,7 +909,9 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       S_story.gameDay = 0;
       const inn = NODE_MAP.TLL;
-      const pinAt = (day) => { S_story.day = day; const vf = _voidFeatured(inn); return vf; };
+      // §BOARD-01-VOID-GATE — canActivate now reads the gate:{dayMin,dayMax} window, so capture it
+      // AT pin-time (while S_story.day is in-window); a later day would correctly close the gate.
+      const pinAt = (day) => { S_story.day = day; const vf = _voidFeatured(inn); return vf && { ...vf, _canAct: QuestRuntime.canActivate(vf.id) }; };
       const all = VOID_IDS.map(id => !!QUEST_DB[id]);          // all three quests exist
       // day 1 (fresh): no Void tide is live — the pin is dormant, board is all normal BOUNTY cards
       S_story.day = 1;
@@ -921,7 +923,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
         id: p.id, isVoid: p.void === true, standing: p.voidStanding,
         rewardStr: p.rewardStr, rewardXp: _boardRewardXp(QUEST_DB[p.id]),
         destOk: !!NODE_MAP[p.destCode] && p.destCode !== 'TLL',
-        canActivate: QuestRuntime.canActivate(p.id),
+        canActivate: p._canAct,
       };
       // ceiling bypass: at standing 0 (Unknown, cap 250) the day-42 pin (320xp) still shows
       S_story.warrantStanding = 0; S_story.day = 42;
@@ -954,14 +956,15 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     const r = await page.evaluate((VOID_IDS) => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const inn = NODE_MAP.TLL;
-      // the activateCond WINDOWS are the single source of truth (they gate BOTH arrival and the pin)
-      const condAt = (day) => { S_story.day = day; return VOID_IDS.map(id => QUEST_DB[id].activateCond()); };
+      // §BOARD-01-VOID-GATE — the day-window GATES are the single source of truth (they gate BOTH
+      // arrival and the pin): QuestRuntime.canActivate reads gate:{dayMin,dayMax} against S_story.day
+      const condAt = (day) => { S_story.day = day; return VOID_IDS.map(id => QuestRuntime.canActivate(id)); };
       const w20 = condAt(20), w21 = condAt(21), w34 = condAt(34), w35 = condAt(35), w41 = condAt(41), w42 = condAt(42), w49 = condAt(49);
       const pinIdAt = (day) => { S_story.day = day; const vf = _voidFeatured(inn); return vf && vf.id; };
-      // at day 35 the day-21 hunt is gone: not pinned, and its own cond refuses it (arrival would too)
+      // at day 35 the day-21 hunt is gone: not pinned, and its own gate refuses it (arrival would too)
       const day35Pin = pinIdAt(35);
       S_story.day = 35;
-      const q21GoneAt35 = !QUEST_DB['quest_void_tide_21'].activateCond();
+      const q21GoneAt35 = !QuestRuntime.canActivate('quest_void_tide_21');
       // excluded from the normal rotation pool: past every window, a huge slate never lists a Void id as a NORMAL card
       S_story.day = 42; S_story.warrantStanding = 20;
       const wide = _boardBounties(inn, 500);

@@ -54,6 +54,7 @@ function refActivationLeaf(g, st) {
   if (g.sleptAt)  need.push(g.sleptAt.every(nd => !!(st.sleptAtNodes || {})[nd]));
   if (g.flagsPath) need.push(g.flagsPath.every(p => !!pathVal(st, p)));
   if (g.countMin) need.push(g.countMin.every(c => asCount(pathVal(st, c.path)) >= c.min));
+  if (g.dayMin != null || g.dayMax != null) { const d = st.day || 1; need.push((g.dayMin == null || d >= g.dayMin) && (g.dayMax == null || d < g.dayMax)); }
   return need.every(Boolean);
 }
 function refCompletionLeaf(g, st, opts = {}) {
@@ -121,6 +122,8 @@ const termCases = [
   ['activate', { sleptAt: ['LHR'] }, { sleptAtNodes: { LHR: true } }, {}],
   ['activate', { flagsPath: ['tour.pip'] }, { tour: { pip: true } }, { tour: {} }],
   ['activate', { countMin: [{ path: 'log', min: 2 }] }, { log: [1, 2] }, { log: [1] }],
+  ['activate', { dayMin: 21, dayMax: 35 }, { day: 21 }, { day: 35 }],   // §BOARD-01-VOID-GATE — inclusive lo / exclusive hi
+  ['activate', { dayMin: 42 }, { day: 42 }, { day: 41 }],               // open-ended upper bound
   ['complete', { flags: ['x'] }, { x: true }, {} ],
   ['complete', { flagsAny: ['x'] }, { x: true }, {}],
   ['complete', { battles: ['b1'] }, { defeatedBattles: { b1: true } }, {}],
