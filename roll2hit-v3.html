@@ -23392,6 +23392,16 @@ function _renderNpcCard(key, container) {
     + greetingHtml
     + _preamble
     + '<div style="font-style:italic;font-size:12px;color:' + quoteColor + ';margin-top:2px">' + displayQuote + '</div>';
+  // §NPC-01-C: enemy footer — at Friendly (folds in §POT-C2). Mirrors the worldTruth
+  // footer's treatment but one tier earlier: the relationship deepens from "what they're
+  // up against" (Friendly, ⚔) to "what they know" (Dear Friend, ✦). Rendered above the
+  // worldTruth footer so a Dear Friend card reads friendly-reveal → dear-friend-reveal.
+  if (fav >= 1 && dlg.meta && dlg.meta.enemy) {
+    const en = document.createElement('div');
+    en.style.cssText = 'font-size:10px;color:#3A2010;margin-top:6px;font-style:italic;border-top:1px solid #3a2010;padding-top:4px;';
+    en.textContent = '⚔ ' + dlg.meta.enemy;
+    card.appendChild(en);
+  }
   // worldTruth footer — only at Dear Friend
   if (fav >= 2 && dlg.meta && dlg.meta.worldTruth) {
     const wt = document.createElement('div');

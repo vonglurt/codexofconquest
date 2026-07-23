@@ -115,3 +115,86 @@ test.describe('§NPC-01-B — render map derived from BIRKA_NPC_PROFILES.node', 
     expect(pageErrors).toEqual([]);
   });
 });
+
+// §NPC-01-C — render dlg.meta.enemy at Friendly (fav>=1), mirroring the worldTruth footer at
+// Dear Friend (fav>=2). The relationship deepens from "what they're up against" (⚔, Friendly) to
+// "what they know" (✦, Dear Friend). Folds in §POT-C2: 202 authored villain sketches that nothing
+// read. Tier-gated + data-driven — not a yael special case.
+test.describe('§NPC-01-C — meta.enemy footer at Friendly (folds in §POT-C2)', () => {
+  test('enemy reveals at Friendly, worldTruth stays Dear-Friend-only, and enemy sits above worldTruth', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+
+    const r = await page.evaluate(() => {
+      const key = 'yael';
+      const meta = NPC_DIALOGUES[key].meta;
+      const enemy = meta.enemy, worldTruth = meta.worldTruth;
+
+      const render = fav => {
+        S_story.npcFavorability = { [key]: fav };
+        S_story.actNumber = 1;            // avoid Act-III / Act-8 one-time injections (meta preserved either way)
+        S_story.yaelOnboardingSeen = true; // take the normal tier pool, not the onboarding early-return
+        const box = document.createElement('div');
+        _renderNpcCard(key, box);
+        return box;
+      };
+
+      const impartial = render(0).textContent;
+      const friendlyBox = render(1);
+      const dearBox = render(2);
+
+      // DOM order on the Dear Friend card: the enemy footer (leaf div, "⚔ …") must precede the
+      // worldTruth footer (leaf div, "✦ …"), so the card reads friendly-reveal → dear-friend-reveal.
+      const footers = [...dearBox.querySelectorAll('div')].map(d => d.textContent);
+      const enemyIdx = footers.findIndex(t => t.startsWith('⚔ '));
+      const wtIdx = footers.findIndex(t => t.startsWith('✦ '));
+
+      return {
+        enemy,
+        impartialHasEnemy: impartial.includes('⚔ ' + enemy),
+        friendlyHasEnemy: friendlyBox.textContent.includes('⚔ ' + enemy),
+        friendlyHasWorldTruth: friendlyBox.textContent.includes('✦ ' + worldTruth),
+        dearHasEnemy: dearBox.textContent.includes('⚔ ' + enemy),
+        dearHasWorldTruth: dearBox.textContent.includes('✦ ' + worldTruth),
+        enemyBeforeWorldTruth: enemyIdx >= 0 && wtIdx >= 0 && enemyIdx < wtIdx,
+      };
+    });
+
+    expect(r.enemy, 'yael has an authored enemy line').toBeTruthy();
+    expect(r.impartialHasEnemy, 'Impartial (fav<1) does NOT reveal the enemy line').toBe(false);
+    expect(r.friendlyHasEnemy, 'Friendly (fav>=1) reveals the enemy line').toBe(true);
+    expect(r.friendlyHasWorldTruth, 'Friendly does NOT yet reveal the Dear-Friend worldTruth').toBe(false);
+    expect(r.dearHasEnemy, 'Dear Friend still shows the enemy line').toBe(true);
+    expect(r.dearHasWorldTruth, 'Dear Friend reveals the worldTruth line').toBe(true);
+    expect(r.enemyBeforeWorldTruth, 'enemy footer sits above worldTruth on the card').toBe(true);
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('data-driven: every sampled Friendly NPC with meta.enemy renders the ⚔ footer (not a yael special case)', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+
+    const r = await page.evaluate(() => {
+      // NPCs that have BOTH a profile (else _renderNpcCard early-returns) and an authored enemy line.
+      const keys = Object.keys(NPC_DIALOGUES)
+        .filter(k => BIRKA_NPC_PROFILES[k] && NPC_DIALOGUES[k].meta && NPC_DIALOGUES[k].meta.enemy)
+        .slice(0, 20);
+      const missing = [], threw = [];
+      for (const k of keys) {
+        S_story.npcFavorability = { [k]: 1 };
+        S_story.actNumber = 1;
+        const box = document.createElement('div');
+        try { _renderNpcCard(k, box); } catch (e) { threw.push(k + ': ' + String(e)); continue; }
+        if (!box.textContent.includes('⚔ ' + NPC_DIALOGUES[k].meta.enemy)) missing.push(k);
+      }
+      return { sweepSize: keys.length, missing, threw };
+    });
+
+    expect(r.sweepSize, 'sampled NPCs with a profile + authored enemy line').toBeGreaterThan(10);
+    expect(r.threw, 'no card throws rendering the enemy footer at Friendly').toEqual([]);
+    expect(r.missing, 'every sampled Friendly NPC shows its ⚔ enemy footer').toEqual([]);
+    expect(pageErrors).toEqual([]);
+  });
+});
