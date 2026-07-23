@@ -9,8 +9,8 @@
 
 ## 0. The 60-second orientation
 
-- **The product is one file:** `roll2hit-v3.html` (~37k lines, ~5.4 MB) *is* the game — combat engine, world map, 418 nodes, 398 monsters, ~2,850 quests, 8 acts, save system. No server and no build step at **play** time: the shipped game is static HTML you open in a browser, and the WBAPI server is an **authoring-time** tool. (Parity modules do carry one author-time step — re-inlining a `js/*.js` twin back into the HTML after editing it, §6.5.) Everything else in the repo exists to **author, document, test, and host** that one file.
-- **You do not hand-edit 37k lines.** You author through the **WBAPI** — a local REST server (`js/wbapi-server.js` on `:1367`) driven by `./api.sh`, which reads the HTML's data sections and writes mutations back in place.
+- **The product is one file:** `roll2hit-v3.html` *is* the game — combat engine, world map, hundreds of nodes and monsters, thousands of quests across multiple acts, save system — one large static HTML file (tens of thousands of lines, several MB). Exact live totals rot when hardcoded, so this line no longer carries them: **run `npm run stats`** for the real counts (nodes · monsters · terrains · quests · NPCs · acts · lines · bytes, parsed from the data sections by the same `wbapi-core` the `:1367` server uses — §DX-01g). No server and no build step at **play** time: the shipped game is static HTML you open in a browser, and the WBAPI server is an **authoring-time** tool. (Parity modules do carry one author-time step — re-inlining a `js/*.js` twin back into the HTML after editing it, §6.5.) Everything else in the repo exists to **author, document, test, and host** that one file.
+- **You do not hand-edit tens of thousands of lines.** You author through the **WBAPI** — a local REST server (`js/wbapi-server.js` on `:1367`) driven by `./api.sh`, which reads the HTML's data sections and writes mutations back in place.
 - **Docs mirror the HTML two ways.** Every data structure has a home doc; every doc entry traces to a line in the HTML. When you change the game, you sync the doc in the same increment.
 - **Work is one increment per "continue."** Pick a `§`-tagged item from BACKLOG.md, ship the smallest coherent slice, verify it, mark it done, and stop. Append new ideas to BACKLOG.md rather than doing them inline.
 
@@ -210,6 +210,7 @@ node --check js/wbapi-server.js   # server-file parse only — the HTML inline <
 
 # What exists already? (grep before building)
 ./api.sh list quest --q "TERM";  ./api.sh get node LHR;  grep -n "SYMBOL" roll2hit-v3.html
+npm run stats                            # live node/monster/quest/terrain/NPC/line/byte totals (never trust a hardcoded count)
 
 # Author
 ./api.sh post node code=NEW name=<terrainKey> label="…" act=N
