@@ -8325,6 +8325,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   KRN:{ num:5,  code:'KRN', name:'crypt',           label:'The Birka Crypt',             act:1, text:"The stair goes down into a cold that has a taste — old stone, standing water, the mineral breath of a place the sun has never reached. Torches burn at the bottom, lit recently, the wax still running and not yet pooled.\n\nThe first chamber holds twelve tombs in two rows. A few of the lids sit askew, one stone slab face-down on the floor, and the scratches on its underside face the wrong way. Water drips somewhere past the reach of the light, patient and unhurried.\n\nIn the far corner a shadow lies where nothing stands to cast it, and it seems to settle whenever you look at it straight. Overhead a sexton's lantern crosses the grating and moves on, and does not look down. The dark down here does not feel empty. It feels occupied — and in no particular hurry.", npc:null, battle:{label:'Skeleton ×3 + Shadow', key:'skeleton', count:3}, loot:'Crypt Key · Void Scratch Note', sleep:false,
   },
   HKG:{ num:6,  code:'HKG', name:'cyberpunk_streets', label:'Neon Undercity',             act:1, text:"The descent from the crypt floor takes thirty steps. At the bottom the stone ends and the conduit begins — cable bundles thick as your arm running the corridor's length, neon strips casting everything in a blue the eye reads as cold.\n\nThe passage was a transit corridor once. The turnstiles at the far end are still set to reject; three have been forced and bent back. Someone came through recently, and the path they cleared is the one you will use.\n\nTwo androids hold the mid-point checkpoint, heads tracking in the slow arc of a thing that runs on schedule. Between them, a data wraith — light that moves wrong, a signal that chose to persist rather than terminate. The androids are the vermin here. The wraiths are what a corridor produces when it runs long enough without maintenance.\n\nCommander Bruhns is already past the checkpoint. You can tell because the androids are still in reset posture, not yet returned to neutral scan.\n\nHe did not wait.", npc:'Commander Bruhns', battle:{label:'Android ×2 + Data Wraith', key:'corrupted_android', count:2}, loot:'Signal Jammer · EMP Grenade · Commander Token', sleep:false,
+    textVariants:[{flag:'cyMaintenanceDecoded',text:'The descent from the crypt floor still takes thirty steps. You count them differently now. At the bottom the stone ends and the conduit begins — and you know the hand that laid it. The cable bundles thick as your arm are resonance channels; the blue the eye reads as cold is bioluminescence, tuned by a Scholar King three centuries before the word for it existed. The plate on the wall told you so, once you could read the cipher. Nothing here is out of its time. It is precisely of its time — his.\n\nThe passage was a transit corridor once, and now you know who ran the transit. The turnstiles at the far end are still set to reject; three have been forced and bent back. Someone came through recently, and the path they cleared is the one you will use.\n\nTwo androids hold the mid-point checkpoint, heads tracking in the slow arc of a thing that still runs on his schedule — the maintenance log unbroken where the maintainer is not. Between them, a data wraith: light that moves wrong, a signal that chose to persist rather than terminate. The androids are the vermin the corridor grew. The wraith is what any of his work becomes when it runs long enough without him.\n\nCommander Bruhns is already past the checkpoint. You can tell because the androids are still in reset posture, not yet returned to neutral scan.\n\nHe did not wait. He walks the Scholar King\'s corridor and reads it as a hazard. You read the maker\'s name off the wall on the way in.'}],
   },
   // ── §LIX: Jerusalem + Damascus — The Road to Damascus ──
   JRS:{ num:84, code:'JRS', name:'jerusalem', label:'Jerusalem — Lower Court', act:4, 
@@ -24066,6 +24067,11 @@ const EFFORT_XP_PCT = 0.25;
 // tiny because a fight fires many attack rolls. Per-encounter miss-XP is capped at the
 // flee value (EFFORT_XP_PCT × kill), so miss-farming can never out-earn an actual kill.
 const EFFORT_MISS_PCT = 0.02;
+// §XP-02-A: flat first-arrival exploration XP — the 4th §XP-01 grant site ("all action earns
+// XP" extends to covering new ground). Awarded once per node on the visited false→true flip.
+// Kept flat + tiny and ≤ the weakest starter flee value (EFFORT_XP_PCT × a real kill; protofleder
+// = round(12×16×0.25) = 48) so exploring a node can never out-earn a fight. One obvious dial.
+const EXPLORE_XP = 10;
 
 const STARTER_DAGGER = { name:'Rusted Dagger', icon:'🗡', type:'item', sell:0, code:'spawn' };
 const STARTER_POINTY_STICK = { tier:'pointy_stick', name:'Pointy Stick', icon:'🪵', type:'mainweapon', die:4, count:1, magicBonus:0, sell:10, minLevel:1 };
@@ -29635,7 +29641,27 @@ function _itemType(n) {
   return 'item';
 }
 
+// §XP-02-A: first-arrival exploration XP — the 4th §XP-01 grant site. Fires once per node when
+// its `visited` boolean flips false→true (backtracking pays nothing, for free, via the guard).
+// XP is granted AFTER the free step has already landed (this runs inside storyRender), so it can
+// never gate movement. UI (message + any level-up modal) is deferred so the render finishes first.
+function _grantExplorationXp(node) {
+  if (node.junction) return;   // routing junctions are not "places" — no exploration XP
+  const xp = EXPLORE_XP;
+  if (!(xp > 0)) return;
+  S_story.explorationXp = (S_story.explorationXp || 0) + xp;   // telemetry (mirrors effortXpQuests)
+  S_story.xp += xp;
+  _levelUpQueue = [];
+  _checkLevelUp();
+  const _lvls = _levelUpQueue.slice();   // capture before the deferred UI reads the shared queue
+  setTimeout(() => {
+    storyMsg('🧭 New ground. +' + xp + ' XP for reaching ' + (node.label || node.code) + '.');
+    if (_lvls.length > 0) _showLevelUpModal(_lvls[0]);
+  }, 0);
+}
+
 function storyCollectLoot(node) {
+  if (!S_story.visited[node.code]) _grantExplorationXp(node);   // §XP-02-A — before the visited flip below
   if (S_story.visited[node.code] || !node.loot) { S_story.visited[node.code] = true; return null; }
   S_story.visited[node.code] = true;
   if (node.loot.startsWith('VICTORY') || node.loot.startsWith('Portal Key')) return null;
@@ -32143,7 +32169,7 @@ function storyRender(node, prefix) {
     const _frNpcs = [];
     if (S_story.connieMet) _frNpcs.push('connie_tuna');
     if ((S_story.quests || {})['quest_la_riva_02'] === 'active' || (S_story.quests || {})['quest_la_riva_03'] === 'active') _frNpcs.push('aldo_sardino');
-    const _ssjNpcs = S_story.emmerMet ? ['emmer'] : [];
+    const _ssjNpcs = S_story.emmerMet ? ['the_fisherman','emmer'] : ['the_fisherman']; // §NPC-01-SF5: the Fisherman is "always here in the morning" (SSJ text) and Yael signposts him — but SSJ's curated literal shadowed his derived card. List him unconditionally.
     const _nueNpcs = ['gret'];
     if (S_story.pierFalkWarm) _nueNpcs.push('pier');
     const birkaNpcs = { LHR:['yael'], TLL:['brynn'], MHQ:['quill'], LLA:['pachelbel'], HKG:['crov','auros'], CQ:_cqNpcs, SQ:_sqNpcs, // §PLAY-01-G: dead pre-§WALK sublocation codes remapped to real nodes, each proved by its NPC's quest activateNode — IN→TLL (brynn/"The First Inn"), TV→MHQ (quill/"Birka Tavern"), BA→LLA (pachelbel/"The Rough Bar"; the Varga ambient below already checks LLA), CY→HKG (crov Weckmann + auros Bruhns/"Neon Undercity"). LHR was the §PLAY-01-D CI→LHR fix (yael/start node). No NODE_MAP entry ever existed for CI/IN/TV/BA/CY, so these cards previously rendered nowhere.

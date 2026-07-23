@@ -9521,7 +9521,7 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
         lootMsg,
         inv: S_story.inventory.map(i => i.name),
         q1: S_story.quests.quest_math_01, q4: S_story.quests.quest_math_04,
-        gold: S_story.gold, xp: S_story.xp,
+        gold: S_story.gold, xp: S_story.xp, explore: EXPLORE_XP,
         msgs: msgs.join(' | '),
       };
     });
@@ -9530,7 +9530,8 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
     expect(r.q1).toBe('complete');
     expect(r.q4).toBe('complete');
     expect(r.gold).toBe(1000 + 300 + 500);
-    expect(r.xp).toBe(350 + 500);
+    // §XP-02-A: ZERO is unvisited here (S_story.visited={}), so the first-arrival grant also fires.
+    expect(r.xp).toBe(350 + 500 + r.explore);
     expect(r.msgs).toContain('✓ The Number That Means Nothing');
     expect(r.msgs).toContain('✓ The Counting Quest');
   });

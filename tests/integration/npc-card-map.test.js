@@ -263,3 +263,41 @@ test.describe('§NPC-01-SF2 — profile-less, dialogue-only NPCs render from dlg
     expect(pageErrors).toEqual([]);
   });
 });
+
+// §NPC-01-SF5 — the_fisherman is SSJ's designated mentor (Yael signposts him; SSJ node text says he
+// is "always here in the morning") and has a rich BIRKA_NPC_PROFILES entry that would derive a card
+// at SSJ — but SSJ is a CURATED birkaNpcs key, and the literal-wins rule shadowed the derived map.
+// The old `_ssjNpcs = emmerMet ? ['emmer'] : []` never listed him, so the mentor rendered no card
+// (and NO card at all in fresh state, before Emmer is met). The fix lists him unconditionally.
+test.describe('§NPC-01-SF5 — the Fisherman renders unconditionally at SSJ (was shadowed by the curated literal)', () => {
+  test('fresh state (emmerMet=false): the Fisherman card shows at SSJ, Emmer does not yet', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'SSJ';
+    // SEED_STATE leaves emmerMet unset (falsey) → the old code rendered zero cards at SSJ.
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('The Fisherman');       // was absent before SF5 (empty _ssjNpcs)
+    await expect(row).not.toContainText('Emmer Finch');     // Emmer is still state-gated on emmerMet
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('after meeting Emmer (emmerMet=true): both cards show, Fisherman first', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'SSJ';
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true }, emmerMet: true });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('The Fisherman');
+    await expect(row).toContainText('Emmer Finch');
+    // order matches the curated literal ['the_fisherman','emmer'] — mentor first, apprentice second.
+    const order = await row.evaluate(el => {
+      const t = el.textContent;
+      return t.indexOf('The Fisherman') < t.indexOf('Emmer Finch');
+    });
+    expect(order, 'the Fisherman card precedes Emmer on the SSJ row').toBe(true);
+    expect(pageErrors).toEqual([]);
+  });
+});

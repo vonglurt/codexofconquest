@@ -163,14 +163,15 @@ XP is earned on every enemy kill, including open-cell encounters.
 
 XP accumulates in `S_story.xp` across the entire run (monotonic — never decremented in-run; NG+ resets). Shown on the victory overlay after each fight.
 
-**Effort XP (§XP-01):** the principle is *all action earns XP; you never lose XP* — every "effort without success" surface pays a fraction of what the success would. Two dials:
+**Effort XP (§XP-01 / §XP-02):** the principle is *all action earns XP; you never lose XP* — every "effort without success" surface, plus **covering new ground**, pays out. Three dials:
 
 | Dial | Default | Applies to |
 |---|---|---|
 | `EFFORT_XP_PCT` | `0.25` | a **fled enemy** grants `round(AC·maxHp·EFFORT_XP_PCT)` (`_storyEnemyFlees`); a **failed skill-check** grants `round(rewardXp·EFFORT_XP_PCT)` of the reward the pass would have given, **once per quest** (`_resolveQuestUQF`; 0 if the check carries no reward bit) |
 | `EFFORT_MISS_PCT` | `0.02` | each **missed attack** grants `round(AC·maxHp·EFFORT_MISS_PCT)` (`_overlayPlayerAttack`), banked silently (no mid-fight level-up modal) |
+| `EXPLORE_XP` (§XP-02-A) | `10` | **first arrival** at a node — a flat grant awarded once when `S_story.visited[code]` flips false→true (`storyCollectLoot` → `_grantExplorationXp`); backtracking a visited node pays nothing. Accrues to `S_story.explorationXp` telemetry; UI (message + any level-up) is deferred so it never gates the free step |
 
-Combat misses are **capped per encounter** at the flee value — cumulative miss-XP in one fight cannot exceed `round(AC·maxHp·EFFORT_XP_PCT)` (25% of the kill), so miss-farming a weak enemy never out-earns fighting a real one, and a won fight yields at most ~125% of its kill XP. Effort XP is single-player story only (`S_story`); it never enters the synced PvP duel.
+Combat misses are **capped per encounter** at the flee value — cumulative miss-XP in one fight cannot exceed `round(AC·maxHp·EFFORT_XP_PCT)` (25% of the kill), so miss-farming a weak enemy never out-earns fighting a real one, and a won fight yields at most ~125% of its kill XP. First-arrival XP is likewise **bounded ≤ the weakest starter flee value** (`EXPLORE_XP` = `10` ≤ protofleder's `round(12·16·0.25)` = `48`), so exploring a node can never out-earn a fight. All effort XP is single-player story only (`S_story`); it never enters the synced PvP duel.
 
 ---
 
