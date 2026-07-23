@@ -55,7 +55,7 @@ Confirm current state from the live file, never from memory or a "DONE" claim.
 
 **6. Sync the docs in the same increment.** Every changed structure updates its home doc (§1 table in index.md maps structure→doc). Two-way sync is a hard rule, not a courtesy: `quest.md` for quests, `monsters.md` for monsters, `world.md`/`maps.md`/`story.md` for world/nodes, `mechanics.md` for systems. Verify world-map consistency across `maps.md`/`story.md`/`world.md` on each pass.
 
-**7. Verify.** Run the relevant checks (§7). At minimum `npm run check:walk` for world/quest changes and the item's own integration test. Parse the file (`node --check js/wbapi-server.js`; the inline `<script>` must stay valid). Know the **pre-existing baseline reds** so you can tell a real regression from noise (§7).
+**7. Verify.** Run the relevant checks (§7). At minimum `npm run check:walk` for world/quest changes and the item's own integration test. Parse the server (`node --check js/wbapi-server.js`) — note this does *not* cover the HTML's inline `<script>`, which is validated only when the Playwright suite loads the page (a syntax error there fails every test). Know the **pre-existing baseline reds** so you can tell a real regression from noise (§7).
 
 **8. Commit + speak, then mark done.** Commit only when the work is verified. After every `git commit`, run `./say.sh "<commit subject>"` (Commit + Speak Rule; use `./say.sh`, never raw macOS `say`). Then flip the BACKLOG row to `[x]` **with the commit hash and the evidence** (test counts, greps, green gates) — the house style is a one-paragraph ship record, not a bare checkmark. **Mark done only after verified.**
 
@@ -173,10 +173,10 @@ These are non-negotiable. Full text in CONTRIBUTING.md.
 ## 7. Verify — tests and the known baseline
 
 ```bash
-npm run check:walk        # world-invariant CI gates (invariants/parity/terrain/roads/rooms/quest/gate/rng/questgraph)
+npm run check:walk        # 10 world-invariant CI gates (invariants/parity/behaviour/terrain/roads/rooms/quest/gate/rng/questgraph)
 npm test                  # Playwright integration suite  (STOP the server first — see below)
 npm run test:mud          # MUD server-protocol harness
-node --check js/wbapi-server.js   # inline-script + server parse
+node --check js/wbapi-server.js   # server-file parse only — the HTML inline <script> is validated by npm test's browser load + the parity fences
 ```
 
 **Known pre-existing baseline reds** (so you can tell a real regression from noise — these are *not* your fault, do not "fix" them blindly):
