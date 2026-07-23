@@ -246,12 +246,20 @@ test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
         hint:'A test vignette.', bits:[{ kind:'skill_check', stat:'WIS', skill:'Insight', dc:13, onPass:[], onFail:[] }] };
       S_story.quests.__uqf_panel = 'active';
       storyRender(NODE_MAP[S_story.currentCode]);
-      const out = (document.getElementById('story-content') || document.body).innerHTML;
+      // §CEREMO-ACC: the "Roll Ceremonia — Insight DC 13" button now lives in the
+      // expand-to-confirm accordion — tap the quest card to open it. Read #story-info-row
+      // (NOT document.body, whose innerHTML also holds the <script> source where the
+      // verb literal appears). Target roll cards by lbl so a node's fish/encounter/rest
+      // card (lbl BATTLE/FISH/REST) is never the one clicked.
+      [...document.querySelectorAll('#story-info-row .story-section-card')]
+        .filter(c => { const l = c.querySelector('.story-card-lbl'); return l && ['ROLL','FIGHT','DELIVER','ESCORT','TALK'].includes(l.textContent); })
+        .forEach(c => { const b = c.querySelector('.story-card-btn'); if (b) b.click(); });
+      const out = document.getElementById('story-info-row').innerHTML;
       delete QUEST_DB.__uqf_panel;
       return out;
     });
-    expect(html).toContain('Panel Demo');                       // the UQF quest title
-    expect(html).toContain('Roll Ceremonia — Insight DC 13');   // a working roll button, DC from the bit
+    expect(html).toContain('Panel Demo');                       // the UQF quest title (card main)
+    expect(html).toContain('Roll Ceremonia — Insight DC 13');   // the roll button inside the opened accordion
   });
 
   test('storyCheckQuests honors a UQF declarative gate on activation', async ({ page }) => {
@@ -356,7 +364,7 @@ test.describe('§WISDOM-01 migrated to UQF — quest_wis_01 (§ARCH-01 Phase 3)'
     expect(r.flag).toBe(false);
     expect(r.token).toBe(false);
     expect(r.gold).toBe(0);
-    expect(r.xp).toBe(0);
+    expect(r.xp).toBe(63);   // §XP-01: a failed check still earns 25%-once effort XP = round(250·0.25); success rewards (flag/token/gold) stay withheld
   });
 });
 
@@ -585,7 +593,7 @@ test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () =
       return { status:S_story.quests.quest_wane_03, xp:S_story.xp, croneMarks:S_story.croneMarks };
     });
     expect(r.status).toBe('failed');   // retryable:false ⇒ locked
-    expect(r.xp).toBe(0);
+    expect(r.xp).toBe(44);   // §XP-01: 25%-once effort XP = round(175·0.25); no croneMark reward
     expect(r.croneMarks).toBe(0);
   });
 
@@ -991,8 +999,12 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01
         S_story.ceremonia_yael_04_failed = failed;
         S_story.quests = { quest_ceremonia_yael_05:'active' };
         storyRender(NODE_MAP['LHR']);
-        // read the rendered quest-panel container only — NOT document.body, whose
-        // innerHTML includes the <script> source (where both literals also live).
+        // §CEREMO-ACC: the vignette (alt vs main) now renders inside the expand-to-confirm
+        // accordion — open the quest card first. Read #story-info-row only (NOT document.body,
+        // whose innerHTML includes the <script> source where both literals also live).
+        [...document.querySelectorAll('#story-info-row .story-section-card')]
+          .filter(c => { const l = c.querySelector('.story-card-lbl'); return l && ['ROLL','FIGHT','DELIVER','ESCORT','TALK'].includes(l.textContent); })
+          .forEach(c => { const b = c.querySelector('.story-card-btn'); if (b) b.click(); });
         return document.getElementById('story-info-row').innerHTML;
       };
       const altPart = 'I heard about the report';      // from vignetteTextAlt
@@ -1588,7 +1600,7 @@ test.describe('§ARCH-01 Wave 1 — Innmother skill-checks (quest_inn_{02,03,04}
       return { status:S_story.quests.quest_inn_02, dxp:S_story.xp - 1000000, kindness:S_story.innmotherKindness };
     });
     expect(r.status).toBe('failed');   // retryable:false ⇒ locked
-    expect(r.dxp).toBe(0);
+    expect(r.dxp).toBe(38);   // §XP-01: 25%-once effort XP = round(150·0.25); no kindness reward
     expect(r.kindness).toBe(0);
   });
 });
@@ -1849,7 +1861,7 @@ test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor
     });
     expect(r.status).toBe('active');   // retryable ⇒ stays active
     expect(r.hp).toBe(20);             // onFail _legacy_fn docked 10 psychic
-    expect(r.xp).toBe(0); expect(r.flag).toBe(false); expect(r.fails).toBe(1);
+    expect(r.xp).toBe(19); expect(r.flag).toBe(false); expect(r.fails).toBe(1);   // §XP-01: 25%-once effort XP = round(75·0.25), even on a retryable fail (granted once)
   });
 
   test('the §D01-02 NUE handshake button still drives the migrated quest through _rollCeremonia', async ({ page }) => {
@@ -2342,7 +2354,7 @@ test.describe('§ARCH-01 Wave 1r — The Scar (quest_scar_01..04)', () => {
       return { pass, fail };
     });
     expect(r.pass).toEqual({ status:'done',   choice:'help',   xp:250, s4:true });
-    expect(r.fail).toEqual({ status:'failed', choice:'refuse', xp:0,   s4:true });
+    expect(r.fail).toEqual({ status:'failed', choice:'refuse', xp:63,  s4:true });   // §XP-01: 25%-once effort XP = round(250·0.25) on the failed branch
   });
 
   test('scar_04 completion.atNode: needs gretChoice AND currentCode===NUE', async ({ page }) => {
@@ -2450,7 +2462,7 @@ test.describe('§ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIRE
       const got = r.find(x => x.id === s.id);
       expect(got.status).toBe('failed');
       expect(got.passFlag).toBe(false);
-      expect(got.xp).toBe(0);
+      expect(got.xp).toBe(Math.round(s.xp * 0.25));   // §XP-01: 25%-once effort XP; success flags/tokens still withheld
       if (s.failFlag) {
         expect(got.failFlagSet).toBe(true);
         expect(got.failTokName).toBe(s.label + ' Token');
@@ -2544,7 +2556,7 @@ test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket
       return { status:S_story.quests.quest_stoning_lystra, flag:S_story.stoningEvent,
                xp:S_story.xp, hp:S_story.hp, tokName:tok && tok.name, tokens:S_story.inventory.length };
     });
-    expect(r).toEqual({ status:'failed', flag:true, xp:0, hp:1, tokName:'Lystra Stoning Token', tokens:1 });
+    expect(r).toEqual({ status:'failed', flag:true, xp:38, hp:1, tokName:'Lystra Stoning Token', tokens:1 });   // §XP-01: 25%-once effort XP = round(150·0.25)
   });
 
   test('basket PASS parity: done + both flags + two tokens + xp+150', async ({ page }) => {
@@ -2576,7 +2588,7 @@ test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket
                rope:S_story.basketRopeComplete, xp:S_story.xp, tokens:S_story.inventory.length,
                failures:(S_story.skillCheckAttempts.quest_basket_damascus || {}).failures };
     });
-    expect(r).toEqual({ status:'active', esc:false, rope:false, xp:0, tokens:0, failures:1 });
+    expect(r).toEqual({ status:'active', esc:false, rope:false, xp:38, tokens:0, failures:1 });   // §XP-01: 25%-once effort XP = round(150·0.25), even on a retryable fail
   });
 });
 
@@ -2670,7 +2682,7 @@ test.describe('§ARCH-01 Wave 1u — Atlantean iodine chain (iodine_01/shore_02/
     }), IODINE);
     for (const s of IODINE) {
       const got = r.find(x => x.id === s.id);
-      expect(got).toEqual({ id:s.id, status:'active', xp:0, gold:0,
+      expect(got).toEqual({ id:s.id, status:'active', xp:Math.round(s.xp * 0.25), gold:0,   // §XP-01: 25%-once effort XP; no gold/closure effects on fail
         flag: s.flag ? false : null, items:0, knowledge:0, failures:1 });
     }
   });
@@ -2831,7 +2843,7 @@ test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-cu
     }), FOLK);
     for (const s of FOLK) {
       const got = r.find(x => x.id === s.id);
-      expect(got).toEqual({ id:s.id, status:'active', xp:0, faith_folk:0, emmerStage4a:false, items:0, failures:1 });
+      expect(got).toEqual({ id:s.id, status:'active', xp:Math.round(s.xp * 0.25), faith_folk:0, emmerStage4a:false, items:0, failures:1 });   // §XP-01: 25%-once effort XP; flag unchanged on fail
     }
   });
 });
@@ -7707,7 +7719,8 @@ test.describe('§ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated; xp/
         const failFlagOk = flag ? S_story[flag] === false : true;
         // retryable quests stay 'active' on fail (not 'failed'); non-retryable → 'failed'
         const failStatusOk = q.retryable ? S_story.quests[id] !== 'done' : S_story.quests[id] === 'failed';
-        if (!(failStatusOk && S_story.xp === 0 && S_story.gold === 0 && failFlagOk)) failBad.push(id);
+        const effXp = rw ? Math.round((rw.xp || 0) * 0.25) : 0;   // §XP-01: a failed check earns 25%-once effort XP; gold/flag rewards still withheld
+        if (!(failStatusOk && S_story.xp === effXp && S_story.gold === 0 && failFlagOk)) failBad.push(id);
       }
       return { count:ids.length, passBad, failBad };
     }, NEWLY_MIGRATED);
@@ -8554,6 +8567,11 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
     const r = await page.evaluate(() => {
       S_story.quests = { hty02_act4: 'active' };   // isolate: the card list renders only the first 6 active quests
       storyRender(NODE_MAP[S_story.currentCode]);
+      // §CEREMO-ACC: the "Fight — STR DC 12" roll button lives in the expand-to-confirm
+      // accordion — open the quest card first (the FIGHT lbl + ⚔ title stay on the card).
+      [...document.querySelectorAll('#story-info-row .story-section-card')]
+        .filter(c => { const l = c.querySelector('.story-card-lbl'); return l && ['ROLL','FIGHT','DELIVER','ESCORT','TALK'].includes(l.textContent); })
+        .forEach(c => { const b = c.querySelector('.story-card-btn'); if (b) b.click(); });
       const html = document.getElementById('story-info-row').innerHTML;
       return {
         hasFightLbl: html.includes('FIGHT'),
@@ -8748,6 +8766,11 @@ test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main par
     const r = await page.evaluate(() => {
       S_story.quests = { zth_08_act5:'active', stn_c1a1:'active', stn_c1a2:'active' };
       storyRender(NODE_MAP[S_story.currentCode]);
+      // §CEREMO-ACC: the typed "verb — STAT DC n" roll buttons live in the expand-to-confirm
+      // accordion — open all three quest cards first (the DELIVER/ESCORT/TALK lbls stay on the cards).
+      [...document.querySelectorAll('#story-info-row .story-section-card')]
+        .filter(c => { const l = c.querySelector('.story-card-lbl'); return l && ['ROLL','FIGHT','DELIVER','ESCORT','TALK'].includes(l.textContent); })
+        .forEach(c => { const b = c.querySelector('.story-card-btn'); if (b) b.click(); });
       const html = document.getElementById('story-info-row').innerHTML;
       return {
         deliver: html.includes('DELIVER') && html.includes('Deliver — CHA DC 12'),
@@ -8974,10 +8997,10 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
     });
     expect(r.fns).toEqual([]);              // zero closures left
     expect(r.arrayCount).toBe(r.total);     // every carrier is an array chain
-    expect(r.arrayCount).toBe(102);         // 27 (W7b closures) + 61 (W7c per-id block) + 5 (§MATH-01 gold chains) + 9 (§KG Inc 3: kg_01–03,05–10)
     expect(r.nonUqf).toEqual([]);           // §W7d — the last legacy carrier (wm_01) migrated
-    expect(r.uqfCount).toBe(102);
+    expect(r.uqfCount).toBe(r.total);       // every carrier is a valid UQF-1.0 array chain — was a brittle absolute census (102 drifted to 105 as content grew, masking real regressions behind a false-red baseline); the relational form catches any closure / non-UQF carrier without a false red on new content (§DX-01b)
     expect(r.invalid).toEqual([]);          // every chain passes bit contracts
+    expect(r.total).toBeGreaterThanOrEqual(102);   // sanity floor: onComplete carriers only grow (27 W7b + 61 W7c + 5 §MATH-01 + 9 §KG + later content) — catches a mass disappearance
   });
 
   test('glut_06 full-chain parity: flags, gift removal, kindness, crown flag', async ({ page }) => {
