@@ -23337,6 +23337,13 @@ function _renderNpcCard(key, container) {
   const fav = dlg.fav;
   const badgeTxt = fav >= 2 ? '💛 Dear Friend' : fav >= 1 ? '🤝 Friendly' : (_hasActiveQuestFor(key) ? '📋 Quest Active' : '👤 Impartial');
   const staticProfile = fav >= 2 ? p.dearFriend : fav >= 1 ? p.friendly : p.neutral;
+  // §NPC-01-A: "lean" profiles (key/name/occupation/node only — the ~194 non-Birka NPCs) carry no
+  // per-tier greeting object, so staticProfile is undefined and staticProfile.greeting would throw.
+  // Omit the greeting line when absent (name/occupation/quote/worldTruth still render); rich profiles
+  // keep byte-identical HTML. This is the keystone that lets §NPC-01-B widen the render map safely.
+  const greetingHtml = (staticProfile && staticProfile.greeting)
+    ? '<div style="font-size:12px;color:#2A1A0A">' + staticProfile.greeting + '</div>'
+    : '';
   const card = document.createElement('div');
   card.className = 'info-chip npc-card-chip';
   card.style.cssText = 'display:flex;flex-direction:column;gap:4px;padding:8px;background:#D4BC88;border:1px solid #8B4A2A;border-radius:4px;cursor:default;width:100%;box-sizing:border-box;';
@@ -23364,7 +23371,7 @@ function _renderNpcCard(key, container) {
     + '<span style="font-size:10px;color:#444444">' + badgeTxt + '</span>'
     + '</div>'
     + '<div style="font-size:11px;color:#444444;margin-bottom:2px">' + p.occupation + '</div>'
-    + '<div style="font-size:12px;color:#2A1A0A">' + staticProfile.greeting + '</div>'
+    + greetingHtml
     + _preamble
     + '<div style="font-style:italic;font-size:12px;color:' + quoteColor + ';margin-top:2px">' + displayQuote + '</div>';
   // worldTruth footer — only at Dear Friend
