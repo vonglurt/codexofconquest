@@ -37144,7 +37144,7 @@ function _travelTick() {
     S_story.waypoint = null;
     _updateWaypointBtn();
     storyMsg('📍 You have reached the waypoint: ' + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '!');
-    storyQuestToggle();
+    switchSheet('sheet-story');   // waypoint arrival returns to the main screen, not the quest tab
     return;
   }
   const dir = _roadGridDir(pos, wp);
@@ -37202,7 +37202,7 @@ function storyWaypoint() {
     storyMsg('📍 You have reached the waypoint: ' + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '!');
     S_story.waypoint = null;
     _updateWaypointBtn();
-    storyQuestToggle();
+    switchSheet('sheet-story');   // waypoint arrival returns to the main screen, not the quest tab
     return;
   }
   const dir = _roadGridDir(pos, wp);   // §NAV-01d: same road-weighted route as auto-travel
