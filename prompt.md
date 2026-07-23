@@ -9,7 +9,7 @@
 
 ## 0. The 60-second orientation
 
-- **The product is one file:** `roll2hit-v3.html` (~37k lines, ~5.4 MB) *is* the game — combat engine, world map, 418 nodes, 398 monsters, ~2,850 quests, 8 acts, save system. No server, no build step at runtime. Everything else in the repo exists to **author, document, test, and host** that one file.
+- **The product is one file:** `roll2hit-v3.html` (~37k lines, ~5.4 MB) *is* the game — combat engine, world map, 418 nodes, 398 monsters, ~2,850 quests, 8 acts, save system. No server and no build step at **play** time: the shipped game is static HTML you open in a browser, and the WBAPI server is an **authoring-time** tool. (Parity modules do carry one author-time step — re-inlining a `js/*.js` twin back into the HTML after editing it, §6.5.) Everything else in the repo exists to **author, document, test, and host** that one file.
 - **You do not hand-edit 37k lines.** You author through the **WBAPI** — a local REST server (`js/wbapi-server.js` on `:1367`) driven by `./api.sh`, which reads the HTML's data sections and writes mutations back in place.
 - **Docs mirror the HTML two ways.** Every data structure has a home doc; every doc entry traces to a line in the HTML. When you change the game, you sync the doc in the same increment.
 - **Work is one increment per "continue."** Pick a `§`-tagged item from BACKLOG.md, ship the smallest coherent slice, verify it, mark it done, and stop. Append new ideas to BACKLOG.md rather than doing them inline.
@@ -57,7 +57,9 @@ Confirm current state from the live file, never from memory or a "DONE" claim.
 
 **7. Verify.** Run the relevant checks (§7). At minimum `npm run check:walk` for world/quest changes and the item's own integration test. Parse the server (`node --check js/wbapi-server.js`) — note this does *not* cover the HTML's inline `<script>`, which is validated only when the Playwright suite loads the page (a syntax error there fails every test). Know the **pre-existing baseline reds** so you can tell a real regression from noise (§7).
 
-**8. Commit + speak, then mark done.** Commit only when the work is verified. After every `git commit`, run `./say.sh "<commit subject>"` (Commit + Speak Rule; use `./say.sh`, never raw macOS `say`). Then flip the BACKLOG row to `[x]` **with the commit hash and the evidence** (test counts, greps, green gates) — the house style is a one-paragraph ship record, not a bare checkmark. **Mark done only after verified.**
+**7½. Eyeball it in the running game (when the change is player-visible).** Tests don't catch UX regressions — a mis-wired button, a screen that returns to the wrong tab, node text that reads wrong after an event. For anything a player would *see* or *click*, open `roll2hit-v3.html` in a browser (the `/run` skill launches it) and watch the actual behavior before you commit. Editing a `*:CORE` parity module? **Re-inline the `js/*.js` twin into the HTML first** (§6.5) — otherwise you're eyeballing the old inlined copy.
+
+**8. Commit + speak, then mark done.** Commit only when the work is verified, on the track's branch (§8). After every `git commit`, run `./say.sh "<subject>"` — and the call must **speak what changed** (what's being fixed/reviewed/added: city, node, quest ID, chain, source book, verbatim quote, property name), never a bare status word (Commit + Speak / say-narration rules; use `./say.sh`, never raw macOS `say`). This is the single source for the narration spec — §6.8 just points here. Then flip the BACKLOG row to `[x]` **with the commit hash and the evidence** (test counts, greps, green gates) — the house style is a one-paragraph ship record, not a bare checkmark. **Mark done only after verified.**
 
 **9. The finishing discipline (this is the intent of this whole file).**
 - **Single agent, no fan-out.** Do all work inline in **one** agent — never spawn sub-agents (Agent tool, Explore, Workflow orchestration). Every step stays visible in the main conversation.
@@ -166,7 +168,7 @@ These are non-negotiable. Full text in CONTRIBUTING.md.
 5. **Parity fences.** `MOVER:CORE`, `ROOMS:CORE`, `DUEL:CORE`, `QUEST:CORE` are pure, world-injected, and byte-identical to their `js/*.js` twins, asserted by `scripts/check-*-parity.js`. **Never edit an inlined copy** — edit `js/<mod>.js`, re-inline, and re-run the checker.
 6. **Seeded RNG for game state.** Encounter/skill/loot/drop rolls draw the seeded stream (client `_seededNext()` ≡ server `seededNext`). Cosmetic randomness is fine.
 7. **API-first.** Author through `./api.sh`; add the endpoint before the edit if it's missing.
-8. **Narration:** every `./say.sh` call should speak what's being fixed / reviewed / added (city, node, quest ID, chain, source book, verbatim quote, property name) — not a bare status word (say-narration directive).
+8. **Narration.** Every `./say.sh` call speaks *what changed*, not a bare status word — full spec in §2 step 8 (say-narration directive).
 
 ---
 
@@ -192,6 +194,7 @@ node --check js/wbapi-server.js   # server-file parse only — the HTML inline <
 
 ## 8. Conventions
 
+- **Branch per track.** Each `§`-track gets its own `feat/<slug>` (or `chore/<slug>`) branch; commit there and open a PR to `main` — **never** commit a track straight to `main`. (We're on `feat/board-01-warrants-board` right now.)
 - **Section IDs:** work is tracked as `§XXX-NN` (e.g. `§VM-01`, `§BOARD-01-FU3`). New tracks get a new `§` tag + a heading in BACKLOG.md and an anchor other rows link to.
 - **§RESUME "Continue Here":** the newest work keeps a reverse-chronological log at the top of BACKLOG.md — a dense paragraph per increment with commit hash, evidence, and the exact next step. Add to it as you go; it is how the next session resumes without re-deriving context.
 - **Line anchors drift.** BACKLOG/notes cite bare line numbers (`21722`, `36102`) as *hints* — **re-grep the symbol before editing**, never trust the number. (This drift is itself logged as a refactor candidate — see §DX-01 in BACKLOG.md.)
@@ -219,8 +222,9 @@ node --check js/wbapi-server.js   # server-file parse only — the HTML inline <
 ./api.sh advise <questId> # errors=[] warnings=[]?
 
 # Verify + close
+git rev-parse --abbrev-ref HEAD          # on the track's feat/<slug> branch, NOT main? (§8)
 npm run check:walk;  node --check js/wbapi-server.js
-git commit -m "feat(§ID): …" && ./say.sh "feat: <subject>"
+git commit -m "feat(§ID): …" && ./say.sh "feat: <subject>"   # commit on the branch; PR to main
 #   → flip the BACKLOG row to [x] with hash + evidence
 ```
 
