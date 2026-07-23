@@ -60,9 +60,10 @@ Confirm current state from the live file, never from memory or a "DONE" claim.
 **8. Commit + speak, then mark done.** Commit only when the work is verified. After every `git commit`, run `./say.sh "<commit subject>"` (Commit + Speak Rule; use `./say.sh`, never raw macOS `say`). Then flip the BACKLOG row to `[x]` **with the commit hash and the evidence** (test counts, greps, green gates) — the house style is a one-paragraph ship record, not a bare checkmark. **Mark done only after verified.**
 
 **9. The finishing discipline (this is the intent of this whole file).**
+- **Single agent, no fan-out.** Do all work inline in **one** agent — never spawn sub-agents (Agent tool, Explore, Workflow orchestration). Every step stays visible in the main conversation.
 - **Work the main directive to completion.** Don't scatter effort across the side tangents you notice on the way.
-- **Every side task you notice becomes a BACKLOG item, not a detour.** Saw a stale count, a broken helper, a refactor worth doing? Append it as a `§`-row and keep going. That is how the main task *finishes* instead of fraying.
-- **If you cannot finish, say so and leave a trail.** Append your recent actions + the exact next step to the item's §RESUME entry in BACKLOG.md and state plainly that it is **incomplete**. Never report a half-done item as done.
+- **Every side task you notice becomes a BACKLOG item, not a detour.** Saw a stale count, a broken helper, a refactor worth doing? Append it as a `§`-row to BACKLOG.md and keep going. That is how the main task *finishes* instead of fraying.
+- **Any unaccomplished work on your path goes to BACKLOG.md too.** If you cannot finish, say so and leave a trail: append your recent actions + the exact next step to the item's §RESUME "Continue Here" entry in BACKLOG.md and state plainly that it is **incomplete**. Never report a half-done item as done.
 
 ---
 
