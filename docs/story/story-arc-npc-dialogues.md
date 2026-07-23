@@ -35,6 +35,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 > Source: `NPC_DIALOGUES` const in `roll2hit-v3.html` (line 7204). 6 NPCs × 4 states × 5 quotes = 120 lines. Each NPC entry also has a `meta` block with `worldTruth`, `enemy`, and `missionBit`. Dialogue state selection order: `dearFriend` (fav ≥ 2) → `questActive` (active quest) → `friendly` (fav ≥ 1) → `impartial`.
 >
 > **Card footers (`_renderNpcCard`).** The `meta` block surfaces as two stacked card footers, each unlocking a tier apart so the relationship deepens from *what they're up against* to *what they know*: **`enemy` (⚔) at Friendly** (fav ≥ 1, §NPC-01-C) sits above **`worldTruth` (✦) at Dear Friend** (fav ≥ 2). Same italic 10px treatment, differentiated only by the icon; both use `textContent` (authored strings never inject HTML).
+>
+> **Profile-less fallback (§NPC-01-SF2).** `_renderNpcCard` normally reads name/occupation from the `BIRKA_NPC_PROFILES[key]` entry, but some NPCs are wired into the card map (`birkaNpcs` / the derived map) with *only* an `NPC_DIALOGUES` entry and no profile. These used to hit `if(!p) return` and render nothing; now the card synthesizes a lean profile from `dlg.meta` (`name` + `occupation`), so they show name + occupation + quote + the ⚔/✦ footers. The per-tier greeting object is absent for these, so §NPC-01-A's greeting-omit path applies.
 
 #### Yael Scheidemann — City Guard Captain (CI)
 - **worldTruth:** "Every riot that gets suppressed becomes three quiet riots."

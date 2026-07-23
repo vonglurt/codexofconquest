@@ -22620,7 +22620,6 @@ const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
   chrysis_slave: { key:"chrysis_slave", name:"Chrysis the Slave", occupation:"Household slave of Andromache (survivor; carried the weaving from the burning room)", node:"TRH" },
   bronze_attendant: { key:"bronze_attendant", name:"The Bronze Attendant", occupation:"Self-moving mechanical figure made by Hephaestus (holding the shield description scroll)", node:"SKN" },
   myrine_survivor: { key:"myrine_survivor", name:"Myrine the Survivor", occupation:"Trojan woman who carried Hecuba's robe from the burning temple (burns on both hands)", node:"SKN" },
-  euryclea_ithaca: { key:"euryclea_ithaca", name:"Euryclea the Housekeeper", occupation:"Head housekeeper of Odysseus's palace (she nursed him as a child)", node:"ITH" },
   euryclea_ithaca: { key:"euryclea_ithaca", name:"Euryclea the Housekeeper", occupation:"Head housekeeper of Odysseus's palace (nursed him as a child)", node:"ITH" },
   the_fisherman: { key:"the_fisherman", name:"The Fisherman", occupation:"fisherman", node:"SSJ", neutral:{ greeting:"The fire has been going since four. The rod is by the door — if you want it, take it.", dialogue:"I do not ask where people come from. The lake is north. You will hear it before you see it. Most people go once and that is enough. Some come back." }, friendly:{ greeting:"You came back. Good.", dialogue:"I watched your line from the steps yesterday. Your grip is different from the first time. You did not notice it change. That is when it starts." }, dearFriend:{ greeting:"I knew you would be here this morning.", dialogue:"The rod I set on the table — I made it the first week I was here. Eleven years ago. I did not know what I was making yet. I know now. Keep it." } },
   egil_thorvaldsen: { key:"egil_thorvaldsen", name:"Egil Thorvaldsen", occupation:"wool factor, Hanseatic connections", node:"BK" },
@@ -23348,10 +23347,18 @@ function _renderNpcCard(key, container) {
       }
     }
   }
-  const p = BIRKA_NPC_PROFILES[key];
-  if (!p) return;
+  let p = BIRKA_NPC_PROFILES[key];
   const dlg = _getNPCDialogue(key);
   if (!dlg) return;
+  // §NPC-01-SF2: NPCs wired into `birkaNpcs` (or the derived map) but with NO BIRKA_NPC_PROFILES entry
+  // — 9 dialogue-only NPCs (jimmy/sandy_cat/kenickie at CQ, isolde_voss/benedikt_rasp at SQ, and
+  // rennau/vonn/solvak/yva at STN/TL/VS/GC) — used to hit `if(!p) return` and render nothing at all.
+  // Synthesize a lean profile from the dialogue meta so they show name+occupation+quote (+ the ⚔/✦
+  // footers); with no per-tier greeting object, §NPC-01-A's greeting-omit path applies unchanged.
+  if (!p) {
+    if (!dlg.meta || !dlg.meta.name) return;
+    p = { name: dlg.meta.name, occupation: dlg.meta.occupation || '' };
+  }
   const fav = dlg.fav;
   const badgeTxt = fav >= 2 ? '💛 Dear Friend' : fav >= 1 ? '🤝 Friendly' : (_hasActiveQuestFor(key) ? '📋 Quest Active' : '👤 Impartial');
   const staticProfile = fav >= 2 ? p.dearFriend : fav >= 1 ? p.friendly : p.neutral;
@@ -26986,7 +26993,7 @@ const WORLD_PROGRESSION_EVENTS = [ // → doc: world.md §World Progression (con
   { id:'quill_debt',     condition: () => S_story.actNumber >= 4 && !S_story.quillQuestComplete,        journalNote: null, action: () => { S_story.couperiDebtDegraded = true; } }
 ];
 
-const NODE_NPC_KEYS = { // → doc: world.md §NPC Locations (node code → primary NPC key; used by _getNPCDialogue() routing)
+const NODE_NPC_KEYS = { // → doc: world.md §NPC Locations (node code → primary NPC key; read by _getNodeMapColor() + _getFarewell())
   LHR:'yael', IN:'brynn', TV:'couperin', BA:'pachelbel', CY:'weckmann', SQ:'crane',
   PRN:'ef_npc', EH:'eh_npc', ES:'es_npc', EW:'ew_npc', EB:'eb_npc',
   KUN:'eo_npc', EI:'ei_npc', EA:'ea_npc', EC:'ec_npc', EL:'el_npc',

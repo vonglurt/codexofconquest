@@ -198,3 +198,68 @@ test.describe('§NPC-01-C — meta.enemy footer at Friendly (folds in §POT-C2)'
     expect(pageErrors).toEqual([]);
   });
 });
+
+// §NPC-01-SF2 — NPCs wired into birkaNpcs (or the derived map) but with NO BIRKA_NPC_PROFILES entry
+// used to hit `if(!p) return` in _renderNpcCard and render an EMPTY card (silently vanish). The fix
+// synthesizes a lean profile from the dialogue meta (name/occupation), so they now render name +
+// occupation + quote + the tier-gated ⚔/✦ footers. 9 such NPCs are actually wired (jimmy/sandy_cat/
+// kenickie→CQ, isolde_voss/benedikt_rasp→SQ, rennau→STN, vonn→TL, solvak→VS, yva→GC).
+test.describe('§NPC-01-SF2 — profile-less, dialogue-only NPCs render from dlg.meta instead of vanishing', () => {
+  test('every dialogue-only NPC (no profile) renders name+occupation, and the ⚔ footer still fires at Friendly', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+
+    const r = await page.evaluate(() => {
+      // The premise: dialogue entries with meta.name but NO BIRKA_NPC_PROFILES entry.
+      const orphans = Object.keys(NPC_DIALOGUES)
+        .filter(k => !BIRKA_NPC_PROFILES[k] && NPC_DIALOGUES[k].meta && NPC_DIALOGUES[k].meta.name);
+      const empty = [], nameMissing = [], occMissing = [], threw = [];
+      for (const k of orphans) {
+        const meta = NPC_DIALOGUES[k].meta;
+        S_story.npcFavorability = { [k]: 0 };
+        S_story.actNumber = 1;
+        const box = document.createElement('div');
+        try { _renderNpcCard(k, box); } catch (e) { threw.push(k + ': ' + String(e)); continue; }
+        if (!box.textContent.trim()) { empty.push(k); continue; }      // the pre-fix bug: nothing rendered
+        if (!box.textContent.includes(meta.name)) nameMissing.push(k);
+        if (meta.occupation && !box.textContent.includes(meta.occupation)) occMissing.push(k);
+      }
+
+      // A profile-less NPC that also carries an enemy line (jimmy) shows the ⚔ footer at Friendly —
+      // proving the §NPC-01-C footer logic reaches the synthesized-profile path too.
+      let jimmyFriendlyEnemy = null;
+      const jm = NPC_DIALOGUES['jimmy'];
+      if (jm && !BIRKA_NPC_PROFILES['jimmy'] && jm.meta && jm.meta.enemy) {
+        S_story.npcFavorability = { jimmy: 1 };
+        S_story.actNumber = 1;
+        const box = document.createElement('div');
+        _renderNpcCard('jimmy', box);
+        jimmyFriendlyEnemy = box.textContent.includes('⚔ ' + jm.meta.enemy);
+      }
+
+      return { orphanCount: orphans.length, empty, nameMissing, occMissing, threw, jimmyFriendlyEnemy };
+    });
+
+    expect(r.orphanCount, 'there are dialogue-only NPCs to guard (no profile, has meta.name)').toBeGreaterThan(5);
+    expect(r.threw, 'no dialogue-only NPC throws in _renderNpcCard').toEqual([]);
+    expect(r.empty, 'no dialogue-only NPC renders an empty card anymore (the SF2 bug)').toEqual([]);
+    expect(r.nameMissing, 'every dialogue-only card shows its meta.name').toEqual([]);
+    expect(r.occMissing, 'every dialogue-only card shows its meta.occupation').toEqual([]);
+    expect(r.jimmyFriendlyEnemy, "jimmy (profile-less) shows the ⚔ enemy footer at Friendly").toBe(true);
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('end-to-end: a profile-less NPC (solvak) shows a card at its REAL wired node VS (was blank before SF2)', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    // solvak has NO BIRKA_NPC_PROFILES entry and is wired into birkaNpcs at VS (shown while
+    // !vsDebtSettled, the fresh-state default). VS is a real NODE_MAP node — before SF2 the card
+    // early-returned on !p and rendered nothing. Load the game standing on VS and assert the live row.
+    const node = 'VS';
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true } });
+    await dismissContinue(page);
+    await expect(page.locator('#story-npc-cards-row')).toContainText('Debt Agent Solvak');
+    expect(pageErrors).toEqual([]);
+  });
+});
