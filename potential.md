@@ -140,10 +140,6 @@ Of the 10 `BLOCKED` rows, **9 are blocked on §VM-01 Inc A** (prompts 10, 14, 20
 
 ## §POT-H — Adventure Hooks & Quests (prompts 11–15)
 
-- [x] **§POT-H1 — Hooks reach you only by walking onto them — and the opcode for the alternative is already written and unused** (prompts 11, 31, 35) `OPEN → PROMOTED 2026-07-21 → §BOARD-01 in BACKLOG.md` 🔴
-  **Today:** every hook is arrival-triggered: `storyCheckQuests` fires on arrival at `activateNode`. `rumor` = 7 hits, all prose. **There is no bounty board** — the single `bounty` hit in 37,271 lines is flavor text inside `VOID_TIDE_EVENTS` #21. With 2,850 quests across 401 nodes, discovery is **geographic, never social**: nobody ever tells you where to go.
-  **Potential:** an NPC-delivered hook ("a rumor points you at a distant node") is **exactly what the dead `unlock` opcode does.** `unlock` (`21778`) is a working handler — `(bit.quests||[]).forEach(qid => … S_story.quests[qid] = 'active')` — authored **zero times**. This is a rare shape: the capability exists, is contract-validated (`21575`), and needs no VM change (it does not branch or wait). A bounty/rumor board is the natural consumer. **Best unblocked ratio in this file.**
-
 - [ ] **§POT-H2 — "Uncharted lands" aren't modeled, and walking somewhere new earns nothing** (prompt 12) `OPEN` 🟠
   **Today:** the journey is the engine's strength — 401 nodes, free movement, road net, auto-travel. But `S_story.visited` is a bare boolean per node whose only consumer is map tinting (`_getNodeMapColor`, `26819`). No fog-of-war, no discovery reward.
   **Potential:** **this is an unfinished §XP-01.** That track's user directive was *"all action earns XP"* and it shipped three grant sites (fled enemy, missed attack, failed check) — yet **exploration, the one thing the game is built around, grants nothing.** First-arrival XP is a direct, in-principle completion of a closed track, using its existing dials.
@@ -156,13 +152,7 @@ Of the 10 `BLOCKED` rows, **9 are blocked on §VM-01 Inc A** (prompts 10, 14, 20
   **Today:** `faction_hansa` (8 refs), three `faith_*` tracks, and a `favorMin` gate term (3 uses). Factions are vocabulary, not actors.
   **Potential:** §PLAY-01-B established the pattern (enemies now respond per tier). Factions responding to your actions is the same idea one level up — but the prompt's *"opportunities to influence the outcome"* requires influence, i.e. `choice`. Blocked; also large. Pair with §POT-C2 (`meta.enemy` is the authored raw material for who opposes whom).
 
-- [x] **§POT-H5 — Legendary artifact: shipped** (prompt 15) `SHIPPED` 🟢
-  **Today:** the 7 Shards *are* this quest, and §PLAY-01-A surfaced them — `SHARD_GOAL = 7`, the objective chip renders `🔮🔮🔮◇◇◇◇` with symbols darkening as each returns. Backstory + perils are authored. Nothing to build; the one soft gap (no per-shard backstory surface) is low priority and belongs to §POT-W1's codex if ever wanted.
-
 ## §POT-B — Combat Encounters (prompts 16–20)
-
-- [x] **§POT-B1 — Random encounters by terrain and level: shipped, twice** (prompts 16, 19) `SHIPPED` 🟢
-  **Today:** the best-served prompt in the listicle. `WORLD_DB` is **110 hand-authored terrain→monster tables**; `TERRAIN_ENCOUNTER_RATE` sets per-terrain rates; `_weightedMonsterPick` (`36796`) draws them; **§KG-01 Hunt Mode** biases 80% of picks to `_monsterLevel ≤ player level` while 20% still draws the full pool; `_monsterLevel` normalizes threat 1–20; `TIER_LABELS` (`7950`) shows the player ⬥Trivial→★Deadly. **Do not rebuild.**
 
 - [ ] **§POT-B2 — Terrain is in the room but never in the fight; no legendary or lair actions exist** (prompts 17, 19) `OPEN` 🟠
   **Today:** stats are rich (398 full blocks). Tactics: §PLAY-01-B's press/flee is the entire enemy AI. **Legendary abilities: none** — every `legendary` hit is the Legendary Shield item or a fish size tier. **Lair actions: 0 hits. Environmental advantage: none** — combat reads terrain in exactly one place, the `_VOID_TERRAIN_RE` name heuristic that classifies Void-vs-mundane. The `ROOMS` kernel knows terrain (`terrainAt`, `9794`); the fight never asks.
@@ -178,31 +168,15 @@ Of the 10 `BLOCKED` rows, **9 are blocked on §VM-01 Inc A** (prompts 10, 14, 20
 
 ## §POT-R — Roleplaying & Storytelling (prompts 21–25) — *the heart of the listicle*
 
-- [x] **§POT-R0 — Atmospheric scene-setting: shipped, and it is the craft peak of the file** (prompt 21) `SHIPPED` 🟢
-  **Today:** `ROOMS:CORE` (`9804`, parity-fenced) + `__ROOM_PROSE` (`9827`) generate per-cell prose with exits and sensory detail; 401 node texts carry the authored scenes. Nothing to build.
-
 - [ ] **§POT-R1 — ⭐ The keystone: the engine cannot ask a question** (prompts 22, 24, 44) `BLOCKED = §VM-01 Inc A` 🔴
   **Today:** *"Act as a supportive game master who … responds to my character's actions"* and *"branching paths based on my dialogue choices"* describe a loop this engine does not have. `choice` contract at `21577`, empty handler at `21779`, **0 authors**, and `renderChoiceBlock` exists only inside that handler's comment. Note the split: the **stat** half of prompt 24 already ships — CHA/Persuasion/Deception/Intimidation checks are live (e.g. `mol001_act2`, CHA DC 13). It is only the **branch** that is missing.
   **Potential:** **§VM-01 Inc A (~30 lines) unblocks six operations and 9 of these 44 prompts.** Nothing in this section should be promoted ahead of it.
-
-- [x] **§POT-R2 — ⭐ 193 of 213 NPCs have a full four-tier relationship arc that no node can render** (prompt 23) `OPEN → PROMOTED 2026-07-23 → §NPC-01 in BACKLOG.md` 🔴 *largest content unlock in the file*
-  **Today, measured:** `NPC_DIALOGUES` holds **213 NPCs**, each with four favor-scaled pools (`impartial` / `questActive` / `friendly` / `dearFriend`), a `quote`, a `meta.worldTruth` payoff and a `meta.enemy`. `_getNPCDialogue` (`22943`) implements the whole tier ladder. **But:**
-  - `_renderNpcCard` has **exactly one call site** (`31835`), driven by `birkaNpcs` — a **hardcoded 14-key literal** (`LHR,TLL,MHQ,LLA,HKG,CQ,SQ,STN,TL,VS,GC,AMS,SSJ,NUE`).
-  - **20 of 213 NPCs are reachable as cards. 193 are not.**
-  - Favor — which gates the ladder and the `worldTruth` payoff — moves via only **16 `favor` bits across 2,850 quests** + 5 hardcoded `_setNpcFavor` calls.
-  - `NODE_NPC_KEYS`' own comment claims it is *"used by `_getNPCDialogue()` routing."* **It is not** — its only consumers are `_getNodeMapColor` (`26822`) and `_getFarewell` (`26833`). Stale doc comment, §PLAY-01-G class.
-  - **Honest scope note:** those 193 NPCs are **not** unreachable content — 203 of 213 are referenced by ≥1 quest, so their *writing* reaches players as quest prose. What is unreachable is the **relationship** — the deepening ladder and the `worldTruth` earned at Dear Friend.
-  **Potential:** **the render map is already derivable from data.** §PLAY-01-G's remap fixed `birkaNpcs`' dead codes *by reading each NPC's quest `activateNode`* — proving the NPC→node mapping is a **query, not a literal**. Computing `birkaNpcs` from `QUEST_DB` would take the relationship system from 20 NPCs to ~203 and give the 16-bit favor track, `meta.enemy` (§POT-C2) and 193 `worldTruth` lines (§POT-W1) somewhere to land. It is the same "hardcoded per-node special case → generic data-driven engine" migration the lab report identifies as the direction `storyRender` is already evolving in.
-  > **Promoted 2026-07-23 → §NPC-01** (`lab-reports/lab-report-npc-card-map.md`). Re-measured live at `r2h-3.104.0` (37,812 lines) — and the thesis is **stronger** than the `43bd09c` snapshot said: the card *content* is not thin. **204 `BIRKA_NPC_PROFILES` entries** (`22386`) and **213 `NPC_DIALOGUES` entries** (`10273`) are authored, **203** have both. Two corrections that reshape the work: **(1)** the NPC→node mapping is **already declared on every profile's `.node`** (121 distinct codes, **all** resolving in `NODE_MAP` — 0 dead) — so the map is a pure *inversion*, no `QUEST_DB` derivation needed and no §PLAY-01-G dead-code risk; **(2)** the real engine change is that `_renderNpcCard` (`23317`) **crashes on a lean profile** (`staticProfile.greeting`, `23367`) and ~194 of 204 profiles are lean — so the keystone increment is a greeting fallback, *then* widen the map (with the current state-gated curation preserved as an override layer). Side-findings logged: `euryclea_ithaca` dup key (SF1), profile-less mapped NPCs (SF2), stale `NODE_NPC_KEYS` comment (SF3).
 
 - [ ] **§POT-R3 — The best writing in the file is gated behind a d20 instead of a decision** (prompt 25) `BLOCKED` 🔴 *sharpest statement of §VM-01's cost*
   **Today:** the moral content is world-class — the surgeon's wound log and entry M.T.; *"The archive holds accurate records. It does not determine what to do with them."* But **every dilemma resolves by dice, not by decision**: you roll INT/WIS to *perceive* it, and the quest tells you what you concluded. `passText` narrates the insight; `failText` narrates missing it. The player never takes a side.
   **Potential:** `choice` would convert perception-rolls into decisions across the arcs where it matters. This is the clearest measure of §VM-01's cost: **the engine's finest content is a spectator sport.** Blocked on Inc A.
 
 ## §POT-P — World & Story Progression (prompts 26–30)
-
-- [x] **§POT-P1 — Turning points, twists, story branches: shipped** (prompts 26, 29) `SHIPPED` 🟢
-  **Today:** gates sequence arcs (`flags` 1,618 · `questsAttempted` 23 · `questsDone` 12 · `flagsPath` 5 · `sleptAt` 4 · `notFlags` 3 · `favorMin` 3 · `flagsAny` 2); the `narrative` bit (101 uses) delivers revelations; §PLAY-01-A's chip surfaces the goal. Note these gate **mission listing only, never movement** (Free-Movement policy).
 
 - [ ] **§POT-P2 — The "world changes after an event" mechanism shipped with one consumer** (prompt 28) `OPEN` 🔴 *high ratio*
   **Today:** §GR shipped `node.textVariants:[{flag,text}]` (`85faf9b`), recorded as *"display-only, API-authored; **reusable for any 'node changes after an event'**."* Measured: **exactly one node uses it** (`8630`) — the `fishmongerRowRestored` payoff. The renderer (`30537`, `30540`) is generic and idle.
@@ -230,9 +204,6 @@ Of the 10 `BLOCKED` rows, **9 are blocked on §VM-01 Inc A** (prompts 10, 14, 20
 
 ## §POT-M — Meta & Mechanics (prompts 36–40)
 
-- [x] **§POT-M0 — Practice encounters: shipped** (prompt 36) `SHIPPED` 🟢
-  **Today:** `ENEMY_DB` (`5327`) covers *"all combat opponents incl. dummy/commoner"* — a training dummy exists — and **§KG is a purpose-built tutorial zone**: `sparring_droid` (`_monsterLevel` 1), the Komsomol School, and the Skill Fabrika (jack-in "brain-download" training), carrying a fresh L1 fighter to ~L6. Nothing to build.
-
 - [ ] **§POT-M1 — The game has no rules surface at all** (prompt 40) `OPEN` 🔴 *cleanest honesty item*
   **Today:** measured — **no help screen, no rules tab, no glossary** anywhere in 37,271 lines. The entire tutorial is **one NPC monologue** (`yael.impartial[0]`), and §PLAY-01-D had to add a **special-case guarantee** (`yaelOnboardingSeen`) purely to ensure it is delivered once, because the auto-active Slums quest shadowed it. `mechanics.md` is a *developer* doc the player never sees. Meanwhile the engine privately knows: `_magicTierAllowed` = `level ≥ magic × 5`, `XP_LEVELS`, `CONDITION_ADV`, `_monsterLevel`, `EFFORT_XP_PCT`/`EFFORT_MISS_PCT`, the d100 loot weights.
   **Potential:** **the textbook §PLAY-01 finding** — *the engine knows things it won't transmit.* §PLAY-01-A proved the pattern (objective chip: surface the known, diegetically, UI-only, zero balance risk). A rules/codex surface is the direct analogue and is the same class of no-design-call, no-balance-risk work. Merge with §POT-W1 + §POT-S4 into **one codex surface**.
@@ -243,10 +214,6 @@ Of the 10 `BLOCKED` rows, **9 are blocked on §VM-01 Inc A** (prompts 10, 14, 20
 
 ## §POT-X — Collaborative Worldbuilding (prompts 41–44)
 
-- [x] **§POT-X1 — Collaborative worldbuilding: shipped, for developers** (prompt 41) `SHIPPED (dev-only)` 🟢
-  **Today:** `worldbuilder.html` + the WBAPI server + `api.sh` are a full alternate-turns authoring loop, and the **API-First Development Policy** makes it the *preferred* way to change the world. Emits UQF-1.0 end-to-end (§EDITOR-03).
-  **Potential:** the surface is dev-only; in-game player authoring is a different (large, speculative) product. Logged, not recommended.
-
 - [ ] **§POT-X2 — The game states an inner arc and has no mechanics for it** (prompt 43) `OPEN (design call)` 🟠
   **Today:** Yael's monologue promises it outright — *"You came here to fight demons. You will. Real ones, with claws. **But the ones behind your own eyes are older and meaner, and that is the real fight.**"* There is no mechanic for that fight. The one shipped inner-arc mechanic is §GR-D's Froberger Entry 42 (`entry42Written`/`entry42Text` carried across NG+, the blank page you may fill at ≥3 dear friends) — which is genuinely this prompt, done once, at the very end of the game.
   **Potential:** Entry 42 is the proof the shape works and the template for more. **This is a design call, not a loop task** — and per the Lab Report Policy it needs a lab report locking data shapes first (new narrative arc).
@@ -254,6 +221,49 @@ Of the 10 `BLOCKED` rows, **9 are blocked on §VM-01 Inc A** (prompts 10, 14, 20
 - [ ] **§POT-X3 — Branching, interconnected storylines** (prompt 42) `BLOCKED` 🟠
   **Today:** gates express **sequence**, not **branch** — 1,618 `flags` terms and no disjunction, which is why `itemsMinAny` exists *for exactly one quest* (`quest_wm_01`).
   **Potential:** CONTRIBUTING already diagnoses this precisely: *"A term added per quest is the language asking for an expression evaluator (§VM-01-F). Before adding a gate term, check whether `{all|any|not}` nesting would say it instead."* The prompt's *"branching paths, layers of intrigue, narrative reversals"* is **§VM-01-F**, already scoped. Do not add gate terms to approximate it.
+
+---
+
+## Archived — Done · Promoted · Shipped-No-Build
+
+> **What this section holds.** The rows that are *closed* as seeds — either **promoted** to a real `§` track in [BACKLOG.md](BACKLOG.md) (the seed's job is done; the work now lives + is tracked there) or verdicted **SHIPPED**, i.e. *the file already does this, do not rebuild*. Moved here 2026-07-23 so the active seed sections above show only **open / blocked** work. **They remain counted in the coverage table + tally** (this file's "100% coverage" promise is intact — every prompt still maps to an item, archived or not) and are still referenced by the highest-ratio table below.
+
+### Promoted → a tracked `§` in BACKLOG.md
+
+- [x] **§POT-H1 — Hooks reach you only by walking onto them — and the opcode for the alternative is already written and unused** (prompts 11, 31, 35) `OPEN → PROMOTED 2026-07-21 → §BOARD-01 in BACKLOG.md` 🔴
+  **Today:** every hook is arrival-triggered: `storyCheckQuests` fires on arrival at `activateNode`. `rumor` = 7 hits, all prose. **There is no bounty board** — the single `bounty` hit in 37,271 lines is flavor text inside `VOID_TIDE_EVENTS` #21. With 2,850 quests across 401 nodes, discovery is **geographic, never social**: nobody ever tells you where to go.
+  **Potential:** an NPC-delivered hook ("a rumor points you at a distant node") is **exactly what the dead `unlock` opcode does.** `unlock` (`21778`) is a working handler — `(bit.quests||[]).forEach(qid => … S_story.quests[qid] = 'active')` — authored **zero times**. This is a rare shape: the capability exists, is contract-validated (`21575`), and needs no VM change (it does not branch or wait). A bounty/rumor board is the natural consumer. **Best unblocked ratio in this file.**
+
+- [x] **§POT-R2 — ⭐ 193 of 213 NPCs have a full four-tier relationship arc that no node can render** (prompt 23) `OPEN → PROMOTED 2026-07-23 → §NPC-01 in BACKLOG.md` 🔴 *largest content unlock in the file*
+  **Today, measured:** `NPC_DIALOGUES` holds **213 NPCs**, each with four favor-scaled pools (`impartial` / `questActive` / `friendly` / `dearFriend`), a `quote`, a `meta.worldTruth` payoff and a `meta.enemy`. `_getNPCDialogue` (`22943`) implements the whole tier ladder. **But:**
+  - `_renderNpcCard` has **exactly one call site** (`31835`), driven by `birkaNpcs` — a **hardcoded 14-key literal** (`LHR,TLL,MHQ,LLA,HKG,CQ,SQ,STN,TL,VS,GC,AMS,SSJ,NUE`).
+  - **20 of 213 NPCs are reachable as cards. 193 are not.**
+  - Favor — which gates the ladder and the `worldTruth` payoff — moves via only **16 `favor` bits across 2,850 quests** + 5 hardcoded `_setNpcFavor` calls.
+  - `NODE_NPC_KEYS`' own comment claims it is *"used by `_getNPCDialogue()` routing."* **It is not** — its only consumers are `_getNodeMapColor` (`26822`) and `_getFarewell` (`26833`). Stale doc comment, §PLAY-01-G class.
+  - **Honest scope note:** those 193 NPCs are **not** unreachable content — 203 of 213 are referenced by ≥1 quest, so their *writing* reaches players as quest prose. What is unreachable is the **relationship** — the deepening ladder and the `worldTruth` earned at Dear Friend.
+  **Potential:** **the render map is already derivable from data.** §PLAY-01-G's remap fixed `birkaNpcs`' dead codes *by reading each NPC's quest `activateNode`* — proving the NPC→node mapping is a **query, not a literal**. Computing `birkaNpcs` from `QUEST_DB` would take the relationship system from 20 NPCs to ~203 and give the 16-bit favor track, `meta.enemy` (§POT-C2) and 193 `worldTruth` lines (§POT-W1) somewhere to land. It is the same "hardcoded per-node special case → generic data-driven engine" migration the lab report identifies as the direction `storyRender` is already evolving in.
+  > **Promoted 2026-07-23 → §NPC-01** (`lab-reports/lab-report-npc-card-map.md`). Re-measured live at `r2h-3.104.0` (37,812 lines) — and the thesis is **stronger** than the `43bd09c` snapshot said: the card *content* is not thin. **204 `BIRKA_NPC_PROFILES` entries** (`22386`) and **213 `NPC_DIALOGUES` entries** (`10273`) are authored, **203** have both. Two corrections that reshape the work: **(1)** the NPC→node mapping is **already declared on every profile's `.node`** (121 distinct codes, **all** resolving in `NODE_MAP` — 0 dead) — so the map is a pure *inversion*, no `QUEST_DB` derivation needed and no §PLAY-01-G dead-code risk; **(2)** the real engine change is that `_renderNpcCard` (`23317`) **crashes on a lean profile** (`staticProfile.greeting`, `23367`) and ~194 of 204 profiles are lean — so the keystone increment is a greeting fallback, *then* widen the map (with the current state-gated curation preserved as an override layer). Side-findings logged: `euryclea_ithaca` dup key (SF1), profile-less mapped NPCs (SF2), stale `NODE_NPC_KEYS` comment (SF3).
+
+### Shipped — the file already does this, do not rebuild
+
+- [x] **§POT-H5 — Legendary artifact: shipped** (prompt 15) `SHIPPED` 🟢
+  **Today:** the 7 Shards *are* this quest, and §PLAY-01-A surfaced them — `SHARD_GOAL = 7`, the objective chip renders `🔮🔮🔮◇◇◇◇` with symbols darkening as each returns. Backstory + perils are authored. Nothing to build; the one soft gap (no per-shard backstory surface) is low priority and belongs to §POT-W1's codex if ever wanted.
+
+- [x] **§POT-B1 — Random encounters by terrain and level: shipped, twice** (prompts 16, 19) `SHIPPED` 🟢
+  **Today:** the best-served prompt in the listicle. `WORLD_DB` is **110 hand-authored terrain→monster tables**; `TERRAIN_ENCOUNTER_RATE` sets per-terrain rates; `_weightedMonsterPick` (`36796`) draws them; **§KG-01 Hunt Mode** biases 80% of picks to `_monsterLevel ≤ player level` while 20% still draws the full pool; `_monsterLevel` normalizes threat 1–20; `TIER_LABELS` (`7950`) shows the player ⬥Trivial→★Deadly. **Do not rebuild.**
+
+- [x] **§POT-R0 — Atmospheric scene-setting: shipped, and it is the craft peak of the file** (prompt 21) `SHIPPED` 🟢
+  **Today:** `ROOMS:CORE` (`9804`, parity-fenced) + `__ROOM_PROSE` (`9827`) generate per-cell prose with exits and sensory detail; 401 node texts carry the authored scenes. Nothing to build.
+
+- [x] **§POT-P1 — Turning points, twists, story branches: shipped** (prompts 26, 29) `SHIPPED` 🟢
+  **Today:** gates sequence arcs (`flags` 1,618 · `questsAttempted` 23 · `questsDone` 12 · `flagsPath` 5 · `sleptAt` 4 · `notFlags` 3 · `favorMin` 3 · `flagsAny` 2); the `narrative` bit (101 uses) delivers revelations; §PLAY-01-A's chip surfaces the goal. Note these gate **mission listing only, never movement** (Free-Movement policy).
+
+- [x] **§POT-M0 — Practice encounters: shipped** (prompt 36) `SHIPPED` 🟢
+  **Today:** `ENEMY_DB` (`5327`) covers *"all combat opponents incl. dummy/commoner"* — a training dummy exists — and **§KG is a purpose-built tutorial zone**: `sparring_droid` (`_monsterLevel` 1), the Komsomol School, and the Skill Fabrika (jack-in "brain-download" training), carrying a fresh L1 fighter to ~L6. Nothing to build.
+
+- [x] **§POT-X1 — Collaborative worldbuilding: shipped, for developers** (prompt 41) `SHIPPED (dev-only)` 🟢
+  **Today:** `worldbuilder.html` + the WBAPI server + `api.sh` are a full alternate-turns authoring loop, and the **API-First Development Policy** makes it the *preferred* way to change the world. Emits UQF-1.0 end-to-end (§EDITOR-03).
+  **Potential:** the surface is dev-only; in-game player authoring is a different (large, speculative) product. Logged, not recommended.
 
 ---
 
