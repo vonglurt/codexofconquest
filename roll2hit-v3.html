@@ -23314,6 +23314,24 @@ function _missionComplete() {
   };
   return Object.values(bits).filter(Boolean).length >= 8;
 }
+// §NPC-01-B: the NPC card render map is DERIVED, not hand-listed. Every BIRKA_NPC_PROFILES entry
+// already declares its own `node` (121 distinct codes, all present in NODE_MAP — 0 dead), so we invert
+// the profile table into { nodeCode: [npcKey,...] } once and cache it. storyRender's Layer 41 uses the
+// hand-curated `birkaNpcs` literal where one exists (the 14 legacy / state-gated nodes stay byte-
+// identical — the parity anchor) and falls back to this derived map everywhere else, taking the
+// relationship surface from ~20 NPCs to ~203. Cache is safe: BIRKA_NPC_PROFILES is an immutable literal.
+let _npcRenderMapCache = null;
+function _deriveNpcRenderMap() {
+  if (_npcRenderMapCache) return _npcRenderMapCache;
+  const m = {};
+  for (const key in BIRKA_NPC_PROFILES) {
+    const node = BIRKA_NPC_PROFILES[key] && BIRKA_NPC_PROFILES[key].node;
+    if (!node) continue;
+    (m[node] || (m[node] = [])).push(key);
+  }
+  _npcRenderMapCache = m;
+  return m;
+}
 function _renderNpcCard(key, container) {
   // Layer 60: Act VIII farewell beat
   { const flagKey = 'act8Farewell' + key[0].toUpperCase() + key.slice(1);
@@ -32106,7 +32124,13 @@ function storyRender(node, prefix) {
       VS:S_story.vsDebtSettled ? [] : ['solvak'], GC:S_story.vsDebtProbed && !S_story.vsWeaponsFound ? ['yva'] : [],
       AMS:_frNpcs,
       SSJ:_ssjNpcs, NUE:_nueNpcs };
-    const keys = birkaNpcs[node.code];
+    // §NPC-01-B: curated literal wins for the 14 legacy / state-gated nodes (parity anchor); every
+    // other node falls back to the map derived from BIRKA_NPC_PROFILES.node. Key by the node KEY
+    // (S_story.currentCode): 291 of 418 NODE_MAP entries omit an explicit `code` field, so `node.code`
+    // is undefined for them — but both maps are keyed on the node key, which currentCode always is
+    // (and which equals node.code wherever that field is present, so the 14 legacy nodes are unchanged).
+    const _npcNodeKey = node.code || S_story.currentCode;
+    const keys = (_npcNodeKey in birkaNpcs) ? birkaNpcs[_npcNodeKey] : _deriveNpcRenderMap()[_npcNodeKey];
     if (keys) {
       const npcRowDiv = document.createElement('div');
       npcRowDiv.id = 'story-npc-cards-row';
