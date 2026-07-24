@@ -22770,6 +22770,7 @@ const _S_DEFAULTS = () => ({
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [], ebReturnsCompleted: {},
   npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, cycle4NoteRead: false, bogDefeated: false, // §LI–§LVIII + CO-001
+  npcTalk: {},   // §NPC-01-D — key → { count, lastDay }: deliberate-talk progress toward Friendly (fav 1). Never raises above 1; Dear Friend stays quest/personal-act-earned.
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   hoursElapsed: 0, hoursSinceSlept: 0,
@@ -23187,6 +23188,28 @@ function _checkDearFriendUpgrade(key) {
     storyMsg('💛 ' + (p2.name||key) + ' says your name when you walk in.');
   }
 }
+// §NPC-01-D — a Talk action on the NPC card raises favor toward Friendly (fav 1) ONLY, making the
+// ⚔ enemy footer (fav≥1) reachable by talking while Dear Friend (fav 2, the ✦ worldTruth footer)
+// stays quest / personal-act earned — preserving the §NPC-01-C "relationship deepens" reveal.
+// Cost model B (user pick): accumulate once per game-day — no day is spent; the cost is the days that
+// pass as you travel/rest near the NPC. TALK_TO_FRIENDLY deliberate talks on distinct S_story.day
+// values → _setNpcFavor(key,1). Pure state + messaging (Free-Movement safe: talking is not a step);
+// the card button re-renders separately in its click handler. Outside all parity fences.
+const TALK_TO_FRIENDLY = 3;   // deliberate talks (on distinct game-days) to reach Friendly. Tunable.
+function _talkToNpc(key) {
+  const dlg = _getNPCDialogue(key);
+  if (!dlg) return;
+  const p = BIRKA_NPC_PROFILES[key];
+  const name = (p && p.name) || (dlg.meta && dlg.meta.name) || key;
+  if (_npcFavor(key) >= 1) { storyMsg('🤝 ' + name + ' already counts you a friend.'); return; }
+  if (!S_story.npcTalk) S_story.npcTalk = {};
+  const t = S_story.npcTalk[key] || { count: 0, lastDay: 0 };
+  if (t.lastDay === S_story.day) { storyMsg('💬 You have said your piece with ' + name + ' today. Come back another day.'); return; }
+  t.count += 1; t.lastDay = S_story.day;
+  S_story.npcTalk[key] = t;
+  if (t.count >= TALK_TO_FRIENDLY) _setNpcFavor(key, 1);   // fires the "looks at you differently" msg + dearFriendBits check; never above 1
+  else storyMsg('💬 ' + name + ' warms to you a little. (' + t.count + '/' + TALK_TO_FRIENDLY + ')');
+}
 /* ── §CROWN-01: Kindness Meter + Crone Mark helpers ── */
 function _innKindness(n) {
   S_story.innmotherKindness = (S_story.innmotherKindness || 0) + n;
@@ -23440,6 +23463,18 @@ function _renderNpcCard(key, container) {
     btn.style.cssText = 'margin-top:6px;padding:4px 10px;background:#2a1a08;border:1px solid #7c4a1a;border-radius:3px;color:#f0c070;cursor:pointer;font-size:12px;align-self:flex-start;';
     btn.addEventListener('click', () => _yaelEscortAction());
     card.appendChild(btn);
+  }
+  // §NPC-01-D: Talk action — raise favor toward Friendly (fav 1) so the ⚔ enemy footer becomes
+  // reachable by talking. Shown only while Impartial (fav < 1); once Friendly the ⚔ footer is the
+  // reward and the button retires. Click accumulates via _talkToNpc, then re-renders the story view.
+  if (fav < 1) {
+    const tb = document.createElement('button');
+    const _talkProg = ((S_story.npcTalk || {})[key] || {}).count || 0;
+    tb.className = 'npc-talk-btn';
+    tb.textContent = _talkProg > 0 ? '💬 Talk (' + _talkProg + '/' + TALK_TO_FRIENDLY + ')' : '💬 Talk';
+    tb.style.cssText = 'margin-top:6px;padding:4px 10px;background:#2a1a08;border:1px solid #7c4a1a;border-radius:3px;color:#f0c070;cursor:pointer;font-size:12px;align-self:flex-start;';
+    tb.addEventListener('click', () => { _talkToNpc(key); storyRender(NODE_MAP[S_story.currentCode]); });
+    card.appendChild(tb);
   }
   container.appendChild(card);
 }

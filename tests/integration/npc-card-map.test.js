@@ -377,3 +377,89 @@ test.describe('§NPC-01-SF6 — homeless derived profiles at curated nodes are u
     expect(pageErrors).toEqual([]);
   });
 });
+
+// §NPC-01-D — a Talk action on the NPC card raises favor toward Friendly (fav 1) ONLY, so the ⚔ enemy
+// footer becomes reachable by talking while Dear Friend (fav 2, the ✦ worldTruth footer) stays quest/
+// personal-act earned — preserving the §NPC-01-C reveal. Cost model B (user pick): accumulate once per
+// game-day (TALK_TO_FRIENDLY talks on distinct S_story.day values), no day burned. See
+// lab-reports/lab-report-npc-01-d-talk-verb.md.
+test.describe('§NPC-01-D — talk verb: reach Friendly (⚔) by talking, Dear Friend (✦) stays quest-earned', () => {
+  test('button shows only at Impartial; N distinct-day talks reach Friendly and light the ⚔ footer; never exceeds fav 1', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    await page.goto('/roll2hit-v3.html');
+
+    const r = await page.evaluate(() => {
+      // A renderable NPC that has BOTH an enemy (⚔, Friendly) and a worldTruth (✦, Dear Friend) line,
+      // so we can assert the ⚔ becomes reachable while the ✦ stays hidden. Exclude yael (onboarding
+      // special-case + dearFriendBits auto-upgrade path) to keep the ceiling assertion clean.
+      const key = Object.keys(NPC_DIALOGUES).find(k =>
+        k !== 'yael' && NPC_DIALOGUES[k].meta && NPC_DIALOGUES[k].meta.enemy && NPC_DIALOGUES[k].meta.worldTruth
+        && (BIRKA_NPC_PROFILES[k] || NPC_DIALOGUES[k].meta.name));
+      const meta = NPC_DIALOGUES[key].meta;
+      const TTF = TALK_TO_FRIENDLY;
+
+      // fresh relationship state
+      S_story.npcFavorability = {}; S_story.npcTalk = {}; S_story.day = 1; S_story.actNumber = 1;
+      const render = () => { const b = document.createElement('div'); _renderNpcCard(key, b); return b; };
+
+      // Impartial: Talk button present, ⚔ hidden
+      const box0 = render();
+      const buttonAtImpartial = !!box0.querySelector('.npc-talk-btn');
+      const enemyAtImpartial  = box0.textContent.includes('⚔ ' + meta.enemy);
+
+      // Cadence guard: two talks on the SAME day advance the counter only once
+      _talkToNpc(key);                             // day 1 → count 1
+      const afterTalk1  = (S_story.npcTalk[key] || {}).count;
+      _talkToNpc(key);                             // day 1 again → blocked
+      const afterSameDay = (S_story.npcTalk[key] || {}).count;
+
+      // Progression: talk on distinct days up to the threshold → Friendly
+      for (let d = 2; d <= TTF; d++) { S_story.day = d; _talkToNpc(key); }
+      const favWhenReached = _npcFavor(key);
+      const box1 = render();
+      const buttonAtFriendly    = !!box1.querySelector('.npc-talk-btn');
+      const enemyAtFriendly     = box1.textContent.includes('⚔ ' + meta.enemy);
+      const worldTruthAtFriendly = box1.textContent.includes('✦ ' + meta.worldTruth);
+
+      // Ceiling: keep talking on further days → favor NEVER climbs above 1 (Dear Friend is deed-earned)
+      for (let d = TTF + 1; d <= TTF + 3; d++) { S_story.day = d; _talkToNpc(key); }
+      const favAfterMoreTalk = _npcFavor(key);
+      const box2 = render();
+      const worldTruthStillHidden = !box2.textContent.includes('✦ ' + meta.worldTruth);
+
+      return { key, TTF, buttonAtImpartial, enemyAtImpartial, afterTalk1, afterSameDay,
+        favWhenReached, buttonAtFriendly, enemyAtFriendly, worldTruthAtFriendly,
+        favAfterMoreTalk, worldTruthStillHidden };
+    });
+
+    expect(r.TTF, 'TALK_TO_FRIENDLY is a positive threshold').toBeGreaterThan(0);
+    expect(r.buttonAtImpartial, 'Talk button renders while Impartial (fav 0)').toBe(true);
+    expect(r.enemyAtImpartial, 'the ⚔ enemy footer is hidden at Impartial').toBe(false);
+    expect(r.afterTalk1, 'first talk advances the counter to 1').toBe(1);
+    expect(r.afterSameDay, 'a second talk the same game-day does NOT advance (cadence guard)').toBe(1);
+    expect(r.favWhenReached, `${r.TTF} distinct-day talks reach Friendly (fav 1)`).toBe(1);
+    expect(r.buttonAtFriendly, 'Talk button retires once Friendly (the ⚔ footer is the reward)').toBe(false);
+    expect(r.enemyAtFriendly, 'the ⚔ enemy footer is now reachable by talking').toBe(true);
+    expect(r.worldTruthAtFriendly, 'the ✦ worldTruth footer stays hidden — talk never reaches Dear Friend').toBe(false);
+    expect(r.favAfterMoreTalk, 'talking further NEVER raises favor above 1 (Dear Friend is deed-earned)').toBe(1);
+    expect(r.worldTruthStillHidden, 'the ✦ footer stays hidden no matter how much you talk').toBe(true);
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('end-to-end: clicking the live Talk button on a rendered card advances progress via _talkToNpc + storyRender', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    // ser_bardo@PSAGLD renders fresh at fav 0 (§NPC-01-B end-to-end case) → the Talk button is present.
+    const node = 'PSAGLD';
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('Ser Bardo Albizzi');
+    const talkBtn = row.locator('.npc-talk-btn').first();
+    await expect(talkBtn).toBeVisible();               // button is live in the real card row
+    await talkBtn.click();                              // click → _talkToNpc + storyRender re-render
+    await expect(row.locator('.npc-talk-btn').first()).toContainText('1/' + await page.evaluate(() => TALK_TO_FRIENDLY));
+    expect(pageErrors).toEqual([]);
+  });
+});

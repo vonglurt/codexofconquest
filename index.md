@@ -557,6 +557,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.ebReturnsCompleted` | object | ebCode → true; set on EB return quest completion |
 | `S_story.ebNegotiatedPayments` | object | ebCode → gold accepted |
 | `S_story.npcFavorability` | object | npcKey → 0/1/2/3 |
+| `S_story.npcTalk` | object | npcKey → `{count,lastDay}`: §NPC-01-D Talk progress to Friendly (once/day) |
 | `S_story.roughWhiskeyUsed` | boolean | true after drunk pit fight event fires |
 | `S_story.yaelEscortUsed` | boolean | true after one-time escort narration fires |
 | `S_story.pitTrainingWins` | number | CY battle wins while `quest_pit_training` active |

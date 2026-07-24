@@ -843,11 +843,13 @@ Six named Birka NPCs each have a favorability state tracked in `S_story.npcFavor
 | Level | Value | Unlocks |
 |---|---|---|
 | Impartial | 0 | Default state; neutral dialogue pool |
-| Friendly | 1 | Quest-gated; unlock via completing their intro quest |
-| Dear Friend | 2 | Time-gated after Friendly + enough visits |
+| Friendly | 1 | A quest `{kind:'favor'}` grant **or** the **Talk** action (§NPC-01-D); unlocks the ⚔ enemy card footer |
+| Dear Friend | 2 | A quest/personal-act grant (never Talk); unlocks the ✦ worldTruth card footer |
 | Dear Friend+ | 3 | Second-act content; post-NG+ or post-Act IV |
 
-**The six NPCs:** Yael (CI), Brynn (IN), Quill/Couperin (TV), Pachelbel/Deacon (BA), Weckmann (CY), Auros/Bruhns (CY).
+**Talk verb (§NPC-01-D).** Every card-bearing NPC (~203 after §NPC-01-B/SF6) carries a **💬 Talk** button on its card while Impartial. Talking accumulates `S_story.npcTalk[key] = {count, lastDay}`; **`TALK_TO_FRIENDLY` (=3) talks on distinct game-days** call `_setNpcFavor(key, 1)` → Friendly. It is rate-limited to **once per game-day per NPC** (no day is spent — cost model B; the cost is the days that pass as you travel/rest near them) and **never raises favor above 1**, so Friendly (and the ⚔ enemy footer) becomes talk-reachable at scale while **Dear Friend (the ✦ worldTruth footer) stays quest/personal-act earned** — preserving the §NPC-01-C reveal. Talking is a card action, not a movement step (Free-Movement untouched). *Intended ripple:* the two `favorMin:{brynn:1}` / `favorMin:{yael:1}` side quests (`quest_brynn_firewood`, `quest_city_watch_patrol`) become listable by befriending those NPCs, and talk-earned friends count toward `_lubeckFriends()`.
+
+**The six curated Birka NPCs:** Yael (CI), Brynn (IN), Quill/Couperin (TV), Pachelbel/Deacon (BA), Weckmann (CY), Auros/Bruhns (CY) — the original rich-profile set; §NPC-01 widened the *card render* (and now Talk-earnable favor) to ~203 NPCs.
 
 Each NPC has 5 dialogue quotes per state in `NPC_DIALOGUES`, cycled by visit count. `_getNPCDialogue(npcKey)` runs a priority chain:
 1. Debt degradation check (Rough Whiskey debt)
@@ -1024,6 +1026,7 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `_ASI_TABLE` | const array[6] | d6 ASI roll outcomes (Might/Endurance/Agility/Power/Speed/Guard) |
 | `_ASI_LEVELS` | Set | Level numbers that grant ASI rolls: {4,6,8,12,14,16,19} |
 | `S_story.npcFavorability` | object | npcKey → 0/1/2/3 (Impartial/Friendly/Dear Friend/Dear Friend+) |
+| `S_story.npcTalk` | object | npcKey → `{count, lastDay}`: §NPC-01-D talk progress toward Friendly (once/game-day; `count≥TALK_TO_FRIENDLY` → fav 1) |
 | `S_story.ngPlusRun` | number | NG+ generation counter; 0 = first run |
 | `S_story.frobergerLastEntryRead` | boolean | true after player finds Journal Entry 41 |
 | `S_story.journalEntriesRead` | array | entryNums of FROBERGER_JOURNAL collectible entries found |
