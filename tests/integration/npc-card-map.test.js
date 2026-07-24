@@ -301,3 +301,79 @@ test.describe('§NPC-01-SF5 — the Fisherman renders unconditionally at SSJ (wa
     expect(pageErrors).toEqual([]);
   });
 });
+
+// §NPC-01-SF6 — MERGE the derived map on top of a curated node instead of letting the literal fully
+// shadow it (the SF5 root cause, generalized). A BIRKA_NPC_PROFILES profile whose .node points at a
+// curated node (long_john_silver_sen@TL, archivus_sweelinck / ulrich_von_gessert@NUE) previously
+// rendered NOWHERE. Now those "homeless" profiles are appended after the curated list — while the
+// conditionally-hidden curated NPCs (connie_tuna before connieMet, pier before pierFalkWarm, vonn
+// before tlLedgerRead) are NEVER un-gated by the always-on derived map: the curated block's maximal
+// key set (_curatedGoverned) is excluded from the additions. Net effect: +3 previously-homeless
+// cards, zero un-gating, curated nodes whose derived list == their governed keys stay byte-identical.
+test.describe('§NPC-01-SF6 — homeless derived profiles at curated nodes are un-shadowed, without un-gating', () => {
+  test('NUE (fresh): the two homeless profiles now render; the state-gated curated NPC (pier) does NOT', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'NUE';
+    // fresh state: pierFalkWarm unset → pier stays gated; gret is the unconditional curated NPC.
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('Gret Orrens');                 // curated (unconditional) — unchanged
+    await expect(row).toContainText('Archivus Ptolemy Sweelinck');  // SF6: was homeless (profile.node=NUE, shadowed)
+    await expect(row).toContainText('Ulrich von Gessert');          // SF6: was homeless
+    await expect(row).not.toContainText('Pier Falk');               // regression guard: still state-gated on pierFalkWarm
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('TL (fresh): the homeless profile (Long John Silver) renders; the gated curated NPC (vonn) does NOT', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'TL';
+    // tlLedgerRead unset → the curated list is [] (vonn gated); only the SF6 addition should show.
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('Long John Silver');            // SF6: was homeless (profile.node=TL, shadowed)
+    await expect(row).not.toContainText('Adjutant Vonn');           // regression guard: vonn gated on tlLedgerRead
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('AMS (fresh): the always-on derived map does NOT un-gate the conditionally-hidden curated NPCs', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'AMS';
+    // connie_tuna/aldo_sardino have profiles with .node=AMS (so they ARE in the derived map) but are
+    // state-gated in the curated literal. A naive "curated ∪ derived" union would wrongly show them on
+    // fresh state; _curatedGoverned excludes them. THIS is the core regression this increment prevents.
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).not.toContainText('Connie Tuna');
+    await expect(row).not.toContainText('Aldo Sardino');
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('AMS (connieMet=true): the curated gating still works — Connie appears when her flag is set', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'AMS';
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true }, connieMet: true });
+    await dismissContinue(page);
+    await expect(page.locator('#story-npc-cards-row')).toContainText('Connie Tuna');
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('parity: LHR (curated == derived) gains no additions — exactly one card', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'LHR';
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('Yael');
+    const cardCount = await row.evaluate(el => el.querySelectorAll('.npc-card-chip').length);
+    expect(cardCount, 'LHR still renders exactly the one curated card (yael) — derived adds nothing').toBe(1);
+    expect(pageErrors).toEqual([]);
+  });
+});

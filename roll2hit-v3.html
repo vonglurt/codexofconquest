@@ -32183,7 +32183,24 @@ function storyRender(node, prefix) {
     // is undefined for them — but both maps are keyed on the node key, which currentCode always is
     // (and which equals node.code wherever that field is present, so the 14 legacy nodes are unchanged).
     const _npcNodeKey = node.code || S_story.currentCode;
-    const keys = (_npcNodeKey in birkaNpcs) ? birkaNpcs[_npcNodeKey] : _deriveNpcRenderMap()[_npcNodeKey];
+    // §NPC-01-SF6: MERGE the derived map on top of a curated node instead of letting the literal fully
+    // shadow it (the SF5 root cause, generalized). A rich BIRKA_NPC_PROFILES profile whose .node points
+    // at a curated node (long_john_silver_sen@TL, archivus_sweelinck/ulrich_von_gessert@NUE) previously
+    // rendered NOWHERE; now it is appended after the curated list. The curated literal keeps authority
+    // over the NPCs it GOVERNS — `_curatedGoverned` is the MAXIMAL, flag-independent set of every key any
+    // branch of the birkaNpcs block above can list — so a conditionally-hidden NPC (connie_tuna before
+    // connieMet, pier before pierFalkWarm, emmer before emmerMet, vonn before tlLedgerRead, …) is NEVER
+    // un-gated by the always-on derived map. Curated order first, then the un-shadowed additions (deduped).
+    // Keep this set in sync with the birkaNpcs construction above; the SF6 tests assert no un-gating.
+    const _curatedGoverned = new Set(['yael','brynn','quill','pachelbel','crov','auros','jimmy','sandy_cat','kenickie','isolde_voss','benedikt_rasp','rennau','vonn','solvak','yva','connie_tuna','aldo_sardino','the_fisherman','emmer','gret','pier']);
+    let keys;
+    if (_npcNodeKey in birkaNpcs) {
+      const _curatedList = birkaNpcs[_npcNodeKey] || [];
+      const _additions = (_deriveNpcRenderMap()[_npcNodeKey] || []).filter(k => !_curatedGoverned.has(k) && _curatedList.indexOf(k) === -1);
+      keys = _curatedList.concat(_additions);
+    } else {
+      keys = _deriveNpcRenderMap()[_npcNodeKey];
+    }
     if (keys) {
       const npcRowDiv = document.createElement('div');
       npcRowDiv.id = 'story-npc-cards-row';
