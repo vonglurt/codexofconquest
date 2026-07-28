@@ -60,7 +60,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `docs/` | Reference docs (see `docs/README.md`): `spec/` `story/` `api/` `mechanics/` `notes/` | ✅ Created 2026-07-09 |
 | `CONTRIBUTING.md` | Development policies & directives (API-first, cell-first, free-movement, test-run rules, WBAPI hazards, lab-report policy) | ✅ Split from plan.md 2026-07-09 |
 | `prompt.md` | Operating directive — the work loop (BACKLOG item → API author → doc sync → verify → close), the inserting pattern, and the hard invariants, wiring CONTRIBUTING.md + BACKLOG.md together for a cold start | ✅ Created 2026-07-22 |
-| `BACKLOG.md` | Outstanding work — open/in-progress items + closed-for-context list | ✅ Split from plan.md 2026-07-09 |
+| `BACKLOG.md` | Outstanding work — genuinely-open/in-progress items only (closed rows migrate to `plan-archive.md`; §DX-01f bulk migration 2026-07-28) | ✅ Split from plan.md 2026-07-09 |
 | `docs/mechanics/mechanics-combat.md` | Battle Mode: combat flow, 1.5 AP economy, weapons, loot, leveling, defeat screens, save system | ✅ Split 2026-05-25 |
 | `docs/mechanics/mechanics-economy.md` | Story Mode: vendor system, NPC favorability, EB, NG+, state fields, F4 function reference | ✅ Split 2026-05-25 |
 | `docs/spec/combat.md` | Battle engine reference: initiative, overlay, Champion features, death saves, flee | ✅ §API-02 line-verified 2026-05-25 |

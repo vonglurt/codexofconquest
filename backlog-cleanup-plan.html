@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Backlog Cleanup Plan — §DX-01f bulk migration (2026-07-28)</title>
+<style>
+  :root { --bg:#1a1410; --card:#241b14; --text:#f1e3c8; --dim:#c9a97a; --accent:#e0a34c; --green:#8fce6a; --rule:#4a3category0; }
+  * { box-sizing: border-box; }
+  body { margin:0; padding:2rem 1rem; background:var(--bg); color:var(--text);
+         font: 16px/1.55 Georgia, 'Times New Roman', serif; }
+  main { max-width: 860px; margin: 0 auto; }
+  h1 { font-size:1.6rem; color:var(--accent); border-bottom:2px solid var(--accent); padding-bottom:.4rem; }
+  h2 { font-size:1.15rem; color:var(--accent); margin-top:2rem; }
+  code { font-family: ui-monospace, Menlo, monospace; font-size:.88em; background:#00000040; padding:.1em .35em; border-radius:4px; color:var(--green); }
+  ol li, ul li { margin:.5rem 0; }
+  .meta { color:var(--dim); font-size:.9rem; }
+  section { background:var(--card); border:1px solid #3a2c1e; border-radius:10px; padding:1rem 1.4rem; margin:1.2rem 0; }
+  .directive { border-left:4px solid var(--accent); }
+</style>
+</head>
+<body>
+<main>
+<h1>Backlog Cleanup Plan — §DX-01f bulk migration</h1>
+<p class="meta">roll2hit.com · branch <code>feat/vm-01-g3</code> · 2026-07-28 · single-agent, inline, no background processes</p>
+
+<section>
+<h2>What this increment does</h2>
+<p>The current activity is <strong>backlog cleanup</strong>, not a new feature increment. In order:</p>
+<ol>
+  <li><strong>§DX-01f — the <code>[x]</code>-row bulk migration.</strong> BACKLOG.md still carries dozens of closed <code>[x]</code> rows kept "for context". Migrate the closed rows verbatim into <code>plan-archive.md</code> (new section <em>"Archived 2026-07-28 — §DX-01f"</em>), leave one-line pointers, and shrink BACKLOG.md to genuinely-open work. The §RESUME log tail beyond the newest 2026-07-28 entries (the 2026-07-22/23 snapshots) rolls over too.</li>
+  <li><strong>Reconcile "Open at a Glance"</strong> with reality afterward: closed tracks (§NPC-01, §CLEANUP-01, §DEATH-01, §PLAY-01) drop to pointers; §VM-01 (G2b/G4 open), §BOARD-01-D, §POT-PROMOTE, §DX-01 remnants (a/c/d/e), and the new §AUDIT-03a–e stay. Old bullets archived verbatim as a snapshot.</li>
+  <li><strong>Remaining §DX-01 rows (a/c/d/e)</strong> — repo-health items — are candidates after the file is clean, each its own increment, one per "continue".</li>
+  <li><strong>Existing-Work-First before touching anything:</strong> <code>git status</code>/<code>git log</code>, check for a second live claude session, grep to disprove each row being moved. (Done this session: tree clean at <code>c9f3946</code>, one live session, prior slice confirmed only the §RESUME-tail was migrated.)</li>
+</ol>
+</section>
+
+<section>
+<h2>Documents reread before starting (this session)</h2>
+<ul>
+  <li><strong>BACKLOG.md</strong> — the object of the cleanup: Open at a Glance, the §RESUME log, every <code>[x]</code> migration candidate (598 lines / 306&nbsp;KB surveyed section by section).</li>
+  <li><strong>plan-archive.md</strong> — the destination: dated "Archived YYYY-MM-DD" sections, verbatim moves, pointer convention.</li>
+  <li><strong>CONTRIBUTING.md</strong> — Existing-Work-First, Lab Report Policy (docs-only work: not needed), Commit + Speak, Test-Run Rules, hazards.</li>
+  <li><strong>prompt.md</strong> — §2 step 8 (ship-record house style a migrated row must preserve) and §8 conventions (status markers, §RESUME discipline, branch per track).</li>
+  <li><strong>index.md</strong> — doc map + doc-health badge; cross-references must stay intact (only <code>potential.md</code> links into BACKLOG anchors — §VM-01 and §POT-PROMOTE headings, both kept).</li>
+</ul>
+</section>
+
+<section class="directive">
+<h2>The standing directive</h2>
+<p>One increment per "continue": pick the single next backlog-cleanup slice (§DX-01f bulk migration first), prove its premise before acting, do all work inline in one agent with no subagents and no background processes, sync every affected doc in the same increment, commit (never straight to <code>main</code>) with a narrated <code>./say.sh</code> call that speaks what changed, flip the row with hash and evidence, and turn every tangent into a new §-row instead of a detour — reporting anything unfinished as <strong>incomplete</strong> in §RESUME, never as done.</p>
+</section>
+
+<section>
+<h2>Migration inventory (measured this session)</h2>
+<ul>
+  <li>§NPC-01 full closed section → archive (heading + pointer stays).</li>
+  <li>§CLEANUP-01 closed body → archive (two deferred-by-decision optional rows stay).</li>
+  <li>§RESUME 2026-07-22/23 snapshots (15 entries) → archive; the four 2026-07-28 entries stay.</li>
+  <li>§VM-01 closed rows A–F + F-FU → archive (preamble + the open G row stay).</li>
+  <li>§BOARD-01 preamble + Inc 0/A/B/C, and §BOARD-01-FU1–8 → archive (optional Inc D stays).</li>
+  <li>§NAV-01-FU closed row → archive (deferred region-centering noted in the pointer).</li>
+  <li>§DX-01 closed rows b/g/h + §BOARD-01-VOID-GATE → archive (a/c/d/e/f stay).</li>
+  <li>Game Content §1367 / §GR-D / §KG, Mechanics &amp; Systems closed rows (§XP-01, §MBIT-02, §FC06 drop nerf, §FC07, §KG-01, bag readability, UI gaps, §DEATH-01), Design Decisions, Multiplayer §MP-CHAT-GLOBAL / §MP-MAPTABS / §MAP-NAV → archive (§IDEA-01 and §MESH-01-REVIEW tails stay).</li>
+</ul>
+<p class="meta">Verification: spot-grep moved signatures (0 in BACKLOG / 1 in archive), line counts before/after, <code>git diff --stat</code>; docs-only change so <code>check:walk</code> / Playwright / Hazard #1 are N/A.</p>
+</section>
+</main>
+</body>
+</html>
