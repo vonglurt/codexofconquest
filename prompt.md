@@ -176,14 +176,14 @@ These are non-negotiable. Full text in CONTRIBUTING.md.
 ## 7. Verify — tests and the known baseline
 
 ```bash
-npm run check:walk        # 10 world-invariant CI gates (invariants/parity/behaviour/terrain/roads/rooms/quest/gate/rng/questgraph)
+npm run check:walk        # 11 world-invariant CI gates (invariants/dupkeys/parity/behaviour/terrain/roads/rooms/quest/gate/rng/questgraph)
 npm test                  # Playwright integration suite  (STOP the server first — see below)
 npm run test:mud          # MUD server-protocol harness
 node --check js/wbapi-server.js   # server-file parse only — the HTML inline <script> is validated by npm test's browser load + the parity fences
 ```
 
 **Known pre-existing baseline reds: NONE — everything below is fully green (since 2026-07-28, §DX-01a). Any red is a real regression you (or a concurrent edit) introduced.**
-- `check:walk` — **all 10 gates green.** The last two carried reds retired 2026-07-28 (§DX-01a): `check:invariants` I1/I2 (J14/J15 `junction:true` §KG highway-tool leftovers — nodes removed) and `check:roads` R2/R3 (TGS off-component + road cell 10,207 on Gulf-of-Finland sea — `build-roads.js --apply` regen laid the real Tungas–Station 7 road, col 217 rows 8–13, and rerouted TLL→SPB via the 8,20x corridor). Node count is now **416** (418 − the 2 junctions).
+- `check:walk` — **all 11 gates green** (the 11th, `check:dupkeys`, added 2026-07-28 §AUDIT-03a — fails on any duplicate key inside one data-section entry, the last-key-wins rot class). The last two carried reds retired 2026-07-28 (§DX-01a): `check:invariants` I1/I2 (J14/J15 `junction:true` §KG highway-tool leftovers — nodes removed) and `check:roads` R2/R3 (TGS off-component + road cell 10,207 on Gulf-of-Finland sea — `build-roads.js --apply` regen laid the real Tungas–Station 7 road, col 217 rows 8–13, and rerouted TLL→SPB via the 8,20x corridor). Node count is now **416** (418 − the 2 junctions).
 - `quest-runtime-uqf.test.js` — **fully green, no known red.** The old *"~17–18-failure env baseline"* was disproved (2026-07-22, §DX-01b) as 17 deterministic **stale tests** — not an env flake — and fixed; the last red was retired 2026-07-23 (§BOARD-01-VOID-GATE). So a failure here is a real regression: the git-stash-diff ceremony is retired. Full history: the §DX-01b + §BOARD-01-VOID-GATE ship records in BACKLOG.md / plan-archive.md.
 
 **Test-run rules (learned §NAV-01h):**

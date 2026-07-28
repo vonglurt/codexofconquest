@@ -12,6 +12,7 @@
     "test:headed": "playwright test --headed",
     "test:install": "playwright install chromium",
     "check:invariants": "node scripts/check-invariants.js",
+    "check:dupkeys": "node scripts/check-dupkeys.js --selftest && node scripts/check-dupkeys.js",
     "check:parity": "node scripts/check-mover-parity.js",
     "check:behaviour": "node scripts/check-mover-behaviour.js",
     "check:terrain": "node scripts/check-terrain-parity.js",
@@ -27,7 +28,7 @@
     "check:laddermigration": "node scripts/check-ladder-migration.js",
     "check:worlddiff": "node scripts/world-diff.js --selftest",
     "test:mud": "node tests/mud-harness.mjs",
-    "check:walk": "npm run check:invariants && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity && npm run check:questparity && npm run check:gateast && npm run check:rng && npm run check:questgraph"
+    "check:walk": "npm run check:invariants && npm run check:dupkeys && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity && npm run check:questparity && npm run check:gateast && npm run check:rng && npm run check:questgraph"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3"
