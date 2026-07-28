@@ -3,7 +3,7 @@
 # Roll2Hit — The Shattered Codex: Document Index
 
 **Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · 36,933 lines · 418 nodes · 398 monsters · ~2,848 quests · 85 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + **§MESH-01 gameplay ladder (f–j) ✅ COMPLETE 2026-07-06** (buffs · hireling · sentries · no-dupe ledger incl. cross-origin trades · PvP duels) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · §DATA-01 ✅ RESOLVED 2026-07-06 (superseded by §ARCH-01 UQF; journal-renderer textContent residual shipped)
+**Status:** Layers 0–104 implemented · 37,950 lines · 416 nodes · 398 monsters · ~2,848 quests · 85 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + **§MESH-01 gameplay ladder (f–j) ✅ COMPLETE 2026-07-06** (buffs · hireling · sentries · no-dupe ledger incl. cross-origin trades · PvP duels) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · §DATA-01 ✅ RESOLVED 2026-07-06 (superseded by §ARCH-01 UQF; journal-renderer textContent residual shipped)
 **Last updated:** 2026-07-09 — repository reorganized + structure simplified (see below)
 
 > **📁 Repo reorganized 2026-07-09.** Root decluttered ~110 → ~35 files. `plan.md` split into `CONTRIBUTING.md` (dev policies) + `BACKLOG.md` (outstanding work). Historical docs moved under `docs/{spec,story,api,mechanics,notes}/`; importers → `importers/`, dev utilities → `tools/`, narrative texts → `sources/`. Core sync docs stay at root. Folder map + hosting/run instructions: **`README.md`**.
@@ -20,7 +20,7 @@
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
-| Live entity counts | **Run `npm run stats` for live totals** (§DX-01g — parsed from the data sections by `wbapi-core`, the single source; don't trust a hardcoded count). Last measured 2026-07-23: 418 nodes · 398 monsters · 111 terrains · 2,851 quests · 204 NPC profiles · 213 dialogues · 8 acts · 37,860 lines · 5.44 MB | ✅ 2026-07-23 (`npm run stats`) |
+| Live entity counts | **Run `npm run stats` for live totals** (§DX-01g — parsed from the data sections by `wbapi-core`, the single source; don't trust a hardcoded count). Last measured 2026-07-28: 416 nodes (418 − J14/J15, retired by §DX-01a) · 398 monsters · 111 terrains · 2,851 quests · 204 NPC profiles · 213 dialogues · 8 acts · 37,950 lines · 5.46 MB | ✅ 2026-07-23 (`npm run stats`) |
 | Last sync pass | 2026-07-09 — §CLEANUP-01 Part B doc-health: refreshed stale in-prose counts against the live `GET /api/list` parse — **monsters 370/392 → 398** (`monsters.md` header + `index.md` Status/footer/`MONSTER_POOL` row + spec-world row), **nodes 410 → 418** (Status/footer/cell-map row), **quests ~2,830 → ~2,848**, **footer line count 34,542 → 36,933**; terrain live count noted as 111 (check:invariants' 110 is its line-regex Set undercounting the JS-parse total by 1). `story.md`'s "42 story nodes" left as-is — it's a curated *narrative*-beat count, not the 418 world nodes (flagged for a narrative-owner review, not a mechanical overwrite). **Prior pass:** 2026-07-03 — §NAV-01 docs close-out: `lab-reports/lab-report-nav01-navigable-world.md` written; road-net + room-layer sections added to `maps.md` (+ FL1/FL9/FL12 flows re-verified against code, stale GATE_LOCKS section retired), `docs/notes/docs-node-network.md §13` (L0–L8 layer stack; §4/§9 rewritten to mover-kernel reality), `mechanics.md` (Roads, Rooms & Auto-Travel). **Sync findings:** `GATE_LOCKS` gone from code (docs claimed 4 live gates); §CELL-13 jump-travel removal partially reverted (`storyPortal`/`storyUseTransmort`/hearth live) → **resolved same day: user directed re-removal** (all jump-travel code cut from HTML; mechanics.md/mechanics-economy.md sections replaced with removal notes; gates check:walk 6/6, nav+autosave+fishing 48/48). Prior pass: 2026-07-02 §MESH docs close-out | ✅ |
 
 > Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
@@ -420,7 +420,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **NPC dialogue system** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-npc-dialogue-system.md` · `lab-reports/lab-report-birka-beginner-arc.md` |
 | **NPC favorability** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `index.md` |
 | **NG+ system** | `docs/story/story-arc-ngplus.md` | `lab-reports/lab-report-ng-plus-remembrance.md` · `lab-reports/lab-report-endings-and-echoes.md` |
-| **Cell map (418 nodes)** | `maps.md` | `index.md (NODE_MAP · NODE_COORDS · CELL_GRID)` · `docs/story/story-flowchart.md` · `docs/notes/docs-node-network.md` |
+| **Cell map (416 nodes)** | `maps.md` | `index.md (NODE_MAP · NODE_COORDS · CELL_GRID)` · `docs/story/story-flowchart.md` · `docs/notes/docs-node-network.md` |
 | **Overseer (The Fog Bank / LSO)** | `world.md` · `story.md Layer 104b` | `lab-reports/lab-report-littoral-courts.md §III` |
 | **Pachelbel / Deacon** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
 | **Saul→Paul arc (§LIX–§LXIX + §PAUL-01; §FUTURE-01 ✅ closed 2026-07-07)** | `story.md Layer 104a` · `maps.md` · `quest.md` §THE SAUL→PAUL ARC (18-quest table) | `lab-reports/lab-report-saul-paul-travel-reference.md` · `lab-reports/lab-report-saul-paul-vignette-spec.md` |
@@ -792,7 +792,7 @@ This rule applies to `docs/api/api-data-audit.md`, `plan-archive.md §TTS`, and 
 ---
 
 *Last updated: 2026-07-02*
-*Codebase: `roll2hit-v3.html` · 36,933 lines · Layers 0–104 complete · 418 nodes · 398 monsters · ~2,848 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF ✅ CLOSED · §MESH-01 core + full gameplay ladder f–j (ledger trades incl. cross-origin, PvP duels) · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
+*Codebase: `roll2hit-v3.html` · 37,950 lines · Layers 0–104 complete · 416 nodes · 398 monsters · ~2,848 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF ✅ CLOSED · §MESH-01 core + full gameplay ladder f–j (ledger trades incl. cross-origin, PvP duels) · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---
