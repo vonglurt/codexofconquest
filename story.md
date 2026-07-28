@@ -2879,7 +2879,7 @@ LJ0(entry) → LC1(court) → LJ1(battle) → LC2(court) → LJ2(battle) → LC3
 
 **storyRender injections:**
 
-*LJ3 — navigator trigger* (`id:'story-lso-trigger'`): Fires once when `!seaOverseerMet && !charmResisted`. Describes navigator's second register; orients player toward LSO (east of LJ3).
+*LSO — navigator trigger* (`id:'story-lso-trigger'`): Shows while `!seaOverseerMet && !charmResisted` (gates off once the fog resolves either flag). Describes navigator's second register; stacks above LSO's own node text as the three-courts progress marker. **§VM-01-G1-FIX (2026-07-28):** originally keyed to `LJ3`, a node code that was never built (the LJ0–LJ3 sea-battle junctions documented in maps.md don't exist in NODE_MAP — only the courts LC1–LC4/LCA/LSO shipped), so this panel had never rendered; remapped to LSO, `quest_sea_overseer`'s own `activateNode`. Lives in the `NODE_PANELS` table, not inline in storyRender.
 
 *LCA — arc-close* (`id:'story-lca-close'`): Fires on every visit. Counts `(betrayalThought + betrayalWord + betrayalDeed)`:
 - 0: "The four courts gave their seals. You gave them nothing but your position."
