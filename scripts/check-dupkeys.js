@@ -13,6 +13,13 @@
 // the section object) with a string/template/comment/regex-safe scanner, and
 // fails on any key declared twice in the same entry.
 //
+// §AUDIT-03f — parse-parity phase: every entry key declared in the source text
+// must survive the WBAPI parse (`wbapi-core.load`). The fn-stripper once
+// swallowed whole entries when a section COMMENT contained an arrow-fn example
+// (quest_sea_01/quest_sb_01 were un-listable through the entire API surface);
+// this phase fails on any textual-vs-parsed key mismatch so that class of
+// silent drop can never return.
+//
 // Usage:  node scripts/check-dupkeys.js            # audit, exit 1 on findings
 //         node scripts/check-dupkeys.js --selftest # prove the scanner catches
 //                                                  # a planted duplicate
@@ -94,10 +101,49 @@ function auditSection(src, name, fails) {
   return { entries };
 }
 
+// ── §AUDIT-03f parse parity: textual entry keys ↔ WBAPI-parsed keys ──────────
+// Sections whose parsed collection is an object keyed by entry id. FISH_DB /
+// ITEM_DB / NODE_COORDS-style array or empty sections are covered where mapped.
+const PARSE_PARITY = [
+  ['QUEST_DB', 'questDb'], ['NODE_MAP', 'nodeMap'], ['NODE_COORDS', 'nodeCoords'],
+  ['WORLD_DB', 'worldDb'], ['MONSTER_POOL', 'monsterPool'], ['MONSTER_DROPS', 'monsterDrops'],
+  ['BIRKA_NPC', 'birkaNpcs'], ['NPC_DIALOGUES', 'npcDialogues'], ['LAKE_MAGIC', 'lakeMagicDb'],
+];
+
+// Depth-1 key set of a section's top-level object literal, from source text.
+function sectionKeys(src, name) {
+  let text = sectionText(src, name);
+  if (text == null) return null;
+  // MONSTER_DROPS nests inside MONSTER_POOL's markers — apply the same split load() uses.
+  if (name === 'MONSTER_POOL') text = text.split('WORLDBUILDER:MONSTER_DROPS')[0];
+  const keys = new Set(); const stack = [];
+  for (const t of scanTokens(text)) {
+    if (t.open) { stack.push(t.open); continue; }
+    if (t.close) { stack.pop(); continue; }
+    if (stack.length === 1) keys.add(t.key);
+  }
+  return keys;
+}
+
+function auditParseParity(src, fails, core, only) {
+  core = core || require(path.join(ROOT, 'js', 'wbapi-core.js')).load(src);
+  for (const [section, coll] of PARSE_PARITY) {
+    if (only && !only.includes(section)) continue;
+    const textual = sectionKeys(src, section);
+    if (textual == null) { fails.push(`${section}: section markers not found (parse-parity)`); continue; }
+    const parsed = new Set(Object.keys(core[coll] || {}));
+    for (const k of textual) if (!parsed.has(k))
+      fails.push(`${section}.${k}: declared in source but DROPPED by the WBAPI parse — un-listable/un-editable through the whole API surface (§AUDIT-03f class)`);
+    for (const k of parsed) if (!textual.has(k))
+      fails.push(`${section}.${k}: in the WBAPI parse but not found textually — scanner/parser disagreement, investigate`);
+  }
+}
+
 function run(src) {
   const fails = [];
   const counts = {};
   for (const s of SECTIONS) counts[s] = auditSection(src, s, fails).entries;
+  auditParseParity(src, fails);
   return { fails, counts };
 }
 
@@ -115,9 +161,29 @@ const QUEST_DB = {
   auditSection(dirty, 'QUEST_DB', f2);
   const ok1 = f1.length === 0;
   const ok2 = f2.length === 1 && f2[0].includes("duplicate key 'activateNode'");
-  const r2 = { fails: f2 };
-  console.log(`selftest clean-pass=${ok1} planted-dup-caught=${ok2}${ok2 ? '' : ' → ' + JSON.stringify(r2.fails)}`);
-  process.exit(ok1 && ok2 ? 0 : 1);
+  // §AUDIT-03f parity selftest: an arrow-fn example inside a section COMMENT is
+  // the exact trap that dropped quest_sea_01/quest_sb_01 — the fixed parser must
+  // keep both entries, and a simulated drop must be caught by the parity audit.
+  const trap = `// ◆◆◆ WORLDBUILDER:QUEST_DB:START ◆◆◆
+const QUEST_DB = {
+  // migrated: gate:{} ← activateCond:()=>true, and completeFn:()=>S.x==='NWI' (notes with, commas). more
+  q_c: { title:'Trap survivor', gate:{}, completion:{ atNode:'NWI' }, onDo:()=>{ /* body { */ S.f=1; } },
+  q_d: { title:'Next', gate:{ flags:['x'] } },
+};
+// ◆◆◆ WORLDBUILDER:QUEST_DB:END ◆◆◆
+// ◆◆◆ WORLDBUILDER:MONSTER_POOL:START ◆◆◆
+const MONSTER_POOL = {};
+// ◆◆◆ WORLDBUILDER:MONSTER_POOL:END ◆◆◆`;
+  const core = require(path.join(ROOT, 'js', 'wbapi-core.js')).load(trap);
+  const f3 = [];
+  auditParseParity(trap, f3, core, ['QUEST_DB', 'MONSTER_POOL']);
+  const ok3 = !!(f3.length === 0 && core.questDb.q_c && core.questDb.q_d);
+  delete core.questDb.q_c; // simulate a parser drop — parity must catch it
+  const f4 = [];
+  auditParseParity(trap, f4, core, ['QUEST_DB', 'MONSTER_POOL']);
+  const ok4 = f4.length === 1 && f4[0].includes('QUEST_DB.q_c') && f4[0].includes('DROPPED');
+  console.log(`selftest clean-pass=${ok1} planted-dup-caught=${ok2} comment-trap-survives=${ok3} simulated-drop-caught=${ok4}${ok3 && ok4 ? '' : ' → ' + JSON.stringify([...f3, ...f4])}`);
+  process.exit(ok1 && ok2 && ok3 && ok4 ? 0 : 1);
 }
 
 const src = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
@@ -130,4 +196,5 @@ if (fails.length) {
   process.exit(1);
 }
 console.log('\n✓ no entry declares the same key twice — no silently-shadowed authored values');
+console.log('✓ parse parity: every source entry key survives the WBAPI parse (§AUDIT-03f)');
 process.exit(0);

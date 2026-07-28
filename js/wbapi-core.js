@@ -51,6 +51,20 @@ function removeFns(src) {
   let out = '', i = 0;
   while (i < src.length) {
     const c = src[i];
+    // Comments copy through verbatim — a `foo:()=>…` example inside a section
+    // comment must never trigger the fn-stripper (§AUDIT-03f: it swallowed the
+    // whole next entry up to the first depth-0 comma, silently dropping
+    // quest_sea_01/quest_sb_01 from every WBAPI parse).
+    if (c === '/' && src[i+1] === '/') {
+      while (i < src.length && src[i] !== '\n') out += src[i++];
+      continue;
+    }
+    if (c === '/' && src[i+1] === '*') {
+      out += src[i++]; out += src[i++];
+      while (i < src.length && !(src[i] === '*' && src[i+1] === '/')) out += src[i++];
+      if (i < src.length) { out += src[i++]; out += src[i++]; }
+      continue;
+    }
     if (c === '"' || c === "'" || c === '`') {
       out += c; i++;
       while (i < src.length) {
@@ -77,7 +91,9 @@ function removeFns(src) {
             if (cc === '"' || cc === "'" || cc === '`') {
               const q = cc; k++;
               while (k < src.length) { if (src[k] === '\\') { k += 2; continue; } if (src[k++] === q) break; }
-            } else if (cc === '{') { depth++; k++; }
+            } else if (cc === '/' && src[k+1] === '/') { while (k < src.length && src[k] !== '\n') k++; }
+            else if (cc === '/' && src[k+1] === '*') { k += 2; while (k < src.length && !(src[k] === '*' && src[k+1] === '/')) k++; k += 2; }
+            else if (cc === '{') { depth++; k++; }
             else if (cc === '}') { depth--; k++; if (depth === 0) break; }
             else k++;
           }
@@ -88,7 +104,9 @@ function removeFns(src) {
             if (cc === '"' || cc === "'" || cc === '`') {
               const q = cc; k++;
               while (k < src.length) { if (src[k] === '\\') { k += 2; continue; } if (src[k++] === q) break; }
-            } else if ('([{'.includes(cc)) { depth++; k++; }
+            } else if (cc === '/' && src[k+1] === '/') { while (k < src.length && src[k] !== '\n') k++; }
+            else if (cc === '/' && src[k+1] === '*') { k += 2; while (k < src.length && !(src[k] === '*' && src[k+1] === '/')) k++; k += 2; }
+            else if ('([{'.includes(cc)) { depth++; k++; }
             else if (')]}'.includes(cc)) { if (depth === 0) break; depth--; k++; }
             else if (cc === ',' && depth === 0) break;
             else k++;
