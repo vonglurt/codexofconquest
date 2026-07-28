@@ -101,8 +101,10 @@ Free-Movement untouched (panels/hooks/choices are not movement steps). G1/G2 are
 outside all four parity fences; G3 touches quest *data* (QUEST:CORE stays byte-identical; data
 edits only); G4 adds one gate/opcode leaf → kernel edit in `js/quest.js` + re-inline +
 `check:questparity`/`check:gateast` extension in lockstep. Seeded RNG N/A for G1–G3. Hazard #1
-(stop the `:1367` server) applies to every inline-JS edit. Baseline reds J14/J15 + TGS/SPB expected
-unchanged throughout.
+(stop the `:1367` server) applies to every inline-JS edit. ~~Baseline reds J14/J15 + TGS/SPB expected
+unchanged throughout.~~ **[STALE as of 2026-07-28 — §DX-01a retired both baselines; `check:walk` is
+fully green (11 gates, incl. the new `check:dupkeys`). For G2b/G4: expect NO reds — any red is a
+real regression.]**
 
 ## 7. Open knob for the user (the ASK) — ANSWERED, design LOCKED 2026-07-28
 
