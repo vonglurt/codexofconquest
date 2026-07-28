@@ -87,4 +87,16 @@ test.describe('§VM-01-G1 — NODE_PANELS renders the migrated panels', () => {
     expect(r.bkStillInline).toBe(true);
     expect(r.lsoPanelInTable).toBe(true);
   });
+
+  test('§VM-01-G1-FIX — the §SIREN-01 teaser renders at LSO (was dead code LJ3) and gates off after the fog resolves', async ({ page }) => {
+    const fresh = await renderAt(page, 'LSO');
+    expect(fresh.some(s => s.id === 'story-lso-trigger'), 'teaser renders at the Fog Bank pre-quest').toBe(true);
+    const resolved = await renderAt(page, 'LSO', { charmResisted: true });
+    expect(resolved.some(s => s.id === 'story-lso-trigger'), 'teaser gone once charmResisted').toBe(false);
+    const failed = await renderAt(page, 'LSO', { seaOverseerMet: true });
+    expect(failed.some(s => s.id === 'story-lso-trigger'), 'teaser gone once seaOverseerMet').toBe(false);
+    await page.evaluate(() => {
+      if (NODE_PANELS.some(p => (p.nodes || []).includes('LJ3'))) throw new Error('dead LJ3 key still present');
+    });
+  });
 });

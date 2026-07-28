@@ -30915,11 +30915,12 @@ const NODE_PANELS = [
     when:st => st.stoningEvent,
     css:'margin-top:10px;border-left-color:#803030;font-style:italic;color:#d8a0a0;font-size:12px;',
     text:'He is on the ground outside the city. He is not dead. He gets up.\n\nTimael is still in the market square. He has been there the whole time. He does not explain why. He says: where are you going next?\n\n"He got up and went back into the city."\n\nHP: 1. You cannot be healed above 1 while in Lystra.' },
-  // §SIREN-01: LJ3 — navigator speaks in a different register. NOTE (G1 finding): 'LJ3' is a DEAD
-  // node code — no NODE_MAP entry or constructed node ever carries it, so this panel has never
-  // rendered. Intended node is LSO (quest_sea_overseer's activateNode). Preserved verbatim here;
-  // the LJ3→LSO remap ships as its own follow-up (BACKLOG §VM-01-G1).
-  { id:'story-lso-trigger', nodes:['LJ3'],
+  // §SIREN-01: navigator speaks in a different register — the quest_sea_overseer approach teaser,
+  // gated off once the fog resolves either flag. §VM-01-G1-FIX: originally keyed to 'LJ3', a dead
+  // node code no NODE_MAP entry ever carried, so this panel had NEVER rendered; remapped to LSO
+  // ("The Fog Bank — Open Water"), the quest's own activateNode — same standard as §PLAY-01-G/
+  // §NPC-01-SF4 dead-code remaps.
+  { id:'story-lso-trigger', nodes:['LSO'],
     when:st => !st.seaOverseerMet && !st.charmResisted,
     css:'margin-top:10px;border-left-color:#2a3a4a;background:#06080a;color:#9ab0c0;font-style:italic;font-size:12px;',
     text:'After the serpent crossing the navigator is at the wheel. They are attentive to the compass in the ordinary way.\n\nThey are also, in a second and quieter register, speaking to something in the water to the east. Brief exchanges. Their lips barely move. They are not aware of it.\n\nThe fog bank four miles east has been there all day. It has no seasonal explanation.\n\nThere is something in the fog that knows you have come through three courts.' },
