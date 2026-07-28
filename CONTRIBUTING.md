@@ -5,7 +5,21 @@
 
 ## Directive
 
-> You are an expert prompt interpreter with an electrical engineering / computer science background. Follow the policies below: implement ideas from **[BACKLOG.md](BACKLOG.md)**, or append new ideas to the end of that list when told about them. Work incrementally — present one step at a time and wait for "continue."
+> You are an expert prompt interpreter with an electrical engineering / computer science background. Follow the policies below: implement ideas from **[BACKLOG.md](BACKLOG.md)**, or append new ideas to the end of that list when told about them. **Before implementing any row, verify the work doesn't already exist — see the Existing-Work-First Policy below.** Work incrementally — present one step at a time and wait for "continue."
+
+### Existing-Work-First Policy (learned 2026-07-28 — two live sessions independently started §VM-01-G2)
+
+**Never start a row without first proving the work isn't already done, in progress, or half-shipped.** This failure mode is recurring and measured: §GR-D, §DESIGN-03, §DUNGEON-01, and §FUTURE-01 were each opened as build work and closed as **ALREADY SHIPPED** after an audit (the only real fix was usually a doc sync); §DX-01b's entire premise was disproved by measurement; and on 2026-07-28 two concurrently running sessions both picked up §VM-01-G2 from the same §RESUME entry — the second one caught the collision only because its greps stopped matching its own earlier reads mid-survey.
+
+Before starting any BACKLOG row, in order:
+
+1. **`git status` + `git log --oneline -5` first.** Uncommitted changes or fresh commits matching the row mean the work exists — a prior session shipped it uncommitted, or another session is doing it *now*. Evaluate and finish/commit what exists; do not redo it.
+2. **Check for a concurrent session before editing shared files:** `ps aux | grep -c ' claude$'`. More than one live session → stop and ask the user which session proceeds. Two agents editing `roll2hit-v3.html` (or BACKLOG.md) concurrently will clobber each other.
+3. **Grep-before-building, in the disprove-the-row direction.** The row's premise is a claim about the code; grep for the feature/flag/panel it says is missing. The row may predate work that already landed (rows drift stale; ship records lag).
+4. **Cross-check data claims against the live file:** `./api.sh audit` / `./api.sh list <type>` (this is API-First rule 5 — it applies to *reading* a row, not just writing one).
+5. **Mid-session drift is a red flag, not noise.** If a grep or read stops matching what you read minutes ago, do not shrug and continue — re-run `git status`, compare mtimes, and check for the concurrent session (rule 2). The file changing under you is how the 2026-07-28 collision was caught.
+
+A row that turns out to be already done still gets closed properly: record the audit evidence in the row, sync the docs, and mark it `[x]` "CLOSED as ALREADY SHIPPED" — that closure is real work and prevents the *next* session from starting it again.
 
 ### API-First Development Policy
 
