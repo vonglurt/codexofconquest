@@ -463,3 +463,95 @@ test.describe('§NPC-01-D — talk verb: reach Friendly (⚔) by talking, Dear F
     expect(pageErrors).toEqual([]);
   });
 });
+
+// §NPC-01-SF4 — the last three dead birkaNpcs codes (CQ/SQ/GC — never in NODE_MAP) remapped to the
+// nodes their arcs actually render at, each proved by the arc's own render gate AND by the NPCs' own
+// NPC_DIALOGUES meta.node: CQ→CDG (Layer 44 Ally Cat Arc; Jimmy is CDG's NODE_MAP npc), SQ→NUE
+// (Layer 51 Weimar Scholar Gate; merged into the existing curated NUE entry), GC→TRD (Layer 55's
+// Yva paid-info scene). All state-gating preserved verbatim — this is a pure key remap.
+test.describe('§NPC-01-SF4 — dead codes CQ/SQ/GC remapped to CDG/NUE/TRD (cards render in live play)', () => {
+  test('CDG (fresh): Jimmy renders at the Cat Quarter; Sandy/Kenickie stay quest-gated', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'CDG';
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('Jimmy "Two-Tails" Carbonara'); // was wired to dead CQ → rendered nowhere
+    await expect(row).not.toContainText('Sandy "Scratchpad" Mewlino'); // gated on quest_cat_02 complete
+    await expect(row).not.toContainText('Kenickie Clawnickie Mancuso'); // gated on quest_cat_05 complete
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('CDG (cat quests complete): Sandy and Kenickie join Jimmy — gating preserved verbatim', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'CDG';
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true },
+      quests: { quest_cat_02: 'complete', quest_cat_05: 'complete' } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('Jimmy "Two-Tails" Carbonara');
+    await expect(row).toContainText('Sandy "Scratchpad" Mewlino');
+    await expect(row).toContainText('Kenickie Clawnickie Mancuso');
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('NUE (fresh): Isolde joins the merged curated entry; Benedikt stays gated on wmArchiveComplete', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'NUE';
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('Gret Orrens');            // pre-existing curated NUE NPC — unchanged
+    await expect(row).toContainText('Archivist Isolde Voss');  // was wired to dead SQ → rendered nowhere
+    await expect(row).not.toContainText('Benedikt Rasp');      // gated on wmArchiveComplete
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('NUE (wmArchiveComplete): Benedikt appears — SQ gating preserved verbatim', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'NUE';
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true },
+      wmArchiveComplete: true });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('Archivist Isolde Voss');
+    await expect(row).toContainText('Benedikt Rasp');
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('TRD: Yva renders only inside her window (vsDebtProbed && !vsWeaponsFound)', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    const node = 'TRD';
+    // fresh: vsDebtProbed unset → no Yva card
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true } });
+    await dismissContinue(page);
+    await expect(page.locator('#story-npc-cards-row')).not.toContainText('Goblin broker');
+    // inside the window: vsDebtProbed=true, vsWeaponsFound unset → Yva renders (was wired to dead GC)
+    await seedAndLoad(page, { currentCode: node, checkpointNode: node, visited: { [node]: true },
+      vsDebtProbed: true });
+    await dismissContinue(page);
+    await expect(page.locator('#story-npc-cards-row')).toContainText('Goblin broker');
+    expect(pageErrors).toEqual([]);
+  });
+
+  test('source guard: no dead CQ/SQ/GC keys remain in the birkaNpcs literal', async ({ page }) => {
+    await page.goto('/roll2hit-v3.html');
+    const r = await page.evaluate(() => {
+      const src = storyRender.toString();
+      const litDecl = src.slice(src.indexOf('const birkaNpcs ='), src.indexOf('_npcNodeKey'));
+      return {
+        deadKeys: ['CQ', 'SQ', 'GC'].filter(k => new RegExp('[,{\\n]\\s*' + k + ':').test(litDecl)),
+        cdgCurated: /[,{]\s*CDG:/.test(litDecl),
+        trdCurated: /[,{\n]\s*TRD:/.test(litDecl),
+      };
+    });
+    expect(r.deadKeys, 'no dead node code is a birkaNpcs key anymore').toEqual([]);
+    expect(r.cdgCurated, 'CDG carries the remapped cat-cluster entry').toBe(true);
+    expect(r.trdCurated, 'TRD carries the remapped Yva entry').toBe(true);
+  });
+});

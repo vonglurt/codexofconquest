@@ -32207,11 +32207,16 @@ function storyRender(node, prefix) {
     const _ssjNpcs = S_story.emmerMet ? ['the_fisherman','emmer'] : ['the_fisherman']; // §NPC-01-SF5: the Fisherman is "always here in the morning" (SSJ text) and Yael signposts him — but SSJ's curated literal shadowed his derived card. List him unconditionally.
     const _nueNpcs = ['gret'];
     if (S_story.pierFalkWarm) _nueNpcs.push('pier');
-    const birkaNpcs = { LHR:['yael'], TLL:['brynn'], MHQ:['quill'], LLA:['pachelbel'], HKG:['crov','auros'], CQ:_cqNpcs, SQ:_sqNpcs, // §PLAY-01-G: dead pre-§WALK sublocation codes remapped to real nodes, each proved by its NPC's quest activateNode — IN→TLL (brynn/"The First Inn"), TV→MHQ (quill/"Birka Tavern"), BA→LLA (pachelbel/"The Rough Bar"; the Varga ambient below already checks LLA), CY→HKG (crov Weckmann + auros Bruhns/"Neon Undercity"). LHR was the §PLAY-01-D CI→LHR fix (yael/start node). No NODE_MAP entry ever existed for CI/IN/TV/BA/CY, so these cards previously rendered nowhere.
+    const birkaNpcs = { LHR:['yael'], TLL:['brynn'], MHQ:['quill'], LLA:['pachelbel'], HKG:['crov','auros'], CDG:_cqNpcs, // §PLAY-01-G: dead pre-§WALK sublocation codes remapped to real nodes, each proved by its NPC's quest activateNode — IN→TLL (brynn/"The First Inn"), TV→MHQ (quill/"Birka Tavern"), BA→LLA (pachelbel/"The Rough Bar"; the Varga ambient below already checks LLA), CY→HKG (crov Weckmann + auros Bruhns/"Neon Undercity"). LHR was the §PLAY-01-D CI→LHR fix (yael/start node). No NODE_MAP entry ever existed for CI/IN/TV/BA/CY, so these cards previously rendered nowhere.
+      // §NPC-01-SF4: the last three dead codes (CQ/SQ/GC) remapped by the same standard, each proved by
+      // its arc's own render gate — CQ→CDG (Layer 44 Ally Cat Arc gates on node.code==='CDG'; Jimmy is
+      // CDG's own NODE_MAP npc), SQ→NUE (Layer 51 Weimar Scholar Gate gates on 'NUE'; _sqNpcs merged
+      // into the existing NUE entry below, gating verbatim), GC→TRD (Layer 55's Yva paid-info scene
+      // gates on 'TRD'). No NODE_MAP entry ever existed for CQ/SQ/GC either.
       STN:['rennau'], TL:S_story.tlLedgerRead ? ['vonn'] : [],
-      VS:S_story.vsDebtSettled ? [] : ['solvak'], GC:S_story.vsDebtProbed && !S_story.vsWeaponsFound ? ['yva'] : [],
+      VS:S_story.vsDebtSettled ? [] : ['solvak'], TRD:S_story.vsDebtProbed && !S_story.vsWeaponsFound ? ['yva'] : [],
       AMS:_frNpcs,
-      SSJ:_ssjNpcs, NUE:_nueNpcs };
+      SSJ:_ssjNpcs, NUE:_nueNpcs.concat(_sqNpcs) };
     // §NPC-01-B: curated literal wins for the 14 legacy / state-gated nodes (parity anchor); every
     // other node falls back to the map derived from BIRKA_NPC_PROFILES.node. Key by the node KEY
     // (S_story.currentCode): 291 of 418 NODE_MAP entries omit an explicit `code` field, so `node.code`
