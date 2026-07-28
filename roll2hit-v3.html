@@ -30884,6 +30884,160 @@ function _openBlueShuttersContent(wrap) {
   wrap.appendChild(sub);
 }
 
+// ── §VM-01-G1: NODE_PANELS — the state-gated flavor/arrival panel table ──
+// Every entry is one former hardcoded `if (node.code === 'XX')` block from storyRender's
+// special-case stack, migrated verbatim (Class A: pure gated panel; Class B: + a `once` flag).
+// Schema: { nodes:[codes], when?(st), once?:flagName, id?, css?, html? | text (string or fn(st)→string|null) }.
+// _renderNodePanels iterates in TABLE ORDER inserting each afterend of #story-text-box — the same
+// LIFO stacking the source blocks produced — so order here MUST mirror the original source order.
+// Only order-safe blocks live here: each entry preceded, in the old source, every block that can
+// co-fire on the same node (the BK approach panel stays inline — Corelli's button precedes it).
+// `html` is reserved for STATIC authored markup only — never interpolate state into it (§DATA-01);
+// dynamic text uses `text` → textContent.
+const NODE_PANELS = [
+  { id:'story-ci-tagline', nodes:['LHR'],
+    css:'text-align:center;border-left:none;border-top:1px solid #40607a;padding:10px 14px 8px;font-style:normal;color:#fea712;letter-spacing:0.05em;',
+    html:'LETS GO &mdash; Codex of Conquest: Curse of Knowledge<br><span style="font-size:10px;color:#9ab0c0;letter-spacing:0.02em;">roll2hit.com &middot; MIT Public Domain</span>' },
+  // §LXII: AO — name-change notice on first arrival post-commission. NOTE (G1 finding): dead in
+  // practice — storyCollectLoot flips visited[code] earlier in the same render, so !visited['HTY']
+  // is always false here. Gate preserved verbatim (G1 is a no-op); fix tracked in BACKLOG §VM-01-G1.
+  { id:'story-ao-namechange', nodes:['HTY'],
+    when:st => st.commissionReceived && !st.visited['HTY'],
+    css:'margin-top:10px;border-left-color:#a07030;font-style:italic;color:#e0c890;font-size:12px;',
+    text:'He is called Paul here for the first time. He will be called Saul again once, by someone who does not know the road. It will not fit.' },
+  // §LIX: KS — conversion fires on first arrival (quest_road_damascus auto-completes on next storyCheckQuests)
+  { id:'story-ks-conversion', nodes:['DAM'],
+    when:st => !st.saulConverted, once:'saulConverted',
+    css:'margin-top:10px;border-left-color:#8080a0;font-style:italic;color:#c0c8d8;font-size:13px;',
+    text:'The road was well-maintained for the first half day. After the stones gave way to packed earth the escort fell back to march-pace. The dust was the same colour as the sky — noon, flat white, no shadow to navigate by.\n\nThe light, when it came, was not theatrical. It did not arrive with sound. It arrived with the absolute certainty of a fact that had already been true and was simply now being acknowledged. The road did not change. The dust did not change. The sky did not change.\n\nSaul of Tarsus fell.\n\nWhen he looked up, he could not see. The escort commander was asking him something. He said: Lead me to the city. He meant Damascus. He meant: I cannot complete this journey on my own and I require assistance. Both things were true for the first time simultaneously.\n\nThe warrants are still in his coat. He will not use them again.' },
+  // §LXIV/§PAUL-01: LT — stoning aftermath shows once quest_stoning_lystra resolves
+  { id:'story-lt-stoning', nodes:['KYA'],
+    when:st => st.stoningEvent,
+    css:'margin-top:10px;border-left-color:#803030;font-style:italic;color:#d8a0a0;font-size:12px;',
+    text:'He is on the ground outside the city. He is not dead. He gets up.\n\nTimael is still in the market square. He has been there the whole time. He does not explain why. He says: where are you going next?\n\n"He got up and went back into the city."\n\nHP: 1. You cannot be healed above 1 while in Lystra.' },
+  // §SIREN-01: LJ3 — navigator speaks in a different register. NOTE (G1 finding): 'LJ3' is a DEAD
+  // node code — no NODE_MAP entry or constructed node ever carries it, so this panel has never
+  // rendered. Intended node is LSO (quest_sea_overseer's activateNode). Preserved verbatim here;
+  // the LJ3→LSO remap ships as its own follow-up (BACKLOG §VM-01-G1).
+  { id:'story-lso-trigger', nodes:['LJ3'],
+    when:st => !st.seaOverseerMet && !st.charmResisted,
+    css:'margin-top:10px;border-left-color:#2a3a4a;background:#06080a;color:#9ab0c0;font-style:italic;font-size:12px;',
+    text:'After the serpent crossing the navigator is at the wheel. They are attentive to the compass in the ordinary way.\n\nThey are also, in a second and quieter register, speaking to something in the water to the east. Brief exchanges. Their lips barely move. They are not aware of it.\n\nThe fog bank four miles east has been there all day. It has no seasonal explanation.\n\nThere is something in the fog that knows you have come through three courts.' },
+  // §SIREN-01: LCA — arc close, betrayal count
+  { id:'story-lca-close', nodes:['LCA'],
+    css:'margin-top:10px;border-left-color:#3a3a5a;font-style:italic;color:#c0c0d8;font-size:12px;',
+    text:st => {
+      const _bc = (st.betrayalThought ? 1 : 0) + (st.betrayalWord ? 1 : 0) + (st.betrayalDeed ? 1 : 0);
+      if (_bc === 0) {
+        return 'The four courts gave their seals.\n\nYou gave them nothing but your position. You named the tidal schedule. You found the wheel. You addressed the court directly. You went to the dock first. Each time: your position, clearly held.\n\nThe sea behind you is the same sea. Nothing about the water has changed. The difference is that you navigated it without being navigated.';
+      } else if (_bc <= 2) {
+        return 'The seals are in your coat.\n\nYou have been shaped by the crossing. Not entirely — you held your position at ' + (3 - _bc) + ' of the courts. But the shaping was real, and it was not requested, and you did not notice it at the time it happened.\n\nYou notice it now. The water is still. Stillness makes the shape of a thing visible. This is what stillness is for.';
+      }
+      return 'You gave something at each harbor that you did not mean to give.\n\nAt Port Aurel: your interpretation. At Port Calice: your pace. At Port Mireille: your role.\n\nThe seals are in your coat. The commission is complete. The water is still. The stillness is the first moment of stillness since Port Aurel — the first moment in which nothing is being measured except by you, and you are only now beginning to count.';
+    } },
+  // §ML: Malta shore — snake; no roll, no explanation, crowd changes their mind
+  { id:'story-ml-snake', nodes:['MLA'],
+    when:st => !st.maltaSnakeEvent, once:'maltaSnakeEvent',
+    css:'margin-top:10px;border-left-color:#4a4a2a;font-style:italic;color:#c8c890;font-size:12px;',
+    text:st => {
+      const _mlHarmony = st.harmonyChainComplete
+        ? '\n\nThe islanders showed unusual kindness. You have seen this before — a place that has no reason to be kind and is kind anyway. It moves the same way every time. "The islanders showed us unusual kindness."'
+        : '\n\nThe islanders showed unusual kindness.';
+      return 'The fire is built on the shore. Two hundred and seventy-six people, cold and wet and alive on the beach before dawn.\n\nA viper comes out of the brush when the wood is gathered — the heat, the disturbance. It fastens to his hand. The islanders see this. They reach a conclusion: he is a murderer; he survived the sea but judgment found him at the fire.\n\nHe shakes it into the fire.\n\nThey wait for his hand to swell. His hand does not swell. They wait for him to fall. He does not fall. He goes back to building the fire.\n\nThe islanders change their minds. They say: he is a god.\n\nHe does not correct them. He has been counting people all night. The count is correct. He builds the fire.' + _mlHarmony;
+    } },
+  // L40-H/I: Sweelinck dialogue variant at SQ and CO (Layer 41: Birka variant overrides curse score
+  // if player has 3+ friends). The NUE-only age/map/S49 sub-blocks stay inline in storyRender.
+  { id:'story-sweelinck-variant', nodes:['NUE','TLS'],
+    text:st => {
+      const cs = _curseScore();
+      const _birkaVar = SWEELINCK_DIALOGUE_VARIANTS.find(v => v.birka && _lubeckFriends() >= 3);
+      const variant = _birkaVar || SWEELINCK_DIALOGUE_VARIANTS.find(v => !v.birka && cs >= v.minScore && cs <= v.maxScore);
+      return variant ? variant.text : null;
+    } },
+  // Layer 49: §XIV Quest -1 — The Open Door
+  { nodes:['TLS'],
+    when:st => (st.level || 1) >= 20 && !st.questMinusOne,
+    css:'margin-top:10px;border-left-color:#556b2f;',
+    text:[
+      '🔓  You are Level 20.',
+      '',
+      'The Fighter Champion progression ends here. The crit window is 17–20.',
+      'You have two Action Surges per short rest. Indomitable has been yours',
+      'for eleven levels. There is no Level 21 in this build.',
+      '',
+      'But the source file is 16,024 lines of readable JavaScript.',
+      'MONSTER_POOL has 423 entries. WORLD_DB has 67 terrain entries.',
+      'QUEST_DB has a completion function for each quest. The MIT License',
+      'has no restrictions.',
+      '',
+      'Level 21 is undefined.',
+      'That is not a bug. That is the door.',
+      '',
+      'If you want to continue, the next step is yours to write.',
+      'The tools are: a text editor, a browser, and the following commands:',
+      '',
+      '    grep -n "MONSTER_POOL" roll2hit-v3.html',
+      '    grep -c "key:\'" roll2hit-v3.html',
+      '    grep -n "^const QUEST_DB" roll2hit-v3.html',
+      '',
+      'The markdown files in this directory keep the documentation synchronized.',
+      'plan.md §XIV describes the World Creator Wizard.',
+      '',
+      'To mark this quest complete, open your browser console and type:',
+      '    S_story.questMinusOne = true; storyAutoSave();',
+      '',
+      'The game will not know whether you earned it.',
+      'That is also intentional.',
+      '',
+      '— Froberger\'s margin note, Entry 42 (not yet written)',
+    ].join('\n') },
+  // §D01-01: Themed Dungeon Doctrine — EB approach room flavor panels (IST/TBS/MCT; the BK
+  // Void-Fracture-Maze panel stays inline — Corelli's button precedes it in the old source and
+  // can co-fire at BK, so extracting it would reorder the DOM).
+  { nodes:['IST'],
+    when:st => !st.defeatedBattles['IST'],
+    css:'margin-top:10px;border-left-color:#1a4a6a;',
+    html:'<div style="color:#4080a0;font-weight:700;margin-bottom:4px;">📚 Library of the Drowned — Approach</div>'
+      + '<div style="font-size:12px;color:#9ab;line-height:1.5;">'
+      + 'The water here is the wrong temperature. Not cold — wrong. As if the cold has a direction and that direction is toward you. The ink in the wall-inscriptions has not run in three centuries of submersion. It should have run in the first decade. The library holds things in place by insisting that they stay. You are subject to the same arrangement until you are not. The chamber is aware of the distinction. It has filed it.'
+      + '</div>' },
+  { nodes:['TBS'],
+    when:st => !st.defeatedBattles['TBS'],
+    css:'margin-top:10px;border-left-color:#2a1a0a;',
+    html:'<div style="color:#9a6040;font-weight:700;margin-bottom:4px;">🦴 Organic Corruption — Approach</div>'
+      + '<div style="font-size:12px;color:#c8a07a;line-height:1.5;">'
+      + 'The walls are not made of stone here. They are made of something that was stone and then became something else when the Void moved through it. The texture is wrong in a way that takes a moment to identify. A moment after you identify it, you wish you had taken longer to do so. The bones in the walls were load-bearing once. They still are. The structure would collapse without them. It has not collapsed. It is waiting for a different kind of structural failure.'
+      + '</div>' },
+  { nodes:['MCT'],
+    when:st => !st.defeatedBattles['MCT'],
+    css:'margin-top:10px;border-left-color:#1a2a4a;',
+    html:'<div style="color:#5080c0;font-weight:700;margin-bottom:4px;">💧 The Water Palace — Approach</div>'
+      + '<div style="font-size:12px;color:#8ab0d0;line-height:1.5;">'
+      + 'The floor is water. This is not a figure of speech. The Elder Marid poured its medium into the architecture and the floor is the water the palace drank. It holds your weight. This is a decision the palace made. The columns are also water. The arches are also water. The decision about which parts are floor and which are wall is aesthetic. The Marid had opinions about aesthetics. It expressed them comprehensively. You are walking on the considered opinion of an ancient elemental regarding the correct height of a threshold.'
+      + '</div>' },
+];
+
+// §VM-01-G1: render every NODE_PANELS entry active for this node. Runs immediately after the
+// stale-sibling sweep (which already removed last render's panels — the old per-block
+// remove-by-id calls were redundant belt-and-braces over that sweep). Each insert lands
+// afterend of #story-text-box, replicating the source blocks' LIFO stacking exactly.
+function _renderNodePanels(node, st) {
+  for (const p of NODE_PANELS) {
+    if (p.nodes.indexOf(node.code) === -1) continue;
+    if (p.when && !p.when(st)) continue;
+    const _txt = typeof p.text === 'function' ? p.text(st) : p.text;
+    if (p.text !== undefined && (_txt === null || _txt === undefined)) continue;
+    if (p.once) st[p.once] = true;
+    const el = document.createElement('div');
+    if (p.id) el.id = p.id;
+    el.className = 'sweelinck-variant';
+    if (p.css) el.style.cssText = p.css;
+    if (p.html !== undefined) el.innerHTML = p.html;
+    else el.textContent = _txt;
+    document.getElementById('story-text-box').insertAdjacentElement('afterend', el);
+  }
+}
+
 function storyRender(node, prefix) {
   // §CELL-03: keep grid position in sync whenever we land on a named node
   if (node && NODE_COORDS[node.code]) {
@@ -30935,18 +31089,8 @@ function storyRender(node, prefix) {
       const _next = _el.nextElementSibling; _el.remove(); _el = _next;
     }
   }
-  // ── Intro tagline at CI ──
-  { const _oldCiTag = document.getElementById('story-ci-tagline');
-    if (_oldCiTag) _oldCiTag.remove();
-    if (node.code === 'LHR') {
-      const _ciDiv = document.createElement('div');
-      _ciDiv.id = 'story-ci-tagline';
-      _ciDiv.className = 'sweelinck-variant';
-      _ciDiv.style.cssText = 'text-align:center;border-left:none;border-top:1px solid #40607a;padding:10px 14px 8px;font-style:normal;color:#fea712;letter-spacing:0.05em;';
-      _ciDiv.innerHTML = 'LETS GO &mdash; Codex of Conquest: Curse of Knowledge<br><span style="font-size:10px;color:#9ab0c0;letter-spacing:0.02em;">roll2hit.com &middot; MIT Public Domain</span>';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _ciDiv);
-    }
-  }
+  // ── §VM-01-G1: data-driven flavor/arrival panels (former per-node special-case blocks) ──
+  _renderNodePanels(node, S_story);
   // ── Layer 50: §XV Entry 42 — blank journal page at CI (qualifying NG+ run) ──
   { const _e42Old = document.getElementById('story-entry42-prompt');
     if (_e42Old) _e42Old.remove();
@@ -30987,91 +31131,7 @@ function storyRender(node, prefix) {
       }
     }
   }
-  // ── §LXII: AO — name-change notice on first arrival post-commission ──
-  { const _aoNameOld = document.getElementById('story-ao-namechange');
-    if (_aoNameOld) _aoNameOld.remove();
-    if (node.code === 'HTY' && S_story.commissionReceived && !S_story.visited['HTY']) {
-      const _aoDiv = document.createElement('div');
-      _aoDiv.id = 'story-ao-namechange';
-      _aoDiv.className = 'sweelinck-variant';
-      _aoDiv.style.cssText = 'margin-top:10px;border-left-color:#a07030;font-style:italic;color:#e0c890;font-size:12px;';
-      _aoDiv.textContent = 'He is called Paul here for the first time. He will be called Saul again once, by someone who does not know the road. It will not fit.';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _aoDiv);
-    }
-  }
-  // ── §LIX: KS — conversion fires on first arrival ──
-  { const _ksConvOld = document.getElementById('story-ks-conversion');
-    if (_ksConvOld) _ksConvOld.remove();
-    if (node.code === 'DAM' && !S_story.saulConverted) {
-      S_story.saulConverted = true;
-      // quest_road_damascus will auto-complete on next storyCheckQuests
-      const _convDiv = document.createElement('div');
-      _convDiv.id = 'story-ks-conversion';
-      _convDiv.className = 'sweelinck-variant';
-      _convDiv.style.cssText = 'margin-top:10px;border-left-color:#8080a0;font-style:italic;color:#c0c8d8;font-size:13px;';
-      _convDiv.textContent = 'The road was well-maintained for the first half day. After the stones gave way to packed earth the escort fell back to march-pace. The dust was the same colour as the sky — noon, flat white, no shadow to navigate by.\n\nThe light, when it came, was not theatrical. It did not arrive with sound. It arrived with the absolute certainty of a fact that had already been true and was simply now being acknowledged. The road did not change. The dust did not change. The sky did not change.\n\nSaul of Tarsus fell.\n\nWhen he looked up, he could not see. The escort commander was asking him something. He said: Lead me to the city. He meant Damascus. He meant: I cannot complete this journey on my own and I require assistance. Both things were true for the first time simultaneously.\n\nThe warrants are still in his coat. He will not use them again.';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _convDiv);
-    }
-  }
-  // ── §LXIV/§PAUL-01: LT — stoning aftermath shows once quest_stoning_lystra resolves ──
-  { const _ltStoningOld = document.getElementById('story-lt-stoning');
-    if (_ltStoningOld) _ltStoningOld.remove();
-    if (node.code === 'KYA' && S_story.stoningEvent) {
-      const _stDiv = document.createElement('div');
-      _stDiv.id = 'story-lt-stoning';
-      _stDiv.className = 'sweelinck-variant';
-      _stDiv.style.cssText = 'margin-top:10px;border-left-color:#803030;font-style:italic;color:#d8a0a0;font-size:12px;';
-      _stDiv.textContent = 'He is on the ground outside the city. He is not dead. He gets up.\n\nTimael is still in the market square. He has been there the whole time. He does not explain why. He says: where are you going next?\n\n"He got up and went back into the city."\n\nHP: 1. You cannot be healed above 1 while in Lystra.';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _stDiv);
-    }
-  }
-  // ── §SIREN-01: LJ3 — navigator speaks in a different register ──
-  { const _lsoOld = document.getElementById('story-lso-trigger');
-    if (_lsoOld) _lsoOld.remove();
-    if (node.code === 'LJ3' && !S_story.seaOverseerMet && !S_story.charmResisted) {
-      const _lsoDiv = document.createElement('div');
-      _lsoDiv.id = 'story-lso-trigger';
-      _lsoDiv.className = 'sweelinck-variant';
-      _lsoDiv.style.cssText = 'margin-top:10px;border-left-color:#2a3a4a;background:#06080a;color:#9ab0c0;font-style:italic;font-size:12px;';
-      _lsoDiv.textContent = 'After the serpent crossing the navigator is at the wheel. They are attentive to the compass in the ordinary way.\n\nThey are also, in a second and quieter register, speaking to something in the water to the east. Brief exchanges. Their lips barely move. They are not aware of it.\n\nThe fog bank four miles east has been there all day. It has no seasonal explanation.\n\nThere is something in the fog that knows you have come through three courts.';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _lsoDiv);
-    }
-  }
-  // ── §SIREN-01: LCA — arc close, betrayal count ──
-  { const _lcaOld = document.getElementById('story-lca-close');
-    if (_lcaOld) _lcaOld.remove();
-    if (node.code === 'LCA') {
-      const _bc = (S_story.betrayalThought ? 1 : 0) + (S_story.betrayalWord ? 1 : 0) + (S_story.betrayalDeed ? 1 : 0);
-      const _lcaDiv = document.createElement('div');
-      _lcaDiv.id = 'story-lca-close';
-      _lcaDiv.className = 'sweelinck-variant';
-      _lcaDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a5a;font-style:italic;color:#c0c0d8;font-size:12px;';
-      if (_bc === 0) {
-        _lcaDiv.textContent = 'The four courts gave their seals.\n\nYou gave them nothing but your position. You named the tidal schedule. You found the wheel. You addressed the court directly. You went to the dock first. Each time: your position, clearly held.\n\nThe sea behind you is the same sea. Nothing about the water has changed. The difference is that you navigated it without being navigated.';
-      } else if (_bc <= 2) {
-        _lcaDiv.textContent = 'The seals are in your coat.\n\nYou have been shaped by the crossing. Not entirely — you held your position at ' + (3 - _bc) + ' of the courts. But the shaping was real, and it was not requested, and you did not notice it at the time it happened.\n\nYou notice it now. The water is still. Stillness makes the shape of a thing visible. This is what stillness is for.';
-      } else {
-        _lcaDiv.textContent = 'You gave something at each harbor that you did not mean to give.\n\nAt Port Aurel: your interpretation. At Port Calice: your pace. At Port Mireille: your role.\n\nThe seals are in your coat. The commission is complete. The water is still. The stillness is the first moment of stillness since Port Aurel — the first moment in which nothing is being measured except by you, and you are only now beginning to count.';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _lcaDiv);
-    }
-  }
-  // ── §ML: Malta shore — snake; no roll, no explanation, crowd changes their mind ──
-  { const _mlOld = document.getElementById('story-ml-snake');
-    if (_mlOld) _mlOld.remove();
-    if (node.code === 'MLA' && !S_story.maltaSnakeEvent) {
-      S_story.maltaSnakeEvent = true;
-      const _mlDiv = document.createElement('div');
-      _mlDiv.id = 'story-ml-snake';
-      _mlDiv.className = 'sweelinck-variant';
-      _mlDiv.style.cssText = 'margin-top:10px;border-left-color:#4a4a2a;font-style:italic;color:#c8c890;font-size:12px;';
-      const _mlHarmony = S_story.harmonyChainComplete
-        ? '\n\nThe islanders showed unusual kindness. You have seen this before — a place that has no reason to be kind and is kind anyway. It moves the same way every time. "The islanders showed us unusual kindness."'
-        : '\n\nThe islanders showed unusual kindness.';
-      _mlDiv.textContent = 'The fire is built on the shore. Two hundred and seventy-six people, cold and wet and alive on the beach before dawn.\n\nA viper comes out of the brush when the wood is gathered — the heat, the disturbance. It fastens to his hand. The islanders see this. They reach a conclusion: he is a murderer; he survived the sea but judgment found him at the fire.\n\nHe shakes it into the fire.\n\nThey wait for his hand to swell. His hand does not swell. They wait for him to fall. He does not fall. He goes back to building the fire.\n\nThe islanders change their minds. They say: he is a god.\n\nHe does not correct them. He has been counting people all night. The count is correct. He builds the fire.' + _mlHarmony;
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _mlDiv);
-    }
-  }
+  // (§VM-01-G1: the AO/KS/LT/LJ3/LCA/ML flavor panels moved to NODE_PANELS above.)
   // ── Layer 50: §XV NG+ quest activation at CI ──
   if (node.code === 'LHR' && (S_story.ngPlusRun || 0) >= 1) {
     const _ngqs = S_story.quests || {};
@@ -31079,22 +31139,10 @@ function storyRender(node, prefix) {
     if (!_ngqs['quest_ng_02'] && S_story.priorQuestMinusOne) S_story.quests['quest_ng_02'] = 'active';
     if (!_ngqs['quest_ng_03']) S_story.quests['quest_ng_03'] = 'active';
   }
-  // ── L40-H/I: Sweelinck dialogue variant at SQ and CO ──
+  // ── L40-H/I: Sweelinck at SQ and CO (the dialogue-variant panel itself moved to NODE_PANELS;
+  //    the NUE-only age/map/S49 sub-blocks stay here) ──
   {
-    const swBox = document.getElementById('story-sweelinck-variant');
-    if (swBox) swBox.remove();
     if (node.code === 'NUE' || node.code === 'TLS') {
-      const cs = _curseScore();
-      // Layer 41: Birka variant overrides curse score if player has 3+ friends
-      const _birkaVar = SWEELINCK_DIALOGUE_VARIANTS.find(v => v.birka && _lubeckFriends() >= 3);
-      const variant = _birkaVar || SWEELINCK_DIALOGUE_VARIANTS.find(v => !v.birka && cs >= v.minScore && cs <= v.maxScore);
-      if (variant) {
-        const vDiv = document.createElement('div');
-        vDiv.id = 'story-sweelinck-variant';
-        vDiv.className = 'sweelinck-variant';
-        vDiv.textContent = variant.text;
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', vDiv);
-      }
       // S28: Sweelinck age line — shown on 2nd+ visit to SQ, once per run
       if (node.code === 'NUE' && !S_story.sweelinckAgeLineSeen) {
         const sqVisits = (S_story.npcVisitCounts && S_story.npcVisitCounts['sq_revisit']) || 0;
@@ -31608,46 +31656,7 @@ function storyRender(node, prefix) {
     ), 700);
     storyAutoSave();
   }
-  // ── Layer 49: §XIV Quest -1 — The Open Door ──
-  if (node.code === 'TLS' && (S_story.level || 1) >= 20 && !S_story.questMinusOne) {
-    const q1Div = document.createElement('div');
-    q1Div.className = 'sweelinck-variant';
-    q1Div.style.cssText = 'margin-top:10px;border-left-color:#556b2f;';
-    q1Div.textContent = [
-      '🔓  You are Level 20.',
-      '',
-      'The Fighter Champion progression ends here. The crit window is 17–20.',
-      'You have two Action Surges per short rest. Indomitable has been yours',
-      'for eleven levels. There is no Level 21 in this build.',
-      '',
-      'But the source file is 16,024 lines of readable JavaScript.',
-      'MONSTER_POOL has 423 entries. WORLD_DB has 67 terrain entries.',
-      'QUEST_DB has a completion function for each quest. The MIT License',
-      'has no restrictions.',
-      '',
-      'Level 21 is undefined.',
-      'That is not a bug. That is the door.',
-      '',
-      'If you want to continue, the next step is yours to write.',
-      'The tools are: a text editor, a browser, and the following commands:',
-      '',
-      '    grep -n "MONSTER_POOL" roll2hit-v3.html',
-      '    grep -c "key:\'" roll2hit-v3.html',
-      '    grep -n "^const QUEST_DB" roll2hit-v3.html',
-      '',
-      'The markdown files in this directory keep the documentation synchronized.',
-      'plan.md §XIV describes the World Creator Wizard.',
-      '',
-      'To mark this quest complete, open your browser console and type:',
-      '    S_story.questMinusOne = true; storyAutoSave();',
-      '',
-      'The game will not know whether you earned it.',
-      'That is also intentional.',
-      '',
-      '— Froberger\'s margin note, Entry 42 (not yet written)',
-    ].join('\n');
-    document.getElementById('story-text-box').insertAdjacentElement('afterend', q1Div);
-  }
+  // (§VM-01-G1: the Layer 49 §XIV Quest -1 "Open Door" panel moved to NODE_PANELS above.)
   // ── Layer 50: §XV Froberger's sealed letter at CO in NG+ ──
   if (node.code === 'TLS' && (S_story.ngPlusRun || 0) >= 1 && !S_story.frobergerLetterFound) {
     const _letterDiv = document.createElement('div');
@@ -31861,16 +31870,8 @@ function storyRender(node, prefix) {
     document.getElementById('story-text-box').insertAdjacentElement('afterend', _iqRemDiv);
   }
   // ── §D01-01: Themed Dungeon Doctrine — EB approach room flavor panels ──
-  if (node.code === 'IST' && !S_story.defeatedBattles['IST']) {
-    const _eaDiv = document.createElement('div');
-    _eaDiv.className = 'sweelinck-variant';
-    _eaDiv.style.cssText = 'margin-top:10px;border-left-color:#1a4a6a;';
-    _eaDiv.innerHTML = '<div style="color:#4080a0;font-weight:700;margin-bottom:4px;">📚 Library of the Drowned — Approach</div>'
-      + '<div style="font-size:12px;color:#9ab;line-height:1.5;">'
-      + 'The water here is the wrong temperature. Not cold — wrong. As if the cold has a direction and that direction is toward you. The ink in the wall-inscriptions has not run in three centuries of submersion. It should have run in the first decade. The library holds things in place by insisting that they stay. You are subject to the same arrangement until you are not. The chamber is aware of the distinction. It has filed it.'
-      + '</div>';
-    document.getElementById('story-text-box').insertAdjacentElement('afterend', _eaDiv);
-  }
+  // (§VM-01-G1: IST/TBS/MCT moved to NODE_PANELS above; BK stays inline — Corelli's button
+  //  precedes it in this source order and can co-fire at BK, so extraction would reorder the DOM.)
   if (node.code === 'BK' && !S_story.defeatedBattles['TBS']) {
     const _bkMazeDiv = document.createElement('div');
     _bkMazeDiv.className = 'sweelinck-variant';
@@ -31880,26 +31881,6 @@ function storyRender(node, prefix) {
       + 'Past the Warrant Hall, at the end of the corridor Mordus never mentions and his staff never enters, the passage begins to rotate. Not metaphorically. The walls are on a mechanism the Scholar Kings put there to prevent exactly the kind of approach you are making. The chalk mark is your idea. It is not a bad idea. The maze has seen worse. It has a counterpoint prepared.'
       + '</div>';
     document.getElementById('story-text-box').insertAdjacentElement('afterend', _bkMazeDiv);
-  }
-  if (node.code === 'TBS' && !S_story.defeatedBattles['TBS']) {
-    const _egDiv = document.createElement('div');
-    _egDiv.className = 'sweelinck-variant';
-    _egDiv.style.cssText = 'margin-top:10px;border-left-color:#2a1a0a;';
-    _egDiv.innerHTML = '<div style="color:#9a6040;font-weight:700;margin-bottom:4px;">🦴 Organic Corruption — Approach</div>'
-      + '<div style="font-size:12px;color:#c8a07a;line-height:1.5;">'
-      + 'The walls are not made of stone here. They are made of something that was stone and then became something else when the Void moved through it. The texture is wrong in a way that takes a moment to identify. A moment after you identify it, you wish you had taken longer to do so. The bones in the walls were load-bearing once. They still are. The structure would collapse without them. It has not collapsed. It is waiting for a different kind of structural failure.'
-      + '</div>';
-    document.getElementById('story-text-box').insertAdjacentElement('afterend', _egDiv);
-  }
-  if (node.code === 'MCT' && !S_story.defeatedBattles['MCT']) {
-    const _evDiv = document.createElement('div');
-    _evDiv.className = 'sweelinck-variant';
-    _evDiv.style.cssText = 'margin-top:10px;border-left-color:#1a2a4a;';
-    _evDiv.innerHTML = '<div style="color:#5080c0;font-weight:700;margin-bottom:4px;">💧 The Water Palace — Approach</div>'
-      + '<div style="font-size:12px;color:#8ab0d0;line-height:1.5;">'
-      + 'The floor is water. This is not a figure of speech. The Elder Marid poured its medium into the architecture and the floor is the water the palace drank. It holds your weight. This is a decision the palace made. The columns are also water. The arches are also water. The decision about which parts are floor and which are wall is aesthetic. The Marid had opinions about aesthetics. It expressed them comprehensively. You are walking on the considered opinion of an ancient elemental regarding the correct height of a threshold.'
-      + '</div>';
-    document.getElementById('story-text-box').insertAdjacentElement('afterend', _evDiv);
   }
   // ── Layer 44: §IX Ally Cat Arc — CQ node render ──
   if (node.code === 'CDG') {
