@@ -289,12 +289,17 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
           S_story.gameDay = 0;
           const qsrc = QUEST_DB[src], qdst = QUEST_DB[dst];
           const beforeDst = (S_story.quests || {})[dst] || null;
-          // legitimacy: the referral target is a real, in-sequence bounty on a fresh game
-          const dstCanActivate = QuestRuntime.canActivate(dst);
           const dstNodeExists  = !!NODE_MAP[qdst.activateNode];
-          // fire the source's completion chain exactly as storyCheckQuests (29394) does
+          // fire the source's completion chain exactly as storyCheckQuests (29394) does — the
+          // source is marked complete FIRST, as the completion loop does before running onComplete
+          S_story.quests[src] = 'complete';
           const msgs = [];
           _uqfRunToCompletion(QuestRuntime.execBits(qsrc.onComplete, { questId: src, pushMsg: m => msgs.push(m) }));
+          // §VM-01-G3 — legitimacy is IN-SEQUENCE AT REFERRAL TIME: the source's completion
+          // (status + its flag writes) is what satisfies the target's gate. The old check ran
+          // canActivate on a FRESH game, which only ever passed because the rennau gates were
+          // vacuous — the same hole that let the board post chapter 2 before chapter 1.
+          const dstCanActivate = QuestRuntime.canActivate(dst);
           const afterDst = (S_story.quests || {})[dst] || null;
           // idempotency: a second fire must not throw and must leave the target 'active'
           _uqfRunToCompletion(QuestRuntime.execBits(qsrc.onComplete, { questId: src, pushMsg: () => {} }));
@@ -542,7 +547,9 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
       out.targetNodeExists = !!NODE_MAP[tNode] && tNode !== 'TLL';
       out.geoDistinct = new Set([QUEST_DB[SRCS[0]].activateNode, QUEST_DB[SRCS[1]].activateNode, tNode]).size === 3;
 
-      // legitimacy on a fresh game: target is a real, in-sequence, not-yet-started bounty
+      // §VM-01-G3 — the target now carries a REAL gate (vsDebtProbed), so on a fresh game it
+      // does NOT canActivate: the convergence referral's force-unlock is the sanctioned
+      // cross-arc introduction, and the board itself can no longer post the chapter early.
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       out.targetUnsetFresh = !(S_story.quests || {})[TARGET];
       out.targetCanActivate = QuestRuntime.canActivate(TARGET);
@@ -598,7 +605,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.targetNodeExists).toBe(true);
     expect(r.geoDistinct).toBe(true);                   // both sources + target are three distinct distant nodes
     expect(r.targetUnsetFresh).toBe(true);
-    expect(r.targetCanActivate).toBe(true);
+    expect(r.targetCanActivate).toBe(false);  // §VM-01-G3 — the real gate holds fresh; unlock is the sanctioned bypass
     for (const e of r.eachPostsAlone) {
       expect(e.posted, e.src).toBe(true);               // each source ALONE posts the shared bounty
       expect(e.referralNamesBrokerAndBoard, e.src).toBe(true);
@@ -649,8 +656,11 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     });
     expect(r.missing).toEqual([]);
     expect(r.leafUnsetFresh).toBe(true);
-    expect(r.mergeCanActivate).toBe(true);
-    expect(r.leafCanActivate).toBe(true);
+    // §VM-01-G3 — merge (vs_02) and leaf (vs_03) now carry real gates (vsDebtProbed /
+    // vsWeaponsFound), so neither canActivate on a fresh game: the unlock hops below are
+    // the sanctioned in-sequence path, and the board can no longer post either chapter early.
+    expect(r.mergeCanActivate).toBe(false);
+    expect(r.leafCanActivate).toBe(false);
     expect(r.mergeActiveAfterSrc).toBe(true);      // convergence edge posts the merge
     expect(r.leafStillUnsetAfterSrc).toBe(true);   // ...but the onward hop waits for the merge to COMPLETE
     expect(r.leafActiveAfterMerge).toBe(true);     // the merge, once done, refers onward (through-node)

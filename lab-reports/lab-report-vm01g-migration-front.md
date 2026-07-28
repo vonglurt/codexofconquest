@@ -134,3 +134,51 @@ argument design; and the CDG/Tilbury/Visby mixed blocks, which are G3's quest-ac
 territory. Side-finding: fresh SZG legitimately renders no workshop panel — the node's own `loot`
 auto-grants the Prototype Wand on arrival, gating the wand button off (test probe adjusted, not a
 regression).
+
+## 9. G3 ship addendum (2026-07-28) — the row's premise was half-stale, and the drift WAS the work
+
+**G3 shipped: the 5 Class-C activation blocks (NG+/WM/TL/VS/cat, 15 quests + 3 adjacent) are real
+`gate:` + `activateNode` data.** But grep-before-building rewrote the premise before a line moved:
+
+1. **Most of the 15 already HAD an `activateNode`** — appended by the `a721254`/`ea02faf` audit
+   waves as a duplicate key below the authored `activateNode:null` (last-key-wins). Result: the
+   whole cat chain, `tl_02/03`, `vs_02/03/warden`, `la_riva_02/03` mass-activated at their nodes
+   with vacuous `gate:{}` — **the legacy stanzas' staged sequencing had already silently died**;
+   only their bespoke messages still mattered. `710bb75`'s "SF→LCY" dead-code remap sent
+   `tl_01`/`tl_03` to the wrong node entirely (SF = the Storefront = STN).
+2. **`actNumber` is `node.act`, not campaign progress** (`storyRender` line 6), so every act-gated
+   leg (`vs_01` "Act V+", `tl_03` "Act IV+") was structurally dead; `wm_01`'s "Act VI+" was
+   vestigially always-true at NUE. No `actMin` leaf was needed — nothing real to express.
+3. **`NODE_MAP.VS` and `NODE_MAP.TL` had no `code` field** — the entire VS arc and the TL Vonn
+   path (tl_02's only completion) had NEVER run. Fixed via `./api.sh put node` — the Solvak/Vonn
+   buttons render for the first time ever. Reviving them exposed two latent **double-pay** bugs
+   (Ori and the seal-delivery buttons duplicated their quests' W7c onComplete grants) — both
+   buttons now narrate + set the completion flag and the quest chain pays exactly once, keyed on
+   the quest being ACTIVE.
+
+**Mechanism shipped:** `_uqfActivateAtNode(node)` — the activation loop extracted from
+storyCheckQuests and ALSO run at the START of storyRender (idempotent; its msgs join the strip in
+the same position), because per-node UI keyed on `'active'` must see same-arrival activations, as
+the retired inline stanzas guaranteed. New per-quest fields the host understands: **`onActivate`**
+(absent → `📋 title` · `null` → silent · `{msg, delayMs}` → bespoke delayed narration, verbatim
+from the old blocks) and **`boardExempt`** (the NG+ remembrance set never posts). The gate grammar
+needed ZERO new leaves — `countMin` on `ngPlusRun`, `questsDone`, `notFlags`, `flags` covered
+everything.
+
+**Board consequence (deliberate):** real gates make `_bountyPostable`'s "gate satisfied ⇒
+in-sequence" promise TRUE — the slate sheds exactly the out-of-sequence chapters
+(cat_02–06/void, tl_03, vs_02/03/warden, la_riva_02/03); chain heads still post. The FU6
+legitimacy tests were updated from "canActivate on a fresh game" (satisfiable only by vacuous
+gates) to **in-sequence at referral time**; Yva's button re-keyed on `quest_vs_02` active heals
+the referral route's dead-end.
+
+**Proof:** 20-combo golden-state harness (pre-captured at HEAD, re-diffed after) — **14/20
+byte-identical, 6 intended diffs, 0 unexpected** (VS revival ×2, cat staging ×4); permanent
+`uqf-quest-activation.test.js` 8/8; `quest-runtime-uqf` 303/303; warrants-board 25/25 +
+npc-card-map 22/22 + panels 7 + hooks 4 + gate-ast/coroutine/env/softlock/quest-core + 4 smokes =
+**410 tests in the final runs**; all four parity fences byte-identical (`QUEST:CORE` untouched —
+the host change is storyCheckQuests/storyRender, outside the fence); `check:walk` green except the
+documented J14/J15 + TGS/SPB baselines; §7½ eyeballed (VS shows Solvak's card + button + listed
+quest; CDG staged). **Left for G-FU/backlog:** the `ath05_act3/4`-class imported multi-act chains
+still mass-activate per node corpus-wide (pre-existing, now visible at VS); the 201×
+`npc:"long_john_silver_sen"` mis-stamp from `ea02faf`; a corpus-wide duplicate-key audit.

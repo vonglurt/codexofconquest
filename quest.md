@@ -126,6 +126,8 @@ Each quest entry uses the following tags:
 | `quest_cat_06` | "The Cat-King Cometh" | [BATTLE] Cat-King | 1 | 1500gp + Cat-King's Claw + `catKingDefeated` | [✅ LIVE] |
 | `quest_cat_void` | "Void Strays" | [BATTLE] ×5 | 1 | 400gp | [✅ LIVE] |
 
+**Activation model (§VM-01-G3, 2026-07-28):** the chain is declaratively staged at CDG via `gate:` + `activateNode:'CDG'` — `cat_01` unconditional → `cat_02` (questsDone `cat_01`) → `cat_03`/`cat_05`/`cat_void` (questsDone `cat_02`) → `cat_04` (questsDone `cat_03`) → `cat_06` (questsDone `cat_04`+`cat_05`). The Jimmy/Sandy/Tommy arrival narrations ride the quests' `onActivate` fields. (Before G3, appended duplicate `activateNode:"CDG"` fields made the WHOLE chain activate on first arrival — the storyRender stanzas' staging had silently died.)
+
 ---
 
 ### Fishmonger's Row (FR) — NODE 79
@@ -171,6 +173,16 @@ Each quest entry uses the following tags:
 
 ### Weimar Archive (WM)
 
+#### Scholar Gate chain (§XVI — activation declarative since §VM-01-G3 2026-07-28)
+
+| Quest ID | Title | Gate (activation) | Node | Reward | Status |
+|----------|-------|-------------------|------|--------|--------|
+| `quest_wm_01` | "Isolde: The Revocation Record" | `{}` (Isolde's line rides `onActivate`; the old "Act VI+" leg was vestigial — NUE is an act-6+ node) | NUE | Lower Archive access | [✅ LIVE] |
+| `quest_wm_02` | "Isolde: Lower Archive" | questsDone `wm_01` | NUE | Froberger's Field Notes + Isolde Friendly | [✅ LIVE] |
+| `quest_wm_03` | "Benedikt: The Reading Circle" | `wmArchiveComplete` | NUE | Scholar Kings' History + Benedikt Dear Friend | [✅ LIVE] |
+| `quest_wm_04` | "Benedikt: The First Researcher" | `wmBenediktCircleComplete` | NUE | Benedikt's Annotated Copy + 300gp | [✅ LIVE] |
+| `quest_wm_05` | "The Open File" | `_legacyFn` gate (unchanged) | — | 200gp | [✅ LIVE] |
+
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
 | `quest_inquisitor_handshake` + `_questions` + `_final` *(design: quest_inquisitor)* | "The Extended Hand" | [SKILL CHECK]+[BATTLE if lying] | 3-quest gauntlet (NUE) | Archive key + `inquisitorPassed` | [✅ LIVE §D02-02] |
@@ -213,6 +225,14 @@ Each quest entry uses the following tags:
 ## TILBURY — Act II (Nodes: docks, market_quarter, storefront, merchant_ship)
 
 *(Existing quests live. §SPARK-01 quests below: PLANNED — see plan-archive.md §SPARK-01 for full spec.)*
+
+### Tilbury Harbor Arc (§XIX — STN/TL; **revived §VM-01-G3 2026-07-28**, was dead from Q-TL-02 on: `NODE_MAP.TL` had no `code` field)
+
+| Quest ID | Title | Gate (activation) | Node | Reward | Status |
+|----------|-------|-------------------|------|--------|--------|
+| `quest_tl_01` | "Rennau: The Ledger" | `{}` (unconditional; silent) | STN *(was mis-remapped LCY)* | Harrow Manifest + Rennau Friendly | [✅ LIVE] |
+| `quest_tl_02` | "Rennau: The Embargo" | `tlLedgerRead` | TL | embargo decision + FU6 referral → tl_03 | [✅ LIVE] |
+| `quest_tl_03` | "Rennau: The Missing Ship" | questsDone `tl_02` + not `tlMissingShipSolved` | STN | 300gp + Ori's Account + Rennau Dear Friend (paid once, via onComplete) | [✅ LIVE] |
 
 ### §SPARK-01 — The Harmony Chain (📋 PLANNED)
 
@@ -291,6 +311,15 @@ A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mi
 ## VISBY — Act V (Nodes: alley, sewers, goblin_cave, pirate_cave, bar)
 
 *(Existing quests live.)*
+
+### Visby Underground Arc (§XX — VS/TRD; **revived §VM-01-G3 2026-07-28**, was entirely dead: `NODE_MAP.VS` had no `code` field)
+
+| Quest ID | Title | Gate (activation) | Node | Reward | Status |
+|----------|-------|-------------------|------|--------|--------|
+| `quest_vs_01` | "Solvak: The Collector" | `{}` (unconditional; silent — the old "Act V+" leg could never fire at an act-2 node) | VS | Solvak Friendly + `vsDebtProbed` | [✅ LIVE] |
+| `quest_vs_02` | "Yva: The Broker" | `vsDebtProbed` (or §BOARD-01-FU6 referral unlock; Yva's TRD button keys on the quest being active) | VS | Hollow Hands Seal + Yva Friendly | [✅ LIVE] |
+| `quest_vs_03` | "Mordus Pays" | `vsWeaponsFound` | VS | 400gp + `vsDebtSettled`/`vsShamanKnown` (paid once, via onComplete) | [✅ LIVE] |
+| `quest_vs_warden` | "The Warden" | hook-driven (Layer 56 Void Shaman hook; `activateNode:null`) | MT tunnel | `wardensLegacyKnown` + warden token | [✅ LIVE] |
 
 ---
 
@@ -532,6 +561,18 @@ Events A–F use `gate:{}` (always listed on arrival) and `retryable:true`. **Ev
 | `quest_kg_11` Why the Line Went Quiet | TVR · Lena | skill_check | INT/Investigation DC12 (retryable) | 500xp/100 → `kgCorridorCleared` |
 
 Gate spine (W→E, listing only): `{}` → `kgEnlisted` → `kgManifestDelivered` → `kg_03 done` → `kgFormsPassed` → `kg_05 done` → `kg_06 done` → `kgCoreDelivered` → `kg_08 done` → `kgSimCleared` → `kg_10 done`. Tail seeds the existing SVO / Station 7 thread (Lena's closing line).
+
+---
+
+## NEW GAME+ — Froberger Remembrance (LHR) — §XV Layer 50
+
+*(Activation declarative since §VM-01-G3 2026-07-28: `activateNode:'LHR'` + an `ngPlusRun ≥ 1` countMin gate replaced the storyRender block; silent (`onActivate:null`) and `boardExempt` — a personal remembrance is not Warrant work.)*
+
+| Quest ID | Title | Gate (activation) | Reward | Status |
+|----------|-------|-------------------|--------|--------|
+| `quest_ng_01` | "Froberger: The Remembered Path" | `ngPlusRun ≥ 1` | 500gp | [✅ LIVE] |
+| `quest_ng_02` | "Froberger: The Open Page" | `ngPlusRun ≥ 1` + `priorQuestMinusOne` | Entry 42 | [✅ LIVE] |
+| `quest_ng_03` | "Froberger: The Letter" | `ngPlusRun ≥ 1` | 300gp | [✅ LIVE] |
 
 ---
 

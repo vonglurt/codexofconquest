@@ -178,7 +178,9 @@ The lake itself does not change. The fish are still there. The sign still says Y
 **Their leverage:** Information networks, harbor access, forged documents, and Magistra Muffat's intelligence apparatus.
 **Player relationship:** Transactional at first; genuinely invested once Muffat believes the player is serious.
 
-#### ⚠️ PLANNED — Tilbury Harbor Arc (plan-archive.md §XIX, Layer 54)
+#### ✅ LIVE — Tilbury Harbor Arc (plan-archive.md §XIX, Layer 54; **revived §VM-01-G3 2026-07-28**)
+
+> **§VM-01-G3 revival note.** The arc had shipped as code but was PARTLY DEAD in play: `NODE_MAP.TL` carried no `code` field, so the Adjutant Vonn interaction — Q-TL-02's only completion path — never rendered, killing the chain from Q-TL-02 onward. The node is fixed, the quests now carry real gates (`tl_01` unconditional at STN · `tl_02` `tlLedgerRead` · `tl_03` questsDone `tl_02`) + `activateNode` (the appended `LCY` on tl_01/tl_03 was a wrong-target SF→LCY dead-code remap; SF = the Storefront = STN), and Ori's reward flows through `quest_tl_03`'s own onComplete chain exactly once. The old "Act IV+" leg on Q-TL-03 was structurally dead (`actNumber` = the current node's act, constant per node) and is retired in favor of the quest chain.
 
 Two new named NPCs in the Tilbury harbor district (nodes TL + SF):
 - **Harbor Master Rennau** (SF docks) — keeps the ledger of ships that haven't come back; starts Impartial; Dear Friend after Q-TL-03. He has the ledger Road Companion Dessa (§XVIII) references.
@@ -233,7 +235,9 @@ J1–J7 named roadside nodes gain one first-visit NPC encounter: Tessie (J1), Ol
 **Their leverage:** Military strength, labyrinthine territory, and the respect of every bandit between the mountains and the coast.
 **Player relationship:** Strictly transactional. Mordus keeps deals. He expects the same.
 
-#### ⚠️ PLANNED — Visby Underground (plan-archive.md §XX, Layer 55)
+#### ✅ LIVE — Visby Underground (plan-archive.md §XX, Layer 55; **revived §VM-01-G3 2026-07-28**)
+
+> **§VM-01-G3 revival note.** The arc had shipped as code but was ENTIRELY DEAD in play: `NODE_MAP.VS` carried no `code` field, so the whole VS block — Q-VS-01's activation, Solvak's probe button, the seal-delivery payoff — never rendered (Q-VS-01 was reachable only as a Warrant's Board bounty, and its completion flag was unreachable even then). The node is fixed; the quests carry real gates (`vs_01` unconditional at VS — the old "Act V+" leg could never fire, VS is an act-2 node · `vs_02` `vsDebtProbed` · `vs_03` `vsWeaponsFound`); Yva's broker button now keys on `quest_vs_02`'s own status so a §BOARD-01-FU6 referral-unlocked player no longer dead-ends; the seal payoff pays through `quest_vs_03`'s onComplete exactly once. Yva is at TRD (Goblin Warrens) — the "GC" below is the §NPC-01-SF4-era dead code.
 
 Two new NPCs and one new monster in the Visby/Goblin Caves area (nodes VS + GC):
 - **Debt Agent Solvak** (VS node, outside Crimson Warrant perimeter) — Merchant's Conclave debt collector; has been waiting 6 weeks; starts Impartial; Friendly after Q-VS-01; leaves VS permanently after Q-VS-03.

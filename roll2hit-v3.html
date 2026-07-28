@@ -8970,8 +8970,10 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   ADM: { num:277, name:"inn", label:"Admiral Benbow Inn — Chalk Cliff Coast", act:1,
   },
   TL: { num:278, name:"docks", label:"Bristol Harbor — Tilbury Docks", act:1,
+    code:"TL",
   },
   VS: { num:279, name:"market_quarter", label:"Visby Underground — Fence Quarter", act:2,
+    code:"VS",
   },
   HMS: { num:280, name:"docks", label:"Hispaniola — Mid-Atlantic Deck", act:2,
   },
@@ -10911,30 +10913,32 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     activateNode:'BK', waypointNode:'BK', reward:400,
     npc:"long_john_silver_sen",
   },
-  // ── Layer 50: §XV NG+ Remembrance quests (activateNode:null — triggered in storyRender) ──
-  quest_ng_01: { id:'quest_ng_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'ngMemoryDelivered', min:3 }] }, title:'Froberger: The Remembered Path',
+  // ── Layer 50: §XV NG+ Remembrance quests (§VM-01-G3: activateNode:'LHR' + a real ngPlusRun
+  //    gate replace the storyRender activation block; onActivate:null keeps them silent as the
+  //    block always was; boardExempt — a personal remembrance is not Warrant work) ──
+  quest_ng_01: { id:'quest_ng_01', type:'side', schema:'UQF-1.0', gate:{ countMin:[{ path:'ngPlusRun', min:1 }] }, bits:[], completion:{ countMin:[{ path:'ngMemoryDelivered', min:3 }] }, title:'Froberger: The Remembered Path',
     onComplete:[ { kind:'reward', gold:500 }, { kind:'narrative', msg:'💰 +500gp. The city remembers. So do they.' } ], // §ARCH-01 W7c
     desc:"You have been here before. The city does not announce this — the city does not announce anything. But the three people who matter have been here too, and they looked up when you came around the corner before you were close enough to be recognized, and this is how you know the city remembers. Go to them. They are not the same as when you left. Neither are you. This is not a problem. This is what the second visit is for.",
     hint:'Visit three NPCs you have reached Dear Friend status with.',
-    activateNode:null, 
+    activateNode:'LHR', onActivate:null, boardExempt:true,
     waypointNode:'LHR', reward:500,
     disposition:'"The journal says: the world does not reset. The people do not reset. Only the monsters reset. You have always been here." — Froberger, Entry 41 marginal note',
     npc:"long_john_silver_sen",
   },
-  quest_ng_02: { id:'quest_ng_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['entry42Written'] }, title:'Froberger: The Open Page',
+  quest_ng_02: { id:'quest_ng_02', type:'side', schema:'UQF-1.0', gate:{ countMin:[{ path:'ngPlusRun', min:1 }], flags:['priorQuestMinusOne'] }, bits:[], completion:{ flags:['entry42Written'] }, title:'Froberger: The Open Page',
     onComplete:[ { kind:'narrative', msg:'📖 Entry 42 is in the journal.' } ], // §ARCH-01 W7c — reward is the act itself
     desc:"Froberger's journal ends at forty-one. The forty-second page is blank — not torn, not missing, blank. He stopped there on purpose. You can tell because the previous entry ends mid-thought and the blank page comes after it like an answer to a question he decided not to answer himself. He knew someone would come back a second time with enough of the story to fill it. That someone is whoever is holding this journal now.",
     hint:'Visit the City Inn to find the open page.',
-    activateNode:null, 
+    activateNode:'LHR', onActivate:null, boardExempt:true,
     waypointNode:'LHR', reward:0,
     disposition:'"Forty-two. I stopped there on purpose. Someone else will finish this one." — Froberger\'s margin note',
     npc:"long_john_silver_sen",
   },
-  quest_ng_03: { id:'quest_ng_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['frobergerLetterFound'] }, title:'Froberger: The Letter',
+  quest_ng_03: { id:'quest_ng_03', type:'side', schema:'UQF-1.0', gate:{ countMin:[{ path:'ngPlusRun', min:1 }] }, bits:[], completion:{ flags:['frobergerLetterFound'] }, title:'Froberger: The Letter',
     onComplete:[ { kind:'reward', gold:300 }, { kind:'flag_write', set:['frobergerLetterFound'] }, { kind:'narrative', msg:'💰 +300gp. The letter is yours now.' } ], // §ARCH-01 W7c
     desc:"A sealed letter is at the Coastal Observatory. Froberger's handwriting — you know it now well enough to recognize it before you see the name. It was not there on your first run, because on your first run you were not the person it was addressed to. The observatory is the place the arc ends. The letter is what it leaves behind for whoever arrives a second time having already done the work of the first.",
     hint:'Return to the Coastal Observatory.',
-    activateNode:null, 
+    activateNode:'LHR', onActivate:null, boardExempt:true,
     waypointNode:'TLS', reward:300,
     disposition:'"If you are reading this, you completed the run once already. I am sorry about the ending. You deserved a better one." — Froberger\'s sealed letter',
     npc:"long_john_silver_sen",
@@ -10952,38 +10956,39 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     ],
     desc:"Archivist Isolde Voss controls access to the Scholar Kings\' lower archive. The Froberger revocation record is there. Gain access.",
     hint:'Collect 3 Scholar Kings\' Seals from Scholar\'s Guards — or bring the archive letter from the Blue Shutters Archive.',
-    activateNode:'NUE', 
+    activateNode:'NUE', // §VM-01-G3 — the Layer-51 storyRender stanza is retired; the act≥6 leg was vestigial (NUE is an act-6+ node and actNumber = node.act on arrival)
+    onActivate:{ msg:'"You\'re asking about Froberger. Everyone who comes here lately is asking about Froberger." — Archivist Isolde Voss, at the gate', delayMs:500 },
     waypointNode:'NUE', reward:0,
     disposition:'"You\'re asking about Froberger. Everyone who comes here lately is asking about Froberger. His access was revoked pursuant to the Scholar Kings Protocol on Speculative Endangerment." — Archivist Isolde Voss',
     npc:"archivus_sweelinck",
     rumor:"A scholar's record was revoked and the proof scattered into seals. Isolde in Nuremberg is short three of them. The Warrant wants the record made whole.",
   },
-  quest_wm_02: { id:'quest_wm_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['wmDoc1Read','wmDoc2Read','wmDoc3Read'] }, title:'Isolde: Lower Archive',
+  quest_wm_02: { id:'quest_wm_02', type:'side', schema:'UQF-1.0', gate:{ questsDone:['quest_wm_01'] }, bits:[], completion:{ flags:['wmDoc1Read','wmDoc2Read','wmDoc3Read'] }, title:'Isolde: Lower Archive',
     onComplete:[ { kind:'flag_write', set:['wmArchiveComplete'] }, { kind:'favor', npc:'isolde_voss', set:1 }, { kind:'narrative', msg:'📗 Froberger\'s Field Notes (Tome) obtained. Isolde is Friendly.' } ], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:"Froberger's Field Notes", icon:'📗', type:'tome', sell:0, bonus:{ deathSave:1 }, description:'Margin: "The pressure is survivable if you know it\'s coming."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Three documents in the lower archive. The revocation letter, the field report, the personnel file. Read all three.",
     hint:'Visit the Scholar\'s Quarter and examine the archive documents.',
-    activateNode:null, 
+    activateNode:'NUE', onActivate:null,
     waypointNode:'NUE', reward:0,
     disposition:'"He left his research notes in the lower archive. I moved them there myself. I told myself it was protocol. I\'ve been thinking about that since you came in." — Isolde Voss (Friendly)',
     npc:"long_john_silver_sen",
   },
-  quest_wm_03: { id:'quest_wm_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['wmBenediktCircleComplete'] }, title:'Benedikt: The Reading Circle',
+  quest_wm_03: { id:'quest_wm_03', type:'side', schema:'UQF-1.0', gate:{ flags:['wmArchiveComplete'] }, bits:[], completion:{ flags:['wmBenediktCircleComplete'] }, title:'Benedikt: The Reading Circle',
     onComplete:[ { kind:'flag_write', set:['wmBenediktCircleComplete','wmDoc3Unredacted'] }, { kind:'favor', npc:'benedikt_rasp', set:1 }, { kind:'narrative', msg:'📘 Scholar Kings\' History (Tome) obtained. Benedikt is Dear Friend.' } ], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:"Scholar Kings' History", icon:'📘', type:'tome', sell:0, bonus:{ initiative:2 }, description:'"First knowledge, then decision, then action. Never the other order."',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt Rasp runs a reading circle from a bookbinder\'s stall. Three sessions — three different days.",
     hint:'Attend 3 reading circle sessions at the Scholar\'s Quarter (one per day).',
-    activateNode:null, 
+    activateNode:'NUE', onActivate:null,
     waypointNode:'NUE', reward:0,
     disposition:'"The third one\'s always the hardest. Not because the material is harder — because by then you realize the first two were already enough and you stayed anyway." — Benedikt Rasp',
     npc:"long_john_silver_sen",
   },
-  quest_wm_04: { id:'quest_wm_04', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['wmFirstResearcherKnown'] }, title:'Benedikt: The First Researcher',
+  quest_wm_04: { id:'quest_wm_04', type:'side', schema:'UQF-1.0', gate:{ flags:['wmBenediktCircleComplete'] }, bits:[], completion:{ flags:['wmFirstResearcherKnown'] }, title:'Benedikt: The First Researcher',
     onComplete:[ { kind:'flag_write', set:['wmFirstResearcherKnown'] }, { kind:'reward', gold:300 }, { kind:'narrative', msg:'📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.' } ], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:"Benedikt's Annotated Copy", icon:'📙', type:'tome', sell:0, bonus:{ atkWhileQuestActive:1 }, description:'"He was right about this one too." — B. Rasp',silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt knows who the First Researcher was. He waited three sessions to be sure you were the kind of person to be told.",
     hint:'Return to the lower archive and read the unredacted personnel file.',
-    activateNode:null, 
+    activateNode:'NUE', onActivate:null,
     waypointNode:'NUE', reward:300,
     disposition:'"The Scholar Kings didn\'t erase her. They just stopped saying the name. Froberger said it in his margin notes every time. That\'s how I found her. And now you know how I found him." — Benedikt Rasp',
     npc:"long_john_silver_sen",
@@ -11055,7 +11060,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     ],
     desc:"Harbor Master Rennau keeps the ledger of ships that haven\'t come back. The Harrow is the most recent. Find its manifest.",
     hint:'Search the Storefront docks for the Harrow manifest (loot or monster drop).',
-    activateNode:"LCY", 
+    activateNode:'STN', onActivate:null, // §VM-01-G3 — was "LCY", a wrong-target dead-code remap (710bb75 SF→LCY; SF meant the Storefront = STN, where Rennau, the Harbor Board, and the whole arc live)
     waypointNode:'STN', reward:0,
     disposition:'"The Conclave calls the ones that haven\'t come back \'weather losses.\' I stopped calling them that six weeks ago." — Harbor Master Rennau',
     passText:"Rennau shows you the ledger entry. The Harrow Manifest is in your hands now. She adds your name to the inquiry.",
@@ -11063,20 +11068,19 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
     rumor:"Harbor Master Rennau keeps a ledger of ships that never came back. The newest line is the Harrow. The Warrant wants its manifest found.",
   },
-  quest_tl_02: { id:'quest_tl_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flagsAny:['tlEmbargoChallenged','tlEmbargoDismissed'] }, title:'Rennau: The Embargo',
+  quest_tl_02: { id:'quest_tl_02', type:'side', schema:'UQF-1.0', gate:{ flags:['tlLedgerRead'] }, bits:[], completion:{ flagsAny:['tlEmbargoChallenged','tlEmbargoDismissed'] }, title:'Rennau: The Embargo',
     onComplete:[ { kind:'narrative', msg:'📋 Embargo decision logged.' }, { kind:'narrative', msg:'🪧 Then the docks deliver what no protocol could: a survivor of the Harrow, three weeks on foot, asking for the Harbor Master by name. Ori. Rennau wants you there when she talks. A new bounty surfaces on the Warrant\'s Board.' }, { kind:'unlock', quests:['quest_tl_03'] } ], // §ARCH-01 W7c · §BOARD-01-FU6 referral edge
     desc:"The harbor has been closed for three weeks under Emergency Trade Protocol 7. Adjutant Vonn enforces it politely and completely — he is not wrong about the protocol, only about whether the protocol is right. The manifest proves ships have gone missing. The embargo prevents finding out why. Both things are true at the same time and the Conclave considers this a policy matter above Vonn's grade. Rennau has the ledger and no leverage. Decide what to do with the manifest.",
     hint:'Speak with Adjutant Vonn at Tilbury, then choose how to handle the ship manifest.',
-    activateNode:null, 
+    activateNode:"TL", onActivate:null, // §VM-01-G3 — deduped (the entry carried BOTH the authored null and an appended "TL"; last-key-wins made "TL" effective, kept)
     waypointNode:'TL', reward:0,
     disposition:'"The embargo is a legitimate Conclave instrument. The fact that it\'s bad policy is above my grade." — Adjutant Vonn',
     passText:"Vonn is polite about the whole thing. The harbor stays closed. You decided what to do with the manifest.",
     failText:"The harbor is still closed under Protocol 7. Adjutant Vonn is at Tilbury.",
-    activateNode:"TL",
     npc:"long_john_silver_sen",
     rumor:"An embargo has sealed the harbor politely and completely — and buried a manifest with it. The Warrant wants the paper out from under Protocol 7. Mind Adjutant Vonn.",
   },
-  quest_tl_03: { id:'quest_tl_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['tlMissingShipSolved'] }, title:'Rennau: The Missing Ship',
+  quest_tl_03: { id:'quest_tl_03', type:'side', schema:'UQF-1.0', gate:{ questsDone:['quest_tl_02'], notFlags:['tlMissingShipSolved'] }, bits:[], completion:{ flags:['tlMissingShipSolved'] }, title:'Rennau: The Missing Ship',
     onComplete:[ // §ARCH-01 W7c — account item built at runtime (description branches on Field Notes possession) → _legacy_fn
       { kind:'flag_write', set:['tlMissingShipSolved'] },
       { kind:'favor', npc:'rennau', set:2 },
@@ -11088,12 +11092,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     ],
     desc:"A survivor from the Harrow has arrived in Tilbury. Three weeks on foot. Her name is Ori. She knows what happened.",
     hint:'Speak with Ori at the Storefront (Act IV+). Bring her account to Rennau.',
-    activateNode:null, 
+    activateNode:'STN', onActivate:null, // §VM-01-G3 — deduped; the appended "LCY" was the same 710bb75 SF→LCY mis-remap as tl_01 (Ori is at the Storefront)
     waypointNode:'STN', reward:300,
     disposition:'"Ori said the thing that boarded them didn\'t have a name. Things that don\'t have names are the Void\'s specialty." — Harbor Master Rennau',
     passText:"Ori gives her account. Rennau reads it without stopping. She adds the name to the ledger in a different column — the one with answers.",
     failText:"Ori has arrived in Tilbury after three weeks on foot. She has not been spoken to yet.",
-    activateNode:"LCY",
     npc:"long_john_silver_sen",
     rumor:"A survivor of the Harrow reached Tilbury on foot, three weeks walking. Her name is Ori and she knows what happened. The Warrant wants her account brought to Rennau.",
   },
@@ -13364,7 +13367,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ { kind:'flag_write', set:['vsDebtProbed'] }, { kind:'favor', npc:'solvak', set:1 }, { kind:'narrative', msg:'💬 Mordus\'s position recorded. Solvak is Friendly.' } ], // §ARCH-01 W7c
     desc:"Debt Agent Solvak has been outside Visby six weeks with a 2,000gp debt and no leverage. You might have some.",
     hint:'Enter Visby and speak to Warlord Mordus about the missing weapons shipment.',
-    activateNode:'VS', 
+    activateNode:'VS', onActivate:null, // §VM-01-G3 — the Layer-55 stanza's act≥5 leg was structurally dead (actNumber = node.act, and VS is an act-2 node), so on-node it never fired; the arc self-paces through Solvak's buttons
     waypointNode:'VS', reward:0,
     disposition:'"The debt will be paid when the weapons are returned. The weapons will be returned when I know where they went. I do not know where they went." — Warlord Mordus',
     passText:"The debt will be paid when the weapons are returned. Mordus has spoken. The investigation path into Visby is open.",
@@ -13372,7 +13375,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"long_john_silver_sen",
     rumor:"A collector in Visby is owed, and the debtor has stopped answering his door. The Warrant wants the matter probed before it turns loud. Ask Solvak.",
   },
-  quest_vs_02: { id:'quest_vs_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vsWeaponsFound'] }, title:'Yva: The Broker',
+  quest_vs_02: { id:'quest_vs_02', type:'side', schema:'UQF-1.0', gate:{ flags:['vsDebtProbed'] }, bits:[], completion:{ flags:['vsWeaponsFound'] }, title:'Yva: The Broker',
     onComplete:[ { kind:'flag_write', set:['vsWeaponsFound'] }, { kind:'favor', npc:'yva', set:1 }, { kind:'narrative', msg:'🖤 Hollow Hands weapons trail found. Yva is Friendly.' },
       // §BOARD-01-FU6 (through-flow) — this quest is the referral graph's first THROUGH-NODE: it is
       // BOTH a merge target (in-degree 2, from quest_pachelbel_shipment + quest_couperin_lute's
@@ -13384,25 +13387,23 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
       { kind:'unlock', quests:['quest_vs_03'] } ], // §ARCH-01 W7c · §BOARD-01-FU6 through-flow edge
     desc:"Yva is inside the Goblin Caves. The Hollow Hands have marked her stall. She knows where the weapons went — for 50gp.",
     hint:'Find Yva inside the Goblin Caves.',
-    activateNode:null, 
+    activateNode:"VS", onActivate:null, // §VM-01-G3 — deduped (authored null + appended "VS"); the vsDebtProbed gate keeps board posting AND the newly-revived VS node in-sequence
     waypointNode:'TRD', reward:0,
     disposition:'"I don\'t know who they answer to. I know what the mark means." — Yva',
     passText:"I do not know who they answer to. I know what the mark means. Yva has taken the 50gp and given the lead.",
     failText:"Yva inside the Goblin Caves has not been found yet. She has the weapons location for 50gp.",
-    activateNode:"VS",
     npc:"long_john_silver_sen",
     rumor:"Two odd goods are converging on Visby, both stamped with the same unreadable mark. Yva the broker knows what it means. The Warrant wants her reading.",
   },
-  quest_vs_03: { id:'quest_vs_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vsDebtSettled'] }, title:'Mordus Pays',
+  quest_vs_03: { id:'quest_vs_03', type:'side', schema:'UQF-1.0', gate:{ flags:['vsWeaponsFound'] }, bits:[], completion:{ flags:['vsDebtSettled'] }, title:'Mordus Pays',
     onComplete:[ { kind:'flag_write', set:['vsDebtSettled','vsShamanKnown'] }, { kind:'reward', gold:400 }, { kind:'narrative', msg:'💰 +400gp from Solvak. Debt settled. The shaman is named — but not found.' } ], // §ARCH-01 W7c
     desc:"Mordus saw the Hollow Hands Seal. He paid sideways. Bring the transit seal to Solvak.",
     hint:'Return to Solvak outside Visby with the Hollow Hands Seal.',
-    activateNode:null, 
+    activateNode:"VS", onActivate:null, // §VM-01-G3 — deduped; the vsWeaponsFound gate keeps the board's in-sequence promise (supersedes the FU6 "keeps gate:{}" note now that VS is a live node)
     waypointNode:'VS', reward:400,
     disposition:'"The Hollow Hands are mine to deal with now that I know what they are." — Warlord Mordus',
     passText:"The Hollow Hands are mine to deal with now that I know what they are. Mordus has paid. Solvak has the seal.",
     failText:"The Hollow Hands Seal has not been brought to Solvak outside Visby yet.",
-    activateNode:"VS",
     npc:"long_john_silver_sen",
     rumor:"The mark leads to a name and the name to a debt: Mordus, of the Hollow Hands. The Warrant means to see it paid. Bring the paper to Visby.",
   },
@@ -13422,7 +13423,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     disposition:'"If I\'m wrong, then I needed to be stopped. That\'s — that\'s actually fine." — The Warden',
     passText:"If I am wrong, then I needed to be stopped. That is actually fine. The Warden has accepted the record.",
     failText:"The Warden at the Mountain Pass has not yet been confronted with the Constructor Log.",
-    activateNode:"VS",
     npc:"long_john_silver_sen",
   },
   // ── §KG Increment 3 — St. Petersburg → Moscow corridor quest chain (honor-central, L1→~L6) ──
@@ -13554,95 +13554,93 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     hint:'Fight in the Cat Quarter until the quota is filled.',
     targetMonsterKeys:['stray_alley_cat','fluffy_cat'],
     killGoals:[{key:'stray_alley_cat',need:5,label:'Stray'},{key:'fluffy_cat',need:3,label:'Fluffy'}],
-    activateNode:'CDG', 
+    activateNode:'CDG', // §VM-01-G3 — the Layer-44 storyRender stanzas are retired; the chain sequencing lives in the gates below (the appended duplicate activateNode fields had made the whole chain activate at once)
+    onActivate:{ msg:'Jimmy Two-Tails adjusts the brim of his tiny fedora.\n\n"Listen. LISTEN. I\'m gonna tell you somethin\' and I\'m only gonna say it once."\n\nHe leans forward.\n\n"You want to help this neighborhood? Clear out the riff-raff. Five strays. Three fluffies. They\'re harmless but they set a tone and the tone ain\'t good. Capisce? You do this, we talk about the bigger problems. Deal?"\n\n📋 Quest: The New Scratch — accepted.', delayMs:500 },
     waypointNode:'CDG', reward:200,
     disposition:'"You done good, kid. Real professional. The neighborhood\'s already calmer. Relatively. For cats." — Jimmy Two-Tails',
     passText:"You done good, kid. Real professional. The neighborhood is already calmer. Relatively. For cats.",
     failText:"The Cat Quarter still has strays and fluffies. Clear 5 strays and 3 fluffies for Jimmy Two-Tails.",
     npc:"long_john_silver_sen",
   },
-  quest_cat_02: { id:'quest_cat_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'catKills.beefy_tom', min:3 }], itemsAll:[{ name:'Cracked Claw', min:3 }] }, title:'Jimmy: Beefy Business',
+  quest_cat_02: { id:'quest_cat_02', type:'side', schema:'UQF-1.0', gate:{ questsDone:['quest_cat_01'] }, bits:[], completion:{ countMin:[{ path:'catKills.beefy_tom', min:3 }], itemsAll:[{ name:'Cracked Claw', min:3 }] }, title:'Jimmy: Beefy Business',
     onComplete:[ { kind:'reward', gold:350 }, { kind:'narrative', msg:'💰 +350gp from Jimmy. Sandy Scratchpad Mewlino has joined the Cat Quarter.' } ], // §ARCH-01 W7c
     desc:"Three Beefy Toms are running muscle for a rival outfit. Take them down and collect the proof.",
     hint:'Kill 3 Beefy Toms and collect their Cracked Claws.',
     targetMonsterKeys:['beefy_tom'],
     killGoals:[{key:'beefy_tom',need:3,label:'Beefy Tom'}],
-    activateNode:null, 
+    activateNode:'CDG',
+    onActivate:{ msg:'Jimmy: "Good work. Now. Beefy Toms — three of \'em — been running muscle for an outside operation. Take \'em down. Keep the claws. Three claws. I wanna see the proof."\n\n📋 Quest: Beefy Business — accepted.', delayMs:600 },
     waypointNode:'CDG', reward:350,
     disposition:'"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart." — Sandy Scratchpad Mewlino',
     passText:"Those guys were affiliated. You just stepped into something bigger than strays, sweetheart.",
     failText:"Three Beefy Toms are still running muscle. Kill them and collect the Cracked Claws.",
-    activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_cat_03: { id:'quest_cat_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'catKills.honcho_cat_m', min:1 },{ path:'catKills.honcho_cat_f', min:1 }] }, title:'Sandy: Honcho Problems',
+  quest_cat_03: { id:'quest_cat_03', type:'side', schema:'UQF-1.0', gate:{ questsDone:['quest_cat_02'] }, bits:[], completion:{ countMin:[{ path:'catKills.honcho_cat_m', min:1 },{ path:'catKills.honcho_cat_f', min:1 }] }, title:'Sandy: Honcho Problems',
     onComplete:[ { kind:'reward', gold:500 }, { kind:'narrative', msg:'💰 +500gp + Rhinestone Collar trophy.' } ], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:'Rhinestone Collar',icon:'💎',type:'trophy',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — let them merge and you\'re dealing with a Taz Devil.",
     hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
     targetMonsterKeys:['honcho_cat_m','honcho_cat_f'],
     killGoals:[{key:'honcho_cat_m',need:1,label:'Honcho Capo'},{key:'honcho_cat_f',need:1,label:'Boss Lady'}],
-    activateNode:null, 
+    activateNode:'CDG',
+    onActivate:{ msg:'Sandy "Scratchpad" Mewlino is here now. Tortoiseshell fur, eyes like she\'s already three moves ahead of you.\n\n"Sweetheart. You think this is about territory? This is about RESPECT. There\'s a Capo and a Boss Lady circling each other two blocks north. You kill \'em SEPARATE. Let \'em merge — and I promise you, a Taz Devil is nobody\'s problem they wanted.\n\nAlso — Don Fluffissimo. He\'s been sending his Merchant Cats into MY neighborhood. With Corrupted Cats for backup. Void-touched. Disgusting. He needs to be handled."\n\n📋 Quest: Honcho Problems — accepted.\n📋 Quest: Fat Cats Don\'t Tip — accepted.\n📋 Quest: Void Strays — accepted.', delayMs:700 }, // announces the 03/05/void trio that co-activates on cat_02's completion
     waypointNode:'CDG', reward:500,
     disposition:'"Kid, I told you. SEPARATE. You kill \'em SEPARATE. The merge thing is NOT a mechanic I enjoy." — Jimmy Two-Tails',
     passText:"I told you. SEPARATE. The merge thing is NOT a mechanic I enjoy. They are down and separate.",
     failText:"The Capo and Boss Lady are still circling. Kill them separately before they merge into a Taz Devil.",
-    activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_cat_04: { id:'quest_cat_04', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ battles:['CQ_TAZ'] }, title:'Jimmy: When the Tornado Comes',
+  quest_cat_04: { id:'quest_cat_04', type:'side', schema:'UQF-1.0', gate:{ questsDone:['quest_cat_03'] }, bits:[], completion:{ battles:['CQ_TAZ'] }, title:'Jimmy: When the Tornado Comes',
     onComplete:[ { kind:'reward', gold:750 }, { kind:'narrative', msg:'💰 +750gp + Furball Crown trophy. Tommy No-Ears has seen enough.' } ], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:'Furball Crown',icon:'🌀',type:'trophy',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Two Honchos merged. A Taz Devil — Furball Tornado — is loose in the Cat Quarter. Take it down.",
     hint:'Defeat the Taz Devil at the Cat Quarter.',
-    activateNode:null, 
+    activateNode:'CDG', onActivate:null,
     waypointNode:'CDG', reward:750,
     disposition:'"Oh you think you TOUGH now? You killed ONE Taz? ONE? There\'s THREE more building up past the fish market right now and when they merge — WHEN THEY MERGE, buddy — that ain\'t a Taz no more. That\'s a KING." — Tommy No-Ears DeVito',
     passText:"You think you TOUGH now? You killed ONE Taz. There are THREE more building past the fish market. When they merge that is not a Taz anymore. That is a KING.",
     failText:"The Taz Devil Furball Tornado is still loose in the Cat Quarter. Defeat it before the next merge.",
-    activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_cat_05: { id:'quest_cat_05', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'catKills.fat_merchant_cat', min:4 }], battles:['CQ_BOSS'] }, title:"Sandy: Fat Cats Don't Tip",
+  quest_cat_05: { id:'quest_cat_05', type:'side', schema:'UQF-1.0', gate:{ questsDone:['quest_cat_02'] }, bits:[], completion:{ countMin:[{ path:'catKills.fat_merchant_cat', min:4 }], battles:['CQ_BOSS'] }, title:"Sandy: Fat Cats Don't Tip",
     onComplete:[ { kind:'reward', gold:900 }, { kind:'narrative', msg:"💰 +900gp + The Don's Signet Ring. Kenickie's Black Market is open." } ], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:"The Don's Signet Ring",icon:'💍',type:'trophy',sell:35,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
     hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
     targetMonsterKeys:['fat_merchant_cat'],
     killGoals:[{key:'fat_merchant_cat',need:4,label:'Merchant Cat'}],
-    activateNode:null, 
+    activateNode:'CDG', onActivate:null, // cat_03's onActivate speaks for the 03/05/void trio
     waypointNode:'CDG', reward:900,
     disposition:'"The merchants have been using Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin. I don\'t like it in my neighborhood." — Sandy Scratchpad Mewlino',
     passText:"The merchants used Corrupted Cats as enforcers. Void-touched kitties doing dirty work for coin. Sandy does not like it in her neighborhood. Don Fluffissimo is down.",
     failText:"Don Fluffissimo and the Fat Merchant Cats still run the corrupted enforcer ring. Kill all four merchants and the Don.",
-    activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_cat_06: { id:'quest_cat_06', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['catKingDefeated'] }, title:'Tommy: The Cat-King Cometh',
+  quest_cat_06: { id:'quest_cat_06', type:'side', schema:'UQF-1.0', gate:{ questsDone:['quest_cat_04','quest_cat_05'] }, bits:[], completion:{ flags:['catKingDefeated'] }, title:'Tommy: The Cat-King Cometh',
     onComplete:[ { kind:'reward', gold:1500 }, { kind:'narrative', msg:"💰 +1500gp + Cat-King's Claw Fragment. You are honorary Ally Cat." } ], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:"Cat-King's Claw Fragment",icon:'👑',type:'trophy',sell:50,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Three Taz Devils merged at the fish market. The Cat-King has awoken. You\'re the hero. You go.",
     hint:'Defeat The Cat-King at the Cat Quarter.',
-    activateNode:null, 
+    activateNode:'CDG',
+    onActivate:{ msg:'Tommy No-Ears DeVito is pacing at the alley entrance, fur standing on end.\n\n"Three Taz Devils merged at the fish market. THREE. It\'s a KING. I\'m not going anywhere near that. You\'re the hero. You go."', delayMs:600 },
     waypointNode:'CDG', reward:1500,
     disposition:'"Listen. I want you to know something. You did good. Real good. You\'re like... honorary Ally Cat now. Don\'t tell nobody. It ain\'t a thing we advertise." — Jimmy Two-Tails',
     passText:"You did good. Real good. You are honorary Ally Cat now. Do not tell nobody. It is not a thing they advertise.",
     failText:"The Cat-King merged from three Taz Devils is still loose at the Cat Quarter. You are the hero. You go.",
-    activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
-  quest_cat_void: { id:'quest_cat_void', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'catKills.corrupted_cat', min:5 }] }, title:'Sandy: Void Strays',
+  quest_cat_void: { id:'quest_cat_void', type:'side', schema:'UQF-1.0', gate:{ questsDone:['quest_cat_02'] }, bits:[], completion:{ countMin:[{ path:'catKills.corrupted_cat', min:5 }] }, title:'Sandy: Void Strays',
     onComplete:[ { kind:'reward', gold:400 }, { kind:'narrative', msg:'💰 +400gp from Sandy. The Void Strays are cleared.' } ], // §ARCH-01 W7c
     desc:"Strays near the DF node have gone wrong. Wrong eyes, wrong fur. Sandy doesn\'t like it in her neighborhood.",
     hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
     targetMonsterKeys:['corrupted_cat'],
     killGoals:[{key:'corrupted_cat',need:5,label:'Corrupted Cat'}],
-    activateNode:null, 
+    activateNode:'CDG', onActivate:null, // cat_03's onActivate speaks for the 03/05/void trio
     waypointNode:'CDG', reward:400,
     disposition:'"Something\'s wrong with the strays near the DF node. They\'re not just feral — they\'re WRONG. Wrong eyes. Wrong fur. Not touching anything from that block." — Sandy Scratchpad Mewlino',
     passText:"The strays near DF are gone. Sandy does not say thank you. She says: good.",
     failText:"The strays near the DF node are still wrong. Wrong eyes, wrong fur. Five of them.",
-    activateNode:"CDG",
     npc:"long_john_silver_sen",
   },
   // ── Layer 78: La Riva — Fishmonger's Row quests ──
@@ -13666,7 +13664,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     disposition:'"He built that rack himself, the second season." — Connie Tuna',
     passText:"He built that rack himself, the second season. The rubble has been cleared. The Corrupted Cats are gone.",
     failText:"Five Corrupted Cats are still holding the rubble at Fishmonger Row. Clear them to find what they carry.",
-    activateNode:"AMS",
     npc:"long_john_silver_sen",
   },
   quest_la_riva_03: { id:'quest_la_riva_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['laRivaComplete'] }, title:"Aldo: The Account Book",
@@ -13677,7 +13674,6 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     disposition:'"Yeah. Okay. I\'ll hold onto this." — Kenickie Clawnickie Mancuso',
     passText:"Yeah. Okay. I will hold onto this. Kenickie has the account book. Vincenzo page delivered.",
     failText:"The Old Tuna Account Book has not been delivered to Kenickie at the Cat Quarter.",
-    activateNode:"AMS",
     npc:"long_john_silver_sen",
   },
   // ── Layer 47: Fishing Guide (Q-BAIT-00) ──
@@ -29734,20 +29730,31 @@ function storyCollectLoot(node) {
 }
 
 /* ── Layer 3: Quest + Journal ── */
-function storyCheckQuests(node) {
+// §VM-01-G3 — the activation pass, extracted so storyRender can run it BEFORE its render body
+// (per-node UI keyed on 'active' status must see same-arrival activations, as the retired
+// inline stanzas guaranteed). Idempotent: already-active quests are skipped, so the second
+// run inside storyCheckQuests emits nothing new. Epic quests activate explicitly via
+// modal/defeat. §VM-01-F-FU — _questsByNode(node.code) replaces the old O(2,850) scan; it
+// returns exactly the non-epic quests whose activateNode === node.code.
+function _uqfActivateAtNode(node) {
   const msgs = [];
-  // Activate quests at this node (epic quests activate explicitly via modal/defeat).
-  // §VM-01-F-FU — _questsByNode(node.code) replaces the old O(2,850) Object.values scan;
-  // it returns exactly the non-epic quests whose activateNode === node.code, so the
-  // epic + node filters are already applied and the msgs order is unchanged.
   _questsByNode(node.code).forEach(q => {
     if (!S_story.quests[q.id]) {
       if (q.activateCond && !q.activateCond()) return;
       if (q.schema === 'UQF-1.0' && !QuestRuntime.canActivate(q.id)) return;   // §ARCH-01 Phase 2 — declarative gate
       S_story.quests[q.id] = 'active';
-      msgs.push('📋 ' + q.title);
+      // §VM-01-G3 — the onActivate field: absent → the default '📋 title' strip line;
+      // null → silent activation (the migrated storyRender blocks never announced these);
+      // {msg, delayMs} → the arc's bespoke delayed narration, verbatim from the old block.
+      if (!('onActivate' in q)) msgs.push('📋 ' + q.title);
+      else if (q.onActivate && q.onActivate.msg) setTimeout(() => storyMsg(q.onActivate.msg), q.onActivate.delayMs || 500);
     }
   });
+  return msgs;
+}
+function storyCheckQuests(node) {
+  const msgs = [];
+  msgs.push(..._uqfActivateAtNode(node));
   // §GUIDE-01: Emmer Finch visible once arc is active
   if (!S_story.emmerMet && ['active','done','complete'].includes((S_story.quests||{}).quest_guide_01)) S_story.emmerMet = true;
   // §DESIGN-03: Track patrol route for quest_city_watch_patrol
@@ -31468,6 +31475,13 @@ function storyRender(node, prefix) {
   }
   S_story.actNumber = node.act || 1;
   const lootMsg  = storyCollectLoot(node);
+  // §VM-01-G3 — activate this node's declaratively-gated quests BEFORE the render body, so
+  // per-node UI (Solvak's button, the CDG boss buttons) keyed on 'active' status renders in
+  // the SAME arrival — exactly as the retired inline activation stanzas did. The end-of-render
+  // storyCheckQuests re-runs the same idempotent pass (no duplicate messages) and handles
+  // completion; the strip below concatenates these activation messages in the same position
+  // they always occupied.
+  const activationMsgs = _uqfActivateAtNode(node);
   // Farewell line (L44-I)
   const farewellEl = document.getElementById('story-farewell');
   if (farewellEl) {
@@ -31554,13 +31568,9 @@ function storyRender(node, prefix) {
     }
   }
   // (§VM-01-G1: the AO/KS/LT/LJ3/LCA/ML flavor panels moved to NODE_PANELS above.)
-  // ── Layer 50: §XV NG+ quest activation at CI ──
-  if (node.code === 'LHR' && (S_story.ngPlusRun || 0) >= 1) {
-    const _ngqs = S_story.quests || {};
-    if (!_ngqs['quest_ng_01']) S_story.quests['quest_ng_01'] = 'active';
-    if (!_ngqs['quest_ng_02'] && S_story.priorQuestMinusOne) S_story.quests['quest_ng_02'] = 'active';
-    if (!_ngqs['quest_ng_03']) S_story.quests['quest_ng_03'] = 'active';
-  }
+  // (§VM-01-G3: the Layer-50 NG+ activation block moved into quest_ng_01/02/03's own
+  //  gate (ngPlusRun countMin + priorQuestMinusOne) + activateNode:'LHR' — storyCheckQuests
+  //  activates them declaratively, silently (onActivate:null), as this block always did.)
   // ── L40-H/I: Sweelinck at SQ and CO (the dialogue-variant panel itself moved to NODE_PANELS;
   //    the NUE-only age/map/S49 sub-blocks stay here) ──
   {
@@ -31607,25 +31617,10 @@ function storyRender(node, prefix) {
     }
   }
   // ── Layer 51: §XVI Weimar Scholar Gate — SQ node ──
+  // (§VM-01-G3: the four Q-WM activation stanzas moved into quest_wm_01–04's own gates
+  //  (wm_01 gate:{} + onActivate Isolde line; wm_02 questsDone wm_01; wm_03 wmArchiveComplete;
+  //  wm_04 wmBenediktCircleComplete) + activateNode:'NUE'.)
   if (node.code === 'NUE') {
-    const _wqs = S_story.quests || {};
-    // Activate Q-WM-01 on first SQ visit (Act VI+)
-    if (!_wqs['quest_wm_01'] && (S_story.actNumber || 1) >= 6) {
-      S_story.quests['quest_wm_01'] = 'active';
-      setTimeout(() => storyMsg('"You\'re asking about Froberger. Everyone who comes here lately is asking about Froberger." — Archivist Isolde Voss, at the gate'), 500);
-    }
-    // Activate Q-WM-02 when archive unlocked
-    if (_wqs['quest_wm_01'] === 'complete' && !_wqs['quest_wm_02']) {
-      S_story.quests['quest_wm_02'] = 'active';
-    }
-    // Activate Q-WM-03 when archive complete + Benedikt available
-    if (S_story.wmArchiveComplete && !_wqs['quest_wm_03']) {
-      S_story.quests['quest_wm_03'] = 'active';
-    }
-    // Activate Q-WM-04 when circle complete
-    if (S_story.wmBenediktCircleComplete && !_wqs['quest_wm_04']) {
-      S_story.quests['quest_wm_04'] = 'active';
-    }
     // §D01-04: Class Gate — bypass wmLowerArchiveUnlocked via Action Surge charge
     if (!S_story.wmLowerArchiveUnlocked && !S_story.classGateUsed && (S_story.surgeCharges || 0) > 0) {
       const _cgDiv = document.createElement('div');
@@ -31731,8 +31726,10 @@ function storyRender(node, prefix) {
   // ── Layer 54: §XIX Tilbury Harbor Arc — SF and TL nodes ──
   if (node.code === 'STN') {
     const _tqs = S_story.quests || {};
-    // Q-TL-01: activate on first SF visit (any act)
-    if (!_tqs['quest_tl_01']) S_story.quests['quest_tl_01'] = 'active';
+    // (§VM-01-G3: Q-TL-01/02/03 activation moved into the quests' own gates + activateNode:'STN'
+    //  — tl_01 unconditional; tl_02 tlLedgerRead; tl_03 questsDone tl_02 (the old act≥4 leg was
+    //  structurally dead: actNumber = node.act, constant per node). The FU6 unlock referral
+    //  chain (tl_01 → tl_02 → tl_03) remains the live in-sequence path.)
     // Harbor board button — shows manifest loot; awards quest completion
     if (!S_story.tlLedgerRead) {
       const hbBtn = document.createElement('button');
@@ -31756,11 +31753,11 @@ function storyRender(node, prefix) {
       });
       document.getElementById('story-text-box').insertAdjacentElement('afterend', hbBtn);
     }
-    // Activate Q-TL-02 when ledger read
-    if (S_story.tlLedgerRead && !_tqs['quest_tl_02']) S_story.quests['quest_tl_02'] = 'active';
-    // Ori encounter — Act IV+ and tlLedgerRead
-    if (S_story.tlLedgerRead && (S_story.actNumber || 1) >= 4 && !S_story.tlMissingShipSolved) {
-      if (!_tqs['quest_tl_03']) S_story.quests['quest_tl_03'] = 'active';
+    // Ori encounter (§VM-01-G3: the act≥4 leg was dead — actNumber = node.act, constant at
+    // STN — and the button's direct grants duplicated quest_tl_03's W7c onComplete chain,
+    // a latent double-pay. Now: the button shows while tl_03 is ACTIVE, narrates, and sets
+    // the completion flag; the quest's own onComplete pays out gold/favor/item exactly once.)
+    if (_tqs['quest_tl_03'] === 'active' && !S_story.tlMissingShipSolved) {
       const oriBtn = document.createElement('button');
       oriBtn.className = 'inv-use-btn';
       oriBtn.textContent = '📜 Speak with Ori.';
@@ -31768,13 +31765,6 @@ function storyRender(node, prefix) {
       oriBtn.addEventListener('click', () => {
         storyMsg('Ori: "I was on the Harrow. I\'m the only one who came back."\n\nShe describes what boarded them. Not pirates. Not storm. Something that came from below — "a shape in the water, very large, that didn\'t move like a fish or a whale. It moved like it was looking for something. Then it found the ship."\n\n"I went over the side before it hit. Three weeks on foot to get here. I needed to tell someone."');
         S_story.tlMissingShipSolved = true;
-        if (!S_story.inventory) S_story.inventory = [];
-        S_story.inventory.push({ name:"Ori's Account", icon:'📜', type:'readable', sell:0,
-          description:'She describes what boarded the Harrow. A shape in the water, very large, that moved like it was looking for something. Then it found the ship.'
-            + ((S_story.inventory || []).find(i => i.name === "Froberger's Field Notes") ? '\n\nFroberger wrote: "The pressure is survivable if you know it\'s coming." Ori survived because she knew the shape was there and went over the side before it hit.' : '') });
-        _setNpcFavor('rennau', 2);
-        S_story.gold += 300;
-        storyMsg('📜 +300gp. Ori\'s Account obtained. Rennau is Dear Friend.');
         oriBtn.remove();
         storyAutoSave();
       });
@@ -31823,7 +31813,10 @@ function storyRender(node, prefix) {
   // ── Layer 55: §XX Visby Underground — VS and GC nodes ──
   if (node.code === 'VS') {
     const _vqs = S_story.quests || {};
-    if (!_vqs['quest_vs_01'] && (S_story.actNumber || 1) >= 5) S_story.quests['quest_vs_01'] = 'active';
+    // (§VM-01-G3: Q-VS-01 activation moved into the quest's own gate + activateNode:'VS'.
+    //  The old stanza's act≥5 leg could never fire here — actNumber = node.act and VS is act 2 —
+    //  and NODE_MAP.VS carried no `code` field at all, so this entire block was dead until both
+    //  were fixed this increment. The Solvak/pay buttons below render for the first time ever.)
     if (_vqs['quest_vs_01'] === 'active' && !S_story.vsDebtProbed) {
       const solvakBtn = document.createElement('button');
       solvakBtn.className = 'inv-use-btn';
@@ -31843,19 +31836,20 @@ function storyRender(node, prefix) {
       });
       document.getElementById('story-text-box').insertAdjacentElement('afterend', solvakBtn);
     }
-    // Q-VS-03: Solvak payment
-    if (S_story.vsWeaponsFound && !S_story.vsDebtSettled) {
+    // Q-VS-03: Solvak payment (§VM-01-G3: the button's direct +400gp/flag grants duplicated
+    // quest_vs_03's W7c onComplete chain — a latent double-pay while this node was dead. Now:
+    // the button shows while vs_03 is ACTIVE, spends the seal, narrates, and sets the
+    // completion flag; the quest's own onComplete pays the 400gp exactly once.)
+    if ((S_story.quests || {})['quest_vs_03'] === 'active' && S_story.vsWeaponsFound && !S_story.vsDebtSettled) {
       const payBtn = document.createElement('button');
       payBtn.className = 'inv-use-btn';
       payBtn.textContent = '🖤 Deliver the Hollow Hands Seal to Solvak.';
       payBtn.style.cssText = 'margin-top:4px;';
       payBtn.addEventListener('click', () => {
         S_story.vsDebtSettled = true;
-        S_story.vsShamanKnown = true;
-        S_story.gold += 400;
         S_story.inventory = (S_story.inventory || []).filter(i => i.name !== 'Hollow Hands Seal');
         setTimeout(() => storyMsg('Mordus: "The Hollow Hands are mine to deal with now that I know what they are. You found what I needed to find them. That\'s worth something."'), 600);
-        storyMsg('💰 +400gp from Solvak. Debt settled. The Void shaman operates inside Mordus\'s territory. You know this. Solvak does not.');
+        storyMsg('The Void shaman operates inside Mordus\'s territory. You know this. Solvak does not.');
         payBtn.remove();
         storyAutoSave();
       });
@@ -31864,7 +31858,10 @@ function storyRender(node, prefix) {
   }
   if (node.code === 'TRD') {
     const _vqs2 = S_story.quests || {};
-    if (S_story.vsDebtProbed && !S_story.vsWeaponsFound) {
+    // §VM-01-G3 — keyed on vs_02's own status (was vsDebtProbed): the Solvak probe still opens
+    // it, and a §BOARD-01-FU6 referral-unlocked vs_02 (pachelbel/couperin convergence) no longer
+    // dead-ends — the broker answers whoever legitimately holds the quest.
+    if (_vqs2['quest_vs_02'] === 'active' && !S_story.vsWeaponsFound) {
       const yvaBtn = document.createElement('button');
       yvaBtn.className = 'inv-use-btn';
       yvaBtn.textContent = '💬 Find Yva (50gp).';
@@ -32056,32 +32053,11 @@ function storyRender(node, prefix) {
     const _oldKenshop = document.getElementById('kenickie-shop-div');
     if (_oldKenshop) _oldKenshop.remove();
     const qs = S_story.quests || {};
-    // Auto-activate Q-CAT-01 on first CQ visit
-    if (!qs['quest_cat_01']) {
-      S_story.quests['quest_cat_01'] = 'active';
-      setTimeout(() => storyMsg('Jimmy Two-Tails adjusts the brim of his tiny fedora.\n\n"Listen. LISTEN. I\'m gonna tell you somethin\' and I\'m only gonna say it once."\n\nHe leans forward.\n\n"You want to help this neighborhood? Clear out the riff-raff. Five strays. Three fluffies. They\'re harmless but they set a tone and the tone ain\'t good. Capisce? You do this, we talk about the bigger problems. Deal?"\n\n📋 Quest: The New Scratch — accepted.'), 500);
-    }
-    // Q-CAT-02 unlock after Q-CAT-01 complete
-    if (qs['quest_cat_01'] === 'complete' && !qs['quest_cat_02']) {
-      S_story.quests['quest_cat_02'] = 'active';
-      setTimeout(() => storyMsg('Jimmy: "Good work. Now. Beefy Toms — three of \'em — been running muscle for an outside operation. Take \'em down. Keep the claws. Three claws. I wanna see the proof."\n\n📋 Quest: Beefy Business — accepted.'), 600);
-    }
-    // Q-CAT-03 and Q-CAT-05/VOID unlock after Q-CAT-02 complete
-    if (qs['quest_cat_02'] === 'complete' && !qs['quest_cat_03']) {
-      S_story.quests['quest_cat_03'] = 'active';
-      if (!qs['quest_cat_05']) S_story.quests['quest_cat_05'] = 'active';
-      if (!qs['quest_cat_void']) S_story.quests['quest_cat_void'] = 'active';
-      setTimeout(() => storyMsg('Sandy "Scratchpad" Mewlino is here now. Tortoiseshell fur, eyes like she\'s already three moves ahead of you.\n\n"Sweetheart. You think this is about territory? This is about RESPECT. There\'s a Capo and a Boss Lady circling each other two blocks north. You kill \'em SEPARATE. Let \'em merge — and I promise you, a Taz Devil is nobody\'s problem they wanted.\n\nAlso — Don Fluffissimo. He\'s been sending his Merchant Cats into MY neighborhood. With Corrupted Cats for backup. Void-touched. Disgusting. He needs to be handled."\n\n📋 Quest: Honcho Problems — accepted.\n📋 Quest: Fat Cats Don\'t Tip — accepted.\n📋 Quest: Void Strays — accepted.'), 700);
-    }
-    // Q-CAT-04 unlock after Q-CAT-03 complete
-    if (qs['quest_cat_03'] === 'complete' && !qs['quest_cat_04']) {
-      S_story.quests['quest_cat_04'] = 'active';
-    }
-    // Q-CAT-06 unlock after BOTH Q-CAT-04 and Q-CAT-05 complete
-    if (qs['quest_cat_04'] === 'complete' && qs['quest_cat_05'] === 'complete' && !qs['quest_cat_06']) {
-      S_story.quests['quest_cat_06'] = 'active';
-      setTimeout(() => storyMsg('Tommy No-Ears DeVito is pacing at the alley entrance, fur standing on end.\n\n"Three Taz Devils merged at the fish market. THREE. It\'s a KING. I\'m not going anywhere near that. You\'re the hero. You go."'), 600);
-    }
+    // (§VM-01-G3: the five Q-CAT activation stanzas moved into quest_cat_01–06/void's own
+    //  gates (the questsDone chain 01→02→{03,05,void}→04→06) + activateNode:'CDG', with the
+    //  staged Jimmy/Sandy/Tommy narrations as onActivate fields. Before this, appended
+    //  duplicate activateNode:"CDG" fields had the WHOLE chain activating at once on first
+    //  arrival — the stanzas' sequencing had been dead since the append.)
     // Boss battle buttons
     const cqDiv = document.createElement('div');
     cqDiv.id = 'cq-boss-buttons';
@@ -35308,7 +35284,7 @@ function storyRender(node, prefix) {
   storyUpdateStatus();
   // Quests + messages
   const questMsgs = storyCheckQuests(node);
-  const parts = [prefix, lootMsg, ...questMsgs].filter(Boolean);
+  const parts = [prefix, lootMsg, ...activationMsgs, ...questMsgs].filter(Boolean);
   storyMsg(parts.join('  ·  '));
   // Keep quest list DOM in sync so it's current when user opens the panel
   storyRenderQuests();
@@ -36417,6 +36393,7 @@ function _boardRumorLine(b) {
 // activateCond fails closed (skip).
 function _bountyPostable(q, node) {
   if (!q || q.schema !== 'UQF-1.0' || !BOUNTY_TYPES.has(q.type)) return false;
+  if (q.boardExempt) return false;  // §VM-01-G3 — personal/arc-scripted quests never post (the NG+ remembrance set)
   if (!q.activateNode || q.activateNode === node.code) return false;
   if ((S_story.quests || {})[q.id]) return false;             // not already active/done
   if (!NODE_MAP[q.activateNode]) return false;                // destination must exist
