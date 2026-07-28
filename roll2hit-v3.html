@@ -31040,6 +31040,426 @@ function _renderNodePanels(node, st) {
   }
 }
 
+// ── §VM-01-G2: NODE_HOOKS — registered per-node render hooks (Class E bespoke UIs) ──
+// Each hook body is the VERBATIM former storyRender block, still self-gating (its own
+// node/state conditions are unchanged — including computed multi-node gates like the
+// Corelli appearance schedule). Dispatch is IN PLACE: storyRender calls _runNodeHook at
+// the exact source position each block occupied, so insertion order (LIFO stacking on
+// story-text-box 'afterend') is preserved BY CONSTRUCTION and the G1 order-safety rule
+// needs no per-block exclusion analysis. (The lab report sketched a single dispatch
+// loop; that is order-UNSAFE for schedule-gated hooks — recorded in the G2 ship record.)
+// The `nodes` field is tooling metadata only (null = computed schedule); the truth is the
+// hook body’s own gate.
+function _nodeHookVoidArchaeology(node) {
+  // ── Layer 52: §XVII Void Archaeology — [INVESTIGATE] at 5 nodes + MT tunnel ──
+  {
+    const _vaReady = (S_story.ngPlusRun || 0) >= 1 && S_story.wmFirstResearcherKnown && S_story.entry42Written;
+    const _vaSites = {
+      LHR: { flag:'vaCI', text:'In the back of the Blue Shutters Archive — a partial shelf record. Researcher Category: Containment. Date: [REDACTED]. The same shelf that held the archive letter. She worked here. The marks start here.' },
+      BMA: { flag:'vaSL', text:'A carved marker on a corner building in the Birka Slums. The pattern matches the stones at the Defiant Fields exactly. This building predates the city by 80 years — predates the Scholar Kings. The mark was here before there was anyone to put it there.' },
+      ZRH: { flag:'vaDF', text:'A stone alignment in the scorched terrain of the Defiant Fields. Not random — spaced to a mathematical interval. The battle happened at the activation point. This is where the sealing mechanism triggered. You didn\'t choose this spot. She chose it, 200 years before you arrived.' },
+      NUE: { flag:'vaWM', text:'Document 3 in the lower archive — but now the project codename is visible: ANTECEDENT CONTAINMENT PROTOCOL. The word "Void" appears nowhere in the original documents. She never called it that. She called it what it was: a cage.' },
+      GVA: { flag:'vaMT', text:'A sealed access tunnel at the Mountain Pass. Never opened by anyone in the records. Sealed before the Scholar Kings existed. Not collapsed — sealed from inside. The seal is intact. It is waiting.' },
+    };
+    if (_vaReady && _vaSites[node.code]) {
+      const _site = _vaSites[node.code];
+      if (!S_story[_site.flag]) {
+        const invBtn = document.createElement('button');
+        invBtn.className = 'inv-use-btn inv-investigate-glow';
+        invBtn.textContent = '🏛️ Investigate.';
+        invBtn.style.cssText = 'margin-top:6px;';
+        invBtn.addEventListener('click', () => {
+          S_story[_site.flag] = true;
+          storyMsg(_site.text);
+          invBtn.remove();
+          const found = ['vaCI','vaSL','vaDF','vaWM','vaMT'].every(f => S_story[f]);
+          if (found && !S_story.vaAllMarksFound) {
+            S_story.vaAllMarksFound = true;
+            setTimeout(() => {
+              storyMsg('Five marks. One pattern. She was everywhere before anyone was looking.');
+              if (!S_story.quests) S_story.quests = {};
+              if (!S_story.quests['quest_va_02']) S_story.quests['quest_va_02'] = 'active';
+            }, 600);
+          }
+          storyAutoSave();
+        });
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', invBtn);
+      }
+    }
+    // Activate Q-VA-01 on first investigation site encounter
+    if (_vaReady && _vaSites[node.code] && !((S_story.quests || {})['quest_va_01'])) {
+      S_story.quests = S_story.quests || {};
+      S_story.quests['quest_va_01'] = 'active';
+    }
+    // MT tunnel button
+    if (node.code === 'GVA' && S_story.vaLogFound && !S_story.vaLastWardVisited) {
+      const _hasKey = (S_story.inventory || []).some(i => i.name === 'Antecedent Seal' || i.name === "Froberger's Field Notes");
+      if (_hasKey) {
+        const tunnelBtn = document.createElement('button');
+        tunnelBtn.className = 'inv-use-btn';
+        tunnelBtn.textContent = '🏛️ Open the tunnel.';
+        tunnelBtn.style.cssText = 'margin-top:6px;';
+        tunnelBtn.addEventListener('click', () => {
+          S_story.vaLastWardVisited = true;
+          tunnelBtn.remove();
+          storyMsg('The seal accepts the key. The door opens inward.\n\nInside: cut stone. No decay. The air is perfectly still — sealed for 200 years.\n\nOn the far wall, six sentences. The last field test of the containment structure. The first time it was ever closed.\n\n"The destabilization event was calculated correctly. The sealing mechanism engaged at the predicted moment. The Antecedent entered containment. The cage is closed. We did not know what we were containing. We only knew it could not be destroyed.\n\nThe Antecedent was here. It is not anymore. You know where it is now."');
+          storyAutoSave();
+        });
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', tunnelBtn);
+      }
+    }
+    // Q-VA-03 and Q-VA-04 activation
+    if ((S_story.ngPlusRun || 0) >= 1) {
+      const _qs = S_story.quests || {};
+      if (S_story.vaLogFound && !_qs['quest_va_03']) S_story.quests['quest_va_03'] = 'active';
+      if (S_story.vaLastWardVisited && !_qs['quest_va_04']) S_story.quests['quest_va_04'] = 'active';
+    }
+    // Q-VA-04: Benedikt delivers message at SQ
+    if (node.code === 'NUE' && S_story.vaLastWardVisited && S_story.entry42Written && !S_story.vaArchitectureKnown) {
+      setTimeout(() => storyMsg(
+        'Benedikt: "She built it. You closed it. Froberger found the mechanism. You followed him. Entry 42 is the fourth link. Four links is a chain. A chain holds. That is the only kind of answer this work produces — not a solution, a chain."'
+      ), 700);
+      S_story.vaArchitectureKnown = true;
+      storyAutoSave();
+    }
+  }
+}
+function _nodeHookVoidShamanWarden(node) {
+  // ── Layer 56: §XXI Void Shaman — MT tunnel Warden encounter ──
+  if (node.code === 'GVA' && S_story.vsShamanKnown && S_story.vaLastWardVisited && !S_story.wardensLegacyKnown) {
+    if (!S_story.vshamanFound) {
+      S_story.vshamanFound = true;
+      if (!S_story.quests['quest_vs_warden']) S_story.quests['quest_vs_warden'] = 'active';
+      storyMsg('Inside the tunnel, past where you stopped before.\n\nThe walls are marked — not the stone alignment from the DF node, but new work, carved in the past six months. A workbench. Notes in a language that mixes goblin glyphs and Old Scholar script.\n\nThe Warden is not surprised to see you. They knew Mordus would send someone eventually.\n\n"You came to stop me. Or to understand. Either is fine. I have been working for eleven years to do the right thing. I may be wrong about what the right thing is."');
+      storyAutoSave();
+    }
+    const _wardenBtnGroup = document.createElement('div');
+    _wardenBtnGroup.style.cssText = 'display:flex;flex-direction:column;gap:3px;margin-top:6px;';
+    const _hasLog = (S_story.inventory || []).some(i => i.name === "The Constructor's Log");
+    if (_hasLog) {
+      const logBtn = document.createElement('button');
+      logBtn.className = 'inv-use-btn';
+      logBtn.textContent = '📜 Show them the Constructor\'s Log.';
+      logBtn.addEventListener('click', () => {
+        storyMsg('The Warden takes the Log. Reads. Stops at Entry 2.\n\n"\'The cage must be opened before it can be closed.\' This is the original. This is — the mandate they gave us was open the cage. But this says open the tunnel to close the cage. The tunnel. Not the cage."\n\nThey read Entry 7.\n\n"\'If someone is reading this, the sealing mechanism has activated. The cage is closed.\'\n\nThe cage is closed. It was closed 200 years ago. I have been eleven years trying to re-open it."\n\nThey are quiet for a long time.\n\n"Tell the clan the mission is complete. That is the truth — the mandate was fulfilled 200 years before I was born. This is — this is fine. I can stop."\n\nThey pass you the token without being asked.\n\nThe sub-clan walked back in. All of them. Mordus didn\'t ask what changed. He logged them as returned.');
+        S_story.vsShamanPersuaded = true;
+        S_story.wardensLegacyKnown = true;
+        S_story.inventory = S_story.inventory || [];
+        S_story.inventory.push({ name:"The Warden's Token", icon:'🔑', type:'relic', sell:0,
+          description:'Original Warden\'s seal, First Researcher\'s appointment. Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything.' });
+        S_story.gold += 600;
+        storyMsg('💰 +600gp (quest: The Warden). 🔑 The Warden\'s Token added to inventory.');
+        if (!S_story.quests['quest_vs_warden']) S_story.quests['quest_vs_warden'] = 'active';
+        _wardenBtnGroup.remove();
+        storyAutoSave();
+      });
+      _wardenBtnGroup.appendChild(logBtn);
+    }
+    const fightBtn = document.createElement('button');
+    fightBtn.className = 'inv-use-btn';
+    fightBtn.textContent = '⚔️ Fight the Warden.';
+    fightBtn.addEventListener('click', () => {
+      _wardenBtnGroup.remove();
+      setTimeout(() => storyPreBattle({ ...node, code:'MT_WARDEN', battle:{ label:'The Warden', key:'void_shaman', count:1 } }), 300);
+    });
+    _wardenBtnGroup.appendChild(fightBtn);
+    document.getElementById('story-text-box').insertAdjacentElement('afterend', _wardenBtnGroup);
+  }
+}
+function _nodeHookCorelliMerchant(node) {
+  // ── Layer 61: §XXVI Corelli the Wandering Merchant ──
+  { const _coApp = _checkCorelliAppearance(node.code);
+    if (_coApp) {
+      const _coBtnOld = document.getElementById('corelli-encounter-btn');
+      if (_coBtnOld) _coBtnOld.remove();
+      const _coBtn = document.createElement('button');
+      _coBtn.id = 'corelli-encounter-btn';
+      _coBtn.className = 'inv-use-btn';
+      _coBtn.textContent = '🛒 Traveling Merchant';
+      _coBtn.style.cssText = 'margin-top:6px;border-color:#7a6040;';
+      _coBtn.addEventListener('click', () => {
+        _coBtn.remove();
+        S_story.corelli_encounter_count = (S_story.corelli_encounter_count || 0) + 1;
+        const fav = S_story.fav_corelli || 0;
+        const opener = _corelliOpener(_coApp);
+        // 5th appearance (last_cipher) — revelation first if Dear Friend
+        if (_coApp.index === 5) {
+          if (fav >= 3 && !S_story.corelliRevelationDelivered) {
+            storyMsg('Corelli: "' + opener + '"\n\n"Six years I carried sealed documents for the Ivory Circle. Documents between the Scholar Kings and their contractors. I never opened them.\n\nThen one seal broke in the rain. Just the outer wrapper. I had three days before the next courier exchange, so I read what was inside.\n\nIt was an order. A suppression order. For a researcher named — they called her \'the Antecedent.\' They were very careful not to use her name.\n\nThe order said: remove her findings from the distribution network. All copies. All correspondence. All record of the correspondence. Do not destroy — destroy leaves a record of destruction. Reclassify.\n\nI\'ve been selling her things ever since. Not all of them. I\'m not foolish. But the ones that would find the right hands eventually. I think you might be the right hands.\n\nTake this. Don\'t ask where I found it."');
+            S_story.corelliRevelationDelivered = true;
+            S_story.inventory = S_story.inventory || [];
+            if (!S_story.inventory.some(i => i.name === CORELLI_ITEMS.last_cipher.name)) {
+              S_story.inventory.push({ ...CORELLI_ITEMS.last_cipher });
+              storyMsg('🔐 The Last Cipher added to inventory.');
+            }
+            // Decode encoded_letter if owned
+            const enc = S_story.inventory.find(i => i.name === CORELLI_ITEMS.encoded_letter.name);
+            if (enc) enc._decoded = true;
+          } else {
+            storyMsg('Corelli: "' + opener + '"');
+            storyMsg('(Corelli has nothing left to sell. But they look like they\'ve been waiting for something — or someone.)');
+          }
+          storyAutoSave();
+          return;
+        }
+        // Normal appearance — show item for purchase
+        const itemDef = CORELLI_ITEMS[_coApp.itemKey];
+        const alreadyOwned = (S_story.inventory || []).some(i => i.name === itemDef.name);
+        storyMsg('Corelli: "' + opener + '"');
+        if (alreadyOwned) {
+          storyMsg('(You already have ' + itemDef.name + '.)');
+          storyAutoSave();
+          return;
+        }
+        const _buyDiv = document.createElement('div');
+        _buyDiv.style.cssText = 'display:flex;flex-direction:column;gap:3px;margin-top:5px;';
+        const _buyBtn = document.createElement('button');
+        _buyBtn.className = 'inv-use-btn';
+        _buyBtn.textContent = _coApp.itemLabel;
+        _buyBtn.addEventListener('click', () => {
+          if ((S_story.gold || 0) < itemDef.price) { storyBlock('💰 Not enough gold.'); return; }
+          S_story.gold -= itemDef.price;
+          S_story.inventory = S_story.inventory || [];
+          S_story.inventory.push({ ...itemDef });
+          S_story.corelli_purchase_count = (S_story.corelli_purchase_count || 0) + 1;
+          S_story.fav_corelli = Math.min(3, S_story.corelli_purchase_count);
+          storyMsg('🛒 Purchased: ' + itemDef.name + '. 💰 -' + itemDef.price + 'gp.');
+          _buyDiv.remove();
+          storyAutoSave();
+        });
+        const _passBtn = document.createElement('button');
+        _passBtn.className = 'inv-use-btn';
+        _passBtn.textContent = '— Pass.';
+        _passBtn.addEventListener('click', () => { _buyDiv.remove(); });
+        _buyDiv.appendChild(_buyBtn);
+        _buyDiv.appendChild(_passBtn);
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', _buyDiv);
+        storyAutoSave();
+      });
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _coBtn);
+    }
+  }
+}
+function _nodeHookCodexCoreChamber(node) {
+  // ── §D01-10: Codex Core Chamber — pre-boss choice room at CO ──
+  if (node.code === 'TLS' && (S_story.shards || 0) >= 6 && !S_story.defeatedBattles['TLS']
+      && !S_story.codexCoreEntered) {
+    S_story.codexCoreEntered = true;
+    const _ccDiv = document.createElement('div');
+    _ccDiv.className = 'sweelinck-variant';
+    _ccDiv.style.cssText = 'margin-top:10px;border-left-color:#9060c0;';
+    _ccDiv.innerHTML = '<div style="color:#c090f0;font-weight:700;margin-bottom:6px;">⚡ The Codex Core Chamber</div>'
+      + '<div style="font-size:12px;color:#bba;margin-bottom:10px;">'
+      + 'The chamber hums like a tuning fork. The Codex — not all of it, not yet, but the architecture of it — is visible here as a standing column of light, each Shard spinning in its locked position. Six of them yours now. The seventh is here. Has been here. The chamber built itself around the seventh Shard centuries ago and the whole CO node is structured around keeping anything from touching it. Commander Auros is not guarding the Codex. She is part of the seal. She does not know this. When she attacks you, she is executing a Scholar King failsafe that has been running in her bones for thirty years.'
+      + (S_story.priorCarrierSeen ? '<br><br><em>The Prior Carrier said "Tell Sweelinck I found the seventh entry." You are standing in the room where that entry was written. This is not a metaphor. The Codex recorded you before you arrived. The blank page is not blank.</em>' : '')
+      + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:5px;">'
+      + '<button class="inv-use-btn" id="cc-stabilize-btn">🔵 Stabilize — take the Shard, face Auros (standard)</button>'
+      + '<button class="inv-use-btn" id="cc-destroy-btn">⚡ Destroy the housing — STR Ceremonia Roll DC 15 (bypass Auros, +curseScore)</button>'
+      + '<button class="inv-use-btn" id="cc-claim-btn">🟣 Claim as power — CHA Ceremonia Roll DC 17 (surge +2, voidPressure +3, Auros fight required)</button>'
+      + '</div>';
+    document.getElementById('story-text-box').insertAdjacentElement('afterend', _ccDiv);
+    document.getElementById('cc-stabilize-btn').addEventListener('click', () => {
+      S_story.codexCoreChosen = 'stabilize';
+      _ccDiv.remove();
+      storyMsg('You reach for the column. The seventh Shard accepts your hand. Commander Auros turns. She is already in motion.\n\nShe doesn\'t know why she\'s attacking. She only knows the failsafe says to.');
+      storyAutoSave();
+    });
+    document.getElementById('cc-destroy-btn').addEventListener('click', () => {
+      const _strMod = Math.floor(((S_story.abilityScores || {}).str || 16) - 10) / 2 | 0;
+      const _profB  = Math.floor(((S_story.level || 1) - 1) / 4) + 2;
+      const _roll   = Math.ceil(Math.random() * 20);
+      const _total  = _roll + _strMod + _profB;
+      const _dc = 15;
+      _appendStoryHcard({ round:'Day '+S_story.day, actor:'YOU', formula:'STR Ceremonia d20+'+(_strMod+_profB), outcome:'= '+_total+(_total>=_dc?' ✓':' ✗')+' DC '+_dc, dmg:'' });
+      if (_total >= _dc) {
+        S_story.codexCoreChosen = 'destroy';
+        S_story.defeatedBattles = S_story.defeatedBattles || {};
+        S_story.defeatedBattles['TLS'] = true;
+        S_story.curseScore = (S_story.curseScore || 0) + 5;
+        _ccDiv.remove();
+        storyMsg('The column shatters. The seventh Shard falls into your hand — whole, warm, done waiting.\n\nAuros staggers. The failsafe that has been running in her bones for thirty years cuts off mid-sentence.\n\nShe looks at her hands. She does not recognize them without the compulsion.\n\n⚠ You broke something that could not be rebuilt. [curseScore +5]');
+        storyCheckQuests(node);
+        storyAutoSave();
+      } else {
+        storyMsg('The column does not yield. The housing was built by seven Scholar Kings who expected exactly this. Try again when you are ready.\n[STR Ceremonia Roll: '+_total+' vs DC '+_dc+' — failed]');
+      }
+    });
+    document.getElementById('cc-claim-btn').addEventListener('click', () => {
+      const _chaMod = Math.floor(((S_story.abilityScores || {}).cha || 8) - 10) / 2 | 0;
+      const _profB  = Math.floor(((S_story.level || 1) - 1) / 4) + 2;
+      const _roll   = Math.ceil(Math.random() * 20);
+      const _total  = _roll + _chaMod + _profB;
+      const _dc = 17;
+      _appendStoryHcard({ round:'Day '+S_story.day, actor:'YOU', formula:'CHA Ceremonia d20+'+(_chaMod+_profB), outcome:'= '+_total+(_total>=_dc?' ✓':' ✗')+' DC '+_dc, dmg:'' });
+      if (_total >= _dc) {
+        S_story.codexCoreChosen = 'claim';
+        S_story.surgeCharges = Math.min((S_story.surgeCharges || 0) + 2, 5);
+        S_story.voidPressure  = (S_story.voidPressure || 0) + 3;
+        _ccDiv.remove();
+        storyMsg('The column recognizes you. Not who you are now — who you were before the loop.\n\nThe Shard comes free. The housing remains, reshaped around the absence.\n\nAuros stops mid-step. "You shouldn\'t be able to do that."\n\nShe attacks anyway. The failsafe doesn\'t care what the Codex decided.\n\n[Action Surge charges +2 · voidPressure +3]');
+        storyAutoSave();
+      } else {
+        storyMsg('The column waits. You are asserting ownership of something you have not yet fully remembered.\n\nTry again tomorrow. It has waited this long.\n[CHA Ceremonia Roll: '+_total+' vs DC '+_dc+' — failed]');
+        S_story.codexCoreEntered = false;
+        storyAutoSave();
+      }
+    });
+  } else if (node.code === 'TLS' && S_story.codexCoreEntered && !S_story.defeatedBattles['TLS'] && S_story.codexCoreChosen) {
+    // After choice is made, show reminder
+    const _chosenLabel = { stabilize:'Stabilize', destroy:'Destroy', claim:'Claim' }[S_story.codexCoreChosen] || '';
+    if (_chosenLabel) {
+      const _remDiv = document.createElement('div');
+      _remDiv.className = 'sweelinck-variant';
+      _remDiv.style.cssText = 'margin-top:8px;border-left-color:#9060c0;font-size:12px;';
+      _remDiv.textContent = '⚡ Codex Core: ' + _chosenLabel + ' path chosen. The seventh Shard awaits.';
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _remDiv);
+    }
+  }
+}
+function _nodeHookLaRivaRow(node) {
+  // ── Layer 78: La Riva — FR node render ──
+  if (node.code === 'AMS') {
+    const _oldFrDiv = document.getElementById('fr-quest-div');
+    if (_oldFrDiv) _oldFrDiv.remove();
+    const qs = S_story.quests || {};
+    // First visit — Connie auto-dialogue and connieMet
+    if (qs['quest_la_riva_01'] === 'active' && !S_story.connieMet) {
+      S_story.connieMet = true;
+      setTimeout(() => storyMsg('The woman at the end of the path turns when she hears you.\n\nConnie Tuna. Tortoiseshell apron, hands that know what work looks like. She does not look surprised. She looks like someone who has been here long enough that new arrivals have stopped surprising her.\n\n"You came." Not a question. A registration.\n\n"The Corrupted Cats showed up after the Cat-King went down. Thinner now. But they\'re still here. They\'re in the rubble where the south stall was. I can\'t clear them myself."\n\nShe does not ask why you came. She seems to have decided that you being here is enough.\n\n📋 Quest: The Weight of a Net — accepted.'), 500);
+      S_story.quests['quest_la_riva_02'] = 'active';
+    }
+    // la_riva_02 complete — Aldo gives account book
+    if (qs['quest_la_riva_02'] === 'active'
+        && (S_story.frCatKillCount || 0) >= 5
+        && (S_story.inventory || []).some(i => i.name === "Vincenzo's Net")
+        && !qs['quest_la_riva_03']) {
+      S_story.quests['quest_la_riva_02'] = 'complete';
+      S_story.quests['quest_la_riva_03'] = 'active';
+      if (!S_story.npcFavorability) S_story.npcFavorability = {};
+      S_story.npcFavorability['aldo_sardino'] = (S_story.npcFavorability['aldo_sardino'] || 0) + 1;
+      S_story.gold = (S_story.gold || 0) + 500;
+      setTimeout(() => {
+        storyMsg('💰 +500gp. The rubble is quieter now.\n\nAldo Sardino steps out from between two collapsed stalls. He has been here the whole time.\n\n"I found the net in the rubble of my stall. Three days after. I folded it." He does not look at Connie. "I\'ve been carrying it since."\n\nHe reaches inside his coat. He puts the folded net down on the nearest intact piece of counter. Then he reaches under his arm and draws out a ledger — battered, squared, the handwriting on the cover formal.\n\n"Every vendor on the row. Who owed what. Who paid. Vincenzo\'s page is the last one." He holds it out to you. "Take it to Kenickie. He\'s the one who knew Vincenzo\'s operation. He should hold it."\n\n📒 Old Tuna Account Book obtained.\n📋 Quest: The Account Book — accepted.');
+        const _book = { name:'Old Tuna Account Book', icon:'📒', type:'key_item', sell:0,
+          description:"A worn ledger. Every vendor on Fishmonger's Row — who owed what, who paid forward. Vincenzo's page is the last completed entry. The pages after it are blank." };
+        S_story.inventory = S_story.inventory || [];
+        S_story.inventory.push(_book);
+        updateGold();
+        storyAutoSave();
+      }, 600);
+    }
+    const frDiv = document.createElement('div');
+    frDiv.id = 'fr-quest-div';
+    frDiv.style.cssText = 'margin-top:8px;display:flex;flex-direction:column;gap:6px;';
+    // Repeatable clear button — fires corridor battle so defeatedBattles['AMS'] doesn't block it
+    if (qs['quest_la_riva_02'] === 'active' && (S_story.frCatKillCount || 0) < 5) {
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'inv-use-btn';
+      clearBtn.textContent = '⚡ Clear Corrupted Cats (' + (S_story.frCatKillCount || 0) + '/5)';
+      clearBtn.addEventListener('click', () => {
+        storyPreBattle({ ...node, code:'AMS', battle:{label:'Corrupted Cat in the Rubble', key:'corrupted_cat', count:1}, corridor:true });
+      });
+      frDiv.appendChild(clearBtn);
+    }
+    if (frDiv.children.length > 0) {
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', frDiv);
+    }
+  }
+}
+function _nodeHookScholarWorkshop(node) {
+  // ── Layer 81: Scholar King's Workshop (WK) render ──
+  if (node.code === 'SZG') {
+    const _wkOld = document.getElementById('wk-panel');
+    if (_wkOld) _wkOld.remove();
+    const _wkDiv = document.createElement('div');
+    _wkDiv.id = 'wk-panel';
+    _wkDiv.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-top:8px;';
+    // Prototype Wand pickup (before quest system activates)
+    if (!S_story.d0206_a2_passed && !(S_story.inventory||[]).some(i => i.name === "Scholar King's Prototype Wand")) {
+      const _wandBtn = document.createElement('button');
+      _wandBtn.className = 'story-card-btn';
+      _wandBtn.textContent = '⚗ Examine the Prototype Wand on the shelf.';
+      _wandBtn.onclick = () => { storyMsg('The wand hums faintly. You will need to prove you can handle it first. (See quest: Act II — The Prototype)'); };
+      _wkDiv.appendChild(_wandBtn);
+    }
+    // Spirit encounter info after blueprint known
+    if (S_story.scholarWorkshopComplete) {
+      const _wkDone = document.createElement('div');
+      _wkDone.style.cssText = 'font-size:11px;color:var(--grn-lt);';
+      _wkDone.textContent = '✓ The Workshop yielded its secrets. The blueprint is in your pack. The Spirit has gone quiet.';
+      _wkDiv.appendChild(_wkDone);
+    }
+    // Auros blueprint advantage reminder
+    if (S_story.aurosBlueprintKnown && !S_story.defeatedBattles['TLS']) {
+      const _wkHint = document.createElement('div');
+      _wkHint.style.cssText = 'font-size:10px;color:var(--gold);border-left:2px solid var(--gold);padding-left:6px;';
+      _wkHint.textContent = '📜 Blueprint known: Auros\'s left pauldron is AC -4 in the Convergence fight.';
+      _wkDiv.appendChild(_wkHint);
+    }
+    if (_wkDiv.children.length > 0) {
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wkDiv);
+    }
+  }
+}
+function _nodeHookMimicMeadows(node) {
+  // ── Layer 81: Mimic Meadows (MM) render ──
+  if (node.code === 'LIM') {
+    const _mmOld = document.getElementById('mm-panel');
+    if (_mmOld) _mmOld.remove();
+    const _mmDiv = document.createElement('div');
+    _mmDiv.id = 'mm-panel';
+    _mmDiv.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-top:8px;';
+    // Tribble count display
+    const _tc = S_story.tribbleCount || 0;
+    if (_tc > 0) {
+      const _tcEl = document.createElement('div');
+      _tcEl.style.cssText = 'font-size:11px;color:var(--gold);';
+      _tcEl.textContent = '🧸 Fuzzy Tribbles in pack: ' + _tc + (_tc >= 10 ? ' — Brynn says they\'re on the ceiling.' : _tc >= 5 ? ' — They have opinions about battles.' : '');
+      _mmDiv.appendChild(_tcEl);
+    }
+    // Mimic pet name prompt (after A5 passes). quest_d0208_a5 is a skill_check,
+    // whose terminal status is 'done' (set at _rollCeremonia L6647), never 'complete'
+    // — the old '=== complete' gate was dead, so the rename never appeared. (open-gaps item 3, 2026-07-07)
+    if ((S_story.quests||{})['quest_d0208_a5'] === 'done' && S_story.mimicPetName === 'Baby Mimic') {
+      const _nameDiv = document.createElement('div');
+      _nameDiv.style.cssText = 'display:flex;gap:6px;align-items:center;flex-wrap:wrap;';
+      const _nameInput = document.createElement('input');
+      _nameInput.type = 'text'; _nameInput.placeholder = 'Name your mimic...';
+      _nameInput.style.cssText = 'font-size:11px;padding:3px 6px;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:4px;flex:1;min-width:120px;';
+      const _nameBtn = document.createElement('button');
+      _nameBtn.className = 'story-card-btn'; _nameBtn.textContent = '📦 Give a name';
+      _nameBtn.onclick = () => {
+        const n = _nameInput.value.trim();
+        if (n) { S_story.mimicPetName = n; storySave(); storyMsg('📦 ' + n + ' opens its lid once in acknowledgement. You are not sure if that means yes.'); storyRender(node); }
+      };
+      _nameDiv.appendChild(_nameInput); _nameDiv.appendChild(_nameBtn);
+      _mmDiv.appendChild(_nameDiv);
+    }
+    if (S_story.mimicPetName && S_story.mimicPetName !== 'Baby Mimic') {
+      const _petEl = document.createElement('div');
+      _petEl.style.cssText = 'font-size:11px;color:var(--grn-lt);';
+      _petEl.textContent = '📦 ' + S_story.mimicPetName + ' is following you. It has decided you are acceptable.';
+      _mmDiv.appendChild(_petEl);
+    }
+    if (_mmDiv.children.length > 0) {
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _mmDiv);
+    }
+  }
+}
+const NODE_HOOKS = [ // ordered by former storyRender source position
+  { id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA'], fn:_nodeHookVoidArchaeology },
+  { id:'void-shaman-warden', nodes:['GVA'], fn:_nodeHookVoidShamanWarden },
+  { id:'corelli-merchant', nodes:null, fn:_nodeHookCorelliMerchant },
+  { id:'codex-core-chamber', nodes:['TLS'], fn:_nodeHookCodexCoreChamber },
+  { id:'la-riva-row', nodes:['AMS'], fn:_nodeHookLaRivaRow },
+  { id:'scholar-workshop', nodes:['SZG'], fn:_nodeHookScholarWorkshop },
+  { id:'mimic-meadows', nodes:['LIM'], fn:_nodeHookMimicMeadows },
+];
+function _runNodeHook(id, node) {
+  for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node);
+}
+
 function storyRender(node, prefix) {
   // §CELL-03: keep grid position in sync whenever we land on a named node
   if (node && NODE_COORDS[node.code]) {
@@ -31272,78 +31692,7 @@ function storyRender(node, prefix) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', circleBtn);
     }
   }
-  // ── Layer 52: §XVII Void Archaeology — [INVESTIGATE] at 5 nodes + MT tunnel ──
-  {
-    const _vaReady = (S_story.ngPlusRun || 0) >= 1 && S_story.wmFirstResearcherKnown && S_story.entry42Written;
-    const _vaSites = {
-      LHR: { flag:'vaCI', text:'In the back of the Blue Shutters Archive — a partial shelf record. Researcher Category: Containment. Date: [REDACTED]. The same shelf that held the archive letter. She worked here. The marks start here.' },
-      BMA: { flag:'vaSL', text:'A carved marker on a corner building in the Birka Slums. The pattern matches the stones at the Defiant Fields exactly. This building predates the city by 80 years — predates the Scholar Kings. The mark was here before there was anyone to put it there.' },
-      ZRH: { flag:'vaDF', text:'A stone alignment in the scorched terrain of the Defiant Fields. Not random — spaced to a mathematical interval. The battle happened at the activation point. This is where the sealing mechanism triggered. You didn\'t choose this spot. She chose it, 200 years before you arrived.' },
-      NUE: { flag:'vaWM', text:'Document 3 in the lower archive — but now the project codename is visible: ANTECEDENT CONTAINMENT PROTOCOL. The word "Void" appears nowhere in the original documents. She never called it that. She called it what it was: a cage.' },
-      GVA: { flag:'vaMT', text:'A sealed access tunnel at the Mountain Pass. Never opened by anyone in the records. Sealed before the Scholar Kings existed. Not collapsed — sealed from inside. The seal is intact. It is waiting.' },
-    };
-    if (_vaReady && _vaSites[node.code]) {
-      const _site = _vaSites[node.code];
-      if (!S_story[_site.flag]) {
-        const invBtn = document.createElement('button');
-        invBtn.className = 'inv-use-btn inv-investigate-glow';
-        invBtn.textContent = '🏛️ Investigate.';
-        invBtn.style.cssText = 'margin-top:6px;';
-        invBtn.addEventListener('click', () => {
-          S_story[_site.flag] = true;
-          storyMsg(_site.text);
-          invBtn.remove();
-          const found = ['vaCI','vaSL','vaDF','vaWM','vaMT'].every(f => S_story[f]);
-          if (found && !S_story.vaAllMarksFound) {
-            S_story.vaAllMarksFound = true;
-            setTimeout(() => {
-              storyMsg('Five marks. One pattern. She was everywhere before anyone was looking.');
-              if (!S_story.quests) S_story.quests = {};
-              if (!S_story.quests['quest_va_02']) S_story.quests['quest_va_02'] = 'active';
-            }, 600);
-          }
-          storyAutoSave();
-        });
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', invBtn);
-      }
-    }
-    // Activate Q-VA-01 on first investigation site encounter
-    if (_vaReady && _vaSites[node.code] && !((S_story.quests || {})['quest_va_01'])) {
-      S_story.quests = S_story.quests || {};
-      S_story.quests['quest_va_01'] = 'active';
-    }
-    // MT tunnel button
-    if (node.code === 'GVA' && S_story.vaLogFound && !S_story.vaLastWardVisited) {
-      const _hasKey = (S_story.inventory || []).some(i => i.name === 'Antecedent Seal' || i.name === "Froberger's Field Notes");
-      if (_hasKey) {
-        const tunnelBtn = document.createElement('button');
-        tunnelBtn.className = 'inv-use-btn';
-        tunnelBtn.textContent = '🏛️ Open the tunnel.';
-        tunnelBtn.style.cssText = 'margin-top:6px;';
-        tunnelBtn.addEventListener('click', () => {
-          S_story.vaLastWardVisited = true;
-          tunnelBtn.remove();
-          storyMsg('The seal accepts the key. The door opens inward.\n\nInside: cut stone. No decay. The air is perfectly still — sealed for 200 years.\n\nOn the far wall, six sentences. The last field test of the containment structure. The first time it was ever closed.\n\n"The destabilization event was calculated correctly. The sealing mechanism engaged at the predicted moment. The Antecedent entered containment. The cage is closed. We did not know what we were containing. We only knew it could not be destroyed.\n\nThe Antecedent was here. It is not anymore. You know where it is now."');
-          storyAutoSave();
-        });
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', tunnelBtn);
-      }
-    }
-    // Q-VA-03 and Q-VA-04 activation
-    if ((S_story.ngPlusRun || 0) >= 1) {
-      const _qs = S_story.quests || {};
-      if (S_story.vaLogFound && !_qs['quest_va_03']) S_story.quests['quest_va_03'] = 'active';
-      if (S_story.vaLastWardVisited && !_qs['quest_va_04']) S_story.quests['quest_va_04'] = 'active';
-    }
-    // Q-VA-04: Benedikt delivers message at SQ
-    if (node.code === 'NUE' && S_story.vaLastWardVisited && S_story.entry42Written && !S_story.vaArchitectureKnown) {
-      setTimeout(() => storyMsg(
-        'Benedikt: "She built it. You closed it. Froberger found the mechanism. You followed him. Entry 42 is the fourth link. Four links is a chain. A chain holds. That is the only kind of answer this work produces — not a solution, a chain."'
-      ), 700);
-      S_story.vaArchitectureKnown = true;
-      storyAutoSave();
-    }
-  }
+  _runNodeHook('void-archaeology', node); // ── Layer 52: §XVII Void Archaeology — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
   // ── §D01-04: Secret Gate — DF Defiant Fields void toll rune ──
   if (node.code === 'ZRH' && !S_story._voidTollSecret && !S_story.secretGatePassed) {
     const _sgDiv = document.createElement('div');
@@ -31538,118 +31887,8 @@ function storyRender(node, prefix) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', yvaBtn);
     }
   }
-  // ── Layer 56: §XXI Void Shaman — MT tunnel Warden encounter ──
-  if (node.code === 'GVA' && S_story.vsShamanKnown && S_story.vaLastWardVisited && !S_story.wardensLegacyKnown) {
-    if (!S_story.vshamanFound) {
-      S_story.vshamanFound = true;
-      if (!S_story.quests['quest_vs_warden']) S_story.quests['quest_vs_warden'] = 'active';
-      storyMsg('Inside the tunnel, past where you stopped before.\n\nThe walls are marked — not the stone alignment from the DF node, but new work, carved in the past six months. A workbench. Notes in a language that mixes goblin glyphs and Old Scholar script.\n\nThe Warden is not surprised to see you. They knew Mordus would send someone eventually.\n\n"You came to stop me. Or to understand. Either is fine. I have been working for eleven years to do the right thing. I may be wrong about what the right thing is."');
-      storyAutoSave();
-    }
-    const _wardenBtnGroup = document.createElement('div');
-    _wardenBtnGroup.style.cssText = 'display:flex;flex-direction:column;gap:3px;margin-top:6px;';
-    const _hasLog = (S_story.inventory || []).some(i => i.name === "The Constructor's Log");
-    if (_hasLog) {
-      const logBtn = document.createElement('button');
-      logBtn.className = 'inv-use-btn';
-      logBtn.textContent = '📜 Show them the Constructor\'s Log.';
-      logBtn.addEventListener('click', () => {
-        storyMsg('The Warden takes the Log. Reads. Stops at Entry 2.\n\n"\'The cage must be opened before it can be closed.\' This is the original. This is — the mandate they gave us was open the cage. But this says open the tunnel to close the cage. The tunnel. Not the cage."\n\nThey read Entry 7.\n\n"\'If someone is reading this, the sealing mechanism has activated. The cage is closed.\'\n\nThe cage is closed. It was closed 200 years ago. I have been eleven years trying to re-open it."\n\nThey are quiet for a long time.\n\n"Tell the clan the mission is complete. That is the truth — the mandate was fulfilled 200 years before I was born. This is — this is fine. I can stop."\n\nThey pass you the token without being asked.\n\nThe sub-clan walked back in. All of them. Mordus didn\'t ask what changed. He logged them as returned.');
-        S_story.vsShamanPersuaded = true;
-        S_story.wardensLegacyKnown = true;
-        S_story.inventory = S_story.inventory || [];
-        S_story.inventory.push({ name:"The Warden's Token", icon:'🔑', type:'relic', sell:0,
-          description:'Original Warden\'s seal, First Researcher\'s appointment. Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything.' });
-        S_story.gold += 600;
-        storyMsg('💰 +600gp (quest: The Warden). 🔑 The Warden\'s Token added to inventory.');
-        if (!S_story.quests['quest_vs_warden']) S_story.quests['quest_vs_warden'] = 'active';
-        _wardenBtnGroup.remove();
-        storyAutoSave();
-      });
-      _wardenBtnGroup.appendChild(logBtn);
-    }
-    const fightBtn = document.createElement('button');
-    fightBtn.className = 'inv-use-btn';
-    fightBtn.textContent = '⚔️ Fight the Warden.';
-    fightBtn.addEventListener('click', () => {
-      _wardenBtnGroup.remove();
-      setTimeout(() => storyPreBattle({ ...node, code:'MT_WARDEN', battle:{ label:'The Warden', key:'void_shaman', count:1 } }), 300);
-    });
-    _wardenBtnGroup.appendChild(fightBtn);
-    document.getElementById('story-text-box').insertAdjacentElement('afterend', _wardenBtnGroup);
-  }
-  // ── Layer 61: §XXVI Corelli the Wandering Merchant ──
-  { const _coApp = _checkCorelliAppearance(node.code);
-    if (_coApp) {
-      const _coBtnOld = document.getElementById('corelli-encounter-btn');
-      if (_coBtnOld) _coBtnOld.remove();
-      const _coBtn = document.createElement('button');
-      _coBtn.id = 'corelli-encounter-btn';
-      _coBtn.className = 'inv-use-btn';
-      _coBtn.textContent = '🛒 Traveling Merchant';
-      _coBtn.style.cssText = 'margin-top:6px;border-color:#7a6040;';
-      _coBtn.addEventListener('click', () => {
-        _coBtn.remove();
-        S_story.corelli_encounter_count = (S_story.corelli_encounter_count || 0) + 1;
-        const fav = S_story.fav_corelli || 0;
-        const opener = _corelliOpener(_coApp);
-        // 5th appearance (last_cipher) — revelation first if Dear Friend
-        if (_coApp.index === 5) {
-          if (fav >= 3 && !S_story.corelliRevelationDelivered) {
-            storyMsg('Corelli: "' + opener + '"\n\n"Six years I carried sealed documents for the Ivory Circle. Documents between the Scholar Kings and their contractors. I never opened them.\n\nThen one seal broke in the rain. Just the outer wrapper. I had three days before the next courier exchange, so I read what was inside.\n\nIt was an order. A suppression order. For a researcher named — they called her \'the Antecedent.\' They were very careful not to use her name.\n\nThe order said: remove her findings from the distribution network. All copies. All correspondence. All record of the correspondence. Do not destroy — destroy leaves a record of destruction. Reclassify.\n\nI\'ve been selling her things ever since. Not all of them. I\'m not foolish. But the ones that would find the right hands eventually. I think you might be the right hands.\n\nTake this. Don\'t ask where I found it."');
-            S_story.corelliRevelationDelivered = true;
-            S_story.inventory = S_story.inventory || [];
-            if (!S_story.inventory.some(i => i.name === CORELLI_ITEMS.last_cipher.name)) {
-              S_story.inventory.push({ ...CORELLI_ITEMS.last_cipher });
-              storyMsg('🔐 The Last Cipher added to inventory.');
-            }
-            // Decode encoded_letter if owned
-            const enc = S_story.inventory.find(i => i.name === CORELLI_ITEMS.encoded_letter.name);
-            if (enc) enc._decoded = true;
-          } else {
-            storyMsg('Corelli: "' + opener + '"');
-            storyMsg('(Corelli has nothing left to sell. But they look like they\'ve been waiting for something — or someone.)');
-          }
-          storyAutoSave();
-          return;
-        }
-        // Normal appearance — show item for purchase
-        const itemDef = CORELLI_ITEMS[_coApp.itemKey];
-        const alreadyOwned = (S_story.inventory || []).some(i => i.name === itemDef.name);
-        storyMsg('Corelli: "' + opener + '"');
-        if (alreadyOwned) {
-          storyMsg('(You already have ' + itemDef.name + '.)');
-          storyAutoSave();
-          return;
-        }
-        const _buyDiv = document.createElement('div');
-        _buyDiv.style.cssText = 'display:flex;flex-direction:column;gap:3px;margin-top:5px;';
-        const _buyBtn = document.createElement('button');
-        _buyBtn.className = 'inv-use-btn';
-        _buyBtn.textContent = _coApp.itemLabel;
-        _buyBtn.addEventListener('click', () => {
-          if ((S_story.gold || 0) < itemDef.price) { storyBlock('💰 Not enough gold.'); return; }
-          S_story.gold -= itemDef.price;
-          S_story.inventory = S_story.inventory || [];
-          S_story.inventory.push({ ...itemDef });
-          S_story.corelli_purchase_count = (S_story.corelli_purchase_count || 0) + 1;
-          S_story.fav_corelli = Math.min(3, S_story.corelli_purchase_count);
-          storyMsg('🛒 Purchased: ' + itemDef.name + '. 💰 -' + itemDef.price + 'gp.');
-          _buyDiv.remove();
-          storyAutoSave();
-        });
-        const _passBtn = document.createElement('button');
-        _passBtn.className = 'inv-use-btn';
-        _passBtn.textContent = '— Pass.';
-        _passBtn.addEventListener('click', () => { _buyDiv.remove(); });
-        _buyDiv.appendChild(_buyBtn);
-        _buyDiv.appendChild(_passBtn);
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', _buyDiv);
-        storyAutoSave();
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _coBtn);
-    }
-  }
+  _runNodeHook('void-shaman-warden', node); // ── Layer 56: §XXI Void Shaman — MT tunnel Warden — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
+  _runNodeHook('corelli-merchant', node); // ── Layer 61: §XXVI Corelli the Wandering Merchant — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
   // Benedikt callback at SQ when vsShamanPersuaded
   if (node.code === 'NUE' && S_story.vsShamanPersuaded && _npcFavor('benedikt_rasp') >= 2 && !S_story.vsShamanBenediktDelivered) {
     S_story.vsShamanBenediktDelivered = true;
@@ -31727,81 +31966,7 @@ function storyRender(node, prefix) {
       setTimeout(() => storyMsg(coSceneText), 600);
     }
   }
-  // ── §D01-10: Codex Core Chamber — pre-boss choice room at CO ──
-  if (node.code === 'TLS' && (S_story.shards || 0) >= 6 && !S_story.defeatedBattles['TLS']
-      && !S_story.codexCoreEntered) {
-    S_story.codexCoreEntered = true;
-    const _ccDiv = document.createElement('div');
-    _ccDiv.className = 'sweelinck-variant';
-    _ccDiv.style.cssText = 'margin-top:10px;border-left-color:#9060c0;';
-    _ccDiv.innerHTML = '<div style="color:#c090f0;font-weight:700;margin-bottom:6px;">⚡ The Codex Core Chamber</div>'
-      + '<div style="font-size:12px;color:#bba;margin-bottom:10px;">'
-      + 'The chamber hums like a tuning fork. The Codex — not all of it, not yet, but the architecture of it — is visible here as a standing column of light, each Shard spinning in its locked position. Six of them yours now. The seventh is here. Has been here. The chamber built itself around the seventh Shard centuries ago and the whole CO node is structured around keeping anything from touching it. Commander Auros is not guarding the Codex. She is part of the seal. She does not know this. When she attacks you, she is executing a Scholar King failsafe that has been running in her bones for thirty years.'
-      + (S_story.priorCarrierSeen ? '<br><br><em>The Prior Carrier said "Tell Sweelinck I found the seventh entry." You are standing in the room where that entry was written. This is not a metaphor. The Codex recorded you before you arrived. The blank page is not blank.</em>' : '')
-      + '</div>'
-      + '<div style="display:flex;flex-direction:column;gap:5px;">'
-      + '<button class="inv-use-btn" id="cc-stabilize-btn">🔵 Stabilize — take the Shard, face Auros (standard)</button>'
-      + '<button class="inv-use-btn" id="cc-destroy-btn">⚡ Destroy the housing — STR Ceremonia Roll DC 15 (bypass Auros, +curseScore)</button>'
-      + '<button class="inv-use-btn" id="cc-claim-btn">🟣 Claim as power — CHA Ceremonia Roll DC 17 (surge +2, voidPressure +3, Auros fight required)</button>'
-      + '</div>';
-    document.getElementById('story-text-box').insertAdjacentElement('afterend', _ccDiv);
-    document.getElementById('cc-stabilize-btn').addEventListener('click', () => {
-      S_story.codexCoreChosen = 'stabilize';
-      _ccDiv.remove();
-      storyMsg('You reach for the column. The seventh Shard accepts your hand. Commander Auros turns. She is already in motion.\n\nShe doesn\'t know why she\'s attacking. She only knows the failsafe says to.');
-      storyAutoSave();
-    });
-    document.getElementById('cc-destroy-btn').addEventListener('click', () => {
-      const _strMod = Math.floor(((S_story.abilityScores || {}).str || 16) - 10) / 2 | 0;
-      const _profB  = Math.floor(((S_story.level || 1) - 1) / 4) + 2;
-      const _roll   = Math.ceil(Math.random() * 20);
-      const _total  = _roll + _strMod + _profB;
-      const _dc = 15;
-      _appendStoryHcard({ round:'Day '+S_story.day, actor:'YOU', formula:'STR Ceremonia d20+'+(_strMod+_profB), outcome:'= '+_total+(_total>=_dc?' ✓':' ✗')+' DC '+_dc, dmg:'' });
-      if (_total >= _dc) {
-        S_story.codexCoreChosen = 'destroy';
-        S_story.defeatedBattles = S_story.defeatedBattles || {};
-        S_story.defeatedBattles['TLS'] = true;
-        S_story.curseScore = (S_story.curseScore || 0) + 5;
-        _ccDiv.remove();
-        storyMsg('The column shatters. The seventh Shard falls into your hand — whole, warm, done waiting.\n\nAuros staggers. The failsafe that has been running in her bones for thirty years cuts off mid-sentence.\n\nShe looks at her hands. She does not recognize them without the compulsion.\n\n⚠ You broke something that could not be rebuilt. [curseScore +5]');
-        storyCheckQuests(node);
-        storyAutoSave();
-      } else {
-        storyMsg('The column does not yield. The housing was built by seven Scholar Kings who expected exactly this. Try again when you are ready.\n[STR Ceremonia Roll: '+_total+' vs DC '+_dc+' — failed]');
-      }
-    });
-    document.getElementById('cc-claim-btn').addEventListener('click', () => {
-      const _chaMod = Math.floor(((S_story.abilityScores || {}).cha || 8) - 10) / 2 | 0;
-      const _profB  = Math.floor(((S_story.level || 1) - 1) / 4) + 2;
-      const _roll   = Math.ceil(Math.random() * 20);
-      const _total  = _roll + _chaMod + _profB;
-      const _dc = 17;
-      _appendStoryHcard({ round:'Day '+S_story.day, actor:'YOU', formula:'CHA Ceremonia d20+'+(_chaMod+_profB), outcome:'= '+_total+(_total>=_dc?' ✓':' ✗')+' DC '+_dc, dmg:'' });
-      if (_total >= _dc) {
-        S_story.codexCoreChosen = 'claim';
-        S_story.surgeCharges = Math.min((S_story.surgeCharges || 0) + 2, 5);
-        S_story.voidPressure  = (S_story.voidPressure || 0) + 3;
-        _ccDiv.remove();
-        storyMsg('The column recognizes you. Not who you are now — who you were before the loop.\n\nThe Shard comes free. The housing remains, reshaped around the absence.\n\nAuros stops mid-step. "You shouldn\'t be able to do that."\n\nShe attacks anyway. The failsafe doesn\'t care what the Codex decided.\n\n[Action Surge charges +2 · voidPressure +3]');
-        storyAutoSave();
-      } else {
-        storyMsg('The column waits. You are asserting ownership of something you have not yet fully remembered.\n\nTry again tomorrow. It has waited this long.\n[CHA Ceremonia Roll: '+_total+' vs DC '+_dc+' — failed]');
-        S_story.codexCoreEntered = false;
-        storyAutoSave();
-      }
-    });
-  } else if (node.code === 'TLS' && S_story.codexCoreEntered && !S_story.defeatedBattles['TLS'] && S_story.codexCoreChosen) {
-    // After choice is made, show reminder
-    const _chosenLabel = { stabilize:'Stabilize', destroy:'Destroy', claim:'Claim' }[S_story.codexCoreChosen] || '';
-    if (_chosenLabel) {
-      const _remDiv = document.createElement('div');
-      _remDiv.className = 'sweelinck-variant';
-      _remDiv.style.cssText = 'margin-top:8px;border-left-color:#9060c0;font-size:12px;';
-      _remDiv.textContent = '⚡ Codex Core: ' + _chosenLabel + ' path chosen. The seventh Shard awaits.';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _remDiv);
-    }
-  }
+  _runNodeHook('codex-core-chamber', node); // ── §D01-10: Codex Core Chamber — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
   // ── §D01-03: Prior Carrier at WM — behind Inquisitor door ──
   if (node.code === 'NUE' && S_story.inquisitorPassed && !S_story.priorCarrierSeen) {
     const _pcDiv = document.createElement('div');
@@ -32049,131 +32214,10 @@ function storyRender(node, prefix) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', cqDiv);
     }
   }
-  // ── Layer 78: La Riva — FR node render ──
-  if (node.code === 'AMS') {
-    const _oldFrDiv = document.getElementById('fr-quest-div');
-    if (_oldFrDiv) _oldFrDiv.remove();
-    const qs = S_story.quests || {};
-    // First visit — Connie auto-dialogue and connieMet
-    if (qs['quest_la_riva_01'] === 'active' && !S_story.connieMet) {
-      S_story.connieMet = true;
-      setTimeout(() => storyMsg('The woman at the end of the path turns when she hears you.\n\nConnie Tuna. Tortoiseshell apron, hands that know what work looks like. She does not look surprised. She looks like someone who has been here long enough that new arrivals have stopped surprising her.\n\n"You came." Not a question. A registration.\n\n"The Corrupted Cats showed up after the Cat-King went down. Thinner now. But they\'re still here. They\'re in the rubble where the south stall was. I can\'t clear them myself."\n\nShe does not ask why you came. She seems to have decided that you being here is enough.\n\n📋 Quest: The Weight of a Net — accepted.'), 500);
-      S_story.quests['quest_la_riva_02'] = 'active';
-    }
-    // la_riva_02 complete — Aldo gives account book
-    if (qs['quest_la_riva_02'] === 'active'
-        && (S_story.frCatKillCount || 0) >= 5
-        && (S_story.inventory || []).some(i => i.name === "Vincenzo's Net")
-        && !qs['quest_la_riva_03']) {
-      S_story.quests['quest_la_riva_02'] = 'complete';
-      S_story.quests['quest_la_riva_03'] = 'active';
-      if (!S_story.npcFavorability) S_story.npcFavorability = {};
-      S_story.npcFavorability['aldo_sardino'] = (S_story.npcFavorability['aldo_sardino'] || 0) + 1;
-      S_story.gold = (S_story.gold || 0) + 500;
-      setTimeout(() => {
-        storyMsg('💰 +500gp. The rubble is quieter now.\n\nAldo Sardino steps out from between two collapsed stalls. He has been here the whole time.\n\n"I found the net in the rubble of my stall. Three days after. I folded it." He does not look at Connie. "I\'ve been carrying it since."\n\nHe reaches inside his coat. He puts the folded net down on the nearest intact piece of counter. Then he reaches under his arm and draws out a ledger — battered, squared, the handwriting on the cover formal.\n\n"Every vendor on the row. Who owed what. Who paid. Vincenzo\'s page is the last one." He holds it out to you. "Take it to Kenickie. He\'s the one who knew Vincenzo\'s operation. He should hold it."\n\n📒 Old Tuna Account Book obtained.\n📋 Quest: The Account Book — accepted.');
-        const _book = { name:'Old Tuna Account Book', icon:'📒', type:'key_item', sell:0,
-          description:"A worn ledger. Every vendor on Fishmonger's Row — who owed what, who paid forward. Vincenzo's page is the last completed entry. The pages after it are blank." };
-        S_story.inventory = S_story.inventory || [];
-        S_story.inventory.push(_book);
-        updateGold();
-        storyAutoSave();
-      }, 600);
-    }
-    const frDiv = document.createElement('div');
-    frDiv.id = 'fr-quest-div';
-    frDiv.style.cssText = 'margin-top:8px;display:flex;flex-direction:column;gap:6px;';
-    // Repeatable clear button — fires corridor battle so defeatedBattles['AMS'] doesn't block it
-    if (qs['quest_la_riva_02'] === 'active' && (S_story.frCatKillCount || 0) < 5) {
-      const clearBtn = document.createElement('button');
-      clearBtn.className = 'inv-use-btn';
-      clearBtn.textContent = '⚡ Clear Corrupted Cats (' + (S_story.frCatKillCount || 0) + '/5)';
-      clearBtn.addEventListener('click', () => {
-        storyPreBattle({ ...node, code:'AMS', battle:{label:'Corrupted Cat in the Rubble', key:'corrupted_cat', count:1}, corridor:true });
-      });
-      frDiv.appendChild(clearBtn);
-    }
-    if (frDiv.children.length > 0) {
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', frDiv);
-    }
-  }
-  // ── Layer 81: Scholar King's Workshop (WK) render ──
-  if (node.code === 'SZG') {
-    const _wkOld = document.getElementById('wk-panel');
-    if (_wkOld) _wkOld.remove();
-    const _wkDiv = document.createElement('div');
-    _wkDiv.id = 'wk-panel';
-    _wkDiv.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-top:8px;';
-    // Prototype Wand pickup (before quest system activates)
-    if (!S_story.d0206_a2_passed && !(S_story.inventory||[]).some(i => i.name === "Scholar King's Prototype Wand")) {
-      const _wandBtn = document.createElement('button');
-      _wandBtn.className = 'story-card-btn';
-      _wandBtn.textContent = '⚗ Examine the Prototype Wand on the shelf.';
-      _wandBtn.onclick = () => { storyMsg('The wand hums faintly. You will need to prove you can handle it first. (See quest: Act II — The Prototype)'); };
-      _wkDiv.appendChild(_wandBtn);
-    }
-    // Spirit encounter info after blueprint known
-    if (S_story.scholarWorkshopComplete) {
-      const _wkDone = document.createElement('div');
-      _wkDone.style.cssText = 'font-size:11px;color:var(--grn-lt);';
-      _wkDone.textContent = '✓ The Workshop yielded its secrets. The blueprint is in your pack. The Spirit has gone quiet.';
-      _wkDiv.appendChild(_wkDone);
-    }
-    // Auros blueprint advantage reminder
-    if (S_story.aurosBlueprintKnown && !S_story.defeatedBattles['TLS']) {
-      const _wkHint = document.createElement('div');
-      _wkHint.style.cssText = 'font-size:10px;color:var(--gold);border-left:2px solid var(--gold);padding-left:6px;';
-      _wkHint.textContent = '📜 Blueprint known: Auros\'s left pauldron is AC -4 in the Convergence fight.';
-      _wkDiv.appendChild(_wkHint);
-    }
-    if (_wkDiv.children.length > 0) {
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wkDiv);
-    }
-  }
+  _runNodeHook('la-riva-row', node); // ── Layer 78: La Riva — FR node render — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
+  _runNodeHook('scholar-workshop', node); // ── Layer 81: Scholar King's Workshop (WK) — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
 
-  // ── Layer 81: Mimic Meadows (MM) render ──
-  if (node.code === 'LIM') {
-    const _mmOld = document.getElementById('mm-panel');
-    if (_mmOld) _mmOld.remove();
-    const _mmDiv = document.createElement('div');
-    _mmDiv.id = 'mm-panel';
-    _mmDiv.style.cssText = 'display:flex;flex-direction:column;gap:6px;padding:10px 12px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-top:8px;';
-    // Tribble count display
-    const _tc = S_story.tribbleCount || 0;
-    if (_tc > 0) {
-      const _tcEl = document.createElement('div');
-      _tcEl.style.cssText = 'font-size:11px;color:var(--gold);';
-      _tcEl.textContent = '🧸 Fuzzy Tribbles in pack: ' + _tc + (_tc >= 10 ? ' — Brynn says they\'re on the ceiling.' : _tc >= 5 ? ' — They have opinions about battles.' : '');
-      _mmDiv.appendChild(_tcEl);
-    }
-    // Mimic pet name prompt (after A5 passes). quest_d0208_a5 is a skill_check,
-    // whose terminal status is 'done' (set at _rollCeremonia L6647), never 'complete'
-    // — the old '=== complete' gate was dead, so the rename never appeared. (open-gaps item 3, 2026-07-07)
-    if ((S_story.quests||{})['quest_d0208_a5'] === 'done' && S_story.mimicPetName === 'Baby Mimic') {
-      const _nameDiv = document.createElement('div');
-      _nameDiv.style.cssText = 'display:flex;gap:6px;align-items:center;flex-wrap:wrap;';
-      const _nameInput = document.createElement('input');
-      _nameInput.type = 'text'; _nameInput.placeholder = 'Name your mimic...';
-      _nameInput.style.cssText = 'font-size:11px;padding:3px 6px;background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:4px;flex:1;min-width:120px;';
-      const _nameBtn = document.createElement('button');
-      _nameBtn.className = 'story-card-btn'; _nameBtn.textContent = '📦 Give a name';
-      _nameBtn.onclick = () => {
-        const n = _nameInput.value.trim();
-        if (n) { S_story.mimicPetName = n; storySave(); storyMsg('📦 ' + n + ' opens its lid once in acknowledgement. You are not sure if that means yes.'); storyRender(node); }
-      };
-      _nameDiv.appendChild(_nameInput); _nameDiv.appendChild(_nameBtn);
-      _mmDiv.appendChild(_nameDiv);
-    }
-    if (S_story.mimicPetName && S_story.mimicPetName !== 'Baby Mimic') {
-      const _petEl = document.createElement('div');
-      _petEl.style.cssText = 'font-size:11px;color:var(--grn-lt);';
-      _petEl.textContent = '📦 ' + S_story.mimicPetName + ' is following you. It has decided you are acceptable.';
-      _mmDiv.appendChild(_petEl);
-    }
-    if (_mmDiv.children.length > 0) {
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _mmDiv);
-    }
-  }
+  _runNodeHook('mimic-meadows', node); // ── Layer 81: Mimic Meadows (MM) — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
 
   // ── Layer 41: Birka NPC cards ──
   {

@@ -111,3 +111,26 @@ unchanged throughout.
 2. **Slice order G1→G2→G3→G4 confirmed?** → **Confirmed** (G1 first = biggest win, lowest risk).
 3. **G4 scope veto:** → **OK in principle, but G4 gets its own child design pass** (child lab
    report before implementation, as §5 already flags). G1–G3 proceed regardless.
+
+## 8. G2 ship addendum (2026-07-28) — one design deviation, recorded honestly
+
+**G2 shipped: 7 Class-E blocks → `NODE_HOOKS`** (Void Archaeology · Void Shaman Warden · Corelli
+Merchant · Codex Core Chamber · La Riva row · Scholar Workshop · Mimic Meadows; ~440 lines out of
+storyRender). **Deviation from §4-C2's sketch:** the "single dispatch loop" is **order-UNSAFE** —
+Corelli's gate is the computed `_checkCorelliAppearance` schedule (any of 5 nodes), so no single
+dispatch position exists from which it cannot cross a same-node co-firing block (the §3-1 LIFO
+hazard); a keyed `NODE_HOOKS[code]` map cannot even express its gate. **Shipped shape:** verbatim
+self-gating hook fns + an ordered `NODE_HOOKS` registry (with `nodes` as tooling metadata, `null`
+= computed schedule) + **in-place dispatch** — `_runNodeHook(id, node)` sits at the exact source
+position each block occupied, so stacking order is preserved **by construction** and the G1
+order-safety rule needs no per-block exclusion analysis. **Proof:** 14-combo golden-DOM
+before/after diff **byte-identical** (story-column HTML + move-msg + quest/flag probes, 0 page
+errors both sides); `uqf-node-hooks.test.js` 4/4; `quest-runtime-uqf` 303/303 (+ panels 7 +
+npc-card-map 22 = 332/332); all four parity fences byte-identical; every `check:walk` gate green
+except the documented J14/J15 + TGS/SPB baselines. **Deferred to G2b:** the Birka-region nested
+UIs (Blue Shutters, Froberger Memorial, Pachelbel/Couperin ledgers, Pit Championship, Kenickie
+shop, Kern & Sable) — they anchor to `npcRowDiv` / nest inside the Layer-41 scope and need a ctx
+argument design; and the CDG/Tilbury/Visby mixed blocks, which are G3's quest-activation
+territory. Side-finding: fresh SZG legitimately renders no workshop panel — the node's own `loot`
+auto-grants the Prototype Wand on arrival, gating the wand button off (test probe adjusted, not a
+regression).
