@@ -99,4 +99,18 @@ test.describe('§VM-01-G1 — NODE_PANELS renders the migrated panels', () => {
       if (NODE_PANELS.some(p => (p.nodes || []).includes('LJ3'))) throw new Error('dead LJ3 key still present');
     });
   });
+
+  test('§VM-01-G1-FIX — the §LXII AO name-change notice shows once on first post-commission arrival (was dead via visited timing)', async ({ page }) => {
+    const plain = await renderAt(page, 'HTY');
+    expect(plain.some(s => s.id === 'story-ao-namechange'), 'no notice pre-commission').toBe(false);
+    const post = await renderAt(page, 'HTY', { commissionReceived: true });
+    expect(post.some(s => s.id === 'story-ao-namechange'), 'notice on first post-commission arrival').toBe(true);
+    const r = await page.evaluate(() => {
+      const seen = S_story.aoNameNoticeSeen;
+      storyRender(NODE_MAP[S_story.currentCode]);
+      return { seen, secondRenderHasPanel: !!document.getElementById('story-ao-namechange') };
+    });
+    expect(r.seen, 'once-flag written').toBe(true);
+    expect(r.secondRenderHasPanel, 'notice does not repeat').toBe(false);
+  });
 });

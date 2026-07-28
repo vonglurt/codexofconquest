@@ -30898,11 +30898,12 @@ const NODE_PANELS = [
   { id:'story-ci-tagline', nodes:['LHR'],
     css:'text-align:center;border-left:none;border-top:1px solid #40607a;padding:10px 14px 8px;font-style:normal;color:#fea712;letter-spacing:0.05em;',
     html:'LETS GO &mdash; Codex of Conquest: Curse of Knowledge<br><span style="font-size:10px;color:#9ab0c0;letter-spacing:0.02em;">roll2hit.com &middot; MIT Public Domain</span>' },
-  // §LXII: AO — name-change notice on first arrival post-commission. NOTE (G1 finding): dead in
-  // practice — storyCollectLoot flips visited[code] earlier in the same render, so !visited['HTY']
-  // is always false here. Gate preserved verbatim (G1 is a no-op); fix tracked in BACKLOG §VM-01-G1.
+  // §LXII: AO — name-change notice on first arrival post-commission. §VM-01-G1-FIX: the original
+  // once-guard was !visited['HTY'], but storyCollectLoot flips visited[code] earlier in the same
+  // render, so the panel was dead since it shipped. A dedicated once-flag restores the authored
+  // intent (show exactly once, on the first post-commission arrival).
   { id:'story-ao-namechange', nodes:['HTY'],
-    when:st => st.commissionReceived && !st.visited['HTY'],
+    when:st => st.commissionReceived && !st.aoNameNoticeSeen, once:'aoNameNoticeSeen',
     css:'margin-top:10px;border-left-color:#a07030;font-style:italic;color:#e0c890;font-size:12px;',
     text:'He is called Paul here for the first time. He will be called Saul again once, by someone who does not know the road. It will not fit.' },
   // §LIX: KS — conversion fires on first arrival (quest_road_damascus auto-completes on next storyCheckQuests)
