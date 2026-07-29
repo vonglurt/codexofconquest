@@ -66,6 +66,26 @@ Do **not** leave it unset (that is an audit error), and do **not** bulk-default 
 **Bulk re-anchoring:** `./api.sh batch-npc updates.json` (`[{id, npc}, …]`) — one parse and
 one save for the whole batch instead of N full-file rewrites.
 
+**Coverage is now total (§AUDIT-03g, 2026-07-29): all 2,853 quests carry an `npc`, so
+`./api.sh audit` reports `errors: 0`** — the standing error that provoked the `ea02faf`
+bulk-default is gone. The last 68 unanchored quests were derived one family at a time:
+
+| Family | Key | Why |
+|--------|-----|-----|
+| `quest_d0201_*`, `quest_d0209_*` (RAI) | `captain_selene_draketide` | a §D02 **Epic-Battleground approach arc inherits its battleground's giver** — the same key `quest_ea_primary`/`_return` already carry at that node |
+| `quest_d0205_*` (BK) | `warlord_kael_mordus` | same rule, via `quest_eg_primary` (Void Shaman's Sanctum) |
+| `quest_d0207_*`, `quest_d0204_*`, `quest_d0210_*`, `quest_d0206_*`, `quest_void_below`, `quest_void_tide_21/35/42` | `auros` | Commander Seraphine Bruhns — profile key `auros`, the `NODE_MAP` inline npc of **both** HKG and TLS, the named figure of the Workshop schematics, and the corpus anchor of the Warrant thread (`quest_signal_01`) |
+| `quest_d0208_*` (Mimic Meadows), `quest_inquisitor_*`, `clr_01_act5` | `archivus_sweelinck` | the Shattered-Codex archivist: NUE's own NPC for the Inquisitor gauntlet, and the named "archivist at Weimar" who closes the `clr_01` chain. **`quest_d0208_*` is provisional** — its presiding character is the Mother Mimic, who has no registry entry (§AUDIT-03i) |
+| `clr_01_act3/act4` | `watcher_gvw` | chain coherence — acts 1–2 already carry it |
+| `quest_math_01–05` | `johannes_von_weisheit` | the §MATH-01 arc's convening voice; the Event Horizon Station literally speaks in `quest_math_03`'s `onComplete` |
+| `quest_ceremonia_yael_*`, `quest_slums_cleanup`, `quest_city_watch_patrol`, `quest_crypt_survey` | `yael` | Yael Scheidemann is the named actor (crypt survey = the §DESIGN-03 Birka commission set, hers by chain) |
+| `quest_courier_release`, `quest_sir_jullean` | `city_guard_captain` | LHR's inline npc — the desk-guard scenes, matching the `quest_ng_0*` Froberger precedent |
+| `quest_brynn_firewood`, `quest_brynn_ledger` | `brynn` | TLL's own profile |
+| `quest_pit_debut` | `crov` | Pit Master Weckmann, matching `quest_pit_training` |
+
+Pinned by `tests/integration/audit03g-npc-coverage.test.js` (coverage · the 68 keys · vocabulary
+resolution · the EB-giver derivation re-asserted from the live corpus, not hard-coded).
+
 ---
 
 ## BIRKA — Act I (Nodes: BA, SL, IN, TA, bar, CP, CY, CQ, FR, MM)
