@@ -3,13 +3,34 @@
 # MAPS — The Shattered Codex
 ### Island World Grid Map & Node Network Reference
 
-> **Grid system:** Columns C01–C26 (west→east), Rows R01–R16 (north→south). Each cell is a 2-letter code. `WW` = water (ocean, impassable without boat). Sky nodes (CO, HC) float above the island. Mythic-east nodes (GA, KT, OP) are on a distant island reachable by sky road — their grid position reflects relative east direction. All node connections are derived from `CELL_GRID` adjacency; no stored edge data exists.
+> # ⚠️ READ THIS FIRST (§AUDIT-03l, 2026-07-29)
+>
+> **The node-code and coordinate tables in the first half of this file are HISTORICAL** — they
+> describe the retired **26×16** projection, and **81 of the 92 codes in the legend do not exist
+> in the game.** Each such section now carries a ⚠️ HISTORICAL heading and is kept verbatim as the
+> record of that era. **For any live answer, use the generated index:**
+>
+> | Question | Live source |
+> |----------|-------------|
+> | What is this node's code / cell / act / terrain? | **[`docs/maps/node-index.md`](docs/maps/node-index.md)** · `npm run nodes` · `./api.sh get node <CODE>` |
+> | What does the grid actually look like here? | `node scripts/render-region.js <r0> <r1> <c0> <c1>` |
+> | Is the world connected? | `./api.sh reachability` (100% from LHR) · `./api.sh broken` (0) |
+> | What does a legacy code (`SF`, `CQ`, `CI`…) mean? | the **LEGACY CODE MAP** at the bottom of `docs/maps/node-index.md` |
+>
+> Taking a node code from a hand-maintained table is what put `activateNode:"SF"` on eight quests
+> in `710bb75` and sent two of them to the wrong city for two months (§AUDIT-03c). The generated
+> index is gate-fenced by `check:walk` gate #12 (`npm run check:nodeindex`) so it cannot drift.
+
+> **Grid system (26×16 era — historical):** Columns C01–C26 (west→east), Rows R01–R16 (north→south). Each cell is a 2-letter code. `WW` = water (ocean, impassable without boat). Sky nodes (CO, HC) float above the island. Mythic-east nodes (GA, KT, OP) are on a distant island reachable by sky road — their grid position reflects relative east direction. **Live grid:** 90×360 (§CELL-02), nodes at r 2–73 / c 154–249. All node connections are derived from `CELL_GRID` adjacency; no stored edge data exists — that part is still true.
 
 ---
 
-## TINY MAP — Overview (Zones)
+## TINY MAP — Overview (Zones) ⚠️ **HISTORICAL (the 26×16 era)**
 
 *Each cell represents a broad geographic zone. Use for orientation only.*
+
+> **⚠️ The zone letters below are 26×16-era node codes and are not `NODE_MAP` keys (§AUDIT-03l).**
+> Kept as the record of that era. Live: [`docs/maps/node-index.md`](docs/maps/node-index.md) (`npm run nodes`).
 
 ```
      W  CE  C  E  ME
@@ -25,7 +46,12 @@
 
 ---
 
-## FULL MAP — Node Grid (26×16)
+## FULL MAP — Node Grid (26×16) ⚠️ **HISTORICAL — superseded by the §CELL-02 grid**
+
+> **⚠️ Not the live world (§AUDIT-03l).** The live grid is 90×360 with nodes at r 2–73 / c 154–249,
+> and none of the two-letter codes below is a `NODE_MAP` key. Kept as the record of the 26×16 era.
+> **To see the real grid: `node scripts/render-region.js <r0> <r1> <c0> <c1>`** (ASCII window over the
+> live sea/lane/road/settlement layers); node codes + live cells: [`docs/maps/node-index.md`](docs/maps/node-index.md).
 
 *Two-letter node codes. `WW` = water. Non-node land cells shown as `..`. Epic Battleground nodes (E*) appear at WW cells only where the terrain has a logical override (deep forest, underwater cave, frozen waste, sky-adjacent spire). Mythic-east nodes shown at far right; reach by walking east via sky road.*
 
@@ -51,27 +77,51 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 
 ---
 
-## LEGEND — Two-Letter Code Reference
+## NODE CODE REFERENCE → **[`docs/maps/node-index.md`](docs/maps/node-index.md)** (generated)
 
-> ## ⚠️ THE CODES IN THIS TABLE ARE NOT `NODE_MAP` KEYS (§AUDIT-03c, measured 2026-07-29)
+**To look up a node code, read the generated index — never a table in this file.**
+
+```bash
+npm run nodes                 # regenerate docs/maps/node-index.md from roll2hit-v3.html
+./api.sh get node CDG         # the other live answer
+```
+
+`docs/maps/node-index.md` lists **all 416 nodes** — code · `Node #` · terrain · act · live
+`NODE_COORDS` cell · sleep flag · label · inline NPC — parsed by the same `wbapi-core`
+extractor the `:1367` server and every `scripts/check-*.js` use, exactly as `npm run stats`
+(§DX-01g) does for counts. It carries a **LEGACY CODE MAP** at the bottom for reading older
+docs, lab reports and commit messages (`SF`→`STN`, `CQ`→`CDG`, `CI`→`LHR`, …). It is
+gate-fenced: `npm run check:nodeindex` (gate #12 of `check:walk`) fails if it drifts from the
+game, so it cannot go stale the way the historical legend below did.
+
+---
+
+## LEGEND — Two-Letter Code Reference ⚠️ **HISTORICAL (the 26×16 era) — NOT LIVE**
+
+> ## ⚠️ NOTHING IN THIS SECTION IS CURRENT (§AUDIT-03c/03l, measured 2026-07-29)
 >
-> **73 of the 76 rows below name a code that does not exist in the game.** This legend
-> predates the airport-code naming the live `NODE_MAP` uses, and it was never migrated.
-> `SL`→`BMA`, `CI`→`LHR`, `IN`→`TLL`, `CY`→`HKG`, `SF`→`STN`, `CQ`→`CDG`, `AT`→`RAI`, and
-> so on for every row; the **Node #** column is still correct and is the recovery key
-> (`NODE_MAP[k].num`). `CI` is the worst trap — it *does* exist, but as the Chancery Court
-> (num 429), not Birka's streets. The **⚠️ PLANNED** markers here are unreliable too: the
-> `CQ` row still reads *"not yet in HTML"* for content (the 7-quest Ally Cat arc at `CDG`)
-> that has shipped and been playable for months.
+> **81 of the 92 rows below name a code that does not exist in the game, and the other 11
+> name nodes the world removed. The `Grid Cell` column is dead too** — it is the retired
+> 26×16 projection, while live `NODE_COORDS` runs r 2–73 / c 154–249. This legend predates
+> the airport-code naming and was never migrated. It is **kept verbatim as the record of
+> that era**; the live answer is the generated index linked above.
+>
+> `SL`→`BMA` · `CI`→`LHR` · `IN`→`TLL` · `CY`→`HKG` · `SF`→`STN` · `CQ`→`CDG` · `AT`→`RAI`
+> — the full recovered map (81 rows) is the LEGACY CODE MAP in `docs/maps/node-index.md`.
+> **The `Node #` column is the recovery key, but it is not sufficient on its own:** num 77
+> is held by *two* nodes (`MJF` and `CDG`), and several terrain keys were renamed since
+> (`epic_goblin`→`epic_goblin_cave`, `desert_caravan`→`arabia`, …), so the generator matches
+> by num and then **corroborates** by terrain or label. `CI` is the worst trap — it *does*
+> exist, but as the Chancery Court (num 429), not Birka's streets. The **⚠️ PLANNED**
+> markers are stale too: the `CQ` row still reads *"not yet in HTML"* for the 7-quest Ally
+> Cat arc that has been playable at `CDG` for months.
 >
 > **This table is the most likely source of `710bb75`.** Eight quests were authored with
 > `activateNode:"SF"`/`"CQ"`/`"FR"` — codes that appear nowhere but here — and `quest_tl_01`
 > carries `activateNode:"SF"` alongside a live `waypointNode:'STN'` **for the same node**,
 > which is what reading one field off this table and the other off `NODE_MAP` looks like.
 > The repair commit then guessed `SF → LCY` and sent two quests to the wrong city for two
-> months before §VM-01-G3 caught it. **Read `NODE_MAP` in
-> `roll2hit-v3.html`, or `./api.sh get node <code>`, for a node code — never this table.**
-> The full remap is filed as **§AUDIT-03l** in BACKLOG.md.
+> months before §VM-01-G3 caught it.
 
 | Code | Node # | Terrain | Act | Grid Cell | Story Description |
 |------|--------|---------|-----|-----------|-------------------|
@@ -188,7 +238,13 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 
 ---
 
-## NODE NETWORK — Travel Connections
+## NODE NETWORK — Travel Connections ⚠️ **HISTORICAL codes (the topology note still holds)**
+
+> **⚠️ The `XX(nn)` codes below are 26×16-era names, not `NODE_MAP` keys (§AUDIT-03l)** — the `(nn)`
+> `Node #` is the recovery key; resolve it in [`docs/maps/node-index.md`](docs/maps/node-index.md)'s
+> LEGACY CODE MAP. The *statement* this section makes — that connections are derived from grid
+> adjacency and no stored edge data exists — is still true and is why the codes were never updated.
+> Live reachability: `./api.sh reachability` (100% from LHR) and `./api.sh broken` (0).
 
 *Connections are derived at runtime from `CELL_GRID` grid adjacency — not stored as edge fields. This table documents the canonical story connections for reference. Directions reflect geographic movement on the cell grid.*
 
@@ -315,7 +371,11 @@ LITTORAL COURTS (§SIREN-01 — extended south from DS, Act IV)
 
 ---
 
-## COORDINATE INDEX — Alphabetical by Code
+## COORDINATE INDEX — Alphabetical by Code ⚠️ **HISTORICAL — dead codes AND dead coordinates**
+
+> **⚠️ Both columns are retired (§AUDIT-03l):** the codes are 26×16-era names and the `Row`/`Col`
+> values are the 26×16 projection, while live `NODE_COORDS` runs r 2–73 / c 154–249. The live
+> per-node cell is the `Cell (r,c)` column of [`docs/maps/node-index.md`](docs/maps/node-index.md).
 
 | Code | Node | Row | Col | Connects To |
 |------|------|-----|-----|-------------|
@@ -418,7 +478,11 @@ LITTORAL COURTS (§SIREN-01 — extended south from DS, Act IV)
 
 ---
 
-## SLEEP NODES (Inn Beats)
+## SLEEP NODES (Inn Beats) ⚠️ **HISTORICAL — 8 of the live 38**
+
+> **⚠️ Stale and incomplete (§AUDIT-03l):** the game has **38** `sleep:true` checkpoint nodes today,
+> not the 8 listed, and these codes are 26×16-era names. The live set is the 🛏 column of
+> [`docs/maps/node-index.md`](docs/maps/node-index.md). Kept as the record of the original inn beats.
 
 | Night | Code | Location | Cost |
 |-------|------|----------|------|

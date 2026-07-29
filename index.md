@@ -64,7 +64,8 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `docs/mechanics/mechanics-combat.md` | Battle Mode: combat flow, 1.5 AP economy, weapons, loot, leveling, defeat screens, save system | ✅ Split 2026-05-25 |
 | `docs/mechanics/mechanics-economy.md` | Story Mode: vendor system, NPC favorability, EB, NG+, state fields, F4 function reference | ✅ Split 2026-05-25 |
 | `docs/spec/combat.md` | Battle engine reference: initiative, overlay, Champion features, death saves, flee | ✅ §API-02 line-verified 2026-05-25 |
-| `maps.md` | World map: cell grid + extended areas, 410 node codes + coordinates, cell-adjacency network, gate locks, §MESH multiplayer map surfaces | ✅ Updated 2026-07-02 |
+| `maps.md` | World map: road net + room layer, navigation-engine function reference, §MESH multiplayer map surfaces. **Its node-code/coordinate tables are HISTORICAL (the retired 26×16 era) — §AUDIT-03l** | ✅ Updated 2026-07-29 |
+| `docs/maps/node-index.md` | **GENERATED — the live node reference** (all 416: code · `Node #` · terrain · act · live cell · 🛏 · label · inline NPC) + the LEGACY CODE MAP for reading pre-airport-code docs. `npm run nodes`; gate-fenced by `check:walk` #12 | ✅ Generated 2026-07-29 |
 | `story.md` | Main quest narrative: 42 story nodes across 8 acts, 7 Epic NPC profiles, prologue, endings, NG+ | ✅ 76 nodes covered |
 | `world.md` | DM manual: world history, 4 factions, 7 Epic NPC profiles, quest motivation, survival pressure | ✅ Reviewed 2026-05-24 |
 | `monsters.md` | 398 monsters: stat blocks by tier and terrain pool, 20 EB bosses, fish pool | ✅ Verified 2026-07-09 |
@@ -460,10 +461,12 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 | Town | Two-letter hub | Act | Inn | Key quest nodes | Epic NPC |
 |------|---------------|-----|-----|-----------------|----------|
-| **Birka** | BI | I + VIII | IN | CI · SL · CQ · TV · BA · CR · CY | Commander Bruhns |
-| **Tilbury** | TL | II | SF | DK · MQ · MS · AL | Magistra Muffat |
-| **Visby** | VS | V | IS / PC | SE · BK · GC · MC · CA · VC | Warlord Mordus |
-| **Weimar** | WM | VI | SQ | BQ · OU → GA · AR · MT | Archivus Sweelinck |
+| **Birka** | BI | I + VIII | `TLL` 🛏 | `LHR` · `BMA` · `CDG` · `MHQ` · `LLA` · `KRN` · `HKG` | Commander Bruhns |
+| **Tilbury** | TL | II | `SEN` 🛏 | `LCY` · `LGW` · `STN` · `GOT` | Magistra Muffat |
+| **Visby** | VS | V | `NAS` 🛏 | `SFT` · `VBY` · `TRD` · `FEZ` · `VIE` · `CLJ` 🛏 | Warlord Mordus |
+| **Weimar** | WM | VI | `NUE` 🛏 | `ERF` 🛏 · `EGE` → `HER` · `LYR` · `GVA` | Archivus Sweelinck |
+
+> **Codes remapped to live `NODE_MAP` keys 2026-07-29 (§AUDIT-03l)** — this table had carried the retired 26×16 names (`CI`/`SF`/`CQ`/`SQ`…). Two corrections beyond the rename: the **Inn** column had named `SF`/`IS`, neither of which is a `sleep:true` node — the real checkpoints are `SEN` (Aboard the Tilbury Star) and `NAS` (Pirate Cave); and Visby's `BK` was the *Broken Tooth Tavern* = **`VBY`**, not the live `BK` (Birka Shore), one of the two code collisions the generated LEGACY CODE MAP flags. The `Two-letter hub` column is a *town* label, not a node code. Live per-node detail incl. all 38 🛏 checkpoints: [`docs/maps/node-index.md`](docs/maps/node-index.md).
 
 > See `docs/story/story-flowchart.md` for full node-to-node movement graph and arc overlays.
 
@@ -505,7 +508,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `_LEVEL_SHIELD_GIFT` | Magic shield gifts on milestone levels: L3 → +1 Shield, L11 → +2 Shield |
 | `XP_BY_TIER` | Legacy tier XP; kept for reference — L12+ uses `AC × maxHP` formula |
 | `BOSS_COMMANDER_AUROS` | AC22/HP300/ATK+12/3d8+6; final boss at CO node; requires Lv20 + 7 shards |
-| `VENDOR_NODES` | Set of node codes with vendor access (5 nodes: BA/MQ/SF/IS/BK) |
+| `VENDOR_NODES` | Set of node codes with vendor access (5 nodes: `LLA`/`LGW`/`STN`/`PDL`/`BK`) |
 | `XP_LEVELS` | 20-entry array; max 195,000 XP at L20 |
 | `LOOT_TABLE` | 20-entry d20 drop table (dead code — replaced by `_D100_TABLE`) |
 
