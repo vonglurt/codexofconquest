@@ -53,6 +53,26 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 
 ## LEGEND — Two-Letter Code Reference
 
+> ## ⚠️ THE CODES IN THIS TABLE ARE NOT `NODE_MAP` KEYS (§AUDIT-03c, measured 2026-07-29)
+>
+> **73 of the 76 rows below name a code that does not exist in the game.** This legend
+> predates the airport-code naming the live `NODE_MAP` uses, and it was never migrated.
+> `SL`→`BMA`, `CI`→`LHR`, `IN`→`TLL`, `CY`→`HKG`, `SF`→`STN`, `CQ`→`CDG`, `AT`→`RAI`, and
+> so on for every row; the **Node #** column is still correct and is the recovery key
+> (`NODE_MAP[k].num`). `CI` is the worst trap — it *does* exist, but as the Chancery Court
+> (num 429), not Birka's streets. The **⚠️ PLANNED** markers here are unreliable too: the
+> `CQ` row still reads *"not yet in HTML"* for content (the 7-quest Ally Cat arc at `CDG`)
+> that has shipped and been playable for months.
+>
+> **This table is the most likely source of `710bb75`.** Eight quests were authored with
+> `activateNode:"SF"`/`"CQ"`/`"FR"` — codes that appear nowhere but here — and `quest_tl_01`
+> carries `activateNode:"SF"` alongside a live `waypointNode:'STN'` **for the same node**,
+> which is what reading one field off this table and the other off `NODE_MAP` looks like.
+> The repair commit then guessed `SF → LCY` and sent two quests to the wrong city for two
+> months before §VM-01-G3 caught it. **Read `NODE_MAP` in
+> `roll2hit-v3.html`, or `./api.sh get node <code>`, for a node code — never this table.**
+> The full remap is filed as **§AUDIT-03l** in BACKLOG.md.
+
 | Code | Node # | Terrain | Act | Grid Cell | Story Description |
 |------|--------|---------|-----|-----------|-------------------|
 | SL | 51 | city_slums | I | R04,C16 | Birka Slums — vermin hunting ground (The Vermin Pit), N of CI; connects N→DF |

@@ -86,9 +86,19 @@ bulk-default is gone. The last 68 unanchored quests were derived one family at a
 Pinned by `tests/integration/audit03g-npc-coverage.test.js` (coverage · the 68 keys · vocabulary
 resolution · the EB-giver derivation re-asserted from the live corpus, not hard-coded).
 
+**Prefer the profile key when registries 2 and 3 name the same person (§AUDIT-03c/k).** A node's
+inline `npc` string normalizes to a key that is often the *same character* as a `NPC_DIALOGUES` /
+`BIRKA_NPC` profile under a different spelling, and **both** pass `npcKeyOk` — so `_questsByNpc`
+files one person under two headings. Measured live: **six** such alias pairs exist in the 297-key
+vocabulary — `jimmy_two-tails`⇄`jimmy` · `innkeeper_brynn`⇄`brynn` · `commander_bruhns`⇄`auros` ·
+`archivus_ptolemy_sweelinck`⇄`archivus_sweelinck` · `bard_tomas_couperin`⇄`quill` ·
+`city_fence`⇄`pachelbel` — plus `city_guard_captain`⇄`yael`, where both sides carry quests today.
+Of the six, only `jimmy_two-tails` had a live split (`quest_cat_06`, since collapsed to `jimmy`).
+Until `npcKeyVocab()` learns an alias map (§AUDIT-03k), **anchor to the profile key by hand.**
+
 ---
 
-## BIRKA — Act I (Nodes: BA, SL, IN, TA, bar, CP, CY, CQ, FR, MM)
+## BIRKA — Act I (Nodes: BA, SL, IN, TA, bar, CP, CY, CDG, AMS, MM)
 
 ### City Streets (BA) — NODE 1
 
@@ -185,7 +195,7 @@ resolution · the EB-giver derivation re-asserted from the live corpus, not hard
 
 ---
 
-### Cat Quarter (CQ) — NODE 77
+### Cat Quarter (`CDG`) — NODE 77
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
@@ -199,15 +209,19 @@ resolution · the EB-giver derivation re-asserted from the live corpus, not hard
 
 **Activation model (§VM-01-G3, 2026-07-28):** the chain is declaratively staged at CDG via `gate:` + `activateNode:'CDG'` — `cat_01` unconditional → `cat_02` (questsDone `cat_01`) → `cat_03`/`cat_05`/`cat_void` (questsDone `cat_02`) → `cat_04` (questsDone `cat_03`) → `cat_06` (questsDone `cat_04`+`cat_05`). The Jimmy/Sandy/Tommy arrival narrations ride the quests' `onActivate` fields. (Before G3, appended duplicate `activateNode:"CDG"` fields made the WHOLE chain activate on first arrival — the storyRender stanzas' staging had silently died.)
 
+**Node code (§AUDIT-03c, 2026-07-29):** the node is **`CDG`**, num 77, label *"The Cat Quarter"* — never `CQ`. `CQ` was author shorthand that `710bb75` remapped away; the only `CQ_*` strings left in the engine are the three **pseudo-battle codes** `CQ_TAZ` / `CQ_BOSS` / `CQ_KING`, which are `pendingBattle.nodeCode` labels for the panel-launched boss fights, not nodes. Audit verdict: `cat_05`/`cat_06`/`cat_void` → `CDG` is **right** — corroborated by the node's own label + inline npc (Jimmy Two-Tails), by `waypointNode:'CDG'`, and by the boss-button panel that guards on `node.code === 'CDG'`. One correction applied: `quest_cat_06` had been anchored to `jimmy_two-tails` (the CDG inline-name slug) while its three siblings use the `NPC_DIALOGUES` profile key `jimmy` — the same character under two index headings (§AUDIT-03k). Now `jimmy` on all four.
+
 ---
 
-### Fishmonger's Row (FR) — NODE 79
+### Fishmonger's Row (`AMS`) — NODE 79
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
 | `quest_la_riva_01` | "What Remains" | [ACCOMPLISHMENT] | 1 | `connieMet` | [✅ LIVE §GR] |
 | `quest_la_riva_02` | "The Weight of a Net" | [BATTLE] ×5 + drop | 1 | 500gp + Aldo Friendly | [✅ LIVE §GR] |
 | `quest_la_riva_03` | "The Account Book" | [ACCOMPLISHMENT] | 1 | Kenickie Dear Friend + `laRivaComplete` | [✅ LIVE §GR] |
+
+**Node code + activation model (§AUDIT-03c, 2026-07-29):** the node is **`AMS`**, num 79, label *"Fishmonger's Row"* — never `FR`. The `FR` shorthand survives only in the arc's design IDs (`Q-FR-01/02/03`) and in the engine's own hook/handler comments (`_nodeHookLaRivaRow`, guarded on `node.code === 'AMS'`; the `frCatKillCount` counter). Audit verdict: `FR → AMS` is **right**, and the arc is legitimately **bi-nodal** — Kenickie sends you east from `CDG`, Connie and Aldo are at `AMS`, and the account book goes back to Kenickie at `CDG` (hence `la_riva_03`'s `waypointNode:'CDG'`). All three quests carry **`activateNode:null`** and are staged by code, not by arrival: `la_riva_01` by the `CQ_KING` defeat handler, `02` by Connie's first-visit hook at `AMS`, `03` by Aldo's hook once the net + 5 kills are in. `710bb75`'s appended `activateNode:"AMS"` on `02`/`03` would have mass-activated them past that staging; §VM-01-G3 removed it (and §AUDIT-03a removed `la_riva_01`'s).
 
 ---
 

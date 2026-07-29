@@ -190,14 +190,16 @@ The lake itself does not change. The fish are still there. The sign still says Y
 
 > **§VM-01-G3 revival note.** The arc had shipped as code but was PARTLY DEAD in play: `NODE_MAP.TL` carried no `code` field, so the Adjutant Vonn interaction — Q-TL-02's only completion path — never rendered, killing the chain from Q-TL-02 onward. The node is fixed, the quests now carry real gates (`tl_01` unconditional at STN · `tl_02` `tlLedgerRead` · `tl_03` questsDone `tl_02`) + `activateNode` (the appended `LCY` on tl_01/tl_03 was a wrong-target SF→LCY dead-code remap; SF = the Storefront = STN), and Ori's reward flows through `quest_tl_03`'s own onComplete chain exactly once. The old "Act IV+" leg on Q-TL-03 was structurally dead (`actNumber` = the current node's act, constant per node) and is retired in favor of the quest chain.
 
-Two new named NPCs in the Tilbury harbor district (nodes TL + SF):
-- **Harbor Master Rennau** (SF docks) — keeps the ledger of ships that haven't come back; starts Impartial; Dear Friend after Q-TL-03. He has the ledger Road Companion Dessa (§XVIII) references.
+Two new named NPCs in the Tilbury harbor district (nodes `TL` + `STN`; the arc's older prose calls `STN` "SF" — see the §AUDIT-03c note below):
+- **Harbor Master Rennau** (`STN`, the Map Shop / storefront docks) — keeps the ledger of ships that haven't come back; starts Impartial; Dear Friend after Q-TL-03. He has the ledger Road Companion Dessa (§XVIII) references.
 - **Adjutant Vonn** (TL adjutant's office) — Conclave embargo enforcer; starts Impartial; caps at Friendly; holds the Conclave's position throughout.
 
 Quest chain Q-TL-01 through Q-TL-03: "The Conclave's Weight"
 - Q-TL-01: obtain `ship_manifest` readable item (the *Harrow*, a missing ship carrying Scholar Kings correspondence consigned to Isolde Voss eleven months ago); `tlLedgerRead`.
 - Q-TL-02: choose how to handle the harbor embargo — report to Muffat (Q65 cross-ref), deliver to Birka contact, or leave it; sets `tlEmbargoChallenged` or `tlEmbargoDismissed`.
-- Q-TL-03: Act IV+ only; Ori (Harrow survivor) appears at SF docks; her account cross-references §XII apex predators if fishing overhaul is implemented; `ori_account` readable item; Rennau reaches Dear Friend.
+- Q-TL-03: Act IV+ only; Ori (Harrow survivor) appears at the `STN` docks; her account cross-references §XII apex predators if fishing overhaul is implemented; `ori_account` readable item; Rennau reaches Dear Friend.
+
+> **§AUDIT-03c (2026-07-29) — the dead-code remap audit closed here.** `710bb75` ("Fix 8 activateNode errors") moved eight quests off three codes that were never `NODE_MAP` keys: **`SF` → the Map Shop `STN`** (the commit guessed `LCY` — wrong, fixed by §VM-01-G3), **`CQ` → `CDG`** (The Cat Quarter), **`FR` → `AMS`** (Fishmonger's Row). All three identifications now hold corpus-wide: **0** of 2,853 quests name a non-existent node in `activateNode` *or* `waypointNode`, pinned by `tests/integration/audit03c-node-refs.test.js`. The shorthand survives only in **prose and the older docs** — most of all in `maps.md`'s legend table, where 73 of 76 rows still use the pre-airport-code names and which is the likeliest place the eight bad values were copied from (§AUDIT-03l). Read `NODE_MAP` for a node code, never a doc table.
 
 The `ship_manifest` cross-references §XVI: if `wmFirstResearcherKnown`, the consignee (Isolde Voss) is recognized. No new monsters. Two new readable items. See plan-archive.md §XIX for full dialogue and state flags.
 
