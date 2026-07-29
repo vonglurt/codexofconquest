@@ -120,6 +120,14 @@ Geography (projection `col=180+°lon, row≈69.75−°lat`): `TLL(10,204) → SP
 - **FBR — The Skill Fabrika** (`skill_fabrika`): cyberpunk jack-in "brain-download" trade school. **NPC: Technician Iosif.** Signature battle: Sim Overload vs `trainer_bot_prime` (mLevel-4 capstone).
 - **TVR — Rzhev Transit Waystation** (`soviet_transit`): rest stop (sleep) + the road to the dark Station 7. **NPC: Quartermaster Lena** (seeds the SVO thread).
 
+> **⚠️ §AUDIT-03e (2026-07-29) — this corridor was shipped dead and is now live for the first time.**
+> All five nodes (SPB/KMS/ZVD/FBR/TVR) omit the `code:` field in `NODE_MAP`, so `node.code` was
+> `undefined` at every one of them: **`NPC_DIALOGUE[node.code]` missed, so none of the five NPCs above
+> were ever talkable** (the Talk button stayed disabled); `quest_kg_01` never activated on arrival;
+> ZVD's and FBR's battles shared one `defeatedBattles[undefined]` slot with each other (win one, the
+> other reads as already defeated); and the Rest card advertised "The First Inn (TLL) — 166 moves"
+> instead of TVR 4 cells away. The `code = key` backfill fixed all of it — see maps.md §NODE_MAP.
+>
 > **DM note:** No Codex Shard, no main-quest connection — optional Act I content, a second on-ramp for a fresh character. Reuses/extends the cyberpunk anchors HKG (Neon Undercity) + SVO (Station 7). Monsters: monsters.md §"Soviet-Cyberpunk Training Tier." **NPC dialogue trees + the ~10–12 UQF quest chain are §KG Increment 3.** Design: `lab-reports/lab-report-kg-russia-kindergarten-zones.md`.
 
 ---

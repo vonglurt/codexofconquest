@@ -17,6 +17,30 @@ Each quest entry uses the following tags:
 
 ---
 
+## Arrival activation and the §AUDIT-03e seam (2026-07-29)
+
+A quest lists on arrival when `_uqfActivateAtNode` finds it via `_questsByNode(node.code)` and its
+`gate` passes. Until §AUDIT-03e that lookup was **dead at 287 of the 416 nodes**: those NODE_MAP
+entries omit the redundant `code:` field, so `node.code` was `undefined` and the index returned
+nothing. **2,283 quests named one of them in `activateNode`** — including whole shipped arcs
+(§MATH-01's `quest_math_*`, §KG's `quest_kg_*`) that had never activated in live play.
+
+The `code = key` backfill (maps.md §NODE_MAP) fixes the lookup. Activation is unblocked **selectively**,
+because most of those 2,283 are the §AUDIT-03d imported-chain corpus:
+
+| Shape | Behaviour at a backfilled node |
+|-------|-------------------------------|
+| Real `gate:` **or** a `completion:` clause | Activates normally (staged by its own gate) |
+| Vacuous `gate:{}` **and** no `completion:` — a free-floating vignette with no objective | **Held** pending §AUDIT-03d staging |
+
+Measured: **5** quests newly fire on arrival across all 287 nodes (the §KG + §MATH-01 chain heads and
+`mq_4` at BK), worst node 1 — well under the live worst of 31 at NUE. Without the seam, WM alone would
+fire **151** in one arrival, act4/act5 finales ahead of their own act1. **When authoring a quest for a
+backfilled node, give it a real gate or a real completion** — an objective-less `gate:{}` vignette will
+not list until §AUDIT-03d lands.
+
+---
+
 ## The `npc` field — authoring metadata, not gameplay (§AUDIT-03b, 2026-07-29)
 
 `quest.npc` **anchors a quest to an NPC for authoring purposes only.** The game client

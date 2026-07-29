@@ -552,6 +552,18 @@ See `docs/spec/spec-corridors.md` for the full historical spec.
 
 > **Source of truth:** `roll2hit-v3.html`. This section documents all functions that read or write map/navigation state. Every function listed here is covered by at least one flowchart below.
 >
+> **§AUDIT-03e — the `code` field is a runtime backfill, not authored data.** 287 of the 416 authored
+> entries omit the redundant `code:` field (only 129 carry it, and **no entry has `code !== key`**). One
+> line immediately after the `WORLDBUILDER:NODE_MAP:END` marker fills it in from the key at load:
+> `Object.keys(NODE_MAP).forEach(k => { if (!NODE_MAP[k].code) NODE_MAP[k].code = k; })`. Before that
+> fix `node.code` was `undefined` at those 287 nodes, so they **all shared the single `undefined` slot**
+> in every per-node state map (`visited`, `defeatedBattles`, `sleptAtNodes`, `pendingBattle.nodeCode` →
+> the corpse record) and every `NPC_DIALOGUE` / `VENDOR_NODES` / `_bfsGridPath` / board-seed lookup
+> missed. **When authoring a new node you may omit `code:`** — the backfill supplies it — but never
+> write a `code:` that differs from the key. The set captured before the assignment,
+> `NODE_CODE_BACKFILLED`, is the §AUDIT-03d seam in `_uqfActivateAtNode` and the pin that keeps
+> `_renderFinalMap` at its historical 129 cells.
+>
 > **CS architecture note:** `NODE_MAP` is a flat plain object keyed by node code — O(1) lookup. `CELL_GRID` is a sparse object keyed by `"r,c"` string — O(1) reverse lookup. `NODE_COORDS` is a flat object keyed by code — O(1). Navigation is a synchronous MUD-style state machine: one cell at a time, no concurrency, no stored edge data. `cellMove(dir)` is fully synchronous; the only async element is the `setTimeout` in `_enterEmptyCell` that delays encounter start by 300ms.
 
 ---
@@ -652,7 +664,7 @@ MILEPOINT E  Journal + Navigate button show "(n steps, NE)"; ★ clears on arriv
 
 | Constant | Type | Shape | Purpose |
 |----------|------|-------|---------|
-| `NODE_MAP` | plain object | `{code: {num,name,label,act,text,npc,battle,loot,sleep,...}}` | 422 named nodes; all N/S/E/W/portal/spire fields stripped (§CELL-01 + §CELL-13) — exits derived from CELL_GRID adjacency only |
+| `NODE_MAP` | plain object | `{code: {num,name,label,act,text,npc,battle,loot,sleep,...}}` | 416 named nodes; all N/S/E/W/portal/spire fields stripped (§CELL-01 + §CELL-13) — exits derived from CELL_GRID adjacency only. **The key IS the code** — see the §AUDIT-03e note below |
 | `NODE_COORDS` | plain object | `{code: {r,c}}` | Grid position for each node; drives CELL_GRID and map render. **Grid rules:** adjacent nodes should share the same row or column and be ≤ 4 cells apart. Junction intermediaries no longer needed. |
 | `CELL_GRID` | plain object (computed) | `{"r,c": code}` | Reverse lookup: grid coordinate → node code; built at startup from NODE_COORDS |
 | `ROAD_RUNS` / `ROAD_CELLS` | RLE object / computed Set | `{row:[[c0,c1],…]}` / `"r,c"` keys | §NAV-01b fungal road net (400 cells, 88 junctions) — terrain `'road'`, encounter rate 0. Regenerate via ♻ Reweave only |

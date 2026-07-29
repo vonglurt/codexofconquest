@@ -9287,7 +9287,21 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
 };
 // ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
 
-const ACT_NAMES = ['','Act I — Birka','Act II — Tilbury','Act III — The Wilds','Act IV — The Deep','Act V — Visby','Act VI — Desert','Act VII — Mythic Circuit','Act VIII — The Reckoning'];
+// ── §AUDIT-03e: the `code` backfill — a NODE_MAP key IS that node's code ──────────────────────
+// 287 of the 416 authored entries omit the redundant `code:` field, but every runtime consumer
+// reads `node.code`: the per-node state keys (`visited`, `defeatedBattles`, `sleptAtNodes`,
+// `junctionsSeen`, `pendingBattle.nodeCode` → the corpse record), the NPC_DIALOGUE / VENDOR_NODES /
+// NODE_PANELS / CORELLI_APPEARANCES / NODE_COORDS lookups, and the Warrant's Board day-seed. At a
+// code-less node `node.code` was `undefined` — so all 287 of them SHARED the single `undefined`
+// slot in every one of those state maps (visit one, and the other 286 read as already-visited;
+// win one battle, and the other five read as already-defeated).
+// The backfill is provably identity-preserving: NO entry in the corpus has `code !== key`
+// (asserted corpus-wide by tests/integration/audit03e-node-code.test.js).
+// NODE_CODE_BACKFILLED must be captured BEFORE the assignment — it is the §AUDIT-03d seam below.
+const NODE_CODE_BACKFILLED = new Set(Object.keys(NODE_MAP).filter(k => !NODE_MAP[k].code));
+Object.keys(NODE_MAP).forEach(k => { if (!NODE_MAP[k].code) NODE_MAP[k].code = k; });
+
+const ACT_NAMES =['','Act I — Birka','Act II — Tilbury','Act III — The Wilds','Act IV — The Deep','Act V — Visby','Act VI — Desert','Act VII — Mythic Circuit','Act VIII — The Reckoning'];
 
 /* Grid coordinates — spaced layout r:1–41, c:2–60 (Chebyshev ≥ 2 between all nodes) */
 // ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆
@@ -27215,7 +27229,11 @@ function _renderFinalMap() {
   canvas.innerHTML = '';
   overlay.style.display = 'flex';
   // Render a simplified warmth grid using NODE_COORDS
-  const allSlugs = Object.keys(NODE_MAP).filter(k => NODE_MAP[k] && NODE_MAP[k].code);
+  // §AUDIT-03e — this filter historically selected the 129 entries that carried an explicit
+  // `code:` field; after the backfill it would widen to all 416 and push the 9-column grid from
+  // ~15 rows to ~47, far past the overlay's viewport. Held at the historical set on purpose —
+  // which nodes the ending map SHOULD warm is an authored call, filed as §AUDIT-03e-FU.
+  const allSlugs = Object.keys(NODE_MAP).filter(k => NODE_MAP[k] && !NODE_CODE_BACKFILLED.has(k));
   allSlugs.forEach(slug => {
     const cell = document.createElement('div');
     cell.className = 'final-map-cell';
@@ -29729,7 +29747,20 @@ function storyCollectLoot(node) {
 // returns exactly the non-epic quests whose activateNode === node.code.
 function _uqfActivateAtNode(node) {
   const msgs = [];
+  // §AUDIT-03e SEAM — the backfill makes 2,283 quests newly reachable by arrival at the 287 nodes
+  // that gained a `code`. Most are the §AUDIT-03d imported-chain corpus: a vacuous `gate:{}` and
+  // no `completion` clause, i.e. a free-floating vignette with no objective of its own. Turning
+  // those on wholesale would fire 151 at WM in a single arrival, act4/act5 finales ahead of their
+  // own act1 — so they stay held until §AUDIT-03d's staging design lands (their chains' own
+  // `mission_bit` flags are the ready-made gates). Everything with a real gate or a real
+  // completion activates normally, which is what revives the arcs this row exists to fix.
+  // Measured: 5 quests newly fire on arrival across all 287 nodes (the §KG and §MATH-01 chain
+  // heads + mq_4 at BK — all authored, all previously dead), worst node 1; today's LIVE worst is
+  // NUE at 31. The guard is scoped to backfilled nodes ONLY, so no shipped node changes behaviour.
+  // DELETE this guard and NODE_CODE_BACKFILLED together when §AUDIT-03d lands.
+  const _held = NODE_CODE_BACKFILLED.has(node.code);
   _questsByNode(node.code).forEach(q => {
+    if (_held && !q.completion && (!q.gate || Object.keys(q.gate).length === 0)) return;
     if (!S_story.quests[q.id]) {
       if (q.activateCond && !q.activateCond()) return;
       if (q.schema === 'UQF-1.0' && !QuestRuntime.canActivate(q.id)) return;   // §ARCH-01 Phase 2 — declarative gate
@@ -32213,9 +32244,11 @@ function storyRender(node, prefix) {
       SSJ:_ssjNpcs, NUE:_nueNpcs.concat(_sqNpcs) };
     // §NPC-01-B: curated literal wins for the 14 legacy / state-gated nodes (parity anchor); every
     // other node falls back to the map derived from BIRKA_NPC_PROFILES.node. Key by the node KEY
-    // (S_story.currentCode): 291 of 418 NODE_MAP entries omit an explicit `code` field, so `node.code`
-    // is undefined for them — but both maps are keyed on the node key, which currentCode always is
-    // (and which equals node.code wherever that field is present, so the 14 legacy nodes are unchanged).
+    // (S_story.currentCode). This was the FIRST local workaround for what §AUDIT-03e later fixed at
+    // the source: 287 of 416 entries omitted an explicit `code` field, so `node.code` was undefined
+    // for them. Since the §AUDIT-03e backfill `node.code` is always the node key, so the
+    // `|| S_story.currentCode` fallback is now unreachable — kept as a belt-and-braces default for
+    // a synthetic node object (e.g. the CY_VOID spread at Layer 41) that carries no map key.
     const _npcNodeKey = node.code || S_story.currentCode;
     // §NPC-01-SF6: MERGE the derived map on top of a curated node instead of letting the literal fully
     // shadow it (the SF5 root cause, generalized). A rich BIRKA_NPC_PROFILES profile whose .node points

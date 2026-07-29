@@ -82,10 +82,13 @@ test.describe('§NPC-01-B — render map derived from BIRKA_NPC_PROFILES.node', 
         deadNodes: nodes.filter(n => !NODE_MAP[n]),
         distinctKeyCount: distinctKeys.size,
         renderableNodes: nodes.filter(n => m[n].some(k => NPC_DIALOGUES[k])).length,
-        // many derived nodes omit an explicit NODE_MAP[key].code field — so the render lookup MUST key
-        // on the node key (currentCode), not node.code, or these render nothing. Guards the §NPC-01-B fix.
-        codelessDerivedNodes: nodes.filter(n => NODE_MAP[n] && !NODE_MAP[n].code).length,
-        serBardoHasCodeField: !!(NODE_MAP[serBardoNode] && NODE_MAP[serBardoNode].code),
+        // Many derived nodes omitted an explicit `code:` field in source — so the render lookup had
+        // to key on the node key (currentCode), not node.code, or they rendered nothing. §AUDIT-03e
+        // retired that hazard at the source (code is backfilled from the key at load), so the check
+        // is now: those same nodes are the backfilled set, and node.code resolves to the key there.
+        backfilledDerivedNodes: nodes.filter(n => NODE_CODE_BACKFILLED.has(n)).length,
+        derivedCodesAllResolve: nodes.every(n => NODE_MAP[n].code === n),
+        serBardoWasCodeless: NODE_CODE_BACKFILLED.has(serBardoNode),
         serBardoNode, serBardoDerived, wired, lhrCurated, serBardoNodeCurated,
       };
     });
@@ -98,8 +101,9 @@ test.describe('§NPC-01-B — render map derived from BIRKA_NPC_PROFILES.node', 
     expect(r.renderableNodes, 'many nodes now yield a renderable NPC (has both profile and dialogue)').toBeGreaterThan(100);
     expect(r.lhrCurated, 'LHR stays a curated literal key — parity anchor, literal wins').toBe(true);
     expect(r.serBardoNodeCurated, "ser_bardo's node is NOT curated, so derivation applies there").toBe(false);
-    expect(r.codelessDerivedNodes, 'many derived nodes omit node.code → lookup must key on currentCode').toBeGreaterThan(50);
-    expect(r.serBardoHasCodeField, 'PSAGLD is one such code-less node (the end-to-end regression case)').toBe(false);
+    expect(r.backfilledDerivedNodes, 'many derived nodes were code-less in source — the §NPC-01-B hazard').toBeGreaterThan(50);
+    expect(r.serBardoWasCodeless, `${r.serBardoNode} is one such node (the end-to-end regression case)`).toBe(true);
+    expect(r.derivedCodesAllResolve, '§AUDIT-03e: node.code now resolves to the key at every derived node').toBe(true);
     expect(pageErrors).toEqual([]);
   });
 
