@@ -98,15 +98,38 @@ test.describe('§KG Increment 2 — Russia kindergarten zones', () => {
     expect(r.spbBattle == null).toBe(true);  // talk/hub node — encounters come from terrain + Hunt Mode
   });
 
+  // §DX-02e (2026-07-29): this test used to pin six hardcoded sample cells from the
+  // lab report's original road-lay. `ROAD_RUNS` is GENERATED (scripts/build-roads.js),
+  // and §DX-01a's regen rerouted the TLL→SPB leg off the Gulf-of-Finland sea cell
+  // 10,207 via the row-8 TUO corridor — so four of the six samples stopped being road
+  // while the design promise (encounter-free travel between the zone nodes) stayed
+  // true. Assert the PROMISE against the engine's own route, not the generator's
+  // coordinates: pin the property, and a future re-lay can never make this red again
+  // unless it actually breaks the corridor.
   test('the corridor is real road (encounter-free travel between nodes)', async ({ page }) => {
-    const r = await page.evaluate(() => {
-      // Sample cells laid between the nodes (lab report §2 road ranges).
-      const path = ['10,205', '10,209', '11,210', '11,212', '12,214', '14,216'];
-      return path.map((k) => ({ k, road: ROAD_CELLS.has(k), rate: TERRAIN_ENCOUNTER_RATE.road }));
-    });
-    for (const c of r) {
-      expect(c.road, `${c.k} is a road cell`).toBe(true);
-      expect(c.rate).toBe(0);   // road terrain never rolls an encounter
+    const CORRIDOR = ['TLL', 'SPB', 'KMS', 'ZVD', 'FBR', 'TVR', 'SVO'];
+    const r = await page.evaluate((codes) => {
+      // The exact router auto-travel walks (§NAV-01d road-weighted Dijkstra: road /
+      // sea-lane cells cost 1, everything else 2) — window.__maptabs._roadGridPathCore.
+      const route = window.__maptabs._roadGridPathCore;
+      const legs = [];
+      for (let i = 0; i < codes.length - 1; i++) {
+        const a = codes[i], b = codes[i + 1];
+        const path = route(NODE_COORDS[a], NODE_COORDS[b]);
+        // Every cell but the destination node itself is walked as terrain; a cell is
+        // safe if it is road (rate 0) or is itself a settlement (arrival, not a roll).
+        const offRoad = path.slice(0, -1)
+          .map((p) => `${p.r},${p.c}`)
+          .filter((k) => !ROAD_CELLS.has(k) && !cellCode(k));
+        legs.push({ a, b, steps: path.length, cells: path.map((p) => `${p.r},${p.c}`), offRoad });
+      }
+      return { legs, roadRate: TERRAIN_ENCOUNTER_RATE.road };
+    }, CORRIDOR);
+
+    expect(r.roadRate).toBe(0);           // road terrain never rolls an encounter
+    for (const leg of r.legs) {
+      expect(leg.steps, `${leg.a} → ${leg.b} has a route`).toBeGreaterThan(0);
+      expect(leg.offRoad, `${leg.a} → ${leg.b} route [${leg.cells.join(' ')}] leaves the road at`).toEqual([]);
     }
   });
 });
