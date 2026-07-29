@@ -174,6 +174,49 @@ function parseSanitized(block, name) {
 // Targeted field patcher — edits a string field in raw JS source in-place.
 // Avoids full re-serialization so function bodies are preserved.
 // ═══════════════════════════════════════════════════════════════════════════
+// §AUDIT-03b — return the first regex match that sits at brace/bracket depth 0 of `body`,
+// skipping string literals and comments (the comment-awareness hazard class, §AUDIT-03f).
+// `re` must carry the /g flag. Returns the RegExp match object, or null if none qualifies.
+function firstTopLevelMatch(body, re) {
+  // Precompute the depth at every index once, so N candidate matches cost one scan.
+  // depth[i] === 0 means "index i is real code at the entry's own top level".
+  // Anything inside a string, a comment, or a nested {}/[]/() gets a non-zero marker,
+  // so a candidate match there can never be chosen.
+  const IN = -1;                       // sentinel for string/comment interiors
+  const depth = new Int32Array(body.length + 1).fill(IN);
+  let d = 0, i = 0;
+  while (i < body.length) {
+    const c = body[i], n = body[i + 1];
+    if (c === '/' && n === '/') {                       // line comment
+      while (i < body.length && body[i] !== '\n') i++;
+      continue;
+    }
+    if (c === '/' && n === '*') {                       // block comment
+      i += 2;
+      while (i < body.length && !(body[i] === '*' && body[i + 1] === '/')) i++;
+      i += 2;
+      continue;
+    }
+    if (c === '"' || c === "'" || c === '`') {          // string literal
+      const q = c; i++;
+      while (i < body.length) {
+        if (body[i] === '\\' && q !== '`') { i += 2; continue; }
+        if (body[i] === q) { i++; break; }
+        i++;
+      }
+      continue;
+    }
+    depth[i] = d;                                       // real code at this depth
+    if (c === '{' || c === '[' || c === '(') d++;
+    else if (c === '}' || c === ']' || c === ')') d--;
+    i++;
+  }
+  re.lastIndex = 0;
+  let m;
+  while ((m = re.exec(body)) !== null) if (depth[m.index] === 0) return m;
+  return null;
+}
+
 function patchStringField(sectionSrc, entryKey, field, newValue) {
   // Escape for a double-quoted JS literal: backslashes, quotes, and — critically —
   // real newlines/CRs become \n/\r escapes so multi-paragraph values never inject a
@@ -191,8 +234,12 @@ function patchStringField(sectionSrc, entryKey, field, newValue) {
   // Locate `field:` and its opening quote, then scan to the matching close quote while
   // respecting backslash escapes — so an embedded \" inside the old value (e.g. a quoted
   // line of dialogue) is not mistaken for the terminator, which would leave a corrupt tail.
-  const startRe = new RegExp(`(\\b${field}\\s*:\\s*)(["\`'])`, 'm');
-  const m = startRe.exec(body);
+  // §AUDIT-03b — the match must be the entry's OWN field, at brace depth 0 of the body.
+  // Before this, the first textual match won, so `put quest <id> npc=…` on a quest whose
+  // bits contain `{ kind:'favor', npc:'…' }` silently patched the NESTED favor npc and
+  // left the top-level field untouched (6 quests in the §AUDIT-03b re-anchor hit this).
+  const startRe = new RegExp(`(\\b${field}\\s*:\\s*)(["\`'])`, 'gm');
+  const m = firstTopLevelMatch(body, startRe);
   if (!m) return null;
   const q = m[2];
   const valStart = m.index + m[0].length;   // first char after the opening quote
@@ -530,7 +577,7 @@ function _classifyQuest(q) {
 const WBAPI = {
   nodeMap: {}, nodeCoords: {}, questDb: {}, monsterPool: {},
   monsterDrops: {}, worldDb: {}, birkaNpcs: {},
-  fishPool: [], nightFishPool: [], lakeMagicDb: {}, itemDb: {}, npcDialogues: {}, d100Table: [],
+  fishPool: [], nightFishPool: [], lakeMagicDb: {}, itemDb: {}, npcDialogues: {}, ebNpcDialogue: {}, d100Table: [],
   _terrainToMonsters: {}, _monsterToTerrains: {},
   _questsByNode: {}, _questsByNpc: {}, _questsByWaypoint: {},
   _questFlags: {}, _flagToQuests: {}, _questArcs: {},
@@ -570,6 +617,11 @@ const WBAPI = {
     this.itemDb        = parseSimple(extrSection(src,'ITEM_DB'), 'ITEM_DB') || {};
     this.npcDialogues  = parseSanitized(extrSection(src,'NPC_DIALOGUES'), 'NPC_DIALOGUES') || {};
     this.d100Table     = parseArr(extrSection(src,'D100_TABLE'), '_D100_TABLE') || [];
+    // §AUDIT-03b — the Epic-Battleground quest-givers. Keyed by battleground node code,
+    // each entry names a real, rendered quest-giver (EB_NPC_DIALOGUE lives OUTSIDE the
+    // WORLDBUILDER markers, so it is read straight off the raw source).
+    this.ebNpcDialogue = parseSanitized(src, 'EB_NPC_DIALOGUE') || {};
+    this._npcVocab     = null;   // invalidate the cached npcKeyVocab() union
     const qSrc = extrSection(src,'QUEST_DB');
     this._rawQuestSrc = qSrc || '';
     this.questDb = parseSanitized(qSrc, 'QUEST_DB');
@@ -751,6 +803,25 @@ const WBAPI = {
   },
 
   // ── Quests ──
+  // §AUDIT-03b — the single source of truth for "is this a real NPC key?".
+  // Four registries hold real, rendered speakers, and a quest may legitimately be
+  // anchored to any of them:
+  //   1. BIRKA_NPC profiles          (the card-bearing NPC corpus)
+  //   2. NODE_MAP inline `npc`       (normalized: lowercased, spaces → underscores)
+  //   3. NPC_DIALOGUES keys          (arc speakers — jimmy/solvak/benedikt_rasp/…)
+  //   4. EB_NPC_DIALOGUE givers      (the 20 Epic-Battleground quest-givers, by name)
+  // Before this, only (1)+(2) were accepted, so every (3)/(4) speaker advise-warned.
+  npcKeyVocab() {
+    if (this._npcVocab) return this._npcVocab;
+    const norm = s => String(s).toLowerCase().replace(/\s/g,'_');
+    const v = new Set(Object.keys(WBAPI.birkaNpcs || {}));
+    for (const n of Object.values(WBAPI.nodeMap || {})) if (n && n.npc) v.add(norm(n.npc));
+    for (const k of Object.keys(WBAPI.npcDialogues || {})) v.add(k);
+    for (const e of Object.values(WBAPI.ebNpcDialogue || {})) if (e && e.npc) v.add(norm(e.npc));
+    return (this._npcVocab = v);
+  },
+  npcKeyOk(key) { return !key || WBAPI.npcKeyVocab().has(key); },
+
   quests: {
     all()       { return Object.entries(WBAPI.questDb).map(([id,q])=>({...q,id})); },
     byNode(code){ return (WBAPI._questsByNode[code]||[]).map(id=>({...WBAPI.questDb[id],id})); },
@@ -802,6 +873,7 @@ const WBAPI = {
       return {ok: errors.length === 0, errors};
     },
 
+
     // §ARCH-02 Phase 1 — world-logic cross-reference advisory
     advise(id) {
       const q = WBAPI.questDb[id]; if (!q) return {ok:false,warnings:[`quest "${id}" not found`]};
@@ -809,11 +881,8 @@ const WBAPI = {
       if (q.activateNode && !WBAPI.nodeMap[q.activateNode]) warnings.push(`activateNode "${q.activateNode}" not in NODE_MAP`);
       if (q.waypointNode && !WBAPI.nodeMap[q.waypointNode]) warnings.push(`waypointNode "${q.waypointNode}" not in NODE_MAP`);
       const npcKey = q.npc || q.npcKey;
-      if (npcKey) {
-        const inBirka = !!WBAPI.birkaNpcs[npcKey];
-        const inMap   = Object.values(WBAPI.nodeMap).some(n => n.npc && n.npc.toLowerCase().replace(/\s/g,'_') === npcKey);
-        if (!inBirka && !inMap) warnings.push(`npc "${npcKey}" not found in BIRKA_NPC or NODE_MAP`);
-      }
+      if (npcKey && !WBAPI.npcKeyOk(npcKey))
+        warnings.push(`npc "${npcKey}" not found in BIRKA_NPC, NODE_MAP, NPC_DIALOGUES or EB_NPC_DIALOGUE`);
       // §EDITOR-03 W8b — UQF shape advisories (legacy authoring is dead post-W7d)
       if (q.schema !== 'UQF-1.0') warnings.push('not schema UQF-1.0 — legacy quests have no completion path post-W7d');
       if (q.type === 'skill_check' && !(q.bits || []).some(b => b.kind === 'skill_check'))

@@ -4622,7 +4622,7 @@ async function route(req, res) {
     {
       const VA = new Set(['str','dex','con','int','wis','cha']);
       const _nodeOk = code => !code || nodeKeys.has(code);
-      const _npcOk  = key  => !key  || !!WBAPI.birkaNpcs[key] || Object.values(WBAPI.nodeMap).some(n => n.npc && n.npc.toLowerCase().replace(/\s/g,'_') === key);
+      const _npcOk  = key  => WBAPI.npcKeyOk(key);   // §AUDIT-03b — shared 4-registry vocabulary (wbapi-core)
       for (const [id, q] of Object.entries(WBAPI.questDb)) {
         for (const bit of (q.bits || [])) {
           const p = `${id} bit[${bit.kind}]`;
@@ -9972,7 +9972,7 @@ async function route(req, res) {
       {
         const nodeKeys  = new Set(Object.keys(WBAPI.nodeMap));
         const monKeys   = new Set(Object.keys(WBAPI.monsterPool));
-        const _npcOk    = k => !k || !!WBAPI.birkaNpcs[k] || Object.values(WBAPI.nodeMap).some(n => n.npc && n.npc.toLowerCase().replace(/\s/g,'_') === k);
+        const _npcOk    = k => WBAPI.npcKeyOk(k);     // §AUDIT-03b — shared 4-registry vocabulary (wbapi-core)
         const worldErrors = [];
         if (body.activateNode && !nodeKeys.has(body.activateNode))
           worldErrors.push(`activateNode "${body.activateNode}" not found in NODE_MAP`);
@@ -9980,7 +9980,7 @@ async function route(req, res) {
           worldErrors.push(`waypointNode "${body.waypointNode}" not found in NODE_MAP`);
         const npcKey = body.npc || body.npcKey;
         if (npcKey && !_npcOk(npcKey))
-          worldErrors.push(`npc "${npcKey}" not found in BIRKA_NPC or NODE_MAP`);
+          worldErrors.push(`npc "${npcKey}" not found in BIRKA_NPC, NODE_MAP, NPC_DIALOGUES or EB_NPC_DIALOGUE`);
         // §EDITOR-03 (UQF W8b): walk the RUNTIME bit vocabulary — q.bits, an
         // array-valued onComplete, and skill_check onPass/onFail outcome chains.
         const _walkBits = (arr, path, fn) => (Array.isArray(arr) ? arr : []).forEach((bit, i) => {
@@ -9994,7 +9994,7 @@ async function route(req, res) {
             if (bit.key && !monKeys.has(bit.key)) worldErrors.push(`${p}: monster key "${bit.key}" not in MONSTER_POOL`);
           }
           if (bit.kind === 'favor' && bit.npc && !_npcOk(bit.npc))
-            worldErrors.push(`${p}: npc "${bit.npc}" not found in BIRKA_NPC or NODE_MAP`);
+            worldErrors.push(`${p}: npc "${bit.npc}" not found in BIRKA_NPC, NODE_MAP, NPC_DIALOGUES or EB_NPC_DIALOGUE`);
         };
         _walkBits(body.bits, 'bit', _checkBit);
         if (Array.isArray(body.onComplete)) _walkBits(body.onComplete, 'onComplete', _checkBit);

@@ -17,6 +17,33 @@ Each quest entry uses the following tags:
 
 ---
 
+## The `npc` field — authoring metadata, not gameplay (§AUDIT-03b, 2026-07-29)
+
+`quest.npc` **anchors a quest to an NPC for authoring purposes only.** The game client
+(`roll2hit-v3.html`) has **zero** quest-level `.npc` reads — nothing a player sees depends
+on it. Its consumers are the worldbuilder display, the server's `_questsByNpc` index,
+`./api.sh advise` (an unresolvable key is a *warning*), `./api.sh audit` (a **missing**
+field is an *error* — every quest must be anchored), and the NPC delete-guards.
+
+**The accepted vocabulary is four registries** (`WBAPI.npcKeyOk`, `js/wbapi-core.js`):
+
+| # | Registry | Key form |
+|---|----------|----------|
+| 1 | `BIRKA_NPC` profiles | the profile key (`long_john_silver_sen`) |
+| 2 | `NODE_MAP` inline `npc` | display name normalized — lowercased, spaces → `_` |
+| 3 | `NPC_DIALOGUES` | the dialogue key (`jimmy`, `solvak`, `benedikt_rasp`) |
+| 4 | `EB_NPC_DIALOGUE` | the Epic-Battleground giver's name, normalized |
+
+**Anchoring rule, in priority order:** the scene's named speaker if that speaker has a key
+→ else the arc/chain's convening NPC → else the quest's `activateNode` inline NPC.
+Do **not** leave it unset (that is an audit error), and do **not** bulk-default it — the
+`ea02faf` sweep did exactly that and mis-stamped 203 quests as Long John Silver's.
+
+**Bulk re-anchoring:** `./api.sh batch-npc updates.json` (`[{id, npc}, …]`) — one parse and
+one save for the whole batch instead of N full-file rewrites.
+
+---
+
 ## BIRKA — Act I (Nodes: BA, SL, IN, TA, bar, CP, CY, CQ, FR, MM)
 
 ### City Streets (BA) — NODE 1

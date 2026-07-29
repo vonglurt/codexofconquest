@@ -258,6 +258,7 @@ The game is a D&D 5e world stored in a single HTML file. The API manages: nodes 
   ./api.sh audit [--map] [--data] [--section node|quest|monster|terrain|coords]  integrity scan
   ./api.sh chain <quest-id>                     quest dependency chain
   ./api.sh advise <quest-id>                    §ARCH-02 Ph5: quest fields + chain + advisory in one call
+  ./api.sh batch-npc <updates.json>             §AUDIT-03b: bulk quest.npc re-anchor, one save ([{id,npc},…])
   ./api.sh export <collection>                  dump JSON (node_map quest_db monster_pool world_db all)
   ./api.sh location [code]                      composite view (no code = list all)
   ./api.sh speak <npc> "<prompt>" --state neutral|friendly|dearFriend
@@ -600,6 +601,28 @@ const CMD = {
       const diff = s.worldHash && srv.worldHash && srv.worldHash !== s.worldHash ? `  ${C.yellow}≠ different world${C.reset}` : '';
       process.stdout.write(`  🖥 ${srv.name || srv.addr}  ·  🌍 ${srv.worldTag || srv.worldHash}  ·  ${srv.engineVer}  ·  ${srv.addr}  ·  👥 ${srv.playerCount | 0}${diff}\n`);
     }
+  },
+
+  // §AUDIT-03b — named wrapper for POST /api/batch/npc (bulk quest.npc re-anchor,
+  // one parse + one save for the whole batch instead of N full-file rewrites).
+  // Usage:  ./api.sh batch-npc updates.json     (or pipe the JSON on stdin)
+  //   file/stdin shape: [{id, npc}, ...]  or  {updates:[{id, npc}, ...]}
+  async 'batch-npc'(pos, flags) {
+    await requireServer();
+    const [, file] = pos;
+    const piped = file ? null : await readStdin();
+    let raw = piped;
+    if (file) {
+      try { raw = JSON.parse(require('fs').readFileSync(file, 'utf8')); }
+      catch (e) { die(`Cannot read updates file "${file}": ${e.message}`); }
+    }
+    if (!raw) die('Usage: ./api.sh batch-npc <updates.json>   (or pipe JSON on stdin)');
+    const updates = Array.isArray(raw) ? raw : (raw.updates || []);
+    if (!updates.length) die('No updates found — expected [{id, npc}, ...] or {updates:[...]}');
+    info(`batch-npc: ${updates.length} quest npc re-anchors in one save`);
+    const r = await request('POST', '/api/batch/npc', { updates });
+    if (r.status >= 400) { printError(r); process.exit(1); }
+    printResult(r.body, flags);
   },
 
   // §ARCH-02 Phase 5 — composite advise: quest fields + chain check in one call
@@ -2284,6 +2307,8 @@ ${C.bold}═══════════════════════�
     ./api.sh put quest mq_2 waypointNode=FRO
     ./api.sh put quest mq_3 activateNode=SDQ
     ./api.sh put quest sq_1 npc=brynn
+    ./api.sh batch-npc updates.json          # §AUDIT-03b: bulk npc re-anchor, ONE save
+                                             #   updates.json = [{"id":"quest_x","npc":"key"}, ...]
     ./api.sh put quest quest_wis_01 checkDC=14
     ./api.sh put quest quest_wis_01 checkStat=WIS
     ./api.sh put quest sq_2 xpAward=50 reward=20
