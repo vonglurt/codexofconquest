@@ -67,25 +67,33 @@ test.describe('§XP-01 — universal effort XP (misses + failed checks)', () => 
   test('failed skill-check grants 25% of reward XP, once per quest', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
-      storyNewGame({ str:8, dex:8, con:8, int:8, wis:8, cha:8 });   // low stats → checks fail
-      const _rand = Math.random; Math.random = () => 0.01;          // d20 ≈ 1 → total well under any DC
+      storyNewGame({ str:8, dex:8, con:8, int:8, wis:8, cha:8 });
+      // §DX-02f: force the FAIL by raising the DC out of reach, not by stubbing
+      // Math.random — §VM-01-B moved _rollSkill's d20 onto the seeded stream
+      // (QuestRuntime._rollSkill → E.rng()), so a Math.random stub controls nothing
+      // and the check became a coin flip. Same idiom warrants-board.test.js uses to
+      // force a deterministic PASS (sc.dc = -100). Restored after each call.
+      const forceFail = (id, fn) => {
+        const sc = QUEST_DB[id].bits.find(b => b.kind === 'skill_check');
+        const savedDc = sc.dc; sc.dc = 999;      // unreachable: max total is d20(20)+mod+prof
+        try { return fn(); } finally { sc.dc = savedDc; }
+      };
 
       // quest_muffat_01: onPass reward xp:150 → effort = round(150 * 0.25) = 38
       const xpA0 = S_story.xp;
-      _resolveQuestUQF('quest_muffat_01');
+      forceFail('quest_muffat_01', () => _resolveQuestUQF('quest_muffat_01'));
       const firstFail = S_story.xp - xpA0;
       // a SECOND failure of the same quest must grant 0 (once-per-quest guard)
       S_story.quests['quest_muffat_01'] = 'active';                 // pretend it's live again
       const xpA1 = S_story.xp;
-      _resolveQuestUQF('quest_muffat_01');
+      forceFail('quest_muffat_01', () => _resolveQuestUQF('quest_muffat_01'));
       const secondFail = S_story.xp - xpA1;
 
       // rix_09_act1: onPass:[] (no reward bit) → effort 0
       const xpB0 = S_story.xp;
-      _resolveQuestUQF('rix_09_act1');
+      forceFail('rix_09_act1', () => _resolveQuestUQF('rix_09_act1'));
       const noRewardFail = S_story.xp - xpB0;
 
-      Math.random = _rand;
       return { firstFail, secondFail, noRewardFail, guarded: !!S_story.effortXpQuests['quest_muffat_01'] };
     });
     expect(r.firstFail).toBe(38);        // round(150 * 0.25)

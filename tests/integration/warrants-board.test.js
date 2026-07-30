@@ -1013,7 +1013,13 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
       const standingBefore = S_story.warrantStanding;
       const q = QUEST_DB[pin.id];
       const sc = q.bits.find(b => b.kind === 'skill_check');
-      S_story.currentCode = q.activateNode; S_story.playerR = 5; S_story.playerC = 9;
+      // §DX-02f: stand on the quest node at the cell the ENGINE says that node occupies.
+      // Hardcoding (5,9) here made currentCode and playerR/C disagree — a state no step can
+      // produce — so storyRender's §CELL-03 sync (31618) "moved" the player by correcting the
+      // coords, and this test read that as a warp. Pin the property, not a coordinate (§DX-02e).
+      S_story.currentCode = q.activateNode;
+      S_story.playerR = NODE_COORDS[q.activateNode].r;
+      S_story.playerC = NODE_COORDS[q.activateNode].c;
       const posBefore = { c: S_story.currentCode, r: S_story.playerR, col: S_story.playerC };
       const savedDc = sc.dc; sc.dc = -100;            // force a deterministic PASS
       _rollCeremonia(pin.id);                          // REAL resolve → _resolveQuestUQF (onPass) → _creditWarrant
