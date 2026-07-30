@@ -96,6 +96,26 @@ vocabulary — `jimmy_two-tails`⇄`jimmy` · `innkeeper_brynn`⇄`brynn` · `co
 Of the six, only `jimmy_two-tails` had a live split (`quest_cat_06`, since collapsed to `jimmy`).
 Until `npcKeyVocab()` learns an alias map (§AUDIT-03k), **anchor to the profile key by hand.**
 
+**Write the registry KEY, never the display name (§AUDIT-03h, 2026-07-30).** Ten quests held a
+human-readable name (`npc:"Emmer Finch"`) where the key belongs (`emmer`). Capitals and spaces
+resolve in **no** registry, so those quests advise-warned forever and `_questsByNpc` filed them
+under a heading no other quest could reach. All ten are normalized; **the corpus now holds zero
+unresolvable `npc` values**, and `audit03b-npc-anchor.test.js`'s tolerated list is empty:
+
+| Quest(s) | Was | Now | Why |
+|----------|-----|-----|-----|
+| `quest_guide_01/02/03/05` | `"Emmer Finch"` | `emmer` | the `BIRKA_NPC` profile at `SSJ`, the arc's own `activateNode`; `quest_guide_06`'s `onComplete` already spends `{kind:'favor', npc:'emmer'}` |
+| `quest_guide_04` | `"Bog Mudwhistle"` | `emmer` | **Bog is not an NPC** — he is a `NPC_TOUR_OPPONENTS` row (key `bog`), a Yugurt-tournament opponent in none of the four registries. The corpus precedent is unambiguous: the sibling `quest_tour_*` quests are each titled after an opponent (`quest_tour_03` is literally *"Bog's Terms"*) and every one anchors to `emmer`. Beat 4 of Emmer's own six-quest arc |
+| `quest_guide_06` | `"The Fisherman"` | `the_fisherman` | an `NPC_DIALOGUES` key **and** `SSJ`'s inline `npc` normalized — registries 2 and 3 agree on the identical slug |
+| `quest_scar_01/03/04` | `"Gret Orrens"` | `gret` | the profile at `NUE`; `quest_scar_04`'s `onComplete` already spends `{kind:'favor', npc:'gret'}` |
+| `quest_scar_02` | `"Pier Falk"` | `pier` | the profile at `NUE`; the §NPC-01 card map already pushes `'pier'` on `pierFalkWarm` |
+
+⚠️ **The key is not always the name slugified.** `Gret Orrens` → `gret`, not `gret_orrens`;
+`Pier Falk` → `pier`. Resolve every key against `WBAPI.npcKeyVocab()` before writing it.
+And note the inverse: **`NODE_MAP`'s inline `npc` is *supposed* to be a display name** (`SSJ.npc
+= 'The Fisherman'`) — normalizing *that* would be the bug, since it is what makes the key
+resolve. Pinned by `tests/integration/audit03h-npc-normalize.test.js`.
+
 ---
 
 ## BIRKA — Act I (Nodes: BA, SL, IN, TA, bar, CP, CY, CDG, AMS, MM)

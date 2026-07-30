@@ -38,20 +38,9 @@ test.describe('§AUDIT-03b — quest npc anchoring', () => {
       .filter(([, q]) => q && q.npc && !W.npcKeyOk(q.npc))
       .map(([id, q]) => `${id}=${q.npc}`);
     // The 10 legacy un-normalized values (display names like "Emmer Finch" rather than
-    // `emmer`) predate this row and are tracked separately as §AUDIT-03h. Assert they are
-    // the ONLY unresolvable keys, so a new bad stamp cannot slip in unnoticed.
-    expect(bad.sort()).toEqual([
-      'quest_guide_01=Emmer Finch',
-      'quest_guide_02=Emmer Finch',
-      'quest_guide_03=Emmer Finch',
-      'quest_guide_04=Bog Mudwhistle',
-      'quest_guide_05=Emmer Finch',
-      'quest_guide_06=The Fisherman',
-      'quest_scar_01=Gret Orrens',
-      'quest_scar_02=Pier Falk',
-      'quest_scar_03=Gret Orrens',
-      'quest_scar_04=Gret Orrens',
-    ]);
+    // `emmer`) were normalized by §AUDIT-03h — the tolerated list is now EMPTY, so any
+    // unresolvable stamp at all is a regression. Derivations: audit03h-npc-normalize.test.js.
+    expect(bad.sort()).toEqual([]);
   });
 
   test('npcKeyOk accepts all four registries and rejects a bogus key', () => {
