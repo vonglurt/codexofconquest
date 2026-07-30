@@ -1479,7 +1479,11 @@ function saveAndRestart(res, status, payload) {
 // Returns the full HTTP response on the same connection.
 // expectedFields: { fieldName: expectedStringValue } — verified against reloaded data.
 // connectType/connectKey: optional, recomputed after reload for fresh connection metadata.
-function saveAndVerify(res, status, payload, expectedFields, connectType, connectKey) {
+// §DX-01d/i — `postVerify` runs AFTER the disk reload and returns extra payload
+// fields (or `{ok:false,error}` to fail the response). Deletes need it: their
+// proof of success is an ABSENCE in the re-parsed collections, which nothing in
+// the expectedFields path can express.
+function saveAndVerify(res, status, payload, expectedFields, connectType, connectKey, postVerify) {
   // 1. Save to disk
   const r = WBAPI.save();
   if (!r.ok) {
@@ -1529,8 +1533,12 @@ function saveAndVerify(res, status, payload, expectedFields, connectType, connec
     ? CONNECT[connectType](connectKey)
     : {};
 
+  // 4b. Caller-supplied post-reload assertion (see §DX-01d/i note above)
+  const extra = postVerify ? (postVerify() || {}) : {};
+  const postOk = extra.ok !== false;
+
   cors(res);
-  const httpStatus = verifyOk ? status : 422;
+  const httpStatus = (verifyOk && postOk) ? status : (postOk ? 422 : 500);
   res.writeHead(httpStatus, { 'Content-Type': 'application/json' });
   const out = {
     ...payload,
@@ -1539,6 +1547,7 @@ function saveAndVerify(res, status, payload, expectedFields, connectType, connec
     savePath: r.path,
     ...(verified.length > 0 ? { verified } : {}),
     ...(verifyOk ? {} : { ok:false, error:`field mismatch after reload: ${mismatches.join(', ')}` }),
+    ...extra,
   };
   logBody('out', out);
   res.end(JSON.stringify(out, null, 2));
@@ -11091,10 +11100,31 @@ async function route(req, res) {
     const ns = { node:WBAPI.nodes, quest:WBAPI.quests, monster:WBAPI.monsters, npc:WBAPI.npcs }[type];
     const del = ns.delete(key);
     const ent = r.entity || {};
+    if (!del.ok) {
+      logRow('DELETE failed', del.error || JSON.stringify(del.blockedBy || {}));
+      logResponse(method, url.pathname, 409, del.error || `delete blocked for ${type}:${key}`);
+      return json(res, 409, { ...del, wasEntity: r.entity });
+    }
     logRow('deleted', `${type} › ${key}${ent.label||ent.name||ent.title ? '  ·  ' + (ent.label||ent.name||ent.title) : ''}`);
-    logResponse(method, url.pathname, del.ok ? 200 : 409,
-      del.ok ? `deleted ${type}/${key}` : del.error);
-    return json(res, del.ok ? 200 : 409, { ...del, wasEntity: r.entity });
+    if (del.dropRemoved)   logRow('cascaded', `MONSTER_DROPS › ${key}`);
+    if (del.coordsRemoved) logRow('cascaded', `NODE_COORDS › ${key}`);
+    if (del.coordsWarning) logRow('coords', `${C.yellow}⚠ ${del.coordsWarning}${C.reset}`);
+    // §DX-01d/i — the delete family used to end here, at `json(...)`: no save, no
+    // reload, and (until WBAPI.deleteEntrySource) no source patch either, so the
+    // operator was told `✓ deleted` while the file on disk still held the entry.
+    // Persist through the same save+reload every other write path uses, then prove
+    // from the RE-PARSED collections that the entry is actually gone.
+    logResponse(method, url.pathname, 200, `deleted ${type}/${key}`);
+    return saveAndVerify(res, 200, { ...del, wasEntity: r.entity }, {}, null, null, () => {
+      const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
+      if (col[key]) {
+        logRow('verify', `${C.red}✗ ${type}:${key} survived save+reload — delete did NOT persist${C.reset}`);
+        return { ok:false, deleteVerified:false,
+          error:`${type} "${key}" is still present after save+reload — the delete did not persist` };
+      }
+      logRow('verify', `${C.green}✓ ${type}:${key} absent from disk after reload${C.reset}`);
+      return { deleteVerified:true };
+    });
   }
 
   // ── POST (special operations) ──

@@ -1499,6 +1499,8 @@ const CMD = {
   //   5. Wire <from>.dir = first junction, last junction.dir = <to>
   //
   // Signpost text is generated for each junction indicating the road name.
+  // ⚠️ DEPRECATED (§DX-01d) — planning only; --execute is refused. See the block
+  // below the arg parse for why, and for what to do instead.
   async highway(pos, flags) {
     const [, fromCode, toCode] = pos;
     if (!fromCode || !toCode) die('Usage: ./api.sh highway <from> <to> [--step N] [--dry-run] [--terrain type]');
@@ -1506,6 +1508,36 @@ const CMD = {
     const terrain  = flags.terrain || 'junction';
     const dryRun   = flags['dry-run'] !== undefined ? true : !flags.execute;
     const OPP = { N:'S', S:'N', E:'W', W:'E' };
+
+    // ── §DX-01d: --execute is DEPRECATED and refused, before any work ─────────
+    // What it actually did: drop sparse junction:true waypoint nodes every --step
+    // cells and wire them N/S/E/W. It laid ZERO road cells, so it never produced a
+    // road — and each waypoint referenced a `junction` terrain absent from
+    // WORLD_DB, which is precisely how J14/J15 became the check:invariants I1/I2
+    // reds that sat red until §DX-01a removed the nodes and build-roads.js --apply
+    // laid the real Tungas–Station 7 road.
+    //
+    // It is also unnecessary: a node on land contiguous with the main landmass is
+    // already walk-routable (./api.sh reachability is the authority — the mover
+    // walks cell by cell; the legacy edge graph is abandoned). Waypoints buy
+    // nothing but invariant violations.
+    //
+    // Refused up front, before the coordinate fetch, so it costs nothing and needs
+    // no server. Planning still works — re-run without --execute.
+    if (!dryRun) die([
+      'highway --execute is DEPRECATED (§DX-01d) — refusing to drop junction nodes.',
+      '',
+      'It laid ZERO road cells and created junction:true nodes on a terrain absent',
+      'from WORLD_DB — the direct cause of the J14/J15 check:invariants I1/I2 reds.',
+      '',
+      'What to do instead:',
+      '  • Reachability — nothing to do. A contiguous-land node is already walk-routable.',
+      '      ./api.sh reachability     # the authority (BFS from LHR); target 100%',
+      '  • An encounter-free ROAD between two nodes — lay real road cells:',
+      '      edit ROAD_RUNS in roll2hit-v3.html, then  node scripts/build-roads.js --apply',
+      '      verify with  npm run check:walk  (check:roads R1–R3)',
+      '  • Just the route plan — re-run without --execute (the default).',
+    ].join('\n'));
 
     // Fetch current state
     const [nmResp, coordResp] = await Promise.all([
@@ -1548,7 +1580,7 @@ const CMD = {
 
     if (dryRun) return;
 
-    // ── Execute ──────────────────────────────────────────────────────────────
+    // ── Execute (unreachable since §DX-01d — retained for the record) ─────────
     // Helper: spawn one junction in a given direction from a source node
     const spawnNext = async (srcCode, dir, overrideR, overrideC) => {
       const body = { from: srcCode, dir, dryRun: false, terrain,
@@ -2435,6 +2467,21 @@ ${C.bold}═══════════════════════�
     - Run ./api.sh chain <id> for quests (check canDelete)
     - Run ./api.sh location <code> for nodes (check quests/npcs)
 
+  Deletes are SOURCE-LEVEL and verified (§DX-01d/i, 2026-07-30). The entry line
+  is excised from the data section, the file is saved and re-parsed, and the
+  response carries deleteVerified:true only if the entry is really gone. Before
+  that fix every del was model-only: it printed "✓ deleted" and the entry came
+  back on the next parse.
+
+  Cascades, so no orphan is left for ./api.sh audit:
+    node    → its NODE_COORDS row
+    monster → its MONSTER_DROPS trophy entry
+
+  Refuses rather than corrupts: if excising the entry would change any other
+  entry in the section, nothing is written and the delete fails loudly.
+  Dependency guards are unchanged — a node with quests/NPCs, or a quest with
+  downstream dependents, is still blocked (409 + blockedBy).
+
   Examples:
     ./api.sh del quest sq_birka_rat
     ./api.sh del quest quest_old_01
@@ -2831,18 +2878,15 @@ ${C.bold}═══════════════════════�
     ./api.sh smart-connect GLA NID --execute
     ./api.sh smart-connect LHR CON --radius 8
 
-  Full junction highway (L-shaped route, elbow at corner):
-    ./api.sh highway LHR CON
-    ./api.sh highway LHR CON --execute
-    ./api.sh highway KOL REG --execute
-    ./api.sh highway REG VEN --execute
-    ./api.sh highway VEN CON --execute
-    ./api.sh highway CON SIN --execute
-    ./api.sh highway ANT JAR --execute
-    ./api.sh highway BGD SAM --execute
-    ./api.sh highway MAR CVP --execute
-    ./api.sh highway GLA NID --step 2 --execute
-    ./api.sh highway WOR REG --terrain junction --execute
+  Full junction highway (L-shaped route, elbow at corner) — ⚠️ PLANNING ONLY:
+    ./api.sh highway LHR CON            # route/elbow/step report (free, honest)
+    ./api.sh highway LHR CON --execute  # REFUSED since §DX-01d
+
+    --execute laid ZERO road cells and dropped junction:true nodes on a terrain
+    absent from WORLD_DB — the direct cause of the J14/J15 check:invariants reds.
+    A contiguous-land node is already walk-routable (./api.sh reachability is the
+    authority). For a real encounter-free road: edit ROAD_RUNS, then
+    node scripts/build-roads.js --apply, then npm run check:walk.
 
   Single junction node:
     ./api.sh junction LHR S
@@ -3040,7 +3084,7 @@ const SYNOPSIS = [
   `  ${C.green}find-open-location${C.reset} <city>         find open attachment points near a city  [--radius 8]`,
   `  ${C.green}connect${C.reset} <A> <dir> <B>              direct wire (warns on deg=3/4 issues)  [--force]`,
   `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain T] [--execute]`,
-  `  ${C.green}highway${C.reset} <from> <to>                full junction highway  [--step 4] [--execute]`,
+  `  ${C.green}highway${C.reset} <from> <to>                ⚠️ route PLANNING only  [--step 4]  (--execute refused, §DX-01d)`,
   `  ${C.green}fix-bidirectional${C.reset} [--execute]         fix all one-way links (A→B but B doesn't point back)`,
   `  ${C.green}cluster-bridge${C.reset} [--execute]             connect remaining isolated clusters`,
   `  ${C.green}migrate strip-exit-fields${C.reset} [--execute]   §CELL-14: strip dead N/S/E/W/portal/spire from NODE_MAP`,

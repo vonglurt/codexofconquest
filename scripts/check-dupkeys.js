@@ -41,42 +41,17 @@ function sectionText(src, name) {
 }
 
 // Scan an object-literal body, yielding events:
-//   {open:'{'|'['}, {close:'}'|']'}, {key, index} for every `key:` / `'key':`
-// that starts a property (key position = first token after `{` or `,`).
-// Handles // and /* */ comments and ' " ` strings (escapes honored, template
-// interiors treated as opaque). Ternary `cond ? a : b` colons never sit in key
-// position, so they are ignored by construction.
-function* scanTokens(body) {
-  let i = 0, expectKey = false;
-  const n = body.length;
-  while (i < n) {
-    const ch = body[i];
-    if (ch === '/' && body[i + 1] === '/') { i = body.indexOf('\n', i); if (i < 0) return; continue; }
-    if (ch === '/' && body[i + 1] === '*') { i = body.indexOf('*/', i); if (i < 0) return; i += 2; continue; }
-    if (ch === "'" || ch === '"' || ch === '`') {
-      const q = ch; const strStart = i; i++;
-      while (i < n && body[i] !== q) { if (body[i] === '\\') i++; i++; }
-      // a quoted string in key position is a quoted property name
-      if (expectKey) {
-        let j = i + 1; while (j < n && /\s/.test(body[j])) j++;
-        if (body[j] === ':') yield { key: body.slice(strStart + 1, i), index: strStart };
-        expectKey = false;
-      }
-      i++; continue;
-    }
-    if (ch === '{' || ch === '[') { yield { open: ch }; expectKey = ch === '{'; i++; continue; }
-    if (ch === '}' || ch === ']') { yield { close: ch }; expectKey = false; i++; continue; }
-    if (ch === ',') { expectKey = true; i++; continue; }
-    if (expectKey && /[A-Za-z_$]/.test(ch)) {
-      let j = i; while (j < n && /[A-Za-z0-9_$]/.test(body[j])) j++;
-      let k = j; while (k < n && /\s/.test(body[k])) k++;
-      if (body[k] === ':' && body[k + 1] !== ':') yield { key: body.slice(i, j), index: i };
-      expectKey = false; i = j; continue;
-    }
-    if (!/\s/.test(ch)) expectKey = false;
-    i++;
-  }
-}
+//   {open:'{'|'[', index}, {close:'}'|']', index}, {key, index} for every
+// `key:` / `'key':` that starts a property (key position = first token after
+// `{` or `,`). Handles // and /* */ comments and ' " ` strings (escapes
+// honored, template interiors treated as opaque). Ternary `cond ? a : b`
+// colons never sit in key position, so they are ignored by construction.
+//
+// §DX-01d/i — the scanner MOVED to js/wbapi-core.js and is imported here. This
+// gate and the source-level entry deleters (`WBAPI.deleteEntrySource`) must
+// agree on what an entry is: a private copy here would drift, and a scanner
+// that disagrees with the writer is the §AUDIT-03f silent-drop class again.
+const scanTokens = require(path.join(ROOT, 'js', 'wbapi-core.js'))._scanTokens;
 
 function auditSection(src, name, fails) {
   const text = sectionText(src, name);

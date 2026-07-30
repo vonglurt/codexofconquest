@@ -43,6 +43,106 @@ function sectionCloseIdx(src, name) {
   return idx > a ? idx : -1;
 }
 
+// §DX-01d/i — comment/string-safe token scan over an object-literal body.
+//
+// Moved here from scripts/check-dupkeys.js so the duplicate-key gate and the
+// source-level deleters share ONE scanner. Two scanners drift, and a scanner
+// that disagrees with the parser is exactly the §AUDIT-03f silent-drop class
+// (a section comment holding an arrow-fn example ate two whole quests).
+//
+// Yields, in source order:
+//   {open:'{'|'[' , index}   {close:'}'|']' , index}   {key, index}
+// for every `key:` / `'key':` in KEY POSITION (first token after `{` or `,`).
+// Handles // and /* */ comments and ' " ` strings (escapes honored, template
+// interiors opaque). Ternary `cond ? a : b` colons never sit in key position,
+// so they are ignored by construction.
+function* scanTokens(body) {
+  let i = 0, expectKey = false;
+  const n = body.length;
+  while (i < n) {
+    const ch = body[i];
+    if (ch === '/' && body[i + 1] === '/') { i = body.indexOf('\n', i); if (i < 0) return; continue; }
+    if (ch === '/' && body[i + 1] === '*') { i = body.indexOf('*/', i); if (i < 0) return; i += 2; continue; }
+    if (ch === "'" || ch === '"' || ch === '`') {
+      const q = ch; const strStart = i; i++;
+      while (i < n && body[i] !== q) { if (body[i] === '\\') i++; i++; }
+      // a quoted string in key position is a quoted property name
+      if (expectKey) {
+        let j = i + 1; while (j < n && /\s/.test(body[j])) j++;
+        if (body[j] === ':') yield { key: body.slice(strStart + 1, i), index: strStart };
+        expectKey = false;
+      }
+      i++; continue;
+    }
+    if (ch === '{' || ch === '[') { yield { open: ch, index: i }; expectKey = ch === '{'; i++; continue; }
+    if (ch === '}' || ch === ']') { yield { close: ch, index: i }; expectKey = false; i++; continue; }
+    if (ch === ',') { expectKey = true; i++; continue; }
+    if (expectKey && /[A-Za-z_$]/.test(ch)) {
+      let j = i; while (j < n && /[A-Za-z0-9_$]/.test(body[j])) j++;
+      let k = j; while (k < n && /\s/.test(body[k])) k++;
+      if (body[k] === ':' && body[k + 1] !== ':') yield { key: body.slice(i, j), index: i };
+      expectKey = false; i = j; continue;
+    }
+    if (!/\s/.test(ch)) expectKey = false;
+    i++;
+  }
+}
+
+// The depth-1 key list (entry names, in source order, duplicates preserved) of a
+// section body. Duplicates matter: the multiset is what proves a delete removed
+// exactly one entry and nothing else.
+function sectionTopKeys(body) {
+  const keys = [], stack = [];
+  for (const t of scanTokens(body)) {
+    if (t.open)  { stack.push(t.open); continue; }
+    if (t.close) { stack.pop(); continue; }
+    if (stack.length === 1) keys.push(t.key);
+  }
+  return keys;
+}
+
+// Character span [start,end) of ONE depth-1 entry inside a section body —
+// including its leading indentation, its trailing comma, any same-line trailing
+// comment, and the newline that ends it. Returns null when the key is absent.
+function entrySpan(body, key) {
+  const stack = [];
+  let start = -1, depthAtStart = -1, end = -1;
+  for (const t of scanTokens(body)) {
+    if (t.open) { stack.push(t.open); continue; }
+    if (t.close) {
+      const before = stack.length;
+      stack.pop();
+      if (start === -1) continue;
+      if (before === depthAtStart + 1) { end = t.index + 1; break; }  // the entry's own value closed
+      if (before === depthAtStart)     { end = t.index; break; }      // section closed first (primitive tail)
+      continue;
+    }
+    if (start === -1) {
+      if (stack.length === 1 && t.key === key) { start = t.index; depthAtStart = stack.length; }
+      continue;
+    }
+    // a sibling key while still at the entry's own depth → the value was a primitive
+    if (stack.length === depthAtStart) { end = t.index; break; }
+  }
+  if (start === -1) return null;
+  if (end === -1) end = body.length;
+
+  // Take the whole line when only indentation precedes the key.
+  const lineStart = body.lastIndexOf('\n', start) + 1;
+  const cutStart = body.slice(lineStart, start).trim() === '' ? lineStart : start;
+
+  // Absorb the trailing comma, then the rest of the line if it is blank or a comment.
+  let e = end;
+  while (e < body.length && (body[e] === ' ' || body[e] === '\t')) e++;
+  if (body[e] === ',') e++;
+  let eol = e;
+  while (eol < body.length && body[eol] !== '\n') eol++;
+  const tail = body.slice(e, eol).trim();
+  if (tail === '' || tail.startsWith('//')) e = eol < body.length ? eol + 1 : eol;
+
+  return { start: cutStart, end: e };
+}
+
 function extractObj(block, name) {
   if (!block) return null;
   const re = new RegExp(`(?:const|let|var)\\s+${name}\\s*=\\s*`);
@@ -718,6 +818,13 @@ const WBAPI = {
   // agree on where a section actually ends (see sectionCloseIdx above).
   _sectionCloseIdx: sectionCloseIdx,
 
+  // §DX-01d/i — the ONE comment/string-safe source scanner. `check:dupkeys`
+  // (scripts/check-dupkeys.js) reads its section keys through these, so the audit
+  // gate and the source-level deleters can never disagree about what an entry is.
+  _scanTokens: scanTokens,
+  _sectionTopKeys: sectionTopKeys,
+  _entrySpan: entrySpan,
+
   _findKey(col, idOrTitle) {
     if (col[idOrTitle] !== undefined) return idOrTitle;
     const needle = String(idOrTitle).toLowerCase();
@@ -813,10 +920,17 @@ const WBAPI = {
     byTier(t)    { return WBAPI.monsters.all().filter(m=>m.tier===t); },
     get(idOrName){ const k=WBAPI._findKey(WBAPI.monsterPool,idOrName); return k?{...WBAPI.monsterPool[k],key:k,drop:WBAPI.monsterDrops[k]||null,terrains:WBAPI._monsterToTerrains[k]||[]}:null; },
     put(id,data) { WBAPI.monsterPool[id]={...(WBAPI.monsterPool[id]||{}),...data}; return {ok:true,key:id}; },
+    // §DX-01i — deletes at SOURCE level (see WBAPI.deleteEntrySource). The trophy
+    // drop is cascaded: leaving it behind creates the orphan-drop error `./api.sh
+    // audit` already reports.
     delete(idOrName) {
       const k=WBAPI._findKey(WBAPI.monsterPool,idOrName); if(!k) return {ok:false,error:'not found'};
       const d=WBAPI._deps.monster(k); if(d.terrains.length) return {ok:false,blockedBy:d};
-      delete WBAPI.monsterPool[k]; return {ok:true,key:k};
+      const src=WBAPI.deleteEntrySource('MONSTER_POOL',k); if(!src.ok) return src;
+      const drop = WBAPI.monsterDrops[k] ? WBAPI.deleteEntrySource('MONSTER_DROPS',k) : null;
+      if (drop && drop.ok) delete WBAPI.monsterDrops[k];
+      delete WBAPI.monsterPool[k]; WBAPI._buildIndexes();
+      return {ok:true,key:k,line:src.line,...(drop&&drop.ok?{dropRemoved:drop.line}:{})};
     },
     // Rename display name globally across all terrains.
     rename(idOrName, newDisplayName) {
@@ -883,10 +997,13 @@ const WBAPI = {
       const k=WBAPI._findKey(WBAPI.birkaNpcs,idOrName)||idOrName;
       WBAPI.birkaNpcs[k]={...(WBAPI.birkaNpcs[k]||{}),...data}; return {ok:true,key:k};
     },
+    // §DX-01i — deletes at SOURCE level (see WBAPI.deleteEntrySource).
     delete(idOrName) {
       const k=WBAPI._findKey(WBAPI.birkaNpcs,idOrName); if(!k) return {ok:false,error:'not found'};
       const d=WBAPI._deps.npc(k); if(d.quests.length) return {ok:false,blockedBy:d};
-      delete WBAPI.birkaNpcs[k]; return {ok:true,key:k};
+      const src=WBAPI.deleteEntrySource('BIRKA_NPC',k); if(!src.ok) return src;
+      delete WBAPI.birkaNpcs[k]; WBAPI._buildIndexes();
+      return {ok:true,key:k,line:src.line};
     },
   },
 
@@ -932,10 +1049,13 @@ const WBAPI = {
       const k=WBAPI._findKey(WBAPI.questDb,idOrTitle)||idOrTitle;
       WBAPI.questDb[k]={...(WBAPI.questDb[k]||{}),...data}; return {ok:true,key:k};
     },
+    // §DX-01i — deletes at SOURCE level (see WBAPI.deleteEntrySource).
     delete(idOrTitle) {
       const k=WBAPI._findKey(WBAPI.questDb,idOrTitle); if(!k) return {ok:false,error:'not found'};
       const d=WBAPI._deps.quest(k); if(d.downstream.length) return {ok:false,blockedBy:d};
-      delete WBAPI.questDb[k]; return {ok:true,key:k};
+      const src=WBAPI.deleteEntrySource('QUEST_DB',k); if(!src.ok) return src;
+      delete WBAPI.questDb[k]; WBAPI._buildIndexes();
+      return {ok:true,key:k,line:src.line};
     },
 
     // §ARCH-02 Phase 1 — field-level validity check (§EDITOR-03 W8b: UQF-aware —
@@ -1030,10 +1150,21 @@ const WBAPI = {
       const k=WBAPI._findKey(WBAPI.nodeMap,codeOrName)||codeOrName;
       WBAPI.nodeMap[k]={...(WBAPI.nodeMap[k]||{}),...data}; return {ok:true,key:k};
     },
+    // §DX-01d — deletes at SOURCE level (see WBAPI.deleteEntrySource), NODE_MAP and
+    // NODE_COORDS together. This is the model/file desync Hazard #4 described for
+    // `./api.sh del node J##`: it was never junction-specific, every node delete
+    // reported success and changed nothing on disk. The coord entry is cascaded
+    // because a NODE_COORDS row for a node that no longer exists is an orphan
+    // `./api.sh audit`/`check:roads` then has to reason about.
     delete(codeOrName) {
       const k=WBAPI._findKey(WBAPI.nodeMap,codeOrName); if(!k) return {ok:false,error:'not found'};
       const d=WBAPI._deps.node(k); if(d.quests.length||d.npcs.length) return {ok:false,blockedBy:d};
-      delete WBAPI.nodeMap[k]; return {ok:true,key:k};
+      const src=WBAPI.deleteEntrySource('NODE_MAP',k); if(!src.ok) return src;
+      const co = WBAPI.nodeCoords[k] ? WBAPI.deleteEntrySource('NODE_COORDS',k) : null;
+      if (co && co.ok) delete WBAPI.nodeCoords[k];
+      delete WBAPI.nodeMap[k]; WBAPI._buildIndexes();
+      return {ok:true,key:k,line:src.line,...(co&&co.ok?{coordsRemoved:co.line}:{}),
+              ...(co&&!co.ok?{coordsWarning:co.error}:{})};
     },
   },
 
@@ -1309,44 +1440,65 @@ const WBAPI = {
     return { ok:true, nodesTouched, totalRemoved, perField, sampleNode, dryRun:false };
   },
 
-  // Remove a node entry from NODE_MAP source using brace-depth tracking.
-  // Handles both single-line and multi-line entries (insertStringField makes entries multi-line
-  // after direction fields are added). Returns true if removed, false if not found.
-  deleteNodeSource(code) {
-    if (!this._rawSrc) return false;
-    const S = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
-    const E = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
-    const am = this._rawSrc.indexOf(S) + S.length;
-    const em = this._rawSrc.indexOf(E);
-    if (am < S.length || em < 0) return false;
-    const sec = this._rawSrc.slice(am, em);
-    const keyRe = new RegExp(`^([ \\t]*)${code}\\s*:\\s*\\{`, 'gm');
-    const km = keyRe.exec(sec);
-    if (!km) return false;
-    const lineStart = km.index;
-    const openEnd = km.index + km[0].length;
-    let depth = 1, i = openEnd, inStr = null;
-    while (i < sec.length) {
-      const c = sec[i];
-      if (inStr) {
-        if (c === '\\' && inStr !== '`') { i += 2; continue; }
-        if (c === inStr) inStr = null;
-      } else if (c === '/' && sec[i+1] === '/') {
-        while (i < sec.length && sec[i] !== '\n') i++;
-        continue;
-      } else {
-        if (c === '"' || c === "'" || c === '`') inStr = c;
-        else if (c === '{') depth++;
-        else if (c === '}') { depth--; if (depth === 0) break; }
-      }
-      i++;
+  // §DX-01d/i — remove ONE entry from a WORLDBUILDER section AT SOURCE LEVEL.
+  //
+  // Every `*.delete()` below used to do `delete WBAPI.<collection>[k]` and nothing
+  // else. `save()` writes `_rawSrc`, so the entry came straight back on the next
+  // parse while the operator had already been told `✓ deleted`. That is the exact
+  // mirror of the §DX-01c create bug — **a write path that reports success without
+  // persisting** — and the standing lesson holds either way: the failure is silent
+  // because nothing ever throws.
+  //
+  // Verify-or-revert: after the splice, the section's depth-1 key MULTISET must
+  // differ from before by exactly one instance of `key`. If a nested brace, a
+  // string, or a comment fooled the scanner and a neighbour went with it, the
+  // splice is rolled back and the delete fails loudly instead of corrupting the
+  // section. Returns { ok, key, line, error }.
+  deleteEntrySource(section, key) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    const S = `// ◆◆◆ WORLDBUILDER:${section}:START ◆◆◆`;
+    const E = `// ◆◆◆ WORLDBUILDER:${section}:END ◆◆◆`;
+    const a = this._rawSrc.indexOf(S), b = this._rawSrc.indexOf(E);
+    if (a === -1 || b <= a) return { ok:false, error:`${section} section markers not found in source` };
+    const from = a + S.length;
+
+    // MONSTER_POOL is the one section that NESTS another (MONSTER_DROPS sits inside
+    // its anchors). Clamp to the section's OWN body so a pool delete can never reach
+    // into the trophy-drops map — §DX-01c's "real-but-wrong object", in mirror image.
+    let to = b;
+    const nestedRe = /\/\/ ◆◆◆ WORLDBUILDER:[A-Z0-9_]+:START ◆◆◆/g;
+    nestedRe.lastIndex = from;
+    const nested = nestedRe.exec(this._rawSrc);
+    if (nested && nested.index < b) to = nested.index;
+
+    const body = this._rawSrc.slice(from, to);
+    const span = entrySpan(body, key);
+    if (!span) return { ok:false, error:`entry "${key}" not found in ${section} source text` };
+
+    const line = body.slice(span.start, span.end);
+    const patched = body.slice(0, span.start) + body.slice(span.end);
+
+    const count = (keys) => keys.reduce((m, k) => (m[k] = (m[k] || 0) + 1, m), {});
+    const bC = count(sectionTopKeys(body)), aC = count(sectionTopKeys(patched));
+    const diff = [];
+    for (const k of new Set([...Object.keys(bC), ...Object.keys(aC)])) {
+      const d = (bC[k] || 0) - (aC[k] || 0);
+      if (d !== 0) diff.push(`${k}×${d}`);
     }
-    if (depth !== 0) return false;
-    let end = i + 1;
-    while (end < sec.length && sec[end] !== '\n') end++;
-    if (end < sec.length) end++;
-    this._rawSrc = this._rawSrc.slice(0, am) + sec.slice(0, lineStart) + sec.slice(end) + this._rawSrc.slice(em);
-    return true;
+    if (diff.length !== 1 || diff[0] !== `${key}×1`)
+      return { ok:false, error:`refused: excising "${key}" from ${section} would change ${diff.length} entr${diff.length===1?'y':'ies'} (${diff.join(', ')}) — source NOT modified` };
+
+    this._rawSrc = this._rawSrc.slice(0, from) + patched + this._rawSrc.slice(to);
+    return { ok:true, key, line: line.trim() };
+  },
+
+  // Remove a node entry from NODE_MAP source. Returns true if removed.
+  // §DX-01d — was a second, private brace-walker that nothing ever called (its own
+  // scanner missed /* */ comments and it left the NODE_COORDS row orphaned). It now
+  // delegates to deleteEntrySource so there is ONE source-level deleter with one
+  // verify-or-revert guard. NODE_MAP only — `WBAPI.nodes.delete()` is the full path.
+  deleteNodeSource(code) {
+    return this.deleteEntrySource('NODE_MAP', code).ok;
   },
 
   renameNodeKey(oldCode, newCode) {

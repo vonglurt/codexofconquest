@@ -155,7 +155,7 @@ Never guess an ID. Always search first.
 ./api.sh put node LHR N=BMA S=KRN E=TLL W=WRO
 echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 
-# Delete (only if not referenced)
+# Delete (only if not referenced) — source-level + verified, cascades NODE_COORDS (§DX-01d/i)
 ./api.sh del node OLD_CODE
 ```
 
@@ -429,7 +429,7 @@ If you find yourself reaching for curl to hit one of these, request an api.sh wr
 | `GET /api/list/{type}` | `./api.sh list <type> [filters]` |
 | `POST /api/{type}` | `./api.sh post <type> [fields]` |
 | `PUT /api/{type}/{id}` | `./api.sh put <type> <id> [fields]` |
-| `DELETE /api/{type}/{id}` | `./api.sh del <type> <id>` |
+| `DELETE /api/{type}/{id}` | `./api.sh del <type> <id>` — source-level, saved + re-parsed, returns `deleteVerified` (§DX-01d/i) |
 | `GET /api/coords` | `./api.sh count coords` |
 | `GET /api/graph/broken` | `./api.sh broken` *(needs wrapper — request refactor)* |
 | `GET /api/graph/reachability` | `./api.sh reachability` *(needs wrapper — request refactor)* |

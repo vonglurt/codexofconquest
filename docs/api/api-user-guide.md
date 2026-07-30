@@ -859,6 +859,16 @@ EOF
 
 The `del` command auto-acquires a nonce before issuing the DELETE. **Before deleting**, run `chain` (for quests) or check `_meta.canDelete` (for nodes) to confirm nothing depends on it.
 
+**Deletes are source-level and verified (§DX-01d/i, 2026-07-30).** The entry line is excised from its data section, the file is saved and re-parsed, and the response carries `deleteVerified:true` only once the entry is confirmed absent from the reloaded collections. Before that fix, every `del` — node, quest, monster, npc — dropped the entry from the *in-memory model only*: it printed `✓ deleted`, and the entry came straight back on the next parse.
+
+Three behaviors worth knowing:
+
+| Behavior | What it means |
+|---|---|
+| **Cascades** | Deleting a node also removes its `NODE_COORDS` row; deleting a monster also removes its `MONSTER_DROPS` trophy entry — so no orphan is left for `./api.sh audit` to report. |
+| **Verify-or-revert** | If excising the entry would alter *any* other entry in the section, nothing is written and the delete fails loudly. A refused delete leaves the source byte-identical. |
+| **Guards unchanged** | A node with quests/NPCs, or a quest with downstream dependents, is still blocked — `409` with `blockedBy`. |
+
 ### 10.1 Delete a quest
 
 ```bash
