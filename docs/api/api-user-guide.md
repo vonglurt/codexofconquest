@@ -412,7 +412,7 @@ curl -s 'http://localhost:1367/api/list/monster?tier=trivial' | jq 'length'
 curl -s 'http://localhost:1367/api/list/monster?tier=easy'    | jq '[.[] | .key]'
 curl -s 'http://localhost:1367/api/list/monster?tier=medium'  | jq '[.[] | .key]'
 curl -s 'http://localhost:1367/api/list/monster?tier=hard'    | jq '[.[] | .key]'
-curl -s 'http://localhost:1367/api/list/monster?tier=boss'    | jq '[.[] | .key]'
+curl -s 'http://localhost:1367/api/list/monster?tier=deadly'    | jq '[.[] | .key]'
 ```
 
 #### Text search
@@ -793,8 +793,10 @@ Boss-tier example:
   dmgDie=10 \
   dmgCount=2 \
   dmgFlat=5 \
-  tier=boss
+  tier=deadly
 ```
+
+> **All nine fields are required, and `tier` is one of `trivial | easy | medium | hard | deadly`** — there is no `boss` tier, and no `dmg` / `xp` field (damage is `dmgCount·d(dmgDie) + dmgFlat`; battle XP is computed from AC·maxHP, never stored). A body that misses a field or names a retired one is rejected **422 with the offending fields listed, and nothing is written** (§DX-01c). The new monster starts in **no terrain** — place it with `./api.sh put terrain <terrainKey> monsters=[…]`.
 
 ### 9.4 Create a terrain
 

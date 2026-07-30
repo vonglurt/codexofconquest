@@ -2,7 +2,21 @@
 
 # roll2hit.com — Monster Reference
 
-**Total: 398 monsters** across 5 tiers, 8 source pools. All entries implemented in `MONSTER_POOL` in `roll2hit-v3.html`. *(Count verified 2026-07-09 against the live `GET /api/list/monster`.)*
+**Total: 398 monsters** across 5 tiers, 8 source pools. All entries implemented in `MONSTER_POOL` in `roll2hit-v3.html`. *(Count re-verified 2026-07-30 against a live `wbapi-core` parse: 398 pool entries, 398 drops.)*
+
+## Authoring a monster (§DX-01c, 2026-07-30)
+
+Monsters go in through the API like every other entity — the old "hand-edit `MONSTER_POOL` because `post monster` is broken" exception is retired:
+
+```bash
+./api.sh post monster key=dock_rat name="Dock Rat" ac=11 hp=6 atk=2 dmgDie=4 dmgCount=1 dmgFlat=0 tier=trivial
+./api.sh put terrain docks monsters='["dock_rat"]'      # a new monster starts in NO terrain
+./api.sh post monster/dock_rat/drop name="Rat Tail" icon=🐀 sell=2
+```
+
+**The entry shape is exactly nine fields, all required** — `{key, name, ac, hp, atk, dmgDie, dmgCount, dmgFlat, tier}`, uniform across all 398 live entries. Damage is `dmgCount·d(dmgDie) + dmgFlat`; there is **no `dmg` field, and no stored `xp`** (battle XP is computed as ≈`AC·maxHP`). **`tier` is a string** — `trivial | easy | medium | hard | deadly` — and it is not cosmetic: the worldbuilder's monster picker groups by exactly those five and **silently drops anything else**. A body that misses a field, names a retired one, or passes a numeric tier is rejected `422` with the offending fields listed and **nothing written**.
+
+⚠️ `./api.sh del monster <key>` still only removes the entry from the in-memory model — the source line survives the save (§DX-01i). Delete by hand until that ships.
 
 ---
 

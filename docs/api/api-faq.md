@@ -1310,7 +1310,7 @@ curl -s 'http://localhost:1367/api/list/ids/terrain' | jq '.ids'
 # IDs from any filtered list (add ?ids=true)
 curl -s 'http://localhost:1367/api/list/node?act=1&ids=true'           | jq '.ids'
 curl -s 'http://localhost:1367/api/list/quest?type=main&ids=true'      | jq '.ids'
-curl -s 'http://localhost:1367/api/list/monster?tier=boss&ids=true'    | jq '.ids'
+curl -s 'http://localhost:1367/api/list/monster?tier=deadly&ids=true'    | jq '.ids'
 ```
 
 ### 13.5 List index

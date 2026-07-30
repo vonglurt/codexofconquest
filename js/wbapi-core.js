@@ -18,6 +18,31 @@ function extrSection(src, name) {
   return (a > -1 && b > a) ? src.slice(a + S.length, b).trim() : null;
 }
 
+// §DX-01c — locate a section's OWN closing `};` in the raw source.
+//
+// A WORLDBUILDER section's object closes BEFORE any nested section begins, and
+// MONSTER_POOL is the one live nest: its END anchor sits *after* MONSTER_DROPS:END
+// in roll2hit-v3.html, so the obvious "last `};` before our END anchor" finds the
+// TROPHY-DROPS map's brace. That is exactly where every `post monster` entry landed
+// for as long as the route existed (WBAPI Hazard #2) — the entry was written to a
+// real section, just the wrong one, which is why it never threw. Stop the search at
+// the first nested START anchor instead.
+//
+// Returns the index of the '\n' beginning the section's own `};`, or -1.
+function sectionCloseIdx(src, name) {
+  const S = `// ◆◆◆ WORLDBUILDER:${name}:START ◆◆◆`;
+  const E = `// ◆◆◆ WORLDBUILDER:${name}:END ◆◆◆`;
+  const a = src.indexOf(S), b = src.indexOf(E);
+  if (a === -1 || b <= a) return -1;
+  let limit = b;
+  const nestedRe = /\/\/ ◆◆◆ WORLDBUILDER:[A-Z0-9_]+:START ◆◆◆/g;
+  nestedRe.lastIndex = a + S.length;
+  const nested = nestedRe.exec(src);
+  if (nested && nested.index < b) limit = nested.index;
+  const idx = src.lastIndexOf('\n};', limit);
+  return idx > a ? idx : -1;
+}
+
 function extractObj(block, name) {
   if (!block) return null;
   const re = new RegExp(`(?:const|let|var)\\s+${name}\\s*=\\s*`);
@@ -689,6 +714,10 @@ const WBAPI = {
   },
 
   // ── Helpers ──
+  // §DX-01c — shared with wbapi-server's insertBeforeSectionClose so both writers
+  // agree on where a section actually ends (see sectionCloseIdx above).
+  _sectionCloseIdx: sectionCloseIdx,
+
   _findKey(col, idOrTitle) {
     if (col[idOrTitle] !== undefined) return idOrTitle;
     const needle = String(idOrTitle).toLowerCase();
@@ -720,6 +749,65 @@ const WBAPI = {
 
   // ── Monsters ──
   monsters: {
+    // §DX-01c — the live MONSTER_POOL contract, measured (391/391 entries carry
+    // exactly these, plus `voidTainted` on 2). `tier` is a STRING: the old server
+    // serializer ran it through Number() and wrote `tier:NaN`.
+    TIERS: ['trivial','easy','medium','hard','deadly'],
+    STATS: ['ac','hp','atk','dmgDie','dmgCount','dmgFlat'],
+
+    // The exact MONSTER_POOL line shape. `key` comes first and is always emitted —
+    // the bestiary picker and every terrain roster read `m.key`, and a keyless
+    // entry is the §AUDIT-03e shared-undefined-slot class all over again.
+    serialize(key, body) {
+      const p = [`key:${JSON.stringify(key)}`, `name:${JSON.stringify(String(body.name))}`];
+      for (const f of WBAPI.monsters.STATS) p.push(`${f}:${Number(body[f])}`);
+      p.push(`tier:${JSON.stringify(body.tier)}`);
+      if (body.voidTainted) p.push('voidTainted:true');
+      return `  ${key}: { ${p.join(', ')} },\n`;
+    },
+
+    // Validate a create body against the live contract. Returns [] when clean.
+    validate(key, body = {}) {
+      const errors = [];
+      if (!key || !/^[a-z_][a-z0-9_]*$/.test(key))
+        errors.push(`key "${key}" must be snake_case (a-z, 0-9, underscore, no leading digit)`);
+      if (!body.name) errors.push('name is required — the display name shown in combat and the bestiary');
+      for (const f of WBAPI.monsters.STATS) {
+        if (body[f] === undefined) { errors.push(`${f} is required`); continue; }
+        if (!Number.isFinite(Number(body[f]))) errors.push(`${f} must be a number — got ${JSON.stringify(body[f])}`);
+      }
+      if (!WBAPI.monsters.TIERS.includes(body.tier))
+        errors.push(`tier must be one of ${WBAPI.monsters.TIERS.join(' | ')} (a string, not a number) — got ${JSON.stringify(body.tier)}`);
+      // Fields the OLD broken serializer accepted and the game has never read.
+      // Silently dropping them is how `dmg:6` became a monster with no damage.
+      if (body.dmg !== undefined) errors.push('"dmg" is not a MONSTER_POOL field — damage is dmgDie + dmgCount + dmgFlat (dmgCount·d(dmgDie) + dmgFlat)');
+      if (body.xp  !== undefined) errors.push('"xp" is not a MONSTER_POOL field — battle XP is computed from AC·maxHP, never stored');
+      return errors;
+    },
+
+    // Create a monster AT SOURCE LEVEL, inside MONSTER_POOL, so it survives save().
+    // Replaces the server's old serializeMonsterLiteral + insertBeforeSectionClose
+    // pair, which wrote a `{name,ac,hp,atk,dmg,xp,tier:NaN}` line into MONSTER_DROPS.
+    create(key, body = {}) {
+      if (!WBAPI._rawSrc) return { ok:false, error:'no source loaded' };
+      if (WBAPI.monsterPool[key]) return { ok:false, error:`monster "${key}" already exists` };
+      const errors = WBAPI.monsters.validate(key, body);
+      if (errors.length) return { ok:false, error:'monster data invalid — nothing written', errors };
+
+      const closeIdx = sectionCloseIdx(WBAPI._rawSrc, 'MONSTER_POOL');
+      if (closeIdx === -1) return { ok:false, error:'MONSTER_POOL closing }; not found' };
+      const entry = WBAPI.monsters.serialize(key, body);
+      WBAPI._rawSrc = WBAPI._rawSrc.slice(0, closeIdx + 1) + entry + WBAPI._rawSrc.slice(closeIdx + 1);
+
+      const rec = { key, name: String(body.name) };
+      for (const f of WBAPI.monsters.STATS) rec[f] = Number(body[f]);
+      rec.tier = body.tier;
+      if (body.voidTainted) rec.voidTainted = true;
+      WBAPI.monsterPool[key] = rec;
+      WBAPI._buildIndexes();
+      return { ok:true, key, entry: rec, line: entry.trim() };
+    },
+
     all()        { return Object.entries(WBAPI.monsterPool).map(([k,v])=>({...v,key:k,drop:WBAPI.monsterDrops[k]||null,terrains:WBAPI._monsterToTerrains[k]||[]})); },
     byTerrain(t) { return (WBAPI._terrainToMonsters[t]||[]).map(k=>({...WBAPI.monsterPool[k],key:k,drop:WBAPI.monsterDrops[k]||null})); },
     byTier(t)    { return WBAPI.monsters.all().filter(m=>m.tier===t); },

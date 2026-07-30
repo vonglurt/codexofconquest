@@ -1563,11 +1563,16 @@ function readBody(req) {
 // Source mutation helpers  (used by create routes + flag insertion)
 // ═══════════════════════════════════════════════════════════════════════════
 
+// §DX-01c — the closing brace is located by WBAPI._sectionCloseIdx, which stops at
+// the first NESTED section START. This used to be `lastIndexOf('\n};', endAnchor)`,
+// and MONSTER_POOL's END anchor sits after MONSTER_DROPS:END — so every created
+// monster was spliced into the trophy-drops map (Hazard #2). MONSTER_POOL is the
+// only live nest today; the helper keeps the class from recurring if another
+// section is ever wrapped.
 function insertBeforeSectionClose(section, entry) {
   const endAnchor = `// ◆◆◆ WORLDBUILDER:${section}:END ◆◆◆`;
-  const anchorIdx = WBAPI._rawSrc.indexOf(endAnchor);
-  if (anchorIdx === -1) return { ok:false, error:`${section} END anchor not found` };
-  const closingIdx = WBAPI._rawSrc.lastIndexOf('\n};', anchorIdx);
+  if (WBAPI._rawSrc.indexOf(endAnchor) === -1) return { ok:false, error:`${section} END anchor not found` };
+  const closingIdx = WBAPI._sectionCloseIdx(WBAPI._rawSrc, section);
   if (closingIdx === -1) return { ok:false, error:`${section} closing }; not found` };
   WBAPI._rawSrc = WBAPI._rawSrc.slice(0, closingIdx + 1) + entry + WBAPI._rawSrc.slice(closingIdx + 1);
   return { ok:true };
@@ -1681,17 +1686,10 @@ function serializeTerrainLiteral(key, body) {
   return `  ${key}: { monsters:[${mStr}]${label}${icon} },\n`;
 }
 
-function serializeMonsterLiteral(key, body) {
-  const NUM  = ['ac','hp','atk','dmg','xp','tier'];
-  const STR  = ['name','size','type','align','speed','cr','desc'];
-  const parts = [`  ${key}: { name:${JSON.stringify(body.name||key)}`];
-  for (const f of STR) if (body[f] !== undefined && f !== 'name') parts.push(`${f}:${JSON.stringify(body[f])}`);
-  for (const f of NUM) if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
-  if (body.atk_bonus !== undefined) parts.push(`atk_bonus:${Number(body.atk_bonus)}`);
-  if (body.dmg_type)  parts.push(`dmg_type:${JSON.stringify(body.dmg_type)}`);
-  if (body.drops)     parts.push(`drops:${JSON.stringify(body.drops)}`);
-  return parts.join(', ') + ' },\n';
-}
+// §DX-01c — serializeMonsterLiteral is RETIRED. It wrote a schema the game does not
+// have: `dmg`/`xp`/`size`/`cr`/`desc` (fields no MONSTER_POOL entry carries), no `key`,
+// no dmgDie/dmgCount/dmgFlat, and `tier` through Number() → `tier:NaN`. The live shape
+// and its validation now live in WBAPI.monsters.serialize / .validate / .create.
 
 function serializeDropLiteral(key, body) {
   return `  ${key}: { icon:${JSON.stringify(body.icon||'📦')}, name:${JSON.stringify(body.name)}, sell:${Number(body.sell||0)} },\n`;
@@ -2091,7 +2089,7 @@ async function route(req, res) {
           'CREATE',
           `  POST ${b}/api/node          body: {code, label, act, name?, desc?, ...}`,
           `  POST ${b}/api/quest         body: {id, type, title, activateNode, startText, ...}`,
-          `  POST ${b}/api/monster       body: {key, name, ac, hp, atk, dmg, xp, tier, cr?, desc?}`,
+          `  POST ${b}/api/monster       body: {key, name, ac, hp, atk, dmgDie, dmgCount, dmgFlat, tier}  (all required; tier is trivial|easy|medium|hard|deadly)`,
           `  POST ${b}/api/terrain       body: {key, label, icon?, monsters:[key,...]}`,
           `  POST ${b}/api/npc           body: {key, name, node, occupation?, neutral?, friendly?, dearFriend?}`,
           `  POST ${b}/api/item          body: {key, name, type, icon?, sell?, desc?, atkBonus?, passive?, readText?}`,
@@ -2226,9 +2224,8 @@ async function route(req, res) {
           'EXAMPLE',
           `  curl -XPOST http://localhost:${PORT}/api/monster \\`,
           `    -H \'Content-Type: application/json\' \\`,
-          `    -d \'{"key":"dock_rat","name":"Dock Rat","ac":11,"hp":4,`,
-          `         "atk":2,"dmg":3,"xp":10,"tier":1,"cr":"1/8",`,
-          `         "desc":"A mangy rodent the size of a small dog."}\'`,
+          `    -d \'{"key":"dock_rat","name":"Dock Rat","ac":11,"hp":6,`,
+          `         "atk":2,"dmgDie":4,"dmgCount":1,"dmgFlat":0,"tier":"trivial"}\'`,
         ].join('\n'),
       },
 
@@ -2470,7 +2467,7 @@ async function route(req, res) {
           '# 4. Create monster',
           `curl -XPOST $SERVER/api/monster \\`,
           `  -H 'Content-Type: application/json' \\`,
-          `  -d '{"key":"dock_rat","name":"Dock Rat","ac":11,"hp":4,"atk":2,"dmg":3,"xp":10,"tier":1}'`,
+          `  -d '{"key":"dock_rat","name":"Dock Rat","ac":11,"hp":6,"atk":2,"dmgDie":4,"dmgCount":1,"dmgFlat":0,"tier":"trivial"}'`,
           '',
           '# 5. Add monster to terrain',
           `curl -XPUT $SERVER/api/terrain/fog_docks \\`,
@@ -2567,7 +2564,7 @@ async function route(req, res) {
           '# Create',
           `curl -XPOST ${b}/api/node    -H 'Content-Type: application/json' -d '{"code":"XX","label":"New Node","act":1}'`,
           `curl -XPOST ${b}/api/quest   -H 'Content-Type: application/json' -d '{"id":"quest_xx_01","type":"combat","title":"...","activateNode":"XX"}'`,
-          `curl -XPOST ${b}/api/monster -H 'Content-Type: application/json' -d '{"key":"new_mob","name":"New Mob","ac":12,"hp":6,"atk":3,"dmg":4,"xp":15,"tier":1}'`,
+          `curl -XPOST ${b}/api/monster -H 'Content-Type: application/json' -d '{"key":"new_mob","name":"New Mob","ac":12,"hp":10,"atk":3,"dmgDie":4,"dmgCount":1,"dmgFlat":1,"tier":"easy"}'`,
           `curl -XPOST ${b}/api/terrain -H 'Content-Type: application/json' -d '{"key":"new_terrain","label":"New Terrain","monsters":["new_mob"]}'`,
           '',
           '# Update',
@@ -4715,7 +4712,7 @@ async function route(req, res) {
         if (section === 'MONSTER_DROPS' && field === 'key')
           return `   → curl ${b}/api/monster/${key}  # create monster, or DELETE the orphan drop entry`;
         if (section === 'FISH_DB'    && field === 'key')
-          return `   → curl -XPOST ${b}/api/monster -H 'Content-Type: application/json' -d '{"key":"${key}","name":"...","ac":10,"hp":10,"atk":2,"dmg":4,"xp":5,"tier":1}'`;
+          return `   → curl -XPOST ${b}/api/monster -H 'Content-Type: application/json' -d '{"key":"${key}","name":"...","ac":10,"hp":10,"atk":2,"dmgDie":4,"dmgCount":1,"dmgFlat":0,"tier":"easy"}'`;
         if (section === 'MONSTER_POOL' && field === 'drops')
           return `   → curl -XPOST ${b}/api/monster/${key}/drop -H 'Content-Type: application/json' -d '{"name":"${key} remains","sell":0}'`;
         if (section === 'D100_TABLE')
@@ -4971,8 +4968,8 @@ async function route(req, res) {
         return { entity, field, why:`Drop entry "${key}" has no matching MONSTER_POOL entry. Drop is orphaned.`,
           howToFix: { options: [
             { label:`Create monster "${key}" in MONSTER_POOL`, method:'POST', url:`${base}/monster`,
-              body:{ key, name:key, ac:12, hp:10, atk:2, dmg:4, xp:10, tier:1 },
-              curl:`curl -XPOST ${base}/monster -H 'Content-Type: application/json' -d '{"key":"${key}","name":"${key}","ac":12,"hp":10,"atk":2,"dmg":4,"xp":10,"tier":1}'` },
+              body:{ key, name:key, ac:12, hp:10, atk:2, dmgDie:4, dmgCount:1, dmgFlat:1, tier:'easy' },
+              curl:`curl -XPOST ${base}/monster -H 'Content-Type: application/json' -d '{"key":"${key}","name":"${key}","ac":12,"hp":10,"atk":2,"dmgDie":4,"dmgCount":1,"dmgFlat":1,"tier":"easy"}'` },
             { label:`Delete orphan drop (requires nonce)`,
               note:`NONCE=$(curl -s -XPOST ${base}/nonce -H 'Content-Type: application/json' -d '{"type":"monster","id":"${key}"}' | jq -r .nonce)  && curl -XDELETE ${base}/drops/${key} -H "X-Nonce: $NONCE"` },
           ]}};
@@ -4985,8 +4982,8 @@ async function route(req, res) {
         return { entity, field, why:msg,
           howToFix: missing ? { options:[
             { label:`Create missing monster "${missing}"`, method:'POST', url:`${base}/monster`,
-              body:{ key:missing, name:missing, ac:12, hp:20, atk:3, dmg:6, xp:20, tier:2 },
-              curl:`curl -XPOST ${base}/monster -H 'Content-Type: application/json' -d '{"key":"${missing}","name":"${missing}","ac":12,"hp":20,"atk":3,"dmg":6,"xp":20,"tier":2}'` },
+              body:{ key:missing, name:missing, ac:12, hp:20, atk:3, dmgDie:6, dmgCount:1, dmgFlat:2, tier:'medium' },
+              curl:`curl -XPOST ${base}/monster -H 'Content-Type: application/json' -d '{"key":"${missing}","name":"${missing}","ac":12,"hp":20,"atk":3,"dmgDie":6,"dmgCount":1,"dmgFlat":2,"tier":"medium"}'` },
             { label:`Remove "${missing}" from terrain`, method:'PUT', url:`${base}/terrain/${key}`,
               body:{ monsters: currentList.filter(m=>m!==missing) },
               curl:`curl -XPUT ${base}/terrain/${key} -H 'Content-Type: application/json' -d '{"monsters":${JSON.stringify(currentList.filter(m=>m!==missing))}}'` },
@@ -10096,26 +10093,33 @@ async function route(req, res) {
       return saveAndRestart(res, 201, { ok:true, key, entity: WBAPI.worldDb[key], connections: { monsters: monsterKeys } });
     }
 
+    // §DX-01c — was WBAPI Hazard #2 ("post monster is BROKEN — do not use it").
+    // Delegates to WBAPI.monsters.create, which validates against the live 9-field
+    // contract and splices into MONSTER_POOL rather than the trophy-drops map.
+    // Incomplete or wrong-schema bodies are now REJECTED (422) instead of silently
+    // written half-formed — the row's "fail loudly" requirement, applied to bad input.
     if (type === 'monster') {
       const key = body.key;
-      if (!key || !body.name) {
-        logResponse(method, url.pathname, 400, 'missing key or name');
-        return json(res, 400, { error:'Required fields: key, name. Optional: ac, hp, atk, dmg, xp, tier, desc' });
-      }
       if (WBAPI.monsterPool[key]) {
         logResponse(method, url.pathname, 409, `monster "${key}" already exists`);
         return json(res, 409, { error:`Monster "${key}" already exists` });
       }
-      const entry = serializeMonsterLiteral(key, body);
-      const ins = insertBeforeSectionClose('MONSTER_POOL', entry);
-      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
-      const { key: _k, ...mFields } = body;
-      WBAPI.monsterPool[key] = mFields;
-      WBAPI._buildIndexes();
+      const errors = WBAPI.monsters.validate(key, body);
+      if (errors.length) {
+        logResponse(method, url.pathname, 422, `monster data invalid: ${errors[0]}`);
+        return json(res, 422, {
+          ok:false, error:'Monster data invalid — nothing written', errors,
+          hint:'MONSTER_POOL entries are {key,name,ac,hp,atk,dmgDie,dmgCount,dmgFlat,tier}. Damage is dmgCount·d(dmgDie)+dmgFlat; tier is one of trivial|easy|medium|hard|deadly. See GET /api/schema/monster.',
+          example:{ key:'dock_rat', name:'Dock Rat', ac:11, hp:6, atk:2, dmgDie:4, dmgCount:1, dmgFlat:0, tier:'trivial' },
+        });
+      }
+      const cr = WBAPI.monsters.create(key, body);
+      if (!cr.ok) { logResponse(method, url.pathname, 500, cr.error); return json(res, 500, cr); }
       logRow('key', key);
-      logRow('stats', `${body.name}  ·  AC ${body.ac||'?'}  HP ${body.hp||'?'}  ATK +${body.atk||'?'}  tier: ${body.tier||'?'}`);
+      logRow('stats', `${body.name}  ·  AC ${body.ac}  HP ${body.hp}  ATK +${body.atk}  dmg ${body.dmgCount}d${body.dmgDie}+${body.dmgFlat}  ·  tier: ${body.tier}`);
+      logRow('note', 'no terrain yet — add it with PUT /api/terrain/{key} monsters=[…]');
       logResponse(method, url.pathname, 201, `created monster/${key}`);
-      return saveAndRestart(res, 201, { ok:true, key, entity: WBAPI.monsterPool[key] });
+      return saveAndRestart(res, 201, { ok:true, key, entity: WBAPI.monsterPool[key], line: cr.line });
     }
 
     if (type === 'npc') {
