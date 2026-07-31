@@ -22265,6 +22265,17 @@ const JOURNAL_ENTRIES = { // dead code — 5 node-specific Froberger quotes (ent
 };
 
 /* ── NPC Dialogue Hooks ── */
+// §AUDIT-03j — who holds the SEN slot. The Tilbury Star has two authored speakers and
+// NPC_DIALOGUE has one slot per node code: the captain by default, and the hold's rat
+// catcher for as long as the §SPARK-01 cargo-hold investigation is the reason you are
+// below decks (quest_spark_03/04 both activate at SEN).
+function _senHoldSpeaker() {
+  const q = S_story.quests || {};
+  return !!(S_story.bioluminescentParasiteFound || S_story.whodunitSolved
+    || q['quest_spark_03'] === 'active' || q['quest_spark_03'] === 'complete'
+    || q['quest_spark_04'] === 'active' || q['quest_spark_04'] === 'complete');
+}
+
 const NPC_DIALOGUE = { // → doc: story.md §FL7
   LHR: { name:'City Guard Captain',              quote:'"Move along. The lower districts are sealed after dark — third night running. Whatever came out of the crypt, it\'s not going back in on its own."' },
   TLL: { name:'Innkeeper Brynn',                 quote:'"He left this in the room. Paid three nights ahead, didn\'t sleep the third one. I kept it. Felt like someone would come asking."' },
@@ -22307,7 +22318,22 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : S_story.antecedentMet && !S_story.solmFound // §LVII
     ? ((() => { S_story.solmFound = true; return '"Back room." He lifts the hinged counter without ceremony. "Three months. She reorganized the shelf twice." He says it the way he says everything — as a fact, without opinion about it.\n\nAnalyst Solm is at the back desk with a notebook open to a fresh page. She looks up once. Her pen does not move.\n\n"The transmission lasted three seconds and eleven tenths. I had stopped writing because I was listening so carefully I forgot to log. When it cut — I understood what had happened before I understood what I had heard."\n\nShe sets the pen down.\n\n"I did not return to Station 7. I came here instead. Classified knowledge you can no longer safely carry — Magistra Muffat is the only institutional function that makes sense for that." A pause. "You were down there." Not a question. She looks at the entry she wrote this morning. "Was it —"\n\nShe stops.\n\n"Confirmed," she says quietly. "That\'s sufficient." She writes it once more, cleanly, and closes the volume.'; })())
     : '"No sign on the door by design. You found it, which means you were supposed to. I\'ve been holding the Real Map for eleven years waiting for someone who needed it."' },
-  SEN: { name:'Ship Captain',                    quote:'"Weather\'s holding. Sleep while you can — we make the deep crossing at dawn and I won\'t slow the ship if something comes over the rail."' },
+  // §AUDIT-03j: this slot used to be the Ship Captain alone, and the §SPARK-01 hold
+  // investigation's speaker sat beside it under the key `MS_SPARK` — the legacy code
+  // `MS` (= SEN) plus a suffix, because the registry is one speaker per node code.
+  // `NPC_DIALOGUE[node.code]` can only ever look up 'SEN', so Brannick had never
+  // rendered, though quest_spark_03/04 both activate here. Folded in as a state gate:
+  // while the cargo-hold whodunit is live the hold's rat catcher speaks, otherwise the
+  // captain does. Both authored voices reachable; no second-speaker mechanism needed.
+  SEN: { name:'Ship Captain',
+    nameFn:() => _senHoldSpeaker() ? 'Brannick, Rat Catcher' : 'Ship Captain',
+    quoteFn:() => S_story.whodunitSolved
+    ? '"The colony\'s in a sealed jar now. I asked the captain if I could keep it. She said no. I think she was wrong." He looks at the hold. The rats are watching him. "They were going to bite me. That was their job and my job was to net them. Now we just sort of... understand each other. I don\'t know if that\'s better." He thinks about it. "It is better."'
+    : S_story.bioluminescentParasiteFound
+    ? '"They never bit me once. Even when I had the net. It didn\'t feel right to use the net after a while." He considers the largest rat, which is sitting on an empty cask watching him. "He\'s got a family. Down under the ballast. Five. I\'ve seen them." He says this the way someone says something they know is professionally inadvisable but personally true.'
+    : _senHoldSpeaker()
+    ? '"Something\'s off in the hold. The rats aren\'t — they\'re not acting right. Usually I\'ve got them on the run by the second day." He looks troubled. "They keep stopping and looking at me. Not threatening. Just looking."'
+    : '"Weather\'s holding. Sleep while you can — we make the deep crossing at dawn and I won\'t slow the ship if something comes over the rail."' },
   // §LIX–§LXI — The Road to Damascus NPCs
   JRS: { name:'Barnach', quoteFn:() => S_story.hellenistsThreaten // §LXI
     ? '"They are at the gate. They are at the assembly hall. They are in the square." He does not waste time on what they want — you both know. "Fifteen days is how long this city was prepared to hold this tension. It has held." He looks toward the west gate. "Tarsus. Go to Tarsus. You are from Tarsus. They will not follow you to Tarsus."'
@@ -22417,11 +22443,9 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
     : S_story.warmthEelFound
     ? '"Sixty feet, minimum. It goes right under us like it owns the lane. Which it does, I suppose." He leans on the rail. "Eight days I\'ve been here. Eight days and I haven\'t hit anyone. I don\'t know what to do with that." He pauses. "The fish clustering is the real problem. The fishing boats can\'t work. You should move it south."'
     : '"It has been like this for eight days. We stopped trying to fight on day two. I\'m not sure we could anymore — it just doesn\'t seem important. There\'s something below. Amber. Goes under both keels every few hours." He looks at you without suspicion, which is not how he usually looks at strangers. "This is not normal for me either."' },
-  MS_SPARK: { name:'Brannick, Rat Catcher', quoteFn:() => S_story.whodunitSolved
-    ? '"The colony\'s in a sealed jar now. I asked the captain if I could keep it. She said no. I think she was wrong." He looks at the hold. The rats are watching him. "They were going to bite me. That was their job and my job was to net them. Now we just sort of... understand each other. I don\'t know if that\'s better." He thinks about it. "It is better."'
-    : S_story.bioluminescentParasiteFound
-    ? '"They never bit me once. Even when I had the net. It didn\'t feel right to use the net after a while." He considers the largest rat, which is sitting on an empty cask watching him. "He\'s got a family. Down under the ballast. Five. I\'ve seen them." He says this the way someone says something they know is professionally inadvisable but personally true.'
-    : '"Something\'s off in the hold. The rats aren\'t — they\'re not acting right. Usually I\'ve got them on the run by the second day." He looks troubled. "They keep stopping and looking at me. Not threatening. Just looking."' },
+  // §AUDIT-03j: `MS_SPARK` (Brannick, Rat Catcher) lived here under the legacy code
+  // `MS` = SEN and was therefore unreachable — its four quote states now hang off the
+  // SEN entry above, gated by `_senHoldSpeaker()`.
   // §NAVAL-01: The Intercept
   GCI: { name:'Captain Vera Keel', quoteFn:() => S_story.sbResolved
     ? (S_story.sbParleySucceeded
@@ -26352,14 +26376,27 @@ const ITEM_DB = { // General item definitions — weapons, amulets, consumables,
 
 /* ── Layer 53: Living World — Junction Vignettes + Road Companion ── */
 const JUNCTION_VIGNETTES = { // → doc: story.md §Junction Vignettes
+  // §AUDIT-03j: these 8 scenes were keyed to J1–J7 + RD — the junction/road stubs §WALK
+  // deleted when the world became cell-walked (0 junctions). Only J1 had ever been
+  // remapped (→ WRO), so 7 of the 8 rendered nowhere. Rehomed onto live road nodes,
+  // each derived from the vignette's OWN text rather than by position:
+  //   Old Faeron, retired soldier      → DAR  The Road Junction — South of the Relay Post
+  //   Mira, refugee "we left Tilbury"  → PCR  Canterbury Road — Pilgrims' Camp (the cell
+  //                                           east of Tilbury's LCY; she has a camp)
+  //   The Cartographer, gives coastline→ J13  The Western Sea Road
+  //   Wren, Scholar Kings courier      → ADN  Ardennes — Road Junction (Weimar's row)
+  //   "Paid in full. —S." on a post    → BLW  Blidworth — Forest Toll Gate
+  //   A child's toy on the road        → BNX  The Eastern Bend — Relay Road (the bend
+  //                                           Tessie's surviving WRO vignette warns of)
+  //   Cold fire ring, broken cart wheel→ OKD  The Oak at the Crossroads ("the tree line")
   WRO: { npc:'Tessie', tag:'Merchant\'s runner', lines:['"My employer hasn\'t paid me in three weeks. I\'m still running the routes. I don\'t know why."','She adjusts the pack on her shoulders. She\'s not looking for an answer.','"Good road. Watch the eastern bend — something spooked the relay horses yesterday."'], help:'You hand Tessie 10 gold. She looks at it for a long moment. "I\'ll take it. Thank you."' },
-  LJU: { npc:'Old Faeron', tag:'Retired soldier', lines:['"I fought the first Tide. Told everyone it would come back. I was very boring at parties."','He has a scar that runs from his left ear to his collarbone. He doesn\'t cover it.','"Don\'t make the same mistake twice. The second time, I knew what to do. The first time I just survived. Only one of those is actually useful."'], help:'Old Faeron looks at the gold. Slides it back. "Keep it. You\'ll need it for something."' },
-  SPU: { npc:'Mira', tag:'Refugee', actMin:3, lines:['"We left Tilbury before the harbor closed. I don\'t think we\'ll go back."','She has three children, none older than ten. They\'re asleep against a pack.','"My husband is still there. He was arranging the last cargo. That was eight days ago."'], help:'She takes the gold. Doesn\'t say thank you. Says: "There\'s an inn two leagues east. Tell them Mira sent you — they\'ll know what that means."' },
-  TGD: { npc:'The Cartographer', tag:'Unknown', lines:['"I\'ve been mapping these roads for twelve years. I still find new ones. That used to frighten me."','Her map covers three sheets and is rolled tight in an oilskin tube.','"The road you came from has changed since I drew it. Most of them have. I stopped correcting the old maps. I just make new ones."'], help:'She waves it off. "I don\'t carry gold. Maps are my currency. Here." She tears a small section from a corner sheet. "The coastline. More accurate than what you\'ll find printed."' },
-  TOS: { npc:'Wren', tag:'Scholar Kings courier', lines:['"I carry messages for the Scholar Kings. I stopped reading them two years ago. Better that way."','She moves fast. She was walking before you arrived. She pauses at the junction.','"The Scholar Kings archive at Weimar lost three shelves last month. \'Reorganization.\' That\'s what they called it." She moves on.'], help:'She\'s gone before you can offer anything.' },
-  MMX: { npc:null, lines:[null, null, null], env:'A note pinned to a post: "Paid in full. —S." No signature beyond that initial. No context. The road is quiet.' },
-  ANC: { npc:null, lines:[null, null, null], env:'A child\'s toy on the road. No NPC. No explanation. You leave it where it is.' },
-  LDE: { npc:null, lines:[null, null, null], env:'A cleared verge. The fire ring is cold. A broken cart wheel leans against the tree line. Someone stopped here recently and kept moving.' },
+  DAR: { npc:'Old Faeron', tag:'Retired soldier', lines:['"I fought the first Tide. Told everyone it would come back. I was very boring at parties."','He has a scar that runs from his left ear to his collarbone. He doesn\'t cover it.','"Don\'t make the same mistake twice. The second time, I knew what to do. The first time I just survived. Only one of those is actually useful."'], help:'Old Faeron looks at the gold. Slides it back. "Keep it. You\'ll need it for something."' },
+  PCR: { npc:'Mira', tag:'Refugee', actMin:3, lines:['"We left Tilbury before the harbor closed. I don\'t think we\'ll go back."','She has three children, none older than ten. They\'re asleep against a pack.','"My husband is still there. He was arranging the last cargo. That was eight days ago."'], help:'She takes the gold. Doesn\'t say thank you. Says: "There\'s an inn two leagues east. Tell them Mira sent you — they\'ll know what that means."' },
+  J13: { npc:'The Cartographer', tag:'Unknown', lines:['"I\'ve been mapping these roads for twelve years. I still find new ones. That used to frighten me."','Her map covers three sheets and is rolled tight in an oilskin tube.','"The road you came from has changed since I drew it. Most of them have. I stopped correcting the old maps. I just make new ones."'], help:'She waves it off. "I don\'t carry gold. Maps are my currency. Here." She tears a small section from a corner sheet. "The coastline. More accurate than what you\'ll find printed."' },
+  ADN: { npc:'Wren', tag:'Scholar Kings courier', lines:['"I carry messages for the Scholar Kings. I stopped reading them two years ago. Better that way."','She moves fast. She was walking before you arrived. She pauses at the junction.','"The Scholar Kings archive at Weimar lost three shelves last month. \'Reorganization.\' That\'s what they called it." She moves on.'], help:'She\'s gone before you can offer anything.' },
+  BLW: { npc:null, lines:[null, null, null], env:'A note pinned to a post: "Paid in full. —S." No signature beyond that initial. No context. The road is quiet.' },
+  BNX: { npc:null, lines:[null, null, null], env:'A child\'s toy on the road. No NPC. No explanation. You leave it where it is.' },
+  OKD: { npc:null, lines:[null, null, null], env:'A cleared verge. The fire ring is cold. A broken cart wheel leans against the tree line. Someone stopped here recently and kept moving.' },
 };
 const COMPANION_LINES = { // → doc: story.md §Road Companion
   2: { name:'Dessa', ctx:'Carrying supplies between Birka and Tilbury', line:'The harbor master in Tilbury keeps a ledger of every ship that left since the Tide started. He won\'t show it to anyone. I\'ve seen him writing in it.' },
@@ -26382,12 +26419,17 @@ const CORELLI_ITEMS = { // → doc: world.md §Corelli the Wandering Merchant (5
   last_cipher:   { name:'The Last Cipher', icon:'🔐', type:'readable', sell:0, price:0,
     readText:'A Scholar King administrative cipher key — the kind used to decode sealed distribution correspondence. At the bottom, in a different hand: "Antecedent Containment Protocol, cycle 3. All materials reclassified. Distribution route: suppressed. Reason on file: CLASSIFICATION LEVEL 7." Beneath that, scratched with a nail rather than written with a pen: "She built it to save us. They hid it to save themselves."' },
 };
-const CORELLI_APPEARANCES = [ // → doc: world.md §Corelli the Wandering Merchant (5 nodes: TL/RD/IS/WM/IN)
+// → doc: world.md §Corelli the Wandering Merchant. The old header named the 26×16 codes
+// TL/RD/IS/WM/IN; live they are LCY/WRO/BK/NUE/TLL. §AUDIT-03j: stop 2 was `LDE` = the
+// legacy `RD` road node §WALK removed, so it never fired — reassigned to WRO (Midlands
+// Road Fork, act 3), the surviving road fork on the Tilbury→Visby corridor his opener
+// describes ("the road between here and the coast", "the Wilds road").
+const CORELLI_APPEARANCES = [
   { nodeCode:'LCY', actMin:2, index:1, opener:'New in Tilbury? Thought so. You have the look of someone who just arrived and hasn\'t decided if they trust the harbor yet.',
     openerFriendly:'We\'ve met before. Tilbury, if I remember right — and I always remember. The ink sold well, I take it?',
     openerTrusted:'Back again. I\'ve been following the same road you have, more or less. Just a different axis. I keep quieter notes.',
     itemKey:'scholar_ink', itemLabel:'📝 Scholar\'s Ink (dismissed notes) — 120gp' },
-  { nodeCode:'LDE', actMin:3, index:2, opener:'We meet again. I saw you in Tilbury — don\'t be alarmed, I remember everyone I sell to.',
+  { nodeCode:'WRO', actMin:3, index:2, opener:'We meet again. I saw you in Tilbury — don\'t be alarmed, I remember everyone I sell to.',
     openerFriendly:'The road between here and the coast has been strange lately. You\'ve felt it too, I can see.',
     openerTrusted:'I\'ve been on the Wilds road four times this season. Every time it looks different. The land is shifting. Or we are.',
     itemKey:'false_warrant', itemLabel:'📋 False Warrant Papers — 200gp' },
@@ -27171,42 +27213,57 @@ const WORLD_PROGRESSION_EVENTS = [ // → doc: world.md §World Progression (con
 ];
 
 const NODE_NPC_KEYS = { // → doc: world.md §NPC Locations (node code → primary NPC key; read by _getNodeMapColor() + _getFarewell())
-  LHR:'yael', IN:'brynn', TV:'couperin', BA:'pachelbel', CY:'weckmann', SQ:'crane',
-  PRN:'ef_npc', EH:'eh_npc', ES:'es_npc', EW:'ew_npc', EB:'eb_npc',
-  KUN:'eo_npc', EI:'ei_npc', EA:'ea_npc', EC:'ec_npc', EL:'el_npc',
-  OTP:'ed_npc', EM:'em_npc', EE:'ee_npc', EV:'ev_npc', EJ:'ej_npc',
-  KTM:'et_npc', ER:'er_npc', EK:'ek_npc', EP:'ep_npc', EG:'eg_npc'
+  // §AUDIT-03j: BOTH columns must resolve — the node code in NODE_MAP and the npc key
+  // in the favor ledger — or the entry is inert. It was written in the retired 26×16
+  // codes: 21 of 26 rows named a node that does not exist (IN/TV/BA/CY/SQ + 16 E*),
+  // so favor tinting and farewells worked at LHR alone. Codes remapped via the
+  // LEGACY CODE MAP (docs/maps/node-index.md); npc keys corrected to the profile keys
+  // the favor ledger actually spends (the old values were the profiles' SURNAMES:
+  // 'couperin' = Bard Tomas Couperin = quill · 'weckmann' = Pit Master Weckmann = crov).
+  // The 20 E*:'e?_npc' rows were placeholders naming a key that exists nowhere; EB nodes
+  // are tinted by the live `ebReturnDone` branch instead, so removing them is a no-op.
+  // 'crane' named no NPC anywhere in the file and went with its dead code.
+  LHR:'yael', TLL:'brynn', MHQ:'quill', LLA:'pachelbel', HKG:'crov'
 };
 
 const NPC_FAREWELLS = { // → doc: story.md §Act VIII NPC Farewell Beats (separate from ACT8_FAREWELL_BEATS modal; ambient farewell text)
+  // §AUDIT-03j: owner keys and `<from>_to_<to>` route keys were all written in the
+  // retired 26×16 codes — all 12 routes and 3 of the 6 owners named something that does
+  // not exist, so only each NPC's `default` line could ever fire, and only for yael.
+  // The mechanism itself is alive: `S_story.currentCode` advances ONLY on node arrival
+  // (28109), so a route key is "last node you stood on → next node you reach", at any
+  // walking distance — it never required cell adjacency.
+  // Codes remapped via docs/maps/node-index.md's LEGACY CODE MAP. One CONTENT override:
+  // yael's `CI_to_SQ` line says "Long road to Tilbury", but SQ = NUE = Weimar — the text
+  // is the authority (§AUDIT-03c method), so it points at Tilbury's LCY, not NUE.
   yael: {
-    CI_to_SW: "Yael: 'Watch the southern road. It floods after rain and the footing's bad.'",
-    CI_to_IN: "Yael: 'Brynn's fine. Don't fuss at her. She doesn't want fussing.'",
-    CI_to_SQ: "Yael: 'Long road to Tilbury. Come back with news.'",
+    LHR_to_MSY: "Yael: 'Watch the southern road. It floods after rain and the footing's bad.'",
+    LHR_to_TLL: "Yael: 'Brynn's fine. Don't fuss at her. She doesn't want fussing.'",
+    LHR_to_LCY: "Yael: 'Long road to Tilbury. Come back with news.'",
     default:  "Yael: 'Move well.'"
   },
   brynn: {
-    IN_to_CI: "Brynn: 'Yael knows this city better than the map does. Trust her.'",
-    IN_to_TV: "Brynn: 'Tell Quill to eat something.'",
+    TLL_to_LHR: "Brynn: 'Yael knows this city better than the map does. Trust her.'",
+    TLL_to_MHQ: "Brynn: 'Tell Quill to eat something.'",
     default:  "Brynn: 'The room\'ll be here when you get back.'"
   },
-  couperin: {
-    TV_to_CI: "Quill: 'Yael\'s on the south corner at seventh bell. She knows the quiet routes.'",
-    TV_to_DK: "Quill: 'Reims keep\'s got a different sound. You\'ll know what I mean when you hear it.'",
+  quill: {
+    MHQ_to_LHR: "Quill: 'Yael\'s on the south corner at seventh bell. She knows the quiet routes.'",
+    MHQ_to_LCY: "Quill: 'Reims keep\'s got a different sound. You\'ll know what I mean when you hear it.'",
     default:  "Quill: 'Safe roads.'"
   },
   pachelbel: {
-    BA_to_CI: "Pachelbel: 'Yael\'s all right. Don\'t tell her I said so.'",
-    BA_to_CY: "Pachelbel: 'Weckmann runs a clean pit. Don\'t embarrass yourself.'",
+    LLA_to_LHR: "Pachelbel: 'Yael\'s all right. Don\'t tell her I said so.'",
+    LLA_to_HKG: "Pachelbel: 'Weckmann runs a clean pit. Don\'t embarrass yourself.'",
     default:  "Pachelbel: 'Watch what you carry.'"
   },
-  weckmann: {
-    CY_to_SW: "Weckmann: 'Ground\'s soft on the SW road past the second marker. Step wide.'",
-    CY_to_DK: "Weckmann: 'Reims keep\'s not hard. It\'s just dark. Different problem.'",
+  crov: {
+    HKG_to_MSY: "Weckmann: 'Ground\'s soft on the SW road past the second marker. Step wide.'",
+    HKG_to_LCY: "Weckmann: 'Reims keep\'s not hard. It\'s just dark. Different problem.'",
     default:  "Weckmann: 'Come back standing.'"
   },
-  bruhns: {
-    CY_to_IS: "Auros: 'The Ironshell node has subsidence in the northwest corner. Don\'t stand there.'",
+  auros: {
+    HKG_to_PDL: "Auros: 'The Ironshell node has subsidence in the northwest corner. Don\'t stand there.'",
     default:  "Auros: 'Document what you see.'"
   }
 };
@@ -29963,8 +30020,11 @@ function storyCheckJournal(node) {
 function storyShowNpc(nodeCode) {
   const d = NPC_DIALOGUE[nodeCode];
   if (!d) return;
-  document.getElementById('npc-card-name').textContent = d.name;
-  document.getElementById('npc-card-text').textContent = d.quote;
+  // §AUDIT-03j: this modal read `d.quote` only, so the 41 state-aware `quoteFn` entries
+  // rendered the literal string "undefined" here (the Talk accordion had always honored
+  // quoteFn). `nameFn` is its counterpart, for a slot whose speaker changes with state.
+  document.getElementById('npc-card-name').textContent = d.nameFn ? d.nameFn() : d.name;
+  document.getElementById('npc-card-text').textContent = d.quoteFn ? d.quoteFn() : d.quote;
   document.getElementById('story-npc-modal').classList.add('visible');
 }
 
@@ -34122,7 +34182,7 @@ function storyRender(node, prefix) {
             _talkAccordion.className = 'npc-talk-accordion';
             _talkAccordion.innerHTML =
               '<div class="npc-talk-quote">' + (_npcDial.quoteFn ? _npcDial.quoteFn() : _npcDial.quote) + '</div>'
-              + '<div class="npc-talk-name">— ' + _npcDial.name + '</div>';
+              + '<div class="npc-talk-name">— ' + (_npcDial.nameFn ? _npcDial.nameFn() : _npcDial.name) + '</div>';
             _npcCard.insertAdjacentElement('afterend', _talkAccordion);
             requestAnimationFrame(() => _talkAccordion && _talkAccordion.classList.add('open'));
             if (_talkBtn) _talkBtn.textContent = 'Close';

@@ -1128,6 +1128,8 @@ All six are Birka city nodes. No other nodes have NIGHT_AMBIENT entries.
 | `_checkWorldProgressionEvents()` | 10670 | Fires off-screen world events on day advance | `WORLD_PROGRESSION_EVENTS`, `worldEventsFired` | `worldEventsFired` push, `S_story.log` |
 | `_applyActThreeWeight()` | 10684 | One-time Act III body class + state flag | `actNumber`, `actThreeWeightApplied` | `actThreeWeightApplied = true`; `document.body.classList.add('act-three')` |
 | `_getFarewell(fromCode, toCode)` | 10661 | Returns farewell line when leaving Friendly+ NPC node | `NODE_NPC_KEYS[from]`, `npcFavorability`, `NPC_FAREWELLS` | none (returns string\|null) |
+
+> **§AUDIT-03j (2026-07-31) — `NODE_NPC_KEYS` was 21/26 dead and both of its columns now resolve.** The table (node code → primary NPC key) was written in the retired 26×16 codes AND in the profiles' surnames, so `_getNodeMapColor` and `_getFarewell` answered at **LHR alone**. Live table: `LHR:yael · TLL:brynn · MHQ:quill · LLA:pachelbel · HKG:crov` — five rows, each a real node and a real favor-ledger key (`couperin`=Bard Tomas **Couperin**=`quill`; `weckmann`=Pit Master **Weckmann**=`crov`). The 20 `E*:'e?_npc'` rows were placeholders naming a key that exists nowhere and were removed as a proven no-op — EB nodes are tinted by the live `ebReturnDone` branch instead. `crane` named no NPC in the file and went with its dead code. `NPC_FAREWELLS`' 12 `<from>_to_<to>` route keys were dead for the same reason (only each NPC's `default` could fire); they are live codes now. The route mechanism never needed cell adjacency — `S_story.currentCode` advances only on node arrival, so a route key means *last node you stood on → next node you reach*.
 | `_getGigaultState()` | 10644 | Returns Petra stall state (present/absent/gone) | `PETRA_STALL_STATES`, `gameDay % 3` | none (returns state object) |
 | `storyCheckQuests(node)` | 11325 | Activates quests at node; completes quests when conditions met | `QUEST_DB`, `S_story.quests`, `S_story.inventory` | `quests[id]` → active/complete; gold/inventory side effects; `_setNpcFavor` calls |
 | `storyQuestToggle()` | 11720 | Opens/closes quest sidebar overlay | DOM state | DOM story-quest-overlay |
@@ -1192,7 +1194,7 @@ Stored in `NPC_VOID_PRESSURE_LINES`. Fires when `fav[npc] ≥ 2` and `voidPressu
 
 ## Corelli the Wandering Merchant *(Layer 61 — ✅ Implemented)*
 
-A new NPC archetype — vendor-modal, not fixed to a single node. Corelli appears at 5 nodes across 5 acts (TL/RD/IS/WM/IN), moving through the same world as the player on their own route. Favorability is purchase-gated: one increment per purchase, cap 3. No quest needed. The relationship is built through commerce.
+A new NPC archetype — vendor-modal, not fixed to a single node. Corelli appears at 5 nodes across 5 acts — live codes **LCY → WRO → BK → NUE → TLL** (the doc's old `TL/RD/IS/WM/IN` were the retired 26×16 names) — moving through the same world as the player on their own route. Favorability is purchase-gated: one increment per purchase, cap 3. No quest needed. The relationship is built through commerce.
 
 **Backstory (revealed at fav = 3):** Former Ivory Circle courier. Carried sealed documents for six years without opening them. One seal broke in the rain. Read the order inside: a suppression directive for a researcher the Circle called "the Antecedent." Has been redistributing her lost materials commercially ever since — not to expose anyone, but because the right things should find the right hands.
 
@@ -1206,7 +1208,7 @@ A new NPC archetype — vendor-modal, not fixed to a single node. Corelli appear
 
 **Cross-references:** §XVI (First Researcher = "the Antecedent"), §XVII (Antecedent Containment Protocol), §XXII (shard 5 placed by First Researcher), §XXIV (scholar_ink hints at pressure thresholds).
 
-**New RD node:** Minor roadside junction between Tilbury and Visby; Corelli's 2nd appearance. No battle/loot/sleep.
+**Stop 2 — WRO, the Midlands Road Fork** (§AUDIT-03j, 2026-07-31). The 2nd appearance was scheduled at the legacy `RD` roadside junction, one of the stubs §WALK deleted when the world became cell-walked; the entry still named it, so `_checkCorelliAppearance` never matched and **stop 2 of 5 had never fired**. Reassigned to `WRO` — the surviving road fork on the Tilbury→Visby corridor his opener describes (*"the road between here and the coast"*, *"the Wilds road"*). Gate-fenced by `check:noderegs`.
 
 **Lab report required before implementation:** `lab-report-corelli-merchant.md`.
 

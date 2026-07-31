@@ -1647,7 +1647,21 @@ Prerequisites: `ngPlusRun ≥ 1` + `wmFirstResearcherKnown` (from §XVI) + `entr
 
 Two texture layers added to open-world traversal. No state flags on either system.
 
-- **Junction Vignettes** (`JUNCTION_VIGNETTES`, HTML line 11145) — J1–J7 named roadside nodes each have one NPC on first visit: Tessie (J1), Old Faeron (J2), Mira (J3, Act III+), The Cartographer (J4), Wren (J5), empty note (J6), child's toy (J7), empty verge (RD). Optional `[HELP]` button (10gp donation). Rendered in `storyRender()` at HTML line 15608 when `JUNCTION_VIGNETTES[node.code]` exists.
+- **Junction Vignettes** (`JUNCTION_VIGNETTES`) — eight roadside scenes, one per node on first visit, with an optional `[Help — 10gp]` donation button; rendered in `storyRender()` when `JUNCTION_VIGNETTES[node.code]` exists.
+  **§AUDIT-03j (2026-07-31) — seven of the eight had never rendered.** They were keyed to `J1`–`J7` + `RD`, the junction/road stubs §WALK deleted when the world became cell-walked (0 junctions); only `J1` was ever remapped (→ `WRO`). Rehomed onto live road nodes, each derived from the vignette's own text rather than by position:
+
+  | Scene | Legacy | Live node | Why that node |
+  |---|---|---|---|
+  | Tessie, merchant's runner | `J1` | `WRO` Midlands Road Fork | already remapped; the only one that rendered |
+  | Old Faeron, retired soldier | `J2` | `DAR` The Road Junction — South of the Relay Post | a veteran at a relay-post junction |
+  | Mira, refugee (Act III+) | `J3` | `PCR` Canterbury Road — Pilgrims' Camp | *"we left Tilbury"* — the cell east of Tilbury's LCY, and she is camped |
+  | The Cartographer | `J4` | `J13` The Western Sea Road | she tears off *"the coastline"* as payment |
+  | Wren, Scholar Kings courier | `J5` | `ADN` Ardennes — Road Junction | she carries news of *the Weimar archive*; ADN sits on Weimar's row |
+  | *"Paid in full. —S."* note | `J6` | `BLW` Blidworth — Forest Toll Gate | a note pinned to a post, at a toll gate |
+  | A child's toy on the road | `J7` | `BNX` The Eastern Bend — Relay Road | the bend Tessie's surviving WRO line warns about |
+  | Cold fire ring, broken cart wheel | `RD` | `OKD` The Oak at the Crossroads | *"leans against the tree line"* |
+
+  Gate-fenced by `check:noderegs` (`check:walk` #13) — a vignette keyed to a node that does not exist is now CI-red.
 - **Road Companion** (`COMPANION_LINES`, HTML line 11155) — one named traveler per act (Acts II–VI) delivers one lore line in the first cell departing a hub node: Dessa (Act II, harbor ledger), Olaf (Act III, Scholar Kings lockout date), Maret (Act IV, Visby west gate), Pilgrim (Act V, MT sealed tunnel), empty road (Act VI). Rendered at HTML line 17152 when `act >= 2 && !companionActsSeen[act]`. No repeat per act.
 
 ---
@@ -1744,6 +1758,10 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 #### ✅ Implemented — The Homecoming: Act VIII Farewell Beats (plan-archive.md §XXV, Layer 60)
 
 `ACT8_FAREWELL_BEATS` const (6 keys). Fires via `_renderNpcCard()` when `actNumber === 8 + fav ≥ 1 + flag unset`. Renders via `storyMsg()` with 🌅 prefix. Gift items auto-pushed to inventory.
+
+> ⚠️ The `Node` column below is in retired 26×16 codes: `CI`=`LHR` · `IN`=`TLL` · `TV`=`MHQ` · `BA`=`LLA` · `CY`=`HKG`. Look codes up in `docs/maps/node-index.md`, never in a hand-maintained table (§AUDIT-03l).
+>
+> **Not to be confused with the ambient `NPC_FAREWELLS`** (`_getFarewell`), whose 12 `<from>_to_<to>` route keys and 3 of 6 owner keys were dead until §AUDIT-03j (2026-07-31) — so every departure fell back to the NPC's `default` line, and only Yael's could fire at all. Owners are now the profile keys the favor ledger actually spends (`quill`/`crov`/`auros`, not `couperin`/`weckmann`/`bruhns`) and all 12 routes name live nodes.
 
 | NPC Key | Node | Theme | Gift |
 |---------|------|-------|------|
@@ -2512,7 +2530,7 @@ MILEPOINT F  ebReturnDone[ebCode] = true; quest_[code]_return set to 'complete'
 
 ### FL7 — NPC Dialogue Priority
 
-**`NPC_DIALOGUE`** (HTML line 8210) — 27-entry dictionary keyed by node code. Each entry: `{name, quote}`. Covers all non-Birka story NPCs (Magistra Muffat, Sandmage Izador, Fisherman, etc.) plus static fallback quotes for the five Birka Six nodes. Used by `storyShowNpc()` when `BIRKA_NPC_PROFILES` does not apply. → doc: story.md §FL7
+**`NPC_DIALOGUE`** — dictionary keyed by node code (68 entries). Each entry: `{name, quote}`, or `{name, nameFn, quoteFn}` when the speaker/line varies with state. **One slot per node code**: §AUDIT-03j (2026-07-31) removed `MS_SPARK`, the §SPARK-01 rat catcher parked under the legacy code `MS` (=`SEN`) beside the Ship Captain — unreachable, so Brannick had never spoken despite `quest_spark_03/04` both activating at SEN. His four quote states now hang off the SEN entry behind `_senHoldSpeaker()`: the hold's rat catcher while the cargo-hold whodunit is live, the captain otherwise. The same pass fixed `storyShowNpc`, which read only `d.quote` — the 41 `quoteFn` entries had been rendering the literal string "undefined" in the d-pad NPC modal. Covers all non-Birka story NPCs (Magistra Muffat, Sandmage Izador, Fisherman, etc.) plus static fallback quotes for the five Birka Six nodes. Used by `storyShowNpc()` when `BIRKA_NPC_PROFILES` does not apply. → doc: story.md §FL7
 
 ```
 MILEPOINT A  Player enters node → storyShowNpc(nodeCode) dispatches to _renderNpcCard(key, container)
