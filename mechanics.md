@@ -148,6 +148,8 @@ At **≤30% HP** the enemy's turn (`_storyEnemyTurn`) branches on what kind of t
 - **Void-touched enemies *press* (one-time enrage).** `_isVoidEnemy()` is a **heuristic**: Void/undead vocabulary in the name/key (void, corrupt, wraith, shade, revenant, wight, ghoul, lich, skeleton, necro, dread, abyss, blight, cursed, shadow, demon…) **or** a Void-ish current terrain. Once per fight (`S.opp.enraged`, reset each encounter in `_storyRollInit`) it gains `_voidEnrage(tier)`: **easy** +1 atk/+1 dmg … **deadly** +4 atk/+4 dmg **and an extra damage die** — then still attacks that turn. Makes "Deadly ⚠" read as a duel, not just big numbers.
 - **Mundane beasts *flee*.** With `_fleeChance(tier)` (easy 0.5 → deadly 0.1) the beast breaks and runs: `_storyEnemyFlees()` ends the fight — **no loot, node not cleared** — but the effort still earns XP (see below).
 
+> ⚠️ **Both branches key on `tier`, and both fall back silently** (§DX-02g, 2026-07-31). `_voidEnrage` answers an unknown tier with the *weakest* press (`+1/+1`) and `_fleeChance` with `0.4`; the same value also feeds `_storyRollInit`'s initiative modifier and `_weightedMonsterPick`'s encounter weight (`|| 10`). `void_shaman` shipped as `tier:'rare'` and pressed at +1/+1 for as long as it existed. **A monster's tier must be one of the five** — see the tier-contract table in `monsters.md`.
+
 ### XP System
 
 XP is earned on every enemy kill, including open-cell encounters.

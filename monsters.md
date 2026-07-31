@@ -14,9 +14,26 @@ Monsters go in through the API like every other entity — the old "hand-edit `M
 ./api.sh post monster/dock_rat/drop name="Rat Tail" icon=🐀 sell=2
 ```
 
-**The entry shape is exactly nine fields, all required** — `{key, name, ac, hp, atk, dmgDie, dmgCount, dmgFlat, tier}`, uniform across all 398 live entries. Damage is `dmgCount·d(dmgDie) + dmgFlat`; there is **no `dmg` field, and no stored `xp`** (battle XP is computed as ≈`AC·maxHP`). **`tier` is a string** — `trivial | easy | medium | hard | deadly` — and it is not cosmetic: the worldbuilder's monster picker groups by exactly those five and **silently drops anything else**. A body that misses a field, names a retired one, or passes a numeric tier is rejected `422` with the offending fields listed and **nothing written**.
+**The entry shape is exactly nine fields, all required** — `{key, name, ac, hp, atk, dmgDie, dmgCount, dmgFlat, tier}`, uniform across all 398 live entries. Damage is `dmgCount·d(dmgDie) + dmgFlat`; there is **no `dmg` field, and no stored `xp`** (battle XP is computed as ≈`AC·maxHP`). A body that misses a field, names a retired one, or passes a numeric tier is rejected `422` with the offending fields listed and **nothing written**.
 
-⚠️ `./api.sh del monster <key>` still only removes the entry from the in-memory model — the source line survives the save (§DX-01i). Delete by hand until that ships.
+### The `tier` contract — five values, and it is not cosmetic (§DX-02g, 2026-07-31)
+
+**`tier` is a string, and it must be one of exactly five: `trivial | easy | medium | hard | deadly`.** It is read by the engine in six places, and **every one of them falls back on an unknown value rather than throwing** — which is how `void_shaman` shipped as `tier:'rare'` and `void_rat_swarm` as `tier:'low'` and stayed invisible:
+
+| Reader | What an off-contract tier does |
+|---|---|
+| `_voidEnrage(tier)` | falls back to `{atk:1, dmg:1, die:0}` — a Void enemy's §PLAY-01-B low-HP press runs at the **weakest** magnitude regardless of its stat block |
+| `_storyRollInit` | `tierMod[tier] ?? 0` — the enemy rolls initiative with **no** tier modifier (`hard` is +3) |
+| `_weightedMonsterPick` | `WEIGHTS[tier] || 10` — a flat weight 10, which at low notoriety is **2.5× a `hard` monster's** encounter rate |
+| `_fleeChance(tier)` | `?? 0.4` — a mundane beast flees more readily than a `medium` one (0.35) |
+| the two threat badges | render the raw value (`RARE`) and ask for a `.threat-<tier>` CSS class **that does not exist** → an unstyled badge |
+| `populateTerrainEnemies` | the terrain-enemy picker groups by the five and **silently drops** anything else |
+
+`./api.sh post monster` has rejected off-contract tiers since §DX-01c, so no *new* one can be created; `tests/integration/dx02g-monster-tier-contract.test.js` pins both directions — every `MONSTER_POOL`/`EPIC_BOSS_POOL` entry on contract, **and** every tier-keyed engine map covering all five (a map that ships partial is the same silent-fallback defect from the other side).
+
+**Two corrections, derived from the corpus rather than tasted:** `void_shaman` (The Warden) `rare → hard` — its two exact stat-block twins (AC15/HP65/atk6: Bandit Captain, Pirate Captain) are both `hard`; `void_rat_swarm` `low → easy` — 6 of its 8 nearest stat-neighbours are `easy`, its exact AC/HP/atk twin is Jackalwere.
+
+*(`./api.sh del monster <key>` now excises at source level with verify-or-revert and cascades the trophy drop — fixed 2026-07-30, §DX-01d/i. The old "delete by hand" warning here is retired.)*
 
 ---
 

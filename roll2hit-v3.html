@@ -5407,7 +5407,7 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
   // ── Layer 55: Visby Underground ──
   hollow_hands_guard: { key:'hollow_hands_guard', name:'Hollow Hands Guard', ac:13, hp:22, atk:4, dmgDie:6,  dmgCount:1, dmgFlat:2,  tier:'easy'     },
   // ── Layer 56: The Void Shaman (scripted encounter only — not in random pools) ──
-  void_shaman:        { key:'void_shaman',        name:'The Warden',         ac:15, hp:65, atk:6, dmgDie:6,  dmgCount:2, dmgFlat:4,  tier:'rare'     },
+  void_shaman:        { key:'void_shaman',        name:'The Warden',         ac:15, hp:65, atk:6, dmgDie:6,  dmgCount:2, dmgFlat:4,  tier:"hard"     },
   // trivial — city slums vermin (AC ≤ 5, HP 2–20, Lv1-friendly)
   rabid_dog:         { key:'rabid_dog',         name:'Rabid Dog',               ac:4, hp:9,  atk:3, dmgDie:4, dmgCount:1, dmgFlat:1, tier:'trivial' },
   aggressive_turkey: { key:'aggressive_turkey', name:'Aggressive Turkey',       ac:2, hp:4,  atk:1, dmgDie:3, dmgCount:1, dmgFlat:0, tier:'trivial' },
@@ -5650,7 +5650,7 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
   bronze_automaton: { key:'bronze_automaton', name:'Bronze Automaton',         ac:18, hp:105, atk:7,  dmgDie:8,  dmgCount:2, dmgFlat:4,  tier:'hard'   },
   ettin:            { key:'ettin',            name:'Ettin (Two-Headed Giant)', ac:12, hp:85,  atk:7,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
   void_wolf:        { key:'void_wolf',        name:'Void-Touched Wolf',        ac:13, hp:28,  atk:5,  dmgDie:8,  dmgCount:1, dmgFlat:3,  tier:'medium', voidTainted:true },
-  void_rat_swarm:   { key:'void_rat_swarm',   name:'Void Rat Swarm',           ac:12, hp:18,  atk:4,  dmgDie:4,  dmgCount:2, dmgFlat:0,  tier:'low',    voidTainted:true },
+  void_rat_swarm:   { key:'void_rat_swarm',   name:'Void Rat Swarm',           ac:12, hp:18,  atk:4,  dmgDie:4,  dmgCount:2, dmgFlat:0,  tier:"easy",    voidTainted:true },
   void_walker:      { key:'void_walker',      name:'Void Walker',              ac:15, hp:97,  atk:8,  dmgDie:8,  dmgCount:3, dmgFlat:0,  tier:'hard'   },
   star_spawn:       { key:'star_spawn',       name:'Star Spawn (Far Realm)',   ac:14, hp:85,  atk:7,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
   jade_construct:   { key:'jade_construct',   name:'Jade Construct',           ac:17, hp:114, atk:8,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
