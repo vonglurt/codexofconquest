@@ -506,11 +506,11 @@ total = d20 + proficiencyBonus + S_story.atkBonus (level)
 
 ### Main Hand Weapons (WEAPON_ITEMS)
 
-70 entries: 14 base weapon types × 5 magic tiers (base, +1, +2, +3, +4) — `[0,1,2,3,4].flatMap(...)` over `_BASE_WEAPONS` (`23740`).
+70 entries: 14 base weapon types × 5 magic tiers (base, +1, +2, +3, +4) — `[0,1,2,3,4].flatMap(...)` over `_BASE_WEAPONS` (`const _BASE_WEAPONS@24295`).
 
 **14 base types (die size ascending):** Pointy Stick d4 Lv1, Sickle d4 Lv1, Axe d6 Lv1, Bow d6 Lv2, Scimitar d6 Lv2, Flail d8 Lv3, Long Sword d8 Lv3, Morningstar d8 Lv4, Rapier d8 Lv4, Crossbow d10 Lv5, Glaive d10 Lv5, Halberd d10 Lv6, Maul 2d6 Lv7, Lance d12 Lv8.
 
-**Magic-tier level gate:** `_magicTierAllowed(magic)` (`23755`) = player `level ≥ magic × 5` — so **+1 → Lv5, +2 → Lv10, +3 → Lv15, +4 → Lv20** (note: no `baseLv` term in the gate). Each item also carries a per-entry `minLevel = min(20, max(magic × 5, baseLv + magic × 4))` used for display/sort.
+**Magic-tier level gate:** `_magicTierAllowed(magic)` (`function _magicTierAllowed@24333`) = player `level ≥ magic × 5` — so **+1 → Lv5, +2 → Lv10, +3 → Lv15, +4 → Lv20** (note: no `baseLv` term in the gate). Each item also carries a per-entry `minLevel = min(20, max(magic × 5, baseLv + magic × 4))` used for display/sort.
 
 **Acquisition (§FC06 nerf — fishing-exclusive positive magic):** only the **base tier (magicBonus 0)** drops from combat, via the one-guaranteed `_rollMonsterWeaponDrop()` (d6 quality −4..0; see §Equipment Drops). The +1..+4 tiers **no longer drop from any kill** — the old `_rollMainWeaponDrop()` 15%/battle path is **deleted** and the d100 table is consumables-only. Positive-magic weapons reach the player only via **Yugurt Lake fishing** (`LAKE_MAGIC_DB`) and **hand-authored quest / Epic-Boss rewards**. The +N `WEAPON_ITEMS` pool stays defined for save reconstruction + future authored grants, but nothing random rolls it.
 
@@ -545,7 +545,7 @@ Every new game begins at City Streets — Birka (LHR) with:
 
 **Starting attack bonus at Level 1:** STR +3 (score 16) + Prof +2 + Flint Dagger −3 = **+2 to hit**. Deliberately weak — the crude flint dagger makes early fights challenging and rewards upgrading to a better offhand.
 
-The start node is **`LHR`** ("City Streets — Birka", `num:1`, `8225`) — set by `storyNewGame() → storyRender(NODE_MAP['LHR'])`; `checkpointNode` also defaults to `LHR`. *(Note: the neighbouring-node codes below — the City Fence vendor, the inn, and the NPC codes in §Story Mode — are pre-§WALK legacy codes and still need a dedicated remap pass; only the `LHR` start node is code-verified here.)*
+The start node is **`LHR`** ("City Streets — Birka", `num:1`, `LHR:{ num:1@8315`) — set by `storyNewGame() → storyRender(NODE_MAP['LHR'])`; `checkpointNode` also defaults to `LHR`. *(Note: the neighbouring-node codes below — the City Fence vendor, the inn, and the NPC codes in §Story Mode — are pre-§WALK legacy codes and still need a dedicated remap pass; only the `LHR` start node is code-verified here.)*
 
 ---
 

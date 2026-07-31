@@ -9,6 +9,8 @@
     "start": "node js/wbapi-server.js",
     "stats": "node scripts/stats.js",
     "nodes": "node scripts/node-index.js",
+    "anchors": "node scripts/resolve-anchors.js",
+    "anchors:fix": "node scripts/resolve-anchors.js --fix",
     "test": "playwright test",
     "test:headed": "playwright test --headed",
     "test:install": "playwright install chromium",
@@ -27,12 +29,13 @@
     "check:nodeindex": "node scripts/node-index.js --check",
     "check:noderegs": "node scripts/check-noderegs.js --selftest && node scripts/check-noderegs.js",
     "check:npcregs": "node scripts/check-npcregs.js --selftest && node scripts/check-npcregs.js",
+    "check:anchors": "node scripts/resolve-anchors.js --selftest && node scripts/resolve-anchors.js",
     "check:arraypatch": "node scripts/check-array-patch.js",
     "check:itemchain": "node scripts/check-itemchain.js",
     "check:laddermigration": "node scripts/check-ladder-migration.js",
     "check:worlddiff": "node scripts/world-diff.js --selftest",
     "test:mud": "node tests/mud-harness.mjs",
-    "check:walk": "npm run check:invariants && npm run check:dupkeys && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity && npm run check:questparity && npm run check:gateast && npm run check:rng && npm run check:questgraph && npm run check:nodeindex && npm run check:noderegs && npm run check:npcregs"
+    "check:walk": "npm run check:invariants && npm run check:dupkeys && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity && npm run check:questparity && npm run check:gateast && npm run check:rng && npm run check:questgraph && npm run check:nodeindex && npm run check:noderegs && npm run check:npcregs && npm run check:anchors"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3"
