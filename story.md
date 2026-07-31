@@ -2645,6 +2645,16 @@ MILEPOINT G  storyNewGamePlus() — NG+ reset
 | `_yaelEscortAction()` | 8057 | One-time Yael escort narration at CI; sets yaelEscortUsed | `yaelEscortUsed`, `npcFavorability.yael` | `yaelEscortUsed = true` |
 | `storyNewGamePlus()` | 8186 | NG+ reset: preserve npcFavorability + pitPerks, reset all else | `npcFavorability`, `pitPerks`, `ngPlusRun` | full S_story reset + NG+ fields restored |
 
+> **§AUDIT-03n (2026-07-31) — the ending showed the STRANGER epilogue for three of the six NPCs, at any favor.** `_buildEpilogueScroll()`'s `npcOrder` named `couperin` / `weckmann` / `bruhns` — the profiles' **surnames**, which the favor ledger never writes — so `npcFavorability[key]` was always `0` and the `fav>=2` / `fav>=3` lines authored for Quill, Weckmann and Bruhns were unreachable. The same three keys keyed **seven** registries in all (`SWEELINCK_NAMING_LINES` · `NPC_EPILOGUES` · `NPC_NG_PLUS_GREETINGS` · `ROUGH_WHISKEY_REACTIONS` · `NPC_ACT_THREE_LINES` · `FROBERGER_TRACES` · `NPC_CROSS_REFS` — 21 dead entries), plus **five `_npcFavor('bruhns')` gate sites** in live render code. All renamed to the ledger's keys:
+>
+> | dead key | live key | character | node |
+> |---|---|---|---|
+> | `couperin` | **`quill`** | Bard Tomas Couperin | MHQ |
+> | `weckmann` | **`crov`** | Pit Master Weckmann | HKG |
+> | `bruhns` | **`auros`** | Cmdr Seraphine Bruhns | HKG |
+>
+> The **tell** was that the engine held two `npcOrder` lists that disagreed — the town-crier one (`_getTownCrierLine`) already used the real keys. Same defect and same three names as §AUDIT-03j's `NODE_NPC_KEYS`/`NPC_FAREWELLS` columns; the six canonical keys are `yael` · `brynn` · `quill` · `pachelbel` · `crov` · `auros`. Fenced by **`check:npcregs`** (`check:walk` gate #14) and `tests/integration/audit03n-npc-registries.test.js`.
+
 ---
 
 ## ✅ Implemented — The Froberger Memorial: A Living Stone at CI (plan-archive.md §XXVIII, Layer 63)

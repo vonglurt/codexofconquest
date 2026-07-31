@@ -27047,6 +27047,16 @@ const SWEELINCK_DIALOGUE_VARIANTS = [ // → doc: lab-reports/lab-report-endings
 ];
 
 const SWEELINCK_NAMING_LINES = { // → doc: story.md §Covenant Ceremony (per-NPC fav-gated witness lines)
+  // §AUDIT-03n: this table and the six below it (NPC_EPILOGUES, NPC_NG_PLUS_GREETINGS,
+  // ROUGH_WHISKEY_REACTIONS, NPC_ACT_THREE_LINES, FROBERGER_TRACES, NPC_CROSS_REFS) were
+  // keyed to the profiles' SURNAMES — 'couperin'/'weckmann'/'bruhns' — which the favor
+  // ledger never writes, so every lookup returned undefined and 21 authored entries were
+  // unreachable. The ledger spends the PROFILE keys, and only these six exist:
+  //   quill = Bard Tomas Couperin (MHQ) · crov = Pit Master Weckmann (HKG)
+  //   auros = Cmdr Seraphine Bruhns (HKG) · yael (LHR) · brynn (TLL) · pachelbel (LLA)
+  // Same defect and same three names as §AUDIT-03j's NODE_NPC_KEYS/NPC_FAREWELLS columns.
+  // Fenced by `check:npcregs` (check:walk gate #14) — a key here must resolve in the
+  // 4-registry npcKeyVocab(), and a new all-lowercase table must be classified there.
   yael: {
     2: "Yael, who keeps the city honest with her own hands.",
     3: "Yael, who told you about the report she wishes she hadn't filed — and filed a second one because of you."
@@ -27055,7 +27065,7 @@ const SWEELINCK_NAMING_LINES = { // → doc: story.md §Covenant Ceremony (per-N
     2: "Brynn, who runs the inn because someone has to and because she is very good at it.",
     3: "Brynn, who remembered, at the end, what she was running toward."
   },
-  couperin: {
+  quill:    {
     2: "Tomas Couperin, who is still in debt and still playing.",
     3: "Quill, who wrote a song for you. Who plays it every Friday."
   },
@@ -27063,11 +27073,11 @@ const SWEELINCK_NAMING_LINES = { // → doc: story.md §Covenant Ceremony (per-N
     2: "Pachelbel, who paid a debt he didn't owe because his code required it.",
     3: "Pachelbel, who went to see the family. After. He didn't tell you."
   },
-  weckmann: {
+  crov:     {
     2: "Weckmann, who teaches because Bruna needed a teacher and there wasn't one.",
     3: "Weckmann, who said, when you asked: 'You're the best student I've had since him. I needed you to know that.'"
   },
-  bruhns: {
+  auros:  {
     2: "Seraphine Bruhns, who keeps filing the reports.",
     3: "Auros, who finished the theory Froberger started. She's going to submit it."
   }
@@ -27084,7 +27094,7 @@ const NPC_EPILOGUES = { // → doc: story.md §Epilogue (per-NPC fav-gated epilo
     2: "Brynn's daughter came home for two weeks. They stayed up late.",
     3: "Brynn's daughter came home. She sat in the kitchen and watched her mother run the inn and said, finally: 'You're very good at this.' Brynn said: 'I know. I'm figuring out what else I am.'"
   },
-  couperin: {
+  quill:    {
     0: "Quill is still in debt. He's still playing.",
     2: "Quill settled the debt. He's playing without counting the reach now.",
     3: "Quill settled the debt. He plays the song every Friday. He's working on a second one. It's about staying."
@@ -27094,12 +27104,12 @@ const NPC_EPILOGUES = { // → doc: story.md §Epilogue (per-NPC fav-gated epilo
     2: "Pachelbel sent coin to Raison's family. Anonymous. He didn't go see them.",
     3: "Pachelbel went to see the family. Raison's kid is eight. He sat with them for an hour. He didn't say who he was. He said he knew Raison. The kid asked what Raison was like. Pachelbel said: 'Better at the work than me.'"
   },
-  weckmann: {
+  crov:     {
     0: "Weckmann is still running the pit.",
     2: "Weckmann trains three fighters now. The illegal operation didn't come back.",
     3: "Weckmann started a second class on Thursdays. Younger fighters, twelve to sixteen. He teaches them the rules first, before anything else. He says it's because someone taught him that way. He knows that's not true. He does it anyway."
   },
-  bruhns: {
+  auros:  {
     0: "Auros submitted another report. It was reclassified.",
     2: "Auros completed the structural survey. She submitted it through a different channel.",
     3: "Auros finished the theory. She submitted it jointly with a Scholar King archivist who had independent data. The city planning office acted on it. Not everything — half. She says half is how it starts."
@@ -27116,10 +27126,10 @@ const FROBERGER_EPILOGUE = { // → doc: story.md §Epilogue (Froberger memorial
 const NPC_NG_PLUS_GREETINGS = { // → doc: docs/story/story-arc-ngplus.md §NPC Memory Lines
   yael:     "You again. I wondered if you'd come back. I set the patrol route to account for it.",
   brynn:    "Oh. You're back. The corner room's been ready. I don't know why I kept it.",
-  couperin: "I thought you might. I've been working on something new. It's not done. Come back when you've been to the pit.",
+  quill:    "I thought you might. I've been working on something new. It's not done. Come back when you've been to the pit.",
   pachelbel:"I know what you're here for. The code hasn't changed. Neither have I. That's not a bad thing.",
-  weckmann: "Back for more. Good. The tree starts over — we build what you've earned again, right.",
-  bruhns:   "The depths are different this run. I have new data. I need your eyes again."
+  crov:     "Back for more. Good. The tree starts over — we build what you've earned again, right.",
+  auros:    "The depths are different this run. I have new data. I need your eyes again."
 };
 
 // ── Layer 50: §XV NPC Dear Friend memory lines (second NG+ visit, fav ≥ 2) ──
@@ -27174,7 +27184,7 @@ const ROUGH_WHISKEY_REACTIONS = { // → doc: world.md §Rough Whiskey (BA vendo
     friendly:  "[She pours water without asking. Sets it in front of you. Says nothing. Watches until you drink it.]",
     dearFriend: "Was it the pit or was it something else? Either way — water first. Talk after if you want."
   },
-  couperin: {
+  quill:    {
     impartial: "Ha! The lute strings are sensitive and I can smell everything from up here. Come back sober.",
     friendly:  "You showed up like this once before. Different kind of night, I think. The request list is still on the board.",
     dearFriend: "[Quill plays something slow without being asked. Doesn't make eye contact. Plays until the song ends.] Better?"
@@ -27184,12 +27194,12 @@ const ROUGH_WHISKEY_REACTIONS = { // → doc: world.md §Rough Whiskey (BA vendo
     friendly:  "I don't deal with people in altered states. Not a moral thing — a precision thing. Come back tomorrow.",
     dearFriend: "Sit down. Not for business. Just — sit down. There's a chair."
   },
-  weckmann: {
+  crov:     {
     impartial: "I know that bottle. You're not fighting tonight. Come back straight.",
     friendly:  "[Weckmann looks at you for a long moment.] You want to fight like this again? I'm not stopping you. I'm also not impressed.",
     dearFriend: "[Weckmann pours his own glass. Sets it on the counter. Doesn't drink it.] I keep this one for after. Sit."
   },
-  bruhns: {
+  auros:  {
     impartial: "The depth survey requires a clear head. Come back when you have one.",
     friendly:  "Rough Whiskey before a research briefing. Bold choice. What's going on?",
     dearFriend: "Froberger used to do that. Before the hard caves. I asked him once why. He said: 'so I don't overthink it.' Did it work for you?"
@@ -27271,10 +27281,10 @@ const NPC_FAREWELLS = { // → doc: story.md §Act VIII NPC Farewell Beats (sepa
 const NPC_ACT_THREE_LINES = { // → doc: story.md §FL7 — NPC Dialogue Priority (one-time lines fired in Act III on node visit; per-NPC)
   yael:     "Rough stretch. I can see it in how you're moving.",
   brynn:    "You look tired. Sit down for a minute. The world can wait one minute.",
-  couperin: "[Quill just nods when you arrive. Starts a slower song without asking.]",
+  quill:    "[Quill just nods when you arrive. Starts a slower song without asking.]",
   pachelbel:"You've been east. I can tell. Take a breath before you tell me what you need.",
-  weckmann: "You're carrying something. Not in your pack. Come train. It helps.",
-  bruhns:   "The readings are worse. I know you know. Sit down."
+  crov:     "You're carrying something. Not in your pack. Come train. It helps.",
+  auros:    "The readings are worse. I know you know. Sit down."
 };
 
 /* ── §RESEARCH-01 §III.B: NPC Preamble Lines — one observable action per Dear Friend, fav ≥ 2 ── */
@@ -27487,10 +27497,10 @@ function _buildWeckmannLog() {
 const FROBERGER_TRACES = { // → doc: world.md §Froberger Traces (6 one-time NPC memories; fav >= 2 + visit-count gated)
   yael:     { minFav:2, visitTrigger:3, text:"A researcher came through once. Froberger, he said. Knew every patrol route by the second day. Left without saying why. I assumed it was urgent. It usually is, with that type." },
   brynn:    { minFav:3, visitTrigger:1, text:"He stayed in room 6. Very quiet. Read all night — I could see the light under the door. I brought him water twice. He said thank you both times. He left early. He didn't say goodbye, but he left the room cleaner than he found it. I think that's what he could manage." },
-  couperin: { minFav:2, visitTrigger:2, text:"He came in once, sat at the back, didn't request anything. Just listened. At the end he said: 'You're good.' I said thank you. He said: 'I mean technically. There's something else. You'll find it or you won't.' And he left. I've been thinking about what the something else is ever since." },
+  quill:    { minFav:2, visitTrigger:2, text:"He came in once, sat at the back, didn't request anything. Just listened. At the end he said: 'You're good.' I said thank you. He said: 'I mean technically. There's something else. You'll find it or you won't.' And he left. I've been thinking about what the something else is ever since." },
   pachelbel:{ minFav:2, visitTrigger:2, text:"He looked at the code on the wall for a long time. Then he said: 'You mean it.' Not a question. I said yes. He said: 'That's rarer than you think.' He bought one item. Left. I ran his description past three contacts afterward. Nobody had a file on him. I respected that." },
-  weckmann: { minFav:3, visitTrigger:2, text:"Watched three fights. Didn't place a bet. At the end he asked me how long I'd been running the pit. I told him. He said: 'You still grieve it, don't you. That's why you run it clean.' I asked how he knew. He said: 'You watch the fighters like you're watching for something specific.' He wasn't wrong. I didn't ask him how he knew that." },
-  bruhns:   { minFav:2, visitTrigger:1, text:"He read my whole depth survey in one session. Three hours. No questions. At the end he said: 'The rate of change is accelerating. You have maybe two years before the first surface event.' I asked what he meant. He said he'd seen it three other places. He left before I could ask what happened to those places. I've been assuming the worst ever since. The data supports it." }
+  crov:     { minFav:3, visitTrigger:2, text:"Watched three fights. Didn't place a bet. At the end he asked me how long I'd been running the pit. I told him. He said: 'You still grieve it, don't you. That's why you run it clean.' I asked how he knew. He said: 'You watch the fighters like you're watching for something specific.' He wasn't wrong. I didn't ask him how he knew that." },
+  auros:    { minFav:2, visitTrigger:1, text:"He read my whole depth survey in one session. Three hours. No questions. At the end he said: 'The rate of change is accelerating. You have maybe two years before the first surface event.' I asked what he meant. He said he'd seen it three other places. He left before I could ask what happened to those places. I've been assuming the worst ever since. The data supports it." }
 };
 
 const NPC_CROSS_REFS = { // → doc: world.md §Cross-References (17 lines; every-3rd-visit injection at fav >= 1)
@@ -27505,7 +27515,7 @@ const NPC_CROSS_REFS = { // → doc: world.md §Cross-References (17 lines; ever
     { fav:1, text:"I asked Quill to play something slow last month. He came by the next evening. Didn't charge me. Played for forty minutes. He knows exactly when to stop." },
     { fav:2, text:"Quill is going to be fine. He's already fine, actually. He just doesn't know it yet because the debt number is still in his head. Once that's gone — he'll play like he used to." }
   ],
-  couperin: [
+  quill:    [
     { fav:1, text:"Pachelbel and I have a history. He lent me money when the Guild first came after me. He says it wasn't a loan. I say it was. We've been having this argument for four years. I think we both like having it." },
     { fav:2, text:"Pachelbel's code is real. I've tested it — accidentally. He turned down a deal I set up because the margin was wrong by his code's standards. He didn't tell me. He just did. That's when I understood the code isn't performance." },
     { fav:1, text:"Brynn asked for something slow last Tuesday. I was there Wednesday. She was doing the books while I played. She didn't look up. She looked less tired by the time I stopped. I count that." }
@@ -27514,12 +27524,12 @@ const NPC_CROSS_REFS = { // → doc: world.md §Cross-References (17 lines; ever
     { fav:1, text:"Quill says it wasn't a loan. It was. I let him say it wasn't because the alternative is that it was a gift, and Quill's too proud for gifts. So it's a loan we both know will never be repaid. That works fine." },
     { fav:2, text:"He's going to pay it back eventually. Not because he has to — because he'll want to. When he does I'll tell him to put it toward the next license payment. He'll argue. I'll win. It'll be fine." }
   ],
-  weckmann: [
+  crov:     [
     { fav:1, text:"The guard captain checks on the pit results without checking on the pit. Smart. She knows what she needs to know without knowing what she can't unknow. I respect the line she's drawn." },
     { fav:1, text:"Auros does her surveys at the bottom of the CY access shaft. I hear the equipment. I don't ask. She doesn't ask about the pit. We work in parallel. That's a good arrangement." },
     { fav:2, text:"She found something down there six months ago. I could tell by the way she came back up. She didn't say what. I didn't ask. But I've been keeping the pit fighters away from the north corner of the shaft since then." }
   ],
-  bruhns: [
+  auros:  [
     { fav:1, text:"Weckmann cleared the north access corridor last season without being asked. I think he knew I needed it clear. He didn't say anything. That's his way." },
     { fav:2, text:"I've been using the fighters he trains for depth security when the survey goes past the first threshold. They're calm under pressure. Whatever he's teaching them, it works down there too." }
   ]
@@ -27926,7 +27936,7 @@ function _buildEpilogueScroll() {
     ];
   }
   const lines = [];
-  const npcOrder = ['yael','brynn','couperin','pachelbel','weckmann','bruhns'];
+  const npcOrder = ['yael','brynn','quill','pachelbel','crov','auros'];
   npcOrder.forEach(key => {
     const fav = (S_story.npcFavorability || {})[key] ?? 0;
     const entries = NPC_EPILOGUES[key];
@@ -32157,7 +32167,7 @@ function storyRender(node, prefix) {
   }
   // ── Layer 72: §XXXVII Bruhns CO fav-gated scene ──
   if (node.code === 'TLS' && !S_story.defeatedBattles['TLS'] && !S_story.bruhnsCoSceneDelivered) {
-    const fav = _npcFavor('bruhns');
+    const fav = _npcFavor('auros');
     let coSceneText = null;
     if (fav >= 2) {
       coSceneText = BRUHNS_CO_SCENE.dearFriend;
@@ -32994,7 +33004,7 @@ function storyRender(node, prefix) {
         setTimeout(() => storyMsg('The Neon Undercity looks exactly as you remember it. Which is the problem — you should not remember it at all.'), 300);
       }
       // ── S6: Weckmann/Auros joint conversation at CY when both Friendly ──
-      if (node.code === 'HKG' && _npcFavor('crov') >= 1 && _npcFavor('bruhns') >= 1
+      if (node.code === 'HKG' && _npcFavor('crov') >= 1 && _npcFavor('auros') >= 1
           && !S_story.s6JointDelivered) {
         S_story.s6JointDelivered = true;
         const voidActive = !!(S_story.quests && S_story.quests['quest_void_below'] === 'active');
@@ -33064,12 +33074,12 @@ function storyRender(node, prefix) {
           npcRowDiv.appendChild(chalBtn);
         }
         // ── Layer 67b: S29 Auros tactical theory at CY ──
-        if (S_story.frobergerLastEntryRead && _npcFavor('bruhns') >= 2 && !S_story.s29LineDelivered) {
+        if (S_story.frobergerLastEntryRead && _npcFavor('auros') >= 2 && !S_story.s29LineDelivered) {
           S_story.s29LineDelivered = true;
           setTimeout(() => storyMsg(S29_AUROS_THEORY), 600);
         }
         // ── S7b: Undercity Survey delivery to Auros at CY ──
-      if (node.code === 'HKG' && _npcFavor('bruhns') >= 2
+      if (node.code === 'HKG' && _npcFavor('auros') >= 2
           && (S_story.inventory||[]).some(i => i.name === 'Undercity Survey (Partial)')
           && !S_story.undercitySurveyDelivered) {
         const delBtn = document.createElement('button');
@@ -33482,7 +33492,7 @@ function storyRender(node, prefix) {
       }
     }
     // ── L45-J: Froberger Note × Bruhns cross-item ──
-    if (node.code === 'HKG' && S_story.froberger_last_note_read && _npcFavor('bruhns') >= 2
+    if (node.code === 'HKG' && S_story.froberger_last_note_read && _npcFavor('auros') >= 2
         && !S_story.frobergerBruhnsLineDelivered) {
       S_story.frobergerBruhnsLineDelivered = true;
       setTimeout(() => storyMsg("Auros: \"You found one of his notes. He left several. I found one in the depth access shaft — it described a structural feature that took me a year to verify was real. He'd been there in maybe three hours. He always knew exactly what to look for. I sometimes think the curse isn't that he couldn't connect — it's that he could see everything else so clearly that people just looked slow by comparison.\""), 500);

@@ -6,6 +6,9 @@
 
 ---
 
+> **⚠️ KEY-DRIFT NOTE (added 2026-07-31, §AUDIT-03n).** The code blocks below are the **design-time** shapes and key the per-NPC tables to the profiles' *surnames* — `couperin` / `weckmann` / `bruhns`. Those were never keys the favor ledger writes, so every one of those entries was unreachable in live play until §AUDIT-03n renamed them. Read them as **`quill`** (Bard Tomas Couperin, MHQ) · **`crov`** (Pit Master Weckmann, HKG) · **`auros`** (Cmdr Seraphine Bruhns, HKG). The six canonical favor keys are `yael` · `brynn` · `quill` · `pachelbel` · `crov` · `auros`; `check:npcregs` (`check:walk` gate #14) now enforces it. The report's design intent is unchanged — only the key spelling was wrong.
+
+
 ## I. The Design Principle
 
 Everything in the game has been pointing toward one moment: the covenant at SQ. The seal is placed, the Void is closed, and someone walks out of the cave knowing what they did.
