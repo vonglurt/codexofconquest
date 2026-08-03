@@ -375,6 +375,50 @@ const CMD = {
     printResult(r.body, flags);
   },
 
+  // ── save / snapshots (§DX-02l) ──────────────────────────────────────────────
+  // Every WRITE already reaches disk on its own (§DX-02k: temp + atomic rename).
+  // `save` is the DELIBERATE dated backup — the one surface that stamps on
+  // purpose — and it was reachable only by raw `curl`, which is exactly what
+  // prompt.md §3 says never to fall back to.
+  async save(pos, flags) {
+    await requireServer();
+    const r = await request('POST', '/api/save');
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    if (flags.raw || flags.out) { printResult(r.body, flags); return; }
+    const mb = r.body.bytes ? `  ${C.dim}(${(r.body.bytes / 1048576).toFixed(1)} MB)${C.reset}` : '';
+    ok(`primary  ${r.body.primary}`);
+    ok(`backup   ${r.body.backup}${mb}`);
+    info('list them with ./api.sh snapshots');
+  },
+
+  // Dated backups are gitignored, so nothing else in the repo will tell you they
+  // are there — §DX-02k found six (~32 MB) nobody had seen.
+  async snapshots(pos, flags) {
+    await requireServer();
+    if (flags.sweep) {
+      const nonce = await getNonce('snapshot', 'sweep');
+      const qs = flags.force ? '?force=true' : '';
+      const r = await request('DELETE', `/api/snapshots${qs}`, null, { 'X-Nonce': nonce });
+      if (r.status >= 400) { printError(r); process.exit(1); }
+      if (flags.raw || flags.out) { printResult(r.body, flags); return; }
+      ok(`deleted ${r.body.deleted.length}  ${C.dim}(${(r.body.freedBytes / 1048576).toFixed(1)} MB freed)${C.reset}`);
+      for (const s of r.body.skipped)
+        process.stdout.write(`  ${C.yellow}kept${C.reset} ${s.name}  ${C.dim}${s.reason}${C.reset}\n`);
+      return;
+    }
+    const r = await request('GET', '/api/snapshots');
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    if (flags.raw || flags.out) { printResult(r.body, flags); return; }
+    const d = r.body;
+    ok(`${d.count} snapshot(s) in ${d.dir}  ${C.dim}(${(d.totalBytes / 1048576).toFixed(1)} MB, ${d.archived} archived)${C.reset}`);
+    for (const s of d.snapshots)
+      process.stdout.write(`  ${s.archived ? `${C.green}archived  ${C.reset}` : `${C.yellow}unarchived${C.reset}`}  ${s.name}  ${C.dim}${(s.bytes / 1048576).toFixed(1)} MB${C.reset}\n`);
+    if (d.count) {
+      info('fold them into the patch chain (keeps each delta, then removes the file):  ./archive-snapshots.sh');
+      info('or delete the already-archived ones:  ./api.sh snapshots --sweep   [--force to discard unarchived too]');
+    }
+  },
+
   async put(pos, flags) {
     await requireServer();
     const [, type, id, ...rest] = pos;
@@ -2992,6 +3036,24 @@ ${C.bold}═══════════════════════�
   ./wbapi-toggle.sh status    Show PID and port
   ./wbapi-toggle.sh fg        Run in foreground with full log scroll
 
+  ── Persistence: dated backups (§DX-02k / §DX-02l) ───────────────
+
+  Every write already reaches disk on its own — the server writes a temp
+  beside the game file and renames it in (atomic; nothing left to sweep).
+  You do NOT need to run save after a put/post/del.
+
+    ./api.sh save               dated backup beside roll2hit-v3.html, then
+                                overwrite + hot-reload  (POST /api/save)
+    ./api.sh snapshots          list the dated backups + total size
+    ./api.sh snapshots --sweep  delete the ones already patch-archived
+                                  [--force  discard unarchived ones too]
+
+  Disposal keeps history by default: ./archive-snapshots.sh turns each
+  snapshot into a milepoints/patches delta and then removes the file, so
+  --sweep refuses anything that chain has never seen unless you --force.
+  The dated files are gitignored — ./api.sh snapshots is the only thing
+  that will ever tell you they are there.
+
   ── Logging modes ────────────────────────────────────────────────
 
   Normal (default):
@@ -3073,6 +3135,8 @@ const SYNOPSIS = [
   `  ${C.green}del${C.reset}   <type> <id>                  delete`,
   `  ${C.green}speak${C.reset} <npc-id> "<prompt>"           Claude NPC reply`,
   `  ${C.green}import${C.reset} <file.json>                 bulk import nodes + quest cycles`,
+  `  ${C.green}save${C.reset}                               dated backup beside the game file, then overwrite + reload`,
+  `  ${C.green}snapshots${C.reset} [--sweep] [--force]      list / delete those dated backups`,
   ``,
   `  ${C.bold}── Map & Coordinates ───────────────────────────────────────────────────${C.reset}`,
   `  ${C.green}worldmap${C.reset} [--regions] [--region A1] [--city CODE] [--search Q] [--monster M] [--route A --to B]`,

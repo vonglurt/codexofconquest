@@ -193,6 +193,18 @@ echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 ./api.sh audit --map                   # map conformity check
 ```
 
+### Dated backups (§DX-02k / §DX-02l)
+
+Writes persist on their own (temp + atomic rename) — `save` is the *deliberate*
+dated snapshot the `milepoints/patches` chain is built from.
+
+```bash
+./api.sh save                          # dated backup beside the game file, then overwrite + reload
+./api.sh snapshots                     # list them (they are gitignored — nothing else will)
+./api.sh snapshots --sweep             # delete the ones ./archive-snapshots.sh already patched
+./api.sh snapshots --sweep --force     # …and discard the unarchived ones too
+```
+
 ### NPC Dialogue
 
 ```bash
@@ -444,6 +456,9 @@ If you find yourself reaching for curl to hit one of these, request an api.sh wr
 | `GET /api/audit` | `./api.sh audit` |
 | `GET /api/audit/map` | `./api.sh audit --map` |
 | `POST /api/audit/map/fix` | `./api.sh fix-bidirectional --execute` |
+| `POST /api/save` | `./api.sh save` — dated backup beside the game file, then overwrite + reload (§DX-02l) |
+| `GET /api/snapshots` | `./api.sh snapshots` — list those dated backups (gitignored; nothing else reports them) |
+| `DELETE /api/snapshots` | `./api.sh snapshots --sweep [--force]` — deletes only snapshots already in the `milepoints/patches` chain unless forced |
 
 ---
 

@@ -492,7 +492,7 @@ The canonical workflow for adding any quest chain via the API. Steps are invaria
 
 ### C. Pre-flight Checklist
 
-Before `POST /api/save`:
+Before `./api.sh save` (`POST /api/save` — the dated backup; the writes themselves already persisted):
 
 1. All `activateCond` flags exist in `_S_DEFAULTS`
 2. All `checkPassFlag` values are unique across QUEST_DB

@@ -88,6 +88,10 @@ Confirm current state from the live file, never from memory or a "DONE" claim.
 ./api.sh post node code=NEW name=city label="New City" act=1
 ./api.sh post quest id=new_q_01 title="Title" type=side activateNode=LHR
 
+# Dated backups (§DX-02k/§DX-02l) — writes already persist on their own
+./api.sh save                          # deliberate dated backup beside the game file
+./api.sh snapshots [--sweep] [--force] # list them / delete the patch-archived ones
+
 # Network health — run at the start and end of every session that touches nodes
 ./api.sh reachability     # target 100% reachable from LHR
 ./api.sh broken           # target 0 broken edges
@@ -232,6 +236,7 @@ npm run stats                            # live node/monster/quest/terrain/NPC/l
 ./api.sh reachability     # 100%?
 ./api.sh broken           # 0?
 ./api.sh advise <questId> # errors=[] warnings=[]?
+./api.sh snapshots        # anything dated left beside the game file? (gitignored — nothing else reports it)
 
 # Verify + close
 git rev-parse --abbrev-ref HEAD          # on the track's feat/<slug> branch, NOT main? (§8)

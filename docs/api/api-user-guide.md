@@ -1359,13 +1359,17 @@ curl -s -XPOST http://localhost:1367/api/layout/apply \
   -d "{\"coords\": $(cat /tmp/proposed-layout.json)}" | jq
 ```
 
-### 17.13 Save to disk
+### 17.13 Save to disk — the deliberate dated backup
 
 ```bash
-curl -s -XPOST http://localhost:1367/api/save | jq
+./api.sh save            # POST /api/save — dated backup beside the game file, then overwrite + reload
+./api.sh snapshots       # list those dated backups (they are gitignored — nothing else will tell you)
+./api.sh snapshots --sweep [--force]
 ```
 
-Most write endpoints auto-save. Call this explicitly if you've made multiple low-level coord changes and want to persist.
+Every write already persists on its own (temp beside `roll2hit-v3.html` + atomic rename, §DX-02k) — you do **not** need `save` after a `put`/`post`/`del`. What `save` gives you is the *dated snapshot* the `milepoints/patches` chain is built from.
+
+Disposal keeps history by default: `./archive-snapshots.sh` turns each snapshot into a patch and then removes the file, so `--sweep` deletes only snapshots that chain already holds; `--force` discards the rest. *(§DX-02l, 2026-08-03 — before that this section printed a raw `curl`, which is precisely what §3's golden rule says never to fall back to.)*
 
 ### 17.14 Help topics (server-side man pages)
 
@@ -1488,7 +1492,9 @@ POST /api/graph/fill-gap {..., dryRun:false}   Execute junction chain
 GET  /api/layout/solve?root=LHR&step=8        Propose layout
 POST /api/layout/apply {"coords":{...}}        Apply layout
 
-POST /api/save                                 Dated snapshot + copy (writes already persist)
+POST /api/save                                 Dated snapshot + copy (writes already persist)  → ./api.sh save
+GET  /api/snapshots                            List the dated snapshots + total size          → ./api.sh snapshots
+DELETE /api/snapshots[?force=true]             Sweep them (nonce; archived-only unless force)  → ./api.sh snapshots --sweep
 POST /api/reload                               Re-read from disk
 GET  /api/next-error?skip=N&severity=error     First failing item
 GET  /api/help/{topic}                         Server man pages
@@ -1597,7 +1603,7 @@ EOF
 ./api.sh post quest id=quest_test_01 type=side title="Test Quest" \
   activateNode=TEST desc="test" passText="pass" failText="fail"
 ./api.sh location TEST
-curl -s -XPOST http://localhost:1367/api/save | jq
+./api.sh save                      # optional: a dated backup (the writes above already persisted)
 ```
 
 ---
@@ -1651,8 +1657,8 @@ curl -s 'http://localhost:1367/api/graph/validate/VAULT?maxGap=4' | jq
 # 8. Audit
 ./api.sh audit --map
 
-# 9. Save
-curl -s -XPOST http://localhost:1367/api/save | jq
+# 9. Dated backup (the writes above already reached disk)
+./api.sh save
 ```
 
 ---

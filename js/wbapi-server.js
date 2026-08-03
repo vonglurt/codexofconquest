@@ -1469,6 +1469,50 @@ function saveGameFile() {
   return { ok:true, path: GAME_FILE };
 }
 
+// §DX-02l — the dated files `saveStamped()` writes BESIDE THE GAME FILE.
+// `roll2hit-v3-2*.html` is gitignored, so nothing in the repo will ever mention
+// them: §DX-02k found six (~32 MB) that had accumulated invisibly. This is the
+// read side of that surface — the server owns it because the server is what
+// knows where `GAME_FILE` actually lives (`--file`/`ROLL2HIT_FILE` move it).
+//
+// `archived` means the snapshot is already folded into the milepoints/patches
+// chain, which is what archive-snapshots.sh builds — and that script `rm`s each
+// file after patching it, so the honest disposal path produces a delta first.
+// A snapshot that is NOT archived is unrecorded history: deleting it discards
+// the only copy of that state. (The chain's very first entry is the gzip base,
+// whose filename the chain does not record — `_last.name` covers the newest and
+// the `.patch` files cover the rest, so at most that one oldest snapshot reads
+// as unarchived when it isn't. `force` is the escape hatch.)
+function listSnapshots() {
+  const dir  = path.dirname(path.resolve(GAME_FILE));
+  const base = path.basename(GAME_FILE, '.html').replace(/(-\d{8}-\d{6})+$/, '');
+  const re   = new RegExp(`^${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}-\\d{8}-\\d{6}\\.html$`);
+
+  const patchDir = path.join(ROOT, 'milepoints', 'patches');
+  const archived = new Set();
+  try {
+    for (const f of fs.readdirSync(patchDir))
+      if (f.endsWith('.patch')) archived.add(`${f.slice(0, -'.patch'.length)}.html`);
+  } catch {}
+  try {
+    const last = fs.readFileSync(path.join(patchDir, '_last.name'), 'utf8').trim();
+    if (last) archived.add(last);
+  } catch {}
+
+  const snapshots = [];
+  for (const f of fs.readdirSync(dir)) {
+    if (!re.test(f)) continue;
+    const full = path.join(dir, f);
+    // Inverse guard: the stamp suffix already makes this impossible, but the one
+    // file this must never be able to name is the game itself.
+    if (path.resolve(full) === path.resolve(GAME_FILE)) continue;
+    let st; try { st = fs.statSync(full); } catch { continue; }
+    snapshots.push({ name:f, bytes:st.size, mtime:st.mtime.toISOString(), archived:archived.has(f) });
+  }
+  snapshots.sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+  return { dir, snapshots, totalBytes: snapshots.reduce((n, s) => n + s.bytes, 0) };
+}
+
 // After every successful write: save to disk, hot-reload in memory, respond — no process restart.
 function saveAndRestart(res, status, payload) {
   const r = saveGameFile();
@@ -3075,10 +3119,12 @@ async function route(req, res) {
       }
       const { type, id } = body || {};
       if (!type || !id) return json(res, 400, { error:'body.type and body.id required' });
-      const validTypes = ['node','quest','monster','npc'];
+      // §DX-02l — `snapshot` is the one type with no collection behind it: the
+      // sweep destroys FILES, not entries, so there is no key to resolve.
+      const validTypes = ['node','quest','monster','npc','snapshot'];
       if (!validTypes.includes(type)) return json(res, 400, { error:`type must be one of: ${validTypes.join(', ')}` });
       const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
-      const resolvedKey = WBAPI._findKey(col, id) || id;
+      const resolvedKey = col ? (WBAPI._findKey(col, id) || id) : id;
       const token = nonceIssue(type, resolvedKey);
       const expiresAt = new Date(Date.now() + NONCE_TTL).toISOString();
       logRow('type › id', `${type} › ${resolvedKey}`);
@@ -3152,7 +3198,52 @@ async function route(req, res) {
       return json(res, 500, { ok:false, error:`reload failed after save: ${e.message}`, backup: backupPath });
     }
     logResponse(method, url.pathname, 200, `saved → reloaded`);
-    return json(res, 200, { ok:true, backup: backupPath, primary: GAME_FILE });
+    return json(res, 200, { ok:true, backup: backupPath, primary: GAME_FILE, bytes: fs.statSync(backupPath).size });
+  }
+
+  // ── Snapshots (§DX-02l) — the dated backups POST /api/save leaves behind ──
+  if (parts[0] === 'snapshots' && method === 'GET') {
+    const { dir, snapshots, totalBytes } = listSnapshots();
+    logRow('dir', dir);
+    logRow('snapshots', `${snapshots.length}  ·  ${(totalBytes / 1048576).toFixed(1)} MB  ·  ${snapshots.filter(s => s.archived).length} archived`);
+    logResponse(method, url.pathname, 200, `${snapshots.length} snapshot(s)`);
+    return json(res, 200, { ok:true, dir, count:snapshots.length, totalBytes,
+      archived: snapshots.filter(s => s.archived).length, snapshots,
+      note:'./archive-snapshots.sh patches each into milepoints/patches and removes it. DELETE /api/snapshots (./api.sh snapshots --sweep) deletes only ones already in that chain.' });
+  }
+
+  // DELETE /api/snapshots — sweep. Nonce-guarded like every other destructive
+  // route, and it will not discard a snapshot the patch chain has never seen
+  // unless you say `force` (that snapshot is the only copy of its state).
+  if (parts[0] === 'snapshots' && method === 'DELETE') {
+    const nonce = req.headers['x-nonce'] || url.searchParams.get('nonce');
+    if (!nonce) {
+      logResponse(method, url.pathname, 403, 'sweep requires X-Nonce');
+      return json(res, 403, { ok:false,
+        error:'DELETE /api/snapshots requires a nonce. POST /api/nonce with {type:"snapshot",id:"sweep"} first.',
+        hint:'./api.sh snapshots --sweep does this for you.' });
+    }
+    const nc = nonceConsume(nonce, 'snapshot', 'sweep');
+    if (!nc.ok) {
+      logResponse(method, url.pathname, 403, `nonce rejected: ${nc.error}`);
+      return json(res, 403, { ok:false, error: nc.error });
+    }
+    const force = /^(1|true|yes)$/i.test(url.searchParams.get('force') || '');
+    const { dir, snapshots } = listSnapshots();
+    const deleted = [], skipped = [];
+    let freedBytes = 0;
+    for (const s of snapshots) {
+      if (!s.archived && !force) {
+        skipped.push({ name:s.name, reason:'not in the milepoints/patches chain — run ./archive-snapshots.sh to keep its delta, or sweep with force to discard it' });
+        continue;
+      }
+      try { fs.unlinkSync(path.join(dir, s.name)); deleted.push(s.name); freedBytes += s.bytes; }
+      catch (e) { skipped.push({ name:s.name, reason:e.message }); }
+    }
+    logRow('deleted', `${deleted.length}  ·  ${(freedBytes / 1048576).toFixed(1)} MB freed`);
+    if (skipped.length) logRow('kept', `${skipped.length} unarchived (force to discard)`);
+    logResponse(method, url.pathname, 200, `swept ${deleted.length}`);
+    return json(res, 200, { ok:true, dir, deleted, skipped, freedBytes, forced: force });
   }
 
   // ── Schema ──
