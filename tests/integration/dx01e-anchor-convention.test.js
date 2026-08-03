@@ -28,9 +28,17 @@ const SCRIPT = path.join(ROOT, 'scripts', 'resolve-anchors.js');
 const GAME = path.join(ROOT, 'roll2hit-v3.html');
 
 const ANCHOR_RE = /`([^`\n]{1,80}?)@(\d{2,6})`/g;
+// The legacy form both rows retire: a bare backticked 4–5 digit line number.
+const LEGACY_RE = /`(\d{4,5})`/g;
 // The live docs migrated in this increment — every anchor in them must resolve.
 const MIGRATED = ['CONTRIBUTING.md', 'BACKLOG.md', 'mechanics.md',
                   path.join('docs', 'mechanics', 'mechanics-combat.md')];
+// §DX-01e-FU — potential.md is the live SEED INBOX: its anchors are read to build FROM,
+// so a rotted one sends a future session to build against the wrong code. It was the last
+// live doc still on the bare form (36 anchors; 35 of them pointed somewhere else by the
+// time they were measured). Everything still bare after this is HISTORY — plan-archive.md
+// and the lab reports — which is annotated, never rewritten (§DX-02c/§AUDIT-03m).
+const SEED_INBOX = 'potential.md';
 
 function run(args) {
   // stdout AND stderr — the gate warns on stderr and reports findings there too.
@@ -109,6 +117,25 @@ test('§DX-01e — a dead symbol FAILS the gate; a merely drifted number does no
     fs.rmSync(doc, { force: true });
     fs.rmSync(tmp, { recursive: true, force: true });
   }
+});
+
+test('§DX-01e-FU — the seed inbox carries no bare anchors, and every symbol it names resolves', () => {
+  const text = fs.readFileSync(path.join(ROOT, SEED_INBOX), 'utf8');
+
+  // The gate fails on a DEAD symbol, but it is silent about a bare `31732` — that form
+  // resolves to nothing to check. So the only thing standing between potential.md and a
+  // slow slide back to line numbers is this assertion.
+  LEGACY_RE.lastIndex = 0;
+  expect(text.match(LEGACY_RE) || [], `${SEED_INBOX} regressed to bare line anchors`).toEqual([]);
+
+  const lines = fs.readFileSync(GAME, 'utf8').split('\n');
+  const anchors = anchorsIn(SEED_INBOX)
+    .filter(a => !/^(?:symbol|sym|path\/to\/file\.js:symbol)$/.test(a.sym));
+  // 36 bare anchors migrated, plus the `item_check` handler named while correcting the
+  // dead-opcode count. A collapse here means someone stripped the anchors instead.
+  expect(anchors.length).toBeGreaterThanOrEqual(36);
+  for (const a of anchors)
+    expect(lines[a.line - 1], `${SEED_INBOX}: \`${a.sym}@${a.line}\``).toContain(a.sym);
 });
 
 test('§DX-01e — lookup mode answers where a symbol lives now, and refuses to invent one', () => {

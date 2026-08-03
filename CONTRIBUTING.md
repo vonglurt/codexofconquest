@@ -121,6 +121,7 @@ node scripts/resolve-anchors.js <symbol>   # where does this live NOW?
 - **It only WARNS on a drifted number.** Failing there would re-create the per-increment tax the policy exists to remove.
 - **`` `symbol@1234` `` is the documented placeholder** and is skipped by the tool — a doc can show the convention without `--fix` re-pointing the example.
 - **Closed ship records and lab reports keep their bare numbers — history is annotated, not rewritten** (the §DX-02c / §AUDIT-03m precedent). Never trust a number in `plan-archive.md`; re-resolve the symbol.
+- **Every LIVE doc is migrated as of 2026-08-03 (§DX-01e-FU).** `potential.md` — the seed inbox, whose anchors are read to *build from* — was the last one, and 35 of its 36 anchors pointed somewhere else by the time they were measured. What is still bare is history by construction: `plan-archive.md` (211) and the lab reports (~300). **A doc you write anchors in is a live doc; use the symbol form from the first draft.**
 
 ### WBAPI Authoring Hazards (learned 2026-07-08, §KG session — a full session of work was clobbered + recovered from a dangling git blob)
 
