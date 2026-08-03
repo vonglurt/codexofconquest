@@ -807,14 +807,20 @@ Boss-tier example:
   icon=🏛
 ```
 
-After creating the terrain, add monsters to it via `put`:
+After creating the terrain, set its roster with `put terrain … monsters=` (§DX-02h — before
+2026-08-03 this section told you to add monsters "via `put`" while the endpoint accepted only
+`label`/`icon`, and every terrain PUT reported success without writing anything to disk):
 
 ```bash
-# Monsters are managed as an array; use the PUT endpoint directly
-curl -s -XPUT http://localhost:1367/api/terrain/temple_ruins \
-  -H 'Content-Type: application/json' \
-  -d '{"label":"Temple Ruins — Fallen Columns"}'
+./api.sh get terrain temple_ruins                       # read the CURRENT roster first
+./api.sh put terrain temple_ruins label="Temple Ruins — Fallen Columns"
+./api.sh put terrain temple_ruins monsters=skeleton,ghast,wight
 ```
+
+⚠️ **`monsters` replaces the whole roster, it does not append** — read, append, write back.
+Unknown monster keys are refused `422` with **nothing written**; duplicates are allowed but
+warned. Never hand-edit the array: it holds code identifiers (`P.skeleton`), and a
+JSON-string array re-parses cleanly while silently breaking the encounter picker.
 
 ### 9.5 Pipe JSON body
 

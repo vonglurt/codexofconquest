@@ -83,7 +83,6 @@ const NOT_NPC_KEYED = {
   CONDITION_ADV:           'condition names (prone/restrained/blinded/…)',
   QUEST_DB:                'quest ids',
   POTION_TIERS:            'potion tier names (minor/healing/greater/superior)',
-  XP_BY_TIER:              'monster tier names (trivial/easy/medium/hard/deadly)',
   STARTER_DAGGER:          'item FIELDS (name/icon/type/sell), not a keyed table',
   EB_STORY_ITEMS:          'item keys — Epic Battleground story rewards',
   LAKE_MAGIC_DB:           'lake-magic entry ids (lake_mag_01…)',

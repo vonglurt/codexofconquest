@@ -2110,7 +2110,7 @@ async function route(req, res) {
           `  PUT  ${b}/api/node/{code}   body: {label?, act?, name?, desc?, ...}`,
           `  PUT  ${b}/api/quest/{id}    body: {title?, type?, startText?, failText?, ...}`,
           `  PUT  ${b}/api/monster/{key} body: {name?, ac?, hp?, atk?, dmg?, xp?, tier?}`,
-          `  PUT  ${b}/api/terrain/{key} body: {label?, icon?}`,
+          `  PUT  ${b}/api/terrain/{key} body: {label?, icon?, monsters?:[key,...]}`,
           `  PUT  ${b}/api/npc/{key}     body: {name?, role?, desc?}`,
           `  PUT  ${b}/api/loot          body: {entries:[{weight,_type,_magic?},...]}  (full replace)`,
           `  PUT  ${b}/api/loot/{index}  body: {weight?,_type?,_magic?}  (single entry)`,
@@ -10399,27 +10399,77 @@ async function route(req, res) {
       try { body = await readBody(req); } catch(e) {
         return json(res, 400, { error:'Invalid JSON' });
       }
-      const allowed = ['label','icon'];
-      const results = [];
+      // §DX-02h — this handler used to set WBAPI.worldDb[tk][field] and return ok:true
+      // WITHOUT calling save(): every terrain PUT reported success and persisted nothing,
+      // and because the mutation lived in memory, GET read it back for the rest of the
+      // process's life. That is Hazard #5 (§DX-01d/i) in a fifth write path, with the
+      // read path corroborating the lie. It now writes at SOURCE level and round-trips.
+      const allowed = ['label','icon','monsters'];
+      const unknown = Object.keys(body).filter(f => !allowed.includes(f));
+      if (unknown.length || !Object.keys(body).length) {
+        const err = unknown.length
+          ? `Field(s) not directly editable: ${unknown.join(', ')}. Editable: ${allowed.join(', ')}`
+          : 'No fields given. Editable: ' + allowed.join(', ');
+        logResponse(method, url.pathname, 422, `terrain/${tk}: ${err}`);
+        return json(res, 422, { ok:false, error: err, editable: allowed });
+      }
+      // All-or-nothing: validate the whole body before touching source, so a bad field
+      // can never leave a half-applied entry behind (§DX-01c's create-validation shape).
       for (const [field, value] of Object.entries(body)) {
-        if (!allowed.includes(field)) {
-          results.push({ field, ok:false, error:`Field "${field}" not directly editable. Editable: ${allowed.join(', ')}` });
-          continue;
+        if (field === 'monsters') continue;
+        if (typeof value !== 'string') {
+          logResponse(method, url.pathname, 422, `terrain/${tk}: ${field} must be a string`);
+          return json(res, 422, { ok:false, error:`Field "${field}" must be a string — nothing was written` });
         }
-        if (typeof value === 'string') {
-          WBAPI.worldDb[tk][field] = value;
-          results.push({ field, ok:true });
-        } else {
-          results.push({ field, ok:false, error:'Terrain fields must be strings' });
+      }
+      // `monsters` accepts a JSON array or a comma-separated string (./api.sh put
+      // terrain sewers monsters=giant_rat,zombie). Every key is validated against
+      // MONSTER_POOL by editTerrainRoster, which refuses without touching source.
+      let roster = null;
+      if ('monsters' in body) {
+        roster = Array.isArray(body.monsters) ? body.monsters
+               : (typeof body.monsters === 'string' ? body.monsters.split(',').map(s=>s.trim()).filter(Boolean) : null);
+        if (!roster) {
+          logResponse(method, url.pathname, 422, `terrain/${tk}: monsters must be an array or comma-separated string`);
+          return json(res, 422, { ok:false, error:'Field "monsters" must be an array of monster keys or a comma-separated string — nothing was written' });
         }
+      }
+
+      const results = [];
+      let warning = null;
+      for (const [field, value] of Object.entries(body)) {
+        const r = field === 'monsters'
+          ? WBAPI.editTerrainRoster(tk, roster)
+          : WBAPI.editField('terrain', tk, field, value);
+        if (r.warning) warning = r.warning;
+        results.push({ field, ok: !!r.ok, ...(r.ok ? {} : { error: r.error }) });
       }
       const allOk = results.every(r=>r.ok);
       logRow('target', `terrain › ${tk}`);
       results.forEach(r => logRow(r.field, r.ok ? `${C.green}✓${C.reset}` : `${C.red}✗ ${r.error}${C.reset}`));
-      logResponse(method, url.pathname, allOk ? 200 : 207, `terrain/${tk} updated`);
-      return json(res, allOk ? 200 : 207, {
-        ok: allOk, fields: results,
-        entity: { ...WBAPI.worldDb[tk], key:tk },
+      if (warning) logRow('warning', `${C.yellow||''}${warning}${C.reset}`);
+      if (!allOk) {
+        logResponse(method, url.pathname, 422, `terrain/${tk}: no field written`);
+        return json(res, 422, { ok:false, fields: results, error:'terrain PUT failed — source NOT modified' });
+      }
+      logResponse(method, url.pathname, 200, `terrain/${tk} updated`);
+      // The proof of a terrain write is the RE-PARSE from disk, not the echo: verify
+      // every field against the freshly loaded WORLD_DB before reporting success.
+      return saveAndVerify(res, 200, { ok:true, fields: results, ...(warning?{warning}:{}) }, null, null, null, () => {
+        const t2 = WBAPI.worldDb[tk];
+        if (!t2) return { ok:false, error:`terrain "${tk}" missing after reload` };
+        const mism = [];
+        for (const [field, value] of Object.entries(body)) {
+          if (field === 'monsters') {
+            const got = WBAPI._terrainToMonsters[tk] || [];
+            if (got.length !== roster.length || got.some((k,i)=>k!==roster[i]))
+              mism.push(`monsters: [${got.join(', ')}] != [${roster.join(', ')}]`);
+          } else if (t2[field] !== value) {
+            mism.push(`${field}: ${JSON.stringify(t2[field])} != ${JSON.stringify(value)}`);
+          }
+        }
+        if (mism.length) return { ok:false, error:`terrain "${tk}" did not survive the round trip — ${mism.join(' · ')}` };
+        return { verifiedOnDisk: Object.keys(body), entity: { ...t2, key:tk, monsters: WBAPI._terrainToMonsters[tk] || [] } };
       });
     }
   }
@@ -11397,7 +11447,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/quest/{id}/chain               → upstream + downstream chain'],
     ['GET',    '/api/location/{code}               → composite view'],
     ['PUT',    '/api/{node|quest|monster|npc}/{id}  body: {field:value,...}'],
-    ['PUT',    '/api/terrain/{id}                  body: {label?,icon?}'],
+    ['PUT',    '/api/terrain/{id}                  body: {label?,icon?,monsters?:[keys]}'],
     ['POST',   '/api/nonce                          body: {type,id} → 16-char token (required for DELETE)'],
     ['DELETE', '/api/{node|quest|monster|npc}/{id}  X-Nonce: <token> required (409 if nested content)'],
     ['POST',   '/api/quest                          body: {id, type, title, activateNode, ...}'],

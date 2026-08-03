@@ -33,6 +33,21 @@ Monsters go in through the API like every other entity — the old "hand-edit `M
 
 **Two corrections, derived from the corpus rather than tasted:** `void_shaman` (The Warden) `rare → hard` — its two exact stat-block twins (AC15/HP65/atk6: Bandit Captain, Pirate Captain) are both `hard`; `void_rat_swarm` `low → easy` — 6 of its 8 nearest stat-neighbours are `easy`, its exact AC/HP/atk twin is Jackalwere.
 
+### A pool entry is not content until a roster names it (§DX-02h, 2026-08-03)
+
+**`MONSTER_POOL` membership does not put a monster in the game.** A monster reaches play through a `WORLD_DB[terrain].monsters` roster (random/Hunt encounters via `_weightedMonsterPick`), a `node.battle`, a `type:'combat'` quest, or `EPIC_BOSS_POOL`. An entry named by **none** of those is authored content nothing can reach, and it is invisible: it has a stat block and a trophy drop, `./api.sh audit` is happy, and no gate fires.
+
+Measured 2026-08-03: **55 of 398 pool entries have exactly two references in the whole file — their own entry and their `MONSTER_DROPS` trophy — and nothing else.** §DX-02h was filed believing `void_rat_swarm` was the only one; its voidTainted twin `void_wolf` had the identical shape, and ~50 more sit in the *partially* rostered **Dark Fantasy Bestiary** import (`fleder`, `cave_bear`, `koshchey`, `shaelmaar`, `ysbaddaden` … while their neighbours `protofleder`, `warg`, `alp`, `basilisk` are live). Both void kin are now rostered in **`sewers`** — whose single node is **SFT "Visby Sewers"** (act 5), and Visby is where `VOID_TIDE_EVENTS[21]` sights the first Void Walker. The remaining 53 are tracked as **§DX-02j**.
+
+**Authoring a roster (`PUT /api/terrain` was fixed for this, §DX-02h):**
+
+```bash
+./api.sh get terrain sewers                       # read the current roster first
+./api.sh put terrain sewers monsters=giant_rat,zombie,void_rat_swarm   # WHOLE roster, not a delta
+```
+
+⚠️ **`monsters` replaces the entire roster** — read it, append, write it back. Every key is validated against `MONSTER_POOL` (an unknown one is refused `422` with **nothing written**), the patched section is re-parsed and proved before the write commits, and the server verifies again after the disk reload. Duplicates are allowed but warned (`cat_quarter` ships one). Never hand-edit a roster: the array holds **code identifiers** (`P.giant_rat`), and a JSON-string array re-parses without error while silently driving `_monsterLevel` to 1 for the whole terrain.
+
 *(`./api.sh del monster <key>` now excises at source level with verify-or-revert and cascades the trophy drop — fixed 2026-07-30, §DX-01d/i. The old "delete by hand" warning here is retired.)*
 
 ---

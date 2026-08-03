@@ -1168,12 +1168,16 @@ Read-only derived stat. Never stored in `S_story`. `_calcLuck()` = `⌈(STR×DEX
 
 ### Void-Touched Monsters
 
-Two new entries added to `MONSTER_POOL` at Layer 59. Injected into terrain encounter tables at runtime when `voidPressure ≥ 6` via `_applyVoidPressureMonsters()`:
+> ⚠️ **DRIFT CORRECTED 2026-08-03 (§DX-02h) — this section described a design, in the present tense, that was never built.** Measured at HEAD: **`_applyVoidPressureMonsters()` occurs 0 times in the file** (the runtime-injection mechanism below does not exist), and of the five terrains the table named, **`dark_forest` and `mountain_pass` are not terrain keys at all** — `WORLD_DB` has no such entries, and "GL wilderness" is not a key either. The net effect is that both monsters were in **no roster, on no `node.battle`, in no quest**: authored content nothing could reach, while this doc read as if it shipped. That is the "authoritative-looking but fictional" class §AUDIT-03l warns about, and it is precisely why the gap went unnoticed — the doc was the thing that looked like evidence. Both are now **statically rostered in `sewers`** (its one node is **SFT "Visby Sewers"**, act 5 — Visby is where `VOID_TIDE_EVENTS[21]` sights the first Void Walker), verified by `dx02h-terrain-roster-write.test.js`. **The voidPressure-gated injection remains unbuilt and is §TIDE-01's territory** (§TIDE-01-B/C are the open rows for the tide changing the world); do not cite it as shipped.
 
-| Monster | Terrain | AC | HP | ATK | DMG | Drop |
+Two entries added to `MONSTER_POOL` at Layer 59. Both are `voidTainted:true`, and both are **statically rostered in `sewers`** (§DX-02h) — there is no runtime injection.
+
+| Monster | Terrain (LIVE) | AC | HP | ATK | DMG | Drop |
 |---------|---------|----|----|-----|-----|------|
-| `void_wolf` | dark_forest, mountain_pass, GL wilderness | 13 | 28 | +5 | 1d8+3 | Void Shard (◈, sell 25) |
-| `void_rat_swarm` | alley, city_slums, sewers | 12 | 18 | +4 | 2d4 | Void Shard (◈, sell 15) |
+| `void_wolf` | `sewers` ~~dark_forest, mountain_pass, GL wilderness~~ | 13 | 28 | +5 | 1d8+3 | Void Shard (◈, sell 25) |
+| `void_rat_swarm` | `sewers` ~~alley, city_slums, sewers~~ | 12 | 18 | +4 | 2d4 | Void Shard (◈, sell 15) |
+
+*(Struck values are the never-built 2026-era plan, kept for provenance — two of those five terrain keys have never existed. `_monsterLevel` puts the swarm at 3 and the wolf at 4, inside the `sewers` roster's existing `giant_rat`→`vampire` band.)*
 
 **Void Shard** is a sellable lore relic, not a Codex Shard. Flavor text: *"A fragment of something that shouldn't exist."*
 

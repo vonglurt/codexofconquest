@@ -6308,7 +6308,7 @@ const WORLD_DB = { // → doc: world.md §WORLD_DB
   catacombs:        { label:'Catacombs',             icon:'💀',  monsters:[ P.skeleton, P.zombie, P.shadow, P.ghoul, P.specter, P.ghost, P.ghast, P.wight, P.wraith, P.mummy, P.revenant, P.vampire_spawn, P.vampire, P.mummy_lord, P.death_knight, P.lich, P.nightwraith, P.sluagh, P.grave_hag ] },
   vampire_castle:   { label:'Vampire Castle',        icon:'🧛',  monsters:[ P.zombie, P.skeleton, P.shadow, P.ghost, P.specter, P.wraith, P.wight, P.revenant, P.vampire_spawn, P.vampire, P.death_knight, P.lich, P.striga, P.sluagh, P.bruxa ] },
   // ── Underground / Caves ──────────────────────────────────
-  sewers:           { label:'Sewer Underbelly',      icon:'🐀',  monsters:[ P.giant_rat, P.zombie, P.shadow, P.ghoul, P.wererat, P.specter, P.intellect_dev, P.ghast, P.mimic, P.water_weird, P.wight, P.wraith, P.vampire_spawn, P.vampire, P.rotfiend, P.nekker, P.alghoul ] },
+  sewers:           { label:'Sewer Underbelly',      icon:'🐀',  monsters:[ P.giant_rat, P.zombie, P.shadow, P.ghoul, P.wererat, P.specter, P.intellect_dev, P.ghast, P.mimic, P.water_weird, P.wight, P.wraith, P.vampire_spawn, P.vampire, P.rotfiend, P.nekker, P.alghoul, P.void_rat_swarm, P.void_wolf ] },
   goblin_cave:      { label:'Goblin Warrens',        icon:'👺',  monsters:[ P.kobold, P.goblin, P.giant_rat, P.hobgoblin, P.bugbear, P.worg, P.ogre, P.troll, P.bandit_captain, P.nekker, P.redcap, P.ettin, P.hollow_hands_guard ] },
   pirate_cave:      { label:'Pirate Cave',           icon:'☠',   monsters:[ P.pirate, P.bandit, P.thug, P.spy, P.skeleton, P.zombie, P.mimic, P.swashbuckler, P.pirate_captain, P.vampire_spawn, P.vampire, P.pirate_ghost, P.sea_demon, P.bone_naga ] },
   monster_cave:     { label:'Monster Den',           icon:'🐉',  monsters:[ P.orc, P.gnoll, P.hobgoblin, P.ogre, P.troll, P.mimic, P.gelatinous_cube, P.wight, P.wraith, P.mind_flayer, P.beholder, P.aboleth, P.alghoul, P.ettin, P.bone_naga ] },
@@ -24235,10 +24235,21 @@ function storyEnter() {
    LAYER 11: Story Battle Focus System
 ══════════════════════════════════════════════════════════ */
 
-const XP_BY_TIER = { trivial:25, easy:50, medium:100, hard:250, deadly:1000 };
+// §DX-02i — `const XP_BY_TIER = { trivial:25, easy:50, medium:100, hard:250, deadly:1000 }`
+// was declared here and read by NOTHING (one occurrence in the file: its own declaration).
+// It is DELETED rather than left commented because it did not encode the shipped XP model
+// in a stale form — it encoded a DIFFERENT one, which is the "authoritative-looking but
+// fictional" shape §AUDIT-03l warns about, one grep away from adoption. Battle XP is
+// `(S.enemy.ac||10) * (S.opp.maxHp||10)` (see _grantMissEffortXp), and the §XP-01 effort
+// dials (EFFORT_XP_PCT / EFFORT_MISS_PCT) are percentages OF that product. Measured at
+// retirement, the table paid 1.9x-6.5x less at every tier (deadly: flat 1000 vs a shipped
+// mean of 4,095 across 33 monsters), so wiring it in would have silently nerfed the whole
+// curve. Do not reintroduce a tier→XP table without a balance pass over 2,853 quests.
 
 // Cumulative XP required to reach each level (index = level - 1).
-// Level 1 = 0 XP (start). Level 20 = 680,000 XP.
+// Level 1 = 0 XP (start). Level 20 = 195,000 XP — the array below is the authority.
+// (§DX-02i: this line read "680,000 XP" until 2026-08-03; no value in the table has
+// ever been 680,000. index.md's Design Constants row had the right number all along.)
 const XP_LEVELS = [ // → doc: docs/mechanics/mechanics-combat.md §Character Levels & XP
   0, 400, 1000, 2000, 3500, 5500, 8000, 11000, 15000, 20000,     // 1-10
   27000, 36000, 47000, 60000, 75000, 93000, 114000, 138000, 165000, 195000  // 11-20

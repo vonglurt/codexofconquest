@@ -139,9 +139,12 @@ test('§DX-01e-FU — the seed inbox carries no bare anchors, and every symbol i
 });
 
 test('§DX-01e — lookup mode answers where a symbol lives now, and refuses to invent one', () => {
-  const hit = run(['const XP_BY_TIER']);
+  // §DX-02i — was `const XP_BY_TIER`, a constant nothing read; deleting it would have
+  // broken this fixture. `const EFFORT_XP_PCT` is a live §XP-01 dial with exactly one
+  // occurrence, so the lookup still has a single unambiguous answer to resolve to.
+  const hit = run(['const EFFORT_XP_PCT']);
   expect(hit.code).toBe(0);
-  expect(hit.out).toMatch(/`const XP_BY_TIER@\d+`/);
+  expect(hit.out).toMatch(/`const EFFORT_XP_PCT@\d+`/);
 
   const miss = run(['_definitelyNotInTheGameFile']);
   expect(miss.code).toBe(1);

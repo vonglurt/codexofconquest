@@ -63,7 +63,8 @@ function region(src, anchor, span) {
 // its literal occupies. Each must mention all five contract tiers as a key.
 const TIER_KEYED_SITES = [
   { anchor: "const TIER_ORDER  = ['trivial'",                    span: 400,  what: 'populateTerrainEnemies TIER_ORDER + TIER_LABELS' },
-  { anchor: 'const XP_BY_TIER =',                                span: 120,  what: 'XP_BY_TIER' },
+  // §DX-02i — `const XP_BY_TIER` was listed here as a tier-keyed map. It was read by
+  // nothing and has been deleted; a map the engine never consults cannot ship partial.
   { anchor: 'const tierMod = {',                                 span: 120,  what: '_storyRollInit initiative modifier' },
   { anchor: 'function _voidEnrage(tier)',                        span: 500,  what: '_voidEnrage press magnitude' },
   { anchor: 'function _fleeChance(tier)',                        span: 200,  what: '_fleeChance' },

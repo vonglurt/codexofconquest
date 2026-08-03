@@ -509,7 +509,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `_ASI_TABLE` | 6-entry d6 table; each: `{name, icon, delta, desc}` |
 | `_LEVEL_GOLD_GIFT` | Gold gifted on non-ASI levels: `{2:250, 3:350, 5:500, …, 20:2500}` |
 | `_LEVEL_SHIELD_GIFT` | Magic shield gifts on milestone levels: L3 → +1 Shield, L11 → +2 Shield |
-| `XP_BY_TIER` | Legacy tier XP; kept for reference — L12+ uses `AC × maxHP` formula |
+| ~~`XP_BY_TIER`~~ | ✅ **DELETED 2026-08-03 (§DX-02i).** Read by nothing (one occurrence: its own declaration), and it encoded a *different* XP model, not a stale form of the shipped one — it paid 1.9×–6.5× less at every tier. Battle XP is `(S.enemy.ac‖10) × (S.opp.maxHp‖10)` at **every** level; the old "L12+ uses `AC × maxHP`" note here was also wrong, since nothing ever consulted the table at any level. |
 | `BOSS_COMMANDER_AUROS` | AC22/HP300/ATK+12/3d8+6; final boss at CO node; requires Lv20 + 7 shards |
 | `VENDOR_NODES` | Set of node codes with vendor access (5 nodes: `LLA`/`LGW`/`STN`/`PDL`/`BK`) |
 | `XP_LEVELS` | 20-entry array; max 195,000 XP at L20 |

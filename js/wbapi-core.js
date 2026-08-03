@@ -1210,10 +1210,18 @@ const WBAPI = {
   // ═══════════════════════════════════════════════════════════════════════
   editField(type, idOrTitle, field, value) {
     if (!this._rawSrc) return { ok:false, error:'no source loaded' };
-    const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL' };
+    // §DX-02h — `terrain` was absent from both maps, so WORLD_DB had NO source-level
+    // writer at all: PUT /api/terrain set worldDb[k][field] in memory, returned ok:true,
+    // and never touched _rawSrc. GET then read the edit back until the next restart.
+    const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL', terrain:'WORLD_DB' };
     const section = sectionMap[type]; if (!section) return { ok:false, error:'unknown type' };
-    const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool }[type];
+    const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool, terrain:this.worldDb }[type];
     const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
+    // A terrain roster is `P.<key>` identifiers, not a string. patchStringField would
+    // find no quoted value and insertStringField would then ADD a second `monsters:"…"`
+    // field — the last-key-wins rot §AUDIT-03a's gate #11 exists to catch. Refuse here.
+    if (type === 'terrain' && field === 'monsters')
+      return { ok:false, error:'terrain rosters hold P.<key> identifiers — use editTerrainRoster(key, monsterKeys)' };
 
     // ── patch queue: defer source write, update in-memory immediately ────────
     // Only queue node edits — quest/npc/monster sections are small and infrequent.
@@ -1278,6 +1286,47 @@ const WBAPI = {
     this._rawSrc = respliceSection(this._rawSrc, section, patched);
     col[key][field] = value;
     return { ok:true, key, field, value, inserted: isNew, strategy:'editStructuredField' };
+  },
+
+  // §DX-02h — the WORLD_DB roster writer. WORLD_DB is the one collection whose array
+  // field holds CODE IDENTIFIERS (`monsters:[ P.giant_rat, … ]`), not JSON, so
+  // editStructuredField is WRONG here: serializeJsLiteral would emit ["giant_rat"],
+  // which re-parses to a string array. Nothing throws — _buildIndexes maps strings
+  // fine — but the GAME reads WORLD_DB[t].monsters as stat blocks, so _monsterLevel
+  // would score every entry 1 and _weightedMonsterPick would weight on undefined.
+  // The same silent "real-but-wrong shape" class as §DX-01c's trophy-map splice.
+  // Emits the identical `P.<key>` form serializeTerrainLiteral uses on create.
+  editTerrainRoster(terrainKey, monsterKeys) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    if (!Array.isArray(monsterKeys)) return { ok:false, error:'monsters must be an array of monster keys' };
+    const key = this._findKey(this.worldDb, terrainKey);
+    if (!key) return { ok:false, error:`terrain "${terrainKey}" not found` };
+    const bad = monsterKeys.filter(mk => typeof mk !== 'string' || !this.monsterPool[mk]);
+    if (bad.length) return { ok:false, error:`monster keys not in MONSTER_POOL: ${bad.join(', ')} — source NOT modified` };
+
+    const literal = `[ ${monsterKeys.map(mk => `P.${mk}`).join(', ')} ]`;
+    const sectionSrc = extrSection(this._rawSrc, 'WORLD_DB');
+    const patched = patchLiteralField(sectionSrc, key, 'monsters', literal);
+    if (!patched) return { ok:false, error:`entry "${key}" has no top-level monsters field in WORLD_DB — source NOT modified` };
+
+    // Pre-flight: re-parse the PATCHED section and prove it reads back as exactly the
+    // requested roster before committing, mirroring deleteEntrySource's refuse-rather-
+    // than-corrupt guard. A write path's acceptance test is a round trip (Hazard #5).
+    const reparsed = parseWithP(patched, 'WORLD_DB', this.monsterPool);
+    const readBack = ((reparsed[key] || {}).monsters || []).map(m => (typeof m === 'string' ? m : m && m.key));
+    if (readBack.length !== monsterKeys.length || readBack.some((k, i) => k !== monsterKeys[i]))
+      return { ok:false, error:`refused: "${key}" re-parsed as [${readBack.join(', ')}] not [${monsterKeys.join(', ')}] — source NOT modified` };
+    if (Object.keys(reparsed).length !== Object.keys(this.worldDb).length)
+      return { ok:false, error:`refused: WORLD_DB re-parsed to ${Object.keys(reparsed).length} terrains, expected ${Object.keys(this.worldDb).length} — source NOT modified` };
+
+    this._rawSrc = respliceSection(this._rawSrc, 'WORLD_DB', patched);
+    this.worldDb[key].monsters = monsterKeys.map(mk => ({ ...this.monsterPool[mk], key:mk }));
+    this._buildIndexes();
+    // Duplicates are allowed, not rejected: `cat_quarter` ships one (fluffy_cat ×2), and
+    // a writer that cannot express what the corpus already holds cannot round-trip it.
+    const dupes = monsterKeys.filter((k, i) => monsterKeys.indexOf(k) !== i);
+    return { ok:true, key, field:'monsters', value:monsterKeys, strategy:'editTerrainRoster',
+             ...(dupes.length ? { warning:`duplicate roster entries double their encounter weight: ${[...new Set(dupes)].join(', ')}` } : {}) };
   },
 
   // beginPatchQueue: activate deferred writes for node editField calls.

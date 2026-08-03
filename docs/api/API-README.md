@@ -173,6 +173,7 @@ echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 ./api.sh put monster goblin hp=10 ac=15
 ./api.sh put npc egil_thorvaldsen occupation="merchant"
 ./api.sh put terrain dark_forest label="Dark Forest" icon="🌲"
+./api.sh put terrain dark_forest monsters=wolf,dire_wolf,worg   # §DX-02h — WHOLE roster, not a delta
 ```
 
 ### Export / Import
