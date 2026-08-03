@@ -263,7 +263,7 @@ The strip pass is built into the API as §CELL-14. It runs through the worldbuil
   ./api.sh migrate strip-exit-fields
   # → 404 nodes / 2095 fields  (N:514 S:519 E:536 W:524 portal:1 spire:1)
   ```
-- [ ] **C2.** Apply the strip. `saveAndRestart` writes the new source as a stamped snapshot, copies over `roll2hit-v3.html`, and reloads in-process:
+- [ ] **C2.** Apply the strip. `saveAndRestart` persists the new source and reloads in-process. *(§DX-02k, 2026-08-03: it used to write a dated snapshot and copy that over `roll2hit-v3.html`, leaving the ~5.4 MB snapshot behind on every write; it now writes a temp beside the game file and renames it into place.)*
   ```bash
   ./api.sh migrate strip-exit-fields --execute
   ```

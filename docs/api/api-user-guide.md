@@ -44,7 +44,7 @@
 
 ## 1. Server Lifecycle
 
-The server reads `roll2hit-v3.html` into memory. Every write mutates in-memory objects, then serialises back to disk via `POST /api/save` (triggered automatically on most writes).
+The server reads `roll2hit-v3.html` into memory. Every write mutates in-memory objects and then persists to disk automatically — a temp file beside `roll2hit-v3.html`, renamed into place (atomic, so a reader never sees a half-written game file). `POST /api/save` is a *different* thing: it writes a **dated snapshot** next to the game file and copies it over, which is what `monitor-snapshots.py` / `archive-snapshots.sh` turn into the `milepoints/patches` chain. You do not need it to persist a write. *(§DX-02k, 2026-08-03 — before that fix every write went through the snapshot path and left the ~5.4 MB file behind, once per PUT.)*
 
 ```bash
 # Start
@@ -1488,7 +1488,7 @@ POST /api/graph/fill-gap {..., dryRun:false}   Execute junction chain
 GET  /api/layout/solve?root=LHR&step=8        Propose layout
 POST /api/layout/apply {"coords":{...}}        Apply layout
 
-POST /api/save                                 Write to disk
+POST /api/save                                 Dated snapshot + copy (writes already persist)
 POST /api/reload                               Re-read from disk
 GET  /api/next-error?skip=N&severity=error     First failing item
 GET  /api/help/{topic}                         Server man pages

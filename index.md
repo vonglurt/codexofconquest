@@ -117,7 +117,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 
 | File | Purpose |
 |------|---------|
-| `wbapi-core.js` | Core WBAPI library — `extractObj`, `removeFns`, Proxy model, comment-aware brace counting |
+| `wbapi-core.js` | Core WBAPI library — `extractObj`, `removeFns`, Proxy model, comment-aware brace counting. **Persist surfaces (§DX-02k):** `save(dest)` — writes exactly there, refuses with no argument; `saveStamped([dir])` — dated backup **beside the source file**; source-level writers `editField` / `editStructuredField` / `editTerrainRoster` / `deleteEntrySource` |
 | `api.sh` / `api/wb.js` | **Primary CLI wrapper** — queued HTTP to WBAPI, auto-nonce, retry/backoff, `--ai` Claude assist, `--out` file output, pipe-friendly |
 | `wbapi-cli.js` | Low-level CLI — direct in-process reads/writes against `roll2hit-v3.html` (use `api.sh` for day-to-day work) |
 | `wbapi-server.js` | Local HTTP server — REST endpoints for worldbuilder.html at port 1367 |
@@ -194,7 +194,7 @@ All finished §* items. Open/planned items live in `BACKLOG.md`.
 | Location | Contents |
 |----------|---------|
 | `milepoints/` | Curated milestone builds (e.g., `roll2hit-v3-20260602-174751.html`) |
-| `roll2hit-v3-*.html` (root) | Session-level timestamped snapshots — ~25 files, May 29 – Jun 2 2026 |
+| `roll2hit-v3-*.html` (root) | Dated snapshots, gitignored, consumed by `monitor-snapshots.py` → `milepoints/patches/`. **Produced on request only (§DX-02k, 2026-08-03):** a deliberate `cp` or `POST /api/save`. Until then the server stamped one **per successful write** and never swept it — 6 files / ~32 MB were sitting in the root when this was found. `WBAPI.save()` now refuses without a destination; `saveStamped()` is the backup, `saveGameFile()` (temp + atomic rename) is the per-write persist |
 
 ### 1367-Sources
 

@@ -220,7 +220,8 @@ const COMMANDS = {
   // ── SAVE ───────────────────────────────────────────────────────────────────
   save([, outputPath]) {
     load();
-    const result = WBAPI.save(outputPath);
+    // §DX-02k — `wbapi save` with no path means "dated backup", and now says so.
+    const result = outputPath ? WBAPI.save(outputPath) : WBAPI.saveStamped();
     if (!result.ok) err(result.error);
     ok(`saved → ${result.path}`);
   },
@@ -244,8 +245,7 @@ const COMMANDS = {
 // ── Auto-save after mutations ─────────────────────────────────────────────────
 function autoSave() {
   if (!WBAPI._rawSrc) return;
-  const stamped = WBAPI.getStampedName();
-  const result  = WBAPI.save(stamped);
+  const result = WBAPI.saveStamped();   // §DX-02k — beside the source file, not the CWD
   if (result.ok) console.log(`  saved → ${result.path}`);
 }
 

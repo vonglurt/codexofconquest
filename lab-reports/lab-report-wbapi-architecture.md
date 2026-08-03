@@ -351,6 +351,8 @@ POST /api/save    →  _rawSrc written to timestamped backup
 
 ### 4.2 The Save-Restart Cycle
 
+> **Annotation (§DX-02k, 2026-08-03) — historical, do not follow verbatim.** Two things drifted from this trace. (1) The exit-67 relaunch is gone: writes hot-reload in place (`saveAndRestart`/`saveAndVerify`). (2) `WBAPI.save()` **no longer takes no argument** — the `getStampedName()` fallback resolved a bare filename against the process CWD, so *every* write left a ~5.4 MB dated file there. `POST /api/save` still stamps, via `WBAPI.saveStamped()` (beside the source file); the per-write path is `saveGameFile()` — temp + atomic rename, nothing left behind. The step-2 note below that copy-then-rename "is atomic on most filesystems" was the right instinct applied to the wrong step; it is now the actual mechanism.
+
 `POST /api/save` performs the following sequence:
 
 ```

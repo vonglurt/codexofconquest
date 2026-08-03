@@ -100,7 +100,17 @@ When you save the game file, copy it with a timestamp:
 
 ```bash
 cp roll2hit-v3.html roll2hit-v3-$(date +%Y%m%d-%H%M%S).html
+# …or ask the server for one: curl -X POST http://localhost:1367/api/save
 ```
+
+> **§DX-02k (2026-08-03) — snapshots are produced on request, not as a side effect.**
+> This deliberate `cp` is, and always was, the documented input to the patch store.
+> Until §DX-02k the WBAPI server *also* stamped a full ~5.4 MB snapshot into its
+> working directory on **every successful PUT/POST/DELETE** and never removed it,
+> which turned a curated session history into per-keystroke noise (6 orphans /
+> ~32 MB were in the repo root when it was found — invisible, since the pattern is
+> gitignored). The per-write persist now writes a temp beside the game file and
+> renames it into place; `POST /api/save` remains the on-demand snapshot surface.
 
 `monitor-snapshots.py` detects the new file, waits until all file handles
 close (`lsof`), then:

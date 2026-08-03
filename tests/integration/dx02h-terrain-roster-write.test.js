@@ -56,8 +56,9 @@ test.describe('§DX-02h — the terrain roster write path', () => {
 
       const wrote = W.editTerrainRoster('crypt', [...before, 'giant_rat']);
       expect(wrote.ok, wrote.error).toBe(true);
-      // save(tmp) writes IN PLACE. The argless form stamps a dated snapshot next to
-      // the module — in the repo root — so a test that uses it litters on every run.
+      // save(tmp) writes IN PLACE. §DX-02k: the argless form is now REFUSED — it
+      // used to stamp a dated 5.4 MB snapshot into the process CWD (which read as
+      // "the repo root" only because that is where the server runs).
       const saved = W.save(tmp);
       expect(saved.ok).toBe(true);
 

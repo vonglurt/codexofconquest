@@ -363,9 +363,11 @@ this session — they are §CELL-06 scope):
      return saveAndRestart(res, 200, { stripped: count });
    }
 
-   Note: saveAndRestart() is defined at line ~510 — it calls WBAPI.save(), copies
-   the file to GAME_FILE, reloads WBAPI.load(GAME_FILE), and sends the JSON response.
-   This is the correct pattern used by all other mutating endpoints.
+   Note: saveAndRestart() persists the source, reloads WBAPI.load(GAME_FILE), and
+   sends the JSON response. This is the correct pattern used by all other mutating
+   endpoints. (§DX-02k, 2026-08-03: it used to call the argless WBAPI.save() and
+   copy the resulting dated snapshot over GAME_FILE — which left a ~5.4 MB file in
+   the CWD on every write. It now goes through saveGameFile(): temp + atomic rename.)
 
 2. Restart the WBAPI server to pick up the new endpoint:
    ./wbapi-toggle.sh restart

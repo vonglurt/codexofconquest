@@ -1588,8 +1588,17 @@ const WBAPI = {
     return `${base}-${ds}-${ts}.html`;
   },
 
+  // §DX-02k — `save()` REQUIRES a destination. It used to fall back to
+  // `getStampedName()`, a BARE filename, which `fs.writeFileSync` resolves
+  // against the process CWD — so every argless caller dropped a ~5.4 MB dated
+  // copy wherever it happened to be running, and never removed it. The fallback
+  // read as "the repo root" only because the server's CWD is the repo root.
+  // Want a dated backup? Say so: `saveStamped()`. Want to overwrite the game
+  // file? Say that too — the server's `saveGameFile()` writes a temp and renames.
   save(outputPath) {
     if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    if (!outputPath)
+      return { ok:false, error:'save() requires a destination path — pass one, or call saveStamped() for a dated backup beside the source file (§DX-02k)' };
 
     // Guard: coerced objects
     if (this._rawSrc.includes('[object Object]'))
@@ -1606,9 +1615,18 @@ const WBAPI = {
     if (badConds.length)
       return { ok:false, error:`save aborted: ${badConds.length} activateCond value(s) are bare identifiers (not arrow functions) — will throw ReferenceError at runtime: ${badConds.slice(0,5).join(', ')}${badConds.length>5?' …':''}`};
 
-    const dest = outputPath || this.getStampedName();
-    fs.writeFileSync(dest, this._rawSrc, 'utf8');
-    return { ok:true, path: path.resolve(dest) };
+    fs.writeFileSync(outputPath, this._rawSrc, 'utf8');
+    return { ok:true, path: path.resolve(outputPath) };
+  },
+
+  // §DX-02k — the deliberate dated-backup surface (`POST /api/save`, the CLI's
+  // autoSave, archive-snapshots.sh's patch chain). Lands beside the SOURCE FILE,
+  // not in the CWD: a script run from /tmp against the repo's HTML now backs it
+  // up next to the HTML, which is what every caller already assumed.
+  saveStamped(dir) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    const base = dir || path.dirname(path.resolve(this._srcPath || '.'));
+    return this.save(path.join(base, this.getStampedName()));
   },
 
   // ── Export world/ folder structure ──
