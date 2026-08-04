@@ -17,7 +17,7 @@ The answer operates at three layers:
 
 1. **Greeting layer** — `NPC_NG_PLUS_GREETINGS`: first NPC visit in NG+ (established in Layer 43, not new to §XV)
 2. **Memory layer** — `NPC_NG_MEMORY_LINES`: second NPC visit in NG+ after preserved favorability ≥ 2 (new in Layer 50)
-3. **Author layer** — Entry 42 modal at CI, quest chain, journal persistence
+3. **Author layer** — Entry 42 modal at `LHR` (historical `CI`), quest chain, journal persistence
 
 The section closes the philosophical loop opened by Quest -1 (§XIV): the player who found the door becomes the author who writes what is behind it.
 
@@ -39,7 +39,7 @@ The section closes the philosophical loop opened by Quest -1 (§XIV): the player
 
 ### Trigger Condition
 
-At CI (inn) in NG+, fires before inn text renders if all three hold:
+At `LHR` (historical `CI`) (inn) in NG+, fires before inn text renders if all three hold:
 - `S_story.ngPlusRun >= 1`
 - `S_story.priorQuestMinusOne === true` (found the door in prior run)
 - `!S_story.entry42Written` (not yet engaged)
@@ -88,7 +88,7 @@ Dear Friends eligible for memory lines: `yael`, `brynn`, `quill`, `pachelbel`, `
 
 ## Quest Chain
 
-Activated at CI in NG+ (first visit):
+Activated at `LHR` (historical `CI`) in NG+ (first visit):
 
 ```js
 if (!_ngqs['quest_ng_01']) S_story.quests['quest_ng_01'] = 'active';
@@ -106,19 +106,19 @@ if (!_ngqs['quest_ng_03']) S_story.quests['quest_ng_03'] = 'active';
 
 **quest_ng_01 — "The Remembered Path":** Revisit 3 Dear Friends. Tracked via `ngMemoryDelivered` — each Dear Friend NPC visited in the second-visit slot (after NG+ greeting already delivered, fav ≥ 2) counts toward the three required. Reward: 500gp. Sets `nextFrobergerComplete = true`.
 
-**quest_ng_02 — "The Open Page":** Write Entry 42 at CI. Only activated if `priorQuestMinusOne`. Reward is the act itself — writing in the blank page is its own completion. No gold. The mechanic does not require substantive prose; choosing "Leave It Blank" completes the quest.
+**quest_ng_02 — "The Open Page":** Write Entry 42 at `LHR` (historical `CI`). Only activated if `priorQuestMinusOne`. Reward is the act itself — writing in the blank page is its own completion. No gold. The mechanic does not require substantive prose; choosing "Leave It Blank" completes the quest.
 
-**quest_ng_03 — "The Letter":** Find Froberger's sealed letter at CO. Only available in NG+; not present in a first run. One "Take the letter." button on CO visit when `!frobergerLetterFound`. Sets `frobergerLetterFound = true`. Reward: 300gp.
+**quest_ng_03 — "The Letter":** Find Froberger's sealed letter at `TLS` (historical `CO`). Only available in NG+; not present in a first run. One "Take the letter." button on `TLS` (historical `CO`) visit when `!frobergerLetterFound`. Sets `frobergerLetterFound = true`. Reward: 300gp.
 
 ---
 
-## Froberger's Sealed Letter at CO
+## Froberger's Sealed Letter at `TLS` (historical `CO`)
 
-Rendered on CO visit in NG+ when `!frobergerLetterFound`. The letter is not available in a first run — it exists only in NG+ as a final artifact from Froberger.
+Rendered on `TLS` (historical `CO`) visit in NG+ when `!frobergerLetterFound`. The letter is not available in a first run — it exists only in NG+ as a final artifact from Froberger.
 
 Button: "Take the letter." Sets `frobergerLetterFound = true`, completes quest_ng_03, grants 300gp.
 
-The letter is a readable item. Its presence at CO — the arc's closing node — positions it as a valediction: something Froberger left for whoever came after him. The player who completes quest_ng_03 is the person Froberger addressed.
+The letter is a readable item. Its presence at `TLS` (historical `CO`) — the arc's closing node — positions it as a valediction: something Froberger left for whoever came after him. The player who completes quest_ng_03 is the person Froberger addressed.
 
 ---
 
@@ -132,7 +132,7 @@ The letter is a readable item. Its presence at CO — the arc's closing node —
 | `entry42Read` | boolean | `false` | No | Whether player has opened journal to Entry 42 |
 | `ngMemoryDelivered` | object | `{}` | No | `{npcKey: true}` — prevents memory line from firing twice per run |
 | `nextFrobergerComplete` | boolean | `false` | No | Set when quest_ng_01 completes |
-| `frobergerLetterFound` | boolean | `false` | No | Set when player finds CO letter in NG+ |
+| `frobergerLetterFound` | boolean | `false` | No | Set when player finds `TLS` (historical `CO`) letter in NG+ |
 | `priorQuestMinusOne` | boolean | captured | Yes | Captures `questMinusOne` value before NG+ reset |
 
 **What survives reset:** `ngPlusRun` (incremented), `entry42Written`, `entry42Text`, `priorQuestMinusOne`.
@@ -165,7 +165,7 @@ Not preserved: `ngMemoryDelivered`, `entry42Read`, `frobergerLetterFound`, `next
 The `entry42Written` flag is required for §XVII (Void Archaeology) to be completable. Specifically:
 
 - `quest_va_04` cannot complete without `entry42Written`
-- When `vaLastWardVisited` is true and `entry42Written` is true, Benedikt delivers the four-author chain synthesis at SQ
+- When `vaLastWardVisited` is true and `entry42Written` is true, Benedikt delivers the four-author chain synthesis at `NUE` (historical `SQ`)
 - Without `entry42Written`, the chain has only three links and Benedikt does not speak
 - `vaArchitectureKnown` cannot be set
 
@@ -177,7 +177,7 @@ The dependency chain reads: `priorQuestMinusOne` (§XIV Quest -1) → `entry42Wr
 
 ## The Benedikt Four-Author Chain Speech
 
-Delivered at SQ when `vaLastWardVisited && entry42Written && !vaArchitectureKnown` (this speech is the §XVII arc close, but `entry42Written` from §XV is the enabling condition):
+Delivered at `NUE` (historical `SQ`) when `vaLastWardVisited && entry42Written && !vaArchitectureKnown` (this speech is the §XVII arc close, but `entry42Written` from §XV is the enabling condition):
 
 > **Benedikt:** "She built it. You closed it. Froberger found the mechanism. You followed him. Entry 42 is the fourth link. Four links is a chain. A chain holds. That is the only kind of answer this work produces — not a solution, a chain."
 
@@ -185,7 +185,7 @@ The four authors named:
 
 1. **The First Researcher (Marta Eilene Vass)** — built the cage; wrote the Constructor's Log; left no name in the official record
 2. **Froberger** — found the mechanism; documented it in his field notes; died for it
-3. **The player** — activated the sealing mechanism at DF (the Defiant Fields battle); closed the cage without knowing it
+3. **The player** — activated the sealing mechanism at `ZRH` (historical `DF`) (the Defiant Fields battle); closed the cage without knowing it
 4. **Entry 42** — the player's own written entry; the fourth link that makes it a chain
 
 The chain only has four links if the player wrote (or chose to leave blank) Entry 42. `vaArchitectureKnown` only sets when `entry42Written` is true. A player who skipped Entry 42 cannot receive this synthesis. The arc requires self-authorship to close.
@@ -196,9 +196,9 @@ The chain only has four links if the player wrote (or chose to leave blank) Entr
 
 | Node | §XV Role | Connected Arc | Connection |
 |------|----------|---------------|------------|
-| CI | Entry 42 modal trigger; quest_ng_01/02/03 activation | §XVII | `vaCI` investigation mark also at CI; both occur in NG+ |
-| SQ | `entry42Written` required for quest_va_04 | §XVI + §XVII | Benedikt Rasp (§XVI Dear Friend) delivers four-author chain; `entry42Written` enables it |
-| CO | Froberger's sealed letter (quest_ng_03) | §XIV | CO is also the Quest -1 Level 20 trigger node; farewell arc node in §XXV |
+| `LHR` (historical `CI`) | Entry 42 modal trigger; quest_ng_01/02/03 activation | §XVII | `vaCI` investigation mark also at `LHR` (historical `CI`); both occur in NG+ |
+| `NUE` (historical `SQ`) | `entry42Written` required for quest_va_04 | §XVI + §XVII | Benedikt Rasp (§XVI Dear Friend) delivers four-author chain; `entry42Written` enables it |
+| `TLS` (historical `CO`) | Froberger's sealed letter (quest_ng_03) | §XIV | `TLS` (historical `CO`) is also the Quest -1 Level 20 trigger node; farewell arc node in §XXV |
 | Any node (Dear Friends) | NPC memory lines (second visit, fav ≥ 2) | §XXV | Act VIII farewell beats also fire at NPC nodes by favorability |
 
 ---
@@ -229,7 +229,7 @@ A player who reached NG+ without finding Quest -1's door is not asked to write E
 | `roll2hit-v3.html` | Line 11836 | `NPC_NG_PLUS_GREETINGS` const |
 | `roll2hit-v3.html` | Line 11846 | `NPC_NG_MEMORY_LINES` const |
 | `roll2hit-v3.html` | Lines 8654–8664 | NPC memory line delivery logic |
-| `roll2hit-v3.html` | Lines 14218–14221 | Entry 42 modal trigger at CI |
+| `roll2hit-v3.html` | Lines 14218–14221 | Entry 42 modal trigger at `LHR` (historical `CI`) |
 | `roll2hit-v3.html` | Lines 14260–14262 | quest_ng_01/02/03 activation |
 | `roll2hit-v3.html` | Lines 12837, 12857 | Epilogue `entry42Written` variant |
 | `lab-report-ng-plus-remembrance.md` | All | §XV full implementation record |

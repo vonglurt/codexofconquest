@@ -3,7 +3,7 @@
 # Story Arc — Birka NPC Dialogues
 **Source:** Extracted from `story.md` — canonical NPC content
 **Elaboration:** `lab-report-birka-beginner-arc.md` · `lab-report-npc-dialogue-system.md` · `lab-report-narrative-arcs-brynn-bruhns-yael.md` · `lab-report-web-of-connections.md`
-**Intersection:** CI (Yael), IN (Brynn), TV (Quill), BA (Pachelbel), CY (Weckmann/Auros) — all Act I nodes persist to Act VIII
+**Intersection:** `LHR` (Yael), `TLL` (Brynn), `MHQ` (Quill), `LLA` (Pachelbel), `HKG` (Weckmann/Auros) — all Act I nodes persist to Act VIII  *(historical: `CI`=`LHR` · `IN`=`TLL` · `TV`=`MHQ` · `BA`=`LLA` · `CY`=`HKG`)*
 
 > See `story-flowchart.md` for arc overlay showing NPC nodes on the quest map.
 
@@ -15,18 +15,18 @@ Six Birka NPCs are fully interactive across all 8 acts. Each has a quest chain, 
 
 | NPC | Node | Intro Quest | Dear Friend Unlock |
 |---|---|---|---|
-| Yael Scheidemann | CI | `quest_yael_escort` (3 SL vermin clears) | Escort + 5+ visits |
-| Brynn Clerambault | IN | `quest_brynn_ledger` (Worn Ledger from SL) | Maintenance + 5+ visits |
-| Quill / Couperin | TV | `quest_couperin_lute` (Lute from Pachelbel) | Song received + 5+ visits |
-| Pachelbel / Deacon | BA | `quest_pachelbel_goods` (Pigeon route intel) | 15gp tip + 5+ visits |
-| Weckmann | CY | `quest_pit_training` (5 pit wins) | Log + 5+ visits |
-| Auros / Bruhns | CY | `quest_auros_depths` (Undercity survey) | Depths report + Act V |
+| Yael Scheidemann | `LHR` (historical `CI`) | `quest_yael_escort` (3 `BMA` (historical `SL`) vermin clears) | Escort + 5+ visits |
+| Brynn Clerambault | `TLL` (historical `IN`) | `quest_brynn_ledger` (Worn Ledger from `BMA` (historical `SL`)) | Maintenance + 5+ visits |
+| Quill / Couperin | `MHQ` (historical `TV`) | `quest_couperin_lute` (Lute from Pachelbel) | Song received + 5+ visits |
+| Pachelbel / Deacon | `LLA` (historical `BA`) | `quest_pachelbel_goods` (Pigeon route intel) | 15gp tip + 5+ visits |
+| Weckmann | `HKG` (historical `CY`) | `quest_pit_training` (5 pit wins) | Log + 5+ visits |
+| Auros / Bruhns | `HKG` (historical `CY`) | `quest_auros_depths` (Undercity survey) | Depths report + Act V |
 
 At **Dear Friend+** (level 3), joint NPC moments unlock:
-- Quill + Brynn at TV: joint ambient moment
-- Weckmann + Auros at CY: mid-conversation the player interrupts
+- Quill + Brynn at `MHQ` (historical `TV`): joint ambient moment
+- Weckmann + Auros at `HKG` (historical `CY`): mid-conversation the player interrupts
 - Froberger traces fire (one-time NPC memory of Froberger per Dear Friend NPC)
-- Entry 41 reaction lines at IN (Brynn) and SQ (Sweelinck) after `frobergerLastEntryRead`
+- Entry 41 reaction lines at `TLL` (historical `IN`) (Brynn) and `NUE` (historical `SQ`) (Sweelinck) after `frobergerLastEntryRead`
 
 ---
 
@@ -44,7 +44,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 >
 > **Dead-code remap (§NPC-01-SF4).** The last three dead pre-§WALK codes in the `birkaNpcs` literal — `CQ`/`SQ`/`GC`, none ever in `NODE_MAP`, so their six NPCs rendered nowhere — are remapped to the nodes their arcs actually render at, each proved by the arc's own `node.code` render gate *and* by the NPCs' own `NPC_DIALOGUES.meta.node`: **CQ→CDG** (The Cat Quarter — Layer 44 Ally Cat Arc; `jimmy`, plus `sandy_cat` after `quest_cat_02` and `kenickie` after `quest_cat_05`), **SQ→NUE** (Scholar's Quarter — Weimar — Layer 51 Scholar Gate; `isolde_voss`, plus `benedikt_rasp` after `wmArchiveComplete`; merged into the existing curated NUE entry), **GC→TRD** (Goblin Warrens — Layer 55; `yva` while `vsDebtProbed && !vsWeaponsFound`). All state-gating preserved verbatim — a pure key remap, same standard as the §PLAY-01-G `CI/IN/TV/BA/CY` remaps.
 
-#### Yael Scheidemann — City Guard Captain (CI)
+#### Yael Scheidemann — City Guard Captain (`LHR` (historical `CI`))
 - **worldTruth:** "Every riot that gets suppressed becomes three quiet riots."
 - **enemy:** Commissioners who scrub evidence of unrest.
 - **missionBit:** `yaelEscortUsed`
@@ -78,7 +78,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-#### Brynn Clerambault — Innkeeper (IN)
+#### Brynn Clerambault — Innkeeper (`TLL` (historical `IN`))
 - **worldTruth:** "Safety is a thing people carry in, not a thing rooms provide."
 - **enemy:** Merchants who disappear without settling the account — not for the gold, for the not knowing.
 - **missionBit:** `brynnsJournalRead`
@@ -112,7 +112,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-#### Quill (Tomas Couperin) — Unlicensed Bard (TV)
+#### Quill (Tomas Couperin) — Unlicensed Bard (`MHQ` (historical `TV`))
 - **worldTruth:** "The best songs are the ones that take three listenings to understand."
 - **enemy:** Licensed guild bards who play the same five songs on rotation and call it craft.
 - **missionBit:** `couperiSongReceived`
@@ -144,7 +144,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 3. "The guild sent someone to review my license status last month. He stayed for four songs, tipped well, and wrote 'non-compliant but substantial' in his report. I've framed it."
 4. "The cipher song ends on a note that resolves to nothing. I used to think that was a flaw. Now I think it's the point. The resolution is something the listener has to supply."
 
-**QUILL_UNFINISHED_SONGS** — 7 ambient snippets visible at TV (S45). Cycle index: `Math.floor(gameDay / 2) % 7`. Click "Ask about it." triggers a full Quill interaction.
+**QUILL_UNFINISHED_SONGS** — 7 ambient snippets visible at `MHQ` (historical `TV`) (S45). Cycle index: `Math.floor(gameDay / 2) % 7`. Click "Ask about it." triggers a full Quill interaction.
 
 | Index | Ambient text |
 |-------|-------------|
@@ -158,7 +158,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-#### Pachelbel (Deacon) — Fence / Information Broker (BA)
+#### Pachelbel (Deacon) — Fence / Information Broker (`LLA` (historical `BA`))
 - **worldTruth:** "The difference between a loan and a gift is whether anyone admits which it was."
 - **enemy:** Merchants who use credit as a weapon — the kind who extend it to people they know can't repay, then collect the debt as leverage.
 - **missionBit:** `pachelbelPaidBack`
@@ -192,7 +192,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-#### Weckmann (Crov) — Pit Master (CY)
+#### Weckmann (Crov) — Pit Master (`HKG` (historical `CY`))
 - **worldTruth:** "The body tells the truth about who you are when you're tired. Everything else is performance."
 - **enemy:** Pit promoters who run fixed fights — not for the money, for the fact that they corrupt the one place where honesty is mandatory.
 - **missionBit:** `crovPitTrainingWins`
@@ -226,7 +226,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-#### Auros (Commander Seraphine Bruhns) — Commander / Scholar King Archivist (CY)
+#### Auros (Commander Seraphine Bruhns) — Commander / Scholar King Archivist (`HKG` (historical `CY`))
 - **worldTruth:** "The infrastructure that keeps cities standing is invisible until it fails."
 - **enemy:** The Void — not as metaphor, as specific engineering problem. The Scholar King relay is degrading and no one alive knows the maintenance protocol.
 - **missionBit:** `bruhnsDepthsReported`

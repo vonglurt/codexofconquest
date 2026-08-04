@@ -35,12 +35,12 @@ Shared thematic argument: the Merchant's Conclave is competent at paperwork and 
 
 **Layer:** 54  
 **Subtitle:** "The Conclave's Weight"  
-**Nodes:** SF (Storefront/docks) + TL (Tilbury)  
+**Nodes:** `STN` (historical `SF`) (Storefront/docks) + TL (Tilbury)  
 **Act gate:** Act II+ (no explicit actNumber check; node access governed by route)
 
 ### Summary
 
-The harbor in Tilbury existed as a node (DK — Harbor Docks) with ambient description and Magistra Muffat's main quest beat. There was no institutional record of the shipping environment, no NPC whose job was the ledger, and no reason to return after collecting Shard #1.
+The harbor in Tilbury existed as a node (`LCY` (historical `DK`) — Harbor Docks) with ambient description and Magistra Muffat's main quest beat. There was no institutional record of the shipping environment, no NPC whose job was the ledger, and no reason to return after collecting Shard #1.
 
 §XIX fills this gap by making the harbor ledger the entry point. Harbor Master Rennau keeps the record of ships that haven't come back. Ten ships are listed on the harbor board by name and day overdue. The most recent is the Harrow. The Conclave categorizes them as "weather losses." Rennau stopped using that category six weeks ago.
 
@@ -48,18 +48,18 @@ The arc's payoff is Ori — the sole survivor of the Harrow — who walks into T
 
 ### Story Text (story.md Layer 54 stub)
 
-Nodes: TL (Tilbury) + SF (Storefront/docks). Two new NPCs, no new terrain monsters needed.
+Nodes: TL (Tilbury) + `STN` (historical `SF`) (Storefront/docks). Two new NPCs, no new terrain monsters needed.
 
-- **Harbor Master Rennau** (`rennau`) — SF node; NPC card rendered on SF visits; impartial → friendly (Q-TL-01) → dear friend (Q-TL-03). Quote: *"The ledger is the only record that's honest."*
+- **Harbor Master Rennau** (`rennau`) — `STN` (historical `SF`) node; NPC card rendered on `STN` (historical `SF`) visits; impartial → friendly (Q-TL-01) → dear friend (Q-TL-03). Quote: *"The ledger is the only record that's honest."*
 - **Adjutant Vonn** (`vonn`) — TL node; rendered when `tlLedgerRead`; caps at Friendly; holds Conclave position.
-- **Q-TL-01** "The Ledger" — Harbor Board button at SF; clicking reveals 10 empty berths + awards The Harrow Manifest (📄, readable). `tlLedgerRead = true`. If `wmFirstResearcherKnown`: manifest shows Isolde Voss as consignee.
+- **Q-TL-01** "The Ledger" — Harbor Board button at `STN` (historical `SF`); clicking reveals 10 empty berths + awards The Harrow Manifest (📄, readable). `tlLedgerRead = true`. If `wmFirstResearcherKnown`: manifest shows Isolde Voss as consignee.
 - **Q-TL-02** "The Embargo" — Vonn interaction at TL; two choices: [Report to Birka contacts] (+150gp, `tlEmbargoChallenged`) or [Leave it] (`tlEmbargoDismissed`).
-- **Q-TL-03** "The Missing Ship" — Ori encounter at SF (Act IV+, `tlLedgerRead`); one-click delivery to Rennau; awards Ori's Account (📜, readable) + 300gp + Rennau Dear Friend. If `Froberger's Field Notes` in inventory: extra lore line in account.
+- **Q-TL-03** "The Missing Ship" — Ori encounter at `STN` (historical `SF`) (Act IV+, `tlLedgerRead`); one-click delivery to Rennau; awards Ori's Account (📜, readable) + 300gp + Rennau Dear Friend. If `Froberger's Field Notes` in inventory: extra lore line in account.
 - **State flags (4):** `tlLedgerRead`, `tlEmbargoChallenged`, `tlEmbargoDismissed`, `tlMissingShipSolved`.
 
 ### NPC Profiles
 
-**Harbor Master Rennau** — Merchant's Conclave Tier 2, node: SF. Begins Neutral; advances to Friendly on quest_tl_01 completion; Dear Friend on quest_tl_03 completion.
+**Harbor Master Rennau** — Merchant's Conclave Tier 2, node: `STN` (historical `SF`). Begins Neutral; advances to Friendly on quest_tl_01 completion; Dear Friend on quest_tl_03 completion.
 
 Key dialogue lines by favorability state:
 - Neutral: *"The ledger goes back eleven months. Every ship that's left, every ship that's come back, every ship that hasn't. The Conclave calls the ones that haven't 'weather losses.' I stopped calling them that six weeks ago."*
@@ -90,17 +90,17 @@ Vonn is not a villain. He holds the Conclave position because it is his job. The
 | `quest_tl_03` | Rennau: The Missing Ship | `tlMissingShipSolved` | Ori's Account (readable) + 300gp; Rennau Dear Friend |
 
 **Activation sequence:**
-- `quest_tl_01` activates immediately on SF node arrival
+- `quest_tl_01` activates immediately on `STN` (historical `SF`) node arrival
 - `quest_tl_02` activates when `tlLedgerRead` (after board read)
 - `quest_tl_03` activates when `tlLedgerRead` AND `actNumber >= 4` (Ori arrives in Act IV)
 
 ### Harbor Board Mechanic
 
-On first SF visit with `!tlLedgerRead`, the harbor board renders as a storyMsg listing ten ships by name and days overdue:
+On first `STN` (historical `SF`) visit with `!tlLedgerRead`, the harbor board renders as a storyMsg listing ten ships by name and days overdue:
 
 > `HARROW (Day 17), SILVER MARCH (Day 24), CORMORANT (Day 31), BRINE OATH (Day 44)...`
 
-If the Harrow Manifest is not already in inventory, it is added automatically at this point. `quest_tl_01` activates on SF arrival before the board reads.
+If the Harrow Manifest is not already in inventory, it is added automatically at this point. `quest_tl_01` activates on `STN` (historical `SF`) arrival before the board reads.
 
 The harbor board listing ten ships by name and days-overdue makes the Conclave's scale of incompetence legible immediately. The player sees not one missing ship but ten, classified identically, before the arc begins.
 
@@ -114,7 +114,7 @@ Both complete quest_tl_02. Neither changes Vonn's behavior or Rennau's dialogue.
 
 ### Ori Encounter (quest_tl_03)
 
-Fires at SF when `tlLedgerRead && actNumber >= 4 && !tlMissingShipSolved`. Button: "📜 Speak with Ori." Clicking delivers Ori's account as storyMsg and immediately sets `tlMissingShipSolved = true`, adds Ori's Account to inventory, advances Rennau to Dear Friend, grants +300gp.
+Fires at `STN` (historical `SF`) when `tlLedgerRead && actNumber >= 4 && !tlMissingShipSolved`. Button: "📜 Speak with Ori." Clicking delivers Ori's account as storyMsg and immediately sets `tlMissingShipSolved = true`, adds Ori's Account to inventory, advances Rennau to Dear Friend, grants +300gp.
 
 Ori is the sole survivor of the Harrow. She walks into Tilbury three weeks after the sinking. Her account is delivered through testimony, not investigation — the player learns what happened to the Harrow through what the person who survived decided to say.
 
@@ -138,23 +138,23 @@ If `wmFirstResearcherKnown` is true when quest_tl_01 completes, the Harrow Manif
 
 **Layer:** 55  
 **Subtitle:** "What Mordus Owes"  
-**Nodes:** VS (Visby) + GC (Goblin Caves) + BK (Broken Tooth Tavern)  
+**Nodes:** VS (Visby) + `TRD` (historical `GC`) (Goblin Caves) + `VBY` (historical `BK`) (Broken Tooth Tavern)  
 **Act gate:** `actNumber >= 5`
 
 ### Summary
 
-The Visby Underground arc gives Warlord Mordus a quest role beyond the main-quest monster-bounty beat. Mordus owns the Broken Tooth Tavern (BK) and controls Visby's criminal infrastructure. He is also in debt to the Merchant's Conclave for 2,000gp — the price of a weapons shipment that never arrived.
+The Visby Underground arc gives Warlord Mordus a quest role beyond the main-quest monster-bounty beat. Mordus owns the Broken Tooth Tavern (`VBY` (historical `BK`)) and controls Visby's criminal infrastructure. He is also in debt to the Merchant's Conclave for 2,000gp — the price of a weapons shipment that never arrived.
 
-§XX makes the missing weapons the investigation: who received them, why, and what they did with them. The answer (Yva's testimony at GC) is that a goblin sub-clan called the Hollow Hands received the shipment because their Void-aligned shaman told them it was tribute Mordus owed. Mordus never paid tribute. The shaman invented a tribute to arm a sub-clan. This is the §XXI setup.
+§XX makes the missing weapons the investigation: who received them, why, and what they did with them. The answer (Yva's testimony at `TRD` (historical `GC`)) is that a goblin sub-clan called the Hollow Hands received the shipment because their Void-aligned shaman told them it was tribute Mordus owed. Mordus never paid tribute. The shaman invented a tribute to arm a sub-clan. This is the §XXI setup.
 
 ### Story Text (story.md Layer 55 stub)
 
-Nodes: VS (Visby) + GC (Goblin Caves). One new monster (`hollow_hands_guard`).
+Nodes: VS (Visby) + `TRD` (historical `GC`) (Goblin Caves). One new monster (`hollow_hands_guard`).
 
 - **Debt Agent Solvak** (`solvak`) — VS node; rendered until `vsDebtSettled`; impartial → friendly (Q-VS-01). Quote: *"I've been outside Visby for six weeks."*
-- **Yva** (`yva`) — GC node; rendered when `vsDebtProbed && !vsWeaponsFound`; 50gp to talk; friendly after Q-VS-02.
+- **Yva** (`yva`) — `TRD` (historical `GC`) node; rendered when `vsDebtProbed && !vsWeaponsFound`; 50gp to talk; friendly after Q-VS-02.
 - **Q-VS-01** "The Collector" — activated at VS (Act V+); Solvak button → Mordus dialogue → `vsDebtProbed`. If `tlLedgerRead`: Solvak mentions the Harrow.
-- **Q-VS-02** "The Broker" — Yva 50gp interaction at GC; reveals Hollow Hands + shaman; awards Hollow Hands Seal (🖤, quest_item). If `tlMissingShipSolved`: Yva confirms Harrow was not Hollow Hands.
+- **Q-VS-02** "The Broker" — Yva 50gp interaction at `TRD` (historical `GC`); reveals Hollow Hands + shaman; awards Hollow Hands Seal (🖤, quest_item). If `tlMissingShipSolved`: Yva confirms Harrow was not Hollow Hands.
 - **Q-VS-03** "Mordus Pays" — deliver seal to Solvak at VS; 400gp; `vsDebtSettled = true`, `vsShamanKnown = true`. Mordus follow-up: *"The Hollow Hands are mine to deal with now."*
 - New monster: `hollow_hands_guard` (AC13/HP22/ATK+4/1d6+2/easy) — added to `goblin_cave` terrain; drops Hollow Hands Seal (🖤, sell:0).
 - The shaman is named (`vsShamanKnown`) but not confronted — Layer 56 §XXI.
@@ -168,7 +168,7 @@ Key dialogue lines by favorability state:
 - Neutral: *"I've been outside Visby for six weeks. Mordus won't see me directly. The debt is 2,000gp for a weapons shipment. The shipment arrived at the docks and then it didn't arrive at Mordus."*
 - Friendly (post quest_vs_01): *"You talked to Mordus. He didn't have you removed. That's better than my last three visits combined."*
 
-**Yva** — Goblin broker, formerly Mordus-aligned, node: GC. Renders when `vsDebtProbed && !vsWeaponsFound`. 50gp payment required to receive testimony. Advances to Friendly after payment.
+**Yva** — Goblin broker, formerly Mordus-aligned, node: `TRD` (historical `GC`). Renders when `vsDebtProbed && !vsWeaponsFound`. 50gp payment required to receive testimony. Advances to Friendly after payment.
 
 Key line (delivered after 50gp payment):
 
@@ -180,7 +180,7 @@ Yva is a former supply intermediary who unknowingly moved weapons to the Hollow 
 
 `hollow_hands_guard` — Hollow Hands Guard. AC 13, HP 22, ATK +4, 1d6+2. Tier: easy.
 
-Drop: Hollow Hands Seal (icon 🖤, sell: 0 — non-sellable quest item). Added to `goblin_cave` terrain pool alongside kobolds, goblins, hobgoblins, and bugbears. Functionally a goblin-tier easy encounter that signals Hollow Hands presence in the GC node territory.
+Drop: Hollow Hands Seal (icon 🖤, sell: 0 — non-sellable quest item). Added to `goblin_cave` terrain pool alongside kobolds, goblins, hobgoblins, and bugbears. Functionally a goblin-tier easy encounter that signals Hollow Hands presence in the `TRD` (historical `GC`) node territory.
 
 Note: collecting the Hollow Hands Seal via monster drop has no direct quest effect — `vsWeaponsFound` sets only through Yva's 50gp testimony. The drop is narrative texture; the testimony is the gate.
 
@@ -193,7 +193,7 @@ Note: collecting the Hollow Hands Seal via monster drop has no direct quest effe
 | `vsDebtSettled` | boolean | `false` | Seal delivered to Solvak; debt resolved; +400gp |
 | `vsShamanKnown` | boolean | `false` | Set simultaneously with vsDebtSettled; gates §XXI |
 
-`vsShamanKnown` sets at debt settlement — not after defeating the shaman. The player knows the shaman exists from the chain of evidence before seeking them out. §XXI activates at MT because the player knows where the shaman operates from the Yva investigation, not because they stumbled into a dungeon.
+`vsShamanKnown` sets at debt settlement — not after defeating the shaman. The player knows the shaman exists from the chain of evidence before seeking them out. §XXI activates at `GVA` (historical `MT`) because the player knows where the shaman operates from the Yva investigation, not because they stumbled into a dungeon.
 
 ### Quest Chain
 
@@ -219,7 +219,7 @@ The `harrowNote` conditional: if `tlLedgerRead`, Solvak appends *"We lost a ship
 
 ### Yva Payment Gate
 
-Clicking "Find Yva (50gp)" at GC:
+Clicking "Find Yva (50gp)" at `TRD` (historical `GC`):
 - Deducts 50gp (hard-gated: *"You don't have 50gp."* if insufficient)
 - Delivers Yva's testimony
 - Sets `vsWeaponsFound = true`
@@ -242,7 +242,7 @@ Mordus's delayed response (600ms):
 
 > *"The Hollow Hands are mine to deal with now that I know what they are. You found what I needed to find them. That's worth something."*
 
-The `vsDebtSettled` and `vsShamanKnown` flags setting simultaneously is the correct design: debt settlement is the moment the player understands the shaman's operation, not a separate reveal. The Hollow Hands are named. The shaman is known. §XXI at MT is now available once `vaLastWardVisited` also holds.
+The `vsDebtSettled` and `vsShamanKnown` flags setting simultaneously is the correct design: debt settlement is the moment the player understands the shaman's operation, not a separate reveal. The Hollow Hands are named. The shaman is known. §XXI at `GVA` (historical `MT`) is now available once `vaLastWardVisited` also holds.
 
 ---
 
@@ -253,7 +253,7 @@ The `vsDebtSettled` and `vsShamanKnown` flags setting simultaneously is the corr
 | Flag Gate | Location | Line |
 |-----------|----------|------|
 | `tlLedgerRead` | Solvak at VS (§XX) | *"We lost a ship around the same time. The Harrow. Unrelated, probably."* |
-| `tlMissingShipSolved` | Yva at GC (§XX) | *"The Harrow. I heard about that ship. The Hollow Hands didn't touch it."* |
+| `tlMissingShipSolved` | Yva at `TRD` (historical `GC`) (§XX) | *"The Harrow. I heard about that ship. The Hollow Hands didn't touch it."* |
 | `wmFirstResearcherKnown` | Harrow Manifest (§XIX) | Manifest shows Isolde Voss as consignee |
 | `Froberger's Field Notes` in inventory | Ori's Account (§XIX) | Extra lore line: Froberger on surviving the pressure |
 
@@ -261,7 +261,7 @@ The arcs are designed to be completable in any order. The cross-references add s
 
 ### §XX → §XXI Downstream
 
-`vsShamanKnown` (set at quest_vs_03 completion) is one of two prerequisites for §XXI. The Warden encounter at MT does not trigger until both `vsShamanKnown` (§XX) and `vaLastWardVisited` (§XVII Void Archaeology) are true. The Visby debt investigation names the target; the Void Archaeology tunnel opening establishes the location. §XXI requires both investigation lines to converge.
+`vsShamanKnown` (set at quest_vs_03 completion) is one of two prerequisites for §XXI. The Warden encounter at `GVA` (historical `MT`) does not trigger until both `vsShamanKnown` (§XX) and `vaLastWardVisited` (§XVII Void Archaeology) are true. The Visby debt investigation names the target; the Void Archaeology tunnel opening establishes the location. §XXI requires both investigation lines to converge.
 
 ### §XIX Cross-Link to §XVI
 
@@ -273,10 +273,10 @@ The Harrow Manifest's `wmFirstResearcherKnown` gate creates a direct connection 
 
 | Node | Code | NPCs | New Content |
 |------|------|------|-------------|
-| Tilbury Harbor (docks) | SF | Rennau, Ori (Act IV+) | Harbor Board mechanic; Harrow Manifest item |
+| Tilbury Harbor (docks) | `STN` (historical `SF`) | Rennau, Ori (Act IV+) | Harbor Board mechanic; Harrow Manifest item |
 | Tilbury (town) | TL | Vonn | Embargo choice (quest_tl_02) |
 | Visby | VS | Solvak | Debt dialogue; seal delivery |
-| Goblin Caves | GC | Yva | Yva testimony; `hollow_hands_guard` in terrain pool |
+| Goblin Caves | `TRD` (historical `GC`) | Yva | Yva testimony; `hollow_hands_guard` in terrain pool |
 
 ---
 

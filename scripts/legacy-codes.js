@@ -66,14 +66,7 @@ const SWEEP = [
   'world.md',
   'story.md',
   'docs/notes/docs-dev-environment.md',
-];
-
-/**
- * PENDING — live docs measured but not yet read hit-by-hit. Reported with counts on
- * every run and NOT gate-fenced, because a gate that fails on work nobody has done yet
- * is just a red light you learn to ignore. Move a file to SWEEP when it is swept.
- */
-const PENDING = [
+  // §AUDIT-03m-FU (2026-08-04) — the last seven PENDING docs, swept and promoted.
   'docs/story/story-arc-coastal.md',
   'docs/story/story-arc-investigation.md',
   'docs/story/story-arc-ngplus.md',
@@ -82,6 +75,17 @@ const PENDING = [
   'docs/story/story-flowchart.md',
   'docs/notes/docs-node-network.md',
 ];
+
+/**
+ * PENDING — live docs measured but not yet read hit-by-hit. Reported with counts on
+ * every run and NOT gate-fenced, because a gate that fails on work nobody has done yet
+ * is just a red light you learn to ignore. Move a file to SWEEP when it is swept.
+ *
+ * EMPTY since §AUDIT-03m-FU (2026-08-04): every live doc is now gate-fenced. The list
+ * stays because it is the correct landing place for the NEXT doc that grows legacy
+ * codes — a new doc is reported, not silently ignored, and not instantly a red gate.
+ */
+const PENDING = [];
 
 const HISTORY_DIRS = ['lab-reports/', 'archive/', 'docs/spec/', '1367-sources/', 'milepoints/', 'maps/'];
 const HISTORY_FILES = [
@@ -138,8 +142,40 @@ const LOCAL_CUE = /(?:nodes?\s+(?:[A-Z0-9]{2,4}[,·\s]+)*|\|\s*|[→←]\s*)$/i;
  * explanatory line only a BACKTICKED code is treated as explained; a bare one is still
  * the trap this tool exists to find.
  */
-const EXPLANATORY_LINE = /retired 26|legacy|historical|LEGACY CODE MAP/i;
+const EXPLANATORY_LINE = /retired 26|26×16|legacy|historical|dead[- ]code|remap(?:ped|ping|s)?\b|pre-§WALK|LEGACY CODE MAP/i;
+
+/**
+ * `CQ→CDG` — the code is one side of a STATED MAPPING, so the sentence already
+ * explains it; rewriting the left side yields `` `CDG` (historical `CQ`)→CDG ``,
+ * which claims the opposite of what the author wrote. §AUDIT-03m-FU: found on
+ * `story-arc-npc-dialogues.md:45`, the §NPC-01-SF4 remap record — a HISTORY-shaped
+ * paragraph living inside a live doc, which is the normal case, not the odd one.
+ */
+const statesMapping = (line, i, len) =>
+  /^\s*(?:→|->)\s*[A-Z][A-Z0-9]{1,3}\b/.test(line.slice(i + len)) ||
+  /[A-Z][A-Z0-9]{1,3}\s*(?:→|->)\s*$/.test(line.slice(Math.max(0, i - 8), i));
 const inBackticks = (line, i, len) => line[i - 1] === '`' && line[i + len] === '`';
+
+/**
+ * Is this index inside ANY inline code span on the line? Not the same test as
+ * inBackticks, which asks whether the code is a span all by itself.
+ *
+ * §AUDIT-03m-FU, found by dropping the `/` guard: world.md explains a remap with
+ * *"the doc's old `TL/RD/IS/WM/IN` were the retired 26×16 names"*. Those five codes
+ * are the sentence's SUBJECT — rewriting them to live codes would make it claim the
+ * opposite of what it says. On an explanatory line, a code anywhere inside a span is
+ * already labelled as historical by the prose around it. (§DX-02l-FU, same lesson in
+ * the other direction: the checker serves the prose, never the reverse.)
+ */
+function inCodeSpan(line, i) {
+  let open = -1;
+  for (let k = 0; k < line.length; k++) {
+    if (line[k] !== '`') continue;
+    if (open < 0) open = k;
+    else { if (i > open && i < k) return true; open = -1; }
+  }
+  return false;
+}
 
 /** Does this LINE talk about nodes at all? */
 function nodeContextLine(line, codes) {
@@ -153,8 +189,70 @@ function nodeContextLine(line, codes) {
   return codes.length >= 2;                                       // a run of codes IS the context
 }
 
+/**
+ * A PLACE CUE — the words immediately before a code that make it a location and
+ * nothing else: "at CI", "on CO visit", "arrives at DK", "the SQ node".
+ *
+ * §AUDIT-03m-FU: nodeContextLine is a LINE test, and it is the right shape for a
+ * report (it is what keeps `IS`/`AT`/`CO` from firing inside English sentences).
+ * But the commonest way a story doc names a place — *"Write Entry 42 at CI"* — puts
+ * no node word anywhere on the line, so those hits were invisible: `story-arc-ngplus`
+ * carried ELEVEN such codes on lines the line test skipped while the eight it could
+ * see were annotated. A doc could therefore be swept, pass the gate, and still read
+ * `at CO` throughout. The cue is deliberately LOCAL and closed-class: a preposition
+ * of place (or the word "node") in the two tokens before the code. "the player finds
+ * CO letter" still needs a human — see the §AUDIT-03m-FU residual pass.
+ */
+const PLACE_CUE = /\b(?:at|in|on|to|from|near|into|onto|toward|towards|through|via|between|node|nodes|reaches|reached|arrives?|arriving|visits?|visiting)\s+(?:the\s+)?$/i;
+
+/**
+ * `CI` is ALSO continuous integration, and this repo writes about its own build
+ * constantly — *"wired into CI as a job"*, *"Inc 2 CI gate"*, *"(13 checks, in CI)"*.
+ * The weak prepositions (`in`/`into`/`to`) read both ways; `at` does not — nobody
+ * writes *"at CI"* about a pipeline. Same shape as STRICT_LOCAL: a code that is
+ * jargon elsewhere gets a narrower cue, classified by hand rather than by a ratio.
+ */
+const JARGON_ONLY = new Set(['CI']);
+const CI_BUILD_LINE = /\b(?:CI[\/-]CD|workflow|\.github|runs-on|pipeline|npm (?:run|ci|test)|check:[a-z]+|job|gate|actions\/|Playwright|harness|invariants)\b/i;
+
+/**
+ * The cue can also come AFTER the code, when the code modifies a place-noun:
+ * *"the MT tunnel"*, *"CI site investigated"*, *"On first SF visit"*, *"CO outro"*.
+ * A closed, hand-read noun list — the §AUDIT-03j/n house style — not a part-of-speech
+ * guess. §AUDIT-03m-FU: these were the single largest residual class left by the
+ * first sweep (14 in `story-arc-investigation.md` alone).
+ */
+const TRAILING_CUE = /^\s+(?:node|nodes|site|sites|tunnel|pass|visit|visits|arrival|outro|letter|screen|entry|ending|crossroads|quarter|render|renders|boundary|cell|stone|corridor|approach)\b/i;
+
+/**
+ * A code that is the WHOLE parenthetical — *"Innkeeper (IN)"*, *"the docks (DK)"*.
+ * Nothing else is ever written that way in this corpus; it is how these docs label
+ * a heading with the place it belongs to.
+ */
+const soleParenthetical = (line, i, len) => line[i - 1] === '(' && line[i + len] === ')';
+
+/**
+ * `SW` is Murky Swamp AND it is south-west; `SE` is Visby Sewers AND south-east.
+ * §AUDIT-03p hit the same collision in the engine (its phase 5 classifies two
+ * "compass" tables separately from the node ones). In prose the tell is unmistakable:
+ * a compass token sits in a RUN of compass tokens — *"All N, S, E, W, SW, spire and
+ * portal fields were stripped"*. A node code never does. Caught when the sweep of
+ * `docs-node-network.md` rewrote exactly that sentence into a swamp.
+ */
+const COMPASS_CODES = new Set(['SW', 'SE']);
+const COMPASS_RUN_BEFORE = /\b(?:N|S|E|W|NE|NW|SE|SW)`?\s*[,/|]\s*`?$/;
+const COMPASS_RUN_AFTER = /^`?\s*[,/|]\s*`?(?:N|S|E|W|NE|NW|SE|SW)\b/;
+
+/**
+ * §AUDIT-03m-FU: `/` used to be a boundary the lookbehind REFUSED, on the theory that
+ * a slash meant a path. Measured, it does not: all 218 slash-preceded hits in the
+ * corpus are node RUNS — `at CI/SL/DF/WM/MT`, `VENDOR_NODES: BA/MQ/SF/IS/BK`,
+ * `Pip (DK/MQ)`. The guard was silently eating the densest node lists in the repo,
+ * annotating the first code of a run and leaving the rest bare. A trailing `-`/word
+ * char still blocks a real path segment (`docs/DK-notes`).
+ */
 const codeRe = (map) =>
-  new RegExp('(?<![A-Za-z0-9_\\-/§])(' + [...map.keys()].join('|') + ')(?![A-Za-z0-9_\\-])', 'g');
+  new RegExp('(?<![A-Za-z0-9_\\-§])(' + [...map.keys()].join('|') + ')(?![A-Za-z0-9_\\-])', 'g');
 
 /** Already annotated? `LHR` (historical `CI`) must not be re-flagged. */
 function annotatedAt(line, idx) {
@@ -183,9 +281,25 @@ function scanFile(text, map, re) {
     for (const m of raw) {
       const code = m[1];
       if (annotatedAt(line, m.index)) continue;
-      if (explanatory && inBackticks(line, m.index, code.length)) continue;
-      if (AMBIGUOUS.has(code) && !ctx) continue;
-      if (STRICT_LOCAL.has(code) && !LOCAL_CUE.test(line.slice(Math.max(0, m.index - 40), m.index))) continue;
+      if (explanatory && (inBackticks(line, m.index, code.length) || inCodeSpan(line, m.index) || statesMapping(line, m.index, code.length))) continue;
+      const before = line.slice(Math.max(0, m.index - 40), m.index);
+      const after = line.slice(m.index + code.length);
+      if (COMPASS_CODES.has(code) && (COMPASS_RUN_BEFORE.test(before) || COMPASS_RUN_AFTER.test(after))) continue;
+      // `CI` is continuous integration wherever the LINE is about the build. That is
+      // a property of the sentence, not of the preposition in front of the token:
+      // narrowing it to "at CI" instead let "the player walks to CI" through, which a
+      // negative control caught before this shipped.
+      if (JARGON_ONLY.has(code) && CI_BUILD_LINE.test(line)) continue;
+      // A code that ENDS a dash- or pipe-delimited field and is followed by a column
+      // separator is a code column: `### Q56 — EB | Wreck of the Unbroken`. Distinct
+      // from nodeContextLine's `| CI |`, which needs the code alone in the cell.
+      const codeColumn = /^\s*\|/.test(after) && /(?:[—–|-]|^)\s*$/.test(before);
+      const cued = PLACE_CUE.test(before) || TRAILING_CUE.test(after) ||
+                   soleParenthetical(line, m.index, code.length) || codeColumn;
+      if (AMBIGUOUS.has(code) && !ctx && !cued) continue;
+      // `EB`/`DC` are jargon far more often than nodes, so a leading cue is required —
+      // but a code column reads the other way round: `### Q56 — EB | Wreck of the Unbroken`.
+      if (STRICT_LOCAL.has(code) && !LOCAL_CUE.test(before) && !/^\s*\|/.test(after)) continue;
       out.push({ line: i + 1, col: m.index, code, live: map.get(code).live, text: line.trim() });
     }
   });

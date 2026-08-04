@@ -24,23 +24,23 @@ The chain is strictly sequential at the flag level. §XVII cannot begin without 
 ## §XVI — Weimar Scholar Gate
 
 **Layer:** 51  
-**Node:** SQ (Scholar's Quarter, Weimar)  
+**Node:** `NUE` (historical `SQ`) (Scholar's Quarter, Weimar)  
 **Act gate:** `actNumber >= 6`
 
 ### Summary
 
-The Scholar's Quarter existed as a passive lore node — Archivist Sweelinck, Shard #7, ambient references to old books — with no quest chain and no reason to return. §XVI makes SQ the locus for Froberger's institutional history. The player arrives seeking the shard and discovers the bureaucratic record of why Froberger died: not because the Void killed him, but because the Scholar Kings revoked his access and left him without institutional backing.
+The Scholar's Quarter existed as a passive lore node — Archivist Sweelinck, Shard #7, ambient references to old books — with no quest chain and no reason to return. §XVI makes `NUE` (historical `SQ`) the locus for Froberger's institutional history. The player arrives seeking the shard and discovers the bureaucratic record of why Froberger died: not because the Void killed him, but because the Scholar Kings revoked his access and left him without institutional backing.
 
 The arc introduces two NPCs, a new monster, a tome inventory category, and a three-document archive modal. Its narrative climax is the unredaction of Document 3, revealing that the personnel file's `[REDACTED]` name is Marta Eilene Vass — the First Researcher whose containment structure predates the Scholar Kings by a generation. This revelation is the direct prerequisite for §XVII.
 
 ### Story Text (story.md Layer 51 stub)
 
-Two new NPCs at the SQ node:
+Two new NPCs at the `NUE` (historical `SQ`) node:
 
 - **Archivist Isolde Voss** (`isolde_voss`) — controls access to the Lower Archive; impartial → friendly after Q-WM-02. Starts guarding the gate. Quote: *"The revocation was filed correctly. I stopped being certain it was right about three months after he died."*
-- **Benedikt Rasp** (`benedikt_rasp`) — ex-Scholar Tier 3 (resigned); runs a reading circle from a bookbinder's stall; appears at SQ after `wmArchiveComplete`. Dear Friend after Q-WM-03.
+- **Benedikt Rasp** (`benedikt_rasp`) — ex-Scholar Tier 3 (resigned); runs a reading circle from a bookbinder's stall; appears at `NUE` (historical `SQ`) after `wmArchiveComplete`. Dear Friend after Q-WM-03.
 
-Quest chain (all activated at SQ node, sequential):
+Quest chain (all activated at `NUE` (historical `SQ`) node, sequential):
 
 - **Q-WM-01** "The Revocation Record" — collect 3 Scholar Kings' Seals OR use `archiveLetterObtained`. Reward: `wmLowerArchiveUnlocked`.
 - **Q-WM-02** "Lower Archive" — read all 3 archive docs in `_storyWmArchiveModal()`. Reward: Froberger's Field Notes (Tome, +1 death save) + Isolde Friendly.
@@ -51,11 +51,11 @@ Tome bonus system: `_tomeBonuses()` helper computes aggregate bonuses from all `
 
 New monster: `scholars_guard` (medium, AC14/HP45/ATK+5/1d8+3) — added to `scholars_qtr` terrain. Drops Scholar Kings' Seal (🔏, sell:20).
 
-Archive modal (`_storyWmArchiveModal()`): 3 documents with READ buttons; Document 3 shows unredacted after `wmDoc3Unredacted` set. Accessible via "Lower Archive" button at SQ when `wmLowerArchiveUnlocked`.
+Archive modal (`_storyWmArchiveModal()`): 3 documents with READ buttons; Document 3 shows unredacted after `wmDoc3Unredacted` set. Accessible via "Lower Archive" button at `NUE` (historical `SQ`) when `wmLowerArchiveUnlocked`.
 
 ### NPC Profiles
 
-**Archivist Isolde Voss** — Senior Archivist First Tier. Node: SQ. Begins Neutral; advances to Friendly on quest_wm_02 completion.
+**Archivist Isolde Voss** — Senior Archivist First Tier. Node: `NUE` (historical `SQ`). Begins Neutral; advances to Friendly on quest_wm_02 completion.
 
 Key NPC lines by favorability state:
 - Neutral: *"The revocation was filed correctly. I stopped being certain it was right about three months after he died."*
@@ -63,7 +63,7 @@ Key NPC lines by favorability state:
 
 Isolde represents institutional authority reluctantly reckoning with her choices. Her complicity in the Froberger revocation is acknowledged but never resolved. She caps at Friendly — she cannot become a Dear Friend because she still holds the position that revoked Froberger's access.
 
-**Benedikt Rasp** — ex-Scholar Tier 3, resigned. Runs reading circle from bookbinder's stall. Node: SQ. Appears after `wmArchiveComplete`. Advances to Dear Friend on quest_wm_03 completion.
+**Benedikt Rasp** — ex-Scholar Tier 3, resigned. Runs reading circle from bookbinder's stall. Node: `NUE` (historical `SQ`). Appears after `wmArchiveComplete`. Advances to Dear Friend on quest_wm_03 completion.
 
 Key NPC line at quest_wm_04 disposition: *"The Scholar Kings didn't erase her. They just stopped saying the name. Froberger said it in his margin notes every time. That's how I found her. And now you know how I found him."*
 
@@ -73,7 +73,7 @@ This line establishes the discovery chain that §XVII will formalize: First Rese
 
 | Flag | Type | Default | Purpose |
 |------|------|---------|---------|
-| `wmLowerArchiveUnlocked` | boolean | `false` | Gates [Open Archive] button in SQ render |
+| `wmLowerArchiveUnlocked` | boolean | `false` | Gates [Open Archive] button in `NUE` (historical `SQ`) render |
 | `wmDoc1Read` | boolean | `false` | Revocation Letter read |
 | `wmDoc2Read` | boolean | `false` | Field Report read |
 | `wmDoc3Read` | boolean | `false` | Personnel File read (redacted) |
@@ -82,7 +82,7 @@ This line establishes the discovery chain that §XVII will formalize: First Rese
 | `wmSessionsDays` | array | `[]` | Tracks gameDay values of each Benedikt session |
 | `wmBenediktCircleComplete` | boolean | `false` | 3 sessions attended; triggers quest_wm_04 |
 | `wmFirstResearcherKnown` | boolean | `false` | First Researcher's name learned; gates §XVII |
-| `archiveLetterObtained` | boolean | `false` | Alternative access path (from Yael at CI) |
+| `archiveLetterObtained` | boolean | `false` | Alternative access path (from Yael at `LHR` (historical `CI`)) |
 
 Note: `wmDoc3Unredacted` is a separate flag from `wmDoc3Read`. Document 3 can be read in redacted form without unredacting it. `wmDoc3Unredacted` sets only on quest_wm_03 completion. A player who reads Document 3 before completing the reading circle gets the redacted version and must return after quest_wm_03 to see the unredacted form with the name Marta Eilene Vass.
 
@@ -121,7 +121,7 @@ Document 4 appears in the same archive interface after §XVII's investigation si
 
 `scholars_guard` — Scholar's Guard. AC 14, HP 45, ATK +5, 1d8+3. Tier: medium. Defined in MONSTER_POOL. Added to `scholars_qtr` terrain pool alongside homunculi, mages, liches, and library ghosts.
 
-Drop: Scholar Kings' Seal (icon 🔏, sell: 20). Three Seals are required to complete quest_wm_01 via the combat path. Alternative: `archiveLetterObtained` from Yael at CI with favorability ≥ 1, skipping the combat requirement.
+Drop: Scholar Kings' Seal (icon 🔏, sell: 20). Three Seals are required to complete quest_wm_01 via the combat path. Alternative: `archiveLetterObtained` from Yael at `LHR` (historical `CI`) with favorability ≥ 1, skipping the combat requirement.
 
 ### Tome Bonus System
 
@@ -142,7 +142,7 @@ Integration points:
 
 ### Two Access Paths for quest_wm_01
 
-The archive access gate (3 Scholar Seals OR archive letter) provides a skill-based alternative to grinding the scholars_guard encounter. Players with high Yael favorability can obtain the letter at CI before reaching Weimar — rewarding prior relationship building. Both paths complete the quest; neither is faster in all cases.
+The archive access gate (3 Scholar Seals OR archive letter) provides a skill-based alternative to grinding the scholars_guard encounter. Players with high Yael favorability can obtain the letter at `LHR` (historical `CI`) before reaching Weimar — rewarding prior relationship building. Both paths complete the quest; neither is faster in all cases.
 
 ---
 
@@ -150,12 +150,12 @@ The archive access gate (3 Scholar Seals OR archive letter) provides a skill-bas
 
 **Layer:** 52  
 **Subtitle:** "The Architecture"  
-**Nodes:** CI, SL, DF, WM, MT (investigation marks); SQ (arc close); WM archive modal (Document 4)  
+**Nodes:** `LHR`, `BMA`, `ZRH`, WM, `GVA` (investigation marks); `NUE` (arc close); WM archive modal (Document 4)  *(historical: `CI`=`LHR` · `SL`=`BMA` · `DF`=`ZRH` · `MT`=`GVA` · `SQ`=`NUE`)*
 **Act gate:** NG+-exclusive — requires `ngPlusRun >= 1` + `wmFirstResearcherKnown` + `entry42Written`
 
 ### Summary
 
-§XVII is a NG+-exclusive investigation arc that places five `[INVESTIGATE]` buttons at nodes the player has visited since Act I. Each reveals a mark left by the First Researcher — Marta Eilene Vass — 200 years before the game's events. Collecting all five unlocks a fourth document in the Weimar archive, the Constructor's Log, which enables opening the sealed MT tunnel. The arc closes at SQ where Benedikt delivers the "four-author chain" synthesis. `vaArchitectureKnown` gates a fifth ending variant at the CO victory screen.
+§XVII is a NG+-exclusive investigation arc that places five `[INVESTIGATE]` buttons at nodes the player has visited since Act I. Each reveals a mark left by the First Researcher — Marta Eilene Vass — 200 years before the game's events. Collecting all five unlocks a fourth document in the Weimar archive, the Constructor's Log, which enables opening the sealed `GVA` tunnel. The arc closes at `NUE` where Benedikt delivers the "four-author chain" synthesis. `vaArchitectureKnown` gates a fifth ending variant at the `TLS` victory screen.  *(historical: `MT`=`GVA` · `SQ`=`NUE` · `CO`=`TLS`)*
 
 The design goal is retroactive recontextualization. The player has walked through five locations that were already hers. The `[INVESTIGATE]` buttons surface what was always true about the world. Nothing is retconned — the marks were always there. The player lacked the knowledge to see them.
 
@@ -163,12 +163,12 @@ The design goal is retroactive recontextualization. The player has walked throug
 
 Prerequisites: `ngPlusRun >= 1` + `wmFirstResearcherKnown` (from §XVI) + `entry42Written` (from §XV).
 
-- **Five investigation sites** — `[INVESTIGATE]` button at CI/SL/DF/WM/MT when prerequisites met. Each reveals one paragraph of the Antecedent Containment Protocol pattern. Flags: `vaCI`, `vaSL`, `vaDF`, `vaWM`, `vaMT`.
+- **Five investigation sites** — `[INVESTIGATE]` button at `LHR`/`BMA`/`ZRH`/WM/`GVA` when prerequisites met. Each reveals one paragraph of the Antecedent Containment Protocol pattern. Flags: `vaCI`, `vaSL`, `vaDF`, `vaWM`, `vaMT`.  *(historical: `CI`=`LHR` · `SL`=`BMA` · `DF`=`ZRH` · `MT`=`GVA`)*
 - **Q-VA-01** "Five Marks" — auto-activates on first investigation site visit; complete when all 5 visited (`vaAllMarksFound`).
 - **Q-VA-02** "Constructor's Log" — activates when `vaAllMarksFound`; 4th document appears in `_storyWmArchiveModal()`; 7 entries written by Marta Eilene Vass (First Researcher); reward: The Constructor's Log (readable) + Antecedent Seal (relic) items.
-- **Q-VA-03** "The Sealed Tunnel" — MT node gains `[Open the tunnel]` when `vaLogFound` + key item in inventory. Text chamber: 6 sentences + *"The Antecedent was here. It is not anymore."* Reward: `vaLastWardVisited` + 200gp.
-- **Q-VA-04** "The Architecture" — Benedikt delivers message at SQ when `vaLastWardVisited + entry42Written`. Reward: `vaArchitectureKnown` + 500gp + lore addendum to Annotated Copy.
-- **Fifth ending** — if `vaArchitectureKnown + entry42Written + ngPlusRun >= 1`: CO outro addendum *"Froberger wrote 41 entries. You wrote one. She wrote 7..."*; Sweelinck question: *"What was inside the cage?"* (overrides all other questions).
+- **Q-VA-03** "The Sealed Tunnel" — `GVA` (historical `MT`) node gains `[Open the tunnel]` when `vaLogFound` + key item in inventory. Text chamber: 6 sentences + *"The Antecedent was here. It is not anymore."* Reward: `vaLastWardVisited` + 200gp.
+- **Q-VA-04** "The Architecture" — Benedikt delivers message at `NUE` (historical `SQ`) when `vaLastWardVisited + entry42Written`. Reward: `vaArchitectureKnown` + 500gp + lore addendum to Annotated Copy.
+- **Fifth ending** — if `vaArchitectureKnown + entry42Written + ngPlusRun >= 1`: `TLS` (historical `CO`) outro addendum *"Froberger wrote 41 entries. You wrote one. She wrote 7..."*; Sweelinck question: *"What was inside the cage?"* (overrides all other questions).
 - **State flags (9):** `vaCI`, `vaSL`, `vaDF`, `vaWM`, `vaMT`, `vaAllMarksFound`, `vaLogFound`, `vaLastWardVisited`, `vaArchitectureKnown`.
 
 ### Gate Condition
@@ -185,11 +185,11 @@ All three must be true. Until all three are true, `[INVESTIGATE]` buttons do not
 
 | Node | Flag | Investigation Text Summary |
 |------|------|---------------------------|
-| CI | `vaCI` | Blue Shutters Archive shelf record — researcher category "Containment"; same shelf as archive letter |
-| SL | `vaSL` | Carved marker on a corner building predating the city by 80 years; predates the Scholar Kings |
-| DF | `vaDF` | Stone alignment spaced to a mathematical interval; the battle happened at the activation point |
+| `LHR` (historical `CI`) | `vaCI` | Blue Shutters Archive shelf record — researcher category "Containment"; same shelf as archive letter |
+| `BMA` (historical `SL`) | `vaSL` | Carved marker on a corner building predating the city by 80 years; predates the Scholar Kings |
+| `ZRH` (historical `DF`) | `vaDF` | Stone alignment spaced to a mathematical interval; the battle happened at the activation point |
 | WM | `vaWM` | Document 3 in the lower archive — project codename now visible: ANTECEDENT CONTAINMENT PROTOCOL |
-| MT | `vaMT` | Sealed access tunnel; never opened in any record; sealed from inside; intact |
+| `GVA` (historical `MT`) | `vaMT` | Sealed access tunnel; never opened in any record; sealed from inside; intact |
 
 On button click: sets the site flag, displays the site text, removes the button, checks if all five flags are now set. When all five are collected, `vaAllMarksFound = true` fires with a 600ms delayed message: *"Five marks. One pattern. She was everywhere before anyone was looking."* `quest_va_02` activates at this point.
 
@@ -212,14 +212,14 @@ On button click: sets the site flag, displays the site text, removes the button,
 
 | Flag | Type | Default | Purpose |
 |------|------|---------|---------|
-| `vaCI` | boolean | `false` | CI site investigated |
-| `vaSL` | boolean | `false` | SL site investigated |
-| `vaDF` | boolean | `false` | DF site investigated |
+| `vaCI` | boolean | `false` | `LHR` (historical `CI`) site investigated |
+| `vaSL` | boolean | `false` | `BMA` (historical `SL`) site investigated |
+| `vaDF` | boolean | `false` | `ZRH` (historical `DF`) site investigated |
 | `vaWM` | boolean | `false` | WM site investigated |
-| `vaMT` | boolean | `false` | MT site investigated |
+| `vaMT` | boolean | `false` | `GVA` (historical `MT`) site investigated |
 | `vaAllMarksFound` | boolean | `false` | All five sites found; unlocks Document 4 |
-| `vaLogFound` | boolean | `false` | Constructor's Log read; unlocks MT tunnel |
-| `vaLastWardVisited` | boolean | `false` | MT tunnel opened; activates quest_va_04 |
+| `vaLogFound` | boolean | `false` | Constructor's Log read; unlocks `GVA` (historical `MT`) tunnel |
+| `vaLastWardVisited` | boolean | `false` | `GVA` (historical `MT`) tunnel opened; activates quest_va_04 |
 | `vaArchitectureKnown` | boolean | `false` | Four-author chain understood; gates fifth ending |
 
 ### Constructor's Log (Document 4)
@@ -235,9 +235,9 @@ Reading the Log:
 
 The Log is discoverable via the archive modal (Document 4 path) or via the quest_va_02 reward handler. Both paths converge on `vaLogFound`.
 
-### MT Tunnel Opening
+### `GVA` (historical `MT`) Tunnel Opening
 
-At MT, if `vaLogFound` is true and `vaLastWardVisited` is false, the game checks for a key item:
+At `GVA` (historical `MT`), if `vaLogFound` is true and `vaLastWardVisited` is false, the game checks for a key item:
 
 ```js
 const _hasKey = (S_story.inventory || []).some(
@@ -249,9 +249,9 @@ Either item opens the tunnel. Froberger's Field Notes (the §XVI tome) are an al
 
 On tunnel opening: `vaLastWardVisited = true`. The chamber text renders describing cut stone, perfectly still air sealed for 200 years, and six sentences on the far wall — the First Researcher's final operational notes. The last line: *"The Antecedent was here. It is not anymore. You know where it is now."*
 
-### Benedikt Synthesis Speech at SQ — Quest_va_04
+### Benedikt Synthesis Speech at `NUE` (historical `SQ`) — Quest_va_04
 
-On any SQ visit where `vaLastWardVisited` is true, `entry42Written` is true, and `vaArchitectureKnown` is not yet set:
+On any `NUE` (historical `SQ`) visit where `vaLastWardVisited` is true, `entry42Written` is true, and `vaArchitectureKnown` is not yet set:
 
 > **Benedikt:** "She built it. You closed it. Froberger found the mechanism. You followed him. Entry 42 is the fourth link. Four links is a chain. A chain holds. That is the only kind of answer this work produces — not a solution, a chain."
 
@@ -261,7 +261,7 @@ This is the arc's structural close. Benedikt traces the chain backward — from 
 
 ### CO Victory Screen — Fifth Ending Variant
 
-`vaArchitectureKnown` gates a fifth Sweelinck question variant at the CO ending screen, overriding all other question branches:
+`vaArchitectureKnown` gates a fifth Sweelinck question variant at the `TLS` (historical `CO`) ending screen, overriding all other question branches:
 
 ```js
 if (S_story.vaArchitectureKnown && S_story.entry42Written && (S_story.ngPlusRun || 0) >= 1) {
@@ -285,20 +285,20 @@ This question is only askable to a player who has completed the entire arc. It i
 
 **Layer:** 56  
 **Subtitle:** "The Antecedent's Last Warden"  
-**Node:** MT (Mountain Pass tunnel) + SQ (Benedikt callback)  
+**Node:** `GVA` (historical `MT`) (Mountain Pass tunnel) + `NUE` (historical `SQ`) (Benedikt callback)  
 **Prerequisites:** `vsShamanKnown` (§XX Visby Underground) + `vaLastWardVisited` (§XVII)
 
 ### Summary
 
-§XXI activates at the MT tunnel when both investigation lines — the Visby debt chain and the Void Archaeology tunnel — converge. The player finds the Warden: a figure who has spent eleven years executing a corrupted mandate, believing they are working to re-open the Antecedent's cage. The arc offers two resolution paths (persuasion via the Constructor's Log, or combat) and closes the Hollow Hands sub-clan arc. Both paths set `wardensLegacyKnown`.
+§XXI activates at the `GVA` (historical `MT`) tunnel when both investigation lines — the Visby debt chain and the Void Archaeology tunnel — converge. The player finds the Warden: a figure who has spent eleven years executing a corrupted mandate, believing they are working to re-open the Antecedent's cage. The arc offers two resolution paths (persuasion via the Constructor's Log, or combat) and closes the Hollow Hands sub-clan arc. Both paths set `wardensLegacyKnown`.
 
-The arc's premise: the First Researcher planted a guardian at the MT tunnel. Her instruction was to open the tunnel to close the cage — when the sealing mechanism activates, confirm it and stand down. This instruction was copied by hand through seventeen generations of goblin shamanic tradition. The seventeenth copy contains a small error in the verb tense: the sentence now reads "open the cage." A pronoun shift in an oral tradition reinterpreted 200 years later. The Warden armed the Hollow Hands as a resource pool. None of this was malice. It was misdirection so old the original direction was lost.
+The arc's premise: the First Researcher planted a guardian at the `GVA` (historical `MT`) tunnel. Her instruction was to open the tunnel to close the cage — when the sealing mechanism activates, confirm it and stand down. This instruction was copied by hand through seventeen generations of goblin shamanic tradition. The seventeenth copy contains a small error in the verb tense: the sentence now reads "open the cage." A pronoun shift in an oral tradition reinterpreted 200 years later. The Warden armed the Hollow Hands as a resource pool. None of this was malice. It was misdirection so old the original direction was lost.
 
 ### Story Text (story.md Layer 56 stub)
 
 Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). Both required; neither alone triggers the encounter.
 
-MT tunnel node block gated by `vsShamanKnown && vaLastWardVisited && !wardensLegacyKnown`. On first visit sets `vshamanFound = true` and activates `quest_vs_warden`.
+`GVA` (historical `MT`) tunnel node block gated by `vsShamanKnown && vaLastWardVisited && !wardensLegacyKnown`. On first visit sets `vshamanFound = true` and activates `quest_vs_warden`.
 
 **The Warden:** *"You came to stop me. Or to understand. Either is fine. I have been working for eleven years to do the right thing. I may be wrong about what the right thing is."*
 
@@ -307,7 +307,7 @@ MT tunnel node block gated by `vsShamanKnown && vaLastWardVisited && !wardensLeg
 - **`void_shaman`** — AC15/HP65/ATK+6/2d6+4, rare tier. MONSTER_POOL scripted entry; not in any random terrain pool.
 - **`warden_token`** — The Warden's Token (🔑, relic, sell:0). Description: "Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything."
 - **`wardensLegacyKnown`** set on either outcome. Hollow Hands arc resolved.
-- **Benedikt callback** — at SQ if `vsShamanPersuaded && benedikt_rasp fav >= 2 && !vsShamanBenediktDelivered`: "She planted a guardian at the tunnel and didn't write it down anywhere official. She planted a 200-year misunderstanding. The difference between those things might be very small."
+- **Benedikt callback** — at `NUE` (historical `SQ`) if `vsShamanPersuaded && benedikt_rasp fav >= 2 && !vsShamanBenediktDelivered`: "She planted a guardian at the tunnel and didn't write it down anywhere official. She planted a 200-year misunderstanding. The difference between those things might be very small."
 - **State flags:** `vshamanFound`, `vshamanDefeated`, `vsShamanPersuaded`, `wardensLegacyKnown`, `vsShamanBenediktDelivered` in `_S_DEFAULTS()`.
 - **`quest_vs_warden`** in QUEST_DB — completeFn: `wardensLegacyKnown`; reward: 600gp (delivered inline).
 
@@ -318,7 +318,7 @@ if (node.code === 'MT' && S_story.vsShamanKnown
     && S_story.vaLastWardVisited && !S_story.wardensLegacyKnown)
 ```
 
-On first qualifying MT visit, `vshamanFound = true` and `quest_vs_warden` activates. The Warden's introductory storyMsg fires: *"You came to stop me. Or to understand. Either is fine. I have been working for eleven years to do the right thing. I may be wrong about what the right thing is."*
+On first qualifying `GVA` (historical `MT`) visit, `vshamanFound = true` and `quest_vs_warden` activates. The Warden's introductory storyMsg fires: *"You came to stop me. Or to understand. Either is fine. I have been working for eleven years to do the right thing. I may be wrong about what the right thing is."*
 
 This opening line is the Warden's character in full. It establishes that they are not surprised, not hostile, and genuinely uncertain about their own mission — before the player makes any choice.
 
@@ -346,7 +346,7 @@ The persuasion path is gated by item presence, not social skill. The Warden cann
 
 **Button:** `⚔️ Fight the Warden.`
 
-Triggers `storyPreBattle` with synthetic node code `MT_WARDEN` (not `MT`) — prevents the battle result from being stored under the actual MT node code, preserving MT's normal state for subsequent visits.
+Triggers `storyPreBattle` with synthetic node code `MT_WARDEN` (not `GVA`) — prevents the battle result from being stored under the actual `GVA` node code, preserving `GVA`'s normal state for subsequent visits.  *(historical: `MT`=`GVA`)*
 
 Monster stats: AC 15, HP 65, ATK +6, 2d6+4. Tier: rare. Named "The Warden" in MONSTER_POOL so the battle overlay reads as a named encounter.
 
@@ -374,7 +374,7 @@ A player who takes the combat path and never reads the Constructor's Log receive
 | `vshamanDefeated` | boolean | `false` | Combat path taken and Warden defeated |
 | `vsShamanPersuaded` | boolean | `false` | Persuasion path taken — Constructor's Log shown |
 | `wardensLegacyKnown` | boolean | `false` | Arc complete (either path); completes quest_vs_warden |
-| `vsShamanBenediktDelivered` | boolean | `false` | Benedikt's callback at SQ fired (one per run) |
+| `vsShamanBenediktDelivered` | boolean | `false` | Benedikt's callback at `NUE` (historical `SQ`) fired (one per run) |
 
 `vshamanDefeated` and `vsShamanPersuaded` are mutually exclusive. Both set `wardensLegacyKnown`.
 
@@ -396,9 +396,9 @@ A player who takes the combat path and never reads the Constructor's Log receive
 
 The hint explicitly directs the player to bring the Constructor's Log — making the persuasion path legible before the encounter.
 
-### Benedikt Callback at SQ (Persuasion Path Only)
+### Benedikt Callback at `NUE` (historical `SQ`) (Persuasion Path Only)
 
-When `vsShamanPersuaded && _npcFavor('benedikt_rasp') >= 2 && !vsShamanBenediktDelivered`, visiting SQ triggers:
+When `vsShamanPersuaded && _npcFavor('benedikt_rasp') >= 2 && !vsShamanBenediktDelivered`, visiting `NUE` (historical `SQ`) triggers:
 
 > *"You found the Warden. She planted them, didn't she — the First Researcher. She planted a guardian at the tunnel and didn't write it down anywhere official. I didn't know the chain went that far. Neither did she, I think — she thought she was planting a safeguard. She planted a 200-year misunderstanding. The difference between those things might be very small."*
 
@@ -412,10 +412,10 @@ The callback fires only on the persuasion path because the persuasion path left 
 
 | System | Flag | Effect |
 |--------|------|--------|
-| News item | `warden_resolved` | *"Travelers on the northern road say the MT pass is open for the first time in forty years."* |
+| News item | `warden_resolved` | *"Travelers on the northern road say the `GVA` (historical `MT`) pass is open for the first time in forty years."* |
 | Shard Note #5 | `wardensLegacyKnown` | addText: *"Placed by the first Warden, on the First Researcher's instruction. The chain goes back this far."* |
 | Shard Note #6 | `wardensLegacyKnown` | addText: *"Placed by the original Warden, on the First Researcher's instruction."* |
-| Inn Dream (SQ) | `vaArchitectureKnown` | SQ dream variant — Constructor's Log Entry 7 |
+| Inn Dream (`NUE` (historical `SQ`)) | `vaArchitectureKnown` | `NUE` (historical `SQ`) dream variant — Constructor's Log Entry 7 |
 | Froberger Entry 26 | ambient | Written before Layer 56: *"The data was on page seven. I wish I had taken longer with the first read."* |
 
 ---
@@ -424,13 +424,13 @@ The callback fires only on the persuasion path because the persuasion path left 
 
 | Node | §XVI | §XVII | §XXI | Cross-Arc |
 |------|------|-------|------|-----------|
-| SQ | All 4 quests; Benedikt/Isolde NPCs; archive modal | Benedikt synthesis speech (quest_va_04) | Benedikt callback (persuasion path only) | Entry 42 synthesis in §XVII requires §XV `entry42Written` |
-| MT | — | `vaMT` investigation mark; tunnel opening (`vaLastWardVisited`) | Warden encounter; `MT_WARDEN` synthetic battle | `vaLastWardVisited` from §XVII is prerequisite for §XXI |
-| CI | Alternative archive access path (Yael letter) | `vaCI` investigation mark (Blue Shutters shelf) | — | CI is also §XV Entry 42 modal location |
+| `NUE` (historical `SQ`) | All 4 quests; Benedikt/Isolde NPCs; archive modal | Benedikt synthesis speech (quest_va_04) | Benedikt callback (persuasion path only) | Entry 42 synthesis in §XVII requires §XV `entry42Written` |
+| `GVA` (historical `MT`) | — | `vaMT` investigation mark; tunnel opening (`vaLastWardVisited`) | Warden encounter; `MT_WARDEN` synthetic battle | `vaLastWardVisited` from §XVII is prerequisite for §XXI |
+| `LHR` (historical `CI`) | Alternative archive access path (Yael letter) | `vaCI` investigation mark (Blue Shutters shelf) | — | `LHR` (historical `CI`) is also §XV Entry 42 modal location |
 | WM | `wmFirstResearcherKnown` (Document 3 unredaction) | `vaWM` investigation mark + Document 4 (Constructor's Log) | — | Archive modal is the interface for both §XVI docs and §XVII Document 4 |
-| GC | — | — | Hollow Hands sub-clan (combat outcome: scatter) | §XX `vsShamanKnown` gated by Yva testimony at GC |
-| SL | — | `vaSL` investigation mark | — | — |
-| DF | — | `vaDF` investigation mark (sealing mechanism site) | — | — |
+| `TRD` (historical `GC`) | — | — | Hollow Hands sub-clan (combat outcome: scatter) | §XX `vsShamanKnown` gated by Yva testimony at `TRD` (historical `GC`) |
+| `BMA` (historical `SL`) | — | `vaSL` investigation mark | — | — |
+| `ZRH` (historical `DF`) | — | `vaDF` investigation mark (sealing mechanism site) | — | — |
 
 ---
 
@@ -446,8 +446,8 @@ The callback fires only on the persuasion path because the persuasion path left 
 | `roll2hit-v3.html` | Lines 8428–8441 | Weimar + Void Archaeology + Void Shaman state flags in `_S_DEFAULTS()` |
 | `roll2hit-v3.html` | Lines 12359–12455 | `WM_ARCHIVE_DOCS` + `_storyWmArchiveModal()` — 4 documents |
 | `roll2hit-v3.html` | Lines 12836–12866 | CO fifth ending variant + victory screen addendum |
-| `roll2hit-v3.html` | Lines 14325–14373 | §XVI quest activation chain and reading circle logic at SQ |
-| `roll2hit-v3.html` | Lines 14380–14449 | §XVII `[INVESTIGATE]` block — gate, sites, MT tunnel, quest chain |
+| `roll2hit-v3.html` | Lines 14325–14373 | §XVI quest activation chain and reading circle logic at `NUE` (historical `SQ`) |
+| `roll2hit-v3.html` | Lines 14380–14449 | §XVII `[INVESTIGATE]` block — gate, sites, `GVA` (historical `MT`) tunnel, quest chain |
 | `roll2hit-v3.html` | Lines 14611–14729 | §XXI render block — gate, vshamanFound, dual path, Benedikt callback |
 | `lab-report-weimar-scholar-gate.md` | All | §XVI full implementation record |
 | `lab-report-void-archaeology.md` | All | §XVII full implementation record |

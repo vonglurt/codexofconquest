@@ -113,8 +113,81 @@ test.describe('§AUDIT-03m — legacy node codes in doc prose', () => {
     expect(L.classify('world.md')).toBe('SWEEP');
     expect(L.classify('lab-reports/lab-report-ally-cat.md')).toBe('HISTORY');
     expect(L.classify('plan-archive.md')).toBe('HISTORY');
-    expect(L.classify('docs/story/story-flowchart.md')).toBe('PENDING');
+    expect(L.classify('docs/story/story-flowchart.md')).toBe('SWEEP');   // §AUDIT-03m-FU promoted the last 7
     expect(L.classify('docs/notes/a-doc-nobody-has-classified.md')).toBe('UNCLASSIFIED');
+    // PENDING is empty but must remain a live class — the next doc to grow legacy codes
+    // lands there (reported, not an instant red gate), exactly as these seven did.
+    expect(Array.isArray(L.PENDING)).toBe(true);
+    expect(L.PENDING).toEqual([]);
+  });
+
+  // ---- §AUDIT-03m-FU: the residual classes the first sweep could not see ---------
+  //
+  // The first sweep annotated what `nodeContextLine` could see — a LINE test, and the
+  // right shape for a report. But the commonest way a story doc names a place puts no
+  // node word on the line at all: "Write Entry 42 at CI". `story-arc-ngplus.md` was
+  // left with ELEVEN such codes after being "swept" of eight, and `world.md`/`story.md`
+  // sat GATE-GREEN carrying 35 between them. These are the cues that close that gap.
+  test('a place cue makes an ambiguous code a node, with no node word on the line', () => {
+    const mustCatch = [
+      ['a preposition of place', 'Write Entry 42 at CI. Only activated if the prior run finished.'],
+      ['on X visit',             'Rendered on CO visit when the letter has not been found.'],
+      ['motion toward',          'The player walks to CY and the neon is loud.'],
+      ['a trailing place-noun',  'The MT tunnel opens once both investigation lines converge.'],
+      ['a trailing "site"',      '| `vaCI` | boolean | `false` | CI site investigated |'],
+      ['a sole parenthetical',   '#### Brynn Clerambault — Innkeeper (IN)'],
+      ['a slash-separated run',  'The `[INVESTIGATE]` button appears at CI/SL/DF/MT when unlocked.'],
+      ['a code column heading',  '### Q56 — EB | Wreck of the Unbroken'],
+    ];
+    for (const [why, line] of mustCatch) {
+      expect(scan(line).length, `MISSED: ${why} — ${line}`).toBeGreaterThan(0);
+    }
+    // the slash run must catch EVERY member, not just the first — that was the bug
+    expect(scan('The button appears at CI/SL/DF/MT when unlocked.').map(h => h.code).sort())
+      .toEqual(['CI', 'DF', 'MT', 'SL']);
+  });
+
+  test('the FU cues do not fire on the senses that are not nodes', () => {
+    const mustIgnore = [
+      // `CI` is continuous integration all over this repo's own build prose. The
+      // discriminator is the LINE's vocabulary, not the preposition: narrowing it to
+      // "at CI" let "the player walks to CI" through, which a negative control caught.
+      ['CI as continuous integration',  'Inc 4 — TTL-prune assertion + CI job + doc-sync (FINAL)'],
+      ['CI wired into a workflow',      'Wired into CI as a separate `mud` job in walk-invariants.yml'],
+      ['CI beside an npm script',       '`npm run check:arraypatch` (13 checks, in CI)'],
+      // `SW` is Murky Swamp and it is also south-west. §AUDIT-03p hit the same collision
+      // in the engine. A compass token sits in a RUN of compass tokens; a node never does.
+      ['SW in a compass run',           'All N, S, E, W, SW, spire, and portal direction fields were stripped'],
+      ['SW in a backticked compass run', '0 of 416 nodes carries `N`/`S`/`E`/`W`/`SW`/`spire`/`portal`'],
+      // A code that is one side of a STATED MAPPING is the sentence's subject. Rewriting
+      // the left side makes it claim the opposite of what the author wrote.
+      ['a remap record',                'The dead-code remap moved **CQ→CDG** and **GC→TRD** to real nodes.'],
+      ['a code run inside one span on an explanatory line',
+                                        "The doc's old `TL/RD/IS/WM/IN` were the retired 26×16 names."],
+    ];
+    for (const [why, line] of mustIgnore) {
+      expect(scan(line), `FALSE POSITIVE: ${why} — ${line}`).toEqual([]);
+    }
+  });
+
+  test('the sweep is corroborated by the ENGINE, not just by the legacy map', () => {
+    // The §AUDIT-03m lesson, and the reason this row re-read every claim it annotated:
+    // annotating a WRONG node code launders it into a confident-looking live one.
+    // world.md's Act VIII Homecoming table named four wrong places; `birkaNpcs` settles it.
+    const html = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
+    const roster = html.match(/const birkaNpcs = \{[^}]*\}/);
+    expect(roster, 'birkaNpcs is the authority on where these NPCs stand').not.toBeNull();
+    for (const [npc, node] of [['yael', 'LHR'], ['brynn', 'TLL'], ['quill', 'MHQ'], ['pachelbel', 'LLA']]) {
+      expect(roster[0], `${npc} must be rostered at ${node}`).toMatch(new RegExp(`${node}:\\['?${npc}`));
+    }
+    const world = fs.readFileSync(path.join(ROOT, 'world.md'), 'utf8');
+    for (const [npc, node] of [['Quill', 'MHQ'], ['Pachelbel', 'LLA'], ['Weckmann', 'HKG'], ['Auros', 'HKG']]) {
+      expect(world, `world.md's Homecoming row for ${npc} must name ${node}`)
+        .toContain(`| ${npc} (\`${node}\``);
+    }
+    // `SH` was never a NODE_MAP key at all (the §AUDIT-03p born-dead class), so a tool
+    // driven by the LEGACY CODE MAP is blind to it — it has to be caught by reading.
+    expect(world).not.toMatch(/Tell Pachelbel at SH/);
   });
 
   test('history is annotated, never rewritten — the tool refuses to write one', () => {

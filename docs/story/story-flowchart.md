@@ -260,14 +260,14 @@ Nodes where two or more named arcs cross. These are the most structurally loaded
 
 | Node | Code | Arcs Crossing | Notes |
 |------|------|--------------|-------|
-| Birka City Streets | CI | Main Quest · §XVII · §XV · Birka NPC (Yael) | Entry 42 modal fires here in NG+; §XVII mark vaCI |
-| First Inn | IN | Main Quest · Birka NPC (Brynn) · Corelli (5th) · §XXV Homecoming | Brynn farewell + Corelli revelation both fire here Act VIII |
-| Tilbury Docks | DK | Main Quest (Shard #1) · §XIX · Corelli (1st) | Harbor Board + Harrow Manifest + Corelli introduction |
-| Goblin Warrens | GC | Main Quest (Shard #4) · §XX · §XXI (prerequisite) · [E] EG | vsShamanKnown set here; enables Warden encounter; EG EB |
-| Mountain Pass | MT | §XVII (5th mark + tunnel) · §XXI (Warden) · [E] ET | Only node that is simultaneously investigation site and encounter node |
-| Scholar's Quarter | SQ | Main Quest (Shard #7) · §XVI · §XVII · §XXI · §XV · Corelli (4th) | Most arc-loaded node in the game — 5 arcs intersect here |
-| Cosmic Realm | CO | Main Quest (victory) · §XIV (Quest -1) · §XV (Froberger's letter) · §XVII (5th ending) | End state diverges based on 4 arc completion flags |
-| Birka Slums | SL | Cat Arc (→CQ) · §XVII (vaSL mark) | Investigation mark + cat arc hub |
+| Birka City Streets | `LHR` (historical `CI`) | Main Quest · §XVII · §XV · Birka NPC (Yael) | Entry 42 modal fires here in NG+; §XVII mark vaCI |
+| First Inn | `TLL` (historical `IN`) | Main Quest · Birka NPC (Brynn) · Corelli (5th) · §XXV Homecoming | Brynn farewell + Corelli revelation both fire here Act VIII |
+| Tilbury Docks | `LCY` (historical `DK`) | Main Quest (Shard #1) · §XIX · Corelli (1st) | Harbor Board + Harrow Manifest + Corelli introduction |
+| Goblin Warrens | `TRD` | Main Quest (Shard #4) · §XX · §XXI (prerequisite) · [E] `TBS` | vsShamanKnown set here; enables Warden encounter; `TBS` `FLR` (historical `EB`) |  *(historical: `GC`=`TRD` · `EG`=`TBS`)*
+| Mountain Pass | `GVA` (historical `MT`) | §XVII (5th mark + tunnel) · §XXI (Warden) · [E] `KTM` (historical `ET`) | Only node that is simultaneously investigation site and encounter node |
+| Scholar's Quarter | `NUE` (historical `SQ`) | Main Quest (Shard #7) · §XVI · §XVII · §XXI · §XV · Corelli (4th) | Most arc-loaded node in the game — 5 arcs intersect here |
+| Cosmic Realm | `TLS` (historical `CO`) | Main Quest (victory) · §XIV (Quest -1) · §XV (Froberger's letter) · §XVII (5th ending) | End state diverges based on 4 arc completion flags |
+| Birka Slums | `BMA` (historical `SL`) | Cat Arc (→`CDG` (historical `CQ`)) · §XVII (vaSL mark) | Investigation mark + cat arc hub |
 
 ---
 

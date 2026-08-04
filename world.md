@@ -164,7 +164,7 @@ Reached by going south from `J6` (historical — no live node) (Western Wilds Cr
 > *"Smells like wood smoke and fish oil. A lifetime of tackle on the walls. Nets that haven't been cast in years. A rod propped by the door. He is always here in the morning."*
 
 - **NPC:** The Fisherman — present continuously; says *"...Nice Day For Fishing. Yugurt!"* on loop; not to you specifically; not to no one specifically
-- **Loot:** Fishing Rod — required to trigger `storyFishing()` at YL
+- **Loot:** Fishing Rod — required to trigger `storyFishing()` at `BOO` (historical `YL`)
 - **Sleep:** Free (sleepCost:0)
 
 > **DM note:** The Fisherman is not a quest-giver in the current build. He is ambient world — a human who made a choice about how to spend his time and is at peace with it. He has no backstory the player can unlock. He has no connection to the Void, Froberger, or the Ivory Circle. He fishes.
@@ -246,7 +246,7 @@ New items: `void_architect_seal` (type: `relic`, sell: 0) and `constructor_log` 
 
 The **Constructor's Log** (7 entries, First Researcher's own words) surfaces as Document 4 in the WM lower archive after all five sites are visited. Benedikt Rasp delivers the final confirmation of the four-author chain: First Researcher → Froberger → Benedikt → player (Entry 42).
 
-See plan-archive.md §XVII for the full Constructor's Log text, investigation site descriptions, state flags, and CO outro addendum.
+See plan-archive.md §XVII for the full Constructor's Log text, investigation site descriptions, state flags, and `TLS` (historical `CO`) outro addendum.
 
 #### Living World: Junction Vignettes + Road Companion *(Layer 53 — ✅ Implemented)*
 
@@ -279,7 +279,7 @@ The shaman is Layer 56+ content. §XX names the threat; it does not resolve it. 
 
 #### ⚠️ PLANNED — The Void Shaman: The Antecedent's Last Warden (plan-archive.md §XXI, Layer 56)
 
-Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). The Warden has been living in the MT tunnel for 6 months.
+Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). The Warden has been living in the `GVA` (historical `MT`) tunnel for 6 months.
 
 **The Warden** — the current holder of a goblin title appointed 200 years ago by the First Researcher. She planted a guardian clan (the proto-Hollow Hands) at the Mountain Pass with the mandate: "if the cage starts to fail, open the tunnel." In 200 years of oral retransmission, "open the tunnel to stabilize the cage from inside" became "open the cage." The Warden has been working to release the Antecedent, believing this is what the First Researcher wanted. They are wrong about the direction. The CO victory already activated the sealing mechanism — the Warden has been working toward something that already happened, from the wrong side.
 
@@ -525,15 +525,15 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 **Blue Shutters Archive** (`LHR` (historical `CI`), gated by Yael letter) — three-state button: blocked → ask Yael → enter. Grants Entry 33, Undercity Survey (Partial) key item. Survey deliverable to Auros at `HKG` (historical `CY`).
 
-**Varga at `LLA` (historical `BA`)** (S8) — Ivory Circle informant at a regular `LLA` (historical `BA`) table, monitoring the restricted shelves (Froberger and Void research materials). Three [Observe] clicks escalate ambient text across visits: watch 1 ("the same book open to the same page"), watch 2 ("wrote one line in a notebook, put it away"), watch 3 (pigeon launches north-northeast → `s8VargaClueUnlocked`). Tell Pachelbel at SH → she recognizes the forwarding route: *"Was it the Froberger shelf?"* +15gp → `s8PachelbelTold`. Cross-refs: Act I Town Crier line [3] (informants missing their corners); `yaelEscortDone` Town Crier line (informants run off north end). See `plan-archive.md §XXXII` for full design.
+**Varga at `LLA` (historical `BA`)** (S8) — Ivory Circle informant at a regular `LLA` (historical `BA`) table, monitoring the restricted shelves (Froberger and Void research materials). Three [Observe] clicks escalate ambient text across visits: watch 1 ("the same book open to the same page"), watch 2 ("wrote one line in a notebook, put it away"), watch 3 (pigeon launches north-northeast → `s8VargaClueUnlocked`). Tell Pachelbel at `LLA` (historical `SH` — a code that was NEVER in `NODE_MAP`; Pachelbel stands at `LLA` per `birkaNpcs`) → she recognizes the forwarding route: *"Was it the Froberger shelf?"* +15gp → `s8PachelbelTold`. Cross-refs: Act I Town Crier line [3] (informants missing their corners); `yaelEscortDone` Town Crier line (informants run off north end). See `plan-archive.md §XXXII` for full design.
 
-*(Layer 67a — ✅ Implemented. Inline at HTML 15345. Flag: `s6JointDelivered`. Weckmann/Auros joint conversation at CY when both Friendly+.)*
+*(Layer 67a — ✅ Implemented. Inline at HTML 15345. Flag: `s6JointDelivered`. Weckmann/Auros joint conversation at `HKG` (historical `CY`) when both Friendly+.)*
 
-**Auros Tactical Theory** (S29) — one-time dialogue at CY. Fires when `frobergerLastEntryRead && fav_auros >= 2`. Auros decodes Entry 41 from Void-advance tactical indicators: Froberger's last route covered Year Twelve flagged sectors in the correct sequence. *"He was mapping the negative space of the Void all along... He got to the end of the map. Then the Tide arrived."* Const: `S29_AUROS_THEORY`. Sets `s29LineDelivered`. See `plan-archive.md §XXXII`.
+**Auros Tactical Theory** (S29) — one-time dialogue at `HKG` (historical `CY`). Fires when `frobergerLastEntryRead && fav_auros >= 2`. Auros decodes Entry 41 from Void-advance tactical indicators: Froberger's last route covered Year Twelve flagged sectors in the correct sequence. *"He was mapping the negative space of the Void all along... He got to the end of the map. Then the Tide arrived."* Const: `S29_AUROS_THEORY`. Sets `s29LineDelivered`. See `plan-archive.md §XXXII`.
 
-*(Layer 67b — ✅ Implemented. Const: `S29_AUROS_THEORY` (HTML 11659). Triggered at CY when `frobergerLastEntryRead && fav_auros >= 2`. Sets `s29LineDelivered`. HTML comment at 8628 labels this Layer 67b.)*
+*(Layer 67b — ✅ Implemented. Const: `S29_AUROS_THEORY` (HTML 11659). Triggered at `HKG` (historical `CY`) when `frobergerLastEntryRead && fav_auros >= 2`. Sets `s29LineDelivered`. HTML comment at 8628 labels this Layer 67b.)*
 
-**Weckmann Training Log** — available at CY after Dear Friend. Shows pit fight history. `_buildWeckmannLog()` builds it dynamically. Contains personal combat philosophy.
+**Weckmann Training Log** — available at `HKG` (historical `CY`) after Dear Friend. Shows pit fight history. `_buildWeckmannLog()` builds it dynamically. Contains personal combat philosophy.
 
 **Pit Training Perks** (`PIT_PERK_UNLOCKS`, HTML line 10457) — unlocked sequentially by `_checkPitPerkUnlock()` as `pitTrainingWins` accumulates. One perk per win threshold. Five total, in order:
 
@@ -542,12 +542,12 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 | 1 | `controlledAggression` | Controlled Aggression | "You're not swinging harder. You're swinging when it counts." | `combatState.controlledAggression = true` |
 | 2 | `readTheRoom` | Read the Room | "Bruna could tell a fighter's gas tank by the third exchange." | `combatState.readTheRoom = true` |
 | 3 | `groundGame` | Ground Game | "When you put them down, keep them down." | `combatState.groundGame = true` |
-| 4 | `cornerWork` | Corner Work | "The corner is where you recover. Go to the corner." | `combatState.cornerWork = true` (`HKG` (historical `CY`)/DK nodes only) |
+| 4 | `cornerWork` | Corner Work | "The corner is where you recover. Go to the corner." | `combatState.cornerWork = true` (`HKG` (historical `CY`)/`LCY` (historical `DK`) nodes only) |
 | 5 | `crovsLesson` | Weckmann's Lesson | "When everything goes wrong — stop, breathe, start again." | `combatState.crovsLesson = true` |
 
 Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when all 5 are held.
 
-**Room 6** — locked room at CY. `storyShowRoom6()`. Available at Weckmann Dear Friend. Contains Froberger's last fighting note.
+**Room 6** — locked room at `HKG` (historical `CY`). `storyShowRoom6()`. Available at Weckmann Dear Friend. Contains Froberger's last fighting note.
 
 **Deacon's Code** — `storyShowDeaconCode()`. Available at Pachelbel Dear Friend. Opened via a button at the `LLA` (historical `BA`) node when fav ≥ 2. Full text (`DEACON_CODE_TEXT` const):
 
@@ -583,13 +583,13 @@ All three together bring the balance to exactly 0. When `brynLedgerBalance >= 0`
 
 *(Layer 68b — ✅ Implemented. Const: `WECKMANN_TRAINING_LOG` (HTML 12402). `_buildWeckmannLog()` at 12242; `storyShowWeckmannLog()` at 12258. HTML comment at 11602 labels this Layer 68b.)*
 
-**S29 — Auros/Froberger theory** (`s29LineDelivered`) — one-time dialogue injection. Fires when the player visits Auros at CY after: (1) Froberger's last journal entry has been read AND (2) Auros is at Dear Friend (fav ≥ 2). Auros connects Froberger's final courier route to the Void advance, explains what the entry means in tactical terms. Fires once; `s29LineDelivered` prevents repeat.
+**S29 — Auros/Froberger theory** (`s29LineDelivered`) — one-time dialogue injection. Fires when the player visits Auros at `HKG` (historical `CY`) after: (1) Froberger's last journal entry has been read AND (2) Auros is at Dear Friend (fav ≥ 2). Auros connects Froberger's final courier route to the Void advance, explains what the entry means in tactical terms. Fires once; `s29LineDelivered` prevents repeat.
 
-**S49 — Entry 41 delivery** (`s49BrynnDelivered`, `s49SweelinckDelivered`) — two parallel one-time scenes that fire after Froberger's last entry is read. At IN: Brynn reads Entry 41 twice (quietly), quotes the last line *"Come back"* and says: *"He was right. They do need the person. Glad you're not done yet."* At NUE: Sweelinck takes the journal, reads Entry 41 standing, closes it carefully, says: *"I'll keep it here. You know where to find me when you're done."* — and keeps it. Each fires independently on the next visit after `frobergerLastEntryRead = true`. Full scene text: `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts. Covenant Keeper patch: if `s49SweelinckDelivered`, `_buildSweelinckNamingSequence()` opening changes to *"You know where to find me. You found me. Good."* See `plan-archive.md §XXX` for full design.
+**S49 — Entry 41 delivery** (`s49BrynnDelivered`, `s49SweelinckDelivered`) — two parallel one-time scenes that fire after Froberger's last entry is read. At `TLL` (historical `IN`): Brynn reads Entry 41 twice (quietly), quotes the last line *"Come back"* and says: *"He was right. They do need the person. Glad you're not done yet."* At NUE: Sweelinck takes the journal, reads Entry 41 standing, closes it carefully, says: *"I'll keep it here. You know where to find me when you're done."* — and keeps it. Each fires independently on the next visit after `frobergerLastEntryRead = true`. Full scene text: `S49_BRYNN_SCENE` / `S49_SWEELINCK_SCENE` consts. Covenant Keeper patch: if `s49SweelinckDelivered`, `_buildSweelinckNamingSequence()` opening changes to *"You know where to find me. You found me. Good."* See `plan-archive.md §XXX` for full design.
 
 *(Layer 65 — ✅ Implemented. Consts: `S49_BRYNN_SCENE` (HTML 11699), `S49_SWEELINCK_SCENE`. Trigger logic in HTML. Flags `s49BrynnDelivered` / `s49SweelinckDelivered` in `_S_DEFAULTS()` (HTML 8440).)*
 
-**S54 — Joint NPC moment** (`s54JointMomentDelivered`) — Yael and Brynn at CI together, Act VII+, both Friendly+. The player catches Brynn asking Yael: *"Still the same light?"* / *"Still the same light."* — a reference to the First Inn light that has burned since Act I. Both then address the player. The only scene where two Birka Six NPCs share the frame. Const: `S54_JOINT_MOMENT`. See `plan-archive.md §XXXI` for full design.
+**S54 — Joint NPC moment** (`s54JointMomentDelivered`) — Yael and Brynn at `LHR` (historical `CI`) together, Act VII+, both Friendly+. The player catches Brynn asking Yael: *"Still the same light?"* / *"Still the same light."* — a reference to the First Inn light that has burned since Act I. Both then address the player. The only scene where two Birka Six NPCs share the frame. Const: `S54_JOINT_MOMENT`. See `plan-archive.md §XXXI` for full design.
 
 *(Layer 66a — ✅ Implemented. Const: `S54_JOINT_MOMENT` (HTML 11680). Flag: `s54JointMomentDelivered` in `_S_DEFAULTS()` (HTML 8441).)*
 
@@ -1239,14 +1239,16 @@ A new NPC archetype — vendor-modal, not fixed to a single node. Corelli appear
 
 Six one-time beats fire in Act VIII (actNumber === 8) when a player with Friendly or Dear Friend favorability visits each NPC's node. Each fires from a parchment modal before the normal dialogue, then sets its flag and returns the NPC to standard rotation. Not preserved on NG+.
 
+> **⚠️ Node column corrected 2026-08-04 (§AUDIT-03m-FU).** `ACT8_FAREWELL_BEATS` is keyed by **NPC key**, not by node — the beat fires wherever that NPC stands, which the engine settles in `birkaNpcs` (`LHR:['yael'] · TLL:['brynn'] · MHQ:['quill'] · LLA:['pachelbel'] · HKG:['crov','auros']`). Four of these six rows named the wrong place: Quill was listed at `LLA` (Pachelbel's node), Pachelbel at `SH` (**a code that was never in `NODE_MAP` at all** — the §AUDIT-03p born-dead class), Weckmann at `KRN` and Auros at `VBY`, when both are at `HKG`. Annotating those codes in place would have turned four wrong claims into four confident-looking live ones.  *(historical: `BA`=`LLA` · `CR`=`KRN` · `BK`=`VBY` · `CY`=`HKG`)*
+
 | NPC | Act VIII Final Note | Gift |
 |-----|--------------------|----|
-| Yael (CI) | Spent the player's absence building a witness network — names of people who will tell the truth after. *"Go do the other kind [of victory]."* | None |
-| Brynn (IN) | Has bread waiting. Was worried since Act III. Doesn't say so directly. | `brynns_loaf` — heals 8 HP, cannot be sold |
-| Quill (BA) | The Couperin ledger is settled. Understood the lesson: debts that served their purpose can be released. | None |
-| Pachelbel (SH) | Gives the player an unfinished composition sketch — the first honest work since the debt was cleared. *"Maybe you'll leave it for someone else to read."* | `pachelbels_sketch` — readable, no mechanical effect, cannot be sold |
-| Weckmann (CR) | Recognizes the player as the rare kind of champion — the kind earned in the world, not in a pit. Kept a tincture for this. | `champions_tincture` — advantage on next attack roll, cannot be sold |
-| Auros (`VBY` (historical `BK`)) | *"Be ready. What you bring to it matters. Not just the Shards."* — the only beat that looks toward `TLS` (historical `CO`) rather than back. Ambiguous in retrospect, given her role in the final battle. | None |
+| Yael (`LHR`, historical `CI`) | Spent the player's absence building a witness network — names of people who will tell the truth after. *"Go do the other kind [of victory]."* | None |
+| Brynn (`TLL`, historical `IN`) | Has bread waiting. Was worried since Act III. Doesn't say so directly. | `brynns_loaf` — heals 8 HP, cannot be sold |
+| Quill (`MHQ`, historical `TV`) | The Couperin ledger is settled. Understood the lesson: debts that served their purpose can be released. | None |
+| Pachelbel (`LLA`, historical `BA`) | Gives the player an unfinished composition sketch — the first honest work since the debt was cleared. *"Maybe you'll leave it for someone else to read."* | `pachelbels_sketch` — readable, no mechanical effect, cannot be sold |
+| Weckmann (`HKG`, historical `CY`) | Recognizes the player as the rare kind of champion — the kind earned in the world, not in a pit. Kept a tincture for this. | `champions_tincture` — advantage on next attack roll, cannot be sold |
+| Auros (`HKG`, historical `CY`) | *"Be ready. What you bring to it matters. Not just the Shards."* — the only beat that looks toward `TLS` (historical `CO`) rather than back. Ambiguous in retrospect, given her role in the final battle. | None |
 
 **Flags:** `act8FarewellYael/Brynn/Quill/Pachelbel/Weckmann/Auros` (6 booleans, default false, not NG+-preserved).  
 **New items:** `brynns_loaf`, `pachelbels_sketch`, `champions_tincture`. Full dialogue text in `plan-archive.md §XXV`.
@@ -1255,7 +1257,7 @@ Six one-time beats fire in Act VIII (actNumber === 8) when a player with Friendl
 
 ## The Froberger Memorial: World Context *(Layer 63 — ✅ Implemented)*
 
-The Froberger memorial stone sits at the CI crossroads. It has been there since before the game begins — the players arrive in a world where this stone already exists and is already tended.
+The Froberger memorial stone sits at the `LHR` (historical `CI`) crossroads. It has been there since before the game begins — the players arrive in a world where this stone already exists and is already tended.
 
 **Geography:** Northwest quadrant of the `LHR` intersection, set slightly back from the main road. Visible from the inn door. The same bench Weckmann mentions in his book entry ("the bench across the road") is the forge bench — Weckmann's forge is at `KRN`, but Froberger apparently watched training from the `LHR` side. This is consistent: a chronicler would sit where he could observe without interfering.  *(historical: `CI`=`LHR` · `CR`=`KRN`)*
 

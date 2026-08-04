@@ -18,8 +18,8 @@
 
 ---
 
-### Q52 — EF | Thornwood Maw
-**NPC:** Woodcutter Bram · *logger* · parent node FO · boss: Thornwood King (Treant)  
+### Q52 — `PRN` (historical `EF`) | Thornwood Maw
+**NPC:** Woodcutter Bram · *logger* · parent node `FRO` (historical `FO`) · boss: Thornwood King (Treant)  
 **Payment:** 220–300gp · Special item: none
 
 **Q52.W — Wound**
@@ -39,8 +39,8 @@
 
 ---
 
-### Q53 — EH | Loch of the Drowned King
-**NPC:** Shepherd Rona · *shepherd* · parent node HL · boss: Highland Aboleth  
+### Q53 — `INV` (historical `EH`) | Loch of the Drowned King
+**NPC:** Shepherd Rona · *shepherd* · parent node `KIR` (historical `HL`) · boss: Highland Aboleth  
 **Payment:** 260gp (fixed) · Special item: none
 
 **Q53.W — Wound**
@@ -60,8 +60,8 @@
 
 ---
 
-### Q54 — ES | Sunken Altar
-**NPC:** Herbalist Gwynne · *herbalist* · parent node SW · boss: Elder Hydra  
+### Q54 — `SDR` (historical `ES`) | Sunken Altar
+**NPC:** Herbalist Gwynne · *herbalist* · parent node `MSY` (historical `SW`) · boss: Elder Hydra  
 **Payment:** 240gp (fixed) · Special item: none
 
 **Q54.W — Wound**
@@ -81,8 +81,8 @@
 
 ---
 
-### Q55 — EW | Hag Mother's Cradle
-**NPC:** Wane · *youngest crone* · parent node HS · boss: Grand Hag Queen  
+### Q55 — `PMO` (historical `EW`) | Hag Mother's Cradle
+**NPC:** Wane · *youngest crone* · parent node `SDQ` (historical `HS`) · boss: Grand Hag Queen  
 **Payment:** 200gp (fixed) · Special item: `swamp_blessing`
 
 **Q55.W — Wound**
@@ -102,8 +102,8 @@
 
 ---
 
-### Q56 — EB | Wreck of the Unbroken
-**NPC:** Harbormaster Tula · *harbormaster* · parent node BE · boss: Vampire Pirate Lord  
+### Q56 — `FLR` (historical `EB`) | Wreck of the Unbroken
+**NPC:** Harbormaster Tula · *harbormaster* · parent node `BGI` (historical `BE`) · boss: Vampire Pirate Lord  
 **Payment:** 300–420gp · Special item: none
 
 **Q56.W — Wound**
@@ -123,8 +123,8 @@
 
 ---
 
-### Q57 — EO | Leviathan's Eye
-**NPC:** Navigator Cassius · *navigator* · parent node DS · boss: The True Leviathan  
+### Q57 — `KUN` (historical `EO`) | Leviathan's Eye
+**NPC:** Navigator Cassius · *navigator* · parent node `SID` (historical `DS`) · boss: The True Leviathan  
 **Payment:** 320gp (fixed) · Special item: `ship_warrant`
 
 **Q57.W — Wound**
@@ -144,8 +144,8 @@
 
 ---
 
-### Q58 — EI | Isle of the Wyrm Crown
-**NPC:** Island Elder Maris · *elder and fisher* · parent node IS · boss: Ancient Sea Dragon  
+### Q58 — `ACE` (historical `EI`) | Isle of the Wyrm Crown
+**NPC:** Island Elder Maris · *elder and fisher* · parent node `PDL` (historical `IS`) · boss: Ancient Sea Dragon  
 **Payment:** 280gp (fixed) · Special item: none
 
 **Q58.W — Wound**
@@ -165,8 +165,8 @@
 
 ---
 
-### Q59 — EA | Abyssal Scriptorium
-**NPC:** Captain Selene Draketide · *ship captain* · parent node AT · boss: Index Guardian Aboleth  
+### Q59 — `IST` (historical `EA`) | Abyssal Scriptorium
+**NPC:** Captain Selene Draketide · *ship captain* · parent node `RAI` (historical `AT`) · boss: Index Guardian Aboleth  
 **Payment:** 300gp (fixed) · Special item: none  
 **⚠️ Also Epic NPC #3** — see full profile in "The Seven Epic NPC Profiles" section above. Her EB wound establishes that she has been at the Atlantis archive for months before the player arrives — consistent with her Epic NPC profile ("Her ship's hold contains the sunken library of Atlantis").
 
@@ -187,8 +187,8 @@
 
 ---
 
-### Q60 — EC | Scholar Kings' Forge
-**NPC:** Runewright Ossian · *runewright* · parent node SC · boss: Forge Warden Dragon Turtle  
+### Q60 — `SOF` (historical `EC`) | Scholar Kings' Forge
+**NPC:** Runewright Ossian · *runewright* · parent node `GIB` (historical `SC`) · boss: Forge Warden Dragon Turtle  
 **Payment:** 250gp (fixed) · Special item: `forge_rune`
 
 **Q60.W — Wound**
@@ -208,8 +208,8 @@
 
 ---
 
-### Q61 — EL | Sunken God's Throne
-**NPC:** River Trader Aldous · *river trader* · parent node FL · boss: Storm Giant Titan  
+### Q61 — `BEG` (historical `EL`) | Sunken God's Throne
+**NPC:** River Trader Aldous · *river trader* · parent node `TRF` (historical `FL`) · boss: Storm Giant Titan  
 **Payment:** 280gp (fixed) · Special item: `river_pass`
 
 **Q61.W — Wound**
@@ -229,8 +229,8 @@
 
 ---
 
-### Q62 — ED | Trench Titan
-**NPC:** First Mate Darro · *first mate* · parent node DS · boss: Charybdis Prime  
+### Q62 — `OTP` (historical `ED`) | Trench Titan
+**NPC:** First Mate Darro · *first mate* · parent node `SID` (historical `DS`) · boss: Charybdis Prime  
 **Payment:** 320gp (fixed) · Special item: none  
 **Lore note:** Darro was aboard Draketide's ship twenty years ago when the Charybdis first appeared (Q57). He watched what she saw. He has carried it since because she doesn't speak of it.
 
@@ -251,8 +251,8 @@
 
 ---
 
-### Q63 — EM | Noonwraith Queen's Field
-**NPC:** Farmer Wren · *farmer* · parent node MI · boss: Noonwraith Queen  
+### Q63 — `WAW` (historical `EM`) | Noonwraith Queen's Field
+**NPC:** Farmer Wren · *farmer* · parent node `MAN` (historical `MI`) · boss: Noonwraith Queen  
 **Payment:** 260gp (fixed) · Special item: none
 
 **Q63.W — Wound**
@@ -272,8 +272,8 @@
 
 ---
 
-### Q64 — EE | Pharaoh's Vault
-**NPC:** Caravan Master Zephyrine · *caravan master* · parent node DE · boss: Vault Pharaoh (Mummy Lord)  
+### Q64 — `CAI` (historical `EE`) | Pharaoh's Vault
+**NPC:** Caravan Master Zephyrine · *caravan master* · parent node `AHB` (historical `DE`) · boss: Vault Pharaoh (Mummy Lord)  
 **Payment:** 300gp (fixed) · Special item: `escort_contract`
 
 **Q64.W — Wound**
@@ -293,8 +293,8 @@
 
 ---
 
-### Q65 — EV | Djinn Lord's Palace
-**NPC:** Izador al-Rashun · *sandmage and djinn-binder* · parent node DC · boss: Elder Marid  
+### Q65 — `MCT` (historical `EV`) | Djinn Lord's Palace
+**NPC:** Izador al-Rashun · *sandmage and djinn-binder* · parent node `DOH` (historical `DC`) · boss: Elder Marid  
 **Payment:** 350gp (fixed) · Special item: `sand_cipher`  
 **⚠️ Also Epic NPC #5** — see full profile in "The Seven Epic NPC Profiles" section above. His EB wound (someone higher in the hierarchy renegotiating his contract) is a separate incident from his Epic NPC role (dissolving the djinn's binding for Shard #5). Both scenes share the DC node and establish Izador as someone who has multiple ongoing agreements with djinn.
 
@@ -315,8 +315,8 @@
 
 ---
 
-### Q66 — EJ | Canopy Cathedral
-**NPC:** Herbalist Mael · *herbalist* · parent node JU · boss: Cathedral Wyrm (Green Dragon)  
+### Q66 — `SJO` (historical `EJ`) | Canopy Cathedral
+**NPC:** Herbalist Mael · *herbalist* · parent node `BEL` (historical `JU`) · boss: Cathedral Wyrm (Green Dragon)  
 **Payment:** 250gp (fixed) · Special item: none
 
 **Q66.W — Wound**
@@ -336,10 +336,10 @@
 
 ---
 
-### Q67 — ET | Peak of the Eldest
-**NPC:** Blacksmith Dora Flint · *blacksmith* · parent node BQ · boss: Summit Wyrm (White Dragon)  
+### Q67 — `KTM` (historical `ET`) | Peak of the Eldest
+**NPC:** Blacksmith Dora Flint · *blacksmith* · parent node `ERF` (historical `BQ`) · boss: Summit Wyrm (White Dragon)  
 **Payment:** 300gp (fixed) · Special item: `runic_hammer`  
-**Lore note:** Dora Flint is the blacksmith of Weimar's lower quarter (BQ node). Her EB quest directly serves Sweelinck — she needs summit ore to forge the Codex instrument he requires for the sealing ceremony. This ties the ET Epic Battleground into the main quest chain.
+**Lore note:** Dora Flint is the blacksmith of Weimar's lower quarter (`ERF` (historical `BQ`) node). Her EB quest directly serves Sweelinck — she needs summit ore to forge the Codex instrument he requires for the sealing ceremony. This ties the `KTM` (historical `ET`) Epic Battleground into the main quest chain.
 
 **Q67.W — Wound**
 > The mountain summit ore vein has been blocked for three years. She can't forge Sweelinck's Codex instrument without it. Lowland iron has the wrong memory — it remembers being underground, not cold.
@@ -358,10 +358,10 @@
 
 ---
 
-### Q68 — ER | Frost Warden's Throne
-**NPC:** Fur Trader Sigrid · *fur trader* · parent node AR · boss: Frost Giant Jarl Kolvros  
+### Q68 — `RKV` (historical `ER`) | Frost Warden's Throne
+**NPC:** Fur Trader Sigrid · *fur trader* · parent node `LYR` (historical `AR`) · boss: Frost Giant Jarl Kolvros  
 **Payment:** 350–450gp · Special item: none  
-**Note:** One of three EB entries with a negotiable payment range (others: Q52/EF and Q71/EG). Negotiate line is unique — not "This is everything" but a specific acknowledgement.
+**Note:** One of three EB entries with a negotiable payment range (others: Q52/`PRN` (historical `EF`) and Q71/`TBS` (historical `EG`)). Negotiate line is unique — not "This is everything" but a specific acknowledgement.
 
 **Q68.W — Wound**
 > Eleven months of tolls paid to Kolvros, starting reasonable. Last month he took her lead trader Beron instead of the chest. She paid again. She doesn't know what the thirteenth payment looks like.
@@ -380,8 +380,8 @@
 
 ---
 
-### Q69 — EK | Shattered Seraph's Spire
-**NPC:** Grounded Seraph Ithiel · *sky road keeper* · parent node HC · boss: Fallen Seraph Variel  
+### Q69 — `MAD` (historical `EK`) | Shattered Seraph's Spire
+**NPC:** Grounded Seraph Ithiel · *sky road keeper* · parent node `CTU` (historical `HC`) · boss: Fallen Seraph Variel  
 **Payment:** 0gp ★ · Special item: `star_fragment`  
 **★ Zero-gold entry:** The only EB quest with no gold reward. paymentFloor = paymentCeiling = paymentOpening = 0. The `_storyEbNpcModal()` function handles this gracefully: when `d.paymentFloor === 0`, the payment display reads "No gold — a greater reward awaits." and the accept button shows "✓ Accept Quest" (not "💰 Accept 0gp"). The Negotiate button is hidden (`canNegotiate = false` when floor ≥ ceiling). The `star_fragment` special item is the sole reward. The covenant between Ithiel and Variel is the emotional core.
 
@@ -402,8 +402,8 @@
 
 ---
 
-### Q70 — EP | Admiral's Last Cove
-**NPC:** Fence Boss Carrick · *pirate fence* · parent node PC · boss: Admiral's Ghost (Wraith King)  
+### Q70 — `HAV` (historical `EP`) | Admiral's Last Cove
+**NPC:** Fence Boss Carrick · *pirate fence* · parent node `NAS` (historical `PC`) · boss: Admiral's Ghost (Wraith King)  
 **Payment:** 300gp (fixed) · Special item: `pirate_cache`
 
 **Q70.W — Wound**
@@ -423,8 +423,8 @@
 
 ---
 
-### Q71 — EG | Void Shaman's Sanctum
-**NPC:** Warlord Kael Mordus · *warlord* · parent node BK (Broken Tooth Tavern) · boss: Void High Shaman Kazrath  
+### Q71 — `TBS` (historical `EG`) | Void Shaman's Sanctum
+**NPC:** Warlord Kael Mordus · *warlord* · parent node `VBY` (historical `BK`) (Broken Tooth Tavern) · boss: Void High Shaman Kazrath  
 **Payment:** 400–500gp · Special item: `crimson_warrant`  
 **⚠️ Also Epic NPC #4** — see full profile in "The Seven Epic NPC Profiles" section above. His EB wound gives the backstory for his main-quest role: the shaman in the goblin caves had Void allegiances and a reporting structure connecting to Birka authority. His return beat — "He was writing to someone in Birka. Someone in a position of authority." — is a direct plot thread pointing toward the High Council.
 
