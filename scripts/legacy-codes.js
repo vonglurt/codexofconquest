@@ -265,14 +265,38 @@ function isTableHeader(lines, i) {
   return /^\s*\|/.test(lines[i] || '') && /^\s*\|?[\s:|-]{3,}$/.test(lines[i + 1] || '');
 }
 
-function scanFile(text, map, re) {
-  const out = [];
+/**
+ * The one prose walker both phases use. A fenced block is code, a table header row is
+ * column names, and neither is prose to annotate — measure that in ONE place so the
+ * gate and the writer can never disagree about what a line is (§DX-01d's lesson: one
+ * shared scanner for the gate and the writer, or they drift).
+ */
+function eachProseLine(text, cb) {
   const lines = text.split('\n');
   let fenced = false;
   lines.forEach((line, i) => {
     if (/^\s*```/.test(line)) { fenced = !fenced; return; }
     if (fenced) return;                 // a fenced block is code — never prose to annotate
     if (isTableHeader(lines, i)) return;
+    cb(line, i);
+  });
+}
+
+/** The local cues that make a token a PLACE, independent of the rest of the line. */
+function localCue(line, i, len) {
+  const before = line.slice(Math.max(0, i - 40), i);
+  const after = line.slice(i + len);
+  // A code that ENDS a dash- or pipe-delimited field and is followed by a column
+  // separator is a code column: `### Q56 — EB | Wreck of the Unbroken`. Distinct
+  // from nodeContextLine's `| CI |`, which needs the code alone in the cell.
+  const codeColumn = /^\s*\|/.test(after) && /(?:[—–|-]|^)\s*$/.test(before);
+  return PLACE_CUE.test(before) || TRAILING_CUE.test(after) ||
+         soleParenthetical(line, i, len) || codeColumn;
+}
+
+function scanFile(text, map, re) {
+  const out = [];
+  eachProseLine(text, (line, i) => {
     const explanatory = EXPLANATORY_LINE.test(line);
     re.lastIndex = 0;
     const raw = [...line.matchAll(re)];
@@ -290,17 +314,120 @@ function scanFile(text, map, re) {
       // narrowing it to "at CI" instead let "the player walks to CI" through, which a
       // negative control caught before this shipped.
       if (JARGON_ONLY.has(code) && CI_BUILD_LINE.test(line)) continue;
-      // A code that ENDS a dash- or pipe-delimited field and is followed by a column
-      // separator is a code column: `### Q56 — EB | Wreck of the Unbroken`. Distinct
-      // from nodeContextLine's `| CI |`, which needs the code alone in the cell.
-      const codeColumn = /^\s*\|/.test(after) && /(?:[—–|-]|^)\s*$/.test(before);
-      const cued = PLACE_CUE.test(before) || TRAILING_CUE.test(after) ||
-                   soleParenthetical(line, m.index, code.length) || codeColumn;
+      const cued = localCue(line, m.index, code.length);
       if (AMBIGUOUS.has(code) && !ctx && !cued) continue;
       // `EB`/`DC` are jargon far more often than nodes, so a leading cue is required —
       // but a code column reads the other way round: `### Q56 — EB | Wreck of the Unbroken`.
       if (STRICT_LOCAL.has(code) && !LOCAL_CUE.test(before) && !/^\s*\|/.test(after)) continue;
       out.push({ line: i + 1, col: m.index, code, live: map.get(code).live, text: line.trim() });
+    }
+  });
+  return out;
+}
+
+// ------------------------------------------------- phase 2: the BORN-DEAD class
+//
+// §AUDIT-03q. Phase 1 is driven by the LEGACY CODE MAP, which records codes that WERE
+// nodes and were renamed. It therefore has nothing to say about a code that was never a
+// node at all — §AUDIT-03p found four of those in the engine (`SH`/`PH`/`MH`/`WM` matched
+// no `NODE_MAP` key at the commit that authored them: written from memory, born dead).
+// Such a code resolves in NEITHER registry, so phase 1 is blind to it BY CONSTRUCTION,
+// and `world.md`'s *"Tell Pachelbel at SH"* had to be caught by reading.
+//
+// The class also catches a second shape the same way round: a real historical code the
+// `maps.md` legend never listed, so `npm run nodes` never put it in the LEGACY CODE MAP.
+// Both fail the same test — *the token looks like a node code and resolves nowhere* —
+// and the classification below is what tells them apart.
+
+/**
+ * THE DELIBERATE LIMIT, stated because a silent one reads as coverage: phase 2 looks at
+ * exactly-two-letter tokens. That is the shape of the retired 26×16 code space, which is
+ * the era a born-dead code is written in — all eleven tokens this row was filed to
+ * classify (`SH` `PH` `MH` `SK` `SB` `AO` `LT` `HR` `KS` `DR` `TS`) are two letters.
+ * Widening to three lets in the whole acronym vocabulary of a technical doc (`NPC` 151×,
+ * `DOM`, `ATK`, `HTML`) for no measured gain, and every extra token is human classification
+ * work, not machine work. A three-letter code written from memory is NOT caught here.
+ */
+const UNKNOWN_TOKEN = /(?<![A-Za-z0-9_\-§])([A-Z]{2})(?![A-Za-z0-9_\-])/g;
+
+/**
+ * Tokens that ARE node codes and resolve nowhere — the born-dead class itself. Listed so
+ * the report can name them and so a BARE one still fails the gate: these are precisely the
+ * references a reader would follow to a node that never existed.
+ */
+const BORN_DEAD = new Map([
+  ['SH', 'never a `NODE_MAP` key at any commit (§AUDIT-03p). `world.md` used it for Pachelbel, who stands at `LLA` (`birkaNpcs`).'],
+  ['PH', 'never a `NODE_MAP` key — a `_voidFlavorLine` CLUSTER key written from memory, dropped rather than guessed (§AUDIT-03p).'],
+  ['MH', 'never a `NODE_MAP` key — same CLUSTER, same origin, also dropped (§AUDIT-03p).'],
+]);
+
+/**
+ * Tokens that merely LOOK like a 26×16 code in a node-ish sentence. Explicit, with a
+ * reason each — the #13/#14/#16 house style, for the third time and for the same reason:
+ * a percentage heuristic is blind to a token that is *always* jargon. 23 tokens fire in
+ * the swept corpus; 20 of them are these.
+ */
+const NOT_A_NODE_CODE = new Map([
+  ['NG', 'New Game Plus — always written `NG+`'],
+  ['HP', 'hit points'],
+  ['AC', 'armor class'],
+  ['XP', 'experience points'],
+  ['DM', 'dungeon master ("DM note:", "at the DM\'s discretion")'],
+  ['II', 'Roman act numeral (Act II)'],
+  ['IV', 'Roman act numeral (Act IV)'],
+  ['VI', 'Roman act numeral (Act VI)'],
+  ['ID', 'identifier — the `| Quest ID |` column header'],
+  ['UI', 'user interface'],
+  ['NO', 'the word NO — Neon Undercity signage: "NO COIN · NO TRUST · NO THANKS"'],
+  ['OR', 'the word OR — "Win OR Pass presented"'],
+  ['WA', 'the `.WA` (warning) field of an `EB_NPC_DIALOGUE` Q-code, e.g. `Q52.WA`'],
+  ['WP', 'the WP (waypoint) button — §NAV-01d/e auto-travel'],
+  ['NE', 'compass north-east — `(n steps, NE)` readouts'],
+  ['SP', 'single-player (the SP client, opposite the MUD server)'],
+  ['MP', 'multiplayer'],
+  ['TC', 'Town Crier — the `TC_*` line consts'],
+  ['GB', 'gigabytes — the V8 heap limit'],
+  ['FR', 'a real pre-airport code (Fishmonger\'s Row → `AMS`) that the `maps.md` legend never listed, so `npm run nodes` never put it in the LEGACY CODE MAP; every live-doc use states the mapping'],
+]);
+
+/** Every live `NODE_MAP` code, from the generated index's main table (codes run 2–6 chars). */
+function loadLiveCodes(indexText) {
+  const live = new Set();
+  const end = indexText.indexOf('## LEGACY CODE MAP');
+  for (const m of indexText.slice(0, end < 0 ? undefined : end)
+    .matchAll(/^\|\s*`([A-Z][A-Z0-9]{1,5})`\s*\|\s*(?:\d+|—)\s*\|\s*`/gm)) live.add(m[1]);
+  return live;
+}
+
+/**
+ * A line that NAMES a node — `at `LLA` or SH about the lute`. Neither the line test nor a
+ * local cue sees that `SH`: no node word anywhere on the line, and the preposition belongs
+ * to `LLA`, not to `SH`. But a sentence that has already put a live code in backticks is
+ * talking about places, and a second codeish token on it is a place too. This is the
+ * §AUDIT-03m-FU lesson one turn further: the instrument keeps missing the code that sits
+ * NEXT TO the one it can see.
+ */
+const namesLiveNode = (line, live) =>
+  [...line.matchAll(/`([A-Z][A-Z0-9]{1,5})`/g)].some(m => live.has(m[1]));
+
+/** Codeish tokens that resolve in NEITHER registry, in a node context. */
+function scanUnknown(text, live, map) {
+  const out = [];
+  eachProseLine(text, (line, i) => {
+    UNKNOWN_TOKEN.lastIndex = 0;
+    const raw = [...line.matchAll(UNKNOWN_TOKEN)].filter(m => !live.has(m[1]) && !map.has(m[1]));
+    if (!raw.length) return;
+    const explanatory = EXPLANATORY_LINE.test(line);
+    const ctx = namesLiveNode(line, live) || nodeContextLine(line, raw.map(m => m[1]));
+    for (const m of raw) {
+      const code = m[1];
+      if (annotatedAt(line, m.index)) continue;
+      // Same exemption as phase 1, and the same reason: on a line that EXPLAINS the
+      // legacy codes, a backticked one is the sentence's subject. `story.md`'s §AUDIT-03p
+      // note names `SH`/`PH`/`MH` precisely to record that they were never nodes.
+      if (explanatory && (inBackticks(line, m.index, code.length) || inCodeSpan(line, m.index) || statesMapping(line, m.index, code.length))) continue;
+      if (!ctx && !localCue(line, m.index, code.length)) continue;
+      out.push({ line: i + 1, col: m.index, code, text: line.trim() });
     }
   });
   return out;
@@ -375,9 +502,28 @@ function annotateFile(rel, map, re, write) {
 
 // ------------------------------------------------------------------- main
 
+/**
+ * Phase 2 over the swept docs. Returns the two failure shapes separately, because they
+ * ask different things of a human: a BARE born-dead reference is a live trap to fix by
+ * hand, an UNCLASSIFIED token is a token nobody has decided about yet.
+ */
+function runPhase2(indexText, map) {
+  const live = loadLiveCodes(indexText);
+  const bare = [], unclassified = [], counts = new Map();
+  for (const rel of SWEEP) {
+    for (const h of scanUnknown(fs.readFileSync(path.join(ROOT, rel), 'utf8'), live, map)) {
+      counts.set(h.code, (counts.get(h.code) || 0) + 1);
+      if (BORN_DEAD.has(h.code)) bare.push({ ...h, rel });
+      else if (!NOT_A_NODE_CODE.has(h.code)) unclassified.push({ ...h, rel });
+    }
+  }
+  return { live, bare, unclassified, counts };
+}
+
 function main() {
   const args = process.argv.slice(2);
-  const map = loadLegacyMap(fs.readFileSync(INDEX, 'utf8'));
+  const indexText = fs.readFileSync(INDEX, 'utf8');
+  const map = loadLegacyMap(indexText);
   const re = codeRe(map);
 
   if (args[0] === '--annotate') {
@@ -416,11 +562,23 @@ function main() {
         for (const h of r.hits.slice(0, 8)) console.error(`    :${h.line} ${h.code} -> ${h.live || '(no live node)'}  ${h.text.slice(0, 90)}`);
       }
     }
-    if (bad.length || unclassified.length) process.exit(1);
+    // phase 2 (§AUDIT-03q) — the codes NEITHER registry can see
+    const p2 = runPhase2(indexText, map);
+    if (p2.bare.length) {
+      console.error('check:legacycodes FAIL — BORN-DEAD node codes in SWEEP docs (they name a node that never existed):');
+      for (const h of p2.bare) console.error(`  ${h.rel}:${h.line} ${h.code} — ${BORN_DEAD.get(h.code)}\n    ${h.text.slice(0, 110)}`);
+    }
+    if (p2.unclassified.length) {
+      console.error('check:legacycodes FAIL — unclassified codeish token(s) that resolve in NEITHER registry:');
+      for (const h of p2.unclassified) console.error(`  ${h.rel}:${h.line} ${h.code}  ${h.text.slice(0, 100)}\n    (classify it in BORN_DEAD or NOT_A_NODE_CODE in scripts/legacy-codes.js)`);
+    }
+    if (bad.length || unclassified.length || p2.bare.length || p2.unclassified.length) process.exit(1);
     const pend = rows.filter(r => r.cls === 'PENDING');
     for (const r of pend) console.log(`  … PENDING ${r.rel} — ${r.n} (live doc, not yet swept — §AUDIT-03m)`);
     console.log(`check:legacycodes OK — ${SWEEP.length} swept doc(s) carry no bare legacy code` +
-      (pend.length ? `; ${pend.reduce((a, r) => a + r.n, 0)} references remain in ${pend.length} pending live doc(s)` : ''));
+      (pend.length ? `; ${pend.reduce((a, r) => a + r.n, 0)} references remain in ${pend.length} pending live doc(s)` : '') +
+      `\n  phase 2 (§AUDIT-03q) — ${p2.counts.size} two-letter token(s) resolve in neither registry across the swept docs, all classified` +
+      ` (tables: ${BORN_DEAD.size} born-dead, ${NOT_A_NODE_CODE.size} not node codes)`);
     return;
   }
 
@@ -438,7 +596,23 @@ function main() {
     console.log('\nUNCLASSIFIED (add to SWEEP or HISTORY):');
     for (const u of unclassified) console.log('  ' + u);
   }
+
+  const p2 = runPhase2(indexText, map);
+  console.log(`\nphase 2 (§AUDIT-03q) — two-letter tokens in the ${SWEEP.length} swept docs that resolve in NEITHER registry:`);
+  for (const [code, n] of [...p2.counts].sort((a, b) => b[1] - a[1])) {
+    const why = BORN_DEAD.has(code) ? 'BORN-DEAD — ' + BORN_DEAD.get(code)
+      : NOT_A_NODE_CODE.has(code) ? 'not a node code — ' + NOT_A_NODE_CODE.get(code)
+      : '⚠️ UNCLASSIFIED';
+    console.log('  ' + code.padEnd(4) + String(n).padStart(4) + '  ' + why);
+  }
+  if (p2.bare.length) {
+    console.log('\n  bare born-dead reference(s) — a reader would follow these to a node that never existed:');
+    for (const h of p2.bare) console.log(`    ${h.rel}:${h.line} ${h.code}  ${h.text.slice(0, 100)}`);
+  }
 }
 
 if (require.main === module) main();
-module.exports = { loadLegacyMap, classify, scanFile, codeRe, annotateLine, SWEEP, PENDING, AMBIGUOUS };
+module.exports = {
+  loadLegacyMap, loadLiveCodes, classify, scanFile, scanUnknown, codeRe, annotateLine,
+  SWEEP, PENDING, AMBIGUOUS, BORN_DEAD, NOT_A_NODE_CODE,
+};

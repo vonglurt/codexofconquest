@@ -190,6 +190,108 @@ test.describe('§AUDIT-03m — legacy node codes in doc prose', () => {
     expect(world).not.toMatch(/Tell Pachelbel at SH/);
   });
 
+  // ---- §AUDIT-03q: the codes NEITHER registry can see ---------------------------
+  //
+  // Phase 1 is driven by the LEGACY CODE MAP — codes that WERE nodes and were renamed.
+  // A code that was never a node at all resolves in neither registry, so phase 1 is
+  // blind to it BY CONSTRUCTION: `world.md`'s "Tell Pachelbel at SH" had to be caught by
+  // reading, and a second one ("at `LLA` or SH") survived that read. Phase 2 is the
+  // instrument for that class, and its classification is explicit for the third time in
+  // this gate family, for the third time for the same reason: a percentage heuristic is
+  // blind to a token that is *always* jargon (`NG` fires 47 times and is never a node).
+  const live = L.loadLiveCodes(fs.readFileSync(path.join(ROOT, 'docs', 'maps', 'node-index.md'), 'utf8'));
+  const scanU = (text) => L.scanUnknown(text, live, map);
+
+  test('no swept doc carries a born-dead node code, and every firing token is classified', () => {
+    const bare = [], unclassified = [];
+    for (const rel of L.SWEEP) {
+      for (const h of scanU(fs.readFileSync(path.join(ROOT, rel), 'utf8'))) {
+        if (L.BORN_DEAD.has(h.code)) bare.push(`${rel}:${h.line} ${h.code}`);
+        else if (!L.NOT_A_NODE_CODE.has(h.code)) unclassified.push(`${rel}:${h.line} ${h.code}  ${h.text.slice(0, 60)}`);
+      }
+    }
+    expect(bare, 'a bare born-dead code names a node that never existed').toEqual([]);
+    expect(unclassified, 'classify it in BORN_DEAD or NOT_A_NODE_CODE').toEqual([]);
+    // every classification carries a REASON — the #13/#14 house style, so the next
+    // reader can tell a decision from a silencer.
+    for (const [code, why] of [...L.BORN_DEAD, ...L.NOT_A_NODE_CODE]) {
+      expect(why.length, `${code} is classified without a reason`).toBeGreaterThan(6);
+    }
+  });
+
+  test('phase 2 catches the born-dead shapes, including the one beside a code it CAN see', () => {
+    const mustCatch = [
+      ['a place preposition',  'Tell Pachelbel at SH — she recognizes the forwarding route.'],
+      // the finding that opened this row: no node word on the line, and the preposition
+      // belongs to the code the tool already resolves. A sentence that has put a live
+      // code in backticks is talking about places, and the token beside it is one too.
+      ['beside a live node code', 'Player asks Pachelbel at `LLA` or SH about the lute.'],
+      ['a trailing place-noun', 'The PH node opens once both lines converge.'],
+      ['a sole parenthetical',  '#### The Sunken Hold (MH)'],
+      // a token nobody has classified fails the gate rather than passing silently
+      ['an unclassified codeish token', 'The courier waits at ZQ, the old crossing.'],
+    ];
+    for (const [why, line] of mustCatch) {
+      expect(scanU(line).length, `MISSED: ${why} — ${line}`).toBeGreaterThan(0);
+    }
+  });
+
+  test('phase 2 asks a human about nothing that is merely jargon', () => {
+    // What a human must act on is a hit that is NOT already classified. Two different
+    // mechanisms produce that silence, and the difference matters: the detector never
+    // fires at all on the last two lines, while `NG`/`AC`/`HP`/`DM` DO fire and are
+    // silenced by the classification table. Asserting only "no hits" would hide which
+    // one is doing the work — and a table that silences everything is a deleted gate.
+    const actionable = (line) => scanU(line).filter(h => !L.NOT_A_NODE_CODE.has(h.code));
+    const mustNotAsk = [
+      ['New Game Plus',        'Perks persist through NG+ at the `LLA` node.'],
+      ['a Roman act numeral',  'The Road Companion appears in Act IV at the `LHR` node.'],
+      ['a stat block',         'Monster stats: AC 15, HP 65, ATK +6 at the `TLL` node.'],
+      ['the DM',               "> **DM note:** the cluster has no Codex Shard at the `HKG` node."],
+      ['an arc identifier',    'The arc ships as Q-TL-01 at the `LLA` node.'],
+      ['a live node code',     'The player arrives at LLA and the bar is loud.'],
+      ['the born-dead note itself', 'Four keys (`SH`, `PH`, `MH`, `WM`) were never `NODE_MAP` keys — the retired 26×16 era.'],
+    ];
+    for (const [why, line] of mustNotAsk) {
+      expect(actionable(line), `FALSE POSITIVE: ${why} — ${line}`).toEqual([]);
+    }
+    // the two silences, named
+    expect(scanU('Perks persist through NG+ at the `LLA` node.').map(h => h.code), 'NG fires and is silenced by the TABLE').toEqual(['NG']);
+    expect(scanU('The player arrives at LLA and the bar is loud.'), 'a live code never fires at all').toEqual([]);
+    expect(scanU('Four keys (`SH`, `PH`, `MH`, `WM`) were never `NODE_MAP` keys — the retired 26×16 era.'),
+      'an explanatory line about the class never fires').toEqual([]);
+  });
+
+  test('the two-letter limit is deliberate, and is stated rather than discovered', () => {
+    // Phase 2 hunts the shape of the retired code space: exactly two letters. All eleven
+    // tokens this row was filed to classify are two letters. Widening to three admits a
+    // technical doc's whole acronym vocabulary (`NPC` alone fires 151 times) for no
+    // measured gain — and every extra token is human classification work, not machine
+    // work. The cost is real and is asserted here so nobody reads silence as coverage:
+    // a THREE-letter code written from memory is not caught.
+    expect(scanU('The courier waits at ZQ, the old crossing.').length).toBeGreaterThan(0);
+    expect(scanU('The courier waits at ZQX, the old crossing.')).toEqual([]);
+    // and the classification tables only ever speak about two-letter tokens
+    for (const code of [...L.BORN_DEAD.keys(), ...L.NOT_A_NODE_CODE.keys()]) {
+      expect(code, `${code} is not a two-letter token`).toMatch(/^[A-Z]{2}$/);
+    }
+  });
+
+  test('the born-dead fix is corroborated by the engine, not by the legacy map', () => {
+    // `SH` resolves in neither registry, so nothing mechanical can say what it meant.
+    // The engine can: the lute handover is keyed to the NPC, and `birkaNpcs` says where
+    // he stands. Annotating `SH` to a guessed node is exactly the laundering §AUDIT-03m-FU
+    // found four times in the Homecoming table.
+    const html = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
+    expect(html, "the lute is handed over from Pachelbel's card, not at a node")
+      .toMatch(/key === 'pachelbel'[\s\S]{0,200}Quill's Lute/);
+    expect(html.match(/const birkaNpcs = \{[^}]*\}/)[0]).toMatch(/LLA:\['?pachelbel/);
+    const world = fs.readFileSync(path.join(ROOT, 'world.md'), 'utf8');
+    expect(world, 'Beat 1 must name the node Pachelbel actually stands at')
+      .toMatch(/\*\*Beat 1:\*\* Player asks Pachelbel at `LLA`/);
+    expect(world, 'and must not still offer the born-dead alternative').not.toMatch(/at `LLA` or SH/);
+  });
+
   test('history is annotated, never rewritten — the tool refuses to write one', () => {
     let err = null;
     try {
