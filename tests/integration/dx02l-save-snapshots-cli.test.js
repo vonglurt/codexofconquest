@@ -187,12 +187,63 @@ test.describe('§DX-02l — ./api.sh save + ./api.sh snapshots', () => {
 
   // The row itself: an endpoint whose only documented client is `curl` is the
   // defect. The author-facing guide must reach it the way authors are told to.
+  //
+  // §DX-02l-FU — the first form of this assertion was line-level (`curl` AND
+  // `/api/save` anywhere on one line) and it went red on PROSE ABOUT THIS VERY
+  // DEFECT: CONTRIBUTING Hazard #7 and prompt.md §7, both written to record it,
+  // name `POST /api/save` and raw `curl` in the same sentence. A doc only
+  // *tells* you to curl in the shapes an author can copy and run — a line in a
+  // fenced block, an inline code span holding the whole command, or a line that
+  // simply starts with `curl`. A sentence naming both tokens is history.
+  // The regex must serve the prose; the repo has already paid once for a doc
+  // bent to a checker (§AUDIT-03l).
+  const curlInstructions = (src, endpointRe) => {
+    const out = [];
+    let fenced = false;
+    src.split('\n').forEach((line, i) => {
+      if (/^\s*(```|~~~)/.test(line)) { fenced = !fenced; return; }
+      const runnable = fenced ? [line] : [
+        ...[...line.matchAll(/`([^`]+)`/g)].map(m => m[1]),
+        ...(/^\s*(?:[-*>]\s*)*\$?\s*curl\b/.test(line) ? [line] : []),
+      ];
+      if (runnable.some(cmd => /\bcurl\b/.test(cmd) && endpointRe.test(cmd)))
+        out.push(`${i + 1}: ${line.trim()}`);
+    });
+    return out;
+  };
+
   test('no author-facing doc reaches /api/save with raw curl', () => {
+    const SURFACE = /\/api\/(save|snapshots)\b/;   // both wrappers now exist
     for (const rel of ['docs/api/api-user-guide.md', 'docs/api/API-README.md',
                        'prompt.md', 'CONTRIBUTING.md']) {
       const src = fs.readFileSync(path.join(ROOT, rel), 'utf8');
-      const hits = src.split('\n').filter(l => /curl/.test(l) && /\/api\/save/.test(l));
-      expect(hits, `${rel} still tells authors to curl /api/save`).toEqual([]);
+      expect(curlInstructions(src, SURFACE),
+        `${rel} still tells authors to curl the dated-backup surface`).toEqual([]);
     }
+  });
+
+  // The positive control the narrowing needs: proving the detector still SEES
+  // the defect it was written for, in each shape a doc can commit it, without
+  // touching a real file. Without this, narrowing an assertion is
+  // indistinguishable from deleting it.
+  test('the narrowed detector still catches every runnable curl shape', () => {
+    const SURFACE = /\/api\/(save|snapshots)\b/;
+    const instructions = [
+      '```bash\ncurl -s -XPOST http://localhost:1367/api/save | jq\n```',
+      'Take a backup with `curl -XPOST http://localhost:1367/api/save`.',
+      'curl -s -XPOST http://localhost:1367/api/save',
+      '- curl -XDELETE http://localhost:1367/api/snapshots?force=true',
+    ];
+    for (const doc of instructions)
+      expect(curlInstructions(doc, SURFACE), `missed: ${doc}`).not.toEqual([]);
+
+    const prose = [
+      'verifying §DX-02k needed raw `curl` — `POST /api/save` had no wrapper.',
+      '`dx02l-save-snapshots-cli.test.js` — *"no doc reaches `/api/save` with raw curl"*.',
+      'Use `./api.sh save`, never curl.',
+      '```bash\ncurl -s http://localhost:1367/api/ping\n```',
+    ];
+    for (const doc of prose)
+      expect(curlInstructions(doc, SURFACE), `false positive: ${doc}`).toEqual([]);
   });
 });
