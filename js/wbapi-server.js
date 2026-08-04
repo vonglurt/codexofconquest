@@ -10004,12 +10004,13 @@ async function route(req, res) {
     try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
     const updates = body.updates || [];
     if (!updates.length) return json(res, 400, { error:'updates array required' });
-    const patched = [], skipped = [], errors = [];
+    const patched = [], skipped = [], errors = [], aliased = [];
     for (const { id, npc } of updates) {
       if (!id || !npc) { errors.push({ id, error:'missing id or npc' }); continue; }
       if (!WBAPI.questDb[id]) { skipped.push(id); continue; }
       WBAPI.questDb[id].npc = npc;
       const r = WBAPI.editField('quest', id, 'npc', npc);
+      if (r.ok && r.aliased) aliased.push({ id, ...r.aliased });   // §AUDIT-03k
       if (r.ok) patched.push(id);
       else errors.push({ id, error: r.error });
     }
@@ -10020,8 +10021,10 @@ async function route(req, res) {
       return json(res, 500, { ok:false, error:`reload failed: ${e.message}` });
     }
     logResponse(method, url.pathname, 200,
-      `batch/npc: ${patched.length} patched  ${skipped.length} skipped  ${errors.length} errors`);
-    return json(res, 200, { ok:true, patched: patched.length, skipped: skipped.length, errors, saved: saveR.path });
+      `batch/npc: ${patched.length} patched  ${skipped.length} skipped  ${errors.length} errors`
+      + (aliased.length ? `  ${aliased.length} alias(es) collapsed` : ''));
+    return json(res, 200, { ok:true, patched: patched.length, skipped: skipped.length, errors,
+                            ...(aliased.length ? { aliased } : {}), saved: saveR.path });
   }
 
   // ── POST /api/{quest|node|terrain|monster} (create new entity) ────────────
@@ -10033,6 +10036,7 @@ async function route(req, res) {
     if (type === 'quest') {
       const { id } = body;
       // Hard required fields
+      let aliasedNpc = null;   // §AUDIT-03k — set below if a display-name anchor was collapsed
       const hardMissing = ['id','type','title','activateNode'].filter(f => !body[f]);
       if (hardMissing.length) {
         logResponse(method, url.pathname, 400, `missing required fields: ${hardMissing.join(', ')}`);
@@ -10067,6 +10071,15 @@ async function route(req, res) {
       if (WBAPI.questDb[id]) {
         logResponse(method, url.pathname, 409, `quest "${id}" already exists`);
         return json(res, 409, { error:`Quest "${id}" already exists` });
+      }
+      // §AUDIT-03k — a create bypasses editField (it serializes a fresh literal), so the
+      // one chokepoint that normalizes an anchor does not see it. Collapse the display-name
+      // alias here, BEFORE the world-logic check — otherwise the check rejects the very
+      // string the world model hands an author, instead of writing the key it means.
+      for (const f of ['npc', 'npcKey']) {
+        if (!body[f]) continue;
+        const canon = WBAPI.npcCanonicalKey(String(body[f]));
+        if (canon !== String(body[f])) { aliasedNpc = { field:f, from:String(body[f]), to:canon }; body[f] = canon; }
       }
       // §ARCH-02 Phase 5 — world-logic checks before write
       {
@@ -10113,8 +10126,9 @@ async function route(req, res) {
       logRow('id', id);
       logRow('title', `${body.title}  ·  type: ${body.type}  ·  node: ${body.activateNode}`);
       if (hasFns) logRow('note', 'function fields written to source');
+      if (aliasedNpc) logRow('npc', `${aliasedNpc.from} → ${aliasedNpc.to}  (§AUDIT-03k display-name alias collapsed)`);
       logResponse(method, url.pathname, 201, `created quest/${id}`);
-      return saveAndRestart(res, 201, { ok:true, id, ...questConnections(id) });
+      return saveAndRestart(res, 201, { ok:true, id, ...(aliasedNpc ? { aliasedNpc } : {}), ...questConnections(id) });
     }
 
     if (type === 'node') {
@@ -11107,7 +11121,11 @@ async function route(req, res) {
       if (field === 'autoJunction') continue; // internal flag, not a real field
       if (typeof value === 'string' || value === null) {
         const r = WBAPI.editField(type, resolvedKey, field, value);
-        results.push({ field, ok: r.ok, error: r.error, inserted: r.inserted || false, removed: r.removed || false, strategy: 'editField' });
+        // §AUDIT-03k — editField collapses a quest's display-name npc alias onto the profile
+        // key. Say so in the response: a silent rewrite of what the author sent is the kind
+        // of "it worked, but not the way you think" this repo keeps paying for.
+        results.push({ field, ok: r.ok, error: r.error, inserted: r.inserted || false, removed: r.removed || false, strategy: 'editField',
+                       ...(r.aliased ? { aliased: r.aliased } : {}) });
       } else if (Array.isArray(value) || typeof value === 'number' || typeof value === 'boolean' || typeof value === 'object') {
         // §WBAPI-01 ph3 (+§MATH-01: plain objects too — serializeJsLiteral already handles
         // them; the old ns.put path was memory-only and silently lost on file-watch reload):
@@ -11130,12 +11148,16 @@ async function route(req, res) {
     }
 
     logRow('target', `${type} › ${resolvedKey}`);
-    results.forEach(r => logRow(r.field, `${C.green}✓${C.reset} ${r.inserted ? 'inserted' : 'updated'}`));
+    results.forEach(r => logRow(r.field, `${C.green}✓${C.reset} ${r.inserted ? 'inserted' : 'updated'}`
+      + (r.aliased ? `  ${C.yellow}(${r.aliased.from} → ${r.aliased.to}, §AUDIT-03k alias)${C.reset}` : '')));
     logResponse(method, url.pathname, 200, `${results.length} field${results.length>1?'s':''} written to source`);
     // Collect expected values for disk-verification (string fields only — non-string are in-memory only)
     const expectedFields = {};
     for (const r of results) {
-      if (r.ok && r.strategy === 'editField' && !r.removed) expectedFields[r.field] = String(body[r.field]);
+      // §AUDIT-03k — verify against what editField actually WROTE, not what the caller sent.
+      // A collapsed npc alias is a deliberate rewrite; comparing to the request made the
+      // round trip report `ok:false — field mismatch` on a write that was entirely correct.
+      if (r.ok && r.strategy === 'editField' && !r.removed) expectedFields[r.field] = String(r.aliased ? r.aliased.to : body[r.field]);
     }
     const putReminder = type === 'node' ? { reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit roll2hit-v3.html directly.' } : {};
     const autoJunctionInfo = autoJunctionCreated.length

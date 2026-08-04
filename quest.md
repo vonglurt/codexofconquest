@@ -54,7 +54,7 @@ field is an *error* — every quest must be anchored), and the NPC delete-guards
 | # | Registry | Key form |
 |---|----------|----------|
 | 1 | `BIRKA_NPC` profiles | the profile key (`long_john_silver_sen`) |
-| 2 | `NODE_MAP` inline `npc` | display name normalized — lowercased, spaces → `_` |
+| 2 | `NODE_MAP` inline `npc` | display name normalized — lowercased, spaces → `_`. **Excludes the seven `NPC_ALIASES` slugs** (§AUDIT-03k): where that person already has a profile, the slug resolves *to* the profile key rather than alongside it |
 | 3 | `NPC_DIALOGUES` | the dialogue key (`jimmy`, `solvak`, `benedikt_rasp`) |
 | 4 | `EB_NPC_DIALOGUE` | the Epic-Battleground giver's name, normalized |
 
@@ -79,22 +79,39 @@ bulk-default is gone. The last 68 unanchored quests were derived one family at a
 | `clr_01_act3/act4` | `watcher_gvw` | chain coherence — acts 1–2 already carry it |
 | `quest_math_01–05` | `johannes_von_weisheit` | the §MATH-01 arc's convening voice; the Event Horizon Station literally speaks in `quest_math_03`'s `onComplete` |
 | `quest_ceremonia_yael_*`, `quest_slums_cleanup`, `quest_city_watch_patrol`, `quest_crypt_survey` | `yael` | Yael Scheidemann is the named actor (crypt survey = the §DESIGN-03 Birka commission set, hers by chain) |
-| `quest_courier_release`, `quest_sir_jullean` | `city_guard_captain` | LHR's inline npc — the desk-guard scenes, matching the `quest_ng_0*` Froberger precedent |
+| `quest_courier_release`, `quest_sir_jullean` | `yael` | LHR's desk-guard scenes. Anchored to the inline slug `city_guard_captain` at the time, together with the `quest_ng_0*` Froberger set; **all five collapsed onto `yael` by §AUDIT-03k** — it was the same woman under a second heading |
 | `quest_brynn_firewood`, `quest_brynn_ledger` | `brynn` | TLL's own profile |
 | `quest_pit_debut` | `crov` | Pit Master Weckmann, matching `quest_pit_training` |
 
 Pinned by `tests/integration/audit03g-npc-coverage.test.js` (coverage · the 68 keys · vocabulary
 resolution · the EB-giver derivation re-asserted from the live corpus, not hard-coded).
 
-**Prefer the profile key when registries 2 and 3 name the same person (§AUDIT-03c/k).** A node's
-inline `npc` string normalizes to a key that is often the *same character* as a `NPC_DIALOGUES` /
-`BIRKA_NPC` profile under a different spelling, and **both** pass `npcKeyOk` — so `_questsByNpc`
-files one person under two headings. Measured live: **six** such alias pairs exist in the 297-key
-vocabulary — `jimmy_two-tails`⇄`jimmy` · `innkeeper_brynn`⇄`brynn` · `commander_bruhns`⇄`auros` ·
-`archivus_ptolemy_sweelinck`⇄`archivus_sweelinck` · `bard_tomas_couperin`⇄`quill` ·
-`city_fence`⇄`pachelbel` — plus `city_guard_captain`⇄`yael`, where both sides carry quests today.
-Of the six, only `jimmy_two-tails` had a live split (`quest_cat_06`, since collapsed to `jimmy`).
-Until `npcKeyVocab()` learns an alias map (§AUDIT-03k), **anchor to the profile key by hand.**
+**One character, one key — the alias map does this for you now (§AUDIT-03k ✅ 2026-08-04).** A
+node's inline `npc` string normalizes to a key that is often the *same character* as a
+`NPC_DIALOGUES` / `BIRKA_NPC` profile under a different spelling. Both used to pass `npcKeyOk`, so
+`_questsByNpc` filed one person under two headings — `city_guard_captain` held 5 quests while
+`yael`, the woman LHR's own node text names, held 17. **`WBAPI.NPC_ALIASES` (`js/wbapi-core.js`)
+now collapses all seven pairs on write**, the alias slugs are **out of the vocabulary** (a quest
+still carrying one advise-warns), and `_questsByNpc` indexes under the canonical key even for a
+hand-authored UQF block that never passed through the API:
+
+| Inline display name | → profile key | Corroboration |
+|---|---|---|
+| `city_guard_captain` (LHR) | `yael` | occupation ≡ slug · `NODE_NPC_KEYS.LHR` · LHR's node text names her |
+| `innkeeper_brynn` (TLL) | `brynn` | name *Innkeeper Brynn Clerambault* ⊇ slug · `NODE_NPC_KEYS.TLL` |
+| `bard_tomas_couperin` (MHQ) | `quill` | name ≡ slug · `NODE_NPC_KEYS.MHQ` |
+| `city_fence` (LLA) | `pachelbel` | name *Fence Pachelbel* · occupation · `NODE_NPC_KEYS.LLA` |
+| `commander_bruhns` (HKG, TLS) | `auros` | name *Commander Seraphine Bruhns* ⊇ slug |
+| `archivus_ptolemy_sweelinck` (NUE) | `archivus_sweelinck` | name ≡ slug · `profile.node = NUE` |
+| `jimmy_two-tails` (CDG) | `jimmy` | name *Jimmy "Two-Tails" Carbonara* ⊇ slug · `profile.node = CDG` |
+
+**A role collision is not an identity.** SEN's inline `ship_captain` matches
+`captain_smollett_sen` by occupation exactly — but Smollett captains the Hispaniola at `HMS` and
+SEN is the *Tilbury Star*. That is why `check:npcregs` phase 5 classifies **explicitly**: a new
+display name that collides with a live profile must be listed in `NPC_ALIASES` or in the gate's
+`NOT_AN_ALIAS` with a reason, and an unlisted one **fails**. The node's display string itself is
+never rewritten — it is supposed to be a name (§AUDIT-03h). Pinned by
+`tests/integration/audit03k-npc-aliases.test.js`.
 
 **Write the registry KEY, never the display name (§AUDIT-03h, 2026-07-30).** Ten quests held a
 human-readable name (`npc:"Emmer Finch"`) where the key belongs (`emmer`). Capitals and spaces

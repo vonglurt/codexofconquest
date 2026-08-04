@@ -94,7 +94,11 @@ test.describe('§AUDIT-03c — quest node references resolve', () => {
     // profile key `jimmy` (registry 3) and as CDG's inline npc string normalized to
     // `jimmy_two-tails` (registry 2). §AUDIT-03b anchored cat_06 to the slug while its
     // three siblings took the profile — one arc, one character, two index headings.
-    expect(W.npcKeyOk('jimmy_two-tails'), 'the slug still resolves — this is §AUDIT-03k, not a broken key').toBe(true);
+    // Was: the slug still resolves, so this is §AUDIT-03k and not a broken key. §AUDIT-03k
+    // shipped 2026-08-04 and the slug now resolves TO the profile — it is an alias, out of
+    // the vocabulary on purpose, so a quest still carrying it advise-warns.
+    expect(W.npcKeyOk('jimmy_two-tails'), 'the slug should no longer validate alongside the profile').toBe(false);
+    expect(W.npcCanonicalKey('jimmy_two-tails')).toBe('jimmy');
     expect(W.npcDialogues.jimmy.meta.name).toContain('Two-Tails');
     for (const id of ['quest_cat_02', 'quest_cat_04', 'quest_cat_06']) {
       expect(W.questDb[id].npc, `${id} must use the profile key`).toBe('jimmy');

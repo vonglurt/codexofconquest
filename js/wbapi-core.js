@@ -779,8 +779,13 @@ const WBAPI = {
         this._questsByWaypoint[q.waypointNode].push(id);
       }
       if (q.npc) {
-        if (!this._questsByNpc[q.npc]) this._questsByNpc[q.npc] = [];
-        this._questsByNpc[q.npc].push(id);
+        // §AUDIT-03k — index under the CANONICAL key. A nested UQF quest is hand-authored
+        // straight into QUEST_DB (Hazard #3), so it never passes editField's normalization;
+        // indexing here is what keeps the delete guard and every quest-count surface from
+        // seeing half a person.
+        const npcKey = WBAPI.npcCanonicalKey(q.npc);
+        if (!this._questsByNpc[npcKey]) this._questsByNpc[npcKey] = [];
+        this._questsByNpc[npcKey].push(id);
       }
     }
     this._questFlags = {}; this._flagToQuests = {};
@@ -1016,6 +1021,52 @@ const WBAPI = {
   //   3. NPC_DIALOGUES keys          (arc speakers — jimmy/solvak/benedikt_rasp/…)
   //   4. EB_NPC_DIALOGUE givers      (the 20 Epic-Battleground quest-givers, by name)
   // Before this, only (1)+(2) were accepted, so every (3)/(4) speaker advise-warned.
+  // §AUDIT-03k — ONE CHARACTER, ONE KEY. Registry 2 is a node's inline `npc`, which is
+  // SUPPOSED to be a display name (§AUDIT-03h) — so when the person standing at that node
+  // already has a profile, the slugified display name enters the vocabulary ALONGSIDE the
+  // profile key instead of resolving to it, and `_questsByNpc` indexes one person under
+  // two headings. Live proof: `city_guard_captain` (LHR's inline string) held 5 quests
+  // while `yael` — the same woman, named in LHR's own node text — held 17, and the delete
+  // guard, `./api.sh location` and every quest-count surface saw only one half at a time.
+  //
+  // Each row is corroborated from the LIVE registries, never from a doc (§AUDIT-03l):
+  //   slug                        → key                  corroboration
+  //   city_guard_captain          → yael                 occupation ≡ slug · NODE_NPC_KEYS.LHR='yael' · LHR text names her
+  //   innkeeper_brynn             → brynn                name "Innkeeper Brynn Clerambault" ⊇ slug · NODE_NPC_KEYS.TLL
+  //   bard_tomas_couperin         → quill                name "Bard Tomas Couperin" ≡ slug · NODE_NPC_KEYS.MHQ
+  //   city_fence                  → pachelbel            name "Fence Pachelbel" · occupation "fence / …" · NODE_NPC_KEYS.LLA
+  //   commander_bruhns            → auros                name "Commander Seraphine Bruhns" ⊇ slug (HKG *and* TLS)
+  //   archivus_ptolemy_sweelinck  → archivus_sweelinck   name ≡ slug · profile.node = NUE
+  //   jimmy_two-tails             → jimmy                name 'Jimmy "Two-Tails" Carbonara' ⊇ slug · profile.node = CDG
+  //
+  // NOT an alias, and the reason is why the gate classifies explicitly: SEN's inline
+  // `ship_captain` matches `captain_smollett_sen` by OCCUPATION, but Smollett captains the
+  // Hispaniola at HMS and SEN is the Tilbury Star — two ships, two captains. A name/role
+  // collision is not an identity. (scripts/check-npcregs.js phase 5 keeps that list.)
+  NPC_ALIASES: {
+    city_guard_captain:         'yael',
+    innkeeper_brynn:            'brynn',
+    bard_tomas_couperin:        'quill',
+    city_fence:                 'pachelbel',
+    commander_bruhns:           'auros',
+    archivus_ptolemy_sweelinck: 'archivus_sweelinck',
+    'jimmy_two-tails':          'jimmy',
+  },
+  // The key this character is indexed under. Identity for everything else.
+  npcCanonicalKey(key) { return (key && WBAPI.NPC_ALIASES[key]) || key; },
+
+  // ── Quests ──
+  // §AUDIT-03b — the single source of truth for "is this a real NPC key?".
+  // Four registries hold real, rendered speakers, and a quest may legitimately be
+  // anchored to any of them:
+  //   1. BIRKA_NPC profiles          (the card-bearing NPC corpus)
+  //   2. NODE_MAP inline `npc`       (normalized: lowercased, spaces → underscores)
+  //   3. NPC_DIALOGUES keys          (arc speakers — jimmy/solvak/benedikt_rasp/…)
+  //   4. EB_NPC_DIALOGUE givers      (the 20 Epic-Battleground quest-givers, by name)
+  // Before this, only (1)+(2) were accepted, so every (3)/(4) speaker advise-warned.
+  // §AUDIT-03k — an aliased registry-2 slug is deliberately NOT in the vocabulary: it
+  // resolves *to* its profile key, so a quest still carrying one advise-warns instead of
+  // validating alongside the real key. The display string in NODE_MAP is untouched.
   npcKeyVocab() {
     if (this._npcVocab) return this._npcVocab;
     const norm = s => String(s).toLowerCase().replace(/\s/g,'_');
@@ -1023,6 +1074,7 @@ const WBAPI = {
     for (const n of Object.values(WBAPI.nodeMap || {})) if (n && n.npc) v.add(norm(n.npc));
     for (const k of Object.keys(WBAPI.npcDialogues || {})) v.add(k);
     for (const e of Object.values(WBAPI.ebNpcDialogue || {})) if (e && e.npc) v.add(norm(e.npc));
+    for (const a of Object.keys(WBAPI.NPC_ALIASES)) if (!WBAPI.birkaNpcs[a] && !WBAPI.npcDialogues[a]) v.delete(a);
     return (this._npcVocab = v);
   },
   npcKeyOk(key) { return !key || WBAPI.npcKeyVocab().has(key); },
@@ -1223,6 +1275,15 @@ const WBAPI = {
     if (type === 'terrain' && field === 'monsters')
       return { ok:false, error:'terrain rosters hold P.<key> identifiers — use editTerrainRoster(key, monsterKeys)' };
 
+    // §AUDIT-03k — normalize a quest anchor onto the canonical key ON WRITE, so the split
+    // cannot re-form one quest at a time. Scoped to (quest, npc) deliberately: NODE_MAP's
+    // own inline `npc` is a DISPLAY NAME and normalizing it would be the §AUDIT-03h bug.
+    let aliased = null;
+    if (type === 'quest' && field === 'npc' && value != null) {
+      const canon = WBAPI.npcCanonicalKey(String(value));
+      if (canon !== String(value)) { aliased = { from:String(value), to:canon }; value = canon; }
+    }
+
     // ── patch queue: defer source write, update in-memory immediately ────────
     // Only queue node edits — quest/npc/monster sections are small and infrequent.
     if (this._pendingPatches !== null && type === 'node') {
@@ -1252,7 +1313,7 @@ const WBAPI = {
     }
     this._rawSrc = respliceSection(this._rawSrc, section, patched);
     col[key][field] = value;
-    return { ok:true, key, field, value, inserted: isNew };
+    return { ok:true, key, field, value, inserted: isNew, ...(aliased ? { aliased } : {}) };
   },
 
   // §WBAPI-01 ph3: edit a structured (array/object/number/boolean) field at SOURCE level,

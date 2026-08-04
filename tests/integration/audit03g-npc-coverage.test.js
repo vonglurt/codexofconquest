@@ -55,10 +55,14 @@ const ANCHORED = {
   watcher_gvw:           ['clr_01_act3', 'clr_01_act4'],          // chain-mates act1/act2
   johannes_von_weisheit: ['quest_math_01', 'quest_math_02', 'quest_math_03',
                           'quest_math_04', 'quest_math_05'],      // the Math Station speaks in-arc
+  // §AUDIT-03k (2026-08-04): the two desk-guard scenes were derived to `city_guard_captain`,
+  // LHR's inline npc — which is Yael Scheidemann under a second heading, as LHR's own node
+  // text says. The derivation was right about the CHARACTER and wrong about the KEY, so they
+  // moved here rather than being re-derived; the 68 total is unchanged.
   yael: ['quest_ceremonia_yael_01', 'quest_ceremonia_yael_02', 'quest_ceremonia_yael_03',
          'quest_ceremonia_yael_04', 'quest_ceremonia_yael_05',
-         'quest_slums_cleanup', 'quest_city_watch_patrol', 'quest_crypt_survey'],
-  city_guard_captain:    ['quest_courier_release', 'quest_sir_jullean'],  // LHR inline npc
+         'quest_slums_cleanup', 'quest_city_watch_patrol', 'quest_crypt_survey',
+         'quest_courier_release', 'quest_sir_jullean'],
   brynn:                 ['quest_brynn_firewood', 'quest_brynn_ledger'],  // TLL inline npc
   crov:                  ['quest_pit_debut'],                             // cf. quest_pit_training
 };
