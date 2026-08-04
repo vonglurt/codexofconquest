@@ -26772,11 +26772,18 @@ const NPC_VOID_PRESSURE_LINES = { // → doc: world.md §The Pressure Cascade (f
 function _voidFlavorLine(nodeCode) {
   const vp = S_story.voidPressure || 0;
   if (vp < 3) return '';
+  // §AUDIT-03p — was 16 keys of which only 5 resolved: the table was written in the
+  // retired 26×16 codes (and 4 of them — SH/PH/MH/WM — were never NODE_MAP keys at all,
+  // invented from memory in cc562f5). Eleven of the sixteen places therefore never showed
+  // the crack line. Codes below are the live ones (docs/maps/node-index.md); SH/PH/MH are
+  // dropped because no node ever carried them. ZRH joins its own district's 'wild' bucket
+  // rather than the 'weimar' its legend row implied — the Unbanked Quarter has no scholars,
+  // and MUC/DUS, the other two defi_land nodes, already read 'wild'.
   const CLUSTER = {
-    LHR:'birka', SL:'birka', CR:'birka', BA:'birka', SH:'birka',
-    STN:'tilbury', PH:'tilbury', DK:'tilbury', MQ:'tilbury',
-    NUE:'weimar', DF:'weimar', WM:'weimar',
-    MUC:'wild', MT:'wild', MH:'wild', HM:'wild',
+    LHR:'birka',   BMA:'birka',   KRN:'birka',  LLA:'birka',
+    STN:'tilbury', LCY:'tilbury', LGW:'tilbury',
+    NUE:'weimar',  WM:'weimar',
+    MUC:'wild',    GVA:'wild',    DUS:'wild',   ZRH:'wild',
   };
   const cluster = CLUSTER[nodeCode];
   if (!cluster) return '';

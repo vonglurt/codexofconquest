@@ -22,11 +22,20 @@
 // NOT_NODE_KEYED with a reason, and an unlisted one FAILS. A new registry cannot slip in
 // dead, and an old one cannot decay into invisibility.
 //
+// THE SECOND BLIND SPOT (§AUDIT-03p, 2026-08-04). Phases 1–2 read only TOP-LEVEL `const`
+// declarations, so a registry declared INSIDE a function was invisible to both of them —
+// it could neither fail nor be forced into the classification. `_voidFlavorLine`'s local
+// `CLUSTER` had sat that way since cc562f5 with 11 of its 16 keys dead, so the Void's
+// "first crack" line never rendered at eleven of the sixteen places it was authored for.
+// Phase 5 applies the same explicit classification to indented `const/let/var NAME = {`
+// literals whose keys are all codeish: LOCAL_NODE_KEYED or NOT_NODE_KEYED, never silence.
+//
 // Phases:
 //   1. registries  — every key of each NODE_KEYED table resolves in NODE_MAP
 //   2. classification — no unclassified codeish top-level object literal
 //   3. fields      — every `nodeCode:`/`node:`/`activateNode:`/… string literal resolves
 //   4. routes      — every `<CODE>_to_<CODE>` composite key resolves on both sides
+//   5. locals      — the same two rules for function-local codeish object literals
 //
 // Usage:  node scripts/check-noderegs.js            # audit, exit 1 on findings
 //         node scripts/check-noderegs.js --selftest # prove each phase catches a plant
@@ -52,14 +61,25 @@ const NODE_KEYED = [
   'INN_DREAMS',          // sleep node → dream text
   'NIGHT_AMBIENT',       // node → after-dark ambient paragraph
 ];
+// Function-local object literals whose KEYS are node codes (§AUDIT-03p). Same rule as
+// NODE_KEYED — every key must resolve — but declared inside a function, where phases 1–2
+// could not see them.
+const LOCAL_NODE_KEYED = [
+  'CLUSTER',    // _voidFlavorLine — node → Void-pressure flavor cluster
+  '_vaSites',   // the §VA arc's site list
+  'birkaNpcs',  // node → the Birka-era NPC rendered on arrival
+];
 // Codeish keys that are NOT node codes. Each needs a reason, so that the list cannot
 // quietly become a dumping ground for a registry someone did not want to fix.
+// (Shared by phases 2 and 5 — a name is classified once, wherever it is declared.)
 const NOT_NODE_KEYED = {
   GEO_PROJ:        'ROWS/COLS — the geo projection\'s dimensions',
   __MOVER_DELTAS:  'N/S/E/W — compass deltas (MOVER:CORE)',
   __ROOM_DIRS:     'N/S/E/W — compass order (ROOMS:CORE)',
   __ROOM_DIRWORD:  'N/S/E/W — compass words (ROOMS:CORE)',
   _MAP_OPP:        'N/S/E/W — opposite-direction table',
+  ARROWS:          'N/S/E/W — compass glyphs (local, map + room renderers)',
+  DELTAS:          'N/S/E/W — compass deltas (local, map + room renderers)',
 };
 // String fields anywhere in the file whose value is a node code.
 const NODE_FIELDS = ['nodeCode', 'node', 'nodeSlug', 'npcNode', 'activateNode',
@@ -72,23 +92,39 @@ const CODEISH = /^[A-Z][A-Z0-9_]{0,5}$/;
 // ── helpers ───────────────────────────────────────────────────────────────────
 // The body of a top-level `const NAME = {` … `};`, brace-matched with the shared
 // comment/string-aware scanner (a private scanner would drift — §AUDIT-03f).
+function objectBody(src, openIdx) {
+  const tail = src.slice(openIdx);
+  let depth = 0;
+  for (const t of WBAPI._scanTokens(tail)) {
+    if (t.open) { depth++; continue; }
+    if (t.close) { depth--; if (depth === 0) return tail.slice(0, t.index + 1); }
+  }
+  return null;
+}
+
 function topLevelObjects(src) {
   const out = new Map();
   const declRe = /^const ([A-Za-z_$][A-Za-z0-9_$]*) = \{/gm;
   let m;
   while ((m = declRe.exec(src))) {
-    const openIdx = m.index + m[0].length - 1;
-    const tail = src.slice(openIdx);
-    let depth = 0, endRel = -1;
-    for (const t of WBAPI._scanTokens(tail)) {
-      if (t.open) { depth++; continue; }
-      if (t.close) { depth--; if (depth === 0) { endRel = t.index; break; } }
-    }
-    if (endRel < 0) continue;
-    out.set(m[1], {
-      body: tail.slice(0, endRel + 1),
-      line: src.slice(0, m.index).split('\n').length,
-    });
+    const body = objectBody(src, m.index + m[0].length - 1);
+    if (body === null) continue;
+    out.set(m[1], { body, line: src.slice(0, m.index).split('\n').length });
+  }
+  return out;
+}
+
+// Function-local declarations — the same shape, but INDENTED (that indent is the whole
+// difference, and it is why phases 1–2 never saw `CLUSTER`). A name can appear more than
+// once (two renderers each declare their own `ARROWS`), so this returns a list, not a map.
+function localObjects(src) {
+  const out = [];
+  const declRe = /^[ \t]+(?:const|let|var) ([A-Za-z_$][A-Za-z0-9_$]*) = \{/gm;
+  let m;
+  while ((m = declRe.exec(src))) {
+    const body = objectBody(src, m.index + m[0].length - 1);
+    if (body === null) continue;
+    out.push({ name: m[1], body, line: src.slice(0, m.index).split('\n').length });
   }
   return out;
 }
@@ -142,6 +178,28 @@ function audit(src, live) {
       }
     }
   }
+
+  // 5. locals — function-local registries, same two rules (resolve + classify explicitly)
+  const seenLocal = new Set();
+  for (const o of localObjects(src)) {
+    let keys;
+    try { keys = WBAPI._sectionTopKeys(o.body); } catch (_) { continue; }
+    if (LOCAL_NODE_KEYED.includes(o.name)) {
+      seenLocal.add(o.name);
+      for (const k of keys) {
+        if (!live.has(k)) findings.push(`[local] ${o.name} (line ${o.line}) key '${k}' is not a NODE_MAP key`);
+      }
+      continue;
+    }
+    if (NOT_NODE_KEYED[o.name] || NODE_KEYED.includes(o.name) || ROUTE_KEYED.includes(o.name)) continue;
+    if (keys.length < 2) continue;
+    if (keys.some(k => !CODEISH.test(k))) continue;   // mixed keys → not a node table
+    findings.push(`[local] ${o.name} (line ${o.line}) has all-codeish keys (${keys.slice(0, 6).join(',')}…) `
+      + 'but is in neither LOCAL_NODE_KEYED nor NOT_NODE_KEYED — classify it in scripts/check-noderegs.js');
+  }
+  for (const name of LOCAL_NODE_KEYED) {
+    if (!seenLocal.has(name)) findings.push(`[local] ${name} — declared in LOCAL_NODE_KEYED but not found as a function-local literal`);
+  }
   return findings;
 }
 
@@ -152,13 +210,18 @@ function selftest(src, live) {
     ['classify', src.replace('const GEO_PROJ = {', 'const PLANTED_TABLE = { AAA:1, BBB:2 };\nconst GEO_PROJ = {')],
     ['field',    src.replace("nodeCode:'WRO'", "nodeCode:'ZZQ'")],
     ['route',    src.replace('LHR_to_TLL:', 'ZZQ_to_TLL:')],
+    // §AUDIT-03p — both halves of phase 5: a dead key in a classified local table, and an
+    // unclassified one. The second plant is the defect that hid `CLUSTER` for months.
+    ['local',    src.replace('  const CLUSTER = {\n', '  const CLUSTER = {\n    ZZQ:\'birka\',\n'), 'local/deadkey'],
+    ['local',    src.replace('  const CLUSTER = {', '  const PLANTED_LOCAL = { AAA:1, BBB:2 };\n  const CLUSTER = {'), 'local/classify'],
   ];
   let ok = true;
-  for (const [phase, planted] of plants) {
-    if (planted === src) { console.error(`✗ selftest[${phase}] — the plant did not apply (anchor moved)`); ok = false; continue; }
+  for (const [phase, planted, label] of plants) {
+    const name = label || phase;
+    if (planted === src) { console.error(`✗ selftest[${name}] — the plant did not apply (anchor moved)`); ok = false; continue; }
     const hits = audit(planted, live).filter(f => f.startsWith(`[${phase}]`));
-    if (!hits.length) { console.error(`✗ selftest[${phase}] — planted defect NOT caught`); ok = false; }
-    else console.log(`✓ selftest[${phase}] — caught: ${hits[0]}`);
+    if (!hits.length) { console.error(`✗ selftest[${name}] — planted defect NOT caught`); ok = false; }
+    else console.log(`✓ selftest[${name}] — caught: ${hits[0]}`);
   }
   return ok;
 }
@@ -181,5 +244,5 @@ if (findings.length) {
   console.error('  off a hand-maintained table (§AUDIT-03l).');
   process.exit(1);
 }
-console.log(`✓ check:noderegs — ${NODE_KEYED.length} node-keyed registries, ${NODE_FIELDS.length} node fields `
-  + `and ${ROUTE_KEYED.length} route table(s) all resolve against ${live.size} live nodes`);
+console.log(`✓ check:noderegs — ${NODE_KEYED.length} node-keyed registries, ${LOCAL_NODE_KEYED.length} function-local ones, `
+  + `${NODE_FIELDS.length} node fields and ${ROUTE_KEYED.length} route table(s) all resolve against ${live.size} live nodes`);

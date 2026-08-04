@@ -1747,6 +1747,17 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 **Threshold 1 — First Crack (≥ 3):** `_voidFlavorLine` active; sets `voidCrackFired`. Birka: *"The cobblestones are colder than they should be."* Tilbury: *"The harbor lights flicker without wind."* Weimar: *"The scholars' candles are burning down fast today."* Wild: *"Something is bleeding through the rock."*
 
+**Where each line fires — the live `CLUSTER` table (`_voidFlavorLine`, §AUDIT-03p 2026-08-04).** A node not listed here is silent at any pressure; the line is per-*cluster*, not per-node.
+
+| Cluster | Nodes |
+|---------|-------|
+| `birka` | `LHR` · `BMA` · `KRN` · `LLA` |
+| `tilbury` | `STN` · `LCY` · `LGW` |
+| `weimar` | `NUE` · `WM` |
+| `wild` | `MUC` · `GVA` · `DUS` · `ZRH` |
+
+> ⚠️ **The table shipped in the retired 26×16 codes and 11 of its 16 keys were dead** — so from Layer 59 (`cc562f5`) until §AUDIT-03p the crack line rendered at **5 of the 16** places it was authored for. Four of the original keys (`SH`, `PH`, `MH`, `WM`) were **never** `NODE_MAP` keys at all: they were written from memory, not from the world. `WM` later became a real node (Weimar Archive) that happens to fit its cluster; `SH`/`PH`/`MH` never did and are dropped. `ZRH` (The Unbanked Quarter, ex-`DF`) is filed under `wild` rather than the `weimar` its legend row implied — it is a `defi_land` node like `MUC` and `DUS`, and has no scholars. **This is why gate #13 grew a phase 5:** `CLUSTER` is declared *inside* `_voidFlavorLine`, and `check:noderegs` had only ever read top-level registries. Look codes up in `docs/maps/node-index.md`, never in a hand-maintained table (§AUDIT-03l).
+
 **Threshold 2 — Fracture (≥ 6):** Sets `voidFracturesFired`. NPC pressure line fires once per Dear Friend NPC (fav ≥ 2) via `_getNPCDialogue()`. Second flavor line added per node: *"[label]: the air here has a quality you can't name. Wrong, somehow."* Monsters: `void_wolf` + `void_rat_swarm` in MONSTER_POOL (voidTainted:true); drop `Void Shard` (◈, 25/15gp).
 
 **Threshold 3 — Imminent (= 9):** Sets `voidImminentWarned`. Fires storyMsg warning with shard count. `void_mercy_count = 1` if shards ≥ 5. CO gate appends urgency line. Mercy window in `storyCheckVoidTide()`: skips pressure increment, posts *"You sleep fitfully. The Void holds its breath with you."*
