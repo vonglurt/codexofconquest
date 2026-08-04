@@ -294,7 +294,7 @@ retry/backoff, and pipe-safe JSON output. Common commands:
 ```bash
 ./api.sh ping                          # health check
 ./api.sh mode trace                    # set logging mode
-./api.sh get node CY                   # fetch a node
+./api.sh get node HKG                  # fetch a node (HKG = Neon Undercity; the old `CY` code is dead — §AUDIT-03l)
 ./api.sh put quest quest_wis_01 hp=12  # patch a field
 ./api.sh list npc --q egil             # search by name
 ./api.sh audit                         # integrity scan

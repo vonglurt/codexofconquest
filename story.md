@@ -6,7 +6,7 @@
 
 ---
 
-The Neon Undercity is where corruption begins. Void pressure through the CY corridors, data wraiths in the relay chambers, the Scholar Kings' underground city turned inside out and made to carry something it was not built for. The corruption does not stay there. It moves upward through commercial channels: the Merchant Cats who ran Corrupted Cat enforcers across the CY/CDG boundary, the void-accelerated merges that produced the Taz Devils, the Cat-King that came from those merges and destroyed three city blocks and went back down. The grief that settled in those three city blocks is the same void corruption in a human register. It is not metaphor. It is the social form of the same mechanism.
+The Neon Undercity is where corruption begins. Void pressure through the `HKG` (historical `CY`) corridors, data wraiths in the relay chambers, the Scholar Kings' underground city turned inside out and made to carry something it was not built for. The corruption does not stay there. It moves upward through commercial channels: the Merchant Cats who ran Corrupted Cat enforcers across the `HKG` (historical `CY`)/CDG boundary, the void-accelerated merges that produced the Taz Devils, the Cat-King that came from those merges and destroyed three city blocks and went back down. The grief that settled in those three city blocks is the same void corruption in a human register. It is not metaphor. It is the social form of the same mechanism.
 
 Nobody has been back to Fishmonger's Row since.
 
@@ -98,7 +98,7 @@ The grief in Froberger's journal is epistemic — the grief of someone who under
 
 #### The Blank Page — Void Archaeology (CO)
 
-In NG+, at the CO node, there is a sealed letter from Froberger. The fifth ending — if `vaArchitectureKnown` and `entry42Written` and `ngPlusRun ≥ 1` — adds the line: *"Froberger wrote 41 entries. You wrote one. She wrote 7."* Sweelinck's final question, overriding all others: *"What was inside the cage?"* The void archaeology arc is grief in its purest mechanical form: the architecture of things that should be over that are not over, the scaffold of the dead Scholar Kings visible through the wall of the present, the blank page that Froberger left and that the player fills. To fill it is not to finish it. It is to add your weight to the ongoing project of carrying what cannot be set down.
+In NG+, at the `TLS` (historical `CO`) node, there is a sealed letter from Froberger. The fifth ending — if `vaArchitectureKnown` and `entry42Written` and `ngPlusRun ≥ 1` — adds the line: *"Froberger wrote 41 entries. You wrote one. She wrote 7."* Sweelinck's final question, overriding all others: *"What was inside the cage?"* The void archaeology arc is grief in its purest mechanical form: the architecture of things that should be over that are not over, the scaffold of the dead Scholar Kings visible through the wall of the present, the blank page that Froberger left and that the player fills. To fill it is not to finish it. It is to add your weight to the ongoing project of carrying what cannot be set down.
 
 ---
 
@@ -251,7 +251,7 @@ Weimar is reached by a single road that the scholars say is unmappable to those 
 **Quest Role:** Ferries the player to Atlantis and the sea cavern. Has Shard #3 in her chart room, disguised as a nautical instrument.
 **EPIC Token — The Tidal Rune:** An obsidian disc etched with wave patterns. Grants safe passage through ocean and sea terrain (sea monsters treat the player as neutral on first encounter).
 **Dialogue Hook:** *"I've been sailing around that sunken city for six years. Never thought to ask what the shiny rock in my chart room was actually for."*
-**EB Quest-Giver (Q59):** Also appears as the quest-giver for Q59 — EA | Abyssal Scriptorium (node AT, parent node). Her EB context shows her reading Scholar King construction notes in the archive. See §EPIC BATTLEGROUNDS — Quest-Giver Dialogue below.
+**EB Quest-Giver (Q59):** Also appears as the quest-giver for Q59 — `IST` (historical `EA`) | Abyssal Scriptorium (node `RAI` (historical `AT`), parent node). Her EB context shows her reading Scholar King construction notes in the archive. See §EPIC BATTLEGROUNDS — Quest-Giver Dialogue below.
 
 ---
 
@@ -263,7 +263,7 @@ Weimar is reached by a single road that the scholars say is unmappable to those 
 **Secret:** One of his goblin cave shamans has been worshipping the Void for years. Mordus didn't know until recently. The shaman has Shard #4 and has begun using it as a focus for Void rituals. Mordus wants it gone but can't touch it himself — it burned his ring finger off.
 **Quest Role:** Offers the Shard in exchange for the player eliminating the shaman (START BATTLE). Won't betray the player after the deal is made.
 **EPIC Token — The Crimson Warrant:** A blood-red coin stamped with a fist. Grants safe passage through Visby and all Crimson Warrant territory.
-**EB Quest-Giver (Q71):** Also appears as the quest-giver for Q71 — EG | Void Shaman's Sanctum (node BK, parent node). The EB context reveals the shaman operated an intelligence network reporting to someone in Birka — expanding his main-quest role into a broader Void conspiracy thread. Return beat: "He was writing to someone in Birka." See §EPIC BATTLEGROUNDS — Quest-Giver Dialogue below.
+**EB Quest-Giver (Q71):** Also appears as the quest-giver for Q71 — `TBS` (historical `EG`) | Void Shaman's Sanctum (node `VBY` (historical `BK`), parent node). The EB context reveals the shaman operated an intelligence network reporting to someone in Birka — expanding his main-quest role into a broader Void conspiracy thread. Return beat: "He was writing to someone in Birka." See §EPIC BATTLEGROUNDS — Quest-Giver Dialogue below.
 **Dialogue Hook:** *"I run a tight operation. Whatever that thing in the caves is doing, it's bad for business. You fix it. I'll owe you something. I always pay my debts."*
 
 ---
@@ -277,7 +277,7 @@ Weimar is reached by a single road that the scholars say is unmappable to those 
 **Quest Role:** Leads the player to the djinn's binding circle in the deep desert (START BATTLE or negotiation). Awards the Shard after the djinn is dealt with.
 **EPIC Token — The Sand Cipher:** A brass tile etched with an equation that shifts every time you look away. Decodes the final inscription on the Codex.
 **Dialogue Hook:** *"The djinn has had that Shard for two centuries. It considers the agreement perpetual. You will need to either convince it otherwise or convince it of nothing further. I recommend the former."*
-**EB Quest-Giver (Q65):** Also appears as the quest-giver for Q65 — EV | Djinn's Apex Vault (node DC, parent node). The EB context reveals a separate incident — a djinn hierarchy figure renegotiating his two-century-old contract without consent. Both contexts establish Izador as someone with multiple ongoing elemental agreements, all based at DC. See §EPIC BATTLEGROUNDS — Quest-Giver Dialogue below.
+**EB Quest-Giver (Q65):** Also appears as the quest-giver for Q65 — `MCT` (historical `EV`) | Djinn's Apex Vault (node `DOH` (historical `DC`), parent node). The EB context reveals a separate incident — a djinn hierarchy figure renegotiating his two-century-old contract without consent. Both contexts establish Izador as someone with multiple ongoing elemental agreements, all based at DC. See §EPIC BATTLEGROUNDS — Quest-Giver Dialogue below.
 
 ---
 
@@ -307,7 +307,7 @@ Weimar is reached by a single road that the scholars say is unmappable to those 
 
 ## NODE NETWORK MAP
 
-> **Note:** This is a conceptual terrain topology map — not the canonical node grid. For the authoritative 26×16 grid with exact coordinates, node codes, and connections, see `maps.md`. This diagram predates junctions, EB nodes, and the defi_land cluster (DF/HM/GL).
+> **Note:** This is a conceptual terrain topology map — not the canonical node grid. For the authoritative 26×16 grid with exact coordinates, node codes, and connections, see `maps.md`. This diagram predates junctions, EB nodes, and the defi_land cluster (`ZRH` (historical `DF`)/HM/GL).
 
 ```
                          [COSMIC REALM]
@@ -351,10 +351,10 @@ Four one-way travel blocks enforced by `GATE_LOCKS` (HTML line 10864). Each entr
 
 | From | To | Required Item |
 |------|----|---------------|
-| CR (Crypt) | CY (Cyberpunk Streets) | Crypt Key |
-| SC (Sea Cavern) | FL (Freshwater Lake) | Sea Cave Key |
-| AL (Alley) | SE (Sewers) | Conclave Pass |
-| VC (Vampire Castle) | DE (Desert) | Toll Token |
+| `KRN` (historical `CR`) (Crypt) | `HKG` (historical `CY`) (Cyberpunk Streets) | Crypt Key |
+| `GIB` (historical `SC`) (Sea Cavern) | `TRF` (historical `FL`) (Freshwater Lake) | Sea Cave Key |
+| `GOT` (historical `AL`) (Alley) | `SFT` (historical `SE`) (Sewers) | Conclave Pass |
+| `CLJ` (historical `VC`) (Vampire Castle) | `AHB` (historical `DE`) (Desert) | Toll Token |
 
 ---
 
@@ -373,7 +373,7 @@ The player begins here. The city is enormous and slightly wrong — districts th
 
 **Starting Kit:** You arrive with a 🪵 **Pointy Stick** (main hand, 1d4) and a 🗡 **Flint Dagger** (offhand, −3 to hit — crude, but it's what you have). Inventory holds a Rusted Dagger and 2 Minor Healing Potions. Gold: 150gp.
 
-**NPC (Birka Arc):** Guard Captain Yael Scheidemann — activates `quest_slums_cleanup` (3 vermin clears in SL → 80gp + Yael Friendly). Escort mechanic unlocks at Friendly.
+**NPC (Birka Arc):** Guard Captain Yael Scheidemann — activates `quest_slums_cleanup` (3 vermin clears in `BMA` (historical `SL`) → 80gp + Yael Friendly). Escort mechanic unlocks at Friendly.
 
 **Objective:** Locate the courier's body and recover the stained map.
 **Item Found:** The Bloodstained Map — marks four towns and seven symbols in faded ink.
@@ -394,14 +394,14 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 
 **Boyscout Opportunity:** Short-resting here for the first time earns a 🏕 Necklace Token. Sleep south (at City Inn) after for Boyscout Night double rolls.
 
-**Exit Condition:** N/A — stalk-only node. Return south to CI when done.
-**Next Node →** south to City Streets (CI); east to CDG (Cat Quarter — Layer 44)
+**Exit Condition:** N/A — stalk-only node. Return south to `LHR` (historical `CI`) when done.
+**Next Node →** south to City Streets (`LHR` (historical `CI`)); east to CDG (Cat Quarter — Layer 44)
 
 ---
 
 ### NODE 77 — cat_quarter (The Cat Quarter) ✅ Layer 44
 
-> *Implemented 2026-05-25. Accessible east of SL (SL.E → CDG). Terrain: `cat_quarter`. NPC: Jimmy Two-Tails. Node num: 77. Coords: r:4, c:17.*
+> *Implemented 2026-05-25. Accessible east of `BMA` (historical `SL`) (`BMA` (historical `SL`).E → CDG). Terrain: `cat_quarter`. NPC: Jimmy Two-Tails. Node num: 77. Coords: r:4, c:17.*
 
 **First visit:** Jimmy Two-Tails (orange tabby, tiny fedora) auto-dialogues from an overturned crate and auto-activates Q-CAT-01. Sandy Scratchpad Mewlino appears as NPC card after Q-CAT-02 complete.
 
@@ -467,7 +467,7 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 - **Trigger:** Q-CAT-02 complete → Sandy activates at CDG (parallel with Q-CAT-03 and Q-CAT-05)
 - **Completion:** Kill 5× corrupted_cat (tracked via `S_story.catKills`)
 - **Lore tie:** Void pressure from DF (Unbanked Quarter) leaking into Cat Quarter
-- **Dialogue:** Sandy: *"Something's wrong with the strays near the DF node. They're not just feral — they're WRONG."*
+- **Dialogue:** Sandy: *"Something's wrong with the strays near the `ZRH` (historical `DF`) node. They're not just feral — they're WRONG."*
 
 ---
 
@@ -515,7 +515,7 @@ The innkeeper is nervous. Two merchants disappeared from the harbor district. Sh
 **Item Found:** Merchant Ledger (left by missing merchants) — mentions Magistra Muffat in Tilbury.
 **NPC:** Innkeeper Brynn — minor NPC, gossip source.
 
-**NPC (Birka Arc):** Innkeeper Brynn Clerambault — activates `quest_brynn_ledger` (Worn Ledger Book from SL → free lodging + Brynn Friendly).
+**NPC (Birka Arc):** Innkeeper Brynn Clerambault — activates `quest_brynn_ledger` (Worn Ledger Book from `BMA` (historical `SL`) → free lodging + Brynn Friendly).
 
 > 📖 **FINN'S JOURNAL FOUND** — Brynn sets a worn leather journal on the table alongside breakfast: *"He left this in the room. Paid three nights ahead, didn't sleep the third one. I kept it. Felt like someone would come asking."* The journal has 42 entries — one for every terrain Froberger visited or heard about. The DM may read relevant entries at key nodes throughout the journey.
 
@@ -531,7 +531,7 @@ Rumors fly. Something came out of the crypt last week. A merchant who bought a m
 **Item Found:** Cipher Scrap — partial translation of the Scholar Kings' inscription. Needed later at the Oracle.
 **NPC:** Bard Tomas Couperin (minor) — will trade the cipher scrap for a drink and a silver coin.
 
-**NPC (Birka Arc):** Bard Tomas Couperin — activates `quest_couperin_lute` (lute from Pachelbel at BA → 40gp + cipher scrap + Quill Friendly).
+**NPC (Birka Arc):** Bard Tomas Couperin — activates `quest_couperin_lute` (lute from Pachelbel at `LLA` (historical `BA`) → 40gp + cipher scrap + Quill Friendly).
 
 > 🎲 **START BATTLE: 2× Thug** *(two men who were watching you take the ledger)*
 > Win: They flee. Proceed.
@@ -549,7 +549,7 @@ The bar closest to the crypt has a back room where the city's less official busi
 
 **Item Found:** Conclave Pass — a forged travel document that gets you into Tilbury without a cargo inspection. Costs 15gp from the fence.
 
-**NPC (Birka Arc):** Fence Pachelbel — activates `quest_pachelbel_shipment` (Sealed Scholar Box from CR → 60gp + Pachelbel Friendly). Sells Rough Whiskey 5gp (drunk pit fight trigger at CY).
+**NPC (Birka Arc):** Fence Pachelbel — activates `quest_pachelbel_shipment` (Sealed Scholar Box from `KRN` (historical `CR`) → 60gp + Pachelbel Friendly). Sells Rough Whiskey 5gp (drunk pit fight trigger at `HKG` (historical `CY`)).
 
 **Exit Condition:** Conclave Pass purchased. The crypt entrance is behind the bar.
 **Next Node →** crypt
@@ -582,7 +582,7 @@ The undercity is not fantasy — it is something else. Neon-lit corridors, mecha
 
 **Auros Profile:** Tall, 40s, military bearing, close-cut dark hair going silver. Full plate under a civilian cloak. Carries a command baton that doubles as a weapon. Pragmatic. Has been fighting the Void's encroachment for three years and is running out of options.
 
-**NPCs (Birka Arc):** Pit Master Weckmann — `quest_pit_training` (3 CY wins → Pit Legend Token + Friendly). Commander Auros — `quest_void_below` (requires Weckmann+Auros both Friendly; clear CY_VOID → EMP Grenade + Scholar's Note + Auros Dear Friend). Rough Whiskey triggers drunk pit fight at CY if held when entering battle.
+**NPCs (Birka Arc):** Pit Master Weckmann — `quest_pit_training` (3 `HKG` (historical `CY`) wins → Pit Legend Token + Friendly). Commander Auros — `quest_void_below` (requires Weckmann+Auros both Friendly; clear CY_VOID → EMP Grenade + Scholar's Note + Auros Dear Friend). Rough Whiskey triggers drunk pit fight at `HKG` (historical `CY`) if held when entering battle.
 
 > 🎲 **START BATTLE: Corrupted Android × 2, Data Wraith × 1** *(blocking the relay chamber)*
 > Win: Access the relay chamber, learn the undercity was built by the Scholar Kings.
@@ -705,7 +705,7 @@ Farms are abandoned. Livestock wandered off. The road runs straight but feels wa
 **Exit Condition:** Midlands road crossed. Crow-marked trees found.
 **Next Node →** forest
 
-> **Optional branch — Yugurt Lake:** From J6 (Western Wilds Crossroads), the player may go south to Yugurt Lake instead of east or west. See NODE 75 and NODE 76 below.
+> **Optional branch — Yugurt Lake:** From `J6` (historical — no live node) (Western Wilds Crossroads), the player may go south to Yugurt Lake instead of east or west. See NODE 75 and NODE 76 below.
 
 ---
 
@@ -806,7 +806,7 @@ The beach is the rendezvous point Muffat mentioned for finding Captain Draketide
 ### NODE 75 — yugurt_lake (Yugurt Lake — Optional Detour, Act III)
 **Mirror-flat water. No wind. No birds. A hand-painted sign on a stick at the shore: YUGURT. The surface moves once, slowly, then stops.**
 
-Accessible by going south from J6 (Western Wilds Crossroads). Not on the main quest path. Something very large is in this lake and it knows you are here.
+Accessible by going south from `J6` (historical — no live node) (Western Wilds Crossroads). Not on the main quest path. Something very large is in this lake and it knows you are here.
 
 **Current Mechanic (Layer 37):** `isFishingLake:true` — `storyFishing()` triggers a standard encounter. The player rolls 2d20 to determine which fish (Rank 1–20) answers the line. Every cast is a fight. See `lab-report-fish-with-dnd.md` for full fish stat block table.
 
@@ -825,7 +825,7 @@ Bait consumed per cast. Bare Hook gives −3 Catch. `fishingQuestFlags.q01` set 
 ### NODE 76 — yugurt_cabin (Yugurt Cabin — Optional Detour, Act III)
 **Smells like wood smoke and fish oil. A lifetime of tackle on the walls. Nets that haven't been cast in years. A rod propped by the door. He is always here in the morning.**
 
-Dead-end south of YL. The Fisherman is here continuously. He says: *"...Nice Day For Fishing. Yugurt! ...Nice Day For Fishing. Yugurt!"* He says this continuously. Not to you specifically. Not to no one specifically.
+Dead-end south of `BOO` (historical `YL`). The Fisherman is here continuously. He says: *"...Nice Day For Fishing. Yugurt! ...Nice Day For Fishing. Yugurt!"* He says this continuously. Not to you specifically. Not to no one specifically.
 
 **NPC:** The Fisherman — grants Fishing Rod (loot), free sleep (sleepCost:0).  
 **Item Found:** Fishing Rod — required to trigger `storyFishing()` at YL.  
@@ -846,7 +846,7 @@ Five additional NPCs will be present at YC alongside The Fisherman (who is the M
 **Tournament:** 1v1 betting, best-of-1 round. Player bets gold against opponent's stake. Opponent rolls their own cast using their competence tier as a bait bonus. Highest fish rank wins. Tie → Luck modifier tiebreaker. Win = gold + title upgrade. See `plan-archive.md` §XII-N–XII-P for quest chain Q-TOUR-01 through Q-TOUR-06.
 
 **[✅ Layer 47 — Fishing Guide implemented via quest_fishing_guide]**  
-The Outsider Merchant delivery mechanism (spec) was superseded. The Fisherman himself delivers the **Fishing Guide** after the player casts once at YL and returns to YC. Quest `quest_fishing_guide` (*"The Fisherman: Listen Closely"*) activates at node YC; completes when `(S_story.fishingCatchLog||[]).length > 0 && S_story.currentCode === 'YC'`. Reward: `Fishing Guide` readable item pushed to inventory. While in inventory, the fishing modal shows zone DCs (Shore DC 8 · Reeds DC 12 · Deep DC 16). `FISHING_GUIDE_TEXT` const holds the full annotated guide text.
+The Outsider Merchant delivery mechanism (spec) was superseded. The Fisherman himself delivers the **Fishing Guide** after the player casts once at `BOO` and returns to `SSJ`. Quest `quest_fishing_guide` (*"The Fisherman: Listen Closely"*) activates at node `SSJ`; completes when `(S_story.fishingCatchLog||[]).length > 0 && S_story.currentCode === '`SSJ`'`. Reward: `Fishing Guide` readable item pushed to inventory. While in inventory, the fishing modal shows zone DCs (Shore DC 8 · Reeds DC 12 · Deep DC 16). `FISHING_GUIDE_TEXT` const holds the full annotated guide text.  *(historical: `YL`=`BOO` · `YC`=`SSJ`)*
 
 *"The lake knows the difference between someone casting and someone fishing. After a few visits, so will you."* — The Fisherman, FISHING_GUIDE_TEXT
 
@@ -1372,7 +1372,7 @@ Sweelinck's letter, read by Auros, contains three lines:
 
 **[✅ Implemented — Layer 49] Quest -1: The Open Door** *(plan-archive.md §XIV)*
 
-After the victory screen resolves, if `S_story.level >= 20 && !S_story.questMinusOne`, a Froberger-style scroll (`🔓`) injects into the CO node description with the full Quest -1 text (verbatim in `plan-archive.md §XIV-B`). The scroll explains:
+After the victory screen resolves, if `S_story.level >= 20 && !S_story.questMinusOne`, a Froberger-style scroll (`🔓`) injects into the `TLS` (historical `CO`) node description with the full Quest -1 text (verbatim in `plan-archive.md §XIV-B`). The scroll explains:
 - Level 21 is architecturally undefined — `XP_LEVELS[20]` does not exist
 - The source file is readable JavaScript with named data structures
 - The MIT License requires no permission to fork
@@ -1583,7 +1583,7 @@ Appended to the victory modal. Variant determined by mission completion + curse 
 
 **"Sweelinck is waiting."** overlay (`#ng-plus-title-overlay`) shows for 2100ms at the moment `storyNewGamePlus()` fires — not on first EB revisit. EB revisit lines are separate (`EB_NG_PLUS_LINES` — see below).
 
-`ngPlusRun` counter increments by 1 per completed run; checked by `NPC_NG_PLUS_GREETINGS` (first NG+ visit per NPC key) and `QUILL_UNFINISHED_SONGS` gating (TV node, `ngPlusRun > 0 && quill Dear Friend`).
+`ngPlusRun` counter increments by 1 per completed run; checked by `NPC_NG_PLUS_GREETINGS` (first NG+ visit per NPC key) and `QUILL_UNFINISHED_SONGS` gating (`MHQ` (historical `TV`) node, `ngPlusRun > 0 && quill Dear Friend`).
 
 #### EB_NG_PLUS_LINES — First-Visit Lines on NG+ EB Return
 
@@ -1591,26 +1591,26 @@ When `ngPlusRun > 0` and the player re-enters an Epic Battleground node, a one-t
 
 | Code | Line |
 |------|------|
-| EF | "The black bark again. It's the same." |
-| EH | "The figures still walk below. They don't notice you're back." |
-| ES | "The altar stones unchanged. The water hasn't moved in centuries. You have." |
-| EW | "The smell is the same — older than anything you've faced since." |
-| EB | "The hold still moves. Whatever survived last time has had more time." |
-| EO | "You remember the shape. It doesn't know that changes anything." |
-| EI | "The black rock, the changed stone. It's still here. So are you." |
-| EA | "New inscriptions since last time. You weren't gone long enough for that." |
-| EC | "The door. It opened once. It didn't reseal easily." |
-| EL | "The throne is the same size. It was always this size. You just know that now." |
-| ED | "Charybdis doesn't mark time the way you do. It's been waiting regardless." |
-| EM | "Nothing grows here. You remember that." |
-| EE | "Perfect preservation. It was waiting before. It's still waiting." |
-| EV | "The palace exists again. Or still. The distinction isn't meaningful here." |
-| EJ | "The light still comes through in columns. The dragon did a careful job." |
-| ET | "Three hundred years, and whatever you did shortened it by nothing." |
-| ER | "The throne carved from a glacier. The glacier is smaller." |
-| EK | "The spire still stands. The Seraph is still falling, in the space between." |
-| EP | "Low tide, same as before. He's been guarding it since he died." |
-| EG | "Kazrath has been here since before the Codex shattered. This is a very long time." |
+| `PRN` (historical `EF`) | "The black bark again. It's the same." |
+| `INV` (historical `EH`) | "The figures still walk below. They don't notice you're back." |
+| `SDR` (historical `ES`) | "The altar stones unchanged. The water hasn't moved in centuries. You have." |
+| `PMO` (historical `EW`) | "The smell is the same — older than anything you've faced since." |
+| `FLR` (historical `EB`) | "The hold still moves. Whatever survived last time has had more time." |
+| `KUN` (historical `EO`) | "You remember the shape. It doesn't know that changes anything." |
+| `ACE` (historical `EI`) | "The black rock, the changed stone. It's still here. So are you." |
+| `IST` (historical `EA`) | "New inscriptions since last time. You weren't gone long enough for that." |
+| `SOF` (historical `EC`) | "The door. It opened once. It didn't reseal easily." |
+| `BEG` (historical `EL`) | "The throne is the same size. It was always this size. You just know that now." |
+| `OTP` (historical `ED`) | "Charybdis doesn't mark time the way you do. It's been waiting regardless." |
+| `WAW` (historical `EM`) | "Nothing grows here. You remember that." |
+| `CAI` (historical `EE`) | "Perfect preservation. It was waiting before. It's still waiting." |
+| `MCT` (historical `EV`) | "The palace exists again. Or still. The distinction isn't meaningful here." |
+| `SJO` (historical `EJ`) | "The light still comes through in columns. The dragon did a careful job." |
+| `KTM` (historical `ET`) | "Three hundred years, and whatever you did shortened it by nothing." |
+| `RKV` (historical `ER`) | "The throne carved from a glacier. The glacier is smaller." |
+| `MAD` (historical `EK`) | "The spire still stands. The Seraph is still falling, in the space between." |
+| `HAV` (historical `EP`) | "Low tide, same as before. He's been guarding it since he died." |
+| `TBS` (historical `EG`) | "Kazrath has been here since before the Codex shattered. This is a very long time." |
 
 #### ✅ Layer 50 — NG+ Remembrance Layer (plan-archive.md §XV, Implemented 2026-05-25)
 
@@ -1619,7 +1619,7 @@ When `ngPlusRun >= 1` AND 3+ Dear Friends preserved AND `priorQuestMinusOne` is 
 - **NPC_NG_MEMORY_LINES** const — one callback line per Dear Friend NPC (`yael`, `brynn`, `quill`, `pachelbel`, `crov`, `auros`). Fires once per NG+ run per NPC on second visit (after NG+ greeting already delivered, fav ≥ 2). Tracked in `S_story.ngMemoryDelivered[key]`.
 - **Entry 42 modal at CI** — textarea + "Write it." / "Leave it blank." buttons. Gated: `ngPlusRun ≥ 1`, `priorQuestMinusOne`, `entry42Written === false`, 3+ Dear Friends. Writes to `S_story.entry42Text`, sets `entry42Written = true`.
 - **Entry 42 in journal sidebar** — appended after entry 41 in `storyJournalToggle` when `entry42Written`. Shows player's text or "[left blank]". Sets `entry42Read = true`.
-- **Froberger's sealed letter at CO** — rendered on CO visit in NG+ when `!frobergerLetterFound`. "Take the letter." button sets `frobergerLetterFound = true`.
+- **Froberger's sealed letter at `TLS` (historical `CO`)** — rendered on `TLS` (historical `CO`) visit in NG+ when `!frobergerLetterFound`. "Take the letter." button sets `frobergerLetterFound = true`.
 - **Quest chain (activated at CI on NG+ first visit):**
   - `quest_ng_01` — "The Remembered Path": revisit 3 Dear Friends (tracked via `ngMemoryDelivered`). Reward: 500gp.
   - `quest_ng_02` — "The Open Page": write Entry 42 at CI. Only activated if `priorQuestMinusOne`. Reward: (the act itself).
@@ -1636,7 +1636,7 @@ Prerequisites: `ngPlusRun ≥ 1` + `wmFirstResearcherKnown` (from §XVI) + `entr
 - **Five investigation sites** — `[INVESTIGATE]` button at CI/SL/DF/WM/MT when prerequisites met. Each reveals one paragraph of the Antecedent Containment Protocol pattern. Flags: `vaCI`, `vaSL`, `vaDF`, `vaWM`, `vaMT`.
 - **Q-VA-01** "Five Marks" — auto-activates on first investigation site visit; complete when all 5 visited (`vaAllMarksFound`).
 - **Q-VA-02** "Constructor's Log" — activates when `vaAllMarksFound`; 4th document appears in `_storyWmArchiveModal()`; 7 entries written by Marta Eilene Vass (First Researcher); reward: `The Constructor's Log` (readable) + `Antecedent Seal` (relic) items.
-- **Q-VA-03** "The Sealed Tunnel" — MT node gains `[Open the tunnel]` when `vaLogFound` + key item in inventory. Text chamber: 6 sentences + *"The Antecedent was here. It is not anymore."* Reward: `vaLastWardVisited` + 200gp.
+- **Q-VA-03** "The Sealed Tunnel" — `GVA` (historical `MT`) node gains `[Open the tunnel]` when `vaLogFound` + key item in inventory. Text chamber: 6 sentences + *"The Antecedent was here. It is not anymore."* Reward: `vaLastWardVisited` + 200gp.
 - **Q-VA-04** "The Architecture" — Benedikt delivers message at NUE when `vaLastWardVisited + entry42Written`. Reward: `vaArchitectureKnown` + 500gp + lore addendum to Annotated Copy.
 - **Fifth ending** — if `vaArchitectureKnown + entry42Written + ngPlusRun ≥ 1`: CO outro addendum *"Froberger wrote 41 entries. You wrote one. She wrote 7..."*; Sweelinck question: *"What was inside the cage?"* (overrides all other questions).
 - **State flags (9):** `vaCI`, `vaSL`, `vaDF`, `vaWM`, `vaMT`, `vaAllMarksFound`, `vaLogFound`, `vaLastWardVisited`, `vaArchitectureKnown`.
@@ -1648,29 +1648,29 @@ Prerequisites: `ngPlusRun ≥ 1` + `wmFirstResearcherKnown` (from §XVI) + `entr
 Two texture layers added to open-world traversal. No state flags on either system.
 
 - **Junction Vignettes** (`JUNCTION_VIGNETTES`) — eight roadside scenes, one per node on first visit, with an optional `[Help — 10gp]` donation button; rendered in `storyRender()` when `JUNCTION_VIGNETTES[node.code]` exists.
-  **§AUDIT-03j (2026-07-31) — seven of the eight had never rendered.** They were keyed to `J1`–`J7` + `RD`, the junction/road stubs §WALK deleted when the world became cell-walked (0 junctions); only `J1` was ever remapped (→ `WRO`). Rehomed onto live road nodes, each derived from the vignette's own text rather than by position:
+  **§AUDIT-03j (2026-07-31) — seven of the eight had never rendered.** They were keyed to the historical `J1`–`J7` + `RD`, the junction/road stubs §WALK deleted when the world became cell-walked (0 junctions); only `WRO` was ever remapped (→ `WRO`). Rehomed onto live road nodes, each derived from the vignette's own text rather than by position:  *(historical: `J1`=`WRO`)*
 
   | Scene | Legacy | Live node | Why that node |
   |---|---|---|---|
-  | Tessie, merchant's runner | `J1` | `WRO` Midlands Road Fork | already remapped; the only one that rendered |
-  | Old Faeron, retired soldier | `J2` | `DAR` The Road Junction — South of the Relay Post | a veteran at a relay-post junction |
-  | Mira, refugee (Act III+) | `J3` | `PCR` Canterbury Road — Pilgrims' Camp | *"we left Tilbury"* — the cell east of Tilbury's LCY, and she is camped |
-  | The Cartographer | `J4` | `J13` The Western Sea Road | she tears off *"the coastline"* as payment |
-  | Wren, Scholar Kings courier | `J5` | `ADN` Ardennes — Road Junction | she carries news of *the Weimar archive*; ADN sits on Weimar's row |
-  | *"Paid in full. —S."* note | `J6` | `BLW` Blidworth — Forest Toll Gate | a note pinned to a post, at a toll gate |
-  | A child's toy on the road | `J7` | `BNX` The Eastern Bend — Relay Road | the bend Tessie's surviving WRO line warns about |
+  | Tessie, merchant's runner | `WRO` (historical `J1`) | `WRO` Midlands Road Fork | already remapped; the only one that rendered |
+  | Old Faeron, retired soldier | `J2` (historical — no live node) | `DAR` The Road Junction — South of the Relay Post | a veteran at a relay-post junction |
+  | Mira, refugee (Act III+) | `J3` (historical — no live node) | `PCR` Canterbury Road — Pilgrims' Camp | *"we left Tilbury"* — the cell east of Tilbury's LCY, and she is camped |
+  | The Cartographer | `J4` (historical — no live node) | `J13` The Western Sea Road | she tears off *"the coastline"* as payment |
+  | Wren, Scholar Kings courier | `J5` (historical — no live node) | `ADN` Ardennes — Road Junction | she carries news of *the Weimar archive*; ADN sits on Weimar's row |
+  | *"Paid in full. —S."* note | `J6` (historical — no live node) | `BLW` Blidworth — Forest Toll Gate | a note pinned to a post, at a toll gate |
+  | A child's toy on the road | `J7` (historical — no live node) | `BNX` The Eastern Bend — Relay Road | the bend Tessie's surviving WRO line warns about |
   | Cold fire ring, broken cart wheel | `RD` | `OKD` The Oak at the Crossroads | *"leans against the tree line"* |
 
   Gate-fenced by `check:noderegs` (`check:walk` #13) — a vignette keyed to a node that does not exist is now CI-red.
-- **Road Companion** (`COMPANION_LINES`, HTML line 11155) — one named traveler per act (Acts II–VI) delivers one lore line in the first cell departing a hub node: Dessa (Act II, harbor ledger), Olaf (Act III, Scholar Kings lockout date), Maret (Act IV, Visby west gate), Pilgrim (Act V, MT sealed tunnel), empty road (Act VI). Rendered at HTML line 17152 when `act >= 2 && !companionActsSeen[act]`. No repeat per act.
+- **Road Companion** (`COMPANION_LINES`, HTML line 11155) — one named traveler per act (Acts II–VI) delivers one lore line in the first cell departing a hub node: Dessa (Act II, harbor ledger), Olaf (Act III, Scholar Kings lockout date), Maret (Act IV, Visby west gate), Pilgrim (Act V, `GVA` (historical `MT`) sealed tunnel), empty road (Act VI). Rendered at HTML line 17152 when `act >= 2 && !companionActsSeen[act]`. No repeat per act.
 
 ---
 
 #### ✅ Layer 54 — Tilbury Harbor Arc (plan-archive.md §XIX, Implemented 2026-05-25)
 
-Nodes: TL (Tilbury) + SF (Storefront/docks). Two new NPCs, no new terrain monsters needed.
+Nodes: TL (Tilbury) + `STN` (historical `SF`) (Storefront/docks). Two new NPCs, no new terrain monsters needed.
 
-- **Harbor Master Rennau** (`rennau`) — SF node; NPC card rendered on SF visits; impartial → friendly (Q-TL-01) → dear friend (Q-TL-03). Quote: *"The ledger is the only record that's honest."*
+- **Harbor Master Rennau** (`rennau`) — `STN` (historical `SF`) node; NPC card rendered on `STN` (historical `SF`) visits; impartial → friendly (Q-TL-01) → dear friend (Q-TL-03). Quote: *"The ledger is the only record that's honest."*
 - **Adjutant Vonn** (`vonn`) — TL node; rendered when `tlLedgerRead`; caps at Friendly; holds Conclave position.
 - **Q-TL-01** "The Ledger" — Harbor Board button at SF; clicking reveals 10 empty berths + awards The Harrow Manifest (`📄`, readable). `tlLedgerRead = true`. If `wmFirstResearcherKnown`: manifest shows Isolde Voss as consignee.
 - **Q-TL-02** "The Embargo" — Vonn interaction at TL; two choices: [Report to Birka contacts] (+150gp, `tlEmbargoChallenged`) or [Leave it] (`tlEmbargoDismissed`).
@@ -1681,10 +1681,10 @@ Nodes: TL (Tilbury) + SF (Storefront/docks). Two new NPCs, no new terrain monste
 
 #### ✅ Layer 55 — Visby Underground (plan-archive.md §XX, Implemented 2026-05-25)
 
-Nodes: VS (Visby) + GC (Goblin Caves). One new monster (`hollow_hands_guard`).
+Nodes: VS (Visby) + `TRD` (historical `GC`) (Goblin Caves). One new monster (`hollow_hands_guard`).
 
 - **Debt Agent Solvak** (`solvak`) — VS node; rendered until `vsDebtSettled`; impartial → friendly (Q-VS-01). Quote: *"I've been outside Visby for six weeks."*
-- **Yva** (`yva`) — GC node; rendered when `vsDebtProbed && !vsWeaponsFound`; 50gp to talk; friendly after Q-VS-02.
+- **Yva** (`yva`) — `TRD` (historical `GC`) node; rendered when `vsDebtProbed && !vsWeaponsFound`; 50gp to talk; friendly after Q-VS-02.
 - **Q-VS-01** "The Collector" — activated at VS (Act V+); Solvak button → Mordus dialogue → `vsDebtProbed`. If `tlLedgerRead`: Solvak mentions the Harrow.
 - **Q-VS-02** "The Broker" — Yva 50gp interaction at GC; reveals Hollow Hands + shaman; awards Hollow Hands Seal (🖤, quest_item). If `tlMissingShipSolved`: Yva confirms Harrow was not Hollow Hands.
 - **Q-VS-03** "Mordus Pays" — deliver seal to Solvak at VS; 400gp; `vsDebtSettled = true`, `vsShamanKnown = true`. Mordus follow-up: *"The Hollow Hands are mine to deal with now."*
@@ -1698,7 +1698,7 @@ Nodes: VS (Visby) + GC (Goblin Caves). One new monster (`hollow_hands_guard`).
 
 Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). Both required; neither alone triggers the encounter.
 
-MT tunnel node block gated by `vsShamanKnown && vaLastWardVisited && !wardensLegacyKnown`. On first visit sets `vshamanFound = true` and activates `quest_vs_warden`.
+`GVA` (historical `MT`) tunnel node block gated by `vsShamanKnown && vaLastWardVisited && !wardensLegacyKnown`. On first visit sets `vshamanFound = true` and activates `quest_vs_warden`.
 
 **The Warden:** "You came to stop me. Or to understand. Either is fine. I have been working for eleven years to do the right thing. I may be wrong about what the right thing is."
 
@@ -1719,12 +1719,12 @@ MT tunnel node block gated by `vsShamanKnown && vaLastWardVisited && !wardensLeg
 
 | Shard | Name | Node | Placer | Flag-gated addText |
 |-------|------|------|--------|-------------------|
-| 1 | The Toccata Fragment | DK | Elder Couperin (Quill's ancestor) | — |
-| 2 | The Prelude Stone | FO | Scholar Marzena (Conclave-adjacent) | — |
-| 3 | The Fugue Seal | AT | Researcher Aldric (unaffiliated) | — |
-| 4 | The Cantata Mark | GC | Archivist Hendrika (Scholar Kings defector) | — |
-| 5 | The Passacaglia Core | DC | The First Researcher | `wmFirstResearcherKnown`: "You recognize the handwriting. She was here. This was hers." |
-| 6 | The Chaconne Piece | OP | The original Warden | `wardensLegacyKnown`: "Placed by the first Warden, on the First Researcher's instruction." |
+| 1 | The Toccata Fragment | `LCY` (historical `DK`) | Elder Couperin (Quill's ancestor) | — |
+| 2 | The Prelude Stone | `FRO` (historical `FO`) | Scholar Marzena (Conclave-adjacent) | — |
+| 3 | The Fugue Seal | `RAI` (historical `AT`) | Researcher Aldric (unaffiliated) | — |
+| 4 | The Cantata Mark | `TRD` (historical `GC`) | Archivist Hendrika (Scholar Kings defector) | — |
+| 5 | The Passacaglia Core | `DOH` (historical `DC`) | The First Researcher | `wmFirstResearcherKnown`: "You recognize the handwriting. She was here. This was hers." |
+| 6 | The Chaconne Piece | `BKK` (historical `OP`) | The original Warden | `wardensLegacyKnown`: "Placed by the first Warden, on the First Researcher's instruction." |
 | 7 | The Sarabande Key | NUE | Froberger himself | `entry42Written`: "You wrote Entry 42. He left the page. You filled it." |
 
 Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five of them knew what they were carrying. One of them didn't know what was inside it. One of them did and placed it last. You know all their names now."* Sets `shardNotesAllRead = true` (NUE dream variant gate, §XXIII).
@@ -1733,9 +1733,9 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 #### ✅ Implemented — Inn Dreams (plan-archive.md §XXIII, Layer 58)
 
-`INN_DREAMS` const keyed by `IN` and `NUE` (SF/IS have `sleep:false` in WORLD_DB). Fires via `setTimeout` after `storyConfirmSleep()`, prefixed `💤 ‹dream›`. Cycle: `gameDay % 3`. Conditionals checked first; first matching flag wins.
+`INN_DREAMS` const keyed by `TLL` (historical `IN`) and `NUE` (`STN` (historical `SF`)/IS have `sleep:false` in WORLD_DB). Fires via `setTimeout` after `storyConfirmSleep()`, prefixed `💤 ‹dream›`. Cycle: `gameDay % 3`. Conditionals checked first; first matching flag wins.
 
-- **IN (Birka)** — *Birka in the small hours / A door / The city is very quiet.* Flags: `frobergerLastEntryRead` → Entry 41 dream; `entry42Written` → journal heavier; `vaArchitectureKnown` → four authors.
+- **`TLL` (historical `IN`) (Birka)** — *Birka in the small hours / A door / The city is very quiet.* Flags: `frobergerLastEntryRead` → Entry 41 dream; `entry42Written` → journal heavier; `vaArchitectureKnown` → four authors.
 - **NUE (Weimar)** — *Pages turning / Name at margin / Archive organized.* Flags: `wmFirstResearcherKnown` → name readable; `vaArchitectureKnown` → Constructor's Log Entry 7; `shardNotesAllRead` → seven handwritings.
 - No new state flags. No new monsters. No new items.
 
@@ -1765,12 +1765,12 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 | NPC Key | Node | Theme | Gift |
 |---------|------|-------|------|
-| `yael` | CI | Builds a witness network while player was away | None |
-| `brynn` | IN | Made too much bread — *"I always do when I'm worried"* | `Brynn's Loaf` 🍞 (heal 8 HP) |
-| `quill` | TV | Ledger finally balances; understands Couperin's "just a number" | None |
-| `pachelbel` | BA | Composing honestly for the first time; gives the unfinished sketch | `Pachelbel's Sketch` 📄 (readable) |
-| `crov` | CY | Recognizes the player as a champion earned on the road | `Champion's Tincture` ⚗️ (advantage next attack) |
-| `auros` | CY | *"Be ready. What you bring to it matters."* | None |
+| `yael` | `LHR` (historical `CI`) | Builds a witness network while player was away | None |
+| `brynn` | `TLL` (historical `IN`) | Made too much bread — *"I always do when I'm worried"* | `Brynn's Loaf` 🍞 (heal 8 HP) |
+| `quill` | `MHQ` (historical `TV`) | Ledger finally balances; understands Couperin's "just a number" | None |
+| `pachelbel` | `LLA` (historical `BA`) | Composing honestly for the first time; gives the unfinished sketch | `Pachelbel's Sketch` 📄 (readable) |
+| `crov` | `HKG` (historical `CY`) | Recognizes the player as a champion earned on the road | `Champion's Tincture` ⚗️ (advantage next attack) |
+| `auros` | `HKG` (historical `CY`) | *"Be ready. What you bring to it matters."* | None |
 
 **Mechanics:** Tincture sets `S_story._advantageNextAttack`; consumed in `doPlayerAttack()`. Loaf uses inline `heal` property (not in POTION_TIERS). Sketch uses Layer 57 readable system. **6 state flags:** `act8FarewellYael/Brynn/Quill/Pachelbel/Crov/Auros`.
 
@@ -1792,7 +1792,7 @@ A new NPC archetype: a vendor-modal NPC who appears at 5 nodes across 5 acts, mo
 
 **The Revelation (fav = 3, 5th appearance):** Corelli reveals they were an Ivory Circle courier who accidentally read a sealed suppression order for "the Antecedent." Has been quietly redistributing her lost items ever since. Gives `last_cipher`. The cipher's final line (scratched with a nail, not written): *"She built it to save us. They hid it to save themselves."*
 
-**`RD` Roadside node (new):** Minor junction waypoint between Tilbury and Visby. No battle/loot/sleep. Corelli appears here on 2nd encounter; otherwise empty passage.
+**`RD` (historical — no live node) Roadside node (new):** Minor junction waypoint between Tilbury and Visby. No battle/loot/sleep. Corelli appears here on 2nd encounter; otherwise empty passage.
 
 **New state flags:** `fav_corelli` (int, 0–3), `corelli_purchase_count`, `corelli_encounter_count`, `corelliRevelationDelivered`.  
 **Lab report needed before implementation:** `lab-report-corelli-merchant.md` (new vendor-NPC archetype, differs from NPC_DIALOGUES shape).
@@ -1805,12 +1805,12 @@ Six Birka NPCs are fully interactive across all 8 acts. Each has a quest chain, 
 
 | NPC | Node | Intro Quest | Dear Friend Unlock |
 |---|---|---|---|
-| Yael Scheidemann | CI | `quest_yael_escort` (3 SL vermin clears) | Escort + 5+ visits |
-| Brynn Clerambault | IN | `quest_brynn_ledger` (Worn Ledger from SL) | Maintenance + 5+ visits |
-| Quill / Couperin | TV | `quest_couperin_lute` (Lute from Pachelbel) | Song received + 5+ visits |
-| Pachelbel / Deacon | BA | `quest_pachelbel_goods` (Pigeon route intel) | 15gp tip + 5+ visits |
-| Weckmann | CY | `quest_pit_training` (5 pit wins) | Log + 5+ visits |
-| Auros / Bruhns | CY | `quest_auros_depths` (Undercity survey) | Depths report + Act V |
+| Yael Scheidemann | `LHR` (historical `CI`) | `quest_yael_escort` (3 `BMA` (historical `SL`) vermin clears) | Escort + 5+ visits |
+| Brynn Clerambault | `TLL` (historical `IN`) | `quest_brynn_ledger` (Worn Ledger from `BMA` (historical `SL`)) | Maintenance + 5+ visits |
+| Quill / Couperin | `MHQ` (historical `TV`) | `quest_couperin_lute` (Lute from Pachelbel) | Song received + 5+ visits |
+| Pachelbel / Deacon | `LLA` (historical `BA`) | `quest_pachelbel_goods` (Pigeon route intel) | 15gp tip + 5+ visits |
+| Weckmann | `HKG` (historical `CY`) | `quest_pit_training` (5 pit wins) | Log + 5+ visits |
+| Auros / Bruhns | `HKG` (historical `CY`) | `quest_auros_depths` (Undercity survey) | Depths report + Act V |
 
 At **Dear Friend+** (level 3), joint NPC moments unlock:
 - Quill + Brynn at TV: joint ambient moment
@@ -2048,8 +2048,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q52 — EF | Thornwood Maw
-**NPC:** Woodcutter Bram · *logger* · parent node FO · boss: Thornwood King (Treant)  
+### Q52 — `PRN` (historical `EF`) | Thornwood Maw
+**NPC:** Woodcutter Bram · *logger* · parent node `FRO` (historical `FO`) · boss: Thornwood King (Treant)  
 **Payment:** 220–300gp · Special item: none
 
 **Q52.W — Wound**
@@ -2069,8 +2069,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q53 — EH | Loch of the Drowned King
-**NPC:** Shepherd Rona · *shepherd* · parent node HL · boss: Highland Aboleth  
+### Q53 — `INV` (historical `EH`) | Loch of the Drowned King
+**NPC:** Shepherd Rona · *shepherd* · parent node `KIR` (historical `HL`) · boss: Highland Aboleth  
 **Payment:** 260gp (fixed) · Special item: none
 
 **Q53.W — Wound**
@@ -2090,8 +2090,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q54 — ES | Sunken Altar
-**NPC:** Herbalist Gwynne · *herbalist* · parent node SW · boss: Elder Hydra  
+### Q54 — `SDR` (historical `ES`) | Sunken Altar
+**NPC:** Herbalist Gwynne · *herbalist* · parent node `MSY` (historical `SW`) · boss: Elder Hydra  
 **Payment:** 240gp (fixed) · Special item: none
 
 **Q54.W — Wound**
@@ -2111,8 +2111,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q55 — EW | Hag Mother's Cradle
-**NPC:** Wane · *youngest crone* · parent node HS · boss: Grand Hag Queen  
+### Q55 — `PMO` (historical `EW`) | Hag Mother's Cradle
+**NPC:** Wane · *youngest crone* · parent node `SDQ` (historical `HS`) · boss: Grand Hag Queen  
 **Payment:** 200gp (fixed) · Special item: `swamp_blessing`
 
 **Q55.W — Wound**
@@ -2133,7 +2133,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 ---
 
 ### Q56 — EB | Wreck of the Unbroken
-**NPC:** Harbormaster Tula · *harbormaster* · parent node BE · boss: Vampire Pirate Lord  
+**NPC:** Harbormaster Tula · *harbormaster* · parent node `BGI` (historical `BE`) · boss: Vampire Pirate Lord  
 **Payment:** 300–420gp · Special item: none
 
 **Q56.W — Wound**
@@ -2153,8 +2153,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q57 — EO | Leviathan's Eye
-**NPC:** Navigator Cassius · *navigator* · parent node DS · boss: The True Leviathan  
+### Q57 — `KUN` (historical `EO`) | Leviathan's Eye
+**NPC:** Navigator Cassius · *navigator* · parent node `SID` (historical `DS`) · boss: The True Leviathan  
 **Payment:** 320gp (fixed) · Special item: `ship_warrant`
 
 **Q57.W — Wound**
@@ -2174,8 +2174,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q58 — EI | Isle of the Wyrm Crown
-**NPC:** Island Elder Maris · *elder and fisher* · parent node IS · boss: Ancient Sea Dragon  
+### Q58 — `ACE` (historical `EI`) | Isle of the Wyrm Crown
+**NPC:** Island Elder Maris · *elder and fisher* · parent node `PDL` (historical `IS`) · boss: Ancient Sea Dragon  
 **Payment:** 280gp (fixed) · Special item: none
 
 **Q58.W — Wound**
@@ -2195,8 +2195,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q59 — EA | Abyssal Scriptorium
-**NPC:** Captain Selene Draketide · *ship captain* · parent node AT · boss: Index Guardian Aboleth  
+### Q59 — `IST` (historical `EA`) | Abyssal Scriptorium
+**NPC:** Captain Selene Draketide · *ship captain* · parent node `RAI` (historical `AT`) · boss: Index Guardian Aboleth  
 **Payment:** 300gp (fixed) · Special item: none  
 **⚠️ Also Epic NPC #3** — see full profile in "The Seven Epic NPC Profiles" section above. Her EB wound establishes that she has been at the Atlantis archive for months before the player arrives — consistent with her Epic NPC profile ("Her ship's hold contains the sunken library of Atlantis").
 
@@ -2217,8 +2217,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q60 — EC | Scholar Kings' Forge
-**NPC:** Runewright Ossian · *runewright* · parent node SC · boss: Forge Warden Dragon Turtle  
+### Q60 — `SOF` (historical `EC`) | Scholar Kings' Forge
+**NPC:** Runewright Ossian · *runewright* · parent node `GIB` (historical `SC`) · boss: Forge Warden Dragon Turtle  
 **Payment:** 250gp (fixed) · Special item: `forge_rune`
 
 **Q60.W — Wound**
@@ -2238,8 +2238,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q61 — EL | Sunken God's Throne
-**NPC:** River Trader Aldous · *river trader* · parent node FL · boss: Storm Giant Titan  
+### Q61 — `BEG` (historical `EL`) | Sunken God's Throne
+**NPC:** River Trader Aldous · *river trader* · parent node `TRF` (historical `FL`) · boss: Storm Giant Titan  
 **Payment:** 280gp (fixed) · Special item: `river_pass`
 
 **Q61.W — Wound**
@@ -2259,8 +2259,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q62 — ED | Trench Titan
-**NPC:** First Mate Darro · *first mate* · parent node DS · boss: Charybdis Prime  
+### Q62 — `OTP` (historical `ED`) | Trench Titan
+**NPC:** First Mate Darro · *first mate* · parent node `SID` (historical `DS`) · boss: Charybdis Prime  
 **Payment:** 320gp (fixed) · Special item: none  
 **Lore note:** Darro was aboard Draketide's ship twenty years ago when the Charybdis first appeared (Q57). He watched what she saw. He has carried it since because she doesn't speak of it.
 
@@ -2281,8 +2281,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q63 — EM | Noonwraith Queen's Field
-**NPC:** Farmer Wren · *farmer* · parent node MI · boss: Noonwraith Queen  
+### Q63 — `WAW` (historical `EM`) | Noonwraith Queen's Field
+**NPC:** Farmer Wren · *farmer* · parent node `MAN` (historical `MI`) · boss: Noonwraith Queen  
 **Payment:** 260gp (fixed) · Special item: none
 
 **Q63.W — Wound**
@@ -2302,8 +2302,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q64 — EE | Pharaoh's Vault
-**NPC:** Caravan Master Zephyrine · *caravan master* · parent node DE · boss: Vault Pharaoh (Mummy Lord)  
+### Q64 — `CAI` (historical `EE`) | Pharaoh's Vault
+**NPC:** Caravan Master Zephyrine · *caravan master* · parent node `AHB` (historical `DE`) · boss: Vault Pharaoh (Mummy Lord)  
 **Payment:** 300gp (fixed) · Special item: `escort_contract`
 
 **Q64.W — Wound**
@@ -2323,8 +2323,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q65 — EV | Djinn Lord's Palace
-**NPC:** Izador al-Rashun · *sandmage and djinn-binder* · parent node DC · boss: Elder Marid  
+### Q65 — `MCT` (historical `EV`) | Djinn Lord's Palace
+**NPC:** Izador al-Rashun · *sandmage and djinn-binder* · parent node `DOH` (historical `DC`) · boss: Elder Marid  
 **Payment:** 350gp (fixed) · Special item: `sand_cipher`  
 **⚠️ Also Epic NPC #5** — see full profile in "The Seven Epic NPC Profiles" section above. His EB wound (someone higher in the hierarchy renegotiating his contract) is a separate incident from his Epic NPC role (dissolving the djinn's binding for Shard #5). Both scenes share the DC node and establish Izador as someone who has multiple ongoing agreements with djinn.
 
@@ -2345,8 +2345,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q66 — EJ | Canopy Cathedral
-**NPC:** Herbalist Mael · *herbalist* · parent node JU · boss: Cathedral Wyrm (Green Dragon)  
+### Q66 — `SJO` (historical `EJ`) | Canopy Cathedral
+**NPC:** Herbalist Mael · *herbalist* · parent node `BEL` (historical `JU`) · boss: Cathedral Wyrm (Green Dragon)  
 **Payment:** 250gp (fixed) · Special item: none
 
 **Q66.W — Wound**
@@ -2366,10 +2366,10 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q67 — ET | Peak of the Eldest
-**NPC:** Blacksmith Dora Flint · *blacksmith* · parent node BQ · boss: Summit Wyrm (White Dragon)  
+### Q67 — `KTM` (historical `ET`) | Peak of the Eldest
+**NPC:** Blacksmith Dora Flint · *blacksmith* · parent node `ERF` (historical `BQ`) · boss: Summit Wyrm (White Dragon)  
 **Payment:** 300gp (fixed) · Special item: `runic_hammer`  
-**Lore note:** Dora Flint is the blacksmith of Weimar's lower quarter (BQ node). Her EB quest directly serves Sweelinck — she needs summit ore to forge the Codex instrument he requires for the sealing ceremony. This ties the ET Epic Battleground into the main quest chain.
+**Lore note:** Dora Flint is the blacksmith of Weimar's lower quarter (`ERF` (historical `BQ`) node). Her EB quest directly serves Sweelinck — she needs summit ore to forge the Codex instrument he requires for the sealing ceremony. This ties the `KTM` (historical `ET`) Epic Battleground into the main quest chain.
 
 **Q67.W — Wound**
 > The mountain summit ore vein has been blocked for three years. She can't forge Sweelinck's Codex instrument without it. Lowland iron has the wrong memory — it remembers being underground, not cold.
@@ -2388,8 +2388,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q68 — ER | Frost Warden's Throne
-**NPC:** Fur Trader Sigrid · *fur trader* · parent node AR · boss: Frost Giant Jarl Kolvros  
+### Q68 — `RKV` (historical `ER`) | Frost Warden's Throne
+**NPC:** Fur Trader Sigrid · *fur trader* · parent node `LYR` (historical `AR`) · boss: Frost Giant Jarl Kolvros  
 **Payment:** 350–450gp · Special item: none  
 **Note:** One of three EB entries with a negotiable payment range (others: Q52/EF and Q71/EG). Negotiate line is unique — not "This is everything" but a specific acknowledgement.
 
@@ -2410,8 +2410,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q69 — EK | Shattered Seraph's Spire
-**NPC:** Grounded Seraph Ithiel · *sky road keeper* · parent node HC · boss: Fallen Seraph Variel  
+### Q69 — `MAD` (historical `EK`) | Shattered Seraph's Spire
+**NPC:** Grounded Seraph Ithiel · *sky road keeper* · parent node `CTU` (historical `HC`) · boss: Fallen Seraph Variel  
 **Payment:** 0gp ★ · Special item: `star_fragment`  
 **★ Zero-gold entry:** The only EB quest with no gold reward. paymentFloor = paymentCeiling = paymentOpening = 0. The `_storyEbNpcModal()` function handles this gracefully: when `d.paymentFloor === 0`, the payment display reads "No gold — a greater reward awaits." and the accept button shows "✓ Accept Quest" (not "💰 Accept 0gp"). The Negotiate button is hidden (`canNegotiate = false` when floor ≥ ceiling). The `star_fragment` special item is the sole reward. The covenant between Ithiel and Variel is the emotional core.
 
@@ -2432,8 +2432,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q70 — EP | Admiral's Last Cove
-**NPC:** Fence Boss Carrick · *pirate fence* · parent node PC · boss: Admiral's Ghost (Wraith King)  
+### Q70 — `HAV` (historical `EP`) | Admiral's Last Cove
+**NPC:** Fence Boss Carrick · *pirate fence* · parent node `NAS` (historical `PC`) · boss: Admiral's Ghost (Wraith King)  
 **Payment:** 300gp (fixed) · Special item: `pirate_cache`
 
 **Q70.W — Wound**
@@ -2453,8 +2453,8 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ---
 
-### Q71 — EG | Void Shaman's Sanctum
-**NPC:** Warlord Kael Mordus · *warlord* · parent node BK (Broken Tooth Tavern) · boss: Void High Shaman Kazrath  
+### Q71 — `TBS` (historical `EG`) | Void Shaman's Sanctum
+**NPC:** Warlord Kael Mordus · *warlord* · parent node `VBY` (historical `BK`) (Broken Tooth Tavern) · boss: Void High Shaman Kazrath  
 **Payment:** 400–500gp · Special item: `crimson_warrant`  
 **⚠️ Also Epic NPC #4** — see full profile in "The Seven Epic NPC Profiles" section above. His EB wound gives the backstory for his main-quest role: the shaman in the goblin caves had Void allegiances and a reporting structure connecting to Birka authority. His return beat — "He was writing to someone in Birka. Someone in a position of authority." — is a direct plot thread pointing toward the High Council.
 
@@ -2484,7 +2484,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ### Q-NEXUS-01 — HM | "Blueprints" ✅
 **Trigger:** [Ask] on first visit. Sets `nexusQ01Active`.  
-**Follow-up (next HM visit):** [Say nothing] or [Explain what a warning is] → Q-NEXUS-02.
+**Follow-up (next `DUS` (historical `HM`) visit):** [Say nothing] or [Explain what a warning is] → Q-NEXUS-02.
 
 ### Q-NEXUS-02 — HM | "Creative Literacy" ✅
 **Trigger:** [Warn] or [Explain what a warning is]. Sets `nexusQ02Complete`.  
@@ -2627,7 +2627,7 @@ MILEPOINT G  storyNewGamePlus() — NG+ reset
 | `storyCheckJournal(node)` | 11358 | Finds Froberger journal entry at node; shows modal or log line | `FROBERGER_JOURNAL`, `journalEntriesRead` | `journalEntriesRead.push(entryNum)`, `frobergerLastEntryRead` |
 | `storyJournalToggle()` | 11689 | Opens/closes journal sidebar | DOM state | DOM story-journal-overlay |
 | `storyUpdateJournalCount()` | 11714 | Updates journal badge count | `journalEntriesRead.length` | DOM journal-count badge |
-| `storyShowFrobergerNote()` | 11090 | Renders parchment note at CO node | DOM froberger-note-overlay | `froberger_last_note_read = true` |
+| `storyShowFrobergerNote()` | 11090 | Renders parchment note at `TLS` (historical `CO`) node | DOM froberger-note-overlay | `froberger_last_note_read = true` |
 | `_storyEbNpcModal(ebCode)` | 11388 | Renders EB quest-giver modal (wound→opening→warning→negotiate) | `EB_NPC_DIALOGUE[ebCode]`, `EPIC_BOSS_POOL[bossKey]` | `_ebNpcCode`, DOM eb-npc-* elements |
 | `_storyEbReturnBeat(ebCode)` | 11503 | Delivers return beat gold + specialItem on quest completion | `EB_NPC_DIALOGUE[ebCode]`, `ebNegotiatedPayments` | `ebReturnDone[ebCode]`, `S_story.gold`, inventory push |
 | `storyEpicPreBattle(node)` | 13028 | Sets up pre-battle overlay for EB boss fight | `EPIC_BOSS_POOL[bossKey]`, `defeatedBattles` | `_preBattNode._isEpicBattle = true` |
@@ -2638,7 +2638,7 @@ MILEPOINT G  storyNewGamePlus() — NG+ reset
 | `_buildWeckmannLog()` | 10736 | Constructs Weckmann log text from pitTrainingWins | `S_story.pitTrainingWins`, `playerName`, `WECKMANN_TRAINING_LOG` | returns string |
 | `_buildEpilogueScroll()` | 11026 | Constructs per-NPC epilogue scroll for ending | `NPC_EPILOGUES`, `npcFavorability`, `_missionComplete()`, `_curseScore()` | returns string[] |
 | `_buildSweelinckNamingSequence()` | 11016 | Builds Sweelinck naming text for Covenant Keeper ending | `SWEELINCK_NAMING_LINES`, `npcFavorability` | returns string[] |
-| `storyCheckVictory(node)` | 11116 | Checks win condition; populates victory screen; selects ending text | `defeatedBattles['CO']`, `_missionComplete()`, `_curseScore()` | DOM vic-* elements, endingEl |
+| `storyCheckVictory(node)` | 11116 | Checks win condition; populates victory screen; selects ending text | `defeatedBattles['`TLS` (historical `CO`)']`, `_missionComplete()`, `_curseScore()` | DOM vic-* elements, endingEl |
 | `_covenantStanding()` | 11011 | Returns covenant standing label from score bracket | `COVENANT_STANDING_LABELS`, `_curseScore()` | returns label object |
 | `storyPreFinalBattle()` | 10981 | Pre-battle screen for Auros boss fight at CO | `BOSS_COMMANDER_AUROS`, `defeatedBattles` | `_preBattNode` for Auros |
 | `storyMsg(txt)` | 11280 | Appends a message line to the node log | txt string | DOM story-log element |
@@ -2659,7 +2659,7 @@ MILEPOINT G  storyNewGamePlus() — NG+ reset
 
 ## ✅ Implemented — The Froberger Memorial: A Living Stone at CI (plan-archive.md §XXVIII, Layer 63)
 
-An optional interactive stone at CI. One `[Examine Memorial]` button at the CI NPC row; repurposes `froberger-note-overlay` div for the modal.
+An optional interactive stone at `LHR` (historical `CI`). One `[Examine Memorial]` button at the `LHR` (historical `CI`) NPC row; repurposes `froberger-note-overlay` div for the modal.
 
 **Const:** `FROBERGER_MEMORIAL_TEXT` — object with 4 keys: `base` / `yael_friendly` / `dear_friend` / `post_cipher`. Plaque layers are additive; each appends when its condition is met.
 
@@ -2683,9 +2683,9 @@ An optional interactive stone at CI. One `[Examine Memorial]` button at the CI N
 
 ## ✅ Implemented — The Pit Championship: Finals at Crossroads Forge (plan-archive.md §XXIX, Layer 64)
 
-One-time championship bout at CY node (Weckmann's actual node), triggered when `pitTrainingWins >= 5`. Weckmann offers the match; player faces Ogundimu, the Iron Standard — a retired city champion defined in const `PIT_CHAMPION_OGUNDIMU` (not in MONSTER_POOL). No XP, no gold, no drop.
+One-time championship bout at `HKG` (historical `CY`) node (Weckmann's actual node), triggered when `pitTrainingWins >= 5`. Weckmann offers the match; player faces Ogundimu, the Iron Standard — a retired city champion defined in const `PIT_CHAMPION_OGUNDIMU` (not in MONSTER_POOL). No XP, no gold, no drop.
 
-**Trigger:** First CY visit after `pitTrainingWins >= 5` AND `!pitChampionOffered` → `_showPitChampionOffer()` fires via `setTimeout`. After offer fires, `pitChampionOffered = true`. Persistent `[Challenge for the Title]` button at CY until won.
+**Trigger:** First `HKG` (historical `CY`) visit after `pitTrainingWins >= 5` AND `!pitChampionOffered` → `_showPitChampionOffer()` fires via `setTimeout`. After offer fires, `pitChampionOffered = true`. Persistent `[Challenge for the Title]` button at `HKG` (historical `CY`) until won.
 
 **Opponent:** `PIT_CHAMPION_OGUNDIMU` const — AC 16, HP 42, ATK +7, dmgDie 10, dmgFlat 4. Tier: elite. `isChampion: true`. `_storyBattleVictory()` patched to detect `pb.champion` and bypass all XP/gold/loot resolution.
 
@@ -2715,7 +2715,7 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 ## ✅ Implemented — The Joint Witness and the Map Caption (plan-archive.md §XXXI, Layers 66a+66b)
 
-**S54 — Yael and Brynn at CI (Layer 66a):** Fires on first CI visit where `actNumber >= 7` AND `_npcFavor('yael') >= 1` AND `_npcFavor('brynn') >= 1` AND `!s54JointMomentDelivered`. `storyMsg(S54_JOINT_MOMENT)` via `setTimeout(400)`. Full scene: Brynn with delivery basket, Yael already at CI, *"Still the same light?" / "Still the same light."*, then both address the player. Sets `s54JointMomentDelivered = true`.
+**S54 — Yael and Brynn at `LHR` (Layer 66a):** Fires on first `LHR` visit where `actNumber >= 7` AND `_npcFavor('yael') >= 1` AND `_npcFavor('brynn') >= 1` AND `!s54JointMomentDelivered`. `storyMsg(S54_JOINT_MOMENT)` via `setTimeout(400)`. Full scene: Brynn with delivery basket, Yael already at `LHR`, *"Still the same light?" / "Still the same light."*, then both address the player. Sets `s54JointMomentDelivered = true`.  *(historical: `CI`=`LHR`)*
 
 **Flag split:** Pre-existing TV stub (Quill plays Brynn's song) was using `s54JointMomentDelivered`. Renamed to `s54QuillBrynnDelivered` (new flag in `_S_DEFAULTS()`). NUE "map on the wall" stub was using `s55MapLineDelivered`. Renamed to `s55SqMapLineDelivered` (new flag in `_S_DEFAULTS()`). Both pre-existing stubs now have their own flags; canonical §XXXI flags restored to their intended roles.
 
@@ -2725,9 +2725,9 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 ## ✅ Implemented — Two Intelligence Feeds: The Varga Watch and the Auros Theory (plan-archive.md §XXXII, Layers 67a+67b)
 
-**S8 — Varga Watch at BA (Layer 67a):** Three-observation arc at BA already fully implemented in earlier layers. Three `👁 Watch him.` button escalations → `s8VargaClueUnlocked = true` at watch 3; pigeon direction note fires. Pachelbel tell at BA when `s8VargaClueUnlocked && !s8PachelbelTold && _npcFavor('pachelbel') >= 1` → full Pachelbel response + 15gp + `s8PachelbelTold = true`.
+**S8 — Varga Watch at `LLA` (Layer 67a):** Three-observation arc at `LLA` already fully implemented in earlier layers. Three `👁 Watch him.` button escalations → `s8VargaClueUnlocked = true` at watch 3; pigeon direction note fires. Pachelbel tell at `LLA` when `s8VargaClueUnlocked && !s8PachelbelTold && _npcFavor('pachelbel') >= 1` → full Pachelbel response + 15gp + `s8PachelbelTold = true`.  *(historical: `BA`=`LLA`)*
 
-**S29 — Auros Theory at CY (Layer 67b):** `S29_AUROS_THEORY` const (full scene: Auros decodes Froberger's route as Void-advance indicator sequence; *"'The shape of the absence.' He finally understood — he'd been mapping the negative space of the Void all along."*). `_getNPCDialogue('bruhns')` short stub removed; CY node render trigger added: `frobergerLastEntryRead && _npcFavor('bruhns') >= 2 && !s29LineDelivered` → `storyMsg(S29_AUROS_THEORY)` via `setTimeout(600)`, sets `s29LineDelivered = true`.
+**S29 — Auros Theory at `HKG` (historical `CY`) (Layer 67b):** `S29_AUROS_THEORY` const (full scene: Auros decodes Froberger's route as Void-advance indicator sequence; *"'The shape of the absence.' He finally understood — he'd been mapping the negative space of the Void all along."*). `_getNPCDialogue('bruhns')` short stub removed; `HKG` (historical `CY`) node render trigger added: `frobergerLastEntryRead && _npcFavor('bruhns') >= 2 && !s29LineDelivered` → `storyMsg(S29_AUROS_THEORY)` via `setTimeout(600)`, sets `s29LineDelivered = true`.
 
 ---
 
@@ -2735,13 +2735,13 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterObtained`, `archiveUndercitySurveyTaken`, `raisonToolsUsed`. Note: spec named a new flag `surveyDeliveredToAuros`; implementation uses the pre-existing `undercitySurveyDelivered` for the same concept.
 
-**S7 — Blue Shutters Archive at CI (Layer 68a):** Three-state button: blocked (Yael letter needed) → Yael writes letter ([Request a letter] when `fav_yael >= 1`; sets letter pending; next CI visit: `archiveLetterObtained = true`) → [Enter the Archive]. Inside: (1) Entry 33 added to journal immediately with archivist footnote: *"Filed under: Void Research / Public / Uncatalogued — per Circle directive 1309-VII. Entry author appears unaware of the correlation. No restriction required."* (2) `archive_letter` item pickup (flavor: *"A partial shelf record. 'Researcher Category: Containment, Date: [REDACTED].' Two archivists. The second stopped mid-sentence."*) — in §XVI (Weimar Scholar Gate), Isolde accepts this in place of 3 Scholar Kings' Seal items. (3) Undercity Survey (Partial) pickup → `archiveUndercitySurveyTaken = true`.
+**S7 — Blue Shutters Archive at `LHR` (historical `CI`) (Layer 68a):** Three-state button: blocked (Yael letter needed) → Yael writes letter ([Request a letter] when `fav_yael >= 1`; sets letter pending; next `LHR` (historical `CI`) visit: `archiveLetterObtained = true`) → [Enter the Archive]. Inside: (1) Entry 33 added to journal immediately with archivist footnote: *"Filed under: Void Research / Public / Uncatalogued — per Circle directive 1309-VII. Entry author appears unaware of the correlation. No restriction required."* (2) `archive_letter` item pickup (flavor: *"A partial shelf record. 'Researcher Category: Containment, Date: [REDACTED].' Two archivists. The second stopped mid-sentence."*) — in §XVI (Weimar Scholar Gate), Isolde accepts this in place of 3 Scholar Kings' Seal items. (3) Undercity Survey (Partial) pickup → `archiveUndercitySurveyTaken = true`.
 
 **Survey delivery to Auros (CY):** [Deliver survey] option when `archiveUndercitySurveyTaken && !undercitySurveyDelivered`. On deliver: item removed from inventory, `undercitySurveyDelivered = true`, +40gp. Auros: *"This was taken in Year Ten. Four sectors match my Year Twelve Void-advance indicators. Someone decided it wasn't worth forwarding."* If `s29LineDelivered`: appends *"Froberger walked the same sectors in Year Thirteen. One year after this survey was buried."*
 
 **S46 — Raison's Tools (Layer 68b):** Sold by Pachelbel at BA, Dear Friend tier (fav >= 2), 50gp. Item: `raisons_tools` (usable). Using it: item removed from inventory, `raisonToolsUsed = true`, +30gp (*"The lens clarifies something you've been carrying. What you thought was worth less is worth more."*), second log line after 600ms: *"The handle has instructions written in tiny letters. Whoever taught Raison to do this was very careful about what not to forget."*
 
-**Pachelbel's Ledger (BA, Dear Friend):** [Read Ledger] button when `fav_pachelbel >= 2`. Const: `PACHELBEL_LEDGER` (keyed by act). Entry 2: Raison's arrest at the north gate (*"They called it unauthorized research access... His eldest was brought in for 'evaluation.'"*). Entry 3: younger child escaped south by night (*"Someone had left a boat. I don't know who."*) → Vonn in §XIX (Tilbury, unnamed connection). Pachelbel bought the tools back at impound: *"I don't know what I'm going to do with them."* Inline overlay with [Close] and backdrop-click-to-close.
+**Pachelbel's Ledger (`LLA` (historical `BA`), Dear Friend):** [Read Ledger] button when `fav_pachelbel >= 2`. Const: `PACHELBEL_LEDGER` (keyed by act). Entry 2: Raison's arrest at the north gate (*"They called it unauthorized research access... His eldest was brought in for 'evaluation.'"*). Entry 3: younger child escaped south by night (*"Someone had left a boat. I don't know who."*) → Vonn in §XIX (Tilbury, unnamed connection). Pachelbel bought the tools back at impound: *"I don't know what I'm going to do with them."* Inline overlay with [Close] and backdrop-click-to-close.
 
 **Flag note:** Spec flag `surveyDeliveredToAuros` was not added; `undercitySurveyDelivered` handles both the archive state and the CY delivery gate.
 
@@ -2749,11 +2749,11 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — Yael's Record: The Named Report Scene (plan-archive.md §XXXIX, Layer 74)
 
-**Trigger:** CI node, `_npcFavor('yael') >= 2`, `actNumber >= 6`, `yaelEscortUsed`, `!yaelNamedReportDelivered`. Const: `YAEL_NAMED_REPORT_SCENE` (setup, decision, choiceHold, choiceThree). `yaelNamedReportDelivered: false` added to `_S_DEFAULTS()`.
+**Trigger:** `LHR` (historical `CI`) node, `_npcFavor('yael') >= 2`, `actNumber >= 6`, `yaelEscortUsed`, `!yaelNamedReportDelivered`. Const: `YAEL_NAMED_REPORT_SCENE` (setup, decision, choiceHold, choiceThree). `yaelNamedReportDelivered: false` added to `_S_DEFAULTS()`.
 
 **Scene (via `setTimeout(600ms)`):** `YAEL_NAMED_REPORT_SCENE.setup` + decision text fire as a storyMsg. Two inline choice buttons appear in npcRowDiv: `📋 I'll hold it.` → *"Good. Then it's in four places now."* / `🗂 Three copies is enough.` → *"Three is enough. I just wanted someone outside the system to know."* Both set `yaelNamedReportDelivered = true` and remove the choice div.
 
-**YAEL_PATROL_NODES:** SW entry appended — `{ condition: () => yaelNamedReportDelivered, nodeSlug:'SW', line:"The second report is filed. I'm not watching to see if it disappears." }`
+**YAEL_PATROL_NODES:** `MSY` (historical `SW`) entry appended — `{ condition: () => yaelNamedReportDelivered, nodeSlug:'`MSY` (historical `SW`)', line:"The second report is filed. I'm not watching to see if it disappears." }`
 
 **§XXXVI epilogue condition:** Added to `ARC_EPILOGUE_CONDITIONS` — *"Yael kept three copies of the second report. She knows exactly where each one is."* (also added for §XXXVIII `s2DaughterDelivered` in the same pass).
 
@@ -2761,7 +2761,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — The Heartwood Letter: Brynn's Daughter Scene (plan-archive.md §XXXVIII, Layer 73)
 
-**Trigger:** IN node, `actNumber >= 4 && !s2DaughterDelivered && journalEntriesRead.includes(7)`. Patches the pre-existing S2 block. Per §XXXVIII reconciliation note: uses `s2DaughterDelivered` (pre-existing) not `brynnLetterSceneDelivered` (spec name). Const: `BRYNN_HEARTWOOD_SCENE` (keys: friendly, dearFriend).
+**Trigger:** `TLL` (historical `IN`) node, `actNumber >= 4 && !s2DaughterDelivered && journalEntriesRead.includes(7)`. Patches the pre-existing S2 block. Per §XXXVIII reconciliation note: uses `s2DaughterDelivered` (pre-existing) not `brynnLetterSceneDelivered` (spec name). Const: `BRYNN_HEARTWOOD_SCENE` (keys: friendly, dearFriend).
 
 **fav 0:** No scene — `s2DaughterDelivered` not set, remains available when fav increases.
 
@@ -2775,7 +2775,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — The Final Confrontation: Commander Bruhns's CO Scene (plan-archive.md §XXXVII, Layer 72)
 
-**Context:** Commander Seraphine Bruhns (key `'bruhns'` in NPC_DIALOGUES, key `'auros'` in BIRKA_NPC_PROFILES) is the final boss. `BRUHNS_CO_SCENE` const added. `bruhnsCoSceneDelivered: false` added to `_S_DEFAULTS()`. CO render block added before the Birka NPC cards section: checks `!defeatedBattles['CO'] && !bruhnsCoSceneDelivered` then `_npcFavor('bruhns')`.
+**Context:** Commander Seraphine Bruhns (key `'bruhns'` in NPC_DIALOGUES, key `'auros'` in BIRKA_NPC_PROFILES) is the final boss. `BRUHNS_CO_SCENE` const added. `bruhnsCoSceneDelivered: false` added to `_S_DEFAULTS()`. `TLS` (historical `CO`) render block added before the Birka NPC cards section: checks `!defeatedBattles['`TLS` (historical `CO`)'] && !bruhnsCoSceneDelivered` then `_npcFavor('bruhns')`.
 
 **fav 1:** `BRUHNS_CO_SCENE.friendly` via `setTimeout(600ms)`. fav 2: `BRUHNS_CO_SCENE.dearFriend`; if `s29LineDelivered`: appends `BRUHNS_CO_SCENE.dearFriendWithTheory`. Sets `bruhnsCoSceneDelivered = true`. fav 0: no scene (arrival quote unchanged).
 
@@ -2807,11 +2807,11 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — The First Inn Light: Brynn's Vigil Arc (plan-archive.md §XXXV, Layer 70)
 
-**Ambient:** IN node S58 regulars block prepends *"A lamp burns in the corner. It has been lit since your first night here."* as the first line — no flag, no condition. `BRYNN_KEEPER_STORY` const holds all scene strings.
+**Ambient:** `TLL` (historical `IN`) node S58 regulars block prepends *"A lamp burns in the corner. It has been lit since your first night here."* as the first line — no flag, no condition. `BRYNN_KEEPER_STORY` const holds all scene strings.
 
 **Beat 1 — Inquiry (IN, fav_brynn ≥ 1, Act II+, !brynnKeeperStoryTold):** `🕯 Ask Brynn about the lamp in the corner.` button appears. On click: shows `BRYNN_KEEPER_STORY.inquiry`, removes button, shows `💬 Why that night?` follow-up. On follow-up click: shows `BRYNN_KEEPER_STORY.followUp`, sets `brynnKeeperStoryTold = true`.
 
-**Beat 2 — Choice (IN, fav_brynn ≥ 2, brynnKeeperStoryTold, !brynnLightChoiceMade):** `BRYNN_KEEPER_STORY.choicePrompt` rendered inline with two buttons: `🕯 Let it keep burning.` → `brynnLightKept = true`; `🌙 It can rest when I'm done.` → `brynnLightKept = false`. Both set `brynnLightChoiceMade = true`.
+**Beat 2 — Choice (`TLL` (historical `IN`), fav_brynn ≥ 2, brynnKeeperStoryTold, !brynnLightChoiceMade):** `BRYNN_KEEPER_STORY.choicePrompt` rendered inline with two buttons: `🕯 Let it keep burning.` → `brynnLightKept = true`; `🌙 It can rest when I'm done.` → `brynnLightKept = false`. Both set `brynnLightChoiceMade = true`.
 
 **§XXV farewell four-branch (ACT8_FAREWELL_BEATS.brynn.text converted to function):** `!brynnKeeperStoryTold` → `farewellNoStory` + sets `brynnKeeperStoryTold = true`. `!brynnLightChoiceMade` → `farewellNoChoice`. `brynnLightKept` → `farewellKeep`. else → `farewellRest`. Appended to base farewell text.
 
@@ -2823,17 +2823,17 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — The Couperin Ledger: Quill's Three-Beat Arc (plan-archive.md §XXXIV, Layer 69)
 
-**Trigger chain:** `quills_lute` item in inventory → Quill at TV → BA Act VIII farewell branch. No new state flags — all three (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-existed in `_S_DEFAULTS()`.
+**Trigger chain:** `quills_lute` item in inventory → Quill at `MHQ` (historical `TV`) → `LLA` (historical `BA`) Act VIII farewell branch. No new state flags — all three (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-existed in `_S_DEFAULTS()`.
 
-**Beat 1 — Lute Retrieval (pre-existing):** Pachelbel auto-gives lute when `quest_couperin_lute` is active and lute not in inventory (`_renderNpcCard` at BA). Quest auto-completes at TV when lute present: +40gp, lute removed, `fav_quill → 1`, cipher scrap added. Consts: `S34_QUILL_BEAT2`, `S34_QUILL_BEAT3`.
+**Beat 1 — Lute Retrieval (pre-existing):** Pachelbel auto-gives lute when `quest_couperin_lute` is active and lute not in inventory (`_renderNpcCard` at `LLA` (historical `BA`)). Quest auto-completes at `MHQ` (historical `TV`) when lute present: +40gp, lute removed, `fav_quill → 1`, cipher scrap added. Consts: `S34_QUILL_BEAT2`, `S34_QUILL_BEAT3`.
 
 **Beat 2 — Couperin's Song (at TV, !couperiSongReceived && quest === 'complete'):** `S34_QUILL_BEAT2` fires via `setTimeout(400ms)`. Quill plays the family theme — *"My grandmother taught me this. I haven't played it since before the pawn."* Sets `couperiSongReceived = true`, `quillQuestComplete = true`, calls `_checkDearFriendUpgrade('quill')`. Note: The +40gp and lute removal are handled by the quest auto-complete in the same render; the scene is the flavor layer.
 
-**Beat 3 — Debt Degradation (at TV, quillQuestComplete && !couperiDebtDegraded):** Beat 3 block placed BEFORE Beat 2 in TV render to prevent same-visit co-fire (Beat 3 can't trigger when quillQuestComplete is still false on Beat 2's visit). `S34_QUILL_BEAT3` fires via `setTimeout(600ms)`. *"It's just a number. You can let it go."* Sets `couperiDebtDegraded = true`. Town Crier `quillQuestComplete` line pre-existing in `TOWN_CRIER_LINES`.
+**Beat 3 — Debt Degradation (at `MHQ` (historical `TV`), quillQuestComplete && !couperiDebtDegraded):** Beat 3 block placed BEFORE Beat 2 in `MHQ` (historical `TV`) render to prevent same-visit co-fire (Beat 3 can't trigger when quillQuestComplete is still false on Beat 2's visit). `S34_QUILL_BEAT3` fires via `setTimeout(600ms)`. *"It's just a number. You can let it go."* Sets `couperiDebtDegraded = true`. Town Crier `quillQuestComplete` line pre-existing in `TOWN_CRIER_LINES`.
 
 **L44-E fix:** Bug: `_getNPCDialogue` stub used `npcKey === 'couperin'` (wrong key). Fixed to `npcKey === 'quill'`. Line updated to: *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."*
 
-**Act VIII BA farewell:** `ACT8_FAREWELL_BEATS.quill.text` converted to function. If `quillQuestComplete`: appends *"Pachelbel sent a note. 'Account closed, no remainder.' I keep it in the case."* BA Act VIII block added (before L44-A Gigault stall): fires when `actNumber === 8 && fav_quill >= 1 && !act8FarewellQuill`, showing Quill at the archive desk. `act8FarewellQuill` flag prevents double-fire at TV.
+**Act VIII `LLA` farewell:** `ACT8_FAREWELL_BEATS.quill.text` converted to function. If `quillQuestComplete`: appends *"Pachelbel sent a note. 'Account closed, no remainder.' I keep it in the case."* `LLA` Act VIII block added (before L44-A Gigault stall): fires when `actNumber === 8 && fav_quill >= 1 && !act8FarewellQuill`, showing Quill at the archive desk. `act8FarewellQuill` flag prevents double-fire at `MHQ`.  *(historical: `BA`=`LLA` · `TV`=`MHQ`)*
 
 ---
 
@@ -2852,31 +2852,31 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — Paul's Mediterranean Journey: Journey 2 + Malta + Rome (plan-archive.md §FUTURE-01 / §LXV–§LXIX, Layer 104a)
 
-Six story nodes (PL/AE/EF2/KR/ML/ST) completing the Mediterranean commission arc begun in §LIX–§LXIV. Five quests, one storyRender event (Malta snake), six NPC quoteFn entries. All nodes Act IV.
+Six story nodes (`KVA` (historical `PL`)/AE/EF2/KR/ML/ST) completing the Mediterranean commission arc begun in §LIX–§LXIV. Five quests, one storyRender event (Malta snake), six NPC quoteFn entries. All nodes Act IV.
 
 **Quest table:**
 
 | Quest ID | Node | Type | Check | DC | Pass Flag | Description |
 |----------|------|------|-------|----|-----------| ------------|
-| `quest_philippi` | PL | side | — | — | `lyraConverted` | Lyra sets via IIFE on first visit; all doors open |
-| `quest_areopagus` | AE | skill_check | CHA Persuasion | 13 | `areopagusSpeech` | Unknown Altar; Dionysius and Damaris stay |
+| `quest_philippi` | `KVA` (historical `PL`) | side | — | — | `lyraConverted` | Lyra sets via IIFE on first visit; all doors open |
+| `quest_areopagus` | `ATH` (historical `AE`) | skill_check | CHA Persuasion | 13 | `areopagusSpeech` | Unknown Altar; Dionysius and Damaris stay |
 | `quest_ephesus_riot` | EF2 | skill_check | CHA Persuasion | 12 | `demetriusRiotEscaped` | City clerk reaches front of theater; charges never filed |
-| `quest_corinth_letters` | KR | side | — | — | `corinthLettersWritten` | IIFE on first visit; 18 months; letters written at night |
-| `quest_rome_arrest` | ST | side | — | — | `romeArrestBegun` | IIFE on first visit; activates after `maltaSnakeEvent` |
+| `quest_corinth_letters` | `ZTH` (historical `KR`) | side | — | — | `corinthLettersWritten` | IIFE on first visit; 18 months; letters written at night |
+| `quest_rome_arrest` | `FCO` (historical `ST`) | side | — | — | `romeArrestBegun` | IIFE on first visit; activates after `maltaSnakeEvent` |
 
 **Malta snake — storyRender injection (no quest, no skill roll):**
-Fires once at ML when `!S_story.maltaSnakeEvent` → sets flag → injects `<div id="story-ml-snake">` with `'...He builds the fire.'`. No pass/fail state. The crowd changes their mind without being asked to. `style: border-left-color:#4a4a2a; color:#c8c890; font-style:italic` matches the grief-arc vignette register.
+Fires once at `MLA` (historical `ML`) when `!S_story.maltaSnakeEvent` → sets flag → injects `<div id="story-ml-snake">` with `'...He builds the fire.'`. No pass/fail state. The crowd changes their mind without being asked to. `style: border-left-color:#4a4a2a; color:#c8c890; font-style:italic` matches the grief-arc vignette register.
 
 **NPC quoteFn table:**
 
 | Code | NPC | Pre-event | Post-event |
 |------|-----|-----------|------------|
-| PL | Lyra | IIFE — watches from bridge, decides, invites to house | "I decided before I spoke. The speaking was the confirmation." |
-| AE | Athens Market Steward | Describes 200-year maintenance policy for all altars | Recalls Areopagus; "Some of them will think about it longer than others." |
+| `KVA` (historical `PL`) | Lyra | IIFE — watches from bridge, decides, invites to house | "I decided before I spoke. The speaking was the confirmation." |
+| `ATH` (historical `AE`) | Athens Market Steward | Describes 200-year maintenance policy for all altars | Recalls Areopagus; "Some of them will think about it longer than others." |
 | EF2 | Demetrius | Guild economics; theater filling | "The meeting got away from me. I should have called a lawyer." |
-| KR | Prisca + Akil | IIFE — hire Paul on arrival, letters written at night | "The joins held. Some of the letters were for everyone." |
-| ML | Malta Shore Islanders | Counts survivors (276); watches Paul build fire | "We said a lot of things today. The counting was real." |
-| ST | Timael | IIFE — follows since Lystra; house arrest framing | "The arc does not end here. I know that. He knows that." |
+| `ZTH` (historical `KR`) | Prisca + Akil | IIFE — hire Paul on arrival, letters written at night | "The joins held. Some of the letters were for everyone." |
+| `MLA` (historical `ML`) | Malta Shore Islanders | Counts survivors (276); watches Paul build fire | "We said a lot of things today. The counting was real." |
+| `FCO` (historical `ST`) | Timael | IIFE — follows since Lystra; house arrest framing | "The arc does not end here. I know that. He knows that." |
 
 **State flags:** `lyraConverted`, `areopagusSpeech`, `demetriusRiotEscaped`, `corinthLettersWritten`, `maltaSnakeEvent`, `romeArrestBegun` — all in `S_story` defaults.
 
@@ -2886,10 +2886,10 @@ Fires once at ML when `!S_story.maltaSnakeEvent` → sets flag → injects `<div
 
 ## ✅ Implemented — The Four Courts of the Littoral Sea (plan-archive.md §SIREN-01, Layer 104b)
 
-Ten-node sequential ocean arc. Entry via DS east probe (DS at r:25,c:10; LJ0 at r:25,c:14). Four courtly skill-check encounters, three sea battles, one parallel Overseer quest, one arc-close storyRender. Writing register: compressed French vignette, two perspectives implied per encounter, no declared manipulation.
+Ten-node sequential ocean arc. Entry via `SID` east probe (`SID` at r:25,c:10; `LJ0` (historical — no live node) at r:25,c:14). Four courtly skill-check encounters, three sea battles, one parallel Overseer quest, one arc-close storyRender. Writing register: compressed French vignette, two perspectives implied per encounter, no declared manipulation.  *(historical: `DS`=`SID`)*
 
 **Node chain:**
-LJ0(entry) → LC1(court) → LJ1(battle) → LC2(court) → LJ2(battle) → LC3(court) → LJ3(battle+trigger) → LC4(court) → LCA(terminal); LSO branches east from LJ3.
+`LJ0` (historical — no live node)(entry) → LC1(court) → `LJ1` (historical — no live node)(battle) → LC2(court) → `LJ2` (historical — no live node)(battle) → LC3(court) → `LJ3` (historical — no live node)(battle+trigger) → LC4(court) → LCA(terminal); LSO branches east from `LJ3` (historical — no live node).
 
 **Quest table:**
 
@@ -2907,7 +2907,7 @@ LJ0(entry) → LC1(court) → LJ1(battle) → LC2(court) → LJ2(battle) → LC3
 
 **storyRender injections:**
 
-*LSO — navigator trigger* (`id:'story-lso-trigger'`): Shows while `!seaOverseerMet && !charmResisted` (gates off once the fog resolves either flag). Describes navigator's second register; stacks above LSO's own node text as the three-courts progress marker. **§VM-01-G1-FIX (2026-07-28):** originally keyed to `LJ3`, a node code that was never built (the LJ0–LJ3 sea-battle junctions documented in maps.md don't exist in NODE_MAP — only the courts LC1–LC4/LCA/LSO shipped), so this panel had never rendered; remapped to LSO, `quest_sea_overseer`'s own `activateNode`. Lives in the `NODE_PANELS` table, not inline in storyRender.
+*LSO — navigator trigger* (`id:'story-lso-trigger'`): Shows while `!seaOverseerMet && !charmResisted` (gates off once the fog resolves either flag). Describes navigator's second register; stacks above LSO's own node text as the three-courts progress marker. **§VM-01-G1-FIX (2026-07-28):** originally keyed to `LJ3` (historical — no live node), a node code that was never built (the `LJ0` (historical — no live node)–`LJ3` (historical — no live node) sea-battle junctions documented in maps.md don't exist in NODE_MAP — only the courts LC1–LC4/LCA/LSO shipped), so this panel had never rendered; remapped to LSO, `quest_sea_overseer`'s own `activateNode`. Lives in the `NODE_PANELS` table, not inline in storyRender.
 
 *LCA — arc-close* (`id:'story-lca-close'`): Fires on every visit. Counts `(betrayalThought + betrayalWord + betrayalDeed)`:
 - 0: "The four courts gave their seals. You gave them nothing but your position."
@@ -2931,9 +2931,9 @@ LJ0(entry) → LC1(court) → LJ1(battle) → LC2(court) → LJ2(battle) → LC3
 
 | Node | Battle | Key | Count |
 |------|--------|-----|-------|
-| LJ1 | First Crossing | `sea_serpent` | 2 |
-| LJ2 | Second Crossing | `deep_one` | 3 |
-| LJ3 | The Serpent of the Passage | `sea_serpent` | 1 (solo, full HP) |
+| `LJ1` (historical — no live node) | First Crossing | `sea_serpent` | 2 |
+| `LJ2` (historical — no live node) | Second Crossing | `deep_one` | 3 |
+| `LJ3` (historical — no live node) | The Serpent of the Passage | `sea_serpent` | 1 (solo, full HP) |
 
 **Overseer design:** WIS DC 15 (matches Succubus/Incubus charm save DC). Not a battle — dialogue in the fog. Pass = name the structure aloud, go to fourth court anyway. Fail = accept the "helpful offer" (one specific framing at Port Solen). The offer is transparent; the difficulty is not deception but the knight's willingness to accept assistance from something that has been instrumentalizing them.
 
