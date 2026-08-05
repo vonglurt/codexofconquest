@@ -2,7 +2,8 @@
 # Lab Report — §VM-01-G4: Class D per-verb (the migration front's last slice)
 
 > **Status: DESIGN LOCKED `f340143` · ASK ANSWERED (refuse-at-click) · G4a ✅ SHIPPED `b905733` ·
-> G4b ✅ SHIPPED `f7a60a5` · G4c ✅ SHIPPED `4c2a831` — see the §12½, §12¾ and §12⅞ addenda. §1–§12 below are the design pass as written before any edit and are left
+> G4b ✅ SHIPPED `f7a60a5` · G4c ✅ SHIPPED `4c2a831` · G4d ✅ SHIPPED `b0c2478` — **the slice plan
+> is COMPLETE** — see the §12½, §12¾, §12⅞ and §12⁹⁄₁₆ addenda. §1–§12 below are the design pass as written before any edit and are left
 > unrewritten; the addendum is where what actually shipped is recorded.** This is the child
 > design pass the parent report's §7 design lock required before G4 may be built
 > (*"G4 OK in principle, but G4 gets its own child design pass first"*). Parent:
@@ -550,7 +551,7 @@ are answered.
 
 ---
 
-## 12⁹⁄₁₆. Addendum — §VM-01-G4d SHIPPED 2026-08-05 (the D3 menu + the two Class-E strays)
+## 12⁹⁄₁₆. Addendum — §VM-01-G4d ✅ SHIPPED 2026-08-05 `b0c2478` (the D3 menu + the two Class-E strays)
 
 **What shipped, exactly as §10 sliced it.** The three CDG confrontations (Taz Devil ·
 Don Fluffissimo · Cat-King) are `NODE_VERBS` entries sharing **group `cdg-boss-menu`**, rendered
