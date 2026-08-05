@@ -36,6 +36,17 @@
 //   3. fields      — every `nodeCode:`/`node:`/`activateNode:`/… string literal resolves
 //   4. routes      — every `<CODE>_to_<CODE>` composite key resolves on both sides
 //   5. locals      — the same two rules for function-local codeish object literals
+//   6. comparisons + battle codes (§VM-01-G-FU, 2026-08-05) — the shape phases 1–5 never
+//      scanned: a `node.code === 'XX'` comparison literal, and the synthetic
+//      defeatedBattles-ledger codes (`code:'WG0_TRIAL'` spreads, `defeatedBattles['…']`
+//      guards, `battles:[…]` completion gates, `nodeCode ===` overlay guards). The
+//      §VM-01-G triage measured 116 comparison literals and 20 synthetic battle codes
+//      with NO fence — all live today only because the content is young; `birkaNpcs`
+//      proves what happens to unfenced code-keyed logic when the world moves. Every
+//      literal must resolve in NODE_MAP or be classified in SYNTHETIC_BATTLE_CODES.
+//      STATED LIMIT: the scan is textual — a comparison through an alias
+//      (`const c = node.code; c === 'XX'`) is not caught. Comment-aware by construction
+//      (two of the corpus hits are prose in comments — the §AUDIT-03f lesson).
 //
 // Usage:  node scripts/check-noderegs.js            # audit, exit 1 on findings
 //         node scripts/check-noderegs.js --selftest # prove each phase catches a plant
@@ -86,12 +97,35 @@ const NODE_FIELDS = ['nodeCode', 'node', 'nodeSlug', 'npcNode', 'activateNode',
                      'waypointNode', 'checkpointNode', 'atNode'];
 // §VM-01-G4d: a `combat` bit's `nodeCode` may carry a SYNTHETIC battle code — the kernel
 // spreads the LIVE node and overrides only `code`, so the value is a defeatedBattles ledger
-// key, not a place (CDG's three boss confrontations; the same codes already appear in
-// `battles:` completion gates and defeatedBattles guards, which this gate never scanned).
-// Explicit list in the NODE_KEYED/NOT_NODE_KEYED house style: an UNLISTED synthetic code
-// still fails, and the exemption applies to `nodeCode:` ONLY — a synthetic code in
+// key, not a place (CDG's three boss confrontations). §VM-01-G-FU widened the fence to the
+// other shapes those codes live in (`code:` spreads, `defeatedBattles[…]` guards,
+// `battles:` gates, `nodeCode ===` overlay guards — phase 6), and the list grew 3 → 20:
+// the engine-region Class-F stack mints one per staged fight. Explicit classification in
+// the NODE_KEYED/NOT_NODE_KEYED house style: an UNLISTED synthetic code still fails, and
+// the `nodeCode:` FIELD exemption applies to `nodeCode:` ONLY — a synthetic code in
 // `activateNode`/`waypointNode`/… is a real defect (asserted by the selftest).
-const SYNTHETIC_BATTLE_CODES = ['CQ_TAZ', 'CQ_BOSS', 'CQ_KING'];
+const SYNTHETIC_BATTLE_CODES = {
+  CQ_TAZ:      '§VM-01-G4d — CDG boss menu, Taz confrontation',
+  CQ_BOSS:     '§VM-01-G4d — CDG boss menu, Don confrontation',
+  CQ_KING:     '§VM-01-G4d — CDG boss menu, Cat-King confrontation',
+  MT_WARDEN:   'Layer 56 — Void Shaman Warden (hook launch + overlay guard)',
+  CY_VOID:     'Layer 41 — Void Below descend at HKG',
+  WG0_TRIAL:   '§CROWN-01 — Sea Serpent gate trial at WG0',
+  HW1_KELPIE:  '§CROWN-01 — Kelpie dispatch at HW1',
+  HW1_WITCH:   '§CROWN-01 — Sea Witch commission at HW1',
+  HG1_MUDCRAB: '§CROWN-01 — Mudcrab dispatch at HG1',
+  HG1_OCTOPUS: '§CROWN-01 — Giant Octopus commission at HG1',
+  HN1_SPAWN:   '§CROWN-01 — Sea Spawn dispatch at HN1',
+  HN1_DEMON:   '§CROWN-01 — Sea Demon commission at HN1',
+  INN_EEL:     '§CROWN-01 — Giant Eel inn commission at INN',
+  HCA_BOSS:    '§CROWN-01 — the Leviathan arc boss at HCA',
+  MS_BILGE:    '§WHODUNIT-01 — Sea Spawn ×2 bilge fight at SEN',
+  SB_PRIVATEER:'§NAVAL-01 — the Intercept privateer fight at GCI',
+  BN_NIGHTHAG: '§HUNT-02 — Night Hag relay-post fight at BNX',
+  LD_DROWNERS: '§HUNT-01 — Drowner ×3 den fight at VAW',
+  VS_SHADOW:   '§WISDOM-01 — the mirror-construct fight at VS',
+  DSJ_EELS:    '§LXX — Giant Eel ×2 kelp-channel fight at DSJ',
+};
 // Objects whose KEYS are `<from>_to_<to>` node pairs.
 const ROUTE_KEYED = ['NPC_FAREWELLS'];
 
@@ -139,6 +173,33 @@ function localObjects(src) {
 
 function lineOf(src, idx) { return src.slice(0, idx).split('\n').length; }
 
+// Comments → spaces (newlines kept, so line numbers survive; strings preserved — the
+// literals phase 6 scans ARE strings). Two of the phase-6 corpus hits are prose inside
+// comments (`node.code === 'XX'` in the NODE_PANELS header, `defeatedBattles['CF']` in
+// the Pit Championship note) — a scanner without this is the §AUDIT-03f defect again.
+function stripComments(src) {
+  let out = '', i = 0;
+  const n = src.length;
+  while (i < n) {
+    const ch = src[i];
+    if (ch === '/' && src[i + 1] === '/') {
+      let j = src.indexOf('\n', i); if (j < 0) j = n;
+      out += ' '.repeat(j - i); i = j; continue;
+    }
+    if (ch === '/' && src[i + 1] === '*') {
+      let j = src.indexOf('*/', i); j = j < 0 ? n : j + 2;
+      out += src.slice(i, j).replace(/[^\n]/g, ' '); i = j; continue;
+    }
+    if (ch === "'" || ch === '"' || ch === '`') {
+      const q = ch; let j = i + 1;
+      while (j < n && src[j] !== q) { if (src[j] === '\\') j++; j++; }
+      j++; out += src.slice(i, j); i = j; continue;
+    }
+    out += ch; i++;
+  }
+  return out;
+}
+
 // ── the audit ─────────────────────────────────────────────────────────────────
 function audit(src, live) {
   const findings = [];
@@ -170,7 +231,7 @@ function audit(src, live) {
     const re = new RegExp(`\\b${f}\\s*:\\s*'([A-Z][A-Z0-9_]{0,5})'`, 'g');
     let m;
     while ((m = re.exec(src))) {
-      if (f === 'nodeCode' && SYNTHETIC_BATTLE_CODES.includes(m[1])) continue;   // §VM-01-G4d
+      if (f === 'nodeCode' && SYNTHETIC_BATTLE_CODES[m[1]]) continue;   // §VM-01-G4d
       if (!live.has(m[1])) findings.push(`[field] ${f}:'${m[1]}' at line ${lineOf(src, m.index)} is not a NODE_MAP key`);
     }
   }
@@ -209,6 +270,44 @@ function audit(src, live) {
   for (const name of LOCAL_NODE_KEYED) {
     if (!seenLocal.has(name)) findings.push(`[local] ${name} — declared in LOCAL_NODE_KEYED but not found as a function-local literal`);
   }
+
+  // 6. comparisons + battle codes (§VM-01-G-FU) — comment-stripped, then four textual
+  //    shapes. A literal resolves in NODE_MAP or is a classified synthetic battle code;
+  //    anything else is dead code waiting to be discovered by a player not seeing it.
+  const bare = stripComments(src);
+  const CODE_LIT = "['\"]([A-Z][A-Z0-9_]{0,15})['\"]";
+  const cmpShapes = [
+    ['cmp',        new RegExp('\\bnode\\.code\\s*===\\s*' + CODE_LIT, 'g')],
+    ['cmp',        new RegExp('\\bnodeCode\\s*===\\s*' + CODE_LIT, 'g')],
+    ['battlecode', new RegExp('defeatedBattles[^\\[\\n]{0,8}\\[\\s*' + CODE_LIT + '\\s*\\]', 'g')],
+    ['battlecode', new RegExp('\\bcode\\s*:\\s*' + CODE_LIT, 'g')],
+  ];
+  for (const [tag, re] of cmpShapes) {
+    let m;
+    while ((m = re.exec(bare))) {
+      if (live.has(m[1]) || SYNTHETIC_BATTLE_CODES[m[1]]) continue;
+      findings.push(`[${tag}] '${m[1]}' at line ${lineOf(bare, m.index)} resolves in neither NODE_MAP nor SYNTHETIC_BATTLE_CODES`);
+    }
+  }
+  { // battles: completion-gate arrays — same rule, member by member
+    const re = /\bbattles\s*:\s*\[([^\]]*)\]/g;
+    let m;
+    while ((m = re.exec(bare))) {
+      let mm; const r2 = new RegExp(CODE_LIT, 'g');
+      while ((mm = r2.exec(m[1]))) {
+        if (live.has(mm[1]) || SYNTHETIC_BATTLE_CODES[mm[1]]) continue;
+        findings.push(`[battlecode] battles-gate '${mm[1]}' at line ${lineOf(bare, m.index)} resolves in neither NODE_MAP nor SYNTHETIC_BATTLE_CODES`);
+      }
+    }
+  }
+  // …and the classification stays honest in the other direction: a listed synthetic
+  // battle code the file no longer mentions is a stale entry, same as a NODE_KEYED
+  // registry that stopped existing.
+  for (const code of Object.keys(SYNTHETIC_BATTLE_CODES)) {
+    if (!bare.includes(`'${code}'`) && !bare.includes(`"${code}"`)) {
+      findings.push(`[battlecode] '${code}' is classified in SYNTHETIC_BATTLE_CODES but occurs nowhere in the file — retire the entry`);
+    }
+  }
   return findings;
 }
 
@@ -226,6 +325,13 @@ function selftest(src, live) {
     // unclassified one. The second plant is the defect that hid `CLUSTER` for months.
     ['local',    src.replace('  const CLUSTER = {\n', '  const CLUSTER = {\n    ZZQ:\'birka\',\n'), 'local/deadkey'],
     ['local',    src.replace('  const CLUSTER = {', '  const PLANTED_LOCAL = { AAA:1, BBB:2 };\n  const CLUSTER = {'), 'local/classify'],
+    // §VM-01-G-FU — phase 6, both halves: a dead comparison literal, and an UNLISTED
+    // synthetic battle code (the classification must be explicit, not a wildcard).
+    ['cmp',        src.replace("node.code === 'SSJ'", "node.code === 'ZZQ'"), 'cmp/deadcode'],
+    ['battlecode', src.replace("code:'WG0_TRIAL'", "code:'ZZ_TRIAL'"), 'battlecode/unlisted'],
+    // the inverse rule: a classified synthetic the file stops mentioning is a stale entry
+    // (every DSJ_EELS site swapped to a LIVE code, so ONLY the staleness rule can fire)
+    ['battlecode', src.split("'DSJ_EELS'").join("'TLS'"), 'battlecode/stale-entry'],
   ];
   let ok = true;
   for (const [phase, planted, label] of plants) {
@@ -234,6 +340,18 @@ function selftest(src, live) {
     const hits = audit(planted, live).filter(f => f.startsWith(`[${phase}]`));
     if (!hits.length) { console.error(`✗ selftest[${name}] — planted defect NOT caught`); ok = false; }
     else console.log(`✓ selftest[${name}] — caught: ${hits[0]}`);
+  }
+  // §VM-01-G-FU — the phase-6 NEGATIVE control: the same dead literal inside a COMMENT
+  // must NOT fire. Two real comments in the corpus carry exactly this shape; a scanner
+  // that flags them is the §AUDIT-03f defect wearing a gate's badge.
+  {
+    const planted = src.replace('function storyRender', "// planted prose: node.code === 'ZZQ' and defeatedBattles['ZZ_PLANT'] in a comment\nfunction storyRender");
+    if (planted === src) { console.error('✗ selftest[cmp/comment-immunity] — the plant did not apply (anchor moved)'); ok = false; }
+    else {
+      const hits = audit(planted, live).filter(f => f.includes('ZZQ') || f.includes('ZZ_PLANT'));
+      if (hits.length) { console.error(`✗ selftest[cmp/comment-immunity] — a comment fired the gate: ${hits[0]}`); ok = false; }
+      else console.log('✓ selftest[cmp/comment-immunity] — a dead literal in a comment is prose, not a finding');
+    }
   }
   return ok;
 }
@@ -257,4 +375,5 @@ if (findings.length) {
   process.exit(1);
 }
 console.log(`✓ check:noderegs — ${NODE_KEYED.length} node-keyed registries, ${LOCAL_NODE_KEYED.length} function-local ones, `
-  + `${NODE_FIELDS.length} node fields and ${ROUTE_KEYED.length} route table(s) all resolve against ${live.size} live nodes`);
+  + `${NODE_FIELDS.length} node fields, ${ROUTE_KEYED.length} route table(s), comparison literals and `
+  + `${Object.keys(SYNTHETIC_BATTLE_CODES).length} classified battle codes all resolve against ${live.size} live nodes`);

@@ -240,3 +240,93 @@ immediately *after* the row's insert on a different anchor, and **Kenickie** is 
 surface belongs to the mixed CDG/Tilbury/Visby blocks G2 assigned to G3's territory. Both are
 Class-E candidates for a later slice, not residue of this one. **What remains above the front is
 G4 (Class D per-verb, needs its own child report) and the G-FU engine-region exceptions.**
+
+## 11. G-FU triage (2026-08-05) — the engine region censused, the "front" metaphor breaks below the engine, and the fence ships before any block moves
+
+**The row said "the 47 engine-region inline exceptions (Class F): triage after G1–G4." G1–G4 are
+complete, so this is the triage — and the count held: 47.** Re-measured live at `513df2b`: the
+file carries **115** `node.code ===` comparisons (+1 in a comment). They split **36** registry
+self-gates (the migrated `NODE_PANELS`/`NODE_HOOKS` bodies' own verbatim guards — by design) ·
+**24** above the front (G4 territory: the G4c-FU-blocked verbs, the deliberate non-migrations,
+the delayed one-time beats) · **48** below the front inside `storyRender` (**47** special-case +
+1 generic `q.waypointNode` comparison, which compares against *data* and is the engine done
+right) · **6** outside `storyRender` (the `quest_city_watch_patrol` ordered-visit writes ×3 in
+`storyCheckQuests`; the INN kindness-discount pricing ×3 in `storySleep`/`storyConfirmSleep`).
+
+**Finding 1 — the "migration front" metaphor breaks below `_mkSection`.** The parent's model was
+two programs stacked: special cases, then the generic engine. Reading the engine region end to
+end shows a THIRD layer: after the generic sections (Fish / Encounter / Quests / Board / Loot /
+Rest / World / EB chips / Key Events, all data-driven) sits a **second special-case stack —
+~1,200 lines, ~38 blocks** — accreted by the newer content arcs: §CROWN-01 (WG0/HW1/HG1/HN1/INN/
+HCA), §LXX–LXXIII (CAN/DA2/DA3/DSJ/DSF), §SPARK-01/02 + §WHODUNIT-01 + §NAVAL-01 + §PORT-01/02
+(LCY/SEN/GCI/DNF/MME), §HUNT-01/02 (WRO/BNX/HFT/KSU/ALF/VAW), §ALCHEMY-01 + §WISDOM-01 (KIR/MAN/
+SEN/PDL/MLA/ATH/VS), plus the §XLV SSJ tournament. The front did not merely stop moving backward
+— **new content started accreting BELOW it**, in the same five shapes the §2 taxonomy already
+names. Every block is the `.sweelinck-variant` house pattern: a state-multiplexed colored panel,
+usually with one or two effect buttons, several launching a staged `setTimeout(storyPreBattle,
+400)` fight under a **synthetic defeatedBattles code**.
+
+**Finding 2 — zero dead references. The rot thesis has not struck below the front, and the reason
+is age, not architecture.** Verified against the live registries: all **36** unique compared node
+codes resolve in `NODE_MAP`; all **12** referenced quest IDs exist in `QUEST_DB`; all **14**
+battle keys exist in `MONSTER_POOL`; every flag these blocks read has a writer (the four
+apparent orphans — `hagDefeated2`, `drownersDefeated`, `seaStrangenessNoticed`,
+`whodunit2Solved` — are written by `flag_write` bits in the `set:[…]` array shape). The two
+unresolved hits the sweep raised are both **comments** (`node.code === 'XX'` in the NODE_PANELS
+header; `defeatedBattles['CF']` in the Pit Championship note) — the §AUDIT-03f lesson biting the
+sweep itself. This stack is young content authored against live codes. `birkaNpcs` was young
+once too.
+
+**Finding 3 — nothing fenced any of it, and that is the shippable half.** Gate #13 scanned
+registries, node-valued *fields* and routes — never a **comparison literal**, and never the
+**synthetic battle code** family (`code:'WG0_TRIAL'` spreads, `defeatedBattles['…']` guards,
+`battles:[…]` completion gates, `nodeCode ===` overlay guards — the exact shapes G4d's ship
+record noted "this gate never scanned"). **Shipped: `check-noderegs.js` phase 6.** Comment-aware
+by construction (comments → spaces, offsets preserved); every literal in the four shapes must
+resolve in `NODE_MAP` **or** be classified in `SYNTHETIC_BATTLE_CODES`, which grew 3 → **20**
+(each with its arc named); a classified code the file stops mentioning is a **stale entry** and
+fails in the other direction. Selftest grew 8 → **11**: a planted dead comparison caught, an
+unlisted synthetic caught, a stale classification caught, and the **negative control** — the
+same dead literal inside a comment is prose, not a finding. Stated limit, in the §AUDIT-03q
+house style: the scan is textual, so a comparison through an alias (`const c = node.code;
+c === 'XX'`) is not caught — stated rather than left as silence that reads like coverage.
+
+**Classification of the 47 (by the §2 taxonomy, read against the *shipped* grammar):**
+
+| Shape | Count | Sites | Expressible today? |
+|---|---|---|---|
+| D1 combat-dispatch verb (the G4d shape: `narrative` + `combat` w/ synthetic code) | ~14 | WG0 · HW1×2 · HG1×2 · HN1×2 · INN · HCA boss · BN hag · LD drowners · DSJ eels · SB fight leg · VS shadow fight leg | **YES** — G4d shipped this exact shape |
+| Multi-state colored panel (Class A at 2–5 states, `fn(st)` text + style) | ~12 | NWI · KSU · ALF · PDL · MLA · done-states of DA2/DA3/WRO/HFT · SEN spark | **YES if** `NODE_PANELS` takes fn-valued `text`/`style` — G4c's `bits:fn(st)` precedent |
+| Staged chain panels (panel + 1–3 staged effect buttons) | ~14 | LCY · SEN whodunit · DNF×2 · MME · KIR · MAN · SEN ship · ATH · CAN · DA2 gate · DA3 · DSF · HG1 gift · HCA marks | **MOSTLY** — verbs are label+bits; the chrome question is G4c-FU ask 2 |
+| D3 concurrent menu | 1 | GCI intercept (3 role buttons) | **YES** — G4d's container mode |
+| Class E bespoke UI | 1 | SSJ tournament (accordion state machine over `NPC_TOUR_OPPONENTS`) | **NO** — `NODE_HOOKS` verbatim, G2's method |
+| Genuine engine specials | 5 | TLS `isFinal` framing · INN sleep pricing ×3 · patrol ordered-visit ×3 (counted as 2 blocks) | **Design calls** — node-field vs grammar |
+
+One census correction to G4: **MME's hull-repair button is a seventh hand-written gold site**
+(`200gp`, refuse-at-click, `if (gold < 200) { storyMsg(refuse); return }`) — G4 counted six.
+It is a `cost`-leaf consumer waiting, and it confirms the leaf's contract generalizes.
+
+**Slice plan (locked; each independently shippable, per-arc so every slice has one fiction):**
+- **G-FU-a — §CROWN-01** (8 blocks at WG0/HW1/HG1/HN1/INN/HCA): the combat verbs are G4d's
+  shape verbatim; the HCA iodine pre-buff is a 2-verb sequence; the marks conversion is a
+  `NODE_PANELS` once-panel with fn text. Largest uniform win, no design call.
+- **G-FU-b — §HUNT-01/02** (6 blocks at WRO/BNX/HFT/KSU/ALF/VAW): hooks + investigation panels
+  + 2 combat verbs. No design call.
+- **G-FU-c — §ALCHEMY-01 + §WISDOM-01** (8 blocks, the Roen arc): staged verbs + panels; the
+  VS shadow block is a genuine **D2 choice** (accept vs fight) — the second `choice` consumer.
+- **G-FU-d — the harbor chains** (§SPARK-01/02 · §WHODUNIT-01 · §NAVAL-01 · §PORT-01/02 at
+  LCY/SEN/GCI/DNF/MME): the GCI menu is D3; the MME hull repair converts to `cost` in place.
+- **G-FU-e — the §LXX family** (CAN/DA2/DA3/DSJ/DSF): small verbs + done-panels.
+- **G-FU-f — the engine specials + SSJ**: SSJ → `NODE_HOOKS` verbatim (no design call); TLS
+  `isFinal` / INN pricing / patrol need their **design calls** (node field vs grammar vs stay)
+  — filed, not defaulted.
+- Panel chrome note: every block above uses per-state `border-left-color`/`color` on
+  `.sweelinck-variant`. If `NODE_PANELS.style` (G1's own field) is accepted per-state via
+  `fn(st)`, the chrome question **dissolves** for this stack — it is G4c-FU ask 2's
+  `.sweelinck-variant` *builder* case, not its six-knob generic-panel case. To be re-read at
+  G-FU-a ship time, not answered here.
+
+**What this triage deliberately did not do:** move a block (the fence had to exist first — the
+§DX-02g "durable half" order), answer G4c-FU's asks (they are the user's), or pin the 47 count
+in a test (**pin the property, never the incident** — the property is "every literal resolves or
+is classified," and it is now gate #13 phase 6, which the count will pass through as it shrinks).
