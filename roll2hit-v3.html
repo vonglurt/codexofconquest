@@ -31453,6 +31453,36 @@ const NODE_PANELS = [
       }
       return _hcaText;
     } },
+  // ── §VM-01-G-FU-b: the §HUNT-01 pure-text panels (Class A). Each 2-state block becomes two
+  // entries sharing one DOM id with mutually exclusive `when`s — the DUS else-leg precedent —
+  // because per-state chrome on a static `css` string needs no fn-valued css (that question
+  // stays with G4c-FU ask 2). The done-state css strings are the blocks' effective styles
+  // (base cssText + the two property overrides, serialized identically). HFT's done panel is
+  // id-less exactly as the inline block's div was. WRO's done panel is NOT here — the junction
+  // vignette + Corelli button co-render at WRO and would re-stack it (see _nodeHookHuntWroRelay).
+  // §HUNT-01: LS — Elder Fisherwoman aftermath at HFT
+  { nodes:['HFT'],
+    when:st => st.drownersDefeated,
+    css:'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;',
+    text:'✅ The den is cleared. The Elder Fisherwoman knows. She did not look surprised. The Guild will adjust their theory over the next two seasons.' },
+  // §HUNT-01: LH — hull investigation panel at KSU
+  { id:'story-hunt-lh', nodes:['KSU'],
+    when:st => st.huntHookReceived && !st.lakeClueFound,
+    css:'margin-top:10px;border-left-color:#2a4a5a;color:#7ab0c0;font-size:12px;',
+    text:'🔍 The recovered boat hull is at the dock. The Guild master says: spirit marks. The marks are at the waterline on the port side. INT Investigation DC 12 to read what made them. See quest panel to attempt the check.' },
+  { id:'story-hunt-lh', nodes:['KSU'],
+    when:st => st.huntHookReceived && st.lakeClueFound,
+    css:'margin-top:10px;border-left-color:#3a5a2a;color:#80b870;font-size:12px;',
+    text:'✅ Hull examined. The marks are physical — claw drag, waterline grip. Not spirit work. A creature. The tracks north will show where it goes.' },
+  // §HUNT-01: LN — trail investigation panel at ALF
+  { id:'story-hunt-ln', nodes:['ALF'],
+    when:st => st.lakeClueFound && !st.lakeLairLocated,
+    css:'margin-top:10px;border-left-color:#2a4a5a;color:#7ab0c0;font-size:12px;',
+    text:'🔍 The north shore path is disturbed. Mud scuffed, shelf edge worn. Something has been moving in and out of the water here regularly. WIS Perception DC 13 to read the direction and locate the den. See quest panel to attempt the check.' },
+  { id:'story-hunt-ln', nodes:['ALF'],
+    when:st => st.lakeClueFound && st.lakeLairLocated,
+    css:'margin-top:10px;border-left-color:#3a5a2a;color:#80b870;font-size:12px;',
+    text:'✅ Trail read. Three of them — from the track spacing. They denned at the shelf collapse. North Shore Den is accessible.' },
 ];
 
 // §VM-01-G1: render every NODE_PANELS entry active for this node. Runs immediately after the
@@ -33014,6 +33044,130 @@ function _nodeHookHcaLeviathan(node) {
     }
   }
 }
+// ── §VM-01-G-FU-b: the four §HUNT-01/02 panel blocks, VERBATIM (G2's method). All four carry a
+// button INSIDE their .sweelinck-variant chrome (BNX/VAW: the staged battle button; WRO/HFT: the
+// quest-hook button) — the WG0 shape — so they stay hooks until the G4c-FU ask-2 panel-chrome
+// question is answered; the plan's "2 combat verbs" (BN hag, LD drowners) corrected the same way
+// WG0/HCA did in G-FU-a. WRO additionally keeps its DONE branch here rather than in NODE_PANELS:
+// the junction vignette and the Corelli button co-render at WRO, and _renderNodePanels runs
+// EARLIER in storyRender than both inserts, so the panel table would re-stack the done panel
+// below them — in-place dispatch is what preserves the LIFO order (the G2 rule, measured live).
+// HFT's done branch has no co-rendering sibling and moved to NODE_PANELS with KSU/ALF.
+function _nodeHookHuntWroRelay(node) {
+  // §HUNT-02: J1 — Tessie's relay road warning
+  { const _j1Old = document.getElementById('story-hunt2-j1'); if (_j1Old) _j1Old.remove();
+    if (node.code === 'WRO' && !S_story.huntHook2Received) {
+      const _j1Div = document.createElement('div');
+      _j1Div.id = 'story-hunt2-j1';
+      _j1Div.className = 'sweelinck-variant';
+      _j1Div.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
+      _j1Div.textContent = '🛤 At the crossroads stone: Tessie, moving east, stops. "The relay horses won\'t pass the eastern bend. Four days. Road wardens say bandits — old mill fires at night. I\'ve run this road six years. There are no bandits in those fields." She keeps moving. She has told everyone. You are the first to look like you might do something about it.';
+      const _j1Btn = document.createElement('button');
+      _j1Btn.className = 'inv-use-btn'; _j1Btn.style.marginTop = '6px';
+      _j1Btn.textContent = '🛤 Follow up on the relay road warning';
+      _j1Btn.addEventListener('click', () => {
+        _j1Btn.disabled = true;
+        S_story.huntHook2Received = true;
+        S_story.xp = (S_story.xp||0) + 50;
+        storyMsg('🛤 Tessie\'s route takes her east toward Birka. But the relay road goes north from this fork — the farm stations, the sleeping posts, the eastern bend she named.\n\nFour days of horses refusing to pass. The road wardens have a theory about bandit fires. The theory does not explain why horses stop at a precise point rather than anywhere along the road.\n\nQuest: The Relay Road Warning — active. Quest: Reading the Road — active at this fork. +50 XP.');
+        storyRender(node);
+      });
+      _j1Div.appendChild(_j1Btn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _j1Div);
+    }
+    if (node.code === 'WRO' && S_story.hagDefeated2) {
+      const _j1DoneDiv = document.createElement('div');
+      _j1DoneDiv.className = 'sweelinck-variant';
+      _j1DoneDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
+      _j1DoneDiv.textContent = '✅ The relay road is clear. The horses are running the eastern bend again. Tessie\'s route is unobstructed.';
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _j1DoneDiv);
+    }
+  }
+}
+function _nodeHookHuntBnxBend(node) {
+  // §HUNT-02: BN — investigation panels + battle trigger
+  { const _bnOld = document.getElementById('story-hunt2-bn'); if (_bnOld) _bnOld.remove();
+    if (node.code === 'BNX') {
+      const _bnDiv = document.createElement('div');
+      _bnDiv.id = 'story-hunt2-bn';
+      _bnDiv.className = 'sweelinck-variant';
+      if ((S_story.defeatedBattles||{})['BN_NIGHTHAG']) {
+        _bnDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
+        _bnDiv.textContent = '✅ The sleeping post is empty. The hag\'s territory is gone. The relay horses passed the bend this morning for the first time in four days. The station master has the token ready.';
+      } else if (S_story.bendLairFound) {
+        _bnDiv.style.cssText = 'margin-top:10px;border-left-color:#6a3a2a;color:#c07858;font-size:12px;';
+        _bnDiv.textContent = '⚠ Night hag confirmed. She works from the sleeping post — riding the relay horses at night, draining them, leaving the road impassable. She will return at dusk. She is here now.';
+        const _bnBtn = document.createElement('button');
+        _bnBtn.className = 'inv-use-btn'; _bnBtn.style.marginTop = '6px';
+        _bnBtn.textContent = '⚔ Drive the Night Hag out — clear the relay post';
+        _bnBtn.addEventListener('click', () => {
+          _bnBtn.disabled = true;
+          storyMsg('At dusk the sleeping post moves. Not the post — the air around it. A hag works this way: she does not announce herself. She is simply present and then she is present in the wrong way, and by the time you notice the difference she is already between you and the exit.\n\nShe does not speak. She has been doing this since before Birka had relay stations. She has no opinion about the relay station. She has an opinion about the horses. They are hers.');
+          setTimeout(() => storyPreBattle({ ...node, code:'BN_NIGHTHAG', battle:{ label:'Night Hag — The Sleeping Road', key:'night_hag', count:1 } }), 400);
+        });
+        _bnDiv.appendChild(_bnBtn);
+      } else if (S_story.bendRoadClue) {
+        _bnDiv.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
+        _bnDiv.textContent = '🔍 The sleeping post is at the tree line. The tether rings are worn in a pattern that is wrong for relay horses. The soil beside the post has an impression in it. INT Investigation DC 13 to read the evidence. See quest panel to attempt the check.';
+      } else {
+        _bnDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a3a;color:#909090;font-size:12px;';
+        _bnDiv.textContent = '🛤 The eastern bend. Hoof marks end 200 paces from the sleeping post. The relay station road continues north. The road wardens say bandit fires. The mill is empty.';
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _bnDiv);
+    }
+  }
+}
+function _nodeHookHuntHftElder(node) {
+  // §HUNT-01: LS — Elder Fisherwoman hook
+  { const _lsOld = document.getElementById('story-hunt-ls'); if (_lsOld) _lsOld.remove();
+    if (node.code === 'HFT' && !S_story.huntHookReceived) {
+      const _lsDiv = document.createElement('div');
+      _lsDiv.id = 'story-hunt-ls';
+      _lsDiv.className = 'sweelinck-variant';
+      _lsDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a5a;color:#7ab0c0;font-size:12px;';
+      _lsDiv.textContent = '🎣 At the south dock: a woman, ninety-one years on this lake, watching the north shore. Three boats have not come back since the spring. The Guild has placed spirit offerings. She has not placed offerings. "Something is eating the fish. Something that eats a boat is not a spirit."';
+      const _lsBtn = document.createElement('button');
+      _lsBtn.className = 'inv-use-btn'; _lsBtn.style.marginTop = '6px';
+      _lsBtn.textContent = '🎣 Speak to the Elder Fisherwoman';
+      _lsBtn.addEventListener('click', () => {
+        _lsBtn.disabled = true;
+        S_story.huntHookReceived = true;
+        S_story.xp = (S_story.xp||0) + 100;
+        storyMsg('🎣 She says: three boats. North end. Since the rock shelf fell in spring.\n\n"The Guild has been here four times. They brought offerings. The offerings go before morning — something takes them. They say the spirit is appeased. I say the spirit is hungry. I say it is not a spirit."\n\nShe points toward the harbor. "There is a recovered hull at the dock. The Guild master will tell you what the marks mean. Look at the marks yourself."\n\nShe looks back at the water. She is not asking you to go. She is telling you what she knows.\n\nQuest: Something in the Lake — active. Quest: Scale Marks on the Hull — active at the Lake Harbor. +100 XP.');
+        storyRender(node);
+      });
+      _lsDiv.appendChild(_lsBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _lsDiv);
+    }
+  }
+}
+function _nodeHookHuntVawDen(node) {
+  // §HUNT-01: LD — drowner den battle trigger
+  { const _ldOld = document.getElementById('story-hunt-ld'); if (_ldOld) _ldOld.remove();
+    if (node.code === 'VAW') {
+      const _ldDiv = document.createElement('div');
+      _ldDiv.id = 'story-hunt-ld';
+      _ldDiv.className = 'sweelinck-variant';
+      if ((S_story.defeatedBattles||{})['LD_DROWNERS']) {
+        _ldDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
+        _ldDiv.textContent = '✅ Den cleared. The shelf collapse is quiet. Drowned Compass recovered. The Guild captain\'s name is on the case. The north end of the lake is open.';
+      } else {
+        _ldDiv.style.cssText = 'margin-top:10px;border-left-color:#5a2a2a;color:#c07070;font-size:12px;';
+        _ldDiv.textContent = '⚠ Three drowners are at the base of the collapse. They have been here since the rock fell. They are aware you are on the shelf above them.';
+        const _ldBtn = document.createElement('button');
+        _ldBtn.className = 'inv-use-btn'; _ldBtn.style.marginTop = '6px';
+        _ldBtn.textContent = '⚔ Enter the den — clear the drowners';
+        _ldBtn.addEventListener('click', () => {
+          _ldBtn.disabled = true;
+          storyMsg('The shelf collapse opens into a flooded chamber — wide enough for three drowners to move freely. The boat timbers are here: hull sections, a mast section, rope. They are not hidden. The drowners do not hide what they do.\n\nThey come up from the water channel at the far end.');
+          setTimeout(() => storyPreBattle({ ...node, code:'LD_DROWNERS', battle:{ label:'Drowner × 3 — The North Den', key:'drowner', count:3 } }), 400);
+        });
+        _ldDiv.appendChild(_ldBtn);
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _ldDiv);
+    }
+  }
+}
 const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'nue-lower-archive', nodes:['NUE'], fn:_nodeHookNueLowerArchive },
   { id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA'], fn:_nodeHookVoidArchaeology },
@@ -33055,6 +33209,10 @@ const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'birka-quill-ambient-song', nodes:['MHQ'], anchor:'npc-row', fn:_nodeHookBirkaQuillAmbientSong },
   { id:'wg0-gate-trial', nodes:['WG0'], fn:_nodeHookWg0GateTrial },    // §VM-01-G-FU-a
   { id:'hca-leviathan', nodes:['HCA'], fn:_nodeHookHcaLeviathan },     // §VM-01-G-FU-a
+  { id:'hunt-wro-relay', nodes:['WRO'], fn:_nodeHookHuntWroRelay },    // §VM-01-G-FU-b
+  { id:'hunt-bnx-bend', nodes:['BNX'], fn:_nodeHookHuntBnxBend },      // §VM-01-G-FU-b
+  { id:'hunt-hft-elder', nodes:['HFT'], fn:_nodeHookHuntHftElder },    // §VM-01-G-FU-b
+  { id:'hunt-vaw-den', nodes:['VAW'], fn:_nodeHookHuntVawDen },        // §VM-01-G-FU-b
 ];
 function _runNodeHook(id, node, ctx) {
   for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node, ctx);
@@ -35362,154 +35520,11 @@ function storyRender(node, prefix) {
       }
     }
   }
-  // §HUNT-02: J1 — Tessie's relay road warning
-  { const _j1Old = document.getElementById('story-hunt2-j1'); if (_j1Old) _j1Old.remove();
-    if (node.code === 'WRO' && !S_story.huntHook2Received) {
-      const _j1Div = document.createElement('div');
-      _j1Div.id = 'story-hunt2-j1';
-      _j1Div.className = 'sweelinck-variant';
-      _j1Div.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
-      _j1Div.textContent = '🛤 At the crossroads stone: Tessie, moving east, stops. "The relay horses won\'t pass the eastern bend. Four days. Road wardens say bandits — old mill fires at night. I\'ve run this road six years. There are no bandits in those fields." She keeps moving. She has told everyone. You are the first to look like you might do something about it.';
-      const _j1Btn = document.createElement('button');
-      _j1Btn.className = 'inv-use-btn'; _j1Btn.style.marginTop = '6px';
-      _j1Btn.textContent = '🛤 Follow up on the relay road warning';
-      _j1Btn.addEventListener('click', () => {
-        _j1Btn.disabled = true;
-        S_story.huntHook2Received = true;
-        S_story.xp = (S_story.xp||0) + 50;
-        storyMsg('🛤 Tessie\'s route takes her east toward Birka. But the relay road goes north from this fork — the farm stations, the sleeping posts, the eastern bend she named.\n\nFour days of horses refusing to pass. The road wardens have a theory about bandit fires. The theory does not explain why horses stop at a precise point rather than anywhere along the road.\n\nQuest: The Relay Road Warning — active. Quest: Reading the Road — active at this fork. +50 XP.');
-        storyRender(node);
-      });
-      _j1Div.appendChild(_j1Btn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _j1Div);
-    }
-    if (node.code === 'WRO' && S_story.hagDefeated2) {
-      const _j1DoneDiv = document.createElement('div');
-      _j1DoneDiv.className = 'sweelinck-variant';
-      _j1DoneDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-      _j1DoneDiv.textContent = '✅ The relay road is clear. The horses are running the eastern bend again. Tessie\'s route is unobstructed.';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _j1DoneDiv);
-    }
-  }
-  // §HUNT-02: BN — investigation panels + battle trigger
-  { const _bnOld = document.getElementById('story-hunt2-bn'); if (_bnOld) _bnOld.remove();
-    if (node.code === 'BNX') {
-      const _bnDiv = document.createElement('div');
-      _bnDiv.id = 'story-hunt2-bn';
-      _bnDiv.className = 'sweelinck-variant';
-      if ((S_story.defeatedBattles||{})['BN_NIGHTHAG']) {
-        _bnDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-        _bnDiv.textContent = '✅ The sleeping post is empty. The hag\'s territory is gone. The relay horses passed the bend this morning for the first time in four days. The station master has the token ready.';
-      } else if (S_story.bendLairFound) {
-        _bnDiv.style.cssText = 'margin-top:10px;border-left-color:#6a3a2a;color:#c07858;font-size:12px;';
-        _bnDiv.textContent = '⚠ Night hag confirmed. She works from the sleeping post — riding the relay horses at night, draining them, leaving the road impassable. She will return at dusk. She is here now.';
-        const _bnBtn = document.createElement('button');
-        _bnBtn.className = 'inv-use-btn'; _bnBtn.style.marginTop = '6px';
-        _bnBtn.textContent = '⚔ Drive the Night Hag out — clear the relay post';
-        _bnBtn.addEventListener('click', () => {
-          _bnBtn.disabled = true;
-          storyMsg('At dusk the sleeping post moves. Not the post — the air around it. A hag works this way: she does not announce herself. She is simply present and then she is present in the wrong way, and by the time you notice the difference she is already between you and the exit.\n\nShe does not speak. She has been doing this since before Birka had relay stations. She has no opinion about the relay station. She has an opinion about the horses. They are hers.');
-          setTimeout(() => storyPreBattle({ ...node, code:'BN_NIGHTHAG', battle:{ label:'Night Hag — The Sleeping Road', key:'night_hag', count:1 } }), 400);
-        });
-        _bnDiv.appendChild(_bnBtn);
-      } else if (S_story.bendRoadClue) {
-        _bnDiv.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
-        _bnDiv.textContent = '🔍 The sleeping post is at the tree line. The tether rings are worn in a pattern that is wrong for relay horses. The soil beside the post has an impression in it. INT Investigation DC 13 to read the evidence. See quest panel to attempt the check.';
-      } else {
-        _bnDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a3a;color:#909090;font-size:12px;';
-        _bnDiv.textContent = '🛤 The eastern bend. Hoof marks end 200 paces from the sleeping post. The relay station road continues north. The road wardens say bandit fires. The mill is empty.';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _bnDiv);
-    }
-  }
-  // §HUNT-01: LS — Elder Fisherwoman hook
-  { const _lsOld = document.getElementById('story-hunt-ls'); if (_lsOld) _lsOld.remove();
-    if (node.code === 'HFT' && !S_story.huntHookReceived) {
-      const _lsDiv = document.createElement('div');
-      _lsDiv.id = 'story-hunt-ls';
-      _lsDiv.className = 'sweelinck-variant';
-      _lsDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a5a;color:#7ab0c0;font-size:12px;';
-      _lsDiv.textContent = '🎣 At the south dock: a woman, ninety-one years on this lake, watching the north shore. Three boats have not come back since the spring. The Guild has placed spirit offerings. She has not placed offerings. "Something is eating the fish. Something that eats a boat is not a spirit."';
-      const _lsBtn = document.createElement('button');
-      _lsBtn.className = 'inv-use-btn'; _lsBtn.style.marginTop = '6px';
-      _lsBtn.textContent = '🎣 Speak to the Elder Fisherwoman';
-      _lsBtn.addEventListener('click', () => {
-        _lsBtn.disabled = true;
-        S_story.huntHookReceived = true;
-        S_story.xp = (S_story.xp||0) + 100;
-        storyMsg('🎣 She says: three boats. North end. Since the rock shelf fell in spring.\n\n"The Guild has been here four times. They brought offerings. The offerings go before morning — something takes them. They say the spirit is appeased. I say the spirit is hungry. I say it is not a spirit."\n\nShe points toward the harbor. "There is a recovered hull at the dock. The Guild master will tell you what the marks mean. Look at the marks yourself."\n\nShe looks back at the water. She is not asking you to go. She is telling you what she knows.\n\nQuest: Something in the Lake — active. Quest: Scale Marks on the Hull — active at the Lake Harbor. +100 XP.');
-        storyRender(node);
-      });
-      _lsDiv.appendChild(_lsBtn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _lsDiv);
-    }
-    if (node.code === 'HFT' && S_story.drownersDefeated) {
-      const _lsDoneDiv = document.createElement('div');
-      _lsDoneDiv.className = 'sweelinck-variant';
-      _lsDoneDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-      _lsDoneDiv.textContent = '✅ The den is cleared. The Elder Fisherwoman knows. She did not look surprised. The Guild will adjust their theory over the next two seasons.';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _lsDoneDiv);
-    }
-  }
-  // §HUNT-01: LH — hull investigation panel
-  { const _lhOld = document.getElementById('story-hunt-lh'); if (_lhOld) _lhOld.remove();
-    if (node.code === 'KSU' && S_story.huntHookReceived) {
-      const _lhDiv = document.createElement('div');
-      _lhDiv.id = 'story-hunt-lh';
-      _lhDiv.className = 'sweelinck-variant';
-      _lhDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a5a;color:#7ab0c0;font-size:12px;';
-      if (!S_story.lakeClueFound) {
-        _lhDiv.textContent = '🔍 The recovered boat hull is at the dock. The Guild master says: spirit marks. The marks are at the waterline on the port side. INT Investigation DC 12 to read what made them. See quest panel to attempt the check.';
-      } else {
-        _lhDiv.style.borderLeftColor = '#3a5a2a';
-        _lhDiv.style.color = '#80b870';
-        _lhDiv.textContent = '✅ Hull examined. The marks are physical — claw drag, waterline grip. Not spirit work. A creature. The tracks north will show where it goes.';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _lhDiv);
-    }
-  }
-  // §HUNT-01: LN — trail investigation panel
-  { const _lnOld = document.getElementById('story-hunt-ln'); if (_lnOld) _lnOld.remove();
-    if (node.code === 'ALF' && S_story.lakeClueFound) {
-      const _lnDiv = document.createElement('div');
-      _lnDiv.id = 'story-hunt-ln';
-      _lnDiv.className = 'sweelinck-variant';
-      _lnDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a5a;color:#7ab0c0;font-size:12px;';
-      if (!S_story.lakeLairLocated) {
-        _lnDiv.textContent = '🔍 The north shore path is disturbed. Mud scuffed, shelf edge worn. Something has been moving in and out of the water here regularly. WIS Perception DC 13 to read the direction and locate the den. See quest panel to attempt the check.';
-      } else {
-        _lnDiv.style.borderLeftColor = '#3a5a2a';
-        _lnDiv.style.color = '#80b870';
-        _lnDiv.textContent = '✅ Trail read. Three of them — from the track spacing. They denned at the shelf collapse. North Shore Den is accessible.';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _lnDiv);
-    }
-  }
-  // §HUNT-01: LD — drowner den battle trigger
-  { const _ldOld = document.getElementById('story-hunt-ld'); if (_ldOld) _ldOld.remove();
-    if (node.code === 'VAW') {
-      const _ldDiv = document.createElement('div');
-      _ldDiv.id = 'story-hunt-ld';
-      _ldDiv.className = 'sweelinck-variant';
-      if ((S_story.defeatedBattles||{})['LD_DROWNERS']) {
-        _ldDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-        _ldDiv.textContent = '✅ Den cleared. The shelf collapse is quiet. Drowned Compass recovered. The Guild captain\'s name is on the case. The north end of the lake is open.';
-      } else {
-        _ldDiv.style.cssText = 'margin-top:10px;border-left-color:#5a2a2a;color:#c07070;font-size:12px;';
-        _ldDiv.textContent = '⚠ Three drowners are at the base of the collapse. They have been here since the rock fell. They are aware you are on the shelf above them.';
-        const _ldBtn = document.createElement('button');
-        _ldBtn.className = 'inv-use-btn'; _ldBtn.style.marginTop = '6px';
-        _ldBtn.textContent = '⚔ Enter the den — clear the drowners';
-        _ldBtn.addEventListener('click', () => {
-          _ldBtn.disabled = true;
-          storyMsg('The shelf collapse opens into a flooded chamber — wide enough for three drowners to move freely. The boat timbers are here: hull sections, a mast section, rope. They are not hidden. The drowners do not hide what they do.\n\nThey come up from the water channel at the far end.');
-          setTimeout(() => storyPreBattle({ ...node, code:'LD_DROWNERS', battle:{ label:'Drowner × 3 — The North Den', key:'drowner', count:3 } }), 400);
-        });
-        _ldDiv.appendChild(_ldBtn);
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _ldDiv);
-    }
-  }
+  _runNodeHook('hunt-wro-relay', node);           // §HUNT-02: J1 — Tessie's relay road warning (+ done panel — see hook header for why it stays here)
+  _runNodeHook('hunt-bnx-bend', node);            // §HUNT-02: BN — investigation panels + battle trigger
+  _runNodeHook('hunt-hft-elder', node);           // §HUNT-01: LS — Elder Fisherwoman hook (done panel → NODE_PANELS)
+  // §HUNT-01: LH (KSU) + LN (ALF) investigation panels → NODE_PANELS (§VM-01-G-FU-b)
+  _runNodeHook('hunt-vaw-den', node);             // §HUNT-01: LD — drowner den battle trigger
   // §ALCHEMY-01: HL — The Shepherd's Dream (hook + return)
   { const _alchHLOld = document.getElementById('story-alch-hl'); if (_alchHLOld) _alchHLOld.remove();
     if (node.code === 'KIR') {

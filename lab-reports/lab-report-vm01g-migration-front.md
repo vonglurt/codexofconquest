@@ -395,3 +395,62 @@ which `uqf-node-verbs-crown.test.js` owns). `check:walk` 16/16 exit 0; full Play
 set).
 
 **Ship hash:** `56c08f1` (2026-08-05).
+
+## 11b. G-FU-b ship addendum (2026-08-05) — the §HUNT-01/02 stack moved as a provable no-op, and the plan's "2 combat verbs" corrected the same way WG0 did
+
+**The slice plan said "6 blocks at WRO/BNX/HFT/KSU/ALF/VAW: hooks + investigation panels +
+2 combat verbs." The block census held (6 blocks, 8 `node.code ===` comparisons — WRO and HFT
+carry two branches each); the shapes were corrected by measurement in two places, both by rules
+this report already recorded.**
+
+**Correction 1 — the "2 combat verbs" (BN hag, LD drowners) are not bare D1 buttons.** Both
+battle buttons live INSIDE their `.sweelinck-variant` panels (`_bnDiv.appendChild(_bnBtn)`,
+`_ldDiv.appendChild(_ldBtn)`) — the exact shape that moved WG0 out of §11's D1 row in G-FU-a.
+Splitting text→panel + button→verb would move the button from inside the bordered chrome to a
+full-width sibling below it (the G4c flex-column lesson: a DOM diff proves markup, not layout),
+so both blocks moved to **`NODE_HOOKS` verbatim** (G2's method) until the G4c-FU ask-2 chrome
+question is answered. This slice ships **zero verbs**, and that is the honest reading of its
+material: all four button-carrying blocks (WRO/HFT hook panels, BNX/VAW battle panels) are the
+panel-with-embedded-button shape.
+
+**Correction 2 — WRO's done panel cannot go to `NODE_PANELS`, for a stacking reason measured
+live.** `_renderNodePanels` runs EARLY in `storyRender` (`_renderNodePanels(node`), and at WRO
+the junction vignette and the Corelli merchant button both co-render as story-text-box
+'afterend' siblings, inserted LATER — so the panel table would re-stack the done panel BELOW
+them, where the inline block (last insert wins the top) put it ABOVE. The done branch stays in
+the `hunt-wro-relay` hook; the LIFO property is pinned by a test, G2's ZRH pattern. **HFT's done
+panel has no co-rendering sibling** (golden-verified: every HFT/KSU/ALF/VAW combo renders the
+hunt panel as the ONLY sibling), so it and the KSU/ALF investigation panels moved to
+`NODE_PANELS` — five entries. The per-state chrome needed **no fn-valued `css`**: each 2-state
+block is two entries sharing one DOM id with mutually exclusive `when`s (the DUS else-leg
+precedent), each entry's `css` the state's *effective* style — the base cssText with the two
+property overrides already applied, which serializes byte-identically. The §11 chrome note's
+fn-css dissolution stays unanswered and unneeded at this size; it becomes real at G-FU-c/d's
+larger multi-state panels.
+
+**What this slice deliberately did not change:** the staged 400ms `storyPreBattle` beats (hooks
+keep the block's own timing verbatim — the G4d same-beat delta applies only to verb
+transformations, and there are none here); and the WRO/HFT hook buttons' click narratives, which
+the end-of-render quest strip already overwrote on HEAD (the §BOARD-01-FU6 destroyed-narrative
+class, observed in the golden capture's `wro-click`/`hft-click` combos) — recovering them means
+transforming the blocks, which is the ask-2-blocked work, not this slice's.
+
+**Evidence.** Golden capture, **22 combos** over sibling DOM + bounding boxes + message
+text/class + pre-battle overlay/node + state, HEAD vs after: **22/22 byte-identical** — the
+first slice in the family with no delta at all, because nothing transformed: verbatim hooks kept
+ids, timings and chrome, and the five panel entries reproduce the inline divs' serialized styles
+exactly (including HFT's done div carrying no id, reproduced by an id-less entry).
+Self-stability 22/22. §7½: **8 story-column PNGs, 8/8 byte-identical**, wro-fresh and bnx-lair
+eyeballed live (embedded buttons inside their panels; junction vignette + Corelli stacking
+unchanged). 24-authored-string sweep, every string exactly once (the two double-counts are
+pre-existing independent uses: BNX's own `node.battle` label, a quest hint naming the Elder
+Fisherwoman). `uqf-node-hunt.test.js` **11/11 with 3 red on HEAD — exactly the registry/source
+tests — and all 8 behaviour tests green BOTH ways** (G2's honest shape at its purest: a
+verbatim move's behaviour tests must not depend on the change). `uqf-node-hooks` pin grown
+11→15 (the hunt hooks appended in source order below the crown pair). Gate #13 phase 6 already
+held `BN_NIGHTHAG`/`LD_DROWNERS` from the triage, so no classification change. `check:walk`
+**16/16 exit 0**; full Playwright **873 passed / 4 failed** (877 tests; the run reported 872/5
+and the fifth was the known `multiplayer-presence:171` flake, 7/7 alone; one BACKLOG.md anchor
+hint refreshed by `anchors:fix` after the ~180-line shift above `storyRender`).
+
+**Ship hash:** _recorded in the follow-up docs commit._
