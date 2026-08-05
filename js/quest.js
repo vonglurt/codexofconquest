@@ -40,6 +40,12 @@ const BIT_CONTRACTS = {
     validate: b => ((b.set||[]).length + (b.clear||[]).length) > 0 },
   reward:      { required:[],                    optional:['xp','gold','items','knowledge'],
     validate: b => !!(b.xp || b.gold || (b.items && b.items.length) || b.knowledge) },
+  // §VM-01-G4a — the PRICE leaf, reward's inverse. `reward` with a negative gold
+  // "works" arithmetically with no affordability test and the word *reward* on a
+  // price — a write into a real-but-wrong object, which never throws (WBAPI Hazard
+  // #2's standing lesson). This is the leaf that says price out loud.
+  cost:        { required:[],                    optional:['gold','resource','count','refuse'],
+    validate: b => (typeof b.gold === 'number' && b.gold > 0) || (typeof b.resource === 'string' && b.resource.length > 0) },
   combat:      { required:['key','label'],       optional:['count','nodeCode'],
     validate: b => typeof b.key === 'string' && typeof b.label === 'string' },
   narrative:   { required:[],                    optional:['msg','template'],
@@ -274,7 +280,12 @@ function createQuestRuntime(host) {
        before. §VM-01-C: ctx.state is the _ENV (defaults to the live state via
        getState). Unknown kinds are warned + skipped. Synchronous callers wrap the
        returned generator in a runToCompletion (throws on an unresolved ask, so
-       plain chains are byte-identical to the old straight-line loop). */
+       plain chains are byte-identical to the old straight-line loop).
+       §VM-01-G4a: a handler may FAIL the chain by setting ctx._halt (only `cost`
+       does — an unaffordable price). The flag is deliberately never cleared here:
+       ctx is shared with any nested execBits (a choice option's bits), so a halt
+       inside a branch aborts the whole chain it belongs to rather than letting the
+       outer bits run on unpaid. One ctx per run — the drivers build a fresh one. */
     *execBits(bits, ctx) {
       const c = ctx || {};
       if (!c.state) c.state = S();   // §VM-01-C: the _ENV — handlers write/read c.state, defaulting to the live state
@@ -283,6 +294,7 @@ function createQuestRuntime(host) {
         if (!h) { console.warn('[UQF] unknown bit kind:', bit.kind); continue; }
         const r = h(bit, c);
         if (r && typeof r.next === 'function') yield* r;   // handler suspended → propagate its yields
+        if (c._halt) break;                                // §VM-01-G4a: an unaffordable cost fails the rest of the chain
       }
     },
 
@@ -328,6 +340,28 @@ function createQuestRuntime(host) {
         // (async; stamps mintId on the pushed copy). No-op offline/SP.
         if (bit.items && bit.items.length) { st.inventory = st.inventory || []; bit.items.forEach(i => { const it = { ...i }; st.inventory.push(it); if (E.mint) E.mint(it); }); }
         if (bit.knowledge) { st.knowledge = st.knowledge || []; st.knowledge.push(bit.knowledge); }
+      },
+      // §VM-01-G4a — pay a price. REFUSE-AT-CLICK is the shipped contract (user
+      // design call 2026-08-04, lab-report-vm01g4-per-verb §12): the verb always
+      // renders and an unaffordable price refuses out loud, byte-for-byte what all
+      // six hand-written gold sites do today — the game states what it wants rather
+      // than quietly withholding the option. `cost` therefore never contributes to a
+      // verb's `when`; a future opt-in hideWhenUnaffordable would be the other call.
+      // Both currencies are TESTED before either is SPENT, so a mixed price can
+      // never part-pay. hp is deliberately not a currency: the Memory Gate's −15 is
+      // narrated damage on a branch that always succeeds, so it is that option's
+      // effect, not its price.
+      cost(bit, ctx) {
+        const st = ctx.state;
+        const need = (bit.count == null) ? 1 : bit.count;
+        const shortGold = (typeof bit.gold === 'number') && (st.gold || 0) < bit.gold;
+        const shortRes  = !!bit.resource && (st[bit.resource] || 0) < need;
+        if (shortGold || shortRes) {
+          if (bit.refuse) { if (ctx.pushMsg) ctx.pushMsg(bit.refuse); else if (E.msg) E.msg(bit.refuse); }
+          ctx._halt = true; ctx._refused = true; return;
+        }
+        if (typeof bit.gold === 'number') st.gold = (st.gold || 0) - bit.gold;
+        if (bit.resource) st[bit.resource] = (st[bit.resource] || 0) - need;
       },
       combat(bit) { if (E.preBattle) E.preBattle({ ...(E.getNode ? E.getNode(S().currentCode) : null), code: bit.nodeCode || bit.key, battle: { label: bit.label, key: bit.key, count: bit.count || 1 } }); },
       narrative(bit, ctx) { if (!bit.msg) return; if (ctx && ctx.pushMsg) ctx.pushMsg(bit.msg); else if (E.msg) E.msg(bit.msg); /* template path: Phase 2 renderNamedTemplate */ },

@@ -30,8 +30,8 @@ front moves backward ~4/day"* no longer holds inside the region: the front moved
 1,439 lines in seven days. G4 is what is left.
 
 **Registries in the house style G4 must match** (both live, both already load-bearing):
-`NODE_PANELS` (`const NODE_PANELS@31139`, rendered by `_renderNodePanels(node, st)@31268`) and
-`NODE_HOOKS` (`const NODE_HOOKS@32654`, dispatched in place by `_runNodeHook(id, node, ctx)@32692`).
+`NODE_PANELS` (`const NODE_PANELS@31246`, rendered by `_renderNodePanels(node, st)@31375`) and
+`NODE_HOOKS` (`const NODE_HOOKS@32761`, dispatched in place by `_runNodeHook(id, node, ctx)@32799`).
 
 ---
 
@@ -74,8 +74,8 @@ anywhere in the game today.
 This is the finding that reorders the whole slice, and it was not visible from the parent report.
 
 Inc A built the coroutine seam and built it correctly: `execBits` is a generator
-(`*execBits(bits, ctx)@22081`), `choice` is a suspending handler that yields an `ask` envelope
-(`*choice(bit, ctx)@22154`), and the host has a driver that parks the generator in a module slot
+(`*execBits(bits, ctx)@22165`), `choice` is a suspending handler that yields an `ask` envelope
+(`*choice(bit, ctx)@22261`), and the host has a driver that parks the generator in a module slot
 (`function _uqfPump(gen, answer)@6827`, `let _uqfPending = null@6824`).
 
 **What was never built is the other half of the driver — the part that renders the ask and resumes
@@ -145,7 +145,7 @@ honour it.
 ## 5. Finding 3 — two blocks capture free text, which `choice` cannot express and should not
 
 `Entry 42` (LHR) and the `Secret Gate` void-toll rune (ZRH) both render a `<textarea>` and persist
-the player's own prose — `S_story.entry42Text@32779` and `S_story._voidTollSecret@32937`. Both are
+the player's own prose — `S_story.entry42Text@32892` and `S_story._voidTollSecret@33031`. Both are
 read back by the ending. `choice`'s resume value is *"an index, so the data author never couples to
 presentation"* (`22152`); a free-text answer couples to presentation by definition.
 
@@ -160,7 +160,7 @@ the moment to grow the shape — with three consumers, not two.)
 ## 6. Finding 4 — `consume` already exists; only `cost` is missing, and it is three currencies
 
 The parent named the missing grammar as *"a `cost` leaf (gold≥N, consume) — ONE new opcode."* Half
-of that is already shipped: **`item_remove`** is a live handler (`item_remove(bit, ctx)@22137`) and
+of that is already shipped: **`item_remove`** is a live handler (`item_remove(bit, ctx)@22244`) and
 covers every consume site measured (Hollow Hands Seal, Old Tuna Account Book).
 
 What is genuinely missing is the **cost** half, and it is not one currency:
@@ -178,7 +178,7 @@ Two properties of the shipped behaviour that a naive `cost` leaf would silently 
    leaf that hides or disables the unaffordable verb is a **UX change**, not a no-op — and the
    telling-vs-asking thesis of this whole track argues the current behaviour is the better one
    (the game says what it wants; it does not quietly withhold the option).
-2. **`reward` will not do the job.** `reward(bit, ctx)@22126` does `st.gold = (st.gold||0) + bit.gold`,
+2. **`reward` will not do the job.** `reward(bit, ctx)@22211` does `st.gold = (st.gold||0) + bit.gold`,
    so `gold: -50` "works" arithmetically — with no affordability test, no refusal message, and the
    word *reward* on a price. That is a real-but-wrong object, and per WBAPI Hazard #2's standing
    lesson, **a write into a real-but-wrong object never throws.**
@@ -211,9 +211,9 @@ honest and neither is quietly dropped a fourth time.
 ## 8. Finding 6 — the act-leg thread §VM-01-G2b opened is now closed for this region
 
 G2b found five narrative beats gated on `actNumber >= N` at nodes whose `act` is 1, and therefore
-permanently dead (`S_story.actNumber = node.act || 1@32702`, assigned every render). Swept for the
+permanently dead (`S_story.actNumber = node.act || 1@32809`, assigned every render). Swept for the
 same shape across G4's region: **one act comparison remains** —
-`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@32819` (Sweelinck's "map before the city"
+`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@32932` (Sweelinck's "map before the city"
 line). **NUE is `act:6`**, so the leg is not dead — it is **vacuously true**, and has been since it
 shipped. It is not staging; arriving at NUE at all satisfies it.
 
@@ -251,7 +251,7 @@ made for the class and it holds: across all 13 D1 surfaces the only grammar gap 
 A **D3 menu** is just several `NODE_VERBS` entries sharing a `group` id, rendered into one
 container — which is what `cq-boss-buttons` already is. The three CDG confrontations become
 `{ kind:'combat', key:'taz_devil', label:'…', nodeCode:'CQ_TAZ' }`; **`combat`'s optional
-`nodeCode` field already exists** (`combat(bit)@22135`) and is exactly the synthetic-code spread
+`nodeCode` field already exists** (`combat(bit)@22242`) and is exactly the synthetic-code spread
 those buttons hand to `storyPreBattle` today, so no grammar is needed for them either.
 
 ### 9.2 The choice driver — the host half Inc A left unbuilt
@@ -349,13 +349,52 @@ answered, because the `cost` leaf's contract differs between them.
 
 ---
 
+## 12½. ADDENDUM — the ASK is answered and G4a is SHIPPED (2026-08-04)
+
+**Answer: (a) refuse-at-click.** The user's call, matching this report's recommendation. `cost`
+therefore never contributes to a verb's `when`; a `hideWhenUnaffordable` opt-in remains available
+later if play argues for it, and adding it would not change any behaviour shipped here.
+
+**What shipped (G4a — driver + leaf, zero content moved, as sliced in §10):**
+
+- **`cost` in the kernel** (`js/quest.js`, inside the QUEST:CORE fence → re-inlined; parity green at
+  25,030 bytes). Contract `{ gold?, resource?, count?, refuse? }`, registered in `BIT_CONTRACTS`
+  beside `reward` because it is `reward`'s inverse. Both currencies are **tested before either is
+  spent**, so a mixed price can never part-pay — a property this report measured for but did not
+  name, and the only one a naive implementation gets wrong silently.
+- **Chain failure**, the mechanism the leaf needed: a handler may set `ctx._halt`, and `execBits`
+  breaks on it. The flag is **deliberately never cleared** in the loop — `ctx` is shared with the
+  nested `execBits` a `choice` option runs, so a halt inside a branch aborts the chain it belongs
+  to instead of letting the outer bits run on unpaid. One `ctx` per run is what makes a sticky flag
+  safe, and both drivers build a fresh one.
+- **The host half of the coroutine** (`_uqfRunVerb`/`_uqfRenderAsk` beside `_uqfPump`, outside the
+  fence). §3's finding made real: an `{ask:'choice'}` envelope now renders as one button per option
+  in the verb's own mount, resumes the same generator with the picked index, and on completion
+  removes the mount and re-renders the node with the chain's narrative as `storyRender`'s prefix
+  (`_resolveQuestUQF`'s route — storyRender's tail `storyMsg` would otherwise overwrite it).
+- **The abandonment rule §9.2 required**: `storyRender` drops `_uqfPending` beside the sweep that
+  takes the panel's DOM, and an option button re-checks that the slot still holds *its* generator,
+  so a stale panel is inert rather than resuming a dropped chain.
+
+**Evidence.** `uqf-verb-driver.test.js` **12/12**, and the **positive control is the shape that
+matters**: against HEAD **10 of 12 fail, and the 2 that pass are exactly the two asserting
+*unchanged* behaviour** — a chain with no `cost` runs every bit, and a `choice` inside
+`skill_check` still throws. `check:walk` **16/16 exit 0** (`check:questparity` byte-identical),
+Playwright **816 passed / 4 failed** — the documented `worldbuilder-crud-arrays` four.
+
+**Unchanged by design:** §5 (the two free-text blocks stay inline), §7 (Kenickie + Lower Archive go
+to `NODE_HOOKS` in G4d), §8 (the act-leg thread stays closed). **Next: G4b** — Kern & Sable, the
+first `choice` in the game's history, shipping alone so it can be eyeballed.
+
+---
+
 ## 13. Anchors touched by this report
 
-`storyRender(node, prefix)@32696` · `_mkSection(id, icon, label)@33702` ·
-`const NODE_PANELS@31139` · `_renderNodePanels(node, st)@31268` · `const NODE_HOOKS@32654` ·
-`_runNodeHook(id, node, ctx)@32692` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
-`function _uqfRunToCompletion(gen)@6840` · `*execBits(bits, ctx)@22081` · `*choice(bit, ctx)@22154` ·
-`combat(bit)@22135` · `item_remove(bit, ctx)@22137` · `reward(bit, ctx)@22126`
+`storyRender(node, prefix)@32803` · `_mkSection(id, icon, label)@33815` ·
+`const NODE_PANELS@31246` · `_renderNodePanels(node, st)@31375` · `const NODE_HOOKS@32761` ·
+`_runNodeHook(id, node, ctx)@32799` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
+`function _uqfRunToCompletion(gen)@6840` · `*execBits(bits, ctx)@22165` · `*choice(bit, ctx)@22261` ·
+`combat(bit)@22242` · `item_remove(bit, ctx)@22244` · `reward(bit, ctx)@22211`
 
 ---
 

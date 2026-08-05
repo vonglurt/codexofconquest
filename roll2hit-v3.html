@@ -6842,6 +6842,79 @@ function _uqfRunToCompletion(gen) {
   if (ask) throw new Error('[UQF] runToCompletion hit an unresolved ask: ' + ask.ask);
 }
 
+/* ── §VM-01-G4a — the OTHER half of the driver: render the ask, resume with the answer ──
+   Inc A built the suspending half correctly (the execBits generator, the *choice handler,
+   the _uqfPump slot) and the half that renders an ask and resumes with an answer was never
+   written: `renderChoiceBlock`, the name the old comments promised, occurs 0 times in this
+   file and 0 times in js/quest.js — it has never existed as code. Every live execBits entry
+   point therefore wraps in _uqfRunToCompletion above, which THROWS on an ask, so until now a
+   `choice` bit in any chain could only throw (lab-report-vm01g4-per-verb.md §3). This is that
+   missing half. It is HOST code — it touches the DOM — and stays outside the QUEST:CORE
+   parity fence, exactly like _uqfPump.
+
+   _uqfRunVerb(verb, mount) runs verb.bits through QuestRuntime.execBits and pumps the
+   generator. On an { ask:'choice', prompt, options } envelope it replaces `mount`'s contents
+   with one button per option; clicking option i resumes the SAME generator with _uqfPump(gen, i)
+   and the loop repeats until the chain ends. Narrative output is buffered through ctx.pushMsg
+   and handed to storyRender as its prefix — the route _resolveQuestUQF already uses, because
+   storyRender's tail storyMsg overwrites #story-move-msg (§BOARD-01-FU6).
+
+   Three properties designed in rather than discovered:
+   1. A pending generator is ABANDONED whenever storyRender runs (see the drop beside the
+      stale-sibling sweep). Inc A's single-slot premise was "a choice resolves within one
+      interaction turn"; a NODE choice breaks that premise — it can sit on screen across a
+      render, and the sweep takes its panel's DOM with it. Abandoning is safe by construction
+      because `choice` applies only the picked option's bits, AFTER the pick, so an abandoned
+      suspension has written nothing.
+   2. A stale option button is INERT: its click re-checks that _uqfPending still holds this
+      generator, so a click on a panel that survived a render can never resume a dropped chain.
+   3. The scope fence stays. skill_check's onPass/onFail keep the kernel's own
+      _questRunToCompletion, so a choice nested inside a skill-check branch still throws.
+      G4 does not widen that. */
+function _uqfRenderAsk(gen, ask, mount, step) {
+  mount.innerHTML = '';
+  if (ask.prompt) {
+    const p = document.createElement('div');
+    p.className = 'npc-ambient';
+    p.style.cssText = 'font-size:11px;margin-bottom:4px;';
+    p.textContent = ask.prompt;
+    mount.appendChild(p);
+  }
+  (ask.options || []).forEach((label, i) => {
+    const b = document.createElement('button');
+    b.className = 'inv-use-btn';
+    b.style.cssText = 'margin-top:4px;display:block;';
+    b.textContent = label;
+    b.dataset.uqfOption = String(i);
+    b.addEventListener('click', () => {
+      if (!_uqfPending || _uqfPending.gen !== gen) return;   // a render abandoned this ask — the panel is inert
+      step(_uqfPump(gen, i));
+    });
+    mount.appendChild(b);
+  });
+}
+/* Run one verb's bit chain to completion, rendering any choice it suspends on into `mount`.
+   Returns the ctx (so a caller — or a test — can read ctx._refused after an unaffordable
+   cost). A fresh ctx per run is what makes the kernel's _halt flag safe to leave set. */
+function _uqfRunVerb(verb, mount) {
+  const msgs = [];
+  const ctx = { verbId: verb.id, pushMsg: m => msgs.push(m) };
+  const gen = QuestRuntime.execBits(verb.bits || [], ctx);
+  const step = ask => {
+    if (ask) {
+      if (!mount) { console.warn('[UQF] verb suspended with no mount to render into:', verb.id); return; }
+      _uqfRenderAsk(gen, ask, mount, step);
+      return;
+    }
+    if (mount && mount.parentNode) mount.remove();
+    const _cur = NODE_MAP[S_story.currentCode];
+    if (_cur && typeof storyRender === 'function') storyRender(_cur, msgs.length ? msgs.join('  ·  ') : undefined);
+    else if (typeof storyMsg === 'function') msgs.forEach(m => storyMsg(m));
+  };
+  step(_uqfPump(gen));
+  return ctx;
+}
+
 /* §ARCH-01 Phase 2 — resolve a UQF v1.0 skill_check quest through QuestRuntime.
    Renders the same roll hcard + status update + re-render as the legacy
    resolver, but draws every side effect (flags, rewards, narrative) from the
@@ -21843,6 +21916,12 @@ const BIT_CONTRACTS = {
     validate: b => ((b.set||[]).length + (b.clear||[]).length) > 0 },
   reward:      { required:[],                    optional:['xp','gold','items','knowledge'],
     validate: b => !!(b.xp || b.gold || (b.items && b.items.length) || b.knowledge) },
+  // §VM-01-G4a — the PRICE leaf, reward's inverse. `reward` with a negative gold
+  // "works" arithmetically with no affordability test and the word *reward* on a
+  // price — a write into a real-but-wrong object, which never throws (WBAPI Hazard
+  // #2's standing lesson). This is the leaf that says price out loud.
+  cost:        { required:[],                    optional:['gold','resource','count','refuse'],
+    validate: b => (typeof b.gold === 'number' && b.gold > 0) || (typeof b.resource === 'string' && b.resource.length > 0) },
   combat:      { required:['key','label'],       optional:['count','nodeCode'],
     validate: b => typeof b.key === 'string' && typeof b.label === 'string' },
   narrative:   { required:[],                    optional:['msg','template'],
@@ -22077,7 +22156,12 @@ function createQuestRuntime(host) {
        before. §VM-01-C: ctx.state is the _ENV (defaults to the live state via
        getState). Unknown kinds are warned + skipped. Synchronous callers wrap the
        returned generator in a runToCompletion (throws on an unresolved ask, so
-       plain chains are byte-identical to the old straight-line loop). */
+       plain chains are byte-identical to the old straight-line loop).
+       §VM-01-G4a: a handler may FAIL the chain by setting ctx._halt (only `cost`
+       does — an unaffordable price). The flag is deliberately never cleared here:
+       ctx is shared with any nested execBits (a choice option's bits), so a halt
+       inside a branch aborts the whole chain it belongs to rather than letting the
+       outer bits run on unpaid. One ctx per run — the drivers build a fresh one. */
     *execBits(bits, ctx) {
       const c = ctx || {};
       if (!c.state) c.state = S();   // §VM-01-C: the _ENV — handlers write/read c.state, defaulting to the live state
@@ -22086,6 +22170,7 @@ function createQuestRuntime(host) {
         if (!h) { console.warn('[UQF] unknown bit kind:', bit.kind); continue; }
         const r = h(bit, c);
         if (r && typeof r.next === 'function') yield* r;   // handler suspended → propagate its yields
+        if (c._halt) break;                                // §VM-01-G4a: an unaffordable cost fails the rest of the chain
       }
     },
 
@@ -22131,6 +22216,28 @@ function createQuestRuntime(host) {
         // (async; stamps mintId on the pushed copy). No-op offline/SP.
         if (bit.items && bit.items.length) { st.inventory = st.inventory || []; bit.items.forEach(i => { const it = { ...i }; st.inventory.push(it); if (E.mint) E.mint(it); }); }
         if (bit.knowledge) { st.knowledge = st.knowledge || []; st.knowledge.push(bit.knowledge); }
+      },
+      // §VM-01-G4a — pay a price. REFUSE-AT-CLICK is the shipped contract (user
+      // design call 2026-08-04, lab-report-vm01g4-per-verb §12): the verb always
+      // renders and an unaffordable price refuses out loud, byte-for-byte what all
+      // six hand-written gold sites do today — the game states what it wants rather
+      // than quietly withholding the option. `cost` therefore never contributes to a
+      // verb's `when`; a future opt-in hideWhenUnaffordable would be the other call.
+      // Both currencies are TESTED before either is SPENT, so a mixed price can
+      // never part-pay. hp is deliberately not a currency: the Memory Gate's −15 is
+      // narrated damage on a branch that always succeeds, so it is that option's
+      // effect, not its price.
+      cost(bit, ctx) {
+        const st = ctx.state;
+        const need = (bit.count == null) ? 1 : bit.count;
+        const shortGold = (typeof bit.gold === 'number') && (st.gold || 0) < bit.gold;
+        const shortRes  = !!bit.resource && (st[bit.resource] || 0) < need;
+        if (shortGold || shortRes) {
+          if (bit.refuse) { if (ctx.pushMsg) ctx.pushMsg(bit.refuse); else if (E.msg) E.msg(bit.refuse); }
+          ctx._halt = true; ctx._refused = true; return;
+        }
+        if (typeof bit.gold === 'number') st.gold = (st.gold || 0) - bit.gold;
+        if (bit.resource) st[bit.resource] = (st[bit.resource] || 0) - need;
       },
       combat(bit) { if (E.preBattle) E.preBattle({ ...(E.getNode ? E.getNode(S().currentCode) : null), code: bit.nodeCode || bit.key, battle: { label: bit.label, key: bit.key, count: bit.count || 1 } }); },
       narrative(bit, ctx) { if (!bit.msg) return; if (ctx && ctx.pushMsg) ctx.pushMsg(bit.msg); else if (E.msg) E.msg(bit.msg); /* template path: Phase 2 renderNamedTemplate */ },
@@ -32745,6 +32852,12 @@ function storyRender(node, prefix) {
   { const _vfl = _voidFlavorLine(node.code);
     if (_vfl) document.getElementById('story-text-box').textContent += '\n\n' + _vfl;
   }
+  // §VM-01-G4a: the sweep below takes any pending choice panel's DOM with it, so drop the
+  // suspended generator that panel belonged to. Inc A's single module slot assumed "a choice
+  // resolves within one interaction turn"; a NODE choice can sit on screen across a render.
+  // Safe by construction — `choice` applies only the picked option's bits, AFTER the pick,
+  // so an abandoned suspension has written nothing.
+  _uqfPending = null;
   // Clear all stale dynamic siblings between story-text-box and story-info-row
   { let _el = document.getElementById('story-text-box').nextElementSibling;
     while (_el && _el.id !== 'story-info-row') {

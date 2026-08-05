@@ -17,6 +17,38 @@ Each quest entry uses the following tags:
 
 ---
 
+## Prices and choices — the `cost` leaf and the choice driver (§VM-01-G4a, 2026-08-04)
+
+**Paying for something is now a bit, not a hand-written `if`.** Six surfaces charged gold with the
+same three inline lines (`if (gold < N) { msg; return; } gold -= N;`) — Yva's 50gp, the Junction
+Vignette's `[Help — 10gp]`, Kenickie's four prices. The opcode:
+
+```js
+{ kind:'cost', gold:50, refuse:"💰 You don't have 50gp." }   // gold
+{ kind:'cost', resource:'surgeCharges', count:1 }            // a class resource
+```
+
+- **Refuse-at-click is the contract** (user design call). The verb **always renders**; if the player
+  is short, `cost` emits `refuse` and **fails the whole chain** — including from inside a `choice`
+  option, where it aborts the bits after the choice too. It does **not** hide the option, so a
+  `cost` must never appear in a gate or a `when`. The game states its price out loud; that is the
+  same telling-vs-asking thesis the rest of §VM-01 is built on.
+- **Every currency is tested before any is spent** — a `{gold, resource}` price can never part-pay.
+- **Do not spell a price as `reward` with negative gold.** It computes correctly and is wrong
+  everywhere else: no affordability test, no refusal, and the word *reward* on a price.
+- **hp is not a currency.** The Memory Gate's −15 hp is narrated damage on a branch that always
+  succeeds — author it as an effect in that option's bits.
+
+**`choice` can be driven at last.** Its host half (`_uqfRunVerb`/`_uqfRenderAsk`) shipped in the
+same slice; before it, `renderChoiceBlock` had never existed and a `choice` bit could only throw.
+`choice` is **exclusive by construction** — it suspends, takes one index, runs that option's bits and
+discards the rest — so use it only where the surface really is *pick one*. A one-option "choice" is
+a labelled effect chain with ceremony, and a menu whose entries are meant to coexist (CDG's three
+boss confrontations) is the opposite of one. A `choice` inside `skill_check`'s `onPass`/`onFail`
+still throws, by scope fence.
+
+---
+
 ## Arrival activation and the §AUDIT-03e seam (2026-07-29)
 
 A quest lists on arrival when `_uqfActivateAtNode` finds it via `_questsByNode(node.code)` and its

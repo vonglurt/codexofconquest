@@ -25,7 +25,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
     expect(r.hasGate).toBe(true);
     expect(r.hasExec).toBe(true);
     // Every bit kind in the registry has a handler.
-    expect(r.kinds).toBe('_legacy_fn,choice,combat,favor,flag_write,item_check,item_remove,mission_bit,narrative,reward,skill_check,unlock');   // favor added in W7c
+    expect(r.kinds).toBe('_legacy_fn,choice,combat,cost,favor,flag_write,item_check,item_remove,mission_bit,narrative,reward,skill_check,unlock');   // favor added in W7c; cost in §VM-01-G4a
   });
 
   test('validateQuest enforces bit contracts', async ({ page }) => {
