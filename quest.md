@@ -844,10 +844,10 @@ Gate spine (W→E, listing only): `{}` → `kgEnlisted` → `kgManifestDelivered
 | ✅ Live §SIREN-01 | 5 (Littoral Courts + Overseer) |
 | ✅ Live §CROWN-01 | 24 (Whisper ×6, Glut ×6, Wane ×6, Inn ×6) |
 | ✅ Live §CROWN-01 Amendment A | 10 (3 failure dispatches + 4 hag commissions + 3 iodine track) |
-| ✅ Live §LXX | 4 (Shore Road + Tide Register + Forge Mechanism + Smelting) |
-| ✅ Live §LXXI | 2 (Sunken Hall inscription + Tide Gate activation) |
-| ✅ Live §LXXII | 1 (Conclave Annex post-event note) |
-| ✅ Live §LXXIII | 1 (The Depth — 18 Meters: both-chains closure) |
+| ✅ Live §LXX | 4 (Shore Road + Tide Register + Forge Mechanism + Smelting) ⚠️ `quest_forge_02` double-pays the DSF smelt button — see §LXX-01-FU note below |
+| ✅ Live §LXXI | 2 (Sunken Hall inscription + Tide Gate activation) ⚠️ `quest_sunken_02` double-pays the DA2 gate button (a second permanent INT +1) — see §LXX-01-FU note below |
+| ✅ Live §LXXII | 1 (Conclave Annex post-event note) — the button/quest pair done RIGHT: the button writes only flag + knowledge, `quest_ca_01`'s onComplete pays (the la_riva/hg1 shape) |
+| ✅ Live §LXXIII | 1 (The Depth — 18 Meters: both-chains closure) ⚠️ `quest_depth_01` double-pays the DA3 button (+500 XP + a duplicate knowledge entry) — see §LXX-01-FU note below |
 | **Total live** | **~128** |
 | ✅ Live §SPARK-01 | 5 (Smalt + Overture + Clot + Who Done It + Aldous Comes Clean) |
 | ✅ Live §SPARK-01 SEA | 3 (Calm Sea + Warmth Eel + The Escort) |
@@ -859,6 +859,17 @@ Gate spine (W→E, listing only): `{}` → `kgEnlisted` → `kgManifestDelivered
 | ✅ Live §1367 | 7 (Historical 1367 AD vignettes A–G; Event G "The Unseen Pen" shipped by promoting `quest_lxvii67`) |
 | **Total live** | **~141** (Event G re-themed an existing quest — no net new quest object) |
 | Planned | 0 |
+
+> **⚠ §LXX-01-FU (measured 2026-08-05, §VM-01-G-FU-e):** three of the four §LXX-family
+> button/quest pairs **double-pay on HEAD** — `quest_sunken_02` (DA2), `quest_depth_01` (DA3)
+> and `quest_forge_02` (DSF) each carry their button's ENTIRE effect in `onComplete` and
+> auto-complete on the same arrival that draws the button (activation + completion in one
+> `storyCheckQuests` pass), so the still-rendered button pays a second time: DA2 a **second
+> permanent INT +1** (+500gp), DA3 +500 XP + a duplicate knowledge entry, DSF a second Sea
+> Element (+400gp). Preserved verbatim by the migration, pinned as measured by
+> `uqf-node-lxx.test.js`; the fix is a content change — **open as §LXX-01-FU in BACKLOG.md**,
+> fix shape: the button keeps only the flag write (the la_riva/hg1 pattern — `quest_ca_01` at
+> CAN is the pair done right, one arc over).
 
 ---
 

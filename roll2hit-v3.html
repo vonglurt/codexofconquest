@@ -31527,6 +31527,30 @@ const NODE_PANELS = [
     when:st => st.pipMet && st.bioluminescentParasiteFound && st.whodunitSolved,
     css:'margin-top:10px;border-left-color:#2a5a2a;color:#70b880;font-size:12px;',
     text:'✅ Mystery solved. The Warmth bloomed in the perfume vats. The cargo is commercially ruined and spiritually interesting. Brannick and the rats are fine. The captain has the Letter of Safe Passage ready. Inspector Wren-Pembury is on deck, thinking.' },
+  // ── §VM-01-G-FU-e: the §LXX stack's button-less surfaces. Sibling analysis (the G-FU-b WRO
+  // rule), golden-verified: nothing else co-renders afterend at DA2/DA3/DSF — no npc-row (no
+  // BIRKA_NPC_PROFILES profile homes there; the resident voices in NPC_DIALOGUE render as a
+  // WORLD-section card inside #story-info-row, not a sibling), none of the five §LXX nodes is
+  // in KEY_EVENTS or JUNCTION_VIGNETTES — so each panel is the only sibling in its state and
+  // the panels-phase insert position is byte-identical to the inline block's. The DA2/DA3 done
+  // divs were id-less inline and stay id-less here; the DSF note keeps the shared
+  // story-dsf-smelt id (mutually exclusive with the verb's button by the iodine test).
+  // §LXXI: DA2 — Tide Gate opened (done state)
+  { nodes:['DA2'],
+    when:st => st.tideGateOpened,
+    css:'margin-top:10px;border-left-color:#2a5a3a;color:#80c890;font-size:12px;',
+    text:'✅ The Gate is open. The depth below: eighteen meters. Bearing 047°. The chain has closed. The archive has an archivist. The Gate has the alloy. These are two statements of the same fact.' },
+  // §LXXIII: DA3 — both chains closed (done state)
+  { nodes:['DA3'],
+    when:st => st.antecedentDepthMet,
+    css:'margin-top:10px;border-left-color:#1a3a2a;color:#70a880;font-size:12px;',
+    text:'✅ Both chains closed. The signal has returned to Station 7. The Constructor\'s design is understood: one foundation, two questions, one archivist.' },
+  // §LXX: DSF — forge active, no iodine held (the smelt button's else-leg)
+  { id:'story-dsf-smelt', nodes:['DSF'],
+    when:st => st.forgeActivated && !st.seaElementCrafted
+               && !(st.inventory||[]).some(i => i.name === 'Charged Iodine Salt' || i.name === 'Iodine Salt'),
+    css:'margin-top:8px;border-left-color:#6a4a1a;color:#c09050;font-size:11px;',
+    text:'🧂 The forge is active. The mechanism is ready. The process requires Iodine Salt — plain or charged. The reduction completes in the forge heat.' },
 ];
 
 // §VM-01-G1: render every NODE_PANELS entry active for this node. Runs immediately after the
@@ -33879,6 +33903,130 @@ function _nodeHookPortMmeSaltwick(node) {
     }
   }
 }
+// ── §VM-01-G-FU-e: the §LXX family (CAN/DA2/DA3/DSJ/DSF) — four verbatim hooks. Every button
+// in these blocks lives INSIDE .sweelinck-variant panel chrome (the WG0 embedded-button rule)
+// except DSF's bare smelt button, which is the NODE_VERBS entry `lxx-dsf-smelt`; the DA2/DA3
+// done-states and the DSF no-iodine note are the stack's button-less surfaces → NODE_PANELS.
+// The DA2 gate additionally writes a NUMERIC abilityScores.int += 1 — the HCA iodineBuffBonus
+// class in a third sighting — so it could not be a verb even outside its chrome.
+// MEASURED 2026-08-05 (§LXX-01-FU, the §SPARK-01-FU Aldous class): quest_sunken_02 /
+// quest_depth_01 / quest_forge_02 each auto-complete on the same arrival that draws these
+// buttons and duplicate the button's whole payout, so the click after auto-completion pays
+// AGAIN (DA2: a second permanent INT +1 and +500gp; DA3: +500 XP and a duplicate knowledge
+// entry; DSF: a second Sea Element and +400gp). Preserved verbatim, pinned by the golden and
+// uqf-node-lxx.test.js, filed — quest_ca_01 at CAN is the same pair done RIGHT (the button
+// writes only the flag + knowledge; the quest's onComplete pays), the la_riva/hg1 fix shape.
+function _nodeHookLxxCanDoc(node) {
+  // §LXXII: CAN — Conclave Annex post-event document
+  { const _canOld = document.getElementById('story-can-doc'); if (_canOld) _canOld.remove();
+    if (node.code === 'CAN' && !S_story.conclaveResponseRead) {
+      const _canDiv = document.createElement('div');
+      _canDiv.id = 'story-can-doc';
+      _canDiv.className = 'sweelinck-variant';
+      _canDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a5a;color:#a0a8c8;font-size:12px;';
+      _canDiv.textContent = '📜 The document in the output tray. Pre-written. It has been waiting for you.';
+      const _canBtn = document.createElement('button');
+      _canBtn.className = 'inv-use-btn'; _canBtn.style.marginTop = '6px';
+      _canBtn.textContent = '📜 Read the post-event document';
+      _canBtn.addEventListener('click', () => {
+        _canBtn.disabled = true;
+        S_story.conclaveResponseRead = true;
+        S_story.knowledge = S_story.knowledge || [];
+        S_story.knowledge.push("Cycle 4 — Post-Event Note: The archive answered. The interval is confirmed. 'The person who followed the chain receives this note because they are the archivist the protocol was designed to identify.' — Conclave Archivist");
+        storyMsg('📜 SCHOLAR KINGS — CONCLAVE ROUTING / Post-Event. Class 1. No further routing.\n\nThe Gate opened at the expected terminus of the chain. The monitoring infrastructure was not in position to intervene. The note placed in the requisition materials was a record of the intent, not a successful instruction.\n\nThe archive answered. The Antecedent\'s question is closed. The containment holds — the closure of the question does not dissolve the structure; it changes the character of the pressure within it.\n\nCycle 4 proceeds on the adjusted timeline: post-event monitoring. The interval is now confirmed.\n\nThe person who followed the chain receives this note because they are the archivist the protocol was designed to identify. The note is for them.\n\nAuthorization: Conclave Archivist.\n[No countersignature required.]\n[No date required.]\n\n— Post-Event Note added to the Necklace of Knowledge.');
+        storyRender(node);
+      });
+      _canDiv.appendChild(_canBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _canDiv);
+    }
+  }
+}
+function _nodeHookLxxDa2Gate(node) {
+  // §LXXI: DA2 — Tide Gate activation (the tideGateOpened done-state is a NODE_PANELS entry)
+  { const _gateOld = document.getElementById('story-da2-gate'); if (_gateOld) _gateOld.remove();
+    if (node.code === 'DA2' && !S_story.tideGateOpened) {
+      const _inv = S_story.inventory || [];
+      const _hasEl = _inv.some(i => i.name === 'Sea Element');
+      const _gateDiv = document.createElement('div');
+      _gateDiv.id = 'story-da2-gate';
+      _gateDiv.className = 'sweelinck-variant';
+      _gateDiv.style.cssText = 'margin-top:10px;border-left-color:#2a3a5a;color:#90a8c8;font-size:12px;';
+      if (_hasEl && S_story.inscriptionRead) {
+        _gateDiv.textContent = '🔱 The mechanism has three positions. You know the sequence. The Sea Element fits the first position. The reduction runs forward from here.';
+        const _gateBtn = document.createElement('button');
+        _gateBtn.className = 'inv-use-btn'; _gateBtn.style.marginTop = '6px';
+        _gateBtn.textContent = '🔱 Place the Sea Element — open the Gate';
+        _gateBtn.addEventListener('click', () => {
+          _gateBtn.disabled = true;
+          const _inv2 = S_story.inventory || [];
+          const _seIdx = _inv2.findIndex(i => i.name === 'Sea Element');
+          if (_seIdx !== -1) _inv2.splice(_seIdx, 1);
+          S_story.tideGateOpened = true;
+          S_story.abilityScores = S_story.abilityScores || {};
+          S_story.abilityScores.int = (S_story.abilityScores.int || 10) + 1;
+          S_story.gold = (S_story.gold||0) + 500;
+          storyMsg('The Gate opens inward and down. The depth below is eighteen meters. Bearing 047°.\n\nStation 7 monitored this location. Bertha No-Bank spent forty-one volumes recording the absence of its signal. The Antecedent\'s containment was built on top of this structure. The Constructor chose this site because the infrastructure was already here.\n\nThe chain closes. You have been following it from the outside in. INT +1 (permanent). +500gp.');
+          storyRender(node);
+        });
+        _gateDiv.appendChild(_gateBtn);
+      } else if (!S_story.inscriptionRead) {
+        _gateDiv.textContent = '🔱 The mechanism is visible but the sequence is not yet clear. The inscription in the hall above describes the correct order.';
+      } else {
+        _gateDiv.textContent = '🔱 The mechanism requires the Sea Element — the Atlantean alloy from the forge above. The forge knows the sequence. The Gate knows the alloy.';
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _gateDiv);
+    }
+  }
+}
+function _nodeHookLxxDa3Depth(node) {
+  // §LXXIII: DA3 — The Depth, one-time Constructor revelation (the antecedentDepthMet
+  // done-state is a NODE_PANELS entry)
+  { const _depthOld = document.getElementById('story-da3-depth'); if (_depthOld) _depthOld.remove();
+    if (node.code === 'DA3' && !S_story.antecedentDepthMet) {
+      const _depthDiv = document.createElement('div');
+      _depthDiv.id = 'story-da3-depth';
+      _depthDiv.className = 'sweelinck-variant';
+      _depthDiv.style.cssText = 'margin-top:10px;border-left-color:#1a2a4a;color:#7090b8;font-size:12px;';
+      _depthDiv.textContent = '⚓ The tidal configuration of the Antecedent is active. This installation has been waiting since the Gate was sealed — a second chamber on the same foundation as the one above the archive, built by the same Constructor for a different question with the same required answer.';
+      const _depthBtn = document.createElement('button');
+      _depthBtn.className = 'inv-use-btn'; _depthBtn.style.marginTop = '6px';
+      _depthBtn.textContent = '⚓ Acknowledge the closing — both chains end here';
+      _depthBtn.addEventListener('click', () => {
+        _depthBtn.disabled = true;
+        S_story.antecedentDepthMet = true;
+        S_story.knowledge = S_story.knowledge || [];
+        S_story.knowledge.push("Constructor Design: Both the Antecedent's archival installation (CY→AC) and the tidal installation (DA3, bearing 047°, depth 18m) were built on the same foundation. The Constructor required one person to close both chains — the archival question and the tidal question are independent but the answer to each requires the same archivist.");
+        S_story.xp = (S_story.xp||0) + 500;
+        storyMsg('⚓ The signal returns to Station 7.\n\nBertha No-Bank spent forty-one volumes recording the absence. The absence ends now. The monitoring protocol completes. The Antecedent\'s tidal configuration closes.\n\nYou followed both chains — the archival from CY to AC, the tidal from DSF to DA3. The Constructor built both gates on the same foundation knowing these chains would require the same hands.\n\nKnowledge entry added: Constructor Design. +500 XP.');
+        storyRender(node);
+      });
+      _depthDiv.appendChild(_depthBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _depthDiv);
+    }
+  }
+}
+function _nodeHookLxxDsjEels(node) {
+  // §LXX: DSJ — Giant Eel × 2 channel battle
+  { const _dsjOld = document.getElementById('story-dsj-eels'); if (_dsjOld) _dsjOld.remove();
+    if (node.code === 'DSJ' && !(S_story.defeatedBattles||{})['DSJ_EELS']) {
+      const _eelsDiv = document.createElement('div');
+      _eelsDiv.id = 'story-dsj-eels';
+      _eelsDiv.className = 'sweelinck-variant';
+      _eelsDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a3a;color:#80c0a0;font-size:12px;';
+      _eelsDiv.textContent = '⚡ The channel is held by two Giant Eels. They have been stationed here longer than the forge has been sealed. They are not predatory — they are present, which is a different kind of obstruction.';
+      const _eelsBtn = document.createElement('button');
+      _eelsBtn.className = 'inv-use-btn'; _eelsBtn.style.marginTop = '6px';
+      _eelsBtn.textContent = '⚡ Clear the channel';
+      _eelsBtn.addEventListener('click', () => {
+        _eelsBtn.disabled = true;
+        storyMsg('The two eels move toward each other as you enter the channel — not to attack, but to close it. The current changes. The discharge is enough to arc across the water.');
+        setTimeout(() => storyPreBattle({ ...node, code:'DSJ_EELS', battle:{ label:'Giant Eel × 2 — The Kelp Channel', key:'giant_eel', count:2 } }), 400);
+      });
+      _eelsDiv.appendChild(_eelsBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _eelsDiv);
+    }
+  }
+}
 const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'nue-lower-archive', nodes:['NUE'], fn:_nodeHookNueLowerArchive },
   { id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA'], fn:_nodeHookVoidArchaeology },
@@ -33936,6 +34084,10 @@ const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'port-dnf-access', nodes:['DNF'], fn:_nodeHookPortDnfAccess },         // §VM-01-G-FU-d
   { id:'spark-dnf-harmony', nodes:['DNF'], fn:_nodeHookSparkDnfHarmony },     // §VM-01-G-FU-d
   { id:'port-mme-saltwick', nodes:['MME'], fn:_nodeHookPortMmeSaltwick },     // §VM-01-G-FU-d (hull price → the `cost` leaf)
+  { id:'lxx-can-doc', nodes:['CAN'], fn:_nodeHookLxxCanDoc },       // §VM-01-G-FU-e
+  { id:'lxx-da2-gate', nodes:['DA2'], fn:_nodeHookLxxDa2Gate },     // §VM-01-G-FU-e (numeric INT write — the HCA class; done state → NODE_PANELS)
+  { id:'lxx-da3-depth', nodes:['DA3'], fn:_nodeHookLxxDa3Depth },   // §VM-01-G-FU-e (done state → NODE_PANELS)
+  { id:'lxx-dsj-eels', nodes:['DSJ'], fn:_nodeHookLxxDsjEels },     // §VM-01-G-FU-e (staged DSJ_EELS battle — the BN/LD shape)
 ];
 function _runNodeHook(id, node, ctx) {
   for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node, ctx);
@@ -34169,6 +34321,26 @@ const NODE_VERBS = [
     label:'⚡ Go below — the drainage channel', btnStyle:'margin-top:4px;',
     bits: [ { kind:'narrative', msg:"The passage below the inn floor is narrow and slick. The smell here is the sea, concentrated. The Giant Eel occupies most of the channel. It is electrogenic and large and occupying a space you both need." },
             { kind:'combat', key:'giant_eel', label:'Giant Eel — The Drainage Channel', nodeCode:'INN_EEL' } ] },
+  // ── §VM-01-G-FU-e: DSF — the smelting button, the §LXX stack's only BARE D1 button (the
+  // inline block inserted the <button> directly afterend of #story-text-box with no panel
+  // wrapper, so the embedded-button rule does not bite — the first verb this family has
+  // shipped since G-FU-a). The charged-preferred salt pick is fn-valued `bits` (the G4c
+  // precedent: the VM still receives a plain array); item_remove on the missing name is a
+  // no-op, byte-identical to the inline splice-on--1. quest_forge_02's own onComplete runs
+  // the SAME pick behind _legacy_fn and double-pays with this button on HEAD — preserved as
+  // measured, filed §LXX-01-FU. One named delta: the driver re-renders with the narrative as
+  // storyRender's prefix, so the smelt line is READABLE now — inline, its own bare re-render
+  // destroyed it (§BOARD-01-FU6 class, fourth recovered narrative).
+  { id:'lxx-dsf-smelt', group:'lxx-dsf-smelt', nodes:['DSF'],
+    when: st => st.forgeActivated && !st.seaElementCrafted
+                && (st.inventory||[]).some(i => i.name === 'Charged Iodine Salt' || i.name === 'Iodine Salt'),
+    label:'🔱 Smelt the Sea Element', btnStyle:'margin-top:4px;',
+    bits: st => [
+      { kind:'item_remove', name: (st.inventory||[]).some(i => i.name === 'Charged Iodine Salt')
+          ? 'Charged Iodine Salt' : 'Iodine Salt' },
+      { kind:'flag_write', set:['seaElementCrafted'] },
+      { kind:'reward', gold:400, items:[{ name:'Sea Element', icon:'🔱', type:'weapon', atkBonus:2, dmgDie:8, dmgCount:1, dmgFlat:0, minLevel:1, sell:500, desc:'Atlantean alloy. Holds the tide\'s force in the metal. +2 ATK, 1d8 damage.' }] },
+      { kind:'narrative', msg:'🔱 The iodine goes into the forge first — the smoke register, then the salt bed, then the charged heat. The alloy that emerges is the color the sea has before dawn. Sea Element: +2 ATK, 1d8. +400gp.' } ] },
 ];
 
 // §VM-01-G4b: render every NODE_VERBS entry active for this node, in table order, each into its own
@@ -35778,71 +35950,8 @@ function storyRender(node, prefix) {
   // (§VM-01-G-FU-a: the HG1 Glut's Gift first-visit panel and the HCA Crone Mark conversion are
   //  NODE_PANELS once-panels now — and the gift's dead !visited['HG1'] guard is fixed there.)
   _runNodeHook('hca-leviathan', node);            // §CROWN-01 Amendment A: HCA — Leviathan arc boss
-  // §LXXII: CAN — Conclave Annex post-event document
-  { const _canOld = document.getElementById('story-can-doc'); if (_canOld) _canOld.remove();
-    if (node.code === 'CAN' && !S_story.conclaveResponseRead) {
-      const _canDiv = document.createElement('div');
-      _canDiv.id = 'story-can-doc';
-      _canDiv.className = 'sweelinck-variant';
-      _canDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a5a;color:#a0a8c8;font-size:12px;';
-      _canDiv.textContent = '📜 The document in the output tray. Pre-written. It has been waiting for you.';
-      const _canBtn = document.createElement('button');
-      _canBtn.className = 'inv-use-btn'; _canBtn.style.marginTop = '6px';
-      _canBtn.textContent = '📜 Read the post-event document';
-      _canBtn.addEventListener('click', () => {
-        _canBtn.disabled = true;
-        S_story.conclaveResponseRead = true;
-        S_story.knowledge = S_story.knowledge || [];
-        S_story.knowledge.push("Cycle 4 — Post-Event Note: The archive answered. The interval is confirmed. 'The person who followed the chain receives this note because they are the archivist the protocol was designed to identify.' — Conclave Archivist");
-        storyMsg('📜 SCHOLAR KINGS — CONCLAVE ROUTING / Post-Event. Class 1. No further routing.\n\nThe Gate opened at the expected terminus of the chain. The monitoring infrastructure was not in position to intervene. The note placed in the requisition materials was a record of the intent, not a successful instruction.\n\nThe archive answered. The Antecedent\'s question is closed. The containment holds — the closure of the question does not dissolve the structure; it changes the character of the pressure within it.\n\nCycle 4 proceeds on the adjusted timeline: post-event monitoring. The interval is now confirmed.\n\nThe person who followed the chain receives this note because they are the archivist the protocol was designed to identify. The note is for them.\n\nAuthorization: Conclave Archivist.\n[No countersignature required.]\n[No date required.]\n\n— Post-Event Note added to the Necklace of Knowledge.');
-        storyRender(node);
-      });
-      _canDiv.appendChild(_canBtn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _canDiv);
-    }
-  }
-  // §LXXI: DA2 — Tide Gate activation
-  { const _gateOld = document.getElementById('story-da2-gate'); if (_gateOld) _gateOld.remove();
-    if (node.code === 'DA2' && !S_story.tideGateOpened) {
-      const _inv = S_story.inventory || [];
-      const _hasEl = _inv.some(i => i.name === 'Sea Element');
-      const _gateDiv = document.createElement('div');
-      _gateDiv.id = 'story-da2-gate';
-      _gateDiv.className = 'sweelinck-variant';
-      _gateDiv.style.cssText = 'margin-top:10px;border-left-color:#2a3a5a;color:#90a8c8;font-size:12px;';
-      if (_hasEl && S_story.inscriptionRead) {
-        _gateDiv.textContent = '🔱 The mechanism has three positions. You know the sequence. The Sea Element fits the first position. The reduction runs forward from here.';
-        const _gateBtn = document.createElement('button');
-        _gateBtn.className = 'inv-use-btn'; _gateBtn.style.marginTop = '6px';
-        _gateBtn.textContent = '🔱 Place the Sea Element — open the Gate';
-        _gateBtn.addEventListener('click', () => {
-          _gateBtn.disabled = true;
-          const _inv2 = S_story.inventory || [];
-          const _seIdx = _inv2.findIndex(i => i.name === 'Sea Element');
-          if (_seIdx !== -1) _inv2.splice(_seIdx, 1);
-          S_story.tideGateOpened = true;
-          S_story.abilityScores = S_story.abilityScores || {};
-          S_story.abilityScores.int = (S_story.abilityScores.int || 10) + 1;
-          S_story.gold = (S_story.gold||0) + 500;
-          storyMsg('The Gate opens inward and down. The depth below is eighteen meters. Bearing 047°.\n\nStation 7 monitored this location. Bertha No-Bank spent forty-one volumes recording the absence of its signal. The Antecedent\'s containment was built on top of this structure. The Constructor chose this site because the infrastructure was already here.\n\nThe chain closes. You have been following it from the outside in. INT +1 (permanent). +500gp.');
-          storyRender(node);
-        });
-        _gateDiv.appendChild(_gateBtn);
-      } else if (!S_story.inscriptionRead) {
-        _gateDiv.textContent = '🔱 The mechanism is visible but the sequence is not yet clear. The inscription in the hall above describes the correct order.';
-      } else {
-        _gateDiv.textContent = '🔱 The mechanism requires the Sea Element — the Atlantean alloy from the forge above. The forge knows the sequence. The Gate knows the alloy.';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _gateDiv);
-    }
-    if (node.code === 'DA2' && S_story.tideGateOpened) {
-      const _openDiv = document.createElement('div');
-      _openDiv.className = 'sweelinck-variant';
-      _openDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#80c890;font-size:12px;';
-      _openDiv.textContent = '✅ The Gate is open. The depth below: eighteen meters. Bearing 047°. The chain has closed. The archive has an archivist. The Gate has the alloy. These are two statements of the same fact.';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _openDiv);
-    }
-  }
+  _runNodeHook('lxx-can-doc', node);              // §LXXII: CAN — Conclave Annex post-event document (§VM-01-G-FU-e)
+  _runNodeHook('lxx-da2-gate', node);             // §LXXI: DA2 — Tide Gate activation (§VM-01-G-FU-e; the tideGateOpened done state → NODE_PANELS)
   // §SPARK-01 SEA: OW — Warmth Eel investigation + escort
   { const _owOld = document.getElementById('story-ow-eel'); if (_owOld) _owOld.remove();
     if (node.code === 'NWI') {
@@ -35885,89 +35994,13 @@ function storyRender(node, prefix) {
   _runNodeHook('wis-vs-underground', node);     // §DUNGEON-01: VS Underground Room — lower archive entrance
   _runNodeHook('wis-vs-hub', node);             // §WISDOM-01: VS — The Manuscript Hub (hook + shadow room + resolution; carries the VS_SHADOW→wisPage6 latch, which runs on every render exactly as the inline block did)
 
-  // §LXXIII: DA3 — The Depth, one-time Constructor revelation
-  { const _depthOld = document.getElementById('story-da3-depth'); if (_depthOld) _depthOld.remove();
-    if (node.code === 'DA3' && !S_story.antecedentDepthMet) {
-      const _depthDiv = document.createElement('div');
-      _depthDiv.id = 'story-da3-depth';
-      _depthDiv.className = 'sweelinck-variant';
-      _depthDiv.style.cssText = 'margin-top:10px;border-left-color:#1a2a4a;color:#7090b8;font-size:12px;';
-      _depthDiv.textContent = '⚓ The tidal configuration of the Antecedent is active. This installation has been waiting since the Gate was sealed — a second chamber on the same foundation as the one above the archive, built by the same Constructor for a different question with the same required answer.';
-      const _depthBtn = document.createElement('button');
-      _depthBtn.className = 'inv-use-btn'; _depthBtn.style.marginTop = '6px';
-      _depthBtn.textContent = '⚓ Acknowledge the closing — both chains end here';
-      _depthBtn.addEventListener('click', () => {
-        _depthBtn.disabled = true;
-        S_story.antecedentDepthMet = true;
-        S_story.knowledge = S_story.knowledge || [];
-        S_story.knowledge.push("Constructor Design: Both the Antecedent's archival installation (CY→AC) and the tidal installation (DA3, bearing 047°, depth 18m) were built on the same foundation. The Constructor required one person to close both chains — the archival question and the tidal question are independent but the answer to each requires the same archivist.");
-        S_story.xp = (S_story.xp||0) + 500;
-        storyMsg('⚓ The signal returns to Station 7.\n\nBertha No-Bank spent forty-one volumes recording the absence. The absence ends now. The monitoring protocol completes. The Antecedent\'s tidal configuration closes.\n\nYou followed both chains — the archival from CY to AC, the tidal from DSF to DA3. The Constructor built both gates on the same foundation knowing these chains would require the same hands.\n\nKnowledge entry added: Constructor Design. +500 XP.');
-        storyRender(node);
-      });
-      _depthDiv.appendChild(_depthBtn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _depthDiv);
-    }
-    if (node.code === 'DA3' && S_story.antecedentDepthMet) {
-      const _closedDiv = document.createElement('div');
-      _closedDiv.className = 'sweelinck-variant';
-      _closedDiv.style.cssText = 'margin-top:10px;border-left-color:#1a3a2a;color:#70a880;font-size:12px;';
-      _closedDiv.textContent = '✅ Both chains closed. The signal has returned to Station 7. The Constructor\'s design is understood: one foundation, two questions, one archivist.';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _closedDiv);
-    }
-  }
-  // §LXX: DSJ — Giant Eel × 2 channel battle
-  { const _dsjOld = document.getElementById('story-dsj-eels'); if (_dsjOld) _dsjOld.remove();
-    if (node.code === 'DSJ' && !(S_story.defeatedBattles||{})['DSJ_EELS']) {
-      const _eelsDiv = document.createElement('div');
-      _eelsDiv.id = 'story-dsj-eels';
-      _eelsDiv.className = 'sweelinck-variant';
-      _eelsDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a3a;color:#80c0a0;font-size:12px;';
-      _eelsDiv.textContent = '⚡ The channel is held by two Giant Eels. They have been stationed here longer than the forge has been sealed. They are not predatory — they are present, which is a different kind of obstruction.';
-      const _eelsBtn = document.createElement('button');
-      _eelsBtn.className = 'inv-use-btn'; _eelsBtn.style.marginTop = '6px';
-      _eelsBtn.textContent = '⚡ Clear the channel';
-      _eelsBtn.addEventListener('click', () => {
-        _eelsBtn.disabled = true;
-        storyMsg('The two eels move toward each other as you enter the channel — not to attack, but to close it. The current changes. The discharge is enough to arc across the water.');
-        setTimeout(() => storyPreBattle({ ...node, code:'DSJ_EELS', battle:{ label:'Giant Eel × 2 — The Kelp Channel', key:'giant_eel', count:2 } }), 400);
-      });
-      _eelsDiv.appendChild(_eelsBtn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _eelsDiv);
-    }
-  }
-  // §LXX: DSF — Smelting completion button (requires forgeActivated + iodine)
-  { const _smeltOld = document.getElementById('story-dsf-smelt'); if (_smeltOld) _smeltOld.remove();
-    if (node.code === 'DSF' && S_story.forgeActivated && !S_story.seaElementCrafted) {
-      const _inv = S_story.inventory || [];
-      const _hasIodine = _inv.some(i => i.name === 'Charged Iodine Salt' || i.name === 'Iodine Salt');
-      if (_hasIodine) {
-        const _smeltBtn = document.createElement('button');
-        _smeltBtn.id = 'story-dsf-smelt'; _smeltBtn.className = 'inv-use-btn'; _smeltBtn.style.marginTop = '4px';
-        _smeltBtn.textContent = '🔱 Smelt the Sea Element';
-        _smeltBtn.addEventListener('click', () => {
-          _smeltBtn.disabled = true;
-          const _inv2 = S_story.inventory || [];
-          const _ci = _inv2.findIndex(i => i.name === 'Charged Iodine Salt');
-          const _pi = _inv2.findIndex(i => i.name === 'Iodine Salt');
-          if (_ci !== -1) _inv2.splice(_ci, 1); else if (_pi !== -1) _inv2.splice(_pi, 1);
-          S_story.seaElementCrafted = true;
-          S_story.gold = (S_story.gold||0) + 400;
-          S_story.inventory.push({ name:'Sea Element', icon:'🔱', type:'weapon', atkBonus:2, dmgDie:8, dmgCount:1, dmgFlat:0, minLevel:1, sell:500, desc:'Atlantean alloy. Holds the tide\'s force in the metal. +2 ATK, 1d8 damage.' });
-          storyMsg('🔱 The iodine goes into the forge first — the smoke register, then the salt bed, then the charged heat. The alloy that emerges is the color the sea has before dawn. Sea Element: +2 ATK, 1d8. +400gp.');
-          storyRender(node);
-        });
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', _smeltBtn);
-      } else {
-        const _smeltNote = document.createElement('div');
-        _smeltNote.id = 'story-dsf-smelt';
-        _smeltNote.className = 'sweelinck-variant';
-        _smeltNote.style.cssText = 'margin-top:8px;border-left-color:#6a4a1a;color:#c09050;font-size:11px;';
-        _smeltNote.textContent = '🧂 The forge is active. The mechanism is ready. The process requires Iodine Salt — plain or charged. The reduction completes in the forge heat.';
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', _smeltNote);
-      }
-    }
-  }
+  // §LXXIII: DA3 — The Depth (§VM-01-G-FU-e; the antecedentDepthMet done state → NODE_PANELS)
+  _runNodeHook('lxx-da3-depth', node);
+  // §LXX: DSJ — Giant Eel × 2 channel battle (§VM-01-G-FU-e)
+  _runNodeHook('lxx-dsj-eels', node);
+  // §LXX: DSF — the smelting button → NODE_VERBS `lxx-dsf-smelt` (§VM-01-G-FU-e; the stack's
+  // only BARE D1 button — the no-iodine note is a NODE_PANELS entry sharing its DOM id)
+  _renderNodeVerbs(node, S_story, 'lxx-dsf-smelt');
   // Status
   storyUpdateStatus();
   // Quests + messages

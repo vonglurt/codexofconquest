@@ -581,3 +581,60 @@ front; full Playwright **906 passed / 4 failed** (910 tests; the four are the do
 7/7 alone).
 
 **Ship hash:** `8cdda7b` (2026-08-05).
+
+## 11e. G-FU-e ship addendum (2026-08-05) — the §LXX family moved, the family's first verb since G-FU-a, and all three of the stack's quests double-pay their own buttons
+
+**The slice plan said "small verbs + done-panels" — measured: ONE verb, and it is the family's
+only genuinely BARE D1 button.** Every other button in the stack (CAN document read · DA2 gate
+placement · DA3 acknowledgement · DSJ channel clear) lives INSIDE `.sweelinck-variant` panel
+chrome — the WG0 embedded-button rule, fourth application — and the DA2 gate additionally
+writes a NUMERIC `abilityScores.int += 1`, the HCA `iodineBuffBonus` class in a third sighting,
+so it could not be a verb even outside its chrome. Four blocks → **`NODE_HOOKS` verbatim**
+(`lxx-can-doc` / `lxx-da2-gate` / `lxx-da3-depth` / `lxx-dsj-eels`, registry tail, dispatched
+in place). The button-less surfaces → **`NODE_PANELS` ×3**: the DA2/DA3 done states (id-less
+inline, id-less entries — the G-FU-b HFT precedent) and the DSF no-iodine note (keeps the
+shared `story-dsf-smelt` id; mutually exclusive with the verb by the iodine test). Sibling
+analysis by the G-FU-b WRO rule, golden-verified: **nothing co-renders afterend at any of the
+five nodes** — no `BIRKA_NPC_PROFILES` profile homes there (the resident voices in
+`NPC_DIALOGUE` render as a WORLD-section card inside `#story-info-row`, not a sibling), and
+none of CAN/DA2/DA3/DSJ/DSF is in `KEY_EVENTS` or `JUNCTION_VIGNETTES`.
+
+**The verb: DSF's smelt button** — the inline block inserted a bare `<button>` directly
+afterend with no wrapper, exactly the G4c D1 shape, so `lxx-dsf-smelt` is a label verb
+(`btnStyle:'margin-top:4px;'`, the inline spacing) with **fn-valued `bits`** for the
+charged-preferred salt pick (the G4c precedent — the VM still receives a plain array;
+`item_remove` on the absent name is a no-op, byte-identical to the inline splice-on-−1), then
+`flag_write` + `reward{gold:400, items:[Sea Element]}` + `narrative`. `reward.items` carries
+the full weapon object — no grammar growth needed.
+
+**The finding — all three of the stack's own quests DOUBLE-PAY their buttons on HEAD (filed
+§LXX-01-FU, the §SPARK-01-FU Aldous class ×3).** `quest_sunken_02`, `quest_depth_01` and
+`quest_forge_02` each carry the button's ENTIRE effect in their `onComplete` and auto-complete
+on the same arrival that draws the button (activation + completion in ONE `storyCheckQuests`
+pass — the G-FU-a glut lesson), so the still-rendered button pays AGAIN: **DA2 grants a second
+permanent INT point** (+500gp; measured 12→13 on arrival, →14 on click), **DA3 a second
++500 XP and a duplicate knowledge entry**, **DSF a second Sea Element** (+400gp). All three
+preserved verbatim and pinned as measured — the migration is not the content fix.
+`quest_ca_01` at CAN is the same pair done RIGHT (the button writes only flag + knowledge; the
+quest's `onComplete` pays +300gp) — the la_riva/hg1 fix shape, already in the file, one arc
+over.
+
+**Evidence:** 25-combo golden HEAD-vs-after over sibling DOM + bounding boxes + msg text/class
++ `_preBattNode` + state incl. 13 click combos — **20/25 byte-identical** (every hook and
+panel surface, all three double-pays to the byte), **1 id-only** (`story-dsf-smelt` →
+`verb-lxx-dsf-smelt`, bounding box equal — the bare button's full-width flex stretch
+preserved), **4 the same named delta**: the smelt narrative is READABLE after the click
+(state and sibling DOM byte-equal; inline, its own bare re-render destroyed it — §BOARD-01-FU6
+class, **fourth recovered narrative**). Self-stability 25/25 both sides; §7½ **25/25
+story-column PNGs byte-identical**, dsf-ready and da2-ready eyeballed; 23-authored-string
+sweep, every count equal to HEAD (the doubles are the quests' own shared strings);
+`uqf-node-lxx.test.js` **15/15 with 5 red on HEAD — the 4 registry/source tests + the
+recovered-narrative test — and the 10 greens exactly the verbatim/unchanged-behaviour ones**,
+incl. the three §LXX-01-FU double-pay pins passing BOTH ways; `uqf-node-hooks` pin 27→31;
+`uqf-node-verbs-d1`'s label-verb pin excludes `lxx-` (the G-FU-a crown precedent); gate #13
+phase 6 already held `DSJ_EELS`; `check:walk` **16/16 exit 0**; 25 anchor hints refreshed by
+`anchors:fix`; full Playwright **920 passed / 4 failed** (925 tests; the four are the
+documented `worldbuilder-crud-arrays` set; `multiplayer-presence:171` flaked and retried
+green).
+
+**Ship hash:** (recorded post-commit).

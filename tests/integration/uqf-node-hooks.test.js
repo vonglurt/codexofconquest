@@ -45,8 +45,11 @@ test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
     // §VM-01-G-FU-d added the six harbor-chain blocks (§SPARK-01/02 · §WHODUNIT-01 · §NAVAL-01
     // · §PORT-01/02 at LCY/SEN/GCI/DNF/MME) after those — the harbor stack sits below the alch
     // region in source order; uqf-node-harbor.test.js owns their behaviour.
-    expect(r.count).toBe(27);
-    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b + G4d + G-FU-a/b/c/d').toBe(27);
+    // §VM-01-G-FU-e added the four §LXX-family blocks (CAN/DA2/DA3/DSJ) after those — the §LXX
+    // stack sits below the harbor region in source order; uqf-node-lxx.test.js owns their
+    // behaviour (incl. the three §LXX-01-FU double-pays, pinned there as measured).
+    expect(r.count).toBe(31);
+    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b + G4d + G-FU-a/b/c/d/e').toBe(31);
     expect(r.allFns).toBe(true);
     expect(r.leadsRegistry, 'registry stays ordered by former source position: story-text-box-anchored blocks precede the G2b npc-row block').toBe(true);
     expect(r.ids).toEqual(['nue-lower-archive', 'void-archaeology', 'void-shaman-warden', 'corelli-merchant',
@@ -56,7 +59,8 @@ test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
       'alch-kir-dream', 'alch-man-noon', 'alch-sen-ship', 'alch-ath-stoic',
       'wis-vs-underground', 'wis-vs-hub',
       'spark-lcy-harmony', 'whodunit-sen-bilge', 'naval-gci-intercept',
-      'port-dnf-access', 'spark-dnf-harmony', 'port-mme-saltwick']);
+      'port-dnf-access', 'spark-dnf-harmony', 'port-mme-saltwick',
+      'lxx-can-doc', 'lxx-da2-gate', 'lxx-da3-depth', 'lxx-dsj-eels']);
     expect(r.unknownIsNoop).toBe(true);
   });
 
