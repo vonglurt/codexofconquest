@@ -2488,6 +2488,16 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ## QUESTS — DeFi Land (Layer 46 — ✅ Implemented)
 
+> **§VM-01-G4b (2026-08-04): this overture is now DATA.** The 76 inline lines that built these
+> buttons by hand are three `NODE_VERBS` entries (`dus-kern-sable-first` / `-followup` / `-after`,
+> quest.md §"`NODE_VERBS` — where a verb is authored"), and the two option panels are the **first
+> `choice` bits ever executed in this game**. Every line of prose below is unchanged — the migration
+> was proved by a multiset diff showing every authored string survived verbatim. **One behaviour
+> changed on purpose:** the driver re-renders the node when a chain ends, so the Q-NEXUS-01
+> follow-up now appears in the same beat as [Ask] instead of waiting for the next visit, and the
+> aftermath line appears the moment Q-NEXUS-02 completes. The "next `DUS` visit" wording below is
+> kept as the authored intent it records, not as current behaviour.
+
 ### Q-NEXUS-00 — `DUS` (historical `HM`) | "The Overheard Conversation" ✅
 **Trigger:** First visit to `DUS` (historical `HM`); `nexusQuestSeen` false.  
 **Beat:** Kern and Sable at the Frequency Row counter, citing Chapter 7 of *Don't Create The Torment Nexus* as a blueprint.  

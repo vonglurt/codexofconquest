@@ -47,6 +47,33 @@ a labelled effect chain with ceremony, and a menu whose entries are meant to coe
 boss confrontations) is the opposite of one. A `choice` inside `skill_check`'s `onPass`/`onFail`
 still throws, by scope fence.
 
+### `NODE_VERBS` — where a verb is authored (§VM-01-G4b, 2026-08-04)
+
+A quest is something you're *given*; a **verb** is something a place lets you *do*. The third small
+registry in the `NODE_PANELS`/`NODE_HOOKS` house style holds them, and its bits are ordinary UQF:
+
+```js
+{ id:'dus-kern-sable-first', nodes:['DUS'],
+  when: st => !st.nexusQuestSeen,
+  bits: [ { kind:'choice', prompt:'Two figures at the Frequency Row counter…', options:[
+    { label:'👂 Stay quiet. Keep listening.', bits:[ {kind:'flag_write', set:['nexusQuestSeen']},
+                                                     {kind:'narrative', msg:'…'} ] },
+    …
+  ] } ] }
+```
+
+Three surfaces, chosen by what the entry carries — **`label` + `bits`** is a button that runs the
+chain on click (the ordinary verb); **`bits` with no `label`** means the chain *is* the surface, so
+it runs at render and its first bit **must** be a suspending `choice` (anything else is refused out
+loud, because it would apply its effects on every draw of the node); **`ambient`** alone is a
+flavour line for a state that offers nothing to do. `when` is a plain predicate over state — note
+that a `cost` never belongs in it (refuse-at-click, above).
+
+**Dispatch is in place**: `_renderNodeVerbs(node, st)` is called at the source position the migrated
+block occupied, so DOM stacking order is preserved by construction rather than by analysis. Live
+consumers: the Kern & Sable overture at DUS (Q-NEXUS-00/01/02) — the first `choice` ever executed
+in this game. The 13 single-verb surfaces arrive in §VM-01-G4c.
+
 ---
 
 ## Arrival activation and the §AUDIT-03e seam (2026-07-29)

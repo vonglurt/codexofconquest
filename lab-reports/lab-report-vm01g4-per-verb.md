@@ -1,8 +1,8 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 # Lab Report — §VM-01-G4: Class D per-verb (the migration front's last slice)
 
-> **Status: DESIGN LOCKED `f340143` · ASK ANSWERED (refuse-at-click) · G4a ✅ SHIPPED `b905733` — see
-> the §12½ addendum. §1–§12 below are the design pass as written before any edit and are left
+> **Status: DESIGN LOCKED `f340143` · ASK ANSWERED (refuse-at-click) · G4a ✅ SHIPPED `b905733` ·
+> G4b ✅ SHIPPED — see the §12½ and §12¾ addenda. §1–§12 below are the design pass as written before any edit and are left
 > unrewritten; the addendum is where what actually shipped is recorded.** This is the child
 > design pass the parent report's §7 design lock required before G4 may be built
 > (*"G4 OK in principle, but G4 gets its own child design pass first"*). Parent:
@@ -32,8 +32,8 @@ front moves backward ~4/day"* no longer holds inside the region: the front moved
 1,439 lines in seven days. G4 is what is left.
 
 **Registries in the house style G4 must match** (both live, both already load-bearing):
-`NODE_PANELS` (`const NODE_PANELS@31246`, rendered by `_renderNodePanels(node, st)@31375`) and
-`NODE_HOOKS` (`const NODE_HOOKS@32761`, dispatched in place by `_runNodeHook(id, node, ctx)@32799`).
+`NODE_PANELS` (`const NODE_PANELS@31253`, rendered by `_renderNodePanels(node, st)@31382`) and
+`NODE_HOOKS` (`const NODE_HOOKS@32768`, dispatched in place by `_runNodeHook(id, node, ctx)@32806`).
 
 ---
 
@@ -76,8 +76,8 @@ anywhere in the game today.
 This is the finding that reorders the whole slice, and it was not visible from the parent report.
 
 Inc A built the coroutine seam and built it correctly: `execBits` is a generator
-(`*execBits(bits, ctx)@22165`), `choice` is a suspending handler that yields an `ask` envelope
-(`*choice(bit, ctx)@22261`), and the host has a driver that parks the generator in a module slot
+(`*execBits(bits, ctx)@22172`), `choice` is a suspending handler that yields an `ask` envelope
+(`*choice(bit, ctx)@22268`), and the host has a driver that parks the generator in a module slot
 (`function _uqfPump(gen, answer)@6827`, `let _uqfPending = null@6824`).
 
 **What was never built is the other half of the driver — the part that renders the ask and resumes
@@ -147,7 +147,7 @@ honour it.
 ## 5. Finding 3 — two blocks capture free text, which `choice` cannot express and should not
 
 `Entry 42` (LHR) and the `Secret Gate` void-toll rune (ZRH) both render a `<textarea>` and persist
-the player's own prose — `S_story.entry42Text@32892` and `S_story._voidTollSecret@33031`. Both are
+the player's own prose — `S_story.entry42Text@33004` and `S_story._voidTollSecret@33143`. Both are
 read back by the ending. `choice`'s resume value is *"an index, so the data author never couples to
 presentation"* (`22152`); a free-text answer couples to presentation by definition.
 
@@ -162,7 +162,7 @@ the moment to grow the shape — with three consumers, not two.)
 ## 6. Finding 4 — `consume` already exists; only `cost` is missing, and it is three currencies
 
 The parent named the missing grammar as *"a `cost` leaf (gold≥N, consume) — ONE new opcode."* Half
-of that is already shipped: **`item_remove`** is a live handler (`item_remove(bit, ctx)@22244`) and
+of that is already shipped: **`item_remove`** is a live handler (`item_remove(bit, ctx)@22251`) and
 covers every consume site measured (Hollow Hands Seal, Old Tuna Account Book).
 
 What is genuinely missing is the **cost** half, and it is not one currency:
@@ -180,7 +180,7 @@ Two properties of the shipped behaviour that a naive `cost` leaf would silently 
    leaf that hides or disables the unaffordable verb is a **UX change**, not a no-op — and the
    telling-vs-asking thesis of this whole track argues the current behaviour is the better one
    (the game says what it wants; it does not quietly withhold the option).
-2. **`reward` will not do the job.** `reward(bit, ctx)@22211` does `st.gold = (st.gold||0) + bit.gold`,
+2. **`reward` will not do the job.** `reward(bit, ctx)@22218` does `st.gold = (st.gold||0) + bit.gold`,
    so `gold: -50` "works" arithmetically — with no affordability test, no refusal message, and the
    word *reward* on a price. That is a real-but-wrong object, and per WBAPI Hazard #2's standing
    lesson, **a write into a real-but-wrong object never throws.**
@@ -213,9 +213,9 @@ honest and neither is quietly dropped a fourth time.
 ## 8. Finding 6 — the act-leg thread §VM-01-G2b opened is now closed for this region
 
 G2b found five narrative beats gated on `actNumber >= N` at nodes whose `act` is 1, and therefore
-permanently dead (`S_story.actNumber = node.act || 1@32809`, assigned every render). Swept for the
+permanently dead (`S_story.actNumber = node.act || 1@32921`, assigned every render). Swept for the
 same shape across G4's region: **one act comparison remains** —
-`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@32932` (Sweelinck's "map before the city"
+`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@33044` (Sweelinck's "map before the city"
 line). **NUE is `act:6`**, so the leg is not dead — it is **vacuously true**, and has been since it
 shipped. It is not staging; arriving at NUE at all satisfies it.
 
@@ -253,7 +253,7 @@ made for the class and it holds: across all 13 D1 surfaces the only grammar gap 
 A **D3 menu** is just several `NODE_VERBS` entries sharing a `group` id, rendered into one
 container — which is what `cq-boss-buttons` already is. The three CDG confrontations become
 `{ kind:'combat', key:'taz_devil', label:'…', nodeCode:'CQ_TAZ' }`; **`combat`'s optional
-`nodeCode` field already exists** (`combat(bit)@22242`) and is exactly the synthetic-code spread
+`nodeCode` field already exists** (`combat(bit)@22249`) and is exactly the synthetic-code spread
 those buttons hand to `storyPreBattle` today, so no grammar is needed for them either.
 
 ### 9.2 The choice driver — the host half Inc A left unbuilt
@@ -390,13 +390,85 @@ first `choice` in the game's history, shipping alone so it can be eyeballed.
 
 ---
 
+## 12¾. ADDENDUM — G4b is SHIPPED: the first `choice` in the game's history (2026-08-04)
+
+**What shipped.** `NODE_VERBS` — the third small vocabulary §9.1 locked — plus `_renderNodeVerbs`,
+and Kern & Sable's 76 inline lines at DUS as its three entries. Nothing else moved.
+
+**The schema grew one field beyond §9.1's sketch, and the reason is worth recording.** §9.1 wrote
+`{id, nodes, anchor, when, label, bits}` — a **button** verb, which is the D1 shape. A D2 exclusive
+choice has no button: the options *are* the surface, with no intermediate click. Giving Kern & Sable
+a `label` would have inserted a click the player never had to make. So the entry shape is decided by
+what it carries:
+
+| Carries | Surface | Class |
+|---|---|---|
+| `label` + `bits` | a button; the chain runs on click | D1 (G4c) |
+| `bits`, no `label` | the chain **is** the surface: it runs at render and **must** park on a `choice` | D2 |
+| `ambient` | a flavour line for a state that offers nothing to do | the aftermath beat |
+
+The label-less mode needs a guard rather than a convention, because running a chain at render is
+exactly how you get side effects on every draw of a node. A label-less chain whose first bit is not
+a `choice` is **refused with a warning, before its mount is created** — the second half of that
+sentence is the part the test caught: the first implementation refused *after* inserting the mount,
+so a refusal still changed the page. **A refusal that leaves an empty div behind is not a refusal.**
+
+**The two behaviour deltas, both named rather than discovered:**
+
+1. **The driver re-renders on completion**, so the Q-NEXUS-01 follow-up now appears in the same beat
+   as [Ask] instead of on the next arrival, and the aftermath line appears the moment Q-NEXUS-02
+   completes. The inline handlers ended with `hmDiv.remove()` and no re-render. The fiction supports
+   it — they are still at the counter, waiting — and it is asserted in the test file rather than left
+   to be noticed. `story.md`'s "next `DUS` visit" wording is kept and annotated as authored intent.
+2. **The empty 8px spacer is gone.** The inline block always inserted its `hmDiv`, so the "listened
+   and walked away" state rendered an empty bordered-nothing with a top margin. The registry renders
+   nothing there.
+
+**Evidence.** Three artifacts, in the order they were built:
+- **A multiset diff of the authored strings** between HEAD's block and the new table: **14 vs 14,
+  identical, nothing added or lost**, with the three ambient lines unwrapped from the `innerHTML`
+  wrapper the old block hand-built. This is the G2b line-multiset-diff method adapted to a block
+  that *could not* be moved verbatim — its shape changed, so only its content can be pinned, and
+  pinning the content is what proves no prose was retyped.
+- **A golden-DOM diff of all four DUS states** against HEAD (temp harness, deleted). Text and button
+  labels **byte-identical**, including the 6px/4px button spacing — `_uqfRenderAsk` was given the
+  first-button 6px the hand-written panels all used, so the migration is pixel-identical rather than
+  merely equivalent. The remaining deltas are the mount's `id`, a `data-uqf-option` attribute, one
+  redundant wrapper `<div>` + `<em>` dropped from an already-italic `.npc-ambient` (CSS 2122 — zero
+  pixels), and delta 2 above.
+- **`uqf-node-verbs.test.js` 10/10**, with **all 10 failing at HEAD**. That is *not* the "some tests
+  assert unchanged behaviour and pass both ways" shape G2b had, and the difference is honest: the
+  surface's DOM identity changed with the migration, so the equivalence proof has to live in the
+  golden diff, not in the after-state contract.
+
+Plus `check:walk` **16/16 exit 0** (`check:questparity` **25,030 bytes — the kernel was not touched**;
+this slice is entirely host code), full Playwright **826 passed / 4 failed** = the documented
+`worldbuilder-crud-arrays` four, and **§7½ eyeballed**: all three states screenshotted in the running
+game, the sidebar ITEMS counter ticking 0→1 as the token lands through the `reward` bit.
+
+**One thing measured and left alone.** `_mkAmbientLine` was factored out so a `choice`'s `prompt` and
+a `NODE_VERBS` `ambient` cannot drift apart — one shape, one definition. The `<em>` the inline blocks
+wrapped their ambient in is not reproduced: only 3 of the 10 `.npc-ambient` sites in the file use it,
+the class is already `font-style:italic`, and keeping it would have meant two markup shapes inside
+one new renderer.
+
+**Not migrated, unchanged from §9.3:** the free-text blocks (§5), Kenickie + Lower Archive (§7).
+**Next: G4c** — the 13 D1 verbs → `NODE_VERBS`, plus converting the Junction Vignette `[Help — 10gp]`
+to `cost`, which is the parent's stated bar for the leaf not being single-use.
+
+---
+
 ## 13. Anchors touched by this report
 
-`storyRender(node, prefix)@32803` · `_mkSection(id, icon, label)@33815` ·
-`const NODE_PANELS@31246` · `_renderNodePanels(node, st)@31375` · `const NODE_HOOKS@32761` ·
-`_runNodeHook(id, node, ctx)@32799` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
-`function _uqfRunToCompletion(gen)@6840` · `*execBits(bits, ctx)@22165` · `*choice(bit, ctx)@22261` ·
-`combat(bit)@22242` · `item_remove(bit, ctx)@22244` · `reward(bit, ctx)@22211`
+`storyRender(node, prefix)@32915` · `_mkSection(id, icon, label)@33854` ·
+`const NODE_PANELS@31253` · `_renderNodePanels(node, st)@31382` · `const NODE_HOOKS@32768` ·
+`_runNodeHook(id, node, ctx)@32806` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
+`function _uqfRunToCompletion(gen)@6840` · `*execBits(bits, ctx)@22172` · `*choice(bit, ctx)@22268` ·
+`combat(bit)@22249` · `item_remove(bit, ctx)@22251` · `reward(bit, ctx)@22218`
+
+**Added by G4b (§12¾):** `const NODE_VERBS@32834` · `function _renderNodeVerbs(node, st)@32881` ·
+`function _mkAmbientLine(text)@6878` · `function _uqfRunVerb(verb, mount)@6906` ·
+`function _uqfRenderAsk(gen, ask, mount, step)@6885`
 
 ---
 

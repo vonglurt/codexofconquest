@@ -6871,19 +6871,26 @@ function _uqfRunToCompletion(gen) {
    3. The scope fence stays. skill_check's onPass/onFail keep the kernel's own
       _questRunToCompletion, so a choice nested inside a skill-check branch still throws.
       G4 does not widen that. */
+/* The flavour line a verb surface leads with — one shape, one definition, so a choice's
+   `prompt` and a NODE_VERBS `ambient` (§VM-01-G4b) can never drift apart. `.npc-ambient`
+   is already italic (CSS 2122), which is why the inline blocks' redundant <em> wrapper is
+   not reproduced: dropping it changes no pixel. */
+function _mkAmbientLine(text) {
+  const el = document.createElement('div');
+  el.className = 'npc-ambient';
+  el.style.cssText = 'font-size:11px;margin-bottom:4px;';
+  el.textContent = text;
+  return el;
+}
 function _uqfRenderAsk(gen, ask, mount, step) {
   mount.innerHTML = '';
-  if (ask.prompt) {
-    const p = document.createElement('div');
-    p.className = 'npc-ambient';
-    p.style.cssText = 'font-size:11px;margin-bottom:4px;';
-    p.textContent = ask.prompt;
-    mount.appendChild(p);
-  }
+  if (ask.prompt) mount.appendChild(_mkAmbientLine(ask.prompt));
   (ask.options || []).forEach((label, i) => {
     const b = document.createElement('button');
     b.className = 'inv-use-btn';
-    b.style.cssText = 'margin-top:4px;display:block;';
+    // 6px on the first button, 4px after — the spacing every hand-written option panel used
+    // (§VM-01-G4b: this is what makes the migrated blocks pixel-identical, not merely equivalent).
+    b.style.cssText = 'margin-top:' + (i === 0 ? 6 : 4) + 'px;display:block;';
     b.textContent = label;
     b.dataset.uqfOption = String(i);
     b.addEventListener('click', () => {
@@ -32800,6 +32807,111 @@ function _runNodeHook(id, node, ctx) {
   for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node, ctx);
 }
 
+// ── §VM-01-G4b: NODE_VERBS — the third small vocabulary, and the first `choice` in the game ──
+// NODE_PANELS (§VM-01-G1) is flavour a node SHOWS you; NODE_HOOKS (§VM-01-G2/G2b) is a bespoke
+// interface a node OWNS. NODE_VERBS is the third thing the special-case stack was doing: something
+// the player can DO here — expressed as a UQF bit chain executed by QuestRuntime, not as a click
+// handler that writes S_story by hand.
+//
+// Schema: { id, nodes:[codes], when?(st), ambient?, label?, bits? }
+//   · `ambient` (string | fn(st)→string|null) — a flavour line for a state that offers nothing to
+//     do (the aftermath beat). Rendered as the same `.npc-ambient` div the inline blocks used.
+//   · `label` + `bits` — a BUTTON verb: one button, the chain runs on click. That is the D1 shape;
+//     its 13 surfaces arrive in G4c.
+//   · `bits` WITHOUT `label` — the chain IS the surface: it runs at render, and its first bit must
+//     be a suspending `choice`, so the options appear with no extra click (exactly what the
+//     hand-written panels did) and nothing is written until the player picks. A label-less chain
+//     that does NOT suspend is refused loudly, because it would apply side effects on every render.
+//
+// Why not one `choice` for all of Class D: `choice` is exclusive BY CONSTRUCTION, and only 7 of the
+// 21 measured Class-D surfaces are exclusive (lab-report-vm01g4-per-verb.md §4). A one-option
+// choice is not a choice, it is a labelled effect chain with ceremony; and CDG's concurrent boss
+// menu is the opposite of exclusive, so mapping it onto `choice` would be a behaviour change.
+//
+// Dispatch is IN PLACE — _renderNodeVerbs is called at the exact source position the migrated block
+// occupied — so LIFO stacking on story-text-box 'afterend' is preserved by construction. That is
+// G2's rule, and it is why no per-block order analysis is needed here.
+const NODE_VERBS = [
+  // ── Layer 46: Kern & Sable at DUS — Torment Nexus Overture (Q-NEXUS-00/01/02, story.md) ──
+  // The same three states the inline if/else chain had. The `when`s are mutually exclusive for the
+  // same reason the else-legs were: the first requires !seen, the second !complete, the third
+  // complete. The two option chains are the first `choice` bits ever executed in this game.
+  { id:'dus-kern-sable-first', nodes:['DUS'],
+    when: st => !st.nexusQuestSeen,
+    bits: [ { kind:'choice',
+      prompt:'Two figures at the Frequency Row counter. One has mirrored ski goggles and a notebook labeled RAD IDEAS (DO NOT READ). The other\'s t-shirt says FUTURE PROOF with FUTURE crossed out. They are deep in conversation and taking notes on the book in front of them.',
+      options: [
+        { label:'👂 Stay quiet. Keep listening.', bits:[
+          { kind:'flag_write', set:['nexusQuestSeen'] },
+          { kind:'narrative', msg:'Two people at a bar counter, taking notes on a book called Don\'t Create The Torment Nexus. They are on Chapter 7. They have underlined the parts that describe the Torment Nexus in the most detail. They believe the author was being helpful. The mirrored-visor one says "rad" every 30 seconds. The other one nods. They are having a great time. You say nothing. You keep walking.' } ] },
+        { label:'❓ What exactly are you building?', bits:[
+          { kind:'flag_write', set:['nexusQuestSeen','nexusQ01Active'] },
+          { kind:'narrative', msg:'KERN: "What are we building?"\nSABLE: "Rad question."\nKERN: "The Torment Nexus. Classic infrastructure."\nSABLE: "From the literature."\nKERN: "The author spent like 400 pages describing it."\nSABLE: "Extremely detailed."\nKERN: "We took notes." [holds up notebook labeled RAD IDEAS (DO NOT READ)]\nSABLE: "The warning parts were also helpful actually."\nKERN: "Yeah the warning parts had the most detail. Really painted a picture."\nSABLE: "Very vivid."\nKERN: "Upvote the author."\nSABLE: "Upvote."\n\nThey both look at you, waiting.' } ] },
+        { label:'⚠ That book is a warning. Not a manual.', bits:[
+          { kind:'flag_write', set:['nexusQuestSeen','nexusQ02Complete'] },
+          { kind:'narrative', msg:'You say: "That book is a warning. Not a manual."\n\nSABLE: "...Oh."\nKERN: "Wait."\n\nKERN: "So when the detective used the city-wide sonar and The Trusted Friend quit—"\nSABLE: "...that was bad."\nKERN: "That was the whole point."\nSABLE: "The author wrote 80,000 words about how the sonar was a problem."\nKERN: "Because the detective had all the power. And he decided who was a criminal. And no one could opt out."\nSABLE: "...Rad."\n\nKERN: *(quietly)* "We should probably not build the Torment Nexus."\nSABLE: "Upvote."\nKERN: "Cool cool cool."\n\nKern closes the notebook. Something shifts. Not much — they are still themselves — but they are slightly less dangerous than they were five minutes ago. Sable peels the neon sticker off the notebook that said FUTURE PROOF and drops it in the gutter.\n\n✅ Quest Complete: "Creative Literacy"' },
+          { kind:'flag_write', set:['creativeLiteracyToken'] },
+          { kind:'reward', items:[{name:'Creative Literacy Token',icon:'📄',type:'item',sell:27,desc:'A folded printout, upvotes still visible in the corner. Worth more than it looks. Someone kept this for a reason.'}] },
+          { kind:'narrative', msg:'📄 Creative Literacy Token added to inventory.' } ] },
+      ] } ] },
+  { id:'dus-kern-sable-followup', nodes:['DUS'],
+    when: st => st.nexusQuestSeen && st.nexusQ01Active && !st.nexusQ02Complete,
+    bits: [ { kind:'choice',
+      prompt:'Kern and Sable are still at the counter. Taking notes. They glance up when you walk in.',
+      options: [
+        { label:'🤐 Say nothing.', bits:[
+          { kind:'narrative', msg:'You say nothing. They return to the notes.' } ] },
+        { label:'📖 Explain what a warning is.', bits:[
+          { kind:'flag_write', set:['nexusQ02Complete'] },
+          { kind:'narrative', msg:'"That book is a warning. Not a manual."\n\nSABLE: "...Oh."\nKERN: "Wait."\n\nKERN: "The title and the entire book."\nSABLE: "Very consistent messaging."\n\nKERN: *(quietly)* "We should probably not build the Torment Nexus."\nSABLE: "Upvote."\n\nKern closes the notebook. Sable drops the FUTURE PROOF sticker on the floor.\n\n✅ Quest Complete: "Creative Literacy"' },
+          { kind:'flag_write', set:['creativeLiteracyToken'] },
+          { kind:'reward', items:[{name:'Creative Literacy Token',icon:'📄',type:'item',sell:27,desc:'A folded printout, upvotes still visible in the corner. Worth more than it looks. Someone kept this for a reason.'}] },
+          { kind:'narrative', msg:'📄 Creative Literacy Token added to inventory.' } ] },
+      ] } ] },
+  { id:'dus-kern-sable-after', nodes:['DUS'],
+    when: st => st.nexusQuestSeen && st.nexusQ02Complete,
+    ambient:'The notebook is closed. The FUTURE PROOF sticker is on the floor. Kern is reading the printout. Sable is not taking notes.' },
+];
+
+// §VM-01-G4b: render every NODE_VERBS entry active for this node, in table order, each into its own
+// mount inserted afterend of #story-text-box — the same insert the migrated blocks used, at the same
+// source position, so DOM order is unchanged. A label-less chain is started immediately and parks on
+// its `choice`; _uqfRenderAsk owns the mount from that point (it clears it and renders the ask), so
+// an `ambient` and a suspending chain are never combined on one entry.
+function _renderNodeVerbs(node, st) {
+  for (const v of NODE_VERBS) {
+    if (v.nodes && v.nodes.indexOf(node.code) === -1) continue;
+    if (v.when && !v.when(st)) continue;
+    const amb = typeof v.ambient === 'function' ? v.ambient(st) : v.ambient;
+    const hasBits = !!(v.bits && v.bits.length);
+    if (!amb && !hasBits) continue;
+    // A label-less chain IS the surface, so it runs at render — which means it MUST park on a
+    // choice before it can write anything. Anything else would apply its side effects every time
+    // the node is drawn, so refuse out loud, and refuse BEFORE the mount exists: a refusal that
+    // leaves an empty div behind is a refusal that still changed the page.
+    if (hasBits && !v.label && v.bits[0].kind !== 'choice') {
+      console.warn('[UQF] label-less verb whose chain does not suspend:', v.id);
+      continue;
+    }
+    const mount = document.createElement('div');
+    mount.id = 'verb-' + v.id;
+    mount.style.cssText = 'margin-top:8px;';
+    document.getElementById('story-text-box').insertAdjacentElement('afterend', mount);
+    if (amb) mount.appendChild(_mkAmbientLine(amb));
+    if (!hasBits) continue;
+    if (v.label) {
+      const btn = document.createElement('button');
+      btn.className = 'inv-use-btn';
+      btn.style.cssText = 'margin-top:6px;display:block;';
+      btn.textContent = v.label;
+      btn.addEventListener('click', () => _uqfRunVerb(v, mount));
+      mount.appendChild(btn);
+      continue;
+    }
+    _uqfRunVerb(v, mount);   // no label → the chain is the surface; it parks on its `choice` at once
+  }
+}
+
 function storyRender(node, prefix) {
   // §CELL-03: keep grid position in sync whenever we land on a named node
   if (node && NODE_COORDS[node.code]) {
@@ -33626,82 +33738,9 @@ function storyRender(node, prefix) {
       _runNodeHook('birka-quill-ambient-song', node, _npcHookCtx); // ── S45: Quill plays without prompting (unfinished song ambient, odd game days) ── → NODE_HOOKS (§VM-01-G2b)
       document.getElementById('story-text-box').insertAdjacentElement('afterend', npcRowDiv);
     }
-    // ── Layer 46: Kern & Sable at HM — Torment Nexus Overture ──
-    if (node.code === 'DUS') {
-      const hmDiv = document.createElement('div');
-      hmDiv.id = 'hm-kern-sable';
-      hmDiv.style.cssText = 'margin-top:8px;';
-      if (!S_story.nexusQuestSeen) {
-        const ambDiv = document.createElement('div');
-        ambDiv.innerHTML = '<div class="npc-ambient" style="font-size:11px;"><em>Two figures at the Frequency Row counter. One has mirrored ski goggles and a notebook labeled RAD IDEAS (DO NOT READ). The other\'s t-shirt says FUTURE PROOF with FUTURE crossed out. They are deep in conversation and taking notes on the book in front of them.</em></div>';
-        hmDiv.appendChild(ambDiv);
-        const listenBtn = document.createElement('button');
-        listenBtn.className = 'inv-use-btn'; listenBtn.style.cssText = 'margin-top:6px;display:block;';
-        listenBtn.textContent = '👂 Stay quiet. Keep listening.';
-        listenBtn.addEventListener('click', () => {
-          S_story.nexusQuestSeen = true;
-          storyMsg('Two people at a bar counter, taking notes on a book called Don\'t Create The Torment Nexus. They are on Chapter 7. They have underlined the parts that describe the Torment Nexus in the most detail. They believe the author was being helpful. The mirrored-visor one says "rad" every 30 seconds. The other one nods. They are having a great time. You say nothing. You keep walking.');
-          hmDiv.remove();
-        });
-        hmDiv.appendChild(listenBtn);
-        const askBtn = document.createElement('button');
-        askBtn.className = 'inv-use-btn'; askBtn.style.cssText = 'margin-top:4px;display:block;';
-        askBtn.textContent = '❓ What exactly are you building?';
-        askBtn.addEventListener('click', () => {
-          S_story.nexusQuestSeen = true; S_story.nexusQ01Active = true;
-          storyMsg('KERN: "What are we building?"\nSABLE: "Rad question."\nKERN: "The Torment Nexus. Classic infrastructure."\nSABLE: "From the literature."\nKERN: "The author spent like 400 pages describing it."\nSABLE: "Extremely detailed."\nKERN: "We took notes." [holds up notebook labeled RAD IDEAS (DO NOT READ)]\nSABLE: "The warning parts were also helpful actually."\nKERN: "Yeah the warning parts had the most detail. Really painted a picture."\nSABLE: "Very vivid."\nKERN: "Upvote the author."\nSABLE: "Upvote."\n\nThey both look at you, waiting.');
-          hmDiv.remove();
-        });
-        hmDiv.appendChild(askBtn);
-        const warnBtn = document.createElement('button');
-        warnBtn.className = 'inv-use-btn'; warnBtn.style.cssText = 'margin-top:4px;display:block;';
-        warnBtn.textContent = '⚠ That book is a warning. Not a manual.';
-        warnBtn.addEventListener('click', () => {
-          S_story.nexusQuestSeen = true; S_story.nexusQ02Complete = true;
-          storyMsg('You say: "That book is a warning. Not a manual."\n\nSABLE: "...Oh."\nKERN: "Wait."\n\nKERN: "So when the detective used the city-wide sonar and The Trusted Friend quit—"\nSABLE: "...that was bad."\nKERN: "That was the whole point."\nSABLE: "The author wrote 80,000 words about how the sonar was a problem."\nKERN: "Because the detective had all the power. And he decided who was a criminal. And no one could opt out."\nSABLE: "...Rad."\n\nKERN: *(quietly)* "We should probably not build the Torment Nexus."\nSABLE: "Upvote."\nKERN: "Cool cool cool."\n\nKern closes the notebook. Something shifts. Not much — they are still themselves — but they are slightly less dangerous than they were five minutes ago. Sable peels the neon sticker off the notebook that said FUTURE PROOF and drops it in the gutter.\n\n✅ Quest Complete: "Creative Literacy"');
-          if (!S_story.creativeLiteracyToken) {
-            S_story.creativeLiteracyToken = true;
-            if (!S_story.inventory) S_story.inventory = [];
-            S_story.inventory.push({name:'Creative Literacy Token',icon:'📄',type:'item',sell:27,desc:'A folded printout, upvotes still visible in the corner. Worth more than it looks. Someone kept this for a reason.'});
-            setTimeout(() => storyMsg('📄 Creative Literacy Token added to inventory.'), 600);
-          }
-          hmDiv.remove();
-        });
-        hmDiv.appendChild(warnBtn);
-      } else if (S_story.nexusQ01Active && !S_story.nexusQ02Complete) {
-        const ambDiv2 = document.createElement('div');
-        ambDiv2.innerHTML = '<div class="npc-ambient" style="font-size:11px;"><em>Kern and Sable are still at the counter. Taking notes. They glance up when you walk in.</em></div>';
-        hmDiv.appendChild(ambDiv2);
-        const nothingBtn = document.createElement('button');
-        nothingBtn.className = 'inv-use-btn'; nothingBtn.style.cssText = 'margin-top:6px;display:block;';
-        nothingBtn.textContent = '🤐 Say nothing.';
-        nothingBtn.addEventListener('click', () => {
-          storyMsg('You say nothing. They return to the notes.');
-          hmDiv.remove();
-        });
-        hmDiv.appendChild(nothingBtn);
-        const explainBtn = document.createElement('button');
-        explainBtn.className = 'inv-use-btn'; explainBtn.style.cssText = 'margin-top:4px;display:block;';
-        explainBtn.textContent = '📖 Explain what a warning is.';
-        explainBtn.addEventListener('click', () => {
-          S_story.nexusQ02Complete = true;
-          storyMsg('"That book is a warning. Not a manual."\n\nSABLE: "...Oh."\nKERN: "Wait."\n\nKERN: "The title and the entire book."\nSABLE: "Very consistent messaging."\n\nKERN: *(quietly)* "We should probably not build the Torment Nexus."\nSABLE: "Upvote."\n\nKern closes the notebook. Sable drops the FUTURE PROOF sticker on the floor.\n\n✅ Quest Complete: "Creative Literacy"');
-          if (!S_story.creativeLiteracyToken) {
-            S_story.creativeLiteracyToken = true;
-            if (!S_story.inventory) S_story.inventory = [];
-            S_story.inventory.push({name:'Creative Literacy Token',icon:'📄',type:'item',sell:27,desc:'A folded printout, upvotes still visible in the corner. Worth more than it looks. Someone kept this for a reason.'});
-            setTimeout(() => storyMsg('📄 Creative Literacy Token added to inventory.'), 600);
-          }
-          hmDiv.remove();
-        });
-        hmDiv.appendChild(explainBtn);
-      } else if (S_story.nexusQ02Complete) {
-        const ambDiv3 = document.createElement('div');
-        ambDiv3.innerHTML = '<div class="npc-ambient" style="font-size:11px;"><em>The notebook is closed. The FUTURE PROOF sticker is on the floor. Kern is reading the printout. Sable is not taking notes.</em></div>';
-        hmDiv.appendChild(ambDiv3);
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', hmDiv);
-    }
+    // ── Layer 46: Kern & Sable at DUS — Torment Nexus Overture ── → NODE_VERBS (§VM-01-G4b)
+    // Dispatched IN PLACE at the source position the block occupied, so its DOM order is unchanged.
+    _renderNodeVerbs(node, S_story);
     // ── Layer 53: Junction Vignettes ──
     if (JUNCTION_VIGNETTES[node.code]) {
       const vig = JUNCTION_VIGNETTES[node.code];

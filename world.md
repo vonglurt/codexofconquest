@@ -87,7 +87,7 @@ Dead-end east of `ZRH` (historical `DF`).
 - **Loot:** None
 - **Terrain notes:** The composition notebooks are stacked floor-to-ceiling inside the first unit. Volumes 1–40 are unreadable. Volume 41 is in progress.
 
-**[✅ Layer 46]** At the bar counter: **Kern** (mirrored ski goggles, notebook labeled RAD IDEAS DO NOT READ) and **Sable** (t-shirt reading FUTURE PROOF with FUTURE crossed out in marker). Q-NEXUS-00/01/02 — "The Torment Nexus Overture." On first visit: [Listen] / [Ask] / [Warn]. Confrontation arc ("Creative Literacy") rewards `creative_literacy_token` (📄, sell:27).
+**[✅ Layer 46]** At the bar counter: **Kern** (mirrored ski goggles, notebook labeled RAD IDEAS DO NOT READ) and **Sable** (t-shirt reading FUTURE PROOF with FUTURE crossed out in marker). Q-NEXUS-00/01/02 — "The Torment Nexus Overture." On first visit: [Listen] / [Ask] / [Warn]. Confrontation arc ("Creative Literacy") rewards `creative_literacy_token` (📄, sell:27). **[§VM-01-G4b, 2026-08-04]** The three states are now `NODE_VERBS` data (`dus-kern-sable-first`/`-followup`/`-after`) and the two option panels are the game's first live `choice` bits — prose unchanged; see story.md §Q-NEXUS for the one intended behaviour delta.
 
 **`MUC` (historical `GL`) — Old Guard's Corner (Node 74, R03,C15)**
 Dead-end west of `ZRH` (historical `DF`).
