@@ -31689,6 +31689,968 @@ function _nodeHookMimicMeadows(node) {
     }
   }
 }
+// ── §VM-01-G2b: the npc-row hooks — the Birka-region blocks deferred by G2 ──
+// Same in-place dispatch as G2; the only difference is the ANCHOR. These 29 blocks appended
+// to `npcRowDiv` (the #story-npc-cards-row element built inside storyRender) rather than to
+// #story-text-box, so they need one thing from the enclosing scope. That is the whole ctx:
+// `_runNodeHook(id, node, ctx)` passes `{ npcRowDiv }` and the 21 hooks that append destructure
+// it in their signature, so every body below is byte-verbatim — not even re-indented. The 8
+// that take `(node)` alone write no DOM here (storyMsg / their own inserts); they stay in this
+// registry because their SOURCE POSITION is load-bearing, which is the same reason dispatch is
+// in place: LIFO stacking is preserved by construction (G2 ship record).
+function _nodeHookBirkaVargaWatch(node, { npcRowDiv }) {
+      // ── S8: Varga's presence at BA — observation mechanic ──
+      if (node.code === 'LLA') {
+        const vargaWatches = S_story.s8VargaWatches || 0;
+        if (!S_story.s8VargaClueUnlocked) {
+          const vargaAmbient = document.createElement('div');
+          const vargaDesc = vargaWatches === 0
+            ? 'A man at the corner table who is not drinking his drink. He\'s watching the door.'
+            : vargaWatches === 1
+            ? 'The man at the corner table is still there. Different drink. Same door.'
+            : 'He\'s been here three visits. The drink changes. He doesn\'t.';
+          vargaAmbient.innerHTML = '<div class="npc-ambient" style="font-size:11px;"><em>' + vargaDesc + '</em></div>';
+          npcRowDiv.appendChild(vargaAmbient);
+          if (vargaWatches < 3) {
+            const watchBtn = document.createElement('button');
+            watchBtn.className = 'inv-use-btn';
+            watchBtn.style.cssText = 'margin-top:4px;';
+            watchBtn.textContent = '👁 Watch him.';
+            watchBtn.addEventListener('click', () => {
+              S_story.s8VargaWatches = vargaWatches + 1;
+              if (S_story.s8VargaWatches >= 3) {
+                S_story.s8VargaClueUnlocked = true;
+                storyMsg("He leaves at the same moment as the courier from the harbor. Not together — just the same moment.\n\nYael mentioned him: Varga. The pigeon route changed three times this season. The coin is moving toward the docks.\n\nPachelbel would know what that means.");
+              } else {
+                storyMsg(S_story.s8VargaWatches === 1
+                  ? "He orders another drink. He doesn't touch it."
+                  : "He receives a small folded note. Reads it. Puts it in his coat. Does not leave.");
+              }
+              watchBtn.remove();
+            });
+            npcRowDiv.appendChild(watchBtn);
+          }
+        }
+        if (S_story.s8VargaClueUnlocked && !S_story.s8PachelbelTold) {
+          const tellBtn = document.createElement('button');
+          tellBtn.className = 'inv-use-btn';
+          tellBtn.style.cssText = 'margin-top:4px;';
+          tellBtn.textContent = '💬 Tell Pachelbel about Varga.';
+          tellBtn.addEventListener('click', () => {
+            S_story.s8PachelbelTold = true;
+            storyMsg("Pachelbel listens without moving.\n\nPachelbel: \"Varga changes his route when the coin source changes. Three times means three new sources — or one source that keeps moving.\"\n\nA pause.\n\n\"The harbor's been different lately. More people coming through who don't know the prices. That's not new trade. That's displacement.\" He looks at you. \"I'll adjust my inventory accordingly. You didn't hear that from me.\"");
+            S_story.gold += 15;
+            storyMsg("He slides 15gp across the counter. No explanation.");
+            tellBtn.remove();
+          });
+          npcRowDiv.appendChild(tellBtn);
+        }
+      }
+}
+function _nodeHookBirkaPachelbelLedger(node, { npcRowDiv }) {
+      // ── Layer 68b: Pachelbel Ledger at BA (Dear Friend) ──
+      if (node.code === 'LLA' && _npcFavor('pachelbel') >= 2) {
+        const _plWrap = document.createElement('div');
+        _plWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
+        const ledgerBtn = document.createElement('button');
+        ledgerBtn.className = 'inv-use-btn';
+        ledgerBtn.textContent = '📒 Read the ledger.';
+        ledgerBtn.style.cssText = 'margin-top:4px;';
+        ledgerBtn.addEventListener('click', () => {
+          if (document.getElementById('pachelbel-ledger-sub')) return;
+          ledgerBtn.disabled = true; ledgerBtn.style.opacity = '0.5';
+          const sub = document.createElement('div');
+          sub.id = 'pachelbel-ledger-sub';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090c;border-left:3px solid #404870;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
+          const hd = document.createElement('div');
+          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#6070a0;text-transform:uppercase;';
+          hd.textContent = "📒 Pachelbel's Ledger";
+          sub.appendChild(hd);
+          [2,3].forEach(n => {
+            const entry = document.createElement('pre');
+            entry.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#8090b8;font-family:"Courier New",monospace;margin:0;border-top:1px solid #2a3050;padding-top:10px;';
+            entry.textContent = 'Entry ' + n + '\n\n' + PACHELBEL_LEDGER[n];
+            sub.appendChild(entry);
+          });
+          _plWrap.appendChild(sub);
+        });
+        _plWrap.appendChild(ledgerBtn);
+        npcRowDiv.appendChild(_plWrap);
+      }
+}
+function _nodeHookBirkaQuillCouperinFarewell(node) {
+      // ── Layer 69 §XXXIV — Act VIII: Quill visits BA to close the Couperin estate ledger ──
+      if (node.code === 'LLA' && (S_story.actNumber || 1) === 8
+          && _npcFavor('quill') >= 1 && !S_story.act8FarewellQuill) {
+        S_story.act8FarewellQuill = true;
+        const beatText = typeof ACT8_FAREWELL_BEATS.quill.text === 'function'
+          ? ACT8_FAREWELL_BEATS.quill.text()
+          : ACT8_FAREWELL_BEATS.quill.text;
+        setTimeout(() => storyMsg('Quill is at the archive desk — not his usual table, not his instrument.\n\n' + beatText), 500);
+      }
+}
+function _nodeHookBirkaGigaultStall(node, { npcRowDiv }) {
+      // ── L44-A: Gigault stall at BA ──
+      if (node.code === 'LLA') {
+        const gig = document.createElement('div');
+        gig.style.cssText = 'margin-top:6px;';
+        gig.innerHTML = _getGigaultState();
+        npcRowDiv.appendChild(gig);
+      }
+}
+function _nodeHookBirkaDeaconCode(node, { npcRowDiv }) {
+      // ── L44-Q: Deacon Code click target at BA ──
+      if (node.code === 'LLA') {
+        const _dcWrap = document.createElement('div');
+        _dcWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
+        const dcBtn = document.createElement('button');
+        dcBtn.className = 'inv-use-btn';
+        dcBtn.textContent = '📋 The code on the wall.';
+        dcBtn.style.cssText = 'margin-top:4px;';
+        dcBtn.addEventListener('click', () => {
+          if (document.getElementById('deacon-code-sub')) return;
+          dcBtn.disabled = true; dcBtn.style.opacity = '0.5';
+          const sub = document.createElement('div');
+          sub.id = 'deacon-code-sub';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0a0c0a;border-left:3px solid #506850;border-radius:4px;';
+          const hd = document.createElement('div');
+          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#608060;text-transform:uppercase;margin-bottom:8px;';
+          hd.textContent = '📋 Pachelbel\'s Code';
+          const body = document.createElement('pre');
+          body.style.cssText = 'font-size:12px;line-height:1.8;white-space:pre-wrap;color:#a0c0a0;margin:0;';
+          body.textContent = DEACON_CODE_TEXT;
+          sub.appendChild(hd); sub.appendChild(body);
+          _dcWrap.appendChild(sub);
+        });
+        _dcWrap.appendChild(dcBtn);
+        npcRowDiv.appendChild(_dcWrap);
+      }
+}
+function _nodeHookBirkaBrynnMaintenance(node, { npcRowDiv }) {
+      // ── L44-L/N: Brynn maintenance + ledger at IN ──
+      if (node.code === 'TLL') {
+        const bmDiv = document.createElement('div');
+        bmDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:4px;';
+        const _ledgerWrap = document.createElement('div');
+        _ledgerWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
+        const ledgerBtn = document.createElement('button');
+        ledgerBtn.className = 'inv-use-btn';
+        ledgerBtn.textContent = '📒 The ledger.';
+        ledgerBtn.addEventListener('click', () => {
+          if (document.getElementById('brynn-ledger-sub')) return;
+          ledgerBtn.disabled = true; ledgerBtn.style.opacity = '0.5';
+          const bal = S_story.brynLedgerBalance ?? -8;
+          const balColor = bal < 0 ? '#c06060' : '#60a060';
+          const balStr = bal < 0 ? bal + ' copper' : bal === 0 ? '0 copper (balanced)' : '+' + bal + ' copper';
+          const sub = document.createElement('div');
+          sub.id = 'brynn-ledger-sub';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090c;border-left:3px solid #404870;border-radius:4px;';
+          const hd = document.createElement('div');
+          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#6070a0;text-transform:uppercase;margin-bottom:8px;';
+          hd.textContent = "📒 Brynn's Inn — Month Ledger";
+          const pre = document.createElement('pre');
+          pre.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre;color:#8090b8;font-family:"Courier New",monospace;margin:0;';
+          pre.innerHTML = "BRYNN'S INN — MONTH LEDGER\n"
+            + "—————————————————————————\n"
+            + "Room nights (14 beds avg 60% fill):  235 copper\n"
+            + "Meals served:                         84 copper\n"
+            + "Kitchen staff (part-time):           -45 copper\n"
+            + "Supplies (food, candles, linen):    -112 copper\n"
+            + "Repairs (ongoing):                   -" + (24 - (S_story.brynThirdStepFixed ? 4 : 0)) + " copper\n"
+            + "—————————————————————————\n"
+            + 'BALANCE: <span style="color:' + balColor + ';font-weight:700">' + balStr + '</span>';
+          sub.appendChild(hd); sub.appendChild(pre);
+          _ledgerWrap.appendChild(sub);
+          if (bal >= 0 && !S_story._brynLedgerZeroShown) {
+            S_story._brynLedgerZeroShown = true;
+            setTimeout(() => storyMsg("Brynn: \"Oh. That's the first time in three years.\" Beat. \"Thank you.\""), 300);
+          }
+        });
+        _ledgerWrap.appendChild(ledgerBtn);
+        bmDiv.appendChild(_ledgerWrap);
+        if (_npcFavor('brynn') >= 1) {
+          const taskIdx = (S_story.gameDay || 0) % 3;
+          const task = BRYNN_MAINTENANCE_TASKS[taskIdx];
+          if (!S_story[task.flag]) {
+            const mBtn = document.createElement('button');
+            mBtn.className = 'inv-use-btn';
+            mBtn.textContent = '🔧 ' + task.label + (task.cost_gold > 0 ? ' (' + task.cost_gold + 'g)' : '');
+            mBtn.addEventListener('click', () => {
+              if (task.cost_gold > 0 && S_story.gold < task.cost_gold) {
+                storyBlock('Not enough gold.'); return;
+              }
+              if (task.cost_gold > 0) { S_story.gold -= task.cost_gold; storyUpdateStatus(); }
+              task.action();
+              storyMsg(task.narration + '  Brynn: "' + task.brynn_after + '"');
+              mBtn.disabled = true; mBtn.style.opacity = '0.5';
+            });
+            bmDiv.appendChild(mBtn);
+          }
+        }
+        npcRowDiv.appendChild(bmDiv);
+      }
+}
+function _nodeHookBirkaNightAmbient(node, { npcRowDiv }) {
+      // ── S52: Night-mode ambient text ──
+      if (NIGHT_AMBIENT[node.code] && (S_story.gameDay || 0) % 4 >= 2) {
+        const nightDiv = document.createElement('div');
+        nightDiv.innerHTML = '<div class="npc-ambient" style="border-color:#2a3a5a;color:#7090b0;">'
+          + '<em>' + NIGHT_AMBIENT[node.code] + '</em></div>';
+        npcRowDiv.appendChild(nightDiv);
+      }
+}
+function _nodeHookBirkaNiversPasses(node, { npcRowDiv }) {
+      // ── L45-D/E: Nivers at CI ──
+      if (node.code === 'LHR') {
+        const nivers = document.createElement('div');
+        nivers.innerHTML = '<div class="npc-ambient">The guard on the corner — same post, same stillness. She\'s there when you arrive. She\'ll be there when you leave. She says: <em>"' + NIVERS_DIALOGUE + '"</em></div>';
+        const niversPasses = (S_story.niversPasses || 0) + 1;
+        S_story.niversPasses = niversPasses;
+        // Yael Dear Friend addition after 3+ Nivers passes
+        if (niversPasses >= 3 && _npcFavor('yael') >= 2 && !S_story.niversYaelLineDelivered) {
+          S_story.niversYaelLineDelivered = true;
+          setTimeout(() => storyMsg("Yael: \"Nivers's been on that corner for eleven years. You know what that takes? Not skill. Presence. The willingness to be there every single day when the world is not watching. I've tried to understand it. I think it's the thing I should be learning from her instead of the other way around.\""), 600);
+        }
+        npcRowDiv.appendChild(nivers);
+        // L45-F: Yael "Who is the guard?" dialogue option
+        if (_npcFavor('yael') >= 1 && !S_story.niversNameLearned) {
+          const askBtn = document.createElement('button');
+          askBtn.className = 'inv-use-btn';
+          askBtn.textContent = '🛡 Who is the guard on the corner?';
+          askBtn.style.cssText = 'margin-top:4px;';
+          askBtn.addEventListener('click', () => {
+            S_story.niversNameLearned = true;
+            if (!S_story.log) S_story.log = [];
+            S_story.log.unshift({ type:'world', text:'The guard on the corner — Nivers. Eleven years.', day: S_story.day || 1 });
+            storyMsg("Yael: \"Her name is Nivers. Eleven years on that corner. Same schedule. I keep meaning to tell her I notice. I keep not doing it.\"");
+            askBtn.remove();
+          });
+          npcRowDiv.appendChild(askBtn);
+        }
+      }
+}
+function _nodeHookBirkaBlueShutters(node, { npcRowDiv }) {
+      // ── S7: Blue Shutters Archive at CI ──
+      if (node.code === 'LHR') {
+        const yealFav = _npcFavor('yael');
+        const _bsWrap = document.createElement('div');
+        _bsWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:6px;';
+
+        if (!S_story.archiveLetterObtained && yealFav < 1) {
+          // State 1: rejected at the door
+          const archiveBtn = document.createElement('button');
+          archiveBtn.className = 'inv-use-btn';
+          archiveBtn.textContent = '🔵 The blue-shuttered building on Scholar\'s Row.';
+          archiveBtn.addEventListener('click', () => {
+            if (document.getElementById('bs-archive-sub')) return;
+            archiveBtn.disabled = true; archiveBtn.style.opacity = '0.5';
+            const sub = document.createElement('div');
+            sub.id = 'bs-archive-sub';
+            sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090e;border-left:3px solid #304060;border-radius:4px;display:flex;flex-direction:column;gap:6px;';
+            const hd = document.createElement('div');
+            hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#405870;text-transform:uppercase;';
+            hd.textContent = '🔵 Blue Shutters Archive — Scholar\'s Row';
+            const body = document.createElement('div');
+            body.style.cssText = 'font-size:12px;line-height:1.8;color:#8090a8;font-style:italic;';
+            body.textContent = 'The shutters are a particular shade of blue — institutional, deliberate. A Scholar Kings archive seal is set into the door frame. The reading list is full. The staff tell you this without looking up. You get the impression it isn\'t about the reading list.';
+            const note = document.createElement('div');
+            note.style.cssText = 'font-size:11px;color:#506080;';
+            note.textContent = 'Access requires a letter of introduction. Ask someone who has standing here.';
+            sub.appendChild(hd); sub.appendChild(body); sub.appendChild(note);
+            _bsWrap.appendChild(sub);
+          });
+          _bsWrap.appendChild(archiveBtn);
+
+        } else if (!S_story.archiveLetterObtained && yealFav >= 1) {
+          // State 2: Yael can provide a letter
+          const archiveBtn = document.createElement('button');
+          archiveBtn.className = 'inv-use-btn';
+          archiveBtn.textContent = '🔵 Ask Yael about the blue-shuttered building.';
+          archiveBtn.addEventListener('click', () => {
+            if (document.getElementById('bs-archive-sub')) return;
+            archiveBtn.disabled = true; archiveBtn.style.opacity = '0.5';
+            S_story.archiveLetterObtained = true;
+            const sub = document.createElement('div');
+            sub.id = 'bs-archive-sub';
+            sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090e;border-left:3px solid #304060;border-radius:4px;display:flex;flex-direction:column;gap:8px;';
+            const hd = document.createElement('div');
+            hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#405870;text-transform:uppercase;';
+            hd.textContent = '🔵 Blue Shutters Archive — Yael';
+            const body = document.createElement('div');
+            body.style.cssText = 'font-size:12px;line-height:1.8;color:#a0b0c8;font-style:italic;';
+            body.textContent = '"The Blue Shutters. Scholar King archive, restricted stack. I have a standing letter of introduction — patrol business. You can use it."\n\nShe writes your name in the margin. "Don\'t take anything. Don\'t ask about the depth surveys. They\'ll know what you\'re looking for."\n\nShe hands you the letter.';
+            const enterBtn = document.createElement('button');
+            enterBtn.className = 'inv-use-btn';
+            enterBtn.textContent = '🔵 Enter the Blue Shutters Archive.';
+            enterBtn.addEventListener('click', () => {
+              enterBtn.disabled = true; enterBtn.style.opacity = '0.5';
+              _openBlueShuttersContent(_bsWrap);
+            });
+            sub.appendChild(hd); sub.appendChild(body); sub.appendChild(enterBtn);
+            _bsWrap.appendChild(sub);
+          });
+          _bsWrap.appendChild(archiveBtn);
+
+        } else {
+          // State 3: letter in hand, enter directly
+          const archiveBtn = document.createElement('button');
+          archiveBtn.className = 'inv-use-btn';
+          archiveBtn.textContent = '🔵 Enter the Blue Shutters Archive.';
+          archiveBtn.addEventListener('click', () => {
+            if (document.getElementById('bs-archive-sub')) return;
+            archiveBtn.disabled = true; archiveBtn.style.opacity = '0.5';
+            _openBlueShuttersContent(_bsWrap);
+          });
+          _bsWrap.appendChild(archiveBtn);
+        }
+
+        npcRowDiv.appendChild(_bsWrap);
+      }
+}
+function _nodeHookBirkaFrobergerMemorial(node, { npcRowDiv }) {
+      // ── Layer 63: Froberger Memorial at CI ──
+      if (node.code === 'LHR') {
+        const _memWrap = document.createElement('div');
+        _memWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
+        const memBtn = document.createElement('button');
+        memBtn.className = 'inv-use-btn';
+        memBtn.textContent = '⛪ Examine the memorial.';
+        memBtn.style.cssText = 'margin-top:4px;';
+        memBtn.addEventListener('click', () => {
+          if (document.getElementById('memorial-subrow')) return;
+          memBtn.disabled = true; memBtn.style.opacity = '0.5';
+          S_story.frobergerMemorialVisited = true;
+          let plaque = FROBERGER_MEMORIAL_TEXT.base;
+          if (_npcFavor('yael') >= 1) plaque += FROBERGER_MEMORIAL_TEXT.yael_friendly;
+          if (['yael','brynn','quill','pachelbel','crov','auros'].some(k => _npcFavor(k) >= 2)) plaque += FROBERGER_MEMORIAL_TEXT.dear_friend;
+          if (S_story.corelliRevelationDelivered) plaque += FROBERGER_MEMORIAL_TEXT.post_cipher;
+          const sub = document.createElement('div');
+          sub.id = 'memorial-subrow';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0c0a06;border-left:3px solid #7a5a1a;border-radius:4px;display:flex;flex-direction:column;gap:8px;';
+          const pq = document.createElement('pre');
+          pq.style.cssText = 'font-family:Georgia,serif;font-size:12px;color:#e8d4a0;white-space:pre-wrap;margin:0;line-height:1.7;';
+          pq.textContent = plaque;
+          sub.appendChild(pq);
+          const bookHd = document.createElement('div');
+          bookHd.style.cssText = 'font-size:10px;color:#666;border-top:1px solid #3a2a0a;padding-top:6px;letter-spacing:1px;';
+          bookHd.textContent = '— Memorial Book —';
+          sub.appendChild(bookHd);
+          FROBERGER_MEMORIAL_BOOK.forEach(e => {
+            const el = document.createElement('div');
+            el.style.cssText = 'font-size:11px;color:#a08060;font-style:italic;';
+            el.textContent = '"' + e.text + '"' + (e.attr ? '  — ' + e.attr : '');
+            sub.appendChild(el);
+          });
+          if (S_story.frobergerMemorialBookSigned && S_story._memorialPlayerEntry) {
+            const pe = document.createElement('div');
+            pe.style.cssText = 'font-size:11px;color:#b09070;font-style:italic;';
+            pe.textContent = '"' + S_story._memorialPlayerEntry + '"  — (your hand)';
+            sub.appendChild(pe);
+          }
+          const btnRow = document.createElement('div');
+          btnRow.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid #3a2a0a;padding-top:8px;';
+          if (!S_story.frobergerMemorialFlowers) {
+            const flBtn = document.createElement('button');
+            flBtn.className = 'inv-use-btn';
+            flBtn.textContent = '🌸 Leave Flowers (10gp)';
+            flBtn.addEventListener('click', () => {
+              if ((S_story.gold || 0) < 10) { storyMsg('🌸 Not enough gold (10gp required).'); return; }
+              S_story.gold -= 10; S_story.frobergerMemorialFlowers = true;
+              storyUpdateStatus();
+              const isNg = (S_story.ngPlusRun || 0) > 0;
+              storyMsg(isNg ? '🌸 You leave flowers again. You wonder if anyone will wonder who keeps doing this.' : '🌸 You leave a small bunch of flowers at the stone. They look right there.');
+              flBtn.remove();
+            });
+            btnRow.appendChild(flBtn);
+          }
+          if (!S_story.frobergerMemorialBookSigned) {
+            const choices = (S_story.ngPlusRun || 0) > 0 ? MEMORIAL_PLAYER_CHOICES_NG : MEMORIAL_PLAYER_CHOICES;
+            choices.forEach(txt => {
+              const cb = document.createElement('button');
+              cb.className = 'inv-use-btn';
+              cb.textContent = '✍️ "' + txt + '"';
+              cb.addEventListener('click', () => {
+                S_story.frobergerMemorialBookSigned = true;
+                S_story._memorialPlayerEntry = txt;
+                storyMsg('✍️ You write: "' + txt + '"');
+                const pe = document.createElement('div');
+                pe.style.cssText = 'font-size:11px;color:#b09070;font-style:italic;';
+                pe.textContent = '"' + txt + '"  — (your hand)';
+                sub.insertBefore(pe, btnRow);
+                btnRow.querySelectorAll('button').forEach(b => { if (b.textContent.startsWith('✍️')) b.remove(); });
+              });
+              btnRow.appendChild(cb);
+            });
+          }
+          sub.appendChild(btnRow);
+          _memWrap.appendChild(sub);
+        });
+        _memWrap.appendChild(memBtn);
+        npcRowDiv.appendChild(_memWrap);
+      }
+}
+function _nodeHookBirkaNoFishingSign(node, { npcRowDiv }) {
+      // ── No Fishing Sign at CI ──
+      if (node.code === 'LHR') {
+        if (!S_story.noFishingSignRead) {
+          const _fishWrap = document.createElement('div');
+          _fishWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:4px;';
+          const signBtn = document.createElement('button');
+          signBtn.className = 'inv-use-btn';
+          signBtn.textContent = '🚫 A hand-lettered sign on the lamppost: NO FISHING.';
+          let _tabReady = false;
+          signBtn.addEventListener('click', () => {
+            if (!_tabReady) {
+              _tabReady = true;
+              signBtn.textContent = '↩ Pull the tab.';
+              const readSub = document.createElement('div');
+              readSub.style.cssText = 'margin-top:6px;padding:10px 12px;background:#080c08;border-left:3px solid #406040;border-radius:4px;font-size:11px;color:#80a080;line-height:1.7;font-style:italic;';
+              readSub.textContent = 'The notice is bolted at chest height. Block letters, official ink: "NO FISHING IN THE CITY LIMITS. By Order of the Watch."\n\nBelow the ordinance, in smaller hand: "...unless you know what you\'re doing. Tear here."\n\nA perforated tab hangs from the bottom edge. It reads: FISHING AT YUGURT LAKE · FREE ROD FOR NEW ANGLERS · BRING THIS COUPON · MEET THE FISHERMAN.';
+              _fishWrap.appendChild(readSub);
+            } else {
+              S_story.noFishingSignRead = true;
+              S_story.inventory = S_story.inventory || [];
+              S_story.inventory.push({ name:'Free Rod Coupon', icon:'🎫', type:'readable', sell:0,
+                readText:'FISHING AT YUGURT LAKE\n\nFREE ROD FOR NEW ANGLERS\n\nPresent this coupon to The Fisherman at Yugurt Cabin.\nYugurt Cabin is south of Yugurt Lake, south of the Western Wilds Crossroads.\n\n"...Nice Day For Fishing. Yugurt!"' });
+              if (!S_story.quests) S_story.quests = {};
+              S_story.quests['quest_no_fishing_sign'] = 'active';
+              signBtn.disabled = true; signBtn.style.opacity = '0.5';
+              // Replace any read-sub with the response sub-row
+              const old = _fishWrap.querySelector('div');
+              if (old) old.remove();
+              const sub = document.createElement('div');
+              sub.style.cssText = 'margin-top:6px;padding:10px 12px;background:#080c08;border-left:3px solid #406040;border-radius:4px;display:flex;flex-direction:column;gap:8px;';
+              const txt = document.createElement('div');
+              txt.style.cssText = 'font-size:12px;color:#90b890;line-height:1.7;';
+              txt.textContent = '🎫 The tab is in your hand. Somewhere in the lake country is a man who will give you a rod if you show him this. The sign said so. You have no reason to distrust a sign.';
+              const wpBtn = document.createElement('button');
+              wpBtn.className = 'inv-use-btn';
+              wpBtn.textContent = '📍 Set waypoint → Yugurt Lake';
+              wpBtn.addEventListener('click', () => {
+                storySetWaypoint('BOO');
+                wpBtn.textContent = '📍 Waypoint set — Yugurt Lake';
+                wpBtn.disabled = true; wpBtn.style.opacity = '0.6';
+              });
+              const couponCard = document.createElement('div');
+              couponCard.style.cssText = 'padding:6px 8px;background:#050a05;border:1px solid #3a5030;border-radius:3px;font-size:11px;color:#70a070;line-height:1.6;';
+              couponCard.innerHTML = '🎫 <strong style="color:#90c080">Free Rod Coupon</strong> added to inventory — redeemable for 1 × <em>Fishing Rod (+0, standard)</em> at Yugurt Cabin.';
+              sub.appendChild(txt); sub.appendChild(wpBtn); sub.appendChild(couponCard);
+              _fishWrap.appendChild(sub);
+              storyAutoSave();
+            }
+          });
+          _fishWrap.appendChild(signBtn);
+          npcRowDiv.appendChild(_fishWrap);
+        } else {
+          const signDiv = document.createElement('div');
+          signDiv.className = 'npc-ambient';
+          signDiv.style.cssText = 'font-size:11px;color:var(--muted);margin-top:4px;';
+          signDiv.innerHTML = 'The NO FISHING notice is still bolted to the lamppost. The pull-tab is gone.';
+          npcRowDiv.appendChild(signDiv);
+        }
+      }
+}
+function _nodeHookBirkaS54JointWitness(node) {
+      // ── Layer 66a: S54 Yael + Brynn joint witness at CI (Act VIII) ──
+      if (node.code === 'LHR' && (S_story.actNumber || 1) >= 7
+          && _npcFavor('yael') >= 1 && _npcFavor('brynn') >= 1
+          && !S_story.s54JointMomentDelivered) {
+        S_story.s54JointMomentDelivered = true;
+        setTimeout(() => storyMsg(S54_JOINT_MOMENT), 400);
+      }
+}
+function _nodeHookBirkaYaelNamedReport(node, { npcRowDiv }) {
+      // ── Layer 74 §XXXIX — Yael Named Report at CI ──
+      if (node.code === 'LHR' && _npcFavor('yael') >= 2
+          && (S_story.actNumber || 1) >= 6 && S_story.yaelEscortUsed
+          && !S_story.yaelNamedReportDelivered) {
+        setTimeout(() => {
+          storyMsg(YAEL_NAMED_REPORT_SCENE.setup + '\n\n' + YAEL_NAMED_REPORT_SCENE.decision);
+          const choiceDiv = document.createElement('div');
+          choiceDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:3px;';
+          const holdBtn = document.createElement('button');
+          holdBtn.className = 'inv-use-btn';
+          holdBtn.textContent = '📋 I\'ll hold it.';
+          holdBtn.addEventListener('click', () => {
+            S_story.yaelNamedReportDelivered = true;
+            storyMsg('Yael: ' + YAEL_NAMED_REPORT_SCENE.choiceHold);
+            choiceDiv.remove();
+          });
+          const threeBtn = document.createElement('button');
+          threeBtn.className = 'inv-use-btn';
+          threeBtn.textContent = '🗂 Three copies is enough.';
+          threeBtn.addEventListener('click', () => {
+            S_story.yaelNamedReportDelivered = true;
+            storyMsg('Yael: ' + YAEL_NAMED_REPORT_SCENE.choiceThree);
+            choiceDiv.remove();
+          });
+          choiceDiv.appendChild(holdBtn);
+          choiceDiv.appendChild(threeBtn);
+          npcRowDiv.appendChild(choiceDiv);
+        }, 600);
+      }
+}
+function _nodeHookBirkaYaelPatrolLine(node, { npcRowDiv }) {
+      // ── L45-G: Yael patrol field line ──
+      if (node.code !== 'LHR') {
+        const yaelPatrol = _getYaelLocation();
+        if (yaelPatrol && yaelPatrol.nodeSlug === node.code) {
+          const patrolDiv = document.createElement('div');
+          patrolDiv.innerHTML = '<div class="npc-ambient" style="border-color:#4a6a3a;"><strong style="color:#c0d8a0">Yael</strong> — in the field. She sees you. <em>"' + yaelPatrol.line + '"</em></div>';
+          npcRowDiv.appendChild(patrolDiv);
+        }
+      }
+}
+function _nodeHookBirkaCyMadnessGate(node) {
+      // ── §D01-07: CY Madness Gate — first visit WIS save ──
+      if (node.code === 'HKG' && !S_story.cyMadnessRoll) {
+        const _wisMod = Math.floor(((S_story.abilityScores || {}).wis || 12) - 10) / 2 | 0;
+        const _profB  = Math.floor(((S_story.level || 1) - 1) / 4) + 2;
+        const _cyRoll = Math.ceil(Math.random() * 20);
+        const _cyTotal = _cyRoll + _wisMod + _profB;
+        const _cyDC = 12;
+        const _CY_MADNESS = [
+          'The walls are breathing. You are fairly certain this is incorrect.',
+          'The data wraith turns toward you before you enter the room. You didn\'t make a sound.',
+          'A maintenance log on the wall is dated 300 years ago and your name is on it.',
+          'For three seconds, the neon is beautiful and you know exactly why.',
+          'You can read the void-script on the relays. You do not know this language. You have always known this language.',
+          'Someone else is wearing your footsteps.',
+          'The Corrupted Androids look at you like they recognize you.',
+          'The map in your hand matches this building\'s blueprint exactly. It shouldn\'t.',
+          'You almost said hello to the data wraith before combat started.',
+          'This is fine. This is all fine. You have been here before and it was fine then too.',
+        ];
+        if (_cyTotal >= _cyDC) {
+          S_story.cyMadnessRoll = 'clear';
+          _appendStoryHcard({ round:'Day '+S_story.day, actor:'VOID', formula:'WIS Save d20+'+_wisMod, outcome:'= '+_cyTotal+' ✓ DC '+_cyDC,
+            dmg:'Scholar King infrastructure — copper wiring, bioluminescent void growth. The data wraiths are corrupted maintenance programs.' });
+        } else {
+          const _dIdx = Math.floor(Math.random() * 10);
+          const _madText = _CY_MADNESS[_dIdx];
+          S_story.cyMadnessRoll = 'fractured';
+          S_story.cyMadnessTable = _madText;
+          _appendStoryHcard({ round:'Day '+S_story.day, actor:'VOID', formula:'WIS Save d20+'+_wisMod, outcome:'= '+_cyTotal+' ✗ DC '+_cyDC,
+            dmg:'[Madness] ' + _madText });
+        }
+        storyAutoSave();
+      }
+}
+function _nodeHookBirkaCyMaintenancePlate(node) {
+      // ── §D01-07: CY Maintenance Plate — live state indicator ──
+      { const _platOld = document.getElementById('story-cy-plate'); if (_platOld) _platOld.remove();
+        if (node.code === 'HKG' && S_story.cyMadnessRoll) {
+          const _platDiv = document.createElement('div');
+          _platDiv.id = 'story-cy-plate';
+          _platDiv.className = 'sweelinck-variant';
+          if (S_story.cyOriginKnown) {
+            _platDiv.style.cssText = 'margin-top:10px;border-left-color:#5a4a8a;color:#c8b8f8;font-size:12px;';
+            _platDiv.textContent = '🪧 The plate is behind you now. Your designation in Scholar King notation, copper-cast three centuries ago. The Neon Undercity is yours. You built it. You forgot. The plate did not.';
+          } else if (S_story.cyMaintenanceDecoded) {
+            _platDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a6a;color:#9090d0;font-size:12px;';
+            _platDiv.textContent = '🪧 The cipher is partially decoded. The builder\'s designation matches Froberger\'s fragment. One more session to confirm the translation.';
+          } else if (S_story.d0207_a1_passed) {
+            _platDiv.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b08050;font-size:12px;';
+            _platDiv.textContent = '🪧 The copper plate is on the north wall — three centuries old, Scholar King cipher, your name not yet fully translated. INT Arcana DC 13 to decode it. Defeat the Data Wraith first.';
+          } else {
+            _platDiv.style.cssText = 'margin-top:10px;border-left-color:#2a2a2a;color:#808060;font-size:12px;';
+            _platDiv.textContent = '🔍 Something on the north wall is very quiet against the neon. Copper, old. WIS Perception DC 10 to focus on it — see quest panel.';
+          }
+          document.getElementById('story-text-box').insertAdjacentElement('afterend', _platDiv);
+        }
+      }
+}
+function _nodeHookBirkaCyNgPlusLine(node) {
+      // ── §D01-07: CY NG+ remembered line (no save, just flavor) ──
+      if (node.code === 'HKG' && (S_story.ngPlusRun || 0) >= 1 && !S_story.cyNgPlusLineDelivered) {
+        S_story.cyNgPlusLineDelivered = true;
+        setTimeout(() => storyMsg('The Neon Undercity looks exactly as you remember it. Which is the problem — you should not remember it at all.'), 300);
+      }
+}
+function _nodeHookBirkaS6JointConversation(node) {
+      // ── S6: Weckmann/Auros joint conversation at CY when both Friendly ──
+      if (node.code === 'HKG' && _npcFavor('crov') >= 1 && _npcFavor('auros') >= 1
+          && !S_story.s6JointDelivered) {
+        S_story.s6JointDelivered = true;
+        const voidActive = !!(S_story.quests && S_story.quests['quest_void_below'] === 'active');
+        const jointLine = voidActive
+          ? "You arrive mid-conversation. Weckmann: \"If you go down there—\" Auros: \"I know.\" A pause. \"I've mapped the whole floor.\" Weckmann: \"I know you have.\"\n\nThey both stop talking when they see you."
+          : "Weckmann and Auros are talking when you arrive. Something about the structural load on the north corridor. Auros is drawing on a piece of paper. Weckmann is asking questions.\n\nThey stop when they see you. Auros: \"The load is fine.\" Weckmann: \"I wasn't worried.\" Neither of them looks like they've been talking long.";
+        setTimeout(() => storyMsg(jointLine), 400);
+      }
+}
+function _nodeHookBirkaWeckmannLog(node, { npcRowDiv }) {
+      // ── L45-H: Weckmann training log at CY ──
+      if (node.code === 'HKG') {
+        const _logWrap = document.createElement('div');
+        _logWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
+        const logBtn = document.createElement('button');
+        logBtn.className = 'inv-use-btn';
+        logBtn.textContent = '📓 The training log.';
+        logBtn.style.cssText = 'margin-top:4px;';
+        logBtn.addEventListener('click', () => {
+          if (document.getElementById('weckmann-log-sub')) return;
+          logBtn.disabled = true; logBtn.style.opacity = '0.5';
+          const sub = document.createElement('div');
+          sub.id = 'weckmann-log-sub';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#080c08;border-left:3px solid #506050;border-radius:4px;';
+          const hd = document.createElement('div');
+          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#708070;text-transform:uppercase;margin-bottom:8px;';
+          hd.textContent = '📓 Training Log';
+          const body = document.createElement('pre');
+          body.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#90a890;font-family:"Courier New",monospace;margin:0;';
+          body.textContent = _buildWeckmannLog();
+          sub.appendChild(hd); sub.appendChild(body);
+          _logWrap.appendChild(sub);
+        });
+        _logWrap.appendChild(logBtn);
+        npcRowDiv.appendChild(_logWrap);
+        // ── Layer 64: Pit Championship trigger at CY ──
+        if ((S_story.pitTrainingWins || 0) >= 5 && !S_story.pitChampionOffered) {
+          S_story.pitChampionOffered = true;
+          const _pcSub = document.createElement('div');
+          _pcSub.style.cssText = 'margin-top:8px;padding:12px 14px;background:#0c0900;border-left:3px solid #a07030;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
+          const _pcHd = document.createElement('div');
+          _pcHd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#a08040;text-transform:uppercase;';
+          _pcHd.textContent = '🏆 Weckmann — The Pit Championship';
+          const _pcBody = document.createElement('div');
+          _pcBody.style.cssText = 'font-size:12px;line-height:1.8;color:#c8a870;white-space:pre-wrap;';
+          _pcBody.textContent = 'Weckmann is cleaning the forge when you arrive. He sets the brush down.\n\n"Five. You know what five means?"\n\nHe doesn\'t wait for an answer.\n\n"It means I\'ve been holding back a name. Ogundimu. The Iron Standard — that\'s what they called her, before the dispute. She doesn\'t fight for rankings anymore. She fights because she wants to know if she\'s still herself."\n\nHe picks the brush back up.\n\n"I told her about you. She said yes. That means something — she says no to most people."';
+          const _pcBtns = document.createElement('div');
+          _pcBtns.style.cssText = 'display:flex;gap:8px;';
+          const _pcAccept = document.createElement('button');
+          _pcAccept.className = 'inv-use-btn';
+          _pcAccept.style.cssText = 'flex:1;background:#3a2000;border-color:#c08030;color:#f0c060;font-weight:700;';
+          _pcAccept.textContent = '🏆 Accept the match';
+          _pcAccept.addEventListener('click', () => { _pcSub.remove(); _startPitChampionBattle(); });
+          const _pcLater = document.createElement('button');
+          _pcLater.className = 'inv-use-btn';
+          _pcLater.style.cssText = 'flex:1;';
+          _pcLater.textContent = 'Not yet';
+          _pcLater.addEventListener('click', () => _pcSub.remove());
+          _pcBtns.appendChild(_pcAccept); _pcBtns.appendChild(_pcLater);
+          _pcSub.appendChild(_pcHd); _pcSub.appendChild(_pcBody); _pcSub.appendChild(_pcBtns);
+          npcRowDiv.appendChild(_pcSub);
+        }
+        if (S_story.pitChampionOffered && !S_story.pitChampionWon) {
+          const chalBtn = document.createElement('button');
+          chalBtn.className = 'inv-use-btn';
+          chalBtn.textContent = '🏆 Challenge for the Title.';
+          chalBtn.style.cssText = 'margin-top:4px;';
+          chalBtn.addEventListener('click', _startPitChampionBattle);
+          npcRowDiv.appendChild(chalBtn);
+        }
+        // ── Layer 67b: S29 Auros tactical theory at CY ──
+        if (S_story.frobergerLastEntryRead && _npcFavor('auros') >= 2 && !S_story.s29LineDelivered) {
+          S_story.s29LineDelivered = true;
+          setTimeout(() => storyMsg(S29_AUROS_THEORY), 600);
+        }
+        // ── S7b: Undercity Survey delivery to Auros at CY ──
+      if (node.code === 'HKG' && _npcFavor('auros') >= 2
+          && (S_story.inventory||[]).some(i => i.name === 'Undercity Survey (Partial)')
+          && !S_story.undercitySurveyDelivered) {
+        const delBtn = document.createElement('button');
+        delBtn.className = 'inv-use-btn';
+        delBtn.textContent = '🗺 Show Auros the undercity survey.';
+        delBtn.style.cssText = 'margin-top:4px;';
+        delBtn.addEventListener('click', () => {
+          S_story.undercitySurveyDelivered = true;
+          const idx = (S_story.inventory||[]).findIndex(i => i.name === 'Undercity Survey (Partial)');
+          if (idx >= 0) S_story.inventory.splice(idx, 1);
+          S_story.gold = (S_story.gold || 0) + 40; storyUpdateStatus();
+          let surveyMsg = "She takes it from you without asking where you got it.\n\nShe reads the pressure annotations. A long pause.\n\n\"This was taken around Year Ten. The survey team documented six sectors. Four of them match the Void-advance indicators I flagged in Year Twelve.\"\n\nShe folds it.\n\n\"Two years. They had two years of lead time and this never reached the tactical desk. Someone decided it wasn't worth forwarding.\" (+40 gold)\n\n\"If you find the second half, bring it.\"";
+          if (S_story.s29LineDelivered) surveyMsg += "\n\n\"Froberger walked the same sectors in Year Thirteen. One year after this survey was buried. If he'd known it existed, he would have understood earlier.\"";
+          storyMsg(surveyMsg);
+          delBtn.remove();
+        });
+        npcRowDiv.appendChild(delBtn);
+      }
+      // ── L45-M: Fighter's Token search at closed lot ──
+        if (S_story.quests['quest_pit_training'] === 'complete' && !S_story.fightersTokenFound && !S_story.fightersTokenGiven) {
+          const searchBtn = document.createElement('button');
+          searchBtn.className = 'inv-use-btn';
+          searchBtn.textContent = '🔍 Search the closed lot.';
+          searchBtn.style.cssText = 'margin-top:4px;';
+          searchBtn.addEventListener('click', () => {
+            S_story.fightersTokenFound = true;
+            S_story.inventory.push({name:"Fighter's Token",icon:'🏅',type:'key_item',sell:0,desc:"A stamped metal disc with a fighter's number. Someone earned this."});
+            storyMsg("You find a small stamped disc in the collapsed tarpaulin. A fighter's number. Somebody competed here.");
+            searchBtn.remove();
+          });
+          npcRowDiv.appendChild(searchBtn);
+        }
+        // Fighter's Token delivery to Weckmann
+        if (S_story.fightersTokenFound && !S_story.fightersTokenGiven) {
+          const giveBtn = document.createElement('button');
+          giveBtn.className = 'inv-use-btn';
+          giveBtn.textContent = '🏅 Show Weckmann the token.';
+          giveBtn.style.cssText = 'margin-top:4px;';
+          giveBtn.addEventListener('click', () => {
+            S_story.fightersTokenGiven = true;
+            const idx = (S_story.inventory||[]).findIndex(i => i.name === "Fighter's Token");
+            if (idx >= 0) S_story.inventory.splice(idx, 1);
+            storyMsg("[Weckmann holds it for a long time.]\nWeckmann: \"I know this number. This is from Fischer's operation — he ran fights before I opened the legal pit. The fighter who had this token went on to compete legally. They're okay. They moved on.\"\n[He sets it on the counter. Doesn't give it back.]\n\"Don't ask me how I know. I've been watching these numbers for twenty years.\"");
+            giveBtn.remove();
+          });
+          npcRowDiv.appendChild(giveBtn);
+        }
+      }
+}
+function _nodeHookBirkaBrynnHeartwoodLetter(node) {
+      // ── S2 / Layer 73 §XXXVIII: Brynn Heartwood Letter — fav-gated, at IN Act IV+, Entry 7 read ──
+      if (node.code === 'TLL' && (S_story.actNumber || 1) >= 4
+          && !S_story.s2DaughterDelivered
+          && (S_story.journalEntriesRead || []).includes(7)) {
+        const fav = _npcFavor('brynn');
+        let letterText = null;
+        if (fav >= 2) letterText = BRYNN_HEARTWOOD_SCENE.dearFriend;
+        else if (fav >= 1) letterText = BRYNN_HEARTWOOD_SCENE.friendly;
+        if (letterText) {
+          S_story.s2DaughterDelivered = true;
+          setTimeout(() => storyMsg(letterText), 700);
+        }
+      }
+}
+function _nodeHookBirkaBrynnRegulars(node, { npcRowDiv }) {
+      // ── S58: Brynn's Regulars — ambient guests at IN ──
+      if (node.code === 'TLL') {
+        const regularsDiv = document.createElement('div');
+        regularsDiv.style.cssText = 'margin-top:8px;';
+        const act = S_story.actNumber || 1;
+        const ledgerOk = (S_story.brynLedgerBalance || -8) >= 0;
+        let reg1 = 'The merchant in room 3 — same table, same meal, every visit.';
+        let reg2 = 'An elderly woman by the fire who doesn\'t look up. She\'s been here longer than you have.';
+        let reg3 = act >= 3
+          ? 'A courier stopped for the night. She has the look of someone carrying news she hasn\'t decided to share.'
+          : 'The corner booth is empty. Brynn says it usually isn\'t.';
+        if (ledgerOk) {
+          reg1 = 'The merchant in room 3 has been here three weeks now. He says the roads south are clear again.';
+        }
+        regularsDiv.innerHTML = '<div class="npc-ambient" style="font-size:11px;line-height:1.75;">'
+          + '<em>A lamp burns in the corner. It has been lit since your first night here.</em><br>'
+          + '<em>' + reg1 + '</em><br>'
+          + '<em>' + reg2 + '</em><br>'
+          + '<em>' + reg3 + '</em>'
+          + '</div>';
+        npcRowDiv.appendChild(regularsDiv);
+      }
+}
+function _nodeHookBirkaS49Entry41(node, { npcRowDiv }) {
+      // ── Layer 65: S49 Froberger Entry 41 — Brynn at IN (full scene) ──
+      if (node.code === 'TLL' && S_story.frobergerLastEntryRead && !S_story.s49BrynnDelivered) {
+        const s49Btn = document.createElement('button');
+        s49Btn.className = 'inv-use-btn';
+        s49Btn.textContent = '📔 You read the last entry.';
+        s49Btn.style.cssText = 'margin-top:4px;';
+        s49Btn.addEventListener('click', () => {
+          S_story.s49BrynnDelivered = true;
+          storyMsg(S49_BRYNN_SCENE);
+          s49Btn.remove();
+        });
+        npcRowDiv.appendChild(s49Btn);
+      }
+}
+function _nodeHookBirkaRoom6(node, { npcRowDiv }) {
+      // ── L45-I: Room 6 at IN (Brynn Dear Friend) ──
+      if (node.code === 'TLL' && _npcFavor('brynn') >= 3) {
+        const _r6Wrap = document.createElement('div');
+        _r6Wrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
+        const r6Btn = document.createElement('button');
+        r6Btn.className = 'inv-use-btn';
+        r6Btn.textContent = '🚪 Room 6.';
+        r6Btn.style.cssText = 'margin-top:4px;';
+        r6Btn.addEventListener('click', () => {
+          if (document.getElementById('room6-sub')) return;
+          r6Btn.disabled = true; r6Btn.style.opacity = '0.5';
+          if (!S_story.room6Visited) { S_story.room6Visited = true; S_story.brynRoom6Line = true; }
+          const sub = document.createElement('div');
+          sub.id = 'room6-sub';
+          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0c0a08;border-left:3px solid #7a6040;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
+          const body = document.createElement('div');
+          body.style.cssText = 'font-size:12px;line-height:1.9;color:#c0a870;font-style:italic;';
+          body.innerHTML = "<p style='margin:0 0 8px'>It's clean. Brynn keeps all the rooms clean, but this one is slightly more so — the way a room gets when someone tidies it out of care rather than routine.</p>"
+            + "<p style='margin:0 0 8px'>There's a mark on the wall near the window: a small sigil, scratched into the plaster. Not defacement — done carefully, at eye level, the kind of mark someone makes when they want to be able to find a place again.</p>"
+            + "<p style='margin:0 0 8px'>The bed has two pillows. Brynn added the second one after the fact. She doesn't know exactly why. She changed the pillowcase last week even though no one had slept on it.</p>"
+            + "<p style='margin:0'>On the windowsill, almost under the sill itself, a scrap of paper. Not Froberger's journal pages — different paper, smaller. In the same handwriting as the journal, but lighter:</p>";
+          const sig = document.createElement('div');
+          sig.style.cssText = 'text-align:center;font-size:15px;color:#8a6030;font-style:italic;padding:10px 0;border-top:1px solid #3a2a10;border-bottom:1px solid #3a2a10;';
+          sig.textContent = '— still here.';
+          const close = document.createElement('div');
+          close.style.cssText = 'font-size:11px;color:#907050;font-style:italic;';
+          close.textContent = 'You look at it for a while. You close the door behind you.';
+          sub.appendChild(body); sub.appendChild(sig); sub.appendChild(close);
+          _r6Wrap.appendChild(sub);
+        });
+        _r6Wrap.appendChild(r6Btn);
+        npcRowDiv.appendChild(_r6Wrap);
+      }
+}
+function _nodeHookBirkaLampInquiry(node, { npcRowDiv }) {
+      // ── Layer 70 §XXXV — Beat 1: Lamp Inquiry at IN ──
+      if (node.code === 'TLL' && _npcFavor('brynn') >= 1
+          && (S_story.actNumber || 1) >= 2 && !S_story.brynnKeeperStoryTold) {
+        const lampBtn = document.createElement('button');
+        lampBtn.className = 'inv-use-btn';
+        lampBtn.textContent = '🕯 Ask Brynn about the lamp in the corner.';
+        lampBtn.style.cssText = 'margin-top:4px;';
+        lampBtn.addEventListener('click', () => {
+          storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.inquiry);
+          lampBtn.remove();
+          const followBtn = document.createElement('button');
+          followBtn.className = 'inv-use-btn';
+          followBtn.textContent = '💬 Why that night?';
+          followBtn.style.cssText = 'margin-top:4px;';
+          followBtn.addEventListener('click', () => {
+            S_story.brynnKeeperStoryTold = true;
+            storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.followUp);
+            followBtn.remove();
+          });
+          npcRowDiv.appendChild(followBtn);
+        });
+        npcRowDiv.appendChild(lampBtn);
+      }
+}
+function _nodeHookBirkaLampChoice(node, { npcRowDiv }) {
+      // ── Layer 70 §XXXV — Beat 2: Lamp Choice at IN (Dear Friend only) ──
+      if (node.code === 'TLL' && _npcFavor('brynn') >= 2
+          && S_story.brynnKeeperStoryTold && !S_story.brynnLightChoiceMade) {
+        const choiceDiv = document.createElement('div');
+        choiceDiv.style.cssText = 'margin-top:4px;display:flex;flex-direction:column;gap:3px;';
+        const prompt = document.createElement('div');
+        prompt.style.cssText = 'font-size:12px;color:#5A3A10;font-style:italic;margin-bottom:2px;';
+        prompt.textContent = 'Brynn: ' + BRYNN_KEEPER_STORY.choicePrompt;
+        choiceDiv.appendChild(prompt);
+        const keepBtn = document.createElement('button');
+        keepBtn.className = 'inv-use-btn';
+        keepBtn.textContent = '🕯 Let it keep burning.';
+        keepBtn.addEventListener('click', () => {
+          S_story.brynnLightChoiceMade = true;
+          S_story.brynnLightKept = true;
+          storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.choiceKeep);
+          choiceDiv.remove();
+        });
+        const restBtn = document.createElement('button');
+        restBtn.className = 'inv-use-btn';
+        restBtn.textContent = '🌙 It can rest when I\'m done.';
+        restBtn.addEventListener('click', () => {
+          S_story.brynnLightChoiceMade = true;
+          S_story.brynnLightKept = false;
+          storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.choiceRest);
+          choiceDiv.remove();
+        });
+        choiceDiv.appendChild(keepBtn);
+        choiceDiv.appendChild(restBtn);
+        npcRowDiv.appendChild(choiceDiv);
+      }
+}
+function _nodeHookBirkaQuillBrynnSong(node) {
+      // ── S54b: Quill plays Brynn's song at TV — both Dear Friend, once per run ──
+      if (node.code === 'MHQ' && _npcFavor('quill') >= 2 && _npcFavor('brynn') >= 2
+          && !S_story.s54QuillBrynnDelivered) {
+        S_story.s54QuillBrynnDelivered = true;
+        setTimeout(() => storyMsg("Quill is already playing when you arrive. Something slow.\n\n\"Brynn came by yesterday,\" he says without stopping. \"Asked me to play something slow for a while. Said she had a guest who needed it.\"\n\nHe doesn't look up. He means it as high praise."), 500);
+      }
+}
+function _nodeHookBirkaQuillNgPlusSong(node, { npcRowDiv }) {
+      // ── S32: Quill's second song on NG+ (Dear Friend or higher) ──
+      if (node.code === 'MHQ' && (S_story.ngPlusRun || 0) > 0 && _npcFavor('quill') >= 2) {
+        const s32Div = document.createElement('div');
+        s32Div.style.cssText = 'margin-top:8px;padding:10px 12px;background:#E2D0A8;border-left:3px solid #B87C28;font-style:italic;font-size:12px;color:#2A1A0A;line-height:1.7;';
+        s32Div.innerHTML = '<div style="font-size:10px;color:#6A4A28;letter-spacing:2px;margin-bottom:8px;font-style:normal;">UNTITLED (SECOND SONG)</div>'
+          + '<div>The city is still there. The city is still there.</div>'
+          + '<div>You left it and it stayed. You came back and it remembered.</div>'
+          + '<div>That\'s the thing about cities — they don\'t wait for you, they just don\'t leave.</div>'
+          + '<div>That\'s a love song, I think. I\'m still deciding.</div>'
+          + '<div style="margin-top:8px;font-size:11px;color:#6A4A28;font-style:normal;">[Quill: "I reused the chord progression. It fit."]</div>';
+        npcRowDiv.appendChild(s32Div);
+      }
+}
+function _nodeHookBirkaRodShop(node, { npcRowDiv }) {
+      // ── Rod Shop at YC ──
+      if (node.code === 'SSJ') {
+        const _rodShopWrap = document.createElement('div');
+        _rodShopWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:4px;';
+        const shopBtn = document.createElement('button');
+        shopBtn.className = 'inv-use-btn';
+        shopBtn.textContent = '🎣 Browse Rods — The Fisherman';
+        shopBtn.addEventListener('click', () => {
+          const existing = document.getElementById('rod-shop-sub');
+          if (existing) { existing.remove(); shopBtn.disabled = false; shopBtn.style.opacity = ''; return; }
+          shopBtn.disabled = true; shopBtn.style.opacity = '0.5';
+          const sub = document.createElement('div');
+          sub.id = 'rod-shop-sub';
+          sub.style.cssText = 'margin-top:6px;padding:10px 12px;background:#060a08;border-left:3px solid #4a7060;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
+          const hdr = document.createElement('div');
+          hdr.style.cssText = 'font-size:10px;color:#6a9070;letter-spacing:2px;';
+          hdr.textContent = "THE FISHERMAN'S RODS";
+          sub.appendChild(hdr);
+          const hasCoupon = !S_story.fishingRodCouponRedeemed && (S_story.inventory||[]).some(i => i.name === 'Free Rod Coupon');
+          FISHING_RODS.forEach(rod => {
+            const owned = (S_story.inventory||[]).some(i => i.name === rod.name);
+            const row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:8px;flex-wrap:wrap;';
+            const info = document.createElement('div');
+            info.style.cssText = 'flex:1;font-size:12px;color:#a0c0a8;line-height:1.5;';
+            info.innerHTML = rod.icon + ' <strong>' + rod.name + '</strong>'
+              + (rod.rodBonus > 0 ? ' <span style="color:#60e0a0">+' + rod.rodBonus + ' Catch</span>' : '')
+              + '<br><span style="font-size:11px;color:#688070;">' + rod.desc + '</span>';
+            const btn = document.createElement('button');
+            btn.className = 'inv-use-btn';
+            if (owned) {
+              btn.textContent = '✓ Owned'; btn.disabled = true; btn.style.opacity = '0.5';
+            } else if (rod.tier === 0 && hasCoupon) {
+              btn.textContent = '🎫 Redeem Coupon (Free)';
+              btn.addEventListener('click', () => {
+                S_story.fishingRodCouponRedeemed = true;
+                S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== 'Free Rod Coupon');
+                S_story.inventory.push({ name:rod.name, icon:rod.icon, type:'tool', sell:rod.sell, code:'SSJ', rodBonus:rod.rodBonus, desc:rod.desc });
+                // §ARCH-01 W8c — the engine is the SOLE completer. The fishingRodCouponRedeemed
+                // flag set just above satisfies quest_no_fishing_sign's completion:{flags:[…]}, so
+                // storyCheckQuests completes it and fires its xpAward:50 (== the old inline +50).
+                // The rod grant above is the redemption action, not the quest reward, so it stays.
+                storyCheckQuests(node);
+                storyMsg("The Fisherman takes the tab. He looks at it — he made the tab — but he looks at it like it's new each time.\n\n\"...Nice Day For Fishing. Yugurt!\"\n\nHe hands you the rod that was propped by the door.\n\n🎣 Fishing Rod obtained. ✓ Quest complete — The No-Fishing Sign. +50 XP.");
+                sub.remove(); shopBtn.disabled = false; shopBtn.style.opacity = ''; storyAutoSave();
+              });
+            } else {
+              btn.textContent = rod.price + 'gp';
+              btn.addEventListener('click', () => {
+                if ((S_story.gold || 0) < rod.price) {
+                  const orig = btn.textContent;
+                  btn.textContent = '✗ Need ' + rod.price + 'gp';
+                  setTimeout(() => { btn.textContent = orig; }, 1500); return;
+                }
+                S_story.gold = (S_story.gold || 0) - rod.price;
+                S_story.inventory = S_story.inventory || [];
+                S_story.inventory.push({ name:rod.name, icon:rod.icon, type:'tool', sell:rod.sell, code:'SSJ', rodBonus:rod.rodBonus, desc:rod.desc });
+                storyMsg('You hand over ' + rod.price + 'gp. The Fisherman nods once.\n\n🎣 ' + rod.name + ' obtained.' + (rod.rodBonus > 0 ? ' +' + rod.rodBonus + ' to Catch rolls.' : ''));
+                sub.remove(); shopBtn.disabled = false; shopBtn.style.opacity = ''; storyAutoSave();
+              });
+            }
+            row.appendChild(info); row.appendChild(btn); sub.appendChild(row);
+          });
+          _rodShopWrap.appendChild(sub);
+        });
+        _rodShopWrap.appendChild(shopBtn);
+        npcRowDiv.appendChild(_rodShopWrap);
+      }
+}
+function _nodeHookBirkaQuillAmbientSong(node, { npcRowDiv }) {
+      // ── S45: Quill plays without prompting (unfinished song ambient, odd game days) ──
+      if (node.code === 'MHQ' && (S_story.gameDay || 0) > 0 && (S_story.gameDay || 0) % 2 === 1) {
+        const songIdx = Math.floor((S_story.gameDay || 0) / 2) % QUILL_UNFINISHED_SONGS.length;
+        const s45Div = document.createElement('div');
+        s45Div.style.cssText = 'margin-top:6px;';
+        s45Div.innerHTML = '<div class="npc-ambient">' + QUILL_UNFINISHED_SONGS[songIdx] + ' <button style="background:none;border:none;color:#4A3010;font-size:11px;cursor:pointer;padding:0;font-style:italic;" id="s45-ask-quill">Ask about it.</button></div>';
+        npcRowDiv.appendChild(s45Div);
+        setTimeout(() => {
+          const askBtn = document.getElementById('s45-ask-quill');
+          if (askBtn) askBtn.addEventListener('click', () => {
+            askBtn.parentElement.innerHTML = '<em style="color:#4A3010">"Oh — this one\'s not finished. Come back."</em>';
+          });
+        }, 50);
+      }
+}
 const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA'], fn:_nodeHookVoidArchaeology },
   { id:'void-shaman-warden', nodes:['GVA'], fn:_nodeHookVoidShamanWarden },
@@ -31697,9 +32659,38 @@ const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'la-riva-row', nodes:['AMS'], fn:_nodeHookLaRivaRow },
   { id:'scholar-workshop', nodes:['SZG'], fn:_nodeHookScholarWorkshop },
   { id:'mimic-meadows', nodes:['LIM'], fn:_nodeHookMimicMeadows },
+  { id:'birka-varga-watch', nodes:['LLA'], anchor:'npc-row', fn:_nodeHookBirkaVargaWatch },
+  { id:'birka-pachelbel-ledger', nodes:['LLA'], anchor:'npc-row', fn:_nodeHookBirkaPachelbelLedger },
+  { id:'birka-quill-couperin-farewell', nodes:['LLA'], anchor:'npc-row', fn:_nodeHookBirkaQuillCouperinFarewell },
+  { id:'birka-gigault-stall', nodes:['LLA'], anchor:'npc-row', fn:_nodeHookBirkaGigaultStall },
+  { id:'birka-deacon-code', nodes:['LLA'], anchor:'npc-row', fn:_nodeHookBirkaDeaconCode },
+  { id:'birka-brynn-maintenance', nodes:['TLL'], anchor:'npc-row', fn:_nodeHookBirkaBrynnMaintenance },
+  { id:'birka-night-ambient', nodes:null, anchor:'npc-row', fn:_nodeHookBirkaNightAmbient },
+  { id:'birka-nivers-passes', nodes:['LHR'], anchor:'npc-row', fn:_nodeHookBirkaNiversPasses },
+  { id:'birka-blue-shutters', nodes:['LHR'], anchor:'npc-row', fn:_nodeHookBirkaBlueShutters },
+  { id:'birka-froberger-memorial', nodes:['LHR'], anchor:'npc-row', fn:_nodeHookBirkaFrobergerMemorial },
+  { id:'birka-no-fishing-sign', nodes:['LHR'], anchor:'npc-row', fn:_nodeHookBirkaNoFishingSign },
+  { id:'birka-s54-joint-witness', nodes:['LHR'], anchor:'npc-row', fn:_nodeHookBirkaS54JointWitness },
+  { id:'birka-yael-named-report', nodes:['LHR'], anchor:'npc-row', fn:_nodeHookBirkaYaelNamedReport },
+  { id:'birka-yael-patrol-line', nodes:null, anchor:'npc-row', fn:_nodeHookBirkaYaelPatrolLine },
+  { id:'birka-cy-madness-gate', nodes:['HKG'], anchor:'npc-row', fn:_nodeHookBirkaCyMadnessGate },
+  { id:'birka-cy-maintenance-plate', nodes:['HKG'], anchor:'npc-row', fn:_nodeHookBirkaCyMaintenancePlate },
+  { id:'birka-cy-ngplus-line', nodes:['HKG'], anchor:'npc-row', fn:_nodeHookBirkaCyNgPlusLine },
+  { id:'birka-s6-joint-conversation', nodes:['HKG'], anchor:'npc-row', fn:_nodeHookBirkaS6JointConversation },
+  { id:'birka-weckmann-log', nodes:['HKG'], anchor:'npc-row', fn:_nodeHookBirkaWeckmannLog },
+  { id:'birka-brynn-heartwood-letter', nodes:['TLL'], anchor:'npc-row', fn:_nodeHookBirkaBrynnHeartwoodLetter },
+  { id:'birka-brynn-regulars', nodes:['TLL'], anchor:'npc-row', fn:_nodeHookBirkaBrynnRegulars },
+  { id:'birka-s49-entry41', nodes:['TLL'], anchor:'npc-row', fn:_nodeHookBirkaS49Entry41 },
+  { id:'birka-room6', nodes:['TLL'], anchor:'npc-row', fn:_nodeHookBirkaRoom6 },
+  { id:'birka-lamp-inquiry', nodes:['TLL'], anchor:'npc-row', fn:_nodeHookBirkaLampInquiry },
+  { id:'birka-lamp-choice', nodes:['TLL'], anchor:'npc-row', fn:_nodeHookBirkaLampChoice },
+  { id:'birka-quill-brynn-song', nodes:['MHQ'], anchor:'npc-row', fn:_nodeHookBirkaQuillBrynnSong },
+  { id:'birka-quill-ngplus-song', nodes:['MHQ'], anchor:'npc-row', fn:_nodeHookBirkaQuillNgPlusSong },
+  { id:'birka-rod-shop', nodes:['SSJ'], anchor:'npc-row', fn:_nodeHookBirkaRodShop },
+  { id:'birka-quill-ambient-song', nodes:['MHQ'], anchor:'npc-row', fn:_nodeHookBirkaQuillAmbientSong },
 ];
-function _runNodeHook(id, node) {
-  for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node);
+function _runNodeHook(id, node, ctx) {
+  for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node, ctx);
 }
 
 function storyRender(node, prefix) {
@@ -32486,901 +33477,40 @@ function storyRender(node, prefix) {
       npcRowDiv.id = 'story-npc-cards-row';
       npcRowDiv.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
       keys.forEach(k => _renderNpcCard(k, npcRowDiv));
-      // ── S8: Varga's presence at BA — observation mechanic ──
-      if (node.code === 'LLA') {
-        const vargaWatches = S_story.s8VargaWatches || 0;
-        if (!S_story.s8VargaClueUnlocked) {
-          const vargaAmbient = document.createElement('div');
-          const vargaDesc = vargaWatches === 0
-            ? 'A man at the corner table who is not drinking his drink. He\'s watching the door.'
-            : vargaWatches === 1
-            ? 'The man at the corner table is still there. Different drink. Same door.'
-            : 'He\'s been here three visits. The drink changes. He doesn\'t.';
-          vargaAmbient.innerHTML = '<div class="npc-ambient" style="font-size:11px;"><em>' + vargaDesc + '</em></div>';
-          npcRowDiv.appendChild(vargaAmbient);
-          if (vargaWatches < 3) {
-            const watchBtn = document.createElement('button');
-            watchBtn.className = 'inv-use-btn';
-            watchBtn.style.cssText = 'margin-top:4px;';
-            watchBtn.textContent = '👁 Watch him.';
-            watchBtn.addEventListener('click', () => {
-              S_story.s8VargaWatches = vargaWatches + 1;
-              if (S_story.s8VargaWatches >= 3) {
-                S_story.s8VargaClueUnlocked = true;
-                storyMsg("He leaves at the same moment as the courier from the harbor. Not together — just the same moment.\n\nYael mentioned him: Varga. The pigeon route changed three times this season. The coin is moving toward the docks.\n\nPachelbel would know what that means.");
-              } else {
-                storyMsg(S_story.s8VargaWatches === 1
-                  ? "He orders another drink. He doesn't touch it."
-                  : "He receives a small folded note. Reads it. Puts it in his coat. Does not leave.");
-              }
-              watchBtn.remove();
-            });
-            npcRowDiv.appendChild(watchBtn);
-          }
-        }
-        if (S_story.s8VargaClueUnlocked && !S_story.s8PachelbelTold) {
-          const tellBtn = document.createElement('button');
-          tellBtn.className = 'inv-use-btn';
-          tellBtn.style.cssText = 'margin-top:4px;';
-          tellBtn.textContent = '💬 Tell Pachelbel about Varga.';
-          tellBtn.addEventListener('click', () => {
-            S_story.s8PachelbelTold = true;
-            storyMsg("Pachelbel listens without moving.\n\nPachelbel: \"Varga changes his route when the coin source changes. Three times means three new sources — or one source that keeps moving.\"\n\nA pause.\n\n\"The harbor's been different lately. More people coming through who don't know the prices. That's not new trade. That's displacement.\" He looks at you. \"I'll adjust my inventory accordingly. You didn't hear that from me.\"");
-            S_story.gold += 15;
-            storyMsg("He slides 15gp across the counter. No explanation.");
-            tellBtn.remove();
-          });
-          npcRowDiv.appendChild(tellBtn);
-        }
-      }
-      // ── Layer 68b: Pachelbel Ledger at BA (Dear Friend) ──
-      if (node.code === 'LLA' && _npcFavor('pachelbel') >= 2) {
-        const _plWrap = document.createElement('div');
-        _plWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
-        const ledgerBtn = document.createElement('button');
-        ledgerBtn.className = 'inv-use-btn';
-        ledgerBtn.textContent = '📒 Read the ledger.';
-        ledgerBtn.style.cssText = 'margin-top:4px;';
-        ledgerBtn.addEventListener('click', () => {
-          if (document.getElementById('pachelbel-ledger-sub')) return;
-          ledgerBtn.disabled = true; ledgerBtn.style.opacity = '0.5';
-          const sub = document.createElement('div');
-          sub.id = 'pachelbel-ledger-sub';
-          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090c;border-left:3px solid #404870;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
-          const hd = document.createElement('div');
-          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#6070a0;text-transform:uppercase;';
-          hd.textContent = "📒 Pachelbel's Ledger";
-          sub.appendChild(hd);
-          [2,3].forEach(n => {
-            const entry = document.createElement('pre');
-            entry.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#8090b8;font-family:"Courier New",monospace;margin:0;border-top:1px solid #2a3050;padding-top:10px;';
-            entry.textContent = 'Entry ' + n + '\n\n' + PACHELBEL_LEDGER[n];
-            sub.appendChild(entry);
-          });
-          _plWrap.appendChild(sub);
-        });
-        _plWrap.appendChild(ledgerBtn);
-        npcRowDiv.appendChild(_plWrap);
-      }
-      // ── Layer 69 §XXXIV — Act VIII: Quill visits BA to close the Couperin estate ledger ──
-      if (node.code === 'LLA' && (S_story.actNumber || 1) === 8
-          && _npcFavor('quill') >= 1 && !S_story.act8FarewellQuill) {
-        S_story.act8FarewellQuill = true;
-        const beatText = typeof ACT8_FAREWELL_BEATS.quill.text === 'function'
-          ? ACT8_FAREWELL_BEATS.quill.text()
-          : ACT8_FAREWELL_BEATS.quill.text;
-        setTimeout(() => storyMsg('Quill is at the archive desk — not his usual table, not his instrument.\n\n' + beatText), 500);
-      }
-      // ── L44-A: Gigault stall at BA ──
-      if (node.code === 'LLA') {
-        const gig = document.createElement('div');
-        gig.style.cssText = 'margin-top:6px;';
-        gig.innerHTML = _getGigaultState();
-        npcRowDiv.appendChild(gig);
-      }
-      // ── L44-Q: Deacon Code click target at BA ──
-      if (node.code === 'LLA') {
-        const _dcWrap = document.createElement('div');
-        _dcWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
-        const dcBtn = document.createElement('button');
-        dcBtn.className = 'inv-use-btn';
-        dcBtn.textContent = '📋 The code on the wall.';
-        dcBtn.style.cssText = 'margin-top:4px;';
-        dcBtn.addEventListener('click', () => {
-          if (document.getElementById('deacon-code-sub')) return;
-          dcBtn.disabled = true; dcBtn.style.opacity = '0.5';
-          const sub = document.createElement('div');
-          sub.id = 'deacon-code-sub';
-          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0a0c0a;border-left:3px solid #506850;border-radius:4px;';
-          const hd = document.createElement('div');
-          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#608060;text-transform:uppercase;margin-bottom:8px;';
-          hd.textContent = '📋 Pachelbel\'s Code';
-          const body = document.createElement('pre');
-          body.style.cssText = 'font-size:12px;line-height:1.8;white-space:pre-wrap;color:#a0c0a0;margin:0;';
-          body.textContent = DEACON_CODE_TEXT;
-          sub.appendChild(hd); sub.appendChild(body);
-          _dcWrap.appendChild(sub);
-        });
-        _dcWrap.appendChild(dcBtn);
-        npcRowDiv.appendChild(_dcWrap);
-      }
-      // ── L44-L/N: Brynn maintenance + ledger at IN ──
-      if (node.code === 'TLL') {
-        const bmDiv = document.createElement('div');
-        bmDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:4px;';
-        const _ledgerWrap = document.createElement('div');
-        _ledgerWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
-        const ledgerBtn = document.createElement('button');
-        ledgerBtn.className = 'inv-use-btn';
-        ledgerBtn.textContent = '📒 The ledger.';
-        ledgerBtn.addEventListener('click', () => {
-          if (document.getElementById('brynn-ledger-sub')) return;
-          ledgerBtn.disabled = true; ledgerBtn.style.opacity = '0.5';
-          const bal = S_story.brynLedgerBalance ?? -8;
-          const balColor = bal < 0 ? '#c06060' : '#60a060';
-          const balStr = bal < 0 ? bal + ' copper' : bal === 0 ? '0 copper (balanced)' : '+' + bal + ' copper';
-          const sub = document.createElement('div');
-          sub.id = 'brynn-ledger-sub';
-          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090c;border-left:3px solid #404870;border-radius:4px;';
-          const hd = document.createElement('div');
-          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#6070a0;text-transform:uppercase;margin-bottom:8px;';
-          hd.textContent = "📒 Brynn's Inn — Month Ledger";
-          const pre = document.createElement('pre');
-          pre.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre;color:#8090b8;font-family:"Courier New",monospace;margin:0;';
-          pre.innerHTML = "BRYNN'S INN — MONTH LEDGER\n"
-            + "—————————————————————————\n"
-            + "Room nights (14 beds avg 60% fill):  235 copper\n"
-            + "Meals served:                         84 copper\n"
-            + "Kitchen staff (part-time):           -45 copper\n"
-            + "Supplies (food, candles, linen):    -112 copper\n"
-            + "Repairs (ongoing):                   -" + (24 - (S_story.brynThirdStepFixed ? 4 : 0)) + " copper\n"
-            + "—————————————————————————\n"
-            + 'BALANCE: <span style="color:' + balColor + ';font-weight:700">' + balStr + '</span>';
-          sub.appendChild(hd); sub.appendChild(pre);
-          _ledgerWrap.appendChild(sub);
-          if (bal >= 0 && !S_story._brynLedgerZeroShown) {
-            S_story._brynLedgerZeroShown = true;
-            setTimeout(() => storyMsg("Brynn: \"Oh. That's the first time in three years.\" Beat. \"Thank you.\""), 300);
-          }
-        });
-        _ledgerWrap.appendChild(ledgerBtn);
-        bmDiv.appendChild(_ledgerWrap);
-        if (_npcFavor('brynn') >= 1) {
-          const taskIdx = (S_story.gameDay || 0) % 3;
-          const task = BRYNN_MAINTENANCE_TASKS[taskIdx];
-          if (!S_story[task.flag]) {
-            const mBtn = document.createElement('button');
-            mBtn.className = 'inv-use-btn';
-            mBtn.textContent = '🔧 ' + task.label + (task.cost_gold > 0 ? ' (' + task.cost_gold + 'g)' : '');
-            mBtn.addEventListener('click', () => {
-              if (task.cost_gold > 0 && S_story.gold < task.cost_gold) {
-                storyBlock('Not enough gold.'); return;
-              }
-              if (task.cost_gold > 0) { S_story.gold -= task.cost_gold; storyUpdateStatus(); }
-              task.action();
-              storyMsg(task.narration + '  Brynn: "' + task.brynn_after + '"');
-              mBtn.disabled = true; mBtn.style.opacity = '0.5';
-            });
-            bmDiv.appendChild(mBtn);
-          }
-        }
-        npcRowDiv.appendChild(bmDiv);
-      }
-      // ── S52: Night-mode ambient text ──
-      if (NIGHT_AMBIENT[node.code] && (S_story.gameDay || 0) % 4 >= 2) {
-        const nightDiv = document.createElement('div');
-        nightDiv.innerHTML = '<div class="npc-ambient" style="border-color:#2a3a5a;color:#7090b0;">'
-          + '<em>' + NIGHT_AMBIENT[node.code] + '</em></div>';
-        npcRowDiv.appendChild(nightDiv);
-      }
-      // ── L45-D/E: Nivers at CI ──
-      if (node.code === 'LHR') {
-        const nivers = document.createElement('div');
-        nivers.innerHTML = '<div class="npc-ambient">The guard on the corner — same post, same stillness. She\'s there when you arrive. She\'ll be there when you leave. She says: <em>"' + NIVERS_DIALOGUE + '"</em></div>';
-        const niversPasses = (S_story.niversPasses || 0) + 1;
-        S_story.niversPasses = niversPasses;
-        // Yael Dear Friend addition after 3+ Nivers passes
-        if (niversPasses >= 3 && _npcFavor('yael') >= 2 && !S_story.niversYaelLineDelivered) {
-          S_story.niversYaelLineDelivered = true;
-          setTimeout(() => storyMsg("Yael: \"Nivers's been on that corner for eleven years. You know what that takes? Not skill. Presence. The willingness to be there every single day when the world is not watching. I've tried to understand it. I think it's the thing I should be learning from her instead of the other way around.\""), 600);
-        }
-        npcRowDiv.appendChild(nivers);
-        // L45-F: Yael "Who is the guard?" dialogue option
-        if (_npcFavor('yael') >= 1 && !S_story.niversNameLearned) {
-          const askBtn = document.createElement('button');
-          askBtn.className = 'inv-use-btn';
-          askBtn.textContent = '🛡 Who is the guard on the corner?';
-          askBtn.style.cssText = 'margin-top:4px;';
-          askBtn.addEventListener('click', () => {
-            S_story.niversNameLearned = true;
-            if (!S_story.log) S_story.log = [];
-            S_story.log.unshift({ type:'world', text:'The guard on the corner — Nivers. Eleven years.', day: S_story.day || 1 });
-            storyMsg("Yael: \"Her name is Nivers. Eleven years on that corner. Same schedule. I keep meaning to tell her I notice. I keep not doing it.\"");
-            askBtn.remove();
-          });
-          npcRowDiv.appendChild(askBtn);
-        }
-      }
-      // ── S7: Blue Shutters Archive at CI ──
-      if (node.code === 'LHR') {
-        const yealFav = _npcFavor('yael');
-        const _bsWrap = document.createElement('div');
-        _bsWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:6px;';
-
-        if (!S_story.archiveLetterObtained && yealFav < 1) {
-          // State 1: rejected at the door
-          const archiveBtn = document.createElement('button');
-          archiveBtn.className = 'inv-use-btn';
-          archiveBtn.textContent = '🔵 The blue-shuttered building on Scholar\'s Row.';
-          archiveBtn.addEventListener('click', () => {
-            if (document.getElementById('bs-archive-sub')) return;
-            archiveBtn.disabled = true; archiveBtn.style.opacity = '0.5';
-            const sub = document.createElement('div');
-            sub.id = 'bs-archive-sub';
-            sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090e;border-left:3px solid #304060;border-radius:4px;display:flex;flex-direction:column;gap:6px;';
-            const hd = document.createElement('div');
-            hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#405870;text-transform:uppercase;';
-            hd.textContent = '🔵 Blue Shutters Archive — Scholar\'s Row';
-            const body = document.createElement('div');
-            body.style.cssText = 'font-size:12px;line-height:1.8;color:#8090a8;font-style:italic;';
-            body.textContent = 'The shutters are a particular shade of blue — institutional, deliberate. A Scholar Kings archive seal is set into the door frame. The reading list is full. The staff tell you this without looking up. You get the impression it isn\'t about the reading list.';
-            const note = document.createElement('div');
-            note.style.cssText = 'font-size:11px;color:#506080;';
-            note.textContent = 'Access requires a letter of introduction. Ask someone who has standing here.';
-            sub.appendChild(hd); sub.appendChild(body); sub.appendChild(note);
-            _bsWrap.appendChild(sub);
-          });
-          _bsWrap.appendChild(archiveBtn);
-
-        } else if (!S_story.archiveLetterObtained && yealFav >= 1) {
-          // State 2: Yael can provide a letter
-          const archiveBtn = document.createElement('button');
-          archiveBtn.className = 'inv-use-btn';
-          archiveBtn.textContent = '🔵 Ask Yael about the blue-shuttered building.';
-          archiveBtn.addEventListener('click', () => {
-            if (document.getElementById('bs-archive-sub')) return;
-            archiveBtn.disabled = true; archiveBtn.style.opacity = '0.5';
-            S_story.archiveLetterObtained = true;
-            const sub = document.createElement('div');
-            sub.id = 'bs-archive-sub';
-            sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#08090e;border-left:3px solid #304060;border-radius:4px;display:flex;flex-direction:column;gap:8px;';
-            const hd = document.createElement('div');
-            hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#405870;text-transform:uppercase;';
-            hd.textContent = '🔵 Blue Shutters Archive — Yael';
-            const body = document.createElement('div');
-            body.style.cssText = 'font-size:12px;line-height:1.8;color:#a0b0c8;font-style:italic;';
-            body.textContent = '"The Blue Shutters. Scholar King archive, restricted stack. I have a standing letter of introduction — patrol business. You can use it."\n\nShe writes your name in the margin. "Don\'t take anything. Don\'t ask about the depth surveys. They\'ll know what you\'re looking for."\n\nShe hands you the letter.';
-            const enterBtn = document.createElement('button');
-            enterBtn.className = 'inv-use-btn';
-            enterBtn.textContent = '🔵 Enter the Blue Shutters Archive.';
-            enterBtn.addEventListener('click', () => {
-              enterBtn.disabled = true; enterBtn.style.opacity = '0.5';
-              _openBlueShuttersContent(_bsWrap);
-            });
-            sub.appendChild(hd); sub.appendChild(body); sub.appendChild(enterBtn);
-            _bsWrap.appendChild(sub);
-          });
-          _bsWrap.appendChild(archiveBtn);
-
-        } else {
-          // State 3: letter in hand, enter directly
-          const archiveBtn = document.createElement('button');
-          archiveBtn.className = 'inv-use-btn';
-          archiveBtn.textContent = '🔵 Enter the Blue Shutters Archive.';
-          archiveBtn.addEventListener('click', () => {
-            if (document.getElementById('bs-archive-sub')) return;
-            archiveBtn.disabled = true; archiveBtn.style.opacity = '0.5';
-            _openBlueShuttersContent(_bsWrap);
-          });
-          _bsWrap.appendChild(archiveBtn);
-        }
-
-        npcRowDiv.appendChild(_bsWrap);
-      }
-      // ── Layer 63: Froberger Memorial at CI ──
-      if (node.code === 'LHR') {
-        const _memWrap = document.createElement('div');
-        _memWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
-        const memBtn = document.createElement('button');
-        memBtn.className = 'inv-use-btn';
-        memBtn.textContent = '⛪ Examine the memorial.';
-        memBtn.style.cssText = 'margin-top:4px;';
-        memBtn.addEventListener('click', () => {
-          if (document.getElementById('memorial-subrow')) return;
-          memBtn.disabled = true; memBtn.style.opacity = '0.5';
-          S_story.frobergerMemorialVisited = true;
-          let plaque = FROBERGER_MEMORIAL_TEXT.base;
-          if (_npcFavor('yael') >= 1) plaque += FROBERGER_MEMORIAL_TEXT.yael_friendly;
-          if (['yael','brynn','quill','pachelbel','crov','auros'].some(k => _npcFavor(k) >= 2)) plaque += FROBERGER_MEMORIAL_TEXT.dear_friend;
-          if (S_story.corelliRevelationDelivered) plaque += FROBERGER_MEMORIAL_TEXT.post_cipher;
-          const sub = document.createElement('div');
-          sub.id = 'memorial-subrow';
-          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0c0a06;border-left:3px solid #7a5a1a;border-radius:4px;display:flex;flex-direction:column;gap:8px;';
-          const pq = document.createElement('pre');
-          pq.style.cssText = 'font-family:Georgia,serif;font-size:12px;color:#e8d4a0;white-space:pre-wrap;margin:0;line-height:1.7;';
-          pq.textContent = plaque;
-          sub.appendChild(pq);
-          const bookHd = document.createElement('div');
-          bookHd.style.cssText = 'font-size:10px;color:#666;border-top:1px solid #3a2a0a;padding-top:6px;letter-spacing:1px;';
-          bookHd.textContent = '— Memorial Book —';
-          sub.appendChild(bookHd);
-          FROBERGER_MEMORIAL_BOOK.forEach(e => {
-            const el = document.createElement('div');
-            el.style.cssText = 'font-size:11px;color:#a08060;font-style:italic;';
-            el.textContent = '"' + e.text + '"' + (e.attr ? '  — ' + e.attr : '');
-            sub.appendChild(el);
-          });
-          if (S_story.frobergerMemorialBookSigned && S_story._memorialPlayerEntry) {
-            const pe = document.createElement('div');
-            pe.style.cssText = 'font-size:11px;color:#b09070;font-style:italic;';
-            pe.textContent = '"' + S_story._memorialPlayerEntry + '"  — (your hand)';
-            sub.appendChild(pe);
-          }
-          const btnRow = document.createElement('div');
-          btnRow.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid #3a2a0a;padding-top:8px;';
-          if (!S_story.frobergerMemorialFlowers) {
-            const flBtn = document.createElement('button');
-            flBtn.className = 'inv-use-btn';
-            flBtn.textContent = '🌸 Leave Flowers (10gp)';
-            flBtn.addEventListener('click', () => {
-              if ((S_story.gold || 0) < 10) { storyMsg('🌸 Not enough gold (10gp required).'); return; }
-              S_story.gold -= 10; S_story.frobergerMemorialFlowers = true;
-              storyUpdateStatus();
-              const isNg = (S_story.ngPlusRun || 0) > 0;
-              storyMsg(isNg ? '🌸 You leave flowers again. You wonder if anyone will wonder who keeps doing this.' : '🌸 You leave a small bunch of flowers at the stone. They look right there.');
-              flBtn.remove();
-            });
-            btnRow.appendChild(flBtn);
-          }
-          if (!S_story.frobergerMemorialBookSigned) {
-            const choices = (S_story.ngPlusRun || 0) > 0 ? MEMORIAL_PLAYER_CHOICES_NG : MEMORIAL_PLAYER_CHOICES;
-            choices.forEach(txt => {
-              const cb = document.createElement('button');
-              cb.className = 'inv-use-btn';
-              cb.textContent = '✍️ "' + txt + '"';
-              cb.addEventListener('click', () => {
-                S_story.frobergerMemorialBookSigned = true;
-                S_story._memorialPlayerEntry = txt;
-                storyMsg('✍️ You write: "' + txt + '"');
-                const pe = document.createElement('div');
-                pe.style.cssText = 'font-size:11px;color:#b09070;font-style:italic;';
-                pe.textContent = '"' + txt + '"  — (your hand)';
-                sub.insertBefore(pe, btnRow);
-                btnRow.querySelectorAll('button').forEach(b => { if (b.textContent.startsWith('✍️')) b.remove(); });
-              });
-              btnRow.appendChild(cb);
-            });
-          }
-          sub.appendChild(btnRow);
-          _memWrap.appendChild(sub);
-        });
-        _memWrap.appendChild(memBtn);
-        npcRowDiv.appendChild(_memWrap);
-      }
-      // ── No Fishing Sign at CI ──
-      if (node.code === 'LHR') {
-        if (!S_story.noFishingSignRead) {
-          const _fishWrap = document.createElement('div');
-          _fishWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:4px;';
-          const signBtn = document.createElement('button');
-          signBtn.className = 'inv-use-btn';
-          signBtn.textContent = '🚫 A hand-lettered sign on the lamppost: NO FISHING.';
-          let _tabReady = false;
-          signBtn.addEventListener('click', () => {
-            if (!_tabReady) {
-              _tabReady = true;
-              signBtn.textContent = '↩ Pull the tab.';
-              const readSub = document.createElement('div');
-              readSub.style.cssText = 'margin-top:6px;padding:10px 12px;background:#080c08;border-left:3px solid #406040;border-radius:4px;font-size:11px;color:#80a080;line-height:1.7;font-style:italic;';
-              readSub.textContent = 'The notice is bolted at chest height. Block letters, official ink: "NO FISHING IN THE CITY LIMITS. By Order of the Watch."\n\nBelow the ordinance, in smaller hand: "...unless you know what you\'re doing. Tear here."\n\nA perforated tab hangs from the bottom edge. It reads: FISHING AT YUGURT LAKE · FREE ROD FOR NEW ANGLERS · BRING THIS COUPON · MEET THE FISHERMAN.';
-              _fishWrap.appendChild(readSub);
-            } else {
-              S_story.noFishingSignRead = true;
-              S_story.inventory = S_story.inventory || [];
-              S_story.inventory.push({ name:'Free Rod Coupon', icon:'🎫', type:'readable', sell:0,
-                readText:'FISHING AT YUGURT LAKE\n\nFREE ROD FOR NEW ANGLERS\n\nPresent this coupon to The Fisherman at Yugurt Cabin.\nYugurt Cabin is south of Yugurt Lake, south of the Western Wilds Crossroads.\n\n"...Nice Day For Fishing. Yugurt!"' });
-              if (!S_story.quests) S_story.quests = {};
-              S_story.quests['quest_no_fishing_sign'] = 'active';
-              signBtn.disabled = true; signBtn.style.opacity = '0.5';
-              // Replace any read-sub with the response sub-row
-              const old = _fishWrap.querySelector('div');
-              if (old) old.remove();
-              const sub = document.createElement('div');
-              sub.style.cssText = 'margin-top:6px;padding:10px 12px;background:#080c08;border-left:3px solid #406040;border-radius:4px;display:flex;flex-direction:column;gap:8px;';
-              const txt = document.createElement('div');
-              txt.style.cssText = 'font-size:12px;color:#90b890;line-height:1.7;';
-              txt.textContent = '🎫 The tab is in your hand. Somewhere in the lake country is a man who will give you a rod if you show him this. The sign said so. You have no reason to distrust a sign.';
-              const wpBtn = document.createElement('button');
-              wpBtn.className = 'inv-use-btn';
-              wpBtn.textContent = '📍 Set waypoint → Yugurt Lake';
-              wpBtn.addEventListener('click', () => {
-                storySetWaypoint('BOO');
-                wpBtn.textContent = '📍 Waypoint set — Yugurt Lake';
-                wpBtn.disabled = true; wpBtn.style.opacity = '0.6';
-              });
-              const couponCard = document.createElement('div');
-              couponCard.style.cssText = 'padding:6px 8px;background:#050a05;border:1px solid #3a5030;border-radius:3px;font-size:11px;color:#70a070;line-height:1.6;';
-              couponCard.innerHTML = '🎫 <strong style="color:#90c080">Free Rod Coupon</strong> added to inventory — redeemable for 1 × <em>Fishing Rod (+0, standard)</em> at Yugurt Cabin.';
-              sub.appendChild(txt); sub.appendChild(wpBtn); sub.appendChild(couponCard);
-              _fishWrap.appendChild(sub);
-              storyAutoSave();
-            }
-          });
-          _fishWrap.appendChild(signBtn);
-          npcRowDiv.appendChild(_fishWrap);
-        } else {
-          const signDiv = document.createElement('div');
-          signDiv.className = 'npc-ambient';
-          signDiv.style.cssText = 'font-size:11px;color:var(--muted);margin-top:4px;';
-          signDiv.innerHTML = 'The NO FISHING notice is still bolted to the lamppost. The pull-tab is gone.';
-          npcRowDiv.appendChild(signDiv);
-        }
-      }
-      // ── Layer 66a: S54 Yael + Brynn joint witness at CI (Act VIII) ──
-      if (node.code === 'LHR' && (S_story.actNumber || 1) >= 7
-          && _npcFavor('yael') >= 1 && _npcFavor('brynn') >= 1
-          && !S_story.s54JointMomentDelivered) {
-        S_story.s54JointMomentDelivered = true;
-        setTimeout(() => storyMsg(S54_JOINT_MOMENT), 400);
-      }
-      // ── Layer 74 §XXXIX — Yael Named Report at CI ──
-      if (node.code === 'LHR' && _npcFavor('yael') >= 2
-          && (S_story.actNumber || 1) >= 6 && S_story.yaelEscortUsed
-          && !S_story.yaelNamedReportDelivered) {
-        setTimeout(() => {
-          storyMsg(YAEL_NAMED_REPORT_SCENE.setup + '\n\n' + YAEL_NAMED_REPORT_SCENE.decision);
-          const choiceDiv = document.createElement('div');
-          choiceDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:3px;';
-          const holdBtn = document.createElement('button');
-          holdBtn.className = 'inv-use-btn';
-          holdBtn.textContent = '📋 I\'ll hold it.';
-          holdBtn.addEventListener('click', () => {
-            S_story.yaelNamedReportDelivered = true;
-            storyMsg('Yael: ' + YAEL_NAMED_REPORT_SCENE.choiceHold);
-            choiceDiv.remove();
-          });
-          const threeBtn = document.createElement('button');
-          threeBtn.className = 'inv-use-btn';
-          threeBtn.textContent = '🗂 Three copies is enough.';
-          threeBtn.addEventListener('click', () => {
-            S_story.yaelNamedReportDelivered = true;
-            storyMsg('Yael: ' + YAEL_NAMED_REPORT_SCENE.choiceThree);
-            choiceDiv.remove();
-          });
-          choiceDiv.appendChild(holdBtn);
-          choiceDiv.appendChild(threeBtn);
-          npcRowDiv.appendChild(choiceDiv);
-        }, 600);
-      }
-      // ── L45-G: Yael patrol field line ──
-      if (node.code !== 'LHR') {
-        const yaelPatrol = _getYaelLocation();
-        if (yaelPatrol && yaelPatrol.nodeSlug === node.code) {
-          const patrolDiv = document.createElement('div');
-          patrolDiv.innerHTML = '<div class="npc-ambient" style="border-color:#4a6a3a;"><strong style="color:#c0d8a0">Yael</strong> — in the field. She sees you. <em>"' + yaelPatrol.line + '"</em></div>';
-          npcRowDiv.appendChild(patrolDiv);
-        }
-      }
-      // ── §D01-07: CY Madness Gate — first visit WIS save ──
-      if (node.code === 'HKG' && !S_story.cyMadnessRoll) {
-        const _wisMod = Math.floor(((S_story.abilityScores || {}).wis || 12) - 10) / 2 | 0;
-        const _profB  = Math.floor(((S_story.level || 1) - 1) / 4) + 2;
-        const _cyRoll = Math.ceil(Math.random() * 20);
-        const _cyTotal = _cyRoll + _wisMod + _profB;
-        const _cyDC = 12;
-        const _CY_MADNESS = [
-          'The walls are breathing. You are fairly certain this is incorrect.',
-          'The data wraith turns toward you before you enter the room. You didn\'t make a sound.',
-          'A maintenance log on the wall is dated 300 years ago and your name is on it.',
-          'For three seconds, the neon is beautiful and you know exactly why.',
-          'You can read the void-script on the relays. You do not know this language. You have always known this language.',
-          'Someone else is wearing your footsteps.',
-          'The Corrupted Androids look at you like they recognize you.',
-          'The map in your hand matches this building\'s blueprint exactly. It shouldn\'t.',
-          'You almost said hello to the data wraith before combat started.',
-          'This is fine. This is all fine. You have been here before and it was fine then too.',
-        ];
-        if (_cyTotal >= _cyDC) {
-          S_story.cyMadnessRoll = 'clear';
-          _appendStoryHcard({ round:'Day '+S_story.day, actor:'VOID', formula:'WIS Save d20+'+_wisMod, outcome:'= '+_cyTotal+' ✓ DC '+_cyDC,
-            dmg:'Scholar King infrastructure — copper wiring, bioluminescent void growth. The data wraiths are corrupted maintenance programs.' });
-        } else {
-          const _dIdx = Math.floor(Math.random() * 10);
-          const _madText = _CY_MADNESS[_dIdx];
-          S_story.cyMadnessRoll = 'fractured';
-          S_story.cyMadnessTable = _madText;
-          _appendStoryHcard({ round:'Day '+S_story.day, actor:'VOID', formula:'WIS Save d20+'+_wisMod, outcome:'= '+_cyTotal+' ✗ DC '+_cyDC,
-            dmg:'[Madness] ' + _madText });
-        }
-        storyAutoSave();
-      }
-      // ── §D01-07: CY Maintenance Plate — live state indicator ──
-      { const _platOld = document.getElementById('story-cy-plate'); if (_platOld) _platOld.remove();
-        if (node.code === 'HKG' && S_story.cyMadnessRoll) {
-          const _platDiv = document.createElement('div');
-          _platDiv.id = 'story-cy-plate';
-          _platDiv.className = 'sweelinck-variant';
-          if (S_story.cyOriginKnown) {
-            _platDiv.style.cssText = 'margin-top:10px;border-left-color:#5a4a8a;color:#c8b8f8;font-size:12px;';
-            _platDiv.textContent = '🪧 The plate is behind you now. Your designation in Scholar King notation, copper-cast three centuries ago. The Neon Undercity is yours. You built it. You forgot. The plate did not.';
-          } else if (S_story.cyMaintenanceDecoded) {
-            _platDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a6a;color:#9090d0;font-size:12px;';
-            _platDiv.textContent = '🪧 The cipher is partially decoded. The builder\'s designation matches Froberger\'s fragment. One more session to confirm the translation.';
-          } else if (S_story.d0207_a1_passed) {
-            _platDiv.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b08050;font-size:12px;';
-            _platDiv.textContent = '🪧 The copper plate is on the north wall — three centuries old, Scholar King cipher, your name not yet fully translated. INT Arcana DC 13 to decode it. Defeat the Data Wraith first.';
-          } else {
-            _platDiv.style.cssText = 'margin-top:10px;border-left-color:#2a2a2a;color:#808060;font-size:12px;';
-            _platDiv.textContent = '🔍 Something on the north wall is very quiet against the neon. Copper, old. WIS Perception DC 10 to focus on it — see quest panel.';
-          }
-          document.getElementById('story-text-box').insertAdjacentElement('afterend', _platDiv);
-        }
-      }
-      // ── §D01-07: CY NG+ remembered line (no save, just flavor) ──
-      if (node.code === 'HKG' && (S_story.ngPlusRun || 0) >= 1 && !S_story.cyNgPlusLineDelivered) {
-        S_story.cyNgPlusLineDelivered = true;
-        setTimeout(() => storyMsg('The Neon Undercity looks exactly as you remember it. Which is the problem — you should not remember it at all.'), 300);
-      }
-      // ── S6: Weckmann/Auros joint conversation at CY when both Friendly ──
-      if (node.code === 'HKG' && _npcFavor('crov') >= 1 && _npcFavor('auros') >= 1
-          && !S_story.s6JointDelivered) {
-        S_story.s6JointDelivered = true;
-        const voidActive = !!(S_story.quests && S_story.quests['quest_void_below'] === 'active');
-        const jointLine = voidActive
-          ? "You arrive mid-conversation. Weckmann: \"If you go down there—\" Auros: \"I know.\" A pause. \"I've mapped the whole floor.\" Weckmann: \"I know you have.\"\n\nThey both stop talking when they see you."
-          : "Weckmann and Auros are talking when you arrive. Something about the structural load on the north corridor. Auros is drawing on a piece of paper. Weckmann is asking questions.\n\nThey stop when they see you. Auros: \"The load is fine.\" Weckmann: \"I wasn't worried.\" Neither of them looks like they've been talking long.";
-        setTimeout(() => storyMsg(jointLine), 400);
-      }
-      // ── L45-H: Weckmann training log at CY ──
-      if (node.code === 'HKG') {
-        const _logWrap = document.createElement('div');
-        _logWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
-        const logBtn = document.createElement('button');
-        logBtn.className = 'inv-use-btn';
-        logBtn.textContent = '📓 The training log.';
-        logBtn.style.cssText = 'margin-top:4px;';
-        logBtn.addEventListener('click', () => {
-          if (document.getElementById('weckmann-log-sub')) return;
-          logBtn.disabled = true; logBtn.style.opacity = '0.5';
-          const sub = document.createElement('div');
-          sub.id = 'weckmann-log-sub';
-          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#080c08;border-left:3px solid #506050;border-radius:4px;';
-          const hd = document.createElement('div');
-          hd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#708070;text-transform:uppercase;margin-bottom:8px;';
-          hd.textContent = '📓 Training Log';
-          const body = document.createElement('pre');
-          body.style.cssText = 'font-size:11px;line-height:1.7;white-space:pre-wrap;color:#90a890;font-family:"Courier New",monospace;margin:0;';
-          body.textContent = _buildWeckmannLog();
-          sub.appendChild(hd); sub.appendChild(body);
-          _logWrap.appendChild(sub);
-        });
-        _logWrap.appendChild(logBtn);
-        npcRowDiv.appendChild(_logWrap);
-        // ── Layer 64: Pit Championship trigger at CY ──
-        if ((S_story.pitTrainingWins || 0) >= 5 && !S_story.pitChampionOffered) {
-          S_story.pitChampionOffered = true;
-          const _pcSub = document.createElement('div');
-          _pcSub.style.cssText = 'margin-top:8px;padding:12px 14px;background:#0c0900;border-left:3px solid #a07030;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
-          const _pcHd = document.createElement('div');
-          _pcHd.style.cssText = 'font-size:10px;font-weight:700;letter-spacing:1.5px;color:#a08040;text-transform:uppercase;';
-          _pcHd.textContent = '🏆 Weckmann — The Pit Championship';
-          const _pcBody = document.createElement('div');
-          _pcBody.style.cssText = 'font-size:12px;line-height:1.8;color:#c8a870;white-space:pre-wrap;';
-          _pcBody.textContent = 'Weckmann is cleaning the forge when you arrive. He sets the brush down.\n\n"Five. You know what five means?"\n\nHe doesn\'t wait for an answer.\n\n"It means I\'ve been holding back a name. Ogundimu. The Iron Standard — that\'s what they called her, before the dispute. She doesn\'t fight for rankings anymore. She fights because she wants to know if she\'s still herself."\n\nHe picks the brush back up.\n\n"I told her about you. She said yes. That means something — she says no to most people."';
-          const _pcBtns = document.createElement('div');
-          _pcBtns.style.cssText = 'display:flex;gap:8px;';
-          const _pcAccept = document.createElement('button');
-          _pcAccept.className = 'inv-use-btn';
-          _pcAccept.style.cssText = 'flex:1;background:#3a2000;border-color:#c08030;color:#f0c060;font-weight:700;';
-          _pcAccept.textContent = '🏆 Accept the match';
-          _pcAccept.addEventListener('click', () => { _pcSub.remove(); _startPitChampionBattle(); });
-          const _pcLater = document.createElement('button');
-          _pcLater.className = 'inv-use-btn';
-          _pcLater.style.cssText = 'flex:1;';
-          _pcLater.textContent = 'Not yet';
-          _pcLater.addEventListener('click', () => _pcSub.remove());
-          _pcBtns.appendChild(_pcAccept); _pcBtns.appendChild(_pcLater);
-          _pcSub.appendChild(_pcHd); _pcSub.appendChild(_pcBody); _pcSub.appendChild(_pcBtns);
-          npcRowDiv.appendChild(_pcSub);
-        }
-        if (S_story.pitChampionOffered && !S_story.pitChampionWon) {
-          const chalBtn = document.createElement('button');
-          chalBtn.className = 'inv-use-btn';
-          chalBtn.textContent = '🏆 Challenge for the Title.';
-          chalBtn.style.cssText = 'margin-top:4px;';
-          chalBtn.addEventListener('click', _startPitChampionBattle);
-          npcRowDiv.appendChild(chalBtn);
-        }
-        // ── Layer 67b: S29 Auros tactical theory at CY ──
-        if (S_story.frobergerLastEntryRead && _npcFavor('auros') >= 2 && !S_story.s29LineDelivered) {
-          S_story.s29LineDelivered = true;
-          setTimeout(() => storyMsg(S29_AUROS_THEORY), 600);
-        }
-        // ── S7b: Undercity Survey delivery to Auros at CY ──
-      if (node.code === 'HKG' && _npcFavor('auros') >= 2
-          && (S_story.inventory||[]).some(i => i.name === 'Undercity Survey (Partial)')
-          && !S_story.undercitySurveyDelivered) {
-        const delBtn = document.createElement('button');
-        delBtn.className = 'inv-use-btn';
-        delBtn.textContent = '🗺 Show Auros the undercity survey.';
-        delBtn.style.cssText = 'margin-top:4px;';
-        delBtn.addEventListener('click', () => {
-          S_story.undercitySurveyDelivered = true;
-          const idx = (S_story.inventory||[]).findIndex(i => i.name === 'Undercity Survey (Partial)');
-          if (idx >= 0) S_story.inventory.splice(idx, 1);
-          S_story.gold = (S_story.gold || 0) + 40; storyUpdateStatus();
-          let surveyMsg = "She takes it from you without asking where you got it.\n\nShe reads the pressure annotations. A long pause.\n\n\"This was taken around Year Ten. The survey team documented six sectors. Four of them match the Void-advance indicators I flagged in Year Twelve.\"\n\nShe folds it.\n\n\"Two years. They had two years of lead time and this never reached the tactical desk. Someone decided it wasn't worth forwarding.\" (+40 gold)\n\n\"If you find the second half, bring it.\"";
-          if (S_story.s29LineDelivered) surveyMsg += "\n\n\"Froberger walked the same sectors in Year Thirteen. One year after this survey was buried. If he'd known it existed, he would have understood earlier.\"";
-          storyMsg(surveyMsg);
-          delBtn.remove();
-        });
-        npcRowDiv.appendChild(delBtn);
-      }
-      // ── L45-M: Fighter's Token search at closed lot ──
-        if (S_story.quests['quest_pit_training'] === 'complete' && !S_story.fightersTokenFound && !S_story.fightersTokenGiven) {
-          const searchBtn = document.createElement('button');
-          searchBtn.className = 'inv-use-btn';
-          searchBtn.textContent = '🔍 Search the closed lot.';
-          searchBtn.style.cssText = 'margin-top:4px;';
-          searchBtn.addEventListener('click', () => {
-            S_story.fightersTokenFound = true;
-            S_story.inventory.push({name:"Fighter's Token",icon:'🏅',type:'key_item',sell:0,desc:"A stamped metal disc with a fighter's number. Someone earned this."});
-            storyMsg("You find a small stamped disc in the collapsed tarpaulin. A fighter's number. Somebody competed here.");
-            searchBtn.remove();
-          });
-          npcRowDiv.appendChild(searchBtn);
-        }
-        // Fighter's Token delivery to Weckmann
-        if (S_story.fightersTokenFound && !S_story.fightersTokenGiven) {
-          const giveBtn = document.createElement('button');
-          giveBtn.className = 'inv-use-btn';
-          giveBtn.textContent = '🏅 Show Weckmann the token.';
-          giveBtn.style.cssText = 'margin-top:4px;';
-          giveBtn.addEventListener('click', () => {
-            S_story.fightersTokenGiven = true;
-            const idx = (S_story.inventory||[]).findIndex(i => i.name === "Fighter's Token");
-            if (idx >= 0) S_story.inventory.splice(idx, 1);
-            storyMsg("[Weckmann holds it for a long time.]\nWeckmann: \"I know this number. This is from Fischer's operation — he ran fights before I opened the legal pit. The fighter who had this token went on to compete legally. They're okay. They moved on.\"\n[He sets it on the counter. Doesn't give it back.]\n\"Don't ask me how I know. I've been watching these numbers for twenty years.\"");
-            giveBtn.remove();
-          });
-          npcRowDiv.appendChild(giveBtn);
-        }
-      }
-      // ── S2 / Layer 73 §XXXVIII: Brynn Heartwood Letter — fav-gated, at IN Act IV+, Entry 7 read ──
-      if (node.code === 'TLL' && (S_story.actNumber || 1) >= 4
-          && !S_story.s2DaughterDelivered
-          && (S_story.journalEntriesRead || []).includes(7)) {
-        const fav = _npcFavor('brynn');
-        let letterText = null;
-        if (fav >= 2) letterText = BRYNN_HEARTWOOD_SCENE.dearFriend;
-        else if (fav >= 1) letterText = BRYNN_HEARTWOOD_SCENE.friendly;
-        if (letterText) {
-          S_story.s2DaughterDelivered = true;
-          setTimeout(() => storyMsg(letterText), 700);
-        }
-      }
-      // ── S58: Brynn's Regulars — ambient guests at IN ──
-      if (node.code === 'TLL') {
-        const regularsDiv = document.createElement('div');
-        regularsDiv.style.cssText = 'margin-top:8px;';
-        const act = S_story.actNumber || 1;
-        const ledgerOk = (S_story.brynLedgerBalance || -8) >= 0;
-        let reg1 = 'The merchant in room 3 — same table, same meal, every visit.';
-        let reg2 = 'An elderly woman by the fire who doesn\'t look up. She\'s been here longer than you have.';
-        let reg3 = act >= 3
-          ? 'A courier stopped for the night. She has the look of someone carrying news she hasn\'t decided to share.'
-          : 'The corner booth is empty. Brynn says it usually isn\'t.';
-        if (ledgerOk) {
-          reg1 = 'The merchant in room 3 has been here three weeks now. He says the roads south are clear again.';
-        }
-        regularsDiv.innerHTML = '<div class="npc-ambient" style="font-size:11px;line-height:1.75;">'
-          + '<em>A lamp burns in the corner. It has been lit since your first night here.</em><br>'
-          + '<em>' + reg1 + '</em><br>'
-          + '<em>' + reg2 + '</em><br>'
-          + '<em>' + reg3 + '</em>'
-          + '</div>';
-        npcRowDiv.appendChild(regularsDiv);
-      }
-      // ── Layer 65: S49 Froberger Entry 41 — Brynn at IN (full scene) ──
-      if (node.code === 'TLL' && S_story.frobergerLastEntryRead && !S_story.s49BrynnDelivered) {
-        const s49Btn = document.createElement('button');
-        s49Btn.className = 'inv-use-btn';
-        s49Btn.textContent = '📔 You read the last entry.';
-        s49Btn.style.cssText = 'margin-top:4px;';
-        s49Btn.addEventListener('click', () => {
-          S_story.s49BrynnDelivered = true;
-          storyMsg(S49_BRYNN_SCENE);
-          s49Btn.remove();
-        });
-        npcRowDiv.appendChild(s49Btn);
-      }
-      // ── L45-I: Room 6 at IN (Brynn Dear Friend) ──
-      if (node.code === 'TLL' && _npcFavor('brynn') >= 3) {
-        const _r6Wrap = document.createElement('div');
-        _r6Wrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
-        const r6Btn = document.createElement('button');
-        r6Btn.className = 'inv-use-btn';
-        r6Btn.textContent = '🚪 Room 6.';
-        r6Btn.style.cssText = 'margin-top:4px;';
-        r6Btn.addEventListener('click', () => {
-          if (document.getElementById('room6-sub')) return;
-          r6Btn.disabled = true; r6Btn.style.opacity = '0.5';
-          if (!S_story.room6Visited) { S_story.room6Visited = true; S_story.brynRoom6Line = true; }
-          const sub = document.createElement('div');
-          sub.id = 'room6-sub';
-          sub.style.cssText = 'margin-top:6px;padding:12px 14px;background:#0c0a08;border-left:3px solid #7a6040;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
-          const body = document.createElement('div');
-          body.style.cssText = 'font-size:12px;line-height:1.9;color:#c0a870;font-style:italic;';
-          body.innerHTML = "<p style='margin:0 0 8px'>It's clean. Brynn keeps all the rooms clean, but this one is slightly more so — the way a room gets when someone tidies it out of care rather than routine.</p>"
-            + "<p style='margin:0 0 8px'>There's a mark on the wall near the window: a small sigil, scratched into the plaster. Not defacement — done carefully, at eye level, the kind of mark someone makes when they want to be able to find a place again.</p>"
-            + "<p style='margin:0 0 8px'>The bed has two pillows. Brynn added the second one after the fact. She doesn't know exactly why. She changed the pillowcase last week even though no one had slept on it.</p>"
-            + "<p style='margin:0'>On the windowsill, almost under the sill itself, a scrap of paper. Not Froberger's journal pages — different paper, smaller. In the same handwriting as the journal, but lighter:</p>";
-          const sig = document.createElement('div');
-          sig.style.cssText = 'text-align:center;font-size:15px;color:#8a6030;font-style:italic;padding:10px 0;border-top:1px solid #3a2a10;border-bottom:1px solid #3a2a10;';
-          sig.textContent = '— still here.';
-          const close = document.createElement('div');
-          close.style.cssText = 'font-size:11px;color:#907050;font-style:italic;';
-          close.textContent = 'You look at it for a while. You close the door behind you.';
-          sub.appendChild(body); sub.appendChild(sig); sub.appendChild(close);
-          _r6Wrap.appendChild(sub);
-        });
-        _r6Wrap.appendChild(r6Btn);
-        npcRowDiv.appendChild(_r6Wrap);
-      }
-      // ── Layer 70 §XXXV — Beat 1: Lamp Inquiry at IN ──
-      if (node.code === 'TLL' && _npcFavor('brynn') >= 1
-          && (S_story.actNumber || 1) >= 2 && !S_story.brynnKeeperStoryTold) {
-        const lampBtn = document.createElement('button');
-        lampBtn.className = 'inv-use-btn';
-        lampBtn.textContent = '🕯 Ask Brynn about the lamp in the corner.';
-        lampBtn.style.cssText = 'margin-top:4px;';
-        lampBtn.addEventListener('click', () => {
-          storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.inquiry);
-          lampBtn.remove();
-          const followBtn = document.createElement('button');
-          followBtn.className = 'inv-use-btn';
-          followBtn.textContent = '💬 Why that night?';
-          followBtn.style.cssText = 'margin-top:4px;';
-          followBtn.addEventListener('click', () => {
-            S_story.brynnKeeperStoryTold = true;
-            storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.followUp);
-            followBtn.remove();
-          });
-          npcRowDiv.appendChild(followBtn);
-        });
-        npcRowDiv.appendChild(lampBtn);
-      }
-      // ── Layer 70 §XXXV — Beat 2: Lamp Choice at IN (Dear Friend only) ──
-      if (node.code === 'TLL' && _npcFavor('brynn') >= 2
-          && S_story.brynnKeeperStoryTold && !S_story.brynnLightChoiceMade) {
-        const choiceDiv = document.createElement('div');
-        choiceDiv.style.cssText = 'margin-top:4px;display:flex;flex-direction:column;gap:3px;';
-        const prompt = document.createElement('div');
-        prompt.style.cssText = 'font-size:12px;color:#5A3A10;font-style:italic;margin-bottom:2px;';
-        prompt.textContent = 'Brynn: ' + BRYNN_KEEPER_STORY.choicePrompt;
-        choiceDiv.appendChild(prompt);
-        const keepBtn = document.createElement('button');
-        keepBtn.className = 'inv-use-btn';
-        keepBtn.textContent = '🕯 Let it keep burning.';
-        keepBtn.addEventListener('click', () => {
-          S_story.brynnLightChoiceMade = true;
-          S_story.brynnLightKept = true;
-          storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.choiceKeep);
-          choiceDiv.remove();
-        });
-        const restBtn = document.createElement('button');
-        restBtn.className = 'inv-use-btn';
-        restBtn.textContent = '🌙 It can rest when I\'m done.';
-        restBtn.addEventListener('click', () => {
-          S_story.brynnLightChoiceMade = true;
-          S_story.brynnLightKept = false;
-          storyMsg('Brynn: ' + BRYNN_KEEPER_STORY.choiceRest);
-          choiceDiv.remove();
-        });
-        choiceDiv.appendChild(keepBtn);
-        choiceDiv.appendChild(restBtn);
-        npcRowDiv.appendChild(choiceDiv);
-      }
-      // ── S54b: Quill plays Brynn's song at TV — both Dear Friend, once per run ──
-      if (node.code === 'MHQ' && _npcFavor('quill') >= 2 && _npcFavor('brynn') >= 2
-          && !S_story.s54QuillBrynnDelivered) {
-        S_story.s54QuillBrynnDelivered = true;
-        setTimeout(() => storyMsg("Quill is already playing when you arrive. Something slow.\n\n\"Brynn came by yesterday,\" he says without stopping. \"Asked me to play something slow for a while. Said she had a guest who needed it.\"\n\nHe doesn't look up. He means it as high praise."), 500);
-      }
-      // ── S32: Quill's second song on NG+ (Dear Friend or higher) ──
-      if (node.code === 'MHQ' && (S_story.ngPlusRun || 0) > 0 && _npcFavor('quill') >= 2) {
-        const s32Div = document.createElement('div');
-        s32Div.style.cssText = 'margin-top:8px;padding:10px 12px;background:#E2D0A8;border-left:3px solid #B87C28;font-style:italic;font-size:12px;color:#2A1A0A;line-height:1.7;';
-        s32Div.innerHTML = '<div style="font-size:10px;color:#6A4A28;letter-spacing:2px;margin-bottom:8px;font-style:normal;">UNTITLED (SECOND SONG)</div>'
-          + '<div>The city is still there. The city is still there.</div>'
-          + '<div>You left it and it stayed. You came back and it remembered.</div>'
-          + '<div>That\'s the thing about cities — they don\'t wait for you, they just don\'t leave.</div>'
-          + '<div>That\'s a love song, I think. I\'m still deciding.</div>'
-          + '<div style="margin-top:8px;font-size:11px;color:#6A4A28;font-style:normal;">[Quill: "I reused the chord progression. It fit."]</div>';
-        npcRowDiv.appendChild(s32Div);
-      }
-      // ── Rod Shop at YC ──
-      if (node.code === 'SSJ') {
-        const _rodShopWrap = document.createElement('div');
-        _rodShopWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:4px;';
-        const shopBtn = document.createElement('button');
-        shopBtn.className = 'inv-use-btn';
-        shopBtn.textContent = '🎣 Browse Rods — The Fisherman';
-        shopBtn.addEventListener('click', () => {
-          const existing = document.getElementById('rod-shop-sub');
-          if (existing) { existing.remove(); shopBtn.disabled = false; shopBtn.style.opacity = ''; return; }
-          shopBtn.disabled = true; shopBtn.style.opacity = '0.5';
-          const sub = document.createElement('div');
-          sub.id = 'rod-shop-sub';
-          sub.style.cssText = 'margin-top:6px;padding:10px 12px;background:#060a08;border-left:3px solid #4a7060;border-radius:4px;display:flex;flex-direction:column;gap:10px;';
-          const hdr = document.createElement('div');
-          hdr.style.cssText = 'font-size:10px;color:#6a9070;letter-spacing:2px;';
-          hdr.textContent = "THE FISHERMAN'S RODS";
-          sub.appendChild(hdr);
-          const hasCoupon = !S_story.fishingRodCouponRedeemed && (S_story.inventory||[]).some(i => i.name === 'Free Rod Coupon');
-          FISHING_RODS.forEach(rod => {
-            const owned = (S_story.inventory||[]).some(i => i.name === rod.name);
-            const row = document.createElement('div');
-            row.style.cssText = 'display:flex;align-items:center;gap:8px;flex-wrap:wrap;';
-            const info = document.createElement('div');
-            info.style.cssText = 'flex:1;font-size:12px;color:#a0c0a8;line-height:1.5;';
-            info.innerHTML = rod.icon + ' <strong>' + rod.name + '</strong>'
-              + (rod.rodBonus > 0 ? ' <span style="color:#60e0a0">+' + rod.rodBonus + ' Catch</span>' : '')
-              + '<br><span style="font-size:11px;color:#688070;">' + rod.desc + '</span>';
-            const btn = document.createElement('button');
-            btn.className = 'inv-use-btn';
-            if (owned) {
-              btn.textContent = '✓ Owned'; btn.disabled = true; btn.style.opacity = '0.5';
-            } else if (rod.tier === 0 && hasCoupon) {
-              btn.textContent = '🎫 Redeem Coupon (Free)';
-              btn.addEventListener('click', () => {
-                S_story.fishingRodCouponRedeemed = true;
-                S_story.inventory = (S_story.inventory||[]).filter(i => i.name !== 'Free Rod Coupon');
-                S_story.inventory.push({ name:rod.name, icon:rod.icon, type:'tool', sell:rod.sell, code:'SSJ', rodBonus:rod.rodBonus, desc:rod.desc });
-                // §ARCH-01 W8c — the engine is the SOLE completer. The fishingRodCouponRedeemed
-                // flag set just above satisfies quest_no_fishing_sign's completion:{flags:[…]}, so
-                // storyCheckQuests completes it and fires its xpAward:50 (== the old inline +50).
-                // The rod grant above is the redemption action, not the quest reward, so it stays.
-                storyCheckQuests(node);
-                storyMsg("The Fisherman takes the tab. He looks at it — he made the tab — but he looks at it like it's new each time.\n\n\"...Nice Day For Fishing. Yugurt!\"\n\nHe hands you the rod that was propped by the door.\n\n🎣 Fishing Rod obtained. ✓ Quest complete — The No-Fishing Sign. +50 XP.");
-                sub.remove(); shopBtn.disabled = false; shopBtn.style.opacity = ''; storyAutoSave();
-              });
-            } else {
-              btn.textContent = rod.price + 'gp';
-              btn.addEventListener('click', () => {
-                if ((S_story.gold || 0) < rod.price) {
-                  const orig = btn.textContent;
-                  btn.textContent = '✗ Need ' + rod.price + 'gp';
-                  setTimeout(() => { btn.textContent = orig; }, 1500); return;
-                }
-                S_story.gold = (S_story.gold || 0) - rod.price;
-                S_story.inventory = S_story.inventory || [];
-                S_story.inventory.push({ name:rod.name, icon:rod.icon, type:'tool', sell:rod.sell, code:'SSJ', rodBonus:rod.rodBonus, desc:rod.desc });
-                storyMsg('You hand over ' + rod.price + 'gp. The Fisherman nods once.\n\n🎣 ' + rod.name + ' obtained.' + (rod.rodBonus > 0 ? ' +' + rod.rodBonus + ' to Catch rolls.' : ''));
-                sub.remove(); shopBtn.disabled = false; shopBtn.style.opacity = ''; storyAutoSave();
-              });
-            }
-            row.appendChild(info); row.appendChild(btn); sub.appendChild(row);
-          });
-          _rodShopWrap.appendChild(sub);
-        });
-        _rodShopWrap.appendChild(shopBtn);
-        npcRowDiv.appendChild(_rodShopWrap);
-      }
-      // ── S45: Quill plays without prompting (unfinished song ambient, odd game days) ──
-      if (node.code === 'MHQ' && (S_story.gameDay || 0) > 0 && (S_story.gameDay || 0) % 2 === 1) {
-        const songIdx = Math.floor((S_story.gameDay || 0) / 2) % QUILL_UNFINISHED_SONGS.length;
-        const s45Div = document.createElement('div');
-        s45Div.style.cssText = 'margin-top:6px;';
-        s45Div.innerHTML = '<div class="npc-ambient">' + QUILL_UNFINISHED_SONGS[songIdx] + ' <button style="background:none;border:none;color:#4A3010;font-size:11px;cursor:pointer;padding:0;font-style:italic;" id="s45-ask-quill">Ask about it.</button></div>';
-        npcRowDiv.appendChild(s45Div);
-        setTimeout(() => {
-          const askBtn = document.getElementById('s45-ask-quill');
-          if (askBtn) askBtn.addEventListener('click', () => {
-            askBtn.parentElement.innerHTML = '<em style="color:#4A3010">"Oh — this one\'s not finished. Come back."</em>';
-          });
-        }, 50);
-      }
+      // §VM-01-G2b: the ctx contract for the npc-row hooks below. Measured, not assumed —
+      // `npcRowDiv` is the ONLY storyRender local any of the 29 extracted blocks reads
+      // (the apparent `n`/`row` hits were \n escapes and a comment), so the anchor element
+      // is the whole contract. Nothing else from this scope crosses the boundary.
+      const _npcHookCtx = { npcRowDiv };
+      _runNodeHook('birka-varga-watch', node, _npcHookCtx); // ── S8: Varga's presence at BA — observation mechanic ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-pachelbel-ledger', node, _npcHookCtx); // ── Layer 68b: Pachelbel Ledger at BA (Dear Friend) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-quill-couperin-farewell', node, _npcHookCtx); // ── Layer 69 §XXXIV — Act VIII: Quill visits BA to close the Couperin estate ledger ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-gigault-stall', node, _npcHookCtx); // ── L44-A: Gigault stall at BA ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-deacon-code', node, _npcHookCtx); // ── L44-Q: Deacon Code click target at BA ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-brynn-maintenance', node, _npcHookCtx); // ── L44-L/N: Brynn maintenance + ledger at IN ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-night-ambient', node, _npcHookCtx); // ── S52: Night-mode ambient text ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-nivers-passes', node, _npcHookCtx); // ── L45-D/E: Nivers at CI ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-blue-shutters', node, _npcHookCtx); // ── S7: Blue Shutters Archive at CI ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-froberger-memorial', node, _npcHookCtx); // ── Layer 63: Froberger Memorial at CI ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-no-fishing-sign', node, _npcHookCtx); // ── No Fishing Sign at CI ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-s54-joint-witness', node, _npcHookCtx); // ── Layer 66a: S54 Yael + Brynn joint witness at CI (Act VIII) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-yael-named-report', node, _npcHookCtx); // ── Layer 74 §XXXIX — Yael Named Report at CI ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-yael-patrol-line', node, _npcHookCtx); // ── L45-G: Yael patrol field line ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-cy-madness-gate', node, _npcHookCtx); // ── §D01-07: CY Madness Gate — first visit WIS save ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-cy-maintenance-plate', node, _npcHookCtx); // ── §D01-07: CY Maintenance Plate — live state indicator ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-cy-ngplus-line', node, _npcHookCtx); // ── §D01-07: CY NG+ remembered line (no save, just flavor) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-s6-joint-conversation', node, _npcHookCtx); // ── S6: Weckmann/Auros joint conversation at CY when both Friendly ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-weckmann-log', node, _npcHookCtx); // ── L45-H: Weckmann training log at CY ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-brynn-heartwood-letter', node, _npcHookCtx); // ── S2 / Layer 73 §XXXVIII: Brynn Heartwood Letter — fav-gated, at IN Act IV+, Entry 7 read ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-brynn-regulars', node, _npcHookCtx); // ── S58: Brynn's Regulars — ambient guests at IN ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-s49-entry41', node, _npcHookCtx); // ── Layer 65: S49 Froberger Entry 41 — Brynn at IN (full scene) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-room6', node, _npcHookCtx); // ── L45-I: Room 6 at IN (Brynn Dear Friend) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-lamp-inquiry', node, _npcHookCtx); // ── Layer 70 §XXXV — Beat 1: Lamp Inquiry at IN ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-lamp-choice', node, _npcHookCtx); // ── Layer 70 §XXXV — Beat 2: Lamp Choice at IN (Dear Friend only) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-quill-brynn-song', node, _npcHookCtx); // ── S54b: Quill plays Brynn's song at TV — both Dear Friend, once per run ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-quill-ngplus-song', node, _npcHookCtx); // ── S32: Quill's second song on NG+ (Dear Friend or higher) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-rod-shop', node, _npcHookCtx); // ── Rod Shop at YC ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-quill-ambient-song', node, _npcHookCtx); // ── S45: Quill plays without prompting (unfinished song ambient, odd game days) ── → NODE_HOOKS (§VM-01-G2b)
       document.getElementById('story-text-box').insertAdjacentElement('afterend', npcRowDiv);
     }
     // ── Layer 46: Kern & Sable at HM — Torment Nexus Overture ──

@@ -184,3 +184,59 @@ documented J14/J15 + TGS/SPB baselines; §7½ eyeballed (VS shows Solvak's card 
 quest; CDG staged). **Left for G-FU/backlog:** the `ath05_act3/4`-class imported multi-act chains
 still mass-activate per node corpus-wide (pre-existing, now visible at VS); the 201×
 `npc:"long_john_silver_sen"` mis-stamp from `ea02faf`; a corpus-wide duplicate-key audit.
+
+## 10. G2b ship addendum (2026-08-04) — the ctx design was one field, and the migration read five dead beats out of the region
+
+**The blocker G2 recorded was "these need a ctx-argument design."** It was answered by
+measurement rather than by design: of the 89 `storyRender` locals in scope at the region, the 29
+Birka blocks read **exactly one** — `npcRowDiv`, the `#story-npc-cards-row` element. (The scan's
+apparent `n` / `row` / `txt` / `fav` hits were `\n` escapes inside strings, a word inside a
+comment, and block-local declarations; `keys` and `_npcNodeKey`, the two candidates one would
+expect, are read by **none** of them.) So the ctx is `{ npcRowDiv }` and nothing else, built once
+beside the anchor it carries. `_runNodeHook(id, node, ctx)` forwards it; the **21** hooks that
+append destructure it in the signature (`function _nodeHookBirkaX(node, { npcRowDiv })`), the
+**8** that write no DOM here take `(node)` alone and are asserted never to name the anchor.
+
+**Two safety properties checked before the move, not after.** (1) **No top-level `return`** — all
+13 `return`s in the region sit inside click handlers, so a `return` that used to exit *nothing*
+cannot now exit a hook early. (2) **No `var`** — nothing hoists out of a block into the function
+scope for a later block to read. Both were mechanical scans, and both were the reason a verbatim
+move is legitimate here at all.
+
+**Bodies moved byte-for-byte — not even re-indented.** The strongest evidence is a line-multiset
+diff of the two revisions: **nothing was removed except the 2 old `_runNodeHook` lines**, and
+everything added is scaffolding (29 function headers, 29 closers, 29 registry entries, 29
+dispatch calls, 13 comment lines, the ctx declaration, the 2 new dispatch lines). Every one of
+the 895 moved lines is identical on both sides.
+
+**Proof of no-op: a 17-combo golden-DOM/state diff, 16 byte-identical.** The 17th (`HKG-base`)
+differs — and differs again between **two runs of the same code**, because the CY Madness Gate
+draws `Math.random()` (unseeded) and writes the result to two persisted `S_story` fields. That is
+a **pre-existing violation of invariant #6**, not a regression; filed as **§DX-02m** (51
+`Math.random()` sites; `check:rng` guards stream *parity*, so nothing gates *which* stream a
+state write draws from).
+
+**The finding: five act-gated beats in this region cannot fire, and one of them takes a second
+beat down with it.** `storyRender` assigns `S_story.actNumber = node.act || 1` on every render,
+before this region; every Birka node is `act:1`. So `birka-lamp-inquiry` (`>= 2`),
+`birka-brynn-heartwood-letter` (`>= 4`), `birka-yael-named-report` (`>= 6`),
+`birka-s54-joint-witness` (`>= 7`) and `birka-quill-couperin-farewell` (`=== 8`) are unreachable
+— the same structurally-dead act leg **§VM-01-G3** retired from the quest stanzas, still standing
+in five narrative beats. `birka-lamp-choice` gates on `brynnKeeperStoryTold`, whose **only writer
+is the dead Beat 1**, so the whole §XXXV lamp arc past its ambient line is unreachable. Note the
+Yael scene also disagrees with its own design doc on the **node** (`world.md` §XXXIX says
+`LLA`/`HKG` at Act IV+; the code says `LHR` at Act VI+) — which is exactly why this is filed as
+**§VM-01-G2b-FU** (design call) and not guessed at: §AUDIT-03m-FU's lesson is that annotating or
+"fixing" an unverified claim launders it. `world.md` and `story.md` are annotated at all five
+sites; the defect is pinned by a test so the follow-up must update it.
+
+**The anchor class is now empty, and G2's deferral list was approximate.** After the move the only
+`npcRowDiv` references left in `storyRender` are the element's own three construction lines, the
+ctx, and the final `insertAdjacentElement` — **zero** block bodies. Of the six UIs G2 named as
+deferred, four are inside the 29 (Blue Shutters and Froberger Memorial as their own hooks; **Pit
+Championship** is a sub-block of `birka-weckmann-log`; the ledgers are `birka-pachelbel-ledger` /
+`birka-brynn-maintenance`), but **Kern & Sable is not an npc-row block at all** — it sits
+immediately *after* the row's insert on a different anchor, and **Kenickie** is a CDG NPC whose
+surface belongs to the mixed CDG/Tilbury/Visby blocks G2 assigned to G3's territory. Both are
+Class-E candidates for a later slice, not residue of this one. **What remains above the front is
+G4 (Class D per-verb, needs its own child report) and the G-FU engine-region exceptions.**

@@ -15,22 +15,27 @@ async function renderAt(page, code, ov = {}) {
 }
 
 test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
-  test('registry integrity: 7 ordered entries, unique ids, callable fns, dispatch reaches the fn', async ({ page }) => {
+  test('registry integrity: the 7 G2 entries lead the registry, unique ids, callable fns, dispatch reaches the fn', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
-      const ids = NODE_HOOKS.map(h => h.id);
+      // §VM-01-G2b appended 29 npc-row hooks after these; this test owns the G2 head of the
+      // registry (the story-text-box-anchored ones), uqf-npc-row-hooks.test.js owns the tail.
+      const g2 = NODE_HOOKS.filter(h => h.anchor !== 'npc-row');
+      const ids = g2.map(h => h.id);
       return {
-        count: NODE_HOOKS.length,
+        count: g2.length,
         ids,
-        uniqueIds: new Set(ids).size,
+        uniqueIds: new Set(NODE_HOOKS.map(h => h.id)).size === NODE_HOOKS.length ? g2.length : -1,
         allFns: NODE_HOOKS.every(h => typeof h.fn === 'function'),
+        leadsRegistry: NODE_HOOKS.slice(0, 7).every(h => h.anchor !== 'npc-row'),
         // dispatch finds by id; an unknown id is a silent no-op (returns undefined)
         unknownIsNoop: _runNodeHook('no-such-hook', NODE_MAP['LHR']) === undefined,
       };
     });
     expect(r.count).toBe(7);
-    expect(r.uniqueIds).toBe(7);
+    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b').toBe(7);
     expect(r.allFns).toBe(true);
+    expect(r.leadsRegistry, 'registry stays ordered by former source position: G2 blocks precede the G2b npc-row block').toBe(true);
     expect(r.ids).toEqual(['void-archaeology', 'void-shaman-warden', 'corelli-merchant',
       'codex-core-chamber', 'la-riva-row', 'scholar-workshop', 'mimic-meadows']);
     expect(r.unknownIsNoop).toBe(true);

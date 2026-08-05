@@ -2726,6 +2726,8 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 ## ✅ Implemented — The Joint Witness and the Map Caption (plan-archive.md §XXXI, Layers 66a+66b)
 
+> ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** The S54 half (`actNumber >= 7` at `LHR`, `act:1`) never fires; the Layer-66b map caption is unaffected. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaS54JointWitness`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
+
 **S54 — Yael and Brynn at `LHR` (Layer 66a):** Fires on first `LHR` visit where `actNumber >= 7` AND `_npcFavor('yael') >= 1` AND `_npcFavor('brynn') >= 1` AND `!s54JointMomentDelivered`. `storyMsg(S54_JOINT_MOMENT)` via `setTimeout(400)`. Full scene: Brynn with delivery basket, Yael already at `LHR`, *"Still the same light?" / "Still the same light."*, then both address the player. Sets `s54JointMomentDelivered = true`.  *(historical: `CI`=`LHR`)*
 
 **Flag split:** Pre-existing TV stub (Quill plays Brynn's song) was using `s54JointMomentDelivered`. Renamed to `s54QuillBrynnDelivered` (new flag in `_S_DEFAULTS()`). NUE "map on the wall" stub was using `s55MapLineDelivered`. Renamed to `s55SqMapLineDelivered` (new flag in `_S_DEFAULTS()`). Both pre-existing stubs now have their own flags; canonical §XXXI flags restored to their intended roles.
@@ -2760,6 +2762,8 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — Yael's Record: The Named Report Scene (plan-archive.md §XXXIX, Layer 74)
 
+> ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** The `actNumber >= 6` leg at `LHR` (`act:1`) never fires — and note `world.md` designs this scene for `LLA`/`HKG` at Act IV+, so the node disagrees too. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaYaelNamedReport`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
+
 **Trigger:** `LHR` (historical `CI`) node, `_npcFavor('yael') >= 2`, `actNumber >= 6`, `yaelEscortUsed`, `!yaelNamedReportDelivered`. Const: `YAEL_NAMED_REPORT_SCENE` (setup, decision, choiceHold, choiceThree). `yaelNamedReportDelivered: false` added to `_S_DEFAULTS()`.
 
 **Scene (via `setTimeout(600ms)`):** `YAEL_NAMED_REPORT_SCENE.setup` + decision text fire as a storyMsg. Two inline choice buttons appear in npcRowDiv: `📋 I'll hold it.` → *"Good. Then it's in four places now."* / `🗂 Three copies is enough.` → *"Three is enough. I just wanted someone outside the system to know."* Both set `yaelNamedReportDelivered = true` and remove the choice div.
@@ -2771,6 +2775,8 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 ---
 
 ## ✅ Implemented — The Heartwood Letter: Brynn's Daughter Scene (plan-archive.md §XXXVIII, Layer 73)
+
+> ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** The `actNumber >= 4` leg at `TLL` (`act:1`) never fires. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaBrynnHeartwoodLetter`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
 
 **Trigger:** `TLL` (historical `IN`) node, `actNumber >= 4 && !s2DaughterDelivered && journalEntriesRead.includes(7)`. Patches the pre-existing S2 block. Per §XXXVIII reconciliation note: uses `s2DaughterDelivered` (pre-existing) not `brynnLetterSceneDelivered` (spec name). Const: `BRYNN_HEARTWOOD_SCENE` (keys: friendly, dearFriend).
 
@@ -2818,6 +2824,8 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — The First Inn Light: Brynn's Vigil Arc (plan-archive.md §XXXV, Layer 70)
 
+> ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** Beat 1's `actNumber >= 2` leg at `TLL` (`act:1`) never fires, and Beat 2 gates on `brynnKeeperStoryTold` — which the dead Beat 1 is the ONLY writer of, so the whole arc past the ambient line is unreachable. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaLampInquiry`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
+
 **Ambient:** `TLL` (historical `IN`) node S58 regulars block prepends *"A lamp burns in the corner. It has been lit since your first night here."* as the first line — no flag, no condition. `BRYNN_KEEPER_STORY` const holds all scene strings.
 
 **Beat 1 — Inquiry (IN, fav_brynn ≥ 1, Act II+, !brynnKeeperStoryTold):** `🕯 Ask Brynn about the lamp in the corner.` button appears. On click: shows `BRYNN_KEEPER_STORY.inquiry`, removes button, shows `💬 Why that night?` follow-up. On follow-up click: shows `BRYNN_KEEPER_STORY.followUp`, sets `brynnKeeperStoryTold = true`.
@@ -2833,6 +2841,8 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 ---
 
 ## ✅ Implemented — The Couperin Ledger: Quill's Three-Beat Arc (plan-archive.md §XXXIV, Layer 69)
+
+> ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** Beats 1–3 are live; only the Act VIII `LLA` farewell branch (`actNumber === 8`, `LLA` is `act:1`) never fires. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaQuillCouperinFarewell`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
 
 **Trigger chain:** `quills_lute` item in inventory → Quill at `MHQ` (historical `TV`) → `LLA` (historical `BA`) Act VIII farewell branch. No new state flags — all three (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-existed in `_S_DEFAULTS()`.
 
