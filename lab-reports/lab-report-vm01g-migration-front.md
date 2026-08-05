@@ -330,3 +330,5 @@ It is a `cost`-leaf consumer waiting, and it confirms the leaf's contract genera
 §DX-02g "durable half" order), answer G4c-FU's asks (they are the user's), or pin the 47 count
 in a test (**pin the property, never the incident** — the property is "every literal resolves or
 is classified," and it is now gate #13 phase 6, which the count will pass through as it shrinks).
+
+**Ship hash:** `02ff4aa` (2026-08-05).
