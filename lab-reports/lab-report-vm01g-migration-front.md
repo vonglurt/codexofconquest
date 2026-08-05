@@ -512,3 +512,72 @@ Playwright **889 passed / 4 failed** (893 tests; the four are the documented
 `worldbuilder-crud-arrays` set; the `multiplayer-presence:171` flake passed this run).
 
 **Ship hash:** `7d8cb39` (2026-08-05).
+
+## 11d. G-FU-d ship addendum (2026-08-05) — the harbor chains moved, the plan's D3 claim corrected by a STRING, and a second circular-dead beat surfaced
+
+**The slice:** §SPARK-01/02 · §WHODUNIT-01 · §NAVAL-01 · §PORT-01/02 at LCY/SEN/GCI/DNF/MME —
+seven surfaces in six blocks (~378 lines) → **six verbatim hooks + three `NODE_PANELS` entries,
+ZERO verbs.** Hooks `spark-lcy-harmony` / `whodunit-sen-bilge` / `naval-gci-intercept` /
+`port-dnf-access` / `spark-dnf-harmony` / `port-mme-saltwick`, registry run appended after the
+alch stack (source order), dispatched in place.
+
+**The plan's "GCI intercept = D3 concurrent menu → G4d's container mode" is corrected by
+measurement, and the reason is new to the family: a STRING.** The intercept's three role buttons
+are genuinely concurrent (D3's shape exactly), but parley and examine both write
+`sbChosenRole = 'parley'|'examine'` — a string enum `flag_write` (boolean-only) cannot express,
+the HCA `iodineBuffBonus` class in a second type. Growing the grammar for one consumer is the
+`itemsMinAny` failure, so the block stays a verbatim hook and the D3 conversion is filed with
+the G4c-FU asks. **The MME hull repair is the plan shape that HELD:** the seventh hand-written
+gold site now pays through the `cost` leaf via `_uqfRunChain` (the junction-vignette consumer
+shape) — refusal speaks Dorit's own line through `storyBlock` (the house shake, the one named
+behavioural delta), success leaves every other line of the click verbatim minus the hand-written
+`gold -= 200`.
+
+**What left the hooks: the SEN Clot/Warmth panel, the stack's only button-less block** — three
+`NODE_PANELS` entries sharing `story-spark-ms` with mutually exclusive `when`s (the DUS
+else-leg shape), the solved state's `css` the block's effective serialized style. Sibling
+analysis by the G-FU-b WRO rule, golden-verified: SEN's other afterend co-renders
+(`story-whodunit2-ms`, the `alch-sen-ship` hook) insert later than the panels phase in both
+worlds; no npc-row renders at SEN (no `BIRKA_NPC_PROFILES` profile homes there) and SEN is in
+neither `KEY_EVENTS` nor `JUNCTION_VIGNETTES`.
+
+**Finding 1 — the LCY counterfeit-writ beat was circular-dead since it shipped** (the G-FU-a
+Glut's Gift class, second sighting): the panel's insertion guard was
+`(kingsWritSeen || smaltBefriended)` and `kingsWritSeen`'s ONLY writer is the Inspector button
+INSIDE that panel. The arc survived because `quest_spark_01` (gate `{}`) sets `smaltBefriended`
+from the quest panel — skipping the Inspector's opening scene and the King's Writ (Counterfeit)
+item entirely, while the Scene-5 confrontation still listed "the three claims" as if the first
+had been witnessed. The prose and the mechanics disagreed and the prose was right. **Fix, in
+the hook, marked inline:** the panel inserts whenever LCY renders (like every other state of
+the chain), and the writ button gates on its own flag so the un-dead beat cannot stack
+duplicate writs on its own re-render.
+
+**Finding 2 — the Scene-5 confrontation DOUBLE-PAYS on HEAD, and this slice deliberately
+preserves it:** the inline button and `quest_spark_05`'s `onComplete` each pay +400gp/+400 XP,
+each remove the writ, and each grant a Letter of True Passage (the quest completes on
+`aldousConfessed` in the same render — the §ARCH-01 W7b decomposition copied the closure into
+the quest while the block kept its own). A verbatim no-op is not the place to fix content;
+pinned as measured (gold +800, two Letters) by `uqf-node-harbor.test.js` and **filed as
+§SPARK-01-FU**.
+
+**One measured lie left standing:** the MME source comment says the hull panel sits "below" the
+access panel; both insert `afterend` of `story-text-box`, so the LAST insert (hull) renders
+ABOVE. The hook keeps the real order, a test pins it, and the hook header records the
+discrepancy.
+
+**Evidence:** 49-combo golden HEAD-vs-after over sibling DOM + bounding boxes + msg text/class
++ pre-battle overlay/node + state, incl. 13 click-outcome combos — **46/49 byte-identical, the
+3 deltas exactly the two writ-fix states and the cost-leaf refusal channel** (same text,
+`msg-block msg-shake` class); self-stability 49/49; §7½ **10 story-column PNGs, 8
+byte-identical**, the 2 differing being the fix states, both eyeballed live; 38-authored-string
+sweep, every count equal to HEAD; `uqf-node-harbor.test.js` **17/17 with 6 red on HEAD — the 3
+registry/source tests + the 2 writ-fix tests + the refusal-channel test — and the 11 greens
+exactly the verbatim/unchanged-behaviour ones**; `uqf-node-hooks` pin 21→27; **`uqf-node-alch`'s
+own `slice(-6)` tail pin broke on this slice and was converted to the contiguous run — the
+G-FU-c lesson biting the very file that wrote it**; gate #13 phase 6 already held `MS_BILGE` and
+`SB_PRIVATEER`; `check:walk` **16/16 exit 0**; 25 anchor hints refreshed by `anchors:fix` up
+front; full Playwright **906 passed / 4 failed** (910 tests; the four are the documented
+`worldbuilder-crud-arrays` set; `multiplayer-presence:171` flaked in the full run and passed
+7/7 alone).
+
+**Ship hash:** (recorded in the docs commit).

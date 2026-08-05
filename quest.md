@@ -539,6 +539,7 @@ resolve. Pinned by `tests/integration/audit03h-npc-normalize.test.js`.
 - Act IV: [ACCOMPLISHMENT] He writes the Letter of True Passage (his real authority document, valid). Token created.
 - Act V: *"My name is Aldous. I have contacts in six ports. If you need something that isn't on any manifest, I am who you speak to."* `aldousConfessed=true`. Aldous becomes a recurring ally NPC at DK.
 - **Reward:** Letter of True Passage + 400gp + 400 XP + Aldous recurring ally (black market contacts in Tilbury, Visby, Malta).
+- **⚠ Engine findings (§VM-01-G-FU-d, 2026-08-05):** (1) Scene 1's counterfeit-writ beat was **circular-dead since it shipped** — the LCY panel's insertion guard required `kingsWritSeen`, whose only writer was the Inspector button inside that panel; the arc survived only because `quest_spark_01` (gate `{}`) sets `smaltBefriended` from the quest panel, skipping the writ scene and its item entirely. Fixed in the `spark-lcy-harmony` hook: the panel inserts whenever LCY renders, and the button gates on its own flag (no second writ). (2) The Scene 5 confrontation **double-pays on HEAD**: the panel button and `quest_spark_05`'s `onComplete` each grant +400gp/+400 XP and each add a Letter of True Passage (the quest completes on `aldousConfessed` in the same render). Preserved verbatim by the migration, pinned as measured by `uqf-node-harbor.test.js`; the fix is a content change — **open as §SPARK-01-FU in BACKLOG.md**.
 
 ---
 

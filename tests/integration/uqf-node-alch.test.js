@@ -39,10 +39,15 @@ const clickIn = (page, panelId, text) =>
   page.locator('#' + panelId + ' button', { hasText: text }).first().evaluate(el => el.click());
 
 test.describe('§VM-01-G-FU-c — registry + source shape', () => {
-  test('the six alch/wisdom hooks sit at the registry tail with callable fns', async ({ page }) => {
+  test('the six alch/wisdom hooks sit as a contiguous registry run with callable fns', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
-      const tail = NODE_HOOKS.slice(-6);
+      // §VM-01-G-FU-d appended the harbor hooks after these (their stack sits below the alch
+      // region in source order), so the pin is the contiguous run, no longer the tail — the
+      // registry-tail pin this file shipped with was exactly the shape its own slice's hunt-pin
+      // adjustment warned about (pin the contiguous run, never the tail).
+      const first = NODE_HOOKS.findIndex(h => h.id === 'alch-kir-dream');
+      const tail = first === -1 ? [] : NODE_HOOKS.slice(first, first + 6);
       return {
         ids: tail.map(h => h.id),
         nodes: tail.map(h => (h.nodes || []).join(',')),

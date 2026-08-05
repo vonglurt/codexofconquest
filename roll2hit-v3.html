@@ -31506,6 +31506,27 @@ const NODE_PANELS = [
     when:st => st.roenOracleRead && st.roenMaltaCrisis,
     css:'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;',
     text:'✅ The stone was retrieved by a fisherman who dove without being asked and handed it back. "You dropped it." No charge. Gone before Roen remembered to thank him. Roen has been thinking about this ever since. "Always do your best. That was enough for the whole harbor. I should do my best. That will be enough for the whole journey."' },
+  // ── §VM-01-G-FU-d: the §SPARK-01 MS panel — the harbor stack's only button-less block
+  // (Class A, 3 states, pure text). Sibling analysis (the G-FU-b WRO rule), golden-verified:
+  // SEN's other afterend co-renders (story-whodunit2-ms, the alch-sen-ship hook) both insert
+  // LATER than the panels phase in both worlds, so they stack above this entry exactly as they
+  // stacked above the inline block — no npc-row renders at SEN (no BIRKA_NPC_PROFILES profile
+  // homes there) and SEN is in neither KEY_EVENTS nor JUNCTION_VIGNETTES. Three entries share
+  // one DOM id with mutually exclusive `when`s (the DUS else-leg shape); the solved state's
+  // `css` is the block's effective serialized style (base cssText + its two overrides).
+  // §SPARK-01: MS — Clot + Brannick + Warmth mystery
+  { id:'story-spark-ms', nodes:['SEN'],
+    when:st => st.pipMet && !st.bioluminescentParasiteFound,
+    css:'margin-top:10px;border-left-color:#2a3a6a;color:#8090c8;font-size:12px;',
+    text:'🟡 Pip is in your pack. On its left ear: Clot — a blood tick, large for its kind, amber glow on its dorsal side. In the hold, rat catcher Brannick stands surrounded by rats. The rats are calm. Brannick seems pleased. The cargo of imported perfumes smells unusual.' },
+  { id:'story-spark-ms', nodes:['SEN'],
+    when:st => st.pipMet && st.bioluminescentParasiteFound && !st.whodunitSolved,
+    css:'margin-top:10px;border-left-color:#2a3a6a;color:#8090c8;font-size:12px;',
+    text:'🔍 The Warmth is identified. The colony is somewhere in the cargo hold. The captain wants answers before Tilbury port. Brannick is available to testify. The perfume vats are warm — the ideal colony environment. Trace the chain: Clot → Pip → the hold → the vats.' },
+  { id:'story-spark-ms', nodes:['SEN'],
+    when:st => st.pipMet && st.bioluminescentParasiteFound && st.whodunitSolved,
+    css:'margin-top:10px;border-left-color:#2a5a2a;color:#70b880;font-size:12px;',
+    text:'✅ Mystery solved. The Warmth bloomed in the perfume vats. The cargo is commercially ruined and spiritually interesting. Brannick and the rats are fine. The captain has the Letter of Safe Passage ready. Inspector Wren-Pembury is on deck, thinking.' },
 ];
 
 // §VM-01-G1: render every NODE_PANELS entry active for this node. Runs immediately after the
@@ -33452,6 +33473,412 @@ function _nodeHookWisVsHub(node) {
     }
   }
 }
+function _nodeHookSparkLcyHarmony(node) {
+  // §SPARK-01: DK — Wren-Pembury/Smalt/Pip Harmony Chain at LCY (§VM-01-G-FU-d). Four states,
+  // three panel-embedded buttons — the WG0 embedded-button shape, verbatim. Carries ONE fix,
+  // marked inline: the insertion guard that kept the counterfeit-writ beat circular-dead.
+  // §SPARK-01: DK — Inspector Wren-Pembury + Smalt + Pip chain
+  { const _spk1Old = document.getElementById('story-spark-dk'); if (_spk1Old) _spk1Old.remove();
+    if (node.code === 'LCY') {
+      const _spkDiv = document.createElement('div');
+      _spkDiv.id = 'story-spark-dk';
+      _spkDiv.className = 'sweelinck-variant';
+      _spkDiv.style.cssText = 'margin-top:10px;border-left-color:#8a6a2a;color:#c8a860;font-size:12px;';
+      if (!S_story.smaltBefriended) {
+        _spkDiv.textContent = '🐟 A man in pressed wool stands at the third berth with an embossed leather case. The harbor cat — salt-gray, four years resident — is sitting directly on the cargo manifests. She has been sitting there since Tuesday. The man\'s name, according to his writ, is Inspector Aldous Wren-Pembury. He is waiting for you to solve his problem.';
+        if (!S_story.kingsWritSeen) { // §VM-01-G-FU-d FIX — no second writ: the beat's own flag gates its button
+        const _inspBtn = document.createElement('button');
+        _inspBtn.className = 'inv-use-btn'; _inspBtn.style.marginTop = '6px';
+        _inspBtn.textContent = '📋 Speak to Inspector Wren-Pembury';
+        _inspBtn.addEventListener('click', () => {
+          _inspBtn.disabled = true;
+          S_story.kingsWritSeen = true;
+          const inv = S_story.inventory = S_story.inventory || [];
+          inv.push({ name:"King's Writ (Counterfeit)", icon:'📋', type:'misc', desc:"Presented by Inspector Wren-Pembury. Heavy paper, embossed seal, official language. The seal is a printing from Saltwick. The Eastern Reach commission does not exist.", sell:0 });
+          storyMsg('📋 "By order of the Crown, Port Sanitation and Civil Orderliness Act, the animal currently occupying cargo berth three must be relocated to a non-commercial area within twenty-four hours." He hands you the Writ. The paper is very heavy. The seal is very embossed.\n\n"The Pembury estate in the Eastern Reach has been in our family three hundred years. I was born there. The cat is a public health matter."\n\nThe cat looks at you. She is not afraid. She is bored.\n\nKing\'s Writ (Counterfeit) added to inventory. Quest: Smalt is now active — see quest panel to roll CHA Persuasion DC 10.');
+          storyRender(node);
+        });
+        _spkDiv.appendChild(_inspBtn);
+        }
+      } else if (S_story.smaltBefriended && !S_story.pipMet) {
+        _spkDiv.textContent = '🐈 Smalt is at your heel, watching the dock wall south toward the Market Quarter entrance. She is waiting for you to follow. The Inspector appears from the direction of the chandler\'s office. He is carrying his case. He mentions, unprompted, that his father was an Admiral.';
+        const _pipBtn = document.createElement('button');
+        _pipBtn.className = 'inv-use-btn'; _pipBtn.style.marginTop = '6px';
+        _pipBtn.textContent = '🐈 Follow Smalt south — meet Pip';
+        _pipBtn.addEventListener('click', () => {
+          _pipBtn.disabled = true;
+          S_story.pipMet = true;
+          if (!S_story.wrenpemburyInconsistencyNoticed) S_story.wrenpemburyInconsistencyNoticed = true;
+          const inv = S_story.inventory = S_story.inventory || [];
+          // Remove Smalt's Trust (consumed by Smalt as endorsement)
+          const fishIdx = inv.findIndex(i => i.name === "Smalt's Trust");
+          if (fishIdx !== -1) inv.splice(fishIdx, 1);
+          // Add Pip's Friendship Bead
+          inv.push({ name:"Pip's Friendship Bead", icon:'🪵', type:'misc', desc:"A gnawed wooden bead from a merchant's abacus. Pip's token of alliance. Smalt gave it to Pip; Pip gives it to you.", sell:1 });
+          storyMsg('🐈 At the south end of the dock wall: a mouse, sitting. Smalt walks to the mouse and sits beside it. The mouse does not move.\n\nThe Inspector catches up. "My father — the late Admiral Pembury — we are a naval family, always have been." He seems pleased with this. He does not notice that the Eastern Reach has no coastline.\n\nPip looks at you. It places a small gnawed bead — a merchant\'s abacus bead — near your foot. A gift.\n\nSmalt eats the dried salt fish from your pack. An endorsement.\n\nSmalt\'s Trust consumed. Pip\'s Friendship Bead added to inventory. The inconsistency is noted. Quest: The Overture complete. Quest: Clot\'s Revelation activates — find Pip on the Tilbury Star. +150 XP.');
+          S_story.xp = (S_story.xp||0) + 150;
+          storyRender(node);
+        });
+        _spkDiv.appendChild(_pipBtn);
+      } else if (S_story.whodunitSolved && S_story.wrenpemburyInconsistencyNoticed && !S_story.aldousConfessed) {
+        _spkDiv.style.borderLeftColor = '#6a3a2a';
+        _spkDiv.style.color = '#c08860';
+        _spkDiv.textContent = '📋 Inspector Wren-Pembury is at the third berth. He has been standing there since the Tilbury Star docked. He has mentioned three different places he is from. The Eastern Reach. The naval family. Saltwick. He is watching the dock like a man who knows the conversation is coming.';
+        const _aldBtn = document.createElement('button');
+        _aldBtn.className = 'inv-use-btn'; _aldBtn.style.marginTop = '6px';
+        _aldBtn.textContent = '📋 Confront Aldous — three claims, one person';
+        _aldBtn.addEventListener('click', () => {
+          _aldBtn.disabled = true;
+          S_story.aldousConfessed = true;
+          S_story.harmonyChainComplete = true;
+          S_story.gold = (S_story.gold||0) + 400;
+          S_story.xp = (S_story.xp||0) + 400;
+          const inv = S_story.inventory = S_story.inventory || [];
+          const wIdx = inv.findIndex(i => i.name === "King's Writ (Counterfeit)");
+          if (wIdx !== -1) inv.splice(wIdx, 1);
+          inv.push({ name:'Letter of True Passage', icon:'📜', type:'misc', desc:"Aldous the Fencer's real authority document. Valid at six ports including Tilbury, Visby, and Malta. A genuine credential from a genuine black market contact.", sell:0 });
+          storyMsg('📜 You list the three: the estate. The Admiral. Saltwick.\n\nAldous tears the King\'s Writ. One careful tear, then another. He folds what remains and sets it on the dock bollard.\n\nHe takes Pip\'s Friendship Bead from his coat pocket — he has been carrying it since the Tilbury Star — and places it in your hand.\n\n"My name is Aldous. The Admiral does not exist. The estate does not exist. Saltwick exists — I would prefer it didn\'t. I gave testimony. The crown gave me a printing press and a new name. Wren-Pembury was the first combination that sounded important enough."\n\nHe writes the Letter of True Passage without being asked.\n\n"I have contacts in six ports. If you need something that is not on any manifest, I am who you speak to."\n\n"You showed kindness to a cat. Then a mouse. Then a tick. Then a parasite that spoiled forty-seven bottles of perfume by making them smell too much like love. I have been watching. I cannot keep doing the voice."\n\nThe Harmony Chain is complete.\n\nKing\'s Writ destroyed. Letter of True Passage added. +400gp. +400 XP. Aldous is an ally.');
+          storyRender(node);
+        });
+        _spkDiv.appendChild(_aldBtn);
+      } else if (S_story.aldousConfessed) {
+        _spkDiv.style.borderLeftColor = '#2a5a2a';
+        _spkDiv.style.color = '#80c880';
+        _spkDiv.textContent = '✅ The Harmony Chain is complete. Smalt is on the third berth bollard. Aldous — formerly Wren-Pembury — is at his usual post. He nods when you pass. The chain: cat, mouse, tick, warmth, human. Five creatures, all friends.';
+      }
+      // §VM-01-G-FU-d FIX — the insertion guard was (kingsWritSeen || smaltBefriended), and
+      // kingsWritSeen's ONLY writer is the Inspector button INSIDE this panel: the writ beat
+      // was circular-dead since it shipped (the §VM-01-G-FU-a Glut's Gift class). The arc
+      // survived only because quest_spark_01 (gate:{}) sets smaltBefriended from the quest
+      // panel, skipping the counterfeit writ entirely — while the Inspector's opening scene
+      // and the King's Writ item were unreachable. The panel now inserts whenever its node
+      // renders, exactly like every other state of this chain.
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _spkDiv);
+    }
+  }
+}
+function _nodeHookWhodunitSenBilge(node) {
+  // §WHODUNIT-01: MS — The Bilge Mystery at SEN (§VM-01-G-FU-d). Five states, two embedded
+  // buttons (hook + staged MS_BILGE battle), moved verbatim.
+  // §WHODUNIT-01: MS — The Bilge Mystery
+  { const _wdOld = document.getElementById('story-whodunit2-ms'); if (_wdOld) _wdOld.remove();
+    if (node.code === 'SEN' && S_story.saltwickAccessed) {
+      const _wdDiv = document.createElement('div');
+      _wdDiv.id = 'story-whodunit2-ms';
+      _wdDiv.className = 'sweelinck-variant';
+      if (S_story.whodunit2Solved || (S_story.defeatedBattles||{})['MS_BILGE']) {
+        _wdDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
+        _wdDiv.textContent = '✅ Bilge clear. Two sea spawn — one entry point, one follow-through. The rope nest is disassembled. Ord the passenger is owed an apology the cook has declined to give. The port drain is sealed with copper mesh. The Star runs clean.';
+      } else if (S_story.whodunit2WitnessRead) {
+        _wdDiv.style.cssText = 'margin-top:10px;border-left-color:#5a2a2a;color:#c07070;font-size:12px;';
+        _wdDiv.textContent = '⚠ Two sea spawn in the bilge. They entered during the Saltwick hull repair through the port drain. Delt\'s testimony confirmed it — proximity sedation, not harm. The bilge access is below the cargo hold.';
+        const _wdBtn = document.createElement('button');
+        _wdBtn.className = 'inv-use-btn'; _wdBtn.style.marginTop = '6px';
+        _wdBtn.textContent = '⚔ Descend to the bilge — clear the sea spawn';
+        _wdBtn.addEventListener('click', () => {
+          _wdBtn.disabled = true;
+          storyMsg('The bilge access is a hatch in the cargo hold floor. The hold smells of tallow and deep water — not the same smell. The tallow smell is what remains of the cask. The deep water smell is what replaced it.\n\nThe hatch opens. Below: a temporary nest of rope coils in the ballast corner. Two shapes moving in the dark water at the hull joint. They do not hide. They turn toward the light with the incurious attention of creatures that have never been threatened in an enclosed space before.\n\nThey are about to be.');
+          setTimeout(() => storyPreBattle({ ...node, code:'MS_BILGE', battle:{ label:'Sea Spawn × 2 — The Bilge', key:'sea_spawn', count:2 } }), 400);
+        });
+        _wdDiv.appendChild(_wdBtn);
+      } else if (S_story.whodunit2ClueFound) {
+        _wdDiv.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
+        _wdDiv.textContent = '🔍 Port drain: sea spawn scale residue confirmed. Entered during the Saltwick repair. The cook\'s theory is wrong — Ord has been in his cabin. Interview Delt about what he experienced. WIS Insight DC 13 — see quest panel.';
+      } else if (S_story.whodunit2HookReceived) {
+        _wdDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a3a;color:#909090;font-size:12px;';
+        _wdDiv.textContent = '🔍 The port bilge drain is disturbed — the iron grate was moved from inside. Cold-water smell underneath that is not standard bilge. INT Investigation DC 12 to identify what came through. See quest panel to attempt the check.';
+      } else {
+        _wdDiv.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
+        _wdDiv.textContent = '⚓ Three items missing from the hold: rendered tallow, two rope coils, and the eastern crossing charts. Crewman Delt found in the bilge with his boots off and no memory of six hours. The cook says it was the passenger who boarded at Saltwick.';
+        const _wdHookBtn = document.createElement('button');
+        _wdHookBtn.className = 'inv-use-btn'; _wdHookBtn.style.marginTop = '6px';
+        _wdHookBtn.textContent = '🔍 Investigate the missing cargo';
+        _wdHookBtn.addEventListener('click', () => {
+          _wdHookBtn.disabled = true;
+          S_story.whodunit2HookReceived = true;
+          S_story.xp = (S_story.xp||0) + 50;
+          storyMsg('⚓ The first mate\'s log: tallow cask night three. Rope coils night four. Charts displaced night five. Delt found the morning after — on the ballast boards, boots arranged beside him, no memory of how he got there.\n\nThe passenger Ord has a locked cabin and a Saltwick boarding ticket. He has not been seen below decks.\n\nBut the first mate notes: the port bilge drain grate was moved. From the inside.\n\nQuest: The Port Drain now active. +50 XP.');
+          storyRender(node);
+        });
+        _wdDiv.appendChild(_wdHookBtn);
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wdDiv);
+    }
+  }
+}
+function _nodeHookNavalGciIntercept(node) {
+  // §NAVAL-01: SB — The Intercept at GCI (§VM-01-G-FU-d). The §11 slice plan called this "D3
+  // concurrent menu → G4d's container mode"; corrected by measurement: two of the three role
+  // buttons write a STRING enum (sbChosenRole = 'parley'|'examine'|'fight') and flag_write is
+  // boolean-only — the HCA iodineBuffBonus class. Growing the grammar for one consumer is the
+  // itemsMinAny failure, so the block stays a verbatim hook; the D3 conversion is filed with
+  // the G4c-FU asks, not defaulted.
+  // §NAVAL-01: SB — The Intercept, crew role selection
+  { const _sbOld = document.getElementById('story-sb-intercept'); if (_sbOld) _sbOld.remove();
+    if (node.code === 'GCI') {
+      const _sbDiv = document.createElement('div');
+      _sbDiv.id = 'story-sb-intercept';
+      _sbDiv.className = 'sweelinck-variant';
+      _sbDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a5a;color:#8888c8;font-size:12px;';
+      if (S_story.sbResolved || (S_story.defeatedBattles||{})['SB_PRIVATEER']) {
+        _sbDiv.style.borderLeftColor = '#2a5a3a'; _sbDiv.style.color = '#70b880';
+        _sbDiv.textContent = S_story.sbParleySucceeded
+          ? '✅ Captain Keel took the eighty gold and stood down. The Letter of Marque is in your pack — valid at three eastern ports that haven\'t updated their records. The intercept brig is hull-down on the horizon now.'
+          : S_story.sbPapersRead
+          ? '✅ The Eastern Reach seal date gave her away. She threw the Letter across the gap herself. The intercept brig came about before you finished reading it.'
+          : '✅ The privateer crew is cleared. Letter of Marque recovered. Captain Keel was either gone over the side or overboard — the Tilbury Star\'s captain did not look for her. She set course east without comment.';
+      } else if (!S_story.sbApproachSeen) {
+        _sbDiv.textContent = '⚓ The intercept brig is across the lane. Captain Vera Keel at the rail, Commission pennant raised. The gap between ships is still open. The Tilbury Star\'s crew is at stations. Three options. Choose your role.';
+        const _btnParley = document.createElement('button');
+        _btnParley.className = 'inv-use-btn'; _btnParley.style.marginTop = '6px';
+        _btnParley.textContent = '🗣 Go to the rail — speak to their captain (CHA)';
+        _btnParley.addEventListener('click', () => {
+          S_story.sbApproachSeen = true; S_story.sbChosenRole = 'parley';
+          storyMsg('⚓ You go to the Star\'s rail. Keel is already there on her side, watching.\n\n"Good," she says. "I was hoping for this option."\n\nQuest: Speak to Their Captain — active. CHA Persuasion DC 12. See quest panel.');
+          storyRender(node);
+        });
+        const _btnExamine = document.createElement('button');
+        _btnExamine.className = 'inv-use-btn'; _btnExamine.style.marginLeft = '6px'; _btnExamine.style.marginTop = '6px';
+        _btnExamine.textContent = '🔍 Take the helm — read their papers (INT)';
+        _btnExamine.addEventListener('click', () => {
+          S_story.sbApproachSeen = true; S_story.sbChosenRole = 'examine';
+          storyMsg('⚓ You take the helm position and read the Commission pennant from the distance Keel is holding it.\n\nThe seal is visible. The date is visible. Something about the date is visible.\n\nQuest: Read the Letter of Marque — active. INT Investigation DC 11. See quest panel.');
+          storyRender(node);
+        });
+        const _btnFight = document.createElement('button');
+        _btnFight.className = 'inv-use-btn'; _btnFight.style.marginLeft = '6px'; _btnFight.style.marginTop = '6px';
+        _btnFight.textContent = '⚔ Go below — man the guns';
+        _btnFight.addEventListener('click', () => {
+          S_story.sbApproachSeen = true; S_story.sbChosenRole = 'fight';
+          storyMsg('⚓ You go below. The gun crew is already at the forward piece.\n\n"Ready," the gunner says. He does not ask for confirmation. He says it the way someone says a thing that will happen regardless.\n\nKeel watches the Star\'s gun ports open. She nods once.\n\n"Gangplanks out," she says.\n\nThe intercept begins.');
+          setTimeout(() => storyPreBattle({ ...node, code:'SB_PRIVATEER', battle:{ label:'Privateer Captain + Privateer × 2 — The Intercept', key:'pirate_captain', count:1 } }), 400);
+        });
+        _sbDiv.appendChild(_btnParley); _sbDiv.appendChild(_btnExamine); _sbDiv.appendChild(_btnFight);
+      } else if (S_story.sbChosenRole === 'parley') {
+        _sbDiv.textContent = '🗣 At the rail. Keel is waiting. The gap is still open. CHA Persuasion DC 12 — see quest panel to attempt. If the parley fails, the fight begins.';
+      } else if (S_story.sbChosenRole === 'examine') {
+        _sbDiv.textContent = '🔍 At the helm. The Commission pennant is readable. The seal date is visible. INT Investigation DC 11 — see quest panel to attempt. If the read fails, she calls the gangplanks.';
+      } else {
+        _sbDiv.textContent = '⚔ The gun crew is ready. The gangplanks are out. The intercept is engaged.';
+        if (!((S_story.defeatedBattles||{})['SB_PRIVATEER'])) {
+          const _fightBtn2 = document.createElement('button');
+          _fightBtn2.className = 'inv-use-btn'; _fightBtn2.style.marginTop = '6px';
+          _fightBtn2.textContent = '⚔ Fight — clear the privateer crew';
+          _fightBtn2.addEventListener('click', () => {
+            _fightBtn2.disabled = true;
+            storyMsg('The gangplanks go out on both sides. Keel\'s crew comes across the port plank; the fight begins at the rail.');
+            setTimeout(() => storyPreBattle({ ...node, code:'SB_PRIVATEER', battle:{ label:'Privateer Captain + Privateer × 2 — The Intercept', key:'pirate_captain', count:1 } }), 400);
+          });
+          _sbDiv.appendChild(_fightBtn2);
+        }
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _sbDiv);
+    }
+  }
+}
+function _nodeHookPortDnfAccess(node) {
+  // §PORT-02: DF — Dunfall access at DNF (§VM-01-G-FU-d). Four states, one embedded button,
+  // moved verbatim. The KIR defeatedBattles guard is a REAL node code (the kelpie ford), not
+  // a synthetic — gate #13 phase 6 resolves it in NODE_MAP.
+  // §PORT-02: DF — Dunfall access (kelpie must be defeated at HL)
+  { const _dfOld = document.getElementById('story-df-access'); if (_dfOld) _dfOld.remove();
+    if (node.code === 'DNF') {
+      const _dfDiv = document.createElement('div');
+      _dfDiv.id = 'story-df-access';
+      _dfDiv.className = 'sweelinck-variant';
+      const kelpieCleared = !!((S_story.defeatedBattles||{})['KIR']);
+      if (S_story.dfBarterLearned) {
+        _dfDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
+        _dfDiv.textContent = '✅ Dunfall is open. The highland herb pouch is in your pack. Mairén\'s ledger has the exchange recorded in sheepskin. Come back in spring — the myrtle is better after the first frost.';
+      } else if (S_story.dunfallAccessed) {
+        _dfDiv.style.cssText = 'margin-top:10px;border-left-color:#3a5a2a;color:#80a860;font-size:12px;';
+        _dfDiv.textContent = '🌿 The harbor is open. Mairén has highland herb pouches — yarrow, bog myrtle, and one ingredient she will not name. The market runs on acknowledgment, not gold. WIS Insight DC 11 to understand the exchange. See quest panel.';
+      } else if (kelpieCleared) {
+        _dfDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a5a;color:#6090b0;font-size:12px;';
+        _dfDiv.textContent = '🏔 The ford is clear. The doors in Dunfall are open. Mairén Fionn is at the dock with the harbor ledger. The village carried the closed-door grief while the ford was blocked. You cleared the ford.';
+        const _dfBtn = document.createElement('button');
+        _dfBtn.className = 'inv-use-btn'; _dfBtn.style.marginTop = '6px';
+        _dfBtn.textContent = '🏔 Enter Dunfall — ford is clear';
+        _dfBtn.addEventListener('click', () => {
+          _dfBtn.disabled = true;
+          S_story.dunfallAccessed = true;
+          S_story.xp = (S_story.xp||0) + 100;
+          storyMsg('🏔 Mairén is at the dock with the ledger open.\n\n"You cleared the ford." She says it as a statement, not a greeting. "We opened the doors."\n\nThe village is quiet in the way that follows a long closure — not festive, not relieved, just present again. The fish market is running. The wool carts are moving. Three households are not represented at the dock, and everyone knows which three.\n\nDunfall is accessible. The barter market is open. +100 XP.');
+          storyRender(node);
+        });
+        _dfDiv.appendChild(_dfBtn);
+      } else {
+        _dfDiv.style.cssText = 'margin-top:10px;border-left-color:#5a4a3a;color:#b09070;font-size:12px;';
+        _dfDiv.textContent = '🚪 The doors in Dunfall are barred. The kelpie holds the ford west of the Highlands. The light from the standing stones went wrong and the village closed. Mairén watches from behind the door. She does not open it.';
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _dfDiv);
+    }
+  }
+}
+function _nodeHookSparkDnfHarmony(node) {
+  // §SPARK-02: DF — Fehn/Bram/Oat Dunfall Harmony Chain at DNF (§VM-01-G-FU-d). Five states,
+  // three embedded buttons, moved verbatim. Inserts AFTER port-dnf-access in dispatch order,
+  // so it stacks ABOVE the access panel — the inline LIFO, preserved in place.
+  // §SPARK-02: DF — Commissioner Fehn + Bram + Oat + Drift Spore (Dunfall Harmony Chain)
+  { const _spk2dfOld = document.getElementById('story-spark2-df'); if (_spk2dfOld) _spk2dfOld.remove();
+    if (node.code === 'DNF' && S_story.dunfallAccessed) {
+      const _spk2Div = document.createElement('div');
+      _spk2Div.id = 'story-spark2-df';
+      _spk2Div.className = 'sweelinck-variant';
+      if (S_story.dunfallHarmonyComplete) {
+        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
+        _spk2Div.textContent = '✅ The Dunfall Harmony Chain is complete. Bram is on the ledger. Oat is in the grain pile. Commissioner Halvard Fehn — formerly Halvard Jesst, harbor informant, nine years relocated — is at the south dock writing clearance letters in his actual handwriting for the first time in nine years. The chain: cat, mouse, spore, man. Four creatures, all accounted for.';
+      } else if (S_story.brimFound && !S_story.fehnConfessed) {
+        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#3a4a6a;color:#8090c8;font-size:12px;';
+        _spk2Div.textContent = '✨ The drift spore is in the vial. The Commissioner has been in its six-foot radius for two days. Three inconsistencies documented: the Revenue Division that does not exist, the Highland Fleet his grandfather commanded that does not exist, the appointment certificate from an office that closed before his appointment date.';
+        const _fehnBtn = document.createElement('button');
+        _fehnBtn.className = 'inv-use-btn'; _fehnBtn.style.marginTop = '6px';
+        _fehnBtn.textContent = '📋 Confront Commissioner Fehn — three names, one person';
+        _fehnBtn.addEventListener('click', () => {
+          _fehnBtn.disabled = true;
+          S_story.fehnConfessed = true;
+          S_story.dunfallHarmonyComplete = true;
+          S_story.gold = (S_story.gold||0) + 400;
+          S_story.xp = (S_story.xp||0) + 400;
+          const inv = S_story.inventory = S_story.inventory || [];
+          const dsIdx = inv.findIndex(i => i.name === 'Dunfall Drift Spore');
+          if (dsIdx !== -1) inv.splice(dsIdx, 1);
+          inv.push({ name:'Highland Letter of Clearance', icon:'📃', type:'misc', desc:'Commissioner Halvard Fehn\'s real credential — a clearance letter valid at four highland ports including Dunfall and Saltwick. Issued under his actual name: Halvard Jesst, Harbor Customs Informant, Ninth Circuit. The signature is steadier than the Commissioner one.', sell:0 });
+          storyMsg('📃 You list the three: the Revenue Division. The Highland Fleet. The appointment date.\n\nFehn is quiet. The drift spore radius is six feet and you are both inside it.\n\n"My name is Halvard Jesst. The Commissioner is a construction — they gave me the name and the writ to keep me visible and occupied while the smuggling case closed." He folds the assessment form along its original creases. "The case closed nine years ago. I am not certain anyone sent the notice."\n\nHe takes the drift spore vial from your hand. Opens it. The amber disperses into the dock air.\n\n"Bram has been on my ledger since I arrived. I tried to move him the first three days. He weighs nothing and does not move. I understand now that he was performing a service."\n\nHe writes the Highland Letter of Clearance without being asked. The handwriting is different from the Commissioner signature — steadier, older.\n\n"Valid at four ports. Dunfall is one of them. Saltwick will recognize the Ninth Circuit seal." He looks at Bram. Bram looks at the harbor.\n\nDunfall Drift Spore consumed. Highland Letter of Clearance added. +400gp. +400 XP. Dunfall Harmony Chain complete.');
+          storyRender(node);
+        });
+        _spk2Div.appendChild(_fehnBtn);
+      } else if (S_story.oatMet && !S_story.brimFound) {
+        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#3a3a2a;color:#a8a860;font-size:12px;';
+        _spk2Div.textContent = '🐭 Oat is in the grain pile at the south dock joint. He has an amber glow on his left ear — not eye-shine. Something from the loch shallows. INT Nature DC 12 to identify what it is doing to the dock ecosystem. See quest panel to attempt.';
+      } else if (S_story.bramBefriended && !S_story.oatMet) {
+        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#2a4a2a;color:#80a870;font-size:12px;';
+        _spk2Div.textContent = '🐟 Bram is watching the south dock joint. He gave you the endorsement scale. The grain pile at the wall joint has a mouse in it. Bram leads when you are ready.';
+        const _oatBtn = document.createElement('button');
+        _oatBtn.className = 'inv-use-btn'; _oatBtn.style.marginTop = '6px';
+        _oatBtn.textContent = '🐟 Follow Bram to the grain pile';
+        _oatBtn.addEventListener('click', () => {
+          _oatBtn.disabled = true;
+          S_story.oatMet = true;
+          S_story.xp = (S_story.xp||0) + 100;
+          const inv = S_story.inventory = S_story.inventory || [];
+          const bsIdx = inv.findIndex(i => i.name === "Bram's Fish Scale");
+          if (bsIdx !== -1) inv.splice(bsIdx, 1);
+          inv.push({ name:"Oat's Harbor Bead", icon:'🪡', type:'misc', desc:'A small cord fragment from the mooring dock. Oat placed it near your foot when Bram sat down beside him. The gesture means: acknowledged. The Commissioner says something about his uncle\'s commission.', sell:0 });
+          storyMsg('🐭 At the south dock joint, half-inside the grain pile: Oat.\n\nOat is white-gray, harbor-sized, with the expression of a mouse who has been in this grain pile since before the Commissioner arrived and intends to be in it after.\n\nBram walks to Oat and sits beside him with no other apparent purpose.\n\nThe Commissioner catches up. "My uncle held the rank of Commodore-Provisional in the Northern Admiralty." He sounds pleased with this. There is no Northern Admiralty. There is no Commodore-Provisional rank.\n\nOat places a small cord fragment near your foot. An acknowledgment.\n\nBram\'s Fish Scale consumed (Bram ate it as endorsement). Oat\'s Harbor Bead added. +100 XP. Quest: What Oat Carries active.');
+          storyRender(node);
+        });
+        _spk2Div.appendChild(_oatBtn);
+      } else if (S_story.spark2HookReceived && !S_story.bramBefriended) {
+        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#6a4a2a;color:#c09070;font-size:12px;';
+        _spk2Div.textContent = '🐈 Bram is on the ledger. He has been on the ledger for three years. He weighs nothing and does not move. He is watching a specific point on the south dock wall — not the Commissioner, not you. Something at the wall joint. WIS Animal Handling DC 11. See quest panel.';
+      } else {
+        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#8a6a2a;color:#c8a860;font-size:12px;';
+        _spk2Div.textContent = '📋 A man in pressed wool stands at the south end of the dock with an embossed leather case. The harbor cat — salt-gray, three years resident — is sitting directly on his assessment ledger. His writ identifies him: Commissioner Halvard Fehn, Inland Revenue, Loch Assessment Division. He is waiting for someone to solve his problem.';
+        const _fehnHookBtn = document.createElement('button');
+        _fehnHookBtn.className = 'inv-use-btn'; _fehnHookBtn.style.marginTop = '6px';
+        _fehnHookBtn.textContent = '📋 Speak to Commissioner Fehn';
+        _fehnHookBtn.addEventListener('click', () => {
+          _fehnHookBtn.disabled = true;
+          S_story.spark2HookReceived = true;
+          S_story.xp = (S_story.xp||0) + 50;
+          storyMsg('📋 "By order of the Inland Revenue, Loch Assessment Division, the animal currently impeding the harbor assessment ledger must be relocated within twenty-four hours." He hands you the assessment writ. Heavy paper. Embossed seal. The seal reads: Western Revenue Office, Third Circuit.\n\nThe Western Revenue Office, Third Circuit, closed thirteen years ago. A closed office does not issue active assessments.\n\n"The Fehn family has served the Revenue for four generations. My grandfather commanded the Highland Revenue Survey of — " He stops. He seems to be remembering which grandfather he is currently citing.\n\nThe cat looks at you. She is not afraid. She is waiting to see if you are worth following.\n\nQuest: Bram and the Ledger active. WIS Animal Handling DC 11 — see quest panel. +50 XP.');
+          storyRender(node);
+        });
+        _spk2Div.appendChild(_fehnHookBtn);
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _spk2Div);
+    }
+  }
+}
+function _nodeHookPortMmeSaltwick(node) {
+  // §PORT-01: SK — Saltwick credential check + hull repair at MME (§VM-01-G-FU-d). Five access
+  // states (two embedded credential buttons) + the nested hull panel, moved verbatim except the
+  // hull price, which now goes through the `cost` leaf (marked inline). NOTE the source
+  // comment says the hull panel sits "below" the access panel; measured live it inserts AFTER
+  // it afterend of story-text-box and therefore renders ABOVE it — the golden pins the real
+  // order, and the verbatim move preserves it.
+  // §PORT-01: SK — Saltwick credential check + Dorit access
+  { const _skOld = document.getElementById('story-sk-access'); if (_skOld) _skOld.remove();
+    if (node.code === 'MME') {
+      const _skDiv = document.createElement('div');
+      _skDiv.id = 'story-sk-access';
+      _skDiv.className = 'sweelinck-variant';
+      if (S_story.saltwickJobAccepted) {
+        _skDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
+        _skDiv.textContent = '✅ Saltwick is open. Dorit\'s ledger has your name in it. The Saltwick Bill of Lading is in your pack. The amber glass consignment is someone else\'s problem now.';
+      } else if (S_story.saltwickAccessed) {
+        _skDiv.style.cssText = 'margin-top:10px;border-left-color:#3a4a2a;color:#90a860;font-size:12px;';
+        _skDiv.textContent = '🟡 Saltwick is open to you. Dorit has a job — something went missing from the warehouse while the Dockmasters\' brig was at the Warmth Calm. She needs someone who can ask at Tilbury without producing paperwork. CHA Persuasion DC 12. See quest panel.';
+      } else if (S_story.pirateCrew_allied) {
+        _skDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a5a;color:#6090b0;font-size:12px;';
+        _skDiv.textContent = '⚓ The joint pirate debt note. Both crews are in Dorit\'s column. She reads the note without touching it — she has read it in her head before you finish unfolding it. "The Redmast and the Saltwick brig. Together." She looks at you differently now. "You moved the eel." She opens the dock gate.';
+        const _skBtn = document.createElement('button');
+        _skBtn.className = 'inv-use-btn'; _skBtn.style.marginTop = '6px';
+        _skBtn.textContent = '⚓ Enter Saltwick — pirate crew credential';
+        _skBtn.addEventListener('click', () => {
+          _skBtn.disabled = true;
+          S_story.saltwickAccessed = true;
+          S_story.xp = (S_story.xp||0) + 150;
+          storyMsg('⚓ Dorit looks at the note for a long time.\n\n"Both of them. Together. For an eel." She sets the note back on the dock ledge. "I\'ve been running this port fourteen years. The Redmast and the Dockmasters\' brig have been trying to sink each other for twelve of them." She sounds genuinely interested. "You must have done something unusual."\n\nThe dock gate opens. You are in Dorit\'s ledger.\n\nSaltwick is accessible. +150 XP.');
+          storyRender(node);
+        });
+        _skDiv.appendChild(_skBtn);
+      } else if (S_story.aldousConfessed) {
+        _skDiv.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
+        _skDiv.textContent = '📜 Aldous\'s Letter of True Passage. Saltwick is one of his six ports. Dorit was the Harbormaster when Aldous testified against her contractors. She reads the letter. She does not look surprised. She opens the dock gate.';
+        const _skBtn2 = document.createElement('button');
+        _skBtn2.className = 'inv-use-btn'; _skBtn2.style.marginTop = '6px';
+        _skBtn2.textContent = '📜 Enter Saltwick — Aldous\'s letter';
+        _skBtn2.addEventListener('click', () => {
+          _skBtn2.disabled = true;
+          S_story.saltwickAccessed = true;
+          S_story.xp = (S_story.xp||0) + 150;
+          storyMsg('📜 Dorit reads the letter without expression.\n\n"Aldous." She folds it along its original creases. "He named us." She sets it down. "Of course he did. The six ports he listed are the six ports where his testimony means nothing, because we already knew. He was protecting his contacts, not his credit."\n\nShe opens the dock gate.\n\n"He showed kindness to a cat." She says it flatly. "The entire dock heard about it. That kind of thing travels." She looks at you. "You were there."\n\nSaltwick is accessible. +150 XP.');
+          storyRender(node);
+        });
+        _skDiv.appendChild(_skBtn2);
+      } else {
+        _skDiv.style.cssText = 'margin-top:10px;border-left-color:#5a3a3a;color:#b07070;font-size:12px;';
+        _skDiv.textContent = '🚫 The dock gate is closed. Saltwick runs on vouches. You don\'t have one. The woman at the end of the dock is reading something. She has not looked up. She will not look up until someone she recognizes arrives — or until you are recognizable.';
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _skDiv);
+      // Hull repair panel (separate, below access panel)
+      const _hullOld = document.getElementById('story-sk-hull'); if (_hullOld) _hullOld.remove();
+      if (S_story.saltwickAccessed) {
+        const _hullDiv = document.createElement('div');
+        _hullDiv.id = 'story-sk-hull';
+        _hullDiv.className = 'sweelinck-variant';
+        if (S_story.shipRepaired) {
+          _hullDiv.style.cssText = 'margin-top:6px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
+          _hullDiv.textContent = '✅ Hull repaired. The Tilbury Star runs clean.';
+        } else {
+          _hullDiv.style.cssText = 'margin-top:6px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
+          _hullDiv.textContent = '⚓ The dry dock is available. The Tilbury Star has been running with a cracked strake — three crossings. Repair costs 200gp at Saltwick rates. See quest panel.';
+          const _hullBtn = document.createElement('button');
+          _hullBtn.className = 'inv-use-btn'; _hullBtn.style.marginTop = '6px';
+          _hullBtn.textContent = '⚓ Commission hull repair — 200gp';
+          _hullBtn.addEventListener('click', () => {
+            // §VM-01-G-FU-d — the price is the `cost` leaf now (the SEVENTH hand-written gold
+            // site, the §11 census correction). _uqfRunChain pays-or-refuses in place: short of
+            // coin, Dorit's own line refuses through storyBlock (the house shake) and nothing
+            // is spent; on success the leaf has already taken the 200gp, so the hand-written
+            // subtraction is gone. Everything below is the verbatim inline body.
+            const _hullCtx = _uqfRunChain([{ kind:'cost', gold:200, refuse:'Dorit looks at your coin. "Short. Come back when the purse is right."' }]);
+            if (_hullCtx._refused) return;
+            _hullBtn.disabled = true;
+            S_story.shipRepaired = true;
+            S_story.xp = (S_story.xp||0) + 200;
+            storyMsg('⚓ The dry dock crew has the Star out of the water before the tide turns.\n\nThe cracked strake is replaced. Highland timber — better grain than lowland oak, tighter ring spacing. The captain inspects the hull without speaking, which is the most approval she gives.\n\n"She\'ll hold the deep crossing now," the dock worker says. He does not look at the captain when he says it. He does not need to. She has already gone back aboard.\n\n-200gp. +200 XP. Tilbury Star: hull repaired.');
+            storyRender(node);
+          });
+          _hullDiv.appendChild(_hullBtn);
+        }
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', _hullDiv);
+      }
+    }
+  }
+}
 const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'nue-lower-archive', nodes:['NUE'], fn:_nodeHookNueLowerArchive },
   { id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA'], fn:_nodeHookVoidArchaeology },
@@ -33503,6 +33930,12 @@ const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'alch-ath-stoic', nodes:['ATH'], fn:_nodeHookAlchAthStoic },       // §VM-01-G-FU-c
   { id:'wis-vs-underground', nodes:['VS'], fn:_nodeHookWisVsUnderground },// §VM-01-G-FU-c
   { id:'wis-vs-hub', nodes:['VS'], fn:_nodeHookWisVsHub },                // §VM-01-G-FU-c (nodes is metadata: the fn's own latch runs everywhere)
+  { id:'spark-lcy-harmony', nodes:['LCY'], fn:_nodeHookSparkLcyHarmony },     // §VM-01-G-FU-d (carries the writ-beat fix)
+  { id:'whodunit-sen-bilge', nodes:['SEN'], fn:_nodeHookWhodunitSenBilge },   // §VM-01-G-FU-d
+  { id:'naval-gci-intercept', nodes:['GCI'], fn:_nodeHookNavalGciIntercept }, // §VM-01-G-FU-d (D3-shaped; sbChosenRole is a string write — see fn header)
+  { id:'port-dnf-access', nodes:['DNF'], fn:_nodeHookPortDnfAccess },         // §VM-01-G-FU-d
+  { id:'spark-dnf-harmony', nodes:['DNF'], fn:_nodeHookSparkDnfHarmony },     // §VM-01-G-FU-d
+  { id:'port-mme-saltwick', nodes:['MME'], fn:_nodeHookPortMmeSaltwick },     // §VM-01-G-FU-d (hull price → the `cost` leaf)
 ];
 function _runNodeHook(id, node, ctx) {
   for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node, ctx);
@@ -35432,384 +35865,13 @@ function storyRender(node, prefix) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', _owDiv);
     }
   }
-  // §SPARK-01: DK — Inspector Wren-Pembury + Smalt + Pip chain
-  { const _spk1Old = document.getElementById('story-spark-dk'); if (_spk1Old) _spk1Old.remove();
-    if (node.code === 'LCY') {
-      const _spkDiv = document.createElement('div');
-      _spkDiv.id = 'story-spark-dk';
-      _spkDiv.className = 'sweelinck-variant';
-      _spkDiv.style.cssText = 'margin-top:10px;border-left-color:#8a6a2a;color:#c8a860;font-size:12px;';
-      if (!S_story.smaltBefriended) {
-        _spkDiv.textContent = '🐟 A man in pressed wool stands at the third berth with an embossed leather case. The harbor cat — salt-gray, four years resident — is sitting directly on the cargo manifests. She has been sitting there since Tuesday. The man\'s name, according to his writ, is Inspector Aldous Wren-Pembury. He is waiting for you to solve his problem.';
-        const _inspBtn = document.createElement('button');
-        _inspBtn.className = 'inv-use-btn'; _inspBtn.style.marginTop = '6px';
-        _inspBtn.textContent = '📋 Speak to Inspector Wren-Pembury';
-        _inspBtn.addEventListener('click', () => {
-          _inspBtn.disabled = true;
-          S_story.kingsWritSeen = true;
-          const inv = S_story.inventory = S_story.inventory || [];
-          inv.push({ name:"King's Writ (Counterfeit)", icon:'📋', type:'misc', desc:"Presented by Inspector Wren-Pembury. Heavy paper, embossed seal, official language. The seal is a printing from Saltwick. The Eastern Reach commission does not exist.", sell:0 });
-          storyMsg('📋 "By order of the Crown, Port Sanitation and Civil Orderliness Act, the animal currently occupying cargo berth three must be relocated to a non-commercial area within twenty-four hours." He hands you the Writ. The paper is very heavy. The seal is very embossed.\n\n"The Pembury estate in the Eastern Reach has been in our family three hundred years. I was born there. The cat is a public health matter."\n\nThe cat looks at you. She is not afraid. She is bored.\n\nKing\'s Writ (Counterfeit) added to inventory. Quest: Smalt is now active — see quest panel to roll CHA Persuasion DC 10.');
-          storyRender(node);
-        });
-        _spkDiv.appendChild(_inspBtn);
-      } else if (S_story.smaltBefriended && !S_story.pipMet) {
-        _spkDiv.textContent = '🐈 Smalt is at your heel, watching the dock wall south toward the Market Quarter entrance. She is waiting for you to follow. The Inspector appears from the direction of the chandler\'s office. He is carrying his case. He mentions, unprompted, that his father was an Admiral.';
-        const _pipBtn = document.createElement('button');
-        _pipBtn.className = 'inv-use-btn'; _pipBtn.style.marginTop = '6px';
-        _pipBtn.textContent = '🐈 Follow Smalt south — meet Pip';
-        _pipBtn.addEventListener('click', () => {
-          _pipBtn.disabled = true;
-          S_story.pipMet = true;
-          if (!S_story.wrenpemburyInconsistencyNoticed) S_story.wrenpemburyInconsistencyNoticed = true;
-          const inv = S_story.inventory = S_story.inventory || [];
-          // Remove Smalt's Trust (consumed by Smalt as endorsement)
-          const fishIdx = inv.findIndex(i => i.name === "Smalt's Trust");
-          if (fishIdx !== -1) inv.splice(fishIdx, 1);
-          // Add Pip's Friendship Bead
-          inv.push({ name:"Pip's Friendship Bead", icon:'🪵', type:'misc', desc:"A gnawed wooden bead from a merchant's abacus. Pip's token of alliance. Smalt gave it to Pip; Pip gives it to you.", sell:1 });
-          storyMsg('🐈 At the south end of the dock wall: a mouse, sitting. Smalt walks to the mouse and sits beside it. The mouse does not move.\n\nThe Inspector catches up. "My father — the late Admiral Pembury — we are a naval family, always have been." He seems pleased with this. He does not notice that the Eastern Reach has no coastline.\n\nPip looks at you. It places a small gnawed bead — a merchant\'s abacus bead — near your foot. A gift.\n\nSmalt eats the dried salt fish from your pack. An endorsement.\n\nSmalt\'s Trust consumed. Pip\'s Friendship Bead added to inventory. The inconsistency is noted. Quest: The Overture complete. Quest: Clot\'s Revelation activates — find Pip on the Tilbury Star. +150 XP.');
-          S_story.xp = (S_story.xp||0) + 150;
-          storyRender(node);
-        });
-        _spkDiv.appendChild(_pipBtn);
-      } else if (S_story.whodunitSolved && S_story.wrenpemburyInconsistencyNoticed && !S_story.aldousConfessed) {
-        _spkDiv.style.borderLeftColor = '#6a3a2a';
-        _spkDiv.style.color = '#c08860';
-        _spkDiv.textContent = '📋 Inspector Wren-Pembury is at the third berth. He has been standing there since the Tilbury Star docked. He has mentioned three different places he is from. The Eastern Reach. The naval family. Saltwick. He is watching the dock like a man who knows the conversation is coming.';
-        const _aldBtn = document.createElement('button');
-        _aldBtn.className = 'inv-use-btn'; _aldBtn.style.marginTop = '6px';
-        _aldBtn.textContent = '📋 Confront Aldous — three claims, one person';
-        _aldBtn.addEventListener('click', () => {
-          _aldBtn.disabled = true;
-          S_story.aldousConfessed = true;
-          S_story.harmonyChainComplete = true;
-          S_story.gold = (S_story.gold||0) + 400;
-          S_story.xp = (S_story.xp||0) + 400;
-          const inv = S_story.inventory = S_story.inventory || [];
-          const wIdx = inv.findIndex(i => i.name === "King's Writ (Counterfeit)");
-          if (wIdx !== -1) inv.splice(wIdx, 1);
-          inv.push({ name:'Letter of True Passage', icon:'📜', type:'misc', desc:"Aldous the Fencer's real authority document. Valid at six ports including Tilbury, Visby, and Malta. A genuine credential from a genuine black market contact.", sell:0 });
-          storyMsg('📜 You list the three: the estate. The Admiral. Saltwick.\n\nAldous tears the King\'s Writ. One careful tear, then another. He folds what remains and sets it on the dock bollard.\n\nHe takes Pip\'s Friendship Bead from his coat pocket — he has been carrying it since the Tilbury Star — and places it in your hand.\n\n"My name is Aldous. The Admiral does not exist. The estate does not exist. Saltwick exists — I would prefer it didn\'t. I gave testimony. The crown gave me a printing press and a new name. Wren-Pembury was the first combination that sounded important enough."\n\nHe writes the Letter of True Passage without being asked.\n\n"I have contacts in six ports. If you need something that is not on any manifest, I am who you speak to."\n\n"You showed kindness to a cat. Then a mouse. Then a tick. Then a parasite that spoiled forty-seven bottles of perfume by making them smell too much like love. I have been watching. I cannot keep doing the voice."\n\nThe Harmony Chain is complete.\n\nKing\'s Writ destroyed. Letter of True Passage added. +400gp. +400 XP. Aldous is an ally.');
-          storyRender(node);
-        });
-        _spkDiv.appendChild(_aldBtn);
-      } else if (S_story.aldousConfessed) {
-        _spkDiv.style.borderLeftColor = '#2a5a2a';
-        _spkDiv.style.color = '#80c880';
-        _spkDiv.textContent = '✅ The Harmony Chain is complete. Smalt is on the third berth bollard. Aldous — formerly Wren-Pembury — is at his usual post. He nods when you pass. The chain: cat, mouse, tick, warmth, human. Five creatures, all friends.';
-      }
-      if (node.code === 'LCY' && (S_story.kingsWritSeen || S_story.smaltBefriended)) {
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', _spkDiv);
-      }
-    }
-  }
-  // §SPARK-01: MS — Clot + Brannick + Warmth mystery
-  { const _spk2Old = document.getElementById('story-spark-ms'); if (_spk2Old) _spk2Old.remove();
-    if (node.code === 'SEN' && S_story.pipMet) {
-      const _msDiv = document.createElement('div');
-      _msDiv.id = 'story-spark-ms';
-      _msDiv.className = 'sweelinck-variant';
-      _msDiv.style.cssText = 'margin-top:10px;border-left-color:#2a3a6a;color:#8090c8;font-size:12px;';
-      if (!S_story.bioluminescentParasiteFound) {
-        _msDiv.textContent = '🟡 Pip is in your pack. On its left ear: Clot — a blood tick, large for its kind, amber glow on its dorsal side. In the hold, rat catcher Brannick stands surrounded by rats. The rats are calm. Brannick seems pleased. The cargo of imported perfumes smells unusual.';
-      } else if (S_story.bioluminescentParasiteFound && !S_story.whodunitSolved) {
-        _msDiv.textContent = '🔍 The Warmth is identified. The colony is somewhere in the cargo hold. The captain wants answers before Tilbury port. Brannick is available to testify. The perfume vats are warm — the ideal colony environment. Trace the chain: Clot → Pip → the hold → the vats.';
-      } else if (S_story.whodunitSolved) {
-        _msDiv.style.borderLeftColor = '#2a5a2a';
-        _msDiv.style.color = '#70b880';
-        _msDiv.textContent = '✅ Mystery solved. The Warmth bloomed in the perfume vats. The cargo is commercially ruined and spiritually interesting. Brannick and the rats are fine. The captain has the Letter of Safe Passage ready. Inspector Wren-Pembury is on deck, thinking.';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _msDiv);
-    }
-  }
-  // §WHODUNIT-01: MS — The Bilge Mystery
-  { const _wdOld = document.getElementById('story-whodunit2-ms'); if (_wdOld) _wdOld.remove();
-    if (node.code === 'SEN' && S_story.saltwickAccessed) {
-      const _wdDiv = document.createElement('div');
-      _wdDiv.id = 'story-whodunit2-ms';
-      _wdDiv.className = 'sweelinck-variant';
-      if (S_story.whodunit2Solved || (S_story.defeatedBattles||{})['MS_BILGE']) {
-        _wdDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-        _wdDiv.textContent = '✅ Bilge clear. Two sea spawn — one entry point, one follow-through. The rope nest is disassembled. Ord the passenger is owed an apology the cook has declined to give. The port drain is sealed with copper mesh. The Star runs clean.';
-      } else if (S_story.whodunit2WitnessRead) {
-        _wdDiv.style.cssText = 'margin-top:10px;border-left-color:#5a2a2a;color:#c07070;font-size:12px;';
-        _wdDiv.textContent = '⚠ Two sea spawn in the bilge. They entered during the Saltwick hull repair through the port drain. Delt\'s testimony confirmed it — proximity sedation, not harm. The bilge access is below the cargo hold.';
-        const _wdBtn = document.createElement('button');
-        _wdBtn.className = 'inv-use-btn'; _wdBtn.style.marginTop = '6px';
-        _wdBtn.textContent = '⚔ Descend to the bilge — clear the sea spawn';
-        _wdBtn.addEventListener('click', () => {
-          _wdBtn.disabled = true;
-          storyMsg('The bilge access is a hatch in the cargo hold floor. The hold smells of tallow and deep water — not the same smell. The tallow smell is what remains of the cask. The deep water smell is what replaced it.\n\nThe hatch opens. Below: a temporary nest of rope coils in the ballast corner. Two shapes moving in the dark water at the hull joint. They do not hide. They turn toward the light with the incurious attention of creatures that have never been threatened in an enclosed space before.\n\nThey are about to be.');
-          setTimeout(() => storyPreBattle({ ...node, code:'MS_BILGE', battle:{ label:'Sea Spawn × 2 — The Bilge', key:'sea_spawn', count:2 } }), 400);
-        });
-        _wdDiv.appendChild(_wdBtn);
-      } else if (S_story.whodunit2ClueFound) {
-        _wdDiv.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
-        _wdDiv.textContent = '🔍 Port drain: sea spawn scale residue confirmed. Entered during the Saltwick repair. The cook\'s theory is wrong — Ord has been in his cabin. Interview Delt about what he experienced. WIS Insight DC 13 — see quest panel.';
-      } else if (S_story.whodunit2HookReceived) {
-        _wdDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a3a;color:#909090;font-size:12px;';
-        _wdDiv.textContent = '🔍 The port bilge drain is disturbed — the iron grate was moved from inside. Cold-water smell underneath that is not standard bilge. INT Investigation DC 12 to identify what came through. See quest panel to attempt the check.';
-      } else {
-        _wdDiv.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
-        _wdDiv.textContent = '⚓ Three items missing from the hold: rendered tallow, two rope coils, and the eastern crossing charts. Crewman Delt found in the bilge with his boots off and no memory of six hours. The cook says it was the passenger who boarded at Saltwick.';
-        const _wdHookBtn = document.createElement('button');
-        _wdHookBtn.className = 'inv-use-btn'; _wdHookBtn.style.marginTop = '6px';
-        _wdHookBtn.textContent = '🔍 Investigate the missing cargo';
-        _wdHookBtn.addEventListener('click', () => {
-          _wdHookBtn.disabled = true;
-          S_story.whodunit2HookReceived = true;
-          S_story.xp = (S_story.xp||0) + 50;
-          storyMsg('⚓ The first mate\'s log: tallow cask night three. Rope coils night four. Charts displaced night five. Delt found the morning after — on the ballast boards, boots arranged beside him, no memory of how he got there.\n\nThe passenger Ord has a locked cabin and a Saltwick boarding ticket. He has not been seen below decks.\n\nBut the first mate notes: the port bilge drain grate was moved. From the inside.\n\nQuest: The Port Drain now active. +50 XP.');
-          storyRender(node);
-        });
-        _wdDiv.appendChild(_wdHookBtn);
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wdDiv);
-    }
-  }
-  // §NAVAL-01: SB — The Intercept, crew role selection
-  { const _sbOld = document.getElementById('story-sb-intercept'); if (_sbOld) _sbOld.remove();
-    if (node.code === 'GCI') {
-      const _sbDiv = document.createElement('div');
-      _sbDiv.id = 'story-sb-intercept';
-      _sbDiv.className = 'sweelinck-variant';
-      _sbDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a5a;color:#8888c8;font-size:12px;';
-      if (S_story.sbResolved || (S_story.defeatedBattles||{})['SB_PRIVATEER']) {
-        _sbDiv.style.borderLeftColor = '#2a5a3a'; _sbDiv.style.color = '#70b880';
-        _sbDiv.textContent = S_story.sbParleySucceeded
-          ? '✅ Captain Keel took the eighty gold and stood down. The Letter of Marque is in your pack — valid at three eastern ports that haven\'t updated their records. The intercept brig is hull-down on the horizon now.'
-          : S_story.sbPapersRead
-          ? '✅ The Eastern Reach seal date gave her away. She threw the Letter across the gap herself. The intercept brig came about before you finished reading it.'
-          : '✅ The privateer crew is cleared. Letter of Marque recovered. Captain Keel was either gone over the side or overboard — the Tilbury Star\'s captain did not look for her. She set course east without comment.';
-      } else if (!S_story.sbApproachSeen) {
-        _sbDiv.textContent = '⚓ The intercept brig is across the lane. Captain Vera Keel at the rail, Commission pennant raised. The gap between ships is still open. The Tilbury Star\'s crew is at stations. Three options. Choose your role.';
-        const _btnParley = document.createElement('button');
-        _btnParley.className = 'inv-use-btn'; _btnParley.style.marginTop = '6px';
-        _btnParley.textContent = '🗣 Go to the rail — speak to their captain (CHA)';
-        _btnParley.addEventListener('click', () => {
-          S_story.sbApproachSeen = true; S_story.sbChosenRole = 'parley';
-          storyMsg('⚓ You go to the Star\'s rail. Keel is already there on her side, watching.\n\n"Good," she says. "I was hoping for this option."\n\nQuest: Speak to Their Captain — active. CHA Persuasion DC 12. See quest panel.');
-          storyRender(node);
-        });
-        const _btnExamine = document.createElement('button');
-        _btnExamine.className = 'inv-use-btn'; _btnExamine.style.marginLeft = '6px'; _btnExamine.style.marginTop = '6px';
-        _btnExamine.textContent = '🔍 Take the helm — read their papers (INT)';
-        _btnExamine.addEventListener('click', () => {
-          S_story.sbApproachSeen = true; S_story.sbChosenRole = 'examine';
-          storyMsg('⚓ You take the helm position and read the Commission pennant from the distance Keel is holding it.\n\nThe seal is visible. The date is visible. Something about the date is visible.\n\nQuest: Read the Letter of Marque — active. INT Investigation DC 11. See quest panel.');
-          storyRender(node);
-        });
-        const _btnFight = document.createElement('button');
-        _btnFight.className = 'inv-use-btn'; _btnFight.style.marginLeft = '6px'; _btnFight.style.marginTop = '6px';
-        _btnFight.textContent = '⚔ Go below — man the guns';
-        _btnFight.addEventListener('click', () => {
-          S_story.sbApproachSeen = true; S_story.sbChosenRole = 'fight';
-          storyMsg('⚓ You go below. The gun crew is already at the forward piece.\n\n"Ready," the gunner says. He does not ask for confirmation. He says it the way someone says a thing that will happen regardless.\n\nKeel watches the Star\'s gun ports open. She nods once.\n\n"Gangplanks out," she says.\n\nThe intercept begins.');
-          setTimeout(() => storyPreBattle({ ...node, code:'SB_PRIVATEER', battle:{ label:'Privateer Captain + Privateer × 2 — The Intercept', key:'pirate_captain', count:1 } }), 400);
-        });
-        _sbDiv.appendChild(_btnParley); _sbDiv.appendChild(_btnExamine); _sbDiv.appendChild(_btnFight);
-      } else if (S_story.sbChosenRole === 'parley') {
-        _sbDiv.textContent = '🗣 At the rail. Keel is waiting. The gap is still open. CHA Persuasion DC 12 — see quest panel to attempt. If the parley fails, the fight begins.';
-      } else if (S_story.sbChosenRole === 'examine') {
-        _sbDiv.textContent = '🔍 At the helm. The Commission pennant is readable. The seal date is visible. INT Investigation DC 11 — see quest panel to attempt. If the read fails, she calls the gangplanks.';
-      } else {
-        _sbDiv.textContent = '⚔ The gun crew is ready. The gangplanks are out. The intercept is engaged.';
-        if (!((S_story.defeatedBattles||{})['SB_PRIVATEER'])) {
-          const _fightBtn2 = document.createElement('button');
-          _fightBtn2.className = 'inv-use-btn'; _fightBtn2.style.marginTop = '6px';
-          _fightBtn2.textContent = '⚔ Fight — clear the privateer crew';
-          _fightBtn2.addEventListener('click', () => {
-            _fightBtn2.disabled = true;
-            storyMsg('The gangplanks go out on both sides. Keel\'s crew comes across the port plank; the fight begins at the rail.');
-            setTimeout(() => storyPreBattle({ ...node, code:'SB_PRIVATEER', battle:{ label:'Privateer Captain + Privateer × 2 — The Intercept', key:'pirate_captain', count:1 } }), 400);
-          });
-          _sbDiv.appendChild(_fightBtn2);
-        }
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _sbDiv);
-    }
-  }
-  // §PORT-02: DF — Dunfall access (kelpie must be defeated at HL)
-  { const _dfOld = document.getElementById('story-df-access'); if (_dfOld) _dfOld.remove();
-    if (node.code === 'DNF') {
-      const _dfDiv = document.createElement('div');
-      _dfDiv.id = 'story-df-access';
-      _dfDiv.className = 'sweelinck-variant';
-      const kelpieCleared = !!((S_story.defeatedBattles||{})['KIR']);
-      if (S_story.dfBarterLearned) {
-        _dfDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-        _dfDiv.textContent = '✅ Dunfall is open. The highland herb pouch is in your pack. Mairén\'s ledger has the exchange recorded in sheepskin. Come back in spring — the myrtle is better after the first frost.';
-      } else if (S_story.dunfallAccessed) {
-        _dfDiv.style.cssText = 'margin-top:10px;border-left-color:#3a5a2a;color:#80a860;font-size:12px;';
-        _dfDiv.textContent = '🌿 The harbor is open. Mairén has highland herb pouches — yarrow, bog myrtle, and one ingredient she will not name. The market runs on acknowledgment, not gold. WIS Insight DC 11 to understand the exchange. See quest panel.';
-      } else if (kelpieCleared) {
-        _dfDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a5a;color:#6090b0;font-size:12px;';
-        _dfDiv.textContent = '🏔 The ford is clear. The doors in Dunfall are open. Mairén Fionn is at the dock with the harbor ledger. The village carried the closed-door grief while the ford was blocked. You cleared the ford.';
-        const _dfBtn = document.createElement('button');
-        _dfBtn.className = 'inv-use-btn'; _dfBtn.style.marginTop = '6px';
-        _dfBtn.textContent = '🏔 Enter Dunfall — ford is clear';
-        _dfBtn.addEventListener('click', () => {
-          _dfBtn.disabled = true;
-          S_story.dunfallAccessed = true;
-          S_story.xp = (S_story.xp||0) + 100;
-          storyMsg('🏔 Mairén is at the dock with the ledger open.\n\n"You cleared the ford." She says it as a statement, not a greeting. "We opened the doors."\n\nThe village is quiet in the way that follows a long closure — not festive, not relieved, just present again. The fish market is running. The wool carts are moving. Three households are not represented at the dock, and everyone knows which three.\n\nDunfall is accessible. The barter market is open. +100 XP.');
-          storyRender(node);
-        });
-        _dfDiv.appendChild(_dfBtn);
-      } else {
-        _dfDiv.style.cssText = 'margin-top:10px;border-left-color:#5a4a3a;color:#b09070;font-size:12px;';
-        _dfDiv.textContent = '🚪 The doors in Dunfall are barred. The kelpie holds the ford west of the Highlands. The light from the standing stones went wrong and the village closed. Mairén watches from behind the door. She does not open it.';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _dfDiv);
-    }
-  }
-  // §SPARK-02: DF — Commissioner Fehn + Bram + Oat + Drift Spore (Dunfall Harmony Chain)
-  { const _spk2dfOld = document.getElementById('story-spark2-df'); if (_spk2dfOld) _spk2dfOld.remove();
-    if (node.code === 'DNF' && S_story.dunfallAccessed) {
-      const _spk2Div = document.createElement('div');
-      _spk2Div.id = 'story-spark2-df';
-      _spk2Div.className = 'sweelinck-variant';
-      if (S_story.dunfallHarmonyComplete) {
-        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-        _spk2Div.textContent = '✅ The Dunfall Harmony Chain is complete. Bram is on the ledger. Oat is in the grain pile. Commissioner Halvard Fehn — formerly Halvard Jesst, harbor informant, nine years relocated — is at the south dock writing clearance letters in his actual handwriting for the first time in nine years. The chain: cat, mouse, spore, man. Four creatures, all accounted for.';
-      } else if (S_story.brimFound && !S_story.fehnConfessed) {
-        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#3a4a6a;color:#8090c8;font-size:12px;';
-        _spk2Div.textContent = '✨ The drift spore is in the vial. The Commissioner has been in its six-foot radius for two days. Three inconsistencies documented: the Revenue Division that does not exist, the Highland Fleet his grandfather commanded that does not exist, the appointment certificate from an office that closed before his appointment date.';
-        const _fehnBtn = document.createElement('button');
-        _fehnBtn.className = 'inv-use-btn'; _fehnBtn.style.marginTop = '6px';
-        _fehnBtn.textContent = '📋 Confront Commissioner Fehn — three names, one person';
-        _fehnBtn.addEventListener('click', () => {
-          _fehnBtn.disabled = true;
-          S_story.fehnConfessed = true;
-          S_story.dunfallHarmonyComplete = true;
-          S_story.gold = (S_story.gold||0) + 400;
-          S_story.xp = (S_story.xp||0) + 400;
-          const inv = S_story.inventory = S_story.inventory || [];
-          const dsIdx = inv.findIndex(i => i.name === 'Dunfall Drift Spore');
-          if (dsIdx !== -1) inv.splice(dsIdx, 1);
-          inv.push({ name:'Highland Letter of Clearance', icon:'📃', type:'misc', desc:'Commissioner Halvard Fehn\'s real credential — a clearance letter valid at four highland ports including Dunfall and Saltwick. Issued under his actual name: Halvard Jesst, Harbor Customs Informant, Ninth Circuit. The signature is steadier than the Commissioner one.', sell:0 });
-          storyMsg('📃 You list the three: the Revenue Division. The Highland Fleet. The appointment date.\n\nFehn is quiet. The drift spore radius is six feet and you are both inside it.\n\n"My name is Halvard Jesst. The Commissioner is a construction — they gave me the name and the writ to keep me visible and occupied while the smuggling case closed." He folds the assessment form along its original creases. "The case closed nine years ago. I am not certain anyone sent the notice."\n\nHe takes the drift spore vial from your hand. Opens it. The amber disperses into the dock air.\n\n"Bram has been on my ledger since I arrived. I tried to move him the first three days. He weighs nothing and does not move. I understand now that he was performing a service."\n\nHe writes the Highland Letter of Clearance without being asked. The handwriting is different from the Commissioner signature — steadier, older.\n\n"Valid at four ports. Dunfall is one of them. Saltwick will recognize the Ninth Circuit seal." He looks at Bram. Bram looks at the harbor.\n\nDunfall Drift Spore consumed. Highland Letter of Clearance added. +400gp. +400 XP. Dunfall Harmony Chain complete.');
-          storyRender(node);
-        });
-        _spk2Div.appendChild(_fehnBtn);
-      } else if (S_story.oatMet && !S_story.brimFound) {
-        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#3a3a2a;color:#a8a860;font-size:12px;';
-        _spk2Div.textContent = '🐭 Oat is in the grain pile at the south dock joint. He has an amber glow on his left ear — not eye-shine. Something from the loch shallows. INT Nature DC 12 to identify what it is doing to the dock ecosystem. See quest panel to attempt.';
-      } else if (S_story.bramBefriended && !S_story.oatMet) {
-        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#2a4a2a;color:#80a870;font-size:12px;';
-        _spk2Div.textContent = '🐟 Bram is watching the south dock joint. He gave you the endorsement scale. The grain pile at the wall joint has a mouse in it. Bram leads when you are ready.';
-        const _oatBtn = document.createElement('button');
-        _oatBtn.className = 'inv-use-btn'; _oatBtn.style.marginTop = '6px';
-        _oatBtn.textContent = '🐟 Follow Bram to the grain pile';
-        _oatBtn.addEventListener('click', () => {
-          _oatBtn.disabled = true;
-          S_story.oatMet = true;
-          S_story.xp = (S_story.xp||0) + 100;
-          const inv = S_story.inventory = S_story.inventory || [];
-          const bsIdx = inv.findIndex(i => i.name === "Bram's Fish Scale");
-          if (bsIdx !== -1) inv.splice(bsIdx, 1);
-          inv.push({ name:"Oat's Harbor Bead", icon:'🪡', type:'misc', desc:'A small cord fragment from the mooring dock. Oat placed it near your foot when Bram sat down beside him. The gesture means: acknowledged. The Commissioner says something about his uncle\'s commission.', sell:0 });
-          storyMsg('🐭 At the south dock joint, half-inside the grain pile: Oat.\n\nOat is white-gray, harbor-sized, with the expression of a mouse who has been in this grain pile since before the Commissioner arrived and intends to be in it after.\n\nBram walks to Oat and sits beside him with no other apparent purpose.\n\nThe Commissioner catches up. "My uncle held the rank of Commodore-Provisional in the Northern Admiralty." He sounds pleased with this. There is no Northern Admiralty. There is no Commodore-Provisional rank.\n\nOat places a small cord fragment near your foot. An acknowledgment.\n\nBram\'s Fish Scale consumed (Bram ate it as endorsement). Oat\'s Harbor Bead added. +100 XP. Quest: What Oat Carries active.');
-          storyRender(node);
-        });
-        _spk2Div.appendChild(_oatBtn);
-      } else if (S_story.spark2HookReceived && !S_story.bramBefriended) {
-        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#6a4a2a;color:#c09070;font-size:12px;';
-        _spk2Div.textContent = '🐈 Bram is on the ledger. He has been on the ledger for three years. He weighs nothing and does not move. He is watching a specific point on the south dock wall — not the Commissioner, not you. Something at the wall joint. WIS Animal Handling DC 11. See quest panel.';
-      } else {
-        _spk2Div.style.cssText = 'margin-top:10px;border-left-color:#8a6a2a;color:#c8a860;font-size:12px;';
-        _spk2Div.textContent = '📋 A man in pressed wool stands at the south end of the dock with an embossed leather case. The harbor cat — salt-gray, three years resident — is sitting directly on his assessment ledger. His writ identifies him: Commissioner Halvard Fehn, Inland Revenue, Loch Assessment Division. He is waiting for someone to solve his problem.';
-        const _fehnHookBtn = document.createElement('button');
-        _fehnHookBtn.className = 'inv-use-btn'; _fehnHookBtn.style.marginTop = '6px';
-        _fehnHookBtn.textContent = '📋 Speak to Commissioner Fehn';
-        _fehnHookBtn.addEventListener('click', () => {
-          _fehnHookBtn.disabled = true;
-          S_story.spark2HookReceived = true;
-          S_story.xp = (S_story.xp||0) + 50;
-          storyMsg('📋 "By order of the Inland Revenue, Loch Assessment Division, the animal currently impeding the harbor assessment ledger must be relocated within twenty-four hours." He hands you the assessment writ. Heavy paper. Embossed seal. The seal reads: Western Revenue Office, Third Circuit.\n\nThe Western Revenue Office, Third Circuit, closed thirteen years ago. A closed office does not issue active assessments.\n\n"The Fehn family has served the Revenue for four generations. My grandfather commanded the Highland Revenue Survey of — " He stops. He seems to be remembering which grandfather he is currently citing.\n\nThe cat looks at you. She is not afraid. She is waiting to see if you are worth following.\n\nQuest: Bram and the Ledger active. WIS Animal Handling DC 11 — see quest panel. +50 XP.');
-          storyRender(node);
-        });
-        _spk2Div.appendChild(_fehnHookBtn);
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _spk2Div);
-    }
-  }
-  // §PORT-01: SK — Saltwick credential check + Dorit access
-  { const _skOld = document.getElementById('story-sk-access'); if (_skOld) _skOld.remove();
-    if (node.code === 'MME') {
-      const _skDiv = document.createElement('div');
-      _skDiv.id = 'story-sk-access';
-      _skDiv.className = 'sweelinck-variant';
-      if (S_story.saltwickJobAccepted) {
-        _skDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-        _skDiv.textContent = '✅ Saltwick is open. Dorit\'s ledger has your name in it. The Saltwick Bill of Lading is in your pack. The amber glass consignment is someone else\'s problem now.';
-      } else if (S_story.saltwickAccessed) {
-        _skDiv.style.cssText = 'margin-top:10px;border-left-color:#3a4a2a;color:#90a860;font-size:12px;';
-        _skDiv.textContent = '🟡 Saltwick is open to you. Dorit has a job — something went missing from the warehouse while the Dockmasters\' brig was at the Warmth Calm. She needs someone who can ask at Tilbury without producing paperwork. CHA Persuasion DC 12. See quest panel.';
-      } else if (S_story.pirateCrew_allied) {
-        _skDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a5a;color:#6090b0;font-size:12px;';
-        _skDiv.textContent = '⚓ The joint pirate debt note. Both crews are in Dorit\'s column. She reads the note without touching it — she has read it in her head before you finish unfolding it. "The Redmast and the Saltwick brig. Together." She looks at you differently now. "You moved the eel." She opens the dock gate.';
-        const _skBtn = document.createElement('button');
-        _skBtn.className = 'inv-use-btn'; _skBtn.style.marginTop = '6px';
-        _skBtn.textContent = '⚓ Enter Saltwick — pirate crew credential';
-        _skBtn.addEventListener('click', () => {
-          _skBtn.disabled = true;
-          S_story.saltwickAccessed = true;
-          S_story.xp = (S_story.xp||0) + 150;
-          storyMsg('⚓ Dorit looks at the note for a long time.\n\n"Both of them. Together. For an eel." She sets the note back on the dock ledge. "I\'ve been running this port fourteen years. The Redmast and the Dockmasters\' brig have been trying to sink each other for twelve of them." She sounds genuinely interested. "You must have done something unusual."\n\nThe dock gate opens. You are in Dorit\'s ledger.\n\nSaltwick is accessible. +150 XP.');
-          storyRender(node);
-        });
-        _skDiv.appendChild(_skBtn);
-      } else if (S_story.aldousConfessed) {
-        _skDiv.style.cssText = 'margin-top:10px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
-        _skDiv.textContent = '📜 Aldous\'s Letter of True Passage. Saltwick is one of his six ports. Dorit was the Harbormaster when Aldous testified against her contractors. She reads the letter. She does not look surprised. She opens the dock gate.';
-        const _skBtn2 = document.createElement('button');
-        _skBtn2.className = 'inv-use-btn'; _skBtn2.style.marginTop = '6px';
-        _skBtn2.textContent = '📜 Enter Saltwick — Aldous\'s letter';
-        _skBtn2.addEventListener('click', () => {
-          _skBtn2.disabled = true;
-          S_story.saltwickAccessed = true;
-          S_story.xp = (S_story.xp||0) + 150;
-          storyMsg('📜 Dorit reads the letter without expression.\n\n"Aldous." She folds it along its original creases. "He named us." She sets it down. "Of course he did. The six ports he listed are the six ports where his testimony means nothing, because we already knew. He was protecting his contacts, not his credit."\n\nShe opens the dock gate.\n\n"He showed kindness to a cat." She says it flatly. "The entire dock heard about it. That kind of thing travels." She looks at you. "You were there."\n\nSaltwick is accessible. +150 XP.');
-          storyRender(node);
-        });
-        _skDiv.appendChild(_skBtn2);
-      } else {
-        _skDiv.style.cssText = 'margin-top:10px;border-left-color:#5a3a3a;color:#b07070;font-size:12px;';
-        _skDiv.textContent = '🚫 The dock gate is closed. Saltwick runs on vouches. You don\'t have one. The woman at the end of the dock is reading something. She has not looked up. She will not look up until someone she recognizes arrives — or until you are recognizable.';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _skDiv);
-      // Hull repair panel (separate, below access panel)
-      const _hullOld = document.getElementById('story-sk-hull'); if (_hullOld) _hullOld.remove();
-      if (S_story.saltwickAccessed) {
-        const _hullDiv = document.createElement('div');
-        _hullDiv.id = 'story-sk-hull';
-        _hullDiv.className = 'sweelinck-variant';
-        if (S_story.shipRepaired) {
-          _hullDiv.style.cssText = 'margin-top:6px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-          _hullDiv.textContent = '✅ Hull repaired. The Tilbury Star runs clean.';
-        } else {
-          _hullDiv.style.cssText = 'margin-top:6px;border-left-color:#4a3a2a;color:#b09060;font-size:12px;';
-          _hullDiv.textContent = '⚓ The dry dock is available. The Tilbury Star has been running with a cracked strake — three crossings. Repair costs 200gp at Saltwick rates. See quest panel.';
-          const _hullBtn = document.createElement('button');
-          _hullBtn.className = 'inv-use-btn'; _hullBtn.style.marginTop = '6px';
-          _hullBtn.textContent = '⚓ Commission hull repair — 200gp';
-          _hullBtn.addEventListener('click', () => {
-            if ((S_story.gold||0) < 200) { storyMsg('Dorit looks at your coin. "Short. Come back when the purse is right."'); return; }
-            _hullBtn.disabled = true;
-            S_story.gold = (S_story.gold||0) - 200;
-            S_story.shipRepaired = true;
-            S_story.xp = (S_story.xp||0) + 200;
-            storyMsg('⚓ The dry dock crew has the Star out of the water before the tide turns.\n\nThe cracked strake is replaced. Highland timber — better grain than lowland oak, tighter ring spacing. The captain inspects the hull without speaking, which is the most approval she gives.\n\n"She\'ll hold the deep crossing now," the dock worker says. He does not look at the captain when he says it. He does not need to. She has already gone back aboard.\n\n-200gp. +200 XP. Tilbury Star: hull repaired.');
-            storyRender(node);
-          });
-          _hullDiv.appendChild(_hullBtn);
-        }
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', _hullDiv);
-      }
-    }
-  }
+  _runNodeHook('spark-lcy-harmony', node);   // §SPARK-01: DK — Wren-Pembury/Smalt/Pip Harmony Chain (+ the writ-beat fix — see hook header)
+  // §SPARK-01: MS — Clot + Brannick + Warmth mystery (3-state pure panel) → NODE_PANELS (§VM-01-G-FU-d)
+  _runNodeHook('whodunit-sen-bilge', node);  // §WHODUNIT-01: MS — The Bilge Mystery
+  _runNodeHook('naval-gci-intercept', node); // §NAVAL-01: SB — The Intercept (D3-shaped; two roles write a STRING enum — see hook header)
+  _runNodeHook('port-dnf-access', node);     // §PORT-02: DF — Dunfall access (kelpie must be defeated at HL)
+  _runNodeHook('spark-dnf-harmony', node);   // §SPARK-02: DF — Fehn/Bram/Oat Dunfall Harmony Chain
+  _runNodeHook('port-mme-saltwick', node);   // §PORT-01: SK — Saltwick credential check + hull repair (hull price → `cost`, §VM-01-G-FU-d)
   _runNodeHook('hunt-wro-relay', node);           // §HUNT-02: J1 — Tessie's relay road warning (+ done panel — see hook header for why it stays here)
   _runNodeHook('hunt-bnx-bend', node);            // §HUNT-02: BN — investigation panels + battle trigger
   _runNodeHook('hunt-hft-elder', node);           // §HUNT-01: LS — Elder Fisherwoman hook (done panel → NODE_PANELS)
