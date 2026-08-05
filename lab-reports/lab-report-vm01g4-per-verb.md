@@ -34,7 +34,7 @@ front moves backward ~4/day"* no longer holds inside the region: the front moved
 
 **Registries in the house style G4 must match** (both live, both already load-bearing):
 `NODE_PANELS` (`const NODE_PANELS@31285`, rendered by `_renderNodePanels(node, st)@31560`) and
-`NODE_HOOKS` (`const NODE_HOOKS@34030`, dispatched in place by `_runNodeHook(id, node, ctx)@34092`).
+`NODE_HOOKS` (`const NODE_HOOKS@34156`, dispatched in place by `_runNodeHook(id, node, ctx)@34219`).
 
 ---
 
@@ -148,7 +148,7 @@ honour it.
 ## 5. Finding 3 — two blocks capture free text, which `choice` cannot express and should not
 
 `Entry 42` (LHR) and the `Secret Gate` void-toll rune (ZRH) both render a `<textarea>` and persist
-the player's own prose — `S_story.entry42Text@34499` and `S_story._voidTollSecret@34611`. Both are
+the player's own prose — `S_story.entry42Text@34626` and `S_story._voidTollSecret@34738`. Both are
 read back by the ending. `choice`'s resume value is *"an index, so the data author never couples to
 presentation"* (`22152`); a free-text answer couples to presentation by definition.
 
@@ -214,9 +214,9 @@ honest and neither is quietly dropped a fourth time.
 ## 8. Finding 6 — the act-leg thread §VM-01-G2b opened is now closed for this region
 
 G2b found five narrative beats gated on `actNumber >= N` at nodes whose `act` is 1, and therefore
-permanently dead (`S_story.actNumber = node.act || 1@34416`, assigned every render). Swept for the
+permanently dead (`S_story.actNumber = node.act || 1@34543`, assigned every render). Swept for the
 same shape across G4's region: **one act comparison remains** —
-`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@34539` (Sweelinck's "map before the city"
+`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@34666` (Sweelinck's "map before the city"
 line). **NUE is `act:6`**, so the leg is not dead — it is **vacuously true**, and has been since it
 shipped. It is not staging; arriving at NUE at all satisfies it.
 
@@ -599,13 +599,13 @@ menu-order — the G2b honest shape). `check:walk` 16/16.
 
 ## 13. Anchors touched by this report
 
-`storyRender(node, prefix)@34410` · `_mkSection(id, icon, label)@35163` ·
-`const NODE_PANELS@31285` · `_renderNodePanels(node, st)@31560` · `const NODE_HOOKS@34030` ·
-`_runNodeHook(id, node, ctx)@34092` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
+`storyRender(node, prefix)@34537` · `_mkSection(id, icon, label)@35290` ·
+`const NODE_PANELS@31285` · `_renderNodePanels(node, st)@31560` · `const NODE_HOOKS@34156` ·
+`_runNodeHook(id, node, ctx)@34219` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
 `function _uqfRunToCompletion(gen)@6840` · `*execBits(bits, ctx)@22204` · `*choice(bit, ctx)@22300` ·
 `combat(bit)@22281` · `item_remove(bit, ctx)@22283` · `reward(bit, ctx)@22250`
 
-**Added by G4b (§12¾):** `const NODE_VERBS@34130` · `function _renderNodeVerbs(node, st, group, container)@34356` ·
+**Added by G4b (§12¾):** `const NODE_VERBS@34257` · `function _renderNodeVerbs(node, st, group, container)@34483` ·
 `function _mkAmbientLine(text)@6878` · `function _uqfRunVerb(verb, mount)@6914` ·
 `function _uqfRenderAsk(gen, ask, mount, step)@6885`
 

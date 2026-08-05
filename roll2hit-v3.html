@@ -34027,6 +34027,132 @@ function _nodeHookLxxDsjEels(node) {
     }
   }
 }
+function _nodeHookSsjTournament(node, { row, _mkSection, _mkCard }) {
+  // ── §XLV TOURNAMENT section (YC only, requires Fishing Rod) ────
+  if (node.code === 'SSJ') {
+    const hasRod = (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod'));
+    if (hasRod) {
+      const { sec, body } = _mkSection(null, '🏆', 'Tournament');
+      const currentTitle = S_story.yugurtTourTitle;
+      if (currentTitle) {
+        const titleBadge = document.createElement('div');
+        titleBadge.style.cssText = 'font-size:11px;color:var(--gold);padding:4px 0 2px;letter-spacing:.4px;';
+        titleBadge.textContent = '🏆 Your title: ' + currentTitle;
+        body.appendChild(titleBadge);
+      }
+      NPC_TOUR_OPPONENTS.forEach(opp => {
+        const beaten = !!(S_story.yugurtTourBeat||{})[opp.key];
+        if (beaten) {
+          body.appendChild(_mkCard({ lbl:'BEAT', main:opp.name, hint:opp.title, tag:'✓', tagClass:'transferred', done:true }));
+          return;
+        }
+        let _tourAccordion = null;
+        const _card = _mkCard({
+          lbl: opp.competence.toUpperCase(), main: opp.name,
+          hint: opp.title + ' · Stake: ' + opp.stake + 'gp',
+          btn: 'Challenge', btnClass: 'btn-hunt',
+          btnClick: () => {
+            const _btn = _card.querySelector('.story-card-btn');
+            if (_tourAccordion) {
+              _tourAccordion.classList.remove('open');
+              const _c = _tourAccordion; setTimeout(() => _c.remove(), 270);
+              _tourAccordion = null;
+              if (_btn) _btn.textContent = 'Challenge';
+              return;
+            }
+            const acc = document.createElement('div');
+            acc.className = 'npc-talk-accordion hunt-accordion';
+            // NPC quote
+            const quoteEl = document.createElement('div');
+            quoteEl.className = 'npc-talk-quote';
+            quoteEl.style.cssText = 'font-size:12px;margin-bottom:8px;';
+            quoteEl.textContent = opp.quote;
+            acc.appendChild(quoteEl);
+            // Bait / cast info
+            const playerBait = (S_story.inventory||[]).find(i => i.type === 'bait');
+            const playerBonus = playerBait ? (playerBait.catchBonus||0) : -3;
+            const playerBaitLbl = playerBait ? (playerBait.icon+' '+playerBait.name+' ('+(playerBonus>=0?'+':'')+playerBonus+')') : '🪝 Bare Hook (−3)';
+            const infoEl = document.createElement('div');
+            infoEl.style.cssText = 'font-size:11px;color:var(--dim);margin-bottom:6px;';
+            infoEl.textContent = 'Your bait: '+playerBaitLbl+' · '+opp.name+': '+opp.competence+' ('+(opp.bonus>=0?'+':'')+opp.bonus+')';
+            acc.appendChild(infoEl);
+            // Result area (inserted before castBtn for stacking)
+            const resultEl = document.createElement('div');
+            resultEl.style.cssText = 'font-size:11px;line-height:1.7;min-height:0;';
+            acc.appendChild(resultEl);
+            // Cast button
+            const canAfford = S_story.gold >= opp.stake;
+            const castBtn = document.createElement('button');
+            castBtn.className = 'story-card-btn btn-hunt';
+            castBtn.style.cssText = 'width:100%;margin-top:6px;font-size:12px;';
+            castBtn.textContent = canAfford ? '🎣 Cast — stake '+opp.stake+'gp' : '💰 Need '+opp.stake+'gp to enter';
+            castBtn.disabled = !canAfford;
+            castBtn.addEventListener('click', () => {
+              castBtn.disabled = true;
+              // Rolls
+              const pRoll = _tourRoll(playerBonus);
+              const nRoll = _tourRoll(opp.bonus);
+              let outcome = pRoll.fishRank > nRoll.fishRank ? 'win' : pRoll.fishRank < nRoll.fishRank ? 'lose' : 'tie';
+              if (outcome === 'tie') outcome = _luckMod() > 0 ? 'win' : _luckMod() < 0 ? 'lose' : 'tie';
+              // Display
+              const pMod = (playerBonus>=0?'+':'')+playerBonus, nMod = (opp.bonus>=0?'+':'')+opp.bonus;
+              let html = 'You: d20('+pRoll.die+')'+pMod+'='+pRoll.tot+' → <strong>'+pRoll.fishName+'</strong> (Rank '+pRoll.fishRank+')<br>';
+              html += opp.name+': d20('+nRoll.die+')'+nMod+'='+nRoll.tot+' → <strong>'+nRoll.fishName+'</strong> (Rank '+nRoll.fishRank+')<br><br>';
+              if (outcome === 'win') {
+                S_story.gold += opp.stake;
+                if (!S_story.yugurtTourBeat) S_story.yugurtTourBeat = {};
+                S_story.yugurtTourBeat[opp.key] = true;
+                S_story.yugurtTourTitle = TOUR_TITLES[opp.key];
+                // §ARCH-01 W8c — the engine is the SOLE completer. The yugurtTourBeat[opp.key]
+                // flag set just above satisfies quest_tour_0N's completion:{flagsPath:['yugurtTourBeat.<key>']},
+                // so storyCheckQuests completes the active act and fires its xpAward — which is
+                // exactly opp.xp for every act (pip 100 … master 1000, verified equal). The old
+                // inline '=complete'+opp.xp shortcut was a redundant second completion path.
+                storyCheckQuests(node); // complete this act (engine) + activate the next in the chain
+                html += '✓ <strong>YOU WIN</strong> — +'+opp.stake+'gp · <em>'+TOUR_TITLES[opp.key]+'</em>';
+                if (opp.key === 'bog') { // CO-001: Bog's losing beat
+                  S_story.bogDefeated = true;
+                  html += '<br><br><em>He sits down on the bank with his rod across his knees. He does not look at you. He looks at the lake.<br><br>"I been coming here since before that cabin was standing. Before the Fisherman. Before the dock." He turns the rod over once. "I used to think the lake had a mood. Like it chose what to give you. I don\'t think that anymore." A pause. "I think it just is what it is and we\'re the ones who want it to mean something."<br><br>He stands up. He picks up his bucket. One fish, medium, respectable. "Good cast," he says. Not to the fish.</em>';
+                }
+                if (opp.key === 'master') html += '<br>🏆 You are the Master of Yugurt.';
+                storyAutoSave();
+                setTimeout(() => storyRender(node), 500);
+              } else if (outcome === 'lose') {
+                S_story.gold = Math.max(0, (S_story.gold||0) - opp.stake);
+                html += '✗ <strong>YOU LOSE</strong> — −'+opp.stake+'gp';
+                castBtn.disabled = (S_story.gold||0) < opp.stake;
+                castBtn.textContent = (S_story.gold||0) >= opp.stake ? '🎣 Cast again — '+opp.stake+'gp' : '💰 Need '+opp.stake+'gp to re-enter';
+                storyAutoSave();
+              } else {
+                html += '— <strong>TIE</strong> — no gold exchanged · cast again';
+                castBtn.disabled = false;
+              }
+              resultEl.innerHTML = html;
+            });
+            acc.appendChild(castBtn);
+            // Walk away
+            const retreatEl = document.createElement('div');
+            retreatEl.className = 'battle-retreat-link';
+            retreatEl.textContent = '← Walk away';
+            retreatEl.addEventListener('click', () => {
+              acc.classList.remove('open');
+              const _c = acc; setTimeout(() => _c.remove(), 270);
+              _tourAccordion = null;
+              if (_btn) _btn.textContent = 'Challenge';
+            });
+            acc.appendChild(retreatEl);
+            _tourAccordion = acc;
+            _card.insertAdjacentElement('afterend', acc);
+            requestAnimationFrame(() => _tourAccordion && _tourAccordion.classList.add('open'));
+            if (_btn) _btn.textContent = 'Close';
+          }
+        });
+        body.appendChild(_card);
+      });
+      row.appendChild(sec);
+    }
+  }
+}
 const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'nue-lower-archive', nodes:['NUE'], fn:_nodeHookNueLowerArchive },
   { id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA'], fn:_nodeHookVoidArchaeology },
@@ -34088,6 +34214,7 @@ const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'lxx-da2-gate', nodes:['DA2'], fn:_nodeHookLxxDa2Gate },     // §VM-01-G-FU-e (numeric INT write — the HCA class; done state → NODE_PANELS)
   { id:'lxx-da3-depth', nodes:['DA3'], fn:_nodeHookLxxDa3Depth },   // §VM-01-G-FU-e (done state → NODE_PANELS)
   { id:'lxx-dsj-eels', nodes:['DSJ'], fn:_nodeHookLxxDsjEels },     // §VM-01-G-FU-e (staged DSJ_EELS battle — the BN/LD shape)
+  { id:'ssj-tournament', nodes:['SSJ'], fn:_nodeHookSsjTournament }, // §VM-01-G-FU-f (Class E bespoke UI — the §XLV accordion state machine over NPC_TOUR_OPPONENTS; ctx = the three storyRender section surfaces)
 ];
 function _runNodeHook(id, node, ctx) {
   for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node, ctx);
@@ -35652,130 +35779,7 @@ function storyRender(node, prefix) {
     row.appendChild(sec);
   }
 
-  // ── §XLV TOURNAMENT section (YC only, requires Fishing Rod) ────
-  if (node.code === 'SSJ') {
-    const hasRod = (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod'));
-    if (hasRod) {
-      const { sec, body } = _mkSection(null, '🏆', 'Tournament');
-      const currentTitle = S_story.yugurtTourTitle;
-      if (currentTitle) {
-        const titleBadge = document.createElement('div');
-        titleBadge.style.cssText = 'font-size:11px;color:var(--gold);padding:4px 0 2px;letter-spacing:.4px;';
-        titleBadge.textContent = '🏆 Your title: ' + currentTitle;
-        body.appendChild(titleBadge);
-      }
-      NPC_TOUR_OPPONENTS.forEach(opp => {
-        const beaten = !!(S_story.yugurtTourBeat||{})[opp.key];
-        if (beaten) {
-          body.appendChild(_mkCard({ lbl:'BEAT', main:opp.name, hint:opp.title, tag:'✓', tagClass:'transferred', done:true }));
-          return;
-        }
-        let _tourAccordion = null;
-        const _card = _mkCard({
-          lbl: opp.competence.toUpperCase(), main: opp.name,
-          hint: opp.title + ' · Stake: ' + opp.stake + 'gp',
-          btn: 'Challenge', btnClass: 'btn-hunt',
-          btnClick: () => {
-            const _btn = _card.querySelector('.story-card-btn');
-            if (_tourAccordion) {
-              _tourAccordion.classList.remove('open');
-              const _c = _tourAccordion; setTimeout(() => _c.remove(), 270);
-              _tourAccordion = null;
-              if (_btn) _btn.textContent = 'Challenge';
-              return;
-            }
-            const acc = document.createElement('div');
-            acc.className = 'npc-talk-accordion hunt-accordion';
-            // NPC quote
-            const quoteEl = document.createElement('div');
-            quoteEl.className = 'npc-talk-quote';
-            quoteEl.style.cssText = 'font-size:12px;margin-bottom:8px;';
-            quoteEl.textContent = opp.quote;
-            acc.appendChild(quoteEl);
-            // Bait / cast info
-            const playerBait = (S_story.inventory||[]).find(i => i.type === 'bait');
-            const playerBonus = playerBait ? (playerBait.catchBonus||0) : -3;
-            const playerBaitLbl = playerBait ? (playerBait.icon+' '+playerBait.name+' ('+(playerBonus>=0?'+':'')+playerBonus+')') : '🪝 Bare Hook (−3)';
-            const infoEl = document.createElement('div');
-            infoEl.style.cssText = 'font-size:11px;color:var(--dim);margin-bottom:6px;';
-            infoEl.textContent = 'Your bait: '+playerBaitLbl+' · '+opp.name+': '+opp.competence+' ('+(opp.bonus>=0?'+':'')+opp.bonus+')';
-            acc.appendChild(infoEl);
-            // Result area (inserted before castBtn for stacking)
-            const resultEl = document.createElement('div');
-            resultEl.style.cssText = 'font-size:11px;line-height:1.7;min-height:0;';
-            acc.appendChild(resultEl);
-            // Cast button
-            const canAfford = S_story.gold >= opp.stake;
-            const castBtn = document.createElement('button');
-            castBtn.className = 'story-card-btn btn-hunt';
-            castBtn.style.cssText = 'width:100%;margin-top:6px;font-size:12px;';
-            castBtn.textContent = canAfford ? '🎣 Cast — stake '+opp.stake+'gp' : '💰 Need '+opp.stake+'gp to enter';
-            castBtn.disabled = !canAfford;
-            castBtn.addEventListener('click', () => {
-              castBtn.disabled = true;
-              // Rolls
-              const pRoll = _tourRoll(playerBonus);
-              const nRoll = _tourRoll(opp.bonus);
-              let outcome = pRoll.fishRank > nRoll.fishRank ? 'win' : pRoll.fishRank < nRoll.fishRank ? 'lose' : 'tie';
-              if (outcome === 'tie') outcome = _luckMod() > 0 ? 'win' : _luckMod() < 0 ? 'lose' : 'tie';
-              // Display
-              const pMod = (playerBonus>=0?'+':'')+playerBonus, nMod = (opp.bonus>=0?'+':'')+opp.bonus;
-              let html = 'You: d20('+pRoll.die+')'+pMod+'='+pRoll.tot+' → <strong>'+pRoll.fishName+'</strong> (Rank '+pRoll.fishRank+')<br>';
-              html += opp.name+': d20('+nRoll.die+')'+nMod+'='+nRoll.tot+' → <strong>'+nRoll.fishName+'</strong> (Rank '+nRoll.fishRank+')<br><br>';
-              if (outcome === 'win') {
-                S_story.gold += opp.stake;
-                if (!S_story.yugurtTourBeat) S_story.yugurtTourBeat = {};
-                S_story.yugurtTourBeat[opp.key] = true;
-                S_story.yugurtTourTitle = TOUR_TITLES[opp.key];
-                // §ARCH-01 W8c — the engine is the SOLE completer. The yugurtTourBeat[opp.key]
-                // flag set just above satisfies quest_tour_0N's completion:{flagsPath:['yugurtTourBeat.<key>']},
-                // so storyCheckQuests completes the active act and fires its xpAward — which is
-                // exactly opp.xp for every act (pip 100 … master 1000, verified equal). The old
-                // inline '=complete'+opp.xp shortcut was a redundant second completion path.
-                storyCheckQuests(node); // complete this act (engine) + activate the next in the chain
-                html += '✓ <strong>YOU WIN</strong> — +'+opp.stake+'gp · <em>'+TOUR_TITLES[opp.key]+'</em>';
-                if (opp.key === 'bog') { // CO-001: Bog's losing beat
-                  S_story.bogDefeated = true;
-                  html += '<br><br><em>He sits down on the bank with his rod across his knees. He does not look at you. He looks at the lake.<br><br>"I been coming here since before that cabin was standing. Before the Fisherman. Before the dock." He turns the rod over once. "I used to think the lake had a mood. Like it chose what to give you. I don\'t think that anymore." A pause. "I think it just is what it is and we\'re the ones who want it to mean something."<br><br>He stands up. He picks up his bucket. One fish, medium, respectable. "Good cast," he says. Not to the fish.</em>';
-                }
-                if (opp.key === 'master') html += '<br>🏆 You are the Master of Yugurt.';
-                storyAutoSave();
-                setTimeout(() => storyRender(node), 500);
-              } else if (outcome === 'lose') {
-                S_story.gold = Math.max(0, (S_story.gold||0) - opp.stake);
-                html += '✗ <strong>YOU LOSE</strong> — −'+opp.stake+'gp';
-                castBtn.disabled = (S_story.gold||0) < opp.stake;
-                castBtn.textContent = (S_story.gold||0) >= opp.stake ? '🎣 Cast again — '+opp.stake+'gp' : '💰 Need '+opp.stake+'gp to re-enter';
-                storyAutoSave();
-              } else {
-                html += '— <strong>TIE</strong> — no gold exchanged · cast again';
-                castBtn.disabled = false;
-              }
-              resultEl.innerHTML = html;
-            });
-            acc.appendChild(castBtn);
-            // Walk away
-            const retreatEl = document.createElement('div');
-            retreatEl.className = 'battle-retreat-link';
-            retreatEl.textContent = '← Walk away';
-            retreatEl.addEventListener('click', () => {
-              acc.classList.remove('open');
-              const _c = acc; setTimeout(() => _c.remove(), 270);
-              _tourAccordion = null;
-              if (_btn) _btn.textContent = 'Challenge';
-            });
-            acc.appendChild(retreatEl);
-            _tourAccordion = acc;
-            _card.insertAdjacentElement('afterend', acc);
-            requestAnimationFrame(() => _tourAccordion && _tourAccordion.classList.add('open'));
-            if (_btn) _btn.textContent = 'Close';
-          }
-        });
-        body.appendChild(_card);
-      });
-      row.appendChild(sec);
-    }
-  }
+  _runNodeHook('ssj-tournament', node, { row, _mkSection, _mkCard }); // ── §XLV TOURNAMENT section (YC only, requires Fishing Rod) ── → NODE_HOOKS (§VM-01-G-FU-f)
 
   // ── WORLD section (NPC, vendor, portal, misc) ──────
   {

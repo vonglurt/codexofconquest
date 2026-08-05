@@ -638,3 +638,63 @@ documented `worldbuilder-crud-arrays` set; `multiplayer-presence:171` flaked and
 green).
 
 **Ship hash:** `3dfdc26` (2026-08-05).
+
+## 11f. G-FU-f ship addendum (2026-08-05) — the SSJ tournament moved as the family's THIRD zero-delta no-op, and the slice plan's block inventory is DONE
+
+**The plan held exactly as written — the first slice in the family with zero corrections.**
+"SSJ → `NODE_HOOKS` verbatim (no design call)" is what shipped: the §XLV tournament block
+(124 lines — the census's ONE Class-E bespoke UI, an accordion state machine over
+`NPC_TOUR_OPPONENTS` with per-opponent challenge cards, a stake-gated cast roll, and the
+Bog losing beat) moved to `_nodeHookSsjTournament`, registry tail after the §LXX run,
+dispatched in place. G2's method: **line-multiset 124/124, zero unmatched lines**, and the
+git diff is +128/−124 — the 124 verbatim lines plus exactly the 2-line fn wrapper, 1 registry
+entry, and 1 dispatch line.
+
+**The ctx is the one new shape worth recording: three storyRender-local SECTION surfaces,
+not one DOM node.** Unlike every prior hook (a div: `npcRowDiv`, `cqDiv`), this block renders
+a `_mkSection` into `#story-info-row` between the Rest and World sections, using the
+storyRender-local builders `_mkSection`/`_mkCard`. Those close over nothing — they are local
+by placement, not by dependency — so the ctx passes them under their own names,
+`{ row, _mkSection, _mkCard }`, and the body stays byte-verbatim (the G2b rule generalized:
+pass exactly what the block already names, nothing renamed). In-place dispatch preserves the
+Rest → Tournament → World section order by construction, so the G-FU-b sibling-analysis
+question does not even arise — the block owns no afterend siblings.
+
+**Evidence (the zero-delta standard, third time):** 16-combo golden HEAD-vs-after over the
+full `#story-info-row` DOM + section bounding boxes + msg text/class + state (gold, beats,
+title, bogDefeated, quests, inventory, saved gold), incl. **7 click combos** (accordion
+open/close/toggle/walk-away, cast win/lose/tie, the Bog beat, the master sweep, the broke
+re-arm, the engine-sole-completer quest chain) — **16/16 byte-identical**; self-stability
+16/16 BOTH sides; §7½ **16/16 story-info-row PNGs byte-identical**, fresh and cast-win-bog
+eyeballed live (title badge, BEAT strikethrough, quest chain advanced). 9-authored-string
+sweep, every count equal to HEAD. `uqf-node-ssj.test.js` **10/10 with 3 red on HEAD —
+exactly the registry/source tests — and all 7 behaviour tests green BOTH ways** (the G-FU-b
+honest shape); `uqf-node-hooks` pin 31→32; `check:walk` **16/16 exit 0**; 23 anchor hints
+refreshed by `anchors:fix` (the ~124-line shift above storyRender — the G-FU-b lesson,
+run it in-slice); full Playwright **931 passed / 4 failed** (935 tests; the four are the
+documented `worldbuilder-crud-arrays` set; no flake this run).
+
+**Left as measured, filed not fixed:** `_tourRoll` draws `Math.random()` into persisted
+state (gold, `yugurtTourBeat`) — a §DX-02m site, noted in the test header. The win path's
+`storyCheckQuests(node)` is the §ARCH-01 W8c sole-completer contract working correctly —
+pinned green both ways, no double-pay here (the §LXX/§SPARK class does NOT strike: the
+button pays the stake, the quest pays only xpAward).
+
+**With this slice the §11 slice plan's BLOCK INVENTORY IS COMPLETE** — every one of the
+~38 below-front special-case blocks the triage censused now lives in a registry
+(`NODE_HOOKS`/`NODE_PANELS`/`NODE_VERBS`) or is ask-blocked with its reason filed. What
+remains of the second stack is not blocks but the **3 engine specials (6 sites)**, filed
+as design calls in BACKLOG **§VM-01-G-FU-f2**, measured live this slice:
+- **TLS `isFinal`** — the predicate `(node|waypointNode)==='TLS' && level>=20 && shards>=7`
+  swaps `storyPreBattle` for `storyPreFinalBattle`, duplicated at THREE sites (encounter
+  card + two quest-list Fight buttons). Ask: a node field (`finalBattle:{minLevel,minShards}`)
+  vs stay. The duplication is the drift risk.
+- **INN sleep pricing** — `freeBookingUnlocked` (written at `innmotherKindness >= 5`,
+  completing `quest_inn_06`) zeroes `node.sleepCost` at three sites in the sleep flow, all
+  guarded `node.code === 'INN'`. Ask: a node field (a cost-waiver flag name) vs stay.
+- **Patrol ordered-visit** — three arrival-path lines write `patrolBA → patrolIN →
+  patrolRouteComplete` in enforced LHR→TLL→MHQ order while `quest_city_watch_patrol` is
+  active. The gate grammar has no ordered-visit leaf. Ask: a grammar leaf vs a 3-quest
+  chain re-expression vs stay.
+
+**Ship hash:** recorded in the docs follow-up (2026-08-05).
