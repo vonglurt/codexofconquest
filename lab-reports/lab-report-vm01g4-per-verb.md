@@ -2,7 +2,7 @@
 # Lab Report — §VM-01-G4: Class D per-verb (the migration front's last slice)
 
 > **Status: DESIGN LOCKED `f340143` · ASK ANSWERED (refuse-at-click) · G4a ✅ SHIPPED `b905733` ·
-> G4b ✅ SHIPPED — see the §12½ and §12¾ addenda. §1–§12 below are the design pass as written before any edit and are left
+> G4b ✅ SHIPPED `f7a60a5` · G4c ✅ SHIPPED `4c2a831` — see the §12½, §12¾ and §12⅞ addenda. §1–§12 below are the design pass as written before any edit and are left
 > unrewritten; the addendum is where what actually shipped is recorded.** This is the child
 > design pass the parent report's §7 design lock required before G4 may be built
 > (*"G4 OK in principle, but G4 gets its own child design pass first"*). Parent:
@@ -458,8 +458,8 @@ to `cost`, which is the parent's stated bar for the leaf not being single-use.
 
 ---
 
-## 12⅞. ADDENDUM — G4c is SHIPPED: the button mode gets its first consumers, and the D1 count
-was measured down from 13 to 4 (2026-08-04)
+## 12⅞. ADDENDUM — G4c is SHIPPED `4c2a831`: the button mode gets its first consumers, and the D1
+count was measured down from 13 to 4 (2026-08-04)
 
 **What shipped.** Four D1 surfaces become `NODE_VERBS` button entries — Sweelinck's S49 scene at
 `NUE`, Ori at `STN`, Yva at `TRD`, Brynn's firewood at `TLL` — and the Junction Vignette's
