@@ -69,10 +69,45 @@ loud, because it would apply its effects on every draw of the node); **`ambient`
 flavour line for a state that offers nothing to do. `when` is a plain predicate over state — note
 that a `cost` never belongs in it (refuse-at-click, above).
 
-**Dispatch is in place**: `_renderNodeVerbs(node, st)` is called at the source position the migrated
-block occupied, so DOM stacking order is preserved by construction rather than by analysis. Live
-consumers: the Kern & Sable overture at DUS (Q-NEXUS-00/01/02) — the first `choice` ever executed
-in this game. The 13 single-verb surfaces arrive in §VM-01-G4c.
+**Dispatch is in place**: `_renderNodeVerbs(node, st, group)` is called at the source position each
+migrated block occupied, so DOM stacking order is preserved by construction rather than by analysis.
+
+#### The button verb (§VM-01-G4c, 2026-08-04)
+
+```js
+{ id:'trd-yva', group:'trd-yva', nodes:['TRD'],
+  when: st => (st.quests||{})['quest_vs_02'] === 'active' && !st.vsWeaponsFound,
+  label:'💬 Find Yva (50gp).', btnStyle:'margin-top:6px;',
+  bits: st => [ { kind:'cost', gold:50, refuse:"💰 You don't have 50gp." },
+                { kind:'narrative', msg:'Yva: "Fifty gold…' + (st.tlMissingShipSolved ? '…' : '') },
+                { kind:'flag_write', set:['vsWeaponsFound'] },
+                { kind:'favor', npc:'yva', set:1 },
+                { kind:'reward', items:[{ name:'Hollow Hands Seal', … }] },
+                { kind:'unlock', quests:['quest_vs_03'] } ] }
+```
+
+- **`group` names a dispatch position**, and it is the unit the renderer takes. Every group has
+  exactly one call site and every call site names a live group — a test asserts both, because an
+  entry with no call site would render **nowhere** and nothing else would notice.
+- **`bits` may be an array or `fn(st)`** — the same `string | fn` shape `ambient` and `when` already
+  have. Use the function form only for text assembled from state (Yva's extra paragraph once the
+  Harrow is solved); the VM still receives a plain declarative array.
+- **`btnStyle`** is the button's own inline style. A verb with a `label` and no `ambient` **is** its
+  button — no wrapper — because the anchor's parent is a flex column: a direct-child button is
+  stretched full width, and the same button inside a wrapper shrinks to its text. A DOM diff cannot
+  see that; only a screenshot can.
+- **`favor` takes `set:`, not `add:`, when mirroring `_setNpcFavor`** — that helper writes an
+  absolute level and only ever raises it, so `add:1` would *lower* a favor already at 2.
+- **The chain's completion re-renders the node.** Anything the verb satisfies (a quest's completion
+  gate) therefore lands in the **same beat** rather than on the next arrival, and the chain's
+  narrative survives as `storyRender`'s prefix instead of being overwritten by whatever spoke last.
+
+Live consumers: the Kern & Sable overture at DUS (Q-NEXUS-00/01/02) — the first `choice` ever
+executed in this game — plus four button verbs (Sweelinck's S49 scene at NUE, Ori at STN, Yva at
+TRD, Brynn's firewood at TLL). The Junction Vignette's `[Help — 10gp]` pays through `cost` **without**
+being a verb: `_uqfRunChain(bits)` runs a chain in place, with no mount and no re-render, for a
+surface a re-render would erase. The remaining D1 blocks (delayed beats, hand-styled panels) wait on
+§VM-01-G4c-FU's design calls.
 
 ---
 

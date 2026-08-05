@@ -46,12 +46,14 @@ test.describe('§VM-01-G4b — the NODE_VERBS registry', () => {
       dus: NODE_VERBS.filter(v => (v.nodes || []).indexOf('DUS') > -1).map(v => v.id),
       hasRenderer: typeof _renderNodeVerbs === 'function',
       // the two surfaces that offer a decision are `choice` bits — not three one-option verbs
-      choiceKinds: NODE_VERBS.filter(v => v.bits).map(v => v.bits[0].kind),
-      optionCounts: NODE_VERBS.filter(v => v.bits).map(v => v.bits[0].options.length),
+      choiceKinds: NODE_VERBS.filter(v => v.group === 'dus-kern-sable' && v.bits).map(v => v.bits[0].kind),
+      optionCounts: NODE_VERBS.filter(v => v.group === 'dus-kern-sable' && v.bits).map(v => v.bits[0].options.length),
     }));
     expect(r.hasRenderer).toBe(true);
     expect(r.dus).toEqual(['dus-kern-sable-first', 'dus-kern-sable-followup', 'dus-kern-sable-after']);
-    expect(r.ids).toEqual(r.dus);   // G4b ships the pilot ALONE; the 13 D1 verbs arrive in G4c
+    // G4b shipped the pilot alone; §VM-01-G4c added the D1 button verbs after it, so the DUS trio
+    // is now the HEAD of the table rather than the whole of it.
+    expect(r.ids.slice(0, 3)).toEqual(r.dus);
     expect(r.choiceKinds, 'an exclusive surface is a `choice` bit, not a stack of verbs').toEqual(['choice', 'choice']);
     expect(r.optionCounts, 'three options on the first meeting, two on the follow-up').toEqual([3, 2]);
   });

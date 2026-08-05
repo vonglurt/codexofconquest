@@ -32,8 +32,8 @@ front moves backward ~4/day"* no longer holds inside the region: the front moved
 1,439 lines in seven days. G4 is what is left.
 
 **Registries in the house style G4 must match** (both live, both already load-bearing):
-`NODE_PANELS` (`const NODE_PANELS@31253`, rendered by `_renderNodePanels(node, st)@31382`) and
-`NODE_HOOKS` (`const NODE_HOOKS@32768`, dispatched in place by `_runNodeHook(id, node, ctx)@32806`).
+`NODE_PANELS` (`const NODE_PANELS@31285`, rendered by `_renderNodePanels(node, st)@31414`) and
+`NODE_HOOKS` (`const NODE_HOOKS@32800`, dispatched in place by `_runNodeHook(id, node, ctx)@32838`).
 
 ---
 
@@ -76,8 +76,8 @@ anywhere in the game today.
 This is the finding that reorders the whole slice, and it was not visible from the parent report.
 
 Inc A built the coroutine seam and built it correctly: `execBits` is a generator
-(`*execBits(bits, ctx)@22172`), `choice` is a suspending handler that yields an `ask` envelope
-(`*choice(bit, ctx)@22268`), and the host has a driver that parks the generator in a module slot
+(`*execBits(bits, ctx)@22204`), `choice` is a suspending handler that yields an `ask` envelope
+(`*choice(bit, ctx)@22300`), and the host has a driver that parks the generator in a module slot
 (`function _uqfPump(gen, answer)@6827`, `let _uqfPending = null@6824`).
 
 **What was never built is the other half of the driver — the part that renders the ask and resumes
@@ -147,7 +147,7 @@ honour it.
 ## 5. Finding 3 — two blocks capture free text, which `choice` cannot express and should not
 
 `Entry 42` (LHR) and the `Secret Gate` void-toll rune (ZRH) both render a `<textarea>` and persist
-the player's own prose — `S_story.entry42Text@33004` and `S_story._voidTollSecret@33143`. Both are
+the player's own prose — `S_story.entry42Text@33101` and `S_story._voidTollSecret@33229`. Both are
 read back by the ending. `choice`'s resume value is *"an index, so the data author never couples to
 presentation"* (`22152`); a free-text answer couples to presentation by definition.
 
@@ -162,7 +162,7 @@ the moment to grow the shape — with three consumers, not two.)
 ## 6. Finding 4 — `consume` already exists; only `cost` is missing, and it is three currencies
 
 The parent named the missing grammar as *"a `cost` leaf (gold≥N, consume) — ONE new opcode."* Half
-of that is already shipped: **`item_remove`** is a live handler (`item_remove(bit, ctx)@22251`) and
+of that is already shipped: **`item_remove`** is a live handler (`item_remove(bit, ctx)@22283`) and
 covers every consume site measured (Hollow Hands Seal, Old Tuna Account Book).
 
 What is genuinely missing is the **cost** half, and it is not one currency:
@@ -180,7 +180,7 @@ Two properties of the shipped behaviour that a naive `cost` leaf would silently 
    leaf that hides or disables the unaffordable verb is a **UX change**, not a no-op — and the
    telling-vs-asking thesis of this whole track argues the current behaviour is the better one
    (the game says what it wants; it does not quietly withhold the option).
-2. **`reward` will not do the job.** `reward(bit, ctx)@22218` does `st.gold = (st.gold||0) + bit.gold`,
+2. **`reward` will not do the job.** `reward(bit, ctx)@22250` does `st.gold = (st.gold||0) + bit.gold`,
    so `gold: -50` "works" arithmetically — with no affordability test, no refusal message, and the
    word *reward* on a price. That is a real-but-wrong object, and per WBAPI Hazard #2's standing
    lesson, **a write into a real-but-wrong object never throws.**
@@ -213,9 +213,9 @@ honest and neither is quietly dropped a fourth time.
 ## 8. Finding 6 — the act-leg thread §VM-01-G2b opened is now closed for this region
 
 G2b found five narrative beats gated on `actNumber >= N` at nodes whose `act` is 1, and therefore
-permanently dead (`S_story.actNumber = node.act || 1@32921`, assigned every render). Swept for the
+permanently dead (`S_story.actNumber = node.act || 1@33018`, assigned every render). Swept for the
 same shape across G4's region: **one act comparison remains** —
-`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@33044` (Sweelinck's "map before the city"
+`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@33141` (Sweelinck's "map before the city"
 line). **NUE is `act:6`**, so the leg is not dead — it is **vacuously true**, and has been since it
 shipped. It is not staging; arriving at NUE at all satisfies it.
 
@@ -253,7 +253,7 @@ made for the class and it holds: across all 13 D1 surfaces the only grammar gap 
 A **D3 menu** is just several `NODE_VERBS` entries sharing a `group` id, rendered into one
 container — which is what `cq-boss-buttons` already is. The three CDG confrontations become
 `{ kind:'combat', key:'taz_devil', label:'…', nodeCode:'CQ_TAZ' }`; **`combat`'s optional
-`nodeCode` field already exists** (`combat(bit)@22249`) and is exactly the synthetic-code spread
+`nodeCode` field already exists** (`combat(bit)@22281`) and is exactly the synthetic-code spread
 those buttons hand to `storyPreBattle` today, so no grammar is needed for them either.
 
 ### 9.2 The choice driver — the host half Inc A left unbuilt
@@ -458,17 +458,113 @@ to `cost`, which is the parent's stated bar for the leaf not being single-use.
 
 ---
 
+## 12⅞. ADDENDUM — G4c is SHIPPED: the button mode gets its first consumers, and the D1 count
+was measured down from 13 to 4 (2026-08-04)
+
+**What shipped.** Four D1 surfaces become `NODE_VERBS` button entries — Sweelinck's S49 scene at
+`NUE`, Ori at `STN`, Yva at `TRD`, Brynn's firewood at `TLL` — and the Junction Vignette's
+`[Help — 10gp]` keeps its block and swaps its hand-written price for the **`cost`** leaf. That
+second one is §10's stated bar for the leaf not being single-use, and it is now met: **two live
+consumers, at two different prices, in two different surfaces.**
+
+**The finding is the count.** §4 listed 13 D1 surfaces and §10 sliced them as one unit. Reading all
+13 against the shipped grammar rather than against the census, **only 4 are expressible today**, and
+the other 9 are blocked by three gaps this report measured toward but never named:
+
+| Blocked by | Surfaces | What is actually missing |
+|---|---|---|
+| **a delayed second beat** | Harbor Board · Solvak probe · Seal delivery | each ends `setTimeout(() => storyMsg(…), 400–800)`. `storyMsg` **replaces** `#story-move-msg`, so the first line is *destroyed* after the beat — that pacing is authored. `narrative` has no timing and the kernel is pure (it cannot schedule), so folding both lines into the buffer would make a transient line permanent. |
+| **panel chrome** | Surge Lock · Froberger letter · Codex Inquisitor | each hand-builds a `.sweelinck-variant` div with its own `border-left-color`, title colour, wrapper `margin-top` (8 vs 10), title `margin-bottom` (4 vs 6), body `margin-bottom` (6 vs 8) and, at Surge Lock, a button `background`. A *byte-identical* generic panel would need to carry all six as registry fields — that is a CSS struct smuggled into a vocabulary, not a vocabulary. |
+| **a ceremonia launch** | Codex Inquisitor (also) | its button calls `_rollCeremonia(questId)` — it *starts* a skill check rather than containing one, which is precisely why §9.2 said the scope fence does not need widening; but there is no bit that starts one. |
+
+Plus the two already recorded: the Reading Circle (§9.3, a day cooldown) and the la_riva delivery,
+which lives inside CDG's `cq-boss-buttons` container and therefore belongs to **G4d** with the menu
+it shares a div with. **13 = 4 shipped + 3 delay + 3 panel + 1 cooldown + 1 D3-resident + Codex
+Inquisitor counted once in the panel column.** Each of the three gaps is a *design call*, not a
+build step — filed as **§VM-01-G4c-FU** with a recommendation, because inventing an answer to any
+of them inside this slice is exactly the `itemsMinAny` failure §4 exists to prevent.
+
+**Three schema growths, each with a measured reason:**
+
+1. **`group`** — the dispatch position. G4b had one call site rendering the whole table; four blocks
+   in four different source positions cannot share one, and LIFO stacking is preserved only by
+   dispatching **where the block sat**. `group` is §9.1's own D3 word ("several `NODE_VERBS` entries
+   sharing a group id"), so G4d inherits it. Every group has exactly one call site and every call
+   site names a live group — **asserted**, because an entry with no call site renders nowhere, which
+   is the silent rot this whole track exists to stop.
+2. **`bits` may be a fn(st)** — the same `string | fn` shape `ambient` and `when` already have in
+   this registry. Yva's line grows a paragraph once the Harrow is solved; Sweelinck's closes
+   differently on NG+ (`_getS49SweelinckScene()`), and the inline handlers computed that text **at
+   click**. The VM's grammar is untouched: `execBits` is handed a plain declarative array either way.
+3. **`btnStyle`, and a label-only verb IS its button — no wrapper at all.** This is the one the
+   evidence caught rather than the design. Every D1 block inserted a **bare button** afterend of
+   `#story-text-box`, whose parent is a **flex column**: a direct-child button is stretched to the
+   column's full width, and the identical button inside G4b's block mount shrinks to its own text.
+   **The golden-DOM capture reported that as identical** — same tag, same class, same label, same
+   style — and the §7½ screenshot showed a full-width bar on one side and a small left-aligned chip
+   on the other. So the button is the managed element (it carries the mount's `id`, and if such a
+   chain ever suspends the driver swaps it for a div first), and `btnStyle` carries the site's own
+   spacing — 8/4/6/6px, one per site. **The lesson is the one this track keeps relearning in a new
+   dimension: a DOM diff proves markup, not layout.** The bounding box is now part of the capture.
+
+**One `cost` correction against §9.1's sketch:** it wrote `{ kind:'favor', npc:'yva', add:1 }`.
+`_setNpcFavor` takes an **absolute** level and only ever raises it, so `add:1` would have *lowered*
+a favor already at 2. The shipped bit is `set:1`, and the case is pinned by a test.
+
+**Evidence — a 23-combo golden capture of every affected state, HEAD vs after**, over DOM (markup
+**and** bounding box), message text, message class, gold, hp, inventory, favor, quests and flags.
+**11 states are byte-identical · 5 differ only by the `id` the button now carries** — every
+"offered" state and the refusal, box included, so the four migrated surfaces are **pixel-identical**
+— **and 7 carry the delta below.** All four DUS states are byte-identical (G4b untouched) and all
+three junction states are byte-identical, including the `msg-block` shake class on the refusal,
+which is what proves the price conversion is a no-op rather than a rewrite. **6 of the 9 §7½
+screenshots are byte-identical PNGs**; the 3 that differ are the click outcomes. Every remaining
+delta is **one class, already named by G4b**: the
+driver re-renders when a chain ends, so a quest the verb satisfies **completes in the same beat**
+instead of on the next arrival — `quest_tl_03` pays its 300gp and Ori's Account while the player is
+still looking at the verb, `quest_vs_02` closes on the same click. It is paid **exactly once** either
+way (§VM-01-G3 moved those payouts into the quests' own `onComplete` for exactly this reason), and
+the migration *recovers* two narratives the inline handlers destroyed: at Yva, `_setNpcFavor`'s
+`🤝 …looks at you differently now.` used to overwrite her whole speech; at the firewood,
+`storyCheckQuests`' own messages did. The driver buffers the chain's narrative and hands it to
+`storyRender` as the **prefix**, so both survive, joined.
+
+**One consequence worth recording rather than discovering.** At `NUE` the re-render advances
+`npcVisitCounts['sq_revisit']`, because that block counts a **render**, not an arrival — so
+Sweelinck's once-per-run age line now lands immediately after the S49 click instead of on the next
+visit. It still fires exactly once. The per-render counter is pre-existing (any `storyRender`
+re-entry at NUE already ticks it); it is filed under §VM-01-G4c-FU rather than fixed here, because
+changing it is a content-timing decision, not a migration step.
+
+**Tests:** `uqf-node-verbs-d1.test.js` **13/13**, and the positive control is the honest shape —
+**7 of 13 fail at HEAD, and the 6 that pass are exactly the ones asserting *unchanged* behaviour**
+(Yva's full chain, the favor floor, Sweelinck's NG+ closing, and both junction states). `check:walk`
+**16/16 exit 0** with `check:questparity` at **25,030 bytes — the kernel was not touched again**;
+`uqf-node-verbs.test.js` 10/10 with two pins updated (the DUS trio is now the table's *head*, not
+the whole of it — updating a pin that exists to catch exactly this is part of the fix).
+
+**Next: G4d** — CDG's D3 concurrent menu as grouped `NODE_VERBS` with `combat` bits, plus the two
+Class-E strays (Kenickie's market, the Lower Archive launcher) to `NODE_HOOKS` verbatim, and the
+la_riva delivery that shares their container. Then **§VM-01-G4c-FU**, once its three design calls
+are answered.
+
+---
+
 ## 13. Anchors touched by this report
 
-`storyRender(node, prefix)@32915` · `_mkSection(id, icon, label)@33854` ·
-`const NODE_PANELS@31253` · `_renderNodePanels(node, st)@31382` · `const NODE_HOOKS@32768` ·
-`_runNodeHook(id, node, ctx)@32806` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
-`function _uqfRunToCompletion(gen)@6840` · `*execBits(bits, ctx)@22172` · `*choice(bit, ctx)@22268` ·
-`combat(bit)@22249` · `item_remove(bit, ctx)@22251` · `reward(bit, ctx)@22218`
+`storyRender(node, prefix)@33012` · `_mkSection(id, icon, label)@33896` ·
+`const NODE_PANELS@31285` · `_renderNodePanels(node, st)@31414` · `const NODE_HOOKS@32800` ·
+`_runNodeHook(id, node, ctx)@32838` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
+`function _uqfRunToCompletion(gen)@6840` · `*execBits(bits, ctx)@22204` · `*choice(bit, ctx)@22300` ·
+`combat(bit)@22281` · `item_remove(bit, ctx)@22283` · `reward(bit, ctx)@22250`
 
-**Added by G4b (§12¾):** `const NODE_VERBS@32834` · `function _renderNodeVerbs(node, st)@32881` ·
-`function _mkAmbientLine(text)@6878` · `function _uqfRunVerb(verb, mount)@6906` ·
+**Added by G4b (§12¾):** `const NODE_VERBS@32873` · `function _renderNodeVerbs(node, st, group)@32962` ·
+`function _mkAmbientLine(text)@6878` · `function _uqfRunVerb(verb, mount)@6914` ·
 `function _uqfRenderAsk(gen, ask, mount, step)@6885`
+
+**Added by G4c (§12⅞):** `function _verbBits(verb, st)@6908` · `function _uqfRunChain(bits)@6949`
+*(`_renderNodeVerbs` grew its `group` argument in this slice — gate #15 caught the old anchor as a
+DEAD symbol the moment the signature changed, which is exactly what a symbol anchor is for.)*
 
 ---
 

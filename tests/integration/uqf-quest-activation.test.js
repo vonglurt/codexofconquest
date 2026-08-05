@@ -129,7 +129,11 @@ test.describe('§VM-01-G3 — declarative per-arc quest activation', () => {
     const vonn = await page.evaluate(() => Array.from(document.querySelectorAll('.inv-use-btn')).map(b => b.textContent));
     expect(vonn.some(t => t.includes('Speak with Adjutant Vonn')), 'Vonn renders for the first time ever').toBe(true);
 
-    // Ori pays out through quest_tl_03's onComplete exactly once (the button's direct grants are gone)
+    // Ori pays out through quest_tl_03's onComplete exactly once (the button's direct grants are gone).
+    // §VM-01-G4c: Ori is a NODE_VERBS entry now, and the verb driver RE-RENDERS when its chain ends,
+    // so the completion loop runs on the click itself rather than on the next render. That is a
+    // timing change, not a payout change — this test's property is "exactly once, from the quest
+    // chain", so it is asserted against a second render instead of against the click.
     const r = await page.evaluate(async () => {
       S_story.tlLedgerRead = true;
       S_story.quests = { quest_tl_01: 'complete', quest_tl_02: 'complete', quest_tl_03: 'active' };
@@ -140,18 +144,18 @@ test.describe('§VM-01-G3 — declarative per-arc quest activation', () => {
       const goldBefore = S_story.gold;
       ori.click();
       const goldAfterClick = S_story.gold;
-      storyRender(NODE_MAP.STN);              // next render: the completion loop pays the chain
+      storyRender(NODE_MAP.STN);              // a further render must add nothing
       return { oriShown: true, flag: S_story.tlMissingShipSolved,
-               clickPaidNothing: goldAfterClick === goldBefore,
+               paidOnClick: goldAfterClick === goldBefore + 300,
                status: S_story.quests.quest_tl_03,
                paidOnce: S_story.gold === goldBefore + 300,
                account: S_story.inventory.filter(i => i.name === "Ori's Account").length };
     });
     expect(r.oriShown).toBe(true);
     expect(r.flag).toBe(true);
-    expect(r.clickPaidNothing).toBe(true);
+    expect(r.paidOnClick, 'the completion beat lands in the same beat as the verb (§VM-01-G4c)').toBe(true);
     expect(r.status).toBe('complete');
-    expect(r.paidOnce, '+300gp exactly once, from the quest chain').toBe(true);
+    expect(r.paidOnce, '+300gp exactly once, from the quest chain — a further render adds nothing').toBe(true);
     expect(r.account).toBe(1);
   });
 

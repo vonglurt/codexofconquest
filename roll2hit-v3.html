@@ -6900,25 +6900,57 @@ function _uqfRenderAsk(gen, ask, mount, step) {
     mount.appendChild(b);
   });
 }
+/* §VM-01-G4c — a verb's chain, resolved. `bits` may be a FUNCTION of state, exactly as
+   `ambient` and `when` already are in the same registry: several migrated sites assemble
+   their narrative from state (Yva's line changes once the Harrow is solved; Sweelinck's
+   closing line changes on NG+), and the inline handlers computed that text at click time.
+   The VM's grammar is untouched — execBits is always handed a plain declarative array. */
+function _verbBits(verb, st) {
+  return typeof verb.bits === 'function' ? (verb.bits(st) || []) : (verb.bits || []);
+}
 /* Run one verb's bit chain to completion, rendering any choice it suspends on into `mount`.
    Returns the ctx (so a caller — or a test — can read ctx._refused after an unaffordable
    cost). A fresh ctx per run is what makes the kernel's _halt flag safe to leave set. */
 function _uqfRunVerb(verb, mount) {
   const msgs = [];
   const ctx = { verbId: verb.id, pushMsg: m => msgs.push(m) };
-  const gen = QuestRuntime.execBits(verb.bits || [], ctx);
+  const gen = QuestRuntime.execBits(_verbBits(verb, S_story), ctx);
+  let m = mount;
   const step = ask => {
     if (ask) {
-      if (!mount) { console.warn('[UQF] verb suspended with no mount to render into:', verb.id); return; }
-      _uqfRenderAsk(gen, ask, mount, step);
+      if (!m) { console.warn('[UQF] verb suspended with no mount to render into:', verb.id); return; }
+      // A label-only verb IS its button (§VM-01-G4c), so if such a chain ever suspends the button
+      // has to become a container first — an ask is a stack of buttons and cannot render inside one.
+      if (m.tagName === 'BUTTON') {
+        const d = document.createElement('div');
+        d.id = m.id; d.style.cssText = 'margin-top:8px;';
+        m.replaceWith(d); m = d;
+      }
+      _uqfRenderAsk(gen, ask, m, step);
       return;
     }
-    if (mount && mount.parentNode) mount.remove();
+    if (m && m.parentNode) m.remove();
     const _cur = NODE_MAP[S_story.currentCode];
     if (_cur && typeof storyRender === 'function') storyRender(_cur, msgs.length ? msgs.join('  ·  ') : undefined);
     else if (typeof storyMsg === 'function') msgs.forEach(m => storyMsg(m));
   };
   step(_uqfPump(gen));
+  return ctx;
+}
+/* §VM-01-G4c — run a bit chain IN PLACE: no mount, no re-render, messages straight to the
+   message line. For a surface that is NOT a NODE_VERBS entry and therefore could not be
+   re-created by a re-render — the Junction Vignette's [Help — 10gp] is the case: its lines
+   are drawn once per node by JUNCTION_VIGNETTES, and re-rendering would replace the vignette
+   the button belongs to with "…has moved on". A refused price speaks through storyBlock, so
+   the shake every hand-written gold refusal uses survives the migration. Returns ctx, which
+   is what G4a built `ctx._refused` for: the caller does its own DOM work only on success.
+   No mount means no ask can be rendered, so the chain runs through the thrower — a `choice`
+   here is a scope error, exactly as it is inside skill_check. */
+function _uqfRunChain(bits) {
+  const msgs = [];
+  const ctx = { pushMsg: m => msgs.push(m) };
+  _uqfRunToCompletion(QuestRuntime.execBits(bits || [], ctx));
+  if (msgs.length) (ctx._refused ? storyBlock : storyMsg)(msgs.join('  ·  '));
   return ctx;
 }
 
@@ -32813,30 +32845,37 @@ function _runNodeHook(id, node, ctx) {
 // the player can DO here — expressed as a UQF bit chain executed by QuestRuntime, not as a click
 // handler that writes S_story by hand.
 //
-// Schema: { id, nodes:[codes], when?(st), ambient?, label?, bits? }
+// Schema: { id, group, nodes:[codes], when?(st), ambient?, label?, btnStyle?, bits? }
 //   · `ambient` (string | fn(st)→string|null) — a flavour line for a state that offers nothing to
 //     do (the aftermath beat). Rendered as the same `.npc-ambient` div the inline blocks used.
-//   · `label` + `bits` — a BUTTON verb: one button, the chain runs on click. That is the D1 shape;
-//     its 13 surfaces arrive in G4c.
+//   · `label` + `bits` — a BUTTON verb: one button, the chain runs on click. That is the D1 shape.
 //   · `bits` WITHOUT `label` — the chain IS the surface: it runs at render, and its first bit must
 //     be a suspending `choice`, so the options appear with no extra click (exactly what the
 //     hand-written panels did) and nothing is written until the player picks. A label-less chain
 //     that does NOT suspend is refused loudly, because it would apply side effects on every render.
+//   · `bits` may be an ARRAY or a fn(st)→array (§VM-01-G4c) — the same string|fn shape `ambient`
+//     already has, for the sites whose narrative is assembled from state at click time.
+//   · `btnStyle` (§VM-01-G4c) — the button's own inline style, so a migrated site keeps the exact
+//     spacing it had. A label-only verb IS its button (see _renderNodeVerbs).
 //
 // Why not one `choice` for all of Class D: `choice` is exclusive BY CONSTRUCTION, and only 7 of the
 // 21 measured Class-D surfaces are exclusive (lab-report-vm01g4-per-verb.md §4). A one-option
 // choice is not a choice, it is a labelled effect chain with ceremony; and CDG's concurrent boss
 // menu is the opposite of exclusive, so mapping it onto `choice` would be a behaviour change.
 //
-// Dispatch is IN PLACE — _renderNodeVerbs is called at the exact source position the migrated block
-// occupied — so LIFO stacking on story-text-box 'afterend' is preserved by construction. That is
-// G2's rule, and it is why no per-block order analysis is needed here.
+// Dispatch is IN PLACE — _renderNodeVerbs(node, st, group) is called at the exact source position
+// each migrated block occupied — so LIFO stacking on story-text-box 'afterend' is preserved by
+// construction. That is G2's rule, and it is why no per-block order analysis is needed here.
+// `group` is what names a dispatch position (§9.1's D3 sketch: "several NODE_VERBS entries sharing
+// a group id, rendered into one container"). Every group in this table has exactly ONE call site
+// and every call site names a live group — asserted by uqf-node-verbs.test.js, because an entry
+// with no call site would render nowhere, which is the silent rot this whole track exists to stop.
 const NODE_VERBS = [
   // ── Layer 46: Kern & Sable at DUS — Torment Nexus Overture (Q-NEXUS-00/01/02, story.md) ──
   // The same three states the inline if/else chain had. The `when`s are mutually exclusive for the
   // same reason the else-legs were: the first requires !seen, the second !complete, the third
   // complete. The two option chains are the first `choice` bits ever executed in this game.
-  { id:'dus-kern-sable-first', nodes:['DUS'],
+  { id:'dus-kern-sable-first', group:'dus-kern-sable', nodes:['DUS'],
     when: st => !st.nexusQuestSeen,
     bits: [ { kind:'choice',
       prompt:'Two figures at the Frequency Row counter. One has mirrored ski goggles and a notebook labeled RAD IDEAS (DO NOT READ). The other\'s t-shirt says FUTURE PROOF with FUTURE crossed out. They are deep in conversation and taking notes on the book in front of them.',
@@ -32854,7 +32893,7 @@ const NODE_VERBS = [
           { kind:'reward', items:[{name:'Creative Literacy Token',icon:'📄',type:'item',sell:27,desc:'A folded printout, upvotes still visible in the corner. Worth more than it looks. Someone kept this for a reason.'}] },
           { kind:'narrative', msg:'📄 Creative Literacy Token added to inventory.' } ] },
       ] } ] },
-  { id:'dus-kern-sable-followup', nodes:['DUS'],
+  { id:'dus-kern-sable-followup', group:'dus-kern-sable', nodes:['DUS'],
     when: st => st.nexusQuestSeen && st.nexusQ01Active && !st.nexusQ02Complete,
     bits: [ { kind:'choice',
       prompt:'Kern and Sable are still at the counter. Taking notes. They glance up when you walk in.',
@@ -32868,9 +32907,51 @@ const NODE_VERBS = [
           { kind:'reward', items:[{name:'Creative Literacy Token',icon:'📄',type:'item',sell:27,desc:'A folded printout, upvotes still visible in the corner. Worth more than it looks. Someone kept this for a reason.'}] },
           { kind:'narrative', msg:'📄 Creative Literacy Token added to inventory.' } ] },
       ] } ] },
-  { id:'dus-kern-sable-after', nodes:['DUS'],
+  { id:'dus-kern-sable-after', group:'dus-kern-sable', nodes:['DUS'],
     when: st => st.nexusQuestSeen && st.nexusQ02Complete,
     ambient:'The notebook is closed. The FUTURE PROOF sticker is on the floor. Kern is reading the printout. Sable is not taking notes.' },
+
+  // ── §VM-01-G4c: the D1 button verbs — one button, no alternative offered, panel gone on use.
+  // Every bit below but `cost` was already a shipped opcode, which is the measured claim the G4
+  // design pass made for this class (lab report §9.1) and it held.
+  // ── Layer 65: S49 Froberger Entry 41 — Sweelinck at SQ (full scene) ──
+  { id:'nue-s49-sweelinck', group:'nue-sweelinck-s49', nodes:['NUE'],
+    when: st => st.frobergerLastEntryRead && !st.s49SweelinckDelivered,
+    label:'📔 You read the last entry.', btnStyle:'margin-top:8px;',
+    // _getS49SweelinckScene() closes differently on NG+ — the inline handler called it at click.
+    bits: () => [ { kind:'flag_write', set:['s49SweelinckDelivered'] },
+                  { kind:'narrative', msg:_getS49SweelinckScene() } ] },
+  // ── Q-TL-03: Ori at the Tilbury harbour (§VM-01-G3 keyed it on tl_03 active; the quest's own
+  //    onComplete pays out, so this verb narrates and sets the completion flag, nothing else) ──
+  { id:'stn-ori', group:'stn-ori', nodes:['STN'],
+    when: st => (st.quests || {})['quest_tl_03'] === 'active' && !st.tlMissingShipSolved,
+    label:'📜 Speak with Ori.', btnStyle:'margin-top:4px;',
+    bits: [ { kind:'narrative', msg:'Ori: "I was on the Harrow. I\'m the only one who came back."\n\nShe describes what boarded them. Not pirates. Not storm. Something that came from below — "a shape in the water, very large, that didn\'t move like a fish or a whale. It moved like it was looking for something. Then it found the ship."\n\n"I went over the side before it hit. Three weeks on foot to get here. I needed to tell someone."' },
+            { kind:'flag_write', set:['tlMissingShipSolved'] } ] },
+  // ── Q-VS-02: Yva the broker at TRD — the FIRST price in the game paid through the `cost` leaf
+  //    (§VM-01-G4a). Refuse-at-click is the shipped contract, so the verb always renders and says
+  //    what it wants; `cost` never contributes to a `when`. ──
+  { id:'trd-yva', group:'trd-yva', nodes:['TRD'],
+    when: st => (st.quests || {})['quest_vs_02'] === 'active' && !st.vsWeaponsFound,
+    label:'💬 Find Yva (50gp).', btnStyle:'margin-top:6px;',
+    bits: st => [
+      { kind:'cost', gold:50, refuse:'💰 You don\'t have 50gp.' },
+      { kind:'narrative', msg:'Yva: "Fifty gold. Thank you. The weapons went to the Hollow Hands. A goblin sub-clan with a Void-aligned shaman. The shaman told them the weapons were tribute Mordus owed them. Mordus never paid tribute. The shaman invented a tribute that made the Hollow Hands feel owed.\n\nThat\'s the part that scares me."\n\n'
+        + (st.tlMissingShipSolved ? 'Yva adds: "The Harrow. I heard about that ship. The Hollow Hands didn\'t touch it. Whatever got that ship wasn\'t them."\n\n' : '')
+        + 'She gives you the mark — a seal used by the Hollow Hands to identify allied cargo.' },
+      { kind:'flag_write', set:['vsWeaponsFound'] },
+      // `set:1`, not `add:1` — _setNpcFavor takes an ABSOLUTE level and only ever raises it.
+      { kind:'favor', npc:'yva', set:1 },
+      { kind:'reward', items:[{ name:'Hollow Hands Seal', icon:'🖤', type:'quest_item', sell:0,
+        description:'A goblin sub-clan mark. Void-tainted. The mark of a faction answering to a shaman Mordus doesn\'t know.' }] },
+      { kind:'unlock', quests:['quest_vs_03'] } ] },
+  // ── §DESIGN-03: quest_brynn_firewood — the woodpile at Birka ──
+  { id:'tll-brynn-firewood', group:'tll-brynn-firewood', nodes:['TLL'],
+    when: st => _npcFavor('brynn') >= 1 && (st.quests || {})['quest_brynn_firewood'] === 'active'
+                && !st.brynnFirewoodDelivered,
+    label:'🪵 Help split the firewood.', btnStyle:'margin-top:6px;',
+    bits: [ { kind:'flag_write', set:['brynnFirewoodDelivered'] },
+            { kind:'narrative', msg:'You find the axe where she left it — not stored, just set down, the way you set something down when you intend to come back to it later but later has been a while.\n\nThe pile takes an hour. When you stack the last piece she comes out the back door with a cup of something hot and does not say anything. She goes back inside.\n\nThe cup is for you. She left it on the chopping block.' } ] },
 ];
 
 // §VM-01-G4b: render every NODE_VERBS entry active for this node, in table order, each into its own
@@ -32878,31 +32959,47 @@ const NODE_VERBS = [
 // source position, so DOM order is unchanged. A label-less chain is started immediately and parks on
 // its `choice`; _uqfRenderAsk owns the mount from that point (it clears it and renders the ask), so
 // an `ambient` and a suspending chain are never combined on one entry.
-function _renderNodeVerbs(node, st) {
+function _renderNodeVerbs(node, st, group) {
   for (const v of NODE_VERBS) {
+    if (group !== undefined && v.group !== group) continue;
     if (v.nodes && v.nodes.indexOf(node.code) === -1) continue;
     if (v.when && !v.when(st)) continue;
     const amb = typeof v.ambient === 'function' ? v.ambient(st) : v.ambient;
-    const hasBits = !!(v.bits && v.bits.length);
+    const bits = _verbBits(v, st);
+    const hasBits = bits.length > 0;
     if (!amb && !hasBits) continue;
     // A label-less chain IS the surface, so it runs at render — which means it MUST park on a
     // choice before it can write anything. Anything else would apply its side effects every time
     // the node is drawn, so refuse out loud, and refuse BEFORE the mount exists: a refusal that
     // leaves an empty div behind is a refusal that still changed the page.
-    if (hasBits && !v.label && v.bits[0].kind !== 'choice') {
+    if (hasBits && !v.label && bits[0].kind !== 'choice') {
       console.warn('[UQF] label-less verb whose chain does not suspend:', v.id);
       continue;
     }
-    const mount = document.createElement('div');
+    // §VM-01-G4c: a label-only verb IS its button — no wrapper. Every D1 block it migrates inserted
+    // a BARE <button> afterend of #story-text-box, and that anchor's parent is a flex column, so a
+    // direct-child button is stretched full width by the layout while one inside a wrapper shrinks
+    // to its text. That is invisible to a DOM diff and obvious in a screenshot (§7½ caught it), so
+    // the button is the managed element and carries the site's own spacing.
+    const bare = !!v.label && !amb;
+    const mount = document.createElement(bare ? 'button' : 'div');
     mount.id = 'verb-' + v.id;
+    if (bare) {
+      mount.className = 'inv-use-btn';
+      mount.style.cssText = v.btnStyle || 'margin-top:6px;';
+      mount.textContent = v.label;
+      mount.addEventListener('click', () => _uqfRunVerb(v, mount));
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', mount);
+      continue;
+    }
     mount.style.cssText = 'margin-top:8px;';
     document.getElementById('story-text-box').insertAdjacentElement('afterend', mount);
     if (amb) mount.appendChild(_mkAmbientLine(amb));
     if (!hasBits) continue;
-    if (v.label) {
+    if (v.label) {                       // label + ambient: the button stacks under the flavour line
       const btn = document.createElement('button');
       btn.className = 'inv-use-btn';
-      btn.style.cssText = 'margin-top:6px;display:block;';
+      btn.style.cssText = v.btnStyle || 'margin-top:6px;display:block;';
       btn.textContent = v.label;
       btn.addEventListener('click', () => _uqfRunVerb(v, mount));
       mount.appendChild(btn);
@@ -33052,19 +33149,8 @@ function storyRender(node, prefix) {
           document.getElementById('story-text-box').insertAdjacentElement('afterend', mapLineDiv);
         }
       }
-      // ── Layer 65: S49 Froberger Entry 41 — Sweelinck at SQ (full scene) ──
-      if (node.code === 'NUE' && S_story.frobergerLastEntryRead && !S_story.s49SweelinckDelivered) {
-        const s49SqBtn = document.createElement('button');
-        s49SqBtn.className = 'inv-use-btn';
-        s49SqBtn.style.cssText = 'margin-top:8px;';
-        s49SqBtn.textContent = '📔 You read the last entry.';
-        s49SqBtn.addEventListener('click', () => {
-          S_story.s49SweelinckDelivered = true;
-          storyMsg(_getS49SweelinckScene());
-          s49SqBtn.remove();
-        });
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', s49SqBtn);
-      }
+      // ── Layer 65: S49 Froberger Entry 41 — Sweelinck at SQ (full scene) ── → NODE_VERBS (§VM-01-G4c)
+      _renderNodeVerbs(node, S_story, 'nue-sweelinck-s49');
     }
   }
   // ── Layer 51: §XVI Weimar Scholar Gate — SQ node ──
@@ -33176,7 +33262,6 @@ function storyRender(node, prefix) {
   }
   // ── Layer 54: §XIX Tilbury Harbor Arc — SF and TL nodes ──
   if (node.code === 'STN') {
-    const _tqs = S_story.quests || {};
     // (§VM-01-G3: Q-TL-01/02/03 activation moved into the quests' own gates + activateNode:'STN'
     //  — tl_01 unconditional; tl_02 tlLedgerRead; tl_03 questsDone tl_02 (the old act≥4 leg was
     //  structurally dead: actNumber = node.act, constant per node). The FU6 unlock referral
@@ -33208,19 +33293,8 @@ function storyRender(node, prefix) {
     // STN — and the button's direct grants duplicated quest_tl_03's W7c onComplete chain,
     // a latent double-pay. Now: the button shows while tl_03 is ACTIVE, narrates, and sets
     // the completion flag; the quest's own onComplete pays out gold/favor/item exactly once.)
-    if (_tqs['quest_tl_03'] === 'active' && !S_story.tlMissingShipSolved) {
-      const oriBtn = document.createElement('button');
-      oriBtn.className = 'inv-use-btn';
-      oriBtn.textContent = '📜 Speak with Ori.';
-      oriBtn.style.cssText = 'margin-top:4px;';
-      oriBtn.addEventListener('click', () => {
-        storyMsg('Ori: "I was on the Harrow. I\'m the only one who came back."\n\nShe describes what boarded them. Not pirates. Not storm. Something that came from below — "a shape in the water, very large, that didn\'t move like a fish or a whale. It moved like it was looking for something. Then it found the ship."\n\n"I went over the side before it hit. Three weeks on foot to get here. I needed to tell someone."');
-        S_story.tlMissingShipSolved = true;
-        oriBtn.remove();
-        storyAutoSave();
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', oriBtn);
-    }
+    // → NODE_VERBS (§VM-01-G4c)
+    _renderNodeVerbs(node, S_story, 'stn-ori');
   }
   if (node.code === 'TL') {
     const _tqs = S_story.quests || {};
@@ -33307,34 +33381,11 @@ function storyRender(node, prefix) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', payBtn);
     }
   }
-  if (node.code === 'TRD') {
-    const _vqs2 = S_story.quests || {};
-    // §VM-01-G3 — keyed on vs_02's own status (was vsDebtProbed): the Solvak probe still opens
-    // it, and a §BOARD-01-FU6 referral-unlocked vs_02 (pachelbel/couperin convergence) no longer
-    // dead-ends — the broker answers whoever legitimately holds the quest.
-    if (_vqs2['quest_vs_02'] === 'active' && !S_story.vsWeaponsFound) {
-      const yvaBtn = document.createElement('button');
-      yvaBtn.className = 'inv-use-btn';
-      yvaBtn.textContent = '💬 Find Yva (50gp).';
-      yvaBtn.style.cssText = 'margin-top:6px;';
-      yvaBtn.addEventListener('click', () => {
-        if ((S_story.gold || 0) < 50) { storyMsg('💰 You don\'t have 50gp.'); return; }
-        S_story.gold -= 50;
-        storyMsg('Yva: "Fifty gold. Thank you. The weapons went to the Hollow Hands. A goblin sub-clan with a Void-aligned shaman. The shaman told them the weapons were tribute Mordus owed them. Mordus never paid tribute. The shaman invented a tribute that made the Hollow Hands feel owed.\n\nThat\'s the part that scares me."\n\n'
-          + (S_story.tlMissingShipSolved ? 'Yva adds: "The Harrow. I heard about that ship. The Hollow Hands didn\'t touch it. Whatever got that ship wasn\'t them."\n\n' : '')
-          + 'She gives you the mark — a seal used by the Hollow Hands to identify allied cargo.');
-        S_story.vsWeaponsFound = true;
-        _setNpcFavor('yva', 1);
-        S_story.inventory = S_story.inventory || [];
-        S_story.inventory.push({ name:'Hollow Hands Seal', icon:'🖤', type:'quest_item', sell:0,
-          description:'A goblin sub-clan mark. Void-tainted. The mark of a faction answering to a shaman Mordus doesn\'t know.' });
-        if (!_vqs2['quest_vs_03']) S_story.quests['quest_vs_03'] = 'active';
-        yvaBtn.remove();
-        storyAutoSave();
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', yvaBtn);
-    }
-  }
+  // §VM-01-G3 — keyed on vs_02's own status (was vsDebtProbed): the Solvak probe still opens
+  // it, and a §BOARD-01-FU6 referral-unlocked vs_02 (pachelbel/couperin convergence) no longer
+  // dead-ends — the broker answers whoever legitimately holds the quest.
+  // → NODE_VERBS (§VM-01-G4c — and the first price the player ever pays through `cost`)
+  _renderNodeVerbs(node, S_story, 'trd-yva');
   _runNodeHook('void-shaman-warden', node); // ── Layer 56: §XXI Void Shaman — MT tunnel Warden — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
   _runNodeHook('corelli-merchant', node); // ── Layer 61: §XXVI Corelli the Wandering Merchant — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
   // Benedikt callback at SQ when vsShamanPersuaded
@@ -33740,7 +33791,7 @@ function storyRender(node, prefix) {
     }
     // ── Layer 46: Kern & Sable at DUS — Torment Nexus Overture ── → NODE_VERBS (§VM-01-G4b)
     // Dispatched IN PLACE at the source position the block occupied, so its DOM order is unchanged.
-    _renderNodeVerbs(node, S_story);
+    _renderNodeVerbs(node, S_story, 'dus-kern-sable');
     // ── Layer 53: Junction Vignettes ──
     if (JUNCTION_VIGNETTES[node.code]) {
       const vig = JUNCTION_VIGNETTES[node.code];
@@ -33773,10 +33824,15 @@ function storyRender(node, prefix) {
               helpBtn.className = 'inv-use-btn';
               helpBtn.textContent = '[Help — 10gp]';
               helpBtn.style.cssText = 'margin-top:4px;';
+              // §VM-01-G4c — the price is the `cost` leaf now, and this is the second consumer
+              // that proves it is not single-use (the G4 design pass's stated bar for adding it).
+              // The vignette itself stays a data registry (lab report §9.3): _uqfRunChain runs the
+              // chain in place, with no re-render, because a re-render would replace these lines
+              // with "…has moved on" — junctionsSeen was set at the top of this very render.
               helpBtn.addEventListener('click', () => {
-                if ((S_story.gold || 0) < 10) { storyBlock('Not enough gold.'); return; }
-                S_story.gold -= 10;
-                storyMsg(vig.help);
+                const _ctx = _uqfRunChain([{ kind:'cost', gold:10, refuse:'Not enough gold.' },
+                                           { kind:'narrative', msg:vig.help }]);
+                if (_ctx._refused) return;
                 helpBtn.remove();
                 storyUpdateStatus();
               });
@@ -33804,24 +33860,10 @@ function storyRender(node, prefix) {
       S_story.roughWhiskeyBrynLineDelivered = true;
       setTimeout(() => storyMsg("Brynn: \"Pachelbel's selling that now? He used to turn it away — said the margin didn't justify the trouble it causes. Must have changed his policy. Things do.\""), 400);
     }
-    // ── §DESIGN-03: quest_brynn_firewood — woodpile at IN ──
-    if (node.code === 'TLL' && _npcFavor('brynn') >= 1
-        && (S_story.quests||{})['quest_brynn_firewood'] === 'active'
-        && !S_story.brynnFirewoodDelivered) {
-      const _fwBtn = document.createElement('button');
-      _fwBtn.className = 'inv-use-btn';
-      _fwBtn.textContent = '🪵 Help split the firewood.';
-      _fwBtn.style.cssText = 'margin-top:6px;';
-      _fwBtn.addEventListener('click', () => {
-        S_story.brynnFirewoodDelivered = true;
-        _fwBtn.remove();
-        storyMsg('You find the axe where she left it — not stored, just set down, the way you set something down when you intend to come back to it later but later has been a while.\n\nThe pile takes an hour. When you stack the last piece she comes out the back door with a cup of something hot and does not say anything. She goes back inside.\n\nThe cup is for you. She left it on the chopping block.');
-        storyCheckQuests(node);
-        storyUpdateStatus();
-        storyAutoSave();
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _fwBtn);
-    }
+    // ── §DESIGN-03: quest_brynn_firewood — woodpile at IN ── → NODE_VERBS (§VM-01-G4c; the
+    //    handler's storyCheckQuests/storyUpdateStatus/storyAutoSave tail is the re-render the
+    //    verb driver ends with — storyRender does all three, in that order, at its own tail.)
+    _renderNodeVerbs(node, S_story, 'tll-brynn-firewood');
     // Layer 69 §XXXIV — Quill Beat 3: The Debt Degradation (checked before Beat 2 so it can't fire same visit)
     if (node.code === 'MHQ' && S_story.quillQuestComplete && !S_story.couperiDebtDegraded) {
       S_story.couperiDebtDegraded = true;
