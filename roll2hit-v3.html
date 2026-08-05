@@ -31405,6 +31405,54 @@ const NODE_PANELS = [
       + '<div style="font-size:12px;color:#8ab0d0;line-height:1.5;">'
       + 'The floor is water. This is not a figure of speech. The Elder Marid poured its medium into the architecture and the floor is the water the palace drank. It holds your weight. This is a decision the palace made. The columns are also water. The arches are also water. The decision about which parts are floor and which are wall is aesthetic. The Marid had opinions about aesthetics. It expressed them comprehensively. You are walking on the considered opinion of an ancient elemental regarding the correct height of a threshold.'
       + '</div>' },
+  // ── §VM-01-G-FU-a: the two §CROWN-01 once-panels. Each text fn is the block's VERBATIM former
+  // body (G2's method applied to a panel): it applies the block's original award as it computes
+  // the line, which is safe ONLY under `once` — the fn runs at most one time per save, exactly as
+  // the block's own latch always guaranteed. A panel without `once` must keep its text fn pure.
+  // §CROWN-01: HG1 first-visit — give Glut's Gift. §VM-01-G-FU-a-FIX: the original once-guard was
+  // !visited['HG1'], but storyCollectLoot flips visited[code] earlier in the same render (the
+  // §VM-01-G1-FIX AO class), so this panel was DEAD since it shipped — Glut's Gift was never
+  // granted and quest_glut_06 ("The Open Hand") never listed. glutGiftReturned is the durable
+  // guard: quest_glut_06's onComplete sets it in the same write that clears glut_gift_held, so
+  // the gift cannot re-fire after the return.
+  { id:'story-hg1-gift', nodes:['HG1'],
+    when:st => !st.glut_gift_held && !st.glutGiftReturned, once:'glut_gift_held',
+    css:'margin-top:10px;border-left-color:#a07030;font-style:italic;color:#e0c890;font-size:12px;',
+    text:st => {
+      S_story.inventory = S_story.inventory || [];
+      S_story.inventory.push({ name:"Glut's Gift", icon:'🍯', sell:0, drop:false });
+      return '🍯 Glut presses the jar into your hand before you can respond to the pressing. It is warm. You are carrying Glut\'s Gift.';
+    } },
+  // §CROWN-01: HCA — Crone Mark conversion (fires once, not on revisit)
+  { id:'story-hca-marks', nodes:['HCA'],
+    when:st => !st.croneMarksBanked && (st.defeatedBattles||{})['HCA_BOSS'], once:'croneMarksBanked',
+    css:'margin-top:10px;border-left-color:#7a5a9a;',
+    text:st => {
+      const m = S_story.croneMarks || 0;
+      let _hcaText = '🟤 Crone Marks: ' + m + ' accumulated across the three crowns.\n\n';
+      if (m >= 15) {
+        S_story.abilityScores = S_story.abilityScores || {};
+        S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;
+        S_story.knowledge = S_story.knowledge || [];
+        S_story.knowledge.push('Swamp-lore — Crone Bead: one question of the deep swamp answered.');
+        S_story.inventory = S_story.inventory || [];
+        S_story.inventory.push({ name:'Crone Staff', icon:'🪄', sell:250, atkBonus:3, dmgDie:8, dmgCount:1, dmgFlat:0, type:'weapon', minLevel:1 });
+        _hcaText += 'Fifteen marks. The three crowns witnessed fully. WIS +1 (permanent). Crone Bead added to the Necklace of Knowledge. Crone Staff: 🪄 +3 ATK, 1d8.';
+      } else if (m >= 10) {
+        S_story.abilityScores = S_story.abilityScores || {};
+        S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;
+        S_story.knowledge = S_story.knowledge || [];
+        S_story.knowledge.push('Swamp-lore — Crone Bead: one question of the deep swamp answered.');
+        _hcaText += 'Ten marks. The attention was sufficient. WIS +1 (permanent). Crone Bead added to the Necklace of Knowledge.';
+      } else if (m >= 6) {
+        S_story.abilityScores = S_story.abilityScores || {};
+        S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;
+        _hcaText += 'Six marks. The crowns were witnessed. WIS +1 (permanent).';
+      } else {
+        _hcaText += 'The marks are what they are. The arc closes here regardless.';
+      }
+      return _hcaText;
+    } },
 ];
 
 // §VM-01-G1: render every NODE_PANELS entry active for this node. Runs immediately after the
@@ -32894,6 +32942,78 @@ function _nodeHookCdgKenickieMarket(node, { cqDiv }) {
       cqDiv.appendChild(kBtn);
     }
 }
+// ── §VM-01-G-FU-a: the two §CROWN-01 panel-with-embedded-button blocks, VERBATIM (G2's method).
+// Both are the staged-chain-panel shape, NOT bare D1 buttons — the button lives INSIDE a
+// .sweelinck-variant panel with its own chrome — so they stay hooks until the G4c-FU ask-2
+// panel-chrome question is answered (lab report §11's own "MOSTLY" row). The Leviathan block is
+// additionally inexpressible as verbs today for two measured reasons: the iodine pre-buff writes
+// a NUMERIC field (iodineBuffBonus = 5|3) no opcode can express (flag_write is boolean-only),
+// and the boss button renders DISABLED until the held salt is burned — a visible-but-inert
+// interlock NODE_VERBS cannot render (a `when`-gated verb is absent, not disabled).
+function _nodeHookWg0GateTrial(node) {
+  // §CROWN-01 Amendment A: WG0 — Sea Serpent gate trial
+  { const _wg0Old = document.getElementById('story-wg0-trial');
+    if (_wg0Old) _wg0Old.remove();
+    if (node.code === 'WG0' && !(S_story.defeatedBattles||{})['WG0_TRIAL']) {
+      const _wg0Div = document.createElement('div');
+      _wg0Div.id = 'story-wg0-trial';
+      _wg0Div.className = 'sweelinck-variant';
+      _wg0Div.style.cssText = 'margin-top:10px;border-left-color:#204a30;color:#9acc9a;font-size:12px;';
+      _wg0Div.textContent = '🐍 The flooded crossing. Something large coils beneath the surface — visible, not hiding. It occupies the gate. The water is at chest height.';
+      const _wg0Btn = document.createElement('button');
+      _wg0Btn.className = 'inv-use-btn'; _wg0Btn.style.marginTop = '6px';
+      _wg0Btn.textContent = '🐍 Cross the flooded gate';
+      _wg0Btn.addEventListener('click', () => {
+        _wg0Btn.disabled = true;
+        storyMsg('The water reaches your chest at the crossing. The serpent does not retreat. It turns toward you.');
+        setTimeout(() => storyPreBattle({ ...node, code:'WG0_TRIAL', battle:{ label:'Sea Serpent — The Gate Crossing', key:'sea_serpent', count:1 } }), 400);
+      });
+      _wg0Div.appendChild(_wg0Btn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wg0Div);
+    }
+  }
+}
+function _nodeHookHcaLeviathan(node) {
+  // §CROWN-01 Amendment A: HCA — Leviathan arc boss (gates the conversion)
+  { const _levOld = document.getElementById('story-hca-leviathan'); if (_levOld) _levOld.remove();
+    if (node.code === 'HCA' && !(S_story.defeatedBattles||{})['HCA_BOSS']) {
+      const _levDiv = document.createElement('div');
+      _levDiv.id = 'story-hca-leviathan';
+      _levDiv.className = 'sweelinck-variant';
+      _levDiv.style.cssText = 'margin-top:10px;border-left-color:#1a2a4a;color:#8ab0d0;font-size:12px;';
+      _levDiv.textContent = '🌊 The clearing surface breaks. Something rises from the depth that has been drawing on the swamp for a very long time — Whisper\'s silence, Glut\'s excess, Wane\'s grief, all of it accumulated below into this. The Leviathan. It surfaces here because this is where the pressure finally equals the weight above it.';
+      const _levBtn = document.createElement('button');
+      _levBtn.className = 'inv-use-btn'; _levBtn.style.marginTop = '6px';
+      _levBtn.textContent = '🌊 Face the Leviathan';
+      // Check for iodine inventory — offer burn before battle
+      const _invL = S_story.inventory || [];
+      const _hasChL = _invL.some(i => i.name === 'Charged Iodine Salt');
+      const _hasPlaL = _invL.some(i => i.name === 'Iodine Salt');
+      if (_hasChL || _hasPlaL) {
+        const _iodBtn = document.createElement('button');
+        _iodBtn.className = 'inv-use-btn'; _iodBtn.style.cssText = 'margin-top:4px;border-color:#c09020;color:#e0c060;';
+        _iodBtn.textContent = _hasChL ? '⚡🧂 Burn Charged Iodine Salt at the water\'s edge (+5 ATK this fight)' : '🧂 Burn Iodine Salt at the water\'s edge (+3 ATK this fight)';
+        _iodBtn.addEventListener('click', () => {
+          _iodBtn.disabled = true; _levBtn.disabled = false;
+          const _iIdx = _invL.findIndex(i => i.name === (_hasChL ? 'Charged Iodine Salt' : 'Iodine Salt'));
+          if (_iIdx !== -1) _invL.splice(_iIdx, 1);
+          S_story.iodineBuffActive = true; S_story.iodineBuffBonus = _hasChL ? 5 : 3;
+          storyMsg(_hasChL ? '⚡🧂 Charged iodine burns blue-white at the water\'s edge. The Leviathan flinches. Atlantean craft — ancient and correct.' : '🧂 Iodine salt burns at the waterline. The smoke is chemical, sea-salt, focused. The Leviathan is sensitive to it.');
+        });
+        _levDiv.appendChild(_iodBtn);
+        _levBtn.disabled = true;
+      }
+      _levBtn.addEventListener('click', () => {
+        _levBtn.disabled = true;
+        const _iodAtk = S_story.iodineBuffActive ? ' The iodine reaction is already in the water.' : '';
+        storyMsg('The Leviathan surfaces completely.' + _iodAtk + ' It is larger than the clearing. It has been here, below, the entire arc.');
+        setTimeout(() => storyPreBattle({ ...node, code:'HCA_BOSS', battle:{ label:'The Leviathan — Rising from the Clearing', key:'leviathan', count:1 } }), 400);
+      });
+      _levDiv.appendChild(_levBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _levDiv);
+    }
+  }
+}
 const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'nue-lower-archive', nodes:['NUE'], fn:_nodeHookNueLowerArchive },
   { id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA'], fn:_nodeHookVoidArchaeology },
@@ -32933,6 +33053,8 @@ const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'birka-quill-ngplus-song', nodes:['MHQ'], anchor:'npc-row', fn:_nodeHookBirkaQuillNgPlusSong },
   { id:'birka-rod-shop', nodes:['SSJ'], anchor:'npc-row', fn:_nodeHookBirkaRodShop },
   { id:'birka-quill-ambient-song', nodes:['MHQ'], anchor:'npc-row', fn:_nodeHookBirkaQuillAmbientSong },
+  { id:'wg0-gate-trial', nodes:['WG0'], fn:_nodeHookWg0GateTrial },    // §VM-01-G-FU-a
+  { id:'hca-leviathan', nodes:['HCA'], fn:_nodeHookHcaLeviathan },     // §VM-01-G-FU-a
 ];
 function _runNodeHook(id, node, ctx) {
   for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node, ctx);
@@ -33097,6 +33219,75 @@ const NODE_VERBS = [
             // (the ✨ Dear Friend line is authored in the narrative below, as it always was).
             { kind:'favor', npc:'kenickie', set:3 },
             { kind:'narrative', msg:'You hand Kenickie the account book.\n\nHe takes it. He looks at it for a long moment. He does not open it. He does not say Vincenzo\'s name.\n\n"Yeah." A pause. "Okay." Another pause. "I\'ll hold onto this."\n\nHe puts it under the counter, next to whatever else is under there. The market is still open. The sardines are still freshish. He does not say anything else about it.\n\n🎣 La Riva — complete.\n✨ Kenickie Clawnickie Mancuso: Dear Friend.' } ] },
+
+  // ── §VM-01-G-FU-a: the §CROWN-01 combat-dispatch verbs — the G4d shape verbatim. Each group is
+  // dispatched at the exact source position its block occupied (in-place rule); every battle code
+  // is a synthetic defeatedBattles ledger key, classified in gate #13 phase 6. The G4d delta
+  // applies here too: the inline handlers' 400ms setTimeout between the narrative line and the
+  // pre-battle overlay is gone — the line rides the render prefix and reads when the overlay
+  // closes. WG0's gate trial and HCA's Leviathan are NOT here — they are panel-with-embedded-
+  // button shapes and live in NODE_HOOKS until the G4c-FU ask-2 chrome question is answered.
+  // §CROWN-01 Amendment A: HW1 — Kelpie (failure dispatch) + Sea Witch (hag commission)
+  { id:'hw1-kelpie', group:'crown-hw1', nodes:['HW1'],
+    when: st => ((st.quests || {})['quest_whisper_kelpie']||'') === 'active'
+                && !(st.defeatedBattles||{})['HW1_KELPIE'],
+    label:'🌊 Track the Kelpie in the east shallows', btnStyle:'margin-top:4px;',
+    bits: [ { kind:'narrative', msg:'The east shallows. The surface moves against the current — the pattern of something circling. The Kelpie turns toward you.' },
+            { kind:'combat', key:'kelpie', label:'Kelpie — The East Shallows', nodeCode:'HW1_KELPIE' } ] },
+  { id:'hw1-witch', group:'crown-hw1', nodes:['HW1'],
+    when: st => ((st.quests || {})['quest_whisper_witch']||'') === 'active'
+                && !(st.defeatedBattles||{})['HW1_WITCH'],
+    label:'🧙 Confront the thing in the still water', btnStyle:'margin-top:4px;',
+    bits: [ { kind:'narrative', msg:"The surface problem. The Sea Witch rises from the deepest section. She knows every secret she shouldn't. So does Whisper. They are the same creature. Only one of them has chosen to be the problem." },
+            { kind:'combat', key:'sea_witch', label:'Sea Witch — The Deep Still', nodeCode:'HW1_WITCH' } ] },
+  // §CROWN-01 Amendment A: HG1 — Mudcrab (chicken quest) + Giant Octopus (hag commission)
+  { id:'hg1-mudcrab', group:'crown-hg1', nodes:['HG1'],
+    when: st => ((st.quests || {})['quest_glut_mudcrab']||'') === 'active'
+                && !(st.defeatedBattles||{})['HG1_MUDCRAB'],
+    label:'🦀 Find the Mudcrab that left', btnStyle:'margin-top:4px;',
+    bits: [ { kind:'narrative', msg:"The mudcrab is at the mire's edge. Not hiding. It ate enough and left. It is, in the specific way of creatures that know when to stop, exactly where it chose to be." },
+            { kind:'combat', key:'mudcrab', label:'Mudcrab — Mire Edge', nodeCode:'HG1_MUDCRAB' } ] },
+  { id:'hg1-octopus', group:'crown-hg1', nodes:['HG1'],
+    when: st => ((st.quests || {})['quest_glut_octopus']||'') === 'active'
+                && !(st.defeatedBattles||{})['HG1_OCTOPUS'],
+    label:'🐙 Clear the east crossing', btnStyle:'margin-top:4px;',
+    bits: [ { kind:'narrative', msg:"The Giant Octopus across the eastern passage. Fed for seasons on Glut's overflow. It occupies the space with the certainty of something that has never been asked to leave." },
+            { kind:'combat', key:'giant_octopus', label:'Giant Octopus — The East Crossing', nodeCode:'HG1_OCTOPUS' } ] },
+  // §VM-01-G-FU-a-FIX: quest_glut_06 ("The Open Hand") completes on flags:['glutGiftReturned'] —
+  // and NOTHING ever wrote that flag: the quest's own onComplete is its only writer, a circular
+  // completion that could never fire (it was invisible because the gift panel above was dead, so
+  // the quest never listed either). The missing piece was always a return SURFACE — this verb is
+  // that writer. The quest's own completion pipeline then does the rest: onComplete removes the
+  // jar, clears glut_gift_held, banks the kindness, sets glutCrownComplete; passText carries the
+  // return's narrative ("You gave it back…"), so the verb needs no narrative bit of its own.
+  { id:'hg1-gift-return', group:'crown-hg1', nodes:['HG1'],
+    // `when` reads the flag the chain itself writes (the la_riva rule): the driver re-renders in
+    // the same beat, BEFORE the end-of-render completion pass runs onComplete, so the quest is
+    // still 'active' and the jar still held at that moment — the flag is what's already true.
+    when: st => ((st.quests || {})['quest_glut_06']||'') === 'active' && !st.glutGiftReturned
+                && (st.inventory || []).some(i => i.name === "Glut's Gift"),
+    label:'🍯 Return Glut\'s Gift to the feeding pool', btnStyle:'margin-top:4px;',
+    bits: [ { kind:'flag_write', set:['glutGiftReturned'] } ] },
+  // §CROWN-01 Amendment A: HN1 — Sea Spawn (failure dispatch) + Sea Demon (hag commission)
+  { id:'hn1-spawn', group:'crown-hn1', nodes:['HN1'],
+    when: st => ((st.quests || {})['quest_wane_spawn']||'') === 'active'
+                && !(st.defeatedBattles||{})['HN1_SPAWN'],
+    label:'🌊 Find what moved the stone', btnStyle:'margin-top:4px;',
+    bits: [ { kind:'narrative', msg:"The Sea Spawn in the mire beneath the stone. It carries grief that soaked into the ground long enough to animate. It moves toward you the way things move when carrying too much." },
+            { kind:'combat', key:'sea_spawn', label:"Sea Spawn — The Stone's Sub-channel", nodeCode:'HN1_SPAWN' } ] },
+  { id:'hn1-demon', group:'crown-hn1', nodes:['HN1'],
+    when: st => ((st.quests || {})['quest_wane_demon']||'') === 'active'
+                && !(st.defeatedBattles||{})['HN1_DEMON'],
+    label:'👁 Face the thing below the mire', btnStyle:'margin-top:4px;',
+    bits: [ { kind:'narrative', msg:"The sub-channel below. The Sea Demon drains whatever vitality enters the channel — a sustained pull, not a violent one. It is more efficient at diminishment than Wane. She finds this unacceptable." },
+            { kind:'combat', key:'sea_demon', label:'Sea Demon — The Sub-channel', nodeCode:'HN1_DEMON' } ] },
+  // §CROWN-01 Amendment A: INN — Giant Eel (inn commission)
+  { id:'inn-eel', group:'crown-inn', nodes:['INN'],
+    when: st => ((st.quests || {})['quest_inn_eel']||'') === 'active'
+                && !(st.defeatedBattles||{})['INN_EEL'],
+    label:'⚡ Go below — the drainage channel', btnStyle:'margin-top:4px;',
+    bits: [ { kind:'narrative', msg:"The passage below the inn floor is narrow and slick. The smell here is the sea, concentrated. The Giant Eel occupies most of the channel. It is electrogenic and large and occupying a space you both need." },
+            { kind:'combat', key:'giant_eel', label:'Giant Eel — The Drainage Channel', nodeCode:'INN_EEL' } ] },
 ];
 
 // §VM-01-G4b: render every NODE_VERBS entry active for this node, in table order, each into its own
@@ -34683,221 +34874,29 @@ function storyRender(node, prefix) {
       }
     }
   }
-  // §CROWN-01 Amendment A: WG0 — Sea Serpent gate trial
-  { const _wg0Old = document.getElementById('story-wg0-trial');
-    if (_wg0Old) _wg0Old.remove();
-    if (node.code === 'WG0' && !(S_story.defeatedBattles||{})['WG0_TRIAL']) {
-      const _wg0Div = document.createElement('div');
-      _wg0Div.id = 'story-wg0-trial';
-      _wg0Div.className = 'sweelinck-variant';
-      _wg0Div.style.cssText = 'margin-top:10px;border-left-color:#204a30;color:#9acc9a;font-size:12px;';
-      _wg0Div.textContent = '🐍 The flooded crossing. Something large coils beneath the surface — visible, not hiding. It occupies the gate. The water is at chest height.';
-      const _wg0Btn = document.createElement('button');
-      _wg0Btn.className = 'inv-use-btn'; _wg0Btn.style.marginTop = '6px';
-      _wg0Btn.textContent = '🐍 Cross the flooded gate';
-      _wg0Btn.addEventListener('click', () => {
-        _wg0Btn.disabled = true;
-        storyMsg('The water reaches your chest at the crossing. The serpent does not retreat. It turns toward you.');
-        setTimeout(() => storyPreBattle({ ...node, code:'WG0_TRIAL', battle:{ label:'Sea Serpent — The Gate Crossing', key:'sea_serpent', count:1 } }), 400);
-      });
-      _wg0Div.appendChild(_wg0Btn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wg0Div);
-    }
-  }
-  // §CROWN-01 Amendment A: HW1 — Kelpie (failure dispatch) + Sea Witch (hag commission)
-  { const _kelpieOld = document.getElementById('story-hw1-kelpie'); if (_kelpieOld) _kelpieOld.remove();
-    if (node.code === 'HW1' && (S_story.quests['quest_whisper_kelpie']||'') === 'active'
-        && !(S_story.defeatedBattles||{})['HW1_KELPIE']) {
-      const _kBtn = document.createElement('button');
-      _kBtn.id = 'story-hw1-kelpie'; _kBtn.className = 'inv-use-btn'; _kBtn.style.marginTop = '4px';
-      _kBtn.textContent = '🌊 Track the Kelpie in the east shallows';
-      _kBtn.addEventListener('click', () => {
-        _kBtn.disabled = true;
-        storyMsg('The east shallows. The surface moves against the current — the pattern of something circling. The Kelpie turns toward you.');
-        setTimeout(() => storyPreBattle({ ...node, code:'HW1_KELPIE', battle:{ label:'Kelpie — The East Shallows', key:'kelpie', count:1 } }), 400);
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _kBtn);
-    }
-    const _witchOld = document.getElementById('story-hw1-witch'); if (_witchOld) _witchOld.remove();
-    if (node.code === 'HW1' && (S_story.quests['quest_whisper_witch']||'') === 'active'
-        && !(S_story.defeatedBattles||{})['HW1_WITCH']) {
-      const _wBtn = document.createElement('button');
-      _wBtn.id = 'story-hw1-witch'; _wBtn.className = 'inv-use-btn'; _wBtn.style.marginTop = '4px';
-      _wBtn.textContent = '🧙 Confront the thing in the still water';
-      _wBtn.addEventListener('click', () => {
-        _wBtn.disabled = true;
-        storyMsg("The surface problem. The Sea Witch rises from the deepest section. She knows every secret she shouldn't. So does Whisper. They are the same creature. Only one of them has chosen to be the problem.");
-        setTimeout(() => storyPreBattle({ ...node, code:'HW1_WITCH', battle:{ label:'Sea Witch — The Deep Still', key:'sea_witch', count:1 } }), 400);
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wBtn);
-    }
-  }
-  // §CROWN-01 Amendment A: HG1 — Mudcrab (chicken quest) + Giant Octopus (hag commission)
-  { const _mudOld = document.getElementById('story-hg1-mudcrab'); if (_mudOld) _mudOld.remove();
-    if (node.code === 'HG1' && (S_story.quests['quest_glut_mudcrab']||'') === 'active'
-        && !(S_story.defeatedBattles||{})['HG1_MUDCRAB']) {
-      const _mBtn = document.createElement('button');
-      _mBtn.id = 'story-hg1-mudcrab'; _mBtn.className = 'inv-use-btn'; _mBtn.style.marginTop = '4px';
-      _mBtn.textContent = '🦀 Find the Mudcrab that left';
-      _mBtn.addEventListener('click', () => {
-        _mBtn.disabled = true;
-        storyMsg("The mudcrab is at the mire's edge. Not hiding. It ate enough and left. It is, in the specific way of creatures that know when to stop, exactly where it chose to be.");
-        setTimeout(() => storyPreBattle({ ...node, code:'HG1_MUDCRAB', battle:{ label:'Mudcrab — Mire Edge', key:'mudcrab', count:1 } }), 400);
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _mBtn);
-    }
-    const _octOld = document.getElementById('story-hg1-octopus'); if (_octOld) _octOld.remove();
-    if (node.code === 'HG1' && (S_story.quests['quest_glut_octopus']||'') === 'active'
-        && !(S_story.defeatedBattles||{})['HG1_OCTOPUS']) {
-      const _oBtn = document.createElement('button');
-      _oBtn.id = 'story-hg1-octopus'; _oBtn.className = 'inv-use-btn'; _oBtn.style.marginTop = '4px';
-      _oBtn.textContent = '🐙 Clear the east crossing';
-      _oBtn.addEventListener('click', () => {
-        _oBtn.disabled = true;
-        storyMsg("The Giant Octopus across the eastern passage. Fed for seasons on Glut's overflow. It occupies the space with the certainty of something that has never been asked to leave.");
-        setTimeout(() => storyPreBattle({ ...node, code:'HG1_OCTOPUS', battle:{ label:'Giant Octopus — The East Crossing', key:'giant_octopus', count:1 } }), 400);
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _oBtn);
-    }
-  }
-  // §CROWN-01 Amendment A: HN1 — Sea Spawn (failure dispatch) + Sea Demon (hag commission)
-  { const _spawnOld = document.getElementById('story-hn1-spawn'); if (_spawnOld) _spawnOld.remove();
-    if (node.code === 'HN1' && (S_story.quests['quest_wane_spawn']||'') === 'active'
-        && !(S_story.defeatedBattles||{})['HN1_SPAWN']) {
-      const _spBtn = document.createElement('button');
-      _spBtn.id = 'story-hn1-spawn'; _spBtn.className = 'inv-use-btn'; _spBtn.style.marginTop = '4px';
-      _spBtn.textContent = '🌊 Find what moved the stone';
-      _spBtn.addEventListener('click', () => {
-        _spBtn.disabled = true;
-        storyMsg("The Sea Spawn in the mire beneath the stone. It carries grief that soaked into the ground long enough to animate. It moves toward you the way things move when carrying too much.");
-        setTimeout(() => storyPreBattle({ ...node, code:'HN1_SPAWN', battle:{ label:"Sea Spawn — The Stone's Sub-channel", key:'sea_spawn', count:1 } }), 400);
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _spBtn);
-    }
-    const _demonOld = document.getElementById('story-hn1-demon'); if (_demonOld) _demonOld.remove();
-    if (node.code === 'HN1' && (S_story.quests['quest_wane_demon']||'') === 'active'
-        && !(S_story.defeatedBattles||{})['HN1_DEMON']) {
-      const _dBtn = document.createElement('button');
-      _dBtn.id = 'story-hn1-demon'; _dBtn.className = 'inv-use-btn'; _dBtn.style.marginTop = '4px';
-      _dBtn.textContent = '👁 Face the thing below the mire';
-      _dBtn.addEventListener('click', () => {
-        _dBtn.disabled = true;
-        storyMsg("The sub-channel below. The Sea Demon drains whatever vitality enters the channel — a sustained pull, not a violent one. It is more efficient at diminishment than Wane. She finds this unacceptable.");
-        setTimeout(() => storyPreBattle({ ...node, code:'HN1_DEMON', battle:{ label:'Sea Demon — The Sub-channel', key:'sea_demon', count:1 } }), 400);
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _dBtn);
-    }
-  }
-  // §CROWN-01 Amendment A: INN — Giant Eel (inn commission)
-  { const _eelOld = document.getElementById('story-inn-eel'); if (_eelOld) _eelOld.remove();
-    if (node.code === 'INN' && (S_story.quests['quest_inn_eel']||'') === 'active'
-        && !(S_story.defeatedBattles||{})['INN_EEL']) {
-      const _eBtn = document.createElement('button');
-      _eBtn.id = 'story-inn-eel'; _eBtn.className = 'inv-use-btn'; _eBtn.style.marginTop = '4px';
-      _eBtn.textContent = '⚡ Go below — the drainage channel';
-      _eBtn.addEventListener('click', () => {
-        _eBtn.disabled = true;
-        storyMsg("The passage below the inn floor is narrow and slick. The smell here is the sea, concentrated. The Giant Eel occupies most of the channel. It is electrogenic and large and occupying a space you both need.");
-        setTimeout(() => storyPreBattle({ ...node, code:'INN_EEL', battle:{ label:'Giant Eel — The Drainage Channel', key:'giant_eel', count:1 } }), 400);
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _eBtn);
-    }
-  }
-  // §CROWN-01: HW1 return-visit — Whisper's Saint's Work (triggers after quest_01 attempted)
+  // ── §VM-01-G-FU-a: the §CROWN-01 stack — dispatched in place. The seven combat-dispatch verbs
+  // are NODE_VERBS groups (the G4d shape verbatim, one group per former block position); WG0's
+  // gate trial and HCA's Leviathan are panel-with-embedded-button shapes and moved to NODE_HOOKS
+  // verbatim (G2's method — see the hook header for why they are not verbs yet); the two
+  // once-panels (Glut's Gift, the Crone Mark conversion) are NODE_PANELS entries rendered at the
+  // panels position — order-safe because the gift's only former co-firing siblings are the HG1
+  // verbs (the gift never co-fired at HEAD: its block was dead) and the marks panel is mutually
+  // exclusive with the Leviathan hook (banked only after HCA_BOSS falls). ──
+  _runNodeHook('wg0-gate-trial', node);           // §CROWN-01 Amendment A: WG0 — Sea Serpent gate trial
+  _renderNodeVerbs(node, S_story, 'crown-hw1');   // §CROWN-01 Amendment A: HW1 — Kelpie + Sea Witch
+  _renderNodeVerbs(node, S_story, 'crown-hg1');   // §CROWN-01 Amendment A: HG1 — Mudcrab + Giant Octopus + the Glut's Gift return
+  _renderNodeVerbs(node, S_story, 'crown-hn1');   // §CROWN-01 Amendment A: HN1 — Sea Spawn + Sea Demon
+  _renderNodeVerbs(node, S_story, 'crown-inn');   // §CROWN-01 Amendment A: INN — Giant Eel
+  // §CROWN-01: HW1 return-visit — Whisper's Saint's Work (triggers after quest_01 attempted).
+  // A silent state latch, not a surface — quest_whisper_saint completes on this flag. Stays
+  // inline (§VM-01-G-FU-a: the migration moves surfaces; the latch has nothing to render).
   if (node.code === 'HW1' && !S_story.whisperSaintSeen
       && (S_story.quests['quest_whisper_01']||'') !== '') {
     S_story.whisperSaintSeen = true;
   }
-  // §CROWN-01: HG1 first-visit — give Glut's Gift
-  { const _hg1Old = document.getElementById('story-hg1-gift');
-    if (_hg1Old) _hg1Old.remove();
-    if (node.code === 'HG1' && !S_story.visited['HG1'] && !S_story.glut_gift_held) {
-      S_story.glut_gift_held = true;
-      S_story.inventory = S_story.inventory || [];
-      S_story.inventory.push({ name:"Glut's Gift", icon:'🍯', sell:0, drop:false });
-      const _hg1Div = document.createElement('div');
-      _hg1Div.id = 'story-hg1-gift';
-      _hg1Div.className = 'sweelinck-variant';
-      _hg1Div.style.cssText = 'margin-top:10px;border-left-color:#a07030;font-style:italic;color:#e0c890;font-size:12px;';
-      _hg1Div.textContent = '🍯 Glut presses the jar into your hand before you can respond to the pressing. It is warm. You are carrying Glut\'s Gift.';
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _hg1Div);
-    }
-  }
-  // §CROWN-01 Amendment A: HCA — Leviathan arc boss (gates the conversion)
-  { const _levOld = document.getElementById('story-hca-leviathan'); if (_levOld) _levOld.remove();
-    if (node.code === 'HCA' && !(S_story.defeatedBattles||{})['HCA_BOSS']) {
-      const _levDiv = document.createElement('div');
-      _levDiv.id = 'story-hca-leviathan';
-      _levDiv.className = 'sweelinck-variant';
-      _levDiv.style.cssText = 'margin-top:10px;border-left-color:#1a2a4a;color:#8ab0d0;font-size:12px;';
-      _levDiv.textContent = '🌊 The clearing surface breaks. Something rises from the depth that has been drawing on the swamp for a very long time — Whisper\'s silence, Glut\'s excess, Wane\'s grief, all of it accumulated below into this. The Leviathan. It surfaces here because this is where the pressure finally equals the weight above it.';
-      const _levBtn = document.createElement('button');
-      _levBtn.className = 'inv-use-btn'; _levBtn.style.marginTop = '6px';
-      _levBtn.textContent = '🌊 Face the Leviathan';
-      // Check for iodine inventory — offer burn before battle
-      const _invL = S_story.inventory || [];
-      const _hasChL = _invL.some(i => i.name === 'Charged Iodine Salt');
-      const _hasPlaL = _invL.some(i => i.name === 'Iodine Salt');
-      if (_hasChL || _hasPlaL) {
-        const _iodBtn = document.createElement('button');
-        _iodBtn.className = 'inv-use-btn'; _iodBtn.style.cssText = 'margin-top:4px;border-color:#c09020;color:#e0c060;';
-        _iodBtn.textContent = _hasChL ? '⚡🧂 Burn Charged Iodine Salt at the water\'s edge (+5 ATK this fight)' : '🧂 Burn Iodine Salt at the water\'s edge (+3 ATK this fight)';
-        _iodBtn.addEventListener('click', () => {
-          _iodBtn.disabled = true; _levBtn.disabled = false;
-          const _iIdx = _invL.findIndex(i => i.name === (_hasChL ? 'Charged Iodine Salt' : 'Iodine Salt'));
-          if (_iIdx !== -1) _invL.splice(_iIdx, 1);
-          S_story.iodineBuffActive = true; S_story.iodineBuffBonus = _hasChL ? 5 : 3;
-          storyMsg(_hasChL ? '⚡🧂 Charged iodine burns blue-white at the water\'s edge. The Leviathan flinches. Atlantean craft — ancient and correct.' : '🧂 Iodine salt burns at the waterline. The smoke is chemical, sea-salt, focused. The Leviathan is sensitive to it.');
-        });
-        _levDiv.appendChild(_iodBtn);
-        _levBtn.disabled = true;
-      }
-      _levBtn.addEventListener('click', () => {
-        _levBtn.disabled = true;
-        const _iodAtk = S_story.iodineBuffActive ? ' The iodine reaction is already in the water.' : '';
-        storyMsg('The Leviathan surfaces completely.' + _iodAtk + ' It is larger than the clearing. It has been here, below, the entire arc.');
-        setTimeout(() => storyPreBattle({ ...node, code:'HCA_BOSS', battle:{ label:'The Leviathan — Rising from the Clearing', key:'leviathan', count:1 } }), 400);
-      });
-      _levDiv.appendChild(_levBtn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _levDiv);
-    }
-  }
-  // §CROWN-01: HCA — Crone Mark conversion (fires once, not on revisit)
-  { const _hcaOld = document.getElementById('story-hca-marks');
-    if (_hcaOld) _hcaOld.remove();
-    if (node.code === 'HCA' && !S_story.croneMarksBanked && (S_story.defeatedBattles||{})['HCA_BOSS']) {
-      S_story.croneMarksBanked = true;
-      const m = S_story.croneMarks || 0;
-      const _hcaDiv = document.createElement('div');
-      _hcaDiv.id = 'story-hca-marks';
-      _hcaDiv.className = 'sweelinck-variant';
-      _hcaDiv.style.cssText = 'margin-top:10px;border-left-color:#7a5a9a;';
-      let _hcaText = '🟤 Crone Marks: ' + m + ' accumulated across the three crowns.\n\n';
-      if (m >= 15) {
-        S_story.abilityScores = S_story.abilityScores || {};
-        S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;
-        S_story.knowledge = S_story.knowledge || [];
-        S_story.knowledge.push('Swamp-lore — Crone Bead: one question of the deep swamp answered.');
-        S_story.inventory = S_story.inventory || [];
-        S_story.inventory.push({ name:'Crone Staff', icon:'🪄', sell:250, atkBonus:3, dmgDie:8, dmgCount:1, dmgFlat:0, type:'weapon', minLevel:1 });
-        _hcaText += 'Fifteen marks. The three crowns witnessed fully. WIS +1 (permanent). Crone Bead added to the Necklace of Knowledge. Crone Staff: 🪄 +3 ATK, 1d8.';
-      } else if (m >= 10) {
-        S_story.abilityScores = S_story.abilityScores || {};
-        S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;
-        S_story.knowledge = S_story.knowledge || [];
-        S_story.knowledge.push('Swamp-lore — Crone Bead: one question of the deep swamp answered.');
-        _hcaText += 'Ten marks. The attention was sufficient. WIS +1 (permanent). Crone Bead added to the Necklace of Knowledge.';
-      } else if (m >= 6) {
-        S_story.abilityScores = S_story.abilityScores || {};
-        S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;
-        _hcaText += 'Six marks. The crowns were witnessed. WIS +1 (permanent).';
-      } else {
-        _hcaText += 'The marks are what they are. The arc closes here regardless.';
-      }
-      _hcaDiv.textContent = _hcaText;
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _hcaDiv);
-    }
-  }
+  // (§VM-01-G-FU-a: the HG1 Glut's Gift first-visit panel and the HCA Crone Mark conversion are
+  //  NODE_PANELS once-panels now — and the gift's dead !visited['HG1'] guard is fixed there.)
+  _runNodeHook('hca-leviathan', node);            // §CROWN-01 Amendment A: HCA — Leviathan arc boss
   // §LXXII: CAN — Conclave Annex post-event document
   { const _canOld = document.getElementById('story-can-doc'); if (_canOld) _canOld.remove();
     if (node.code === 'CAN' && !S_story.conclaveResponseRead) {

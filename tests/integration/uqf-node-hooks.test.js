@@ -34,12 +34,16 @@ test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
     });
     // §VM-01-G4d added the two Class-E strays the G4 design pass found in its territory
     // (nue-lower-archive, cdg-kenickie-market), slotted at their former source positions.
-    expect(r.count).toBe(9);
-    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b + G4d').toBe(9);
+    // §VM-01-G-FU-a added the two §CROWN-01 panel-with-embedded-button blocks (wg0-gate-trial,
+    // hca-leviathan) AFTER the npc-row tail — the crown stack's former source position is below
+    // the Birka region; uqf-node-verbs-crown.test.js owns their behaviour.
+    expect(r.count).toBe(11);
+    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b + G4d + G-FU-a').toBe(11);
     expect(r.allFns).toBe(true);
     expect(r.leadsRegistry, 'registry stays ordered by former source position: story-text-box-anchored blocks precede the G2b npc-row block').toBe(true);
     expect(r.ids).toEqual(['nue-lower-archive', 'void-archaeology', 'void-shaman-warden', 'corelli-merchant',
-      'codex-core-chamber', 'cdg-kenickie-market', 'la-riva-row', 'scholar-workshop', 'mimic-meadows']);
+      'codex-core-chamber', 'cdg-kenickie-market', 'la-riva-row', 'scholar-workshop', 'mimic-meadows',
+      'wg0-gate-trial', 'hca-leviathan']);
     expect(r.unknownIsNoop).toBe(true);
   });
 

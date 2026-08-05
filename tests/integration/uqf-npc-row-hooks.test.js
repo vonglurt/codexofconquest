@@ -35,9 +35,14 @@ test.describe('§VM-01-G2b — npc-row hooks', () => {
       return {
         ids: row.map(h => h.id),
         allFns: row.every(h => typeof h.fn === 'function'),
-        // the npc-row block is CONTIGUOUS and LAST — the registry's ordering convention is
-        // "former storyRender source position", and the Birka region sits after every G2 block
-        contiguousTail: NODE_HOOKS.slice(NODE_HOOKS.length - row.length).every(h => h.anchor === 'npc-row'),
+        // the npc-row block is CONTIGUOUS — the registry's ordering convention is "former
+        // storyRender source position": the Birka region sits after every G2 block, and
+        // §VM-01-G-FU-a's crown hooks (WG0 trial, HCA Leviathan) sit after IT, because the
+        // §CROWN-01 stack accreted below the npc-row region in storyRender source order.
+        contiguousTail: (() => {
+          const first = NODE_HOOKS.findIndex(h => h.anchor === 'npc-row');
+          return NODE_HOOKS.slice(first, first + row.length).every(h => h.anchor === 'npc-row');
+        })(),
         uniqueIds: new Set(NODE_HOOKS.map(h => h.id)).size === NODE_HOOKS.length,
       };
     });

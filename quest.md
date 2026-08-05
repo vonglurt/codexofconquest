@@ -737,7 +737,7 @@ The Overseer. It has been in the water since Port Aurel, in telepathic contact w
 | `quest_glut_03` | "The Locked Door" | HG1 | [SKILL CHECK] | INT Investigation | 14 | `_addCroneMark()` | 200 | [✅ LIVE §CROWN-01] |
 | `quest_glut_04` | "The Endless Feeding" | HG1 | [SKILL CHECK] | WIS Insight | 13 | `_addCroneMark()` | 200 | [✅ LIVE §CROWN-01] |
 | `quest_glut_05` | "The False Protection" | HG1 | [SKILL CHECK] | WIS Insight | 15 | `_addCroneMark()` | 225 | [✅ LIVE §CROWN-01] |
-| `quest_glut_06` | "The Open Hand" | HG1 | [COMPLETION] | — | — | remove Glut's Gift, `glutGiftReturned`, `glutCrownComplete`, `_innKindness(1)` | — | [✅ LIVE §CROWN-01] |
+| `quest_glut_06` | "The Open Hand" | HG1 | [COMPLETION] | — | — | remove Glut's Gift, `glutGiftReturned`, `glutCrownComplete`, `_innKindness(1)` | — | [✅ LIVE §CROWN-01; **dead until §VM-01-G-FU-a** — see note] |
 | `quest_wane_01` | "The Carried Grief" | HN1 | [SKILL CHECK] | WIS Insight | 12 | `_addCroneMark()` | 150 | [✅ LIVE §CROWN-01] |
 | `quest_wane_02` | "The Diminishing Task" | HN1 | [SKILL CHECK] | STR Athletics | 13 | `_addCroneMark()` | 175 | [✅ LIVE §CROWN-01] |
 | `quest_wane_03` | "The Hopeless Errand" | HN1 | [SKILL CHECK] | INT Investigation | 13 | `_addCroneMark()` | 175 | [✅ LIVE §CROWN-01] |
@@ -760,6 +760,16 @@ NOTHING (*Rien*). Whisper tends a small cairn without mention or invitation. Fir
 
 **`quest_glut_06` — "The Open Hand"** *(Node: HG1. Object: Glut's Gift jar, warm in the coat.)*
 MORE (*Encore*). The jar given at first arrival. Completion: player holds Glut's Gift and is at HG1. No check. Item removed, `glutGiftReturned = true`.
+> **§VM-01-G-FU-a (2026-08-05): this quest was DEAD end to end until now, twice over.** (1) The
+> gift block's once-guard was `!visited['HG1']`, and `storyCollectLoot` flips `visited[code]`
+> earlier in the same render — so the jar was never granted and the quest (gate
+> `flags:['glut_gift_held']`) never listed, while HG1's own node text said *"She gives you the
+> jar as you arrive."* The panel is a `NODE_PANELS` once-panel now, guarded by
+> `!glut_gift_held && !glutGiftReturned`. (2) The completion `flags:['glutGiftReturned']` was
+> **circular** — its only writer was the quest's own `onComplete`. The return the paragraph
+> above describes is now a real surface: the `hg1-gift-return` `NODE_VERBS` button
+> (*🍯 Return Glut's Gift to the feeding pool*) writes the flag, and the quest's own pipeline
+> (onComplete + passText) does the rest. Pinned by `uqf-node-verbs-crown.test.js`.
 
 **`quest_inn_03` — "The Correction"** *(Node: INN. Object: the spoon, held incorrectly for the third time.)*
 MINE (*À moi*). She corrects it again. The correction is the same each time. CHA Persuasion DC 13: set the spoon down; say you are not leaving. Pass: the correction produces a response she did not have a category for; `_innKindness(1)`. Fail: you apologize; the corrections continue.

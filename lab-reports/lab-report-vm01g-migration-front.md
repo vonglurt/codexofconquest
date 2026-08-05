@@ -332,3 +332,66 @@ in a test (**pin the property, never the incident** — the property is "every l
 is classified," and it is now gate #13 phase 6, which the count will pass through as it shrinks).
 
 **Ship hash:** `02ff4aa` (2026-08-05).
+
+## 11a. G-FU-a ship addendum (2026-08-05) — the §CROWN-01 stack moved, and the plan's own re-read corrected two of its three shapes
+
+**The slice plan held for the seven bare-button dispatches and was corrected by measurement on
+the other two shapes.** (1) *"the combat verbs are G4d's shape verbatim"* — true for the SEVEN
+bare buttons (HW1 kelpie/witch · HG1 mudcrab/octopus · HN1 spawn/demon · INN eel), which are
+`NODE_VERBS` groups `crown-hw1`/`crown-hg1`/`crown-hn1`/`crown-inn`, dispatched in place. WG0's
+gate trial is NOT that shape — its button lives INSIDE a `.sweelinck-variant` panel with its own
+chrome, i.e. the staged-chain-panel row of §11's own table, so it moved to `NODE_HOOKS` verbatim
+(G2's method) until the G4c-FU ask-2 chrome question is answered. (2) *"the HCA iodine pre-buff
+is a 2-verb sequence"* — measured NO, for two reasons the plan couldn't see without reading the
+grammar against the block: the burn writes a **numeric** field (`iodineBuffBonus = 5|3`) and
+`flag_write` is boolean-only — no opcode expresses it — and the boss button renders
+**visible-but-disabled** until a held salt burns, an interlock a `when`-gated verb cannot render
+(absent ≠ disabled). Growing the grammar for one consumer would be the `itemsMinAny` failure, so
+the Leviathan block is a `NODE_HOOKS` verbatim move too, its reasons stated in the hook header.
+(3) *"the marks conversion is a NODE_PANELS once-panel with fn text"* — held, with the stated
+rule that a **once**-panel's text fn may carry the block's original awards (the verbatim body);
+a non-`once` panel's text must stay pure.
+
+**Finding 1 — the Glut's Gift block was DEAD since it shipped (the §VM-01-G1-FIX AO class,
+found by the migration's own gate re-read).** Its once-guard was `!visited['HG1']`, and
+`storyCollectLoot` flips `visited[code]` unconditionally earlier in the same render — so the
+condition was always false by the time the block ran. The jar was never granted, while HG1's own
+node text promised it (*"She gives you the jar as you arrive. … It is warm in your hand."* — the
+prose and the mechanics disagreed, and the prose was right). The panel's guard is now
+`!glut_gift_held && !glutGiftReturned` (`glutGiftReturned` is the durable once-guard — set by
+quest_glut_06's onComplete in the same write that clears `glut_gift_held`, so the pair cannot
+re-fire after the return).
+
+**Finding 2 — quest_glut_06 ("The Open Hand") was dead a SECOND way: circular completion.** It
+completes on `flags:['glutGiftReturned']`, and the only writer of that flag was its own
+`onComplete`. Invisible at HEAD because finding 1 meant the quest never even listed. The fix is
+the one this track's own vocabulary supplies: the **`hg1-gift-return` verb** (*🍯 Return Glut's
+Gift to the feeding pool*, group `crown-hg1`) writes the flag; the quest's own completion
+pipeline does everything else — no QUEST_DB edit, no new grammar. Two rules the first
+implementation got told by a test: the verb's `when` must read the flag its own chain writes
+(the la_riva rule — the driver re-renders BEFORE the end-of-render completion pass, so quest
+status and inventory are unchanged at that moment), and an `atNode`+`itemsAll` completion was
+rejected at design time because `storyCheckQuests` activates and completes in ONE pass — the
+quest would have granted and returned the jar in the same arrival.
+
+**What stayed inline, on purpose:** the HW1 `whisperSaintSeen` latch — a silent state write with
+nothing to render (quest_whisper_05 completes on it); the migration moves *surfaces*.
+
+**Evidence.** Line-multiset diff: the WG0 and HCA-Leviathan hook bodies moved with **zero
+unmatched lines** (byte-identical); the seven transformed buttons and two panels are pinned by a
+37-authored-string sweep, every string surviving exactly once. Golden capture, 26 combos over
+DOM+bbox+state, HEAD vs after: **14 byte-identical · 8 id-only** (`story-*` → `verb-*`, bboxes
+equal) **· 4 named deltas** — two ARE the fix (hg1-fresh grants the jar and lists The Open Hand;
+hg1-return-offered shows the new verb), two are G4d's re-render class (the clicked dispatch
+button returns enabled behind the pre-battle overlay instead of staying disabled). Self-stability
+26/26. §7½: 8 story-column PNGs, **6 byte-identical**, the 2 differing being the fix states,
+both eyeballed. `uqf-node-verbs-crown.test.js` **11/11, 6 red on HEAD and the 5 greens exactly
+the verbatim/unchanged-behaviour tests**. Three registry pins grown, each right to exist:
+`uqf-node-hooks` (9→11, the crown hooks appended in source order), `uqf-npc-row-hooks` (the
+npc-row block is contiguous but no longer the registry TAIL — the crown stack sits below it in
+storyRender source order), `uqf-node-verbs-d1` (the label-verb pin excludes `crown-` groups,
+which `uqf-node-verbs-crown.test.js` owns). `check:walk` 16/16 exit 0; full Playwright
+**862 passed / 4 failed** (855+11 tests; the four = the documented `worldbuilder-crud-arrays`
+set).
+
+**Ship hash:** recorded in the BACKLOG row on commit.
