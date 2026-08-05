@@ -453,4 +453,4 @@ held `BN_NIGHTHAG`/`LD_DROWNERS` from the triage, so no classification change. `
 and the fifth was the known `multiplayer-presence:171` flake, 7/7 alone; one BACKLOG.md anchor
 hint refreshed by `anchors:fix` after the ~180-line shift above `storyRender`).
 
-**Ship hash:** _recorded in the follow-up docs commit._
+**Ship hash:** `cf2fec8` (2026-08-05).
