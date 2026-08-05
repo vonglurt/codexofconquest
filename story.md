@@ -405,7 +405,7 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 
 **First visit:** Jimmy Two-Tails (orange tabby, tiny fedora) auto-dialogues from an overturned crate and auto-activates Q-CAT-01. Sandy Scratchpad Mewlino appears as NPC card after Q-CAT-02 complete.
 
-**Default battle:** Beefy Tom × 3. Boss battles (Taz Devil, Don Fluffissimo, Cat-King) triggered via storyRender buttons gated by quest state.
+**Default battle:** Beefy Tom × 3. Boss battles (Taz Devil, Don Fluffissimo, Cat-King) triggered via storyRender buttons gated by quest state. **[§VM-01-G4d, 2026-08-05]** The three buttons are now `NODE_VERBS` entries in group `cdg-boss-menu` (`narrative` + `combat` bits, synthetic `nodeCode:'CQ_*'`), rendered into the same `#cq-boss-buttons` container — concurrent by design, which is why they are a *menu*, not a `choice`. Kenickie's Black Market moved verbatim to `NODE_HOOKS` (`cdg-kenickie-market`). One beat delta: the pre-battle overlay now opens in the same beat as the click (the 400ms pause before it is gone); the confrontation line still lands.
 
 **NPCs:** Jimmy Two-Tails (NPC_DIALOGUES key: `jimmy`), Sandy "Scratchpad" Mewlino (key: `sandy_cat`), Don Fluffissimo (key: `don_fluffissimo`, antagonist only).
 
@@ -503,7 +503,7 @@ The cramped alleys north of Birka market. Refuse heaps attract every pest the ci
 #### Q-FR-03 — "The Account Book" ✅ Layer 78
 - **ID:** `quest_la_riva_03` | **Reward:** 0gp + Kenickie Dear Friend + `laRivaComplete: true`
 - **Trigger:** Q-FR-02 complete → Aldo gives Old Tuna Account Book
-- **Completion:** Deliver `Old Tuna Account Book` to Kenickie at CDG (button in CDG render)
+- **Completion:** Deliver `Old Tuna Account Book` to Kenickie at CDG (button in CDG render — a `NODE_VERBS` entry, `cdg-la-riva-delivery`, since §VM-01-G4d 2026-08-05; before that the inline handler's delivery message was destroyed by its own re-render, §BOARD-01-FU6 class, so the dialogue line below is now *readable in game* for the first time)
 - **Dialogue:** Kenickie: *"Yeah. Okay. I'll hold onto this."*
 
 ---

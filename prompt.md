@@ -144,7 +144,7 @@ quest_courier_release: {
 - **`bits`** are the VM opcodes: `skill_check` (d20 + abilityMod + profBonus ≥ DC), `mission_bit` (grant a kept token/flag), `reward` (xp/gold), `cost` (**pay** a price — §VM-01-G4a), `flag_write`, `narrative`, `favor` (NPC relationship), `combat`, `unlock` (activate a quest from afar), `choice`. Compose behavior from these — **do not write a new single-use bit kind or a `_legacy_fn` closure** (Host/Script Separation Policy).
 - **`cost` is `reward`'s inverse, and the reason it exists is that `reward` would "work" without it:** `reward` does `gold += bit.gold`, so `gold:-50` is arithmetically fine — with no affordability test, no refusal, and the word *reward* on a price (Hazard #2's *a write into a real-but-wrong object never throws*). `{ kind:'cost', gold:50, refuse:"💰 You don't have 50gp." }` — or `{ resource:'surgeCharges', count:1 }` — tests **every** currency before spending **any** (a mixed price never part-pays) and, when short, emits `refuse` and **fails the whole chain**, including from inside a `choice` option. The contract is **refuse-at-click** (user design call 2026-08-04): the verb always renders and states its price rather than quietly withholding itself, matching all six hand-written gold sites. So **`cost` never belongs in a `when`/gate.** **hp is not a currency** — the Memory Gate's −15 is narrated damage on a branch that always succeeds, so it is that option's effect, not its price.
 - **`choice` now has a host end (§VM-01-G4a).** Inc A built the suspending half; `renderChoiceBlock` — the renderer the comments promised — never existed, so until 2026-08-04 a `choice` bit anywhere could only *throw*. `_uqfRunVerb(verb, mount)` runs a bit chain and renders each `ask` as option buttons in `mount`, resuming with the picked index. A pending choice is **abandoned on the next `storyRender`** (safe: `choice` applies the picked option's bits only *after* the pick), and a stale option button is inert. The scope fence is unchanged — a `choice` inside `skill_check`'s `onPass`/`onFail` still throws.
-- **A verb is authored in `NODE_VERBS` (§VM-01-G4b/G4c).** The third small registry beside
+- **A verb is authored in `NODE_VERBS` (§VM-01-G4b/G4c/G4d).** The third small registry beside
   `NODE_PANELS` (flavour a node *shows*) and `NODE_HOOKS` (an interface a node *owns*):
   `{ id, group, nodes, when?, label?, btnStyle?, bits?, ambient? }` — **`label` + `bits`** is a button
   that runs the chain on click; **`bits` with no `label`** means the chain *is* the surface, so it
@@ -158,7 +158,13 @@ quest_courier_release: {
   `btnStyle`) — the anchor's parent is a flex column, so a direct-child button stretches full width
   while a wrapped one shrinks to its text, a difference **a DOM diff cannot see and a screenshot
   can**. Consumers: Kern & Sable at DUS — the first `choice` ever executed in this game — plus the
-  four D1 button verbs (S49 Sweelinck/NUE · Ori/STN · Yva/TRD · firewood/TLL). For a price on a
+  four D1 button verbs (S49 Sweelinck/NUE · Ori/STN · Yva/TRD · firewood/TLL). Several entries
+  sharing one `group` rendered into a call-site-owned container (the 4th `_renderNodeVerbs`
+  argument) is the **concurrent-menu mode** (§VM-01-G4d — CDG's boss confrontations): verbs all
+  visible at once are a *menu*, never a `choice`, because `choice` is exclusive by construction. A
+  `combat` bit's optional `nodeCode` may be a **synthetic** battle code there (`CQ_TAZ` — a
+  `defeatedBattles` key, not a place), fenced by `check:noderegs`' explicit
+  `SYNTHETIC_BATTLE_CODES` list. For a price on a
   surface that is *not* a verb, `_uqfRunChain(bits)` runs a chain in place with no re-render (the
   Junction Vignette's `[Help — 10gp]`).
 - **`gate`** is a compiled boolean expression: a bare object is implicit `all` (AND); `{any:[…]}` = OR, `{not:…}` = NOT, over leaf terms (`flags`, `flagsAny`, `items`/`itemsAll`, `battles`, `questsComplete`). The gate decides **whether the mission lists** when you arrive — it is *mission gating*, never *movement gating* (§6).

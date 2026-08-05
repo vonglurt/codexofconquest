@@ -66,7 +66,9 @@ test.describe('§VM-01-G4c — the registry after the D1 migration', () => {
       id: v.id, group: v.group, hasLabel: !!v.label,
       bitsKind: typeof v.bits, ambient: !!v.ambient,
     })));
-    const d1 = r.filter(v => v.hasLabel).map(v => v.id);
+    // §VM-01-G4d added the CDG label verbs (the D3 menu + the la_riva delivery); this test owns
+    // the G4c D1 set, uqf-node-verbs-d3.test.js owns the CDG tail.
+    const d1 = r.filter(v => v.hasLabel && (v.group || '').indexOf('cdg-') !== 0).map(v => v.id);
     expect(d1).toEqual(['nue-s49-sweelinck', 'stn-ori', 'trd-yva', 'tll-brynn-firewood']);
     expect(r.every(v => !!v.group), 'a group is what names a dispatch position').toBe(true);
     // `bits` may be an array or a fn(st) — the same string|fn shape `ambient` already had.
@@ -79,7 +81,8 @@ test.describe('§VM-01-G4c — the registry after the D1 migration', () => {
     // to stop (§PLAY-01-G: birkaNpcs' five cards keyed to dead node codes, invisible for months).
     await at(page, 'TRD');
     const groups = await page.evaluate(() => [...new Set(NODE_VERBS.map(v => v.group))]);
-    const called = [...HTML.matchAll(/_renderNodeVerbs\(node, S_story, '([^']+)'\)/g)].map(m => m[1]);
+    // §VM-01-G4d: a D3 call site passes its shared container as a 4th argument.
+    const called = [...HTML.matchAll(/_renderNodeVerbs\(node, S_story, '([^']+)'(?:, \w+)?\)/g)].map(m => m[1]);
     expect(called.slice().sort()).toEqual(groups.slice().sort());
     expect(new Set(called).size, 'one call site per group').toBe(called.length);
   });

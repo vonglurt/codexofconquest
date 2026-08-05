@@ -84,6 +84,14 @@ const NOT_NODE_KEYED = {
 // String fields anywhere in the file whose value is a node code.
 const NODE_FIELDS = ['nodeCode', 'node', 'nodeSlug', 'npcNode', 'activateNode',
                      'waypointNode', 'checkpointNode', 'atNode'];
+// §VM-01-G4d: a `combat` bit's `nodeCode` may carry a SYNTHETIC battle code — the kernel
+// spreads the LIVE node and overrides only `code`, so the value is a defeatedBattles ledger
+// key, not a place (CDG's three boss confrontations; the same codes already appear in
+// `battles:` completion gates and defeatedBattles guards, which this gate never scanned).
+// Explicit list in the NODE_KEYED/NOT_NODE_KEYED house style: an UNLISTED synthetic code
+// still fails, and the exemption applies to `nodeCode:` ONLY — a synthetic code in
+// `activateNode`/`waypointNode`/… is a real defect (asserted by the selftest).
+const SYNTHETIC_BATTLE_CODES = ['CQ_TAZ', 'CQ_BOSS', 'CQ_KING'];
 // Objects whose KEYS are `<from>_to_<to>` node pairs.
 const ROUTE_KEYED = ['NPC_FAREWELLS'];
 
@@ -162,6 +170,7 @@ function audit(src, live) {
     const re = new RegExp(`\\b${f}\\s*:\\s*'([A-Z][A-Z0-9_]{0,5})'`, 'g');
     let m;
     while ((m = re.exec(src))) {
+      if (f === 'nodeCode' && SYNTHETIC_BATTLE_CODES.includes(m[1])) continue;   // §VM-01-G4d
       if (!live.has(m[1])) findings.push(`[field] ${f}:'${m[1]}' at line ${lineOf(src, m.index)} is not a NODE_MAP key`);
     }
   }
@@ -209,6 +218,9 @@ function selftest(src, live) {
     ['registry', src.replace('const NIGHT_AMBIENT = {', 'const NIGHT_AMBIENT = {\n  ZZQ: "planted",')],
     ['classify', src.replace('const GEO_PROJ = {', 'const PLANTED_TABLE = { AAA:1, BBB:2 };\nconst GEO_PROJ = {')],
     ['field',    src.replace("nodeCode:'WRO'", "nodeCode:'ZZQ'")],
+    // §VM-01-G4d — the synthetic-battle-code exemption is nodeCode-ONLY: the same code in
+    // any other node field is a real defect and must still be caught.
+    ['field',    src.replace("nodeCode:'WRO'", "activateNode:'CQ_TAZ'"), 'field/synthetic-scope'],
     ['route',    src.replace('LHR_to_TLL:', 'ZZQ_to_TLL:')],
     // §AUDIT-03p — both halves of phase 5: a dead key in a classified local table, and an
     // unclassified one. The second plant is the defect that hid `CLUSTER` for months.

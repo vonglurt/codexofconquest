@@ -117,7 +117,7 @@ A sub-district invisible to city records. Entry sign (hand-lettered on a cardboa
 - **Terrain:** `cat_quarter` — 10 cat monsters from Stray to Cat-King
 - **Quest chain:** Q-CAT-01 through Q-CAT-06 (Levels 3–5); New York dialect; Goodfellas × Grease Broadway tonal register
 - **Cat hierarchy:** Stray → Fluffy → Beefy → Honcho → Taz Devil (Honcho merge) → Cat-King (3× Taz Devil merge)
-- **Loot:** Cat-King drops The Don's Signet Ring; vendor chip "Kenickie's Black Market" unlocks after Q-CAT-03
+- **Loot:** Cat-King drops The Don's Signet Ring; vendor chip "Kenickie's Black Market" unlocks after Q-CAT-03 *(⚠ the engine gates the market launcher on `quest_cat_05` **complete** — the Don's quest, whose own completion message says "Kenickie's Black Market is open"; verified against `_nodeHookCdgKenickieMarket` §VM-01-G4d 2026-08-05)*
 
 > **DM note:** CDG has no Codex Shard and no connection to the main quest. It is optional Act I content — a full side arc for players who explore east of the Slums before heading to Tilbury. The Corrupted Cat sub-quest ties to `ZRH` (historical `DF`) node Void pressure lore.
 

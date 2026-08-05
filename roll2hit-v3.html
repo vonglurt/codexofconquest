@@ -32797,11 +32797,110 @@ function _nodeHookBirkaQuillAmbientSong(node, { npcRowDiv }) {
         }, 50);
       }
 }
+// ── §VM-01-G4d: the two Class-E strays the G4 design pass found sitting in G4's territory
+// (lab-report-vm01g4-per-verb.md §7) — G2's verbatim method, three slices after they first
+// fell between G2 ("deferred"), G2b ("a CDG surface in G3's territory") and G3 (activation,
+// not UI). Bodies are NOT re-indented, so a line-multiset diff proves the move (§VM-01-G2b). ──
+function _nodeHookNueLowerArchive(node) {
+    // Lower archive button
+    if (S_story.wmLowerArchiveUnlocked) {
+      const _archWrap = document.createElement('div');
+      _archWrap.id = 'wm-archive-wrap';
+      _archWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:6px;';
+      const archBtn = document.createElement('button');
+      archBtn.className = 'inv-use-btn';
+      archBtn.textContent = '📚 Lower Archive';
+      archBtn.addEventListener('click', () => {
+        const existing = document.getElementById('wm-archive-sub');
+        if (existing) { existing.remove(); archBtn.style.opacity = ''; archBtn.disabled = false; return; }
+        archBtn.disabled = true; archBtn.style.opacity = '0.5';
+        _storyWmArchiveModal(_archWrap);
+      });
+      _archWrap.appendChild(archBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _archWrap);
+    }
+}
+function _nodeHookCdgKenickieMarket(node, { cqDiv }) {
+  const qs = S_story.quests || {};   // the one storyRender local the block reads besides cqDiv
+    // ── Layer 75: §XL Kenickie's Black Market ──
+    if (qs['quest_cat_05'] === 'complete') {
+      const kBtn = document.createElement('button');
+      kBtn.className = 'inv-use-btn';
+      kBtn.textContent = '🐟 Kenickie\'s Black Market';
+      kBtn.addEventListener('click', () => {
+        kBtn.remove();
+        const KENICKIE_STOCK = [
+          { label:'Sardine Pack ×3', icon:'🐟', price:18,
+            desc:'Catch +2 bait. "Freshish. Don\'t ask about the smell."',
+            makeItem: () => ({ name:'Sardine Pack', icon:'🐟', type:'bait', count:3, sell:1, catchBonus:2, typeBonus:0, advantage:false, sizeUp:false }) },
+          { label:'Live Shallows Minnow', icon:'🐠', price:28,
+            desc:'Catch +3, Size↑. "From the Don\'s private pond. He doesn\'t need it anymore."',
+            makeItem: () => ({ name:'Live Shallows Minnow', icon:'🐠', type:'bait', count:1, sell:2, catchBonus:3, typeBonus:0, advantage:false, sizeUp:true }) },
+          { label:'Minor Healing Potion', icon:'🧪', price:45,
+            desc:'Heals 10hp. 10% off. Community pricing.',
+            makeItem: () => ({ name:'Minor Healing Potion', icon:'🧪', type:'potion', heal:10, sell:15 }) },
+          { label:'Healing Potion', icon:'🫧', price:135,
+            desc:'Heals 25hp. 10% off. Community pricing.',
+            makeItem: () => ({ name:'Healing Potion', icon:'🫧', type:'potion', heal:25, sell:35 }) },
+        ];
+        const shopDiv = document.createElement('div');
+        shopDiv.id = 'kenickie-shop-div';
+        shopDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:5px;border:1px solid #8B4A2A;border-radius:5px;padding:10px;background:#E2D0A8;';
+        const title = document.createElement('div');
+        title.style.cssText = 'font-size:11px;color:#6A4A28;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #8B4A2A;padding-bottom:4px;margin-bottom:2px;';
+        title.textContent = '🐟 Kenickie\'s Black Market';
+        shopDiv.appendChild(title);
+        const goldLine = document.createElement('div');
+        goldLine.style.cssText = 'font-size:11px;color:#6A4808;';
+        const updateGold = () => { goldLine.textContent = '💰 Gold: ' + S_story.gold + 'gp'; };
+        updateGold();
+        shopDiv.appendChild(goldLine);
+        KENICKIE_STOCK.forEach(stock => {
+          const row = document.createElement('div');
+          row.style.cssText = 'display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid #2a1808;';
+          const info = document.createElement('div');
+          info.style.cssText = 'flex:1;font-size:11px;line-height:1.5;';
+          info.innerHTML = '<strong>' + stock.icon + ' ' + stock.label + '</strong>'
+            + ' — <span style="color:#5A3010">' + stock.price + 'gp</span>'
+            + '<br><span style="color:#3A2010;font-size:10px;">' + stock.desc + '</span>';
+          const buyBtn = document.createElement('button');
+          buyBtn.className = 'inv-use-btn';
+          buyBtn.style.cssText = 'white-space:nowrap;font-size:10px;padding:3px 8px;';
+          buyBtn.textContent = 'Buy';
+          buyBtn.addEventListener('click', () => {
+            if (S_story.gold < stock.price) { storyBlock('💰 Not enough gold.'); return; }
+            S_story.gold -= stock.price;
+            const item = stock.makeItem();
+            const ei = item.type === 'bait' ? (S_story.inventory||[]).findIndex(i => i.name === item.name && i.type === 'bait') : -1;
+            if (ei >= 0) { S_story.inventory[ei].count = (S_story.inventory[ei].count || 1) + (item.count || 1); }
+            else { S_story.inventory = S_story.inventory || []; S_story.inventory.push(item); }
+            S_story.kenickieMarketUsed = true;
+            updateGold();
+            storyAutoSave();
+            storyMsg('Kenickie: "Good choice. My guy Vinnie\'s got more next week. Maybe." 🤌');
+          });
+          row.appendChild(info);
+          row.appendChild(buyBtn);
+          shopDiv.appendChild(row);
+        });
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'inv-use-btn';
+        closeBtn.style.cssText = 'margin-top:4px;opacity:0.6;font-size:10px;';
+        closeBtn.textContent = '↩ Close market';
+        closeBtn.addEventListener('click', () => shopDiv.remove());
+        shopDiv.appendChild(closeBtn);
+        cqDiv.insertAdjacentElement('afterend', shopDiv);
+      });
+      cqDiv.appendChild(kBtn);
+    }
+}
 const NODE_HOOKS = [ // ordered by former storyRender source position
+  { id:'nue-lower-archive', nodes:['NUE'], fn:_nodeHookNueLowerArchive },
   { id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA'], fn:_nodeHookVoidArchaeology },
   { id:'void-shaman-warden', nodes:['GVA'], fn:_nodeHookVoidShamanWarden },
   { id:'corelli-merchant', nodes:null, fn:_nodeHookCorelliMerchant },
   { id:'codex-core-chamber', nodes:['TLS'], fn:_nodeHookCodexCoreChamber },
+  { id:'cdg-kenickie-market', nodes:['CDG'], fn:_nodeHookCdgKenickieMarket },
   { id:'la-riva-row', nodes:['AMS'], fn:_nodeHookLaRivaRow },
   { id:'scholar-workshop', nodes:['SZG'], fn:_nodeHookScholarWorkshop },
   { id:'mimic-meadows', nodes:['LIM'], fn:_nodeHookMimicMeadows },
@@ -32857,6 +32956,9 @@ function _runNodeHook(id, node, ctx) {
 //     already has, for the sites whose narrative is assembled from state at click time.
 //   · `btnStyle` (§VM-01-G4c) — the button's own inline style, so a migrated site keeps the exact
 //     spacing it had. A label-only verb IS its button (see _renderNodeVerbs).
+//   · Several entries sharing one `group` rendered into one call-site-owned container is the D3
+//     concurrent-menu mode (§VM-01-G4d) — deliberately NOT a `choice`, because a menu's verbs are
+//     all visible at once and none removes the others. See _renderNodeVerbs' container parameter.
 //
 // Why not one `choice` for all of Class D: `choice` is exclusive BY CONSTRUCTION, and only 7 of the
 // 21 measured Class-D surfaces are exclusive (lab-report-vm01g4-per-verb.md §4). A one-option
@@ -32952,6 +33054,49 @@ const NODE_VERBS = [
     label:'🪵 Help split the firewood.', btnStyle:'margin-top:6px;',
     bits: [ { kind:'flag_write', set:['brynnFirewoodDelivered'] },
             { kind:'narrative', msg:'You find the axe where she left it — not stored, just set down, the way you set something down when you intend to come back to it later but later has been a while.\n\nThe pile takes an hour. When you stack the last piece she comes out the back door with a cup of something hot and does not say anything. She goes back inside.\n\nThe cup is for you. She left it on the chopping block.' } ] },
+
+  // ── §VM-01-G4d: the D3 concurrent menu — CDG's boss confrontations (Layer 44 §IX). The three
+  // entries share group 'cdg-boss-menu' and render into ONE container (the same #cq-boss-buttons
+  // div the inline block built), because `choice` is exclusive by construction and these are
+  // deliberately concurrent — all visible at once, none removing the others (lab report §4 D3).
+  // Every bit was already a shipped opcode: `combat`'s optional nodeCode carries the synthetic
+  // CQ_* code each button always handed storyPreBattle. One named delta: the kernel's combat
+  // handler opens the pre-battle overlay in the SAME beat as the click — the inline handlers'
+  // 400ms setTimeout between the narrative line and the overlay is gone. The line still lands
+  // (as the render prefix) and still reads when the overlay closes. ──
+  { id:'cdg-boss-taz', group:'cdg-boss-menu', nodes:['CDG'],
+    when: st => (st.quests || {})['quest_cat_04'] === 'active' && !st.defeatedBattles['CQ_TAZ'],
+    label:'🌀 Confront the Taz Devil — Furball Tornado',
+    bits: [ { kind:'narrative', msg:'The alley fills with a low rumble. Two Honchos — male and female — spiral into each other like a drain.\n\nThen: fur. Teeth. Wind. TORNADO.\n\nJimmy, from somewhere behind you: "I TOLD you this was a SITUATION."' },
+            { kind:'combat', key:'taz_devil', label:'Taz Devil — Furball Tornado', nodeCode:'CQ_TAZ' } ] },
+  { id:'cdg-boss-don', group:'cdg-boss-menu', nodes:['CDG'],
+    when: st => (st.quests || {})['quest_cat_05'] === 'active' && (st.catKills || {}).fat_merchant_cat >= 4
+                && !st.defeatedBattles['CQ_BOSS'],
+    label:'💍 Confront Don Fluffissimo',
+    bits: [ { kind:'narrative', msg:'The Don is waiting in a back alley, two Fat Merchant Cats flanking him like pillars.\n\nHe speaks very slowly.\n\n"You come to MY quarter. In MY district. Without bringing fish. Without a proper introduction. That\'s... unfortunate."' },
+            { kind:'combat', key:'fat_cat_boss', label:'Don Fluffissimo + Bodyguards', nodeCode:'CQ_BOSS' } ] },
+  { id:'cdg-boss-king', group:'cdg-boss-menu', nodes:['CDG'],
+    when: st => (st.quests || {})['quest_cat_06'] === 'active' && !st.catKingDefeated,
+    label:'👑 Face The Cat-King',
+    bits: [ { kind:'narrative', msg:'The sky above the fish market goes dark.\n\nThree Taz Devils spiral together — a sound like every cat in the city hissing at once — and then it emerges. A crown of claw. Eyes like lanterns. The Cat-King.\n\nIt is very large. It is not happy. It is very definitely not a problem you can ignore.' },
+            { kind:'combat', key:'cat_king', label:'The Cat-King', nodeCode:'CQ_KING' } ] },
+  // ── Layer 78: La Riva — the la_riva_03 delivery at CDG shares the menu's container but sits
+  // AFTER the Kenickie launcher in DOM order, so it has its own group dispatched after the hook
+  // (in-place rule). Its message used to be a storyMsg immediately followed by a bare
+  // storyRender, whose tail overwrites #story-move-msg (§BOARD-01-FU6) — as the chain's
+  // narrative it rides the render prefix and survives: the same recovered-narrative delta
+  // §VM-01-G4c named at TRD and TLL. ──
+  { id:'cdg-la-riva-delivery', group:'cdg-la-riva', nodes:['CDG'],
+    when: st => (st.quests || {})['quest_la_riva_03'] === 'active'
+                && (st.inventory || []).some(i => i.name === 'Old Tuna Account Book'),
+    label:'📒 Give Kenickie the Account Book',
+    bits: [ { kind:'item_remove', name:'Old Tuna Account Book' },
+            { kind:'flag_write', set:['laRivaComplete','fishmongerRowRestored'] },
+            // set:3 — Dear Friend outright, exactly the level the inline handler wrote.
+            // _setNpcFavor is ABSOLUTE, only ever raises, and emits no line at level 3
+            // (the ✨ Dear Friend line is authored in the narrative below, as it always was).
+            { kind:'favor', npc:'kenickie', set:3 },
+            { kind:'narrative', msg:'You hand Kenickie the account book.\n\nHe takes it. He looks at it for a long moment. He does not open it. He does not say Vincenzo\'s name.\n\n"Yeah." A pause. "Okay." Another pause. "I\'ll hold onto this."\n\nHe puts it under the counter, next to whatever else is under there. The market is still open. The sardines are still freshish. He does not say anything else about it.\n\n🎣 La Riva — complete.\n✨ Kenickie Clawnickie Mancuso: Dear Friend.' } ] },
 ];
 
 // §VM-01-G4b: render every NODE_VERBS entry active for this node, in table order, each into its own
@@ -32959,7 +33104,12 @@ const NODE_VERBS = [
 // source position, so DOM order is unchanged. A label-less chain is started immediately and parks on
 // its `choice`; _uqfRenderAsk owns the mount from that point (it clears it and renders the ask), so
 // an `ambient` and a suspending chain are never combined on one entry.
-function _renderNodeVerbs(node, st, group) {
+// §VM-01-G4d: `container` is the D3 mode — several entries sharing a group render INTO one element
+// the call site owns (§9.1's "several NODE_VERBS entries sharing a group id, rendered into one
+// container"), instead of each inserting afterend of #story-text-box. The call site inserts the
+// container itself, so an all-`when`-false group leaves the page untouched — the G4b rule that a
+// refusal must not leave an empty div behind, applied to a whole menu.
+function _renderNodeVerbs(node, st, group, container) {
   for (const v of NODE_VERBS) {
     if (group !== undefined && v.group !== group) continue;
     if (v.nodes && v.nodes.indexOf(node.code) === -1) continue;
@@ -32986,14 +33136,18 @@ function _renderNodeVerbs(node, st, group) {
     mount.id = 'verb-' + v.id;
     if (bare) {
       mount.className = 'inv-use-btn';
-      mount.style.cssText = v.btnStyle || 'margin-top:6px;';
+      // Inside a shared container the flex gap owns the spacing, so a default per-button margin
+      // would double it — a container verb's default style is none (§VM-01-G4d).
+      mount.style.cssText = v.btnStyle || (container ? '' : 'margin-top:6px;');
       mount.textContent = v.label;
       mount.addEventListener('click', () => _uqfRunVerb(v, mount));
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', mount);
+      if (container) container.appendChild(mount);
+      else document.getElementById('story-text-box').insertAdjacentElement('afterend', mount);
       continue;
     }
-    mount.style.cssText = 'margin-top:8px;';
-    document.getElementById('story-text-box').insertAdjacentElement('afterend', mount);
+    mount.style.cssText = container ? '' : 'margin-top:8px;';
+    if (container) container.appendChild(mount);
+    else document.getElementById('story-text-box').insertAdjacentElement('afterend', mount);
     if (amb) mount.appendChild(_mkAmbientLine(amb));
     if (!hasBits) continue;
     if (v.label) {                       // label + ambient: the button stacks under the flavour line
@@ -33177,23 +33331,7 @@ function storyRender(node, prefix) {
         storyAutoSave();
       });
     }
-    // Lower archive button
-    if (S_story.wmLowerArchiveUnlocked) {
-      const _archWrap = document.createElement('div');
-      _archWrap.id = 'wm-archive-wrap';
-      _archWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:6px;';
-      const archBtn = document.createElement('button');
-      archBtn.className = 'inv-use-btn';
-      archBtn.textContent = '📚 Lower Archive';
-      archBtn.addEventListener('click', () => {
-        const existing = document.getElementById('wm-archive-sub');
-        if (existing) { existing.remove(); archBtn.style.opacity = ''; archBtn.disabled = false; return; }
-        archBtn.disabled = true; archBtn.style.opacity = '0.5';
-        _storyWmArchiveModal(_archWrap);
-      });
-      _archWrap.appendChild(archBtn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _archWrap);
-    }
+    _runNodeHook('nue-lower-archive', node); // ── Lower archive button (launcher for _storyWmArchiveModal) ── → NODE_HOOKS (§VM-01-G4d)
     // Benedikt reading circle button
     if (S_story.wmArchiveComplete && !S_story.wmBenediktCircleComplete) {
       const circleBtn = document.createElement('button');
@@ -33554,140 +33692,25 @@ function storyRender(node, prefix) {
     if (_oldCqDiv) _oldCqDiv.remove();
     const _oldKenshop = document.getElementById('kenickie-shop-div');
     if (_oldKenshop) _oldKenshop.remove();
-    const qs = S_story.quests || {};
     // (§VM-01-G3: the five Q-CAT activation stanzas moved into quest_cat_01–06/void's own
     //  gates (the questsDone chain 01→02→{03,05,void}→04→06) + activateNode:'CDG', with the
     //  staged Jimmy/Sandy/Tommy narrations as onActivate fields. Before this, appended
     //  duplicate activateNode:"CDG" fields had the WHOLE chain activating at once on first
     //  arrival — the stanzas' sequencing had been dead since the append.)
-    // Boss battle buttons
+    // §VM-01-G4d: the boss confrontations are NODE_VERBS sharing group 'cdg-boss-menu' — the D3
+    // concurrent-menu mode — rendered into the same #cq-boss-buttons container the inline block
+    // built. Kenickie's Black Market is Class E (a shop with its own state machine, lab report
+    // §7) and lives in NODE_HOOKS by G2's verbatim method; it takes the container as ctx (the
+    // G2b one-field rule) because the launcher sits between the boss buttons and the delivery
+    // in DOM order, and the shop mounts afterend of the container. The la_riva delivery has its
+    // own group dispatched after the hook — in-place dispatch is what preserves the five
+    // children's order by construction. The container inserts only when non-empty, as always.
     const cqDiv = document.createElement('div');
     cqDiv.id = 'cq-boss-buttons';
     cqDiv.style.cssText = 'margin-top:8px;display:flex;flex-direction:column;gap:6px;';
-    // Taz Devil button — visible when Q-CAT-04 active and not yet defeated
-    if (qs['quest_cat_04'] === 'active' && !S_story.defeatedBattles['CQ_TAZ']) {
-      const tazBtn = document.createElement('button');
-      tazBtn.className = 'inv-use-btn';
-      tazBtn.textContent = '🌀 Confront the Taz Devil — Furball Tornado';
-      tazBtn.addEventListener('click', () => {
-        storyMsg('The alley fills with a low rumble. Two Honchos — male and female — spiral into each other like a drain.\n\nThen: fur. Teeth. Wind. TORNADO.\n\nJimmy, from somewhere behind you: "I TOLD you this was a SITUATION."');
-        setTimeout(() => storyPreBattle({ ...node, code:'CQ_TAZ', battle:{label:'Taz Devil — Furball Tornado', key:'taz_devil', count:1} }), 400);
-      });
-      cqDiv.appendChild(tazBtn);
-    }
-    // Don Fluffissimo button — visible when Q-CAT-05 active, 4 fat merchant cats killed, not yet defeated
-    if (qs['quest_cat_05'] === 'active' && (S_story.catKills || {}).fat_merchant_cat >= 4
-        && !S_story.defeatedBattles['CQ_BOSS']) {
-      const donBtn = document.createElement('button');
-      donBtn.className = 'inv-use-btn';
-      donBtn.textContent = '💍 Confront Don Fluffissimo';
-      donBtn.addEventListener('click', () => {
-        storyMsg('The Don is waiting in a back alley, two Fat Merchant Cats flanking him like pillars.\n\nHe speaks very slowly.\n\n"You come to MY quarter. In MY district. Without bringing fish. Without a proper introduction. That\'s... unfortunate."');
-        setTimeout(() => storyPreBattle({ ...node, code:'CQ_BOSS', battle:{label:"Don Fluffissimo + Bodyguards", key:'fat_cat_boss', count:1} }), 400);
-      });
-      cqDiv.appendChild(donBtn);
-    }
-    // Cat-King button — visible when Q-CAT-06 active and not yet defeated
-    if (qs['quest_cat_06'] === 'active' && !S_story.catKingDefeated) {
-      const kingBtn = document.createElement('button');
-      kingBtn.className = 'inv-use-btn';
-      kingBtn.textContent = '👑 Face The Cat-King';
-      kingBtn.addEventListener('click', () => {
-        storyMsg('The sky above the fish market goes dark.\n\nThree Taz Devils spiral together — a sound like every cat in the city hissing at once — and then it emerges. A crown of claw. Eyes like lanterns. The Cat-King.\n\nIt is very large. It is not happy. It is very definitely not a problem you can ignore.');
-        setTimeout(() => storyPreBattle({ ...node, code:'CQ_KING', battle:{label:'The Cat-King', key:'cat_king', count:1} }), 400);
-      });
-      cqDiv.appendChild(kingBtn);
-    }
-    // ── Layer 75: §XL Kenickie's Black Market ──
-    if (qs['quest_cat_05'] === 'complete') {
-      const kBtn = document.createElement('button');
-      kBtn.className = 'inv-use-btn';
-      kBtn.textContent = '🐟 Kenickie\'s Black Market';
-      kBtn.addEventListener('click', () => {
-        kBtn.remove();
-        const KENICKIE_STOCK = [
-          { label:'Sardine Pack ×3', icon:'🐟', price:18,
-            desc:'Catch +2 bait. "Freshish. Don\'t ask about the smell."',
-            makeItem: () => ({ name:'Sardine Pack', icon:'🐟', type:'bait', count:3, sell:1, catchBonus:2, typeBonus:0, advantage:false, sizeUp:false }) },
-          { label:'Live Shallows Minnow', icon:'🐠', price:28,
-            desc:'Catch +3, Size↑. "From the Don\'s private pond. He doesn\'t need it anymore."',
-            makeItem: () => ({ name:'Live Shallows Minnow', icon:'🐠', type:'bait', count:1, sell:2, catchBonus:3, typeBonus:0, advantage:false, sizeUp:true }) },
-          { label:'Minor Healing Potion', icon:'🧪', price:45,
-            desc:'Heals 10hp. 10% off. Community pricing.',
-            makeItem: () => ({ name:'Minor Healing Potion', icon:'🧪', type:'potion', heal:10, sell:15 }) },
-          { label:'Healing Potion', icon:'🫧', price:135,
-            desc:'Heals 25hp. 10% off. Community pricing.',
-            makeItem: () => ({ name:'Healing Potion', icon:'🫧', type:'potion', heal:25, sell:35 }) },
-        ];
-        const shopDiv = document.createElement('div');
-        shopDiv.id = 'kenickie-shop-div';
-        shopDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:5px;border:1px solid #8B4A2A;border-radius:5px;padding:10px;background:#E2D0A8;';
-        const title = document.createElement('div');
-        title.style.cssText = 'font-size:11px;color:#6A4A28;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid #8B4A2A;padding-bottom:4px;margin-bottom:2px;';
-        title.textContent = '🐟 Kenickie\'s Black Market';
-        shopDiv.appendChild(title);
-        const goldLine = document.createElement('div');
-        goldLine.style.cssText = 'font-size:11px;color:#6A4808;';
-        const updateGold = () => { goldLine.textContent = '💰 Gold: ' + S_story.gold + 'gp'; };
-        updateGold();
-        shopDiv.appendChild(goldLine);
-        KENICKIE_STOCK.forEach(stock => {
-          const row = document.createElement('div');
-          row.style.cssText = 'display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding:5px 0;border-bottom:1px solid #2a1808;';
-          const info = document.createElement('div');
-          info.style.cssText = 'flex:1;font-size:11px;line-height:1.5;';
-          info.innerHTML = '<strong>' + stock.icon + ' ' + stock.label + '</strong>'
-            + ' — <span style="color:#5A3010">' + stock.price + 'gp</span>'
-            + '<br><span style="color:#3A2010;font-size:10px;">' + stock.desc + '</span>';
-          const buyBtn = document.createElement('button');
-          buyBtn.className = 'inv-use-btn';
-          buyBtn.style.cssText = 'white-space:nowrap;font-size:10px;padding:3px 8px;';
-          buyBtn.textContent = 'Buy';
-          buyBtn.addEventListener('click', () => {
-            if (S_story.gold < stock.price) { storyBlock('💰 Not enough gold.'); return; }
-            S_story.gold -= stock.price;
-            const item = stock.makeItem();
-            const ei = item.type === 'bait' ? (S_story.inventory||[]).findIndex(i => i.name === item.name && i.type === 'bait') : -1;
-            if (ei >= 0) { S_story.inventory[ei].count = (S_story.inventory[ei].count || 1) + (item.count || 1); }
-            else { S_story.inventory = S_story.inventory || []; S_story.inventory.push(item); }
-            S_story.kenickieMarketUsed = true;
-            updateGold();
-            storyAutoSave();
-            storyMsg('Kenickie: "Good choice. My guy Vinnie\'s got more next week. Maybe." 🤌');
-          });
-          row.appendChild(info);
-          row.appendChild(buyBtn);
-          shopDiv.appendChild(row);
-        });
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'inv-use-btn';
-        closeBtn.style.cssText = 'margin-top:4px;opacity:0.6;font-size:10px;';
-        closeBtn.textContent = '↩ Close market';
-        closeBtn.addEventListener('click', () => shopDiv.remove());
-        shopDiv.appendChild(closeBtn);
-        cqDiv.insertAdjacentElement('afterend', shopDiv);
-      });
-      cqDiv.appendChild(kBtn);
-    }
-    // ── Layer 78: La Riva — la_riva_03 Kenickie delivery at CQ ──
-    if (qs['quest_la_riva_03'] === 'active'
-        && (S_story.inventory || []).some(i => i.name === 'Old Tuna Account Book')) {
-      const deliverBtn = document.createElement('button');
-      deliverBtn.className = 'inv-use-btn';
-      deliverBtn.textContent = '📒 Give Kenickie the Account Book';
-      deliverBtn.addEventListener('click', () => {
-        deliverBtn.remove();
-        S_story.inventory = (S_story.inventory || []).filter(i => i.name !== 'Old Tuna Account Book');
-        S_story.laRivaComplete = true;
-        S_story.fishmongerRowRestored = true;
-        if (!S_story.npcFavorability) S_story.npcFavorability = {};
-        S_story.npcFavorability['kenickie'] = 3;
-        storyMsg('You hand Kenickie the account book.\n\nHe takes it. He looks at it for a long moment. He does not open it. He does not say Vincenzo\'s name.\n\n"Yeah." A pause. "Okay." Another pause. "I\'ll hold onto this."\n\nHe puts it under the counter, next to whatever else is under there. The market is still open. The sardines are still freshish. He does not say anything else about it.\n\n🎣 La Riva — complete.\n✨ Kenickie Clawnickie Mancuso: Dear Friend.');
-        storyAutoSave();
-        storyRender(NODE_MAP[S_story.currentCode]);
-      });
-      cqDiv.appendChild(deliverBtn);
-    }
+    _renderNodeVerbs(node, S_story, 'cdg-boss-menu', cqDiv);
+    _runNodeHook('cdg-kenickie-market', node, { cqDiv }); // ── Layer 75: §XL Kenickie's Black Market ── → NODE_HOOKS (§VM-01-G4d)
+    _renderNodeVerbs(node, S_story, 'cdg-la-riva', cqDiv); // ── Layer 78: La Riva — la_riva_03 Kenickie delivery at CQ ──
     if (cqDiv.children.length > 0) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', cqDiv);
     }

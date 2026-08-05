@@ -27,17 +27,19 @@ test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
         ids,
         uniqueIds: new Set(NODE_HOOKS.map(h => h.id)).size === NODE_HOOKS.length ? g2.length : -1,
         allFns: NODE_HOOKS.every(h => typeof h.fn === 'function'),
-        leadsRegistry: NODE_HOOKS.slice(0, 7).every(h => h.anchor !== 'npc-row'),
+        leadsRegistry: NODE_HOOKS.slice(0, 9).every(h => h.anchor !== 'npc-row'),
         // dispatch finds by id; an unknown id is a silent no-op (returns undefined)
         unknownIsNoop: _runNodeHook('no-such-hook', NODE_MAP['LHR']) === undefined,
       };
     });
-    expect(r.count).toBe(7);
-    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b').toBe(7);
+    // §VM-01-G4d added the two Class-E strays the G4 design pass found in its territory
+    // (nue-lower-archive, cdg-kenickie-market), slotted at their former source positions.
+    expect(r.count).toBe(9);
+    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b + G4d').toBe(9);
     expect(r.allFns).toBe(true);
-    expect(r.leadsRegistry, 'registry stays ordered by former source position: G2 blocks precede the G2b npc-row block').toBe(true);
-    expect(r.ids).toEqual(['void-archaeology', 'void-shaman-warden', 'corelli-merchant',
-      'codex-core-chamber', 'la-riva-row', 'scholar-workshop', 'mimic-meadows']);
+    expect(r.leadsRegistry, 'registry stays ordered by former source position: story-text-box-anchored blocks precede the G2b npc-row block').toBe(true);
+    expect(r.ids).toEqual(['nue-lower-archive', 'void-archaeology', 'void-shaman-warden', 'corelli-merchant',
+      'codex-core-chamber', 'cdg-kenickie-market', 'la-riva-row', 'scholar-workshop', 'mimic-meadows']);
     expect(r.unknownIsNoop).toBe(true);
   });
 

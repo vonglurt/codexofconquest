@@ -69,8 +69,11 @@ loud, because it would apply its effects on every draw of the node); **`ambient`
 flavour line for a state that offers nothing to do. `when` is a plain predicate over state — note
 that a `cost` never belongs in it (refuse-at-click, above).
 
-**Dispatch is in place**: `_renderNodeVerbs(node, st, group)` is called at the source position each
-migrated block occupied, so DOM stacking order is preserved by construction rather than by analysis.
+**Dispatch is in place**: `_renderNodeVerbs(node, st, group, container)` is called at the source
+position each migrated block occupied, so DOM stacking order is preserved by construction rather
+than by analysis. The optional 4th argument is the **concurrent-menu mode** (below): the call site
+owns a container element, the group's verbs render into it, and the call site inserts it only when
+non-empty.
 
 #### The button verb (§VM-01-G4c, 2026-08-04)
 
@@ -102,9 +105,34 @@ migrated block occupied, so DOM stacking order is preserved by construction rath
   gate) therefore lands in the **same beat** rather than on the next arrival, and the chain's
   narrative survives as `storyRender`'s prefix instead of being overwritten by whatever spoke last.
 
+#### The concurrent menu (§VM-01-G4d, 2026-08-05)
+
+A **choice is exclusive by construction** — pick one option, the rest are discarded. When a place
+offers several verbs that are all visible at once and none removes the others, that is not a
+choice, it is a **menu**: several entries sharing one `group`, rendered into one container the
+call site owns. CDG's boss confrontations are the live consumer:
+
+```js
+{ id:'cdg-boss-taz', group:'cdg-boss-menu', nodes:['CDG'],
+  when: st => (st.quests||{})['quest_cat_04'] === 'active' && !st.defeatedBattles['CQ_TAZ'],
+  label:'🌀 Confront the Taz Devil — Furball Tornado',
+  bits: [ { kind:'narrative', msg:'The alley fills with a low rumble…' },
+          { kind:'combat', key:'taz_devil', label:'Taz Devil — Furball Tornado', nodeCode:'CQ_TAZ' } ] }
+```
+
+`combat`'s optional **`nodeCode`** may be a *synthetic* battle code (`CQ_TAZ` is a
+`defeatedBattles` ledger key, not a place — the kernel spreads the live node and overrides only
+`code`). The `check:noderegs` gate keeps an explicit `SYNTHETIC_BATTLE_CODES` list for exactly
+these; an unlisted synthetic code, or a synthetic code in any *other* node field, still fails.
+Note the kernel's combat handler opens the pre-battle overlay **in the same beat as the click** —
+a hand-written `setTimeout` beat between the narrative and the overlay does not survive migration.
+
 Live consumers: the Kern & Sable overture at DUS (Q-NEXUS-00/01/02) — the first `choice` ever
 executed in this game — plus four button verbs (Sweelinck's S49 scene at NUE, Ori at STN, Yva at
-TRD, Brynn's firewood at TLL). The Junction Vignette's `[Help — 10gp]` pays through `cost` **without**
+TRD, Brynn's firewood at TLL), and CDG's five-child menu (§VM-01-G4d): the three boss
+confrontations in group `cdg-boss-menu`, the Kenickie Black Market launcher (a `NODE_HOOKS`
+entry — a shop is an interface, not a verb), and the la_riva_03 account-book delivery in group
+`cdg-la-riva`. The Junction Vignette's `[Help — 10gp]` pays through `cost` **without**
 being a verb: `_uqfRunChain(bits)` runs a chain in place, with no mount and no re-render, for a
 surface a re-render would erase. The remaining D1 blocks (delayed beats, hand-styled panels) wait on
 §VM-01-G4c-FU's design calls.

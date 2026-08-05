@@ -33,7 +33,7 @@ front moves backward ~4/day"* no longer holds inside the region: the front moved
 
 **Registries in the house style G4 must match** (both live, both already load-bearing):
 `NODE_PANELS` (`const NODE_PANELS@31285`, rendered by `_renderNodePanels(node, st)@31414`) and
-`NODE_HOOKS` (`const NODE_HOOKS@32800`, dispatched in place by `_runNodeHook(id, node, ctx)@32838`).
+`NODE_HOOKS` (`const NODE_HOOKS@32897`, dispatched in place by `_runNodeHook(id, node, ctx)@32937`).
 
 ---
 
@@ -147,7 +147,7 @@ honour it.
 ## 5. Finding 3 — two blocks capture free text, which `choice` cannot express and should not
 
 `Entry 42` (LHR) and the `Secret Gate` void-toll rune (ZRH) both render a `<textarea>` and persist
-the player's own prose — `S_story.entry42Text@33101` and `S_story._voidTollSecret@33229`. Both are
+the player's own prose — `S_story.entry42Text@33255` and `S_story._voidTollSecret@33367`. Both are
 read back by the ending. `choice`'s resume value is *"an index, so the data author never couples to
 presentation"* (`22152`); a free-text answer couples to presentation by definition.
 
@@ -213,9 +213,9 @@ honest and neither is quietly dropped a fourth time.
 ## 8. Finding 6 — the act-leg thread §VM-01-G2b opened is now closed for this region
 
 G2b found five narrative beats gated on `actNumber >= N` at nodes whose `act` is 1, and therefore
-permanently dead (`S_story.actNumber = node.act || 1@33018`, assigned every render). Swept for the
+permanently dead (`S_story.actNumber = node.act || 1@33172`, assigned every render). Swept for the
 same shape across G4's region: **one act comparison remains** —
-`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@33141` (Sweelinck's "map before the city"
+`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@33295` (Sweelinck's "map before the city"
 line). **NUE is `act:6`**, so the leg is not dead — it is **vacuously true**, and has been since it
 shipped. It is not staging; arriving at NUE at all satisfies it.
 
@@ -550,15 +550,61 @@ are answered.
 
 ---
 
+## 12⁹⁄₁₆. Addendum — §VM-01-G4d SHIPPED 2026-08-05 (the D3 menu + the two Class-E strays)
+
+**What shipped, exactly as §10 sliced it.** The three CDG confrontations (Taz Devil ·
+Don Fluffissimo · Cat-King) are `NODE_VERBS` entries sharing **group `cdg-boss-menu`**, rendered
+into the same `#cq-boss-buttons` container the inline block built — `_renderNodeVerbs` grew a
+4th `container` argument for the D3 mode (§9.1's own sketch: *"several entries sharing a group
+id, rendered into one container"*). Each is `narrative` + `combat` with the synthetic
+`nodeCode:'CQ_*'` — §9.1's claim that **no new grammar is needed for D3 held**: the kernel was
+not touched a third time (`check:questparity` still **25,030 bytes**). The **la_riva_03
+delivery** is a fourth verb in its own group `cdg-la-riva`, dispatched *after* the Kenickie hook
+so the container's five children keep their order by construction (`item_remove` + `flag_write`
++ `favor set:3` + `narrative` — every bit shipped grammar). **Kenickie's Black Market (71 lines)
+and the NUE Lower Archive launcher moved to `NODE_HOOKS` verbatim** (G2's method; the Kenickie
+hook takes `{ cqDiv }` as ctx — the G2b one-field rule again, measured not designed: the only
+other storyRender local the block reads is `qs`, which the hook re-derives in one line).
+Registry order stays by-former-source-position: `nue-lower-archive` slots *before*
+`void-archaeology`, `cdg-kenickie-market` between `codex-core-chamber` and `la-riva-row`.
+
+**Two named deltas, both the classes earlier slices already carry:** (1) the kernel's `combat`
+handler opens the pre-battle overlay **in the same beat as the click** — the inline handlers'
+400ms `setTimeout` between the rumble line and the overlay is gone; the line rides the render
+prefix and still reads when the overlay closes. (2) the delivery message **survives** — the
+inline handler's `storyMsg` was followed one line later by a bare `storyRender` whose tail
+overwrites `#story-move-msg` (§BOARD-01-FU6), so on HEAD the player never read Kenickie's
+*"Yeah. Okay. I'll hold onto this."* at all. The G4c recovered-narrative delta, third
+occurrence.
+
+**One gate finding:** the synthetic battle codes were the first `nodeCode:` literals gate #13
+ever scanned that are deliberately NOT places — `check-noderegs.js` grew
+`SYNTHETIC_BATTLE_CODES` (explicit list with a reason, `nodeCode:`-scoped ONLY; a synthetic code
+in `activateNode` still fails, asserted by a new selftest plant).
+
+**Evidence:** 20-combo golden HEAD-vs-after over DOM + bounding box + msg + overlay +
+`_preBattNode` + gold/inv/favor/quests/flags — **12 byte-identical · 7 differ only by the
+button's new `id` (+ an empty `style=""`), with every bounding box equal → pixel-identical · 1
+(`cdg-taz-clicked`) carries the same-beat re-render advancing Jimmy's rotating card quote one
+pick**; after-vs-after2 self-stability **20/20** (the §VM-01-G2b double-run rule). **All 6 §7½
+story-column screenshots byte-identical PNGs** (full-page shots differ only in the map
+canvases). Line-multiset diff: **zero Kenickie/Lower-Archive body lines fail to reappear**; the
+removed-only residue is exactly the four handlers now expressed as VM data. Authored-string
+counts all `n → n`. `uqf-node-verbs-d3.test.js` **12/12 with 6 red on HEAD and the 6 that pass
+exactly the unchanged-behaviour ones** (Kenickie shop ×2, Lower Archive ×2, empty-menu,
+menu-order — the G2b honest shape). `check:walk` 16/16.
+
+---
+
 ## 13. Anchors touched by this report
 
-`storyRender(node, prefix)@33012` · `_mkSection(id, icon, label)@33896` ·
-`const NODE_PANELS@31285` · `_renderNodePanels(node, st)@31414` · `const NODE_HOOKS@32800` ·
-`_runNodeHook(id, node, ctx)@32838` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
+`storyRender(node, prefix)@33166` · `_mkSection(id, icon, label)@33919` ·
+`const NODE_PANELS@31285` · `_renderNodePanels(node, st)@31414` · `const NODE_HOOKS@32897` ·
+`_runNodeHook(id, node, ctx)@32937` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
 `function _uqfRunToCompletion(gen)@6840` · `*execBits(bits, ctx)@22204` · `*choice(bit, ctx)@22300` ·
 `combat(bit)@22281` · `item_remove(bit, ctx)@22283` · `reward(bit, ctx)@22250`
 
-**Added by G4b (§12¾):** `const NODE_VERBS@32873` · `function _renderNodeVerbs(node, st, group)@32962` ·
+**Added by G4b (§12¾):** `const NODE_VERBS@32975` · `function _renderNodeVerbs(node, st, group, container)@33112` ·
 `function _mkAmbientLine(text)@6878` · `function _uqfRunVerb(verb, mount)@6914` ·
 `function _uqfRenderAsk(gen, ask, mount, step)@6885`
 
