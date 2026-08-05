@@ -637,4 +637,4 @@ phase 6 already held `DSJ_EELS`; `check:walk` **16/16 exit 0**; 25 anchor hints 
 documented `worldbuilder-crud-arrays` set; `multiplayer-presence:171` flaked and retried
 green).
 
-**Ship hash:** (recorded post-commit).
+**Ship hash:** `3dfdc26` (2026-08-05).
