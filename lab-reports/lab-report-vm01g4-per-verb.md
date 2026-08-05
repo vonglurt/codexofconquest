@@ -1,7 +1,9 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 # Lab Report — §VM-01-G4: Class D per-verb (the migration front's last slice)
 
-> **Status: ⚠️ DESIGN — LOCKED PENDING ONE ASK (§12). No HTML edited.** This is the child
+> **Status: DESIGN LOCKED `f340143` · ASK ANSWERED (refuse-at-click) · G4a ✅ SHIPPED `b905733` — see
+> the §12½ addendum. §1–§12 below are the design pass as written before any edit and are left
+> unrewritten; the addendum is where what actually shipped is recorded.** This is the child
 > design pass the parent report's §7 design lock required before G4 may be built
 > (*"G4 OK in principle, but G4 gets its own child design pass first"*). Parent:
 > [`lab-report-vm01g-migration-front.md`](lab-report-vm01g-migration-front.md). Track policy:
@@ -349,7 +351,7 @@ answered, because the `cost` leaf's contract differs between them.
 
 ---
 
-## 12½. ADDENDUM — the ASK is answered and G4a is SHIPPED (2026-08-04)
+## 12½. ADDENDUM — the ASK is answered and G4a is SHIPPED (2026-08-04, `b905733`)
 
 **Answer: (a) refuse-at-click.** The user's call, matching this report's recommendation. `cost`
 therefore never contributes to a verb's `when`; a `hideWhenUnaffordable` opt-in remains available
