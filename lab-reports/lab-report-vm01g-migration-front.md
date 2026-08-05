@@ -511,4 +511,4 @@ refreshed by `anchors:fix` after the ~270-line shift (the G-FU-b lesson applied 
 Playwright **889 passed / 4 failed** (893 tests; the four are the documented
 `worldbuilder-crud-arrays` set; the `multiplayer-presence:171` flake passed this run).
 
-**Ship hash:** (see the BACKLOG row / git log — recorded post-commit).
+**Ship hash:** `7d8cb39` (2026-08-05).
