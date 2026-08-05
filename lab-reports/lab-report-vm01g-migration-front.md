@@ -697,4 +697,4 @@ as design calls in BACKLOG **§VM-01-G-FU-f2**, measured live this slice:
   active. The gate grammar has no ordered-visit leaf. Ask: a grammar leaf vs a 3-quest
   chain re-expression vs stay.
 
-**Ship hash:** recorded in the docs follow-up (2026-08-05).
+**Ship hash:** `6a571de` (2026-08-05).
