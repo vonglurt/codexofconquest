@@ -580,4 +580,4 @@ front; full Playwright **906 passed / 4 failed** (910 tests; the four are the do
 `worldbuilder-crud-arrays` set; `multiplayer-presence:171` flaked in the full run and passed
 7/7 alone).
 
-**Ship hash:** (recorded in the docs commit).
+**Ship hash:** `8cdda7b` (2026-08-05).
