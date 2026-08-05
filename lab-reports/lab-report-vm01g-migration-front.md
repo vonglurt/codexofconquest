@@ -454,3 +454,61 @@ and the fifth was the known `multiplayer-presence:171` flake, 7/7 alone; one BAC
 hint refreshed by `anchors:fix` after the ~180-line shift above `storyRender`).
 
 **Ship hash:** `cf2fec8` (2026-08-05).
+
+## 11c. G-FU-c ship addendum (2026-08-05) — the §ALCHEMY-01/§WISDOM-01 stack moved as a second zero-delta no-op, and the "second `choice` consumer" is corrected by the rule the last two slices wrote
+
+**The slice plan said "8 blocks, the Roen arc: staged verbs + panels; the VS shadow block is a
+genuine D2 choice (accept vs fight) — the second `choice` consumer." The block census held
+(8 blocks at KIR/MAN/SEN/PDL/MLA/ATH/VS — VS carries two); the shapes were corrected by
+measurement, using exactly the rule G-FU-a and G-FU-b established.**
+
+**Correction — the whole stack is panel-embedded, so this slice ships ZERO verbs and no
+`choice`.** Every button in the eight blocks lives INSIDE its `.sweelinck-variant` chrome:
+KIR's three staged states (`_aDiv.appendChild(_aBtn)` in each), MAN/SEN/ATH's single beats, the
+VS underground descent, and the manuscript hub's hook/bind/shadow states. The VS shadow pair
+has genuine D2 `choice` semantics — exclusive accept-vs-fight, no launcher button, exactly
+Kern & Sable's shape — but its SURFACE is a bordered panel whose prompt text and both option
+buttons share the chrome, and a `choice` verb's surface is `_uqfRunVerb`'s bare div mount
+(`margin-top:8px`, no class, `_mkAmbientLine` prompt at 11px italic vs the panel's 12px
+non-italic). Converting it changes chrome a DOM-of-the-options diff would misread as equivalent
+— the G4c layout lesson — so the hub moved to **`NODE_HOOKS` verbatim** and the second `choice`
+consumer is **G4c-FU ask-2-blocked work**, filed, not defaulted. Six hooks
+(`alch-kir-dream` / `alch-man-noon` / `alch-sen-ship` / `alch-ath-stoic` /
+`wis-vs-underground` / `wis-vs-hub`), registry tail, dispatched in place.
+
+**What did leave the hooks: PDL and MLA, the stack's only button-less blocks** — 2-state
+pure-text panels, four `NODE_PANELS` entries in the DUS else-leg shape (two entries share one
+DOM id with mutually exclusive `when`s, each `css` the state's own cssText verbatim; both
+inline divs carried their id in both states, so no id-less entry was needed). Sibling analysis
+by the G-FU-b WRO rule, then golden-verified: **nothing co-renders afterend at PDL**, and MLA's
+only co-render is `story-ml-snake`, which sits EARLIER in the panel table — so table order
+preserves the inline LIFO (alch panel above the snake panel), pinned by a test. The §11 chrome
+note's fn-css dissolution stays unneeded a second time: no state in either block overrides a
+property after cssText, so each state's css IS the authored string.
+
+**One shape worth naming: the `wis-vs-hub` hook carries the block's `VS_SHADOW → wisPage6`
+latch, which runs on EVERY render** — the inline latch sat before the `node.code === 'VS'`
+guard, so it fired wherever you rendered. `_runNodeHook` dispatches by id (`nodes` is tooling
+metadata), and the dispatch call is unconditional at the source position, so the latch keeps
+exactly that behavior. Same class as G-FU-a's HW1 `whisperSaintSeen` latch, except this one
+lives inside the moved block's own braces, so it moves WITH the block rather than staying
+inline. Pinned by a test (a won VS_SHADOW flips the page flag at the next render).
+
+**Evidence.** Golden capture, **37 combos** — the family's largest, because the hub is 5-way and
+the KIR block 4-way — over sibling DOM + bounding boxes + message text/class + pre-battle
+overlay/node + state (roen chain flags, wisdom pages, knowledge, inventory), HEAD vs after:
+**37/37 byte-identical**, the second zero-delta slice in a row. Self-stability 37/37. §7½:
+**8 story-column PNGs, 8/8 byte-identical**, kir-stone and vs-shadow eyeballed live (the shadow
+options inside the hub chrome; the quest hint on screen even says "Use the story panel at VS to
+choose: accept or fight"). 23-authored-string sweep, every count equal to HEAD (the doubles are
+pre-existing independent uses: QUEST_DB hints and journal prose quoting the same lines).
+`uqf-node-alch.test.js` **16/16 with 3 red on HEAD — exactly the registry/source tests — and
+all 13 behaviour tests green BOTH ways** (G2's honest shape). `uqf-node-hooks` pin grown 15→21;
+`uqf-node-hunt`'s tail pin adjusted to the contiguous run (the alch stack now sits below it —
+the same adjustment G-FU-a made to the npc-row pin). Gate #13 phase 6 already held `VS_SHADOW`
+from the triage, so no classification change. `check:walk` **16/16 exit 0**; 25 anchor hints
+refreshed by `anchors:fix` after the ~270-line shift (the G-FU-b lesson applied up front); full
+Playwright **889 passed / 4 failed** (893 tests; the four are the documented
+`worldbuilder-crud-arrays` set; the `multiplayer-presence:171` flake passed this run).
+
+**Ship hash:** (see the BACKLOG row / git log — recorded post-commit).

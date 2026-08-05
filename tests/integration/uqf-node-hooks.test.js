@@ -39,14 +39,19 @@ test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
     // the Birka region; uqf-node-verbs-crown.test.js owns their behaviour.
     // §VM-01-G-FU-b added the four §HUNT-01/02 blocks after those (same reason — the hunt stack
     // sits below the crown region in source order); uqf-node-hunt.test.js owns their behaviour.
-    expect(r.count).toBe(15);
-    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b + G4d + G-FU-a + G-FU-b').toBe(15);
+    // §VM-01-G-FU-c added the six §ALCHEMY-01/§WISDOM-01 (Roen arc) blocks after those — the
+    // alch stack sits below the hunt region in source order; uqf-node-alch.test.js owns their
+    // behaviour (incl. the VS shadow accept-vs-fight pair, pinned there as ask-2-blocked).
+    expect(r.count).toBe(21);
+    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b + G4d + G-FU-a/b/c').toBe(21);
     expect(r.allFns).toBe(true);
     expect(r.leadsRegistry, 'registry stays ordered by former source position: story-text-box-anchored blocks precede the G2b npc-row block').toBe(true);
     expect(r.ids).toEqual(['nue-lower-archive', 'void-archaeology', 'void-shaman-warden', 'corelli-merchant',
       'codex-core-chamber', 'cdg-kenickie-market', 'la-riva-row', 'scholar-workshop', 'mimic-meadows',
       'wg0-gate-trial', 'hca-leviathan',
-      'hunt-wro-relay', 'hunt-bnx-bend', 'hunt-hft-elder', 'hunt-vaw-den']);
+      'hunt-wro-relay', 'hunt-bnx-bend', 'hunt-hft-elder', 'hunt-vaw-den',
+      'alch-kir-dream', 'alch-man-noon', 'alch-sen-ship', 'alch-ath-stoic',
+      'wis-vs-underground', 'wis-vs-hub']);
     expect(r.unknownIsNoop).toBe(true);
   });
 

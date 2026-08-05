@@ -32,10 +32,14 @@ const clickIn = (page, panelId, text) =>
   page.locator('#' + panelId + ' button', { hasText: text }).first().evaluate(el => el.click());
 
 test.describe('§VM-01-G-FU-b — registry + source shape', () => {
-  test('the four hunt hooks sit at the registry tail with callable fns', async ({ page }) => {
+  test('the four hunt hooks sit as a contiguous registry run with callable fns', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
-      const tail = NODE_HOOKS.slice(-4);
+      // §VM-01-G-FU-c appended the alch/wisdom hooks after these (their stack sits below the
+      // hunt region in source order), so the pin is the contiguous run, no longer the tail —
+      // the same adjustment G-FU-a made to the npc-row pin when the crown stack landed below it.
+      const first = NODE_HOOKS.findIndex(h => h.id === 'hunt-wro-relay');
+      const tail = first === -1 ? [] : NODE_HOOKS.slice(first, first + 4);
       return {
         ids: tail.map(h => h.id),
         nodes: tail.map(h => (h.nodes || []).join(',')),

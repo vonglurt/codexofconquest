@@ -31483,6 +31483,29 @@ const NODE_PANELS = [
     when:st => st.lakeClueFound && st.lakeLairLocated,
     css:'margin-top:10px;border-left-color:#3a5a2a;color:#80b870;font-size:12px;',
     text:'✅ Trail read. Three of them — from the track spacing. They denned at the shelf collapse. North Shore Den is accessible.' },
+  // ── §VM-01-G-FU-c: the two §ALCHEMY-01 button-less panels (Class A, 2 states each) — the DUS
+  // else-leg shape: two entries share one DOM id with mutually exclusive `when`s, each `css` the
+  // state's own cssText verbatim. Sibling analysis (the G-FU-b WRO rule): nothing co-renders
+  // afterend at PDL, and MLA's only co-render is story-ml-snake, which sits EARLIER in this
+  // table, so the inline order (alch panel above the snake panel) is preserved by table order.
+  // §ALCHEMY-01: IS — The Oracle's Reading at PDL
+  { id:'story-alch-is', nodes:['PDL'],
+    when:st => st.roenAtSea && !st.roenOracleRead,
+    css:'margin-top:10px;border-left-color:#3a2a5a;color:#9080c8;font-size:12px;',
+    text:'🐑 The Oracle\'s Apprentice gave Roen a reading. He is staring at it. "She said: \'the gold is below the water that has already been cleared.\' This is almost word-for-word the same as the fortune teller in Birka." He shows you both. They are. "Either the universe is being extremely consistent, or both these women know something I don\'t." He looks at the fortune slip you\'ve been holding. "CHA Persuasion DC 11 to argue with the universe on my behalf."' },
+  { id:'story-alch-is', nodes:['PDL'],
+    when:st => st.roenAtSea && st.roenOracleRead,
+    css:'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;',
+    text:'✅ "The water that has already been cleared — the loch. The kelpie was cleared. The water was cleared." Roen is very still. "My grandmother\'s backyard. She was describing the backyard." He folds both readings together. "She was not speaking in metaphors. She was speaking in Highland geography."' },
+  // §ALCHEMY-01: ML — The Lost Stone at MLA
+  { id:'story-alch-ml', nodes:['MLA'],
+    when:st => st.roenOracleRead && !st.roenMaltaCrisis,
+    css:'margin-top:10px;border-left-color:#2a4a5a;color:#6090b0;font-size:12px;',
+    text:'🐑 Roen dropped the stone in the Malta harbor. Not on purpose. He can see it on the floor — it\'s glowing slightly amber in the shallows. He\'s sitting on the dock with the expression of a man who has just dropped forty years of his grandmother\'s advice into a Mediterranean port. "I can see it. I can\'t reach it." He sits. "I think this is a sign. WIS Insight DC 12 to help me count what I have rather than what\'s on the harbor floor."' },
+  { id:'story-alch-ml', nodes:['MLA'],
+    when:st => st.roenOracleRead && st.roenMaltaCrisis,
+    css:'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;',
+    text:'✅ The stone was retrieved by a fisherman who dove without being asked and handed it back. "You dropped it." No charge. Gone before Roen remembered to thank him. Roen has been thinking about this ever since. "Always do your best. That was enough for the whole harbor. I should do my best. That will be enough for the whole journey."' },
 ];
 
 // §VM-01-G1: render every NODE_PANELS entry active for this node. Runs immediately after the
@@ -33168,6 +33191,267 @@ function _nodeHookHuntVawDen(node) {
     }
   }
 }
+// ── §VM-01-G-FU-c: the six §ALCHEMY-01/§WISDOM-01 (Roen arc) blocks, VERBATIM (G2's method).
+// Every button in this stack lives INSIDE its .sweelinck-variant chrome (KIR's three staged
+// states, MAN/SEN/ATH's beats, VS's underground descent, and the manuscript hub — including the
+// accept-vs-fight pair) — the WG0 shape — so all six stay hooks until the G4c-FU ask-2
+// panel-chrome question is answered. The VS shadow pair has genuine D2 `choice` semantics
+// (exclusive, no launcher button), but a `choice` verb's surface is _uqfRunVerb's bare div
+// mount, not panel chrome, so converting it is ask-2-blocked work: the plan's "second `choice`
+// consumer" is corrected by the same measured rule that moved WG0 (G-FU-a) and the BN/LD
+// combat buttons (G-FU-b) to hooks. The two button-less 2-state panels (PDL oracle, MLA stone)
+// moved to NODE_PANELS.
+function _nodeHookAlchKirDream(node) {
+  // §ALCHEMY-01: HL — The Shepherd's Dream (hook + return)
+  { const _alchHLOld = document.getElementById('story-alch-hl'); if (_alchHLOld) _alchHLOld.remove();
+    if (node.code === 'KIR') {
+      if (S_story.personalLegendComplete) {
+        const _aDiv = document.createElement('div');
+        _aDiv.id = 'story-alch-hl'; _aDiv.className = 'sweelinck-variant';
+        if (S_story.personalLegendMature) {
+          _aDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a2a;color:#70b870;font-size:12px;';
+          _aDiv.textContent = '✅ The Personal Legend and the Book of Human Nature: both complete. Roen sits at the loch on Tuesdays. He reads. The book is on the rock beside him. He has written two pages of his own notes in the margins.';
+        } else if (S_story.wisHookReceived) {
+          _aDiv.style.cssText = 'margin-top:10px;border-left-color:#2a2a4a;color:#8090c0;font-size:12px;';
+          _aDiv.textContent = '📖 Roen is collecting fragments of Ardley\'s text. He is moving between nodes. He will be at Visby when you need him. He left a note on the loch stone: "W2 is at Saltwick. She touches the ledger."';
+        } else {
+          _aDiv.style.cssText = 'margin-top:10px;border-left-color:#8a7a2a;color:#c8b050;font-size:12px;';
+          _aDiv.textContent = '🐑 Roen is at the loch, but he is not watching the water. He is watching the highland market on the far bank.\n\n"I have been sitting here for three weeks," he says. "I thought I would feel finished. I found the gold. The fortune teller was right. My grandmother was using geographic coordinates. Everything resolved correctly. I am satisfied with the resolution."\n\nHe does not look satisfied. He looks like a man who has answered one question and noticed that the answer opened a door.\n\n"The merchant across the water — the one with the grey coat — touches his left ear before he lies. He has done it eleven times in the last hour. I have been counting." He pauses. "I did not know I was going to count. I just noticed and then I could not stop."\n\nHe turns to you.\n\n"I heard from the loch archivist about a text. A court historian — name of Ardley — spent forty years watching people the way I have been watching that merchant. And he wrote it down. A library in Visby has a copy. I am going to go find it."';
+          const _wisIntroBtn = document.createElement('button');
+          _wisIntroBtn.className = 'inv-use-btn'; _wisIntroBtn.style.marginTop = '6px';
+          _wisIntroBtn.textContent = '📖 Ask what Ardley wrote down';
+          _wisIntroBtn.addEventListener('click', () => {
+            _wisIntroBtn.disabled = true;
+            storyMsg('Roen: "The archivist said Ardley documented six laws of human behavior — the mask people wear, the aggression they hide under courtesy, the one thing every person is trying to protect, the way power struggles take longer than they need to, the way people defend a position after it has stopped being true, and something about the part of yourself you refuse to examine."\n\nHe picks up a stone from the bank. Not the grandmother\'s stone — just a stone.\n\n"The archivist said Ardley named the court treasurer\'s behavior in a public lecture and was dismissed before the applause finished. The treasurer scattered the text. Sixteen years later the treasurer\'s family lost their dock contracts to a Baltic competitor who had read a dispersed copy."\n\nRoen sets the stone back down.\n\n"The laws worked whether or not anyone wanted them to." He looks at the merchant across the water, who has just touched his left ear again. "I am going to Visby. You should come."');
+            storyRender(node);
+          });
+          _aDiv.appendChild(_wisIntroBtn);
+        }
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
+      } else if (S_story.roenAlchemistMet) {
+        const _aDiv = document.createElement('div');
+        _aDiv.id = 'story-alch-hl'; _aDiv.className = 'sweelinck-variant';
+        _aDiv.style.cssText = 'margin-top:10px;border-left-color:#c8a830;color:#d8b840;font-size:12px;';
+        _aDiv.textContent = '🏔 Roen is at the loch edge where the kelpie used to be. He has the stone. He is looking at the water. "The old man in Athens said the stone already knows. My grandmother said the gold is in the loch. The stone is what connects those two sentences. I think I need to put it in the water."';
+        const _aBtn = document.createElement('button');
+        _aBtn.className = 'inv-use-btn'; _aBtn.style.marginTop = '6px';
+        _aBtn.textContent = '✨ Watch Roen drop the stone into the loch';
+        _aBtn.addEventListener('click', () => {
+          _aBtn.disabled = true;
+          S_story.personalLegendComplete = true;
+          S_story.gold = (S_story.gold||0) + 400;
+          S_story.xp = (S_story.xp||0) + 500;
+          S_story.knowledge = S_story.knowledge || [];
+          S_story.knowledge.push('Personal Legend: Roen the Highland shepherd traveled four thousand miles following his grandmother\'s stone. The stone was a loch-shore fragment of the Warmth Eel bioluminescent colony — a biological gold-locator. The Highland loch gold was real. The grandmother was using geographic coordinates, not metaphor. The fortune teller was right. The journey was required to understand what was already known.');
+          const inv = S_story.inventory = S_story.inventory || [];
+          inv.push({ name:'Loch Gold Flake', icon:'✨', type:'misc', desc:'Gold flake from the Highland loch, surfaced when Roen dropped the Philosophy Stone into the water. The bioluminescent colony below concentrates trace gold from the highland runoff. His grandmother\'s stone was a fragment of the same colony — a finder\'s stone. She was speaking literally.', sell:30 });
+          storyMsg('✨ The stone hits the water.\n\nThe loch glows amber — the same amber as the Warmth Eel, the same amber as the Dunfall drift spore. The same bioluminescent colony at three different scales: open sea, loch shore, shepherd\'s pocket.\n\nGold flakes rise from the loch floor. Not a hoard — a geological truth. The colony below concentrates trace gold from the highland runoff. The grandmother\'s stone was a fragment of the same colony. It knew where the gold was because it WAS the same colony. It was always pointing home.\n\nRoen picks up a gold flake from the surface.\n\n"She said \'it\'s in the backyard.\' I thought she was being poetic." He pauses. "She was not being poetic. She was a shepherd. Shepherds don\'t do poetry. They do directions."\n\nHe holds the flake to the light.\n\n"Forty years. Four thousand miles. A philosopher in Athens who charged me four copper for that information. My grandmother told me for free. In four words."\n\nHe puts the flake in your hand.\n\n"Keep it. You were there for the whole thing."\n\nLoch Gold Flake added. +400gp. +500 XP. Knowledge entry added. The Personal Legend is complete.');
+          storyRender(node);
+        });
+        _aDiv.appendChild(_aBtn);
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
+      } else if (!S_story.roenMet) {
+        const _aDiv = document.createElement('div');
+        _aDiv.id = 'story-alch-hl'; _aDiv.className = 'sweelinck-variant';
+        _aDiv.style.cssText = 'margin-top:10px;border-left-color:#8a7a2a;color:#c8b050;font-size:12px;';
+        _aDiv.textContent = '🐑 At the crossroads: a man with a shepherd\'s staff and a smooth stone in his hand. He\'s been here since dawn. "My grandmother told me this stone knows where the gold is. A fortune teller in Birka confirmed it. I\'ve been arguing with the stone for forty years and it\'s never said anything, which I now think is the message." He looks at you. "You walk like someone who knows where they\'re going."';
+        const _aBtn = document.createElement('button');
+        _aBtn.className = 'inv-use-btn'; _aBtn.style.marginTop = '6px';
+        _aBtn.textContent = '🐑 Let Roen travel with you';
+        _aBtn.addEventListener('click', () => {
+          _aBtn.disabled = true;
+          S_story.roenMet = true;
+          S_story.xp = (S_story.xp||0) + 50;
+          const inv = S_story.inventory = S_story.inventory || [];
+          inv.push({ name:"Shepherd's Fortune Slip", icon:'📜', type:'misc', desc:'The fortune teller\'s reading for Roen: "Follow the omen. The world will teach you. The gold is below the water that has already been cleared." Roen has given it to you because he keeps reading it wrong and needs a second opinion.', sell:0 });
+          storyMsg('🐑 "Excellent." Roen picks up a small pack from behind the crossroads stone. He has prepared for this.\n\n"The fortune teller said: follow the omen. The world will teach you. The gold is below the water that has already been cleared." He hands you the reading. "I\'ve been carrying this for six months. Every time I read it I understand it differently. I need someone to hold it who will read it correctly when the time comes."\n\nHe looks at the loch. Then at the road south.\n\n"I believe the gold is on a Mediterranean island. My grandmother said it was in the backyard. One of them is using metaphor. I believe it is my grandmother." He is wrong about which one.\n\nShepherd\'s Fortune Slip added. +50 XP. Roen will travel with you. Quest: The Noon Plain activates at the Midlands.');
+          storyRender(node);
+        });
+        _aDiv.appendChild(_aBtn);
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
+      }
+    }
+  }
+}
+function _nodeHookAlchManNoon(node) {
+  // §ALCHEMY-01: MI — The Noon Plain
+  { const _alchMIOld = document.getElementById('story-alch-mi'); if (_alchMIOld) _alchMIOld.remove();
+    if (node.code === 'MAN' && S_story.roenMet && !S_story.roenMidlandsWisdom) {
+      const _aDiv = document.createElement('div');
+      _aDiv.id = 'story-alch-mi'; _aDiv.className = 'sweelinck-variant';
+      _aDiv.style.cssText = 'margin-top:10px;border-left-color:#8a7a2a;color:#c8b050;font-size:12px;';
+      _aDiv.textContent = '🐑 Roen is in the noon plain watching his shadow disappear under his feet. "At noon the plain has no shadow. My grandmother said: don\'t take the shadow personally. I thought this was a metaphor. Now I think she meant: the shadow is just an absence of light, not a judgment. You can\'t take an absence personally." He watches the horizon. "That creature over there, however — I would take that personally."';
+      const _aBtn = document.createElement('button');
+      _aBtn.className = 'inv-use-btn'; _aBtn.style.marginTop = '6px';
+      _aBtn.textContent = '🐑 Discuss the shadow with Roen';
+      _aBtn.addEventListener('click', () => {
+        _aBtn.disabled = true;
+        S_story.roenMidlandsWisdom = true;
+        S_story.xp = (S_story.xp||0) + 150;
+        storyMsg('🐑 "The second agreement," Roen says, watching the noonwraith on the horizon, "is: don\'t take anything personally. The noonwraith doesn\'t want to destroy you specifically. It wants to destroy anyone who stands in the noon plain without knowing to leave." He pauses. "Although I suppose not leaving is somewhat personal. On my part."\n\nHe takes the stone out and holds it up. It\'s warm.\n\n"The stone gets warm when the sun is directly overhead. I\'ve taken this personally for forty years." He puts it back. "I\'m practicing not taking it personally. It is a process. Also the stone is from the loch shallows. My grandmother called it a loch stone. I thought that just meant it was from the loch. I wonder now if that was more specific than I understood."\n\nHe turns south, toward the road.\n\n+150 XP. Quest: The Ship Remembers activates at the Tilbury Star.');
+        storyRender(node);
+      });
+      _aDiv.appendChild(_aBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
+    }
+  }
+}
+function _nodeHookAlchSenShip(node) {
+  // §ALCHEMY-01: MS — The Ship Remembers
+  { const _alchMSOld = document.getElementById('story-alch-ms'); if (_alchMSOld) _alchMSOld.remove();
+    if (node.code === 'SEN' && S_story.roenMidlandsWisdom && !S_story.roenAtSea) {
+      const _aDiv = document.createElement('div');
+      _aDiv.id = 'story-alch-ms'; _aDiv.className = 'sweelinck-variant';
+      _aDiv.style.cssText = 'margin-top:10px;border-left-color:#2a3a6a;color:#8090c8;font-size:12px;';
+      _aDiv.textContent = '🐑 Roen is at the ship\'s rail. First time at sea. "The ship doesn\'t make assumptions about where the sea ends. It goes until it arrives. I\'ve been making assumptions about where the gold is for forty years. The ship is doing better than I am." He\'s not looking away from the water. "The stone is heavy in my pocket today. It\'s been heavy since the plains."';
+      const _aBtn = document.createElement('button');
+      _aBtn.className = 'inv-use-btn'; _aBtn.style.marginTop = '6px';
+      _aBtn.textContent = '🐑 Stand at the rail with Roen';
+      _aBtn.addEventListener('click', () => {
+        _aBtn.disabled = true;
+        S_story.roenAtSea = true;
+        S_story.xp = (S_story.xp||0) + 200;
+        storyMsg('🐑 The rail. The water. A shepherd who has never been on a ship.\n\n"The sea doesn\'t remember the ships that crossed it. Only the ships remember the sea. I\'ve been waiting for the world to remember me. I think I have that backwards." He holds the stone over the rail — not dropping it, considering.\n\n"The stone is warm again. It\'s the water." He pulls it back. "My grandmother grew up near the loch. She said the stone came from the loch shallows. She called it a loch stone. I thought that just meant it was from the loch. I wonder now if that was more specific." He is getting closer to understanding something. He does not know how close.\n\n+200 XP. Quest: The Oracle\'s Reading activates at the Oracle\'s Island.');
+        storyRender(node);
+      });
+      _aDiv.appendChild(_aBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
+    }
+  }
+}
+function _nodeHookAlchAthStoic(node) {
+  // §ALCHEMY-01: AE — The Stoic's Gold
+  { const _alchAEOld = document.getElementById('story-alch-ae'); if (_alchAEOld) _alchAEOld.remove();
+    if (node.code === 'ATH' && S_story.roenMaltaCrisis && !S_story.roenAlchemistMet) {
+      const _aDiv = document.createElement('div');
+      _aDiv.id = 'story-alch-ae'; _aDiv.className = 'sweelinck-variant';
+      _aDiv.style.cssText = 'margin-top:10px;border-left-color:#3a2a3a;color:#a080a0;font-size:12px;';
+      _aDiv.textContent = '🐑 Near the altar to an unknown god: an old man who has been on the same stone since before the current magistrates were born. He looked at Roen\'s fortune slip and immediately said: "You\'ve already found it." Roen: "I haven\'t." Old man: "You have the stone. Your grandmother said the stone knows where the gold is. So: the stone has the knowledge. The knowledge is the gold. You\'ve been carrying gold for forty years." Roen has been staring at him for ten minutes.';
+      const _aBtn = document.createElement('button');
+      _aBtn.className = 'inv-use-btn'; _aBtn.style.marginTop = '6px';
+      _aBtn.textContent = '🐑 Let Roen give the fortune slip to the old man';
+      _aBtn.addEventListener('click', () => {
+        _aBtn.disabled = true;
+        S_story.roenAlchemistMet = true;
+        S_story.xp = (S_story.xp||0) + 250;
+        const inv = S_story.inventory = S_story.inventory || [];
+        const slipIdx = inv.findIndex(i => i.name === "Shepherd's Fortune Slip");
+        if (slipIdx !== -1) inv.splice(slipIdx, 1);
+        storyMsg('🐑 Roen holds out the slip. The old man reads it. Sets it on the stone beside him.\n\n"\'Below the water that has already been cleared.\'" He does not elaborate.\n\nRoen: "What does that mean?"\n\nOld man: "You already know."\n\nRoen: "The Highland loch. The kelpie was cleared."\n\nOld man: "Yes."\n\nRoen: "My grandmother\'s backyard."\n\nOld man: "Yes."\n\nRoen: "She wasn\'t using a metaphor."\n\nOld man: "Shepherds rarely do."\n\nRoen is quiet. Then: "I paid a fortune teller in Birka. An oracle on an island. I walked to Athens and found you on a rock. You all said the same thing. In progressively fewer words." He looks at the stone. "My grandmother told me for free. In four words."\n\nThe old man folds the slip into his coat. "You would not have understood it then. The journey was not to find the gold. The journey was to understand what your grandmother already knew."\n\nRoen nods once.\n\n"That\'s very annoying," he says. He says it with complete warmth.\n\nShepherd\'s Fortune Slip consumed. +250 XP. Quest: The Gold Was Home activates at the Irish Highlands.');
+        storyRender(node);
+      });
+      _aDiv.appendChild(_aBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
+    }
+  }
+}
+function _nodeHookWisVsUnderground(node) {
+  // §DUNGEON-01: VS Underground Room — lower archive entrance
+  { const _vsUgOld = document.getElementById('story-vs-underground'); if (_vsUgOld) _vsUgOld.remove();
+    if (node.code === 'VS' && S_story.wisHookReceived && !S_story.visbyUnderground) {
+      const _ugDiv = document.createElement('div');
+      _ugDiv.id = 'story-vs-underground'; _ugDiv.className = 'sweelinck-variant';
+      _ugDiv.style.cssText = 'margin-top:10px;border-left-color:#1a1a3a;color:#7080b0;font-size:12px;';
+      _ugDiv.textContent = '🕯 The main archive has a lower level. Roen mentioned it four times in passing — always the same detail: "It shows you something." He did not elaborate. The passage down is behind the southeast stack, below the cartography section. Eight steps.';
+      const _ugBtn = document.createElement('button');
+      _ugBtn.className = 'inv-use-btn'; _ugBtn.style.marginTop = '6px';
+      _ugBtn.textContent = '🕯 Descend to the lower archive level';
+      _ugBtn.addEventListener('click', () => {
+        _ugBtn.disabled = true;
+        S_story.visbyUnderground = true;
+        storyMsg('🕯 The lower level is cut stone over older stone. No windows. The air is cold in the way that archives are cold — not temperature, but attention. Three alcoves and one central chamber. The central chamber has a standing mirror, obsidian, no frame. The shadow room is here.');
+        storyRender(node);
+      });
+      _ugDiv.appendChild(_ugBtn);
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _ugDiv);
+    }
+  }
+}
+function _nodeHookWisVsHub(node) {
+  // §WISDOM-01: VS — The Manuscript Hub (hook + shadow room + resolution)
+  { const _wisVsOld = document.getElementById('story-wis-vs'); if (_wisVsOld) _wisVsOld.remove();
+    if ((S_story.defeatedBattles||{})['VS_SHADOW'] && !S_story.wisPage6_shadow) {
+      S_story.wisPage6_shadow = true;
+    }
+    if (node.code === 'VS' && S_story.personalLegendComplete) {
+      const _wDiv = document.createElement('div');
+      _wDiv.id = 'story-wis-vs'; _wDiv.className = 'sweelinck-variant';
+      _wDiv.style.cssText = 'margin-top:10px;border-left-color:#2a2a4a;color:#8090c0;font-size:12px;';
+      const _p1 = S_story.wisPage1_masks, _p2 = S_story.wisPage2_aggression;
+      const _p3 = S_story.wisPage3_thumbscrew, _p4 = S_story.wisPage4_sight;
+      const _p5 = S_story.wisPage5_form, _p6 = S_story.wisPage6_shadow;
+      const _allFive = _p1 && _p2 && _p3 && _p4 && _p5;
+      const _allSix = _allFive && _p6;
+      if (S_story.personalLegendMature) {
+        _wDiv.textContent = '📚 Ardley\'s Complete Laws sits on the archive shelf. Roen\'s foreword: "These are not rules. They are a pair of glasses."';
+      } else if (S_story.wisHookReceived && _allSix) {
+        _wDiv.textContent = '📖 Roen has all six sections laid out. He says: "The treasurer scattered the text. Sixteen years later his family lost the dock contracts to a Baltic competitor who had read a copy. The laws worked whether or not anyone wanted them to." He looks at the pile. "Shall we bind it?"';
+        const _bindBtn = document.createElement('button');
+        _bindBtn.className = 'inv-use-btn'; _bindBtn.style.marginTop = '6px';
+        _bindBtn.textContent = '📚 Bind Ardley\'s manuscript';
+        _bindBtn.addEventListener('click', () => {
+          _bindBtn.disabled = true;
+          S_story.personalLegendMature = true;
+          S_story.gold = (S_story.gold||0) + 400;
+          S_story.xp = (S_story.xp||0) + 600;
+          const inv = S_story.inventory = S_story.inventory || [];
+          const pIdx = inv.findIndex(i => i.name === 'Pages of the Ardley Manuscript');
+          if (pIdx !== -1) inv.splice(pIdx, 1);
+          inv.push({ name:"Ardley's Complete Laws", icon:'📚', type:'misc', desc:"All six sections of Master Fenn Ardley's 'A Complete Account of Human Nature in Its Unreformed State.' The masks law. The aggression law. Each man's thumbscrew. The shortsightedness law. The formlessness law. The shadow law. Roen has added a foreword in his own handwriting. It says: 'These are not rules. They are a pair of glasses.'", sell:50 });
+          S_story.knowledge = S_story.knowledge || [];
+          S_story.knowledge.push("Ardley's Laws: Master Fenn Ardley documented six laws of human behavior and was dismissed for naming the court treasurer's behavior publicly. The text was scattered; its dispersal east eventually cost the treasurer's dynasty their dock contracts. The laws were proven by the act of suppressing them. Roen's foreword: 'These are not rules. They are a pair of glasses. Ardley did not invent what he described. He noticed it.'");
+          storyMsg('📚 Roen binds the six sections. He writes the foreword in three minutes — he has been composing it since the first fragment.\n\n"These are not rules. They are a pair of glasses. Ardley did not invent what he described. He noticed it. The court treasurer, in removing the text, confirmed it. The Baltic competitor, in using it, proved it. The laws existed before Ardley. They will exist after you finish reading. You are already using them. Now you know what to call the thing you are doing."\n\nArdley\'s Complete Laws added. Pages of the Ardley Manuscript removed.\n+400gp, +600 XP. Knowledge entry added.');
+          storyRender(node);
+        });
+        _wDiv.appendChild(_bindBtn);
+      } else if (S_story.wisHookReceived && _allFive && !_p6) {
+        _wDiv.textContent = '🔮 Five sections found. The sixth — Ardley\'s chapter on the repressed shadow — has been traced to a room in the lower Visby level. Roen has been there four times. He says: "It shows you something. I gave it a formal nod. It seemed appropriate." Two paths: accept what it reflects, or fight what you find.';
+        const _acceptBtn = document.createElement('button');
+        _acceptBtn.className = 'inv-use-btn'; _acceptBtn.style.marginTop = '6px';
+        _acceptBtn.textContent = '🔮 Accept the reflection (receive the shadow\'s observation)';
+        _acceptBtn.addEventListener('click', () => {
+          _acceptBtn.disabled = true;
+          S_story.wisPage6_shadow = true;
+          S_story.xp = (S_story.xp||0) + 350;
+          const inv = S_story.inventory = S_story.inventory || [];
+          inv.push({ name:'Shadow Shard', icon:'🔮', type:'misc', desc:"A fragment of the VS mirror room, offered freely after you accepted what it reflected. It reflects nothing now — whatever was in it has been named. The room behind it is quiet.", sell:25 });
+          storyMsg('🔮 The room below the archive has a mirror that should not exist here — polished obsidian, standing, no frame.\n\nIt shows you something. What it shows is specific and accurate. It names a pattern you have been navigating around for a long time.\n\nYou give it a formal nod. The mirror fractures cleanly at the center, offering a single shard. The room behind it goes quiet.\n\nArdley\'s W6 fragment collected. Shadow Shard added. Knowledge entry: "The shadow is not your enemy. It is the part of you that has been waiting to be named." +350 XP.');
+          S_story.knowledge = S_story.knowledge || [];
+          S_story.knowledge.push("Ardley W6 — The Shadow: The mirror room in Visby's lower archive reflects a pattern the visitor has been navigating around — not a lie, not a flaw, but a part of the self that operates below acknowledgment. Roen gave it a formal nod. The mirror offered a shard. Accepting the shadow's observation is not defeat. It is the end of the cost of suppressing it.");
+          storyRender(node);
+        });
+        const _shadowBtn = document.createElement('button');
+        _shadowBtn.className = 'inv-use-btn'; _shadowBtn.style.marginTop = '4px';
+        _shadowBtn.textContent = '⚔️ Descend and fight the shadow construct';
+        _shadowBtn.addEventListener('click', () => {
+          _shadowBtn.disabled = true;
+          setTimeout(() => storyPreBattle({ ...node, code:'VS_SHADOW', battle:{ label:'Shadow — The Mirror Construct', key:'shadow', count:1 } }), 400);
+        });
+        _wDiv.appendChild(_acceptBtn);
+        _wDiv.appendChild(_shadowBtn);
+      } else if (S_story.wisHookReceived) {
+        const _found = [_p1,_p2,_p3,_p4,_p5,_p6].filter(Boolean).length;
+        _wDiv.textContent = '📖 Roen\'s portfolio is open on the archive table. ' + _found + ' of 6 Ardley sections found. Remaining fragments: W1 at Tilbury Docks (WIS 13), W2 at Saltwick (WIS 12), W3 at the Intercept (INT 11), W4 at Visby Tavern (INT 12), W5 at Athens (WIS 12), W6 here (WIS 14 or combat).';
+      } else {
+        _wDiv.textContent = '📖 Roen is at the Visby archive with a battered portfolio. The guild has a copy of a suppressed text by court historian Master Fenn Ardley. Six more sections survive, scattered. Roen: "He was right. That\'s why they scattered it."';
+        const _hookBtn = document.createElement('button');
+        _hookBtn.className = 'inv-use-btn'; _hookBtn.style.marginTop = '6px';
+        _hookBtn.textContent = '📖 Help Roen collect Ardley\'s pages';
+        _hookBtn.addEventListener('click', () => {
+          _hookBtn.disabled = true;
+          S_story.wisHookReceived = true;
+          S_story.xp = (S_story.xp||0) + 100;
+          const inv = S_story.inventory = S_story.inventory || [];
+          inv.push({ name:'Pages of the Ardley Manuscript', icon:'📖', type:'misc', desc:"A growing portfolio of Master Fenn Ardley's fragments, collected by Roen. Six sections needed. Title page: 'A Complete Account of Human Nature in Its Unreformed State.' The author's name is in very small type, as if he was already worried about who might read it.", sell:0 });
+          storyMsg('📖 Roen sets the portfolio on the table.\n\nThe guild archivist kept his copy in the lower archive for twenty years, knowing someone would eventually come looking. Ardley wrote six sections in one year — then gave a lecture to the full court council, named the treasurer\'s behavior patterns by chapter, and was dismissed before the applause finished.\n\nThe treasurer scattered the text. He held the city dock contracts for sixteen more years. Then a Baltic competitor who had read a dispersed copy outbid him on every route that mattered.\n\nRoen: "He was right. That\'s why they scattered it."\n\nPages of the Ardley Manuscript added. +100 XP. Quests W1–W6 now active at their respective nodes.');
+          storyRender(node);
+        });
+        _wDiv.appendChild(_hookBtn);
+      }
+      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wDiv);
+    }
+  }
+}
 const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'nue-lower-archive', nodes:['NUE'], fn:_nodeHookNueLowerArchive },
   { id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA'], fn:_nodeHookVoidArchaeology },
@@ -33213,6 +33497,12 @@ const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'hunt-bnx-bend', nodes:['BNX'], fn:_nodeHookHuntBnxBend },      // §VM-01-G-FU-b
   { id:'hunt-hft-elder', nodes:['HFT'], fn:_nodeHookHuntHftElder },    // §VM-01-G-FU-b
   { id:'hunt-vaw-den', nodes:['VAW'], fn:_nodeHookHuntVawDen },        // §VM-01-G-FU-b
+  { id:'alch-kir-dream', nodes:['KIR'], fn:_nodeHookAlchKirDream },       // §VM-01-G-FU-c
+  { id:'alch-man-noon', nodes:['MAN'], fn:_nodeHookAlchManNoon },         // §VM-01-G-FU-c
+  { id:'alch-sen-ship', nodes:['SEN'], fn:_nodeHookAlchSenShip },         // §VM-01-G-FU-c
+  { id:'alch-ath-stoic', nodes:['ATH'], fn:_nodeHookAlchAthStoic },       // §VM-01-G-FU-c
+  { id:'wis-vs-underground', nodes:['VS'], fn:_nodeHookWisVsUnderground },// §VM-01-G-FU-c
+  { id:'wis-vs-hub', nodes:['VS'], fn:_nodeHookWisVsHub },                // §VM-01-G-FU-c (nodes is metadata: the fn's own latch runs everywhere)
 ];
 function _runNodeHook(id, node, ctx) {
   for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node, ctx);
@@ -35525,275 +35815,13 @@ function storyRender(node, prefix) {
   _runNodeHook('hunt-hft-elder', node);           // §HUNT-01: LS — Elder Fisherwoman hook (done panel → NODE_PANELS)
   // §HUNT-01: LH (KSU) + LN (ALF) investigation panels → NODE_PANELS (§VM-01-G-FU-b)
   _runNodeHook('hunt-vaw-den', node);             // §HUNT-01: LD — drowner den battle trigger
-  // §ALCHEMY-01: HL — The Shepherd's Dream (hook + return)
-  { const _alchHLOld = document.getElementById('story-alch-hl'); if (_alchHLOld) _alchHLOld.remove();
-    if (node.code === 'KIR') {
-      if (S_story.personalLegendComplete) {
-        const _aDiv = document.createElement('div');
-        _aDiv.id = 'story-alch-hl'; _aDiv.className = 'sweelinck-variant';
-        if (S_story.personalLegendMature) {
-          _aDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a2a;color:#70b870;font-size:12px;';
-          _aDiv.textContent = '✅ The Personal Legend and the Book of Human Nature: both complete. Roen sits at the loch on Tuesdays. He reads. The book is on the rock beside him. He has written two pages of his own notes in the margins.';
-        } else if (S_story.wisHookReceived) {
-          _aDiv.style.cssText = 'margin-top:10px;border-left-color:#2a2a4a;color:#8090c0;font-size:12px;';
-          _aDiv.textContent = '📖 Roen is collecting fragments of Ardley\'s text. He is moving between nodes. He will be at Visby when you need him. He left a note on the loch stone: "W2 is at Saltwick. She touches the ledger."';
-        } else {
-          _aDiv.style.cssText = 'margin-top:10px;border-left-color:#8a7a2a;color:#c8b050;font-size:12px;';
-          _aDiv.textContent = '🐑 Roen is at the loch, but he is not watching the water. He is watching the highland market on the far bank.\n\n"I have been sitting here for three weeks," he says. "I thought I would feel finished. I found the gold. The fortune teller was right. My grandmother was using geographic coordinates. Everything resolved correctly. I am satisfied with the resolution."\n\nHe does not look satisfied. He looks like a man who has answered one question and noticed that the answer opened a door.\n\n"The merchant across the water — the one with the grey coat — touches his left ear before he lies. He has done it eleven times in the last hour. I have been counting." He pauses. "I did not know I was going to count. I just noticed and then I could not stop."\n\nHe turns to you.\n\n"I heard from the loch archivist about a text. A court historian — name of Ardley — spent forty years watching people the way I have been watching that merchant. And he wrote it down. A library in Visby has a copy. I am going to go find it."';
-          const _wisIntroBtn = document.createElement('button');
-          _wisIntroBtn.className = 'inv-use-btn'; _wisIntroBtn.style.marginTop = '6px';
-          _wisIntroBtn.textContent = '📖 Ask what Ardley wrote down';
-          _wisIntroBtn.addEventListener('click', () => {
-            _wisIntroBtn.disabled = true;
-            storyMsg('Roen: "The archivist said Ardley documented six laws of human behavior — the mask people wear, the aggression they hide under courtesy, the one thing every person is trying to protect, the way power struggles take longer than they need to, the way people defend a position after it has stopped being true, and something about the part of yourself you refuse to examine."\n\nHe picks up a stone from the bank. Not the grandmother\'s stone — just a stone.\n\n"The archivist said Ardley named the court treasurer\'s behavior in a public lecture and was dismissed before the applause finished. The treasurer scattered the text. Sixteen years later the treasurer\'s family lost their dock contracts to a Baltic competitor who had read a dispersed copy."\n\nRoen sets the stone back down.\n\n"The laws worked whether or not anyone wanted them to." He looks at the merchant across the water, who has just touched his left ear again. "I am going to Visby. You should come."');
-            storyRender(node);
-          });
-          _aDiv.appendChild(_wisIntroBtn);
-        }
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
-      } else if (S_story.roenAlchemistMet) {
-        const _aDiv = document.createElement('div');
-        _aDiv.id = 'story-alch-hl'; _aDiv.className = 'sweelinck-variant';
-        _aDiv.style.cssText = 'margin-top:10px;border-left-color:#c8a830;color:#d8b840;font-size:12px;';
-        _aDiv.textContent = '🏔 Roen is at the loch edge where the kelpie used to be. He has the stone. He is looking at the water. "The old man in Athens said the stone already knows. My grandmother said the gold is in the loch. The stone is what connects those two sentences. I think I need to put it in the water."';
-        const _aBtn = document.createElement('button');
-        _aBtn.className = 'inv-use-btn'; _aBtn.style.marginTop = '6px';
-        _aBtn.textContent = '✨ Watch Roen drop the stone into the loch';
-        _aBtn.addEventListener('click', () => {
-          _aBtn.disabled = true;
-          S_story.personalLegendComplete = true;
-          S_story.gold = (S_story.gold||0) + 400;
-          S_story.xp = (S_story.xp||0) + 500;
-          S_story.knowledge = S_story.knowledge || [];
-          S_story.knowledge.push('Personal Legend: Roen the Highland shepherd traveled four thousand miles following his grandmother\'s stone. The stone was a loch-shore fragment of the Warmth Eel bioluminescent colony — a biological gold-locator. The Highland loch gold was real. The grandmother was using geographic coordinates, not metaphor. The fortune teller was right. The journey was required to understand what was already known.');
-          const inv = S_story.inventory = S_story.inventory || [];
-          inv.push({ name:'Loch Gold Flake', icon:'✨', type:'misc', desc:'Gold flake from the Highland loch, surfaced when Roen dropped the Philosophy Stone into the water. The bioluminescent colony below concentrates trace gold from the highland runoff. His grandmother\'s stone was a fragment of the same colony — a finder\'s stone. She was speaking literally.', sell:30 });
-          storyMsg('✨ The stone hits the water.\n\nThe loch glows amber — the same amber as the Warmth Eel, the same amber as the Dunfall drift spore. The same bioluminescent colony at three different scales: open sea, loch shore, shepherd\'s pocket.\n\nGold flakes rise from the loch floor. Not a hoard — a geological truth. The colony below concentrates trace gold from the highland runoff. The grandmother\'s stone was a fragment of the same colony. It knew where the gold was because it WAS the same colony. It was always pointing home.\n\nRoen picks up a gold flake from the surface.\n\n"She said \'it\'s in the backyard.\' I thought she was being poetic." He pauses. "She was not being poetic. She was a shepherd. Shepherds don\'t do poetry. They do directions."\n\nHe holds the flake to the light.\n\n"Forty years. Four thousand miles. A philosopher in Athens who charged me four copper for that information. My grandmother told me for free. In four words."\n\nHe puts the flake in your hand.\n\n"Keep it. You were there for the whole thing."\n\nLoch Gold Flake added. +400gp. +500 XP. Knowledge entry added. The Personal Legend is complete.');
-          storyRender(node);
-        });
-        _aDiv.appendChild(_aBtn);
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
-      } else if (!S_story.roenMet) {
-        const _aDiv = document.createElement('div');
-        _aDiv.id = 'story-alch-hl'; _aDiv.className = 'sweelinck-variant';
-        _aDiv.style.cssText = 'margin-top:10px;border-left-color:#8a7a2a;color:#c8b050;font-size:12px;';
-        _aDiv.textContent = '🐑 At the crossroads: a man with a shepherd\'s staff and a smooth stone in his hand. He\'s been here since dawn. "My grandmother told me this stone knows where the gold is. A fortune teller in Birka confirmed it. I\'ve been arguing with the stone for forty years and it\'s never said anything, which I now think is the message." He looks at you. "You walk like someone who knows where they\'re going."';
-        const _aBtn = document.createElement('button');
-        _aBtn.className = 'inv-use-btn'; _aBtn.style.marginTop = '6px';
-        _aBtn.textContent = '🐑 Let Roen travel with you';
-        _aBtn.addEventListener('click', () => {
-          _aBtn.disabled = true;
-          S_story.roenMet = true;
-          S_story.xp = (S_story.xp||0) + 50;
-          const inv = S_story.inventory = S_story.inventory || [];
-          inv.push({ name:"Shepherd's Fortune Slip", icon:'📜', type:'misc', desc:'The fortune teller\'s reading for Roen: "Follow the omen. The world will teach you. The gold is below the water that has already been cleared." Roen has given it to you because he keeps reading it wrong and needs a second opinion.', sell:0 });
-          storyMsg('🐑 "Excellent." Roen picks up a small pack from behind the crossroads stone. He has prepared for this.\n\n"The fortune teller said: follow the omen. The world will teach you. The gold is below the water that has already been cleared." He hands you the reading. "I\'ve been carrying this for six months. Every time I read it I understand it differently. I need someone to hold it who will read it correctly when the time comes."\n\nHe looks at the loch. Then at the road south.\n\n"I believe the gold is on a Mediterranean island. My grandmother said it was in the backyard. One of them is using metaphor. I believe it is my grandmother." He is wrong about which one.\n\nShepherd\'s Fortune Slip added. +50 XP. Roen will travel with you. Quest: The Noon Plain activates at the Midlands.');
-          storyRender(node);
-        });
-        _aDiv.appendChild(_aBtn);
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
-      }
-    }
-  }
-  // §ALCHEMY-01: MI — The Noon Plain
-  { const _alchMIOld = document.getElementById('story-alch-mi'); if (_alchMIOld) _alchMIOld.remove();
-    if (node.code === 'MAN' && S_story.roenMet && !S_story.roenMidlandsWisdom) {
-      const _aDiv = document.createElement('div');
-      _aDiv.id = 'story-alch-mi'; _aDiv.className = 'sweelinck-variant';
-      _aDiv.style.cssText = 'margin-top:10px;border-left-color:#8a7a2a;color:#c8b050;font-size:12px;';
-      _aDiv.textContent = '🐑 Roen is in the noon plain watching his shadow disappear under his feet. "At noon the plain has no shadow. My grandmother said: don\'t take the shadow personally. I thought this was a metaphor. Now I think she meant: the shadow is just an absence of light, not a judgment. You can\'t take an absence personally." He watches the horizon. "That creature over there, however — I would take that personally."';
-      const _aBtn = document.createElement('button');
-      _aBtn.className = 'inv-use-btn'; _aBtn.style.marginTop = '6px';
-      _aBtn.textContent = '🐑 Discuss the shadow with Roen';
-      _aBtn.addEventListener('click', () => {
-        _aBtn.disabled = true;
-        S_story.roenMidlandsWisdom = true;
-        S_story.xp = (S_story.xp||0) + 150;
-        storyMsg('🐑 "The second agreement," Roen says, watching the noonwraith on the horizon, "is: don\'t take anything personally. The noonwraith doesn\'t want to destroy you specifically. It wants to destroy anyone who stands in the noon plain without knowing to leave." He pauses. "Although I suppose not leaving is somewhat personal. On my part."\n\nHe takes the stone out and holds it up. It\'s warm.\n\n"The stone gets warm when the sun is directly overhead. I\'ve taken this personally for forty years." He puts it back. "I\'m practicing not taking it personally. It is a process. Also the stone is from the loch shallows. My grandmother called it a loch stone. I thought that just meant it was from the loch. I wonder now if that was more specific than I understood."\n\nHe turns south, toward the road.\n\n+150 XP. Quest: The Ship Remembers activates at the Tilbury Star.');
-        storyRender(node);
-      });
-      _aDiv.appendChild(_aBtn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
-    }
-  }
-  // §ALCHEMY-01: MS — The Ship Remembers
-  { const _alchMSOld = document.getElementById('story-alch-ms'); if (_alchMSOld) _alchMSOld.remove();
-    if (node.code === 'SEN' && S_story.roenMidlandsWisdom && !S_story.roenAtSea) {
-      const _aDiv = document.createElement('div');
-      _aDiv.id = 'story-alch-ms'; _aDiv.className = 'sweelinck-variant';
-      _aDiv.style.cssText = 'margin-top:10px;border-left-color:#2a3a6a;color:#8090c8;font-size:12px;';
-      _aDiv.textContent = '🐑 Roen is at the ship\'s rail. First time at sea. "The ship doesn\'t make assumptions about where the sea ends. It goes until it arrives. I\'ve been making assumptions about where the gold is for forty years. The ship is doing better than I am." He\'s not looking away from the water. "The stone is heavy in my pocket today. It\'s been heavy since the plains."';
-      const _aBtn = document.createElement('button');
-      _aBtn.className = 'inv-use-btn'; _aBtn.style.marginTop = '6px';
-      _aBtn.textContent = '🐑 Stand at the rail with Roen';
-      _aBtn.addEventListener('click', () => {
-        _aBtn.disabled = true;
-        S_story.roenAtSea = true;
-        S_story.xp = (S_story.xp||0) + 200;
-        storyMsg('🐑 The rail. The water. A shepherd who has never been on a ship.\n\n"The sea doesn\'t remember the ships that crossed it. Only the ships remember the sea. I\'ve been waiting for the world to remember me. I think I have that backwards." He holds the stone over the rail — not dropping it, considering.\n\n"The stone is warm again. It\'s the water." He pulls it back. "My grandmother grew up near the loch. She said the stone came from the loch shallows. She called it a loch stone. I thought that just meant it was from the loch. I wonder now if that was more specific." He is getting closer to understanding something. He does not know how close.\n\n+200 XP. Quest: The Oracle\'s Reading activates at the Oracle\'s Island.');
-        storyRender(node);
-      });
-      _aDiv.appendChild(_aBtn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
-    }
-  }
-  // §ALCHEMY-01: IS — The Oracle's Reading
-  { const _alchISOld = document.getElementById('story-alch-is'); if (_alchISOld) _alchISOld.remove();
-    if (node.code === 'PDL' && S_story.roenAtSea) {
-      const _aDiv = document.createElement('div');
-      _aDiv.id = 'story-alch-is'; _aDiv.className = 'sweelinck-variant';
-      if (!S_story.roenOracleRead) {
-        _aDiv.style.cssText = 'margin-top:10px;border-left-color:#3a2a5a;color:#9080c8;font-size:12px;';
-        _aDiv.textContent = '🐑 The Oracle\'s Apprentice gave Roen a reading. He is staring at it. "She said: \'the gold is below the water that has already been cleared.\' This is almost word-for-word the same as the fortune teller in Birka." He shows you both. They are. "Either the universe is being extremely consistent, or both these women know something I don\'t." He looks at the fortune slip you\'ve been holding. "CHA Persuasion DC 11 to argue with the universe on my behalf."';
-      } else {
-        _aDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-        _aDiv.textContent = '✅ "The water that has already been cleared — the loch. The kelpie was cleared. The water was cleared." Roen is very still. "My grandmother\'s backyard. She was describing the backyard." He folds both readings together. "She was not speaking in metaphors. She was speaking in Highland geography."';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
-    }
-  }
-  // §ALCHEMY-01: ML — The Lost Stone
-  { const _alchMLOld = document.getElementById('story-alch-ml'); if (_alchMLOld) _alchMLOld.remove();
-    if (node.code === 'MLA' && S_story.roenOracleRead) {
-      const _aDiv = document.createElement('div');
-      _aDiv.id = 'story-alch-ml'; _aDiv.className = 'sweelinck-variant';
-      if (!S_story.roenMaltaCrisis) {
-        _aDiv.style.cssText = 'margin-top:10px;border-left-color:#2a4a5a;color:#6090b0;font-size:12px;';
-        _aDiv.textContent = '🐑 Roen dropped the stone in the Malta harbor. Not on purpose. He can see it on the floor — it\'s glowing slightly amber in the shallows. He\'s sitting on the dock with the expression of a man who has just dropped forty years of his grandmother\'s advice into a Mediterranean port. "I can see it. I can\'t reach it." He sits. "I think this is a sign. WIS Insight DC 12 to help me count what I have rather than what\'s on the harbor floor."';
-      } else {
-        _aDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a3a;color:#70b880;font-size:12px;';
-        _aDiv.textContent = '✅ The stone was retrieved by a fisherman who dove without being asked and handed it back. "You dropped it." No charge. Gone before Roen remembered to thank him. Roen has been thinking about this ever since. "Always do your best. That was enough for the whole harbor. I should do my best. That will be enough for the whole journey."';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
-    }
-  }
-  // §ALCHEMY-01: AE — The Stoic's Gold
-  { const _alchAEOld = document.getElementById('story-alch-ae'); if (_alchAEOld) _alchAEOld.remove();
-    if (node.code === 'ATH' && S_story.roenMaltaCrisis && !S_story.roenAlchemistMet) {
-      const _aDiv = document.createElement('div');
-      _aDiv.id = 'story-alch-ae'; _aDiv.className = 'sweelinck-variant';
-      _aDiv.style.cssText = 'margin-top:10px;border-left-color:#3a2a3a;color:#a080a0;font-size:12px;';
-      _aDiv.textContent = '🐑 Near the altar to an unknown god: an old man who has been on the same stone since before the current magistrates were born. He looked at Roen\'s fortune slip and immediately said: "You\'ve already found it." Roen: "I haven\'t." Old man: "You have the stone. Your grandmother said the stone knows where the gold is. So: the stone has the knowledge. The knowledge is the gold. You\'ve been carrying gold for forty years." Roen has been staring at him for ten minutes.';
-      const _aBtn = document.createElement('button');
-      _aBtn.className = 'inv-use-btn'; _aBtn.style.marginTop = '6px';
-      _aBtn.textContent = '🐑 Let Roen give the fortune slip to the old man';
-      _aBtn.addEventListener('click', () => {
-        _aBtn.disabled = true;
-        S_story.roenAlchemistMet = true;
-        S_story.xp = (S_story.xp||0) + 250;
-        const inv = S_story.inventory = S_story.inventory || [];
-        const slipIdx = inv.findIndex(i => i.name === "Shepherd's Fortune Slip");
-        if (slipIdx !== -1) inv.splice(slipIdx, 1);
-        storyMsg('🐑 Roen holds out the slip. The old man reads it. Sets it on the stone beside him.\n\n"\'Below the water that has already been cleared.\'" He does not elaborate.\n\nRoen: "What does that mean?"\n\nOld man: "You already know."\n\nRoen: "The Highland loch. The kelpie was cleared."\n\nOld man: "Yes."\n\nRoen: "My grandmother\'s backyard."\n\nOld man: "Yes."\n\nRoen: "She wasn\'t using a metaphor."\n\nOld man: "Shepherds rarely do."\n\nRoen is quiet. Then: "I paid a fortune teller in Birka. An oracle on an island. I walked to Athens and found you on a rock. You all said the same thing. In progressively fewer words." He looks at the stone. "My grandmother told me for free. In four words."\n\nThe old man folds the slip into his coat. "You would not have understood it then. The journey was not to find the gold. The journey was to understand what your grandmother already knew."\n\nRoen nods once.\n\n"That\'s very annoying," he says. He says it with complete warmth.\n\nShepherd\'s Fortune Slip consumed. +250 XP. Quest: The Gold Was Home activates at the Irish Highlands.');
-        storyRender(node);
-      });
-      _aDiv.appendChild(_aBtn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _aDiv);
-    }
-  }
-  // §DUNGEON-01: VS Underground Room — lower archive entrance
-  { const _vsUgOld = document.getElementById('story-vs-underground'); if (_vsUgOld) _vsUgOld.remove();
-    if (node.code === 'VS' && S_story.wisHookReceived && !S_story.visbyUnderground) {
-      const _ugDiv = document.createElement('div');
-      _ugDiv.id = 'story-vs-underground'; _ugDiv.className = 'sweelinck-variant';
-      _ugDiv.style.cssText = 'margin-top:10px;border-left-color:#1a1a3a;color:#7080b0;font-size:12px;';
-      _ugDiv.textContent = '🕯 The main archive has a lower level. Roen mentioned it four times in passing — always the same detail: "It shows you something." He did not elaborate. The passage down is behind the southeast stack, below the cartography section. Eight steps.';
-      const _ugBtn = document.createElement('button');
-      _ugBtn.className = 'inv-use-btn'; _ugBtn.style.marginTop = '6px';
-      _ugBtn.textContent = '🕯 Descend to the lower archive level';
-      _ugBtn.addEventListener('click', () => {
-        _ugBtn.disabled = true;
-        S_story.visbyUnderground = true;
-        storyMsg('🕯 The lower level is cut stone over older stone. No windows. The air is cold in the way that archives are cold — not temperature, but attention. Three alcoves and one central chamber. The central chamber has a standing mirror, obsidian, no frame. The shadow room is here.');
-        storyRender(node);
-      });
-      _ugDiv.appendChild(_ugBtn);
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _ugDiv);
-    }
-  }
-  // §WISDOM-01: VS — The Manuscript Hub (hook + shadow room + resolution)
-  { const _wisVsOld = document.getElementById('story-wis-vs'); if (_wisVsOld) _wisVsOld.remove();
-    if ((S_story.defeatedBattles||{})['VS_SHADOW'] && !S_story.wisPage6_shadow) {
-      S_story.wisPage6_shadow = true;
-    }
-    if (node.code === 'VS' && S_story.personalLegendComplete) {
-      const _wDiv = document.createElement('div');
-      _wDiv.id = 'story-wis-vs'; _wDiv.className = 'sweelinck-variant';
-      _wDiv.style.cssText = 'margin-top:10px;border-left-color:#2a2a4a;color:#8090c0;font-size:12px;';
-      const _p1 = S_story.wisPage1_masks, _p2 = S_story.wisPage2_aggression;
-      const _p3 = S_story.wisPage3_thumbscrew, _p4 = S_story.wisPage4_sight;
-      const _p5 = S_story.wisPage5_form, _p6 = S_story.wisPage6_shadow;
-      const _allFive = _p1 && _p2 && _p3 && _p4 && _p5;
-      const _allSix = _allFive && _p6;
-      if (S_story.personalLegendMature) {
-        _wDiv.textContent = '📚 Ardley\'s Complete Laws sits on the archive shelf. Roen\'s foreword: "These are not rules. They are a pair of glasses."';
-      } else if (S_story.wisHookReceived && _allSix) {
-        _wDiv.textContent = '📖 Roen has all six sections laid out. He says: "The treasurer scattered the text. Sixteen years later his family lost the dock contracts to a Baltic competitor who had read a copy. The laws worked whether or not anyone wanted them to." He looks at the pile. "Shall we bind it?"';
-        const _bindBtn = document.createElement('button');
-        _bindBtn.className = 'inv-use-btn'; _bindBtn.style.marginTop = '6px';
-        _bindBtn.textContent = '📚 Bind Ardley\'s manuscript';
-        _bindBtn.addEventListener('click', () => {
-          _bindBtn.disabled = true;
-          S_story.personalLegendMature = true;
-          S_story.gold = (S_story.gold||0) + 400;
-          S_story.xp = (S_story.xp||0) + 600;
-          const inv = S_story.inventory = S_story.inventory || [];
-          const pIdx = inv.findIndex(i => i.name === 'Pages of the Ardley Manuscript');
-          if (pIdx !== -1) inv.splice(pIdx, 1);
-          inv.push({ name:"Ardley's Complete Laws", icon:'📚', type:'misc', desc:"All six sections of Master Fenn Ardley's 'A Complete Account of Human Nature in Its Unreformed State.' The masks law. The aggression law. Each man's thumbscrew. The shortsightedness law. The formlessness law. The shadow law. Roen has added a foreword in his own handwriting. It says: 'These are not rules. They are a pair of glasses.'", sell:50 });
-          S_story.knowledge = S_story.knowledge || [];
-          S_story.knowledge.push("Ardley's Laws: Master Fenn Ardley documented six laws of human behavior and was dismissed for naming the court treasurer's behavior publicly. The text was scattered; its dispersal east eventually cost the treasurer's dynasty their dock contracts. The laws were proven by the act of suppressing them. Roen's foreword: 'These are not rules. They are a pair of glasses. Ardley did not invent what he described. He noticed it.'");
-          storyMsg('📚 Roen binds the six sections. He writes the foreword in three minutes — he has been composing it since the first fragment.\n\n"These are not rules. They are a pair of glasses. Ardley did not invent what he described. He noticed it. The court treasurer, in removing the text, confirmed it. The Baltic competitor, in using it, proved it. The laws existed before Ardley. They will exist after you finish reading. You are already using them. Now you know what to call the thing you are doing."\n\nArdley\'s Complete Laws added. Pages of the Ardley Manuscript removed.\n+400gp, +600 XP. Knowledge entry added.');
-          storyRender(node);
-        });
-        _wDiv.appendChild(_bindBtn);
-      } else if (S_story.wisHookReceived && _allFive && !_p6) {
-        _wDiv.textContent = '🔮 Five sections found. The sixth — Ardley\'s chapter on the repressed shadow — has been traced to a room in the lower Visby level. Roen has been there four times. He says: "It shows you something. I gave it a formal nod. It seemed appropriate." Two paths: accept what it reflects, or fight what you find.';
-        const _acceptBtn = document.createElement('button');
-        _acceptBtn.className = 'inv-use-btn'; _acceptBtn.style.marginTop = '6px';
-        _acceptBtn.textContent = '🔮 Accept the reflection (receive the shadow\'s observation)';
-        _acceptBtn.addEventListener('click', () => {
-          _acceptBtn.disabled = true;
-          S_story.wisPage6_shadow = true;
-          S_story.xp = (S_story.xp||0) + 350;
-          const inv = S_story.inventory = S_story.inventory || [];
-          inv.push({ name:'Shadow Shard', icon:'🔮', type:'misc', desc:"A fragment of the VS mirror room, offered freely after you accepted what it reflected. It reflects nothing now — whatever was in it has been named. The room behind it is quiet.", sell:25 });
-          storyMsg('🔮 The room below the archive has a mirror that should not exist here — polished obsidian, standing, no frame.\n\nIt shows you something. What it shows is specific and accurate. It names a pattern you have been navigating around for a long time.\n\nYou give it a formal nod. The mirror fractures cleanly at the center, offering a single shard. The room behind it goes quiet.\n\nArdley\'s W6 fragment collected. Shadow Shard added. Knowledge entry: "The shadow is not your enemy. It is the part of you that has been waiting to be named." +350 XP.');
-          S_story.knowledge = S_story.knowledge || [];
-          S_story.knowledge.push("Ardley W6 — The Shadow: The mirror room in Visby's lower archive reflects a pattern the visitor has been navigating around — not a lie, not a flaw, but a part of the self that operates below acknowledgment. Roen gave it a formal nod. The mirror offered a shard. Accepting the shadow's observation is not defeat. It is the end of the cost of suppressing it.");
-          storyRender(node);
-        });
-        const _shadowBtn = document.createElement('button');
-        _shadowBtn.className = 'inv-use-btn'; _shadowBtn.style.marginTop = '4px';
-        _shadowBtn.textContent = '⚔️ Descend and fight the shadow construct';
-        _shadowBtn.addEventListener('click', () => {
-          _shadowBtn.disabled = true;
-          setTimeout(() => storyPreBattle({ ...node, code:'VS_SHADOW', battle:{ label:'Shadow — The Mirror Construct', key:'shadow', count:1 } }), 400);
-        });
-        _wDiv.appendChild(_acceptBtn);
-        _wDiv.appendChild(_shadowBtn);
-      } else if (S_story.wisHookReceived) {
-        const _found = [_p1,_p2,_p3,_p4,_p5,_p6].filter(Boolean).length;
-        _wDiv.textContent = '📖 Roen\'s portfolio is open on the archive table. ' + _found + ' of 6 Ardley sections found. Remaining fragments: W1 at Tilbury Docks (WIS 13), W2 at Saltwick (WIS 12), W3 at the Intercept (INT 11), W4 at Visby Tavern (INT 12), W5 at Athens (WIS 12), W6 here (WIS 14 or combat).';
-      } else {
-        _wDiv.textContent = '📖 Roen is at the Visby archive with a battered portfolio. The guild has a copy of a suppressed text by court historian Master Fenn Ardley. Six more sections survive, scattered. Roen: "He was right. That\'s why they scattered it."';
-        const _hookBtn = document.createElement('button');
-        _hookBtn.className = 'inv-use-btn'; _hookBtn.style.marginTop = '6px';
-        _hookBtn.textContent = '📖 Help Roen collect Ardley\'s pages';
-        _hookBtn.addEventListener('click', () => {
-          _hookBtn.disabled = true;
-          S_story.wisHookReceived = true;
-          S_story.xp = (S_story.xp||0) + 100;
-          const inv = S_story.inventory = S_story.inventory || [];
-          inv.push({ name:'Pages of the Ardley Manuscript', icon:'📖', type:'misc', desc:"A growing portfolio of Master Fenn Ardley's fragments, collected by Roen. Six sections needed. Title page: 'A Complete Account of Human Nature in Its Unreformed State.' The author's name is in very small type, as if he was already worried about who might read it.", sell:0 });
-          storyMsg('📖 Roen sets the portfolio on the table.\n\nThe guild archivist kept his copy in the lower archive for twenty years, knowing someone would eventually come looking. Ardley wrote six sections in one year — then gave a lecture to the full court council, named the treasurer\'s behavior patterns by chapter, and was dismissed before the applause finished.\n\nThe treasurer scattered the text. He held the city dock contracts for sixteen more years. Then a Baltic competitor who had read a dispersed copy outbid him on every route that mattered.\n\nRoen: "He was right. That\'s why they scattered it."\n\nPages of the Ardley Manuscript added. +100 XP. Quests W1–W6 now active at their respective nodes.');
-          storyRender(node);
-        });
-        _wDiv.appendChild(_hookBtn);
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _wDiv);
-    }
-  }
+  _runNodeHook('alch-kir-dream', node);         // §ALCHEMY-01: HL — The Shepherd's Dream (hook + return)
+  _runNodeHook('alch-man-noon', node);          // §ALCHEMY-01: MI — The Noon Plain
+  _runNodeHook('alch-sen-ship', node);          // §ALCHEMY-01: MS — The Ship Remembers
+  // §ALCHEMY-01: IS (PDL oracle) + ML (MLA stone) 2-state pure-text panels → NODE_PANELS (§VM-01-G-FU-c)
+  _runNodeHook('alch-ath-stoic', node);         // §ALCHEMY-01: AE — The Stoic's Gold
+  _runNodeHook('wis-vs-underground', node);     // §DUNGEON-01: VS Underground Room — lower archive entrance
+  _runNodeHook('wis-vs-hub', node);             // §WISDOM-01: VS — The Manuscript Hub (hook + shadow room + resolution; carries the VS_SHADOW→wisPage6 latch, which runs on every render exactly as the inline block did)
 
   // §LXXIII: DA3 — The Depth, one-time Constructor revelation
   { const _depthOld = document.getElementById('story-da3-depth'); if (_depthOld) _depthOld.remove();
