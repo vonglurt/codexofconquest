@@ -394,4 +394,4 @@ which `uqf-node-verbs-crown.test.js` owns). `check:walk` 16/16 exit 0; full Play
 **862 passed / 4 failed** (855+11 tests; the four = the documented `worldbuilder-crud-arrays`
 set).
 
-**Ship hash:** recorded in the BACKLOG row on commit.
+**Ship hash:** `56c08f1` (2026-08-05).
