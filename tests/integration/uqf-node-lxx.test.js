@@ -3,18 +3,21 @@
 // DA2 gate additionally writes a NUMERIC abilityScores.int += 1, the HCA class), the stack's
 // three button-less surfaces (DA2/DA3 done states + the DSF no-iodine note) to NODE_PANELS,
 // and ONE verb: DSF's smelt button is the family's only BARE D1 button (the inline block
-// inserted the <button> directly afterend with no panel wrapper), so it is a NODE_VERBS entry
-// with fn-valued bits (the charged-preferred salt pick — the G4c precedent).
+// inserted the <button> directly afterend with no panel wrapper), so it is a NODE_VERBS entry.
 //
-// MEASURED ON HEAD and preserved (filed §LXX-01-FU, the §SPARK-01-FU Aldous class):
-// quest_sunken_02 / quest_depth_01 / quest_forge_02 each auto-complete on the same arrival
-// that draws these buttons and duplicate the button's whole payout — the click after
-// auto-completion pays AGAIN (DA2: a second permanent INT +1 and +500gp; DA3: +500 XP and a
-// duplicate knowledge entry; DSF: a second Sea Element and +400gp). quest_ca_01 at CAN is the
-// same pair done RIGHT (button writes flag + knowledge, quest pays) — the la_riva/hg1 shape.
+// §LXX-01-FU (the §SPARK-01-FU Aldous class) — MEASURED 2026-08-05, FIXED 2026-08-06:
+// quest_sunken_02 / quest_depth_01 / quest_forge_02 each auto-completed on the same arrival
+// that draws these buttons and duplicated the button's whole payout — the click after
+// auto-completion paid AGAIN (DA2: a second permanent INT +1 and +500gp; DA3: +500 XP and a
+// duplicate knowledge entry; DSF: a second Sea Element and +400gp). The fix is the
+// quest_ca_01 / la_riva / hg1 shape: each button/verb writes ONLY its flag, each quest's
+// completion is keyed on that flag, and the quest's onComplete is the single payer — with the
+// DA2/DA3 handlers' Station 7 prose (never readable on the double-pay build: destroyed by its
+// own bare storyRender, §BOARD-01-FU6 class) moved into the quests' narrative bits. The three
+// "§LXX-01-FU FIX" tests below pin the single-pay contract; they fail on the double-pay build.
 //
-// POSITIVE CONTROL: the registry/source tests and the recovered-narrative test fail at HEAD.
-// Every other behaviour test passes BOTH ways by design — the blocks moved verbatim (25-combo
+// POSITIVE CONTROL (G-FU-e, historical): the registry/source tests and the recovered-narrative
+// test failed on pre-migration HEAD; the verbatim-surface tests passed both ways (25-combo
 // golden: 20/25 byte-identical; 1 id-only with every bounding box equal; 4 the same recovered-
 // narrative delta with state and sibling DOM byte-equal).
 'use strict';
@@ -108,20 +111,17 @@ test.describe('§VM-01-G-FU-e — registry + source shape', () => {
     expect(r.exclusive, 'note renders exactly when the verb does not (the iodine test)').toBe(true);
   });
 
-  test('the smelt verb is a bare label verb with fn-valued bits in a dispatched group', async ({ page }) => {
+  test('the smelt verb is a bare label verb whose bits are flag + narrative only — quest_forge_02 is the payer', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       const v = NODE_VERBS.find(x => x.id === 'lxx-dsf-smelt');
-      const bits = typeof v.bits === 'function'
-        ? v.bits({ inventory: [{ name: 'Charged Iodine Salt' }, { name: 'Iodine Salt' }] }) : null;
-      const bitsPlain = typeof v.bits === 'function'
-        ? v.bits({ inventory: [{ name: 'Iodine Salt' }] }) : null;
+      const q = QUEST_DB.quest_forge_02;
       return {
         group: v.group, nodes: (v.nodes || []).join(','), label: v.label,
-        btnStyle: v.btnStyle, ambient: !!v.ambient, bitsFn: typeof v.bits === 'function',
-        kinds: bits && bits.map(b => b.kind),
-        pickBoth: bits && bits[0].name,
-        pickPlain: bitsPlain && bitsPlain[0].name,
+        btnStyle: v.btnStyle, ambient: !!v.ambient,
+        kinds: (typeof v.bits === 'function' ? v.bits({}) : v.bits).map(b => b.kind),
+        completion: JSON.stringify(q.completion),
+        payKinds: q.onComplete.map(b => b.kind),
       };
     });
     expect(r.group).toBe('lxx-dsf-smelt');
@@ -129,10 +129,12 @@ test.describe('§VM-01-G-FU-e — registry + source shape', () => {
     expect(r.label).toBe('🔱 Smelt the Sea Element');
     expect(r.btnStyle, 'the inline button\'s own 4px spacing').toBe('margin-top:4px;');
     expect(r.ambient, 'label-only: the verb IS its button, no wrapper').toBe(false);
-    expect(r.bitsFn).toBe(true);
-    expect(r.kinds).toEqual(['item_remove', 'flag_write', 'reward', 'narrative']);
-    expect(r.pickBoth, 'charged is consumed first when both are held').toBe('Charged Iodine Salt');
-    expect(r.pickPlain).toBe('Iodine Salt');
+    // §LXX-01-FU FIX — the verb writes only the flag (+ the recovered narrative);
+    // quest_forge_02 completes on that flag and its onComplete owns the charged-preferred
+    // salt pick (the _legacy_fn) and the single pay.
+    expect(r.kinds).toEqual(['flag_write', 'narrative']);
+    expect(r.completion).toBe('{"flags":["seaElementCrafted"]}');
+    expect(r.payKinds).toEqual(['_legacy_fn', 'flag_write', 'reward', 'narrative']);
   });
 
   test('the five block bodies are gone from storyRender; dispatch calls sit in their place', async () => {
@@ -200,42 +202,50 @@ test.describe('§VM-01-G-FU-e — behaviour, unchanged by design', () => {
     expect(s[0], 'inline done div was id-less').not.toContain('id=');
   });
 
-  test('DA2 §LXX-01-FU pin: quest_sunken_02 auto-completes on the qualifying arrival and the still-rendered button pays a SECOND permanent INT point', async ({ page }) => {
+  test('DA2 §LXX-01-FU FIX: the qualifying arrival only activates; the click pays the INT point, the gold and the element exactly once', async ({ page }) => {
     await at(page, 'DA2', { inscriptionRead: true, inventory: [ELEMENT] });
     let r = await page.evaluate(() => ({
       gold: S_story.gold, int: S_story.abilityScores.int, inv: S_story.inventory.length,
       q: S_story.quests.quest_sunken_02, gate: !!S_story.tideGateOpened,
     }));
-    // the arrival: activation + completion in ONE pass (the G-FU-a glut lesson), the element
-    // consumed and the gate opened by the QUEST — while the fresh gate button is still drawn
-    expect(r.q).toBe('complete');
-    expect(r.gate).toBe(true);
-    expect(r.gold, 'SEED 500 + the quest\'s 500').toBe(1000);
-    expect(r.int, 'SEED 12 + the quest\'s +1').toBe(13);
-    expect(r.inv).toBe(0);
+    // the arrival now only ACTIVATES the pair — completion is keyed on the button's flag
+    // (the quest_ca_01 shape), so nothing is paid before the player acts. On the double-pay
+    // build this arrival completed the quest, consumed the element and paid INT 12→13.
+    expect(r.q).toBe('active');
+    expect(r.gate).toBe(false);
+    expect(r.gold, 'SEED 500, untouched').toBe(500);
+    expect(r.int, 'SEED 12, untouched').toBe(12);
+    expect(r.inv, 'the element still held').toBe(1);
     const btn = await sibs(page);
-    expect(btn[0], 'the fresh button is still on the page').toContain('Place the Sea Element');
+    expect(btn[0], 'the gate button is drawn').toContain('Place the Sea Element');
     await clickSib(page, 'Place the Sea Element');
     await page.waitForTimeout(150);
-    r = await page.evaluate(() => ({ gold: S_story.gold, int: S_story.abilityScores.int }));
-    // the double-pay, preserved as measured (filed §LXX-01-FU): a second +500gp and a second
-    // PERMANENT stat point. When the content fix lands, THIS assertion is the one it flips.
-    expect(r.gold).toBe(1500);
-    expect(r.int).toBe(14);
+    r = await page.evaluate(() => ({
+      gold: S_story.gold, int: S_story.abilityScores.int, inv: S_story.inventory.length,
+      q: S_story.quests.quest_sunken_02, gate: !!S_story.tideGateOpened,
+    }));
+    // the click writes the flag; the quest completes on it in the same render and pays ONCE
+    expect(r.q).toBe('complete');
+    expect(r.gate).toBe(true);
+    expect(r.gold, 'the quest\'s +500, once').toBe(1000);
+    expect(r.int, 'ONE permanent INT point').toBe(13);
+    expect(r.inv, 'the element consumed by the quest').toBe(0);
   });
 
-  test('DA3: fresh + done states; the click writes flag, knowledge and +500 XP', async ({ page }) => {
+  test('DA3: fresh + done states; the click writes ONLY the flag — with no quest active, nothing pays', async ({ page }) => {
     await at(page, 'DA3');
     let s = await sibs(page);
     expect(s[0]).toContain('The tidal configuration of the Antecedent is active');
     await clickSib(page, 'Acknowledge the closing');
     await page.waitForTimeout(150);
     const r = await page.evaluate(() => ({
-      xp: S_story.xp, kn: S_story.knowledge.length, flag: !!S_story.antecedentDepthMet,
+      xp: S_story.xp, kn: (S_story.knowledge || []).length, flag: !!S_story.antecedentDepthMet,
     }));
+    // §LXX-01-FU FIX — the button is a flag writer (the la_riva/hg1 shape); knowledge and
+    // XP come only from quest_depth_01's onComplete, absent in this questless state
     expect(r.flag).toBe(true);
-    expect(r.kn).toBe(1);
-    expect(r.xp).toBe(500);
+    expect(r.kn, 'the button no longer grants knowledge — the quest does').toBe(0);
+    expect(r.xp, 'the button no longer pays — the quest does').toBe(0);
     await at(page, 'DA3', { antecedentDepthMet: true });
     s = await sibs(page);
     expect(s.length).toBe(1);
@@ -243,19 +253,23 @@ test.describe('§VM-01-G-FU-e — behaviour, unchanged by design', () => {
     expect(s[0]).not.toContain('id=');
   });
 
-  test('DA3 §LXX-01-FU pin: quest_depth_01 completes on bare arrival and the click duplicates knowledge + XP', async ({ page }) => {
+  test('DA3 §LXX-01-FU FIX: bare arrival pays nothing; the click completes the quest and pays knowledge + 500 XP once', async ({ page }) => {
     await at(page, 'DA3', { quests: { quest_depth_01: 'active' }, tideGateOpened: true });
     let r = await page.evaluate(() => ({
+      xp: S_story.xp, kn: (S_story.knowledge || []).length, q: S_story.quests.quest_depth_01,
+    }));
+    // the old completion ({ atNode:'DA3' }) completed HERE, before the player acted
+    expect(r.q).toBe('active');
+    expect(r.xp).toBe(0);
+    expect(r.kn).toBe(0);
+    await clickSib(page, 'Acknowledge the closing');
+    await page.waitForTimeout(150);
+    r = await page.evaluate(() => ({
       xp: S_story.xp, kn: S_story.knowledge.length, q: S_story.quests.quest_depth_01,
     }));
     expect(r.q).toBe('complete');
-    expect(r.xp, 'the quest\'s xpAward').toBe(500);
-    expect(r.kn).toBe(1);
-    await clickSib(page, 'Acknowledge the closing');
-    await page.waitForTimeout(150);
-    r = await page.evaluate(() => ({ xp: S_story.xp, kn: S_story.knowledge.length }));
-    expect(r.xp, 'the double-pay, preserved as measured').toBe(1000);
-    expect(r.kn, 'the knowledge entry is duplicated').toBe(2);
+    expect(r.xp, 'the quest\'s xpAward, once').toBe(500);
+    expect(r.kn, 'ONE Constructor Design entry').toBe(1);
   });
 
   test('DSJ: the channel panel stages the synthetic DSJ_EELS battle 400ms after the click', async ({ page }) => {
@@ -294,32 +308,40 @@ test.describe('§VM-01-G-FU-e — behaviour, unchanged by design', () => {
     expect(s[0]).toContain('Smelt the Sea Element');
   });
 
-  test('DSF: the smelt pays exactly once and prefers the charged salt', async ({ page }) => {
-    await at(page, 'DSF', { forgeActivated: true, inventory: [IODINE, CHARGED], quests: { quest_forge_02: 'complete' } });
+  test('DSF: the smelt pays exactly once via the quest and prefers the charged salt', async ({ page }) => {
+    // fresh quests: the arrival activates quest_forge_02 (gate: forgeActivated), the click
+    // completes it — the quest's _legacy_fn owns the charged-preferred pick now
+    await at(page, 'DSF', { forgeActivated: true, inventory: [IODINE, CHARGED] });
     await clickSib(page, 'Smelt the Sea Element');
     await page.waitForTimeout(150);
     const r = await page.evaluate(() => ({
       gold: S_story.gold, inv: S_story.inventory.map(i => i.name),
-      flag: !!S_story.seaElementCrafted,
+      flag: !!S_story.seaElementCrafted, q: S_story.quests.quest_forge_02,
     }));
     expect(r.flag).toBe(true);
+    expect(r.q).toBe('complete');
     expect(r.gold, 'SEED 500 + 400, once').toBe(900);
     expect(r.inv, 'charged consumed, plain kept, the Element granted').toEqual(['Iodine Salt', 'Sea Element']);
   });
 
-  test('DSF §LXX-01-FU pin: quest_forge_02 auto-completes on arrival-with-iodine and the still-rendered button smelts a SECOND Sea Element', async ({ page }) => {
+  test('DSF §LXX-01-FU FIX: arrival-with-iodine only activates; the click smelts exactly ONE Sea Element', async ({ page }) => {
     await at(page, 'DSF', { forgeActivated: true, inventory: [IODINE] });
     let r = await page.evaluate(() => ({
       gold: S_story.gold, inv: S_story.inventory.map(i => i.name), q: S_story.quests.quest_forge_02,
     }));
-    expect(r.q).toBe('complete');
-    expect(r.gold).toBe(900);
-    expect(r.inv).toEqual(['Sea Element']);
+    // the arrival now only ACTIVATES (completion is keyed on the verb's flag — the ca_01
+    // shape). On the double-pay build this arrival smelted the first Element by itself.
+    expect(r.q).toBe('active');
+    expect(r.gold).toBe(500);
+    expect(r.inv).toEqual(['Iodine Salt']);
     await clickSib(page, 'Smelt the Sea Element');
     await page.waitForTimeout(150);
-    r = await page.evaluate(() => ({ gold: S_story.gold, inv: S_story.inventory.map(i => i.name) }));
-    expect(r.gold, 'the double-pay, preserved as measured').toBe(1300);
-    expect(r.inv).toEqual(['Sea Element', 'Sea Element']);
+    r = await page.evaluate(() => ({
+      gold: S_story.gold, inv: S_story.inventory.map(i => i.name), q: S_story.quests.quest_forge_02,
+    }));
+    expect(r.q).toBe('complete');
+    expect(r.gold, 'paid once').toBe(900);
+    expect(r.inv, 'ONE Sea Element; the salt consumed by the quest').toEqual(['Sea Element']);
   });
 });
 

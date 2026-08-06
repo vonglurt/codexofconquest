@@ -12208,7 +12208,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_forge_02: { id:'quest_forge_02', type:'side',
-    schema:'UQF-1.0', gate:{ flags:['forgeActivated'] }, bits:[], completion:{ flags:['forgeActivated'], items:['Charged Iodine Salt','Iodine Salt'], atNode:'DSF' }, title:'The Smelting',
+    // §LXX-01-FU FIX — completion keyed on the smelt verb's flag (the quest_ca_01 shape:
+    // the lxx-dsf-smelt verb writes the flag, this onComplete runs the charged-preferred
+    // salt pick and pays once). The old completion ({ flags:['forgeActivated'],
+    // items:[salts], atNode:'DSF' }) auto-completed on arrival-with-iodine, so the click
+    // smelted a SECOND Sea Element.
+    schema:'UQF-1.0', gate:{ flags:['forgeActivated'] }, bits:[], completion:{ flags:['seaElementCrafted'] }, title:'The Smelting',
     desc:'The forge is active. The Atlantean Sea Element requires iodine reduction in the forge heat — the secret of Atlantas.',
     hint:'Bring Iodine Salt to the forge and smelt the Sea Element.',
     activateNode:'DSF', 
@@ -12276,7 +12281,11 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
 
   quest_sunken_02: { id:'quest_sunken_02', type:'side',
-    schema:'UQF-1.0', gate:{ flags:['inscriptionRead'] }, bits:[], completion:{ flags:['inscriptionRead'], itemsAll:['Sea Element'], atNode:'DA2' }, title:'The Tide Gate',
+    // §LXX-01-FU FIX — completion keyed on the DA2 gate button's flag (the quest_ca_01 shape:
+    // the button writes the flag, this onComplete pays once). The old completion
+    // ({ flags:['inscriptionRead'], itemsAll:['Sea Element'], atNode:'DA2' }) auto-completed
+    // on the arrival that drew the button, so the click paid a SECOND permanent INT point.
+    schema:'UQF-1.0', gate:{ flags:['inscriptionRead'] }, bits:[], completion:{ flags:['tideGateOpened'] }, title:'The Tide Gate',
     desc:'The Gate mechanism requires the Sea Element — the Atlantean alloy forged from the reduction sequence. The forge made the key. You are the last step.',
     hint:'Bring the Sea Element to The Tide Gate. The mechanism accepts the alloy.',
     activateNode:'DA2', 
@@ -12285,7 +12294,10 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
       { kind:'item_remove', name:'Sea Element' },
       { kind:'_legacy_fn', fn:() => { S_story.abilityScores = S_story.abilityScores || {}; S_story.abilityScores.int = (S_story.abilityScores.int || 10) + 1; } },
       { kind:'reward', gold:500 },
-      { kind:'narrative', msg:"🔱 The Sea Element fits the mechanism in the correct order. The Gate opens inward and down. Bearing 047°. Depth 18m. The chain closes. INT +1 (permanent). +500gp." },
+      // §LXX-01-FU — the DA2 button's Station 7 prose, recovered: on HEAD the handler's
+      // storyMsg was destroyed by its own bare storyRender (§BOARD-01-FU6 class), so this
+      // richer text had never been readable. The narrative bit rides the completion stream.
+      { kind:'narrative', msg:"🔱 The Sea Element fits the mechanism in the correct order. The Gate opens inward and down. The depth below is eighteen meters. Bearing 047°.\n\nStation 7 monitored this location. Bertha No-Bank spent forty-one volumes recording the absence of its signal. The Antecedent's containment was built on top of this structure. The Constructor chose this site because the infrastructure was already here.\n\nThe chain closes. You have been following it from the outside in. INT +1 (permanent). +500gp." },
     ],
     xpAward:500,
     disposition:'"The Gate was waiting for whoever followed the chain. The chain closes." — The Tide Gate, Sunken Hall',
@@ -12296,14 +12308,20 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
 
   // ── §LXXIII: The Depth ──
   quest_depth_01: { id:'quest_depth_01', type:'side',
-    schema:'UQF-1.0', gate:{ flags:['tideGateOpened'] }, bits:[], completion:{ atNode:'DA3' }, title:'The Depth — 18 Meters',
+    // §LXX-01-FU FIX — completion keyed on the DA3 button's flag (the quest_ca_01 shape).
+    // The old completion ({ atNode:'DA3' }) auto-completed on bare arrival, so the click
+    // paid a second +500 XP and duplicated the Constructor Design knowledge entry.
+    schema:'UQF-1.0', gate:{ flags:['tideGateOpened'] }, bits:[], completion:{ flags:['antecedentDepthMet'] }, title:'The Depth — 18 Meters',
     desc:'The Gate opened downward. Eighteen meters below, the signal that Station 7 monitored has reached its terminus. The Antecedent has a second configuration — the tidal question, built on the same foundation as the archival one.',
     hint:'Descend through the open Gate to the depth below.',
     activateNode:'DA2', 
     onComplete:[
       { kind:'flag_write', set:['antecedentDepthMet'] },
       { kind:'reward', knowledge:"Constructor Design: Both the Antecedent's archival installation (CY→AC) and the tidal installation (DA3, bearing 047°, depth 18m) were built on the same foundation. The Constructor required one person to close both chains — the archival question and the tidal question are independent but the answer to each requires the same archivist." },
-      { kind:'narrative', msg:'⚓ Both chains close. The archival question (is the archive maintained?) was answered at AC. The tidal question (does the chain have an end?) is answered here. The Constructor built both gates on the same foundation knowing that whoever followed one chain could follow the other.\n\nKnowledge entry added: Constructor Design.\n\n+500 XP.' },
+      // §LXX-01-FU — the DA3 button's Station 7 prose, recovered: on HEAD the handler's
+      // storyMsg was destroyed by its own bare storyRender (§BOARD-01-FU6 class), so this
+      // richer text had never been readable. The narrative bit rides the completion stream.
+      { kind:'narrative', msg:'⚓ The signal returns to Station 7.\n\nBertha No-Bank spent forty-one volumes recording the absence. The absence ends now. The monitoring protocol completes. The Antecedent\'s tidal configuration closes.\n\nYou followed both chains — the archival from CY to AC, the tidal from DSF to DA3. The Constructor built both gates on the same foundation knowing these chains would require the same hands.\n\nKnowledge entry added: Constructor Design. +500 XP.' },
     ],
     xpAward:500,
     disposition:'"The question is not different from here. The answer is not different from here. The foundation is the same. The chain is the same. You are the same." — The Antecedent, Tidal Configuration',
@@ -33499,8 +33517,10 @@ function _nodeHookWisVsHub(node) {
 }
 function _nodeHookSparkLcyHarmony(node) {
   // §SPARK-01: DK — Wren-Pembury/Smalt/Pip Harmony Chain at LCY (§VM-01-G-FU-d). Four states,
-  // three panel-embedded buttons — the WG0 embedded-button shape, verbatim. Carries ONE fix,
-  // marked inline: the insertion guard that kept the counterfeit-writ beat circular-dead.
+  // three panel-embedded buttons — the WG0 embedded-button shape, verbatim. Carries TWO fixes,
+  // marked inline: the insertion guard that kept the counterfeit-writ beat circular-dead
+  // (§VM-01-G-FU-d), and the §SPARK-01-FU double-pay — the confrontation button now writes
+  // only aldousConfessed; quest_spark_05's onComplete is the single payer.
   // §SPARK-01: DK — Inspector Wren-Pembury + Smalt + Pip chain
   { const _spk1Old = document.getElementById('story-spark-dk'); if (_spk1Old) _spk1Old.remove();
     if (node.code === 'LCY') {
@@ -33553,15 +33573,13 @@ function _nodeHookSparkLcyHarmony(node) {
         _aldBtn.textContent = '📋 Confront Aldous — three claims, one person';
         _aldBtn.addEventListener('click', () => {
           _aldBtn.disabled = true;
+          // §SPARK-01-FU FIX — the button writes only the flag (the la_riva/hg1 shape):
+          // quest_spark_05 completes on aldousConfessed in this same render and its onComplete
+          // pays the +400gp/+400 XP, tears the Writ and writes the Letter exactly once. This
+          // handler's own storyMsg was never readable on HEAD anyway — the bare storyRender
+          // below overwrote it (§BOARD-01-FU6 class) — so the quest's narrative bit is the
+          // text players have always seen.
           S_story.aldousConfessed = true;
-          S_story.harmonyChainComplete = true;
-          S_story.gold = (S_story.gold||0) + 400;
-          S_story.xp = (S_story.xp||0) + 400;
-          const inv = S_story.inventory = S_story.inventory || [];
-          const wIdx = inv.findIndex(i => i.name === "King's Writ (Counterfeit)");
-          if (wIdx !== -1) inv.splice(wIdx, 1);
-          inv.push({ name:'Letter of True Passage', icon:'📜', type:'misc', desc:"Aldous the Fencer's real authority document. Valid at six ports including Tilbury, Visby, and Malta. A genuine credential from a genuine black market contact.", sell:0 });
-          storyMsg('📜 You list the three: the estate. The Admiral. Saltwick.\n\nAldous tears the King\'s Writ. One careful tear, then another. He folds what remains and sets it on the dock bollard.\n\nHe takes Pip\'s Friendship Bead from his coat pocket — he has been carrying it since the Tilbury Star — and places it in your hand.\n\n"My name is Aldous. The Admiral does not exist. The estate does not exist. Saltwick exists — I would prefer it didn\'t. I gave testimony. The crown gave me a printing press and a new name. Wren-Pembury was the first combination that sounded important enough."\n\nHe writes the Letter of True Passage without being asked.\n\n"I have contacts in six ports. If you need something that is not on any manifest, I am who you speak to."\n\n"You showed kindness to a cat. Then a mouse. Then a tick. Then a parasite that spoiled forty-seven bottles of perfume by making them smell too much like love. I have been watching. I cannot keep doing the voice."\n\nThe Harmony Chain is complete.\n\nKing\'s Writ destroyed. Letter of True Passage added. +400gp. +400 XP. Aldous is an ally.');
           storyRender(node);
         });
         _spkDiv.appendChild(_aldBtn);
@@ -33909,13 +33927,15 @@ function _nodeHookPortMmeSaltwick(node) {
 // done-states and the DSF no-iodine note are the stack's button-less surfaces → NODE_PANELS.
 // The DA2 gate additionally writes a NUMERIC abilityScores.int += 1 — the HCA iodineBuffBonus
 // class in a third sighting — so it could not be a verb even outside its chrome.
-// MEASURED 2026-08-05 (§LXX-01-FU, the §SPARK-01-FU Aldous class): quest_sunken_02 /
-// quest_depth_01 / quest_forge_02 each auto-complete on the same arrival that draws these
-// buttons and duplicate the button's whole payout, so the click after auto-completion pays
-// AGAIN (DA2: a second permanent INT +1 and +500gp; DA3: +500 XP and a duplicate knowledge
-// entry; DSF: a second Sea Element and +400gp). Preserved verbatim, pinned by the golden and
-// uqf-node-lxx.test.js, filed — quest_ca_01 at CAN is the same pair done RIGHT (the button
-// writes only the flag + knowledge; the quest's onComplete pays), the la_riva/hg1 fix shape.
+// MEASURED 2026-08-05 (§LXX-01-FU, the §SPARK-01-FU Aldous class) and FIXED 2026-08-06:
+// quest_sunken_02 / quest_depth_01 / quest_forge_02 each auto-completed on the same arrival
+// that draws these buttons and duplicated the button's whole payout, so the click after
+// auto-completion paid AGAIN (DA2: a second permanent INT +1 and +500gp; DA3: +500 XP and a
+// duplicate knowledge entry; DSF: a second Sea Element and +400gp). The fix is the
+// quest_ca_01 / la_riva / hg1 shape: each button/verb now writes ONLY its flag, each quest's
+// completion is keyed on that flag, and the quest's onComplete pays exactly once — with the
+// DA2/DA3 handlers' Station 7 prose (never readable on HEAD: their own bare storyRender
+// destroyed it, §BOARD-01-FU6 class) moved into the quests' narrative bits.
 function _nodeHookLxxCanDoc(node) {
   // §LXXII: CAN — Conclave Annex post-event document
   { const _canOld = document.getElementById('story-can-doc'); if (_canOld) _canOld.remove();
@@ -33958,14 +33978,12 @@ function _nodeHookLxxDa2Gate(node) {
         _gateBtn.textContent = '🔱 Place the Sea Element — open the Gate';
         _gateBtn.addEventListener('click', () => {
           _gateBtn.disabled = true;
-          const _inv2 = S_story.inventory || [];
-          const _seIdx = _inv2.findIndex(i => i.name === 'Sea Element');
-          if (_seIdx !== -1) _inv2.splice(_seIdx, 1);
+          // §LXX-01-FU FIX — flag only (the la_riva/hg1 shape): quest_sunken_02 completes on
+          // tideGateOpened in this same render and its onComplete consumes the Sea Element,
+          // writes the permanent INT +1 and pays +500gp exactly once. This handler's Station 7
+          // storyMsg was never readable on HEAD (its own bare storyRender overwrote it —
+          // §BOARD-01-FU6 class); that prose now lives in the quest's narrative bit.
           S_story.tideGateOpened = true;
-          S_story.abilityScores = S_story.abilityScores || {};
-          S_story.abilityScores.int = (S_story.abilityScores.int || 10) + 1;
-          S_story.gold = (S_story.gold||0) + 500;
-          storyMsg('The Gate opens inward and down. The depth below is eighteen meters. Bearing 047°.\n\nStation 7 monitored this location. Bertha No-Bank spent forty-one volumes recording the absence of its signal. The Antecedent\'s containment was built on top of this structure. The Constructor chose this site because the infrastructure was already here.\n\nThe chain closes. You have been following it from the outside in. INT +1 (permanent). +500gp.');
           storyRender(node);
         });
         _gateDiv.appendChild(_gateBtn);
@@ -33993,11 +34011,12 @@ function _nodeHookLxxDa3Depth(node) {
       _depthBtn.textContent = '⚓ Acknowledge the closing — both chains end here';
       _depthBtn.addEventListener('click', () => {
         _depthBtn.disabled = true;
+        // §LXX-01-FU FIX — flag only (the la_riva/hg1 shape): quest_depth_01 completes on
+        // antecedentDepthMet in this same render and its onComplete grants the Constructor
+        // Design knowledge + the 500 XP xpAward exactly once. This handler's Station 7
+        // storyMsg was never readable on HEAD (its own bare storyRender overwrote it —
+        // §BOARD-01-FU6 class); that prose now lives in the quest's narrative bit.
         S_story.antecedentDepthMet = true;
-        S_story.knowledge = S_story.knowledge || [];
-        S_story.knowledge.push("Constructor Design: Both the Antecedent's archival installation (CY→AC) and the tidal installation (DA3, bearing 047°, depth 18m) were built on the same foundation. The Constructor required one person to close both chains — the archival question and the tidal question are independent but the answer to each requires the same archivist.");
-        S_story.xp = (S_story.xp||0) + 500;
-        storyMsg('⚓ The signal returns to Station 7.\n\nBertha No-Bank spent forty-one volumes recording the absence. The absence ends now. The monitoring protocol completes. The Antecedent\'s tidal configuration closes.\n\nYou followed both chains — the archival from CY to AC, the tidal from DSF to DA3. The Constructor built both gates on the same foundation knowing these chains would require the same hands.\n\nKnowledge entry added: Constructor Design. +500 XP.');
         storyRender(node);
       });
       _depthDiv.appendChild(_depthBtn);
@@ -34451,22 +34470,18 @@ const NODE_VERBS = [
   // ── §VM-01-G-FU-e: DSF — the smelting button, the §LXX stack's only BARE D1 button (the
   // inline block inserted the <button> directly afterend of #story-text-box with no panel
   // wrapper, so the embedded-button rule does not bite — the first verb this family has
-  // shipped since G-FU-a). The charged-preferred salt pick is fn-valued `bits` (the G4c
-  // precedent: the VM still receives a plain array); item_remove on the missing name is a
-  // no-op, byte-identical to the inline splice-on--1. quest_forge_02's own onComplete runs
-  // the SAME pick behind _legacy_fn and double-pays with this button on HEAD — preserved as
-  // measured, filed §LXX-01-FU. One named delta: the driver re-renders with the narrative as
-  // storyRender's prefix, so the smelt line is READABLE now — inline, its own bare re-render
-  // destroyed it (§BOARD-01-FU6 class, fourth recovered narrative).
+  // shipped since G-FU-a). §LXX-01-FU FIX — the verb writes only the flag + its narrative
+  // (the la_riva/hg1 shape): quest_forge_02 completes on seaElementCrafted in the driver's
+  // re-render and its onComplete runs the charged-preferred salt pick, grants the Sea
+  // Element and pays +400gp exactly once. The narrative stays on the verb side — the driver
+  // re-renders with it as storyRender's prefix, so the smelt line is READABLE (§BOARD-01-FU6
+  // class, fourth recovered narrative; inline, its own bare re-render destroyed it).
   { id:'lxx-dsf-smelt', group:'lxx-dsf-smelt', nodes:['DSF'],
     when: st => st.forgeActivated && !st.seaElementCrafted
                 && (st.inventory||[]).some(i => i.name === 'Charged Iodine Salt' || i.name === 'Iodine Salt'),
     label:'🔱 Smelt the Sea Element', btnStyle:'margin-top:4px;',
-    bits: st => [
-      { kind:'item_remove', name: (st.inventory||[]).some(i => i.name === 'Charged Iodine Salt')
-          ? 'Charged Iodine Salt' : 'Iodine Salt' },
+    bits: [
       { kind:'flag_write', set:['seaElementCrafted'] },
-      { kind:'reward', gold:400, items:[{ name:'Sea Element', icon:'🔱', type:'weapon', atkBonus:2, dmgDie:8, dmgCount:1, dmgFlat:0, minLevel:1, sell:500, desc:'Atlantean alloy. Holds the tide\'s force in the metal. +2 ATK, 1d8 damage.' }] },
       { kind:'narrative', msg:'🔱 The iodine goes into the forge first — the smoke register, then the salt bed, then the charged heat. The alloy that emerges is the color the sea has before dawn. Sea Element: +2 ATK, 1d8. +400gp.' } ] },
 ];
 

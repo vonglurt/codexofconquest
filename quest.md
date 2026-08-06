@@ -539,7 +539,7 @@ resolve. Pinned by `tests/integration/audit03h-npc-normalize.test.js`.
 - Act IV: [ACCOMPLISHMENT] He writes the Letter of True Passage (his real authority document, valid). Token created.
 - Act V: *"My name is Aldous. I have contacts in six ports. If you need something that isn't on any manifest, I am who you speak to."* `aldousConfessed=true`. Aldous becomes a recurring ally NPC at DK.
 - **Reward:** Letter of True Passage + 400gp + 400 XP + Aldous recurring ally (black market contacts in Tilbury, Visby, Malta).
-- **⚠ Engine findings (§VM-01-G-FU-d, 2026-08-05):** (1) Scene 1's counterfeit-writ beat was **circular-dead since it shipped** — the LCY panel's insertion guard required `kingsWritSeen`, whose only writer was the Inspector button inside that panel; the arc survived only because `quest_spark_01` (gate `{}`) sets `smaltBefriended` from the quest panel, skipping the writ scene and its item entirely. Fixed in the `spark-lcy-harmony` hook: the panel inserts whenever LCY renders, and the button gates on its own flag (no second writ). (2) The Scene 5 confrontation **double-pays on HEAD**: the panel button and `quest_spark_05`'s `onComplete` each grant +400gp/+400 XP and each add a Letter of True Passage (the quest completes on `aldousConfessed` in the same render). Preserved verbatim by the migration, pinned as measured by `uqf-node-harbor.test.js`; the fix is a content change — **open as §SPARK-01-FU in BACKLOG.md**.
+- **⚠ Engine findings (§VM-01-G-FU-d, 2026-08-05):** (1) Scene 1's counterfeit-writ beat was **circular-dead since it shipped** — the LCY panel's insertion guard required `kingsWritSeen`, whose only writer was the Inspector button inside that panel; the arc survived only because `quest_spark_01` (gate `{}`) sets `smaltBefriended` from the quest panel, skipping the writ scene and its item entirely. Fixed in the `spark-lcy-harmony` hook: the panel inserts whenever LCY renders, and the button gates on its own flag (no second writ). (2) The Scene 5 confrontation **double-paid** (found 2026-08-05, **FIXED 2026-08-06 §SPARK-01-FU**): the panel button and `quest_spark_05`'s `onComplete` each granted +400gp/+400 XP and each added a Letter of True Passage (the quest completes on `aldousConfessed` in the same render). The fix is the la_riva/hg1 shape: the button now writes only `aldousConfessed`; the quest's `onComplete` is the single payer. The button's own `storyMsg` was never readable anyway (destroyed by its own bare `storyRender` — §BOARD-01-FU6 class), so the player-visible text is unchanged. Single-pay pinned by `uqf-node-harbor.test.js`.
 
 ---
 
@@ -844,10 +844,10 @@ Gate spine (W→E, listing only): `{}` → `kgEnlisted` → `kgManifestDelivered
 | ✅ Live §SIREN-01 | 5 (Littoral Courts + Overseer) |
 | ✅ Live §CROWN-01 | 24 (Whisper ×6, Glut ×6, Wane ×6, Inn ×6) |
 | ✅ Live §CROWN-01 Amendment A | 10 (3 failure dispatches + 4 hag commissions + 3 iodine track) |
-| ✅ Live §LXX | 4 (Shore Road + Tide Register + Forge Mechanism + Smelting) ⚠️ `quest_forge_02` double-pays the DSF smelt button — see §LXX-01-FU note below |
-| ✅ Live §LXXI | 2 (Sunken Hall inscription + Tide Gate activation) ⚠️ `quest_sunken_02` double-pays the DA2 gate button (a second permanent INT +1) — see §LXX-01-FU note below |
+| ✅ Live §LXX | 4 (Shore Road + Tide Register + Forge Mechanism + Smelting) — `quest_forge_02` single-pays since the §LXX-01-FU fix (see note below) |
+| ✅ Live §LXXI | 2 (Sunken Hall inscription + Tide Gate activation) — `quest_sunken_02` single-pays since the §LXX-01-FU fix (see note below) |
 | ✅ Live §LXXII | 1 (Conclave Annex post-event note) — the button/quest pair done RIGHT: the button writes only flag + knowledge, `quest_ca_01`'s onComplete pays (the la_riva/hg1 shape) |
-| ✅ Live §LXXIII | 1 (The Depth — 18 Meters: both-chains closure) ⚠️ `quest_depth_01` double-pays the DA3 button (+500 XP + a duplicate knowledge entry) — see §LXX-01-FU note below |
+| ✅ Live §LXXIII | 1 (The Depth — 18 Meters: both-chains closure) — `quest_depth_01` single-pays since the §LXX-01-FU fix (see note below) |
 | **Total live** | **~128** |
 | ✅ Live §SPARK-01 | 5 (Smalt + Overture + Clot + Who Done It + Aldous Comes Clean) |
 | ✅ Live §SPARK-01 SEA | 3 (Calm Sea + Warmth Eel + The Escort) |
@@ -860,16 +860,17 @@ Gate spine (W→E, listing only): `{}` → `kgEnlisted` → `kgManifestDelivered
 | **Total live** | **~141** (Event G re-themed an existing quest — no net new quest object) |
 | Planned | 0 |
 
-> **⚠ §LXX-01-FU (measured 2026-08-05, §VM-01-G-FU-e):** three of the four §LXX-family
-> button/quest pairs **double-pay on HEAD** — `quest_sunken_02` (DA2), `quest_depth_01` (DA3)
-> and `quest_forge_02` (DSF) each carry their button's ENTIRE effect in `onComplete` and
-> auto-complete on the same arrival that draws the button (activation + completion in one
-> `storyCheckQuests` pass), so the still-rendered button pays a second time: DA2 a **second
-> permanent INT +1** (+500gp), DA3 +500 XP + a duplicate knowledge entry, DSF a second Sea
-> Element (+400gp). Preserved verbatim by the migration, pinned as measured by
-> `uqf-node-lxx.test.js`; the fix is a content change — **open as §LXX-01-FU in BACKLOG.md**,
-> fix shape: the button keeps only the flag write (the la_riva/hg1 pattern — `quest_ca_01` at
-> CAN is the pair done right, one arc over).
+> **✅ §LXX-01-FU (measured 2026-08-05, §VM-01-G-FU-e; FIXED 2026-08-06):** three of the four
+> §LXX-family button/quest pairs **double-paid** — `quest_sunken_02` (DA2), `quest_depth_01`
+> (DA3) and `quest_forge_02` (DSF) each carried their button's ENTIRE effect in `onComplete`
+> and auto-completed on the same arrival that drew the button, so the still-rendered button
+> paid a second time: DA2 a **second permanent INT +1** (+500gp), DA3 +500 XP + a duplicate
+> knowledge entry, DSF a second Sea Element (+400gp). **The fix is the `quest_ca_01` /
+> la_riva/hg1 shape:** each button/verb now writes ONLY its flag (`tideGateOpened` /
+> `antecedentDepthMet` / `seaElementCrafted`), each quest's `completion` is keyed on that
+> flag, and the quest's `onComplete` pays exactly once — with the DA2/DA3 handlers' Station 7
+> prose (never readable before: destroyed by its own bare `storyRender`, §BOARD-01-FU6 class)
+> moved into the quests' `narrative` bits. Single-pay pinned by `uqf-node-lxx.test.js`.
 
 ---
 

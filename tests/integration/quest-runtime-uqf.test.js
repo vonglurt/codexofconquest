@@ -8477,7 +8477,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
       afterRenard:'complete', xpAwardFired:true });
   });
 
-  test('real counter flips: pit_debut via pitTrainingWins; forge_02 fuzzy-OR items + flags + atNode', async ({ page }) => {
+  test('real counter flips: pit_debut via pitTrainingWins; mq_6 fuzzy-OR items; forge_02 flag-gated since §LXX-01-FU', async ({ page }) => {
     await page.goto('/roll2hit-v3.html');
     const r = await page.evaluate(() => {
       const out = {};
@@ -8489,17 +8489,28 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
       storyCheckQuests({ code:'ZZZ' });
       out.oneWin = S_story.quests.quest_pit_debut;
       out.perIdGold = S_story.gold - 10000;                                       // +100 from the W7c onComplete chain
+      // §LXX-01-FU moved quest_forge_02 off the fuzzy-OR items term (its completion is
+      // flag-gated on seaElementCrafted now — the quest_ca_01 shape), so the live
+      // multi-member OR specimen is mq_6: either shard satisfies it. canComplete alone is
+      // read-only — no completion fires here.
+      S_story.inventory = [{ name:'Codex Shard #6' }];
+      out.shardA = QuestRuntime.canComplete('mq_6');
+      S_story.inventory = [{ name:'Weimar Fragment (Shard #7)' }];
+      out.shardB = QuestRuntime.canComplete('mq_6');
+      S_story.inventory = [];
+      out.neither = QuestRuntime.canComplete('mq_6');
+      // and forge_02's NEW completion: the smelt verb's flag, nothing else — salt in hand
+      // no longer completes it (that was the §LXX-01-FU auto-complete double-pay)
       S_story.quests.quest_forge_02 = 'active';
       S_story.forgeActivated = true; S_story.currentCode = 'DSF';
-      S_story.inventory = [{ name:'Iodine Salt' }];                               // either salt satisfies the OR
-      out.plainSalt = QuestRuntime.canComplete('quest_forge_02');
-      S_story.inventory = [{ name:'Charged Iodine Salt' }];
-      out.chargedSalt = QuestRuntime.canComplete('quest_forge_02');
-      S_story.inventory = [];
-      out.noSalt = QuestRuntime.canComplete('quest_forge_02');
+      S_story.inventory = [{ name:'Iodine Salt' }];
+      out.saltAlone = QuestRuntime.canComplete('quest_forge_02');
+      S_story.seaElementCrafted = true;
+      out.flagSet = QuestRuntime.canComplete('quest_forge_02');
       return out;
     });
-    expect(r).toEqual({ noWins:'active', oneWin:'complete', perIdGold:100, plainSalt:true, chargedSalt:true, noSalt:false });
+    expect(r).toEqual({ noWins:'active', oneWin:'complete', perIdGold:100, shardA:true, shardB:true, neither:false,
+      saltAlone:false, flagSet:true });
   });
 });
 

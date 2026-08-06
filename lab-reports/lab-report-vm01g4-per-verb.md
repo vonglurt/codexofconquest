@@ -33,8 +33,8 @@ front moves backward ~4/day"* no longer holds inside the region: the front moved
 1,439 lines in seven days. G4 is what is left.
 
 **Registries in the house style G4 must match** (both live, both already load-bearing):
-`NODE_PANELS` (`const NODE_PANELS@31285`, rendered by `_renderNodePanels(node, st)@31560`) and
-`NODE_HOOKS` (`const NODE_HOOKS@34156`, dispatched in place by `_runNodeHook(id, node, ctx)@34219`).
+`NODE_PANELS` (`const NODE_PANELS@31303`, rendered by `_renderNodePanels(node, st)@31578`) and
+`NODE_HOOKS` (`const NODE_HOOKS@34175`, dispatched in place by `_runNodeHook(id, node, ctx)@34238`).
 
 ---
 
@@ -77,8 +77,8 @@ anywhere in the game today.
 This is the finding that reorders the whole slice, and it was not visible from the parent report.
 
 Inc A built the coroutine seam and built it correctly: `execBits` is a generator
-(`*execBits(bits, ctx)@22204`), `choice` is a suspending handler that yields an `ask` envelope
-(`*choice(bit, ctx)@22300`), and the host has a driver that parks the generator in a module slot
+(`*execBits(bits, ctx)@22222`), `choice` is a suspending handler that yields an `ask` envelope
+(`*choice(bit, ctx)@22318`), and the host has a driver that parks the generator in a module slot
 (`function _uqfPump(gen, answer)@6827`, `let _uqfPending = null@6824`).
 
 **What was never built is the other half of the driver — the part that renders the ask and resumes
@@ -148,7 +148,7 @@ honour it.
 ## 5. Finding 3 — two blocks capture free text, which `choice` cannot express and should not
 
 `Entry 42` (LHR) and the `Secret Gate` void-toll rune (ZRH) both render a `<textarea>` and persist
-the player's own prose — `S_story.entry42Text@34626` and `S_story._voidTollSecret@34738`. Both are
+the player's own prose — `S_story.entry42Text@34641` and `S_story._voidTollSecret@34753`. Both are
 read back by the ending. `choice`'s resume value is *"an index, so the data author never couples to
 presentation"* (`22152`); a free-text answer couples to presentation by definition.
 
@@ -163,7 +163,7 @@ the moment to grow the shape — with three consumers, not two.)
 ## 6. Finding 4 — `consume` already exists; only `cost` is missing, and it is three currencies
 
 The parent named the missing grammar as *"a `cost` leaf (gold≥N, consume) — ONE new opcode."* Half
-of that is already shipped: **`item_remove`** is a live handler (`item_remove(bit, ctx)@22283`) and
+of that is already shipped: **`item_remove`** is a live handler (`item_remove(bit, ctx)@22301`) and
 covers every consume site measured (Hollow Hands Seal, Old Tuna Account Book).
 
 What is genuinely missing is the **cost** half, and it is not one currency:
@@ -181,7 +181,7 @@ Two properties of the shipped behaviour that a naive `cost` leaf would silently 
    leaf that hides or disables the unaffordable verb is a **UX change**, not a no-op — and the
    telling-vs-asking thesis of this whole track argues the current behaviour is the better one
    (the game says what it wants; it does not quietly withhold the option).
-2. **`reward` will not do the job.** `reward(bit, ctx)@22250` does `st.gold = (st.gold||0) + bit.gold`,
+2. **`reward` will not do the job.** `reward(bit, ctx)@22268` does `st.gold = (st.gold||0) + bit.gold`,
    so `gold: -50` "works" arithmetically — with no affordability test, no refusal message, and the
    word *reward* on a price. That is a real-but-wrong object, and per WBAPI Hazard #2's standing
    lesson, **a write into a real-but-wrong object never throws.**
@@ -214,9 +214,9 @@ honest and neither is quietly dropped a fourth time.
 ## 8. Finding 6 — the act-leg thread §VM-01-G2b opened is now closed for this region
 
 G2b found five narrative beats gated on `actNumber >= N` at nodes whose `act` is 1, and therefore
-permanently dead (`S_story.actNumber = node.act || 1@34543`, assigned every render). Swept for the
+permanently dead (`S_story.actNumber = node.act || 1@34558`, assigned every render). Swept for the
 same shape across G4's region: **one act comparison remains** —
-`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@34666` (Sweelinck's "map before the city"
+`node.code === 'NUE' && (S_story.actNumber || 1) >= 3@34681` (Sweelinck's "map before the city"
 line). **NUE is `act:6`**, so the leg is not dead — it is **vacuously true**, and has been since it
 shipped. It is not staging; arriving at NUE at all satisfies it.
 
@@ -254,7 +254,7 @@ made for the class and it holds: across all 13 D1 surfaces the only grammar gap 
 A **D3 menu** is just several `NODE_VERBS` entries sharing a `group` id, rendered into one
 container — which is what `cq-boss-buttons` already is. The three CDG confrontations become
 `{ kind:'combat', key:'taz_devil', label:'…', nodeCode:'CQ_TAZ' }`; **`combat`'s optional
-`nodeCode` field already exists** (`combat(bit)@22281`) and is exactly the synthetic-code spread
+`nodeCode` field already exists** (`combat(bit)@22299`) and is exactly the synthetic-code spread
 those buttons hand to `storyPreBattle` today, so no grammar is needed for them either.
 
 ### 9.2 The choice driver — the host half Inc A left unbuilt
@@ -599,13 +599,13 @@ menu-order — the G2b honest shape). `check:walk` 16/16.
 
 ## 13. Anchors touched by this report
 
-`storyRender(node, prefix)@34537` · `_mkSection(id, icon, label)@35290` ·
-`const NODE_PANELS@31285` · `_renderNodePanels(node, st)@31560` · `const NODE_HOOKS@34156` ·
-`_runNodeHook(id, node, ctx)@34219` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
-`function _uqfRunToCompletion(gen)@6840` · `*execBits(bits, ctx)@22204` · `*choice(bit, ctx)@22300` ·
-`combat(bit)@22281` · `item_remove(bit, ctx)@22283` · `reward(bit, ctx)@22250`
+`storyRender(node, prefix)@34552` · `_mkSection(id, icon, label)@35305` ·
+`const NODE_PANELS@31303` · `_renderNodePanels(node, st)@31578` · `const NODE_HOOKS@34175` ·
+`_runNodeHook(id, node, ctx)@34238` · `let _uqfPending@6824` · `function _uqfPump(gen, answer)@6827` ·
+`function _uqfRunToCompletion(gen)@6840` · `*execBits(bits, ctx)@22222` · `*choice(bit, ctx)@22318` ·
+`combat(bit)@22299` · `item_remove(bit, ctx)@22301` · `reward(bit, ctx)@22268`
 
-**Added by G4b (§12¾):** `const NODE_VERBS@34257` · `function _renderNodeVerbs(node, st, group, container)@34483` ·
+**Added by G4b (§12¾):** `const NODE_VERBS@34276` · `function _renderNodeVerbs(node, st, group, container)@34498` ·
 `function _mkAmbientLine(text)@6878` · `function _uqfRunVerb(verb, mount)@6914` ·
 `function _uqfRenderAsk(gen, ask, mount, step)@6885`
 

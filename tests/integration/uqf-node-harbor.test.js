@@ -7,11 +7,17 @@
 // plan shape that HELD: the seventh hand-written gold site now pays through the `cost` leaf via
 // _uqfRunChain (the junction-vignette consumer shape).
 //
-// The slice carries ONE content fix, the G-FU-a Glut's Gift class: the LCY writ beat was
+// The slice carried ONE content fix, the G-FU-a Glut's Gift class: the LCY writ beat was
 // circular-dead since it shipped — the panel's insertion guard required kingsWritSeen, whose
 // only writer was the Inspector button INSIDE that panel. quest_spark_01 (gate:{}) let the arc
 // skip the beat, so the counterfeit-writ scene and item were unreachable while the confrontation
 // still listed "the three claims" as if the player had seen the first one.
+//
+// §SPARK-01-FU — MEASURED 2026-08-05, FIXED 2026-08-06: the Scene-5 confrontation double-paid
+// on the G-FU-d build (the inline button AND quest_spark_05's onComplete each paid +400gp/
+// +400 XP and each granted a Letter of True Passage). The fix is the la_riva/hg1 shape: the
+// button writes only aldousConfessed; the quest — whose completion was already keyed on that
+// flag — is the single payer. The confrontation test below pins the single-pay contract.
 //
 // POSITIVE CONTROL: the registry/source tests and the two fix tests fail at HEAD. Every other
 // behaviour test passes BOTH ways by design — the blocks moved verbatim (49-combo golden:
@@ -172,24 +178,26 @@ test.describe('§VM-01-G-FU-d — §SPARK-01/§WHODUNIT-01 at LCY/SEN behave as 
     expect(r.inv).not.toContain("Smalt's Trust");
   });
 
-  test('LCY confrontation: +400gp/+400 XP, the writ torn, the Letter of True Passage written', async ({ page }) => {
+  test('LCY confrontation §SPARK-01-FU FIX: +400gp/+400 XP once, the writ torn, ONE Letter of True Passage', async ({ page }) => {
     await at(page, 'LCY', { smaltBefriended: true, pipMet: true, whodunitSolved: true,
       wrenpemburyInconsistencyNoticed: true,
       inventory: [{ name: "King's Writ (Counterfeit)", icon: '📋', type: 'misc', sell: 0 }] });
     await clickIn(page, 'story-spark-dk', 'Confront Aldous');
     const r = await page.evaluate(() => ({
       gold: S_story.gold, xp: S_story.xp, done: !!S_story.harmonyChainComplete,
+      conf: !!S_story.aldousConfessed,
       inv: (S_story.inventory || []).map(i => i.name),
     }));
-    // HEAD pre-existing duplication, preserved by the verbatim move and pinned as measured:
-    // the inline block AND quest_spark_05's onComplete each pay +400gp/+400xp and each grant
-    // the Letter (the quest completes on aldousConfessed in the same render), plus +150 from
-    // quest_spark_02 completing on pipMet in this fresh-quests state. Filed as a §SPARK-01
-    // finding in BACKLOG — fixing it is a content change, not this migration's business.
-    expect(r.gold).toBe(SEED_STATE.gold + 800);
-    expect(r.xp).toBe(950);
-    expect(r.done).toBe(true);
-    expect(r.inv.filter(n => n === 'Letter of True Passage').length, 'block + quest each grant one — the HEAD duplication, pinned').toBe(2);
+    // §SPARK-01-FU FIX — the button writes only aldousConfessed; quest_spark_05 completes on
+    // it in the same render and its onComplete is the single payer (+400gp/+400 XP, the writ
+    // item_remove, ONE Letter, harmonyChainComplete). The extra +150 XP is quest_spark_02
+    // completing on pipMet in this fresh-quests state, as before. On the double-pay build
+    // this click paid +800gp/950 XP and granted TWO Letters.
+    expect(r.conf).toBe(true);
+    expect(r.gold).toBe(SEED_STATE.gold + 400);
+    expect(r.xp).toBe(550);
+    expect(r.done, 'harmonyChainComplete now written by the quest').toBe(true);
+    expect(r.inv.filter(n => n === 'Letter of True Passage').length, 'the quest grants exactly one').toBe(1);
     expect(r.inv).not.toContain("King's Writ (Counterfeit)");
   });
 
