@@ -8724,6 +8724,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   },
   // ── ACT VIII — FINALE
   TLS:{ num:42, code:'TLS', name:'cosmic_realm',    label:'Cosmic Realm — The Convergence', act:8, text:"The spire above Birka is the tallest structure in the known world, built for this specific purpose by people who knew this day would come and did not know when. The Codex Cradle is set into the eastern spire wall at platform height. It has been waiting here since construction was complete.\n\nThe sky is black at noon. This is not weather. The Void does not cause nightfall — it causes noon itself to fail. Below the platform, the city of Birka is still lit by the morning that preceded this hour. Up here the light stopped when the convergence began.\n\nCommander Bruhns holds the platform perimeter with a military cordon. He arrived before you. He has always arrived before you. He does not explain how.\n\nSeven Void Walkers stand between you and the Cradle. After them, the Void Warlord — the Void's chosen instrument, not its full extent. The full extent is behind it and does not require a body.\n\nThis is the threshold every other threshold was oriented toward.", npc:'Commander Bruhns', battle:{label:'Void Walker ×7 → Void Warlord', key:'void_walker', count:1}, loot:'VICTORY — The Codex is Reforged', sleep:false,
+    finalBattle:{minLevel:20,minShards:7},
   },
   // ── Layer 9 — Junction Nodes ──
   WRO:{ num:43, code:'WRO', name:"midlands", label:'Midlands Road Fork',        act:3, text:"A stone post at the crossroads — carved, not painted. Someone decided these directions were worth the permanence of stone. East, Birka, two leagues. West, Forest Road, three.\n\nThe road is packed dirt in both directions, but more packed east. Birka gets more traffic. The Forest Road gets travelers who have already decided not to go to Birka — people who know their destination and are not reconsidering it here.\n\nThe post has no opinion on the choice. It has been providing the same two directions for long enough that the road arranged itself around the decision it represents. The packed dirt is the accumulated weight of everyone who read the post and went east.", npc:null, battle:null, loot:null, sleep:false,
@@ -27985,6 +27986,15 @@ const NIGHT_AMBIENT = { // → doc: world.md §City at Night (shown when gameDay
   NUE: "The Oude Kerk square is empty. Sweelinck's lamp is on."
 };
 
+// §VM-01-G-FU-f2: the final-battle framing predicate, ONE copy. A node opts in with
+// `finalBattle:{minLevel,minShards}` (data, the §VM-01-G3 onActivate precedent) — TLS
+// is the sole author; the three former hand-copied `=== 'TLS' && level>=20 && shards>=7`
+// sites (encounter card + both quest-list Fight buttons) all read this helper.
+function _finalBattleReady(code) {
+  const fb = code && NODE_MAP[code] && NODE_MAP[code].finalBattle;
+  return !!(fb && (S_story.level||1) >= (fb.minLevel||0) && (S_story.shards||0) >= (fb.minShards||0));
+}
+
 function storyPreFinalBattle() {
   const node = NODE_MAP['TLS'];
   if (!node) return;
@@ -30727,7 +30737,7 @@ function storyRenderQuests() {
         let wpBtnHtml = '';
         if (!completed && q.waypointNode) {
           if (atDest && wpNode && wpNode.battle) {
-            const isFinal = q.waypointNode === 'TLS' && (S_story.level||1) >= 20 && (S_story.shards||0) >= 7;
+            const isFinal = _finalBattleReady(q.waypointNode);   // §VM-01-G-FU-f2: node-field predicate, one copy
             wpBtnHtml = '<button class="quest-set-wp-btn" style="background:rgba(138,32,21,0.1);border-color:var(--red-lt);color:var(--red);margin-top:4px;" '
               + 'onclick="' + (isFinal ? 'storyPreFinalBattle()' : 'storyPreBattle(NODE_MAP[\'' + q.waypointNode + '\'])') + '">'
               + (isFinal ? '🔥 Final Fight' : '⚔ Fight Now') + '</button>';
@@ -35364,7 +35374,7 @@ function storyRender(node, prefix) {
   if (node.battle) {
     const { sec, body } = _mkSection(null, '⚔', 'Encounter');
     const defeated = !!S_story.defeatedBattles[node.code];
-    const isFinal = node.code === 'TLS' && (S_story.level||1) >= 20 && (S_story.shards||0) >= 7;
+    const isFinal = _finalBattleReady(node.code);   // §VM-01-G-FU-f2: node-field predicate, one copy
     if (defeated) {
       body.appendChild(_mkCard({ lbl: 'BATTLE', main: node.battle.label, tag: '✓ Defeated', tagClass: 'transferred', done: true }));
     } else {
@@ -35656,7 +35666,7 @@ function storyRender(node, prefix) {
         let btn = null, btnClass = 'btn-hunt', btnClick = null;
         if (q.waypointNode) {
           if (atDest && wpNode && wpNode.battle) {
-            const isFinal = q.waypointNode === 'TLS' && (S_story.level||1) >= 20 && (S_story.shards||0) >= 7;
+            const isFinal = _finalBattleReady(q.waypointNode);   // §VM-01-G-FU-f2: node-field predicate, one copy
             btn = isFinal ? '🔥 Final Fight' : '⚔ Fight Now';
             btnClass = 'btn-fight';
             btnClick = () => isFinal ? storyPreFinalBattle() : storyPreBattle(wpNode);
