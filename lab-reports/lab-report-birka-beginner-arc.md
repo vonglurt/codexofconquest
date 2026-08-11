@@ -1,344 +1,280 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report — Birka Roots: The Beginner Story Arc
-### NPC Favorability, City Quests, and the Seeds of the Curse
-**Date:** 2026-05-22
-**Project:** roll2hit.com — Birka starter arc + NPC Favorability system
-**Framework applied:**
-- Tales Arcane 5-step quest template
-- One-shot pacing: single goal, modular content
-- Pinker: Curse of Knowledge seeded in Act I, not revealed until Act VI
-- Codex of Conquest: Birka is what you're fighting for. You just don't know that yet.
+# Birka Roots: The Beginner Arc and the NPC Favorability System
+
+**Lab Report — IEEE Style · Roll2Hit: The Shattered Codex (`roll2hit-v3.html`)**
+**Original date:** 2026-05-22 · **Classification:** Content Design / Relationship-State Systems
+**Verification pass:** 2026-08-11 (§DOC-02d) — every claim re-measured against HEAD.
+
+> **HISTORY DOCUMENT.** This is the design record as believed on 2026-05-22, not a description of
+> the current engine. Claims that did not ship, or that shipped and were later removed, are marked
+> **NOT SHIPPED** / **RETIRED** and **kept** — a silently deleted claim reads like one that held.
+> Its node codes are the retired 26×16 space; per §AUDIT-03m, `lab-reports/` is HISTORY —
+> **annotate, never rewrite**. Treat no code listing below as live source.
 
 ---
 
-## THE CONCEPT
+## Abstract
 
-The player arrives in Birka with 150gp, a pointy stick, and no idea why the sky is violet at night. The main quest — gather seven Codex Shards, seal the Void — is available immediately. It is also completely incomprehensible to a Level 1 fighter who hasn't seen anything yet.
+The report specified a six-NPC, seven-quest starter arc in Birka and, under it, the mechanism the
+rest of the game's relationship content was later built on: **NPC Favorability**, a per-NPC integer
+that permanently changes an NPC's greeting and dialogue. The design thesis was that the arc's value
+is not XP or gold but *five names* — five people whose loss the player can feel when the Void
+arrives — and that this is the gentlest possible seeding of the Curse of Knowledge.
 
-The Birka Roots arc does not delay the main quest. It runs alongside it. Six quests, five NPCs, one city. The player can skip all of them. The game is designed to make skipping feel like the wrong choice — not mechanically, but humanly. These are people with problems that fit exactly in the space of what a capable person can fix.
+**Verification result: this is the strongest survival in the §DOC-02 corpus so far.** Of **32**
+named symbols, **29 resolve at HEAD (91%)**, and the three that do not are cosmetic or inert. Every
+state field shipped under its specified name (`npcFavorability`, `roughWhiskeyUsed`,
+`yaelEscortUsed`), every function shipped under its specified name (`_setNpcFavor`, `_npcFavor`,
+`_renderNpcCard`), six of the seven quests shipped, and the system **outgrew its own spec by an
+order of magnitude** — §NPC-01-B derived the card-render map from `BIRKA_NPC_PROFILES` and took the
+relationship surface from ~20 NPCs to **204 profiles / 213 dialogues**.
 
-That is the seed of the curse. Froberger walked through Birka in three days. He didn't make friends. He said they would slow him down. He was right. They also would have given him something to come back for — which is the thing the curse eventually takes away.
+The failure mode here is not rot; it is **naming**. All **8 node codes are dead as written** and
+five of them were **born dead** — no `NODE_MAP` entry for `CI`/`IN`/`TV`/`BA`/`CY` ever existed —
+and the report's own inconsistency between *Couperin* and *Quill* minted two keys for one character,
+a defect §AUDIT-03n had to spend a whole row fixing fourteen months of engine-time later.
 
-The player who spends time in Birka, who makes Yael friendly and earns Brynn's good room, who wins Quill's cipher and helps Pachelbel check the shipment — that player has five reasons to care about what happens to this city. The Void is not an abstraction to them. It is a threat to specific people whose names they know.
-
-That is what the arc is for. Not experience points. Not gold. Five names.
-
----
-
-## THE SIX BIRKA NPCs
-
-### Guard Captain Yael Scheidemann (CI — R05,C16)
-
-Thirty-eight years old. The scar from jaw to left ear came from a riot three years ago. She has been policing the Birka market district for twelve years and knows every face on every block — not because she's vigilant, but because she actually likes the people who live there. She has a daughter in the city school. She is proud of the guard and quietly ashamed of the slums.
-
-She intercepts the player because she has run out of official options. Her guards won't go into the slums after dark. The city council hasn't approved the cleanup budget. The problem is sitting one block north of the market entrance and getting worse.
-
-**Neutral greeting:**
-*"You look capable. The slums are a problem. My guards manage the border. They don't go in."*
-
-**Friendly greeting (after Slums Cleanup quest):**
-She falls into step beside you when you enter CI. She points out the yellow door on Merchant Row without being asked.
-
-*"That family's been here forty years. The grandmother — Gigault — she makes bread on Solsday. Brings a loaf to the guard post every week, never misses. She was talking about leaving, before. The vermin were getting into the street."* She doesn't say "thank you" directly. She says: *"Gigault said to tell whoever fixed the slums that the bread is waiting whenever they want it."*
-
-**Her wound:** The riot three years ago. She knows who organized it. She has the name. She can't prove it — the evidence she collected disappeared from the guard archive three weeks after the incident. Someone with access above her rank took it. She has spent three years policing the same district as the person who erased that evidence. She is still polite to them in meetings.
+**Keywords:** relationship state, NPC favorability, starter arc, design-record verification,
+identifier drift
 
 ---
 
-### Innkeeper Brynn Clerambault (IN — R05,C17)
+## I. Method
 
-Fifty-five. Runs the inn alone since her husband died six years ago. She has been doing this alone for long enough that alone has become the baseline — she doesn't experience it as hardship anymore, which is itself a kind of hardship. Her daughter is learning to read. She mentioned this to Froberger, who wrote about it. He was the last guest who asked.
+Four measurements, all from HEAD (`roll2hit-v3.html`, 38,707 lines, r2h-3.104.0, 416 nodes / 2,853
+quests / 204 NPC profiles):
 
-She is the person who found Froberger's journal. She kept it because it felt like something someone would come looking for. She was right.
-
-**Neutral greeting:**
-*"One night, two if you need. Breakfast at dawn. The good room's taken."*
-
-**Friendly greeting (after Ledger quest):**
-She sets the good room key on the counter when you walk in. Doesn't wait to be asked.
-
-*"The good room. The previous guest left in a hurry — the pleasant kind of hurry, not the frightened kind."* She has tea ready. *"My daughter got through the whole first page today. She can write 'expedition' now. She showed me. She presses very hard."*
-
-She doesn't say anything else for a moment. Then: *"The good room has a window that faces east. You'll want to sleep before dark while you still can."*
-
-**Her wound:** She is tired. Not bitter, not broken — just tired in the way that six years of solo work creates a baseline tiredness that becomes invisible. She has not told anyone this because there is no one to tell who could do anything about it. Froberger asked. She didn't tell him either, but she noticed that he asked.
+1. **Symbol census.** Every constant, state field, function, quest id, item name and DOM string the
+   report names, batched through one `grep -c` loop (§DOC-02 accelerator 3).
+2. **Node-code resolution.** All 8 codes tested against live `NODE_MAP` keys **and** against the
+   `docs/maps/node-index.md` remap table.
+3. **Mechanism re-read.** Each behavioural claim read at its live definition, not from the report —
+   quest `onComplete` chains, the drunk-fight branch, the favor ladder, the escort handler.
+4. **History probe.** `git log -S` on every absent symbol, to separate **RETIRED** from
+   **NEVER-SHIPPED** (§DOC-02c's instrument).
 
 ---
 
-### Bard Tomas Couperin (TV — R06,C17)
+## II. As-Built Inventory — What Survives
 
-Twenty-nine. Has been performing at the Birka tavern for two years on a license that has been denied twice. He owes the license application fee — now three refusals deep — to the Bureau of Civic Commerce, which means he can't leave Birka without defaulting on a city debt, and can't get the license because he has an outstanding debt. He is aware that this is a trap. He treats it with elaborate good humor, which is not the same as being fine with it.
+| Claim | Status at HEAD | Anchor |
+|---|---|---|
+| `BIRKA_NPC_PROFILES`, 6 entries, fields `{key, name, occupation, node, neutral, friendly, dearFriend}` | **exact** — all six shipped, all fields present, `special` used exactly once (Yael) | `const BIRKA_NPC_PROFILES@22712` |
+| `S_story.npcFavorability` — `npcKey` → 0 / 1 / 2 | **exact**, declared in `_S_DEFAULTS()` | `npcFavorability: {}@23087` |
+| `_setNpcFavor(npcKey, level)` + its two log lines | **exact**, both strings verbatim: *"looks at you differently now"* / *"says your name when you walk in"* | `function _setNpcFavor@23462` |
+| `_npcFavor(npcKey)` selects the card variant | **exact** — 42 call sites | — |
+| `_renderNpcCard(npcKey)` | **exact** (signature grew a `container` argument) | `function _renderNpcCard@23683` |
+| `S_story.roughWhiskeyUsed` — one-time drunk-fight latch | **exact** | `roughWhiskeyUsed: false@23054` |
+| `S_story.yaelEscortUsed` | **exact**, and load-bearing in four more places than specified | `yaelEscortUsed: false@23055` |
+| Rough Whiskey — 5gp at the bar, `consumable_misc`, sell 2gp | **exact, all three** | `Rough Whiskey',icon:'🥃',type:'consumable_misc',sell:2@24380` |
+| Six of seven quests: slums cleanup · ledger · lute · shipment · pit training · void below | **all live as UQF-1.0** | `quest_slums_cleanup@21217` … `quest_void_below@21317` |
+| Gold rewards 80 / 40 / 60 | **exact, all three** | `gold:80@21218`, `gold:40@21263`, `gold:60@21279` |
+| Items: Worn Ledger Book · Sealed Scholar Box · Pit Legend Token · EMP Grenade · Scholar's Note · Cipher Scrap · Conclave Pass | **all seven live** | `itemChain`@21242/21270/21288/21298/21324 |
+| Pachelbel hands the lute over on request, no fight — with his line verbatim | **exact**, including *"it didn't look like something that should be left under a chair in here"* | `key === 'pachelbel' && S_story.quests@23769` |
+| Sweelinck's four curse-score variants **plus** a fifth Birka variant at ≥3 friends | **exact structure** — 5 entries, the 5th flagged `birka:true` | `const SWEELINCK_DIALOGUE_VARIANTS@27224` |
+| Player starts with 150gp | **exact** | `gold: 150@23005` |
+| Auros → Dear Friend on Void Below; the arc's only fav-2 grant | **exact** (`{kind:'favor', npc:'auros', set:2}`) | `quest_void_below@21317` |
 
-He is deeply talented. This is not promotional copy — the cipher scrap embedded in his song about the Scholar Kings contains actual encoded text that a scholar would recognize. He figured it out by ear. He hasn't told anyone because he's not sure what to do with it yet.
-
-**Neutral greeting:**
-He is mid-song when you arrive. He finishes the verse before speaking. *"What brings you to the finest musical establishment in Birka? There are three others. Don't visit them."*
-
-**Friendly greeting (after Lute quest):**
-He switches songs when you walk in. Something instrumental, something he clearly composed himself.
-
-*"I've been working on that since last month. The middle section wasn't right."* He plays another measure. *"The cipher in the Scholar Kings song — I figured it out. It's coordinates. I don't know to what yet. You might, if you're going where I think you're going."* He slides the decoded scrap across. *"You fixed something real for me. This is something real for you. Fair trade."*
-
-**His wound:** He has been in this city for two years and made very few friends because his life is specifically designed to prevent stability. He does not name this as a wound. He performs instead.
-
----
-
-### Fence Pachelbel (BA — R06,C18)
-
-Forty-four. Has run the rough bar's back room for fifteen years. He is not simply a criminal — he operates a very specific moral code involving no children, no poison, no information that gets someone killed without their knowing they're at risk. He has never articulated this code. Everyone who works with him knows it anyway.
-
-He had a partner fifteen years ago. The partner got caught on a job Pachelbel planned. Pachelbel didn't get caught because he made a decision at the last minute to send his partner without him. The partner served four years. Pachelbel has been paying for that decision ever since in the way he operates: he takes the extra risk himself, he gives the partner's cut to whoever needs it, he doesn't compromise. He will not tell you this. It is visible in how he does business.
-
-**Neutral greeting:**
-He looks at you for a long moment before speaking. This is an assessment. *"I might know something. Depends what you need and what you're offering."*
-
-**Friendly greeting (after Shipment quest):**
-He pulls out a seat without being asked.
-
-*"Conclave Pass. Normal rate's sixty. You get thirty."* He sets a cup of something on the table. It might be tea. *"You checked that shipment correctly. Most people either don't check or check in a way that misses the Scholar King signature. You found it."* He drinks. *"That tells me you know what you're looking for. That's a specific kind of rare."*
-
-He doesn't say this warmly. He says it the way a person says something they're glad is true: with relief more than pleasure.
-
-**His wound:** The partner's name is Raison. Raison got out four years ago and left Birka. Pachelbel doesn't know where he went. He knows he could find out. He hasn't looked. He tells himself it's because Raison deserves to not be found if he wants that. He's not entirely sure that's the only reason.
+**Live: 29 of 32.**
 
 ---
 
-### Pit Master Weckmann (CY — R07,C16)
+## III. Spec → Shipped Delta Table
 
-Fifty-one. Former city guard, former soldier. Fifteen years of pit fight scars across his hands and forearms, worn the way other people wear medals. He took over the undercity training pit eight years ago because it was being run badly and badly-run pits get people killed. He runs a clean fight. He is very serious about this in a way that communicates itself through atmosphere rather than rules.
+Sixteen deltas. Each is **NOT SHIPPED** (never existed), **RETIRED** (shipped, later removed), or
+**CHANGED** (survived under altered contract).
 
-He lost a fighter he trained two years ago — not in his pit, in an illegal fight across the city. The fighter was twenty-three. Weckmann shut down for three months. He came back because the people who use the pit for legitimate training needed somewhere safe to train. He didn't stop grieving. He opened the pit anyway.
+| # | Report claim | Outcome | Measured at HEAD |
+|---|---|---|---|
+| 1 | **`BIRKA_QUESTS`** — a named const holding the 7 quests | **NOT SHIPPED** | `grep -c` = 0; `git log -S` = **0 commits ever**. The quests were authored directly into `QUEST_DB`, which is the correct home (§ARCH-01). Harmless. |
+| 2 | **`quest_drunk_fight`** — the 7th quest, "auto-trigger, no activation" | **NOT SHIPPED — and left dangling** | No `QUEST_DB` entry; `git log -S` = 1 commit, the reference itself. It is listed in `_hasActiveQuestFor`'s `npcQuests` under `crov:['quest_pit_training','quest_drunk_fight']@23644`, so the lookup is permanently `undefined` and the entry is inert. **The drunk fight shipped as an engine event, not a quest.** See §V-3. |
+| 3 | **Drunk Pit Fight mechanics** — disadvantage on all attacks · +3 damage on a hit · one-time · item consumed | **SHIPPED, exactly** | `if (S_story._drunkFight) adv = 'dis'@25044`; `const drunkBonus = S_story._drunkFight ? 3 : 0@25071`; latch + inventory filter at `roughWhiskeyUsed = true@24690`. |
+| 4 | **Drunk fight — the natural-20 flavor line** (*"…something underneath the training that knows exactly what it's doing"*) | **NOT SHIPPED** | 0 hits, **0 commits ever**. No crit branch exists in the drunk path. |
+| 5 | **Drunk fight — Weckmann's two reactions**; loss reaction *"Next time sober. Or come back drunk…"* | **CHANGED / NOT SHIPPED** | The **win** line shipped compressed — *"You absolute idiot. I'm counting it."@25401* (the *"most technically incorrect win"* beat cut). The **loss** line has **0 commits ever**: `_drunkFight` is consumed only in `_storyBattleVictory`, so **losing the drunk fight produces no Weckmann reaction at all**. |
+| 6 | **First drunk win grants the Pit Legend Token early**, regardless of Quest 5 | **NOT SHIPPED** | The victory branch does exactly one thing beyond the message: `if (_npcFavor('crov') < 1) _setNpcFavor('crov',1)@25400`. **No token.** The favor half of the claim shipped; the item half did not. |
+| 7 | **Pit Legend Token — "+5gp trade value at BA"** | **CHANGED** | `sell:30`, flat, everywhere. No node-specific trade bonus exists in the engine for any item. |
+| 8 | **Quest 5 requires 1+ Birka quest complete; Quest 6 requires Auros AND Weckmann both Friendly** | **NOT SHIPPED — both** | Both carry `gate:{}`. The gate shape exists and is used by a *sibling* quest in the same block (`quest_brynn_firewood` gates on `favorMin:{brynn:1}`), so this is an authoring omission, not a missing capability. **The arc's intended ordering is unenforced: Void Below is available on arrival.** |
+| 9 | **Slums Cleanup grants a "Guard Favor token (story item)"** | **NOT SHIPPED** | No inventory item. The phrase survives only inside the narrative string *"💰 +80gp from Yael. Guard Favor granted."* — 1 occurrence, 1 commit. The favor itself is granted (`favor npc:'yael' set:1`); the *token* was never minted. |
+| 10 | **Brynn's Ledger reward: "free lodging for 3 nights"** | **NOT SHIPPED** | `onComplete` emits *"🛏 Brynn offers 3 free nights"* and stops. No counter, no flag, no state. `storySleep` charges `node.sleepCost` unless `node.code === 'INN' && S_story.freeBookingUnlocked@36208` — an unrelated flag on a different node. **TLL charges `sleepCost:5` before and after the quest.** See §V-2. |
+| 11 | **Rough Whiskey can be consumed from inventory (−5% max HP, flavor)** | **NOT SHIPPED** | No consume path exists. The item's *only* consumer is the `pendingBattle.nodeCode === 'HKG'` auto-trigger, which removes it. |
+| 12 | **Rough Whiskey NPC reactions** — two authored (Quill refuses; Weckmann *"After the fight."*) | **CHANGED — expanded 2 → 18** | `const ROUGH_WHISKEY_REACTIONS@27359` covers **all six** NPCs × three tiers, read through `_checkRoughWhiskeyReaction@28154` and gated by a *second*, separate flag `roughWhiskeyActive` cleared on sleep and on battle victory. **Neither authored line survives verbatim** — Quill's became *"the lute strings are sensitive and I can smell everything from up here."* |
+| 13 | **Three favorability states** — neutral / friendly / dear friend; **"one quest is enough"** | **CHANGED — four tiers, and two ways up** | The dialogue registry is keyed `impartial · questActive · friendly · dearFriend`; **`questActive`** is a fourth tier the report does not specify, selected by `_hasActiveQuestFor@23641`. §NPC-01-D then added a second route to Friendly with no quest at all: `TALK_TO_FRIENDLY = 3@23513` deliberate talks on distinct game-days. Fav 2 remains quest/personal-act earned, so the report's *"one quest is enough"* is now *"one quest **or** three conversations."* |
+| 14 | **`S_story.lubeckFriends`** — a derived count state field | **CHANGED** | Shipped as a **function**, `function _lubeckFriends()@23461`, not a field. **The name is a fossil**: the city is Birka, and `Lübeck` survives only as an unrelated live node, `LBC` — the Hansa Gate, Act 2. A reader who greps `lubeck` lands in the wrong city. |
+| 15 | **Escort mechanic** — a *"special node-description overlay on the corridors from CI"*, firing on the **next move** to an adjacent node, with the blue-shutters / Varga's-pigeons narration verbatim | **CHANGED — three ways** | (a) There are **no corridors** — §WALK/§NAV-01 deleted that layer entirely (§DOC-02c delta 3), so it renders as a **modal fired on click**, `function _yaelEscortAction@23796`; (b) the narration is a **different, shorter text** — Skalder's corner, Nivers at the fountain, the unread riot report — none of the specified paragraphs shipped; (c) `yaelEscortUsed` and the *"🛡 Walk the beat"* re-view both shipped exactly, and the flag grew **four more readers** the report never anticipated: Yael's dear-friend second act, a `_missionComplete` bit, a journal beat, and an Act-5 records line. |
+| 16 | **Void Below combat: "Void Horror or equivalent, drawn from the WORLD_DB void pool"** | **CHANGED** | *"Void Horror"* has **0 occurrences**. The fight is a **synthetic battle code**: `{ ...node, code:'CY_VOID', battle:{label:'Void Corruption', key:'void_walker', count:2} }@35912` — two `void_walker`, classified in `check-noderegs.js`'s `SYNTHETIC_BATTLE_CODES` as *"Layer 41 — Void Below descend at HKG"*. |
+| 17 | **Auros's rune-tablet reading** — *"the second district boundary… We are currently at the third district boundary."* — the arc's Step 4 "New Information" | **NOT SHIPPED** | Both phrases: 0 hits, **0 commits ever**. The Sealed Scholar Box is delivered to Pachelbel and the chain ends there. **The report's Step 4 has no scene.** |
 
-**Neutral greeting:**
-He looks at your hands. Your weapons. He nods once.
+### III-A. Node-code resolution — 0 of 8, and 5 born dead
 
-*"Three fights, then we talk. That's the policy. Show me you're not wasting my time or mine."*
+| Code | Report says | HEAD says |
+|---|---|---|
+| `CI` | Yael; "the city"; the arc's entry point | Remaps to **`LHR`** (City Streets — Birka). **`CI` is ALSO a live key** — `num:429`, *Chancery Court — The Officer's Pen*, an entirely different node. |
+| `IN` | Brynn's inn | → **`TLL`** (The First Inn) |
+| `TV` | Quill's tavern | → **`MHQ`** (Birka Tavern) |
+| `BA` | Pachelbel's rough bar | → **`LLA`** (The Rough Bar) |
+| `CY` | Weckmann's pit + Auros | → **`HKG`** (Neon Undercity) |
+| `SL` | The slums | → **`BMA`** (Birka Slums) |
+| `CR` | The crypt | → **`KRN`** (The Birka Crypt) |
+| `SQ` | Sweelinck, Act VI | → **`NUE`** (Scholar's Quarter — Weimar) |
 
-**Friendly greeting (after Training quest):**
-He announces your name before the fight. Not loudly — specifically. The room knows you're someone he has vouched for.
+`CI` is the §AUDIT-03m hazard in its purest form: it passes any *"does this code exist?"* check while
+every sentence containing it stays wrong. The remaining seven are cleanly dead.
 
-After the fight: *"Your left shoulder drops before you swing. Costs you a quarter second. Against someone who counts quarters, that's the fight."* He hands you a practice cloth. *"Come back when you've worked on it. There's always more to work on."*
-
-This is not warmth in the conventional sense. This is Weckmann's version of warmth: he is investing his attention, which is the most valuable thing he has.
-
-**His wound:** The fighter's name was Bruna. He was twenty-three. He died in an illegal pit for money he didn't need because someone offered him a challenge he couldn't refuse. Weckmann knows who organized the fight. It was someone with money and no accountability. Weckmann has spent two years finding ways to make illegal pits less profitable in Birka. He does this quietly. He does not mention Bruna.
-
----
-
-## THE ARC — FIVE STEPS, SIX QUESTS
-
-### Step 1 — Establish the Objective
-
-Guard Captain Yael intercepts the player at CI.
-
-*"You're new. You look capable."* She hands you a map of the Birka Slums — hand-drawn, very accurate, clearly made by someone who has been watching the block for years. *"Vermin problem. Rats, swarms, a few things that shouldn't be in a city at all. My guards manage the border. They don't go in. I can't make them go in — not at night, not since the colony got established two months ago."*
-
-*"I can pay sixty gold for a cleared block. More if it's actually clear."*
-
-She has three pieces of information: what needs to be done, why it needs to be done, and what happens if it isn't. The vermin are spreading toward the market. Gigault's bread route is blocked. The city council's response is pending review.
-
-This is a small problem. This is the point. The first objective is the size of a first objective.
-
-### Step 2 — Initial Challenges (Quests 1–4)
-
-Four quests that run simultaneously, available immediately after Yael's introduction. The player can do them in any order.
-
-**Quest 1: Slums Cleanup** (SL)
-Clear 3 vermin encounters from the slums. Return to Yael. Reward: 80gp + Guard Favor token (story item). Yael → Friendly.
-
-Mechanically: 3 Stalk/Battle cycles at SL using existing vermin pool. The player's first real test against enemies that are genuinely easy — designed to succeed, designed to feel like winning.
-
-**Quest 2: Brynn's Ledger** (IN → SL)
-The inn ledger was taken by a pickpocket who retreated into the slums. The pickpocket is Level 1: scared, non-threatening, not a fighter. The ledger drops from any SL encounter as a bonus trophy item: "Worn Ledger Book" (sell: 0, quest item). Return to Brynn. Reward: free lodging for 3 nights. Brynn → Friendly.
-
-Note: Brynn mentions the ledger unprompted when the player first checks into the inn. She's not desperate — it's her record of seven years of guests. "It has Froberger's stay in it. Third page from the back."
-
-**Quest 3: Quill's Lute** (TV → BA)
-Quill's lute was taken by a very drunk man who wandered into the rough bar and hasn't left. Pachelbel has it behind the bar. He found it under a chair.
-
-*"I kept it because it didn't look like something that should be left under a chair in here."*
-
-The lute is behind the bar. Pachelbel gives it back if you ask. No fight, no bribery — Pachelbel kept it for the same reason Brynn kept Froberger's journal: it felt like something someone would come for. Return to Quill. Reward: 40gp + cipher scrap (existing story item, now earned rather than purchased). Quill → Friendly.
-
-Quill gives the player something: he plays a song specifically for them. It's a minute long. There is no mechanical reward for listening. Listening is the reward.
-
-**Quest 4: Pachelbel's Shipment** (BA → CR)
-A delivery was supposed to arrive at the rough bar's back room. The courier dropped it in the crypt and ran. The box has a Scholar King seal on it that Pachelbel recognized and that made him very cautious.
-
-*"I've fenced for fifteen years. I know what a Scholar King marking looks like. I don't touch those boxes without knowing what's inside."*
-
-The player goes into the crypt, finds the "Sealed Scholar Box" (item, no fight required — it's in a corner of the first chamber), brings it back. Pachelbel opens it carefully. It's a rune-tablet with a message in Old Scholar that Auros can read. Pachelbel pays 60gp. Pachelbel → Friendly.
-
-Side objective: bring the tablet to Auros. She reads it and says: *"This is a maintenance log for the signal jammer below the undercity. It was written three hundred years ago. It says the device requires calibration if the Void advance reaches the second district boundary."* She looks at the tablet for a long moment. *"We are currently at the third district boundary."*
-
-This is Step 4 — New Information — embedded in a side objective that the player may or may not pursue.
-
-### Step 3 — The Main Challenge (Quests 5–6)
-
-**Quest 5: Pit Training** (CY, requires 1+ Birka quest complete)
-Auros points the player toward Weckmann. *"If you're going where I think you're going, you need to be better than you currently are. The pit master will tell you honestly whether you're getting there."*
-
-Weckmann accepts the player on Auros's word. Three pit fights at CY, each one fought at the player's current level. Win all three. Reward: Pit Legend Token (story item, +5gp trade value at BA), Undercity Reputation (flavor). Weckmann → Friendly.
-
-**Quest 5b — Drunk Pit Fight Bonus (auto-trigger, any time)**
-If the player has "Rough Whiskey" in inventory (purchasable at BA for 5gp) and enters any combat at CY, a special one-time event triggers.
-
-*"You didn't plan to fight tonight. You had one drink. Then someone said something, or you said something, or it just happened the way it happens at the pit."*
-
-Mechanical effect:
-- Disadvantage on all attack rolls this combat
-- +3 bonus damage on any hit that lands
-- On a natural 20: flavor text "Even drunk, even against the odds, there's something underneath the training that knows exactly what it's doing."
-
-Weckmann's reaction (win): *"You absolute idiot."* [Beat.] *"That was the most technically incorrect win I have ever watched. I'm counting it. Don't do it again."*
-
-Weckmann's reaction (loss): He patches you up without comment. Then: *"Next time sober. Or come back drunk. I genuinely cannot decide which is more useful for your development."*
-
-First drunk win grants the "Pit Legend Token" early (regardless of whether Quest 5 is started) and triggers Weckmann → Friendly regardless of training status.
-
-**Quest 6: The Void Below** (CY, requires Auros AND Weckmann both friendly)
-Auros has been tracking a Void corruption node below the signal jammer's foundation. The vermin in SL were fleeing it. Pachelbel's scholar-box was a warning about it. Weckmann has been noticing that fighters coming up from the lower undercity levels are distracted — "not scared, not hurt, just not quite themselves."
-
-Auros: *"I need you to go deeper than the relay chamber. There is a node below the jammer's foundation that the maintenance log doesn't account for. Something has been growing there for three weeks. I believe it is Void-adjacent. I cannot go — someone needs to stay at the jammer controls. I am asking you specifically because you have shown that you can be trusted to complete what you start."*
-
-She looks at the maintenance log. *"Froberger went this way. He didn't finish what he started in Birka. He took the EMP Grenade and left."*
-
-She is not telling you to be different from Froberger. She is giving you information about what happened last time. What you do with it is your decision.
-
-Combat: medium-tier Void entity (Void Horror or equivalent, drawn from the existing WORLD_DB void pool). Standard battle. Return to Auros after.
-
-Auros → Dear Friend. Reward: EMP Grenade (existing story item), Scholar's Note (seeds the Codex quest — reads: *"The Shards exist because seven people agreed they would. The agreement still stands. You are the next signature."*).
-
-### Step 4 — New Information
-
-The rune-tablet Pachelbel's shipment contained. The maintenance log. The corruption node below the signal jammer. The scholar's note.
-
-Together they tell a story: Birka is not incidentally in the path of the Void. It was built on a Scholar King safeguard. The whole city is a device that has been slowly failing for three hundred years. The signal jammer is one part of a larger system. The Codex Shards are another.
-
-The player does not need to assemble this explicitly. The information is there for a player who pursues all six quests. The inference is left to them.
-
-### Step 5 — The Final Challenge (and its real form)
-
-The Void Below fight is the mechanical finale of the Birka arc. It is medium difficulty. The player will win unless they are very unlucky. The fight is not the point.
-
-The point is what happens when you walk back out.
-
-Auros is at the jammer controls when you return. She doesn't say thank you — she reports: the corruption node is gone, the signal is stable, the maintenance log shows green across all monitored sectors.
-
-Then she says: *"Froberger came back once. After the Shards. He didn't stay long. He said he wanted to see whether the city was still here."* She adjusts a setting on the jammer that doesn't need adjusting. *"I told him it was. He left the next morning."*
-
-She doesn't say what she wished had been different. She is very good at not saying things. But the player knows, now, what it would have meant for someone to stay.
-
-That is the final challenge of the Birka arc: not a monster. A choice about whether to keep the people you know in the category of people you know.
+**The five NPC codes were born dead.** The engine records this in its own source, at the `birkaNpcs`
+literal that carries the fix: *"No NODE_MAP entry ever existed for CI/IN/TV/BA/CY, so these cards
+previously rendered nowhere"* (`const birkaNpcs@35134`, §PLAY-01-G). These codes came from the
+`maps.md` legend, not from the world — the §AUDIT-03p **born-dead** class, and the reason
+`docs/maps/node-index.md` (`npm run nodes`) is now the only place a node code may be read.
 
 ---
 
-## NPC FAVORABILITY — GAME FEATURE DESIGN
+## IV. Three Names for One Bard — the Origin of §AUDIT-03n
 
-### What It Is
+The report is internally inconsistent about who its characters are, and **the inconsistency shipped
+as keys**:
 
-NPC Favorability is a state per NPC that changes their greeting, their dialogue, and their relationship to the player permanently. It is not a meter. It is not points. It is a binary shift from neutral to friendly — one quest is enough — with a second shift from friendly to dear friend available for the Birka arc finale.
+- The bard is introduced as **"Bard Tomas Couperin"** in his profile section and then called
+  **"Quill"** in fourteen subsequent places, including his own quest name. At HEAD he is *three*
+  identifiers at once: key `quill`, `name:'Bard Tomas Couperin'`, quest id `quest_couperin_lute`.
+- **"Pit Master Weckmann"** shipped under the key **`crov`** — a token that appears nowhere in this
+  report, and which no reader of it could guess.
+- **"Auros"** shipped as key `auros` with `name:'Commander Seraphine Bruhns'`. The report's heading
+  says **"THE SIX BIRKA NPCs"** and then gives **five** profile sections — Auros appears only in the
+  arc prose, never characterised, and is listed in the implementation notes as an afterthought
+  (*"Auros-extended"*). The document's own count of its cast is wrong.
 
-The shift is visible immediately. The next time the player enters a node where a friendly NPC is present, the NPC's card reads differently. Not dramatically. Not effusively. Specifically — the way a real person who has reason to be glad to see you changes in exactly the ways a real person changes.
+**§AUDIT-03n (2026-07-31) measured the bill.** Seven engine registries had been keyed to the
+*surnames* — `couperin` / `weckmann` / `bruhns` — which the favor ledger never writes: **21 authored
+entries unreachable**, plus six live code references, including the victory screen's own `npcOrder`,
+so the ending showed the **stranger** epilogue for Quill, Weckmann and Bruhns at any favor. §AUDIT-03k
+then found the mirror in the other direction (display-name slugs minting rival keys) and added
+`WBAPI.NPC_ALIASES` plus `check:npcregs` phase 5.
 
-### The Three States
-
-**Neutral:** Professional. Functional. The NPC addresses the player as a stranger with potential. They give information that is useful. They do not give information that is personal.
-
-**Friendly:** Personal. Opinionated. The NPC addresses the player by reference to shared history — not by name necessarily, but with an acknowledgment that there is history. They give opinions about their life, the city, things they have noticed. They share things a stranger would not hear.
-
-**Dear Friend:** Intimate. The NPC treats the player as someone they have been waiting for. Their dialogue includes private information, specific names, the kind of detail that a person only shares with someone they trust completely.
-
-### The Escort Mechanic (Yael Specific)
-
-When Yael is Friendly and the player is in CI, her dialogue card includes a "🛡 Walk with me" option. Selecting it activates a one-time escort sequence: Yael walks the player from CI to their next destination (any adjacent node), narrating the city as she walks.
-
-The narration is specific. She names the buildings. She notes which guard is on which corner. She tells the player about Gigault's yellow door and the bread route. She mentions which block had the worst of the vermin problem and how it's changed.
-
-This is not a mechanical benefit. The player moves one node with a companion who tells them true things about the place they're in. That's the entire feature. It's the feature because it changes what the city feels like — from a map to a place where someone lives.
-
-Yael's escort narration, full text (displayed as a special node-description overlay on the corridors from CI):
-
-*"That building on the left — the one with the blue shutters — was a Scholar King archive. Before my time. The Council converted it to a registry office twenty years ago. They kept the foundation markings because the foundation is the original Scholar King stone and nobody wants to pay to break Scholar King stone."*
-
-Pause.
-
-*"The slot on the corner is Varga's post. He's been on this street for eleven years. He knows when something's wrong before the report comes in — he says the pigeons change route before anything happens at ground level. I asked him once if he was serious. He said: 'Captain, I've been right fourteen times.' I told him that wasn't statistically meaningful. He said: 'It's meaningful to me.' He's probably right."*
-
-She nods to the guard on the corner. He nods back.
-
-*"Varga's the one who told me about the vermin before the first report reached my desk. He was right again."*
+*Durable lesson, and the one this report is worth keeping for: **a design doc that uses two names for
+one character mints two keys.** The engine cannot tell that Couperin and Quill are the same person,
+and a favor written under one is invisible to a gate reading the other. Fix the name in the doc
+before the doc becomes the schema.*
 
 ---
 
-## THE CURSE OF KNOWLEDGE CONNECTION
+## V. Defects Filed
 
-The Birka arc seeds the curse in the most gentle possible way: it shows the player what it looks like to have a home base with people in it.
+1. **§AUDIT-03u — the world has 416 nodes; two player-facing strings still say forty-two.**
+   Both are stale by 10×, and both are load-bearing onboarding text: STN's Map Shop sets down *"the
+   Real Map beside it — **all forty-two nodes** — and pushes it toward you"* (`STN:{ num:9@8636`),
+   and Yael's Level-1 tutorial monologue opens *"Check your MAP. The known world has **forty-two
+   nodes** and you can get lost in it, badly, fast"* (`yael: { meta:@10397`). Forty-two was the
+   report-era battleground count in the retired 26×16 space (§DOC-02c Appendix A lists exactly 42).
+   `npm run stats` says **416**. Mechanical, but Yael's line is the game's first paragraph of
+   instruction — rewrite it to describe scale without a number, rather than swapping in one that
+   will rot the same way.
 
-Froberger did not have this. This is the difference.
+2. **§AUDIT-03v — Brynn promises a free room twice and charges 5gp both times.** `TLL`'s node text
+   has her say *"'Free,' she says. 'The room's free too, if you need it.'"* (`TLL:{ num:2@8431`),
+   and `quest_brynn_ledger.onComplete` narrates *"🛏 Brynn offers 3 free nights"* (`@21234`).
+   `storySleep` charges `node.sleepCost` — **5gp** at TLL — with a single exemption hardcoded to a
+   *different* node (`node.code === 'INN' && S_story.freeBookingUnlocked@36208`). So the game states
+   a price of zero in prose, restates it as a quest reward, and bills the player at both. **Small
+   design call:** grant the three nights (a `brynnFreeNights` counter decremented in `storySleep`,
+   the shape `freeBookingUnlocked` already models) **or** rewrite both strings. Do not do neither.
 
-Sweelinck, at SQ in Act VI, has four variants based on the player's curse score. There is a fifth variant triggered if the player has three or more Birka NPCs at Friendly or higher:
-
-**Sweelinck — Birka variant (three or more friendly Birka NPCs):**
-*"You made friends in Birka."* He sets down the pen he's been writing with. *"Froberger didn't. He said they would slow him down. He was right — they would have. You're slower than he was."*
-
-Pause.
-
-*"You also have five people who know your name in a city that matters. Froberger had the Shards. He had the knowledge. He didn't have anyone to come back to."* He picks the pen back up. *"I'm not telling you that's better. I'm telling you it's different. The difference will matter at the end."*
-
-This is the only place in the game where the player is told directly: the friends you made in Act I matter. Not in combat. Not in gold. In what the ending means.
-
----
-
-## ROUGH WHISKEY — ITEM DESIGN
-
-Purchasable at BA for 5gp. Type: `consumable_misc`. Sell: 2gp.
-
-Description: *"A bar glass of something that smells like turpentine and tastes like a decision you'll think about later. The barman pours it without asking what you want. This is what you get."*
-
-Functions:
-- Can be consumed from inventory: removes 5% max HP as intoxication penalty (flavor only, minor)
-- If in inventory when entering CY combat: triggers Drunk Pit Fight event (one-time only)
-- After Drunk Pit Fight event: item is consumed regardless of outcome
-- If given to Quill: he refuses it. *"I've seen what that does to lute strings."*
-- If given to Weckmann: he looks at it. *"After the fight."* He doesn't specify whose fight.
-
----
-
-## IMPLEMENTATION NOTES FOR PLAN.MD
-
-**New const: `BIRKA_NPC_PROFILES`**
-6 entries (Yael, Brynn, Quill, Pachelbel, Weckmann, Auros-extended). Each: `{key, name, occupation, node, neutral:{greeting, dialogue}, friendly:{greeting, dialogue, special?}, dearFriend:{greeting, dialogue}}`
-
-**New const: `BIRKA_QUESTS`**
-7 QUEST_DB entries: slums_cleanup, brynn_ledger, couperin_lute, pachelbel_shipment, pit_training, drunk_fight (auto-trigger, no activation), void_below.
-
-**New state: `S_story.npcFavorability: {}`**
-npcKey → 0 (neutral) | 1 (friendly) | 2 (dear friend)
-
-**New state: `S_story.roughWhiskeyUsed: false`**
-Tracks whether the drunk pit fight event has already fired; prevents repeat.
-
-**New state: `S_story.lubeckFriends`**
-Derived count: Object.values where favor ≥ 1. Used in Sweelinck's Birka variant check.
-
-**New mechanic: `_setNpcFavor(npcKey, level)`**
-Sets favorability. Logs: *"[Name] looks at you differently now."* (Neutral → Friendly) or *"[Name] says your name when you walk in."* (Friendly → Dear Friend).
-
-**New mechanic: `_npcFavor(npcKey)`**
-Returns current favorability level. Used by storyRender() to select NPC card variant.
-
-**New mechanic: `_renderNpcCard(npcKey)`**
-Renders the NPC card at their node: name, occupation, favorability-appropriate greeting, current dialogue, and any special action (🛡 Walk with me for Yael).
-
-**Escort mechanic:**
-Yael's escort activates when "Walk with me" is clicked. A one-time corridor narration overlay fires on the next move from CI to any adjacent node. `S_story.yaelEscortUsed: false` tracks this; after use, the option changes to "🛡 Walk the beat" (re-viewable narration, no overlay, just text).
+3. **§DX-02o — one quest-id string literal in the engine resolves to nothing, and no gate can see
+   it.** `quest_drunk_fight@23644` has no `QUEST_DB` entry; `S_story.quests['quest_drunk_fight']` is
+   permanently `undefined`, so `_hasActiveQuestFor('crov')` silently drops half its roster — the
+   `questActive` dialogue tier can only ever fire for `quest_pit_training`. Census over the whole
+   file: **302 distinct `quest_*` literals, 301 resolve, 1 does not** (the two other misses,
+   `quest_whisper_` / `quest_wane_`, are legitimate `startsWith` prefixes and must be exempted).
+   **The gap is structural, not incidental:** `check:questgraph` walks `QUEST_DB` against itself and
+   never reads engine JS; `check:noderegs` mentions `QUEST_DB` **zero** times. This is exactly the
+   §AUDIT-03j class — *a missed lookup renders nothing* — in the **quest-id** dimension, which has no
+   fence. Wants a `check:questrefs` phase resolving every `'quest_*'` literal outside `QUEST_DB`
+   against the live id set, with an explicit `NOT_A_QUEST_ID` classification list in the
+   §AUDIT-03j/n/m house style. Mechanical; the measurement above is the whole scope.
 
 ---
 
-*End of lab report. Implementation: see Layer 41 in plan.md.*
+## VI. What the Report Got Right
 
+The design half of this document is its durable half, and it held for 81 days and 6.1× the file:
+
+- **Favorability as a small integer with permanent, visible effects, not a meter.** Shipped exactly,
+  and it is now the substrate for **204 NPC profiles and 213 dialogue sets** — §NPC-01-B derived the
+  render map from `BIRKA_NPC_PROFILES` rather than hand-listing it, taking the relationship surface
+  from ~20 NPCs to ~203 with no change to the mechanism this report specified.
+- **The two log lines.** *"[Name] looks at you differently now."* / *"[Name] says your name when you
+  walk in."* — verbatim in `_setNpcFavor` at HEAD. Both are still the only thing that announces a
+  relationship change anywhere in the game.
+- **The dear-friend "second personal act."** The report implies it; the engine formalised it as a
+  six-entry `dearFriendBits` table (escort used · journal Entry 7 read · Quill's song received ·
+  shipment complete · 3 pit wins · depths reported), checked in two places so the upgrade fires
+  whether the act or the quest lands second. **Every one of the six is an act this report invented.**
+- **The Sweelinck payoff, and it is stronger than specified.** `_birkaVar` is resolved **first** and
+  overrides all four curse-score bands, so at three or more friends the Birka variant is what the
+  player gets, unconditionally. The text is a paraphrase — the pen business and the *"I'm not telling
+  you that's better"* beat were cut for *"He carried the Shards. You've been carrying something
+  heavier."* — but the report's claim that this is *the one place the game says the friends mattered*
+  is true at HEAD, and the precedence rule makes it truer than the spec asked for.
+- **`_missionComplete`'s twelve bits are this report's thesis in executable form.** Eight of twelve
+  are Birka relationship acts — `yaelEscortUsed`, `brynnsJournalRead`, `couperiSongReceived`,
+  `pachelbelPaidBack`, `crovPitTrainingWins`, `bruhnsDepthsReported`, `atLeastThreeFriends`,
+  `noHighCurse` — and the ending needs **8 of 12**. *"Not experience points. Not gold. Five names."*
+  is not a mood statement in the shipped game; it is a threshold.
 
 ---
+
+## VII. Scope Note
+
+Retained as the design record for a system that is **fully live and much larger than described**.
+Its value at HEAD is threefold: it is the origin of the favorability mechanism every later NPC track
+inherited unchanged; it is the clearest evidence in the §DOC-02 corpus that **the design half of a
+lab report outlives the addressing half** — 91% of its symbols resolve while 0% of its node codes do;
+and it is the traceable origin of the identifier drift §AUDIT-03n and §AUDIT-03k spent two rows
+repairing. Where §DOC-02b found a report that contradicted itself about code, this one contradicts
+itself about **people** — and that turned out to be the more expensive kind.
+
+---
+
+## References
+
+[1] §NPC-01-B/C/D — derived NPC card render map; the ⚔/✦ footers; the Talk-to-Friendly path
+    (`TALK_TO_FRIENDLY = 3`). Extends this report's mechanism to 204 profiles.
+[2] §AUDIT-03n — npc-key registry audit (`check:npcregs`, gate #14). 21 unreachable entries from the
+    surname/first-name split traced in §IV.
+[3] §AUDIT-03k — `WBAPI.NPC_ALIASES` + `check:npcregs` phase 5; the display-name-slug mirror.
+[4] §PLAY-01-D/G — the CI→LHR and IN/TV/BA/CY remaps; source of the born-dead finding in §III-A.
+[5] §WALK / §NAV-01 — navigation-core redesign. Deleted the corridor layer the escort overlay of
+    delta 15 was specified against.
+[6] §ARCH-01 — Universal Quest Format 1.0. The six shipped quests are UQF-1.0; `BIRKA_QUESTS` was
+    never needed.
+[7] §BOARD-01-FU6 — the ledger fork and the lute/box confluence; three of this arc's quests became
+    the Warrant network's first branch and first in-degree-2 merge.
+[8] §DOC-02b / §DOC-02c — prior verification passes; source of the `git log -S` instrument and the
+    *"the half of a document that points at code is the half that is right"* lesson, which this
+    report inverts.
+
+---
+
+## Appendix A — Kept, NOT SHIPPED (verbatim 2026-05-22 record)
+
+Retained because a deleted claim reads like one that held. None of the following exists at HEAD.
+
+- **Auros's rune-tablet scene (Step 4).** *"This is a maintenance log for the signal jammer below the
+  undercity. It was written three hundred years ago. It says the device requires calibration if the
+  Void advance reaches the second district boundary."* … *"We are currently at the third district
+  boundary."*
+- **Yael's escort narration.** The Scholar King archive with blue shutters, converted to a registry
+  office twenty years ago; Varga's post, eleven years, and the pigeons that change route before
+  anything happens at ground level — *"Captain, I've been right fourteen times."*
+- **Drunk fight, natural 20.** *"Even drunk, even against the odds, there's something underneath the
+  training that knows exactly what it's doing."*
+- **Weckmann on a drunk loss.** *"Next time sober. Or come back drunk. I genuinely cannot decide
+  which is more useful for your development."*
+- **Rough Whiskey, given away.** To Quill: *"I've seen what that does to lute strings."* To Weckmann:
+  *"After the fight."* (He doesn't specify whose fight.)
+- **Quest 5b's early token** and **Quest 1's Guard Favor story item**.
+- **Brynn's three free nights** as a mechanic.
+
+---
+
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
