@@ -319,7 +319,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-reports/lab-report-friendships-with-magic.md` | 41–42 | Session postmortem — waypoint BFS highlight, Hunt Mode, EB negotiation |
 | `lab-reports/lab-report-living-world.md` | 44 | World progression events, Gigault stall, NPC farewells, Act III desaturation |
 | `lab-reports/lab-report-web-of-connections.md` | 45 | `FROBERGER_TRACES`, `NPC_CROSS_REFS` (17), Room 6, Yael patrol, cross-item triggers |
-| `lab-reports/lab-report-ally-cat.md` | 44 | §IX Cat Quarter — 6-quest arc, Ally Cat hierarchy, Kenickie unlock |
+| `lab-reports/lab-report-ally-cat.md` | 44 | §IX Cat Quarter — 7-quest arc (6 + `quest_cat_void`), Ally Cat hierarchy, Kenickie unlock. **Re-verified against HEAD 2026-08-11** — carries the spec→shipped delta table and the two defects it found (§AUDIT-03r/s) |
 | `lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` | 70+72+74 | §XXXV Brynn's Vigil + §XXXVII Bruhns CO scene + §XXXIX Yael Named Report |
 
 ### Quest Arcs
@@ -674,7 +674,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.brynnLightKept` | boolean | true = light choice; false = dark choice |
 | `S_story.bruhnsCoSceneDelivered` | boolean | Bruhns CO confrontation scene delivered |
 | `S_story.yaelNamedReportDelivered` | boolean | Yael named report scene delivered |
-| `S_story.catKills` | object | nodeCode → kill count; Cat Quarter arc tracking |
+| `S_story.catKills` | object | **monster key** → kill count (`catKills.stray_alley_cat`); the four Cat Quarter `countMin` gates read it *(corrected 2026-08-11 — was documented as "nodeCode → kill count")* |
 | `S_story.catKingDefeated` | boolean | Cat King boss defeated |
 | `S_story.kenickieMarketUsed` | boolean | Kenickie's black market accessed |
 | `S_story.questMinusOne` | boolean | Quest -1 (Level 21 / World Creator) seen |

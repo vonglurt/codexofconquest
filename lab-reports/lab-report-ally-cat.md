@@ -2,56 +2,56 @@
 
 # Lab Report — Layer 44: The Ally Cat Arc ("Nine Lives, Capisce?")
 
-**Date:** 2026-05-25  
-**Layer:** 44  
-**Section:** §IX  
-**Status:** ✅ Implemented 2026-05-25 (duplicate QUEST_DB block removed 2026-05-25)
+**Authored:** 2026-05-25 (pre-implementation spec) · **Shipped:** 2026-05-25
+**Layer:** 44 · **Section:** §IX · **Node:** `CDG` — The Cat Quarter
+**Status:** ✅ Implemented · **Re-verified against `roll2hit-v3.html` @ `a7867e3` on 2026-08-11**
+
+> **This is a HISTORY document** (`scripts/legacy-codes.js` classification). It records what
+> was *designed* in May 2026 and what is *live* now. The maintained home docs for this arc are
+> `story.md` §NODE 77 (quest-by-quest) and `world.md` §Layer 46 (node/terrain). Where this
+> report and those disagree, they win.
+>
+> **The node shipped as `CQ` and is `CDG` today** — the §WALK/§NAV-01 geo-grid recode
+> (`CQ`→`CDG`, `SL`→`BMA`, `DF`→`ZRH`, `CY`→`HKG`). Every code below is the live one unless
+> marked *historical*. The `CQ_` prefix survives in three **synthetic battle codes**, which are
+> not node codes and are classified as such in `check:noderegs` phase 6.
 
 ---
 
-## 1. Scope
+## 1. Abstract
 
-Adds the Ally Cat Arc — a Goodfellas × Grease mob-cat faction arc accessible from Act I via the Birka Slums (SL) node. Deliverables:
+A Goodfellas × Grease mob-cat faction arc reachable in Act I: one node, a ten-rung monster
+hierarchy (Stray → Fluffy → Beefy → Honcho → Taz Devil → Cat-King), a seven-quest chain, and a
+black-market vendor unlocked by the chain's midpoint. The design shipped essentially intact;
+this revision records the **six deltas** between spec and code (§4) and the **defects the
+2026-08-11 verification found** (§6), each of which is now a BACKLOG row rather than a note.
 
-- 1 new world node: **CQ — The Cat Quarter**
-- 10 new monster entries
-- 10 new drop entries
-- 1 new WORLD_DB terrain (`cat_quarter`)
-- 7 monsters appended to existing `alley` terrain
-- 7 quest entries (`quest_cat_01` through `quest_cat_06` + `quest_cat_void`)
-- 3 new NPC dialogue profiles (`jimmy`, `sandy_cat`, `don_fluffissimo`)
-- 1 new HUNTING_GROUNDS entry
+## 2. Method
 
----
-
-## 2. New Node: CQ — The Cat Quarter
-
-| Field | Value |
-|---|---|
-| `num` | 77 |
-| `code` | `CQ` |
-| `name` | `cat_quarter` |
-| `label` | `The Cat Quarter` |
-| `act` | 1 |
-| `N` | null |
-| `S` | null |
-| `E` | null |
-| `W` | `SL` |
-| `npc` | `Jimmy Two-Tails` |
-| `battle` | `{label:'Beefy Tom × 3', key:'beefy_tom', count:3}` |
-| `loot` | `Tiny Fedora` |
-| `sleep` | false |
-| NODE_COORDS | `CQ:{r:4, c:17}` (one east of SL at r:4, c:16) |
-
-Wire change: SL node gets `E:'CQ'` added to its connection object.
-
-Node text: *"Narrow brick lanes, broken glass, discarded fish bones. Every surface is scratched. Not vandalism — territorial markings, dense as wallpaper. A large orange tabby sits on an overturned crate wearing what appears to be a very small fedora. He sees you and doesn't move."*
+Every claim below was re-measured against the live HTML by `grep`/`sed` — not carried forward
+from the 2026-05-25 text, and not read off a doc table (§AUDIT-03m: *never read a node code off
+a doc table*). Claims that could not be confirmed in the file are marked **NOT SHIPPED** and
+retained rather than deleted, because a silently removed claim reads as a claim that held.
 
 ---
 
-## 3. Monster Pool (10 new entries)
+## 3. As-built inventory
 
-Insertion point: after `rug_spider` block (Layer 44 section), new `// ── Ally Cat Arc ──` comment block.
+### 3.1 Node — `` `CDG:{ num:77@8798` ``
+
+| Field | Live value | vs. spec |
+|---|---|---|
+| `num` / `code` / `name` | `77` / `CDG` / `cat_quarter` | code recoded from `CQ` |
+| `label` / `act` | `The Cat Quarter` / `1` | ✅ |
+| `npc` / `loot` / `sleep` | `Jimmy Two-Tails` / `Tiny Fedora` / `false` | ✅ |
+| `battle` | `{label:'Beefy Tom × 3', key:'beefy_tom', count:3}` | ✅ |
+| Position | `` `CDG:{r:21,c:182}@9619` `` (90×360 geo grid) | spec's `r:4,c:17` is the retired 26×16 grid |
+| Connections | **none** — `NODE_MAP` carries no `N`/`S`/`E`/`W` fields at all | spec's `W:'SL'` / `SL.E='CQ'` wiring was retired wholesale by §WALK; travel is the `ROAD_RUNS` net + `mover.js` kernel |
+| `text` | rewritten post-ship (longer; the fedora/guest-register passage) | spec text is superseded |
+
+### 3.2 MONSTER_POOL — 10 entries, `` `stray_alley_cat:  { key:'stray_alley_cat'@5395` ``
+
+**All ten shipped with the specified statline, unchanged.**
 
 | Key | Name | AC | HP | ATK | Damage | Tier |
 |---|---|---|---|---|---|---|
@@ -66,174 +66,162 @@ Insertion point: after `rug_spider` block (Layer 44 section), new `// ── All
 | `fat_cat_boss` | Don Fluffissimo | 17 | 90 | +7 | 2d6+5 | hard |
 | `cat_king` | The Cat-King | 19 | 160 | +10 | 3d8+6 | deadly |
 
-### Monster Drops (10 entries)
+### 3.3 MONSTER_DROPS — 10 entries, `` `stray_alley_cat:      { name:'Flea-Dusted Pelt'@5837` ``
 
-| Key | Drop Name | Icon | Sell |
+All ten shipped with the specified name/icon/sell: Flea-Dusted Pelt 🐱 1 · Tuft of Fluff 🐾 2 ·
+Cracked Claw 🦴 4 · Embossed Coin Pouch 💰 12 · Tiny Fedora 🎩 8 · Rhinestone Collar 💎 10 ·
+Void-Singed Whisker ⚡ 7 · Furball Crown 🌀 18 · The Don's Signet Ring 💍 35 · Cat-King's Claw
+Fragment 👑 50.
+
+### 3.4 WORLD_DB terrain
+
+- `` `cat_quarter:      { label:'The Cat Quarter'@6286` `` — 10 pool slots, `fluffy_cat` listed
+  twice (intentional spawn weighting), `cat_king` **absent** (reserved for the `CQ_KING`
+  encounter). Shipped exactly as specified.
+- `` `alley:            { label:'Dark Alley'@6287` `` — the 7 specified keys appended
+  (`stray_alley_cat`, `fluffy_cat`, `beefy_tom`, `honcho_cat_m`, `honcho_cat_f`,
+  `corrupted_cat`, `taz_devil`); `fat_merchant_cat` / `fat_cat_boss` / `cat_king` correctly
+  remain CDG-exclusive. The predicted pool widening for *all* alley nodes is real and stands.
+
+### 3.5 QUEST_DB — 7 entries, `` `quest_cat_01: { id:'quest_cat_01'@13689` ``
+
+All seven are **UQF-1.0** (migrated by §ARCH-01; authored in 2026-05 as hand-written blocks).
+Gating is `gate.questsDone`, not a hand-compared `=== 'complete'` string.
+
+| ID | Gate | Completion (live) | Reward (live) |
 |---|---|---|---|
-| `stray_alley_cat` | Flea-Dusted Pelt | 🐱 | 1 |
-| `fluffy_cat` | Tuft of Fluff | 🐾 | 2 |
-| `beefy_tom` | Cracked Claw | 🦴 | 4 |
-| `fat_merchant_cat` | Embossed Coin Pouch | 💰 | 12 |
-| `honcho_cat_m` | Tiny Fedora | 🎩 | 8 |
-| `honcho_cat_f` | Rhinestone Collar | 💎 | 10 |
-| `corrupted_cat` | Void-Singed Whisker | ⚡ | 7 |
-| `taz_devil` | Furball Crown | 🌀 | 18 |
-| `fat_cat_boss` | The Don's Signet Ring | 💍 | 35 |
-| `cat_king` | Cat-King's Claw Fragment | 👑 | 50 |
+| `quest_cat_01` | *(none)* — activates on arrival at `CDG` | `catKills.stray_alley_cat ≥ 5` ∧ `catKills.fluffy_cat ≥ 3` | 200gp |
+| `quest_cat_02` | `quest_cat_01` | `catKills.beefy_tom ≥ 3` ∧ hold 3× Cracked Claw | 350gp; Sandy card appears |
+| `quest_cat_03` | `quest_cat_02` | `catKills.honcho_cat_m ≥ 1` ∧ `catKills.honcho_cat_f ≥ 1` | 500gp + Rhinestone Collar |
+| `quest_cat_04` | `quest_cat_03` | `battles:['CQ_TAZ']` | 750gp + Furball Crown |
+| `quest_cat_05` | `quest_cat_02` | `catKills.fat_merchant_cat ≥ 4` ∧ `battles:['CQ_BOSS']` | 900gp + Don's Signet Ring; Kenickie unlocks |
+| `quest_cat_06` | `quest_cat_04` ∧ `quest_cat_05` | `flags:['catKingDefeated']` | 1500gp + Cat-King's Claw Fragment |
+| `quest_cat_void` | `quest_cat_02` | `catKills.corrupted_cat ≥ 5` | 400gp |
+
+Kill tracking is a dedicated counter object, `` `catKills: {}, monsterKills: {}@23120` ``, keyed
+by **monster key** (not node code — see §6.3).
+
+### 3.6 Boss encounters
+
+Three exclusive-by-quest-state buttons, migrated from inline `storyRender` handlers to
+`NODE_PANELS` by §VM-01-G4d as a **deliberately concurrent** group (`group:'cdg-boss-menu'`) —
+`` `cdg-boss-taz@34378` ``, `cdg-boss-don`, `cdg-boss-king`. Each emits a `narrative` bit then a
+`combat` bit carrying the synthetic code. Victory is handled at
+`` `if (pb && pb.nodeCode === 'CQ_KING')@25372` `` and siblings, which write `catKingDefeated`
+and open the §Layer-78 La Riva chain.
+
+### 3.7 NPCs
+
+- **Node auto-text:** `` `CDG: { name:'Jimmy Two-Tails'@22696` `` — Jimmy's "It ain't a monster.
+  It's a SITUATION" opener, verbatim as specified.
+- **`NPC_DIALOGUES` profiles:** `` `occupation:"Cat Quarter fixer"@10403` `` (`jimmy`),
+  `sandy_cat`, `don_fluffissimo` — plus **`kenickie`**, promoted to a full profile later
+  (Layer 75 §XL). Four, not three.
+- **Card roster:** `` `const _cqNpcs = ['jimmy']@35123` `` — `sandy_cat` on `quest_cat_02`
+  complete, `kenickie` on `quest_cat_05` complete. `CDG` was one of the codes repaired by
+  §PLAY-01-G, when `birkaNpcs` was found keyed to pre-§WALK sublocation codes that rendered
+  nowhere.
+- **Tommy No-Ears DeVito** remains encounter-only (`storyMsg` beats, no profile) — as specified.
+- **Profile shape is favor-tiered, not state-tiered:** `{meta, impartial[], friendly[],
+  dearFriend[], quote}`. The spec's hostile/neutral/friendly/dear tone table never existed as a
+  data shape; `don_fluffissimo` carries `impartial` only, which realises the spec's intent
+  ("friendly not accessible — he is the antagonist") by omission.
+
+### 3.8 State flags — `_S_DEFAULTS()`
+
+`catKingDefeated:false` shipped as specified. Two more were added that the spec did not name:
+**`catKills:{}`** (the counter the chain is built on) and **`kenickieMarketUsed:false`**.
+
+### 3.9 Vendor — Kenickie's Black Market
+
+Shipped Layer 75 §XL; migrated to `` `cdg-kenickie-market@34191` `` (`NODE_HOOKS`) by
+§VM-01-G4d. Gated on `quest_cat_05` **complete**. Four SKUs: Sardine Pack ×3 (18gp, catch +2),
+Live Shallows Minnow (28gp, catch +3, size↑), Minor Healing Potion (45gp), Healing Potion
+(135gp). The "10% discount" is real but applies only to the two potions — 45 vs. `POTION_TIERS`
+`minor.cost 50`, 135 vs. `healing.cost 150`; the baits are exclusive stock with no list price
+to discount.
 
 ---
 
-## 4. WORLD_DB Changes
+## 4. Design → shipped deltas
 
-### 4a. Append to existing `alley` terrain monsters array
+| # | Spec claim (2026-05-25) | Live | Note |
+|---|---|---|---|
+| 1 | Q-CAT-01 pays "200gp **+ Tiny Fedora trophy**" | 200gp only | **NOT SHIPPED.** Tiny Fedora exists as `CDG.loot` and the `honcho_cat_m` drop, never as a quest grant. |
+| 2 | Q-VOID pays "400gp **+ Void-Singed Whisker ×3**" | 400gp only | **NOT SHIPPED.** Whisker is the `corrupted_cat` drop; the chain grants none. |
+| 3 | Q-CAT-03 "merge mechanic — if both Honchos appear in one battle, second wave loads `taz_devil`" | absent | **NOT SHIPPED.** No merge/second-wave code exists. The Taz is a separate scripted encounter (`quest_cat_04` / `CQ_TAZ`); the merge survives only as narration. |
+| 4 | Quest levels 3/3/4/4/4/5 | no `level` or `minLevel` field on any of the 7 | Design intent, **unenforced by the engine**. `world.md`'s "Levels 3–5" is likewise descriptive. |
+| 5 | Vendor chip "added to CQ node's vendor array" | a `NODE_HOOKS` launcher, not a node field | The node has no vendor array; the shape landed as a hook. |
+| 6 | 1 new `HUNTING_GROUNDS` entry | registry **deleted** | §TIMELESS-01 removed Hunt/Stalk; `` `// §TIMELESS-01: HUNTING_GROUNDS removed@10392` ``. |
 
-Add these 7 keys to the existing `alley` terrain's `monsters` array:
-```
-P.stray_alley_cat, P.fluffy_cat, P.beefy_tom, P.honcho_cat_m,
-P.honcho_cat_f, P.corrupted_cat, P.taz_devil
-```
+**Post-ship migrations** (none of which the arc requested; each rewrote how it executes):
+§WALK/§NAV-01 code + grid recode → §ARCH-01 UQF-1.0 quest migration → §TIMELESS-01 hunt removal
+→ §PLAY-01-G NPC-card repair → §EDITOR-01-D-FU(b) `itemChain` trophies → §VM-01-G3 (the
+storyRender activation stanzas retired; chain sequencing moved into `gate`, which fixed an
+appended-duplicate `activateNode` bug that had made the whole chain activate at once) →
+§VM-01-G4d (boss buttons → `NODE_PANELS`, Kenickie → `NODE_HOOKS`).
 
-Note: `fat_merchant_cat`, `fat_cat_boss`, and `cat_king` are CQ-exclusive — not added to generic `alley`.
-
-### 4b. New `cat_quarter` terrain entry
-
-```js
-cat_quarter: { label:'The Cat Quarter', icon:'🐱', monsters:[
-  P.stray_alley_cat, P.fluffy_cat, P.beefy_tom, P.fluffy_cat,
-  P.honcho_cat_m, P.honcho_cat_f, P.fat_merchant_cat,
-  P.corrupted_cat, P.taz_devil, P.fat_cat_boss
-] }
-```
-
-Note: `fluffy_cat` appears twice (higher spawn weight per spec). `cat_king` is reserved for the Q-CAT-06 boss encounter and not in the random pool.
-
----
-
-## 5. Quest Chain (7 entries)
-
-All quests use existing QUEST_DB structure. Flags stored in `S_story.quests[key]`.
-
-| ID | Key | Level | Trigger | Reward |
-|---|---|---|---|---|
-| Q-CAT-01 | `quest_cat_01` | 3 | First CQ visit; Jimmy auto-dialogue | 200gp + Tiny Fedora trophy |
-| Q-CAT-02 | `quest_cat_02` | 3 | `quest_cat_01 === 'complete'` | 350gp + Sandy unlocks at CQ |
-| Q-CAT-03 | `quest_cat_03` | 4 | `quest_cat_02 === 'complete'` | 500gp + Rhinestone Collar trophy |
-| Q-CAT-04 | `quest_cat_04` | 4 | `quest_cat_03 === 'complete'` | 750gp + Furball Crown + Tommy appears |
-| Q-CAT-05 | `quest_cat_05` | 4 | `quest_cat_02 === 'complete'`; Sandy gives | 900gp + Don's Signet Ring + vendor chip |
-| Q-CAT-06 | `quest_cat_06` | 5 | Both `quest_cat_04` AND `quest_cat_05 === 'complete'` | 1500gp + Cat-King's Claw Fragment + `catKingDefeated:true` |
-| Q-VOID | `quest_cat_void` | — | After Q-CAT-02; CQ board auto-appears | 400gp + Void-Singed Whisker ×3 |
-
-### Quest mechanic notes
-
-- **Q-CAT-01:** Kill target = 5× stray_alley_cat AND 3× fluffy_cat in CQ terrain. Track via kill counters in QUEST_DB.
-- **Q-CAT-03 merge mechanic:** If honcho_cat_m and honcho_cat_f appear in same battle, second wave loads `taz_devil`. Quest fails the "clean kill" condition; player gets credit for killing each separately.
-- **Q-CAT-05 vendor chip:** "Kenickie's Black Market" — fish bait + minor potions at 10% discount. Add to CQ node's vendor array on quest completion.
-- **Q-CAT-06 flag:** `catKingDefeated:true` added to `_S_DEFAULTS()`. Parallels `pitChampionWon` pattern.
+The spec's §9 "insertion order" and §10 "documentation updates on completion" tables are
+retired: both describe a build procedure that no longer applies (steps 11–12 authored
+`storyRender` stanzas that §VM-01-G3/G4d deleted, and `plan.md` was split into
+CONTRIBUTING.md + BACKLOG.md on 2026-07-09).
 
 ---
 
-## 6. NPC Characters
+## 5. Risk register — outcome
 
-### 6a. NPC_DIALOGUE (node auto-text on first visit)
-
-**CQ node entry** — Jimmy Two-Tails opening quote (fires on first CQ visit):
-> *"Listen. LISTEN. I'm gonna tell you somethin' and I'm only gonna say it once. The Taz Devil? It ain't a monster. It's a SITUATION. Two Honchos merge and boom — situation. You wanna help? You help by makin' sure they don't get within three blocks of each other. Capisce?"*
-
-### 6b. NPC_DIALOGUES profile entries
-
-Three new keys: `jimmy`, `sandy_cat`, `don_fluffissimo`.
-
-**`jimmy` — Jimmy "Two-Tails" Carbonara (Orange tabby, fedora, fixer)**
-
-| State | Tone |
+| Risk (as filed) | Outcome |
 |---|---|
-| hostile | Suspicious; doesn't talk to strangers without a reference |
-| neutral | Street-formal; lots of "Listen" and "Capisce" |
-| friendly | Warm-gruff; treats player like a made guy |
-| dear | Calls player honorary Ally Cat; final Q-CAT-06 speech |
-
-**`sandy_cat` — Sandy "Scratchpad" Mewlino (Tortoiseshell, Grease-queen)**
-
-| State | Tone |
-|---|---|
-| hostile | Dismissive; "Who sent you, sweetheart?" |
-| neutral | Sharp; calls out merge culture as disrespect |
-| friendly | Conspiratorial; trusts player with Merchant Cat intel |
-| dear | Gives Q-CAT-05; rallies around Corrupted Cat concern |
-
-**`don_fluffissimo` — Don Fluffissimo (Persian, speaks very soft, very slow)**
-
-| State | Tone |
-|---|---|
-| hostile | "Unfortunate" opener; bodyguards appear |
-| neutral | Measured; counts everything you haven't brought him |
-| friendly | Not accessible — he's always the antagonist of Q-CAT-05 |
-| dear | N/A — he's a boss fight, not an ally |
-
-*Note: Tommy No-Ears DeVito and Kenickie Clawnickie Mancuso are encounter/dialogue NPCs, not full profile NPCs. Their lines appear as storyMsg beats at quest completion milestones, not as NPC_DIALOGUES entries.*
+| "`num:77` — verify no existing node uses 77" | ❌ **REALIZED.** `MJF` (The Shale Drop, act 3) and `CDG` both carry `num:77`. See §6.1. |
+| "`SL` patch must not overwrite an existing `E`" | ✅ Moot — compass connections were removed from `NODE_MAP` entirely. |
+| "`alley` pool widening for all alley nodes" | ✅ Occurred as predicted and accepted. |
+| "`fluffy_cat` double entry is intentional" | ✅ Still double-listed. |
+| "`jimmy` key collision" | ✅ No collision; `jimmy` is unique and is the canonical profile key (`wbapi-core.js:1040` records the `jimmy_two-tails` → `jimmy` alias resolution). |
 
 ---
 
-## 7. New State Flags
+## 6. Defects found by this verification
 
-Added to `_S_DEFAULTS()`:
+Each is filed as a BACKLOG row; none is fixed here (this pass is documentation-only).
 
-```js
-catKingDefeated: false,
-```
-
-Quest keys (`quest_cat_01` through `quest_cat_06`, `quest_cat_void`) handled by existing QUEST_DB machinery — no explicit default flags needed.
-
----
-
-## 8. HUNTING_GROUNDS Entry
-
-```js
-cat_quarter: { displayName:"The Cat Quarter" }
-```
-
----
-
-## 9. Insertion Order for `roll2hit-v3.html`
-
-| Step | Target | Location hint |
-|---|---|---|
-| 1 | MONSTER_POOL: 10 new entries | After `rug_spider` block, new `// ── Ally Cat Arc ──` block |
-| 2 | MONSTER_DROPS: 10 new entries | After `rug_spider` drop |
-| 3a | WORLD_DB `alley` terrain: append 7 monsters | Existing `alley:` entry |
-| 3b | WORLD_DB `cat_quarter` terrain: new entry | After `defi_land` entry |
-| 4 | NODE_MAP: CQ entry (num:77) | End of node list; also patch SL to add `E:'CQ'` |
-| 5 | NODE_COORDS: `CQ:{r:4, c:17}` | Coords object |
-| 6 | QUEST_DB: 7 quest entries | After existing side quests |
-| 7 | NPC_DIALOGUE: CQ auto-text | CQ entry |
-| 8 | NPC_DIALOGUES: `jimmy`, `sandy_cat`, `don_fluffissimo` | After existing NPC profiles |
-| 9 | HUNTING_GROUNDS: `cat_quarter` | HUNTING_GROUNDS object |
-| 10 | `_S_DEFAULTS()`: `catKingDefeated:false` | State factory |
-| 11 | storyRender: Q-CAT-01 auto-dialogue at CQ | Node render block for `'CQ'` |
-| 12 | storyRender: Quest progression beats (Q-CAT-02 through Q-CAT-06) | Node render blocks |
+1. **`num:77` is held by two nodes** — `MJF` and `CDG`. `node.num` is display-only (three read
+   sites: the HUD node number, the trail list, the travel destination line), so the collision is
+   cosmetic today, but it is a duplicate identity in a field that reads like a primary key.
+   Already noted in `maps.md`; now a row. → **§AUDIT-03r**
+2. **Dead node codes in player-facing engine strings** — 7 occurrences the doc-side
+   `check:legacycodes` gate cannot see, because it scans `*.md` only, and that
+   `check:noderegs` phase 6 cannot see, because it scans comparison literals only. Five are this
+   arc's (`sandy_cat` dialogue, `quest_cat_void` `desc`/`disposition`/`failText`, the `CQ_BOSS`
+   victory `storyMsg`) and all say *"the DF node"* for what is now `ZRH`; two more are elsewhere
+   (a `CY` quest `desc`, a `DF` tunnel `storyMsg`). → **§AUDIT-03s**
+3. **`index.md` mis-describes `S_story.catKills`** as "nodeCode → kill count". It is keyed by
+   **monster key** (`catKills.stray_alley_cat`), which is what all four `countMin` gates read.
+   Corrected in this increment.
+4. **`world.md` §Layer 46 carries stale pointers** — "HTML line 8026" (actual `8798`) and
+   "QUEST_DB lines ~11799–11885" (actual `13689`–`13785`), both bare numbers of the kind §DX-01e
+   retired, plus the 26×16 coordinate `R04,C17`. Corrected in this increment.
 
 ---
 
-## 10. Documentation Updates on Completion
+## 7. Anchors
 
-| File | Update |
-|---|---|
-| `monsters.md` | Add Ally Cat Arc section (10 entries); update header count; update Source Groups row |
-| `story.md` | Add CQ node entry; add 7 quests; add Jimmy/Sandy/Don NPC profiles |
-| `maps.md` | Add CQ to node grid (r:4, c:17); wire SL↔CQ connection |
-| `world.md` | Add `cat_quarter` terrain entry; note Corrupted Cat/DF node overlap |
-| `index.md` | Add CQ to node cross-reference; note cat community arc |
-| `plan.md` | Update §IX from PLANNED to ✅ Implemented |
+`` `CDG:{ num:77@8798` `` · `` `CDG:{r:21,c:182}@9619` `` ·
+`` `stray_alley_cat:  { key:'stray_alley_cat'@5395` `` ·
+`` `stray_alley_cat:      { name:'Flea-Dusted Pelt'@5837` `` ·
+`` `cat_quarter:      { label:'The Cat Quarter'@6286` `` ·
+`` `alley:            { label:'Dark Alley'@6287` `` ·
+`` `quest_cat_01: { id:'quest_cat_01'@13689` `` ·
+`` `catKills: {}, monsterKills: {}@23120` `` ·
+`` `CDG: { name:'Jimmy Two-Tails'@22696` `` ·
+`` `occupation:"Cat Quarter fixer"@10403` `` · `` `const _cqNpcs = ['jimmy']@35123` `` ·
+`` `cdg-boss-taz@34378` `` · `` `cdg-kenickie-market@34191` `` ·
+`` `if (pb && pb.nodeCode === 'CQ_KING')@25372` `` ·
+`` `// §TIMELESS-01: HUNTING_GROUNDS removed@10392` ``
 
----
-
-## 11. Risk Notes
-
-- **Node num:77** — verify no existing node uses 77. Current highest observed is Layer 69's nodes in the 70s range; confirm with grep before insertion.
-- **SL patch** — SL node already has E/W/N/S connections; adding `E:'CQ'` must not overwrite an existing `E` value. Check SL node definition before patching.
-- **`alley` terrain** — adding 7 new cats to the existing `alley` terrain widens random encounter pool for all alley nodes (not just CQ). Acceptable per spec (alley encounters are intended to include cat types), but note the pool expansion.
-- **`fluffy_cat` double entry** in `cat_quarter` monsters array is intentional (higher spawn weight).
-- **NPC_DIALOGUES `jimmy` key** — confirm no collision with existing NPC keys named `jimmy` or `Jimmy`.
+**See also:** `story.md` §NODE 77 · `world.md` §Layer 46 · `monsters.md` (Ally Cat Arc) ·
+`lab-reports/lab-report-kenickie-chronicle.md` (the market's own arc) ·
+`lab-reports/lab-report-vm01g4-per-verb.md` §4 (the D3 concurrent-menu classification that moved
+the three boss buttons).
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

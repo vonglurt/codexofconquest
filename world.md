@@ -103,12 +103,12 @@ Dead-end west of `ZRH` (historical `DF`).
 
 ---
 
-### **[✅ Layer 46 — Implemented]** The Cat Quarter (Node CDG, R04,C17)
+### **[✅ Layer 46 — Implemented]** The Cat Quarter (Node CDG, cell 21,182)
 
-CDG in WORLD_DB (HTML line 8026). Quest chain `quest_cat_01`–`quest_cat_void` in QUEST_DB (HTML lines ~11799–11885). Full design in `plan-archive.md` Section IX.
+CDG in NODE_MAP: `` `CDG:{ num:77@8798` ``. Quest chain `quest_cat_01`–`quest_cat_void` in QUEST_DB from `` `quest_cat_01: { id:'quest_cat_01'@13689` ``. Full design + the 2026-08-11 spec→shipped verification in `lab-reports/lab-report-ally-cat.md`; original §IX spec in `plan-archive.md`.
 
-**CDG — The Cat Quarter (Node 77, R04,C17)**
-Dead-end east of `BMA` (historical `SL`). `cat_quarter` terrain.
+**CDG — The Cat Quarter (Node 77, cell `r:21,c:182`)**
+`cat_quarter` terrain. *(Coordinates corrected 2026-08-11 — the historical `R04,C17` is the retired 26×16 grid; the live geo grid is 90×360.)* Authored as a dead-end east of `BMA` (historical `SL`), but `NODE_MAP` no longer carries compass connections at all — §WALK/§NAV-01 replaced them with the `ROAD_RUNS` net and the `mover.js` kernel.
 
 A sub-district invisible to city records. Entry sign (hand-lettered on a cardboard box): **"RAT PROBLEM. NOT RATS. CATS. WORSE."** The Ally Cat community runs this block through a strict hierarchy — strays at the bottom, Honchos at the top, and the Cat-King rotating through every Taz Devil merge event. Nobody human runs anything here. The cats have opinions about this.
 
