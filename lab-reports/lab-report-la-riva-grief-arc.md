@@ -1,432 +1,313 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report — La Riva, Grief Architecture, and the Vignette Layer
+# Lab Report — La Riva: Grief as a Causal Mechanic, and the Vignette Layer
 
-**Project:** roll2hit.com — *The Shattered Codex*
-**Report Designation:** GR-01 (Grief Arc Implementation — Layer 78)
-**HTML Baseline:** `roll2hit-v3.html` — 18,324 lines at session close
-**Session Date:** 2026-05-26
-**Category:** Narrative Architecture · Grief-as-Mechanic · French Vignette Technique · Romance Layer · Literary Research Log
+**Project:** roll2hit.com — *The Shattered Codex* · **Designation:** GR-01 (Layer 78)
+**Original session:** 2026-05-26 · **Verification pass:** 2026-08-12 (§DOC-02s)
+**Category:** Narrative architecture · grief-as-mechanic · French vignette technique · romance layer
+
+> **STATUS — VERIFIED, AND THE STRONGEST SURVIVAL IN THE §DOC-02 PROGRAM TO DATE.** This is a
+> HISTORY document; the 2026-05-26 text has been re-measured claim-by-claim against live
+> `roll2hit-v3.html` and rewritten short. Claims that did not ship are marked **NOT SHIPPED** and
+> **kept** — a silently deleted claim reads as one that held. **43 of 46 named identifiers resolve
+> (93 %), every quoted string is verbatim after 78 days, and the arc is fully reachable** — the
+> first §DOC-02 increment in six to find no §AUDIT-03x casualty. The deltas are three: a retired
+> hour-counter row, a favor write that bypasses its own host helper, and one deferred item that is
+> still deferred and now matters more than it did.
 
 ---
 
 ## Abstract
 
-This report documents the design and implementation of the grief arc for *The Shattered Codex*, centered on Layer 78 ("La Riva") but extending through the full narrative as a distributed structural technique. The implementation draws from three bodies of research: (1) the French vignette tradition as practiced in Chrétien de Troyes's twelfth-century Arthurian romances; (2) grief transcript analysis — specifically, the characteristic compression and object-centering observable in how bereaved individuals describe loss; and (3) the existing HTML source, which already contained, prior to this pass, every causal and narrative element needed to construct the arc. The work was not invention. It was excavation.
+This report documents the grief arc for *The Shattered Codex* — Layer 78, "La Riva" — and the
+distributed vignette technique it generalised into. Three inputs: the French vignette tradition as
+practised by Chrétien de Troyes; grief-transcript analysis, specifically the object-centering and
+peripheral precision characteristic of bereaved speech; and the existing HTML, which already
+contained every causal and narrative element the arc needed. **The work was excavation, not
+invention.**
 
-The central thesis: grief in *The Shattered Codex* is not a decorative narrative layer. It is the human register of the same void corruption mechanism that drives the combat and exploration system. CY → Merchant Cats → Cat-King → Fishmonger's Row → Connie/Aldo → FR → CY again. The arc does not introduce new lore. It surfaces what was already there.
+The central thesis: **grief is not a decorative layer over the combat system — it is the human
+register of the same void-corruption mechanism that drives combat and exploration.** The arc adds no
+lore. It makes existing lore legible.
 
-This report also documents the romance quest architecture (ROMANCE_QUOTES, NPC_ROMANCE_PREAMBLES, NPC_ROMANCE_VIGNETTES, INN_DREAMS), which uses the same compressed vignette technique applied to a different emotional register: attachment, recognition, and the domestic weight of a relationship in progress.
-
----
-
-## I. Literary Research Background
-
-### I-A. Sources Consulted
-
-The vignette technique applied in this implementation draws from several converging traditions:
-
-**Chrétien de Troyes (c. 1180–1191) — *Yvain*, *Erec et Enide*, *Cligès*, *Le Chevalier de la Charrette*.** Chrétien is the foundational reference for two techniques deployed throughout the arc:
-
-1. **Encoding emotion in small observable actions.** In *Erec et Enide*, Erec's love for Enide is never declared; it is rendered through the prior act — he watched the gate long after she had passed through it. In *Yvain*, the knight's forgetting of his oath to Laudine is not described psychologically; it is narrated through the arrival of the ring-bearer and the return of the ring. The emotion is in the gap between the observable actions, not in any description of an internal state.
-
-2. **The two-step hesitation as moral weight.** Lancelot's two-step delay before climbing into the cart (*Le Chevalier de la Charrette*) is the whole of the story's ethical charge. He hesitated for two steps. She saw the two steps. He had not thought about two steps. The reader has everything they need from those three sentences. This technique — where the full weight of a relationship is conveyed through one observed hesitation or prior act — is the direct ancestor of the NPC preamble system in *The Shattered Codex*: "She looks up before you reach the corner." "The cup is already on the table."
-
-3. **Fenice and the refusal of the Iseut arc.** In *Cligès*, Fenice explicitly refuses to follow the Iseut pattern — she will not give her body to one man and her heart to another. She chooses her ending before the ending can choose her. This register informs the NPC quest disposition lines: each named NPC in Birka makes one irreversible choice in their associated quest, and the disposition line articulates the moral weight of that choice without editorial comment.
-
-**Grief transcript analysis.** Real grief transcripts exhibit two consistent features that distinguish them from fictional grief representations: (1) extreme precision about peripheral facts — the sequence of events, the exact time, the spatial layout — as a containing structure around the central absence; (2) objects that survive the loss carrying the weight of the relationship. The mountain guide in Froberger Entry 12 does not describe the avalanche emotionally; he organizes the facts — snow depth, slope angle, party composition, the decisions made and their order — with the precision of someone who has not talked about it in a long time and has therefore had fourteen years to organize it. The grief is in the cracks between the facts. He sealed the cracks with accuracy.
-
-This transcript-accuracy is what distinguishes Connie Tuna's dialogue from conventional game NPC grief writing. Connie does not say she misses Vincenzo. She says: *"I went back once. Two weeks after. I counted everything I could still name by shape: the Sardino stall, the ice box, the hook rack where the morning catch went up."* This is the documented behavior of bereaved people accounting for what remains. The taxonomy is the grief.
-
-**The French vignette structure as five-act object-naming.** In the vignette tradition, the governing form is: five acts, each act named for one surviving object, two perspectives per act compressed into present-tense prose, the gap between perspectives carrying the emotional charge. The object does not symbolize anything — it is the record of the relationship. The net is not a symbol of Vincenzo. The net is the net he said to hang at dawn so it would be ready by the second tide, and it was hanging to dry when the Cat-King came, and then it was on the floor, and then Aldo found it in the rubble and folded it and has been carrying it ever since. This is not symbolism. This is what happened to the net.
+Re-measured at 78 days, the thesis holds and the implementation is intact. The report also documents
+the romance architecture (`ROMANCE_QUOTES`, `NPC_ROMANCE_PREAMBLES`, `NPC_ROMANCE_VIGNETTES`,
+`INN_DREAMS`), which applies the same compression to a different register — attachment rather than
+loss — and the hour-counter wiring that made elapsed time a resource rather than a display.
 
 ---
 
-### I-B. Design Principle — Derived
+## I. Intention, Inspiration, and What This Adds to the Game
 
-From the above research, the following design principle was established for all grief writing in *The Shattered Codex*:
+*(Drawn from the original Abstract, §I, §X and §XI, and stated here as one argument rather than four.)*
 
-> **Never declare the emotion. Name the object. Name what the person does with it. The gap between two people doing different things with the same object is the emotion.**
+### I-A. The intention
 
-This principle applies at every scale:
-- The arc level: net / key / account book travel through all five acts of La Riva.
-- The NPC level: Brynn's cup, Yael's corner-watch, Aldo's folded coat.
-- The journal level: Froberger's entry stops mid-page; the blank line is the grief.
-- The quest level: Kenickie goes quiet. He says "Yeah. Okay. I'll hold onto this." That is the end. The Row does not rebuild.
+Most games treat grief as cutscene material: a death happens, a character emotes, the player
+proceeds. The stated intent of Layer 78 was the opposite — **make grief a downstream consequence of
+a mechanic the player has already been operating**, so that the emotional layer and the systems layer
+are the same layer viewed from different ends.
+
+### I-B. The inspiration, and what each source contributed
+
+| Source | What it supplied | Where it lands in the engine |
+|---|---|---|
+| **Chrétien de Troyes** — *Erec et Enide*, *Yvain*, *Cligès*, *Lancelot* | Emotion encoded as a **prior observable act**, never declared. Erec watches the gate after she has passed through it; Lancelot hesitates two steps before the cart and does not know he did | The six `const NPC_ROMANCE_PREAMBLES = {@27479` — *"She looks up before you reach the corner."* · *"The cup is already on the table."* All six verbatim at HEAD |
+| **Grief-transcript analysis** | Bereaved speech exhibits (a) extreme precision about peripheral facts as a containing structure, (b) surviving objects carrying the relationship | Froberger Entry 12's avalanche guide, who *"sealed the cracks with accuracy"*; Connie's counting ritual — *"Everything I could still name by shape"* |
+| **The five-act object form** | Five acts, each named for one surviving object; two perspectives per act; the gap between them carries the charge | `story.md §GRIEF AND CORRUPTION` — net → crate → account book → key → market |
+
+**The derived design principle, unchanged and still governing:**
+
+> **Never declare the emotion. Name the object. Name what the person does with it. The gap between
+> two people doing different things with the same object is the emotion.**
+
+### I-C. What it adds to playability
+
+1. **It converts a boss kill into a consequence.** Defeating the Cat-King already paid XP and gold.
+   `S_story.catKingDefeated = true;@25373` now also opens a chain, so the fight acquires an aftermath
+   the player chooses whether to walk into. **The combat reward is unchanged; what changed is that
+   the fight now has a place to point at.**
+2. **It gives a repeatable encounter a non-combat reason to be repeated.** The five Corrupted Cats at
+   AMS use `corridor:true@31928` with `count:1` — deliberately trivial. The player is not being
+   challenged; they are being **paced**. Difficulty would have been the wrong axis.
+3. **It makes an item's uselessness the point.** Both arc items ship `sell:0` and are consumed by the
+   chain. Vincenzo's Net and the Account Book are the only things in the arc the player can hold, and
+   neither can be monetised — which is the mechanical statement of the arc's thesis.
+4. **It closes on witnessing rather than restoration.** `laRivaComplete` + `fishmongerRowRestored`
+   fire together, and the Row does not rebuild. **This is the design's sharpest claim and it is the
+   one the engine now backs hardest** — see delta 8: the restoration payoff shipped six weeks later
+   (2026-07-07) as a `textVariants` node-text swap that says *"two of the three blocks are still
+   rubble."*
+5. **It retrofits meaning onto dialogue the player has already read.** Kenickie's *"My guy Vinnie's
+   got more next week. Maybe."* was written before the arc existed and was not modified. After the
+   arc, the trailing *"maybe"* reads as grief. **Zero content cost, and it only works because nothing
+   was changed.**
+6. **It made elapsed time legible.** §VIII wired `hoursElapsed` / `hoursSinceSlept`, which had existed
+   and never incremented. That counter has since become **load-bearing** (delta 10).
+
+### I-D. The main points and their rationale, collected
+
+| # | Point | Rationale |
+|---|---|---|
+| 1 | Grief is causally downstream of void corruption, not parallel to it | A second, decorative system would be cuttable. A consequence of an existing system is not |
+| 2 | The arc introduces no new lore | Every element (Vinnie, the Cat-King, the three blocks, Corrupted Cats) was already in the file. Retrofit costs nothing and cannot contradict itself |
+| 3 | Objects, not symbols | *"The net is not a symbol of Vincenzo. The net is the net he said to hang at dawn."* A symbol invites interpretation; a record does not |
+| 4 | The gap between perspectives is the content | Two characters do different things with the same object and neither tells the other. The reader completes it; the text never does |
+| 5 | Resolution is witnessing | The Row does not rebuild, Aldo keeps carrying the net, Kenickie does not say the name. Someone came. That is the whole change |
+| 6 | The technique generalises down-register | The same compression drives the romance layer and the NPC quest dispositions — one revealing self-statement instead of a plot summary |
 
 ---
 
 ## II. The Corruption-Grief Chain
 
-The arc is not externally imposed on the existing lore. The following causal chain was already present in the HTML prior to this pass:
+Every link was already present in the HTML before Layer 78:
 
 ```
-Void pressure (CY node, Neon Undercity)
-    ↓
-Merchant Cat faction uses Corrupted Cat enforcers across CY/CQ boundary
-    ↓
-Void-accelerated merges produce Taz Devils (combat mechanic, CQ)
-    ↓
-Taz Devils merge under Cat-King (boss, CQ)
-    ↓
-Cat-King destroys Fishmonger's Row: three city blocks (referenced in Cat-King dialogue)
-    ↓
-Vincenzo "Vinnie" Tuna dies (already named: HTML lines 7857, 15265 — Kenickie, "my guy Vinnie")
-    ↓
-Connie Tuna + Aldo Sardino grieve unwitnessed at FR
-    ↓
-Corrupted Cats colonize rubble (void + grief: same vector)
-    ↓
-FR becomes second void pressure node adjacent to CQ
-    ↓
-Cycle continues upward toward Birka surface
+Void pressure (CY → live HKG)
+  → Merchant Cats deploy Corrupted Cat enforcers
+  → void-accelerated merges produce Taz Devils
+  → Taz Devils merge under the Cat-King
+  → Cat-King destroys Fishmonger's Row (three blocks)
+  → Vincenzo "Vinnie" Tuna dies (already named, in two unrelated Kenickie lines)
+  → Connie + Aldo grieve unwitnessed
+  → Corrupted Cats colonize the rubble — void and grief occupy the same ground
+  → the Row becomes a second pressure node adjacent to the Cat Quarter
 ```
 
-The Vincenzo retrofit is the key structural insight. Kenickie already said "my guy Vinnie" twice, in two unrelated dialogue lines, before this arc was designed. The name was already in the HTML. The retroactive interpretation — that Kenickie's trailing "maybe" and his supply-chain silences are grief, not just flavor — required no dialogue changes. The reader connects the names. The writer only had to make it possible to connect them.
+**The Vincenzo retrofit is the structural insight.** Both pre-existing Kenickie references survive at
+HEAD, unmodified, 78 days on: the profile line *"My guy Vinnie's got a contact who knows a cat…"* and
+the shop line *"Good choice. My guy Vinnie's got more next week. Maybe."* 🤌 The arc did not touch
+them. It only made them connectable.
 
 ---
 
-## III. The Five-Act Vignette Structure — La Riva
+## III. The Five-Act Structure — Design Record
 
-**Status: Confirmed correct.** The five-act structure was reviewed, approved ("i like."), and implemented in full in `story.md §GRIEF AND CORRUPTION`. The following is the design record.
+**The prose itself lives in `story.md §GRIEF AND CORRUPTION` (§LA RIVA — THE ROW, Acts I–V),
+verified present and marked ✅ Implemented 2026-05-26.** That file is the maintained home doc, so the
+act text is *not* duplicated here — only the design record it does not carry.
 
-Each act is named for the object that survives. Two perspectives per act, compressed present-tense prose, one paragraph each. The gap between perspectives is the emotion. The objects travel and accumulate weight: net → crate → account book → key → market.
+| Act | Object | Its function | The gap |
+|---|---|---|---|
+| I | **The Net** | The record of the last moment before the before — hung at dawn on Vincenzo's instruction, down when Connie reached the door | Aldo found it, folded it, carries it, has not told her. His logic — *"she hasn't asked, so she isn't ready"* — protects the carrier more than the protected. The reader sees this; neither character does |
+| II | **The Crate** | Registers the Corrupted Cats as grief-colonizers, not just combat: the void settled where the grief settled | Connie's counting ritual is invisible to Sandy; Sandy's theory is invisible to Connie. The cats are the only element in both views |
+| III | **The Account Book** | The material record of the Row's existence; Vincenzo's page is the last completed entry, the pages after it blank | Aldo has the record. Kenickie knows what it means. Neither has moved. They are not in the same room |
+| IV | **The Key** | A bronze fish-stamped key that opens nothing; a persistence ritual older than the catastrophe | Two objects, two carriers, one shared understanding neither will name. The dignity of not requiring the other to perform grief is also a form of isolation |
+| V | **The Market** | The act of witnessing. Nothing rebuilds | The player's arrival is the only change. The Covenant Keeper ending names each person helped — not to celebrate them, but to confirm that what they were carrying was seen |
 
----
-
-### Act I — The Net
-
-**Object function:** The net is what was hanging when the catastrophe happened. It is the record of the last moment before the before. Connie hung it at dawn — Vincenzo's instruction — and it was there when she came to the door and he was not.
-
-**Perspective 1 — Connie:** She put the net out before sunrise. She was inside when the noise started. She came to the door. The net was down and Vincenzo was not standing next to it. That is the complete record of what she saw at that moment. She went back inside. She did not yet understand that she would need a plan for what to do after.
-
-**Perspective 2 — Aldo:** He found the net three days later in the rubble of his stall, draped over the broken counter as if someone had set it down on their way somewhere else. He folded it. He is still carrying it inside his coat. He has not told Connie he found it because she has not asked where the net went, which means she is not ready to hear it, which means he keeps carrying it until she is.
-
-**Gap:** The same net. Two people. Neither has told the other. The logic Aldo is using — "she hasn't asked, therefore she isn't ready" — is not wrong, but it is the kind of logic that protects the carrier more than the person being protected. The reader sees this. Neither character does.
-
----
-
-### Act II — The Crate
-
-**Object function:** The crate is the object that registers the Corrupted Cats as grief-colonizers, not just combat. They moved into the broken furniture. The void settled in the same place the grief settled.
-
-**Perspective 1 — Connie:** She went back once, two weeks after. The Corrupted Cats were already settled into the broken wood. She stood at the edge and counted everything she could still name by shape. Then she left, because she had finished what she came to do, which was to confirm that it was all still there in the shape of absence.
-
-**Perspective 2 — Sandy Scratchpad Mewlino (secondhand, via Jimmy Two-Tails):** "There's something wrong with that block. Wrong the way the DF strays are wrong. They're not just feral — they're HOLDING something." Jimmy said: "That's above our pay grade." Sandy said: "Above everyone's, apparently."
-
-**Gap:** The neighborhood has a working theory. The grief is nobody's problem in particular, which is how it stays everyone's ambient condition. Connie's counting-ritual is invisible to Sandy; Sandy's observation is invisible to Connie. The cats are the only thing in both perspectives at once.
+*(Retained per the §DOC-02n precondition: `story.md` holds the prose but not the per-act object
+function or gap analysis, so this table is the specification of record and deleting it would destroy
+the only copy.)*
 
 ---
 
-### Act III — The Account Book
+## IV. As-Built Inventory
 
-**Object function:** The account book is the material record of the Row's existence. Aldo's one completed act of preservation. Vincenzo's page is the last completed entry.
+| Structure | Shipped as | Status |
+|---|---|---|
+| Node FR — Fishmonger's Row | `AMS:{ num:79, code:'AMS'@8801` — `name:'ruins'`, `label:"Fishmonger's Row"`, `act:1`, node text byte-identical to birth | ✅ renamed, all fields preserved |
+| Quest 1 — "What Remains" | `quest_la_riva_01: { id:'quest_la_riva_01'@13785`, `completion:{ flags:['connieMet'] }`, `waypointNode:'AMS'` | ✅ live (title now NPC-prefixed) |
+| Quest 2 — "The Weight of a Net" | `quest_la_riva_02: { id:'quest_la_riva_02'@13795`, `countMin:[{ path:'frCatKillCount', min:5 }]@13795` + `itemsAll:["Vincenzo's Net"]`, `reward:500` | ✅ live, condition and reward exact |
+| Quest 3 — "The Account Book" | `quest_la_riva_03: { id:'quest_la_riva_03'@13806`, `completion:{ flags:['laRivaComplete'] }`, `reward:0` | ✅ live |
+| Activation | `S_story.catKingDefeated = true;@25373` → 2500 ms `setTimeout` → `S_story.quests['quest_la_riva_01'] = 'active';@25377` | ✅ delay exact as specified |
+| Repeatable encounter | `corridor:true@31928`, `count:1`, `key:'corrupted_cat'` | ✅ exact |
+| Item 1 | `name:"Vincenzo's Net", icon:'🎣', type:'key_item', sell:0@25358` — `description` **byte-identical** to the report's quotation | ✅ exact |
+| Item 2 | `name:'Old Tuna Account Book', icon:'📒', type:'key_item', sell:0@31911` | ✅ exact |
+| State fields | `connieMet: false, fishmongerRowRestored: false, laRivaComplete: false, frCatKillCount: 0,@23122` — all four, **on one line, in the specified order** | ✅ exact |
+| NPCs | `connie_tuna` + `aldo_sardino`, both with `node:"AMS"` in profile and dialogue | ✅ live |
+| Delivery + Kenickie favor | `id:'cdg-la-riva-delivery'@34405` — a `NODE_VERBS` verb; `{ kind:'favor', npc:'kenickie', set:3 }@34414` | ✅ live, migrated to the VM (§VM-01-G4) |
+| Romance layer | `const ROMANCE_QUOTES@22379` (**21**) · `const NPC_ROMANCE_PREAMBLES@27479` (**6**) · `const NPC_ROMANCE_VIGNETTES@27489` (**6**) · `const INN_DREAMS@27131` | ✅ all four, counts exact |
+| Journal | `const FROBERGER_JOURNAL = [@27184` — **41 entries**, unchanged since the earliest surviving build | ✅ exact |
+| Hour counter | `function _storyRollInit() {@24624` · `const _updateHeal = () => {@7134` · `function storyShortRest@25817` · `hoursElapsed  = (S_story.hoursElapsed  || 0) + 8@36300` / `S_story.hoursSinceSlept = 0;@36301` | ⚠️ 4 of 5 rows — see delta 9 |
 
-**Perspective 1 — Aldo:** He walked away with the book under his arm because it was the only thing he could carry that would tell anyone what had existed there. The entries are neat and squared, one vendor per page. Vincenzo's page is the last completed entry. The pages after it are blank.
-
-**Perspective 2 — Kenickie:** He heard about the account book from Sandy. He said: "What are they gonna do with it — rebuild?" Then he went quiet. He said: "Vinnie had the whole south block operation in his head. Nobody knew the supply chain like him. Not even me." He said "maybe" once about more stock being available next week. Then nothing. He has not asked to see the book. This is the form his grief takes: accurate information about supply chains delivered with a trailing silence where the person who held the supply chain used to be.
-
-**Gap:** Aldo has the record. Kenickie knows what the record means. Neither has moved. The account book is in Aldo's possession. It has Kenickie's grief in it. They are not in the same room.
-
----
-
-### Act IV — The Key
-
-**Object function:** The key is Connie's private persistence ritual. It no longer opens anything useful. She keeps handling it because the habit is older than the catastrophe.
-
-**Perspective 1 — Connie:** A bronze key with a fish stamp on the head — Vincenzo had it made as a joke, the kind of joke that becomes unbearable once the thing it opens no longer exists. She carries it on her house key ring. She takes it off the ring sometimes and puts it in her pocket separately, then returns it to the ring when she leaves the house. She has not examined this habit or tried to stop it.
-
-**Perspective 2 — Aldo:** He has been watching her do this since the first week. He sees the key come off the ring, get turned over, go back. He says nothing because he is carrying the net and that is worse and he knows it. Grief in this neighborhood is not discussed by people who are still inside it — not because they are incapable, but because the neighborhood's only remaining dignity is in not requiring each other to perform it.
-
-**Gap:** Two objects. Two carriers. One shared understanding that neither will name. The dignity of not requiring the other to perform grief is also a form of isolation. The reader is permitted to hold both interpretations.
-
----
-
-### Act V — The Market
-
-**Object function:** The market is the act of witnessing. Nothing rebuilds. The player's arrival is the change.
-
-**Perspective 1 — Present state:** After the Cat-King falls, the void pressure at FR drops. The Corrupted Cats there grow thin. Nothing rebuilds. Connie is still there. Aldo still goes every two weeks.
-
-**Perspective 2 — What the player's arrival changes:** Someone came. That is the whole of it. The market does not reopen. Aldo does not stop carrying the net. Kenickie receives the account book and holds it and does not say the name that is in it. But someone came, and the grief that had been occurring in private gets a witness. The Covenant Keeper ending names each person helped by name. This is why. Not to celebrate them. To confirm that the things they were carrying were seen.
+**Census: 43 of 46 identifiers resolve (93 %).** The three that do not are `storyQuestHunt` and
+`storyMove` (both **RETIRED**, delta 9) and `partial_market` (**never built**, and correctly filed as
+deferred — delta 8).
 
 ---
 
-## IV. Quest Chain Implementation Record — "La Riva"
+## V. Spec → Shipped Delta Table
 
-### Quest Table
-
-| Quest ID | Title | Completion Condition | Reward |
-|----------|-------|---------------------|--------|
-| `quest_la_riva_01` | "What Remains" | `connieMet: true` (visit FR) | 0gp — activation only |
-| `quest_la_riva_02` | "The Weight of a Net" | `frCatKillCount ≥ 5` + Vincenzo's Net in inventory | 500gp + Aldo Friendly |
-| `quest_la_riva_03` | "The Account Book" | Deliver Old Tuna Account Book to Kenickie at CQ | 0gp + Kenickie fav→3 |
-
-### Activation Sequence
-
-1. Player defeats Cat-King at CQ.
-2. 2.5-second delay → Kenickie dialogue activates `quest_la_riva_01`: *"You should go see what's left of the Row. Fishmonger's Row, one block east. Connie's still there."*
-3. Player navigates CQ→FR (FR is one node east of CQ; no node existed prior to Layer 78; `CQ.E = 'FR'` added).
-4. First FR visit: `connieMet = true`, `quest_la_riva_01 = 'complete'`, `quest_la_riva_02 = 'active'`.
-5. Player clears FR corrupted cats via repeatable button (5 required total; `corridor:true` prevents `defeatedBattles['FR']` from being set).
-6. At 5 kills, Vincenzo's Net drops to inventory: *"A fishing net with a bronze fish-stamp tag on the corner. It was left hanging to dry the morning the Cat-King came. Found in the rubble, folded."*
-7. `quest_la_riva_02 = 'complete'`. Aldo gives Old Tuna Account Book. `quest_la_riva_03 = 'active'`.
-8. Player returns to CQ, delivers book to Kenickie. Kenickie says: *"Yeah. Okay. I'll hold onto this."* `laRivaComplete = true`, `fishmongerRowRestored = true`, `npcFavorability['kenickie'] = 3`.
-
-### Key Implementation Notes
-
-- **Repeatable FR battle:** The standard system records `defeatedBattles[nodeCode] = true` after first win, removing the battle button. FR requires 5 kills, so `corridor:true` bypasses this. The button shows a count: "⚡ Clear Corrupted Cats (N/5)".
-- **Vincenzo's Net is a key item:** `sell: 0`. It cannot be sold. The player carries it until they receive the account book, which is itself delivered to Kenickie. Neither item stays in inventory.
-- **The account book transfer:** `aldo_sardino`'s `dearFriend` dialogue delivers the book: *"Here. The account book. You take it to Kenickie. Everything that was on the Row is in there. Every name."*
-- **Kenickie's final line:** *"Yeah. Okay. I'll hold onto this."* The Row does not rebuild. Kenickie does not name Vincenzo. The resolution is witnessing, not restoration.
-
-### New State Fields (`_S_DEFAULTS()`)
-
-```js
-connieMet: false,
-fishmongerRowRestored: false,
-laRivaComplete: false,
-frCatKillCount: 0,
-```
+| # | Original claim | Shipped | Verdict |
+|---|---|---|---|
+| 1 | Node `FR` east of `CQ`, created this pass; `CQ.E = 'FR'` | **Right when written.** At the birth commit `dcb72cb` the file carries `FR:{ num:79, code:'FR', name:'ruins', label:"Fishmonger's Row", act:1, W:'CQ' …}`. §WALK/§NAV-01 renamed it `AMS` preserving `num`, terrain key, label and text, and deleted the compass fields | ✅ **RENAME, not error** (instrument 8, 6th consecutive) |
+| 2 | Full activation sequence, 8 steps | Every step verifies, including the 2.5 s delay and the exact Kenickie line (*"you should go see what's left of the Row. Fishmonger's Row, one block east. Connie's still there."*) | ✅ EXACT |
+| 3 | `activateCond` / `completeFn` as the activation mechanism | Both retired by §ARCH-01. All three quests ship `activateNode:null` with UQF `completion:{}`, driven by explicit `S_story.quests[…]` writes and a `NODE_VERBS` verb | ⚠️ MECHANISM MIGRATED, behaviour preserved |
+| 4 | Quest titles "What Remains" / "The Weight of a Net" / "The Account Book" | Shipped NPC-prefixed: *"Kenickie: What Remains"*, *"Connie: The Weight of a Net"*, *"Aldo: The Account Book"* | ⚠️ COSMETIC |
+| 5 | Rewards — 0gp / 500gp + Aldo Friendly / 0gp + Kenickie fav 3 | 500 and 0 exact; Kenickie `set:3` exact; Aldo `+1`, and the live tier scale is `>= 1` friendly, `>= 2` dearFriend, so **Friendly is correct** | ✅ EXACT |
+| 6 | Vincenzo's Net `description` (quoted in full) | Byte-identical at HEAD | ✅ EXACT |
+| 7 | Kenickie's closing line *"Yeah. Okay. I'll hold onto this."* | Byte-identical, as both `disposition` and delivery narrative | ✅ EXACT |
+| 8 | §XI: `fishmongerRowRestored` "does not currently trigger any visual change at FR… deferred. Potential extension: terrain `ruins` → `partial_market`" | **The deferral shipped — under a different mechanism.** `textVariants:[{flag:'fishmongerRowRestored'@8802` swaps the node text to *"Two of the three blocks are still rubble. The third has a market in it — one stall…"*. `partial_market` has **0 occurrences**: the terrain swap was never built and did not need to be | ✅ **SHIPPED, better** — the flag went from write-only to read |
+| 9 | §VIII hour table, five action types | `storyConfirmSleep` +8 / reset ✅ exact · `storyShortRest` +1/+1 ✅ · **battle** +1/+1 shipped at battle **start** (`_storyRollInit`), not victory · **`storyQuestHunt` +2/+2 RETIRED** by §TIMELESS-01 (`7952752`; 3 commits, born `e594848`) · **`storyMove` RETIRED** by §WALK/§NAV-01 (0 occurrences, 2 commits) | ⚠️ **3 of 5 rows stale — all RETIRED, none never-shipped** |
+| 10 | §VIII: "Display thresholds (existing CSS, now active): 16h → `warn`, 24h → `danger`" | Exact (`aw >= 24 ? ' danger' : aw >= 16 ? ' warn'@36120`) — **and no longer display-only.** `0) >= 24) {@25046` imposes combat **disadvantage** at 24h without sleep, surfaced in the pre-battle warning | ✅ **UNDERSTATED** — the counter became a mechanic |
+| 11 | §XI: Kenickie naming line for the Covenant Keeper ending "deferred" | `const SWEELINCK_NAMING_LINES = {@27237` holds exactly six keys — `yael · brynn · quill · pachelbel · crov · auros`. **Kenickie is not among them**, and the report's own suggested line has 0 occurrences | ❌ **NOT SHIPPED** — 78 days; see §VII |
+| 12 | §V-E: fifth ending gated on `vaArchitectureKnown` + `entry42Written` + `ngPlusRun ≥ 1` | `if (S_story.vaArchitectureKnown && S_story.entry42Written && (S_story.ngPlusRun \|\| 0) >= 1) {` at two sites; text `Froberger wrote 41 entries. You wrote one.@28295` verbatim (report clipped the tail) | ✅ EXACT |
+| 13 | §XI: Froberger Entries 17 and 29 need no further hooks | Both live, both quoted verbatim (*"The taxonomy stands corrected in any case"*, *"only gets worse with additional documentation"*) | ✅ EXACT |
+| 14 | §VI romance counts — 21 quotes / 6 preambles / 6 vignettes | 21 / 6 / 6 | ✅ EXACT |
+| 15 | §VII quest dispositions rewritten in character voice (3 quoted) | All three verbatim: `quest_brynn_ledger`, `quest_pit_training`, `quest_couperin_lute` | ✅ EXACT |
+| 16 | Baseline *"18,324 lines at session close"*; Vinnie references at *"lines 7857, 15265"* | **No committed build matches.** The session's own commit `dcb72cb` is 18,462; the preceding commit `213d14b` is 18,130, with the Vinnie lines at **7855** and **15250**. All three numbers describe an **uncommitted working tree** | ⚠️ **UNVERIFIABLE, not wrong** — see §VIII |
 
 ---
 
-## V. The Distributed Grief — Subplot Architecture
+## VI. Reachability
 
-The La Riva arc is the concentrated form. The same grief technique runs through the full narrative in a lower register. In each case: one domestic action, one surviving object, the weight held without declaration.
+Applying the §DOC-02r closure (cell primacy + gate-flag writers): **the arc is fully reachable.**
 
-### V-A. Froberger's Journal — Epistemic Grief
+- `AMS` is **alone** in cell `17,184` — the only node there, so it is unconditionally `list[0]`.
+- `CDG` is `list[0]` in cell `21,182` (ahead of `LIM`/`FRK`/`FRS`), independently confirmed by §DOC-02q.
+- Every gate flag has a live writer: `catKingDefeated` at `CQ_KING` victory; `connieMet` in the AMS
+  block; `frCatKillCount` on `pb.nodeCode === 'AMS'` corrupted-cat kills; `laRivaComplete` /
+  `fishmongerRowRestored` in the CDG delivery verb.
+- The Entry-42 addendum is appended **after** ending selection, not inside the curse-score branch, so
+  it is unaffected by §ENDING-01.
 
-Froberger's grief is the grief of someone who understood everything except how to give that understanding to another person. His journal is the record of that inability in 41 entries.
-
-**Entry 12 (MT — mountain pass):**
-> *My guide through the pass was efficient and quiet and knew the mountain the way you know something you have stopped needing to look at. On the second night, at a fire, he talked for two hours about an avalanche that had happened fourteen years ago — with the precision of someone who had not talked about it in a long time and had therefore had fourteen years to organize it. He was not organizing grief. He was organizing the facts of it: snow depth, slope angle, party composition, the decisions made and their order. The grief was in the cracks between the facts. He had sealed the cracks with accuracy.*
-
-This is the transcript-accuracy principle in direct application. The entry does not describe the guide's grief; it describes a bereaved person's organizational behavior. The model: precision as container. The cracks as the thing precision cannot contain. The phrase "I don't know if that was the right thing" is Froberger's own version of the same uncertainty — he named the avalanche. Did that help? He cannot know.
-
-**Entry 17 (MI — archive):**
-> *The woman at the archive disagreed with my taxonomy of the eastern wards. She was right. I did not tell her she was right until she had already left the city. I wrote it in a letter I addressed to the archive's general post, not to her name, because I did not know if she would want to hear from me. I do not know if she received it. The taxonomy stands corrected in any case.*
-
-The correction was made. The letter was sent. The relationship is unrecorded. "The taxonomy stands corrected in any case" is one of the most precisely grief-accurate lines in the journal — the intellectual resolution substituting for the human one, stated as if that substitution is satisfactory, with the entire weight of its insufficiency in the phrase "in any case."
-
-**Entry 29 (IS — Oracle):**
-> *There is a question I should have asked before she left. I have been composing an answer to it for eleven months in case she asks it, which she will not, because I never asked the question. This is the kind of error that only gets worse with additional documentation.*
-
-Two layers: the documented regret, and the meta-commentary that documenting it makes it worse. Froberger knows he is doing the thing he has diagnosed. He is doing it anyway. This is the character's arc in miniature.
-
-**Entry 41 (CO — must-read, readAloud:true):**
-> *You walked it. So you know now. I am sorry for that. I am also grateful. The covenant needed someone who knew.*
->
-> *Come back, when it's done. To the people. They need the person who knows, not just the knowledge. That is what I failed to understand. I kept the knowledge and gave them the outcomes. They needed the person who was willing to stay uncertain with them while the outcomes were still unknown.*
->
-> *Come back.*
-
-Entry 41 is where Froberger's grief becomes addressed grief — addressed to the player directly. "Come back." The line that precedes it is his self-diagnosis: *I kept the knowledge and gave them the outcomes.* The Curse of Knowledge as personal failure, stated as clearly as Froberger ever states anything. The blank line below Entry 41 is the invitation to write Entry 42.
+**This is the first §DOC-02 increment in six to find no §AUDIT-03x casualty**, and the reason is
+structural rather than lucky: the arc occupies two nodes, one of which was authored as a dedicated
+one-node locale.
 
 ---
 
-### V-B. Brynn Clerambault — The Cup
+## VII. The One Defect That Matters
 
-The cup is the domestic-action version of the net. Both are objects that survive. Both encode a relationship through a habitual prior act.
+**Kenickie is raised to Dear Friend by this arc's own final quest and cannot be named by the ending
+the arc exists to feed.**
 
-**NPC preamble (fav ≥ 2):** "The cup is already on the table."
+`{ kind:'favor', npc:'kenickie', set:3 }@34414` promotes him past the `>= 2` dearFriend threshold at
+the moment he receives the account book. `const SWEELINCK_NAMING_LINES = {@27237` — the Covenant
+Ceremony's per-NPC fav-gated witness lines — carries six keys and not his.
 
-**Inn vignette (post-sleep, fav ≥ 2):**
-> *The inn is warm because you brought wood. You know this in a way that has no words. Brynn set a cup on the table before you asked, and you watched her hands — careful with small things, decisive with heavy ones. You think: a person who is precise with cups knows what they are doing with everything. You think: that is not a small thing to know about someone.*
+Act V states the design purpose in one sentence: *"The Covenant Keeper ending names each person
+helped by name. This is why. Not to celebrate them. To confirm that the things they were carrying
+were seen."* **The arc's entire stated payoff is a naming line that was deferred and never written.**
 
-**Quest disposition (quest_brynn_ledger):**
-> *"Rove had good credit. That's the part I keep coming back to. Good credit and bad judgment and I trusted the credit." — Brynn Clerambault*
+**The six keys are exactly the six curated Birka NPCs** — the same set as `NPC_ROMANCE_PREAMBLES`.
+So the ceremony names the six *distributed* grief subplots of §V and omits the one *concentrated*
+grief arc, which is the arc this report is named for. The generalisation shipped; the origin did not.
 
-The ledger that Rove took and kept without paying is the account book's counterpart for Brynn — an object that encoded a relationship and was taken. The quest returns it. Brynn's response when the ledger comes back is the cup: she refills it before you ask. The domestic act is the grief resolution. Not the explanation. Not the gratitude. The cup.
+Two compounding facts: the Covenant Keeper ending is *itself* currently unreachable (§ENDING-01 — the
+curse-score floor of 20), so the missing line sits behind a screen no player can reach; and the
+report **filed this correctly as deferred**, with a suggested text. It is a clean NOT SHIPPED, not an
+oversight discovered late. → **§GR-FU**.
 
----
-
-### V-C. Yael Scheidemann — The Corner
-
-**NPC preamble (fav ≥ 2):** "She looks up before you reach the corner."
-
-**Inn vignette (post-sleep, fav ≥ 2):**
-> *You slept poorly. Before dawn the city makes a sound like breathing — the docks, the cart-wheels not yet moving, one dog somewhere two streets over. You have been to Yael's corner more than once now, and she always looks up before you arrive, as if she heard your step from farther away than makes sense. You have not spoken of this. Neither has she. Some things are more useful left as questions.*
-
-Yael filed the report on the courier. She was correct to file it. She was standing two blocks from where Froberger collapsed. The corner where she watches is the corner nearest the event. She has been there since. The preamble — "she looks up before you reach the corner" — carries the whole of the Chrétien technique: the prior act is the emotion. She was already looking. You were already expected. The gap between "she looks up" and "before you reach" is the attachment.
-
----
-
-### V-D. Commander Seraphine Bruhns — The Manifold
-
-**NPC preamble (fav ≥ 2):** "She closes the manifold. That is the acknowledgment."
-
-**Inn vignette (post-sleep, fav ≥ 2):**
-> *Bruhns reviews her manifests each morning before the city wakes. You have seen it three times now from the street: the candle, the papers, the absolute stillness of someone who is used to carrying things alone. You are going to have to fight her. She is going to have to let you. You do not know, and have stopped pretending to know, whether you are the right person for what comes after.*
-
-Bruhns is the grief of command: you protect people from the weight so successfully that they cannot know you are carrying it. The manifold closing is the only visible acknowledgment she will give. The player is watching from the street. They are watching someone who is watched by nobody. The sentence "you are going to have to fight her" is there because the arc requires it — the Codex forge is at CO, and Bruhns holds the line — but the sentence that follows it carries the full weight of the vignette: *neither of you knows whether you are the right person for what comes after.*
+Second, smaller defect: Aldo's promotion is a **raw increment**,
+`S_story.npcFavorability['aldo_sardino'] = (S_story.npcFavorability['aldo_sardino'] || 0) + 1;@31907`,
+bypassing `function _setNpcFavor(key, level) {@23462` — the absolute, only-ever-raises setter that
+the CDG verb's own comment cites as canonical and that emits the tier-change line. **Within one arc,
+one NPC is promoted through the host and the other by a direct write into the ledger.** → **§DX-02x**.
 
 ---
 
-### V-E. The Blank Page — NG+ Void Archaeology
+## VIII. Corpus Note — Numbers From an Uncommitted Tree
 
-At CO in NG+, with `vaArchitectureKnown` and `entry42Written` and `ngPlusRun ≥ 1`, the fifth ending adds:
-> *"Froberger wrote 41 entries. You wrote one. She wrote 7."*
+The report's three hard numbers are internally consistent and match **no commit**:
 
-Entry 42 is the blank page Froberger left. To fill it is not to finish it. It is to add your weight to the ongoing project of carrying what cannot be set down. The grief arc's final structural point: the blank page is not empty. It is an invitation that was waiting.
+| Claim | Nearest committed build | Delta |
+|---|---|---|
+| 18,324 lines "at session close" | `213d14b` 14:00 = 18,130 · `dcb72cb` 16:49 = 18,462 | falls between |
+| Vinnie at line 7857 | 7855 at `213d14b`, 7953 at `dcb72cb` | +2 / −96 |
+| Vinnie at line 15265 | 15250 at `213d14b`, 15448 at `dcb72cb` | +15 / −183 |
 
----
+All three sit just above the pre-session build and below the session's own commit — i.e. they were
+read off a **working tree that was never committed**, mid-session. ***The durable rule: a report's
+line numbers and line-count baseline can be mutually consistent and still match nothing in git. Score
+them UNVERIFIABLE rather than wrong — and do not use them to date a report; use the birth commits of
+the things it describes.*** (Instrument 18, third refinement.)
 
-## VI. The Romance Layer — Same Technique, Different Register
-
-The ROMANCE_QUOTES, NPC_ROMANCE_PREAMBLES, NPC_ROMANCE_VIGNETTES, and INN_DREAMS systems use the same compressed vignette technique as the grief layer but in the register of attachment — the recognition that a relationship is occurring, without naming it.
-
-### VI-A. ROMANCE_QUOTES — Source and Register
-
-The 21 quotes in `ROMANCE_QUOTES` were selected from Chrétien de Troyes across four registers, each performing a distinct narrative function:
-
-**Erec/Enide register (6 quotes) — mutual regard:**
-> *"She passed before him on a white palfrey and he watched until she was past the gate, and then watched the gate."*
-
-This is the preamble technique's literary ancestor. He watched the gate. The gate is the cup on the table; it is the corner before you reach it. The action after the action, encoding the attachment. The quote fires in inn sequences after Act III, during the 15%-per-sleep romance quote delivery.
-
-> *"Long he gazed at her fair hair, her laughing eyes — and yet she looked at him with equal steadiness, as if they were in competition."*
-
-The "as if they were in competition" does what the French vignette gap does: it provides a second observation that is not an explanation but a clarification of the first, making the charge between the two observable without naming it.
-
-**Yvain/Lion register (4 quotes) — forgetting and loyalty:**
-> *"He forgot. That is the whole of it. He forgot, and when he remembered, it was already the wrong kind of late."*
-
-One sentence, three beats, and the full moral weight of the *Yvain* arc. This quote is available from Act III forward. In context — when the player has been spending hours in combat and exploration and perhaps has not returned to their Birka NPCs — the quote lands differently than it does in literary analysis.
-
-**Cligès register (3 quotes) — the refusal of the inherited pattern:**
-> *"She said: I will not be Iseut. I will not give what I do not give freely. That is not the same story."*
-
-Fenice's refusal to follow the Iseut arc is structurally parallel to how each Birka NPC is written: they have irreversible choices, and those choices are their own. Brynn does not wait to be rescued from the ledger debt. Yael files the second report because of you, not because she was told to. The Cligès register names this as an active stance.
-
-**Lancelot register (3 quotes) — the two-step:**
-> *"He hesitated for two steps before climbing in. She saw the two steps. He had not thought about two steps."*
-
-The Lancelot cart scene is the extreme case of the prior-act technique: an action so compressed that the hesitation, not the action, is the content. *He had not thought about two steps* is the line that makes this more than a romantic observation — it adds Lancelot's unawareness of what he revealed, which is the full emotional charge. This quote is the direct ancestor of "She looks up before you reach the corner."
-
-**Yvain search register (5 quotes) — quest/search:**
-> *"She continued in prayer until she heard a horn, at which she greatly rejoiced; for she thought now she would find shelter, if she could only reach the place. So she turned in the direction of the sound."*
-
-These quotes give the player's movement through the node map a romantic quest grammar — the turning toward a sound, the following of tracks, the "my wayward heart leads me on inside." They fire in transit, not at rest. They encode the journey as its own form of attention.
+Note also that the romance layer §VI documents shipped at `9684ff6` (10:39) and `28dae66`
+(two days earlier), while La Riva shipped at `dcb72cb` (16:49) — **one report, three build moments.**
 
 ---
 
-### VI-B. NPC_ROMANCE_PREAMBLES — Six Lines
+## IX. Summary Statistics — Then and Now
 
-The preamble system delivers one line per NPC at fav ≥ 2, in italics, before the NPC's dialogue renders. The line describes one prior act — something the NPC did before you arrived, that demonstrates they already knew you were coming.
-
-| NPC | Preamble |
-|-----|---------|
-| Yael | "She looks up before you reach the corner." |
-| Brynn | "The cup is already on the table." |
-| Quill (Couperin) | "He is mid-phrase and does not stop playing, but he nods." |
-| Pachelbel | "He slides it across without being asked." |
-| Weckmann (crov) | "He does not look up, but he knew you were there." |
-| Bruhns (auros) | "She closes the manifold. That is the acknowledgment." |
-
-All six are Chrétien-derived: the prior act as the emotion. The reader fills the gap. Nothing is declared. The technique is consistent across all six precisely because the six relationships are at different positions in the arc — Quill/Couperin's relationship is lighter, Bruhns's is heavier, and the shared form is what lets the reader calibrate the weight rather than being told it.
-
----
-
-### VI-C. NPC_ROMANCE_VIGNETTES — Six Inn Vignettes
-
-The vignettes fire once per NPC per run, post-sleep, when the NPC's home node was in the last three moves and fav ≥ 2. They are not read when the player is at the NPC. They are read after. The delay is structural: the vignette is what you think about when you've left.
-
-**Quill vignette (full text for example):**
-> *Couperin played something last night that he said had no name. You woke at the third hour with the melody still in your head, which is strange because you cannot usually remember music. The song was about waiting, or about distance — you could not tell which. He never finishes anything. You are beginning to think that is not an accident.*
-
-Three things are happening: the melody that persisted against normal capacity; the ambiguity about what the song was about (waiting or distance — the player notices they cannot distinguish these); the observation that the incompleteness is not carelessness. The vignette does not say "Couperin is falling in love with you." It says: "you woke at the third hour with his melody still in your head." The reader does the rest.
-
-**Pachelbel vignette:**
-> *Pachelbel does not say farewell. He slides things across the counter and you take them. That is the transaction. But this morning you passed the City Fence before it opened and saw him through the grating, tallying something, and he was talking quietly to himself the way people do when they have been alone a long time and have made peace with it. You walked past. You came back. You went past again. You did not go in. Some things are not for daylight.*
-
-The three-pass walk (past / back / past again / did not go in) is the Lancelot two-step amplified. The hesitation is the content. "Some things are not for daylight" is the player's recognition of something they are not yet ready to name.
+| Item | Claimed 2026-05-26 | Measured 2026-08-12 |
+|---|---|---|
+| New nodes | 1 (FR) | 1 (`AMS`, `num:79` preserved) ✅ |
+| New NPCs | 2 | 2 ✅ |
+| New quests | 3 | 3 ✅ |
+| New items | 2 | 2, both `sell:0` ✅ |
+| New state fields | 4 | 4, one line, specified order ✅ |
+| NPC favor changes | 1 (kenickie → 3) | 2 (kenickie → 3, aldo → 1) — the report undercounts its own work |
+| Hour-counter action types wired | 5 | 4 live, 1 retired, 1 relocated to battle start |
+| `ROMANCE_QUOTES` | 21 | 21 ✅ |
+| `FROBERGER_JOURNAL` | 41 | 41 ✅ |
+| HTML lines | 18,324 | 38,712 (uncommitted-tree baseline — §VIII) |
 
 ---
 
-### VI-D. INN_DREAMS — Conditional Dream Text
+## X. What Was Not Changed — Re-verified
 
-`INN_DREAMS` (HTML line ~12034) delivers conditional dream text at IN and SQ nodes, keyed on story flags. The dreams are not romantic or grief-themed uniformly — they shift based on which flags are set. The mechanic is: you sleep at the inn, and what you dream is a function of what you know. If `catKingDefeated` is set, the CQ-adjacent dreams are different. If a romance vignette has fired, the subsequent sleep at IN may reflect it.
-
-The INN_DREAMS system is the third tier of the vignette stack: ROMANCE_QUOTES (ambient, 15% per sleep), NPC_ROMANCE_VIGNETTES (once-per-run, post-sleep, triggered), INN_DREAMS (conditional, flag-gated). Together they produce a sleep sequence that is never exactly the same twice, and that shifts in register as the player's relationships and knowledge shift.
-
----
-
-## VII. Modification of Quest Dispositions — The Vignette Concept Applied
-
-Prior to the grief arc design pass, quest disposition lines in `QUEST_DB` were written as conventional quest flavor: plot summary, hint about where to go, reward framing. The vignette research pass rewrote all Birka NPC quest dispositions in the compressed character-voice form.
-
-### Before/After Pattern
-
-The design shift: from plot-summary to *one revealing statement the NPC makes about themselves that incidentally describes the quest's emotional weight.* The statement should be one they would only make to someone they have decided to trust. It should not be a full explanation. It should be the kind of thing a person says when they have been carrying something long enough that they stop explaining it and start just saying it.
-
-**`quest_brynn_ledger`:**
-> *"Rove had good credit. That's the part I keep coming back to. Good credit and bad judgment and I trusted the credit." — Brynn Clerambault*
-
-This is not a plot summary of the quest. It is the exact thought Brynn has been circling for months. "Good credit and bad judgment" — she has split the judgment correctly but it does not help. The credit is what she trusted. This is true of how trust works. The disposition does not say "the ledger was taken"; it gives you the exact cognitive loop of the person the ledger was taken from.
-
-**`quest_pit_training`:**
-> *"The promoters tried to fix a fight here last year. I shut the pit rather than host it. Some things cost more to keep than to lose." — Weckmann*
-
-This tells you who Weckmann is. Not what the quest is. You go train at CY because you want to know the person who said "some things cost more to keep than to lose." The quest is the occasion; the disposition is the character.
-
-**`quest_couperin_lute`:**
-> *"The guild licenses five songs. Five. For the whole of human experience. I don't know if that's arrogance or optimism." — Tomas Couperin*
-
-The lute is pawned. The lute is the quest item. The disposition does not say the lute is pawned. It says: here is the particular quality of mind of the person whose lute is pawned. You know, from this line, that Couperin notices the same category of absurdity that the player notices. The quest is not about the lute. It is about whether Couperin can ask for help, which he cannot, which is why the lute is still pawned. The disposition shows you why he cannot ask.
+- Both Kenickie "my guy Vinnie" lines: **unmodified at HEAD**, 78 days on. The retrofit still works
+  by making them legible in retrospect.
+- The Corrupted Cat combat mechanic: unchanged; AMS uses the shared pool at `count:1`.
+- No non-La-Riva favorability values altered.
 
 ---
 
-## VIII. Hour Counter Wiring — Implementation Record
+## XI. Residual — Re-scored
 
-The `hoursElapsed` and `hoursSinceSlept` state fields existed in `_S_DEFAULTS()` and were displayed in the stats panel (`s-hours`, `s-awake`) but were never incremented. Layer 78 wired all five action types.
+| Item | 2026-05-26 status | 2026-08-12 |
+|---|---|---|
+| Froberger Entries 17 / 29 | Carried by the entries themselves; no hooks needed | ✅ Holds — both live and verbatim |
+| NG+ Entry 42 | "Full implementation deferred" | ✅ **Shipped** — full loop verified 2026-07-07 |
+| `fishmongerRowRestored` visual payoff | Deferred; proposed `partial_market` terrain | ✅ **Shipped as `textVariants`**, a better mechanism; `partial_market` never built and not needed |
+| Kenickie Covenant naming line | Deferred | ❌ **STILL NOT SHIPPED** → §GR-FU |
 
-| Action | hoursElapsed | hoursSinceSlept |
-|--------|-------------|-----------------|
-| `storyMove` | +1 | +1 |
-| Battle victory | +1 | +1 |
-| `storyShortRest` | +1 | +1 |
-| `storyQuestHunt` | +2 | +2 |
-| `storyConfirmSleep` | +8 | reset to 0 |
-
-Display thresholds (existing CSS, now active): 16h awake → `warn` class; 24h awake → `danger` class on `s-awake` element.
+Three of four deferred items closed. **The one that did not is the arc's own stated payoff.**
 
 ---
 
-## IX. Summary Statistics
+## References
 
-| Item | Count / Status |
-|------|---------------|
-| New nodes implemented | 1 (FR — Fishmonger's Row) |
-| New NPCs | 2 (connie_tuna, aldo_sardino) |
-| New quests | 3 (quest_la_riva_01/02/03) |
-| New items | 2 (Vincenzo's Net, Old Tuna Account Book) |
-| New state fields | 4 (connieMet, fishmongerRowRestored, laRivaComplete, frCatKillCount) |
-| NPC fav changes | 1 (kenickie → 3 on quest_la_riva_03 complete) |
-| Hour counter action types wired | 5 |
-| New story.md sections | 2 (§GRIEF AND CORRUPTION prepend, §NODE 79) |
-| plan.md sections | 1 (§GR prepended before §0) |
-| HTML lines at session close | 18,324 |
-| Five-act vignette structure | ✅ Confirmed correct, implemented in full |
-| Literary research base | Chrétien de Troyes (4 romances), grief transcript analysis |
+[1] Chrétien de Troyes, *Erec et Enide*, *Yvain (Le Chevalier au Lion)*, *Cligès*, *Le Chevalier de la Charrette*, c. 1170–1191.
+[2] C. S. Lewis, *The Allegory of Love*, Oxford, 1936. (On the prior-act convention in courtly narrative.)
+[3] B. Williams, "Ethical Consistency," *Proc. Aristotelian Society*, Supp. vol. 39, pp. 103–124, 1965. (Moral residue — the unwitnessed loss.)
 
 ---
 
-## X. What Was Not Changed
-
-- Kenickie's existing dialogue at lines 7857 and 15265 ("my guy Vinnie") was not modified. The retrofit works by making those lines legible in retrospect.
-- The CQ node text was not changed. Kenickie's "maybe" 🤌 was not changed. The grief layer is in the interpretation, not the declaration.
-- The Corrupted Cat combat mechanic was not changed. FR uses the existing `corrupted_cat` enemy pool with `count:1` per repeatable encounter (for vignette pacing, not challenge).
-- No existing NPC favorability values were altered for non-La-Riva NPCs.
-
----
-
-## XI. Residual and Deferred Items
-
-- **Froberger Entries 17 and 29** are implemented in the journal and documented here. The "⚠️ PLANNED" markers in story.md for these as *separate* subplots were replaced by the understanding that the entries themselves carry the subplot. No additional quest hooks are needed.
-- **NG+ Entry 42** remains at `entry42Written` state flag, wired to the void archaeology ending. Full implementation deferred to Layer 78+ NG+ pass.
-- **`fishmongerRowRestored: true`** is set on quest completion but does not currently trigger any visual change at FR. A potential Layer 79+ extension: if `fishmongerRowRestored`, FR terrain changes from `ruins` to `partial_market` with modified node text. Not implemented; deferred.
-- **Kenickie fav 3 naming line** for the Covenant Keeper ending (`SWEELINCK_NAMING_LINES`) was not added in this pass. Suggested: *"Kenickie, who kept the account book. Who knows every name in it."* Deferred to NG+ pass.
+**Original session:** 2026-05-26 · **Verified and rewritten:** 2026-08-12 (§DOC-02s)
+**Reference builds:** `dcb72cb` (La Riva) · `9684ff6` (romance layer) · `28dae66` (`INN_DREAMS`)
+**Measured against:** HEAD, 38,712 lines. Where this document and `roll2hit-v3.html` disagree, the file is right.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
