@@ -99,7 +99,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 |------|---------|--------|
 | `froberger-journal-all-entries.txt` | All 41 Froberger journal entries verbatim | ✅ Verified 41/41 (2026-05-24) |
 | `docs/notes/ux-first-battles.md` | First battles UX walkthrough, 10 UX fixes, wimper/flee flow | ✅ Accurate for L0–37 |
-| `5thOrgan.html` | Standalone polyphonic pipe organ synthesizer (72 oscillators, Beethoven canon) | ✅ 2026-05-24 |
+| `sources/5thOrgan.html` | Standalone polyphonic pipe organ synthesizer (12-voice pool, 72-oscillator capacity, Beethoven Op.67 canon). **Not wired into the game — `roll2hit-v3.html` has zero Web Audio (§AUDIO-01).** Moved from the repo root by `5e48dd7` | ✅ 2026-05-24 · verified §DOC-02ad 2026-08-12 |
 | `worldbuilder.html` | World Builder UI — 17 tabs: Map, Bestiary, Loot, NPCs, Quests, Dice Lab, CRUD, API, Audit, Stats, Endpoints, Builder, Wizard, ✏ Editor (§EDITOR-01), ⛓ Mission (§EDITOR-02), 🚶 Walk (§WALK), 🌐 Mesh (§MESH-01) | ✅ 2026-07-02 |
 | `Saul2Paul.txt` | §FUTURE-01 reference text — Paul's journey from Acts/Pauline letters, itinerary notes | ✅ |
 | `littoral-courts-story.txt` | §SIREN-01 vignette prose — Littoral Courts story text, French register source | ✅ |
@@ -346,7 +346,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | File | Topic |
 |------|-------|
 | `lab-reports/lab-report-story-codoex-curse-of-knowedge.md` | Pinker framework — writing guide for terrain descriptions and NPC dialogue |
-| `lab-reports/lab-report-Polyphonic-Organ-Synth.md` | `5thOrgan.html` — IIR biquad filter, ADSR, Beethoven canon construction, Web Audio API |
+| `lab-reports/lab-report-Polyphonic-Organ-Synth.md` | `sources/5thOrgan.html` — IIR biquad filter, ADSR, Beethoven canon construction, Web Audio API. **Verified §DOC-02ad 2026-08-12** (573 → 401 lines): transcribed material exact, 7 findings in composed passages — the default registration is 1/n² not 1/n (§DX-02am), the loop desyncs on live control change and 30 of 56 canon offsets collide (§DX-02an), and the synth was never embedded in the game (§AUDIO-01) |
 | `lab-reports/lab-report-ponies-unicorns-aspirations-future-ideas.md` | Future aspirations — DM's Companion Guide, Fishing Guide, Mission Explorer |
 | `lab-reports/lab-report-meta-process-loop-expansion.md` | Meta-process — prompt→plan→lab-report recursive loop, 10 historical instances, session efficiency |
 | `lab-reports/lab-report-meta-corpus-analysis.md` | The corpus as architecture — meta-analysis of the lab-report corpus and its structural relationship to the game file |
@@ -430,7 +430,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Pachelbel / Deacon** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
 | **Saul→Paul arc (§LIX–§LXIX + §PAUL-01; §FUTURE-01 ✅ closed 2026-07-07)** | `story.md Layer 104a` · `maps.md` · `quest.md` §THE SAUL→PAUL ARC (18-quest table) | `lab-reports/lab-report-saul-paul-travel-reference.md` · `lab-reports/lab-report-saul-paul-vignette-spec.md` |
 | **Pit training / Weckmann** | `world.md` | `lab-reports/lab-report-birka-beginner-arc.md` · `lab-reports/lab-report-kenickie-chronicle.md` |
-| **Polyphonic organ** | `5thOrgan.html` | `lab-reports/lab-report-Polyphonic-Organ-Synth.md` |
+| **Polyphonic organ** | `sources/5thOrgan.html` | `lab-reports/lab-report-Polyphonic-Organ-Synth.md` · `lab-reports/lab-report-ponies-unicorns-aspirations-future-ideas.md` §VI (originating spec) |
 | **Potions (4 tiers)** | `docs/mechanics/mechanics-economy.md` | `index.md (POTION_TIERS)` |
 | **Quill / Couperin** | `docs/story/story-arc-npc-dialogues.md` | `lab-reports/lab-report-web-of-connections.md` |
 | **Quest -1 (Level 21)** | `story.md §XIV` | `lab-reports/lab-report-quest-minus-one-world-creator.md` |
