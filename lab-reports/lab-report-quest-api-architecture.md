@@ -1,577 +1,413 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report: Quest API Architecture & Universal Mission Format
-**Document ID:** §ARCH-01  
-**Status:** Design Specification — Pre-Implementation  
-**Date:** 2026-05-28  
-**Scope:** roll2hit-v3.html — Quest system unification, WBAPI runtime, live migration strategy
+# Lab Report: Quest API Architecture & the Universal Quest Format (UQF-1.0)
+
+**Document ID:** §ARCH-01
+**Original:** 2026-05-28 — Design Specification, Pre-Implementation (577 lines)
+**Verified:** 2026-08-12 — §DOC-02ag, re-measured against live `roll2hit-v3.html` (38,712 lines · 2,853 quests)
+**Status:** ✅ **SHIPPED AND CLOSED.** Thesis executed at 13.6× the specified scale. Four delta clusters recorded below.
 
 ---
 
 ## Abstract
 
-The current quest system in roll2hit-v3.html uses a heterogeneous flat-object format in QUEST_DB with two formal types (`skill_check`, `side`) and one implicit type (`main`), each using different field subsets. Logic that should belong to the quest definition is instead scattered across storyRender injection blocks, completeFn closures, and inline handlers. This document specifies:
+This is the specification that turned quest content from **code** into **data**. In May 2026 a
+mission's behaviour lived in three places at once — a `QUEST_DB` entry, a `storyRender` injection
+block, and a `completeFn` closure — so adding one quest meant writing JavaScript in three files'
+worth of one file, and no tool could read a quest without executing it. §ARCH-01 proposed a single
+declarative schema (**UQF-1.0**), an opcode registry of composable *mission bits*, a runtime host
+(`QuestRuntime`) to execute them, and a five-phase live migration.
 
-1. A **Universal Quest Format (UQF v1.0)** — a single declarative schema for all mission types
-2. A **Mission Bit Registry** — atomic, composable mechanics with typed contracts
-3. A **WBAPI runtime layer** — callable from both the game and worldbuilder.html
-4. A **live migration plan** — five phases that keep the game running throughout
+**It shipped.** At HEAD, **2,803 of 2,853 quests (98.2 %) carry `schema:'UQF-1.0'`**, one runtime
+executes all of them, and the runtime is a **parity-fenced module** (`js/quest.js`) that runs
+headless on the server — a capability the spec did not ask for. The spec was written against a
+**210-quest** database; the format it defined now carries **2,853**.
 
----
-
-## 1. Problem Statement
-
-### 1.1 Current Format Fragmentation
-
-Three quest types currently exist, each with incompatible field sets:
-
-| Field | `main` | `side` | `skill_check` |
-|-------|--------|--------|---------------|
-| `activateCond` | JS function | JS function | JS function |
-| `completeFn` | JS function | JS function | absent |
-| `checkStat` | absent | absent | `'WIS'` / `'INT'` |
-| `checkDC` | absent | absent | number |
-| `checkPassFlag` | absent | absent | string or function |
-| `onPass` / `onFail` | absent | absent | JS function |
-| `retryable` | absent | absent | boolean |
-| `disposition` | string | string | string |
-
-The `completeFn` for a `side` quest can contain: flag writes, inventory mutations, XP awards, gold awards, knowledge entries, and NPC dialogue unlocks — all in an unstructured closure. The worldbuilder cannot safely edit these.
-
-### 1.2 Logic Fragmentation
-
-Quest behavior currently lives in three places simultaneously:
-
-```
-QUEST_DB         — activation conditions, completion check
-storyRender      — button creation, narrative presentation
-completeFn       — side effects (flags, items, XP)
-```
-
-A single mission arc like §WISDOM-01 requires coordinating entries in all three. Editing the quest title means finding the right storyRender block. Changing a DC means finding the QUEST_DB entry. Adding a new item reward means writing raw JS in a closure.
-
-### 1.3 Parsing Opacity
-
-`activateCond` and `completeFn` are live JS arrow functions. They cannot be:
-- Serialized to JSON
-- Safely diffed by the worldbuilder
-- Statically analyzed for flag dependencies
-- Validated for correctness before runtime
-
-The WBAPI flag extraction currently relies on regex over raw source text as a workaround. This is fragile.
+This verification finds report-rot concentrated exactly where instrument 12 predicts — in the one
+passage the author *composed* rather than *copied* — and engine-rot in three places where a
+promised payoff was implemented and then silently outgrown.
 
 ---
 
-## 2. Design Goals
+## Method
 
-| Goal | Requirement |
-|------|-------------|
-| Single source of truth | All quest behavior defined in QUEST_DB, nothing in storyRender |
-| Declarative | No JS closures in quest data — only typed field values |
-| Composable | Quests are assembled from named mission bits |
-| Parseable | The worldbuilder can read, diff, and write any quest field |
-| Live migration | The game continues working at every migration phase |
-| Versioned | Schema version stamped so old/new formats coexist |
+1. Census: every identifier, field, bit kind, node code and quest id named in the report, batched
+   through one `grep -c` pass, then partitioned live / dead.
+2. `git log -S "<symbol>" -- roll2hit-v3.html` on every dead symbol, to separate **RETIRED**
+   (shipped, later removed) from **NEVER SHIPPED** (0 commits ever).
+3. Archive adjudication (instrument 8): the report entered the repo at **`2d42ea2`
+   (2026-05-29 09:50)**, one day after its stated date. Every *"currently"* claim is scored against
+   `git show 2d42ea2:roll2hit-v3.html`, never against HEAD.
+4. Delta table run **both ways** — report-rot *and* engine-rot.
+5. Reachability (instrument 19) and census cross-check (instrument 14): totals reproduced against
+   `npm run stats` and `check:dupkeys` before any delta was derived.
 
----
-
-## 3. Universal Quest Format (UQF v1.0)
-
-### 3.1 Top-Level Structure
-
-```javascript
-{
-  // Identity
-  id:       'quest_wis_01',      // unique key (matches QUEST_DB key)
-  schema:   '1.0',               // UQF version
-  arc:      'wisdom',            // arc prefix
-  layer:    112,                 // implementation layer
-
-  // Lifecycle anchors
-  activateNode:  'DK',           // node where quest appears in panel
-  waypointNode:  'DK',           // map waypoint marker
-  
-  // Activation gate (declarative, replaces activateCond arrow function)
-  gate: {
-    flags:    ['wisHookReceived'],          // ALL must be true
-    flagsAny: [],                           // ANY must be true (optional)
-    notFlags: [],                           // NONE must be true (optional)
-    nodes:    [],                           // player must have visited (optional)
-  },
-
-  // Mission bits — the mechanics this quest uses
-  bits: [...],
-
-  // Display
-  title:       'The Rope Callous',
-  hint:        'Study the merchant\'s hands.',
-  disposition: '"I was waiting for someone to notice."',
-  retryable:   false,
-}
-```
-
-### 3.2 Mission Bit Definition
-
-A **mission bit** is a typed, self-contained behavior unit. Each bit has:
-- A **kind** (the bit type)
-- A **contract** (required + optional fields for that kind)
-- A **handler** (the runtime function that executes it)
-
-A quest's `bits` array is an ordered list of bit objects. The runtime processes them in order.
+> **Instrument 14 fired on this pass and changed a headline.** A first, unscoped
+> `grep -o "type:'…'"` returned 42 distinct `type` values at the archive and made §1.1 look
+> catastrophically wrong. Those were mostly *inventory item* types. Re-scoped to the
+> `WORLDBUILDER:QUEST_DB` anchors, the real answer is **four** — and §1.1 is wrong by exactly one
+> type, which is a finding worth keeping instead of a scandal that was not true.
 
 ---
 
-## 4. Mission Bit Registry
+## 1. Intention, and what it buys the player
 
-### Bit: `skill_check`
+The report's own argument, restated because it is still the right one:
 
-The player must pass a D20 ability check.
+> *"Quest behavior currently lives in three places simultaneously… Editing the quest title means
+> finding the right `storyRender` block. Changing a DC means finding the `QUEST_DB` entry. Adding a
+> new item reward means writing raw JS in a closure."* — §1.2
 
-```javascript
-{
-  kind:      'skill_check',
-  stat:      'WIS',              // STR | DEX | CON | INT | WIS | CHA
-  skill:     'Insight',          // optional — for display only
-  dc:        13,
-  adv:       false,              // advantage on the roll
-  onPass:    [...bits],          // bits to execute on pass (nested!)
-  onFail:    [...bits],          // bits to execute on fail
-}
-```
+That is an authoring complaint, but it was really a **content-volume** argument, and the number
+proves it. A format where one quest costs three hand-edits in a 14,000-line file has a ceiling
+somewhere around a few hundred quests; a format where a quest is a JSON-shaped literal has
+essentially none. **210 → 2,853 in 75 days** is the whole case for UQF, and it was made before the
+content existed to justify it.
 
-**Contract:** `stat` required, `dc` required, `onPass` or `onFail` required.  
-**Runtime:** calls `rollD20(stat, prof) >= dc` → routes to `onPass` or `onFail` chain.
+**What the player actually got from this document:**
 
----
+| Player-facing consequence | Mechanism UQF made possible |
+|---|---|
+| **A world with 2,853 missions instead of ~210** | quests became bulk-authorable data; `scripts/uqf-bulk-migrate.js` moved 2,600+ of them mechanically |
+| **The Warrant's Board** (§BOARD-01) — a discovery surface that lists what you can *actually* start | a board can only rank missions whose availability is a readable `gate:{…}`, never a closure it would have to run |
+| **Missions that charge you** (the `cost` opcode, §VM-01-G4a) | a new *mechanic* is one opcode + one contract row, and every existing quest can use it the same day |
+| **Choices that are real choices** (Kern & Sable at DUS) | `choice` suspends the bit chain and applies **only** the picked branch, *after* the pick — closing a tab mid-choice writes no partial state |
+| **A quest that misfires is caught before you meet it** | `validateQuest` + `check:questgraph` + `check:questparity` can inspect a quest without running the game |
 
-### Bit: `flag_write`
-
-Sets one or more story state flags.
-
-```javascript
-{
-  kind:   'flag_write',
-  set:    ['wisPage1_masks'],     // flags to set true
-  clear:  [],                    // flags to set false
-}
-```
-
-**Contract:** at least one of `set` or `clear` required.  
-**Runtime:** `S_story[flag] = true` for each entry in `set`.
+The last one is the quiet win. Under the old format, the only validator for a quest was *a player
+walking into it.*
 
 ---
 
-### Bit: `reward`
+## 2. As-built inventory
 
-Awards XP, gold, and/or items.
+The runtime is one fenced region, `// ◆◆◆ QUEST:CORE:START ◆◆◆@21965` → `QUEST:CORE:END`,
+byte-identical to `js/quest.js` and asserted by `check:questparity` (gate #8 of 16).
 
-```javascript
-{
-  kind:    'reward',
-  xp:      150,
-  gold:    250,
-  items:   [
-    { id:'pages_ardley', name:'Pages of the Ardley Manuscript', icon:'📖', type:'token', sell:0 }
-  ],
-  knowledge: "I was waiting for someone to notice",   // knowledge log entry
-}
-```
+| Spec element | As built | Anchor |
+|---|---|---|
+| Schema constant | `SCHEMA_VERSION` | `const SCHEMA_VERSION = 'UQF-1.0';@21966` |
+| Bit contract registry | 13 kinds (spec: 6) | `const BIT_CONTRACTS = {@21970` |
+| Contract checker | pure, no side effects | `function validateQuest(q) {@22004` |
+| Legacy adapter | retired to identity (W7d) | `function adaptLegacyQuest(id, q) {@22026` |
+| Runtime factory | host-injected (§VM-01-D) | `function createQuestRuntime(host) {@22180` |
+| Activation gate | compiled boolean tree | `canActivate(questId) {@22193` |
+| Completion gate | **not in the spec** | `canComplete(questId) {@22205` |
+| Bit-chain executor | **a generator** (§VM-01-A) | `*execBits(bits, ctx) {@22223` |
+| Roll | seeded stream, not `Math.random` | `_rollSkill(stat) {@22242` |
+| Skill-check resolver | name exact | `resolveSkillCheck(bit, ctx) {@22256` |
+| Opcode table | 13 handlers (spec: 8) | `HANDLERS: {@22264` |
+| Live binding | 12 injected effects | `const QuestRuntime = createQuestRuntime({@22341` |
+| Activation leaf | ~15 declarative terms | `function _matchActivationLeaf(g, st) {@22048` |
 
-**Contract:** at least one of `xp`, `gold`, `items`, `knowledge` required.  
-**Runtime:** applies all rewards, triggers `storyMsg`, pushes to inventory and knowledge log.
+**Opcode usage across all 2,853 quests** (authored bit kinds, not contract rows):
 
----
+| kind | uses | | kind | uses |
+|---|---:|---|---|---:|
+| `skill_check` | 2,623 | | `favor` | 18 |
+| `mission_bit` | 2,449 | | `unlock` | 14 |
+| `reward` | 151 | | `combat` | 10 |
+| `narrative` | 138 | | `item_remove` | 8 |
+| `_legacy_fn` | 115 | | `cost` | 3 |
+| `flag_write` | 58 | | `choice` | 2 |
+| | | | **`item_check`** | **0** |
 
-### Bit: `combat`
-
-Triggers a combat encounter.
-
-```javascript
-{
-  kind:     'combat',
-  key:      'shadow',
-  label:    'Shadow — The Mirror Construct',
-  count:    1,
-  nodeCode: 'VS_SHADOW',         // custom combat code for defeatedBattles tracking
-}
-```
-
-**Contract:** `key` required, `label` required.  
-**Runtime:** calls `storyPreBattle({...currentNode, code:nodeCode, battle:{label,key,count}})`.
-
----
-
-### Bit: `narrative`
-
-Displays a message or storyRender block.
-
-```javascript
-{
-  kind:     'narrative',
-  msg:      'Roen folds the page carefully.',    // inline storyMsg
-  template: 'wis_intro',                         // named template ID (for complex renders)
-}
-```
-
-**Contract:** `msg` or `template` required.  
-**Runtime:** calls `storyMsg(msg)` or renders the named template.
+Structural totals: **2,803** quests stamped `UQF-1.0` · **2,823** carry `gate:` and `bits:` ·
+**189** carry a declarative `completion:` · **105** an `onComplete:` chain · **163** a
+`waypointNode` · **50** never migrated.
 
 ---
 
-### Bit: `item_remove`
+## 3. Spec → shipped delta table
 
-Removes a named item from inventory.
+Both directions. **RS** = report-side rot (the report is wrong), **ES** = engine-side (the engine
+declined or outgrew the spec), **✅** = shipped as specified.
 
-```javascript
-{
-  kind: 'item_remove',
-  name: 'Pages of the Ardley Manuscript',
-}
-```
-
----
-
-### Bit: `unlock`
-
-Activates another quest or enables a dialogue branch.
-
-```javascript
-{
-  kind:   'unlock',
-  quests: ['quest_wis_02'],   // quest IDs to force-activate
-  npcs:   [],                 // NPC keys whose favorability gates to open
-}
-```
-
----
-
-### Bit: `choice`
-
-Presents the player with a branching choice.
-
-```javascript
-{
-  kind:    'choice',
-  prompt:  'Accept the reflection, or fight it?',
-  options: [
-    { label: 'Accept the reflection', bits: [{ kind:'flag_write', set:['wisPage6_shadow'] }, ...] },
-    { label: 'Fight it',              bits: [{ kind:'combat', key:'shadow', label:'Shadow — The Mirror Construct', count:1, nodeCode:'VS_SHADOW' }] },
-  ],
-}
-```
-
-**Contract:** `options` required, min 2. Each option must have `label` and `bits`.  
-**Runtime:** renders button group; each button triggers its bit chain.
+| # | Spec claim (§) | Shipped | Verdict |
+|---|---|---|---|
+| 1 | `schema:'1.0'` (§3.1) | `schema:'UQF-1.0'`, 2,803× | ES — value changed, field kept |
+| 2 | `arc:` on every quest (§3.1) | **3 quests of 2,853** | ES — abandoned |
+| 3 | `layer:` on every quest (§3.1) | **1 quest of 2,853** | ES — abandoned |
+| 4 | `type` field dropped (§3.1 omits it) | **`type:` on 2,853 of 2,853** | ES — never left; it drives the roll card |
+| 5 | `gate:{flags,flagsAny,notFlags,nodes}` | all four ✅ + `flagEquals`, `questsDone`, `questsAttempted`, `items`, `battles`, `restedAtMin`, `atNode`, … | ✅ + widened to ~15 terms |
+| 6 | `gate.expr` string language (Open-Q #5) | **0 commits ever** — shipped as `{all}/{any}/{not}` object composition | ES — better answer, same problem |
+| 7 | `QuestRuntime.canActivate/execBits/resolveSkillCheck/HANDLERS` | all four ✅ under their exact names | ✅ |
+| 8 | `SCHEMA_VERSION`, `BIT_CONTRACTS`, `validateQuest`, `adaptLegacyQuest` | all four ✅ | ✅ |
+| 9 | `rollD20Stat(bit.stat)` (§6) | **0 commits ever** → `_rollSkill(stat) {@22242` | RS — invented name |
+| 10 | `pushKnowledge(bit.knowledge)` (§6) | **0 commits ever** → inline `st.knowledge.push` | RS — invented name |
+| 11 | `renderNamedTemplate(bit.template)` (§6) | **never a function** — survives only in a comment; `template:` has **0** authored uses | ES — NOT SHIPPED |
+| 12 | `renderChoiceBlock(prompt, options, ctx)` (§6) | never existed; the host end shipped 2026-08-04 as `_uqfRunVerb` (§VM-01-G4a) | ES — 71 days inert |
+| 13 | `MissionBitController` (§9 heading) | **0 commits ever**; the function under it shipped as `validateQuest` | RS — invented name for a real thing |
+| 14 | Eight opcodes (§4) | 13: + `cost`, `mission_bit`, `favor`, `item_check`, `_legacy_fn` | ✅ + widened |
+| 15 | `unlock` handler = *"force quest panel refresh"* (§6, a stub) | fully implemented: writes `st.quests[qid]='active'` | ES — the stub grew a body |
+| 16 | `adaptLegacyQuest` wraps `gate:{_legacyFn: q.activateCond}` | shipped as a **marker** `gate:{_legacyFn:true}` on 15 quests; the function itself is a W7d no-op | ES — shape survived, mechanism inverted |
+| 17 | Phase 4: *"`schema:'0.legacy'` entries: zero"* | `'0.legacy'` **retired** (2 commits) — but **46 `activateCond` closures with 2 live readers** and **115 `_legacy_fn` bits** remain | ES — goal met by renaming, not by removing |
+| 18 | Design Goal *"No JS closures in quest data"* (§2) | **144 of 2,853 quests (5.0 %) still carry one** | ES — 95 % achieved |
+| 19 | `WBAPI.quests.all()` / `.chain(id)` (§10) | both ✅ under their exact names | ✅ |
+| 20 | §10: chain graph *"uses declarative `gate.flags` instead of regex"* | still 100 % regex — **see Finding 3** | ES — the stated payoff |
+| 21 | §12 *"lives where"* table (10 rows) | `MONSTER_DROPS` ✅ · `BIRKA_NPC_PROFILES` ✅ · `WORLD_DB[t].monsters` ✅ · `NODE_MAP[code].text` ✅ · all six `bits[]` rows ✅ | ✅ 10/10 |
+| 22 | Open-Q #3: *"add a new bit kind `item_check`"* | kind shipped, contract shipped, handler shipped, **0 quests use it**; the real answer was a completion-gate `items` term | ES — built both, used one |
+| 23 | Open-Q #4: *"`retryable` inherits from the quest root, not the bit"* | exactly so — **0 bits carry `retryable`**; `retryGateDays` added later (67 uses) | ✅ answered as proposed |
+| 24 | Phase 2 target arcs: §DUNGEON-01, §SPARK-03, §HUNT-03, §CEREMONY-03 | §DUNGEON-01 ✅ shipped; the other three **do not exist** (§SPARK-01/02 and the hunt arcs shipped under other tags) | RS — three aspirational tags |
+| 25 | Phase 3 order: WISDOM → SPARK → ALCHEMY → HUNT → main | WISDOM-01 **was first**, exactly as argued (`d7505ff`); the rest reordered (spark 9th, hunt 12th, alch 15th) — all four migrated | ✅ on the thesis |
+| 26 | §11 per-arc manual play-through checklist | replaced by `scripts/uqf-bulk-migrate.js` + golden-diff + Playwright | ES — see Finding 4 |
+| 27 | §14 schedule: *"Phase 1 — next session"* | Phase 1 landed **30 days later** (`80bc1f4`, 2026-06-28 13:01) | RS |
+| 28 | §14 schedule: Phase 3 = *"2–3 sessions"* | Phase 1 → Phase 2 → first migrated arc in **28 minutes**; all ~2,850 quests in **2 days** | ES — 20× faster than planned |
+| 29 | `activateNode:'DK'` (§3.1, §5) | **a survival, not a dead code** — archive `DK:{num:7, "Magistra Muffat is terrifying in the best way…"}` is HEAD's `LCY`, `num` / text / NPC byte-identical | ✅ right when written |
 
 ---
 
-## 5. Complete Example: quest_wis_01 in UQF v1.0
+## 4. Findings
 
-**Legacy format (current):**
-```javascript
-quest_wis_01: {
-  id:'quest_wis_01', type:'skill_check', title:'The Rope Callous',
-  hint:'Study the merchant\'s hands.',
-  activateNode:'DK', activateCond:()=>!!S_story.wisHookReceived,
-  checkStat:'WIS', checkSkill:'Insight', checkDC:13,
-  onPass:(S)=>{S_story.wisPage1_masks=true;S_story.gold+=150;...},
-  onFail:(S)=>{...},
-  retryable:false, xpAward:150, reward:150,
-  disposition:'"I was waiting for someone to notice."',
-},
-```
+### Finding 1 — §1.1's problem statement undercounts its own problem by one whole type
 
-**UQF v1.0 format:**
-```javascript
-quest_wis_01: {
-  schema:'1.0', id:'quest_wis_01', arc:'wisdom', layer:112,
-  activateNode:'DK', waypointNode:'DK',
-  gate: { flags:['wisHookReceived'] },
-  bits: [
-    {
-      kind:'skill_check', stat:'WIS', skill:'Insight', dc:13,
-      onPass: [
-        { kind:'flag_write', set:['wisPage1_masks'] },
-        { kind:'reward', xp:150, gold:150, knowledge:'I was waiting for someone to notice' },
-        { kind:'narrative', msg:'Silas Vance turns his palm up. "How long have you known?" He does not seem alarmed.' },
-      ],
-      onFail: [
-        { kind:'narrative', msg:'The merchant shakes his head. "Bale callous. I haul cargo."' },
-      ],
-    }
-  ],
-  title:'The Rope Callous', hint:'Study the merchant\'s hands.',
-  retryable:false, disposition:'"I was waiting for someone to notice."',
-},
-```
+> *"Three quest types currently exist, each with incompatible field sets."* — §1.1
 
----
+Scoped to `QUEST_DB` at the birth commit `2d42ea2`, there were **210 quests and four types**:
 
-## 6. WBAPI Runtime Layer
+| type | archive count | HEAD count |
+|---|---:|---:|
+| `side` | 104 | 142 |
+| `skill_check` | 59 | 2,484 |
+| **`epic`** | **40** | **40** |
+| `main` | 7 | 7 |
 
-The runtime is a singleton that processes UQF bit chains. It bridges the worldbuilder and the live game.
+`epic` — **19 % of the database, the second-largest formal type** — is absent from §1.1's table and
+from every migration phase in §8. It is also the one type that never grew: **still exactly 40, 75
+days later**, which is the §EPIC-01 orphan set. The report also calls `main` *"implicit"*; it was a
+literal `type:'main'` string on seven quests, and those seven are also unchanged at HEAD.
 
-```javascript
-const QuestRuntime = {
-  SCHEMA_VERSION: '1.0',
+*A specification that omits a type does not fail loudly. It just never mentions it again.*
 
-  // Check if quest is available at current node
-  canActivate(questId) {
-    const q = QUEST_DB[questId];
-    if (!q.gate) return true;
-    const g = q.gate;
-    if (g.flags    && !g.flags.every(f => S_story[f]))    return false;
-    if (g.flagsAny && !g.flagsAny.some(f => S_story[f]))  return false;
-    if (g.notFlags && g.notFlags.some(f => S_story[f]))   return false;
-    return true;
-  },
+### Finding 2 — the worked example is the fabricated part (instrument 12, purest form)
 
-  // Execute a bit chain
-  execBits(bits, context) {
-    for (const bit of bits) {
-      const handler = QuestRuntime.HANDLERS[bit.kind];
-      if (!handler) { console.warn('Unknown bit kind:', bit.kind); continue; }
-      handler(bit, context);
-    }
-  },
+§5 presents *"Legacy format (current)"* for `quest_wis_01` as a transcription. Against the archive
+it is **4 of 9 fields wrong, plus one omission and one invention**:
 
-  // Execute pass/fail for a skill_check bit
-  resolveSkillCheck(bit, context) {
-    const roll = rollD20Stat(bit.stat);
-    const pass = roll >= bit.dc;
-    QuestRuntime.execBits(pass ? (bit.onPass||[]) : (bit.onFail||[]), context);
-    return { roll, pass };
-  },
+| §5 says | Archive `2d42ea2` says | |
+|---|---|---|
+| `title:'The Rope Callous'` | `title:'Mask Check'` | ❌ **0 commits ever** for the report's title |
+| `hint:'Study the merchant's hands.'` | `hint:'Read Silas Vance\'s hands at the Tilbury docks. WIS Insight DC 13.'` | ❌ |
+| `checkStat:'WIS'` | `checkStat:'wis'` | ❌ case — and the case mattered: `§SKILLFIX-02` (`fc040cd`) is a whole migration wave about it |
+| `xpAward:150, reward:150` | `xpAward:0`, no `reward` field | ❌ invented |
+| *(omitted)* | `checkPassFlag:'wisPage1_masks'` | ❌ omitted from the very listing §1.1 says defines the type |
+| `activateNode:'DK'`, `activateCond:()=>!!S_story.wisHookReceived`, `checkSkill:'Insight'`, `checkDC:13`, `retryable:false`, `disposition` | all exact | ✅ |
 
-  HANDLERS: {
-    skill_check(bit, ctx) { QuestRuntime.resolveSkillCheck(bit, ctx); },
-    flag_write(bit)       { (bit.set||[]).forEach(f => S_story[f] = true); (bit.clear||[]).forEach(f => S_story[f] = false); },
-    reward(bit)           { if(bit.xp) S_story.xp = (S_story.xp||0)+bit.xp; if(bit.gold) S_story.gold+=bit.gold; (bit.items||[]).forEach(i=>S_story.inventory.push(i)); if(bit.knowledge) pushKnowledge(bit.knowledge); },
-    combat(bit)           { storyPreBattle({...NODE_MAP[S_story.currentCode], code:bit.nodeCode||bit.key, battle:{label:bit.label, key:bit.key, count:bit.count||1}}); },
-    narrative(bit)        { if(bit.msg) storyMsg(bit.msg); else renderNamedTemplate(bit.template); },
-    item_remove(bit)      { const i=S_story.inventory.findIndex(x=>x.name===bit.name); if(i>-1) S_story.inventory.splice(i,1); },
-    choice(bit, ctx)      { renderChoiceBlock(bit.prompt, bit.options, ctx); },
-    unlock(bit)           { /* force quest panel refresh */ },
-  },
-};
-```
+The §5 **UQF conversion** then carries the error forward — it specifies `reward{xp:150}` where the
+legacy `onPass` awarded **250**. The engine, migrating for real 31 days later, took the *archive's*
+number: `{ kind:'reward', gold:150, xp:250,@13360`.
 
----
+And every string the author could **copy** survived intact. `quest_wis_01: { id:'quest_wis_01',
+schema:'UQF-1.0'@13351` still holds the `desc`, the `hint`, the 👁️ pass narration and the fail
+line **byte-identical to the archive across 75 days and a total format migration**. The
+`disposition` — *"I was waiting for someone to notice." — Silas Vance, third berth* — is verbatim
+too; the report quotes it correctly everywhere except where it truncates the attribution.
 
-## 7. Compatibility: Legacy Adapter
+Even the invented reward item obeys the rule: `Pages of the Ardley Manuscript` is real (4
+occurrences, then and now), while its stated `id:'pages_ardley'` and `type:'token'` are not — the
+live record has **no `id` field at all** and is `type:'misc'`. ***The name was copied; the schema
+around it was remembered.***
 
-During the migration, old-format quests coexist with UQF quests. The adapter lets the runtime handle both:
+### Finding 3 → §DX-02ar — the migration's stated payoff inverted, and it disarmed a safety guard
 
-```javascript
-function adaptLegacyQuest(q) {
-  if (q.schema) return q; // already UQF
-  const adapted = {
-    schema: '0.legacy',
-    id: q.id, arc: q.id.split('_').slice(0,2).join('_'),
-    activateNode: q.activateNode, waypointNode: q.waypointNode,
-    gate: { _legacyFn: q.activateCond },  // wrapped, not parsed
-    bits: [],
-    title: q.title, hint: q.hint, retryable: q.retryable,
-    disposition: q.disposition,
-    _legacy: q,  // preserve original
-  };
-  if (q.type === 'skill_check') {
-    adapted.bits.push({
-      kind: 'skill_check', stat: q.checkStat, skill: q.checkSkill, dc: q.checkDC,
-      onPass: [{ kind:'_legacy_fn', fn: q.onPass }],
-      onFail: [{ kind:'_legacy_fn', fn: q.onFail }],
-    });
-  }
-  return adapted;
-}
-```
+§1.3 filed the defect: *"The WBAPI flag extraction currently relies on regex over raw source text
+as a workaround. This is fragile."* §10 promised the fix: the chain graph *"uses declarative
+`gate.flags` instead of regex."*
 
-The `_legacy_fn` bit kind falls through to the original function — preserving exact behavior with zero risk.
+At HEAD the regex is **unchanged and unaccompanied**:
+`js/wbapi-core.js:this._questFlags[id] = { reads, writes };@797` still derives every dependency
+edge from `src.matchAll(/S_story\.(\w+)/)` over raw quest source, and
+`js/wbapi-core.js:chain(id) {@1089` reads nothing else. There is no `gate.flags` branch anywhere
+in the file.
 
----
+Migrating to a declarative format therefore made the analyser **blind**, because a declarative gate
+contains no `S_story.` token to match. Measured over all 2,853 quests:
 
-## 8. Migration Plan
+- **104** quests contain any `S_story.` read; **66** contain a write.
+- **1,680** quests carry declarative dependency terms (`gate.flags` / `flagsAny` / `notFlags` /
+  `questsDone` / `questsAttempted`).
+- **1,624 of those are invisible to the regex** — no `S_story.` token anywhere in the entry.
+- `WBAPI.quests.chain(id)` therefore returns `{upstream:[],downstream:[]}` for **2,749 of 2,853
+  quests (96.4 %)**. The 2,449 `mission_bit` grants are equally invisible: the flag is written by a
+  host effect, not by an assignment in the quest's own text.
 
-### Phase 0: Anchors + WBAPI (✅ Complete)
-Zero risk. Add `◆◆◆ WORLDBUILDER:*` anchors. Build worldbuilder.html. No game code changes.
+**The consequence is not cosmetic.** `js/wbapi-core.js:const d=WBAPI._deps.quest(k);
+if(d.downstream.length)@1107` is the **delete guard** — the check that refuses to delete a quest
+other quests depend on. It is fed by that same empty chain, so for 96 % of the database the guard
+passes vacuously. `advise` reports the empty chain as fact.
 
-### Phase 1: Schema + Runtime (No behavior change)
-- Add `SCHEMA_VERSION = '1.0'` constant to game file
-- Add `QuestRuntime` singleton (inactive — not yet called)
-- Add `adaptLegacyQuest()` adapter function
-- Add per-quest `schema: '0.legacy'` field to all existing QUEST_DB entries
-- Add WBAPI to worldbuilder.html (reads both formats)
+*This is the §DX-02n family inverted once more: not a reader with no writers, but an analyser
+still reading the format its own document retired.*
 
-**Risk:** Zero. No game behavior changes. All new code is inert.
+### Finding 4 — the plan that shipped is not the plan that was written, and that is why it shipped
 
-### Phase 2: New quests use UQF (Additive)
-- All new quest arcs (§DUNGEON-01, §SPARK-03, §HUNT-03, §CEREMONY-03) written in UQF v1.0
-- `QuestRuntime.execBits()` called for UQF quests; legacy path unchanged
-- Worldbuilder gains full edit capability for UQF quests
+§11 is a **13-line manual checklist per arc**, ending *"Run play-through: activate quest, pass,
+verify flags + rewards / …fail, verify retry/lock."* §14 budgets Phase 3 at *"2–3 sessions."* With
+~210 quests that is defensible. It does not survive contact with 2,853.
 
-**Risk:** Low. Only new code is on the UQF path. Legacy quests untouched.
+What actually happened, from the commit stream:
 
-### Phase 3: Migrate by arc (Incremental)
-- One arc at a time, convert QUEST_DB entries from legacy to UQF
-- Migrate corresponding storyRender block logic INTO the bit chain
-- Add arc-by-arc integration tests (manual play-through checklist)
-- Target order: §WISDOM-01 (cleanest) → §SPARK-01 → §ALCHEMY-01 → §HUNT arcs → main quest
+| | commit | time |
+|---|---|---|
+| Phase 1 — inert runtime | `80bc1f4` | 2026-06-28 **13:01** |
+| Phase 2 — dual-path dispatch | `f5117ca` | **13:21** |
+| Phase 3 — first arc, `quest_wis_01` | `d7505ff` | **13:29** |
+| Waves 1a–1v — 22 hand-migrated arcs | `24becb6` … `cdc788f` | 06-28 14:32 → 06-29 08:29 |
+| **Wave 2a — "stand up bulk migrator"** | `ae4f6de` | 06-29 **08:41** |
+| Waves 2b–2l+ — families of 30–235 acts each | `8cf47e9` … | 06-29 08:49 → |
 
-**Risk:** Medium per arc. Each arc is independent. The adapter provides fallback.
+**Twenty-eight minutes from inert runtime to first migrated arc**, and the migration only reached
+2,853 quests because Wave 2a stopped following §11 and wrote a codemod
+(`scripts/uqf-bulk-migrate.js`) instead. The document's own §8 has no such step. Its correctness
+argument — *"the adapter provides fallback"* — was replaced by a stronger one it never proposed:
+**mechanical transform + golden diff + a Playwright pin per family.**
 
-### Phase 4: Deprecate legacy path
-- All QUEST_DB entries are UQF v1.0
-- `adaptLegacyQuest()` is a no-op (all `schema: '1.0'`)
-- storyRender blocks that are now quest-driven are removed
-- `schema: '0.legacy'` entries: zero
+*A migration plan sized to the content that exists cannot survive the content the migration
+enables. §11 was right about what to check and wrong about who checks it.*
 
-**Risk:** Medium-low. Full test pass before removal.
+### Finding 5 → §DX-02as — four contract rows validate green and do nothing
 
-### Phase 5: Canonicalize
-- QUEST_DB becomes the single source of truth for all quest behavior
-- storyRender only handles pure display (node text, map travel) — no quest logic
-- Worldbuilder can export a fully functional new arc as a JSON file that gets pasted into QUEST_DB
+§9's premise is that `BIT_CONTRACTS` is the authority on what a bit may contain. Four entries
+accept a field or a kind that no code path consumes:
 
----
+| Surface | Contract says | Reality |
+|---|---|---|
+| `skill_check.adv` | optional | `_rollSkill(stat)@22242` never reads `bit.adv`; **0** authored uses. Advantage is unreachable through UQF. |
+| `narrative.template` | optional | `narrative(bit, ctx) { if (!bit.msg) return;@22301` — a `template`-only bit is a **silent no-op**; `renderNamedTemplate` never shipped; **0** authored uses |
+| `unlock.npcs` | optional, and it *satisfies* the validator on its own | `unlock(bit, ctx) { (bit.quests@22312` ignores it entirely — `{kind:'unlock', npcs:['x']}` validates ✅ and does nothing |
+| `item_check` (whole kind) | required `name` | `item_check(bit, ctx) {@22311` writes `ctx._itemCheck`, which **nothing reads**; **0** authored uses — the job went to the completion gate's `items` term |
 
-## 9. Mission Bit Controller / Checker
+None is live-broken today, because nothing authors them. All four are **traps for the next author**,
+and `unlock.npcs` is the sharpest: it is the one case where the invalid thing passes validation
+*because of* the dead field.
 
-The **MissionBitController** validates a quest definition against its bit contracts before writing to QUEST_DB:
+### Finding 6 — an engine comment miscounts the population it describes (→ §DX-02as (e))
 
-```javascript
-const BIT_CONTRACTS = {
-  skill_check: {
-    required: ['stat', 'dc'],
-    optional: ['skill', 'adv', 'onPass', 'onFail'],
-    validate: b => ['STR','DEX','CON','INT','WIS','CHA'].includes(b.stat) && typeof b.dc === 'number',
-  },
-  flag_write: {
-    required: [],
-    optional: ['set', 'clear'],
-    validate: b => (b.set||[]).length + (b.clear||[]).length > 0,
-  },
-  reward: {
-    required: [],
-    optional: ['xp', 'gold', 'items', 'knowledge'],
-    validate: b => b.xp||b.gold||(b.items&&b.items.length)||b.knowledge,
-  },
-  combat: {
-    required: ['key', 'label'],
-    optional: ['count', 'nodeCode'],
-    validate: b => typeof b.key === 'string' && typeof b.label === 'string',
-  },
-  narrative: {
-    required: [],
-    optional: ['msg', 'template'],
-    validate: b => b.msg || b.template,
-  },
-  choice: {
-    required: ['prompt', 'options'],
-    optional: [],
-    validate: b => b.options && b.options.length >= 2 && b.options.every(o => o.label && o.bits),
-  },
-};
+`function adaptLegacyQuest(id, q) {@22026` carries a comment stating the surviving non-UQF entries
+are *"quest_math_01–05 §MATH-01 gap + the 30 dead blq_05–10 book-stubs"* — **35**. Measured: **50**.
+The fifteen it omits are `quest_1367_a`–`f` (6), `quest_lxvii67`, `quest_guide_04`,
+`quest_scar_01`–`04`, and `quest_void_tide_21/35/42`. Nine of the fifteen are named in Wave 1r/1v
+commit messages *as migrated* — `ac9ef23` (`§ARCH-01 Wave 1r: migrate scar arc … → UQF`) and
+`cdc788f` (`Wave 1v … lxvii67/guide_04 → UQF`) — so their bits and gates were converted and the
+`schema:` stamp was not applied. `advise` flags each one individually
+(*"not schema UQF-1.0 — legacy quests have no completion path post-W7d"*), so the population is
+visible; only the summary is wrong.
 
-function validateQuest(q) {
-  const errors = [];
-  if (!q.schema) errors.push('Missing schema version');
-  if (!q.id) errors.push('Missing id');
-  if (!q.bits || !q.bits.length) errors.push('No mission bits defined');
-  for (const bit of (q.bits||[])) {
-    const contract = BIT_CONTRACTS[bit.kind];
-    if (!contract) { errors.push(`Unknown bit kind: ${bit.kind}`); continue; }
-    if (!contract.validate(bit)) errors.push(`Bit "${bit.kind}" failed contract validation`);
-    for (const req of contract.required) if (bit[req] === undefined) errors.push(`Bit "${bit.kind}" missing required field: ${req}`);
-  }
-  return { valid: errors.length === 0, errors };
-}
-```
+***A migration commit's own comment is a claim about the present as well as the past, and it is the
+claim least likely to be re-measured.***
 
-The worldbuilder's Quest Editor runs `validateQuest()` before allowing export. Red fields = failed contract. Green = valid.
+### Finding 7 → §DX-02at — one vocabulary, two hand-maintained copies, already drifted
+
+The report's whole §1 is an argument against a definition living in more than one place. HEAD keeps
+the bit vocabulary twice: `const BIT_CONTRACTS = {@21970` in the game (13 kinds) and
+`worldbuilder.html:const OPERAND_CONTRACTS = {@1373` in the editor (11 kinds), whose own comment
+says it *"mirrors the game's BIT_CONTRACTS."*
+
+It no longer does. **Missing: `cost`** — the §VM-01-G4a price leaf, a live opcode with three
+authored uses — **and `_legacy_fn`**, with 115. The editor cannot describe the newest mechanic in
+the language it exists to edit.
+
+### Finding 8 — `validateQuest` shipped, and shipped somewhere else
+
+> *"The worldbuilder's Quest Editor runs `validateQuest()` before allowing export. Red fields =
+> failed contract. Green = valid."* — §9
+
+`validateQuest` has roughly **150 call sites and every one is a test.**
+`tests/integration/quest-runtime-uqf.test.js` alone calls it ~140 times, including whole-corpus
+sweeps (*"if (!validateQuest(q).valid) bad.push(id + ':invalid')"*), and
+`uqf-quest-core.test.js:45` proves it works under a bare `require()`.
+
+The authoring path does not call it. `js/wbapi-core.js:advise(id)` — the function
+`prompt.md` §4 tells every author to run — checks `activateNode`, `waypointNode`, `npc`, the
+`schema` stamp, a `skill_check`-without-a-`skill_check`-bit mismatch, and retired
+`completeFn`/`completeItems`, then returns `WBAPI.quests.chain(id)`. It never touches
+`BIT_CONTRACTS`. **A malformed bit therefore reaches `QUEST_DB` and is caught by the Playwright
+suite, not by the tool at the point of authorship.**
+
+This is not scored as a defect. The contract checker became the **regression fence** for 2,803
+quests, which is a larger job than the export gate it was specified for, and §DX-02as/§DX-02at
+name the two places where wiring it into `advise` would now pay.
+
+### Finding 9 — reachability (instrument 19): the flagship is live
+
+`quest_wis_01`'s `activateNode:'LCY'` occupies cell **18,180** with `STN` and `SEN`, and **`LCY` is
+`list[0]`** — the primary, so it can become `currentCode` and the quest activates. Node/cell totals
+reproduced exactly: **416 nodes across 244 cells**, matching `npm run stats` and §AUDIT-03x.
+`LCY`'s NPC is `Magistra Elara Muffat`, matching the quest's `npc:"magistra_elara_muffat"`. No
+§AUDIT-03x casualty in this arc.
 
 ---
 
-## 10. Worldbuilder Integration Points
+## 5. The Open Questions register (§13), adjudicated
 
-| Worldbuilder Feature | Uses |
-|----------------------|------|
-| Quest list | `WBAPI.quests.all()` — reads both legacy and UQF |
-| Quest editor | UQF bit-by-bit editor (Phase 2+); raw textarea for legacy |
-| Chain graph | `WBAPI.quests.chain(id)` — uses declarative `gate.flags` instead of regex |
-| Bit validator | `validateQuest()` — inline error display |
-| Export | Generates UQF JS literal ready for paste into QUEST_DB |
-| Diff/patch | UQF quests are fully JSON-serializable — clean diffs |
+The report's most valuable section, because it names five things its author knew he did not know.
+**Four of five were answered; the answers are better than the proposals in three cases.**
 
----
-
-## 11. Arc Migration Checklist Template
-
-For each arc being migrated from legacy → UQF:
-
-```
-□ Map all flags: what does each quest read / write?
-□ Convert activateCond → gate.flags / gate.flagsAny / gate.notFlags
-□ Identify primary mechanic → pick bit kind (skill_check / combat / choice)
-□ Move onPass logic → [ flag_write bits, reward bits, narrative bits ]
-□ Move onFail logic → [ narrative bits ]
-□ Move completeFn side effects → bit chain in the quest's bits array
-□ Remove corresponding storyRender block (the bit chain renders it)
-□ Run play-through: activate quest, pass, verify flags + rewards
-□ Run play-through: activate quest, fail, verify retry/lock behavior
-□ Set schema: '1.0' on all migrated quests in the arc
-```
+| # | Question | Outcome |
+|---|---|---|
+| 1 | Named templates vs `choice` bits for multi-state nodes | **Neither.** `template` never shipped; multi-state node surfaces became `NODE_PANELS`/`NODE_HOOKS`/`NODE_VERBS` (§VM-01-G4b–d). `story-wis-vs`'s 5-branch block still renders from `const _wisVsOld = document.getElementById('story-wis-vs')@33450` — the one §1.2 fragmentation the migration never reached |
+| 2 | `checkPassFlag` → `flag_write.set` mapping | **Refined:** it became `mission_bit{flag,label}` (a *kept receipt*), not `flag_write`. Usage proves the call: 2,449 `mission_bit` vs 58 `flag_write` |
+| 3 | `completeItems` → `gate.items` or a new `item_check` bit? | **Both were built; only the gate term is used.** `completeItems` retired W7d. See Finding 5 |
+| 4 | `retryable` at the quest root, not in the bit | **Shipped exactly as proposed.** 0 bits carry it |
+| 5 | Compound AND/OR — proposed a `gate.expr` string language | **Rejected in favour of a better shape.** `{all}/{any}/{not}` object composition over ~15 leaf terms, compiled once and memoised by `_gatePred`. A string language would have needed a parser and would not be JSON-diffable — losing Design Goal 4 to solve Goal 3 |
 
 ---
 
-## 12. Single Source of Truth: What Lives Where
+## 6. Phase register (§8), outcomes
 
-After full migration:
+| Phase | Spec | Outcome |
+|---|---|---|
+| 0 — Anchors + WBAPI | ✅ claimed complete | **True.** 24 `◆◆◆ WORLDBUILDER:*` anchors live; `worldbuilder.html` shipped `2d42ea2`, the same commit that added this report |
+| 1 — Schema + inert runtime | *"next session"* | ✅ **`80bc1f4`, 30 days later** |
+| 2 — New quests use UQF | 4 named arcs | ✅ **`f5117ca`** (20 min after Phase 1); 1 of 4 named arcs exists |
+| 3 — Migrate by arc | *"2–3 sessions"* | ✅ **2 days**, 34+ waves, via a codemod the plan does not contain |
+| 4 — Deprecate legacy path | *"`0.legacy`: zero"* | ✅ on the letter (W7d retired `completeFn`, `completeItems`, `_rollCeremonia`'s roll body, the adapter); ⚠️ 46 `activateCond` + 115 `_legacy_fn` closures survive |
+| 5 — Canonicalize | `QUEST_DB` sole source of truth | ✅ for behaviour; the `storyRender` display split is real but not total (Open-Q #1) |
 
-| Data | Lives in |
-|------|----------|
-| Quest activation conditions | `gate` field in QUEST_DB |
-| Quest narrative text | `bits[].narrative.msg` in QUEST_DB |
-| Flag writes | `bits[].flag_write.set` in QUEST_DB |
-| XP/gold rewards | `bits[].reward` in QUEST_DB |
-| Combat encounters | `bits[].combat` in QUEST_DB |
-| Item drops | `MONSTER_DROPS` keyed by monster key |
-| Item effects | `bits[].reward.items` in QUEST_DB |
-| Node text (scene flavor) | `NODE_MAP[code].text` (unchanged) |
-| NPC dialogue | `BIRKA_NPC_PROFILES` (unchanged) |
-| Terrain monsters | `WORLD_DB[terrain].monsters` (unchanged) |
-
----
-
-## 13. Open Questions
-
-1. **storyRender timing**: Some render blocks have complex conditional sub-states (e.g., `story-wis-vs` with 5 branches). Should multi-state nodes use `choice` bits, or stay as named templates? **Proposed:** named templates for node-wide display; `choice` bits only for quest-driven branches.
-
-2. **checkPassFlag**: Currently a function or a string. In UQF it becomes `flag_write.set`. Confirm correct mapping for all existing `skill_check` quests before Phase 3.
-
-3. **completeItems array**: Used to check if player holds a required item. Does this become `gate.items`? Needs a new bit kind: `item_check`. Add to contract registry in Phase 1.
-
-4. **Retryable skill checks**: The `retryable` field controls whether a failed `skill_check` quest stays in the panel. The bit contract should inherit this from the quest root, not duplicate it in the bit.
-
-5. **Saga-level gates**: Some quests activate based on complex multi-quest state (e.g., `personalLegendComplete && !wisHookReceived`). The `gate.flags + gate.notFlags` schema handles this declaratively for simple cases. For compound AND/OR logic, add a `gate.expr` field that is a simple boolean expression language (e.g., `"personalLegendComplete AND NOT wisHookReceived"`).
+**Beyond the spec:** the runtime became a *host-injected kernel*. `createQuestRuntime(host)@22180`
+names no global, so `js/quest.js` runs under `require()` on the server and in tests, and
+`check:questparity` asserts the inlined copy is byte-identical. §6 asked for a layer *"callable
+from both the game and worldbuilder.html"*; it got one callable from the game, the server, the MUD
+harness and the test suite. `execBits` also became a **generator**, which is what made a suspending
+`choice` possible at all — a capability §4's `choice` contract implied and §6's straight-line
+`for` loop could not have delivered.
 
 ---
 
-## 14. Implementation Schedule
+## 7. Defects filed
 
-| Phase | Target | Risk | Effort |
-|-------|--------|------|--------|
-| Phase 0 | ✅ Done | Zero | 1 session |
-| Phase 1 | Next session | Zero | 1 session |
-| Phase 2 | §DUNGEON-01 | Low | Per arc |
-| Phase 3 | §WISDOM-01 first | Medium | 2–3 sessions |
-| Phase 4 | After all arcs | Medium-low | 1 session |
-| Phase 5 | Finalization | Low | 1 session |
+| Row | Severity | Summary |
+|---|---|---|
+| **§DX-02ar** | 🟡 | `WBAPI.quests.chain()` derives dependencies from an `S_story.` regex; 1,624 declaratively-gated quests are invisible, 96.4 % of the corpus returns an empty chain, and the quest **delete guard** passes vacuously as a result |
+| **§DX-02as** | 🟢 | Four contract surfaces validate green and do nothing — `skill_check.adv`, `narrative.template`, `unlock.npcs`, the whole `item_check` kind — plus (e) the `adaptLegacyQuest` comment's 35-vs-**50** miscount of the un-migrated set |
+| **§DX-02at** | 🟢 | `worldbuilder.html:OPERAND_CONTRACTS` mirrors `BIT_CONTRACTS` by hand and has drifted: **`cost` and `_legacy_fn` missing** |
 
 ---
 
-*§ARCH-01 — Quest API Architecture & Universal Mission Format*  
-*Author: World Builder — roll2hit.com*  
-*Status: Pre-Implementation Design — awaiting Phase 1 kickoff*
+## 8. Verdict
+
+**§ARCH-01 is the most consequential document in the corpus and one of the most faithfully
+implemented.** Every runtime symbol it named under a name it could not have copied — `QuestRuntime`,
+`canActivate`, `execBits`, `resolveSkillCheck`, `HANDLERS`, `SCHEMA_VERSION`, `BIT_CONTRACTS`,
+`validateQuest`, `adaptLegacyQuest` — exists at HEAD under exactly that name, 75 days and 13.6×
+the content later. Its four design goals hold. Its rejected alternatives were rejected for better
+reasons than it gave.
+
+Its errors are all in the same place: **the one section that describes something that already
+existed.** §1.1 miscounts the types it is reforming; §5 misquotes the quest it is converting; §6's
+two helper names were remembered rather than read. Everything the author was *inventing* is right,
+and most of what he was *reporting* is wrong — the inverse of the corpus's usual gradient, and a
+sharper form of instrument 12 than the program had yet seen.
+
+> *"The `_legacy_fn` bit kind falls through to the original function — preserving exact behavior
+> with zero risk."* — §7
+
+Still true, and still there. 115 times.
+
+---
+
+*§ARCH-01 — Quest API Architecture & Universal Quest Format · verified §DOC-02ag, 2026-08-12*
+*Author: World Builder — roll2hit.com*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
