@@ -337,7 +337,7 @@ that held.
 
 ---
 
-*Verified 2026-08-12 under §DOC-02l. Original 753 lines → 300. Node codes annotated, never rewritten
+*Verified 2026-08-12 under §DOC-02l. Original 753 lines → 344. Node codes annotated, never rewritten
 (`lab-reports/` is HISTORY under `scripts/legacy-codes.js`).*
 
 ---
