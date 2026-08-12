@@ -1,328 +1,363 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report — Friendships with Magic
-### Eight Hours in the Loop: A Session Postmortem for the Codex of Conquest
+### Session Postmortem, Layers 41–42 + Five Systems — Verified Against HEAD
 
-**Project:** `roll2hit-v3.html` — single-file HTML5 game engine, MIT License  
-**Status:** `roll2hit-v3.html` — 12,637 lines · Layers 0–42 complete  
-**Date:** 2026-05-22  
-**Series:** Implementation Audit, Architecture Observation, and Philosophy of Open-Source Joy  
-**Classification:** Engineering · Narrative Design · Game Architecture · Open Source Theory  
+**Subject:** `roll2hit-v3.html` — single-file HTML5 D&D-5e game engine, MIT License
+**Written:** 2026-05-22 (updated 2026-05-24) · **Verified:** 2026-08-12 (§DOC-02o)
+**Source state at writing:** 12,637 lines · Layers 0–42
+**State at verification:** 38,712 lines · 416 nodes · 398 monsters · 111 terrains · 2,853 quests
+**Classification:** Session record · Implementation audit · Design rationale
 
 ---
 
 ## Abstract
 
-This report documents a single eight-hour development session on the shaddering of the *Codex of Conquest* — a narratively-driven, single-file HTML/JavaScript/CSS game engine built on D&D 5e mechanics, distributed under the MIT License with no external dependencies. The session completed implementation verification of Layers 0–42 and introduced five discrete architectural systems: waypoint exit highlighting, Hunt Mode travel, EB negotiation CHA checks with non-lethal consequences, guaranteed monster weapon drops with auto-equip, and a cleaned 3×3 compass interface.
+This report recorded one eight-hour session: verification of Layers 39–40, implementation of
+Layers 41–42 (Birka NPC Favorability; the NPC world-truth dialogue system and four-branch victory
+screen), and five new systems — waypoint exit highlighting, a Hunt Mode toggle, an Epic-Battleground
+CHA negotiation check, guaranteed monster weapon drops, and a roll line shown on both outcomes.
 
-Beyond the engineering record, this report examines what this project *is*, philosophically: a message placed in code by someone trapped in a time loop, addressed to their parallel self, distributed freely so that everyone who finds it benefits from the same insight. The game teaches the Curse of Knowledge. The act of building it demonstrates the cure.
+Re-measured 82 days later: **34 of 40 named identifiers resolve (85 %)**, every surviving one under
+its originally specified name, and the two most heavily specified systems (3 and 5) are byte-exact
+including their colour values, damage-line format and button label. **Zero authoring errors were
+found in any transcribed passage.** Every error in the document is in a *composed* one — a summary
+figure, an invented DOM id, a paraphrased line of prose.
 
-The punchline is this: **Friendships with Magic.** Not magic that wins battles. Magic that is the byproduct of choosing people over efficiency.
+The finding is not about the document. **The report's central design claim — that the loop ends when
+the player chooses people over efficiency — is no longer executable.** `_curseScore()` is
+byte-identical to the day it was written, but the field it subtracts from has had no reachable writer
+since 2026-05-29. Its value now has a hard floor of **20**, so of the four ending variants this
+session shipped, **three are unreachable and the one that always fires is Groundhog Day Cursed**.
+Separately, the "Covenant Keeper (True)" standing has been unreachable **since birth** by an
+off-by-one: the score floor is −5 and the gate is ≤ −6.
 
----
-
-## I. The Object: A Self-Contained World
-
-Before anything else, the artifact must be described correctly.
-
-`roll2hit-v3.html` is a **single file**. No build step. No server. No npm. No CDN. No cookies required. No account. You can email it. You can put it on a USB drive. You can open it in a browser that has never seen the internet. It contains:
-
-- A complete D&D 5e combat simulator with initiative, action economy, conditions, death saves, advantage/disadvantage, and a Fighter Champion progression from Level 1 to Level 20
-- A 71-node narrative adventure game spanning 8 acts with a complete arc: arrive, meet people, investigate the Void, choose who to help, fight a final boss, discover what the ending thinks of your choices
-- 370 monsters across 66 terrain entries (46 base + 20 epic), organized into `WORLD_DB` with stat blocks, drop tables, and tier weighting
-- A full vendor economy, inventory system, save/load via `localStorage`, and a survival clock (Day 1–49, Void Tide pressure)
-- 17 journal entries by a dead researcher named Froberger, whose last act was to document what he learned so someone else wouldn't have to start from zero
-- An NPC favorability system with 6 named characters across 4 relationship states, each with a pool of 20 cycling dialogue quotes that change based on whether you've helped them and how much
-- A Curse of Knowledge score that tracks not your combat performance but your willingness to treat knowledge as a burden to share rather than a credential to hoard
-- Four ending variants: Covenant Keeper (friends + no curse), Standard Covenant, Groundhog Day Cursed (the Void is sealed but you are still trapped), and Mixed
-
-This is distributable in the strongest possible sense: copy one file. Done. It runs.
-
-That design constraint — one file, zero dependencies — is not a technical limitation. It is a philosophical statement. The thing you make should be giveable.
+A second design claim — System 4's *Finders Keepers* rule — was **deliberately reversed** by a later
+layer, and the reversal left the original rationale standing as a live comment three lines above the
+call that violates it.
 
 ---
 
-## II. The Session: What Was Built
+## I. Method
 
-### Layer Verification: The Audit Protocol
+Per §DOC-02 house method. Instruments applied: full-name batch census before reading (2); `git log -S`
+on every dead symbol to separate RETIRED from NEVER SHIPPED (4); archive diff against
+`git show 32c10c5:roll2hit-v3.html`, the earliest surviving build, 2026-05-24 (8); copy-vs-compose as
+the error predictor (12); a report's self-criticism and its reversals are claims (10, 13); a census
+total cross-checked against a gate that counts the same set (14); both legs of a stated trade (16).
 
-The session began as a systematic audit. Layers 0–38 had been verified in prior sessions. The first task was confirming that Layers 39 and 40 — Epic Battlegrounds and the Codex of Conquest Narrative Arc — were present in the code but missing from the `plan.md` header and completed-layers reference table. The discrepancy was not a bug: it was a documentation debt. The code was complete. The map had not been updated to reflect where the territory had actually grown.
-
-This is a recurring motif in the project: the code knows more than the documentation thinks it does. Froberger, again.
-
-Both layers were verified against the live HTML — `EPIC_BOSS_POOL`, `EB_NPC_DIALOGUE`, `FROBERGER_JOURNAL`, `SWEELINCK_DIALOGUE_VARIANTS`, `_curseScore()`, `storyCheckVictory()` — and `plan.md` and `index.md` were updated to reflect actual state. The header now reads: **"Layers 0–42 complete. All planned layers implemented."**
-
-Layers 41 and 42 were then confirmed as not present and implemented in sequence:
-
-**Layer 41 — Birka Roots & NPC Favorability** added `BIRKA_NPC_PROFILES` (six full character portraits: Guard Captain Yael, Innkeeper Brynn, Lute-Bard Quill, Merchant Pachelbel, Pit-Fighter Weckmann, Scout Auros), the `npcFavorability` state object, six QUEST_DB entries with personal stakes, the Rough Whiskey vendor item as a social currency, a drunk pit fight, a Yael escort encounter, and the Birka variant of Sweelinck's Act-VI dialogue. The cursor for these NPCs was set to `_npcFavor()`, `_setNpcFavor()`, `_lubeckFriends()`, and `_renderNpcCard()`.
-
-**Layer 42 — NPC World-Truth Dialogue System + Groundhog Day Completion** added `NPC_DIALOGUES` (6 NPCs × 4 relationship states × 5 cycling quotes), `_getNPCDialogue()` with visit-count cycling, `_missionComplete()` (evaluating 12 mission bits — escort used, journal read, song received, debts repaid, pit training wins, depths reported, EB returns, journal half-completed, Void sealed, at least three friends, no high curse, returned to Birka) returning true at ≥8 satisfied, `_checkDearFriendUpgrade()` triggering at the second personal act per NPC, and a fully four-branched `storyCheckVictory()`: Covenant Keeper, Standard Covenant, Groundhog Day Cursed, and Mixed. The Covenant Keeper ending names each person helped by name.
-
-### The Five New Systems
-
-After verification, five new systems were designed and implemented in this session. Each is documented here both as engineering record and as behavioral observation.
+The delta table runs **both ways** (6): a specified behaviour absent from HEAD is an engine defect,
+not a stale claim, until the archive says otherwise.
 
 ---
 
-#### System 1 — Waypoint Exit Highlighting
+## II. Design Intent — and What Each System Was For
 
-**Prompt context:** The player needed guidance navigating toward a set waypoint without opening the quest overlay.
+The session's thesis, stated once in the report and nowhere in the game: **Friendships with Magic.**
+Not magic that wins battles — magic that becomes reachable because the player chose people over
+efficiency. Every system below was built to make that choice *cost something and show something*.
+This section is retained because it is the specification the delta table is measured against.
 
-**Architecture:** `_updateExitLinks()` was rewritten to compute the first step of the BFS path to the active waypoint before rendering exits. The function previously generated static anchor tags; it now generates row-level `onclick` handlers on the `.exit-line` div itself, making the entire row a clickable target rather than just the link text. When the computed `wpDir` matches a direction, that row receives class `exit-waypoint` — a green-tinted rectangle with `#22cc66` border — and a small `▶ WP` pill badge.
+| System | Playability problem it solves | Mechanism |
+|---|---|---|
+| **1 · Waypoint exit highlighting** | The player knew *where* the waypoint was and not *which door*. Consulting the quest overlay on every step taxed the walk, which is the game's primary verb. | Tint the exit row leading toward the waypoint and tag it `▶ WP`. No new mode, no tutorial — a green rectangle. |
+| **2 · Hunt Mode toggle** | A modal asked "Hunt or Warp?" on every long move. A per-trip question for what is really a standing preference. | Convert the decision into a persistent state bit. Configuration once, no friction after. |
+| **3 · EB negotiation CHA check** | Asking for more money was a free button. No texture, no cost. | Roll CHA vs DC 17. **The NPC pays the ceiling either way** — the check prices *the asking*, not the money. Failure is a narrative beat with 1d4 non-lethal damage, not a denial. |
+| **4 · Monster weapon drops** | Loot arrived only through a gated economy table, so the world never surprised the player. | Every kill drops a weapon whose die is bounded by the monster's. Auto-equip if better; last weapon unsellable. *"The market has restrictions. The world does not."* |
+| **5 · Roll line on pass** | The roll appeared only on failure, so success felt like the system hiding its work. | Same panel, same format, different colour, both outcomes. Information density without decision density. |
+| **Layer 41–42 · Favorability + endings** | Relationship needed a *readable consequence*, or helping people is decoration. | Four relationship tiers; a 12-bit `_missionComplete()` at ≥ 8; four endings, the best of which names each person helped. |
 
-`_updateWaypointBtn()` was updated to call `_updateExitLinks()` at the end of its execution, so waypoint changes from the quest panel (which previously only updated the button text) now also refresh the exit highlight without requiring a full `storyRender()`.
-
-**Architectural observation:** The exits panel evolved from a passive information display into an active navigation aid. The BFS algorithm (`_bfsPath()`) which was originally purpose-built for the Waypoint button now serves a secondary role as a real-time UI hint. The same pathfinding graph traversal that moves the character on click also pre-highlights the correct direction in the exits panel. This is compositional reuse: the algorithm was already written; connecting it to the visual layer cost twelve lines.
-
-**Pattern observed:** Every time this project adds wayfinding intelligence to the engine, the interface becomes more generous to the player without becoming more complex. The BFS path does not add a new mode or a tutorial screen. It adds a green rectangle.
-
----
-
-#### System 2 — Hunt Mode Toggle
-
-**Prompt context:** The corridor travel modal asked "Hunt or Warp?" on every long-distance move. This was interrupting flow. The modes should be persistent preferences, not per-trip decisions.
-
-**Architecture:** The `⚔ Battle` corner and `⏳ Wait` corner were removed from the 3×3 d-pad compass. The center stalk button (`btn-dpad-stalk`, which opened the stalk modal) was replaced with `btn-hunt-toggle` — a persistent mode toggle. `S_story.huntMode` (default `false`) is the single state bit.
-
-`storyCorridorTravel()` was rewritten from 25 lines with a modal sequence to 18 lines with no modal. When `huntMode` is `false`, footpath travel warps instantly: `"⚡ Warped → [destination]."` When `huntMode` is `true`, the travel rolls a chance-based encounter using `_stalkedMonsterPick()` (which gives 6× weight to quest-target monsters) and sets `S_story.surpriseAdvantage = true` if combat triggers. The corridor overlay HTML remains in the DOM but is never shown. The mode replaces the decision.
-
-`_updateHuntBtn()` reflects current state: amber (warp) or green glow (hunt).
-
-**Architectural observation:** The corridor modal was doing two jobs — conveying travel information and asking for a choice. Separating these (choice → persistent toggle; information → chat message) eliminated the modal entirely while preserving both functions. The d-pad corner cleanup reduced cognitive surface area: from four corners doing four different things (NPC, Battle, Rest, Wait) to two corners (NPC, Rest) plus a clearly named mode toggle at center. The compass now communicates its affordances without tooltip-reading.
-
-**Pattern observed:** Modals are expensive. Each modal is a context switch, an interruption, a micro-decision. Replacing modal decisions with persistent modes converts per-trip friction into configuration. The player who sets Hunt Mode and forgets about it is hunting on every footpath with no additional interaction. This is the d-pad's second architectural simplification (the first being the replacement of the stalk overlay with the hunt toggle).
+The through-line: **each system converts a decision into either information or configuration, and
+never into a new screen.** That principle held — none of the five added an overlay, and four of the
+five are still doing their job at HEAD.
 
 ---
 
-#### System 3 — EB Negotiation: The CHA Check and the Gut Punch
+## III. As-Built Inventory (HEAD, 2026-08-12)
 
-**Prompt context:** Payment negotiation in Epic Battleground contracts was binary: offer or ceiling. The prompt asked for a skill check with failure consequences — the NPC still pays but expresses their displeasure physically.
+**Live — 34 identifiers**, each under its originally specified name:
+`function _weaponScore(w) {@24577` · `function _isLastWeapon(item) {@24598` ·
+`const _wpDrop = _rollMonsterWeaponDrop@25428` · `const _monDmgDie = S.opp@25427` ·
+`function _updateHuntBtn() {@38074` · `function storyToggleHunt() {@38085` ·
+`function _curseScore() {@28191` · `const _EB_CODES = ['PRN'@28030` ·
+`function _lubeckFriends()@23461` · `const FROBERGER_JOURNAL = [@27184` ·
+`const _BASE_WEAPONS = [@24471` · `const WEAPON_ITEMS = [0, 1, 2, 3, 4]@24494` ·
+`#eb-npc-cha-roll-line.cha-pass@3388` · `He's Fine — Continue →@4915` ·
+`.exit-waypoint { background@2841` · `_updateExitLinks` · `_updateWaypointBtn` ·
+`_missionComplete` · `_checkDearFriendUpgrade` · `storyCheckVictory` · `_getNPCDialogue` ·
+`NPC_DIALOGUES` · `BIRKA_NPC_PROFILES` · `EPIC_BOSS_POOL` · `EB_NPC_DIALOGUE` ·
+`SWEELINCK_DIALOGUE_VARIANTS` · `_npcFavor` · `_setNpcFavor` · `_renderNpcCard` ·
+`npcFavorability` · `huntMode` · `surpriseAdvantage` · `roughWhiskeyUsed` · `yaelEscortUsed` ·
+`_storyBattleVictory`.
 
-**Architecture:** `negBtn.onclick` now rolls 1d20 + CHA modifier against DC 17. CHA modifier uses the standard D&D formula: `floor((cha − 10) / 2)`. A character with CHA 8 has −1 modifier, requiring a natural 18 to succeed.
+**Dead — 6 identifiers**, all resolved by instrument 4:
 
-On **pass**: the roll result is displayed in a green panel (`cha-pass` class: `#44ee88` text, `#051a0d` background, `#22cc66` border) showing `"CHA CHECK — DC 17 · Rolled 15 −1 = 14 ✓ PASSED"`. The ceiling payment and NPC quote appear below it, exactly as before.
-
-On **fail**: the same roll panel appears in red. The payment section and action buttons hide. A new `eb-npc-cha-fail-panel` slides in containing: the roll result, an anger text block (the NPC moves without warning — knee, elbow, face-first into the ground, two seconds, stands over you), a calm text block (italic, left-bordered, the NPC crouches and says the negotiation line anyway), a damage line (`💢 N non-lethal damage — HP X / Y`), and a "He's Fine — Continue →" button. The damage is 1d4, minimum 1, and `S_story.hp` cannot drop below 1. When Continue is clicked, the fail panel hides, the payment section reappears with the ceiling amount, and the accept button is ready.
-
-The NPC **still pays the ceiling amount in all cases.** The check is not about whether you get paid more — it is about the cost of asking.
-
-**Architectural observation:** The fail panel is a narrative beat, not a punishment. The game does not prevent the player from negotiating. It does not reduce their payment. It shows them what it costs to push someone past their comfort. The NPC's anger is understandable. Their calming down is also understandable. The player receives a small wound and a story.
-
-The panel reset logic (called at modal open) ensures roll results from prior negotiations do not persist into new encounters. State cleanup is applied at the entry point, not the exit point — a more robust pattern.
-
-**Pattern observed:** The skill check adds information density without adding decision density. The player does not choose whether to roll — rolling is automatic on Negotiate. They receive the result and see both its consequence and its resolution in a single screen. The whole sequence is contained within the existing modal, no new overlays required.
-
----
-
-#### System 4 — Guaranteed Monster Weapon Drops with Auto-Equip and Finders Keepers
-
-**Prompt context:** Every monster should drop a weapon. The weapon's damage die is constrained by the monster's damage die. No level gate. If the drop is better than what's equipped, auto-equip it. You can't sell your last weapon.
-
-**Architecture:** Three new functions and one update to `_storyBattleVictory()`.
-
-`_weaponScore(w)` returns `die × count + magicBonus × 2`. This is the comparison metric for "better."
-
-`_rollMonsterWeaponDrop(monsterDmgDie)` filters `WEAPON_ITEMS` to entries where `w.die <= monsterDmgDie` and the tier is not already owned. No `minLevel` check. No `_magicTierAllowed()` check. The pool is flat-random across all eligible entries. If the player already owns every weapon at that die size, the fallback is any unowned weapon. If the player owns every weapon in the game, returns `null`.
-
-`_isLastWeapon(item)` returns true if selling this item would leave the player with zero weapons in that slot — the equipped slot is null AND there is only one copy in inventory. This function is applied as a filter in `storySellAll` and `storySellEquipment`. The auto-sell duplicate function (`_autoSellDuplicates`) is already structurally safe because it only removes when there are 2+ copies of the same base type.
-
-In `_storyBattleVictory()`, after the existing d100 loot drop, the monster's `S.opp.dmgDie` drives a `_rollMonsterWeaponDrop()` call. If `_dropScore > _curScore`, the old equipped weapon goes to inventory and the drop is equipped directly. The item is pushed to `dropsThisBattle` with `_autoEquipped: true`. The victory screen renders it in green (`svo-drop.auto-equipped`) with `"— ⚔ Equipped!"`.
-
-**Architectural observation:** The Finders Keepers rule is philosophically important. Normally `_rollD100Loot()` enforces `_magicTierAllowed()` — a +3 weapon requires Level 15+. Monster drops bypass this entirely. A Level 3 player fighting a berserker (dmgDie 12) could receive a +4 Lance. The game does not stop this. The game gives it to them. The explicit design decision is that found gear is different from bought gear. The market has restrictions. The world does not.
-
-The "last weapon" protection completes the loop: what is freely given cannot be freely taken. You can sell your extras. You cannot sell yourself into being defenseless.
-
-**Pattern observed:** The drop system now has two parallel tracks: the d100 loot table (gated, balanced, economy-aware) and the monster weapon drop (ungated, die-constrained, Finders Keepers). These tracks serve different functions. The loot table manages progression pacing. The monster drop adds chaos, delight, and the specific feeling of finding something unexpected in the body of your enemy.
+| Symbol | Verdict | Evidence |
+|---|---|---|
+| `_bfsPath` | **RETIRED** | 5 occurrences at the archive, 7 commits, 0 at HEAD. Replaced by `_roadGridDir` on the 90×360 geo grid (§WALK/§NAV-01). |
+| `storyCorridorTravel` | **RETIRED** | 2 at the archive, 3 commits, 0 at HEAD. Deleted by §CELL-11A. |
+| `_stalkedMonsterPick` | **RETIRED** | 3 at the archive, 5 commits. Survives at HEAD only as the tombstone `_stalkedMonsterPick) removed with the Hunt feature@38269`. |
+| `"⚡ Warped → …"` | **RETIRED, now FORBIDDEN** | 2 commits. Jump travel is invariant #3 — *no jump travel, ever*. The system as specified could not be re-shipped. |
+| `btn-hunt-toggle` | **RETIRED** | 3 at the archive, 3 commits. HEAD's element id is `btn-hunt`. |
+| `btn-dpad-stalk` | **NEVER SHIPPED** | **0 commits ever, 0 at the archive.** No element ever carried this id. |
 
 ---
 
-#### System 5 — Roll Line Shown on Pass
+## IV. Spec → Shipped Delta Table
 
-**Prompt context:** The CHA check roll result was only shown on failure. It should be shown on both outcomes.
+Runs both directions. ✅ = shipped as specified · ⚠️ = shipped, changed · ❌ = specified, absent
+(engine side) · **NOT SHIPPED** = claimed, never existed.
 
-**Architecture:** `eb-npc-cha-roll-line` was moved from inside `eb-npc-cha-fail-panel` to a sibling position above it in the card. On pass, it receives class `cha-pass` (green: `#44ee88`, `#051a0d`, `#22cc66`). On fail, no class (red default). In both cases `style.display = ''`. The reset at modal open sets `style.display = 'none'` and clears `className`.
-
-**Architectural observation:** Showing the roll result on success is not about transparency. It is about texture. The player who rolls a 19 and passes should feel the nearness of the alternative. The player who rolls a 3 and fails should not feel that the system is hiding something from them. Consistent information display — same panel, same format, different color — converts a single-state reveal into a full outcome screen.
-
----
-
-## III. The Architecture as a Whole
-
-After eight hours and five systems, `roll2hit-v3.html` is 12,637 lines. This is worth sitting with.
-
-12,637 lines. One file. Every comma is load-bearing. There is no dead code pathway because dead code pathways were audited out of this codebase methodically, layer by layer, report by report. The style of this project is: build the thing in the file, verify it in the file, document it outside the file, never move on until the previous layer is provably complete.
-
-The architecture exhibits several stable patterns that have been consistent across all 42 layers:
-
-**The state object is the source of truth.** `S_story` holds all mutable game state. Nothing is inferred from the DOM. If a value is not in `S_story`, it does not affect game behavior. This makes every function pure relative to its inputs and means that save/load via `localStorage` is trivially correct: serialize `S_story`, deserialize `S_story`, done.
-
-**Render functions are idempotent re-renders.** `storyRender()`, `storyRenderInventory()`, `storyRenderVendor()`, `_updateExitLinks()` — these functions destroy and rebuild their DOM targets each call. There is no partial-update diffing. This is slower than virtual DOM; it is also simpler than virtual DOM, and the game has no performance requirements that virtual DOM would solve. Correctness over cleverness.
-
-**Every BFS use is the same BFS.** `_bfsPath(from, to)` is called for waypoint movement, waypoint hop count, exit highlighting, and auto-inn pathfinding. The graph is `NODE_MAP`. The traversal is breadth-first. The function was written once. It is reused without modification.
-
-**Every new mode is a boolean in `S_story` and `_S_DEFAULTS()`.** `huntMode`, `surpriseAdvantage`, `roughWhiskeyUsed`, `yaelEscortUsed` — all follow the same pattern. Adding a mode is: add the field in two places, add the update function, add the event listener. The pattern never changes.
-
-**Monster stat blocks carry their own combat semantics.** Every entry in `MONSTER_POOL` and `WORLD_DB` has `dmgDie`, `dmgCount`, `dmgFlat`, `ac`, `hp`, `atk`, and `tier`. These are not references to a separate table. The stat block is self-contained. This means `_rollMonsterWeaponDrop()` can read `S.opp.dmgDie` without a lookup. The monster is its own documentation.
-
----
-
-## IV. The Philosophical Architecture
-
-All of the above is engineering. The engineering is in service of something that is not engineering.
-
-### The Curse of Knowledge
-
-Steven Pinker's concept of the Curse of Knowledge is: once you know something, you cannot remember not knowing it. You lose access to the state of confusion your students are in. You give instructions that assume the answer is already partially understood. You become impatient with the people who are where you were. You see the fix and stop seeing the person.
-
-Froberger, the dead researcher whose journal the player collects across 17 entries, died from the Curse of Knowledge. He knew how to seal the Void. He had all the technical information. He treated his knowledge as something to apply rather than something to share. He didn't make friends in Birka. He said they would slow him down. He was right in the short term. The Void is still open.
-
-The player's job is not to be smarter than Froberger. The player's job is to be *slower* than Froberger in the specific places that matter.
-
-### The Time Loop
-
-The Groundhog Day ending — triggered when the Void is sealed but the Curse of Knowledge score is ≥15 — shows the player: *"The Void is sealed. The curse is not in the Void."* The loop continues. You have solved the technical problem and missed the actual problem. The screen does not say you failed. It says: go around again.
-
-This is the Star Trek logic, the Groundhog Day logic, the time-loop logic: you are not being punished by the loop. The loop is offering you another chance to choose differently. The loop ends when you choose people over efficiency. When you help Yael because Yael needs help, not because helping Yael gives you a quest reward. When you win Quill's cipher not to unlock dialogue but because Quill is nervous about his debt and you have the afternoon.
-
-`_missionComplete()` evaluates 12 mission bits and returns true at 8. The eight you choose to satisfy are up to you. The four you skip are yours to carry.
-
-### The Message in the Code
-
-Froberger's last journal entry is a message to whoever finds the Codex after him. He does not know who they are. He does not know when they will arrive. He wrote it anyway, clearly, with everything he had figured out, because the alternative was letting it die with him.
-
-This game is that journal entry.
-
-The developer who writes this code does not know who will open the HTML file. It could be a student learning JavaScript who reads the source. It could be someone who just lost a D&D campaign and wants to feel something. It could be someone in a long loop of their own — professionally, personally, existentially — who needs to be reminded that the loop is not a punishment. It could be someone who just wants to fight a berserker and find a Lance on the floor afterward.
-
-The MIT License is the mechanism. No attribution required. No payment required. Modify it, fork it, rewrite it, give it to someone. The only condition is that you include the license. The license says: *this was made freely. pass it on.*
-
-### Mostly Walking
-
-Before this was a D&D game, it was a DOS game. Before it was a DOS game, it was a tabletop. The lineage matters.
-
-The DOS RPGs — Zork, Ultima, the old Infocom adventures — were not games about combat. Combat was punctuation. The game was reading. You walked from room to room. The room described itself. You read the description. You walked somewhere else. The description changed. You were, functionally, reading a novel with navigation. The fighting, when it happened, was an interruption of the reading — a gear-shift that said: *this moment has stakes.*
-
-`roll2hit` inherits this structure directly. The player navigates a 26×16 grid of named nodes. Moving from CI to IN is one button press and a paragraph of prose. Moving from IN to SL is one button press and different prose. The player's relationship to the game is: **walk, read, walk again.** The battles are the punctuation — the places where the text gives way to dice.
-
-This is not a limitation. This is the form.
-
-Old tabletop players understand this instinctively. A session of D&D is mostly talking. Mostly description. Mostly the DM saying: *"You arrive at the crossroads. The road to the left smells like smoke. The road to the right is quiet."* The fight is five minutes of an hour. The hour is what the fight is fighting for.
-
-`roll2hit` is a walking game with reading about your walking quest. The quest is the text. The text is the world. The combat is the proof that the world has teeth.
-
-The design consequence: every node needs a description worth reading. If the text is filler, walking is boring. If the text earns its prose — if Brynn's line about room six actually says something about who she is — then the walk from CI to IN is not navigation. It is visitation. You are going somewhere that has a person in it.
-
-This is why the NPC dialogue pools have 20 entries each, why Froberger's journal has 41 entries, why Yael's farewell changes based on where you're going. Not to simulate complexity. To make the walk worth the words.
-
-### Friendships with Magic
-
-This phrase is the game's thesis, stated once here and nowhere in the game itself.
-
-The Codex of Conquest is a game about magic — the Void, the Shards, the Convergence, the Covenant Ceremony. It is also a game about friendships — Yael and her daughter, Brynn and room six, Quill and his debt, Pachelbel and the shipment, Weckmann and the pit. The game doesn't tell you these are connected. It shows you that the magic becomes meaningful in proportion to the number of people who are alive to witness it.
-
-The Covenant Keeper ending names each person you helped. Not as a reward. As a record. These are the people who exist because you were not in a hurry. The Void is sealed. The people are here. That is the difference between Froberger's loop and yours.
-
-Friendships with magic. Not magic that makes you powerful. Magic that becomes possible because you chose friendship first. The curse is the belief that your knowledge is the solution. The cure is the discovery that your knowledge, shared with people who trust you, is a different kind of solution — one that doesn't require you to go through it alone every time.
+| # | Report claim | HEAD | Verdict |
+|---|---|---|---|
+| 1 | `_updateExitLinks()` computes the first step toward the waypoint before rendering exits | Does exactly this, via `wpDir = _roadGridDir(@37524` | ⚠️ contract kept, mechanism replaced |
+| 2 | The whole `.exit-line` row becomes clickable, not just the link | `el.setAttribute('onclick', "cellMove('…')")` on every active row | ✅ |
+| 3 | Waypoint row gets class `exit-waypoint`, `#22cc66` border | Class exact; border is now `var(--grn-lt)` = `#3A7A3A` | ⚠️ colour changed |
+| 4 | A `▶ WP` pill badge marks the row | `<span class="exit-wp-tag">▶ WP</span>`, both render paths | ✅ byte-exact |
+| 5 | `_updateWaypointBtn()` calls `_updateExitLinks()` at the end | Last statement of the function | ✅ |
+| 6 | Exits are derived from the BFS path over `NODE_MAP` | Exits are **one cell only**, from the geo grid; the comment `// Waypoint BFS direction (§CELL-09)@37520` sits directly above a `_roadGridDir` call | ⚠️ stale comment, see F3 |
+| 7 | `btn-dpad-stalk` was the center button being replaced | No such id, ever | **NOT SHIPPED** |
+| 8 | `btn-hunt-toggle` replaces it; `S_story.huntMode` (default `false`) is the single state bit | The field is live and still defaults `false`; the element is `btn-hunt` | ⚠️ id renamed |
+| 9 | `storyCorridorTravel()` rewritten to 18 lines, no modal | Function deleted entirely (§CELL-11A) | ❌ RETIRED |
+| 10 | Hunt off ⇒ footpath travel warps instantly | Warp is **banned** (invariant #3) | ❌ RETIRED + forbidden |
+| 11 | Hunt on ⇒ encounter weighted 6× toward quest-target monsters via `_stalkedMonsterPick()` | Hunt on ⇒ `baseRate * 2` capped at 0.8, and an 80 % bias toward monsters at/below the player's level | ⚠️ **different mechanic, same name** (§KG-01) |
+| 12 | `_updateHuntBtn()` paints amber (warp) or green glow (hunt) | Live; toggles class `hunting` and rewrites `title` | ✅ contract kept |
+| 13 | Negotiation rolls 1d20 + `floor((cha − 10) / 2)` vs DC 17 | `const roll   = Math.floor(Math.random() * 20) + 1;@30292`, `total >= 17` | ✅ byte-exact |
+| 14 | CHA 8 ⇒ −1 modifier, needs a natural 18 | 18 − 1 = 17 ≥ 17 | ✅ arithmetic exact |
+| 15 | Pass panel `#44ee88` / `#051a0d` / `#22cc66` | `#eb-npc-cha-roll-line.cha-pass@3388`, all three values | ✅ byte-exact |
+| 16 | Fail: anger block — *knee, elbow, face-first, two seconds, stands over you* | Shipped text is *knee, **fist**, face-first, stands over you, chest heaving*; no "two seconds" | ⚠️ paraphrase, see F6 |
+| 17 | Damage line `💢 N non-lethal damage — HP X / Y` | Byte-exact format string | ✅ |
+| 18 | 1d4, minimum 1, HP cannot drop below 1 | `S_story.hp     = Math.max(1, (S_story.hp || 1) - dmg);@30311` | ✅ |
+| 19 | "He's Fine — Continue →" button restores the payment section | Label byte-exact; handler restores both hidden sections | ✅ |
+| 20 | The NPC pays the ceiling in **all** cases | Both branches set `paymentCeiling` | ✅ |
+| 21 | Panel reset at modal open, not at exit | Reset block at `@30261` | ✅ |
+| 22 | Roll line moved to a sibling above the fail panel, shown on both outcomes | DOM order and both display paths exact | ✅ |
+| 23 | `_weaponScore(w) = die × count + magicBonus × 2` | Byte-identical archive → HEAD, 82 days | ✅ |
+| 24 | `_isLastWeapon()` blocks selling into an empty weapon slot; filters `storySellAll` / `storySellEquipment` | Both filters present, and the guard was **widened** to the off-hand `weapon` slot the report did not mention | ✅ + extended |
+| 25 | Drop pool = `w.die <= monsterDmgDie` and tier not owned; **no `minLevel`, no `_magicTierAllowed()`** | Pool adds `&& w.magicBonus === 0`; the level gate is still absent — because a base-tier cap makes it moot | ⚠️ **REVERSED**, see F2 |
+| 26 | Flat-random across eligible entries | `_seededNext()` (invariant #6, §VM-01-B) | ⚠️ improved |
+| 27 | *"A Level 3 player fighting a berserker (dmgDie 12) could receive a +4 Lance"* | True at the archive (`+4_lance` has `minLevel: 20`, bypassed). **Impossible at HEAD.** | ⚠️ correct when written |
+| 28 | Auto-equip when `_dropScore > _curScore`; old weapon to inventory; `_autoEquipped: true`; green `svo-drop.auto-equipped` with `— ⚔ Equipped!` | Every element byte-exact | ✅ |
+| 29 | Layer 41 adds `BIRKA_NPC_PROFILES`, six full portraits | Live; §NPC-01-B took it to **204 profiles** | ✅ scaled ×34 |
+| 30 | Layer 42 adds `NPC_DIALOGUES` — 6 NPCs × 4 states × 5 quotes | 4 states exact (`impartial` 213 / `friendly` 212 / `dearFriend` 209 / `questActive` 201); **213 keys** | ✅ scaled ×35 |
+| 31 | *"Pit-Fighter Weckmann"* is one of the six | Shipped under key **`crov`** | ⚠️ the §AUDIT-03n two-name split, present here too |
+| 32 | `_missionComplete()` evaluates 12 mission bits, true at ≥ 8 | 12 bits, `>= 8`, byte-exact | ✅ — but see F1 |
+| 33 | Four ending variants branch in `storyCheckVictory()` | All four branches present in source | ⚠️ **3 unreachable**, see F1 |
+| 34 | Groundhog Day fires when the Void is sealed and curse ≥ 15 | `curse >= 15` is the branch, and it is now **always true** | ⚠️ see F1 |
+| 35 | Journal: **17 entries** (§I and §VII) | **41** — at HEAD *and* at the archive | ❌ wrong when written; the same report says 41 in §IV |
+| 36 | Weapons: **70 (14 base × 5 magic tiers)** | `_BASE_WEAPONS` = 14, `WEAPON_ITEMS` = 14 × 5 = **70** | ✅ exact, 82 days |
+| 37 | Monsters 370 across 66 terrain entries | Exact at the archive; **398 / 111** at HEAD | ⚠️ scaled |
+| 38 | Nodes 71 (42 story + 7 junctions + MT + SL + 20 EB) | Internally consistent; 76 at the archive two days later; **416** at HEAD. `junction:true` is now a CI failure (`check:invariants` I1/I2) | ⚠️ scaled; one component forbidden |
+| 39 | §III thesis: *"Every BFS use is the same BFS — `_bfsPath(from, to)`, the graph is `NODE_MAP`"* | `_bfsPath` 0 occurrences; routing is road-weighted over a 90×360 cell grid | ❌ RETIRED |
+| 40 | §III thesis: *"Every new mode is a boolean in `S_story` and `_S_DEFAULTS()`"* | All four named fields live and still declared in `_S_DEFAULTS()` | ✅ holds |
+| 41 | §III thesis: *"the stat block is self-contained — `_rollMonsterWeaponDrop()` reads `S.opp.dmgDie` without a lookup"* | `const _monDmgDie = S.opp@25427` — the only `S.opp.dmgDie` read in the file | ✅ holds |
+| 42 | §V lineage: 18 lab reports | All 18 existed when written; **3 deleted by `120d617`** | ✅ correct when written, see F5 |
 
 ---
 
-## V. Lab Reports Referenced — An Intellectual Lineage
+## V. Findings
 
-This project has generated a corpus of lab reports that, taken together, form a design philosophy as much as a technical specification. They are listed here with their conceptual contribution.
+### F1 — Three of the four endings are unreachable, and the one that always fires is the failure ending. → §ENDING-01
 
-| File | Conceptual contribution |
-|---|---|
-| `lab-report-prompt-migration-arena-to-prototype.md` | The origin story: how a combat dice arena became a narrative engine |
-| `lab-report-story-codoex-curse-of-knowedge.md` | Pinker's Curse of Knowledge applied as game theme; the Froberger arc; sensory language principles |
-| `lab-report-game-story-codex-of-conquest.md` | The 51-node world map design; act structure; the Convergence as narrative target |
-| `lab-report-circuit-map-theory.md` | Corridor routing theory; the corridor as connective tissue between named nodes |
-| `lab-report-battleground-circuit-path-quest.md` | How corridors and Epic Battlegrounds interact; travel as encounter surface |
-| `lab-report-epic-battlegrounds.md` | 20 dead-end boss nodes; payment negotiation; auto-waypoint; the NPC system for deadly encounters |
-| `lab-report-drop-rates-balance-and-health.md` | XP compression; magic tier gates; d100 unified drop table; the economy as pacing tool |
-| `lab-report-loot-drop-weapon-economy.md` | Weapon tier system design; dagger/shield exclusivity; sell vs buy asymmetry |
-| `lab-report-leveling-flashbang-condition-economy.md` | Flashbang mechanics; condition costs; level-up architecture |
-| `lab-report-fish-with-dnd.md` | Yugurt Lake fishing; 20-tier fish as a self-contained difficulty ladder; play as leisure |
-| `lab-report-birka-beginner-arc.md` | Six NPC profiles; the Birka starter arc; quest design through human stakes |
-| `lab-report-npc-dialogue-system.md` | 4-state speech; occupation as lens; friendship changes specificity not warmth |
-| `lab-report-endings-and-echoes.md` | The Covenant Ceremony; Sweelinck's dynamic naming; NPC epilogues; Groundhog Day logic |
-| `lab-report-living-world.md` | Off-screen character Gigault; world momentum independent of player; the antidote to the cursor of knowledge |
-| `lab-report-web-of-connections.md` | Froberger's traces in NPC memory; the world predates the player; history as discovery |
-| `lab-report-plan-cleanup-v13.md` | Architectural compaction method; the spec lifecycle; verified-before-archived principle |
-| `lab-report-plan-cleanup-v17.md` | Shield stacking bug; spell DC inflation; potion type correction; compaction as hygiene |
-| **`lab-report-friendships-with-magic.md`** | **This document. The session postmortem. The thesis.** |
+`function _curseScore() {@28191` is **byte-identical between the archive and HEAD** — 82 days, zero
+drift. It partitions the 20 Epic Battlegrounds into returned / started-not-returned / never-started
+and returns `(startedNotReturned × 3) + (neverStarted × 1) − (allComplete ? 5 : 0)`.
+
+`returned` reads `S_story.ebReturnDone`. Its only writer is
+`S_story.ebReturnDone[ebCode] = true;@30363` inside `function _storyEbReturnBeat(ebCode) {@30358`,
+which **§EPIC-01 proved unreachable**: `c1d5a94` (2026-05-29) renamed the `NODE_MAP` keys and left the
+forty `QUEST_DB` epic ids as `quest_ef_*`, so every site that *computes* `'quest_' + code.toLowerCase()
++ '_return'` now addresses a phantom namespace. Independently re-confirmed here: `quest_prn_primary`
+has 0 occurrences, `quest_ef_primary` exactly 1.
+
+With `returnsComplete` pinned at 0, the arithmetic collapses to a closed form:
+
+> **curse = 20 + 2 × (EB bosses defeated)**, range **20 … 60**.
+
+Consequences, all measured at HEAD:
+
+- `if (missionDone && curse <= 0)` — **Covenant Keeper, dead.** The one ending that names each person
+  the player helped; the payoff the whole Layer-42 relationship system exists to deliver.
+- `else if (curse <= 0)` — **Standard Covenant, dead.**
+- `else if (curse >= 15)` — `Sweelinck sets the journal on the table@28258`, *"The Void is sealed. The
+  curse is not in the Void."* — **fires 100 % of the time.**
+- The final `else` (Mixed) is dead: the window `0 < curse < 15` cannot be entered.
+- Sweelinck's Last Question collapses the same way — always `Were you alone by choice?@28276`.
+- **2 of the 12 mission bits are permanently false**: `allEbReturns: Object.keys(NPC_DIALOGUES)@23656`
+  (needs ≥ 5 returns) and `noHighCurse: _curseScore() < 10@23660` (floor 20). `_missionComplete()`
+  still needs 8, now out of an effective 10.
+
+**Verdict: engine-rot, dated.** At the archive the epic ids resolved, so all 20 returns were
+achievable and `curse = −5` was reachable. The endings worked when this report was written and broke
+75 days ago. Fixing §EPIC-01 restores all three.
+
+**F1b — a separate, born-broken off-by-one.** `const _isTrue = missionDone && curse <= -6@28229`
+gates the *"Covenant Keeper (True)"* standing. The best attainable score in a fully working engine is
+`0 + 0 − 5 = −5` — the `(allComplete ? 5 : 0)@28204` bonus is the only negative term and it is worth
+exactly 5. **`curse <= -6` is unsatisfiable by construction**, and the same threshold is present at
+the archive. This one does **not** wait on §EPIC-01: it has never been winnable.
+
+### F2 — *Finders Keepers* was deliberately reversed, and its rationale is still in the code. → §FISH-02 (origin document)
+
+The archive's `_rollMonsterWeaponDrop` is byte-exact to this report's spec, comment included:
+`// Finders Keepers: no level/magic restrictions — die constraint only`. HEAD's is not:
+
+- `WEAPON_ITEMS.filter(w => w.die <= monsterDmgDie && w.magicBonus === 0@24587` — magic tiers excluded.
+- `const deg = Math.min(0, d6 - 5)@24592` — a −4…0 degradation roll, prefixing *Wrecked / Rusted /
+  Chipped / Worn*.
+- Justified in place by `FC06: monster drops capped at base tier@24586`, which continues *"fishing is
+  the only source of +bonus weapons"* — the giving half §DOC-02n measured as never built.
+
+**The call site still carries the original rationale.** `no level/magic gate (Finders Keepers)@25426`
+sits one line above `const _wpDrop = _rollMonsterWeaponDrop@25428`. Two comments in one call chain
+assert opposite contracts, ~800 lines apart, both live.
+
+**Census correction (instrument 14).** §DOC-02n / §FISH-02 record *"48 of 60 `WEAPON_ITEMS`"*.
+`const _BASE_WEAPONS = [@24471` holds **14** entries and `const WEAPON_ITEMS = [0, 1, 2, 3, 4]@24494`
+is a `flatMap` over five tiers: the set is **70**, and the unreachable count is **56 of 70**. Same
+fact, corrected figures — only the 14 `magicBonus: 0` entries have a live grant path.
+
+**F2b — the penalty is applied and not disclosed.** A degraded weapon carries `magicBonus: -1…-4`,
+which `S.weapon.flatMod = mw.magicBonus@24669` feeds straight into attack and damage. Three of the
+four surfaces that render a bonus print it **only when positive** — `_wpCopy.magicBonus > 0 ? ' +'@25442`
+(victory drop line), `const tag = mw.magicBonus > 0 ? dieStr@30917` (inventory tag),
+`it.magicBonus > 0 ? ' +' + it.magicBonus + ' atk/dmg'@31094` (item detail). Only the Character Sheet
+Main Hand row signs it. **A "Wrecked Long Sword" reads as a plain Long Sword everywhere the player
+picks it up**, while quietly costing −4 to hit and damage. The display code was written when a bonus
+could only be ≥ 0; the nerf did not revisit it.
+
+### F3 — A tombstone that outlived its own corpse
+
+`_updateHuntBtn / storyToggleHunt removed@38113` states that §TIMELESS-01 removed both functions.
+`function _updateHuntBtn() {@38074` and `function storyToggleHunt() {@38085` are declared **39 and 28
+lines above that comment**, are live, and `_updateHuntBtn()` is called from `storyRender`. §KG-01
+re-minted both names in place for a *different* mechanic and left the tombstone standing.
+
+This is §DOC-02c's retired-vocabulary hazard in its sharpest live form — the collision is not merely
+undated, it is **contradicted within one screenful**. Two milder instances found the same pass:
+`// Waypoint BFS direction (§CELL-09)@37520` sits directly above a `_roadGridDir` call, and
+`no level/magic gate (Finders Keepers)@25426` (F2).
+
+### F4 — The journal count is wrong twice, in the summary, and right once, in the prose
+
+§I and the §VII metrics table both state **17** journal entries. §IV states **41**.
+`const FROBERGER_JOURNAL = [@27184` holds **41 at HEAD and 41 at the archive** — §DOC-02i measured it
+as the only design constant in the corpus that has not moved in 79 days. So **17 was wrong on the day
+it was written**, twice, and the report contains its own correction.
+
+This inverts §DOC-02h's rule rather than confirming it: here the *narrative* passage is right and the
+*metrics table* is wrong. Consistent with instrument 12 — the 41 in §IV is quoted from the artifact
+while arguing a point about it; the 17 is a summary figure recalled to fill a row.
+
+### F5 — The lineage table had zero authoring errors; three of its entries have since been deleted
+
+15 of 18 files exist. `lab-report-loot-drop-weapon-economy.md`, `lab-report-plan-cleanup-v13.md` and
+`lab-report-plan-cleanup-v17.md` do not — and all three have **2 commits each: a create and a delete
+by `120d617`**, the commit §DOC-02b/§DOC-02i already recorded as removing six lab reports. The
+misspelled entry `lab-report-story-codoex-curse-of-knowedge.md` is the **actual filename on disk**,
+not a citation error. *A missing file is not a wrong citation — instrument 4 is what separates them.*
+
+### F6 — Instrument 12, on the finest grain the program has measured
+
+Every measured error in this document is in a composed passage; nothing transcribed is wrong.
+
+| Passage kind | Facts checked | Errors |
+|---|---|---|
+| Formulae quoted from code (`_weaponScore`, CHA modifier, DC 17) | 6 | **0** |
+| DOM ids, class names, colour triples, format strings, button labels | 14 | **1** (`btn-dpad-stalk`, 0 commits ever) |
+| Numeric summary rows (§VII table) | 9 | **2** (17 journal entries; the 71-node breakdown) |
+| Paraphrased prose (anger block, §IV) | 1 | **1** (elbow / "two seconds") |
+
+The single fabricated identifier and the single bad paraphrase sit in the two sentences that were
+*narrated* rather than pasted. `btn-hunt-toggle`, named in the same sentence as `btn-dpad-stalk`,
+is real — **half the sentence was copied and half was recalled.**
 
 ---
 
-## VI. The Open-Source Act
+## VI. Corpus Note — Two Same-Day Reports Specify Opposite Negotiation Semantics
 
-The MIT License on this codebase is not a legal formality. It is the act of leaving room six cleaner than you found it.
+`lab-report-epic-battlegrounds.md`, also dated 2026-05-22, specifies that failing the negotiation is
+**not punished**; §EPIC-03 was filed against HEAD on that basis. **This report explicitly designs the
+punishment** — *"the NPC still pays but expresses their displeasure physically"*, 1d4 non-lethal,
+floor 1 — and the engine implements this one, line for line.
 
-Froberger left a room clean. He left a journal. He left traces in every NPC who remembered him. He didn't announce this. He just did it, because the alternative was letting the information die. The player discovers this gradually — not through exposition, but through five people who each mention a quiet researcher who stayed one night and asked the right questions.
+So §EPIC-03's "is the damage intended?" half is **answered by measurement**: it is a deliberate,
+documented override, made the same day. What survives as a real defect is the half this report never
+considered — **the ceiling equals the floor on 16 of the 20 contracts**, so on those 16 negotiating
+can only cost HP and can never gain gold. The design is coherent exactly where ceiling > floor: 4 of 20.
 
-That is the design pattern. Leave the room clean. Leave the journal. Don't announce it.
-
-The developer who writes a 12,637-line single-file game engine for free, under a license that requires nothing, releases it into the world as a kind of letter. The letter says: *I figured some things out. Here they are. You don't have to start from zero.*
-
-Whether anyone opens it is not the point. The act of writing it clearly — architecturally, narratively, philosophically — is the message. The loop doesn't require a recipient. It just requires someone willing to do the work.
-
----
-
-## VII. Current State
-
-| Metric | Value |
-|---|---|
-| File | `roll2hit-v3.html` |
-| Line count | 12,637 |
-| Layers complete | 0–42 (all planned) |
-| Nodes | 71 (42 story + 7 junctions + MT + SL + 20 Epic Battlegrounds) |
-| Monsters | 370 across 66 terrain entries (46 base + 20 epic) |
-| NPCs with full dialogue | 6 (Yael, Brynn, Quill, Pachelbel, Weckmann, Auros) |
-| Ending variants | 4 |
-| Journal entries | 17 |
-| Weapons | 70 (14 base × 5 magic tiers) |
-| License | MIT — no restrictions, attribution optional |
-| Dependencies | Zero |
-| Distributable as | One file |
+Also traceable to this specification: `const roll   = Math.floor(Math.random() * 20) + 1;@30292` and
+the 1d4 at `@30311` are **two unseeded `Math.random()` calls writing persisted `S_story.hp`**
+(invariant #6 · §DX-02m · §EPIC-03). Both predate §VM-01-B, which moved the quest-path d20 to the
+seeded stream and never reached surfaces that roll their own.
 
 ---
 
-## Appendix: The Design Contract
+## VII. State Then and Now
 
-The contract this project keeps with whoever finds it:
+| Metric | 2026-05-22 (claimed) | Archive `32c10c5` | HEAD 2026-08-12 |
+|---|---|---|---|
+| Lines | 12,637 | 14,377 | 38,712 |
+| Nodes | 71 | 76 | 416 |
+| Monsters / terrains | 370 / 66 | 370 / 66 | 398 / 111 |
+| NPC dialogue sets | 6 | 6 (`crov`, not `weckmann`) | 213 (204 profiles) |
+| Journal entries | 17 *(and 41 in §IV)* | **41** | **41** |
+| Weapons | 70 (14 × 5) | 70 | **70** |
+| Ending variants | 4 | 4 reachable | **4 declared, 1 reachable** |
+| Quests | — | — | 2,853 |
 
-1. It runs without setup.
-2. It does not phone home.
-3. It is readable. The code is the documentation.
-4. It is changeable. The license says so.
-5. It is complete enough to play and incomplete enough to extend.
-6. It was made with care.
-7. It was made for joy.
-
-The Curse of Knowledge says: once you know how to make something good, you forget what it felt like not to know. The antidote is not simplifying your work. The antidote is remembering that the person who needs it is not you. It is whoever opens the file next.
-
-Make it for them.
-
----
-
-> *"You reached Level 20. The game has nothing left to give you — except the source code.*
-> *Open it. Read it. The data structures are named clearly. The monster pool is a JavaScript object. The quest system is a const with completion functions. The world map is a grid. None of it is magic. All of it is yours.*
-> *The MIT License means: no permission required. Fork it. Name your world. Add your monsters. Write your own Froberger. Put your own people in the inn.*
-> *The shell finds the line. The sed replaces it. The grep counts what's there. The markdown keeps track. The loop doesn't end because you sealed the Void — it ends when you build the next one.*
-> *Level 21 is undefined. That's the invitation.*
-> *See `plan.md` §XIV — The World Creator. The next quest has no NPC to give it to you. You are the NPC now."*
->
-> — Quest -1: The Open Door (triggers at Level 20, `plan.md` §XIV)
+The report's line/node figures cannot be checked at 2026-05-22 — no build survives from that day; the
+nearest is two days later. Both are internally consistent and are recorded as unverifiable, not wrong.
 
 ---
 
-*Report written 2026-05-22. Updated 2026-05-24.*  
-*Eight hours in the loop. All layers complete.*  
-*The Void is sealed. The curse is not in the Void.*  
-*Friendships with Magic.*
+## VIII. Defects Filed
+
+| Row | Premise | Design call? |
+|---|---|---|
+| **§ENDING-01** *(new)* | `_curseScore()` floor is 20 because `ebReturnDone` has no reachable writer → Covenant Keeper, Standard Covenant and Mixed are all unreachable; Groundhog Day Cursed is the only ending the game can produce; 2 of 12 mission bits permanently false. **Resolved by fixing §EPIC-01** — sequence behind it. | No |
+| **§ENDING-01 (b)** *(new)* | `missionDone && curse <= -6@28229` against a score floor of −5: the *"Covenant Keeper (True)"* standing is unsatisfiable and always has been. One-character fix, but which threshold is intended is the author's call. | Small |
+| **§FISH-02** *(extended)* | Denominator corrected: **56 of 70** `WEAPON_ITEMS` unreachable, not 48 of 60. Adds **F2b**: negative `magicBonus` is applied to attack/damage but hidden on 3 of 4 render surfaces. Adds the live-comment contradiction (`Finders Keepers@25426` vs `FC06@24586`). | Existing |
+| **§AUDIT-03aa** *(extended)* | Second instance of the class, and stronger: `_updateHuntBtn / storyToggleHunt removed@38113` is refuted by declarations 39 and 28 lines above it. Adds the stale `// Waypoint BFS direction (§CELL-09)@37520`. Argues the wanted detector is *"a comment asserting removal of a symbol that resolves"* — mechanically checkable. | No |
+| **§EPIC-03** *(narrowed)* | The damage-on-fail half is **answered**: deliberate, specified by this report, implemented faithfully. What remains open is ceiling == floor on 16 of 20, which makes negotiation strictly dominated there. | Small |
+| **§FISH-01** *(impact note)* | Yael's Level-1 tutorial monologue directs every new player to *"go north to Yugurt, to the cabin, and find the old man… the water gives up what no shop stocks."* Per §FISH-01 the lake node can never render its fishing surface. The tutorial points at the unreachable feature. | No |
 
 ---
 
-MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.
+## Appendix — Lineage Table, Re-Checked
+
+The §V lineage list cited 18 reports. **All 18 existed when written**; 15 are still on disk. The
+three that are not each carry exactly two commits — a create and a delete by `120d617`:
+`lab-report-loot-drop-weapon-economy.md` (weapon tiers; sell/buy asymmetry),
+`lab-report-plan-cleanup-v13.md` (spec lifecycle) and `lab-report-plan-cleanup-v17.md` (shield
+stacking; spell DC inflation). The misspelled `lab-report-story-codoex-curse-of-knowedge.md` is the
+literal filename on disk. Five of the surviving entries have since been verified by this program:
+§DOC-02c, §DOC-02d, §DOC-02f, §DOC-02j, §DOC-02l, §DOC-02m.
 
 ---
+
+## Conclusion
+
+The engineering in this session has aged unusually well. Two systems are byte-exact 82 days on, one
+survived a total world-coordinate migration with its contract intact and every line rewritten, and
+the relationship architecture it introduced scaled from 6 characters to 213 without a change to the
+shape it defined. Nothing the author transcribed was wrong.
+
+What did not survive is the thesis. *Friendships with Magic* names a payoff — an ending that reads
+back the name of every person you stopped for — and that ending is currently unreachable, because a
+rename in a different subsystem orphaned the quest ids a curse score is computed from. The player
+still helps Yael, still wins Quill's cipher, still seals the Void, and is still told: *the curse is
+not in the Void. Come back when you're ready.*
+
+The report closes on the observation that a check nobody runs reports green. This is the same failure
+one level down: **a payoff nothing tests reports shipped.** All four endings are in the source. Three
+of them are decoration.
+
+---
+
+*Report written 2026-05-22, updated 2026-05-24. Verified against HEAD 2026-08-12 (§DOC-02o).*
+*Original claims are preserved; nothing measured as unshipped has been deleted.*
+
+---
+
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
