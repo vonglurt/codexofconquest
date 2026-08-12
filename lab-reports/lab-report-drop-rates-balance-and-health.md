@@ -1,270 +1,309 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Drop Rate Calibration, Health Economy Balancing, and the Cooperative PVE Rest Architecture in *The Shattered Codex*
+# Drop Rate Calibration, Health Economy, and the Rest Architecture in *The Shattered Codex*
 
-**Roll2Hit v3 — Game Design Analysis Report**  
-**Series:** Laboratory Reports on Narrative Engine Architecture  
-**Classification:** Game Balance · Economy Design · Player Experience  
-**Date:** 2026-05-21  
-**Status:** Design Specification + Rationale Document
+**Roll2Hit v3 — Laboratory Report**
+**Classification:** Game Balance · Economy Design · Rest Mechanics
+**Written:** 2026-05-21 · **Verified against HEAD:** 2026-08-11 (§DOC-02j)
+**Status:** Design specification — **verified, corrected, and re-scored**
 
 ---
 
 ## Abstract
 
-This report documents the health economy, drop rate design, and rest mechanic architecture of *The Shattered Codex*, a solo PVE narrative adventure layer built atop the Roll2Hit v3 combat engine. The central design question is: *how do you give a player a meaningful challenge without punishing them for exploring?* We present a stat-derived reward formula (`reward = floor(0.1 × AC × maxHP)`) that makes enemies self-funding — fighting harder enemies yields proportionally larger health recovery and gold — and a rest system a short/long rest mechanics, extended with a location-collection sub-system called the **Necklace of Knowledge**. The overarching design philosophy is the **Cooperative DM Principle**: in a solo PVE experience, the dungeon master is structurally on the player's side. Difficulty exists as texture, not obstruction.
+This report specified three coupled systems: a stat-derived kill reward
+(`reward = floor(0.1 × AC × maxHP)`) driving XP, healing and gold from one product; a
+d20 loot table as a per-kill healing floor; and a Layer-13 rest architecture (short-rest
+allowance, Necklace of Knowledge, Boy Scouts Camping Award) that its own Appendix A
+declared **unimplemented**. Re-measured 82 days later: **the reward formula shipped
+verbatim, the rest architecture shipped in full, and the loot table shipped as a
+different structure.** The report's Appendix A is now the stalest thing in it — six of
+its seven "📋 Planned" rows are live code. The measured error is concentrated in the
+report's **illustrative** passages: of five worked monster examples, **two name monsters
+that have never existed** and two carry wrong stats, while the transcribed data
+(sell values, potion heals, bead record shape) is exact.
 
 ---
 
-## I. Introduction
+## I. Method
 
-### I-A. The Problem Space
+Instruments applied (§DOC-02 house method): batch `grep -c` census before reading the
+prose; `git log -S` on every dead symbol to separate **RETIRED** (shipped, later removed)
+from **NOT SHIPPED** (never existed); archive adjudication at `32c10c5` (2026-05-24,
+earliest surviving build) for every claim about the past; **the delta table run both
+ways** — HEAD checked for a specified behaviour before any row is marked NOT SHIPPED;
+and a home-doc cross-check against `docs/mechanics/mechanics-combat.md` and
+`mechanics-economy.md`.
 
-Commercial action RPGs resolve the challenge-vs-accessibility tension through contests: lives, energy meters, pay-to-continue, or difficulty sliders. These mechanisms are extrinsic to the game world — they break immersion and communicate to the player that the game is working *against* them.
-
-*The Shattered Codex* takes a different position. The player navigates a 42-node world across 49 days to collect 7 Codex Shards. Combat is unavoidable; rest costs gold; the Void Tide advances on a calendar. These are real pressures. But the system is designed so that the *natural play path* — fight, rest, explore, follow quests — produces net-positive resource flow. A player who engages with the game as intended never hits a wall.
-
-This is the **Cooperative DM Principle**: the dungeon master's job is to make the story compelling, not to prevent the player from finishing it.
-
-### I-B. Scope of This Report
-
-This report covers three interlocking systems:
-
-1. **Drop Rate & Health Economy** — the stat-derived reward formula, loot table, and how they interact with enemy difficulty to produce self-funding combat
-2. **Rest Architecture** — short rests, long rests, inn recovery, and the Necklace of Knowledge location-collection layer
-3. **Design Philosophy** — the theoretical underpinning for why these systems work together.
+A claim that did not ship is marked **NOT SHIPPED** and **kept**. Lab reports are
+HISTORY: nothing is silently deleted.
 
 ---
 
-## II. Health Economy Design
+## II. Census
 
-### II-A. The Reward Formula
+| Class | Resolves at HEAD | Note |
+|---|---|---|
+| Named state fields | 3 / 4 | `hearthHome` RETIRED (§CELL-13) |
+| Named functions / structures | 4 / 6 | `LOOT_TABLE` declared but unread; `shortRestHealAmt` never existed |
+| Monster statlines (§II-A table) | 1 / 5 exact | 2 never existed, 2 wrong stats |
+| Loot-table sell values | 4 / 4 exact | 25 · 75 · 200 · 500 |
+| Potion heal values | 4 / 4 exact | 10 · 25 · 50 · 100 |
+| Bead record shape (§III-D-1) | byte-exact | `{ name, icon, node, type:'knowledge' }` |
+| Appendix A "📋 Planned" rows | **6 of 7 shipped** | the inverse of its own status |
 
-Every enemy kill produces three resources simultaneously. All three derive from the same underlying formula:
+**Overall: 21 of 30 measurable claims hold (70%).** Every failure is in a passage the
+author **composed**; every passage the author could **copy** is exact.
 
-```
-XP        = AC × maxHP
-reward    = floor(0.1 × AC × HPLoss)
-healAmt   = reward
-goldDrop  = reward
-```
+---
 
-Since the enemy dies at 0 HP, `HPLoss = maxHP`, giving:
+## III. As-Built Inventory
 
-```
-reward = floor(0.1 × AC × maxHP) = floor(XP × 0.1)
-```
+**Kill reward** — `_storyBattleVictory`, one block:
+`const reward` is `Math.floor(...)` over `S.opp.maxHp || 10) * 0.1@25309`;
+`// heal stays at base@25310`; `const goldDrop = Math.floor(reward * partyMult)@25311`.
+XP is `S.enemy.ac` × `S.opp.maxHp` × `partyMult`, rounded, one line above.
 
-**Key property:** XP, HP healed, and gold earned are all proportional to the same enemy stat product. A harder enemy — one with higher AC and more health — rewards more across all three axes simultaneously. There is no tradeoff between "challenging fight" and "good reward." The player is never incentivized to farm weak enemies.
+**Loot** — `const _D100_TABLE =@24516` (7 weighted rows, total 100),
+`function _rollD100Loot@24533`, `const POTION_TIERS = {@24306`.
+`const LOOT_TABLE =@24441` — the 20-entry d20 array this report documents — is still
+declared and has **no reader**.
 
-**Representative examples:**
+**Rest (Layer 13)** — `function storyShortRest@25817`, `const base  = Math.floor(S_story.hpMax * 0.25)@25838`,
+`const heal  = isInn ? base : base * 2@25839`, `if (_lv >= 2) S_story.surgeCharges@25844`,
+`Boy Scouts Award — doubled!@25858`.
+**Necklace** — `function _knowledgeIcon@25788`, `function _maybeAddKnowledgeBead@25808`,
+`S_story.knowledge.push({ name, icon@25814`, defaults `shortRests: 3, knowledge: []@23075`,
+render `makeSection('🔮 Necklace of Knowledge')@31230`.
+**Long rest** — `const _rollCount = _isFirstSleep ? 2 : 1@36255`,
+`_healTotal = Math.max(_healTotal@36263`, `S_story.day = Math.min(49, S_story.day + 1)@36270`,
+`S_story.shortRests = 3@36306`, `Boyscout Night! Double rolls@36317`.
+**Gate leaf** — `if (g.restedAtMin)@22074`, consumed by exactly one quest:
+`quest_d0206_a3: { id:@21790`, `restedAtMin:{ SZG:1 }@21793`.
 
-| Enemy | AC | Max HP | XP | Heal (HP) | Gold (gp) |
-|---|---|---|---|---|---|
-| Goblin Cutpurse | 11 | 7 | 77 | 7 | 7 |
-| Wererat | 13 | 33 | 429 | 42 | 42 |
-| Orc Warlord | 16 | 93 | 1,488 | 148 | 148 |
-| Vampire Spawn | 15 | 82 | 1,230 | 123 | 123 |
-| Ancient Dragon | 22 | 367 | 8,074 | 807 | 807 |
+---
 
-The dragon fight that nearly kills you also heals you for 807 HP and pays 807 gp. The system is self-correcting: the fights that drain resources the most also replenish them the most.
+## IV. Spec → Shipped Delta Table
 
-### II-B. Loot Table Distribution
-
-In addition to the stat-derived reward, every kill rolls a d20 on a weighted healing potion table:
-
-| d20 | Item | Weight | Sell Value |
+| # | Report claim | HEAD | Verdict |
 |---|---|---|---|
-| 1–10 | 🧪 Minor Healing Potion (+10 HP) | 50% | 25 gp |
-| 11–15 | 🫧 Healing Potion (+25 HP) | 25% | 75 gp |
-| 16–18 | 💜 Greater Healing Potion (+50 HP) | 15% | 200 gp |
-| 19–20 | ✨ Superior Healing Potion (+100 HP) | 10% | 500 gp |
-
-**Expected value per kill:** `0.50(10) + 0.25(25) + 0.15(50) + 0.10(100)` = `5 + 6.25 + 7.5 + 10` = **28.75 HP** of potion healing per kill on average.
-
-This is independent of enemy difficulty. A Goblin Cutpurse and an Ancient Dragon both roll the same table. The loot table is a floor — a minimum recovery guarantee per fight — while the stat-derived reward is a ceiling that scales with difficulty. Together they form a health safety net that is always nonzero.
-
-### II-C. Monster-Specific Drops
-
-A third drop layer — the `MONSTER_DROPS` trophy system — provides sellable items (fangs, pelts, weapon drops) keyed by monster. These feed the vendor economy, enabling potion purchases between combats. Trophy drops do not heal directly; they convert to gold via vendor nodes, which then purchases potions. This creates a secondary health recovery channel mediated by exploration (vendor access) and economy (gold management).
-
-### II-D. Net Health Flow Analysis
-
-For a median enemy (Wererat, AC 13, HP 33):
-- Immediate heal: **+42 HP**
-- Loot table average: **+28.75 HP** (deferred via potion use)
-- Gold: **+42 gp** (buys ~0.8 Minor Potions at 50 gp each)
-
-Total immediate + deferred recovery per fight: approximately **70 HP**. A player who enters a Wererat fight at 1 HP and wins exits with meaningful survivability restored. This is intentional. The game does not punish "scraping through."
+| 1 | `XP = AC × maxHP` | same, `× partyMult`, rounded | ✅ + party term |
+| 2 | `reward = floor(0.1 × AC × maxHP)` | identical | ✅ **verbatim** |
+| 3 | `healAmt = reward` | identical | ✅ **verbatim** |
+| 4 | `goldDrop = reward` | `floor(reward × partyMult)` | ⚠️ party term (§MESH-01f) |
+| 5 | Heal scales with difficulty without limit | capped `min(hpMax, …)` | ❌ **saturates — see F2** |
+| 6 | d20 `LOOT_TABLE`, 4 potion rows | array exists, **0 readers**; live roll is `_D100_TABLE` | ❌ **documents dead code** |
+| 7 | Loot sell values 25/75/200/500 | identical | ✅ **verbatim** |
+| 8 | Potion heals 10/25/50/100 | identical | ✅ **verbatim** |
+| 9 | Expected potion heal **28.75 HP/kill** | **21.0 HP** live; 27.75 from its own table | ❌ **overstated 37%** |
+| 10 | Minor Potion costs 50 gp to buy, sells 25 | identical | ✅ **verbatim** |
+| 11 | `MONSTER_DROPS` trophy layer → vendor gold | live | ✅ |
+| 12 | Goblin Cutpurse AC 11 HP 7 | **0 commits ever** | ❌ **never existed** |
+| 13 | Orc Warlord AC 16 HP 93 | **0 commits ever** | ❌ **never existed** |
+| 14 | Wererat AC 13 HP 33 | `ac:12, hp:33` — also 12 at archive | ❌ **wrong when written** |
+| 15 | Vampire Spawn AC 15 HP 82 | identical | ✅ **verbatim** |
+| 16 | Ancient Dragon AC 22 HP 367 | `hp:546` — also 546 at archive | ❌ **wrong when written** |
+| 17 | 3 short rests/day, reset on inn sleep | identical | ✅ |
+| 18 | Short rest = flat % of `hpMax` | `floor(hpMax × 0.25)` | ✅ |
+| 19 | …"scaled by CON modifier or level proxy" | flat, **no CON term** | ❌ NOT SHIPPED |
+| 20 | `shortRestHealAmt` field | **0 commits ever** | ❌ never existed |
+| 21 | Boy Scouts: 2× heal at non-inn nodes | identical | ✅ **verbatim** |
+| 22 | Award message *"Roughing it…"* | **0 commits ever** | ❌ NOT SHIPPED |
+| 23 | Award is "display-only at the mechanical level" | it is mechanical (`base * 2`) | ❌ self-contradictory |
+| 24 | Inn rest (DGQR) = **full HP** | `d10 + CON` rolls, floor 50% `hpMax` | ❌ **NOT SHIPPED — see F3** |
+| 25 | Inn sleep advances calendar 1 day | identical, clamped to 49 | ✅ |
+| 26 | Inn sleep sets Hearth Home | `hearthHome` **RETIRED** (§CELL-13) | ❌ retired |
+| 27 | Necklace bead `{ name, icon, node, type }` | identical | ✅ **byte-exact** |
+| 28 | Beads stored in `S_story.inventory` | own top-level `S_story.knowledge` | ⚠️ relocated |
+| 29 | One bead per unique rest location, no dupes | identical | ✅ |
+| 30 | Beads display-only, not usable/sellable | identical | ✅ |
+| 31 | Six named example beads | all **0 commits ever**; names derived from `node.label` | ❌ never existed |
+| 32 | Knowledge section in inventory overlay | live | ✅ |
+| 33 | Quest-boosted encounters, 6× weight | `_stalkedMonsterPick` deleted | ❌ **RETIRED** (§TIMELESS-01) |
+| 34 | Checkpoint respawn at **½ HP** | `hp = 1` — also 1 at archive | ❌ **wrong when written** |
+| 35 | 42-node world | **416** nodes | ❌ stale (§AUDIT-03u) |
+| 36 | 8 inn nodes | **38** `sleep:true` nodes | ❌ stale |
+| 37 | 49-day clock, 7 Codex Shards | identical | ✅ |
 
 ---
 
-## III. Rest Architecture
+## V. Findings
 
-### III-A. Rest Mechanics — The Reference Model
+### F1 — The Appendix A inversion
 
-We often see two rest types:
+Appendix A lists seven Layer-13 mechanics as *"described in this report but not yet
+implemented."* **Six shipped and the seventh shipped in altered form.** The whole layer
+exists under `LAYER 13: Short Rests & Necklace of Knowledge@25785`, and the specified
+bead record shipped **byte-exact** to the field list in §III-D-1.
 
-- **Short Rest** (1 hour): Spend Hit Dice to recover HP. Each die roll + CON modifier restores HP. A character has a number of Hit Dice equal to their level. Spent Hit Dice recover on Long Rest.
-- **Long Rest** (8 hours): Regain all HP. Recover half spent Hit Dice. Reset spell slots and most limited-use abilities.
+This is the first report in the program whose **own status block** is its stalest
+section — and the cleanest argument for the two-way delta rule: read against HEAD alone,
+every one of these rows reads as a live gap.
 
-Standard 5e allows unlimited short rests between long rests, though most encounters are balanced around 6–8 encounters per long rest. *The Shattered Codex* adapts this model with a simplified constraint appropriate to a single-file arcade RPG: **3 short rests per day**, reset on long rest at an inn.
+### F2 — The self-funding thesis holds on two axes of three
 
-### III-B. Short Rest Implementation
+§II-A's central claim — *"XP, HP healed, and gold earned are all proportional to the
+same enemy stat product… no tradeoff between challenging fight and good reward"* — is
+true for XP and gold and **false for healing**, because the heal is clamped:
+`S_story.hp = Math.min(S_story.hpMax, …)`.
 
-**Allowance:** 3 short rests per calendar day.  
-**Reset trigger:** Long rest at any inn node.  
-**Simplification:** Rather than Hit Die rolls, short rests restore a flat HP amount scaled to the player's current `S_story.hpMax`. This avoids the stat complexity of CON modifiers while preserving the D&D pacing model.
+`hpMax` starts at `10 + CON mod` and grows by `d10 + CON mod` per level, so a level-20
+character sits near 155 HP. The heal axis therefore **saturates** wherever
+`0.1 × AC × maxHP ≥ hpMax` — at level 1 (`hpMax` ≈ 12) that is any monster with
+`AC × HP ≥ 120`, i.e. nearly the whole pool. **Four of the report's own five example rows
+are simply "full heal" at level 1**, and §II-A's *"the dragon fight… also heals you for
+807 HP"* can never occur at any level.
 
-Short rests represent catching breath, binding wounds, eating trail rations. They are contextual — the game does not require a specific location. A player can short-rest at a junction, a beach, or a dungeon corridor.
+A heal capped at maximum HP is correct behaviour, so this corrects the report's rhetoric,
+not the engine: **it treats a saturating axis as a linear one and builds its anti-grind
+argument on it.**
 
-### III-C. Long Rest — Inn Nodes
+### F3 — The rest architecture shipped inverted, and promises full HP in two strings
 
-**8 inn nodes** are distributed across the 42-node world at key act transitions. Sleeping at an inn:
+§III-B explicitly sets aside the 5e model: *"Rather than Hit Die rolls, short rests
+restore a flat HP amount."* HEAD does exactly that — **and ships Hit Die rolls on the
+long rest instead**: `2 × d10 + CON` on a first visit, `1 × d10 + CON` on a revisit,
+floored at 50% `hpMax`. The specified `S_story.hp = S_story.hpMax` never shipped.
 
-1. **Restores full HP** (`S_story.hp = S_story.hpMax`)
-2. **Resets the short rest counter** to 3
-3. **Advances the calendar** by 1 day (triggering Void Tide pressure checks)
-4. **Sets or confirms Hearth Home** if the player designates this inn as their base
+The consequence is player-facing. The sleep overlay states
+`full HP recovery@35759` and `heal to full & advance a day@35758` — **a promise the code
+does not keep.** This is the §AUDIT-03v/w/y(b) class (a player-facing string naming a
+mechanical effect with nothing behind it), and the **sixth instance in six increments**,
+confirming §DOC-02h's finding that the class is not confined to gold. → **§AUDIT-03v/w
+cluster**
 
-Inns cost gold (scaled by act). The gold cost creates a meaningful resource decision: spend now for full recovery and rest-counter reset, or conserve and take a short rest. This is the core economic loop of the rest system.
+### F4 — "Boy Scouts" names two different mechanics with opposite rationales
 
-#### III-C-1. Double Good Quality Rest
+The award shipped **twice**:
 
-Inn rest is classified as a **Double Good Quality Rest (DGQR)**. The DGQR designation reflects the narrative reality: the player character has access to:
-- Security (locked room, no random encounter during sleep)
-- Comfort (real bed, warmth, shelter from weather)
-- Nourishment (a meal included in the inn fee)
-- Hygiene (the implied shower — a clean adventurer is a rested adventurer)
+- **Short rest** — `Boy Scouts Award — doubled!@25858`, fired when `!isInn`. This is the
+  spec's rationale exactly: sleeping rough is harder, so the game doubles the heal.
+- **Long rest** — `Boyscout Night! Double rolls@36317`, fired when `_isFirstSleep`. This
+  is a **first-visit** bonus that fires **at an inn** — inverting the spec's own framing
+  (*"a ranger sleeps better under stars than in a tavern"*).
 
-In mechanical terms, DGQR means **full HP restoration** rather than the partial recovery of a standard long rest in the field. This distinguishes the inn from a wilderness camp and gives the vendor/inn economy clear value.
+One name, two mechanics, opposite meanings, two spellings (`Boy Scouts` / `Boyscout`),
+and no doc distinguishes them. The report's own name for it — *"Boy Scouts Camping
+Award"* — has **0 commits ever**. → **§AUDIT-03aa**
 
-### III-D. The Necklace of Knowledge
+### F5 — The short rest is implemented twice, and the copies have already diverged
 
-The Necklace of Knowledge is a **passive collection inventory sub-system** that rewards exploration through rest. It does not grant active powers — it is a bestiary of places, a souvenir rack of locations the player has rested in, hung as beads on a metaphorical necklace.
+`storyShortRest@25817` is the canonical Layer-13 path. A second, independent copy lives
+in the post-battle return row at `const _rests = () => S_story.shortRests@7133`, with
+`const base = Math.floor(S_story.hpMax * 0.25)@7145` and
+`const heal = isInn ? base : base * 2@7146` — the heal math byte-identical.
 
-#### III-D-1. Structure
+Everything else diverges. The battle-return copy spends the same allowance but does
+**not**:
 
-- Stored as a sub-array of `S_story.inventory` with `type: 'knowledge'`
-- Each bead is a unique rest-location token: `{ name, icon, node, type:'knowledge' }`
-- Cannot be used, sold, or dropped — display-only
-- Visible in inventory as a distinct section: **🔮 Necklace of Knowledge**
+- grant the Necklace bead (`_maybeAddKnowledgeBead` uncalled) — **so resting here builds no necklace**;
+- set `shortRestedAtNodes`, so no Necklace Token is earned **and no `restedAtMin` gate credit accrues** —
+  `quest_d0206_a3` (`restedAtMin:{ SZG:1 }@21793`) cannot be opened by this path;
+- restore Action Surge charges (`if (_lv >= 2) S_story.surgeCharges@25844` has no twin);
+- print the Boy Scouts message, **though it applies the 2× multiplier anyway**.
 
-#### III-D-2. Acquisition
+Two copies of one formula, silently disagreeing on four consequences. → **§DX-02t**
 
-A new bead is added to the necklace the **first time the player rests at each unique location**. Each node where rest is possible (inn, wilderness camp, vendor shelter, boat, etc.) produces exactly one bead over the course of a run. Repeat rests at the same node do not add duplicates.
+### F6 — §II-B documents a table no surviving build has ever read
 
-This creates an organic completionism incentive aligned with exploration: a player who seeks out every rest location fills their necklace, and does so by playing the game well (surviving long enough to reach each location).
+`const LOOT_TABLE =@24441` is a 20-entry d20 array, exactly as described, and the
+transcription is near-exact: **all four sell values (25/75/200/500) and three of four
+slot counts (5 Healing, 3 Greater, 2 Superior) are correct.** The single error is an
+**edit** — the array's 2 Spell Scroll slots are dropped and folded into Minor Healing
+Potion (8 → 10), which is precisely the 1.0 HP gap between the report's stated
+**28.75 HP** and the **27.75 HP** its own source table yields.
 
-#### III-D-3. Example Beads
+But the array has **one occurrence in the file — its own declaration — and had exactly
+one at `32c10c5` as well.** No surviving build has ever contained a reader. Live rolls go
+through `_D100_TABLE` (potion weights 35/18/14/6 of 100), whose expected potion heal is
+**21.0 HP per kill** — 27% below the report's figure, with **27% of rolls returning no
+potion at all**. The roll adds `_luckMod()` and the potion rows sit at the low end of the
+table, so **higher Luck shifts the roll away from healing** toward scroll/flashbang/gold:
+the report's "floor" shrinks as Luck rises.
 
-| Location | Bead Name | Icon |
+Two doc-side defects fall out. Both home docs state the array is gone —
+`mechanics-economy.md:253` (*"(removed) … definition now a comment stub"*) and
+`mechanics-combat.md:193` — **while HEAD still declares it in full**; and its own FC05
+pointer comment claims it is *"used by `_rollD100Loot()`"*, which reads `_D100_TABLE`.
+Three sources, three different claims. → **§DX-02n (f)**
+
+### F7 — The illustration/transcription gradient, sharpened
+
+The transcription/narration gradient holds a fifth consecutive time, but this report
+refines it. The failing passage is a **table** — §II-A's five worked examples — the form
+the rule predicts should be *safe*. Every value in it is invented or misremembered, while
+§II-B's table, §III-D-1's record shape and the formula appendix are exact.
+
+**The predictor is not table-versus-trace; it is whether the passage is a COPY of a
+source or an ILLUSTRATION composed to make a point.** §II-A's monsters were chosen to
+show a difficulty gradient, so they were written from memory: two invented outright, two
+with stats bent toward the curve being argued for. **A table composed to persuade fails
+exactly like a reconstructed trace.**
+
+---
+
+## VI. Appendix A Resolved
+
+Scored in delta rows 17–32: **six of seven shipped.** Fully — the 3/day counter, the flat
+short-rest heal, the 2× off-inn award, the Necklace, bead acquisition on both rest paths,
+and the inventory section. Partially — inn sleep, whose short-rest reset shipped and whose
+**full-HP restoration did not** (F3). Dropped on the way: the CON scaling, the
+`shortRestHealAmt` field, the *"Roughing it"* message and all six example bead names.
+The report was never updated, so it has read as an open specification for 82 days.
+
+---
+
+## VII. Defects Filed
+
+| Row | Premise | Design call |
 |---|---|---|
-| City Inn (Birka) | Birka Pillow | 🛏 |
-| Harbor Lighthouse (coastal) | Lighthouse Watch | 🔦 |
-| Forest Shrine | Shrine Stone | 🪨 |
-| Sunken City (boat cabin) | Cabin Lantern | ⛵ |
-| Ruined Tower | Crumbling Turret | 🏚 |
-| Any wilderness node | Trail Marker | 🏕 |
+| **§DX-02t** | Short rest implemented twice; the battle-return copy withholds bead, token, `restedAtMin` credit and surge refresh (F5) | No |
+| **§AUDIT-03aa** | "Boy Scouts" names two mechanics with opposite rationales and two spellings (F4) | Small (which keeps the name) |
+| **§DX-02n (f)** | `LOOT_TABLE` still declared with 0 readers; both home docs say it was removed; its pointer names a false consumer (F6) | No |
+| **§AUDIT-03v/w** | Sleep overlay promises *"full HP recovery"* / *"heal to full"* against a dice heal — 6th instance, not gold (F3) | With the cluster |
 
-### III-E. Boy Scouts Camping Award
-
-When the player rests at a **non-inn location** — the streets of a city, the floor of a vendor's shop, a boat deck, a wilderness clearing — they receive the **Boy Scouts Camping Award**: a mechanical bonus applied to that rest's healing.
-
-**Effect:** Double the standard short-rest HP recovery for that rest instance.
-
-**Rationale:** Sleeping rough is *harder*. A player who chooses or is forced to camp outside an inn is demonstrating resourcefulness. The game rewards that choice rather than penalizing it. This is the Cooperative DM Principle in microcosm: the environment acknowledges what you did and respects it.
-
-**Narrative framing:** The adventurer is experienced enough to make the most of any situation. A knight sleeps on a featherbed; a ranger sleeps better under stars than in a tavern because they know how.
-
-**Implementation note:** The award is display-only at the mechanical level (a brief message: *"Roughing it — you rest with the resourcefulness of a seasoned traveler. Heal doubled."*) and applies the 2× multiplier to `shortRestHealAmt` before applying to `S_story.hp`.
+Already covered, noted not filed: `Math.random()` in the sleep and level-up HP rolls
+(§DX-02m); *"42-node"* player-facing strings (§AUDIT-03u); the inert dagger/mainweapon
+branches of `_rollD100Loot` (documented at `mechanics-economy.md:341` as the §FC06 nerf).
 
 ---
 
-## IV. Synthesis: The Cooperative DM Principle
+## Appendix A — Formula Reference (corrected)
 
-### IV-A. Theoretical Framing
-
-Solo PVE game design has a structural asymmetry: the "dungeon master" (the game system) controls all variables, including enemy stats, resource availability, and encounter frequency. In adversarial framing, this power is used to create challenge by restricting player resources and increasing enemy pressure. The player must overcome the system.
-
-In cooperative framing, the system uses the same variables to *scaffold* the player toward engaging with the game's full content. Difficulty exists as texture — combat feels dangerous — but the underlying math ensures that a player who keeps fighting will always have the resources to keep fighting.
-
-This is not "easy mode." The Void Tide clock, the day limit, and the gate-locked progression create genuine urgency. But the health and economy systems are calibrated so that *combat itself* is the primary source of health and gold. The game is self-funding. The more you play, the more resources you have.
-
-### IV-B. Design Pillars
-
-| Pillar | Mechanism |
-|---|---|
-| Combat is self-funding | `reward = 0.1 × AC × maxHP` for both heal and gold |
-| Every kill has a floor | d20 loot table guarantees ~28.75 HP of potion per kill |
-| Exploration is rewarded | Necklace of Knowledge beads for unique rest locations |
-| Improvisation is respected | Boy Scouts Camping Award doubles rough-sleep healing |
-| Inns are worth their cost | DGQR: full HP + short rest reset + Hearth Home integration |
-| Quest path is easiest path | Quest-boosted encounter rolls (6× weight for quest targets) |
-| Failure has a soft floor | Checkpoint respawn at ½ HP — never start from zero |
-
-### IV-C. The Anti-Grind Guarantee
-
-The formula `reward = 0.1 × AC × maxHP` is deliberately **not flat**. A player who grinds weak enemies for safety gets weak rewards. The system nudges players toward appropriate-difficulty encounters by making those encounters more efficient. This discourages grinding while rewarding engagement with the main content.
-
-Combined with the Void Tide clock (Day 49 hard limit), the system produces a natural pressure toward forward progress: the most efficient play is also the most narratively engaged play.
-
-### IV-D. Rest as Story, Not Just Mechanics
-
-The Necklace of Knowledge converts rest into narrative artifact. Every bead is evidence of where the player has been. A fully beaded necklace is a record of a complete run — a physical history of the adventure encoded in a collectible the player can see in inventory.
-
-This transforms "resting" from a mechanical necessity (restore HP before next fight) into a world-building act (I was *there*, in *that place*, and I stayed the night). The DM rewards presence, not just performance.
-
----
-
-## V. Conclusion
-
-The health economy of *The Shattered Codex* is built on a single commitment: **the game is on your side**. Every enemy that challenges you also funds your recovery. Every place you rest teaches you something about the world. Every night spent under the stars rather than in a warm inn is acknowledged and respected with a bonus.
-
-The formulas are simple — `floor(0.1 × AC × maxHP)` — but the design intent behind them is not: we want a player who finishes the game to feel like the world collaborated with them, that the difficulty was real, the victories were earned, and the journey left marks they can see.
-
-The Necklace of Knowledge is that mark. The Boy Scouts Camping Award is that respect. The inn, with its hot meal and locked door, is that comfort.
-
-The dungeon master is not your enemy. They are the author of the world, and they want you to see all of it.
-
----
-
-## Appendix A — Pending Implementation: Rest Architecture (Layer 13)
-
-The following mechanics are **described in this report but not yet implemented** in code. They constitute the design specification for Layer 13:
-
-| Feature | Status | Notes |
+| Variable | Report | HEAD |
 |---|---|---|
-| Short rest counter (3/day) | 📋 Planned | `S_story.shortRests` field; decrement on use, reset on inn sleep |
-| Short rest heal formula | 📋 Planned | Flat % of `hpMax` scaled by CON modifier or level proxy |
-| Inn sleep → full HP + reset | 📋 Planned | Already restores HP; short rest reset is the new piece |
-| Boy Scouts Camping Award | 📋 Planned | 2× short rest heal at non-inn nodes; message on apply |
-| Necklace of Knowledge | 📋 Planned | `type:'knowledge'` inventory sub-items; unique per node; display section in inventory overlay |
-| Knowledge bead acquisition | 📋 Planned | On first sleep at each node, push bead with node label + icon |
-| Inventory overlay: Knowledge section | 📋 Planned | Separate render block below main inventory list |
+| XP per kill | `AC × maxHP` | `round(AC × maxHP × partyMult)` |
+| HP healed per kill | `floor(0.1 × AC × maxHP)` | identical, then clamped to `hpMax` |
+| Gold per kill | `floor(0.1 × AC × maxHP)` | `floor(reward × partyMult)` |
+| Loot roll | `d20 → LOOT_TABLE[0..19]` | `d100 + luck → _D100_TABLE` |
+| Expected potion heal/kill | `28.75 HP` | **21.0 HP** |
+| Short rest heal | TBD — % of `hpMax` | `floor(hpMax × 0.25)`, ×2 off-inn |
+| Short rests per day | 3 | 3 |
+| Long rest heal | full `hpMax` | `n × (d10 + CON)`, floor 50% `hpMax` |
+| Checkpoint respawn HP | ½ `hpMax` | **1** |
+| Inn count · world size | 8 · 42 nodes | 38 · 416 nodes |
 
 ---
 
-## Appendix B — Formula Reference
+## Appendix B — Worked Examples, Re-measured
 
-| Variable | Formula |
-|---|---|
-| XP per kill | `AC × maxHP` |
-| HP healed per kill | `floor(0.1 × AC × maxHP)` |
-| Gold looted per kill | `floor(0.1 × AC × maxHP)` |
-| Loot table roll | `d20 → LOOT_TABLE[0..19]` |
-| Expected potion heal/kill | `28.75 HP` |
-| Short rest heals | TBD — % of `hpMax` |
-| Short rests per day | 3 |
-| Boy Scouts bonus | 2× short rest heal (non-inn only) |
-| Inn rest (DGQR) | Full HP (`hpMax`) + short rest counter reset |
+| Enemy | Report AC/HP | Actual AC/HP | Actual XP | Actual reward |
+|---|---|---|---|---|
+| Goblin Cutpurse | 11 / 7 | **never existed** | — | — |
+| Wererat | 13 / 33 | 12 / 33 | 396 | 39 |
+| Orc Warlord | 16 / 93 | **never existed** | — | — |
+| Vampire Spawn | 15 / 82 | 15 / 82 ✅ | 1,230 | 123 |
+| Ancient Dragon | 22 / 367 | 22 / **546** | 12,012 | 1,201 |
+
+§II-D's median-enemy analysis follows: a Wererat yields **+39 HP / +39 gp** (not 42) and
+**21.0 HP** of deferred potion (not 28.75) — about **60 HP** of total recovery, not 70.
+Its one exact sub-claim survives: 39 gp still buys ~0.8 Minor Healing Potions at the
+live 50 gp price.
 
 ---
 
-*Report written 2026-05-21*  
-*Codebase: roll2hit-v3.html — Layers 0–12 implemented*  
-*Layer 13 (Rest Architecture + Necklace of Knowledge) — specification complete, implementation pending*
-
+*Report written 2026-05-21 · verified against `roll2hit-v3.html` 2026-08-11 (§DOC-02j)*
+*Design intent preserved verbatim; every measured claim re-scored against the live file.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
