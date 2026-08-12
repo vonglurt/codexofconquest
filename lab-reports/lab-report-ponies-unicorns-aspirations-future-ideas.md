@@ -1,528 +1,282 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report — Ponies, Unicorns, and Aspirations: Future Ideas Beyond the Current Build
+# Lab Report — Ponies, Unicorns, and Aspirations: Companion Products Beyond the Build
+
 ### Post-Game Aspirations and Companion Product Concepts for roll2hit.com
-**Date:** 2026-05-24  
-**Status:** 💭 ASPIRATIONAL — not a plan.md section; not a PLANNED layer; no HTML changes implied  
-**Scope:** What this project could become after the current game is complete and polished  
+
+**Original date:** 2026-05-24 · born `1d1b064` 18:47:49, §VI appended `13bb222` 18:54:19
+**Original status:** 💭 ASPIRATIONAL — no Layer number, no insertion spec, no HTML changes implied
+**Verified:** 2026-08-12 (§DOC-02ae) against `roll2hit-v3.html` @ 38,712 lines · `sources/5thOrgan.html` · `worldbuilder.html`
+**Verification verdict:** **3 of 5 concepts SHIPPED, two of them within five days.** The document's own scheduling claim — *"None of these can be started in the current session"* — was falsified **33 minutes later** by a commit in the same session. Every *transcribable* number in it is exact; every *illustrative* field name in it is invented.
 
 ---
 
 ## Abstract
 
-This document captures aspirational ideas that sit outside the current implementation queue. Nothing here is PLANNED in the plan.md sense — there is no Layer number, no insertion spec, no state flags. These are "what if the game is complete and we want to go further" ideas: companion publications, tooling products, and interface concepts that would require significant work beyond `roll2hit-v3.html`. They are recorded here so they are not lost, not so they are acted on immediately.
+This report is the project's roadmap-of-aspirations: four companion products imagined for the day the game itself is finished — a **Dungeon Master's Companion Guide**, a **Fishing Guide**, a **Mission Explorer** (a debug-annotated data browser), and a **Polyphonic Pipe Organ Synthesizer** (72 sine oscillators, no samples, no audio files). A fifth idea appears in a single paragraph of §V, almost as an aside: ship the Fishing Guide as a *readable item inside the game* rather than as a document.
 
-The four major concepts explored are: (1) a **Dungeon Master's Companion Guide** — a full spoiler manual for GMs running roll2hit as a tabletop session; (2) a **Fishing Guide** — a standalone reference for the fishing system; (3) a **Mission Explorer** — a CRUD-style read interface for exploring mission arcs, monster data, and NPC dispositions with full debug metadata; and (4) a **Polyphonic Pipe Organ Synthesizer** — real-time background music computed from 72 sine wave oscillators (12-note polyphony × 6 harmonics per note), driven by MIDI or a JSON tablature sequencer, delivered as a standalone `roll2hit-organ.html` with no samples and no audio files. The Mission Explorer and Organ Synthesizer are the most technically concrete and each has a clear standalone implementation path.
+Re-measured 80 days later, the register reads: **Mission Explorer SHIPPED** (as `worldbuilder.html`, five days later, inverted on all three of its stated design axes) · **Organ SHIPPED** (as `sources/5thOrgan.html`, thirty-three minutes later) · **Fishing Guide SHIPPED — but as the aside, not the document** (`FISHING_GUIDE_TEXT`, a `type:'readable'` item that unlocks zone DCs) · **DM's Guide NOT SHIPPED** · **Fishing Guide as a standalone document NOT SHIPPED**.
 
----
-
-## I. The Dungeon Master's Companion Guide
-
-### A. The Concept
-
-roll2hit runs as a solo player experience. But the world — 76 nodes, 8 acts, 6 named NPCs, 370 monsters, 41 Froberger journal entries, 7 Codex Shards, faction politics, Curse of Knowledge scoring — is rich enough to support a tabletop session where a human Dungeon Master runs it for a group of players. The game's HTML file is the adventure module. The DM's Guide is the thing that tells the DM what everything means.
-
-A full DM's Guide would be 80–120 pages and would include:
-
-### B. Contents
-
-**Part I — The World Before the Players Arrive**
-- The 49-day countdown explained (what happens each day mechanically; what the Void Tide represents narratively)
-- Act-by-act world summary: what is true, what is changing, what the factions are doing off-screen
-- The Froberger backstory told plainly (not through journal entries)
-- The Scholar Kings' history — the First Researcher, the Warden, the suppression policy — told as a narrative, not as fragments
-
-**Part II — NPC Profiles (Full Spoilers)**
-One page per named NPC. For each:
-
-| Field | Content |
-|-------|---------|
-| Name and node | Location, act range |
-| Public face | What they say and present to any player |
-| Hidden truth | What they know that the player doesn't (yet) |
-| Agenda | What they want to happen in the world |
-| Favorability gates | Exactly what triggers Impartial → Friendly → Dear Friend |
-| All 20 dialogue quotes | Verbatim, by state, with DM context for each |
-| Froberger connection | What this NPC knew about Froberger |
-| Quest chain | Full beat-by-beat, with alternative paths noted |
-| DM improvisation notes | How to handle off-script player actions; what this NPC would and wouldn't do |
-
-This section covers: Yael, Brynn, Quill, Pachelbel, Weckmann, Auros, Sweelinck, Muffat, Mordus, Draketide, Izador, Leeuwenhoek, Rennau (§XIX), Vonn (§XIX), Solvak (§XX), Yva (§XX), Isolde Voss (§XVI), Benedikt Rasp (§XVI), Jimmy Two-Tails (§IX), and the Warden (§XXI).
-
-**Part III — Monster Manual**
-All 370 (or 372+) monsters, organized by terrain and tier. For each:
-- Stat block (AC, HP, ATK, DMG, tier)
-- Loot table (drop item, sell value)
-- DM flavor text: what this creature is doing here; what it wants; how it fights
-- Terrain notes: which WORLD_DB entries it appears in; what the encounter looks and feels like
-
-**Part IV — Mission Architecture**
-- All main-quest mission bits explained (the 12 `_missionComplete()` bits; what each one means narratively)
-- All side quests (Q01–Q51) with DM context for why each quest exists in the world
-- All Epic Battleground quests (Q52–Q71) with the full NPC profile, wound, opening, warning, negotiate, and return lines
-- The Curse of Knowledge score formula explained plainly: what raises it, what lowers it, what the thresholds mean for each ending
-
-**Part V — The Endings**
-All four endings (plus the §XVII fifth ending addendum), with the specific score conditions that trigger each. What to say to the players after each ending. How to run NG+ in a tabletop context (the "everything is remembered" rule).
-
-**Part VI — Dungeon Master Tooling**
-- How to adjust monster difficulty (the AC/HP/ATK scaling principles)
-- How to add a homebrew NPC using the existing NPC_DIALOGUES shape
-- How to run a session without the computer (paper stat blocks, manual dice)
-- The "Quest -1" invitation: what Level 21 means, and how a DM can write it
-
-### C. Format
-
-80–120 pages. Printed layout, or a long PDF. Designed to sit next to the laptop running the HTML file. Could also be a second HTML file (`roll2hit-gm-guide.html`) following the same "one file, no server" philosophy.
+The finding that generalises: the report ranked these by **effort and prerequisite**, and that ranking predicted nothing. What predicted everything is the **medium of the deliverable**. The three concepts that shipped are the three whose output is code or data. The two that did not are the two whose output is prose. This repository converts a specification into an implementation reliably and quickly; it has never once converted a specification into a book.
 
 ---
 
-## II. The Fishing Guide
+## I. Intent, Inspiration, and What Each Concept Buys the Player
 
-### A. The Concept
+The document was written at a moment of confidence: the world had reached 76 nodes and 370 monsters, the architecture felt settled, and the natural next question was *what is this thing for, beyond itself?* Each of the four answers is a different theory of that question, and each has a distinct effect on playability.
 
-The fishing system — Yugurt Lake, the Fishing Rod, the 20-rank fish pool, the Hooked condition, the predator encounter mechanic — is complex enough to warrant its own standalone reference. The Fishing Overhaul (§XII, Layer 47 PLANNED) will add bait tiers, a tournament arc, and new predators. After implementation, a Fishing Guide would be the clean reference for all of it.
+**A. The DM's Companion Guide — playability by *transposition*.**
+roll2hit is a solo experience. The Guide's premise is that the HTML file is already an adventure module and only lacks the layer a human Dungeon Master needs to run it for a table: hidden agendas, favor thresholds stated plainly, monster flavour, ending conditions. The playability gain is not to the solo player at all — it converts a single-player program into a multiplayer evening. *"The game's HTML file is the adventure module. The DM's Guide is the thing that tells the DM what everything means."*
 
-### B. Contents
+**B. The Fishing Guide — playability by *legibility*.**
+The fishing sub-game has a rank-20 species pool, a Hooked condition, zone DCs and a predator layer. None of that is discoverable by playing; a player casts, something happens, and the model stays invisible. The Guide's premise is that a systems-dense minigame needs a reference or it reads as randomness. **This is the concept whose implementation the report itself improved in passing** (see §V and Finding 3).
 
-**Section 1 — The Yugurt Lake System**
-- How to reach Yugurt Lake (nodes YL, YC)
-- What the Fishing Rod does mechanically
-- The 2d20 roll table: what each bracket means (fish encounter vs. predator vs. nothing)
-- The Hooked condition: how it applies, how it resolves
+**C. The Mission Explorer — playability by *authorability*.**
+The stated target user is *"a DM, a modder, or a curious developer who wants to understand the architecture without reading 14,377 lines of source."* The playability argument is second-order but the strongest of the four: a world this size is only extendable if its data is browsable, and every hour a content author spends grepping is an hour not spent writing a quest. The report's own framing of the requirement is quoted from the user verbatim: *"give all the debug information about the variable name, about the data type, about its index and position where we can reference it to change it."*
 
-**Section 2 — The Fish Pool (Ranks 1–20)**
-All 20 fish, organized by rank:
-| Rank | Fish Name | HP | Description | Loot |
-|------|-----------|----|-------------|------|
-| 1 | ... | ... | ... | ... |
-(all 20 entries, with the full descriptions added to monsters.md in SP2)
+**D. The Pipe Organ — playability by *atmosphere*, under an architectural constraint.**
+The game ships as one static HTML file with no build step and no assets. That forbids music — every conventional soundtrack is a file. The organ dissolves the contradiction: an additive synthesiser's score is an array of integers and its instrument is arithmetic, so **a pipe organ is the only music design that survives this repository's invariants**. The intended payoff is background music *"like a player piano, in the background, as the game is played"* — a continuous, non-looping-sounding presence during travel and combat.
 
-**Section 3 — Predator Encounters (§XII PLANNED)**
-The BAIT_FISH_POOL apex predators: names, stats, bait requirements, loot drops. How bait tiers change the encounter odds. The predator attraction formula.
-
-**Section 4 — The Tournament (§XII PLANNED)**
-"Master of Yugurt" quest chain: the five tournament rounds, NPC judges, trophy items.
-
-**Section 5 — Fishing as World Lore**
-- The Fisherman NPC (no quest, no connection to the main arc — just a man who fishes)
-- The connection between §XIX (Ori's ship and the ocean predator) and the lake system
-- Why the Void Tide changes what lives in the water
-
-### C. Format
-
-20–30 pages. A standalone document, or a printable PDF. Could also be the in-game "Fishing Guide" item (a readable `type:'tome'` equivalent for the fishing arc — players find it in-game and can read the actual rules from it).
+That last sentence is the origin of **§AUDIO-01**: the synthesiser was built and the embedding never was. The game is silent to this day.
 
 ---
 
-## III. The Mission Explorer — A GM Interface for roll2hit Data
+## II. Method
 
-### A. The Concept
+Per the §DOC-02 program: batch census of every named identifier before reading the prose; `git log -S` on every dead symbol to separate **RETIRED** from **NOT SHIPPED**; the earliest surviving build `32c10c5` (2026-05-24, 14,377 lines) as the reference for claims about the past; sibling reports as a cross-check; and a reachability closure on every surface claimed playable.
 
-The most technically ambitious idea. A read-only (or read-primary) interface for exploring everything in `roll2hit-v3.html` as structured data — not as gameplay, but as a database. The target user is a DM, a modder, or a curious developer who wants to understand the architecture without reading 14,377 lines of source.
+Two program instruments carried this pass in particular:
 
-The Mission Explorer is a second HTML file (`roll2hit-explorer.html`) that loads the same game constants and presents them through a detail-view browser.
-
-### B. Interface Design — Views
-
-**Monster Explorer**
-A searchable table of all MONSTER_POOL entries. Click any monster to open a detail panel:
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│  goblin_scout                                          [monster]   │
-│  ─────────────────────────────────────────────────────────────────  │
-│  Display name:    Goblin Scout                                      │
-│  AC:              12          const MONSTER_POOL["goblin_scout"].ac │
-│  HP:              8           .hp                                   │
-│  ATK:             +3          .atk                                  │
-│  Damage:          1d6+1       .die=6, .dieCount=1, .mod=1          │
-│  Tier:            low         .tier                                 │
-│  Icon:            👺          .icon                                 │
-│  Key:             goblin_scout (string, index 0)                    │
-│  Appears in:      alley, city_slums, goblin_cave (3 terrains)       │
-│                   WORLD_DB["alley"].monsters[2]                     │
-│                   WORLD_DB["city_slums"].monsters[0]                │
-│                   WORLD_DB["goblin_cave"].monsters[1]               │
-│  Drop:            Rusty Dagger (icon:🗡️, sell:5)                   │
-│                   MONSTER_DROPS["goblin_scout"]                     │
-│  XP value:        [calculated: floor(AC * HP * 0.1) = 9]           │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-Every field shows: the value, the JavaScript path to read it, the data type, and its position in any relevant array.
-
-**Terrain Explorer**
-A searchable table of all WORLD_DB entries (66 terrains). Click any terrain:
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│  alley                                                 [terrain]   │
-│  ─────────────────────────────────────────────────────────────────  │
-│  Display name:    Alley                                             │
-│  Key:             alley (string, WORLD_DB index 3)                  │
-│  Monsters (7):    goblin_scout, street_rat, pickpocket, ...         │
-│                   WORLD_DB["alley"].monsters[] — array[7]           │
-│  Hunt weight:     HUNTING_GROUNDS["alley"] (if present)             │
-│  Nodes using it:  SL, CQ (PLANNED), VS                              │
-│                   NODE_MAP entries where terrain === "alley"        │
-│  Epic:            false (.epic property)                            │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-**NPC Explorer**
-All named NPCs — Birka Six, Epic NPCs, PLANNED NPCs. Detail view includes:
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│  Yael Scheidemann                                       [npc]      │
-│  ─────────────────────────────────────────────────────────────────  │
-│  Node:            CI (City Intersection)                            │
-│  State key:       yael (NPC_DIALOGUES["yael"])                      │
-│  Favorability:    S_story.fav_yael (int, 0–2)                       │
-│  worldTruth:      "Every riot that gets suppressed becomes three..."│
-│  enemy:           "Commissioners who scrub evidence of unrest."     │
-│  missionBit:      yaelEscortUsed (boolean)                          │
-│  Quotes — impartial (5):  [expandable list]                         │
-│  Quotes — questActive (5): [expandable list]                        │
-│  Quotes — friendly (5):   [expandable list]                         │
-│  Quotes — dearFriend (5): [expandable list]                         │
-│  Quest:           quest_yael_escort                                 │
-│                   QUEST_DB["quest_yael_escort"]                     │
-│  Froberger trace: NPC_CROSS_REFS["yael"] (3 lines)                  │
-│  EB connection:   none (Birka NPC only)                             │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-**Quest Explorer**
-All QUEST_DB entries + EB_NPC_DIALOGUE entries. Filter by: side quest / EB quest / PLANNED. Detail view:
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│  quest_yael_escort                                     [quest]     │
-│  ─────────────────────────────────────────────────────────────────  │
-│  Key:             quest_yael_escort (QUEST_DB, index 0)             │
-│  NPC:             Yael (CI node)                                    │
-│  Trigger flag:    yaelEscortUsed (S_story.yaelEscortUsed)           │
-│  Complete flag:   yaelEscortDone (S_story.yaelEscortDone)           │
-│  Requirement:     3 SL vermin kills                                 │
-│  Reward:          200gp + Yael Friendly                             │
-│  Mission bit:     bit 1 of _missionComplete() (index 0)            │
-│  Curse score:     +1 if complete AND Yael Dear Friend               │
-│  Status:          ✅ implemented — HTML line ~8200                   │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-**Mission Arc Browser**
-A high-level view of the full story arc — all 8 acts, all 76 nodes, plotted on the world grid. Click any node for its NODE_MAP entry displayed as a detail record. Shows: text, npc, loot, battle, connections, act number, terrain.
-
-**State Flag Browser**
-All 107 `_S_DEFAULTS()` fields listed with:
-- Variable name and JavaScript path
-- Data type (boolean / int / string / array)
-- Default value
-- Which quest/arc sets it
-- Which render functions read it
-
-### C. The "Debug Metadata" Requirement
-
-The user's requirement: *"give all the debug information about the variable name, about the data type, about its index and position where we can reference it to change it."*
-
-Every detail view in the Mission Explorer shows three things for every field:
-
-1. **JavaScript reference path** — exactly how to read it in the browser console: `MONSTER_POOL["goblin_scout"].ac`
-2. **Data type** — `string`, `number`, `boolean`, `array[N]`, `object`
-3. **Position** — array index, object key, or line number reference in the HTML
-
-This makes the Explorer useful for modders and developers, not just DMs. A developer can open the Explorer, find the monster they want to change, and get the exact path to edit in the HTML.
-
-### D. The CRUD Question
-
-The user asks about CRUD — the Explorer is primarily **Read**. Write operations (C, U, D) are intentionally excluded from the initial design because:
-- The HTML is the source of truth; edits belong in the source file
-- A write interface would need validation, undo, and conflict resolution
-- Read-only is safe and useful; writable is risky and complex
-
-However, **one write-adjacent feature** is worth considering: **Export as JSON**. From any Explorer view, the user can export the displayed data as a JSON object. This doesn't change the HTML — it lets a modder take the current state of MONSTER_POOL (or any const) as a JSON file, edit it externally, and then paste it back into the HTML. This is a middle path: not in-browser editing, but structured export that makes editing tractable.
-
-### E. Technical Implementation
-
-The Mission Explorer is a second HTML file. It uses the same `<script>` block from `roll2hit-v3.html` (the data constants only — not the game rendering functions). Implementation approach:
-
-1. Extract all `const` declarations (MONSTER_POOL, WORLD_DB, NODE_MAP, QUEST_DB, etc.) into a shared `roll2hit-data.js` file
-2. `roll2hit-v3.html` includes this script
-3. `roll2hit-explorer.html` also includes this script, plus its own UI
-4. The Explorer's UI is a single-page app with tabbed views (Monster / Terrain / NPC / Quest / Arc / State)
-
-**Cost:** This requires refactoring `roll2hit-v3.html` to externalize the data constants — a significant change to the "one file" architecture. If the one-file constraint is a hard requirement, the Explorer can instead read the HTML file as text (via FileReader API if opened locally) and parse the constants from the raw source.
-
-**Alternative:** A single-file Explorer that the user opens, then drags-and-drops `roll2hit-v3.html` onto. The FileReader API reads the dropped file, eval()s the constants (in a sandboxed context), and builds the Explorer views from the extracted data. This preserves the one-file architecture for the game while giving the Explorer its data source.
+- **Instrument 12 (copy-vs-illustration).** A passage the author could *copy* is reliable; a passage they *composed to illustrate a point* is not — regardless of whether it looks like a table.
+- **Instrument 7 (the corpus).** Three siblings adjudicate parts of this document that it cannot adjudicate about itself: **§DOC-02m** (`lab-report-fish-with-dnd.md`) owns the fishing measurements, **§DOC-02ad** (`lab-report-Polyphonic-Organ-Synth.md`) owns the synthesiser, and **§DOC-02i** independently verified this report's world constants at the archive.
 
 ---
 
-## IV. Priorities and Dependencies
+## III. Census
 
-These three products have different prerequisites:
+**World constants cited in §I.A — all exact at the archive build `32c10c5`** (independently confirmed by §DOC-02i, which measured the same seven constants for a different report on the same tree):
 
-| Product | Prerequisite | Effort |
-|---------|-------------|--------|
-| DM's Companion Guide | Game must be content-complete (all PLANNED layers implemented) | HIGH — 80–120 pages of writing |
-| Fishing Guide | §XII (Fishing Overhaul) must be implemented | MEDIUM — 20–30 pages; mostly extracting existing data |
-| Mission Explorer | Architectural decision on data externalization | HIGH — new HTML file + JS extraction logic |
+| Constant | As written (2026-05-24) | At archive | At HEAD (2026-08-12) |
+|---|---|---|---|
+| Nodes | 76 | 76 ✅ | **416** |
+| Acts | 8 | 8 ✅ | 8 ✅ |
+| Named NPCs | 6 | 6 ✅ (`const NPC_DIALOGUES = {@10396`) | **204 profiles / 213 dialogues** |
+| Monsters | 370 | 370 ✅ | **398** |
+| Terrains | (66, §III.B) | 66 ✅ | **111** |
+| Froberger journal entries | 41 | 41 ✅ | **41** — unmoved in 80 days |
+| Codex Shards | 7 | 7 ✅ | 7 ✅ (`SHARD_GOAL = 7@36175`) |
+| `_S_DEFAULTS()` fields | 107 (§III.B) | 107 ✅ | 104 of 107 survive |
+| HTML source lines | 14,377 | 14,377 ✅ | **38,712** |
 
-None of these can be started in the current session. The DM's Guide requires a complete game. The Fishing Guide requires §XII. The Mission Explorer requires an architectural decision about the one-file constraint.
+**Nine of nine exact.** No design document in this corpus has done better on figures it measured itself.
 
-**Suggested sequencing:**
-1. Finish implementing all current PLANNED layers (Layers 44–58)
-2. Write the Fishing Guide (Layers 47 is the trigger)
-3. Decide on Mission Explorer architecture (one-file vs. externalized data)
-4. Write the DM's Companion Guide last — after everything else is stable
+**§I.B's twenty named NPCs — 19 of 20 resolve (95 %).** Yael, Brynn, Quill, Pachelbel, Weckmann, Auros, Sweelinck, Muffat, Mordus, Draketide, Izador, Rennau, Vonn, Solvak, Yva, Isolde Voss, Benedikt Rasp, Jimmy Two-Tails and the Warden are all live. **`Leeuwenhoek` has 0 occurrences in `roll2hit-v3.html` and 0 commits in its entire history** — the name exists only in the planning documents of the period. A cast list that is 95 % real and 5 % aspirational is exactly what an aspirational document should look like; the point of recording it is that *nothing in the prose distinguishes the nineteen from the one*.
 
----
-
-## V. The Fishing Guide as an In-Game Item
-
-One elegant possibility: the Fishing Guide does not need to be a separate document. It can be the `Fishing Guide` item already in the game (a `type:'readable'` item available at the Yugurt Lake vendor). The player picks it up in-game and reads the actual mechanics from it.
-
-This would mean the Fishing Guide is written as a readable item — in-world prose that describes the system the way a character in the world would explain it. The DM version (with debug metadata and exact roll tables) would be an appendix to the main DM's Guide.
+**§III's ASCII detail-panel mock-ups — 0 of 14 field names correct.** See Finding 4.
 
 ---
 
----
+## IV. Spec → Shipped Delta Table
 
-## VI. Polyphonic Pipe Organ Synthesizer — Background Music via Sine Waves
-
-### A. The Concept
-
-A real-time polyphonic pipe organ synthesizer running entirely in the browser via the Web Audio API. No samples. No audio files. Pure mathematics: sine waves mixed in the proportions that a real pipe organ produces, driven by a sequencer that reads a note file and plays it like a player piano — in the background, as the game is played.
-
-**Why an organ?** Pipe organs are the ideal instrument to simulate with sine waves because their harmonic structure is precisely predictable. Each pipe produces a fundamental frequency plus a series of overtones that follow the harmonic series exactly. The timbre (the "color" of the organ's sound) comes from the relative volumes of those overtones — not from the complexity of the waveform itself. This means a convincing organ simulation requires no samples and no convolution: just oscillators, gain nodes, and a mixer.
-
-**Why sine waves?** A sine wave is the fundamental unit of acoustic energy. Every sound — every instrument, every voice, every noise — can be expressed as a sum of sine waves at different frequencies and amplitudes (Fourier's theorem). For a pipe organ, the decomposition is not just theoretical: the instrument literally generates those sine wave components mechanically, one per pipe. Simulating it is reconstruction, not approximation.
-
----
-
-### B. Harmonic Series — The Physics
-
-When an organ pipe sounds a note at fundamental frequency *f*, it also generates overtones at integer multiples of *f*. The amplitude of each overtone decreases inversely with its order:
-
-| Harmonic | Frequency | Amplitude (ratio) | Pipe organ stop analogy |
-|----------|-----------|-------------------|------------------------|
-| 1st (fundamental) | *f* | 1.000 | Principal 8' |
-| 2nd | 2*f* (octave) | 0.500 | Principal 4' |
-| 3rd | 3*f* (octave + fifth) | 0.333 | Quint 2⅔' |
-| 4th | 4*f* (two octaves) | 0.250 | Principal 2' |
-| 5th | 5*f* (two octaves + third) | 0.200 | Tierce 1⅗' |
-| 6th | 6*f* (two octaves + fifth) | 0.167 | Larigot 1⅓' |
-
-**For each note played:** create 6 oscillators (one per harmonic), each at frequency `n * f`, each with gain proportional to `1/n`. Sum through a master gain node. The result sounds like a principal organ stop.
-
-**Polyphony:** 12 simultaneous notes × 6 harmonics each = **72 sine wave oscillators running simultaneously**. The Web Audio API handles this comfortably; modern browsers can sustain hundreds of concurrent oscillator nodes.
-
----
-
-### C. Oscillator Architecture
-
-```
-For each active note N (up to 12 simultaneous):
-
-  MIDI note → frequency f = 440 × 2^((note - 69) / 12)
-
-  Oscillator 1 (fundamental):  freq = 1 × f,  gain = 1.000 × velocity × masterGain
-  Oscillator 2 (2nd harmonic): freq = 2 × f,  gain = 0.500 × velocity × masterGain
-  Oscillator 3 (3rd harmonic): freq = 3 × f,  gain = 0.333 × velocity × masterGain
-  Oscillator 4 (4th harmonic): freq = 4 × f,  gain = 0.250 × velocity × masterGain
-  Oscillator 5 (5th harmonic): freq = 5 × f,  gain = 0.200 × velocity × masterGain
-  Oscillator 6 (6th harmonic): freq = 6 × f,  gain = 0.167 × velocity × masterGain
-
-  All 6 → GainNode(note) → masterGainNode → AudioContext.destination
-
-Total: 12 × 6 = 72 oscillators + 12 note GainNodes + 1 masterGainNode
-```
-
-**Stop simulation:** Different organ stops emphasize different harmonics. The mixer for each harmonic order is a GainNode whose value can be changed in real time:
-
-```
-stopMixer = {
-  h1: 1.000,  // fundamental weight — increase for flute; keep at 1.0 for principal
-  h2: 0.500,  // 2nd harmonic — decrease for flute; increase for reed
-  h3: 0.333,  // 3rd harmonic — decrease for flute; emphasized for string stops
-  h4: 0.250,  // 4th harmonic
-  h5: 0.200,  // 5th harmonic — emphasized for mixture stops (brightness)
-  h6: 0.167   // 6th harmonic
-}
-```
-
-This gives the player a virtual drawbar organ (similar to a Hammond B3 but simulating pipe organ stops rather than a tonewheeel organ). Six sliders — one per harmonic order — control the timbre in real time.
+| # | Claim / concept | Section | Verdict | Evidence |
+|---|---|---|---|---|
+| 1 | DM's Companion Guide, 80–120 pp | §I | **NOT SHIPPED** | no `roll2hit-gm-guide` artefact; 0 occurrences repo-wide |
+| 2 | Fishing Guide, standalone 20–30 pp document | §II | **NOT SHIPPED** | superseded by row 3 |
+| 3 | Fishing Guide **as an in-game readable item** | §V | ✅ **SHIPPED** | `name:'Fishing Guide', icon:'📖', type:'readable'@13819` · `const FISHING_GUIDE_TEXT =@26659` |
+| 4 | …and it gates a mechanic, not just flavour | — | ✅ **exceeded** | `const hasGuide = (S_story.inventory@30406` reveals zone DCs |
+| 5 | Mission Explorer, a second HTML data browser | §III | ✅ **SHIPPED** `2d42ea2`, 2026-05-29 | `worldbuilder.html`, 10,685 lines, 17 tabs |
+| 6 | …read-only; C/U/D "intentionally excluded" | §III.D | ⚠️ **INVERTED** | 29 `POST` · 32 `PUT` · 4 `DELETE` call sites |
+| 7 | …cost: must externalize the data constants | §III.E | ❌ **cost never paid** | `<script src=` = **0** in `roll2hit-v3.html`; the one-file invariant held |
+| 8 | …fallback: FileReader drag-and-drop | §III.E | **NOT SHIPPED** | shipped answer is a third option: server-side parse via `wbapi-core.js` |
+| 9 | …debug metadata (JS path · type · index) | §III.C | **NOT SHIPPED** → **§DX-02ao** | no detail view emits a reference path, a data type or an array position |
+| 10 | …Export as JSON, the "middle path" | §III.D | ✅ **SHIPPED + exceeded** | `worldbuilder.html:/api/export/all?format=json@2616`, `Export JS`, `Export Patched` |
+| 11 | …State Flag Browser ("which quest sets it") | §III.B | ◐ **HALF SHIPPED** | `worldbuilder.html:this._flagToQuests[f].writes.push(id)@1695` indexes reads/writes — **over `QUEST_DB` source only**, so the "which render functions read it" half is absent |
+| 12 | Yugurt Lake at nodes `YL`, `YC` | §II.1 | ✅ **RIGHT WHEN WRITTEN**, renamed since | archive `YL:{num:75, yugurt_lake}` → `BOO:{ num:75, code:'BOO'@8782`; `YC:{num:76}` → `SSJ:{ num:76, code:'SSJ'@8786` — `num`, terrain and label all preserved |
+| 13 | 20-rank fish pool | §II.2 | ✅ **exact** | `const FISH_POOL = [@26504`, 20 entries; plus `const NIGHT_FISH_POOL = [@26526` (5, §XLVIII) |
+| 14 | The Hooked condition | §II.1 | ✅ SHIPPED | `condition:'Hooked'` in the catch resolver |
+| 15 | 2d20 cast roll table | §II.1 | **RETIRED**, not never-shipped | archive carries the *"🎣 Cast Line (2d20)"* button; Layer 47 replaced it with a four-phase Catch system (§DOC-02m) |
+| 16 | `BAIT_FISH_POOL` apex predators | §II.3 | **NOT SHIPPED under that name** | 0 commits ever; apex predator shipped as `name:'Horned Shark'@5511` in `yugurt_lake:      { label:'Yugurt Lake'@6283` |
+| 17 | "Master of Yugurt" tournament, five rounds | §II.4 | ✅ **SHIPPED, six** | `title:'Master of Yugurt'@26719`; `const TOUR_TITLES = {@26722` names six ranks |
+| 18 | The Fisherman: *"no quest, no connection to the main arc"* | §II.5 | ⚠️ **REVERSED** | he gives the rod, keeps a free-sleep cabin, and is named in Yael's Level-1 tutorial monologue |
+| 19 | Organ: 12 voices × 6 harmonics = 72 oscillators | §VI.B/H | ✅ **exact** | `sources/5thOrgan.html:const N_HARM   = 6;@142` · `sources/5thOrgan.html:const MAX_VOX  = 12;@143` |
+| 20 | Organ: `f = 440 × 2^((n−69)/12)` | §VI.C | ✅ **byte-exact** | `sources/5thOrgan.html:function midiHz(m)@185` |
+| 21 | Organ: stop mixer `1.000 … 0.167` | §VI.C | ✅ **byte-exact** | `sources/5thOrgan.html:drawbars:  [1.000, 0.500@161` |
+| 22 | Organ: stop analogies 8′/4′/2⅔′/2′/1⅗′/1⅓′ | §VI.B | ✅ **became the UI** | `sources/5thOrgan.html:const DBAR_LABELS = [@359` |
+| 23 | Organ: 10 ms attack, 200 ms release | §VI.G | ✅ **byte-exact** | `sources/5thOrgan.html:attackMs:  10,@163` · `sources/5thOrgan.html:releaseMs: 200,@164` |
+| 24 | Organ: Beethoven demo, 8 events | §VI.E | ✅ **byte-exact**, 4 of 5 fields | `sources/5thOrgan.html:const MOTIF = [@147` — every beat, note, duration and velocity identical; only `ch` dropped |
+| 25 | Organ: MIDI input, *"the standard and the right choice"* | §VI.D | **NOT SHIPPED** | `requestMIDIAccess` = 0; the string `MIDI` = 0 |
+| 26 | Organ: JSON tablature *format* + parser | §VI.D | **NOT SHIPPED as a format** | 0 `JSON.parse`; the data shipped, the file format did not |
+| 27 | Organ: manual I / manual II / pedal channels | §VI.D | **NOT SHIPPED** | single manual |
+| 28 | Organ: meantone / Pythagorean temperament | §VI.G | **NOT SHIPPED** | 0 occurrences |
+| 29 | Organ: delivered as `roll2hit-organ.html` | §VI.G | **renamed** | shipped as `sources/5thOrgan.html` |
+| 30 | Organ: *"in the background, as the game is played"* | §VI.A | **NOT SHIPPED** → **§AUDIO-01** | `roll2hit-v3.html` has 0 `AudioContext` / 0 `<audio>` / 0 `iframe` |
+| 31 | *"None of these can be started in the current session"* | §IV | ❌ **falsified in 33 minutes** | see Finding 1 |
 
 ---
 
-### D. Input Format — MIDI vs. Custom
+## V. Finding 1 — The Thirty-Three Minute Falsification
 
-**MIDI** is the standard and the right choice. Reasons:
-- `navigator.requestMIDIAccess()` (Web MIDI API) gives browser access to hardware MIDI controllers
-- MIDI files (`.mid`) are the universal format for pre-composed sequences
-- MIDI note numbers map directly to frequencies via the standard formula
-- Tempo, timing, and channel assignment are already handled by the MIDI spec
+The document ends its priorities section with a flat scheduling claim: ***"None of these can be started in the current session. The DM's Guide requires a complete game. The Fishing Guide requires §XII. The Mission Explorer requires an architectural decision about the one-file constraint."*** Git disagrees, on the same evening, in the same working session:
 
-**MIDI channels for this implementation:**
-- Channel 1: Manual I (right hand / melody)
-- Channel 2: Manual II (left hand / harmony)
-- Channel 3: Pedal (bass — lowest octave; only fundamentals + 2nd harmonic, no high partials)
-- Channels 4–16: reserved for expansion or polyphonic aftertouch
+| Time (2026-05-24) | Commit | Event |
+|---|---|---|
+| 18:47:49 | `1d1b064` | Report born with §I–§V, including *"None of these can be started in the current session."* |
+| 18:54:19 | `13bb222` | **§VI — the organ — appended to the same file.** A fifth concept, six minutes later. |
+| 19:20:35 | `030c446` | **`5thOrgan.html` shipped**, complete with drawbars, ADSR, oscilloscope, voice stealing and its own IEEE design report. |
 
-**16th note resolution at tempo:** MIDI files carry their own tempo in BPM. The sequencer reads the MIDI file's timing track (division, tempo change events) and schedules Web Audio API events using `AudioContext.currentTime` with sub-millisecond precision. No approximation needed — Web Audio scheduling is sample-accurate.
+Thirty-three minutes from *"none of these can be started"* to a working polyphonic synthesiser with a companion lab report. The document then absorbed the news about itself: the closing status block — *"**Implementation status (2026-05-24):** ✅ Implemented"* — sits eleven lines below the sentence it refutes, and **both are still in the file**.
 
-**If not MIDI:** A simple JSON tablature format works for hand-authored sequences:
+This is not an error to correct; it is the most useful thing the document records. ***A roadmap's estimate of its own tractability is a claim like any other, and it is the claim most likely to be wrong within the hour.*** The sentence was true about the DM's Guide, true about the Fishing Guide, true about the Explorer's architectural question — and the author, five minutes after writing it, found a fifth idea it was not true about and simply built the thing.
 
-```json
-{
-  "bpm": 108,
-  "resolution": 16,
-  "events": [
-    { "beat": 0,    "note": 67, "duration": 1, "velocity": 0.8, "ch": 1 },
-    { "beat": 0.5,  "note": 67, "duration": 1, "velocity": 0.8, "ch": 1 },
-    { "beat": 1.0,  "note": 67, "duration": 1, "velocity": 0.8, "ch": 1 },
-    { "beat": 1.5,  "note": 63, "duration": 4, "velocity": 1.0, "ch": 1 }
-  ]
-}
-```
-
-`beat` is in 16th-note units. `duration` is in 16th-note units. This is readable by hand and parseable by a single JSON.parse().
+The five-day figure for the Explorer is the same result at a coarser resolution: `worldbuilder.html` is born on 2026-05-29 (`2d42ea2`, *"Working on worldbuilder to further the abstractions"*), and the *"architectural decision"* it was blocked on was never made — it was **dissolved** (Finding 3).
 
 ---
 
-### E. Beethoven's 5th — The Example Sequence
+## VI. Finding 2 — The Medium Predicted Shipping; the Effort Ranking Predicted Nothing
 
-The opening of Beethoven's 5th Symphony (the *da da da DOMMM* motif) is ideal as a test sequence:
-- Short, immediately recognizable
-- Demonstrates polyphony: the held note overlaps with the repeat of the motif
-- Loops naturally: after the second phrase ends, it returns to the first
+§IV's priorities table is the document's central analytical artifact. Scored at 80 days:
 
-**Pitches:**
-- First phrase: G4 G4 G4 Eb4 (short short short long) — MIDI: 67 67 67 63
-- Second phrase: F4 F4 F4 D4 (short short short long) — MIDI: 65 65 65 62
-- At 108 BPM, "short" = eighth note = 277ms; "long" = half note = 1111ms
+| Product | Stated prerequisite | Stated effort | Outcome |
+|---|---|---|---|
+| DM's Companion Guide | game content-complete | HIGH | **not shipped** |
+| Fishing Guide (document) | §XII Fishing Overhaul | MEDIUM | **not shipped** — §XII shipped, the document did not |
+| Mission Explorer | architectural decision on data externalization | HIGH | **shipped in 5 days**, decision dissolved |
+| *(Organ — added after the table, never entered in it)* | — | — | **shipped in 33 minutes** |
+| *(Fishing Guide as an item — §V aside, never entered in it)* | — | — | **shipped** |
 
-**JSON tablature (16th note units at 108 BPM):**
+The effort column ranked the Explorer HIGH and the Fishing Guide MEDIUM; the HIGH one shipped and the MEDIUM one did not. The prerequisite column blocked the Explorer on a decision that turned out not to need making, and blocked the Fishing Guide on §XII, which shipped — and the document still did not follow.
 
-```json
-{
-  "title": "Beethoven Symphony No. 5, Op. 67 — Opening Motif",
-  "bpm": 108,
-  "resolution": 16,
-  "loop": true,
-  "events": [
-    { "beat": 0,  "note": 67, "duration": 2, "velocity": 0.85, "ch": 1 },
-    { "beat": 2,  "note": 67, "duration": 2, "velocity": 0.85, "ch": 1 },
-    { "beat": 4,  "note": 67, "duration": 2, "velocity": 0.85, "ch": 1 },
-    { "beat": 6,  "note": 63, "duration": 8, "velocity": 1.00, "ch": 1 },
-    { "beat": 14, "note": 65, "duration": 2, "velocity": 0.85, "ch": 1 },
-    { "beat": 16, "note": 65, "duration": 2, "velocity": 0.85, "ch": 1 },
-    { "beat": 18, "note": 65, "duration": 2, "velocity": 0.85, "ch": 1 },
-    { "beat": 20, "note": 62, "duration": 8, "velocity": 1.00, "ch": 1 }
-  ]
-}
-```
+**The variable that separates the shipped from the unshipped is what the deliverable is made of.** Explorer → code. Organ → code. Fishing Guide as an item → a `readText` string and an inventory object, i.e. game data. DM's Guide → 80–120 pages of prose. Fishing Guide as a document → 20–30 pages of prose. **Three for three on code; zero for two on prose.**
 
-**With overlap:** If the long note (Eb4, 8 beats = half note) is held for its full duration and the second phrase begins at beat 14 while beat 6's note is still sounding, 2 notes are active simultaneously. The loop then begins again while the D4 is still ringing — demonstrating the organ's natural voice overlap and why 12-note polyphony is the right target (a full Bach chorale can have 4 simultaneous parts, each sustained into the next beat, easily reaching 8 simultaneous notes when phrases overlap).
+> **26th INSTRUMENT (new this pass): in a roadmap document, the DELIVERABLE'S MEDIUM predicts shipping far better than its stated effort or prerequisite.** A repository with an authoring pipeline converts a specification into an implementation on the day it is written; the same repository has no pipeline that converts a specification into a book, so the prose deliverable waits on a resource nobody scheduled. When a plan mixes both media, rank by medium first and read the effort column second.
+
+The corollary is a practical one for this project: **the DM's Guide and the Fishing Guide are more likely to ship as game surfaces than as documents.** §V already proved the pattern once. The Explorer's NPC and Quest tabs are two-thirds of the DM's Guide's Part II and Part IV, rendered from live data rather than transcribed — and a transcription would have rotted, as this corpus has now measured a dozen times.
 
 ---
 
-### F. Architecture Diagram
+## VII. Finding 3 — The Explorer Shipped, Inverted on All Three of Its Design Axes
 
-```
-                          ┌─────────────────────────────────┐
-  MIDI file / JSON ──────►│         Sequencer               │
-  (or MIDI keyboard)      │   reads beats at AudioContext   │
-                          │   .currentTime; schedules start │
-                          │   and stop events per note      │
-                          └──────────────┬──────────────────┘
-                                         │ noteOn(midi, velocity, time)
-                                         │ noteOff(midi, time)
-                                         ▼
-                          ┌─────────────────────────────────┐
-                          │       Voice Pool (12 slots)     │
-                          │                                 │
-                          │  slot 0: note=67, active        │
-                          │  slot 1: note=63, active        │
-                          │  slot 2: idle                   │
-                          │  ...                            │
-                          └──────────────┬──────────────────┘
-                                         │ per active slot:
-                                         ▼
-                   ┌─────────────────────────────────────────────┐
-                   │            Voice (per note)                 │
-                   │                                             │
-                   │  f = 440 × 2^((note-69)/12)                 │
-                   │                                             │
-                   │  OscNode(1×f) → GainNode(1.000 × h1stop)   │
-                   │  OscNode(2×f) → GainNode(0.500 × h2stop)   │  ─┐
-                   │  OscNode(3×f) → GainNode(0.333 × h3stop)   │   │
-                   │  OscNode(4×f) → GainNode(0.250 × h4stop)   │   │ all → NoteGain
-                   │  OscNode(5×f) → GainNode(0.200 × h5stop)   │   │
-                   │  OscNode(6×f) → GainNode(0.167 × h6stop)   │  ─┘
-                   │                                             │
-                   │  NoteGain.gain ramps: attack 10ms,          │
-                   │  release 200ms on noteOff (pipe organ       │
-                   │  has fast attack, slow release)             │
-                   └──────────────────────┬──────────────────────┘
-                                          │ × 12 voices
-                                          ▼
-                          ┌──────────────────────────┐
-                          │      MasterGain           │
-                          │   (overall volume knob)   │
-                          └──────────────┬────────────┘
-                                         │
-                                         ▼
-                              AudioContext.destination
-                                  (speakers / headphones)
-```
+`worldbuilder.html` (10,685 lines, 17 tabs: Map · Bestiary · Loot · NPCs · Quests · Dice Lab · CRUD · API · Audit · Stats · Endpoints · Builder · Wizard · Editor · Mission · Walk · Mesh) is unmistakably the Mission Explorer. `worldbuilder.html:data-tab="bestiary"@403` is §III.B's Monster Explorer; the NPCs, Quests and Mission tabs are its NPC, Quest and Mission-Arc browsers. And on each of the three axes the report reasoned about explicitly, the shipped answer is the opposite of the specified one.
+
+**Axis 1 — Read vs. Write.** §III.D excludes Create/Update/Delete for three stated reasons: *"the HTML is the source of truth"*, *"a write interface would need validation, undo, and conflict resolution"*, *"read-only is safe and useful; writable is risky and complex."* HEAD ships **29 `POST` · 32 `PUT` · 4 `DELETE`** call sites. The objection was not overruled — it was **answered by building the thing it asked for**: WBAPI validates (a bad monster body is rejected 422 with the field list and nothing is written) and excises at source level with verify-or-revert. *The report was right that writes need validation. It was wrong that this meant not writing.*
+
+**Axis 2 — Where the data comes from.** §III.E enumerates exactly two options: externalize the constants into `roll2hit-data.js` (*"a significant change to the 'one file' architecture"*), or a FileReader drag-and-drop that `eval()`s the constants from the dropped file. Neither shipped. The shipped mechanism is a **third option the document does not consider**: a local server parses the HTML *as text* and serves structured data over REST, so the browser never needs the constants at all. `roll2hit-v3.html` contains **zero** `<script src=` tags — **the architectural cost the report priced was never paid, and the decision it was blocked on was never made.**
+
+> This is the 22nd instrument in its cleanest positive form: *enumerate the space the chooser actually chooses from.* The report enumerated two options and the winner was outside the enumeration. A two-option table reads as exhaustive precisely because it is a table.
+
+**Axis 3 — Debug metadata.** This is the one axis where the report is right and HEAD is not. §III.C quotes the user's own requirement verbatim and specifies three things per field: **JavaScript reference path** (`MONSTER_POOL["goblin_scout"].ac`), **data type**, and **position** (array index / object key / line number). No detail view in `worldbuilder.html` emits any of the three. What shipped instead answers the *"reference it to change it"* half by a different route: the Wizard and Builder tabs emit the **API call** that mutates the record. That is arguably better for authoring and strictly worse for understanding — you learn how to change the value without ever learning where it lives. → **§DX-02ao**.
+
+A fourth, gentler result: §III.B's **State Flag Browser** is half-built and nobody noticed. `worldbuilder.html:this._flagToQuests[f].writes.push(id)@1695` maintains a per-flag reader/writer index — precisely §III.B's *"which quest/arc sets it"* row — but its scan universe is the `QUEST_DB` source text only, so the *"which render functions read it"* row is structurally absent. **That is the same blind spot `check:deadconsts` (§DX-02n) keeps rediscovering from the other side**, and this is prior art for it: the census already exists, it is simply pointed at one section of the file.
 
 ---
 
-### G. Implementation Notes
+## VIII. Finding 4 — Instrument 12, and the Mock-Ups Are Illustrations
 
-**Envelope:** A pipe organ has essentially no attack time (the pipe speaks immediately) and a medium release (the air column decays over ~200ms when the key is released). In Web Audio API terms:
+§III.B's four ASCII detail panels are the document's most concrete-looking passages: box-drawn, monospaced, field-by-field, with JavaScript paths in the right-hand column. They are also the least accurate thing in it. **Not one field name in them is real.**
 
-```js
-noteGain.gain.setValueAtTime(0, startTime);
-noteGain.gain.linearRampToValueAtTime(velocity, startTime + 0.010); // 10ms attack
-// on noteOff:
-noteGain.gain.setValueAtTime(noteGain.gain.value, stopTime);
-noteGain.gain.linearRampToValueAtTime(0, stopTime + 0.200);         // 200ms release
-osc.stop(stopTime + 0.201); // stop all 6 oscillators after release
-```
+| Mock-up field | As written | Live | Verdict |
+|---|---|---|---|
+| Damage dice | `.die`, `.dieCount`, `.mod` | `dmgDie` · `dmgCount` · `dmgFlat` | wrong ×3 |
+| Tier value | `low` | one of `trivial\|easy\|medium\|hard\|deadly` | not in the vocabulary |
+| Monster key | `goblin_scout` | — | **0 commits ever** |
+| Terrain roster | `street_rat`, `pickpocket` | — | **0 commits ever** |
+| Terrain flag | `WORLD_DB[…].epic` | — | `epic:` = 0 occurrences |
+| Favor field | `S_story.fav_yael` (int 0–2) | `npcFavorability` | **0 commits ever** |
+| Quest key | `quest_yael_escort` | — | **0 commits ever** |
+| Complete flag | `yaelEscortDone` | — | **0 commits ever** |
+| Hunt weight | `HUNTING_GROUNDS["alley"]` | tombstone comment only | deleted by §TIMELESS-01 |
+| Node code | `CI (City Intersection)` | `LHR`, City Streets | the §AUDIT-03m class |
+| XP formula | `floor(AC * HP * 0.1) = 9` | `floor(0.1 × AC × maxHP)` | ✅ **correct** |
 
-**Voice stealing:** When all 12 voice slots are occupied and a new note arrives, steal the oldest active note. Log a warning if voice stealing occurs — it means the composition has more than 12 simultaneous notes and the polyphony target should be raised.
+**Two survivors, and both are the two the author could copy**: `yaelEscortUsed` is live (13 occurrences) because it is a real `_S_DEFAULTS()` field, and the XP formula is right because it is a real formula. Everything invented to make a box look populated is invented wrong.
 
-**Tuning:** Equal temperament by default (the standard formula). Add an option for meantone or Pythagorean temperament for historically-accurate organ simulation — these slightly alter the frequency of non-fundamental harmonics and produce the characteristic "beating" between intervals that period instruments have.
-
-**File format recommendation:** Use the JSON tablature format for hand-authored game loops (background music); use the Web MIDI API for live keyboard input. Both paths feed the same `noteOn(midi, velocity, time)` and `noteOff(midi, time)` functions in the Voice Pool.
-
-**Standalone file:** Deliver as `roll2hit-organ.html` — a single HTML file following the same "no server, no build" philosophy as the main game. The Beethoven motif JSON is embedded inline as a `const DEMO_SEQUENCE`. The player can open it, hear it, adjust the stop sliders, and optionally connect a MIDI keyboard.
-
----
-
-### H. Polyphony Budget — Why 12?
-
-| Use case | Notes needed simultaneously |
-|----------|-----------------------------|
-| Simple melody | 1 |
-| Melody + bass | 2 |
-| Three-voice Bach invention | 3 |
-| Four-voice chorale | 4 |
-| Chorale with sustained notes across bar lines | 6–8 |
-| Full organ texture (chorale + counterpoint + pedal) | 8–12 |
-| With overlapping phrase releases | up to 12 |
-
-12 notes covers all practical organ repertoire, including dense Baroque polyphony. 72 oscillators is well within the Web Audio API's capacity. The main constraint is CPU — but on a modern laptop, 72 oscillator nodes running simultaneously takes approximately 2–5% of a single CPU core.
+This is instrument 12 in a form worth keeping, because it defeats the older instrument-9 heuristic completely: these panels *cite JavaScript paths, array indices and data types* — every surface signal of a copied passage — and they were composed. ***The tell is not whether a passage looks like data. It is whether the data was there to be copied when the passage was written.*** In May 2026 the Explorer did not exist, so there was no detail panel to transcribe; the author drew what one would look like, and drawing requires names.
 
 ---
 
-*Section VI added 2026-05-24 — Polyphonic Pipe Organ Synthesizer concept: 72-oscillator sine wave engine (12-note polyphony × 6 harmonics), Web Audio API implementation, MIDI and JSON tablature input, harmonic series mixer (stop simulation), Beethoven's 5th opening motif as demo sequence.*
+## IX. Section VI — The Organ: Near-Total Spec Fidelity, and the One Thing That Did Not Ship
 
-**Implementation status (2026-05-24):** ✅ **Implemented.** The organ synthesizer is now live as `5thOrgan.html` — a self-contained single-file browser synthesizer. Full IEEE-format design report: `lab-report-Polyphonic-Organ-Synth.md`. Includes 6 harmonic drawbars, adjustable ADSR/filter/falloff, Beethoven Op.67 two-voice canon sequencer, 12-voice polyphony with voice stealing, and oscilloscope. Future directions in lab report §XIII: AudioWorklet variant, PeriodicWave blending, song library UI, chord-progression loop, random-seed generative melody (LCG scale walk), bass pedal tone sustain layer.
+§VI is the highest-fidelity specification in this corpus. Every quantity it states is in the shipped synthesiser, unchanged, 80 days later:
+
+- `sources/5thOrgan.html:const N_HARM   = 6;@142` and `sources/5thOrgan.html:const MAX_VOX  = 12;@143` → **72 oscillators**, exactly §VI.H's budget.
+- `sources/5thOrgan.html:function midiHz(m)@185` is `440 * Math.pow(2, (m - 69) / 12)` — §VI.C byte-for-byte.
+- `sources/5thOrgan.html:drawbars:  [1.000, 0.500@161` — all six values are §VI.C's `stopMixer` literally.
+- `sources/5thOrgan.html:const DBAR_LABELS = [@359` — `H1 8′ · H2 4′ · H3 2⅔′ · H4 2′ · H5 1⅗′ · H6 1⅓′`, which is §VI.B's *"Pipe organ stop analogy"* column promoted into the user interface.
+- `sources/5thOrgan.html:attackMs:  10,@163` / `sources/5thOrgan.html:releaseMs: 200,@164` — §VI.G's envelope, to the millisecond.
+- `sources/5thOrgan.html:const MOTIF = [@147` — all eight Beethoven events identical to §VI.E's JSON in beat, note, duration and velocity; only `ch` was dropped, the manual assignment having no consumer in a single-manual instrument.
+
+**What did not ship is the entire input layer.** §VI.D argues at length that MIDI is *"the standard and the right choice"* and specifies channel assignments for Manual I, Manual II and Pedal; `requestMIDIAccess` has **0** occurrences and the string `MIDI` appears **0** times in the shipped file. The JSON tablature offered as the *fallback* (*"if not MIDI"*) also did not ship as a **format** — there is no parser, no `resolution` key, no `duration` key, no `JSON.parse`. What shipped is the tablature's **content** as a hardcoded positional array. So of the two input paths the report ranked, the winner is the one it ranked last and did not name: *embed the sequence and skip the file format entirely.*
+
+**One footnote the sibling report needs.** §DOC-02ad found that the shipped organ's default registration is a **Flute** (≈1/n², within 0.8 %) while both the synth's report and its preset table call it a **Principal** — and filed §DX-02am. This document is the innocent half of that defect and explains it. §VI.C specifies `1/n` as the *whole* amplitude law, which is correct: at the time of writing there was no falloff control, and `1/n` genuinely is a principal stop. The synthesiser later added `sources/5thOrgan.html:falloffDB: 6,@162` — an independently correct 6 dB/octave term — **on top of** drawbars that already carried the 1/n taper, and the product is 1/n².
+
+> ***DURABLE: a parameter added on top of a completed specification silently re-signs every default written against it.*** Neither document is wrong on its own; the defect exists only in the space between them, which is why instrument 7 (read the corpus, not the report) is the only thing that could find it.
+
+**And the thing that never happened at all.** §VI.A is explicit that this is a *game* feature — *"driven by a sequencer that reads a note file and plays it like a player piano — in the background, as the game is played"* — and the synth's own conclusion says it is *"ready for embedding as an iframe."* `roll2hit-v3.html` has **0** occurrences of `AudioContext`, `createOscillator`, `new Audio`, `<audio>` or `iframe`; its 119 uses of *"sound"* and 21 of *"music"* are all narrative prose. The instrument was built, the score was written, the file was filed under `sources/` with the authoring tools, and **the game has never made a sound**. That is §AUDIO-01, and this paragraph is its originating requirement.
 
 ---
+
+## X. Concept Register (all five, scored)
+
+| # | Concept | Register verdict | Shipped as |
+|---|---|---|---|
+| 1 | DM's Companion Guide | ❌ not shipped in 80 days | — (partly superseded: the Explorer's NPC/Quest/Mission tabs render Parts II and IV from live data) |
+| 2 | Fishing Guide (document) | ❌ not shipped in 80 days | — |
+| 3 | Mission Explorer | ✅ shipped +5 days, inverted on 3 axes | `worldbuilder.html` |
+| 4 | Pipe Organ Synthesizer | ✅ shipped +33 minutes | `sources/5thOrgan.html` — **not embedded** (§AUDIO-01) |
+| 5 | Fishing Guide **as an in-game item** (§V aside) | ✅ shipped | `const FISHING_GUIDE_TEXT =@26659` |
+
+**Three of five, and the ranking got them in the wrong order.** The one-paragraph aside outperformed the section it was an aside to. The concept given the most pages (the DM's Guide, six subsections and a nine-row field table) is the one with the least code behind it — which is not a coincidence but the same finding again: **pages are what you produce when the deliverable is pages.**
+
+There is one honest bright spot in the register's own reasoning, and it deserves saying. §I.A's argument for why a Guide is *possible* — *"the world is rich enough to support a tabletop session"* — has only got stronger: 76 → 416 nodes, 6 → 204 NPC profiles, and `function _missionComplete() {@23648` still counts exactly the twelve narrative bits the DM's Guide Part IV proposed to explain. The premise held. The medium did not.
+
+**One caution for whoever eventually writes Part V.** The report specifies documenting *"all four endings … with the specific score conditions that trigger each."* At HEAD, **three of those four conditions cannot fire**: `_curseScore()` has a closed form of `20 + 2 × (EB bosses defeated)` and a floor of 20, because its `ebReturnDone` term is written only by a beat reachable through a quest id `QUEST_DB` does not hold (**§EPIC-01**, **§ENDING-01**). A DM's Guide written today would document three endings the game cannot reach. ***The Guide's stated prerequisite was "the game must be content-complete"; the real prerequisite is a two-site rename.***
+
+---
+
+## XI. Defects Filed and Cross-References
+
+**New this pass:**
+
+- **§DX-02ao (🟡, small design call)** — *the Explorer's debug-metadata requirement never shipped.* §III.C is a verbatim user requirement — variable name, data type, index/position, *"where we can reference it to change it"* — and no `worldbuilder.html` detail view emits a JavaScript reference path, a data-type annotation or an array position. The Wizard/Builder tabs answer the *mutation* half by emitting the API call, so the gap is specifically **comprehension**, not authoring. Design call is on form only (an always-on metadata column · a "dev mode" toggle · a click-to-copy path chip).
+- **§DX-02ap (🟢, no design call)** — *the authoring tool teaches raw `curl`.* `worldbuilder.html:Full curl sequence (run in order)@7929` renders a runnable `curl -s -X POST …/node|/monster|/quest` sequence for the author to copy, which is the exact shape prompt.md §3 and CONTRIBUTING Hazard #7 forbid (*"all world-building goes through `./api.sh`"*). It is invisible to every gate: §DX-02l-FU's detector was narrowed to *"a line an author can copy and run"* — which these are — but scans `.md` files only, and `worldbuilder.html` is not in its universe. Fix: emit `./api.sh post node code=… label=…` equivalents beside (or instead of) the curl block. The **Endpoints** tab's curl examples are correct as-is; that tab is an HTTP reference, not an authoring path.
+- **§DX-02n +1 (prior art, not a new member)** — `worldbuilder.html:this._flagToQuests[f].writes.push(id)@1695` already implements the reader/writer census `check:deadconsts` has been specified to need, over `QUEST_DB` source text. Whoever builds the gate should start here and widen the scan universe to the whole file rather than start over.
+
+**Corroborated, not re-filed** (existing-work-first):
+
+- **§AUDIO-01** — this document's §VI.A is its originating requirement; the *"background music as the game is played"* framing is quoted here verbatim and remains the strongest argument for the row.
+- **§DX-02am** — explained, not duplicated: see §IX.
+- **§FISH-01** — `LYR:{ num:41, code:'LYR'@8723` (act 7) is declared 59 lines before `BOO:{ num:75, code:'BOO'@8782` (act 3) and both occupy cell `2,194`, so `isFishingLake:true@8782` never reads at a node the player can stand on. This report's §II and §V both describe a sub-game that is currently unreachable by walking. Owned by §DOC-02m; re-derived independently here.
+- **§EPIC-01 / §ENDING-01** — the real blocker on the DM's Guide Part V (see §X).
+- **§AUDIT-03u** — Yael's Level-1 monologue still says *"the known world has forty-two nodes."* It is also, pleasingly, where she sends the player to the lake: *"Go north to Yugurt, to the cabin, and find the old man who keeps it — they call him the Fisherman. He hands the rod to anyone who will use it, free, and asks nothing back."* Which is the exact contradiction of §II.5's *"just a man who fishes"* — the Fisherman became load-bearing.
+
+---
+
+## XII. Preserved Aspirational Content — NOT SHIPPED, kept
+
+Per program policy, an unshipped claim is marked and kept, never deleted. The following are the document's live proposals and remain valid asks:
+
+**The DM's Companion Guide (§I).** Six parts: *The World Before the Players Arrive* (the 49-day countdown, act-by-act state, the Froberger backstory told plainly, the Scholar Kings' suppression policy as narrative) · *NPC Profiles, full spoilers* — one page each, nine fields: name/node · public face · hidden truth · agenda · favorability gates · all quotes verbatim by state with DM context · Froberger connection · quest chain beat-by-beat · improvisation notes · *Monster Manual* — all monsters by terrain and tier with stat block, loot, flavour, encounter feel · *Mission Architecture* — the twelve `_missionComplete()` bits, side quests, Epic Battleground quests with their wound/opening/warning/negotiate/return lines, the Curse of Knowledge formula explained plainly · *The Endings* — all four plus the §XVII fifth, with what to say to the table after each, and how to run NG+ ("everything is remembered") · *DM Tooling* — difficulty scaling, homebrew NPCs on the `NPC_DIALOGUES` shape, running without a computer, and the "Quest −1" invitation (what Level 21 means, and how a DM writes it). Format: 80–120 pp, or a second HTML file under the same one-file philosophy.
+
+**The Fishing Guide as a document (§II).** Five sections: the Yugurt Lake system · the rank 1–20 fish table · predator encounters and bait tiers · the Master of Yugurt tournament · fishing as world lore. Substantially superseded — the mechanics now live in `mechanics-combat.md` and in the in-game readable — but the *lore* section (why the Void Tide changes what lives in the water) has no home yet.
+
+**Mission Explorer, unbuilt parts.** The debug-metadata layer (§DX-02ao) · the State Flag Browser's engine-side reader column · per-field line-number references into the HTML.
+
+**Organ, unbuilt parts.** Web MIDI live keyboard input (`navigator.requestMIDIAccess()`) with Manual I / Manual II / Pedal on channels 1–3, the pedal restricted to fundamental + 2nd harmonic · a parsed JSON tablature file format · meantone and Pythagorean temperaments for period-accurate beating · voice-stealing warnings when a composition exceeds 12 simultaneous notes · **embedding the organ in the game** (§AUDIO-01).
+
+---
+
+## XIII. Conclusion
+
+The document set out to record ideas *"so they are not lost, not so they are acted on immediately"* — and then two of them were acted on immediately, one of them within the same session, six minutes after the sentence saying none could be.
+
+What survives re-measurement is not the roadmap but the taste behind it. Every number the author measured is exact, eighty days and 5.5× the file later. The physics of the organ is right, the harmonic table became a user interface, and the demo motif is byte-identical. The one-paragraph aside about shipping a guide as an in-game item turned out to be the most implementable idea in the file. And the two things it got wrong — the effort ranking and the mock-up field names — are wrong in the same way and for the same reason: **they describe things that did not exist yet, and description without a source to copy from is invention.**
+
+For a document whose title promises ponies and unicorns, the accuracy rate on the things it could check is remarkable, and the failure rate on the things it could not is total. *That is the whole method of this program in one file.*
+
+---
+
+**Anchors used in this report** resolve against `roll2hit-v3.html` (38,712 lines), `sources/5thOrgan.html` (448 lines) and `worldbuilder.html` (10,685 lines) as of 2026-08-12. Legacy node codes (`YL`, `YC`, `CI`, `SL`, `CQ`, `VS`) are preserved as written — `lab-reports/` is a HISTORY corpus under `scripts/legacy-codes.js`; annotate, never rewrite.
+
+---
+
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
