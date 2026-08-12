@@ -1,230 +1,302 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-```
- lp -o page-top=48 -o page-bottom=48 -o page-left=12 -o page-right=12 -o cpi=18 -o lpi=9 lab-report-littorial-courts-story.txt
-```
-# Lab Report — The Four Courts of the Littoral Sea
+# The Four Courts of the Littoral Sea — §SIREN-01
 
-**Project:** roll2hit.com — *The Shattered Codex*
-**Report Designation:** SIREN-01 (Littoral Courts Arc — Layer 104)
-**HTML Baseline:** `roll2hit-v3.html` — ~21,200 lines at session close
-**Session Date:** 2026-05-28
-**Category:** Narrative Architecture · Manipulation Psychology · French Vignette Technique · Social Skill Checks · Parallel-Quest Design
+**Project:** roll2hit.com — *The Shattered Codex* · **Designation:** SIREN-01 (Layer 104)
+**Classification:** Narrative Architecture · Social Skill Checks · Parallel-Quest Design
+**Original:** 2026-05-28 · `roll2hit-v3.html` ~21,200 lines · ship commit **`42c2f82`**
+**Verified against HEAD (38,712 lines):** 2026-08-12 (§DOC-02u)
+**Verified status:** **Every authored artifact survives — quests byte-exact through a total format migration — and not one node of the arc can be reached by any player.**
+
+> **HISTORY DOCUMENT.** Annotated, never rewritten to match HEAD. Claims that did not ship are
+> marked **NOT SHIPPED** and **kept**; a silently deleted claim reads as one that held.
 
 ---
 
 ## Abstract
 
-This report documents the design and implementation of the Littoral Courts arc (§SIREN-01) for *The Shattered Codex*. The arc is a sequential ocean-route quest chain — 10 nodes from the deep-sea entry point (DS.E) to the Southern Anchorage (LCA) — in which a knight on diplomatic commission navigates four coastal courts, each ruled by a Lady who uses one of four words as a social instrument: BUSY (*Occupée*), MAYBE (*Peut-être*), FRIEND (*Ami*), SOON (*Bientôt*).
+§SIREN-01 is a sequential ocean-route chain of ten nodes in which a knight on diplomatic commission
+navigates four coastal courts, each ruled by a Lady who uses one word as a social instrument:
+**BUSY** (*Occupée*), **MAYBE** (*Peut-être*), **FRIEND** (*Ami*), **SOON** (*Bientôt*). Each word is
+a skill check — WIS Insight, INT Investigation, CHA Persuasion — testing whether the knight can read
+a frame without being shaped by it. Three sea crossings separate the courts; a fifth, optional
+encounter in a fog bank (LSO) reveals the Overseer, the thing that arranged the sequence.
 
-The arc's source material is a psychology-of-relationship-dynamics transcript that identifies these four words as tools of indirect interpersonal framing — what the transcript calls "the quietest weapon" because "it leaves no fingerprints." The D&D implementation translates this into skill-check quest mechanics: each word corresponds to a WIS Insight, INT Investigation, or CHA Persuasion check; each check tests whether the knight can read the frame without being shaped by it.
+Re-measured 76 days later: **the implementation is one of the most faithful in the §DOC-02 corpus and
+the arc is 100 % unreachable.** All five quests survive the §ARCH-01 UQF migration **byte-exact** —
+every DC, stat, skill, pass flag, fail flag and XP award; all ten state flags shipped in the specified
+order in one contiguous block; all six NPC `quoteFn` state machines intact. But four of the ten nodes
+were deleted, and **all six survivors are non-primary occupants of shared cells**, so none can ever
+become `S_story.currentCode`. Zero of five quests can activate. The arc-close cannot render.
 
-The arc's combat content is entirely with sea creatures — three crossings, escalating from Sea Spawn to Deep Ones to a solo Sea Serpent. The Ladies never fight. The ocean does.
-
-A parallel quest introduces the Overseer (node LSO — The Fog Bank), a telepathic entity drawn from Succubus/Incubus lore who has been administering all four courts from the water ahead of the knight since Port Aurel. The Overseer's quest (WIS Insight DC 15) asks the knight to name the meta-structure they have been navigating and refuse the "helpful offer" at its end.
-
-All court prose and NPC voice is written in compressed present-tense French vignette register. The betrayal mechanic (three flags: `betrayalThought`, `betrayalWord`, `betrayalDeed`) tracks skill-check failures and feeds a three-variant arc-close storyRender injection at LCA.
-
----
-
-## I. Source Material and Design Derivation
-
-### I-A. The Four Words — Source Transcript
-
-The arc derives from a psychology-of-social-dynamics transcript organized around four words that operate as interpersonal framing tools rather than as statements of fact:
-
-| Word | Mechanism (transcript) | D&D Translation |
-|------|----------------------|-----------------|
-| **BUSY** | "Not measuring her schedule. Measuring you." Intermittent reinforcement: warmth given in short unpredictable bursts, watching whether the other person adjusts downward. | Lady Aurel — the tidal schedule. Every appointment is borrowed from a schedule she administers. She sees you exactly as often as she has decided to. |
-| **MAYBE** | "A soft, subtle cage. Keeps you emotionally available without requiring commitment." The other person stays circling while she checks her options. | Lady Calice — the drawbridge. "Perhaps at the evening tide." The wheel that lowers the bridge is in the courtyard. It is not locked. No one mentions it. |
-| **FRIEND** | "The sharpest downgrade delivered without sounding cruel." The knight is introduced to court as "my most trusted companion" before he can introduce himself. The role is assigned, not offered. | Lady Mireille — the court introduction. Name and title remain. The frame, however, has been set. |
-| **SOON** | "A future that never arrives because it was never meant to." Temporal delay reinforcement. Hope is fed precisely enough that the absence of a real date is not noticed. | Lady Solen — the ship on the horizon. Named, specific, three seasons unmoving. The fishermen at the dock know. No one asks them first. |
-
-The transcript's core argument — "the danger isn't the word, it's the man's willingness to surrender his emotional center" — translates mechanically into the skill check system: the check tests whether the knight holds their position (PASS) or adjusts to fit the frame (FAIL). The betrayal flags are the mechanical record of that adjustment.
-
-The arc does not moralize. The three-variant arc-close at LCA witnesses the score without judgment. A knight who accumulated three betrayals is not punished — they simply arrive having been shaped, and the text names the shape clearly.
-
-### I-B. The Three-Betrayal Mechanic — Succubus/Incubus Source
-
-The Overseer character and the betrayal mechanic draw from Succubus/Incubus D&D lore (MM p.349), specifically:
-
-- **Three betrayals — thought, word, deed** — are sufficient for a soul to belong to the fiend. The arc maps these onto the first three skill-check fails.
-- **Telepathic Bond** — "ignores range restriction on telepathy when communicating with a Charmed creature; the two don't even need to be on the same plane." The Overseer has been in contact with the ship's navigator since the first crossing. The navigator is not aware of this.
-- **Shape-changing** — the Overseer has no fixed form; it appears through the navigator's second register and then directly in the fog.
-- **Charm (DC 15 WIS)** — the Overseer quest uses WIS Insight DC 15, matching the charm save DC from the stat block.
-
-The Overseer is not a battle encounter. It is a dialogue encounter in a fog bank (node LSO, east branch from LJ3). The pass condition is naming the structure aloud — not accusation, not drama, flat acknowledgment — and going to the fourth court anyway.
-
-The fail condition: accepting the "helpful offer." The voice asks for a single word — a specific framing at Port Solen. The word is not wrong. It gives the Overseer a small piece of the frame.
-
-### I-C. Writing Register — French Vignette
-
-All court node text and NPC voice follows the compressed present-tense vignette register established in the grief arc (§GR) and Paul arc (§LIX–§LXIX):
-
-- **Two perspectives implied per encounter** — the Lady's calibration and the knight's position — without either being named.
-- **The gap between perspectives is the subject.** The text never declares what the manipulation is. The skill check vignette text frames the moment.
-- **Objects carry the weight.** The tide table. The bridge chain. The herald at the door. The ship on the horizon. The wheel in the courtyard. None of these are symbolic. They are the specific facts of the specific situation.
-- **No editorial comment.** The arc-close does not say the knight was manipulated. It says: "you gave something at each harbor that you did not mean to give." That is the observation. The interpretation belongs to the player.
-
-The sea crossing nodes invert the register: minimal court prose, maximum physical fact. The sea is not atmospheric. It is a classification on a chart and a creature that enters from the wrong direction.
+Two things went wrong, thirteen days apart, and neither was a decision about this arc.
 
 ---
 
-## II. Arc Architecture
+## I. Intent, Inspiration, and What It Buys the Player
 
-### II-A. Node Chain
+*(Restated from the original Abstract, §I and §V — the part of this document that survived best, and
+the reason the work was done.)*
 
-All nodes at column 14, 2-row steps south. Entry via DS(r:25,c:10).E probe → LJ0(r:25,c:14).
+**The inspiration** is a psychology-of-relationship-dynamics transcript identifying four ordinary
+words that operate as interpersonal *framing tools* rather than statements of fact. The transcript
+calls this **"the quietest weapon,"** because **"it leaves no fingerprints."**
 
-| # | Code | Label | r | c | Type | Content |
-|---|------|-------|---|---|------|---------|
-| 111 | `LJ0` | The Littoral Passage | 25 | 14 | Junction | Entry from DS.E |
-| 112 | `LC1` | Port Aurel — The Tide Keep | 27 | 14 | Court | `quest_aurel_tide` WIS DC 12 |
-| 113 | `LJ1` | First Crossing | 29 | 14 | Battle | Sea Spawn × 2 (`sea_serpent`, count:2) |
-| 114 | `LC2` | Port Calice — The Drawbridge Court | 31 | 14 | Court | `quest_calice_bridge` INT DC 13 |
-| 115 | `LJ2` | Second Crossing | 33 | 14 | Battle | Deep One × 3 (`deep_one`, count:3) |
-| 116 | `LC3` | Port Mireille — The Cape Court | 35 | 14 | Court | `quest_mireille_ami` CHA DC 14 |
-| 117 | `LJ3` | The Serpent Passage | 37 | 14 | Battle | The Serpent of the Passage (`sea_serpent`, count:1) |
-| 118 | `LC4` | Port Solen — The Far Harbor | 39 | 14 | Court | `quest_solen_horizon` WIS DC 13 |
-| 119 | `LCA` | The Southern Anchorage | 41 | 14 | Terminal | storyRender arc-close (betrayal count) |
-| 120 | `LSO` | The Fog Bank — Open Water | 37 | 18 | Branch | `quest_sea_overseer` WIS DC 15 |
+| Word | Mechanism | The court that is it |
+|---|---|---|
+| **BUSY** | Intermittent reinforcement — warmth in short unpredictable bursts, watching whether you adjust downward. *"Not measuring her schedule. Measuring you."* | **Lady Aurel**, the tide keep. Every appointment is borrowed from a schedule she administers. |
+| **MAYBE** | *"A soft, subtle cage."* Keeps you available without requiring commitment. | **Lady Calice**, the drawbridge. *"Perhaps at the evening tide."* The wheel that lowers the bridge is in the courtyard. It is not locked. No one mentions it. |
+| **FRIEND** | *"The sharpest downgrade delivered without sounding cruel."* The role is assigned, not offered. | **Lady Mireille**, the cape court. You are introduced as *"my most trusted companion"* before you can introduce yourself. |
+| **SOON** | *"A future that never arrives because it was never meant to."* | **Lady Solen**, the far harbor. A named ship on the horizon, three seasons unmoving. The fishermen at the dock know. No one asks them first. |
 
-LSO at (r:37,c:18) branches east from LJ3(r:37,c:14), gap=4 — within probe range. LSO is the Overseer encounter, optional but thematically structuring.
+**Why this is a game mechanic and not an essay.** The transcript's thesis — *"the danger isn't the
+word, it's the man's willingness to surrender his emotional center"* — maps onto a d20 with no
+translation loss. **PASS = you held your position. FAIL = you adjusted to fit the frame.** The three
+betrayal flags (`betrayalThought` · `betrayalWord` · `betrayalDeed`) are the mechanical record of that
+adjustment, and the arc-close at LCA reads the count back without judgement:
 
-### II-B. Quest Table
+> **0 betrayals —** *"You gave them nothing but your position."*
+> **3 betrayals —** *"You gave something at each harbor that you did not mean to give."*
 
-| Quest ID | Node | Type | Ability | DC | Pass Flag | Fail Flag | XP |
-|----------|------|------|---------|----|-----------|-----------|----|
-| `quest_aurel_tide` | LC1 | skill_check | WIS Insight | 12 | `aurelTideRead` | `betrayalThought` | 150 |
-| `quest_calice_bridge` | LC2 | skill_check | INT Investigation | 13 | `caliceBridgeCrossed` | `betrayalWord` | 175 |
-| `quest_mireille_ami` | LC3 | skill_check | CHA Persuasion | 14 | `mireilleAmiNamed` | `betrayalDeed` | 200 |
-| `quest_solen_horizon` | LC4 | skill_check | WIS Insight | 13 | `solenSoonRead` | — | 225 |
-| `quest_sea_overseer` | LSO | skill_check | WIS Insight | 15 | `charmResisted` | `seaOverseerMet` | 250 |
+**What it adds to the game, concretely:**
 
-Note: `quest_solen_horizon` has no fail flag — the letters come regardless at Port Solen; the fail condition is narrative (you waited; the season passed) rather than a state mutation.
+1. **A skill check that is not a lock.** Most `skill_check` quests gate a reward; these gate *who you
+   were at the end*. Failing still gets you the seal — Lady Aurel was always going to give it — so the
+   check measures a cost the quest log cannot show you.
+2. **Failure with a memory.** Three fails become a state carried to a terminal node and narrated back.
+   Almost nothing else in the engine accumulates a *character* score across an arc.
+3. **The sea as control group.** The Ladies never fight; the ocean does — and the source material is
+   blunt about why: **"women aren't the enemy."** The sea is what the manipulative dynamic is *not*:
+   honest about what it wants. The serpent passage put it best — the charts name that water *la mer
+   des serpents*, **"not as a warning but as a classification."**
+4. **A final check that is harder for being transparent.** After three courts, the thing that built
+   them offers help. It costs *"nothing"* — one word, one framing, at Port Solen. DC 15, matching the
+   Succubus charm save (MM p.349). *"The most effective intervention is the one that appears to be
+   assistance."*
 
-### II-C. NPC Voice Table
-
-All NPCs use multi-state `quoteFn` with state mutation on first visit:
-
-| Node | NPC | Pass state | In-progress state | Pre-event state |
-|------|-----|-----------|------------------|-----------------|
-| LC1 | Lady Aurel | `aurelTideRead` | `betrayalThought` | default |
-| LC2 | Lady Calice | `caliceBridgeCrossed` | `betrayalWord` | default |
-| LC3 | Lady Mireille | `mireilleAmiNamed` | `betrayalDeed` | default |
-| LC4 | Lady Solen | `solenSoonRead` | — | default |
-| LCA | Harbor Keeper | `littorialComplete` (set on first visit) | — | — |
-| LSO | The Overseer | `charmResisted` | `seaOverseerMet` | default (pre-encounter) |
-
-### II-D. State Flags
-
-All added to `S_story` defaults:
-
-```javascript
-// §SIREN-01: Littoral Courts
-aurelTideRead: false, betrayalThought: false,
-caliceBridgeCrossed: false, betrayalWord: false,
-mireilleAmiNamed: false, betrayalDeed: false,
-solenSoonRead: false, littorialComplete: false,
-seaOverseerMet: false, charmResisted: false,
-```
-
-### II-E. storyRender Injections
-
-**LJ3 — Navigator trigger** (fires once, pre-encounter):
-```
-id: 'story-lso-trigger'
-Condition: node.code === 'LJ3' && !S_story.seaOverseerMet && !S_story.charmResisted
-Effect: inserts panel describing navigator's second register; prompts player to investigate the fog bank east
-```
-
-**LCA — Arc close** (fires on every visit):
-```
-id: 'story-lca-close'
-Condition: node.code === 'LCA'
-Logic: counts (betrayalThought + betrayalWord + betrayalDeed)
-  0 betrayals → "You gave them nothing but your position."
-  1–2 betrayals → "You have been shaped by the crossing. You notice it now that the water is still."
-  3 betrayals → "You gave something at each harbor you did not mean to give. The water is still."
-```
+**The register.** Compressed present-tense French vignette, inherited from the grief arc (§GR) and the
+Paul arc (§LIX–§LXIX): two perspectives implied per encounter and neither named; **objects carry the
+weight** (the tide table, the bridge chain, the herald at the door, the ship on the horizon); **no
+editorial comment.** The arc never says *you were manipulated.* It says what happened and hands the
+interpretation to the player.
 
 ---
 
-## III. The Overseer — Design Rationale
+## II. Method
 
-### III-A. Why a Parallel Quest
-
-The four Ladies are not architects. They are administrators of patterns they have used before and will use again. What the four-court structure implies — a coordinated sequence of tests, each targeting a different susceptibility — suggests a layer above the courts: something that constructed the sequence, not merely deployed it.
-
-The Overseer is that layer. It has been ahead of the knight since Port Aurel: in the water, in the navigator's second register, in the fog bank that has no seasonal explanation.
-
-The reveal is placed at LJ3 — the hardest sea crossing, after three courts, before the fourth. The knight has navigated the pattern (with whatever score) and is now, for the first time, given a direct encounter with the thing that set it.
-
-### III-B. The Offer
-
-The Overseer offers to "arrange the fourth court differently." The offer is reasonable. It is warm. It costs "nothing." It requires only a single word — a specific framing — at Port Solen.
-
-This is the fifth test, and it is harder than the four courts because it is transparent. The Overseer does not conceal what it is doing. It presents the offer plainly. The difficulty is not deception — it is the knight's willingness to accept assistance from something that has been instrumentalizing them.
-
-DC 15 (vs. DC 12–14 in the courts) reflects this. The charm DC in the stat block is also 15.
-
-### III-C. Fail Condition Design
-
-The fail flag for the Overseer is `seaOverseerMet` (not `charmResisted`). This is intentional: failing the Overseer check means you accepted the offer — you met the Overseer on its terms. The pass flag (`charmResisted`) names the refusal.
-
-On subsequent visits to LSO, the NPC voice changes depending on which flag is set:
-- `charmResisted`: the fog is thinner; the navigator is normal; nothing is in the water here
-- `seaOverseerMet`: the offer is still open; it waits
+Program instruments applied: batch symbol census before reading · `git log -S` on every dead symbol ·
+**instrument 18** (the earliest surviving build `32c10c5` *predates* this report by four days, so the
+reference is the arc's own **birth commit `42c2f82`**) · **instrument 19** (a reachability closure over
+`CELL_GRID`, run because the report describes a multi-quest chain) · **instrument 14** (the closure's
+totals reconciled against `check:dupkeys`' node count before any delta was derived).
 
 ---
 
-## IV. World Geography
+## III. As-Built Inventory (HEAD)
 
-The Littoral Sea is the open water south and west of the main continent's deep-sea nodes. The Littoral Passage (LJ0) connects to the existing DS (Deep Sea Trench) node via the east probe — the same ocean that contains the Charybdis and the Leviathan's silhouette.
+**Nodes — 6 of 10 survive.** `LC1:{ num:112, code:'LC1'@8531` · `LC2:{ num:114, code:'LC2'@8535` ·
+`LC3:{ num:116, code:'LC3'@8539` · `LC4:{ num:118, code:'LC4'@8543` ·
+`LSO:{ num:120, code:'LSO'@8547` · `LCA:{ num:119, code:'LCA'@8551`.
+**Deleted:** `LJ0` · `LJ1` · `LJ2` · `LJ3`.
 
-The four harbor-courts are coastal fortresses on a southward littoral chain. They are not on any existing political map. They predate the Conclave. Their architecture is described through the specific objects the node texts name: the harbormaster's tower, the drawbridge chain, the cape court fire, the harbor window facing south.
+**Quests — 5 of 5, UQF-1.0.** `quest_aurel_tide: { id:'quest_aurel_tide'@11560` ·
+`quest_calice_bridge: { id:'quest_calice_bridge'@11576` ·
+`quest_mireille_ami: { id:'quest_mireille_ami'@11592` ·
+`quest_solen_horizon: { id:'quest_solen_horizon'@11608` ·
+`quest_sea_overseer: { id:'quest_sea_overseer'@11624`.
 
-The Southern Anchorage (LCA) is open water — the first node in the arc with nothing requiring anything from the player. This is noted in the node text and the arc-close alike.
+**State — 10 of 10, contiguous.** `// §SIREN-01: Littoral Courts@23181` …
+`solenSoonRead: false, littorialComplete: false,@23185`.
 
----
+**Voice — 6 of 6 `quoteFn` state machines.** `LC1: { name:'Lady Aurel', quoteFn:() => S_story.aurelTideRead@22541` ·
+`LCA: { name:'Harbor Keeper', quoteFn:() => S_story.littorialComplete@22559` ·
+`LSO: { name:'The Overseer', quoteFn:() => S_story.charmResisted@22562`.
 
-## V. Non-Obvious Decisions
-
-**1. Why the sea battles are not with the Ladies.**
-The source material is explicit: "women aren't the enemy." The battles are with the sea because the sea is genuinely hostile — no frame, no instrument, no calibration. The contrast between court encounters (skill checks, language, indirect pressure) and sea encounters (direct, physical, mortal) is structural. The sea is what the manipulative dynamic is not: honest about what it wants from you.
-
-**2. Why `quest_solen_horizon` has no fail flag.**
-Port Solen (SOON) is the fourth pattern, and by the time the player reaches it they have either accumulated betrayals or not. The fishermen are at the dock regardless. The letters come regardless. The fail condition at Port Solen is not a state mutation — it is a narrative acknowledgment that the player waited. The arc-close at LCA does not need a fourth betrayal flag because the three-flag counting already produces a meaningful score.
-
-**3. Why the betrayal flags set on `checkFailFlag` rather than in the failText handler.**
-The `checkFailFlag` field is already supported by the skill-check handler at line 6203. Using it is structurally cleaner than custom logic in the failText string. The flags set automatically on fail without requiring special-case code in the renderer.
-
-**4. Why the Overseer appears at LJ3 and not LC4.**
-LJ3 is the last sea crossing — the solo serpent, the hardest battle, the deepest point in the ocean before the final court. The navigator's second register has been present since the first crossing; the player encounters it here because this is the first moment after the third court where the pattern has sufficient shape to be named. The Overseer offers the shortcut at the exact moment when shortcuts look most attractive: one more court, after three, after a long battle.
-
-**5. Why `littorialComplete` is set by the Harbor Keeper's first-visit NPC mutation rather than a quest.**
-The arc completion is a commission stamp, not an adventure. LCA is a terminal rest node; the arc-close is in the storyRender injection. The Harbor Keeper's NPC mutation handles the completion flag cleanly without requiring a separate quest entry that would add noise to the quest log.
+**Panels — 2 of 2.** `{ id:'story-lso-trigger', nodes:['LSO'],@31345` (repointed — Finding 3) ·
+`{ id:'story-lca-close', nodes:['LCA'],@31350` with `const _bc = (st.betrayalThought ? 1 : 0)@31353`.
 
 ---
 
-## VI. Implementation Checklist
+## IV. Spec → Shipped Delta Table
 
-| Item | Status |
-|------|--------|
-| 10 NODE_MAP entries (LJ0–LCA + LSO) | ✅ |
-| NODE_COORDS for 10 nodes | ✅ |
-| 5 QUEST_DB entries | ✅ |
-| `checkFailFlag` used for betrayal flags | ✅ (supported at HTML line ~6203) |
-| 6 NPC_DIALOGUE entries (LC1–LC4, LCA, LSO) | ✅ |
-| 10 S_story state flags | ✅ |
-| LJ3 storyRender injection (navigator trigger) | ✅ |
-| LCA storyRender injection (arc-close, betrayal count) | ✅ |
-| plan.md §SIREN-01 spec | ✅ |
-| maps.md sync | ⚠️ PENDING — increment 3 |
-| story.md sync | ⚠️ PENDING — increment 4 |
-| world.md sync | ⚠️ PENDING — increment 5 |
-| quest.md sync | ⚠️ PENDING — increment 2 |
-| index.md sync | ⚠️ PENDING — increment 6 |
+| # | Report claim (§) | HEAD | Verdict |
+|---|---|---|---|
+| 1 | 5 quests: IDs, nodes, stats, skills, DCs 12/13/14/13/15, pass+fail flags, XP 150/175/200/225/250 (§II-B) | Every field exact, through the §ARCH-01 migration | ✅ **BYTE-EXACT, 25/25 fields** |
+| 2 | `quest_solen_horizon` has no fail flag (§II-B, §V.2) | Ships `onFail:[]`; the migration comment says so independently | ✅ EXACT |
+| 3 | 10 `S_story` flags in the listed order (§II-D) | One contiguous block, specified order, specified comment header | ✅ EXACT |
+| 4 | 6 NPC multi-state `quoteFn` entries (§II-C) | All six, with the pass / in-progress / default structure | ✅ EXACT |
+| 5 | `littorialComplete` set by the Harbor Keeper's first-visit mutation, not a quest (§V.5) | Exactly that, inside the LCA `quoteFn` | ✅ EXACT |
+| 6 | 10 nodes, `NODE_COORDS` for all 10, column 14 in 2-row steps (§II-A) | **10/10 exact at the birth commit**; 4 nodes since deleted; coordinates since migrated to the 90×360 grid | ✅ **at birth** → **RETIRED** |
+| 7 | 3 sea crossings: Sea Spawn ×2, Deep One ×3, the Serpent (§II-A) | **All three byte-exact at birth; all three deleted.** Every surviving node is `battle:null` | ❌ **RETIRED — the whole combat layer** (Finding 2) |
+| 8 | LJ3 navigator trigger fires pre-encounter, pointing east to the fog (§II-E) | Repointed to `LSO` — the node it points *at* | ⚠️ **MISDIRECTED** (Finding 3) |
+| 9 | LCA arc-close, 3-way betrayal count (§II-E) | Live and exact, all three variants | ✅ EXACT — but unreachable |
+| 10 | Betrayal flags set via `checkFailFlag`, "supported at line ~6203" (§V.3, §VI) | Field **retired** by §ARCH-01; 3 hits, **all in migration comments** | **RETIRED — rationale is now archaeology** |
+| 11 | Baseline *"~21,200 lines at session close"* (header) | `42c2f82` = **21,242 lines** | ✅ **EXACT within its own tilde** |
+| 12 | maps.md / story.md / world.md / quest.md / index.md sync ⚠️ PENDING (§VI) | **All five closed** | ✅ **CLOSED — verify by measurement** |
+| 13 | Arc is playable from DS.E to LCA (§Abstract, §II-A) | **0 of 6 nodes reachable; 0 of 5 quests can activate** | ❌ **ENGINE-ROT, TOTAL** (Finding 1) |
+| 14 | `littorialComplete` (sic) | Shipped with the misspelling, permanently | ⚠️ **the doc became the schema** (Finding 5) |
+
+---
+
+## V. Findings
+
+### Finding 1 → §AUDIT-03x extended — the first 100 % casualty in the program
+
+`const CELL_GRID = (() => {@9852` groups nodes by cell in `NODE_MAP` **declaration order**, and only
+`list[0]` can ever be reached: `S_story.currentCode` is assigned at exactly two sites, and the one
+that matters is `S_story.currentCode = destCode;@28373`, which always yields the primary. Measured
+closure over all 416 nodes (**244 cells, 172 non-primary** — exact against §AUDIT-03x's recorded
+figures):
+
+| Node | Cell | Position | Reachable? |
+|---|---|---|---|
+| LC1 Port Aurel | `32,203` | 3rd of 17 | ❌ `list[0]` = `SEA` |
+| LC2 Port Calice | `32,203` | 4th of 17 | ❌ |
+| LC3 Port Mireille | `32,203` | 5th of 17 | ❌ |
+| LC4 Port Solen | `32,203` | 6th of 17 | ❌ |
+| LSO The Fog Bank | `32,203` | 7th of 17 | ❌ |
+| LCA Southern Anchorage | `35,213` | 2nd of 2 | ❌ `list[0]` = `CI2` |
+
+`LC4:{r:32,c:203},@9773` and `LCA:{r:35,c:213},@9812` are the coordinates that did it. Since
+`function _uqfActivateAtNode(node) {@30137` keys on `node.code`, **all five quests are stranded**;
+since the arc-close is a node panel, **the ending cannot render either**.
+
+**This is the largest proportional casualty §AUDIT-03x has produced.** §CROWN-01 lost 24 of 34 quests
+and kept two reachable nodes; §DOC-02r's prosocial family lost 28 of 51. §SIREN-01 loses **6 of 6
+nodes and 5 of 5 quests — everything.** There is no partial experience to salvage and no entry point
+that still works. ***And nothing in the repo says so:*** `quest.md` lists all five as **"✅ LIVE
+§SIREN-01"**, which is true of `QUEST_DB` and false of the game. That gap is exactly what §DX-02w
+(`check:cellprimacy`) exists to close.
+
+### Finding 2 — the ocean was deleted by a commit about memory allocation
+
+The report's structural thesis is one sentence: **"The Ladies never fight. The ocean does."** At the
+birth commit all three crossings are present and byte-exact to §II-A —
+`battle:{label:'Sea Spawn × 2', key:'sea_serpent', count:2}`,
+`battle:{label:'Deep One × 3', key:'deep_one', count:3}`,
+`battle:{label:'The Serpent of the Passage', key:'sea_serpent', count:1}` — carried on the four
+junction nodes LJ0–LJ3.
+
+They were removed on **2026-06-10 by `a61d6eb`**, whose subject line is *"fix: P5 batchEditNode O(M)
+rewrite + P6.5 DELTA key crash"* and whose body describes, in detail, an O(N×M) string-allocation
+rewrite and a `DELTA['N']` key-casing crash. **It says nothing about world content.** Four nodes and
+an entire combat layer left in the same diff as a garbage-collection yield.
+
+Two consequences worth separating:
+
+- **The arc's contrast is gone.** Every surviving node is `battle:null`. What remains is four courts
+  and a fog bank — the language half of a design whose whole point was the alternation.
+- **The design is now FORBIDDEN, not merely absent.** The crossings were `junction:true`, which
+  `check:invariants` **I2 fails outright** (*"junctions were bulk-deleted in §WALK-1/§CELL-05"*). So
+  restoring them verbatim is a CI failure; the sea has to come back some other way.
+
+***A deletion that is correct as tooling and catastrophic as content will not describe itself in the
+commit message. Read the diff, not the subject line.***
+
+### Finding 3 → §AUDIT-03af — the engine's own comment is wrong about the past, and the wrong diagnosis produced the wrong fix
+
+Live at `§VM-01-G1-FIX: originally keyed to 'LJ3', a dead@31341`, the comment reads:
+
+> *"originally keyed to `'LJ3'`, a dead node code **no NODE_MAP entry ever carried**, so this panel
+> had **NEVER rendered**; remapped to LSO … the quest's own `activateNode`."*
+
+**Both clauses are false.** At `42c2f82`:
+`LJ3:{ num:117, code:'LJ3', name:'junction', label:'The Serpent Passage', act:4 …}` — a real
+`NODE_MAP` entry carrying the arc's hardest battle. The panel therefore **did render**, for thirteen
+days, exactly where it was designed to. `LJ3` was **RETIRED** on 2026-06-10, not born dead.
+
+The correction matters because it is **causal**. The teaser exists to tell you there is something in
+the water *to the east* and send you to find it. Believing it had never worked, the fix pointed it at
+`LSO` — **the fog bank itself**. It now announces the discovery to a player standing inside it:
+
+> *"They are also, in a second and quieter register, speaking to something in the water to the east."*
+
+This is §DOC-02g's rule in its live form, and its second confirmed instance: ***a migration commit's
+own comment is a claim about the past, usually written from memory rather than from the diff. Being
+"in the code" confers no authority about history.*** The general shape: **a dead node code is usually
+a RETIREMENT, and diagnosing it as born-dead licenses a remap that a retirement would forbid.**
+
+### Finding 4 — instrument 18, and a rare clean result: this report was written from the file
+
+The header claims *"~21,200 lines at session close."* `42c2f82` is **21,242** — exact within its own
+tilde, and **the first §DOC-02 baseline in three increments to match a real commit** (§DOC-02s and
+§DOC-02t both described working trees that were never committed). §II-A's ten coordinates are
+**10 of 10 exact at birth** — column 14 in 2-row steps from LJ0 (25,14) to LCA (41,14), plus LSO at
+(37,18), *"gap = 4, within probe range"* included. **Zero fabricated identifiers, zero invented
+statlines.** Instrument 12's usual gradient never appears, because there is nothing composed here to
+be wrong: this document is a build record, not an argument.
+
+### Finding 5 — the misspelling that became the schema
+
+`littorialComplete` — not *littoral* — is live in `_S_DEFAULTS()` and in both branches of the LCA
+`quoteFn`. The report spells it that way **consistently**, including in the `lp` print command in its
+own header (`lab-report-littorial-courts-story.txt`), while the arc, every node label, all five home
+docs and the report's own title say **Littoral**.
+
+§DOC-02d's lesson in field-name form: ***fix the spelling in the doc before the doc becomes the
+schema.*** Cosmetic, and effectively permanent — the field is persisted to `localStorage`, so renaming
+it breaks every existing save. Recorded, not filed.
+
+### Finding 6 — five deferred sync items, all closed, verified by doing it
+
+§VI marks maps.md · story.md · world.md · quest.md · index.md as **⚠️ PENDING — increments 2–6.**
+All five carry §SIREN-01 content at HEAD, and one is better than closed: `world.md:493` already
+annotates the dead crossing as **"`LJ3` (historical — no live node)"** — the §AUDIT-03m annotation
+pass doing its job on this very arc. ***Re-score a residual list every pass; §DOC-02j and §DOC-02s
+both found status blocks stale in the "already shipped" direction, and this is the third.***
+
+### Finding 7 — `checkFailFlag` is retired, and the migration left a receipt
+
+§V.3 argues the betrayal flags should ride `checkFailFlag` because *"the field is already supported by
+the skill-check handler."* §ARCH-01 retired it. Three hits remain, **all inside comments** — dead by
+the standing rule. But the comment that replaced it is a model of how to retire a field:
+`retryable:false so the fail flag grants once). xpAward→reward. solen_horizon had no@11557` and
+`and the LJ3/betrayalCount blocks — mission_bit sets the flag + grants the token identically.@11559`
+record the whole translation, including the `onFail:[]` special case — **independently confirming
+§II-B's note about Port Solen 71 days later.** ***A migration that writes down what it mapped to what
+is the reason this report's quest table could be scored 25/25 instead of guessed at.***
+
+---
+
+## VI. Defects Filed
+
+| Row | Defect | Design call? |
+|---|---|---|
+| **§AUDIT-03x** *(extended)* | §SIREN-01 is the first **100 %** casualty: 6 of 6 nodes non-primary, 5 of 5 quests unable to activate, arc-close unable to render. Five nodes sit in the 17-node cell `32,203`. | 🟠 Yes — the standing §AUDIT-03x call |
+| **§AUDIT-03af** | The `§VM-01-G1-FIX` comment states `LJ3` was a code *"no NODE_MAP entry ever carried"* and *"had NEVER rendered"*; both are false at `42c2f82`. The false diagnosis licensed remapping the navigator teaser onto `LSO`, the node it exists to point at. Correct the comment (🟢); re-place the panel (🟡 small call). | 🟡 Mixed |
+| **§SIREN-01-FU** | The arc's entire combat layer died with the junction nodes, and `junction:true` is now CI failure **I2**, so it cannot be restored as written. Decide: re-express the three crossings as `battle` fields on real nodes, or accept a court-only arc and cut the "the ocean does" thesis from the docs. | 🟠 Yes |
+| **Doc note** | `quest.md` marks all five quests **"✅ LIVE"** — true of `QUEST_DB`, false of the game. Not an error to fix by hand; it is the argument for **§DX-02w** (`check:cellprimacy`). | 🟢 No |
+
+---
+
+## VII. Design Material Retained
+
+Kept because no maintained doc carries it and this report is its only copy:
+
+- **The four-word source table** (§I above) and the mapping rule that makes it mechanical: *the check
+  tests whether the knight holds their position or adjusts to fit the frame.*
+- **Why the Overseer is a parallel quest, not a boss** (§III-A/B): the four Ladies are administrators
+  of a pattern, not its architects. The Overseer is the layer above, and its test is harder precisely
+  because it is **transparent** — it does not conceal the offer. *"A hostile voice can be refused. A
+  helpful voice requires a different kind of refusal."*
+- **Why the fail flag is `seaOverseerMet` and the pass flag is `charmResisted`** (§III-C): failing
+  means you met it on its terms. The asymmetry is the point.
+- **Why Port Solen has no fail flag** (§V.2): the letters come regardless. The fourth pattern's
+  failure is narrative — you waited — and three flags already produce a meaningful score.
+- **Why the Overseer appears at the last crossing** (§V.4): *"The Overseer offers the shortcut at the
+  exact moment when shortcuts look most attractive: one more court, after three, after a long
+  battle."* Worth preserving as a placement principle even though the node it names is gone.
+- **The dispositions**, which are the arc in miniature:
+  *"The tide keeps its own schedule. Everything else negotiates."* — Port Aurel ·
+  *"The evening tide is reliable. The question is whether you need it to be."* — Port Calice ·
+  *"He addressed the court directly. It was unexpected. I found it clarifying."* — Lady Mireille ·
+  *"The fishermen remember. They always remember."* — the dock at Port Solen.
+
+---
+
+*Original report 2026-05-28, ship commit `42c2f82`.*
+*Verified and rewritten 2026-08-12 under §DOC-02u against `roll2hit-v3.html` at 38,712 lines.*
+*Four courts, five quests, ten flags, every string intact — and a sea that is no longer there.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
