@@ -1,226 +1,218 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report — Layers 75+77: Kenickie's Black Market + Chronicle System
+# Lab Report — Layers 75 + 77: Kenickie's Black Market · The Chronicle System
 
-**IEEE-Format Post-Mortem**  
-**Date:** 2026-05-25  
-**Layers:** 75 (§XL) + 77 (§XLII)  
-**Sections:** §XL — Kenickie's Black Market + Sheet-Swapper UI · §XLII — Chronicle System  
-**Status:** ✅ Implemented  
-**Codebase:** `roll2hit-v3.html` — single-file browser RPG
+**IEEE-format post-mortem · re-verified against live `roll2hit-v3.html`**
+**Written:** 2026-05-25 · **Re-measured:** 2026-08-12 (§DOC-02q) · **Layers:** 75 (§XL) + 77 (§XLII)
+**Status:** both systems SHIPPED and reachable; five spec claims wrong when written, one live defect filed
 
 ---
 
 ## Abstract
 
-This report covers two systems implemented as structurally distinct but thematically adjacent layers: Layer 75 (§XL) — Kenickie's Black Market and the associated Sheet-Swapper UI at the Cat Quarter node, and Layer 77 (§XLII) — the Chronicle System, a dual-ledger career/run statistics tracker with game-over summary and live character sheet display. Both systems are reward-surface features: §XL gives a concrete economic payoff for completing the Cat Arc's most demanding quest chain (`quest_cat_05`), while §XLII gives players a narrative payoff — a readable record of what happened across a run or a career. Neither system branches story; both systems measure and display what the player has already done.
+Two reward-surface systems, written up the day they were built. **§XL — Kenickie's Black Market** turns the completion of a Cat-Quarter quest into a persistent discount shop, so an arc's payoff is an ongoing economic relationship rather than a one-time loot line. **§XLII — The Chronicle** is a dual-ledger statistics recorder (`runStats` per life, `careerStats` across lives) surfaced on the game-over screen and the character sheet, so that dying produces a *reading* of the run instead of only a verdict. Neither branches story; both convert work the player already did into something they can see.
+
+Re-measurement finds **§XL implemented almost exactly as specified and fully reachable**, and **§XLII implemented under different names than the report gives it**, with one born-broken defect that voids the ledger's stated purpose. The report's own recommendations section is its least reliable passage: two of its four requests had already shipped in the very commits it documents.
 
 ---
 
-## I. §XL — Kenickie's Black Market + Sheet-Swapper UI
+## I. Method
 
-### A. Design Intent
+Seventeen-instrument §DOC-02 pass. Every named identifier batched through one `grep -c` before any prose was read; every dead symbol put through `git log -S "<symbol>" -- roll2hit-v3.html` to separate RETIRED from NEVER SHIPPED; every node code checked against the archive build before being called wrong; cell-primacy checked so a "shipped" surface is not reported as reachable when it is not; `NODE_MAP=416` cross-checked against `check:dupkeys` before any census figure was trusted.
 
-The Cat Arc (`quest_cat_01` through `quest_cat_06`) concludes with `quest_cat_05` — defeating the Cat-King. The quest chain is the longest in Act I and involves the arc's primary antagonist faction. Quest completions in this codebase typically reward gold and a trophy item; the Cat-King defeat adds the Don's Signet Ring and 900gp. But the arc's tone — a mob-cat economy run on loyalty and crew hierarchy — called for something beyond a loot drop. Kenickie Clawnickie Mancuso exists in the Cat Quarter as a background presence: a black market operator who has never been the player's direct contact. He is not Jimmy Two-Tails (the fixer), Sandy (the informant), or any of the Honchos. He is the fence.
+Both systems **postdate** the earliest surviving build (`32c10c5`, 2026-05-24), so the archive cannot adjudicate them. Their birth commits do, and all four fall on the report's own date:
 
-§XL makes Kenickie's operation accessible as the mechanical payoff for completing `quest_cat_05`. The reward is not a unique item — it is access to discounted healing and fishing bait from someone who now considers you validated crew. The "10% community pricing" framing is intentional: the Cat Quarter economy does not run on adventurer-as-customer. It runs on loyalty. Completing the Cat-King quest earns that loyalty, and Kenickie's prices reflect it.
+| Commit | Time (2026-05-25) | What it built |
+|---|---|---|
+| `4090c82` | — | Layer 44: the Ally Cat Arc (`CQ`, `quest_cat_01`–`06`) |
+| `cab8865` | 10:16 | Chronicle v1 — **5** stat fields, character-sheet two-column display |
+| `e1c91e8` | 10:20 | Game-over Chronicle wiring — **4** rows |
+| `aef1650` | 10:35 | Chronicle v2 — **10** fields, `_STAT_ZERO`, the **Hit rate** row |
+| `194a810` | — | `kenickieMarketUsed`, the market block |
 
-The Sheet-Swapper UI refers to Kenickie's dialogue card appearing in the CQ NPC sheet view once `quest_cat_05 === 'complete'`. Before that condition is met, Kenickie has no interface presence at CQ. After it, his card surfaces alongside the standard CQ node render. This is a sheet-swap pattern: the same node surface area presents different NPC content depending on quest state.
-
-### B. Implementation Architecture
-
-#### NPC Definition
-
-**`kenickie` NPC profile** — defined in `NPC_DIALOGUES` (line 7638). Node: CQ. Kenickie Clawnickie Mancuso is not a full-arc NPC and does not accumulate favorability states in the standard hostile/neutral/friendly/dear progression. His dialogue is a single-state encounter: he appears only when the unlock condition is satisfied, and his tone is that of an operator acknowledging a peer.
-
-Character archetype: the fence who speaks in fish metaphors because the Cat Quarter economy runs on fish. His dialogue treats the player's Cat-King victory as professional validation — not emotional warmth. He is not Jimmy's warmth or Sandy's sharpness; he is the quiet economy that underlies the arc.
-
-#### State Flag
-
-**`kenickieMarketUsed: false`** — defined in `_S_DEFAULTS()` (line 8422). Tracks whether the player has made at least one purchase from the Black Market. Set to `true` on first completed transaction. Used to conditionally alter Kenickie's greeting on subsequent visits ("Back again. Good. The sardines are fresher today than yesterday.") — a single-line variation that rewards return visits without requiring additional quest machinery.
-
-#### Unlock Condition
-
-The market activates when `quest_cat_05 === 'complete'`. This flag is set at the Cat-King quest completion handler (line 13056), which also grants +900gp and the Don's Signet Ring and emits the story message: *"+900gp + The Don's Signet Ring. Kenickie's Black Market is open."*
-
-The inline announcement in the completion message is the only notification that the market exists. There is no quest entry for market access, no map marker change, and no separate unlock animation. The message is the unlock.
-
-#### Render Block
-
-**Lines 14878–14933** — the CQ node render block includes a conditional that checks `quest_cat_05 === 'complete'`. When true, a button labeled `🐟 Kenickie's Black Market` appears in the node UI. Clicking the button toggles the visibility of `#kenickie-shop-div` — an inline shop div that renders without a page transition.
-
-The shop div is not a modal. It is an in-place expansion of the CQ node surface, consistent with the single-file, no-page-transition architecture of `roll2hit-v3.html`.
-
-#### Shop Inventory (4 items)
-
-| Item | Price | Type | Effect | Flavor |
-|------|-------|------|--------|--------|
-| Sardine Pack ×3 | 18gp | Bait | Catch +2 | *"Freshish. Don't ask about the smell."* |
-| Live Shallows Minnow | 28gp | Bait | Catch +3, size↑ | *"From the Don's private pond. He doesn't need it anymore."* |
-| Minor Healing Potion | 45gp | Consumable | Heals 10hp | — (10% off standard price) |
-| Healing Potion | 135gp | Consumable | Heals 25hp | — (10% off standard price) |
-
-**Bait stacking logic:** Bait items check inventory by name. If a matching item already exists, the count increments by the purchased quantity (×3 for the Sardine Pack; ×1 for the Minnow). They do not create duplicate inventory entries. This follows the existing bait-stacking pattern used elsewhere in the fishing system.
-
-**Healing potion pricing:** The 10% discount is applied at the shop definition level — 45gp and 135gp are the actual stored prices, not calculated dynamically from a base price. If standard potion prices change in a future layer, Kenickie's prices must be manually updated to maintain the discount relationship.
-
-#### Sheet-Swapper UI (line 14959)
-
-The Kenickie card at CQ is an instance of the sheet-swapper pattern: the NPC sheet area of the CQ node conditionally renders Kenickie's dialogue when `quest_cat_05 === 'complete'`, replacing (or appending to) the default CQ node NPC display. This surfaces Kenickie's voice — the fence's single-state dialogue — at the point in the game when the player has earned access to it. Before `quest_cat_05` is complete, the sheet area at CQ shows Jimmy Two-Tails or the default node NPC. After completion, Kenickie's card appears.
+The report describes the 10-field shape, so it was written after `aef1650` — i.e. **after every commit it recommends changes to.**
 
 ---
 
-## II. §XLII — Chronicle System
+## II. §XL — Kenickie's Black Market
 
-### A. Design Intent
+### A. Design intent, and what it adds to play
 
-Before §XLII, the game-over screen showed gold earned, level reached, and a "Try Again" prompt. There was no summary of what happened during a run. A player who died at Act IV after 14 nights, 200 battles, and 1,800 damage dealt had no way to see any of that — only that they were dead.
+`quest_cat_05` — *"Sandy: Fat Cats Don't Tip"* — ends with Don Fluffissimo dead and 900gp plus a trophy ring in hand. That is the normal shape of a quest payout in this game, and its problem is that it is **over the moment it lands**. The Cat Quarter's fiction is a neighbourhood economy that runs on standing rather than on coin, so the arc wanted a payoff shaped like standing.
 
-The Chronicle system fills this gap with a dual-ledger architecture: `runStats` tracks the current run from start to game-over or respawn; `careerStats` tracks the same fields permanently across all runs, all respawns, and all NG+ cycles. The distinction matters because `roll2hit-v3.html` supports NG+ — a player on their fourth run is a different player than one on their first, and the career ledger is the record of that difference.
+Kenickie Clawnickie Mancuso is the fence — the quarter's quiet commerce, not its diplomacy (Jimmy) or its politics (Sandy). §XL makes his stock buyable **only** after `quest_cat_05`, at 10% under the vendor rate, and never as a purchasable privilege: a player holding 10,000gp who skipped the arc cannot buy a sardine, and a player holding 200gp who killed the Don can.
 
-The game-over Chronicle div (`#gameover-chronicle`) is the only place `runStats` is displayed in complete form. The character sheet Chronicle section (line 16756) shows `careerStats` live during play. The design intent is that the game-over screen is a summary of what just happened, while the character sheet is a record of who you are across everything you have done.
+**Playability contribution.** Three concrete things. (1) It converts a terminal quest reward into a **standing supply line** — healing at 45/135gp instead of 50/150gp is a small edge that keeps paying for the rest of the run, which is what makes the Cat Arc worth finishing rather than abandoning at `cat_02`. (2) It is the **fishing sub-game's only discounted bait source**, tying two otherwise unrelated systems together through a character. (3) It gives the quarter a **third voice with a different register** — a shop that opens is a cheaper, more legible signal of "you are inside now" than any amount of dialogue, and the NPC card appearing beside Jimmy's and Sandy's states the same thing spatially.
 
-### B. Implementation Architecture
+### B. As-built
 
-#### Stat Objects
+- **Profile.** `kenickie: { meta: { name:"Kenickie Clawnickie Mancuso"@10406` in `NPC_DIALOGUES`. All **seven** dialogue lines byte-identical to `194a810` across 79 days.
+- **Unlock.** `if (qs['quest_cat_05'] === 'complete')@33005`, inside `function _nodeHookCdgKenickieMarket@33002`, registered as `{ id:'cdg-kenickie-market', nodes:['CDG'], fn:_nodeHookCdgKenickieMarket }@34196`.
+- **Announcement.** `quest_cat_05: { id:'quest_cat_05'@13744`'s `onComplete` narrative: *"💰 +900gp + The Don's Signet Ring. Kenickie's Black Market is open."* The ring is really granted — `itemChain:[{action:'grant',name:"The Don's Signet Ring"@13746`, `silent:true`, `sell:35`.
+- **Shop.** `shopDiv.id = 'kenickie-shop-div';@33026`, mounted by `cqDiv.insertAdjacentElement('afterend', shopDiv);@33071` — an in-place expansion, not a modal, exactly as specified.
+- **Stock, verbatim.** Sardine Pack ×3 · 18gp · `catchBonus:2` · *"Freshish. Don't ask about the smell."* — Live Shallows Minnow · 28gp · `catchBonus:3`, `sizeUp:true` · *"From the Don's private pond. He doesn't need it anymore."* — Minor Healing Potion · 45gp · heals 10 — Healing Potion · 135gp · heals 25.
+- **Discount, still exact.** `const POTION_TIERS = {@24306` prices the same two potions at 50 and 150. 45 and 135 are 10% under both, unchanged after 79 days.
+- **Bait stacking.** Matches on `name` **and** `type === 'bait'`, increments `count`, no duplicate rows.
+- **Sheet-swapper.** `_cqNpcs.push('kenickie')@35130`.
+- **Reachability.** `CDG:{ num:77@8798` is declared before `LIM`, `FRK` and `FRS`, its three cell-mates at `21,182`, so it is `list[0]` and can become `currentCode`. **The market is reachable** — not a §AUDIT-03x casualty.
 
-**Defined in `_S_DEFAULTS()` (lines 8446–8447):**
+### C. Node code — right when written
 
-```js
-careerStats: _STAT_ZERO(),
-runStats:    _STAT_ZERO(),
-```
-
-Both objects are initialized by `_STAT_ZERO()`, which returns the same structure: a zeroed object with ten named fields.
-
-**`_STAT_ZERO()` factory function (line 8815):**
-
-```js
-function _STAT_ZERO() {
-  return {
-    kills: 0, deaths: 0, dmgDealt: 0, dmgReceived: 0,
-    sleeps: 0, battlesAttempted: 0, attacksAttempted: 0,
-    attacksHit: 0, exitsTaken: 0, daysAdventuring: 0
-  };
-}
-```
-
-Using a factory function rather than an inline object literal ensures that `careerStats` and `runStats` are always separate object references — not aliases — and that both are initialized to identical zero-states without duplication.
-
-#### Stat Field Reference
-
-| Field | Incremented by | Notes |
-|-------|---------------|-------|
-| `kills` | Enemy defeat | All combat kills, all terrains |
-| `deaths` | Player reaches 0 HP | Includes respawn events |
-| `dmgDealt` | Any damage applied to enemy | Accumulated per hit |
-| `dmgReceived` | Any damage applied to player | Accumulated per hit |
-| `sleeps` | Rest action taken | Not equivalent to `daysAdventuring` |
-| `battlesAttempted` | Battle initiated | Includes retreated battles |
-| `attacksAttempted` | Attack roll made | Includes misses |
-| `attacksHit` | Attack roll hits | Subset of `attacksAttempted` |
-| `exitsTaken` | Node transition via path | Counts each movement action |
-| `daysAdventuring` | Sleep action taken | Tracks calendar progression |
-
-**Note on `daysAdventuring` vs. `gameDay`:** `gameDay` (line 8397) is the in-game calendar counter — it increments on sleep and is used for time-sensitive quest checks and ambient day display. `daysAdventuring` is the Chronicle stat tracking the same event. They increment together on sleep but serve different systems: `gameDay` is a game-state variable read by quest logic; `daysAdventuring` is a stat read by the Chronicle. They are not aliased.
-
-#### `_trackStat()` Call Pattern
-
-Stats are written via `_trackStat(field, amount)`, which increments both `careerStats[field]` and `runStats[field]` simultaneously. All stat-incrementing calls use this function — there is no direct mutation of either stat object outside it. This guarantees the two ledgers stay in sync at the write level.
-
-Example (sleep): `_trackStat('daysAdventuring', 1)` fires on every rest action, incrementing both `careerStats.daysAdventuring` and `runStats.daysAdventuring`.
-
-#### Game-Over Chronicle
-
-**`_populateGameoverChronicle()` (line 8753)** — reads `runStats` and populates `#gameover-chronicle` with a table of ten rows. Called at game-over, before the game-over screen renders. The div acquires the CSS class `has-data` after population, which controls its visibility — the Chronicle section is hidden until populated, preventing an empty table from rendering in any other context.
-
-**Chronicle row labels:**
-
-| Field | Display Label |
-|-------|--------------|
-| `kills` | Enemies defeated |
-| `deaths` | Times downed |
-| `dmgDealt` | Damage dealt |
-| `dmgReceived` | Damage received |
-| `sleeps` | Nights slept |
-| `battlesAttempted` | Battles |
-| `attacksAttempted` | Attacks attempted |
-| `attacksHit` | Attacks hit |
-| `exitsTaken` | Paths taken |
-| `daysAdventuring` | Days adventuring |
-
-#### Reset and Persistence Behavior
-
-**On respawn (line 8834):** `careerStats` is preserved as-is. `runStats` is reassigned to `_STAT_ZERO()`. The player's career ledger continues accumulating; the run ledger starts clean. This is the correct behavior for a game with permadeath-and-respawn: career numbers should grow monotonically; run numbers should represent only the run that just ended.
-
-**On NG+ (`storyNewGamePlus()`, line 8826):** `careerStats` is preserved across the NG+ initialization. The career ledger accumulates across all runs in all NG+ cycles — a player on NG+3 who has completed 400 battles total will see 400 in their career ledger regardless of how many runs have ended. `runStats` resets at NG+ the same way it resets at respawn.
-
-#### Character Sheet Chronicle Section (line 16756)
-
-The character sheet has a Chronicle section that reads `careerStats` fields live during play. This is the permanent record visible to the player at any time — not a summary, but a running total. The game-over screen shows what the run cost; the character sheet shows what the career has accumulated.
+`CQ` was a real `NODE_MAP` key at `4090c82`: `CQ:{ num:77, code:'CQ', name:'cat_quarter', label:'The Cat Quarter', act:1, … npc:'Jimmy Two-Tails', battle:{…key:'beefy_tom', count:3}, loot:'Tiny Fedora', sleep:false }`. §WALK/§NAV-01 renamed it to `CDG` preserving `num`, terrain key, label, npc, battle and loot; the row is already translated in `docs/maps/node-index.md`. **Fifth consecutive increment in which the archive converts a dead code list into a rename list.**
 
 ---
 
-## III. Design Decisions and Trade-offs
+## III. §XLII — The Chronicle System
 
-### A. The Market as Loyalty Payoff, Not Transaction
+### A. Design intent, and what it adds to play
 
-Kenickie's Black Market is not available to new visitors, high-level players, or players with gold above a threshold. It is available only to players who completed `quest_cat_05`. This is a deliberate choice against convenience-based gating. The Cat Quarter economy is faction-based; access is a recognition of loyalty, not a commercial transaction. A player with 10,000gp who never completed the Cat Arc cannot buy Sardine Packs from Kenickie. A player at 200gp who defeated the Cat-King can. The economic gating is relational, not numerical.
+Before §XLII the game-over screen said gold, level, and *try again*. A player who reached Act IV over fourteen nights and two hundred battles was told only that they were dead. The Chronicle answers *what did that cost* with a run ledger, and *who am I now* with a career ledger that outlives death — the distinction exists because the game has permadeath-with-respawn and NG+, so "this life" and "all lives" are genuinely different quantities.
 
-### B. 10% Discount as Hardcoded Price
+**Playability contribution.** (1) It makes death **legible** — a run ends in a paragraph of numbers rather than a wall, which converts a loss into a comparison and is the whole reason a player starts again. (2) `careerStats` is the game's only **cross-life progress signal**; nothing else in the save survives a death and says so out loud. (3) The `Hit rate` row is the one derived figure, and it is the only place the game reports the player's actual combat competence back to them.
 
-The 10% discount on healing potions is baked into the item prices (45gp, 135gp) rather than calculated dynamically from a base price. This simplifies the shop render — no percentage logic at display time — but creates a maintenance dependency: if standard healing potion prices change, Kenickie's prices must be manually updated. Given that potion prices are stable across the current version and Kenickie's shop is a single shop definition with four items, this trade-off is acceptable. The flavor rationale (community pricing as a fixed rate, not a market adjustment) also supports hardcoded prices: Kenickie does not offer variable discounts.
+### B. As-built
 
-### C. `kenickieMarketUsed` as First-Purchase Flag
-
-The flag tracks first purchase rather than visit count. This is sufficient for the intended behavior (greeting variation on return) and avoids tracking purchase frequency, which would require either a counter or a more complex state structure. The greeting variation is cosmetic — it does not affect prices, inventory, or quest state. A simple boolean is the correct instrument.
-
-### D. Dual Ledger vs. Single Ledger with Reset
-
-An alternative architecture would track only `careerStats` and display run totals by recording a snapshot at run-start and computing the delta at game-over. This was not adopted. The dual-ledger approach (`careerStats` + `runStats`) is explicit: each ledger has a clear write path, a clear reset point, and a clear display surface. The delta-computation approach would require storing a run-start snapshot and ensuring it resets correctly — more state, more failure modes, no readability advantage. Two zeroed objects with a shared write function is the simpler design.
-
-### E. `has-data` CSS Gate on Chronicle Div
-
-The `#gameover-chronicle` div is hidden until `_populateGameoverChronicle()` runs and applies `has-data`. This prevents the Chronicle section from rendering as an empty table in any non-game-over context (e.g., if the div is present in the DOM during normal play but not yet populated). The CSS gate also means the Chronicle section can be included in the game-over screen markup without conditional render logic — the markup is always present; only the class controls visibility.
+- **Storage.** `careerStats: { kills:0@23146` and its `runStats` twin on the next line, both **inline ten-field literals** in `_S_DEFAULTS()`.
+- **Factory.** `const _STAT_ZERO = () =>@23914` — an arrow const, used by the lazy-init guard and the respawn reset **but not by `_S_DEFAULTS()`**.
+- **Writer.** `function _statTally(key, n) {@23915` increments both ledgers. **Fourteen call sites, and every one of them goes through it** — no direct mutation of either object exists. That contract, which is the report's real architectural claim, holds exactly.
+- **Fields, 10/10 live.** `kills` `deaths` `dmgDealt` `dmgReceived` `sleeps` `battlesAttempted` `attacksAttempted` `attacksHit` `exitsTaken` `daysAdventuring`.
+- **Game-over surface.** `function _populateGameoverChronicle() {@23852` reads `const rs = S_story.runStats || {};@23855`, builds **nine** rows, and gates the div both ways — `el.classList.add('has-data')@23874` on data, `remove` on none, against `#gameover-chronicle.has-data@1722` (`display:block`, default `none`). The div exists at `id="gameover-chronicle"@5030` and `function storyGameOver() {@23877` populates it before revealing the modal, which is reached from `hp === 0`. The surface really renders.
+- **Character sheet.** Ten rows, **two columns** — `This Life` (`runStats`) and `All Lives` (`careerStats`), the career column blanked by `const isFirstRun = (cs.deaths || 0) === 0;@37728`.
+- **Respawn.** `const _survivingCareerStats@23925` copies the career ledger out, reloads the checkpoint, restores it, and zeroes `runStats`. Exactly as specified.
 
 ---
 
-## IV. Post-Mortem Notes
+## IV. Spec → shipped delta table
 
-### What Worked
+Legend: **✅** as specified · **±** shipped differently · **✗ NOT SHIPPED** · **⚠️** wrong on the day it was written.
 
-- Kenickie's bait items — particularly the "From the Don's private pond. He doesn't need it anymore." line — land well as Cat Arc payoff. The flavor text does not describe a dead Don Fluffissimo explicitly, but the implication is clear to players who completed `quest_cat_05`. The shop rewards completion by letting players loot the winner's narrative.
-- The `_STAT_ZERO()` factory pattern is the correct isolation tool. Using the same function to initialize both `careerStats` and `runStats` ensures the field list is always identical between them and that reset is expressed as reassignment rather than per-field zero-out.
-- Displaying `runStats` exclusively on the game-over screen and `careerStats` exclusively on the character sheet creates a clean division of concern: the game-over screen is retrospective (what this run cost), the character sheet is progressive (who you are now). Players reading one surface are not confused by the other.
-- The `daysAdventuring` / `gameDay` separation is well-motivated. The two counters track the same event (sleep) but for different systems, and keeping them separate avoids cross-system coupling — quest logic that reads `gameDay` would break if `gameDay` were replaced by the Chronicle stat.
-
-### What Could Be Better
-
-- Kenickie's shop has no restock mechanic. The four items are always available in unlimited quantity. For bait items this is correct — fishing bait should not be scarce. For healing potions, unlimited availability at a 10% discount is a mild economy edge for players who completed `quest_cat_05`, which is probably fine but worth noting. A future layer could cap healing potion stock at 3 per visit (resetting on sleep) without changing the bait behavior.
-- The `kenickieMarketUsed` greeting variation has no documentation in the NPC_DIALOGUES entry other than the flag itself. If a future maintainer adds a new greeting condition or extends Kenickie's dialogue, the flag's purpose and trigger point are not visible at the NPC profile definition. An inline comment at line 8422 (the flag definition) noting *"first purchase flag — gates Kenickie's return greeting"* would close this gap.
-- The Chronicle character sheet section (line 16756) shows `careerStats` but not `runStats`. A player mid-run has no in-play way to see how their current run is going numerically — only their career total. Adding a collapsible "This Run" row group below "Career" in the character sheet Chronicle section would give mid-run visibility without replacing the career display.
-- `attacksAttempted` and `attacksHit` are tracked but no derived hit rate is computed or displayed. The game-over Chronicle lists both fields as raw numbers. A percentage display ("Attacks hit: 47 / 112 (42%)") would make the stat more readable at the summary screen without additional state.
+| # | Report claim | Measured at HEAD | Verdict |
+|---|---|---|---|
+| 1 | `kenickie` profile, dialogue as quoted | 7 lines byte-identical since `194a810` | ✅ |
+| 2 | Node `CQ` | Real key at `4090c82`; renamed `CDG`, `num:77` preserved | ✅ rename |
+| 3 | Unlock on `quest_cat_05 === 'complete'` | `if (qs['quest_cat_05'] === 'complete')@33005` | ✅ |
+| 4 | Completion message quoted | Verbatim, prefixed `💰` | ✅ |
+| 5 | +900gp and the Don's Signet Ring | `reward gold:900` + `itemChain` grant, `sell:35` | ✅ |
+| 6 | Four items at 18 / 28 / 45 / 135gp | Exact | ✅ |
+| 7 | Catch +2 · Catch +3 & size↑ · heal 10 · heal 25 | Exact | ✅ |
+| 8 | Both bait flavour strings | Verbatim | ✅ |
+| 9 | 10% under standard potion price | 50→45, 150→135; still exact after 79 days | ✅ |
+| 10 | Bait stacks by name, no duplicate rows | Matches `name` **and** `type==='bait'` | ✅ |
+| 11 | Shop is an in-place expansion, not a modal | `insertAdjacentElement('afterend')` | ✅ |
+| 12 | `kenickieMarketUsed` set on first purchase | `S_story.kenickieMarketUsed = true;@33056` | ✅ write |
+| 13 | …and alters Kenickie's greeting on return | **0 readers**; the quoted greeting has **0 commits ever** | ✗ NOT SHIPPED → §DX-02n |
+| 14 | Button *toggles* `#kenickie-shop-div` | Button **removes itself**; Close removes the div; no toggle. Both return on the next `storyRender` | ± |
+| 15 | Kenickie's card *replaces* the CQ NPC display | **Appends** — `_cqNpcs.push('kenickie')@35130`, third card beside Jimmy and Sandy | ± |
+| 16 | Render block inside `storyRender` (lines 14878–14933) | Extracted verbatim to `NODE_HOOKS` by §VM-01-G4d | ± moved |
+| 17 | *"`quest_cat_05` — defeating the Cat-King"* | `quest_cat_05` is the **Don Fluffissimo** fight; the Cat-King is `title:'Tommy: The Cat-King Cometh'@13758` (`quest_cat_06`). Both titles identical at `4090c82` | ⚠️ |
+| 18 | Kenickie is *"a single-state encounter"* with no favorability | `impartial` / `friendly` / `dearFriend` present **at birth**, and `{ kind:'favor', npc:'kenickie', set:3 }@34414` now drives him to Dear Friend | ⚠️ |
+| 19 | Tiers are *hostile/neutral/friendly/dear* | The tier set is `impartial · questActive · friendly · dearFriend` | ⚠️ |
+| 20 | `careerStats`/`runStats` initialised **by `_STAT_ZERO()`** in `_S_DEFAULTS()` | Two inline ten-field literals; the factory is used only by the lazy guard and the respawn reset — the duplication it was adopted to prevent is what shipped, at birth and at HEAD | ⚠️ |
+| 21 | `function _STAT_ZERO() { return {…} }` | `const _STAT_ZERO = () =>@23914`, arrow | ± |
+| 22 | Ten stat fields, as named | 10/10 live under their specified names | ✅ |
+| 23 | Written via **`_trackStat(field, amount)`** | **0 occurrences, 0 commits ever.** The writer is `_statTally(key, n)@23915` | ✗ NOT SHIPPED (name) |
+| 24 | No direct mutation outside the writer | Holds — 14 call sites, all `_statTally` | ✅ |
+| 25 | Game-over Chronicle has **ten** rows | **Nine.** `deaths` and `attacksHit` are not rows; a derived `['Hit rate',@23861` is | ± |
+| 26 | The ten row labels as tabulated | **3 of 10** match (`Damage dealt`, `Damage received`, `Days adventuring`) | ± |
+| 27 | `has-data` gates visibility | Both directions, plus CSS at `#gameover-chronicle.has-data@1722` | ✅ |
+| 28 | On respawn: career kept, run zeroed | Exact | ✅ |
+| 29 | **On NG+: `careerStats` preserved** | `function storyNewGamePlus() {@24001` preserves six named fields and `careerStats` is not one; `Object.assign(S_story, _S_DEFAULTS())` zeroes it. **False at `cab8865` too** | ⚠️ ✗ → **§CHRON-01** |
+| 30 | Character sheet shows `careerStats` (not `runStats`) | Shows **both**, `runStats` in the first column, since `cab8865` | ⚠️ |
+| 31 | `daysAdventuring` ≠ `gameDay`, not aliased | Correct — `S_story.gameDay = (S_story.gameDay || 0) + 1;@36271` is a separate counter with its own readers | ✅ |
+| 32 | `sleeps` *"not equivalent to `daysAdventuring`"* | `_statTally('sleeps', 1);@36297` and `_statTally('daysAdventuring', 1);@36298` are adjacent, are each field's **only** writer, and are unconditional — the two fields are **permanently equal**, and the game-over screen prints both | ⚠️ → **§CHRON-01 (b)** |
 
 ---
 
-## V. File References
+## V. Recommendation register
 
-| File | Location | Content |
-|------|----------|---------|
-| `roll2hit-v3.html` | Line 7638 | `kenickie` NPC_DIALOGUES profile |
-| `roll2hit-v3.html` | Line 8397 | `gameDay` state variable |
-| `roll2hit-v3.html` | Line 8422 | `kenickieMarketUsed: false` in `_S_DEFAULTS()` |
-| `roll2hit-v3.html` | Lines 8446–8447 | `careerStats` and `runStats` initialized via `_STAT_ZERO()` |
-| `roll2hit-v3.html` | Line 8753 | `_populateGameoverChronicle()` — reads `runStats`, populates `#gameover-chronicle` |
-| `roll2hit-v3.html` | Line 8815 | `_STAT_ZERO()` factory function |
-| `roll2hit-v3.html` | Line 8826 | `storyNewGamePlus()` — `careerStats` preserved on NG+ |
-| `roll2hit-v3.html` | Line 8834 | Respawn handler — `runStats` reset to `_STAT_ZERO()` |
-| `roll2hit-v3.html` | Line 13056 | `quest_cat_05` completion — +900gp, Don's Signet Ring, market unlock message |
-| `roll2hit-v3.html` | Lines 14878–14933 | CQ node render block — Kenickie button + `#kenickie-shop-div` |
-| `roll2hit-v3.html` | Line 14959 | Sheet-Swapper UI — Kenickie card conditional on `quest_cat_05 === 'complete'` |
-| `roll2hit-v3.html` | Line 16756 | Character sheet Chronicle section — reads `careerStats` live |
-| `lab-report-ally-cat.md` | §5 | `quest_cat_05` quest chain — Sandy, vendor chip unlock, original design |
-| `plan.md` | §XL + §XLII | Original design directives for Layers 75 and 77 |
+The report's *"What Could Be Better"* section, scored against the commits it was written after.
+
+| # | Recommendation | Outcome |
+|---|---|---|
+| R1 | Cap healing-potion stock (e.g. 3 per visit, resetting on sleep) | **NOT SHIPPED.** Stock is still unlimited; kept as an open idea, not a defect |
+| R2 | Inline comment at the `kenickieMarketUsed` declaration naming its purpose | **NOT SHIPPED** — `kenickieMarketUsed: false,@23120` is bare. Superseded: the flag has no purpose to document (delta 13) |
+| R3 | Add a *"This Run"* group to the character sheet Chronicle | **ALREADY SHIPPED WHEN WRITTEN** — the two-column `This Life` / `All Lives` sheet is in `cab8865`, four commits and ~20 minutes earlier |
+| R4 | Compute and display a hit-rate percentage | **ALREADY SHIPPED WHEN WRITTEN** — `['Hit rate',@23861` is in `aef1650`, the same commit that created `attacksAttempted` and `attacksHit`. The recommendation asks for a feature that could not have existed one commit earlier and did exist in the commit that gave it inputs |
+
+**Two of four recommendations were requests for work already done, and both are stated in the same paragraph that describes the surfaces correctly elsewhere.** This is the §DOC-02j result in its sharpest form: *a report's own status and recommendation blocks are claims like any other, and read against HEAD alone every one of these rows looks like a live gap.*
+
+---
+
+## VI. Findings
+
+### Finding 1 → §CHRON-01 — the career ledger does not survive the boundary it exists for
+
+`careerStats` is the answer to the report's own question *"who are you across everything you have done"*, and its stated justification is NG+: *"a player on their fourth run is a different player than one on their first."* `storyNewGamePlus()` preserves `npcFavorability`, `pitPerks`, `ngPlusRun`, `entry42Written`, `entry42Text` and `questMinusOne`, then calls `Object.assign(S_story, _S_DEFAULTS())`. **`careerStats` is not on that list, so it is zeroed.** This is not rot: the same six-name preserve list is in `cab8865`, the chronicle's own birth commit. It has never worked.
+
+The consequence compounds rather than merely losing data. `ngPlusRun` **is** preserved, so the game knows it is on run four while the ledger says nothing has ever happened. And because the character sheet blanks the career column when `const isFirstRun = (cs.deaths || 0) === 0;@37728`, a zeroed career ledger **also hides itself** — an NG+3 player reads a character sheet byte-identical to a player who has never died. There is no error, no empty column, no zero: the surface silently agrees with the wipe, which is why 79 days of play have not surfaced it.
+
+Fix is one line in the preserve list, mirroring `savedFavorability`. **No design call** — the report, the field name, and the sheet's own `All Lives` heading all specify the same behaviour.
+
+**§CHRON-01 (b), same subsystem, small writing call.** `sleeps` and `daysAdventuring` have one writer each, on adjacent unconditional lines in the sleep path, so they can never diverge — yet the game-over Chronicle prints both as separate rows (*"Sleeps"*, *"Days adventuring"*) and the character sheet prints both again. Either give `daysAdventuring` a second writer that justifies it (day passage from any source, not only sleep) or drop one row from each surface. The report itself asserts they *"serve different systems"*; measured, only `gameDay` does.
+
+### Finding 2 — instrument 12 at its cleanest, and the report refutes itself twice
+
+Everything the author could **copy** is exact: 7/7 dialogue lines, 4/4 prices, 4/4 effects, 2/2 flavour strings, 10/10 field names, both potion discounts, the `has-data` mechanism, the respawn semantics. Every error is in a passage that had to be **composed from memory**:
+
+- The function name `_trackStat` — **0 commits ever**, against a live `_statTally` the report never mentions.
+- The `_S_DEFAULTS()` code block showing `careerStats: _STAT_ZERO(),` — a two-line quotation of something that has never been in the file.
+- The ten-row label table — 3/10, against a nine-row shipped list.
+- The favorability tier vocabulary — *hostile/neutral/friendly/dear*, none of which is the engine's four-tier set.
+
+And it disagrees with itself twice, both times with the transcribed half right:
+
+1. **§I-A** calls `quest_cat_05` the Cat-King fight; **§IV** says the bait flavour *"does not describe a dead Don Fluffissimo explicitly, but the implication is clear to players who completed `quest_cat_05`"* — which is exactly correct, because `quest_cat_05` **is** the Don's death. The section reasoning from the quoted item text is right; the section framing the arc from memory is wrong.
+2. **§I-B** calls Kenickie *"a single-state encounter"* that *"does not accumulate favorability"*; the profile it is describing had three tiers when it was written, and its own `dearFriend` line — *"You killed the Cat-King. You buying sardines from me. This is the whole arc right here."* — is the arc-completion voice the report says does not exist.
+
+***Believe a report's transcribed material over its summary of that material, even one paragraph away, even the same hand on the same day.***
+
+### Finding 3 → §DX-02n — `kenickieMarketUsed`: a flag whose only consumer is the report
+
+Three occurrences: the `_S_DEFAULTS()` declaration, the write on purchase, nothing else. The variant greeting it exists to gate — *"Back again. Good. The sardines are fresher today than yesterday."* — has **0 commits ever**. The field persists to `localStorage`, reloads, and is never read, so §DX-02n's round-trip acceptance test passes it green. The report's §III-C defends the choice of a boolean over a counter at length; the boolean is not consulted at all.
+
+Note the shape for the gate design: this is a write-only field whose **absent reader was specified in prose and never in code**, which is why it reads as a deliberate simple instrument rather than as dead weight.
+
+---
+
+## VII. Risk-register outcome
+
+The report filed one explicit maintenance risk — that hardcoding the 10% discount as literal prices creates a dependency on `POTION_TIERS` never changing. **It did not fire.** 50→45 and 150→135 are still exactly 10% after 79 days. Recorded as a correct call, not a lucky one: the flavour rationale (community pricing is a fixed rate, not a market adjustment) is what made the literal prices the honest encoding.
+
+---
+
+## VIII. Verdict
+
+**§XL shipped as specified and works.** Sixteen of nineteen market claims are exact; the three misses are one never-built greeting, one interaction detail (remove-and-rebuild, not toggle), and one arc-framing error about which boss dies in which quest. The feature is reachable, the discount is real, and the NPC card, the shop and the fishing bait line all still land the payoff the design was after.
+
+**§XLII shipped under different names, and its central promise is broken.** The architecture is sound and stricter than described — one writer, fourteen call sites, no direct mutation — but the writer is `_statTally`, the factory is not used where the report says it is, the game-over table has nine rows rather than ten, and `careerStats` is destroyed by New Game+, which is the exact transition the dual ledger was built for.
+
+---
+
+## IX. File references
+
+| Symbol | Content |
+|---|---|
+| `kenickie: { meta: { name:"Kenickie Clawnickie Mancuso"@10406` | NPC profile — 3 tiers, 7 lines |
+| `CDG:{ num:77@8798` | The Cat Quarter (ex-`CQ`), primary in cell 21,182 |
+| `quest_cat_05: { id:'quest_cat_05'@13744` | Don Fluffissimo; 900gp + market unlock |
+| `itemChain:[{action:'grant',name:"The Don's Signet Ring"@13746` | Trophy grant |
+| `title:'Tommy: The Cat-King Cometh'@13758` | `quest_cat_06` — the actual Cat-King quest |
+| `function _nodeHookCdgKenickieMarket@33002` | Market block (ex-`storyRender`, §VM-01-G4d) |
+| `shopDiv.id = 'kenickie-shop-div';@33026` | Shop container |
+| `S_story.kenickieMarketUsed = true;@33056` | The flag's only writer |
+| `_cqNpcs.push('kenickie')@35130` | Sheet-swapper card |
+| `{ kind:'favor', npc:'kenickie', set:3 }@34414` | §GR La Riva → Dear Friend |
+| `const POTION_TIERS = {@24306` | Standard prices the 10% is measured against |
+| `careerStats: { kills:0@23146` | Inline literal in `_S_DEFAULTS()` |
+| `const _STAT_ZERO = () =>@23914` | Zero factory (arrow const) |
+| `function _statTally(key, n) {@23915` | The real dual-ledger writer |
+| `function _populateGameoverChronicle() {@23852` | Nine-row run summary |
+| `['Hit rate',@23861` | The derived row |
+| `#gameover-chronicle.has-data@1722` | Visibility gate |
+| `const _survivingCareerStats@23925` | Respawn preserve — correct |
+| `function storyNewGamePlus() {@24001` | NG+ — **does not preserve `careerStats`** |
+| `const isFirstRun = (cs.deaths || 0) === 0;@37728` | Blanks the career column, hiding the wipe |
+| `_statTally('sleeps', 1);@36297` · `_statTally('daysAdventuring', 1);@36298` | The permanently-equal pair |
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
