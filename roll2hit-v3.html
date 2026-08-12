@@ -26595,8 +26595,13 @@ const CORELLI_ITEMS = { // → doc: world.md §Corelli the Wandering Merchant (5
   last_cipher:   { name:'The Last Cipher', icon:'🔐', type:'readable', sell:0, price:0,
     readText:'A Scholar King administrative cipher key — the kind used to decode sealed distribution correspondence. At the bottom, in a different hand: "Antecedent Containment Protocol, cycle 3. All materials reclassified. Distribution route: suppressed. Reason on file: CLASSIFICATION LEVEL 7." Beneath that, scratched with a nail rather than written with a pen: "She built it to save us. They hid it to save themselves."' },
 };
-// → doc: world.md §Corelli the Wandering Merchant. The old header named the 26×16 codes
-// TL/RD/IS/WM/IN; live they are LCY/WRO/BK/NUE/TLL. §AUDIT-03j: stop 2 was `LDE` = the
+// → doc: world.md §Corelli the Wandering Merchant. The old 26×16 codes were DK/RD/BK/SQ/IN
+// (corrected 2026-08-11 §DOC-02g from the archive, `git show 194a810`/`c1d5a94^`; this comment
+// previously said TL/RD/IS/WM/IN, wrong on 3 of 5 — a migration comment written from memory
+// rather than from the diff). Live they are LCY/WRO/BK/NUE/TLL. ⚠️ Stop 3's `BK` is WRONG:
+// legacy `BK` was the Broken Tooth Tavern, Visby = live `VBY`, but `BK` still resolves — as
+// "Birka Shore", a beach — so check:noderegs passes while the opener says "Visby". §AUDIT-03y.
+// §AUDIT-03j: stop 2 was `LDE` = the
 // legacy `RD` road node §WALK removed, so it never fired — reassigned to WRO (Midlands
 // Road Fork, act 3), the surviving road fork on the Tilbury→Visby corridor his opener
 // describes ("the road between here and the coast", "the Wilds road").

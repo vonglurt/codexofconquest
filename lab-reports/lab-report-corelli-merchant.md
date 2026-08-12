@@ -3,191 +3,194 @@
 # Lab Report — Layer 61, §XXVI: Corelli the Wandering Merchant
 
 **File:** `roll2hit-v3.html`
-**Section:** §XXVI (Layer 61)
-**Date:** 2026-05-25
-**Status:** Implemented
-**Format:** IEEE Post-Mortem
+**Original:** 2026-05-25 · **Verified against HEAD:** 2026-08-11 (§DOC-02g)
+**Status:** Shipped, with three defects live at HEAD
+**Format:** IEEE post-mortem, verification-revised
+
+> **Revision note.** The 2026-05-25 text is retained where it verified and corrected where it did not. §2 records the survival measurement; §3 is the spec→shipped delta table. A claim that never shipped is marked **NOT SHIPPED** and kept, not deleted. Line numbers in the original are all stale and are not reproduced; anchors below are `symbol@line` (§DX-01e).
 
 ---
 
 ## Abstract
 
-This report documents the design, implementation, and post-mortem analysis of Corelli the Wandering Merchant, a cross-act NPC introduced in Layer 61, §XXVI of `roll2hit-v3.html`. Corelli functions as a recurring vendor who appears at most once per act window across five geographically distributed nodes. His inventory threads directly into the §XVI/§XVII investigation arc, supplying player-readable lore items and one active consumable. A favorability system gated on purchase count drives escalating disclosure, culminating in a fifth-appearance revelation modal that delivers the full Antecedent cipher and decodes a previously partial item. The implementation required one new world node (RD), four new state flags, two helper functions, and integration points across `storyRender`, `storyCorridorTravel`, and the death-save subsystem.
+Corelli is a cross-act vendor appearing at most once per act window across five nodes. His inventory feeds the §XVI/§XVII Antecedent arc: three readable lore items, one consumable, one trinket, and a free fifth-appearance cipher gated on purchase-derived favorability. Verification finds the **mechanism intact and the geography broken**: 19 of 20 named identifiers resolve, every state field and helper survives under its original name, and the purchase→favorability→revelation spine is byte-for-byte the design — but **0 of 5 node codes are correct at HEAD**, one of the five resolves to a *different live place*, and the item at that stop is unobtainable. Two live sources (an engine comment and `world.md`) record the arc's own history wrongly; **this report holds the correct record**, settled from the archive.
 
 ---
 
-## 1. Design Intent
+## 1. Verification Method
 
-Corelli was designed to solve a specific narrative delivery problem: the §XVI/§XVII investigation arc requires players to encounter Antecedent lore gradually, at plausible diegetic sources, rather than through exposition dumps or dungeon-chest discovery. A wandering merchant who has been unknowingly (then knowingly) trafficking suppressed Scholar Kings materials satisfies this requirement while remaining optional — players who never buy from Corelli miss contextual depth but not critical path progress.
+1. Grep every identifier the report names against HEAD.
+2. `git log -S` every dead symbol — this separates **RETIRED** (shipped, later removed) from **NEVER SHIPPED** (§DOC-02c instrument).
+3. For claims *about the past*, read the archive rather than HEAD (`git show <sha>:roll2hit-v3.html`) — HEAD cannot adjudicate what a prior version did (§DOC-02f instrument 8).
+4. Resolve every node code against `NODE_MAP` **and check what it names**, not merely that it resolves.
 
-Secondary design goals:
-
-1. **Reward engagement over time.** A player who encounters Corelli once gets a useful item. A player who finds him across multiple acts and spends gold gets an NPC who trusts them with the arc's cipher key.
-2. **Tie vendor inventory to active systems.** Items should not be inert collectibles. `scholar_ink` explains voidPressure tier breakpoints the player is already experiencing; `false_warrant` has a mechanical effect in corridor travel; `kings_seal` integrates with the death-save subsystem.
-3. **Make the fifth encounter feel earned, not arbitrary.** The revelation is gated on `fav_corelli >= 3`, which requires purchasing at least three items across prior appearances. The player has to have been paying attention.
-
----
-
-## 2. Implementation Architecture
-
-### 2.1 State Flags (`_S_DEFAULTS`, line 8443)
-
-Four flags govern all Corelli behavior:
-
-| Flag | Type | Default | Purpose |
-|---|---|---|---|
-| `fav_corelli` | int 0–3 | 0 | Favorability tier; controls opener text and revelation gate |
-| `corelli_purchase_count` | int | 0 | Total items purchased; source of truth for `fav_corelli` |
-| `corelli_encounter_count` | int | 0 | Times Corelli has been encountered; prevents repeat appearances |
-| `corelliRevelationDelivered` | bool | false | True after 5th-appearance modal fires; enables `encoded_letter` footnote |
-
-`fav_corelli` is always derived: `fav_corelli = min(3, corelli_purchase_count)`. It is not set independently.
-
-### 2.2 Item Definitions (`CORELLI_ITEMS`, lines 11130–11163)
-
-Five items, three categories:
-
-**Readable lore items:**
-
-- `scholar_ink` (120gp) — A dismissed scholar's notes on voidPressure threshold behavior at P3, P6, and P9. The scholar was terminated at P2 for asking questions. Provides mechanical context the player is experiencing but may not understand.
-- `encoded_letter` (80gp) — A partial Antecedent Containment Protocol suppression order. Readable on purchase, but a decoded footnote is appended only after `corelliRevelationDelivered = true`, at which point the cipher Corelli delivers retroactively clarifies what the partial text meant.
-
-**Active consumable:**
-
-- `false_warrant` (200gp) — Scholar Kings patrol papers. In `storyCorridorTravel`, when a corridor hunt encounter would trigger, the engine checks for `false_warrant` in inventory and, if present, auto-consumes it and skips the encounter. This effect is hard-disabled when `voidPressure >= 7` (line 17088); at that pressure level, Scholar Kings paperwork is narratively and mechanically irrelevant.
-
-**Passive trinket:**
-
-- `kings_seal` (350gp) — A Scholar Kings field authority seal. Grants +1 to death saving throws. Integration is at line 6217 in the death-save resolution block.
-
-**Auto-delivered:**
-
-- `last_cipher` (free) — Delivered directly to inventory on the 5th appearance, not purchasable. Contains the full cipher key and the scratched message: *"She built it to save us. They hid it to save themselves."* Triggers `corelliRevelationDelivered = true` and appends the decoded footnote to any `encoded_letter` in inventory.
-
-### 2.3 Appearance Definitions (`CORELLI_APPEARANCES`, lines 11130–11163)
-
-Five appearances, each with three opener text variants indexed by `fav_corelli`:
-
-| # | Node | Location | Act Min | Sells | Index Gate |
-|---|---|---|---|---|---|
-| 1 | DK | Tilbury Harbor Docks | II | `scholar_ink` | `encounter_count < 1` |
-| 2 | RD | Roadside Clearing | III | `false_warrant` | `encounter_count < 2` |
-| 3 | BK | Broken Tooth Tavern, Visby | V | `encoded_letter` | `encounter_count < 3` |
-| 4 | SQ | Scholar's Quarter, Weimar | VI | `kings_seal` | `encounter_count < 4` |
-| 5 | IN | First Inn, Birka | VIII | `last_cipher` (auto) | `encounter_count < 5` |
-
-The index gate (`corelli_encounter_count < index`) ensures each appearance fires at most once and in intended sequence. A player who skips the Act III node will not encounter the Act III appearance retroactively; they will simply miss that item and that favorability opportunity.
-
-Opener text follows three tiers:
-- **Neutral** (`fav_corelli == 0`): Merchant patter, no personal acknowledgment.
-- **Friendly** (`fav_corelli >= 1`): Corelli recognizes the player, references a prior sale.
-- **Trusted** (`fav_corelli >= 2`): Corelli speaks more openly, hints at the nature of his inventory.
-
-### 2.4 Helper Functions (lines 8473–8483)
-
-`_checkCorelliAppearance(nodeCode)` — Called in `storyRender`. Iterates `CORELLI_APPEARANCES`, returns the first entry where `node.code` matches, the current act meets `actMin`, and `corelli_encounter_count < entry.index`. Returns null if no appearance qualifies.
-
-`_corelliOpener(app)` — Given a matched appearance object, returns the appropriate opener string from its three-variant array based on current `fav_corelli`.
-
-### 2.5 UI Integration
-
-When `_checkCorelliAppearance` returns a non-null appearance, `storyRender` inserts a `"Traveling Merchant"` button after the story text box. Clicking the button:
-
-1. Increments `corelli_encounter_count`.
-2. Renders the vendor modal with the appearance's available item(s) and opener text.
-3. On purchase, increments `corelli_purchase_count` and recomputes `fav_corelli`.
-
-On the 5th appearance, if `fav_corelli >= 3`, the button click also triggers the revelation modal before the vendor UI loads (lines 14666–14677).
-
-### 2.6 5th Appearance Revelation Modal (lines 14666–14677)
-
-Content delivered in the modal:
-
-- Corelli spent six years as a Scholar Kings courier, never opening sealed documents.
-- One seal broke in rain. He read the suppression order for "the Antecedent."
-- He has been selling her materials to "the right hands" ever since.
-- `last_cipher` is delivered to inventory.
-- `corelliRevelationDelivered` is set to `true`, which appends the decoded footnote to `encoded_letter` if in inventory.
-
-### 2.7 New World Node: RD (line 7232)
-
-The Roadside Clearing node was added specifically to host Corelli's Act III appearance. No prior node on the Act III path offered a plausible merchant encounter location.
-
-- **num:** 78
-- **act:** 3
-- **Connections:** W: `J6`, E: `MI`
-- **junction:** true
-- **NODE_COORDS:** r:5, c:6
+The birth commit is **`194a810`**; the repoint commit is **`c1d5a94`**.
 
 ---
 
-## 3. Design Decisions
+## 2. Survival Summary
 
-**3.1 Encounter-count gating over node-visit gating.**
-The decision to gate appearances on `corelli_encounter_count < index` rather than on node-visit state means Corelli does not reappear if the player revisits a node. Once encountered at DK, Corelli is gone from DK permanently. This avoids the appearance of Corelli being a static shopkeeper and reinforces that he is actually traveling.
-
-**3.2 Favorability derived from purchase count, not encounter count.**
-Seeing Corelli without buying does not increase favorability. This keeps the relationship economy honest: Corelli trusts people who have been customers, not people who have spoken to him. A player who finds all five appearances but never buys anything will receive a neutral fifth encounter and no revelation.
-
-**3.3 `false_warrant` disabled at voidPressure >= 7.**
-Scholar Kings bureaucratic authority is narratively established as collapsing under advanced void conditions. Disabling the warrant's mechanical effect at P7+ reinforces this without requiring additional writing. The item remains in inventory and remains readable, but the game does not pretend paperwork matters when the void is overtaking institutional structures.
-
-**3.4 `encoded_letter` as a retroactively enriched item.**
-The footnote append on `corelliRevelationDelivered` means the `encoded_letter` becomes more informative after the fifth encounter. A player who bought it in Act V and re-reads it in Act VIII will find new text. This rewards re-reading inventory items and creates a sense of the world unlocking rather than simply adding new content.
-
-**3.5 `last_cipher` as free auto-delivery.**
-Making the cipher free and non-purchasable signals that the fifth encounter is not a transaction. Corelli is not selling the player information; he is choosing to give it. The distinction matters for the revelation's emotional register.
-
-**3.6 New node RD as infrastructure for a single NPC.**
-Adding a world node to support one merchant appearance is a high-cost decision for what is narratively a roadside encounter. The justification is that the Act III geographic path had no suitable junction between J6 and MI, and placing Corelli in an existing combat or puzzle node would have created tonal inconsistency. RD is designated junction:true, keeping it lightweight.
-
----
-
-## 4. Post-Mortem Notes
-
-### 4.1 What Worked
-
-**The favorability-as-purchase-count model is clean and self-explanatory.** There is no hidden math. Players who buy things get closer to the revelation. The system requires no documentation within the game because the behavior is intuitive.
-
-**Threading items into existing systems prevented vendor bloat.** `scholar_ink` explains P3/P6/P9 transitions the player encounters regardless; `false_warrant` has a corridor effect that makes the 200gp feel justified; `kings_seal` integrates with death saves at line 6217. None of these items are purely decorative.
-
-**The index gate is robust against sequence violations.** A player who bypasses the Act III node through alternate routing will not encounter a broken appearance state. The gate simply never fires.
-
-**The `encoded_letter` retroactive decode creates a meaningful re-read moment.** In testing, players who noticed the footnote addition without being told about it reported the highest engagement with the Antecedent arc. The item rewards curiosity.
-
-**The `last_cipher` message ("She built it to save us. They hid it to save themselves.") is load-bearing.** It recontextualizes the entire suppression order arc in one sentence and does not over-explain. The fact that it is scratched with a nail rather than printed is the correct detail.
-
-### 4.2 What Could Be Better
-
-**The Act II–III gap between appearances 1 and 2 is the longest in the sequence.** A player who encounters Corelli at DK in Act II may forget him entirely before the Act III appearance at RD. There is currently no ambient reminder system. A journal entry or world-map pin on encounter would reduce attrition.
-
-**`false_warrant` has no readable description of its mechanical effect.** The item is described as "Scholar Kings patrol papers" but the auto-consume behavior in corridor travel is not surfaced to the player. Players who bought the item and benefited from it often did not know why an encounter was skipped. A one-line consumption notice in the corridor travel log would close this gap without breaking immersion.
-
-**The revelation modal fires before the vendor UI in the 5th appearance.** This is the correct order dramatically, but it means the player experiences an emotional beat and then is immediately asked to interact with a shop. A brief pause or scene break between the revelation and the vendor interaction would better pace the disclosure.
-
-**`kings_seal` at 350gp is expensive relative to its mechanical benefit.** +1 to death saves is meaningful but the cost is high enough that players who did not know its effect in advance often skipped it. If `fav_corelli` were surfaced in the item description ("A Scholar Kings field officer carried this"), it might signal value more clearly.
-
-**RD is a purpose-built node with no content beyond the Corelli appearance.** Players who visit RD without triggering Corelli (wrong act, already encountered) find an empty junction. A minimal ambient description or passive encounter would reduce the sense that the node exists only as a waypoint.
-
----
-
-## 5. File References
-
-| Element | Location |
+| Measure | Result |
 |---|---|
-| `_S_DEFAULTS` (state flags) | `roll2hit-v3.html`, line 8443 |
-| `_checkCorelliAppearance` | `roll2hit-v3.html`, lines 8473–8483 |
-| `_corelliOpener` | `roll2hit-v3.html`, lines 8473–8483 |
-| `CORELLI_ITEMS` | `roll2hit-v3.html`, lines 11130–11163 |
-| `CORELLI_APPEARANCES` | `roll2hit-v3.html`, lines 11130–11163 |
-| 5th appearance revelation modal | `roll2hit-v3.html`, lines 14666–14677 |
-| `kings_seal` death-save integration | `roll2hit-v3.html`, line 6217 |
-| `false_warrant` disable gate | `roll2hit-v3.html`, line 17088 |
-| RD node definition | `roll2hit-v3.html`, line 7232 |
+| Identifiers named / resolving at HEAD | **19 / 20 (95%)** — the highest survival measured in the §DOC-02 program |
+| State fields surviving under original name | **4 / 4** |
+| Helper functions surviving under original name | **2 / 2** |
+| Item keys surviving | **5 / 5**, all five `readText` strings verbatim |
+| Node codes correct at HEAD | **0 / 5** |
+| Dead identifiers | 1 — `storyCorridorTravel` (**RETIRED**, not never-shipped) |
+| Retired node property the design depends on | `junction:true` — **0 occurrences** at HEAD |
+
+**The internal gradient repeats §DOC-02f's finding.** Everything the author could have *transcribed* — field names, item keys, prices, the favorability formula, the RD node record — is exact. Everything *narrated* — the UI shape, the pacing critique, "remains readable" — is wrong, and three of those were wrong **on the day the report was written**, not by drift.
 
 ---
 
-*Layer 61, §XXVI — Corelli the Wandering Merchant. roll2hit-v3.html. 2026-05-25.*
+## 3. Spec → Shipped Delta Table
+
+| # | Report claim | HEAD | Class |
+|---|---|---|---|
+| 1 | Appearances at `DK`→`RD`→`BK`→`SQ`→`IN` | `LCY`→`WRO`→`BK`→`NUE`→`TLL` | Repointed by `c1d5a94` after §WALK retired the 26×16 codes |
+| 2 | Stop 3 = `BK` = Broken Tooth Tavern, Visby | `BK` = **Birka Shore — Northern Longship Landing**, a beach, act 1 | **LIVE DEFECT** — correct target is `VBY` |
+| 3 | Stop 3 fires when the player stands there | `BK` shares cell (10,197) with `LHR` and is non-primary — **it can never be arrived at** | **LIVE DEFECT** (§AUDIT-03x) |
+| 4 | `encoded_letter` purchasable at stop 3 for 80gp | Its only grant path is stop 3 → **unobtainable** | **LIVE DEFECT**, consequence of 2+3 |
+| 5 | `false_warrant` auto-consumes to skip a corridor encounter, disabled at `voidPressure >= 7` | Host `storyCorridorTravel` deleted by `85cc43e` (§CELL-11A). Item still sells for **200gp** with no reader | **RETIRED** — shipped at birth, removed later |
+| 6 | The item "remains in inventory and remains readable" (§3.3) | `readableItems` filters `type === 'readable'`; `false_warrant` is `type:'consumable'` → **no Read button, ever** | **NOT SHIPPED** — untrue at birth too |
+| 7 | Vendor UI and revelation are **modals** | Both are `storyMsg()` lines into the story log plus buttons inserted via `insertAdjacentElement('afterend')` on `#story-text-box` | **NOT SHIPPED** — untrue at birth too |
+| 8 | Revelation "fires before the vendor UI" on stop 5; player is "immediately asked to interact with a shop" (§2.5, §4.2) | Stop 5 has `itemLabel:null` and the branch **`return`s** after the revelation. There is no shop | **NOT SHIPPED** — the critique describes behavior the code cannot produce, at birth or now |
+| 9 | RD is `junction:true`, "keeping it lightweight" (§3.6) | Node deleted by §WALK; **`junction:true` has 0 occurrences** and violates `check:invariants` I1/I2 | Banned design |
+| 10 | `CORELLI_ITEMS` and `CORELLI_APPEARANCES` both at lines 11130–11163 | Two structures cannot share one range; both numbers were wrong at birth as well | Report-internal error |
+| 11 | The block lives inline in `storyRender` | Migrated into `_nodeHookCorelliMerchant(node)`, one call site, order preserved | Refactor (§VM-01-G-FU) |
+| 12 | — (not covered) | `corelliRevelationDelivered` has **three readers the report never mentions**, all present at birth: a Warrant's Board rumor, the victory-screen `qOrder`, and `FROBERGER_MEMORIAL_TEXT.post_cipher` | Coverage gap, not drift |
+
+**Verified unchanged (no delta):** all four state fields and their defaults; `fav_corelli = min(3, corelli_purchase_count)`; the `count < index` monotonic gate; the three-tier opener selection at fav ≥ 2 / ≥ 1 / else; all five item names, icons, types, prices and `readText` bodies; `kings_seal`'s +1 death-save bonus; the `encoded_letter` decoded footnote; the revelation's `fav >= 3` gate and its full monologue.
+
+---
+
+## 4. Finding 1 — The report is the correct record; two live sources are wrong
+
+The engine comment above `CORELLI_APPEARANCES` states: *"The old header named the 26×16 codes TL/RD/IS/WM/IN."* `world.md` repeats it: *"the doc's old `TL/RD/IS/WM/IN` were the retired 26×16 names."*
+
+The archive disagrees. At `194a810` and at `c1d5a94^`, the `nodeCode` values are **`DK`, `RD`, `BK`, `SQ`, `IN`** — exactly what this report says. There was no header comment above the structure to misread; none existed until `c1d5a94` wrote one. **Three of the five old codes in both live sources are wrong, and the lab report is right.**
+
+This is the second corpus correction of a live source by a §DOC-02 verification, and the first where the wrong source is the **engine itself**. The generalizable rule:
+
+> **A migration commit's own comment is a claim about the past, and it is usually written from memory rather than from the diff.** Verify it against `git show <sha>^` like any other claim. The doc being "in the code" confers no authority about history.
+
+The error is not cosmetic. The migrator believed stop 3's old code was `IS`; it was `BK` — and `BK` is *still a live key*. That belief is the mechanism of Finding 2.
+
+---
+
+## 5. Finding 2 — The `BK` collision is a live defect, and it is not confined to Corelli
+
+`BK` is the §AUDIT-03m **"worse than dead"** class: the code resolves, so `check:noderegs` passes, while the sentence is wrong.
+
+| | Report's `BK` (2026-05-25) | HEAD's `BK` |
+|---|---|---|
+| Label | Broken Tooth Tavern, Visby | Birka Shore — Northern Longship Landing |
+| `name` | `bar` | `beach` |
+| `act` | 5 | 1 |
+| Live key | `VBY` | `BK` |
+
+Corelli's stop-3 dialogue is unambiguous about which it means — *"Visby. Well."* and *"Mordus runs a tight tavern."* `VBY`'s own node text is the Mordus scene, and `VBY` carries `npc:'Warlord Kael Mordus'`.
+
+**The same mis-repoint hit at least two more registries:**
+
+- `NPC_DIALOGUE.BK` = *Warlord Kael Mordus*, whose quote opens **"You're not from Visby. But you're here"** — keyed to a Birka beach. `VBY` appears nowhere in that registry.
+- `VENDOR_NODES` contains `'BK'` — a vendor at a longship landing with no vendor in its text.
+
+Direct references at HEAD: **9 × `activateNode:'BK'`, 2 × `waypointNode:'BK'`, 1 × `nodeCode:'BK'`.** Each needs individual adjudication — some may legitimately mean the Birka shore. Filed as **§AUDIT-03y**.
+
+---
+
+## 6. Finding 3 — Stop 3 is unreachable independently of the collision
+
+`NODE_COORDS` places `BK` and `LHR` in the same cell, **(10, 197)**. `LHR` is declared first in `NODE_MAP`, so it is `list[0]` for that cell; per §AUDIT-03x, `S_story.currentCode` is assigned only from `list[0]`, so `node.code` is never `'BK'` and `_checkCorelliAppearance` can never match stop 3.
+
+Consequences, in order of severity:
+
+1. **`encoded_letter` is unobtainable.** Stop 3 is its only grant path. This kills design decision §3.4 — the retroactive decode — which §4.1 named as the feature that tested best. The footnote code at `it._decoded@31170` is live and correct and can never fire from a purchased letter.
+2. **The arc still completes.** The gate is `count < index`, so stops 4 and 5 fire with `count` at 2 and 3; three purchases remain available (`scholar_ink`, `false_warrant`, `kings_seal`), so `fav_corelli` still reaches 3 and the revelation is attainable. The failure is silent — a missing stop, not a broken chain.
+3. Repointing stop 3 to `VBY` fixes 1 and 2 together. This is the cheap fix and it does **not** wait on §AUDIT-03x's design call.
+
+---
+
+## 7. Finding 4 — `false_warrant` is a 200gp purchase with no surface
+
+It shipped working. `194a810` carried the exact mechanic described: a `findIndex` on inventory inside the hunt-mode encounter branch, `splice`, the narration *"The patrol glances at your papers and waves you through"*, and the `voidPressure < 7` disable. `85cc43e` (§CELL-11A, corridor dead-code removal) deleted the host function and took the mechanic with it.
+
+At HEAD the item is still sold at stop 2 — **which is reachable** — for 200gp, and:
+
+- it renders in the **💊 Consumables** section (`type === 'consumable'`),
+- it has **no Use button** (the only consumable handler tests `effect === 'advantage_next_attack'`, which it lacks),
+- it has **no Read button** (`readableItems` filters `type === 'readable'`).
+
+A player can buy it and never interact with it again. This is the §AUDIT-03v/§AUDIT-03w class — a player-facing price with nothing behind it — and the third instance in four increments, which is why that family now wants a detector rather than another hand-filed row. Filed as **§AUDIT-03y** (b).
+
+---
+
+## 8. Design Intent (verified, condensed)
+
+Corelli delivers Antecedent lore at plausible diegetic sources rather than by exposition dump, and is fully optional. Three intents, all shipped:
+
+1. **Reward engagement over time** — one encounter yields an item; five yield the cipher key.
+2. **Tie inventory to active systems** — `scholar_ink` explains voidPressure P3/P6/P9 breakpoints the player is already living through; `kings_seal` grants +1 to death saves at `const _kingsSealBonus@7502`. *(The third leg, `false_warrant`'s corridor effect, is Finding 4.)*
+3. **Make the fifth encounter earned** — gated on `fav >= 3`, i.e. three prior purchases.
+
+Two design decisions verify exactly and remain sound: favorability derives from **purchases, not encounters** (seeing Corelli without buying moves nothing), and `last_cipher` is **free and non-purchasable**, so the fifth meeting is a gift rather than a transaction.
+
+---
+
+## 9. Architecture as Shipped
+
+**State** (`fav_corelli: 0@23143`) — `fav_corelli` (0–3, always derived), `corelli_purchase_count`, `corelli_encounter_count`, `corelliRevelationDelivered`.
+
+**Selection** (`function _checkCorelliAppearance@23447`) — first entry where `nodeCode` matches, `actNumber >= actMin`, and `corelli_encounter_count < index`. Because every encounter raises the floor, an appearance can be *skipped* but never taken out of order.
+
+**Voice** (`function _corelliOpener@23452`) — `openerTrusted` at fav ≥ 2, `openerFriendly` at fav ≥ 1, else `opener`.
+
+**Data** (`const CORELLI_ITEMS@26586`, `const CORELLI_APPEARANCES@26603`).
+
+**Surface** (`function _nodeHookCorelliMerchant@31731`) — renders a `🛒 Traveling Merchant` button after `#story-text-box`. On click: increment encounter count, emit the opener, then either the stop-5 revelation branch (deliver `last_cipher`, set `corelliRevelationDelivered`, mark any owned letter `_decoded`, **return**) or a buy/pass button pair that debits gold and recomputes favorability.
+
+**Appearances at HEAD:**
+
+| # | Code | Node at HEAD | actMin | Item | Verdict |
+|---|---|---|---|---|---|
+| 1 | `LCY` | Harbor Docks — Tilbury | 2 | `scholar_ink` 120gp | ✅ matches the described place |
+| 2 | `WRO` | Midlands Road Fork | 3 | `false_warrant` 200gp | ⚠️ place OK, item inert (Finding 4) |
+| 3 | `BK` | Birka Shore — beach | 5 | `encoded_letter` 80gp | ❌ wrong place, unreachable (Findings 2–3) |
+| 4 | `NUE` | Scholar's Quarter — Weimar | 6 | `kings_seal` 350gp | ✅ matches the described place |
+| 5 | `TLL` | The First Inn | 8 | `last_cipher` free | ✅ matches the described place |
+
+**The retired RD node** (§2.7 of the original) verifies **5/5** against the archive — `num:78`, `act:3`, `W:'J6'`, `E:'MI'`, `junction:true`, `NODE_COORDS r:5,c:6`. `J6` and `MI` are both absent at HEAD; `RD` was deleted with the junction stubs and stop 2 reassigned to `WRO` (§AUDIT-03j).
+
+---
+
+## 10. Post-Mortem, Reassessed
+
+**Held up.** Purchase-count favorability needs no in-game documentation because the behavior is intuitive, and it survived five months and a world-coordinate migration untouched. The `last_cipher` line — *"She built it to save us. They hid it to save themselves."* — is verbatim at HEAD, including the detail that it is scratched with a nail.
+
+**Held up but unreachable.** The `encoded_letter` retroactive decode is well-built and cannot currently be experienced (Finding 3).
+
+**Still open.** The Act II→III gap between stops 1 and 2 remains the longest, with no ambient reminder.
+
+**Withdrawn.** The pacing critique — *revelation, then immediately a shop* — describes a sequence the code has never produced (delta 8). The `false_warrant` legibility complaint is superseded: the item has no effect to surface (Finding 4). The `kings_seal` price critique stands on its own terms, but note the bonus **does** apply and is not documented anywhere the player can read.
+
+**New, from verification.** RD was built as infrastructure for one NPC and then deleted by a world migration, taking stop 2 with it until §AUDIT-03j caught it. Stop 3 was lost the same way and was **not** caught, because its code still resolved. The lesson is the one this increment adds to the program:
+
+> **A code that resolves is not a code that is right.** After any key-space migration, verify what each surviving code *names*, not merely that it looks up.
+
+---
+
+## 11. Backlog Filed
+
+- **§AUDIT-03y (a)** — repoint `CORELLI_APPEARANCES` stop 3 and `NPC_DIALOGUE` from `BK` to `VBY`; adjudicate `VENDOR_NODES` and the 12 `BK` field references individually. No design call for the two Visby-texted ones.
+- **§AUDIT-03y (b)** — `false_warrant`: restore an effect or stop charging 200gp. Design call, and it should close with §AUDIT-03v/§AUDIT-03w as one detector.
+- **§DX-02q** — a `check:noderegs` phase for **semantic** collisions: a node code whose surrounding content contradicts the node it resolves to.
+- Correct the `TL/RD/IS/WM/IN` claim in `world.md` and in the engine comment (done this increment).
+
+---
+
+*Layer 61, §XXVI — Corelli the Wandering Merchant. Verified against `roll2hit-v3.html` at HEAD, 2026-08-11.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
