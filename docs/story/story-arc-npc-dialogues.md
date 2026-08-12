@@ -11,18 +11,18 @@
 
 ## BIRKA ARC SUMMARY (Layers 41–42)
 
-Six Birka NPCs are fully interactive across all 8 acts. Each has a quest chain, 4 favorability states, and 20 dialogue quotes (5 per state). Favorability persists through New Game+.
+Six Birka NPCs are fully interactive across all 8 acts. Each has a quest chain, 4 favorability states, and **19** dialogue quotes — 5 impartial / 5 questActive / 5 friendly / **4** dearFriend (measured §DOC-02ab; the long-standing *"20, 5 per state"* was never true of the dearFriend pool). Favorability persists through New Game+.
 
 | NPC | Node | Intro Quest | Dear Friend Unlock |
 |---|---|---|---|
-| Yael Scheidemann | `LHR` (historical `CI`) | `quest_yael_escort` (3 `BMA` (historical `SL`) vermin clears) | Escort + 5+ visits |
+| Yael Scheidemann | `LHR` (historical `CI`) | `quest_slums_cleanup` · `quest_city_watch_patrol` | Escort + 5+ visits |
 | Brynn Clerambault | `TLL` (historical `IN`) | `quest_brynn_ledger` (Worn Ledger from `BMA` (historical `SL`)) | Maintenance + 5+ visits |
 | Quill / Couperin | `MHQ` (historical `TV`) | `quest_couperin_lute` (Lute from Pachelbel) | Song received + 5+ visits |
-| Pachelbel / Deacon | `LLA` (historical `BA`) | `quest_pachelbel_goods` (Pigeon route intel) | 15gp tip + 5+ visits |
-| Weckmann | `HKG` (historical `CY`) | `quest_pit_training` (5 pit wins) | Log + 5+ visits |
-| Auros / Bruhns | `HKG` (historical `CY`) | `quest_auros_depths` (Undercity survey) | Depths report + Act V |
+| Pachelbel / Deacon | `LLA` (historical `BA`) | `quest_pachelbel_shipment` | 15gp tip + 5+ visits |
+| Weckmann (`crov`) | `HKG` (historical `CY`) | `quest_pit_training` · `quest_drunk_fight` *(the latter is a dangling id — §DX-02o)* | Log + 5+ visits |
+| Auros / Bruhns | `HKG` (historical `CY`) | `quest_void_below` | Depths report + Act V |
 
-At **Dear Friend+** (level 3), joint NPC moments unlock:
+At **Dear Friend** (`npcFavorability` = **2**, not 3 — the ledger stores three values, `0 Impartial · 1 Friendly · 2 Dear Friend`, and derives Quest-Active from `_hasActiveQuestFor`), joint NPC moments unlock:
 - Quill + Brynn at `MHQ` (historical `TV`): joint ambient moment
 - Weckmann + Auros at `HKG` (historical `CY`): mid-conversation the player interrupts
 - Froberger traces fire (one-time NPC memory of Froberger per Dear Friend NPC)
@@ -32,7 +32,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ### NPC_DIALOGUES — Full Transcript
 
-> Source: `NPC_DIALOGUES` const in `roll2hit-v3.html` (line 7204). 6 NPCs × 4 states × 5 quotes = 120 lines. Each NPC entry also has a `meta` block with `worldTruth`, `enemy`, and `missionBit`. Dialogue state selection order: `dearFriend` (fav ≥ 2) → `questActive` (active quest) → `friendly` (fav ≥ 1) → `impartial`.
+> Source: `const NPC_DIALOGUES = {@10396`. **This transcript covers the six Birka NPCs — 114 lines of the table's 1,614, across 6 of its 213 entries (2.8 %).** The rest are authored per-arc and live only in the HTML (§DX-02ad's class: a register that is accurate about everything it names and names a fraction of the set). Each NPC entry also has a `meta` block with `worldTruth`, `enemy`, and `missionBit`. Dialogue state selection order: `dearFriend` (fav ≥ 2) → `questActive` (active quest) → `friendly` (fav ≥ 1) → `impartial`.
 >
 > **Card footers (`_renderNpcCard`).** The `meta` block surfaces as two stacked card footers, each unlocking a tier apart so the relationship deepens from *what they're up against* to *what they know*: **`enemy` (⚔) at Friendly** (fav ≥ 1, §NPC-01-C) sits above **`worldTruth` (✦) at Dear Friend** (fav ≥ 2). Same italic 10px treatment, differentiated only by the icon; both use `textContent` (authored strings never inject HTML).
 >

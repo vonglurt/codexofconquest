@@ -1,67 +1,325 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report — NPC Dialogue System: World Truth, 4-State Speech, and the Groundhog Day Mechanic
+# Lab Report — Layer 42: The NPC Dialogue System (World Truth · 4-State Speech · Groundhog Day)
 
-*roll2hit.com / Codex of Conquest — Layer 42 Design Document*
+**IEEE-format design document · original 2026-05-22 · verified against live `roll2hit-v3.html` 2026-08-12 (§DOC-02ab)**
+**Home doc:** `docs/story/story-arc-npc-dialogues.md` · **Reference build:** `32c10c5` (2026-05-24, earliest surviving — this report **predates** it)
+**Status:** architecture ✅ shipped and scaled 35× · dialogue script ❌ 0 of 120 lines shipped · payoff ⛔ blocked by §EPIC-01
 
-> **Implementation note (SP2 2026-05-24):** Two details differ from the shipped HTML. (1) `NPC_DIALOGUES` pool selection: `questActive` fires when `_hasActiveQuestFor(npcKey)` is true regardless of fav level — not tied to fav=1. `dearFriend` fires at fav≥2; `friendly` at fav=1 with no active quest. (2) `_missionComplete()` evaluates 12 bits and returns `true` when **8 or more** are set (`>= 8`), not `.every(Boolean)` as this document specifies. The bit list also differs from the design version — see `story.md` FL8 Milepoint B for the implemented bit list.
-
----
-
-## I. Design Philosophy
-
-The problem with most RPG dialogue is that NPCs have **information**, not **perspective**. They tell you where the dungeon is. They don't have a theory about why people like you keep going into dungeons and what that says about the world.
-
-The dialogue system in Codex of Conquest is built on three interlocking principles:
-
-**1. Occupation as lens.** Every NPC has spent their working life developing a particular theory of how the world works. A guard captain believes power flows through enforced norms. An innkeeper believes survival comes from invisible maintenance. A fence believes morality is what you can afford. These are not just flavor — they are the specific angle from which each NPC sees the Curse of Knowledge playing out in real time. They may not name the curse. They live it.
-
-**2. The curse weaves through personality.** The Curse of Knowledge says: once you know how to fix a thing, you can no longer remember not knowing. You see the fix before you see the person. Each NPC has their own version of this — their own version of becoming too capable, too efficient, too alone. The guard who stops seeing residents and sees patrol sectors. The innkeeper who stops feeling tired and just runs the deficit. The bard who stops playing music and starts calculating reach. Their dialogue reflects where they are on that arc — and shifts as they become your friend.
-
-**3. Friendship changes the angle, not the voice.** Friendly NPCs don't become warmer and vague. They become warmer and more specific. An Impartial Yael says "move along." A Friendly Yael says "Varga changed his pigeon route three days before the last tax collection — that's his tell." The information is sharper because the trust is real. A Dear Friend NPC says things they've never said out loud before. Not performed confession — just the thing they've been thinking about for eleven years that finally has an audience.
+> **Verification note (§DOC-02).** This is a re-measured rewrite. Claims that did **not** ship are marked
+> **NOT SHIPPED** and **kept**. §VI keeps all 120 original dialogue lines **verbatim** — they exist
+> nowhere else, and the §DOC-02p rule applies: *deleting a document that holds the only copy of authored
+> content is not a cleanup.* What was compressed is the unmeasurable prose around them. Anchors are
+> `` `symbol@line` `` (§DX-01e). The original's own 2026-05-24 implementation note is superseded by §IV.
 
 ---
 
-## II. The 4-State Speech System
+## Abstract
 
-Every NPC has four distinct dialogue states. State is determined by `S_story.npcFavorability[npcKey]`:
+Layer 42 specifies the relationship layer of *Codex of Conquest*: a per-NPC dialogue schema
+(`meta.worldTruth` / `meta.enemy` / `meta.missionBit` plus four favor-keyed quote pools), a
+deterministic cycling selector, a quest-log **Disposition** line that voices each NPC's structural
+grievance, and the **Groundhog Day** ending mechanic in which the player who seals the Void
+*efficiently* — without the connections that produce no output — is told they have become the thing the
+game warned them about.
 
-```
-0 = Impartial    (default, never interacted or quest not active)
-1 = Quest-Active (player has their quest in journal, not complete)
-2 = Friendly     (quest complete, npcFavorability set to 2)
-3 = Dear Friend  (triggered by second interaction after Friendly; requires additional beat)
-```
-
-The transition from 2 to 3 (Friendly → Dear Friend) requires a specific trigger — not automatic. Usually: completing their second quest, surviving a hard fight with them, or returning to their node after a long journey.
-
-### State Rendering Logic
-
-```js
-function _getNPCDialogue(npcKey) {
-  const profile = NPC_DIALOGUES[npcKey];
-  const fav = S_story.npcFavorability[npcKey] ?? 0;
-  const questActive = _hasActiveQuestFor(npcKey);
-  
-  let pool;
-  if (fav >= 3)          pool = profile.dearFriend;
-  else if (fav >= 2)     pool = profile.friendly;
-  else if (questActive)  pool = profile.questActive;
-  else                   pool = profile.impartial;
-  
-  // Pick quote — not random; use (visitCount % pool.length) for cycling
-  const visitKey = `${npcKey}_visits`;
-  const idx = (S_story[visitKey] ?? 0) % pool.length;
-  S_story[visitKey] = (S_story[visitKey] ?? 0) + 1;
-  return pool[idx];
-}
-```
-
-Cycling rather than random: this ensures the player sees all quotes over multiple visits, and the best quotes appear deliberately at specific visit counts.
+Verification finds a **clean split between container and contents**. The schema shipped and grew from
+6 NPCs to **213**; the selector shipped byte-faithful; the Disposition field shipped on **201** quests;
+the four-way ending nest shipped with the exact thresholds specified. Against that: **0 of 120 quoted
+dialogue lines exist at HEAD or in the earliest surviving build**, **0 of 6 World Truths are verbatim**,
+**4 of 7 characters are named things they were never called**, and — the finding that matters — the
+Groundhog Day mechanic is **inverted at HEAD by an unrelated rename**: three of its four endings are
+unreachable and the fourth, the accusation, fires unconditionally.
 
 ---
 
-## III. NPC Profiles — Full Dialogue Matrix
+## I. Design intent — and what it buys the player
+
+### A. The thesis
+
+> *"The problem with most RPG dialogue is that NPCs have **information**, not **perspective**. They tell
+> you where the dungeon is. They don't have a theory about why people like you keep going into dungeons
+> and what that says about the world."*
+
+Three principles, all of which survive as live code:
+
+1. **Occupation as lens.** Each NPC carries one sentence — `meta.worldTruth` — that is the theory their
+   working life produced. A guard captain believes power flows through enforced norms; an innkeeper
+   believes survival is invisible maintenance; a fence believes morality is what you can afford.
+2. **The curse weaves through personality.** The Curse of Knowledge — *once you know how to fix a thing
+   you can no longer remember not knowing* — has a per-NPC expression. The guard who stops seeing
+   residents and sees patrol sectors. The bard who stops playing music and starts calculating reach.
+3. **Friendship changes the angle, not the voice.** A friendly NPC does not get warmer and vaguer; they
+   get warmer and **more specific**. *"Move along"* becomes *"Varga changed his pigeon route three days
+   before the last tax collection — that's his tell."*
+
+### B. What it adds to play
+
+- **It makes favorability a content key rather than a stat.** Four pools per NPC × 213 NPCs = **1,614
+  authored lines** at HEAD, and roughly a quarter of them are only ever visible to a player who did
+  optional work. The relationship ledger is the largest gated content surface in the game.
+- **It gives repeat visits a reason.** `return { quote: pool[count % pool.length], meta: d.meta, fav };@23639`
+  cycles rather than randomises, so the fifth visit is *new*, not a reroll. This is the single most
+  durable line in the document — specified in §II, shipped, unchanged in 82 days.
+- **It converts kindness into an ending.** `function _missionComplete() {@23648` counts twelve acts that
+  produce no loot, and the ending branches on it. The game's best outcome is reserved for the player who
+  did the things with no output — *"the part you did because you were there, and someone needed
+  something, and you were the kind of person who noticed."*
+- **It puts the antagonist in the quest log.** `meta.enemy` is rarely a person; it is a system, a
+  structure, an incentive. Surfacing it as a voiced **Disposition** line makes every side quest an
+  argument rather than an errand.
+
+---
+
+## II. Method
+
+1. **Batch symbol census** before reading prose (§DOC-02 instrument 2): every identifier, CSS class,
+   state field and mission bit through one `grep -c` pass.
+2. **Mechanical quote scoring.** All 120 fenced dialogue lines extracted from §VI and substring-matched
+   (apostrophe-normalised, 55-char prefix) against **both** HEAD and the archive. No sampling.
+3. **Archive adjudication (instruments 4, 8, 18).** The report is dated **2026-05-22, two days before
+   the earliest surviving commit `32c10c5`**, so HEAD cannot adjudicate it alone and the archive is the
+   reference for "was this ever true."
+4. **Reachability closure (instrument 19).** Every mission bit traced to a writer; every ending branch
+   traced to an attainable score.
+
+---
+
+## III. As-built inventory
+
+### A. The schema — shipped, and scaled 35×
+
+`const NPC_DIALOGUES = {@10396` (a `◆◆◆ WORLDBUILDER ◆◆◆` data section, so it is API-authorable).
+
+| | Archive `32c10c5` | HEAD | Ratio |
+|---|---|---|---|
+| NPC entries | 6 | **213** | 35.5× |
+| Authored quotes | 144 | **1,614** | 11.2× |
+| `impartial` / `questActive` / `friendly` / `dearFriend` | — | 421 / 416 / 413 / 364 | — |
+
+`meta` field coverage at HEAD: `worldTruth` **213/213** · `missionBit` **209** · `enemy` **202** ·
+`name` + `occupation` **21**. The last is **not** a gap: only the 10 dialogue-only NPCs (no
+`BIRKA_NPC_PROFILES` entry) need `meta.name`, and **all 10 have it** — §NPC-01-SF2's synthesised-profile
+fallback is exactly covered. *Checked and deliberately not filed.*
+
+### B. The selector — `function _getNPCDialogue(npcKey) {@23560`
+
+Pool order at HEAD is `if (fav >= 2) pool = d.dearFriend;@23569`, then `questActive`, then `friendly`
+(fav ≥ 1), then `impartial` — a **three-number** ledger (0/1/2), not the report's four (0/1/2/3). The
+selector has since grown eight one-time injection paths in front of the pool (onboarding, act-three
+weight, Froberger traces, cross-refs, void-pressure lines, and three per-NPC beats), all of which
+`return` early. The cycling tail is unchanged.
+
+### C. The mission ledger — `function _missionComplete() {@23648`
+
+Twelve named bits, `return Object.values(bits).filter(Boolean).length >= 8;@23663`. **Byte-identical to
+the archive except two node codes** (`'CO'`→`'TLS'`, `'CI'`→`'LHR'`) — 82 days, zero drift.
+
+### D. The endings — four variants, thresholds 0 and 15, exactly as specified
+
+`if (missionDone && curse <= 0) {@28243` → Covenant Keeper · `else if (curse <= 0)` → the Capable Warden ·
+`} else if (curse >= 15) {@28257` → the Loop Continues · `else` → the Imperfect Covenant. Plus a stricter
+fifth standing added later, `const _isTrue = missionDone && curse <= -6@28229`.
+
+### E. The Disposition line — `docs`' quietest success
+
+**201 quests carry a `disposition:` field**, voiced and attributed, e.g.
+`disposition: '"The commissioners don\'t read field reports about the Slums.@21223` — Yael's grievance,
+in her voice, on her quest. The report proposed it for six NPCs; it shipped as a schema field for the
+whole quest database.
+
+---
+
+## IV. Spec → shipped delta table
+
+| # | Spec claim (2026-05-22) | Shipped at HEAD | Verdict |
+|---|---|---|---|
+| 1 | `NPC_DIALOGUES` keyed by npcKey, `meta` + 4 pools | exactly that, 213 entries | ✅ EXACT |
+| 2 | `meta: {name, occupation, worldTruth, enemy, missionBit}` | 3 of 5 universal; `name`/`occupation` only where no profile exists | ✅ by design |
+| 3 | Cycling by `visitCount % pool.length`, not random | `pool[count % pool.length]@23639` | ✅ **EXACT, 82 days** |
+| 4 | 4 favor states numbered 0/1/2/3 | **three** numbers; Friendly = 1, Dear Friend = 2 | ⚠️ compressed (§V-B) |
+| 5 | World Truth footer at "favorability 2 (Friendly)" | `if (fav >= 2 && dlg.meta && dlg.meta.worldTruth) {@23762` | ⚠️ literal shipped, **tier moved** (§V-B) |
+| 6 | `enemy` surfaces only in the quest log | **also an NPC-card footer at fav ≥ 1** (§NPC-01-C) | ✅ + expansion |
+| 7 | `renderNPCDialogueCard()`, `.npc-dialogue-card`, `.npc-state-badge`, `.npc-world-truth` | **0 occurrences, all four** — ships as `_renderNpcCard` with inline styles | ❌ NOT SHIPPED |
+| 8 | 120 authored dialogue lines across 6 NPCs × 4 states | **0 of 120** present at HEAD **or** in the archive | ❌ **NOT SHIPPED** (§V-A) |
+| 9 | 6 World Truths, quoted | **0 verbatim**; 1 (Auros) a recognisable paraphrase, Yael's truncated, 4 replaced outright | ❌ NOT SHIPPED |
+| 10 | Yael Stormhook · Brynn Fenn · Tomas Quill · Crane | **0 commits ever**, all four | ❌ NOT SHIPPED (§V-C) |
+| 11 | "Deacon", the BA fence with a code on the wall | the **code** shipped, owned by Pachelbel — `const DEACON_CODE_TEXT =@27546` | ⚠️ name demoted to an artifact (§V-C) |
+| 12 | Nodes CI · IN · TV · BA · CY · SQ | `LHR` · `TLL` · `MHQ` · `LLA` · `HKG` · `NUE` | ⚠️ 0 of 6 resolve, all 6 correctly remapped |
+| 13 | Crov and Auros share a node | `HKG:['crov','auros']@35139` | ✅ EXACT — the one geography claim that holds |
+| 14 | `_missionComplete()` = `bits.every(Boolean)` over 12 bits | `filter(Boolean).length >= 8` over a **different** 12 | ❌ NOT SHIPPED (author's own note said so) |
+| 15 | Bit `weckmannPitTrainingDone` | **0 occurrences**; ships as `crovPitTrainingWins@23654` | ❌ renamed to the profile key |
+| 16 | Bit `couperiSongReceived` | **shipped, typo and all** — 9 occurrences (§V-C) | ✅ EXACT |
+| 17 | Bit `ebReturnsCompleted >= 20` | `allEbReturns@23656` reads `ebReturnDone`, threshold **5** | ⚠️ and it minted a dead field (§V-D) |
+| 18 | Bit `journalEntriesRead >= 17` (a number) | `journalHalf@23657` — an **array**, `length >= 9` of 41 | ⚠️ type + threshold changed |
+| 19 | Bits `frobergerLastEntryRead` · `ebNegotiatedPayments > 0` · `roughWhiskeyUsed` | **dropped**; replaced by `sealedVoid` · `atLeastThreeFriends` · `noHighCurse` | ⚠️ 3 of 12 replaced |
+| 20 | Four endings on `_missionComplete()` × `_curseScore()` at 0 / 15 | exactly that nest, both thresholds | ✅ EXACT — and **3 of 4 unreachable** (§V-E) |
+| 21 | Quest-log **Disposition** line, voiced, enemy-derived | **201 quests** carry `disposition:` | ✅ **+ shipped 33× wider than proposed** |
+| 22 | "8 NPCs × 4 states × 8 quotes = 256; 700+ at scale" | **213 NPCs, 1,614 quotes** | ✅ under-projected by 2.3× |
+
+**Score: 8 exact · 3 exact-plus-expansion · 11 deltas, of which the entire dialogue script is one.**
+
+---
+
+## V. Findings
+
+### A. The container shipped and the contents did not — 0 of 120
+
+Every one of the 120 dialogue lines in §VI was substring-matched against HEAD **and** against
+`32c10c5`, the earliest surviving build, two days after this document was written. **None is present in
+either.** The archive already held six `NPC_DIALOGUES` entries with 144 quotes — so the table existed,
+was populated, and was populated with **entirely different text**.
+
+This is the exact inverse of §DOC-02e's result on the Ceremonia spec (*"100 % of its prose survives and
+0 % of its field names do"*). Here 79 % of the field names survive and 0 % of the prose does.
+***A schema is a promise the codebase can keep; a script is a promise only an author can keep, and the
+two ship on different days.*** The corpus now has one clean instance of each direction, which is what
+makes the pair worth stating as a rule rather than an anecdote.
+
+The one line that *nearly* survived is instructive: Yael's `impartial[0]` slot — the report's *"Keep
+moving. This district's quiet right now"* — is at HEAD the 400-word §PLAY-01-D onboarding monologue.
+The **slot** was load-bearing enough to be fought over; the **line** was not.
+
+### B. The four states became three numbers, and one footer moved a tier without changing a character
+
+The report defines `0 Impartial · 1 Quest-Active · 2 Friendly · 3 Dear Friend`. HEAD stores **three**
+values and derives Quest-Active from `_hasActiveQuestFor` instead: `0 Impartial · 1 Friendly ·
+2 Dear Friend`. The author's own 2026-05-24 note caught this.
+
+What the note missed is the consequence. §V of the original specifies the World Truth footer as
+*"when favorability reaches 2 (Friendly)."* HEAD ships
+`if (fav >= 2 && dlg.meta && dlg.meta.worldTruth) {@23762` — **the literal is byte-faithful to the spec
+and one whole tier stricter than the spec meant**, because the number 2 changed meaning underneath it.
+The World Truth — the payload of principle 1 — is now a Dear Friend reveal, not a Friendly one.
+
+***A magic number is a contract between a spec and its code, and renumbering the states silently
+re-signs it.*** (The engine later added an `enemy` footer at fav ≥ 1, which restores a two-stage reveal
+— friendly-reveal then dear-friend-reveal — so the design intent came back by a different door.)
+
+### C. Six of seven characters are named at least two ways in this one document
+
+| §III heading | Its `missionBit` | §VI/§VII prose | HEAD key | HEAD `meta.name` |
+|---|---|---|---|---|
+| YAEL STORMHOOK | `yaelEscortUsed` | Yael Scheidemann | `yael` | Yael Scheidemann |
+| BRYNN FENN | `brynnsJournalRead` | Brynn | `brynn` | **Brynn Clerambault** |
+| TOMAS QUILL | `couperiSongReceived` | Tomas Couperin | `quill` | Tomas Couperin |
+| DEACON | `pachelbelPaidBack` | Pachelbel | `pachelbel` | Fence Pachelbel |
+| CROV | `weckmannPitTrainingDone` | Weckmann | `crov` | Pit Master Weckmann |
+| SERAPHINE AUROS | `bruhnsDepthsReported` | Auros | `auros` | Cmdr Seraphine Bruhns |
+| CRANE | — | Sweelinck (§IV) | `archivus_sweelinck` | — |
+
+**`Yael Stormhook`, `Brynn Fenn`, `Tomas Quill` and `Crane` have 0 commits in the file's entire
+history.** §DOC-02d identified its neighbour as the traceable origin of §AUDIT-03n — *a design doc that
+uses two names for one character mints two keys.* **This document is that failure at six characters and
+industrial scale**, and it is worse in a specific way: the ambiguity did not resolve *consistently*.
+
+- `crov` — key wins, flag renamed to `crovPitTrainingWins@23654`.
+- `auros` — key wins, flag keeps the surname: `bruhnsDepthsReported`.
+- `quill` — key wins, flag keeps the surname **and the surname is misspelled**.
+- `pachelbel` — the **flag's** name won and became the key; the §III heading name lost.
+
+Four characters, four different resolutions of one ambiguity, all in the table at `@10396`.
+***An ambiguous name is not a coin flip you lose once; it is a coin flip you lose again at every site
+that has to spell it.***
+
+**Two consequences worth keeping.** (1) **`couperiSongReceived` is a typo that became a save format.**
+Nine occurrences at HEAD, including `S_story.couperiSongReceived = true;@35299` and a `_S_DEFAULTS()`
+field — and because `_S_DEFAULTS()` fields persist to `localStorage`, renaming it would break every
+existing save. *The document wrote "couperi" once and the repository will spell it that way forever.*
+(2) **"Deacon" survived as a thing rather than a person.** The fence's *"My code's on the wall. Read
+it"* shipped as `const DEACON_CODE_TEXT =@27546` — *"Deacon's Code (4 rules; readable at BA; Pachelbel
+Dear Friend)"* — with `function _nodeHookBirkaDeaconCode(node, { npcRowDiv }) {@32126` rendering it at
+`LLA`. The character's name is now the name of his rulebook, owned by the character who replaced him.
+A third, unrelated `Deacon Nikolaos` exists at ATH. ***When a document gives one character two names,
+the engine does not always drop one — sometimes it keeps both and demotes one to furniture.***
+
+### D. The report's own mission bit minted the repository's cleanest dead field
+
+§IV lists `S_story.ebReturnsCompleted >= 20` as a mission bit. HEAD writes that field on every EB
+return — and `allEbReturns@23656` reads **`ebReturnDone`** instead. `ebReturnsCompleted` has **12 fewer
+readers than its twin, which is to say zero**: it is §DX-02n(b), *"the quietest form of Hazard #2 — it
+saves, reloads, and is never consulted, so even the round-trip acceptance test passes it green."*
+
+**This document is where it came from.** §DOC-02b found the field; this pass supplies the cause. The
+spec named a counter, the engine wrote it, and the reader was built against a sibling that already
+existed. ***A dead field usually has a document behind it, and the document usually reads as a
+requirement.***
+
+Two smaller shapes in the same twelve lines: `allEbReturns` opens with
+`allEbReturns: Object.keys(NPC_DIALOGUES).length > 0@23656` — a conjunct over an immutable non-empty
+literal, so it is **always true and tests nothing**; and `journalHalf: (S_story.journalEntriesRead || []).length >= 9,@23657`
+is named *half* while asking for 9 of `FROBERGER_JOURNAL`'s 41 entries — **22 %**. Also
+`returnedToCI: !!(S_story.visited && S_story.visited['LHR'] && S_story.level >= 5),@23661`: a dead node
+code preserved in an **identifier**, where no gate can see it (`check:legacycodes` scans `.md`,
+`check:noderegs` scans references, and this is a property name).
+
+### E. THE FINDING — the Groundhog Day mechanic is inverted at HEAD, and it accuses the wrong player
+
+The report's thesis is §IV: *"The TRUE win — transcending the curse — requires completing every mission
+bit… Because they were the part of the mission that had no output."* The four-way nest that delivers it
+shipped **exactly as specified**. It cannot fire as specified, and here is the arithmetic.
+
+`function _curseScore() {@28191` scores each of the twenty `const _EB_CODES = [@28030` as *returned*,
+*started-not-returned* (×3) or *never started* (×1). `returned` reads `S_story.ebReturnDone[code]`,
+written **only** by `function _storyEbReturnBeat(ebCode) {@30358`, called **only** from
+`c.addEventListener('click', () => _storyEbReturnBeat(ebCode));@35878`, which renders only when
+`const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@35865` is active — i.e.
+`quest_prn_return`. `QUEST_DB` holds `quest_ef_return` … `quest_eg_return`, the **retired EA–ET codes**.
+The same mismatch sits in `const primaryId = 'quest_' + code.toLowerCase() + '_primary';@28196`.
+**That is §EPIC-01.** No id resolves, the RETURN chip never renders, `ebReturnDone` is never written.
+
+With `returned = false` for all twenty, `_curseScore()` has a **hard floor of 20** (all-never-started)
+and a ceiling of 60 (all-accepted-none-returned). Therefore:
+
+| Branch | Condition | Reachable? |
+|---|---|---|
+| Covenant Keeper (**TRUE SEAL**) | `missionDone && curse <= 0` | ⛔ never |
+| The Capable Warden (**EFFICIENT**) | `curse <= 0` | ⛔ never |
+| The Imperfect Covenant | `0 < curse < 15` | ⛔ never |
+| **The Loop Continues (CURSED)** | `curse >= 15` | ✅ **always** |
+
+`const _isTrue = missionDone && curse <= -6@28229` — the "Covenant Keeper (True)" standing — likewise
+never renders, and the three score-banded `const SWEELINCK_DIALOGUE_VARIANTS = [@27229` below 15 are
+dead (the fifth, `birka:true`, is checked first via `_lubeckFriends() >= 3` and is fine).
+
+**So the only ending any player can reach is the accusation** — *"you couldn't slow down long enough to
+catch them… It's not a condemnation. It's a pattern. I've seen it seventeen times."* A player who
+befriends all six Birka NPCs, reads the journal, trains at the pit, walks the beat with Yael and stays
+for Quill's song is told, word for word, that they were the efficient one who skipped the people.
+***The mechanic still works. It is pointed the wrong way.***
+
+`_missionComplete()` takes collateral damage from the same cause: `noHighCurse: _curseScore() < 10,@23660`
+and `allEbReturns` are **both permanently false**, so the ledger needs **8 of 10** attainable bits, not
+8 of 12. And `sealedVoid` is a tautology at both call sites — the victory screen only renders once
+`defeatedBattles['TLS']` is set — so the real bar is **7 of 9 genuine choices**. The design's stated
+generosity (*"8 of 12, you can miss a third of it"*) is, in play, 7 of 9.
+
+→ **§ENDING-01 extended** (this is the third independent reproduction, and the first from the dialogue
+side); **§EPIC-01 gains its sharpest single sentence of player impact.**
+
+### F. What the world truths became
+
+Zero of the six shipped verbatim. Auros's is a tightened paraphrase
+(*"…built on infrastructure that was never meant to be permanent"* → *"…invisible until it fails"*);
+Yael's is truncated (the report's *"…that never make the papers"* clause is gone); the other four are
+different sentences making different arguments. Brynn's *"The thing that keeps a city running is the
+work no one names"* became *"Safety is a thing people carry in, not a thing rooms provide."* Quill's
+economics became aesthetics: *"The best songs are the ones that take three listenings to understand."*
+
+Not rot — **revision**. The shipped set is more concrete and less thesis-shaped, which is the same edit
+the dialogue got. ***The document argued that the theme should emerge and never be explained; the
+rewrite it received is that argument applied to the document.***
+
+---
+
+## VI. The unshipped dialogue draft — six NPCs, four states, 120 lines
+
+> **Kept verbatim, deliberately.** Every line below was scored against HEAD and against `32c10c5`;
+> **none is present in either.** This document is therefore the only surviving copy, and the §DOC-02p
+> rule applies — *a report that holds the only copy of authored content is an archive, not a stale
+> claim.* The names, node codes and mission bits in the headings are the originals and are **wrong at
+> HEAD**; §V-C maps every one of them. Read this section as a draft script, not as a description of the
+> game.
 
 ### YAEL STORMHOOK (CI — Guard Captain)
 
@@ -70,9 +328,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 **Enemy:** City commissioners who erase evidence of unrest to keep the books clean.  
 **Wound:** She filed the riot suppression report herself. She followed orders. She has read it approximately four times. She filed it correctly.  
 **Curse Expression:** The guard who stops seeing people and sees patrol sectors. The soldier who gets so good at keeping order that she can no longer remember what order was for.  
-**Mission Bit:** `yaelEscortUsed`  
-
----
 
 **Impartial** *(fav = 0, no quest active)*  
 ```
@@ -110,8 +365,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 "The city doesn't need more capable guards. It needs guards who remember why they became guards. I'm working on that. It's slow."
 ```
 
----
-
 ### BRYNN FENN (IN — Innkeeper)
 
 **Occupation:** Innkeeper, solo for 6 years. Runs a 14-bed inn with one part-time kitchen helper.  
@@ -119,9 +372,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 **Enemy:** Anyone who benefits from infrastructure without acknowledging it exists.  
 **Wound:** Baseline exhaustion so structural it reads as her personality. No one asks if she's okay because she's always managing.  
 **Curse Expression:** The innkeeper who stops noticing she's tired and just tracks the deficit. Systems thinking as survival, until the system is all that's left.  
-**Mission Bit:** `brynnsJournalRead`  
-
----
 
 **Impartial**  
 ```
@@ -159,8 +409,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 "You came back. I started keeping the corner room. In case."
 ```
 
----
-
 ### TOMAS QUILL (TV — Bard)
 
 **Occupation:** Unlicensed bard, 4 years. Performs at the Tavern while paying off a license debt that accrues faster than he earns.  
@@ -168,9 +416,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 **Enemy:** The Bardic Guild licensing apparatus, specifically the debt collector who visits every third Tuesday.  
 **Wound:** He's good enough to be licensed. The debt structure makes it functionally impossible. He has started doing math during performances.  
 **Curse Expression:** The artist who gets so good at calculating reach that he stops playing music and starts playing audiences. Professionalization as slow disappearance.  
-**Mission Bit:** `couperiSongReceived`  
-
----
 
 **Impartial**  
 ```
@@ -208,8 +453,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 "I have a song. It's about someone who keeps coming back to a city that doesn't seem to need them, and how the city actually does. I'm still finishing it. I'll play it when it's right."
 ```
 
----
-
 ### DEACON (BA — Fence)
 
 **Occupation:** Fence. Runs a legitimate salvage front at BA. Strict moral code: no bodies, no children, no desperation goods.  
@@ -217,9 +460,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 **Enemy:** Merchants who operate with moral plausible deniability — they didn't steal anything, they just bought it.  
 **Wound:** Raison got arrested on a job Pachelbel passed to him. Pachelbel declined because the margin was thin. He didn't go to the trial.  
 **Curse Expression:** The fence who gets so good at assessing risk that he stops assessing people. The moral code as armor that eventually becomes a wall.  
-**Mission Bit:** `pachelbelPaidBack`  
-
----
 
 **Impartial**  
 ```
@@ -257,8 +497,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 "If you find yourself on the wrong side of a deal and you need someone to know where you are — I'll know. That's the offer."
 ```
 
----
-
 ### CROV (CY — Pit Master)
 
 **Occupation:** Pit master, 28 years. Runs the legal fights at CY. Quietly campaigns against illegal pits.  
@@ -266,9 +504,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 **Enemy:** Pit operators who run illegal fights because the legal overhead cuts into margin.  
 **Wound:** Lost Bruna at 23 to an illegal pit. The fight Bruna took was one Weckmann declined because the odds were too good.  
 **Curse Expression:** The coach who gets so good at reading fighters that he stops seeing fighters and sees fighting. Bruna became a variable. That was before the pit.  
-**Mission Bit:** `weckmannPitTrainingDone`  
-
----
 
 **Impartial**  
 ```
@@ -306,8 +541,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 "You keep coming back. Training, not fighting. That tells me something. The people who only want to fight don't become good. The people who want to understand it — sometimes they do."
 ```
 
----
-
 ### SERAPHINE AUROS (CY — Undercity Tech Researcher)
 
 **Occupation:** Independent researcher, undercity access specialist. Works out of CY because the depth access is best here.  
@@ -315,9 +548,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 **Enemy:** City planning officials who refuse to fund undercity surveys because the findings would create liability.  
 **Wound:** Submitted a structural integrity report three years ago. It was reclassified. She found out because she kept a copy.  
 **Curse Expression:** The researcher who gets so good at finding structural failure that she stopped imagining structural success. Diagnosis as worldview.  
-**Mission Bit:** `bruhnsDepthsReported`  
-
----
 
 **Impartial**  
 ```
@@ -355,8 +585,6 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 "You came back from the depths. Something down there is looking back up. I want you to know that, because most people who know it have either left or stopped talking."
 ```
 
----
-
 ### CRANE (SQ — The Watcher)
 
 **Occupation:** Last of the Covenant Wardens. Maintains the Seal. Has been doing this for longer than the current city exists.  
@@ -369,211 +597,96 @@ Cycling rather than random: this ensures the player sees all quotes over multipl
 
 ---
 
-## IV. The Groundhog Day Mechanic
+---
 
-### Concept
+## VII. Recommendation register
 
-The Curse of Knowledge, as a game mechanic, means: you sealed the Void. The work is done. But if you did it alone — if you were so efficient and capable that you skipped every connection, every unnecessary quest, every thing that didn't produce output — then the Void seals, and Sweelinck says:
+| Proposal | Where | Outcome |
+|---|---|---|
+| `NPC_DIALOGUES` schema: `meta` + 4 pools, keyed by npcKey | §V | ✅ **SHIPPED**, 6 → 213 entries |
+| Cycling selector (`visitCount % pool.length`), not random | §II | ✅ **SHIPPED**, unchanged 82 days |
+| "No-touch extension" — adding quotes is adding strings | §V | ✅ **SHIPPED and then some**: the block is a `◆◆◆ WORLDBUILDER ◆◆◆` data section, so quotes are addable through `./api.sh`, not just by hand |
+| World Truth footer at Friendly | §V | ⚠️ shipped **at Dear Friend** (§V-B) |
+| `enemy` as a voiced quest-log **Disposition** line | §VI | ✅ **SHIPPED at 201 quests** — the document's most successful single idea |
+| `renderNPCDialogueCard` + 3 CSS classes | §V | ❌ NOT SHIPPED (the surface exists as `_renderNpcCard`) |
+| 4-state numbering 0/1/2/3 | §II | ❌ NOT SHIPPED — compressed to 0/1/2 |
+| `_missionComplete()` as `every(Boolean)` over its 12 bits | §IV | ❌ NOT SHIPPED — 8-of-12 over a different 12 |
+| Four ending variants on `_missionComplete()` × `_curseScore()` | §IV | ✅ shipped exactly · ⛔ **3 of 4 unreachable** (§V-E) |
+| The 120-line dialogue script | §VI | ❌ **NOT SHIPPED**, 0 of 120 |
 
-*"The seal holds. You sealed it alone. The curse is not in the Void — it's in the person who sealed it. The next Warden will find the Void open again, and they will be you."*
-
-The loop continues. The curse recurs. Not mechanically — there's no actual looping — but narratively. Sweelinck describes the cycle. The player is told: you did the work, and you became what you were warned against.
-
-The TRUE win — transcending the curse — requires completing every mission bit. Not because the mission bits were the mission. Because they were the part of the mission that had no output. They were the part you did because you were there, and someone needed something, and you were the kind of person who noticed.
-
-### `_missionComplete()` — All Mission Bits
-
-```js
-function _missionComplete() {
-  const bits = [
-    // Birka arc
-    S_story.yaelEscortUsed,          // walked the city with Yael
-    S_story.brynnsJournalRead,       // read the journal to Brynn
-    S_story.couperiSongReceived,       // stayed for Quill's original song
-    S_story.pachelbelPaidBack,          // delivered restitution for Raison
-    S_story.weckmannPitTrainingDone,     // completed training arc with Weckmann
-    S_story.bruhnsDepthsReported,     // brought depth readings to Auros
-    
-    // EB arc — all 20 returns completed
-    S_story.ebReturnsCompleted >= 20,
-    
-    // Codex arc
-    S_story.journalEntriesRead >= 17, // read all journal entries
-    S_story.frobergerLastEntryRead,        // specifically: Entry 41 — "Come back"
-    
-    // General
-    S_story.ebNegotiatedPayments > 0, // at least one EB NPC paid in coin, not combat
-    
-    // Optional but scored
-    S_story.roughWhiskeyUsed,         // survived the drunk fight (tested yourself imperfectly)
-    S_story.pitTrainingWins >= 3,     // kept coming back to Weckmann
-  ];
-  
-  return bits.every(Boolean);
-}
-```
-
-### Ending Variants (Nested with `_curseScore()`)
-
-```
-_missionComplete() && _curseScore() <= 0:
-  → TRUE SEAL — "Covenant Keeper" ending
-  → Sweelinck names every person you helped
-  → The city is named in the seal
-  → "The curse does not recur. You knew how, and you also knew why. That is the whole secret."
-
-_missionComplete() && _curseScore() > 0:
-  → IMPERFECT COVENANT — "The Work Isn't Clean"
-  → Sweelinck acknowledges the completeness, notes the cost
-  → "You helped everyone, but not freely. The seal holds. Watch the thing that made it difficult — it's the beginning of the next curse."
-
-!_missionComplete() && _curseScore() <= 0:
-  → EFFICIENT SEAL — "The Capable Warden"
-  → Sweelinck: "You were excellent. The seal is strong."
-  → Beat. "Froberger was excellent too."
-  → "The curse does not end here. It waits in the next Warden who is very good at the work."
-
-!_missionComplete() && _curseScore() >= 15:
-  → CURSED SEAL — "The Loop Continues"
-  → Sweelinck: "The Void is sealed."
-  → "You will leave now. You'll take what you learned. And somewhere, sometime, someone will break because you couldn't slow down long enough to catch them."
-  → "It's not a condemnation. It's a pattern. I've seen it seventeen times."
-```
+**6 of 10 adopted.** Every adopted item is *structural*; every rejected item is *content or presentation*.
+That is not a coincidence and it is the report's real lesson about itself.
 
 ---
 
-## V. Architectural Plan for Hundreds of NPC Quotes
+## VIII. Defects filed from this pass
 
-### The Scale Problem
+| Row | Severity | Summary |
+|---|---|---|
+| **§ENDING-01** extended | 🔴 | Third independent reproduction, first from the dialogue side, and the sharpest statement of impact: with `_curseScore()` floored at 20 the **only** reachable ending is the accusation, delivered to the most attentive possible player. `_missionComplete()` also drops from 8-of-12 to **7 of 9 real choices**. Released by §EPIC-01. |
+| **§EPIC-01** annotated | 🔴 | The id mismatch is at two computing sites, not one: `const primaryId = 'quest_' + code.toLowerCase() + '_primary';@28196` and `const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@35865`. Fixing only the primaries leaves `ebReturnDone` unwritable and the curse floor intact. |
+| **§DX-02n** +2, and one **origin** | 🟢 | `ebReturnsCompleted`'s origin traced to §IV of this report. New: the always-true conjunct in `allEbReturns@23656`, and `journalHalf@23657` — a bit named *half* that asks for 9 of 41. |
+| **§AUDIT-03s** family +1 | 🟢 | `returnedToCI@23661` — a retired node code preserved in an **identifier**, invisible to every gate by construction. |
+| **§AUDIT-03n** post-mortem | 🟢 | This document is the root cause at six characters; `couperiSongReceived` is a **typo that reached the save format** and cannot be renamed without breaking saves. Recorded, not actionable. |
 
-A full implementation with 8 major NPCs × 4 states × 8 quotes each = 256 quotes for Birka alone. Adding EB NPCs (20 × 3 states × 5 quotes) = 300 more. Total system at scale: 700+ quotes.
-
-This cannot live as inline strings in a single const. It needs a structure that:
-1. Loads quickly (no separate network requests)
-2. Is easy to extend without touching game logic
-3. Allows quote-by-quote editing without breaking other quotes
-4. Cycles predictably so players encounter quotes across visits
-
-### Data Structure
-
-```js
-const NPC_DIALOGUES = {
-  // Keyed by npcKey (matches S_story.npcFavorability key)
-  yael: {
-    meta: {
-      name: "Yael Scheidemann",
-      occupation: "Guard Captain",
-      worldTruth: "Every riot that gets suppressed becomes three quiet riots that never make the papers.",
-      enemy: "City commissioners who erase evidence of unrest to keep the books clean.",
-      missionBit: "yaelEscortUsed"
-    },
-    impartial: [
-      "Keep moving. This district's quiet right now and I'd like to keep it that way.",
-      "Papers if you're trading. Move along if you're not.",
-      "You want information, you want the notice board. I'm not it.",
-      "Conclave district east, market district west. If you don't know where you're going, you're already in the wrong place.",
-      "Quiet night. I'd like it to stay quiet."
-    ],
-    questActive: [ /* quotes */ ],
-    friendly: [ /* quotes */ ],
-    dearFriend: [ /* quotes */ ]
-  },
-  brynn: { /* same structure */ },
-  // ... all NPCs
-};
-```
-
-### Rendering
-
-```js
-function renderNPCDialogueCard(npcKey) {
-  const profile = NPC_DIALOGUES[npcKey];
-  if (!profile) return '';
-  
-  const line = _getNPCDialogue(npcKey);
-  const fav = S_story.npcFavorability[npcKey] ?? 0;
-  const stateLabel = ['Impartial','Quest-Active','Friendly','Dear Friend'][Math.min(fav, 3)];
-  const questActive = _hasActiveQuestFor(npcKey);
-  const effectiveLabel = (fav < 2 && questActive) ? 'Quest-Active' : stateLabel;
-  
-  return `
-    <div class="npc-dialogue-card state-${effectiveLabel.toLowerCase().replace(' ','-')}">
-      <div class="npc-name">${profile.meta.name}</div>
-      <div class="npc-state-badge">${effectiveLabel}</div>
-      <div class="npc-speech">"${line}"</div>
-      ${fav >= 2 ? `<div class="npc-world-truth">— ${profile.meta.worldTruth}</div>` : ''}
-    </div>`;
-}
-```
-
-### Adding Quotes (No-Touch Extension)
-
-The system is designed so adding quotes = adding strings to arrays. No logic changes. No rendering changes. Steps to add 100 new quotes:
-
-1. Open `roll2hit-v3.html`
-2. Find `const NPC_DIALOGUES`
-3. Locate the npcKey and state array
-4. Push strings
-5. Done
-
-The visit-counter cycling (`visitCount % pool.length`) automatically exposes new quotes as players return to nodes.
-
-### The Occupation-Truth Display
-
-When favorability reaches 2 (Friendly), the NPC card exposes a small footer: their World Truth. This is not lore exposition — it's the line that crystallizes what they've been saying in indirect fragments all along. The player who has been paying attention recognizes it. The player who hasn't gets a hint at what they've been missing.
+**Checked and deliberately NOT filed** (existing-work-first): the 21-of-213 `meta.name` coverage is
+correct by design — all 10 profile-less NPCs carry it; `quest_drunk_fight` in
+`const npcQuests = { yael:['quest_slums_cleanup','quest_city_watch_patrol']@23642` is still dangling but
+is already §DX-02o.
 
 ---
 
-## VI. What Grinds Their Gears — Quest Log Disposition Field
+## IX. File references and dating
 
-The quest log entry for each NPC quest should include a **Disposition** line that surfaces the enemy field as player-facing text. Not neutral. Voiced.
+The report cites no line numbers, so it cannot be dated by instrument 18. What can be established:
 
-```
-QUEST: Walk the Beat
-GIVER: Yael Scheidemann, Guard Captain
-DISPOSITION: "Twelve years and the thing that still gets me? The commissioners who order the cleanup and then order the report scrubbed. They want a safe city without knowing anything about what safe costs. That's the part I can't enforce my way out of."
-```
+- It **predates the repository's earliest surviving build** (`32c10c5`, 2026-05-24 17:34) by two days,
+  so §DOC-02f's instrument 8 applies in its strongest form: *absence at HEAD proves nothing; absence at
+  the archive is the only available evidence, and here it is decisive* — the archive already had a
+  populated `NPC_DIALOGUES` with entirely different text.
+- Its own 2026-05-24 implementation note is the earliest self-correction in the corpus, and **both of
+  its two corrections are right** (the `questActive` derivation and the 8-of-12 threshold) — a rare
+  clean result for a status block (cf. §DOC-02j, §DOC-02x, where status blocks were the wrong half).
 
-```
-QUEST: The Debt Ledger
-GIVER: Tomas Couperin, Unlicensed Bard
-DISPOSITION: "The Guild isn't corrupt — they're perfectly functional. They just function to extract rent from people who make things. Every Tuesday, Boyvin shows up and he's punctual and he's polite and I think about how much easier it would be if he were just a villain."
-```
+Live anchors: `const NPC_DIALOGUES = {@10396` · `function _getNPCDialogue(npcKey) {@23560` ·
+`function _missionComplete() {@23648` · `function _curseScore() {@28191` ·
+`const SWEELINCK_DIALOGUE_VARIANTS = [@27229` · `const DEACON_CODE_TEXT =@27546` ·
+`function _lubeckFriends() { return Object.values(S_story.npcFavorability || {}).filter(v => v >= 1).length; }@23461`.
 
-```
-QUEST: Raison's Restitution
-GIVER: Pachelbel, Salvage Specialist
-DISPOSITION: "I don't hate the merchants who buy clean goods with dirty origins. I know exactly what they're doing. I just wish they knew it too. Plausible deniability is a choice. They've made it so comfortable it doesn't feel like one anymore."
-```
-
-This pattern: the NPC's enemy is not a person, usually. It's a system, a structure, a pattern of incentives. The Curse of Knowledge is woven into each one — they can name the problem with perfect clarity. They often cannot change it. That gap between diagnosis and solution is exactly what Froberger faces at scale.
+Cross-references: `lab-report-birka-beginner-arc.md` (§DOC-02d — the six Birka NPCs' quests and the same
+naming defect at one character) · `lab-report-endings-and-echoes.md` (`SWEELINCK_DIALOGUE_VARIANTS`'
+own home) · `docs/story/story-arc-npc-dialogues.md` (the maintained home doc) · `story.md` FL8
+Milepoint B (the implemented bit list).
 
 ---
 
-## VII. World Truth as Thematic Weave
+## X. Conclusion
 
-Each NPC's world truth connects to the Curse of Knowledge arc:
+This document got the architecture right and the world wrong, and it is worth being precise about which
+half is which. The schema it drew — one sentence of theory, one named enemy, one mission bit, four pools
+keyed by trust — absorbed a 35× expansion without a single change to its shape, and the selector it
+specified in nine lines of pseudocode is running unmodified 82 days later. That is as good as a design
+document gets.
 
-| NPC | World Truth | Curse Connection |
-|-----|-------------|-----------------|
-| Yael | Suppressed riots become three quiet riots | Capability without transparency creates more problems invisibly |
-| Brynn | Invisible labor keeps everything running | What you do in service of others can become indistinguishable from what you do to survive |
-| Quill | Institutions capture creative upside, externalize downside | The systems that benefit from your talent are structured to make you feel the failure is personal |
-| Pachelbel | The market has no morality; the people in it do | Moral code as minimum standard vs. moral code as comfort — the difference between ethics and excuse |
-| Weckmann | Pain you chose to receive is information; pain imposed is destruction | The teacher who gets so good at preparing students for danger that he stops seeing the students |
-| Auros | Permanent infrastructure built on temporary infrastructure | Every functional system has a substrate that nobody maintains, until it fails catastrophically |
+Everything the document actually *wrote* was replaced. All 120 lines, all six World Truths, four of
+seven names. The replacement is better — more concrete, less thesis-shaped, exactly the edit the
+document's own §VII argues for — but the document did not survive it, and the only reason its draft is
+still legible is that nobody deleted the file.
 
-These truths are not explained to the player. They emerge through repeated visits. The player who reads the fourth Dear Friend quote from Yael and the third Dear Friend quote from Weckmann in the same session will notice the pattern — the Curse of Knowledge is not one person's problem. It's a structural feature of becoming capable in a world that rewards capability.
+The thing to fix is neither. §IV promises that the player who does the work with no output gets a
+different ending, and the four-way nest that delivers that promise shipped intact and correct. An
+unrelated rename in a different subsystem then floored the curse score at 20, and now every player —
+including the one who did everything — is told they were the one who couldn't slow down.
 
-The game does not explain this. Froberger's journal shows it in one person. The NPCs show it in six others. The player feels the pattern without being told it's a pattern.
+> *"It's not a condemnation. It's a pattern. I've seen it seventeen times."*
 
-That's the whole design.
+The engine has now said it to everyone, which was not the design. **§EPIC-01 is a rename; it is also the
+difference between this game's thesis and its opposite.**
 
 ---
 
-*lab-report-npc-dialogue-system.md — Layer 42 design document*  
-*Generated 2026-05-22 — roll2hit.com / Codex of Conquest*
-
+*Original: `lab-report-npc-dialogue-system.md` — Layer 42 design document, 2026-05-22.*
+*Verified and rewritten 2026-08-12 (§DOC-02ab).*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
