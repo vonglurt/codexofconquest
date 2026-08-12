@@ -2,529 +2,257 @@
 
 # Lab Report: The Naval Campaign Layer — Ports, Intercepts, Hunts, and the Harmony Chain at Sea
 
-**Author:** Claude (Sonnet 4.6) + roll2hit.com design sessions  
-**Date:** 2026-05-28  
-**Classification:** Arc Design / Naval Systems / Quest Architecture  
-**Audience:** Electrical Engineering / Computer Science background; video game designer / programmer  
+**Author:** Claude (Sonnet 4.6) + roll2hit.com design sessions
+**Filed:** 2026-05-28 · **Ship commit:** `e339aeb`
+**Verified against HEAD:** 2026-08-12 (§DOC-02z) — 76 days later, at 5.5× the file
+**Classification:** Arc Design / Naval Systems / Quest Architecture
+**Audience:** EE/CS background; game designer-programmer
 
 ---
 
 ## Abstract
 
-This report documents the design process for the naval campaign layer of *The Shattered Codex*, built across three context sessions from four design transcripts: an improv-in-D&D transcript (Flutes Loot), a side quest structure transcript (World Anvil), a naval campaigns transcript, and a monster hunt transcript (Ben Byrne). The transcripts were processed in three stages: (1) principle extraction into §DESIGN-REF, (2) selection of one transcript to implement first, (3) sequential implementation of derived arcs. Session 3 added a retrospective multipass: §SPARK-02 (The Dunfall Harmony Chain — second friendship arc template at DF), §WHODUNIT-01 (The Bilge Mystery — steamboat monster mystery at MS), and §ALCHEMY-01 (The Personal Legend — world-spanning escort quest following Roen the shepherd through six existing nodes). Nine new nodes were added (OW, SK, SB, DF, LD, BN, and the DA3/§LXXIII tidal chain). Thirty-four new quests were added across §SPARK-01 SEA, §NAVAL-01, §PORT-01, §PORT-02, §HUNT-01, §HUNT-02, §SPARK-02, §WHODUNIT-01, and §ALCHEMY-01. This report documents what was built, the principles that shaped each decision, the arc threading that connects them, and the remaining ⚙️ items.
+This report specifies a naval campaign layer for *The Shattered Codex*: **7 new nodes, 33 quests, 13 items, 11 NPCs**, distilled from four tabletop-design transcripts (improv, side-quest structure, naval campaigns, monster hunts) into **five reusable arc templates** — §HUNT, §PORT, §SPARK, §WHODUNIT, §ALCHEMY.
+
+**Why the game wanted it.** Before this layer the world had one shape of "go there and fight the thing." The sea gave three new shapes the engine could already express with the mechanics it had: a *reputation currency* (a port that opens because of who vouches for you, not because you paid), an *investigation gradient* (a wrong theory held sincerely, corrected by two skill checks, not by a lore dump), and a *travelling companion* (an arc whose geography is borrowed rather than built). Each is a different answer to the same playability question — **what makes the player want to cross four thousand miles of a world they can already walk freely?**
+
+**Verification result.** The specification shipped with **zero transcription error** across ~100 measured identifiers: 33/33 quest ids, 29/29 state flags, 13/13 items with every icon and all five sell values, **14/14 skill checks exact in stat, skill name and DC**, and 7/7 node records exact in `num`, terrain key, label and act. All 22 node codes are dead *as written* and **all 22 resolve by `num`+label to a live node** — the §WALK/§NAV-01 migration renamed this layer, it deleted nothing.
+
+**And 13 of the 33 quests (39 %) cannot be reached in the shipped game.** Not one identifier is missing. Four host nodes — `SEN`, `HFT`, `VAW`, `ATH` — became **non-primary** occupants of shared cells, and three arcs die at flags whose only writer sits inside a `node.code === '<that node>'` block. §HUNT-01 loses 4 of 4, §WHODUNIT-01 loses 4 of 4, §ALCHEMY-01 loses 5 of 7. *A 100 % symbol census accompanying a 39 % dead feature — §DOC-02r's instrument 19.*
+
+**Attribution.** §DOC-02r (2026-08-12, `33c2166`) reached the §HUNT-01 4/4 and §WHODUNIT-01 4/4 verdicts first, from the prosocial-mechanics side, and named `SEN`←`LCY`, `HFT`/`VAW`←`ALF` and `ATH`←`SEA`. This pass **independently reproduces both** from the naval side and adds four results that arc-shaped review could not see: **§ALCHEMY-01's 5-of-7 casualty**, the **loss of the §BOARD-01-FU6 diamond's apex**, the **two surfaces that rescue part of the layer** (§V-4), and **two live double-pay sites** on nodes that are perfectly reachable (§VI-A).
 
 ---
 
-## I. Source Transcripts and Extraction Process
+## I. Method
 
-### 1.1 What the transcripts contained
+Nine instruments, in the order run:
 
-The four source transcripts were not game design documents — they were lectures, tutorials, and videos about general tabletop RPG design. The extraction process was:
-
-```
-TRANSCRIPT (general RPG design advice)
-   └─► [Filter] → what applies to this specific game
-               └─► [Map to existing systems] → what can be implemented now
-               └─► [Defer] → what requires new systems → plan.md §DESIGN-REF ⚙️ entry
-```
-
-The key filter was **existing system compatibility**: principles that could be applied to existing QUEST_DB structure, existing node architecture, and existing state flags were implemented. Principles requiring new UI systems (e.g., "charter a ship" fast travel option at DK) were deferred as ⚙️ entries.
-
-### 1.2 The four transcripts and their core contributions
-
-| Transcript | Source | Core principle extracted | Primary application |
-|-----------|--------|------------------------|---------------------|
-| Improv in D&D | Flutes Loot | Yes-and; fail states memorable not dead ends; contrasting energy | §SPARK-01 arc design |
-| Side Quest Structure | World Anvil | Hook → Investigation → Twist → Choice; worldbuilding anchor | §HUNT-01/02 arc template |
-| Naval Campaigns | (unnamed) | Handcrafted travel problems; crew roles; distinct port culture | §NAVAL-01, §PORT-01/02 |
-| Monster Hunt | Ben Byrne | Wrong theory setup; investigation corrects; confrontation rewarded | §HUNT-01/02 4-phase template |
-
-### 1.3 The one-transcript-first protocol
-
-After extracting all four transcripts into §DESIGN-REF, the decision was made to implement **one transcript first** rather than all four simultaneously. The Ben Byrne monster hunt transcript was selected because:
-
-1. It had the most concrete mechanical template (4 phases, named)
-2. It required the fewest new systems (existing skill_check quest type + storyPreBattle pattern)
-3. It produced a repeatable arc template (§HUNT-01 → §HUNT-02 → future §HUNT-N)
-
-The other three transcripts' implementations followed in subsequent passes, each drawing on the infrastructure established by the first.
+1. **Batch census.** Every named quest id, flag, item, NPC and node code through one `grep -c` loop *before* reading a line of prose (§DOC-02b).
+2. **Archive comparison.** `git show e339aeb:roll2hit-v3.html` — the report's own ship commit — is the only thing that can adjudicate a claim about 2026-05-28 (§DOC-02f, instrument 8).
+3. **Rename resolution by triple-match.** A dead node code is presumed a *rename*, not a deletion, until `num` + terrain key + label all fail (§DOC-02y).
+4. **Cell-primacy census.** `const CELL_GRID = (() => {@9852` builds each cell in `NODE_MAP` declaration order; only `list[0]` can ever become `S_story.currentCode` (§AUDIT-03x).
+5. **Reachability closure over gate flags.** For every gate term, find *all* writers; a single writer inside a blocked block kills the whole downstream chain (§DOC-02r, instrument 19).
+6. **Second-route search.** Before declaring a quest dead, check `unlock` edges and the Warrant's Board — the closure runs in the *positive* direction too.
+7. **Recommendation register.** Score the report's own ⚙️ deferrals against HEAD (§DOC-02i).
+8. **Copy-vs-compose.** Expect transcribed tables to be exact and narrated passages to drift (§DOC-02k, instrument 12).
+9. **Payment audit.** Where a `storyRender` button writes a quest's completion flag, check whether *both* sides pay.
 
 ---
 
-## II. What Was Built
+## II. As-Built Inventory
 
-### 2.1 Node inventory
+### 2.1 Nodes — 7 of 7 shipped, 7 of 7 survive
 
-| Node | Num | Label | Connection | Purpose |
-|------|-----|-------|-----------|---------|
-| OW | 139 | Open Water — The Warmth Calm | MS.E ↔ LW.W | §SPARK-01 SEA warmth eel encounter |
-| SK | 142 | Saltwick — The Unwritten Port | MS.S | §PORT-01 reputation-gated port |
-| SB | 144 | The Intercept — Three Miles Out | MS.N | §NAVAL-01 ship-to-ship with crew roles |
-| DF | 143 | Dunfall — The Loch Harbor | HL.W ↔ EH.E | §PORT-02 kelpie-gated barter port |
-| LD | 140 | North Shore Den | LN.N | §HUNT-01 drowner den confrontation |
-| BN | 141 | The Eastern Bend | J1.N | §HUNT-02 night hag relay road |
-| DA3 | 138 | The Depth — 18 Meters | DA2.S | §LXXIII tidal chain terminus |
+| Spec code | `num` | Label | HEAD code | Cell | Reachable? |
+|---|---|---|---|---|---|
+| OW | 139 | Open Water — The Warmth Calm | **`NWI`**`@8641` | 17,181 | ✅ primary |
+| SK | 142 | Saltwick — The Unwritten Port | **`MME`**`@8651` | 15,178 | ✅ primary |
+| SB | 144 | The Intercept — Three Miles Out | **`GCI`**`@8646` | 20,177 | ✅ primary |
+| DF | 143 | Dunfall — The Loch Harbor | **`DNF`**`@8739` | 17,171 | ✅ primary |
+| LD | 140 | North Shore Den | **`VAW`**`@8526` | 10,191 | ❌ **4th of 6** |
+| BN | 141 | The Eastern Bend | **`BNX`**`@8806` | 25,197 | ✅ primary |
+| DA3 | 138 | The Depth — 18 Meters | `DA3`@8623 | 32,203 | ❌ 15th of 17 |
 
-**MS now has three exits:** W (DK, original), E (OW → LW), S (SK), N (SB). The Tilbury Star is the central sea hub.
+The archive record is exact in every field, **including the bidirectional wiring the report's "Connection" column claims**: `OW:{ num:139, … E:'LW', W:'MS'`, `SK: N:'MS'`, `SB: S:'MS'`, `DF: E:'HL', W:'EH'`, `LD: S:'LN'`, `BN: S:'J1'`, `DA3: N:'DA2'`. Six of seven kept their exact display label through the migration; `BN`'s was extended to *'The Eastern Bend — Relay Road'*.
 
-### 2.2 Quest inventory
+**Host nodes borrowed by the layer, all renamed, all num-exact:** MS(10)→`SEN`, DK(7)→`LCY`, LS(109)→`HFT`, LN(107)→`ALF`, LH(106)→`KSU`, HL(14)→`KIR`, MI(12)→`MAN`, IS(19)→`PDL`, ML(95)→`MLA`, AE(92)→`ATH`, LW(105)→`MOL`, EH(53)→`INV`, J1(43)→`WRO`.
 
-| Arc | Quest IDs | Type | Location | Key mechanic |
-|-----|-----------|------|----------|-------------|
-| §SPARK-01 SEA | quest_sea_01–03 | side + 2× skill_check | OW | INT DC 13 identify eel; WIS DC 14 escort |
-| §HUNT-01 | quest_hunt_01–04 | side + 2× skill_check + side | LS/LH/LN/LD | INT DC 12 hull; WIS DC 13 trail |
-| §HUNT-02 | quest_hunt2_01–04 | side + 2× skill_check + side | J1/BN | WIS DC 11 road; INT DC 13 sleeping post |
-| §PORT-01 | quest_sk_01/02 + quest_sk_hull | side + skill_check + side | SK | CHA DC 12 consignment; 200gp hull repair |
-| §PORT-02 | quest_df_01/02 | side + skill_check | DF | WIS DC 11 barter insight |
-| §NAVAL-01 | quest_sb_01 + parley/examine/fight | side + 2× skill_check + side | SB | CHA DC 12 parley; INT DC 11 papers |
-| §SPARK-02 | quest_spark2_01–05 | 3× side + 2× skill_check | DF | WIS DC 11 animal handling; INT DC 12 nature |
-| §WHODUNIT-01 | quest_bilge_01–04 | 2× side + 2× skill_check | MS | INT DC 12 drain; WIS DC 13 witness |
-| §ALCHEMY-01 | quest_alch_01–07 | 5× side + 2× skill_check | HL/MI/MS/IS/ML/AE | CHA DC 11 oracle; WIS DC 12 Malta crisis |
+`J1` is worth its own line: it was `name:'junction'`, and junction nodes became a **CI failure** (`check:invariants` I1/I2, §DX-01d). It was not deleted — it was reclassified to `name:"midlands"`, kept `num:43` and kept its label *'Midlands Road Fork'*. **§HUNT-02's entire hook survived a design ban by changing terrain.**
 
-**Total new quests this layer:** ~34. Running total: ~151 live.
+### 2.2 Quests — 33 of 33 live as UQF-1.0
 
-### 2.3 Items introduced
+| Arc | Quests | Host at HEAD | Reachable |
+|---|---|---|---|
+| §SPARK-01 SEA | `quest_sea_01–03` | SEN → NWI | ⚠️ **board only** (1 of 3 heads) |
+| §HUNT-01 | `quest_hunt_01–04` | HFT · KSU · ALF · VAW | ❌ **0 of 4** |
+| §HUNT-02 | `quest_hunt2_01–04` | WRO · BNX | ✅ 4 of 4 |
+| §PORT-01 | `quest_sk_01` · `_02` · `_hull` | MME | ✅ 3 of 3 |
+| §PORT-02 | `quest_df_01/02` | DNF | ✅ 2 of 2 |
+| §NAVAL-01 | `quest_sb_01` + 3 role paths | GCI | ✅ 1 of 1 |
+| §SPARK-02 | `quest_spark2_01–05` | DNF | ✅ 5 of 5 |
+| §WHODUNIT-01 | `quest_bilge_01–04` | SEN | ❌ **0 of 4** |
+| §ALCHEMY-01 | `quest_alch_01–07` | KIR·MAN·SEN·PDL·MLA·ATH·KIR | ❌ **2 of 7** |
 
-| Item | Icon | Sell | Source arc | Significance |
-|------|------|------|-----------|-------------|
-| Joint Pirate Debt Note | ⚓ | 0 | §SPARK-01 SEA | Credential at SK; two crew allegiances |
-| Drowned Compass | 🧭 | 80 | §HUNT-01 | Guild captain's compass; proof of wrong theory |
-| Relay Station Token | 🪙 | 20 | §HUNT-02 | Brass token; relay road cleared |
-| Saltwick Bill of Lading | 📄 | 0 | §PORT-01 | Valid at 6 unregistered ports |
-| Highland Herb Pouch | 🌿 | 40 | §PORT-02 | Dunfall-only; moorland herbs |
-| Letter of Marque (Keel) | 📜 | 0/15 | §NAVAL-01 | Same item, 3 different meanings by path |
-| Bram's Fish Scale | 🐟 | 0 | §SPARK-02 | Token 1 of 4: endorsement, temporary |
-| Oat's Harbor Bead | 🪡 | 0 | §SPARK-02 | Token 2 of 4: acknowledgment, temporary |
-| Dunfall Drift Spore | ✨ | 0 | §SPARK-02 | Token 3 of 4: proof of Fehn's gentling |
-| Highland Letter of Clearance | 📃 | 0 | §SPARK-02 | Token 4 of 4: permanent; Halvard Jesst credential |
-| Sea Spawn Scale Fragment | 🐚 | 13 | §WHODUNIT-01 | Evidence of hull breach; case closed |
-| Shepherd's Fortune Slip | 📜 | 0 | §ALCHEMY-01 | Token 1: prophecy receipt; exists only for the duration of the journey |
-| Loch Gold Flake | ✨ | 30 | §ALCHEMY-01 | Token 2: permanent; bioluminescent colony surfaced gold; grandmother spoke literally |
+### 2.3 Skill checks — 14 of 14 byte-exact
+
+| Quest | Spec | Shipped |
+|---|---|---|
+| `quest_sea_02` | INT 13 identify eel | `stat:'INT', skill:'Investigation', dc:13` ✅ |
+| `quest_sea_03` | WIS 14 escort | `stat:'WIS', skill:'Nature', dc:14` ✅ |
+| `quest_hunt_02` | INT 12 hull marks | `INT / Investigation / 12` ✅ |
+| `quest_hunt_03` | WIS 13 north-shore trail | `WIS / Perception / 13` ✅ |
+| `quest_hunt2_02` | WIS 11 road | `WIS / Perception / 11` ✅ |
+| `quest_hunt2_03` | INT 13 sleeping post | `INT / Investigation / 13` ✅ |
+| `quest_sk_02` | CHA 12 consignment | `CHA / Persuasion / 12` ✅ |
+| `quest_df_02` | WIS 11 barter insight | `WIS / Insight / 11` ✅ |
+| `quest_spark2_02` | WIS 11 animal handling | `WIS / Animal Handling / 11` ✅ |
+| `quest_spark2_04` | INT 12 nature | `INT / Nature / 12` ✅ |
+| `quest_bilge_02` | INT 12 port drain | `INT / Investigation / 12` ✅ |
+| `quest_bilge_03` | WIS 13 witness | `WIS / Insight / 13` ✅ |
+| `quest_alch_04` | CHA 11 oracle | `CHA / Persuasion / 11` ✅ |
+| `quest_alch_05` | WIS 12 Malta crisis | `WIS / Insight / 12` ✅ |
+
+### 2.4 Items — 13 of 13 live, every icon and sell value exact
+
+Joint Pirate Debt Note ⚓ · Drowned Compass 🧭 **80** · Relay Station Token 🪙 **20** · Saltwick Bill of Lading 📄 · Highland Herb Pouch 🌿 **40** · Letter of Marque (Keel) 📜 · Bram's Fish Scale 🐟 · Oat's Harbor Bead 🪡 · Dunfall Drift Spore ✨ · Highland Letter of Clearance 📃 · Sea Spawn Scale Fragment 🐚 **13** · Shepherd's Fortune Slip 📜 · Loch Gold Flake ✨ **30**.
+
+### 2.5 Battle keys — classified, and the gate's table records the rename
+
+`SYNTHETIC_BATTLE_CODES` in `scripts/check-noderegs.js` carries all four, each already annotated with its *new* host: `MS_BILGE: '§WHODUNIT-01 — Sea Spawn ×2 bilge fight at SEN'`, `SB_PRIVATEER: '… at GCI'`, `BN_NIGHTHAG: '… at BNX'`, `LD_DROWNERS: '… at VAW'`. Gate #13 phase 6 is the only place in the repo that records this layer's rename map, and it is correct.
 
 ---
 
-## III. Design Principles Applied — Per Arc
+## III. Design Intent — what each template was for
 
-### 3.1 §SPARK-01 SEA — The Warmth Calm (OW)
+The transcripts were not game-design documents; they were lectures. The extraction filter was **existing-system compatibility**: anything expressible in `QUEST_DB` + `NODE_MAP` + a state flag was built; anything needing new UI was deferred with a ⚙️.
 
-**Source transcript:** Improv in D&D (Flutes Loot) + Naval Campaigns.
+**§SPARK-01 SEA — play on assumptions (OW/`NWI`).** Two wanted pirate ships at anchor, not fighting. The player expects a threat encounter; the reality is something large and warm below the surface that has made conflict feel pointless to both crews. *The Redmast Quartermaster: "eight days and I haven't hit anyone; I don't know what to do with that."* The eel has no agenda — it simply is. **Playability contribution:** the game's first encounter that cannot be solved by the combat system, teaching the player that `Investigate` is a verb here.
 
-**Principle applied: Play on assumptions.**  
-The setup is "two wanted pirate ships at anchor with no hostility between them." The player's assumption is that this is a threat encounter. The reality is that something large and warm below the surface has made conflict feel pointless to both crews. The player must investigate (identify the eel) and resolve (escort it south) without fighting either pirate crew.
+**§HUNT-01/02 — the wrong theory, held sincerely.** Four phases: setup (a credible institution asserts a wrong cause), investigation (two checks read physical evidence), confrontation, resolution. The Guild's spirit offerings are the *traditional* response to unexplained lake deaths; the road wardens' "bandit fires" is a *credible* theory, because old mills do attract squatters. **Neither character is diminished by being wrong** — the tell is precision: every horse stopped at the same point. Bandit fear is diffuse; territorial marking is not. **Playability contribution:** an investigation gradient that rewards reading over grinding, and §HUNT-02 is built *entirely* from one line Tessie was already saying at the J1 fork — retroactive worldbuilding at zero content cost.
 
-**Principle applied: Contrasting energy.**  
-The Redmast Quartermaster is practical and wary ("eight days and I haven't hit anyone; I don't know what to do with that"). The warmth eel has no agenda — it simply is. The contrast between the pirate's anxiety about his own non-violence and the eel's indifference to the whole situation is the scene's emotional core.
+**§PORT-01/02 — reputation and barter as currencies.** Saltwick opens on any of three credentials (`pirateCrew_allied`, `aldousConfessed`, or §SPARK-02's Ninth Circuit seal) and on none of them stays shut; Dunfall's market runs on acknowledgment, and the fail state says so out loud — *"Come back when you've walked the ford path. Not the road — the ford."* Dunfall is gated by clearing the kelpie at `KIR`, so **the village is a consequence, not a quest**. **Playability contribution:** two ports that reward completionist play without gating content behind a single mandatory quest.
 
-**Arc threading: OW → SK.**  
-The Saltwick Dockmasters' brig is one of the two ships at OW. Their First Mate signs the Joint Pirate Debt Note alongside the Redmast Quartermaster. This note becomes the player's credential at SK — the pirateCrew_allied flag opens Saltwick's dock gate. The naval travel problem (Warmth Calm blocks trade route) resolves into the port reputation system (Saltwick accepts the pirate alliance as currency).
+**§NAVAL-01 — one item, three meanings (SB/`GCI`).** REF-03 asked for Captain/Gunner/Lookout/Quartermaster crew roles; the implementation simplified to three buttons because the node is one encounter, not a campaign. Parley (CHA 12), Examine (INT 11), Fight — **all three yield the same Letter of Marque**. Parley: Keel gave it willingly, she wanted to be bought off. Examine: she threw it across the gap, the test was whether you'd read the date. Fight: recovered from the chart room, the Commission was already void. *The item is identical. The player's understanding of Keel is not.*
 
-### 3.2 §HUNT-01 — What's In The Lake (LD)
+**§SPARK-02 — the four-token vignette chain (DF/`DNF`).** Objects enter and leave as physical markers of emotional state: Bram's Fish Scale exists only between Act 2 and Act 3, then Bram eats it. **The player's inventory becomes a timeline of the arc rather than a permanent record of it.** Commissioner Halvard Fehn maintains three identities at once — a Revenue Office closed 13 years ago, a Highland Fleet that does not exist, a Commodore-Provisional rank in a Northern Admiralty that does not exist — and the drift spore does not make him confess; **it makes him stop performing.** That is the difference between coercion and gentling, and the confrontation works because the player collected the evidence.
 
-**Source transcript:** Ben Byrne monster hunt, 4-phase template.
+**§WHODUNIT-01 — a mystery in a closed space (MS/`SEN`).** No new node: all four phases run at one node via `storyRender` progression, with the battle fired by button rather than by a cardinal move, because "deeper into the ship" is a vertical descent. The wrong theory here is *social* rather than institutional — the cook's, and it is circumstantially coherent (the passenger came from Saltwick; nobody from Saltwick uses their real name). **The cook never apologizes.** In §HUNT the wrong-theory NPC updates; the cook does not, and that persistent off-note is load-bearing: the mystery is solved, the bilge is clear, and the social wrong stands.
 
-**Phase application:**
-
-| Phase | Implementation | Wrong theory corrected |
-|-------|---------------|----------------------|
-| Setup | Elder Fisherwoman at LS: three boats missing, Guild places spirit offerings | Guild theory: spirit; Reality: physical drowners |
-| Investigation | INT DC 12 hull marks (physical claw drag) → WIS DC 13 north shore trail (territorial stop line) | Marks are grip marks, not spirit-work |
-| Confrontation | LD: Drowner ×3, storyPreBattle(LD_DROWNERS) | Den at shelf collapse after spring rock fall |
-| Resolution | Drowned Compass + Guild captain found + knowledge entry | Guild adjusts theory over two seasons |
-
-**Design decision: the wrong theory is sympathetically wrong.**  
-The Guild master is not foolish — spirit offerings are the traditional response to unexplained lake deaths. The Elder Fisherwoman is not prescient — she has ninety-one years of lake experience that reads physical evidence correctly. Neither character is diminished by the investigation's conclusion.
-
-**Design decision: storyMove gate on LN→LD.**  
-The lair (LD) is not accessible until lakeLairLocated is set. This enforces the investigation — the player cannot skip directly to the fight without reading the trail. The gate message uses the correct tone: it names what the player sees (disturbed path) without naming what they haven't found yet (the lair).
-
-### 3.3 §HUNT-02 — The Eastern Bend (BN)
-
-**Source transcript:** Ben Byrne monster hunt, second application.
-
-**Difference from §HUNT-01:** The wrong theory source is institutional (road wardens, not a village elder), the creature is psychological rather than physical (night hag vs. drowners), and the investigation reads invisible evidence (territorial marking, spiral tether wear, heel-only handprint) rather than physical evidence (hull marks, drag tracks).
-
-**Design decision: Tessie's existing dialogue as the hook.**  
-The J1 junction already has Tessie as an EB_NPC who says "Watch the eastern bend — something spooked the relay horses yesterday." §HUNT-02 builds the entire arc from that single existing line. The hook is already in the world — the investigation arc simply answers the question the game had already asked.
-
-**Principle applied: the wrong theory is institutional.**  
-Road wardens say bandit fires. This is a credible theory — old mills do attract squatters. The tell is the precision: every horse stopped at the same point, not at random points along the road. Bandit fear is diffuse. Territorial marking is precise. The INT skill check reads the stopping line as evidence of the hag's territory, not the bandits' position.
-
-### 3.4 §PORT-01 — Saltwick (SK)
-
-**Source transcript:** Naval Campaigns — distinct port culture, reputation-gated access.
-
-**Cultural identity: reputation as currency.**  
-Saltwick's access system uses three existing arc states as credentials:
-- pirateCrew_allied (§SPARK-01 SEA): Both pirate crews vouch for you
-- aldousConfessed (§SPARK-01): Aldous's Letter of True Passage names Saltwick as one of his six ports
-- Neither: dock gate stays closed
-
-This means Saltwick is inaccessible on a first playthrough until at least one prior arc is resolved. The port rewards completionist play without gating content behind a single mandatory quest.
-
-**Arc threading: Saltwick → Aldous → Inspector.**  
-quest_sk_02 (the missing consignment) reveals that the buyer used a "Pembury" shipping address — a chandler's shop that closed the morning of the delivery. This connects §PORT-01 back to §SPARK-01 (Aldous Wren-Pembury's false identity) without naming the connection directly. The player who remembers Aldous's backstory understands what Dorit is telling them. The player who doesn't gets a mystery thread.
-
-**The hull repair as travel problem.**  
-The Tilbury Star's cracked strake is a handcrafted travel problem (REF-03 template). It doesn't block movement — the ship still runs — but it creates a pending consequence. The repair at Saltwick costs 200gp and ties the dry dock to the Highland timber trade: "Highland timber from Dunfall — better grain than lowland oak." This cross-reference connects §PORT-01 and §PORT-02 through the dock worker's dialogue, making the world feel consistent rather than modular.
-
-### 3.5 §PORT-02 — Dunfall (DF)
-
-**Source transcript:** Naval Campaigns — distinct port culture, access gated by world state.
-
-**Cultural identity: barter economy, pre-commerce.**  
-Dunfall's market runs on acknowledgment, not gold. The WIS Insight DC 11 check in quest_df_02 is not about reading Mairén — it's about understanding what the exchange requires. The fail state makes this explicit: "Come back when you've walked the ford path. Not the road — the ford." The market does not open until the player demonstrates they understand why the doors were barred.
-
-**Access gated by §HL battle completion.**  
-HL already has the kelpie + Cú Sídhe battle. Clearing it sets defeatedBattles['HL']. The storyMove gate at HL→DF checks this flag. Dunfall is therefore a **consequence** of the kelpie fight, not a separate quest — the player clears the loch, and the village opens. The causal chain was already in HL's node text ("the doors in Dunfall bar from the inside" when the standing stones go gold).
-
-**Node insertion:** DF is inserted between HL and EH (Loch of the Drowned King epic battleground). The player can now: clear the kelpie (HL) → visit Dunfall (DF) → continue west to the epic loch (EH). The three nodes form a natural progression along the highland loch.
-
-### 3.6 §NAVAL-01 — The Intercept (SB)
-
-**Source transcript:** Naval Campaigns — ship-to-ship combat, crew roles.
-
-**The crew role design decision.**  
-REF-03 calls for "Captain, Gunner, Lookout, Quartermaster" crew roles. The implementation simplified to three branching buttons because the node is a single encounter, not a sustained campaign:
-- Go to the rail (Parley) → CHA DC 12 diplomatic resolution
-- Take the helm (Examine) → INT DC 11 document analysis
-- Go below (Fight) → immediate battle
-
-All three paths yield the same item (Letter of Marque, Keel). The **meaning** of the item differs by path:
-- Parley: Keel gave it willingly — she wanted to be bought off
-- Examine: Keel threw it across the gap — the test was whether you'd read the date
-- Fight: Recovered from the chart room — the Commission was already void when she presented it
-
-The item is identical. The player's understanding of Keel is not.
-
-**The unresolved thread.**  
-Keel's motivation is never explained. She was "testing the eastern run for something." The Eastern Reach seal connects to Aldous (Wren-Pembury's false estate). What Keel was looking for — and who sent her — is left as an open thread. This is deliberate per REF-02: "the twist should contradict the initial NPC's belief, not contradict facts." Keel's belief about the Star's cargo is left intact. The player doesn't know if she found what she was looking for.
-
-### 3.7 §SPARK-02 — The Dunfall Harmony Chain (DF)
-
-**Source transcript:** Improv in D&D (Flutes Loot) — second application of the §SPARK template.
-
-**Design decision: second instance proves the template is repeatable.**  
-§SPARK-01 used Tilbury/DK as the location, Inspector Wren-Pembury as the formal NPC, and the cat → mouse → tick → parasite → harmony sequence. §SPARK-02 uses Dunfall/DF, Commissioner Halvard Fehn, and a cat → mouse → drift spore → harmony sequence. Different creatures, different location, same underlying arc shape: unlikely kindness chain, contrasting energy NPCs, token objects created and destroyed.
-
-**The four-token vignette chain:**
-
-| Token | Created | Destroyed | Meaning |
-|-------|---------|-----------|---------|
-| Bram's Fish Scale | WIS DC 11 pass | storyRender button (Bram eats it as endorsement) | Act 2: formal acknowledgment |
-| Oat's Harbor Bead | storyRender button (Follow Bram) | INT DC 12 onPass (used as specimen holder) | Act 3: acknowledged alliance |
-| Dunfall Drift Spore | INT DC 12 pass | storyRender button (Fehn opens vial as proof) | Act 4: chemical key to Fehn's identity |
-| Highland Letter of Clearance | storyRender button (Fehn confrontation) | — (kept) | Act 5: real credential, real name |
-
-**The French vignette structure:** Objects enter and leave as physical markers of emotional state. The Bram's Fish Scale exists only for the time between Act 2 and Act 3 — it represents the endorsement period. Once Bram has led you to Oat, it has done its work and is consumed. The vignette structure ensures the player's inventory is a timeline of the arc, not a permanent record of it.
-
-**Halvard Fehn's three inconsistencies:**  
-1. The Western Revenue Office, Third Circuit — closed 13 years ago (seal on his appointment certificate)
-2. The Highland Fleet his grandfather commanded — no Highland Fleet exists
-3. His uncle's rank of Commodore-Provisional in the Northern Admiralty — no Northern Admiralty exists, rank doesn't exist
-
-Each inconsistency is introduced in NPC dialogue during the arc, attached to the moment when the player makes progress (befriending Bram, meeting Oat, identifying the drift spore). The inconsistencies are not accusations — they arrive as non-sequiturs from Fehn himself, who is trying to maintain all three identities simultaneously while standing in a drift spore radius that makes him slightly too agreeable to keep the performance tight.
-
-**The drift spore as narrative device:**  
-The spore is not a villain's tool and not a McGuffin. It is context. Fehn's inconsistencies are not caused by the spore — he would have them anyway. The spore makes him *willing to let them show*. This is the difference between coercion and gentling. The spore does not make him confess; it makes him stop performing. The confrontation works because the player collected the evidence, not because a chemical did the work for them.
-
-**Arc threading: §SPARK-02 → §PORT-01.**  
-Halvard Jesst's real credential (Ninth Circuit seal) is valid at Saltwick. This gives the Highland Letter of Clearance a mechanical use beyond the Dunfall arc — it functions as an alternative credential to pirateCrew_allied and aldousConfessed for SK access. The arc threading now has three credential paths to Saltwick instead of two.
-
-### 3.8 §WHODUNIT-01 — The Bilge Mystery (MS)
-
-**Source transcript:** Ben Byrne monster hunt 4-phase template, applied to a closed-space ship setting.
-
-**Design decision: no new node required.**  
-§HUNT-01 and §HUNT-02 each required a new confrontation node (LD and BN) gated by investigation. §WHODUNIT-01 required no new node because MS had no free exits left (N: SB, S: SK, E: OW, W: DK all occupied) and because all four phases can be implemented within a single node via storyRender progression. The battle trigger fires via `storyPreBattle(MS_BILGE)` without a geographic move.
-
-**The wrong theory source is social, not institutional:**  
-In §HUNT-01, the wrong theory came from a religious institution (the Guild's spirit offerings). In §HUNT-02, from a civic institution (road wardens). In §WHODUNIT-01, from an individual (the cook). The cook's theory is circumstantially coherent — the passenger came from Saltwick, nobody from Saltwick uses their real name. The theory is wrong for a reason that the cook cannot perceive: the creature entered not through a person but through the hull repair window.
-
-**The two investigation skill checks:**
-
-| Check | Stat | DC | Evidence found | Wrong theory addressed |
-|-------|------|-----|----------------|----------------------|
-| The Port Drain | INT Investigation | 12 | Sea spawn scale on port grate | Cook's theory wrong — passenger in cabin |
-| What Delt Remembers | WIS Insight | 13 | Cold from below; "reading sound" = spawn moving charts | Confirms creature, not person |
-
-Investigation 1 (physical evidence) corrects the theory; Investigation 2 (witness memory) confirms the creature's nature and closes the remaining ambiguity about Delt's condition.
-
-**The passenger Ord as structural element:**  
-Ord has no dialogue and never acts. He is a named absence — someone who came from Saltwick (therefore suspicious to the cook), stayed in his cabin (therefore irrelevant to the investigation), and asked for the tallow cask afterward (therefore humanizing). The cook has never apologized. Ord has not asked for one. This is the arc's final beat, delivered in the `onComplete` narrative rather than in any interactive element.
-
-**Connection to the hull repair:**  
-The sea spawn entered during the Saltwick hull repair (quest_sk_hull). This creates a consequential relationship between arcs: the repair fixed a structural problem and created a temporal access window that the creature used. Players who repaired the hull at Saltwick and then return to MS encounter a direct consequence of that decision. Players who did not repair the hull encounter the same mystery but without the causal explanation — the knowledge entry still names the mechanism.
-
-### 3.9 §ALCHEMY-01 — The Personal Legend (HL/MI/MS/IS/ML/AE)
-
-**Source inspiration:** Paulo Coelho's *The Alchemist* + Toltec wisdom (Don Miguel Ruiz, *The Four Agreements*). The "Philosophy Stoner" — an escortee who is simultaneously earnest, profound, and slightly absurd about everything.
-
-**Design decision: world-spanning escort with zero new nodes.**  
-§ALCHEMY-01 threads through six existing nodes (HL, MI, MS, IS, ML, AE) that span roughly four thousand miles of the game world. No new nodes were required. This is the template's defining structural characteristic: the arc is long in narrative distance but free in geographic cost. The escort is implemented as a storyRender block at each node that activates when the correct prior flag is set and the player has not yet reached the next beat.
-
-**The Four Agreements threading:**
-
-| Beat | Node | Toltec agreement | Implementation |
-|------|------|-----------------|----------------|
-| Hook | HL | Be impeccable with your word | Grandmother gave coordinates, not metaphor |
-| Noon plain | MI | Don't take anything personally | Midlands merchant dismisses Roen; Roen observes it passes |
-| Ship | MS | Don't make assumptions | Roen assumes the sea will be hostile; it is not |
-| Oracle | IS | — (skill check) | CHA DC 11 Persuasion: convince the fortune teller to read |
-| Malta crisis | ML | Always do your best | WIS DC 12 Insight: Roen wants to give up; the fisherman's lesson applies |
-| Alchemist | AE | All four, in synthesis | The stone was the finder all along |
-
-Each wisdom beat is attached to a real scene at a real node — the agreements are never stated directly by Roen or the game text, only enacted. A player who knows Ruiz will recognize them. A player who doesn't gets a philosophical travel companion who notices things.
-
-**The two-token structure:**
-
-| Token | Created | Destroyed | Meaning |
-|-------|---------|-----------|---------|
-| Shepherd's Fortune Slip | HL hook (storyRender button) | AE alchemist beat (storyRender button) | The journey record; the fortune teller's slip; exists only while searching |
-| Loch Gold Flake | HL return (storyRender button) | — (permanent) | The grandmother was using geographic coordinates; the gold was always there |
-
-The Shepherd's Fortune Slip is held for five nodes and six stages before being relinquished. This is the longest token arc in the game — it outlasts Bram's Fish Scale (2 stages), the Oat's Harbor Bead (2 stages), and the Letter of Marque (1 stage). Its persistence is deliberate: Roen carries it as proof that the journey was real, not as a claim that the prophecy is true.
-
-**The bioluminescence resolution:**  
-The Philosophy Stone (Roen's grandmother's stone) is a loch-shore fragment of the Warmth Eel bioluminescent colony — the same organism family as Clot's Glow (§SPARK-01) and the Dunfall Drift Spore (§SPARK-02). The colony concentrates trace gold from highland runoff through its biological process. When Roen drops the stone into the loch, the colony below responds: the Loch Gold Flake surfaces. This makes three arcs share a single underlying organism: §SPARK-01 (Clot's Glow on the Tilbury Star), §SPARK-02 (Dunfall Drift Spore at DF), and §ALCHEMY-01 (grandmother's finder stone, Highland loch). A player who reads all three knowledge entries can reconstruct the organism's range.
-
-**The grandmother's instruction was literal.**  
-"The gold is in the loch" is the hook. The fortune teller at IS confirmed it. Roen traveled four thousand miles expecting metaphor, preparing to be disappointed by literalism. The arc's resolution is that the grandmother was using the stone as a geographic locator — a finder's device for a bioluminescent colony that concentrates gold. She spoke literally, precisely, and with complete accuracy. Roen says "That's very annoying" with complete warmth. This is the correct ending.
-
-**No new nodes, one new NPC, two items.**  
-§ALCHEMY-01 adds Roen (shepherd, ~40, earnest, mildly ridiculous) and two items to the world. The arc threads through the heaviest-traveled nodes in the game without adding geographic weight. The design lesson: an escort arc does not need its own geography — it borrows the world's.
+**§ALCHEMY-01 — a world-spanning arc with zero new nodes.** Roen the shepherd crosses six existing nodes and roughly four thousand miles. The Four Agreements are never stated, only enacted — a player who knows Ruiz recognises them; a player who doesn't gets a travel companion who notices things. The resolution inverts every other template: **the prophecy is simply true.** The grandmother's stone is a finder for a bioluminescent colony that concentrates highland gold, and *"the gold is in the loch"* was a coordinate, not a metaphor. Roen says *"That's very annoying"* with complete warmth. **Playability contribution:** proof that a long arc needs no geography of its own — it borrows the world's, and the whole colony threads three arcs into one organism (Clot's Glow → Dunfall Drift Spore → the Philosophy Stone).
 
 ---
 
-## IV. Arc Threading Map
+## IV. Spec → Shipped Delta Table
 
-The naval campaign layer is not a set of independent arcs — they form a thread chain:
+| # | Spec claim | HEAD | Verdict |
+|---|---|---|---|
+| 1 | 7 new nodes, `num` 138–144 | all 7 live, `num`/terrain/label/act exact | ✅ **SHIPPED** |
+| 2 | ~34 quests across 9 arcs | **33** `QUEST_DB` entries, all UQF-1.0 | ✅ **SHIPPED** |
+| 3 | 13 items, listed sell values | 13/13, all icons + 5/5 sells exact | ✅ **SHIPPED** |
+| 4 | 16 skill checks with named DCs | 14 authored; **14/14 stat+skill+DC exact** | ✅ **SHIPPED** |
+| 5 | 11 NPCs with named flags | 11/11 live; 29/29 flags in `_S_DEFAULTS()` | ✅ **SHIPPED** |
+| 6 | Node codes OW/SK/SB/DF/LD/BN + 15 hosts | 0/22 resolve as written; **22/22 resolve by `num`+label** | ⚠️ **RENAMED** (§WALK/§NAV-01) |
+| 7 | *"MS now has three exits: W/E/S/N"* | compass fields: **0 occurrences** in `NODE_MAP` | ❌ **RETIRED** — the mover walks cell-by-cell |
+| 8 | §3.2 *"storyMove gate on LN→LD"* | `storyMove` does not exist; mover refuses only `oob`/`impassable` | ❌ **NOW FORBIDDEN** (invariant #1) |
+| 9 | §3.5 *"storyMove gate at HL→DF checks `defeatedBattles['HL']`"* | same | ❌ **NOW FORBIDDEN** (invariant #1) |
+| 10 | *"Running total: ~151 live"* quests | 2,853 at HEAD; **402 top-level `QUEST_DB` entries at `e339aeb`** | ⚠️ **UNVERIFIABLE** — see §VI-D |
+| 11 | Hull repair costs 200gp at Saltwick | `kind:'cost', gold:200@33924` (*"Dorit looks at your coin. 'Short. Come back when the purse is right.'"*) | ✅ **SHIPPED** — and now a `cost` leaf (§VM-01-G4a) |
+| 12 | §HUNT-01 investigation gates the den | gate is *quest-side* only; the den node is walk-open | ✅ **RE-EXPRESSED**, invariant-correct |
+| 13 | REF-03 ⚙️ boarding combat | 0 hits | ❌ **NOT SHIPPED** (kept) |
+| 14 | REF-03 ⚙️ `travelCompanion` state system | **0 occurrences** | ❌ **NOT SHIPPED** (kept) |
+| 15 | REF-03 ⚙️ charter a ship at DK | 0 hits | ❌ **NOT SHIPPED** (kept) |
+| 16 | REF-04 ⚙️ investigation lowers confrontation DC | no DC modifier anywhere in §HUNT | ❌ **NOT SHIPPED** (kept) |
+| 17 | REF-04 ⚙️ spare-the-monster option | 0 hits | ❌ **NOT SHIPPED** (kept) |
+| 18 | The layer is playable | **13 of 33 quests unreachable** | ❌ **ENGINE-ROT** → §V |
 
-```
-§SPARK-01 (DK/MS)
-   → aldousConfessed, pirateCrew_allied, Letter of True Passage
-   
-§SPARK-01 SEA (OW)
-   → pirateCrew_allied = true (Joint Pirate Debt Note)
-   → Saltwick First Mate allied
-   
-§PORT-01 (SK)
-   → credential check: pirateCrew_allied OR aldousConfessed
-   → quest_sk_02: "Pembury" address (silent callback to §SPARK-01)
-   → quest_sk_hull: hull repair uses Dunfall timber (silent callback to §PORT-02)
-   
-§NAVAL-01 (SB)
-   → Eastern Reach seal connects to §SPARK-01 (Aldous's estate claim)
-   → Letter of Marque: valid at three eastern ports (expands navigation options)
-   → Keel's test: unresolved thread
-   
-§PORT-02 (DF)
-   → gated by §HL kelpie battle
-   → Highland timber → Saltwick dry dock (connects to §PORT-01)
-   → Dunfall opens EH epic battleground approach
-   
-§HUNT-01 (LD)
-   → self-contained; anchored at lake area
-   → Drowned Compass: Guild captain's name (offline consequence)
-   
-§HUNT-02 (BN)
-   → uses Tessie's existing J1 dialogue (retroactive worldbuilding)
-   → Night Hag: relay road open, downstream travel facilitated
-```
-
-```
-§SPARK-02 (DF)
-   → dunfallHarmonyComplete, Highland Letter of Clearance
-   → fehnConfessed → Halvard Jesst identified (Ninth Circuit seal)
-   → Letter of Clearance valid at SK: third credential path to Saltwick
-   
-§WHODUNIT-01 (MS)
-   → activateCond: saltwickAccessed (passenger came from Saltwick)
-   → whodunit2Solved: bilge cleared, port drain sealed
-   → Sea Spawn Scale Fragment: evidence of hull breach
-   → causal chain: quest_sk_hull (hull repair at SK) → bilge access window → sea spawn entry
-
-§ALCHEMY-01 (HL → MI → MS → IS → ML → AE → HL)
-   → activateCond: () => true (always available at HL)
-   → roenMet → roenMidlandsWisdom → roenAtSea → roenOracleRead → roenMaltaCrisis → roenAlchemistMet → personalLegendComplete
-   → Shepherd's Fortune Slip: created at HL, destroyed at AE
-   → Loch Gold Flake: created on HL return; bioluminescent colony connection to §SPARK-01 and §SPARK-02
-   → philosophy stone = same organism as Clot's Glow (§SPARK-01) and Dunfall Drift Spore (§SPARK-02)
-```
-
-The chain reads: §SPARK-01 → SEA → PORT-01 → NAVAL-01 (all on the Tilbury/MS hub). §PORT-02 and §HUNT arcs are spurs from existing combat nodes. §SPARK-02 runs at DF and feeds back into SK (new third credential path). §WHODUNIT-01 runs at MS and requires SK to be completed first (saltwickAccessed as activateCond). The hub-and-spoke structure allows any arc to be completed without the others, but completing them in the chain order adds meaning at each step.
+**Recommendation register: 0 of 5 ⚙️ items shipped in 76 days.** All five needed a *new system* rather than new data, and the report said so at the time. That is a correct triage surviving unrevised — the deferral held.
 
 ---
 
-## V. Design Decisions That Could Have Gone Differently
+## V. The Finding — a 100 % census over a 39 % dead layer
 
-### 5.1 OW between MS and LW vs. as an MS spur
+### 5.1 Mechanism
 
-OW was inserted between MS and LW on the main sea route (MS.E was updated from 'LW' to 'OW'). The alternative was to make OW accessible as MS.S or as a junction spur.
+`const CELL_GRID = (() => {@9852` maps every cell to an **array** of node codes, built in `NODE_MAP` declaration order; `const cellCode   = (key) => CELL_GRID[key]?.[0] || null;@9861` returns `list[0]`, and `S_story.currentCode` is assigned at exactly two sites, both yielding the primary. `function _uqfActivateAtNode(node) {@30137` keys on `node.code`. **A non-primary node's quests never activate by arrival, its text never renders, its battle never fires, and `if (g.atNode && st.currentCode !== g.atNode) return false;@22124` makes any `atNode` completion there impossible.**
 
-The inline insertion was correct because the Warmth Calm is described as blocking the trade lane — "the sea goes calm between Tilbury and the lake approach." An MS.E traversal that now requires resolving OW before reaching LW correctly models the blockage as a travel problem. A spur would have made it optional and ignored.
+Four of this layer's host nodes are non-primary:
 
-### 5.2 Saltwick as MS.S vs. as a separate sea approach
+| Node | Cell | Occupants | Primary | Cost |
+|---|---|---|---|---|
+| **`SEN`** *Aboard the Tilbury Star* | 18,180 | 3 (`LCY` `STN` `SEN`) | `LCY` | **8 quests**, `battle:{label:'Pirate ×3 + Ghost'}`, `loot:'Cargo Manifest'`, `npc:'Ship Captain'`, and `sleep:true, sleepCost:3` |
+| **`HFT`** *South Shore — Fishermen's Village* | 10,191 | 6 | `ALF` | 1 quest + the §HUNT-01 hook block |
+| **`VAW`** *North Shore Den* | 10,191 | 6 | `ALF` | 1 quest + the drowner den |
+| **`ATH`** *Athens — The Market Hill* | 32,203 | 17 | `SEA` | 4 quests |
 
-SK was placed at MS.S rather than as a junction off OC or BE. This keeps Saltwick on the Tilbury Star's route — it's a port the Star knows about, approaches from the south side, and has been avoiding the official inspection records for eleven years. The geography is consistent with the text.
+`SEN` is the layer's hub. It is also a `sleep:true` node, therefore a **Warrant's Board host that no player can ever stand on** (`function _boardHost(node)@37038`).
 
-### 5.3 The Intercept at MS.N vs. between MS and OW
+Cell **10,191** deserves its own note: it holds the entire lake sub-map — `ALF` *North Shore Path*, `HVG` *East Coast — Upper Shore*, `HFT` *South Shore*, `VAW` *North Shore Den* — **plus two Volsunga-saga halls from an unrelated track**, `ODD` *Oddrun's Estate* and `SIG` *Siggeir's Hall*. **5 of 6 stranded, across 2 independent tracks.** This is the §DOC-02x "score by cell, not by arc" result reproduced in a second cell.
 
-SB was placed at MS.N (above MS, three miles out) rather than inserting between MS.E and OW. The reason: the Intercept is an optional encounter, not a required crossing. Inserting it between MS and OW would make it mandatory for all sea routes. Placing it at MS.N makes it accessible to players who explore north of the Star, while keeping the MS→OW→LW route unblocked.
+### 5.2 Closure over the gate flags
 
-### 5.4 Dunfall between HL and EH vs. as HL spur
+The cell map alone would strand 9 quests. The **flag closure** takes it to 13, because three entry flags have exactly one writer each and each writer sits inside a blocked node's `storyRender` block:
 
-DF was inserted between HL.W and EH (updating both HL.W and EH.E) rather than adding it as a diagonal connection off HL. The inline insertion was correct because it creates a natural geographic sequence: Highland road → village at the loch edge → the loch's deep waters. A diagonal spur would have broken the geographic logic.
+| Flag | Sole writer | Blocked by | Kills |
+|---|---|---|---|
+| `huntHookReceived` | `if (node.code === 'HFT' && !S_story.huntHookReceived) {@33224` | `HFT` non-primary | `quest_hunt_01`'s completion → `_02` → `_03` → `_04` — **§HUNT-01, 4 of 4** *(§DOC-02r first)* |
+| `whodunit2HookReceived` | inside `if (node.code === 'SEN' && S_story.saltwickAccessed) {@33622` | `SEN` non-primary | `quest_bilge_01`'s completion → `_02` → `_03` → `_04` — **§WHODUNIT-01, 4 of 4** *(§DOC-02r first)* |
+| `roenAtSea` | `if (node.code === 'SEN' && S_story.roenMidlandsWisdom && !S_story.roenAtSea) {@33380` | `SEN` non-primary | `quest_alch_03`'s completion → `_04` → `_05` → `_06` → `_07` — **§ALCHEMY-01, 5 of 7** — **NEW** |
 
-### 5.5 Night Hag at BN vs. at an existing node
+(`roenAlchemistMet`, written at `if (node.code === 'ATH' && S_story.roenMaltaCrisis && !S_story.roenAlchemistMet) {@33403`, is blocked the same way — but the arc is already dead two beats upstream, so `ATH` is a *redundant* casualty.)
 
-§HUNT-02 uses a new node (BN) rather than retrofitting an existing node with a monster hunt overlay. The reason: the §HUNT template requires the confrontation node to be gated (accessible only after investigation). Existing nodes with null exits (J1.N) provide the cleanest gate point without modifying main-route traversal.
+**Blast radius, per arc:** §HUNT-01 loses the Elder Fisherwoman's ninety-one years of lake reading, the Drowned Compass, the drowner den and the Guild's two-season theory correction. §WHODUNIT-01 loses the entire template's only instance — the port drain, Delt's memory, the bilge fight, and the cook who never apologises. §ALCHEMY-01 stops at the Midlands and never reaches the oracle, the Malta crisis, the Alchemist, or the Loch Gold Flake — *so the one arc built to prove that the grandmother spoke literally never gets to prove it.*
 
----
+### 5.3 The §BOARD-01-FU6 diamond loses its apex
 
-## VI. What REF-03 Still Requires
+`quest_hunt_01` is not an ordinary casualty: its `onComplete` carries
+`{ kind:'unlock', quests:['sq_2','quest_hunt2_01'] }@12902` — the referral graph's **one geo-spanning diamond**, forking to a highland kelpie and a relay-road hag and reconverging on the reopened harbour at `DNF`. Its completion requires `huntHookReceived`. **The apex can activate and can never complete, so the diamond's fork never fires.** Both arms remain independently reachable by arrival, so the *content* survives; what is lost is the Warrant reader's line that connects them — the sentence that turns two hunts into one pattern.
 
-| Item | Status | Notes |
-|------|--------|-------|
-| Travel problems (handcrafted) | ✅ Hull repair at SK | Storm damage → hull repair complete |
-| Ship-to-ship combat | ✅ §NAVAL-01 (SB) | 3-path crew role selection |
-| Boarding combat (two-gangplank) | ⚙️ Not implemented | Requires dedicated combat map node |
-| 3–5 interesting ports | ✅ Saltwick + Dunfall added | Total: Tilbury, LH, Saltwick, Dunfall, Malta, IS = 6 ports |
-| NPCs traveling with party | ⚙️ Brannick as ship NPC | Requires `travelCompanion` state system |
-| Charter a ship at DK | ⚙️ Not implemented | Fast travel; requires new UI element or junction trigger |
+### 5.4 What survives, and why — the closure in the positive direction
 
-The REF-03 "2 more distinct ports" item is now fully satisfied (Saltwick + Dunfall). The two remaining ⚙️ items (boarding combat, charter a ship) require new systems rather than new nodes and are deferred.
+Two mechanisms rescue part of the layer, and both were found by looking for a *second route* before writing anything off:
 
----
+1. **The Warrant's Board pre-activates across the map.** `function _bountyPostable(q, node)@37150` requires only that the destination exist in `NODE_MAP` — **it never tests primacy** — and `_acceptBounty` fires the file's first live `unlock`. So `quest_sea_01` (gate `{}`, `xp:100` ≤ the Unknown tier's 250 cap) *is* postable, and its completion is `completion:{ atNode:'NWI' }` — a **primary** node. **§SPARK-01 SEA is fully playable, but only for a player who finds it on a board.**
+2. **The quest panel is not node-scoped.** `// ── QUESTS section (active quests at this node) ────@35545` is followed by `.filter(([, s]) => s === 'active')@35548` over the *whole* `S_story.quests` map, with no node filter. The Ceremonia roll card therefore renders for **any** active skill_check quest at **any** node. This is what makes board-accepted skill-check bounties completable at all — and it is a divergence between a comment and its code that nobody has recorded. → **§DX-02ah**.
 
-## VII. What REF-04 Still Requires
-
-| Item | Status | Notes |
-|------|--------|-------|
-| Wrong theory in setup | ✅ §HUNT-01 (spirit), §HUNT-02 (bandits) | Pattern established |
-| Investigation corrects theory | ✅ Both arcs | Skill check chain in both |
-| Confrontation rewarded by investigation | ⚙️ No DC reduction implemented | Investigating should lower confrontation DC |
-| Salvageable item + world change | ✅ Both arcs | Compass + Relay Token |
-| Spare the monster option | ⚙️ Not implemented | §HUNT-03+ should offer choice |
-
-The one missing mechanical piece from REF-04: the investigation should make the confrontation **easier**, not just unlockable. Currently the investigation gates access to the confrontation node but does not modify the monster's effective stats. A future implementation: if the player completes both investigation skill checks, add `storyPreBattle` advantage (or -2 to monster AC) as a flag check. This is a §HUNT-03 design requirement.
+Final tally: **17 quests live by walking · 3 live only via the board · 13 unreachable.**
 
 ---
 
-## VIII. NPC State Summary
+## VI. Secondary Findings
 
-| NPC | Node | New flags | Final state |
-|-----|------|-----------|-------------|
-| Redmast Quartermaster | OW | pirateCrew_allied, warmthEelEscorted | Allied; can be called in at SK |
-| Harbormaster Dorit | SK | saltwickAccessed, saltwickJobAccepted, shipRepaired | Allied; Pembury thread planted |
-| Mairén Fionn | DF | dunfallAccessed, dfBarterLearned | Allied; Dunfall market open |
-| Captain Vera Keel | SB | sbParleySucceeded / sbPapersRead / sbResolved | Resolved (all paths); Letter issued |
-| Elder Fisherwoman | LS | huntHookReceived, drownersDefeated | Allied; Guild theory corrected |
-| Tessie | J1 | huntHook2Received, hagDefeated2 | Relay road clear; route unobstructed |
-| Commissioner Halvard Fehn | DF | spark2HookReceived → fehnConfessed | Revealed as Halvard Jesst; Letter of Clearance issued |
-| The Cook | MS | whodunit2HookReceived (trigger) | Still wrong; has not apologized to Ord |
-| Crewman Delt | MS | whodunit2WitnessRead | Recovered; proximity sedation dispersed |
-| Passenger Ord | MS | (structural element only) | Owed an apology; will not receive one |
-| Roen | HL→MI→MS→IS→ML→AE→HL | roenMet → personalLegendComplete | Journey complete; Philosophy Stone dropped; Loch Gold Flake found; "That's very annoying" |
+**A. Two live double-pay sites (→ §DX-02ai).** Where a `storyRender` button writes the flag a quest completes on, both sides can pay. This layer has exactly two, and both are on **reachable** nodes:
 
----
+- `quest_sk_hull` — the MME button grants `S_story.xp = (S_story.xp||0) + 200;@33928` and the toast says *"-200gp. +200 XP"*; `storyRender(node)` then completes the quest, whose `onComplete` carries `{ kind:'reward', xp:200 }`. **400 XP paid, 200 announced.**
+- `quest_spark2_05` — the DNF Fehn-confrontation button grants +400 gold and +400 XP; the quest then pays `xpAward:600` through `if (q.type === 'side' && q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }@30202`. **1,000 XP paid, 400 announced.**
 
-## IX. §SPARK Template — Comparative Anatomy
+The other nine button/quest pairs in this layer are clean — payment sits on exactly one side each. These two are the same class as the four fixed by `3338def` (§SPARK-01-FU / §LXX-01-FU) and survived that sweep because it was scoped to the harbour and §LXX stacks.
 
-Two instances of the §SPARK template now exist. Their shared structure and divergences:
+**B. Two specified movement gates are now banned designs.** §3.2 and §3.5 both specify a `storyMove` refusal — *"The lair (LD) is not accessible until `lakeLairLocated` is set"* and *"The `storyMove` gate at HL→DF checks this flag."* Invariant #1 now forbids any quest state from refusing a step, and `storyMove` no longer exists; the mover refuses for exactly two reasons, `oob` and `impassable`. **Both intents survived the ban** — the investigation still gates the *mission*, never the road. This is §DOC-02c's "specified design is now FORBIDDEN, not merely absent" class, with the unusual outcome that the re-expression is faithful.
 
-| Feature | §SPARK-01 (DK/MS/OW) | §SPARK-02 (DF) |
-|---------|----------------------|----------------|
-| Formal NPC | Inspector Aldous Wren-Pembury | Commissioner Halvard Fehn |
-| NPC's real identity | Aldous, fencer, witness protection | Halvard Jesst, harbor informant |
-| Creature chain | Cat → Mouse → Tick → Parasite | Cat → Mouse → Drift Spore |
-| Chemistry link | Clot's Glow → Warmth Eel | Dunfall Drift Spore (same family) |
-| Token chain length | 3 (Writ, Trust, Bead) | 4 (Scale, Bead, Spore, Letter) |
-| Final item | Letter of True Passage | Highland Letter of Clearance |
-| Arc location | City hub (DK) + ship (MS) | Port town (DF) |
-| Threading | SK access via aldousConfessed | SK third credential via Jesst seal |
-| Inconsistency trigger | Writ from Saltwick, naval family, estate | Revenue office, Highland Fleet, Northern Admiralty |
+**C. `SEN`'s stranding is wider than this layer.** Its 8 `activateNode:'SEN'` quests include `quest_spark_03` and `quest_spark_04` — the §SPARK-01 cat→mouse→tick→parasite beats aboard the Star — so the parent arc loses two beats to the same cell. `STN`, the Map Shop (§AUDIT-03u's *"forty-two nodes"* string), is the third occupant of the same cell and equally unreachable.
 
-The template is now proven as repeatable. Both instances are self-contained but thread into the same SK credential system. A third instance (§SPARK-03) at a future location would follow the same shape: a formal NPC with contradicting identities, a creature kindness chain, 3–4 token objects created and destroyed, and a final credential item with downstream mechanical use.
-
-## X. §WHODUNIT Template — First Instance
-
-§WHODUNIT-01 establishes a new template distinct from §HUNT and §SPARK:
-
-```
-§WHODUNIT template:
-  1. Missing item + dazed witness (hook: wrong theory from a credible NPC)
-  2. Physical evidence check (INT Investigation) → creature theory replaces person theory
-  3. Witness memory check (WIS Insight) → creature type confirmed, nature of harm clarified
-  4. Confrontation (storyPreBattle at existing node, no new node required)
-  5. Resolution: wrong-theory NPC retains wrong theory in social behavior (cook never apologizes)
-```
-
-The key design difference from §HUNT: §WHODUNIT confrontation does not require a gated node. The investigation phases and battle all happen at the same node (MS), with the battle triggered by a button in the storyRender block. This is appropriate for ship settings where "deeper into the ship" is not a geographic move but a vertical descent — modeled as a button trigger rather than a cardinal direction.
-
-The cook who doesn't apologize is load-bearing. In §HUNT, the wrong-theory NPC (Guild, road wardens) eventually updates their theory. The cook does not. This creates a persistent off-note in the resolution — the mystery is solved, the bilge is clear, but the social wrong has not been corrected. This is more realistic and more interesting than a clean bow.
+**D. The one figure that cannot be checked.** *"Running total: ~151 live"* has no reproducible referent: `QUEST_DB` at `e339aeb` holds **402** top-level entries (269 whose opening line carries an `id:`), and `wbapi-core` cannot parse the archive at all — the `◆◆◆ WORLDBUILDER:` section anchors post-date it, so `npm run stats` has no archive mode. Marked **UNVERIFIABLE**, not wrong. *(Instrument 14: never derive a delta from a count no existing gate produces.)*
 
 ---
 
-## XI. §ALCHEMY Template — First Instance
+## VII. Risk Register — Outcomes
 
-§ALCHEMY-01 establishes a fifth reusable template, distinct from §HUNT, §SPARK, §PORT, and §WHODUNIT:
+| Risk the report filed | Outcome |
+|---|---|
+| Five templates might not be repeatable | ✅ Held — §SPARK reached 2 instances, §HUNT 2, §PORT 2 |
+| Boarding combat needs a dedicated node | ⚠️ Still true; **still not built** |
+| `travelCompanion` needs a state system | ⚠️ Still true; **0 occurrences** |
+| Keel's motive left deliberately open | ✅ Still open — `sbResolved`, no follow-up authored |
+| Arcs must be completable independently | ❌ **Broke, but not the way the author feared** — not through coupling, through geography |
 
-```
-§ALCHEMY template:
-  1. Hook: escortee meets player at home location with a received prophecy
-     → creates Token 1 (the prophecy record; temporary)
-  2. Journey beats: wisdom observation at each node (no skill checks, just flavor + state flag)
-     → 2–3 nodes, one beat each, each anchored to a real scene
-  3. Oracle: skill check (CHA Persuasion) — receive confirmation or redirection
-  4. Crisis: skill check (WIS Insight) — escortee wants to abandon; player reads why they shouldn't
-  5. Alchemist: the synthesis beat — no new content, just recognition
-     → destroys Token 1
-  6. Return: treasure-was-home resolution
-     → creates Token 2 (permanent; physical evidence that the prophecy was literal)
-     → knowledge entry names the mechanism
-```
-
-**Key differences from other templates:**
-
-| Feature | §ALCHEMY | §SPARK | §HUNT | §WHODUNIT |
-|---------|----------|--------|-------|-----------|
-| New nodes required | 0 | 0–1 | 1–2 | 0 |
-| Wrong theory | None — prophecy is true | NPC identity | Creature type | Cargo thief |
-| Skill checks | 2 (CHA + WIS) | 2 (WIS + INT) | 2 (INT + WIS) | 2 (INT + WIS) |
-| Resolution | Literal geography | Identity revealed | Creature defeated | Creature defeated |
-| Companion NPC | Yes (travels with you) | No | No | No |
-| Token flow | 2 sequential | 3–4 chain | — | — |
-
-**The §ALCHEMY template runs against the player's expectation.** Every other resolution arc either corrects a wrong theory (§HUNT, §WHODUNIT) or reveals a hidden identity (§SPARK). §ALCHEMY presents a prophecy and then fulfills it literally. The Alchemist's irony is that the sophisticated thing (the journey, the wisdom, the crisis) turns out to have served a simple claim that was always true. The grandmother said the gold was in the loch. It was. The journey was necessary not to find the gold but to understand how to surface it.
-
-**The Philosophy Stoner tone:**  
-Roen applies wisdom frameworks to mundane situations with complete sincerity. He is not mocking the frameworks. He is not a comic-relief character. He genuinely believes that understanding why the Midlands merchant dismissed him without taking it personally is a useful exercise in self-knowledge, and he is correct. The absurdity is not that he is wrong — it is that he is right at the wrong scale, in the wrong register, with complete earnestness. This creates a companion who is both annoying and useful, which is the correct companion energy for a quest about learning to value what you already have.
+**The risk nobody filed is the one that fired.** Every risk in the register is about *design coupling*: will the arcs depend on each other, will the templates generalise, will the threading make any single arc unplayable alone. The threading is fine — §HUNT-02, §PORT-01/02, §NAVAL-01 and §SPARK-02 are all completable today. What killed 39 % of the layer is that a world-coordinate migration two months later collapsed four host nodes into cells they no longer own. *A design review can only file risks about the thing it is reviewing, and the danger came from the coordinate system underneath it.*
 
 ---
 
-## XII. Conclusion
+## VIII. Conclusion
 
-The naval campaign layer (Sessions 1–3) adds 7 nodes, ~34 quests, 13 items, and 9 new NPCs to *The Shattered Codex*. It is architecturally a single connected graph centered on the Tilbury Star (MS), with spurs to the Highland (DF), the relay road (BN), and the lake (LD). The arc threading runs from §SPARK-01 through §PORT-01 and §NAVAL-01 via the reputation/credential system, from §HL combat through §PORT-02 via the kelpie-gate, from §PORT-01 (hull repair) through §WHODUNIT-01 (bilge entry) via the repair access window, and from the Warmth Eel bioluminescent colony (§SPARK-01) through the Dunfall Drift Spore (§SPARK-02) to the Philosophy Stone (§ALCHEMY-01) — one organism, three arcs.
+**This is the highest-fidelity content report §DOC-02 has measured.** Roughly a hundred identifiers — quest ids, flags, item names, icons, sell values, fourteen stat/skill/DC triples, seven full node records with their bidirectional wiring — and **not one transcription error**, across 76 days, a total quest-format migration (§ARCH-01), and a 26×16 → 90×360 world-coordinate migration (§WALK/§NAV-01). It is instrument 12's positive case in its purest form: every table here was a **specification meant to be transcribed**, and the engine transcribed it.
 
-Five reusable templates have been established and instantiated:
-- **§SPARK** (improv friendship arc): 2 instances — DK/MS/OW and DF
-- **§HUNT** (4-phase monster hunt): 2 instances — LD and BN
-- **§PORT** (reputation-gated port culture): 2 instances — SK and DF
-- **§WHODUNIT** (closed-space mystery): 1 instance — MS bilge
-- **§ALCHEMY** (world-spanning escort; prophecy fulfilled literally): 1 instance — HL→MI→MS→IS→ML→AE→HL
+**And that is exactly why it matters that 13 of its 33 quests cannot be played.** No gate is red. `check:noderegs`, `check:nodeindex`, `check:dupkeys`, `check:npcregs` and `check:legacycodes` all exit 0 on this material; every node code resolves, every quest id resolves, every flag is declared, every skill check is well-formed. `quest.md` lists the arcs as live, and of `QUEST_DB` that is entirely true.
 
-Each template has a proven implementation. The next session can instantiate any of them at a new location with new characters without re-engineering the underlying quest architecture. §ALCHEMY-01 in particular demonstrates that a world-spanning arc requires no new nodes — six existing nodes at different geographic scales serve as waypoints for a companion whose journey crosses them all.
+**The one sentence worth keeping:** *the lab-report loop verifies that what was specced got written, and it has no instrument for whether what was written can be reached* (§DX-02w). This report is the cleanest demonstration the corpus has of both halves at once — a perfect spec, perfectly implemented, into a world that moved out from under four of its nodes.
 
-The three unresolved threads are Vera Keel (what she was testing, who sent her), the cook who did not apologize, and Keel's Eastern Reach connection to Aldous Wren-Pembury. All three are deliberate. None are documented here because none are yet decided.
+The cheapest repair is also the smallest: **`SEN`, `HFT`, `VAW` and `ATH` are `list[0]` of nothing.** Reordering four `NODE_MAP` declarations, or splitting four cells, restores three complete arcs, a template that currently has zero live instances, the Tilbury Star's rest node and pirate battle, and the referral graph's only diamond apex — without touching a single line of the content this report specified, because all of it is still there.
 
 ---
 
-**Filed:** 2026-05-28  
-**Retrospective multipass added:** 2026-05-28  
-**§ALCHEMY-01 added:** 2026-05-28  
-**Cross-references:** `plan.md §DESIGN-REF` · `plan.md §NAVAL-01` · `plan.md §PORT-01/02` · `plan.md §HUNT-01/02` · `plan.md §SPARK-02` · `quest.md §HUNT-01` · `lab-report-meta-process-loop-expansion.md §III`  
-**Nodes added:** OW(139), LD(140), BN(141), SK(142), DF(143), SB(144), DA3(138)  
-**Total live quests after this layer:** ~151
+## IX. Filed From This Verification
+
+- **§AUDIT-03x extended** — cell `10,191`: 6 nodes, 2 independent tracks, **5 stranded**; cell `18,180`: `SEN` + `STN` behind `LCY`. `SEN` carries 8 quests, a battle, loot, an NPC and `sleep:true`.
+- **§DX-02w confirmed, 4th independent reproduction** — the single-writer-inside-a-blocked-block shape, three instances in one layer.
+- **§DX-02ah (NEW, 🟡)** — the quest panel renders every active quest at every node, contradicting its own comment; load-bearing for §BOARD-01, and it makes §BOARD-01-FU3's leg-count label cosmetic for skill-check bounties.
+- **§DX-02ai (NEW, 🟢)** — two live double-pay sites, `quest_sk_hull` (400 XP paid / 200 announced) and `quest_spark2_05` (1,000 / 400).
+
+---
+
+**Cross-references:** `BACKLOG.md §AUDIT-03x` · `§DX-02w` · `§DX-02ah` · `§DX-02ai` · `quest.md §HUNT-01` · `lab-report-meta-process-loop-expansion.md §III` · `scripts/check-noderegs.js` (`SYNTHETIC_BATTLE_CODES`)
+**Ship commit:** `e339aeb` (2026-05-28) · **Verified:** 2026-08-12 at `2b6c33e`
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
