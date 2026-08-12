@@ -2,325 +2,294 @@
 
 # Lab Report — §DUNGEON-01: Ten Dungeon Themes Applied to The Shattered Codex
 
-**Layer:** 80  
-**Spec ref:** §DUNGEON-01 + §DUNGEON-02 in plan.md  
-**Date:** 2026-05-26  
-**Status:** PRE-IMPLEMENTATION LOCK — do not begin HTML edits until all 7 items below are resolved and signed off
+**Layer:** 80 · **Spec ref:** §DUNGEON-01 + §DUNGEON-02 (plan.md, now split into CONTRIBUTING.md + BACKLOG.md)
+**Written:** 2026-05-26 as a PRE-IMPLEMENTATION LOCK · **Verified against HEAD:** 2026-08-11 (§DOC-02k)
+
+> **Verification note.** This is a *pre-implementation* design lock. Everything below was written
+> before any HTML edit, so the delta table runs **both ways**: a spec line HEAD does not satisfy is
+> a live gap as often as it is a stale claim. Original claims that did not ship are marked
+> **NOT SHIPPED** and **kept** — a silently deleted claim reads as one that held.
 
 ---
 
-## 1. Priority Tier Assignment (P1 vs P3+)
+## Abstract
 
-### P1 — Low-hanging fruit, existing infrastructure only
+The ten themes were built. §DUNGEON-01 was closed in a later pass as *already shipped*, and this
+verification confirms that at the identifier level: **49 of 57 named identifiers resolve (86 %)**,
+and **all 26 fields of the §New State Fields Summary table shipped under their specified names, in
+the specified order, in one contiguous block** headed `// §DUNGEON-01: Ten Dungeon Themes@23157`.
+Both P3+ nodes deferred as "a later layer if needed" also shipped: `SZG:{ num:80@8811` (Scholar
+King's Workshop) and `LIM:{ num:81@8815` (Mimic Meadows).
 
-| Theme | §D01-# | Why P1 |
-|-------|--------|--------|
-| Themed Dungeon Doctrine | §D01-01 | Flavor sections in existing EB `storyRender()` — no new nodes, just `!defeatedBattles[ebCode]` gates |
-| CY Madness Gate + Hero Origin Reveal | §D01-07 | WIS save on first CY visit already follows `!visited['CY']` pattern; d10 table is flavor hcard only; 3 new state flags |
-| Codex Core Chamber (Loop Heart) | §D01-10 | Pre-boss Ceremonia Roll at CO node; `codexCoreChosen` flag + 3 outcome branches; uses existing `_rollCeremonia()` |
-| Prior Carrier NPC (text/state only) | §D01-03 | State flags `priorCarrierSeen`, `priorCarrierSpoke`; dialog tree in WM node's `storyRender()`; no new NPC profile needed |
-| Void Flux Chamber (state flag) | §D01-09 | `voidFluxActive` boolean inserted into combat loop pre-existing damage resolution; combat inversion table is a state-check wrapper |
+Three results are worth the reader's time. **(1)** The one state-field name that does not resolve
+is the one this document spells **two ways within itself**, and the engine followed the summary
+table rather than the prose list. **(2)** Two of the eight shipped five-act chains **die at Act III**
+— `quest_d0209` on a flag with zero writers, `quest_d0205` on a battle key that was repointed onto a
+node with no battle — and no CI gate can see either. **(3)** §3's Tribble lore revision is the only
+section HEAD **contradicts in its own player-facing text**: the decision it reverses was never
+implemented in the first place, and the content it deletes shipped anyway.
 
-### P2 — Moderate effort, no new nodes
-
-| Theme | §D01-# | Why P2 |
-|-------|--------|--------|
-| Codex Inquisitor at Weimar | §D01-02 | New QUEST_DB entries (§D02-02, 3-question chain); uses `activateCond` + `wmLowerArchiveUnlocked` gate |
-| Sacrifice Gates (3 toll gates) | §D01-04 | 3 separate QUEST_DB/trigger hooks at CO, WM, void node; `journalEntriesRead` removal logic is novel |
-| Void Fracture Maze | §D01-05 | `mazeSolvedChecks` counter + 3 Ceremonia Rolls; applied as EB approach room at BK; no new node |
-| Mimic Colony quest (no new node) | §D01-08 | `quest_mimic_colony` as a QUEST_DB entry; Tribble counter; Animal Handling checks via `_rollCeremonia()` |
-
-### P3+ — Require new nodes in WORLD_DB and node graph
-
-| Theme | §D01-# | Why P3+ |
-|-------|--------|---------|
-| Scholar King's Workshop (Node SW) | §D01-06 | New `WORLD_DB` entry `workshop`, new `NODE_MAP`/node connection from WM or CO; new node render function |
-| Node MM — Mimic Meadows | §D01-08 | New `WORLD_DB` entry `mimic_meadow`, new passive monster flags, node graph connection from NODE 33 |
-
-**Implementation order for this layer (Layer 80):**
-P1 themes first (§D01-07 CY madness, §D01-10 Codex Core, §D01-03 Prior Carrier text), then P2 (§D01-02 Inquisitor, §D01-08 colony quest), then P3+ (Node SW, Node MM) in a later layer if needed.
+**All 8 dead identifiers have 0 commits in the file's entire history** — every one **NEVER SHIPPED**,
+none retired. Nothing here is report-rot from the code moving.
 
 ---
 
-## 2. Node MM (Mimic Meadows) Data Shape
+## 1. Method
 
-### WORLD_DB entry (locked):
+| # | Instrument | Applied to |
+|---|---|---|
+| 1 | Batch `grep -c` of every named identifier before reading a line of prose | 57 identifiers, one command |
+| 2 | `git log -S "<sym>" -- roll2hit-v3.html` on every dead identifier | 8 symbols → separates RETIRED from NEVER SHIPPED |
+| 3 | Occurrence-site read (declaration · writer · reader) for every *live* field | 26 state fields |
+| 4 | Grep for the code that **reveals** a surface, never the surface's own id | the three §D01-04 gates, the CY panel |
+| 5 | Two-way delta table — HEAD is not the reference | §3 (below) |
 
-```js
-mimic_meadow: {
-  label: 'The Mimic Meadows',
-  icon: '🪣',
-  monsters: [
-    P.baby_chest_mimic,
-    P.bookshelf_mimic,
-    P.floor_mimic,
-    P.mother_mimic,
-  ],
-},
-```
+**Node-code caveat.** This report was written in the retired 26×16 coordinate space. **0 of its 8
+place codes are correct as written**, and one is worse than dead: `BK` still resolves, onto a
+different node (see Finding 2b). Mapping, for reading the sections below:
 
-### MONSTER_POOL entries (new, passive-flagged):
-
-```js
-baby_chest_mimic:  { name:'Baby Chest Mimic',  ac:10, hp:8,  atk:'+2', dmg:'1d4',  xp:25,  icon:'🪣', passive:true },
-bookshelf_mimic:   { name:'Bookshelf Mimic',    ac:12, hp:18, atk:'+3', dmg:'1d6',  xp:50,  icon:'📚', passive:true },
-floor_mimic:       { name:'Floor Mimic',        ac:13, hp:22, atk:'+4', dmg:'1d8',  xp:75,  icon:'🟫', passive:true },
-mother_mimic:      { name:'Mother Mimic',       ac:16, hp:60, atk:'+7', dmg:'2d8+3',xp:200, icon:'🗃', passive:true },
-```
-
-### `passive` flag implementation:
-
-The `passive` flag is new to MONSTER_POOL. In `storyEnter()` / the battle start function, before spawning a random encounter at Node MM, check: if the terrain is `mimic_meadow` AND all monsters in the pool have `passive:true`, do not auto-spawn a battle. The node is encounter-free by default. The Mother Mimic battle triggers only if `quest_mimic_colony` Act III condition fires (any mimic was attacked). Implementation: a `_isPassiveTerrain(terrain)` helper that returns `true` if all monsters in `WORLD_DB[terrain].monsters` have `passive:true` in MONSTER_POOL.
-
-### Node MM access:
-
-Node MM is not in the current NODE_MAP (Layer 80 scope defers new node graph wiring to P3+). For P1/P2 work, the Mimic Colony quest (`quest_mimic_colony`) and Tribble mechanic are implemented as if reachable; the actual node connection from NODE 33 is P3+ work. Quest activates via `activateNode:'MM'` once the node exists.
+| In this report | Live at HEAD | |
+|---|---|---|
+| `CY` Neon Undercity | `HKG` | `CO` Codex / Convergence → `TLS` |
+| `WM` Weimar archive | `NUE` | `AT` Abyssal Scriptorium → `RAI` |
+| `MM` Mimic Meadows | `LIM` | `SW` Scholar King's Workshop → `SZG` |
+| `DF` Defiant Fields | `ZRH` | `IN` inn → `TLL` |
+| `BK` maze approach | **`BK` — a *different* node** | `CY_VOID` battle key → live, unchanged |
 
 ---
 
-## 3. Tribble Lore Revision — Corruption, Not Multiplication
+## 2. As-built inventory
 
-**Decision: Tribbles do NOT multiply. They are void-corruption made soft.**
+**State (`_S_DEFAULTS()`).** 26 fields, one contiguous block, `// §DUNGEON-01: Ten Dungeon
+Themes@23157` through `scriptorium_approach_complete: false, mimicColonyEntered: false@23169`.
+Names, order and defaults match §New State Fields Summary exactly.
 
-The original plan.md spec described Tribbles as Star Trek-style harmless multipliers. This is revised. In The Shattered Codex, Tribbles are not cute nuisances — they are a visible symptom of the Void's corrupting influence on living matter. Small, warm, fuzzy things that emit a low bioluminescent pulse. They appear near areas of high Void pressure. The Mimic Meadows are full of them because mimics eat them — Tribbles are the primary food source that keeps the mimic colony passive and well-fed.
+**Nodes.** `SZG:{ num:80@8811` (`name:'workshop'`, act 7, `battle:null`, `sleep:true`,
+loot = Prototype Wand) · `LIM:{ num:81@8815` (`name:'mimic_meadow'`, act 6, `battle:null`,
+loot = Fuzzy Tribble). Terrain `mimic_meadow:  { label:@6365`, roster `[ P.mimic ]`.
 
-**The mimics are the ecosystem pressure that controls the Tribble population.** Without the mimics eating them, Tribbles would accumulate near Void-heavy nodes. The Mimic Meadows exist precisely because something keeps them contained there.
+**Quests.** Eight five-act chains as UQF-1.0 — `quest_d0201/d0204/d0205/d0206/d0207/d0208/d0209/d0210`
+`_a1`–`_a5`. §D02-02 (Inquisitor) and §D02-03 (Prior Carrier) shipped **not** as chains but as
+node-woven story-render surfaces, which is what §1 predicted for them.
 
-### What Tribbles ARE in this lore:
-
-- Corruption made tactile — the Void produces them as a byproduct of reality deteriorating at the edges
-- Warm and soft to the touch; they pulse faintly with bioluminescent void-light
-- Non-hostile, non-multiplying, non-dangerous in small numbers
-- The mimics find them irresistible and eat them; this is why the Mimic Meadows is peaceful
-- If the mimic colony is disturbed or the meadows are cleared, Tribble accumulation at CY and CO would increase — a consequence the game does not mechanically track but the lore holds
-
-### What Tribbles ARE NOT:
-
-- Multiplying creatures (no rest hook, no `tribbleCount` growth formula)
-- Cute pets or harmless collectibles
-- Star Trek references
-
-### State field: `tribbleCount: 0`
-
-`tribbleCount` is a simple acquisition counter — how many Tribbles the player is carrying. It does not grow on rest. It decreases if Tribbles are offered as mimic-bait (consumed on use). It has no upper bound in the mechanical sense, but flavor text changes above threshold.
-
-### Acquisition:
-
-Tribbles are dropped at Node MM from the floor_mimic Animal Handling pass and from Mimic's Cache. Each acquisition adds 1 to `tribbleCount`. They do not occupy inventory slots — `tribbleCount` is a bare counter.
-
-### Tribble-as-mimic-bait:
-
-At Node MM, offering a Tribble to a mimic before an Animal Handling check consumes 1 (`tribbleCount--`) and reduces the effective DC by 4. The mimic eats it. That is what they do with Tribbles.
-
-### Display thresholds (flavor text only, no mechanics):
-
-| `tribbleCount` | Flavor note |
-|---------------|-------------|
-| 1–2 | Carried without incident. They pulse faintly. |
-| 3–4 | Visible in your pack. People look at them. |
-| 5+ | CY node flavor line: *"The Tribbles in your pack pulse slightly faster here. The Void is close."* |
-
-### `tribbleOverflow` flag: REMOVED
-
-The previous spec had `tribbleOverflow: true` trigger a Brynn line ("Those things are on the ceiling"). This is cut — it was predicated on multiplication, which no longer happens. `tribbleOverflow` state field removed from `_S_DEFAULTS()`. The Brynn overflow line is removed from the IN node render block.
+**Hooks.** `function _nodeHookCodexCoreChamber@31810` · `function _nodeHookBirkaCyMadnessGate@32529`
+· the CY maintenance plate and NG+ line · the Prior Carrier three-branch block at `NUE` ·
+the Inquisitor button · `§D01-01: Themed Dungeon Doctrine@31417` as `NODE_PANELS` entries
+(IST/TBS/MCT) plus one inline at BK · three §D01-04 gates: `§D01-04: Class Gate@34716`,
+`§D01-04: Secret Gate@34767`, and the Memory Gate at `S_story.memorGateBypassUsed = true;@34984`.
 
 ---
 
-## 4. Madness Table: Flavor-Only Confirmed
+## 3. Spec → shipped delta table
 
-**Decision: No mechanical penalties. Flavor hcard only.**
+Both directions. **SHIPPED** = built as specified (node rename aside). **EXPANDED** = shipped
+larger than spec. **NOT SHIPPED** = specified, absent, 0 commits ever. **DEFECT** = shipped and
+broken. **CONTRADICTED** = HEAD does the opposite of the locked decision.
 
-The CY madness result (`cyMadnessTable`) is a single d10 roll producing one flavor string. It fires as an `_appendStoryHcard()` entry with actor `'VOID'` and is immediately done. It does not:
-- Reduce HP, AC, or any stat
-- Apply a condition item
-- Block any action
-- Persist beyond the hcard display
-
-The only persistent effect of failing the WIS DC 12 save is `cyMadnessRoll: 'fractured'` (vs `'clear'`). This flag affects NG+ flavor text only — on NG+, the WIS save does not fire and instead shows a one-time "you should not remember it" line.
-
-**Rationale:** §D01-07 spec text explicitly states "flavor only — no mechanical penalties past flavor." The madness table is atmospheric; adding penalties would punish players for visiting CY first, which contradicts the "no permanent fail" design principle.
-
----
-
-## 5. `voidFluxActive` Inversion Logic Location
-
-### Where to insert:
-
-The combat damage resolution lives in the main battle loop function (approximately lines 6500–7050). The attack/damage application happens in the `S.round` increment block. The `voidFluxActive` check must be inserted **after** the base damage roll and **before** HP is subtracted.
-
-**Specific insertion point:** After `const dmg = ...` (raw damage value) and before `S.player.hp -= dmg` (or equivalent enemy HP reduction). The check wraps the `dmg` value:
-
-```js
-// Void Flux inversion — fires only during voidFluxActive combat
-if (S_story.voidFluxActive) {
-  // check condition items on current attack for fire/heal/buff tags
-  if (activeCondition && activeCondition.element === 'fire') {
-    // fire → cold: same numeric damage, add slow label to hcard
-    conditionLabel = '[Void Flux] Fire → Cold';
-  }
-  // healing items handled in storyShortRest / potion use paths separately
-}
-```
-
-### How to avoid breaking existing condition item calculations:
-
-**Key constraint:** The condition item system (`S_story.condition`, applied as stat modifiers to attack/defense rolls) operates before damage values are resolved. `voidFluxActive` must not touch condition item stat math — it only modifies the narrative label and applies a secondary effect (slow, repositioning text) **after** all dice math is complete.
-
-**Implementation rule:** `voidFluxActive` only modifies hcard output labels and applies secondary flavor effects (e.g., tagging the next hcard as cold damage). It does NOT re-roll dice, modify `atk`, `ac`, or condition modifiers. This ensures zero interference with existing condition item calculations.
-
-**Healing inversion:** In the potion use path (`storyBuyPotion` result block and the `storyShortRest` item-use section), a single check:
-```js
-if (S_story.voidFluxActive) {
-  const inverDmg = Math.floor(healAmt * 0.5);
-  S_story.hp = Math.max(1, S_story.hp - inverDmg);
-  // hcard: "Heal → Hurt [Void Flux]"
-}
-```
-This is self-contained and does not affect any non-voidFlux heal paths.
+| # | § | Specified | At HEAD | Verdict |
+|---|---|---|---|---|
+| 1 | §1 P1 | §D01-01 flavor gated by `!defeatedBattles[ebCode]` | `NODE_PANELS`, `when:st => !st.defeatedBattles['IST']` | **SHIPPED**, gate shape byte-exact |
+| 2 | §1 P1 | §D01-07 CY WIS save on first visit, 3 new flags | `function _nodeHookBirkaCyMadnessGate@32529`, DC 12, d10 table, actor `'VOID'` | **SHIPPED** |
+| 3 | §1 P1 | gated by `!S_story.visited?.['CY']` | gated by `!S_story.cyMadnessRoll` | **EXPANDED** — self-latching, strictly better |
+| 4 | §1 P1 | §D01-10 pre-boss roll at CO, `codexCoreChosen` + 3 branches | `_nodeHookCodexCoreChamber@31810`, `shards >= 6`, 3 buttons | **SHIPPED** |
+| 5 | §1 P1 | §D01-03 Prior Carrier, text/state only, no NPC profile | 3 branches at `NUE`; 0 hits in `BIRKA_NPC_PROFILES`/`NPC_DIALOGUES` | **SHIPPED** exactly |
+| 6 | §1 P1 | §D01-09 `voidFluxActive` in the combat damage loop | 2 sites, **both healing**; no combat-loop site | **NOT SHIPPED** (damage half) |
+| 7 | §1 P2 | §D01-02 Inquisitor 3-question chain, `wmLowerArchiveUnlocked` gate | live, migrated to UQF-1.0 by §ARCH-01 W1l | **SHIPPED** |
+| 8 | §1 P2 | §D01-04 three toll gates | three: Class (surge charge), Secret (a typed secret), Memory (15 HP) | **SHIPPED** — see #9 |
+| 9 | §1 P2 | toll = `journalEntriesRead` **removal** ("novel") | 14 occurrences, **`push`/`includes` only, no removal anywhere** | **NOT SHIPPED** — three other currencies instead |
+| 10 | §1 P2 | §D01-05 maze, `mazeSolvedChecks` + 3 rolls at BK | 3 writers, **0 readers**; chain dead at Act III | **DEFECT** — Finding 2b |
+| 11 | §1 P2 | §D01-08 `quest_mimic_colony`, Animal Handling checks | shipped as `quest_d0208_a1`–`_a5`; the literal id has **0 commits ever** | **SHIPPED** under another id |
+| 12 | §1 P3+ | Node SW deferred to "a later layer if needed" | `SZG:{ num:80@8811` | **SHIPPED** |
+| 13 | §1 P3+ | Node MM deferred likewise | `LIM:{ num:81@8815` | **SHIPPED** |
+| 14 | §2 | 4 passive `MONSTER_POOL` mimics (baby/bookshelf/floor/mother) | **0 hits, 0 commits each**; terrain holds one `P.mimic` (ac 12 hp 58) | **NOT SHIPPED** |
+| 15 | §2 | `passive:true` flag + `_isPassiveTerrain(terrain)` helper | 0 hits, 0 commits | **NOT SHIPPED** |
+| 16 | §2 | the meadow is encounter-free by default | achieved — `battle:null` on the node | **SHIPPED**, different mechanism |
+| 17 | §2 | all four mimics appear at MM | as **prose** in the node text, verbatim in spirit | see Finding 3 |
+| 18 | §3 | Tribbles do **not** multiply; not Star Trek | item desc ×4: *"Multiplying."* / *"fairly certain it is multiplying"@21850* | **CONTRADICTED** |
+| 19 | §3 | `tribbleCount` is a bare counter, no inventory slots | counter **and** `S_story.inventory.push({name:'Fuzzy Tribble'…})` | **CONTRADICTED** |
+| 20 | §3 | decreases when spent as mimic-bait; bait reduces DC by 4 | 4 occurrences, **no decrement anywhere**; no bait surface | **NOT SHIPPED** |
+| 21 | §3 | thresholds 1–2 / 3–4 / 5+ with a CY flavour line | `>= 5` and `>= 10`, in the LIM panel only; no CY line | **NOT SHIPPED** as specified |
+| 22 | §3 | `tribbleOverflow` removed from `_S_DEFAULTS()` | **0 commits ever** — never there to remove | **NOT SHIPPED** (vacuous) |
+| 23 | §3 | the Brynn "on the ceiling" line is removed | ships at `_tc >= 10` | **CONTRADICTED** |
+| 24 | §4 | madness = flavour only, no HP/AC/condition/blocking | exact — one `_appendStoryHcard` and done | **SHIPPED** |
+| 25 | §4 | the *only* persistent effect is `cyMadnessRoll` | also persists `cyMadnessTable` (**0 readers**) | minor **DEFECT** |
+| 26 | §4 | on NG+ the save does not fire; a remembered line shows instead | the line ships; NG+ resets `cyMadnessRoll` → **both** fire | **partly NOT SHIPPED** |
+| 27 | §5 | insertion after the damage roll, before HP subtraction | no such site exists | **NOT SHIPPED** |
+| 28 | §5 | must not touch condition-item stat math | held — it never reaches that code | **SHIPPED** by omission |
+| 29 | §5 | healing inversion in `storyBuyPotion` / `storyShortRest` | in the **inventory Drink/Eat** path instead | **SHIPPED**, relocated |
+| 30 | §5 | `hp = max(1, hp - floor(heal*0.5))` — heal becomes damage | `hp + heal - half - half` → nets **+0/+1** | **DEFECT** — inversion is a nullification |
+| 31 | §6 | Prior Carrier distinct; no profile, no dialogue entry | 0 hits in either registry | **SHIPPED** exactly |
+| 32 | §6 | three branches Yes/No/Ignore; Ignore leaves `priorCarrierSpoke` false | all three; `priorCarrierSpoke = false` on Ignore | **SHIPPED** byte-exact |
+| 33 | §6 | Token is `flavor` type — unsellable, unusable | `type:'flavor', sell:0` (`Prior Carrier's Token@35026`) | **SHIPPED** byte-exact |
+| 34 | §7 | `sealedVoid: !!(defeatedBattles['CO'])` is the only CO check | `sealedVoid: !!(S_story.defeatedBattles && S_story.defeatedBattles['TLS'])@23658` | **SHIPPED** |
+| 35 | §7 | 12 conditions, 8 required | 12 keys, `>= 8` | **SHIPPED**, exact |
+| 36 | §7 | neither `catKingDefeated` nor `sevenShards` is checked | correct — `sevenShards` 0 hits; `catKingDefeated` live elsewhere, absent here | **claim VERIFIED** |
+| 37 | §7 | Destroy sets `defeatedBattles['CO']`, `codexCoreChosen`, `curseScore += 5` | all three, at `S_story.defeatedBattles['TLS'] = true;@31845` and the two lines under it | **SHIPPED** byte-exact |
+| 38 | §7 | Claim keeps the Auros fight | keeps it, **plus** CHA DC 17, surge +2, voidPressure +3 | **EXPANDED** |
+| 39 | §7 | Stabilize unchanged | unchanged | **SHIPPED** |
+| 40 | §Phases | `cyMadnessDecoded` | **0 commits ever**; `cyMaintenanceDecoded` is live | **Finding 1** |
+| 41 | §Phases | §D01-10/§D01-08 "uses existing `_rollCeremonia()`" | quest bits do; the two hand-built hooks roll `Math.random()` | **Finding 5** |
 
 ---
 
-## 6. Prior Carrier NPC — Separate Entity Confirmation
+## 4. Findings
 
-**The Prior Carrier is NOT an existing NPC and does NOT share state with the player.**
+### Finding 1 — the only field-name miss is this document disagreeing with itself
 
-### Confirmed distinct from existing cast:
+§Implementation Phases lists `cyMadnessDecoded`; the §New State Fields Summary table lists
+`cyMaintenanceDecoded`. **The engine followed the table** — `cyMaintenanceDecoded: false,
+cyOriginKnown: false@23167`, five occurrences, a writer and three readers — while
+`cyMadnessDecoded` has **0 commits in the file's entire history**.
 
-| Existing NPC | Why not the Prior Carrier |
-|-------------|--------------------------|
-| Sweelinck | Still active, historically placed; not imprisoned |
-| Froberger | Deceased (established lore); journal-only presence |
-| Brynn | Inn-keeper; no Weimar connection |
-| Yael | City watch; living, present-tense |
-| Couperin | Musician NPC; no Scholar King connection |
-| Pachelbel | Merchant/quest NPC; no Weimar lower archive presence |
+That is 26 of 26 table rows shipped and 26 of 27 prose-list rows, and it sharpens the corpus's
+current error predictor. The predictor is **copy-vs-illustration**, not table-vs-prose: this table
+is a *specification* meant to be transcribed, so it was, character for character; the phase list is
+*narrated implementation order*, so one name in it came from memory. A table composed to persuade
+fails; a table composed to be pasted does not.
 
-### Implementation:
+### Finding 2 — two of the eight chains die at Act III, for two unrelated reasons
 
-The Prior Carrier has **no `BIRKA_NPC_PROFILES` entry** and **no `NPC_DIALOGUES` entry**. They are rendered entirely through story-mode node text in the WM node's `storyRender()` block, gated by `inquisitorPassed: true`. Their dialog is three fixed branches (Yes/No/Ignore) wired as inline `storyMsg()` calls, not through the NPC dialogue system.
+**(a) `quest_d0209` — a gate leaf with zero writers.** Act III is
+`completion:{ flags:['voidFluxCleared'] }@21636`, and `g.flags` resolves against `S_story` directly
+(`g.flags.every(f => !!st[f])`). **`voidFluxCleared` occurs 5 times in 38,712 lines: one default,
+one quest desc, three gate reads — and no writer at all.** Act IV gates on it, Act V gates on Act
+IV's flag, so **Acts III–V are unreachable**.
 
-### State fields belonging to player (not shared):
+The consequence is worse than a stalled chain. Act I sets `S_story.voidFluxActive = true`, and the
+**only** clearing site is Act V's pass. A player who passes a DC 10 Arcana check is therefore
+**permanently inside the inversion field**: every potion and every Brynn's Loaf for the rest of the
+run routes through the `[Void Flux] Heal → Hurt` branch and nets +0 or +1 HP. → **§DX-02u**.
 
-- `priorCarrierSeen: boolean` — player's flag; set when player sees the Prior Carrier's cell
-- `priorCarrierSpoke: boolean` — player's flag; set when player answers the question
+This is the *inverse* of the §DX-02n family. Those fields are write-only (saved, reloaded, never
+consulted). This one is **read-only** — a broken dependency, not dead weight — and a
+`check:deadconsts` scoped to unread fields would step straight over it.
 
-The Prior Carrier has no HP, no favor system, no inventory interaction. Their "Prior Carrier's Token" is a `flavor` type inventory item — it cannot be sold, used, or equipped. It exists only to appear in the inventory panel as narrative artifact.
+**(b) `quest_d0205` — the maze was repointed onto a node with no battle.** Act III is
+`completion:{ battles:['BK'] }@21579` and Act IV gates on the same key. At HEAD,
+`BK: { num:241@9011` is *"Birka Shore — Northern Longship Landing"*, a beach whose record carries
+**no `battle` field**, and **nothing in the file ever writes `defeatedBattles['BK']`**. Acts III–V
+are unreachable, and `S_story.mazeSolvedChecks = 3;@21582` — the Act III `onComplete` — can never
+run.
 
----
+This is §AUDIT-03y's *worse-than-dead* class doing mechanical damage rather than narrative damage:
+the code **resolves**, so `check:noderegs` passes it perfectly. It is also independent of
+§AUDIT-03x — repointing BK's cell would not create the battle. → folded into **§AUDIT-03y**.
 
-## 7. Codex Core Chamber — Ending System Compatibility
+### Finding 3 — §3's lore revision is contradicted by HEAD's own player-facing text
 
-### `_missionComplete()` analysis:
+§3 is the report's longest section and its most confident: Tribbles *"do NOT multiply"*, are
+*"not Star Trek references"*, have *"no `tribbleCount` growth formula"*, *"do not occupy inventory
+slots"*, and the Brynn overflow line *"is removed from the IN node render block"*.
 
-```js
-sealedVoid: !!(S_story.defeatedBattles && S_story.defeatedBattles['CO']),
-```
+At HEAD every Fuzzy Tribble is an inventory object whose `desc` asserts the opposite —
+*"You are fairly certain it is multiplying"@21850* and *"Soft. Multiplying."* ×3 — the counter and
+the inventory items are both incremented, and the Brynn line ships at `_tc >= 10` (relocated from
+the inn to the meadow panel, which is why a search of the IN block would have found nothing).
 
-This is the only CO-relevant check. `_missionComplete()` does NOT check for `catKingDefeated` or `sevenShards` — it checks 12 separate conditions and requires 8 to be true. `sealedVoid` is one of those 12.
+And instrument 2 supplies the reason the section reads as authoritative: **`tribbleOverflow` has 0
+commits ever.** The flag §3 declares it is removing was never implemented. **A design doc's
+*reversal* is a claim like any other** — this one describes undoing something that had never been
+done, and the content it believed it was deleting shipped under a different threshold in a
+different block. *(13th instrument for the §DOC-02 program.)*
 
-### Problem with the "Destroy" path:
+The §2 mimic roster is the same shape with the opposite outcome: the four passive statlines have
+0 commits each, yet all four creatures live at `LIM` **as prose** — baby chest mimics, a napping
+bookshelf mimic, a mossy floor mimic, the Mother at the centre. The narrative was copied; the
+invented statblocks were not.
 
-The "Destroy" path bypasses the Auros fight (STR DC 15 smashes the housing). If Auros is never fought, `defeatedBattles['CO']` is never set, and `sealedVoid` is `false`. This would break `_missionComplete()` for the Destroy path.
+### Finding 4 — a two-surface promise with no reader (§AUDIT-03v/w cluster, 7th instance)
 
-### Fix (locked):
+`aurosBlueprintKnown` occurs 4 times: the default, one writer, and **two readers that only render
+the promise back at the player** — Act IV's passText (*"In the CO boss fight, Auros's left pauldron
+has -4 AC"*) and a persistent node panel, `_wkHint.textContent = '📜 Blueprint known@31964`, that
+repeats it for the whole run. **No combat code reads the field.** Auros's AC is never reduced.
 
-After a successful "Destroy" Ceremonia Roll (STR DC 15), set:
-```js
-S_story.defeatedBattles['CO'] = true;
-S_story.codexCoreChosen = 'destroy';
-S_story.curseScore = (S_story.curseScore || 0) + 5;
-```
+First instance in the cluster where the same unbacked mechanic is stated **twice**, once in a
+surface that persists until the fight it names.
 
-This treats the housing destruction as equivalent to defeating the CO EB for mission-complete purposes. Auros is "freed from compulsion" (flavor) rather than defeated in combat, but the seal is broken either way.
+### Finding 5 — invariant #6 broken in the two hand-built hooks, correct three registries away
 
-### "Claim" path:
+`const _cyRoll = Math.ceil(Math.random()@32534` and both Codex Core rolls draw the **unseeded**
+stream and write persisted state: `cyMadnessRoll`, `cyMadnessTable`, `codexCoreChosen`,
+`defeatedBattles['TLS']`, `curseScore`. The UQF `skill_check` path used by all eight chains draws
+the seeded one — `const d20  = Math.ceil(E.rng() * 20)@22248`.
 
-The "Claim" path still requires the Auros fight (the spec says "Auros fight still required but Auros is confused"). So `defeatedBattles['CO']` is set normally via the existing combat win path. No compatibility fix needed.
+So within one feature the quest-authored rolls obey invariant #6 and the two hand-authored hooks do
+not, because §VM-01-B moved the d20 in `_resolveQuestUQF` and never reached surfaces that rolled
+their own. Named instance for **§DX-02m**.
 
-### "Stabilize" path:
+### Finding 6 — six zero-reader fields (§DX-02n)
 
-Standard path — Auros fight proceeds normally. No change needed.
+| Field | Writers | Readers | Note |
+|---|---|---|---|
+| `voidFluxImmunityChoice` | 1 (always `'fire'`) | 0 | Act II's entire reward |
+| `spiritDefeated` | 1 — `S_story.spiritDefeated = false;@21799` | 0 | writes **`false`** on the defeat |
+| `mazeSolvedChecks` | 3 | 0 | third writer unreachable (Finding 2b) |
+| `voidMazeEntered` | 1 (`flag_write`) | 0 | unreachable |
+| `tribbleGladesFed` | 1 | 0 | — |
+| `cyMadnessTable` | 1 | 0 | contradicts §4's own "only persistent effect" |
 
-### Summary: only the "Destroy" path needs the manual `defeatedBattles['CO'] = true` injection.
-
----
-
-## Implementation Phases (§DUNGEON-01 Layer 80)
-
-### P1 — Layer 80, Phase 1 (HTML changes)
-
-1. **`_S_DEFAULTS()` additions:**
-   - `cyMadnessRoll: null`, `cyMadnessTable: null`
-   - `inquisitorMet: false`, `inquisitorPassed: false`
-   - `priorCarrierSeen: false`, `priorCarrierSpoke: false`
-   - `mazeSolvedChecks: 0`, `voidMazeEntered: false`
-   - `voidFluxActive: false`, `voidFluxCleared: false`, `voidFluxImmunityChoice: null`, `voidFluxScrollChanged: false`
-   - `codexCoreChosen: null`, `codexCoreEntered: false`
-   - `tribbleCount: 0`, `mimicPetName: null`, `tribbleGladesFed: false`
-   - `memorGateBypassUsed: false`, `memorGatePassedEntry: false`
-   - `cyMadnessDecoded: false`, `cyOriginKnown: false`
-   - `aurosBlueprintKnown: false`, `scholarWorkshopComplete: false`, `spiritDefeated: false`
-   - `scriptorium_approach_complete: false`
-   - `mimicColonyEntered: false`
-
-2. **CY Madness Gate (§D01-07):** WIS save block in CY node `storyRender()`, gated by `!S_story.visited?.['CY']`. d10 table as array. Fires `_appendStoryHcard()`.
-
-3. **Codex Core Chamber (§D01-10):** Pre-boss Ceremonia Roll section in CO node render, gated by counting shards >= 6. Three-branch choice room with `_rollCeremonia()` hooks. "Destroy" path sets `defeatedBattles['CO'] = true`.
-
-4. **Prior Carrier text (§D01-03):** WM node render block gated by `inquisitorPassed`. Three inline response branches.
-
-5. **`voidFluxActive` inversion (§D01-09):** State flag only in Phase 1 — set/clear logic added to AT and CY_VOID EB approach rooms. Full inversion table in combat loop is Phase 2.
-
-### P2 — Layer 80, Phase 2
-
-6. **§DUNGEON-02 QUEST_DB entries** (D02-01 through D02-10): All 10 five-act quests as QUEST_DB entries using the `skill_check` + `side` type patterns from §DESIGN-03. D02-02 Inquisitor, D02-03 Prior Carrier, D02-10 Codex Core are the highest narrative priority.
-
-7. **Tribble counter (acquisition only):** `tribbleCount` incremented when Tribbles are received as loot. No rest multiplication. See §3 revision.
-
-8. **`quest_mimic_colony`:** QUEST_DB entry for Node MM. Animal Handling Ceremonia Rolls for each mimic type. `mimicPetName` text entry.
-
-### P3+ — Later layer
-
-9. **Node SW (Scholar King's Workshop):** New `WORLD_DB` entry, new node in graph.
-10. **Node MM (Mimic Meadows):** New `WORLD_DB` entry, MONSTER_POOL additions, node graph connection from NODE 33.
-11. **Full `voidFluxActive` combat inversion:** Wrap damage resolution in combat loop.
+`spiritDefeated` is the sharpest: a `_legacy_fn` that sets a defeat flag to `false` at the moment of
+victory. It is inert either way, so no test and no gate can distinguish the bug from the intent.
 
 ---
 
-## New State Fields Summary
+## 5. Risk / decision register outcome
 
-| Field | Type | Default | §D01-# |
-|-------|------|---------|--------|
-| `cyMadnessRoll` | `'clear'\|'fractured'\|null` | `null` | §D01-07 |
-| `cyMadnessTable` | `string\|null` | `null` | §D01-07 |
-| `inquisitorMet` | `boolean` | `false` | §D01-02 |
-| `inquisitorPassed` | `boolean` | `false` | §D01-02 |
-| `priorCarrierSeen` | `boolean` | `false` | §D01-03 |
-| `priorCarrierSpoke` | `boolean` | `false` | §D01-03 |
-| `mazeSolvedChecks` | `number` (0–3) | `0` | §D01-05 |
-| `voidMazeEntered` | `boolean` | `false` | §D01-05 |
-| `voidFluxActive` | `boolean` | `false` | §D01-09 |
-| `voidFluxCleared` | `boolean` | `false` | §D01-09 |
-| `voidFluxImmunityChoice` | `string\|null` | `null` | §D01-09 |
-| `voidFluxScrollChanged` | `boolean` | `false` | §D01-09 |
-| `codexCoreChosen` | `'stabilize'\|'destroy'\|'claim'\|null` | `null` | §D01-10 |
-| `codexCoreEntered` | `boolean` | `false` | §D01-10 |
-| `tribbleCount` | `number` | `0` | §D01-08 |
-| `mimicPetName` | `string\|null` | `null` | §D01-08 |
-| `tribbleGladesFed` | `boolean` | `false` | §D01-08 |
-| `memorGateBypassUsed` | `boolean` | `false` | §D01-04 |
-| `memorGatePassedEntry` | `boolean` | `false` | §D01-04 |
-| `cyMaintenanceDecoded` | `boolean` | `false` | §D02-07 |
-| `cyOriginKnown` | `boolean` | `false` | §D02-07 |
-| `aurosBlueprintKnown` | `boolean` | `false` | §D02-06 |
-| `scholarWorkshopComplete` | `boolean` | `false` | §D02-06 |
-| `spiritDefeated` | `boolean` | `false` | §D02-06 |
-| `scriptorium_approach_complete` | `boolean` | `false` | §D02-01 |
-| `mimicColonyEntered` | `boolean` | `false` | §D02-08 |
+| Locked decision | Outcome |
+|---|---|
+| §3 — Tribbles are corruption, not multipliers | **reversed in shipped text** (Finding 3) |
+| §4 — madness is flavour only | **held**, exactly |
+| §5 — `voidFluxActive` must not touch condition math | **held** — vacuously; the combat half never shipped |
+| §6 — the Prior Carrier is a separate entity with no profile | **held**, exactly |
+| §7 — only the Destroy path needs the manual `defeatedBattles` injection | **held**, all three lines byte-exact |
+
+Four of five held. The one that did not is the only one that was a *narrative* decision rather than
+a data-shape decision — nothing in the schema enforced it, so the item `desc` drifted freely.
 
 ---
 
-*Lab report complete. Proceed with HTML implementation (Phase 1 first) after this file is committed.*
+## 6. Defects filed
+
+- **§DX-02u** (new) — `voidFluxCleared` has zero writers; `quest_d0209` acts III–V unreachable and
+  `voidFluxActive` becomes permanent. No design call: either write the flag on the RAI battle
+  victory or repoint Act III's `completion` at `battles:['RAI']`, matching its five siblings.
+- **§AUDIT-03y** (extended) — `battles:['BK']` on `quest_d0205_a3`; BK carries no battle and nothing
+  writes `defeatedBattles['BK']`. Independent of §AUDIT-03x.
+- **§AUDIT-03v/w/y(b)/aa cluster** (7th instance) — `aurosBlueprintKnown`'s −4 AC promise, stated in
+  two surfaces, read by none.
+- **§DX-02n** (+6) — the zero-reader table in Finding 6; and the **read-only** shape in Finding 2a,
+  which the proposed `check:deadconsts` scope does not cover.
+- **§DX-02m** (named instance) — the two unseeded `Math.random()` d20s in Finding 5.
+- **§DUNGEON-01-FU** (new) — the §3 Tribble text contradiction: four item `desc` strings and one
+  threshold line assert a mechanic the design lock removed. Copy fix, one design call (keep the
+  lore revision or retire it).
+
+Pre-existing and recorded in the engine's own comments, not re-filed: `skill_check` quests never
+reach status `'complete'`, so `quest_d0208_a4`/`_a5`'s `onComplete` narratives never fire —
+*"⚠ dead in legacy too … (§DUNGEON-01 gap)"*.
+
+---
+
+## 7. Preserved original claims (NOT SHIPPED, kept)
+
+Retained verbatim in intent so no reader mistakes absence for success:
+
+1. `MONSTER_POOL` gains `baby_chest_mimic` / `bookshelf_mimic` / `floor_mimic` / `mother_mimic`,
+   all `passive:true`, and a `_isPassiveTerrain(terrain)` helper suppresses auto-spawn where every
+   monster in `WORLD_DB[terrain].monsters` is passive.
+2. `tribbleCount` decrements when a Tribble is offered as mimic-bait, reducing the Animal Handling
+   DC by 4.
+3. Tribble display thresholds 1–2 / 3–4 / 5+, the 5+ band being a **CY** node line
+   (*"The Tribbles in your pack pulse slightly faster here."*).
+4. The §D01-04 toll is the **removal of a read journal entry** from `journalEntriesRead`.
+5. `voidFluxActive` wraps combat damage resolution, retagging fire → cold on the hcard label.
+6. On NG+ the CY WIS save is suppressed rather than re-rolled.
+7. Healing under Void Flux is a net **loss** (`hp -= floor(heal*0.5)`), not a nullification.
+
+---
+
+*Verified 2026-08-11 (§DOC-02k) against `roll2hit-v3.html` @ `4eb1dc6`. 326 → 295 lines.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
