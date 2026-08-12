@@ -1,695 +1,313 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report: Sparse Node Mesh Reduction via Circuit Corridor Junction Theory
-### Applied Computer Science — Traversable World Architecture
-**Project:** roll2hit-v3.html — *The Shattered Codex*  
-**Layer:** 9 — Time-Warp Footpaths & Circuit Corridors  
-**Date:** 2026-05-21  
-**Author:** Roll2Hit Engineering
+# Sparse Node Mesh Reduction via Circuit Corridor Junction Theory
+
+**Lab Report — IEEE Style · Roll2Hit: The Shattered Codex (`roll2hit-v3.html`)**
+**Original date:** 2026-05-21 · **Layer:** 9 — Time-Warp Footpaths & Circuit Corridors
+**Classification:** World Architecture / Navigation Design
+**Verification pass:** 2026-08-11 (§DOC-02f) — every claim re-measured against HEAD and against the
+earliest surviving build.
+
+> **HISTORY DOCUMENT.** This is the design record as believed on 2026-05-21, not a description of
+> the current engine. Claims that did not ship, or that shipped and were later removed, are marked
+> **NOT SHIPPED** / **RETIRED** and **kept** — a silently deleted claim reads like one that held.
+> Its node codes are the retired 26×16 space; per §AUDIT-03m, `lab-reports/` is HISTORY —
+> **annotate, never rewrite**. Treat no code listing below as live source.
 
 ---
 
 ## Abstract
 
-This report documents the architectural solution to a fundamental problem in discrete world-map design: how to render, navigate, and interact with a **sparse node graph** embedded in a dense two-dimensional grid, where the graph's edges represent traversable paths of varying length and danger. We introduce the **Circuit Corridor Junction** model — an extension of the classical Traveling Salesman Problem (TSP) reduced to a freeway-style network with typed travel modes. The implementation reduces an infinite-possibility grid to a compact, deterministic, and visually coherent wire mesh. The philosophical significance lies in the mapping between abstract graph theory and experiential user interaction: the same mathematical structure that makes routing tractable also makes navigation intuitive. We further show that the junction insertion concept is not merely geometric — it is an epistemological claim about the nature of named places.
+The report specified **Circuit Corridors**: a sparse node graph embedded in a dense grid, with the
+gaps between nodes rendered as box-drawing wire traces, selected road cells promoted to named
+**junction** nodes, and each corridor leg traversed in one of two modes — **Warp** (instant, safe)
+or **Hunt** (rolled encounter, probability scaled by the player's active-quest load).
+
+**Verification result: 24 of the 50 symbols it names resolve at HEAD (48%), and 0 of its 26 node
+codes resolve to the node they name.** The whole corridor layer was deleted in three passes
+between 2026-06-13 and 2026-06-16 (§CELL-05, §CELL-10, §CELL-11A, §CELL-14) and superseded by
+§WALK/§NAV-01's 90×360 geo grid. Warp is now a **banned design** (hard invariant #3, *no jump
+travel, ever*) and `junction:true` a **CI failure** (`check:invariants` I1/I2).
+
+The finding that matters is not the removal — it is **where inside the document the accuracy
+lives.** Its data and build listings (§IV–§V) are *verbatim transcriptions*: `WIRE_GLYPH` shipped
+byte-identical in all eleven entries, `_routeSegments()` byte-identical, the junction coordinate
+block exact, and both `NODE_MAP` sample entries exact in every content field. Its **execution
+traces** (§VII) are *narration*: they name three identifiers with **0 commits in the entire
+repository history**, quote an encounter formula missing a whole term, and pivot both traces on a
+dialog that was **built, styled, and never once shown to a player**. This refines §DOC-02b's
+"the half that points at code is the half that is right" — the real boundary is **copied structure
+versus narrated behavior**, and §IV is code that was copied while §VII is code that was imagined.
+
+**Keywords:** sparse graph embedding, corridor routing, travel-mode design, design-record
+verification, document-internal accuracy gradient
 
 ---
 
-## I. Introduction: The Philosophical Problem
+## I. Method
 
-A grid is infinite. A world is not.
+Five measurements, all reproducible (`roll2hit-v3.html`, 38,707 lines, r2h-3.104.0):
 
-When a game designer says "the world," they mean a finite set of meaningful places connected by meaningful paths. The grid is the substrate; the world is the selection. The gap between the two — between every possible cell and the 42 that matter — is the fundamental design problem of any tile-based world map.
-
-The naive solution is a dense graph: every cell is a node, every adjacent cell is an edge. This is complete but useless. The player drowns in choice. Pathfinding becomes a cognitive burden rather than a strategic pleasure. Every step is an identical decision between four undifferentiated blank cells.
-
-The opposite extreme — a pure abstract graph with no spatial embedding — solves the cognitive problem but destroys the world's coherence. You cannot feel that Birka is *far* from the Arctic Wastes if there is no visual distance between them.
-
-**The Circuit Corridor model is the middle solution.** The world is a sparse graph (42 named nodes), but it is *embedded* in a real grid with spatial meaning. Corridors are not abstract edges — they are rendered wire traces that the eye can follow. Distance is visible. Direction is visible. The road from `CI` (Birka, row 5 col 16) to `MI` (Plains & Midlands, row 5 col 8) is eight grid cells wide, and you can see all eight.
-
-This is computationally cheap and experientially rich. That is the philosophical achievement.
-
----
-
-## II. Problem Statement: The Sparse Grid as TSP Variant
-
-### The Classical Traveling Salesman Problem
-
-The Traveling Salesman Problem asks: given N cities and the costs of traveling between each pair, find the minimum-cost Hamiltonian cycle. It is NP-hard in the general case.
-
-Our problem is related but structurally different in three important ways:
-
-| Dimension | Classic TSP | This System |
-|-----------|-------------|-------------|
-| Graph type | Complete (all pairs connected) | Sparse (hand-authored adjacency only) |
-| Objective | Minimize total cost | Maximize interesting encounters en route |
-| Player agency | External optimizer | Human in the loop |
-
-The player is not trying to solve TSP. The player is a traveler with goals (active quests) who chooses *when* to be safe and *when* to hunt. The routing problem is not "find the shortest path" — it is "find the path with the right probability of danger for my current goals."
-
-### The Sparse Grid
-
-The world of *The Shattered Codex* occupies a 16-row × 26-column grid. That is 416 possible cells. Of these, exactly **42 are named nodes** (in Layers 1–8, expanding to 49 with junction nodes in Layer 9). The remaining 374+ cells are empty space — or were, until corridors were drawn through them.
-
-The sparsity ratio is **~90%**. Most of the grid is void. This is what creates the traveling salesman subproblem: to get from node A to node F, you must pass through B, C, D, E — but B through E are not nodes. They are road. They are traversable but placeless.
-
-The junction concept resolves this by **promoting selected road cells to named places**. A junction is a waypoint: it is not a destination, but it is a place you can be. It has a name, a signpost, and a terrain type. It makes the road *legible*.
+1. **Symbol census.** Every function, constant, state field, DOM id and CSS class the report names,
+   batched through one `grep -c` loop — this partitions the document before a line of it is read.
+2. **Node-code resolution.** All 26 codes tested against live `NODE_MAP` keys.
+3. **History probe.** `git log -S` on every dead symbol, separating **RETIRED** (shipped, later
+   removed) from **NOT SHIPPED** (never existed) — the distinction no report can make about itself.
+   Mandatory since §DOC-02c.
+4. **Archive read.** For claims about the past, the report was diffed against `32c10c5`
+   (2026-05-24, the earliest surviving build — three days after the report's own date), not against
+   HEAD. **HEAD cannot adjudicate a claim about 2026-05-21; the archive can.**
+5. **Corpus cross-check.** Compared against its Layer-9 sibling, `lab-report-battleground-circuit-
+   path-quest.md` (§DOC-02c) — same date, same layer, overlapping node tables (§DOC-02e).
 
 ---
 
-## III. The Junction Concept: Named Intersections as Epistemological Objects
+## II. As-Built Inventory — What Survives
 
-### Why Junctions Are Not Just Geometry
+| Claim | Status at HEAD | Anchor |
+|---|---|---|
+| `NODE_MAP` flat, keyed by code; `name` is the terrain key; content fields `npc`/`battle`/`loot`/`sleep` | **exact** | `const NODE_MAP@8425` |
+| `NODE_COORDS` maps every node code to `{r, c}` | **exact shape**, different grid — see delta 8 | `const NODE_COORDS@9421` |
+| `WORLD_DB` terrain table drives the corridor monster pool | **live**; still the encounter pool, reached from terrain not corridor | `const WORLD_DB@6279` |
+| `_weightedMonsterPick(terrain)` — tier-weighted pool draw | **live**, signature intact; body now notoriety-scaled + seeded | `function _weightedMonsterPick@38232` |
+| `_setActivePath(fromCode, toCode, dir)` | **live** — the last surviving line of the runtime layer, see §IV-B | `function _setActivePath@38195` |
+| `S_story.lastExitCode` / `lastExitDir`; the `mc-exit-active` gold exit arrow | **live**, still wired exactly as §IX describes | `mc-exit-active@36714` |
+| Battle pipeline `loadWorldMonster` → `pendingBattle` → `#story-prebatt-overlay` → `storyApplyOutcome` → `btn-outcome-win` | **live** | `function _startStoryBattle@38254` |
+| `storyRender`, `_renderPreBatt`, `_renderMapGrid`, `refreshLeftPanel`, `storyCheckMissedSleep` | **live** | — |
+| `S_story.quests` key→status map; `.log`; `.currentCode`; `.hp`/`.hpMax` | **live** | — |
+| `mc-current` map cursor class | **live** | — |
 
-In graph theory, a junction is simply a vertex with degree ≥ 3. In this system, a junction is more: it is an **epistemological claim** that a particular point in the road network is *worth knowing about*.
-
-Consider the road from `CI` (Birka) to `MI` (Plains). On the grid, this is a straight horizontal line at row 5, spanning columns 8 to 16 — eight cells of empty road. Without a junction, this is an anonymous corridor: you enter at one end and emerge at the other with no sense of the journey.
-
-With junction `J1` at (row 5, col 12), the road becomes:
-
-```
-[ CI ] ─── ─── ─── [ J1: Midlands Road Fork ] ─── ─── ─── [ MI ]
-  r5,c16              r5,c12                               r5,c8
-```
-
-The player knows they are halfway. They can orient. They can plan. The junction transforms a corridor into a **journey with a midpoint**.
-
-This is the same reason highway engineers place named exits on freeways: not because the road needs an exit there geometrically, but because travelers need cognitive anchors. The junction is both a geometric insertion and a named place.
-
-### Junction as Freeway On-Ramp
-
-The freeway analogy is precise. In this system:
-
-- **Nodes** are cities — you can stop, rest, buy, fight, advance quests
-- **Junctions** are on-ramps / interchange signs — named, traversable, but no services
-- **Corridors** are the freeway itself — fast (Warp mode), or hunted (Hunt mode)
-- **Travel mode** is the choice of whether to use cruise control or hunt the shoulder
-
-The player can travel vast distances instantly (Warp), or they can choose to engage the road as a danger zone (Hunt). This is the **freeway mechanic**: the same physical road, two experiential modes, selected by the player based on their current strategic goals.
+**Live: 24 of 50.**
 
 ---
 
-## IV. Data Architecture
+## III. Spec → Shipped Delta Table
 
-### 4.1 Source Data: `NODE_MAP`
+Twelve deltas. Each is **NOT SHIPPED** (never existed), **RETIRED** (shipped, later removed), or
+**CHANGED** (survived under an altered contract).
 
-`NODE_MAP` is the authoritative graph definition. Every named node is an entry with a code, grid label, act, directional adjacency, and content fields:
+| # | Report claim | Outcome | Measured |
+|---|---|---|---|
+| 1 | **The corridor mesh** — `CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, `WIRE_GLYPH`, `buildCorridorMap()`, `_routeSegments()`, `_wireGlyph()`, `_corridorTerrain()` | **RETIRED — all 7** | Present and correct at `32c10c5`; `grep -c` = **0** at HEAD. Deleted by **§CELL-11A** (`85cc43e`, 2026-06-14, *"remove corridor dead code"*). Superseded by the §WALK/§NAV-01 geo grid + `const ROAD_RUNS@9883`. |
+| 2 | **The Hunt/Warp dialog** — `#story-corridor-overlay` fires whenever Manhattan distance ≥ 2; player picks Warp or Hunt | **RETIRED, and never functional — see §III-A** | The markup, CSS and all three buttons shipped verbatim. **No code ever showed it.** |
+| 3 | **`corridor-from` · `corridor-to` · `corridor-terrain` DOM writes** (§VII Trace A) | **NOT SHIPPED as named** | Shipped ids are `corridor-from-name`, `corridor-to-name`, `corridor-terrain-name`. The report drops the suffix on all three. |
+| 4 | **`corridor-quest-count` · `corridor-pct`** DOM writes | **NOT SHIPPED** | `git log -S` returns **0 commits ever** for both. The shipped card has one readout, `corridor-encounter-rate`. |
+| 5 | **`_corridorOnComplete`** — the callback threaded through `triggerCorridorEncounter` and consumed by `storyApplyOutcome` (Trace A steps 7 and 9) | **NOT SHIPPED** | **0 commits ever.** The shipped `triggerCorridorEncounter(terrain, destCode, questHunt)` takes no callback and calls `storyRender(destNode)` directly. Trace A's step 9 describes a resumption mechanism that never existed. |
+| 6 | **Encounter formula** `min(0.90, 0.10 + activeQuestCount × 0.05)`, and the 10/20/30/50/90% table of §VI-2 | **CHANGED — a whole term is missing** | Shipped: `Math.min(0.95, 0.1 + notoriety * 0.015 + activeQuestCount * 0.04)`. Three of four constants differ **and** conspicuousness is a function of **notoriety as well as quests**. Every row of the report's table is wrong; at the level-1 notoriety of 3 the real values are 14.5 / 22.5 / 30.5 / 46.5 / 78.5%, and the 0.95 cap is unreachable by quest load alone. *(§DOC-02c's delta 10 called this expression nonexistent "at HEAD and in history" — correct about the literal, too strong about the mechanism: see §V.)* |
+| 7 | **`pendingBattle` shape** `{nodeCode:'_corridor', name, label:'Corridor — midlands', isCorridor:true}` | **NOT SHIPPED — 3 of 4 fields** | Shipped: `{nodeCode: destCode, name: pick.name, label: destNode.label, corridor: true}`. `isCorridor` and the `'_corridor'` sentinel have **0 commits ever**. The real path also sets `S_story.surpriseAdvantage`, which the report does not mention. |
+| 8 | **The grid** — 16 rows × 26 columns = 416 cells, **42 named nodes**, ~90% sparsity | **CHANGED, all three** | A **90×360** geo grid (equirectangular, sea-masked) with a 15×21 window (§NAV-01e), and **416 nodes** — *the world now has as many named places as the original grid had cells.* The "42" was already stale at `32c10c5` three days later: **67** nodes. |
+| 9 | **Junction nodes `J1`–`J7`** with `junction:true`; "named, traversable, no services" | **RETIRED, then made a CI failure** | All 7 shipped exactly as specified, `J1` included (`num:43`, `label:'Midlands Road Fork'`, all content fields `null`). Purged by **§CELL-05** (`6dea804`, *"abolish junction nodes"*) and **§CELL-14** (`30f18b4`). **0** carry `junction:true` at HEAD; the two later strays (J14/J15) failed `check:invariants` I1/I2 and the tool that minted them is deprecated and refused (§DX-01d). |
+| 10 | **Warp mode** — "instant teleport to destination", encounter 0% | **RETIRED, then forbidden** | Hard invariant #3 is now **"No jump travel, ever"**, stated in source: `no jump travel. checkpointNode@26048`. Warp is not merely removed — it is a **banned design**. *(It also never was a choice: see delta 11.)* |
+| 11 | **Travel mode is chosen per leg**, in the dialog, against the alternative | **NOT SHIPPED** | The shipped `storyCorridorTravel` branches on the *persistent* `S_story.huntMode` toggle and emits a `storyMsg` either way. There was no per-leg choice, no cancel, and no moment at which the two modes were offered side by side. **The report's central mechanic — "the choice is the mechanic" (§VII-B) — is the one thing the layer never implemented.** |
+| 12 | **`Math.random()`** drives the encounter roll and the monster pick; **`node.portal`** short-circuits corridor routing; **`storyMove(dir)`** intercepts non-adjacent destinations | **CHANGED / RETIRED** | Both draws moved to the seeded stream `_seededNext()` (§VM-01-B, now hard invariant #6). `portal` was removed by §CELL-13 — the 3 remaining hits are tombstone comments. `storyMove` = **0**; movement is `cellMove` over the `MOVER:CORE` kernel. |
 
-```javascript
-// roll2hit-v3.html line 4921
-const NODE_MAP = {
-  CI:{ num:1, code:'CI', name:'city', label:'City Streets — Birka', act:1,
-       N:null, S:'CR', E:'IN', W:'MI',
-       text:"The greatest city in the known world...",
-       npc:'City Guard Captain', battle:null, loot:'Bloodstained Map', sleep:false },
-  MI:{ num:12, code:'MI', name:'midlands', label:'Plains & Midlands', act:3,
-       N:'HL', S:null, E:'CI', W:'FO',
-       text:"Open road. Wide sky. Farms abandoned...",
-       npc:null, battle:{label:'Noonwraith + Field Wraith', key:'noonwraith', count:1},
-       loot:'Abandoned Pack', sleep:false },
-  // ... 40 more nodes
-};
-```
+### III-A. The dialog that was built and never shown
 
-`NODE_MAP[code][dir]` gives the neighbor code in that direction, or `null` if no exit. This is the adjacency list of the world graph. It is hand-authored — no automatic generation. Every edge is a deliberate design decision.
+The report's §VI and both execution traces turn on a modal the player opens, reads, and clicks. At
+`32c10c5` that modal exists in full — `#story-corridor-overlay`, `#corridor-card`, the header
+*"⚡ Time-Warp Footpath"*, the From/To/Road rows, and three buttons whose labels the report quotes
+correctly down to the emoji (`🎯 Hunt — roll encounter`, `⚡ Warp — instant, safe`, `✕ Cancel`).
 
-### 4.2 Spatial Embedding: `NODE_COORDS`
+Every JavaScript reference to it in that build is one of three things: two bulk *close-all* arrays,
+and a single `classList.remove('visible')`. **Nothing ever adds `visible`.** No handler is bound to
+any of the three buttons; `corridor-from-name` and `corridor-encounter-rate` are never written.
 
-`NODE_COORDS` maps every node code to a `(row, col)` position in the grid. This is the second layer: the graph given spatial coordinates.
+The overlay was therefore dead markup from the first surviving commit. This is the same verdict
+§TIMELESS-01 later recorded for the Stalk modal — *"already never shown — legacy/dead"* — reached
+here independently, in the sibling report, about a different screen. *Durable lesson: a design
+document cannot distinguish a screen that ships from a screen that is merely **present in the
+file**. Only a search for the code that reveals it can.*
 
-```javascript
-// roll2hit-v3.html line 4977
-const NODE_COORDS = {
-  CI:{r:5,c:16},  MI:{r:5,c:8},   FO:{r:5,c:3},   HL:{r:4,c:3},
-  // ... (42 story nodes)
-  // Layer 9 — Junction nodes (coords only; NODE_MAP entries added in L9-B)
-  J1:{r:5,c:12},  J2:{r:10,c:4},  J3:{r:9,c:3},
-  J4:{r:12,c:8},  J5:{r:1,c:10},  J6:{r:5,c:5},   J7:{r:1,c:22},
-};
-```
+### III-B. Node-code resolution — 0 of 26
 
-The Manhattan distance between two nodes `A` and `B` is:
+All 26 codes were written in the retired 26×16 space. **25 are cleanly dead. One is worse:**
 
-```
-distance(A, B) = |NODE_COORDS[A].r - NODE_COORDS[B].r|
-              + |NODE_COORDS[A].c - NODE_COORDS[B].c|
-```
+| Code | Report says | HEAD says |
+|---|---|---|
+| `CI` | `num:1`, `city`, "City Streets — Birka", Act 1 | **`num:429`, "Chancery Court — The Officer's Pen"**, `act:NaN` — a live but *entirely different* node |
 
-If `distance ≤ 1`, the nodes are adjacent on the grid — no corridor is needed because their map cells touch. If `distance ≥ 2`, there is a gap, and the corridor builder draws a wire through it.
-
-The `CI → MI` edge: `distance = |5-5| + |16-8| = 8`. Eight cells of empty road. Corridor required.
-
-### 4.3 Corridor Cells: `CORRIDOR_CELLS`
-
-`CORRIDOR_CELLS` is a dictionary keyed by `"row,col"` string, populated once at startup by `buildCorridorMap()`. It is the **derived graph of road cells** — the complement of `NODE_COORDS` within the wired edges.
-
-```javascript
-// roll2hit-v3.html line 5038
-const CORRIDOR_CELLS = {};
-// After buildCorridorMap() runs, each entry looks like:
-// "5,15": {
-//   dirs:    Set { 'E', 'W' },   // wire runs east-west
-//   glyph:   '─',                // box-drawing character
-//   terrain: 'midlands',         // WORLD_DB key for encounter rolls
-//   edges:   [{ from:'CI', to:'MI' }]  // which edges pass through
-// }
-```
-
-`CORRIDOR_CELLS` is read-only after construction. The renderer reads it; nothing writes to it at runtime.
-
-### 4.4 Wire Glyph Lookup: `WIRE_GLYPH`
-
-The box-drawing character for each cell is determined by which directions the wire enters and exits. The key is the sorted alphabetical join of the direction set:
-
-```javascript
-// roll2hit-v3.html line 4993
-const WIRE_GLYPH = {
-  'E,W':     '─',   // horizontal wire
-  'N,S':     '│',   // vertical wire
-  'E,N':     '└',   // bottom-left corner
-  'N,W':     '┘',   // bottom-right corner
-  'E,S':     '┌',   // top-left corner
-  'S,W':     '┐',   // top-right corner
-  'E,N,S':   '├',   // T-junction (east branch)
-  'N,S,W':   '┤',   // T-junction (west branch)
-  'E,N,W':   '┴',   // T-junction (south branch)
-  'E,S,W':   '┬',   // T-junction (north branch)
-  'E,N,S,W': '┼',   // four-way crossing
-};
-```
-
-A cell where two wires cross accumulates both direction sets. If `CI→MI` runs east-west through cell (5,9), and some future north-south wire runs through the same cell, that cell's `dirs` set becomes `{N,S,E,W}` → glyph `┼`. The crossing is visible.
-
-### 4.5 Corridor Terrain Map: `CORRIDOR_TERRAIN`
-
-Each edge is assigned a terrain type used to determine which monster pool to draw from in Hunt mode:
-
-```javascript
-// roll2hit-v3.html line 5007
-const CORRIDOR_TERRAIN = {
-  'CI-MI':'midlands',  'MI-CI':'midlands',
-  'MI-FO':'forest',    'FO-MI':'forest',
-  'HS-BE':'forest',    'BE-HS':'forest',
-  'OC-IS':'ocean',     'IS-OC':'ocean',
-  'DS-SE':'ocean',     'SE-DS':'ocean',
-  'VC-DE':'desert',    'DE-VC':'desert',
-  'DC-JU':'jungle',    'JU-DC':'jungle',
-  'KT-OP':'heavenly_clouds', 'OP-KT':'heavenly_clouds',
-  'HC-AR':'arctic',    'AR-HC':'arctic',
-  // ... and junction-split edges
-};
-// Fallback: 'midlands'
-```
-
-Both directions of each edge share the same terrain. A `_corridorTerrain(fromCode, toCode)` lookup handles either order.
+`CI` passes any *"does this code exist?"* check while every sentence containing it stays wrong —
+the §AUDIT-03m hazard class. **Never read a node code off a doc table**; `npm run nodes` →
+`docs/maps/node-index.md` is the live reference.
 
 ---
 
-## V. Mesh Construction: `buildCorridorMap()`
+## IV. Where the Accuracy Lives
 
-### 5.1 The Algorithm
+### IV-A. §IV–§V were transcribed; §VII was narrated
 
-`buildCorridorMap()` runs once at script load, after `NODE_MAP` and `NODE_COORDS` are defined, before any player interaction. It iterates every directed edge in `NODE_MAP`, deduplicates by sorting the edge pair, computes the L-shaped grid route, and writes intermediate cells to `CORRIDOR_CELLS`.
+The two halves of this document have opposite error rates, and the split is clean:
 
-```javascript
-// roll2hit-v3.html line 6196
-function buildCorridorMap() {
-  const processed = new Set();
-  const nodeSet   = new Set(Object.values(NODE_COORDS).map(p => p.r + ',' + p.c));
+**Transcribed (§IV Data Architecture, §V Mesh Construction) — no measured error.**
 
-  Object.keys(NODE_MAP).forEach(fromCode => {
-    const fromCoords = NODE_COORDS[fromCode];
-    if (!fromCoords) return;
-    const node = NODE_MAP[fromCode];
-    if (node.portal) return;                    // portal connections are instant, not routed
+- `WIRE_GLYPH` — all **eleven** entries byte-identical to the shipped table, same order, same glyphs.
+- `_routeSegments()` — byte-identical, including the H-first/V-first branch and the corner-`dirs`
+  construction.
+- The `NODE_COORDS` junction block — all seven coordinates exact, comment structure and all.
+- Both `NODE_MAP` sample entries — `CI` (`num:1`) and `MI` (`num:12`) match the shipped file in
+  **every** field except the rewritten prose `text` and one compass value (`CI.W`, which the
+  report's own §V-2 correctly predicts will be repointed to `J1` when the junction lands).
 
-    ['N','S','E','W'].forEach(dir => {
-      const toCode = node[dir];
-      if (!toCode) return;
-      const edgeKey = [fromCode, toCode].sort().join('-');
-      if (processed.has(edgeKey)) return;       // deduplicate undirected edge
-      processed.add(edgeKey);
+**Narrated (§VII Execution Traces) — five distinct failures.** Deltas 3, 4, 5, 6 and 7 are all in
+the traces: three identifiers with zero commits, a formula missing its notoriety term, a
+`pendingBattle` wrong in three of four fields, and a control flow (callback threading) that no
+version of the code ever used.
 
-      const toCoords = NODE_COORDS[toCode];
-      if (!toCoords) return;
+§DOC-02b concluded that *"the half of a document that points at code is the half that is right."*
+This report shows the boundary is finer. **§VII points at code too — it names functions, line
+numbers, and DOM ids — and it is the wrong half.** The predictor is not whether a passage cites
+code; it is whether the author could **copy** it. A table and a function body can be pasted. A
+ten-step call sequence must be reconstructed from memory, and memory supplies plausible names
+(`corridor-pct`, `isCorridor`, `_corridorOnComplete`) that the file never contained.
 
-      const r1 = fromCoords.r, c1 = fromCoords.c;
-      const r2 = toCoords.r,   c2 = toCoords.c;
-      if (Math.abs(r1 - r2) + Math.abs(c1 - c2) <= 1) return;  // adjacent — no wire
+*Durable rule for the program: when verifying a design document, weight its tables and function
+bodies as evidence and its traces, walkthroughs and sequence diagrams as claims.*
 
-      // Prefer H-first routing; fall back to V-first if H-corner lands on a node
-      let first = 'H';
-      if (r1 !== r2 && c1 !== c2 && nodeSet.has(r1 + ',' + c2) && !nodeSet.has(r2 + ',' + c1))
-        first = 'V';
+### IV-B. The one surviving line of the runtime layer
 
-      const terrain = _corridorTerrain(fromCode, toCode);
-      _routeSegments(r1, c1, r2, c2, first).forEach(seg => {
-        const key = seg.r + ',' + seg.c;
-        if (nodeSet.has(key)) return;           // node cells take precedence — skip
+`_setActivePath` outlived every other function in §IX. It shipped as a three-field write; at HEAD
+it is two lines, `lastCorridorCells` dropped with the mesh:
 
-        if (CORRIDOR_CELLS[key]) {
-          // Crossing: merge direction sets, recompute glyph
-          seg.dirs.forEach(d => CORRIDOR_CELLS[key].dirs.add(d));
-          CORRIDOR_CELLS[key].glyph = _wireGlyph(CORRIDOR_CELLS[key].dirs);
-          CORRIDOR_CELLS[key].edges.push({ from: fromCode, to: toCode });
-        } else {
-          CORRIDOR_CELLS[key] = {
-            dirs: seg.dirs, glyph: _wireGlyph(seg.dirs),
-            terrain, edges: [{ from: fromCode, to: toCode }],
-          };
-        }
-      });
-    });
-  });
+```js
+function _setActivePath(fromCode, toCode, dir) {   // @38195
+  S_story.lastExitCode = fromCode;
+  S_story.lastExitDir  = dir;
 }
 ```
 
-**Computational complexity:** O(E × L) where E is the number of edges (~60) and L is the maximum corridor length in grid cells (~16). At startup this runs in under 1ms. `CORRIDOR_CELLS` is then a static lookup table — O(1) access per cell.
-
-### 5.2 Route Segment Generator: `_routeSegments()`
-
-The L-shaped route from `(r1,c1)` to `(r2,c2)` with horizontal-first order:
-
-```javascript
-// roll2hit-v3.html line 6165
-function _routeSegments(r1, c1, r2, c2, first) {
-  const cells  = [];
-  const hStep  = c2 > c1 ? 1 : (c2 < c1 ? -1 : 0);
-  const vStep  = r2 > r1 ? 1 : (r2 < r1 ? -1 : 0);
-
-  if (first === 'H') {
-    // Horizontal segment (not including from-node or corner)
-    if (hStep !== 0)
-      for (let c = c1 + hStep; c !== c2; c += hStep)
-        cells.push({ r:r1, c, dirs: new Set(['E','W']) });
-    // Corner cell (only when both axes change)
-    if (hStep !== 0 && vStep !== 0)
-      cells.push({ r:r1, c:c2,
-        dirs: new Set([hStep > 0 ? 'W' : 'E', vStep > 0 ? 'S' : 'N']) });
-    // Vertical segment (not including to-node)
-    if (vStep !== 0)
-      for (let r = r1 + vStep; r !== r2; r += vStep)
-        cells.push({ r, c:c2, dirs: new Set(['N','S']) });
-  } else {
-    // Vertical-first: corner at (r2, c1)
-    if (vStep !== 0)
-      for (let r = r1 + vStep; r !== r2; r += vStep)
-        cells.push({ r, c:c1, dirs: new Set(['N','S']) });
-    if (vStep !== 0 && hStep !== 0)
-      cells.push({ r:r2, c:c1,
-        dirs: new Set([vStep > 0 ? 'N' : 'S', hStep > 0 ? 'E' : 'W']) });
-    if (hStep !== 0)
-      for (let c = c1 + hStep; c !== c2; c += hStep)
-        cells.push({ r:r2, c, dirs: new Set(['E','W']) });
-  }
-  return cells;
-}
-```
-
-**Corner direction logic:**
-
-The corner cell is the turning point of the L. Its `dirs` set contains exactly two entries: the direction from which the wire arrives, and the direction in which it departs. The box-drawing character follows automatically from the sorted key lookup.
-
-| Route direction | Corner dirs | Glyph |
-|----------------|-------------|-------|
-| East then South | `{W, S}` | `┐` |
-| East then North | `{W, N}` | `┘` |
-| West then South | `{E, S}` | `┌` |
-| West then North | `{E, N}` | `└` |
-
-**Visual example — `CI(5,16) → MI(5,8)`** (pure horizontal, no corner):
-
-```
-Row 5:  [CI]─── ─── ─── ─── ─── ─── ─── [MI]
-        c16  15  14  13  12  11  10   9    c8
-             ─   ─   ─   ─   ─   ─   ─
-```
-
-After L9-B inserts `J1` at (5,12), the route splits:
-
-```
-        [CI]─── ─── ─── [J1]─── ─── ─── [MI]
-        c16  15  14  13   c12  11  10   9  c8
-```
-
-**Visual example — `OC(13,1) → DS(14,4)`** (L-shaped, H-first):
-
-```
-Row 13: [OC]─── ─── ─┐
-        c1    2    3  c4
-Row 14:              [DS]
-                     c4
-```
-Corner at (13,4) has `dirs={W,S}` → `┐`. Then one vertical cell at (14,4) has `dirs={N,S}`... but that is `DS` itself — a node — so the vertical segment has zero intermediate cells. Net result: one horizontal run + one corner cell.
-
-### 5.3 Glyph Derivation: `_wireGlyph()`
-
-```javascript
-// roll2hit-v3.html line 6157
-function _wireGlyph(dirs) {
-  return WIRE_GLYPH[[...dirs].sort().join(',')] || '·';
-}
-```
-
-The fallback `'·'` is a dot — visible but non-directional. It indicates a crossing combination not in the lookup table (e.g., a single isolated direction `{N}` only, which should not occur in a valid route but is rendered gracefully).
+Its only consumer is the map overlay's gold exit arrow (`mc-exit-active@36714`) — the last item in
+the report's own §IX runtime diagram, and the only one still running. The parameter `toCode` is now
+unused: a **dead parameter** left by the amputation, and a minor member of the §DX-02n dead-code
+family.
 
 ---
 
-## VI. Travel Mode Theory
+## V. Corpus Cross-Check — the `CI` Disagreement, Settled
 
-### 6.1 The Three Modes
+§DOC-02e established that lab reports are a **corpus**: two reports can disagree, and the
+disagreement is invisible to any single-report pass. This report and its Layer-9 sibling
+(`lab-report-battleground-circuit-path-quest.md`, §DOC-02c) share the same date, the same layer and
+an overlapping node table. On `MI`, `J1` and the junction set they agree. On `CI` they do not:
 
-The system implements three travel modes for corridor traversal. Two are coded; the third (Sneak) is a design extension:
+| Source | `CI` is… |
+|---|---|
+| This report (§IV-1) | `num:1`, `name:'city'`, **"City Streets — Birka"** |
+| §DOC-02c's report (Appendix A) | **"The Thieves' Den"** |
+| `32c10c5` (2026-05-24) | `CI:{ num:1, code:'CI', name:'city', label:'City Streets — Birka' }` |
 
-| Mode | Name | Trigger | Encounter Roll | Day Cost | Notes |
-|------|------|---------|----------------|----------|-------|
-| **Run** | Warp | `btn-corridor-warp` | None (0%) | 0 | Instant teleport to destination |
-| **Hunt** | Hunt | `btn-corridor-hunt` | Yes — quest-scaled | 0 | Optional battle at corridor terrain |
-| **Sneak** | *(planned)* | *(future)* | Reduced chance | 0 | Lower encounter rate, slower |
+**This report is right.** "The Thieves' Den" was never a node label — it was
+`HUNTING_GROUNDS['city'].displayName`, an entry in the very table §DOC-02c's report calls "the
+architectural backbone." Its Appendix A is a **mixture**: mostly node labels, at least one
+loosely reworded (`AL` "Visby Dark Alleys" vs the shipped "Visby Approach Alley"; `BQ` "Weimar
+Forge District" vs "Blacksmith Quarter — Weimar"), and `CI` taken from the parallel terrain table
+altogether. §DOC-02c's verification pass reported the conflict faithfully — *report says Thieves'
+Den, HEAD says Chancery Court* — but had no second source to resolve it, so the conflation survived
+into a shipped §DOC-02 output.
 
-The Hunt/Warp dialog (`#story-corridor-overlay`) fires whenever the Manhattan distance between current node and destination is ≥ 2 — i.e., whenever a corridor exists between them.
+Two program corrections follow:
 
-### 6.2 Quest-Probability Coupling
-
-The central design insight of the Hunt/Warp system is that **the player's quest load is both a goal counter and a risk multiplier**. The more quests a player has active, the higher the encounter rate while traveling Hunt mode.
-
-```javascript
-const activeQuestCount = Object.values(S_story.quests).filter(s => s === 'active').length;
-const encounterChance  = Math.min(0.9, 0.1 + activeQuestCount * 0.05);
-```
-
-| Active Quests | Encounter Chance |
-|:---:|:---:|
-| 0 | 10% |
-| 2 | 20% |
-| 4 | 30% |
-| 8 | 50% |
-| 16 | 90% (cap) |
-
-**The philosophical reading:** A player carrying many active quests is a person in motion — they have enemies, obligations, and a reputation. Their presence on the road is conspicuous. The formula quantifies conspicuousness as a monotone linear function of commitment, capped at 90% because even the most wanted person can catch a lucky break.
-
-**The hunt-optimization reading:** The formula also makes Hunt mode *more efficient* when you are already doing many quests. If you have 8 active quests and need to grind XP in a forest corridor, a 50% encounter rate means roughly one fight per two traversals — predictable grinding. The player who plans this is rewarded with efficiency; the player who hunts with no quests gets 10%, which is exploratory randomness.
-
-This is the precise inverse of how most games work: usually more quests = more complexity = more danger. Here, more quests = more conspicuousness = more encounter = more XP per mile. The quests *pull* the world toward you.
+1. **§DOC-02c delta 7 is too strong.** It states the quest→target coupling "has no data to run on
+   and never did." Correct about the *fields*: `targetTerrain` and `targetKeys` have 0 hits, ever.
+   But the **mechanism shipped**, deriving its data instead of declaring it —
+   `_getQuestTargetKeys()` at `32c10c5` walks active quests to `NODE_MAP[q.activateNode].battle.key`
+   and `_stalkedMonsterPick` applies a `BOOST = 6` to those keys. Principle 3 ran; it just never had
+   an authored surface. *A missing field is not a missing feature.*
+2. **HEAD is the wrong instrument for a claim about the past.** Both corrections above came from
+   reading `32c10c5`, not HEAD. §DOC-02e taught that the delta table runs both ways; this pass adds
+   that it also runs **backwards in time** — and that `git log -S` finding zero commits proves
+   non-existence, while a symbol being absent at HEAD proves nothing about 2026-05-21.
 
 ---
 
-## VII. Execution Traces
+## VI. Defects Filed
 
-### Trace A: Hunt Mode
+1. **§AUDIT-03x — 172 of 416 nodes can never be arrived at, blocking 774 quests.** Traced from this
+   report's §VIII Step 2 rule, *"no two nodes should share the same (r, c)."* That rule was
+   **deliberately retired** by §WALK-1.5, which merged 1°-collided cities into shared **locales**:
+   `const CELL_GRID@9852` maps each cell to an *array* of codes, `list[0]` being "the node you
+   arrive at" and the rest "intra-cell sub-locations." Measured: **416 nodes occupy 244 cells**, so
+   **172 are non-primary** (worst cell `32,203` holds **17**). `S_story.currentCode` is assigned at
+   exactly two sites — `S_story.currentCode = destCode@28368`, where `destCode = res.destCodes[0]`,
+   and the respawn line `checkpointNode || 'LHR'@26009` — so **a non-primary code can never become
+   `currentCode`**, and its `text`/`npc`/`battle`/`loot`/`sleep` never render. Because
+   `_uqfActivateAtNode(node)@30132` keys on `node.code`, **1,260 quests carry an `activateNode` on a
+   non-primary node; 486 are already held by the §AUDIT-03e guard, leaving 774 across 135 nodes that
+   would activate on arrival and cannot.** Affected nodes include `BK` (89 quests, sharing a cell
+   with the starting node `LHR`), `WM` (312, behind `ERF`) and `HCA` (behind `WG0`). The waypoint
+   system already knows — `storyWaypoint`/`_travelTick` accept arrival **by cell** precisely because
+   "co-located locale nodes share a cell" — so the player is told *"You have reached the waypoint:
+   \<label\>"* for a node the engine then declines to render. The MUD path is honest about it
+   (`locales share this ground@10207`); the browser path is not. **Design call:** aggregate
+   sub-location quests into the primary's arrival, or give the primary a surface for entering its
+   locale siblings. Overlaps §AUDIT-03d — that row's staging decision should be made knowing 774 of
+   its quests are unreachable for a second, independent reason.
 
-**Scenario:** Player is at `MI` (Plains & Midlands, r5,c8) with 4 active quests. They press `E` to move toward `CI` (r5,c16). Manhattan distance = 8 ≥ 2.
-
-```
-1. User presses E (keyboard) or clicks D-pad East button
-   │
-   └─► storyMove('E')                              [line 5441]
-         node = NODE_MAP['MI']                     → { ..., E:'CI', ... }
-         dest = 'CI'
-         next = NODE_MAP['CI']                     → { label:'City Streets — Birka', ... }
-         [gate lock checks — none apply]
-         [shard gate check — not CO, skip]
-         storyCheckMissedSleep()                   → no missed sleep
-         S_story.log.push('MI')
-         S_story.log.length = 7 (< 20, no shift)
-
-         fromCoords = NODE_COORDS['MI']            → { r:5, c:8 }
-         toCoords   = NODE_COORDS['CI']            → { r:5, c:16 }
-         manhattan  = |5-5| + |8-16|              = 8  ≥  2
-         ↓
-         storyCorridorTravel('MI', 'CI', 'E')      [planned L9-E]
-
-2. storyCorridorTravel('MI', 'CI', 'E')
-         fromNode = NODE_MAP['MI']                 → label: 'Plains & Midlands'
-         toNode   = NODE_MAP['CI']                 → label: 'City Streets — Birka'
-         terrain  = _corridorTerrain('MI','CI')    → 'midlands'
-         activeQs = Object.values(S_story.quests)
-                      .filter(s => s==='active').length  → 4
-         chance   = Math.min(0.9, 0.1 + 4×0.05)   → 0.30  (30%)
-         pct      = 30
-
-         DOM updates:
-           corridor-from     ← 'Plains & Midlands'
-           corridor-to       ← 'City Streets'
-           corridor-terrain  ← 'midlands'
-           corridor-quest-count ← 4
-           corridor-pct      ← '30%'
-
-         btn-corridor-hunt.onclick = doTravel(true)
-         btn-corridor-warp.onclick = doTravel(false)
-         story-corridor-overlay.classList.add('visible')
-         → Dialog renders:
-           ⚡ Time-Warp Footpath
-           Plains & Midlands → City Streets
-           Road: midlands
-           4 active quest(s) → 30% encounter chance
-           [⚡ Warp — instant, safe]
-           [🎯 Hunt — roll encounter]
-           [✕ Cancel]
-
-3. User clicks "🎯 Hunt — roll encounter"
-         doTravel(true) fires
-
-4. doTravel(true)
-         story-corridor-overlay.classList.remove('visible')
-         _setActivePath('MI', 'CI', 'E')          [planned L9-H]
-           S_story.lastExitCode = 'MI'
-           S_story.lastExitDir  = 'E'
-           S_story.lastCorridorCells = [
-             {r:5,c:9}, {r:5,c:10}, {r:5,c:11},
-             {r:5,c:12}, {r:5,c:13}, {r:5,c:14}, {r:5,c:15}
-           ]                                       (from CORRIDOR_CELLS lookup)
-         S_story.currentCode = 'CI'
-         triggerCorridorEncounter('midlands', () => storyRender(NODE_MAP['CI']))
-
-5. triggerCorridorEncounter('midlands', cb)       [planned L9-F]
-         activeQs = 4
-         chance   = 0.30
-         roll     = Math.random()                  → e.g. 0.21  (< 0.30)
-         ENCOUNTER TRIGGERED
-
-         pool     = WORLD_DB['midlands'].monsters
-         monster  = _weightedMonsterPick(pool)
-
-6. _weightedMonsterPick(pool)
-         WEIGHTS = { trivial:35, easy:35, medium:25, hard:4, deadly:1 }
-         Build weighted array (~100 entries):
-           [wolf×35, goblin×35, bandit×25, troll×4, ogre×1, ...]
-         pick random index → e.g. wolf
-         return { name:'Wolf', tier:'trivial', hp:11, ac:13, ... }
-
-7. triggerCorridorEncounter (continued)
-         _corridorOnComplete = cb                  (the storyRender callback)
-         S_story.pendingBattle = {
-           nodeCode: '_corridor',
-           name: 'Wolf',
-           label: 'Corridor — midlands',
-           isCorridor: true,
-         }
-         loadWorldMonster(wolf)                    → loads wolf stats into S.opp
-         S.player.hp    = S_story.hp
-         S.player.maxHp = S_story.hpMax
-         refreshLeftPanel()
-         _renderPreBatt()
-         story-prebatt-overlay.classList.add('visible')
-         → Pre-battle screen: "Corridor — midlands" · "Wolf"
-
-8. [Battle occurs in Battle Mode]
-         Player defeats wolf
-         btn-outcome-win clicked
-
-9. storyApplyOutcome(true)
-         pb = S_story.pendingBattle
-         pb.isCorridor === true  ✓
-         _corridorOnComplete !== null  ✓
-         cb = _corridorOnComplete
-         _corridorOnComplete = null
-         [player survived — hp > 0]
-         cb()
-           → storyRender(NODE_MAP['CI'])
-
-10. storyRender(NODE_MAP['CI'])
-          Renders City Streets — Birka panel
-          Map overlay (if open) shows:
-            Corridor cells (5,9)–(5,15): class mc-corridor-active  (gold wire)
-            Node MI (5,8): exit arrow ▶ has class mc-exit-active   (gold)
-            Node CI (5,16): mc-current  (◉ gold)
-```
-
-**Total function calls in Hunt mode trace:** 10 major calls, with `_weightedMonsterPick` as the deepest internal computation.
+2. **§DX-02n (new member) — `_setActivePath`'s `toCode` parameter is dead.** Passed at the single
+   call site, never read in the two-line body (§IV-B). One-line cleanup; belongs with the
+   `check:deadconsts` phase.
 
 ---
 
-### Trace B: Warp Mode (Story Mode Travel)
+## VII. What the Report Got Right
 
-**Scenario:** Same player, same starting position `MI`, same destination `CI`. Player chooses Warp.
-
-```
-1. storyMove('E')                                 [as in Trace A, steps 1–2]
-   manhattan = 8 ≥ 2
-   → storyCorridorTravel('MI', 'CI', 'E')
-
-2. storyCorridorTravel('MI', 'CI', 'E')
-   [Dialog renders — identical to Trace A]
-
-3. User clicks "⚡ Warp — instant, safe"
-   doTravel(false) fires
-
-4. doTravel(false)
-   story-corridor-overlay.classList.remove('visible')
-   _setActivePath('MI', 'CI', 'E')               [same as Trace A step 4]
-     S_story.lastExitCode = 'MI'
-     S_story.lastExitDir  = 'E'
-     S_story.lastCorridorCells = [ {r:5,c:9}, ..., {r:5,c:15} ]
-   S_story.currentCode = 'CI'
-   storyRender(NODE_MAP['CI'])                    [DIRECT — no encounter step]
-
-5. storyRender(NODE_MAP['CI'])
-   Renders City Streets panel
-   Map overlay shows gold corridor trace (same visual as Hunt mode outcome)
-```
-
-**Total function calls in Warp mode trace:** 5 major calls. Steps 5–9 of Hunt mode (encounter roll, monster pick, battle, outcome) are entirely absent. The corridor is traversed, the highlight is applied, the world renders. Done.
-
-**The asymmetry is the design:** Warp mode is mechanically trivial. Its value is purely navigational. Hunt mode is mechanically rich — it engages the entire battle subsystem — but only because the player chose it. The choice is the mechanic.
+- **Every data structure and algorithm it specified shipped exactly as written** (§IV-A). For a
+  pre-implementation design document that is the strongest possible result, and it held for the
+  subsystem's entire 24-day life.
+- **The junction-as-cognitive-anchor argument.** J1–J7 shipped as specified — named, contentless,
+  purely orienting. The *design* was abandoned, not disproved: §NAV-01's road net solved the same
+  legibility problem with continuous roads instead of named midpoints.
+- **`NODE_MAP.name` is the terrain key.** The single link between place and monster pool, preserved
+  by every later navigation track — the same claim §DOC-02c independently confirmed.
+- **Spatial embedding beats a pure abstract graph** (§I). Vindicated far past its own scope: the
+  world went from a 26-column abstraction to a real equirectangular projection with a coastline
+  raster. The report argued distance should be *felt*; §WALK made it geographic.
+- **`_setActivePath` and the gold exit arrow** — specified in §IX, still running unchanged at HEAD.
 
 ---
 
-## VIII. Mesh Creation: How to Build It From Scratch
+## VIII. Scope Note
 
-### Step 1 — Define Named Places
-
-Every named place is an entry in `NODE_MAP`. Each entry needs: a unique code, a grid label, directional neighbors (or `null`), and content fields (npc, battle, loot, sleep).
-
-```javascript
-const NODE_MAP = {
-  A: { code:'A', label:'Town Alpha', N:null, S:null, E:'B', W:null, ... },
-  B: { code:'B', label:'Town Beta',  N:null, S:null, E:null, W:'A', ... },
-};
-```
-
-**Rule:** every directional edge must be bidirectional in the data. If `A.E = 'B'`, then `B.W = 'A'`.
-
-### Step 2 — Assign Grid Positions
-
-Every node gets a `(row, col)` coordinate. Coordinates are design choices: they determine visual distance and which cells corridors pass through.
-
-```javascript
-const NODE_COORDS = {
-  A: { r:5, c:3 },
-  B: { r:5, c:9 },  // 6 columns apart — corridor will have 5 intermediate cells
-};
-```
-
-**Rule:** no two nodes should share the same `(r, c)` — the renderer places one node per cell.
-
-### Step 3 — Declare Terrain
-
-Add each edge to `CORRIDOR_TERRAIN` with a `WORLD_DB`-valid terrain key. Both directions.
-
-```javascript
-const CORRIDOR_TERRAIN = {
-  'A-B': 'forest', 'B-A': 'forest',
-};
-```
-
-### Step 4 — Call `buildCorridorMap()`
-
-Call once after both data structures are defined. It populates `CORRIDOR_CELLS` automatically from the two source structures.
-
-```javascript
-buildCorridorMap();
-// CORRIDOR_CELLS is now populated with all intermediate grid cells
-// e.g., CORRIDOR_CELLS["5,4"] = { dirs: Set{E,W}, glyph:'─', terrain:'forest', edges:[{from:'A',to:'B'}] }
-```
-
-### Step 5 — Insert Junctions Where Needed
-
-For corridors longer than ~4–5 cells, add a junction node at the midpoint. The junction is a NODE_MAP entry with `junction: true`:
-
-```javascript
-NODE_MAP.J1 = {
-  code:'J1', label:'Forest Road Junction', junction:true,
-  N:null, S:null, E:'B', W:'A',
-  text:'A signpost. East: Town Beta. West: Town Alpha.',
-  npc:null, battle:null, loot:null, sleep:false,
-};
-NODE_COORDS.J1 = { r:5, c:6 };
-```
-
-Then update the original edge: `A.E = 'J1'` and `B.W = 'J1'`. The corridor `A→B` is now split into `A→J1` and `J1→B`. `buildCorridorMap()` draws two shorter wires instead of one long one, with the junction node as a named midpoint visible on the map.
-
-### Step 6 — Render
-
-The map renderer iterates `CORRIDOR_CELLS` for every visible cell in the 11×11 viewport. Each corridor cell renders its glyph in the appropriate color (dim/visited/active). Junction nodes render as `✛` with their code label. The result is a PCB-style wire diagram overlaid on the sparse node grid.
+Retained as the design record for a subsystem that no longer exists. Its value at HEAD is threefold:
+it is the **most accurate surviving specification in the §DOC-02 corpus** at the level of data
+structures; it is the corpus's clearest natural experiment in *where* a design document goes wrong,
+because the transcribed and narrated halves sit in one file by one author on one day (§IV-A); and
+it is the document that settles the `CI` label its Layer-9 sibling got wrong (§V).
 
 ---
 
-## IX. Architectural Summary
+## References
 
-```
-DATA LAYER (static, defined at load)
-├── NODE_MAP          — graph adjacency + content
-├── NODE_COORDS       — spatial embedding (row, col)
-├── WIRE_GLYPH        — direction set → box-drawing char
-├── CORRIDOR_TERRAIN  — edge → WORLD_DB terrain key
-└── CORRIDOR_CELLS    — derived; built by buildCorridorMap()
-
-BUILD LAYER (runs once at startup)
-├── buildCorridorMap()
-│     ├── _routeSegments()   — L-shaped intermediate cell list
-│     ├── _wireGlyph()       — glyph from direction Set
-│     └── _corridorTerrain() — terrain lookup
-└── → CORRIDOR_CELLS populated; ~1ms; read-only thereafter
-
-RUNTIME LAYER (per player action)
-├── storyMove(dir)
-│     ├── if manhattan ≥ 2 → storyCorridorTravel()
-│     └── if manhattan ≤ 1 → storyRender() [direct]
-│
-├── storyCorridorTravel(from, to, dir)
-│     ├── computes encounter % from active quest count
-│     ├── renders Hunt/Warp dialog
-│     └── on choice:
-│           Warp → _setActivePath() → storyRender()
-│           Hunt → triggerCorridorEncounter() → [battle] → storyRender()
-│
-├── triggerCorridorEncounter(terrain, onComplete)
-│     ├── rolls Math.random() vs encounterChance
-│     ├── if hit: _weightedMonsterPick() → loadWorldMonster() → prebattle UI
-│     └── if miss: onComplete() immediately
-│
-└── _renderMapGrid()   [map overlay]
-      ├── first pass:  render node cells (NODE_COORDS)
-      ├── second pass: render corridor cells (CORRIDOR_CELLS)
-      │     ├── mc-corridor-dim     (unvisited endpoint)
-      │     ├── mc-corridor-visited (both endpoints visited)
-      │     └── mc-corridor-active  (last-traveled corridor — gold)
-      └── exit-arrow highlight:  mc-exit-active on lastExitCode+lastExitDir
-```
+[1] §CELL-05 / §CELL-10 / §CELL-11A / §CELL-14 — junction abolition and corridor removal
+    (`6dea804`, `4207552`, `85cc43e`, `30f18b4`; 2026-06-13 … 2026-06-16).
+[2] §WALK / §NAV-01 — navigation-core redesign (90×360 geo grid, `MOVER:CORE`, `ROAD_RUNS`);
+    supersedes Layer 9 entirely. `lab-reports/lab-report-nav01-navigable-world.md`.
+[3] §DOC-02c — `lab-reports/lab-report-battleground-circuit-path-quest.md`, verified 2026-08-11.
+    The Layer-9 sibling; source of the `CI` disagreement resolved in §V.
+[4] §DOC-02b — `lab-reports/lab-report-architecture-full.md`, verified 2026-08-11. Origin of the
+    "the half that points at code is the half that is right" lesson refined in §IV-A.
+[5] §TIMELESS-01 — `lab-reports/lab-report-timeless-movement-hunt-removal.md`, 2026-06-26.
+    Records the shipped Stalk modal as never shown — the §III-A verdict, reached independently.
+[6] §AUDIT-03l / §AUDIT-03m — dead node codes in docs; `docs/maps/node-index.md` is the live
+    reference. Source of the `CI` finding in §III-B.
+[7] §CELL-13 / hard invariant #3 — no jump travel; `checkpointNode` respawn is the only warp.
 
 ---
 
-## X. Conclusion: The Traversable World
+## Appendix A — The 26 Node Codes (RETIRED, kept)
 
-The sparse node mesh, before Layer 9, was a **point graph**: nodes floating in void. Players knew logically that Birka was "west" of the Plains, but the map showed a dot at column 16 and a dot at column 8 with nothing between them. The distance was encoded as data; it was not felt.
+Retained verbatim as the 2026-05-21 record. **None resolves to the node named**; `CI` resolves to a
+different live node.
 
-After Layer 9, the map shows a wire running eight cells from dot to dot. You can see the road. You can see how far you have to go. You can see which roads you have traveled before (bright wire) and which are still unknown (dim wire). You can see where you just came from (gold wire, pulsing arrow).
+**Story nodes (19):** `CI` City Streets — Birka · `MI` Plains & Midlands · `FO` Forest ·
+`HL` Highlands · `OC` Open Ocean · `DS` Deep Sea · `IS` Island Shore · `SE` Sewer ·
+`VC` Mourne's Castle · `DE` Desert · `DC` Caravan Route · `JU` Jungle · `KT` Camelot ·
+`OP` Dragon Palace · `HC` Heavenly Cloud Road · `AR` Arctic Wastes · `HS` Crones' Domain ·
+`BE` Beach · `CO` Cosmic Convergence.
 
-The junction concept makes long roads navigable — not by shortening them, but by naming the midpoint. A junction is an act of declaration: *this place, this road-crossing, is worth knowing about*. The Midlands Road Fork (J1) is not a city. It has no inn, no NPC, no battle. But it has a name, and a name is enough to make a place real.
-
-The Hunt/Warp duality makes the road itself a game resource. A road is not just connection — it is potential danger, potential XP, potential encounter. The player's decision to Warp or Hunt is a strategic choice about risk/reward that is directly coupled to their current quest state. The world *responds* to the player's commitments.
-
-This is the philosophical conclusion: by reducing the infinite grid to a sparse mesh of named places, connected by rendered wires, navigated through typed travel modes, the system transforms geography into *experience*. Distance becomes risk. Roads become decisions. Junctions become knowledge. The map is no longer a lookup table — it is a world.
-
----
-
-*File: `lab-report-circuit-map-theory.md`*  
-*Companion code: `roll2hit-v3.html` — Layer 9-A (L9-A through L9-H)*  
-*Implementation spec: `spec-corridors.md`*  
-*Feature plan: `plan.md`*  
-*Last updated: 2026-05-21*
-
+**Junctions (7):** `J1` Midlands Road Fork (r5,c12) · `J2` (r10,c4) · `J3` (r9,c3) · `J4` (r12,c8) ·
+`J5` (r1,c10) · `J6` (r5,c5) · `J7` (r1,c22). All shipped with `junction:true`; all purged by
+§CELL-05/§CELL-14.
 
 ---
+
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
