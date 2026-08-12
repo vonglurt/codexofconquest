@@ -1,299 +1,362 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report: The Meta Lab-Report Process — Prompt Loop Expansion and Design Iteration
+# Lab Report — The Meta Process: Prompt-Loop Expansion and Design Iteration
 
-**Author:** Claude (Sonnet 4.6) + roll2hit.com design sessions  
-**Date:** 2026-05-26  
-**Classification:** Design Methodology / Process Engineering  
-**Audience:** Electrical Engineering / Computer Science background; video game designer / programmer  
+**Original:** roll2hit.com design session, 2026-05-26 · **Verified against HEAD:** 2026-08-12 (§DOC-02x)
+**Own commit:** `8abc606` (2026-05-26 19:57) — 19,378 lines · HEAD 38,712
+**Classification:** Design methodology / process engineering
+**License:** MIT — roll2hit.com — Copyright (c) 2026
 
 ---
 
 ## Abstract
 
-This report documents the meta-process by which `plan.md` and its associated lab reports evolve through iterative prompt sessions. The central observation is that the prompt–plan–lab-report pipeline is not a linear authoring process — it is a recursive unrolling loop in which each expansion pass produces a list of items, each of which becomes the seed for the next expansion pass. This document analyzes that loop structure, identifies ten specific instances of it in the roll2hit.com design history, and proposes efficiency improvements for future session design.
+This is the second report in the corpus whose subject is the **repository rather than the game** (after
+`lab-report-documentation-system-design.md`, §DOC-02i). It describes the prompt → expansion → lab-report
+→ integration pipeline as a *recursive list-unrolling loop* driven at human pace — one "continue," one
+level of descent — documents ten instances of that loop in the 2026-05 design history, and closes with
+ten recommendations for future sessions.
+
+Verification finds something no other report in the program has produced: **it is the traceable ancestor
+of the repository's current operating manual.** Six of its ten recommendations are binding rules in
+`CONTRIBUTING.md` and `prompt.md` seventy-eight days later — including the one sentence that governs the
+increment now rewriting it. Its factual claims hold at a high rate (18 of 20 identifiers, 6 of 6 lab-report
+filenames, all three SP4 counts exact **at its own commit**), and its errors cluster where the program has
+learned to expect them: node codes, a status block, and one recommendation the document itself refutes
+nine lines later.
+
+Its one measurable failure is also its most useful: recommendation 8 asserts a bijection between
+`quest.md` and `QUEST_DB`. That bijection is now **5.2 % true**.
 
 ---
 
-## I. The Core Loop: Prompt → Expansion → Lab Report → Integration
+## I. Intent, Inspiration, and What It Buys the Player
 
-### 1.1 Formal description
+### A. The problem it was written against
 
-The design process for *The Shattered Codex* follows a consistent pattern:
+A single-file game grown by conversation has one characteristic failure: the specification races ahead of
+the implementation, field names drift between the two, and by the time anyone builds the thing, the
+document describing it is fiction. The author names the mechanism precisely — the prompt history is a
+**shift register**, and every new input pushes an earlier decision one place closer to the overflow
+boundary. When it overflows you do not get an error; you get a confident, wrong memory.
 
-```
-SEED PROMPT
-   └─► [Parse] → List of N items
-                      └─► [For each item] → Elaboration
-                                                └─► [For each elaboration] → Sub-list
-                                                                                  └─► ...
-                                                [Collapse all passes] → Lab Report
-                                                                              └─► [Integration] → HTML
-```
+### B. The design goal
 
-Each stage is a **map operation over a list**. The list grows by a factor of approximately 3–10 per pass. A single seed prompt ("add skill checks") produces, over four passes: 1 mechanic spec → 5 state fields → 4 quest IDs → 15 vignette prose lines → 2 new sections of plan.md → 1 lab report gate → 1 HTML implementation sequence.
+Decide, once, *what belongs where*: **decisions in the plan, reasoning in lab reports, and only current
+working state in the register.** Then put a gate between speculation and commitment — the lab report —
+so that no HTML edit begins until the data shapes are frozen in a file that survives the overflow.
 
-This is not unusual in software engineering — it resembles an **AST expansion** in compiler theory: a token is parsed into a tree, the tree is traversed depth-first, and each leaf is expanded before the traversal continues. The distinguishing feature here is that the **traversal is human-paced**: the user says "continue" between passes, and the assistant expands exactly one level per continue. The loop is explicit and co-driven.
+### C. Why "one continue, one level"
 
-### 1.2 Why this matters
+The loop resembles an AST expansion: parse a token into a tree, traverse depth-first, expand each leaf
+before continuing. The distinguishing feature the author identifies is that **the traversal is
+human-paced.** The user says "continue"; the assistant descends exactly one level. This is not a
+politeness convention — it is the mechanism that keeps the specification and the user's mental model at
+the same depth, so that neither has to be reconciled to the other later.
 
-The efficiency of the design process depends on knowing where in the traversal you are. In electrical engineering terms: the prompt history is a **shift register** — each new input shifts all prior context one position toward the overflow boundary. When the register overflows (context compaction), you lose the tail. The meta-question is: which design decisions belong in the shift register (session memory) vs. which belong in permanent storage (plan.md, lab reports, quest.md)?
+### D. What it adds to the game
 
-The answer in this project: **decisions belong in plan.md; reasoning belongs in lab reports; the shift register holds only current working state.**
+The process is not a feature a player can see, and it would be dishonest to pretend otherwise. Its
+contribution is measurable at one remove, and it is large:
 
----
+1. **Arcs ship with their data shapes intact.** The lab-report gate is why §CROWN-01's nine-node swamp
+   arc could be measured at ~600 transcribed facts with **zero** transcription errors (§DOC-02h), and why
+   §SIREN-01's five quests survived a total format migration **25 of 25 fields byte-exact** (§DOC-02u). A
+   game with 2,853 quests that mostly agree with their own documentation is what this gate buys.
+2. **The world is finishable rather than merely large.** "One increment per continue" is the reason the
+   repository holds 416 nodes and 8 acts instead of forty half-built systems. Depth on one row beats
+   breadth across four, because only a *finished* row survives a context switch.
+3. **A cold session can pick the work up.** Every hand-off contract in the repo — the §RESUME log, the
+   memory files, the numbered next steps — descends from §3.3 of this document.
 
-## II. Ten Specific Instances of the Loop
-
-### Instance 1 — The Grief Arc Expansion (§GR, 2026-05-25)
-
-**Seed:** "Add grief to the story."  
-**First pass:** Corruption-grief chain identified (CY → CQ → FR). 3 characters specced (Connie, Aldo, Vincenzo).  
-**Second pass:** Quest chain elaborated (Q-FR-01–03). Node FR specced (terrain, battle, NPCs).  
-**Third pass:** Writing technique specced (§GR-F French vignette, 5 acts, object-named).  
-**Lab report:** `lab-report-la-riva-grief-arc.md` — locked all data shapes before HTML edit.  
-**Integration:** Layer 78. All state flags, NPC keys, and quest IDs from lab report appear verbatim in HTML.  
-
-**Loop analysis:** Seed → 1 theme → 3 characters → 3 quests → 1 node → 1 writing technique → 1 lab report → Layer 78 HTML. Each "continue" expanded one list item at a time. Total expansion factor: ~1 → ~20 spec items → 1 HTML block.
-
----
-
-### Instance 2 — The Desert Codex Redesign (§DESIGN-01, 2026-05-25/26)
-
-**Seed:** "Redesign the theme to desert/Aztec."  
-**First pass:** Color palette specced (8 variables). Rationale documented (Goethe/Itten contrast theory, simultaneous contrast, 1970s earth tones, Aztec codex parallel).  
-**Second pass:** Layout redesigned (8 structural changes, 3-column → read-quest-act-navigate).  
-**Third pass:** P1–P8 implementation phases defined.  
-**Lab report:** None written (design was primarily CSS; no complex data shape decisions).  
-**Integration:** P1–P8 all implemented 2026-05-26.
-
-**Loop analysis:** This instance demonstrates the **no-lab-report case**: when the expansion produces only CSS values and layout changes (no new data structures, no complex state), the loop can skip the lab report gate and go directly to integration. The efficiency decision is: lab reports are required when new `S_story` fields or QUEST_DB shapes are introduced. They are not required for pure presentation changes.
+> **And the honest limit, which is the most useful sentence this report can offer the project today.**
+> The gate verifies that **what was specced got written**. Nothing in the loop verifies that **what was
+> written can be reached.** Every large casualty the §DOC-02 program has measured — §AUDIT-03x's 774
+> unreachable quests, §CROWN-01's 24 of 34, §DOC-02r's 28 of 51, §SIREN-01's 6 of 6 nodes and 5 of 5
+> quests — passed this loop cleanly, because a symbol census and a data-shape freeze are both blind to
+> cell primacy and gate-flag closure. *The pipeline was designed to stop the spec racing ahead of the
+> code. It has no instrument for the code racing ahead of the world.*
 
 ---
 
-### Instance 3 — The Section Layout (§DESIGN-02, 2026-05-26)
+## II. Method
 
-**Seed:** "Make the story mode layout purpose-driven with labeled sections."  
-**First pass:** 5 section types identified (LOCATION / ENCOUNTER / STALK / SOCIAL / VENDOR).  
-**Second pass:** Per-section render logic specced. `_mkSection()` and `_mkCard()` helper functions designed.  
-**Third pass:** Hour tracking added (P2). Exhaustion threshold added (P3, critical bug fix: `battleDis` never applied to rolls).  
-**Fourth pass:** Per-quest hunt buttons added (P4). `storyQuestHunt(id, forceKey)` signature specced.  
-**Lab report:** Not written (section layout was a render pass, no new persisted state beyond `hoursSinceSlept`).  
-**Integration:** P1–P4 all implemented 2026-05-26. P5 still spec-only.
+Instruments from the §DOC-02 program applied here:
 
-**Loop analysis:** This instance demonstrates **incremental expansion with a bug discovery mid-pass**. P3 was specced as "add exhaustion warnings" but the integration pass revealed that `battleDis` had been displaying but not applying disadvantage. The lab report was not yet written — the bug was caught in the integration pass rather than the spec pass. **Lesson:** the lab report gate exists partly to force analysis of existing code before writing new code. A lab report for P3 would have caught the bug during spec.
-
----
-
-### Instance 4 — The Romance Layer (§RESEARCH-01, 2026-05-25)
-
-**Seed:** "Research Chrétien de Troyes and apply romance patterns to the game."  
-**First pass:** 4 Arthurian romances summarized. Structural parallels to existing game arcs identified.  
-**Second pass:** `ROMANCE_QUOTES` const designed (21 entries, 15% per sleep, Act III+).  
-**Third pass:** `NPC_ROMANCE_PREAMBLES` and `NPC_ROMANCE_VIGNETTES` consts designed per NPC.  
-**Fourth pass:** Quest disposition rewrites applied (all QUEST_DB descs + VOID_TIDE_EVENTS).  
-**Lab report:** `lab-report-la-riva-grief-arc.md` incorporated the romance layer documentation.  
-**Integration:** All romance consts implemented 2026-05-25 (prior session). Inn vignette delivery in `storyConfirmSleep()`.
-
-**Loop analysis:** This instance demonstrates **theory-first expansion**: the research pass precedes the spec pass. The structural parallel table (romance → game arc) is the pivot point — it converts literary analysis into mechanical design decisions. The efficiency of this approach is high: 4 Arthurian arc summaries generate ~6 mechanical implementations in one research session.
+- **11 — a report about a CORPUS can only be judged at the size the corpus was.** Measurements are taken
+  at `8abc606`, the report's own commit, not only at HEAD. This is what vindicated its `// → doc:` count.
+- **4 / 8** — `git log -S` on every dead symbol, to separate RETIRED from NEVER SHIPPED.
+- **12 / 15** — score copied passages apart from composed ones.
+- **14** — check a census regex against a gate that already counts the same set. Fired twice this pass
+  (see §V-C), both times on this author's side of the ledger.
+- **A recommendation register**, per §DOC-02i — the highest-value section for any report ending in
+  recommendations.
 
 ---
 
-### Instance 5 — The Cat Quarter Arc (§XLII, Layer 75–77, 2026-05-26)
+## III. As-Built Inventory
 
-**Seed:** "Add a Cat Quarter with a cat mob story arc."  
-**First pass:** NPC faction specced (Jimmy, Sandy, Don Fluffissimo, Cat-King, Kenickie, Tommy).  
-**Second pass:** Quest chain Q-CAT-01 through Q-CAT-06 + Q-CAT-VOID designed.  
-**Third pass:** Monster keys designed (stray_alley_cat, fluffy_cat, beefy_tom, honcho_cat_m/f, taz_devil, fat_merchant_cat, the_cat_king, corrupted_cat).  
-**Fourth pass:** Corruption chain from CY → CQ → FR identified and documented.  
-**Lab report:** `lab-report-kenickie-chronicle.md`.  
-**Integration:** Layer 75–77. 7 quests, 8+ monster keys, 3 NPCs, 1 new node.
+**Live under the specified name (18 of 20 identifiers, 90 %)**
 
-**Loop analysis:** This is the canonical example of a **full depth-first traversal**: seed → NPCs → quests → monsters → lore → lab report → integration. Each level of the tree was expanded completely before moving to the next. The resulting HTML block was large enough that multiple "continue" passes were required at integration time.
+`const ROMANCE_QUOTES = [@22379` (21 entries) · `const NPC_ROMANCE_PREAMBLES = {@27479` ·
+`const NPC_ROMANCE_VIGNETTES = {@27489` · `const NPC_NG_MEMORY_LINES = {@27324` ·
+`function _mkSection(id, icon, label) {@35320` · `_mkCard` · `_rollCeremonia` ·
+`battleDis: 0,@23020` · `hoursElapsed: 0, hoursSinceSlept: 0,@23091` · `skillCheckAttempts: {},@23149` ·
+`romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23098` · `ngMemoryDelivered` ·
+`priorQuestMinusOne` · `ngPlusRun` · `nexusQ01` · `nexusQ02` · `VOID_TIDE_EVENTS` · `storyConfirmSleep`.
 
----
+**Dead (2)**
 
-### Instance 6 — The §DESIGN-03 Ceremonia Roll (2026-05-26)
+| Symbol | Verdict | Evidence |
+|---|---|---|
+| `storyQuestHunt(id, forceKey)` | **RETIRED — correct when written** | born `e594848` (2026-05-25, the day before), deleted `7952752` §TIMELESS-01 |
+| `the_cat_king` | **NEVER SHIPPED** | **0 commits ever**; the monster shipped as `cat_king:         { key:'cat_king',@5404` |
 
-**Seed:** "Add skill checks, a skill check quest type, romantic vignette quests."  
-**First pass:** Ceremonia Roll formula specced (d20 + abilityMod + profBonus ≥ DC).  
-**Second pass:** `type: 'skill_check'` QUEST_DB fields designed. `_rollCeremonia()` signature sketched.  
-**Third pass:** 4 new Birka missions designed. XP awards assigned.  
-**Fourth pass:** Yael Ceremonia Arc (5 acts, quest IDs 01–05, state flags).  
-**Lab report gate:** §DESIGN-03-G — write `lab-report-ceremonia-roll-skill-checks.md` before P1.  
-**Integration:** PLANNED.
+**Monster keys — 8 of 9 exact.** `stray_alley_cat` · `fluffy_cat` · `beefy_tom` · `honcho_cat_m` ·
+`honcho_cat_f` · `taz_devil` · `fat_merchant_cat` · `corrupted_cat` all live; only the Cat-King carries a
+spurious `the_` prefix the file has never held.
 
-**Loop analysis:** This instance is currently at the **lab report gate** — the expansion is complete but integration has not started. The gate enforces a deliberate pause. This is the correct behavior: the Ceremonia Roll introduces new `S_story` fields, a new QUEST_DB field type, and a new UI button in `storyRenderSections()`. All three touch existing systems. The lab report must verify no collisions before HTML edits begin.
+**Node codes — 0 of 6 resolve.** `CQ`→`CDG` · `CY`→`HKG` · `SW`→`MSY` · `CO`→`TLS` · `FR`→`AMS` ·
+`MM`→`LIM:{ num:81, code:'LIM', name:'mimic_meadow'@8815`. The corpus rule applies: *a node code in a
+design doc is a citation, not an identifier.* **But two of the six are invisible to the gate that exists
+to annotate them** — see §V-D.
 
----
+**Documents — 6 of 6 named lab reports exist.** `la-riva-grief-arc` · `kenickie-chronicle` ·
+`sp4-documentation-sync-pass` · `ng-plus-remembrance` · `ceremonia-roll-skill-checks` ·
+`dungeon-ten-themes`. Recommendation 2's *"no orphaned lab reports"* verified at 6 of 6 then and
+**107 of 107 filenames** now.
 
-### Instance 7 — The §DUNGEON-01 Ten Themes (2026-05-26)
-
-**Seed:** "Analyze a D&D dungeon design transcript. Find 10 themes. Apply each to the game."  
-**First pass:** 10 themes extracted. Each mapped to an existing game system (madness → CY, mimic sanctuary → new node MM, heart of dungeon → CO pre-boss, etc.).  
-**Second pass:** Hero origin canon established. Loop reason defined. CY as madness hallucination specced.  
-**Third pass:** Node MM specced (Mimic Meadows terrain, tribble mechanics, Animal Handling DCs).  
-**Fourth pass:** 10 new state fields specced. 2 new nodes (MM, SW).  
-**Lab report gate:** §DUNGEON-01-G.  
-**Integration:** PLANNED.
-
-**Loop analysis:** This instance demonstrates **theme-to-system mapping** as the first pass. The transcript provided 10 pre-named items; the design work was matching each to an appropriate game system. The efficiency of this approach is high: 10 pre-named inputs with clear descriptions reduce the first-pass cognitive load to a matching problem rather than an invention problem.
+**Dead cross-references (6).** `plan.md §I`, `§0`, `§DESIGN-03-G`, `§DUNGEON-01-G`, `§DUNGEON-02` — the
+file was split into `CONTRIBUTING.md` + `BACKLOG.md` at `5e48dd7`. Same fate as §DOC-02i's subject; the
+content migrated to `plan-archive.md`, which `quest.md` correctly points at.
 
 ---
 
-### Instance 8 — The §DUNGEON-02 Five-Act Quest Elaborations (2026-05-26)
+## IV. Spec → Shipped Delta Table
 
-**Seed:** "For each of the 10 dungeon themes, elaborate a 5-act Chrétien-style quest sequence."  
-**First pass:** 5-act template established (Encounter → Test → Ordeal → Cost → Seal).  
-**Second pass:** 10 quest sequences written in parallel (one per §DUNGEON-01 theme).  
-**Third pass:** Framework document written (§D02-11) — design principles, DC tables, check type tables.  
-**Fourth pass:** `quest.md` created as location-organized register.  
-**Lab report gate:** Merged with §DUNGEON-01-G.  
-**Integration:** PLANNED.
-
-**Loop analysis:** This is the **parallel expansion case**: 10 items expanded simultaneously rather than sequentially. Each quest used the same 5-act template, so the expansion was O(N × template_size) rather than O(N²). The framework document (§D02-11) emerged from the pattern recognition across 10 parallel expansions — it could not have been written first because it required seeing the 10 cases to identify what was common.
-
----
-
-### Instance 9 — The Documentation Sync Pass (SP4, 2026-05-25/26)
-
-**Seed:** "Sync plan.md and story.md with the actual HTML."  
-**First pass:** 20 stale PLANNED markers identified and resolved.  
-**Second pass:** 94 consts annotated with `// → doc:` markers.  
-**Third pass:** F4/F6 tables re-verified against WORLD_DB.  
-**Fourth pass:** `#### Gate Locks` section added to story.md.  
-**Lab report:** `lab-report-sp4-documentation-sync-pass.md`.  
-**Integration:** N/A — this pass was documentation, not HTML.
-
-**Loop analysis:** This instance demonstrates **reverse traversal**: instead of spec → HTML, it went HTML → spec (verifying the HTML against the docs). This is the audit pass. Its efficiency depends entirely on the quality of the forward-traversal documentation: well-annotated HTML (`// → doc:`) makes the audit O(N) scan; unannotated HTML makes it O(N²) search. The sync pass revealed 5 mismatched `// → doc:` targets — evidence of previous forward-traversal passes that lacked the annotation discipline.
-
----
-
-### Instance 10 — The NG+ Remembrance Layer (§XV, Layer 50, 2026-05-25)
-
-**Seed:** "Add NG+ memory lines — NPCs remember the player from previous runs."  
-**First pass:** 6 NPC memory lines designed (`NPC_NG_MEMORY_LINES` const).  
-**Second pass:** Entry 42 modal designed (textarea + write/blank buttons, fav gate, `ngPlusRun ≥ 1`).  
-**Third pass:** Froberger's sealed letter at CO designed.  
-**Fourth pass:** NG+ quest chain designed (`nexusQ01`/`nexusQ02`).  
-**Fifth pass:** Fifth ending specced (Sweelinck question override: "What was inside the cage?").  
-**Lab report:** `lab-report-ng-plus-remembrance.md`.  
-**Integration:** Layer 50 implemented.
-
-**Loop analysis:** This is the **depth-limited expansion case**: the seed prompt specified a constraint ("NG+ memory") that bounded the expansion. Five passes were needed, but each pass was constrained to the NG+ context. The depth limit prevented scope creep into the base-game systems. The lab report locked the data shapes (`npcKey → boolean`, `ngMemoryDelivered[key]`, `priorQuestMinusOne` preservation) before any HTML edit.
+| # | Claim | Measured at HEAD (or as noted) | Verdict |
+|---|---|---|---|
+| 1 | SP4: "94 consts annotated with `// → doc:`" | **94 at `8abc606`**; 93 at HEAD | ✅ **EXACT at its own commit** |
+| 2 | SP4: "20 stale PLANNED markers" | exact — `9684ff6`'s own message | ✅ EXACT |
+| 3 | SP4: "5 mismatched `// → doc:` targets" | exact — `ded062e`'s own message | ✅ EXACT |
+| 4 | `ROMANCE_QUOTES`, 21 entries, "15 % per sleep, Act III+" | `Math.random() < 0.15`, `actNumber >= 3`, and the engine comment **byte-identical** | ✅ EXACT |
+| 5 | §DESIGN-02 P3 fixed `battleDis` never applying | live at `// P3 exhaustion: battleDis charges@25045`, still naming P3 | ✅ SHIPPED |
+| 6 | 5 section types: LOCATION / ENCOUNTER / STALK / SOCIAL / VENDOR | **1 of 5 names survives** (`Encounter`); 9 sections at HEAD; STALK deleted by §TIMELESS-01; SOCIAL + VENDOR re-expressed as `NODE_HOOKS`/`NODE_VERBS` (§VM-01-G) | ⚠️ EXPANDED + RENAMED |
+| 7 | `storyRenderSections()` | survives **only inside an HTML comment**, `<!-- storyRenderSections() writes .story-section divs here -->@4278`; 1 commit ever | ❌ DEAD POINTER |
+| 8 | Instance 6 §DESIGN-03 — "Integration: **PLANNED**" | 9 skill-check quests specified → **2,634 `skill_check` bits** live | ❌ **STALE — SHIPPED** |
+| 9 | Instance 7 §DUNGEON-01 — "Integration: **PLANNED**" | both P3+ nodes live (`SZG` 80, `LIM` 81); 26/26 state fields (§DOC-02k) | ❌ **STALE — SHIPPED** |
+| 10 | Instance 8 §DUNGEON-02 — "Integration: **PLANNED**" | **40 of 50** five-act ids live (8 of 10 chains) | ❌ **STALE — SHIPPED** |
+| 11 | Instance 1 §GR — "all flags, NPC keys, quest IDs appear verbatim in HTML" | confirmed independently by §DOC-02s: **43 of 46 identifiers, every quoted string verbatim** | ✅ EXACT |
+| 12 | Instance 10 §XV — `ngMemoryDelivered[key]`, `priorQuestMinusOne`, `ngPlusRun ≥ 1` | all three live | ✅ EXACT |
+| 13 | Rec. 2 — lab-report naming convention | **107 of 107 files comply**; adopted verbatim into CONTRIBUTING's Lab Report Policy | ✅ **ADOPTED** |
+| 14 | Rec. 8 — "`quest.md` … canonical source of truth for quest IDs" | **148 of 2,853 (5.2 %)** | 🔴 SEE §V-A |
+| 15 | Rec. 6 — parallel expansion, "expand all N in a single pass" | **reversed**; contradicts §IV and rec. 9 | 🔴 SEE §V-B |
+| 16 | Rec. 9 — the "continue" discipline | `prompt.md` §0: *"Work is one increment per 'continue.'"* | ✅ **ADOPTED VERBATIM** |
+| 17 | Rec. 10 — anti-scope-creep gate | CONTRIBUTING § Lab Report Policy trigger table | ✅ **ADOPTED** |
+| 18 | Rec. 5 — memory file after every session | `MEMORY.md` + `project_*.md`; `prompt.md` §2 step 10 | ✅ **ADOPTED** |
+| 19 | Rec. 4 — compress rationale to a summary + a table | **the §DOC-02 program's own rewrite spec**, 78 days later | ✅ **ADOPTED** |
+| 20 | Rec. 7 item 5 — `// → doc:` annotation per new const | superseded by §DX-01e `symbol@line` anchors; the doc half had **0 commits ever** (§DOC-02i) | ⚠️ SUPERSEDED |
+| 21 | Rec. 1 — template-first, and Rec. 3 — state-field freeze | *"template"* and *"freeze"* have **0 occurrences** in CONTRIBUTING.md and prompt.md | ⚠️ NOT ADOPTED (kept) |
 
 ---
 
-## III. Efficiency Analysis
+## V. Findings
 
-### 3.1 Where the loop wastes time
+### A. The one bijection it asserts is 5.2 % true — §DX-02ad
 
-| Waste source | Example | Fix |
-|-------------|---------|-----|
-| Expanding before context is clear | D02 expansion began before D01 was finalized | Use the lab report gate as a hard stop: no expansion until the prior level is locked |
-| Speccing data shapes that will change | `S_story.skillCheckAttempts` field name changed twice during §DESIGN-03 | Name fields in the lab report, not in the planning pass. Field names in plan.md are aspirational; field names in lab reports are binding. |
-| Parallel expansion without template | 10 quest sequences without §D02-11 framework | Write the framework first (one expansion pass), then apply it in parallel. Template-first expansion is O(N × template) not O(N²). |
-| Over-documenting obvious CSS | §DESIGN-01 color theory section (~400 lines for 8 CSS variables) | Rationale is valuable; length is not. Compress theory sections to 50-word summaries + the table. |
-| Re-reading already-read sections | Each session restarts cold; system-reminder blocks re-inject context | Memory files (`MEMORY.md`, `project_*.md`) reduce the cost of cold restarts. Write a memory entry after every major design decision. |
+Recommendation 8: *"`quest.md` … Keep it current: every new quest added to HTML should have a
+corresponding entry. The register is the canonical source of truth for quest IDs, locations, and act
+structure."* The document itself opens by claiming the scope out loud: *"Location-organized register of
+**all quests** — implemented, planned, and specced."*
 
-### 3.2 Where the loop works well
+Measured through the canonical `wbapi-core` parse — the same extractor `:1367` and every `check-*.js` use:
 
-| Success pattern | Example |
-|----------------|---------|
-| Theory-first expansion | §RESEARCH-01 Chrétien analysis → romance mechanics in one session |
-| Lab report as commitment device | §GR lab report locked all data shapes; Layer 78 integration was clean with no schema changes |
-| Object-named vignettes | The French vignette technique produces consistent tone without per-instance style decisions |
-| Parallel expansion with fixed template | §D02 10 quests all used the 5-act template; expansion was fast and output was uniform |
-| Bug discovery at integration time | §DESIGN-02 P3 battleDis bug; caught before any user-facing harm |
+| Population | In `QUEST_DB` | Named in `quest.md` | Coverage |
+|---|---|---|---|
+| `quest_*` (hand-authored family) | 298 | 145 | **48.7 %** |
+| 56 other id families (`ada` 235, `ath` 120, `lis` 95, `zth` 80, `blq` 60, …) | 2,555 | 3 | **0.1 %** |
+| **Total** | **2,853** | **148** | **5.2 %** |
 
-### 3.3 The shift register problem
+This is §DOC-02i's FC01 class in a second subject: a bijection that shipped, was declared canonical, and
+quietly stopped being true — and recommendation 8 is where the claim was written down. The mechanism is
+the same one §DOC-02i named: **a check that depends on a human running it reports green when nobody
+ran it.**
 
-The prompt history is a finite-capacity shift register. When it overflows, earlier context is compacted. The design process compensates by writing every binding decision to a persistent file before it shifts out:
+**But the reverse direction is spotless, and that is why nobody has caught it.** Thirteen quest-shaped
+tokens in `quest.md` fail to resolve in `QUEST_DB`; on inspection **not one is a dead row.** Ten are
+deliberate annotations of the form `` `quest_d0207_a1–a5` *(design: quest_cy_madness_gate)* `` — the live
+id first, the design-era name preserved beside it — which is recommendation 3's own deprecation-note
+discipline actually practised, and the reason §DOC-02k could score §DUNGEON-01 rather than guess at it.
+The remaining three are prose fragments.
 
-```
-[Prompt Session N] → decisions → plan.md (persistent)
-                              → lab report (persistent)
-                              → HTML (persistent, via git)
-                              → memory files (persistent, via MEMORY.md)
+> ***So the register is wrong only by omission and never by assertion. Everything it says is true;
+> it says it about one quest in nineteen.*** That is the hardest kind of staleness to notice, because
+> every spot-check passes. → **§DX-02ad**: `check:questindex`, a two-way `comm` over the parser's own
+> key list — the cheapest possible gate, in the family §DOC-02i proposed for docs.
 
-[Prompt Session N+1] → cold start → reads plan.md → continues from last gate
-```
+### B. The report refutes itself, and the repository picked the right half — a new instrument
 
-The cost of a cold start is proportional to the size of the persistent files. This is a space-time tradeoff: larger plan.md → cheaper cold start, more expensive scan. The optimization is **structured indexing**: `§0` dashboard + Lab Report Index + Memory files provide O(log N) access to the most recent decision state.
+§IV states the governing principle: *"the assistant expands exactly one item per continue. This is the
+**human-paced depth-first traversal**: it prevents the assistant from racing ahead of the user's mental
+model."* Recommendation 9 restates it as a rule. Recommendation 6, three items earlier, says the opposite:
 
----
+> *"When expanding N items using a fixed template, write the template first, then expand all N items in
+> a single pass (not N separate passes)."*
 
-## IV. The Expanding Loop — Visual Model
+Both cannot be policy. The repository chose 9 and hardened it twice — `prompt.md` §0 (*"Work is one
+increment per 'continue'"*) and §2 step 9 (*"Single agent, no fan-out… every step stays visible in the
+main conversation"*). Recommendation 6's efficiency argument is real but it optimises the wrong quantity:
+it saves assistant passes and spends user comprehension, which is exactly the cost §IV was written to
+avoid.
 
-```
-INITIAL SEED
-│
-└─► Pass 1: Identify N items (N ≈ 3–10)
-    │
-    ├─► Item 1 → sub-list (M items)
-    │           └─► each sub-item → elaboration
-    │
-    ├─► Item 2 → sub-list
-    │   ...
-    │
-    └─► Item N → sub-list
-                 │
-                 └─► COLLAPSE all passes → Lab Report
-                                            │
-                                            └─► Integration → HTML
-                                                              │
-                                                              └─► Sync pass → plan.md update
-                                                                              │
-                                                                              └─► Next seed
-```
+> ***23rd instrument: a recommendation list is not a coherent object. Two adjacent items can contradict
+> each other, and the tiebreak is the document's own stated THESIS — not its ordering, not its
+> emphasis, and not which one sounds more efficient.*** Instrument 13 said a design doc's reversal is a
+> claim like any other; this is its sibling — **a design doc's recommendation is a claim about the
+> document it is attached to, and it can be wrong about that.**
 
-At each level, the user's "continue" is the signal to descend one level deeper. The assistant expands exactly one item per continue. This is the **human-paced depth-first traversal**: it prevents the assistant from racing ahead of the user's mental model.
+### C. Two census errors, both mine — instrument 14, twice in one pass
 
-The loop's unrolling produces a **long linear list** as a side effect — because each for-each expands in sequence, the resulting plan.md is a sequential narrative of design decisions rather than a tree. This is intentional: a tree is hard to read; a sequential narrative is readable top-to-bottom.
+A first extraction counted QUEST_DB by grepping `^  quest_` and returned **298**, against `npm run
+stats`' **2,853**. The regex assumed one naming family; the file holds **57 id prefixes**, and
+`quest_*` is 10 % of the population. Any coverage figure derived from the first number would have been
+off by an order of magnitude *in the report's favour*.
 
----
+A second scan flagged 13 `quest.md` rows as dead; ten were deliberate `*(design: …)*` annotations. Filing
+that would have manufactured a defect out of the register's single best practice.
 
-## V. Improvements for Future Sessions
+> ***Both errors point the same way: the instrument that catches them is comparing your count against a
+> gate that already counts the same set, before deriving any delta from it. `npm run stats` and
+> `check:dupkeys` exist for exactly this, and neither costs a minute.***
 
-1. **Template-first rule:** For any expansion producing ≥ 5 instances of the same pattern, write the template (framework document) before expanding the instances. Applied retroactively: §D02-11 framework should have been §D02-00.
+### D. `FR` and `MM` are both outside the LEGACY CODE MAP — §AUDIT-03q's blind spot, second and third instance
 
-2. **Lab report naming convention:** All lab reports follow `lab-report-<slug>.md`. The slug should match the section it documents: `lab-report-ceremonia-roll-skill-checks.md` for §DESIGN-03, `lab-report-dungeon-ten-themes.md` for §DUNGEON-01. No orphaned lab reports.
+Four of this report's six node codes (`CQ`, `CY`, `SW`, `CO`) are in `docs/maps/node-index.md`'s LEGACY
+CODE MAP and are therefore annotatable by `check:legacycodes`. **`FR` and `MM` have zero occurrences in
+that file.** `FR` (Fishmonger's Row → `AMS`) was recorded by §DOC-02s; **`MM` (Mimic Meadows → `LIM`) is
+new**, and this report is one of its citation sources.
 
-3. **State field freeze:** Once a field name appears in a lab report, it does not change. If it must change, the lab report is updated and the change is noted in plan.md with a ⚠️ deprecation note.
+The cause is structural and was stated when the gate was built: the map is generated from `maps.md`'s
+historical legend, so a code the legend never listed is absent from the map, and a detector driven by the
+map cannot see it. Two codes in one short report suggests the residue is larger than two.
 
-4. **Compression rule for rationale sections:** Theory and design rationale sections should compress to: one-paragraph summary + one table. Long-form rationale belongs in lab reports, not in plan.md.
+### E. Two more unseeded rolls into persisted state — §DX-02m
 
-5. **Memory file after every session:** Before the context overflows, write or update a `project_*.md` memory file with the key decisions from this session. The memory file is the cold-start entry point for the next session.
+Instance 4's romance layer delivers through `storyConfirmSleep`, and both of its branches draw the
+**unseeded** stream while writing `_S_DEFAULTS()` fields:
+`romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23098`, written at
+`Math.random() < 0.15` and at
+`S_story.npcRomanceVignetteDelivered = { ..._vDelivered, [_vKey]: true };@36350`. Same shape as §DOC-02m's
+fishing cluster and §DOC-02n's death saves: **the UQF quest path is seeded and every hand-authored
+surface that rolls its own dice is not.** Cosmetic in effect — a flavour line either appears or does not
+— but it is persisted state, so a seeded replay diverges.
 
-6. **Parallel expansion protocol:** When expanding N items using a fixed template, write the template first, then expand all N items in a single pass (not N separate passes). This reduces the N×(pass overhead) cost to N + (template write overhead).
+### F. What held, and where the errors sat
 
-7. **Integration readiness checklist:** Before any HTML edit:
-   - [ ] Lab report written and field names frozen
-   - [ ] New `S_story` fields added to `_S_DEFAULTS()` spec
-   - [ ] New QUEST_DB fields listed in §II Quick Reference
-   - [ ] New state fields added to §III State Fields
-   - [ ] `// → doc:` annotation planned for each new HTML const
-
-8. **quest.md as living register:** `quest.md` was created this session. Keep it current: every new quest added to HTML should have a corresponding entry in `quest.md`. The register is the canonical source of truth for quest IDs, locations, and act structure.
-
-9. **The "continue" discipline:** Each "continue" expands exactly one level of the tree, not multiple. If the user says "continue" and the assistant expands two levels, the next session will have inconsistent depth and will need a sync pass to reconcile.
-
-10. **The anti-scope-creep gate:** Any expansion that introduces a new node, a new terrain entry, or a new QUEST_DB field type triggers a lab report gate. This is the firewall between planning and integration. It prevents the planning loop from producing changes that are expensive to undo.
-
----
-
-## VI. Conclusion
-
-The meta-process is a recursive list-expansion loop driven by human-paced depth-first traversal. Its outputs are: lab reports (design commitments), plan.md sections (design history), and HTML (executable artifact). The loop is efficient when templates exist before expansion and when the lab report gate enforces a clean separation between speculation and commitment. It is inefficient when expansion races ahead of commitment, producing spec documents whose field names drift before integration.
-
-The ten instances documented here show that this project has consistently followed the efficient pattern for narrative and quest design (§GR, §RESEARCH-01, §XLII) and inconsistently followed it for mechanical design (§DESIGN-02 P3 bug, §DESIGN-03 field name drift). The improvement is not structural — the loop is correct — it is disciplinary: freeze field names in lab reports, not in planning passes.
-
-*The thing you build should be giveable. The process you use to build it should be documentable. This report is the documentation.*
+Everything **copied** is exact: three SP4 counts lifted from commit messages, the 15 %/Act-III romance
+rule byte-identical to the engine comment, all four `_S_DEFAULTS()` field names, all six lab-report
+filenames, eight of nine monster keys. Everything **narrated about status** is stale: three
+"Integration: PLANNED" rows that had all shipped, five section names of which one survives, one dead
+pointer left in the markup. Instrument 12 holds for the fourteenth consecutive report — and note *which*
+narration failed. The author was accurate about the past (what happened in each of ten sessions) and
+wrong about the future (what would happen to it). **A status block is a prediction wearing a
+measurement's clothes.**
 
 ---
 
-**Filed:** 2026-05-26  
-**Cross-references:** `plan.md §I` (Directive) · `plan.md §0` (Dashboard) · `plan.md §DESIGN-03-G` · `plan.md §DUNGEON-01-G` · `plan.md §DUNGEON-02` · `quest.md`
+## VI. Recommendation Register
+
+Ten recommendations, scored against `CONTRIBUTING.md` and `prompt.md` at HEAD. **This is the strongest
+register the program has measured** — §DOC-02i's subject went 3 of 5, with two closed without shipping.
+
+| # | Recommendation | Outcome after 78 days |
+|---|---|---|
+| 1 | Template-first for ≥ 5 instances | ⚠️ **NOT ADOPTED** — no such rule exists |
+| 2 | `lab-report-<slug>.md`, no orphans | ✅ **ADOPTED VERBATIM** — CONTRIBUTING § Lab Report Policy; 107/107 comply |
+| 3 | State-field freeze | ⚠️ **NOT POLICY — enforced by physics.** `_S_DEFAULTS()` fields persist to `localStorage`, so a rename breaks saves (§DOC-02u's `littorialComplete`, misspelling and all) |
+| 4 | Compress rationale to a summary + a table | ✅ **ADOPTED AS A PROGRAM** — §DOC-02, user directive 2026-08-11 |
+| 5 | Memory file after every session | ✅ **ADOPTED** — `MEMORY.md` + `project_*.md`; `prompt.md` §2 step 10 |
+| 6 | Parallel expansion in a single pass | ❌ **DELIBERATELY REVERSED** — and the document argues against it (§V-B) |
+| 7 | Integration-readiness checklist (5 items) | ⚠️ **PARTIAL** — `_S_DEFAULTS()` single-source is a rule; the `// → doc:` item was superseded by `symbol@line` anchors |
+| 8 | `quest.md` as living register | ⚠️ **DOCUMENT ADOPTED, CLAIM 5.2 % TRUE** (§V-A) |
+| 9 | The "continue" discipline | ✅ **ADOPTED VERBATIM** — `prompt.md` §0, and it governs this increment |
+| 10 | Anti-scope-creep lab-report gate | ✅ **ADOPTED** — CONTRIBUTING's trigger table, one row per condition it named |
+
+**Six adopted, one reversed, one superseded in part, two never taken up.**
+
+---
+
+## VII. Defects Filed
+
+- **§DX-02ad (NEW, 🟢 no design call)** — `check:questindex`. `quest.md` claims to register *all* quests
+  and names **148 of 2,853**; the 56 non-`quest_*` id families hold 2,555 entries of which 3 are named.
+  Reverse direction is clean (0 dead rows). Gate shape: a two-way `comm` between `WBAPI` parser keys and
+  the ids `quest.md` cites, with an explicit `NOT_A_QUEST_ID` list for the `*(design: …)*` aliases and an
+  explicit **generated-family exemption list**, so the register is scored against the population it is
+  actually meant to cover. The exemption must be written down rather than inferred — the §AUDIT-03j
+  house rule, for the same reason: a percentage heuristic is blind to a family that is *entirely*
+  generated.
+- **§AUDIT-03q blind spot, +1 code (existing rows, extended)** — `MM` (Mimic Meadows → `LIM`) joins `FR`
+  as a legacy code absent from `docs/maps/node-index.md`'s LEGACY CODE MAP, so `check:legacycodes` cannot
+  annotate it. Two in one short report; the residue is worth a sweep of `plan-archive.md` for two-letter
+  codes that resolve in neither registry.
+- **§DX-02m (existing, +2 named instances)** — `romanceQuotesDelivered` and
+  `npcRomanceVignetteDelivered` are `_S_DEFAULTS()` fields written from `Math.random()` inside
+  `storyConfirmSleep`. Cosmetic in effect, persisted in fact.
+- **§AUDIT-03s family (existing, +1)** — `<!-- storyRenderSections() writes .story-section divs here -->@4278`
+  names a function with one commit ever and no definition at HEAD. Invisible to every gate:
+  `check:noderegs` phase 6 is comment-aware *by design*, and `check:anchors` scans `.md` files, not
+  markup. One-line fix, but the class is the point.
+- **Explicitly NOT filed** — the thirteen unresolvable `quest.md` ids. Ten are deliberate design-name
+  annotations and filing them would have penalised the register's best practice (§V-C).
+
+---
+
+## VIII. File References
+
+| Anchor | Content |
+|---|---|
+| `const ROMANCE_QUOTES = [@22379` · `// ROMANCE_QUOTES: 15% per sleep, Act III+, no repeat@36331` | Instance 4, verbatim |
+| `const NPC_ROMANCE_PREAMBLES = {@27479` · `const NPC_ROMANCE_VIGNETTES = {@27489` | the romance consts |
+| `romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23098` · `S_story.npcRomanceVignetteDelivered = { ..._vDelivered, [_vKey]: true };@36350` | §DX-02m (§V-E) |
+| `const NPC_NG_MEMORY_LINES = {@27324` | Instance 10 |
+| `function _mkSection(id, icon, label) {@35320` · `<!-- storyRenderSections() writes .story-section divs here -->@4278` | Instance 3 — helper live, host a dead pointer |
+| `battleDis: 0,@23020` · `// P3 exhaustion: battleDis charges@25045` | Instance 3's bug fix, still live |
+| `hoursElapsed: 0, hoursSinceSlept: 0,@23091` · `skillCheckAttempts: {},@23149` | the two fields §3.1 names |
+| `cat_king:         { key:'cat_king',@5404` | Instance 5 — the Cat-King, without the `the_` |
+| `LIM:{ num:81, code:'LIM', name:'mimic_meadow'@8815` | `MM` resolved (§V-D) |
+| `8abc606` · `9684ff6` · `ded062e` · `213d14b` · `7952752` · `5e48dd7` | own commit · SP4 · SP4 validation · §DESIGN-02 · §TIMELESS-01 · the `plan.md` split |
+
+---
+
+## IX. Conclusion, Re-Scored
+
+The original conclusion reads: *"The improvement is not structural — the loop is correct — it is
+disciplinary: freeze field names in lab reports, not in planning passes."*
+
+Seventy-eight days of measurement say the first half is right and the second half aimed one system too
+low. **The loop is correct and the discipline largely arrived** — six of ten recommendations are rules
+now, and field-name drift turned out to be self-limiting, because `localStorage` refuses to forget a
+field name once a save has held it. What the loop still cannot see is the thing that has cost this
+project the most content: **a quest can be specced correctly, written correctly, migrated correctly, and
+still be unreachable**, and no gate in the pipeline this report describes looks at reachability at all.
+
+The next recommendation, in the document's own idiom, would be recommendation 11: *any expansion that
+places content on a node must close over cell primacy and gate flags before the lab report is signed.*
+That is §DX-02w, and it is open.
+
+> *"The thing you build should be giveable. The process you use to build it should be documentable.
+> This report is the documentation."* — the original, and it earned the sentence. This verification is
+> the same claim run one loop further: **the process that documented the game is now itself under
+> measurement, by a program this document recommended in item 4.** The register got audited by its own
+> proposal. That is either very good engineering or a joke the repository is telling at its own expense,
+> and after seventy-eight days it is difficult to tell the two apart.
+
+---
+
+**Filed:** 2026-05-26 · **Verified:** 2026-08-12
+**Cross-references:** `CONTRIBUTING.md` § Lab Report Policy · `prompt.md` §0, §2 · `quest.md` ·
+`plan-archive.md` §DESIGN-03 / §DUNGEON-01 / §DUNGEON-02 / §GR · `lab-report-documentation-system-design.md`
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
