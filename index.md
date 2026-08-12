@@ -307,7 +307,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | File | Layer(s) | Topic |
 |------|---------|-------|
 | `lab-reports/lab-report-fish-with-dnd.md` | 37 | Yugurt Lake — 20 rank fish, 2d20 cast roll, predator-as-combat design |
-| `lab-reports/lab-report-fishing-bait-prompting.md` | 47 | §XII Fishing bait sub-system design — 5 bait tiers, biome zones, Luck integration |
+| `lab-reports/lab-report-fishing-bait-prompting.md` | 47 | Fishing bait sub-system + planning-directive analysis — **verified §DOC-02n 2026-08-12**: Luck shipped exact, bait fish NOT SHIPPED (foraged `BAIT_TABLES` instead), magic-weapon trade shipped one-sided → §FISH-02 |
 
 ### NPC & Narrative
 
