@@ -1,177 +1,374 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report: Companion Narrative Arc Layers 70, 72, 74
-## §XXXV The First Inn Light / §XXXVII Commander Bruhns's CO Scene / §XXXIX Yael's Named Report Scene
-**roll2hit-v3.html — Single-File Browser RPG**
-**Date:** 2026-05-25 | **Status:** Implemented | **Format:** IEEE Post-Mortem
+# Lab Report — Companion Narrative Arcs, Layers 70 · 72 · 74
+
+## §XXXV The First Inn Light · §XXXVII Commander Bruhns's CO Scene · §XXXIX Yael's Named Report
+
+**Original:** roll2hit.com design session, 2026-05-25 · **Verified against HEAD:** 2026-08-12 (§DOC-02y)
+**Ship commit:** `43610d3` (2026-05-25 07:06) *"Layers 63–74: complete Tier 1 implementation"*
+**Report's own tree:** `585be8f`…`0a131f5` (2026-05-25 13:12–13:35) — all four cited line numbers exact
+**License:** MIT — roll2hit.com — Copyright (c) 2026
 
 ---
 
 ## Abstract
 
-This report documents the design, implementation, and post-mortem analysis of three companion narrative arc layers added to roll2hit-v3.html: Layer 70 (§XXXV, Brynn's Vigil Arc), Layer 72 (§XXXVII, Commander Bruhns's CO Scene), and Layer 74 (§XXXIX, Yael's Named Report Scene). Each layer is a self-contained scene const plus render patch with no new nodes, monsters, or items. Together they pursue a single editorial objective: elevate the three most structurally significant NPCs from functional companions into characters whose arcs close on the player's terms. The implementation relies on boolean state flags per layer (three for Brynn, one each for Bruhns and Yael), scene-const string objects carrying variant text, and targeted injection into existing node render paths. No gameplay systems were modified. The post-mortem for each layer covers trigger logic, variant branching, cross-layer dependencies, and design intent.
+Three companion arcs, each a scene-const plus a render patch: no new nodes, monsters, items or
+gameplay systems. Brynn keeps a lamp burning at the inn for travellers who have not come back. Bruhns
+tells the player, before the last fight, that she is no longer sure she believed the right people.
+Yael says she filed a report under her own name and then goes back on patrol. The editorial objective
+is stated plainly and it is the reason the layers exist: **let the three structurally most important
+NPCs close their arcs on their own terms rather than the player's.**
+
+Verification finds an unusually faithful implementation with an unusually consequential margin.
+**All four scene consts, all five new state flags and all three trigger predicates are live and
+verbatim at HEAD after seventy-nine days and a total world-coordinate migration.** Three named
+identifiers, however, have **zero commits in the file's entire history** — one of them in the report's
+opening sentence — and one of the four surfaces is unreachable.
+
+The finding that outranks the rest is not about this report at all. Chasing its four dead node codes
+through the archive closes an open sweep: **the engine's own comment claims eight node codes "never
+existed," and seven of them are real `NODE_MAP` entries in the earliest surviving build — while the
+comment transcribes their labels off the very entries it denies.**
 
 ---
 
-## 1. Design Philosophy
+## I. Intent, Inspiration, and What It Adds
 
-roll2hit-v3.html resolves its companion relationships through favor scores (`fav_brynn`, `_npcFavor('bruhns')`, `_npcFavor('yael')`) accumulated across the act structure. Prior to these layers, favor scores unlocked mechanical benefits — dialogue variants, escort availability, Act VIII farewell text — but did not produce scenes that acknowledged the companion's inner life independently of the player's immediate action. The three layers documented here address that gap.
+### A. The gap it was written against
 
-The shared design constraint is structural minimalism: each layer must fit the single-file architecture without adding nodes, modifying combat tables, or touching the MONSTER_POOL/WORLD_DB schemas. Narrative weight is achieved entirely through scene-const string objects injected into existing node render functions at precisely conditioned moments. A companion only speaks when the game has earned that speech — when favor is high enough, act number is late enough, and the player has done something that warrants acknowledgment.
+Before Layer 70 the game resolved companion relationships through favor scores, and favor bought
+things: dialogue variants, escort availability, a farewell line in Act VIII. Every one of those is a
+*reward*. None of them is a scene in which the companion has an interior life the player did not
+purchase. A relationship system that only ever pays out teaches the player that the characters are
+vending machines with good dialogue.
 
-The three layers are ordered by their position in the node graph. Brynn's arc (§XXXV) anchors to the IN node, the game's domestic center. Bruhns's arc (§XXXVII) anchors to the CO node, the game's authority center. Yael's arc (§XXXIX) anchors to the CI node and spills into the SW patrol node, crossing node boundaries for the first time in the companion arc system.
+### B. The design constraint, and why it produced better writing
 
----
+Structural minimalism, self-imposed: no new nodes, no combat-table edits, no `MONSTER_POOL` /
+`WORLD_DB` schema changes. Narrative weight has to come entirely from scene-const strings injected
+into existing render paths at precisely conditioned moments. The constraint is the craft — with no
+mechanism to hide behind, a companion speaks only when the game has genuinely earned the speech, and
+the condition *is* the design.
 
-## 2. Layer 70, §XXXV — The First Inn Light: Brynn's Vigil Arc
+### C. What it buys the player
 
-### 2.1 Implementation
+1. **It converts a number into a person.** Favor stops being a gate and starts being a threshold
+   somebody crosses toward you. The lamp is the clearest case: it costs nothing, unlocks nothing, and
+   is the only artifact in the inn that exists because of you.
+2. **It makes the last boss a conversation.** Bruhns is Auros. The CO fight is a confrontation with
+   the NPC whose favor the player has been building for eight acts, and Layer 72 is the difference
+   between a health bar and someone saying *"I signed on because I believed them. I'm not sure any
+   more"* and then raising her weapon anyway.
+3. **It models consequence the player cannot buy off.** Yael's report is already filed when she tells
+   you. Both player replies set the same flag and change nothing, deliberately — *"the player is
+   responding to a fact, not making a decision that determines an outcome."* In a game whose every
+   other surface is a lever, one scene that is not a lever is worth a great deal.
+4. **It leaves residue.** The lamp line, the patrol ambient, the epilogue rows: small permanent traces
+   that a player either notices or does not. The report calls that asymmetry the point, and it is.
 
-**Scene const:** `BRYNN_KEEPER_STORY` at line 11573. The object carries Beat 1 narrative text, Beat 2 prompt text with two labeled choice strings (`keep`, `rest`), the ambient lamp line, and the four farewell variants.
-
-**State flags introduced** (line 8419):
-
-| Flag | Type | Set when |
-|---|---|---|
-| `brynnKeeperStoryTold` | boolean | Beat 1 fires |
-| `brynnLightChoiceMade` | boolean | Player selects either Beat 2 option |
-| `brynnLightKept` | boolean | Player selects `keep` in Beat 2 |
-
-**Beat 1 trigger:** IN node render, conditions `fav_brynn >= 1` AND `actNumber >= 2` AND `!brynnKeeperStoryTold`. On fire, `brynnKeeperStoryTold = true`. Scene: Brynn explains, without being asked, that she keeps the first lamp burning — the one by the entrance — for travelers who haven't come back yet. She does not editorialize. She just keeps it.
-
-**Beat 2 trigger:** IN node render, conditions `fav_brynn >= 2` AND `brynnKeeperStoryTold` AND `!brynnLightChoiceMade`. Player receives two choices. `keep`: the player leaves the lamp alone and says so. `rest`: the player gives a practical response. Both set `brynnLightChoiceMade = true`. Only `keep` sets `brynnLightKept = true`.
-
-**Ambient lamp line:** Rendered at the IN node unconditionally once `brynnLightChoiceMade` is true. A single sentence. Always present for the remainder of the run as a quiet visible artifact of the scene.
-
-**§XXV Act VIII farewell:** Four-branch table resolved by `(brynnKeeperStoryTold, brynnLightKept)`:
-
-| storyTold | lightKept | Farewell variant |
-|---|---|---|
-| false | — | Default (pre-arc) |
-| true | false | Story-aware, practical choice acknowledged |
-| true | true | Story-aware, lamp-kept — Brynn notes the lamp is still lit |
-| (story not told, light somehow set) | — | Fallback to default; state guard prevents this case |
-
-**§XXVII Town Crier line:** `TC_BRYNN_LAMP` injects into ambient inn news when `brynnLightChoiceMade`. The Crier references the lamp in passing — not the conversation, just the lamp, as a fact of the inn.
-
-### 2.2 Post-Mortem
-
-The arc's structural decision was to split the emotional moment across two beat triggers separated by at least one act gate. Beat 1 is pure delivery — Brynn speaks, the player receives. Beat 2 is the only moment the player acts on what Brynn said. Keeping them separate means the player has time to forget before the choice appears, which is intentional: the choice is slightly surprising, which is appropriate for its subject.
-
-The ambient lamp line was the final addition during implementation and the most load-bearing. Without it, the arc closes at Beat 2 and leaves no trace. With it, every subsequent IN visit carries a one-sentence residue that the player either notices or doesn't. That asymmetry is the point.
-
-The Town Crier integration (`TC_BRYNN_LAMP`) was straightforward but worth noting: it is the first instance of a companion arc state flag appearing in the ambient news layer. It establishes a pattern available to future arcs.
-
-The four-branch farewell table has one inert branch (the fallback when storyTold is false but lightKept is somehow true), which is unreachable by design. It was retained rather than removed because removing it would require a guard that obscures the branching logic. The dead branch costs nothing.
+> The design's own summary is the best line in it: *"The arcs close because the characters close them.
+> The player witnesses."* Seventy-nine days later, three of the four surfaces that carry that sentence
+> still render.
 
 ---
 
-## 3. Layer 72, §XXXVII — Commander Bruhns's CO Scene
+## II. Method
 
-### 3.1 Implementation
+Instruments from the §DOC-02 program: **4/8/18** (`git log -S` on every dead name; the archive
+`32c10c5` predates the feature by nine hours, so the birth commit `43610d3` is the reference);
+**12** (score copied passages apart from composed ones); **10** (a post-mortem's self-description is a
+claim); **13** (score a reversal against the report's thesis, not its spec); **19** (a reachability
+closure over cell primacy and gate flags, not a symbol census); **21** (read the diff, not the subject
+line — and its corollary, that a dead node code is usually a *retirement*).
 
-**Scene const:** `BRUHNS_CO_SCENE` at line 12625. Three variant objects: `friendly`, `dearFriend`, `dearFriendWithTheory`. Each carries a distinct text block. The `dearFriendWithTheory` variant appends an addendum line to `dearFriend` rather than replacing it — the base speech is identical; only the final line changes.
+Line-number dating was done by walking the 2026-05-25/27 commit series for the tree whose four cited
+consts land on the cited lines.
 
-**State flag introduced** (line 8420):
+---
 
-| Flag | Type | Set when |
+## III. As-Built Inventory
+
+**Scene consts — 4 of 4 live**
+
+`const BRYNN_KEEPER_STORY = {@27037` (10 keys: 2 beats, prompt, 2 choices, 4 farewells) ·
+`const BRUHNS_CO_SCENE = {@28062` (3 variants) · `const YAEL_NAMED_REPORT_SCENE = {@28048` (setup,
+decision, 2 choices) · `const YAEL_PATROL_NODES = [@27728` (pre-existing, L45-G; the addendum entry
+added here).
+
+**State flags — 5 of 5 live under their specified names, in the specified order, one contiguous block**
+
+`brynnKeeperStoryTold: false, brynnLightChoiceMade: false, brynnLightKept: false,@23117` ·
+`bruhnsCoSceneDelivered: false,@23118` · `yaelNamedReportDelivered: false,@23119`.
+
+**Trigger predicates — 3 of 3 verbatim**
+
+| Layer | HEAD | Report §2.1/§3.1/§4.1 |
 |---|---|---|
-| `bruhnsCoSceneDelivered` | boolean | Any variant fires |
+| 70 Beat 1 | `if (node.code === 'TLL' && _npcFavor('brynn') >= 1@32815` + `actNumber >= 2` + `!brynnKeeperStoryTold` | identical |
+| 70 Beat 2 | `if (node.code === 'TLL' && _npcFavor('brynn') >= 2@32840` + `brynnKeeperStoryTold` + `!brynnLightChoiceMade` | identical |
+| 74 | `if (node.code === 'LHR' && _npcFavor('yael') >= 2@32489` + `actNumber >= 6` + `yaelEscortUsed` + `!yaelNamedReportDelivered` | identical |
 
-**Trigger:** CO node render, injected after `NODE_ARRIVAL_QUOTES` and before the fight chip render. Guard: `!bruhnsCoSceneDelivered`.
+**Never shipped — 3 identifiers, 0 commits ever**
 
-**Variant selection:**
+| Name | Where the report puts it | What actually happened |
+|---|---|---|
+| `fav_brynn` | **the opening sentence** of §1, as one of three favor accessors | the accessor is `_npcFavor('brynn')`; this field has never existed |
+| `TC_BRYNN_LAMP` | §2.1, the Town Crier integration | the **feature shipped** under `brynnKeeperStoryTold:      'The lamp at the First Inn@26775`, reached through `qOrder = @26865` |
+| `NODE_ARRIVAL_QUOTES` | §3.1, the named injection point | no such const has ever existed |
 
-| Condition | Variant |
+**Node codes — 0 of 4 resolve.** `IN`→`TLL` · `CO`→`TLS` · `CI`→`LHR` · `SW`→`MSY`. All four are
+**renames**, verified by a `num` + terrain-key + label triple-match against the archive (§V-A). Note
+that `CI` is now live as a *different* node (Chancery Court, `num:429`) — §AUDIT-03m's "worse than
+dead" class, so an existence check passes while the sentence stays wrong.
+
+---
+
+## IV. Spec → Shipped Delta Table
+
+| # | Claim | Measured at HEAD | Verdict |
+|---|---|---|---|
+| 1 | `BRYNN_KEEPER_STORY` + 3 flags | live, all keys present | ✅ EXACT |
+| 2 | `BRUHNS_CO_SCENE` 3 variants; theory addendum *appends*, does not replace | `coSceneText += '\n\n' + BRUHNS_CO_SCENE.dearFriendWithTheory` — exactly as specified | ✅ EXACT |
+| 3 | `YAEL_NAMED_REPORT_SCENE` + trigger triple | verbatim | ✅ EXACT |
+| 4 | Bruhns variant gate `_npcFavor('bruhns')` | **0 occurrences**; HEAD reads `const fav = _npcFavor('auros');@34994` | ⚠️ REPAIRED BY §AUDIT-03n (§V-C) |
+| 5 | Beat 2 `keep`/`rest` set `brynnLightKept` | live, both branches | ✅ EXACT |
+| 6 | Four-branch Act VIII farewell, **"one inert branch, unreachable by design"** | a **three-flag priority chain, zero inert branches**, whose first branch is a catch-up delivery | ❌ **REVERSED — and better** (§V-D) |
+| 7 | Yael choice labels "Affirm" / "Acknowledge risk" | shipped as `📋 I'll hold it.` / `🗂 Three copies is enough.` (`choiceHold`/`choiceThree`); structure identical, both set the flag, neither branches | ⚠️ PARAPHRASE |
+| 8 | SW patrol addendum gated on `yaelNamedReportDelivered` | shipped: `nodeSlug:'MSY'@27733` — **and cannot render** (§V-B) | ⛔ STRANDED |
+| 9 | §XXXVI epilogue line, *"intentionally passive voice… Yael's name is not in the epilogue text"* | *"Yael kept three copies of the second report. She knows exactly where each one is."* — active voice, her name first | ❌ SELF-DESCRIPTION WRONG |
+| 10 | Cross-dependency `s29LineDelivered`, one-directional and read-only | correct: written once at `S_story.s29LineDelivered = true;@32670`, read once here | ✅ EXACT |
+| 11 | `yaelEscortUsed` set by the escort mechanic | one writer, `S_story.yaelEscortUsed = true;@23798` | ✅ EXACT |
+| 12 | §6: *"the implementation cost is eight state flags"* | the tables list **five**; eight only if `yaelEscortUsed`, `s29LineDelivered` and `fav_brynn` are counted — and the last has never existed | ❌ ARITHMETIC |
+| 13 | Four cited line numbers (L11573 · L12611 · L12625 · L12306) and the flag block (L8419–8421) | **all exact**, window `585be8f`…`0a131f5` | ✅ EXACT |
+| 14 | *(engine-side)* `YAEL_NAMED_REPORT_SCENE`'s own `// → doc:` comment | says **"fav >= 2 Act IV+"**; the guard says `>= 6` | ❌ COMMENT/CODE |
+| 15 | *(engine-side)* the setup string | *"watching the market corner from the **CI** door"* — a dead code in a **player-facing string** | ❌ §AUDIT-03s |
+
+---
+
+## V. Findings
+
+### A. Eight "never existed" claims, seven false — and the sweep §AUDIT-03af asked for, closed
+
+Chasing this report's four dead node codes into the archive lands on an engine comment. `const birkaNpcs@35139`
+remaps five Birka NPC codes and justifies itself like this:
+
+> *"§PLAY-01-G: dead pre-§WALK sublocation codes remapped to real nodes, each proved by its NPC's
+> quest activateNode — IN→TLL (brynn/**"The First Inn"**), TV→MHQ (quill/**"Birka Tavern"**),
+> BA→LLA (pachelbel/**"The Rough Bar"**), CY→HKG (crov Weckmann + auros Bruhns/**"Neon Undercity"**).
+> LHR was the §PLAY-01-D CI→LHR fix. **No NODE_MAP entry ever existed for CI/IN/TV/BA/CY**, so these
+> cards previously rendered nowhere."*
+
+and two lines later, for §NPC-01-SF4: *"No NODE_MAP entry ever existed for CQ/SQ/GC either."*
+
+**Eight claims. At `32c10c5` (2026-05-24, the earliest surviving build) seven are false:**
+
+| Code | Archive `32c10c5` | Remap target at HEAD | Rename correct? |
+|---|---|---|---|
+| `CI` | `num:1, name:'city', "City Streets — Birka", act:1` | `LHR` `num:1, 'city', "City Streets — Birka"` | ✅ |
+| `IN` | `num:2, name:'inn', "The First Inn", act:1` | `TLL` `num:2, 'inn', 'The First Inn'` | ✅ |
+| `TV` | `num:3, name:'tavern', "Birka Tavern", act:1` | `MHQ` `num:3, 'tavern', 'Birka Tavern'` | ✅ |
+| `BA` | `num:4, name:'bar', "The Rough Bar", act:1` | `LLA` `num:4, 'bar', 'The Rough Bar'` | ✅ |
+| `CY` | `num:6, name:'cyberpunk_streets', "Neon Undercity"` | `HKG` `num:6, same, same` | ✅ |
+| `SQ` | `num:35, name:'scholars_qtr', "Scholar's Quarter — Weimar"` | `NUE` `num:35, same, same` | ✅ |
+| `GC` | `num:26, name:'goblin_cave', "Goblin Warrens"` | `TRD` `num:26, same, same` | ✅ |
+| `CQ` | **absent** — the one true claim | `CDG` | ✅ |
+
+**The comment transcribes the labels off the very `NODE_MAP` entries it says never existed.** *"The
+First Inn," "Birka Tavern," "The Rough Bar," "Neon Undercity"* are copied, character for character,
+from records the same sentence denies. The author was reading the archive's data while writing a
+sentence about its absence — self-refutation inside one comment, which is §DOC-02q's rule appearing in
+engine source rather than in prose.
+
+**And this report is a same-week witness.** It was written 2026-05-25, describes scenes "anchored to
+the IN node" and "the CI node," and those scenes shipped and rendered.
+
+**The verdict is the opposite of §DOC-02u's, and that is the useful part.** Every one of the seven is
+a **rename**: `num`, terrain key and label match on all three fields, exactly as §DOC-02f found for
+`CI`/`LHR` alone. The false premise produced seven correct answers, because the author was silently
+matching on labels. But §DOC-02u measured the same "born dead" standard licensing a *wrong* answer —
+`LJ3`, a retired node holding §SIREN-01's hardest battle, remapped onto the fog bank it existed to
+point at. **So: fix the comments, keep the remaps.** → **§AUDIT-03af scoped and answered.**
+
+> ***The durable form: a migration comment's "never existed" is the least reliable sentence in a
+> codebase, because it is the one claim the migrator had no reason to check — the remap already
+> worked. Its danger is not the sentence; it is the STANDARD it establishes for the next remap, which
+> may not have a label to match on.***
+
+### B. The patrol addendum shipped, was remapped correctly, and cannot render — §AUDIT-03x extended
+
+`{ condition: () => !!(S_story.yaelNamedReportDelivered), nodeSlug:'MSY'@27733` — *"The second report
+is filed. I'm not watching to see if it disappears."* The SW→MSY remap is right and the gate is right.
+
+`MSY:{r:25,c:206},@9672` puts it in a cell with **twelve** occupants, and `const CELL_GRID = (() => {@9852`
+builds each cell in `NODE_MAP` declaration order with only `list[0]` able to become `currentCode`.
+`WG0` is first. MSY is **ninth**. The render test is `yaelPatrol.nodeSlug === node.code`, so it never
+passes.
+
+**Cell `25,206` is the largest single casualty site the program has measured, and it is worse than
+recorded.** §DOC-02h scored it for §CROWN-01 and stranded seven swamp nodes there. The full occupant
+list is `WG0 · HW1 · HJ1 · HG1 · HJ2 · HN1 · HJ3 · HCA · MSY · SDQ · OTP · DBN` — **11 of 12
+stranded**, and the last four belong to three unrelated tracks: **MSY** (this arc's patrol beat),
+`SDQ:{ num:16@8664` (The Crones' Domain), `OTP:{ num:62@8761` (Trench Titan, an **§EPIC-01**
+battleground) and `DBN` (Danube Ferry Crossing).
+
+> ***A cell-primacy casualty is not an arc-level event. One cell can take content from four
+> independent tracks, so scoring §AUDIT-03x arc by arc systematically undercounts it — the unit of
+> damage is the CELL, not the feature.*** Closure totals reproduced exactly: **416 nodes / 244 cells**
+> (instrument 14).
+
+### C. This report is the primary source that made §AUDIT-03n's repair correct, and nothing connected them
+
+§3.1 carries a flat statement of fact:
+
+> *"Character note from plan.md: Commander Seraphine Bruhns and Commander Auros are the same
+> character. The CO boss fight is a confrontation with the NPC the player has been building favor with
+> across the arc."*
+
+That sentence is precisely what justifies HEAD's `const fav = _npcFavor('auros');@34994`. The report's
+own spec says `_npcFavor('bruhns')`, which has **0 occurrences** at HEAD — it was one of §AUDIT-03n's
+five gate sites keyed to a surname the favor ledger never writes, each guarding a whole scene. Without
+the repair, `fav` is `0` and neither variant fires: **Bruhns says nothing at the last fight, for every
+player, forever.**
+
+§AUDIT-03n found it sixty-four days later, from two `npcOrder` lists that disagreed. The identity was
+sitting in a lab report the whole time, in English, in a paragraph headed *"Character note."*
+
+> ***A corpus can hold the answer to a defect in prose and no gate can read prose. That is the argument
+> for the delta table this program produces — not because the prose is unreliable, but because it is
+> unindexed.***
+
+### D. The farewell table shipped as a different, better shape — instrument 13
+
+The report describes a four-branch table resolved by `(brynnKeeperStoryTold, brynnLightKept)`, with the
+fourth row an unreachable fallback, and defends keeping it: *"The dead branch costs nothing."*
+
+HEAD ships a **three-flag priority chain with no dead branch at all**: `!storyTold` → `!choiceMade` →
+`lightKept` → `else`. And the first branch is not a default. It is a **catch-up delivery**:
+
+> `farewellNoStory:  '"There's a lamp in the corner that's been burning since your first night. I wanted you to know that."'`
+
+`lampLine = BRYNN_KEEPER_STORY.farewellNoStory;@26893` is immediately followed by
+`S_story.brynnKeeperStoryTold = true`, so a player who never found Beat 1 still gets the lamp told to
+them at the door in Act VIII, and the epilogue row keyed on that flag then reads truthfully rather than
+inventing a conversation. Scored against the report's own thesis — *the arcs close because the
+characters close them* — the shipped design serves it better than the spec, which would have left the
+inattentive player with nothing.
+
+**One shape worth noting rather than filing loudly:** that write happens inside a `text: () => {…}`
+getter — a *render* path mutating a *progression* flag that two downstream consumers read (the Town
+Crier's `qOrder = @26865`, and the epilogue). It is safe today only because `_renderNpcCard` latches
+`act8FarewellBrynn` **before** calling `beat.text()`. Remove that latch, or call the getter twice for a
+preview, and the branch silently advances. → a small §DX row.
+
+### E. What held, and where it did not — instrument 12, fifteenth consecutive confirmation
+
+Everything **transcribable** is exact: four consts, five flags, three trigger predicates, the
+append-not-replace semantics of the theory addendum, the one-directional cross-dependency, four line
+numbers. Everything **composed** carries the errors: three identifiers with zero commits ever, a flag
+count that only reaches eight by including one of them, two paraphrased choice labels, and a
+post-mortem paragraph praising the passive voice of a line that is active and starts with Yael's name.
+
+The `TC_BRYNN_LAMP` case is the corpus's recurring pattern in miniature: **the feature shipped and the
+name did not.** The Town Crier does reference the lamp — through
+`brynnKeeperStoryTold:      'The lamp at the First Inn@26775` — exactly as designed, under no name at
+all. A reader grepping the const would conclude the integration was never built.
+
+### F. Reachability closure (instrument 19)
+
+| Surface | Node | Cell | Verdict |
+|---|---|---|---|
+| Brynn Beats 1–2 + ambient | `TLL` | `10,204` — alone | ✅ REACHABLE |
+| Yael Named Report | `LHR` | `10,197` — `list[0]`, `BK` behind it | ✅ REACHABLE |
+| Bruhns CO scene | `TLS` | `26,181` — alone | ✅ REACHABLE |
+| Yael patrol addendum | `MSY` | `25,206` — **9th of 12** | ⛔ UNREACHABLE |
+
+Gate flags close cleanly: `yaelEscortUsed` has one writer at a live button; `s29LineDelivered` has one
+writer inside the `HKG` npc-row block, itself gated on `frobergerLastEntryRead && _npcFavor('auros') >= 2`.
+Three of four surfaces render. **The arc layer is in far better shape than most content the program has
+measured** — and note *why*: it added no nodes, so the migration that stranded eleven nodes in one cell
+had almost nothing of this layer to catch. *Structural minimalism turned out to be a survival trait.*
+
+---
+
+## VI. Defects Filed
+
+- **§AUDIT-03af (existing, SCOPED AND ANSWERED)** — the sweep it requested is done. `const birkaNpcs@35139`
+  and the §NPC-01-SF4 note make **eight** "no NODE_MAP entry ever existed" claims; **seven are false**
+  against `32c10c5` (only `CQ` holds). All seven remaps are nonetheless **correct renames**
+  (`num` + terrain key + label match). **Fix the comments; keep the remaps** — the opposite verdict to
+  §DOC-02u's `LJ3`, where the same standard licensed a wrong answer. Replace *"never existed"* with
+  *"retired by §WALK/§NAV-01; the node survived under a new key, `num` preserved."*
+- **§AUDIT-03x (existing, EXTENDED — and a change of unit)** — cell `25,206` strands **11 of 12**
+  occupants, not the 7 §DOC-02h attributed to §CROWN-01. The other four are `MSY` (this arc), `SDQ`,
+  `OTP` (an §EPIC-01 battleground) and `DBN`, from three unrelated tracks. **Score §AUDIT-03x by CELL,
+  not by arc**; the per-arc method undercounts by construction.
+- **§DX-02ae (NEW, 🟢 no design call)** — `ACT8_FAREWELL_BEATS.brynn.text` is a `text: () => {…}`
+  getter that writes `S_story.brynnKeeperStoryTold = true`. A render accessor mutating progression
+  state, read downstream by the Town Crier and the epilogue; correct today only because
+  `_renderNpcCard` latches its once-flag before invoking the getter. Move the write to the call site,
+  beside the latch. Also in the same row: `YAEL_NAMED_REPORT_SCENE`'s own `// → doc:` comment says
+  *"fav >= 2 Act IV+"* while the guard reads `>= 6`.
+- **§AUDIT-03s (existing, +2 player-facing hits)** — `YAEL_NAMED_REPORT_SCENE.setup` says *"watching
+  the market corner from the **CI** door"*, and `const S29_AUROS_THEORY@27050`'s header comment says
+  *"fires at **CY**"*. `CI` is the worse of the two: it resolves to a **different live node**, so every
+  existence check passes while the sentence is wrong.
+- **§AUDIT-03z (b) (existing, independently re-confirmed)** — `S29_AUROS_THEORY`'s comment still states
+  the trigger as `fav_auros >= 2`, a field with exactly one occurrence in 38,712 lines: that comment.
+  The live guard is `_npcFavor('auros') >= 2`. Reached here from a different direction, 
+  which is corroboration rather than a duplicate.
+- **Not filed:** the three zero-commit identifiers are recorded **NOT SHIPPED and kept** in §III. They
+  are report-side, not engine-side, and one of them (`TC_BRYNN_LAMP`) names a feature that shipped.
+
+---
+
+## VII. File References
+
+| Anchor | Content |
 |---|---|
-| `_npcFavor('bruhns') >= 1` | `friendly` |
-| `_npcFavor('bruhns') >= 2` | `dearFriend` |
-| `_npcFavor('bruhns') >= 2` AND `s29LineDelivered` | `dearFriendWithTheory` |
-
-Variant selection is evaluated top-to-bottom with the highest condition winning. `s29LineDelivered` refers to the Auros Theory scene state flag from §XXXII, which is set when the player has completed the full Auros Theory beat with the relevant NPC. This cross-dependency is the only inter-layer reference in this group of three.
-
-**Scene content — `dearFriend` variant:** Bruhns explains that the Ivory Circle commissioned the Codex consolidation. Their belief was that bringing the Shards together would seal the Void. She signed on because she believed them. She is no longer sure that belief was correct. She says this before the fight. She does not ask the player to respond.
-
-**Scene content — `dearFriendWithTheory` addendum:** Bruhns confirms that the theory about the Antecedent — the one the player encountered through the Auros Theory scene — is correct. She knew the source. She does not explain why she withheld it. The addendum is a single sentence appended to the `dearFriend` speech without structural separation, so the full scene reads as one continuous statement.
-
-**Character note from plan.md:** Commander Seraphine Bruhns and Commander Auros are the same character. The CO boss fight is a confrontation with the NPC the player has been building favor with across the arc. The scene exists precisely because of this identity — it transforms the boss fight from a mechanical endpoint into a conversation between two people who have, by this point, earned directness with each other.
-
-### 3.2 Post-Mortem
-
-The injection point — after arrival quotes, before fight chip — is the tightest window in any node render path in the game. The fight chip render must not be delayed or the UI enters a broken interstitial state. The scene const text is therefore rendered synchronously with no await, no animation, no confirmation prompt. Bruhns speaks. The fight chip appears. This is correct for the scene's tone.
-
-The `dearFriendWithTheory` variant presented the primary design problem: it must not feel like a reward for having completed §XXXII, because that framing makes Bruhns's confession transactional. The solution was to make the addendum confirmatory rather than revelatory — the player already knows the theory is correct; Bruhns is acknowledging that she knew too. The weight shifts from information to complicity.
-
-The `bruhnsCoSceneDelivered` flag prevents the scene from repeating on node re-entry. Because the CO node is a terminal node (the boss fight resolves the run), re-entry after scene delivery is only possible through debug state manipulation. The flag is nonetheless correct to include; it maintains the architectural consistency of the companion arc pattern.
-
-The `friendly` variant exists for completeness and to ensure players with moderate Bruhns favor receive some acknowledgment at the CO node. It is intentionally brief. Players who reached the CO node with `fav == 1` have had a different relationship with Bruhns, and the scene should reflect that without expanding into content that only makes sense for `fav >= 2`.
+| `const BRYNN_KEEPER_STORY = {@27037` · `farewellNoStory:@27043` | Layer 70, and the catch-up branch |
+| `brynnKeeperStoryTold: false, brynnLightChoiceMade: false, brynnLightKept: false,@23117` | the three flags, one line, specified order |
+| `if (node.code === 'TLL' && _npcFavor('brynn') >= 1@32815` · `if (node.code === 'TLL' && _npcFavor('brynn') >= 2@32840` | Beats 1 and 2, verbatim triggers |
+| `lampLine = BRYNN_KEEPER_STORY.farewellNoStory;@26893` · `qOrder = @26865` · `brynnKeeperStoryTold:      'The lamp at the First Inn@26775` | §V-D and the Town Crier that shipped without `TC_BRYNN_LAMP` |
+| `const BRUHNS_CO_SCENE = {@28062` · `bruhnsCoSceneDelivered: false,@23118` | Layer 72 |
+| `if (node.code === 'TLS' && !S_story.defeatedBattles@34993` · `const fav = _npcFavor('auros');@34994` | the §AUDIT-03n repair this report justifies (§V-C) |
+| `const S29_AUROS_THEORY@27050` · `S_story.s29LineDelivered = true;@32670` | the one cross-dependency |
+| `const YAEL_NAMED_REPORT_SCENE = {@28048` · `yaelNamedReportDelivered: false,@23119` | Layer 74 |
+| `if (node.code === 'LHR' && _npcFavor('yael') >= 2@32489` · `S_story.yaelEscortUsed = true;@23798` | the trigger triple and its one writer |
+| `const YAEL_PATROL_NODES = [@27728` · `nodeSlug:'MSY'@27733` · `MSY:{r:25,c:206},@9672` · `const CELL_GRID = (() => {@9852` | the stranded addendum (§V-B) |
+| `SDQ:{ num:16@8664` · `OTP:{ num:62@8761` | cell `25,206`'s other tracks |
+| `cond: () => !!(S_story.yaelNamedReportDelivered)@28116` · `Yael kept three copies@28117` | the epilogue row, active voice |
+| `const birkaNpcs@35139` | the eight "never existed" claims (§V-A) |
+| `32c10c5` · `43610d3` · `585be8f`…`0a131f5` | archive · ship commit · the report's own tree |
 
 ---
 
-## 4. Layer 74, §XXXIX — Yael's Named Report Scene
+## VIII. Conclusion, Re-Scored
 
-### 4.1 Implementation
+The original conclusion holds and can be stated more precisely than it was. *"No nodes, monsters, or
+items were added. The single-file architecture was not structurally modified."* — true, and it turned
+out to be the layer's insurance policy. Three of four surfaces still render at HEAD after a coordinate
+migration that stranded eleven nodes in a single cell, and the one casualty is the only surface that
+depends on standing somewhere specific.
 
-**Scene const:** `YAEL_NAMED_REPORT_SCENE` at line 12611. Object contains setup text, a decision line, and two labeled player choice strings.
+The implementation cost was five state flags, not eight, and four scene consts rather than three. The
+three identifiers the report names that the file has never held cost nothing at runtime and one full
+audit row at reading time, because the Town Crier integration looks unbuilt to anyone who greps for it.
 
-**State flag introduced** (line 8421):
+And the sentence that turned out to matter most was not in the specification at all. It is in §3.1,
+under a heading that reads *"Character note"*: **Bruhns and Auros are the same person.** A gate found
+that sixty-four days later by noticing two lists disagreed. The report had simply said so.
 
-| Flag | Type | Set when |
-|---|---|---|
-| `yaelNamedReportDelivered` | boolean | Either player choice selected |
-
-**Trigger:** CI node render, conditions `_npcFavor('yael') >= 2` AND `actNumber >= 6` AND `yaelEscortUsed`. Guard: `!yaelNamedReportDelivered`.
-
-`yaelEscortUsed` is an existing state flag set by the escort mechanic. Its presence as a trigger condition is intentional: Yael's arc closes only for players who have actually used her as an escort, not merely accumulated favor through ambient interaction. The named report is not a general announcement; it is something she tells this specific player because of what they did together.
-
-**Scene content:** Yael tells the player she filed a named report — her name on it, not anonymous — about riot suppression evidence from three years ago. She is not watching to see if it disappears. She wanted the player to know she did it. She does not explain why she is telling the player this now, at the CI node, in the middle of an act. The timing is hers.
-
-**Player choices:**
-
-| Choice label | Subtext | Effect |
-|---|---|---|
-| Affirm | Acknowledges the act as meaningful | Sets `yaelNamedReportDelivered = true` |
-| Acknowledge risk | Acknowledges the danger without framing it as a mistake | Sets `yaelNamedReportDelivered = true` |
-
-Both choices set the flag. Neither choice branches the scene further. The distinction between them is tonal, not consequential. This is a deliberate departure from the Beat 2 choice structure in Brynn's arc, where `brynnLightKept` produced a downstream branch. Yael's scene does not need a downstream branch because her action is already complete — the report is filed. The player is responding to a fact, not making a decision that determines an outcome.
-
-**`YAEL_PATROL_NODES` addendum (line 12306):** The SW node receives an additional patrol ambient line when `yaelNamedReportDelivered` is true. Yael does not reference the report directly in this line. She references the weather, or the shift schedule, or something equally mundane. The mundanity is the point — she filed the report, she told someone, and now she is back on patrol. This is how she carries it.
-
-**§XXXVI epilogue scroll:** `yaelNamedReportDelivered` adds a single line to the epilogue text block. The line notes that a named report was filed and entered the record. It does not attribute an outcome. The record is the outcome.
-
-### 4.2 Post-Mortem
-
-The trigger condition triple (`fav >= 2` AND `actNumber >= 6` AND `yaelEscortUsed`) is the most restrictive of the three arc triggers, and correctly so. Yael's scene is the most private of the three — it is not a story Brynn is keeping, not a confession Bruhns is making to contextualize a fight. It is a person telling someone else that they did something they can't take back. The conditions exist to ensure the player has been in the relationship long enough to be the right person to hear it.
-
-The choice not to branch on player response was contested during planning. The argument for branching: players should be able to affect Yael's confidence in her decision. The argument against: Yael already filed the report. The player cannot affect what she did; they can only affect how they receive it. Giving the player a choice that changes the outcome of a fait accompli would misrepresent the scene's power structure. The current implementation keeps that power structure accurate.
-
-The SW patrol addendum (line 12306) is the layer's most architecturally novel feature — the first instance of a companion scene state flag propagating to a patrol node ambient line rather than a farewell or a Crier reference. The precedent is worth noting. Patrol nodes are visited frequently and low-stakes; they are the right place for a companion to be simply present after something significant has happened.
-
-The epilogue line is intentionally passive voice: "a named report was filed." Yael's name is not in the epilogue text. Her name is on the report. The epilogue records the fact; the record is where her name lives.
+> *"The arcs close because the characters close them. The player witnesses."* Three of them still do.
+> Yael, characteristically, is the one standing in a field where nobody can see her — which is either
+> a coordinate bug or the most on-theme casualty in the corpus, and this verification declines to
+> choose.
 
 ---
 
-## 5. Cross-Layer Summary
-
-| Layer | Section | Node | Const | Flags | Cross-dependency |
-|---|---|---|---|---|---|
-| 70 | §XXXV | IN | `BRYNN_KEEPER_STORY` (L11573) | 3 (L8419) | None |
-| 72 | §XXXVII | CO | `BRUHNS_CO_SCENE` (L12625) | 1 (L8420) | `s29LineDelivered` (§XXXII) |
-| 74 | §XXXIX | CI, SW | `YAEL_NAMED_REPORT_SCENE` (L12611) | 1 (L8421) | `yaelEscortUsed` (escort mechanic) |
-
-Layer 72 is the only layer with a cross-arc dependency (`s29LineDelivered`). This dependency is one-directional and read-only: §XXXVII reads the §XXXII flag but does not modify it. No circular dependencies exist in the three-layer group.
-
----
-
-## 6. Conclusion
-
-Layers 70, 72, and 74 close the primary companion arcs of roll2hit-v3.html by giving Brynn, Bruhns, and Yael scenes that exist on their terms rather than the player's. Brynn keeps a lamp burning for people who haven't come back. Bruhns is not sure she believed the right people. Yael put her name on a document and went back to work. None of these scenes require the player to do anything except show up with enough favor and enough acts behind them. The arcs close because the characters close them. The player witnesses.
-
-No nodes, monsters, or items were added. The single-file architecture was not structurally modified. The implementation cost is eight state flags, three scene const objects, and targeted injection into three existing node render paths.
-
----
-
-*IEEE Post-Mortem Format. roll2hit-v3.html companion arc series. Layers 70, 72, 74. 2026-05-25.*
+**Filed:** 2026-05-25 · **Verified:** 2026-08-12
+**Cross-references:** `world.md` §The First Inn Light · §Yael's Named Report Scene · `story.md`
+§Commander Bruhns CO Scene · `plan-archive.md` §XXXII · BACKLOG §AUDIT-03af / §AUDIT-03x / §AUDIT-03n
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
