@@ -16,8 +16,8 @@
 The answer operates at three layers:
 
 1. **Greeting layer** — `NPC_NG_PLUS_GREETINGS`: first NPC visit in NG+ (established in Layer 43, not new to §XV)
-2. **Memory layer** — `NPC_NG_MEMORY_LINES`: second NPC visit in NG+ after preserved favorability ≥ 2 (new in Layer 50)
-3. **Author layer** — Entry 42 modal at `LHR` (historical `CI`), quest chain, journal persistence
+2. **Memory layer** — `NPC_NG_MEMORY_LINES`: preserved favorability ≥ 2 (new in Layer 50). **As designed this fired on the SECOND NG+ visit; as built it fires on the first** — `S_story[ngGreetedKey] = true;@23731` is written by the greeting branch and read eleven lines later by the memory branch in the same synchronous pass, so the latch is always already set (§DX-02aj, measured §DOC-02aa).
+3. **Author layer** — the Entry 42 **panel** at `LHR` (historical `CI`), quest chain, journal persistence
 
 The section closes the philosophical loop opened by Quest -1 (§XIV): the player who found the door becomes the author who writes what is behind it.
 
@@ -29,36 +29,41 @@ The section closes the philosophical loop opened by Quest -1 (§XIV): the player
 |-----------|--------|---------|
 | `ngPlusRun >= 1` | `storyNewGamePlus()` on first NG+ reset | Entire §XV layer active |
 | `priorQuestMinusOne` | Captures `questMinusOne` before NG+ reset | Gates `quest_ng_02` — writing Entry 42 |
-| 3+ Dear Friends (fav ≥ 2 preserved) | `npcFavorability` preserved across reset | Gates `quest_ng_01` completion + memory lines |
+| 3+ Dear Friends (fav ≥ 2 preserved) | `npcFavorability` preserved across reset | Gates `quest_ng_01` completion, the memory lines **and the Entry 42 panel itself** (`if (_e42Dear >= 3) {@34640`) |
 
 `quest_ng_02` ("The Open Page") only activates if `priorQuestMinusOne` is true — only players who found Quest -1's door in a prior run are asked to write what is behind it. A player who reached NG+ without finding the door gets `quest_ng_01` and `quest_ng_03` but not `quest_ng_02`. This preserves the layer's internal logic: you can only write Entry 42 if you found that it needed writing.
 
 ---
 
-## Entry 42 Modal
+## Entry 42 Panel
+
+**It is a panel, not a modal.** The block builds a `.sweelinck-variant` div and inserts it with `insertAdjacentElement('afterend')` below the story text box; there is no overlay and never was.
 
 ### Trigger Condition
 
-At `LHR` (historical `CI`) (inn) in NG+, fires before inn text renders if all three hold:
+At `LHR` (historical `CI`) — **City Streets — Birka**, *not* the inn (`TLL` is *The First Inn*) — in NG+, all **four** must hold:
 - `S_story.ngPlusRun >= 1`
 - `S_story.priorQuestMinusOne === true` (found the door in prior run)
 - `!S_story.entry42Written` (not yet engaged)
+- **`_e42Dear >= 3`** — at least three of `yael`/`brynn`/`quill`/`pachelbel`/`crov`/`auros` at fav ≥ 2 (`const _e42Dear = ['yael','brynn','quill','pachelbel','crov','auros']@34638`). Undocumented until §DOC-02aa; it is also the gate on the game's **fifth ending**, since `vaArchitectureKnown` requires `entry42Written`. Below the threshold the panel renders nothing and says nothing — §AUDIT-03ah.
 
-### Modal Text
+### Panel Text
 
-Textarea prompt: *"Entry 42 is blank. It always has been. Froberger ran out of time before he ran out of world."*
+Textarea placeholder: *"Write Entry 42, or leave this blank."*, under the line *"The page is blank. His handwriting fills forty-one entries. This one — the last — is empty. He left it for someone else. You are the someone else."*
+
+> **NOT SHIPPED (kept).** The spec's prompt *"Entry 42 is blank. It always has been. Froberger ran out of time before he ran out of world."*, the journal label *"Entry 42 — Your Hand"*, and the blank-page line *"The margin says: I know. I was there too."* have **0 commits in the file's history**. The shipped equivalents are above and below.
 
 Two response options:
 
-**Write It:** Saves `entry42Text` from the textarea, sets `entry42Written = true`. Journal sidebar appends a 42nd entry labeled "Entry 42 — Your Hand."
+**Write It:** Saves `entry42Text` from the textarea, sets `entry42Written = true`. The journal sidebar appends a 42nd entry headed `Entry 42 ✦ — <span style="color:#f0c070">by you</span>@30682`.
 
-**Leave It Blank:** Sets `entry42Written = true`, `entry42Text = ""`. Journal entry reads: *"Entry 42 — blank page. The margin says: I know. I was there too."*
+**Leave It Blank:** Sets `entry42Written = true`, `entry42Text = ""`. The journal body reads *"[left blank]"*, and the panel answers `📖 You left Entry 42 blank. Some things need not be written to be true.@34660`
 
 ### Lifetime Persistence
 
-The modal fires once per lifetime. If a player wrote Entry 42 in NG+1, they will never be asked again — the entry they wrote persists as the journal's final page for all future runs. `entry42Text` is preserved across all subsequent NG+ resets. `entry42Written` is also preserved, preventing re-fire.
+The panel fires once per lifetime. If a player wrote Entry 42 in NG+1, they will never be asked again — the entry they wrote persists as the journal's final page for all future runs. `entry42Text` is preserved across all subsequent NG+ resets. `entry42Written` is also preserved, preventing re-fire.
 
-The "Leave It Blank" option was essential. A forced text-entry mechanic alienates players who don't want to write in-game prose. The blank page response — *"I know. I was there too."* — is itself a complete answer. Not every researcher writes. Some just bear witness.
+The "Leave It Blank" option was essential. A forced text-entry mechanic alienates players who don't want to write in-game prose. The blank-page response — *"Some things need not be written to be true."* — is itself a complete answer. Not every researcher writes. Some just bear witness.
 
 ---
 
@@ -66,7 +71,7 @@ The "Leave It Blank" option was essential. A forced text-entry mechanic alienate
 
 ### What They Are
 
-A const mapping NPC key → one unique line delivered on the second NPC visit in NG+ when `npcFavorability[key] >= 2` in the preserved state.
+A const mapping NPC key → one unique line delivered in NG+ when `npcFavorability[key] >= 2` in the preserved state. **Designed for the second visit; delivered on the first** — see the delivery note below.
 
 ### Delivery Logic
 
@@ -74,7 +79,7 @@ A const mapping NPC key → one unique line delivered on the second NPC visit in
 2. If not delivered and `npcFavorability[key] >= 2`: render `NPC_NG_MEMORY_LINES[key]` as a narrative aside
 3. Set `ngMemoryDelivered[key] = true` — fires once per NG+ run
 
-`NPC_NG_PLUS_GREETINGS` fires on the first visit regardless of favorability. `NPC_NG_MEMORY_LINES` fires on the second visit, gated by fav ≥ 2. The two systems are independent: a player who rushes through NG+ without prior high favorability gets greetings only.
+`NPC_NG_PLUS_GREETINGS` fires on the first visit regardless of favorability. `NPC_NG_MEMORY_LINES` was specified to fire on the **second** visit, gated by fav ≥ 2 — **and never has.** The memory branch requires `S_story[ngGreetedKey]`, which the greeting branch sets `S_story[ngGreetedKey] = true;@23731` eleven lines earlier **in the same render pass**, so both land together: the greeting in the card, the memory line 800 ms later via `setTimeout(() => storyMsg(NPC_NG_MEMORY_LINES[key]), 800);@23738`. The corollary is the live hazard: an NPC given a memory line but **no** greeting entry can never deliver it, because nothing else writes the latch. That was the state of `quill`/`crov`/`auros` from 2026-05-25 until §AUDIT-03n re-keyed `NPC_NG_PLUS_GREETINGS` off the profiles' surnames on 2026-07-31 — three of six memory lines unreachable for 67 days. → §DX-02aj. The favor stratification itself is real and works: a player who rushes NG+ without prior high favorability gets greetings only.
 
 Memory lines are proportional to prior relationship. A player who was cold to NPCs in their first run does not receive memory lines — their NPCs don't remember them as warmly.
 
@@ -88,12 +93,12 @@ Dear Friends eligible for memory lines: `yael`, `brynn`, `quill`, `pachelbel`, `
 
 ## Quest Chain
 
-Activated at `LHR` (historical `CI`) in NG+ (first visit):
+Activated at `LHR` (historical `CI`) in NG+. **The inline `storyRender` activation block shown in earlier revisions of this doc no longer exists** — §VM-01-G3 (`c9f3946`) replaced it with declarative UQF gates, and all three carry `activateNode:'LHR'`, `onActivate:null` (silent, as the block always was) and `boardExempt:true` (a personal remembrance is not Warrant work):
 
 ```js
-if (!_ngqs['quest_ng_01']) S_story.quests['quest_ng_01'] = 'active';
-if (!_ngqs['quest_ng_02'] && S_story.priorQuestMinusOne) S_story.quests['quest_ng_02'] = 'active';
-if (!_ngqs['quest_ng_03']) S_story.quests['quest_ng_03'] = 'active';
+quest_ng_01: gate:{ countMin:[{ path:'ngPlusRun', min:1 }] }
+quest_ng_02: gate:{ countMin:[{ path:'ngPlusRun', min:1 }], flags:['priorQuestMinusOne'] }
+quest_ng_03: gate:{ countMin:[{ path:'ngPlusRun', min:1 }] }
 ```
 
 | Quest | Title | Completion Condition | Reward |
@@ -104,9 +109,9 @@ if (!_ngqs['quest_ng_03']) S_story.quests['quest_ng_03'] = 'active';
 
 ### Quest Descriptions
 
-**quest_ng_01 — "The Remembered Path":** Revisit 3 Dear Friends. Tracked via `ngMemoryDelivered` — each Dear Friend NPC visited in the second-visit slot (after NG+ greeting already delivered, fav ≥ 2) counts toward the three required. Reward: 500gp. Sets `nextFrobergerComplete = true`.
+**quest_ng_01 — "The Remembered Path":** Revisit 3 Dear Friends. Tracked via `ngMemoryDelivered` — each Dear Friend NPC (fav ≥ 2) whose card renders in NG+ counts toward the three required. Reward: 500gp. **NOT SHIPPED (kept):** earlier revisions said it sets `nextFrobergerComplete = true`; nothing in the file's history has ever assigned that field (§DX-02n).
 
-**quest_ng_02 — "The Open Page":** Write Entry 42 at `LHR` (historical `CI`). Only activated if `priorQuestMinusOne`. Reward is the act itself — writing in the blank page is its own completion. No gold. The mechanic does not require substantive prose; choosing "Leave It Blank" completes the quest.
+**quest_ng_02 — "The Open Page":** Write Entry 42 at `LHR` (historical `CI`). Its shipped hint — `hint:'Visit the City Inn to find the open page.',@11051` — names the wrong place: `LHR` is City Streets, the inn is `TLL` (§AUDIT-03s). Only activated if `priorQuestMinusOne`. Reward is the act itself — writing in the blank page is its own completion. No gold. The mechanic does not require substantive prose; choosing "Leave It Blank" completes the quest.
 
 **quest_ng_03 — "The Letter":** Find Froberger's sealed letter at `TLS` (historical `CO`). Only available in NG+; not present in a first run. One "Take the letter." button on `TLS` (historical `CO`) visit when `!frobergerLetterFound`. Sets `frobergerLetterFound = true`. Reward: 300gp.
 
@@ -129,9 +134,9 @@ The letter is a readable item. Its presence at `TLS` (historical `CO`) — the a
 | `ngPlusRun` | number | `0` | Yes (incremented) | NG+ generation counter; 0 = first run |
 | `entry42Written` | boolean | `false` | Yes | Whether player has engaged the Entry 42 modal |
 | `entry42Text` | string | `''` | Yes | Player-authored content; empty string = chose blank |
-| `entry42Read` | boolean | `false` | No | Whether player has opened journal to Entry 42 |
+| `entry42Read` | boolean | `false` | No | Set by the journal renderer (`S_story.entry42Read = true;@30676`) and **read by nothing** — write-only, §DX-02n. It does *not* gate `quest_ng_02`; that gates on `entry42Written`. |
 | `ngMemoryDelivered` | object | `{}` | No | `{npcKey: true}` — prevents memory line from firing twice per run |
-| `nextFrobergerComplete` | boolean | `false` | No | Set when quest_ng_01 completes |
+| `nextFrobergerComplete` | boolean | `false` | No | **DEAD** — 1 occurrence in the whole file (its own declaration), 0 assignments in history. §DX-02n. |
 | `frobergerLetterFound` | boolean | `false` | No | Set when player finds `TLS` (historical `CO`) letter in NG+ |
 | `priorQuestMinusOne` | boolean | captured | Yes | Captures `questMinusOne` value before NG+ reset |
 
@@ -156,7 +161,7 @@ Not preserved: `ngMemoryDelivered`, `entry42Read`, `frobergerLetterFound`, `next
 
 ## Epilogue Integration
 
-`entry42Written` gates a fifth ending condition variant in `_buildEpilogueScroll()`. Players who wrote (or chose to leave blank) Entry 42 receive a closing paragraph acknowledging the act: the researcher who came after Froberger left something behind too.
+`entry42Written` is one of three flags on the **fifth ending** — `vaArchitectureKnown && entry42Written && ngPlusRun >= 1` (`// Layer 52: §XVII — fifth ending: vaArchitectureKnown overrides all other questions@28268`). It overrides Sweelinck's last question with *"What was inside the cage?"* and appends the four-authors addendum to the victory screen. **Correction (§DOC-02aa):** earlier revisions placed this in `_buildEpilogueScroll()`; `function _buildEpilogueScroll() {@28120` carries no `entry42` term and never did — the sites are in the victory-screen renderer below it.
 
 ---
 

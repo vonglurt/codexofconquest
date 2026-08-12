@@ -89,7 +89,7 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `docs/story/story-flowchart.md` | Full story flowchart using two-letter node codes · arc overlays · intersection points ★ | All arcs |
 | `docs/story/story-arc-investigation.md` | §XVI Weimar Scholar Gate + §XVII Void Archaeology + §XXI Void Shaman chain | SQ · MT · CI |
 | `docs/story/story-arc-coastal.md` | §XIX Tilbury Harbor + §XX Visby Underground | DK · SF · GC |
-| `docs/story/story-arc-ngplus.md` | §XV NG+ Remembrance · Entry 42 · quest_ng_01/02/03 | CI · SQ · CO |
+| `docs/story/story-arc-ngplus.md` | §XV NG+ Remembrance · Entry 42 · quest_ng_01/02/03 | LHR · NUE · TLS (historical CI · SQ · CO) |
 | `docs/story/story-arc-npc-dialogues.md` | Birka Six NPC_DIALOGUES full transcript (120 quotes) · arc summary | CI · IN · TV · BA · CY |
 | `docs/story/story-arc-epic-battlegrounds.md` | Q52–Q71 EB quest-giver dialogue (5 fields × 20 entries) | 20 dead-end nodes |
 
@@ -681,8 +681,8 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.entry42Written` | boolean | Player has written Entry 42 |
 | `S_story.entry42Text` | string | Player's text for Entry 42 |
 | `S_story.entry42Read` | boolean | Entry 42 read back after writing |
-| `S_story.ngMemoryDelivered` | object | npcKey → true; NG+ memory line delivered per NPC |
-| `S_story.nextFrobergerComplete` | boolean | NG+ Froberger arc complete |
+| `S_story.ngMemoryDelivered` | object | npcKey → true; NG+ memory line delivered per NPC (delivered on the FIRST NG+ visit, not the second — §DX-02aj) |
+| `S_story.nextFrobergerComplete` | boolean | NG+ Froberger arc complete — **DEAD: declared only, 0 assignments in the file's history** (§DX-02n, §DOC-02aa) |
 | `S_story.frobergerLetterFound` | boolean | Froberger's sealed letter at CO found |
 | `S_story.priorQuestMinusOne` | boolean | Quest -1 seen on a prior NG+ run |
 | `S_story.wmLowerArchiveUnlocked` | boolean | Weimar lower archive unlocked |
