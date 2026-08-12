@@ -1,619 +1,386 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report — The roll2hit.com Documentation System: Design, Purpose, and Synchronization Architecture
-### IEEE-Format Analysis of a Two-Way Synchronized Planning and Documentation Framework
-**Date:** 2026-05-24  
-**Subject:** `plan.md` as master planning document; all `.md` files in `/roll2hit.com/`  
-**Scope:** Documentation system architecture, prompt keyword analysis, task decomposition, sync symmetry  
+# Lab Report — The roll2hit.com Documentation System
+
+### Design, Purpose, and Synchronization Architecture — with a 2026-08-11 verification pass
+
+**Original date:** 2026-05-24 (added at `59a9e0d`)
+**Verified:** 2026-08-11 (§DOC-02i) against `roll2hit-v3.html` @ HEAD **and** against the archive build `32c10c5` (2026-05-24)
+**Subject as written:** `plan.md` as master planning document; the repo's Markdown corpus
+**Subject at HEAD:** `plan.md` no longer exists — split into `CONTRIBUTING.md` + `BACKLOG.md` at `5e48dd7` (2026-07-09)
 
 ---
 
 ## Abstract
 
-This report analyzes the documentation system for `roll2hit.com` — a 14,377-line single-file browser RPG — from the perspective of software engineering methodology. The system maintains a **two-way synchronization** between a primary source file (`roll2hit-v3.html`) and a corpus of 37 Markdown documents. `plan.md` functions as the master planning document: it holds implementation directives, a PLANNED-feature specification queue, tooling reference, and the complete sync-pass record. This report describes `plan.md`'s architecture, extracts the recurring keyword vocabulary used across all prompts, proposes a task-assignment decomposition framework derived from that vocabulary, and articulates the symmetry of the two-way sync as a formal engineering pattern. ASCII flowcharts and architecture diagrams are provided for each subsystem. The report concludes that the documentation system is itself a form of software: it has a schema (`index.md` as manifest), a source of truth (`roll2hit-v3.html`), a spec layer (`plan.md`), and a test suite (sync pass increments). Understanding it as software — not prose — is the key to maintaining it at scale.
+This report argued that the roll2hit.com documentation corpus is itself software: it has a schema
+(`index.md` as manifest), a source of truth (`roll2hit-v3.html`), a spec layer (`plan.md`), and a test
+protocol (the sync pass). It specified a **two-way synchronization rule** — every doc item traces to the
+HTML, every HTML item has a home doc — and proposed it as a bijection to be driven to closure by
+successive sync passes.
+
+The 2026-08-11 verification finds the **thesis intact and the instrument that was supposed to enforce it
+broken**. Of the report's seven design constants, all seven were exact against the build it was written
+against; six have since moved and one (`FROBERGER_JOURNAL`, 41 entries) has not moved in 79 days. Of its
+five recommendations, three shipped, one shipped in one direction only, and one is closed by this pass.
+The `_S_DEFAULTS()` contract survived at **104 of 107 fields** — the highest structural survival the
+§DOC-02 program has measured.
+
+The central finding is that **the bijection shipped and stopped being true.** `index.md`'s Doc Health
+Badge — this report's own FC01 — reports `85` lab reports on disk when there are `107`, `36,933` HTML
+lines when there are `38,712`, and marks every row `✅`. Its lab-report list is broken in both
+directions: 26 files on disk are unindexed and 6 index rows name files deleted at `120d617`. The same
+failure is visible on **day one**: the report cites "23 lab reports" because `index.md` said 23 while 22
+existed on disk. *A bijection guarantees a link, not a truth* — demonstrated at HEAD by
+`S29_AUROS_THEORY`, where the FC05 pointer resolves correctly to `world.md` and both ends name a state
+field that has never existed.
 
 ---
 
-## I. Introduction
+## I. Method
 
-### A. The Documentation Problem
+Ten instruments, per the §DOC-02 house method:
 
-`roll2hit-v3.html` is a monolith: all game logic, data, UI, and narrative in a single file. Monoliths are readable only as long as the programmer holds the full architecture in memory. At 14,377 lines, that mental model exceeds working memory for any session longer than a few hours. Documentation exists to externalize that model.
+1. Batch `grep -c` of every named symbol before reading the report body.
+2. `git log -S "<symbol>" -- roll2hit-v3.html` on every symbol the census marks dead — separates
+   **RETIRED** (shipped, later removed) from **NOT SHIPPED** (never existed under that name).
+3. Archive read (`git show 32c10c5:roll2hit-v3.html`) — HEAD cannot adjudicate a claim about the past.
+4. Sibling cross-check against `lab-report-architecture-full.md` (§DOC-02b) and
+   `lab-report-birka-beginner-arc.md` (§DOC-02d).
+5. Delta table run **both ways** — a specified behaviour absent from HEAD is engine-rot, not report-rot.
+6. Corpus reconstruction at the report's own commit (`59a9e0d`) rather than at HEAD, so "wrong when
+   written" is distinguishable from "wrong now".
 
-The naive documentation approach — write a README, update it occasionally — fails at this scale because the gap between documentation and code grows with every edit. The roll2hit documentation system addresses this with a constraint that is both obvious and uncommon: **every item in the docs must trace to the HTML, and every item in the HTML must have a home document.** The two-way sync rule makes documentation a first-class engineering artifact, not an afterthought.
-
-### B. The Role of plan.md
-
-`plan.md` is not a README. It is the master planning document: the first file read at the start of every working session. Its functions are:
-
-1. **Directive** — what the session must do and what rules govern all edits
-2. **Design Constants** — the canonical numbers (370 monsters, 66 terrain entries, 76 nodes, 107 state fields)
-3. **State Field Reference** — all 107 `_S_DEFAULTS()` fields documented by category
-4. **Implementation Archive** — provenance of each implemented layer (1–53)
-5. **Implementation Queue** — PLANNED features in priority order (§V-A)
-6. **Sync Pass Record** — SP1 and SP2 increment logs with status
-7. **Feature Specs** — full IEEE-style specifications for each PLANNED layer (§IX–§XVIII)
-8. **Tooling Reference** — shell commands for safe HTML editing (§XIV)
-9. **Code Examples** — annotated JavaScript patterns for the game's idioms
-
-### C. Scope of This Report
-
-This report covers:
-- `plan.md` structure and purpose (Section II)
-- Keyword analysis across all `.md` prompts and directives (Section III)
-- Task decomposition framework derived from the keyword vocabulary (Section IV)
-- Two-way synchronization as a formal engineering pattern (Section V)
-- Document role specifications — each file's architectural purpose (Section VI)
-- ASCII flowcharts for all major subsystems (Section VII)
-- Recommendations (Section VIII)
+The report is unusual in the corpus: its subject is the repo, not the game. Where a claim is about a
+document rather than about `roll2hit-v3.html`, the document is the measurement target and this is stated.
 
 ---
 
-## II. plan.md — Structure and Purpose Analysis
+## II. Census
 
-### A. Section Map
+| Class | Named | Resolve at HEAD | Rate |
+|---|---|---|---|
+| HTML data-structure consts (§III-C) | 11 | 10 | 91% |
+| State fields named in prose (§VII-E) | 21 | 17 | 81% |
+| Functions | 3 | 3 | 100% |
+| Documents named in the role tables (§VI) | 14 | 13 (12 relocated) | 93% |
+| Design constants (§II-C) | 7 | 7 exact **at the archive build**, 1 unchanged at HEAD | — |
+| Recommendations FC01–FC05 | 5 | 3 shipped · 1 half-shipped · 1 closed by this pass | — |
 
-`plan.md` is organized into four logical zones:
-
-| Zone | Sections | Purpose |
-|------|----------|---------|
-| **Governance** | §I–§IV | Directives, constants, state fields, provenance |
-| **Dashboard** | §V | Implementation and documentation queues; new ideas |
-| **Sync Record** | §VI–§XI | SP1 and SP2 increment logs; function coverage; cross-reference table |
-| **Feature Specs** | §IX, §X, §XII–§XVIII | Full PLANNED feature specifications, one per layer |
-
-The governance zone is read every session. The dashboard is updated whenever a feature is planned or completed. The sync record is the audit trail of SP2. The feature specs are written when planning and marked `✅` when implemented.
-
-### B. The Directive (§I)
-
-§I is the constitution of the documentation system. It states three rules:
-
-1. **Two-way sync rule** — every doc item traces to HTML; every HTML item has a home doc
-2. **PLANNED feature standard** — PLANNED features exist in docs as stubs until implemented; never in HTML reference tables
-3. **Lab Report Policy** — write a lab report for major collections, large redesigns, new narrative arcs, design reviews, and session postmortems; commit with related doc changes in a single commit
-
-The directive is read before any other section. It overrides any other guidance.
-
-### C. The Design Constants (§II)
-
-§II is a quick-reference card for the numbers that appear most frequently across all documents:
-
-| Constant | Value | HTML source |
-|----------|-------|-------------|
-| Monster count | 370 | `MONSTER_POOL` — grep -c "key:'" |
-| WORLD_DB terrains | 66 (46 base + 20 epic) | `WORLD_DB` |
-| Story nodes | 76 | `NODE_MAP` |
-| State fields | 107 | `_S_DEFAULTS()` |
-| Froberger journal entries | 41 | `FROBERGER_JOURNAL` |
-| Named NPCs (Birka) | 6 | `NPC_DIALOGUES` |
-| Acts | 8 | `NODE_MAP[code].act` |
-
-These numbers must be consistent across every document that references them. Any document that states a different count is stale. The sync pass exists to find and correct these divergences.
-
-### D. The PLANNED Feature Lifecycle
-
-Every feature in plan.md §V-A exists in one of four states:
-
-```
-IDEA (§V-C) → SECTION (§IX–§XVIII) → PLANNED stubs (docs) → IMPLEMENTED (HTML + doc sync)
-```
-
-The transition from IDEA to SECTION creates the full spec. The transition from SECTION to PLANNED stubs adds the feature to `story.md`, `world.md`, and `maps.md` as `⚠️ PLANNED` entries. The transition from PLANNED stubs to IMPLEMENTED touches the HTML and then syncs all affected docs.
+`CORRIDOR_CELLS@—` is the only dead const: deleted with the Layer-9 corridor layer (§CELL-05 /
+§CELL-11A / §CELL-14), 3 commits in history — **RETIRED, not never-shipped**. Its home doc
+`docs/spec/spec-corridors.md` survives with a `⚠️ SUPERSEDED` banner, which is the correct handling.
 
 ---
 
-## III. Keyword Analysis — Common Vocabulary Across All Prompts
+## III. Design Constants — the delta table, both ways
 
-### A. Method
+The report's §II-C table gave seven canonical numbers with a verification recipe. Measured against the
+build it was written against (`32c10c5`, 2026-05-24, `roll2hit-v3.html` at exactly **14,377 lines** —
+the report's own figure, exact) and against HEAD:
 
-The recurring vocabulary of the documentation system was extracted by analyzing: `plan.md` §I–§XVIII, `index.md`, `spec-engine.md`, `spec-world.md`, `spec-combat.md`, and all lab-report headers. Keywords were grouped by function.
+| Constant | Report | Archive 2026-05-24 | HEAD 2026-08-11 | Verdict |
+|---|---|---|---|---|
+| HTML lines | 14,377 | **14,377** | 38,712 | ✅ exact when written · 2.69× |
+| Monsters (`const MONSTER_POOL = {@5355`) | 370 | **370** | 398 | ✅ exact when written |
+| `WORLD_DB` terrains (`const WORLD_DB = {@6279`) | 66 (46 base + 20 epic) | **66** | 111 | ✅ exact when written |
+| Story nodes (`const NODE_MAP = {@8425`) | 76 | **76** | 416 | ✅ exact when written · 5.5× |
+| State fields (`const _S_DEFAULTS = () => ({@23062`) | 107 | **107** | 318 | ✅ exact when written |
+| Froberger entries (`const FROBERGER_JOURNAL = [@27184`) | 41 | **41** | **41** | ✅ **unchanged in 79 days** |
+| Named Birka NPCs (`const NPC_DIALOGUES = {@10396`) | 6 | **6** | 204 profiles / 213 dialogues | ✅ exact when written |
+| Acts (`node.act`) | 8 | **1–8** | **0–8 plus `NaN`** | ⚠️ see below |
 
-### B. Control Flow Keywords
+**Zero transcription errors across seven constants.** This is instrument 9's gradient in its cleanest
+form: everything the author could copy is exact.
 
-These keywords appear in session directives and control the working mode:
+Two qualifications the table itself invites:
 
-| Keyword | Frequency | Function |
-|---------|-----------|---------|
-| `continue` | Very high | Triggers next increment; session resumption signal |
-| `PLANNED` | Very high | Marks a feature not yet in HTML; PLANNED stubs exist in docs only |
-| `✅` | High | Marks a completed increment or sync item |
-| `⚠️` | High | Flags attention — PLANNED or deviation from directive |
-| `⏳` | Medium | In-progress or deferred item |
-| `❌` | Low | Ruled out; kept for audit trail |
-| `Layer N` | High | Implementation version number; each layer is an atomic unit |
+- **The stated recipe does not reproduce the stated number unscoped.** §II-C gives
+  `grep -c "key:'"` as the source for 370. At the archive build that grep returns **462** across the
+  whole file and **370** only within the `MONSTER_POOL` block; at HEAD, **568** and **398**. The recipe
+  is correct as a block-scoped count and wrong as written. `npm run stats` (§DX-01g) is the live
+  replacement and parses the data sections with the same `wbapi-core` the `:1367` server uses.
+- **"Acts 8" has become wrong in two directions.** HEAD carries `act:0` (absent from the archive) and
+  `act:NaN` on 36 of 416 nodes — the latter already filed as **§AUDIT-03t** by §DOC-02c, where
+  `node.act || 1` silently act-gates them as Act 1 and `ACT_NAMES[NaN]` renders the literal string
+  *"undefined"* in the act badge.
 
-### C. Architecture Keywords
+**`_S_DEFAULTS()` survival — the strongest structural result in the program.** Of the 107 depth-1 fields
+present at the archive build, **104 are still declared at HEAD**. Only three were removed:
+`hearthHome` and `lastCorridorCells` (§CELL-13 jump-travel removal / the corridor layer) and
+`voidSignClicked`. The report's §VII-E claim that `_S_DEFAULTS()` is the durable spine of session
+continuity is the one architectural prediction it made that can be checked numerically, and it holds at
+97%.
 
-These keywords name the primary data structures:
-
-| Keyword | HTML const | Home doc |
-|---------|-----------|---------|
-| `MONSTER_POOL` | `MONSTER_POOL` | `monsters.md` |
-| `WORLD_DB` | `WORLD_DB` | `monsters.md`, `spec-world.md` |
-| `NODE_MAP` | `NODE_MAP` | `maps.md`, `world.md` |
-| `QUEST_DB` | `QUEST_DB` | `world.md` |
-| `_S_DEFAULTS` | `_S_DEFAULTS()` | `spec-engine.md`, `plan.md §III` |
-| `NPC_DIALOGUES` | `NPC_DIALOGUES` | `story.md` |
-| `FROBERGER_JOURNAL` | `FROBERGER_JOURNAL` | `froberger-journal-all-entries.txt` |
-| `FIGHTER_FEATURES` | `FIGHTER_FEATURES` | `mechanics.md` |
-| `CONDITION_ITEMS` | `CONDITION_ITEMS` | `mechanics.md` |
-| `EPIC_BOSS_POOL` | `EPIC_BOSS_POOL` | `combat.md` |
-
-### D. Policy Keywords
-
-These keywords encode behavioral rules and constraints:
-
-| Keyword | Meaning |
-|---------|---------|
-| `source of truth` | Designates which artifact governs in case of conflict (`roll2hit-v3.html` for code; `plan.md` for intent) |
-| `two-way sync` | Every doc item traces to HTML; every HTML item has a home doc |
-| `lab report` | A new `.md` file written when a major collection, redesign, or arc is added |
-| `home doc` | The canonical document for a given HTML const |
-| `state flag` | A boolean or array field in `_S_DEFAULTS()` that tracks game progress |
-| `gate` / `gated` | A prerequisite condition that must be true before content unlocks |
-| `stale` | A documentation value that no longer matches the HTML |
-| `SP2` | Sync Pass 2 — the two-way consistency pass; each increment is one file comparison |
-
-### E. Narrative Keywords
-
-These keywords appear in feature specs and carry narrative/mechanical weight:
-
-| Keyword | Domain | Usage |
-|---------|--------|-------|
-| `Dear Friend` | NPC | Highest favorability tier; unlocks quest completion content |
-| `favorability` | NPC | Four-state progression: Impartial → Friendly → Dear Friend |
-| `ngPlusRun` | NG+ | Counter tracking how many New Game+ runs; gates §XV and §XVII |
-| `Entry 42` | Narrative | Player-authored journal entry; the 42nd entry; stored in `entry42Text` |
-| `Curse of Knowledge` | Mechanic | Score tracking whether the player shared what they learned |
-| `Void Tide` | World | The primary antagonist force; advances daily |
-| `Froberger` | Character | The deceased researcher; the player's predecessor |
-| `PLANNED stub` | Doc standard | A `⚠️ PLANNED` section in a markdown doc for an unimplemented feature |
-
-### F. Keyword Patterns and Implications for Prompt Design
-
-The keyword analysis reveals three prompt design principles used consistently across all documents:
-
-1. **Gate vocabulary is consistent.** Every prerequisite uses the same form: `flagName = true` or `ngPlusRun ≥ N`. This makes implementation specs machine-parseable — a programmer can extract all gate conditions with a single grep.
-
-2. **Status is always visible.** Every item has a status symbol (`✅ ⚠️ ⏳ ❌`). A reader scanning any section can immediately identify what is done, pending, blocked, or ruled out without reading prose.
-
-3. **Layer numbers are the version system.** Every PLANNED feature has a Layer number. Implementation priority follows layer order. This provides a deterministic ordering that doesn't require a separate project management tool.
+*(Method note, a small correction to a sibling: §DOC-02b records HEAD's field count as 193. That is a
+count of **lines that begin a top-level field**; 87 of those lines declare more than one. The depth-1
+key count is **318**. Both are defensible; they are not the same measurement, and the archive figure of
+107 is a depth-1 count, so 318 is the like-for-like comparison.)*
 
 ---
 
-## IV. Task Assignment and Decomposition Framework
+## IV. Recommendations — outcome register (§VIII-A)
 
-### A. The Atomic Unit of Work
+The report ranked five open documentation items. Their fate is the most useful thing in it:
 
-The atomic unit of work in the roll2hit system is the **Layer**. A Layer is:
+| Item | Recommendation | Outcome |
+|---|---|---|
+| **FC05** | Two-way link convention: `// → doc: file.md §Section` in the HTML; `> HTML source: CONST ~line N` in the docs | **HALF SHIPPED.** The HTML half is live: **93** `// → doc:` pointers, on `MONSTER_POOL`, `WORLD_DB`, `NODE_MAP`, `NPC_DIALOGUES`, `QUEST_DB`, `FIGHTER_FEATURES`, `CONDITION_ITEMS`, `EPIC_BOSS_POOL`, `FROBERGER_JOURNAL` and 84 more; **48** top-level CAPS consts still lack one. The doc half has **0 commits ever** and exactly one occurrence in the repo — inside this report. **NOT SHIPPED — superseded** by §DX-01e's `` `symbol@line` `` anchors, which are gate-enforced (`check:anchors`, gate #15) and therefore strictly better than the prose convention proposed here |
+| **FC02** | `froberger-journal-all-entries.txt` entry-by-entry compare against the HTML — "the count is verified (41 entries); the content comparison has not been done" | **CLOSED BY THIS PASS — and it found two defects.** 39 of 41 entries are verbatim after quote/whitespace normalisation. Entries **17** and **29** are entirely different text in the two artifacts (§V, Finding 3) |
+| **FC01** | Doc Health badge in `index.md` | **SHIPPED** — `index.md` §"Doc Health Badge". **And it is the subject of Finding 1** |
+| **FC03** | Split `mechanics.md` into combat + economy | **SHIPPED** — `docs/mechanics/mechanics-combat.md` + `docs/mechanics/mechanics-economy.md` |
+| **FC04** | Re-verify function names in `lab-report-architecture-full.md` every 10 layers | **NOT SHIPPED as a cadence — superseded in kind.** No periodic re-verification ran; the §DOC-02 program (2026-08-11) is doing it once, exhaustively. §DOC-02b measured that report at 180 of 197 symbols resolving |
 
-- One feature or coherent set of changes
-- Fully specified in plan.md before implementation begins
-- Tagged with a `Layer N` number
-- Implemented as: code change + doc sync + git commit
-- Accompanied by a lab report if it meets the lab report trigger criteria
-
-A Layer is **not** a sprint, a ticket, or a milestone. It is closer to a commit with a spec. The spec exists before the code. The code matches the spec or the spec is updated first.
-
-### B. Task Breakdown by Layer State
-
-Each Layer passes through five task phases:
-
-```
-Phase 1: SPEC     — Write the full spec in plan.md (new §N section)
-Phase 2: STUB     — Add ⚠️ PLANNED stubs to story.md, world.md, maps.md
-Phase 3: CODE     — Implement in roll2hit-v3.html; verify with grep counts
-Phase 4: SYNC     — Update all home docs to reflect implemented code
-Phase 5: COMMIT   — git add all changed files; git commit with layer tag
-```
-
-If a lab report is needed, it is written in Phase 4 and committed in Phase 5 with all other changes.
-
-### C. Task Assignment Template
-
-When assigning a Layer to a working session, the prompt should include:
-
-```
-TASK: Implement Layer N — [Feature Name]
-SPEC: plan.md §N
-PREREQUISITES: [list state flags that must be set]
-HTML TARGETS: [list of consts/functions to modify]
-DOC SYNC: [list of markdown files to update after]
-VERIFY: grep -c "key:'" roll2hit-v3.html (expect: N)
-LAB REPORT: [yes/no — if yes, title]
-COMMIT: git add [files] && git commit -m "Layer N — [Feature Name]"
-```
-
-This template ensures the session has: scope (what to implement), context (where in HTML), verification (how to confirm it worked), and exit criteria (commit).
-
-### D. Session Continuity — The "continue" Keyword
-
-The word `continue` in a session prompt signals: "resume from the last completed increment." The session reads the plan.md dashboard (§V-A), finds the highest-priority `⚠️ PLANNED` item, and begins Phase 1 or resumes at whatever phase was last completed.
-
-This makes plan.md a **resumable state machine** — the document itself encodes where the work is, so context can be reconstructed from the file rather than from conversation history.
-
-### E. Priority Assignment
-
-§V-A assigns priorities 1–9 to current PLANNED features. Priority is determined by:
-
-1. **Layer order** — lower layer number = higher priority (implemented in ascending order)
-2. **Prerequisite readiness** — features with no unsatisfied prerequisites are higher priority than those that require other layers first
-3. **Narrative coherence** — features that connect to already-implemented content are higher priority than those that introduce entirely new systems
-
-The current priority table (§V-A) reflects this ordering: §XIV (Layer 49) before §XV (Layer 50) before §XVI (Layer 51), etc.
+`index.md` line 751 records *"FC01–FC05 documentation queue — ✅ All complete 2026-05-25"*, and the badge
+row reads *"FC items pending: 0 (FC01–FC08 all ✅)"*. **FC05's doc half and FC04's cadence were closed
+without shipping.** Both were superseded by better mechanisms, so the outcome is right and the
+bookkeeping is wrong — which is the same failure mode as Finding 1, one level up.
 
 ---
 
-## V. Two-Way Synchronization — Symmetry Analysis
+## V. Findings
 
-### A. The Symmetry Statement
+### Finding 1 — The Doc Health Badge reports ✅ on every stale row *(→ §DX-02s)*
 
-The two-way sync rule has an elegant symmetry:
+FC01 shipped the badge to make documentation drift visible at a glance. At HEAD it is drifted, and every
+row is marked `✅`:
 
-```
-∀ item D in docs:  ∃ const/function C in HTML such that D describes C
-∀ const C in HTML: ∃ document D in docs such that D is the home doc of C
-```
+| Badge row | Badge says | Live | Drift |
+|---|---|---|---|
+| HTML line count | 36,933 | 38,712 | **+1,779** |
+| Lab reports on disk | 85 | 107 | **+22** |
+| Lab reports in index | 85 | 87 unique filenames referenced | **+2, and wrong in both directions** |
+| Live entity counts | 38,106 lines (2026-07-29) | 38,712 | +606 |
 
-This is a **bijection** between documentation items and code items. In practice it is not perfectly bijective — some HTML functions have no doc, some doc sections describe behavior rather than a single const — but the bijection is the target state. Every sync pass moves the system closer to it.
+The lab-report row is the load-bearing one, because the index is the corpus manifest this report
+designates as the schema:
 
-### B. The Source-of-Truth Hierarchy
+- **26 reports on disk are absent from `index.md`** — the whole `vm01*` series (a–g4), the `play-01*`
+  series, `warrants-board`, `void-tide-bounties`, `death-loot-grave`, `javascript-mud`, `npc-card-map`,
+  and others.
+- **6 index rows name files that do not exist**: `lab-report-api-01-02-mechanics-combat-review.md`,
+  `lab-report-loot-drop-weapon-economy.md`, `lab-report-plan-cleanup-v13.md`,
+  `lab-report-plan-cleanup-v17.md`, `lab-report-plan-cleanup-world-builder-arc.md`,
+  `lab-report-timeline-history-completed.md`. All six were deleted in a single commit, **`120d617`**,
+  and the index kept their rows.
 
-The system has three layers of authority:
+`index.md` carries its own repair instruction directly beneath the badge — *"Update this table at the
+start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`"* — so the
+drift is not a missing procedure. It is a manual procedure that was not run, wearing a green checkmark.
+**Every one of these rows is mechanically computable** (`wc -l`, `ls | wc -l`, a two-way `comm` against
+the index's own references), which makes this the cheapest possible gate and the reason it is filed as
+one.
 
-```
-Level 1 (Intent):    plan.md         — what should be built and why
-Level 2 (Code):      roll2hit-v3.html — what IS built; source of truth for counts
-Level 3 (Docs):      *.md files       — verbose English description of what is built
-```
+**The same failure is present on day one.** At `59a9e0d` — the commit that added this report — the repo
+held **22** lab reports and `index.md` referenced **23**. This report says "23" twice (§VI-C and the
+§VII-A diagram) because it counted the manifest rather than the disk. The corpus figure it gives, **37
+Markdown documents**, is *exact* at that same commit. The report was precise about the number it
+measured and wrong about the number it inherited.
 
-When Levels 1 and 2 conflict: the feature is PLANNED (not yet implemented). When Levels 2 and 3 conflict: the doc is stale (Level 2 wins; update Level 3). When Levels 1 and 3 conflict: the spec has changed (update Level 1, then Level 3).
+### Finding 2 — A bijection guarantees a link, not a truth *(→ §AUDIT-03z (b))*
 
-### C. The Sync Pass as a Formal Process
+FC05's shipped half works exactly as specified. `const S29_AUROS_THEORY =@27050` carries
+`// → doc: world.md §S29`, and `world.md` §S29 exists and describes the scene. The pointer is correct.
 
-A sync pass (SP1, SP2) is a systematic traversal of the bijection:
+Both ends state the trigger as `frobergerLastEntryRead && fav_auros >= 2`. **`fav_auros` occurs exactly
+once in 38,712 lines — in that comment.** It is not a `_S_DEFAULTS()` field and nothing reads it. The
+live guard reads the favor ledger: `s29LineDelivered) {@32669` gates on `_npcFavor('auros') >= 2`.
+`world.md` repeats `fav_auros >= 2` at three separate lines, having inherited it from the comment the
+pointer connects it to.
 
-```
-FOR each HTML const C:
-  1. Identify its home document D
-  2. Read the relevant section of D
-  3. Compare D's claim against C's actual value
-  4. If mismatch: update D to match C (or flag for review)
-  5. Mark increment ✅ in plan.md §XI-B
-```
+The same comment names the node as **`CY`**, which is not a `NODE_MAP` key (`CY`→`HKG`, the §AUDIT-03p
+born-dead class documented in the engine's own `birkaNpcs` source note and in §DOC-02d). `world.md`
+annotates this correctly — *"at `HKG` (historical `CY`)"* — so the doc is right about the place and
+wrong about the field, and the engine comment is wrong about both.
 
-Each increment (`SP2-01` through `SP2-12`) is one pass through one file comparison. The result is a `✅` in the sync log. When all increments are `✅`, the system is in a consistent state.
+Neither error is visible to any gate. `check:legacycodes` (gate #16) scans `*.md`, so an engine comment
+is out of scope; `check:noderegs` phase 6 is comment-aware **by design** (the §AUDIT-03f lesson) and
+therefore skips it; and no gate validates a state-field name appearing in prose. This is
+**§AUDIT-03s's class** — dead references outside `.md` — with a new member: a field name that never
+existed, propagated across the FC05 link into the maintained doc.
 
-### D. PLANNED Feature Asymmetry
+### Finding 3 — FC02, closed after 79 days: two journal entries diverge *(→ §AUDIT-03z (a))*
 
-PLANNED features break the bijection intentionally:
+The HTML's `FROBERGER_JOURNAL` and its declared home doc `sources/froberger-journal-all-entries.txt`
+agree on **39 of 41** entries, verbatim. Two do not:
 
-```
-∃ doc section D with ⚠️ PLANNED: no corresponding C in HTML
-```
+| # | HTML (`FROBERGER_JOURNAL`) | `froberger-journal-all-entries.txt` |
+|---|---|---|
+| 17 | node `MAN` — *"The woman at the archive disagreed with my taxonomy of the eastern war…"* | `[Midlands — MI]` — *"The midland family fed me and gave me the grain-store loft…"* |
+| 29 | node `PDL` — *"There is a question I should have asked before she left…"* | `[Island Settlement — IS]` — *"The island has seven families and one boat…"* |
 
-This is acceptable because the PLANNED stub is an explicit marker of the gap. The invariant becomes: every gap must be marked `⚠️ PLANNED` in the relevant doc. An unmarked gap is a sync error; a marked gap is a design decision.
+These are not typographical drifts; they are different entries. The `.txt` retains superseded text.
 
----
+The file is additionally **invisible to every gate in the repo**. `scripts/legacy-codes.js` drives gate
+#16 from an explicit `SWEEP` list of eleven `.md` paths, with `HISTORY_DIRS` covering `lab-reports/`,
+`archive/`, `docs/spec/` and others; the string `.txt` does not appear in the script. So all **41** entry
+headers still carry retired 26×16 codes (`CI`, `TV`, `CR`, `BA`, `SE`, `SL`, `MI`, `IS`, …) while the
+HTML uses the live ones (`LHR`, `MHQ`, `KRN`, `LLA`, `SFT`, `BMA`, `MAN`, `PDL`), and nothing reports it.
+This file is not history: the HTML names it as a home doc in its own FC05 pointer,
+`const FROBERGER_JOURNAL = [@27184`.
 
-## VI. Document Role Specifications
+*(Corroboration for §DOC-02d: the header remap `CI→LHR`, `TV→MHQ`, `CR→KRN`, `BA→LLA`, `SL→BMA` is
+exactly the list the engine's `birkaNpcs` note records, recovered here independently from the journal.)*
 
-Each document in the roll2hit corpus has a single governing purpose — its "prompt." These are the canonical one-line descriptions:
+### Finding 4 — Two favor mechanisms, one gate grammar *(→ §DX-02s (b))*
 
-### A. Core Documents (always kept in sync with HTML)
+§VII-E specifies Category D as *"one int per named NPC — `fav_yael`, `fav_brynn`"*. Neither field exists
+and **neither has any commit in the file's history** (instrument 2): **NOT SHIPPED**. The favor system
+shipped as a map, `npcFavorability`, written by `_setNpcFavor` and read by the gate grammar at
+`if (g.favorMin)@22064` — a different *shape*, not merely different names. §DOC-02d traced the naming
+half of this to `lab-report-birka-beginner-arc.md`.
 
-| File | One-Line Role Prompt |
-|------|---------------------|
-| `plan.md` | Master planning document — directives, PLANNED feature queue, sync log, tooling reference; read first every session |
-| `index.md` | Cross-reference manifest — maps every doc to its HTML const; SP2 sync log; lab report index |
-| `world.md` | World description — NODE_MAP, WORLD_DB, NPC profiles, faction descriptions, quest IDs, Birka district layout |
-| `story.md` | Narrative document — all 76 nodes, 8 acts, full narrative flow, NPC dialogue transcript (all 120 quotes), quest beats |
-| `mechanics.md` | Mechanical reference — combat engine, XP table, conditions, economy, equipment, save format, fighter features |
-| `monsters.md` | Monster reference — all 370 MONSTER_POOL entries with stat blocks; all 66 WORLD_DB terrain coverage tables |
-| `maps.md` | Spatial reference — 26×16 grid layout, corridor map, node network, all 76 node coordinates, legend |
-| `combat.md` | Combat deep-dive — full combat loop, death saves, Epic Boss Pool, conditions in combat, fighter abilities |
+But the `fav_<npc>` shape is not absent — it is live for exactly one character.
+`fav_corelli: 0@23143` is a real `_S_DEFAULTS()` field, read at two sites and written at
+`S_story.fav_corelli = Math.min@31792` as `min(3, corelli_purchase_count)` (§DOC-02g verified this
+mechanism at 19 of 20 identifiers). It is a private scalar: **`favorMin` cannot see it**, so no quest
+gate can ever depend on Corelli's favor without a `_legacy_fn` closure — invariant-#4 pressure with a
+declarative alternative already in the grammar. The report's Category D therefore describes a shape that
+half-exists, for one NPC, unreachable from the gate language.
 
-### B. Spec Documents (JavaScript architecture reference)
+### Finding 5 — A dead fallback for a field that never existed *(→ §DX-02n)*
 
-| File | One-Line Role Prompt |
-|------|---------------------|
-| `spec-engine.md` | Core engine — `_S_DEFAULTS()` all 107 fields, combat loop, dice functions, initiative, action economy |
-| `spec-corridors.md` | Corridor system — `CORRIDOR_CELLS` grid, stalk/hunt mechanics, movement through terrain |
-| `spec-world.md` | World engine — `WORLD_DB`, `MONSTER_POOL` terrain cascade, terrain-to-monster resolution |
-| `spec-combat.md` | Combat flow — conditions, death saves, Fighter features, battle overlay state machine |
-| `spec-migration.md` | Architecture overview — all data structures; full migration history from Arena to Story Mode |
-
-### C. Lab Reports (design decisions and postmortems)
-
-Lab reports are time-stamped IEEE-format documents that capture a design decision, implementation result, or architecture review. They are not updated after the fact — an "implementation note" is prepended if shipped code diverges from the design. See `index.md` for the full list (23 lab reports).
-
-**Lab Report Trigger Criteria:**
-- Major new collection added (new monster group, terrain cluster, NPC faction, item economy)
-- Large redesign touching multiple systems
-- New narrative theme or arc spanning multiple nodes/NPCs/quests
-- Design review before implementation (spec to lock in data shapes before touching HTML)
-- Session postmortem with non-obvious decisions
-
----
-
-## VII. Architecture Diagrams
-
-### A. Document Hierarchy
-
-```
-                    ┌─────────────────────────┐
-                    │       plan.md           │
-                    │  (Master Planning Doc)  │
-                    │  Directives + Queue     │
-                    │  Feature Specs §IX–§XVIII│
-                    └────────────┬────────────┘
-                                 │ governs
-                    ┌────────────▼────────────┐
-                    │      index.md           │
-                    │  (Cross-Reference Map)  │
-                    │  HTML const → doc file  │
-                    │  Lab report index       │
-                    └────────────┬────────────┘
-                                 │ maps to
-          ┌──────────────────────┼──────────────────────┐
-          │                      │                      │
-┌─────────▼────────┐  ┌──────────▼──────────┐  ┌───────▼──────────┐
-│   Core Docs      │  │    Spec Docs        │  │   Lab Reports    │
-│  world.md        │  │  spec-engine.md     │  │  lab-report-*.md │
-│  story.md        │  │  spec-corridors.md  │  │  (23 files)      │
-│  mechanics.md    │  │  spec-world.md      │  │  IEEE-format     │
-│  monsters.md     │  │  spec-combat.md     │  │  design decisions│
-│  maps.md         │  │  spec-migration.md  │  └──────────────────┘
-│  combat.md       │  └─────────────────────┘
-└─────────┬────────┘
-          │ synced with
-┌─────────▼───────────────────────────────────────────┐
-│                  roll2hit-v3.html                   │
-│          (Source of Truth — 14,377 lines)           │
-│  MONSTER_POOL · WORLD_DB · NODE_MAP · QUEST_DB      │
-│  _S_DEFAULTS · NPC_DIALOGUES · FROBERGER_JOURNAL    │
-│  FIGHTER_FEATURES · EPIC_BOSS_POOL · CONDITION_ITEMS│
-└─────────────────────────────────────────────────────┘
-```
-
-### B. Two-Way Sync Flow
-
-```
-  HTML (source of truth)              Docs (verbose description)
-  ─────────────────────               ──────────────────────────
-  
-  MONSTER_POOL ──────────────────────► monsters.md §MONSTER_POOL
-    key: 'goblin_scout'                  goblin_scout | 12 | 8 | +3 | ...
-    name: 'Goblin Scout'  
-    
-  ◄────────────────────────────────── (sync check: count matches grep -c "key:'")
-  
-  If doc says "370 monsters" and grep returns 371:
-    → doc is stale → update doc to 371
-    
-  If HTML has a new const with no home doc:
-    → sync gap → assign to home doc → add section
-    
-  If doc has a PLANNED stub with no HTML entry:
-    → intentional gap → verify ⚠️ PLANNED marker present → OK
-```
-
-### C. PLANNED Feature Lifecycle
-
-```
-  ┌─────────────────────────────────────────────────────────────────────┐
-  │                    PLANNED Feature Lifecycle                        │
-  └─────────────────────────────────────────────────────────────────────┘
-  
-  [Raw Idea]
-      │
-      ▼
-  §V-C New Feature Ideas table
-  (idea + rationale + candidate lab report)
-      │
-      ▼  (session: "continue working on plan.md")
-  §N Full Spec Section written in plan.md
-  (setting + NPCs + quests + items + state flags + insertion spec)
-      │
-      ▼  (same session)
-  ⚠️ PLANNED stubs added to:
-    story.md — quest beat lines
-    world.md — NPC/location description
-    maps.md  — node entry (if new node)
-      │
-      ▼  (git commit — spec + stubs together)
-  git commit "Add plan.md §N — [Feature Name] (Layer N PLANNED)"
-      │
-      ▼  (future session: implementation)
-  CODE: edit roll2hit-v3.html
-    - add entries to MONSTER_POOL, QUEST_DB, _S_DEFAULTS, etc.
-    - verify with grep count checks
-      │
-      ▼
-  DOC SYNC: update home docs
-    - monsters.md: add monster stat block
-    - story.md: convert PLANNED stub to implemented content
-    - world.md: convert PLANNED stub to implemented content
-    - mechanics.md: add new mechanic section (if needed)
-    - Remove ⚠️ PLANNED markers
-      │
-      ▼  (if lab report criteria met)
-  Write lab-report-[title].md
-  Add to index.md + plan.md §VI-A
-      │
-      ▼
-  git commit "Layer N — [Feature Name]: [summary]"
-  (all files in one commit: HTML + all docs + lab report if any)
-      │
-      ▼
-  §V-A table: update status from ⚠️ PLANNED to ✅
-  §XI-A table: update to ✅ synced
-```
-
-### D. Session Workflow
-
-```
-  SESSION START
-       │
-       ▼
-  Read plan.md §I (Directive)
-       │
-       ▼
-  Read plan.md §V-A (Implementation Queue)
-  Find highest-priority ⚠️ PLANNED item
-       │
-       ├── If implementing: read §N full spec
-       │       │
-       │       ▼
-       │   Read relevant core docs (world.md, story.md, etc.)
-       │       │
-       │       ▼
-       │   Read spec-*.md for JavaScript patterns
-       │       │
-       │       ▼
-       │   Edit roll2hit-v3.html
-       │       │
-       │       ▼
-       │   Verify (grep counts, spot-check)
-       │       │
-       │       ▼
-       │   Sync all home docs
-       │       │
-       │       ▼
-       │   Write lab report (if triggered)
-       │       │
-       │       ▼
-       │   git commit
-       │
-       └── If planning: write §N spec
-               │
-               ▼
-           Add ⚠️ PLANNED stubs to story.md, world.md, maps.md
-               │
-               ▼
-           Update §V-A, §XI-A
-               │
-               ▼
-           git commit
-```
-
-### E. State Flag Architecture
-
-State flags are the mechanical layer connecting the HTML game logic to the narrative progression:
-
-```
-  _S_DEFAULTS() — 107 fields
-  ─────────────────────────────────────────────
-  
-  Category A: Core game state
-    hp, hpMax, gold, xp, level, gameDay, act
-    
-  Category B: Quest completion flags
-    quest_yael_escort: false
-    quest_brynn_ledger: false
-    ... (one boolean per quest)
-    
-  Category C: Narrative state flags
-    frobergerLastEntryRead: false
-    entry42Written: false
-    ngPlusRun: 0
-    wmFirstResearcherKnown: false
-    vaArchitectureKnown: false
-    
-  Category D: NPC favorability
-    fav_yael: 0        // 0=Impartial 1=Friendly 2=DearFriend
-    fav_brynn: 0
-    ... (one int per named NPC)
-    
-  Category E: System arrays
-    quests: []         // active quest IDs
-    inventory: []      // item objects
-    visitedNodes: Set  // nodes visited
-    wmSessionsDays: [] // reading circle days attended
-    
-  ─────────────────────────────────────────────
-  Persisted by: storyAutoSave() → localStorage
-  Restored by:  storyLoadContinue()
-  Default init: _S_DEFAULTS()
-  Doc home:     spec-engine.md, plan.md §III
-```
+The activation-gate reader contains `st.visited || st.visitedNodes@22055`. `visitedNodes` occurs
+**once** in the file — in that expression — has **one commit ever**, and is not a `_S_DEFAULTS()` field
+in the archive build or at HEAD. The live field is `visited`. The right-hand branch is unreachable and
+always was: defensive code written for a field that was never declared. Same class as the §DX-02n
+members, and a further widening of `check:deadconsts` — after top-level consts, quest-entry fields,
+parameters and inventory item objects, this is a **dead alternative in a fallback chain**.
 
 ---
 
-## VIII. Recommendations
+## VI. Document Roles — delta table
 
-### A. The FC Item Queue (§V-B)
+The report's §VI role tables are the part that aged fastest, because `5e48dd7` (2026-07-09) reorganised
+the repo root. Every file survives; twelve moved.
 
-Five documentation improvement items (FC01–FC05) remain open. In priority order:
+| Report's file | HEAD | Role delta |
+|---|---|---|
+| `plan.md` | **retired** → `CONTRIBUTING.md` (rules) + `BACKLOG.md` (work) at `5e48dd7` | The one document the report is *about*. `1367-sources/plan.md` is a different, still-live importer tracker |
+| `index.md` | `index.md` | Role unchanged: manifest + cross-reference + Doc Health Badge (Finding 1) |
+| `world.md` · `story.md` · `mechanics.md` · `monsters.md` · `maps.md` | root, unchanged | `mechanics.md` split per FC03; `maps.md`'s 26×16 tables quarantined by §AUDIT-03l with an explicit historical banner |
+| `combat.md` | `docs/spec/combat.md` | relocated |
+| `spec-engine.md` · `spec-world.md` · `spec-combat.md` · `spec-migration.md` | `docs/spec/` | relocated; `docs/spec/` is a `HISTORY_DIR` for gate #16 |
+| `spec-corridors.md` | `docs/spec/spec-corridors.md` | **⚠️ SUPERSEDED banner** — correct handling of a doc whose subsystem was deleted |
+| `froberger-journal-all-entries.txt` | `sources/` | relocated; gate-invisible (Finding 3) |
 
-1. **FC05** — Two-way link convention: every HTML const gets `// → doc: filename.md §Section`; every doc section gets `> HTML source: CONST ~line N`. This makes the bijection explicit in both artifacts, not just in `index.md`.
+Three prose claims in those tables are now false and are kept here as measured deltas:
+`maps.md` — *"26×16 grid layout… all 76 node coordinates"* → the live projection is **90×360**
+(§WALK-1.5) and `docs/maps/node-index.md` (`npm run nodes`, gate #12) is where a node code is looked up;
+`story.md` — *"all 76 nodes… all 120 quotes"* → 416 nodes, 213 dialogues, and `story.md`'s own "42 story
+nodes" is a curated narrative-beat count deliberately left alone by the 2026-07-09 sync pass;
+`monsters.md` — *"all 370 entries… all 66 terrain coverage tables"* → 398 and 111.
 
-2. **FC02** — `froberger-journal-all-entries.txt` entry-by-entry compare against HTML. The count is verified (41 entries); the content comparison has not been done.
+**Vocabulary deltas.** §III-B's `Layer N` version system survives only as historical labelling (14 uses
+in `BACKLOG.md`; `index.md` still reads "Layers 0–104"); the live identifier is the `§XXX-NN` section tag
+(58 distinct in `BACKLOG.md`). §III-D's `SP2` sync-pass vocabulary has **0 occurrences in any live doc**
+— **RETIRED**. §III-E's narrative vocabulary survives intact: `_curseScore()` is live at three call
+sites, `VOID_TIDE_EVENTS` and `entry42Text` are live fields, and favorability shipped as **four** tiers
+(`impartial · questActive · friendly · dearFriend`) — which resolves this report's own internal
+contradiction, where §III-E calls it *"four-state"* and then lists three, in favour of the number.
 
-3. **FC01** — Doc Health badge in `index.md` — a live count of sync-pass completion visible at a glance.
+**One policy has been reversed in practice.** §VI-C states that lab reports *"are not updated after the
+fact — an implementation note is prepended if shipped code diverges."* `CONTRIBUTING.md` upholds the
+narrow half (bare numbers and anchors in history are annotated, never rewritten), but the §DOC-02
+program rewrites report *prose* against measurement, keeping every unshipped claim marked **NOT
+SHIPPED** rather than prepending a note. This document is an instance of the reversal.
 
-4. **FC03** — Split `mechanics.md` into `mechanics-combat.md` + `mechanics-economy.md`. The file covers two distinct domains; splitting improves navigation.
+---
 
-5. **FC04** — Spot-check policy: re-verify function names in `lab-report-architecture-full.md` every 10 layers, since function names can change over time.
+## VII. What survived
 
-### B. The Keyword Vocabulary as a Style Guide
+Stated plainly, because the failures above are louder than the successes:
 
-The keyword analysis in Section III reveals an implicit style guide for all plan.md additions:
-- Use status symbols (`✅ ⚠️ ⏳ ❌`) consistently — never use prose status ("done", "in progress")
-- Use Layer N numbers for every feature — never describe a feature without its layer tag
-- Use `gate condition:` notation for every prerequisite — never bury gate conditions in prose
-- Use the established vocabulary (`Dear Friend`, `favorability`, `state flag`, `home doc`) — do not invent synonyms
+- **The two-way sync rule shipped and is enforced.** Not as the prose convention FC05 specified, but as
+  93 machine-readable `// → doc:` pointers in one direction and gate-enforced `` `symbol@line` ``
+  anchors (§DX-01e, gate #15) in the other. The report's argument — that the link must live in *both*
+  artifacts — is the argument the repo eventually implemented.
+- **"Documentation as software with a test suite" is now literal.** The report proposed sync passes as
+  the test protocol. HEAD runs **16 CI gates** (`npm run check:walk`), of which at least five —
+  `check:anchors`, `check:nodeindex`, `check:legacycodes`, `check:noderegs`, `check:npcregs` — are
+  doc/reference consistency checks in exactly this report's spirit.
+- **The state contract held at 97%** — 104 of 107 `_S_DEFAULTS()` fields, across a 2.69× file growth and
+  the §ARCH-01 format migration.
+- **The PLANNED-asymmetry rule survives verbatim** as `⚠️ PLANNED` in `BACKLOG.md`, with the
+  strengthened form in `prompt.md` §2: *"New scoped work is a spec, not code."*
+- **The five-phase decomposition (Spec → Stub → Code → Sync → Commit) is recognisably `prompt.md` §2's
+  ten-step loop**, with grep-before-building, the lab-report gate, verification, and the §RESUME
+  handoff added — every addition a phase the original framework had no slot for.
 
-Consistency in vocabulary is what makes the document machine-parseable by a language model reading from a cold start.
+The one thesis the evidence contradicts is §IV-D and §VIII-D: that the master document is a *resumable
+state machine* whose maintenance is guaranteed by its own usefulness. The badge in Finding 1 is the
+counterexample. Manual state that must be re-derived by hand at the start of every session is
+re-derived until it isn't, and then it reports `✅`. **The maintainable form of this report's thesis is
+that every claim a document makes about a countable thing should be recomputed by a gate, not by a
+reader.**
 
-### C. Lab Report Cadence
+---
 
-The lab report policy (plan.md §I) defines trigger criteria but not cadence. Recommendation: review the trigger criteria at the end of every 5-layer implementation block (every 5 `✅` marks in §V-A) to determine whether a session postmortem lab report is warranted. A postmortem every 5 layers ensures that non-obvious design decisions are captured before the session's context is lost.
+## VIII. Defects filed
 
-### D. The plan.md File as Session State
+| Row | Premise | Design call |
+|---|---|---|
+| **§DX-02s (a)** | `check:docindex` — recompute the Doc Health Badge's mechanical rows (HTML line count, lab reports on disk, index↔disk set difference both ways) and fail on drift. 26 unindexed files, 6 phantom rows, 1,779 lines of line-count drift, all rows `✅` | No |
+| **§DX-02s (b)** | Two favor storage shapes; `favorMin` reads `npcFavorability` only, so `fav_corelli` is unreachable from the gate grammar. Either fold it into the ledger or widen the grammar — invariant #4 says widen | Small |
+| **§AUDIT-03z (a)** | `sources/froberger-journal-all-entries.txt` is a live home doc invisible to every gate: 41 retired 26×16 codes in its headers, and entries **17** and **29** carry superseded text. Widen gate #16's `SWEEP` to non-`.md` live docs | No |
+| **§AUDIT-03z (b)** | `fav_auros` — a field that never existed — is stated as the S29 trigger in an engine comment and in `world.md` ×3, reached across a correct FC05 pointer. §AUDIT-03s's class: dead references outside `.md`. The live guard is `_npcFavor('auros') >= 2` | No |
+| **§DX-02n** | The `st.visited` / `st.visitedNodes` fallback in the activation gate reader (anchored in §V Finding 5) — dead alternative in a fallback chain; `visitedNodes` was never a field. Widens `check:deadconsts` a fourth time | No |
 
-`plan.md` functions as a resumable state machine across sessions. Every section either has a status (✅ or ⚠️ PLANNED) or is governance text that does not change. A language model reading plan.md from scratch can determine:
-- What has been implemented (✅ in §XI-A, §V-A)
-- What is planned next (⚠️ PLANNED in §V-A, ordered by priority)
-- What rules govern all work (§I)
-- What the canonical numbers are (§II)
-
-This means `plan.md` is not just documentation — it is **session context as data**. Its maintenance is not optional overhead; it is the mechanism by which continuity is preserved across sessions.
+Pre-existing rows this pass corroborates: **§AUDIT-03t** (`act:NaN`, §III), **§AUDIT-03s** (dead codes
+outside `.md`, Finding 2), **§DX-02n** (Finding 5).
 
 ---
 
 ## IX. Conclusions
 
-The roll2hit.com documentation system is best understood as a software artifact: it has a schema, a source of truth, a spec layer, and a testing protocol (the sync pass). `plan.md` is the specification file — not a README, not a changelog, but the persistent description of intent that governs all future changes.
+1. **Every number this report measured was exact; the one number it inherited was wrong.** Seven design
+   constants and the 14,377-line file size are exact against the build it was written against. The
+   "23 lab reports" figure — copied from `index.md`, which said 23 when 22 existed — is the single
+   transcription error, and it is the one figure that came from another document. This is instrument 9's
+   gradient with an unusually clean edge: the author's own measurements held, the citation did not.
 
-The two-way synchronization rule creates a **bijection** between documentation items and code items. This bijection is maintained by sync passes (SP1, SP2), enforced by the directive (§I), and audited by the cross-reference table (§XI-A). PLANNED features break the bijection intentionally — they exist in docs but not yet in HTML — and this asymmetry is marked explicitly with `⚠️ PLANNED` to distinguish gaps from errors.
+2. **The instrument built to detect staleness became the stalest artifact in the corpus.** FC01's badge
+   is off by 22 reports and 1,779 lines and displays `✅` on every row, with its own repair procedure
+   printed directly beneath it. A check that depends on a human running it is a check that reports
+   green when nobody ran it.
 
-The keyword vocabulary analysis reveals that the system is consistent in its language: status symbols, Layer numbers, gate conditions, and architectural names are used uniformly across all 37 documents. This consistency makes the corpus parseable from a cold start — any session can reconstruct the working context by reading `plan.md` alone.
+3. **A bijection is a link, not a truth.** FC05's shipped half connects `S29_AUROS_THEORY` to `world.md`
+   §S29 perfectly, and both ends name a state field that has never existed in 38,712 lines. Two-way
+   sync guarantees that a claim has an address, not that it is correct.
 
-The task decomposition framework (five phases: Spec → Stub → Code → Sync → Commit) ensures that no implementation is begun without a spec and no spec is closed without a doc sync. The lab report policy ensures that significant design decisions are captured as named artifacts before the session context is lost.
+4. **Superseding is not the same as closing.** FC04 and FC05's doc half were marked `✅ All complete
+   2026-05-25` and neither shipped; both were replaced by better mechanisms (the §DOC-02 program;
+   `symbol@line` anchors). The outcomes were right and the register was wrong — the same defect as (2),
+   one level up, and the reason the §DOC-02 method marks an unshipped claim **NOT SHIPPED** and keeps it.
 
-The system works because it treats documentation as a first-class engineering artifact. That is the only recommendation that matters: maintain it as you would maintain code.
+5. **The thesis is sound and the repo has already ratified it.** "Maintain documentation as you would
+   maintain code" was the report's only real recommendation. What the intervening 79 days added is the
+   part it could not have known to specify: *code is maintained by tests that run without being asked.*
 
 ---
 
 ## X. References
 
 | Reference | Description |
-|-----------|-------------|
-| `roll2hit-v3.html` | Primary source file — 14,377 lines, all game logic and data |
-| `plan.md` | Master planning document — analyzed in this report |
-| `index.md` | Cross-reference manifest and lab report index |
-| `lab-report-architecture-full.md` | IEEE architectural review of roll2hit-v3.html |
-| `spec-engine.md` | `_S_DEFAULTS()` all 107 fields; core engine reference |
-| `spec-world.md` | `WORLD_DB` and `MONSTER_POOL` architecture |
-| `lab-report-web-of-connections.md` | NPC cross-reference system design |
-| `lab-report-endings-and-echoes.md` | NG+ and ending system design |
+|---|---|
+| `roll2hit-v3.html` | Primary source — 38,712 lines at HEAD; 14,377 at `32c10c5` |
+| `32c10c5` (2026-05-24) | Earliest surviving build; the archive baseline for §III |
+| `59a9e0d` (2026-05-24) | The commit that added this report; corpus baseline for Finding 1 |
+| `120d617` | Deleted the six lab reports `index.md` still lists |
+| `5e48dd7` (2026-07-09) | Split `plan.md` → `CONTRIBUTING.md` + `BACKLOG.md`; repo-root reorganisation |
+| `CONTRIBUTING.md` · `BACKLOG.md` · `prompt.md` | The successors to `plan.md` §I / §V / the work loop |
+| `index.md` | Manifest, cross-reference table, Doc Health Badge — Finding 1 |
+| `scripts/legacy-codes.js` | Gate #16; its `SWEEP` list is the subject of §AUDIT-03z (a) |
+| `lab-report-architecture-full.md` (§DOC-02b) | Sibling; FC04's re-verification target |
+| `lab-report-birka-beginner-arc.md` (§DOC-02d) | Sibling; the naming half of Finding 4 |
+| `lab-report-corelli-merchant.md` (§DOC-02g) | Sibling; verified the `fav_corelli` mechanism |
 | IEEE Std 830-1998 | *IEEE Recommended Practice for Software Requirements Specifications* |
 
 ---
 
-*Lab report status: ✅ Complete — Documents plan.md purpose, keyword vocabulary, task decomposition framework, two-way sync symmetry, document role specifications, and ASCII architecture diagrams in IEEE format.*
-
+*Verification status: ✅ §DOC-02i, 2026-08-11 — 619 → 290 lines. Seven design constants re-measured
+against the archive and HEAD; five recommendations adjudicated; FC02 closed by measurement; five defects
+filed. Claims that did not ship are marked **NOT SHIPPED** and kept.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
