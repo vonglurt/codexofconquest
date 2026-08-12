@@ -352,7 +352,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-reports/lab-report-meta-corpus-analysis.md` | The corpus as architecture — meta-analysis of the lab-report corpus and its structural relationship to the game file |
 | `lab-reports/lab-report-saul-paul-travel-reference.md` | §FUTURE-01 source — 37-node Paul arc itinerary, Acts 7–28 + Pauline letters, NPC list, lodging, speeches |
 | `lab-reports/lab-report-saul-paul-vignette-spec.md` | §FUTURE-01 vignette — 14 node texts, 9 quest descriptions, 7 NPC voice lines, 8 voice rules, object inventory, thorn mechanic |
-| `lab-reports/lab-report-kindness-calculus.md` | Prosocial mechanics — asymptotic kindness in quest graphs, token automata, the probabilistic case against combat |
+| `lab-reports/lab-report-kindness-calculus.md` | Prosocial mechanics — asymptotic kindness in quest graphs, token automata, the probabilistic case against combat. **✅ VERIFIED 2026-08-12 (§DOC-02r):** thesis holds and all 51 arc quests resolve, but **28 of 51 (55 %) are unreachable** (§AUDIT-03x co-location + single-writer entry flags) and W6's advertised WIS 14 is not a roll (§AUDIT-03ad) |
 | `lab-reports/lab-report-wisdom-arc.md` | Wisdom Arc — Robert Greene's Laws of Human Nature as quest mechanics, WIS progression design |
 
 ---
