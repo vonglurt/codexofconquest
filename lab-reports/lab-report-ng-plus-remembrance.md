@@ -353,9 +353,9 @@ hung on places that already existed, so the 90×360 world-grid migration had alm
 | 3 | Quote `entry42Text` back in the epilogue | **STILL OPEN** — 0 commits ever; the epilogue acknowledges the act, never the text |
 | 4 | Nothing tells the player memory lines are once-per-run | **CORRECT, AND WORSE THAN STATED** — nothing tells them the lines exist, and §V-A means they were never a "second visit" reward to miss |
 
-**One of four shipped; one is void because it describes a surface that never existed; two are open after 79
-days.** Register score: 0 of 4 acted on — but items 2 and 3 remain good, cheap ideas, and are the natural
-content follow-up to this layer.
+**Register score: 0 of 4 acted on in 79 days.** One is void because it describes a surface that never
+existed; the other three were correct, and item 4 was more correct than its author knew. Items 2 and 3
+remain good, cheap ideas and are the natural content follow-up to this layer.
 
 ---
 
