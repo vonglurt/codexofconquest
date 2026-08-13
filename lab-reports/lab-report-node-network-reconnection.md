@@ -1,231 +1,279 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report: Full Node Network Reconnection — Stray Relocation & Reachability Recovery
+
 ### Applied World Architecture — Graph Repair & Structural Integrity
-**Project:** roll2hit-v3.html — *The Shattered Codex*  
-**Layer:** Infrastructure — Node Mesh Repair Pass  
-**Date:** 2026-06-09  
-**Author:** Roll2Hit Engineering
+
+**Project:** roll2hit-v3.html — *The Shattered Codex*
+**Layer:** Infrastructure — Node Mesh Repair Pass
+**Date:** 2026-06-09 · **Author:** Roll2Hit Engineering
+**Verification pass:** §DOC-02at, 2026-08-13 — re-measured against live `roll2hit-v3.html` and against the
+birth commit `661aa29` (2026-06-09 11:48, one minute after this file's mtime).
+
+> **Status: RETIRED, not wrong.** Every number in the original held at its own commit. The
+> *architecture* it repaired — per-node `N`/`S`/`E`/`W` link fields and `J####` elbow junctions — was
+> deleted wholesale by §CELL-01/§WALK-1 between 2026-06-16 and 2026-06-25. This edition keeps the
+> original claims, marks each **HELD / RETIRED / WRONG-WHEN-WRITTEN**, and adds the one finding the
+> original could not make about itself.
 
 ---
 
 ## Abstract
 
-This report documents a systematic repair of the game world's node connectivity graph, which had degraded to **89% reachability** (694 of 781 nodes reachable from the hub city Birka/LHR). The session applied three repair tools in sequence — `fix-all-broken` for coordinate alignment, a bidirectional batch fix for one-way links, and `rip-and-connect` for stray node relocation — achieving **100% reachability across all 1683 nodes**. A fourth bonus fix resolved a bug in the `worldmap --regions` display that produced NaN×NaN grid dimensions. The world grew significantly during repair: 781 → 1683 nodes, as elbow junctions were spawned to bridge coordinate gaps. All content nodes (383 named locations with quests, NPCs, or monsters) remain intact.
+The world's node connectivity graph had degraded to 89 % reachability (694 of 781 nodes reachable from
+the hub city Birka/`LHR`). Three repair tools were applied in sequence — `fix-all-broken`,
+a bidirectional batch fix, and `rip-and-connect` — reaching **100 % reachability**. A fourth,
+incidental fix repaired a `NaN×NaN` defect in `worldmap --regions`.
+
+Re-measurement confirms the headline outcome and reverses the report's reading of its own cost. The
+pass grew the map 781 → 1,684 nodes; a successor pass grew it to **4,429** within seven hours. Across
+that entire cascade the number of nodes carrying quests, NPCs or monsters **never moved from 384**.
+The report records this as reassurance ("All 383 content nodes are reachable"). It is the diagnosis:
+by 2026-06-09 18:17 the map was **91 % scaffolding**.
+
+**Why the work mattered to play.** Reachability is not a graph statistic — it is the difference between a
+city that exists and a city a player can walk to. Eighty-seven nodes, including real historical cities and
+quest locations, were *dark*: present in the database, listed in the docs, and unreachable by any in-game
+route. The invariant this pass defends is the project's first (`prompt.md` §6.1): **the world is always
+freely traversable.** That invariant survives today. Only the machinery does not.
 
 ---
 
-## I. Pre-Repair State
+## I. Intent and Inspiration
 
-Before any repairs, the world was in the following condition:
+The design premise is that a player should never meet an invisible wall. The engine refuses a step for
+exactly two reasons — off-grid, or sea. Nothing else: no quest, flag, item or mission bit may refuse
+movement. A node the player cannot reach is therefore not a locked door but a **bug**, and 87 of them
+were live.
+
+The inspiration for the repair was cartographic rather than algorithmic: treat the map as a mesh to be
+*tightened* rather than a database to be edited. Hence the three tools, each named for a physical
+gesture — align the broken, close the one-way, rip the stray loose and re-seat it near its neighbours.
+
+The lesson of this verification is that the gesture was the problem. A mesh you tighten by **adding
+material** has no natural stopping point.
+
+---
+
+## II. Pre-Repair State — HELD
 
 | Metric | Value |
 |---|---|
 | Total nodes | 781 |
-| Reachable from LHR | 694 (89%) |
+| Reachable from `LHR` | 694 (89 %) |
 | Isolated clusters | 87 |
-| Broken edges (diagonal/gap) | 497 |
-| Broken edge categories | diagonal_and_gap: 303, gap_too_large: 102, diagonal: 92 |
+| Broken edges | 497 (diagonal_and_gap 303 · gap_too_large 102 · diagonal 92) |
 
-**What "89% reachable" meant in practice:** 87 nodes existed in the database and had connection pointers (N/S/E/W fields), but those connections led to coordinate positions that were unreachable via any continuous walking path from Birka. A player navigating from LHR could visit 694 places. The remaining 87 — including real historical cities and quest nodes — were simply dark. Unreachable by any in-game route.
-
-**What "broken edge" means:** A broken edge is a directional connection `A → B` where B's coordinates are either diagonal to A (movement should be strictly N/S/E/W) or separated by more than 4 grid cells (the maximum traversable gap). Both conditions break navigation in the game engine: the player arrives at A, attempts to move North, and the engine cannot find a valid adjacent cell at B.
-
-The 497 broken edges were split:
-- **diagonal_and_gap (303):** B is both diagonally off-axis AND more than 4 cells away — worst case, requires both a coordinate move and an elbow junction
-- **gap_too_large (102):** B is directly north/south/east/west but more than 4 cells away — requires an intermediate elbow node
-- **diagonal (92):** B is in the right general direction but off-axis by 1–2 cells — requires a coordinate nudge
+A **broken edge** was a directional link `A → B` whose target was diagonal to the source (movement was
+strictly N/S/E/W) or more than 4 grid cells away. Both severed navigation: the player stood at A, moved
+North, and the engine found no valid adjacent cell.
 
 ---
 
-## II. Repair Pass 1 — fix-all-broken (Coordinate Alignment)
+## III. Repair Passes — HELD, with the convergence claim REVERSED
 
-### What it does
+### Pass results as recorded
 
-`fix-all-broken` scans every directional connection in the node map and evaluates whether the target node's coordinates are valid relative to the source. For each broken edge it finds, it either:
+| Pass | Fixed | Failed | Nodes after | Broken after | Reachability |
+|---|---|---|---|---|---|
+| 1 | 494 | 3 | ~1,000 | 594 | 93 % |
+| 2 | 589 | 5 | ~1,267 | 688 | 93 % |
+| 3 | 726 | 9 | 1,683 | 884 | 100 % |
 
-1. **Moves the target node** — shifts B's coordinates to the geometrically correct position (directly north/south/east/west of A, within 4 cells). Used when B has a clear intended position and the cell is free.
-2. **Spawns an elbow junction** — when B is too far away for a direct move, or when the destination cell is occupied, inserts an intermediate junction node (`J###`) in the correct direction and rewires A → J → B in an L-shape.
+Bidirectional fix: 146 links closed, then 135 — the second batch cycling, because setting `B.W = A`
+overwrites whatever occupied `B.W`. Two nodes claiming the same slot cannot both be satisfied by an
+overwrite strategy. `rip-and-connect` relocated ~223 strays across six batches with zero placement
+failures.
 
-### Pass 1 results
+### The convergence argument — **WRONG WHEN WRITTEN**
 
-```
-Pass 1: 494 fixed, 3 failed
-New node count: 781 → ~1000 (elbow junctions spawned)
-Post-pass broken count: 594 (up from 497)
-Post-pass reachability: 93%
-```
+The original §VIII defends the rising broken count:
 
-The broken count increasing after the first pass is expected and not alarming. When node B moves to satisfy A's connection, B's own other connections (to C, D) are now broken because B is no longer where C and D expect it. Each pass resolves some violations while surfacing previously hidden ones. The ratio of broken/total-edges was improving: 62.4% → 59.7%.
+> *"The correct convergence metric is broken/total-edges ratio, not absolute count."*
 
-### Pass 2 results
+The ratio fell monotonically — 62.4 % → 59.7 % → 53.8 % → 47 % — and was read as convergence. But every
+pass spawned elbow junctions, and every junction adds edges to the **denominator**. The metric therefore
+*cannot* report divergence: it is driven downward by the very mechanism whose runaway it was chosen to
+monitor.
 
-```
-Pass 2: 589 fixed, 5 failed
-New node count: ~1267
-Post-pass broken count: 688
-Ratio: 53.8% broken
-Reachability: 93%
-```
+Measured node counts across the cascade:
 
-### Pass 3 results (after bidirectional fix and rip-and-connect)
-
-```
-Pass 3: 726 fixed, 9 failed
-New node count: 1267 → 1683
-Post-pass broken count: 884
-Reachability: 100% (maintained through pass)
-```
-
-The absolute broken count rises with each pass because each pass also spawns new junction nodes (which themselves have coordinates that may need further alignment). The ratio continues to fall. The critical metric — **reachability — rose from 89% to 100% across all passes and held there.**
-
----
-
-## III. Repair Pass 2 — Bidirectional Link Fix
-
-### What it does
-
-A directional link `A.E = B` means "going East from A leads to B." For navigation to be symmetrical, B must also have `B.W = A`. Without this, a player can walk from A to B but cannot find A again from B — the return route is broken.
-
-The WBAPI server exposes `POST /api/audit/map/fix` with no body, which:
-1. Scans every directional connection `A[dir] = B`
-2. Checks whether `B[OPP(dir)] == A`
-3. If not, sets `B[OPP(dir)] = A`
-
-### Results
-
-```
-Pass 1: 146 bidirectional links closed
-Pass 2: 135 links closed (some cycling — see below)
-```
-
-**Why the cycling:** Setting `B.W = A` overwrites whatever was previously in `B.W`. If `B.W` was already `C`, then fixing A→B creates a new violation for C→B. The same 135 nodes cycle between competing back-links fighting for the same slot. These are slot conflicts: two nodes (A and C) each claim to connect eastward to B, but B only has one west slot. Resolving these properly requires removing the spurious link from one side — a deeper repair that requires knowing which connection is canonical (based on quest geography or intended routing). These 135 are logged for future manual review.
-
----
-
-## IV. Repair Pass 3 — Rip-and-Connect (Stray Relocation)
-
-### The stray problem
-
-After fix-all-broken, some nodes end up with valid coordinates but in positions that are geometrically isolated from the main reachable graph. They may be wired to each other (forming small clusters of 2–5 nodes) but those clusters have no path back to LHR. These are "strays."
-
-`rip-and-connect` handles these automatically:
-
-1. **Identify strays** — BFS from LHR to find all unreachable nodes
-2. **Score cities for each stray** — finds the nearest content city by quest cross-reference and geographic proximity
-3. **Find an open slot** — walks the target city's mesh to find a degree ≤ 3 node with a free directional slot
-4. **Move the stray** — relocates the stray node's coordinates to the adjacent cell of that open slot
-5. **Wire bidirectionally** — sets `stray[OPP(dir)] = slot` and `slot[dir] = stray`
-
-### Batches executed
-
-| Batch | Strays found | Placed | Failed | Reachability after |
+| Commit | Time | Nodes | `junction:true` | Content nodes |
 |---|---|---|---|---|
-| 1 (session A) | 248 | 50 | 0 | 95% |
-| 2 (session A) | ~198 | 50 | 0 | 99% |
-| 3 (session A) | ~148 | 50 | 0 | 100% |
-| 4 (session A) | ~19 | 19 | 0 | 100% |
-| 5 (session B, after fix-all-broken pass 3) | 62 | 50 | 0 | — |
-| 6 (session B) | 2 | 2 | 0 | 100% |
+| `3ac0aed` | 06-09 08:32 | 531 | 166 | 365 |
+| **`661aa29`** | **06-09 11:48 — this report** | **1,684** | **1,300** | **384** |
+| `9833f48` | 06-09 18:17 | 4,429 | 4,045 | 384 |
+| `66e26dd` | 06-10 09:23 | 4,429 | 4,045 | 384 |
+| `f1449f5` | 06-10 15:06 | 2,875 | 2,491 | 384 |
+| `120d617` | 06-16 | 451 | 42 | 409 |
+| `efa8f7a` | 06-25 (§WALK-1) | 410 | **0** | 410 |
+| HEAD | 08-13 | 416 | 0 | 416 |
 
-**Total strays relocated and wired: ~223 nodes**
+The successor report `lab-report-junction-reweave-overhaul.md`, filed 22 hours later, opens by calling
+the same mechanism a cascade failure: *"That new junction was itself slightly misaligned → next pass
+found **it** broken and added another junction."* Between the two, the commit log records an
+out-of-memory fix (`e04e903`, `e2576f6`). The map ran the tooling out of heap.
 
-All placements succeeded. No failed relocations. The algorithm found open slots near geographically appropriate cities for every stray node.
-
-### Notable relocations
-
-A sample of where strays landed:
-
-- `HFT` → near J740 (deg 2), wired North — previously isolated on the British Isles mesh
-- `LGW`, `STN` → near SIG (Sigtuna) — London airports reconnected near their geographic cluster
-- `MAD` → near CONREG, East — Madrid now adjacent to its regional node
-- `HAV` → near NID, North — Havre connects at the Scandinavian coast
-- `MSE`, `CHY`, `PCR`, `LRD` — English Midlands cluster relocated and integrated into the existing road mesh
+> **Instrument (§DOC-02, 39th): a convergence metric whose denominator is grown by the process it
+> measures cannot report divergence.** The ratio was honest, monotone, and structurally incapable of
+> raising an alarm.
 
 ---
 
-## V. Bonus Fix — worldmap --regions NaN Bug
+## IV. Stray Relocation — the codes HELD, the geography did not
 
-During the session, `./api.sh worldmap --regions` displayed:
+Twelve node codes are named in the original §IV. **All twelve resolve at HEAD, and all twelve are
+byte-identical to the birth commit in both `num` and `label`** — the strongest node-code result in the
+§DOC-02 corpus to date.
 
-```
-World Region Grid  NaN×NaN  (lat -8°–68°  lon -25°–72°)
-```
+The *glosses* attached to them are another matter. Eight carry a real-world geographic reading; **seven
+contradict the `label` sitting on the same source line, at the report's own commit**:
 
-**Root cause:** `api.sh` calls `worldmap.js` with the argument array `['--regions', '--port', '1367']`. The `getArg('--regions')` helper in worldmap.js returns the next token after `--regions`, which is `'--port'`. The code then computed `+'-port' = NaN`, which propagated through the grid dimension calculation.
+| Code | Report's gloss | `label` at `661aa29` **and** at HEAD | |
+|---|---|---|---|
+| `HFT` | "isolated on the British Isles mesh" | South Shore — The Fishermen's Village | ✗ |
+| `LGW` | "London airports" | Tilbury Market Quarter | ✗ |
+| `STN` | "London airports" | The Map Shop | ✗ |
+| `SIG` | "Sigtuna" | Siggeir's Hall — Signy's Captivity | ✗ |
+| `MAD` | "Madrid" | Shattered Seraph's Spire | ✗ |
+| `CONREG` | "its regional node" | Constantinople — Imperial Court Registry | ✗ |
+| `HAV` | "Havre" | Admiral's Last Cove | ✗ |
+| `NID` | "the Scandinavian coast" | Nidaros — Olaf's Shrine City | ✓ |
+| `MSE`·`CHY`·`PCR`·`LRD` | "English Midlands cluster" | Canterbury / Widow's Farmyard / Pilgrims' Camp / Lord's Manor | ✓ |
 
-**Fix (worldmap.js line 1107):**
+The pattern is exact: the author read `LGW`, `STN`, `MAD`, `HAV` as **IATA airport codes** and described
+the world from the airline atlas rather than from the `label` field on the same line. The two glosses
+that hold are the two whose codes are *not* IATA.
+
+> ***A three-letter code is a key, not a place-name. The moment it looks like something you already
+> know, you have stopped reading the file.***
+
+**Unverifiable by construction:** the §IV placements describe *intermediate* batch states. `HFT` is
+recorded as wired North to `J740`; at the birth commit it is wired North to `J202`, later passes having
+rewired it. No artifact preserves the states the evidence section documents.
+
+---
+
+## V. Bonus Fix — `worldmap --regions` NaN — **HELD, and the sole surviving artifact**
+
+`getArg('--regions')` returned the *next token* (`'--port'`), and `+'--port'` is `NaN`, which propagated
+into the grid dimensions.
 
 ```js
-// Before:
-const nGrid = getArg('--regions') ? +getArg('--regions') : (getArg('--grid') ? +getArg('--grid') : 6);
-
-// After:
 const _nGridRaw = getArg('--regions');
 const nGrid = (_nGridRaw && !isNaN(+_nGridRaw)) ? +_nGridRaw
             : (getArg('--grid') && !isNaN(+getArg('--grid')) ? +getArg('--grid') : 6);
 ```
 
-The fix validates that the retrieved argument is actually a number before coercing it. If `--regions` has no numeric value (used as a boolean flag), it defaults to 6. The regions display now renders correctly:
+Live today at **`tools/worldmap.js:1201–1202`**, byte-identical to the published patch (the file moved
+from the repo root to `tools/`; the original's line hint 1107 has drifted, per §DX-01e). Run at HEAD it
+renders `World Region Grid  6×6  (lat -8°–68°  lon -25°–72°)` — the same bounds the original printed.
+
+*Two hundred lines of graph surgery were deleted. The four-line argument-parsing fix at the bottom of
+the page is still running.*
+
+---
+
+## VI. Final State — as recorded, and as it stands
+
+| Metric | Report: before | Report: after | **HEAD (2026-08-13)** |
+|---|---|---|---|
+| Total nodes | 781 | 1,683 | **416** |
+| Content nodes | 383 | 383 | **415 or 416** — see §AUDIT-03ax |
+| Junction nodes | ~398 | 1,300 | **0** by `junction:true`; **1** by `J`-prefix (`J13`) |
+| Reachable from `LHR` | 694 (89 %) | 1,683 (100 %) | **416 / 416 (100 %)** |
+| Isolated clusters | 87 | 0 | **0** |
+| `N`/`S`/`E`/`W` link fields | — | 1,017 / 1,015 / 918 / 915 | **0 / 0 / 0 / 0** |
+
+**The thesis outlived the architecture.** 100 % reachability from Birka is still true — but it is now
+established by a terrain-field land flood (§WALK-1.5), in which empty land cells are walkable and
+node-adjacency strays cannot exist. The goal survived; every mechanism used to reach it was removed.
+
+### The 1,683 / 383 discrepancy — the report was right, for a reason it could not see
+
+The source text at `661aa29` contains **1,684** `NODE_MAP` entries and **384** non-junction entries. Both
+published figures are one lower, because both were read from the *parsed* model — and the parser silently
+dropped one entry:
 
 ```
-World Region Grid  6×6  (lat -8°–68°  lon -25°–72°)
-
-     25W–8W        8W–7E         7E–23E        23E–39E       ...
-A 55–68°N  A1 [1 city]   A2 [2 city]   A3 [6 city]  ...
-B 42–55°N  B2 [18 city]  B3 [13 city]  B4 [4 city]  ...
-C 30–42°N  C3 [12 city]  C4 [10 city]  C5 [5 city]  ...
+ZRH:{ num:143, ... label:'Dunfall — The Loch Harbor', act:3 ... }   ← line 8024
+ZRH:{ num:72,  ... label:'The Unbanked Quarter',      act:1 ... }   ← line 8068
 ```
 
+`ZRH` is declared **twice**; last key wins. Dunfall — its NPC Mairén Fionn, its harbor, its `sleep:true`
+checkpoint — existed in the file and in no runtime model, from `e339aeb` (2026-05-28) until `291c82a`
+(2026-06-26), when §CELL-14-FU re-coded it to **`DNF`**. The repair pass ran squarely inside that window
+and certified 100 % reachability over a census that had already lost the node.
+
+> ***A duplicate key does not break reachability. It removes the node from the denominator, so the
+> reachability check passes — and passes because the node is gone.*** This is the rot class
+> `check:dupkeys` (gate #11) was built for on 2026-07-28, seven weeks later.
+
 ---
 
-## VI. Final State
+## VII. Remaining Work — every row now measures an undefined quantity
 
-| Metric | Before | After |
+| Original issue | Count | Status at HEAD |
 |---|---|---|
-| Total nodes | 781 | 1683 |
-| Content nodes (quests/NPCs/monsters) | 383 | 383 |
-| Junction/road nodes | ~398 | 1300 |
-| Reachable from LHR | 694 (89%) | **1683 (100%)** |
-| Isolated clusters | 87 | **0** |
-| Broken edges | 497 | 884 |
-| Broken edge ratio | 62% | 47% |
+| Broken edges (diagonal/gap) | 884 | **Undefined** — the check required `N`/`S`/`E`/`W`; `./api.sh broken` now reports isolated *cells* (93) |
+| Cycling bidirectional conflicts | ~135 | **Undefined** — `./api.sh fix-bidirectional` reports *"0 violations"* over an empty field set |
+| Direction-sign violations | 682+ | **Undefined** — no direction fields exist |
+| Degree-1 dead ends | 149 | **Re-based** — 148 at HEAD, but degree now counts adjacent occupied cells, not links |
 
-**All 383 content nodes are reachable.** Every city, dungeon, and quest location in the game can be navigated to from the starting hub at Birka (LHR). The 884 remaining broken edges are coordinate-level misalignments (diagonal links, overly long gaps) that affect display quality in the Worldbuilder but do not sever navigation — all nodes are graph-connected.
+The proximity of 149 and 148 is coincidence across incompatible denominators, and is recorded here so the
+next reader does not mistake it for continuity.
 
-**Why the node count grew:** Each `fix-all-broken` pass spawns "elbow" junction nodes to bridge connections that span more than 4 grid cells. 781 content + road nodes required ~900 additional junctions to be fully bridged. This is expected for a world map where geographic distances were originally encoded at a coarser coordinate resolution.
-
-**Why broken edges are still non-zero:** The broken edge metric measures coordinate precision (are neighbors exactly adjacent on the grid?), not graph connectivity (can you reach them?). The coordinate mesh still has many nodes placed at approximate positions. These can be tightened with future `fix-all-broken` passes or by running `layout-solve` to propagate from the geo-seeded anchors outward. Neither is required for playability — they affect only the Worldbuilder's visual rendering.
+**§VII's recommended next step — `geo-seed --execute` then `layout-solve.js --apply` — was never executed
+and can no longer be executed.** `tools/layout-solve.js` (604 lines) is a constraint solver for
+"N/E/S/W networks," and there are none. It is still recommended at **eight live sites**, including inside
+`api/wb.js`'s *"Full world reset sequence (cell-first, §WALK-1.5 geo flood)"* — a cell-first procedure
+prescribing the edge-graph solver, five lines above the note explaining that the edge graph is retired.
+Filed as **§DX-02bf**.
 
 ---
 
-## VII. Remaining Work
+## VIII. Tooling Notes — retained, corrected
 
-| Issue | Count | Priority |
+**`fix-all-broken` is greedy.** Each pass fixed edges in insertion order; moving B to satisfy A broke B's
+constraints for C. **HELD** — and the honest statement of it is what makes §III's convergence defence a
+reasoning error rather than a reporting one. The mechanism was described correctly and its consequence
+was measured with the wrong instrument.
+
+**Ordering: `rip-and-connect` first.** A stray in the wrong region generates many broken edges as
+alignment tries to reconcile it with distant neighbours; relocating first gives alignment a smaller
+problem. **Sound, and moot** — both tools now return HTTP 410 (§WALK-3 Inc 2).
+
+**Bidirectional cycling.** The proposed fix — check occupancy before overwriting, and clear the source
+side when the target's opposite slot is legitimately taken — was never built. **NOT SHIPPED**, and now
+unbuildable.
+
+---
+
+## IX. Defects Filed
+
+| Row | Severity | Premise |
 |---|---|---|
-| Broken edges (diagonal/gap) | 884 | Low — cosmetic, not blocking |
-| Cycling bidirectional conflicts | ~135 | Medium — slot conflicts need manual slot arbitration |
-| Direction-sign violations | 682+ | Low — coordinate imprecision; fix-all-broken reduces over time |
-| Degree-1 dead ends | 149 | Low — extend with junctions when area is built out |
-
-**Next structural step:** Run `layout-solve.js --apply` after `geo-seed --execute` to rebuild the coordinate mesh from geographic anchors outward. This would reset all junction coordinates to geometrically optimal positions and likely eliminate the majority of broken edges in one pass without cascading.
+| **§DX-02bf** | 🟢 no design call | Eight live sites route authors to `layout-solve --apply`, `fix-bidirectional` and `junction-audit`, all keyed to link fields that are `0` at HEAD. `fix-bidirectional` returns a green *"0 violations"* over an empty set — a passing badge for a subsystem that no longer exists. |
+| **§AUDIT-03ax** | 🟢 no design call | `J13` is the last reweave-era elbow, re-terrained to `midlands` and re-labelled *The Western Sea Road*. It carries node text but **0 quests, 0 NPCs, 0 loot, no `junction:true`**. `./api.sh junction-audit` counts by key prefix and reports **1**; `check:invariants` I1/I2 count by flag and report **0**. Two instruments, one node, two answers. |
 
 ---
 
-## VIII. Tooling Notes
+## X. Conclusion
 
-### fix-all-broken is a greedy algorithm
+The repair achieved what it set out to achieve, and the invariant it defended is intact two months and
+one architecture later: every node in the world is reachable on foot from Birka, and no quest state can
+refuse a step. That is the finding that matters for play.
 
-Each pass fixes edges in insertion order, not by global optimality. Moving node B to satisfy A's constraint may break B's constraints for C. The algorithm converges when coordinate conflicts are few and localized. On a globally disordered mesh, multiple passes are required, and the absolute broken count may grow before shrinking (because new junction nodes are added each pass). The correct convergence metric is broken/total-edges ratio, not absolute count.
+What the report could not tell itself is that it was measuring the wrong thing. It watched a ratio fall
+while the map inflated eightfold around a content set that never grew by one node, and it recorded the
+flat content column — *"383 → 383"* — as proof of safety. The number was correct. The reassurance was
+backwards.
 
-### rip-and-connect before fix-all-broken, or after?
-
-Ideally: **rip-and-connect first**. Relocating strays to their intended geographic cluster before running coordinate alignment means `fix-all-broken` works with nodes in approximately correct positions. In this session, the order was fix-all-broken → rip-and-connect → fix-all-broken, which is valid but slightly less efficient. The key insight is that a stray node in the wrong region of the map creates many broken edges as fix-all-broken tries to reconcile it with its (distant) neighbors. Relocating first gives fix-all-broken a smaller problem.
-
-### The bidirectional cycling problem
-
-The batch bidirectional fix (`POST /api/audit/map/fix`) uses a simple overwrite strategy: set `B.W = A`. When B's west slot is already occupied by C, this creates a new violation for C. A more complete fix would check occupancy before overwriting and instead remove the spurious connection from the source side (`A.E = null`) when B's opposite slot is legitimately taken. This is a future server enhancement.
+> *All 383 content nodes are reachable.* — and by the following evening, so were the 4,045 junctions
+> standing between them.
 
 ---
 
-*Lab report generated 2026-06-09. World state: roll2hit-v3.html, post-repair-pass snapshot series 20260609-18####.*
+*Original report generated 2026-06-09 against snapshot series `20260609-18####`. Verified and rewritten
+2026-08-13 (§DOC-02at) against HEAD and the birth commit `661aa29`. Legacy node codes throughout are
+history and are annotated, never rewritten (§AUDIT-03n / `scripts/legacy-codes.js` HISTORY class).*
