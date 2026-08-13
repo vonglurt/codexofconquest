@@ -224,21 +224,23 @@ The `ship_manifest` cross-references §XVI: if `wmFirstResearcherKnown`, the con
 **Their leverage:** Ancient knowledge, the portal network, the golem gate, Weimar's inaccessibility.
 **Player relationship:** Reluctant trust. They will help anyone Sweelinck approves of.
 
-#### ⚠️ PLANNED — Weimar Scholar Gate (plan-archive.md §XVI, Layer 51)
+#### ✅ SHIPPED — Weimar Scholar Gate (plan-archive.md §XVI, Layer 51 — node `NUE`, historical `SQ`)
 
-Two new named NPCs within the Weimar lower district — outside the Ivory Circle hierarchy, adjacent to it:
-- **Archivist Isolde Voss** — Scholar Kings First Tier; controls gate access; holds Froberger's revocation record; Friendly after Q-WM-02; never reaches Dear Friend in first run
-- **Benedikt Rasp** — ex-Scholar, Tier 3 (resigned); runs informal reading circle; starts Friendly; Dear Friend after Q-WM-03; gives `tome_rasp_annotated`
+*(Status corrected 2026-08-13 by §DOC-02ar: this block read ⚠️ PLANNED while `story.md` §Layer 51 recorded it ✅ Implemented 2026-05-25. The arc shipped at `194a810`; the field names below are corrected to what shipped. **Two engine defects stop the chain at 2 of 4 quests — §AUDIT-03at and §AUDIT-03au.**)*
 
-New item category **Tomes** (`type:'tome'`): passive inventory bonuses, unsellable, NG+-persistent. Three tomes available through the Scholar Gate quest chain. Bonus applied by `_applyTomeBonuses()` at battle start.
+Two named NPCs within the Weimar lower district — outside the Ivory Circle hierarchy, adjacent to it:
+- **Archivist Isolde Voss** (`isolde_voss`) — Scholar Kings First Tier; controls gate access; holds Froberger's revocation record; Friendly after Q-WM-02; **never reaches Dear Friend** — she has no `dearFriend` dialogue pool, so this is by design and correct
+- **Benedikt Rasp** (`benedikt_rasp`) — ex-Scholar, Tier 3 (resigned); runs the informal reading circle; **starts impartial**; specified Dear Friend after Q-WM-03 but ships `set:1` = Friendly (§AUDIT-03ar); grants *Benedikt's Annotated Copy* (there is no `tome_rasp_annotated` key — tomes are keyed by name)
 
-New monster `scholars_guard` (medium) added to WM-area terrain. Drops Scholar Kings' Seal (sell:20).
+New item category **Tomes** (`type:'tome'`): passive inventory bonuses, `sell:0` (unsellable). **NOT NG+-persistent** — `storyNewGamePlus` resets inventory from `_S_DEFAULTS()` and carries only favorability, pit perks, the run counter and the Entry-42 fields. Three tomes are authored; **one is obtainable** (see the two defect rows). Bonuses are read live per roll by `_tomeBonuses()` — not `_applyTomeBonuses()`, which never existed — at initiative, death save and attack.
 
-Q-WM-04 reveals a "First Researcher" who preceded Froberger — unnamed by the Scholar Kings, documented only in a redacted personnel file that Benedikt can unredact. See plan-archive.md §XVI for full quest chain and state flags.
+New monster `scholars_guard` (medium) in the `scholars_qtr` terrain pool. Drops Scholar Kings' Seal (sell:20), the currency for archive access (3 seals **or** Yael's archive letter from `LHR` (historical `CI`)).
+
+Q-WM-04 reveals a "First Researcher" who preceded Froberger — unnamed by the Scholar Kings, documented only in a redacted personnel file that Benedikt can unredact. **The unredaction has never rendered:** the substitution is guarded by a flag whose only writer is Q-WM-04's own completion effect (§AUDIT-03au). See plan-archive.md §XVI for the full quest chain and state flags, and `lab-reports/lab-report-weimar-scholar-gate.md` for the verified delta table.
 
 #### ⚠️ PLANNED — Void Archaeology (plan-archive.md §XVII, Layer 52)
 
-Prerequisites: NG+ run + `wmFirstResearcherKnown` + `entry42Written`.
+Prerequisites: NG+ run + `wmFirstResearcherKnown` + `entry42Written`. **⚠️ Unsatisfiable at HEAD (§DOC-02ar):** `wmFirstResearcherKnown` has one writer — Q-WM-04's own completion effect, which that quest's completion condition depends on (§AUDIT-03au) — and `storyNewGamePlus` does not carry the flag across the NG+ transition this prerequisite also requires. Both must be repaired before Layer 52 can open.
 
 The First Researcher did not merely study the Void — she built the Antecedent Containment Protocol: a pressure cage designed to hold something she called the Antecedent. The Void Tide is the cage expanding. The `TLS` victory activated the sealing mechanism. Five existing nodes (`LHR`, `ZRH`, WM, `BMA`, `GVA`) gain `[INVESTIGATE]` overlays in NG+ that reveal the cage's construction and the First Researcher's identity across a four-quest investigation arc (Q-VA-01 through Q-VA-04).  *(historical: `CO`=`TLS` · `CI`=`LHR` · `DF`=`ZRH` · `SL`=`BMA` · `MT`=`GVA`)*
 

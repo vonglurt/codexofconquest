@@ -2,208 +2,376 @@
 
 # Lab Report — Layer 51: Weimar Scholar Gate
 
-**IEEE-Format Post-Mortem**  
-**Date:** 2026-05-25  
-**Layer:** 51  
-**Section:** §XVI  
-**Status:** ✅ Implemented  
-**Codebase:** `roll2hit-v3.html` — single-file browser RPG
+**IEEE-Format Post-Mortem** · **Original date:** 2026-05-25 · **Layer:** 51 · **Section:** §XVI
+**Ship commit:** `194a810` · **Codebase:** `roll2hit-v3.html` — single-file browser RPG
+
+> **VERIFIED 2026-08-13 (§DOC-02ar).** Re-measured claim-by-claim against HEAD (38,712 lines ·
+> 416 nodes · 2,853 quests) and against the arc's own ship tree. This is a **HISTORY** document:
+> claims that did not ship are marked **NOT SHIPPED** and kept, never deleted — a silently removed
+> claim reads as one that held. Original line numbers are retained only where quoted; live
+> pointers are `` `symbol@line` `` anchors.
 
 ---
 
 ## Abstract
 
-This report documents the design intent, implementation architecture, and integration points of Layer 51 — the Weimar Scholar Gate. The Scholar Gate is a four-quest narrative arc set in Act VI at the Scholar's Quarter (SQ node) in Weimar. It introduces two named NPCs (Archivist Isolde Voss and ex-Scholar Benedikt Rasp), a new monster (`scholars_guard`), a new item category (tomes), and an in-game archive modal with three readable documents. The arc answers a structural question embedded in the world since Act I: who was Froberger, why was his access revoked, and what did he find that the Scholar Kings didn't want published? It also introduces the First Researcher — the character whose identity is fully revealed only by completing all four quests. This revelation directly enables Layer 52's Void Archaeology arc.
+Layer 51 turns the Scholar's Quarter from a shard pickup into the game's only piece of
+*institutional* history: a four-quest arc that answers who Froberger was, why his access was
+revoked, and who preceded him. It introduces two named NPCs (Archivist Isolde Voss, ex-Scholar
+Benedikt Rasp), one monster (`scholars_guard`), a new item class (**tomes** — the first carried
+objects that grant permanent combat bonuses), a three-document archive interface, and a day-gated
+reading circle. The reveal — the First Researcher's name — is the declared prerequisite for
+Layer 52 (Void Archaeology).
+
+**Verification result.** The report is, by identifier census, **the most accurate document the
+program has measured: 42 of 42 named identifiers resolve at HEAD (100 %)**, every statline, bonus,
+flag, formula and quoted line byte-exact across 80 days and the §ARCH-01 format migration. **And
+the arc has never been completable past its second quest.** Two independent, mutually-hidden
+defects — a state field that was mistyped in the implementation and named *correctly* in this
+report, and a completion condition that is its own effect — stop the chain at 2 of 4, strand both
+later tomes, and make the arc's climax (`Marta Eilene Vass`) a string that has never rendered.
+
+> ***The lesson of this increment, and it retires the comfortable version of the census: a census
+> proves a name exists. It cannot prove the engine reads the name the spec wrote.***
 
 ---
 
-## I. Design Intent
+## I. Design Intent — and what it buys the player
 
-### A. The Weimar Gap
+Retained from the original, condensed. This section is *why the layer exists*; it verified sound
+and is the part worth keeping intact.
 
-The Scholar's Quarter (SQ) in Weimar existed in the node map as a passive story node: Archivus Ptolemy Sweelinck, the Weimar Fragment (Shard #7), and ambient lore about old books. There was no quest chain, no archive access mechanic, no reason to return after collecting the shard. The node had weight in the world (Froberger's journal references the Scholar Kings repeatedly) but no mechanical payoff.
+### A. The Weimar gap
 
-The Scholar Gate fills this gap by making SQ the locus for Froberger's institutional history. The player arrives seeking shard #7 and discovers the bureaucratic record of why Froberger died: not because the Void killed him, but because the Scholar Kings revoked his access and left him without institutional backing.
+The Scholar's Quarter existed as a passive story node: Archivus Ptolemy Sweelinck, the Weimar
+Fragment (Shard #7), ambient lore about old books. Froberger's journal cites the Scholar Kings
+constantly; the place they ran had no mechanical payoff and no reason to revisit.
 
-### B. The Tome Category
+The Scholar Gate makes it the locus of Froberger's *institutional* history. The player arrives for
+a shard and leaves with a bureaucratic answer to a mythic question: **the Void did not kill
+Froberger — a committee revoked his access and left him in the field without backing.** That is
+the arc's argument, and it is the reason the layer is filed under investigation rather than combat.
 
-The game's inventory had relics, consumables, and key items. It had no passive persistent bonuses from carried objects. Tomes address this: readable items with `type:'tome'` and a `bonus` field that modifies three combat stats (death saves, initiative, attack). The mechanic rewards quest completion with lasting numerical benefits rather than gold or one-use items.
+**Playability contribution.** The arc adds a *research* verb to a game whose other verbs are walk,
+fight and talk. Its currency is reading order, not damage: three documents that each withhold
+something, a trust gate measured in days rather than gold, and a name you have to earn twice.
+It also gives Weimar a second visit — a node that previously emptied on first arrival.
 
-The bonus structure was chosen to match the narrative of each tome:
-- Froberger's Field Notes → `+1 death save` (his note: "The pressure is survivable if you know it's coming.")
-- Scholar Kings' History → `+2 initiative` (Benedikt's maxim: "First knowledge, then decision, then action.")
-- Benedikt's Annotated Copy → `+1 atk while quest active` (active scholarship improves performance)
+### B. Tomes — the first passive-bonus item class
 
-### C. The First Researcher Problem
+Inventory had relics, consumables and key items; nothing carried gave a standing numerical
+benefit. Tomes are readable items with `type:'tome'` and a `bonus` object touching three combat
+systems. The mechanic pays quest completion in **lasting capability** rather than gold or a
+one-shot.
 
-The Weimar arc needed a revelation that mattered. The Froberger revocation letter (Document 1) tells the player what happened to Froberger institutionally. The field report (Document 2) shows what the Scholar Kings dismissed as anecdote. But Document 3 — the personnel file — is redacted. The name of the researcher who came before Froberger, who built the containment structure, is hidden behind `[REDACTED]`.
+Each bonus was chosen to match its book:
 
-Revealing that name required earning Benedikt's trust over three reading circle sessions, completing quest_wm_04, and then returning to the archive. The unredaction of Document 3 (replacing `[REDACTED]` with `Marta Eilene Vass`) is the arc's narrative climax. It unlocks §XVII's Void Archaeology arc by establishing who built the Antecedent Containment Protocol.
+| Tome | Bonus | Its own line |
+|---|---|---|
+| Froberger's Field Notes | +1 death save | *"The pressure is survivable if you know it's coming."* |
+| Scholar Kings' History | +2 initiative | *"First knowledge, then decision, then action."* |
+| Benedikt's Annotated Copy | +1 atk while a quest is active | *"He was right about this one too." — B. Rasp* |
+
+**Playability contribution.** A death-save bonus is the only stat in the game that pays out at the
+moment the player is least able to act, and it arrives from a *book*. That is the whole design
+thesis of the layer in one item: scholarship as survivability.
+
+### C. The First Researcher problem
+
+Document 1 (the revocation letter) says what happened to Froberger. Document 2 (the field report)
+shows what the institution dismissed. Document 3 — the personnel file — is **redacted**. The
+researcher who came before Froberger, who built the containment structure, has no name on the page.
+
+Earning it takes Benedikt's trust across three reading-circle sessions, then `quest_wm_04`, then a
+return to the archive to see `[REDACTED]` become **Marta Eilene Vass**. That unredaction is the
+arc's narrative climax and the stated entry condition for §XVII.
 
 ---
 
-## II. Implementation Architecture
+## II. Verification Method
 
-### A. New Monster — `scholars_guard`
+1. **Batch census first.** Every identifier the report names, through one `grep -c` loop, before
+   reading a line of the source. Partition into live / dead before forming any thesis.
+2. **`git log -S <symbol>` on every dead or suspicious name**, to separate RETIRED (shipped, later
+   removed) from NOT SHIPPED (never existed).
+3. **Archive read.** `git show 194a810:roll2hit-v3.html` — the arc's own ship tree — because HEAD
+   cannot adjudicate a claim about the day the report was written.
+4. **Writer/reader split.** For every state flag: who writes it, who reads it, and can the writer
+   ever run. This is the instrument that found both defects; the census alone found neither.
+5. **Reachability.** Cell primacy for the arc's node, computed from `NODE_COORDS` against
+   `NODE_MAP` declaration order (§AUDIT-03x).
+6. **Node codes by `num`.** A retired two-letter code is matched to its live node through the
+   `num` field, not through a hand-maintained legend.
 
-**Defined in `MONSTER_POOL` — line 4623:**
+---
+
+## III. As-Built Inventory — verified at HEAD
+
+### A. Monster, drop, terrain — 3 of 3 byte-exact
 
 ```js
 scholars_guard: { key:'scholars_guard', name:"Scholar's Guard", ac:14, hp:45,
-  atk:5, dmgDie:8, dmgCount:1, dmgFlat:3, tier:'medium' }
+                  atk:5, dmgDie:8, dmgCount:1, dmgFlat:3, tier:'medium' }
 ```
 
-**Drop table** (line 5049): `scholars_guard` → `"Scholar Kings' Seal"` (icon 🔏, sell:20).
+`` `key:'scholars_guard'@5406` `` — all eight fields exact as specified. Drop
+`` `icon:'🔏', sell:20@5848` `` → *Scholar Kings' Seal*, exact. Terrain
+`` `P.bone_naga, P.scholars_guard@6291` `` — present in `scholars_qtr` alongside the homunculi,
+mages, liches and library ghosts the report names. **Expansion:** it later joined a second pool
+(`workshop`), which the report predates.
 
-**Terrain pool** (line 5411): added to `scholars_qtr` pool alongside homunculi, mages, liches, and library ghosts. Scholar's Seals drop from guards and serve as currency for archive access (quest_wm_01 gate: 3 Seals OR archive letter).
+### B. `_tomeBonuses()` — function and all three call sites live
 
-### B. Tome Item Category and `_tomeBonuses()`
+`` `function _tomeBonuses()@23407` `` is byte-identical to the report's listing modulo the
+whitespace of two `if` bodies. All three integration points survive:
 
-**Function — line 8451:**
+| System | Live anchor | Shipped expression |
+|---|---|---|
+| Initiative | `` `const _tomeInit = _tomeBonuses().initiative@7439` `` | `d20 + dexMod + tome initiative` |
+| Death saves | `` `_tomeBonuses().deathSave + _kingsSealBonus@7503` `` | exactly as specified, including the Corelli seal addend |
+| Attack | `` `_tomeBonuses().atk + _lakeMagicBonuses().atk@25030` `` | as specified, plus a §DROP-03 addend added later |
+
+The `atkWhileQuestActive` gate (contribute only while some quest is `'active'`) is intact.
+**But see Finding 2:** the only tome carrying that bonus is the one the player cannot obtain, so
+`_tomeBonuses().atk` is structurally always `0` at every call site.
+
+### C. State — 9 of 9 flags under their specified names
+
+`` `wmDoc1Read: false@23129` `` through `` `wmFirstResearcherKnown: false@23131` ``, plus
+`archiveLetterObtained` in the same section. Not one was renamed by §ARCH-01 or §VM-01.
+
+### D. Archive interface
+
+`` `const WM_ARCHIVE_DOCS = [@27787` `` — three documents, keys and titles as specified, both
+signature lines verbatim: *"Signed: Archivist I. Voss"* and Froberger's margin note
+*"I talked to the shepherd. He was describing a Void pressure event. They wrote this before they
+knew. So did I."*
+
+`` `function _storyWmArchiveModal(wrap)@27809` `` — toggle-style, read/unread colour coding
+(green + ✓ / amber + Read) exactly as described; §VM-01-G2 converted it from an HTML string to DOM
+nodes with **no behavioural change**. The 4th document (§XVII's Constructor's Log, gated on
+`vaAllMarksFound`) is present and correct — the report's best architectural call, verified.
+
+The launcher is now a registry entry: `` `id:'nue-lower-archive', nodes:['NUE']@34191` `` →
+`` `function _nodeHookNueLowerArchive(node)@32983` ``, still gated on `wmLowerArchiveUnlocked`.
+Button label shipped as `📚 Lower Archive`, not the report's `[Open Archive]` (cosmetic).
+
+### E. Quest chain — 4 of 4 live as UQF-1.0, plus a fifth the report predates
+
+| Quest | Gate at HEAD | Completion at HEAD | Verdict |
+|---|---|---|---|
+| `quest_wm_01` | open | `` `itemsAll:[{ name:"Scholar Kings' Seal", min:3 }]@11071` `` under `{any}` with the letter flag | **exact** — both paths, as specified |
+| `quest_wm_02` | `questsDone:['quest_wm_01']` | all three doc-read flags | **exact** |
+| `quest_wm_03` | `flags:['wmArchiveComplete']` | `flags:['wmBenediktCircleComplete']` | **blocked** → Finding 1 |
+| `quest_wm_04` | `` `gate:{ flags:['wmBenediktCircleComplete'] }@11106` `` | `` `completion:{ flags:['wmFirstResearcherKnown'] }@11106` `` | **impossible** → Finding 2 |
+| `quest_wm_05` | — | `flags:['wmGurtFileRead']` | *added later (§L), outside this report* |
+
+All three tome grants are exact: `` `bonus:{ deathSave:1 }@11088` ``,
+`` `bonus:{ initiative:2 }@11098` ``, `` `bonus:{ atkWhileQuestActive:1 }@11108` ``, all
+`sell:0` (unsellable, as designed). `quest_wm_04`'s `+300gp` is present.
+
+### F. The two access paths — verified end to end
+
+The alternative to grinding guards is Yael's letter, and it shipped precisely as §III.A describes:
+`` `yealFav >= 1@32289` `` → `` `S_story.archiveLetterObtained = true;@32297` ``, at the Blue
+Shutters Archive, on the starting node. **A design decision that survived 80 days and a world
+migration without a single edit.**
+
+### G. Geography
+
+The node is `` `NUE:{ num:35, code:'NUE'@8705` `` — same `num`, same `name:'scholars_qtr'`, same
+`` `label:"Scholar's Quarter — Weimar"@8705` ``, same `act:6` as the report's `SQ`. **The node
+survived; only the key was renamed.**
+
+**Reachability: clean.** `` `NUE:{r:20,c:191}@9615` `` is the **sole occupant of its cell**, so it
+is `list[0]`, it can become `currentCode`, and all five `activateNode:'NUE'` quests activate on
+arrival — `` `activateNode:'NUE', // §VM-01-G3@11079` ``. Unlike §CROWN-01, **this arc is not a
+§AUDIT-03x casualty.** It fails in the completion grammar, not in the geography, which is why no
+map-level instrument could see it.
+
+---
+
+## IV. Spec → Shipped Delta Table
+
+Two-way: **HEAD is not the reference.** Where the spec is right and the engine is wrong, that is an
+engine defect, not report rot.
+
+| # | Report claim | Measured at HEAD | Verdict |
+|---|---|---|---|
+| 1 | `wmSessionsDays` "tracks **`gameDay`** values" | code reads `S_story.dayCounter`, a field that does not exist | **ENGINE DEFECT — the report is right** (§AUDIT-03at) |
+| 2 | `quest_wm_04` completes on `wmFirstResearcherKnown` | true — and that flag's only writer is `quest_wm_04`'s own `onComplete` | **ENGINE DEFECT — circular** (§AUDIT-03au) |
+| 3 | "Benedikt → **Dear Friend** on quest_wm_03" (stated 3×) | `` `npc:"benedikt_rasp", set:1@11097` ``; Dear Friend begins at 2 (`` `fav >= 2 ? p.dearFriend@23713` ``) | **NOT SHIPPED** (§AUDIT-03ar) |
+| 4 | Isolde "Key line **at Dear Friend**" | she has no `dearFriend` pool at all; that line is her `friendly` tier, and `` `npc:"isolde_voss", set:1@11087` `` is her ceiling | **MISATTRIBUTED — internally consistent, so harmless** |
+| 5 | Isolde "Begins Neutral" | base tier is named `impartial` | cosmetic |
+| 6 | §IV: "no UI showing Sessions attended: 2/3" | `` `reading circle (' + sessions.length@34745` `` renders `(N/3)`, and `` `The circle meets again tomorrow.@34744` `` disables the button — **both in the ship commit** | **WRONG WHEN WRITTEN** |
+| 7 | §IV: Benedikt callback in §XXI is "a long gap" | `` `_npcFavor('benedikt_rasp') >= 2@34931` `` — not a gap, an **unreachable** branch (delta 3) | **understated** |
+| 8 | §IV: "no notification prompt" for the unredaction | correct; and the `` `Read (unredacted)' : '📄 Read'@27850` `` label is itself unreachable (Finding 2c) | **correct, and worse than stated** |
+| 9 | Node `SQ`; letter obtained at `CI` | 0 of 2 codes resolve as written; **2 of 2 resolve by `num`** — `SQ`(35)→`NUE`, `CI`(1)→`LHR` | renamed, not lost |
+| 10 | `[Open Archive]` button | ships as `📚 Lower Archive` | cosmetic |
+| 11 | `quest_wm_01`'s NPC | carries `npc:"archivus_sweelinck"` while its own disposition quotes Isolde | authoring metadata only (§AUDIT-03b) — inert |
+| 12 | *(new, not in report)* | node label says **Weimar**; four player-facing strings on the same node say **Nuremberg** | **§AUDIT-03av** |
+
+Everything not listed above measured **exact**: 8/8 monster fields, the drop, the terrain pool,
+9/9 flags, 3/3 tome bonuses, 3/3 integration points, both access paths, the reading-circle rule,
+the four-document architecture, and every quoted line of Isolde's and Benedikt's dialogue.
+
+---
+
+## V. Findings
+
+### Finding 1 — the reading circle can never reach three sessions (§AUDIT-03at)
 
 ```js
-function _tomeBonuses() {
-  const out = { deathSave:0, initiative:0, atk:0 };
-  const hasActiveQuest = Object.values(S_story.quests || {}).some(v => v === 'active');
-  (S_story.inventory || []).forEach(item => {
-    if (item.type !== 'tome' || !item.bonus) return;
-    if (item.bonus.deathSave)             out.deathSave += item.bonus.deathSave;
-    if (item.bonus.initiative)            out.initiative += item.bonus.initiative;
-    if (item.bonus.atkWhileQuestActive && hasActiveQuest) out.atk += item.bonus.atkWhileQuestActive;
-  });
-  return out;
-}
+const today = S_story.dayCounter || 0;              // @34741
+const alreadyToday = sessions.includes(today);      // @34742
 ```
 
-**Integration points:**
+**`S_story.dayCounter` occurs exactly once in 38,712 lines — that read — and has exactly one
+commit in the file's entire history: `194a810`, the commit that shipped this layer.** It was never
+declared in `_S_DEFAULTS()`, never written, and does not exist in the earliest surviving build. The
+game's real clock is `S_story.day` (`` `S_story.day + '/49'@36104` ``) and `S_story.gameDay`
+(22 sites) — **and this report names `gameDay`, correctly, twice.**
 
-| System | Location | Effect |
-|--------|----------|--------|
-| Initiative roll | Line 6154 | `d20 + dexMod + _tomeBonuses().initiative` |
-| Death saves | Line 6218 | `d20 + _tomeBonuses().deathSave + _kingsSealBonus` |
-| Attack bonus | Line 9881 | `atkBonus + _tomeBonuses().atk` |
+So `today` is `0` on every render, forever. The first click runs
+`` `S_story.wmSessionsDays.push(today);@34751` `` and thereafter `sessions.includes(0)` is
+permanently true. The button locks at 1/3 reading *"📖 The circle meets again tomorrow."* — a
+promise made by a clock that does not tick. `` `if (n >= 3) S_story.wmBenediktCircleComplete = true;@34759` ``
+never fires.
 
-`atkWhileQuestActive` is condition-gated: it only contributes when at least one quest is in `'active'` state. This prevents the bonus from persisting into a completed-game state where all quests are done.
+**Blast radius:** `quest_wm_03` never completes (no Scholar Kings' History, no favor grant, no
+`wmDoc3Unredacted`); `quest_wm_04` never even *activates*, since its gate is that same flag. **The
+arc stops at 2 of 4.** It is a nine-character fix — `dayCounter` → `gameDay` — and it is the
+highest-value single-token repair the verification program has found.
 
-### C. State Flags
+> ***The delta table earns its keep here: the spec named the right field and the implementation
+> mistyped it. Read against HEAD alone, the code looks self-consistent and the report looks stale.
+> It is the other way around.***
 
-**Defined in `_S_DEFAULTS()` — lines 8428–8431:**
+### Finding 2 — `quest_wm_04` is its own precondition (§AUDIT-03au)
 
-| Flag | Type | Default | Purpose |
-|------|------|---------|---------|
-| `wmLowerArchiveUnlocked` | boolean | `false` | Gates the `[Open Archive]` button in SQ render |
-| `wmDoc1Read` | boolean | `false` | Revocation Letter read |
-| `wmDoc2Read` | boolean | `false` | Field Report read |
-| `wmDoc3Read` | boolean | `false` | Personnel File read (redacted) |
-| `wmDoc3Unredacted` | boolean | `false` | Personnel File unredacted after quest_wm_03 |
-| `wmArchiveComplete` | boolean | `false` | All 3 docs read; triggers reading circle chain |
-| `wmSessionsDays` | array | `[]` | Tracks gameDay values of each Benedikt session |
-| `wmBenediktCircleComplete` | boolean | `false` | 3 sessions attended; triggers quest_wm_04 |
-| `wmFirstResearcherKnown` | boolean | `false` | First Researcher's name learned; gates §XVII |
-
-Also from line 8406: `archiveLetterObtained` — alternative access path to the lower archive (obtained from Yael at CI with favorability ≥ 1 and enough trust).
-
-### D. Archive Documents (`WM_ARCHIVE_DOCS` — line 12359)
-
-Three documents readable in the `_storyWmArchiveModal()` overlay:
-
-| # | Key | Title | Content Summary |
-|---|-----|-------|-----------------|
-| 1 | `wmDoc1Read` | Froberger — Access Revocation Letter | Signed by Archivist I. Voss; revoked 6 months before Froberger's death; cites "speculative endangerment" |
-| 2 | `wmDoc2Read` | Scholar Kings Field Report — Early Void Signs | Three independent observer reports dismissed as anecdote; Froberger's margin note: "I talked to the shepherd." |
-| 3 | `wmDoc3Read` | Personnel File — The First Researcher [REDACTED] | Dates precede Scholar Kings' founding; name redacted; unredacted to "Marta Eilene Vass" after quest_wm_03 |
-
-A fourth document — **The Constructor's Log** — appears in the modal when `vaAllMarksFound` is true (§XVII crossover, line 12405). This creates a single archive UI that grows to accommodate the Void Archaeology revelation without a separate interface.
-
-### E. Archive Modal (`_storyWmArchiveModal()` — line 12381)
-
-Toggle-style overlay (second call removes it). Renders documents in read/unread states with color coding: green border + checkmark for read, amber border + Read button for unread. Document 3 renders in two states: redacted (before quest_wm_03) and unredacted (after, replacing `[REDACTED]` with `Marta Eilene Vass`).
-
-The modal button appears in SQ node render only when `wmLowerArchiveUnlocked` is true (line 14342).
-
-### F. NPC Profiles
-
-**Isolde Voss** (line 7657) — Senior Archivist First Tier. Node: SQ. Begins Neutral; advances to Friendly on quest_wm_02 completion. Key line at Dear Friend: *"He left his research notes in the lower archive. I moved them there myself. I told myself it was protocol. I've been thinking about that since you came in."* — her complicity in the Froberger revocation is acknowledged but never resolved.
-
-**Benedikt Rasp** (line 7674) — ex-Scholar Tier 3, resigned. Runs reading circle from bookbinder's stall. Advances to Dear Friend on quest_wm_03 completion. Disposition at quest_wm_04: *"The Scholar Kings didn't erase her. They just stopped saying the name. Froberger said it in his margin notes every time. That's how I found her. And now you know how I found him."* — this line establishes the discovery chain: First Researcher → Froberger → Benedikt → player.
-
-### G. Quest Chain
-
-**Activation at SQ node (lines 14325–14365):**
-
-```
-quest_wm_01 activates when: actNumber >= 6, not yet active
-quest_wm_02 activates when: quest_wm_01 complete
-quest_wm_03 activates when: wmArchiveComplete (all 3 docs read)
-quest_wm_04 activates when: wmBenediktCircleComplete
+```js
+completion:{ flags:['wmFirstResearcherKnown'] }                      // @11106
+onComplete:[ { kind:'flag_write', set:['wmFirstResearcherKnown'] },  // @11107
+             { kind:'reward', gold:300 }, … ]
 ```
 
-| Quest | Title | Completion | Reward |
-|-------|-------|------------|--------|
-| `quest_wm_01` | Isolde: The Revocation Record | 3 Scholar Seals consumed OR archiveLetterObtained | Lower archive unlocked; seals consumed |
-| `quest_wm_02` | Isolde: Lower Archive | wmDoc1Read AND wmDoc2Read AND wmDoc3Read | Froberger's Field Notes (tome, +1 death save); Isolde → Friendly |
-| `quest_wm_03` | Benedikt: The Reading Circle | wmSessionsDays.length ≥ 3 (different days) | Scholar Kings' History (tome, +2 initiative); Benedikt → Dear Friend; wmDoc3Unredacted |
-| `quest_wm_04` | Benedikt: The First Researcher | wmFirstResearcherKnown | Benedikt's Annotated Copy (tome, +1 atk while quest active); +300gp |
+`wmFirstResearcherKnown` has **one writer in the whole file: that `onComplete`.** Every other
+occurrence is a read. And the engine states its own contract in a comment beside the evaluator —
+*"the declarative completion gate is the ONLY completion path."* The quest completes iff the flag
+is set; the flag is set iff the quest completes.
 
-**Reading circle mechanic (lines 14351–14373):** Each session stores `gameDay` in `wmSessionsDays`. The game checks that the current day is not already in the array before allowing a new session — three sessions must span at least three different in-game days. At 3 sessions, `wmBenediktCircleComplete` is set to `true`.
+**Born that way.** At the ship tree the shape was `completeFn:() => !!(S_story.wmFirstResearcherKnown)`
+with the flag set inside the same quest's reward block. §ARCH-01 W7c then transcribed the loop
+faithfully into UQF. *A faithful migration of a broken contract produces a broken contract that now
+looks modern.*
+
+**The intended writer is written down** — in this quest's own hint:
+`` `hint:'Return to the lower archive and read the unredacted personnel file.'@11110` ``. Reading
+the unredacted file should set the flag. It never did.
+
+Three consequences:
+
+- **(a)** Benedikt's Annotated Copy is never granted, so the `atkWhileQuestActive` mechanic — an
+  entire designed bonus class — has never contributed to a single attack roll; and +300gp is never
+  paid.
+- **(b)** `` `S_story.wmDoc3Unredacted && S_story.wmFirstResearcherKnown@27841` `` guards the
+  substitution, so **`Marta Eilene Vass` — one occurrence in the file, at
+  `` `Marta Eilene Vass — First Tier@27842` `` — has never rendered.** The arc's declared climax is
+  a string in a dead branch. And `` `const _vaReady = (S_story.ngPlusRun || 0) >= 1@31623` ``
+  requires the same flag, so Layer 52 inherits the block.
+- **(c)** The `` `Read (unredacted)' : '📄 Read'@27850` `` label is computed only in the branch
+  where the body is null — and `wmDoc3Unredacted` forces the body non-null. **The label is
+  unreachable by construction**, at the ship tree and at HEAD.
+
+**A second wall behind the first.** New Game+ restores six fields
+(`` `const savedNgRun@24024` `` and its neighbours) and resets the rest from `_S_DEFAULTS()`.
+`wmFirstResearcherKnown` is not among the six — while `_vaReady` demands `ngPlusRun >= 1` **and**
+that flag. So even a repaired `quest_wm_04` would have its result erased by the exact transition
+§XVII requires. *Two gates in series, each individually sufficient to close the door.*
+
+### Finding 3 — the tome the arc is named for, and the two that arrive
+
+Of three specified tomes, **one is obtainable.** Froberger's Field Notes (`quest_wm_02`, +1 death
+save) is reachable and works — and it is load-bearing elsewhere: the engine reads it as a key
+substitute (*"Antecedent Seal or Froberger's Field Notes"*) and as a callback in another arc's
+narration. The +2 initiative and +1 atk tomes are behind Finding 1 and Finding 2 respectively.
+
+### Finding 4 — one node, two cities (§AUDIT-03av)
+
+The node's label is *Scholar's Quarter — **Weimar***, and the file says Weimar 517 times. It says
+**Nuremberg** five times, and four of those attach to this node — including the Warrant's Board
+rumor that recruits the player into the arc:
+`` `Isolde in Nuremberg is short three of them@11084` ``, and an NPC whose occupation is
+`` `occupation:"secondary acquisitions, Nuremberg archive"@22953` ``. The player reads *Weimar* in
+the header and *Nuremberg* on the board that sent them there. `NUE` is Nuremberg's airport code;
+the content is Weimar's. Not a dead code — a live node with **two mutually exclusive place names in
+player-facing strings**, which no existing gate can see.
 
 ---
 
-## III. Design Decisions and Trade-offs
+## VI. Post-Mortem Register — the report's own verdicts, re-scored
 
-### A. Two Access Paths for quest_wm_01
+**What worked — upheld.** The three-document structure (bureaucratic record → dismissed evidence →
+redacted name) is intact and reads as designed. The Isolde/Benedikt split — institution reckoning
+with itself vs. the outsider who did the work anyway — is carried entirely by dialogue that
+survives verbatim. And the 4th-document call was right: the archive is one interface that grows
+across two layers, and §XVII plugs into it without a second UI.
 
-The archive access gate (3 Scholar Seals OR archive letter) provides a skill-based alternative to grinding the scholars_guard encounter. Players with high Yael favorability can obtain the letter at CI before reaching Weimar — rewarding prior relationship building. Players who ignored that NPC arc fight guards. Both paths complete the quest; neither is faster in all cases.
+**What could be better — 1 of 3 upheld.**
 
-### B. Reading Circle as a Time Gate
+| Original bullet | Re-scored |
+|---|---|
+| "the reading circle mechanic is invisible" | **WRONG WHEN WRITTEN** — the `(N/3)` counter and the day-lock message shipped in the same commit |
+| "no notification prompt" for the unredaction | **UPHELD, and understated** — there is nothing to notify about (Finding 2) |
+| "the gap to the §XXI Benedikt callback is long" | **UNDERSTATED** — the callback is unreachable at any favor the arc can produce |
 
-Three sessions on different `gameDay` values is a soft time gate. The player must travel away from SQ and return twice. This prevents rushing Benedikt's arc immediately on arriving in Weimar — the reading circle mechanic implies that trust accrues over time, not in a single sitting. The `wmSessionsDays` array enforces this without a wall.
-
-### C. `wmDoc3Unredacted` As a Separate Flag from `wmDoc3Read`
-
-Document 3 can be read in redacted form (sets `wmDoc3Read`) without unredacting it. `wmDoc3Unredacted` only sets on quest_wm_03 completion. This distinction allows the archive modal to render the document twice — once as the institutional record the player found, once as the corrected version Benedikt enabled. A player who reads Document 3 before completing the reading circle gets the redacted version; they must return after quest_wm_03 to see the unredacted form.
-
-### D. `atkWhileQuestActive` Condition
-
-Benedikt's Annotated Copy provides `+1 atk` only while at least one quest is active. This prevents the bonus from inflating late-game numbers after all quests are complete. It also fits the narrative: studying actively, while engaged in a task, sharpens focus. A resting scholar doesn't swing harder.
-
----
-
-## IV. Post-Mortem Notes
-
-### What Worked
-
-- The three-document reveal structure (bureaucratic record → dismissed evidence → redacted name) recreates the experience of archival research. Each document adds context without explaining everything; the player assembles the picture.
-- The Isolde/Benedikt NPC pair divides the arc cleanly: Isolde represents institutional authority reluctantly reckoning with her choices; Benedikt represents the outside researcher who did what the institution wouldn't. The player navigates both to complete the arc.
-- Connecting the archive modal to §XVII's Constructor's Log (as Document 4, visible when `vaAllMarksFound`) was the correct architectural choice. The archive is now a persistent interface that grows as the player learns more — the same place to return to across two layers of investigation.
-
-### What Could Be Better
-
-- The reading circle mechanic is invisible: the game tells the player there are three sessions, but there is no UI showing "Sessions attended: 2/3" or when the next session is available. A player who doesn't track in-game days can't tell how far along they are.
-- `wmDoc3Unredacted` requires returning to the archive after quest_wm_03. There is no notification prompt. Players who don't backtrack will miss the unredacted name and the `wmFirstResearcherKnown` flag will not advance via normal play (it sets on quest_wm_04 completion, not on re-reading Document 3).
-- Benedikt Rasp becomes Dear Friend at quest_wm_03 completion, but there are no further conversations with him in the base game after quest_wm_04. The Void Shaman arc (§XXI) adds a Benedikt callback for `vsShamanPersuaded` players, but the gap between quest_wm_04 and that callback is long.
+> ***A post-mortem is a claim like any other. This one named the exact flag in the exact sentence
+> that contains its own disproof — "it sets on quest_wm_04 completion, not on re-reading Document
+> 3" — and filed it as a backtracking annoyance. When a note tells you a flag's only writer, go
+> read what gates that writer.***
 
 ---
 
-## V. File References
+## VII. Playability assessment
 
-| File | Location | Content |
-|------|----------|---------|
-| `roll2hit-v3.html` | Line 4623 | `scholars_guard` monster definition |
-| `roll2hit-v3.html` | Line 5049 | `scholars_guard` drop → Scholar Kings' Seal |
-| `roll2hit-v3.html` | Line 5411 | `scholars_qtr` terrain pool — includes scholars_guard |
-| `roll2hit-v3.html` | Lines 7657–7668 | Isolde Voss NPC profile |
-| `roll2hit-v3.html` | Lines 7674–7676 | Benedikt Rasp NPC profile |
-| `roll2hit-v3.html` | Lines 7979–8005 | quest_wm_01 through quest_wm_04 QUEST_DB entries |
-| `roll2hit-v3.html` | Lines 8428–8431 | Weimar state flags in `_S_DEFAULTS()` |
-| `roll2hit-v3.html` | Line 8452 | `_tomeBonuses()` function |
-| `roll2hit-v3.html` | Lines 6154, 6218, 9881 | Tome bonus integration: initiative, death saves, atk |
-| `roll2hit-v3.html` | Lines 12359–12379 | `WM_ARCHIVE_DOCS` const — 3 documents |
-| `roll2hit-v3.html` | Lines 12381–12455 | `_storyWmArchiveModal()` function |
-| `roll2hit-v3.html` | Lines 13064–13099 | Quest reward handlers — tome grants, flag sets |
-| `roll2hit-v3.html` | Lines 14325–14373 | Quest activation chain and reading circle logic at SQ |
-| `plan.md` | §XVI | Original design directive |
-| `lab-report-ng-plus-remembrance.md` | §II.B | `wmFirstResearcherKnown` cross-reference — Entry 42 prerequisite |
+**What the layer promises the player:** a second reason to return to Weimar; a research verb;
+three permanent bonuses earned by reading; a trust gate paid in days rather than gold; and a name
+at the end of it that reframes the whole Froberger myth.
+
+**What the layer currently delivers:** the first two quests. The player fights guards or arrives
+with Yael's letter, unlocks the archive, reads three documents, receives the death-save tome — a
+genuinely good ninety minutes — and then meets a button that says the circle meets again tomorrow
+and always will. Benedikt never becomes anyone. The redacted name stays redacted.
+
+**Cost to close the gap:** Finding 1 is one identifier. Finding 2 is one bit moved to the archive
+read handler. Finding 3 resolves itself once those land, and §AUDIT-03ar (`set:1` → `set:2`) then
+becomes live rather than inert. **Four small edits restore two quests, two tomes, an NPC
+relationship tier, a named reveal, and the entry condition for an entire later layer** — the best
+content-per-edit ratio the verification program has measured.
+
+---
+
+## VIII. Defects filed
+
+| Row | Severity | Summary |
+|---|---|---|
+| **§AUDIT-03at** | 🟢 no design call | `S_story.dayCounter` (1 occurrence, 1 commit, 0 writers, ever) → `gameDay`; unblocks `quest_wm_03` and `quest_wm_04` |
+| **§AUDIT-03au** | 🟢 no design call | `quest_wm_04`'s completion is its own effect; plus NG+ wipes the flag `_vaReady` requires; plus a dead button label |
+| **§AUDIT-03av** | 🟡 small design call | `NUE` carries a Weimar label and four Nuremberg player-facing strings |
+| §AUDIT-03ar | *corroborated* | this report **specifies** Dear Friend in three places, so it is a spec→shipped delta, not an ambiguity — and the row's premise needs one correction: `quest_wm_03`'s `onComplete` never runs, so Benedikt's favor is **0**, not 1. The fix is inert until §AUDIT-03at lands |
+| §AUDIT-03b | *corroborated* | `quest_wm_01`'s `npc:` stamp names Sweelinck while its own text quotes Isolde — authoring metadata, inert |
+
+---
+
+## IX. Provenance
+
+Original file-reference table (lines 4623 · 5049 · 5411 · 7657 · 7674 · 7979 · 8428 · 8452 · 6154 ·
+6218 · 9881 · 12359 · 12381 · 13064 · 14325) is **superseded** — the file has grown from ~14 k to
+38,712 lines. Every pointer in this document is a live `` `symbol@line` `` anchor instead. The
+original directive lived in `plan.md` §XVI, now split into `CONTRIBUTING.md` + `BACKLOG.md`;
+closed design text migrated to `plan-archive.md`. Home doc: `story.md` §Layer 51 (✅ Implemented)
+and `world.md` §Weimar Scholar Gate. Cross-reference: `lab-report-ng-plus-remembrance.md` §II.B
+(`wmFirstResearcherKnown` as the Entry 42 prerequisite — see Finding 2b before relying on it).
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
