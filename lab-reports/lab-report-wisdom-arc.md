@@ -1,454 +1,348 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report: The Wisdom Arc — Robert Greene's Laws of Human Nature as Quest Mechanics
+# Lab Report: §WISDOM-01 — The Book of Human Nature
 
-**Author:** Claude (Sonnet 4.6) + roll2hit.com design sessions  
-**Date:** 2026-05-28  
-**Classification:** Arc Design / Companion Quest / Behavioral Wisdom Systems  
-**Audience:** Electrical Engineering / Computer Science background; video game designer / programmer  
-**Depends on:** §ALCHEMY-01 complete (personalLegendComplete = true)
+**Original filing:** 2026-05-28 · Claude (Sonnet 4.6) + roll2hit.com design sessions
+**Classification:** Arc design / companion quest / behavioural-wisdom systems
+**Verified:** 2026-08-13 (§DOC-02as) against `roll2hit-v3.html` @ 38,712 lines
+**Depends on:** §ALCHEMY-01 (`personalLegendComplete`)
+**Status:** ✅ SHIPPED `e339aeb` (2026-05-28 21:25:08 −0700) · ⛔ **UNREACHABLE at HEAD — 8 of 8 quests**
 
 ---
 
 ## Abstract
 
-This report documents the design and mission structure for **§WISDOM-01: The Book of Human Nature** — a sequel arc for Roen, the shepherd-philosopher introduced in §ALCHEMY-01, in which he moves from self-knowledge (Personal Legend) to outward knowledge (human behavior). The source material is Robert Greene's *The Laws of Human Nature* (2018) and *The 48 Laws of Power* (1998). Six laws are extracted, adapted to D&D skill-check mechanics, and applied to six existing game nodes. Each law functions as a lens for a skill check that would not exist without it — the player does not collect wisdom passively but uses each law to read a real situation at a real location. This is the defining difference from §ALCHEMY-01 (wisdom-as-observation) versus §WISDOM-01 (wisdom-as-tool). Eight new quests are proposed, two new items, and one new named NPC (Master Fenn Ardley, deceased — the author of the text, documented through fragments). Roen's commentary on each law in his "Philosophy Stoner" register provides the arc's voice.
+This report specified **§WISDOM-01: The Book of Human Nature**, a sequel arc for Roen — the
+shepherd-philosopher of §ALCHEMY-01 — moving him from self-knowledge to the reading of other
+people. Six laws are extracted from Robert Greene's *The Laws of Human Nature* (2018) and *The 48
+Laws of Power* (1998), each adapted to one skill check at one existing node, plus a hook, a
+resolution and three items.
+
+**Verification result.** The arc shipped **the same evening the report was filed** — the report's
+own `Status: implementation pending` was superseded within four hours — and it shipped with unusual
+fidelity: **8 of 8 quest IDs, 8 of 8 state-flag names and 5 of 6 stat/DC pairs are byte-exact
+against the birth tree**, and survived the whole §ARCH-01 UQF migration intact. One law was
+re-scened at birth (W4), one was never built as a roll (W6), and three named symbols never existed.
+
+**And none of it can be played.** The arc's hub is Visby (`VS`), which was **not a `NODE_MAP` key
+on the night it shipped**, was accidentally re-minted three days later by an unrelated import, and
+sits today as the **5th of 5 occupants of cell `12,198`** — so `storyRender` never reaches it. The
+flag `wisHookReceived` has exactly one writer, inside that block. All eight quests are therefore
+dead: three by node, five by flag. The arc has been live and unplayable for **77 days**.
+
+> The report closes with Roen saying *"I suppose the laws work whether or not you want them to."*
+> They do. So does cell primacy.
 
 ---
 
-## I. Source Material — Robert Greene Extracted
+## I. Intent, inspiration, and what it adds to play
 
-### 1.1 The two relevant Greene works
+**The inspiration.** Greene's two books are the arc's source, and the extraction is disciplined
+rather than decorative. The 48 Laws are *prescriptive and tactical*; the Laws of Human Nature are
+*descriptive and psychological*. The report keeps both registers and states the admission criteria
+up front — a law is usable only if it is **mechanizable** (a stat/DC pair with a real pass/fail
+meaning), **observable in context** (enactable through an NPC at a node that already exists), and
+**morally complex** (a tool, not a cheat code: it makes the player an accurate reader, not a
+manipulator).
 
-| Work | Year | Frame | Core claim |
-|------|------|-------|-----------|
-| *The 48 Laws of Power* | 1998 | Strategic; amoral; historical examples | Human interaction follows predictable power dynamics; ignoring the laws puts you at a disadvantage |
-| *The Laws of Human Nature* | 2018 | Psychological; observational; evolutionary | Humans are driven by forces they don't acknowledge; naming those forces gives you perspective on others and yourself |
+**What the feature adds to the game.** *The Shattered Codex* gives the player three verbs — walk,
+fight, talk. §WISDOM-01 adds a fourth: **read a person.** Its design claim is the sharpest in the
+companion-arc family:
 
-Both works draw on historical figures (Machiavelli, Sun Tzu, Queen Elizabeth I, Howard Hughes, Pericles, Martin Luther King Jr.), philosophical traditions (Stoic, Jungian, Nietzschean), and behavioral science. The 48 Laws are prescriptive tactical rules; the Laws of Human Nature are descriptive psychological observations. D&D can use both registers.
+- **Wisdom-as-tool, not wisdom-as-quote.** §ALCHEMY-01's beats are observational — Roen notices
+  something, names it, moves on. §WISDOM-01 inverts that: each fragment is a *key*. The law is
+  printed in the quest description, then the game immediately produces a situation where the law
+  applies, then a skill check tests whether the player can apply it. A player who reaches the
+  Tilbury docks without the fragment cannot make the Mask Check at all.
+- **It adds no lore — it adds new ways to READ lore that already exists.** Every fragment is a
+  second look at a scene the player has already walked through: Dorit's politeness at Saltwick,
+  Keel's omission aboard the Intercept, the warlord's corner table at the Broken Tooth. This is the
+  cheapest content in the game per unit of felt depth, because it re-uses the world rather than
+  extending it. **Nodes required: 0.**
+- **It rewards having played the rest of the game.** Four of six fragments gate on another arc's
+  completion flag (`saltwickAccessed`, `sbResolved`, `roenAlchemistMet`, `personalLegendComplete`),
+  so the arc's difficulty curve is *narrative coverage*, not level.
+- **It is the corpus's first parallel collection.** Five fragments activate at once and complete in
+  any order — a replayable shape in which two players meet the laws in different sequences. (§V
+  measures how far that thesis survived contact with the build.)
+- **Roen's voice is the payload.** The law arrives from Ardley in a scholar's register; the
+  application arrives from Roen in the "Philosophy Stoner" register — profound at the wrong scale,
+  with total sincerity: *"There is a cloth merchant at the Tilbury dock who holds bolts of fabric
+  the way my grandfather held a lamb — which is to say, like something that could run. I find this
+  interesting."*
 
-### 1.2 Extraction criteria
-
-A law is usable in *The Shattered Codex* if it meets all three conditions:
-
-1. **Mechanizable** — can be expressed as a skill check stat/DC pair with a clear pass/fail meaning
-2. **Observable in context** — the law can be enacted through an existing or minimally new NPC at an existing node
-3. **Carries moral complexity** — the law is a tool, not a cheat code; using it does not make the player a manipulator but an accurate reader
-
-### 1.3 Laws rejected and why
-
-| Law | Reason rejected |
-|-----|----------------|
-| 48L-1: Never outshine the master | Requires court-hierarchy NPCs not yet in the world |
-| 48L-6: Court attention at all costs | Too antagonistic to the game's tone |
-| LHN-2: Transform self-love into empathy | Already enacted in §ALCHEMY-01 (Roen and the Malta fisherman) |
-| LHN-11: Beware grandiosity | No existing NPC embodies the grandiose arc in a testable way |
-| LHN-14: Resist conformity | Requires group-pressure scene; not available at current nodes |
-| LHN-17: Seize the historical moment | Passive; no skill check available; deferred to narrative only |
-| LHN-18: Meditate on mortality | Powerful but better as §LXXIII tidal chain flavor than a quest |
-
----
-
-## II. The Six Selected Laws
-
-### 2.1 Selection table
-
-| Code | Law | Source | Stat | DC | Node |
-|------|-----|--------|------|----|------|
-| W1 | The Law of Role-playing — *See through masks* | LHN-3 | WIS Insight | 13 | DK |
-| W2 | The Law of Aggression — *See the hostility around you* | LHN-16 | WIS Insight | 12 | SK |
-| W3 | Discover Each Man's Thumbscrew | 48L-33 | INT Investigation | 11 | SB |
-| W4 | The Law of Shortsightedness — *Elevate your perspective* | LHN-6 | INT History | 12 | BK |
-| W5 | Assume Formlessness — *Adapt; rigidity is the vulnerability* | 48L-48 | WIS Insight | 12 | AE |
-| W6 | The Law of Repression — *Confront your shadow* | LHN-9 | WIS Save | 14 | VS |
-
-### 2.2 Why these six
-
-**W1 (Masks/DK):** The game world already has two mask-wearing NPCs (Aldous Wren-Pembury, Halvard Fehn). A new merchant at DK who follows the same pattern is not redundant — it's the law in practice. The fragment teaches the player to see it before the deception completes.
-
-**W2 (Aggression/SK):** Dorit at SK is polite and contained. Roen, watching the interaction during the player's quest_sk_02 follow-up, notices something the player missed. The law gives the player retroactive access: with the fragment, a new WIS check lets them soften what would otherwise become a harder negotiation.
-
-**W3 (Thumbscrew/SB):** Vera Keel's test was about something specific. The Letter of Marque arc ended with an unresolved thread ("what she was looking for, who sent her"). The W3 fragment allows the player to read Keel's archived log in the chart room and understand *what* she was protecting. INT check. Does not fully resolve the Keel thread — that is deliberate — but names the mechanism.
-
-**W4 (Shortsightedness/BK):** Birka (§DESIGN-03 planned) is a guild city. Guild elders make deals. The W4 fragment teaches the player to project outcomes — a guild deal that looks profitable in the short term has a pattern that names what it will cost. INT History: what has happened before when this kind of deal was made?
-
-**W5 (Formlessness/AE):** Athens/Alexandria already has Roen's §ALCHEMY-01 alchemist beat. The W5 fragment triggers after roenAlchemistMet — the player can revisit AE with Roen and encounter a philosophical debate. The law teaches the player to release a committed position when the evidence has shifted. WIS Insight: recognize the moment when holding your argument becomes a liability.
-
-**W6 (Repression/VS):** Visby underground (§DUNGEON-01 planned) will have a shadow/mirror element. The W6 fragment enables a non-combat resolution to the shadow encounter: accept what it reflects rather than fight it. WIS saving throw: the shadow tests whether you can receive its observation without flinching. The combat option remains. Accepting gives better loot.
+**The secondary arc, told entirely by implication.** Master Fenn Ardley — court historian, never
+met, dead before the game starts — documented six behaviour patterns, named the court treasurer's
+one out loud to the full council, and was dismissed before the applause finished. The treasurer
+scattered the text and held the city dock contracts for sixteen more years, then lost them to a
+Baltic competitor who had read a dispersed copy. *The laws were proven by the act of suppressing
+them.* The player never meets Ardley. They only meet what he saw.
 
 ---
 
-## III. Mission Structure
+## II. Method
 
-### 3.1 Quest list
+Fourteen instruments from the §DOC-02 program. The load-bearing ones here:
 
-| Quest ID | Type | Node | Title | Mechanic | Flag set |
-|----------|------|------|-------|----------|---------|
-| quest_wis_00 | side | VS | The Manuscript Hook | storyRender button | wisHookReceived |
-| quest_wis_01 | skill_check WIS DC 13 | DK | Mask Check | Insight: read Silas Vance | wisPage1_masks |
-| quest_wis_02 | skill_check WIS DC 12 | SK | What Dorit Already Knew | Insight: read contained hostility | wisPage2_aggression |
-| quest_wis_03 | skill_check INT DC 11 | SB | The Chart Room | Investigation: Keel's archived log | wisPage3_thumbscrew |
-| quest_wis_04 | skill_check INT DC 12 | BK | Three Years Out | History: name the guild deal's outcome | wisPage4_sight |
-| quest_wis_05 | skill_check WIS DC 12 | AE | The Philosopher's Pivot | Insight: release the argument | wisPage5_form |
-| quest_wis_06 | skill_check WIS DC 14 | VS | The Shadow Room | Saving throw: accept the reflection | wisPage6_shadow |
-| quest_wis_07 | side | VS | Ardley's Book | completeFn: all 6 wisPage flags | personalLegendMature |
-
-**Total:** 8 quests. Running total after §WISDOM-01: ~159 live.
-
-### 3.2 Activation chain
-
-```
-§ALCHEMY-01 complete (personalLegendComplete = true)
-   → quest_wis_00 activates at VS
-   → storyRender button: wisHookReceived = true; creates 'Pages of the Ardley Manuscript'
-   
-quest_wis_00 complete (wisHookReceived)
-   → quest_wis_01–06 activate at their respective nodes
-   → each can complete in any order (no sequential dependency)
-   
-All 6 wisPage flags set
-   → quest_wis_07 completeFn passes
-   → storyRender button at VS fires resolution
-   → 'Pages of the Ardley Manuscript' consumed; 'Ardley's Complete Laws' created
-   → personalLegendMature = true; +600 XP; knowledge entry
-```
-
-### 3.3 Flag specification
-
-New flags to add to `_S_DEFAULTS()`:
-
-```javascript
-// §WISDOM-01: The Book of Human Nature
-wisHookReceived: false,
-wisPage1_masks: false,
-wisPage2_aggression: false,
-wisPage3_thumbscrew: false,
-wisPage4_sight: false,
-wisPage5_form: false,
-wisPage6_shadow: false,
-personalLegendMature: false,
-```
-
-### 3.4 Quest detail — per quest
+| # | Instrument | Applied |
+|---|-----------|---------|
+| 1 | Batch census — every named symbol through one `grep -c` before reading a line | 36 names, one pass |
+| 4 | `git log -S <symbol>` separates **RETIRED** from **NOT SHIPPED** | 5 dead names, all 0 commits |
+| 7 | Check the report against its **siblings**, not only HEAD | `lab-report-kindness-calculus.md` §IV |
+| 8/18 | HEAD cannot adjudicate the past — read the **birth tree** | `git show e339aeb:` (same-day) |
+| 19 | **Reachability** — can the player stand where the content is? | `CELL_GRID` primacy, all 6 nodes |
+| 31 | `num` is the node's identity; a code is a citation | **6 of 7 codes recovered by `num`** |
+| 37 | For every flag: who writes it, who reads it, **can the writer run** | `wisHookReceived`, `wisArchiveLetter` |
 
 ---
 
-**quest_wis_00** — The Manuscript Hook  
-`type: 'side', node: VS, activateCond: () => S_story.personalLegendComplete`
+## III. As-built inventory
 
-*Roen appears at Visby with a tattered portfolio. He has been corresponding with the archivist of the underground guild — apparently the guild keeps a copy of a text that was quietly suppressed three decades ago. He says the author was a court historian named Ardley. He says Ardley documented things no one wanted documented. He says the title page calls it "A Complete Account of Human Nature in Its Unreformed State, Vol. I." He says there are at least six more volumes scattered across the world. He looks very happy about this.*
+| Structure | Shipped as | Anchor |
+|---|---|---|
+| 8 quests | `quest_wis_00`–`_07`, all `schema:'UQF-1.0'` | `quest_wis_00: { id:'quest_wis_00'@13333` |
+| 10 state flags | 8 specified + `visbyUnderground` + `wisArchiveLetter` | `// §WISDOM-01: The Book of Human Nature@23275` |
+| Hub surface | one node hook, four exclusive states | `_runNodeHook('wis-vs-hub', node);@36029` |
+| Underground | separate hook, one descent button | `S_story.visbyUnderground = true;@33439` |
+| Hook writer | **the arc's only entry point** | `S_story.wisHookReceived = true;@33520` |
+| Resolution | +400gp, +600 XP, item swap, knowledge entry | `S_story.personalLegendMature = true;@33472` |
+| Shadow branch A | accept — flag, Shadow Shard, +350 XP | `Accept the reflection (receive the shadow@33489` |
+| Shadow branch B | fight — synthetic battle code `VS_SHADOW` | `label:'Shadow — The Mirror Construct'@33506` |
+| 3 items | Pages 📖 · Shadow Shard 🔮 · Complete Laws 📚 | all three live, `sell:0/25/50` as specified |
 
-**storyRender button:** "Help Roen collect the pages"  
-`wisHookReceived = true; inv.push({ name:'Pages of the Ardley Manuscript', icon:'📖', type:'misc', desc:'A growing portfolio of Ardley\'s fragments, collected by Roen. Six more sections needed.', sell:0 })`
-
-XP: 100 on accept.
-
----
-
-**quest_wis_01** — Mask Check (W1: The Law of Role-playing)  
-`type: 'skill_check', stat: 'WIS', skill: 'Insight', dc: 13, node: DK, activateCond: () => S_story.wisHookReceived`
-
-Fragment text (shown in quest description):  
-*"Every person wears a social mask. The mask is not the lie — the mask IS the performance. What you are looking for is not the lie beneath the mask but the gap: the moment when the performance requires more effort than usual. That effort is the tell."*  
-*— Master Fenn Ardley, 'A Complete Account,' Ch. III*
-
-Roen's commentary: *"There is a cloth merchant at the Tilbury dock who holds bolts of fabric the way my grandfather held a lamb — which is to say, like something that could run. I find this interesting."*
-
-**Context NPC:** Silas Vance, cloth merchant at DK. New NPC, no prior flags. His hands have rope callousing, not bale callousing — he was a rigger, not a merchant. He is not dangerous (no combat); he is running a quiet re-export scheme. Passing the check reveals his past and earns his cooperation (he knows a route discount at SK).
-
-`onPass: () => { S_story.wisPage1_masks = true; S_story.gold += 150; }`  
-`onFail: () => { S_story.wisPage1_masks = false; }` (retry available)  
-XP: 250 pass.
+The three quests carrying no roll (`_00`, `_06`, `_07`) ship as `type:'side'` with declarative
+`completion` gates. Both shadow paths converge correctly: `completion:{ flagsAny:['wisPage6_shadow'],
+battles:['VS_SHADOW'] }@13480` is a genuine OR — `_matchCompletionLeaf`'s `flagsAny` + `battles`
+form **one OR-group**, and the resolution quest's five-flag `flags` list is AND'd against it, which
+is exactly the compound the migration comment claims. **The gate semantics are correct.**
 
 ---
 
-**quest_wis_02** — What Dorit Already Knew (W2: The Law of Aggression)  
-`type: 'skill_check', stat: 'WIS', skill: 'Insight', dc: 12, node: SK, activateCond: () => S_story.wisHookReceived && S_story.saltwickAccessed`
+## IV. Spec → shipped delta table
 
-Fragment text:  
-*"Aggression does not announce itself. It dresses as patience, as courtesy, as professional neutrality. You will see it only in small signals: the way someone's voice drops one register when they say a name, the way they touch an object on their desk before they answer. These are not accidents. They are the leak."*  
-*— Master Fenn Ardley, 'A Complete Account,' Ch. XVI*
+| # | Report claim | HEAD | Verdict |
+|---|---|---|---|
+| 1 | 8 quests `quest_wis_00`–`_07` | all 8 present | ✅ exact |
+| 2 | 8 flags in `_S_DEFAULTS()` | all 8, verbatim names | ✅ exact |
+| 3 | W1 WIS Insight 13 · W2 WIS Insight 12 · W3 INT Investigation 11 · W5 WIS Insight 12 | identical | ✅ 4/4 |
+| 4 | §2.1: **W4 = INT History 12 @ BK** | INT **Investigation** 12 — skill changed **at birth** | ⚠️ delta |
+| 5 | §2.2: W4 = *"Birka … a guild city"*, timber-supply deal, `birkaAccessed`, `birkaRepImproved` | **Never built.** Shipped as the Mordus/shaman stalemate at Visby's Broken Tooth, retitled *"The Stalemate Cost"* | ❌ NOT SHIPPED (see §VI) |
+| 6 | §2.1: **W6 = WIS Save 14 @ VS** | `quest_wis_06` is `type:'side'`, `bits:[]`; the accept path is an unconditional button. **No d20 anywhere.** | ❌ NOT SHIPPED → §AUDIT-03ad |
+| 7 | W5 sets `stoic_letter` | shipped as `{ kind:'flag_write', set:['wisArchiveLetter'] }@13457` — **1 writer, 0 readers** | ⚠️ renamed + inert |
+| 8 | W6 fail → *"Shadow Construct (medium)"* | `MONSTER_POOL.shadow`, ac 12 / hp 16, `tier:'easy'` — no such monster name; tier one band lower | ⚠️ delta |
+| 9 | Hook grants +100 XP on accept | `S_story.xp = (S_story.xp||0) + 100;@33521` | ✅ exact |
+| 10 | Resolution: +600 XP, +400gp, splice Pages, push Complete Laws, knowledge entry | all five, in order | ✅ exact |
+| 11 | Item table (3 rows: icon, sell, source) | all three exact | ✅ 3/3 |
+| 12 | *"Running total after §WISDOM-01: ~159 live"* | **2,853 quests** at HEAD (17.9×) | 🕰 corpus grew |
+| 13 | §V thesis: *"first arc with parallel fragment collection … any order"* | **True for W1–W5, false for W6** — the shadow choice renders only at `_allFive` | ⚠️ thesis partial |
+| 14 | Q1: gate W6 in a VS `storyRender` block rather than on §DUNGEON-01 | shipped exactly that way | ✅ recommendation adopted |
+| 15 | Q2: Roen commentary in quest descriptions only (Option B) | shipped exactly that way | ✅ recommendation adopted |
+| 16 | Q3: `personalLegendMature` downstream *"left for the next session"* | it got one — the §ALCHEMY-01 epilogue at `KIR` reads it | ✅ resolved |
+| 17 | Q4: Keel thread *"shape before answer"* | W3's knowledge entry names the Baltic survey data and stops | ✅ as designed |
 
-Roen's commentary: *"Dorit touched the docking ledger four times while you were talking. Not to write anything. Just to touch it. I have been thinking about what that means for several days."*
-
-**Context:** Dorit at SK has always been slightly contained. The W2 fragment allows the player to read her properly: she is not hostile to the player but to the situation the player represents (irregular docking, memory of Aldous's era). Passing the check reveals what Dorit is actually protecting (the dry dock contracts, which are contingent on Aldous's old seal remaining unexamined). Does not unlock new content — but adds a knowledge entry that connects §PORT-01 to §SPARK-01 in a new way.
-
-`onPass: () => { S_story.wisPage2_aggression = true; /* knowledge entry */ }`  
-XP: 250 pass.
-
----
-
-**quest_wis_03** — The Chart Room (W3: Discover Each Man's Thumbscrew)  
-`type: 'skill_check', stat: 'INT', skill: 'Investigation', dc: 11, node: SB, activateCond: () => S_story.wisHookReceived && (S_story.sbResolved || S_story.sbPapersRead)`
-
-Fragment text:  
-*"Every person has one thing they are trying to protect above all others. It is not always what they say they are protecting. Look for the thing they never mention — the omission is usually more revealing than the declaration. Their thumbscrew is the thing that makes them go quiet."*  
-*— Master Fenn Ardley, 'A Complete Account,' Ch. XXXIII*
-
-Roen's commentary: *"Keel talked about the commission. She talked about the eastern run. She talked about the date. She did not talk about the navigator. Not once. In my experience, people do not avoid talking about things that are not important."*
-
-**Context:** The chart room at SB has an archived log from the night of the intercept. Passing the check identifies what Keel was actually protecting: not the commission (void) and not the run (exploratory) but the navigator's notes, which contain survey data for a sea route that would reroute highland timber through the Eastern Reach and cut Tilbury out entirely. This partially resolves the Keel thread. Her "test" was to see if the player would notice. The navigator's notes are gone — Keel took them. But the player now knows the shape of what she wanted.
-
-`onPass: () => { S_story.wisPage3_thumbscrew = true; /* knowledge entry about Keel's navigator */ }`  
-XP: 300 pass.
+**Instrument 4 — five names, zero commits in the file's entire history.** `birkaAccessed`,
+`birkaRepImproved`, `stoic_letter`, `"Three Years Out"`, `"Shadow Construct"`. **NOT SHIPPED, not
+retired** — they were written from intent and never existed for one commit. Kept here, per program
+rule, because a silently deleted claim reads as one that held.
 
 ---
 
-**quest_wis_04** — Three Years Out (W4: The Law of Shortsightedness)  
-`type: 'skill_check', stat: 'INT', skill: 'History', dc: 12, node: BK, activateCond: () => S_story.wisHookReceived && S_story.birkaAccessed`
+## V. Reachability — the arc is 100 % dead (instrument 19)
 
-Fragment text:  
-*"The present moment is always vivid and always incomplete. The person who can force themselves to ask 'what will this look like in three years?' is rare, because the exercise requires abandoning the comfort of the immediate. The guild man who takes the good deal today rarely asks what it will cost his successor."*  
-*— Master Fenn Ardley, 'A Complete Account,' Ch. VI*
+`CELL_GRID` builds each cell in `NODE_MAP` declaration order and **only `list[0]` is ever
+reachable**, because `S_story.currentCode` is assigned at exactly two sites (§AUDIT-03x / §DX-02w).
+Re-derived this pass: **244 cells, reproduced exactly.**
 
-Roen's commentary: *"The guild master is very pleased with the new Baltic contract. I asked him what happens when the Highland timber season fails. He said the timber season does not fail. I said it failed twice in the last thirty years. He said that is different. I have been thinking about what 'different' means."*
+| Node | Cell | Occupants | Primary | Arc content |
+|---|---|---|---|---|
+| **`VS`** | `12,198` | 5 | **`VBY`** | ⛔ hook · shadow room · resolution — `quest_wis_00/_06/_07` |
+| `LCY` | `18,180` | 3 | `LCY` | ✅ reachable — W1 |
+| `MME` | `15,178` | 1 | `MME` | ✅ reachable — W2 |
+| `GCI` | `20,177` | 2 | `GCI` | ✅ reachable — W3 |
+| **`BK`** | `10,197` | 2 | **`LHR`** | ⛔ W4 (and the wrong node anyway — §VI) |
+| **`ATH`** | `32,203` | 17 | **`SEA`** | ⛔ W5 |
+| `KIR` | `17,170` | 1 | `KIR` | ✅ reachable — the §ALCHEMY-01 handoff |
 
-**Context:** Birka's guild council has struck a supply deal that ties their dock access to a single highland timber source (the same Dunfall-adjacent forest referenced in §PORT-02). INT History DC 12: name what happened to the last Birka guild that over-indexed on a single supplier (historical record, two generations back). Passing gives the guild master pause — not enough to stop the deal, but enough to add a contingency clause that opens the Nordic trade route for the player later.
+**The failure is not five separate accidents — it is one flag.** `wisHookReceived` has exactly one
+writer, `S_story.wisHookReceived = true;@33520`, and it sits inside
+`if (node.code === 'VS' && S_story.personalLegendComplete) {@33454`. `VS` is never `currentCode`, so
+the flag is `false` forever, so **W1/W2/W3/W5 never list even though their own nodes are fine**, and
+W4/W6 inherit it transitively. Three quests die by node, five by flag, and **the three reachable
+nodes hold quests that can never be offered.**
 
-`onPass: () => { S_story.wisPage4_sight = true; S_story.birkaRepImproved = true; }`  
-XP: 300 pass.
+The cruelty is in the signpost. At `KIR` — the one node in the arc a player can definitely stand on
+— Roen says: *"A library in Visby has a copy. I am going to go find it."* Every word of that is
+true. The library is the 5th of 5 occupants of its cell.
 
----
+> Corroborates `lab-report-kindness-calculus.md` §IV (§DOC-02r), which reached the identical 8-of-8
+> verdict independently; this pass adds the cell arithmetic, the single-writer proof and §VI.
 
-**quest_wis_05** — The Philosopher's Pivot (W5: Assume Formlessness)  
-`type: 'skill_check', stat: 'WIS', skill: 'Insight', dc: 12, node: AE, activateCond: () => S_story.wisHookReceived && S_story.roenAlchemistMet`
-
-Fragment text:  
-*"The man who has committed to a position and then found the position untenable has two choices: defend the position anyway, or release it. The first is called dignity. The second is called intelligence. They feel identical from the outside. Only the person inside knows which one they are doing."*  
-*— Master Fenn Ardley, 'A Complete Account,' Ch. XLVIII*
-
-Roen's commentary: *"The philosopher and I argued for two hours about whether gold has intrinsic value or whether value is a social agreement. I was right, then I was wrong, then I was right again from the other direction. At some point I stopped knowing which direction I was arguing from. This felt like progress."*
-
-**Context:** The AE philosophical debate is new content at the Athens/Alexandria node. A local Stoic has a position on property rights that contradicts §ALCHEMY-01's resolution (the loch gold was Roen's because he found it, but was it the colony's because it grew it?). WIS Insight DC 12: recognize the moment when your argument has become circular and consciously release it. The Stoic, observing the release, opens a new dialogue branch about the nature of persistence — which yields a knowledge entry and the Stoic's letter of introduction to VS.
-
-`onPass: () => { S_story.wisPage5_form = true; /* knowledge entry + stoic_letter flag */ }`  
-XP: 300 pass.
-
----
-
-**quest_wis_06** — The Shadow Room (W6: The Law of Repression)  
-`type: 'skill_check', stat: 'WIS', saveType: 'save', dc: 14, node: VS, activateCond: () => S_story.wisHookReceived && S_story.visbyUnderground`
-
-Fragment text:  
-*"The parts of yourself you have refused to examine do not disappear. They operate below the surface. They surface as overreactions, as inexplicable preferences, as patterns you cannot explain. The shadow is not your enemy — it is the part of you that has been waiting to be named."*  
-*— Master Fenn Ardley, 'A Complete Account,' Ch. IX*
-
-Roen's commentary: *"There is a room in the lower level that I have been in four times now. It shows you something. I will not say what it showed me. It was accurate, though. I gave it a formal nod. It seemed appropriate."*
-
-**Context:** VS underground has a mirror chamber (§DUNGEON-01 planned). This quest unlocks the non-combat resolution path. WIS Save DC 14: accept what the mirror reflects (the shadow observation names a pattern from the player's story — a recurring choice or avoidance). Pass: the mirror dissolves, yields `Shadow Shard` item (rare component, sell 25) + knowledge entry + wisPage6_shadow. Fail: combat encounter, Shadow Construct (medium difficulty), no item but wisPage6_shadow still sets on combat victory.
-
-`onPass: () => { S_story.wisPage6_shadow = true; inv.push({ name:'Shadow Shard', icon:'🔮', type:'misc', desc:'A fragment of the VS mirror, offered freely. It reflects nothing — whatever was in it has been acknowledged.', sell:25 }); }`  
-`completeFn: () => S_story.wisPage6_shadow` (combat path also counts)  
-XP: 350 pass; 200 combat.
+**Born dead, then accidentally revived (instrument 18).** `VS` is **absent from `NODE_MAP` in the
+arc's own birth tree** — `grep -c "^  VS:" e339aeb` returns **0**. Every `node.code === 'VS'` guard
+in `e339aeb` was unrunnable the minute it shipped (the §AUDIT-03p born-dead class). On 2026-06-03,
+`cb0fc35` — a worldbuilder import whose message names two other nodes — added `VS: { num:279@9088`
+*"Visby Underground — Fence Quarter"*, a label so apt that nothing looked wrong. The arc went
+**born-dead → accidentally resolved → cell-stranded**, and was playable at no point in between.
 
 ---
 
-**quest_wis_07** — Ardley's Book  
-`type: 'side', node: VS, activateCond: () => S_story.wisHookReceived`  
-`completeFn: () => ['wisPage1_masks','wisPage2_aggression','wisPage3_thumbscrew','wisPage4_sight','wisPage5_form','wisPage6_shadow'].every(f => S_story[f])`
+## VI. Node-code forensics — six of seven recovered, and one that came true (instrument 31)
 
-*Roen is sitting at a table in the Visby archive with all six sections laid out. He has been arranging them by theme, then by date, then by theme again. He says Ardley wrote all six sections in the same year — the year before he was dismissed from his court post. He says the dismissal happened because Ardley gave a lecture that named the court treasurer's behavior pattern in front of the full council. He says the treasurer had Ardley's library confiscated and the text dispersed. He says the treasurer's family held the city's dock contracts for sixteen more years, then lost them to a Baltic competitor who had read a copy of Ardley's text that had drifted east.*
+The report's codes are 26×16-era; five are dead at HEAD. Resolved by `num` against the birth tree,
+where the arc's `activateNode` fields used **exactly the report's §2.1 codes**:
 
-*He says: "I suppose the laws work whether or not you want them to."*
+| Report | `num` | Birth label | HEAD | Label at HEAD |
+|---|---|---|---|---|
+| `DK` | 7 | Harbor Docks — Tilbury | `LCY` | Harbor Docks — Tilbury |
+| `SK` | 142 | Saltwick — The Unwritten Port | `MME` | Saltwick — The Unwritten Port |
+| `SB` | 144 | The Intercept — Three Miles Out | `GCI` | The Intercept — Three Miles Out |
+| `AE` | 92 | Athens — The Market Hill | `ATH` | Athens — The Market Hill |
+| `HL` | 14 | Irish Highlands | `KIR` | Irish Highlands |
+| `BK` | 25 | **Broken Tooth Tavern** (`name:'bar (Visby)'`, act 5) | **`VBY`** | **Broken Tooth Tavern** |
+| `VS` | — | *(not a key)* | `VS` | Visby Underground — Fence Quarter |
 
-**storyRender button:** "Bind the pages"  
-```
-const mIdx = inv.findIndex(i => i.name === 'Pages of the Ardley Manuscript');
-if (mIdx !== -1) inv.splice(mIdx, 1);
-inv.push({ name:"Ardley's Complete Laws", icon:'📚', type:'misc', desc:'All six sections of Master Fenn Ardley\'s \'A Complete Account of Human Nature in Its Unreformed State.\' The masks law. The aggression law. Each man\'s thumbscrew. The shortsightedness law. The formlessness law. The shadow law. Roen has added a foreword in his own handwriting. It says: "These are not rules. They are a pair of glasses."', sell:50 });
-S_story.personalLegendMature = true;
-S_story.gold += 400;
-S_story.xp += 600;
-S_story.knowledge.push('Ardley\'s Laws: Master Fenn Ardley documented six laws of human behavior and was dismissed from court service for naming the treasurer\'s behavior pattern publicly. The text was scattered; its dispersal east eventually cost the treasurer\'s family their dock contracts. The laws were proven by the act of suppressing them. Roen notes: these are a pair of glasses, not a rulebook.');
-```
+**Six of seven, every label byte-identical** — the corpus's best node-code result, and it is the
+whole argument for instrument 31: the letters rotted, the `num` did not.
 
-XP: 600 on completion.
+### The `BK` result
 
----
+The report's §2.1 table says **W4 is at `BK`**. Its §2.2 prose glosses that as *"Birka (§DESIGN-03
+planned) is a guild city"* and designs a highland-timber supply deal, `birkaAccessed`,
+`birkaRepImproved`. **At the report's own tree, `BK` was the Broken Tooth Tavern in Visby.** The
+report mis-glossed its own code.
 
-## IV. Design Principles
+The implementer resolved the code correctly and, the same evening, wrote the *tavern* — Warlord Kael
+Mordus and the shaman, six months of neither moving first, retitled **"The Stalemate Cost"**, INT
+Investigation rather than History. §ARCH-01 later migrated it faithfully. Every string in the
+shipped quest says Visby (`hint:'Read the Mordus-shaman stalemate at Visby\'s Broken Tooth
+Tavern.'@13426`), and the hub's own fragment tally agrees: *"W4 at Visby Tavern (INT 12)."*
 
-### 4.1 Wisdom-as-tool, not wisdom-as-quote
+Then the world moved. §WALK/§NAV-01 remapped the four codes that **broke** — `DK`→`LCY`,
+`SK`→`MME`, `SB`→`GCI`, `AE`→`ATH` — and skipped the one that still **resolved**. Today
+`activateNode:'BK', gate:{ flags:['wisHookReceived'] }@13427` points at `BK: { num:241@9011`,
+**"Birka Shore — Northern Longship Landing"**, a beach.
 
-In §ALCHEMY-01, Roen's wisdom beats are observational — he notices things, names them, moves on. The player receives the observation but does not use it mechanically. §WISDOM-01 inverts this: each fragment is a tool. The player reads the law, then the game immediately presents a situation where the law is applicable, and a skill check tests whether the player can apply it correctly.
+> ***38th instrument — a migration repairs the references that BREAK and walks past the one that
+> survives wrongly, so the worse-than-dead code is the one the sweep GUARANTEES it will leave
+> behind.*** Corollary, and the reason this one is worth recording: **the report's error came true
+> seventy days later by a mechanism that had nothing to do with the report.** The prose wrongly said
+> Birka; the code correctly said Visby; the implementer followed the code; the world then re-minted
+> the code as Birka. A wrong document was made retroactively "right" by an unrelated world edit, and
+> `check:noderegs` is green throughout because the code resolves.
 
-The law is not a passive reward. It is a key. Each skill check only unlocks after the corresponding fragment has been found (wisHookReceived + quest order). A player who reaches DK without reading the fragment cannot make the Mask Check.
-
-### 4.2 The Ardley story as secondary arc
-
-The six fragments tell Ardley's story by implication: a court historian who watched people closely enough to document their patterns, named those patterns at the wrong moment to the wrong person, was dismissed, and had his work scattered. The treasurer's dynasty that destroyed him was itself eventually destroyed by someone who had read the scattered copy.
-
-This is Ardley's ghost story: the laws work whether or not you want them to. The player never meets Ardley. They only meet what he saw.
-
-### 4.3 Roen's voice
-
-Roen's commentary on each law is not a paraphrase — it is a translation. He encounters the law through specific, concrete observations that are too specific to be wisdom (his goat, his cousin, his grandfather with the lamb) and too accurate to be coincidence. This is the "Philosophy Stoner" register: profound at the wrong scale, in the wrong register, with complete sincerity.
-
-Each Roen commentary line is included in the quest description, not in a separate storyRender block. The law comes from Ardley (scholarly); the application comes from Roen (literal and slightly absurd); the test comes from the skill check (mechanical).
-
-### 4.4 The unresolved Keel thread gets a shape
-
-The W3 quest (Thumbscrew/SB) does not close the Keel thread — it names the mechanism. The navigator's notes are gone. Keel is gone. But the player now knows that her test was not about the commission or the run; it was about whether they would notice the thing she wasn't saying. This is a partial resolution that makes the full thread more interesting, not less.
-
----
-
-## V. §WISDOM Template — First Instance
-
-```
-§WISDOM template:
-  1. Hook: companion (Roen) has the title page and first clue at a knowledge-archive node
-     → creates token item (incomplete manuscript; temporary)
-     → hook activateCond: prior companion arc complete (personalLegendComplete)
-  
-  2. Fragment collection: 4–6 skill checks at distinct nodes
-     → each check requires a different stat (WIS Insight × 3, INT × 2, WIS Save × 1)
-     → each law is displayed in the quest description before the check
-     → each check applies the law to a real NPC or situation (not hypothetically)
-     → fragments can complete in any order (parallel activation)
-  
-  3. Resolution: return to hook node; companion binds the pages
-     → completeFn checks all fragment flags
-     → destroys incomplete manuscript; creates complete book (permanent)
-     → knowledge entry synthesizes the arc
-```
-
-**Template differences from prior arcs:**
-
-| Feature | §WISDOM | §ALCHEMY | §SPARK | §HUNT |
-|---------|---------|----------|--------|-------|
-| Companion? | Yes (Roen) | Yes (Roen) | No | No |
-| New nodes required | 0 | 0 | 0–1 | 1–2 |
-| Wrong theory? | No | No | Yes (NPC identity) | Yes (creature type) |
-| Fragment collection? | Yes (6 fragments) | No | No | No |
-| Order dependency? | Parallel | Sequential | Sequential | Sequential |
-| Skill check purpose | Apply a law | Confirm wisdom | Identify creature | Investigate threat |
-
-§WISDOM is the first arc with parallel fragment collection. The player can do fragments in any order because each law is independent — understanding masks does not require first understanding aggression. This creates a replayable arc where different players encounter the laws in different orders and through different scenes.
+This adjudicates one of the nine `activateNode:'BK'` sites §AUDIT-03y left open: **`quest_wis_04`
+means `VBY`, unambiguously, and repointing it needs no design call.** It also buys more than it
+costs — `VBY` is the **primary** of cell `12,198`, so W4 would become the arc's only standable
+surface.
 
 ---
 
-## VI. Items
+## VII. Risk register and open questions — outcome
 
-| Item | Icon | Sell | Source | Significance |
-|------|------|------|--------|-------------|
-| Pages of the Ardley Manuscript | 📖 | 0 | quest_wis_00 | Created at hook; exists during fragment collection; consumed at resolution |
-| Shadow Shard | 🔮 | 25 | quest_wis_06 (pass only) | VS mirror fragment; non-combat resolution reward |
-| Ardley's Complete Laws | 📚 | 50 | quest_wis_07 | Permanent; complete 6-law text; Roen's foreword; "a pair of glasses" |
+| Filed | Outcome |
+|---|---|
+| **Q1** *"Does W6 need a §DUNGEON-01 gate?"* — recommended a VS `storyRender` block | ✅ **Built as recommended.** `_nodeHookWisVsUnderground` ships a descent button writing `visbyUnderground`; `quest_wis_06` gates on that flag, whose only writer already requires the hook. |
+| **Q2** *"Does Roen appear at every fragment node?"* — recommended Option B | ✅ **Option B.** Roen's commentary lives in the six `desc` strings; no per-node panels. |
+| **Q3** *"What does `personalLegendMature` enable?"* — deferred | ✅ **Answered by (a).** `if (S_story.personalLegendMature) {@33463` and the `KIR` epilogue both read it: *"Roen sits at the loch on Tuesdays. He reads."* |
+| **Q4** *"How much Keel resolution is too much?"* | ✅ **Held.** W3 names the Baltic survey data and closes nothing. |
+| *(unfiled)* | ⚠️ **The risk nobody filed: can the player stand at `VS`?** Every reachability assumption in the report is implicit, and it is the only one that failed. |
 
----
+**Two live defects the register could not have caught, because both live in the writer/reader
+relation rather than the name space** (instrument 37):
 
-## VII. Arc Threading
-
-§WISDOM-01 threads into existing arcs rather than creating new ones:
-
-```
-§ALCHEMY-01 (personalLegendComplete)
-   → activates §WISDOM-01 hook at VS
-   → Roen's characterization continues: self-knowledge → world-knowledge
-
-§SPARK-01 (aldousConfessed)
-   → quest_wis_01 (DK): Silas Vance echoes the Aldous pattern (mask-wearing)
-   → does not reopen §SPARK-01; adds a second instance of the same law in a new NPC
-
-§PORT-01 (saltwickAccessed)
-   → quest_wis_02 (SK): Dorit's contained aggression retroactively explained
-   → wisPage2_aggression adds a knowledge entry connecting §PORT-01 to §SPARK-01
-
-§NAVAL-01 (sbResolved)
-   → quest_wis_03 (SB): Keel's thumbscrew identified
-   → Keel thread partially resolved; navigator note shape established
-
-§PORT-02 / §DESIGN-03 (birkaAccessed)
-   → quest_wis_04 (BK): Birka guild deal shortsightedness
-   → birkaRepImproved flag: opens Nordic trade route possibility
-
-§ALCHEMY-01 (roenAlchemistMet)
-   → quest_wis_05 (AE): Stoic debate / formlessness
-   → stoic_letter flag: letter of introduction to VS
-
-§DUNGEON-01 (visbyUnderground — PLANNED)
-   → quest_wis_06 (VS): shadow room non-combat resolution
-   → Shadow Shard: rare material for future dungeon crafting
-```
-
-The threading principle: §WISDOM-01 does not add new lore — it adds new ways to read lore that already exists. Each skill check is a second look at a situation the player has already passed through. The arc rewards players who have done other arcs, because each fragment makes something from those arcs newly legible.
+1. **`wisArchiveLetter` — one writer, zero readers.** Three occurrences in 38,712 lines: the
+   migration comment, `wisArchiveLetter: false,@23284`, and the `flag_write` that sets it. The
+   Stoic's letter of introduction to the Visby archive is written, saved across reloads, and
+   consulted by nothing — and its stated destination is the room the player must already be
+   standing in for the arc to have started. §DX-02n's write-only class.
+2. **W6 is not parallel and says nothing about it.** `quest_wis_06` activates the moment
+   `visbyUnderground` is set, and its `hint` says *"Use the story panel at VS to choose: accept or
+   fight."* That panel's choice branch is
+   `} else if (S_story.wisHookReceived && _allFive && !_p6) {@33485` — it renders **only after the
+   other five fragments are complete**. Before that the player sees a fragment tally and no buttons,
+   with an active quest telling them to press one. So the arc's headline design property —
+   "fragments in any order" — holds for five of six, and the sixth is silently last.
 
 ---
 
-## VIII. NPC Inventory
+## VIII. Defects filed
 
-| NPC | Node | Arc role | Status after arc |
-|-----|------|----------|-----------------|
-| Roen | VS/DK/SK/SB/BK/AE | Companion; curator of fragments; commentator | personalLegendMature; returns to HL |
-| Master Fenn Ardley | (deceased) | Author of the text; present only through fragments | Partial vindication; still dead |
-| Silas Vance | DK | New; mask-wearer (W1 application) | Aligned after Mask Check pass; route discount |
+| Row | Class | Call |
+|---|---|---|
+| **§AUDIT-03y extended** | `quest_wis_04.activateNode:'BK'` adjudicated → **`VBY`**; repoint moves W4 onto the arc's only primary node | 🟢 none |
+| **§DX-02n extended** | `wisArchiveLetter` — 1 writer, 0 readers (write-only class, new member) | 🟢 none |
+| **§AUDIT-03ad extended** | same block, second defect: W6's choice branch is `_allFive`-gated while its quest activates early and points at it | 🟡 small |
+| **§DOC-02as-DOC (new)** | **15 shipped quests across §WISDOM-01 + §ALCHEMY-01 have no row in any maintained home doc** — `quest.md` 0/8 and 0/7, `story.md`/`world.md` zero mentions of Roen or Ardley, while `index.md:175` still lists §WISDOM-01 as future work | 🟢 none |
+| **§AUDIT-03s corroborated** | `// §ALCHEMY-01: HL — The Shepherd's Dream@33283` guards `if (node.code === 'KIR') {@33285` — retired code surviving in an engine comment, gate-invisible by design | 🟢 none |
 
----
-
-## IX. Open Questions
-
-**Q1: Does §WISDOM-01 need a VS underground gate?**  
-quest_wis_06 uses `activateCond: () => S_story.wisHookReceived && S_story.visbyUnderground`. This means §DUNGEON-01 (VS underground) must be at least partially implemented before W6 is reachable. Options: (a) make W6 activateCond just `wisHookReceived` and gate the shadow room within the VS storyRender; (b) wait for §DUNGEON-01 implementation. Recommendation: gate on wisHookReceived only, implement shadow room as a VS storyRender block that becomes available once the player has the fragment.
-
-**Q2: Does Roen appear at every fragment node?**  
-Implementation question. Option A: Roen is a permanent storyRender presence at all six nodes once wisHookReceived, visible as a small "Roen's note" panel. Option B: Roen only appears at hook and resolution; his commentary appears in quest descriptions only. Option B is simpler and prevents storyRender block proliferation at high-traffic nodes like DK and SK. Recommendation: Option B.
-
-**Q3: What does personalLegendMature enable?**  
-This flag is currently only set by §WISDOM-01 completion. Possible downstream uses: (a) activates a final Roen farewell at HL; (b) unlocks a §ALCHEMY-02 arc (a third Roen arc, if designed); (c) provides a passive description modifier when talking to philosophical NPCs. For now: set the flag, leave the downstream uses for the next session.
-
-**Q4: The Keel thread — how much resolution is too much?**  
-W3 names the shape of what Keel was protecting (the navigator's notes → Baltic route data) without closing the question of who sent her. This feels correct — the thread should have a shape before it has an answer. But if the navigator's notes are referenced in W3, a future arc will need to either confirm or deny the Baltic route hypothesis. This is a commitment, not a closure.
+Already on the board and **corroborated, not re-filed**: §AUDIT-03x / §DX-02w (`VS`←`VBY`,
+`BK`←`LHR`, `ATH`←`SEA`), §AUDIT-03ad (the DC 14 that is not a roll), §DX-02q (the reissued-code
+class — `VS` is a member).
 
 ---
 
-## X. Implementation Checklist
+## IX. Conclusion
 
-```
-_S_DEFAULTS() additions:
-  □ wisHookReceived: false
-  □ wisPage1_masks: false
-  □ wisPage2_aggression: false
-  □ wisPage3_thumbscrew: false
-  □ wisPage4_sight: false
-  □ wisPage5_form: false
-  □ wisPage6_shadow: false
-  □ personalLegendMature: false
+As a **design document** this is one of the strongest in the corpus. Its extraction criteria are
+stated and applied; it lists the laws it **rejected** and why; its data shapes shipped byte-exact
+and survived a whole-format migration; three of its four open questions were resolved by the build
+in the direction it recommended. The one measurable authoring error — glossing `BK` as Birka — was
+caught and corrected by the implementer *the same evening*, from the report's own code table.
 
-QUEST_DB additions (8 quests):
-  □ quest_wis_00: side, VS, activateCond: personalLegendComplete
-  □ quest_wis_01: skill_check WIS 13, DK, activateCond: wisHookReceived
-  □ quest_wis_02: skill_check WIS 12, SK, activateCond: wisHookReceived + saltwickAccessed
-  □ quest_wis_03: skill_check INT 11, SB, activateCond: wisHookReceived + sbResolved
-  □ quest_wis_04: skill_check INT 12, BK, activateCond: wisHookReceived + birkaAccessed
-  □ quest_wis_05: skill_check WIS 12, AE, activateCond: wisHookReceived + roenAlchemistMet
-  □ quest_wis_06: skill_check WIS 14 (save), VS, activateCond: wisHookReceived
-  □ quest_wis_07: side, VS, completeFn: all 6 wisPage flags
+As a **shipped feature** it is worth nothing to a player, and the reason is one line of geometry no
+section of the report was asked to consider. Six laws, eight quests, three items, two knowledge
+entries and Roen's best writing sit behind a flag whose only writer renders at a node that is fifth
+in its cell.
 
-storyRender blocks needed:
-  □ story-wis-vs: hook + resolution states
-    (hooks when personalLegendComplete, !wisHookReceived OR completeFn)
-  □ story-wis-wis01-dk: shows Roen's commentary on W1 when wisHookReceived + !wisPage1
-    (minimal — one panel, one button links to quest)
-  NOTE: Recommend quest-description-only for Roen commentary at DK/SK/SB/BK/AE
-        Only VS needs full storyRender blocks (hook + resolution)
+**The repair is small and disproportionately valuable.** Making `VS` primary (or moving the hook
+writer to a node that is) restores **eight quests, three items, a companion arc's second act and the
+`personalLegendMature` epilogue at `KIR`** — one of the best content-per-edit ratios the §DOC-02
+program has measured, second only to §AUDIT-03at. Repointing `quest_wis_04` to `VBY` is one
+identifier and independently correct.
 
-Items (inv operations in quest callbacks):
-  □ quest_wis_00 onAccept: create 'Pages of the Ardley Manuscript' (📖)
-  □ quest_wis_06 onPass: create 'Shadow Shard' (🔮)
-  □ quest_wis_07 button: splice 'Pages of the Ardley Manuscript'; create 'Ardley's Complete Laws' (📚)
-
-JS syntax validation after each edit block
-```
+> *"These are not rules. They are a pair of glasses."* — Roen's foreword, shipped verbatim at
+> `inv.push({ name:"Ardley's Complete Laws"@33478`, written for a book no save file has ever
+> contained.
 
 ---
 
-**Filed:** 2026-05-28  
-**Status:** Design complete; implementation pending  
-**Depends on:** §ALCHEMY-01 (personalLegendComplete flag), birkaAccessed flag (§DESIGN-03), visbyUnderground flag (§DUNGEON-01)  
-**Cross-references:** `plan.md §DESIGN-REF` · `lab-report-naval-campaign-layer.md §3.9` · `plan.md §ALCHEMY-01` · `quest.md`  
-**Total new quests if implemented:** 8. Running total: ~159 live.  
-**Total new items if implemented:** 3 (Pages, Shadow Shard, Complete Laws)  
-**Total new NPCs:** 2 (Silas Vance, Master Fenn Ardley — deceased)
+## Appendix A — NOT SHIPPED claims, retained
+
+Per §DOC-02 rule, kept rather than deleted:
+
+- **W4 as designed** (Birka guild timber deal, INT History, `birkaAccessed`, `birkaRepImproved`,
+  *"Three Years Out"*, the Nordic-trade-route contingency clause). Superseded at birth by the
+  Broken Tooth stalemate. 0 commits for all four identifiers.
+- **W6 as a WIS saving throw DC 14.** Never a roll. → §AUDIT-03ad.
+- **`stoic_letter`.** Shipped renamed as `wisArchiveLetter`, and inert.
+- **"Shadow Construct", medium difficulty.** The fight uses `MONSTER_POOL.shadow` — *Shadow*, ac 12,
+  hp 16, `tier:'easy'`.
+- **Silas Vance's route discount at Saltwick.** Narrative only; no discount mechanic exists
+  (`routeDiscount` / `discountRoute`: 0 hits).
+- **The `storyRender` block `story-wis-wis01-dk`** in §X's checklist. Never built — correctly, per
+  the report's own Q2 recommendation two pages earlier.
+
+## Appendix B — the six laws as shipped
+
+| | Law | Source | Check | Node (spec → HEAD) | Scene |
+|---|---|---|---|---|---|
+| W1 | Role-playing — *see through masks* | LHN-3 | WIS Insight 13 | `DK` → `LCY` ✅ | Silas Vance's rope callousing |
+| W2 | Aggression — *see the hostility around you* | LHN-16 | WIS Insight 12 | `SK` → `MME` ✅ | Dorit touches the ledger |
+| W3 | Each man's thumbscrew | 48L-33 | INT Investigation 11 | `SB` → `GCI` ✅ | the navigator Keel never mentioned |
+| W4 | Shortsightedness — *elevate your perspective* | LHN-6 | INT Investigation 12 | `BK` → **`BK`** ❌ (means `VBY`) | Mordus vs. the shaman, six months |
+| W5 | Formlessness — *rigidity is the vulnerability* | 48L-48 | WIS Insight 12 | `AE` → `ATH` ✅ | the Stoic's three incompatible layers |
+| W6 | Repression — *confront your shadow* | LHN-9 | **none shipped** | `VS` → `VS` | the obsidian mirror, accept or fight |
+
+Rejected laws, retained from §1.3 as the record of the extraction discipline: 48L-1 (no court
+hierarchy), 48L-6 (too antagonistic for the tone), LHN-2 (already enacted in §ALCHEMY-01), LHN-11
+(no grandiose NPC), LHN-14 (no group-pressure scene), LHN-17 (passive, no check available), LHN-18
+(better as tidal-chain flavour).
+
+---
+
+**Filed:** 2026-05-28 · **Shipped:** `e339aeb`, 2026-05-28 · **Verified:** 2026-08-13 (§DOC-02as)
+**Cross-references:** `lab-report-kindness-calculus.md` §IV (the independent 8-of-8 verdict) ·
+BACKLOG §AUDIT-03x · §AUDIT-03y · §AUDIT-03ad · §DX-02n · §DX-02q · §DX-02w
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
