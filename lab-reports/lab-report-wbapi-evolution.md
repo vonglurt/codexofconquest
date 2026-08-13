@@ -1,730 +1,438 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report: From grep to WBAPI — The Evolution of Roll2Hit World Data Access
+# Lab Report: From `grep` to WBAPI — How Roll2Hit Got a Write Path
 
-**Author:** Claude (Sonnet 4.6) + paul@roll2hit.com  
-**Date:** 2026-05-29  
-**Classification:** Architecture / Developer Tooling / Data Access Evolution  
-**Audience:** CS/EE background; familiar with shell scripting, Node.js, REST APIs  
+**Author:** Claude (Sonnet 4.6) + paul@roll2hit.com
+**Filed:** 2026-05-29 · **Verified:** 2026-08-13 (§DOC-02ap)
+**Classification:** Architecture / Developer Tooling / Data-Access Evolution
+**Audience:** CS/EE background; shell, Node.js, REST
+
+> **Verification stamp.** This is a HISTORY document, re-measured against the live
+> `roll2hit-v3.html` 76 days after filing. Claims that verified are kept and anchored;
+> claims that did not are **marked and kept**, never deleted — a silently removed claim
+> reads as one that held. §II dates the document; §VII is the delta table.
 
 ---
 
 ## Abstract
 
-This report documents the complete arc of how `roll2hit-v3.html` — a single-file browser game — evolved to support structured world data access and mutation from external developer tooling. The journey passed through six distinct phases: raw `grep`, stream editing with `sed`, Perl one-liners, Python AST attempts, bare Node.js extraction, a full JavaScript parser running inside Node, and finally `wbapi-server.js`: a local REST API that parses the HTML's embedded `<script>` block, reconstructs all game arrays in memory, and writes mutations back into the HTML file in-place. The report documents the design constraints that drove each phase transition, the architecture of the final WBAPI system including its NONCE-based write-protection model, and a complete alphabetical reference of all read-only and write endpoints drawn from the live help system.
+Roll2Hit ships as **one static HTML file**. That is the product promise, not a
+preference: a player, a friend, or an archaeologist opens the file in a browser and
+plays, forever, with no server, no install, and no build step. The promise is easy to
+make and expensive to keep, because it means every monster, node, quest and line of
+dialogue is a JavaScript object literal inside a single `<script>` tag — and by the
+day this report was filed that tag was already **1.5 MB**.
+
+This report documents how the project got a **safe write path into that file**, and
+argues that the write path is what makes the single-file promise survivable at scale.
+It traces six approaches — `grep`, `sed`, Perl, Python, bare Node `eval`, and finally
+a purpose-built text parser (`wbapi-core.js`) fronted by a local REST server
+(`wbapi-server.js`) — records why each of the first five failed, and specifies the
+architecture that stuck: anchor-delimited sections, a comment-aware brace scanner,
+whole-section re-serialization, and a nonce handshake in front of destructive writes.
+
+**The verification result, in one line:** the *architecture* is intact and the
+*inventory* is not. Every mechanism this report identifies as load-bearing is still
+load-bearing at 3× the file, but the report's own worked examples were invented rather
+than transcribed, and it is wrong about its parser's central trick.
 
 ---
 
-## I. The Constraint: One File, No Build Step
+## I. Intent — why a build tool is a playability feature
 
-The foundational constraint of this project is stated in `plan.md §I`:
+The constraint is stated in the original directive:
 
-> *The entire game — all data, all logic, all UI — is fully playable in a browser with only `roll2hit-v3.html`. No Node, no server, no dependencies.*
+> *The entire game — all data, all logic, all UI — is fully playable in a browser with
+> only `roll2hit-v3.html`. No Node, no server, no dependencies.*
 
-This is not an aesthetic preference. It is a functional requirement: the game must be giveable as a single file. A friend, a player, a future archaeologist must be able to open it in a browser and play. There is no build step, no `npm install`, no template language, no `<link>` to an external stylesheet, no `<script src="...">`. Every monster, every terrain entry, every quest, every NPC, every fish in the lake, every lake magic item lives as a JavaScript object literal inside one `<script>` tag in one HTML file.
+The naive reading is that this is an aesthetic, in the demoscene tradition, or a
+homage to single-file tools like `htmx`. The operational reading is harsher: **the
+single-file constraint is a tax paid by the author so the player pays nothing.** No
+version drift, no dead CDN, no "install these seven things first," no moment five years
+from now when the asset server stops answering. The file is the game and the game is the
+file.
 
-This constraint is unusually strict. Most games of comparable complexity would have a database, a build pipeline, or at minimum a JSON asset bundle. Roll2Hit chose the single-file path deliberately, modelling itself after the demoscene tradition and single-file tools like `htmx.org` — where the artifact *is* the thing, not a build artifact that refers to the thing.
+That tax has a threshold. Below some volume of content, hand-editing a giant literal is
+merely tedious. Above it, the constraint becomes the thing that *stops content from
+being written* — because the failure mode is not a compile error, it is a missing comma
+that turns the entire `<script>` block into a syntax error and the game into a blank
+page. One bad brace and the player gets nothing.
 
-The problem this creates for a developer is: **how do you add monsters, quests, and terrain entries to a 300 KB JavaScript literal inside an HTML file without making a typo that silently corrupts the game?**
+**WBAPI is what moved that threshold, and the measurement is the argument.** At filing
+the game held **211 quests**; at verification it holds **2,853** — a 13.5× expansion of
+the content a player can actually walk into, across 416 nodes instead of 144, without
+the shipped artifact ever stopping being one openable file. The tooling never appears
+on screen. It is the reason there is so much on screen.
 
----
-
-## II. The Six Phases of Data Access Evolution
-
-### Phase 1 — grep (direct text search)
-
-The first approach to finding data in the HTML was `grep`. When the worldbuilder needed to know "does monster key `dock_rat` already exist?", the answer was:
-
-```bash
-grep -n "dock_rat" roll2hit-v3.html
-```
-
-This worked for existence checks. It completely failed for structure. A grep result shows you a line; it does not tell you whether that line is inside `MONSTER_POOL`, inside a comment, inside a quest description that happens to mention the monster, or inside the worldbuilder anchor block. Grep treats the file as a bag of lines. The file is not a bag of lines — it is a JavaScript AST serialized as text.
-
-The first generation of worldbuilder tooling was entirely grep-based: the worldbuilder anchor markers (`// ◆◆◆ WORLDBUILDER:WORLD_DB:START ◆◆◆`) were added precisely to give grep a bounded region to search. This worked for terrain entries. It completely failed for quests and monsters, which live in different sections with no clean line-addressable boundary.
-
-**Why it broke:** Multi-line objects. A monster entry spans 1–3 lines and may not have a predictable line pattern. A quest entry spans 5–15 lines. grep is line-addressed. The game is not.
-
----
-
-### Phase 2 — sed (stream editing)
-
-The next phase used `sed` for insertion. The pattern:
-
-```bash
-# Insert a new terrain entry before the WORLD_DB closing anchor
-sed -i '' "/◆◆◆ WORLDBUILDER:WORLD_DB:END ◆◆◆/i\\
-  new_terrain: { monsters:[P.goblin], label:'New Terrain', icon:'🌿' },
-" roll2hit-v3.html
-```
-
-This worked for append-only operations on sections with anchors. The worldbuilder anchor system — `◆◆◆ WORLDBUILDER:section:START ◆◆◆` / `:END` — was designed to support exactly this pattern. Sed could insert before the `:END` line reliably.
-
-**Why it broke:** Brace counting. A JavaScript object literal is not line-addressed. The `:END` anchor sits before the closing `};` of the WORLD_DB object, but the closing brace of a terrain entry must be balanced. Sed cannot count braces. A malformed insertion (missing trailing comma, unbalanced brace) would break the entire `<script>` block silently — the browser would see a JS syntax error and the game would not load at all. Worse, `sed -i` modifies in-place with no undo.
+The design question this report answers is therefore not "how do we edit an HTML file."
+It is: **how do you add a thousand quests to a 1.5 MB JavaScript literal without a typo
+silently killing the game?**
 
 ---
 
-### Phase 3 — Perl (regex with state)
+## II. Dating the document
 
-Perl one-liners attempted to do what sed could not: track brace depth.
+This report was **born in commit `daa60af`, 2026-05-29 16:53** ("WBAPI: port→1367,
+wizard tab, help system") — so it is a ship-note describing what its own commit added,
+not a survey of standing code. Three independent instruments converge on a **59-minute
+window**:
 
-```perl
-perl -0777 -i -pe '
-  s/(◆◆◆ WORLDBUILDER:MONSTER_POOL:START ◆◆◆.*?)(  ◆◆◆ WORLDBUILDER:MONSTER_POOL:END ◆◆◆)/
-    $1  dock_rat: { name:"Dock Rat", ac:11, hp:4, atk:2, dmg:3, xp:10, tier:1 },\n$2/s
-' roll2hit-v3.html
-```
+| Instrument | Evidence | Window |
+|---|---|---|
+| Collection counts (§III table) | `NODE_MAP` 144 · `QUEST_DB` 211 · `MONSTER_POOL` 392 · `WORLD_DB` 107 hold **simultaneously at exactly one tree**, `064aef8` (15:41) | 15:41 → 18:31 |
+| `exit(67)` described as shipped | **0 occurrences** at `064aef8`; **5** at `daa60af`. Born in `15ae00d`, 15:54 | ≥ 15:54 |
+| Birth commit of the file itself | `daa60af` | = 16:53 |
 
-The `-0777` flag slurps the entire file as a single string, enabling the `/s` (single-line dot-matches-newline) modifier. This finally enabled multi-line regex matching.
+All four counts are exact. That is the strongest dating result in the verification
+corpus to date, and it costs one `git show` per candidate tree.
 
-**Why it broke:** Perl regex over 300 KB of JavaScript is fragile. The MONSTER_POOL `START`/`END` markers are reliable anchors, but the regex must match everything between them — which is a 2000-line JavaScript object. Any monster entry containing a regex metacharacter in a description field (parentheses, brackets, dots, pipes) would break the match. More fundamentally: Perl regex is not a JavaScript parser. It cannot understand string escaping, template literals, or nested object syntax.
+**The document was then retro-fitted, and this matters more than the birth date.**
+Commit `77c517f` (2026-06-05 13:21, "§API-CLI-01: api.sh wrapper") rewrote **218 of its
+lines — 97 insertions, 121 deletions** — substituting `./api.sh …` for the raw `curl`
+invocations throughout, and adding the "New rules (as of api.sh v1)" note. The header
+still reads *Filed: 2026-05-29*, and it is true of the prose and false of every command
+example.
 
----
+The sharp part: `7e2239a` retired the exit-67 restart protocol at **06:37 that same
+morning**. The retrofit landed **six hours and forty-four minutes later**, touched a
+third of the document, and left §IV's exit-67 paragraph standing untouched.
 
-### Phase 4 — Python (structured parsing attempt)
-
-Python's `re` module with `DOTALL` and the `ast` module (for JSON-like literals) were the next attempt. The idea: extract the `<script>` block with regex, then parse the JavaScript object literals as if they were Python dicts.
-
-```python
-import re, json
-with open('roll2hit-v3.html') as f:
-    src = f.read()
-script = re.search(r'<script>(.*?)</script>', src, re.DOTALL).group(1)
-# Extract MONSTER_POOL block
-mp_block = re.search(r'MONSTER_POOL\s*=\s*\{(.*?)\n\}', script, re.DOTALL).group(1)
-```
-
-**Why it broke:** JavaScript object literal syntax is not valid JSON. Property keys are unquoted (`ac:11` not `"ac":11`). Values may be references to other variables (`monsters:[P.goblin]` where `P` is a Proxy object). Template literals, arrow functions, spread operators, and regular expression literals appear throughout the codebase. `ast.literal_eval` chokes immediately. Even `json.loads` after naive key-quoting fails on the Proxy references. Python has no JavaScript runtime.
-
----
-
-### Phase 5 — Bare Node.js (eval fragment)
-
-Node.js can execute JavaScript. The attempt: extract the `<script>` block, stub out browser globals, and `eval()` the object literal.
-
-```javascript
-const src = fs.readFileSync('roll2hit-v3.html', 'utf8');
-const script = src.match(/<script>([\s\S]*?)<\/script>/)[1];
-// Stub browser globals
-const document = { getElementById: () => null, ... };
-const window = {};
-// Eval and extract
-eval(script);
-console.log(Object.keys(MONSTER_POOL).length);
-```
-
-**Why it broke:** The game's `<script>` block is not a module — it is a browser-context script. It calls `document.getElementById`, `window.addEventListener`, reads `localStorage`, creates DOM elements with `document.createElement`, registers event listeners, and executes initialization logic on load. A bare Node.js `eval` with stubbed `document` fails immediately when the game's init code touches any DOM method that the stub doesn't implement. The stub needs to be as complete as a real browser DOM.
-
-More subtly: `eval()` of a 300 KB script in global scope mixes all the game's internal variables into the Node.js module scope, creating naming collisions with Node built-ins (`Buffer`, `process`, `require`).
+> ***A retro-fit pass certifies only its own charter.*** A document edited on the day a
+> mechanism it describes was retired is not thereby a document that survived review.
+> Read the retrofit's **diff**, not its date.
 
 ---
 
-### Phase 6 — JavaScript Parser in Node (wbapi-core.js)
+## III. The six phases
 
-The final approach abandoned `eval()` entirely. Instead of executing the JavaScript, the parser *reads* it as structured text, using comment-aware brace counting to extract each data section as a raw string, then evaluates only the pure data literals — not the procedural code.
+Phases 1–5 are recollection, not transcription; they are reported here as the design
+argument they are, with the failure modes stated rather than the code re-litigated.
 
-The key insight: the data arrays (`MONSTER_POOL`, `QUEST_DB`, `NODE_MAP`, `WORLD_DB`) are all declared as `const NAME = { ... };` at the top level. They are **pure data objects** — no function calls in their values, no DOM references, no side effects. The `P.monster_key` references in `WORLD_DB.monsters` arrays are a special case: `P` is a Proxy, so `P.dock_rat` evaluates to the string `"dock_rat"`. The parser handles this by pre-evaluating the Proxy pattern separately.
+| # | Approach | Why it broke |
+|---|---|---|
+| 1 | `grep` | Line-addressed. A monster spans 1–3 lines, a quest 5–15. A hit tells you a string exists, never whether it sits in `MONSTER_POOL`, in a comment, or in a quest description that merely *mentions* the monster. |
+| 2 | `sed` insert-before-anchor | Cannot count braces. A missing comma kills the whole `<script>`; `sed -i` has no undo. |
+| 3 | Perl `-0777` slurp + `/s` regex | Multi-line matching at last, but the pattern must span a 2,000-line object. Any regex metacharacter in a description field breaks the match. Regex is not a parser: no string escaping, no template literals, no nesting. |
+| 4 | Python `re` + `ast` | JS object literals are not JSON. Keys are unquoted (`ac:11`); values reference other variables (`monsters:[P.goblin]`). `ast.literal_eval` chokes on line one. Python has no JS runtime. |
+| 5 | Bare Node `eval()` | The block is browser-context script, not a module: it touches `document`, `localStorage`, `addEventListener`, and runs init on load. Stubbing the DOM well enough means writing a browser. `eval` in global scope also collides with `Buffer`/`process`/`require`. |
+| 6 | **Text parser (`wbapi-core.js`)** | **Shipped.** Never executes the game. Reads it as structured text, evaluates only pure data literals. |
 
-The parsing pipeline in `wbapi-core.js`:
-
-```javascript
-// 1. Extract <script> tag text (one regex, no eval)
-const scriptText = html.match(/<script[\s\S]*?>([\s\S]*?)<\/script>/)[1];
-
-// 2. Locate each section by anchor markers
-//    ◆◆◆ WORLDBUILDER:MONSTER_POOL:START ◆◆◆
-//    ◆◆◆ WORLDBUILDER:MONSTER_POOL:END ◆◆◆
-
-// 3. Comment-aware brace counting to find the object boundary
-//    (skips braces inside // comments and /* */ blocks and strings)
-
-// 4. Extract the raw object literal text for each section
-
-// 5. Evaluate only the pure data literal in a minimal sandbox
-//    with P = new Proxy({}, { get: (_, k) => k }) 
-//    to resolve monster key references
-
-// 6. Populate WBAPI.monsterPool, WBAPI.questDb, WBAPI.nodeMap, etc.
-```
-
-The comment-aware brace counter is the core innovation. JavaScript comments can contain unbalanced braces (`// this object { is not closed`). A naive brace counter would miscount and extract the wrong range. The counter maintains state: inside a string, inside a `//` comment, inside a `/* */` block comment, or in regular code — and only counts braces in the last state.
-
-This approach is safe for two reasons:
-
-1. **Only pure data is evaluated.** The procedural game code (event listeners, render functions, battle logic) is never executed. The parser never calls `eval()` on anything that touches the DOM.
-
-2. **The HTML file is never corrupted by the parse step.** The parser is read-only. Writes are handled by a separate serializer that reconstructs each modified section as text and splices it back into the HTML via string replacement at the anchor positions.
+The Phase-6 insight is that the big collections are **pure data** — no calls, no DOM,
+no side effects — so they can be located structurally and evaluated in isolation. That
+insight held. The mechanism described for it did not, in two particulars (§VII).
 
 ---
 
-## III. The WBAPI Architecture
-
-The final system has three components:
+## IV. Architecture as-built
 
 ```
-roll2hit-v3.html          — single source of truth (game + all data)
-wbapi-core.js             — parser + serializer (reads and writes the HTML)
-wbapi-server.js           — HTTP server (REST API over wbapi-core)
-wbapi-toggle.sh           — process manager (start/stop/fg/restart)
-worldbuilder.html         — developer UI (reads API, ✦ Wizard tab)
+roll2hit-v3.html      — single source of truth (game + all data)
+js/wbapi-core.js      — parser + serializer          [1,814 lines]
+js/wbapi-server.js    — REST server over the core    [11,671 lines]
+api/wb.js (./api.sh)  — the authoring CLI: queue, auto-nonce, retry, --ai
+wbapi-toggle.sh       — process manager: start · stop · restart · status · fg
+worldbuilder.html     — developer UI (✦ Wizard tab)
 ```
 
-### The HTML as Database
+*(The three JS files sat at repo root when this was written; `cc35c08` moved them under
+`js/`, and `api.sh` became a three-line shim over `api/wb.js`.)*
 
-`roll2hit-v3.html` behaves as a document database with a peculiar storage format: JavaScript object literals embedded in a `<script>` tag. The "schema" is the shape of each object. The "records" are the keys. The "tables" are the named constants:
+### The HTML as a document database
 
-| Constant | Records | Analogous to |
-|----------|---------|--------------|
-| `NODE_MAP` | 144 nodes | `nodes` table |
-| `QUEST_DB` | 211 quests | `quests` table |
-| `MONSTER_POOL` | 392 monsters | `monsters` table |
-| `WORLD_DB` | 107 terrains | `terrains` table |
-| `BIRKA_NPCS` | 6 NPCs | `npcs` table |
-| `FISH_POOL` / `NIGHT_FISH_POOL` | ~40 fish | `fish` table |
-| `LAKE_MAGIC_DB` | ~20 items | `lake_magic` table |
+| Constant | At filing | At verification |
+|---|---|---|
+| `NODE_MAP` | 144 | 416 |
+| `QUEST_DB` | 211 | 2,853 |
+| `MONSTER_POOL` | 392 | 398 |
+| `WORLD_DB` | 107 | 111 |
+| `BIRKA_NPC` — **not `BIRKA_NPCS`** (§VII-1) | 6 | 204 profiles |
+| `FISH_POOL` / `NIGHT_FISH_POOL` | 20 | (`FISH_DB` anchor) |
+| `LAKE_MAGIC_DB` | ~20 | live, 1 reader |
+| **File** | 1.79 MB / 24,280 lines | 5.51 MB / 38,712 lines |
 
-The "primary key" for each table is the object key: node code (`CY`, `BK`), snake\_case monster key (`goblin`, `dock_rat`), quest ID (`quest_wis_01`). All cross-references are by key string.
+The primary key of every table is its object key — node code, snake\_case monster key,
+quest ID — and all cross-references are by key string. The server loads the database
+into memory on startup, serves reads from memory, and writes by mutating memory and
+re-serializing to file: SQLite's WAL bargain, one process deep.
 
-The WBAPI server loads this database into memory on startup, serves reads from memory, and writes by mutating memory then serializing back to the file. This is the same pattern used by SQLite's WAL mode: reads are cheap and concurrent; writes serialize through a single process.
-
-### Worldbuilder Anchor Markers
-
-Every major data section in the HTML has paired anchor markers:
+### Anchor markers
 
 ```javascript
 // ◆◆◆ WORLDBUILDER:MONSTER_POOL:START ◆◆◆
-const MONSTER_POOL = {
-  goblin: { name:'Goblin', ac:13, hp:7, atk:4, dmg:5, xp:50, tier:1 },
-  // ... 391 more entries ...
-};
+const MONSTER_POOL = { … };
 // ◆◆◆ WORLDBUILDER:MONSTER_POOL:END ◆◆◆
 ```
 
-The `◆◆◆` character (U+25C6 BLACK DIAMOND) was chosen because it cannot appear in any JavaScript identifier, string template, or operator. It is unambiguously a marker. The markers survive minification (as long as whitespace is not stripped from comments). They also make grep usable as a last resort: even if the WBAPI server is unavailable, a developer can `grep -n "◆◆◆" roll2hit-v3.html` to find every section boundary.
+`◆` is **U+25C6 BLACK DIAMOND** — verified — chosen because it cannot occur in a JS
+identifier, string template or operator, so it is unambiguously a marker and never a
+token. Nine sections carried anchors at filing; **twelve do now** (`NPC_DIALOGUES`,
+`ITEM_DB`, `D100_TABLE` were added later). The pair is also the last-resort escape
+hatch: with the server down, `grep -n "◆◆◆" roll2hit-v3.html` still prints every
+section boundary. Anchor `` `◆◆◆ WORLDBUILDER:BIRKA_NPC:START@22711` ``.
 
-The serializer uses these anchors as splice targets. A terrain write, for example:
+A write finds the `:START`/`:END` pair, reconstructs the whole block from in-memory
+state, and splices. **Every save is a full-section rewrite, never a surgical line
+edit** — which is the safety property: the serializer always regenerates from
+authoritative state, so a partial write cannot leave a section half-formed.
 
-1. Finds `// ◆◆◆ WORLDBUILDER:WORLD_DB:START ◆◆◆` in the HTML text
-2. Finds the matching `:END` anchor
-3. Reconstructs the entire `WORLD_DB = { ... }` block from in-memory state
-4. Replaces the text between the anchors with the reconstructed block
-5. Writes the complete modified HTML back to disk
+### The comment-aware brace scanner — verified, and the lesson is not the one expected
 
-This means every save is a full-section rewrite — not a surgical line edit. This is safe: the serializer always regenerates from the authoritative in-memory state, so there is no possibility of a partial write leaving the section in an inconsistent state.
+The scanner tracks four states — inside a string, inside `//`, inside `/* */`, or in
+code — and counts braces only in the last. This report called it the core innovation.
+It was right, it was implemented correctly at its own tree, and it is still correct at
+HEAD, relocated into the shared tokenizer at
+`` `js/wbapi-core.js:§AUDIT-03f silent-drop class@50` ``.
 
----
+**And the repo was bitten by exactly the hazard it prevents anyway.** §AUDIT-03f: a
+section comment containing an arrow-function example silently ate two whole quests —
+because the duplicate-key gate carried a *second, independent* scanner that was not
+comment-aware. The header now says so out loud: *"Two scanners drift, and a scanner
+that disagrees with the parser is exactly the §AUDIT-03f silent-drop class."*
+(`` `js/wbapi-core.js:Two scanners drift@49` ``)
 
-## IV. Single-Writer Model and NONCE Protection
-
-### Why Single Writer
-
-The WBAPI server enforces **one writer at a time** by design. This is not a limitation — it is a deliberate architectural decision. The rationale:
-
-The game world is not a high-frequency write workload. Terrain entries, monsters, and quests are added by one developer working at one terminal. The expected write rate is: several writes per session, a few sessions per week. There is no need for optimistic locking, conflict resolution, or distributed consensus. A single Node.js process owning the in-memory state and serializing writes sequentially is both correct and sufficient.
-
-If two developers were simultaneously editing `roll2hit-v3.html` — one via curl, one via text editor — their writes would race and one would overwrite the other's changes. The WBAPI server prevents this not by locking the file (the OS advisory lock system is not reliable across processes) but by being **the only writer**. Any developer who needs to edit the world should go through the API. Direct text editor edits to the HTML's data sections are discouraged during an active server session.
-
-After editing, the developer runs `POST /api/restart`. The server serializes the current in-memory state, writes it to disk, exits with code 67, and `wbapi-toggle.sh` relaunches it — loading the fresh HTML from disk. This is the "commit and restart" pattern: it ensures the on-disk state and the in-memory state are always synchronized.
-
-### The NONCE System
-
-Write protection is enforced by a two-step nonce protocol:
-
-**With `./api.sh` — nonces are handled automatically:**
-```bash
-# POST and DELETE auto-fetch the nonce; no manual step needed:
-./api.sh post quest id=quest_chest_01 npc=aldric type=side title="The Sealed Chest"
-./api.sh del quest quest_chest_01
-```
-
-**Manual nonce (if needed for raw curl or special cases):**
-```bash
-NONCE=$(./api.sh nonce quest quest_chest_01)
-curl -XPOST http://localhost:1367/api/quest \
-  -H 'Content-Type: application/json' \
-  -H "X-Nonce: $NONCE" \
-  -d '{"id":"quest_chest_01","npc":"aldric","title":"The Sealed Chest",...}'
-```
-
-The server generates a 16-character random token, stores it in memory with its `{type, id}` pair and a 5-minute expiry, and returns it. The token is single-use and tied to exactly one entity.
-
-The server validates that the nonce is unexpired, matches the `{type, id}` in the request, and has not been used before. Only then does it execute the write.
-
-**Why this matters:** Writes to `roll2hit-v3.html` are permanent and not easily undone (git is the undo). The nonce forces a two-step review: the developer must explicitly state their intent (the nonce request) before the write executes. It also prevents accidental writes from mis-typed curl commands, browser tab replays, or automation scripts that have stale data. It is not a cryptographic security mechanism — it is a **confirmation handshake** for high-value irreversible operations.
-
-DELETE operations always require a nonce. POST operations for create endpoints (terrain, monster, quest, node) accept nonces optionally. PUT operations for field updates do not require nonces by default, since individual field updates are lower risk than full create/delete operations.
+> ***A verified safety mechanism confers safety on its call sites, not on the
+> codebase.*** When a document names a hazard-preventing algorithm as its core
+> innovation, census how many independent implementations of it exist. This one was
+> right the first time and cost two quests to its own copy.
 
 ---
 
-## V. Read-Only Endpoints (Alphabetical)
+## V. Single-writer model and the nonce handshake
 
-All read-only endpoints are `GET` requests. They have no side effects. They read from the in-memory state, not from disk. They can be called concurrently without concern. No nonce is required.
+**Why single writer.** World data is not a high-frequency workload: one developer, one
+terminal, a few writes a session. Optimistic locking, conflict resolution and
+distributed consensus would all be machinery for a problem that does not exist. One
+Node process owning in-memory state and serializing writes is correct and sufficient.
 
----
+**The claim that aged badly.** This report asserts the server *prevents* editor/API
+races "by being the only writer." It does not. The server holds the whole file text
+from the moment it started and re-writes it on every data write, so a hand-edit to CSS
+or JS made while the server was up **is silently reverted by the next `put`**. That is
+now CONTRIBUTING **Hazard #1**, learned the hard way, and the working rule is the
+opposite of a guarantee: restart before any write session, verify a fresh PID, and
+confirm a CSS signature survived the first write. The architecture was right; the
+safety claim was optimism.
 
-### GET /api/audit
+**The nonce.** Verified in every particular but one:
 
-Integrity scan over all in-memory collections. Returns a structured report of findings grouped by severity:
+| Claim | Verdict |
+|---|---|
+| 16-character token | ✅ `` `js/wbapi-server.js:function nonceIssue@50` `` |
+| 5-minute expiry | ✅ `` `js/wbapi-server.js:const NONCE_TTL = 5 * 60 * 1000@48` `` |
+| Single-use | ✅ consumed on validate |
+| Bound to one `{type, id}` | ✅ `` `js/wbapi-server.js:Nonce was issued for@61` `` |
+| "16-character **random** token" | ⚠️ salted SHA-512 of `type:key:salt`, sliced to 16 — random-*seeded*, and the identity binding is baked into the token itself |
+| DELETE requires a nonce | ✅ `` `js/wbapi-server.js:DELETE requires a nonce token@11245` `` |
+| POST "accepts nonces optionally" | ⚠️ POST consumes no nonce at all; only DELETE and the snapshot sweep do |
+| PUT requires none | ✅ |
 
-| Severity | Meaning |
-|----------|---------|
-| `error` | Broken reference — will cause a runtime bug in the game |
-| `warning` | Style issue or probable mistake — game still loads |
-| `suggestion` | Improvement opportunity — not required |
-| `parse` | Section could not be parsed — data may be missing |
+The rationale stands and is worth restating, because it is a design position rather
+than a security one: writes to the game file are permanent (git is the undo), so the
+nonce is a **confirmation handshake**, not a cryptographic control. It costs a
+round-trip and it buys a moment in which the developer must name the exact entity they
+intend to destroy. It also defeats the mistyped `curl`, the replayed browser tab, and
+the automation script running on stale data. `./api.sh` fetches it for you, which is
+the point: ceremony for the machine, none for the human.
 
-Common errors: `quest.activateNode` pointing to a nonexistent node code; `WORLD_DB` terrain `monsters` array referencing a nonexistent `MONSTER_POOL` key; `quest.chain` pointing to a nonexistent quest ID; NPC `node` field pointing to a nonexistent node code.
+### Restart — **NOT SHIPPED at HEAD (retired)**
 
-Workflow: run audit → read errors → create missing entities or fix broken keys → run audit again until errors reach zero.
+This report specifies: `POST /api/restart` saves state, **exits with code 67**, and
+`wbapi-toggle.sh`'s restart loop relaunches. That shipped, in this document's own
+commit, and lived **seven days**. `7e2239a` (2026-06-05) replaced it with in-memory
+hot-reload; `wbapi-toggle.sh` no longer contains a restart loop at all. The server now
+states the repudiation in its own source: *"The server never exits with code 67. All
+restart/relaunch is handled by an external process… POST /api/restart exits 0."*
+(`` `js/wbapi-server.js:The server never exits with code 67@11638` ``)
 
-**New rules (as of api.sh v1):**
-- **ERROR** — quest has no `npc` field (every quest must be anchored to an NPC)
-- **WARNING** — NPC has no quests (NPC has no gameplay function)
-
-```bash
-./api.sh audit
-./api.sh audit --raw | jq '.errors'
-./api.sh audit --raw | jq '.warnings[] | select(.field=="quests")'  # NPCs with no quests
-```
-
----
-
-### GET /api/export/{collection}
-
-Dumps a complete in-memory collection as a downloadable artifact. Useful for backups, offline analysis, or feeding data into other tools.
-
-**Collections:** `node_map`, `quest_db`, `monster_pool`, `world_db`, `fish_pool`, `lake_magic`, `all`
-
-**Formats** (via `?format=` query param):
-
-| Format | Output |
-|--------|--------|
-| `json` (default) | Standard JSON |
-| `js` | Assignment: `const QUEST_DB = {...};` |
-| `module` | CommonJS: `module.exports = {...};` |
-
-```bash
-./api.sh export quest_db --format json --out quests.json
-./api.sh export monster_pool --format js --out monsters.js
-./api.sh export all --format module --out game-data.js
-```
-
-The `module` format produces a file that can be `require()`'d by any Node.js script, enabling offline analysis of the full game dataset without a running server.
+The commit/reset **cycle** survived its mechanism: writes still persist per-operation
+(`` `js/wbapi-server.js:const r = WBAPI.save(tmp)@1465` ``, §DX-02k), and on-disk state
+is still the authority a restart re-parses. → **§DX-02ba** (a live doc still teaches
+the dead protocol).
 
 ---
 
-### GET /api/fish[/{key}][?rank=&night=]
+## VI. The API surface
 
-Fish pool entries. Without parameters, returns all day fish. With `?night=1`, returns night fish. With `?rank=3`, returns fish of rank 3 or higher. With a key, returns a single fish entry.
+The original §V/§VI of this report were a hand-copied alphabetical catalogue of ~30
+endpoints. That catalogue is **retired here**, for the reason the report itself argues
+in its conclusion: the API is self-documenting, so a transcription of it is a second
+source of truth with a shorter half-life than the first. `GET /api/help[/{topic}]`,
+`./api.sh help`, and `docs/api/API-README.md` are the live reference. The server now
+routes **150+** endpoints.
 
-```bash
-./api.sh get fish all
-./api.sh get fish silver_pike
-# filtered: curl 'http://localhost:1367/api/fish?night=1&rank=4'
-```
+What verification measured instead — whether the surface this report *described* is
+still there:
 
----
-
-### GET /api/flags
-
-Lists all `_S_DEFAULTS` flags — the boolean and numeric game state defaults. Returns each flag's name, default value, and comment. Useful for auditing which game features are enabled by default and what their initial state is.
-
-```bash
-./api.sh export _s_defaults --raw    # via export endpoint
-# or direct: curl http://localhost:1367/api/flags
-```
-
----
-
-### GET /api/help[/{topic}]
-
-The built-in help system — a man-page style reference served as plain text. Without a topic, returns the index of all available topics. With a topic, returns a detailed reference for that topic.
-
-**Topics:** `overview`, `modes`, `nonce`, `read`, `write`, `quest`, `node`, `monster`, `terrain`, `mission_bit`, `export`, `wizard`, `audit`, `curl`
-
-```bash
-./api.sh help                              # wb CLI quick reference
-./api.sh --ai "explain the nonce system"   # Claude AI assist
-# Server help topics (verbose): curl http://localhost:1367/api/help/curl
-```
-
-The help system makes the API self-documenting. Run `./api.sh help` for the CLI reference, or `./api.sh --ai "<question>"` to ask Claude about any API capability.
-
----
-
-### GET /api/lake-magic[/{key}][?effect=&minRank=]
-
-Lake magic item list or single entry. Filter by `effect` substring or `minRank` numeric threshold.
-
-```bash
-./api.sh get lake-magic all
-./api.sh get lake-magic rod_of_fortune
-# filtered: curl 'http://localhost:1367/api/lake-magic?minRank=3'
-```
+- **Every endpoint named still routes.** `audit` · `export` · `fish` · `flags` ·
+  `help` · `lake-magic` · `list` · `location` · `ping` · `quest/{id}/chain` ·
+  `schema` · `source` · `nonce` · `reload` · `restart` · `save` · `terrain` ·
+  `monster` (+`/fork`, `/rename`) · `node` (+`/move`) · `npc` · `terrain/{key}/swap`
+  — 0 dead.
+- **Help topics: 14 of 14 survive**, plus four added (`cli`, `coords`, `import`,
+  `workflow`).
+- **Audit severities: 4 of 4** — `error` · `warning` · `suggestion` · `parse`.
+- **Both "api.sh v1" audit rules are live and near-verbatim**:
+  *"quest has no npc field — every quest must be anchored to an NPC"*
+  (`` `js/wbapi-server.js:every quest must be anchored to an NPC@4681` ``) and
+  *"has no quests — NPC has no gameplay function"*
+  (`` `js/wbapi-server.js:NPC has no gameplay function@4721` ``). Note for readers:
+  §AUDIT-03b later established that `q.npc` is **authoring metadata only** — the engine
+  does not route on it — so the ERROR rule enforces bookkeeping, not behaviour.
+- **The ✦ Wizard tab: 6 of 6 steps exact** — Vignette · Token · Location · Monster ·
+  Quest Arc · Review + Create (`` `worldbuilder.html:wdlbl-6@1164` ``,
+  `` `worldbuilder.html:Step 6: Review + Create@1343` ``). The claim that it adds no
+  capability the endpoints lack, and exists only to enforce creation order
+  (terrain → node → monster → quest → save) while showing the payloads beside the
+  narrative, still holds.
+- **Three endpoints are still not wrapped.** This report flagged
+  `monster/{key}/fork`, `node/{code}/move` and `terrain/{key}/swap` as "not yet wrapped
+  in api.sh" and told the reader to use raw `curl`. **Seventy-six days later, all three
+  are still unwrapped** — a standing exception to invariant #7. → **§DX-02bc**.
 
 ---
 
-### GET /api/list/{type}
+## VII. Spec → shipped delta table
 
-Returns a flat list of all entities of a given type. Supports filtering via query parameters.
+| # | Claim | Verdict | Evidence |
+|---|---|---|---|
+| 1 | `BIRKA_NPCS` is the NPC table | **NOT SHIPPED — never existed** | 0 commits ever in the game file's history. The anchor is **`BIRKA_NPC`**, singular; the in-engine roster is the function-local `birkaNpcs`. The sibling report filed the same day has it right (§VIII). |
+| 2 | Pipeline step 1: extract `<script>` text with one regex | **NOT SHIPPED — never existed** | 0 commits ever in `wbapi-core.js`. The parser has always anchored directly on `◆◆◆` in the raw HTML — which this report's own §III describes correctly. It contradicts itself, and §III is the half that cites the mechanism. |
+| 3 | `P = new Proxy({}, { get: (_, k) => k })` → `P.dock_rat` is the string `"dock_rat"` | **Wrong when written** | Actual, byte-identical archive → HEAD: `` `js/wbapi-core.js:const Pp = new Proxy(P@290` `` proxies the **real** `P` and falls back to an **object** `{ key: String(k) }`, not a string. |
+| 4 | *"`goblin: { name:'Goblin', ac:13, hp:7, atk:4, dmg:5, xp:50, tier:1 }` … // 391 more entries"* | **3 of 7 fields wrong when written** | Actual, byte-identical archive → HEAD: `` `goblin:        { name:'Goblin'@5339` `` is `ac:15 … dmgDie:6, dmgCount:1, dmgFlat:2`, and `tier:'easy'` — a **string**, from a five-member enum (`` `js/wbapi-server.js:values:['trivial','easy','medium','hard','deadly']@1306` ``). `dmg` and `xp` are not monster fields. The count "391 more" is **exact**. |
+| 5 | Monster creation takes `cr=1/8` | **NOT SHIPPED — never existed** | `cr:` — 0 at HEAD, 0 at the archive, 0 commits ever. |
+| 6 | The `<script>` block is **300 KB** (stated 3×) | **Wrong when written, by 5.1×** | 1,539,946 bytes at its own tree; whole file 1.79 MB. Never true: the earliest surviving build (2026-05-24) is already 0.86 MB. |
+| 7 | `GET /api/source` is how `worldbuilder.html` loads the game file | **Wrong when written** | 1 hit at the archive, 1 at HEAD — a documentation row. The UI drove typed endpoints then (`/api/schema` ×10, `/api/list` ×9) and drives them now (`/api/list` ×56, `/api/count` ×33). |
+| 8 | `POST /api/restart` → exit 67 → toggle relaunches | **RETIRED** (shipped, lived 7 days) | §V. |
+| 9 | The server *prevents* editor/API write races | **Wrong** — it is the cause of one | CONTRIBUTING Hazard #1. |
+| 10 | Node codes `CY`, `BK` as example primary keys | **Both retired; `BK` is worse than dead** | §IX. |
 
-**Types:** `node`, `quest`, `monster`, `npc`, `terrain`, `fish`, `lake-magic`
+**And the finding that reframes the rest.** Ten worked-example identifiers —
+`dock_rat`, `silver_pike`, `rod_of_fortune`, `fog_docks`, `drowned_sailor`,
+`harbour_rat`, `goblin_champion`, `quest_chest_01`, `sealed_merchant_chest`,
+`questChestDelivered` — have **0 commits, ever, all ten.** In a design doc that would be
+a catastrophe. Here it is *correct by construction*: a reference manual's examples are
+supposed to be fictional, and a man page that documented `POST /api/monster` against a
+real monster would be worse, not better.
 
-**Filters:**
-- `?node=CY` — quests or monsters at a specific node
-- `?terrain=forest` — monsters in a specific terrain
-- `?type=combat` — quests of a specific type
-
-```bash
-./api.sh list node
-./api.sh list quest
-./api.sh list monster
-./api.sh list quest --node CY
-./api.sh list monster --terrain coastal_market
-./api.sh list npc --node CY              # NPCs at a specific node
-```
-
----
-
-### GET /api/location/{code}
-
-Composite view of a location. Returns the node, all quests with `activateNode === code`, all NPCs assigned to the node, and all monsters reachable via the node's terrain. Useful for understanding the full player experience at a given map position.
-
-```bash
-./api.sh location CY
-./api.sh location BK
-```
+> ***In a REFERENCE document, invented identifiers are the healthy case. Score it by its
+> quoted file excerpts, never by its worked examples.*** The one specimen this report
+> dressed as a transcript — `goblin`, with `// … 391 more entries …` as the tell — is
+> the one it got wrong, and it got the *count* in that ellipsis exactly right. The
+> author knew the real total and invented the statline anyway.
 
 ---
 
-### GET /api/{node|quest|monster|npc|terrain}/{id}
+## VIII. Corpus check — the sibling filed the same day
 
-Full entity detail with cross-references. In addition to the entity's own fields, the response includes:
+`lab-report-wbapi.md` covers the same system, same date, same author. Two reports, one
+morning, one file; they disagree, and each disagreement is informative:
 
-- For **nodes**: linked quests, linked NPCs, monsters from terrain
-- For **quests**: upstream/downstream chain, linked NPC, linked nodes
-- For **monsters**: terrains that reference this monster, monster drop table
-- For **terrain**: monster list, nodes that use this terrain
+| | This report | Sibling | Truth |
+|---|---|---|---|
+| NPC table | `BIRKA_NPCS` | **`BIRKA_NPC`** | Sibling. One `grep` settles it. |
+| `WORLD_DB` | 107 | 69 | **Both** — 69 before `064aef8` (15:41), 107 after |
+| `QUEST_DB` | 211 | 210 | **Both** — 210 before `403c453` (12:34), 211 after |
+| File size | *300 KB* | **1.7 MB** | Sibling: 1,793,649 B |
+| File lines | — | *~11,530* | 24,280. The sibling's figure is **its own table's last row** (`BIRKA_NPC | 11472–11530`) misread as the file length |
 
-```bash
-./api.sh get node CY
-./api.sh get quest quest_wis_01
-./api.sh get monster goblin
-./api.sh get terrain forest
-./api.sh get npc aldric
-```
+The counts do not conflict; they **timestamp**. Two reports written hours apart bracket
+a commit from opposite sides, and the pair dates itself more precisely than either can
+alone.
 
----
-
-### GET /api/ping
-
-Health check. Returns counts of all loaded collections. The canonical first call to verify the server is running and the game file is loaded.
-
-```bash
-./api.sh ping
-# ✓ server alive  http://localhost:1367
-```
+The size figures do conflict, and the mechanism is the durable part: the sibling's
+1.7 MB sits in a **header table** — a field to fill from `ls` — and is exact. This
+report's 300 KB sits in **running prose**, three times, and is 5.1× low. Same author,
+same day, same file: **one measured it and one remembered it.** Round numbers in prose
+are recollection wearing a lab coat.
 
 ---
 
-### GET /api/quest/{id}/chain
+## IX. Node codes — instrument 31 (`num` is the identity)
 
-Returns the upstream and downstream quest chain for a given quest ID. Upstream = prerequisites that must be complete before this quest unlocks. Downstream = quests that unlock when this quest passes.
+Both example codes are retired, and the archive resolves them in one step because
+`num` was preserved across the 26×16 → 90×360 world migration:
 
-```bash
-./api.sh chain quest_wis_01
-```
+- **`CY`** (archive `num:6`, *cyberpunk_streets*, "Neon Undercity") → **`HKG`**,
+  `` `HKG:{ num:6@8439` ``. Corroborated independently by the engine's own remap
+  comment in `birkaNpcs`.
+- **`BK`** (archive `num:25`, "Broken Tooth Tavern", Visby) → **`VBY`**,
+  `` `VBY:{ num:25@8684` ``.
 
----
-
-### GET /api/schema[/{type}]
-
-Returns the canonical field schema for a given entity type, including field names, types, whether they are required, and brief descriptions. Without a type, returns schemas for all entity types.
-
-```bash
-# Schema via AI: ./api.sh --ai "what fields does a quest need?"
-# Raw: curl http://localhost:1367/api/schema/quest
-```
+`BK` is the §AUDIT-03m *worse-than-dead* class in pure form. A code that no longer
+exists fails loudly. **`BK` still exists** — as `` `BK: { num:241@9011` ``, "Birka
+Shore — Northern Longship Landing", a beach in a different act on the other side of the
+map. A reader who runs this report's `./api.sh location BK` gets a confident, correct,
+completely wrong answer. Existence checks pass; the sentence stays false.
 
 ---
 
-### GET /api/source
+## X. Why this architecture is right for this problem
 
-Returns the raw HTML source of `roll2hit-v3.html`. Pipe to a file to create a backup or to inspect the raw text.
+| Constraint | Consequence | WBAPI's answer |
+|---|---|---|
+| Single file must stay playable | Data cannot leave the HTML | Parse in place; serialize back in place |
+| No build step | Data is JS literals, not JSON | Comment-aware brace scanner; `P` proxy for key references |
+| One author writing world data | No concurrency needed | One process owns all in-memory state |
+| Writes are high-value, infrequent | Mistakes are expensive | Nonce handshake; dependency checks before DELETE |
+| Author must understand state first | Blind writes are dangerous | Full read API; `audit`; self-documenting help |
+| Server restarts mid-session | State must survive | The HTML *is* the state; restart re-parses from disk |
 
-```bash
-curl http://localhost:1367/api/source -o backup-$(date +%Y%m%d).html    # raw source download
-```
+The anti-patterns declined, and why each would have cost the promise in §I:
 
-This endpoint is also how `worldbuilder.html` loads the game file when connected to the server — it fetches the source, parses it client-side using the same anchor-marker approach, and populates its in-browser WBAPI instance.
+- **External database** — the file stops being self-contained. The promise dies at the
+  first sentence.
+- **Template/build pipeline** — the game is no longer giveable as source.
+- **JSON sidecars** — splits the truth. The browser and the API then need
+  synchronization logic, and two sources of truth are two sources of bugs.
+- **Editor edits during a live server session** — a write race. This one was declined
+  in principle and shipped in practice; see Hazard #1.
 
----
-
-## VI. Write Endpoints (Alphabetical)
-
-All write endpoints mutate in-memory state. **`./api.sh` is the recommended interface** — it handles nonces, queues requests, and retries on failure automatically. The recommended pattern: create/update → verify with a get → audit → save.
-
----
-
-### DELETE /api/{node|quest|monster|npc}/{id}
-
-Deletes an entity permanently. Requires a nonce. The server checks for dependencies: a node with quests or NPCs attached returns `409 Conflict` until dependents are moved or deleted.
-
-```bash
-./api.sh del node XX             # nonce auto-handled
-./api.sh del quest quest_old_01
-```
+The single-file HTML is the discipline. WBAPI is the tooling that lets an author keep
+it without hand-writing JSON into a multi-megabyte `<script>` block.
 
 ---
 
-### POST /api/fish
+## XI. Conclusion
 
-Creates a new fish entry in `FISH_POOL`.
+The evolution from `grep` to WBAPI is a story about matching a tool to a constraint.
+Each early phase failed not because it was a bad tool but because it was the wrong tool
+for this specific combination: JavaScript-literal syntax, DOM-dependent init code, the
+single-file requirement, and the need for safe in-place writes. `grep` treats the file
+as a bag of lines. The file is not a bag of lines; it is an AST serialized as text, and
+nothing that refuses to know that can edit it safely.
 
-```bash
-./api.sh post fish key=silver_pike name="Silver Pike" rank=4 \
-  desc="A gleaming predator." isNight=false
-```
+The final architecture is unusual — a REST API whose database is an HTML file, read by
+locating anchors in raw text and written by splicing whole sections back between them —
+but it is unusual in precisely the way the constraint is unusual. **It has now survived
+3× the file, 13.5× the quests, and 76 days of active development with zero dead
+endpoints.** The parts this report identified as load-bearing all are.
 
----
+What verification adds is the corrective. The mechanisms held; the *particulars*
+did not. Two identifiers here never existed, the parser's central trick is described
+backwards, the headline file size is 5× low, and the one code specimen dressed as a
+transcript was invented — all of it on the day of filing, by an author who had the file
+open. The document is a good architecture paper and an unreliable citation, and those
+two verdicts are independent.
 
-### POST /api/flags
+And the closing sentences still earn their place, because they are the reason any of
+this exists:
 
-Adds a new flag to `_S_DEFAULTS`.
+> *The game is always in a state where it can be opened in a browser and played. The API
+> exists to help a developer keep it that way.*
 
-```bash
-./api.sh post flags name=questChestDelivered defaultValue=false \
-  comment="sealed chest delivery quest"
-```
-
----
-
-### POST /api/lake-magic
-
-Creates a new lake magic item.
-
-```bash
-./api.sh post lake-magic key=rod_of_fortune name="Rod of Fortune" effect=luck+2 rank=3
-```
-
----
-
-### POST /api/monster
-
-Creates a new monster entry. Key must be unique snake\_case. Add to a terrain after creation via `./api.sh put terrain {key} monsters=[...]`.
-
-```bash
-./api.sh post monster key=dock_rat name="Dock Rat" ac=11 hp=4 atk=2 dmg=3 xp=10 tier=1 cr=1/8 \
-  desc="A mangy rodent the size of a small dog."
-```
+Everything above is engineering in service of that. Nobody who plays this game will ever
+see a nonce, an anchor marker, or a brace counter. They will see 2,853 quests in one
+file that opens.
 
 ---
 
-### POST /api/monster/{key}/fork
-
-Creates a variant monster by copying an existing one with field overrides.
-
-```bash
-# low-level curl (not yet wrapped in api.sh):
-curl -XPOST http://localhost:1367/api/monster/goblin/fork \
-  -H 'Content-Type: application/json' \
-  -d '{"newKey":"goblin_champion","overrides":{"name":"Goblin Champion","ac":15,"hp":18}}'
-```
-
----
-
-### POST /api/monster/{key}/rename
-
-Updates a monster's display name without changing its key.
-
-```bash
-./api.sh put monster dock_rat name="Harbour Rat"
-```
-
----
-
-### POST /api/node
-
-Creates a new map node. `code` = primary key (2–3 uppercase chars), `name` = terrain key from `WORLD_DB`.
-
-```bash
-./api.sh post node code=FD label="Fog Docks" act=1 name=coastal_market \
-  desc="Fog-shrouded docks where sailors speak in whispers."
-```
-
----
-
-### POST /api/node/{code}/move
-
-Renames a node's code. Updates all references in `QUEST_DB` and `BIRKA_NPCS`.
-
-```bash
-# low-level curl (not yet wrapped in api.sh):
-curl -XPOST http://localhost:1367/api/node/XX/move \
-  -H 'Content-Type: application/json' \
-  -d '{"newCode":"FD"}'
-```
-
----
-
-### POST /api/nonce
-
-Requests a write-protection token. **`./api.sh` fetches nonces automatically** for `post` and `del` commands.
-
-```bash
-./api.sh nonce quest quest_chest_01    # prints token to stdout
-```
-
----
-
-### POST /api/quest
-
-Creates a new quest entry in `QUEST_DB`. `id`, `type`, `title`, `activateNode`, and **`npc`** are required. `startText`, `failText`, and `passText` carry the narrative. `retryable:true` with `retryGateDays:0` enables hourly retry. `missionBitKey` links a mission-bit token item that the player carries.
-
-```bash
-./api.sh post quest \
-  id=quest_chest_01 type=mission_bit npc=the_merchant \
-  title="The Sealed Chest" activateNode=FD \
-  startText="The merchant presses a locked chest into your hands at dawn." \
-  failText="The docks are crawling with guards tonight. You slip away." \
-  passText="The temple priest accepts the chest without a word." \
-  retryable=true retryGateDays=0 missionBitKey=sealed_merchant_chest
-```
-
----
-
-### POST /api/reload
-
-Re-parses `roll2hit-v3.html` from disk, discarding all in-memory edits. Use this to reset the server state if you made changes directly to the HTML and want the server to pick them up without restarting the process.
-
-```bash
-./wbapi-toggle.sh restart    # preferred (saves + restarts)
-# or: curl -XPOST http://localhost:1367/api/reload
-```
-
----
-
-### POST /api/restart
-
-Saves all in-memory edits to `roll2hit-v3.html`, then exits with code 67. The `wbapi-toggle.sh` restart loop catches code 67 and relaunches the server automatically. The result: a clean restart with the freshly-saved HTML as the source.
-
-```bash
-./wbapi-toggle.sh restart    # preferred wrapper
-# or: curl -XPOST http://localhost:1367/api/restart
-```
-
----
-
-### POST /api/save
-
-Serializes all in-memory edits to `roll2hit-v3.html`. This is the write-commit step. Always call after any create/update/delete operation.
-
-```bash
-# Save fires automatically after each ./api.sh post/put/del.
-# Manual: curl -XPOST http://localhost:1367/api/save
-```
-
----
-
-### POST /api/terrain
-
-Creates a new terrain entry in `WORLD_DB`. The `monsters` array contains `MONSTER_POOL` keys (not names). The server validates that each key exists in `MONSTER_POOL` before writing.
-
-```bash
-./api.sh post terrain key=fog_docks label="Fog Docks" icon=🌫 \
-  monsters='["dock_rat","drowned_sailor"]'
-```
-
----
-
-### POST /api/terrain/{key}/swap
-
-Renames a monster key within a terrain's `monsters` array. Used when a monster key is being renamed and all terrain references must be updated.
-
-```bash
-# low-level (not yet wrapped in api.sh):
-curl -XPOST http://localhost:1367/api/terrain/coastal_market/swap \
-  -H 'Content-Type: application/json' \
-  -d '{"oldKey":"dock_rat","newKey":"harbour_rat"}'
-```
-
----
-
-### PUT /api/{node|quest|monster|npc}/{id}
-
-Updates individual fields of an existing entity. Only the fields included in the body are modified; all other fields are preserved.
-
-```bash
-./api.sh put node FD label="The Sunken Docks" desc="Updated description."
-./api.sh put quest quest_chest_01 failText="The tide is wrong tonight. You wait for morning."
-./api.sh put monster dock_rat hp=6 xp=12
-```
-
----
-
-### PUT /api/terrain/{key}
-
-Updates a terrain's `label`, `icon`, or `monsters` array. Setting `monsters` replaces the entire array; partial updates are not supported (send the complete desired list).
-
-```bash
-./api.sh put terrain fog_docks monsters='["dock_rat","drowned_sailor","harbour_smuggler"]'
-```
-
----
-
-## VII. Design Analysis: Why This Architecture Is Correct For This Problem
-
-The WBAPI architecture optimizes for a specific set of constraints that are uncommon in production software but common in solo/small-team game development:
-
-| Constraint | Consequence | WBAPI Response |
-|-----------|-------------|----------------|
-| Single-file HTML must stay playable | Cannot move data out of HTML | Parser reads data in-place; serializer writes back in-place |
-| No build step | Data is JavaScript literals, not JSON | Comment-aware brace-count parser; Proxy trick for `P.*` references |
-| One developer writing world data | No concurrency needed | Single Node.js process owns all in-memory state |
-| Writes are high-value and infrequent | Mistakes are costly | NONCE handshake; dependency checks before DELETE |
-| Developer must understand state before writing | Blind writes are dangerous | Comprehensive GET read API; audit endpoint; help system |
-| Server may be restarted mid-session | State must survive restart | All state is in the HTML file; restart re-parses from disk |
-
-The anti-patterns this architecture deliberately avoids:
-
-- **External database:** Would break the single-file constraint. The HTML file would no longer be self-contained.
-- **LESS/Sass-style template pipeline:** Would require a build step. The game is no longer giveable as a source file.
-- **JSON sidecar files:** Splits the truth. The browser game and the API would need synchronization logic. Two sources of truth means two sources of bugs.
-- **Direct text editor edits during an active server session:** Creates a write race. The developer edits the file; the server's in-memory state is now stale; `POST /api/save` would overwrite the editor changes.
-
-The single-file HTML is the discipline. The WBAPI is the tooling that lets a developer maintain that discipline without handwriting JSON into a 300 KB `<script>` block.
-
----
-
-## VIII. The Wizard Tab
-
-The `worldbuilder.html` ✦ Wizard tab is the GUI expression of the API-first workflow documented in `plan.md §I`:
-
-1. **Vignette** — write the story in plain English; the wizard extracts suggested IDs
-2. **Token** — name the mission-bit inventory item the player will carry
-3. **Location** — look up an existing node code or define a new node
-4. **Monster** — look up an existing monster key or define a new monster
-5. **Quest Arc** — write BEFORE / FAIL / PASS narrative text; set `retryable` flag
-6. **Review & Create** — see the generated JS literals and curl commands; fire API calls in sequence
-
-The wizard does not introduce any capability that the curl endpoints do not already have. It is a front-end wrapper that enforces the correct creation order (terrain → node → monster → quest → save) and surfaces the JSON payloads alongside the narrative context. The "curl commands" panel in the Review step shows exactly what the wizard will POST — a developer can copy those commands and use them directly without the GUI.
-
----
-
-## IX. Conclusion
-
-The evolution from `grep` to WBAPI is a story about matching the tool to the constraint. Each phase failed not because it was a bad tool, but because it was the wrong tool for the specific combination of constraints: JavaScript object literal syntax, DOM-dependent initialization code, the single-file requirement, and the need for safe in-place writes.
-
-The final architecture is unusual: a REST API that treats an HTML file as its database, reads it by parsing a `<script>` tag, and writes to it by string-splicing at anchor markers. But it is unusual in the same way that the single-file HTML constraint is unusual — it is the right answer for this specific problem.
-
-The NONCE system enforces the discipline that the single-writer model requires. The anchor markers make the HTML parseable without a full JavaScript engine. The help system makes the API self-documenting. And `POST /api/save` + `POST /api/restart` is the commit/reset cycle that keeps the in-memory state synchronized with the file that is the source of truth.
-
-The game is always in a state where it can be opened in a browser and played. The API exists to help a developer maintain that state safely. Those two sentences describe the entire design.
-
----
-
-**Filed:** 2026-05-29  
-**Cross-references:** `plan.md §I` (Directive / API-First Policy) · `plan.md §WBAPI-01` · `wbapi-server.js` · `wbapi-core.js` · `wbapi-toggle.sh` · `worldbuilder.html` · `lab-report-meta-process-loop-expansion.md`
+**Filed:** 2026-05-29 · **Retro-fitted:** 2026-06-05 (`77c517f`) · **Verified:** 2026-08-13 (§DOC-02ap)
+**Follow-ups filed:** §DX-02ba · §DX-02bb · §DX-02bc
+**Cross-references:** `js/wbapi-core.js` · `js/wbapi-server.js` · `api/wb.js` ·
+`wbapi-toggle.sh` · `worldbuilder.html` · `docs/api/API-README.md` ·
+`lab-report-wbapi.md` (same-day sibling) · `lab-report-wbapi-architecture.md` ·
+`lab-report-meta-process-loop-expansion.md` · CONTRIBUTING Hazard #1 · §AUDIT-03b ·
+§AUDIT-03f · §AUDIT-03m · §DX-02k
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
