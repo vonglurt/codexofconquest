@@ -1,236 +1,370 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report — Layers 54+55: Tilbury Harbor Arc + Visby Underground
+# Lab Report — Layers 54 + 55: Tilbury Harbor Arc + Visby Underground
 
-**IEEE-Format Post-Mortem**  
-**Date:** 2026-05-25  
-**Layers:** 54 (§XIX) + 55 (§XX)  
-**Sections:** §XIX — Tilbury Harbor Arc · §XX — Visby Underground  
-**Status:** ✅ Implemented  
-**Codebase:** `roll2hit-v3.html` — single-file browser RPG
+**IEEE-format post-mortem · §DOC-02an verification pass**
+
+| Field | Value |
+|-------|-------|
+| **Original date** | 2026-05-25 |
+| **Ship commit** | `194a810` (2026-05-25 09:10:55 −0700) — verified |
+| **Layers** | 54 (§XIX Tilbury Harbor Arc) · 55 (§XX Visby Underground) |
+| **Codebase** | `roll2hit-v3.html` — single-file browser RPG |
+| **Verified against** | HEAD, 2026-08-12 (`a962c2a`), 79 days after ship |
+| **Status** | ⚠️ **SHIPPED BUT UNREACHABLE** — 32/32 identifiers resolve; **1 of 7 quests is completable in play** |
+
+> *Everything in this arc was built. Almost none of it can be reached. The two facts are
+> independent, and only one of them is visible to a grep.*
 
 ---
 
 ## Abstract
 
-This report covers two complementary arcs implemented together as a structural pair: Layer 54 (§XIX) — the Tilbury Harbor Arc ("The Conclave's Weight"), and Layer 55 (§XX) — the Visby Underground ("What Mordus Owes"). Both arcs operate in Acts II–V, both are centered on the Merchant's Conclave as an institutional presence, and both end at the same revelation: a Void-aligned shaman is operating inside Mordus's territory using a goblin sub-clan (the Hollow Hands) as a proxy. The Tilbury arc documents the Conclave's management of disappearing ships through paperwork; the Visby arc documents a Conclave debt that leads, through a goblin broker, to the same shaman. The two arcs are written and structured to be completable in any order, with one dialogue line in the Visby arc (`harrowNote`) conditionally appending a Tilbury cross-reference when `tlLedgerRead` is true.
+Two arcs implemented as a structural pair. **Layer 54 (§XIX) — the Tilbury Harbor Arc
+("The Conclave's Weight")** makes the Merchant's Conclave legible as a *bureaucracy* rather than a
+setting: Harbor Master Rennau keeps a ledger of ten ships that never came back, the Conclave files
+them as "weather losses," and a survivor of the most recent one walks into town three weeks later
+with an account of what actually boarded her. **Layer 55 (§XX) — the Visby Underground ("What
+Mordus Owes")** turns a 2,000gp Conclave debt into an investigation whose answer is that a
+Void-aligned shaman invented a tribute in order to arm a goblin sub-clan. Both arcs converge on the
+same revelation and were written to be completable in either order, with two conditional
+cross-references rewarding the player who does both.
+
+This pass re-measures every claim against HEAD. **Report-rot is near zero: all 32 named identifiers
+resolve, every quoted line of dialogue is byte-verbatim at 79 days, the monster statline and drop
+are exact, and the design's mechanism is intact end to end.** The defect is elsewhere. Four
+independent blockers — one present on the day of shipping — mean the arcs' surfaces almost never
+render: three of the four node codes the render blocks key on are **non-primary** in their map cells
+(§AUDIT-03x), and the Tilbury arc's entire chain hangs on a flag with **no writer outside its own
+completion handler**. The Void Shaman payoff both arcs exist to deliver has never been reachable.
 
 ---
 
-## I. Design Intent
+## I. Design intent and what it buys the player
 
-### A. §XIX: The Conclave as Paper
+### A. §XIX — the Conclave as paper
 
-The harbor in Tilbury existed as a node (DK — Harbor Docks) with ambient description and Magistra Muffat's main quest beat. There was no institutional record of the shipping environment, no NPC whose job was the ledger, and no reason to return after collecting Shard #1. The design gap: the Merchant's Conclave is named throughout Act II as the power structure of Tilbury, but the player has no interaction with the Conclave as a bureaucratic system — only as a setting.
+Before Layer 54 the Tilbury harbor was scenery: a docks node with ambient text and one main-quest
+beat, and no reason to return after Shard #1. Act II names the Merchant's Conclave as the region's
+power structure, and the player could not *touch* it.
 
-§XIX fills this by making the harbor ledger the entry point. Harbor Master Rennau keeps the record of ships that haven't come back. Ten ships are listed on the harbor board by name and day overdue. The most recent is the Harrow. The Conclave categorizes them as "weather losses." Rennau stopped using that category six weeks ago.
+The arc's answer is a ledger. The harbor board lists ten ships by name and days overdue — **HARROW
+(Day 17) … SUNDRESS (Day 107)** — all filed identically. **The playability argument is that scale
+is legible before the story starts:** the player does not learn there is a missing ship, they see
+ten, and the institution's failure is a *quantity* rather than an assertion. Rennau supplies the
+one line that turns a list into a grievance — *"I stopped calling them that six weeks ago."*
 
-The arc's payoff is Ori — the sole survivor of the Harrow — who walks into Tilbury three weeks after the sinking and describes what boarded them. Not pirates, not a storm. A shape in the water that moved like it was looking for something. Her account connects the harbor mystery to the Void without naming it.
+The payoff, Ori, is a **non-combat resolution**: the sole survivor of the Harrow walks in on her own
+and only has to be spoken with. In a game whose default verb is a d20, an arc that resolves entirely
+through testimony widens the vocabulary of what "finishing something" can feel like.
 
-### B. §XX: The Debt as Investigation
+### B. §XX — the debt as investigation
 
-The Visby Underground arc was designed to give Warlord Mordus a quest role beyond the main-quest monster-bounty beat. Mordus owns the Broken Tooth Tavern (BK) and controls Visby's criminal infrastructure. He is also in debt to the Merchant's Conclave for 2,000gp — the price of a weapons shipment that never arrived.
+Warlord Mordus existed only as a main-quest bounty beat. Layer 55 gives him a *position*: he owes
+the Conclave 2,000gp for a weapons shipment that never arrived, and he cannot pay because he does
+not know where the weapons went. **The player's leverage is being nobody** — Solvak cannot get in
+the door, and you can, because you are not Conclave.
 
-§XX makes the missing weapons the investigation: who received them, why, and what they did with them. The answer (Yva's testimony at GC) is that a goblin sub-clan called the Hollow Hands received the shipment because their Void-aligned shaman told them it was tribute Mordus owed. Mordus never paid tribute. The shaman invented a debt to arm a sub-clan. This is the §XXI setup: the Void Shaman operates as a corrupted warden whose mandate has drifted so far it now resources goblin factions.
+The chain is Solvak → Mordus → Yva → the Hollow Hands → the shaman, and each link is a person
+rather than a lock. Yva's line is the arc's thesis in one sentence:
 
-### C. The Structural Pair
+> *"The shaman told them the weapons were tribute Mordus owed them. Mordus never paid tribute. The
+> shaman invented a tribute that made the Hollow Hands feel owed. That's the part that scares me."*
 
-The two arcs share a thematic argument: the Merchant's Conclave is competent at paperwork and incompetent at the actual world. The harbor ledger accurately records ten missing ships; the Conclave classifies them as weather losses and closes the case. The weapons debt is a legitimate Conclave instrument; the Conclave hired Solvak to collect it without knowing the weapons were stolen by a Void entity. Both arcs end with a player who knows more than the institution that manages the affected territory.
+### C. The structural pair
 
----
+Both arcs argue the same thing: **the Conclave is competent at paperwork and incompetent at the
+world.** The ledger records ten losses accurately and closes the case; the debt instrument is
+legitimate and was written against weapons stolen by a Void entity. Both end with a player who knows
+more than the institution that governs the territory — which is the emotional precondition for the
+Act V–VIII shard hunt, where no institution is coming to help.
 
-## II. Implementation Architecture
-
-### A. New Monster — `hollow_hands_guard` (§XX)
-
-**Defined in `MONSTER_POOL` — line 4624:**
-
-```js
-hollow_hands_guard: { key:'hollow_hands_guard', name:'Hollow Hands Guard',
-  ac:13, hp:22, atk:4, dmgDie:6, dmgCount:1, dmgFlat:2, tier:'easy' }
-```
-
-**Drop table** (line 5051): `hollow_hands_guard` → `"Hollow Hands Seal"` (icon 🖤, sell:0 — non-sellable quest item).
-
-**Terrain pool** (line 5426): Added to `goblin_cave` pool alongside kobolds, goblins, hobgoblins, and bugbears. Functionally a goblin-tier easy encounter that signals Hollow Hands presence in the GC node territory.
-
-### B. §XIX — Tilbury Harbor Arc
-
-#### NPC Profiles
-
-**Rennau** (line 7691) — Harbor Master, Merchant's Conclave Tier 2, node: SF. Begins Neutral; advances to Friendly on quest_tl_01, Dear Friend on quest_tl_03.
-
-Key lines:
-- Neutral: *"The ledger goes back eleven months. Every ship that's left, every ship that's come back, every ship that hasn't. The Conclave calls the ones that haven't 'weather losses.' I stopped calling them that six weeks ago."*
-- Dear Friend: *"Ori said the thing that boarded them didn't have a name. Things that don't have names are the Void's specialty. I'm glad someone came back to tell us."*
-
-**Vonn** (line 7706) — Adjutant, Merchant's Conclave Tier 3, node: TL. Static NPC; does not accumulate favorability. Represents institutional immovability — he enforces the embargo correctly and without malice.
-
-#### Harbor Board Mechanic (lines 14458–14474)
-
-On first SF visit with `!tlLedgerRead`, the game renders the harbor board as a storyMsg listing ten ships by name and days overdue:
-> `HARROW (Day 17), SILVER MARCH (Day 24), CORMORANT (Day 31), BRINE OATH (Day 44)…`
-
-If the Harrow Manifest is not already in inventory, it is added automatically at this point (the board visit constitutes finding the manifest). `quest_tl_01` activates at SF on arrival (line 14456) before the board reads.
-
-#### State Flags
-
-**Defined in `_S_DEFAULTS()` — line 8436:**
-
-| Flag | Type | Default | Purpose |
-|------|------|---------|---------|
-| `tlLedgerRead` | boolean | `false` | Harbor board read; manifest found; Rennau Friendly |
-| `tlEmbargoChallenged` | boolean | `false` | Player reported manifest to Birka Council (+150gp) |
-| `tlEmbargoDismissed` | boolean | `false` | Player chose to leave the manifest with Vonn |
-| `tlMissingShipSolved` | boolean | `false` | Ori's account delivered to Rennau; Rennau Dear Friend |
-
-#### Quest Chain
-
-| Quest | Title | Completion | Reward |
-|-------|-------|------------|--------|
-| `quest_tl_01` | Rennau: The Ledger | `tlLedgerRead` | Harrow Manifest (readable); Rennau → Friendly |
-| `quest_tl_02` | Rennau: The Embargo | `tlEmbargoChallenged` OR `tlEmbargoDismissed` | +150gp if challenged; nothing if dismissed |
-| `quest_tl_03` | Rennau: The Missing Ship | `tlMissingShipSolved` | Ori's Account (readable) + 300gp; Rennau → Dear Friend |
-
-**Activation sequence:**
-- `quest_tl_01` activates immediately on SF node arrival
-- `quest_tl_02` activates when `tlLedgerRead` (after board read)
-- `quest_tl_03` activates when `tlLedgerRead` AND `actNumber ≥ 4` (Ori arrives in Act IV)
-
-#### Vonn Choice (lines 14513–14541)
-
-Clicking "Speak with Adjutant Vonn" at TL presents Vonn's dialogue and two buttons:
-- **Report to Birka contacts** → `tlEmbargoChallenged = true`, +150gp
-- **Leave it** → `tlEmbargoDismissed = true`
-
-Both complete quest_tl_02. Neither changes Vonn's behavior. The choice records the player's stance on institutional accountability without gameplay consequence — the harbor stays closed either way.
-
-#### Ori Encounter (lines 14482–14499)
-
-Fires at SF when `tlLedgerRead && actNumber ≥ 4 && !tlMissingShipSolved`. A button "📜 Speak with Ori." renders. Clicking it delivers Ori's account as storyMsg and immediately sets `tlMissingShipSolved = true`, adds Ori's Account to inventory, sets Rennau to Dear Friend, and grants +300gp.
-
-**Froberger cross-reference in Ori's Account:** If `"Froberger's Field Notes"` is in inventory, the readable text appends:
-> *"Froberger wrote: 'The pressure is survivable if you know it's coming.' Ori survived because she knew the shape was there and went over the side before it hit."*
-
-This ties the §XVI tome reward to the §XIX survivor testimony — a player who completed the Weimar arc before the Tilbury arc gets one additional line of synthesis.
+**Why the pair matters mechanically:** the two arcs share no gate, so they are order-independent, and
+they cross-reference each other in exactly two places. That is the cheapest possible form of
+narrative reward — a player who did both gets one extra sentence in each direction and nothing is
+withheld from a player who did one.
 
 ---
 
-### C. §XX — Visby Underground
+## II. Method
 
-#### NPC Profiles
-
-**Solvak** (line 7722) — Debt Agent, Merchant's Conclave Tier 3, node: VS. Advances to Friendly on quest_vs_01 completion. Represents the Conclave's enforcement arm — competent, professional, and out of his depth.
-
-Key line at Friendly: *"You talked to Mordus. He didn't have you removed. That's better than my last three visits combined."*
-
-**Yva** (line 7735) — Goblin broker, formerly Mordus-aligned, node: GC. Advances to Friendly on paying 50gp for her intelligence. Former supply intermediary who unknowingly moved weapons to the Hollow Hands.
-
-Key line: *"The shaman told them the weapons were tribute Mordus owed them. Mordus never paid tribute. The shaman invented a tribute that made the Hollow Hands feel owed. That's the part that scares me."*
-
-#### State Flags
-
-**Defined in `_S_DEFAULTS()` — line 8438:**
-
-| Flag | Type | Default | Purpose |
-|------|------|---------|---------|
-| `vsDebtProbed` | boolean | `false` | Player has spoken with both Solvak and Mordus |
-| `vsWeaponsFound` | boolean | `false` | Yva's testimony obtained; Hollow Hands Seal in inventory |
-| `vsDebtSettled` | boolean | `false` | Seal delivered to Solvak; debt resolved; +400gp |
-| `vsShamanKnown` | boolean | `false` | Set simultaneously with vsDebtSettled; gates §XXI |
-
-#### Quest Chain
-
-| Quest | Title | Completion | Reward |
-|-------|-------|------------|--------|
-| `quest_vs_01` | Solvak: The Collector | `vsDebtProbed` | Solvak → Friendly; quest_vs_02 activates |
-| `quest_vs_02` | Yva: The Broker | `vsWeaponsFound` | Hollow Hands Seal (quest item); Yva → Friendly |
-| `quest_vs_03` | Mordus Pays | `vsDebtSettled` | +400gp; Solvak satisfied; vsShamanKnown set |
-| `quest_vs_warden` | The Warden | `wardensLegacyKnown` | (handled in §XXI — resolved at MT tunnel) |
-
-**Activation sequence:**
-- `quest_vs_01` activates at VS when `actNumber ≥ 5`
-- `quest_vs_02` activates after `vsDebtProbed` (Mordus dialogue complete)
-- `quest_vs_03` activates after `vsWeaponsFound` (Yva paid)
-
-#### Solvak/Mordus Dialogue Sequence (lines 14548–14562)
-
-The VS node Solvak button delivers a two-beat dialogue with 800ms delay:
-1. Solvak explains the debt and the player's leverage: *"He'll talk to you — you're not Conclave."*
-2. Mordus (reported speech): *"The debt will be paid when the weapons are returned. The weapons will be returned when I know where they went. I do not know where they went." — He is telling the truth.*
-
-The `harrowNote` conditional (line 14554): if `tlLedgerRead`, Solvak appends *"We lost a ship around the same time. The Harrow. Unrelated, probably."* This is the only dialogue cross-reference between the two arcs — a one-line connection placed naturally in an existing NPC conversation.
-
-#### Yva Payment Gate (line 14593–14608)
-
-Clicking "Find Yva (50gp)" at GC deducts 50gp (hard-gated: *"You don't have 50gp."* if insufficient) and delivers Yva's testimony. She adds a Tilbury cross-reference if `tlMissingShipSolved`:
-> *"The Harrow. I heard about that ship. The Hollow Hands didn't touch it. Whatever got that ship wasn't them."*
-
-This second cross-reference (Yva confirming the Harrow was NOT a Hollow Hands operation) separates the two mysteries: the weapons story and the sea creature story are not the same threat. Both lead back to the Void, but via different mechanisms.
-
-#### Hollow Hands Seal Delivery (lines 14568–14583)
-
-At VS with `vsWeaponsFound && !vsDebtSettled`, a button "Deliver the Hollow Hands Seal to Solvak." fires. Clicking removes the Seal from inventory, grants +400gp, sets `vsDebtSettled = true` and `vsShamanKnown = true` simultaneously. Mordus's delayed response (600ms):
-> *"The Hollow Hands are mine to deal with now that I know what they are. You found what I needed to find them. That's worth something."*
-
-`vsShamanKnown` being set at this point — not after defeating the shaman — is intentional: the player knows the shaman exists and operates in Mordus's territory. §XXI then surfaces at MT when both `vsShamanKnown` and `vaLastWardVisited` are true.
+1. Batch census of every identifier the report names (`grep -cF`), partitioning it into resolves /
+   dead before reading the prose (§DOC-02b instrument).
+2. `git log -S` on every claim that looked absent, to separate **RETIRED** from **NEVER SHIPPED**
+   (instrument 4).
+3. Archive reads at `32c10c5` (2026-05-24, earliest surviving build) and at the arc's own ship
+   commit `194a810`, because HEAD cannot adjudicate a claim about 2026-05-25 (instrument 8/11).
+4. **Call-path trace for every specified behaviour, not just symbol resolution** (instrument 31) —
+   which is what found the headline.
+5. Cell-primacy computation over `NODE_MAP` declaration order (§AUDIT-03x method) for all six nodes
+   the arcs touch.
 
 ---
 
-## III. Design Decisions and Trade-offs
+## III. As-built inventory (verified at HEAD)
 
-### A. Arcs Completable in Any Order
+### A. Monster layer — exact
 
-§XIX and §XX were written so the Tilbury arc is not a prerequisite for the Visby arc. A player can complete the Visby debt investigation without having found the Harrow Manifest. The cross-references (Solvak's `harrowNote`, Yva's Harrow dismissal) are conditional on `tlLedgerRead` and `tlMissingShipSolved` respectively — they add synthesis for players who did both arcs, but the Visby arc is complete and coherent without them.
+| Item | Spec | HEAD | Verdict |
+|------|------|------|---------|
+| Statline | `ac:13 hp:22 atk:4 dmgDie:6 dmgCount:1 dmgFlat:2 tier:'easy'` | `name:'Hollow Hands Guard'@5408` | **byte-exact** |
+| Drop | → "Hollow Hands Seal", 🖤, `sell:0` | `hollow_hands_guard:   { name:'Hollow Hands Seal'@5850` | **byte-exact** |
+| Terrain pool | added to `goblin_cave` | `P.hollow_hands_guard ] }@6312`, 13th of 13 | **live** |
 
-### B. Vonn Choice as Moral Marker
+### B. State fields — 8 of 8 live under their specified names
 
-Quest_tl_02 presents a genuine choice (report or leave the manifest) with asymmetric rewards: reporting yields +150gp; leaving yields nothing except the flag. The choice does not affect the game state in any meaningful systemic way — the harbor stays closed, Vonn remains neutral, Rennau does not react differently. The choice is a moral marker, not a branch. A player who takes the money acknowledged the problem formally; a player who leaves it chose silence. Neither action changes Tilbury.
+`tlLedgerRead: false@23136` (with `tlEmbargoChallenged` · `tlEmbargoDismissed` ·
+`tlMissingShipSolved`) and `vsDebtProbed: false@23138` (with `vsWeaponsFound` · `vsDebtSettled` ·
+`vsShamanKnown`). Cross-arc: `wardensLegacyKnown: false@23140`, `vaLastWardVisited: false@23134`.
 
-### C. Ori as a Non-Combat Resolution
+### C. NPC profiles — 4 of 4 live, canonical keys
 
-Quest_tl_03 resolves entirely through dialogue. Ori does not need to be escorted or fought for — she walks into Tilbury on her own and needs only to be spoken with. Her account is the resolution: the player learns what happened to the Harrow through testimony rather than investigation. This matches the arc's theme (institutional record-keeping) — the answer is always available in what people who survived decided to say.
+| Key | Name | Node (spec → HEAD) |
+|-----|------|--------------------|
+| `rennau: { meta: { name:"Harbor Master Rennau"@10411` | Harbor Master, Conclave Tier 2 | SF → **STN** |
+| `vonn: { meta: { name:"Adjutant Vonn"@10412` | Adjutant, Tier 3 | TL → **TL** (a different TL — §V-B) |
+| `solvak: { meta: { name:"Debt Agent Solvak"@10413` | Debt Agent, Tier 3 | VS → **VS** (likewise) |
+| `yva: { meta: { name:"Yva"@10414` | Goblin broker | GC → **TRD** |
 
-### D. `vsShamanKnown` Set at Settlement, Not at Defeat
+All four survived §AUDIT-03n's key audit under the keys the favor ledger actually writes — no
+surname split. Every quoted line verifies verbatim: Rennau's *"The ledger goes back eleven
+months…"*, Rennau at Dear Friend (*"…didn't have a name"*), Solvak's *"He didn't have you
+removed"*, Yva's *"I don't know who they answer to."*
 
-`vsShamanKnown` sets when the debt is settled — when the player learns from the chain of evidence (weapons → Hollow Hands → shaman) that the shaman exists. It does not require entering §XXI's encounter. This preserves the correct information order: know the target exists, then seek them out. §XXI activates at MT because the player knows where the shaman is operating from the Yva investigation, not because they stumbled into a dungeon.
+### D. Quest chain — 7 of 7 live as UQF-1.0
+
+| Quest | Title | Completion (HEAD) | Payout |
+|-------|-------|-------------------|--------|
+| `quest_tl_01: { id:'quest_tl_01'@11170` | Rennau: The Ledger | `flags:['tlLedgerRead']` | Harrow Manifest, Rennau → Friendly |
+| `quest_tl_02` | Rennau: The Embargo | `flagsAny:['tlEmbargoChallenged','tlEmbargoDismissed']` | +150gp if challenged |
+| `quest_tl_03` | Rennau: The Missing Ship | `flags:['tlMissingShipSolved']` | +300gp, Ori's Account, Dear Friend |
+| `quest_vs_01: { id:'quest_vs_01'@13504` | Solvak: The Collector | `flags:['vsDebtProbed']` | Solvak → Friendly |
+| `quest_vs_02` | Yva: The Broker | `flags:['vsWeaponsFound']` | Hollow Hands Seal, Yva → Friendly |
+| `quest_vs_03` | Mordus Pays | `flags:['vsDebtSettled']` | +400gp, sets `vsShamanKnown` |
+| `quest_vs_warden: { id:'quest_vs_warden'@13549` | The Warden | `flags:['wardensLegacyKnown']` | +600gp, Warden's Token |
+
+All seven migrated cleanly through §ARCH-01 (`a79c76a`, Wave 7c), which replaced a 61-id hardcoded
+effects block with per-quest `onComplete` bit chains.
+
+### E. Player-facing surfaces — all built, all verbatim
+
+- **Harbor board**, ten ships: `Harbor Board — Empty berths: HARROW (Day 17)@34815` — identical to
+  the report's transcription, including the Harbor Master's appended note.
+- **Vonn's two-button choice** at `if (node.code === 'TL') {@34838` — Report (+150gp) / Leave it.
+- **Ori**, migrated to the verb registry: `id:'stn-ori'@34344`.
+- **Solvak + Mordus** two-beat dialogue at `if (node.code === 'VS') {@34878`, 800 ms delay intact;
+  the cross-reference `const harrowNote = S_story.tlLedgerRead@34890` is byte-verbatim.
+- **Yva**, migrated to the verb registry as the **first price in the game paid through the `cost`
+  opcode**: `{ kind:'cost', gold:50, refuse:@34356`. Her Tilbury cross-reference
+  (*"Whatever got that ship wasn't them"*) is verbatim inside the same bit chain.
+- **Seal delivery** at VS, 600 ms Mordus response, verbatim.
+- **§XXI Warden hook**: `function _nodeHookVoidShamanWarden(node) {@31694`, gated on
+  `node.code === 'GVA' && S_story.vsShamanKnown@31696` — the specified information order
+  (know the shaman exists, *then* seek them) survived a full re-architecture unchanged.
 
 ---
 
-## IV. Post-Mortem Notes
+## IV. Spec → shipped delta table
 
-### What Worked
+| # | Spec claim | HEAD | Verdict |
+|---|-----------|------|---------|
+| 1 | 32 named identifiers | 32 resolve | **100 % — the strongest census in the program** |
+| 2 | All quoted dialogue | verbatim at 79 days | **exact** |
+| 3 | Node **SF** (Rennau, board) | retired; = `label:'The Map Shop'@8636` (`STN`, `num:9`) | **remapped, correct by `num`** |
+| 4 | Node **DK** (the harbor, §I-A) | retired; = `label:'Harbor Docks — Tilbury'@8632` (`LCY`, `num:7`) | **remapped** |
+| 5 | Node **GC** (Yva) | retired; = `TRD`, `num:26`, `goblin_cave` | **remapped** |
+| 6 | Node **MT** (the Warden) | retired; = `GVA`, `num:50` | **remapped** |
+| 7 | Node **BK** (Broken Tooth Tavern) | = `label:'Broken Tooth Tavern'@8684` (`VBY`, `num:25`); live `BK` is a *Birka beach* | **§AUDIT-03y — resolves, wrong place** |
+| 8 | Node **TL** (Vonn) | **never existed at `194a810`** | **BORN DEAD** → §V-B |
+| 9 | Node **VS** (Solvak/Mordus) | **never existed at `194a810`** | **BORN DEAD** → §V-B |
+| 10 | `quest_tl_01` activates on SF arrival | `activateNode:'STN'`, `gate:{}` | shipped |
+| 11 | `quest_tl_03` activates at `actNumber ≥ 4` | leg deleted — `actNumber` is `node.act`, constant per node, so the test could never change | **NOT SHIPPED — structurally dead when written**; replaced by `questsDone:['quest_tl_02']` |
+| 12 | `quest_vs_01` activates at `actNumber ≥ 5` | same defect: `VS` is an act-2 node | **NOT SHIPPED — dead when written** |
+| 13 | Vonn "does not accumulate favorability" | profile now carries a `friendly:` tier, and **nothing anywhere writes favor for `vonn`** | **delta — unreachable dialogue** (→ §DX-02az) |
+| 14 | Yva paid 50gp, hard-gated refusal | `cost` opcode, refuse-at-click | **upgraded** — a hand-written price became the VM's first `cost` |
+| 15 | "the board visit constitutes finding the manifest" | the board grants the item and **does not set `tlLedgerRead`** | **the arc's central defect** → §V-A |
+| 16 | Seal drops from `hollow_hands_guard` but "has no effect" | still true, and the drop now mints an item **sharing a name** with the quest item | **open** → §AUDIT-03ap |
+| 17 | "no in-world signal Ori has arrived" (§IV rec. 2) | shipped: `quest_tl_02.onComplete` narrates *"a survivor of the Harrow, three weeks on foot…"* | **CLOSED by a later pass** |
+| 18 | Two-arc cross-references | both live and verbatim | shipped |
+| 19 | `plan.md` (§V references) | deleted `5e48dd7`; content in `BACKLOG.md` / `plan-archive.md` | stale pointer |
 
-- The harbor board listing ten ships by name and days-overdue makes the Conclave's scale of incompetence legible immediately. The player sees not one missing ship but ten, classified identically, before the arc begins.
-- The Yva `tlMissingShipSolved` cross-reference — *"whatever got that ship wasn't them"* — is the correct resolution to the two-mystery structure. The arcs share a setting (the Conclave, the Void) but have separate explanations. Yva's dismissal prevents the player from conflating them.
-- `vsDebtSettled` and `vsShamanKnown` setting simultaneously is the correct design: debt settlement is the moment the player understands the shaman's operation, not a separate reveal.
+---
 
-### What Could Be Better
+## V. Reachability analysis — the finding
 
-- The Vonn choice (quest_tl_02) has no downstream consequences visible to the player. Players who choose "Leave it" correctly receive nothing, but there is no acknowledgment that their decision not to act was itself a decision. A small Rennau dialogue variant ("I didn't expect anything different from the Conclave") would close the loop.
-- Ori appears at SF in Act IV but there is no in-world signal that she has arrived. A player who completed quest_tl_01 in Act II and returns to SF in Act IV will find the button without any prompt — Ori just appears. An ambient news item, harbor board update, or storyMsg on SF entry in Act IV would make her arrival feel like an event.
-- The Hollow Hands Seal drops from `hollow_hands_guard` monsters in `goblin_cave`, but collecting it this way has no effect — `vsWeaponsFound` only sets through Yva's 50gp testimony. A monster-drop path to the same flag would reward players who explore GC before finding Yva.
+The report says *"Status: ✅ Implemented,"* and it is right. Implemented and **reachable** are
+different predicates, and nothing in the 2026-05-25 toolchain could tell them apart.
+
+### A. Blocker 1 — `tlLedgerRead` has no writer outside its own completion handler
+
+`quest_tl_01`'s completion condition is `flags:['tlLedgerRead']`. The **only** write to that flag in
+38,712 lines is `{ kind:'flag_write', set:['tlLedgerRead'] }@11172` — inside that same quest's
+`onComplete`, which by definition runs *after* the completion test passes.
+
+**The flag is its own precondition.** The harbor board — the surface the report names as the thing
+that sets it — grants the Harrow Manifest and never touches the flag (`if (!S_story.tlLedgerRead) {@34809`
+through the `hbBtn.remove()` that ends the handler).
+
+**This is not migration rot.** At the arc's own commit `194a810` the shape was identical:
+`completeFn:() => !!(S_story.tlLedgerRead)` with the sole writer inside the id-keyed reward block.
+Instrument 8 verdict: **wrong the day it was written.**
+
+Consequence: `tlLedgerRead` is permanently `false`, so `quest_tl_02`'s gate never opens, Vonn's block
+(`S_story.tlLedgerRead && _tqs['quest_tl_02'] === 'active'@34841`) never renders, `quest_tl_03` is
+never unlocked, Ori's verb never renders, Rennau never advances past Neutral, and Vonn never appears
+in the NPC row (`TL:S_story.tlLedgerRead ? ['vonn'] : []@35145`). **The Harrow Manifest is obtainable;
+the arc is not.**
+
+This is the second instance of the class §AUDIT-03ai named on `quest_ng_02` — *the write-only defect
+inverted: a completion flag nobody can write.* Two instances make it a pattern, and the pattern is
+invisible to every existing gate: the symbol resolves, the quest parses, the bit contract validates.
+
+### B. Blocker 2 — three of four render nodes are non-primary
+
+`CELL_GRID` maps a cell to an **array** built in `NODE_MAP` declaration order, `cellCode` returns
+`CELL_GRID[key]?.[0]`, and `S_story.currentCode = destCode;@28373` can only ever be that primary
+(§AUDIT-03x). A `node.code === 'XX'` block on a non-primary node is unreachable code.
+
+| Node | Cell | Occupants (declaration order) | Primary? |
+|------|------|-------------------------------|----------|
+| `STN` (Rennau, board, Ori) | 18,180 | **LCY** · STN · SEN | ❌ 2nd of 3 |
+| `TL` (Vonn) | 18,177 | **HOR** · BHD · HAV · LRD · HVY · TL · … | ❌ 6th of 13 |
+| `VS` (Solvak, Mordus, seal) | 12,198 | **VBY** · NAS · CAN · BLT · VS | ❌ 5th of 5 |
+| `TRD` (Yva) | 6,190 | **TRD** · NID | ✅ |
+| `GVA` (the Warden) | 23,186 | **GVA** | ✅ |
+
+Corpus-wide: **172 of 416 nodes are non-primary across 244 cells.**
+
+**The provenance of `TL` and `VS` is worth recording in full**, because three separate repairs each
+fixed a real defect and none of them reached play:
+
+1. **2026-05-25 `194a810`** — the arc ships. `NODE_MAP` contains no `TL` and no `VS`. The two render
+   blocks are dead on arrival (§AUDIT-03p "born dead" class).
+2. **2026-06-03 `cb0fc35`** — a worldbuilder import titled *"2 new nodes (KHR/TUN)"* adds **four**:
+   KHR, TUN, and — unmentioned in its own message — `TL: { num:278, name:"docks", label:"Bristol
+   Harbor — Tilbury Docks"@9085` and `VS: { num:279, name:"market_quarter", label:"Visby Underground
+   — Fence Quarter"@9088`. The dead references silently resolve again.
+3. **2026-07-28 `c9f3946` (§VM-01-G3)** — correctly diagnoses that `NODE_MAP.VS` carried no `code`
+   field and repairs it, recording in `world.md` that the arc "had shipped as code but was ENTIRELY
+   DEAD in play." Cell primacy was not part of the diagnosis, so the blocks are still dead.
+
+Both home docs mark the arcs live on the strength of step 3 — `quest.md:473`/`:560` carry `[✅ LIVE]`
+on all six rows, and `world.md:204`/`:263` head both sections **✅ LIVE** with a *"revived §VM-01-G3
+2026-07-28"* note.
+
+**And the fix the arcs need is written in this report's own first paragraph.** §I-A opens with *"The
+harbor in Tilbury existed as a node (DK — Harbor Docks)"* — `DK` is `num:7`, which is **`LCY`, the
+primary of the very cell `STN` is buried in.** Likewise `VS` sits behind `VBY`, the **Broken Tooth
+Tavern**, whose node text already seats Warlord Kael Mordus at his corner table. Repointing the
+Tilbury block `STN → LCY` and the Visby block `VS → VBY` makes both arcs reachable **and** puts each
+scene in the fiction it was written for: the harbor board in a harbor instead of a map shop, and the
+Mordus debt inside Mordus's tavern. No design call required.
+
+### C. Blocker 3 — the one live path, and the character who is invisible on it
+
+`quest_vs_02` is reachable, but not by the route the report specifies. Its gate
+(`flags:['vsDebtProbed']`) is unsatisfiable, because `S_story.vsDebtProbed = true;@34894` lives in the
+dead VS block. What saves it is a later pass: §BOARD-01-FU6 gave `quest_pachelbel_shipment:@21278`
+and `quest_couperin_lute` each an `{ kind:'unlock', quests:['quest_vs_02'] }` edge, and
+`unlock(bit, ctx)@22312` sets a quest active **without consulting its gate**. Both source quests
+complete at MHQ and LLA, which are primaries.
+
+So Yva's verb fires, the 50gp is paid, the Seal is granted, and `quest_vs_02` completes. **This is
+the only one of the seven quests a player can finish.**
+
+One casualty on that path: the NPC row gates Yva's *card* on a different condition from her *button*
+— `TRD:S_story.vsDebtProbed && !S_story.vsWeaponsFound@35146`. On the live route `vsDebtProbed` is
+false, so **the button to talk to Yva renders and Yva does not.** Two surfaces for one character,
+gated on two conditions, one of them dead.
+
+### D. Blocker 4 — the shared payoff is unreachable
+
+`vsShamanKnown` is written at exactly one site: `quest_vs_03`'s `onComplete`. That quest completes on
+`vsDebtSettled`, written only at `S_story.vsDebtSettled = true;@34913` — inside the dead VS block.
+So `vsShamanKnown` is permanently false, the Warden hook's guard at `@31696` never opens,
+`quest_vs_warden` never activates, the `MT_WARDEN` battle has no other entry point, and the
+Warden's Token, the 600gp, and the three-way resolution (persuade / fight / neither) are all
+unreachable.
+
+**Both arcs were built to converge on this scene. It has never been played.**
+
+### E. Scorecard
+
+| Quest | Completable at HEAD | Why not |
+|-------|---------------------|---------|
+| `quest_tl_01` | ❌ | `tlLedgerRead` unwritable (§V-A) **and** `STN` non-primary |
+| `quest_tl_02` | ❌ | gate needs `tlLedgerRead`; `TL` non-primary |
+| `quest_tl_03` | ❌ | needs `tl_02` done; `STN` non-primary |
+| `quest_vs_01` | ❌ | `vsDebtProbed` written only in the dead `VS` block |
+| `quest_vs_02` | ✅ | §BOARD-01-FU6 referral unlock → `TRD` verb |
+| `quest_vs_03` | ❌ | `vsDebtSettled` written only in the dead `VS` block |
+| `quest_vs_warden` | ❌ | hook gated on `vsShamanKnown` |
+
+**1 of 7.** Withheld from the player: 850gp of quest rewards, two readable items, one relic, four
+favor advancements, ten lines of the best dialogue in Act II, and the Void Shaman reveal.
 
 ---
 
-## V. File References
+## VI. Design decisions — re-adjudicated
 
-| File | Location | Content |
-|------|----------|---------|
-| `roll2hit-v3.html` | Line 4624 | `hollow_hands_guard` monster definition |
-| `roll2hit-v3.html` | Line 5051 | `hollow_hands_guard` drop → Hollow Hands Seal |
-| `roll2hit-v3.html` | Line 5426 | `goblin_cave` terrain pool — includes hollow_hands_guard |
-| `roll2hit-v3.html` | Lines 7691–7704 | Rennau NPC profile |
-| `roll2hit-v3.html` | Lines 7706–7718 | Vonn NPC profile |
-| `roll2hit-v3.html` | Lines 7722–7745 | Solvak and Yva NPC profiles |
-| `roll2hit-v3.html` | Lines 8032–8067 | quest_tl_01–03 + quest_vs_01–03 + quest_vs_warden QUEST_DB entries |
-| `roll2hit-v3.html` | Lines 8436, 8438 | Tilbury + Visby state flags in `_S_DEFAULTS()` |
-| `roll2hit-v3.html` | Lines 13121–13158 | Quest reward handlers — tl_01–03, vs_01–03 |
-| `roll2hit-v3.html` | Lines 14456–14542 | §XIX Tilbury render block — harbor board, Ori, Vonn choice |
-| `roll2hit-v3.html` | Lines 14544–14609 | §XX Visby render block — Solvak, Mordus, Yva, seal delivery |
-| `plan.md` | §XIX + §XX | Original design directives |
-| `lab-report-void-shaman.md` | §II | `vsShamanKnown` downstream use — §XXI Warden encounter |
-| `lab-report-weimar-scholar-gate.md` | §II.G | `tlLedgerRead` cross-reference via archiveLetterObtained path |
+| Decision | 2026-05-25 rationale | Verdict at HEAD |
+|----------|---------------------|-----------------|
+| **Arcs completable in any order** | no shared gate; two conditional cross-refs | **Sound and intact.** The design survived a total quest-format migration untouched — the cheapest form of cross-arc reward there is. |
+| **Vonn choice as moral marker** | asymmetric rewards, no systemic branch | **Sound, unverifiable in play.** Both flags have live writers and are read only by `quest_tl_02`'s completion; nothing downstream reads either, exactly as designed. |
+| **Ori as non-combat resolution** | testimony, not investigation | **Sound.** It also made the verb migration trivial: `stn-ori` is a two-bit chain (narrate, set flag). Simple designs migrate. |
+| **`vsShamanKnown` at settlement, not defeat** | preserve information order | **Correct and load-bearing** — and it is precisely why §V-D propagates: a single flag carries the whole hand-off between Layers 55 and 56. |
 
 ---
+
+## VII. Post-mortem register — the report's own three self-criticisms, verified
+
+Per instrument 10, a report's self-criticism is a claim like any other.
+
+1. **"The Vonn choice has no downstream consequences."** ✅ **Correct and still open.** Neither
+   `tlEmbargoChallenged` nor `tlEmbargoDismissed` is read outside `quest_tl_02`'s completion test.
+   The suggested Rennau variant was never authored.
+2. **"No in-world signal that Ori has arrived."** ✅ **Correct, and CLOSED by a later pass.**
+   `quest_tl_02`'s `onComplete` now narrates *"Then the docks deliver what no protocol could: a
+   survivor of the Harrow, three weeks on foot, asking for the Harbor Master by name. Ori."* — the
+   exact fix the register asked for, shipped by §BOARD-01-FU6's referral pass rather than by anyone
+   reading this register. **1 of 3 recommendations shipped; the medium was narration attached to an
+   existing chain, which is the 26th instrument's cheap-medium prediction holding.**
+3. **"The Seal drops from `hollow_hands_guard` but collecting it has no effect."** ✅ **Correct and
+   still open** — and now slightly worse: the trophy drop and Yva's `reward` bit mint two items with
+   the identical name `Hollow Hands Seal`, while the delivery step strips them by name
+   (`filter(i => i.name !== 'Hollow Hands Seal')@34914`). → §AUDIT-03ap.
+
+---
+
+## VIII. Defects filed
+
+| ID | Severity | Summary |
+|----|----------|---------|
+| **§AUDIT-03ao** | 🟠 | Layers 54 + 55 unreachable: `tlLedgerRead` self-referential, and `STN`/`TL`/`VS` non-primary. Fix: give the harbor board the flag write; repoint the render blocks `STN → LCY` and `VS → VBY`. No design call. |
+| **§AUDIT-03x** | — | Extended with the two arcs — the first case where **both** halves of a paired design are stranded, and the first where the correct destination is the *primary* of the same cell. |
+| **§AUDIT-03ap** | 🟢 | `hollow_hands_guard`'s trophy drop shares a name with Yva's quest item; the delivery filter removes both, and the drop path still grants no flag. |
+| **§DX-02az** | 🟢 | `vonn`'s `friendly:` dialogue tier has no favor writer anywhere in the file — an unreachable dialogue tier, a shape `check:deadconsts` does not yet cover. |
+| **§DX-02q** | — | Extended: `TL`/`VS` were born dead, then **re-minted by an unrelated importer** as different nodes, so `check:noderegs` resolves them cleanly. A code that dies and is later reissued is worse than one that stays dead. |
+
+---
+
+## IX. References
+
+| Target | Anchor |
+|--------|--------|
+| Monster | `name:'Hollow Hands Guard'@5408` · drop `hollow_hands_guard:   { name:'Hollow Hands Seal'@5850` · pool `P.hollow_hands_guard ] }@6312` |
+| Nodes | `label:'Harbor Docks — Tilbury'@8632` · `label:'The Map Shop'@8636` · `label:'Broken Tooth Tavern'@8684` · `TL: { num:278@9085` · `VS: { num:279@9088` |
+| NPCs | `rennau: { meta: { name:"Harbor Master Rennau"@10411` … `yva: { meta: { name:"Yva"@10414` |
+| Quests | `quest_tl_01: { id:'quest_tl_01'@11170` · `quest_vs_01: { id:'quest_vs_01'@13504` · `quest_vs_warden: { id:'quest_vs_warden'@13549` |
+| State | `tlLedgerRead: false@23136` · `vsDebtProbed: false@23138` · `wardensLegacyKnown: false@23140` |
+| Render | `Harbor Board — Empty berths: HARROW (Day 17)@34815` · `if (node.code === 'TL') {@34838` · `if (node.code === 'VS') {@34878` · `id:'stn-ori'@34344` · `id:'trd-yva'@34352` |
+| Engine | `unlock(bit, ctx)@22312` · `S_story.currentCode = destCode;@28373` · `function _nodeHookVoidShamanWarden(node) {@31694` |
+| Home docs | `world.md` §Layer 54 / §Layer 55 · `quest.md` §Tilbury Harbor Arc / §Visby Underground Arc · `docs/story/story-arc-coastal.md` |
+| Siblings | `lab-reports/lab-report-void-shaman.md` (§XXI downstream of `vsShamanKnown`) · `lab-reports/lab-report-weimar-scholar-gate.md` (`archiveLetterObtained` path) |
+
+*(Original §V line numbers — 4624, 5051, 5426, 7691, 8436, 14458 — are history against a
+17k-line file and are preserved only in the archive; HEAD pointers are above.)*
+
+---
+
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*

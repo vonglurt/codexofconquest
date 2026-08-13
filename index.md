@@ -331,7 +331,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-reports/lab-report-ng-plus-remembrance.md` | 50 | §XV Entry 42, NPC_NG_MEMORY_LINES, quest_ng_01/02/03, priorQuestMinusOne |
 | `lab-reports/lab-report-weimar-scholar-gate.md` | 51 | §XVI Scholar Gate — archive modal, tome items, Benedikt reading circle, First Researcher |
 | `lab-reports/lab-report-void-archaeology.md` | 52 | §XVII Void Archaeology — 5 investigation sites, Constructor's Log, 4-author chain |
-| `lab-reports/lab-report-tilbury-visby-arcs.md` | 54+55 | §XIX Tilbury Harbor + §XX Visby Underground — Rennau, Solvak, hollow_hands_guard |
+| `lab-reports/lab-report-tilbury-visby-arcs.md` | 54+55 | §XIX Tilbury Harbor + §XX Visby Underground — Rennau, Solvak, hollow_hands_guard *(§DOC-02an verified 2026-08-12: 32/32 identifiers live, **1 of 7 quests completable** — §AUDIT-03ao)* |
 | `lab-reports/lab-report-void-shaman.md` | 56 | §XXI Void Shaman "The Warden" — dual resolution, verb-tense mandate corruption |
 | `lab-reports/lab-report-corelli-merchant.md` | 61 | §XXVI Corelli — 5-appearance wandering merchant, purchase-gated fav, last_cipher |
 | `lab-reports/lab-report-quest-minus-one-world-creator.md` | 49 | §XIV Quest -1 — Level 21 undefined as invitation, World Creator Wizard · **✅ verified 2026-08-12 (§DOC-02ah)** — 18/18 identifiers, 0/2 node codes; the disclosure's three literals are stale (16,024/423/67 vs 38,712/398/111) and the wizard shipped as `worldbuilder.html` |
