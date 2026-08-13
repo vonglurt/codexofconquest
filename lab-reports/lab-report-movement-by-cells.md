@@ -1,1608 +1,448 @@
-# Roll2Hit.com — Cell-Grid Navigation Architecture, Program Flow, and Validation Test Design
+# Cell-Grid Navigation: Architecture, Program Flow, and Validation Design
 
-**Technical Report TR-2026-CELL**
-*roll2hit.com · MIT License · Paul Richeson*
+**Technical Report TR-2026-CELL** · roll2hit.com · MIT License · Paul Richeson
+
+> **HISTORY DOCUMENT — verified against HEAD 2026-08-13 (§DOC-02az).** Written
+> 2026-06-15 (`79b5bee`), archived by `7d3615a`. Claims are annotated, never deleted.
+> **Verdict: the client spine survives; the coordinate space it is written in does not.**
+> The report described a 500×500 grid with one node per cell. Ten days later §WALK-1.5
+> reprojected the world onto a 90×360 equirectangular band and made a cell a *locale*
+> that may hold several nodes. Nearly every falsified claim traces to that one change.
 
 ---
 
 ## Abstract
 
-Roll2Hit.com is a single-file browser-based D&D 5e combat and story assistant. Its navigation system underwent a complete architectural transition (§CELL-01 through §CELL-12) from an explicit N/S/E/W edge-list graph model to a coordinate-based sparse grid model in which all exits are derived at runtime from 2D coordinate adjacency. The canonical root node `LHR` (Birka) anchors a 500×500 integer grid; every named location occupies a unique `(r,c)` cell, and pathfinding is performed entirely by breadth-first search (BFS) over that grid.
+Roll2Hit.com is a single-file browser D&D 5e combat-and-story engine. Between §CELL-01
+and §CELL-12 its navigation model was replaced: an explicit N/S/E/W edge list gave way to
+a coordinate grid in which every exit is *derived at runtime from cell adjacency*. This
+report characterised five layers of that system — API server, geographic seeding tool,
+global constants, browser runtime state, and input dispatch — traced the Act I → Act II
+program flow, and specified a two-tier validation suite.
 
-This report characterizes each application layer — API server (`wbapi-server.js`), geographic coordinate tool (`worldmap.js`), global constant layer, browser runtime state (`S_story`), and navigation input dispatch — with verbatim code excerpts and source line references. It then traces the complete program flow for the canonical Act I to Act II transition ending with first Codex Shard collection.
-
-Finally, it specifies a two-tier test suite: Playwright browser integration tests and Node.js unit tests. The suite is organized around the concept of "reweave-as-validation," in which a fully navigatable map is defined as one where every node present in `NODE_COORDS` is BFS-reachable from `LHR` on the 500×500 grid, respecting `IMPASSABLE_CELLS`.
-
----
-
-## 1. Introduction
-
-Roll2Hit.com is implemented as a single self-contained HTML file (`roll2hit-v3.html`). All game logic, world data, and UI are co-located in that file. A companion Node.js server (`wbapi-server.js`) provides a local REST API that reads and writes the HTML file directly, enabling live game world editing without interrupting a play session. A companion admin SPA (`worldbuilder.html`) connects to that server to provide a graphical design interface.
-
-The navigation model is built on a 500×500 integer grid. Each named location (node) occupies a unique cell identified by row `r` and column `c`. The cell table `CELL_GRID` — a JavaScript plain object keyed by `"r,c"` string — is the sole runtime data structure for navigation. No node stores directional exit references. Pathfinding is performed entirely by breadth-first search (BFS) over the grid, and the waypoint system takes one grid step per player action toward a BFS-determined destination.
-
-This design choice has two consequences. First, adding or moving a node requires only a coordinate entry — no graph edge maintenance. Second, the invariant "every node is reachable" is directly testable by running a single BFS from the root node and comparing the visited set against the full coordinate index.
-
----
-
-## 2. System Architecture Overview
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│  worldbuilder.html (admin SPA)                               │
-│  Design entry: fetch POST /api/node {code, r, c, …}          │
-└────────────────────┬─────────────────────────────────────────┘
-                     │ HTTP to localhost:1367
-┌────────────────────▼─────────────────────────────────────────┐
-│  wbapi-server.js (Node.js REST API, port 1367)               │
-│  Reads + writes roll2hit-v3.html via anchor markers          │
-│  ◆◆◆ WORLDBUILDER:NODE_MAP:START/END ◆◆◆                    │
-│  ◆◆◆ WORLDBUILDER:NODE_COORDS:START/END ◆◆◆                 │
-└────────────────────┬─────────────────────────────────────────┘
-                     │ file I/O  (fs.readFileSync / writeFileSync)
-┌────────────────────▼─────────────────────────────────────────┐
-│  roll2hit-v3.html  (single-file game)                        │
-│  ├── Global constants  (parse-time)                          │
-│  │   NODE_MAP, NODE_COORDS, CELL_GRID, QUEST_DB, WORLD_DB   │
-│  ├── Runtime state  (browser session)                        │
-│  │   S_story  (mutable, persisted to localStorage)           │
-│  └── Navigation functions                                    │
-│      cellMove(), _bfsGridPath(), storyWaypoint(), …          │
-└──────────────────────────────────────────────────────────────┘
-         ▲                         │
-         │ localStorage            │ DOM events
-    seedAndLoad()              D-pad, WP, keyboard
-    (Playwright tests)         → cellMove(dir)
-```
-
-The five primary layers addressed in this report are: (I) the API server, (II) the geographic map tool, (III) the global constant layer, (IV) the browser runtime layer, and (V) the navigation input layer. Two auxiliary topics — (VI) the worldbuilder design entry mechanic and (VII) the cell insertion protocol — are addressed as cross-cutting concerns.
+Re-measured at HEAD: **the architectural thesis holds and the arithmetic does not.**
+Exits are still derived, no compass field survives anywhere in the world (0 of 416 nodes),
+and the deletion is now enforced by two HTTP guards. But the grid is 90×360, not 500×500;
+416 nodes occupy **244** cells, not 416; and the report's first invariant — coordinate
+uniqueness — was **deliberately repealed** to let neighbouring cities share a degree
+square. Of the five test files specified, one existed and was later rewritten *because*
+it hardcoded this report's fixtures; four never shipped.
 
 ---
 
-## 3. Layer I — API Server (`wbapi-server.js`)
+## 1. Purpose, and What the Feature Buys the Player
 
-### 3.1 Role and Responsibility
+The design question underneath §CELL was not "how do we store exits?" It was **"why does
+the map need a second copy of itself?"** A coordinate already says where a place is.
+Maintaining a parallel edge list means every new city is two edits, every move is a graph
+lookup, and every mistake is a silent one — a link pointing at a node that no longer
+exists renders nothing at all.
 
-The API server is a stateless Node.js HTTP server that holds no canonical game state of its own. It acts as a structured write proxy for `roll2hit-v3.html`. The game file is the source of truth; the server's in-memory `WBAPI` object is a parsed mirror used to validate requests before writing. On every successful write the file is saved and WBAPI is reloaded, keeping the mirror in sync.
+Deriving exits from adjacency collapses that to one edit. The player-facing dividends are
+what justify the work:
 
-The parsing logic shared between the server and the offline unit tests lives in `wbapi-core.js`, which exposes a `WBAPI.load(filePath)` entry point. The server requires `wbapi-core.js` at startup; the unit tests in §12.6 require it independently so they can validate the game file without a running HTTP server.
-
-```js
-// wbapi-server.js line 94
-const PORT      = parseInt(process.env.PORT || '1367');
-const GAME_FILE = process.env.ROLL2HIT_FILE
-  || process.argv.find((a, i) => process.argv[i-1] === '--file')
-  || path.join(__dirname, 'roll2hit-v3.html');
-```
-
-### 3.2 The CELL_GRID Mirror (`getCellGrid`)
-
-The server maintains a memoized mirror of the client-side `CELL_GRID` for use in audit, graph analysis, and reweave operations. The cache is invalidated by object identity: if either `WBAPI.nodeMap` or `WBAPI.nodeCoords` is replaced (which happens on every reload), the next call to `getCellGrid()` rebuilds.
-
-```js
-// wbapi-server.js lines 289–296
-function getCellGrid() {
-  const nm = WBAPI.nodeMap, coords = WBAPI.nodeCoords;
-  if (nm !== _cgCacheNm || coords !== _cgCacheCoords) {
-    _cgCacheNm = nm; _cgCacheCoords = coords;
-    _cgCache = buildCellGrid(nm, coords);
-  }
-  return _cgCache;
-}
-```
-
-The underlying `buildCellGrid` function (defined locally within the audit handler at line 2564 and promoted to module scope for reuse) is a verbatim mirror of the client-side construction:
-
-```js
-// wbapi-server.js lines 2564–2572
-function buildCellGrid(nm, coords) {
-  const g = {};
-  for (const code of Object.keys(nm)) {
-    const coord = coords[code] || { r: nm[code].r, c: nm[code].c };
-    if (coord && coord.r != null && coord.c != null)
-      g[`${coord.r},${coord.c}`] = code;
-  }
-  return g;
-}
-```
-
-This design guarantees that the server's view of the grid is always identical to what the client would compute from the same source file.
-
-### 3.3 Derived Exit Computation
-
-When the API returns a node entity via `GET /api/node/{code}`, the response includes a `derived_exits` field computed live from the cell grid. No N/S/E/W fields are stored on nodes; §CELL-01 stripped all such fields from the data model.
-
-```js
-// wbapi-server.js lines 313–321
-derived_exits: (function() {
-  const coord = WBAPI.nodeCoords[key]; if (!coord) return {};
-  const cg = getCellGrid();
-  const result = {};
-  for (let i = 0; i < DIR_NAMES.length; i++) {
-    const nb = cg[`${coord.r+MOVES4[i][0]},${coord.c+MOVES4[i][1]}`];
-    if (nb) result[DIR_NAMES[i]] = nb;
-  }
-  return result;
-}()),
-```
-
-### 3.4 Map Integrity Audit (`GET /api/audit/map`)
-
-The audit endpoint performs four structural checks and returns a machine-readable findings array with inline `fix` commands. The two most relevant checks for the cell-grid model are:
-
-**Diagonal exits** — flags legacy `NW/NE/SW/SE` fields (illegal in the coordinate model):
-
-```js
-// wbapi-server.js lines 2592–2601
-const DIAG_DIRS = ['NW','NE','SW','SE'];
-for (const code of allNodeCodes) {
-  const n = nodeMap[code];
-  for (const d of DIAG_DIRS) {
-    if (n[d] != null)
-      errors.push({ check:'diagonal_exit', code, dir:d, target:String(n[d]),
-        msg:`${code}.${d}="${n[d]}" — diagonal exits not supported; use N/S/E/W only`,
-        fix:{ method:'POST', url:`/api/audit/map/fix`,
-              body:{ check:'diagonal_exit', code, dir:d } } });
-  }
-}
-```
-
-**Long-link spans** — nodes separated by more than 4 grid cells with no intermediate node, creating corridors that BFS must traverse without orientation cues:
-
-```js
-// wbapi-server.js line 2551
-const LONG_LINK_THRESHOLD = 4; // grid cells
-```
-
-### 3.5 Session and SSE Layer
-
-The server maintains a `SESSIONS` map for multi-client coordination. Each session carries the player's grid position, which can be broadcast to co-located clients via Server-Sent Events:
-
-```js
-// wbapi-server.js lines 64–65
-const SESSIONS    = new Map(); // sessionId → { id, playerName, r, c, nodeCode, state, lastSeen }
-const SSE_CLIENTS = new Map(); // sessionId → Response (SSE stream)
-
-// lines 83–89
-function broadcastCell(r, c, event, data, excludeId) {
-  for (const [id, s] of SESSIONS) {
-    if (s.r === r && s.c === c && id !== excludeId) {
-      const sse = SSE_CLIENTS.get(id);
-      if (sse) sseSend(sse, event, data);
-    }
-  }
-}
-```
+- **The space between cities became real.** Under an edge list, everything that is not a
+  city does not exist; you jump from node to node. Under a grid, the ~27,600 walkable land
+  cells are places you can stand — `function _enterEmptyCell(r, c)@28420` gives each one
+  prose, terrain, signposts and an encounter roll. *Distance became travel instead of a
+  menu.*
+- **Terrain became a real trade-off.** `const TERRAIN_ENCOUNTER_RATE@9892` prices the
+  route: `road:0` against `forest:0.25` and `hag_swamp:0.35`. The road is genuinely safer
+  and genuinely longer, and neither is a permission — the open field stays walkable.
+- **Fog of war is per-cell, not per-node.** `visitedCells` is a record of *where you
+  actually walked*, not a checklist of unlocked destinations.
+- **Free movement is structurally guaranteed.** A step can be refused for exactly two
+  reasons — off-grid or sea. Nothing else is consulted. This is `prompt.md` §6.1, the
+  project's first invariant, and §7.3 below records the one time the engine broke it.
 
 ---
 
-## 4. Layer II — Geographic Map Tool (`worldmap.js`)
+## 2. Method
 
-### 4.1 Role and Responsibility
-
-`worldmap.js` is a Node.js command-line tool, not a runtime browser dependency. Its function is twofold: (a) render a terminal ASCII projection of all named game cities onto a 96×30 character grid for visual inspection, and (b) seed initial `r,c` coordinates into `NODE_COORDS` by projecting real-world latitude/longitude values onto the 500×500 game grid via `./api.sh worldmap --seed`.
-
-### 4.2 Geographic Reference Table
-
-The `GEO` table maps the 130+ game node codes to real-world coordinates. A representative excerpt:
-
-```js
-// worldmap.js lines 26–44
-const GEO = {
-  HHL: { lat: 65.0, lon:-22.0, label: 'Herdholt',        region: 'Iceland' },
-  NID: { lat: 63.4, lon: 10.4, label: 'Nidaros',         region: 'Norway' },
-  LHR: { lat: 59.3, lon: 17.6, label: 'Birka',           region: 'Sweden' },
-  // … 127 more entries
-  CON: { lat: 41.0, lon: 28.9, label: 'Constantinople',  region: 'Turkey' },
-  JAR: { lat: 31.8, lon: 35.2, label: 'Jerusalem',       region: 'Palestine' },
-};
-```
-
-### 4.3 Projection and Grid Division
-
-The tool projects the GEO table onto the game grid using a linear map from `[minLat, maxLat]` → `[1, 500]` and `[minLon, maxLon]` → `[1, 500]`. The terminal render uses a 6×6 region grid (rows A–F, columns 1–6):
-
-```js
-// worldmap.js lines 129–137
-const MAP = {
-  minLat: -8, maxLat: 68,
-  minLon: -25, maxLon: 72,
-  WIDTH:  96,
-  HEIGHT: 30,
-};
-
-function regionBounds(row, col, nRows, nCols) {
-  const latStep = (MAP.maxLat - MAP.minLat) / nRows;
-  const lonStep = (MAP.maxLon - MAP.minLon) / nCols;
-  return {
-    minLat: MAP.maxLat - (row + 1) * latStep,
-    maxLat: MAP.maxLat -  row      * latStep,
-    minLon: MAP.minLon +  col      * lonStep,
-    maxLon: MAP.minLon + (col + 1) * lonStep,
-  };
-}
-```
-
-The geographic tool is therefore the design entry point for initial coordinate seeding but is otherwise not involved in runtime navigation. All coordinates it produces are written into the `NODE_COORDS` anchor block via WBAPI PUT calls.
+Every symbol, count and coordinate below was re-measured against the working tree at HEAD
+(`r2h-3.104.0`, 416 nodes, 38,712 lines): symbol census by `grep -c -F`; structural counts
+by loading `js/wbapi-core.js` against `roll2hit-v3.html` and walking `nodeMap`/`nodeCoords`
+directly; connectivity by re-implementing each of the three live BFS variants offline and
+running them on the real data. Line numbers in the original are superseded by
+`symbol@line` anchors, which name a symbol first and a line second.
 
 ---
 
-## 5. Layer III — Global Constant Layer (`roll2hit-v3.html`, parse-time)
+## 3. Verification Summary
 
-### 5.1 The Anchor Section Model
+| § | Claim | Verdict at HEAD |
+|---|---|---|
+| Abstract | Exits derived from coordinate adjacency; no stored exits | ✅ **0** N/S/E/W fields and **0** diagonals across 416 nodes |
+| Abstract | 500 × 500 integer grid | ❌ **90 × 360** (`const GEO_PROJ = { ROWS: 90, COLS: 360 }@9902`) |
+| Abstract | `LHR` anchors the grid; every node a unique `(r,c)` | ⚠️ `LHR` is still the root; **uniqueness repealed** (§5) |
+| 3.2 | Server `buildCellGrid` is a verbatim mirror of the client's | ⚠️ Deliberately *not* verbatim — scalar first-wins vs. array (§8) |
+| 3.3 | `derived_exits` computed live, nothing stored | ✅ `js/wbapi-server.js:derived_exits@1190` |
+| 3.4 | `/api/audit/map` performs **four** structural checks | ❌ **12** check names; **5 of them permanently silent** (§9) |
+| 3.5 | `SESSIONS` map + `broadcastCell` SSE fan-out | ✅ `js/wbapi-server.js:const SESSIONS@71`, `js/wbapi-server.js:function broadcastCell@129` |
+| 4 | `worldmap.js` seeds coords by lat/lon projection | ⚠️ Now `tools/worldmap.js` (155 GEO rows) — **and it still projects into the retired space** (§10) |
+| 5.1 | **Seven** anchor-bounded data sections | ❌ **Eleven** |
+| 5.2 | `NODE_MAP` descriptors carry no exit fields | ✅ |
+| 5.4 | `CELL_GRID["r,c"]` → a node code | ❌ → an **array** of codes; read via `const cellCode   = (key)@9861` |
+| 5.4 | `IMPASSABLE_CELLS` populated at §CELL-10 | ⚠️ Derived from `SEA_RUNS` — **4,790** sea cells, 286 runs |
+| 5.5 | Encounter-rate table, roads/junctions at 0 | ✅ verbatim (`junction:0` is unreachable — §DX-02bm) |
+| 6.1 | `hoursElapsed` incremented on every `cellMove()` | ❌ Removed by §TIMELESS-01 — movement is free of the clock |
+| 6.3 | `storyRender` syncs `playerR/C` from `NODE_COORDS` | ✅ `function storyRender(node, prefix)@34567` |
+| 6.4 | The `type === 'shard'` branch is the **only** write to `S_story.shards` | ✅ **Still true** — one write site in 38,712 lines |
+| 7.1 | D-pad element ids `#dpad-N/S/E/W` | ❌ `#btn-N/S/E/W` |
+| 7.2 | `cellMove` bounds-checks, then applies eight narrative gate-locks | ⚠️ Thin caller over `Mover.move`; **all eight gate-locks deleted** (§7) |
+| 7.3 | Encounter roll is `Math.random() < rate`; Hunt forces 1.0 | ❌ `_seededNext()`; Hunt is `min(0.8, rate × 2)` |
+| 7.4 | `_bfsGridPath(fromCode, toCode, startR, startC)` | ❌ Two parameters; 0-indexed; **E↔W wrap** |
+| 7.5 | WP advances one cell per press; `LHR→SEN` ≈ 55 presses | ❌ One click auto-travels the whole route; `LHR→SEN` is **27** steps |
+| 8.2–8.3 | Worldbuilder grid-direct add + ghost list | ❌ Grid tab **deleted** (`fa7fadc`); 0 ghosts at HEAD |
+| 9.2 | `serializeNodeLiteral`'s `STR` still lists `N,S,E,W` (dead) | ✅ **Still true, still dead** — see §DX-02bn |
+| 10.4 | `LHR → BK → DBV → ISL` is a 3-step south corridor | ❌ `BK` shares `LHR`'s cell; `DBV` is Act III Ragusa; `ISL` is Iceland |
+| 10.6 | First shard is a node whose `loot` contains `"Codex Shard #1"` | ❌ Shard #1 is `LCY`'s *"Trade Seal (Shard #1)"* (§11) |
+| 11.2 | `/api/graph/reachability` runs the `undirAdj` node BFS | ❌ The code survives as a *shared prelude*; the endpoint does not use it (§8) |
+| 11.3 | Reweave complete ⇔ 100% reach, **zero collisions**, 0 diagonals, 0 dangling | ⚠️ 2 of 4 hold; the collision criterion is now **wrong by design** |
+| 11.3 | `POST /api/graph/reweave-all` → HTTP 410 | ✅ verbatim, body deleted by §WALK-3 |
+| 12 | Five test files; two-tier suite | ❌ **One** shipped (and was rebuilt); `tests/unit/` does not exist (§12) |
+| 13 | I1 uniqueness · I2 grid consistency | ❌ Both false at HEAD, by design |
+| 13 | I3 player sync · I4 move correctness · I5 reachability · I6 shard idempotence | ✅ All four hold |
 
-The game file contains seven data sections bounded by `◆◆◆ WORLDBUILDER:SECTION:START ◆◆◆` / `END` marker comments. These markers are the sole write targets for the WBAPI server. The server never parses or regenerates the entire file; it splices text within the anchor-bounded regions.
+---
+
+## 4. The Coordinate Space the Report Outlived
+
+The report was committed 2026-06-15. Its coordinate space died 2026-06-25/26.
+
+| | Report (2026-06-15) | HEAD |
+|---|---|---|
+| Grid | 500 × 500, 1-indexed | 90 × 360 equirectangular 1°, 0-indexed |
+| Edges | hard bounds at 1 and 500 | rows clamp 0–89; **columns wrap E↔W** at the antimeridian |
+| `LHR` | `r:64, c:224` | `r:10, c:197` |
+| `SEN` | `r:10, c:223` | `r:18, c:180` |
+| `BOO` | `r:47, c:223` | `r:2, c:194` |
+| Occupied span | — | rows 2–73, cols 154–249 |
+
+`153a37c` (§WALK-1.5 inc 1–2) introduced the projection and the locale lists; `896846c`
+applied it together with the sea mask. **Shelf life of the report's arithmetic: ten days.**
+
+This is worth stating plainly because it is the report's real lesson. Nothing in it was
+carelessly written. Every coordinate was correct when the ink dried. What expired was the
+*ground*, and a document that cites coordinates inherits the lifetime of the projection it
+was measured in.
+
+---
+
+## 5. The Repeal of Coordinate Uniqueness
+
+Invariant **I1** — *for all distinct nodes A, B: `A.r ≠ B.r || A.c ≠ B.c`* — is violated
+**172 times** at HEAD, and each violation is intentional.
 
 ```
-◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆
-const NODE_MAP = { … };
-◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆
-
-◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆
-const NODE_COORDS = { … };
-◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
+NODE_MAP entries        416      ghosts (NODE_MAP without coords)     0
+NODE_COORDS entries     416      orphan coords (no NODE_MAP entry)    0
+distinct cells          244      cells holding >1 node               66
+extra nodes beyond primary                                          172
+largest locale   32,203 — 17 nodes  (DS1 DS0 LC4 SEA LSO LC3 DA0 DSJ HER
+                                     LC1 LC2 DA3 DA1 DSF DA2 ATH IST)
 ```
 
-### 5.2 `NODE_MAP` — Node Descriptors
-
-`NODE_MAP` is a JavaScript object literal mapping node code strings to descriptor objects. Each descriptor carries narrative, gameplay, and classification fields but **no exit fields**:
+At a 1° projection, Athens and Istanbul are simply not two squares apart. §WALK-1.5 chose
+to keep both cities rather than distort the map, and changed the data structure to say so:
 
 ```js
-// roll2hit-v3.html (representative entry from §CELL-01-compliant data)
-SEN: {
-  num:10, code:'SEN', name:'merchant_ship',
-  label:'Aboard the Tilbury Star', act:2,
-  text:"The Tilbury Star takes paying passengers…",
-  npc:'Ship Captain',
-  battle:{ label:'Pirate ×3 + Ghost', key:'pirate', count:3 },
-  loot:'Cargo Manifest',
-  sleep:true, sleepCost:3,
-}
-```
-
-The `name` field is the terrain key (must match a `WORLD_DB` entry). The `act` field maps to `ACT_NAMES`:
-
-```js
-// roll2hit-v3.html line 8630
-const ACT_NAMES = [
-  '', 'Act I — Birka', 'Act II — Tilbury', 'Act III — The Wilds',
-  'Act IV — The Deep', 'Act V — Visby', 'Act VI — Desert',
-  'Act VII — Mythic Circuit', 'Act VIII — The Reckoning'
-];
-```
-
-### 5.3 `NODE_COORDS` — The Coordinate Index
-
-`NODE_COORDS` holds the grid positions of every named node. This is the primary design artifact — adding a node to the world requires only an entry here (plus `NODE_MAP`).
-
-```js
-// roll2hit-v3.html lines 8633–8637
-// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆
-const NODE_COORDS = { // → doc: maps.md §NODE_COORDS
-  J54381:{r:3,c:24},
-  J62448:{r:4,c:20},
-  J62447:{r:4,c:28},
-  // … 1000+ entries …
-  LHR:{r:64,c:224},   // Birka — canonical Act I root
-  BK: {r:63,c:224},
-  DBV:{r:62,c:224},
-  ISL:{r:61,c:224},
-  BOO:{r:47,c:223},   // Yugurt Lake — fishing start
-  SEN:{r:10,c:223},   // Tilbury Star — Act II
-};
-// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆
-```
-
-### 5.4 `CELL_GRID` — The Navigation Lookup Table
-
-`CELL_GRID` is built from `NODE_COORDS` at page parse time using an immediately-invoked function expression (IIFE). It inverts the coordinate index into a string-keyed reverse map:
-
-```js
-// roll2hit-v3.html lines 17652–17661
-// §CELL-02: Reverse grid lookup — "r,c" → node code
-const CELL_GRID = (() => {
+// §WALK-1.5: each cell is a LOCALE that may hold ≥1 node (1° collisions merge close cities).
+const CELL_GRID = (() => {                       // roll2hit-v3.html@9852
   const g = {};
   for (const code of Object.keys(NODE_MAP)) {
     const coord = NODE_COORDS[code] || { r: NODE_MAP[code].r, c: NODE_MAP[code].c };
     if (coord && coord.r != null && coord.c != null)
-      g[`${coord.r},${coord.c}`] = code;
+      (g[`${coord.r},${coord.c}`] ??= []).push(code);
   }
   return g;
 })();
-const IMPASSABLE_CELLS = new Set(); // populated at §CELL-10 (ocean tiles)
+const cellCode   = (key) => CELL_GRID[key]?.[0] || null;   // the node you "arrive at"
+const cellCodes  = (key) => CELL_GRID[key] || [];          // all nodes in the locale
 ```
 
-This table is `O(1)` for lookup — the cost of a navigation step is one string concatenation and one property read. No graph traversal is required to determine whether the destination of a directional move is a named node.
+So **I2** — `CELL_GRID["r,c"] === code` — is false for all 244 cells, including the 178
+that hold exactly one node: the value is an array either way. The correct restatement is
+`cellCode(k) === CELL_GRID[k][0]`.
 
-### 5.5 Terrain Encounter Rate Table
-
-Empty cells (cells not in `CELL_GRID`) generate encounters at terrain-dependent probabilities inferred from named neighbors. The rate table:
-
-```js
-// roll2hit-v3.html lines 17664–17668
-const TERRAIN_ENCOUNTER_RATE = {
-  midlands:0.15, forest:0.25, highlands:0.20, swamp:0.30, desert:0.20,
-  jungle:0.30,   hag_swamp:0.35, ocean:0.10, beach:0.10,
-  road:0,        junction:0, city:0.05, city_slums:0.10,
-  alley:0.15,    _default:0.15
-};
-```
-
-Roads and junctions have zero encounter rate by design — they are structural connectors, not gameplay spaces.
+The player-facing consequence is a feature the report could not have described: **Birka
+City Streets (`LHR`) and Birka Shore (`BK`) are the same cell.** You do not walk between
+them; they are two rooms of one locale. That is why `_bfsGridPath('LHR','BK')` returns no
+path — and why §NAV-01a had to redefine waypoint arrival as *standing on the destination's
+cell* rather than *matching its code*, or arriving at a shore would never count as arriving.
 
 ---
 
-## 6. Layer IV — Browser Runtime Layer (`S_story`)
+## 6. What Survived Verbatim
 
-### 6.1 State Object Declaration
+Five load-bearing claims re-measured true, and they are the ones that matter:
 
-`S_story` is a singleton mutable JavaScript object declared at module scope. Its initial values represent a new game at `LHR` with no progress. It is populated either from `localStorage` (continue) or from `_S_DEFAULTS()` (new game).
-
-Navigation-critical fields:
-
-```js
-// roll2hit-v3.html lines 29268–29326 (condensed)
-let S_story = {
-  active: false,
-  currentCode: 'LHR',        // Code of current named node (or last named node)
-  playerR: 0,                // §CELL-03: current grid row
-  playerC: 0,                // §CELL-03: current grid column
-  waypoint: null,            // Target node code for storyWaypoint() auto-walk
-  visitedCells: {},          // §CELL-04: "r,c" → true (minimap history)
-  hoursElapsed: 0,           // Incremented on every cellMove() call
-  hoursSinceSlept: 0,        // Reset by sleep actions
-  log: [],                   // Ring buffer of last 20 node codes visited
-  lastExitDir:  null,        // Direction of last named-node exit
-  lastExitCode: null,        // From-code of last named-node exit
-  shards: 0,                 // Codex Shards collected (max 7)
-  actNumber: 1,              // Synced from node.act on every storyRender()
-  // … 60+ additional fields for combat, quests, NPCs, economy …
-};
-```
-
-The `_S_DEFAULTS()` factory (line 29329) returns the canonical new-game values and is used both by `storyNewGame()` and by `storyNewGamePlus()` to reset transient state while preserving persistent tattoos and career statistics.
-
-### 6.2 Save / Load Cycle
-
-```js
-// roll2hit-v3.html lines 30106–30112
-function storyLoadContinue() {
-  storyLoadSave('r2h_autosave');      // Object.assign(S_story, parsed save)
-  S_story.active = true;
-  document.getElementById('story-continue-modal').classList.remove('visible');
-  storyUpdateStatus();
-  storyRender(NODE_MAP[S_story.currentCode]);  // syncs playerR/C
-  if (S_story.pendingBattle) storyShowOutcome();
-}
-```
-
-The full load path is: `storyCheckContinue()` (fires at bottom of `<body>`) → detects `r2h_autosave` → shows continue modal → user clicks **Continue** → `storyLoadContinue()` → `storyRender()`.
-
-### 6.3 `storyRender` — The Node Entry Point
-
-Every time the player arrives at a named node — whether by directional move, waypoint step, or checkpoint restore — `storyRender(node)` is called. It is the central coordinator for the named-node experience:
-
-```js
-// roll2hit-v3.html lines 35875–35882
-function storyRender(node, prefix) {
-  // §CELL-03: keep grid position in sync whenever we land on a named node
-  if (node) {
-    const _nc = NODE_COORDS[node.code] || (node.r != null ? { r: node.r, c: node.c } : null);
-    if (_nc) { S_story.playerR = _nc.r; S_story.playerC = _nc.c; }
-  }
-  S_story.actNumber = node.act || 1;
-  const lootMsg  = storyCollectLoot(node);   // auto-collect loot + shards
-  // … render farewell line, act badge, node header, story text,
-  //   quest panels, NPC panels, exit links, minimap …
-```
-
-The coordinate sync at lines 35878–35879 is the reconciliation point between `S_story.playerR/C` and the `NODE_COORDS` table. If the player was on an empty cell and navigated to a named node, their coordinates snap to the node's canonical position. This prevents drift between the logical state and the grid.
-
-### 6.4 Loot and Shard Collection
-
-`storyCollectLoot(node)` is called on every `storyRender()` call. It checks the node's `visited` flag to prevent double-collection, then parses the `loot` string and grants items. Shards are recognized by item type and trigger the counter update:
-
-```js
-// roll2hit-v3.html lines 34442–34474
-function storyCollectLoot(node) {
-  if (S_story.visited[node.code] || !node.loot) {
-    S_story.visited[node.code] = true; return null;
-  }
-  S_story.visited[node.code] = true;
-  if (node.loot.startsWith('VICTORY') || node.loot.startsWith('Portal Key')) return null;
-  const added = [];
-  node.loot.split(' · ').forEach(raw => {
-    const name = raw.trim();
-    if (!name) return;
-    const type = _itemType(name);
-    S_story.inventory.push({ name, code: node.code, icon: _itemIcon(name), type });
-    added.push(name);
-    if (type === 'shard') {
-      S_story.shards = Math.min(7, S_story.shards + 1);
-      // Layer 57: auto-add shard origin note from SHARD_NOTES[n]
-      const shardM = name.match(/#(\d)/);
-      if (shardM) { /* … insert journal note … */ }
-    }
-  });
-  return added.length ? '📦 ' + added.join(' · ') : null;
-}
-```
-
-The `type === 'shard'` branch is the only write path to `S_story.shards`. There is no separate quest completion hook for shard pickup — the shard is granted automatically on first visit to any node whose `loot` field contains a shard item name matching `/#\d/`.
+1. **No stored exits, anywhere.** 0 cardinal and 0 diagonal fields across 416 nodes — and
+   the deletion is now *defended*: `js/wbapi-server.js:const _badNodeFields@10145` rejects
+   them on create and `js/wbapi-server.js:const _badPutFields@11043` on update, both HTTP
+   400. §CELL-01 emptied the fields; §CELL-08 shipped the guard that stops anything
+   writing them back. Only one of those two was ever listed as a feature.
+2. **`storyRender` is the reconciliation point** (I3). `function storyRender(node, prefix)@34567`
+   still snaps `playerR/C` to `NODE_COORDS[node.code]` on every named-node arrival, so
+   logical state and grid state cannot drift.
+3. **`storyCollectLoot` remains the sole shard writer** (I6). One write to `S_story.shards`
+   exists in the entire file — `function storyCollectLoot(node)@30092` — behind the
+   `S_story.visited[node.code]` guard. A claim of *uniqueness* is the easiest kind to
+   falsify and this one held at 5.5 MB.
+4. **`TERRAIN_ENCOUNTER_RATE` is byte-identical** to the excerpt, three months on.
+5. **`reweave-all` still answers 410** with the same sentence, and §WALK-3 has since
+   deleted its ~3,200-line body — the deprecation the report recorded went all the way.
 
 ---
 
-## 7. Layer V — Navigation Buttons and Input Dispatch
+## 7. What Was Deleted, and One Thing Worth Remembering
 
-### 7.1 Input Sources
+**The eight gate-locks.** §7.2's excerpt shows `cellMove` consulting quest state before
+allowing a step: `TLS` sealed until 7 shards, `DAM` blind days, `NUE` Tide Gate, and five
+more. That block was **real** — it is present in the tree at the report's own commit — and
+it was **deleted the following day** by `1872896` (2026-06-16). Zero occurrences remain.
 
-All player navigation converges on the `cellMove(dir)` function. Three input sources exist:
+This report is therefore the last surviving description of a mechanic that contradicted
+the project's first invariant. *No quest, flag, item, or mission bit may ever refuse a
+step.* If a place must feel impassable, the terrain becomes sea; the mover never reads
+quest state. Today `function cellMove(dir)@28345` is a thin caller over the shared
+`Mover.move` kernel, and the only refusals it can produce are off-grid and impassable.
 
-```
-D-pad buttons     #dpad-N/S/E/W     onclick="cellMove('N')"  (etc.)
-WP button         #btn-waypoint     onclick="storyWaypoint()"
-Keyboard          ArrowUp/Down/Left/Right, n/s/e/w keys
-```
+Also gone, with the reason:
 
-The keyboard handler (line 41412):
-
-```js
-// roll2hit-v3.html lines 41412–41423
-document.addEventListener('keydown', e => {
-  if (!S_story.active) return;
-  if (['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)) return;
-  const dirMap = { ArrowUp:'N', ArrowDown:'S', ArrowRight:'E', ArrowLeft:'W',
-                   n:'N', s:'S', e:'E', w:'W', N:'N', S:'S', E:'E', W:'W' };
-  const mapOpen = document.getElementById('sheet-map').classList.contains('active');
-  if (dirMap[e.key]) {
-    e.preventDefault();
-    cellMove(dirMap[e.key]);
-    if (mapOpen) _renderMapGrid();   // refresh map overlay if visible
-    return;
-  }
-  // … b=battle, i=inventory, q=quests, m=map, j=journal …
-});
-```
-
-### 7.2 `cellMove(dir)` — Step Execution
-
-`cellMove` is the lowest-level navigation primitive. Its execution sequence:
-
-```js
-// roll2hit-v3.html lines 34218–34331 (abridged with gate-lock section condensed)
-function cellMove(dir) {
-  const DELTAS = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
-  const [dr, dc] = DELTAS[dir];
-  const nr = (S_story.playerR || 0) + dr;
-  const nc = (S_story.playerC || 0) + dc;
-
-  // Bound check
-  if (nr < 1 || nc < 1 || nr > 500 || nc > 500) {
-    storyMsg('You reach the edge of the known world.'); return;
-  }
-  // Impassable check (ocean tiles set in §CELL-10)
-  if (IMPASSABLE_CELLS.has(`${nr},${nc}`)) {
-    storyMsg('The sea is impassable on foot.'); return;
-  }
-
-  const destCode = CELL_GRID[`${nr},${nc}`];
-
-  // ── Gate-lock checks (8 narrative gates) ─────────────────────────────────
-  if (destCode === 'TLS' && S_story.shards < 7) {
-    storyMsg('🔮 The Convergence is sealed. You need all 7 Codex Shards…'); return;
-  }
-  // … DAM blind days, JRS Hellenist days, NUE Tide Gate,
-  //   HCA Leviathan, KIR kelpie, WRO relay, ALF tracks, DA2 arch …
-
-  // ── State updates ─────────────────────────────────────────────────────────
-  storyCheckMissedSleep();
-  S_story.log.push(S_story.currentCode);
-  if (S_story.log.length > 20) S_story.log.shift();
-  S_story.playerR = nr;
-  S_story.playerC = nc;
-  (S_story.visitedCells = S_story.visitedCells || {})[`${nr},${nc}`] = true;
-  _statTally('exitsTaken', 1);
-  S_story.hoursElapsed    = (S_story.hoursElapsed || 0) + 1;
-  S_story.hoursSinceSlept = (S_story.hoursSinceSlept || 0) + 1;
-
-  // ── Dispatch: named node vs. empty cell ───────────────────────────────────
-  if (destCode && NODE_MAP[destCode]) {
-    const _farewell = _getFarewell(S_story.currentCode, destCode);
-    _pendingFarewell = _farewell || null;
-    _setActivePath(S_story.currentCode, destCode, dir);
-    S_story.currentCode = destCode;
-    storyRender(NODE_MAP[destCode]);        // ← full node render
-  } else {
-    _enterEmptyCell(nr, nc);               // ← terrain render + encounter roll
-  }
-}
-```
-
-The critical branching condition at the bottom is `CELL_GRID["nr,nc"]` — a single property lookup. Named-node entry and empty-cell entry are mutually exclusive branches.
-
-### 7.3 Empty Cell Entry — `_enterEmptyCell`
-
-When the destination cell is not in `CELL_GRID`, the game infers terrain by majority vote of the four cardinal neighbors, renders a minimal terrain panel, and rolls for encounter:
-
-```js
-// roll2hit-v3.html lines 34333–34389
-function _inferTerrain(r, c) {
-  const neighbors = [[-1,0],[1,0],[0,1],[0,-1]]
-    .map(([dr,dc]) => CELL_GRID[`${r+dr},${c+dc}`])
-    .filter(Boolean)
-    .map(code => NODE_MAP[code]?.name)
-    .filter(Boolean);
-  if (!neighbors.length) return 'midlands';
-  const freq = {};
-  let best = 'midlands', bestN = 0;
-  for (const t of neighbors) {
-    freq[t] = (freq[t]||0) + 1;
-    if (freq[t] > bestN) { bestN = freq[t]; best = t; }
-  }
-  return best;
-}
-
-function _enterEmptyCell(r, c) {
-  const terrain      = _inferTerrain(r, c);
-  const terrainEntry = WORLD_DB[terrain] || WORLD_DB.midlands;
-  // … build exit label string from CELL_GRID neighbors …
-  const html = `
-    <div class="story-node-hd">${terrainEntry.icon||'·'} Open Terrain</div>
-    <div style="color:var(--dim);font-size:12px;margin-bottom:6px;">
-      [Row ${r}, Col ${c}] — ${terrainEntry.label||terrain}
-    </div>
-    <div class="story-text">The path continues…</div>`;
-  document.getElementById('story-text-box').innerHTML = html;
-
-  // §CELL-09: hunt mode guarantees encounter on every empty cell step
-  const baseRate      = TERRAIN_ENCOUNTER_RATE[terrain] ?? TERRAIN_ENCOUNTER_RATE._default;
-  const effectiveRate = S_story.huntMode ? 1.0 : baseRate;
-  if (Math.random() < effectiveRate) {
-    const monster = S_story.huntMode
-      ? _stalkedMonsterPick(terrain) : _weightedMonsterPick(terrain);
-    if (monster) {
-      const label = S_story.huntMode
-        ? `🎯 Hunt ambush — ${monster.name}` : `Wild ${monster.name}`;
-      setTimeout(() => _startStoryBattle(monster, label), 300);
-    }
-  }
-  _renderMiniMap();
-  _updateExitLinks();
-}
-```
-
-### 7.4 BFS Path Finding — `_bfsGridPath`
-
-```js
-// roll2hit-v3.html lines 41282–41312
-function _bfsGridPath(fromCode, toCode, startR, startC) {
-  if (!toCode || !NODE_COORDS[toCode]) return [];
-  const endCoord = NODE_COORDS[toCode];
-  const _nc = NODE_COORDS[fromCode];
-  const startCoord = (startR != null && startC != null)
-    ? { r: startR, c: startC }
-    : _nc || { r: S_story.playerR, c: S_story.playerC };
-  if (!startCoord || startCoord.r == null) return [];
-  if (startCoord.r === endCoord.r && startCoord.c === endCoord.c) return [];
-
-  const visited = new Set();
-  const startKey = `${startCoord.r},${startCoord.c}`;
-  visited.add(startKey);
-  const queue = [{ r: startCoord.r, c: startCoord.c, path: [] }];
-
-  while (queue.length) {
-    const { r, c, path } = queue.shift();
-    for (const [dr, dc] of [[-1,0],[1,0],[0,1],[0,-1]]) {
-      const nr = r + dr, nc = c + dc;
-      const k  = `${nr},${nc}`;
-      if (visited.has(k) || IMPASSABLE_CELLS.has(k)) continue;
-      if (nr < 1 || nc < 1 || nr > 500 || nc > 500) continue;
-      visited.add(k);
-      const step = { r: nr, c: nc, code: CELL_GRID[k] || null };
-      const newPath = [...path, step];
-      if (nr === endCoord.r && nc === endCoord.c) return newPath;
-      queue.push({ r: nr, c: nc, path: newPath });
-    }
-  }
-  return [];
-}
-```
-
-The function accepts optional `startR/startC` parameters to anchor the path from an arbitrary grid position, supporting the case where the player is on an unnamed cell between two named nodes. It returns an array of `{r, c, code}` steps. When `code` is non-null, the step lands on a named node.
-
-### 7.5 BFS Direction and Waypoint Auto-Walk
-
-```js
-// roll2hit-v3.html lines 41316–41350
-function _bfsGridDir(fromCode, toCode, startR, startC) {
-  const path = _bfsGridPath(fromCode, toCode, startR, startC);
-  if (!path.length) return null;
-  const _nc = NODE_COORDS[fromCode];
-  const startCoord = (startR != null && startC != null)
-    ? { r: startR, c: startC }
-    : _nc || { r: S_story.playerR, c: S_story.playerC };
-  const dr = path[0].r - startCoord.r;
-  const dc = path[0].c - startCoord.c;
-  return dr < 0 ? 'N' : dr > 0 ? 'S' : dc > 0 ? 'E' : 'W';
-}
-
-function storyWaypoint() {
-  const wp = S_story.waypoint;
-  if (!wp) { storyQuestToggle(); return; }   // no waypoint → show quest panel
-  if (S_story.currentCode === wp) {
-    storyMsg('📍 You have reached the waypoint: '
-      + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '!');
-    S_story.waypoint = null;
-    _updateWaypointBtn();
-    storyQuestToggle();
-    return;
-  }
-  const dir = _bfsGridDir(
-    S_story.currentCode, wp, S_story.playerR, S_story.playerC);
-  if (!dir) {
-    storyMsg('📍 No path to waypoint found. Move manually toward '
-      + (NODE_MAP[wp] ? NODE_MAP[wp].label : wp) + '.');
-    return;
-  }
-  cellMove(dir);   // one step; player presses WP again for next step
-}
-```
-
-The WP button advances the player exactly one grid cell per press. The full journey from `LHR` (r:64, c:224) to `SEN` (r:10, c:223) requires approximately 55 presses if no encounters interrupt — each call computes a fresh BFS from the current position, accounting for any deviation caused by empty-cell encounters or manual detours.
-
----
-
-## 8. Layer VI — Worldbuilder Design Entry Mechanic (`worldbuilder.html`)
-
-### 8.1 Architecture
-
-`worldbuilder.html` is a standalone browser SPA that connects to the WBAPI server. It holds a client-side mirror of all WBAPI data loaded at startup:
-
-```js
-// worldbuilder.html (startup splash phase)
-splashPhase('Loading nodes…', '/api/coords', 28);
-// Fetches GET /api/coords → { code: {r, c}, … }
-// Populates WBAPI.nodeCoords for the grid renderer
-```
-
-The worldbuilder renders a `NODE_COORDS`-driven cell grid and provides four design entry paths: (a) a wizard modal for guided node+quest+monster creation; (b) a grid-direct add flow triggered by clicking an empty cell adjacent to an existing node; (c) a ghost list for nodes in `NODE_MAP` with no `NODE_COORDS` entry; and (d) a raw API form for manual operations.
-
-### 8.2 Grid-Direct Node Creation
-
-When the designer clicks an empty neighboring cell in the grid view, the worldbuilder pre-fills a form with the adjacency direction and parent node code, then submits to `POST /api/node`:
-
-```js
-// worldbuilder.html lines 8094–8131
-const newR = p ? p.r + DR[dir] : null;
-const newC = p ? p.c + DC[dir] : null;
-const labelVal   = GG('gd-add-label').value.trim() || 'New Location';
-const terrainVal = GG('gd-add-terrain').value.trim() || 'junction';
-const actVal     = parseInt(GG('gd-add-act').value, 10) || 1;
-let   codeVal    = GG('gd-add-code').value.trim().toUpperCase();
-
-const body = {
-  name: terrainVal, label: labelVal, act: actVal,
-  ...(newR !== null ? { r: newR, c: newC } : {}),
-};
-if (codeVal) body.code = codeVal;
-
-const res = await fetch(`${SERVER.url}/api/node`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(body)
-});
-```
-
-The correct current flow omits directional fields entirely and relies on coordinate proximity. After a write, `CELL_GRID["63,225"] = "NEW"` is established automatically on the next `getCellGrid()` call; no explicit edge registration is required:
-
-```json
-POST /api/node
-{
-  "code": "NEW",
-  "name": "midlands",
-  "label": "The Crossing",
-  "act": 1,
-  "r": 63,
-  "c": 225
-}
-```
-
-### 8.3 Ghost Node Resolution
-
-Nodes in `NODE_MAP` without a `NODE_COORDS` entry are termed "ghosts." The worldbuilder ghost list renders them sorted by connectivity degree:
-
-```js
-// worldbuilder.html lines 8148–8155
-const ghosts = Object.entries(WBAPI.nodeMap)
-  .filter(([c]) => !WBAPI.nodeCoords[c])
-  .filter(([c,n]) => !q || c.toLowerCase().includes(q)
-                       || (n.label||'').toLowerCase().includes(q));
-GG('ghost-count').textContent = `(${ghosts.length})`;
-```
-
-A ghost node is unnavigatable — it is in `NODE_MAP` so it can hold quests and NPCs, but it cannot appear in `CELL_GRID` because it has no `r,c`. Placing a ghost via `PUT /api/coords/{code} {r,c}` materializes it into the grid.
-
-### 8.4 Wizard Multi-Entity Creation
-
-The wizard modal coordinates simultaneous creation of a node, a monster, and a quest. The generated API calls sequence:
-
-```
-POST /api/node
-{
-  "code":  "NEW",
-  "label": "Weimar Gatehouse",
-  "act":   1,
-  "terrain": "city",
-  "desc":  "The inner gatehouse…"
-}
-
-POST /api/monster { "key": "guard", "name": "City Guard", … }
-
-POST /api/quest {
-  "id":           "quest_weimar_01",
-  "type":         "side",
-  "title":        "The Gate Fee",
-  "activateNode": "NEW",
-  "waypointNode": "WMR",
-  "desc":         "…"
-}
-```
-
----
-
-## 9. Layer VII — Cell Insertion Along Current Paths
-
-### 9.1 The Coordinate-Adjacency Invariant
-
-In the cell-grid model, two nodes are "connected" if and only if their `r,c` coordinates are Manhattan-adjacent (distance = 1) along a cardinal axis. To insert a node between two existing nodes, the designer places it at an unoccupied cell between them:
-
-```
-Existing graph:
-  BOO at (r:47, c:223) ──── unnamed cells ──── LHR at (r:64, c:224)
-  (17 rows apart, 1 column difference — oblique path through empty terrain)
-
-Insert a named waypoint at (r:55, c:223):
-  POST /api/node { "code":"MID","name":"junction","label":"Midway","act":1,"r":55,"c":223 }
-```
-
-After the write, BFS from `BOO` to `LHR` now passes through `MID` if the path routes through column 223, row 55. No N/S/E/W fields are written on `BOO`, `LHR`, or `MID` — exits are entirely derived from coordinate adjacency.
-
-### 9.2 Server-Side INSERT Protocol — `POST /api/node`
-
-The server handler for node creation (lines 10930–10979) performs the following steps in order:
-
-**1. Validates required fields:** `code`, `name` (terrain key), `label`, `act`
-
-**2. Rejects deprecated N/S/E/W fields** (§CELL-08 guard):
-
-```js
-// wbapi-server.js lines 10940–10944
-const _badNodeFields = ['N','E','S','W'].filter(f => f in body);
-if (_badNodeFields.length) {
-  return json(res, 400, { ok:false,
-    error:`Fields ${_badNodeFields.join(', ')} are deprecated — exits are derived
-           from cell-grid adjacency, not stored. Place the node at (r,c) to
-           establish connections.`,
-    deprecated: _badNodeFields });
-}
-```
-
-**3. Serializes the `NODE_MAP` entry:**
-
-```js
-// wbapi-server.js lines 773–784
-function serializeNodeLiteral(code, body) {
-  const maxNum = Object.values(WBAPI.nodeMap).reduce((m, n) => Math.max(m, n.num||0), 0);
-  const num = body.num !== undefined ? Number(body.num) : maxNum + 1;
-  const STR  = ['name','label','text','npc','loot','N','S','E','W'];
-  const NUM  = ['act','sleepCost'];
-  const BOOL = ['sleep','junction'];
-  const parts = [`  ${code}: { num:${num}`];
-  for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
-  for (const f of NUM)  if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
-  for (const f of BOOL) if (body[f] !== undefined) parts.push(`${f}:${!!body[f]}`);
-  if (body.battle) parts.push(`battle:${JSON.stringify(body.battle)}`);
-  return parts.join(', ') + ' },\n';
-}
-```
-
-> **Note:** `serializeNodeLiteral` still lists `'N','S','E','W'` in its `STR` array. These entries are dead: the §CELL-08 guard (step 2 above) rejects the HTTP request with HTTP 400 before `serializeNodeLiteral` is ever called when any of those keys appear in `body`. The dead entries are a cleanup candidate (`const STR = ['name','label','text','npc','loot']`) to prevent confusion if the guard is relaxed in a future branch.
-
-**4. Inserts the entry** using `insertAfterLastParsedNode()`, which finds the highest-numbered node entry and splices immediately after its closing brace using brace-depth tracking:
-
-```js
-// wbapi-server.js lines 703–749 (condensed)
-function insertAfterLastParsedNode(entry) {
-  let lastKey = null, lastNum = -1;
-  for (const [k, n] of Object.entries(WBAPI.nodeMap)) {
-    if ((n.num||0) > lastNum) { lastNum = n.num||0; lastKey = k; }
-  }
-  if (!lastKey) return insertBeforeSectionClose('NODE_MAP', entry);
-  // … locate lastKey's closing brace via brace-depth scan …
-  // … splice `entry` immediately after the closing },\n …
-  WBAPI._rawSrc = WBAPI._rawSrc.slice(0, insertAt)
-    + entry
-    + WBAPI._rawSrc.slice(insertAt);
-  return { ok:true };
-}
-```
-
-**5. If `r,c` provided**, appends a coordinate entry to the `NODE_COORDS` block:
-
-```js
-// wbapi-server.js lines 10960–10968
-WBAPI.nodeCoords[code] = { r, c };
-const START = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆';
-const END   = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
-const sIdx  = WBAPI._rawSrc.indexOf(START) + START.length;
-const eIdx  = WBAPI._rawSrc.indexOf(END);
-let section = WBAPI._rawSrc.slice(sIdx, eIdx);
-const closeIdx = section.lastIndexOf('\n};');
-section = section.slice(0, closeIdx + 1)
-  + `  ${code}:{r:${r},c:${c}},\n`
-  + section.slice(closeIdx + 1);
-WBAPI._rawSrc = WBAPI._rawSrc.slice(0, sIdx) + section + WBAPI._rawSrc.slice(eIdx);
-```
-
-**6.** Calls `WBAPI._buildIndexes()` to rebuild quest/NPC lookup maps, then saves the file and reloads.
-
-### 9.3 Atomic Row Shift for Grid Expansion
-
-When the grid is too dense to insert a node at the required position, the reweave engine performs an atomic row shift: all nodes at `r >= insertR` shift by +1, and all nodes at `c >= insertC` shift by +1, atomically:
-
-```js
-// wbapi-server.js lines 6685–6692
-for (const code of Object.keys(WBAPI.nodeCoords)) {
-  const coord = WBAPI.nodeCoords[code];
-  WBAPI.nodeCoords[code] = {
-    r: coord.r >= insertR ? coord.r + 1 : coord.r,
-    c: coord.c >= insertC ? coord.c + 1 : coord.c
-  };
-}
-```
-
-After the shift, the cell that was at `(insertR, insertC)` is now vacant, and the new node can be planted there. Any BFS path that previously crossed the shift boundary continues to work because both the source and destination coordinates shift consistently.
-
----
-
-## 10. Full Program Flow: Quest Accept → Act I → Act II → First Shard Collection
-
-### 10.1 Phase 0 — Page Load and State Initialization
-
-On `DOMContentLoaded`, `storyEnter()` fires. It calls `storyCheckContinue()`, which reads `localStorage.getItem('r2h_autosave')`:
-
-```js
-// roll2hit-v3.html lines 29992–30014
-function storyCheckContinue() {
-  if (_continueChecked) return false;
-  _continueChecked = true;
-  try {
-    const raw = localStorage.getItem('r2h_autosave');
-    if (!raw) return false;
-    const save = JSON.parse(raw);
-    const node = NODE_MAP[save.currentCode] || NODE_MAP['LHR'];
-    const loc  = node.label.split(' — ')[0];
-    document.getElementById('continue-sub').textContent =
-      'Day ' + save.day + ' of 49  ·  ' + loc + '  ·  ' + save.inventory.length + ' item(s)';
-    document.getElementById('story-continue-modal').classList.add('visible');
-    return true;
-  } catch(e) { return false; }
-}
-```
-
-A new player sees "New Game." A returning player sees the continue modal showing their last known location and inventory count.
-
-### 10.2 Phase 1 — New Game Initialization at LHR
-
-`storyNewGame()` resets `S_story` to `_S_DEFAULTS()`, applies starting ability scores, computes initial HP from CON modifier, equips starter weapons, and calls `storyRender(NODE_MAP['LHR'])`. The canonical starting node is `LHR`, Birka City Streets, Act I, at `(r:64, c:224)`.
-
-After `storyRender(NODE_MAP['LHR'])`:
-- `S_story.playerR = 64`, `S_story.playerC = 224`
-- `S_story.actNumber = 1`
-- `S_story.currentCode = 'LHR'`
-- `storyCheckQuests(LHR_node)` fires → any quests with `activateNode === 'LHR'` and a passing `activateCond()` become `'active'` in `S_story.quests`
-- The Birka tagline div is injected below `#story-text-box`
-
-### 10.3 Phase 2 — Quest Activation and Waypoint Setting
-
-When `storyCheckQuests(node)` fires at `LHR`, qualifying quests flip to active:
-
-```js
-// roll2hit-v3.html lines 34478–34487
-function storyCheckQuests(node) {
-  const msgs = [];
-  Object.values(QUEST_DB).forEach(q => {
-    if (q.type === 'epic') return;
-    if (!S_story.quests[q.id] && q.activateNode === node.code) {
-      if (q.activateCond && !q.activateCond()) return;
-      S_story.quests[q.id] = 'active';
-      msgs.push('📋 ' + q.title);
-    }
-  });
-  // … emit msgs to #story-move-msg …
-```
-
-The player opens the quest panel (`Q` key or quest button). Any active quest with a `waypointNode` different from its `activateNode` renders a **Set Waypoint** button. Clicking it calls:
-
-```js
-// roll2hit-v3.html lines 41403–41409
-function storySetWaypoint(nodeCode) {
-  S_story.waypoint = nodeCode;
-  S_story.customQuestTerrain = null;
-  _updateWaypointBtn();
-  const dest = NODE_MAP[nodeCode];
-  storyMsg('📍 Waypoint set: ' + (dest ? dest.label : nodeCode));
-}
-```
-
-`_updateWaypointBtn()` highlights `#btn-waypoint` with the `.at-waypoint` class if the player is already there, and calls `_updateExitLinks()` to tint the directional exit buttons green when they point toward the waypoint.
-
-### 10.4 Phase 3 — Navigation from LHR to SEN (Act I → Act II)
-
-`SEN` (Aboard the Tilbury Star) is at `(r:10, c:223)`. From `LHR` at `(r:64, c:224)` the Manhattan distance is 55 rows north and 1 column west — approximately 54–56 steps depending on the path BFS chooses through the named node graph.
-
-The player presses WP repeatedly. Each press executes:
-
-```
-storyWaypoint()
-  → _bfsGridDir('LHR', 'SEN', 64, 224)
-      → _bfsGridPath('LHR', 'SEN')
-          → BFS from (64,224) to (10,223)
-          → returns [{r:63,c:224,code:'BK'}, {r:62,c:224,code:'DBV'}, …]
-      → first step is (63,224) = N relative to (64,224)
-      → returns 'N'
-  → cellMove('N')
-      → nr=63, nc=224
-      → CELL_GRID["63,224"] = 'BK'
-      → storyRender(NODE_MAP['BK'])
-          → S_story.playerR=63, S_story.playerC=224
-          → S_story.currentCode = 'BK'
-          → storyCheckQuests: no new quests at BK
-          → storyCollectLoot: BK has loot → grant if first visit
-```
-
-The named node corridor `LHR → BK → DBV → ISL` (column 224, rows 64→63→62→61) is a clean 3-step south-going corridor traversable without encounter rolls because named-node entry always calls `storyRender()`, which does not invoke `_enterEmptyCell()`. Encounters only occur in `_enterEmptyCell()`.
-
-The player may also navigate manually or mix manual and waypoint steps. BFS recomputes from the actual `(playerR, playerC)` on every `storyWaypoint()` call, so any deviation is automatically corrected on the next press.
-
-### 10.5 Phase 4 — Crossing the Act Boundary
-
-The first time `storyRender(NODE_MAP['SEN'])` is called, `SEN.act === 2`, so:
-
-```js
-// storyRender line 35881
-S_story.actNumber = node.act || 1;   // → 2
-
-// act badge update (within storyRender)
-document.getElementById('story-act-badge').textContent =
-  '— ' + ACT_NAMES[node.act] + ' —';   // → '— Act II — Tilbury —'
-```
-
-The act badge updates visually. No gate check exists between Act I and Act II — the transition is purely by geography. Any quest in `QUEST_DB` with `activateNode === 'SEN'` and a passing `activateCond()` is activated on this render.
-
-### 10.6 Phase 5 — First Shard Collection
-
-The first Codex Shard is located at a node in the Act II network whose `loot` field contains the string `"Codex Shard #1"`. When `storyRender()` calls `storyCollectLoot(node)` on first visit:
-
-```
-node.loot = "Codex Shard #1"
-_itemType("Codex Shard #1") → 'shard'   (matched by /shard/i)
-
-storyCollectLoot execution:
-  S_story.visited[node.code] is false → proceed
-  S_story.visited[node.code] = true
-  parse "Codex Shard #1" → name = "Codex Shard #1", type = 'shard'
-  S_story.inventory.push({ name, code: node.code, icon: '🔮', type: 'shard' })
-  S_story.shards = Math.min(7, 0 + 1) = 1
-  shardM = "Codex Shard #1".match(/#(\d)/) → ['#1', '1']
-  S_story.shardNotes[0] = true
-  S_story.inventory.push(shard origin note item)
-  return '📦 Codex Shard #1'
-```
-
-`storyRender()` displays the returned loot message in `#story-move-msg`. The `#s-shards` counter in the status bar updates to `1/7` via `storyUpdateStatus()`.
-
-The player has now: accepted a quest at `LHR`, navigated across the Act I/II boundary, and collected the first Codex Shard — the canonical Act II objective entry.
-
----
-
-## 11. Reweave as Validation Protocol
-
-### 11.1 Definition
-
-A "reweave" in the current system (post §CELL-06) is not a server-side graph reconstruction but a **BFS connectivity proof**. The definition of a fully navigatable map is:
-
-> Every node `code` present in `NODE_COORDS` is reachable from `LHR` by BFS on the 500×500 `CELL_GRID` grid, respecting `IMPASSABLE_CELLS`.
-
-This is equivalent to the statement that `getCellGrid()` over the current `NODE_COORDS` produces a connected graph containing `LHR` as the root.
-
-### 11.2 Server-Side Graph Reachability (`GET /api/graph/reachability`)
-
-The server's graph handler builds an undirected adjacency map from `CELL_GRID` coordinate neighbors, then runs BFS to partition nodes into clusters:
-
-```js
-// wbapi-server.js lines 4092–4128
-const cellGrid = buildCellGrid(nm, coords);
-const undirAdj = new Map();
-for (const code of Object.keys(nm)) {
-  const coord = coords[code];
-  undirAdj.set(code, new Set());
-  if (!coord) continue;
-  for (const [dr,dc] of MOVES4) {
-    const nb = cellGrid[`${coord.r+dr},${coord.c+dc}`];
-    if (nb && nm[nb]) undirAdj.get(code).add(nb);
-  }
-}
-
-function bfsReach(start) {
-  if (!undirAdj.has(start)) return new Set([start]);
-  const visited = new Set([start]);
-  const queue   = [start];
-  while (queue.length) {
-    const cur = queue.shift();
-    for (const nb of (undirAdj.get(cur) || [])) {
-      if (!visited.has(nb)) { visited.add(nb); queue.push(nb); }
-    }
-  }
-  return visited;
-}
-```
-
-`bfsReach('LHR')` returns the set of all nodes reachable from `LHR`. Any node not in this set is disconnected — unreachable by the player in-game.
-
-### 11.3 Reweave Completion Criteria
-
-A reweave pass is considered complete when:
-
-1. **100% reachability**: `bfsReach('LHR').size === Object.keys(WBAPI.nodeCoords).length` — every node with coordinates is in the LHR cluster.
-2. **Zero collisions**: No two nodes share the same `(r, c)` key in `NODE_COORDS`.
-3. **Zero diagonal links**: `GET /api/audit/map` reports zero `diagonal_exit` errors.
-4. **Zero dangling links**: All legacy N/S/E/W exit fields (if any remain) point to existing nodes.
-5. **Long-link warning zero (optional)**: No named-node-to-named-node corridor exceeds 4 empty cells.
-
-The deprecated `POST /api/graph/reweave-all` returns HTTP 410 with a redirect message:
-
-```js
-// wbapi-server.js lines 5813–5815
-if (parts[1] === 'reweave-all' && method === 'POST') {
-  return json(res, 410, { ok:false,
-    error:'reweave-all is deprecated: junction nodes were removed. Use GET /api/graph/connect for cluster-bridging suggestions.' });
-}
-```
-
----
-
-## 12. Test Plan
-
-### 12.1 Test Architecture
-
-The test suite uses two frameworks:
-
-- **Playwright** (browser integration tests) — loads `roll2hit-v3.html` in a real Chromium instance, seeds state via `localStorage` before page load, and exercises the live JavaScript functions.
-- **Node.js native** assertions (unit tests) — loads `wbapi-core.js` and `wbapi-server.js` directly and tests the server-side BFS and grid functions against the actual game file.
-
-The Playwright configuration:
-
-```js
-// playwright.config.js (existing)
-module.exports = {
-  testDir: './tests/integration',
-  use: { baseURL: 'http://localhost:1367' },
-};
-```
-
-### 12.2 Test Helpers (existing, `tests/integration/helpers.js`)
-
-The helper module provides `seedAndLoad` and `dismissContinue`, which together establish a known game state in under 200ms:
-
-```js
-// tests/integration/helpers.js lines 95–118
-const SEED_STATE = {
-  active: true, currentCode: 'BOO', checkpointNode: 'BOO',
-  hearthHome: 'LHR', hp: 80, hpMax: 80, gold: 500,
-  level: 5, shards: 0, voidPressure: 0,
-  playerR: 0, playerC: 0,   // storyRender() will sync from NODE_COORDS
-  visitedCells: {}, hoursElapsed: 0, hoursSinceSlept: 0,
-  waypoint: null, log: [], visited: { BOO: true },
-  // … full S_story-compatible object …
-};
-
-async function seedAndLoad(page, overrides = {}) {
-  const state = Object.assign({}, SEED_STATE, overrides);
-  await page.addInitScript(s => {
-    localStorage.clear();
-    localStorage.setItem('r2h_autosave', JSON.stringify(s));
-  }, state);
-  await page.goto('/roll2hit-v3.html');
-}
-
-async function dismissContinue(page) {
-  await page.locator('#story-continue-modal').waitFor({ state: 'visible' });
-  await page.locator('#btn-continue-load').click();
-  await expect(page.locator('#story-continue-modal')).not.toHaveClass(/visible/);
-}
-```
-
-### 12.3 Existing Navigation Tests (`tests/integration/navigation.test.js`)
-
-The existing suite validates three invariants:
-
-**Basic walk** — `cellMove('S')` increments `playerR` by 1 and lands on the named node at the destination cell:
-
-```js
-test('cellMove(S) from BOO lands on LXF (named node 1 step south)', async ({ page }) => {
-  await page.evaluate(() => cellMove('S'));
-  const code = await readStory(page, 'currentCode');
-  expect(code).toBe('LXF');   // LXF is at r:48,c:223 — exactly 1 cell south of BOO(r:47,c:223)
-});
-```
-
-**BFS corridor** — `_bfsGridPath(ISL, LHR)` returns exactly 3 steps through the clean S-corridor:
-
-```js
-test('_bfsGridPath(ISL, LHR) is exactly 3 steps (S corridor)', async ({ page }) => {
-  const path = await page.evaluate(() => _bfsGridPath('ISL', 'LHR'));
-  expect(path.length).toBe(3);
-  for (let i = 0; i < path.length - 1; i++) {
-    expect(path[i + 1].r - path[i].r).toBe(1);
-    expect(path[i + 1].c - path[i].c).toBe(0);
-  }
-});
-```
-
-**Full smoke walk** — auto-walks `BOO → LHR` in at most 40 `storyWaypoint()` calls:
-
-```js
-test('SMOKE — full path walk BOO → LHR via repeated storyWaypoint', async ({ page }) => {
-  await page.evaluate(() => { S_story.waypoint = 'LHR'; });
-  for (let i = 0; i < 40; i++) {
-    const cur = await readStory(page, 'currentCode');
-    if (cur === 'LHR') break;
-    await page.evaluate(() => storyWaypoint());
-  }
-  const finalCode = await readStory(page, 'currentCode');
-  expect(finalCode).toBe('LHR');
-  const [r, c] = await page.evaluate(() => [S_story.playerR, S_story.playerC]);
-  expect(r).toBe(64); expect(c).toBe(224);
-});
-```
-
-### 12.4 New Browser Integration Tests — Act Transition and Shard Collection
-
-File: `tests/integration/navigation-act2.test.js`
-
-```js
-'use strict';
-const { test, expect } = require('@playwright/test');
-const { seedAndLoad, dismissContinue, readStory } = require('./helpers.js');
-
-// Grid reference:
-//   LHR = r:64, c:224  (Birka City Streets — Act I root)
-//   SEN = r:10, c:223  (Aboard the Tilbury Star — Act II)
-//   BOO = r:47, c:223  (Yugurt Lake — seed default)
-
-test.describe('Act I → Act II transition', () => {
-
-  test('actNumber is 1 at LHR after load', async ({ page }) => {
-    await seedAndLoad(page, { currentCode: 'LHR', playerR: 64, playerC: 224,
-                              visited: { LHR: true } });
-    await dismissContinue(page);
-    const act = await readStory(page, 'actNumber');
-    expect(act).toBe(1);
-  });
-
-  test('act badge text contains "Act I" at LHR', async ({ page }) => {
-    await seedAndLoad(page, { currentCode: 'LHR', playerR: 64, playerC: 224,
-                              visited: { LHR: true } });
-    await dismissContinue(page);
-    const badge = await page.locator('#story-act-badge').textContent();
-    expect(badge).toContain('Act I');
-  });
-
-  test('storyRender at SEN sets actNumber to 2', async ({ page }) => {
-    await seedAndLoad(page, { currentCode: 'SEN', playerR: 10, playerC: 223,
-                              visited: { SEN: true } });
-    await dismissContinue(page);
-    const act = await readStory(page, 'actNumber');
-    expect(act).toBe(2);
-  });
-
-  test('act badge text contains "Act II" at SEN', async ({ page }) => {
-    await seedAndLoad(page, { currentCode: 'SEN', playerR: 10, playerC: 223,
-                              visited: { SEN: true } });
-    await dismissContinue(page);
-    const badge = await page.locator('#story-act-badge').textContent();
-    expect(badge).toContain('Act II');
-  });
-
-  test('storyWaypoint auto-walks from LHR toward SEN (max 200 steps, no crash)', async ({ page }) => {
-    await seedAndLoad(page, { currentCode: 'LHR', playerR: 64, playerC: 224,
-                              visited: { LHR: true } });
-    await dismissContinue(page);
-    await page.evaluate(() => { S_story.waypoint = 'SEN'; });
-
-    let reached = false;
-    for (let i = 0; i < 200; i++) {
-      const cur = await readStory(page, 'currentCode');
-      if (cur === 'SEN') { reached = true; break; }
-      const hasPrebatt = await page.locator('#story-prebatt-overlay')
-        .isVisible().catch(() => false);
-      if (hasPrebatt) break;
-      await page.evaluate(() => storyWaypoint());
-    }
-    const finalCode = await readStory(page, 'currentCode');
-    if (reached) {
-      expect(finalCode).toBe('SEN');
-      const act = await readStory(page, 'actNumber');
-      expect(act).toBe(2);
-    } else {
-      const r = await readStory(page, 'playerR');
-      expect(r).toBeLessThan(64);
-    }
-  });
-
-});
-
-test.describe('Shard collection', () => {
-
-  async function shardNodeCode(page) {
-    return page.evaluate(() => {
-      return Object.entries(NODE_MAP)
-        .find(([, n]) => n.loot && /Codex Shard #\d/.test(n.loot))
-        ?.[0] || null;
-    });
-  }
-
-  test('first visit to a shard node increments S_story.shards to 1', async ({ page }) => {
-    await seedAndLoad(page, { shards: 0 });
-    await dismissContinue(page);
-
-    const shardCode = await shardNodeCode(page);
-    if (!shardCode) { console.log('No shard node found — skipping'); return; }
-
-    const coord = await page.evaluate(c => NODE_COORDS[c], shardCode);
-    await seedAndLoad(page, {
-      currentCode: shardCode, playerR: coord.r, playerC: coord.c,
-      visited: {}, shards: 0
-    });
-    await dismissContinue(page);
-
-    const shards = await readStory(page, 'shards');
-    expect(shards).toBe(1);
-  });
-
-  test('second visit to shard node does not double-collect', async ({ page }) => {
-    await seedAndLoad(page);
-    await dismissContinue(page);
-    const shardCode = await shardNodeCode(page);
-    if (!shardCode) return;
-
-    const coord = await page.evaluate(c => NODE_COORDS[c], shardCode);
-    await seedAndLoad(page, {
-      currentCode: shardCode, playerR: coord.r, playerC: coord.c,
-      visited: {}, shards: 0
-    });
-    await dismissContinue(page);
-    expect(await readStory(page, 'shards')).toBe(1);
-
-    await page.evaluate(c => { storyRender(NODE_MAP[c]); }, shardCode);
-    expect(await readStory(page, 'shards')).toBe(1);
-  });
-
-  test('shard item appears in inventory with type==="shard" after first visit', async ({ page }) => {
-    await seedAndLoad(page);
-    await dismissContinue(page);
-    const shardCode = await shardNodeCode(page);
-    if (!shardCode) return;
-
-    const coord = await page.evaluate(c => NODE_COORDS[c], shardCode);
-    await seedAndLoad(page, {
-      currentCode: shardCode, playerR: coord.r, playerC: coord.c,
-      visited: {}, shards: 0
-    });
-    await dismissContinue(page);
-
-    const hasShardItem = await page.evaluate(() =>
-      (S_story.inventory || []).some(i => i.type === 'shard'));
-    expect(hasShardItem).toBe(true);
-  });
-
-});
-```
-
-### 12.5 New Browser Integration Tests — Full Reweave Connectivity
-
-File: `tests/integration/reweave-connectivity.test.js`
-
-```js
-'use strict';
-const { test, expect } = require('@playwright/test');
-const { seedAndLoad, dismissContinue } = require('./helpers.js');
-
-test.describe('Reweave — map connectivity invariants', () => {
-
-  test.beforeEach(async ({ page }) => {
-    await seedAndLoad(page);
-    await dismissContinue(page);
-  });
-
-  test('LHR playerR/C match NODE_COORDS["LHR"] exactly', async ({ page }) => {
-    const { r, c, coordR, coordC } = await page.evaluate(() => ({
-      r:      S_story.playerR,
-      c:      S_story.playerC,
-      coordR: NODE_COORDS['LHR']?.r,
-      coordC: NODE_COORDS['LHR']?.c,
-    }));
-    expect(r).toBe(coordR);
-    expect(c).toBe(coordC);
-  });
-
-  test('CELL_GRID["r,c"] for LHR resolves to "LHR"', async ({ page }) => {
-    const entry = await page.evaluate(() => {
-      const lhr = NODE_COORDS['LHR'];
-      return CELL_GRID[`${lhr.r},${lhr.c}`];
-    });
-    expect(entry).toBe('LHR');
-  });
-
-  test('no two NODE_COORDS entries share the same r,c (zero collisions)', async ({ page }) => {
-    const collisions = await page.evaluate(() => {
-      const seen = {};
-      const dupes = [];
-      for (const [code, { r, c }] of Object.entries(NODE_COORDS)) {
-        const k = `${r},${c}`;
-        if (seen[k]) dupes.push({ k, a: seen[k], b: code });
-        seen[k] = code;
-      }
-      return dupes;
-    });
-    expect(collisions).toEqual([]);
-  });
-
-  test('CELL_GRID entry count matches NODE_COORDS entry count', async ({ page }) => {
-    const { coordCount, gridCount } = await page.evaluate(() => ({
-      coordCount: Object.keys(NODE_COORDS).length,
-      gridCount:  Object.keys(CELL_GRID).length,
-    }));
-    expect(gridCount).toBeLessThanOrEqual(coordCount);
-    expect(gridCount).toBeGreaterThan(0);
-  });
-
-  test('sample of 30 spread nodes are BFS-reachable from LHR', async ({ page }) => {
-    const unreachable = await page.evaluate(() => {
-      const codes = Object.keys(NODE_COORDS).sort();
-      const stride = Math.max(1, Math.floor(codes.length / 30));
-      const sample = codes.filter((_, i) => i % stride === 0).slice(0, 30);
-      return sample
-        // `_bfsGridPath(x, x)` returns [] when start === end, so LHR must be
-        // excluded from the path-length check and treated as trivially reachable.
-        .map(c => ({ code: c, reachable: c === 'LHR' || _bfsGridPath(c, 'LHR').length > 0 }))
-        .filter(r => !r.reachable)
-        .map(r => r.code);
-    });
-    expect(unreachable).toEqual([]);
-  });
-
-  test('specifically named Act I nodes are all reachable from LHR', async ({ page }) => {
-    const ACT1_NODES = ['BK','DBV','ISL','BOO','LXF','SEN','NID','ODD','LYG'];
-    const unreachable = await page.evaluate(nodes =>
-      nodes.filter(c => NODE_COORDS[c] && _bfsGridPath(c,'LHR').length === 0),
-      ACT1_NODES);
-    expect(unreachable).toEqual([]);
-  });
-
-  test('_bfsGridPath returns [] for unknown destination (graceful empty)', async ({ page }) => {
-    const len = await page.evaluate(() =>
-      _bfsGridPath('BOO', '__PHANTOM_NODE__').length);
-    expect(len).toBe(0);
-  });
-
-  test('IMPASSABLE_CELLS blocks BFS (ocean cells are non-traversable)', async ({ page }) => {
-    const result = await page.evaluate(() => {
-      if (IMPASSABLE_CELLS.size === 0) return 'no_impassable';
-      const [key] = IMPASSABLE_CELLS;
-      const [r, c] = key.split(',').map(Number);
-      const path = _bfsGridPath('BOO', 'LHR');
-      const blocked = path.some(step => step.r === r && step.c === c);
-      return blocked ? 'BREACH' : 'ok';
-    });
-    expect(result).not.toBe('BREACH');
-  });
-
-});
-```
-
-### 12.6 New Node.js Unit Tests — Cell Grid and Reweave Validation
-
-File: `tests/unit/cell-grid.test.js`
-
-```js
-'use strict';
-const assert = require('assert');
-const path   = require('path');
-const WBAPI  = require('../../wbapi-core');
-
-WBAPI.load(path.join(__dirname, '../../roll2hit-v3.html'));
-
-function buildCellGrid(nm, coords) {
-  const g = {};
-  for (const code of Object.keys(nm)) {
-    const coord = coords[code] || { r: nm[code].r, c: nm[code].c };
-    if (coord && coord.r != null && coord.c != null)
-      g[`${coord.r},${coord.c}`] = code;
-  }
-  return g;
-}
-
-describe('buildCellGrid', () => {
-  it('maps every NODE_COORDS entry to its "r,c" key', () => {
-    const grid = buildCellGrid(WBAPI.nodeMap, WBAPI.nodeCoords);
-    for (const [code, { r, c }] of Object.entries(WBAPI.nodeCoords)) {
-      assert.strictEqual(grid[`${r},${c}`], code,
-        `Expected CELL_GRID["${r},${c}"] === "${code}"`);
-    }
-  });
-
-  it('grid key count equals coord count (no phantom entries)', () => {
-    const grid = buildCellGrid(WBAPI.nodeMap, WBAPI.nodeCoords);
-    assert.strictEqual(Object.keys(grid).length, Object.keys(WBAPI.nodeCoords).length);
-  });
-
-  it('empty nodeMap → empty grid', () => {
-    const grid = buildCellGrid({}, {});
-    assert.deepStrictEqual(grid, {});
-  });
-
-  it('NODE_MAP entry without coords is skipped', () => {
-    const nm    = { GHOST: { num:1, name:'city', label:'Ghost', act:1 } };
-    const grid  = buildCellGrid(nm, {});
-    assert.deepStrictEqual(grid, {});
-  });
-});
-
-describe('CELL_GRID collision detection', () => {
-  it('no two NODE_COORDS entries share the same r,c', () => {
-    const seen = {};
-    for (const [code, { r, c }] of Object.entries(WBAPI.nodeCoords)) {
-      const k = `${r},${c}`;
-      if (seen[k]) {
-        assert.fail(
-          `Coordinate collision: "${code}" and "${seen[k]}" both at (${r},${c})`);
-      }
-      seen[k] = code;
-    }
-  });
-});
-```
-
-File: `tests/unit/reweave-validate.test.js`
-
-```js
-'use strict';
-const assert = require('assert');
-const path   = require('path');
-const WBAPI  = require('../../wbapi-core');
-
-WBAPI.load(path.join(__dirname, '../../roll2hit-v3.html'));
-
-function buildCellGrid(nm, coords) {
-  const g = {};
-  for (const code of Object.keys(nm)) {
-    const coord = coords[code] || { r: nm[code].r, c: nm[code].c };
-    if (coord && coord.r != null && coord.c != null)
-      g[`${coord.r},${coord.c}`] = code;
-  }
-  return g;
-}
-
-// NOTE: This offline BFS flood-fills all cells reachable from LHR, then checks
-// whether each named node's coordinates fall within the visited set. It does NOT
-// apply IMPASSABLE_CELLS (ocean tiles), because those are populated at browser
-// parse time and are not available in the Node.js unit-test context. A node
-// reachable here may still be unreachable at runtime if the only path crosses an
-// impassable cell. The Playwright integration test in §12.5 ("IMPASSABLE_CELLS
-// blocks BFS") covers that gap against the live browser.
-function bfsReachFromLHR(nodeMap, nodeCoords) {
-  const grid  = buildCellGrid(nodeMap, nodeCoords);
-  const lhr   = nodeCoords['LHR'];
-  if (!lhr) throw new Error('LHR not in NODE_COORDS');
-  const visited = new Set([`${lhr.r},${lhr.c}`]);
-  const queue   = [lhr];
-  while (queue.length) {
-    const { r, c } = queue.shift();
-    for (const [dr, dc] of [[-1,0],[1,0],[0,1],[0,-1]]) {
-      const nr = r + dr, nc = c + dc;
-      const k  = `${nr},${nc}`;
-      if (visited.has(k)) continue;
-      if (nr < 1 || nc < 1 || nr > 500 || nc > 500) continue;
-      visited.add(k);
-      queue.push({ r: nr, c: nc });
-    }
-  }
-  return visited;
-}
-
-describe('Reweave — full map BFS connectivity from LHR', () => {
-
-  it('LHR is present in NODE_COORDS', () => {
-    assert.ok(WBAPI.nodeCoords['LHR'],
-      'LHR missing from NODE_COORDS — no BFS root');
-  });
-
-  it('all NODE_COORDS entries are BFS-reachable from LHR', () => {
-    const visited     = bfsReachFromLHR(WBAPI.nodeMap, WBAPI.nodeCoords);
-    const unreachable = Object.entries(WBAPI.nodeCoords)
-      .filter(([, { r, c }]) => !visited.has(`${r},${c}`))
-      .map(([code]) => code);
-    assert.deepStrictEqual(unreachable, [],
-      `Unreachable nodes: ${unreachable.join(', ')}`);
-  });
-
-  it('zero coordinate collisions in NODE_COORDS', () => {
-    const seen = {};
-    const dupes = [];
-    for (const [code, { r, c }] of Object.entries(WBAPI.nodeCoords)) {
-      const k = `${r},${c}`;
-      if (seen[k]) dupes.push(`${code} collides with ${seen[k]} at (${r},${c})`);
-      seen[k] = code;
-    }
-    assert.deepStrictEqual(dupes, []);
-  });
-
-  it('CELL_GRID key count matches NODE_COORDS count (no phantom entries)', () => {
-    const grid = buildCellGrid(WBAPI.nodeMap, WBAPI.nodeCoords);
-    assert.strictEqual(
-      Object.keys(grid).length,
-      Object.keys(WBAPI.nodeCoords).length,
-      'Phantom entries in CELL_GRID suggest coord/nodeMap sync error'
-    );
-  });
-
-  it('all NODE_MAP entries with coords resolve correctly in CELL_GRID', () => {
-    const grid    = buildCellGrid(WBAPI.nodeMap, WBAPI.nodeCoords);
-    const missing = Object.entries(WBAPI.nodeCoords)
-      .filter(([code, { r, c }]) => grid[`${r},${c}`] !== code)
-      .map(([code]) => code);
-    assert.deepStrictEqual(missing, []);
-  });
-
-});
-```
-
-### 12.7 Test Coverage Matrix
-
-| Test File | Framework | What It Proves |
+| Removed | By | Why it mattered |
 |---|---|---|
-| `navigation.test.js` (existing) | Playwright | `cellMove()` moves player; named-node BFS; waypoint walk; `_bfsGridPath` corridor correctness |
-| `navigation-act2.test.js` (new) | Playwright | Act I→II transition; badge update; waypoint from LHR toward SEN; shard collection; double-collect guard |
-| `reweave-connectivity.test.js` (new) | Playwright | Zero collisions; CELL_GRID count; 30-node BFS spot-check; IMPASSABLE_CELLS respected |
-| `cell-grid.test.js` (new) | Node.js | `buildCellGrid()` correctness; phantom entry absence; empty-input safety |
-| `reweave-validate.test.js` (new) | Node.js | Full-file BFS from LHR; 100% reachability; zero collisions; CELL_GRID/coords sync |
+| `hoursElapsed`/`hoursSinceSlept` per step | §TIMELESS-01 | Walking no longer spends the 49-day clock; battle, rest, sleep and fishing still do |
+| `Math.random()` encounter roll | §VM-01-B | Replaced by `_seededNext()`, the same stream the server rolls — replayable from a save |
+| Hunt Mode's `effectiveRate = 1.0` | §KG-01 | Now `min(0.8, rate × 2)`; a guaranteed ambush every step was not a hunt, it was a tax |
+| `"[Row r, Col c] — terrain"` + *"The path continues…"* | §NAV-01c | Replaced by `describeCell` (ROOMS:CORE): deterministic prose, road signage, nearest landmark, region name. The wilderness stopped being identical to itself |
+| Worldbuilder Grid tab (§8.2–8.3) | `fa7fadc` | The grid-direct add flow and ghost list are gone; the Wizard (§8.4) survives |
 
 ---
 
-## 13. Summary and Design Principles
+## 8. Server Side: One Prelude, Three Different Answers
 
-This report has characterized five application layers of the Roll2Hit.com navigation system and two cross-cutting design patterns (worldbuilder entry mechanics and in-path node insertion). The following invariants constitute the formal specification of a correctly operating cell-grid navigation system:
+§11.2 attributed the `undirAdj` / `bfsReach` construction to `GET /api/graph/reachability`.
+The **code still exists, verbatim** — `js/wbapi-server.js:const undirAdj = new Map()@5374` —
+but it is now a *prelude shared by every `/api/graph/*` sub-route*, and the reachability
+endpoint no longer uses it. Three live endpoints answer "is the world connected?" and they
+disagree:
 
-**I1 (Coordinate Uniqueness):** For all distinct nodes `A`, `B` in `NODE_COORDS`: `A.r ≠ B.r || A.c ≠ B.c`.
+| Endpoint | Graph it walks | Answer |
+|---|---|---|
+| `GET /api/graph/reachability` | 90×360 **terrain-field land flood** (sea impassable, columns wrap) | **416 / 416**, one component |
+| the §11.2 prelude (`connect`, `junction-audit`) | **named-node** 4-adjacency over the cell grid | **2 / 416** |
+| `POST /api/graph/cluster-bridge` | its own BFS over `node.N/S/E/W` — of which there are 0 | 1 / 416 |
 
-**I2 (Grid Consistency):** `CELL_GRID["r,c"] === code` if and only if `NODE_COORDS[code] === {r,c}`.
+The middle row is the subtle one, and it is not stale code: the named-node BFS is *correct*
+and got its §CELL-06 migration. It asks whether cities are orthogonally adjacent — and
+with 416 nodes scattered over 32,400 cells the honest answer is permanently ≈0. **"Reads a
+deleted structure" and "reads the right structure and asks the wrong question" are
+different defects with different fixes.** Only the land flood answers the question a player
+would recognise: *can I walk there?* It says yes, 416 times out of 416.
 
-**I3 (Player Sync):** After every call to `storyRender(node)`, `S_story.playerR === NODE_COORDS[node.code].r` and `S_story.playerC === NODE_COORDS[node.code].c`.
+Invariant **I5** therefore holds — under an algorithm this report does not describe.
+Under the algorithm it *does* describe, the world is 2/416 disconnected.
 
-**I4 (Move Correctness):** After `cellMove(dir)`, `S_story.playerR` and `S_story.playerC` reflect the new position, and if `CELL_GRID["new_r,new_c"]` is defined, `S_story.currentCode` reflects that node.
+**§3.2's mirror claim needs one correction.** The module-level
+`js/wbapi-server.js:function buildCellGrid(nm, coords)@948` is no longer a verbatim copy of
+the client's; it deliberately returns a **scalar first-wins** grid so the primary at a
+collided cell matches `CELL_GRID[key][0]`. Same primary, different shape — the parity is
+stated, not accidental.
 
-**I5 (Reachability):** BFS from `NODE_COORDS['LHR']` on the 500×500 grid visits the cell of every node in `NODE_COORDS`.
+---
 
-**I6 (Shard Idempotence):** `storyCollectLoot(node)` increments `S_story.shards` at most once per node code per game session, enforced by the `S_story.visited[node.code]` guard.
+## 9. `/api/audit/map`: Twelve Checks, Five of Them Silent, One Shadowed Grid
 
-The reweave unit test `reweave-validate.test.js` is the machine-checkable proof of **I1**, **I2**, and **I5**. The Playwright integration tests for navigation provide behavioral evidence for **I3**, **I4**, and **I6** against the live browser runtime. Together, these two test tiers form the complete post-reweave validation suite.
+Three corrections to §3.4, all new:
 
-### 13.1 Known Limitations
+1. **Twelve check names, not four:** `alignment`, `axis_distance`, `bidirectional`,
+   `corner_misalign`, `dangling_link`, `density`, `diagonal_exit`, `direction_sign`,
+   `long_link`, `market_proximity`, `max_connections`, `missing_coords`.
+2. **Five of the twelve read compass fields that number zero** — `diagonal_exit`,
+   `dangling_link`, `bidirectional`, `direction_sign`, `max_connections`. They cannot fire
+   and cannot fail. Their perpetual green is not evidence of a healthy map; it is evidence
+   of an empty field. §11.3's completion criteria 3 and 4 inherit this: both are satisfied
+   permanently and structurally, so neither measures anything.
+3. **The handler shadows the promoted grid.** §3.2 recorded that `buildCellGrid` was
+   "promoted to module scope for reuse". The promotion happened; the local copy was not
+   removed. `js/wbapi-server.js:const DENSITY_THRESH = { road:3, market:8, _default:6 }@3802`
+   opens a handler that redeclares `buildCellGrid` **last-wins**, while
+   `js/wbapi-server.js:// §WALK-2: first-wins (not last-wins)@952` is first-wins. They
+   disagree at **all 66 shared cells** — including `10,197`, where the audit believes
+   Birka's cell holds `BK` (the shore) and the client, the mover and the server's own
+   module-level grid all say `LHR` (City Streets, the canonical Act I root). Filed as
+   **§DX-02bq**.
 
-**`IMPASSABLE_CELLS` not covered by unit tests.** The Node.js `bfsReachFromLHR` function in `reweave-validate.test.js` performs a raw grid flood-fill with no impassable-cell mask, because ocean tiles are populated at browser parse time and are not exported by `wbapi-core.js`. A node that passes the unit BFS may still be unreachable at runtime if the only grid path crosses an impassable ocean tile. The Playwright test "IMPASSABLE_CELLS blocks BFS" partially mitigates this by verifying that no step on the known `BOO → LHR` path intersects the impassable set.
+---
 
-**Line number references may drift.** Code excerpts include source line numbers (e.g., "wbapi-server.js lines 313–321") which reflect the file state at the time of writing. Because both `wbapi-server.js` and `roll2hit-v3.html` are frequently modified by WBAPI operations, referenced line numbers should be treated as approximate search targets rather than stable anchors.
+## 10. The Seeding Tool That Still Speaks the Old Space
 
-**`serializeNodeLiteral` STR list.** The field array `['name','label','text','npc','loot','N','S','E','W']` in `serializeNodeLiteral` retains deprecated exit-direction keys (`N`, `S`, `E`, `W`) that the §CELL-08 guard prevents from reaching the serializer in practice. A future cleanup should remove them to eliminate the risk of inadvertently writing legacy exit fields if the guard logic changes.
+`worldmap.js` moved to `tools/worldmap.js` (155 GEO rows, up from the "130+" claimed) and
+its ASCII projection is unchanged. §4.3's description of the seeding path is also unchanged
+— **and that is the problem**:
+
+```js
+// tools/worldmap.js:const GRID_MIN = 8, GRID_MAX = 500@1124
+function geoToGrid(lat, lon) {
+  const r = Math.round(GRID_MIN + (MAP.maxLat - lat) / (MAP.maxLat - MAP.minLat) * (GRID_MAX - GRID_MIN));
+  const c = Math.round(GRID_MIN + (lon - MAP.minLon) / (MAP.maxLon - MAP.minLon) * (GRID_MAX - GRID_MIN));
+  …
+}
+```
+
+`./api.sh worldmap --seed` writes rows in **8–500** into a world whose mover clamps at
+**row 89**, and `PUT /api/coords/{code}` performs no bounds validation of any kind — any
+numeric `r,c` is accepted. A node seeded at row 300 is off the band: unreachable, and once
+you are on it, unleavable. Filed as **§DX-02bo**.
+
+The instrument here is worth keeping: **a claim can stay true while becoming wrong.** The
+tool did not drift. The world drifted out from under it, and the report's most faithful
+layer is the one that now documents live danger.
+
+**A second write-path defect, in the other direction.** The locale model the client
+requires cannot be authored through the API. `PUT /api/coords/{code}` returns **409 on any
+collision**, and `POST /api/node` with colliding `r,c` is worse: it creates the `NODE_MAP`
+entry, *silently drops the coordinates*, and returns **201 `ok:true`**. The result is a
+ghost — §8.3's own term for a node that can hold quests and NPCs but can never appear in
+`CELL_GRID`. There are 0 ghosts at HEAD, so the roster is clean; the manufacturing line is
+still running. Filed as **§DX-02bp**.
+
+---
+
+## 11. Program Flow at HEAD
+
+The §10 walkthrough is structurally intact and numerically obsolete. Corrected:
+
+- **Phase 0–2** hold: `storyCheckContinue` → continue modal → `storyLoadContinue` →
+  `storyRender`. Quest activation moved into `_uqfActivateAtNode` (§VM-01-G3), which runs
+  at the *start* of `storyRender` so per-node UI keyed on `'active'` renders in the same
+  arrival; `storyCheckQuests` re-runs it idempotently.
+- **Phase 3.** `LHR (10,197) → SEN (18,180)` is **27** steps, not ~55. And it is one
+  click, not 27 presses: `storySetWaypoint` calls `_travelStart()`, and `storyWaypoint`
+  routes with `_roadGridDir` — the *road-weighted* router, so auto-travel prefers the safe
+  highway. Any keypress halts it and keeps the waypoint. The report's "player presses WP
+  again for the next step" is retired UX.
+- **Phase 4** holds. `SEN.act === 2`; the badge updates; there is still **no gate between
+  Act I and Act II**. The act boundary is purely geographic — which is exactly the free-
+  movement invariant showing through the narrative layer.
+- **Phase 5** needs a correction. There is no node whose loot reads `"Codex Shard #1"`.
+  Shards are typed by `_itemType`'s regex `/shard #|\(shard|tidal rune|grove token|trade
+  seal|crimson warrant|sand cipher|highspire fragment/`, and the seven shard-bearing nodes
+  are one per act:
+
+  | Shard | Node | Act | Loot string |
+  |---|---|---|---|
+  | #1 | `LCY` | 2 | Trade Seal (Shard #1) |
+  | #2 | `FRO` | 3 | Grove Token (Shard #2) |
+  | #3 | `RAI` | 4 | Tidal Rune (Shard #3) |
+  | #4 | `TRD` | 5 | Crimson Warrant (Shard #4) |
+  | #5 | `DOH` | 6 | Sand Cipher (Shard #5) |
+  | #6 | `BKK` | 7 | Codex Shard #6 |
+  | #7 | `NUE` | 6 | Weimar Fragment (Shard #7) |
+
+  The mechanism the report describes is right; the string it searched for belongs to shard
+  **#6**. `const SHARD_NOTES@27159` covers all seven (its own comment says five — stale).
+
+---
+
+## 12. The Test Plan: One of Five, and It Was Rewritten Because of This Report
+
+`tests/unit/` does not exist. Of the five files in §12, four never shipped:
+
+| File | Tier | Status |
+|---|---|---|
+| `navigation.test.js` | Playwright | ✅ exists — **rebuilt**, see below |
+| `navigation-act2.test.js` | Playwright | ❌ never shipped |
+| `reweave-connectivity.test.js` | Playwright | ❌ never shipped |
+| `cell-grid.test.js` | Node | ❌ never shipped |
+| `reweave-validate.test.js` | Node | ❌ never shipped |
+
+This is not simply an unbuilt plan. The surviving file carries the epitaph in its own
+header:
+
+> *"The previous version hardcoded pre-§WALK-1.5 coords/adjacencies (BOO 47,223;
+> BOO→LXF→SEN corridor) and a since-removed `hoursElapsed += 1` on movement… This rebuild
+> ground-truths every fixture against the CURRENT geo and the post-§TIMELESS-01
+> timeless-movement model."* — §WALK-4 Inc 3
+
+Those are §12.3's three tests, named and dated. The suite was not abandoned; it was
+**written, invalidated by the reprojection, and rebuilt against the live geo** — 25 tests
+covering one-cell movement, timeless movement, the empty-cell shell, the room layer,
+D-pad buttons, sea blocking, sea lanes, BFS, waypoints and auto-travel.
+
+Two of the unbuilt files were unbuildable as specified, and the reason is §5: their central
+assertions were *"zero coordinate collisions"* and *"grid key count equals coord count"*.
+Both are false at HEAD by design. A test suite written to a repealed invariant is not a gap
+in coverage — it is a specification that would now fail correctly.
+
+**One live defect found in the rebuilt file.** Its `moveNoEncounter` helper suppresses the
+step's encounter by stubbing `Math.random`, but §VM-01-B moved that roll to
+`_seededNext()`, which never touches `Math.random`. The stub controls nothing (and is
+restored before the deferred battle fires anyway), so several tests are one unlucky seed
+from a red. This is the **third** recurrence of the same lesson in this repo — §DX-02e
+pinned generated coordinates, §DX-02f stubbed the wrong RNG stream, and now this. *A test
+that stubs an RNG must stub the stream the code actually draws.* Filed as **§DX-02br**.
+
+---
+
+## 13. Invariants, Restated for the Locale Grid
+
+The original I1–I6 are kept below with their corrections, because the two that broke are
+more instructive than the four that held.
+
+| | Original | At HEAD |
+|---|---|---|
+| **I1** | Coordinate uniqueness | ❌ **Repealed.** 172 nodes share a cell with another; a cell is a locale, not a slot |
+| **I2** | `CELL_GRID["r,c"] === code` | ❌ **Reshaped.** `cellCode(k) === CELL_GRID[k][0]`; the value is always an array |
+| **I3** | Player sync after `storyRender` | ✅ Holds |
+| **I4** | Move correctness after `cellMove` | ✅ Holds — now via the shared `Mover.move` kernel |
+| **I5** | BFS from `LHR` reaches every node's cell | ✅ Holds, **416/416**, on the terrain-field land flood (not the node graph, which is 2/416) |
+| **I6** | Shard idempotence via `S_story.visited` | ✅ Holds — still exactly one write site |
+
+Two new invariants the locale model requires, neither yet enforced:
+
+- **I7 (Band containment):** every `NODE_COORDS` entry satisfies `0 ≤ r < 90`. True at HEAD
+  (rows 2–73); no write path checks it (§DX-02bo).
+- **I8 (Primary agreement):** every server-side reader of the cell grid resolves the same
+  primary as the client. False at 66 cells today (§DX-02bq).
+
+---
+
+## 14. Findings Filed
+
+| Row | Sev | Summary |
+|---|---|---|
+| **§DX-02bo** | 🟠 | `tools/worldmap.js --seed` still projects into the retired 500×500 space; `PUT /api/coords` has no bounds guard |
+| **§DX-02bp** | 🟡 | `POST /api/node` returns 201 and silently drops colliding coords, minting a ghost; `PUT /api/coords` 409s the locale model the client requires |
+| **§DX-02bq** | 🟢 | `/api/audit/map` shadows the promoted `buildCellGrid` last-wins, disagreeing with the client's primary at all 66 shared cells; 5 of its 12 checks are permanently silent |
+| **§DX-02br** | 🟢 | `navigation.test.js` suppresses encounters by stubbing `Math.random`, which the roll no longer draws |
+
+Corroborated from prior passes: **§DX-02bm** (`junction:0` unreachable in
+`TERRAIN_ENCOUNTER_RATE`), **§DX-02bn** (`serializeNodeLiteral`'s dead `N,S,E,W` — this
+report's own §9.2 note, still open at HEAD).
+
+---
+
+## 15. Known Limitations of the Original
+
+Retained from §13.1, with verdicts.
+
+**"Line number references may drift."** Correct, and understated: the drift is not noise
+but a whole change of units. Superseded by `symbol@line` anchors (§DX-01e) — the symbol is
+the pointer, the number a hint.
+
+**"`IMPASSABLE_CELLS` not covered by unit tests."** Still true in the sense that no unit
+tier exists. But the underlying worry was inverted by §WALK-1.5: the sea is no longer a
+sparse afterthought populated at parse time, it is 4,790 cells in 286 runs derived from a
+Natural Earth coastline raster, and the live `navigation.test.js` asserts both directions —
+a sea step is refused *and* a carved lane cell is walkable.
+
+**"`serializeNodeLiteral` STR list."** Still true, still dead, now tracked as §DX-02bn.
+The report called it "a cleanup candidate… if the guard is relaxed in a future branch."
+Three months later the guard has not been relaxed, no compass field has returned, and the
+prediction is the most durable sentence in the document.
+
+---
+
+*© 2026 Paul Richeson — MIT License. Verified §DOC-02az, 2026-08-13.*
