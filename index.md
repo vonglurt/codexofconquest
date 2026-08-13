@@ -290,7 +290,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-reports/lab-report-cell-map-mud-redesign.md` | §CELL-01–§CELL-11 | Cell map redesign — 11-section grid migration, MUD session layer, 419 nodes, dead-code removal |
 | `lab-reports/lab-report-map-audit-layout-tooling.md` | §CELL | Map audit, grid layout solver, tooling infrastructure — coordinate audit, gap analysis, reachability |
 | `lab-reports/lab-report-node-network-reconnection.md` | §CELL | Full node network reconnection — stray relocation, bidirectional check, reachability recovery |
-| `lab-reports/lab-report-junction-reweave-overhaul.md` | §CELL | Junction reduction & reweave overhaul — boilerplate purge, coordinate mesh redesign |
+| `lab-reports/lab-report-junction-reweave-overhaul.md` | §CELL | Junction reduction & reweave overhaul — P_NUKE cull + A\* mesh design (2026-06-10). **Verified §DOC-02aw:** P_NUKE shipped and is live at HEAD; the A\* half never existed; §3's safety guarantee was false when written (the Littoral crossings) |
 | `lab-reports/lab-report-mega-reweave.md` | §CELL | MegaReWeave procedure & configuration — batch coordinate migration, world mesh construction |
 | `lab-reports/lab-report-highway-mesh-entry.md` | §CELL | Highway mesh-entry selection & same-component skip — connected-component BFS, entry-point algorithm |
 | `lab-reports/lab-report-walk15fu-grid-resolution.md` | §WALK-1.5-FU(c) | Grid-resolution analysis — 0.25° REJECTED (doesn't fix anchor-chained piles; 16× cells, 4× steps); de-pile at 1° instead |
