@@ -1,282 +1,297 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report Synthesis — Part 1: Architecture & Systems
-**Cross-Reference of All Architecture Lab Reports Against roll2hit-v3.html**
-**Date:** 2026-06-16 · **HTML baseline:** 33,721 lines · **Source reports:** 12
+
+**Original:** 2026-06-16 · cross-reference of 12 Architecture & Systems lab reports against `roll2hit-v3.html`
+**Verified:** 2026-08-13 (§DOC-02bb) · reference commit `89fa13b` (2026-06-16 12:20:47, 33,721 lines) · HEAD 38,712 lines
+**Verdict:** the citations hold; the roll-ups do not. Every figure this document **measured or transcribed** is exact. Every figure it **totalled, rounded, or borrowed** is wrong.
 
 ---
 
-## Purpose of This Document
+## Abstract
 
-This synthesis reads each Architecture & Systems lab report alongside the live HTML and answers three questions for each: what did the report document, what does the code look like *now*, and what from the report still applies as working design knowledge. Reports are in the `lab-reports/` archive, untouched. This document is the living cross-reference.
+This document was written to answer one question a solo author of a 38,712-line single-file game cannot answer from memory: *which of the things we wrote down about this architecture are still true?* It read twelve architecture lab reports beside the live HTML and gave each a three-part verdict — what the report said, what the code looks like now, what still applies.
 
----
+Re-measured 58 days later, it splits cleanly along one seam. Its twenty `symbol@line` citations are **20 of 20 line-exact**; its file baseline (33,721 lines), its `// → doc:` census (94), its `completeFn` count (166), its `activateCond` arrow-function count (1,731), its `QUEST_HOOKS` count (91) and its ten-case dispatch listing are all exact at the reference commit. Its **summary sentences** are where it fails: *nine* anchored data sections when the file had **twelve**, *1,695+* quests when `QUEST_DB` held **2,834**, *pure data* for an object containing **1,897 arrow functions it had itself just counted**, and an eight-item Mission Bit taxonomy whose **cardinality is exactly right and whose eight names have never existed** — not in the source report, not in the HTML, not once in the file's entire history.
 
-## Report 1 — `lab-report-architecture-full.md`
-**Original scope:** IEEE-format full architectural review at ~14,377 lines (2026-05-22)
-**Still active:** Yes — describes the foundational design that all subsequent work extends
-
-### What the report said
-
-The game runs two engines inside one file: **Battle Mode** (`S` object, stateless per session) and **Story Mode** (`S_story` object, persisted via localStorage). Both share the dice library (`roll()`, `resolveAdv()`). Story Mode copies relevant fields into `S` for battle, then reads results back. The "one file" constraint is the primary architectural driver: every pattern that looks unusual is a consequence of zero build step, zero CDN, zero modules.
-
-State architecture: `S` is flat and shallow (reset on refresh). `S_story` is initialized by `_S_DEFAULTS()`, merged from localStorage by `storyLoadSave()`, and persisted by `storyAutoSave()`.
-
-### Current HTML (2026-06-16)
-
-| Symbol | Line | Current state |
-|--------|------|---------------|
-| `const S = {` | 4,720 | Active — Battle Mode state; unchanged in structure |
-| `const _S_DEFAULTS = () => ({` | 21,157 | Active — now ~194 fields (was ~107 at report time) |
-| `storyAutoSave()` | 21,800 | Active |
-| `storyLoadSave(key)` | 21,808 | Active |
-| `storyRender(node, prefix)` | 27,668 | Active — now the primary Story Mode render function |
-| `cellMove(dir)` | 26,002 | Added post-report — replaces `storyMove()` (§CELL-01) |
-
-The `storyMove()` function documented in the report no longer exists — it was replaced by `cellMove(dir)` in §CELL-01 which navigates by grid direction rather than named neighbor. The core insight (two engines, shared dice, one state object) is unchanged and still governs the entire codebase.
-
-### What still applies
-
-- The "no framework" constraint is permanent. Every future feature must fit the one-file, one-scope model.
-- `S_story` mutation discipline: any function can read and write `S_story` because all functions share file scope. This is a design choice, not a limitation — it makes the system tractable without a framework but requires that mutation remain observable (hence the `// → doc:` annotation discipline).
-- The `_S_DEFAULTS()` pattern for safe state initialization is still the canonical new-game/NG+ reset mechanism.
+The architecture it certifies as "structurally true right now" was true for **three hours and sixteen minutes**. `QUEST_EFFECTS`, `QUEST_HOOKS` and `applyQuestEffects` occur **0 times at HEAD**. The predictions it filed almost as afterthoughts, by contrast, all came in: two migrations it called "future" were delivered in full, one audit it called overdue is still overdue at 175× the scope it named, and one contract it called a contract has not moved a single byte in two months.
 
 ---
 
-## Report 2 — `lab-report-prompt-migration-arena-to-prototype.md`
-**Original scope:** Retrospective on 13 layers of evolution from dice tracker to 42-node narrative game (2026-05-21)
-**Still active:** Historically foundational; all named layers are implemented
+## 1. Intent, inspiration, and what it buys the player
 
-### What the report said
+**The intent.** roll2hit.com is one static HTML file with no build step, no modules, and no framework. That constraint is not a limitation the project tolerates; it is the design. But it has a cost: there is no compiler, no import graph, and no type checker to tell an author which parts of a 38,712-line file still mean what the docs say they mean. The documentation corpus *is* the type system, and like any type system it goes stale silently. This synthesis was the corpus's first attempt to type-check itself.
 
-The game evolved from a single-screen combat tracker (Arena) through 13 distinct layers. The primary architectural contribution was **specification gravity**: interlocking documents (plan, spec, mechanics, world, map, story, monsters) that exert coherent pressure on implementation decisions, preventing feature bloat and design drift. The **Cooperative DM Principle** — the mathematical invariant that enemies must always be beatable and death must always be recoverable — was identified as the philosophical core encoded in the reward formula.
+**The inspiration** is stated plainly in the source it draws from: *specification gravity*. A set of interlocking documents that exert coherent pressure on implementation decisions, so that a feature added in month three cannot quietly contradict a decision made in month one. A cross-reference is the instrument that measures whether the gravity is still holding.
 
-### Current HTML relevance
+**Why a player cares.** Nothing in this document renders on screen, and it would be dishonest to pretend otherwise. Its contribution to playability is structural, and it is real:
 
-Specification gravity is now the documentation system itself. The `index.md` / `plan.md` / `story.md` / `world.md` / `maps.md` cluster has grown to 13+ documents and still operates on the same principle: every item in the docs traces to the HTML, every item in the HTML has a home doc.
+- **The two-engine split is why the game can be balanced at all.** Battle Mode (`S`, reset every refresh) and Story Mode (`S_story`, persisted) share the dice library — `roll(` 18 sites, `resolveAdv` 8 — and never merge state. A designer can retune a monster's damage die without any risk of corrupting a save, because the two engines meet at exactly two documented seams. Both are unchanged in structure since the report.
+- **The anchor contract is why 2,853 quests exist.** Twelve `WORLDBUILDER:*:START/END` comment pairs let the WBAPI find and rewrite a data section in a five-megabyte file without a parser for the rest of it. Every quest, node, monster and NPC authored since is authored through that seam. Hand-editing at this scale is not slower — it is impossible.
+- **The Cooperative DM Principle is the part a player actually feels**, and it is the oldest claim in the document: enemies must always be beatable, death must always be recoverable. All three of its named mechanisms are live and player-reachable at HEAD — `const _D100_TABLE@24516` (loot that always gives *something*), `void_mercy_count--@36366` (the void's one free pass), and `function storyRespawnFromCheckpoint@23922`, wired to the game-over button. Two months, five thousand lines, and a total quest-format migration later, the promise the game makes to a losing player is byte-for-byte the promise it made in May.
 
-The Cooperative DM Principle survives in `_D100_TABLE` (loot that always gives something), the void mercy mechanic (`S_story.void_mercy_count`), and the `storyRespawnFromCheckpoint()` path. Death is recoverable; encounters are never unwinnable by design.
-
-### What still applies
-
-- The spec-first discipline: write a spec section in `plan.md` before any feature touches the HTML. This is still §I of the Project Directive.
-- Layer numbering as a provenance system: knowing a feature is "Layer 39" (Epic Battlegrounds) tells you exactly when it was added and where to look for its design context.
+The finding in §6 is the counterweight: on the day this document certified the quest architecture sound, **36 quests across nine chains and twelve nodes could not advance**, for a reason the document itself describes in the abstract one page earlier.
 
 ---
 
-## Report 3 — `lab-report-documentation-system-design.md`
-**Original scope:** Two-way sync architecture analysis — plan.md as planning document, 37-file MD corpus (2026-05-24)
-**Still active:** Yes — the sync discipline described here governs every session
+## 2. Method
 
-### What the report said
+Nine instruments, in the order they mattered.
 
-`plan.md` functions as master planning document across seven zones: Directive, Design Constants, State Fields, Implementation Archive, Implementation Queue, Sync Pass Record, Feature Specs. The **two-way sync rule** — every markdown item traces to HTML, every HTML constant has a home doc — was articulated as a formal engineering invariant. The documentation system is itself software: it has a schema (`index.md` as manifest), a source of truth (the HTML), a spec layer (`plan.md`), and a test suite (sync pass increments).
-
-### Current HTML relevance
-
-The `// → doc: filename.md §Section` annotation pattern is live across all 94 public constants. The WORLDBUILDER anchor comments (14 pairs) added in §WBAPI-01 are the physical markers of the two-way sync at the data layer.
-
-| Anchor pair | Lines |
-|-------------|-------|
-| MONSTER_POOL | 4,797–5,700 |
-| WORLD_DB | 5,708–5,835 |
-| NODE_MAP | 7,654–8,613 |
-| NODE_COORDS | 8,618–9,054 |
-| NPC_DIALOGUES | 9,146–9,362 |
-| QUEST_DB | 9,365–19,816 |
-| BIRKA_NPC | 20,809–21,092 |
-| D100_TABLE | 22,456–22,477 |
-| FISH_DB | 24,228–24,258 |
-
-### What still applies
-
-- The Lab Report Rule: write a lab report for major collections, multi-system redesigns, new narrative arcs (3+ nodes), pre-implementation design reviews, session postmortems with non-obvious decisions. Do not write one for single additions.
-- New lab reports go to `lab-reports/lab-report-<title>.md` (updated 2026-06-16 after archive move).
+1. **Date it.** `git log --diff-filter=A` for the report; the nearest preceding HTML commit is the reference. HEAD cannot adjudicate a claim about 2026-06-16.
+2. **Read the sources as they were.** Seven of the twelve source reports have since been rewritten by this same verification program. Comparing this document against their *current* text produces false findings; it was checked against `git show 7d3615a:<source>` throughout. This caught two would-be errors that were not errors.
+3. **Resolve every `symbol@line`** against the reference snapshot, not by search.
+4. **Re-derive every total with `grep -c` against the file** — never by counting the document's own table rows. This is where it broke.
+5. **Separate transcribed from composed.** A number lifted from a source report and a number summed by the author have different error rates.
+6. **Run the delta both ways.** A specification absent from HEAD may be report-rot or engine-rot.
+7. **`git log -S` on every dead symbol** — retired and never-shipped are different verdicts.
+8. **Execute the suspect shape.** §6's failure was confirmed by running it, not by reading it.
+9. **Check the predictions.** A document that says "this will drift" is making a falsifiable claim.
 
 ---
 
-## Report 4 — `lab-report-sp4-documentation-sync-pass.md`
-**Original scope:** SP4 sync pass — closed 20 stale PLANNED markers, annotated 94 consts, corrected 29+23+8 function table entries (2026-05-26)
-**Still active:** The outcomes are permanently in the HTML; the procedure is a template
+## 3. Dating — a nineteen-second birth and a three-hour architecture
 
-### What the report said
+| Event | Commit | Time | Δ |
+|---|---|---|---|
+| Reference HTML state | `89fa13b` | 12:20:47 | — |
+| Report file mtime | — | 13:15:16 | +54 m 29 s |
+| Report committed | `7d3615a` | 13:15:35 | **+19 s** |
+| Subject architecture destroyed | `120d617` | 16:31:20 | **+3 h 15 m 45 s** |
 
-SP4 ran a systematic audit at 17,762 lines (+23% from prior sync). Three categories of documentation debt: stale PLANNED markers in world.md/story.md; constants without `// → doc:` reverse-links; function table line numbers drifted +9 to +3,115 lines. The pass cleared all three. Net: 94 consts annotated, 20 stale markers cleared, 5 annotation targets corrected, 1 missing section created.
+Nineteen seconds is the tightest mtime→birth window in the verification program. The reference state is unambiguous: `7d3615a` is a docs-only commit, so the HTML the author read is `89fa13b` byte for byte — **33,721 lines, matching the report's stated baseline exactly.**
 
-### Current HTML relevance
-
-The HTML is now at 33,721 lines — nearly double the SP4 baseline. A sync pass is overdue. The `// → doc:` annotation count has not been reverified since SP4. Any new public const added after SP4 should have the annotation; the synthesis process now will verify this for newly-documented systems.
-
-### What still applies
-
-- The SP format (sync pass as a named increment with a baseline, closure criteria, and a report) is the right model for documentation maintenance at this scale.
-- Overdue: SP5 when the HTML crosses a major milestone; probably due now given the §CELL, §ARCH, §DATA-01 additions since SP4.
+`120d617` is the same 22-bullet feature commit that erased §DATA-01 three and a quarter hours later, and its message names none of what it deleted. That is not this document's failure — it is the reason this document exists. The lesson generalises past the accident: *a synthesis is a photograph, and its shutter speed is the interval before the next commit.* Scored against HEAD alone, this report reads as broken. Scored against the file it was actually looking at, it was right about nearly everything it looked at.
 
 ---
 
-## Report 5 — `lab-report-plan-cleanup-world-builder-arc.md`
-**Original scope:** 8,127-line plan.md cleanup — extraction to 36 lab reports, plan.md reduced to active surface (2026-05-25)
-**Still active:** Procedurally historical; the extraction is permanent
+## 4. What held — the citations
 
-### What the report said
+**20 of 20 `symbol@line` citations line-exact** at `89fa13b`; all six anchor line-ranges byte-exact.
 
-plan.md accumulated 8,200 lines because the project outgrew it — sync findings, function tables, Q-indexes, and completed-layer manifests were absorbed into plan.md while layers were still in flight. The cleanup extracted all historical material into 36 lab reports, leaving plan.md as the active planning surface (~230 lines at close). The arc from simulator (Arena) to world builder was traced: the documentation system expanded in direct proportion to the game's complexity.
+| Claim | Line | Result |
+|---|---|---|
+| `const S = {` | 4,720 | ✅ exact |
+| `const _S_DEFAULTS = () => ({` | 21,157 | ✅ exact |
+| `storyAutoSave()` | 21,800 | ✅ exact |
+| `storyLoadSave(key)` | 21,808 | ✅ exact |
+| `storyRender(node, prefix)` | 27,668 | ✅ exact |
+| `cellMove(dir)` | 26,002 | ✅ exact |
+| `storyCheckQuests()` | 26,291 | ✅ exact |
+| `const SCHEMA_VERSION = 'UQF-1.0'` | 20,474 | ✅ exact |
+| `const QuestRuntime = {` | 20,476 | ✅ exact |
+| `const QUEST_EFFECTS = {` | 19,837 | ✅ exact |
+| `const QUEST_HOOKS = {` | 20,141 | ✅ exact |
+| `function applyQuestEffects(effs)` | 19,819 | ✅ exact |
+| `NODE_MAP` anchors | 7,654–8,613 | ✅ exact |
+| `QUEST_DB` anchors | 9,365–19,816 | ✅ exact |
+| `MONSTER_POOL` · `WORLD_DB` · `NODE_COORDS` · `NPC_DIALOGUES` · `BIRKA_NPC` · `D100_TABLE` · `FISH_DB` | 7 ranges | ✅ all exact |
 
-### Current HTML relevance
+And the counts it took the trouble to measure:
 
-The lab report corpus that cleanup created now has 64 entries (including this synthesis). The plan.md cleanup model — extract completed work to archive, keep active surface lean — is the template for the current lab-reports/ move.
+| Census | Claimed | Measured at `89fa13b` | |
+|---|---|---|---|
+| HTML baseline | 33,721 lines | 33,721 | ✅ |
+| `// → doc:` annotations | 94 | 94 | ✅ |
+| `completeFn` in `QUEST_DB` | 166 | 166 | ✅ |
+| `activateCond` **arrow functions** | 1,731 | 1,731 | ✅ |
+| `QUEST_HOOKS` entries | 91 | 91 | ✅ |
+| `applyQuestEffects` dispatch cases | 10 | 10 | ✅ |
+| `onPass`/`onFail` purged from `QUEST_DB` | 127 | 92 + 35 = 127 | ✅ |
+| `QUEST_DB` anchor span | ~10,450 lines | 10,451 | ✅ |
+| HTML growth since §API-02 | +16,013 / +91 % | +16,013 / +90.4 % | ✅ |
+| `storyMove()` removed | 0 occurrences | 0 | ✅ |
+| Lab reports archived | 64 | 64 | ✅ |
+| Source reports still on disk | 12 | 12 | ✅ |
 
-### What still applies
+The `activateCond` figure deserves its own note, because it is *more* precise than a naive census would be. The field occurs 1,767 times; the report says **1,731 arrow functions**, and 1,731 is exactly the count of `activateCond: () =>`. The author distinguished the function-valued field from the 36 that were not function-valued. What the author did not do was ask *why* 36 of them weren't. That question is §6.
 
-- Keep plan.md as the active planning surface. Historical layer specs belong in lab reports or the archive.
-- The "documentation grows with code" insight: at ~33,721 lines, plan.md would need another extraction pass if it were accumulating layer specs again. It isn't because the lab report discipline is established.
-
----
-
-## Report 6 — `lab-report-timeline-history-completed.md`
-**Original scope:** Complete layer-by-layer development timeline archive — Layers 0–45 (2026-05-22)
-**Still active:** Historical record only; all 45 layers are implemented
-
-### What the report said
-
-46 named development layers (0–45) with step codes, key functions/consts, and completion status. The timeline captured the emergence of: NODE_MAP and storyMove (L1), QUEST_DB and storyCheckQuests (L2), loot/inventory (L6), inn sleep/day mechanics (L10), conditions/flashbang (L14), world map (L20), NPC dialogue (L34), fishing (L37), epic battlegrounds (L39), cat quarter (L44), Ally Cat hierarchy (L44). Also archived the Baroque composer renaming migration and all 60 S-suggestions.
-
-### Current HTML relevance
-
-All Layer 0–45 features are still active in the current HTML. The `storyCheckQuests()` (L2) is at line 26,291. The `QUEST_DB` (L2) is at line 9,366–19,816. `NODE_MAP` (L1) is at 7,654–8,613. The fishing system (L37) has grown substantially with lake magic and bait sub-systems (§FISH-01).
-
-Layers 46–104 are not in this timeline report — they're documented across the quest arc and narrative lab reports (see Parts 5 and 6 of this synthesis).
-
----
-
-## Report 7 — `lab-report-api-01-02-mechanics-combat-review.md`
-**Original scope:** IEEE API review of mechanics.md + combat.md — 36 comparison points, 30 function table entries re-verified (2026-05-25)
-**Still active:** The review outcomes are in the docs; the procedure is a template
-
-### What the report said
-
-§API-01 audited mechanics.md across 36 points, leading to its split into mechanics-combat.md + mechanics-economy.md. §API-02 audited combat.md's F6 Function Reference Table — all 30 entries had drifted +163 to +3,115 lines from the last sync (HTML grew from 14,377 to 17,708 lines). Corrected all 30 plus added 12 new entries.
-
-### Current HTML relevance
-
-The F6 table in combat.md is likely drifted again — the HTML has grown from 17,708 to 33,721 lines (+16,013 lines, +91%). A §API-03 review of combat.md's function reference would find all entries stale. This is not urgent (the functions are still there; only the line numbers are wrong) but should be part of any SP5 pass.
-
-### What still applies
-
-- The API Review methodology: enumerate a doc's claims, verify each against the HTML line by line, record drift, update. This is the right procedure for any documentation file that includes line numbers.
+**A conservation law, verified.** The report gives `QUEST_EFFECTS` as "121 declarative entries" — a number matching neither the object's 89 keys nor its 122 descriptors, which reads like an error until you count the arrays: **86 `onPass:` + 35 `onFail:` = 121**, against exactly 121 closures removed from `QUEST_DB`. The migration conserved 1:1. The number is right; only the noun is wrong.
 
 ---
 
-## Report 8 — `lab-report-wbapi.md`
-**Original scope:** WBAPI first-pass design — 3 artifacts, 14 anchor comments, buffer model, parse pipeline (2026-05-29)
-**Still active:** Yes — WBAPI is the active development toolchain
+## 5. Where it failed — every error is an aggregate
 
-### What the report said
+Not one citation is wrong. Not one *total* is right.
 
-Three artifacts: `worldbuilder.html` (browser UI), `wbapi-core.js` (Node.js parse+CRUD), `api.sh`/`api/wb.js` (CLI wrapper). 14 WORLDBUILDER anchor comment pairs mark 7 data sections. The core pipeline: read HTML as text → find anchor → extract JavaScript literal → eval in sandboxed context → mutate → serialize → write back. The buffer model: mutations accumulate in memory until a write-back serialization. The nonce system prevents concurrent writes.
+**(a) "Nine WORLDBUILDER-anchored data sections."** The file had **twelve**, and 24 anchor comments, at the reference commit. The nine rows the report tabulated are all byte-exact; the three it missed — `MONSTER_DROPS`, `LAKE_MAGIC`, `ITEM_DB` — are the three outside the table it inherited from its source. The total was read off the list instead of off the file.
 
-### Current HTML relevance
+That the missing one is `MONSTER_DROPS` is not a neutral detail. `MONSTER_DROPS` is nested *inside* `MONSTER_POOL`'s anchors, and that nesting later cost the repo a real bug: `./api.sh post monster` spliced malformed lines into the trophy-drops map while reporting success, and the incident is now CONTRIBUTING Hazard #2. **The section a census cannot see is a fair predictor of the section a write path will land in by mistake.**
 
-The 14 anchor pairs are still present and in the same section order (see Report 3 table above). The FISH_DB, BIRKA_NPC, and D100_TABLE anchors were added after this report as new collections were implemented. Current count: 9 unique sections, 18+ anchor comments.
+**(b) "14 WORLDBUILDER anchor comment pairs."** The source report says *14 anchor **comments*** marking 7 sections — 7 × 2 = 14. Transcribed as "pairs", the figure silently doubles. One noun, 100 % error.
 
-The WBAPI is the active tool for all worldbuilder operations. The `wbapi-server.js` runs on port 1367. The `api.sh` wrapper is the primary CLI. Nothing documented in this report has been superseded.
+**(c) "`QUEST_DB` (pure data, 1,695+ quests)."** Four words, two errors.
 
-### What still applies
+- **1,695+ → 2,834.** Undercounts the game's largest structure by 1,139 quests, 40 %. Traced: `1695` is `index.md`'s own footer at that commit — a footer whose adjacent line-count claim was *~43,736 lines*, contradicting this report's own verified header by 10,015 lines. The author measured the file to get the header and trusted another document to get the quest count.
+- **"pure data"** — while `QUEST_DB` held **166 `completeFn` + 1,731 `activateCond` = 1,897 arrow functions**, both counts stated correctly by this same report, one page earlier. The Summary contradicts the body it summarises.
 
-- WORLDBUILDER anchor pairs are a contract: if you add a new top-level data collection to the HTML, add the anchor pair so the WBAPI can find it.
-- The "read as text, never execute" principle: the WBAPI parser never runs the whole HTML as JavaScript. It extracts and evals only the data sections it needs.
+**(d) "64 entries (including this synthesis)."** 64 is correct **excluding** it; the directory held 65, and `index.md` at the same commit says 65. An off-by-one in a parenthetical.
 
----
+**(e) "`_S_DEFAULTS()` now ~194 fields."** Measured: **187**. Flagged approximate, so scored as a near-miss (+3.7 %); the companion figure "was ~107 at report time" is the source report's and is not re-litigated here.
 
-## Report 9 — `lab-report-wbapi-architecture.md`
-**Original scope:** WBAPI internal architecture — Proxy model, comment-aware brace counting, request lifecycle (2026-05-30)
-**Still active:** Yes — the described architecture is the live wbapi-server.js
-
-### What the report said
-
-The parsing pipeline: HTML text → `extractObj(html, anchor)` finds the data section → `removeFns(objStr)` strips function-valued properties (since functions can't be round-tripped through JSON) → the cleaned object literal is evaled in a sandboxed `Function('return ...')` call → mutations are applied → `JSON.stringify` → write back into the HTML at the anchor. **Comment-aware brace counting** is the key insight: brace counting must skip `//` line comments and `/* */` block comments, or a `{` inside a comment string falsely inflates depth.
-
-### Current HTML relevance
-
-The `extractObj` + `removeFns` + comment-aware brace counting pipeline directly explains the `QUEST_DB` parsing in §DATA-01. The `removeFns` step is why `completeFn` and `activateCond` (arrow functions) are not round-trippable through the WBAPI — they survive in the HTML but don't survive a WBAPI read-write cycle unless handled specially.
-
-The §DATA-01 separation of `onPass`/`onFail` into `QUEST_ACTIONS`/`QUEST_EFFECTS`/`QUEST_HOOKS` makes those fields WBAPI-safe: `QUEST_EFFECTS` contains only plain data objects, which survive `removeFns` and `JSON.stringify` cleanly.
-
-### What still applies
-
-- The Proxy model: worldbuilder.html uses a P proxy object that intercepts property access and calls WBAPI endpoints. This is the bridge between UI clicks and HTML mutations.
-- `removeFns` is necessary because the HTML contains arrow functions in data objects. `completeFn`, `activateCond`, and (formerly) `onPass`/`onFail` were all affected. Now only `completeFn` and `activateCond` remain as functions in QUEST_DB — a future WBAPI-02 could convert those to declarative predicates as well.
+> **50th instrument — a total read off your own table measures the table, not the world.**
+> Distinct from instrument 27 (*a citation carries no evidential weight*): nothing in (a) was borrowed. Nine rows were measured, and all nine were right, and the word "nine" was still wrong, because an enumeration was mistaken for a census. **For every "N Xs" in a document, re-derive N with a `grep -c` against the file — never by counting the document's own rows.**
 
 ---
 
-## Report 10 — `lab-report-wbapi-evolution.md`
-**Original scope:** Evolution of world data access from grep through WBAPI — 6 phases (2026-05-29)
-**Still active:** Historical; all 6 phases are superseded by the current WBAPI
+## 6. The taxonomy that was counted correctly and named entirely from memory
 
-### What the report said
+The report's account of Report 11 reads:
 
-Six evolutionary phases: raw `grep` → `sed` stream editing → Perl one-liners → Python AST attempts → bare Node.js extraction → full JavaScript parser (WBAPI). Each phase was driven to failure by a specific constraint: grep couldn't mutate; sed couldn't handle multi-line objects; Python AST failed on non-standard JS syntax; bare Node couldn't handle the `removeFns` + brace-count problem. The final WBAPI is the only approach that correctly handles all constraints.
+> *Mission Bit Registry: 8 atomic bit kinds (flag_set, flag_check, item_grant, item_take, xp_award, gold_award, npc_dialog, battle_gate) with typed contracts.*
 
-### What still applies
+**The count is exact.** The source report has precisely eight `### Bit:` sections.
 
-- The constraint catalog is a warning list for anyone trying to write their own parser: JavaScript object literals with multi-line strings, arrow functions, nested objects, and inline comments require comment-aware character-level brace counting, not regex or AST parsing.
-- Never use `JSON.parse` directly on a JS object literal from the HTML — they're not valid JSON (unquoted keys, trailing commas, arrow functions). Always use `removeFns` + `Function('return ...')`.
+**All eight names are fabrications.** Each occurs **0 times** in the source report, **0 times** in the HTML at the reference commit, and **0 times at HEAD** — never authored, in the file's entire history.
 
----
+The source's actual eight, and what became of them:
 
-## Report 11 — `lab-report-quest-api-architecture.md`
-**Original scope:** UQF v1.0 schema + Mission Bit Registry + QuestRuntime design + 5-phase migration (2026-05-28)
-**Still active:** Phase 1 implemented; Phases 2–5 partially superseded by §DATA-01
+| Real kind (source report) | `kind:'…'` at `89fa13b` | at HEAD |
+|---|---|---|
+| `skill_check` | 0 | **2,623** |
+| `reward` | 0 | 151 |
+| `narrative` | 0 | 138 |
+| `flag_write` | 0 | 58 |
+| `unlock` | 0 | 15 |
+| `combat` | 0 | 10 |
+| `item_remove` | 0 | 8 |
+| `choice` | 0 | 2 |
+| **8 of 8 shipped** | **0** | **3,005** |
 
-### What the report said
+Zero at the reference commit because the schema was designed and not yet instantiated — so a census taken that day could see neither the real names nor the invented ones, and nothing on the page distinguished them.
 
-Universal Quest Format (UQF) v1.0: a single declarative schema for all mission types (main/side/skill_check). Mission Bit Registry: 8 atomic bit kinds (flag_set, flag_check, item_grant, item_take, xp_award, gold_award, npc_dialog, battle_gate) with typed contracts. `QuestRuntime` singleton as a live-migration bridge. 5-phase migration: (1) add UQF skeleton, (2) instrument live quests, (3) migrate skill_check quests, (4) migrate side/main, (5) retire legacy path.
+The report then compounds it, declaring *"the Mission Bit type taxonomy is correct"* and mapping five of its invented names onto `QUEST_EFFECTS` — introducing, in the parenthesis, a ninth name absent from its own list of eight: `mission_bit`. **That ninth is the only one that was real.** It stands at 2,449 instances at HEAD, the engine's second most-used bit kind.
 
-### Current HTML relevance
-
-| Symbol | Line | Status |
-|--------|------|--------|
-| `const SCHEMA_VERSION = 'UQF-1.0'` | 20,474 | Active — Phase 1 skeleton present |
-| `const QuestRuntime = {` | 20,476 | Active — stub with `run()` + `adaptLegacyQuest()` |
-| `const QUEST_EFFECTS = {` | 19,837 | Active — **§DATA-01 advance** of Phase 2 intent |
-| `const QUEST_HOOKS = {` | 20,141 | Active — engine handler registry |
-| `function applyQuestEffects(effs)` | 19,819 | Active — effect interpreter |
-
-§DATA-01 (2026-06-16) delivered a practical implementation of the declarative outcome vision: `QUEST_EFFECTS` is the "Mission Bit Registry" made concrete for the pass/fail path. The UQF report's Phase 2 (`completeFn` + `activateCond` declarative conversion) remains open — 166 `completeFn` and 1,731 `activateCond` arrow functions are still in `QUEST_DB` as code.
-
-### What still applies
-
-- The Mission Bit type taxonomy is correct and now maps directly to `QUEST_EFFECTS` effect types (`e:'flag'` = flag_set, `e:'item'` = item_grant, `e:'xp'` = xp_award, `e:'gold'` = gold_award, `e:'mbit'` = mission_bit).
-- `QuestRuntime.adaptLegacyQuest()` remains the bridge to the UQF world. Phase 3–5 migration is the next architecture milestone.
+The eight names offered as the taxonomy: zero, forever. The one tossed in as a gloss: 2,449. There is no better illustration of instrument 9 — *the predictor is not whether a passage cites code, but whether the author could copy it.* The eight-item list looks like the most rigorous sentence on the page. It is the only sentence in the document with a 0 % hit rate.
 
 ---
 
-## Report 12 — `lab-report-quest-data-code-separation.md`
-**Original scope:** §DATA-01 — data-code boundary enforcement (2026-06-16)
-**Still active:** Yes — the described architecture is the live HTML
+## 7. The playability finding — 36 quests, 9 chains, 12 nodes, one duplicate key
 
-### What the report said
+The report's account of the WBAPI parser (Report 9) states the hazard exactly right:
 
-(Full summary in the report itself.) Key outcomes: `storyShowNpc` `quoteFn` fix; `ZRH` → `DFL` Dunfall node rename; `QUEST_DB` purged of 127 `onPass`/`onFail` functions; `QUEST_EFFECTS` (121 declarative entries) + `QUEST_HOOKS` (91 named handlers) + `applyQuestEffects` (10-case dispatch); `q.title/desc/hint` via `textContent` not `innerHTML`.
+> *`removeFns` is why `completeFn` and `activateCond` are not round-trippable through the WBAPI — they survive in the HTML but don't survive a WBAPI read-write cycle unless handled specially.*
 
-### What still applies
+At the commit it was measuring, that hazard had already fired **36 times**, and the report did not look. Those are the 36 `activateCond` fields §4 noted as not function-valued.
 
-Everything described is live. The open question: `completeFn` (166) and `activateCond` (1,731) are still functions in `QUEST_DB`. These are predicate functions (return boolean) rather than action callbacks, so they have different risk and conversion profiles. A future §DATA-02 could convert `completeFn` to a declarative completion check format.
+**The shape.** Thirty-six `QUEST_DB` entries carry `activateCond` **twice** — the authored arrow function, then a re-serialised string copy:
+
+```js
+ath_c1a2: { id:"ath_c1a2", …, activateCond:() => !!S_story.athC1A1Done,
+            activateCond:"() => !!S_story.athC1A1Done" },
+```
+
+In a JavaScript object literal the last key wins, so the effective value is a **string**. The write-back appended where it should have replaced.
+
+**The consequence.** The activation site at line 26,297 reads `if (q.activateCond && !q.activateCond()) return;`. A string is truthy, so the guard passes and the call throws. Confirmed by execution rather than inspection:
+
+```
+typeof effective activateCond : string
+truthy?                       : true
+THROWN: TypeError: x.activateCond is not a function
+```
+
+It throws inside a bare `Object.values(QUEST_DB).forEach(…)` with no `try`, so the exception escapes the callback and **aborts `storyCheckQuests` for that node entirely** — not just the one quest. Everything downstream in the same call, including the completion loop, never runs.
+
+**The blast radius.** All 36 are continuation steps (`a2`–`a5`) of nine archive chains — `ath_` ×4, `zth_` ×4, `cid_` ×28 across seven sub-chains — reachable at **twelve nodes**: `IDC` · `SKN` · `WM` · `ITH` · `PHC` · `BGZ` · `TOL` · `CDN` · `VLC` · `CON` · `NUE` · `VEN`. The openers carry no `activateCond`, so **every chain could be started and none could advance**, and at those twelve nodes no quest activated or completed at all. Nine arcs, visibly begun, silently sealed — which is precisely why it survived: a chain that opens and stops reads as unwritten content, not as a crash.
+
+**Status: RESOLVED, and not by anyone who read this report.** `activateCond:"` is **0 at HEAD**; the §ARCH-01 UQF migration rewrote the field out of existence. `check:dupkeys` shipped 2026-07-28 (`fc40bd4`, §AUDIT-03a) as `check:walk` gate #11 and would now catch the shape on sight — six weeks after the casualties were already gone. Filed here as history, not as an open row.
 
 ---
 
-## Architecture Summary — What Is Structurally True Right Now
+## 8. The predictions — the half of the document that aged best
 
-**One file, one scope, one state object.** `S_story` at line 21,157. `S` at line 4,720. All functions share file scope. No framework. No modules. 33,721 lines.
+Four forward-looking claims, all falsifiable, checked at HEAD.
 
-**Two engines, shared dice.** Battle Mode (`S`) and Story Mode (`S_story`) share `roll()`, `resolveAdv()`, and the damage resolution layer. They never merge state.
+| Prediction | Outcome |
+|---|---|
+| *"A future WBAPI-02 could convert `completeFn`/`activateCond` to declarative predicates"* | ✅ **Delivered** by §ARCH-01 UQF. `completeFn:` 166 → **3**; `activateCond:` 1,767 → **46**. 98 % / 97 % converted. |
+| *"`QuestRuntime.adaptLegacyQuest()` remains the bridge… Phase 3–5 is the next architecture milestone"* | ✅ **Delivered.** `QuestRuntime` 1 → 21 occurrences; the "stub" is now the sole execution surface (`const QuestRuntime@22341`). |
+| *"WORLDBUILDER anchor pairs are a contract"* | ✅ **Held perfectly.** 24 comments / 12 sections at the reference commit; **byte-identical at HEAD** two months and 4,991 lines later. Not one collection was added without its anchor. |
+| *"An §API-03 review of `combat.md`'s function reference would find all entries stale"* · *"SP5 is overdue"* | ⚠️ **Correct, unactioned, and 175× larger than described** → §DX-02bv. Zero commits mention SP5 or §API-03. |
 
-**Nine WORLDBUILDER-anchored data sections.** The WBAPI toolchain reads/writes all nine via anchor comment pairs. QUEST_DB (lines 9,365–19,816) is the largest section at ~10,450 lines.
+That last row is the report's best call, and it undersold it. It named one table in one document. Measured repo-wide, **six maintained home docs carry `| Function | Line |` tables totalling 175 line-numbered rows**:
 
-**Three-layer quest architecture.** `QUEST_DB` (pure data, 1,695+ quests), `QUEST_EFFECTS` (declarative outcomes, 121 entries), `QUEST_HOOKS` (named engine handlers, 91 entries). `applyQuestEffects` is the only execution path from quest data to game state mutation.
+| Document | Rows | Exact | Stale | Unresolvable |
+|---|---|---|---|---|
+| `docs/spec/combat.md` | 55 | 0 | 52 | 3 |
+| `world.md` | 29 | 0 | 29 | 0 |
+| `docs/mechanics/mechanics-economy.md` | 29 | 0 | 29 | 0 |
+| `story.md` | 27 | 0 | 22 | 5 |
+| `mechanics.md` | 26 | 0 | 26 | 0 |
+| `monsters.md` | 9 | 0 | 9 | 0 |
+| **Total** | **175** | **0** | **167** | **8** |
 
-**Documentation as software.** `index.md` is the manifest. `plan.md` is the active spec. Lab reports are the archive. The two-way sync rule is the invariant. The `// → doc:` annotation is the inbound link. The WORLDBUILDER anchor pair is the machine-readable boundary.
+**A 0 % hit rate.** Sampled drift on `docs/spec/combat.md` runs +934 to +1,284 lines; every claimed line now lands inside `MONSTER_POOL` data rather than the function it names.
+
+The sting is that the repo built a gate for exactly this. `check:anchors` walks all six files — `scripts/resolve-anchors.js:const DOC_ROOTS@43` covers `.`, `docs` and `lab-reports` — and reports 2,721 anchors across 59 docs with **0 dead**. It cannot see a single one of the 175 rows, because `scripts/resolve-anchors.js:const ANCHOR_RE@48` matches only `` `symbol@line` `` inside backticks. The two-column table form is not stale to the gate; it is invisible. *Both statements are true at once: zero dead anchors, and 167 stale line references, in the same files, on the same run.*
 
 ---
 
-*Synthesis Part 1 of 7 · Next: Part 2 — Combat & Mechanics · 2026-06-16*
+## 9. What still applies
+
+- **The one-file, one-scope model is permanent**, and every pattern that looks unusual is downstream of it. Unchanged.
+- **The two-engine split** (`S` / `S_story`, shared dice, never-merged state) governs the codebase. Unchanged in structure at 38,712 lines.
+- **`_S_DEFAULTS()` is the canonical new-game/NG+ reset** — `const _S_DEFAULTS@23062`, 187 → 193 fields. Still the single source of truth for save initialisation.
+- **The anchor pair is a contract.** If you add a top-level data collection, add the pair. Two months of perfect compliance is evidence it works.
+- **Never `JSON.parse` a JS object literal from the HTML.** Unquoted keys, trailing commas, arrow functions. `extractObj` + `removeFns` + comment-aware brace counting, all live in `js/wbapi-core.js`.
+- **`removeFns` is a data-loss boundary, not a formatting detail.** §7 is what it costs when the round trip is assumed rather than tested — and the standing acceptance test for any write path remains: *save, re-parse, assert the change survived.*
+- **The two-way sync rule** — every doc item traces to the HTML, every HTML constant has a home doc — is the invariant. `// → doc:` 94 → 93 at HEAD.
+- **Do not hardcode live totals in prose.** `1,695+` is what that habit costs, and it is why `npm run stats` exists.
+
+---
+
+## 10. Delta table
+
+| # | Claim | Verdict | Evidence |
+|---|---|---|---|
+| 1 | 20 `symbol@line` citations | ✅ **20/20 exact** | resolved at `89fa13b` |
+| 2 | HTML baseline 33,721 lines | ✅ exact | `git show 89fa13b` |
+| 3 | 9 anchor line-ranges | ✅ 9/9 byte-exact | — |
+| 4 | 94 `// → doc:` annotations | ✅ exact | 93 at HEAD |
+| 5 | 166 `completeFn` | ✅ exact | 3 at HEAD |
+| 6 | 1,731 `activateCond` arrow fns | ✅ exact | of 1,767 occurrences |
+| 7 | 91 `QUEST_HOOKS` | ✅ exact | — |
+| 8 | 10-case `applyQuestEffects` | ✅ exact | all ten labels verified |
+| 9 | 127 `onPass`/`onFail` purged | ✅ exact | 92 + 35 |
+| 10 | `QUEST_EFFECTS` "121 entries" | ⚠️ **right number, wrong noun** | 121 arrays / 89 keys / 122 descriptors |
+| 11 | "Nine anchored data sections" | ❌ **twelve** | 24 comments; missed `MONSTER_DROPS`, `LAKE_MAGIC`, `ITEM_DB` |
+| 12 | "14 anchor comment **pairs**" | ❌ **14 comments, 7 sections** | source says comments |
+| 13 | "1,695+ quests" | ❌ **2,834** | −40 %; borrowed from `index.md` |
+| 14 | "`QUEST_DB` (pure data)" | ❌ **1,897 arrow functions** | contradicts rows 5–6 |
+| 15 | "8 bit kinds (flag_set, …)" | ❌ **count exact, 0 of 8 names ever existed** | real 8 shipped, 3,005 instances |
+| 16 | "64 entries (incl. this synthesis)" | ⚠️ **64 excluding, 65 including** | `index.md` says 65 |
+| 17 | `_S_DEFAULTS` "~194 fields" | ⚠️ **187** | +3.7 %, flagged approximate |
+| 18 | 3-layer quest architecture "structurally true right now" | ❌ **0 at HEAD** | `QUEST_EFFECTS`/`QUEST_HOOKS`/`applyQuestEffects` all 0; lifetime 3 h 16 m |
+| 19 | Cooperative DM mechanisms | ✅ **3/3 live and reachable** | `_D100_TABLE`, `void_mercy_count`, checkpoint respawn |
+| 20 | 36 `activateCond` non-functions | ❌ **NOT MEASURED** — 12 nodes' quest processing dead | §7; resolved at HEAD |
+| 21 | "future WBAPI-02 / §DATA-02" | ✅ **delivered** | 98 % / 97 % converted |
+| 22 | anchor contract | ✅ **held byte-identical** | 24/12 then and now |
+| 23 | "§API-03 would find all entries stale" · SP5 | ⚠️ **correct, unactioned, 175 rows** | → §DX-02bv |
+| 24 | *"Reports are in `lab-reports/`, untouched"* | ⚠️ **no longer true** | 3 of 12 moved to `archive/`; 7 of 12 rewritten by §DOC-02 |
+
+---
+
+## 11. Defects filed
+
+**§DX-02bv 🟡 — 175 line-numbered doc rows that `check:anchors` is structurally unable to see.**
+Six maintained home docs carry `| Function | Line |` tables: 175 rows, **0 exact, 167 stale, 8 unresolvable**. `scripts/resolve-anchors.js:const DOC_ROOTS@43` already walks every one of those files and `check:anchors` passes clean, because `scripts/resolve-anchors.js:const ANCHOR_RE@48` only recognises `` `symbol@line` `` inside backticks. Fix is mechanical and needs no design call: convert the `| Line |` column to the anchor form, then `npm run anchors:fix`. Sub-item: `index.md`'s footer hardcodes four live totals, two already drifted (37,950 vs 38,712 lines; ~2,848 vs 2,853 quests) — the exact habit that produced delta #13, and `npm run stats` is the replacement.
+
+This row is the report's own §API-03 prediction, confirmed and scoped. It is filed under §DX-02 rather than as a new §API row because the defect is not the drift — drift in a line number is inevitable — but the **gate blind spot** that lets 167 of them pass green.
+
+---
+
+## 12. Conclusion
+
+Twelve reports, three verdicts each, and the document splits along a seam its author could not have seen from inside it: **everything it read is right, and everything it added up is wrong.** Twenty citations, twenty hits. Six totals, six misses. The eight-item taxonomy — the single most rigorous-looking sentence on the page — has a hit rate of zero, while the ninth name, thrown into a parenthesis as a gloss, went on to become the engine's second most-used identifier.
+
+It is worth being fair about what that means. A cross-reference is not a census, and this one never claimed to be; its job was to say *which of these twelve documents can I still trust*, and on that question it was right twenty times out of twenty. Its failure is narrower and more interesting: **it counted its own table and called the result a measurement.**
+
+The predictions redeem it. Every "someone should" it filed almost in passing was correct — two migrations arrived in full under the names its sources specified, one contract has not moved a byte, and one audit is still owed at 175 times the scope it named. A document that is unreliable about the present and accurate about the future is a strange artifact, but not a useless one. It knew what was fragile. It was simply wrong about what was there.
+
+And under all of it, the promise the architecture was built to keep is intact: loot still always gives something, the void still grants its one mercy, and the game-over button still puts you back on your feet. The scaffolding was rebuilt twice. The floor held.
+
+---
+
+*§DOC-02bb · verified against `89fa13b` (33,721 lines) and HEAD (38,712 lines) · 2026-08-13*
+*Synthesis Part 1 of 7 · Next: Part 2 — Combat & Mechanics*

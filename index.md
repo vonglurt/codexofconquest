@@ -235,7 +235,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 | File | Parts | Coverage |
 |------|-------|----------|
-| `lab-reports/lab-report-synthesis-part1-architecture.md` | Part 1 of 7 | All 12 Architecture & Systems reports cross-referenced against live HTML — current line numbers, active/superseded status, what still applies |
+| `lab-reports/lab-report-synthesis-part1-architecture.md` | Part 1 of 7 | All 12 Architecture & Systems reports cross-referenced against live HTML — current line numbers, active/superseded status, what still applies. **✅ VERIFIED §DOC-02bb (2026-08-13):** 20/20 `symbol@line` citations exact and every roll-up wrong (9 anchored sections → 12; 1,695+ quests → 2,834; the "8 bit kinds" taxonomy correct in count, 0 of 8 names ever authored); subject architecture lasted 3 h 16 m; 3 of 4 predictions delivered, the 4th → §DX-02bv |
 | `lab-reports/lab-report-synthesis-part2-combat-mechanics.md` | Part 2 of 7 | All 7 Combat & Mechanics reports — loot channels, 1.5 AP economy, Cooperative DM Principle, Luck stat, tattoo/chronicle persistence |
 | `lab-reports/lab-report-synthesis-part3-world-navigation.md` | Part 3 of 7 | All 13 World & Navigation reports — §CELL model, BFS, MegaReWeave, Epic Battlegrounds, arc templates (§SPARK/§WHODUNIT/§ALCHEMY) |
 | `lab-reports/lab-report-synthesis-part4-monsters-fishing.md` | Part 4 of 7 | Both Fishing reports — 2d20 superseded by Catch/Type/Size system; BAIT_TABLES vs planned BAIT_FISH_POOL; Luck live at 7 roll points; LAKE_MAGIC_DB; night fishing; Emmer arc; tournament chain |
