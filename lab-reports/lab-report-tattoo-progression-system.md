@@ -5,7 +5,7 @@
 **IEEE Game Design & Systems Analysis — Technical Report**
 **roll2hit.com · Layer Reference: §XLII – §XLVII**
 **Original:** 2026-05-25 · **Ship commits:** `1445fc4` · `cab8865` · `e1c91e8` · `aef1650`
-**Verified against HEAD:** 2026-08-12 (§DOC-02am) · original 608 lines → 312
+**Verified against HEAD:** 2026-08-12 (§DOC-02am) · original 608 lines → 492
 **Status:** ✅ SHIPPED, mechanism intact at 79 days · ⚠ 3 specified behaviours absent, 1 live defect
 
 ---
