@@ -1,332 +1,305 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report Synthesis — Part 5: NPC & Narrative
-**Cross-Reference of All NPC & Narrative Lab Reports Against roll2hit-v3.html**
-**Date:** 2026-06-16 · **HTML baseline:** 33,721 lines · **Source reports:** 8
+
+**Cross-reference of eight NPC/narrative lab reports against `roll2hit-v3.html`**
+**Written:** 2026-06-16 · **Reference build:** `89fa13b` (33,721 lines — the stated baseline, exact)
+**Verified:** 2026-08-14 (§DOC-02bf) · **Source reports:** 8
 
 ---
 
-## Purpose
+## Abstract
 
-Each entry reads the lab report against the live HTML and answers: what was documented, what is the current code, what still applies as working design knowledge. Reports are in `lab-reports/` untouched.
+Eight design reports covering Birka's six-NPC dialogue layer, the Corelli merchant arc, the
+La Riva grief arc, the living-world ambient systems, the WBAPI NPC-speak endpoint, and two
+philosophical postmortems are read against the engine and reduced to what a future author can
+act on. The 2026-06-16 pass established the surviving inventory. This verification pass
+re-measured every claim: **46 line citations, 43 exact and 2 landing on the marker comment
+immediately above their target**; every transcribed data figure correct. The failures are
+concentrated in one place — **three "not confirmed implemented" verdicts, all three wrong**, and
+each contradicted by code within five lines of a citation this same document gets right. Four
+further corrections follow, including a mission-ledger threshold that is transcribed perfectly and
+governs a flag nothing can write.
 
----
-
-## Report 1 — `lab-report-npc-dialogue-system.md`
-**Original scope:** Layer 42 — 4-state NPC speech system, world-truth profiles, Groundhog Day mechanic, 6 Birka NPCs (2026-05-22)
-**Still active:** Yes — the system is live; several state definitions differ from the design
-
-### What the report said
-
-**4-state dialogue system.** Every NPC has four states keyed to `S_story.npcFavorability[npcKey]`: Impartial (0), Quest-Active (quest in journal), Friendly (fav ≥ 2), Dear Friend (fav ≥ 3). Visit-count cycling instead of random: `visitCount % pool.length` ensures all quotes surface across multiple visits.
-
-**Six Birka NPCs** with full design matrices: Yael (guard captain — suppressed riots), Brynn (innkeeper — invisible labor), Quill/Couperin (bard — institutional capture), Pachelbel/Deacon (fence — moral code as armor), Crov/Weckmann (pit master — coaching becomes variable-watching), Auros/Bruhns (researcher — diagnosis as worldview). Each has a worldTruth, enemy, wound, and curse expression.
-
-**`_missionComplete()` with 12 bits.** Original design: `bits.every(Boolean)` — all 12 must be true.
-
-**The Groundhog Day mechanic.** Four ending variants keyed on `_missionComplete() && _curseScore()`. The loop closes when you choose people over efficiency.
-
-*Note: the report itself carries an implementation note (added at SP2) correcting the state logic — `questActive` fires when `_hasActiveQuestFor(npcKey)` is true regardless of fav level, not at fav=1; `_missionComplete()` returns `>= 8`, not `.every(Boolean)`.*
-
-### Current HTML relevance
-
-**`NPC_DIALOGUES` is live at line 9,146.** The structure matches the design. All 6 Birka NPCs are present with the `meta`, `impartial`, `questActive` (or equivalent), `friendly`, `dearFriend` fields. The system is live and active.
-
-**`_getNPCDialogue()` at line 21,619 is live.** State selection follows the SP2-corrected logic: `questActive` triggers on `_hasActiveQuestFor(npcKey)`, independent of fav level.
-
-**`BIRKA_NPC_PROFILES` is a separate, parallel structure** at line 20,810. The NPC card renderer `_renderNpcCard()` at line 21,715 reads from both `BIRKA_NPC_PROFILES` (for portrait/greeting/profile) and `NPC_DIALOGUES` (for cycling quotes). The design document describes one object; the live code uses two parallel objects. Both are required.
-
-**`_missionComplete()` at line 21,698 is live and correct per the SP2 note.** 12 bits evaluated, returns `>= 8`. Current bits:
-
-| Bit | Condition |
-|-----|-----------|
-| `yaelEscortUsed` | Flag set |
-| `brynnsJournalRead` | `journalEntriesRead` includes entry 7 |
-| `couperiSongReceived` | Flag set |
-| `pachelbelPaidBack` | `quest_pachelbel_shipment === 'complete'` |
-| `crovPitTrainingWins` | `pitTrainingWins >= 3` |
-| `bruhnsDepthsReported` | Flag set |
-| `allEbReturns` | `ebReturnDone` filter ≥ 5 (not 20 — reduced threshold) |
-| `journalHalf` | `journalEntriesRead.length >= 9` |
-| `sealedVoid` | `defeatedBattles['TLS']` set |
-| `atLeastThreeFriends` | `_lubeckFriends() >= 3` |
-| `noHighCurse` | `_curseScore() < 10` |
-| `returnedToCI` | `visited['LHR']` && `level >= 5` |
-
-The EB returns threshold dropped from 20 (original design) to 5 — a significant relaxation. NPC name and key changes from design to live: Quill/Couperin → `quill`, Pachelbel/Deacon → `pachelbel`, Weckmann/Crov → `crov`, Auros/Bruhns → `bruhns`.
-
-### What still applies
-
-- **`NPC_DIALOGUES` is the canonical quote source.** Four arrays per NPC key: `impartial`, `questActive`, `friendly`, `dearFriend`. The visit-count cycling `(visitKey % pool.length)` is load-bearing — do not convert to random.
-- **`BIRKA_NPC_PROFILES` is required alongside `NPC_DIALOGUES`.** Both structures must be present and keyed consistently for `_renderNpcCard()` to work.
-- **Occupation as lens.** Each NPC has a `worldTruth` and `enemy` in `meta`. These appear on the card at fav ≥ 2. Don't flatten these into generic flavor.
-- **The EB return threshold is now ≥ 5, not 20.** The design required all 20 EB returns. The live `_missionComplete()` requires 5 `ebReturnDone` flags.
+**Why this layer exists.** The Birka NPC system is the game's answer to a structural problem:
+a walking game with reading has no combat pressure to carry its middle hours. The design bet is
+that *recurrence* substitutes for escalation — you pass the same six people repeatedly, and what
+they say changes because of what you did. Every mechanism catalogued below serves that bet.
+The thesis the postmortems name is **Friendships with Magic**: *"magic that is the byproduct of
+choosing people over efficiency."*
 
 ---
 
-## Report 2 — `lab-report-npc-speak-sdk.md`
-**Original scope:** WBAPI NPC speak endpoint — live Claude API character instantiation, Emmer Finch test (2026-06-05)
-**Still active:** Yes — endpoint implemented in `wbapi-server.js`
+## I. Method
 
-### What the report said
-
-`GET /api/npc/{id}/speak?prompt={text}&state={neutral|friendly|dearFriend}` calls the Claude Haiku 4.5 model with a system prompt built from the NPC's `BIRKA_NPC_PROFILES` entry (name, occupation, node text, voice examples for all states). Prompt caching on the system block. Falls back to seed text if `ANTHROPIC_API_KEY` absent. Logs every call to `milepoints/npc-speak.log`.
-
-Test subject: Emmer Finch (`emmer`, node SSJ), 6 calls, 2 prompts ("hello", "biggest fish"). Key finding: **the arc holds without instruction** where seed dialogue is strong (dearFriend: *"Age sixteen. Silver fish. Arms shaking. 'That's not the biggest fish in the river.'"*). Friendly state weakest — seed dialogue quality problem, not model problem. The prompt is short; `worldTruth` and `enemy` not yet passed.
-
-### Current HTML relevance
-
-**The `/api/npc/{id}/speak` endpoint is implemented in `wbapi-server.js` at line 11,408.** Matches the design: GET handler, Claude API call with seed fallback, logging to `npc-speak.log`. The endpoint is live.
-
-**The endpoint uses `BIRKA_NPC_PROFILES` data** served from the extracted game file. The system prompt includes node text and voice examples. The `ANTHROPIC_API_KEY` gate and seed fallback are confirmed at lines 11,428–11,436.
-
-**Recommended extensions from the report** (worldTruth + enemy in prompt; `questContext` parameter; pre-render cache) were not implemented as of this synthesis. The endpoint works at "first attempt" quality.
-
-### What still applies
-
-- **The `/api/npc/{id}/speak` endpoint is available for player-prompt NPC interactions** — the long tail beyond the pre-rendered `NPC_DIALOGUES` arrays. Use it for arbitrary player-initiated prompts; use `NPC_DIALOGUES` for known cycling exchanges.
-- **Friendly seed dialogue is weaker than neutral or dearFriend.** This is a content gap, not a model gap. Improving friendly dialogue strings in `NPC_DIALOGUES` improves the speak endpoint's output for that state at zero model cost.
-- **The loop note from the report is permanently accurate:** *"The lab reports are the npc-speak.log of the collaboration. They function identically to the character cache: a record of what was said, by whom, under what conditions, for future retrieval."* This synthesis document is that cache.
+1. Extract the reference build (`git show 89fa13b:roll2hit-v3.html`) and resolve every line
+   citation against it, not against HEAD (instrument 18 — HEAD cannot adjudicate a claim
+   about 2026-06-16).
+2. Score each cited symbol again at HEAD to separate **stale** from **wrong when written**.
+3. For every claim of the form *"not confirmed implemented"*, run the grep the report did not.
+4. For every threshold, identify the flag's **writer** and prove the writer is reachable.
+5. Check each source report against its own §DOC-02 verification record before trusting an
+   inherited conclusion (instrument 53).
 
 ---
 
-## Report 3 — `lab-report-corelli-merchant.md`
-**Original scope:** Layer 61, §XXVI — Corelli the Wandering Merchant, 5 appearances, reveal arc (2026-05-25)
-**Still active:** Yes — fully implemented; appearance node sequence changed
+## II. As-Built Inventory
 
-### What the report said
+Anchors resolve at HEAD unless a reference-build line is named explicitly.
 
-Five appearances across acts (DK/RD/BK/SQ/IN), gated by `corelli_encounter_count < index`. Favorability derived from purchase count. Five items: `scholar_ink`, `encoded_letter`, `false_warrant`, `kings_seal`, `last_cipher` (auto-delivered, free). Fifth appearance revelation modal when `fav_corelli >= 3`: "She built it to save us. They hid it to save themselves." `last_cipher` delivered, `encoded_letter` footnote retroactively appended.
+| System | Anchor | Role |
+|---|---|---|
+| Cycling quote pools | `const NPC_DIALOGUES = {@10396` | 4 states per NPC key |
+| Portrait / greeting data | `const BIRKA_NPC_PROFILES = {@22712` | parallel structure, both required |
+| State selection | `function _getNPCDialogue(npcKey) {@23560` | `questActive` from `_hasActiveQuestFor` |
+| Card renderer | `function _renderNpcCard(key, container) {@23683` | reads both structures |
+| Mission ledger | `function _missionComplete() {@23648` | 12 bits, returns `>= 8` |
+| Off-screen character | `const PETRA_STALL_STATES = [@27398` · `function _getGigaultState() {@27558` | cycles on `gameDay % 3` |
+| Corridor farewells | `const NPC_FAREWELLS = {@27427` · `function _getFarewell(fromCode, toCode) {@27575` | Friendly+ only |
+| Act III one-liners | `const NPC_ACT_THREE_LINES = {@27469` | priority injection, additive |
+| Node→NPC routing | `const NODE_NPC_KEYS = {@27413` | read by colour *and* farewell |
+| Map warmth gradient | `function _getNodeMapColor(nodeSlug) {@27562` | **live** — see §IV-A |
+| Final map render | `function _renderFinalMap() {@27605` | **live** — see §IV-A |
+| Brynn's chores | `const BRYNN_MAINTENANCE_TASKS = [@27498` | `{label, cost_gold, flag, action, narration}` |
+| Romance layer | `const ROMANCE_QUOTES = [@22379` (21) · `const NPC_ROMANCE_PREAMBLES = {@27479` (6) · `const NPC_ROMANCE_VIGNETTES = {@27489` (6) · `const INN_DREAMS = {@27131` | counts verified |
+| Preamble delivery | `const _preamble = (fav >= 2 && NPC_ROMANCE_PREAMBLES[key])@23740` | italic line before the card |
+| Companion scenes | `const BRYNN_KEEPER_STORY = {@27037` · `const BRUHNS_CO_SCENE = {@28062` · `const YAEL_NAMED_REPORT_SCENE = {@28048` | three arcs, five flags |
+| Corelli arc | `const CORELLI_ITEMS = {@26586` · `const CORELLI_APPEARANCES = [@26608` | 5 items, 5 stops |
+| Death-save bonus | `const _kingsSealBonus@7502` | `kings_seal` grants +1 |
+| La Riva arc | `AMS:{ num:79@8801` · `quest_la_riva_01: { id:'quest_la_riva_01'@13785` · `S_story.frCatKillCount = (S_story.frCatKillCount || 0) + 1;@25355` | node code is `AMS`, never `FR` |
+| NPC speak endpoint | `js/wbapi-server.js:SPEAK_LOG_FILE@815` | moved from repo root since |
 
-### Current HTML relevance
-
-**All Corelli structures are live.** `CORELLI_ITEMS` at line 24,298, `CORELLI_APPEARANCES` at line 24,310, all four state flags in `_S_DEFAULTS` at line 21,234, helper functions at lines 21,531–21,534.
-
-**Appearance node sequence changed from design.** The design document lists DK/RD/BK/SQ/IN. The `wbapi-server.js` `GET /api/nodes` help text (line 1,467) and CORELLI_APPEARANCES doc comment (line 24,310) indicate the sequence shifted to TL/RD/IS/WM/IN. Node code changes: DK→TL (Harbor Docks), BK→IS (somewhere in act 5), SQ→WM (Weimar Scholar Quarter). Core mechanics unchanged.
-
-**`kings_seal` death-save integration is live** at line 6,732: `_kingsSealBonus` checks inventory for the seal by name and grants +1 to death saves.
-
-**`false_warrant` disable gate** — the design specified disabling at `voidPressure >= 7`. The current HTML uses `actNumber` gating rather than explicit voidPressure checks — behavior preserved, mechanism may differ.
-
-**The post-mortem gaps from the report remain unaddressed:**
-- Act II–III gap attrition (no ambient reminder)
-- `false_warrant` mechanical effect not described to player on consumption
-- `kings_seal` at 350gp still expensive relative to mechanical benefit
-
-### What still applies
-
-- **`fav_corelli` is always derived from `corelli_purchase_count`, never set directly.** Don't add manual fav_corelli assignments.
-- **`encoded_letter` footnote retroactive decode** via `corelliRevelationDelivered` is load-bearing. The check at line 27,552 reads inventory and appends `_decoded` content. Preserve this flag.
-- **`last_cipher` auto-delivery at appearance 5 is non-transactional by design.** Don't add a price to it.
-
----
-
-## Report 4 — `lab-report-living-world.md`
-**Original scope:** Layer 44 — off-screen Gigault, world progression events, map memory, corridor farewells, Brynn's maintenance tasks (2026-05-22)
-**Still active:** Majority implemented; some features remain design-stage
-
-### What the report said
-
-Gigault as uninteractable off-screen character (3-state stall, never present). World progression events keyed to act transitions. Map warmth gradient (NPC favorability → node color). Corridor farewell system (`NPC_FAREWELLS`, Friendly+ only). Brynn's maintenance tasks (fix step, firewood, pantry restock). Pachelbel's moral code readable. Void's First Sign flicker in Act I. Final map render at game end.
-
-### Current HTML relevance
-
-**Gigault / `PETRA_STALL_STATES` is live** at line 25,083–25,086. `_getGigaultState()` at line 25,228 cycles on `gameDay % 3`. Her stall appears at the CI node. She is never there. This is correct.
-
-**`NPC_FAREWELLS` is live** at line 25,106. Route-specific and default farewells per NPC. Fires via `_getFarewell()` at line 25,248. Friendly+ only, correct.
-
-**`NPC_ACT_THREE_LINES` is live** at line 25,139. One-line Act III injections per NPC. `_getNPCDialogue()` at line 21,642 checks for these and returns them with priority when `actNumber >= 3` and the line hasn't been seen.
-
-**`BRYNN_MAINTENANCE_TASKS` is live** at line 25,168–25,177. Three tasks with gold cost, flags (`brynThirdStepFixed`, `brynFirewoodBrought`, `brynPantryRestocked`), ledger balance updates. All three flags live in `_S_DEFAULTS` at line 21,186.
-
-**`NODE_NPC_KEYS` is live** at line 25,098. Maps node codes to NPC keys for dialogue routing.
-
-**`NPC_ROMANCE_VIGNETTES` is live** at line 25,159. Once-per-run vignettes fired post-sleep when NPC's home node was in last 3 moves.
-
-**World progression events partially implemented.** `couperiDebtDegraded` fires via a WORLD_EVENTS handler at line 25,095 when `actNumber >= 4 && !quillQuestComplete`. Quill's dialogue silently changes. The `worldEventsFired` array at line 21,185 tracks fired events. The specific CSS `WORLD_JOURNAL_STYLE` class from the report is not confirmed as a live style block — world events may render as standard messages.
-
-**Map warmth gradient — not confirmed implemented.** The design specified `_getNodeMapColor()` returning warmth tints based on NPC fav. The function may not be live in the current minimap render path. `NODE_NPC_KEYS` exists (prerequisite), but the gradient render is unconfirmed.
-
-**Void's First Sign flicker — not confirmed implemented.** The Act I minimap flicker at a specific cell with CSS animation is a design-stage feature; no confirming grep.
-
-**Final map render — not confirmed implemented.** The post-ending full-screen node map at `_renderFinalMap()` is a design-stage feature.
-
-### What still applies
-
-- **Gigault is the off-screen character template.** Never interactable. Named by Friendly NPCs. The stall rotates 3 states. No quest hooks. Any new "city person who exists" follows this pattern.
-- **`NPC_ACT_THREE_LINES` is additive, not replacing.** Don't replace the existing quote pool with Act III lines — `_getNPCDialogue()` returns them with priority and then the cycle continues with the regular pool.
-- **Brynn's third step still creaks until fixed.** `brynThirdStepFixed` drives the ledger balance. If anyone adds new maintenance tasks, they follow the same `{label, cost_gold, flag, action, narration}` pattern.
-- **The "antidote to the Curse of Knowledge" framing is the design philosophy.** The world doesn't wait for the player. It was going before they arrived. Every world-progression event should reinforce this: Quill's debt is worse when you come back, not because the game punished you, but because time passed.
+State fields cluster in `_S_DEFAULTS`: `brynThirdStepFixed: false,@23095` · `s29LineDelivered:@23099` ·
+`brynnKeeperStoryTold: false,@23117` · `connieMet:@23122` · `fav_corelli: 0,@23143`.
 
 ---
 
-## Report 5 — `lab-report-narrative-arcs-brynn-bruhns-yael.md`
-**Original scope:** Layers 70, 72, 74 (§XXXV/§XXXVII/§XXXIX) — three companion scene arcs (2026-05-25)
-**Still active:** Yes — all three arcs fully implemented and live
+## III. Spec → Shipped Delta Table
 
-### What the report said
-
-Three scene-const arcs with no new nodes, monsters, or items. Brynn's Vigil (3 flags: `brynnKeeperStoryTold`, `brynnLightChoiceMade`, `brynnLightKept`; lamp burns for travelers who haven't come back). Bruhns CO Scene (1 flag `bruhnsCoSceneDelivered`; "She is not sure she believed the right people"; cross-dep on `s29LineDelivered`). Yael Named Report Scene (1 flag `yaelNamedReportDelivered`; filed her name on the suppression report; `yaelEscortUsed` required).
-
-### Current HTML relevance
-
-**All three arcs are fully live:**
-
-| Arc | Const | Flags (line) |
-|-----|-------|------|
-| Brynn's Vigil | `BRYNN_KEEPER_STORY` (line 24,732) | 3 flags at line 21,208 |
-| Bruhns CO Scene | `BRUHNS_CO_SCENE` (line 25,719) | 1 flag at line 21,209 |
-| Yael Named Report | `YAEL_NAMED_REPORT_SCENE` (line 25,705) | 1 flag at line 21,210 |
-
-**Cross-dependencies confirmed live:** `s29LineDelivered` at line 21,190. `yaelEscortUsed` is an existing mission bit flag. Both work as read-only guards into the scenes.
-
-**Yael patrol addendum confirmed:** Line 25,399 fires a patrol line at MSY when `yaelNamedReportDelivered` is true: *"The second report is filed. I'm not watching to see if it disappears."* Note: the design specified the SW patrol node; live code uses MSY (patrol node in current world layout).
-
-**The Bruhns CO arc cross-dependency note is the most architecturally notable feature.** The `dearFriendWithTheory` variant in `BRUHNS_CO_SCENE` appends a confirmatory line (not explanatory) when `s29LineDelivered` is true. This is the game's only arc where companion disclosure is gated on cross-arc knowledge — the player must have encountered the Auros theory before Bruhns will confirm it.
-
-### What still applies
-
-- **Arc triggers are triple-gated.** Brynn: `fav_brynn >= 1` AND `actNumber >= 2` AND `!brynnKeeperStoryTold`. Bruhns: `!bruhnsCoSceneDelivered`. Yael: `fav >= 2` AND `actNumber >= 6` AND `yaelEscortUsed`. Never collapse these gates — they ensure the scene lands with the right weight at the right moment.
-- **Neither Bruhns's confession nor Yael's report branches on player response.** Both are faits accomplis. The player witnesses; they don't determine. Don't add response branches that change the outcome — Bruhns has already signed on; Yael has already filed.
-- **The ambient lamp line at IN after `brynnLightChoiceMade` is load-bearing.** Without it the arc closes at Beat 2 and leaves no trace. It's a one-sentence passive residue that changes the node forever. Keep it.
+| # | Claim (2026-06-16) | Verdict | Evidence |
+|---|---|---|---|
+| 1 | Map warmth gradient "not confirmed implemented" | **WRONG** | live, 2 call sites — §IV-A |
+| 2 | Final map render "design-stage" | **WRONG** | live, fires in victory ceremony — §IV-A |
+| 3 | Void's First Sign "no confirming grep" | **WRONG at the time**, RETIRED since — §IV-A |
+| 4 | Corelli stops shifted to `TL/RD/IS/WM/IN` | **0 of 5** | real sequence `LCY/LDE/BK/NUE/TLL` — §IV-B |
+| 5 | Corelli "core mechanics unchanged" | **MISLEADING** | stop 3 unreachable — §IV-B |
+| 6 | 12-bit ledger table | **BYTE-EXACT** | all 12 rows, `>= 8` — §IV-C |
+| 7 | EB threshold "dropped 20 → 5, a significant relaxation" | **VACUOUS** | bit unsatisfiable at any threshold — §IV-C |
+| 8 | Sixth Birka key is `bruhns` | **WRONG** | key is `auros` — §IV-D |
+| 9 | "Prompt caching on the system block" | **INHERITED, FALSE** | never wrote a token — §IV-E |
+| 10 | Yael scene gate `fav >= 2` ∧ Act VI ∧ `yaelEscortUsed` | **CORRECT** | engine comment and `world.md` are wrong — §IV-F |
+| 11 | `WORLD_JOURNAL_STYLE` not a live style block | **CORRECT** | 0 hits at reference and HEAD |
+| 12 | `connie_tuna`/`aldo_sardino` not in `BIRKA_NPC_PROFILES` | **TRUE THEN, STALE NOW** | both added, `@22993`/`@22994` |
+| 13 | Fishmonger's Row is `AMS`, not `FR` | **CORRECT** | `AMS:{ num:79@8801` |
+| 14 | `cookApologized` does not exist | **CORRECT** | 0 hits, reference and HEAD |
+| 15 | `_bfsPath` renamed `_bfsGridPath` | **CORRECT** | 0 / 6 hits respectively |
+| 16 | Growth 12,637 → 33,721 = 2.67× | **CORRECT** | 2.668 |
+| 17 | Romance counts: 21 quotes, 6 preambles, 6 vignettes | **CORRECT** | all three |
 
 ---
 
-## Report 6 — `lab-report-la-riva-grief-arc.md`
-**Original scope:** Layer 78 (§GR) — La Riva grief arc, five-act vignette, romance layer, hour counter (2026-05-26)
-**Still active:** Yes — arc fully live; node code differs from report; romance layer fully live
+## IV. Findings
 
-### What the report said
+### A. The three unverified negatives — and all three were on screen
 
-**The corruption-grief chain.** Void pressure → Merchant Cats → Taz Devils → Cat-King → Fishmonger's Row → Vincenzo Tuna → Connie + Aldo → Corrupted Cats colonize grief. The chain was already present in the HTML; the arc surfaces it.
+The report marks three living-world features unbuilt. Its own hedge is the tell: *"no confirming
+grep."* That is accurate. None was run.
 
-**Five-act vignette structure (La Riva).** Five objects (net/crate/account book/key/market), two perspectives per act, the gap between perspectives carries the emotion. Design principle: "Never declare the emotion. Name the object. Name what the person does with it."
+**Map warmth gradient.** `function _getNodeMapColor(nodeSlug) {@27562` — reference build line
+25,232, which is **four lines** after `_getGigaultState()`, cited correctly on the previous page.
+It reads `NODE_NPC_KEYS`, then returns progressively warmer browns at fav ≥ 1 / 2 / 3. Two live
+call sites: the minimap render loop (`const warmColor = _getNodeMapColor(code);@37342`, applied to
+every visited or trail cell) and `cell.style.background = _getNodeMapColor(slug);@27620`.
 
-**Quest chain:** quest_la_riva_01 (visit FR), quest_la_riva_02 (5 Corrupted Cat kills → Vincenzo's Net), quest_la_riva_03 (deliver Old Tuna Account Book to Kenickie). Kenickie's final line: *"Yeah. Okay. I'll hold onto this."*
+**Final map render.** `function _renderFinalMap() {@27605` — reference line 25,275, forty-three
+lines from the same neighbourhood — invoked at `_renderFinalMap();@28336`, inside the victory
+ceremony, under the comment `// L44-S: final map render before victory modal`.
 
-**Romance layer.** `ROMANCE_QUOTES` (21 Chrétien de Troyes quotes), `NPC_ROMANCE_PREAMBLES` (6 prior-act preambles), `NPC_ROMANCE_VIGNETTES` (6 once-per-run post-sleep vignettes), `INN_DREAMS` (flag-gated conditional dream text).
+**Void's First Sign.** At the reference build, lines 32,789–32,800: a real `r === 4 && c === 3`
+branch adding a `void-flicker` class in Act I (3 CSS hits), a click handler writing
+`S_story.voidSignClicked`, and that field declared in `_S_DEFAULTS` at reference line 21,187 —
+**one line below** line 21,186, which the report cites correctly for Brynn's three maintenance
+flags. Distinct verdict from the other two: this one was **live when the report denied it and has
+since been RETIRED** (`void-flicker` 3 → 0, `voidSignClicked` 2 → 0 at HEAD).
 
-**Hour counter wiring.** 5 action types wired to `hoursElapsed`/`hoursSinceSlept`.
+The pattern is the finding. This document's transcribed tables are perfect and its *absence
+claims* score zero for three. Citing a line and searching a region are different acts, and
+proximity offers no protection: an author reading line 25,228 will not notice line 25,232 unless
+they grep for it.
 
-**Distributed grief.** Froberger's journal entries 12, 17, 29, 41 as the grief of epistemic failure. Brynn's cup, Yael's corner, Bruhns's manifold — the prior-act preambles as Chrétien-derived attachments.
+> **Playability note.** These are not incidental. The warmth gradient is the only place the game
+> renders friendship *spatially* — the map literally warms where you have been kind. Declaring it
+> unbuilt for two months is how a shipped feature goes unmentioned in every doc that follows.
 
-### Current HTML relevance
+### B. Corelli — 0 of 5 stops, sourced to a comment that is itself wrong
 
-**The Fishmonger's Row node uses code `AMS`, not `FR`.** Node at line 8,028: `AMS: { num:79, code:'AMS', name:'ruins', label:"Fishmonger's Row" }`. The lab report refers to it as `FR`. The code changed at some point; the content matches perfectly.
+The report states the appearance sequence "shifted to `TL/RD/IS/WM/IN`". At the reference build
+`CORELLI_APPEARANCES` holds `LCY / LDE / BK / NUE / TLL`. Zero match.
 
-**`connie_tuna` and `aldo_sardino` are live in `NPC_DIALOGUES`** at lines 9,158–9,159. The vignette five-act structure lives in their dialogue pools: Connie's `dearFriend` line *"The key still opens the lock. I tried it. The lock is in the rubble but it opens"* is the Act IV vignette compressed into one sentence.
+Two sources are cited. The first is the const's own header comment, which does say
+`TL/RD/IS/WM/IN` — and is the wrong authority: §DOC-02g proved from the archive that the original
+codes were `DK/RD/BK/SQ/IN` (the report's own list) and that the comment is a migration-era claim
+about the past, written from memory rather than from the diff. The second is *"the
+`wbapi-server.js` `GET /api/nodes` help text (line 1,467)"*; line 1,467 is a `curl .../api/npc/{id}`
+example inside a quest-authoring walkthrough, and the string `TL/RD/IS/WM/IN` occurs **nowhere in
+that file**.
 
-**All three quests are live** at lines 11,899/11,910/11,923. The `frCatKillCount` counter at line 23,186 increments on Corrupted Cat kills at AMS. At ≥5 with quest active, Vincenzo's Net drops to inventory.
+The document then supplies a mapping — *"DK→TL, BK→IS (somewhere in act 5), SQ→WM"* — for a
+migration that did not occur in the direction stated. `nodeCode:'BK'` sits seven lines below the
+comment that was read.
 
-**All state flags live** at line 21,213: `connieMet`, `fishmongerRowRestored`, `laRivaComplete`, `frCatKillCount`.
+*"Core mechanics unchanged"* is the more expensive sentence. `BK` resolves — to **Birka Shore**
+(`num:241`, act 1), not the Broken Tooth Tavern the arc means (§AUDIT-03y). Stop 3 can therefore
+never fire, `encoded_letter` has no other grant path, and the retroactive-decode payoff is dead —
+the payoff this report's *own* "what still applies" list calls **load-bearing** three lines
+earlier. One page, two adjacent bullets, mutually exclusive.
 
-**Romance layer fully live:**
+### C. A byte-exact ledger with a row that governs nothing
 
-| System | Line | Status |
-|--------|------|--------|
-| `ROMANCE_QUOTES` | 20,507 | Live — 21 Chrétien quotes |
-| `BIRKA_NPC_PROFILES` | 20,810 | Live — includes preamble data |
-| `NPC_ROMANCE_PREAMBLES` | 25,149 | Live — 6 prior-act lines |
-| `NPC_ROMANCE_VIGNETTES` | 25,159 | Live — 6 post-sleep vignettes |
-| `INN_DREAMS` | 24,826 | Live — flag-gated dream text |
+The 12-bit table was checked row for row against `function _missionComplete() {@23648` and is
+**correct in every cell**: all twelve conditions, journal entry 7, `pitTrainingWins >= 3`,
+`defeatedBattles['TLS']`, `_lubeckFriends() >= 3`, `_curseScore() < 10`,
+`visited['LHR'] && level >= 5`, and the `>= 8` return.
 
-The preamble delivery is confirmed at line 21,757: `_preamble` renders the `NPC_ROMANCE_PREAMBLES[key]` line at fav ≥ 2 before the NPC card.
+`allEbReturns:@23656` is the exception, and the error is not in the number:
 
-**`gameDay` is live** at line 21,185. Hour counter fields exist; hour-wiring to specific actions should be verified against live code but the fields are present.
+- The bit needs five `ebReturnDone` flags.
+- `ebReturnDone` has exactly one writer, `function _storyEbReturnBeat(ebCode) {@30358`.
+- Its only caller is the RETURN chip, built from
+  `const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@35865`.
+- `ebCode` iterates `const EB_NPC_DIALOGUE = {@26299`, whose keys are three-letter node codes
+  (`PRN`, `INV`, `SDR`, …), producing `quest_prn_return`.
+- `QUEST_DB` holds twenty return quests keyed by the **legacy two-letter** codes —
+  `quest_ef_return`, `quest_eh_return`, … `quest_prn_return` has **0 occurrences at the
+  reference build and 0 at HEAD**.
 
-**Deferred items from the report remain deferred:**
-- `fishmongerRowRestored: true` sets the flag but FR (AMS) terrain text does not change to `partial_market`
-- Kenickie fav 3 naming line for Covenant Keeper ending not added
-- NG+ `entry42Written` not implemented
+So *"the threshold dropped from 20 to 5 — a significant relaxation"* relaxes a bit that could not
+be satisfied at **any** threshold on the day the sentence was written.
 
-### What still applies
+**§EPIC-01 already owns the cause** and dates it precisely: `c1d5a94` (2026-05-29) renamed the
+`NODE_MAP` and `EB_NPC_DIALOGUE` keys and left the forty `QUEST_DB` ids as `quest_ef_*`. Nothing
+here re-dates that. What this document adds is the **consumer side**: eighteen days after the
+break, an author reading the same twelve lines saw a threshold and reported a design decision.
+The defect is invisible from the ledger — the number is right, the flag is unwritable, and
+nothing in the expression says so. The same break costs the warmth gradient of §IV-A its top
+tier: `_getNodeMapColor`'s `ebReturned` branch returns a green (`#3a7a5a`) that no save can reach.
 
-- **The Fishmonger's Row node is AMS, not FR.** Any reference to "FR node" in future work means `AMS`.
-- **The vignette principle is canonical.** "Name the object. Name what the person does with it. The gap is the emotion." Applied to NPC preambles, quest dispositions, dream text. Don't declare the feeling.
-- **NPC_ROMANCE_PREAMBLES render at fav ≥ 2 before the NPC card.** These are single italic lines: *"The cup is already on the table."* They are the prior-act technique from Chrétien. Don't lengthen them.
-- **`connie_tuna` and `aldo_sardino` are `NPC_DIALOGUES` entries, not `BIRKA_NPC_PROFILES` entries.** They live in the wider dialogue pool, not the Birka six. This is correct — they are La Riva arc NPCs, not city NPCs.
+### D. The sixth key is `auros`
 
----
+Report 1 lists the design→live key renames. Three are right (`quill`, `pachelbel`, `crov`); the
+fourth is not. `NPC_DIALOGUES` keys read `yael, brynn, quill, pachelbel, crov, **auros**`, and both
+`NPC_ROMANCE_PREAMBLES` and `NPC_ROMANCE_VIGNETTES` key `auros:` to match. The *flag* took the
+surname (`bruhnsDepthsReported`) and the *scene const* took the surname (`BRUHNS_CO_SCENE`) — the
+key did not. §DOC-02ab had already adjudicated this exact split; the synthesis re-derived it and
+got it wrong, which is what a cross-reference document is supposed to prevent.
 
-## Report 7 — `lab-report-friendships-with-magic.md`
-**Original scope:** Session postmortem — Layers 0–42 verification, 5 new systems, project philosophy (2026-05-22)
-**Still active:** All 5 systems live; philosophy timeless; line count at session close was 12,637 — now 33,721
+### E. The prompt cache that has never written a token
 
-### What the report said
+Report 2's summary repeats *"prompt caching on the system block"* as a working feature, inherited
+from its source without test. §DOC-02ac measured it against the endpoint's own log: **20 calls,
+`cache_read:0` and `cache_write:0` on every row.** The system block runs 451–546 tokens against
+Claude Haiku 4.5's 4,096-token minimum cacheable prefix; below the floor the API caches nothing
+and reports nothing. The comment `// Claude SDK — prompt caching on system block` is still in
+place at HEAD. Open as **§DX-02ak**.
 
-**Five systems implemented:** waypoint exit highlighting (`exit-waypoint` class, BFS-first-step hint), Hunt Mode toggle (persistent mode vs. per-trip decision), EB CHA check DC 17 with gut-punch fail panel (non-lethal, NPC still pays ceiling), guaranteed monster weapon drops with auto-equip, roll line shown on pass.
+Two smaller corrections to the same section: the endpoint moved to `js/wbapi-server.js` (now at
+line 10,595), so the bare `wbapi-server.js:11,408` citation is exact-at-reference and stale-at-HEAD;
+and of the three "not implemented" extensions, `worldTruth`/`enemy` is not the small edit it
+appears to be — the two registries do not share a state vocabulary (§DX-02al).
 
-**Project philosophy:** Curse of Knowledge (Froberger sealed the Void alone; didn't make friends; the loop continues). Groundhog Day logic. MIT License as the act of leaving the room clean. Walking game with reading. **Friendships with Magic** as the thesis — *"Magic that is the byproduct of choosing people over efficiency."*
+### F. Where the report is right and the engine is wrong
 
-**Architectural patterns:** `S_story` as source of truth, render functions as idempotent re-renders, every BFS use is the same BFS, every mode is a boolean in `S_story` and `_S_DEFAULTS`.
+The Yael Named Report gate, from the report's "what still applies": `fav >= 2` **and Act VI+** and
+`yaelEscortUsed`. The live gate agrees exactly — `yaelNamedReportDelivered) {@32491`, guarded by
+`_npcFavor('yael') >= 2 && (S_story.actNumber || 1) >= 6`, at node `LHR`.
 
-### Current HTML relevance
+Both other sources disagree with the code:
 
-**All 5 systems are fully live** — confirmed across prior synthesis reports (Parts 1–3) and the current HTML.
+- `const YAEL_NAMED_REPORT_SCENE = {@28048` — its own header comment says *"fav >= 2 Act IV+"*.
+- `world.md:617` says the scene fires *"at a `LLA` or `HKG` visit (fav_yael ≥ 2, Act IV+,
+  `yaelNamedReportFired` not set)"* — wrong node, wrong act, and `yaelNamedReportFired` is a
+  **phantom flag with 0 occurrences in the engine**.
 
-**The project has grown 2.67× since this report** (12,637 → 33,721 lines). All architectural patterns described remain stable. `S_story` is still the source of truth. `storyRender()` still destroys and rebuilds its DOM targets. `_bfsGridPath()` (renamed from `_bfsPath()` in the §CELL redesign) is still the single pathfinding primitive.
-
-**The philosophical material is timeless and does not have a "current HTML relevance" entry** because it is not implementation — it is the reason for the implementation. Read it when you need to understand why this project exists. Don't check it for API details.
-
-### What still applies
-
-- **The four architectural patterns are still invariants.** `S_story` is truth. Renders are idempotent. BFS is one function. Modes are state booleans. Do not deviate.
-- **The thesis: Friendships with Magic.** This is not in the game. It is the design contract the game fulfills. *"The Void is sealed. The people are here. That is the difference between Froberger's loop and yours."*
-- **The design contract from the appendix:** runs without setup, doesn't phone home, readable, changeable, complete enough to play and incomplete enough to extend, made with care, made for joy. Every addition should honor this.
-
----
-
-## Report 8 — `lab-report-kindness-calculus.md`
-**Original scope:** IEEE spoof — formal analysis of 6 arc templates, prosocial mechanics, token automata, bioluminescent spanning tree (2026-05-28)
-**Still active:** All 6 templates live; formal insights accurate
-
-### What the report said
-
-**Six arc templates** (§SPARK, §HUNT, §PORT, §WHODUNIT, §ALCHEMY, §WISDOM) with formal treatment: prosocial DC mean 11.9 (vs combat DCs 11–20); token ring protocol for arc state management; bioluminescent colonial organism as unplanned spanning-tree connector across §SPARK-01/§SPARK-02/§ALCHEMY-01; Cook who never apologized as `P(Saltwick people = untrustworthy)` failing to converge despite counter-evidence; Roen as ideal Bayesian agent with wide evidence range.
-
-**Key theorems** (as documented): Prosocial EV dominates combat 6:1 in §SPARK family; token chains are formally equivalent to token ring protocols; bioluminescent organism is the minimal spanning tree across three otherwise independent arcs; wrong-theory NPCs implement sympathetically correct Bayesian priors.
-
-**Quest state machine formalism.** Q = (S, Σ, δ, s₀, F). `activateCond` implements transition from inactive → active. `completeFn` implements transition active → complete. State space grows linearly; dependency expressiveness grows super-linearly. Later arcs read earlier flags at zero cost.
-
-### Current HTML relevance
-
-**All six templates are live** across the currently implemented arcs. The Kolmogorov complexity argument from the report is confirmed: §WORLDBUILDER-01 (worldbuilder.html) and §EDITOR-01 are implemented, validating the prediction that the game would reach the template-parameterization threshold.
-
-**The prosocial DC cluster at 11.9 average is accurate** for the arcs the report analyzed. Newer arcs (Saul/Paul, Norse, Arthurian, Math World) extend the system but follow the same pattern: investigation and observation checks cluster in the DC 11–14 range; combat DCs are set by monster AC which ranges much higher.
-
-**The Cook who never apologized** (`cookApologized` never set to true) is a permanent design decision. The paper names this "Cook Non-Convergence." It is a theorem about people, not about the game. The flag does not exist because the flag should not exist.
-
-**The bioluminescent spanning tree is confirmed.** The Warmth Eel / drift spore / grandmother's stone are the same colonial organism in three arcs. No design intent produced this — it was discovered when the writers needed a mechanism and reached for established biology. The spanning tree was already in the graph.
-
-**Roen as Bayesian agent:** His four-thousand-mile journey to confirm grandmother's literal directions (*"I would do it again. I understand it now."*) is live across the §ALCHEMY-01 arc. The characterization holds.
-
-### What still applies
-
-- **The quest state machine formalism is the correct mental model.** `activateCond` = transition guard; `completeFn` = acceptance condition; flags as the state alphabet. New quests should be designed as tuples Q = (S, Σ, δ, s₀, F) — whether or not anyone writes it that way.
-- **The Cook never apologizes.** This is correct. Do not add a resolution to this beat.
-- **The prosocial DC cluster is design intent.** Keep new prosocial checks (observation, befriending, understanding) in the DC 10–14 range. Keep combat DCs implicit in monster AC. The quantitative preference — *it is statistically easier to understand the situation than to fight through it* — should be preserved in future arc design.
-- **The token ring pattern is the correct model for single-progress arc items.** One token in circulation at a time. Create before destroy. The §SPARK-02 chain (fish scale → harbor bead → drift spore → letter of clearance) is the canonical example.
-
----
-
-## NPC & Narrative Summary — What Is Structurally True Right Now
-
-**`NPC_DIALOGUES` and `BIRKA_NPC_PROFILES` are two parallel structures, both required.** `NPC_DIALOGUES` carries cycling quote pools (impartial/questActive/friendly/dearFriend). `BIRKA_NPC_PROFILES` carries portrait data and static greeting/profile text. `_renderNpcCard()` reads both.
-
-**Six Birka NPCs with full arc closure.** Yael, Brynn, Quill/Couperin, Pachelbel, Weckmann/Crov, Auros/Bruhns — each has a world truth, 4 dialogue states, a scene const (Brynn's Vigil/Bruhns CO/Yael Report), and a mission bit. `_missionComplete()` evaluates 12 bits returning `>= 8`.
-
-**La Riva arc is live at node AMS (not FR).** Three quests, `connie_tuna` and `aldo_sardino` in `NPC_DIALOGUES`, `frCatKillCount` counter, Vincenzo's Net key item. Kenickie fav → 3 on delivery. The Row does not rebuild.
-
-**The romance layer is fully live.** `ROMANCE_QUOTES` (21 quotes), `NPC_ROMANCE_PREAMBLES` (6 prior-act lines at fav ≥ 2), `NPC_ROMANCE_VIGNETTES` (6 post-sleep vignettes), `INN_DREAMS` (flag-gated per-node). The prior-act technique (Brynn's cup, Yael's corner) is Chrétien-derived and load-bearing.
-
-**Corelli's 5-appearance arc is live.** `fav_corelli` derived from purchase count. `last_cipher` free at appearance 5. `encoded_letter` footnote retroactively decoded. `kings_seal` grants +1 to death saves.
-
-**The NPC speak endpoint is live in WBAPI.** `GET /api/npc/{id}/speak` handles player-prompt NPC responses via Claude Haiku. Falls back to seed text without API key. Logs to `npc-speak.log`.
-
-**The vignette principle governs NPC writing.** Never declare the emotion. Name the object. Name what the person does with it. The gap is the emotion. This applies at every scale: arc level (La Riva five acts), NPC level (Brynn's cup / Yael's corner), quest disposition level (one revealing statement, not a plot summary).
-
-**The Groundhog Day mechanic is live.** `_missionComplete()` + `_curseScore()` produce four ending variants. The loop ends when you choose people over efficiency. The Cook never apologizes.
+Filed as **§DX-02bx** 🟢. A lab report outscoring both the engine comment and the maintained home
+doc is rare enough to record: reports are usually the stale party, and here the archive-facing
+document is the only one that kept the number.
 
 ---
 
-*Synthesis Part 5 of 7 · Next: Part 6 — Quest Arcs · 2026-06-16*
+## V. What Still Applies
+
+- **`NPC_DIALOGUES` and `BIRKA_NPC_PROFILES` are two structures and both are required.** Quote
+  pools in the first, portrait/greeting in the second; `_renderNpcCard` reads both. Keys must
+  agree — the `auros`/`bruhns` split in §IV-D is what happens when they drift.
+- **Visit-count cycling is load-bearing — do not convert to random.** `pool[count % pool.length]`
+  guarantees a player sees the whole pool across repeat visits. Randomness would let the sixth
+  line never surface, and the sixth line is usually the one that pays off the arc.
+- **`NPC_ACT_THREE_LINES` is additive.** It injects with priority once, then the regular cycle
+  resumes. Do not let it replace the pool.
+- **Occupation is the lens.** Each `meta` carries a `worldTruth` and an `enemy`, surfaced on the
+  card at fav ≥ 2. Yael sees suppressed riots; Brynn sees invisible labour; Bruhns sees diagnosis
+  as worldview. Flattening these into generic flavour costs the layer its reason to exist.
+- **Gigault is the off-screen-character template.** Never interactable, named by friendly NPCs,
+  three rotating stall states, no quest hooks. Any new "city person who exists" copies it.
+- **Arc triggers are triple-gated and the gates are the point.** Brynn `fav >= 1` ∧ Act II+ ∧
+  `!brynnKeeperStoryTold`; Yael `fav >= 2` ∧ **Act VI+** ∧ `yaelEscortUsed`. Collapsing them
+  delivers the scene at the wrong emotional moment.
+- **Neither Bruhns's confession nor Yael's report branches on player response.** Both are faits
+  accomplis; the player witnesses. Adding outcome branches breaks the arcs' shared premise.
+- **Bruhns's `dearFriendWithTheory` is the only cross-arc disclosure gate in the game.** It appends
+  a confirmatory — not explanatory — line when `s29LineDelivered:@23099` is set. The player must
+  have met the theory elsewhere before Bruhns will confirm it. Worth copying; worth not breaking.
+- **The vignette principle governs all NPC writing.** *"Never declare the emotion. Name the object.
+  Name what the person does with it. The gap is the emotion."* Connie's dear-friend line is the
+  whole La Riva Act IV compressed to one sentence: *"The key still opens the lock. I tried it. The
+  lock is in the rubble but it opens."*
+- **Preambles render at fav ≥ 2 and stay one line.** *"The cup is already on the table."* The
+  technique is Chrétien de Troyes by way of `ROMANCE_QUOTES`; lengthening them destroys it.
+- **`fav_corelli` is derived from `corelli_purchase_count`, never assigned.** `last_cipher` is free
+  at appearance 5 by design — do not price it.
+- **Any reference to "the FR node" means `AMS`.**
+- **The Cook never apologizes.** `cookApologized` does not exist because it should not exist.
+- **Prosocial DCs cluster at 10–14; combat DCs live in monster AC.** The quantitative preference —
+  *it is statistically easier to understand the situation than to fight through it* — is design
+  intent, not accident.
+- **The four architectural invariants hold at 2.67× the file:** `S_story` is truth; renders are
+  idempotent; BFS is one function (`_bfsGridPath`); every mode is a boolean in `_S_DEFAULTS`.
+
+---
+
+## VI. Structurally True Right Now
+
+Six Birka NPCs with four dialogue states each, a scene const apiece, and a mission bit apiece.
+Three companion arcs live. The romance layer complete. Corelli's five-stop arc live **except stop
+three**, which cannot fire. The La Riva chain live at `AMS`. The speak endpoint live, without the
+caching its comment claims. The map warms where you were kind, and renders itself one last time
+when you win.
+
+`_missionComplete()` needs 8 of 12 bits. One is pinned false by §EPIC-01, one is a tautology at
+both call sites, and one is guarded by a comparison that can never be false. The design's stated
+slack is therefore narrower than the number suggests — the ending gate is a real mechanism
+pointed slightly wrong, and §EPIC-01 is the row that straightens it.
+
+> *"The Void is sealed. The people are here. That is the difference between Froberger's loop and
+> yours."* The engine can now transmit that sentence. It cannot yet award it.
+
+---
+
+## VII. Verification Record (§DOC-02bf, 2026-08-14)
+
+- **Reference:** `89fa13b` (2026-06-16 12:20:47, 33,721 lines — exact). File mtime `14:04:08`,
+  commit `2d7d625` at `14:04:42`: a **34-second** birth window; `roll2hit-v3.html` untouched
+  between the two.
+- **Citations:** 46 total — 43 exact, 2 landing on the marker/comment line immediately above the
+  named construct (`NPC_DIALOGUES` 9,146→9,147; `AMS` 8,028→8,029), 1 pointing at a real line that
+  does not contain the claim (`wbapi-server.js` 1,467).
+- **Transcribed figures:** 12/12 ledger bits · 21 romance quotes · 6 preambles · 6 vignettes ·
+  3 maintenance flags · 5 scene flags · 2.67× growth — **all exact.**
+- **Filed:** §DX-02bx 🟢 (Yael act-gate drift, 3 wrong facts across 2 sources).
+  **Corroborated without re-filing:** §EPIC-01 (already dates the cause to `c1d5a94`, 2026-05-29,
+  and already names `allEbReturns`; this pass adds only the consumer-side reading) · §AUDIT-03y ·
+  §DX-02ak · §DX-02al · §DOC-02ab · §XP-01 (independently cites `_getNodeMapColor` as live).
+- **Method additions:** instruments 55 (unverified negatives are a third evidence class, and the
+  worst) and 56 (a relaxed threshold on an unwritten flag is a change of zero).
+
+*Synthesis Part 5 of 7 · Next: Part 6 — Quest Arcs*
