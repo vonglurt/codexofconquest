@@ -2,138 +2,202 @@
 
 # Lab Report — §TIMELESS-01: Timeless One-Cell Movement + Hunt Feature Removal
 
-**Date:** 2026-06-26
-**Status:** SPEC (locked; pre-implementation — no `roll2hit-v3.html` edits yet)
-**Scope:** Movement time model + full removal of the Hunt/Stalk subsystem
-**Related:** §WALK series (navigation core), §CELL-03 (one-cell MUD movement), §DATA-01 (quest data/code separation)
+**Date:** 2026-06-26 · **Verified:** 2026-08-14 (§DOC-02bl)
+**Status:** ✅ **SHIPPED** — 4 of 4 increments plus an unplanned follow-up, all on the spec date
+**Reference commit:** `017d7d8` (every line number in the original spec was taken against it)
+**Related:** §WALK · §CELL-03 · §ARCH-01 (UQF) · **§KG-01 — see §5**
 
 ---
 
-## 1. Motivation (user directive, 2026-06-26)
+## Abstract
 
-> "remove all walkable gap distances. that concept should not exist. The game should still be walkable. The position will move only N,E,S, or W. There should be no mention of time warp traveling, and the hunting time bonus. the screen, the entire concept is gone, we now move only one cell at a time (lat/long), or whatever the map has for cell movement N,E,S,W."
+The game charged an hour of a 49-day doom clock for every cell of walking. This report specified
+removing that charge and deleting the Hunt/Stalk subsystem built on it. Both shipped the same day
+(`7d1418c`, `7952752`, `5a54657`, `1d6263a`) plus a documentation sweep (`790d4f3`).
 
-Resolved into three decisions (via clarifying questions):
+Re-measured 49 days later: **the movement half is intact; the removal half is not.** Twelve days
+after this report closed, §KG-01 (`8168f0e`) reintroduced a *different* mechanic under the
+*identical* identifiers — `huntMode`, `storyToggleHunt`, `_updateHuntBtn`, a 🎯 button. Six sites
+across the engine and three maintained docs still certify a removal that has been undone, including
+one engine comment announcing the deletion of two functions defined 28 and 39 lines above it.
+
+The spec's pointer accuracy is **13 of 13 exact**. Its one substantive error is a single adjective.
+
+---
+
+## 1. Motivation and design intent
+
+> *"remove all walkable gap distances. that concept should not exist. The game should still be
+> walkable. The position will move only N,E,S, or W. There should be no mention of time warp
+> traveling, and the hunting time bonus. the screen, the entire concept is gone, we now move only
+> one cell at a time (lat/long), or whatever the map has for cell movement N,E,S,W."*
+> — user directive, 2026-06-26
 
 | # | Decision | Chosen |
 |---|----------|--------|
-| D1 | Time/clock system | **Only movement is timeless** — keep the `⏱ Hours` HUD, fatigue, and Day 1→49 deadline; moving a cell no longer advances time. Battles / sleep / fishing / short-rest still cost time. |
-| D2 | Hunt Mode | **Remove the entire feature** — 🎯 button, HUNT cards/accordion, stalk modal, `huntMode` state, hunt-only helpers. |
-| D3 | Rollout | **Plan + lab report first**, then implement in reviewable increments (one per "continue"). |
+| D1 | Time model | **Only movement is timeless.** Keep the `⏱ Hours` HUD, fatigue, Day 1→49. Battle, sleep and rest still cost time. |
+| D2 | Hunt Mode | **Remove the entire feature** — button, cards, stalk modal, state, helpers. |
+| D3 | Rollout | Lab report first, then one reviewable increment per "continue". |
 
-### 1.1 What "walkable gap distance" actually is
+### 1.1 Why this makes the game better to play
 
-Investigation (two Explore passes) confirmed the **runtime is already pure one-cell N/E/S/W movement** (§CELL-03 / §WALK-2 `Mover.move`). There is **no** multi-cell gap travel, warp, fast-travel, or travel screen in the game. Clicking a non-adjacent node already refuses with *"not reachable in one step."* So "gap distance" survives only as:
-- leftover **hint wording** in the map-click handler, and
-- the **worldbuilder/tooling** `fill-gap` / `maxGap` / `axisDist` concept — already being retired in **§WALK-3** (Inc 2 410'd `fill-gap`/`rip-and-connect`).
+The doom clock is the game's central pressure — seven Codex Shards, forty-nine days. A resource that
+tense only works if the player can see what it is charging them for. An hour per cell put the
+clock's largest expense on its least interesting action, and taxed the one thing the project holds
+inviolable: **free movement** (invariant #1). Walking became a budget item and exploring became
+something to feel guilty about.
 
-No runtime movement-logic change is required for "no gap distance"; only wording cleanup.
+Making movement free moves the whole cost onto **decisions** — fighting, resting, sleeping. Those
+are moments the player chose. Curiosity stops competing with survival, the 416-node world becomes
+something to wander rather than ration, and the deadline survives with more force, not less, because
+everything still on it is something the player actually did.
 
-### 1.2 What "time warp traveling" is
+Hunt removal followed from the same logic: that era's Hunt forced encounters to a **guaranteed
+100%** and charged 2 hours for it — a mode whose whole function was converting time into fights.
+With movement free, its premise was gone.
 
-The in-game **hours clock** (`S_story.hoursElapsed`, shown in the HUD as `⏱ Hours`) advances on several actions. Per D1, the only change is that **moving a cell stops advancing it**. The clock, fatigue, and Day-49 deadline remain.
+### 1.2 What "walkable gap distance" turned out to be
 
----
-
-## 2. Current-state inventory (line numbers as of commit `017d7d8`)
-
-### 2.1 Movement time advancement
-| Site | Lines | Action | Disposition |
-|------|-------|--------|-------------|
-| `cellMove` | 25762–25763 | `hoursElapsed`/`hoursSinceSlept` += 1 **per cell moved** | **REMOVE** (D1) |
-| `_storyRollInit` (battle start) | 22337–22338 | += 1 per battle | keep |
-| short-rest button | 6449–6450 | += 1 per short rest | keep |
-| `storyShortRest` fn | 23413–23414 | += 1 per short rest | keep |
-| `storyQuestHunt` | 26726–26727 | += 2 per hunt | **REMOVE with hunt** |
-| sleep | 31909–31910 | += 8, reset fatigue | keep |
-
-Movement is the **only** time site removed. `_enterEmptyCell` and `storyRender` carry no time of their own — they run inside `cellMove`, so removing the two `cellMove` lines makes both named-node and empty-cell entry timeless.
-
-### 2.2 Hunt/Stalk subsystem (full removal)
-
-**State (`_S_DEFAULTS`)**
-- `huntMode: false` (20894 + duplicate 20922) → **remove**.
-- `slStalksWon: 0` (20892 + 20919) → **keep** (see §3) — it counts BMA battle wins, not stalks.
-
-**DOM / HTML**
-- `#btn-hunt-toggle` 🎯 d-pad button (4290) → remove.
-- Stalk modal `#story-stalk-modal` / `#stalk-card` / `#btn-stalk-wait` / `#btn-stalk-abandon` (4388–4399) → remove (already never shown — legacy/dead).
-
-**CSS**
-- `.story-card-btn.btn-hunt` (1054–1055, dark 3030–3034) → remove.
-- `#story-stalk-modal` / `#stalk-card` / `#btn-stalk-wait` / `#btn-stalk-abandon` (2174–2206, 3203–3211) → remove.
-
-**Functions (all hunt-only → remove)**
-- `storyToggleHunt` (32826–32832), `_updateHuntBtn` (32814–32824)
-- `storyQuestHunt` (26713–26734), `storyQuickWait` (26647–26658)
-- `_stalkedMonsterPick` (32970–32985+), `_getQuestTargetKeys` (32957–32968)
-- `HUNTING_GROUNDS` constant (9228–9296) — used only by `storyQuickWait` (26649) + hunt card (29763)
-
-**storyRender hunt UI**
-- "Stalk" section + HUNT card + accordion + monster rows (29792–29887)
-- per-quest "🎯 Hunt" cards (29900–29907)
-
-**Encounter logic (`cellMove`)** (25822–25831)
-- Replace the `huntMode ? 1.0 : baseRate` / `_stalkedMonsterPick` / "🎯 Hunt ambush" branch with the **plain path**: always `baseRate` + `_weightedMonsterPick` + "Wild …" label.
-
-**`pb.stalk` flag + guards**
-- Set at 26653, 26729, 29855, 29864 → gone with the functions/UI above.
-- Guards `!pb.stalk` at 22898 and 32217–32218 → simplify (always true once nothing sets `stalk`); leave behavior identical.
-
-**Wiring / misc**
-- `btn-hunt-toggle` listener (33012) → remove.
-- Escape-key stalk-modal close (32903) → remove.
-- Stalk-modal hide on `storyRender` (27334) → remove.
-
-### 2.3 Time HUD & costs that STAY (D1)
-- `⏱ Hours` HUD (`#s-hours`, 3927; updated 31783) — **keep**.
-- Fatigue: `hoursSinceSlept >= 24` → battle disadvantage (22716) — **keep**.
-- Day 1→49 deadline; advances on sleep only (31909) — **keep**.
-- Action time-cost hints that remain real: fishing `⏱ 1 hour` (29894), combat `⏱ 1 hour` (29923), sleep `⏱ 8 hours` (30197), short rest `⏱ 1 hour` (30232) — **keep**. Only the hunt hint `⏱ 2 hours` (29807) is removed.
+The runtime was **already** pure one-cell N/E/S/W movement (§CELL-03, §WALK): no multi-cell travel,
+no warp, no travel screen, and a non-adjacent map click already refused. "Gap distance" survived only
+as leftover hint wording and the worldbuilder's `fill-gap`/`maxGap` tooling, already being retired by
+§WALK-3 — which is why this report is mostly a deletion. *The concept the directive asked us to
+abolish had quietly abolished itself.*
 
 ---
 
-## 3. Quest impact — `quest_slums_cleanup` (Yael: Slums Cleanup)
+## 2. Method (verification pass, 2026-08-14)
 
-- Definition (19697–19701): `type:'side'`, `activateNode:'LHR'`, `waypointNode:'BMA'`, `completeFn:() => (S_story.slStalksWon||0) >= 3`, reward 80.
-- **`slStalksWon` is mislabeled.** It increments on **any** battle win at node `BMA` (22904–22906: `if (pb && pb.nodeCode === 'BMA') slStalksWon++`), independent of Hunt Mode. The hint already reads *"Head north to the Birka Slums and clear vermin."*
-- **Therefore removing Hunt Mode does not break this quest.** Three battles at BMA still complete it; encounters at BMA still trigger via the normal terrain encounter rate on cell entry/movement (just no longer forced to 100%).
-- **Rework = clarity only (optional):** rename `slStalksWon` → `slBattlesWon` with a one-line load-compat shim (`S_story.slBattlesWon ??= S_story.slStalksWon || 0`) so existing saves carry over. If we keep the name, zero migration is needed. **Decision: keep the field name** to avoid save churn; add a code comment that it counts BMA battle wins. (Re-evaluate during Inc D.)
-
----
-
-## 4. Implementation increments
-
-| Inc | Title | Touches | Verify |
-|-----|-------|---------|--------|
-| **A** | Movement timeless | delete 2 lines in `cellMove` (25762–63) | move a cell → `⏱ Hours` unchanged; battle/sleep still advance it |
-| **B** | Hunt logic + state | `cellMove` encounter branch → plain path; remove hunt-only fns (`storyToggleHunt`, `_updateHuntBtn`, `storyQuestHunt`, `storyQuickWait`, `_stalkedMonsterPick`, `_getQuestTargetKeys`, `HUNTING_GROUNDS`), `huntMode` default, `pb.stalk` flags/guards, listener/escape/nav-hide | grep clean: no `huntMode`/`stalk`/`HUNTING_GROUNDS`/`_stalked` refs remain; page loads; encounter still rolls on move |
-| **C** | Hunt UI/DOM/CSS | remove 🎯 button (4290), stalk modal (4388–4399), hunt CSS, hunt cards in `storyRender` (29792–29887, 29900–29907) | no dead element IDs referenced; story node renders without HUNT card; no console errors |
-| **D** | Quest + wording + docs | confirm `quest_slums_cleanup` completes via BMA wins (comment the field); reword map-click "not reachable in one step" if it reads as distance; sync `mechanics-combat.md §Hunting Mode`, `index.md`, state-field count, `plan.md` | quest completes after 3 BMA wins; docs reflect removal |
-
-**Ordering rationale:** A is independent and tiny. B removes the JS that C's DOM/CSS references — but C's elements only *call* B's functions via listeners, so B-before-C avoids a window where the UI calls deleted fns. (Alternatively C-before-B; either is safe if done in one session. Lock **B → C**.)
-
-**API-First note:** Hunt removal, the time model, and the quest completion logic are **code** (engine functions, `_S_DEFAULTS`, `QUEST_DB.completeFn` per §DATA-01), not WBAPI-expressible data. Direct HTML edits are the correct path here; no `wbapi-server.js` endpoint applies. No node/monster/terrain CRUD is involved.
+Every named symbol batched through one `grep -c` loop against live `roll2hit-v3.html`; `git log -S`
+with **no pathspec** on each, to separate *retired* from *never shipped* — and, as it turned out, to
+catch a *re-added*; spec line numbers replayed against `git show 017d7d8:roll2hit-v3.html`;
+`_S_DEFAULTS()` censused by a brace-depth walk, not a line regex.
 
 ---
 
-## 5. Risks & non-goals
+## 3. As-built
 
-- **Risk — encounter farming at BMA slows.** Without forced 100% encounters, the Slums quest relies on the terrain base rate. Acceptable (natural pacing); not a blocker. If it proves tedious, a follow-up could raise BMA's `TERRAIN_ENCOUNTER_RATE` slightly — out of scope here.
-- **Risk — stale doc references.** `mechanics-combat.md §Hunting Mode`, the index "Hunt Mode" reverse-lookup rows, and any `HUNTING_GROUNDS` mentions must be retired in Inc D (two-way sync rule).
-- **Non-goal:** the Day-49 deadline, fatigue/disadvantage, the hours HUD, and non-movement time costs all **stay**. This report does not touch combat, fishing, or sleep mechanics beyond removing the hunt hooks.
-- **Non-goal:** no change to `Mover.move` / `mover.js` — movement *direction/position* logic is already correct; only the time side-effect in the `cellMove` caller changes.
+| Inc | Commit | Delivered |
+|-----|--------|-----------|
+| — | `d4fae39` | Spec locked (this report) |
+| **A** | `7d1418c` | Movement no longer advances the clock |
+| **B** | `7952752` | All Hunt/Stalk JavaScript removed |
+| **C** | `5a54657` | Hunt/Stalk UI, DOM and CSS removed |
+| **D** | `1d6263a` | Quest comment · map-click wording · doc sync |
+| **FU** | `790d4f3` | *(unplanned)* Hunt/Stalk residue swept from 7 deeper spec docs |
+
+`function cellMove(dir)@28345` holds zero clock writers and says so at line 28366. Exactly **four**
+`hoursElapsed` writers survive, all on the D1 keep-list: the short-rest button (7149),
+`function _storyRollInit()@24624` at battle start (24650), `function storyShortRest(nodeCode)@25817`
+(25841), and `function storyConfirmSleep()@36244` at +8 (36300). The `⏱ Hours` HUD
+(`id="s-hours"@4190`) and the 24-hour fatigue rule (25046) are live.
+
+The **Stalk** half is gone and stayed gone: `storyQuestHunt`, `storyQuickWait`, `btn-hunt-toggle`,
+`btn-stalk-wait`, `btn-stalk-abandon`, `stalk-card` are all **0 occurrences**; `HUNTING_GROUNDS`,
+`_getQuestTargetKeys` and `_stalkedMonsterPick` survive only inside tombstone comments, which counts
+as dead. Ten `§TIMELESS-01` tombstones remain in the engine. **Nine are true.**
 
 ---
 
-## 6. Acceptance criteria
+## 4. Spec → shipped delta, and the acceptance criteria
 
-1. Moving any number of cells leaves `S_story.hoursElapsed` unchanged; a battle or sleep still advances it.
-2. No `huntMode`, `_stalked*`, `HUNTING_GROUNDS`, `storyQuestHunt`, `storyQuickWait`, `_updateHuntBtn`, `storyToggleHunt`, or stalk-modal identifier remains in `roll2hit-v3.html` (grep-clean).
-3. Story nodes render with **no** HUNT/Stalk card; the d-pad has **no** 🎯 button; no console errors on load or navigation.
-4. `quest_slums_cleanup` still completes after 3 battle wins at BMA.
-5. Encounters still roll on cell movement at each terrain's normal rate.
-6. Docs synced: `mechanics-combat.md`, `index.md`, `plan.md`, state-field count.
+Criteria 1–6 are the spec's own, adjudicated in place.
+
+| # | Claim / criterion | At HEAD | Verdict |
+|---|---|---|---|
+| 1 | **AC1** — movement leaves `hoursElapsed` unchanged; battle/sleep still advance it | 0 writers in `cellMove`; 4 elsewhere, all keep-list | ✅ |
+| 2 | **AC2** — no hunt/stalk identifier remains (grep-clean) | Stalk clean; **Hunt live** | ❌ split (§5) |
+| 3 | **AC3** — no HUNT card, no 🎯 button | button back at `id="btn-hunt"@4752` | ❌ (§5) |
+| 4 | **AC4** — `quest_slums_cleanup` completes on 3 BMA wins | true; §ARCH-01 migrated it to UQF-1.0 `completion.countMin` | ✅ |
+| 5 | **AC5** — encounters still roll on movement at terrain rate | plain path at 28437 | ✅ |
+| 6 | **AC6** — docs synced | synced then, **wrong now** | ❌ (§6-A) |
+| 7 | Encounter branch → plain `baseRate` | plain, then **re-branched** by §KG-01 at 28440 | ⚠️ partial |
+| 8 | `slStalksWon` kept, no save migration | kept; writer 25328, comment 25325 | ✅ |
+| 9 | Map-click wording reworded | phrase 0 occurrences (`1d6263a`) | ✅ |
+| 10 | 13 cited line numbers | 13/13 byte-exact at `017d7d8` | ✅ |
+| 11 | Fishing's `⏱ 1 hour` is a real cost that stays | **never had a clock writer** — not at `017d7d8`, not now | ❌ **NOT SHIPPED** (§6-B) |
+| 12 | State-field count synced | wrote *"All 193"*; the function held **486** that day | ❌ **NEVER CORRECT** (§6-C) |
+
+**4 of 6 acceptance criteria hold.** Both failures are the same event, and it is not this report's
+fault.
+
+---
+
+## 5. The finding: a removed feature's vocabulary was re-used
+
+Twelve days after this report closed, `8168f0e` (§KG-01, 2026-07-08) shipped a new Hunt Mode — a
+genuinely different mechanic:
+
+| | Removed (June) | Re-added (July) |
+|---|---|---|
+| Encounter rate | forced **1.0**, guaranteed | `baseRate × 2`, **capped 0.8** (28440) |
+| Monster choice | quest-target picker | 80/20 bias toward monsters ≤ player level (38245) |
+| Time cost | +2 hours per hunt | none — movement is timeless |
+| Scope | quest cards + stalk modal | wilderness cells only |
+| Toggle | `btn-hunt-toggle` | `btn-hunt` (4752) |
+
+Same name, same state field, same two function names, different behaviour. The new design is
+**better** and consistent with D1 — a grinding aid that costs no clock — and it lives entirely in
+`function _enterEmptyCell(r, c)@28420` and `function _weightedMonsterPick(terrain)@38237`, whose only
+caller is that function; named-node battles never consult it.
+
+The defect is not the feature. It is that **nothing updated its predecessor's paperwork**, and the
+paperwork was thorough. Most vividly, line 38113 still reads:
+
+> `// §TIMELESS-01: _updateHuntBtn / storyToggleHunt removed with the Hunt feature.`
+
+`function _updateHuntBtn()@38074` and `function storyToggleHunt()@38085` are defined 39 and 28 lines
+**above** that sentence. *The tombstone outlived the corpse, and the corpse got up.*
+
+The general hazard, in its sharpest form: **a retired feature's vocabulary is not free to re-use.**
+The existence check passes and the grep for the old name succeeds, so every claim about the removal
+reads as confirmed while being false.
+
+---
+
+## 6. Risk register and defects filed
+
+| Risk (as filed) | Outcome |
+|---|---|
+| BMA farming slows without forced encounters | **Resolved, not as proposed.** The spec suggested raising BMA's terrain rate; §KG-01 restored deliberate grinding globally instead. The follow-up was never needed. |
+| Stale doc references to Hunt/Stalk | **Materialised, then inverted** — Inc D and `790d4f3` swept them; §KG-01 made the corrected docs wrong again. |
+| Non-goals: deadline, fatigue, HUD, non-movement costs, `mover.js` untouched | **All held.** |
+
+**A · §AUDIT-03be** 🟢 — six sites certify a removal §KG-01 undid: the engine comment at 38113;
+`mechanics-combat.md:690`, which lists three live symbols under *"Removed code/state"*;
+`docs-node-network.md:306`; `index.md:409` and `:523`. The same `mechanics-combat.md:688` adds
+*"movement and battle no longer advance the clock"* — **battle always did**, by D1 of this very
+report, and the engine's comment at 28366 says so.
+
+**B · §DX-02bz** 🟡 — the fishing card advertises `⏱ 1 hour · fishing session` (35371) and charges
+nothing. There were exactly **six** clock writers at `017d7d8` — the six in this report's own §2.1
+table — and none was fishing; four now, still none. The row also records that sleep advances
+`hoursElapsed` by 8 but the wall clock `hour` by 6, and the wall clock decides night fishing.
+
+**C · §AUDIT-03bf** 🟢 — `index.md:523` reads *"All 193 `S_story` fields from `_S_DEFAULTS()`"*. That
+sentence was written by **this report's own Inc D** (`1d6263a`), and at that commit the function held
+**486** top-level fields while the doc's table listed **205** rows — matching neither denominator on
+the day it was written. At HEAD: **493** and **208**. The word carrying the error is *"All"*.
+
+---
+
+## 7. Conclusion
+
+§TIMELESS-01 did what it set out to do, completely and in a day, and its bookkeeping was unusually
+good: thirteen of thirteen pointers land byte-exact seven weeks later, and it left ten labelled
+tombstones so the next reader would know what had been here. Yael still runs her Slums detail on
+three plain battles at BMA, exactly as predicted — and still will not say thank you.
+
+**The first lesson it demonstrates rather than states.** Its inventory tables, copied out of the
+file, are flawless. Its single wrong claim is one adjective, applied to a line it had transcribed
+*correctly*, four lines after tabulating the evidence that disproves it: fishing's `⏱ 1 hour` was
+called a cost that "remains real" because the hint says so. **Transcription is reliable; the
+characterisation laid over it is not — and sitting beside a correct citation is no protection.**
+
+**The second is what happened afterwards.** A deletion cannot defend its own vocabulary: the careful
+tombstones this report left became six confident false statements, because the next author needed a
+name for a good idea and the best one was lying around unused. *Nothing is quite as reusable as a
+word you have just finished burying.*
 
 ---
 
