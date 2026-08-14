@@ -1,257 +1,470 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report Synthesis — Part 2: Combat & Mechanics
-**Cross-Reference of All Combat & Mechanics Lab Reports Against roll2hit-v3.html**
-**Date:** 2026-06-16 · **HTML baseline:** 33,721 lines · **Source reports:** 7
+
+**Cross-reference of seven Combat & Mechanics lab reports against `roll2hit-v3.html`**
+
+| | |
+|---|---|
+| **Written** | 2026-06-16 13:36:59 · commit `6be4180` (13:37:20) |
+| **Stated baseline** | 33,721 lines — **exact** for `89fa13b`, the last HTML commit before it |
+| **Verified** | 2026-08-13 · §DOC-02bc · against `89fa13b` (the file it read) **and** HEAD (38,712 lines) |
+| **Source reports** | 7 |
+| **Result** | 30 of 32 identifiers resolve · 33 of 37 line citations exact · **one register certifies the opposite of what its own line range contained** |
+
+> **STATUS: HISTORY.** This document is not maintained as a description of the engine. It is kept
+> because its *design rules* are still load-bearing and because the pattern of its errors is
+> instructive. Per §DOC-02 policy, a claim that did not ship is marked **NOT SHIPPED** or
+> **INVERTED** and **kept** — a silently deleted claim reads as one that held.
 
 ---
 
-## Purpose
+## Abstract
 
-Each entry reads the lab report against the live HTML and answers: what was documented, what is the current code, what still applies as working design knowledge. Reports are in `lab-reports/` untouched.
-
----
-
-## Report 1 — `lab-report-leveling-flashbang-condition-economy.md`
-**Original scope:** Layer 18 — character progression (10 levels), Flashbang consumable, ×100 condition repricing (2026-05-21)
-**Still active:** Yes — all three systems are live and extended
-
-### What the report said
-
-Three systems implemented together as Layer 18:
-
-1. **Character progression** — XP economy wired to level gates. Design constraint: session-completable (levels 5–7 in a normal playthrough). Rewards automatic, no build choices, no menus. Tangible combat difference between levels.
-
-2. **Flashbang** — guaranteed ADV on next attack, bonus action cost. Formalizes the 0.5-action bonus phase economy. The design insight: the bonus phase is the creative space where player tactical identity emerges. Flashbang adds a setup option without adding another decision point per round.
-
-3. **CONDITION_GOLD ×100** — pre-battle conditions repriced from single-digit gold to hundreds. Reflects true power of tactical setup. A level-1 character who spends 300gp on Blinded/Restrained is making a meaningful economic decision, not a trivial one.
-
-### Current HTML
-
-| Symbol | Line | Current state |
-|--------|------|---------------|
-| `const XP_LEVELS = [` | 22,375 | Active — 20 levels, max 195,000 XP (was 10 levels at report time; extended in §XL+) |
-| `const CONDITION_GOLD = {` | 22,569 | Active — annotated `// → doc: mechanics-combat.md §Combat Flow` |
-| `const CONDITION_ITEMS = [` | 20,537 | Active — 11 conditions with name/icon/effect/sell |
-| `const CONDITION_ADV = {` | 6,513 | Active — ADV/DIS modifier by condition name |
-| Flashbang in `_D100_TABLE` | 22,465 | Active — `{weight:4, _type:'flashbang'}` |
-| Flashbang in `COMBAT_ITEMS` | 22,409 | Active — `{name:'Flashbang', cost:150, sell:75}` |
-| `_checkLevelUp()` | 23,499 | Active — called from all XP award sites |
-| `_lu_applyGiftsAndFinish()` | 33,502 | Active — awards HP, gold, shield, tattoo at level-up |
-
-The XP table was extended from 10 to 20 levels (0–195,000 XP). The Flashbang is still the only guaranteed-ADV consumable in the game — no mechanic has superseded its niche. CONDITION_GOLD is unchanged in principle; specific values may have been rebalanced.
-
-### What still applies
-
-- **The 1.5 AP economy** is the structural spine of every combat round. All subsequent combat additions (offhand dagger, Action Surge, spell scroll, Flashbang, conditions) are options within the bonus phase — never new decision phases.
-- **The level design constraint** (session-completable, no build menus, automatic rewards) still governs any new progression mechanic. No feature should require the player to choose between two upgrade paths.
-- `_checkLevelUp()` is the single call site for all XP gate processing — called from quest completions, battle victories, and skill checks. Any new XP source should call it.
+Seven lab reports written between 2026-05-21 and 2026-06-05 specified the combat and mechanics
+layer of *The Shattered Codex*: character progression, the Flashbang, condition pricing, the
+health/reward economy, the three-channel loot model, Luck as a seventh ability score, the tattoo
+and chronicle persistence ledgers, and Kenickie's Black Market. This synthesis read all seven
+against the live file and answered, per report, *what was documented · what the code now does ·
+what still applies as design knowledge*. Verification 58 days later finds the **inventory
+exact and the summaries composed**: every table anchor, every quoted statline and 33 of 37 line
+citations land on the byte, while the errors are concentrated in sentences the author wrote in
+their own words rather than copied. The sharpest result is Register 4, where the report certifies
+`_D100_TABLE` as *"consumables only, no magic weapons"* and cites the exact 22-line range that, in
+the file it was reading, held **ten weapon rows, nine of them positive-magic**. The purge it was
+describing had been silently reverted eleven days earlier and did not return for another 68 days.
 
 ---
 
-## Report 2 — `lab-report-drop-rates-balance-and-health.md`
-**Original scope:** Health economy, drop rate design, Cooperative DM Principle, Necklace of Knowledge (2026-05-21)
-**Still active:** Yes — the reward formula and design philosophy are unchanged
+## I. Purpose, intent, and method
 
-### What the report said
+### I-A. What the original document was for
 
-**The reward formula**: `XP = AC × maxHP`, `reward = floor(0.1 × AC × HPLoss)`. Both heal and gold derive from the same formula — harder enemies are self-funding. A player who fights harder enemies gets proportionally more back.
+The seven source reports were written *as* the systems shipped, one per feature, each locking a
+data shape before or beside the code. By 2026-06-16 there were 64 of them and no map. This
+synthesis is the map: a single page that a future author could read to know **which mechanics are
+canonical, which are superseded, and which design constraints must not be broken by the next
+feature.** Its own stated method — *"each entry reads the lab report against the live HTML"* — is
+exactly the method §DOC-02 now runs on the whole corpus, three months earlier and against a file
+one-sixth the size. That is worth saying plainly: **the program verifying this document was this
+document's idea.**
 
-**Cooperative DM Principle**: The dungeon master is structurally on the player's side. Death is recoverable (checkpoint respawn), encounters are never unwinnable by design, and the natural play path (fight/rest/quest) produces net-positive resource flow.
+### I-B. Verification method (§DOC-02bc)
 
-**Necklace of Knowledge**: Location-collection layer — first arrival at each node awards a Knowledge Bead. Passive reward for exploration without changing combat mechanics.
-
-**Rest architecture**: Short rests (3/day, 50gp, partial heal), long rests (inn sleep, full heal + day advance, costs vary by node).
-
-### Current HTML
-
-| Symbol | Line | Current state |
-|--------|------|---------------|
-| `reward = floor(0.1 × AC × maxHP)` | ~23,244 | Active — `_onStoryVictory()` at line 23,244 |
-| `S_story.knowledge = []` | 21,157 | Active — array of Necklace of Knowledge beads |
-| Checkpoint respawn | 21,917 | Active — `_survivingTattoos` preserved across respawn |
-| `void_mercy_count` | 21,157 | Active — Cooperative DM Principle encoded as state |
-| Short rest (3/day) | `storyShortRest()` | Active |
-
-The formula has not changed since the report. The Cooperative DM Principle is mathematically enforced: `void_mercy_count` prevents the Void Tide from killing a player who is actively playing, and `storyRespawnFromCheckpoint()` guarantees recovery from death.
-
-### What still applies
-
-- The reward formula is a load-bearing invariant. Any new enemy type must produce `XP = AC × maxHP` and heal/gold from `floor(0.1 × AC × HPLoss)` to maintain economy balance.
-- The Cooperative DM Principle is a design rule, not just philosophy: **no mechanic should create a state the player cannot escape through normal play.** Gate locks (e.g., DAM blind-days) must have a reachable resolution.
-- The Necklace of Knowledge is the location-discovery reward layer. It should be the only reward for "first visit" — do not create a parallel "first visit" mechanic.
+1. **Date it.** mtime → birth commit → the last HTML commit before it. That tree, not HEAD, is the
+   reference for every *"current"* claim (instrument 8).
+2. **Census.** Batch every named identifier through one `grep -c` loop at both trees before reading
+   a line of prose; `git log -S` every dead one to split **RETIRED** from **NEVER SHIPPED**
+   (instrument 4).
+3. **Line-check every citation** at the birth tree, not at HEAD.
+4. **Read the source reports at the birth commit** (`git show 6be4180:lab-reports/…`) — 6 of the 7
+   have since been rewritten by this same program, so HEAD's copies are not what the author read.
+5. **Re-derive every "N Xs"** with a counting pass, never from the document's own row count
+   (instrument 50).
+6. **Close over reachability** — a live symbol on a node no player can stand on is not a feature
+   (instrument 19).
 
 ---
 
-## Report 3 — `lab-report-loot-drop-weapon-economy.md`
-**Original scope:** Design proposal — XP scaling fix, unified drop table, magic tier gates, slot rules (2026-05-21)
-**Status:** Historical proposal — superseded by `lab-report-loot-drop-system-v2.md`
+## II. Provenance — a twenty-one-second birth window
 
-### What the report said
+`stat` gives mtime **13:36:59**; the docs-only commit `6be4180` lands at **13:37:20**. **Twenty-one
+seconds** — the program's second-tightest window after §DOC-02bb's nineteen, and the two are
+siblings written twenty-two minutes apart. The HTML in the tree at that moment is `89fa13b`
+(12:20:47), **33,721 lines, matching the report's stated baseline exactly**. Every "current state"
+cell below is therefore checkable against a real file, which is not true of most reports in this
+corpus.
 
-Four problems identified: (1) XP thresholds unreachable in normal play (max 680,000 XP, players hit ~120,000); (2) no unified drop table — weapons/daggers/potions on separate parallel rolls; (3) magic tier gates unenforced (level-1 could receive +2 weapons); (4) offhand slot accepts dagger and shield simultaneously.
-
-### Current HTML status
-
-All four problems were resolved in the v2 redesign (see Report 4). This report's value is as the diagnostic that drove that redesign.
-
-- XP table compressed to 0–195,000 (20 levels reachable in extended play).
-- `_D100_TABLE` unified all consumable drops.
-- `_magicTierAllowed()` enforces magic tier gates via `S_story.level`.
-- Equipment slot rules enforced — offhand dagger and shield are mutually exclusive.
-
-### What still applies
-
-The diagnostic framing is still useful: any new drop type added to the game should (1) appear in `_D100_TABLE` or a clearly named parallel table, (2) have a `minLevel` check if it has power scaling, (3) not be reachable from multiple uncoordinated code paths.
+Two hours fifty-four minutes later, `120d617` *("UI overhaul, gate removal, node-to-node travel,
+geo-seed + reweave")* overwrote the tree with a stale working copy — the same commit that destroyed
+§DOC-02ba's and §DOC-02bb's subjects. It did not touch the combat layer, which is why this
+document aged far better than its two siblings: **its subject survived the afternoon.**
 
 ---
 
-## Report 4 — `lab-report-loot-drop-system-v2.md`
-**Original scope:** Three-channel drop model — trophies, weapon quality roll, d100 consumable; fishing exclusivity for positive magic (2026-06-05)
-**Still active:** Yes — this is the current drop architecture
+## III. Census
 
-### What the report said
+| Measure | Result |
+|---|---|
+| Distinct engine identifiers named | 32 |
+| Resolve at HEAD | **30 (94 %)** |
+| Line citations | 37 |
+| Exact at `89fa13b` | **33 (89 %)** |
+| Node codes cited | **0** — uniquely, nothing to rot |
+| Quoted code fragments | 6 of 8 byte-exact |
+| Aggregate figures ("N Xs") | 4 of 6 exact |
 
-**Three-channel drop model** (sequential, every monster kill):
-1. **Trophy drop** — `MONSTER_DROPS[enemy.key]` → themed sell-item, always
-2. **Unified d100** — `_rollD100Loot()` → `_D100_TABLE` → potions/scrolls/flashbang/gold only (magic weapons removed)
-3. **Monster weapon** — `_rollMonsterWeaponDrop(monsterDmgDie)` → 1 base weapon, quality −4 to 0 (never positive magic)
+**The two dead identifiers.**
 
-**Fishing exclusivity**: `LAKE_MAGIC_DB` contains all positive-magic equipment (+1 to +4). Only fishing produces positive-magic items. This gives Yugurt Lake a mechanically unique purpose.
+- **`_onStoryVictory()` — 0 commits in the file's entire history.** The victory host is and always
+  was `function _storyBattleVictory() {@25280`. This is **inherited, not invented**: §DOC-02v found
+  the identical fabrication in this register's own source report. A citation carries no evidential
+  weight — copying a wrong name from a cited document reproduces it at full confidence.
+- **`baitSatchel`** in the quoted fishing line — the field is `S_story.fishingBaitSatchel`. The rest
+  of that line is byte-perfect, which is the tell: the author transcribed the expression and
+  shortened the identifier from memory while doing it.
 
-**`GET /api/loot-drop` endpoint** — unified view across all three channels; filterable by channel, type, monster, level.
-
-### Current HTML
-
-| Symbol | Line | Current state |
-|--------|------|---------------|
-| `MONSTER_DROPS` anchor | 5,232–5,699 | Active — 392+ entries |
-| `_D100_TABLE` anchor | 22,456–22,477 | Active — consumables only, no magic weapons |
-| `_rollD100Loot()` | 22,485 | Active |
-| `LAKE_MAGIC_DB` | 24,261 | Active — exclusive positive-magic source |
-| `LOOT_TABLE` | 22,384 | Present but **dead code** — replaced by `_D100_TABLE`; marked in a comment |
-
-`LOOT_TABLE` still exists in the HTML (line 22,384) as dead code — the report intended its removal but it was left as a `// dead code` comment. It is not called from anywhere. This is harmless but a future cleanup could remove it.
-
-### What still applies
-
-- The three-channel model is canonical. Do not add weapons to `_D100_TABLE`. Do not add positive-magic items to monster drops. Fishing is the exclusive upgrade path for positive-magic equipment.
-- `MONSTER_DROPS` is the WBAPI-anchored source for trophy drops. New monsters must have a `MONSTER_DROPS` entry or they drop nothing thematic.
-- `_magicTierAllowed(tier)` is the gating function — always call it before awarding any tiered item.
+**The four missed line citations**, all in Registers 2 and 7: two point at
+`const _S_DEFAULTS = () => ({` — the object's opening line — instead of the field, off by 20
+(`knowledge:`) and 44 (`void_mercy_count:`); one names the loot roll where the reward formula is
+99 lines earlier; one is off by 7 and honestly hedged with a tilde. **Every citation that names a
+top-level declaration is exact.**
 
 ---
 
-## Report 5 — `lab-report-luck-seventh-stat.md`
-**Original scope:** Layer 48 (§XIII) — Luck as geometric mean of all six ability scores (2026-05-25)
-**Still active:** Yes — four integration points all active
+## IV. The seven registers
 
-### What the report said
-
-**Formula**: `Luck = ceil(⁶√(STR × DEX × CON × INT × WIS × CHA))`. Modifier: `floor((luck − 10) / 2)`. Read-only, displayed on character sheet. Wired into four systems silently:
-1. **Loot quality** — `_rollD100Loot()` adds `_luckMod()` to the roll
-2. **Death saves** — `_luckMod()` added to d20 death save roll
-3. **Fishing** — reduces Survival DC, improves catch roll
-4. **Corridor encounter rate** — higher Luck reduces random encounter probability
-
-Design intent: reward balanced stat builds without a visible "balance bonus." A player who invests in all stats becomes lucky without knowing they chose to.
-
-### Current HTML
-
-| Symbol | Line | Current state |
-|--------|------|---------------|
-| `_luckMod()` | 21,525 | Active — `Math.floor((_calcLuck() - 10) / 2)` |
-| `_calcLuck()` | ~21,520 | Active — geometric mean of 6 stats |
-| Loot integration | 22,498 | Active — `Math.min(99, roll + Math.max(0, _luckMod()))` |
-| Death save integration | 23,724 | Active — `let d20 = Math.ceil(Math.random() * 20) + _luckMod()` |
-| Fishing integration | 26,830 | Active — `dc = Math.max(4, (baitSatchel ? 8 : 10) - _luckMod())` |
-| Character sheet display | 33,047 | Active — "✦ LUCK" row with geometric mean + modifier |
-
-All four integration points are live. `_luckMod()` is called 7+ times across the codebase. The "hidden reward" design works as intended: the character sheet shows the Luck value but doesn't explain its sources in-game.
-
-### What still applies
-
-- Any new system that should reward balanced stat investment should use `_luckMod()` as an additive bonus.
-- The geometric mean formula is correct for the incentive: one low stat pulls the whole value down. Do not change to arithmetic mean.
-- The `_luckMod()` calls are marked `// Layer 48:` in comments — these should be preserved as provenance markers.
+Each register below states the **design intent** (why the mechanic exists and what it does for
+play), then the measured delta. Rows are scored against `89fa13b` unless marked *(HEAD)*.
 
 ---
 
-## Report 6 — `lab-report-tattoo-progression-system.md`
-**Original scope:** §XLI–§XLVII — Tattoo System (death-persistent progression record) + Chronicle System (dual-ledger stats) (2026-05-25)
-**Still active:** Yes — both systems are core to character identity and death mechanics
+### Register 1 — Levels, Flashbang, condition pricing
+*Source: `lab-report-leveling-flashbang-condition-economy.md` (2026-05-21) · verified separately as §DOC-02t*
 
-### What the report said
+**Intent & playability.** Three systems that all defend the same thing: **the round is a
+decision, and the decision must stay one decision.** Progression is automatic so the player never
+leaves the fiction to shop in a menu; the Flashbang buys a guaranteed hit *inside* the existing
+bonus phase rather than adding a new phase; and repricing conditions ×100 turns pre-battle setup
+from pocket change into a real strategic spend. The 1.5-action economy — one main action plus one
+bonus — is the structural spine every later combat feature had to fit inside, and it is the reason
+combat reads as tactical rather than fiddly.
 
-**Tattoo System**: Bifurcated inventory — standard items drop on death, tattoos survive. Tattoos record: each level-up (ASI choice + HP roll), each death (timestamp + location). They are permanent, non-droppable, rendered in character sheet under "⚫ Your Tattoos." The character sheet text: *"Your tattoos record every level-up decision. They outlive you — the body remembers."*
+| Claim | Verdict |
+|---|---|
+| `XP_LEVELS` — 20 levels, 0 → 195,000 | ✅ **exact, and byte-identical at HEAD** (`const XP_LEVELS = [@24418`) |
+| *"was 10 levels at report time"* | ⚠️ **UNVERIFIABLE / likely never shipped** — §DOC-02t measured the specified 10-level literal at **0 commits ever**; inherited claim |
+| `CONDITION_GOLD` active, annotated `// → doc:` | ✅ exact, comment verbatim |
+| *"specific values may have been rebalanced"* | ❌ **hedge, and wrong** — all 12 entries **byte-identical** from the earliest surviving build to HEAD (`const CONDITION_GOLD = {@24618`) |
+| *"repriced … to hundreds"*, *"spends 300gp on Blinded/Restrained"* | ❌ live prices are **1,000–5,000gp**; Blinded (Smoke Bomb) is **2,000**, Restrained (Binding Web) **1,500** — the worked example is 5–7× low |
+| `CONDITION_ITEMS` — *"11 conditions with name/icon/effect/sell"* | ❌ **12 entries**, fields `match / condition / effect / icon` — **there is no `sell` field**; prices live in the separate `CONDITION_GOLD` two thousand lines away (`const CONDITION_ITEMS = [@22409`) |
+| `CONDITION_ADV` active | ✅ exact (`const CONDITION_ADV = {@7283`) |
+| Flashbang `{weight:4, _type:'flashbang'}` | ✅ byte-exact then · **weight 6 at HEAD** |
+| Flashbang `{name:'Flashbang', cost:150, sell:75}` | ✅ every field exact, then and now |
+| `_checkLevelUp()` · `_lu_applyGiftsAndFinish()` | ✅ both exact |
+| *"`_lu_applyGiftsAndFinish()` awards HP, gold, shield, tattoo"* | ⚠️ **half right** — it applies gold, the shield gift and the `levelUpLog` row (`function _lu_applyGiftsAndFinish(lvl, hp) {@38488`); **HP is applied by the modal's roll handlers** and the tattoo is written at a different site |
+| *"the only guaranteed-ADV consumable"* | ⚠️ **true narrowly** — the Spell Scroll sets the same flag on a DC check, so the Flashbang is the only *unconditional* one; but a purchased condition grants ADV for the **whole battle**, which the same report priced one paragraph earlier |
+| *"the 1.5 AP economy is the structural spine"* | ✅ enforced at every consumable (`function _storyUseFlashbang(invIdx) {@24934` guards on `usedMainAttack`/`usedBonusAction`) |
 
-**Chronicle System**: Two parallel ledgers — `careerStats` (never resets) and `runStats` (resets on respawn). 10 fields each: kills, deaths, dmgDealt, dmgReceived, sleeps, battlesAttempted, attacksAttempted, attacksHit, exitsTaken, daysAdventuring. Displayed in character sheet + game-over modal.
-
-**Time-of-day clock**: `S_story.hour` advances +1 per battle, +6 per sleep (0–23). Used to timestamp death tattoos.
-
-### Current HTML
-
-| Symbol | Line | Current state |
-|--------|------|---------------|
-| `tattoos: []` in `_S_DEFAULTS` | 21,144 / 21,173 | Active — two entries (new-game + NG+ path) |
-| `careerStats: {kills:0,...}` | 21,237 | Active — 10 fields |
-| `runStats: {kills:0,...}` | 21,238 | Active — 10 fields |
-| `_survivingTattoos` on respawn | 21,917 | Active — tattoos preserved across death |
-| `_survivingCareerStats` on respawn | 21,918 | Active — career stats preserved across death |
-| `_lu_applyGiftsAndFinish()` | 33,502 | Active — writes level-up tattoo to inventory |
-| `kenickieMarketUsed: false` | 21,211 | Active — also in this section's scope |
-
-The tattoo and chronicle systems are fully live. The `levelUpLog` array (also in `_S_DEFAULTS`) stores the full level-up history as a separate machine-readable record; tattoos are the human-readable inventory version.
-
-### What still applies
-
-- **The bifurcated inventory rule**: any item that represents a permanent character achievement (level, decision, death) must be a tattoo (`sell: 0`, no drop-on-death). Items that represent resources or equipment are standard inventory.
-- **Death should write a tattoo** with day + hour + node code. The format is established; any future "death event" must follow it.
-- `_survivingTattoos` and `_survivingCareerStats` are the respawn preservation hooks. Do not reset `careerStats` on death. Never drop tattoos.
-- The chronicle fields are the canonical telemetry. Any new trackable player action should be added as a `careerStats` / `runStats` field, not a separate flag.
+*Note kept from §DOC-02t:* `_playerHasBonusOptions()` tests five inventory conditions and then
+returns `true` regardless — closing comment `// wimper always available`. The bonus phase is never
+empty, by construction. The engine is more generous than its own predicate suggests.
 
 ---
 
-## Report 7 — `lab-report-kenickie-chronicle.md`
-**Original scope:** Layers 75+77 — Kenickie's Black Market + Chronicle System (§XL + §XLII) (2026-05-25)
-**Still active:** Yes — both systems are live
+### Register 2 — Health economy, reward formula, Cooperative DM
+*Source: `lab-report-drop-rates-balance-and-health.md` (2026-05-21) · verified separately as §DOC-02j*
 
-### What the report said
+**Intent & playability.** The reward formula makes **harder enemies self-funding**: the same
+expression pays the heal and the gold, so choosing a dangerous fight is choosing a bigger payday
+and a bigger top-up, and the player is never punished for playing upward. Behind it sits the
+Cooperative DM Principle — *the dungeon master is on your side* — which is not a mood but a
+constraint: death is recoverable, encounters are winnable, and no mechanic may create a state the
+player cannot leave by ordinary play. The Necklace of Knowledge adds the collector's thread: a
+souvenir per location, evidence of where you have been, with no combat effect at all.
 
-**§XL — Kenickie's Black Market**: Access unlocks when `quest_cat_05 === 'complete'`. A single inline announcement in the Cat-King completion message is the only notification ("Kenickie's Black Market is open"). No quest entry, no map marker, no animation. The reward is access to discounted healing and fishing bait from someone who now considers you crew. `kenickieMarketUsed: false` tracks first purchase, enabling a single-line greeting variation on return visits. The "sheet-swapper" pattern: the same node surface presents different NPC content depending on quest state.
-
-**§XLII — Chronicle System**: (Also documented in Report 6 above.) The Chronicle system in this report focuses on the game-over modal integration — at death/respawn, the run stats are displayed as a summary before the career cumulative. The display format is: run stats first ("This run"), career stats second ("All time"), presented without blame or judgment — just numbers.
-
-### Current HTML
-
-| Symbol | Line | Current state |
-|--------|------|---------------|
-| `kenickieMarketUsed: false` | 21,211 | Active — `_S_DEFAULTS()` |
-| Kenickie shop unlock | 28,804 | Active — `S_story.kenickieMarketUsed = true` on purchase |
-| `quest_cat_05` completion | ~26,334 | Active — Cat-King quest handler |
-| Run/career stats game-over display | ~21,848 | Active — `storyAutoSave()` vicinity |
-
-### What still applies
-
-- **The sheet-swapper pattern** is the correct model for post-quest NPC surface changes: check a quest flag in the node render block, swap the NPC card content. Do not create a separate node or quest entry for the unlocked NPC mode.
-- **The silent unlock** is the right UX for reward-surface features that only exist as payoff for a completed quest chain. No notification beyond the quest completion message itself.
-- **Chronicle display at game-over**: run stats / career stats displayed without judgment is the tone for all game-over data. The game does not tell the player they failed; it tells them what happened.
+| Claim | Verdict |
+|---|---|
+| `XP = AC × maxHP` | ✅ exact — `xpAward = (S.enemy.ac) * (S.opp.maxHp)` |
+| `reward = floor(0.1 × AC × HPLoss)` (prose) vs `× maxHP` (table) | ✅ **not a contradiction** — the report copied both halves of one line; the engine's own comment reads *"HPGive = goldDrop = 0.1 × AC × HPLoss (HPLoss = maxHP on kill)"* |
+| Attributed to `_onStoryVictory()` at 23,244 | ❌ function **never existed**; the formula is at the head of `function _storyBattleVictory() {@25280`, 99 lines above the cited line |
+| Checkpoint respawn preserves tattoos | ✅ exact, and byte-identical to its 2026-05-25 spec (`function storyRespawnFromCheckpoint()@23922`) |
+| **Necklace: *"first arrival at each node awards a Knowledge Bead"*** | ❌ **INVERTED MECHANISM.** Beads are awarded on **rest**, not arrival — two call sites, both rest paths (`function _maybeAddKnowledgeBead(nodeCode) {@25808`, called from `storyShortRest` and `storyConfirmSleep`). **The source report says "rests" five times.** |
+| *"Short rests (3/day, 50gp, partial heal)"* | ⚠️ 3/day ✅; **no gold cost has ever existed** (`shortRestCost` = 0 occurrences, then and now); heal is 25 % of max HP **at an inn** and **50 % away from one** (`const heal  = isInn ? base : base * 2;@25839`) |
+| Long rest = full heal + day advance, cost varies by node | ✅ `sleepCost` 3–5gp per inn node |
+| *"`void_mercy_count` prevents the Void Tide from killing a player who is actively playing"* | ❌ **materially overstated** — it is **one** reprieve, granted only at pressure 9 **and only with ≥5 of 7 shards** (`S_story.void_mercy_count = (S_story.shards >= 5) ? 1 : 0;@26984`), spent at the next tide with the line *"💤 You sleep fitfully. The Void holds its breath with you."* A player at 4 shards gets nothing. |
+| *"Gate locks (e.g. DAM blind-days) must have a reachable resolution"* | ⚠️ corroborated by §DOC-02ba, which found the quoted DAM blind-days console trace has **no referent in the file** |
 
 ---
 
-## Combat & Mechanics Summary — What Is Structurally True Right Now
+### Register 3 — The loot/weapon-economy diagnosis
+*Source: `lab-report-loot-drop-weapon-economy.md` (2026-05-21) — a proposal, superseded by Register 4. Now in `archive/`.*
 
-**Three-channel loot**. Trophy (`MONSTER_DROPS`) → D100 consumable (`_D100_TABLE`) → weapon quality roll. Fishing is the exclusive positive-magic source (`LAKE_MAGIC_DB`). `_magicTierAllowed()` gates all tiered awards.
+**Intent & playability.** A pure diagnosis: four ways the reward economy leaked — unreachable XP
+thresholds, parallel uncoordinated drop rolls, unenforced magic tiers, and an offhand slot that
+accepted a dagger and a shield at once. Its value to play is indirect but large: it is the document
+that made the loot layer *legible* enough to be redesigned.
 
-**1.5 AP economy is inviolable**. Every battle round: main action (attack) + bonus phase (one of: offhand, potion, spell, flashbang, condition, pass). No feature should add a third decision phase to the round.
-
-**Cooperative DM Principle is mathematically enforced**. Reward formula (`0.1 × AC × HPLoss`) makes harder enemies self-funding. Death checkpoint preserves tattoos + career stats. `void_mercy_count` prevents Void-kill of active players.
-
-**Luck is the seventh stat**. `_calcLuck()` = geometric mean of six ability scores. `_luckMod()` applies to: loot roll quality, death saves, fishing DC, encounter rate. Read-only, hidden incentive for balanced builds.
-
-**Tattoos + Chronicle are the character persistence layer**. Tattoos survive death, record every level and every death with timestamp + location. Career stats never reset. Run stats reset on respawn.
-
-**The level system is session-completable**. `XP_LEVELS` runs 0–195,000 across 20 levels. A normal playthrough reaches levels 5–7; extended play reaches 15+. No build choices, all rewards automatic.
+| Claim | Verdict |
+|---|---|
+| *"max 680,000 XP"* in the old table | ⚪ **UNVERIFIABLE** — `680000` has 0 occurrences in the file's entire committed history, but the report predates the earliest surviving build by three days (instrument 18) |
+| XP table compressed to 0–195,000 over 20 levels | ✅ exact |
+| `_D100_TABLE` unified all consumable drops | ⚠️ true of the *design*, **false of the file it was written against** — see Register 4 |
+| `_magicTierAllowed()` gates on `S_story.level` | ✅ exact and unchanged: `return (S_story.level || 1) >= magic * 5;` (`function _magicTierAllowed(magic) {@24509`) |
+| Offhand dagger and shield mutually exclusive | ✅ **enforced in both directions and twice over** — equipping either returns the other to inventory *("Dagger moved to inventory" / "Shield moved to inventory")*, and the offhand attack refuses outright while a shield is worn (`if (S_story.equippedShield) { _sboLog('🗡 Unequip shield to use offhand.'); return; }@25105`) |
 
 ---
 
-*Synthesis Part 2 of 7 · Next: Part 3 — World & Navigation · 2026-06-16*
+### Register 4 — The three-channel drop model
+*Source: `lab-report-loot-drop-system-v2.md` (2026-06-05) · verified separately as §DOC-02v*
+
+**Intent & playability.** Every kill pays three ways: a **thematic trophy** so the corpse means
+something, a **d100 consumable** so the tactical shelf refills, and a **base weapon at rolled
+quality** so gear improves without ever handing out magic. The exclusion is the design: positive
+magic (+1…+4) comes **only from fishing**, which gives Yugurt Lake a mechanically unique purpose
+and makes a quiet activity the sole route to the best equipment in the game. It is a genuinely
+elegant piece of economy design, and it is the register this report gets wrong.
+
+| Claim | Verdict |
+|---|---|
+| Three channels, in that order, every kill | ✅ exact — trophy → `_rollD100Loot()` → `_rollMonsterWeaponDrop()` |
+| `MONSTER_DROPS` anchor 5,232–5,699 | ✅ **both line numbers exact** |
+| *"392+ entries"* | ✅ **exactly 392** at its own commit — and **398 at HEAD**, a perfect 1:1 with `MONSTER_POOL`, no gaps, no orphans |
+| `_D100_TABLE` anchor 22,456–22,477 | ✅ **both line numbers exact** |
+| **`_D100_TABLE` *"Active — consumables only, no magic weapons"*** | ❌ **INVERTED AT ITS OWN COMMIT.** That exact 22-line range held **16 rows**: 7 consumable and **9 weapon rows — 4 magic daggers (+1…+4), 1 base and 4 magic mainweapons.** See §V-A. |
+| `_rollD100Loot()` at 22,485 | ✅ exact |
+| `_rollMonsterWeaponDrop` → 1 base weapon, quality −4…0, never positive magic | ✅ exact at HEAD, comment included: `// FC06: monster drops capped at base tier` (`function _rollMonsterWeaponDrop(monsterDmgDie) {@24581`) |
+| `LAKE_MAGIC_DB` the exclusive positive-magic source | ⚠️ true of the data; **no live grant path at HEAD** — see §VI |
+| `LOOT_TABLE` *"dead code … marked in a comment"* | ❌ **the comment says the opposite.** `const LOOT_TABLE = [@24441` is annotated *"(d100 result → item; used by `_rollD100Loot()`)"* — naming a caller that reads `_D100_TABLE` instead. Zero readers, a comment asserting one. → **§DROP-01-FU (a)**, open |
+| `GET /api/loot-drop` unified query | ✅ shipped (`js/wbapi-server.js` `loot-drop`), with three defects filed as **§DX-02ab** |
+
+---
+
+### Register 5 — Luck, the seventh stat
+*Source: `lab-report-luck-seventh-stat.md` (2026-05-25) · verified separately as §DOC-02w*
+
+**Intent & playability.** `Luck = ⌈⁶√(STR·DEX·CON·INT·WIS·CHA)⌉`, read-only, shown on the sheet
+and explained nowhere. The geometric mean is the whole idea: one dumped stat drags the root down,
+so a balanced build is quietly rewarded without a "balance bonus" button ever appearing. The
+player becomes lucky without having chosen to be — which is the most charming reward design in the
+file, and the one most in danger of being "cleaned up" by someone who prefers arithmetic means.
+
+| Claim | Verdict |
+|---|---|
+| Formula and modifier | ✅ **byte-identical from birth to HEAD**, `product <= 0` guard included (`function _calcLuck() {@23438`, `function _luckMod()@23444`) |
+| All six table rows (decl · loot · death save · fishing DC · sheet) | ✅ **6 of 6 line-exact** |
+| Loot integration quote | ✅ exact in substance; the roll is now `_seededNext()` (§VM-01-B) |
+| Death-save integration quote | ✅ **byte-identical at HEAD**, `Math.random()` and all — see §V-C |
+| Fishing quote `(baitSatchel ? 8 : 10)` | ⚠️ field is `S_story.fishingBaitSatchel`; expression otherwise exact |
+| *"wired into four systems … 4. corridor encounter rate"* | ❌ **NOT SHIPPED at the time of writing.** The corridor layer was deleted by `85cc43e` two days earlier and again by §CELL-14 at **09:39 the same morning — three hours fifty-eight minutes before this commit.** The report's own table lists six rows and correctly omits it. |
+| *"`_luckMod()` is called 7+ times"* | ✅ true and understated — **10 calls** at that tree |
+| *"the `// Layer 48:` markers should be preserved as provenance"* | ✅ **held exactly — 5 markers then, 5 markers now** |
+
+---
+
+### Register 6 — Tattoos and the Chronicle
+*Source: `lab-report-tattoo-progression-system.md` (2026-05-25) · verified separately as §DOC-02am*
+
+**Intent & playability.** A bifurcated inventory: **things drop on death, tattoos do not.** Every
+level-up and every death is inked with a day, an hour and a place, so the character sheet becomes a
+biography rather than a stat block, and death costs you your gear but never your history. The
+Chronicle is the same idea in numbers — a career ledger that never resets beside a run ledger that
+does. Presented, deliberately, without commentary: the game tells you what happened, not how you
+did.
+
+| Claim | Verdict |
+|---|---|
+| `tattoos: []` in `_S_DEFAULTS` at both paths | ✅ both lines exact |
+| `careerStats` / `runStats`, **10 fields each** | ✅ **exact**, in the stated order (`careerStats: { kills:0@23146`, `runStats:    { kills:0@23147`) |
+| `_survivingTattoos` / `_survivingCareerStats` on respawn | ✅ both exact |
+| `kenickieMarketUsed` in `_S_DEFAULTS` | ✅ exact |
+| `levelUpLog` is the machine-readable twin | ✅ written by the gifts handler |
+| Sheet text *"…They outlive you — the body remembers."* | ✅ **verbatim** — but it renders on the **character-creation** screen (`id="charcreate-sub"@4963`), not the character sheet |
+| Section header *"⚫ Your Tattoos"* | ❌ **0 occurrences, then or now.** The section is `makeSection('⚔ Character Tattoos');@31244` |
+| Time-of-day: `hour` +1 per battle, +6 per sleep, 0–23 | ✅ both exact — the +1 fires at battle **start** (`function _storyRollInit() {@24624`), not at victory |
+| *"Do not reset `careerStats` on death"* | ⚠️ upheld on death; **§CHRON-01** records that NG+ destroys it |
+
+---
+
+### Register 7 — Kenickie's Black Market and the game-over ledger
+*Source: `lab-report-kenickie-chronicle.md` (2026-05-25) · verified separately as §DOC-02q*
+
+**Intent & playability.** The **silent unlock**: finish the Cat-King chain and a fence who now
+considers you crew starts selling discounted healing and bait — announced by one clause inside the
+completion message and nothing else. No map pin, no fanfare, no new quest entry. The reward for
+finishing a chain is that the world quietly behaves differently, which is a far better feeling than
+a notification. The *sheet-swapper* pattern that implements it — same node, different NPC content
+by quest state — is the correct model for every post-quest surface change since.
+
+| Claim | Verdict |
+|---|---|
+| Unlock at `quest_cat_05 === 'complete'` | ✅ exact (cited line off by 7, hedged) |
+| The single announcement *"Kenickie's Black Market is open"* | ✅ **verbatim**, inside the completion narrative bit at `Kenickie's Black Market is open.@13745` |
+| `kenickieMarketUsed = true` on first purchase | ✅ exact (`S_story.kenickieMarketUsed = true;@33056`) |
+| No quest entry, no map marker | ✅ still true |
+| *"run stats first ('This run'), career stats second ('All time')"* at game-over | ❌ **three ways wrong.** The game-over modal shows **one** column — `<div class="goc-title">This Run` — with **nine** rows and **no career figures at all**, then and now (`function _populateGameoverChronicle() {@23852`). The two-column ledger lives on the **character sheet** (`function storyRenderCharSheet() {@37609`) and its headers are **"This Life" / "All Lives"**, the second suppressed until the first death. |
+| *"presented without blame or judgment — just numbers"* | ✅ **exactly right** — nine labelled rows, no commentary anywhere |
+
+---
+
+## V. Findings
+
+### V-A. The headline: a certification contradicted by its own line range
+
+Register 4 states, in a table cell whose line numbers are **both exact**, that
+`_D100_TABLE` (22,456–22,477) is *"Active — consumables only, no magic weapons."* At `89fa13b`
+those 22 lines contain:
+
+```js
+{ weight:5,  _type:'dagger',     _magic:1 },   … +2, +3, +4
+{ weight:8,  _type:'mainweapon', _magic:0 },
+{ weight:6,  _type:'mainweapon', _magic:1 },   … +2, +3, +4
+```
+
+Nine weapon rows, **eight of them positive-magic**, and live: `_rollD100Loot()` branches on both
+types, gated only by `_magicTierAllowed()`. Sixteen rows summing to 100, so a level-20 character
+had a **2 % chance of a +4 mainweapon from any ordinary kill** and a level-5 character a 5 % chance
+of a +1 dagger — while
+the same page declares fishing the exclusive source of positive magic and instructs future authors
+*"Do not add weapons to `_D100_TABLE`."*
+
+Why: §DROP-01 shipped the purge at `440eb5d` (2026-06-05 10:41) and **`88d41d1` reverted it at
+13:33 the same day** — a commit whose subject is *"POST /api/import/book: documentation + smoke
+test cleanup"*, the silent stale-working-copy revert §DOC-02v caught red-handed. The purge did not
+return until `0fffce7` on 2026-07-07, **68 days later**. So this document was written into the
+gap, and its author read the *source report* rather than the range they cited.
+
+***The lesson is not that the author was careless — every number on the page is right. It is that a
+synthesis inherits its sources' intentions and re-publishes them as observations. When a document
+says "reads the report against the live HTML," the one row where it did not is invisible, because
+the citation next to it is perfect.***
+
+### V-B. The mechanism restated in the summariser's own words is the one that changed
+
+The Necklace of Knowledge is awarded on **first rest at a location**. The source report says so
+five times (*"the first time the player rests at each unique location"*), and the engine agrees:
+two call sites, both rest paths. This synthesis renders it as **"first arrival at each node"** —
+and then builds a rule on the error: *"It should be the only reward for 'first visit' — do not
+create a parallel 'first visit' mechanic."*
+
+Both halves fail. There is no first-visit reward in the game at all (`visitedCells` feeds the
+minimap and grants nothing), and the parallel mechanic the rule forbids **was already in the file**:
+the Boyscout Token for a first short rest at a node (`// Boyscout Token — first short rest at this location@25849`)
+and Boyscout Night for a first sleep — *"🏕 Boyscout Night! Double rolls"*. Three
+first-time-here rewards keyed to the same act, and the rule written to prevent exactly that.
+
+***A summary is the most dangerous sentence in a document, because it is the only one nobody
+checks against a file.***
+
+### V-C. The advice that is a trap: `_checkLevelUp()`
+
+Register 1 closes with *"`_checkLevelUp()` is the single call site for all XP gate processing …
+Any new XP source should call it."* Following that advice today produces a silent bug.
+`_checkLevelUp()` is a **mutator that only queues**: it raises `S_story.level` and pushes the level
+onto `_levelUpQueue`, while every benefit — the HP roll, the ASI, the Fighter feature, the gold and
+shield gifts — is delivered by `_showLevelUpModal`. On the skill-check **pass** path the queue is
+never drained, and `function _grantExplorationXp@30077` opens by clearing it, so the next step onto
+new ground discards the pending entry: **the player keeps the level and loses everything in it.**
+The *failing* branch, added later by §XP-01, does it correctly three lines away
+(`The attempt was not wasted.@7014`) — so failing a Ceremonia Roll can open the level-up modal and
+passing one cannot. Filed as **§DX-02p** (§DOC-02e), open, blast radius all 2,453 `skill_check`
+quests. The advice is right about the call and silent about the drain, which is the whole defect.
+
+### V-D. Three loot channels, two random streams
+
+The report's unified-loot thesis is architecturally clean and **half-seeded**. `_rollD100Loot()`
+and `_rollMonsterWeaponDrop()` both draw the seeded stream (§VM-01-B), so a save determines them.
+The trophy channel does not: **13 of the 398 `MONSTER_DROPS` entries are arrays** — multi-drop
+tables picked by `function _pickDrop(table) {@7041`, which rolls `Math.random()` and writes the
+result to persisted inventory through `const _rawDrop = MONSTER_DROPS[S.enemy.key];@7049`. The
+death save is the same shape: `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25896` decides
+whether the character lives, off the unseeded stream, while the loot roll eleven hundred lines away
+was converted. Both are instances of **§DX-02m** (open, 🟠), whose stated first job is to measure
+how many of the file's **51** `Math.random()` sites reach persisted state; these are four of them,
+in the most consequential paths in the game. `check:rng` cannot see it — gate #10 proves the three
+mulberry32 streams agree with each other, never *which* stream a state write draws from.
+
+### V-E. The copied half and the recalled half, in one document
+
+Two of the report's function attributions are wrong (`_onStoryVictory`, and the game-over ledger
+attributed to *"`storyAutoSave()` vicinity"*), and **both sit beside line numbers that are right**
+— the second lands three lines inside `_populateGameoverChronicle()`. Line numbers get pasted;
+function names get remembered. Instrument 9 in its most compact form: **the numbers a document
+copies are its evidence; the words it supplies around them are its claims.**
+
+### V-F. Corpus correction — `q.xpAward` is read
+
+§DX-02n carries a sub-item stating that `q.xpAward` (53 occurrences) has **0 readers**. It has two:
+`// §D02 xpAward on side-type quest completion@30201` in the quest-completion loop, shipped
+2026-05-26 in a commit named *"ui stuff"*, and the Warrant's Board honest-reward preview, whose own
+comment calls it *"the live payout"* and names `q.reward` as the dead field instead. Measured:
+**51 quests carry `xpAward`, 46 of them `type:'side'` — the exact shape the reader requires.** The
+field is live; the row's evidence line is not. → **§DX-02bw**.
+
+---
+
+## VI. Reachability closure (instrument 19)
+
+A symbol can resolve, execute correctly, and still be unreachable. Measured over `CELL_GRID`
+primacy at HEAD (416 nodes, `npm run stats`-reconciled):
+
+| Surface | Reachable? |
+|---|---|
+| Levels · Flashbang · conditions · reward formula · beads · tattoos · chronicle | ✅ global, no node gate |
+| Kenickie's Black Market (`CDG`) | ✅ **`CDG` is primary** in cell `21,182` of four occupants |
+| Luck → loot roll, death save, sheet | ✅ live |
+| Luck → fishing DC, catch, bait | ❌ stranded |
+| **`LAKE_MAGIC_DB` — the entire positive-magic economy** | ❌ **no live grant path.** The only grant site is inside `storyFishing()`, reachable only at `BOO`, which is **second in cell `2,194` behind `LYR`** — §FISH-01 / §FISH-02 |
+| Luck → corridor encounter rate | ⛔ deleted before the report was written |
+
+So Register 4's exclusivity design is intact as data and **dead as an economy**: monster drops are
+capped at base tier exactly as specified, and the fishing channel that was supposed to be the
+compensation cannot be entered. *The invariant shipped perfectly; the exception it defers to is
+behind a node nobody can stand on.*
+
+---
+
+## VII. The durable half — design rules that still govern
+
+These survive verification and should constrain the next combat feature:
+
+1. **The 1.5-action round is inviolable.** Main action + one bonus. Every addition since — offhand
+   dagger, Action Surge, spell scroll, Flashbang, conditions — is an *option inside* the bonus
+   phase. Nothing may add a third decision per round.
+2. **Automatic, announced progression.** No build menus in the flow of play. *(Noted honestly: the
+   level-up modal does ask for an HP roll and, at seven levels, an ASI — the design broke this
+   constraint deliberately and, per §DOC-02t, was right to.)*
+3. **`XP = AC × maxHP` and `reward = ⌊0.1 × AC × HPLoss⌋`.** Any new enemy must pay on this curve or
+   the economy tilts. Harder is self-funding; that is the promise.
+4. **Trophy → d100 → weapon-quality, in that order, and no positive magic from a kill.** Every
+   monster needs a `MONSTER_DROPS` entry — **398 of 398 at HEAD, 84 days and six new monsters
+   later. The best-kept rule in the document.**
+5. **`_magicTierAllowed(tier)` before any tiered award.**
+6. **Bifurcated inventory.** Achievements are tattoos (`sell:0`, never dropped); resources are
+   inventory. Death writes a tattoo with day, hour and place. *(§DX-02ax: the tattoos are safe by
+   container, not by the `drop:false` flag, which has zero readers.)*
+7. **Career stats never reset; run stats reset on respawn.** New telemetry is a ledger field, not a
+   new flag.
+8. **The sheet-swapper.** Post-quest NPC changes swap content on the existing node; they do not mint
+   a new node or quest entry.
+9. **The silent unlock.** A payoff surface is announced by the completion message and nothing else.
+10. **No inescapable states.** The Cooperative DM rule, and the one this report's own subject
+    matter now violates in three places: §DX-02p (a level with no rewards), §FISH-01 (an economy
+    behind a stranded node), §AUDIT-03an (a ledger that never resets after the first death).
+11. **New, from this verification:** *for every "N Xs" in a design document, re-derive N against the
+    file — and for every "the current code does X", open the range you are about to cite.*
+
+---
+
+## VIII. Defects filed
+
+| Row | Grade | Substance |
+|---|---|---|
+| **§DX-02bw** (new) | 🟢 | §DX-02n's `q.xpAward` sub-item says **0 readers**; there are **2**, and 46 of the 51 carrier quests are the `type:'side'` shape the primary reader requires. Correct the row's evidence; the field is live, and the *engine's own comment* says which of the pair is dead (`q.reward`). |
+| **§DX-02m** | 🟠 (extended) | Four named state-writing `Math.random()` sites in the combat core: the death save (`@25896`), the initiative pair in `_storyRollInit`, the spell-scroll DC, and `_pickDrop` (13 array-valued trophy tables → persisted inventory). Total sites reconciled at **51**, matching the row. |
+| **§DROP-01-FU (a)** | open | Confirmed at HEAD: `LOOT_TABLE` declared, 20 entries, **0 readers**, comment still naming `_rollD100Loot()` as its caller. |
+| **§DX-02p** | open | Re-confirmed at HEAD: no `_showLevelUpModal` on the skill-check pass path; `_grantExplorationXp` still clears the queue. |
+| **§FISH-01 / §FISH-02** | open | Re-confirmed by cell primacy: `BOO` second in `2,194` behind `LYR`; no live positive-magic grant path exists. |
+| **§DX-02ab · §CHRON-01 · §AUDIT-03an · §DX-02ax** | open | Re-confirmed, unchanged; recorded here for cross-reference. |
+
+No new engine defect was found that an existing row does not already cover — which, for a
+document this old, is the most flattering thing measurement can say about the subject.
+
+---
+
+## IX. Conclusion
+
+Fifty-eight days after it was written, this synthesis is **94 % correct about what exists, 89 %
+exact about where it lives, and wrong in exactly the places where it stopped copying and started
+summarising.** Its tables are evidence; its prose is testimony. The single inverted claim —
+`_D100_TABLE` certified as weapon-free while the cited range held nine positive-magic rows — is not
+a transcription failure but a *category* failure: it reports an intention as an observation,
+because the intention was published in a report and the observation was never made.
+
+Its design half has aged extremely well. The 1.5-action round, the self-funding reward curve, the
+three-channel drop model, the trophy bijection, the bifurcated inventory and the silent unlock all
+still govern the file, and two of its stated rules — the `MONSTER_DROPS` entry per monster and the
+`// Layer 48:` provenance markers — have held **without a single exception** across 5,000 added
+lines. The tattoos still record every level-up decision, and they still outlive you.
+
+*Verified 2026-08-13 · §DOC-02bc · Synthesis Part 2 of 7 · Next: Part 3 — World & Navigation*
