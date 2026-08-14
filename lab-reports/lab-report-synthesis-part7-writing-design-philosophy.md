@@ -1,309 +1,345 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report Synthesis — Part 7: Writing & Design Philosophy
-**Cross-Reference of All Writing & Design Philosophy Lab Reports Against roll2hit-v3.html**
-**Date:** 2026-06-16 · **HTML baseline:** 33,721 lines · **Source reports:** 8
+
+### Cross-Reference of Eight Craft-and-Philosophy Reports Against `roll2hit-v3.html`
+
+**Original date:** 2026-06-16 14:18 · **Stated baseline:** 33,721 lines · **Source reports:** 8
+**Reference build:** `89fa13b` (2026-06-16 12:20) — **exactly 33,721 lines**, the build this report was written against
+**Verified against HEAD:** 2026-08-14 (§DOC-02bh) — `roll2hit-v3.html` @ 38,712 lines, 59 days later
+**Series:** the closing part of the seven-part synthesis (64 reports)
+
+> **HISTORY DOCUMENT.** This is the synthesis as believed on 2026-06-16, re-measured, not a
+> description of the current engine. Claims that did not ship, or that were wrong when written, are
+> marked **NOT SHIPPED** / **WRONG AT BIRTH** and **kept** — a silently deleted claim reads like one
+> that held. Its node codes are the retired space; per §AUDIT-03m `lab-reports/` is HISTORY —
+> **annotate, never rewrite**.
 
 ---
 
-## Purpose
+## Abstract
 
-Each entry reads the lab report against the live HTML and answers: what was documented, what is the current code, what still applies as working design knowledge. Reports are in `lab-reports/` untouched. This is the final synthesis part; a summary of the complete series closes the document.
+Part 7 closes the synthesis series by asking of eight craft reports — narrative architecture, the
+Pinker style guide, the Void Shaman, the Wisdom arc, the design-process meta-report, the aspirations
+register, the organ synthesiser, and the Birka founding document — *what was documented, what is the
+current code, and what still applies as working design knowledge.*
 
----
+**Verification result: its pointers are near-perfect and its verdicts are wrong about the game.**
+**18 of 18 line citations resolve correctly** against its own baseline build (16 land on the exact
+named symbol; 2 are range endpoints inside the block they cite), **24 of 25 named engine symbols
+resolve at HEAD**, the six Birka dialogue tiers are **19 lines each (5/5/5/4) — byte-exact for all
+six NPCs**, and every quoted passage it copied from the file is verbatim 59 days on.
 
-## Report 1 — `lab-report-game-story-codex-of-conquest.md`
-**Original scope:** Narrative architecture for the full arc — 5-step template, Froberger's three-movement journal, Curse of Knowledge as theme (2026-05-22)
-**Still active:** The architecture is live; the journal is live; the Curse is the game
+**And of the five arcs it pronounces "fully live," four cannot be reached in play.** All eight
+source reports have since been verified individually (§DOC-02d · p · x · ad · ae · al · ao · as), and
+those records converge: the Void Shaman's entry flag has never had a settable writer; the Wisdom
+arc's hub is the 5th of 5 occupants of one cell; the Curse Score is pinned at a floor of 20 by a
+2026-05-29 rename; and the organ shipped as a file the game has never once played. Part 7 grepped
+for symbols, found them, and never asked whether a player could arrive.
 
-### What the report said
+***A symbol census measures the file. Only reachability measures the game.***
 
-**The Curse of Knowledge as structural theme.** Not evil but isolation: "being alone with the knowledge of what the world needs, while the world continues to not know it." Froberger gathered the Shards. He couldn't give his knowledge to anyone. He became the only one. That — not the Void — destroyed him.
-
-**Froberger's journal in three movements.** Movement 1 (Entries 1–14): Wonder — he is a person. Movement 2 (Entries 15–28): Efficiency — he is becoming a function. Movement 3 (Entries 29–41): Isolation — he describes the world from outside it. Entry 41 is the exception: sounds like a person again because he is writing to whoever comes after.
-
-**The mirror function.** The journal's function is not to tell the player "don't be like Froberger." It is to show, in real time, what Froberger was doing when he was still good — and what happened when he kept doing exactly the same thing, slightly more. The horror of the Curse is that it doesn't feel like decay from inside. It feels like growth.
-
-**Five journal entries as read-aloud canonical nodes.** Entry 7 (IN — innkeeper's daughter writes "expedition"), Entry 14 (DK — Muffat's "thirty-eight months"), Entry 23 (DS — Charybdis as consequence not monster), Entry 31, Entry 41.
-
-### Current HTML relevance
-
-**The narrative architecture is fully live.** `FROBERGER_JOURNAL` entries are in the HTML. Sweelinck's dialogue variants implement the ending differentiation. `storyCheckVictory()` reads `_missionComplete()` and `_curseScore()` to branch endings.
-
-**The journal's three movements are observable in the current text.** Entry 7 (Brynn's daughter writing "expedition" hard in pencil) is explicitly live in `brynn`'s NPC_DIALOGUES at line 9,149: *"My daughter wrote 'expedition' in her notebook last week. Very hard pencil. She means it."* The connection between Froberger's journal and the living NPC is confirmed — what he noticed in Movement 1 is still present in the city after he's gone.
-
-**Entry 41 ("Come back") is the game's thesis in six sentences.** It is live in the journal and confirmed as `readAloud:true` (from Part 5). The empty line below it is Entry 42's blank page — every design choice in the game is an argument for why the player should fill it differently than Froberger didn't.
-
-### What still applies
-
-- **The five-step arc structure is backward-designed from Step 3 (the main challenge).** Don't add new main-quest content that doesn't connect back to the Void/Shard mechanic.
-- **The three movements govern any new Froberger entry.** Movement-appropriate voice: short sentences in M2, people's names absent in M3, specific sensory detail in M1. Any added entry should know which movement it belongs to.
-- **The final challenge is not the boss fight.** It is what the player was while doing it. The CO encounter tests mechanical capability; the ending screen tests relational presence. Both are in play simultaneously.
+**Keywords:** synthesis verification, reachability vs. existence, design-record drift, house style,
+inherited conclusions
 
 ---
 
-## Report 2 — `lab-report-story-codoex-curse-of-knowedge.md`
-**Original scope:** Applying Steven Pinker's writing framework to node text and NPC dialogue design (2026-05-22)
-**Still active:** The writing principles are the house style; the "Codex of Conquest" reframe is canonical
+## I. Intent, Inspiration, and What This Buys the Player
 
-### What the report said
+**The inspiration.** By 2026-06-16 the repository had 64 lab reports and one 33,721-line HTML file,
+and the two had stopped being able to see each other. The synthesis series was written against a
+specific fear, and it is the same fear that produced this verification program two months later:
+*a design corpus decays into fiction faster than the code it describes decays into bugs, because
+nothing ever fails when a document is wrong.* Parts 1–6 covered architecture, combat, world,
+monsters, NPCs and quests. Part 7 was reserved for the layer none of those could hold — the
+**writing standards and the design philosophy**, the knowledge that has no data structure.
 
-**Pinker's three principles applied:**
-1. Empathy — the writer must be able to inhabit the reader's not-knowing
-2. Mental image over abstract category — "bunny rabbit" not "stimulus"; concrete specific detail
-3. Examples and generalizations as pendulum — neither alone is sufficient
+**Why the game needed it.** roll2hit's central mechanic is not combat; it is *noticing*. The Void is
+sealed by seven Shards, but the ending is selected by the player's side-content behaviour, and the
+Curse of Knowledge — Froberger's isolation, not his malice — is what the whole arc is about. That
+theme lives entirely in prose. There is no `curseOfKnowledge` field. If the writing standard drifts,
+the game does not throw an error; it just stops meaning anything. Part 7's job was to be the place a
+future author looks before writing a node description, an NPC line, or a journal entry.
 
-**The "Codex of Conquest" reframe.** The Void is not abstract consuming darkness — it is a conqueror, moving like an empire: advancing where defenders are thin, retreating where they're strong, sending scouts ahead. The seven Shards are not artifacts — they are *surrender documents*: seven scholar-kings who said "we will not let this world fall."
+**What it adds to play, concretely.** Four things, and the verification pass confirms three of them
+are load-bearing at HEAD:
 
-**Sensory/motoric/visual writing standard.** Not "the crypt has old tombs" but: dust on the floor *perfectly* settled — until the second chamber where it's gone entirely, and the floor is raw earth, and the claw marks in the corner go toward you, not away. Not "neon corridors" but: light that doesn't flicker, doesn't warm, doesn't behave the way any fire you've ever seen behaves — it just *is*, steadily and coldly, as though it doesn't know what darkness looks like.
+1. **A test a writer can actually run** — *can a stranger who has never played D&D see this place?*
+   It rules out the category noun ("crypt", "undercity") without sensory grounding. §DOC-02al
+   measured the result: node text carrying a concrete number rose from **28 % to 62 %** and tripled
+   in length. The standard was adopted.
+2. **A rule for characterisation** — intelligence is shown through the specific detail only a
+   perceptive person would notice, never through a narrator's label. Muffat does not get called
+   "precise"; she says *"He lasted thirty-eight months."*
+3. **A design goal stated as a number** — **five names**. Not XP, not gold: five people in Birka
+   whose loss the player can feel when the Void arrives. Every relationship system in the game
+   descends from that sentence, and it scaled from 6 NPCs to **204 profiles / 213 dialogues**.
+4. **An epistemic architecture** — decisions in one place, reasoning in another, implementation in a
+   third. This is the part that has moved (§IV, Report 5), but the principle it encodes is now
+   binding repository policy.
 
-**Character rewrite method.** Show intelligence through what characters say, not what narrators state. Muffat: "He lasted thirty-eight months" — detail tells us she tracks everything. "The last ones matter most and people almost always get them wrong" — tells us she knows the difference between raw data and interpretation.
-
-### Current HTML relevance
-
-**The Codex of Conquest framing is live as the game's title and core vocabulary.** The Shards-as-surrender-documents framing appears in quest text, node descriptions, and journal entries.
-
-**The sensory/motoric writing standard is the current style of all node text.** Yael's current impartial dialogue (line 9,148) is not functional exposition — it is a person doing a specific thing at a specific moment that reveals exactly who she is. Every node description from act 3 forward reads in the register this report established.
-
-**The character-intelligence-through-precision principle is live.** Muffat's revised dialogue appears in the current game: "He was careful. Couriers who are careful last three years on this route. He lasted thirty-eight months." Her professional tracking of elapsed time in her first sentence.
-
-### What still applies
-
-- **The test: can a stranger who has never played D&D see this place?** Run every new node text through this filter. If the answer involves category nouns ("undercity", "crypt", "forest") without sensory grounding, revise.
-- **Characters reveal intelligence through specificity, not labels.** Don't call an NPC "perceptive" — have them notice the specific detail that only a perceptive person would notice. Don't call them "conflicted" — have them do one careful thing that reveals the conflict.
-- **The Void is a conqueror.** Write it as such. It advances, retreats, sends scouts. It has a strategy. The player is not fighting a fog — they are fighting an empire's leading edge.
-
----
-
-## Report 3 — `lab-report-void-shaman.md`
-**Original scope:** Layer 56, §XXI — The Void Shaman "The Warden", dual-resolution mechanic, corrupted mandate premise (2026-05-25)
-**Still active:** Yes — fully live; encounter node code changed from report
-
-### What the report said
-
-The Warden spent eleven years executing a mandate corrupted by a verb-tense error in its seventeenth hand-copy: "open the cage" instead of "open the tunnel to close the cage." The dual-resolution mechanic: show them the Constructor's Log (persuasion, `vsShamanPersuaded = true`, +600gp; sub-clan returns to Mordus) or fight (`vshamanDefeated = true`; sub-clan disperses). Both paths set `wardensLegacyKnown`. The Warden's Token item description: *"Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything."* The report locates the encounter at node MT.
-
-### Current HTML relevance
-
-**The encounter node is GVA, not MT.** Report says MT. Live code at line 28,269: `if (node.code === 'GVA' && S_story.vsShamanKnown && S_story.vaLastWardVisited`. The Warden encounter was placed at GVA (some cave node in the world graph), not MT (Mountain Pass). The MT node was used for `vaLastWardVisited` — the Void Archaeology tunnel. The Warden is at GVA.
-
-**All state flags and resolution paths confirmed live:**
-
-| Symbol | Line | Status |
-|--------|------|--------|
-| `void_shaman` (name:'The Warden') | 4,853 | Live — AC 15, HP 65 |
-| `vshamanFound`, `vshamanDefeated`, `vsShamanPersuaded` | 21,231 | Live |
-| `wardensLegacyKnown` | 21,231 / 23,216 / 26,536 | Live — all three paths set it |
-| Persuasion path | 28,285–28,288 | Live |
-| Combat path + Warden's Token | 23,215–23,224 | Live |
-| Warden's post-combat line | 23,224 | Live — *"If I'm wrong, then I needed to be stopped. That's — that's actually fine."* |
-
-**`void_shaman` also appears in `epic_goblin_cave` terrain** (line 5,786). The Warden can be encountered as a random epic battleground monster in goblin cave terrain, separate from the scripted §XXI encounter at GVA.
-
-**The combat path uses `code:'MT_WARDEN'`** — a synthetic node code to prevent the MT node's `defeatedBattles` from being set. This pattern is confirmed live at line 23,215 area.
-
-### What still applies
-
-- **The Warden encounter is at GVA, not MT.** MT is the Void Archaeology tunnel node (§XVII). GVA is where the Warden was placed.
-- **The persuasion path requires the Constructor's Log in inventory.** `sell:0` prevents selling, but the check is item-presence based. The Log must be carried.
-- **The item description is the arc's entire premise.** *"Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything."* Don't add an explanation scene — the token does it.
+**The design conviction underneath all four.** The antagonists in this game are not malicious; they
+are misdirected. The Warden spent eleven years faithfully executing a mandate corrupted by a
+verb-tense error in its seventeenth hand-copy. The correct answer to him is a document, not a sword.
+That is the most precise statement of the project's moral architecture the corpus contains, and Part
+7 is where it was written down.
 
 ---
 
-## Report 4 — `lab-report-wisdom-arc.md`
-**Original scope:** §WISDOM-01 — Robert Greene's Laws of Human Nature as skill-check quest mechanics, Roen companion arc (2026-05-28)
-**Still active:** Yes — fully live; arc depends on §ALCHEMY-01 completion
+## II. Method
 
-### What the report said
-
-Six laws extracted from Greene (LHN + 48 Laws), each mechanized as a skill check at an existing node: W1 (Masks/DK, WIS DC 13), W2 (Aggression/SK, WIS DC 12), W3 (Thumbscrew/SB, INT DC 11), W4 (Shortsightedness/BK, INT DC 12), W5 (Formlessness/AE, WIS DC 12), W6 (Repression/VS, WIS save DC 14). The arc activates after `personalLegendComplete = true` (§ALCHEMY-01). Roen's voice provides philosophical commentary in "Philosophy Stoner" register.
-
-### Current HTML relevance
-
-**`quest_wis_01` confirmed live at line 11,647.** Activation at MME (node code, not DK) with `wisHookReceived && saltwickAccessed`. Node location may differ from report's DK assignment — the wisdom quests activate at shipping/port nodes consistent with the naval arc world area.
-
-**Arc activation confirmed:** `roenAlchemistMet` flag is live (from Part 6 grep: line 11,612). `quest_wis_01` through `quest_wis_06` all confirmed in QUEST_DB.
-
-**W6 shadow room is the arc's mechanical climax.** The mirror room at VS node offers both paths — WIS save DC 14 (accept = knowledge entry + better loot) or combat (shadow construct, AC 12, completion flag but no knowledge entry). This was documented extensively in `lab-report-kindness-calculus.md` (Part 5) and confirmed live.
-
-**The stalemate reading (W4) and the Cook who never apologizes** are documented in the kindness-calculus analysis and confirmed as live design decisions — the Cook's non-convergent prior is `cookApologized: false` permanently.
-
-### What still applies
-
-- **Roen's voice is "Philosophy Stoner" register** — *"That's very annoying," he says. He says it with complete warmth.* Any new Roen dialogue should maintain this register: genuine, curious, accurate, slightly annoyed by his own accuracy.
-- **The six DC values are calibrated.** W6 at DC 14 (self-observation, hardest) is intentional. Don't raise W1's DC (10–13 range for social observation is correct).
-- **Both W6 paths are valid.** The shadow can be fought or accepted. The knowledge entry is the reward for acceptance, not the flag. Both set the same completion flag.
+1. **Symbol census first.** Every engine identifier Part 7 names, batched through one `grep -c`
+   loop before reading a line of prose (§DOC-02b).
+2. **Citation adjudication against the birth build, not HEAD** (instrument 8). The report states a
+   33,721-line baseline; `89fa13b` (2026-06-16 12:20) is **exactly 33,721 lines**, so every line
+   number is checkable as written rather than merely as drifted.
+3. **`git log -S` on every symbol the census marks dead** (instrument 4) — the only way to separate
+   RETIRED from NEVER SHIPPED.
+4. **Sources before HEAD** (instrument 53). All eight source reports were verified and rewritten by
+   §DOC-02 between 2026-08-11 and 2026-08-13. A synthesis inherits *conclusions* while re-checking
+   only *pointers*, so each of Part 7's verdicts was tested against its source's **verification
+   record**, not against its source's original text.
+5. **Reachability before correctness** (instrument 54). For every "fully live" verdict, ask whether
+   a player can arrive — the writer of the flag, the primacy of the cell, the existence of the node.
 
 ---
 
-## Report 5 — `lab-report-meta-process-loop-expansion.md`
-**Original scope:** Design methodology — the prompt→plan→lab-report→HTML loop as recursive AST expansion (2026-05-26)
-**Still active:** The methodology is the live project process
+## III. Citation audit — the pointers are sound
 
-### What the report said
+Eighteen anchors, resolved in `89fa13b`:
 
-The design process follows a consistent map operation over a list: **seed prompt → N items → elaboration per item → sub-lists → collapse → lab report → HTML**. Each "continue" from the user advances exactly one expansion level. The loop is co-driven: human-paced, assistant-expanded.
+| Cited | Claim | Result |
+|-------|-------|--------|
+| 4,853 | `void_shaman` statline | **EXACT** — `ac:15, hp:65` as stated |
+| 5,786 | `void_shaman` in `epic_goblin_cave` | **EXACT** |
+| 9,148–9,152 | the six Birka NPCs in `NPC_DIALOGUES` | **EXACT** — `yael`/`brynn`/`quill`/`pachelbel`/`crov`; the range is off by one entry (six NPCs span 9,148–9,153) |
+| 11,612 | `roenAlchemistMet` | **EXACT** |
+| 11,647 | `quest_wis_01` | **EXACT** |
+| 20,810 | `const BIRKA_NPC_PROFILES` | **EXACT** |
+| 21,231 | the three shaman flags | **EXACT** — all three on one line |
+| 23,215–23,224 | combat path + Warden's Token | **EXACT as a range** (23,215 is `vshamanDefeated = true`, the block's first line) |
+| 23,216 / 26,536 | two of three `wardensLegacyKnown` writers | **EXACT** |
+| 23,224 | Warden's post-combat line | **EXACT and byte-verbatim** |
+| 28,269 | the GVA guard | **EXACT** — `node.code === 'GVA' && …` |
+| 28,285–28,288 | persuasion path | **EXACT as a range** |
 
-**Key distinction:** The prompt history is a shift register — it overflows at context compaction. **Decisions belong in plan.md; reasoning belongs in lab reports; the shift register holds only current working state.**
+**Symbol census:** 24 of 25 named engine identifiers resolve at HEAD. Every quoted line of dialogue,
+item description and journal text is byte-verbatim at 59 days. This is among the cleanest
+transcription records in the §DOC-02 corpus.
 
-**Ten documented instances** covering Grief Arc (§GR), Desert Codex redesign (§DESIGN-01), Section layout (§DESIGN-02), Skill check system (§DESIGN-03), Weimar gate (§XVI), Void Archaeology (§XVII), NG+ remembrance (§XV), Cat Arc (§IX), Chronicle system (§XLII), Birka NPCs (§IX–§42).
-
-**No-lab-report case:** Pure CSS/layout changes with no new data structures can skip the lab report gate and go directly to integration.
-
-**Lab report gate rule:** A lab report is required when new `S_story` fields or QUEST_DB shapes are introduced. Not for presentation changes.
-
-### Current HTML relevance
-
-**This report documents the process, not the code.** No direct HTML symbols. Its relevance is that every synthesis you are reading was produced by the process it describes.
-
-**The distinction is still accurate and load-bearing:** plan.md holds implementation decisions. Lab reports hold design reasoning. The HTML holds the implementation. The synthesis series (Parts 1–7) is the lab-report layer for what the HTML has become relative to what the lab reports expected.
-
-**The "ten specific instances" documented here are all implemented.** Every arc the report lists has been confirmed live in Parts 1–6 of this synthesis.
-
-### What still applies
-
-- **"Decisions belong in plan.md; reasoning belongs in lab reports; the shift register holds only current working state."** This is the project's epistemic architecture. Sessions that skip plan.md produce orphaned implementations.
-- **The lab report gate is binary, not graduated.** If new `S_story` fields or QUEST_DB entries are needed: write the lab report first, lock the data shape, then implement. No partial skips.
-- **Each "continue" advances exactly one expansion level.** The user's "continue" is not ambiguous when the plan.md queue is current. If "continue" feels ambiguous, the queue needs updating.
-
----
-
-## Report 6 — `lab-report-ponies-unicorns-aspirations-future-ideas.md`
-**Original scope:** Post-game aspirations — DM's Companion Guide, Fishing Guide, Mission Explorer, Polyphonic Organ Synthesizer (2026-05-24)
-**Still active:** Organ is implemented; WBAPI partially fulfills Mission Explorer; Guide and Fishing remain aspirational
-
-### What the report said
-
-**Four aspirational products** beyond the current game build:
-
-1. **DM's Companion Guide** — 80–120 page spoiler manual for GMs running roll2hit as tabletop. Full NPC profiles, all quest arcs, monster manual, Curse of Knowledge score explained.
-2. **Fishing Guide** — standalone reference for the Yugurt Lake system.
-3. **Mission Explorer** — CRUD-style read interface for exploring mission arcs, monster data, NPC dispositions with full debug metadata.
-4. **Polyphonic Pipe Organ Synthesizer** — 72 sine oscillators, Web Audio API, `roll2hit-organ.html`, no samples, no audio files, self-contained.
-
-The report explicitly states: *"Nothing here is PLANNED in the plan.md sense — there is no Layer number, no insertion spec, no state flags."*
-
-### Current HTML relevance
-
-**The Polyphonic Organ Synthesizer was built as `5thOrgan.html`.** Confirmed present at `ls /Users/user/code/roll2hit.com/5thOrgan.html`. The implementation matches the specification: additive synthesis, 72 oscillators, Beethoven's Fifth as two-voice canon, Web Audio API, no audio files. It shipped as a standalone file, not as part of `roll2hit-v3.html`.
-
-**The WBAPI server (`wbapi-server.js`) partially fulfills the Mission Explorer concept.** The worldbuilder endpoint (`worldbuilder.html`) provides CRUD-style read/write access to quest, node, and NPC data with debug metadata. The `/api/npc/{id}/speak` endpoint (from Part 5) adds live NPC interaction. The Mission Explorer concept was realized through the WBAPI architecture documented in Part 1.
-
-**The DM's Companion Guide and Fishing Guide remain unbuilt.** No HTML implementation. This synthesis series (Parts 1–7) is the closest current equivalent to the "what everything means" documentation the DM's Guide would provide.
-
-### What still applies
-
-- **`5thOrgan.html` is a finished product**, not a roll2hit-v3.html feature. It lives as a separate file in the same directory. It demonstrates the single-file, no-dependencies philosophy applied to audio synthesis.
-- **The DM's Guide outline is still accurate.** Part I (49-day countdown, act summaries, Froberger backstory), Part II (full NPC spoiler profiles), Part III (monster manual), Part IV (mission architecture), Part V (endings), Part VI (homebrew tooling) — these headings describe what a complete project reference document would contain.
-- **The Mission Explorer concept** is partly live in `worldbuilder.html`. If someone needs programmatic access to quest data, the WBAPI endpoints are the current implementation of that idea.
+> The one exception is instructive. **`cookApologized` has 0 occurrences at HEAD, 0 in the baseline,
+> and 0 commits in the file's entire history** — **NOT SHIPPED**, written from intent. It appears in
+> a *summary* sentence ("the Cook's non-convergent prior is `cookApologized: false` permanently"),
+> never in an inventory. Instrument 10 again: a report's inventory earns trust and its summary does
+> not, one page later, same hand, same day.
 
 ---
 
-## Report 7 — `lab-report-Polyphonic-Organ-Synth.md`
-**Original scope:** `5thOrgan.html` — additive synthesis engine, ADSR, IIR biquad filter, canon sequencer, Web Audio API (2026-05-24)
-**Still active:** Yes — `5thOrgan.html` exists and is the deliverable
+## IV. Per-report delta table
 
-### What the report said
+| # | Source report | Part 7's verdict | Measured at HEAD | Status |
+|---|---------------|------------------|------------------|--------|
+| 1 | `game-story-codex-of-conquest` | "The narrative architecture is fully live" | Architecture live; `storyCheckVictory@28207` does read `_missionComplete@23648` and `_curseScore@28191`. **But §EPIC-01 severed the `returned` writer on 2026-05-29 — the score is pinned at a floor of 20 and neither payoff can be reached** (§DOC-02p) | ⚠ **LIVE BUT UNREACHABLE** |
+| 2 | `story-codoex-curse-of-knowedge` *(the filename's two typos are real and still on disk)* | "The sensory standard is the current style of all node text" | The **principles** shipped and are measurable (28 % → 62 % concrete numbers). The **prose** did not: **1 of ~26 specimens survives** (§DOC-02al) | ✅ principle · ❌ examples |
+| 3 | `void-shaman` | "Yes — fully live; encounter node changed from report" | 20/20 identifiers resolve, dialogue byte-verbatim — **and the arc has been unreachable since the hour it shipped: `vsShamanKnown` has never had a settable writer** (§DOC-02ao) | ⚠ **LIVE BUT UNREACHABLE** |
+| 4 | `wisdom-arc` | "Yes — fully live" | 8 quests, 8 flags, 5/6 DC pairs byte-exact — **and 8 of 8 are dead: the hub `VS` is the 5th of 5 occupants of cell `12,198`, so `storyRender` never reaches it** (§DOC-02as) | ⚠ **LIVE BUT UNREACHABLE** |
+| 5 | `meta-process-loop-expansion` | "The methodology is the live project process" | True, and stronger than claimed — **6 of its 10 recommendations are binding rules in `CONTRIBUTING.md`/`prompt.md`** (§DOC-02x). But **`plan.md` no longer exists at the repo root** (split into CONTRIBUTING.md + BACKLOG.md, `5e48dd7`, 2026-07-09), so the three-place architecture it states is now four-place | ✅ with one retired term |
+| 6 | `ponies-unicorns-aspirations` | "Organ built; Mission Explorer partial; Guide and Fishing unbuilt" | **3 of 5 shipped, not 2.** The Fishing Guide shipped — as the *aside*, `FISHING_GUIDE_TEXT`, a `type:'readable'` item, not the document (§DOC-02ae). DM's Guide **NOT SHIPPED**, correctly reported | ◑ under-counted |
+| 7 | `Polyphonic-Organ-Synth` | "`5thOrgan.html` exists… No discrepancy between report and live file has been identified" | The maths verify: 12 voices × 6 harmonics = 72 oscillators; `sources/5thOrgan.html:drawbars:  [1.000, 0.500@161` is the 1/n law; `falloffDB:6`; round offset 14 sixteenths. **But the file is `sources/5thOrgan.html`** (moved by `5e48dd7`), the literal `ls` path in the report fails, and §DOC-02ad found **four composed errors** the "no discrepancy" sentence overrode | ◑ **no-discrepancy claim withdrawn** |
+| 8 | `birka-beginner-arc` | "All six NPCs live; profiles expanded substantially" | **The strongest row.** All six live; the 2-samples-per-NPC founding doc became **19 lines each (5 impartial / 5 questActive / 5 friendly / 4 dearFriend) — byte-exact for all six**; the system grew to 204 profiles / 213 dialogues. **All 8 node codes are dead as written and five were born dead** — no `NODE_MAP` entry for `CI`/`IN`/`TV`/`BA`/`CY` ever existed (§DOC-02d) | ✅ inventory · ❌ codes |
 
-**Additive synthesis from first principles.** A pipe organ's timbre reduces to the harmonic series: each pipe resonates at fundamental frequency plus integer-multiple overtones. Synthesis equation: `x(t) = Σ A_n · sin(2π·n·f₀·t)`. Six harmonics per note, 12-voice polyphony = 72 simultaneous oscillators.
+**Live identity of the six.** The report's `Couperin` is engine key **`quill`** (Bard Tomas Couperin,
+`MHQ`) and its `Weckmann` is **`crov`** (Pit Master Weckmann, `HKG`); the sixth is **`auros`**
+(Commander Seraphine Bruhns, `HKG`), *not* `bruhns`. The report's own Couperin/Quill inconsistency
+minted two keys for one character — the defect §AUDIT-03n later spent a whole row repairing.
 
-**Stop registration via drawbars.** Amplitude per harmonic follows `A_h = drawbar[h] × 10^(−falloffDB × log₂(h) / 20)`. Default `falloffDB = 6` reproduces the `1/n` amplitude law (Principal stop family).
-
-**Canon sequencer.** Beethoven's Fifth motif (G G G Eb / F F F D) looped at 28 sixteenth notes. Second voice offset 14 sixteenth notes (half-period). When Track 1 plays G4, Track 2 is playing F4 or D4 — no MIDI note collision. Voice pool handles both tracks independently.
-
-**Web Audio API architecture.** `OscillatorNode` objects in a dedicated audio thread. Sample-accurate scheduling via `AudioContext.currentTime`. 72 oscillators sustained with <5% CPU on a modern laptop.
-
-### Current HTML relevance
-
-**`5thOrgan.html` exists as confirmed.** This report's implementation is complete and live as a standalone file. It is not part of `roll2hit-v3.html` and does not interact with `S_story` or any game state.
-
-The report's mathematics are the implementation specification. The implementation delivers what the mathematics describe. No discrepancy between report and live file has been identified.
-
-### What still applies
-
-- **The `5thOrgan.html` architecture is a model for any future standalone tool.** Single file, no build step, no external assets, Web API only. The organ demonstrates this philosophy applied to audio.
-- **The harmonic falloff formula** (`A_h = drawbar[h] × 10^(−falloffDB × log₂(h) / 20)`) is live and correct. Any extension to the organ's timbre model should use this formula as the baseline.
-
----
-
-## Report 8 — `lab-report-birka-beginner-arc.md`
-**Original scope:** Birka NPC origin document — six character profiles with wounds, voices, and the arc's philosophical role (2026-05-22)
-**Still active:** All six NPCs are live; the character profiles expanded substantially in later layers
-
-### What the report said
-
-**The arc's purpose: five names.** The player who spends time in Birka, who makes Yael friendly and earns Brynn's good room, has five reasons to care about what happens to this city. The Void is not an abstraction to them. It is a threat to specific people whose names they know. That is what the arc is for. Not experience points. Not gold. Five names.
-
-**Six character profiles — founding specifications:**
-
-| NPC | Core wound | Froberger connection |
-|-----|-----------|---------------------|
-| Yael (CI) | The riot three years ago. Knows who organized it. Can't prove it — the evidence disappeared from the guard archive. | She knows how Froberger operated: he never stayed long enough to notice what the city's grammar said. |
-| Brynn (IN) | Tired in the way that six years of solo work creates a baseline tiredness that becomes invisible. | "He was the last guest who asked." She kept his journal. |
-| Couperin (TV) | Owes an unpayable debt to the Bardic Guild. Can't leave Birka. Treats it with elaborate good humor, which is not the same as being fine. | He found the Scholar Kings cipher in his own song and doesn't know what to do with it. |
-| Pachelbel (BA) | His partner (Raison) took a job Pachelbel planned. Pachelbel didn't go. Raison served four years. | He doesn't mention Raison. It is visible in how he does business. |
-| Weckmann (CY) | Lost a fighter (Bruna) to an illegal pit two years ago. Shut down for three months, then reopened. | He made the fighter excellent, then stopped seeing the fighter and saw the fighting. |
-| Auros/Bruhns (CY) | Submitted a structural integrity report three years ago. It was reclassified. She kept a copy. | She is what Froberger could have been if he had stayed. |
-
-### Current HTML relevance
-
-**All six NPCs are confirmed live in `NPC_DIALOGUES` (lines 9,148–9,152 range) and `BIRKA_NPC_PROFILES` (line 20,810).**
-
-**The character profiles expanded substantially.** The founding document gives each NPC 2 voice samples. The live NPC_DIALOGUES give each 5 impartial lines, 5 questActive lines, 5 friendly lines, 4 dearFriend lines — 19 lines per NPC vs. 2 in the founding doc.
-
-**Key details confirmed live:**
-- Brynn's daughter writes "expedition" with hard pencil: *"My daughter wrote 'expedition' in her notebook last week. Very hard pencil. She means it."* (live, line 9,149 area)
-- Couperin's cipher in the Scholar Kings song: live — his friendly state references the decoded coordinates
-- Pachelbel's partner Raison: live — `quest_pachelbel_shipment` arc and dearFriend dialogue both reference the backstory
-- Weckmann's lost fighter Bruna: live — *"Bruna was twenty-three"* in dearFriend dialogue (line 9,152 area)
-- Yael's riot report: live — she filed the second one (named, not anonymous) per §XXXIX
-
-**The founding document's wounds are visible in every late-game dearFriend line.** Yael's riot report. Brynn's tiredness acknowledged for the first time. Couperin's debt finally addressed. Pachelbel's Raison — he went to see the family. Weckmann said: "You're the best student I've had since him." Bruhns is going to submit the theory Froberger started.
-
-**Froberger connection — Brynn:** *"He was the last guest who asked."* The live `brynn` NPC_DIALOGUES has: *"The journal was in the room. I kept it because it felt like something someone would come asking for."* The founding document's line is compressed into the neutral greeting but the full emotional weight is in the dearFriend arc.
-
-### What still applies
-
-- **The arc's purpose — five names — is permanent.** Any new Birka NPC addition must add a name, not a quest giver. The player must be able to feel that the Void is a threat to this specific person.
-- **Every NPC has a wound that the player can see but cannot fix.** Yael can't prove who organized the riot. Brynn can't stop being tired. Couperin can't stop calculating reach during performances. These are not quests to solve — they are conditions to witness. The quest resolves a symptom; the wound remains.
-- **Froberger's absence from Birka is itself a character.** He was the last one who asked Brynn. He wrote about the daughter in Entry 7. He was not there long enough to learn anyone's name. The player's job is to do what Froberger didn't: stay long enough.
+| Report's code | Live node |
+|---|---|
+| Yael (CI) | `LHR` |
+| Brynn (IN) | `TLL` |
+| Couperin (TV) → `quill` | `MHQ` |
+| Pachelbel (BA) | `LLA` |
+| Weckmann (CY) → `crov` | `HKG` |
+| Auros/Bruhns (CY) → `auros` | `HKG` |
 
 ---
 
-## Writing & Design Philosophy Summary — The Project's Permanent Truths
+## V. Three composed errors, all wrong at birth
 
-**The Curse of Knowledge is the theme, not the threat.** The Void is the plot. The Curse is the story. Froberger had perfect knowledge and no one to give it to. The player who seals the Void alone completes the plot without completing the story. The story ends when they come back.
+The pattern is instrument 9's, sharpened: **what the author could copy is exact; what the author
+reconstructed is where the errors are.** All three below were falsifiable from the report's own
+baseline build on the day it was written.
 
-**The project's epistemic architecture:** Decisions → plan.md. Reasoning → lab reports. Implementation → HTML. Current working state → session shift register. Synthesis → this series. Each layer has its purpose. Conflating them produces orphaned code or lost design reasoning.
+**V-A. The inverted correction — the report's single loudest finding.** Part 7 states, three times,
+that *"The encounter node is GVA, not MT… GVA (some cave node in the world graph), not MT (Mountain
+Pass). The MT node was used for `vaLastWardVisited` — the Void Archaeology tunnel."*
 
-**The writing standard is sensory, motoric, visual.** Can a stranger see this place? If not, revise. No category nouns without grounding. Characters reveal intelligence through what they say and do, not what narrators state about them.
+In `89fa13b`, on the same page as the guard it cites correctly:
 
-**Five names is the design goal.** Every narrative addition should give the player a reason to care about what happens to a specific person, not an abstraction. The Void conquers by making people abstractions. The game fights it by making them names.
+```js
+GVA:{ num:50, code:'GVA', name:'mountains', label:'The Mountain Pass — High Crest', act:3, … }
+```
 
-**The no-lab-report rule:** CSS and layout changes skip the gate. New `S_story` fields and QUEST_DB entries do not. The lab report locks the data shape before any HTML touch. This is what prevents orphaned implementations.
+**`GVA` *is* the Mountain Pass.** `MT` was not a `NODE_MAP` key in the baseline and is not one at
+HEAD — it is the retired code for this very node, and the arc was never relocated. Worse, the
+invented distinction is refuted by a line eight above the one the report quotes: `vaLastWardVisited`
+is written inside `node.code === 'GVA' && S_story.vaLogFound@31662`. The tunnel and the
+Warden are the same place. The report read a code off a guard, could not place it, supplied "some
+cave node," and then promoted the guess to a **"What still applies"** bullet. *A correction is the
+most dangerous sentence in a design document: it is the one a later reader will not re-check.*
 
-**`5thOrgan.html` is a complete standalone deliverable.** Single file, no dependencies, Web Audio API, 72 oscillators. The philosophy that produced `roll2hit-v3.html` — one file, giveable — applied to audio synthesis.
+**V-B. A quotation that was never in the file.** *"Weckmann's lost fighter Bruna: live —* ***"Bruna
+was twenty-three"*** *in dearFriend dialogue (line 9,152 area)."* The string has **0 occurrences at
+HEAD, 0 in the baseline, and 0 commits ever**. `crov`'s dearFriend tier does not mention Bruna at
+all. Bruna herself is real and live in four other places — an ending line, a favor line, and the pit
+ledger (*"Bruna — pushed too far."*). The character shipped; the sentence attributed to her did not.
+The citation is correct and the content behind it is invented, which is the failure mode a line
+number is least able to protect against.
 
-**The Warden was wrong, not evil.** A verb-tense error in the seventeenth hand-copy of a 200-year-old mandate. Eleven years executing the corrupted instruction faithfully. This is the most precise statement of the project's moral architecture: the antagonists are not malicious — they are misdirected. The correction is evidence, not combat. *The Constructor's Log, Entry 2.* The cage was closed 200 years before the Warden was born.
-
-**The founding characters are visible in the late-game.** Brynn's daughter, Couperin's cipher, Pachelbel's Raison, Weckmann's Bruna, Yael's second report — all present in the live dearFriend arcs. The wounds established in 2026-05-22 are still open in 2026-06-16. They don't close. They witness.
+**V-C. Right quest, wrong quest.** *"`quest_wis_01` confirmed live at line 11,647. Activation at MME
+(node code, not DK) with `wisHookReceived && saltwickAccessed`."* The line number is exact. In the
+baseline and at HEAD, `quest_wis_01` activates at **`LCY`** with `gate:{ flags:['wisHookReceived'] }`.
+**`MME` and the two-flag gate belong to `quest_wis_02`**, the next entry in the file. The report then
+hedged — *"Node location may differ from report's DK assignment"* — which reads as caution about the
+source report but was in fact covering its own transposition.
 
 ---
 
-## Complete Synthesis Series Index
+## VI. The finding that outranks the rest — existence is not reachability
 
-| Part | Title | Reports | Key findings |
-|------|-------|---------|-------------|
-| 1 | Architecture & Systems | 12 | §DATA-01 enforced; WBAPI at :1367; QuestRuntime planned; §CELL replaced J-nodes |
-| 2 | Combat & Mechanics | 7 | AP economy 1.5 live; tattoo system live; luck formula live; monster drop nerf NOT implemented |
-| 3 | World & Navigation | 13 | 126 NODE_MAP + 411 NODE_COORDS; §CELL implicit adjacency; MegaReWeave 9-phase |
-| 4 | Monsters & Fishing | 2 | 2d20 range superseded by Catch/Type/Size; BAIT_TABLES ≠ BAIT_FISH_POOL; LAKE_MAGIC_DB |
-| 5 | NPC & Narrative | 8 | NPC_DIALOGUES + BIRKA_NPC_PROFILES dual-structure; La Riva = AMS; romance layer live |
-| 6 | Quest Arcs | 14 | Cat Quarter=CDG; Weimar=NUE; _rollCeremonia universal resolver; Saul/Paul implemented |
-| 7 | Writing & Philosophy | 8 | Void Shaman at GVA not MT; 5thOrgan.html exists; methodology loop documented |
+Part 7 opens five entries with **"Still active: Yes — fully live."** Every symbol behind those words
+is real. Four of the five arcs cannot be played:
 
-**Total reports synthesized: 64** across 7 parts · **HTML baseline: 33,721 lines** · **Synthesis date: 2026-06-16**
+- **The Void Shaman.** `vsShamanKnown` is set by `quest_vs_warden`'s prerequisite chain and has
+  never had a reachable writer. Of eleven authored surfaces, three render, and all three arrived by
+  accident in an unrelated data-audit commit. The one way to meet The Warden today is as an unnamed
+  wandering monster in `epic_goblin_cave` — the encounter the report correctly noted as *separate*
+  from the scripted scene is the only one that exists. (§DOC-02ao)
+- **The Wisdom arc.** `VS` was not a `NODE_MAP` key the night it shipped, was re-minted three days
+  later by an unrelated import, and is the 5th of 5 occupants of cell `12,198`. Three quests are
+  dead by node and five by flag. Live and unplayable for 77 days. (§DOC-02as)
+- **The Curse Score ending.** `_curseScore()`'s `returned` term lost its writer to a 2026-05-29
+  rename (§EPIC-01), pinning the score at a floor of 20. Part 7's closing thesis — *"The story ends
+  when they come back"* — names precisely the ending that has been unwinnable since (§ENDING-01(b)).
+- **The organ.** `sources/5thOrgan.html` works exactly as specified. `roll2hit-v3.html` contains
+  **zero Web Audio**. The game has been silent since the day the synthesiser shipped (§AUDIO-01).
+
+The fifth — Birka's six NPCs — is reachable, and it is also the only entry whose verdict rests on a
+**counted inventory** rather than on a symbol lookup. That is not a coincidence.
+
+**What generalises.** A synthesis inherits its sources' conclusions while re-checking only their
+pointers, so a source that was wrong about *reach* stays wrong in the summary and gains a citation on
+the way. The cheapest correction available to Part 7 would have cost one question per entry: *who
+writes this flag?* Four of five answers were "nobody," and all four were answerable from lines
+already on its screen.
+
+> **A second, smaller instance of the same blindness.** Part 7 cites Yael's impartial dialogue as
+> the exemplar of the sensory standard — *"not functional exposition… a person doing a specific
+> thing at a specific moment."* The line at `9,148` in its own baseline reads: *"Check your MAP. The
+> known world has forty-two nodes… Open your QUEST LOG when you arrive somewhere new… Watch your
+> HP."* It is a tutorial infodump, it has been byte-identical since the initial commit `32c10c5`,
+> and it is the clearest violation in the file of the standard it was cited to prove. (The "forty-two
+> nodes" against a live 416 is already filed as **§AUDIT-03u**.)
 
 ---
 
-*Synthesis complete — Parts 1–7 · 2026-06-16*
+## VII. What still applies — the durable design knowledge
+
+These survive verification and are the reason this document is kept.
+
+- **The five-step arc is backward-designed from Step 3.** New main-quest content that does not
+  connect to the Void/Shard mechanic does not belong in the main quest.
+- **The three movements govern any new Froberger entry.** M1 specific sensory detail · M2 short
+  sentences · M3 no people's names. Entry 41 is the deliberate exception — he is writing to whoever
+  comes after. Any added entry must know which movement it belongs to.
+- **Can a stranger see this place?** If the answer needs a category noun without sensory grounding,
+  revise. Measured effect at HEAD: 62 % of node text carries a concrete number.
+- **Characters reveal intelligence through specificity, not labels.** Don't call an NPC perceptive —
+  have them notice the thing only a perceptive person notices.
+- **The Void is a conqueror, not a fog.** It advances, retreats, sends scouts. The Shards are not
+  artifacts but *surrender documents*: seven scholar-kings who said *we will not let this world fall*.
+- **Five names.** Every narrative addition must give the player a reason to care about a specific
+  person. The Void conquers by making people abstractions; the game fights it by making them names.
+- **Every NPC has a wound the player can see and cannot fix.** Yael can't prove who organised the
+  riot; Brynn can't stop being tired. These are conditions to witness, not quests to solve. The
+  quest resolves a symptom; the wound remains — and the founding wounds from 2026-05-22 are still
+  visible in the live dearFriend tiers.
+- **The item description is the arc's entire premise.** *"Recopied seventeen times. The seventeenth
+  copy has a small error in the verb tense that changed everything."* Verified byte-exact at both
+  `25,387` and `31,716`. Don't add an explanation scene — the token does it.
+- **The antagonist is wrong, not evil.** Verified byte-verbatim at `25,393`: *"If I'm wrong, then I
+  needed to be stopped. That's — that's actually fine."* The correction is evidence, not combat.
+- **The lab-report gate is binary.** New `S_story` fields or `QUEST_DB` shapes → write the report and
+  lock the data shape first. CSS and layout changes skip it. This is now `prompt.md` §2 step 3.
+- **`sources/5thOrgan.html` is the model for any standalone tool.** One file, no build step, no
+  external assets, Web API only. An additive organ is the only music architecture that survives this
+  repository's single-file invariant — which is why the shape was chosen and why §AUDIO-01 is still
+  worth doing.
+
+**One rule has moved.** *"Decisions belong in plan.md; reasoning belongs in lab reports; the shift
+register holds only current working state."* `plan.md` was split on 2026-07-09 (`5e48dd7`). The live
+form: **policy → `CONTRIBUTING.md` · outstanding work → `BACKLOG.md` · reasoning → `lab-reports/` ·
+implementation → `roll2hit-v3.html` · closed work → `plan-archive.md`.** The principle is unchanged
+and is now enforced; only the filename retired.
+
+---
+
+## VIII. Series index, corrected
+
+| Part | Title | Reports | Key finding, as re-measured |
+|------|-------|---------|------------------------------|
+| 1 | Architecture & Systems | 12 | WBAPI at `:1367` live; QuestRuntime shipped (§ARCH-01, all ~2,853 quests UQF-1.0); §CELL replaced J-nodes |
+| 2 | Combat & Mechanics | 7 | "Monster drop nerf NOT implemented" **still holds** — `battKillEvent@7048` writes `MONSTER_DROPS[key]` unconditionally, no probability gate |
+| 3 | World & Navigation | 13 | ⚠ **"126 `NODE_MAP` + 411 `NODE_COORDS`" — 411 is byte-exact, 126 is a census artifact.** The baseline held **409** nodes; a `CODE:{` pattern matches **127** of them and misses the **282** written `CODE: {`. Live: **416 / 416**. The mismatch was its own tell — a world cannot have 411 coordinates for 126 places. Same artifact as §DOC-02bd |
+| 4 | Monsters & Fishing | 2 | `BAIT_TABLES` ≠ `BAIT_FISH_POOL`; `LAKE_MAGIC_DB` live — but the fishing economy is unreachable (§FISH-01) |
+| 5 | NPC & Narrative | 8 | `NPC_DIALOGUES` + `BIRKA_NPC_PROFILES` dual structure live and scaled to 204/213; La Riva = `AMS` ✓ |
+| 6 | Quest Arcs | 14 | Cat Quarter = `CDG` ✓ · Weimar = `NUE` ✓ (`label:"Scholar's Quarter — Weimar"`) · `_rollCeremonia` live ✓ |
+| 7 | Writing & Philosophy | 8 | ❌ **"Void Shaman at GVA not MT"** — inverted; `GVA` *is* the Mountain Pass · ✓ the organ exists, at `sources/5thOrgan.html` · ✓ methodology documented |
+
+**Total synthesised: 64** — corroborated by `7d3615a` *"archive 64 reports to lab-reports/"*, and the
+part sums check (12+7+13+2+8+14+8). The directory now holds **107**.
+
+**One claim in the Purpose is no longer true.** *"Reports are in `lab-reports/` untouched."* All
+eight sources have since been re-measured and rewritten by §DOC-02, and this file is the ninth.
+
+---
+
+## IX. Defects and disposition
+
+Nothing in this pass required a new BACKLOG row. Every engine defect it surfaced was already filed,
+which is itself the finding — the residue this synthesis sits on is known and tracked:
+
+| Finding | Row | Note |
+|---|---|---|
+| Yael's tutorial: *"forty-two nodes"* vs. a live 416, unchanged since `32c10c5` | **§AUDIT-03u** | already filed; the first instruction a new player reads |
+| *"the stone alignment from the DF node"* in the Warden's arrival text | **§AUDIT-03s** | 6th of 6 known player-facing dead-code strings |
+| `const JOURNAL_ENTRIES@22424` — 5 authored quotes, 1 occurrence, **0 readers**, and it numbers the same texts differently from the live journal (its `LCY:{num:7}` holds Muffat, who is Entry **14**) | **§DX-02n** (l) | a dead const that reads as the numbering authority |
+| Unseeded `Math.random()` into persisted state across the drop and lake-magic channels | **§DX-02m** | `_pickDrop(table)@7041` already named |
+| Curse Score floor of 20 → both endings unreachable | **§EPIC-01**, **§ENDING-01(b)** | highest player impact in the queue |
+| `VS` cell-primacy loss → 8 Wisdom quests dark | **§DX-02w** | `check:cellprimacy` is the gate that would catch it |
+| The game is silent — organ built, never embedded | **§AUDIO-01** | Report 7's own stated purpose, unbuilt |
+
+---
+
+## X. Conclusion
+
+Part 7 is the most accurate report in the §DOC-02 corpus about the *contents of a file* and one of
+the least accurate about the *state of a game*. Eighteen citations resolve, twenty-four of
+twenty-five symbols live, every quoted string verbatim after fifty-nine days — and four of five arcs
+it certified as "fully live" have never been reachable by a player. The three sentences it composed
+rather than copied are each refuted by a line already on its own screen: the Mountain Pass is named
+in `GVA`'s own `label`, `quest_wis_01`'s `activateNode` is on the line it cites, and the Bruna
+quotation was never anywhere.
+
+The design knowledge in §VII is the part that earned its keep. Five names, the three movements, the
+stranger's test, the wound that cannot be fixed, the antagonist who is wrong rather than evil — all
+of it held, and most of it is measurable at HEAD. What did not hold is the verdict column, and the
+reason is a single missing question.
+
+*Froberger's failure was that he knew everything and could give it to no one. A synthesis that
+confirms a symbol exists, and never asks whether anyone can reach it, has reproduced his mistake in
+the documentation layer. Entry 42 is still blank.*
+
+---
+
+*Verified 2026-08-14 · §DOC-02bh · Synthesis series Parts 1–7 complete · © 2026 Paul Richeson — MIT License.*
