@@ -1,262 +1,234 @@
 # Lab Report — §WALK-5: MUD Multi-Client Harness (instanced encounters, v1)
 
-**Status:** ✅ **COMPLETE (2026-06-26).** **Inc 1 ✅** (world inputs + terrain-parity guard) · **Inc 2 ✅** (per-session seeded RNG + instanced roll) · **Inc 3 ✅** (`tests/mud-harness.mjs`, properties a–c) · **Inc 4 ✅** (TTL-prune assertion + CI `mud` job + docs). Full harness **24/24, green across 3 consecutive runs**; closes the **§WALK series**.
-**Parent:** `lab-reports/lab-report-terrain-field-mover-redesign.md` §7 (the v1 instanced-vs-shared decision).
-**Predecessor MUD layer:** `lab-reports/lab-report-cell-map-mud-redesign.md` §CELL-07 (the in-memory `SESSIONS` store + SSE broadcast this report extends).
+**Track:** §WALK-5 (Inc 1–4) + §WALK-5-FU · closes the §WALK series
+**Written:** 2026-06-26 11:41 (`7f4b73c`) · **Series closed:** 2026-06-26 13:33 (`95c4143`)
+**Re-verified against HEAD:** 2026-08-14 (§DOC-02bm)
+**Parent:** `lab-reports/lab-report-terrain-field-mover-redesign.md` §7 (the instanced-vs-shared decision)
+**Predecessor:** `lab-reports/lab-report-cell-map-mud-redesign.md` §CELL-07 (the `SESSIONS` store + SSE broadcast this extends)
 
 ---
 
-## 1. Summary
+## Abstract
 
-§WALK-5 closes the §WALK series by giving the WBAPI server **server-side encounter resolution** and a
-**deterministic multi-client test harness** that proves encounters are *instanced per session* — client A's
-fight never bleeds into client B. The world kernel (`mover.js`) already emits an `encounter:{eligible,
-baseRate}` block; the server simply never populates the inputs (`terrainAt`/`encounterRate` are omitted from
-`getMoverWorld()`). This report locks the shape that wires them in, stores the rolled encounter on the
-session, and drives the whole thing from a scripted K-client harness.
+The WBAPI server had a multi-client session layer (§CELL-07) and a shared movement kernel (§WALK-2), but no
+danger: `mover.js` computed an `encounter` block the server never fed, so every MUD step reported
+`baseRate: 0` and no monster ever appeared. §WALK-5 wires the two missing world inputs, resolves the
+encounter **per session** rather than per cell, and proves the resulting independence with a scripted
+K-client harness. The question it answers is social, not technical: *when two players stand on the same
+wilderness cell, whose fight is it?* The answer locked here — **co-presence is social, danger is private** —
+is what lets a second player join without turning the world into a queue.
 
-**Acceptance:** K-client harness green; the instancing property holds (each client's encounter trace is a
-pure function of its own seed + path); no cross-session encounter bleed; `player_arrived`/`chat` reach
-co-present sessions only; idle TTL prunes sessions.
-
----
-
-## 2. Why this was deferred to its own report
-
-The parent §7 locked the *decision* (instanced, not shared) but its §7.1 pseudo-code predates two later
-changes and assumed a session shape that does not exist. Three reconciliations are mandatory before any code:
-
-1. **`s.huntMode` is gone.** §TIMELESS-01 removed the Hunt/Stalk feature entirely. The parent §7.1 roll
-   `roll < (s.huntMode ? 1 : res.encounter.baseRate)` must drop the `huntMode` branch. The roll is simply
-   `roll < res.encounter.baseRate`. (The §TIMELESS-01 report and `lab-report-timeless-movement-hunt-removal.md`
-   are the authority; there is no guaranteed-encounter mode in the current engine.)
-
-2. **Blocked moves return 409, not `200 {ok:false}`.** The parent §7.1 sketched `if !res.ok: 200 {ok:false}`.
-   The *live* handler (`wbapi-server.js` POST `/api/session/move`, ~line 7507) already returns **409** with
-   `{ok:false, error, reason}` for sea/oob, and that behaviour is covered by the §WALK-2 end-to-end
-   verification. **Do not change it.** §WALK-5 only adds the encounter side-effect to the *success* path
-   (200); the 409 block path is untouched.
-
-3. **`s.state` is a string, not an object.** `session/start` sets `state:'active'` and `session/who`
-   serialises `state: s.state`. The parent §7.1 wrote `s.state.encounter = …`, which would (a) clobber the
-   lifecycle string and (b) change the `who` payload shape. **Decision:** store the rolled encounter at a
-   **new top-level field `s.encounter`** (object or `null`), leaving `s.state` as the lifecycle string. This
-   is additive — `who` gains an `encounter` field; nothing existing changes type.
+Verified at HEAD ten weeks later: **every structure specified is live**, **all 12 line pointers were
+byte-exact at the reference commit**, the parity guard reports **10,440/10,440 cells in agreement**, and the
+harness this report founded has grown **24 → 269 assertions**. Two deltas matter: its own Inc 4 assertion is
+**red at HEAD** (a timing budget, not a broken prune), and the single SP/MP divergence it logged has quietly
+become **four**.
 
 ---
 
-## 3. Current state (ground truth, 2026-06-26)
+## 1. Method
 
-What already exists and is load-bearing — §WALK-5 builds *only* on top of this:
+Batch `grep -c` census of all 40 named symbols first; every §3 pointer replayed against the report's own
+reference tree `7f4b73c` (instrument 8 — HEAD cannot adjudicate a claim about 2026-06-26);
+`git log -S <sym> --all` with **no pathspec** on each dead symbol, to separate RETIRED from NEVER-SHIPPED
+(instruments 4/67); `check-terrain-parity.js` and `npm run test:mud` run live, three consecutive times, plus
+an isolated re-creation of the one failing scenario; and, for every identifier the report declares gone, a
+read of the commits that came **after** its deletion (instrument 68 — vocabulary gets re-minted).
 
-| Piece | Location | Status |
+---
+
+## 2. Intent — why encounters are instanced, and why that is a playability decision
+
+The parent locked the *decision* (instanced, not shared); this report had to live with it. Three arguments,
+ascending:
+
+- **Mechanical.** Node is single-threaded and processes one synchronous `move` per session, so an instanced
+  roll needs no per-cell mutex. A *shared* encounter would need one — and a lock on a cell is a lock on the
+  road.
+- **Free movement (CONTRIBUTING invariant #1).** A shared encounter turns another player's bad luck into a
+  refusal of *your* step. That promise does not survive contended combat.
+- **Playability.** The point of a second player is company, not competition for monsters. Instancing lets a
+  friend walk beside you across 416 nodes — you see their arrival, hear their chat, share the room
+  description — while your fights stay yours. Co-presence becomes something you *want* rather than something
+  you route around.
+
+Shared encounters remain explicitly v2; §4.1 simply refuses to ship them by accident.
+
+---
+
+## 3. Reconciliations before code — the parent's sketch versus the live file
+
+The parent §7.1 pseudo-code predated two later tracks and assumed a session shape that did not exist. Three
+corrections were mandatory, and all three were correct:
+
+| # | Parent §7.1 assumed | The file actually held | Outcome |
+|---|---|---|---|
+| 1 | `roll < (s.huntMode ? 1 : baseRate)` | §TIMELESS-01 had removed Hunt/Stalk; **`s.huntMode` never existed in code at all** | Roll simplified to `roll < baseRate`. Shipped exactly so. |
+| 2 | blocked move → `200 {ok:false}` | the live handler already returned **409** with `{ok, error, reason}` | *"Do not change it."* Unchanged to this day. |
+| 3 | `s.state.encounter = …` | `s.state` is the lifecycle **string** `'active'`, serialised by `who` | New top-level `s.encounter`; `who` gains a field, nothing changes type. |
+
+Correction #1 is the rarer kind of accuracy. `git log -S "s.huntMode" --all` returns **two commits, and both
+are lab reports** — the parent's sketch and this report correcting it. The identifier was never in the
+server. This report is not describing a feature it removed; it is refusing to implement one a sibling
+document had invented on paper.
+
+> **⚠ Annotated 2026-08-14 (§DOC-02bm), and this is the one paragraph a later commit falsified.** §8's
+> *"No `huntMode`"* is **false at HEAD**. `8168f0e` (§KG-01, 2026-07-08) shipped a **different** mechanic —
+> `baseRate × 2` capped at 0.8, an 80/20 bias toward monsters at or below player level, wilderness only, no
+> clock cost — under the identical identifiers `S_story.huntMode` / `storyToggleHunt` / `_updateHuntBtn`.
+> The *server*-side claim (`s.huntMode` absent, roll is plain `baseRate`) remains exactly true, and so does
+> *"there is no guaranteed-encounter mode"* — the new one is a doubling, not a certainty. What is now wrong
+> is the blanket sentence. Tracked as **§AUDIT-03be** (this is its seventh site). *A retired feature's
+> vocabulary is not free to re-use.*
+
+---
+
+## 4. As-built inventory (verified live 2026-08-14)
+
+| Piece | Anchor at HEAD | State |
 |---|---|---|
-| `SESSIONS` Map (`id→{id,playerName,r,c,nodeCode,state,lastSeen}`) | `wbapi-server.js:65` | ✅ §CELL-07 |
-| `SSE_CLIENTS` Map + `broadcastCell(r,c,event,data,excludeId)` | `wbapi-server.js:66,84` | ✅ |
-| `SESSION_TTL` 30-min idle prune (sweep on access) | `wbapi-server.js:67–76` | ✅ |
-| `POST /api/session/start` (spawn at hub LHR) | `wbapi-server.js:7458` | ✅ |
-| `POST /api/session/move` (thin `Mover.move()` caller, §WALK-2) | `wbapi-server.js:7495` | ✅ |
-| `POST /api/session/say` (cell-scoped chat broadcast) | `wbapi-server.js:7526` | ✅ |
-| `GET /api/session/look` · `/who` · `/events` (SSE) | `wbapi-server.js:7390–7446` | ✅ |
-| `getMoverWorld()` — **omits** `terrainAt`/`encounterRate`/`ferryEdges` | `wbapi-server.js:376` | ⛔ §WALK-5 wires these |
-| Kernel `encounter:{eligible,baseRate}` in `MoveResult` | `mover.js:60–67` | ✅ (inputs unfed) |
-| Client parity primitives `_inferTerrain` / `TERRAIN_ENCOUNTER_RATE` / `_weightedMonsterPick` | `roll2hit-v3.html:25639 / 9077 / 32596` | ✅ (to mirror) |
+| Kernel encounter block | `` `js/mover.js:encounter: { eligible: destKind === 'empty', baseRate }@65` `` | ✅ unchanged — **no kernel change was ever required** |
+| Sea-lane parse | `` `js/wbapi-server.js:function getSeaLanes()@1018` `` | ✅ from `_rawSrc`, cached by source ref |
+| Rate-table parse | `` `js/wbapi-server.js:function getEncounterRateTable()@1074` `` | ✅ **stronger than spec** (§5) |
+| Server terrain inference | `` `js/wbapi-server.js:function terrainAt(r, c)@1091` `` | ✅ mirrors `` `function _inferTerrain(r, c)@28383` `` |
+| World inputs wired | `` `js/wbapi-server.js:function getMoverWorld()@1113` `` | ✅ `terrainAt` + `encounterRate`; **no `ferryEdges`** |
+| Per-session PRNG | `` `js/wbapi-server.js:function seededNext(s)@1147` `` | ✅ mulberry32 over `s.rngState` |
+| Flat tier weights | `` `js/wbapi-server.js:const BASE_TIER_WEIGHTS@1158` `` | ✅ `{trivial:40, easy:35, medium:20, hard:4, deadly:1}` — byte-exact to Inc 2 |
+| Monster draw | `` `js/wbapi-server.js:function pickMonster(terrain, s)@1162` `` | ✅ returns `{key, name, tier}` |
+| The instanced roll | `` `js/wbapi-server.js:s.encounter = (seededNext(s) < mres.encounter.baseRate)@8890` `` | ✅ §4.4's pseudo-code, near-verbatim |
+| Idle prune + env override | `` `js/wbapi-server.js:function sessionPrune()@93` `` · `` `js/wbapi-server.js:const SESSION_TTL = parseInt(process.env.SESSION_TTL_MS@76` `` | ✅ prod-inert |
+| Parity guard | `scripts/check-terrain-parity.js` (196 lines), in `check:walk` | ✅ green |
+| Harness | `tests/mud-harness.mjs` (1,447 lines), `npm run test:mud` | ⚠ **267/269** — §7 |
+| CI | `mud` job in `.github/workflows/walk-invariants.yml` | ✅ present |
 
-The kernel is already correct: `mover.js:60–61` computes `terrain = world.terrainAt(r,c)` and
-`baseRate = (destKind==='empty' && world.encounterRate) ? world.encounterRate(terrain) : 0`, and emits
-`encounter.eligible = destKind === 'empty'`. With `terrainAt`/`encounterRate` absent, `terrain` is `null` and
-`baseRate` is `0` — so today the server reports `eligible:true, baseRate:0` on empty cells and never rolls a
-monster. §WALK-5 supplies the two functions; **no kernel change is required.**
-
----
-
-## 4. Design decisions (locked)
-
-### 4.1 Instanced encounters — restated, corrected
-
-Each session resolves its own encounter when it steps onto an **empty** cell (`destKind==='empty'`). The roll
-result lives on `s.encounter`, never on the cell. Co-presence stays *social* (arrivals, chat, `who`, shared
-`look`) — combat is never shared. This matches the §CELL-07 single-thread note: Node is single-threaded and
-processes one synchronous `move` per session, so **no per-cell mutex is needed**. Shared/contended encounters
-remain explicitly v2.
-
-> Named cells (`destKind==='named'`) are **not** encounter-eligible — the kernel already sets
-> `eligible:false` there, mirroring the SP client where `_enterEmptyCell` (and only it) rolls encounters.
-
-### 4.2 Server↔client terrain & encounter parity
-
-`getMoverWorld()` gains two functions that mirror the client byte-for-behaviour:
-
-- **`terrainAt(r,c)`** mirrors `_inferTerrain` (`roll2hit-v3.html:25639`):
-  1. if `SEA_LANES.has("r,c")` → `'ocean'` (carved sea-lanes render as open ocean);
-  2. else majority terrain (`NODE_MAP[code].name`) among the 4 orthogonal neighbours that are named cells;
-  3. ties → first-seen; no named neighbours → `'midlands'`.
-  Server already has `WBAPI.nodeMap` and `getLocaleGrid()` (the cell→codes index); it needs a parsed
-  **`SEA_LANES`** set (parse from `WBAPI._rawSrc` the same way `getImpassable()` parses `SEA_RUNS`). If
-  `SEA_LANES` is empty/absent, step 1 is simply skipped (no ocean reclass) — acceptable for v1 and logged.
-
-- **`encounterRate(terrain)`** mirrors `TERRAIN_ENCOUNTER_RATE` (`roll2hit-v3.html:9077`): a lookup table with
-  `_default:0.15`. Parse the literal from `_rawSrc`, or — since it is a small static table — inline a copy in
-  the server with a **parity assertion** (see §6) that fails CI if the two drift.
-
-### 4.3 Monster pick — parity with `_weightedMonsterPick`
-
-On a successful roll the server picks a monster mirroring `_weightedMonsterPick` (`roll2hit-v3.html:32596`):
-tier-weighted draw from `WORLD_DB[terrain].monsters` (fallback `midlands`). **Caveat:** the client weights by
-`_notorietyWeights(_notoriety())`, which is *player-progression* state the server session does not track. For
-v1 the server uses **flat tier weights** (the `WEIGHTS[m.tier] || 10` default with notoriety held at its base
-tier) and stores `{key,name,tier}` on `s.encounter`. Document this as a known SP/MP divergence; full notoriety
-parity is a v2 follow-up (it needs per-session progression, which the MUD layer does not yet model).
-
-### 4.4 Per-session seeded RNG (the instancing proof's backbone)
-
-Each session gets a deterministic RNG stream seeded at `start` so the harness can replay an exact encounter
-trace. Add `s.seed` (derive from `sessionId`, or accept an optional `body.seed` at `start` for the harness)
-and `s.rngState`; advance a small LCG/xorshift per roll. **This is also the only reason the server can avoid
-`Math.random()`** — which is unavailable in the deterministic contexts the harness drives. The roll is:
-
-```
-// on session/move success, empty cell only:
-if (mres.encounter.eligible) {
-  const roll = seededNext(s);                 // 0..1, advances s.rngState (per-session stream)
-  s.encounter = (roll < mres.encounter.baseRate)
-    ? pickMonster(mres.terrain, s)            // flat-tier draw, also via seededNext(s)
-    : null;
-} else {
-  s.encounter = null;                         // named cell or blocked → clear stale encounter
-}
-```
-
-The instancing property falls straight out: `s.encounter` reads and writes **only** `s.*` — no cell state, no
-other session — so client A's stream and client B's stream are independent by construction. The harness
-asserts this empirically (§5) rather than trusting the argument alone.
-
-### 4.5 Ferry hook — resolve the inert `ferryEdges` ✅ RESOLVED (§WALK-5-FU, 2026-06-26)
-
-`mover.js` supported `world.ferryEdges` (a `Set` of `"r,c|r,c"` land↔land-over-sea edges) but `getMoverWorld()`
-never set it, and there was no `FERRY_EDGES` data anywhere — it was dead capability (§WALK-2-FU "inert ferry
-hook"). §WALK-5 deferred the decision (kept the kernel branch, filed the authoring task). **§WALK-5-FU resolved
-it by DELETING the branch, not authoring data.** Rationale: §WALK-1.5 already carries *every* water crossing as a
-**SEA_LANES land bridge** — a passable cell the kernel walks for free — so a `ferryEdges` `Set` would be a
-redundant second water-crossing mechanism. Authoring `FERRY_EDGES` would invent geo content to duplicate what
-SEA_LANES already does; the honest move is to remove the parallel path. Changes (byte-identical across the two
-MOVER:CORE copies, so `check:parity` stays green):
-- dropped the `viaFerry` computation + the now-unused `fromKey`; the blocked check is simply `if (blocked) return
-  __moverBlocked(from, 'sea')`; the result's `via` is always `'step'` (no consumer ever branched on `'ferry'`).
-- rewrote the `world` doc-comment in `mover.js`, the `_moverWorld()` comment in `roll2hit-v3.html`, and the
-  `getMoverWorld()` comment in `wbapi-server.js` to state there is no ferry mechanism (SEA_LANES carries crossings).
-**Verified:** `check:walk` green (MOVER:CORE identical 1847 bytes, behavioural 0 content mismatches, terrain
-10440/10440); MUD harness **24/24**. This was the last open item under §WALK — the series is now fully closed.
+**Pointer fidelity: 12/12 byte-exact at `7f4b73c`** — `SESSIONS`, `SSE_CLIENTS`, `SESSION_TTL`,
+`broadcastCell`, `getMoverWorld`, the four `/api/session/*` routes, the `if (!mres.ok)` 409 branch cited as
+*"~line 7507"*, and the three HTML anchors. `mover.js:60–61` is `terrain` then `baseRate`, exactly as
+claimed. The report measured its own file rather than remembering it.
 
 ---
 
-## 5. The harness (`tests/mud-harness.*`)
+## 5. Spec → shipped delta table
 
-A Node multi-client driver (no Playwright — it speaks HTTP/SSE to the server directly):
+| § | Specified | Shipped | Verdict |
+|---|---|---|---|
+| 4.2 | `terrainAt`: lane→`ocean`; else majority of 4 orthogonal named neighbours; ties→first-seen; none→`midlands` | identical, **plus** a `ROAD_CELLS`→`'road'` step inserted second | **EXTENDED** — §NAV-01b added it to *both* sides symmetrically; `road:0` is now a rate-table key |
+| 4.2 | rate table: *"parse the literal, **or** inline a copy with a parity assertion"* | **parsed** — the server keeps **no copy** | **STRONGER** — no second table to drift |
+| 4.3 | flat tier weights; document the notoriety divergence | shipped, and the server *comments its divergence back at this report* by name (`@1155`) | **SHIPPED** — but the list has since grown (§8) |
+| 4.4 | per-session `s.seed`/`s.rngState`, mulberry32, roll on the empty-cell success path | verbatim | **SHIPPED**, and later **adopted upstream** — below |
+| 4.5 | keep the ferry branch, author `FERRY_EDGES` later | `95c4143` **deleted** the branch instead | **RESOLVED BY DELETION** — `ferryEdges` (9 commits) / `FERRY_EDGES` (12) are RETIRED, not never-shipped; 0 at HEAD |
+| 5 | harness properties (a) delivery, (b) instancing, (c) social state, (d) TTL prune | all four built | (a)(b)(c) ✅ · **(d) ✅ then, ❌ now** (§7) |
+| 6 | *"assert the server's `TERRAIN_ENCOUNTER_RATE` copy === the client's table"* | no copy exists; guard asserts parse round-trip + full-band agreement | **SUPERSEDED, upward** |
+| 8 | *"Ferry deferred, not deleted"* · *"No `huntMode`"* | ferry deleted the same day; `huntMode` re-minted 12 days later | **BOTH OVERTAKEN** — annotated, not removed |
 
-1. **Spin** the server on an ephemeral port (or assume a running dev server; prefer spawning for CI isolation).
-2. **Start K sessions** at the hub, each with a distinct `seed`.
-3. **Subscribe** each to `GET /api/session/events?sessionId=` (SSE) and record every event with its recipient.
-4. **Drive** a scripted move/say sequence per client (deterministic per seed).
-5. **Assert:**
-   - **(a) co-presence delivery** — `player_arrived` and `chat` are delivered to *co-present sessions only*
-     (same `r,c`), never to the actor, never to sessions elsewhere.
-   - **(b) instancing** — each client's encounter trace (`s.encounter` after each move, read back via `who`/
-     the move response) is a **pure function of its own seed + path**; replaying client A's seed+path
-     reproduces its trace exactly, and A's encounters never appear in B's trace. **This is the core property.**
-   - **(c) social state** — `who`/`look` reflect true co-presence (the `players[]` list at a cell).
-   - **(d) TTL prune** — fast-forwarding past `SESSION_TTL` (inject a clock or temporarily shrink the TTL via
-     a test env var) drops idle sessions and closes their SSE.
-
-The harness is the *acceptance test* for §WALK-5; it lives outside the Playwright suite because it is a
-server-protocol test, but it should run under `npm run` and (cheaply) in CI.
-
----
-
-## 6. Parity guard (extends the §WALK-4 invariant suite)
-
-§WALK-4 proved structural/behavioural mover parity (`scripts/check-mover-parity.js`,
-`scripts/check-mover-behaviour.js`). §WALK-5 adds a **terrain/encounter parity** check so the server's new
-`terrainAt`/`encounterRate`/`encounterRate`-table and monster-pick cannot silently drift from the SP client:
-
-- assert the server's `TERRAIN_ENCOUNTER_RATE` copy === the client's parsed table (keys + values + `_default`);
-- assert `terrainAt(r,c)` agrees with `_inferTerrain(r,c)` on a deterministic sample of empty cells
-  (replicate `_inferTerrain` offline from `NODE_MAP`/`SEA_LANES`, compare);
-- wire into `npm run check:walk` so the existing CI gate (`.github/workflows/walk-invariants.yml`) enforces it.
-
-This keeps the §6 acceptance bar from the parent series — *green on current `main`* — and means any future
-terrain re-tuning that touches one side and not the other fails CI immediately.
+**The seeded stream went the other way.** §4.4 called the per-session PRNG *"mandatory, not a nicety — the
+only reason the server can avoid `Math.random()`."* Twenty-six days later `c22f4f0` (§VM-01-B) moved the
+**single-player client** onto the same algorithm: `` `function _seededNext()@6434` `` is byte-identical to
+the server's but for a lazy bootstrap, and `check:rng` (CI gate #10) proves it — **6,000 draws across 12
+seeds, client == server, duel kernel included.** A save file now fully determines its future rolls. A
+server-side test convenience became a property of the whole game, and it is the largest thing this two-hour
+report produced.
 
 ---
 
-## 7. Increment plan (one commit each, per the Directive)
+## 6. Risk-register outcomes
 
-Strictly sequential; each is a green checkpoint (`npm run check:walk` + harness where applicable):
-
-- **Inc 1 — World inputs. ✅ DONE.** Added `getSeaLanes()` parse + `terrainAt`/`encounterRate` to
-  `getMoverWorld()` (wbapi-server.js); added `scripts/check-terrain-parity.js` to `scripts/` + `check:walk` +
-  CI `paths:`. *No behaviour change to `move` yet* (encounter not yet stored). Verified the kernel now reports
-  non-zero `baseRate` on empty cells (LHR N→empty `eligible:true baseRate:0.15`; E→named BMA `eligible:false`).
-  The guard extracts the REAL `_inferTerrain` (HTML) + `terrainAt` (server) and runs both in a sandbox: rate
-  table (15 keys) + SEA_LANES (59 cells) regex round-trip, terrainAt==_inferTerrain on all 10440 band cells.
-  **Parity guard green; full `check:walk` green.**
-- **Inc 2 — Instanced roll. ✅ DONE.** Added `s.seed`/`s.rngState`/`seededNext` (mulberry32), `pickMonster`
-  (flat base-tier weights `{trivial:40,easy:35,medium:20,hard:4,deadly:1}` via `WBAPI.monsters.byTerrain`,
-  midlands fallback), and the §4.4 roll on the `session/move` **success** path; stored `s.encounter`; surfaced
-  it on the move response + `who` (which also exposes `seed`). Empty cell rolls; named cell clears; a blocked
-  **409** returns early so a pending encounter survives (no move happened). `session/start` accepts an optional
-  `body.seed` for reproducible harness traces. **Verified live over HTTP** (throwaway `PORT=1368` instance,
-  user's 1367 untouched): determinism (same seed+path ⇒ identical trace), firing (32/40 seeds fired ≥1), and
-  per-seed divergence (31 distinct traces / 40 seeds). The automated multi-client SSE/no-bleed assertions are
-  Inc 3. **`check:walk` green.**
-- **Inc 3 — Harness. ✅ DONE.** Built `tests/mud-harness.mjs` (`npm run test:mud`) — a pure HTTP+SSE Node
-  driver (no Playwright). Spawns a throwaway `wbapi-server` on `MUD_HARNESS_PORT` (default 13679, pre-checked;
-  child killed in `finally`), starts K seeded sessions, opens an SSE stream per client (parses `event:`/`data:`
-  frames into `events[]`), drives scripted move/say, and asserts properties (a)–(c): co-presence chat (every
-  co-present session incl. the sender exactly once; a walked-away session stops hearing the cell), cell-scoped
-  `player_arrived` (once, only to sessions already at the destination, never the mover), instancing (encounters
-  never delivered over SSE; trace is a pure fn of the session's own seed — determinism; different seeds
-  diverge), and `who`/`look` co-presence. **18/18, green across 3 consecutive runs.** **Caught + fixed a real
-  §CELL-07 bug:** `session/say` double-delivered the sender's own chat (`broadcastCell(...,null)` already
-  includes the sender, then a redundant `sseSend` to the sender fired again) — removed the redundant send.
-  *CI wiring deferred to Inc 4: the harness boots the server, which top-level-requires `@anthropic-ai/sdk`, so
-  it needs an `npm ci` job (unlike the pure-stdlib `check:walk`).*
-- **Inc 4 — TTL + CI + docs. ✅ DONE.** Added property (d): a second throwaway server booted with a
-  `SESSION_TTL_MS` env override (inert in every real deployment — falls back to the 30-min default) so the
-  prune path runs in ms. The harness keeps a "Warm" session alive with periodic `look`s and leaves a "Ghost"
-  idle, then triggers the sweep (every `/session/*` request prunes first) and asserts **only** the idle Ghost
-  is dropped *and* its SSE stream was server-closed (`res.end()` → client `'end'`), while Warm survives —
-  proving the prune is selective, not a blanket reap. **Harness now 24/24.** Wired into CI as a **separate
-  `mud` job** in `walk-invariants.yml` (`npm ci` + `npm run test:mud`) — it can't ride the stdlib-only
-  `invariants` job because the server top-level-requires `@anthropic-ai/sdk`. Docs synced; **§WALK-5-FU**
-  (ferry data) filed. **Green: full harness + `check:walk`.** This closes §WALK-5 and the entire §WALK series.
-
----
-
-## 8. Non-obvious decisions (for the next reader)
-
-- **No `huntMode`.** Anything in older notes implying a guaranteed-encounter mode is stale post-§TIMELESS-01.
-- **409 stays.** The block path predates the parent §7.1 sketch and is tested; §WALK-5 is purely additive on
-  the 200 path.
-- **`s.encounter`, not `s.state.encounter`.** `s.state` is the lifecycle string; nesting on it would change
-  the `who` API and clobber `'active'`.
-- **Flat tier weights, not notoriety.** The server session has no progression state; full SP parity on the
-  monster draw is a v2/§WALK-5-FU concern, explicitly logged as an SP/MP divergence.
-- **Ferry deferred, not deleted.** Kernel keeps the capability; data (`FERRY_EDGES`) is a paired SP+server
-  content task tracked as §WALK-5-FU — shipping it server-only would be an undetectable parity break.
-- **Seeded RNG is mandatory, not a nicety.** It is both the instancing proof's backbone and the only way the
-  server rolls encounters in the deterministic contexts the harness (and CI) run in.
-
----
-
-## 9. Files (as shipped)
-
-| File | Change |
+| Call made in 2026-06 | Outcome at HEAD |
 |---|---|
-| `wbapi-server.js` | `getMoverWorld()` +`terrainAt`/`encounterRate`/`SEA_LANES`; `session/move` +instanced roll; `s.encounter`/`s.seed`/`s.rngState`; `who` +`encounter`; `SESSION_TTL` reads `SESSION_TTL_MS` env override (test-only, prod-inert) |
-| `scripts/check-terrain-parity.js` (new) | server↔client terrain/encounter-rate parity guard |
-| `package.json` | `check:terrain` + `test:mud` aliases; `check:terrain` folded into `check:walk` |
-| `tests/mud-harness.mjs` (new) | K-client deterministic HTTP+SSE harness, properties a–d (24/24) |
-| `.github/workflows/walk-invariants.yml` | new `mud` job (`npm ci` + `test:mud`); harness path added to triggers |
-| `index.md` / `plan.md` | cross-ref + status; SP/MP encounter divergence note |
-| this report | status → COMPLETE |
+| No per-cell mutex needed (single-threaded Node) | **Correct** — no locking has ever been added |
+| Instancing is structural: the roll touches only `s.*` | **Correct, and it held under pressure.** §MESH-01h later voids a sentry-guarded encounter *after* the roll, precisely so the stream still advances and the trace stays replayable |
+| `s.encounter` is additive; nothing changes type | **Correct** — `who` still serialises `state` as the lifecycle string |
+| 409 block path is right; leave it alone | **Correct** — untouched through §MESH-01/02 and §NAV-01f/g |
+| Ferry server-only would be an undetectable parity break | **Correct in principle, moot in fact** — the branch was deleted rather than fed |
+| Named cells are not encounter-eligible | **Correct** — `` `function _enterEmptyCell(r, c)@28420` `` is still the only client site rolling against the terrain rate |
+
+Six calls, six correct. The report's weakest passages are not judgements but a blanket sentence (§3) and a
+timing constant (§7).
+
+---
+
+## 7. Verification at HEAD (2026-08-14)
+
+**Parity guard — green, and exactly the numbers Inc 1 claimed:**
+
+```
+A   rate-table keys = 15    (client == server: true)      ← Inc 1 said "15 keys"
+A2  SEA_LANES cells = 59    (client == server: true)      ← Inc 1 said "59 cells"
+A3  ROAD_CELLS cells = 410  (client == server: true)      ← §NAV-01b, added later
+B   terrainAt agree = 10440/10440   diffs = 0             ← Inc 1 said "all 10440 band cells"
+```
+
+**Harness — `npm run test:mud` exits 1: 267 passed, 2 failed, three consecutive runs, deterministic.**
+The two failures are property **(d)**, this report's own Inc 4:
+
+```
+[D] idle session past SESSION_TTL is pruned + its SSE closed
+  ✗ after idle TTL, exactly one session survives
+  ✗ Warm (kept active) survives; Ghost (idle) is pruned
+  ✓ pruned Ghost's SSE stream was closed by the server
+  ✓ pruned Ghost session is gone (look 404s)
+```
+
+**The prune is not broken; the stopwatch is.** Re-created in isolation the scenario passes — one survivor,
+Warm. Instrumented inside the full run, `who` returns **count 0**: *both* sessions were reaped.
+`sessionPrune()` runs at the **top of every `/api/session/*` request**, before `look` refreshes `lastSeen` —
+correct behaviour, since a client silent longer than the TTL should be pruned by its own late ping. But
+section [D] sets `TTL_MS = 700` with keep-alives every 280 ms, and by then five node servers are live.
+Measured round-trips in one run: **217 ms, 463 ms, 644 ms** — so the second keep-alive was issued **744 ms**
+after the first, past the TTL, and Warm's own keep-alive killed it. Under 300 ms of margin, against a
+harness that has grown 11× since the constant was chosen. Filed as **§DX-02ca**.
+
+**Growth.** **18/18** at Inc 3 (`a9ee5eb`), **24/24** at Inc 4 (`8a280af`) — both byte-exact against those
+commits. At HEAD: **269 assertions across 26 lettered sections**, 1,447 lines, and the acceptance surface for
+§MESH-01 (a–j), §MESH-02, §NAV-01f/g, the duel kernel, the no-dupe ledger and the ACL. Four properties
+written to prove one design decision became the repo's entire multiplayer test rig.
+
+---
+
+## 8. Defects found → BACKLOG
+
+- **§DX-02ca** 🟢 — the [D] TTL assertion is red, which means `npm run test:mud` exits 1 and **CI's `mud`
+  job fails on any push touching the mover, the server or the harness**. Three live docs
+  (`BACKLOG.md`, `potential.md`, `plan-archive.md`) still record the harness as **269/269**.
+- **§AUDIT-03bg** 🟡 — **§4.3 logged one SP/MP encounter divergence; there are now four**, and none of the
+  three new ones is written down anywhere. The client's roll at
+  `` `function _enterEmptyCell(r, c)@28420` `` applies, in order: `_partyEncounterRate` (§MESH-01f — **×0.5
+  with a co-present ally**, 0 with a sentry), then §KG-01's `` `if (S_story.huntMode) baseRate = Math.min(0.8, baseRate * 2);@28440` ``,
+  then a monster draw that is both notoriety-weighted *and* §KG-01 level-biased. The server applies none of
+  them. `check:terrain` fences the *inputs* — the table and `terrainAt` — and nothing fences the **applied
+  rate**, which is exactly where three later tracks widened the gap. The row also carries a stale cross-file
+  pointer: the comment at HTML line 28441 cites `wbapi-server.js:8784` for the server's matching roll, which
+  now lives at **8890**. (Its two neighbours, `:1147` and `:1155`, are still exact.)
+- **§AUDIT-03be** — extended, not re-filed: this report is the **seventh** site certifying a Hunt Mode
+  removal that was undone. Annotated in place in §3 above.
+
+---
+
+## 9. Ship record
+
+Six commits, **2026-06-26, 11:41 → 13:33 — one hour and fifty-two minutes from spec to closed series.**
+
+| Commit | Time | Increment |
+|---|---|---|
+| `7f4b73c` | 11:41 | Spec (this report) |
+| `65604e9` | 11:52 | **Inc 1** — world inputs + `scripts/check-terrain-parity.js` into `check:walk`. No behaviour change to `move`. |
+| `278cfdc` | 12:41 | **Inc 2** — the instanced roll, surfaced on the move response and `who`. Verified live on a throwaway `PORT=1368`: 32/40 seeds fired, **31 distinct traces from 40 seeds**. |
+| `a9ee5eb` | 12:59 | **Inc 3** — `tests/mud-harness.mjs`, properties (a)–(c), **18/18**. Caught and fixed a real §CELL-07 bug: `session/say` double-delivered the sender's own line. |
+| `8a280af` | 13:17 | **Inc 4** — property (d) via a second server with `SESSION_TTL_MS`; **24/24**; CI `mud` job. |
+| `95c4143` | 13:33 | **§WALK-5-FU** — delete the inert `ferryEdges` branch, both MOVER:CORE copies byte-identical. Series closed. |
+
+**Files:** `js/wbapi-server.js` · `scripts/check-terrain-parity.js` (new) · `package.json` · `tests/mud-harness.mjs` (new) · `.github/workflows/walk-invariants.yml` · `index.md`.
+
+---
+
+## 10. Notes for the next reader
+
+- **A pending encounter survives a blocked move** — the 409 returns before the roll, because no step
+  happened.
+- **Ferry is gone, not deferred.** The original §8 said the opposite for about twenty minutes.
+- **A water crossing is terrain, not a permission.** The strongest sentence the §WALK series produced, and
+  this report is where the last exception to it was surrendered.
+
+---
+
+*§DOC-02bm re-verification, 2026-08-14. HISTORY document — deltas are annotated, never deleted.*
