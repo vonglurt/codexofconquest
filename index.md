@@ -293,7 +293,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `lab-reports/lab-report-junction-reweave-overhaul.md` | §CELL | Junction reduction & reweave overhaul — P_NUKE cull + A\* mesh design (2026-06-10). **Verified §DOC-02aw:** P_NUKE shipped and is live at HEAD; the A\* half never existed; §3's safety guarantee was false when written (the Littoral crossings) |
 | `lab-reports/lab-report-mega-reweave.md` | §CELL | MegaReWeave procedure & configuration — batch coordinate migration, world mesh construction |
 | `lab-reports/lab-report-highway-mesh-entry.md` | §CELL | Highway mesh-entry selection & same-component skip — connected-component BFS, entry-point algorithm |
-| `lab-reports/lab-report-walk15fu-grid-resolution.md` | §WALK-1.5-FU(c) | Grid-resolution analysis — 0.25° REJECTED (doesn't fix anchor-chained piles; 16× cells, 4× steps); de-pile at 1° instead |
+| `lab-reports/lab-report-walk15fu-grid-resolution.md` | §WALK-1.5-FU(c) | Grid-resolution analysis — 0.25° REJECTED (doesn't fix anchor-chained piles; 16× cells, 4× steps); de-pile at 1° instead. **Re-verified 2026-08-14 (§DOC-02bn): every figure replays exact and the conclusion still holds (28 of 66 shared cells unchanged at 0.25°); its one false clause — a "locale-list sub-location picker" that never existed — is the origin of §AUDIT-03x** |
 | `lab-reports/lab-report-world-structure-critique.md` | — | World structure critique — geographic architecture, node density, IATA anchor system |
 | `archive/lab-report-plan-cleanup-v13.md` | 9–13 | Spec archive Layers 9–13 — corridor, hunt, stalk, quest engine |
 | `archive/lab-report-plan-cleanup-v17.md` | 14–17 | Spec archive Layers 14–17 — conditions, shield, flee, 6 bug corrections |
