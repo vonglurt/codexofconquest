@@ -1,391 +1,487 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report: UQF Migration Playbook & Full-Migration Plan
-**Document ID:** §ARCH-01 (Phase 3 companion)
-**Status:** ✅ CLOSED 2026-07-05 (Wave 8c) — all ~2,700 quests UQF-1.0; QuestRuntime is the single execution surface; QUEST_DB is the single source of truth. Deliberate residuals: math×5 (§MATH-01) + 30 blq stubs, both activate-only.
-**Date:** 2026-06-28
-**Scope:** roll2hit-v3.html — migrating all 284 QUEST_DB entries from legacy
-formats to Universal Quest Format (UQF v1.0)
+# Lab Report: The UQF Migration Playbook (§ARCH-01)
+
+**Document ID:** §ARCH-01 (Phase 3 companion) — a **method** document, not a feature close-out.
+**Original date:** 2026-06-28 · **Closed:** 2026-07-05, Wave 8c (`647e070`)
+**Reference build:** `24becb6` (2026-06-28 14:32:20 −0700, Wave 1a) — the tree the §2 survey was taken against.
+**Status:** ✅ CLOSED. Every `QUEST_DB` entry executes as UQF-1.0 except 30 deliberate stubs. `QuestRuntime` is the sole execution surface; `QUEST_DB` is the single source of truth.
+**Verified:** 2026-08-17 (§DOC-02bu) against HEAD and against the archive. Findings in §7–§10.
 
 ---
 
-## 1. Success report — what is done
+## 1. Abstract
 
-§ARCH-01 Phases 1–3 are live and the **first arc (§WISDOM-01) is 100 % UQF**:
+`QUEST_DB` began as **data with JavaScript stapled to it**: each quest carried its own
+`activateCond` predicate, `onPass`/`onFail`/`onComplete` closures, and a bespoke `completeFn`.
+Behaviour lived in ~2,800 hand-written functions with no shared vocabulary, no validator, and no
+way to ask *"what does this quest do?"* except to read it.
 
-| Phase | Result | Commit |
-|-------|--------|--------|
-| Phase 1 | Inert UQF runtime (`SCHEMA_VERSION`, `BIT_CONTRACTS`, `validateQuest`, `adaptLegacyQuest`, `QuestRuntime`) | `80bc1f4` |
-| Phase 2 | Dual-path dispatch — `_rollCeremonia` → `QuestRuntime` for `schema:'UQF-1.0'`; panel/sheet render UQF; gate-gated activation | `f5117ca` |
-| Phase 3a | First quest migrated (`quest_wis_01`) + `mission_bit` bit kind + `passText` parity | `d7505ff` |
-| Phase 3b | `quest_wis_02`–`05` migrated (rest of the skill-checks) | `014fd00` |
-| Phase 3c | Declarative completion path (`canComplete`) + `wis_00/06/07` migrated → arc 100 % UQF | `fcd1e37` |
-| Wave 1a | Wane's Crown (`quest_wane_01`–`06`) + `gate.questsAttempted`/`questsDone` terms; `onPass` closure preserved via `_legacy_fn` | `24becb6` |
-| Wave 1b | Whisper's Crown (`quest_whisper_01`–`06`); first Wave-1 `side` quest (`whisper_05`: `completeFn`→`completion` gate, `onComplete` kept as live hook); flaky-FAIL-test fix | `7b69ce7` |
-| Wave 1c | Glut's Crown (`quest_glut_01`–`06`); `side` quest with a **flag** activation gate + multi-effect `onComplete` (inventory splice + crown flag). All 3 crone Crowns now 100% UQF. | `ee58181` |
-| Wave 1d | Ceremonia: Yael arc (`quest_ceremonia_yael_01`–`05`); + `gate.favorMin` term, `checkFailFlag`→`onFail:[mission_bit]`, vignetteTextAlt render parity fix | `c164fe2` |
-| Wave 1e | §1367 skill-checks (4 of 6: `e_wycliffe`/`b_tamerlane`/`c_ottoman`/`d_hansa`); clamped faction/faith track counters via `_legacy_fn`; first real `onFail` track effect (`d_hansa`) | `e98feb7` |
-| Wave 1f | Ceremonia d0207 arc (5 acts, first full d02xx arc); + `gate.battles` term, `notFlags`/flag/battle completion patterns | `e8f7d59` |
-| Wave 1g | d0201+d0205+d0209 (3 full d02xx arcs, 15 quests) via **codemod**; onFail closures, reward.gold, side onComplete; zero engine changes | `7583772` |
-| Wave 1h | d0204+d0206+d0208+d0210 (final 4 d02xx arcs, 20 quests) via codemod #2 → **d02xx 40/40**; + `gate.shardsMin`/`notBattles`/`restedAtMin` + `completion.questsComplete`; **deliberate bug-fix** (dead completeItems → reward.items) | `58e598f` |
-| Wave 1i | Innmother skill-checks (`quest_inn_02`/`03`/`04`) — first **non-d02** Wave-1 arc; + `gate.sleptAt` term; `onPass:()=>_innKindness(1)` via `_legacy_fn`; side quests stay legacy | `527692c` |
-| §SKILLFIX-01 | **Game-wide bug-fix** (user-approved): `_rollCeremonia` read only `checkAbility`/`checkLabel`, but **2443** skill_checks use `checkStat`/`checkSkill` → rolled with **+0 ability mod** + "undefined" label. Aliased `checkAbility\|\|checkStat` / `checkLabel\|\|checkSkill` at all 4 read sites. Makes every `checkStat`→UQF migration **pure-parity**. | `662ee99` |
-| Wave 1j | Spark: the Harmony Chain (`quest_spark_01–05`) — first arc on the §SKILLFIX-01 pure-parity footing. 3 skill_checks (01 CHA Persuasion DC10 retryable, 03 WIS Medicine DC13, 04 INT Investigation DC14) + 2 side (02/05). `checkPassFlag`→`mission_bit` (03/04 no `bitLabel` → `_flagToLabel` fallback); rich onPass closures (gold/xp/items/knowledge/msg) kept whole via `_legacy_fn`; spark_01 onFail (hp−1) via `_legacy_fn`. Side 02/05: gate←activateCond (05 = 2-flag AND), completion←completeFn, onComplete kept verbatim. **Zero engine changes.** | `a06772d` |
-| Wave 1k | Spark2: the Dunfall Harmony Chain (`quest_spark2_01–05`) — Bram/Oat/Fehn arc at DNF. 2 skill_checks (02 WIS Animal Handling DC11 retryable, 04 INT Nature DC12 **non-retryable**) + 3 side (01/03/05). `checkPassFlag`→`mission_bit{flag}` (no label); onPass closures via `_legacy_fn` (04 splices Oat's Harbor Bead → Dunfall Drift Spore); both keep onFail msg, 04's non-retryable FAIL runs msg then locks. Side 01/03/05 are **pure hook/waypoint gates, NO onComplete** → structural gate/completion only. **Zero engine changes.** | `d9f2d1e` |
-| Wave 1l | Codex Inquisitor gauntlet (`quest_inquisitor_handshake`/`questions`/`final`) at NUE — `checkAbility`/`checkLabel` quests (the ~30 that worked pre-§SKILLFIX-01) → pure parity. **Fully decomposed** (no onPass `_legacy_fn`): `checkPassFlag`→`mission_bit{flag}` (no label), `xpAward`→`reward{xp}` (50/75/200), final's item-push → `reward{items:[Archive Key]}`. Only `questions` keeps `onFail:[_legacy_fn]` (hp−10 psychic). Chained flag gates; `retryGateDays` 0/0/1 top-level. The §D01-02 NUE handshake button dispatches transparently. **Zero engine changes.** | `255060c` |
-| Wave 1m | Sea: The Warmth Calm (`quest_sea_01/02/03`) — Deep Warmth Eel arc (SEN→NWI). 2 skill_checks (02 INT Investigation DC13, 03 WIS Nature DC14) pure-parity via `mission_bit{flag}`+`_legacy_fn` (03 grants `pirateCrew_allied` + Joint Pirate Debt Note). **New engine term `completion.atNode`** (`S_story.currentCode === code`) ← `completeFn:()=>currentCode==='NWI'`, for waypoint-arrival side quests. sea_01 `onComplete` kept verbatim. | `1c636ab` |
-| Wave 1n | Naval Intercept branch (`quest_sb_01`/`fight`/`parley`/`examine`) — Captain Keel's role-choice intercept at GCI. **New engine term `gate.flagEquals`** (`{field:value}` strict equality) ← `sbChosenRole === 'fight'/'parley'/'examine'`. parley/examine `retryable:false` skill_checks; onFail `_legacy_fn` flips `sbChosenRole`→'fight' (branch fallthrough → sb_fight activates). ⚠ **Latent +800xp double-count in sb_fight** (onComplete +400 ∧ xpAward:400) preserved verbatim, flagged for later fix. | `869dc09` |
-| Wave 1o | Lake/Relay Monster Hunt (`quest_hunt_01–04` + `quest_hunt2_01–04`, 8 quests) — 2 identical investigate→clear arcs (hunt2 Night Hag WRO→BNX; hunt drowners HFT→VAW). Hook side (gate:{}) + 2 `retryable:false` checkStat skill_checks (`mission_bit{flag}` no-label + onPass/onFail `_legacy_fn`) + lair-clear side (battle completion + verbatim onComplete). Zero engine changes. ⚠ hunt_04/hunt2_04 share the sb_fight double-count (+1000/+1200xp), preserved. | `df36c93` |
-| Wave 1p | Bilge Mystery (§WHODUNIT-01, `quest_bilge_01–04`) — same investigate→clear shape as the hunt arcs (SEN). Hook side (flag gate) + 2 `retryable:false` checkStat skill_checks (02 INT Investigation DC12, 03 WIS Insight DC13; `mission_bit{flag}` no-label + onPass/onFail `_legacy_fn`) + lair-clear side (battle completion `MS_BILGE` + verbatim onComplete). Zero engine changes. ⚠ bilge_04 shares the double-count (+1200xp), preserved. | `54e0130` |
-| Wave 1q | The Personal Legend (§ALCHEMY-01, `quest_alch_01–07`) — Roen's pilgrimage (Coelho's Alchemist retold). **5 structural waypoint side quests** (01/02/03/06/07 — flag-chained gate + completion, NO onComplete) + 2 retryable checkStat skill_checks (04 CHA Persuasion DC11, 05 WIS Insight DC12; `mission_bit{flag}` no-label + onPass/onFail `_legacy_fn`). Arc's terminal `personalLegendComplete` gates the wis arc. Zero engine changes. | `23ba7b5` |
-| Wave 1r | The Scar (§SCAR-01 Gret Orrens, `quest_scar_01–04`) — **checkAbility** quests (pure parity), **no checkPassFlag** (closures set flags → `_legacy_fn`; `xpAward`→`reward{xp}`). scar_03 is a moral **branch** (onPass `gretChoice='help'`, onFail `gretChoice='refuse'`; `retryable:false` → locks 'failed' but both paths progress, since scar_04 gates on `gretChoice` truthy). scar_04 (side) keeps its `itemChain` (Scar's Light + Orrens Manuscript) + `xpAward:350` + the per-id WIS handler (all schema-agnostic); completion = `flags:['gretChoice']` ∧ `atNode:'NUE'` (reuses the Wave-1m atNode term). `reward:500` dead/display-only, kept. Zero engine changes. | `ac9ef23` |
-| Wave 1s | The Four Courts of the Littoral Sea (§SIREN-01, `quest_aurel_tide`/`calice_bridge`/`mireille_ami`/`solen_horizon`/`sea_overseer`) — first **Wave-1 singleton cluster** (the four-courts sea-betrayal chain that `sea_overseer` culminates, LC1–LC4 + LSO). 5 `checkAbility` skill_checks, all `retryable:false`, **pure parity, fully decomposed** (no onPass closures existed): `checkPassFlag`→onPass `mission_bit{flag,label}` + `xpAward`→`reward`; **`checkFailFlag`→onFail `mission_bit` with the SAME `bitLabel`** (mirrors legacy `_grantMissionBit(failFlag, q.bitLabel)`; safe ∵ non-retryable ⇒ fail flag grants once). `solen_horizon` had no `checkFailFlag` → `onFail:[]` (a simple skill_check mid-arc, folded in for whole-arc coherence). Pass/fail flags read directly by the LC1–LC4/LSO NPC quoteFns + the LJ3/betrayalCount blocks → `mission_bit` sets flag + token identically. Zero engine changes. +4 tests. | `a1b67db` |
-| Wave 1t | Biblical singletons (`quest_stoning_lystra` KYA, `quest_basket_damascus` DAM) — closes the Acts/Pauline Wave-1 cluster. Both **checkAbility** STR Athletics. **stoning** (`retryable:false`): **SHARED pass/fail flag** `stoningEvent` (bitLabel 'Lystra Stoning') — the same `mission_bit` grants on BOTH onPass and onFail; the legacy `onFail` hp→1 closure rides as a `_legacy_fn` ordered **before** the bit (mirrors legacy `onFail()`-then-`_grantMissionBit`); gate `{questsDone:['quest_lame_lystra']}`. **basket** (`retryable:true`, `retryGateDays:1` kept): onPass **fully decomposed** into TWO `mission_bit`s (`escapedDamascus` 'Damascus Escape' + the `_grantMissionBit('basketRopeComplete','Basket Rope')` closure → a second mission_bit, same order) + `reward{xp:150}`; `onFail:[]` (retryable ⇒ no terminal fail flag); gate `{flags:['anathSightRestored']}`. Both quests' flags read directly by the LT render block + the KYA HP cap — token-grant identical. Zero engine changes. +6 tests. | `2c0359b` |
-| Wave 1u | Atlantean iodine chain (`quest_iodine_01` INN, `quest_shore_02` DS1, `quest_forge_01` DSF, `quest_sunken_01` DA1) — the four §CROWN-01 iodine-reduction skill_checks. All **retryable:true**, **no checkPassFlag/checkFailFlag**. Each has a rich onPass closure (item push / gold / `S_story.knowledge` / `storyMsg` + flag set — `kelpBedsCharted`/`forgeActivated`/`inscriptionRead`) that resists clean decomposition → **kept verbatim as a single `_legacy_fn`**, ordered **after** `reward{xp}` (mirrors legacy `xpAward`-then-`onPass()`; the `reward` handler does `xp+=…; _checkLevelUp()` byte-for-byte). No onFail closures → `onFail:[]`. `activateCond` → gate: iodine_01 `{questsAttempted:['quest_inn_01']}`, forge_01 `{flags:['atlanteanProcessKnown']}`, shore_02/sunken_01 `() => true` → `{}`. The side acts (iodine_02/03, shore_01, forge_02, sunken_02) stay legacy on the onComplete path — only the skill_checks migrate. Zero engine changes. +4 tests. | `d84c87b` |
-| Wave 1v | **Closes Wave 1.** Final singletons — Highland trade (`quest_df_02` DNF, `quest_sk_02` MME) + folk wisdom (`quest_lxvii67` HKG, `quest_guide_04` SSJ). **Highland** (both `retryable:true`, **checkStat**): `checkPassFlag` → onPass `mission_bit` with **NO explicit label** (so `_grantMissionBit(flag, undefined)` falls through to `_flagToLabel` — byte-for-byte with legacy `q.bitLabel===undefined`), ordered **before** the rich gold/xp/item/storyMsg closure kept as a single `_legacy_fn` (xpAward was 0 — all reward lives in the closure); fail storyMsg → `onFail:[_legacy_fn]`; gates `{flags:['dunfallAccessed']}` / `{flags:['saltwickAccessed']}`. **Folk** (both `retryable:true`, **checkAbility**): no checkPassFlag ⇒ legacy granted no token, so the simple onPass flag-set (`faith_folk` Math.min++ / `emmerStage4a=true`) rides as a `_legacy_fn` (NOT a mission_bit) after `reward{xp}`; `onFail:[]`. `guide_04` gate → `{questsDone:['quest_guide_03']}`; **`lxvii67`'s `faith_folk>=1` gate is inexpressible in canActivate's term set** ⇒ `gate:{_legacyFn:true}` (canActivate returns permissive) **keeps `activateCond` load-bearing** at the activation site. Zero engine changes. +8 tests. | `cdc788f` |
-| **Wave 2 begins** | Script-assisted bulk migration via **`scripts/uqf-bulk-migrate.js`** (deterministic, safe-by-construction: never re-serializes narrative strings — only deletes the scalar legacy `check*`/`xpAward`/`goldAward`/`bitLabel` fields, decomposes the trivial `() => !!S_story.<flag>` activateCond → `gate:{flags:[…]}` (any other activateCond kept verbatim behind `gate:{_legacyFn:true}`), and inserts `schema/gate/bits` after the `type:"skill_check",` token). **Landscape:** 2350 well-formed legacy skill_checks remain (post-Wave-1) — **0 still carry onPass/onFail closures** (Wave 1 cleared them all); dominant shape = `checkPassFlag` (2242, of which 2234 have NO bitLabel → `_flagToLabel` parity), only 11 xpAward / 3 goldAward / **0 fail-flags**. Migration verified per-family against a **pre-migration golden capture** (legacy resolution + verbatim display fields) re-run post-migration for byte-for-byte parity. | — |
-| Wave 2a | First family: **`hav_*`** (The Articles corsair-papers arcs — 30 acts, nodes CHI/RHD/…). Perfectly uniform: all `checkStat`, all `checkPassFlag` (no bitLabel, no xp/gold), non-retryable; **every activateCond is `() => !!S_story.<flag>`** → all gates decomposed to `gate:{flags:[priorActPassFlag]}` (6 act1 openers → `gate:{}`), giving clean sequential-chain activation. `onPass:[mission_bit{flag}]`, `onFail:[]`. Display fields byte-identical vs golden; pass→done+flag+`_flagToLabel` token, fail→failed (non-retryable). Zero engine changes. +4 tests (self-contained: enumerates the family from QUEST_DB). | `ae4f6de` |
-| Wave 2b | Largest single family: **`ada*`** (235 acts — the biggest legacy skill_check family, nodes WM/TBZ/TRB/…). Maximally uniform: all `checkStat` (5 distinct stats), all `checkPassFlag` (no bitLabel/xp/gold), non-retryable, and **no activateCond on any act** → all `gate:{}` (independently activatable, matching legacy). Confirms the migrator scales to a large family in one pass: 235/235 verified byte-for-byte vs golden (structure + verbatim display fields + pass/fail resolution). `onPass:[mission_bit{flag}]`, `onFail:[]`. Zero engine changes. +2 tests (one asserts structure+gate:{} across all 235; one runs full pass/fail parity across all 235). | `8cf47e9` |
-| Wave 2c | **`ath*`** (113 acts — Trojan-cycle `ath_c1a*` chapters + `ath_NN_act*` arcs). Mixed gates: 72 `gate:{}` + 41 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Surfaced + fixed a latent crash + hardened the migrator:** (1) `trivialGateFlag` required a trailing comma → missed trivial gates that are the literal's LAST field (no comma, `}`-terminated); widened lookahead to `(?=[,}])`. (2) ~3 acts (`ath_c1a2/c1a4/c1a5`) carried a **duplicate `activateCond`** — the real function form PLUS a dead string copy `activateCond:"() => …"`; JS last-key-wins made the parsed value a STRING, so the legacy activation site `q.activateCond()` **threw a TypeError at runtime** (live crash on those nodes). Migrator now strips BOTH forms (`/g` + optional `"?`) and decomposes the intended gate, with a hard post-condition (`throw` if any `activateCond` survives a decompose) → the migration **fixes** the crash, faithful to the function form's intent. `type:"hybrid"` members (e.g. `ath_c1a3`) are correctly skipped (skill_check-only scope; their duplicate-key bug is pre-existing, untouched — ~33 string-form activateConds remain file-wide in not-yet-migrated families + hybrids). Verified vs golden (display + pass/fail) **plus** gate behavior (`canActivate` true iff flag set) + a no-residual-`activateCond` invariant. +2 tests. | `10a0d05` |
-| Wave 2d | **`lis*`** (89 acts — Lisbon Camões water-stained-quire authentication arcs; two naming conventions: `lis_NN_actN` 6 arcs × 4 + `lisNN_actN` 13 arcs × 5). Mixed gates: 71 `gate:{}` + 18 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}` (the 6 `lis_NN` arcs' act2–4 chains; the 13 `lisNN` arcs carry no activateCond). All `checkStat`, all `checkPassFlag` (no bitLabel/xp/gold), non-retryable, no `_legacyFn`. **First explicitly-documented UPPERCASE-checkStat family** (CHA/INT/STR/WIS): the legacy resolver reads `abilityScores[q.checkStat]` **raw-case** while `abilityScores` keys are lowercase ⇒ legacy silently applied a **+0** ability modifier (the §SKILLFIX-01 latent bug). The UQF `_rollSkill` lowercases ⇒ applies the **real** modifier. So migration realizes the §SKILLFIX-01 fix for this family (the intended baseline; same situation as the already-migrated uppercase `hav_*`). Parity verified vs a golden seeded under **both** stat cases (drives a deterministic extreme through either resolver) — structure + verbatim display + pass/fail resolution + gate behavior, no residual `activateCond`, no `pageerror`. `onPass:[mission_bit{flag}]`, `onFail:[]`. Zero engine changes. +2 tests. | `2529bb0` |
-| Wave 2e | **`zth*`** (75 acts — Zürich arcs: `zthNN_actN` 11 arcs × 5 + `zth_NN_actN` 4 arcs × 4 + 4 `zth_c1a*` singletons). Mixed gates: 60 `gate:{}` + 15 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. All `checkStat`, all `checkPassFlag` (no bitLabel/xp/gold), non-retryable, no `_legacyFn`. **Second UPPERCASE-checkStat family** (CHA/CON/INT/STR/WIS — same §SKILLFIX-01 raw-case-read situation as `lis`, handled identically: golden seeded under both stat cases). The migrator correctly **skips the non-skill_check members** — `zth_c1a3` (`type:"hybrid"`) and the `zth_08/09/10/11_act5` (`type:"delivery"`) — confirming `--prefix` scopes by id but the transform is type-gated. Verified vs golden (structure + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. `onPass:[mission_bit{flag}]`, `onFail:[]`. Zero engine changes. +2 tests. | `32b92b8` |
-| Wave 2f | **`flr*`** (71 acts — Florence arcs: `flrNN_actN` 11 arcs × 5 + `flr_NN_actN` 4 arcs × 4; no c1a singletons / no hybrid this family). Mixed gates: 59 `gate:{}` + 12 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. All `checkStat`, all `checkPassFlag` (no bitLabel/xp/gold), non-retryable, no `_legacyFn`. **Third UPPERCASE-checkStat family** (CHA/INT/STR/WIS — same §SKILLFIX-01 raw-case-read situation as `lis`/`zth`, handled identically: golden seeded under both stat cases). The 4 `flr_NN_act5` (`type:"delivery"`) are type-gated out by the transform. Verified vs golden (structure + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. `onPass:[mission_bit{flag}]`, `onFail:[]`. Zero engine changes. +2 tests. | `795cf2a` |
-| Wave 2g | **`hft_*`** (50 acts — Hanseatic-trade arcs). **First MIXED-shape bulk family:** 35 acts (hft_01–07) carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`; **15 acts (hft_08–11) have NO `checkPassFlag`** → `onPass:[]` (legacy pass→done granted nothing — the migrator's `passFlag ? mission_bit : null` + `filter(Boolean)` reproduces that byte-for-byte). Mixed gates: 22 `gate:{}` + 28 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Fourth UPPERCASE-checkStat family** (CHA/CON/INT/STR/WIS — same §SKILLFIX-01 raw-case-read situation, golden seeded under both stat cases). The transform type-gates out the non-skill_check members: `hft_10_act3` (`type:"combat"`) + 4 `*_act5` (`type:"delivery"`). Verified vs golden (structure handles both onPass shapes + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests (assert the 35/15 mission_bit/empty split + 28/22 gate split). | `b689956` |
-| Wave 2h | **`rkv_*`** (50 acts — Reykjavík/northern arcs). **Structural twin of `hft_`:** same mixed shape (35 flag-bearing → `onPass:[mission_bit{flag}]`, 15 flagless rkv_08–11 → `onPass:[]`), same gate split (22 `gate:{}` + 28 `gate:{flags:[…]}`), same type-skips (rkv_10_act3 combat + 4 deliveries). **Fifth UPPERCASE-checkStat family** (CHA/CON/DEX/INT/STR/WIS — first to include DEX; golden seeded under both stat cases). Verified vs golden (struct handles both onPass shapes + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `fdf3e0f` |
-| §SKILLFIX-02 | **Migrator enhancement + game-wide bug-fix (user-approved 2026-06-29).** ~176 legacy skill_checks put a D&D **skill name** (Persuasion ×60, History ×26, Insight ×24, Deception, Stealth, Investigation, Perception, Athletics, Nature, Survival, Religion…) or a full ability word (Strength, Wisdom) in `checkStat` instead of an ability abbrev. Legacy read `abilityScores[checkStat]` → undefined → **+0 ability mod** (a latent bug §SKILLFIX-01 didn't reach; the UQF contract also **requires** `stat∈{STR,DEX,CON,INT,WIS,CHA}` → these would migrate to **invalid** quests). Fix: the bulk migrator now maps the skill → its governing ability (D&D 5e standard; homebrew **Courage/Presence → CHA**) into `stat`, keeping the skill name in `skill` (display + proficiency). Deliberate **behavior change** — the check now rolls the mapped ability mod + proficiency (intended D&D behavior). Parity protocol for these families shifts: assert **display untouched + structure + correct mapping**, NOT vs the buggy +0 legacy roll. | (with Wave 2i) |
-| Wave 2i | **`ist_*`** (48 acts — Constantinople `ist_cNaM` chapters; **first §SKILLFIX-02 family**). 32 of 48 carry a mapped skill name (Persuasion→CHA, History→INT, Insight→WIS, Deception→CHA, Investigation→INT, Religion→INT) + Strength→STR (ability word); 16 already ability-abbrev. All flag-bearing → `onPass:[mission_bit{flag}]`. Gates: 38 `gate:{}` + 10 `gate:{flags:[…]}`. Type-skips: ist_c9a4/ist_c10a4 (`type:"combat"`). All 48 now `validateQuest`-valid (were invalid pre-fix). Verified: display deep-equal golden + mapping correct vs legacy checkStat + NEW behavior deterministic (mapped-ability extreme → pass/fail) + gate behavior, no `pageerror`. +2 tests. | `fc040cd` |
-| Wave 2j | **`rix_*`** (47 acts — Egil's Saga: the York court + Iceland/Althing cycles, nodes YRK/ISL). **Structural twin of `rkv_`/`hft_`** (mixed flag/flagless): 33 acts carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`; **14 acts (notably the `rix_11` Sonatorrek cycle) have NO `checkPassFlag`** → `onPass:[]` (legacy pass→done granted nothing — reproduced byte-for-byte). Mixed gates: 21 `gate:{}` + 26 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Sixth UPPERCASE-checkStat family** (CHA/CON/DEX/INT/STR/WIS; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats — `skill→ability mapped 0`). The transform type-gates out the 8 non-skill_check members (combat `rix_01/03_act3` + the delivery acts incl. `rix_11_act5`). Verified vs golden (struct handles both onPass shapes + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `bbadaf7` |
-| Wave 2k | **`ost_*`** (46 acts — Ostmen/Norse-Dublin saga cycles, incl. frost-giant battlegrounds). **Structural twin of `rix_`/`rkv_`** (mixed flag/flagless): 32 acts carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`; **14 acts have NO `checkPassFlag`** → `onPass:[]` (legacy pass→done granted nothing — reproduced byte-for-byte). Mixed gates: 21 `gate:{}` + 25 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Seventh UPPERCASE-checkStat family** (CHA/CON/DEX/INT/WIS; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). The transform type-gates out the 9 non-skill_check members (5 combat `ost_01_act2`/`02_act4`/`03_act3`/`09_act3`/`10_act3` + 4 deliveries); 4 `ost_*` text/monster-key substrings (`ost_cipher`/`giant`/`gold`/`jarl`) are not quests. Verified vs golden (struct handles both onPass shapes + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `ccbf9de` |
-| Wave 2l | **`arn_*`** (43 acts — Arnarstapi/Norse saga cycles). **Structural twin of `ost_`/`rix_`** (mixed flag/flagless): 32 acts carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`; **11 acts have NO `checkPassFlag`** → `onPass:[]` (legacy pass→done granted nothing — reproduced byte-for-byte). Mixed gates: 18 `gate:{}` + 25 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Eighth UPPERCASE-checkStat family** (CHA/CON/DEX/INT/STR/WIS; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). The transform type-gates out the 7 non-skill_check members (4 combat `arn_01/03/05_act3` + `arn_10_act2` + 3 deliveries). Verified vs golden (struct handles both onPass shapes + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `0262c68` |
-| Wave 2m | **`vby_*`** (42 acts — Viby/Norse saga arcs, 10 chapters × ~5 acts). **Structural twin of `arn_`/`ost_`/`rix_`** (mixed flag/flagless): 33 acts carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`; **9 acts (the entirely-flagless arcs `vby_08/09/10`) have NO `checkPassFlag`** → `onPass:[]` (legacy pass→done granted nothing — reproduced byte-for-byte). Mixed gates: 16 `gate:{}` + 26 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}` (act1 openers of arcs 01–07 + all of the flagless arcs 08/09/10 are `gate:{}`). **Ninth UPPERCASE-checkStat family** (CHA/CON/DEX/INT/STR/WIS; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). The transform type-gates out the 8 non-skill_check members (5 combat `vby_01/03/08_act3` + `vby_09_act2` + `vby_10_act3` + 3 deliveries `vby_08/09/10_act5`). **Note:** the original queue head `clj`/`nwi` use the no-underscore `cljNN_actN` convention — `--prefix clj_` matches nothing; use `--prefix clj` (likewise `nwi`). Verified vs golden (struct handles both onPass shapes + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `63830b2` |
-| Wave 2n | **`kya_*`** (52 acts — Trebizond/Constantinople 1367 arcs; dual id-convention `kya_cNaM` chapters + `kya_N_actN` arcs). **First UNIFORM-flag bulk family since `flr`** (NOT mixed): all 52 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Mixed gates: 12 `gate:{}` + 40 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Tenth UPPERCASE-checkStat family** (CHA/INT/WIS/DEX/STR; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats — despite sharing the Constantinople setting with the §SKILLFIX-02 `ist_` family, `kya` stores ability abbrevs). The transform type-gates out the 8 non-skill_check members (2 hybrid `kya_c1a2`/`kya_c7a4` + 1 combat `kya_c2a4` + 5 deliveries `kya_26/27/28/29/30_act5`). Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `2d7c204` |
-| Wave 2o | **`jrs_*`** (51 acts — Jerusalem pilgrim/Crusade arcs; dual id-convention `jrsNN_actN` + `jrs_NN_actN`). **UNIFORM-flag** (like `kya_`/`flr_`): all 51 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates **mostly-empty**: 39 `gate:{}` + 12 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}` (most arcs activate independently). **Eleventh UPPERCASE-checkStat family** (WIS/CHA/STR/INT/DEX; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). The transform type-gates out the 4 non-skill_check members (deliveries `jrs_08/09/10/11_act5`). Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `1113652` |
-| Wave 2p | **`clj_*`** (42 acts — no-underscore `cljNN_actN` convention; **NB use `--prefix clj`, not `clj_`**). **MIXED shape** (twin of `vby_`/`arn_`): 33 acts carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`; **9 acts have NO `checkPassFlag`** → `onPass:[]` (legacy pass→done granted nothing — reproduced byte-for-byte). Gates: 9 `gate:{}` + 33 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Twelfth UPPERCASE-checkStat family** (WIS/CHA/INT; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). The transform type-gates out the 3 combat members (`clj02/08/09_act4`). Verified vs golden (struct handles both onPass shapes + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `ab34eca` |
-| Wave 2q | **`nwi_*`** (42 acts — no-underscore `nwiNN_actN` convention; **NB use `--prefix nwi`, not `nwi_`**; irregular numbering: 3-digit `nwi001`/`nwi002` arcs + 2-digit `nwi02`–`nwi08`). **UNIFORM-flag** (like `kya_`/`jrs_`): all 42 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates **near-fully-chained**: 1 `gate:{}` + 41 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}` (only one opener activates independently). **Thirteenth UPPERCASE-checkStat family** (CHA/WIS/INT; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). The transform type-gates out the 3 combat members (`nwi002/04/07_act4`). Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `a497b85` |
-| Wave 2r | **`bey_*`** (42 acts — dual id-convention `bey_cNaM` chapters + `bey_N_actN` arcs). **UNIFORM-flag** (like `kya_`/`jrs_`/`nwi_`): all 42 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates: 10 `gate:{}` + 32 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Fourteenth UPPERCASE-checkStat family** (WIS/CHA/INT/STR; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). The transform type-gates out the 8 non-skill_check members (3 hybrid `bey_c1a3`/`bey_c4a2`/`bey_c5a2` + 2 combat `bey_c3a4`/`bey_c6a4` + 3 deliveries `bey_14/15/16_act5`). Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `194bd8d` |
-| Wave 2s | **`tbs_*`** (41 acts — Rustaveli's "The Knight in the Panther's Skin", a 9-chapter × ~5-act grid, dual id-convention `tbs_cNaM`). **UNIFORM-flag** (like `kya_`/`jrs_`/`nwi_`/`bey_`): all 41 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates: 9 `gate:{}` + 32 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Fifteenth UPPERCASE-checkStat family** (WIS/CON/CHA/INT/DEX; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). The transform type-gates out the **4 combat members** (`tbs_c1a3`/`tbs_c2a4`/`tbs_c8a4`/`tbs_c9a4`); **2 of those combat siblings set the `tbsC1A3Done`/`tbsC2A4Done` flags that the migrated `tbs_c1a4`/`tbs_c2a5` gate on** — the gate test toggles the prior flag directly, so these cross-sibling chains verify transparently. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `2e814e2` |
-| Wave 2t | **`crl_*`** (40 acts — 8 arcs × 5 acts, `crlNNN_actN` convention). **UNIFORM-flag** (like `nwi_`/`bey_`): all 40 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates **near-fully-chained**: 1 `gate:{}` + 39 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Sixteenth UPPERCASE-checkStat family** (WIS/CHA/STR/INT; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). **Clean 8×5 grid — no type-gated siblings** (the 7 `crlNNNaN` strings are `missionBit` values, not quests). 7 inter-arc act1 gates reference external `crlNNNComplete` arc-completion flags (set outside the skill_check set — `crl001Complete` notably appears only at its gate site, a pre-existing content quirk preserved byte-for-byte; gate controls mission *listing* only, never movement); the gate test toggles the prior flag directly, so they verify transparently. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `cc7f362` |
-| Wave 2u | **`shk_*`** (40 acts — dual id-convention `shkNN_actN` arcs (shk6–shk14 × 3 acts) + `shk_NN_actN` arcs (shk_04–shk_07)). **MIXED flag/flagless** (twin of `clj_`/`hft_`/`rkv_`): 27 acts carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`; **13 acts have NO `checkPassFlag`** → `onPass:[]` (legacy pass→done granted nothing — reproduced byte-for-byte). Gates: 22 `gate:{}` + 18 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Seventeenth UPPERCASE-checkStat family** (CHA/INT/WIS/DEX/CON; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). The transform type-gates out the 7 non-skill_check members (3 combat `shk_04_act3`/`shk_06_act3`/`shk_07_act4` + 4 deliveries `shk_04_act5`/`shk_05_act5`/`shk_06_act5`/`shk_07_act5`). Verified vs golden (struct handles both onPass shapes + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `38c2f40` |
-| Wave 2v | **`kir_*`** (35 acts — 7 chapters × 5 acts, single `kir_cNaM` convention). **UNIFORM-flag** (like `nwi_`/`bey_`/`crl_`): all 35 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates: 7 `gate:{}` + 28 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`. **Eighteenth UPPERCASE-checkStat family** (all six abilities WIS/CON/CHA/INT/STR/DEX; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). **Perfectly clean 7×5 grid — no type-gated siblings, no prefix bleed** (all 35 file `kir` ids are the migrated acts). First increment after the size-ordered pre-scouted queue was exhausted: re-scoped 1091 legacy / 34 families — `kir` is the largest tied clean (pure-parity) head; the larger `waw`/`bgw`/`ams`/`cai` are §SKILLFIX-02 (skill-name checkStats, deferred to the ist_ display+mapping protocol), `blq` (59) is the deferred split. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `12550c1` |
-| Wave 2w | **`lcy_*`** (35 acts — 7 quests × 5 acts, single `lcy_NN_actN` convention; quests Fortune/Glove/Arrow/John/Prisoner/Guesclin/Lady — the White Company / Du Guesclin arc). **UNIFORM-flag** (like `kir_`/`nwi_`/`bey_`/`crl_`): all 35 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates form **ONE linear 35-act chain**: 1 `gate:{}` (only `lcy_01_act1`) + 34 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}` (each act gates the prior act's flag; each quest's act1 gates the prior quest's act5 flag) → split `{flags:34, empty:1}`, all gate flags internal (none external). **Nineteenth UPPERCASE-checkStat family** (WIS/STR/CHA; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). **Clean 7×5 grid — no type-gated siblings, no prefix bleed** (all 35 file `lcy` ids are the migrated acts). Largest tied clean (pure-parity) head from the Wave-2v re-scope (`lcy`/`lgw`/`gci`, 35 each); the larger `waw`/`bgw`/`ams`/`cai` are §SKILLFIX-02 (deferred to the ist_ display+mapping protocol), `blq` (59) is the deferred split. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `d0d9cc7` |
-| Wave 2x | **`lgw_*`** (35 acts — 7 quests × 5 acts, single `lgw_NN_actN` convention; quests Barge/Throw/Harp/Gareth/Gawain/Grail/Morgan — the Le Morte d'Arthur arc). **STRUCTURAL TWIN of `lcy_*`** (UNIFORM-flag, single linear 35-act chain): all 35 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless); 1 `gate:{}` (only `lgw_01_act1`) + 34 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}` (each quest's act1 gates the prior quest's act5 flag) → split `{flags:34, empty:1}`, all gate flags internal. **Twentieth UPPERCASE-checkStat family** (WIS/STR/CHA; golden seeded under both stat cases). **NO §SKILLFIX-02** (0 skill-name checkStats). **Clean 7×5 grid — no type-gated siblings, no prefix bleed** (all 35 file `lgw` ids are the migrated acts). Second of the Wave-2v clean (pure-parity) re-scope trio `lcy`/`lgw`/`gci`; `gci` (35) is the last clean head, then the §SKILLFIX-02 cluster (`waw`/`bgw`/`ams`/`cai`) + the `blq` (59) split. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `375d296` |
-| Wave 2y | **`gci_*`** (35 acts — 7 chapters × 5 acts, single `gci_NN_actN` convention, `gciCNAMDone` flags; Hugo's *Toilers of the Sea* arc: Gold Ring/Seat/Salvage Log/Clubin's Notebook/Confession/Unread Letter/Lethierry's Account). **STRUCTURAL TWIN of `lcy_*`/`lgw_*`** (UNIFORM-flag, single linear 35-act chain): all 35 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless); 1 `gate:{}` (only `gci_01_act1`) + 34 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}` (each chapter's act1 gates the prior chapter's act5 flag) → split `{flags:34, empty:1}`, all gate flags internal. **Twenty-first UPPERCASE-checkStat family** — first clean family spanning **all six abilities** (CHA/CON/DEX/INT/STR/WIS); golden seeded under both stat cases. **NO §SKILLFIX-02** (0 skill-name checkStats). **Clean 7×5 grid — no type-gated siblings, no prefix bleed** (all 35 file `gci` ids are the migrated acts). **Last of the Wave-2v clean (pure-parity) re-scope trio `lcy`/`lgw`/`gci` — the clean queue is now EXHAUSTED.** Remaining: the §SKILLFIX-02 cluster (`waw` 38 / `bgw` 37 / `ams` / `cai` 35; need the ist_ display+mapping protocol, NOT pass/fail parity) + the `blq` (59) split (id-list). Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `671ce4b` |
-| Wave 2z | **`waw_*`** (38 acts — 8 arcs × ~5 acts, mixed `wawNNN_actN`/`waw_NN_actN` conventions). **RECLASSIFIED CLEAN — the re-scope was wrong.** Wave-2v re-scope tagged `waw` §SKILLFIX-02 (38/38 skill-name), but recon (`--prefix waw --dry`) overturned it: the raw `checkStat`s are **LOWERCASE ability abbrevs** (cha ×22/wis ×9/int ×5/str ×3/dex ×1), 0 skill-names, **`skill→ability mapped 0`** ⇒ NOT §SKILLFIX-02, **pure pass/fail parity** (the migrator uppercases the abbrev into `bit.stat`; legacy already read the lowercase key ⇒ real mod, so even §SKILLFIX-01 doesn't apply — zero behavior change). **UNIFORM-flag**: all 38 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gate split `{flags:30, empty:8}` (8 arc-opener act1s ungated). The 30 gate flags use a **separate `wawNNNaM` naming**, distinct from the `wawNNNActMPassed`/`WAW_NNN_actMPass` passFlags — they are **external** (set outside the migrated set; the 2 type-gated **combat** siblings `waw002_act4`/`waw_02_act4` set `waw002a4`/`waw_02a4` that the `*_act5` acts gate on — the tbs/crl cross-sibling pattern); the gate test toggles the referenced flag directly, so they verify transparently. **Twenty-second UPPERCASE-checkStat family** (CHA/DEX/INT/STR/WIS; golden seeded under both stat cases). No prefix bleed (the non-`_actN` `wawNNNaM` ids are gate-flag values, not quests). **NB the §SKILLFIX-02 cluster classification is now suspect — `bgw`/`ams`/`cai` must be recon-confirmed before assuming the mapping protocol.** Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `d984179` |
-| Wave 2aa | **`ams_*`** (35 acts — 7 arcs × 5 acts, `ams_NN_NN` convention). **RECLASSIFIED CLEAN (2nd mis-tagged cluster member, like `waw`).** Batch-recon of the §SKILLFIX-02 cluster found `bgw` (37/37 skill-name) + `cai` (35/35) are GENUINE §SKILLFIX-02, but **`ams` is clean** — `checkStat`s are lowercase ability abbrevs (wis/str/cha/int), 0 skill-names, **`skill→ability mapped 0`** ⇒ pure pass/fail parity. **STRUCTURALLY IDENTICAL to `kir_*`**: UNIFORM-flag (all 35 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`, 0 flagless); gates form **7 internal per-arc chains** (passFlag `amsNNaM`; each act gates the prior act's passFlag within its arc; 7 arc-opener act1s ungated) → split `{flags:28, empty:7}`, all gate flags internal (none external). **Twenty-third UPPERCASE-checkStat family** (CHA/INT/STR/WIS; golden seeded under both stat cases). No prefix bleed (the non-`_NN_NN` ids are the `amsNNaM` passFlag values). Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. *(Process note: an `--prefix ams` run during recon accidentally omitted `--dry` and applied the migration before golden capture; reverted via `git checkout` and redone golden-first — net protocol intact.)* | `4a867f1` |
-| Wave 2ab | **`bgw_*`** (37 acts — `bgw_cNaM` chapters, the Genie Contract arc). **GENUINE §SKILLFIX-02 — the first since `ist_` (Wave 2i), and the first confirmed-by-batch-recon member of the cluster.** Every `checkStat` is a D&D **skill name** (Deception/History/Insight/Investigation/Nature/Persuasion), which legacy read as `abilityScores[name]` → undefined → **+0 mod**. The migrator maps skill→governing ability (D&D 5e) into `stat` (CHA/INT/WIS), keeping the name in `skill` — `skill→ability mapped 37`, **0 mapping mismatches vs the D&D table**. **Deliberate BEHAVIOR CHANGE** (the check now rolls the mapped ability mod), so the **ist_ display+mapping protocol** applies: golden captures display + original skill-name `checkStat`; post-migration verify asserts **(a) DISPLAY untouched, (b) structure (UQF-1.0/valid/onFail:[]/onPass mission_bit), (c) MAPPING (`stat`∈abilities, `skill`===original checkStat, `SKILL_TO_ABILITY[checkStat]`===`stat`, DC preserved), (d) NEW behavior (the mapped ability mod drives PASS/FAIL)** — NOT vs the legacy +0 roll. All 37 flag-bearing → `onPass:[mission_bit{flag}]`; gates all-empty `{flags:0, empty:37}`. Transform type-gates out 3 combat siblings (`bgw_c1a3`/`c6a4`/`c8a4`). Permanent test mirrors the Wave-2i `ist_*` block (structure+mapping + new-behavior). Zero engine changes. +2 tests. | `189a995` |
-| Wave 2ac | **`cai_*`** (35 acts — `cai_cNaM` chapters). **THIRD genuine §SKILLFIX-02 family (after `ist_`/`bgw_`) and the LAST of the cluster — CLEARS it.** Twin of `bgw_`: every `checkStat` is a D&D skill name (Deception/History/Insight/Investigation/Nature/Persuasion), legacy read as `abilityScores[name]` → +0 mod; the migrator maps skill→governing ability (CHA/INT/WIS) into `stat`, keeping the name in `skill` — `skill→ability mapped 35`, **0 mapping mismatches**. **ist_ display+mapping protocol** (golden = display + original skill-name checkStat; verify = display untouched + structure + mapping (`stat`∈abilities, `skill`===orig, `SKILL_TO_ABILITY[checkStat]`===`stat`, DC preserved) + NEW behavior (mapped ability drives PASS/FAIL), NOT vs the +0 roll). All 35 flag-bearing → `onPass:[mission_bit{flag}]`; gates all-empty `{flags:0, empty:35}`. Transform type-gates out 5 siblings (2 hybrid `cai_c1a3`/`c4a3` + 3 combat `cai_c6a4`/`c7a4`/`c8a4`). Permanent test mirrors the Wave-2i `ist_*` block. **§SKILLFIX-02 cluster (waw/bgw/ams/cai) now fully resolved** — only the `blq` (59) split remains. Zero engine changes. +2 tests. | `e04d490` |
-| Wave 2ad | **`blq_*`** family SPLIT (59 skill_check acts → **29 well-formed migrated + 30 degenerate book-stubs left LEGACY**). The well-formed 29 are arcs `blq_01/02/03/04/11/12` × ~5 acts (the Belluno legal-courier arc). **CLEAN (not §SKILLFIX-02):** `checkStat`s are lowercase ability abbrevs (wis/cha/int/dex/str), 0 skill-names, **`skill→ability mapped 0`** ⇒ pure pass/fail parity (like `waw`/`ams`). UNIFORM-flag — all 29 carry `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless); gates split **`{flags:23, empty:6}`** (the 6 arc-opener act1s ungated; 23 chained on the prior act's passFlag — incl. `blq_02_act5` gating on `blq02RoadCleared`, a flag set by the out-of-scope non-skill_check `blq_02_act4`, kept verbatim as `gate.flags`). **First id-list split family:** the 30 degenerate `blq_05`–`blq_10` book-stubs (the Decameron "Falcon's Inventory" stubs — `reward:NaN`, `activateCond:()=>!!S_story.null`, no `checkStat`/`checkDC`) would have crashed the migrator's well-formedness guard under `--prefix blq`, so the migration used an **explicit comma id-list**; the permanent test inlines that allowlist and asserts the 30 stubs stay un-migrated. Verified (struct + abilities-only `stat` + no retained `skill` + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `2aa42b4` |
-| Wave 2ae | **`inv_*`** (35 acts — 7 chapters × 5 acts, single `inv_NN_actN` ids, `invCNAMDone` flags; Macpherson's Ossian arc **"The Shield of Gormur"** — Dargo/Oscur/Dermid). **First head from the fresh post-`blq` re-scope** (the pre-scouted Wave-2 queue was exhausted at 2ad; a live `--dry` re-scope surfaced **11 structurally-identical CLEAN 35-act families** — `inv`/`bhd`/`sdq`/`plw`/`gdn`/`boo`/`alf`/`ksu`/`cdg`/`vie`/`erf` — all uppercase-abbrev, one linear 35-act chain each). **STRUCTURAL TWIN of `gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 carry `checkPassFlag` → `onPass:[mission_bit{flag}]`, 0 flagless); gates form ONE linear 35-act chain (only `inv_01_act1` ungated; the other 34 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`, each chapter's act1 gating the prior chapter's act5 flag) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat, **ALL SIX abilities** (CHA/CON/DEX/INT/STR/WIS; golden seeded under both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 35 `inv_` ids are the migrated acts). Zero engine changes. +2 tests. | `080a2e5` |
-| Wave 2af | **`bhd_*`** (35 acts — 7 chapters × 5 acts, single `bhd_NN_actN` ids, `bhdCNAMDone` flags; Ossian arc **"Fergus's Cloak"**). SECOND head from the post-`blq` re-scope (twin of `inv_*`). **STRUCTURAL TWIN of `inv`/`gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 → `onPass:[mission_bit{flag}]`, 0 flagless); ONE linear 35-act chain (only `bhd_01_act1` ungated, other 34 trivial `gate.flags`) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat (CHA/CON/INT/STR/WIS; golden seeded both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed. Zero engine changes. +2 tests. | `ad7764d` |
-| Wave 2ag | **`sdq_*`** (35 acts — 7 chapters × 5 acts, single `sdq_NN_actN` ids, `sdqCNAMDone` flags; Walter Scott's **"Rob Roy"** arc — Diana Vernon / Rashleigh / Osbaldistone Hall (OBH) / the Ford of Aberfoil). THIRD head from the post-`blq` re-scope (twin of `inv_*`/`bhd_*`). **STRUCTURAL TWIN of `inv`/`bhd`/`gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 → `onPass:[mission_bit{flag}]`, 0 flagless); ONE linear 35-act chain (only `sdq_01_act1` ungated, other 34 trivial `gate.flags`) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat, **all six abilities** (CHA/CON/DEX/INT/STR/WIS; golden seeded both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 35 `sdq_` ids are the migrated acts). Diff audit confirms 35 ins / 35 del, **zero non-structural lines touched** (narrative byte-for-byte). Zero engine changes. +2 tests. | `9ec1368` |
-| Wave 2ah | **`plw_*`** (35 acts — 7 chapters × 5 acts, single `plw_NN_actN` ids, `plwCNAMDone` flags; Langland's **"Piers Plowman"** arc — the Pardon of Piers / Fragments of the Torn Pardon / the Daughters of God / Need's Argument / Conscience's Departure / Unity's Gate). FOURTH head from the post-`blq` re-scope (twin of `inv_*`/`bhd_*`/`sdq_*`). **STRUCTURAL TWIN of `inv`/`bhd`/`sdq`/`gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 → `onPass:[mission_bit{flag}]`, 0 flagless); ONE linear 35-act chain (only `plw_01_act1` ungated, other 34 trivial `gate.flags`) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat (CHA/CON/INT/STR/WIS; golden seeded both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 35 `plw_` ids are the migrated acts). Diff audit confirms 35 ins / 35 del, **zero non-structural lines touched** (narrative byte-for-byte). Zero engine changes. +2 tests. | `196156a` |
-| Wave 2ai | **`gdn_*`** (35 acts — 7 chapters × 5 acts, single `gdn_NN_actN` ids, `gdnCNAMDone` flags; **Njáls saga** arc — the Escort to Ossaby / the Reconciliation at Swinefell / the Dower Trick (Njáll's scribe) / Gunnar's Writing / the Ice-Leap at Markfleet / the Fifth Court Gambit). FIFTH head from the post-`blq` re-scope (twin of `inv_*`/`bhd_*`/`sdq_*`/`plw_*`). **STRUCTURAL TWIN of `inv`/`bhd`/`sdq`/`plw`/`gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 → `onPass:[mission_bit{flag}]`, 0 flagless); ONE linear 35-act chain (only `gdn_01_act1` ungated, other 34 trivial `gate.flags`) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat (CHA/CON/INT/STR/WIS; golden seeded both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 35 `gdn_` ids are the migrated acts). Diff audit confirms 35 ins / 35 del, **zero non-structural lines touched** (narrative byte-for-byte). Zero engine changes. +2 tests. | `92c801a` |
-| Wave 2aj | **`boo_*`** (35 acts — 7 chapters × 5 acts, single `boo_NN_actN` ids, `booCNAMDone` flags; **Prose Edda / Gylfaginning** arc — Þökk's refusal to weep for Baldr / the Mead-Theft Night / Loki's Capture / the Rune-Learning / the Bound Fenrir (Gleipnir) / Draupnir's Return). SIXTH head from the post-`blq` re-scope (twin of `inv_*`/`bhd_*`/`sdq_*`/`plw_*`/`gdn_*`). **STRUCTURAL TWIN of `inv`/`bhd`/`sdq`/`plw`/`gdn`/`gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 → `onPass:[mission_bit{flag}]`, 0 flagless); ONE linear 35-act chain (only `boo_01_act1` ungated, other 34 trivial `gate.flags`) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat, **all six abilities** (CHA/CON/DEX/INT/STR/WIS; golden seeded both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 35 `boo_` ids are the migrated acts). Diff audit confirms 35 ins / 35 del, **zero non-structural lines touched** (narrative byte-for-byte). Zero engine changes. +2 tests. | `a8503f0` |
-| Wave 2ak | **`alf_*`** (35 acts — 7 chapters × 5 acts, single `alf_NN_actN` ids, `alfCNAMDone` flags; **Kalevala** arc — the Iron Rake / Kullervo's Sword / the Honey-Bee's Errand / the Kantele at the Bottom / the Sampo Fragment / the Origin-Words Tablet (Pohjola's Gate) / the Copper Boat's Last Cargo). SEVENTH head from the post-`blq` re-scope (twin of `inv_*`/`bhd_*`/`sdq_*`/`plw_*`/`gdn_*`/`boo_*`). **STRUCTURAL TWIN of `inv`/…/`gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 → `onPass:[mission_bit{flag}]`, 0 flagless); ONE linear 35-act chain (only `alf_01_act1` ungated, other 34 trivial `gate.flags`) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat (CHA/CON/STR/WIS; golden seeded both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 35 `alf_` ids are the migrated acts). Diff audit confirms 35 ins / 35 del, **zero non-structural lines touched** (narrative byte-for-byte). Zero engine changes. +2 tests. | `fadae2a` |
-| Wave 2al | **`ksu_*`** (35 acts — 7 chapters × 5 acts, single `ksu_NN_actN` ids, `ksuCNAMDone` flags; **St. Olaf canonization** arc (Óláfs saga helga) — the First Miracle / the Eclipse Witness / the Incorrupt Body / the Sealed Relic / the Canonization Document / the Incorrupt Hair / Sigvat's Lament). EIGHTH head from the post-`blq` re-scope (twin of `inv_*`/`bhd_*`/`sdq_*`/`plw_*`/`gdn_*`/`boo_*`/`alf_*`). **STRUCTURAL TWIN of `inv`/…/`gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 → `onPass:[mission_bit{flag}]`, 0 flagless); ONE linear 35-act chain (only `ksu_01_act1` ungated, other 34 trivial `gate.flags`) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat (CHA/CON/STR/WIS; golden seeded both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 35 `ksu_` ids are the migrated acts). Diff audit confirms 35 ins / 35 del, **zero non-structural lines touched** (narrative byte-for-byte). Zero engine changes. +2 tests. | `86470f7` |
-| Wave 2am | **`cdg_*`** (35 acts — 7 chapters × 5 acts, single `cdg_NN_actN` ids, `cdgCNAMDone` flags; **The Three Musketeers / "The Affair of the Diamond Studs"** arc (Dumas) — the Duke's Goodbye / the Convent Letter / the Cardinal's Sealed Order / the Goldsmith's Receipt / Athos's Past / Planchet's Loyalty / the Musketeers' Billet). NINTH head from the post-`blq` re-scope (twin of `inv_*`/`bhd_*`/`sdq_*`/`plw_*`/`gdn_*`/`boo_*`/`alf_*`/`ksu_*`). **STRUCTURAL TWIN of `inv`/…/`gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 → `onPass:[mission_bit{flag}]`, 0 flagless); ONE linear 35-act chain (only `cdg_01_act1` ungated, other 34 trivial `gate.flags`, chaining act→act AND chapter→chapter) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat (STR/DEX/CON/WIS/CHA; golden seeded both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 35 `cdg_` ids are the migrated acts). Zero engine changes. +2 tests. | `bbadaf7` |
-| Wave 2an | **`vie_*`** (35 acts — 7 chapters × 5 acts, single `vie_NN_actN` ids, `vieCNAMDone` flags; **Goethe's Faust** arc — Margarete's Account / the Perjured Record / the Scholar's Confession / the Widow's Contract / the Mayor's Commission / the Wager's Record / the Undelivered Release). TENTH head from the post-`blq` re-scope (twin of `inv_*`/`bhd_*`/`sdq_*`/`plw_*`/`gdn_*`/`boo_*`/`alf_*`/`ksu_*`/`cdg_*`). **STRUCTURAL TWIN of `inv`/…/`gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 → `onPass:[mission_bit{flag}]`, 0 flagless); ONE linear 35-act chain (only `vie_01_act1` ungated, other 34 trivial `gate.flags`, chaining act→act AND chapter→chapter) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat (STR/DEX/CON/WIS/CHA; golden seeded both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 35 `vie_` ids are the migrated acts). Zero engine changes. +2 tests. | `329812e` |
-| Wave 2ao | **`erf_*`** (35 acts — 7 chapters × 5 acts, single `erf_NN_actN` ids, `erfCNAMDone` flags; **Brothers Grimm fairytale** arc — Falada Speaks (the Goose Girl) / Faithful John / the Name in the Forest (Rumpelstiltskin) / the Third Task / Godfather's Ledger (Godfather Death) / the Bones' Song (the Singing Bone) / the Name in the Soup). **ELEVENTH & LAST head of the post-`blq` 35-tier** (twin of `inv_*`/`bhd_*`/`sdq_*`/`plw_*`/`gdn_*`/`boo_*`/`alf_*`/`ksu_*`/`cdg_*`/`vie_*`) — **completes the 11-family CLEAN 35-tier**. **STRUCTURAL TWIN of `inv`/…/`gci`/`lcy`/`lgw`:** UNIFORM-flag (all 35 → `onPass:[mission_bit{flag}]`, 0 flagless); ONE linear 35-act chain (only `erf_01_act1` ungated, other 34 trivial `gate.flags`, chaining act→act AND chapter→chapter) ⇒ split `{flags:34, empty:1}`. UPPERCASE-checkStat (CHA/CON/STR/WIS; golden seeded both cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 35 `erf_` ids are the migrated acts). Zero engine changes. +2 tests. | `cbbdc46` |
-| Wave 2ap | **`mla*`** (34 acts across **7 sub-arcs** — `mla001` ×5, `mla002` ×4 (no act4), `mla02`/`mla03`/`mla04`/`mla05`/`mla06` ×5 each — a Renaissance/classical-lives arc, "The Comparisons" / Tiro / Alcibiades / Gracchus). **FIRST head of the post-35-tier CLEAN mid-tail.** UNIFORM-flag (all 34 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`, 0 flagless). Gates form **ONE cross-arc linear chain** (only `mla001_act1` ungated; the other 33 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`, chaining act→act AND arc→arc via inter-arc completion flags like `mlaThirdComparisonComplete`/`mla04TiroComplete`) ⇒ split `{flags:33, empty:1}`. **LOWERCASE-checkStat** (dex/cha/int/wis — 4 abilities) ⇒ legacy reads the real mod (no §SKILLFIX-01 silent +0); golden seeded under BOTH cases anyway. Mixed id conventions in gate flags (`mlaNNNActNPassed` + uppercase `MLA_002_actNPass` + inter-arc `…Complete`) — handled transparently (gate-behavior test reads `g.flags[0]` dynamically). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all 34 `mla` skill_checks migrated). **Lesson:** the mid-tail is NOT single-chain like the 35-tier — `mla` is 7 sub-arcs with a non-uniform id scheme; always `--dry` + eyeball the id list before assuming shape. Zero engine changes. +2 tests. | `0851d9a` |
-| Wave 2aq | **`mse_*`** (34 acts — 7 chapters × 5 acts, single `mse_cNaM` ids; a Theseus/tournament classical arc). **SECOND head of the CLEAN mid-tail.** UNIFORM-flag (all 34 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`, 0 flagless). Gates form **SEVEN per-chapter internal chains** (each chapter's act1 ungated → 7 `gate:{}`; the other 27 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`, chaining act→act WITHIN a chapter, NO cross-chapter chain) ⇒ split `{flags:27, empty:7}`. UPPERCASE-checkStat (CHA/CON/INT/STR/WIS — 5 abilities, no DEX; golden seeded under both stat cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. **ONE `combat` type-gated sibling** (`mse_c2a4`, correctly skipped — the skill_check filter excludes it, so chapter 2 has 4 skill_check acts a1/a2/a3/a5; the missing-act gap is the combat slot, not a data hole). No prefix bleed. **Lesson:** comm-diff the migrator's skill_check target list against ALL `mse_` ids surfaced the combat sibling before it could throw off the count. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `e9ff598` |
-| Wave 2ar | **`lhr_*`** (34 acts — 7 chapters × 5 acts, single `lhr_NN_actN` ids). **THIRD head of the CLEAN mid-tail; STRUCTURAL TWIN of `mse_*`.** UNIFORM-flag (all 34 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`, 0 flagless). Gates form **SEVEN per-chapter internal chains** (each chapter's act1 ungated → 7 `gate:{}`; the other 27 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`, chaining act→act WITHIN a chapter, NO cross-chapter chain) ⇒ split `{flags:27, empty:7}`. UPPERCASE-checkStat (CHA/INT/STR/WIS — 4 abilities, no DEX/CON; golden seeded under both stat cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. **ONE `combat` type-gated sibling** (`lhr_02_act2`, correctly skipped — the skill_check filter excludes it, so chapter 2 has 4 skill_check acts a1/a3/a4/a5; the missing-act gap is the combat slot). No prefix bleed. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `d08b7b4` |
-| Wave 2as | **`cid_*`** (34 acts — 7 chapters × 5 acts, single `cid_cNaM` ids). **FOURTH head of the CLEAN mid-tail; STRUCTURAL TWIN of `mse_*`/`lhr_*`.** UNIFORM-flag (all 34 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`, 0 flagless). Gates form **SEVEN per-chapter internal chains** (each chapter's act1 ungated → 7 `gate:{}`; the other 27 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`, chaining act→act WITHIN a chapter) ⇒ split `{flags:27, empty:7}`. UPPERCASE-checkStat, **ALL SIX abilities** (CHA/CON/DEX/INT/STR/WIS; golden seeded under both stat cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. **ONE `combat` type-gated sibling** (`cid_c2a4`, correctly skipped — the skill_check filter excludes it, so chapter 2 has 4 skill_check acts a1/a2/a3/a5; the missing-act gap is the combat slot). No prefix bleed. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `094f9de` |
-| Wave 2at | **`lbc_*`** (33 acts — 7 chapters × 5 acts minus 2 hybrid siblings, single `lbc_cNaM` ids). **FIFTH head of the CLEAN mid-tail; STRUCTURAL TWIN of `mse_*`/`lhr_*`/`cid_*`.** UNIFORM-flag (all 33 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`, 0 flagless). Gates form **SEVEN per-chapter internal chains** (each chapter's act1 ungated → 7 `gate:{}`; the other 26 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`, chaining act→act WITHIN a chapter) ⇒ split `{flags:26, empty:7}`. UPPERCASE-checkStat, **ALL SIX abilities** (CHA/CON/DEX/INT/STR/WIS; golden seeded under both stat cases). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. **TWO `hybrid` type-gated siblings** (`lbc_c1a3`, `lbc_c5a4`, correctly skipped — the skill_check filter excludes them, so c1 has acts a1/a2/a4/a5 and c5 has a1/a2/a3/a5; the two missing-act gaps are the hybrid slots). First mid-tail family with >1 type-gated sibling. No prefix bleed. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `3eedc7a` |
-| Wave 2au | **`hty*`** (33 acts — 7 chapters × 5 acts minus 2 combat siblings, no-underscore `htyNN_actN` ids). **SIXTH head of the CLEAN mid-tail; FIRST MIXED flag/flagless mid-tail family.** 26 acts carry a `checkPassFlag` → `onPass:[mission_bit{flag}]`; **7 acts (each chapter's act5 finale) have NO `checkPassFlag` → `onPass:[]`** (legacy pass→done granted nothing; reproduced byte-for-byte — the hft_/rkv_ flagless pattern). Gates form **SEVEN per-chapter internal chains** (each chapter's act1 ungated → 7 `gate:{}`; the other 26 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`) ⇒ split `{flags:26, empty:7}`. **LOWERCASE-checkStat** (cha/int/wis — 3 abilities) ⇒ legacy reads the real mod (no §SKILLFIX-01 silent +0); golden seeded under both cases anyway. CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. **TWO `combat` type-gated siblings** (`hty02_act4`, `hty06_act4`, correctly skipped — so c2 has a1/a2/a3/a5 and c6 has a1/a2/a3/a5; the missing-act gaps are the combat slots). Permanent test branches on `flag` (flag-bearing grant a token; flagless grant nothing). No prefix bleed. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `4b4ed0a` |
-| Wave 2bc | **`quest_*` singletons** (11 newly-migrated skill_check quests out of 82 total — 71 already UQF, 11 legacy). **COMPLETES Wave 2.** ALL have `xpAward` → `onPass:[{kind:'reward', xp:N}]`; 10/11 also have a `mission_bit` passFlag; 3 have `goldAward`. Mixed gates: **7 `_legacyFn`** (complex activateCond preserved — `canActivate` returns true, legacy `activateCond` still load-bearing) + **3 flags** + **1 empty** ⇒ split `{legacyFn:7, flags:3, empty:1}`. `skill→ability mapped 0` (all use `checkAbility` lowercase abbrev or ability `checkStat`, not D&D skill names). 6/11 are `retryable:true` — fail run leaves status `active` (not `failed`); parity test branches on `q.retryable`. No prefix bleed (82 total = 71 already-UQF + 11 legacy; skips correctly). Verified vs golden (schema, stat, dc, passFlag, xp, gold, gate shape, onFail:[]). Zero engine changes. +2 tests. | `e602d92` |
-| **Wave 3 begins** | Side quests → declarative completion. Landscape at start (2026-07-03 re-scope): **99 legacy `side` quests** — completeFn shapes: 44 single-flag · 9 defeated-battle · 12 atNode/compound · 1 flag-AND · 1 flag-OR · 32 complex (counters/nested-path/item-count/function-body) · 2 completeItems-only · 5 with NO completion mechanism at all (`quest_math_01–05` §MATH-01 placeholders — never completable, flagged). **Protocol for sides:** deterministic completion ⇒ no golden roll capture; parity = structure + canComplete truth-tables + a real `storyCheckQuests` active→complete flip asserting the schema-agnostic hooks (`onComplete`, per-id effects block, side `xpAward`) still fire. Sides KEEP `onComplete`/`xpAward`/`itemChain` verbatim — the completion-bit execution point remains the deferred Wave-3 engine task. | — |
-| Wave 3a | **61 sides migrated** (all shapes expressible with existing terms + ONE new engine term). **New `completion.items` OR-term** (item_check finalization, §4 "estimated engine work"): each listed name is one OR-group entry matched with the legacy fuzzy two-way substring rule (`inv.name.includes(ci) \|\| ci.includes(inv.name)`) — replaces non-empty `completeItems` byte-for-byte and composes with `flags` (AND) for future fn∧items quests (none existed in this batch: fn+items overlap = 0). Shapes: 44 flag1 · 9 battle · 2 itemsOnly (`sq_1`/`sq_2`) · 2 atNode (`shore_01`/`depth_01`) · 2 flag∧atNode (`inn_05`/`guide_05`) · 1 flagAND (`wm_02`) · 1 flagOR (`tl_02`). Gates decomposed (flags/questsAttempted/sleptAt/favorMin — incl. `(_npcFavor('brynn')\|\|0)>=1` → `favorMin`, and `gate.battles` for `shore_01`'s `HCA_BOSS` prereq); 3 inexpressible gates kept load-bearing behind `gate:{_legacyFn:true}` (`wm_05` item-count ∧ flag, `road_damascus` inventory.some, `inn_06` `innmotherKindness>=5`). One-shot codemod (structural fragments only; deleted after landing per recipe); diff audit 158 ins/154 del, narrative untouched; QUEST_DB vm-compiles. **38 sides remain for Wave 3b:** counter shapes (`catKills` ×5, `fishingCatchLog` ×5, `pitTrainingWins` ×2, `dropsCollected`, `defeatedBattles.length`, `ngMemoryDelivered`, `slStalksWon`), nested-path flags (`yugurtTourBeat.*` ×6, `fishingQuestFlags.landed15Plus`), item-count/mixed (`iodine_02/03`, `forge_02`, `sunken_02`, `la_riva_02`, `wm_01` function-body, `brynn_ledger`/`couperin_lute`/`pachelbel_shipment` item∧atNode — expressible once an AND-position `itemsAll` term is justified), sleptAt-completion (`inn_01`), + the 5 `quest_math_*` placeholders (need a completion design, not a migration). Gates green: quest-runtime-uqf **240/240** (+6) · check:walk 6/6 · navigation+autosave 39/39. | `ea4f8d2` |
-| Wave 3b | **32 more sides migrated → W3 COMPLETE at 93/99** (2026-07-03; terminal legacy holdouts = `quest_wm_01` bespoke function-body OR + `quest_math_01–05` no-completion placeholders). **THREE new AND-position canComplete terms** (each serving many quests, per the generalize rule): **`countMin`** (`[{path, min}]`, ALL required; dot-path from S_story, value coerced number→itself / array→length / object→key-count / missing→0 — replaces `(pitTrainingWins\|\|0)>=3`, `(fishingCatchLog\|\|[]).length>=n`, `Object.keys(defeatedBattles).length>=n`, `(catKills\|\|{}).beefy_tom>=n`; 17 uses) · **`itemsAll`** (exact-name inventory requirement, entries `'Name'` or `{name, min}`; AND-position vs the fuzzy OR `items`; replaces `.some(i=>i.name==='X')` and `.filter(...).length>=n` conjuncts; 9 uses) · **`flagsPath`** (dot-path nested flags, ALL truthy ← `!!(yugurtTourBeat\|\|{}).pip`; 8 completion uses + **also added to canActivate** for the 5 tour chain gates). Compound completions compose: cat_05 = countMin ∧ battles (single-entry OR-group ≡ AND conjunct), forge_02 = flags ∧ items-fuzzy-OR (either salt) ∧ atNode, iodine_02 = itemsAll{min:2} ∧ atNode, la_riva_02 = countMin ∧ itemsAll. Gates decomposed (flags/questsAttempted/flagsPath/`()=>true`→{}); 6 kept `_legacyFn` (fish_01/tour_01/guide_01 lowercase-fuzzy rod checks + **guide_02/03/06 — their `quests.X === 'done'` gates test side quests that only ever reach `'complete'`: SUSPECTED DEAD GATES, preserved verbatim, flagged in plan.md open-gaps**). Explicit per-quest spec-table codemod (32 quests, 75 edits; structural only, deleted after landing). The Wave-3a test's "W3b list untouched" assertion updated to the terminal holdout set. Gates: quest-runtime-uqf **245/245** (+5) · check:walk 6/6 · navigation+autosave 39/39. | `098e929` |
-| Wave 4 | **ALL 78 combat quests → fight-roll resolver — W4 COMPLETE 2026-07-03** (count drift: the 2026-06-28 survey said 71; recount at migration = 78). **Load-bearing recon finding: every legacy `type:'combat'` quest was DEAD in live play** — `_rollCeremonia` refused non-skill_check types (L6355), none carried completeFn/completeItems/waypointNode, and nothing else set their checkPassFlags (verified: each flag greps exactly twice — definition + downstream gate) ⇒ every arc stalled at its combat act; every act gated on a combat passFlag was unreachable. NO legacy roll behavior existed to golden-capture (the resolver was unreachable) ⇒ §SKILLFIX-02-style verify: structure + display untouched + NEW deterministic behavior. **User call locked the fight-roll design:** combat quests resolve through the SAME skill_check machinery (`_resolveQuestUQF` — zero new resolver code) but present a ⚔ FIGHT card (`FIGHT` lbl, 'Fight — STAT DC n' btn-fight button, FIGHT hcard actor); real-battle resolution (combat bit → storyPreBattle → outcome hook + per-quest encounter design) remains a possible W4b upgrade. Codemod (76 bulk): checkStat/checkDC → bit stat/dc — **placeholder `checkStat:null`/`checkDC:0` (10: ost/arn/vby/rix act3s) and absent stat/DC (11: sen/man/stn/blq/lhr) default to STR DC 12 (user-approved)**; **7 ability-WORD checkStats (Strength ×6 bgw/cai, Wisdom ×1 stn) mapped to STR/WIS** (the stn_c5a3 Wave-2bb precedent — caught by the structure test's stat whitelist); checkPassFlag → onPass `mission_bit` (63); flagless → `onPass:[]` (15); trivial activateConds → `gate:{flags}` (57) / `gate:{}` (21); narrative bytes asserted unchanged per quest + stable block line counts. 1367 `a_najera`/`f_plague` hand-migrated like their Wave-1e siblings (`reward{xp}` ordered before the `_legacy_fn` faction/faith track closure; f_plague's 50% `plague_exposed` onFail preserved; `retryable:true` kept — the only 2 retryable fights). **New reusable `gate.countMin` term** in canActivate (mirror of the W3b completion term; same coercion). **Rode along:** guide_02/03/06 dead gates FIXED → `gate.questsDone` (+ `countMin` for guide_02's catch-log conjunct); Emmer arc now chains — resolves the Wave-3b flag. **3 worldbuilder-export STRING-duplicate activateConds removed** (`ath_c1a3`/`zth_c1a3`/`cid_c2a4` carried `activateCond:"() => …"` on a second line — last-key-wins made the string shadow the function ⇒ TypeError on node arrival; function gates kept; WATCH for this artifact in future exports). Non-retryable semantics: one failed fight ⇒ `'failed'` terminal + failText (matches the bulk families' skill_check acts). Gates: quest-runtime-uqf **253/253** (+8) · check:walk clean · navigation/debug/autosave/worldbuilder-quest-editor 49/49 (server stopped per Test-Run Rules). | `1215651` |
-| Wave 5 | **106 other-type quests → typed-roll resolvers + main parity — W5 COMPLETE 2026-07-03** (survey said 83; recount = 106: delivery 57 · escort 22 · hybrid 13 · dialogue 7 · main 7). **Recon repeated the W4 finding: ALL 99 delivery/escort/dialogue/hybrid quests were DEAD in legacy** (no resolver accepted their types; no completion path; 33 downstream acts gated on their passFlags unreachable). **mq_1–7 were ALIVE** (completeItems → legacy fuzzy match) ⇒ pure-parity `completion:{items}` migration (the W3a term IS the legacy rule), waypointNode/Navigate card untouched. **User-locked design for the dead 99 — typed default rolls:** delivery → **CHA DC 12** + 📦 DELIVER card · escort → **STR DC 12** + 🛡 ESCORT card (NONE of the 79 carried a stat/DC — all defaulted) · dialogue → real skill-name stats mapped via the D&D 5e table (Persuasion→CHA, Insight→WIS; skill preserved in `bit.skill`; `stn_c7a2` raw WIS) + 💬 TALK card · hybrid → real CHA/WIS/STR DCs (cai skill names mapped) + plain 🎲 ROLL card. Story-card flavor generalized to a type→{lbl,icon,verb,class} map; hcard actor likewise (FIGHT/DELIVER/ESCORT/TALK else ROLL). Flag split: 40 flag-bearing → onPass `mission_bit` · 59 flagless → `onPass:[]`. `ath_c1a3`/`zth_c1a3` hybrids now fully declarative (`gate.flags`; the W4 kept-function assertion updated). One codemod (structural only, narrative bytes + line counts asserted; deleted after landing). Gates: quest-runtime-uqf **258/258** (+5) · check:walk clean · navigation/debug/autosave/worldbuilder-quest-editor 49/49. | `3460492` |
-| Wave 6 | **All 40 epic quests → parity completion gates — W6 COMPLETE 2026-07-03; the predicted design pass was NOT needed.** Recon overturned the lab-report-sized-question assumption: the epic lifecycle lives entirely OUTSIDE the quest objects (EB NPC modal activates `_primary` on accept · the boss-victory hook in `storyApplyOutcome` activates `_return` · `_storyEbReturnBeat` sets `ebReturnDone[code]` on the payment beat · the schema-agnostic completion loop runs their completeFns) — the 40 quests (20 battleground primary/return pairs) are passive completion watchers, i.e. the W3 side shape. Both completeFn patterns mapped onto EXISTING terms: primary `!!defeatedBattles['XX']` → `completion:{battles}` · return `!!(ebReturnDone||{})['XX']` → `completion:{flagsPath:['ebReturnDone.XX']}`. Zero engine changes; the activation exclusion (`if (q.type==='epic') return;`) untouched + test-asserted; `waypointNode`/`npc`/`reward` verbatim. **Phase 3 is now type-complete: every QUEST_DB type is migrated except the 6 deliberate holdouts** (`quest_wm_01` bespoke completeFn + `quest_math_01–05` awaiting §MATH-01). Gates: quest-runtime-uqf **262/262** (+4) · check:walk clean · navigation/debug/autosave/worldbuilder-quest-editor 49/49. | `ab996f1` |
-| Wave 7a | **Completion-bit execution point (the W3-deferred gatekeeper) — Phase 4 begins.** When storyCheckQuests flips a quest active→'complete', an ARRAY-valued `onComplete` executes as a UQF bit chain via `QuestRuntime.execBits` (narrative bits ride the msgs stream via `ctx.pushMsg` — same presentation as the per-id block); a FUNCTION-valued `onComplete` stays the byte-identical legacy closure call. `validateQuest` now walks the completion chain too. quest-runtime-uqf **266/266** (+4). | `8e852a1` |
-| Wave 7b | **All 27 QUEST_DB `onComplete` closures → completion bit chains.** Decomposition: flag sets → `flag_write` · xp/gold/items/knowledge → `reward` · exact-name removals → `item_remove` · storyMsg → `narrative` (rides the msgs stream). `_legacy_fn` keeps the inexpressible parts (`_innKindness` threshold key grant, charged-vs-plain iodine preference, INT+1 ability bump, numeric `mazeSolvedChecks`). The known xp double-counts (sb_fight/hunt_04/hunt2_04/bilge_04/sk_hull: bit xp ∧ xpAward) PRESERVED, not fixed. quest-runtime-uqf **270/270** (+4). | `478b5f2` |
-| Wave 7c | **The 61-id hardcoded effects block in storyCheckQuests → per-quest onComplete chains; the id-keyed block is DELETED** (the last schema-agnostic side-effect table — the "~80-id" estimate was 61 on inventory). **New `favor` bit kind** (`{npc, set}` absolute · `{npc, add, cap}` clamped increment, default cap 3) over the monotonic `_setNpcFavor` (never lowers) — replaces 18 `_setNpcFavor` calls. **`_legacy_fn` handlers now receive `ctx`** (`fn(S_story, ctx)`; pre-W7c fns take (S) and ignore it), so conditional entries keep exact behavior: scar_04 mercy branch (one-shot WIS+1 + branch message), vs_warden three-way message, lame_lystra healed/unhealed, wm_01 counted seal spend, va_04 annotation append, tl_01/tl_03 runtime-built readables (state-dependent descriptions), guide_06 guarded WIS bump, fishing_guide lazy `FISHING_GUIDE_TEXT` (the const is declared BELOW QUEST_DB — must stay inside a closure), void_below `_checkDearFriendUpgrade`. `quest_wm_01` (legacy holdout) carries a chain too — the execution point is schema-agnostic; the W7b carrier test validates UQF carriers via validateQuest and wm_01's chain against BIT_CONTRACTS directly. onComplete carriers now **88** (27 W7b + 61 W7c). **Known presentation-only change:** chain messages print BEFORE the '✓ title' line (the legacy block printed after it). **8 dead-in-legacy entries stay dead** (skill_check quests with no completion gate never flip in storyCheckQuests: basket_damascus, ezzir, governor_cyprus, lame_lystra, stoning_lystra, d0206_a5, d0208_a4/a5 — marked in-source). Gates: quest-runtime-uqf **280/280** (+10) · check:walk clean · wb-quest-editor/nav/debug/autosave 49/49. | `a79c76a` |
-| Wave 7d | **Legacy branches RETIRED — the declarative engine is the only quest execution surface** (2026-07-03). (1) `_rollCeremonia`'s legacy roll body (checkStat/checkDC/checkPassFlag/onPass/onFail resolution, ~46 lines) DELETED — the function is now UQF dispatch + a warned no-op for non-UQF ids. (2) storyCheckQuests' `completeFn`/`completeItems` completion terms DELETED — `canComplete` is the only completion path (recon: zero quests carried a non-empty completeItems; the ~100 `completeItems:[]` empty fields stay as inert data for W8's field sweep — the worldbuilder still exports the field). (3) `adaptLegacyQuest` → identity no-op (kept exported on QuestRuntime/window). **Holdout resolution first:** `quest_wm_01` — the LAST completeFn — migrated via a **new OR-position completion term `itemsMinAny`** (`[{name, min}]`, exact-name inventory count in the flagsAny/battles/questsComplete/items OR-group; `letter OR ≥3 Scholar Kings' Seals` was inexpressible by any prior term — `items` is fuzzy ≥1, `itemsAll`/`countMin` are AND-position); its W7c chain (incl. the conditional seal-spend `_legacy_fn`) unchanged, behavior test (seal path spends 3, letter path keeps 4) passes unmodified. **Residual non-UQF = exactly 35, all activate-only with ZERO completion surface** (new residue test asserts the id set + no completeFn/completeItems/completion on any): `quest_math_01–05` (§MATH-01 completion-design gap — activation unaffected: the legacy activateNode/activateCond activation terms are NOT part of W7d and remain live) + the 30 dead `blq_05`–`blq_10` book-stubs (Wave 2ad split; gates never true, no checkDC — the Wave-2ad stay-legacy test still passes). Tests rewritten to assert retirement: Phase-1 adapter test → no-op identity; Phase-2 "legacy still resolves" → DC-1 legacy roll leaves status/flag/xp untouched + warns; W3a/W3b holdout lists → math×5; W7b carrier test → `nonUqf:[]`, all 88 chains whole-quest-validate. Gates: quest-runtime-uqf **284/284** (+4) · check:walk clean · wb-quest-editor/nav/debug/autosave 49/49 · fishing+wb-walk 98/98. | `f8691c1` |
-| Wave 8a | **Dead-field sweep + display-from-bits — Phase 5 (canonicalize) begins** (2026-07-03). (1) All **100 inert `completeItems:[]`** fields swept from QUEST_DB (anchor-scoped script; zero runtime readers since W7d; shapes: 95 `completeItems:[],` — 64 mid-line, 31 whole-line dropped — + 5 literal-final `completeItems:[] },` where the preceding trailing comma is legal ES). (2) The last **root-level check-field residue** removed: `checkAbility`/`checkLabel`/`checkDC` on `quest_lxvii67` + `quest_guide_04` duplicated their skill_check bits verbatim (dead since the panel reads the bit for UQF quests). (3) **Roll-card render is bits-only**: the `scBit === null` legacy display fallback (`q.checkAbility \|\| q.checkStat` / `q.checkLabel \|\| q.checkSkill` / `q.checkDC` / legacy vText) DELETED; branch condition `q.type==='skill_check' \|\| scBit` → `scBit` — a non-UQF skill_check (only the 30 dead blq stubs, never activatable) now falls through to the standard SIDE quest card instead of a broken `undefined vs DC undefined` roll card. Post-sweep root-field census: completeItems/completeFn/check*/checkPassFlag/checkFailFlag/bitLabel/goldAward = **0** · `xpAward` ×50 all `type:'side'` (the live completion award) · `activateCond` ×44 all load-bearing-or-asserted (14 UQF `_legacyFn` gates + 30 blq stubs) · `reward`/`waypointNode` live display. **New permanent canonical-fields test** (dead-field set = ∅ at quest root; xpAward side-only). NOT in scope (→ W8b/§EDITOR-03): the worldbuilder still authors/exports legacy `completeItems`/`completeFn` quests — a freshly exported arc would be DEAD at runtime until the export emits UQF. Gates: quest-runtime-uqf **285/285** (+1) · check:walk clean · wb-quest-editor/nav/debug/autosave/fishing/wb-walk 147/147 · wb mission-builder+chain-editor 24/24. | `b008cde` |
-| Wave 8b | **Worldbuilder UQF export (§EDITOR-03) — the whole authoring pipeline emits UQF-1.0; legacy authoring retired** (2026-07-03). (1) **Mission Builder `buildArcQuests`**: every compiled quest carries `schema:'UQF-1.0'`+`gate`; auto chain-wiring emits `gate:{flags:[producerFlag]}` — the old `'(s)=>s.flag'` activateCond SOURCE strings were dead-or-crashing at runtime (storyCheckQuests calls `activateCond()` zero-arg, so `s` was undefined; the W4 "watch future exports" crash-artifact class is now structurally impossible). skill_check steps → `bits:[{kind:'skill_check',stat,skill?,dc,onPass:[flag_write set producerFlag, reward xp?],onFail:[]}]` (WIS 12 placeholder defaults per the W4/W5 convention; NO root check*/xpAward); side steps → `completion:{items}` ← completeItems csv · killGoals → `completion:{countMin}` over `catKills.<key>` + derived `targetMonsterKeys` · neither → `completion:{atNode}` arrival-beat so a chain always advances; `completeFn` dropped from the draft schema (the mb UI never exposed it); the non-skill producer grantBit-on-itemChain mechanism unchanged (live). (2) **✏ Editor**: the onPass/onFail/completeFn JS-body textareas REPLACED by outcome bit-list card widgets (On Pass / On Fail / On Complete) over the runtime vocabulary (`UQF_BIT_FIELDS`+`uqfCoerceBit`; the old design-vocabulary `BIT_FIELDS` const deleted); new Completion Flags input → `completion:{flags}`; `edBuildQuestObj`/Export JS emit schema/gate/bits/completion/onComplete (checkPassFlag → onPass flag_write, xpAward → onPass reward); all 7 presets rewritten as bit chains; flag-dependency panel reads bits; `toOperands` audit reads the skill_check bit (root check* swept in W8a). (3) **wbapi-server `serializeQuestLiteral`** now writes `schema`/`arc` + `gate`/`bits`/`completion`/`itemChain`/`targetMonsterKeys`/`killGoals` (JSON) + array-valued `onComplete` — previously EVERY UQF field was silently dropped on POST, so a UQF quest posted via API was stripped dead; POST world-logic bit checks → runtime vocabulary (recursive walk incl. onPass/onFail/choice options); the cycles bulk-import composes UQF (gate from bare-ident activateCond, pass flag via onPass flag_write); `?complete=true` filters on `completion` presence (the old `questComplete` flag matched nothing). (4) validate/advise (wbapi-core + browser, pre-staged this session): skill_check stat/dc validated from the BIT; xpAward-on-non-side errors; RETIRED-field + no-completion-gate advisories; `OPERAND_CONTRACTS` = the 11 live runtime kinds (talk_at/navigate/kill_at/… design vocabulary deleted — never had handlers). CRUD PUT completeItems row removed. Serializer round-trip verified by eval (skill_check + side entries parse; bare-ident activateCond wraps callable). Gates: quest-runtime-uqf **285/285** · check:walk clean · wb mission-builder 16 (rewritten UQF expectations) + quest-editor 10 (2 new UQF-emit tests) + chain-editor + crud codecs green — the 4 crud welcome-screen tests fail identically on the PRE-change tree with the server stopped (known §NAV-01-FU item 5 dependency, verified by stash-baseline) · nav/debug/autosave/fishing/wb-walk 138/138. | `11af1e5` |
-| Wave 8c | **storyRender audit — the engine is the SOLE quest-completer; §ARCH-01 CLOSED** (2026-07-05). The final Phase-5 pass: audit every per-node `storyRender` hook and the whole UI/handler surface for quest-state access. **Verdict: KEEP as UI wiring.** The hooks set world flags/status the engine observes and read **zero** legacy quest-execution fields — `checkStat`/`checkPassFlag`/`checkFailFlag`/`onPass`/`onFail`/`completeFn`/`completeItems`/`bitLabel` all grep to **0** outside the engine; the only `.onPass`/`.onFail` reads are bit-level inside `QuestRuntime.execBits`/validators, and `.xpAward`/`.activateCond`/`.activateNode` live only in `storyCheckQuests` + `_questNodes`. `storyCheckQuests` runs at the END of `storyRender` (after all inline hooks), so the engine's `!=='active'` guard already prevents double-completion. **One finding:** two REDUNDANT inline completion shortcuts — the Yugurt tournament win (`quest_tour_0N`) and the free-rod coupon redemption (`quest_no_fishing_sign`) each set `S_story.quests[id]='complete'`+xp inline **and** carried a live, tested engine completion gate (`completion:{flagsPath\|flags}` + `xpAward`; the tour engine path is asserted by the pre-existing W3b test at `:8403`). Since **opp.xp === xpAward for every act** (pip 100 · renard 150 · bog 200 · vera 300 · dirk 500 · master 1000; coupon +50 === xpAward:50 — verified, zero divergence), the inline `='complete'`+xp shortcut is deleted and the handlers defer to `storyCheckQuests` (tour already called it to chain-activate; the coupon handler now calls it) — **engine becomes the single authority, behaviour-preserving** (identical XP, identical end-state). The `no_fishing_sign` inline `+50` was removed **with** the inline complete (else the engine's xpAward:50 would double it). Sole documented exception: **`quest_la_riva_02`** stays inline-authoritative — its inline AMS hook grants +500g / the account book / +Aldo favor / activates `la_riva_03`, rewards its `completion:{countMin,itemsAll}` gate does NOT carry (no `onComplete`/`xpAward`); formalising it into an `onComplete` chain is deferred §GR work (lab-report-gated). **NB the approved "tighten" direction inverted on evidence:** the option text read "strip the dead xpAward + completion mirror," but tests 8333/8403 prove the engine path is live+canonical — the redundant code was the INLINE shortcut, so the fix was the inverse (re-confirmed with the user before editing). New permanent §W8c test block (3): engine-completability + opp.xp===xpAward · single-grant no-double-XP · source pin (both shortcuts gone, `la_riva_02` remains). Gates: quest-runtime-uqf **288/288** (+3) · check:walk clean · fishing 9 green · nav+debug 36 boot-path green. **§ARCH-01 DONE:** all ~2,700 quests UQF-1.0, QuestRuntime the single execution surface, QUEST_DB the single source of truth; deliberate residuals = math×5 (§MATH-01) + 30 blq stubs, both activate-only. | `647e070` |
-| Wave 2bb | **`stn_*`** (11 skill_check acts — mixed-type chapters, `stn_cNaM` ids). **THIRD & LAST §SKILLFIX-02 family of the trio; §SKILLFIX-02 TRIO COMPLETE.** UNIFORM-flag — all 11 carry a mission_bit onPass. Gates: 5 empty (chapter openers) + 6 flags ⇒ split **{flags:6, empty:5}**. Many type-gated siblings (escort/dialogue/combat per chapter, correctly skipped). **§SKILLFIX-02 (10/11):** 10 acts use D&D skill names (Sleight of Hand/Perception/Survival/Stealth/Deception/Athletics) mapped to governing ability (DEX/WIS/STR/CHA); 1 act (`stn_c5a3`) uses full ability word `"Wisdom"` → `WIS` with `skill:null` (raw ability check, not a skill check — migrator: stat:WIS, no skill field). `skill→ability mapped 10`. Permanent test counts `skillCount===10`, asserts `abilOk===true` for all 11. Gate check: canActivate false→true when flag toggled. No prefix bleed. Verified vs golden (schema, ability, passFlag, dc, onFail:[], onPass:mission_bit, gate behavior). Zero engine changes. +2 tests. | `8a6257a` |
-| Wave 2ba | **`sen_*`** (19 skill_check acts — 7 chapters, `sen_cNaM` ids). **SECOND §SKILLFIX-02 family of the trio.** UNIFORM-flag — all 19 carry a mission_bit onPass (0 flagless). Gates form SEVEN per-chapter internal chains ⇒ split **{flags:12, empty:7}**. **TWO `combat` type-gated siblings** (`sen_c6a2`, `sen_c7a2`, correctly skipped; their passFlags still gate two downstream skill_check acts via `S_story.<flag>`). **§SKILLFIX-02** — all 19 use D&D skill names (Stealth/Deception/Perception/Insight/Courage/Persuasion/Athletics) mapped to governing ability (DEX/CHA/WIS/STR); skill name preserved in `bits[0].skill`. `skill→ability mapped 19`. No prefix bleed. Verified vs golden. Zero engine changes. +2 tests. | `9cfe61d` |
-| Wave 2az | **`man_*`** (23 acts — 7 chapters, `man_cNaM` ids). **FIRST §SKILLFIX-02 family of the §SKILLFIX-02 trio.** UNIFORM-flag — all 23 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates form **SEVEN per-chapter internal chains** (each chapter's act1 ungated → 7 `gate:{}`; the other 16 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`) ⇒ split **{flags:16, empty:7}**. **§SKILLFIX-02** — all 23 use D&D skill names in `checkStat` (Stealth/Deception/Persuasion/Perception/Courage/Insight/Presence/Athletics/Sleight of Hand); migrator maps each to governing ability (DEX/CHA/WIS/STR); skill name preserved in `bits[0].skill`; deliberate behavior fix (was rolling at +0 ability mod). `skill→ability mapped 23`, 0 mismatches. Zero type-gated siblings. No prefix bleed. Verified vs golden (schema UQF-1.0, validateQuest, skill preserved, ability correct, passFlag correct, onFail:[], onPass:mission_bit, gate behavior). Zero engine changes. +2 tests. | `c6dbfad` |
-| Wave 2ay | **`clr_*`** (5 acts — single chapter × 5 acts, `clr_01_actN` ids). **TENTH & LAST head of the CLEAN mid-tail.** PRE-MIGRATED — UQF at authoring time (bulk migrator skipped:5; no apply step). UNIFORM-flag — all 5 carry a mission_bit onPass (0 flagless). ALL OPEN GATES — no chaining ⇒ **{flags:0, empty:5}**. Stats: INT(2)+WIS(2)+CHA(1). CLEAN — `mapped 0`, NOT §SKILLFIX-02. Zero type-gated siblings. **Marks the end of the CLEAN mid-tail.** +2 tests. | `81dae11` |
-| Wave 2ax | **`cph*`** (29 acts — 7 chapters × 5 acts minus 6 combat siblings, no-underscore `cphNNN_actN` ids). **NINTH head of the CLEAN mid-tail.** UNIFORM-flag — all 29 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates form **SEVEN per-chapter internal chains** (each chapter's act1 ungated → 7 `gate:{}`; the other 22 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`, chaining act→act WITHIN a chapter) ⇒ split `{flags:22, empty:7}`. UPPERCASE-checkStat (**WIS + CHA only** — narrowest stat set so far in the mid-tail). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. **SIX `combat` type-gated siblings** (c1 has 2 at act2+act4; c2/c3/c5/c7 each have 1 at act3 or act4; c4+c6 have no combat sibling — full 5 acts each) correctly skipped. Most mid-tail combat siblings so far (ties mol's 5 at +1). No prefix bleed. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `13a794a` |
-| Wave 2aw | **`mol*`** (30 acts — 7 chapters × 5 acts minus 5 combat siblings, no-underscore `molNNN_actN` ids). **EIGHTH head of the CLEAN mid-tail.** Laxdæla saga arc (Gudrun's Debt + sub-arcs). UNIFORM-flag — all 30 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates form **SEVEN per-chapter internal chains** (each chapter's act1 ungated → 7 `gate:{}`; the other 23 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`, chaining act→act WITHIN a chapter) ⇒ split `{flags:23, empty:7}`. UPPERCASE-checkStat (WIS 13, CHA 15, DEX 1, STR 1 — four abilities). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. **FIVE `combat` type-gated siblings** (one act3 per chapter in c1/c4/c5/c6/c7; chapters c2 and c3 have a full 5 acts each) correctly skipped. Most mid-tail combat siblings so far. No prefix bleed. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. **Note:** golden flag-reset bug found here — pre-reset `S_story[flag]=false` before the FAIL run in both capture and verify specs to avoid stale `true` from the preceding PASS run. | `a3f358c` |
-| Wave 2av | **`fro_*`** (32 acts — 7 chapters × 5 acts minus 3 type-gated siblings, single `fro_cNaM` ids). **SEVENTH head of the CLEAN mid-tail.** Völsunga saga arc (Hjordis/Gram shards → Brynhild's pyre → Gudrun's harp → Oddrun's ride → 2 more sub-arcs). UNIFORM-flag — all 32 carry a `checkPassFlag` → `onPass:[mission_bit{flag}]` (0 flagless). Gates form **SEVEN per-chapter internal chains** (each chapter's act1 ungated → 7 `gate:{}`; the other 25 trivial `()=>!!S_story.<priorFlag>` → `gate:{flags:[…]}`, chaining act→act WITHIN a chapter) ⇒ split `{flags:25, empty:7}`. UPPERCASE-checkStat (WIS 14, CHA 9, INT 5, DEX 3, CON 1 — five abilities). CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. **THREE type-gated siblings: TWO `hybrid`** (`fro_c1a3`, `fro_c5a3`) **+ ONE `combat`** (`fro_c2a4`) correctly skipped — so c1 has acts a1/a2/a4/a5, c2 has a1/a2/a3/a5, c5 has a1/a2/a4/a5; the three missing-act gaps are the sibling slots. FIRST mid-tail family with 3 type-gated siblings (previous max was 2). No prefix bleed. Verified vs golden (struct + verbatim display + pass/fail + gate behavior), no residual `activateCond`, no `pageerror`. Zero engine changes. +2 tests. | `1ef19ab` |
+§ARCH-01 replaced that with the **Universal Quest Format (UQF-1.0)**: a quest is *pure declarative
+data* — `schema` · `gate` · `bits` · `completion` — executed by a host VM (`QuestRuntime`). Logic
+moved out of the content and into an opcode table (`BIT_CONTRACTS`). The migration ran in eight
+waves over eight days, hand-migrating the 79 bespoke arcs and bulk-transforming the remaining
+~2,340 through a deterministic codemod verified against a pre-migration golden capture.
 
-**Proven properties:**
-- **Behavior parity** — every migrated quest produces byte-identical state
-  (status, flags, mission-bit tokens, xp/gold, knowledge entries) to the
-  legacy closures, verified by 22 Playwright tests.
-- **Zero legacy regression** — every UQF branch is guarded by
-  `schema === 'UQF-1.0'`; the legacy `_rollCeremonia` / `completeFn` path is
-  byte-for-byte unchanged for the other 276 quests. `check:walk` +
-  navigation/debug/autosave/worldbuilder-quest-editor (28) stay green
-  throughout.
-- **Engine generality** — each migration that hit a gap produced a *reusable*
-  primitive, never a one-off: the `mission_bit` bit kind, the `battles` gate
-  term, the compound completion gate (which resolved lab Open-Q #5 — compound
-  AND/OR — **without** a boolean-expression language).
-
-### Quest landscape (measured 2026-06-28 — **CORRECTED**)
-
-> ⚠ The first pass of this report cited "284 quests / 113 skill_check." That came
-> from a survey that under-counted by ~9×. A reproducible **brace-walker** scan
-> (walk top-level `^  key: {` entries, balance braces to the matching close)
-> gives the true figures below. Treat the originals as void.
-
-```
-TOTAL 2515  |  UQF 14 (§WISDOM-01 ×8 + Wane ×6)  |  remaining ~2501
-By type:  skill_check 2192   side 129   combat 71   epic 40
-          delivery 38   escort 22   hybrid 9   main 7   dialogue 7
-skill_check breakdown:
-  ├─ with an onPass closure ...............    78   (Wave 1 — full bit-chain transform)
-  └─ simple (checkPassFlag/xpAward only) ... ~2114  (Wave 2 — codemod bulk)
-with a completeFn closure .................   163   (→ declarative completion)
-```
-
-**Implication for the plan:** Wave 2 is not ~61 hand-migrations — it is **~2149
-near-identical** simple skill_checks. One-by-one is infeasible; Wave 2 must be a
-**programmatic transform** (a codemod that rewrites `checkAbility/checkLabel/
-checkDC/checkPassFlag/xpAward/goldAward/onPass` into a `schema+gate+bits` shell)
-applied in batches, each batch parity-tested by the same harness. Wave 1 (78
-closures) stays hand-migrated arc-by-arc because the closures are bespoke.
-
-**Codemod recipe (validated in Wave 1g — d0201/d0205/d0209, 15 quests):** the safe
-shape is a one-shot script with an explicit per-quest spec of `[oldStructural,
-newStructural]` pairs, applied **within each quest's brace-delimited block** (so
-each old-string need only be unique inside its own block, not the whole file).
-Touch **only structural fragments** (`activateNode`/`activateCond`/`check*`/
-`xpAward`/`goldAward`/`checkPassFlag`/`completeItems`/`onPass`/`onFail`/
-`completeFn`) — **never the narrative prose** (desc/vignetteText/passText/failText),
-which carries apostrophes and quotes that make escaping brittle. Recompute the
-`QUEST_DB:END` bound each block (it shifts as you splice). After running:
-vm-parse the file, structurally assert every target (schema set, no leftover
-legacy fields, bit/completion present), run the suites, then **delete the
-one-shot script** (the transform lives in git + this report).
+This document is the **playbook** — the repeatable procedure, the grammar it produced, and the
+per-wave ship record. Its central claim is procedural: *a migration should widen the grammar, never
+special-case the content.* Fifty days of subsequent engineering have not needed a single exception.
 
 ---
 
-## 2. The migration playbook (common activities)
+## 2. Intention, inspiration, and what the player actually gets
 
-Every quest migration is the same repeatable sequence. This is the checklist
-to run per quest (and per arc):
+### 2.1 The design intention
 
-### A. Recon (per arc, once)
-1. `grep -n "quest_<arc>_" roll2hit-v3.html` — list the arc's quests.
-2. **Read each quest's full legacy object** — capture the exact fields and the
-   verbatim long strings (narratives, knowledge entries).
-3. **Grep for external consumers** of the legacy fields you're about to drop:
-   `grep -nE "\.checkStat|\.checkPassFlag|\.onPass|\.completeFn" …` — confirm
-   they only appear inside `_rollCeremonia` / the `storyCheckQuests` loop
-   (both already schema-guarded). If a storyRender block or other code reads a
-   field directly, plan to leave that field in place.
+The inspiration is the **script/host split** familiar from game engines and from the JVM: content is
+script, the engine is the host, and capability grows **through the grammar** (a new opcode, a new
+gate term) rather than through a new one-off branch per quest. The design goals, in the order the
+report argued them:
 
-### B. Transform (per quest)
-4. **`activateCond` → `gate`**: `()=>!!A` → `{flags:['A']}`; `A && B` →
-   `{flags:['A','B']}`; `A || B` → `{flagsAny:['A','B']}`; negations →
-   `notFlags`; visited-node checks → `nodes`.
-5. **Pick the primary mechanic:**
-   - skill check → a `skill_check` bit (`stat` UPPERCASE, `skill`, `dc`).
-   - passive/side → a declarative `completion` gate (same vocabulary as
-     `gate`, plus `battles:[code]` for defeated-combat conditions); `bits:[]`.
-6. **`onPass` closure → ordered bit chain**, mapping each statement:
-   - `_grantMissionBit(flag)` / `checkPassFlag` → `{kind:'mission_bit', flag}`
-     (grants the inventory token **and** sets the flag — do not use a bare
-     `flag_write`, which drops the token).
-   - extra `S_story.x = true` → `{kind:'flag_write', set:['x']}`.
-   - `S_story.gold += n` / `S_story.xp += n` / knowledge push / item push →
-     one `{kind:'reward', gold, xp, knowledge, items}`.
-   - `storyMsg(text)` → `{kind:'narrative', msg:text}` (paste **verbatim**).
-7. **`onFail` closure → `[{kind:'narrative', msg}]`**.
-8. **`completeFn` → `completion` gate** (flags AND-group; flagsAny+battles
-   OR-group; notFlags). `completeItems:[…]` → an `item_check`-style condition
-   (future) or keep as a legacy field until that bit lands.
-9. **Preserve display/side fields verbatim**: `title, desc, hint, disposition,
-   passText, failText, waypointNode, npc, retryable`. Keep `type` for the
-   badge. Transcribe long strings byte-for-byte from the legacy literal.
+1. **One execution surface.** A quest resolves in exactly one place, so a fix reaches all 2,853.
+2. **Declarative gates.** *When does this list?* becomes readable data, not an opaque predicate.
+3. **Validatable content.** `validateQuest` can refuse a malformed quest; a closure cannot be checked.
+4. **Authorable content.** If quests are data, the worldbuilder can author them — realised in Wave 8b.
+5. **Generalise, never special-case.** Every gap becomes a reusable primitive. The whole grammar in
+   §6 was produced by twenty-odd quests each demanding one thing the engine could not yet say.
 
-### C. Engine gaps — generalize, never special-case
-10. If a quest needs a mechanic the registry lacks, add a **reusable** bit
-    kind or gate term (with a `BIT_CONTRACTS` entry + handler), not a
-    quest-specific branch. So far this produced: `mission_bit` bit kind, the
-    `battles` completion term, (Wave 1a) the **`gate.questsAttempted`**
-    (`(quests[id]||'')!==''`, ×23 in QUEST_DB) + **`gate.questsDone`**
-    (`done`/`complete`) chain terms, (Wave 1d) **`gate.favorMin`**
-    (`{npc:n}` ← `(npcFavorability||{}).x >= n`), (Wave 1f) **`gate.battles`**
-    (`['CODE']` ← `!!defeatedBattles[code]`; ALL required), and (Wave 1h)
-    **`gate.notBattles`** (`!defeatedBattles[code]`), **`gate.shardsMin`**
-    (`(shards||0)>=n`), **`gate.restedAtMin`** (`{node:n}` ←
-    `shortRestedAtNodes[node]>=n`) in `canActivate` + **`completion.questsComplete`**
-    (strict `==='complete'` OR-term, for chaining off a *side* quest) in
-    `canComplete`, and (Wave 1i) **`gate.sleptAt`** (`['CODE']` ←
-    `!!(sleptAtNodes||{})[code]`; ALL required) in `canActivate`, and
-    (Wave 1m) **`completion.atNode`** (`S_story.currentCode === code` ←
-    `completeFn:()=>currentCode==='NWI'`; waypoint-arrival side-quest completion)
-    in `canComplete`, and (Wave 1n) **`gate.flagEquals`** (`{field:value}` strict
-    equality, ALL required ← `S_story.sbChosenRole === 'fight'`; enum/branch-state
-    gates for role choices) in `canActivate`, and (Wave 3a) **`completion.items`**
-    (OR-group term; each listed name matched with the legacy fuzzy two-way substring
-    rule `inv.name.includes(ci) || ci.includes(inv.name)` ← non-empty `completeItems`)
-    in `canComplete`. Each immediately served multiple quests.
+### 2.2 What it did for playability — the load-bearing number
 
-> **§C note — fail flags & the onFail chain.** The legacy non-retryable fail
-> path grants `checkFailFlag` via `_grantMissionBit(checkFailFlag, bitLabel)`
-> (`_rollCeremonia`, ~L6308) — but `_resolveQuestUQF` does NOT replicate that.
-> So a quest with a `checkFailFlag` must carry an explicit
-> `onFail:[{kind:'mission_bit', flag:<checkFailFlag>}]`. (Safe because such
-> quests are non-retryable: every fail is terminal, so the onFail chain runs
-> exactly once — matching the legacy `else` branch.) Likewise `checkPassFlag`
-> ⇒ an `onPass` `mission_bit` (the engine applies neither check*Flag itself).
-> `retryGateDays` needs no migration: the retry helpers read `q.retryGateDays`
-> directly (schema-agnostic), and `_resolveQuestUQF` records `skillCheckAttempts`
-> identically to legacy.
-11. **Imperative shared helpers** (e.g. `_addCroneMark()` = counter++ +
-    inn-kindness) that don't decompose cleanly into declarative bits are the
-    legitimate use of the **`_legacy_fn`** escape hatch: `{kind:'_legacy_fn',
-    fn:() => _helper()}` preserves byte-identical behavior while still moving the
-    quest onto the `schema+gate+bits` shell. Don't invent a one-off bit kind for
-    a single shared helper. (Order matters: emit `reward` before `_legacy_fn` to
-    mirror the legacy `xpAward`-then-`onPass()` sequence.)
+The migration is usually described as a refactor. It was not. **Recon in Waves 4 and 5 found that
+177 quests could not be played at all**, and the archive confirms it exactly:
 
-> **§C note — `side`-quest `onComplete` stays a live hook (for now).**
-> `storyCheckQuests` calls `q.onComplete()` on completion for **every** schema
-> (it is not behind a `schema` guard), so a migrated `side` quest keeps its
-> `onComplete` verbatim — convert only `completeFn`→`completion` gate and
-> `activateCond`→`gate`. Folding `onComplete` effects into a *completion bit
-> chain* needs a UQF completion-bit execution point that doesn't exist yet
-> (a Wave 3 engine task). Until then, `onComplete` is the legitimate hook, same
-> status as the per-id hardcoded completion effects in `storyCheckQuests`.
+| Legacy type | Count at `24becb6` | Had any completion surface | Verdict |
+|---|---|---|---|
+| `combat` | 78 | 0 | dead |
+| `delivery` | 57 | 0 | dead |
+| `escort` | 22 | 0 | dead |
+| `hybrid` | 13 | 0 | dead |
+| `dialogue` | 7 | 0 | dead |
+| `main` (`mq_1`–`7`) | 7 | **7** (`completeItems`) | alive |
 
-### D. Verify & land (per quest/arc)
-12. **Syntax-check** the inline script (vm parse) after each edit.
-13. **Write parity tests** (section 3).
-14. Run `npx playwright test quest-runtime-uqf` + `npm run check:walk` +
-    `navigation debug autosave worldbuilder-quest-editor`.
-15. Update `plan.md`, commit, `say` the subject.
+The cause is one line in the legacy resolver — `if (q.type !== 'skill_check') return;` — and no
+other code accepted those types. They had no `completeFn`, no `completeItems`, no `waypointNode`.
+**A player who accepted one of them could never finish it**, and because downstream acts gated on
+their pass-flags, *every arc containing one stalled at that act.* Waves 4–6 turned 177 inert entries
+into playable content and repaired three dead gates in the Emmer arc as a rider.
+
+Three further fixes reached the whole game:
+
+- **§SKILLFIX-01 (`662ee99`)** — the legacy resolver read only `q.checkAbility`, but **2,443 quests
+  store the ability in `checkStat`**. Those checks rolled `d20 + 0 + proficiency` and printed the
+  ability name as **"undefined"**. Your Wisdom score was decorative on the overwhelming majority of
+  the game's skill checks. Four read sites were aliased; the fix is verbatim at HEAD.
+- **§SKILLFIX-02** — ~176 more quests stored a *skill name* (`Persuasion`, `History`, `Insight`) in
+  the stat field, hitting the same `+0` path. The migrator maps skill → governing ability (D&D 5e;
+  homebrew Courage/Presence → CHA) and keeps the name for display and proficiency.
+- **Wave 2c** — three `ath_*` acts carried a duplicate `activateCond`, the real function *plus* a
+  dead string copy. Last-key-wins made the parsed value a string, so `q.activateCond()` **threw a
+  TypeError on arrival at those nodes**. The migration fixed a live crash. Wave 4 found and removed
+  three more; at HEAD `activateCond:"` occurs **0 times**.
+
+### 2.3 What it did for the author
+
+Wave 8b carried the grammar into the worldbuilder: the Mission Builder compiles arcs to UQF, the
+✏ Editor authors outcome **bits** instead of JavaScript textareas, and `serializeQuestLiteral`
+learned to write `schema`/`gate`/`bits`/`completion` — which it had been **silently dropping**, so
+every UQF quest posted through the API had been arriving stripped dead. A grammar the tools can
+speak is the difference between a format and a filing convention.
 
 ---
 
-## 3. The test-suite playbook
+## 3. Diagnosis at the reference build
 
-All tests live in `tests/integration/quest-runtime-uqf.test.js`, load the real
-game (`page.goto('/roll2hit-v3.html')`), and read **bare top-level globals**
-(`QUEST_DB`, `S_story`, `QuestRuntime`, `validateQuest`, `_rollCeremonia`,
-`storyCheckQuests`) inside `page.evaluate`.
+The 2026-06-28 survey, re-measured at `24becb6` by two independent methods (the `wbapi-core`
+parser and a standalone brace-depth walk, which agree exactly):
 
-**Recurring techniques:**
-- **Determinism by DC / ability**: a `dc:1` bit always passes, `dc:99` always
-  fails. When the DC is fixed by the quest (you can't lower it), force the
-  outcome via the ability score instead: a **huge** score (`{wis:40}`) guarantees
-  a pass; a **deeply negative** score (`{wis:-100}` ⇒ mod −55) guarantees a fail
-  even on a natural 20. **Do not** use a merely-low score like `1` (mod −5) for a
-  "fail" test against a low DC — a d20 of 16–20 can still clear it, and the test
-  flakes ~25 %. (Wave 1a shipped exactly this bug; caught + fixed in 1b. Verify
-  any roll-outcome test with `--repeat-each=3`.)
-- **Suppress level-up noise**: `S_story.level = 20` (so `_checkLevelUp` no-ops),
-  high baseline `xp`/`gold`, then assert the **delta** — robust to the cumulative
-  xp curve.
-- **Drive the real entry points**, not just the engine: call `_rollCeremonia(id)`
-  (the actual roll-button handler) and `storyCheckQuests({code})` (activation +
-  completion loop) so dispatch, render, and gates are all exercised.
-- **Throwaway fixtures** for engine-only tests: inject a synthetic quest into
-  `QUEST_DB`, assert, then `delete` it (fresh page per test makes this safe).
-- **Assert on the rendered container, NOT `document.body`.** When a test checks
-  rendered panel text, read `document.getElementById('story-info-row').innerHTML`
-  (the quest-panel container), not `document.body.innerHTML` — the latter
-  includes the inline `<script>` source, so every quest's literal strings (e.g.
-  both `vignetteText` AND `vignetteTextAlt`) always "match" and the assertion is
-  meaningless. (Wave 1d's render test hit exactly this.)
-- **Assert byte-level parity** against the legacy source values: status `done`,
-  the page flag `true`, the **mission-bit token** present
-  (`inventory.find(i => i.flagRef === flag && i.type === 'mission_bit')`), exact
-  xp/gold deltas, and the knowledge entry (`some(k => k.startsWith('Ardley …'))`).
+| Figure | Report | Measured at `24becb6` | Verdict |
+|---|---|---|---|
+| Total `QUEST_DB` entries | 2,515 | **2,839** | ✘ short by 324 |
+| Already UQF (`§WISDOM-01` ×8 + Wane ×6) | 14 | **14** | ✔ exact, ids match |
+| `skill_check` | 2,192 | **2,482** | ✘ |
+| `side` | 129 | **133** | ✘ |
+| `combat` | 71 | **78** | ✘ (the Wave-4 "drift" was an undercount on day one) |
+| `delivery` / `hybrid` | 38 / 9 | **57 / 13** | ✘ (likewise recounted in Wave 5) |
+| `epic` / `escort` / `main` / `dialogue` | 40 / 22 / 7 / 7 | **40 / 22 / 7 / 7** | ✔ |
+| skill_checks with an `onPass` closure | 78 | **79** | ≈ off by one |
+| entries with a `completeFn` closure | 163 | **163** | ✔ **exact** |
+| `checkStat` carriers (§SKILLFIX-01) | 2,443 | **2,443** | ✔ **exact** |
+| `checkAbility` carriers | ~30 | **83** | ✘ (inherited from `662ee99`'s own comment) |
 
-**The five test shapes per migrated quest/arc:**
-1. *validates as UQF* — `validateQuest(q).valid` with the right `schema`/bit.
-2. *activation gate* — unmet gate ⇒ no activate; met ⇒ `'active'`.
-3. *PASS parity* — every reward/flag/token/knowledge matches legacy.
-4. *FAIL behavior* — non-retryable ⇒ `'failed'` and grants nothing; retryable
-   ⇒ stays `'active'` + logs an attempt.
-5. *completion* (side quests) — `canComplete` truth-table incl. OR-branches;
-   `storyCheckQuests` flips `'active'` → `'complete'`.
+> **The report distrusted its first count, replaced it with a brace-walker, and printed
+> *"Treat the originals as void."* The replacement is wrong by 324.** The instinct was right; the
+> second instrument was not better than the first. Note precisely *which* figures survived: every
+> exact number is one that could be taken by grepping a single field (`completeFn` 163,
+> `checkStat` 2,443, the 14 UQF ids). Every wrong one required walking the whole corpus. **A count
+> you can copy is evidence; a count you must derive is a claim.**
+
+The *implication* the survey drew was nonetheless correct and is the document's best judgement
+call: at either figure, Wave 2 is not sixty hand-migrations but ~2,340 near-identical ones, so it
+must be a programmatic transform. Being wrong about the magnitude did not change the decision.
 
 ---
 
-## 4. Full-migration plan (waves)
+## 4. Method — the playbook
 
-~2501 quests remain. Migrate in waves of rising complexity. A wave is "done" when
-every quest in it is `schema:'UQF-1.0'`, parity-tested, and all suites green.
-**Wave 1 stays hand-migrated arc-by-arc** (bespoke closures); **Wave 2 must be a
-codemod** (the simple skill_checks are too numerous — ~2149 — to hand-edit).
+### 4.1 Recon (per arc, once)
 
-| Wave | Target | Count | Mechanic / new engine work |
-|------|--------|-------|----------------------------|
-| **0 ✅** | §WISDOM-01 pilot | 8 | proves skill_check + completion paths |
-| **1a ✅** | Wane's Crown (`quest_wane_01`–`06`) | 6 | full bit-chain transform; added `gate.questsAttempted`/`questsDone` chain terms; `onPass:()=>_addCroneMark()` preserved via `_legacy_fn`; `xpAward`→`reward`. |
-| **1b ✅** | Whisper's Crown (`quest_whisper_01`–`06`) | 6 | same pattern ×5 skill_checks; **first Wave-1 `side` quest** (`whisper_05`): `completeFn`→`completion:{flags}`, `onComplete` **kept verbatim** (fires from `storyCheckQuests` for any schema — see §C.note). |
-| **1c ✅** | Glut's Crown (`quest_glut_01`–`06`) | 6 | ×5 skill_checks; `side` quest (`glut_06`) with a **flag** activation gate (`gate:{flags:['glut_gift_held']}`) + a multi-effect `onComplete` (inventory splice of "Glut's Gift" + crown flag), kept verbatim. Confirms the side-quest pattern generalizes across flag-gated and chain-gated activation. |
-| **1d ✅** | Ceremonia: Yael romance arc (`quest_ceremonia_yael_01`–`05`) | 5 | richest arc yet — real `checkPassFlag`→`mission_bit`, `checkFailFlag`→`onFail:[mission_bit]` (the legacy non-retryable fail path grants the fail flag; `_resolveQuestUQF` does not, so make it an explicit onFail bit), numeric `onPass` counter + favor/item closure via `_legacy_fn`. **New `gate.favorMin`** term; **vignetteTextAlt render parity fix** (UQF path now honors it). |
-| **1e ✅** | §1367 historical skill-checks (4 of 6) | 4 | `e_wycliffe`/`b_tamerlane`/`c_ottoman`/`d_hansa`. No `checkPassFlag` (no mission_bit); `gate:{}` (independent); `onPass`/`onFail` adjust **clamped faction/faith track counters** via `_legacy_fn`; `d_hansa` first real `onFail` track effect. The 2 combat quests (`a_najera`, `f_plague`) deferred to Wave 4. |
-| **1f ✅** | Ceremonia **d0207** arc (5 acts) | 5 | first FULL d02xx arc (3 skill_check + 2 side), migrated end-to-end like §WISDOM-01. New: **`gate.battles`** activation term (a4 needs `defeatedBattles['HKG']`); `notFlags` activation (a1); flag completion (a2); **battle completion** (a3 → `completion:{battles}`). a5 onPass pushes a flavor item via `_legacy_fn`. **Template for the other 8 d02xx arcs (40 quests total).** |
-| **1g ✅** | d0201 + d0205 + d0209 (3 full arcs) | 15 | **first script-assisted batch** — a one-shot within-block codemod (structural fragments only, never narrative), verified by syntax+structure+tests. Zero engine changes (only already-supported terms). Handled onFail closures (`voidPressure+1`), `reward.gold` finales, and a side-quest `onComplete`. d02xx now **20/40**. |
-| **1h ✅** | d0204 + d0206 + d0208 + d0210 (final 4 arcs) | 20 | codemod #2 → **d02xx 40/40 COMPLETE**. + 4 engine terms: `gate.shardsMin`/`gate.notBattles`/`gate.restedAtMin` (canActivate), `completion.questsComplete` (strict `==='complete'` OR-term). **Deliberate bug-fix (not pure parity):** dead `completeItems` on skill_checks (never granted in legacy) → `onPass reward.items`, so 4 items are now granted. §DUNGEON-01 follow-up logged (per-id `==='complete'` handlers for skill_checks remain dead). |
-| **1i ✅** | Innmother skill-checks (`quest_inn_02`/`03`/`04`) | 3 | first **non-d02** Wave-1 arc. No `checkPassFlag` (no mission_bit); new **`gate.sleptAt`** term (`['INN']` ← `!!(sleptAtNodes||{})['INN']`); `xpAward`→`reward`; `onPass:()=>_innKindness(1)` kept verbatim via `_legacy_fn`. Side quests `inn_01`/`05`/`06` (+`inn_eel`) stay legacy. +4 tests. |
-| **1j ✅** | Spark: the Harmony Chain (`quest_spark_01–05`) | 5 | first arc on the §SKILLFIX-01 pure-parity footing. 3 skill_checks (01 CHA Persuasion DC10 **retryable**, 03 WIS Medicine DC13, 04 INT Investigation DC14) + 2 side (02/05). `checkPassFlag`→`mission_bit` (03/04 no `bitLabel` → `_flagToLabel` fallback); rich onPass closures (gold/xp/items/knowledge/msg) kept whole via `_legacy_fn`; spark_01 onFail (hp−1) via `_legacy_fn`. Side 02/05: gate←activateCond (05 = 2-flag AND), completion←completeFn, onComplete kept verbatim. **Zero engine changes.** +5 tests. |
-| **1k ✅** | Spark2: the Dunfall Harmony Chain (`quest_spark2_01–05`) | 5 | Bram/Oat/Fehn arc at DNF. 2 skill_checks (02 WIS Animal Handling DC11 **retryable**, 04 INT Nature DC12 **non-retryable**) + 3 side (01/03/05). `checkPassFlag`→`mission_bit{flag}` (no label); onPass via `_legacy_fn` (04 splices Oat's Harbor Bead → Dunfall Drift Spore); both keep onFail msg, 04's non-retryable FAIL runs msg then locks. Side 01/03/05 are **pure hook/waypoint gates, NO onComplete** → structural gate/completion only. **Zero engine changes.** +5 tests. |
-| **1l ✅** | Codex Inquisitor gauntlet (`quest_inquisitor_handshake`/`questions`/`final`) | 3 | 3-question construct at NUE. `checkAbility`/`checkLabel` quests (the ~30 that worked pre-§SKILLFIX-01) → pure parity. **Fully decomposed** (no onPass `_legacy_fn`): `checkPassFlag`→`mission_bit{flag}` (no label), `xpAward`→`reward{xp}` (50/75/200), final's item-push → `reward{items:[Archive Key]}`. Only `questions` keeps `onFail:[_legacy_fn]` (hp−10 psychic). Chained flag gates; `retryGateDays` 0/0/1 top-level. §D01-02 NUE handshake button dispatches transparently. **Zero engine changes.** +4 tests. |
-| **1m ✅** | Sea: The Warmth Calm (`quest_sea_01/02/03`) | 3 | Deep Warmth Eel arc (SEN→NWI). 2 skill_checks (02 INT Investigation DC13, 03 WIS Nature DC14) pure-parity via `mission_bit{flag}` (no label) + `_legacy_fn` (03 grants `pirateCrew_allied` + Joint Pirate Debt Note). sea_01 side quest needed a **new `completion.atNode:'NWI'`** term (← `completeFn:()=>currentCode==='NWI'`, waypoint-arrival); `onComplete` kept verbatim. +3 tests. |
-| **1n ✅** | Naval Intercept branch (`quest_sb_01`/`fight`/`parley`/`examine`) | 4 | Captain Keel's role-choice intercept (GCI). **New `gate.flagEquals`** term (`{sbChosenRole:'…'}` strict eq) for the 3 branches. parley (CHA Persuasion DC12) + examine (INT Investigation DC11) `retryable:false`; `mission_bit{flag}` (no label) + onPass `_legacy_fn`; **onFail `_legacy_fn` flips `sbChosenRole`→'fight'** (branch fallthrough → sb_fight activates). sb_fight `completion:{battles:['SB_PRIVATEER']}` + onComplete verbatim. ⚠ **Latent +800xp double-count** (onComplete+400 ∧ xpAward:400) preserved, flagged. +5 tests. |
-| **1o ✅** | Lake/Relay Monster Hunt (`quest_hunt_01–04` + `quest_hunt2_01–04`) | 8 | 2 identical investigate→clear arcs (hunt2 Night Hag WRO→BNX; hunt drowners HFT→VAW). Hook side (gate:{}) + 2 `retryable:false` checkStat skill_checks (`mission_bit{flag}` no-label + onPass/onFail `_legacy_fn` w/ knowledge/xp) + lair-clear side (`completion:{battles}` + verbatim onComplete). Zero engine changes. ⚠ hunt_04 (+1000xp)/hunt2_04 (+1200xp) share the sb_fight double-count, preserved. +3 tests. |
-| **1p ✅** | Bilge Mystery (§WHODUNIT-01, `quest_bilge_01–04`) | 4 | Same investigate→clear shape as hunt (SEN). Hook side (flag gate) + 2 `retryable:false` checkStat skill_checks (02 INT Investigation DC12, 03 WIS Insight DC13; `mission_bit{flag}` no-label + onPass/onFail `_legacy_fn`) + lair-clear side (`completion:{battles:['MS_BILGE']}` + verbatim onComplete). Zero engine changes. ⚠ bilge_04 (+1200xp) shares the double-count, preserved. +3 tests. |
-| **1q ✅** | The Personal Legend (§ALCHEMY-01, `quest_alch_01–07`) | 7 | Roen's pilgrimage (Coelho's Alchemist). **5 structural waypoint side quests** (01/02/03/06/07 — flag-chained gate+completion, NO onComplete) + 2 retryable checkStat skill_checks (04 CHA Persuasion DC11, 05 WIS Insight DC12; `mission_bit{flag}` no-label + onPass/onFail `_legacy_fn`). Terminal `personalLegendComplete` gates the wis arc. Zero engine changes. +3 tests. |
-| **1r ✅** | The Scar (§SCAR-01 Gret Orrens, `quest_scar_01–04`) | 4 | **checkAbility** quests, **no checkPassFlag** (closures→`_legacy_fn`; `xpAward`→`reward{xp}`). scar_03 moral **branch** (onPass help / onFail refuse; `retryable:false` locks 'failed' but both progress). scar_04 (side) keeps `itemChain`/`xpAward:350`/per-id WIS handler (schema-agnostic); completion `flags:['gretChoice']` ∧ `atNode:'NUE'`. `reward:500` dead/display-only. Zero engine changes. +4 tests. |
-| **1s ✅** | The Four Courts of the Littoral Sea (§SIREN-01, `aurel_tide`/`calice_bridge`/`mireille_ami`/`solen_horizon`/`sea_overseer`) | 5 | first **Wave-1 singleton cluster** — LC1–LC4 + LSO sea-betrayal chain. `checkAbility` skill_checks, all `retryable:false`, pure parity, fully decomposed (no onPass closures). `checkPassFlag`→onPass `mission_bit{flag,label}`; `xpAward`→`reward`; **`checkFailFlag`→onFail `mission_bit` (same `bitLabel`)** — non-retryable so it grants once. `solen_horizon` (no fail flag) → `onFail:[]`. Pass/fail flags consumed by the LC/LSO NPC quoteFns + LJ3/betrayalCount. Zero engine changes. +4 tests. |
-| **1t ✅** | Biblical singletons (`stoning_lystra` KYA, `basket_damascus` DAM) | 2 | both STR Athletics `checkAbility`. **stoning** (`retryable:false`): SHARED pass/fail flag `stoningEvent` ('Lystra Stoning') — same `mission_bit` on BOTH outcomes; onFail hp→1 closure → `_legacy_fn` ordered before the bit; gate `{questsDone:['quest_lame_lystra']}`. **basket** (`retryable:true`): onPass fully decomposed into TWO `mission_bit`s (`escapedDamascus` + `basketRopeComplete`) + `reward`; `onFail:[]`; gate `{flags:['anathSightRestored']}`. Flags read by LT render + KYA HP cap. Zero engine changes. +6 tests. |
-| **1u ✅** | Atlantean iodine chain (`iodine_01` INN, `shore_02` DS1, `forge_01` DSF, `sunken_01` DA1) | 4 | the four §CROWN-01 iodine-reduction skill_checks. All `retryable:true`, no checkPassFlag/checkFailFlag. Rich onPass closure (item/gold/knowledge/storyMsg + flag) → single `_legacy_fn` ordered after `reward{xp}`; `onFail:[]`. Gates: iodine_01 `{questsAttempted:['quest_inn_01']}`, forge_01 `{flags:['atlanteanProcessKnown']}`, shore_02/sunken_01 `{}`. Side acts stay legacy. Zero engine changes. +4 tests. |
-| **1v ✅** | **Wave-1 closeout** — Highland trade (`df_02` DNF, `sk_02` MME) + folk wisdom (`lxvii67` HKG, `guide_04` SSJ) | 4 | **Highland** (`checkStat`, `retryable:true`): `checkPassFlag` → onPass label-less `mission_bit` (→ `_flagToLabel` parity) before the gold/xp/item/storyMsg `_legacy_fn`; fail storyMsg → `onFail:[_legacy_fn]`; gates `{flags:['dunfallAccessed']}`/`{flags:['saltwickAccessed']}`. **Folk** (`checkAbility`, `retryable:true`): no token, simple onPass flag-set (`faith_folk++`/`emmerStage4a`) → `_legacy_fn` after `reward{xp}`; `onFail:[]`. `guide_04`→`{questsDone:['quest_guide_03']}`; `lxvii67`'s `faith_folk>=1` inexpressible → `gate:{_legacyFn:true}` keeps `activateCond` load-bearing. Zero engine changes. +8 tests. |
-| **1 ✅** | skill-check arcs **with** `onPass` closures (whole arcs incl. their `side` acts) + Wave-1 singletons | **78** onPass-closures + singleton cluster (done: wane 6, whisper 5, glut 5, ceremonia_yael 5, 1367 skill 4, d02xx 40, inn 3, spark 5, spark2 5, inquisitor 3, sea 3, sb 4, hunt+hunt2 8, bilge 4, alch 7, scar 4, §SIREN-01 5, biblical 2, iodine chain 4, Highland 2, folk 2 = **~115 quests**) | full bit-chain transform (the wis/wane pattern). **d02xx family** (9 arcs × 5 = 40 quests) **✅ 40/40 COMPLETE**. **Wave 1 COMPLETE** — all skill-check arcs with closures + all Wave-1 singletons migrated. Next: **Wave 2** (~2149 simple `checkStat` skill_checks, script-assisted bulk). |
-| **2** | simple skill-checks (checkPassFlag/xpAward only) | **~2149** | **codemod, not hand-migration.** Mechanical rewrite `{checkStat\|checkAbility, checkSkill\|checkLabel, checkDC, checkPassFlag, xpAward, goldAward}` → `schema+gate+bits:[{skill_check stat/skill/dc, onPass:[mission_bit?, reward?]}]`. **NB the dominant convention is `checkStat`/`checkSkill`** (2443 vs 30 `checkAbility`) → bit `stat=checkStat.toUpperCase()`, `skill=checkSkill`. Pure-parity since **§SKILLFIX-01** (legacy now applies the `checkStat` mod too). Run in batches; parity-test each batch with the harness. The dominant chain gate `(quests['prev']||'')!==''` is already covered by `gate.questsAttempted`. |
-| **3 ✅** | `side` quests (completeFn) — **COMPLETE 2026-07-03: Waves 3a (61) + 3b (32) = 93/99** (terms landed: `completion.items`, `countMin`, `itemsAll`, `flagsPath` — see Wave 3a/3b rows in §1) | 99 legacy at start (34 already done in Wave 1) | declarative `completion` gates. **Terminal holdouts (6, deliberate):** `quest_wm_01` (function-body OR of item-count vs flag — single bespoke case, stays on `completeFn`) + `quest_math_01–05` (NO completion mechanism — §MATH-01 design gap, not a migration problem). **Deferred engine task (now the W6 gatekeeper):** a completion-bit execution point, so `onComplete` closures + the per-id hardcoded effects block in `storyCheckQuests` can move into completion bit chains — until then both stay live schema-agnostic hooks. |
-| **4 ✅** | `combat` quests — **COMPLETE 2026-07-03: ALL 78 → fight-roll resolver** (`1215651`; the 71 here was survey drift — see Wave 4 row in §1) | 78 | recon showed every legacy combat quest was DEAD (no resolver, no completion path, flags set nowhere) — W4 was a repair, not a parity migration. User-locked design: resolve via the existing skill_check machinery + ⚔ FIGHT card; STR DC 12 defaults for placeholder/absent stats; new `gate.countMin`; real battles = optional W4b upgrade. |
-| **5 ✅** | other types — **COMPLETE 2026-07-03: 106 migrated** (`3460492`; survey's 83 was drift — actual delivery 57 · escort 22 · hybrid 13 · dialogue 7 · main 7; see Wave 5 row in §1) | 106 | recon: the 99 non-main were ALL DEAD (same class as W4 combat). User-locked typed default rolls (delivery CHA 12 📦 · escort STR 12 🛡 · dialogue mapped skill 💬 · hybrid real stat 🎲); mains = pure-parity `completion:{items}`. Zero new engine terms. |
-| **6 ✅** | `epic` quests — **COMPLETE 2026-07-03** (`ab996f1`; see Wave 6 row in §1) | 40 | recon showed the lifecycle machinery lives OUTSIDE the quest objects — the quests are passive completion watchers. Pure parity onto existing terms (`battles` / `flagsPath`); zero engine changes; activation exclusion untouched. The predicted design pass was unnecessary. |
-| **7 (Phase 4)** | retire legacy paths — **✅ COMPLETE 2026-07-03: 7a execution point (`8e852a1`) · 7b 27 onComplete closures → chains (`478b5f2`) · 7c per-id effects block → chains + block DELETED, new `favor` kind, `_legacy_fn` ctx (`a79c76a`) · 7d legacy `_rollCeremonia` body + `completeFn`/`completeItems` terms DELETED, `adaptLegacyQuest` → no-op, wm_01 migrated via new `itemsMinAny` term** — see the Wave 7a–7d rows in §1 | — | done. Residual non-UQF: math×5 (§MATH-01) + 30 blq stubs — all activate-only, zero completion surface. Next: **W8** QUEST_DB single source of truth (incl. sweeping the ~100 inert `completeItems:[]` fields + the worldbuilder's completeItems export). |
-| **8 (Phase 5) ✅** | canonicalize — **8a ✅ 2026-07-03: dead-field sweep (100 `completeItems:[]` + root check* residue) + roll-card display reads bits only** (Wave 8a row in §1) · **8b ✅ 2026-07-03: worldbuilder UQF export (§EDITOR-03) — mission builder / ✏ Editor / server serializer all emit UQF-1.0; legacy authoring surfaces retired** (Wave 8b row in §1) · **8c ✅ 2026-07-05: storyRender audit — per-node hooks are UI wiring (zero legacy-field reads); 2 redundant inline completion shortcuts removed so the engine is the sole completer; `la_riva_02` sole inline exception (deferred §GR)** (Wave 8c row in §1) | — | **§ARCH-01 CLOSED.** QUEST_DB is the single source of truth; QuestRuntime is the single execution surface. All ~2,700 quests UQF-1.0; deliberate residuals = math×5 (§MATH-01 design gap) + 30 blq stubs (Wave-2ad), both activate-only. |
+1. `grep -n "quest_<arc>_" roll2hit-v3.html` — enumerate the arc.
+2. Read each quest's **full** legacy object; capture the verbatim long strings.
+3. **Grep for external consumers** of every field you intend to drop
+   (`\.checkStat|\.checkPassFlag|\.onPass|\.completeFn`). Confirm they occur only inside
+   `_rollCeremonia` / the `storyCheckQuests` loop, both schema-guarded. A field read by a
+   `storyRender` block stays.
 
-### Sequencing rules
-- **Arc-sized commits.** One arc per commit, parity-tested, suites green, `say`.
-- **Test-first per arc.** Author the five test shapes before/with the transform.
-- **Generalize gaps once.** Each new mechanic becomes a registry primitive
-  (next likely additions: `item_check` gate term for Wave 3; a combat-quest
-  resolver for Wave 4).
-- **Keep `plan.md` + this report in sync** after each wave (two-way doc rule).
-- **Defer epics** (Wave 5) until their lifecycle is designed — they are the one
-  group not yet covered by the proven engine.
+### 4.2 Transform (per quest)
 
-### Estimated engine work still required
-- Wave 3: finalize `item_check` as a completion term (small).
-- Wave 4: ✅ done — needed ZERO new resolver code (combat quests reuse `_resolveQuestUQF` + a FIGHT card flavor); the estimate assumed legacy behavior existed to mirror, but recon showed the legacy path was dead.
-- Epics: ✅ resolved without a design pass — the lifecycle machinery (modal/victory-hook/return-beat) lives outside the quest objects; the quests were plain completion watchers.
-Everything else is the **already-proven** skill_check + completion transform
-applied repeatedly.
+4. **`activateCond` → `gate`.** `()=>!!A` → `{flags:['A']}` · `A && B` → `{flags:['A','B']}` ·
+   `A || B` → `{flagsAny:[…]}` · negation → `notFlags` · visited-node → `nodes`.
+5. **Pick the mechanic.** Skill check → a `skill_check` bit (`stat` UPPERCASE, `skill`, `dc`).
+   Passive/side → a declarative `completion` gate, `bits:[]`.
+6. **`onPass` closure → an ordered bit chain**, statement by statement:
+   `checkPassFlag` → `{kind:'mission_bit', flag}` — **not** a bare `flag_write`, which sets the flag
+   and drops the inventory token · extra `S_story.x = true` → `flag_write` ·
+   gold/xp/knowledge/item pushes → one `reward` · `storyMsg(text)` → `narrative`, pasted verbatim.
+7. **`onFail` closure → `[{kind:'narrative', msg}]`.**
+8. **`completeFn` → a `completion` gate** (`flags` AND-group; `flagsAny`/`battles` OR-group).
+9. **Preserve display fields byte-for-byte**: `title, desc, hint, disposition, passText, failText,
+   waypointNode, npc, retryable`; keep `type` for the badge.
+
+> **Fail flags do not migrate themselves.** The legacy non-retryable fail path granted
+> `checkFailFlag` through `_grantMissionBit`; `_resolveQuestUQF` does not. A quest with a
+> `checkFailFlag` needs an explicit `onFail:[{kind:'mission_bit', …}]`. Safe because such quests are
+> non-retryable, so the chain runs exactly once. `retryGateDays` needs no migration — the retry
+> helpers read it directly and are schema-agnostic.
+
+### 4.3 Generalise, never special-case
+
+10. A missing mechanic becomes a **reusable** gate term or bit kind with a `BIT_CONTRACTS` entry —
+    never a quest-specific branch. Every term in §6 was born this way and every one immediately
+    served several quests.
+11. **`_legacy_fn` is the sanctioned escape hatch**, not a failure. An imperative shared helper
+    (`_addCroneMark()`, `_innKindness(1)`) rides as `{kind:'_legacy_fn', fn}` — byte-identical
+    behaviour, and the quest still moves onto the `schema+gate+bits` shell. Do not invent a
+    single-use bit kind for one helper. **Order matters:** emit `reward` before `_legacy_fn`, to
+    mirror the legacy `xpAward`-then-`onPass()` sequence.
+
+### 4.4 The codemod recipe (validated Wave 1g, industrialised Wave 2)
+
+A one-shot script with an explicit per-quest `[oldStructural, newStructural]` spec, applied
+**within each quest's brace-delimited block** — so each old-string need only be unique inside its
+own block, not the whole 5 MB file. Touch **only structural fragments**; never the narrative prose,
+whose apostrophes and quotes make escaping brittle. Recompute the section bound after each splice.
+Then: vm-parse, structurally assert every target, run the suites, and **delete the one-shot script**
+— *the transform lives in git and in this report.*
+
+Wave 2 promoted this to `scripts/uqf-bulk-migrate.js`, which survives at HEAD. It is
+safe-by-construction: it never re-serialises a narrative string; it deletes only scalar legacy
+fields; it decomposes the trivial `()=>!!S_story.<flag>` gate and keeps any other `activateCond`
+verbatim behind `gate:{_legacyFn:true}`; and it **throws** if an `activateCond` survives a
+decompose. Two hardenings from Wave 2c are still verbatim in
+`scripts/uqf-bulk-migrate.js:function trivialGateFlag(body) {@115`: the lookahead widened to
+`(?=[,}])` so a trivial gate that is the literal's **last** field is not missed, and the optional
+`"?` that strips the dead string-form duplicate.
+
+### 4.5 Verification protocol
+
+Three protocols, chosen by what the legacy path actually did:
+
+- **Pure parity** (most families) — capture a **pre-migration golden** (legacy resolution + verbatim
+  display fields), re-run post-migration, assert byte-for-byte. Where the legacy `checkStat` was
+  UPPERCASE, seed the golden under **both** stat cases so a deterministic extreme drives either
+  resolver.
+- **Display + mapping** (§SKILLFIX-02 families) — the roll deliberately changes, so assert
+  (a) display untouched, (b) structure, (c) `SKILL_TO_ABILITY[checkStat] === stat` with the skill
+  preserved and the DC unchanged, (d) the new behaviour is deterministic. **Never** against the
+  buggy `+0` roll.
+- **Structure + new behaviour** (Waves 4–5) — there was no legacy behaviour to mirror; the resolver
+  was unreachable.
+
+**Five test shapes per migrated quest or arc:** validates as UQF · activation gate (unmet ⇒ no
+activate, met ⇒ `'active'`) · PASS parity · FAIL behaviour (non-retryable ⇒ `'failed'` and grants
+nothing; retryable ⇒ stays `'active'`, logs an attempt) · completion truth-table plus a real
+`storyCheckQuests` `'active'`→`'complete'` flip.
+
+**Techniques worth keeping.** Force an outcome by **ability score**, not by a merely-low one: `{wis:40}`
+always passes, `{wis:-100}` (mod −55) always fails, but `{wis:1}` (mod −5) still clears a low DC on a
+d20 of 16–20 and flakes ~25 % — Wave 1a shipped exactly that bug and 1b caught it. Suppress
+level-up noise with `S_story.level = 20` and assert **deltas**. Drive the real entry points
+(`_rollCeremonia`, `storyCheckQuests`), not just the VM. And **assert on the rendered container,
+not `document.body`** — the body includes the inline `<script>`, so every quest's literal strings
+"match" and the assertion means nothing (Wave 1d's render test hit exactly this).
 
 ---
 
-## 5. Risks & mitigations
+## 5. As-built — the wave programme
 
-| Risk | Mitigation |
-|------|-----------|
-| Long-string transcription drift | Copy literals verbatim within the same Edit; vm-parse after each; narrative text is cosmetic (structured fields are short and asserted). |
-| Hidden external consumer of a legacy field | The section-2-A grep is mandatory before dropping any field. |
-| Per-id hardcoded completion effects (storyCheckQuests) | ✅ Resolved in Wave 7c (`a79c76a`) — inventoried (61 ids), moved into per-quest completion bit chains, id-keyed block deleted. |
-| Epic lifecycle surprises | Wave 5 is gated on a design pass, not transformed blindly. |
-| Silent reward/level-up timing change | Reward handler calls `_checkLevelUp` immediately (legacy sometimes deferred); benign (cumulative xp), documented, tested by delta. |
+### 5.1 Phases 1–3 and Wave 1 (hand-migrated: bespoke closures)
+
+| Wave | Subject | n | Grammar added / note | Commit |
+|---|---|---|---|---|
+| P1 | Inert UQF runtime (`SCHEMA_VERSION`, `BIT_CONTRACTS`, `validateQuest`, `adaptLegacyQuest`, `QuestRuntime`) | — | — | `80bc1f4` |
+| P2 | Dual-path dispatch; panel/sheet render UQF; gate-gated activation | — | — | `f5117ca` |
+| P3a–c | §WISDOM-01 pilot → 100 % UQF | 8 | `mission_bit`; declarative `canComplete` | `d7505ff` `014fd00` `fcd1e37` |
+| 1a | Wane's Crown | 6 | `gate.questsAttempted`, `gate.questsDone` | `24becb6` |
+| 1b | Whisper's Crown | 6 | first `side`: `completeFn`→`completion`, `onComplete` kept | `7b69ce7` |
+| 1c | Glut's Crown | 6 | flag-gated `side` + multi-effect `onComplete` | `ee58181` |
+| 1d | Ceremonia: Yael | 5 | `gate.favorMin`; `checkFailFlag`→`onFail:[mission_bit]`; `vignetteTextAlt` parity fix | `c164fe2` |
+| 1e | §1367 skill-checks (4 of 6) | 4 | clamped faction/faith counters via `_legacy_fn` | `e98feb7` |
+| 1f | Ceremonia d0207 | 5 | `gate.battles`; first full d02xx arc — template for the other 8 | `e8f7d59` |
+| 1g | d0201 + d0205 + d0209 | 15 | **first codemod batch** | `7583772` |
+| 1h | d0204/06/08/10 → **d02xx 40/40** | 20 | `gate.shardsMin`, `notBattles`, `restedAtMin`, `completion.questsComplete`; deliberate bug-fix (dead `completeItems` → `reward.items`) | `58e598f` |
+| 1i | Innmother | 3 | `gate.sleptAt` | `527692c` |
+| — | **§SKILLFIX-01** — game-wide `+0` ability-mod fix at 4 read sites | 2,443 | see §2.2 | `662ee99` |
+| 1j / 1k | Spark · Spark2 | 5 / 5 | first arcs on the pure-parity footing | `a06772d` `d9f2d1e` |
+| 1l | Codex Inquisitor gauntlet | 3 | fully decomposed, no `onPass` `_legacy_fn` | `255060c` |
+| 1m | Sea: The Warmth Calm | 3 | **`completion.atNode`** | `1c636ab` |
+| 1n | Naval Intercept | 4 | **`gate.flagEquals`**; ⚠ latent +800 xp double-count preserved | `869dc09` |
+| 1o / 1p | Hunt ×2 · Bilge | 8 / 4 | investigate→clear shape; ⚠ same double-count | `df36c93` `54e0130` |
+| 1q | §ALCHEMY-01 Personal Legend | 7 | 5 structural waypoint sides | `23ba7b5` |
+| 1r | §SCAR-01 The Scar | 4 | moral branch: both paths progress | `ac9ef23` |
+| 1s | §SIREN-01 Four Courts | 5 | `checkFailFlag`→`onFail mission_bit`, same `bitLabel` | `a1b67db` |
+| 1t | Biblical singletons | 2 | shared pass/fail flag; ordered `_legacy_fn` before the bit | `2c0359b` |
+| 1u | §CROWN-01 iodine chain | 4 | rich closures kept whole, ordered after `reward` | `d84c87b` |
+| 1v | **Wave-1 closeout** — Highland + folk | 4 | `lxvii67`'s `faith_folk>=1` inexpressible ⇒ `gate:{_legacyFn:true}` | `cdc788f` |
+
+### 5.2 Wave 2 — bulk families
+
+Every row below is verified at HEAD: quest count, gate split, pass-flag split and the
+`skill→ability` mapping count. **All 54 are exact** (§7.1). *Gates* = `{flags}`/`{}`;
+*Pass* = `mission_bit`/flagless; *Map* = §SKILLFIX-02 mappings.
+
+| Wave | Family | n | Gates | Pass | Map | Commit |
+|---|---|---|---|---|---|---|
+| 2a | `hav_` The Articles | 30 | 24/6 | 30/0 | 0 | `ae4f6de` |
+| 2b | `ada` (largest family) | 235 | 0/235 | 235/0 | 0 | `8cf47e9` |
+| 2c | `ath` Trojan cycle | 113 | 41/72 | 113/0 | 0 | `10a0d05` |
+| 2d | `lis` Lisbon / Camões | 89 | 18/71 | 89/0 | 0 | `2529bb0` |
+| 2e | `zth` Zürich | 75 | 15/60 | 75/0 | 0 | `32b92b8` |
+| 2f | `flr` Florence | 71 | 12/59 | 71/0 | 0 | `795cf2a` |
+| 2g | `hft_` Hanseatic trade | 50 | 28/22 | 35/15 | 0 | `b689956` |
+| 2h | `rkv_` Reykjavík | 50 | 28/22 | 35/15 | 0 | `fdf3e0f` |
+| 2i | `ist_` Constantinople | 48 | 10/38 | 48/0 | **32** | `fc040cd` |
+| 2j | `rix_` Egil's Saga | 47 | 26/21 | 33/14 | 0 | `b299595` |
+| 2k | `ost_` Norse Dublin | 46 | 25/21 | 32/14 | 0 | `ccbf9de` |
+| 2l | `arn_` Arnarstapi | 43 | 25/18 | 32/11 | 0 | `0262c68` |
+| 2m | `vby_` Viby | 42 | 26/16 | 33/9 | 0 | `63830b2` |
+| 2n | `kya_` Trebizond | 52 | 40/12 | 52/0 | 0 | `2d7c204` |
+| 2o | `jrs` Jerusalem | 51 | 12/39 | 51/0 | 0 | `1113652` |
+| 2p | `clj` (prefix `clj`, **not** `clj_`) | 42 | 33/9 | 33/9 | 0 | `ab34eca` |
+| 2q | `nwi` (prefix `nwi`) | 42 | 41/1 | 42/0 | 0 | `a497b85` |
+| 2r | `bey_` | 42 | 32/10 | 42/0 | 0 | `194bd8d` |
+| 2s | `tbs_` Knight in the Panther's Skin | 41 | 32/9 | 41/0 | 0 | `2e814e2` |
+| 2t | `crl` | 40 | 39/1 | 40/0 | 0 | `cc7f362` |
+| 2u | `shk` | 40 | 18/22 | 27/13 | 0 | `38c2f40` |
+| 2v | `kir_` | 35 | 28/7 | 35/0 | 0 | `12550c1` |
+| 2w | `lcy_` White Company / Du Guesclin | 35 | 34/1 | 35/0 | 0 | `d0d9cc7` |
+| 2x | `lgw_` Le Morte d'Arthur | 35 | 34/1 | 35/0 | 0 | `375d296` |
+| 2y | `gci_` Toilers of the Sea | 35 | 34/1 | 35/0 | 0 | `671ce4b` |
+| 2z | `waw` — **reclassified clean** | 38 | 30/8 | 38/0 | 0 | `d984179` |
+| 2aa | `ams_` — **reclassified clean** | 35 | 28/7 | 35/0 | 0 | `4a867f1` |
+| 2ab | `bgw_` Genie Contract | 37 | 0/37 | 37/0 | **37** | `189a995` |
+| 2ac | `cai_` | 35 | 0/35 | 35/0 | **35** | `e04d490` |
+| 2ad | `blq` — **split**: 29 migrated, 30 stubs left legacy | 29 | 23/6 | 29/0 | 0 | `2aa42b4` |
+| 2ae–2ao | the clean 35-tier: `inv_` Ossian · `bhd_` · `sdq_` Rob Roy · `plw_` Piers Plowman · `gdn_` Njáls saga · `boo_` Prose Edda · `alf_` Kalevala · `ksu_` St Olaf · `cdg_` Three Musketeers · `vie_` Faust · `erf_` Grimm | 35 each | 34/1 each | 35/0 each | 0 | `080a2e5` `ad7764d` `9ec1368` `196156a` `92c801a` `a8503f0` `fadae2a` `86470f7` `bbadaf7` `329812e` `cbbdc46` |
+| 2ap | `mla` | 34 | 33/1 | 34/0 | 0 | `0851d9a` |
+| 2aq–2as | `mse_` · `lhr_` · `cid_` | 34 each | 27/7 each | 34/0 | 0 | `e9ff598` `d08b7b4` `094f9de` |
+| 2at | `lbc_` | 33 | 26/7 | 33/0 | 0 | `3eedc7a` |
+| 2au | `hty` (first mixed mid-tail) | 33 | 26/7 | 26/7 | 0 | `4b4ed0a` |
+| 2av | `fro_` Völsunga saga | 32 | 25/7 | 32/0 | 0 | `1ef19ab` |
+| 2aw | `mol` Laxdæla saga | 30 | 23/7 | 30/0 | 0 | `a3f358c` |
+| 2ax | `cph` (narrowest stat set: WIS+CHA) | 29 | 22/7 | 29/0 | 0 | `13a794a` |
+| 2ay | `clr_` — pre-migrated at authoring | 5 | 0/5 | 5/0 | 0 | `81dae11` |
+| 2az | `man_` | 23 | 16/7 | 23/0 | **23** | `c6dbfad` |
+| 2ba | `sen_` | 19 | 12/7 | 19/0 | **19** | `9cfe61d` |
+| 2bb | `stn_` | 11 | 6/5 | 11/0 | **10** | `8a6257a` |
+| 2bc | `quest_*` singletons — **closes Wave 2** | 11 | 3/1 + 7 `_legacyFn` | — | 0 | `e602d92` |
+
+**Family-shape vocabulary** (worth naming once instead of restating 54 times): *uniform-flag* = every
+act carries a `checkPassFlag`; *mixed* = some acts granted nothing on pass, faithfully reproduced as
+`onPass:[]`; *type-gated sibling* = a `combat`/`hybrid`/`delivery` act inside a chapter that the
+skill-check-only transform correctly skips, leaving an act-number gap that is the sibling's slot,
+not a data hole; *prefix bleed* = ids matching the prefix that are not quests (mission-bit values,
+monster keys). **Sequencing lesson, learned twice:** always `--dry` and read the id list first —
+`--prefix clj_` matches nothing because that family uses `cljNN_actN`.
+
+### 5.3 Waves 3–8
+
+| Wave | Result | Commit |
+|---|---|---|
+| 3a | **61 sides** migrated. New **`completion.items`** OR-term reproducing the legacy fuzzy two-way substring rule byte-for-byte. 3 inexpressible gates kept behind `gate:{_legacyFn:true}` | `ea4f8d2` |
+| 3b | **32 more sides → 93/99.** Three new AND-position terms: **`countMin`** (dot-path, number/array-length/key-count/missing→0; 17 uses) · **`itemsAll`** (exact-name, `'Name'` or `{name,min}`) · **`flagsPath`** (nested dot-path flags; also added to `canActivate`). Found and flagged three **suspected dead gates** (`guide_02/03/06` test `=== 'done'` on side quests that only ever reach `'complete'`) | `098e929` |
+| 4 | **All 78 combat quests** → fight-roll resolver. Recon: all were dead (§2.2). Resolve through the existing skill-check machinery + a ⚔ FIGHT card; **zero new resolver code**. STR DC 12 default for the 21 placeholder/absent stats (user-approved). New `gate.countMin`. **Rode along:** the `guide_02/03/06` dead gates fixed → the Emmer arc chains | `1215651` |
+| 5 | **106 other-type quests.** 99 were dead; `mq_1`–`7` were alive on `completeItems` ⇒ pure-parity `completion:{items}`. Typed default rolls (delivery CHA 12 📦 · escort STR 12 🛡 · dialogue mapped-skill 💬 · hybrid real stat 🎲). Zero new engine terms | `3460492` |
+| 6 | **All 40 epic quests.** Recon overturned the predicted design pass: the epic lifecycle lives entirely *outside* the quest objects, so the quests are passive completion watchers — the Wave-3 side shape. Mapped onto existing `battles` / `flagsPath`. Zero engine changes | `ab996f1` |
+| 7a | **Completion-bit execution point** — an array-valued `onComplete` executes as a bit chain via `execBits`; a function-valued one stays the byte-identical legacy call | `8e852a1` |
+| 7b | All **27** `onComplete` closures → chains. Known xp double-counts preserved, not fixed | `478b5f2` |
+| 7c | The **61**-id hardcoded effects block → per-quest chains; **the id-keyed block is deleted**. New **`favor`** bit kind over the monotonic `_setNpcFavor`. `_legacy_fn` handlers now receive `ctx`. Carriers → 88. Known presentation change: chain messages print *before* the `✓ title` line | `a79c76a` |
+| 7d | **Legacy branches retired.** `_rollCeremonia`'s roll body deleted → UQF dispatch + a warned no-op; `completeFn`/`completeItems` completion terms deleted; `adaptLegacyQuest` → identity. The last `completeFn` (`quest_wm_01`) migrated via a new `itemsMinAny` OR-term | `f8691c1` |
+| 8a | Dead-field sweep: **100** inert `completeItems:[]` + the last root `check*` residue; roll-card display reads the **bit** only | `b008cde` |
+| 8b | **Worldbuilder UQF export (§EDITOR-03)** — Mission Builder, ✏ Editor and `serializeQuestLiteral` all emit UQF; legacy authoring retired (§2.3) | `11af1e5` |
+| 8c | **storyRender audit — the engine is the sole completer; §ARCH-01 CLOSED.** Every per-node hook reads **zero** legacy quest-execution fields. Two redundant inline shortcuts (Yugurt tournament, free-rod coupon) deleted after proving `opp.xp === xpAward` for every act. `quest_la_riva_02` documented as the sole inline exception | `647e070` |
+
+> **Wave 8c inverted its own approved direction on evidence.** The option text read *"strip the dead
+> `xpAward` + completion mirror"*; the tests proved the engine path was the live and canonical one,
+> so the redundant code was the **inline shortcut** and the fix was the inverse. Re-confirmed with
+> the user before editing. *An approved plan is a hypothesis until the tests answer.*
 
 ---
 
-*§ARCH-01 — UQF Migration Playbook. Companion to
-`lab-report-quest-api-architecture.md`. Author: World Builder — roll2hit.com.*
+## 6. The grammar as built
+
+Every term below was produced by a quest that needed it, and every one is live at HEAD.
+Host: `const SCHEMA_VERSION = 'UQF-1.0';@21966` · `const BIT_CONTRACTS = {@21970` ·
+`function validateQuest(q) {@22004` · `canActivate(questId) {@22193` · `canComplete(questId) {@22205` ·
+`*execBits(bits, ctx) {@22223` · `function _resolveQuestUQF(questId) {@6962`.
+
+| Surface | Terms (HEAD carrier counts) | Born in |
+|---|---|---|
+| **`gate`** (mission listing) | `flags` 1624 · `questsAttempted` 24 · `questsDone` 21 · `notFlags` 7 · `battles` 5 · `flagsPath` 5 · `countMin` 4 · `favorMin` 4 · `sleptAt` 4 · `flagEquals` 3 · `flagsAny` 2 · `shardsMin` 1 · `notBattles` 1 · `restedAtMin` 1 · `_legacyFn` 14 · `nodes` (`js/quest.js:if (g.nodes    && !g.nodes.every@121`) | 1a · 1d · 1f · 1h · 1i · 1n · 4 |
+| **`completion`** | `flags` 74 · `battles` 40 · `flagsPath` 28 · `countMin` 23 · `atNode` 19 · `itemsAll` 15 · `items` 9 · `flagsAny` 4 · `questsComplete` 1 · `any` 1 | 1f · 1h · 1m · 3a · 3b |
+| **`bits`** | `skill_check` 2635 · `mission_bit` 2449 · `reward` 159 · `_legacy_fn` 124 · `narrative` 120 · `flag_write` 46 · `unlock` 18 · `favor` 16 · `item_remove` 7 | P3a · 7b · 7c |
+
+**Post-report additions** (later tracks, listed so the grammar reads complete): `dayMin`/`dayMax`
+gate terms (§BOARD-01 Void-tide windows), the `any`/`not` expression AST (§VM-01-F), and the
+`cost`, `choice` and `combat` leaves used by `NODE_VERBS` rather than by `QUEST_DB`.
+
+---
+
+## 7. Verification at HEAD (2026-08-17, §DOC-02bu)
+
+### 7.1 What re-measures exact
+
+- **All 94 distinct commit hashes resolve.**
+- **54 of 54 bulk families exact** — quest count, `{flags}`/`{}` gate split, pass-flag/flagless
+  split, §SKILLFIX-02 mapping count and ability set, ~270 figures in all, 50 days on. The narrowest
+  claims are the sharpest: `cph`'s "WIS + CHA only" holds; `gci_` is the first clean family spanning
+  all six abilities; `tbs_` still excludes STR; the `blq` split is still 29 migrated / 30 stubs.
+- **64 of 64 "Zero engine changes" claims exact.** Every hunk those 64 commits made to
+  `roll2hit-v3.html` — additions and deletions both — lands **inside** the `const QUEST_DB = {@10615`
+  literal. Not one strayed. The only non-test, non-doc file any of them touched is
+  `scripts/uqf-bulk-migrate.js` in Wave 2a, where it was born. *A negative claim is normally the
+  weakest thing in a report; this one is adjudicated by the diff and it holds 64 times.*
+- **Waves 4–5 recon exact, 4 of 4.** 78 combat + 99 other-type with zero completion surface;
+  `mq_1`–`7` alive on `completeItems`, 7 of 7. `if (q.type !== 'skill_check') return;` is verbatim
+  in the archive.
+- **Wave 7d is verbatim at HEAD.** `function _rollCeremonia(questId) {@7024` is the warned no-op;
+  `function adaptLegacyQuest(id, q) {@22026` is the identity; `activateCond:"` string-duplicates = 0.
+- **Wave 8a's field census holds as a property.** Root `completeItems`/`completeFn`/`check*`/
+  `checkPassFlag`/`checkFailFlag`/`bitLabel`/`goldAward` = **0**. `activateCond` = **44**, still
+  exactly 14 UQF `_legacyFn` gates + the 30 stubs — the same number, 51 days later. `xpAward` = **45**
+  and still **100 % `type:'side'`** (the figure drifted from 50; the invariant did not).
+- **Wave 8c's ordering claim holds.** `_runNodeHook('la-riva-row', node);@35119` runs before
+  `const questMsgs = storyCheckQuests(node);@36041`, so inline hooks still precede the engine's
+  completion pass — through an entire §VM-01 hook migration that rewrote the region around it.
+- **The report's own acceptance suite: 303 passed / 0 failed** (`quest-runtime-uqf.test.js`, 4.1 min).
+  It was 288 at close; §MATH-01 and §VM-01-F added the rest.
+- **`check:anchors`** 0 dead · **`check:walk`** 16/16 (it was 6/6 during the migration).
+
+### 7.2 What drifted, and one that never held
+
+| Claim | At HEAD | Verdict |
+|---|---|---|
+| "all ~2,700 quests UQF-1.0" | 2,853 quests, **2,823 UQF** | figure drifted; property holds |
+| Residuals "math ×5 + 30 blq stubs" | **30 blq stubs only** | ✅ half **retired** — §MATH-01 (`32d7bb0`) gave `quest_math_01`–`05` real `itemsAll`+`atNode` completions |
+| "the 30 stubs are activate-only, zero completion surface" | 30/30, still true | ✔ pinned by test |
+| W7d's new `itemsMinAny` term | **deleted** — §VM-01-F's `{any}` + `itemsAll` supersedes it | ✅ retired, and the suite pins the replacement's truth-table |
+| §4 "finalize `item_check` as a completion term" | shipped as `completion.items`; a **separate `item_check` bit kind** also exists | ⚠ see §9 |
+| "verified by 22 Playwright tests" | 288 at close, 303 now | stale by construction |
+| "byte-for-byte unchanged for the other 276 quests" | derived from the void 284-entry survey; the real remainder was 2,825 | ✘ arithmetic on a wrong census |
+| "`check:walk` 6/6" | 16/16 | stale |
+| §3 "All tests live in `quest-runtime-uqf.test.js`" | true for §ARCH-01; the repo now carries 21 `uqf-*` specs | superseded |
+| `_rollCeremonia, ~L6308` · `L6355` | the type guard sits at ~6271 in the archive | historical line hints — do not trust the numbers |
+
+### 7.3 Internal contradictions found
+
+1. **The header contradicts §3.** *"migrating all 284 QUEST_DB entries"* was left in the scope line
+   after §3 voided that survey — and both figures are wrong. Corrected in this revision.
+2. **Epics are Wave 5 in the prose and Wave 6 in the table.** The sequencing rule *"Defer epics
+   (Wave 5)"* and the risk row *"Wave 5 is gated on a design pass"* both point at the wave that
+   actually shipped the *other* types. HEAD sides with the table: epics were Wave 6, `ab996f1`.
+3. **The wave table's tail was out of chronological order.** Rows 2av–2bb (2026-06-30) sat *below*
+   Wave 8c (2026-07-05), so the table announced §ARCH-01 CLOSED and then continued for seven more
+   rows. Reordered here.
+4. **One transposed commit hash — and it is the invisible kind.** Wave 2j (`rix_`) cited
+   `bbadaf7`, which is Wave **2am** (`cdg_`)'s commit. Both resolve, so *"does this hash exist?"*
+   passes while the row is still wrong. The correct hash — `b299595` — **was** written by
+   `1fc91c5` (*"backfill Wave 2j hash"*) and then **overwritten the same day** by `2831fc9`
+   (*"backfill Wave **2am** hash"*), whose edit touched both rows. Corrected in §5.2.
+   *A pointer that resolves to the wrong sibling is worse than a dead one: nothing can flag it.*
+
+---
+
+## 8. Registers
+
+### 8.1 Risk register — 5 of 5 resolved, and one is still asserted
+
+| Risk | Outcome |
+|---|---|
+| Long-string transcription drift | ✅ Held. Structural-fragments-only codemods; the Wave 2ag–2ak diff audits report 35 ins / 35 del with **zero non-structural lines touched**. |
+| Hidden external consumer of a legacy field | ✅ Held. The §4.1 grep was mandatory; Wave 8c's audit found the root fields grep to **0** outside the engine. |
+| Per-id hardcoded completion effects | ✅ Resolved in Wave 7c — inventoried (61, against a *"~80"* estimate), moved into chains, block deleted. |
+| Epic lifecycle surprises | ✅ Dissolved by recon, not by a design pass — the lifecycle was never in the quest objects. |
+| Silent reward/level-up timing change | ✅ Still exactly as documented: `js/quest.js:if (E.checkLevelUp) E.checkLevelUp();@337` fires inside the `reward` handler, benign, asserted by delta. The one risk that is **still true rather than retired** — and it now lives inside the `QUEST:CORE` parity fence. |
+
+*Two of these were retired by measurement rather than by work, which is the honest and the cheap
+outcome: the epic design pass and the "~80-id" block were both smaller than feared.*
+
+### 8.2 Follow-up register — scored
+
+| Follow-up | Outcome |
+|---|---|
+| `item_check` finalized as a completion term (Wave 3) | ✅ shipped as `completion.items` — **but see §9** |
+| Combat resolver (Wave 4) | ✅ needed zero resolver code |
+| Epic design pass | ✅ unnecessary |
+| W4b "real battles for combat quests" | ⏸ never taken; combat quests still resolve as a roll |
+| Known xp double-counts (`sb_fight`, `hunt_04`, `hunt2_04`, `bilge_04`, `sk_hull`) | ✅ **all five closed** — none carries `xpAward` at HEAD; each pays once from its `onComplete` chain |
+| `quest_la_riva_02` → an `onComplete` chain (deferred §GR) | ❌ **still open** — §GR closed without it. §9 |
+| Worldbuilder still authors legacy (`W8a` non-goal) | ✅ closed by Wave 8b the same day |
+
+---
+
+## 9. Defects filed
+
+**§DX-02cm 🟢 — `quest_la_riva_02` is the one quest the engine can complete and cannot pay.**
+Wave 8c named it the sole inline exception and deferred the fix to §GR; §GR closed without taking
+it. At HEAD the quest carries `completion:{countMin, itemsAll}` and **no `onComplete`, no
+`xpAward`**, while all six of its effects — +500 gp, the Old Tuna Account Book, Aldo's favour, the
+activation of `quest_la_riva_03`, and two narration beats — live in an **AMS-only** hook
+(`S_story.quests['quest_la_riva_02'] = 'complete';@31904`) guarded on `status === 'active'`. Ordering
+saves it today: the hook runs before the engine's pass in the same render. But the completion gate
+carries **no `atNode` term**, so any `storyCheckQuests` that fires while the two conditions hold and
+the player is not rendering AMS flips the quest to `'complete'` and the hook's `'active'` test can
+never be true again — silently stranding the arc. Fix: either fold the effects into an `onComplete`
+chain (the §GR intent) or add `atNode:'AMS'` to the completion gate as a one-line fence. The
+exception *is* test-pinned, so this is a design debt rather than a silent rot.
+
+**Not filed — already open.** The `item_check` bit kind is **§DX-02as item (d)**, and that row
+already credits this document: the contract at `item_check:  { required:['name'],@21989` carries the
+comment *"lab Open-Q #3"*, and the handler `item_check(bit, ctx) {@22311` writes `ctx._itemCheck`,
+which nothing in the file reads. **Zero authored uses across 2,853 quests.** It is the report's §4
+follow-up landing twice — once correctly as `completion.items`, once as an opcode that evaluates a
+predicate into a variable no one consumes. *A conditional in a language with no `if`.*
+
+---
+
+## 10. Limitations of this document
+
+- **It is a method document, so its §5 tables are a ship record, not a specification.** Where a wave
+  row and the live grammar disagree, §6 governs.
+- **`_legacy_fn` was never eliminated and was never meant to be** — 124 chains still carry one.
+  Wave 7c's design decision (hand `ctx` to the closure) made it a first-class member of the grammar
+  rather than a wart. The honest reading is that ~4 % of quest behaviour resists declaration, and
+  the format budgets for it.
+- **The line numbers in the original prose (`~L6308`, `L6355`) are historical** and should not be
+  trusted; the `symbol@line` anchors added in this revision are current as of 2026-08-17.
+- **The 30 `blq_05`–`blq_10` book-stubs are deliberately unmigrated.** They are the Decameron
+  "Falcon's Inventory" placeholders: `reward:NaN, activateCond:() => !!S_story.null,@14126` — thirty
+  quests offering a reward that is not a number, gated on the falsiness of nothing. They would have
+  crashed the migrator's well-formedness guard, so Wave 2ad used an explicit id-list and a permanent
+  test pins them as legacy. They are the residue the format is allowed to have.
+
+---
+
+*§ARCH-01 — UQF Migration Playbook. Companion to `lab-report-quest-api-architecture.md`.
+Author: World Builder — roll2hit.com. Verified and rewritten 2026-08-17 under §DOC-02bu.*
 
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
