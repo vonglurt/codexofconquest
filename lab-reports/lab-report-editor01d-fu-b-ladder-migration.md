@@ -1,83 +1,224 @@
-# Lab Report — §EDITOR-01-D-FU (b): reward-ladder → itemChain migration
+# Lab Report — §EDITOR-01-D-FU(b): Reward-Ladder → `itemChain` Migration
 
-**Status:** ✅ **CLOSED** (Inc 1 design → Inc 2 guard → Inc 3 b2a → Inc 4 b1 → **Inc 5 b2b**). 22 reward-ladder branches migrated (9 b2a + 13 b2b); the rest stay code by design (see §7 Residue). Item (a) (visual chain editor) was already CLOSED, so **§EDITOR-01-D-FU is fully closed.**
-**Date:** 2026-06-27
+**Track:** §EDITOR-01-D-FU item (b) · **Original date:** 2026-06-27 · **Status:** ✅ CLOSED (Inc 1–5)
+**Verified against `roll2hit-v3.html` @ HEAD:** 2026-08-17 (§DOC-02bs). History doc — annotate, never rewrite.
 
-## 7. Residue — what stays as code after (b) closes (LOCKED, by design)
+---
 
-(b) is **partial extraction**: only the *inventory* ingredient moved into `itemChain`. Everything below is intentionally NOT migrated and remains in the `storyCheckQuests` ladder (or its quest object):
+## Abstract
 
-- **`fishing_guide`** — the one "pure push", but its `readText` is `FISHING_GUIDE_TEXT`, a **const defined at line 24017, AFTER `QUEST_DB` (line 9373)**. Referencing it from a QUEST_DB data literal is a temporal-dead-zone error; inlining the long canonical text would duplicate a single-source string and risk divergence. **Stays code.** (Only a relocation of the const — out of this FU's scope — would let it migrate.)
-- **`tl_01`, `tl_03`** — dynamic/computed item `description` (concatenated from other state). Non-static; only a computed-effects layer could take them. **Stays code, forever under the static-itemChain model.**
-- **`wm_01`** — `Scholar Kings' Seal` removal is conditional (`!archiveLetterObtained`) AND count-limited to 3; a flat `take` can't express it. **Stays code** (effects-layer territory).
-- **19 no-inventory branches** (gold/favor/XP/flag only) + **16 message-only branches** — nothing for `itemChain` to model; these are the **§DATA-01-REVERTED effects-layer** candidates, explicitly out of scope (§3.5 scope fence).
-- **Per migrated branch (all 22 are PARTIAL):** gold/favor/XP, ability-score writes (`guide_06`/`scar_04` WIS), flag sets, NPC-favor/Dear-Friend calls, and the **verbatim narrative `msgs.push`** all stay as code; only the `inv.push`/`filter` left.
+Every quest in this game ends by handing the player something: a trophy, a tome, a readable, a rod.
+Before this work, all 61 of those payouts lived in one 220-line `if (id === 'quest_…')` ladder inside
+`storyCheckQuests` — engine code, invisible to the worldbuilder, editable only by hand. This report
+locked the design that moved the *inventory* half of that ladder into `itemChain`, a declarative
+per-quest field, and specified the five decisions that made the move safe. It shipped over five
+increments: a parity guard first, then 22 branches in two waves, with a grammar widening between them.
 
-**The larger lever remains §DATA-01-REVERTED** (a declarative effects layer) — it would subsume the 19 gold/favor branches, the 2 dynamic-item branches, and `wm_01`. (b) deliberately shrank the ladder without inventing a second gold/favor mechanism.
-**Scope:** §EDITOR-01-D-FU item **(b)** — mechanically extract the *inventory* operations from the 61-branch `if (id === 'quest_…')` reward ladder in `storyCheckQuests` (roll2hit-v3.html **25875–26094**) into the declarative `itemChain` quest field shipped in §EDITOR-01-D core. Item (a) — the visual chain editor — is **✅ CLOSED** (Inc 1–4) and is the authoring surface this migration feeds. Overlaps the deferred **§DATA-01-REVERTED** (`QUEST_EFFECTS`/`HOOKS` effects layer); §3.5 reconciles the boundary.
+Re-measured 51 days later, the report is **exact on every number it counted** — the 61-branch census,
+the 22 migrations, the 9/13 wave split, the 13-field grammar, five of its six line anchors. Its
+residue analysis proved *predictive*: the five branches it declared un-migratable were hit by an
+independent refactor six days later and left as code for the same reasons. The one thing it could not
+know is that its subject would be dissolved: **§ARCH-01 Wave 7c deleted the ladder entirely on
+2026-07-03**, so the structure this report was written about has stood at zero branches ever since.
 
-This is a **runtime + data refactor** of roll2hit-v3.html. No worldbuilder/server change beyond the grant-grammar widening that (b1) shares with the codec + the §EDITOR-01-D-FU(a) widget schema.
+---
 
-## 1. Reframing the FU brief — what the ladder actually is
+## 1. Intention and inspiration — what this buys the player
 
-The FU brief assumed a population of *pure* `inv.push` / `splice` branches ready to lift out. **There is essentially one** (`quest_fishing_guide`, and even it carries a `readText` the current grammar can't hold). The ground truth, from a full classification of all 61 branches (`/tmp/classify-ladder.js`, reproduced below — re-runnable), is that the ladder is overwhelmingly **mixed effects**: gold + favor + XP + flags + ability scores + narrative message, with an inventory push as one ingredient among several. So (b) is not "lift pure branches"; it is **partial extraction** — pull *only* the inventory ingredient into `itemChain`, leave every other effect as code — gated on a grammar widening.
+The ladder was a *content* bottleneck wearing a refactor's clothes.
 
-## 2. Ground truth — the 61-branch classification (LOCKED reference)
+- **Rewards become authorable.** A designer who wanted Sandy's Honcho contract to pay a Rhinestone
+  Collar had to open the engine and add a line to a 61-case block. After (b), the reward is a field on
+  the quest, editable in the §EDITOR-01-D-FU(a) visual chain editor. More quests get real payouts
+  because adding one stopped being an engine edit — and a game whose side-content pays out in
+  *objects* rather than in numbers is a game where the world remembers what you did.
+- **The game keeps its own voice.** `_applyItemChain` announces a grant as `"💎 Rhinestone Collar
+  obtained."` The ladder's own line was `'💰 +500gp + Rhinestone Collar trophy.'` A naïve migration
+  would have printed both, stapling a robotic receipt to a hand-written sentence. §3.2's `silent:true`
+  exists purely so the prose survives the refactor. **A refactor the player can hear is a bug.**
+- **Items are load-bearing, so a rename is a world-break.** `KEY_EVENTS` fires on an item name held in
+  inventory — carrying the Crypt Key opens the lower ward, the Sea Cave Key opens the inner passage.
+  Reshaping an item during migration would have silently made a world-change unreachable, with no
+  error anywhere. §3.3's name-preservation rule is the reason that did not happen.
 
-| Bucket | Count | Migratable? | Notes |
-|--------|------:|-------------|-------|
-| **Expressible now** — `grant` with only `name/icon/type/sell/desc` | **7** | ✅ b2a (no b1 needed) | `couperin_lute` (Cipher Scrap; also a take), `pit_training`, `cat_03`, `cat_04`, `cat_05`, `cat_06`, `night_eel` |
-| **Take-only** — name-based removal → `take` | **3** | ✅ b2a | `brynn_ledger`, `pachelbel_shipment`, `wm_01` (multi-`Scholar Kings' Seal` removal, count-gated) |
-| **Needs grammar ext (b1)** — literal push w/ rich fields | **14** | ✅ b2b (after b1) | `readText`×7 (`fishing_guide`, `shale_drop`, `muffat_02/03/05`, `solm_01`, `signal_01`), `bonus`+`description`×3 (`wm_02/03/04` tomes), weapon-stats (`guide_06` Rod), `readText`+`passive` (`scar_04`), `uses` (`void_below` EMP), `readableKey`/`readable` (`va_02`) |
-| **Dynamic/computed item** — runtime-built object | **2** | ❌ never (stays code) | `tl_01`, `tl_03` — item `description` is conditionally concatenated from *other* state (`wmFirstResearcherKnown`, presence of `Froberger's Field Notes`). Not a static literal. |
-| **No inventory op** — gold/favor/XP/flag only | **19** | ❌ out of scope (future effects layer) | `slums_cleanup`, `cat_01/02/void`, `city_watch_patrol`, `pit_debut`, `fish_01`, `horned_shark`, `ng_01/03`, `wm_05`, `va_03/04`, `vs_01/02/03/warden`, `lame_lystra`, `brynn_firewood` |
-| **Message-only** | **16** | ❌ nothing to migrate | the Damascus/Lystra/Antioch §LIX–LXIV arc beats, `va_01`, `tl_02`, `ng_02`, `d0206_a5`, `d0208_a4/a5`, `antecedent_01` |
+The inspiration is the house rule stated in `CONTRIBUTING.md` and re-learned in every WBAPI hazard:
+*a write that lands in a real-but-wrong object never throws.* An inventory push is exactly that kind
+of write. So this migration was designed guard-first.
 
-**Total 61.** Inventory work actually touched by (b): **24 branches** (7 + 3 + 14). The other 37 are out: 16 have no state to move, 19 are gold/favor/flag (a *different* refactor — the effects layer), 2 are non-static.
+---
 
-## 3. The five blockers (each one a locked decision)
+## 2. Method (verification pass, 2026-08-17)
 
-### 3.1 The `grant` grammar is too thin — **b1 is a hard prerequisite for the bulk**
-`_applyItemChain` grant (roll2hit-v3.html **23549**) builds exactly `{name, icon, type, sell, desc?}`. But the ladder's pushed items use, across 26 objects: `readText`×8, `description`×7 (note: a **different key** from the grammar's `desc`), `bonus`×3, plus `passive`, `readableKey`/`readable`, `uses`, `minLevel`, and four weapon stats (`atkBonus/dmgDie/dmgCount/dmgFlat`). 14 of the 24 migratable branches are unreachable until grant can carry these.
+1. Census re-derived from the archive, not from HEAD — `git show 27956e4:roll2hit-v3.html` (the Inc-1
+   design-lock build) and `git show de64c16:roll2hit-v3.html` (the Inc-5 close build).
+2. Every line anchor in the original re-resolved against the build it was written against.
+3. Migration count taken from the live gate, not from prose: `npm run check:laddermigration`.
+4. Allow-list compared field-by-field across all four sites the report named as "in lockstep".
+5. `git log -S` on each disputed symbol to separate RETIRED from NEVER-SHIPPED.
+6. Residue cross-checked against the *successor* refactor's own commit message (`a79c76a`).
 
-**LOCKED — (b1) grant-shape widening (explicit allow-list, not arbitrary passthrough):** extend the grant Step + `_applyItemChain` to copy a fixed allow-list of optional item fields when present:
-`desc`/`description` (unify: grammar keeps `desc`; runtime writes whichever the original item used — see 3.4 name/shape parity), `readText`, `readableKey`, `readable`, `passive`, `bonus` (object), `uses` (number), `minLevel` (number), `atkBonus`/`dmgDie`/`dmgCount`/`dmgFlat` (numbers). Anything not on the list is dropped (the codec + widget can't author it; a stray field would silently diverge). This widening lands in **four** places kept in lockstep: `_applyItemChain` runtime, the `parseItemChainText`/`itemChainToText` codec, the §EDITOR-01-D-FU(a) `CHAIN_KINDS.grant` widget schema, and `scripts/check-itemchain.js`. Pipe-grammar text stays viable only for the scalar fields; `readText`/`bonus` are JSON-authored via the visual widget (a new "advanced fields" JSON textarea per grant row) — **the text codec is no longer lossless for rich grants, and that's accepted** (the widget is now the canonical authoring path post-(a)).
+---
 
-### 3.2 Message reconciliation — **migrated grants run silent**
-`_applyItemChain` runs at **25869**, *before* the ladder body, and grant emits its own `"<icon> <name> obtained."`. The ladder's custom line frequently **names the same item** (`'💰 +500gp + Rhinestone Collar trophy.'`). Naïvely migrating doubles the mention. **LOCKED:** add an optional `silent:true` to migrated grant steps (suppresses only the auto-`obtained` line; `grantBit`'s own message is unaffected); the ladder keeps its hand-written narrative line **verbatim**. This preserves exact user-visible output, so the parity guard (3.6) can assert message equality, not just inventory equality. `silent` joins the (b1) allow-list + widget (a checkbox).
+## 3. Ground truth — the 61-branch census (VERIFIED EXACT)
 
-### 3.3 Item names are load-bearing — **names must be byte-preserved**
-Pushed item names are referenced elsewhere by string match: `KEY_EVENTS[].item` (e.g. `'Shipping Manifest (Intercepted)'` → `ke_manifest`, `'Eel Skin Pouch'` → `ke_eel_pouch`, `'Antecedent Seal'`), and quest `completeItems`/`completeFn` name-includes checks. A migration that renames or reshapes an item silently breaks a key event. **LOCKED:** migration is name-preserving; the parity guard cross-checks every migrated item name against `KEY_EVENTS` + `completeItems` references and fails on a drift.
+The FU brief assumed a population of pure `inv.push` branches ready to lift out. There was
+essentially one. The ladder was overwhelmingly **mixed effects** — gold + favor + XP + flags + ability
+scores + a narrative line, with an inventory push as one ingredient among several. So (b) was never
+"lift the pure branches"; it was **partial extraction**.
 
-### 3.4 Ordering & idempotency — **grant `once` vs the ladder's name-dedup**
-Two ladder branches guard with `!inventory.some(i => i.name === X)` before pushing (`guide_06`, `scar_04`). Grant's default `once:true` already skips when an item of that name exists (**23548**) — semantically equivalent for a quest that completes once. **LOCKED:** migrate these as default-`once` grants; do **not** emit `once:false`. (Their ability-score/flag effects stay as code — they are PARTIAL, not FULL.)
+| Bucket | Count | Disposition | Members |
+|--------|------:|-------------|---------|
+| Expressible now — `grant` over `name/icon/type/sell/desc` | 7 | ✅ wave b2a | `couperin_lute` (Cipher Scrap; also a take), `pit_training`, `cat_03`, `cat_04`, `cat_05`, `cat_06`, `night_eel` |
+| Take-only — name-based removal → `take` | 3 | ✅ 2 shipped b2a; `wm_01` **dropped to residue** | `brynn_ledger`, `pachelbel_shipment`, ~~`wm_01`~~ |
+| Needs grammar ext (b1) — literal push w/ rich fields | 14 | ✅ 13 shipped b2b; `fishing_guide` **dropped to residue** | `readText`×7, `bonus`+`description`×3 (`wm_02/03/04`), weapon stats (`guide_06`), `readText`+`passive` (`scar_04`), `uses` (`void_below`), `readableKey` (`va_02`) |
+| Dynamic/computed item | 2 | ❌ never — stays code | `tl_01`, `tl_03` |
+| No inventory op — gold/favor/XP/flag only | 19 | ❌ out of scope | `slums_cleanup`, `cat_01/02/void`, `city_watch_patrol`, `pit_debut`, `fish_01`, `horned_shark`, `ng_01/03`, `wm_05`, `va_03/04`, `vs_01/02/03/warden`, `lame_lystra`, `brynn_firewood` |
+| Message-only | 16 | ❌ nothing to migrate | the Damascus/Lystra/Antioch §LIX–LXIV beats, `va_01`, `tl_02`, `ng_02`, `d0206_a5`, `d0208_a4/a5`, `antecedent_01` |
 
-### 3.5 Boundary with §DATA-01-REVERTED (the effects layer) — **drawn, not crossed**
-The 19 "no inventory op" branches (gold/favor/XP/flag) and the 2 dynamic-item branches are exactly what a declarative `QUEST_EFFECTS`/`HOOKS` layer (§DATA-01-REVERTED) would absorb. (b) deliberately **does not** build that layer — it migrates *only* inventory, the one effect `itemChain` already models. **LOCKED scope fence:** if the effects layer is later prioritized, it subsumes the residue; (b) leaves the ladder strictly smaller and never invents a second gold/favor mechanism. Gold/favor/XP/flag/ability/dynamic-item all **stay as code** after (b).
+**Total 61 — confirmed by direct count at both the Inc-1 build and the Inc-5 build**, and corroborated
+by `a79c76a`'s own subject line: *"the 61-id hardcoded effects block in storyCheckQuests … DELETED."*
 
-### 3.6 Parity guard — **the safety net (`scripts/check-ladder-migration.js`)**
-A headless guard run in CI: for each migrated quest, it loads the quest's `itemChain` and the *removed* ladder push, and asserts (a) the resulting inventory delta (item objects, field-by-field over the allow-list) is identical, (b) the item name is preserved and still satisfies any `KEY_EVENTS`/`completeItems` reference, (c) the surviving ladder branch (gold/favor/flag/msg) is unchanged. Built **before** the first migration so every wave is gated. Wired into the `invariants` job alongside `check:itemchain`.
+> ⚠ **Correction to the original table.** It marked 24 branches migratable (10 + 14) but the report
+> closed at **22**. Both dropouts are named in §6 Residue and neither was silent — the ✅ column above
+> is corrected to match the shipped result rather than the plan.
 
-## 4. What changes vs what stays
+---
 
-- **Changes (per migrated quest):** the quest object in `QUEST_DB` gains an `itemChain:[…]` (authored via the (a) widget); the corresponding `inv.push`/`filter` lines are deleted from its ladder branch.
-- **Stays as code (every migrated branch is PARTIAL):** that branch's `S_story.gold +=`, `_setNpcFavor`, `S_story.xp`, ability-score writes, flag sets, and the verbatim narrative `msgs.push`.
-- **Untouched:** 37 branches (16 msg-only, 19 no-inventory, 2 dynamic). The `_applyItemChain` call site (25869), both completion paths, persistence (ph3) — all unchanged in shape; only grant's field set widens.
+## 4. The five design locks
 
-## 5. Increment plan
+**4.1 — `grant` was too thin; b1 is a hard prerequisite.** The ladder's 26 pushed item objects used
+`readText`×8, `description`×7 (a *different key* from the grammar's `desc`), `bonus`×3, plus
+`passive`, `readableKey`/`readable`, `uses`, `minLevel`, and four weapon stats. **LOCKED:** an explicit
+allow-list, not arbitrary passthrough — anything off-list is dropped, because a stray field the codec
+and widget cannot author would silently diverge. Four sites kept in lockstep: the runtime, the text
+codec, the (a) widget schema, and `check:itemchain`.
 
-- **Inc 1 (this report)** — design lock + full branch classification + blocker decisions. No code.
-- **Inc 2** — **the parity guard first** (`scripts/check-ladder-migration.js`) + wire into CI, against the *current* (un-migrated) ladder as a baseline harness (asserts zero migrations, name index builds). De-risks every later wave.
-- **Inc 3 — wave b2a (no grammar change):** migrate the **10 expressible-now** branches (7 grant + 3 take) to `itemChain` with `silent` grants; delete their push/filter lines; guard green. (`silent` is the only new grant field this wave needs — a minimal slice of b1.)
-- **Inc 4 — b1 grammar widening:** extend grant runtime + codec + (a) widget schema + `check:itemchain` for the rich allow-list (3.1). Headless tests: each new field round-trips; non-allow-list field dropped.
-- **Inc 5 — wave b2b:** migrate the **14 rich-field** branches; guard green. **Closes (b).**
-- (Waves are independently shippable; if (b1) proves too broad, b2a still stands alone and (b) can close partial with a logged residue.)
+**4.2 — Migrated grants run silent.** `silent:true` suppresses only the auto-`obtained` line; the
+branch keeps its hand-written narrative verbatim. This preserves exact user-visible output, which is
+what lets the parity guard assert *message* equality and not merely inventory equality.
 
-## 6. Non-goals / risks
+**4.3 — Item names are byte-preserved.** `KEY_EVENTS[].item` and `completeItems` match by string.
+**LOCKED:** the guard cross-checks every migrated name against both indexes and fails on drift.
 
-- **The effects layer (gold/favor/XP/flag) is explicitly out** — that's §DATA-01-REVERTED, deferred. (b) shrinks the ladder; it does not eliminate it.
-- **2 dynamic-item branches (`tl_01`, `tl_03`) stay code forever** under the static-`itemChain` model — only a computed-effects layer could take them.
-- **Risk — rich-field codec divergence:** the pipe text grammar can't losslessly carry `readText`/`bonus`; mitigated by routing rich grants through the (a) widget's JSON field and asserting widget↔runtime parity in `check:itemchain`, *not* through the text codec.
-- **Risk — silent breakage of a key event** via item rename/reshape: mitigated by the name-preservation cross-check in the parity guard (3.3/3.6), built before any migration.
-- **Risk — message double-mention:** mitigated by `silent` grants + verbatim-msg preservation (3.2); guard asserts message equality.
-- **Strategic note for the next continue:** (b) is real but narrow — it removes ~24 branches' worth of `inv.push` while 37 branches and all non-inventory effects remain. If the goal is "kill the ladder," the **§DATA-01-REVERTED effects layer** is the larger lever and would subsume (b). Recommended order stands: guard (Inc 2) → b2a (Inc 3) is low-risk, high-confidence, and ships value without the grammar widening — a good place to pause and reassess whether b1+b2b or the effects layer comes next.
+**4.4 — `once` replaces the hand-rolled dedup.** Two branches guarded with
+`!inventory.some(i => i.name === X)` (`guide_06`, `scar_04`). Grant's default `once:true` is
+semantically equivalent for a quest that completes once. **LOCKED:** migrate as default-`once`; never
+emit `once:false`.
+
+**4.5 — The boundary with §DATA-01-REVERTED is drawn, not crossed.** The 19 gold/favor branches and
+the 2 dynamic-item branches are effects-layer territory. (b) migrates *only* inventory — the one
+effect `itemChain` already models — and never invents a second gold/favor mechanism.
+
+**4.6 — The parity guard ships first.** `scripts/check-ladder-migration.js`, manifest-driven: one entry
+per migrated quest recording what its branch used to push, asserting (a) inventory parity field-by-field,
+(b) `silent:true` on every migrated grant, (c) the surviving branch no longer pushes the name, (d) the
+name still satisfies its `KEY_EVENTS`/`completeItems` reference. Built at Inc 2 against an *empty*
+manifest, so every later wave was gated by a harness already proven to read the file correctly.
+
+---
+
+## 5. Spec → shipped delta table
+
+| # | Report claim | HEAD (2026-08-17) | Verdict |
+|---|---|---|---|
+| 1 | 61-branch ladder at `roll2hit-v3.html` **25875–26094** | Exact at `27956e4`: first branch 25875, last 26094, count 61 | ✅ **EXACT, both ends** |
+| 2 | Grant builder at **23549**, `once` guard at **23548** | Exact at `27956e4` | ✅ **EXACT** |
+| 3 | `_applyItemChain` call site at **25869**, before the ladder body | Exact at `27956e4` | ✅ **EXACT** |
+| 4 | `FISHING_GUIDE_TEXT` at line **24017** | 23997 at `27956e4` (**−20**) | ⚠ hint drifted; the *argument* holds — `const FISHING_GUIDE_TEXT@26659` is still declared after `const QUEST_DB = {@10615`, so the TDZ objection is live today |
+| 5 | 22 branches migrated (9 b2a + 13 b2b) | `check:laddermigration`: **22 quests, 148/148 checks** | ✅ **EXACT** |
+| 6 | b1 allow-list: 13 optional fields | `for (const f of ['desc', 'description'@26182` carries all 13 **plus `heal`** | ✅ 13/13 shipped; ➕ grown to 14 |
+| 7 | `silent:true` added | `if (!s.silent) msgs.push@26189`; all 22 migrated grants carry it | ✅ SHIPPED |
+| 8 | Four sites in lockstep | Runtime ✓ · `worldbuilder.html:const GRANT_RICH = [@8567` ✓ · widget `worldbuilder.html:{f:'silent',chk:true}@8558` ✓ · `scripts/check-itemchain.js:grant passes heal@80` ✓ — and all four carry `heal` | ✅ held through a later widening by a different track |
+| 9 | Never emit `once:false` | 0 occurrences file-wide | ✅ HELD |
+| 10 | 3 named load-bearing names survive | `const KEY_EVENTS = [@26207` holds 7 items; all three named ones grant through `itemChain` | ✅ VERIFIED |
+| 11 | Guard wired into CI beside `check:itemchain` | `walk-invariants.yml` runs both on the same push paths | ✅ EXACT |
+| 12 | "Both completion paths unchanged" | The second call site (legacy `_rollCeremonia`) was **retired** by §ARCH-01 W7d `f8691c1`; one call site remains — `msgs.push(..._applyItemChain(q))@30198` | ⚠ STALE by design, not a defect |
+| 13 | The ladder shrinks but survives | **Deleted.** `a79c76a` (§ARCH-01 W7c, 2026-07-03) folded all 61 ids into per-quest `onComplete` bit chains — `W7c folded the per-id hardcoded effects block@30193` | ⚠ **SUPERSEDED — 0 branches since 2026-07-03** |
+| 14 | "The larger lever remains §DATA-01-REVERTED" | Right in substance, wrong in vehicle — the effects layer arrived as UQF `onComplete` chains, not `QUEST_EFFECTS`/`HOOKS` | ⚠ SUPERSEDED |
+
+### 5.1 The successor, measured
+
+W7c absorbed exactly the buckets §3 declared out of scope, using the grammar §4.5 refused to invent:
+
+- **19 gold/favor/XP branches** → `reward` + a new `favor` bit kind. `quest_slums_cleanup` at HEAD reads
+  `onComplete:[ {kind:'reward',gold:80}, {kind:'favor',npc:'yael',set:1}, {kind:'narrative',msg:'💰 +80gp from Yael. Guard Favor granted.'} ]`
+  — the same three effects, in the same order, with the report's own quoted message intact.
+- **16 message-only branches** → single `narrative` bits.
+- **`quest_cat_03`** now carries the migrated `itemChain` *and* the W7c `narrative` bit side by side,
+  still printing `'💰 +500gp + Rhinestone Collar trophy.'` and still silent on the grant. **§4.2's
+  contract survived a whole-file refactor it was not designed for.** That is the strongest single
+  result in this verification.
+
+---
+
+## 6. Residue — and why it was a prediction, not an excuse
+
+The following stayed as code by design. All four are still code at HEAD, now as `_legacy_fn` bits
+inside `onComplete` rather than ladder branches:
+
+- **`fishing_guide`** — the one "pure push", but its `readText` is `FISHING_GUIDE_TEXT`, a const
+  declared *after* `QUEST_DB`. Referencing it from a data literal is a temporal-dead-zone error, and
+  inlining the canonical text would duplicate a single-source string. Live at
+  `readText:FISHING_GUIDE_TEXT@13819`.
+- **`tl_01`, `tl_03`** — item `description` conditionally concatenated from other state. Non-static;
+  only a computed-effects layer could take them.
+- **`wm_01`** — `Scholar Kings' Seal` removal is conditional (`!archiveLetterObtained`) *and*
+  count-limited to 3. A flat `take` cannot express it. Live at
+  `seal spend stays _legacy_fn@11072`.
+- **Every migrated branch is PARTIAL** — gold/favor/XP, the `guide_06`/`scar_04` WIS writes, flag
+  sets, and the verbatim `msgs.push` all stayed; only the inventory operation left.
+
+> **The finding.** `a79c76a`'s commit message, written by an independent refactor six days later,
+> names its own `_legacy_fn` holdouts as: *"scar_04 mercy branch, vs_warden three-way, lame_lystra,
+> wm_01 seal spend, tl_01/tl_03 runtime items, fishing_guide lazy FISHING_GUIDE_TEXT."* That is this
+> report's residue list, re-derived from scratch, for the same reasons. **A residue section that a
+> later author reproduces without reading it was a measurement, not an apology.**
+
+---
+
+## 7. Verification at HEAD
+
+```
+check:laddermigration   148/148 pass — 22 quests migrated, 0 ladder branches, 7 key-event items
+check:itemchain         29/29 pass
+check:anchors           3,162 anchors / 76 docs, 0 dead (117 stale hints = standing baseline)
+```
+
+`roll2hit-v3.html` was **not modified** by this verification pass.
+
+---
+
+## 8. Defects found → BACKLOG
+
+- **§DX-02ci** 🟢 — the parity guard's check (c) is **vacuous**. `LADDER` has been empty since
+  `a79c76a`, so `scripts/check-ladder-migration.js:// (c) no double-grant@244` iterates nothing and
+  cannot fail. The risk it guarded is real and *moved*: a double-grant would now come from an
+  `onComplete` chain, not a ladder branch. No live double-grant exists today (checked: 0 of the 22
+  manifest quests push inventory in their own block), so this is coverage, not a red. The same file's
+  header prose still says the ladder *"is being migrated, branch by branch"* and *"at Inc 2 the
+  manifest is EMPTY."* Its one W7c-aware line —
+  `scripts/check-ladder-migration.js:reward ladder stays deleted@207` — shows the right instinct and
+  was applied to one assertion instead of the file.
+- **§DX-02cj** 🟢 — the four-place lockstep is enforced by a **comment**. Nothing in `scripts/` or
+  `tests/` mentions `GRANT_RICH`; no gate compares the widget's list to the runtime allow-list at
+  `for (const f of ['desc', 'description'@26182`, so the two can diverge silently. It
+  survived one widening (`heal`, added by §KG Inc 3 `d6aeefd`, 11 days later, by an author on a
+  different track) purely on discipline. The §DX-02at class, one layer down.
+
+---
+
+## 9. Conclusion
+
+**(b) did what it said, and said what it did.** Twenty-two reward branches became data; the four that
+could not are named, reasoned, and still named correctly today. The guard shipped before the first
+migration and has never gone red. Every counted figure re-measures exact.
+
+The lesson is about *scope honesty*. The report closed with a strategic note — that (b) was "real but
+narrow," that 37 branches and every non-inventory effect remained, and that a declarative effects
+layer was the larger lever. Six days later §ARCH-01 built that layer under a different name and
+finished the job. **The report was superseded because it was right about its own limits**, which is
+the only respectable way for a design lock to age. The `silent` flag it invented to keep one
+hand-written sentence from being followed by a robot is still doing that job, two refactors later.
+
+*Author's note preserved from the original: "(b) deliberately shrank the ladder without inventing a
+second gold/favor mechanism." Six days later, someone invented the first one properly instead.*
