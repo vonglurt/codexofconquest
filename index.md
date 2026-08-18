@@ -694,11 +694,11 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.wmSessionsDays` | array | Days on which archive sessions occurred |
 | `S_story.wmBenediktCircleComplete` | boolean | Benedikt reading circle sequence complete |
 | `S_story.wmFirstResearcherKnown` | boolean | First Researcher identity known |
-| `S_story.vaCI` | boolean | Void Archaeology mark found at CI |
-| `S_story.vaSL` | boolean | Void Archaeology mark found at SL |
-| `S_story.vaDF` | boolean | Void Archaeology mark found at DF |
-| `S_story.vaWM` | boolean | Void Archaeology mark found at WM |
-| `S_story.vaMT` | boolean | Void Archaeology mark found at MT |
+| `S_story.vaCI` | boolean | Void Archaeology mark found at `LHR` — the flag name keeps the retired code `CI` (§DOC-02bz) |
+| `S_story.vaSL` | boolean | Void Archaeology mark found at `BMA` — flag name keeps retired `SL` |
+| `S_story.vaDF` | boolean | Void Archaeology mark found at `ZRH` — flag name keeps retired `DF` |
+| `S_story.vaWM` | boolean | Void Archaeology mark found at `NUE` — flag name keeps retired `WM`; the `_vaSites` **key** was the 39-day outage, fixed `0179687` |
+| `S_story.vaMT` | boolean | Void Archaeology mark found at `GVA` — flag name keeps retired `MT` |
 | `S_story.vaAllMarksFound` | boolean | All 5 archaeology marks found |
 | `S_story.vaLogFound` | boolean | Constructor's Log found in lower archive |
 | `S_story.vaLastWardVisited` | boolean | Last ward (sealed tunnel) visited |

@@ -1,271 +1,314 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report — Layer 52: Void Archaeology "The Architecture"
+# Lab Report — Layer 52: Void Archaeology, "The Architecture"
 
-**IEEE-Format Post-Mortem**  
-**Date:** 2026-05-25 · **Revised:** 2026-07-07  
-**Layer:** 52  
-**Section:** §XVII  
-**Status:** ✅ Implemented — **arc-blocking bug fixed 2026-07-07** (see §VI)  
-**Codebase:** `roll2hit-v3.html` — single-file browser RPG
+**IEEE-format post-mortem**
+**Written:** 2026-05-25 · **Revised:** 2026-07-07 (§VI bug fix) · **Verified against HEAD:** 2026-08-17 (§DOC-02bz)
+**Layer:** 52 · **Section:** §XVII · **Track:** plan-archive.md §XVII
+**Status:** ✅ Implemented and structurally intact · ⚠️ **not reachable in play** — see §VII
+**Codebase:** `roll2hit-v3.html` (single-file browser RPG)
 
-> **⚠️ Node-code note (2026-07-07):** this report was written before the §WALK/§NAV world rewrite renamed every node to airport-style codes. The original logical codes used throughout the prose map to current node codes as: **CI → `LHR`** (City Streets — Birka; the Blue Shutters Archive), **SL → `BMA`** (Birka Slums), **DF → `ZRH`** (name `defi_land`, the Defiant Fields), **WM → `NUE`** (Scholar's Quarter — Weimar; the lower archive), **MT → `GVA`** (Mountain Pass — High Crest), **SQ → `NUE`** (same node as WM — the Weimar archive *is* the Scholar's Quarter). `CO` = the victory/ending screen (not a graph node). Tables and file references below have been updated to current codes and line numbers; §VI records the bug the stale `WM` code caused.
-
----
-
-## Abstract
-
-This report documents the design intent, implementation architecture, and narrative integration of Layer 52 — Void Archaeology, subtitled "The Architecture." This layer is a NG+-exclusive investigation arc that places five `[INVESTIGATE]` buttons at existing nodes (`LHR`, `BMA`, `ZRH`, `NUE`, `GVA`), each revealing a mark left by the First Researcher 200 years before the game's events. Collecting all five unlocks a fourth document in the Weimar archive (`NUE`) — the Constructor's Log — which in turn enables opening the sealed Mountain Pass (`GVA`) tunnel, the only room in the game sealed before the Scholar Kings existed. The arc concludes at the Scholar's Quarter (`NUE`) where Benedikt delivers the "four-author chain" synthesis: the First Researcher built the cage, Froberger found the mechanism, the player closed it, and Entry 42 is the fourth link. `vaArchitectureKnown` gates a fifth ending variant at the victory screen, adding the addendum *"The story has four authors now."*
+> **Historical node codes.** Written before the §WALK/§NAV world rewrite renamed every node to
+> airport-style codes. Throughout: **CI → `LHR`** (City Streets — Birka; the Blue Shutters Archive),
+> **SL → `BMA`** (Birka Slums), **DF → `ZRH`** (`defi_land`, the Defiant Fields), **WM / SQ → `NUE`**
+> (Scholar's Quarter — Weimar; the archive *is* the Quarter), **MT → `GVA`** (Mountain Pass — High
+> Crest), **CO → `TLS`** (the victory screen's node). This is a HISTORY doc: the retired codes are
+> annotated, never rewritten.
 
 ---
 
-## I. Design Intent
+## I. Abstract
 
-### A. The Retroactive World
+Layer 52 is an NG+-exclusive investigation arc built entirely out of places the player has already
+walked through. Five `[INVESTIGATE]` buttons appear at `LHR`, `BMA`, `ZRH`, `NUE` and `GVA`, each
+revealing a mark left by the First Researcher — Marta Eilene Vass — two centuries before the game
+opens. Collecting all five unlocks a fourth document in the Weimar archive, the Constructor's Log,
+which opens the sealed Mountain Pass tunnel, which closes at the Scholar's Quarter with Benedikt
+Rasp's four-author synthesis. `vaArchitectureKnown` then gates a fifth ending variant.
 
-The First Researcher (revealed by name in §XVI as Marta Eilene Vass) predates the Scholar Kings by a generation. Her marks are at nodes the player has visited since Act I. She was at the Blue Shutters Archive (`LHR`). She marked a corner building in the Slums (`BMA`). The Defiant Fields battle (`ZRH`) happened at the exact coordinates she chose for the sealing mechanism. The Weimar archive holds her personnel file (`NUE`). The Mountain Pass (`GVA`) tunnel was sealed by her from the inside.
-
-The design goal of §XVII was retroactive recontextualization: the player has walked through five locations that were already hers. The `[INVESTIGATE]` buttons surface what was always true about the world. Nothing is retconned — the marks were always there. The player lacked the knowledge to see them.
-
-This required the arc to be NG+-exclusive: a first-run player doesn't have `wmFirstResearcherKnown` (unlocked by §XVI's quest_wm_04) and hasn't engaged with the First Researcher's identity at all. The retroactive reading only lands if the player has already learned who she was before they encounter her marks.
-
-### B. The Four-Author Chain
-
-The closing synthesis, delivered by Benedikt at the Scholar's Quarter (`NUE`), names four contributors to the Antecedent containment:
-
-1. **The First Researcher** — built the cage; wrote the Constructor's Log; left no name
-2. **Froberger** — found the mechanism; documented it in his field notes; died for it
-3. **The player** — activated the sealing mechanism at the Defiant Fields (`ZRH`) battle; closed the cage without knowing it
-4. **Entry 42** — the player's own written entry; the fourth link that makes it a chain
-
-The chain only has four links if the player wrote (or chose to leave blank) Entry 42. `vaArchitectureKnown` only sets when `entry42Written` is true. A player who skipped Entry 42 cannot complete quest_va_04. The arc requires self-authorship to close.
-
-### C. The Sealed Tunnel
-
-The Mountain Pass (`GVA`) tunnel is described from Act I in ambient lore as a sealed passage no one has opened. The Pilgrim NPC (~line 25381) says *"Someone sealed that tunnel before the Scholar Kings existed. I've been trying to find out who for forty years."* The tunnel was always a known mystery. §XVII makes it answerable: the First Researcher sealed it from inside after the final field test of the containment structure. The six sentences on the far wall are her last operational notes.
+This revision re-measures every claim against HEAD 82 days after the arc shipped. **The
+implementation is exact** — 39 of 39 acceptance assertions pass, all five site texts are
+byte-identical to their birth commit, and every cited line number was correct at the tree this
+report was revised on. **Three claims are corrected** (§V), and the arc's real defect turned out to
+be upstream of everything this document describes: **its three gate flags cannot all be true in
+normal play** (§VII).
 
 ---
 
-## II. Implementation Architecture
+## II. Design Intent — and what it buys the game
 
-### A. Gate Condition
+### A. Retroactive recontextualization, at zero world cost
 
-The entire Void Archaeology block is guarded by a single three-flag condition (~line 30234, inside `storyRender`):
+The First Researcher predates the Scholar Kings by a generation. Her marks are at nodes the player
+has visited since Act I: she worked in the Blue Shutters Archive; she carved a marker on a corner
+building in the Slums that predates the city by eighty years; the Defiant Fields battle happened at
+the coordinates she chose for the sealing mechanism; her personnel file is in the Weimar archive;
+she sealed the Mountain Pass tunnel from the inside.
 
-```js
-const _vaReady = (S_story.ngPlusRun || 0) >= 1
-              && S_story.wmFirstResearcherKnown
-              && S_story.entry42Written;
-```
+The `[INVESTIGATE]` buttons surface what was always true. Nothing is retconned — *the player lacked
+the knowledge to see them.* **The layer adds no nodes, no monsters and no terrain.** It is flags,
+text and one CSS class hung on geography that already existed, which is why the 90×360 grid
+migration had nothing of it to break: all five sites are the sole occupant or the primary of their
+cell at HEAD, so §AUDIT-03x's 172-node co-location problem never touches it. *Structural minimalism
+as a survival trait — the third measured instance in the corpus.*
 
-All three must be true:
-- **ngPlusRun ≥ 1** — NG+ run (world knowledge presumed)
-- **wmFirstResearcherKnown** — identity of the First Researcher known (§XVI quest_wm_04 complete)
-- **entry42Written** — player has engaged the Entry 42 modal (even if they chose blank)
+### B. Why it improves playability
 
-Until all three are true, `[INVESTIGATE]` buttons do not render, quest_va_01 does not activate, and the arc is entirely invisible.
+1. **It gives a finished world a second reading.** NG+ otherwise repeats content. This layer makes
+   the *same five rooms* mean something different, so the replay is a re-reading rather than a
+   re-grind — the cheapest possible way to buy a second act out of an existing map.
+2. **It is the only content gated on the player having authored something.** `vaArchitectureKnown`
+   cannot be set unless `entry42Written` is true. A player who skipped Entry 42 is told nothing,
+   because the chain genuinely has only three links. Self-authorship is a *mechanical*
+   precondition, not a flourish.
+3. **It answers a question the game has been asking since Act I.** The Pilgrim on the road has been
+   saying `Someone sealed that tunnel before the Scholar Kings existed@26581` — *"I've been trying
+   to find out who for forty years."* Layer 52 makes a piece of ambient furniture answerable.
+4. **It pays out.** +200gp for the tunnel, +500gp and two permanent items for the chain, plus a
+   lore annotation appended to a tome the player already owns.
+5. **It hands the endgame a fifth voice.** The victory screen's Sweelinck question and the
+   four-author addendum only exist for a player who finished this arc.
 
-### B. Five Investigation Sites
+### C. The four-author chain
 
-**Defined in the `_vaSites` map, ~lines 30235–30241:**
+Benedikt names four contributors to the Antecedent containment: **the First Researcher** built the
+cage and wrote the Log; **Froberger** found the mechanism and died for it; **the player** activated
+it at the Defiant Fields without knowing; **Entry 42** is the fourth link, and it is the player's
+own handwriting. Four links is a chain. *"That is the only kind of answer this work produces — not a
+solution, a chain."*
 
-| Node | Flag | Investigation Text Summary |
-|------|------|---------------------------|
-| `LHR` | `vaCI` | Blue Shutters Archive shelf record — researcher category "Containment"; same shelf as archive letter |
-| `BMA` | `vaSL` | Carved marker on a corner building predating the city by 80 years; predates the Scholar Kings |
-| `ZRH` | `vaDF` | Stone alignment spaced to a mathematical interval; the battle happened at the activation point |
-| `NUE` | `vaWM` | Document 3 in the lower archive — project codename now visible: ANTECEDENT CONTAINMENT PROTOCOL |
-| `GVA` | `vaMT` | Sealed access tunnel; never opened in any record; sealed from inside; intact |
+---
 
-> **The `vaWM` site key was the arc-blocking bug (fixed 2026-07-07).** It was keyed `WM` — a logical code that ceased to exist after the §NAV rename — so `_vaSites[node.code]` never matched at the Weimar archive, the button never rendered, `vaWM` could never be set, and `vaAllMarksFound` (which requires all five flags) could never fire. Corrected to `NUE`, the current code for the Scholar's Quarter / Weimar archive. See §VI.
+## III. As-Built Inventory
 
-Each site: on button click, sets `S_story[flag] = true`, displays the site text, removes the button, and checks if all five flags are now set. When all five are collected, `vaAllMarksFound = true` fires with a 600ms delayed message: *"Five marks. One pattern. She was everywhere before anyone was looking."* `quest_va_02` activates at this point.
+All anchors verified at HEAD, 2026-08-17.
 
-The `[INVESTIGATE]` button attaches after the story text box via `insertAdjacentElement('afterend', invBtn)` — consistent with other contextual buttons in the render pipeline. The button self-removes after clicking.
+### A. Dispatch and gate
 
-### C. Quest Chain
+| Element | Anchor | Note |
+|---|---|---|
+| Hook body | `_nodeHookVoidArchaeology(node) {@31620` | **Migrated out of `storyRender` by §VM-01-G2** (2026-07-28), verbatim |
+| Registration | `id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA']@34192` | `nodes` is tooling metadata; the hook body owns the real gate |
+| Call site | `_runNodeHook('void-archaeology', node)@34766` | In place, so DOM order is preserved by construction |
+| Gate | `const _vaReady = (S_story.ngPlusRun || 0) >= 1@31623` | `ngPlusRun ≥ 1` **and** `wmFirstResearcherKnown` **and** `entry42Written` |
 
-**Defined in QUEST_DB — lines 10727–10758 (UQF-1.0):**
+### B. The five sites
 
-| Quest | Title | Completion Condition | Reward |
-|-------|-------|----------------------|--------|
-| `quest_va_01` | The Architecture: Five Marks | `vaAllMarksFound` | (narrative only) |
-| `quest_va_02` | The Architecture: Constructor's Log | `vaLogFound` | Constructor's Log (readable) + Antecedent Seal (relic) |
-| `quest_va_03` | The Architecture: The Sealed Tunnel | `vaLastWardVisited` | +200gp |
-| `quest_va_04` | The Architecture: The Chain | `vaArchitectureKnown` | (narrative only — closes the arc) |
+`const _vaSites = {@31624` — five entries, byte-identical to the 2026-05-25 birth commit `194a810`;
+only the keys were ever edited.
 
-**Activation sequence (all in the `[INVESTIGATE]` block, ~lines 30268–30294):**
-- `quest_va_01` activates on first `[INVESTIGATE]` button encounter at any site
-- `quest_va_02` activates when `vaAllMarksFound` fires
-- `quest_va_03` activates when `vaLogFound` is true
-- `quest_va_04` activates when `vaLastWardVisited` is true
+| Node | Flag | Mark |
+|---|---|---|
+| `LHR` | `vaCI` | Blue Shutters shelf record — Researcher Category: Containment |
+| `BMA` | `vaSL` | Carved marker on a building eighty years older than the city |
+| `ZRH` | `vaDF` | Stone alignment on a mathematical interval — the activation point |
+| `NUE` | `vaWM` | Document 3's project codename: ANTECEDENT CONTAINMENT PROTOCOL |
+| `GVA` | `vaMT` | A sealed access tunnel. *"The seal is intact. It is waiting."* |
+
+Completion fires on `['vaCI','vaSL','vaDF','vaWM','vaMT'].every(f => S_story[f])@31642` → 600 ms →
+`Five marks. One pattern.@31646` and `quest_va_02` activates. The button is created with
+`.inv-investigate-glow {@1939` (gold pulse, added by the 2026-07-07 fix) and self-removes on click.
+
+### C. Quest chain — `QUEST_DB`, UQF-1.0
+
+| Quest | Completion flag | Reward |
+|---|---|---|
+| `quest_va_01` | `vaAllMarksFound` | narrative only |
+| `quest_va_02` | `vaLogFound` | `itemChain`: Constructor's Log (readable) + Antecedent Seal (relic) |
+| `quest_va_03` | `vaLastWardVisited` | **+200gp** |
+| `quest_va_04` | `vaArchitectureKnown` | **+500gp** + an annotation appended to *Benedikt's Annotated Copy* — `📙 +500gp. The Architecture is known.@11160` |
+
+All four carry `activateNode:null`; the hook activates them imperatively rather than through
+`_uqfActivateAtNode`.
 
 ### D. Constructor's Log as Document 4
 
-The Weimar archive modal (`_storyWmArchiveModal()`, ~line 26563) conditionally renders a fourth document when `vaAllMarksFound` is true (Log read / `vaLogFound` set at ~lines 26619–26630). Document 4 — **The Constructor's Log** — contains seven entries in the First Researcher's handwriting, ending:
+`_storyWmArchiveModal(wrap) {@27809` renders a fourth document once `vaAllMarksFound` is set:
+`Document 4: The Constructor@27888`. Reading it runs `S_story.vaLogFound = true;@27865`,
+pushes both items, and activates `quest_va_03`. Entry 7 is quoted verbatim in the modal:
 
-> *"If someone is reading this, the sealing mechanism has activated. The cage is closed. Whatever you sealed inside it — that is what I built this for. I am sorry. I did not have a better answer."*
+> *"If someone is reading this, the sealing mechanism has activated. The cage is closed. Whatever
+> you sealed inside it — that is what I built this for. I am sorry. I did not have a better answer."*
 
-Reading the Log:
-- Sets `vaLogFound = true`
-- Adds `The Constructor's Log` (readable item) and `Antecedent Seal` (relic) to inventory
-- Activates `quest_va_03`
+### E. The `GVA` tunnel — two keys
 
-The Constructor's Log is thus discoverable in two ways: via the archive modal (Document 4 path) or via the `quest_va_02` reward `itemChain` (grant Log + Antecedent Seal, ~line 10738). Both paths converge on the same state flag.
+`i.name === 'Antecedent Seal' || i.name === "Froberger's Field Notes"@31663`. Either opens it: the
+Seal is the artifact, the Field Notes (the §XVI tome) are the intellectual key. Opening sets
+`vaLastWardVisited` and prints the chamber — cut stone, air still for two hundred years, six
+sentences of operational notes on the far wall, then: *"The Antecedent was here. It is not anymore.
+You know where it is now."*
 
-### E. Mountain Pass (`GVA`) Tunnel Opening
+### F. Closure and ending
 
-**Condition (~lines 30273–30288):** At the Mountain Pass (`GVA`) node, if `vaLogFound` is true and `vaLastWardVisited` is false, the game checks for a key item:
+`S_story.vaArchitectureKnown = true;@31689` fires at `NUE` when `vaLastWardVisited && entry42Written`,
+with Benedikt's line on a 700 ms delay so the node text lands first; the flag is set *before* the
+timer resolves, which is what prevents a double-fire on rapid navigation. Downstream:
+`sweelinckQ = '"What was inside the cage?"'@28270` (overriding all other ending questions) and the
+addendum *"Froberger wrote 41 entries. You wrote one. She wrote 7, and no one counted them for 200
+years… The story has four authors now."* The flag is also read as an inn-dream conditional at `TLL`
+and `NUE`.
 
-```js
-const _hasKey = (S_story.inventory || []).some(
-  i => i.name === 'Antecedent Seal' || i.name === "Froberger's Field Notes"
-);
-```
+### G. State
 
-Either item opens the tunnel. `Froberger's Field Notes` (the §XVI tome) is an alternative key — Froberger's notes reference the tunnel's design, and the seal on the Notes matches the tunnel's lock. The `Antecedent Seal` is the direct artifact; the Field Notes are the intellectual key.
-
-On tunnel opening: `vaLastWardVisited = true`, and the chamber text renders describing cut stone, perfectly still air sealed for 200 years, and six sentences on the far wall — the First Researcher's final operational notes. The last line: *"The Antecedent was here. It is not anymore. You know where it is now."*
-
-### F. Quest_va_04 Completion at the Scholar's Quarter (`NUE`)
-
-**~Lines 30296–30302:** On any Scholar's Quarter (`NUE`) visit where `vaLastWardVisited` is true, `entry42Written` is true, and `vaArchitectureKnown` is not yet set:
-
-```js
-setTimeout(() => storyMsg(
-  'Benedikt: "She built it. You closed it. Froberger found the mechanism. You followed him. ' +
-  'Entry 42 is the fourth link. Four links is a chain. A chain holds. ' +
-  'That is the only kind of answer this work produces — not a solution, a chain."'
-), 700);
-S_story.vaArchitectureKnown = true;
-```
-
-The 700ms delay gives the node text time to render before Benedikt speaks. `vaArchitectureKnown` sets immediately after the setTimeout registration — the flag is true before the message displays, preventing double-firing on rapid navigation.
-
-### G. State Flags
-
-**Defined in `_S_DEFAULTS()` — lines 22202–22203:**
-
-| Flag | Type | Default | Purpose |
-|------|------|---------|---------|
-| `vaCI` | boolean | `false` | CI site investigated |
-| `vaSL` | boolean | `false` | SL site investigated |
-| `vaDF` | boolean | `false` | DF site investigated |
-| `vaWM` | boolean | `false` | WM site investigated |
-| `vaMT` | boolean | `false` | MT site investigated |
-| `vaAllMarksFound` | boolean | `false` | All five sites found; unlocks Document 4 |
-| `vaLogFound` | boolean | `false` | Constructor's Log read; unlocks the Mountain Pass (`GVA`) tunnel |
-| `vaLastWardVisited` | boolean | `false` | `GVA` tunnel opened; activates quest_va_04 |
-| `vaArchitectureKnown` | boolean | `false` | Four-author chain understood; gates fifth ending |
-
-### H. Victory Screen Integration
-
-**Lines 27014 (fifth question), 27033–27043 (addendum):**
-
-`vaArchitectureKnown` gates a fifth Sweelinck question variant at the victory/ending screen — overriding all other question branches:
-
-```js
-if (S_story.vaArchitectureKnown && S_story.entry42Written && (S_story.ngPlusRun || 0) >= 1) {
-  sweelinckQ = '"What was inside the cage?"';
-}
-```
-
-This question is only answerable by a player who has completed the entire arc. It is also unanswerable in-game — the cage contents are never specified. The question is Sweelinck's acknowledgment that the player knows what they did, not a prompt for an answer.
-
-The addendum div appended below the ending text (~line 27040):
-> *"Froberger wrote 41 entries. You wrote one. She wrote 7, and no one counted them for 200 years. The cage is closed. You know what it holds. The story has four authors now."*
+`vaCI: false, vaSL: false, vaDF: false, vaWM: false, vaMT: false,@23133` and
+`vaAllMarksFound: false, vaLogFound: false@23134` — nine booleans, all declared in `_S_DEFAULTS()`,
+none carried across the NG+ transition.
 
 ---
 
-## III. Design Decisions and Trade-offs
+## IV. Verification Ledger (2026-08-17)
 
-### A. NG+-Exclusive Gate as Narrative Requirement
+**Acceptance test: 39 assertions, 39 pass.** The §VI simulation was re-run at HEAD by extracting the
+hook verbatim and driving it in a stub DOM: five sites render and collect, `vaAllMarksFound` and the
+payoff line fire, both tunnel keys work and a non-key does not, Benedikt closes the arc, and each of
+the three gate flags is independently load-bearing (three negative controls). The **control run with
+the pre-fix `WM` key still never completes the arc.**
 
-The triple gate (`ngPlusRun ≥ 1`, `wmFirstResearcherKnown`, `entry42Written`) is not a difficulty gate — it is a comprehension gate. The arc only works if the player has the reading context for it. A first-run player at the DF stone alignment would see a math puzzle. A player who knows that Marta Eilene Vass chose this spot 200 years ago and that the battle activated her sealing mechanism sees the same stone alignment as the closing of a two-century-long plan. The information changes the object.
-
-### B. `entry42Written` as Required for `vaArchitectureKnown`
-
-`quest_va_04` cannot complete without `entry42Written`. This means a player who skipped Entry 42 (possible even in NG+ if `priorQuestMinusOne` was false) cannot be told "Entry 42 is the fourth link." The chain has only three links without it, and Benedikt does not speak. The arc is structurally incomplete — intentionally. The player who did not write Entry 42 is not yet one of the authors.
-
-### C. Two-Key `GVA` Tunnel
-
-Accepting either `Antecedent Seal` or `Froberger's Field Notes` as the tunnel key was a deliberate UX choice: a player who found the Log in the archive and consumed it to get the Seal has the Seal. A player who completed §XVI but hasn't yet opened the archive has the Field Notes. Neither path blocks tunnel access. The check uses `.some()` rather than checking a specific item.
-
-### D. Benedikt as the Chain Narrator
-
-Having Benedikt deliver the four-author synthesis (rather than a game message or the player's own journal) grounds the revelation in the social world of the game. Benedikt is the scholar who traced the chain backward: from Froberger's margin notes to the First Researcher, and now forward from the player's Entry 42 to the synthesis. He is the archivist of the archivist. His speaking the chain aloud is an institutional act — the reading circle has one more session.
-
----
-
-## IV. Post-Mortem Notes
-
-### What Worked
-
-- The retroactive mark system — placing investigation sites at nodes the player has visited since Act I — creates the strongest possible experience of the arc's core insight: she was always there. No new nodes were required. The world already contained her work.
-- The four-author chain is mechanically enforced: `vaArchitectureKnown` cannot be set without `entry42Written`. The player who is told "Entry 42 is the fourth link" has, by definition, already engaged with the act of writing Entry 42. The synthesis lands because the player has already done the thing the synthesis is about.
-- The Constructor's Log appearing as Document 4 in the existing Weimar archive modal — rather than a new interface — correctly positions the revelation as a continuation of §XVI's investigation rather than a separate arc.
-
-### What Could Be Better
-
-- ~~The five investigation sites do not highlight or indicate that they are now interactive when the player enters a qualifying node.~~ **Partially addressed 2026-07-07:** the 🏛️ Investigate button now carries an `.inv-investigate-glow` class (gold `inv-investigate-pulse` box-shadow, CSS ~line 1849) that visually distinguishes it from ordinary utility buttons on node entry. A returning player who never opens the node panel could still miss it — a map-tab marker or a "Something here looks worth examining." node-entry `storyMsg` remains a possible further improvement.
-- `vaMT` (the Mountain Pass investigation site) and the tunnel opening are logically separate actions, but both occur at `GVA`. A player investigating `GVA` before finding the Log will set `vaMT` and later return to open the tunnel — two visits to the same node for conceptually related actions. The investigation text could foreshadow the tunnel more explicitly.
-- Quest_va_04 has no explicit completion message beyond Benedikt's line. The quest panel shows `vaArchitectureKnown` as the completeFn check, but the player may not connect Benedikt's spoken synthesis to "quest complete." A small storyMsg after the setTimeout would close the loop visually.
-- The `vaArchitectureKnown` flag is also read as a text-variant condition in the dream/shard-note systems (~lines 25924, 25935), but these cross-references are not discoverable without searching the codebase. A cross-reference table in this doc or plan.md would help future maintenance.
+| Class | Result |
+|---|---|
+| `_vaSites` keys resolve in `NODE_MAP` | **5/5** |
+| `.every()` list ≡ the five site flags | exact |
+| Completion flags declared in `_S_DEFAULTS()` | **4/4** |
+| Site texts vs. birth commit `194a810` | **5/5 byte-identical** |
+| Line citations at the 2026-07-07 revision tree `0179687` | **12/12 exact** (`_vaReady` 30234, `_vaSites` 30235–30241, quests 10727–10758, flags 22202–22203, modal 26563, Log read 26619–26630, tunnel 30273–30288, Benedikt 30296–30302, ending 27014 / 27033–27043, Pilgrim 25381, CSS 1849) |
+| Quoted strings verbatim | **4/4** (Log Entry 7, the payoff line, Benedikt's synthesis, the addendum) |
+| Cell primacy of the five sites | **5/5 primary** (416 nodes / 244 cells / 172 non-primary, corpus figure reproduced) |
 
 ---
 
-## V. File References
+## V. Spec → Shipped Deltas
 
-*(Line numbers current as of the 2026-07-07 revision; the file grows, so treat them as anchors — grep the symbol if a number has drifted.)*
+Both directions. A claim that did not hold is corrected here and kept, not deleted.
 
-| File | Location | Content |
-|------|----------|---------|
-| `roll2hit-v3.html` | Lines 10727–10758 | quest_va_01 through quest_va_04 QUEST_DB entries (UQF-1.0; `itemChain` grants Log+Seal at 10738) |
-| `roll2hit-v3.html` | Lines 22202–22203 | Void Archaeology state flags in `_S_DEFAULTS()` |
-| `roll2hit-v3.html` | `_storyWmArchiveModal()` ~26563; Log read ~26619–26630 | Document 4 (Constructor's Log) |
-| `roll2hit-v3.html` | Lines 27013–27043 | Fifth ending Sweelinck question + victory screen addendum |
-| `roll2hit-v3.html` | ~Lines 30232–30303 | `[INVESTIGATE]` block — gate, `_vaSites` (5 sites, `NUE` fix), MT/`GVA` tunnel, quest chain |
-| `roll2hit-v3.html` | ~Line 1849 | `.inv-investigate-glow` button-highlight CSS (added 2026-07-07) |
-| `roll2hit-v3.html` | Line 25381 | Pilgrim NPC — `GVA` tunnel foreshadow |
-| `plan.md` | §XVII / UI gaps row | Original design directive + 2026-07-07 close |
-| `project_open_gaps` (memory) | "Undocumented UI behaviors" | `[INVESTIGATE]` root-cause + fix record |
-| `lab-report-weimar-scholar-gate.md` | §II.C | `wmFirstResearcherKnown` origin — prerequisite for §XVII |
-| `lab-report-ng-plus-remembrance.md` | §II.D | `entry42Written` origin — required for `vaArchitectureKnown` |
-| `lab-report-void-shaman.md` | §II | `GVA` tunnel extended use in §XXI — Warden encounter |
+| # | Report said | HEAD says | Verdict |
+|---|---|---|---|
+| 1 | `quest_va_04` reward: *"narrative only"* | `{ kind:'reward', gold:500 }` plus a `_legacy_fn` annotating *Benedikt's Annotated Copy* | **Wrong when written.** `reward:500` is present at the birth commit `194a810` and unchanged since. `story.md:1640` had it right the whole time |
+| 2 | *"Quest_va_04 has no explicit completion message beyond Benedikt's line"* | `onComplete` ends with `📙 +500gp. The Architecture is known. The chain holds.` | **Wrong when written** — same line, same tree |
+| 3 | *"The Constructor's Log is discoverable in two ways… both paths converge"* | One discovery path. `quest_va_02` completes **on** `vaLogFound`, whose only writer is the archive modal, so its `itemChain` can only run after the Log is already in inventory — and `if (s.once !== false && inv.some(i => i.name === s.name)) break;@26176` makes the re-grant a no-op | **Corrected.** Harmless, but it is one path with an idempotent echo, not two |
+| 4 | The block lives *"inside `storyRender`"* | `_nodeHookVoidArchaeology(node) {@31620`, a registered `NODE_HOOKS` entry | **Stale, by design** — §VM-01-G2 moved it verbatim 2026-07-28 |
+| 5 | *"read… in the dream/shard-note systems"* | Both reads are `INN_DREAMS` conditionals (`TLL` and `NUE`); the shard-note flag is a neighbouring row, not a reader | **Corrected** |
+| 6 | §VI: four keys survived *"because the site text was re-authored"* | The texts were **never** re-authored — all five are byte-identical from birth to HEAD | **Corrected.** See §VI |
+| 7 | §IV: the sites *"do not highlight"* | Fixed 2026-07-07; `.inv-investigate-glow` is live at HEAD | **Closed** |
+| 8 | §IV: *"a cross-reference table… would help"* | `index.md` State Fields lists all nine flags; `story.md:1632–1642` carries the full layer record | **Closed** (with a caveat — §VIII row 3) |
+| 9 | §E: *"NG+ **is** supported"* | `const savedPriorQuestMinus1@24027` and neighbours: `ngPlusRun` is incremented, six fields survive the reset | **Holds** |
 
 ---
 
-## VI. Addendum — 2026-07-07 Arc-Blocking Bug Fix
+## VI. The 39-Day Outage — a dead node code in a five-entry map
 
-### A. Symptom
+**Symptom.** `[INVESTIGATE]` sat on the open-gaps list as *"documented as not working; root cause
+unknown."* A qualifying player could collect some marks and the arc never closed.
 
-`[INVESTIGATE]` was on the open-gaps list as "buttons do not highlight on node entry — documented as not working; root cause unknown." A qualifying NG+ player could investigate some marks but the arc never closed.
+**Cause, measured.** At the birth commit `194a810` (2026-05-25) all five `_vaSites` keys were the
+logical codes `CI/SL/DF/WM/MT`. On **2026-05-29 22:45**, commit `c1d5a94` (*"story books"*) swept
+four of them to the new world's codes and **left `WM` alone**. It is a single missed token in a
+five-line object literal, and the site text beside it is byte-identical before and after — so the
+report's own explanation (*"the site text was re-authored"*) is not what happened; nothing was
+re-authored, one key was skipped.
 
-### B. Root Cause — a dead node code
+**Blast radius.** `_vaSites[node.code]` never matched at `NUE`, so the button never rendered, `vaWM`
+could never be set, `vaAllMarksFound` could never fire, and `quest_va_02`, `quest_va_03` and
+`quest_va_04` — the Log, the tunnel, the chain and the fifth ending — were all unreachable. **The
+back half of the arc was dead for 39 days**, and this document's own tables still said `WM`, so
+nobody had a reason to look.
 
-The `_vaSites` map keyed its five sites by node code. Four keys (`CI/SL/DF/MT` in original terms) survived the §WALK/§NAV world rewrite as their renamed equivalents *because the site text was re-authored*, but the fifth key was left as the **logical** code `WM` — which is not a node code in the current graph. The Weimar archive / lower archive is node **`NUE`** (Scholar's Quarter — the archive *is* the Quarter). So `_vaSites[node.code]` never matched at `NUE`:
+**Fix (`0179687`, 2026-07-07).** One token, `WM:` → `NUE:`, plus the `.inv-investigate-glow` class.
 
-- the 🏛️ Investigate button never rendered there,
-- `vaWM` could never be set,
-- `vaAllMarksFound` (requires all five of `vaCI/vaSL/vaDF/vaWM/vaMT`) could never fire,
-- and therefore **`quest_va_02`, `quest_va_03`, and `quest_va_04` were all unreachable** — the entire back half of the arc (Constructor's Log → sealed tunnel → four-author chain → fifth ending) dead-ended.
+**The class is now fenced.** `check:noderegs` phase 5 (§AUDIT-03p, 2026-08-04) reads *function-local*
+object literals whose keys are all code-shaped, and `_vaSites` is classified explicitly:
+`scripts/check-noderegs.js:'_vaSites'@80`. A dead node code in this map is now a CI failure. *The
+defect that took 39 days to notice would now take one push.*
 
-This is a textbook consequence of a doc/code node-code drift: the report's own tables still said `WM`, so nobody caught that the code no longer resolved.
+---
 
-### C. Fix
+## VII. Reachability — the finding this report could not make about itself
 
-1. **`_vaSites` key `WM:` → `NUE:`** (one token). All five sites now resolve to real nodes (`LHR/BMA/ZRH/NUE/GVA`); `vaWM` becomes settable and the five-mark completion fires.
-2. **Button highlight** — added `.inv-investigate-glow` (gold `inv-investigate-pulse` box-shadow, CSS ~line 1849) to the 🏛️ Investigate button so it stands out from ordinary utility buttons on node entry (partially closing §IV.B's first "What Could Be Better").
+The arc is correct. It is also, at HEAD, **unreachable in normal play**, for two independent reasons
+that both sit upstream of everything above.
 
-### D. Verification
+**(1) `wmFirstResearcherKnown` has no writer that is not its own consequence.** The flag's only
+writer is `set:['wmFirstResearcherKnown'] }, { kind:'reward', gold:300 }@11107`, inside the
+`onComplete` of the very quest whose completion condition is
+`completion:{ flags:['wmFirstResearcherKnown'] }@11106`. The quest cannot complete until the flag is
+set, and nothing else sets it. Tracked as **§AUDIT-03au** (the fix is one line, and the quest's own
+hint says where the grant belongs). `_vaReady` inherits the block whole.
 
-- Whole inline script re-parses clean (0 syntax errors).
-- All five `_vaSites` keys confirmed to be real node codes; the completion `.every([...])` list confirmed to match the five site flags exactly.
-- Hermetic simulation of the click-handler completion path: visiting `LHR/BMA/ZRH/NUE/GVA` sets all five flags → `vaAllMarksFound = true` → `quest_va_02` activates → payoff message fires. A control run with the old `WM` key confirms the arc *never* completed pre-fix.
+**(2) `entry42Written` sits behind a browser console.** The chain, measured end to end:
 
-### E. Side-correction — NG+ *is* supported
+| # | Requirement | Where it comes from |
+|---|---|---|
+| 1 | Level 20 at `TLS` | `when:st => (st.level || 1) >= 20 && !st.questMinusOne@31382` — Layer 49's "Quest −1" disclosure panel |
+| 2 | `questMinusOne` | **The player types `S_story.questMinusOne = true; storyAutoSave();@31410` into a browser console.** That string literal is the flag's only writer in 38,712 lines |
+| 3 | Start NG+ | `ngPlusRun` +1; `questMinusOne` carries over as `const savedPriorQuestMinus1@24027` |
+| 4 | ≥3 preserved Dear Friends | `if (_e42Dear >= 3) {@34640` — an undocumented fourth gate (**§AUDIT-03ah**) |
+| 5 | Stand at `LHR`, click either button | `S_story.entry42Written    = savedEntry42Written;@24033` then keeps it forever |
+| 6 | Re-earn `wmFirstResearcherKnown` in the new run | blocked by (1) |
 
-While tracing the gate, confirmed that `S_story.ngPlusRun` **is** incremented at the NG+ restart (~line 22970), so `_vaReady`'s `ngPlusRun >= 1` term is reachable. An earlier memory note (§GR-D) claimed "NG+ tracking is currently unsupported" — that was wrong and has been corrected. This arc, the Entry 42 write-prompt, and the fifth ending are all live for a qualifying NG+ run.
+Step 2 is deliberate *for Quest −1* — *"Level 21 is undefined. That is not a bug. That is the
+door… The game will not know whether you earned it. That is also intentional."* Nothing suggests it
+was meant to become the load-bearing precondition of an entire NG+ layer and the game's best ending.
+**That transitive consequence is the design call in §VIII row 1.**
+
+Downstream of this arc, `node.code === 'GVA' && S_story.vsShamanKnown@31696` — Layer 56's Warden
+encounter — needs `vaLastWardVisited`, so it is blocked here *and* separately by §AUDIT-03x/§DOC-02an.
+
+---
+
+## VIII. Defects Filed
+
+| Row | Weight | Summary |
+|---|---|---|
+| **§AUDIT-03bh** | 🟡 | **The self-satisfying completion flag is a class, not an incident.** 23 of 2,853 quests write a flag in `onComplete` that their own `completion` gates on; for **five** of them that write is the flag's *only* writer, so the quest can never complete. `quest_muffat_02` → `quest_muffat_03` → `quest_signal_01` → `quest_antecedent_01` is a **four-quest cascade behind one deadlock**, on primary nodes, with no other cause. Wants a `check:questgraph` phase. §AUDIT-03au is member 1; do not duplicate its fix |
+| **§AUDIT-03bi** | 🟡 | **A browser console is a load-bearing precondition of a layer and an ending** (§VII, step 2). Design call: grant `questMinusOne` on the L20 Void Warlord kill *in addition to* the console route, or drop `priorQuestMinusOne` from the Entry 42 gate, or document it honestly |
+| **§DX-02cw** | 🟢 | **`index.md` is classified HISTORY in `scripts/legacy-codes.js`**, so its State Fields quick reference — the table `prompt.md` tells you to look constants up in — is exempt from gate #16 by classification rather than by blind spot. Five Void rows still describe the marks as *"found at CI/SL/DF/WM/MT"* |
+
+**Corroborated, not re-filed** (instrument 7): §AUDIT-03au · §AUDIT-03ah · §AUDIT-03u (the Quest −1
+panel's stale literals — 16,024 lines, 423 monsters, 67 terrains, and a `plan.md` that no longer
+exists) · §DX-02m (`S_story.frobergerNoteNode = _ebPool@24043` draws the unseeded stream) ·
+§AUDIT-03x/§DOC-02an (Layer 56, and `quest_tl_01`'s `STN` non-primacy).
+
+**Doc sync in this increment:** `world.md`'s Void Archaeology section still read ⚠️ PLANNED while
+`story.md:1632` read ✅ Implemented — corrected, the §XVI repair repeated one layer down.
+
+---
+
+## IX. File References
+
+*(HEAD line numbers, 2026-08-17. Anchors resolve by symbol — `npm run anchors` audits them.)*
+
+| Location | Content |
+|---|---|
+| `_nodeHookVoidArchaeology(node) {@31620` | The whole hook: gate, five sites, tunnel, quest activation, Benedikt |
+| `id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA']@34192` | `NODE_HOOKS` registration |
+| `quest_va_02: { id:'quest_va_02'@11136` | Quest chain, UQF-1.0 (`quest_va_01`–`_04`) |
+| `vaCI: false, vaSL: false, vaDF: false, vaWM: false, vaMT: false,@23133` | The nine state flags |
+| `_storyWmArchiveModal(wrap) {@27809` | Document 4 |
+| `sweelinckQ = '"What was inside the cage?"'@28270` | Fifth ending question + addendum |
+| `.inv-investigate-glow {@1939` | Button highlight (2026-07-07) |
+| `story.md:1632` · `world.md:241` | Maintained home docs — the layer record and the arc summary |
+| `lab-report-weimar-scholar-gate.md` | `wmFirstResearcherKnown` origin — §XVI, the prerequisite |
+| `lab-report-ng-plus-remembrance.md` | `entry42Written` origin — Entry 42 |
+| `lab-report-void-shaman.md` | §XXI — the `GVA` tunnel's second tenant |
+
+---
+
+## X. Conclusion
+
+Layer 52 is the strongest survival result the Void family has produced: 82 days, one total world
+re-coordinate, one UQF format migration and one hook extraction later, every constant, string and
+control-flow branch is where this document says it is, and its own acceptance test still passes
+39 for 39. The three corrections in §V are all sentences the author *composed* rather than *copied* —
+a reward summarised from memory, a discovery path reasoned about rather than traced, and a cause
+narrated rather than diffed. The tables were right; the prose about the tables was not.
+
+The lesson worth keeping is §VI's. A five-entry object literal lost one key in a bulk rename and
+took the back half of an arc with it for thirty-nine days, silently, while this report's own tables
+agreed with the broken code. Nothing in the engine threw. The fix was one token. **The fence that
+now makes it impossible arrived two months later and cost less than the outage did** — which is the
+argument for classifying a registry the day you write it, not the day it breaks.
+
+And the arc is still waiting. She sealed the tunnel from the inside; we sealed it again, twice, from
+the outside — once with a missing key, once with a flag that grants itself.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
