@@ -1,169 +1,289 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
 # Lab Report — §KG Increment 3: The Corridor Quest Chain
-### An 11-quest honor-central on-ramp anchored to the five St. Petersburg → Moscow NPCs
-**Date:** 2026-07-08
-**Project:** roll2hit.com — §KG low-level content band (L1→~L6)
-**Scope:** Increment 3 of 3 — **the quests**. Eleven UQF-1.0 side quests + one small *generic, reusable* counter mechanic. No new nodes, monsters, or terrains (all shipped in Inc 2).
-**Predecessors:** §KG-01 ✅ (Hunt Mode + `_monsterLevel`, `8168f0e`) · §KG Inc 2 ✅ (the zones, `65d65c0` + `dde78ca`).
 
-> **Lab-report policy trigger:** *new narrative theme or arc — a quest chain spanning 3+ nodes, a new NPC arc.* This is the whole §KG story layer; it gets its own gate per the Inc 2 report's explicit hand-off ("Increment 3 is a separate lab-report-gated block").
+### An eleven-quest honour-central on-ramp anchored to the five St. Petersburg → Moscow NPCs
 
----
-
-## 1. CONCEPT
-
-Inc 2 built the corridor as a place: five zones, six training-tier bots, five NPCs who each say one line. Inc 3 gives those five people something to *ask* — a chain of small, honorable jobs that walks a fresh Level-1 fighter east from the Nevsky Checkpoint to the dead station outside Moscow, and delivers them to the real game at roughly Level 6.
-
-This is the **Birka technique, transplanted east** (`lab-report-birka-beginner-arc.md`): the arc does not gate the main quest, it runs *alongside* it. The player can skip every quest here — Free-Movement is absolute (plan.md §Free-Movement / §Mission-Gating: a `gate` defers a mission's *listing*, never a step). The band is *offered* to a low-level player via Hunt Mode + level-scaled pools; a Level-20 returner walks it in five minutes and is bored, which is fine.
-
-What the chain adds over raw grinding is the same thing Birka adds: **names and a spine**. The spine is honor. Every job is framed as a *sanctioned bout* or an *honest delivery*, never a mugging — Volkov's cover story ("you fight who they match you against, nothing more"), Roshkova's drill ("a cadet who cannot lose cleanly cannot win cleanly"), Grimka's clean card ("no poison, no ganging — you lose, you lose standing up"), Iosif's chair, Lena's quiet line to Station 7. The reward for finishing is not the XP (the grinding gives that); it is that five people in a Soviet-cyberpunk steppe know your name by the time you reach the dark station.
-
-The chain also **seeds the existing SVO / Station-7 thread** at its tail (Lena: *"the line to Station 7 runs quiet these days — something out there stopped answering"*), handing a now-capable player off to content that already exists.
+**Authored** 2026-07-08 · **Shipped** `d6aeefd` · **Verified against HEAD** 2026-08-18 (§DOC-02cb)
+**Class** design lock, pre-implementation. Its only commit *is* its ship commit, so all line citations were re-read at the parent build `dde78ca` as well as at HEAD; the report was never amended.
+**Scope as authored** Increment 3 of 3 — eleven UQF-1.0 side quests + one reusable counter. No new nodes, monsters or terrains (Inc 2 shipped those).
+**Predecessors** §KG-01 Hunt Mode + `_monsterLevel` (`8168f0e`) · §KG Inc 2 the zones (`65d65c0`, `dde78ca`).
 
 ---
 
-## 2. THE FIVE ANCHORS — resolved `npc` keys (LOCKED)
+## ABSTRACT
 
-A quest's `npc` field must resolve against the giver node per the audit rule (`wbapi-core.js` ~L797): `node.npc.toLowerCase().replace(/\s/g,'_') === q.npc`. The Inc-2 nodes carry npc **display names**, so the quest keys are the slugified forms — verified against live node data:
+The specification was executed with unusual fidelity: 11/11 quests with the locked `npc` keys,
+gates, completion shapes, XP and gold byte-for-byte as tabled; all five anchor nodes as assumed; all
+six monster `AC·maxHP` products exact; the three engine edits verbatim.
 
-| Node | Label | `node.npc` (display) | **Quest `npc` key (locked)** | Role in the chain |
-|------|-------|----------------------|------------------------------|-------------------|
-| SPB | Nevsky Checkpoint | Recruiter Volkov | `recruiter_volkov` | Cover story / enlistment |
-| KMS | Komsomol School | Commissar-Instructor Roshkova | `commissar-instructor_roshkova` | The drill (spar + lose cleanly) |
-| ZVD | Gulag Gladiator Zavod | Pit-Master Grimka | `pit-master_grimka` | Honor duels (clean card) |
-| FBR | The Skill Fabrika | Technician Iosif | `technician_iosif` | Jack-in deliveries + sim capstone |
-| TVR | Rzhev Transit Waystation | Quartermaster Lena | `quartermaster_lena` | Resupply + road to Station 7 |
+It still fails as a description of a playable feature, for two independent reasons — **the counter
+it introduced has no writer** (§IV), and **the XP model justifying its pacing is arithmetically
+wrong, against the design** (§VI). The first blocks 19 quests across three arcs; the second lands
+the band at Level 5.
 
-> Hyphens survive slugification (`replace(/\s/g,'_')` touches whitespace only): `commissar-instructor_roshkova`, `pit-master_grimka` are correct as written. **Verify each with `./api.sh advise <quest_id>` after authoring** — a mismatch surfaces as `npc "…" not found in BIRKA_NPC or NODE_MAP`.
-
----
-
-## 3. THE CHAIN — 11 quests, W→E, honor-central (LOCKED)
-
-Sequenced by `gate` (mission *listing*, never movement). Each quest lists at its `activateNode` once the prior link's flag/`questsDone` is satisfied. Types vary per the Inc-2 brief ("deliveries / talk / cull-3 / mini-boss"): **4 cull · 3 delivery · 2 mini-boss duel · 2 skill-check**.
-
-| # | id | Node · NPC | Type | Completion (exact shape) | Gate | Reward (xp/gold + item) |
-|---|-----|-----------|------|--------------------------|------|--------------------------|
-| 1 | `quest_kg_01` | SPB · Volkov | cull | `countMin:[{path:'monsterKills.sparring_droid',min:3}]` | `{}` | 120 / 30 · **Guild Enlistment Papers** (mission_bit) → flag `kgEnlisted` |
-| 2 | `quest_kg_02` | SPB · Volkov | delivery | `itemsAll:['Sealed Recruit Manifest'], atNode:'KMS'` | `{flags:['kgEnlisted']}` | 150 / 0 → flag `kgManifestDelivered` |
-| 3 | `quest_kg_03` | KMS · Roshkova | cull | `countMin:[{path:'monsterKills.komsomol_cadet',min:4}]` | `{flags:['kgManifestDelivered']}` | 200 / 40 · **Red Star Pin** |
-| 4 | `quest_kg_04` | KMS · Roshkova | skill_check | WIS/Insight **DC 10** ("lose cleanly") | `{questsDone:['quest_kg_03']}` | 180 / 0 → flag `kgFormsPassed` |
-| 5 | `quest_kg_05` | ZVD · Grimka | mini-boss duel | `countMin:[{path:'monsterKills.gladiator_bot',min:1}]` | `{flags:['kgFormsPassed']}` | 250 / 50 · **Bout Token** → flag `kgFirstBout` |
-| 6 | `quest_kg_06` | ZVD · Grimka | cull | `countMin:[{path:'monsterKills.gladiator_bot',min:3},{path:'monsterKills.zavod_sparbot',min:3}]` | `{questsDone:['quest_kg_05']}` | 300 / 60 · **Clean-Card Trophy** |
-| 7 | `quest_kg_07` | ZVD · Grimka | delivery | `itemsAll:['Stripped Reactor Core'], atNode:'FBR'` | `{questsDone:['quest_kg_06']}` | 220 / 0 → flag `kgCoreDelivered` |
-| 8 | `quest_kg_08` | FBR · Iosif | cull | `countMin:[{path:'monsterKills.fabrika_enforcer',min:3}]` | `{flags:['kgCoreDelivered']}` | 250 / 50 · **Cortex Shunt** |
-| 9 | `quest_kg_09` | FBR · Iosif | mini-boss duel | `countMin:[{path:'monsterKills.trainer_bot_prime',min:1}]` | `{questsDone:['quest_kg_08']}` | 400 / 80 · **Prime Core** → flag `kgSimCleared` |
-| 10 | `quest_kg_10` | TVR · Lena | delivery | `itemsAll:['Certified Skill-Chit'], atNode:'TVR'` | `{flags:['kgSimCleared']}` | 220 / 40 · **Field Ration** (heal consumable) |
-| 11 | `quest_kg_11` | TVR · Lena | skill_check | INT/Investigation **DC 12** ("why the line went quiet") | `{questsDone:['quest_kg_10']}` | 500 / 100 → flag `kgCorridorCleared` |
-
-**Delivery items** follow the established §MATH-01 pattern (memory: *collect-at-node = node.loot + itemsAll/atNode*):
-
-- `kg_02` **Sealed Recruit Manifest** — set as **SPB `node.loot`** (picked up when the player is at SPB, where the quest activates), completed by carrying it to KMS. `atNode:'KMS'`.
-- `kg_07` **Stripped Reactor Core** — granted on `kg_06` completion via `onComplete` `itemChain:[{action:'grant',…}]` (Grimka hands you the decommissioned core), completed at FBR. `atNode:'FBR'`.
-- `kg_10` **Certified Skill-Chit** — granted on `kg_09` completion (Iosif certifies you), completed at TVR (the giver node = the delivery node; Lena stamps it). `atNode:'TVR'`.
-
-> **Delivery-item note:** `itemsAll` completion checks the item is in inventory *at the node* — it does not consume it. Where the narrative wants the item "handed over," the `onComplete` narrative says so and a later `itemChain:[{action:'take',…}]` (or leaving it as a keepsake) is a per-quest call; default is keepsake (no consume), matching the low-friction beginner tone.
-
-**Mini-boss duels reuse the Inc-2 node card battles.** ZVD's card battle is `{key:'gladiator_bot',count:1}` and FBR's is `{key:'trainer_bot_prime',count:1}` — winning a node card battle runs through the same battle-win handler (L24291) that increments the kill counter, so `kg_05`/`kg_09` complete off the card fight **or** off any wild encounter of that key. No new EPIC_BATTLES / `completion.battles` entries are needed (unlike the cat chain's `CQ_TAZ`) — the count-based completion is simpler and doubles as a Hunt-Mode grind path.
+The design is sound and the authoring disciplined. What was never checked is whether anything in the
+engine could satisfy the completion clause the design depends on.
 
 ---
 
-## 4. THE ONE NEW MECHANIC — a generic `monsterKills` counter (reusable)
+## I. INTENT — WHAT THE FEATURE IS FOR
 
-The chain needs per-monster kill quotas. The **only** existing per-monster kill counter is `S_story.catKills`, incremented at **L24291-24292** and read by the killGoals HUD at **L29566** — both hard-coded to the Cat Quarter. Rather than clone a bespoke `zavodKills`/`kgKills` object (arc-specific coupling, the anti-pattern the drop/economy work kept fighting), introduce **one generic counter every arc can use**:
+*Restated from the original §1; it is the part still worth reading.*
 
-**(a) Increment — L24291 area (battle-win handler), add alongside the existing catKills line:**
-```js
-if (!S_story.monsterKills) S_story.monsterKills = {};
-S_story.monsterKills[S.opp.key] = (S_story.monsterKills[S.opp.key] || 0) + 1;
+Inc 2 built the corridor as a **place** — five zones, six training bots, five NPCs with one line
+each. Inc 3 gives those five people something to **ask**. The playability argument:
+
+- **A second front door.** roll2hit had one beginner ramp (Birka). A player who bounces off it has
+  nowhere else to be at Level 1. The corridor is a parallel L1→~L6 band with its own voice, using
+  Birka's technique transplanted east: **the arc runs alongside the main quest, never gates it.**
+- **Grinding becomes a spine.** Levelling by wandering encounters is arithmetic. The same levelling
+  framed as *Volkov signs your papers → Roshkova teaches you to lose → Grimka gives you a clean
+  card → Iosif puts you in the chair → Lena points you at the quiet line* has a destination. **The
+  reward is not the XP — the grinding already gives that. It is that five people in a
+  Soviet-cyberpunk steppe know your name by the time you reach the dark station.**
+- **Honour is load-bearing, not dressing.** Every job is a sanctioned bout or an honest delivery,
+  never a mugging. Volkov's *"you fight who they match you against, nothing more"* is the arc's
+  thesis and its lie; Roshkova's *"a cadet who cannot lose cleanly cannot win cleanly"* is **why**
+  both skill checks are `retryable` — the theme is *lose cleanly*, not *lose permanently*, and the
+  data shape follows the theme.
+- **It hands the player off.** Lena's closing line — *"the line to Station 7 runs quiet these days —
+  something out there stopped answering"* — seeds the existing SVO thread, delivering a now-capable
+  character into content that already exists.
+- **A Level-20 returner walks it in five minutes and is bored. That is correct.** Free-Movement is
+  absolute: a `gate` defers a mission's *listing*, never a step. The band is offered, never walled.
+
+Constraint accepted up front: compact scope — eleven quests, one mechanic, NPC favourability
+explicitly deferred.
+
+---
+
+## II. METHOD
+
+`git log` on the report (one commit, never amended) → line citations re-read at `d6aeefd^` → whole-
+corpus census through `js/wbapi-core.js` (`W.load` → `questDb`/`nodeMap`/monster pool; **2,853
+quests · 416 nodes · 398 monster keys** live), never a line regex → every tabled field diffed
+one quest at a time → every derived figure re-derived from shipped values, never copied →
+`git log -S "<symbol>" --all` with no pathspec on each symbol the census marked dead → and, for the
+one claim no static read can settle, **a live acceptance test in the browser** (§IV).
+
+---
+
+## III. AS-BUILT INVENTORY
+
+### A. The five anchors — all present, all resolving
+
+Audit rule: `node.npc.toLowerCase().replace(/\s/g,'_') === q.npc`
+(`js/wbapi-core.js:const norm = s => String(s).toLowerCase().replace(/\s/g,'_');@1072`). Hyphens
+survive slugification because the replace touches whitespace only — the lock said so and was right.
+
+| Node | Label | `node.npc` | Quest key | Role |
+|------|-------|-----------|-----------|------|
+| SPB | Nevsky Checkpoint | Recruiter Volkov | `recruiter_volkov` | enlistment |
+| KMS | Komsomol School | Commissar-Instructor Roshkova | `commissar-instructor_roshkova` | the drill |
+| ZVD | Gulag Gladiator Zavod | Pit-Master Grimka | `pit-master_grimka` | honour duels |
+| FBR | The Skill Fabrika | Technician Iosif | `technician_iosif` | deliveries + capstone |
+| TVR | Rzhev Transit Waystation | Quartermaster Lena | `quartermaster_lena` | resupply + Station 7 |
+
+`SPB: { num:63991, name:"soviet_checkpoint", label:"Nevsky Checkpoint"@9390` still carries
+`loot:"Sealed Recruit Manifest"`. Card battles exact:
+`battle:{"label":"Honor Duel — Rusted Gladiator Bot","key":"gladiator_bot"@9394` and the FBR twin on
+`trainer_bot_prime`.
+
+### B. The chain — 11/11 shipped to the lock
+
+Head: `quest_kg_01: { id:'quest_kg_01', type:'side', schema:'UQF-1.0'@13569`.
+
+| # | id · giver | Completion | Gate | XP/gold → flag or item |
+|---|-----------|-----------|------|------------------------|
+| 1 | `kg_01` SPB Volkov | `countMin monsterKills.sparring_droid ≥3` | `{}` | 120/30 → `kgEnlisted` |
+| 2 | `kg_02` SPB Volkov | `itemsAll [Sealed Recruit Manifest] @KMS` | `kgEnlisted` | 150/0 → `kgManifestDelivered` |
+| 3 | `kg_03` KMS Roshkova | `countMin komsomol_cadet ≥4` | `kgManifestDelivered` | 200/40 · Red Star Pin |
+| 4 | `kg_04` KMS Roshkova | WIS/Insight **DC 10** | `questsDone kg_03` | 180/0 → `kgFormsPassed` |
+| 5 | `kg_05` ZVD Grimka | `countMin gladiator_bot ≥1` | `kgFormsPassed` | 250/50 → `kgFirstBout` |
+| 6 | `kg_06` ZVD Grimka | `countMin gladiator_bot ≥3 ∧ zavod_sparbot ≥3` | `questsDone kg_05` | 300/60 · Clean-Card Trophy |
+| 7 | `kg_07` ZVD Grimka | `itemsAll [Stripped Reactor Core] @FBR` | `questsDone kg_06` | 220/0 → `kgCoreDelivered` |
+| 8 | `kg_08` FBR Iosif | `countMin fabrika_enforcer ≥3` | `kgCoreDelivered` | 250/50 · Cortex Shunt |
+| 9 | `kg_09` FBR Iosif | `countMin trainer_bot_prime ≥1` | `questsDone kg_08` | 400/80 → `kgSimCleared` |
+| 10 | `kg_10` TVR Lena | `itemsAll [Certified Skill-Chit] @TVR` | `kgSimCleared` | 220/40 · Field Ration `heal:20` |
+| 11 | `kg_11` TVR Lena | INT/Investigation **DC 12** | `questsDone kg_10` | 500/100 → `kgCorridorCleared` |
+
+Mix as specified: **4 cull · 3 delivery · 2 duel · 2 skill_check**. All eleven `schema:'UQF-1.0'`,
+zero `_legacy_fn`. The `type` field carries `'side'` for nine and `'skill_check'` for two; the other
+labels are the report's prose taxonomy, not engine values.
+
+### C. The mechanic — three edits, all present
+
+- **Default** — ✅ verbatim: `catKills: {}, monsterKills: {}, catKingDefeated: false,@23120`
+- **Increment** — ✅ verbatim, and inert (§IV):
+  `S_story.monsterKills[S.opp.key] = (S_story.monsterKills[S.opp.key] || 0) + 1;@25345`
+- **HUD read** — ✅ verbatim, back-compat preserved:
+  `const k = S_story[q.killCounter || 'catKills'] || {};@30759`
+
+`catKills` is untouched behind its eight-key whitelist. The structural claim — *one generic counter,
+not a per-arc clone* — is architecturally sound and remains the right call.
+
+---
+
+## IV. THE BLOCKING DEFECT — `S.opp.key` HAS NO WRITER
+
+`S.opp` is declared with `adv · condition · cond · tier · hp · maxHp · dmgMod` and **no `key`**. The
+combat loader assigns the monster key to the other half of the pair —
+`S.enemy.key      = m.key;@8148`. Across the whole file `S.opp.key` has **four read sites and zero
+write sites**, and `git log -S "catKills[S.enemy.key]" --all` returns **no commit, ever**. The guard
+at `if (S.opp && S.opp.key) {@25342` has been false since the line was written.
+
+**Live acceptance test** (Playwright, real page, no mocks): load the game, call
+`loadWorldMonster(MONSTER_POOL.sparring_droid)`, zero both counters, run `_storyBattleVictory()`.
+
 ```
-Fires on **every** battle win (wild encounter, Hunt-Mode encounter, or node card battle), keyed by `S.opp.key`. `catKills` stays untouched (cat quests unchanged); `monsterKills` is a superset going forward.
-
-**(b) Default — `_S_DEFAULTS()`:** add `monsterKills: {}` next to `catKills: {}` (L22294) so fresh loads and the save schema carry it (§STATE-INIT rule: `_S_DEFAULTS()` is the single source of truth).
-
-**(c) killGoals HUD — L29566:** the live "Stray 2/5" progress chip currently reads `S_story.catKills`. Generalize to read the quest's declared counter, defaulting to `catKills` for back-compat:
-```js
-const counter = S_story[q.killCounter || 'catKills'] || {};
+S.enemy.key = "sparring_droid"        S.opp.key = undefined
+S_story.monsterKills = {}             S_story.catKills = {}
 ```
-§KG quests set `killCounter:'monsterKills'` (+ `targetMonsterKeys`/`killGoals` mirrors of the `countMin` paths, exactly as the cat quests carry them) so the same HUD renders "Sparring Droid 2/3" for the corridor. Cat quests omit `killCounter` → unchanged.
 
-**`completion.countMin` already reads arbitrary dotted paths** (`resolvePath('monsterKills.sparring_droid')`, per the QuestRuntime resolver used by `catKills.beefy_tom` etc.) — no completion-engine change; only the counter's existence, default, and the HUD read are new. **This is the entire mechanical footprint of Inc 3.**
+A full battle victory increments nothing.
 
-*Non-goal for Inc 3 (explicitly deferred):* an NPC **favorability** layer (the Birka `npcFavorability` friendly/dear-friend shift). The audit only requires `npc` resolve to a node — the chain is complete without a favor system, and the five NPCs already carry signature lines. A favor pass can be a clean follow-up; folding it in now would break the "compact" scope the user set.
+**Blast radius.** Both arc heads (`quest_kg_01`, `quest_cat_01`) gate on `{}` and both are
+uncompletable, so each chain severs at its first link. `frCatKillCount` and the Vincenzo's Net grant
+sit under the same guard, taking §GR's payoff with them.
 
----
+| Arc | Counter-gated | Transitively blocked |
+|-----|--------------|---------------------|
+| §KG corridor | 6 | **11** — the whole chain |
+| Ally Cat / Layer 44 | 5 | **7** — the whole arc |
+| §GR La Riva | 1 | **1** — `quest_la_riva_02`, the payoff |
+| **Total** | **12** | **19** |
 
-## 5. NPC VOICE — expanding the five anchors
+**Age.** `catKills[S.opp.key]` was born in the Ally Cat arc's own commit `4090c82` (2026-05-25); the
+§KG chain copied the idiom 44 days later. Neither has ever incremented in live play.
 
-Inc 2 gave each NPC one signature `NPC_DIALOGUE` line. Inc 3 does **not** require a full three-state dialogue tree (that's the deferred favor layer) — the quest `desc`/`hint`/`disposition`/`passText`/`failText` fields carry the voice, exactly as the cat and Birka chains do. Each quest's `disposition` is the NPC speaking in-character at hand-off; each `passText` is the honorable close. House style: concrete, present-tense, honor shown-not-told, ≤ the length of the cat-chain exemplars.
+**Why no gate caught it.** `check:questgraph` registers counters as resources —
+`scripts/check-questgraph.js:out.resources.add('count:' + c.path.split('.')[0])@252` — then
+classifies every `countMin` clause *monotone-satisfiable* because a counter only goes up. True, and
+irrelevant: **a counter that never moves is monotone too.** The written-by-nothing detector covers
+flags, not counters.
 
-Representative dispositions (full text drafted at build, one per quest):
+**Why no test caught it.** `tests/integration/kg-quest-chain.test.js` is a good test of the wrong
+half: it sets `tests/integration/kg-quest-chain.test.js:S_story.monsterKills = {@62` by hand, then
+proves `QuestRuntime.canComplete` honours it. The reader was verified; the writer never was.
 
-- **kg_01 · Volkov:** *"Three droids, clean. The Guild does not sign softness. You fight who we match you against — that is the honor of it, and you just earned your papers."*
-- **kg_04 · Roshkova:** *"You lost the third form and you lost it *straight* — no excuse, no flinch. A cadet who cannot lose cleanly cannot win cleanly. The School corrects you. It does not judge you. Go east."*
-- **kg_05 · Grimka:** *"These bots were gladiators before the Zavod stripped their reactors. We fight them with honor because they fought us with it. One bout down. No poison, no ganging. You lost nothing standing up."*
-- **kg_09 · Iosif:** *"The regulator failed and the Trainer-Bot fought you at full — a sim overload, the chair writing faster than it reads. You held. Half the district is still in that chair. You walked out. Prime Core is yours."*
-- **kg_11 · Lena:** *"You read it right — the line to Station 7 didn't break, it *stopped answering*. Something out there chose the quiet. Refill, resupply, and go see. You're not a recruit anymore; you're whatever the east makes."*
+**The fix is one identifier, four times:** `S.opp.key` → `S.enemy.key`. Filed as **§DX-02cy**.
 
----
-
-## 6. XP ECONOMY — tuned to land the player at ~L6 (5,500 cumulative)
-
-`XP_LEVELS` (L23470): L6 = **5,500** cumulative. Battle XP = `AC·maxHP` per kill (Inc-1/Inc-2 metric). The chain is tuned so **quest-completion XP + the battle XP from the quotas** clears L6 with margin (over-kill from Hunt-Mode grinding is upside, never required):
-
-- **Quest-completion XP** (sum of the reward column): 120+150+200+180+250+300+220+250+400+220+500 = **≈ 2,990 XP**.
-- **Battle XP from the quotas** (per-kill AC·HP × quota):
-  sparring_droid 3×45 = 135 · komsomol_cadet 4×96 = 384 · gladiator_bot ≥4×196 ≈ 784 (kg_05 ≥1 + kg_06 ≥3) · zavod_sparbot 3×130 = 390 · fabrika_enforcer 3×208 = 624 · trainer_bot_prime 1×390 = 390 → **≈ 2,707 XP**.
-- **Total ≈ 5,697 XP** on the minimum path → just past L6, before any Hunt-Mode over-kill or the two skill-check quests' incidental fights. Gold ≈ 550 across the chain funds beginner gear.
-
-If a smoke test shows the minimum path landing short of 5,500, the lever is the two capstone rewards (kg_09 400→450, kg_11 500→600) — cull quotas stay as authored so the *pacing* (not the arithmetic) drives level-up.
-
----
-
-## 7. DATA-SHAPE SUMMARY (the lock)
-
-| Artifact | Location | Count | Method |
-|----------|----------|-------|--------|
-| Quests | QUEST_DB (near the other side-quest blocks) | 11 | `./api.sh post quest` (nodes/quests are API-clean) + field PUTs; `_legacy_fn`-free (pure UQF descriptors) |
-| Delivery item on node.loot | SPB `node.loot` | 1 | `./api.sh put node SPB loot=…` (or direct if the API can't express the loot object) |
-| `monsterKills` increment | battle-win handler L24291 | 1 block | direct HTML edit (JS logic — server stopped first per Hazard #1) |
-| `monsterKills` default | `_S_DEFAULTS()` L22294 | 1 field | direct HTML edit |
-| killGoals HUD generalization | L29566 | 1 line | direct HTML edit |
-
-**Skill-check quests (kg_04, kg_11):** authored as `type:'skill_check'` with a `bits:[{kind:'skill_check', stat, skill, dc, onPass:[…], onFail:[…]}]` descriptor array — pure UQF, no `_legacy_fn` (the sb_parley shape at L12278 is the reference, minus the legacy closure). `retryable:true` for a beginner-friendly ramp (the honor theme is "lose cleanly," not "lose permanently").
-
-**No changes to:** monsters, terrains, nodes (beyond SPB.loot), the mover, the road net, Hunt Mode, `_monsterLevel`, or the completion engine.
+> The corridor was authored so five people would know your name by the end of it. As shipped,
+> Volkov never signs the papers, because the droids you beat were never counted.
 
 ---
 
-## 8. BUILD ORDER (Increment 3)
+## V. SPEC → SHIPPED DELTA TABLE
 
-1. **Restart WBAPI server** so it re-reads the current file (Hazard #1); confirm new PID **and** that a JS signature survives the first write (`grep -c _monsterLevel roll2hit-v3.html` before/after). Commit early; `/tmp` backup.
-2. **Mechanic first (direct HTML, server stopped):** the `monsterKills` increment (L24291), the `_S_DEFAULTS` field (L22294), the killGoals HUD read (L29566). Parse-check (`node -e` inline-script extract). Restart server, re-verify signatures.
-3. **SPB `node.loot`** = Sealed Recruit Manifest (via `./api.sh put node SPB …`, or direct if the loot object can't be expressed by the endpoint).
-4. **`post quest` ×11** (kg_01…kg_11) with the exact shapes in §3; then `put` the prose fields (desc/hint/disposition/passText/failText — mind the **WBAPI newline-PUT hazard**: literal `\n` two-char escapes only, never JSON-string-literal form, per plan.md §RESUME + `patchStringField` fix).
-5. **Wire the two `onComplete` `itemChain` grants** (kg_06 → Stripped Reactor Core, kg_09 → Certified Skill-Chit) and the mission-bit / flag writes.
-6. **Audit each:** `./api.sh advise quest_kg_0X` — confirm `npc` resolves (no "not found" warning), `activateNode`/`waypointNode` in NODE_MAP, schema UQF-1.0. Fix any npc-key slug mismatch.
-7. **Verify (real-game drive):** enlist at SPB → walk the corridor → confirm (a) each quest lists only after its gate flag/`questsDone`, (b) the `monsterKills` HUD chip renders "Sparring Droid 2/3", (c) node card battles at ZVD/FBR satisfy kg_05/kg_09, (d) deliveries complete at the right node, (e) the two skill checks roll and branch, (f) finishing the chain lands the player at ~L6. Screenshot the journal mid-chain.
-8. **Docs sync (two-way, per the sync directive):** quest.md §KG (11 rows + the `monsterKills` note), a mechanics.md line for the generic counter, world.md/monsters.md cross-refs if the quota framing adds anything. Flip the plan.md §KG row Inc 3 `PLANNED`→`SHIPPED` with the commit + gate results.
-9. **Test:** extend `tests/integration/kg-zones.test.js` (or a new `kg-quest-chain.test.js`) — the 11 quests exist + are UQF-1.0, npc keys resolve, the `gate` sequence unlocks in order, `monsterKills` increments + completes a `countMin` quest, a delivery completes at `atNode`, a skill_check pass/fail branches. Keep the WBAPI server **stopped** for the Playwright run (Test-Run Rule 2); read the summary line from a redirected file, not a piped tail (Rule 1).
-
----
-
-## 9. INVARIANTS HONORED
-
-- **Free-Movement:** every `gate` defers a mission's *listing*, never a step. No quest/flag/item is ever read by the mover. The corridor stays freely traversable; the chain is *offered*, not *walled*.
-- **API-first:** quests via `./api.sh post quest` + field PUTs; only the JS counter mechanic + HUD (which the API can't express) goes in by hand, server-restart-guarded (Hazard #1).
-- **Reuse over duplication (grep-before-building):** reused the Inc-2 node card battles for the two mini-bosses (no new EPIC_BATTLES), the existing `countMin` dotted-path resolver, the §MATH-01 node.loot delivery pattern, and the cat-chain killGoals HUD (generalized, not cloned). The `monsterKills` counter is the single new mechanic and it is *generic*, retiring the need for the next arc to invent its own.
-- **UQF-only authoring:** all 11 quests are schema `UQF-1.0`, descriptor-array `bits`/`onComplete`, zero `_legacy_fn`. QuestRuntime is the sole execution surface (§ARCH-01).
-- **State single-source-of-truth:** `monsterKills` added to `_S_DEFAULTS()` so fresh loads + saves carry it (§STATE-INIT).
-- **No new jump travel, no mover changes, no new nodes/monsters/terrains.**
-- **Compact scope preserved:** 11 quests (within the 10–12 brief), one tiny mechanic, favorability explicitly deferred.
+| # | Specified | Shipped | Verdict |
+|---|-----------|---------|---------|
+| 1 | 11 quests: ids, npc keys, activateNodes, gates, completion shapes | identical 11/11 | ✅ exact |
+| 2 | XP + gold per quest (11 pairs) | identical 11/11 | ✅ exact |
+| 3 | 7 flags `kgEnlisted`…`kgCorridorCleared` | all 7 | ✅ exact |
+| 4 | 5 nodes: labels, NPC names, SPB `loot` | all 5 | ✅ exact |
+| 5 | Card battles `{gladiator_bot,1}` / `{trainer_bot_prime,1}` | identical | ✅ exact |
+| 6 | 5 representative dispositions | verbatim, minus emphasis marks; contractions expanded (*"didn't break"*→*"did not break"*) | ✅ substantive match |
+| 7 | Six item grants incl. Field Ration as heal consumable | all six as `itemChain grant`; Field Ration `heal:20` | ✅ exact |
+| 8 | Bout Token (kg_05) · Prime Core (kg_09) tabled as **items** | shipped as `mission_bit` **labels** | ⚠ form differs — kg_01's papers were correctly marked mission_bit; these two were not |
+| 9 | skill_check `bits` with `onPass[…]` / `onFail[…]` | `onPass` populated, **`onFail:[]` on both** | ⚠ narrowed — a failed check is silent |
+| 10 | *"the entire mechanical footprint of Inc 3"* | ship also widened the itemChain grant allow-list with `'dmgFlat', 'heal']) {@26183`, in lockstep across `worldbuilder.html:const GRANT_RICH = ['description','readText','readableKey'@8567` and `check-itemchain.js`, and repaired a pre-existing `_gateFlagSet` crash in that harness | ⚠ **understated at ship** — 5 sites tabled, 6 engine sites + 2 support files needed |
+| 11 | §6 XP model → *"≈5,697, just past L6"* | **5,301** — 199 short of 5,500 | ❌ **wrong when written** (§VI) |
+| 12 | *"Gold ≈ 550 across the chain"* | **450** | ❌ wrong when written |
+| 13 | *"winning a node card battle … increments the kill counter"* | nothing increments the kill counter | ❌ **NOT SHIPPED** (§IV) |
+| 14 | *"retires the need for the next arc to invent its own"* | 42 days on: **6 consumers, all §KG.** No second arc adopted it — but none minted a rival either (`frCatKillCount` predates it by six weeks) | ⚠ capability real, uptake zero |
+| 15 | Integration test (§8 step 9) | `kg-quest-chain.test.js`, 4 tests, real `QuestRuntime` | ✅ shipped |
+| 16 | Doc sync (§8 step 8) | `quest.md` §KG 11-row table · `mechanics.md` §Kill counters · `world.md` corridor | ✅ shipped — **but `mechanics.md` states *"Every battle win increments…"***, so the doc now propagates §IV |
+| 17 | NPC favourability, explicitly deferred | still absent | ✅ correctly deferred — a preserved non-goal, not a defect |
 
 ---
 
-*End of lab report. Implementation: §KG Increment 3 in plan.md — this is the gate; no HTML edit precedes it. Increment 3 closes the §KG feature.*
+## VI. THE XP MODEL, RE-DERIVED
+
+`0, 400, 1000, 2000, 3500, 5500, 8000, 11000, 15000, 20000,@24419` — Level 6 = **5,500**, unchanged.
+Kill XP is `const xpAward = Math.round((S.enemy.ac || 10) * (S.opp.maxHp || 10)@25292` × `partyMult`,
+which is 1.0 solo: the report's `AC·maxHP` metric was and is correct. All six per-monster products
+are exact as tabled — sparring_droid **45** · komsomol_cadet **96** · gladiator_bot **196** ·
+zavod_sparbot **130** · fabrika_enforcer **208** · trainer_bot_prime **390**. Three errors follow
+anyway.
+
+| Term | Report | Re-derived | Δ |
+|------|--------|-----------|---|
+| Quest-completion XP | 2,990 | **2,790** | **−200** — addition error over eleven values the report itself lists |
+| Battle XP, minimum path | 2,707 | **2,511** | **−196** — assumed `gladiator_bot ×4` (kg_05's 1 + kg_06's 3). The counter is cumulative and never resets, so kg_05's kill *counts toward* kg_06's ≥3; the true minimum is **×3** |
+| **Total** | **5,697** | **5,301** | **−396 — the design lands at Level 5, 199 XP short** |
+| Chain gold | ≈550 | **450** | −100 |
+
+The report anticipated this failure and wrote the lever: *"the two capstone rewards (kg_09 400→450,
+kg_11 500→600)."* That is **+150**, reaching 5,451 — **still 49 short.** The contingency was budgeted
+against the wrong total, so it could not have worked either.
+
+Two later mitigations, neither of them tuning and neither available on 2026-07-08: §XP-01 added
+effort XP for misses and failed checks (`const EFFORT_XP_PCT = 0.25;@24426`, 2026-07-12) and §XP-02-A
+added flat first-arrival exploration XP. A player walking the corridor today would clear Level 6 on
+those grants plus incidental encounters. **The pacing survives by accident, not by design** — and it
+is moot until §IV is fixed.
+
+**Instrument.** Partition a paragraph's numbers by *how each was obtained*. Every figure a single
+lookup answers — six AC·HP products, the L6 threshold, eleven reward pairs, the type mix — is exact.
+**Every figure requiring the author to add a column is wrong**, and the one requiring a model of the
+runtime (cumulative counters) is wrong in the direction that flatters the design.
+
+---
+
+## VII. INVARIANTS — SCORED
+
+| Invariant | Outcome |
+|-----------|---------|
+| **Free-Movement** — a `gate` defers *listing*, never a step | ✅ holds. No §KG gate is read by the mover; the corridor is freely traversable |
+| **API-first authoring** | ✅ holds — quests via the API; only the counter + HUD by hand |
+| **Reuse over duplication** | ✅ holds — reused the Inc-2 card battles (no new `EPIC_BATTLES`), the `countMin` resolver, the §MATH-01 `node.loot` pattern; generalised rather than cloned the cat HUD |
+| **UQF-only** | ✅ holds — 11/11 `UQF-1.0`, zero `_legacy_fn` |
+| **State single-source-of-truth** | ✅ holds — `monsterKills` seeded in `_S_DEFAULTS()` |
+| **No jump travel / mover / node / monster / terrain changes** | ✅ holds |
+| **Compact scope** | ✅ holds — 11 quests within the 10–12 brief; favourability deferred, and still deferred |
+| *(unstated)* the chain is **reachable and completable** | ❌ **fails twice.** Activation was dead until §AUDIT-03e's `code = key` backfill (2026-07-28): `node.code` was `undefined` at SPB, so `_questsByNode` returned nothing and the chain *"had never activated in live play"* (`quest.md` §Activation). Completion is dead today (§IV) |
+
+Every invariant the report chose to state holds. The one it did not think to state failed twice,
+independently. A design lock enumerates the properties its author was worried about; this author
+worried about Free-Movement and scope creep, honoured both perfectly, in a chain no player has ever
+finished.
+
+---
+
+## VIII. DEFECTS FILED
+
+| Row | Defect |
+|-----|--------|
+| **§DX-02cy** 🔴 | `S.opp.key` read at 4 sites, written at 0 — **19 quests across §KG, Ally Cat and §GR La Riva unreachable**. Fix: `S.opp.key` → `S.enemy.key` ×4, then correct `mechanics.md` §Kill counters, which documents the broken behaviour as live |
+| **§DX-02cz** 🟡 | `check:questgraph` treats every `countMin` clause as monotone-satisfiable and never asks whether the counter has a host writer — the class §DX-02cy hid in. Extend written-by-nothing from flags to `count:` resources |
+| **§AUDIT-03bl** 🟡 | §KG XP re-tune: the minimum path is 199 XP short of the L6 promise. Design call — retune the capstones, or accept that §XP-01/§XP-02-A cover it and amend the band's stated target |
+| **§DX-02da** 🟢 | `quest_kg_04`/`quest_kg_11` ship `onFail:[]` — a failed corridor skill check is silent. Roshkova's whole lesson is *"a cadet who cannot lose cleanly cannot win cleanly"*, and the arc's thematic centre has no failure text wired to it |
+| **§DX-02db** 🟢 | Commit `3c86055` ("§KG Inc 3 follow-up") announces four game-file edits — road junctions J16–J21, a `monsterKills` revert, dropping SPB's stray loot — and **does not touch `roll2hit-v3.html` at all**; the file is byte-identical to `d6aeefd`. Only a milepoints *snapshot* carries the reverted text. J16–J21 do not exist at HEAD, so corridor walkability from TLL is an open question, and a `git log` search for `monsterKills` reports a revert that never happened |
+
+---
+
+## IX. VERDICT
+
+**As a design document:** among the most faithfully executed locks in the corpus — eleven quests,
+seven flags, five nodes, six statlines, two card battles and three engine edits, byte-exact against
+the table a month later, with the locked `npc` slugs still resolving under an audit rule that has
+since been *widened*. That is what a good lock buys.
+
+**As a description of the shipped feature:** it describes something no player has reached. The
+distance between those two sentences is one identifier.
+
+**Retained lesson.** A design lock verifies **shape**; it has no instrument for **liveness**, and a
+`completion` clause is exactly where the two diverge — it reads state the design document never
+watches anything write.
+
+> **For every counter, flag or item a `completion` clause reads, name its writer in the same
+> increment and prove it fires — in the running game, not in a test that sets the value by hand.**
+
+---
+
+*Verified 2026-08-18 under §DOC-02cb. Claims that did not ship are marked NOT SHIPPED and kept — a
+silently removed claim reads as one that held.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
