@@ -150,7 +150,7 @@ after `storyNewGame`: the chip has a non-null `offsetParent`, measures **958 × 
 | 9 | `courierMapSeen` defaulted in `_S_DEFAULTS()` per §STATE-INIT | added to the **seed literal** instead | ❌ false at its own ship commit (§7.2) |
 
 **Nine locked items; eight shipped byte-exact.** Rows 3 and 4 were then deliberately superseded by
-§PLAY-01-C two hours and forty minutes later — a *gain*, not a regression, and named as such in
+§PLAY-01-C nineteen minutes later — a *gain*, not a regression, and named as such in
 §7.1. Row 9 was wrong the day it was written.
 
 ---
@@ -180,7 +180,7 @@ both are outside the test's universe.
 The report locked one invariant on the day leg: *amber ≥ 35, red ≥ 42 —* ***"mirrors the existing
 `#s-day` thresholds so the two agree."*** It shipped byte-exact.
 
-**§PLAY-01-C (`caa489e`, +2 h 40 m) reframed the deadline as generous and rewrote only one of the
+**§PLAY-01-C (`caa489e`, +19 min 42 s) reframed the deadline as generous and rewrote only one of the
 two surfaces.** The chip lost its red alarm entirely and kept a soft amber inside three days of the
 cap (`(day >= DAY_DEADLINE - 3 ? @36193`). The sidebar still carries the original doom ladder
 (`(S_story.day >= 42 ? @36105`). Proved in the browser, one page, one tick apart:
