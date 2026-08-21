@@ -1,133 +1,322 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+# Lab Report — §PLAY-01 *The Honest Floor*: systems and play review
 
-# Lab Report — §PLAY-01: Systems & Play Review
-### How the game is meant to be played, and where the systems can be improved
-**Date:** 2026-07-12
-**Project:** roll2hit.com — The Shattered Codex
-**Scope:** A systems-and-feel review of the *core engine* — onboarding, combat resolution, enemy AI, the XP/heal/gold economy, the time/Void deadline model, and progression gating. Grounded in a direct read of `roll2hit-v3.html` (combat loop, enemy turn, level-up, new-game/char-create) cross-checked against `mechanics.md` / `README.md`. **Not** a quest-by-quest audit of the ~2,848 UQF quests, nor a narrative-arc review — those are separate gates.
+**Track:** BACKLOG.md §PLAY-01, the **parent review** of a seven-face program (A–G) ·
+**Authored:** 2026-07-12 · one commit, `3a0db52` · **never amended in 40 days** ·
+**Parent build:** `3a0db52^` — 36,933 lines (the ship commit is docs-only, so parent = ship) ·
+**Re-verified:** 2026-08-21 against HEAD (38,712 lines, +1,779 / 40 days) — §DOC-02ci.
 
-> **Lab-report policy trigger:** *a mechanic redesign touching combat / economy / progression / UI.* The findings below propose changes to enemy AI, the time economy, and the onboarding surface — each a real system change, so they are locked here before any HTML edit, per the Lab Report Policy (CONTRIBUTING.md). This report is **diagnostic**: it defines the problem space and proposed increments; each increment that ships gets its data shapes locked in its own follow-up section (or a child report) before code.
+**Scope.** A systems-and-feel review of the *core engine* — onboarding, combat resolution,
+enemy AI, the XP/heal/gold economy, the time/Void deadline model, and progression gating.
+Explicitly **not** a quest-by-quest audit and **not** a narrative review.
 
----
-
-## 1. THE INTENDED LOOP (what the game asks of the player)
-
-1. **Create a character** — point-buy (stats 8–15 on a budget) or "Hard" mode (all 8s). `roll2hit-v3.html:36858`
-2. **Wake in Birka** (node `LHR`, "City Streets — Birka", Act 1) — a Fighter Champion with a Pointy Stick, a crude −3 Flint Dagger, 2 Minor potions, 150 gold. `storyNewGame`, `23159`
-3. **Explore a MUD-style world** — N/E/S/W move one cell; roads are safe (encounter rate 0), wilderness rolls the terrain rate; **movement is timeless** (no clock advance). Click a distant tile to auto-travel.
-4. **Fight** with the 1.5-AP action economy — Attack / Wimper / offhand / potion / scroll / shield / flee. Win → `XP = AC × maxHP`, plus a **free heal and gold each equal to `0.1 × AC × maxHP`** (`_storyBattleVictory`, `24347`).
-5. **Level up** the Fighter Champion (d10 HD, ASIs, Action Surge, Extra Attack, crit widening) toward the **Level 20** cap.
-6. **Deepen NPC bonds** (6 Birka NPCs) — the ending "notices what you shared, not what you killed."
-7. **Beat the deadline** — win condition: **7 Codex Shards** + **Level 20** + defeat **Commander Auros** (AC 22 / HP 300) at node CO, all before **Day 49**. Sleeping advances the day (`34771`); Void Tide events hit on days 3/7/14/21/28/35/42; `voidPressure` 10 = defeat.
-
-Supporting systems: a fishing mini-game (the **only** source of positive-magic gear), 20 Epic Battleground bosses, ~2,848 quests, opt-in mesh multiplayer, New Game+.
+**Children:** each face has its own verification — §DOC-02ce (A) · cf (B) · cg (C) ·
+ch (D) · cc (F/§DEATH-01). Face detail lives there; this document owns the **framing,
+the priority table, and the negatives** — the claims of the form *"the engine never does X."*
 
 ---
 
-## 2. WHAT IS WORKING WELL (do not regress)
+## Abstract
 
-- **The 1.5-AP action economy is genuine tactical design.** Wimper→heal and Wimper→clean-flee routes, the "offhand requires a real attack first" anti-exploit, and the risky-flee vs safe-flee split are elegant and legible. `mechanics.md:75–96`
-- **Free + timeless movement** removes travel tedium without removing danger (roads safe, wild rolls).
-- **Death is recoverable, not a wipe** — corpse-run + checkpoint respawn is player-kind.
-- **Content volume and architecture** — data-driven UQF quests, a coherent world model, atmospheric prose.
+The review's thesis is that `story.md`'s subject — transmission failure — is committed by the
+engine itself: the game *knows* things it will not tell, and the prose says one thing while the
+systems do another. It named six faces of that one sin, gave each a diegetic name, and ranked
+them by whether they were **honesty fixes** (ship freely) or **enactment fixes** (design weight).
 
-The through-line of the critique: **the systems are richer than their legibility and their opposition.** The player gets a deep toolkit and a dramatic deadline, but is never told the goal (§A), never faces an enemy that uses a toolkit back (§B), and never feels the deadline bite (§C).
+Re-measured at 40 days, this is the **fastest spec-to-ship document in the corpus**: A, B, C, D
+and G all shipped on **2026-07-12, the same day the review was written**, F was already scoped as
+§DEATH-01, and E was correctly predicted to fall out of B+C. The track closed `verified 6/6`.
+The framing held; the engineering held; **12 of 12 line anchors are byte-exact** at the parent
+build, and both economy formulas are quoted verbatim, comments included.
 
----
-
-## 2.5 THE UNIFYING THEME — *The Honest Floor* (closing the say/do gap)
-
-`story.md`'s subject is **transmission failure**. Froberger saw the Void clearly, tried to tell people, and couldn't — *"not because they were stupid, but because understanding requires context you can't give by talking"* — so he stopped telling and started fixing, became the only one who could, and that destroyed him. The **Curse of Knowledge** (Pinker, cited in the Abstract): once you know a thing, you can no longer remember not knowing it.
-
-**Every finding below is that same sin, committed by the engine.** The game *knows* things it refuses to transmit or enact — the story SAYS one thing and the systems DO another. This is not six unrelated bugs; it is one theme with six faces. The north star is Sweelinck's closing line: ***"Come back when you're ready. The floor will be honest."*** The engine's floor is not yet honest. The improvement program is not "add features" — it is **make the systems tell the truths the prose already tells.**
-
-| # | Mechanical name | Diegetic name (matches `story.md`) | The say/do gap it closes |
-|---|---|---|---|
-| **A** | Objective HUD | **The Courier's Map** | The engine commits the Curse of Knowledge *literally* — knows the goal, won't tell you. Transmit it the way the story already does: the bloodstained map, seven symbols in faded ink that darken as Shards return. |
-| **B** | Enemy AI per tier | **The Conqueror's Hand** | Prose: the Void "advances where defenders are thin and retreats where they're strong." Mechanics: enemies stand and trade blows. Make Void-touched enemies press at low HP; mundane beasts flee. Enact the conqueror the prose describes. |
-| **C** | Time cost | **No Postponements** | Prose: "The Void does not grant postponements"; Froberger "sealed it seventeen times… each time less present." Mechanics reward that exact failure — grind to capability, never be present. Make the clock bite so the player faces Froberger's choice. |
-| **D** | Signpost fishing gear | **Friendships With Magic** | Prose: "magic that is the byproduct of choosing people over efficiency." The magic-gear vector must reach the player *through a person*, not by stumbling on a sub-menu. The soft-lock is a transmission failure. |
-| **E** | Potions/conditions | **The Tools Regain Their Weight** | Resolves as a *consequence* of B+C: when the world presses and time is scarce, out-healing and out-grinding stop working, so the tactical tools mean something again. |
-| **F** | §DEATH-01 | **The Floor Is Honest** | The respawn message *lies* about what death takes; NG+ silently eats your corpse. Death must tell the truth, and the loop must carry the right things (people — favorability already persists). |
-| **G** | mechanics.md sync | **The Map Matches the Territory** | "The thing you make should be giveable." A giveable artifact whose docs lie about its own code betrays the architecture-as-argument. Make the map honest about the territory. |
-
-**The claim:** the story is philosophically complete; the engine has not caught up to it. This reprioritizes the work — **A, F, G are pure honesty fixes** (no design call, ship freely); **B and C are where the engine finally enacts the Void** instead of narrating it (B needs a data-shape follow-up; C is an ASK because it changes what the game *is*).
+The failures are all of one kind, and it is not a design kind. **Four evidentiary claims are
+wrong in ways that survive re-verification**: a literal string that occurs zero times where the
+report says once; a node code that has never existed; two functions called *deleted* that were
+never written. Three of the four are in the two faces the report rated *lowest risk* — the
+"pure honesty, no design call" tier — and the most consequential of them, §PLAY-01-D, **shipped
+its fix in three hours and aimed the game's only tutorial speech at a subsystem that cannot be
+reached**. The review was right about the engine and careless about its own citations, and the
+carelessness propagated: one of these errors is live in `mechanics.md` today, installed there by
+the review's own fix.
 
 ---
 
-## 3. FINDINGS (grounded, prioritized)
+## I. Intent, inspiration, and what the program does for playability
 
-> Each finding carries its **diegetic name** (from §2.5) alongside the mechanical one. The diegetic frame is the design intent; the mechanical detail is the implementation surface.
+**The design problem.** The engine had accumulated genuine depth — a 1.5-AP action economy, a
+49-day doom clock, a seven-Shard win condition, a relationship system that decides the ending —
+and had told the player almost none of it. Depth the player cannot perceive is not depth; it is
+overhead. Meanwhile the *opposition* had not kept pace: the player held a full toolkit and faced
+enemies that could only stand still and swing.
 
-### §PLAY-01-A — *The Courier's Map* — 🔴 The player is never told the goal *(highest leverage)*
-> **Theme:** the engine commits the Curse of Knowledge literally. Transmit the goal the way the story already does — the bloodstained map pressed into your hand.
-The whole win condition — 7 shards, Level 20, beat Auros, before Day 49 — is **never surfaced**. The literal string "49 days" appears **exactly once in the entire 37k-line file**, in the *Day-49 defeat* flavor text (`23096`). There is no opening framing of the Void, no persistent main-objective tracker, no "0/7 shards · Day 3/49" chip. A new player is dropped into Birka with atmospheric prose and no stated purpose.
-**Proposed (diegetic):** the goal is delivered as **Froberger's map** — the prologue already has the dying courier press "a folded, stained map… four towns and seven symbols in faded ink" into your hand (`story.md:159–163`). Make that literal: an opening framing card in the courier's voice, and a persistent **map/objective chip** — `🔮 Shards 2/7 · ⭐ Lv 8 · ☀ Day 12/49` — whose seven symbols are faded and **darken as each Shard returns**. The HUD is not a sterile tracker; it is the map, and the map is the covenant.
-**Type:** UI + one intro overlay. Lowest effort, highest comprehension payoff. Pure honesty fix — no design call.
+**The inspiration, and it is the game's own text.** Froberger saw the Void clearly, tried to tell
+people, and could not — *"not because they were stupid, but because understanding requires
+context you can't give by talking."* Pinker's **Curse of Knowledge**: once you know a thing, you
+can no longer remember not knowing it. The review's move was to notice that **the engine commits
+that exact sin**, and to make it the organising principle rather than filing six unrelated bugs.
+The north star is Sweelinck's closing line: ***"Come back when you're ready. The floor will be
+honest."***
 
-### §PLAY-01-B — *The Conqueror's Hand* — 🔴 Enemies never make a decision
-> **Theme:** the prose calls the Void a conqueror that "advances where defenders are thin." Make the enemies behave like it.
-`_storyEnemyTurn` (`24278`) is the *entire* enemy AI: roll `d20 + atk`, apply damage, end turn. Enemies never heal, flee, defend, apply conditions, or vary behavior. **All** tactical richness (conditions, stealth, wimper timing, shields, potions, offhand) lives on the player's side only. A "Deadly ⚠" enemy is not a *tactical* threat — it is bigger numbers. Combat is arithmetic, not a duel.
-**Proposed (diegetic):** behavior split along the story's own line between *mundane* and *Void-touched*. **Void-corrupted enemies advance where you are thin** — press harder when your HP is low (enrage under ~30%), or land a one-time debuff that punishes a weak defender. **Mundane beasts retreat where you are strong** — flee at low HP, never press. Even one behavior per tier converts fights from an HP race into a duel, and — crucially — makes the *creature the prose describes* the creature you actually fight.
-**Type:** additive branch inside `_storyEnemyTurn` (`24278`), keyed off `S.opp.tier` and a Void/mundane tag; **must not** touch the DUEL:CORE / mesh replay path (client-authoritative). Lock the per-tier behavior descriptors in a §PLAY-01-B child report before code.
+**Why this improves the game rather than merely documenting it.**
 
-### §PLAY-01-C — *No Postponements* — 🟠 Heal-on-kill quietly defeats the time economy
-> **Theme:** "The Void does not grant postponements." Froberger "sealed it seventeen times… each time less present." The mechanics reward exactly his failure.
-Every kill heals `floor(0.1 × AC × maxHP)` **and** pays equal gold (`24376`), and movement/combat are timeless. **Sleeping is the only thing that advances the day** (`34771`), and the day is the only thing that pushes the Void deadline. So a competent player heals off kills, grinds XP/gold indefinitely, and sleeps only when *they* choose. The intended "rush-vs-grind under a ticking clock" tension is **self-imposed** — the clock ticks only when the player volunteers it. The framing (49-day doom) and the mechanics (time is nearly free) disagree.
-**Proposed (pick one, ASK) — each framed by the theme:** (a) advance time per N cells / per battle, so the Void's clock runs while you fight — *the conqueror advances while you grind*; (b) a slow passive `voidPressure`/day drift — *the breach widens whether or not you are present*; (c) reframe the deadline as generous and drop the doom language — *accept that this run is not the loop*. The richest is any option that ties time spent on raw capability to the **Curse-of-Knowledge / curse score** the game already tracks: grinding for power over people is *literally* Froberger's failure, and the Groundhog Day ending already punishes it — the clock should make the player *feel* that trade in the moment, not only at the epilogue.
-**Type:** tuning + one new time-advance hook. Interacts with §DEATH-01 (checkpoint), Void Tide pacing, and `_curseScore()`. **ASK** — it changes what the game is.
+- **A goal the player can see converts atmosphere into agency.** Before A, a new character woke in
+  Birka with beautiful prose and no stated purpose; the deadline existed only in the text that
+  fired when you had already lost to it. A persistent objective chip makes every subsequent
+  decision — sleep, grind, travel — a decision *about something*.
+- **An enemy that makes a decision converts arithmetic into a duel.** B is the difference between
+  a "Deadly" enemy being bigger numbers and being a different problem. It also makes the creature
+  the prose describes the creature you actually fight.
+- **A clock that bites gives the toolkit back its weight.** This is E, and the review's sharpest
+  structural call: potions and conditions are vestigial *not* because they are mispriced but
+  because nothing pressures you. Fix pressure and the economy re-inflates for free — no repricing,
+  no content.
+- **Honesty is a feature, not hygiene.** F and G are framed as playability work because a death
+  message that lies and a spec that misdescribes its own code both cost the player trust, which is
+  the resource the ending spends.
 
-### §PLAY-01-D — *Friendships With Magic* — 🟠 Positive-magic gear is hidden behind an optional mini-game
-> **Theme:** "magic that is the byproduct of choosing people over efficiency." The magic path should reach you through a person, not a stumbled-upon sub-menu.
-By deliberate design (§FC06), **all** +1…+4 weapons/daggers are *fishing-exclusive*; monster kills only drop base-tier −4..0 gear (`_rollMonsterWeaponDrop`, `23740`). A player who never discovers fishing is **permanently capped at base weapons** through the whole game, including Auros (AC 22 / HP 300) — the single most important power vector sits behind an easily-missed sub-system.
-**Proposed (diegetic):** the magic path already *starts* with a person — the Fisherman hands you the rod free, the Outsider Merchant recites the guide from memory (Curse of Knowledge: he *knows* and can only transmit by giving you the pamphlet). Lean all the way in: make an **NPC point you to the magic** as a relationship beat, so the single most important power vector is felt as "someone chose to help you," not "a menu you happened to open." Alternatively/additionally, a small reliable secondary vector woven into the covenant NPCs' quests. Either way, **preserve** the "fishing gives a permanent edge" intent — do not re-open generic magic drops.
-**Type:** content signposting through NPC dialogue and/or a handful of authored relationship rewards.
-
-### §PLAY-01-E — *The Tools Regain Their Weight* — 🟡 Potions and conditions are near-vestigial for a skilled player
-Potions are exponentially priced to track HP, but heal-on-kill already refills you free every fight. Conditions cost 1,000–5,000 gold, but you rarely need them because enemies are passive (§B) and you out-heal. A large slice of the gold economy is a sink with weak pull. Fixing §B and §C would restore purpose to potions/conditions without touching their pricing.
-**Type:** falls out of §B/§C; no standalone work unless those stall.
-
-### §PLAY-01-F — *The Floor Is Honest* — 🟡 Death-system gaps → already scoped as §DEATH-01
-> **Theme:** "Come back when you're ready. The floor will be honest." Death currently lies about what it takes, and the loop silently discards what should carry over.
-Confirmed the `BACKLOG.md` §DEATH-01 findings: the respawn message *lies* (equipped gear survives death, message says you keep only a dagger); 100% gold loss is brutal for a fresh L1; the corpse-signal chip CSS exists but no JS renders it; entering NG+ **permanently deletes** un-recovered corpses; death is not atomically saved. These remain the right fixes; §DEATH-01 owns them.
-**Type:** see §DEATH-01 (blocked on 3 user design calls).
-
-### §PLAY-01-G — *The Map Matches the Territory* — 🟢 Documentation drift (maintenance risk, not a play bug)
-> **Theme:** "The thing you make should be giveable." A giveable artifact whose docs lie about its own code betrays the architecture-as-argument.
-The docs have diverged from code and self-contradict:
-- `mechanics.md` §Main Hand Weapons claims "42 entries" + "15% drop via `_rollMainWeaponDrop()`"; §Dagger Drops claims "12% via `_rollWeaponDrop()`". **Both functions are deleted** — only `_rollMonsterWeaponDrop` exists (`23740`) — and `WEAPON_ITEMS` is 70. The same doc's Loot Table section correctly says weapons are fishing-exclusive, contradicting itself.
-- `_magicTierAllowed` is `level ≥ magic × 5` in code (`23668`); the §Weapons section says `minLevel = baseLv + magic × 4`.
-- Docs reference start node code "CI"; the actual node is `LHR` (labeled "City Streets — Birka").
-**Type:** a `mechanics.md` sync pass (two-way doc-sync policy). Low effort, restores spec trust.
+**The reprioritisation is the review's real contribution.** Sorting by *kind* — honesty vs
+enactment — rather than by severity is what let five faces ship in a single day: the honesty tier
+needs no design authority, so it never queued behind an ASK.
 
 ---
 
-## 4. PRIORITY ORDER
+## II. Method
 
-The theme reprioritizes by *kind*: the **honesty fixes** (A, F, G) ship freely; the **enactment fixes** (B, C) are where the engine finally does what the prose says, and carry design weight.
-
-| # | Finding (diegetic) | Kind | Effort | Payoff | Blocker |
-|---|---------|------|--------|--------|---------|
-| 1 | §PLAY-01-A *The Courier's Map* | honesty | Low | Massive comprehension | — |
-| 2 | §PLAY-01-B *The Conqueror's Hand* | enactment | Med | Combat becomes a duel | design follow-up |
-| 3 | §PLAY-01-C *No Postponements* | enactment | Med | Restores core tension | **ASK** (a/b/c) |
-| 4 | §DEATH-01 (=§PLAY-01-F *The Floor Is Honest*) | honesty | Med | Closes last real feature | **ASK** (3 calls) |
-| 5 | §PLAY-01-D *Friendships With Magic* | honesty | Low–Med | Fixes hidden soft-lock | — |
-| 6 | §PLAY-01-G *The Map Matches the Territory* | honesty | Low | Restores spec trust | — |
-
-**Recommended first slice:** §PLAY-01-A *The Courier's Map* — pure honesty, no design call, no balance risk, and the single biggest comprehension win. Then take the §PLAY-01-C *No Postponements* ASK to the user, since it reframes what the game *is*.
+1. Pin the parent build. `3a0db52` is docs-only, so parent = ship = **36,933 lines**; every line
+   citation is scored there, and every anchor in *this* rewrite is re-pinned to HEAD.
+2. Re-resolve all 12 cited line numbers at the parent build.
+3. Re-derive every quantity with the real parser (`js/wbapi-core.js`), never a line regex — a
+   line-regex quest census returns 295 against a true 2,850.
+4. Separate *never shipped* from *deleted* with `git log -S <symbol> --all`, **no pathspec**, then
+   re-run scoped to `*.html`.
+5. Test the negatives. A claim of the form *"the engine never does X"* is the only kind that can
+   be falsified by a single counter-example, so each was attacked directly.
+6. Delegate face-level ship verification to the five child reports rather than repeating it.
 
 ---
 
-## 5. EVIDENCE (file:line)
+## III. As-built inventory (HEAD)
 
-- `storyNewGame` / char-create: `roll2hit-v3.html:23159`, `36858`
-- Enemy AI (whole): `_storyEnemyTurn`, `24278`
-- Victory heal + gold + XP: `_storyBattleVictory`, `24347` / reward `24376`
-- Day advance (sleep-only): `34771`; Void Tide dispatch `34860`; voidPressure clamp `25999`
-- Fishing-exclusive weapon drop: `_rollMonsterWeaponDrop`, `23740`; tier gate `_magicTierAllowed`, `23668`
-- "49 days" appears once (Day-49 defeat flavor): `23096`
-- Start node identity: `LHR` = "City Streets — Birka", `8149`
+| Claim in the review | Measured at HEAD | Verdict |
+|---|---|---|
+| Win condition: 7 Shards + Level 20 + beat the Commander | `function _finalBattleReady(code) {@27998`, and TLS carries `minLevel:20, minShards:7` | ✅ exact |
+| Final boss AC 22 / HP 300 | `const BOSS_COMMANDER_AUROS = {@26246` — `ac: 22, hp: 300` | ✅ exact |
+| Void Tide on days 3/7/14/21/28/35/42 | `const VOID_TIDE_EVENTS = {@22368` — exactly those 7 keys | ✅ exact |
+| Sleeping is the only day advance | `S_story.day = Math.min(49, S_story.day + 1);@36270` | ✅ exact |
+| voidPressure 10 = defeat | `S_story.voidPressure = Math.min(10, prev + n);@26978` | ✅ exact |
+| XP = AC × maxHP | `function _storyBattleVictory() {@25280` — the code comment reads *"XP = AC × maxHP"* | ✅ verbatim |
+| Heal and gold each = 0.1 × AC × maxHP | same function — *"HPGive = goldDrop = 0.1 × AC × HPLoss"* | ✅ verbatim |
+| 20 Epic Battleground bosses | `const EPIC_BOSS_POOL = {@26257` — 20 entries | ✅ exact |
+| `WEAPON_ITEMS` is 70 | `const _BASE_WEAPONS = [@24471` (14) × `const WEAPON_ITEMS = [0, 1, 2, 3, 4]@24494` | ✅ exact |
+| `_magicTierAllowed` = level ≥ magic × 5 | `function _magicTierAllowed(magic) {@24509` | ✅ exact |
+| ~2,848 quests | 2,850 at the parent build, 2,853 at HEAD | ✅ within its own hedge |
+| 6 curated Birka NPCs | `const birkaNpcs = {@35139` — Yael, Brynn, Quill, Pachelbel, Weckmann, Bruhns | ✅ exact |
+| Start node is `LHR` | `LHR:{ num:1,@8427` | ✅ exact |
+| Final fight at **node CO** | `CO` resolves in no build, ever; the node is `TLS:{ num:42,@8726` | ❌ **§VII** |
+| The literal `"49 days"` appears **once** | occurs **zero** times, parent and HEAD | ❌ **§VI** |
+| `_rollMainWeaponDrop` / `_rollWeaponDrop` **deleted** | 0 commits ever, in any `*.html` | ❌ **§VIII** |
+| All +1…+4 gear is **fishing-exclusive** | no live grant path exists, fishing included | ❌ **§V** |
+
+**Line anchors:** all **12 of 12** cited line numbers resolve byte-exact at the parent build —
+`23159` · `36858` · `24278` · `24347` · `24376` · `34771` · `34860` · `25999` · `23740` · `23668`
+· `23096` · `8149`. For a document written the same day it cites, this is the expected result;
+it is also the reason the four content errors are dangerous, because the citation discipline
+around them looks impeccable.
+
+---
+
+## IV. Spec → shipped delta
+
+| Face | Diegetic name | Shipped | Commit (2026-07-12) | Outcome |
+|---|---|---|---|---|
+| **A** | The Courier's Map | ✅ | `b46d3f0` | goal surfaced whole; a later design reversal landed on one of its two surfaces (§DOC-02ce) |
+| **B** | The Conqueror's Hand | ✅ | `0883fa9` spec → `8eb909e` | Void enrage live at `S.opp.enraged@24639`; the mundane-flee half has never once returned true (§DOC-02cf) |
+| **C** | No Postponements | ✅ | `caa489e` | user chose **option (c)** — reframe the deadline honest; 10/10 shipped, 5/5 deferrals still deferred (§DOC-02cg) |
+| **D** | Friendships With Magic | ✅ | `cfdeb21` | signpost through Yael — **and see §V** (§DOC-02ch) |
+| **E** | The Tools Regain Their Weight | ⏸ by design | — | correctly predicted to fall out of B+C; no standalone work |
+| **F** | The Floor Is Honest | ✅ | §DEATH-01 `a52f9cd` | the cleanest ship in the corpus at 37 days (§DOC-02cc) |
+| **G** | The Map Matches the Territory | ✅ | `ac651a3` + `a6a1ce7` | doc sync + Birka NPC remap — **and see §VII–IX** |
+
+Track closed `f2e8d44` (2026-07-23), *"verified 6/6"*.
+
+---
+
+## V. Finding 1 — the one false finding is the one that shipped fastest, and it aimed the tutorial at a locked door
+
+§PLAY-01-D states that **all** +1…+4 weapons and daggers are *fishing-exclusive*, and concludes
+that the magic path is *hidden behind* an optional mini-game. The first half is false and the
+second half is false in a more expensive way.
+
+**Measured:** there is **no live grant path for positive-magic equipment of any kind** — and that
+includes fishing.
+
+- `function _rollMonsterWeaponDrop(monsterDmgDie) {@24581` caps its pool at `magicBonus === 0` and
+  degrades it to −4…0. That part the review describes correctly.
+- The second vector, `function _rollD100Loot() {@24533`, *does* branch on `dagger` and
+  `mainweapon` with a magic tier — but `const _D100_TABLE = [@24516` holds **seven rows totalling
+  weight 100** (potions, scroll, flashbang, gold) and contains **neither type**. Both branches were
+  already unreachable **at the parent build**: the table is 7 rows there too. `_magicTierAllowed`
+  is reachable from nowhere else.
+- The specified fishing grant, `_fishingMagicWeaponDrop`, has **0 commits ever**. It was never
+  built. Fishing pays out in *sell value* and in §DROP-03's eight passive `LAKE_MAGIC_DB`
+  trinkets — **0 of which are weapons**.
+- `const DAGGER_ITEMS = [@24458` — the four magic daggers, priced to 8,000 gp — has exactly one
+  consumer in 38,712 lines: the unreachable branch. No vendor stocks them.
+
+So of the 70 generated main weapons, **56 have no grant path**, and so do 4 of 4 magic daggers.
+§DOC-02ch later proved this by execution: 20,000 `_rollD100Loot()` calls at level 20 returned
+**0 mainweapons and 0 daggers**; 20,000 monster-drop calls returned **0 positive-bonus weapons**.
+
+**Why this matters more than a wrong sentence.** The review's recommendation — *signpost the
+fishing path through a person* — shipped **three hours later** as `cfdeb21`, rewriting Yael's
+Level-1 monologue, the first substantial text every new character reads, to say: *"Go north to
+Yugurt, to the cabin… The smiths in this city cannot sell it; the lake can."* Per §FISH-01 the
+lake node `BOO` is declared 59 lines too late and loses its cell to another node, so **the
+fishing surface never renders**. The honesty fix made a vague pointer specific, and what it now
+points at, precisely, is a subsystem the player cannot enter to collect a reward that was never
+implemented.
+
+*The review set out to stop the engine from promising what it would not deliver, and its
+cheapest, lowest-risk face taught the engine to promise it louder.* That is not an argument
+against the fix — it is the strongest possible argument for testing a negative before building on
+it. Owned by **§FISH-01** (unblocks) and **§FISH-02** (the design call).
+
+---
+
+## VI. Finding 2 — the evidence for the flagship finding cannot be re-checked, because the string does not exist
+
+§PLAY-01-A rests on a memorable measurement: *the literal string `"49 days"` appears **exactly
+once in the entire 37k-line file**, in the Day-49 defeat flavor text.*
+
+The file size is right (36,933 → *"37k"*). The cited line `23096` is right, and is byte-exact.
+The count is not: **`"49 days"` occurs zero times**, at the parent build and at HEAD. What line
+23096 actually contains is *"Day 49."* and *"forty-nine days"* — the number spelled out, in prose,
+inside the message that fires when you have already lost.
+
+**The finding is not weakened by this; it is strengthened.** The deadline was never rendered in
+the digit form a player scans for — the review understated its own case. But the *evidence* was
+recorded in a form that fails on re-check: a maintainer grepping `"49 days"` to confirm the gap
+still exists finds nothing and may reasonably conclude it was closed. A claim about a literal
+string is the cheapest kind to verify and the cheapest kind to get wrong, and this one was
+transcribed from a line the author had open.
+
+---
+
+## VII. Finding 3 — the report prints a dead node code, in the document that flags dead node codes
+
+§1 places the final battle *"at node CO."* **`CO` resolves in no build** — not the parent, not
+HEAD, and it is not in `NODE_MAP` in any tree searched. The final battle is at
+`TLS:{ num:42,@8726`, *Cosmic Realm — The Convergence*, reached through
+`_isFinalBoss: true };@28011`.
+
+This is §AUDIT-03m's rule — *never read a node code off a doc table* — and the review broke it in
+§1 while **correctly diagnosing the same class in §7 (G)**, where it flags the docs for citing a
+start node of `CI` when the real one is `LHR`.
+
+And the G diagnosis is itself half-wrong, in the opposite direction. **`CI` is a live node** —
+`CI: { num:429, name:"city"@9229`, *Chancery Court* — at the parent build and at HEAD. It is not
+a stale code; it is a real node that is simply **not** the start node. The distinction is not
+pedantry: it is why `const birkaNpcs = {@35139` was broken. The literal keyed Yael to `CI`, so her
+card did not *fail* to render — it rendered **at the wrong node**, which is a different bug with a
+different signature, and is what §DOC-02ch had to separate in a browser to establish. Of the five
+original Birka keys, `IN`/`TV`/`BA`/`CY` are genuinely dead; `CI` never was.
+
+Both belong to **§AUDIT-03ba**, whose census already scopes `CI` and `CO`.
+
+---
+
+## VIII. Finding 4 — two functions were called *deleted* that were never written, and the fix installed that error in `mechanics.md`, where it is live today
+
+§PLAY-01-G reports that `mechanics.md` documents drop rates for `_rollMainWeaponDrop()` (15 %) and
+`_rollWeaponDrop()` (12 %), and concludes: ***"Both functions are deleted."***
+
+All four quoted doc claims are verbatim at the parent build — `mechanics.md:490` *"42 entries"*,
+`:494` `minLevel = baseLv + magic × 4`, `:496` *"15 % per battle"*, `:511` *"12 % per battle"* —
+and all four were genuinely wrong about the code. The review's *conclusion* is the error.
+
+`git log -S` across **all** refs with **no pathspec** finds both symbols in exactly seven commits,
+every one of them a documentation commit (`BACKLOG.md`, `plan-archive.md`, `mechanics.md`,
+`mechanics-combat.md`, and this report). Re-run scoped to `*.html`: **zero commits, ever.**
+Neither function has existed in the engine at any point in its recorded history. `mechanics.md`
+was not describing deleted code — it was describing an API that was never implemented.
+
+**The error outlived the fix and was promoted by it.** `ac651a3` corrected the numbers, and while
+doing so wrote the review's diagnosis into the doc as fact. At HEAD, `mechanics.md:231` reads
+*"The old parallel 15%/12% separate dagger and weapon rolls are retired"* and `:530` reads *"the
+old `_rollWeaponDrop()` 12%/battle path is **deleted**."* A doc that had one wrong claim now has a
+confident, sourced, wrong claim — §AUDIT-03m-FU exactly: **annotation without verification
+launders a wrong claim into a live one.** → new row **§DX-02dn**.
+
+---
+
+## IX. Finding 5 — G fixed the code and left the doc, and the gate that would have caught it is switched off by classification
+
+`a6a1ce7` remapped `birkaNpcs` to live codes (`LHR`/`TLL`/`MHQ`/`LLA`/`HKG`/`CDG`). Forty days
+later `mechanics.md:854` still reads: *"The six curated Birka NPCs: Yael (CI), Brynn (IN),
+Quill/Couperin (TV), Pachelbel/Deacon (BA), Weckmann (CY), Auros/Bruhns (CY)"* — the pre-remap
+codes, four of which resolve to nothing.
+
+The count is right and the cast is right; only the addresses are stale. This is a **live instance
+of §AUDIT-03ab**: `mechanics.md` is listed in `HISTORY_FILES` in `scripts/legacy-codes.js`, whose
+contract is *annotate, never rewrite* — so gate #16 **cannot report this line by classification**,
+in the one file `prompt.md` §2 step 6 requires every increment to sync. → corroborates
+**§AUDIT-03ab**, no new row.
+
+A rider worth recording: the boss's rendered name is **Commander Seraphine Bruhns**
+(`const BOSS_COMMANDER_AUROS = {@26246`); *"Commander Auros"* is the identifier and survives in
+five prose strings. The review's *"Commander Auros (AC 22 / HP 300)"* has the statline exactly
+right and the player-visible name wrong — the final-battle button reads *"Commander Bruhns."*
+Already owned by the §AUDIT-03n naming cluster.
+
+---
+
+## X. What the review got right, and it is the load-bearing part
+
+Every **design** judgement in this document survived contact with the engine.
+
+- **The enemy-AI diagnosis is fair and complete.** `function _storyEnemyTurn() {@25191` at the
+  parent build is, as described, roll `d20 + atk`, apply damage, end turn — no heal, no flee, no
+  defend, no condition application. The only other actors in it are the player's own hireling and
+  sentry. Summarising a 69-line function as three operations is a fair reading, not a lazy one.
+- **The economy diagnosis is quoted verbatim from the code's own comments** — including the
+  observation that movement and combat are timeless while sleep alone advances the clock, so the
+  49-day doom is self-imposed. The user picked the review's option (c).
+- **E was correctly predicted to be downstream, not standalone.** It never needed its own work.
+- **The unifying theme is not decoration.** Sorting by honesty-vs-enactment is what shipped five
+  faces in a day, and the theme has held up well enough that five child reports still use its
+  vocabulary 37 days on.
+
+The pattern across all four defects is worth naming, because it is the opposite of the usual one:
+**this document is more reliable about the engine than about itself.** Its structural readings —
+what combat *is*, what the economy rewards, why the toolkit feels light — are correct at 40 days.
+Its four errors are all *citations*: a string count, a node code, a deletion that was not one, and
+a scope word (*"exclusive"*) applied to a set with no members. Three sit in the tier marked
+**"pure honesty fix — no design call"**, which is precisely the tier that ships without review.
+
+---
+
+## XI. Defects filed by this re-verification
+
+| Row | Status | Substance |
+|---|---|---|
+| **§DX-02dn** | 🟠 NEW | `mechanics.md:231` and `:530` assert that `_rollMainWeaponDrop()` and `_rollWeaponDrop()` were retired/deleted; neither has ever appeared in any `*.html` in the repo history. Installed by `ac651a3`, the §PLAY-01-G fix. Two-line prose correction to *never implemented*. |
+| **§AUDIT-03ab** | corroborated | `mechanics.md:854` documents the six Birka NPCs at four dead node codes, unreportable by gate #16 because `mechanics.md` is classified HISTORY. First concrete player-facing instance. |
+| **§AUDIT-03ba** | corroborated | adds `CO` (never a node, cited as the final-battle location) and clarifies `CI` as a **live but wrong** node rather than a dead one. |
+| **§FISH-01 / §FISH-02** | corroborated | this review is the **origin** of the tutorial pointer that makes §FISH-01 player-facing; raises its priority above content-backlog weight. |
+| **§AUDIT-03n** | corroborated | `BOSS_COMMANDER_AUROS` renders as *Commander Seraphine Bruhns*. |
+
+---
+
+## XII. Dating appendix
+
+- Report authored and shipped `3a0db52`, 2026-07-12; **no subsequent commit has touched it** —
+  byte-exact at 40 days.
+- Parent build `3a0db52^` = ship build (docs-only commit), 36,933 lines.
+- Faces shipped the same day: `b46d3f0` (A) · `0883fa9`+`8eb909e` (B) · `caa489e` (C) ·
+  `cfdeb21` (D) · `ac651a3`+`a6a1ce7` (G). F = §DEATH-01 `a52f9cd`. Track archived `f2e8d44`,
+  2026-07-23.
+- All 12 original line citations verified at the parent build; all 23 anchors in this rewrite
+  re-pinned to HEAD (38,712 lines).
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
