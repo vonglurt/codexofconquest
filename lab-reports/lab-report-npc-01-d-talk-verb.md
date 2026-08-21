@@ -1,152 +1,174 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
-# Lab Report — §NPC-01-D: A Talk/Gift Verb to Make Favor Reachable at Scale
+# Lab Report — §NPC-01-D: A Talk Verb to Make Favor Reachable at Scale
 
-> **Status:** design-lock (pre-implementation). Locks the data shapes, the render surface, the
-> favor progression, and the invariant analysis **before any HTML edit** (Lab Report Policy,
-> CONTRIBUTING.md). One knob — *what talking costs* — is left as an explicit user decision (§6);
-> the rest is locked here. Scoped from §NPC-01-D in BACKLOG.md; promotes `potential.md` §POT-P3.
+**Original:** 2026-07-23 · design-lock, pre-implementation · subject `roll2hit-v3.html` @ `4acafa0` (37,913 lines)
+**Verified & rewritten:** 2026-08-21 (§DOC-02ck) against HEAD (38,712 lines) — 152 → 174 lines: the code
+blocks came out, the measurements went in. The only §DOC-02 rewrite so far that grew, because the original
+was already lean and had never been checked against the build it shipped from.
+**Class:** design-lock. Implemented **12 minutes later** (`df990c3`, 20:01), closed out at `a824969` (20:03).
 
 ---
 
-## 1. The finding (measured live, 2026-07-23, `roll2hit-v3.html`)
+## Abstract
 
-§NPC-01-A/B/C + SF2/SF5/SF6 took the NPC relationship card from **~20 → ~203** card-bearing NPCs.
-But favor — the state those cards key on — is authored at a tiny fraction of that:
+Two hundred NPCs had a line about what they were up against, and no player could ever hear it. This report
+locked the smallest mechanic that opens them: a **Talk** button on the relationship card raising favor to
+**Friendly and no further**, so the ⚔ *enemy* footer becomes earnable while the ✦ *worldTruth* footer stays
+behind a real deed.
 
-- **`grep -c "kind:'favor'"` = 16** favor bits across the *entire* quest corpus, reaching **13** distinct NPCs.
-- Only ~6 NPCs have a `dearFriendBits` auto-upgrade path (`_setNpcFavor`, `23146`) to reach fav 2.
-- Favor is raised **only** by `{kind:'favor'}` quest bits + a handful of hardcoded spots (`crov` at `25039`).
-  There is **no talk verb, no gift verb, no downtime hub** — `grep` for `onTalk|talkVerb|giftNpc|downtimeVerb` = 0.
+**It is the most accurate document in the §DOC-02 corpus, and it is wrong about the one thing its surface
+argument rests on.** All **12 cited line numbers are byte-exact** against its own build, all four locked data
+shapes shipped under their specified names, and its prescribed acceptance suite is **green at 22/22** today.
+But §2 declares the NPC card *"currently carries no interactive controls"* — and that card had carried a
+`<button>` with a click listener since the earliest surviving commit. The implementation found it anyway: the
+shipped Talk chip copies that button style string **verbatim**, down to a border colour the spec never named.
+*A design doc that cannot see the control already on the screen still ships, because the code reads the
+screen.*
 
-So of the ~203 card-bearing NPCs, **~190 are permanently stuck at Impartial (fav 0)**. The card footers
-gate on favor:
+---
 
-- **⚔ enemy footer** (`dlg.meta.enemy`) renders at **fav ≥ 1** (`_renderNpcCard`, `23417`) — **202** NPCs declare one.
-- **✦ worldTruth footer** (`dlg.meta.worldTruth`) renders at **fav ≥ 2** (`23424`) — **219** NPCs declare one.
+## I. Method
 
-That is a large body of authored content (`meta.enemy` ×202, `meta.worldTruth` ×219) that **can never surface**
-because there is no way to raise favor with the NPC it belongs to. §NPC-01-D closes that gap.
+Line numbers were scored against the **parent build**: `4acafa0` is docs-only, so
+`git show 4acafa0:roll2hit-v3.html` is byte-identical to the file the author read. Counts were re-derived
+with the real parser (`js/wbapi-core.js`), never a line regex. Reach and render were **executed in a browser
+at HEAD**, because reading source cannot tell a painted branch from an unreached one.
 
-## 2. The design (locked): a Talk action on the NPC card
+| Instrument | Result |
+|---|---|
+| Cited line numbers vs parent build | **12 / 12 byte-exact** |
+| Named symbols resolving at HEAD | **24 / 24** |
+| Census figures vs real parser | **1 of 6 wrong** — and wrong on its own build |
+| Locked data shapes shipped under their specified name | **4 / 4** |
+| Report drift since ship | **0 bytes in 29 days** |
+| Acceptance `tests/integration/npc-card-map.test.js` | **22 / 22 green** (16 at ship; §NPC-01-SF4 added 6) |
 
-**Surface — the card, not the d-pad 🧙.** The d-pad "Talk to NPC" button (`btn-dpad-npc`, `37500`) calls
-`storyShowNpc(node.code)`, gated on `NPC_DIALOGUE[node.code]` — a *separate*, node-keyed dialogue map (`22142`,
-singular) that exists for only a small set of nodes. The ~203 relationship cards live in `_renderNpcCard`
-(`23345`), keyed on **npcKey**, and currently carry **no interactive controls** (`cursor:default`). The Talk
-action therefore belongs **on the card**, where all ~203 NPCs already are.
+---
 
-**What Talk does — reach Friendly, never Dear Friend.** `_setNpcFavor(key, level)` (`23146`) already does the
-heavy lifting: it is monotonic (`level <= prev` returns), fires the "🤝 …looks at you differently now" message,
-and runs the `dearFriendBits` auto-upgrade check. The Talk handler calls `_setNpcFavor(key, 1)` and **never
-more**. This is the keystone that **preserves the §NPC-01-C reveal**:
+## II. Intent, and what it buys the player
 
-- **Talk → Friendly (fav 1)** unlocks the **⚔ enemy footer** — *"what they're up against."*
-- **Dear Friend (fav 2)** stays **quest / personal-act earned** (the existing `dearFriendBits` closures) —
-  so the **✦ worldTruth footer** ("what they know") still requires a real deed, exactly as C shipped it.
+The inspiration is the oldest social mechanic in tabletop play: **you learn what someone fears by coming
+back.** §NPC-01-C built the payoff as a two-tier card reveal — Friendly shows their *enemy*, Dear Friend
+their *worldTruth* — and §NPC-01-A/B/SF2/SF5/SF6 then multiplied the cards from ~20 to 204 without
+multiplying the way to earn either tier. The content existed; the verb did not.
 
-**Earned, not a one-click dump.** Talking accumulates. It takes a few conversations, rate-limited so the card
-can't be spammed to Friendly in one sitting. The scarcity model (the rate limit + whether it costs time) is the
-one open decision — see §6.
+- **Patient, not transactional.** `TALK_TO_FRIENDLY = 3@23513` talks on distinct `S_story.day` values reach
+  Friendly, and no day is *spent* — the cost is the days that pass while you travel and rest near someone.
+  The ⚔ footer then reads as what it is: they opened up because you kept coming back.
+- **It refuses to sell the whole ladder.** `_talkToNpc@23514` calls `_setNpcFavor@23462` at level **1** and
+  never higher, so talk can never buy the ✦ line. The game keeps something that cannot be ground for.
+- **It scales to the world, not to Birka.** Measured live at HEAD: **203 of the 204** NPCs in the derived
+  render map get a Talk button. Before it, favor was authored for **13**. Second-order effects measured
+  benign at ship: `favorMin` side quests become listable by befriending (mission gating, never movement
+  gating), and talk-friends count toward `_lubeckFriends@23461`.
 
-## 3. Data shapes (locked)
+---
 
-**New persistent state — declared once in `_S_DEFAULTS()` (`22747`, single source of truth; §STATE-INIT):**
+## III. The finding, re-measured against its own build
 
-```js
-npcTalk: {},   // §NPC-01-D — key → { count:int, lastDay:int }; talk progress toward Friendly.
-               // count reaches TALK_TO_FRIENDLY → _setNpcFavor(key,1). Never raises above fav 1.
-```
+| Claim in §1 | Measured at `4acafa0` | Verdict |
+|---|---|---|
+| `kind:'favor'` bits in the whole quest corpus = 16 | **16** | ✅ exact |
+| distinct NPCs those bits reach = 13 | **13** | ✅ exact |
+| `dearFriendBits` auto-upgrade for ~6 NPCs | **exactly 6** (`const dearFriendBits = {@23472`) | ✅ exact |
+| `meta.enemy` declared by **202** NPCs | **202** of 213 dialogue entries | ✅ exact |
+| `meta.worldTruth` declared by **219** NPCs | **213** | ❌ **wrong when written** |
+| `onTalk` / `talkVerb` / `giftNpc` / `downtimeVerb` = 0 | **0** at both builds | ✅ exact |
+| doom clock runs `S_story.day` 1 → 49 | `DAY_DEADLINE = 49@36175` | ✅ exact |
 
-*Not* reusing `npcVisitCounts` (`22773`): that map increments on every passive card/dialogue view
-(`_getNPCDialogue`, `23225`), so overloading it would let *looking* at a card raise favor. Talk must be a
-deliberate act → its own map.
+**The one bad number hides a better fact.** `NPC_DIALOGUES` holds 213 entries and **all 213** declare
+`worldTruth` — universal, not merely common. The report invented six NPCs rather than noticing that the ✦
+line is the one piece of characterisation every dialogue entry in the file carries. Its prose is likewise
+approximate where it could have been exact: *"~203 card-bearing NPCs"* against **204 profiles / 213
+dialogues**, *"~190 stuck at Impartial"* against **191**. Both tildes land; neither was measured.
 
-**New tunable constant (near the other favor helpers, ~`23144`):**
+---
 
-```js
-const TALK_TO_FRIENDLY = 3;   // deliberate talks to reach Friendly (fav 1). Tunable; see §6.
-```
+## IV. As-built inventory — every locked shape, at HEAD
 
-**Handler (new, beside `_setNpcFavor`):**
+All four locked shapes shipped under their specified names and are byte-live today: `npcTalk: {}@23088` in
+the defaults factory, the tunable `TALK_TO_FRIENDLY = 3@23513`, the handler `_talkToNpc@23514`, and the chip
+`tb.className@23788` — gated on fav < 1 so it retires at Friendly, wired by `tb.addEventListener@23791`
+rather than an inline onclick exactly as §3 required. The ceiling holds: `function _setNpcFavor@23462` is
+called at level 1 and never higher, so `dlg.meta.enemy@23755` became earnable while `dlg.meta.worldTruth@23762`
+did not move. The report was also right about the surface it *rejected*: the d-pad 🧙 is gated on the node-keyed
+`const NPC_DIALOGUE = {@22444` (singular) routing to `function storyShowNpc@30227` — a far smaller map than
+the npcKey-keyed cards in `function _renderNpcCard@23683`. §DX-02cv has since measured that map's cost.
 
-```js
-function _talkToNpc(key) {
-  const p = BIRKA_NPC_PROFILES[key], dlg = _getNPCDialogue(key);
-  if (!dlg) return;
-  const name = (p && p.name) || (dlg.meta && dlg.meta.name) || key;
-  if (_npcFavor(key) >= 1) { storyMsg('🤝 ' + name + ' already counts you a friend.'); return; }
-  if (!S_story.npcTalk) S_story.npcTalk = {};
-  const t = S_story.npcTalk[key] || { count: 0, lastDay: 0 };
-  // ── cadence guard (the §6 decision fills this in) ──
-  if (t.lastDay === S_story.day) { storyMsg('💬 You've said your piece with ' + name + ' today.'); return; }
-  t.count += 1; t.lastDay = S_story.day;
-  S_story.npcTalk[key] = t;
-  if (t.count >= TALK_TO_FRIENDLY) _setNpcFavor(key, 1);   // fires the Friendly msg + dearFriendBits check
-  else storyMsg('💬 ' + name + ' warms to you a little. (' + t.count + '/' + TALK_TO_FRIENDLY + ')');
-  storyRender();   // re-render so the ⚔ footer / badge update
-}
-```
+---
 
-**Render — one button appended in `_renderNpcCard` (`23345`), below the quote, above the footers:**
+## V. Spec → shipped delta table
 
-- Shown only while `_npcFavor(key) < 1` (once Friendly, the ⚔ footer *is* the reward; no button needed).
-- Styled to the card (a small `#8B4A2A`-bordered chip button), `onclick` → `_talkToNpc(key)`.
-- Because a card can be re-rendered many times, wire the handler by `addEventListener` on the created
-  element (not an inline `onclick=` string that would re-inject on every render), consistent with the
-  card's existing DOM-node construction (`document.createElement`, `23383`).
+| # | Locked | Shipped | Note |
+|---|---|---|---|
+| 1 | Escalating talk lines from `dlg.impartial[]` in order by `count` | **NOT SHIPPED** | every talk prints the same *warms to you a little (n/3)* line — Appendix A |
+| 2 | `storyRender();` inside the handler | moved to the click site, with an argument | the spec form **threw** on the `node.act` read; the end-to-end test caught it pre-commit |
+| 3 | Chip below the quote, **above** the footers | appended **below** them | moot: the chip needs fav < 1 and the footers fav ≥ 1, so they never co-render |
+| 4 | Chip border `#8B4A2A` | `#7c4a1a` | the spec took the colour from the **card** border (`card.style.cssText@23723`); the code copied the Yael escort button |
+| 5 | Constant sited "~23144, near the favor helpers" | sited beside the handler | improved; both are outside every fence |
+| 6 | Verify item 5 — a `connie_tuna` un-gating guard | not added | non-risk; Appendix A |
+| 7 | Verify items 1–4 | all four, plus a live-click end-to-end test | that extra test is what found delta 2 |
 
-## 4. Invariant analysis (all clear)
+**Two process notes.** §6 says the cadence model must go to the user and *"do NOT default"* — while the
+handler printed in §3 already encodes model (B) in full. And the report letters its cost models
+**(A)/(B)/(C)** while the BACKLOG row letters its approaches **(a)/(b)/(c)**, so the ship record must read
+*"approach (a) + cost model (B)"* to mean anything. *Option letters minted twice in one increment are option
+letters for nothing* — the §DOC-02e node-code lesson, in a report that never touches a node code.
 
-- **Free-Movement (#1):** untouched. Talk is a card-button action — it makes **no mover call** and refuses
-  **no step**. Like resting, talking is not movement, so no quest/flag/favor ever gates a step. ✅
-- **Mission gating ≠ movement gating (#2):** N/A — no gate touched. ✅
-- **Host/Script separation (#4):** N/A — this is host UI/state, not a QUEST_DB opcode. No new bit kind, no
-  `_legacy_fn`. (It *consumes* favor state the same way the existing render does.) ✅
-- **Parity fences (#5):** `_renderNpcCard` / `_setNpcFavor` are **outside** all four fences
-  (MOVER/ROOMS/DUEL/QUEST CORE), as established across §NPC-01-A/B/C. No `js/*.js` twin to re-inline. ✅
-- **Seeded RNG (#6):** the favor state change is **deterministic** (a counter). Escalating talk lines are
-  read from `dlg.impartial[]` **in order by `count`** (no RNG) — so nothing random touches game state. ✅
-- **Hazard #1 (server reverts CSS/JS on next write):** this is an inline-JS hand-edit → **stop the WBAPI
-  server first**, commit early. ✅
+---
 
-## 5. Verify plan
+## VI. Invariant analysis — re-verified mechanically
 
-Extend `tests/integration/npc-card-map.test.js` (already the §NPC-01 harness):
+**Free-Movement (#1) ✅** — `_talkToNpc@23514` makes no mover call and refuses no step; talking is not
+movement. **Parity fences (#5) ✅** — the four `:CORE` blocks span 9914–9961, 9985–10217, 10238–10390 and
+`QUEST:CORE:START@21965`–22334, and every symbol this increment touched sits above 22400; no `js/*.js` twin.
+**Host/Script separation (#4) ✅** — no new bit kind, no `_legacy_fn`, no `QUEST_DB` opcode. **Seeded RNG (#6)
+✅, but vacuously** — the clearance reasons *"lines are read in order by `count`, so no RNG"*; those lines
+were never built, so the conclusion is right and its stated reason describes absent code.
 
-1. **Talk button renders** on a lean card at fav 0; **absent** once fav ≥ 1.
-2. **Progression:** `TALK_TO_FRIENDLY` talks across distinct game-days reach Friendly and the **⚔ footer
-   appears** (was blank before).
-3. **Ceiling:** talk **never** raises favor above 1 — the **✦ worldTruth footer stays hidden** (Dear Friend
-   remains quest-earned). This is the design-preservation guard.
-4. **Cadence:** a second talk **on the same `S_story.day`** does not advance `count` (per §6's chosen model).
-5. **Regression:** a state-gated curated NPC (e.g. `connie_tuna` before `connieMet`) is unaffected — no
-   un-gating (guards the SF6 invariant).
+One §3 argument did **not** survive contact. The report refuses to reuse `npcVisitCounts` because *"looking
+at a card would raise favor"* — and the separate map does hold for favor. But `_talkToNpc@23514` opens by
+calling `function _getNPCDialogue@23560`, which bumps `npcVisitCounts` as a side effect **including on both
+early-return paths**: the passive counter it was protecting is advanced by the deliberate act, and by clicks
+that do nothing at all. Filed as §DX-02dq.
 
-Plus: **eyeball the running game** (§7½) — talk an NPC to Friendly, confirm the ⚔ footer lights up.
-`check:walk` sub-checks stay green (render-only); the pre-existing J14/J15 + TGS/SPB baseline reds unchanged.
+---
 
-**Docs to sync (same increment):** `mechanics.md` (new Talk verb + favor-earning), `docs/story/story-arc-npc-dialogues.md`
-(card gains a Talk action; Friendly is now talk-reachable, Dear Friend still deed-earned), `index.md` State
-Fields (`npcTalk`), and the §NPC-01-D BACKLOG row.
+## VII. Defects filed
 
-## 6. The one open decision — what does talking *cost*? (present to the user; do NOT default)
+- **§DX-02dq — the Talk verb advances the passive-visit counter it was designed not to touch.** 🟢 no design
+  call. `function _checkFrobergerTrace@27648` gates six one-time memory texts on
+  `const visits = (S_story.npcVisitCounts@27654` against `const FROBERGER_TRACES = {@27685`, so Talk clicks
+  accelerate content meant to reward genuine revisits, and an already-Friendly NPC can be clicked forever for
+  free increments. Two-line fix: hoist the favor and same-day guards above the `_getNPCDialogue` call.
+- **§AUDIT-03bo — one NPC has a name, a node, an occupation and two quests, and renders nothing.**
+  `watcher_gvw: { key@22992` is The Greenwood Watcher, quest-giver for `clr_01_act3@21941` and `clr_01_act4`,
+  listed in the derived render map at `GVW`, with **no `NPC_DIALOGUES` entry** — so `function
+  _renderNpcCard@23683` early-returns and the card is empty. **Verified in a browser: 203 of 204 derived NPCs
+  render and get a Talk button; this one does neither.** §NPC-01-SF2 fixed the mirror case (dialogue without
+  profile); this one has stayed open. Fix is one short dialogue entry with a `meta`.
+- **Verified benign, recorded so it is not re-found:** `let S_story = {@23001` omits `npcTalk` while
+  `const _S_DEFAULTS = () => ({@23062` declares it (both call sites guard), and
+  `const dearFriendBits = {@23472` is duplicated verbatim inside `function _checkDearFriendUpgrade@23489` —
+  two copies of one six-entry table, so any Dear Friend contract change must touch both.
 
-The mechanic above is locked except the **cadence guard** — how scarce a friend is. Three models, each a
-distinct *feel*. Time is the doom-clock resource (`S_story.day`, 1→49; there is also an hour counter
-`hoursElapsed`/`hoursSinceSlept` that ticks per step and drives 24h fatigue).
+---
 
-- **(B) Accumulate, once per game-day, no day burned — *recommended.*** `TALK_TO_FRIENDLY` (≈3) talks, each
-  on a distinct `S_story.day`, reach Friendly. No day is *spent* — the cost is the days that pass naturally
-  as you travel/rest near an NPC. Gentlest, reaches the most NPCs, reuses `S_story.day`, and best fits what
-  the ⚔ footer *is* (they opened up after you kept coming back). Con: an NPC whose node you visit only once
-  never reaches Friendly — thematically fine (you befriend where you spend time), but inert for pass-through
-  1367 NPCs. *This is what the handler in §3 encodes.*
-- **(A) One day per friend — scarcity via the doom clock.** A single talk sets Friendly but **advances a day**
-  (like a short rest). One decisive act, no grind, maximal thematic weight ("you spent the day with them").
-  Con: burns a precious day *and* fires the day-tick side effects (hireling wage, sentry upkeep, day-windowed
-  content) — so you befriend only a handful in a 49-day run; most ⚔ content stays locked.
-- **(C) Gift — scarcity via gold.** Talk is free flavor; a **Gift** button spends gold (≈50g, once per NPC)
-  to reach Friendly. Decisive, no grind, no day burned, and gives the gold economy a non-combat sink. Con:
-  makes friendship transactional (a rich player buys every ⚔ footer). Would need a per-NPC once-cap.
+## Appendix A — NOT SHIPPED, kept verbatim
 
-A hybrid (B's patient path **plus** C's paid path) is possible later; lock **one** for this increment.
+Retained because a silently deleted claim reads as one that held.
+
+> **§4, invariant #6:** *"Escalating talk lines are read from `dlg.impartial[]` **in order by `count`**
+> (no RNG) — so nothing random touches game state."*
+
+Never built. The three talks before Friendly are numerically distinguishable and narratively identical —
+the one place this mechanic still feels like a counter rather than a conversation. The pools it names are
+live and already ordered; feeding `dlg.impartial` into the progress message is the missing half of what the
+report set out to buy: not just to *reach* Friendly, but to be told something on the way there.
+
+> **§5, verify item 5:** *"Regression: a state-gated curated NPC (e.g. `connie_tuna` before `connieMet`) is
+> unaffected — no un-gating (guards the SF6 invariant)."*
+
+Not added under §NPC-01-D. The risk is real but structurally impossible here — Talk mutates favor, never the
+key list `function _renderNpcCard@23683` is called with — and the §NPC-01-SF6 AMS gating tests in the same
+file assert it directly.
