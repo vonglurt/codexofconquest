@@ -1,152 +1,189 @@
 <!-- §VM-01-C child lab report — locked BEFORE the HTML edit (CONTRIBUTING.md Lab Report Policy). -->
-<!-- Parent structural read: lab-report-javascript-mud.md. Prior increments: -vm01a-execbits-coroutine.md, -vm01b-client-rng-seed.md. -->
+<!-- Parent structural read: lab-report-javascript-mud.md. Siblings: -vm01a-execbits-coroutine.md, -vm01b-client-rng-seed.md. -->
 
 # Lab Report — §VM-01-C · *Pass the state, don't close over it*: the `_ENV` fix
 
-**Track:** §VM-01 — The Quest VM → *No Word for Wait* · **Increment:** C (third; independent of A and B, both shipped)
-**Status:** design LOCKED → SHIPPED (see §11)
-**Date:** 2026-07-22
-**Author decision on file (BACKLOG §VM-01-C 🟠 ASK):** *flag registry — defer.* The user chose the pure `_ENV` refactor; the enumerable-namespace / typo→error registry is **out of scope this increment** and lands in §VM-01-E's `check-questgraph.js`, where the gate→effect DAG already needs a "written-by-nothing / read-by-nothing" pass (the typo detector) as a static check rather than a runtime throw.
+**Track:** §VM-01 — The Quest VM → *No Word for Wait* · **Increment:** C (third; independent of A and B)
+**Status:** design LOCKED → SHIPPED `c22f4f0` (2026-07-22) · **verified 30 days on, §12**
+**Author decision on file (BACKLOG §VM-01-C 🟠 ASK):** *flag registry — defer.* The user chose the pure `_ENV` refactor; the enumerable-namespace / typo→error registry lands in §VM-01-E instead, as a static check rather than a runtime throw (§7.3).
+
+> **§DOC-02co verification pass — 2026-08-21.** Re-measured against live `roll2hit-v3.html` (**38,712** lines), against the ship build `c22f4f0` (**37,694**) and its parent (**37,618**), 30 days and six increments after the ship. Original text 152 lines; this rewrite is the same lock, shortened, with an anchor ledger, a spec→shipped delta table and an errata section. **Nothing was deleted for being wrong** — a claim that did not hold is marked and kept.
 
 ---
 
 ## 1. Abstract
 
-Every `QuestRuntime.HANDLERS` effect handler reaches the `S_story` module global by name. The clearest instance is the one the backlog calls out:
+Every `QuestRuntime.HANDLERS` effect handler reached the `S_story` module global **by name**. The clearest instance is the one the backlog called out:
 
 ```js
 flag_write(bit) { (bit.set || []).forEach(f => S_story[f] = true); … }
 ```
 
-Quest data — untrusted, authored content — writes arbitrary named keys onto a host global. That is not a host API; it is handing a script a raw pointer to host memory. In a Lua embedding you would set the script's `_ENV` to a table holding exactly what it may touch. This increment does the equivalent one layer up from the kernels: the handlers stop closing over the `S_story` global and instead read/write **`ctx.state`**, an env threaded in by `execBits`. The env **defaults to the live `S_story`**, so on the live path nothing changes — a provable no-op — while D and E gain the one thing they both require: the ability to **run a quest against a state that is not the live one**.
+Quest data — untrusted, authored *content* — writes arbitrary named keys onto a host global. That is not a host API; it is handing a script a raw pointer to host memory. This increment threads an **env** through the effect layer instead: handlers read and write **`ctx.state`**, seeded once by `execBits`. The env **defaults to the live `S_story`**, so the live path is a provable no-op — while §VM-01-D and §VM-01-E gain the one thing both require: **the ability to run a quest against a state that is not the player's save.**
 
-This is the same move already made inside the three parity kernels (MOVER/ROOMS/DUEL:CORE take state as a parameter instead of closing over a singleton), applied to the quest VM's effect layer.
+**Result, measured 30 days on: the seam shipped exactly as locked and both predicted consumers arrived.** Seven handlers changed, four host-fence handlers did not, no field was added, and `scripts/check-questgraph.js` — the soft-lock prover that tells us the world is finishable — runs on this seam today.
 
-## 2. Method
+## 2. Inspiration, and why a player cares
 
-`execBits` (established in §VM-01-A as the sole entry to every handler — confirmed by grep: no handler is invoked anywhere except line 21883) normalises its `ctx` once, seeding `ctx.state` with the live `S_story` when a caller does not supply one. Each **state-touching** handler then reads/writes `ctx.state` instead of `S_story`. **Host-effect** handlers — the ones whose job is to render, launch a battle, mint over the network, run the favor-clamp helper, roll the dice, or check level-up — keep reaching their live singletons, because they *are* the host, not the script's memory. That split is the Host/Script Separation Policy, stated in terms of state ownership.
+The idea is borrowed wholesale from Lua embedding: you do not let a sandboxed script see your globals, you set its `_ENV` to a table holding exactly what it may touch. The same move was already made three times in this repo — MOVER/ROOMS/DUEL:CORE take state as a parameter instead of closing over a singleton. This increment applies it one layer up, to the quest VM's effect layer.
 
-Because every real call site (6 production + every test) already passes a `ctx` object and **none** passes `.state`, defaulting `ctx.state = S_story` reproduces current behaviour byte-for-byte. The whole test is that `quest-runtime-uqf` stays the §VM-01-A/B env baseline exactly (0 NEW failures).
+**The playability argument is entirely second-order, and it is the strongest kind.** No player will ever see `ctx.state`. What a player sees is a game that can be *checked before they play it*:
 
-## 3. Concepts added (zero new fields, zero new handlers, one seam)
+- **A quest chain can be rehearsed without being lived.** Before this change, the only way to find out what a bit chain does was to run it into the player's save and look. After it, the same chain runs into a scratch object — so a tool can ask *"what does this quest actually write?"* and get an answer without a playthrough.
+- **That is what makes soft-lock detection possible at all.** §VM-01-E's prover walks the world asking *is there a reachable state satisfying this gate?* — which means applying effect chains to candidate states. At HEAD it analyses **2,853 quests**, finds **2,804 reachable**, and reports **0 residual nondeterminism**. A player who reaches Act 8 and finds the last quest un-completable is the worst bug an RPG can ship; this seam is the reason we can look for that class of bug mechanically instead of hoping.
+- **It made the prover *cheaper*, not just possible.** §VM-01-E's ship record names the reason it could take the light option: *"C's scratch-state seam + D's headless requireable kernel ARE a dynamic prober."* The 124 deterministic `_legacy_fn` closures never had to be ported to new opcodes, because they could simply be **executed against a scratch state and diffed**.
 
-| Thing | Where | What |
-|---|---|---|
-| `ctx.state` | normalised in `execBits`; read by the state handlers | the `_ENV`: the object a bit chain's effects write into / read from. Defaults to the live `S_story`. |
+The one-line version: *the game got safer to change, and a game that is safe to change is a game that keeps getting content.*
 
-No new `S_story` field. No new handler kind (the `HANDLERS` key-set is pinned by `quest-runtime-uqf.test.js:28` and stays exactly the 12 current kinds). No new opcode. The change is a **parameterisation**, not a feature.
+## 3. Method
+
+`execBits` is the sole entry to every handler (grep-confirmed: no handler is invoked anywhere else). It normalises its `ctx` once, seeding `ctx.state` with the live `S_story` when a caller does not supply one. Each **state-touching** handler then reads/writes `ctx.state`. **Host-effect** handlers — the ones whose job is to render, launch a battle, mint over the network, clamp favor, or roll the dice — keep reaching their live singletons, because they *are* the host, not the script's memory. That split is the Host/Script Separation Policy stated in terms of state ownership.
+
+Because every real call site already passes a `ctx` object and **none** passes `.state`, defaulting `ctx.state = S_story` reproduces prior behaviour byte-for-byte.
 
 ## 4. The transformation
 
 ### 4.1 The seam — `execBits` seeds the env once
 
+The pre-change form built a fresh `{}` **per bit**; the new form shares one `c` across the chain. That is observationally identical (every call site supplies a `ctx`, so the undefined branch was never taken) and is the correct shape for the `item_check → ctx._itemCheck` pattern, which needs the shared object.
+
+As shipped at `c22f4f0`, and structurally unchanged at HEAD (`*execBits(bits, ctx) {@22223`, `if (!c.state) c.state = S();@22225`):
+
 ```js
 *execBits(bits, ctx) {
   const c = ctx || {};
-  if (!c.state) c.state = S_story;          // §VM-01-C: the _ENV — defaults to the live state (no-op on the live path)
+  if (!c.state) c.state = S_story;   // §VM-01-C: the _ENV — handlers write/read c.state, defaulting to the live S_story
   for (const bit of (bits || [])) {
     const h = QuestRuntime.HANDLERS[bit.kind];
     if (!h) { console.warn('[UQF] unknown bit kind:', bit.kind); continue; }
-    const r = h(bit, c);                     // was: h(bit, ctx || {})
+    const r = h(bit, c);                        // was: h(bit, ctx || {})
     if (r && typeof r.next === 'function') yield* r;
   }
-}
+},
 ```
-
-Note the pre-existing form built a fresh `{}` **per bit** when `ctx` was undefined; the new form shares one `c` across the chain. This is observationally identical (every call site supplies a `ctx` object, so the undefined branch was never taken) and is in fact the correct shape for the `item_check → ctx._itemCheck` pattern, which needs the shared object.
 
 ### 4.2 The state handlers — read/write `ctx.state`
 
-Seven handlers change (only the state access; all other logic is verbatim):
+Seven handlers change; **only the state access changes, all other logic is verbatim.** All seven verified byte-exact at `c22f4f0` and live at HEAD.
 
-| Handler | Before | After |
-|---|---|---|
-| `flag_write` | `S_story[f] = true/false` | `st[f] = …` where `st = ctx.state` |
-| `reward` | `S_story.xp/gold/inventory/knowledge` | `st.xp/gold/inventory/knowledge` (host calls `_checkLevelUp()`, `mpMintStamp()` unchanged) |
-| `item_remove` | `S_story.inventory` | `ctx.state.inventory` |
-| `mission_bit` | fallback `S_story[bit.flag] = true` | fallback `ctx.state[bit.flag] = true` (host `_grantMissionBit` unchanged) |
-| `item_check` | reads `S_story.inventory` | reads `ctx.state.inventory` (still writes the predicate to `ctx._itemCheck`) |
-| `unlock` | `S_story.quests[qid] = 'active'` | `ctx.state.quests[qid] = 'active'` |
-| `_legacy_fn` | `bit.fn(S_story, ctx)` | `bit.fn(ctx.state, ctx)` — legacy fns now receive the env |
+| Handler | Before | After | HEAD anchor |
+|---|---|---|---|
+| `flag_write` | `S_story[f] = true/false` | `st[f] = …` where `st = ctx.state` | `flag_write(bit, ctx)@22268` |
+| `reward` | `S_story.xp/gold/inventory/knowledge` | `st.xp/gold/inventory/knowledge` | `reward(bit, ctx) {@22269` |
+| `item_remove` | `S_story.inventory` | `ctx.state.inventory` | `item_remove(bit, ctx) {@22302` |
+| `mission_bit` | fallback `S_story[bit.flag] = true` | fallback `ctx.state[bit.flag] = true` | `mission_bit(bit, ctx) {@22303` |
+| `item_check` | reads `S_story.inventory` | reads `ctx.state.inventory` | `item_check(bit, ctx) {@22311` |
+| `unlock` | `S_story.quests[qid] = active` | `ctx.state.quests[qid] = active` | `unlock(bit, ctx) {@22312` |
+| `_legacy_fn` | `bit.fn(S_story, ctx)` | `bit.fn(ctx.state, ctx)` | `_legacy_fn(bit, ctx) {@22327` |
 
 ### 4.3 The host-fence handlers — unchanged, by design
 
-`combat` (`storyPreBattle` + `NODE_MAP[S_story.currentCode]`), `narrative` (`storyMsg` / `ctx.pushMsg`), `favor` (`_setNpcFavor` / `_npcFavor` clamp helpers), and the `skill_check` roll (`_rollSkill`, which reads the live character sheet, advances the persisted §VM-01-B rng, and consumes the one-shot iodine buff) all keep their live-singleton access. These are host effects. A static reachability check (§VM-01-E) never executes them — it walks `onPass`/`onFail` as both-reachable and reads the *declared* reward/combat data, not its execution. Routing them through a scratch env would buy nothing and would falsely imply the host could be redirected. `_legacy_fn` still runs arbitrary code and remains E's blocker; giving it `ctx.state` only makes it consistent, not analysable.
+`combat(bit) { if (E.preBattle)@22300`, `narrative(bit, ctx) {@22301`, `favor(bit) {@22306` and the `skill_check(bit, ctx) {@22265` roll keep host access. These are host *effects*. A static reachability check never executes them; routing them through a scratch env would buy nothing and would falsely imply the host could be redirected. `_legacy_fn` still runs arbitrary code and remains E's stated blocker — giving it `ctx.state` makes it consistent, not analysable.
 
-## 5. Why this is the enabler for D and E
+## 5. Anchor ledger — the §7 table, re-scored
 
-Both downstream increments need to *evaluate a quest chain against a hypothetical state*:
+The original §7 carried the disclaimer *"live file, this session — re-grep before editing; they drift each increment."* **They drifted during the increment**, and the drift is legible: measured against the ship build `c22f4f0`, the ten anchors form a **strictly monotonic staircase** — 0, −2, −2, −4, −5, −5, −5, −5, −5 — the signature of a measurement taken part-way through this increment's own insertion. **Not one anchor is dead.**
 
-- **§VM-01-D** (whatever consumes the seam — replay / preview / server-side verification) needs to run effects into a scratch object and compare, without mutating the player's live save.
-- **§VM-01-E** (the soft-lock prover) needs to ask "is there a state reachable from the start satisfying this gate?" — which means applying effect chains to candidate states, not the live one.
+| Symbol | Reported | At `c22f4f0` | Δ |
+|---|---|---|---|
+| `*execBits(bits, ctx)` | 21881 | 21881 | **0 — exact** |
+| Sole handler entry `h(bit, …)` | 21885 | 21887 | −2 |
+| `resolveSkillCheck` | 21910 | 21912 | −2 |
+| `HANDLERS` block | 21918 | 21920 | −2 |
+| `reward` | 21921 | 21925 | −4 |
+| `item_remove` | 21931 | 21936 | −5 |
+| `mission_bit` | 21932 | 21937 | −5 |
+| `item_check` | 21940 | 21945 | −5 |
+| `unlock` | 21941 | 21946 | −5 |
+| `_legacy_fn` | 21956 | 21961 | −5 |
 
-Before this increment neither is expressible: the effects hard-write `S_story`. After it, `execBits(bits, { state: scratch })` runs the exact same chain into `scratch` and leaves `S_story` untouched. That is the entire deliverable.
+The seam anchor is exact, and it is the one the ship record in `plan-archive.md` re-measured and published. The maximum drift, 5, is this increment's own net insertion below the seam.
 
-## 6. Design decisions — LOCKED
+## 6. Why this is the enabler for D and E — **confirmed, with named consumers**
 
-### 6.1 Env scope — **the effect handlers only; gate readers and the roll stay on `S_story` this increment.** (flagged for veto)
-`canActivate` / `canComplete` read `S_story` directly (dozens of terms). They are **evaluators**, not effect handlers, and §VM-01-E builds its own *static* gate walker over the gate→effect DAG rather than calling them at runtime — so threading them now would be speculative surface with no consumer. `_rollSkill` stays on the live sheet/rng (host roll; E does not roll). **Rejected axis:** "thread `ctx.state` through everything that names `S_story`" — larger blast radius, breaks the clean no-op (the roll's rng/iodine mutations would move), and serves no increment on the board.
+Both downstream increments needed to evaluate a quest chain against a hypothetical state, and both now do, in code that exists today:
 
-### 6.2 Env default — **live `S_story`, seeded in `execBits`, never in `S_story` itself.** (flagged for veto)
-The env is a *call-time* parameter, not persisted state. It must never ride a save (a scratch state in `S_story` would serialise and corrupt the real one). Seeding it in `execBits` — the sole handler entry — guarantees every handler sees a defined `ctx.state` without touching any call site. **Rejected axis:** a persisted `S_story.env` pointer (serialises; and a self-reference `S_story.env === S_story` is a `JSON.stringify` cycle).
+| Consumer | Call | Increment |
+|---|---|---|
+| `tests/integration/uqf-quest-core.test.js:117` | `run(rt, […], { state: scratch })` | §VM-01-D |
+| `tests/integration/uqf-softlock.test.js:81` | `execBits(onFail, { state: scratch, … })` | §VM-01-E |
+| `tests/integration/uqf-env.test.js` | five sites | §VM-01-C (this report) |
 
-### 6.3 Registry — **deferred to §VM-01-E** (the ASK, answered by the user).
-An enumerable flag namespace where a typo throws is the natural companion, but it is a *behaviour* change, not a no-op: it would surface any existing dead/mistyped flag as a new runtime error, muddying this increment's verdict. The same defect is better caught **statically** by §VM-01-E's `check-questgraph.js` "written-by-nothing / read-by-nothing" pass, which reports typos as findings without breaking a live playthrough. So the pointer-safety half ships here; the namespace-safety half ships in E.
+**One correction the report could not make about itself.** §6 of the original closed *"That is the entire deliverable."* §VM-01-D's ship record amends it directly and fairly: *"§VM-01-C moved the state writes to `ctx.state`; it did not touch those ten calls — **C was necessary, not sufficient**."* `QuestRuntime` also closed over ten *host functions*, and fencing it required D's full dependency injection. **The seam was the precondition, not the whole enabling.** Recorded, not defended.
 
-## 7. Exact anchors (live file, this session — re-grep before editing; they drift each increment)
+## 7. Design decisions — LOCKED, and scored 30 days on
 
-| Symbol | Line |
+### 7.1 Env scope — the effect handlers only; gate readers and the roll stay on `S_story`
+`canActivate(questId) {@22193` / `canComplete(questId) {@22205` are **evaluators**, not effect handlers, and threading them then would have been speculative surface with no consumer. **Rejected axis:** *"thread `ctx.state` through everything that names `S_story`"* — larger blast radius, breaks the clean no-op.
+
+> **Outcome: the deferral was right and the rejected axis was never taken.** §VM-01-D *did* thread the gate readers eight days later — but through `function createQuestRuntime(host) {@22180` and a call-time `getState()`, not through `ctx.state`. The engine comment records the debt in the right direction: *"resolved at CALL time, so §VM-01-C's per-call `execBits(chain,{state})` seam survives."* When a consumer finally arrived it wanted a **different shape** — which is exactly the argument §7.1 made for waiting.
+
+### 7.2 Env default — live `S_story`, seeded in `execBits`, never in `S_story` itself
+The env is a *call-time* parameter, not persisted state. It must never ride a save: a scratch state stored in `S_story` would serialise and corrupt the real one, and a self-reference is a `JSON.stringify` cycle.
+
+> **Outcome: HELD, verified at HEAD.** `const _S_DEFAULTS = () => ({@23062` carries no `state` and no `env` field, 30 days and six increments on.
+
+### 7.3 Registry — deferred to §VM-01-E (the ASK, answered by the user)
+An enumerable flag namespace where a typo throws is the natural companion, but it is a *behaviour* change, not a no-op: it would surface every existing dead or mistyped flag as a new runtime error, muddying this increment's verdict. Better caught **statically**.
+
+> **Outcome: SHIPPED where promised, and the destination names this report as the source.** `scripts/check-questgraph.js:detector §VM-01-C deferred here.@35`. It runs green today and reports **50 written-by-nothing** and **982 read-by-nothing** flags as a review artifact. *A deferral is only honest if someone writes down where it went; this one is cited by name in the file that received it.*
+
+## 8. Invariants preserved
+
+- **Host/Script Separation** — *advanced*, not merely preserved: the script layer no longer names a host global.
+- **Parity kernels** — **0 kernel sentinels in the `c22f4f0` diff**, measured, not asserted.
+- **§STATE-INIT** — `_S_DEFAULTS()` unchanged; still true at HEAD (§7.2).
+- **§VM-01-A coroutine contract** — `execBits` stays a generator; `ctx.state` is set before the loop, so a suspending `choice` resumes against the same env.
+- **§VM-01-B seeded rng** — `_seededNext` untouched. (The roll has since moved to the injected `const d20  = Math.ceil(E.rng() * 20)@22248` under §VM-01-D — still a host concern, new plumbing.)
+- **No new bit kind.** The `HANDLERS` key-set was pinned at **12** by `tests/integration/quest-runtime-uqf.test.js:28` and stayed exactly 12. *(At HEAD it is 13 — `cost`, added by §VM-01-G4a. Growth after the fence, not through it.)*
+
+## 9. Test plan and result
+
+`tests/integration/uqf-env.test.js` — five tests, one per claim, **all five shipped as planned and all five green in Chromium at HEAD (3.6 s, run this session)**:
+
+| # | Claim | Result |
+|---|---|---|
+| 1 | Live-path no-op — a plain `ctx` mutates the live `S_story` as before | ✅ |
+| 2 | **The payoff** — `execBits(chain, { state: scratch })` writes into `scratch`, `S_story` untouched | ✅ |
+| 3 | `ctx.state` threads through a `choice` suspend/resume | ✅ |
+| 4 | `item_check` reads the env inventory | ✅ |
+| 5 | `_legacy_fn` receives the env, not the global | ✅ |
+
+**Regression at HEAD:** `quest-runtime-uqf` **303/303**, `uqf-coroutine` **5/5**, `warrants-board` **25/25**, `rng-seed` **5/5** — all green.
+
+## 10. Scope fence — what Inc C does NOT do, scored
+
+| Fence | Held? |
 |---|---|
-| `*execBits(bits, ctx)` | `21881` |
-| `resolveSkillCheck` | `21910` (unchanged — passes `ctx` to `execBits`) |
-| `HANDLERS` block | `21918`–`21957` |
-| `flag_write` | `21920` |
-| `reward` | `21921` |
-| `item_remove` | `21931` |
-| `mission_bit` | `21932` |
-| `item_check` | `21940` |
-| `unlock` | `21941` |
-| `_legacy_fn` | `21956` |
-| Sole handler entry (`h(bit, …)`) | `21885` |
+| No flag registry / typo→error | **Held** — shipped in §VM-01-E as a static check (§7.3) |
+| No gate-reader threading | **Held** — threaded later by D, via a different mechanism (§7.1) |
+| No `_rollSkill` / rng threading | **Held** — the roll stayed a host concern; D made it an injected one |
+| No host-effect redirection | **Held at HEAD** — `combat` / `narrative` / `favor` never took the env |
+| No `_legacy_fn` purge | **Held** — and §VM-01-E later found the blocker was **1 bit, not 125** |
+| No new field, save-migration, opcode, or authored content | **Held** — verified at HEAD |
 
-## 8. Invariants preserved (all load-bearing — [CONTRIBUTING.md](../CONTRIBUTING.md))
+**Six for six.** One qualification, recorded: `mission_bit` at HEAD passes `ctx.state` *into* the host grant as a third argument — the env crossed the fence, deliberately, by D's hand, in the direction the fence was designed to permit.
 
-- **Host/Script Separation** — *advanced*, not just preserved: the script layer no longer names a host global; it writes into an env the host hands it. Host effects stay host.
-- **Free-Movement / Mission-Gating** — untouched (no gate logic changes; movement code not in scope).
-- **Parity kernels** — MOVER/ROOMS/DUEL:CORE untouched; 0 kernel sentinels in the diff.
-- **§STATE-INIT** — `_S_DEFAULTS()` unchanged (no new field).
-- **§VM-01-A coroutine contract** — `execBits` stays a generator; `ctx.state` is set before the loop, so a suspending `choice` resumes against the same env. No change to `_uqfPump` / `_uqfRunToCompletion` / `_uqfPending`.
-- **§VM-01-B seeded rng** — `_rollSkill` / `_seededNext` untouched.
+## 11. Errata — figures this report got wrong
 
-## 9. Test plan
+Per §DOC-02 policy, wrong claims are corrected in place and **kept**, never silently removed. Every error below is in **framing prose**; the anchor table, the handler table and the code blocks have a **zero** error rate.
 
-New `tests/integration/uqf-env.test.js`:
+1. **"2,850 quests" → the real figure is 2,853**, measured with the `wbapi-core` parser at the ship build, its parent, *and* HEAD. The same wrong figure appears in the sibling §VM-01-A report: **one measurement, inherited twice.** Authors re-measure what they are about to *cite* and inherit what they are only *decorating with*.
+2. **"the sole handler entry … line 21883" (§2) contradicts "21885" (§7).** §7 is correct; 21883 is the `HANDLERS[bit.kind]` **lookup**, not the call. The table was right and the sentence was wrong.
+3. **"SHIPPED (2026-07-22; not committed, user rule)" is false.** This file is in `c22f4f0`, its first and only commit — committed by the very landing it describes. *A report can be wrong about whether it exists.* (Second sighting: the sibling §VM-01-A report carries the identical false disclaimer.)
+4. **The "17-fail env baseline" was disproved the same working day.** §9 and §11 built a git-stash-diff ceremony around *"the §VM-01-A/B env baseline"* of 17 failures, treating them as environmental noise. **`bd951d7`, committed 8 h 24 min after `c22f4f0`, retired that baseline entirely** — *"it was 17 stale tests, not server clobber (17→1)"*, of which 16 were simply fixed. The suite held **303** tests at the ship, so 286 + 17 = 303 was internally consistent; what was wrong was the *word* **baseline**. **The method still returned the right answer** — 0 NEW failures, and C was a genuine no-op — but the evidence was interpreted through a fiction that the repo audited out of existence before dinner.
 
-1. **Live-path no-op** — `execBits` with a plain `ctx` (no `.state`) mutates the live `S_story` exactly as before (flag_write / reward / unlock land on `S_story`).
-2. **The payoff — run against a scratch state** — `execBits(chain, { state: scratch })` writes flags/xp/quests into `scratch` and leaves `S_story` **untouched**. This is the seam D/E need, proven directly.
-3. **`ctx.state` threads through recursion** — a `choice` whose picked branch is a `flag_write` writes into the *same* env the outer `execBits` was given (scratch stays scratch across the suspend/resume).
-4. **`item_check` reads the env** — an item placed only in `scratch.inventory` satisfies `item_check` when run with `{ state: scratch }`, and does not when run live.
-5. **`_legacy_fn` receives the env** — a legacy `fn(state)` sees `scratch`, not `S_story`, when run with an explicit env.
+> *A baseline is a claim like any other. It is simply the one claim a report never thinks to re-measure.*
 
-Regression: full `quest-runtime-uqf` (2,850 quests) via the disciplined **git-stash-diff** — verdict is 0 NEW failures vs the stashed-HTML 17-fail env baseline, never an absolute count. `warrants-board`, `uqf-coroutine`, `rng-seed` green. `check:walk` (incl. `check:rng`) shows only the two pre-existing baselines.
+## 12. Verdict — SHIPPED, and it held
 
-## 10. Scope fence — what Inc C does NOT do
+The `_ENV` seam is in place and intact 30 days on. `execBits` seeds `ctx.state`; the seven state handlers write and read it; the four host-fence handlers and the roll keep host access. **8 edits, all inside the QuestRuntime region; 0 kernel sentinels; no new field, handler, or opcode** — every one of those figures re-measured and confirmed.
 
-- **No flag registry / typo→error** — deferred to §VM-01-E (§6.3).
-- **No gate-reader threading** — `canActivate` / `canComplete` still read `S_story` (§6.1); E builds a static walker.
-- **No `_rollSkill` / rng threading** — the roll stays a host concern (§6.1).
-- **No host-effect redirection** — `combat` / `narrative` / `favor` / `_checkLevelUp` / `mpMintStamp` / `_grantMissionBit` keep live-singleton access (§4.3).
-- **No `_legacy_fn` purge** — that is §VM-01-E's blocker; C only hands it the env.
-- **No new field, no save-migration, no new opcode, no authored content.**
+**What the verification adds to the original verdict:**
 
-## 11. Verdict — **SHIPPED** (2026-07-22; not committed, user rule)
+- **The design locks all three held**, and §7.1 held in the most instructive way available: the axis it rejected was still the wrong axis when a consumer finally needed one.
+- **Both predicted consumers exist by name**, and the prover consumes the seam so directly that it changed *how* §VM-01-E was implemented — the light option was available only because a chain could be run somewhere safe.
+- **The anchors did not rot**; they were published mid-edit, and the offset is arithmetic.
+- **The four errors are all in prose written last.** The tables, the code and the handler inventory — the parts an author *pastes* rather than *recalls* — are exact.
 
-The `_ENV` seam is in place: `execBits` seeds `ctx.state` (defaulting to the live `S_story`) and the seven state handlers write/read it; the four host-fence handlers and the roll keep their live singletons. **8 edits, all inside the QuestRuntime region (21872–21964); 0 kernel sentinels; no new field, handler, or opcode.**
-
-**Tests:**
-- **New `tests/integration/uqf-env.test.js` — 5/5.** (1) live-path no-op — a plain `ctx` mutates the live `S_story` as before; (2) **the payoff** — `execBits(chain, { state: scratch })` writes flags/xp/quests/items into `scratch` and leaves `S_story` **provably untouched**; (3) `ctx.state` survives a `choice` suspend/resume (picked branch writes the scratch env, live state pristine); (4) `item_check` reads the env inventory (hits under `{state:scratch}`, misses live); (5) `_legacy_fn` receives `ctx.state`, not the global.
-- **Regression `quest-runtime-uqf` 286 passed / 17 failed = the §VM-01-A/B env baseline EXACTLY (0 NEW failures)** — the 17 are the same render-path / forced-outcome tests (Ceremonia/FIGHT/typed-card renders, non-retryable-FAIL locks), none of which touch the state-env seam. The Inc A signature-change hazard does **not** recur here: `execBits(bits, ctx)` keeps its arity, and no caller (production or test) breaks.
-- **`uqf-coroutine` 5/5 · `warrants-board` 25/25 · `rng-seed` 5/5.**
-- **`check:rng` green** (client `_seededNext` ≡ server `seededNext` ≡ `__duelRng`, 6000 draws — untouched by this increment); **MOVER/ROOMS/DUEL:CORE byte-identical**; **0 kernel sentinels** in the diff. `check:walk`'s only reds remain the two pre-existing baselines (`check:invariants` J14/J15, `check:roads` R2/R3).
-
-**Outcome:** the script layer no longer names a host global. `flag_write` and its six siblings write into an env the host hands them; the same bit chain now runs against a scratch state without touching the player's save. §VM-01-D and §VM-01-E's precondition — *run a quest against a state that isn't the live one* — is met. The flag registry (namespace typo→error) is deferred to §VM-01-E's static `check-questgraph.js` pass, per §6.3 and the user's decision.
+**Outcome, restated for the player:** the script layer no longer names a host global. `flag_write` and its six siblings write into an env the host hands them, and the same bit chain now runs against a scratch state without touching a save. That is why the repo can assert, mechanically and on every `check:walk`, that its **2,853 quests** contain **no residual nondeterminism** and that **2,804** of them are reachable. *The player never sees the env. They see a world that finishes.*
