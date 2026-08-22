@@ -1,263 +1,337 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 # Lab Report — §VM-01-A · *Give the VM a `yield`*: `execBits` → coroutine
 
-> **Child lab report of** `lab-reports/lab-report-javascript-mud.md` (the structural read that opened §VM-01) and of the §VM-01 track in **[BACKLOG.md](../BACKLOG.md)**. **Type:** *Design review before implementation* (Lab Report Policy row 4 — "IEEE-format spec locking data shapes and flow before any HTML edit"). Per the §VM-01 preamble: *"every increment locks its own child lab report (data shapes + flow) before any HTML edit."* **This is that lock for Inc A. No product code is touched by this report.**
+> **Status:** ✅ **SHIPPED IN FULL** — the mechanism, the driver, the envelope and the acceptance
+> suite all landed, and every one of them is still load-bearing 30 days later.
 >
-> **Theme (matched to `story.md` / the track's *No Word for Wait*):** the engine *tells* and cannot *ask*. Inc A gives the VM the single missing instruction — a `yield` — so a quest can, for the first time, **wait for an answer**. Everything else in the track is a consumer of this one word.
+> **Written:** 2026-07-21 18:41 as a pre-implementation lock (Lab Report Policy row 4 — spec only,
+> no HTML edited), against `roll2hit-v3.html` at **37,618 lines**, branch `feat/board-01-warrants-board`.
+> **Lock commit:** `7f2f45d` (docs-only, so `7f2f45d:roll2hit-v3.html` **is** the build it measured).
+> **Ship commit:** `c22f4f0` (2026-07-22 10:34) — 16 hours later, landing A + B + C as one commit.
+> **Verified:** 2026-08-21 (§DOC-02cm) against the parent build **and** live HEAD (38,712 lines),
+> with the engine driven in a real browser at HEAD.
 >
-> **Anchors below were grepped from the live `roll2hit-v3.html` this session (37,618 lines, 5.11 MB, working tree at branch `feat/board-01-warrants-board`).** They have already drifted from the values in the BACKLOG §VM-01 rows (which were measured at `43bd09c`): `execBits` moved `21722 → 21825`, the `choice` handler `21779 → 21882`, `unlock` `21778 → 21881`. **Re-grep before editing — these will drift again.**
+> **Head of the seven-report §VM-01 series.** `execBits` is the host half of everything the other six
+> describe. Children: B (seeded RNG) · C (`_ENV`) · D (quest-core parity) · E (softlock prover) ·
+> F (gate AST) · F-FU (`activateNode` index).
+>
+> **HISTORY doc — annotate, do not rewrite.** Claims that did not ship are marked **NOT SHIPPED** and
+> kept. Live pointers use the `symbol@line` form (§DX-01e); the original's bare line numbers survive
+> only where a figure is being scored.
 
 ---
 
-## 1. Abstract
+## Abstract
 
-`execBits` (`21825`) is the quest VM's instruction pump: a straight-line `for` loop that looks up `HANDLERS[bit.kind]`, calls `h(bit, ctx)`, and discards the return value. It has **no branch and no suspend**. This one absence is the root cause named by the parent report — *"the VM has an opcode table and no jump instruction"* — and it is why three opcodes are inert or smuggled:
+The quest VM had an opcode table and no jump instruction. `execBits` was a straight-line `for` loop
+that looked up `HANDLERS[bit.kind]`, called the handler, and threw the return value away — **no
+branch, no suspend**. Three opcodes were inert or smuggled because of it: `choice` was an empty
+function body with a note-to-self in it, `item_check` wrote a result nothing ever read, and
+`skill_check` had the language's only conditional hard-coded inside one leaf.
 
-| Opcode | Contract | Handler | Status |
-|--------|----------|---------|--------|
-| `choice` | `21680` — rigorous: requires `prompt` + `options`, each option a `label` + `bits[]` | `21882` — **empty**: `choice(bit, ctx) { /* Phase 2: renderChoiceBlock(...) */ }` | **0 authors** — a synchronous `for` loop cannot wait for a human |
-| `item_check` | `21672` — "lab Open-Q #3" | `21880` — writes `ctx._itemCheck = …`; **nothing reads it back** (full-file grep = one line) | a conditional in a language with no `if` — evaluates and evaporates |
-| `skill_check` | `21660` | `21859 → resolveSkillCheck 21850` — branches by **hardcoding it inside the leaf**: `execBits(pass ? bit.onPass : bit.onFail, ctx)` (`21853`) | the sole conditional in the language, baked into one instruction rather than available to it |
+This report locked a ~30-line change: make `execBits` a `function*`, add a host-layer driver that
+pumps it, and let a handler suspend by `yield`ing an `{ ask, prompt, options }` envelope. It locked
+three design calls, fenced its own scope hard, and predicted the regression would be a provable
+no-op across 2,853 live quests.
 
-**Inc A converts `execBits` into a generator, adds a driver that pumps it, and lets a handler suspend by `yield`ing an `ask` envelope.** This is `coroutine.yield` transliterated. It is ~30 lines of engine change plus a mechanical wrap of five existing call sites, and it must be *observably a no-op* on the 2,850 live quests (none of which yield today). It ships **the mechanism** and **one proof** (a real `choice` chain driven end-to-end in a new test) — it deliberately does **not** ship choice UI content, a quest-acceptance rewrite, or the skill_check un-smuggle; those are downstream consumers enabled by, but out of scope for, this keystone (§10).
+**Re-measured 30 days on: it is the strongest single artefact in this corpus.** Every code block it
+quotes is byte-exact at its parent build. All 33 of its anchors resolve. Its acceptance suite is
+**5/5 green at HEAD** and its five named regressions are **337/337**. Its three design calls all
+shipped as recommended, and two of them are still exactly right. The third — *"a choice resolves
+within a single interaction turn"* — was **falsified in production** eight days later, and the engine
+survived it **for the precise reason this report gave**, in the paragraph immediately above the one
+that broke. And the report's own §11 verdict, written into the commit that shipped it, gets its
+headline test count wrong, contradicts its own §9, contradicts its own commit message, and calls
+itself uncommitted while being committed.
 
 ---
 
-## 2. Method
+## I. Intention and inspiration — why this matters to play
 
-A structural read of the `QuestRuntime` block (`21713`–`21899`) and every live `execBits` call site, grepped and quoted verbatim below — not recalled. No quest-by-quest audit; the defect is in the engine, and there is exactly one of it.
+roll2hit is a **49-day doom clock**. Every step and every rest spends a day you do not get back. In a
+game built entirely on that one question — *is this worth a day of the world* — the engine could only
+ever **tell** you what happened. It could not **ask**.
 
-**The engine today, in full (`21824`–`21831`):**
+That is not a missing feature; it is a missing *word*. A quest chain was a list of statements the game
+executed at you: a narrative line, a flag, a reward, a battle. There was no instruction in the
+language that meant **stop here and wait for a person**. So every branch a designer wanted had to be
+smuggled: either baked into a leaf handler (`skill_check`, which could branch only on a d20 it rolled
+itself) or written as bespoke hand-coded HTML with its own buttons and its own `if/else` chain, one
+per scene, unreachable by the VM and invisible to every gate that audits it.
 
-```js
-/* Execute an ordered bit chain. Unknown kinds are warned + skipped. */
-execBits(bits, ctx) {
-  for (const bit of (bits || [])) {
-    const h = QuestRuntime.HANDLERS[bit.kind];
-    if (!h) { console.warn('[UQF] unknown bit kind:', bit.kind); continue; }
-    h(bit, ctx || {});
-  }
-},
+The theme the track took from `story.md` is **No Word for Wait**. Inc A adds the word. One `yield`.
+
+The playability argument is not "add dialogue trees." It is that **agency and consequence become
+authorable in data instead of hand-built in markup**. A `choice` bit is a prompt and a list of
+options, each option carrying its own bit chain — so a branch is now the same kind of object as a
+reward, validated by the same contract table, executed by the same pump, and countable by the same
+census. Once the VM can wait, *quest acceptance* is a choice, a *moral fork* is a choice, and
+"the engine can't do that" becomes "author it."
+
+**And the dividend arrived.** Thirty days on, the game's first branching conversation is live at DUS:
+Kern and Sable, two people at a bar counter taking diligent notes on a book called *Don't Create The
+Torment Nexus*, underlining the parts that describe it in the most detail, because they believe the
+author was being helpful. You get three answers. Stay quiet and walk on. Ask what they are building
+(and receive a full transcript of two people saying "rad" at each other about infrastructure). Or
+tell them the truth — *that book is a warning, not a manual* — which lands, quietly, and completes a
+quest called **Creative Literacy**. Nothing is written to your save on the way in; the branch you did
+not pick never runs. It is the whole mechanism, in one scene, doing the one thing the engine could
+never do before: **it waits for you.**
+
+The `choice` bit is the seam. Everything above is content that could not exist without it.
+
+---
+
+## II. Method
+
+A structural read of the `QuestRuntime` block and every live `execBits` call site, grepped and quoted
+verbatim rather than recalled. No quest-by-quest audit — the defect was in the engine and there was
+exactly one of it. That discipline is why the report scores as well as it does: **§9 of the corpus
+method (tables and function bodies are evidence, traces and reconstructions are claims) predicts a
+report made almost entirely of pasted function bodies will not rot, and this one did not.**
+
+Verification method for this pass: pin the parent build (`git show 7f2f45d:roll2hit-v3.html`), score
+every anchor and every quoted block against it, then measure the shipped state at HEAD, run the
+report's own acceptance suite, and drive the authored consumer in a real browser.
+
+---
+
+## III. The engine as it stood — every quoted block byte-exact
+
+**All three code blocks the report quotes reproduce byte-for-byte at the parent build.**
+
+| Quoted block | Parent lines | Result |
+|---|---|---|
+| `execBits` — the straight-line loop | 21824–21831 | ✅ byte-exact, comment line included |
+| `resolveSkillCheck` — the smuggled branch | 21850–21855 | ✅ byte-exact |
+| `choice` — the empty handler with the Phase-2 note | 21882 | ✅ byte-exact |
+
+**The §1 defect table, re-scored:**
+
+| Opcode | Report's claim | Re-measured at the parent build |
+|---|---|---|
+| `choice` | contract at 21680 requires `prompt` + `options`; handler empty; **0 authors** | ✅ all three exact — 0 authored `choice` bits in `QUEST_DB` |
+| `item_check` | writes `ctx._itemCheck`; **nothing reads it back (full-file grep = one line)** | ✅ exact — `grep -c _itemCheck` = **1** |
+| `skill_check` | the sole conditional, hard-coded in the leaf at 21853 | ✅ exact |
+
+**Anchor score against the parent build: 33 of 33 resolve.** Every entry in the report's §7 table
+points at the line it names, including the four the original itself hedged. Two are worth a note
+rather than a mark against it: the *"Open-Q #5 comment"* is on 21773, one line below the cited 21772
+(21772 is the sentence it belongs to); and the load/`JSON.parse` pair cited as 23251/23267 is exact
+at 23251, with 23267 being the second `Object.assign` rather than a second `JSON.parse`. Neither
+misdirects a reader by a single line of reading.
+
+**`HANDLERS` census:** the report's §4.1 says *"all eleven live ones"* return `undefined`. `HANDLERS`
+held **12** keys at the parent build, of which `choice` is the one becoming a generator. **Eleven is
+exactly right** — a precision most reports in this corpus do not reach.
+
+### III-A. The three figures that are wrong
+
+| Figure | As written | Measured | Class |
+|---|---|---|---|
+| Live quest count | *"the 2,850 live quests"* | **2,853** (real parser, parent build) | rounded/inherited, off by 3 |
+| File size | *"5.11 MB"* | 5,427,539 bytes = **5.18 MiB / 5.43 MB** | wrong under either unit |
+| Line count | *"37,618 lines"* | **37,618** | ✅ byte-exact |
+
+The line count — the figure that actually dates the build and makes every anchor scorable — is
+exact. The two that are wrong are the two nothing depends on.
+
+---
+
+## IV. Locked shapes → shipped
+
+| Locked in this report | Shipped at `c22f4f0` | Status at HEAD |
+|---|---|---|
+| `execBits` becomes `function*`, `yield* r` when a handler is itself a generator | yes | ✅ `*execBits(bits, ctx) {@22223` |
+| `choice` becomes `*choice`, applying **only** the picked option's bits, **after** the pick | yes | ✅ `*choice(bit, ctx) {@22319` |
+| `ask` envelope `{ ask:'choice', prompt, options:string[] }`, never persisted | yes | ✅ still the only `ask` kind in the file |
+| Module-level slot holding `{ gen, ask }` | yes, as `_uqfPending` | ✅ `let _uqfPending = null;@6824` |
+| `pump(gen, answer)` | shipped **renamed** `_uqfPump` | ✅ `function _uqfPump(gen, answer) {@6827` |
+| `runToCompletion(gen)` | shipped **renamed** `_uqfRunToCompletion` | ✅ `function _uqfRunToCompletion(gen) {@6840` |
+| Driver lives beside `_resolveQuestUQF`, in the host layer | yes | ✅ same block, 6813–6842 |
+| Five production call sites wrapped | yes | ✅ all five, each tagged `// §VM-01-A` |
+| **Zero** `choice` bits authored into `QUEST_DB` | yes | scope fence held; **2** authored since (§VIII) |
+| No new opcode, gate term, `S_story` field, or save-migration | yes | ✅ `_uqfPending` still absent from every save path |
+| `BIT_CONTRACTS` untouched | yes | ✅ `const BIT_CONTRACTS = {@21970` |
+
+**Two shapes have moved since, both by later increments and both cited to this report:**
+
+- **`QuestRuntime` is no longer an object literal.** The report anchors *"`QuestRuntime` object 21713."*
+  §VM-01-D refactored it into a factory — `const QuestRuntime = createQuestRuntime({@22341` — so the
+  runtime could be `require`d by a headless server. **RETIRED, not wrong.**
+- **A second, pure `runToCompletion` exists inside the kernel.** `function _questRunToCompletion(gen) {@22036`
+  is the parity twin `resolveSkillCheck` uses so a `require('./quest')` server needs no host driver.
+  Its own comment cites *"lab-report-vm01a §6.2"* — the lock held; a *pure* twin was added beside it,
+  not in place of it.
+
+---
+
+## V. The three design calls — how each aged
+
+### §6.1 — which `ask` shapes exist? → **`choice` only; envelope discriminated for `confirm`/`prompt` later.**
+**HELD, and never tested.** `choice` is still the only `ask` kind emitted anywhere in the HTML or in
+`js/quest.js`, 30 days and four consumer increments later. The deferral cost nothing and the
+discriminator was never needed — which is the correct outcome for a bet whose whole value was
+optionality.
+
+### §6.2 — where does the driver live? → **module-level pump in the host layer, never in a kernel.**
+**HELD, with one amendment the report could not have anticipated.** The host driver is still host
+(`_uqfPump` renders nothing itself but sits in the DOM-touching layer, beside `_resolveQuestUQF`).
+When §VM-01-D needed the runtime to be requireable without a DOM, it did **not** move the driver into
+the kernel — it added a pure twin *inside* the kernel and left the boundary where this report drew
+it. The lock is cited by name in the comment that does it.
+
+### §6.3 — how does an un-answered `ask` survive a save/reload? → **it doesn't, and that is the design.**
+**This is where the report is most interesting, because its conclusion was falsified and its
+reasoning was not.**
+
+The lock rested on three legs. Two are still true at HEAD:
+
+1. **The generator lives only in `_uqfPending`, never in `S_story`** — so it is structurally
+   impossible to serialize. ✅ `_uqfPending` appears 7 times in the file and **not once** in
+   `_S_DEFAULTS`, `storyAutoSave`, or any `setItem` path.
+2. **Effects apply only after the pick**, so a player who walks away mid-choice has written nothing.
+   ✅ Still exactly how `*choice` is written, and browser-proved below.
+
+The third leg was the assumption: *"a `choice` resolves within a single interaction turn."* Eight days
+later, §VM-01-G4a put a real choice panel on a real node screen and discovered it does not — a node
+choice can sit on screen across a render. The engine records the correction in its own source, and
+the record is worth quoting because of what it leans on:
+
+> `// §VM-01-G4a: the sweep below takes any pending choice panel@34619` — *"Inc A's single module slot
+> assumed 'a choice resolves within one interaction turn'; a NODE choice can sit on screen across a
+> render. **Safe by construction — `choice` applies only the picked option's bits, AFTER the pick, so
+> an abandoned suspension has written nothing.**"*
+
+**The assumption that broke was rescued by the invariant stated one paragraph above it in this
+report.** §4.2 called apply-after-the-pick *"the property that makes the save decision safe"* — it was
+filed as support for §6.3's conclusion, and it turned out to be load-bearing for the case §6.3 got
+wrong. The repair was `_uqfPending = null` on render sweep plus an inert-stale-button guard in
+`_uqfRenderAsk`; no state model changed, because none had to.
+
+*A design lock is worth more than the decision it reaches when it writes down why.*
+
+---
+
+## VI. Invariant compliance — re-checked at HEAD, not re-copied
+
+| Invariant | Re-measured |
+|---|---|
+| **Host/Script Separation** | ✅ `QUEST_DB` is still script; the runtime + both drivers are host/kernel. The boundary gained a `yield` and did not move. |
+| **Three kernels untouched** | ✅ `MOVER:CORE` / `ROOMS:CORE` / `DUEL:CORE` sentinels sit ~11,600 lines above the edit region at the parent build; `check:parity` unchanged. |
+| **Free-Movement / Mission-Gating** | ✅ still exactly two movement refusals in the file, `'oob'` and `'sea'` — unchanged across 1,094 lines of growth. |
+| **No new game-state `Math.random()`** | ✅ Inc A added none. (`_rollSkill`'s roll moved to the seeded stream in the same commit, by **§VM-01-B**, not by A.) |
+| **Purity claims stay honest** | ✅ `execBits` is still not labelled pure, and still isn't. |
+
+---
+
+## VII. Verification at HEAD
+
+**The report's own acceptance suite, re-run at HEAD, WBAPI server stopped:**
+
+```
+npx playwright test tests/integration/uqf-coroutine.test.js
+  5 passed (3.4s)
 ```
 
-**The one branch in the language, smuggled into a leaf (`21850`–`21855`):**
+All five cases the §9 test plan specified are present and green — including case 5, the `item_check`
+bonus proof the report hedged as *"if this exceeds ~30 lines it moves to the follow-on."* It did not
+move; it shipped.
 
-```js
-resolveSkillCheck(bit, ctx) {
-  const r = QuestRuntime._rollSkill(bit.stat);
-  const pass = r.total >= bit.dc;
-  QuestRuntime.execBits(pass ? (bit.onPass || []) : (bit.onFail || []), ctx);  // ← the sole conditional
-  return { d20: r.d20, total: r.total, pass };
-},
-```
-
-**The empty handler whose contract already validates (`21882`):**
-
-```js
-choice(bit, ctx) { /* Phase 2: renderChoiceBlock(bit.prompt, bit.options, ctx) */ },
-```
-
-The Phase-2 comment is a note-to-self that was never actionable, because there was no state in which the VM could be *waiting* for the render to resolve. Inc A creates that state.
-
----
-
-## 3. Concepts added (three, all additive)
-
-| Concept | Shape | Where it lives | Persisted? |
-|---------|-------|----------------|-----------|
-| **`ask` envelope** | `{ ask:'choice', prompt:string, options:string[] }` — the value a suspending handler `yield`s | produced by handlers, consumed by the driver | **never** (it is a transient yield value) |
-| **generator `execBits`** | `function*` — `yield* r` when a handler is itself a generator | `QuestRuntime.execBits` (replaces `21825`) | n/a |
-| **the driver** | `pump(gen, ctx)` + `runToCompletion(gen)` | module-level, **host layer**, beside `_resolveQuestUQF` (`6799`) — **not** in a kernel | the in-flight generator is **module state, never in `S_story`** |
-
-No new opcode. No new gate term. No new `S_story` field. No new persisted state. `BIT_CONTRACTS` (`21659`) is untouched — `choice`'s contract (`21680`) already exists and already validates; Inc A only makes its handler real.
-
----
-
-## 4. The transformation
-
-### 4.1 `execBits` becomes a generator
-
-```js
-/* Execute an ordered bit chain. A handler that is itself a generator may
-   suspend (yield an `ask`); a plain handler runs to completion as before. */
-function* execBits(bits, ctx) {
-  for (const bit of (bits || [])) {
-    const h = QuestRuntime.HANDLERS[bit.kind];
-    if (!h) { console.warn('[UQF] unknown bit kind:', bit.kind); continue; }
-    const r = h(bit, ctx || {});
-    if (r && typeof r.next === 'function') yield* r;   // handler suspended → propagate its yields
-  }
-}
-```
-
-Plain handlers (all eleven live ones — `flag_write` `21860`, `reward` `21861`, `unlock` `21881`, …) return `undefined`; the `if` skips them; behaviour is byte-identical. Only a handler written as a `function*` can suspend.
-
-### 4.2 `choice` becomes real (the contract already validates it)
-
-```js
-*choice(bit, ctx) {
-  const picked = yield { ask:'choice', prompt: bit.prompt, options: bit.options.map(o => o.label) };
-  yield* execBits(bit.options[picked].bits, ctx);   // apply ONLY the chosen option's bits — after the pick
-}
-```
-
-The effect (`options[picked].bits`) is applied **only after** the driver resumes the generator with the picked index. Nothing is written on the way *in*. This is the property that makes the save decision (§6.3) safe.
-
-### 4.3 The driver — two entry points
-
-```js
-// Resume a suspended generator with the player's answer; returns when it next
-// suspends or finishes. Renders whenever the generator yields an `ask`.
-function pump(gen, answer) {
-  let step = gen.next(answer);
-  while (!step.done) {
-    if (step.value && step.value.ask) { _uqfPending = { gen, ask: step.value }; return step.value; }
-    step = gen.next();               // a non-ask yield is a pass-through (none defined in Inc A)
-  }
-  _uqfPending = null; return null;   // chain complete
-}
-
-// Migration shim: pump to completion, THROW on an unanswered ask. Used at every
-// synchronous call site — none of which contains a choice bit today, so this is
-// behaviourally identical to the old straight-line execBits.
-function runToCompletion(gen) {
-  const step = pump(gen);
-  if (step) throw new Error('[UQF] runToCompletion hit an unresolved ask: ' + step.ask);
-}
-```
-
-`_uqfPending` is a **single module-level slot** holding `{ gen, ask }`. When the player picks an option in the rendered `choice` block, the click handler calls `pump(_uqfPending.gen, index)`. This slot is the entire "waiting for an answer" state — and it lives outside `S_story` on purpose (§6.3).
-
-### 4.4 Migration — wrap five call sites, change no behaviour
-
-Because a generator function returns an iterator instead of running, every existing caller must wrap the call in `runToCompletion(...)`. The complete set (grepped this session):
-
-| Site | Line | Chain executed | Contains a `choice` today? |
-|------|------|----------------|:--:|
-| `_resolveQuestUQF` onPass | `6829` | `sc.onPass` | no |
-| `_resolveQuestUQF` onFail | `6832` | `sc.onFail` | no |
-| `resolveSkillCheck` | `21853` | `pass ? onPass : onFail` | no |
-| `storyCheckQuests` completion | `29498` | `q.onComplete` (array) | no |
-| `_acceptBounty` (§BOARD-01-B) | `36137` | `[{kind:'unlock', …}]` | no |
-
-Each becomes `runToCompletion(QuestRuntime.execBits(chain, ctx))`. Since none of the five chains contains a suspending bit, `runToCompletion` pumps straight through with zero yields → **identical side effects, identical message order**. This is the guarantee the regression asserts (§9). `_rollCeremonia` (`23044`) reaches the engine through `resolveSkillCheck`/`_resolveQuestUQF`, so it needs no separate wrap.
-
----
-
-## 5. Data shapes to lock
-
-**The `ask` envelope (locked shape):**
+**The five named regressions, re-run at HEAD:**
 
 ```
-{ ask: 'choice', prompt: string, options: string[] }
+quest-runtime-uqf 303 · warrants-board 25 · courier-map 1 · enemy-ai 4 · kg-quest-chain 4
+  337 passed (3.8m)
 ```
 
-- `ask` is a **discriminator** — `'choice'` is the only value Inc A emits. `'confirm'` (a degenerate 2-option choice) and `'prompt'` (free-text input) are **additive later** without touching the driver: `pump` already branches on `step.value.ask`; a new kind is a new render arm, not an engine change. **Locked: Inc A ships `choice` only.** (Decision §6.1.)
-- `options` is `string[]` of labels — the render layer's concern; the resume value is the **index**, so the data author never couples to presentation.
-- The envelope is **never persisted** — it is a yield value consumed within the turn.
-
-**The `choice` bit (author-facing — already contracted at `21680`, unchanged):**
-
-```js
-{ kind:'choice', prompt:'…', options:[ { label:'…', bits:[ …bits… ] }, { label:'…', bits:[ …bits… ] } ] }
-```
-
-Inc A authors **zero** `choice` bits into `QUEST_DB` — the first authored choice (quest acceptance, moral forks) is downstream content work. The test (§9) constructs one in-fixture to drive the mechanism.
+**Browser-proved — the authored consumer, driven live in Chromium at HEAD:** seeded at DUS, the verb
+`dus-kern-sable-first@34296` renders **3 option buttons** and parks the generator in `_uqfPending`.
+Before the pick: `creativeLiteracyToken` false, inventory unchanged. Clicking *"That book is a
+warning. Not a manual."* sets `nexusQ02Complete`, leaves the unpicked branch's `nexusQ01Active`
+**false**, grants the **Creative Literacy Token**, releases the slot, and removes the panel. The
+mechanism this report locked is executing player-facing content, correctly, 30 days on.
 
 ---
 
-## 6. Design decisions — LOCKED (all three flagged for veto)
+## VIII. Scope fence — what the report deferred, and what became of it
 
-The §VM-01-A "Lock first" clause names three questions. The recommended answers are derivable from the code read above; each is locked here and **flagged for the user's veto on the next `continue`** (house precedent: §BOARD-01-0, §BOARD-01-FU7/FU8 — design calls made in the lab report, veto-flagged).
+| Deferred by §10 | Status at HEAD |
+|---|---|
+| **Choice UI content** — a live on-screen `choice` render | ✅ **shipped**, §VM-01-G4a/G4b — but **NOT** under the name this report predicted. `renderChoiceBlock` appears exactly once in the file, in a comment recording that it **never existed as code**. The capability shipped as `function _uqfRenderAsk(gen, ask, mount, step) {@6885` + `function _uqfRunVerb(verb, mount) {@6914`. |
+| **Quest-acceptance rewrite** | ⚠️ **not shipped.** The seam exists; nothing has used it for acceptance. |
+| **Un-smuggling `skill_check`** | ⚠️ **not shipped, 30 days open.** `resolveSkillCheck(bit, ctx) {@22256` still branches inside the leaf, now wrapped in the pure twin and explicitly scope-fenced: a `choice` in `onPass`/`onFail` throws by design. |
+| **`'abandoned'` status / transactional rollback** | ⚠️ **not shipped.** `'abandoned'` has **0** occurrences in the file. |
+| **Forward pointers** — *A · B · C independent; D needs C; E needs C; F answers `canComplete`'s `or`; G needs A + F* | ✅ **the whole dependency graph held.** A/B/C `c22f4f0` · D `9f10bfe` · E `354b20a` · F `c6be7f8` · F-FU `549d6b4` · G through G4d + G-FU a–f2. |
 
-### 6.1 Which `ask` shapes exist? → **`choice` only in Inc A; envelope discriminated for `confirm`/`prompt` later.**
-**Rationale:** `choice`'s contract already exists and already validates (`21680`) — it is the shape with zero implementation cost beyond the mechanism. `confirm` is expressible as a two-option `choice` today; `prompt` needs a text-input widget (a UI build, not an engine change) and buys nothing Inc A's consumers need. Discriminating on `ask` from day one means adding them later is purely additive. **Veto axis:** ship `confirm`/`prompt` now instead of deferring.
-
-### 6.2 Where does the driver live? → **A module-level pump in the host layer, beside `_resolveQuestUQF` (`6799`); never in a kernel.**
-**Rationale:** the driver must render (touch the DOM) to present a `choice`, so it cannot sit inside a pure parity-fenced kernel (`MOVER`/`ROOMS`/`DUEL` take a `world` and return data, never touch DOM). But `QuestRuntime` is explicitly *the host*, not a kernel — its handlers already call `storyMsg`/`storyPreBattle` (`21870`/`21869`). The driver belongs exactly where quest resolution already lives. **This keeps the Host/Script Separation Policy intact:** `QUEST_DB` is script, `QuestRuntime` + driver is host; the boundary is unchanged, it just gained a `yield`. **Veto axis:** put `pump`/`runToCompletion` as methods on the `QuestRuntime` object vs. free module functions (cosmetic; either preserves the boundary).
-
-### 6.3 How does an un-answered `ask` survive a save/reload? → **It doesn't — and that is the design, not a gap.**
-**This is the real decision.** Persistence is proven by the code: autosave is `localStorage.setItem('r2h_autosave', JSON.stringify(S_story))` (`23238`); load is `Object.assign(S_story, _S_DEFAULTS(), JSON.parse(raw))` (`23251`, `23267`). **A generator object is not JSON-serializable** — so a suspended coroutine *cannot* be captured by a save even in principle.
-
-The lock turns that constraint into an invariant:
-
-1. **The in-flight generator lives only in `_uqfPending` (module state), never in `S_story`.** It is therefore structurally impossible to serialize — the desired property, not a limitation.
-2. **A `choice` resolves within a single interaction turn** — render → click → resume → complete — before control returns to the movement/rest paths where autosave fires (`23238` fires on step/rest, not mid-render). **No autosave or checkpoint call may run while `_uqfPending` is non-null.** The driver holds the turn; the test asserts an autosave taken mid-suspension never captures a generator.
-3. **Effects apply only after the pick** (§4.2), so a player who closes the tab mid-choice has written **no partial state**. On reload the quest is exactly where it was; its `choice` re-offers on the next interaction. Idempotent, no rollback, **no save-migration** (nothing new persists — unlike §VM-01-B's `rngState`).
-
-**Veto axis:** the alternative is a *serializable* suspension — store `{ questId, bitPath, awaitingAsk }` in `S_story` and rebuild the generator on load. That is a materially larger change (every suspending handler must be resumable from a data cursor, not a live stack frame) and buys only cross-save choices, which no content needs. **Recommendation: reject it for Inc A; suspend within a render turn only.** Revisit only if a future feature needs a choice to survive a reload.
+**The keystone claim is the one that verifies best.** Every §VM-01-G increment — 30-odd hand-written
+scene blocks migrated into `NODE_VERBS`, `NODE_HOOKS` and `NODE_PANELS` — is a consumer of the word
+this report added. The prediction *"every 'the engine can't do that' becomes 'author it in data'"* is
+not rhetoric; it is the shape of the six weeks that followed.
 
 ---
 
-## 7. Exact anchors (live file, this session)
+## IX. Errors in this report, corrected
 
-| Symbol | Line | Note |
-|--------|-----:|------|
-| `BIT_CONTRACTS` | `21659` | opcode table; `choice` contract `21680`, `item_check` `21672`, `skill_check` `21660`, `unlock` `21678` |
-| `QuestRuntime` object | `21713` | the host |
-| `canActivate` | `21720` | declarative gate (untouched by Inc A) |
-| `canComplete` | `21774` | Open-Q #5 comment `21772`; the OR-group `21790` (→ §VM-01-F's `or`) |
-| **`execBits`** | **`21825`** | **the target — `for` loop → `function*`** |
-| `resolveSkillCheck` | `21850` | smuggled branch at `21853` |
-| `HANDLERS` | `21858` | `flag_write` `21860`, `reward` `21861`, `item_check` `21880`, `unlock` `21881`, **`choice` `21882`** |
-| `_resolveQuestUQF` | `6799` | call sites `6829`/`6832` — driver's natural home |
-| `storyCheckQuests` completion | `29498` | `onComplete` chain exec |
-| `_acceptBounty` (§BOARD-01) | `36137` | fifth call site; already routes through `execBits` |
-| `_S_DEFAULTS` | `22573` | fresh-state shape — **unchanged** (no new field) |
-| autosave / load | `23238` / `23251` / `23267` | the serialization boundary the §6.3 lock respects |
-| test dir | `tests/integration/` | new file `uqf-coroutine.test.js`; regression `quest-runtime-uqf.test.js` |
+**The §11 verdict is the weakest paragraph in the document, and it was written last.** It is a
+textbook case of the corpus rule that *a report's inventory earns trust and its summary does not* —
+same hand, same file, one page apart, and the error rate inverts.
 
----
+1. **"not committed — user rule" is false.** The sentence saying so was itself committed, in
+   `c22f4f0`, as part of the +5-line diff that added the verdict. It was true at the instant of
+   typing and false when the increment closed.
+2. **The headline test figure is wrong three ways at once.** §9 sets the target at *"302/302."* §11
+   reports *"286 passed / 17 failed."* The commit message for the very same commit says
+   *"quest-runtime-uqf 286/286."* The file holds **303** tests, so **286 + 17 = 303** — §11 has the
+   only internally consistent pair, §9 is off by one, and the commit message silently drops 17
+   failures. **Re-measured at HEAD: 303/303, fully green.** The *"15 pre-existing failures in this
+   environment"* caveat §9 carried forward from §BOARD-01 is now stale twice over — the count was 17,
+   and the baseline has since been repaired to zero.
+3. **"HTML diff +56/−9" is not a measurable figure.** The commit's actual HTML numstat is **+106/−30**
+   for A + B + C, and its own message states the reason it cannot be split: *"the working-tree HTML
+   diff is a single indivisible change (the execBits hunk carries both the Inc A generator and the
+   Inc C env seed)."* The report published a per-increment attribution for a diff the commit that
+   carried it declares unattributable.
 
-## 8. Invariants preserved (all load-bearing — [CONTRIBUTING.md](../CONTRIBUTING.md))
-
-- **Host/Script Separation.** `QUEST_DB` stays script; `QuestRuntime` + driver stays host. The boundary gains a `yield`; it does not move. Control flow moves *into the VM* (`execBits`) and *out of the leaf* — the exact direction the policy's first rule mandates ("Control flow belongs to the VM, never to a leaf handler … `skill_check` … is the exception to retire, not the pattern to copy").
-- **Three kernels untouched.** `MOVER:CORE`/`ROOMS:CORE`/`DUEL:CORE` sentinels are not in the edit region (`execBits`/`HANDLERS` are ~11,000 lines below the kernels). Gate: git-diff shows **0 kernel sentinels**; `npm run check:walk` parity unchanged.
-- **Free-Movement / Mission-Gating.** Inc A touches quest *effect execution*, never the mover. No `S_story`/flag/bit is added that any movement code reads. **No new movement-refusal** (still `'oob'`/`'sea'` only). No jump travel.
-- **No new game-state `Math.random()`.** Inc A adds no randomness (the seeded-stream work is §VM-01-B). `_rollSkill`'s `Math.random()` at `21842` is untouched by this increment.
-- **Purity claims stay honest.** `execBits` was never labelled pure; as a generator it still isn't (handlers mutate `S_story`). No purity comment is added that the code would falsify.
-
----
-
-## 9. Test plan
-
-**New: `tests/integration/uqf-coroutine.test.js`** — drives a *real* `choice` chain end-to-end:
-
-1. **Suspend-and-resume.** A fixture quest with a `choice` bit (2 options, each option's `bits` sets a distinct flag). Pump `execBits`; assert it yields `{ ask:'choice', options:[…] }` and that **neither** option's flag is set yet (nothing applied on the way in). Resume with index `1`; assert **only** option 1's flag is set.
-2. **`runToCompletion` throws on an unanswered ask.** Same fixture through `runToCompletion`; assert it throws `[UQF] runToCompletion hit an unresolved ask`.
-3. **Plain chains are unchanged.** A `flag_write`+`reward`+`narrative` chain through `runToCompletion`; assert identical side effects and message order to the pre-Inc-A `execBits` (a golden-output check).
-4. **Save cannot capture a suspension (§6.3 invariant).** With `_uqfPending` non-null (mid-choice), take an autosave; assert `JSON.parse(localStorage.r2h_autosave)` contains **no** generator/`_uqfPending` field and round-trips cleanly.
-5. **`item_check` becomes readable (bonus proof).** Show a `choice` whose branch is chosen by a preceding `item_check` result — proving the write-only `ctx._itemCheck` (`21880`) is now consumable by a following bit. *(If this exceeds ~30 lines it moves to the follow-on; the mechanism is what Inc A must prove.)*
-
-**Regression (the whole point — must be a no-op):**
-- `quest-runtime-uqf.test.js` — **full pass** (target **302/302**; the five wrapped call sites must change no observable behaviour). ⚠️ *Env caveat carried from §BOARD-01: this suite reports **15 pre-existing failures in this environment**, proven identical with the HTML change git-stashed (a story-tab default-view quirk, not a regression). Run bare + read the summary line from a file (Test-Run Rule 1); stop the WBAPI server first (Rule 2). The Inc A verdict is "no NEW failures vs. the stashed baseline," not an absolute count.*
-- `warrants-board.test.js` (**25/25**) — `_acceptBounty`'s `execBits` is one of the five wrapped sites.
-- `courier-map` 1/1 · `enemy-ai` 4/4 · `kg-quest-chain` 4/4.
-- Inline script parses clean (`node --check` on the extracted `<script>`); **0 kernel sentinels** in the diff; **no new movement-refusal**.
+**The one thing the report noticed about itself was right, and is the most durable line in it.**
+§4.4 enumerated the five *production* callers and missed the **32 test-file callers** (7 in
+`quest-runtime-uqf.test.js`, 25 in `warrants-board.test.js`). Its own conclusion — *"when an engine
+function's signature changes, 'wrap every caller' includes the harness, and the only honest verdict is
+a git-stash-diff of failing sets, not a raw pass count"* — is exactly the discipline the three wrong
+counts above would have caught.
 
 ---
 
-## 10. Scope fence — what Inc A does NOT do
+## X. Findings filed by this verification
 
-Inc A ships the **mechanism** (`yield` + driver + `ask` envelope) and **one proof** (the test's `choice` chain). It explicitly defers, to keep the diff ~30 lines and the regression a clean no-op:
-
-- **Choice UI content** — no authored `choice` bit lands in `QUEST_DB`. The render block for a live on-screen `choice` (the `renderChoiceBlock` the `21882` comment imagined) is the first *consumer*, shipped next.
-- **Quest-acceptance rewrite** — §PLAY-01's "the engine tells, never asks" is *fixed by* this seam (acceptance becomes a `choice` bit at the head of a chain), but the acceptance flow itself is a follow-on, not Inc A.
-- **Un-smuggling `skill_check`** — `resolveSkillCheck` (`21850`) keeps its in-leaf branch for Inc A (wrapped in `runToCompletion`). Making it a `function*` that `yield*`s so a skill_check branch can *suspend* is the enabling follow-on — mechanical once the generator exists, but out of Inc A's blast radius.
-- **`'abandoned'` status / transactional rollback** — both become expressible once a stage can suspend/branch; neither is built here.
-
-**Forward pointers (dependency order from the BACKLOG §VM-01 preamble):** A · B · C independent (A is the keystone). D needs C. E needs C + the `_legacy_fn` purge. F answers `canComplete`'s own `or` question (`21772`/`21790`). G needs A + F to be worth doing.
-
-**Prior art (from the track preamble):** Ink (Inkle) compiles narrative to bytecode on a small VM and **suspends at a `ChoicePoint`** — structurally exactly this. Yarn Spinner for dialogue. (CEL / JSONLogic are Inc F's expression-AST reference, not Inc A's.)
+- **§DX-02ds** 🟢 — the driver's own safety comment cites *"no autosave (storyAutoSave, 23237) ever
+  captures a suspension."* `storyAutoSave` was at **23313** at the commit that wrote the comment, and
+  is at `function storyAutoSave() {@23805` today. **Wrong when written, by exactly 76 — the
+  increment's own net line delta** (+106/−30). The author read the anchor off this report's §7 table,
+  where it is *correct* for the **parent** build, and pasted it into a comment living in the **child**
+  build. Today it resolves into `_S_DEFAULTS`, at `sbPapersRead: false` — a real-but-wrong line, the
+  worst kind. Comment-only, no behaviour.
+- **§DX-02dt** 🟢 — the game's only two authored `choice` bits (`dus-kern-sable-first@34296` and its
+  follow-up) have **no test that names them**. `uqf-verb-driver.test.js` proves the driver thoroughly,
+  but entirely against in-test fixtures; the one piece of shipped content that exercises the keystone
+  end-to-end is covered only incidentally. One test.
+- **`index.md` corrected in this increment** — line 148 pinned `quest-runtime-uqf.test.js` at
+  **293 tests**; measured **303**. Fixed in place (two-way doc sync), not filed.
 
 ---
 
-## 11. Verdict
+## XI. Verdict
 
-**✅ SHIPPED 2026-07-22 exactly as locked** (not committed — user rule). The change landed at ~30 engine lines + five one-line call-site wraps; the three §6 design calls shipped as recommended. The regression is a **proven true no-op**: `quest-runtime-uqf` returned to **286 passed / 17 failed = the env baseline exactly** (0 NEW failures vs. an HTML-stashed run), and the new `tests/integration/uqf-coroutine.test.js` (**5/5**) drives a real `choice` chain end-to-end. `warrants-board` 25/25 · `courier-map` 1/1 · `enemy-ai` 4/4 · `kg-quest-chain` 4/4. HTML diff **+56/−9**, 0 kernel sentinels, no new `Math.random()`, no new movement-refusal.
+**✅ SHIPPED 2026-07-22, exactly as locked, and it has not needed a correction since.** Three design
+calls, all shipped as recommended; two still exactly right and the third safe for the reason the
+report itself supplied. Every quoted block byte-exact; 33 of 33 anchors resolving; the acceptance
+suite **5/5** and the named regressions **337/337** at HEAD; the authored consumer browser-proved
+executing the mechanism end-to-end. Three wrong numbers, all of them in the verdict paragraph, none
+of them touching a shape, a decision or a line of code.
 
-**One thing this report under-scoped (recorded for the next signature-changing increment):** §4.4 enumerated the **five production** callers that must wrap, but the **test files call `execBits` directly too** (7 sites in `quest-runtime-uqf.test.js`, 25 in `warrants-board.test.js`) — those exercise the old synchronous contract and broke identically. They were adapted to `_uqfRunToCompletion(...)` with assertions unchanged. The lesson: when an engine function's signature changes, "wrap every caller" includes the harness, and the only honest verdict is a **git-stash-diff of failing sets**, not a raw pass count.
-
-Inc A is the keystone: once the VM can `yield`, every "the engine can't do that" in the §VM-01 track becomes "author it in data." **Next consumers unblocked:** a live on-screen `choice` render (`renderChoiceBlock`), quest-acceptance-as-a-choice, the `skill_check` un-smuggle, and the `'abandoned'` status.
+Inc A is the keystone, and the thirty days after it are the evidence. The VM learned one word, and
+the word was *wait*. Kern and Sable are still at that bar counter, still on Chapter 7, still
+underlining the parts with the most detail — and for the first time in this engine's life, whether
+anyone tells them is up to the person holding the keyboard.
 
 *© 2026 Paul Richeson — MIT License.*
