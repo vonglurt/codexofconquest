@@ -1097,7 +1097,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 #s-hp-bar-fill {
   height: 100%; width: 100%;
-  background: var(--grn-lt);
+  background: linear-gradient(90deg, #7A4A1A, #C9920E, #F7C93C); /* brown → gold → yellow (user recolor 2026-08-06; was --grn-lt green) */
   border-radius: 3px;
   transition: width 0.4s ease, background 0.4s ease;
 }
@@ -2567,12 +2567,12 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .multi-atk-btn.active { background: #E76219; color: #120600; border-color: #FEA712; }
 .multi-atk-lbl { color: #FEA712; text-transform: uppercase; letter-spacing: 1px; }
 
-/* ── Playfield Zones — lighter brown arena ───────────── */
+/* ── Playfield Zones — light green dice arena (user recolor 2026-08-06; was dark brown) ── */
 #center-col { background: #2a1208; }
-#opp-zone  { background: #3a1a08; border-bottom: 4px solid #C21717; }
-#you-zone  { background: #2e1406; }
-#opp-zone .zone-label { color: #E76219; }
-#you-zone .zone-label { color: #FEA712; }
+#opp-zone  { background: #CDE6B8; border-bottom: 4px solid #C21717; }
+#you-zone  { background: #BCDCA4; }
+#opp-zone .zone-label { color: #C21717; }
+#you-zone .zone-label { color: #6A4808; }
 
 /* ── Config / Center Bottom ──────────────────────────── */
 #config-scroll { background: #2e1406; border-top: 3px solid #562717; }
@@ -3556,7 +3556,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <!-- You section -->
       <div class="section-lbl gold">🎲 YOU</div>
       <div class="hp-bar-wrap">
-        <div class="hp-bar-fill" id="player-hp-bar" style="width:100%;background:var(--grn-lt)"></div>
+        <div class="hp-bar-fill" id="player-hp-bar" style="width:100%;background:linear-gradient(90deg, #7A4A1A, #C9920E, #F7C93C)"></div>
         <div class="hp-bar-txt" id="player-hp-txt">—</div>
       </div>
       <div class="pip-row">
@@ -6508,7 +6508,7 @@ function rollD20(advState) {
 
 function hpColor(cur, max) {
   const pct = cur / max;
-  if (pct > 0.5) return 'var(--grn-lt)';
+  if (pct > 0.5) return 'linear-gradient(90deg, #7A4A1A, #C9920E, #F7C93C)'; // brown → gold → yellow (user recolor 2026-08-06; was --grn-lt green)
   if (pct > 0.25) return 'var(--gold)';
   return 'var(--red-lt)';
 }
@@ -6523,7 +6523,7 @@ function dieSVG(sides, value, size, glowClass) {
   const dim = size === 'hero' ? 88 : size === 'med' ? 60 : 36;
   const numStr = String(value);
   const numFS = isHero ? (numStr.length >= 3 ? 22 : 28) : (numStr.length >= 3 ? 9 : 12);
-  const numColor = '#ffffff';
+  const numColor = '#2A1A0A'; // theme ink — all dice render in the (now light green) zones; white was invisible there (user recolor 2026-08-06)
 
   let shape = '';
   let textY = isHero ? 54 : 22;
