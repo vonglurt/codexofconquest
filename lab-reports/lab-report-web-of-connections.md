@@ -2,401 +2,257 @@
 
 # Lab Report — The Web of Connections: Froberger's Traces, NPC Cross-Relationships, and Hidden Histories
 
-*roll2hit.com / Codex of Conquest — Layer 45 Design Document*
+*roll2hit.com / Codex of Conquest — Layer 45 design lock, re-verified against the live engine*
+
+| | |
+|---|---|
+| **Original** | Layer 45 design document, dated **2026-05-22** (report footer) |
+| **First commit** | `32c10c5` 2026-05-24 17:34:49 — the repository's **initial commit**; the whole feature set is already present in it |
+| **Ship build** | `32c10c5:roll2hit-v3.html` — **14,377 lines / 859,773 bytes** |
+| **HEAD build** | 2026-08-23 — **38,712 lines / 5,513,223 bytes**, a **6.4×** file |
+| **Verified** | §DOC-02cz, 2026-08-23 — source census + exhaustive favor-write enumeration + Chromium (`tests/integration/web-of-connections-l45.spec.js`, 11 measurement specs, all green) |
+| **Status** | **HISTORY doc.** Legacy 26×16 node codes (`CI`, `IN`, `TV`, `BA`, `CY`, `SW`, `SL`) are left as written — annotate, don't rewrite (§DX-02c / §AUDIT-03n) |
+| **Sibling** | Layer 44 — `lab-report-living-world.md`, verified §DOC-02cy. The two layers share the `npcFavorability` ledger and one defect |
+
+> **⚠️ KEY-DRIFT NOTE (2026-07-31, §AUDIT-03n).** The design-time tables below key their per-NPC entries to the profiles' **surnames** — `couperin` / `weckmann` / `bruhns`. The favor ledger never writes those, so every one of those entries was unreachable in live play until §AUDIT-03n renamed them. Read them as **`quill`** (Bard Tomas Couperin, MHQ) · **`crov`** (Pit Master Weckmann, HKG) · **`auros`** (Cmdr Seraphine Bruhns, HKG). The six canonical keys are `yael` · `brynn` · `quill` · `pachelbel` · `crov` · `auros`, fenced by `check:npcregs` (`check:walk` gate #14). *Re-confirmed 2026-08-23: every authored string in this report — all 6 traces, all 17 cross-references, all 5 patrol lines, the full training log — is **byte-identical** from `32c10c5` to HEAD. Only keys and node codes moved.*
 
 ---
 
-> **⚠️ KEY-DRIFT NOTE (added 2026-07-31, §AUDIT-03n).** The code blocks below are the **design-time** shapes and key the per-NPC tables to the profiles' *surnames* — `couperin` / `weckmann` / `bruhns`. Those were never keys the favor ledger writes, so every one of those entries was unreachable in live play until §AUDIT-03n renamed them. Read them as **`quill`** (Bard Tomas Couperin, MHQ) · **`crov`** (Pit Master Weckmann, HKG) · **`auros`** (Cmdr Seraphine Bruhns, HKG). The six canonical favor keys are `yael` · `brynn` · `quill` · `pachelbel` · `crov` · `auros`; `check:npcregs` (`check:walk` gate #14) now enforces it. The report's design intent is unchanged — only the key spelling was wrong.
+## Abstract
 
-
-## I. The Design Principle
-
-The player arrives in Birka having never been there. But Froberger was there before them. And the NPCs didn't start existing when the player walked in — they have histories with each other, debts and warmth and twelve-year-old arguments that were never fully resolved.
-
-The web of connections is the thing the player discovers when they stay long enough. Not in a quest. Not in a journal entry. In Yael mentioning Weckmann offhand. In Brynn knowing Froberger's room number without being asked. In Quill and Pachelbel having a complicated history the player never gets the full story of.
-
-The world is not assembled for the player's benefit. It predates them. They're discovering what's already there.
+Layer 45 specifies eight subsystems that give Birka a past: six one-time NPC memories of Froberger, seventeen cross-reference lines in which the NPCs describe each other, a guard who has said one word for eleven years, a patrol schedule that moves Yael off her home node, a readable training log spanning twelve years, an empty inn room with a note in it, three cross-item connections, and the composite portrait all of that assembles. This re-verification finds the layer **shipped almost completely and transcribed perfectly** — every authored string is byte-identical to the lock across 90 days and a 6.4× file, all 17 cross-references and all 6 traces are present, and §VI, §VII and §VIII shipped as written. The value is in seven deltas, and the largest is not in this layer at all but in the ledger it depends on. **The favor scale has a ceiling the content does not know about.** Every favor write in the file funnels through `_setNpcFavor`, whose auto-upgrade path is hardcoded to **2**; only `yael` has a write to 3 anywhere in the game. `crov`'s maximum reachable favor is therefore **2**, and his Froberger trace asks for **3** — so *one of the six traces the report is built around cannot be delivered*, and the same ceiling silently kills a Layer 44 world event that §DOC-02cy passed as live. `brynn` reaches 3 only on one of two quest orderings, which makes §VII's Room 6 — a whole section — **conditionally reachable at all**. Five further deltas: Yael's patrol loop is first-match-wins with its loosest condition declared first, so four of her five field lines are **even-game-day-only**; the cross-references are a consumed sequence rather than the "naturally cycling pool" specified; two of the connection map's eight declared relationships have no lines in either direction, one of them being the *"everyone mentions Gigault"* edge that §DOC-02cy independently found broken from the other side; a delivered trace never rejoins the pool as specified; and Weckmann's log renders an authoring stage direction to the player as though it were handwriting.
 
 ---
 
-## II. Froberger's Traces
+## I. Introduction — what the feature is for
 
-Froberger was in Birka. He stayed at Brynn's inn. He talked to Yael. He probably sat in the pit to watch a fight. He asked Auros about the depths.
+The player arrives in Birka having never been there. But Froberger was there before them, and the NPCs did not start existing when the player walked in. They have histories with each other — debts and warmth and twelve-year-old arguments that were never fully resolved.
 
-Each major NPC has one memory of Froberger. It is delivered exactly once — never in the impartial state, never as a quest hook. It surfaces at Friendly or Dear Friend, on a specific visit, and then becomes part of their permanent pool. Once it's said, it doesn't disappear — it cycles with the rest of their dialogue.
+The web of connections is what the player discovers by staying. Not in a quest, not in a journal entry: in Yael mentioning Weckmann offhand, in Brynn knowing Froberger's room number without being asked, in Quill and Pachelbel having a complicated history the player never gets the whole of.
 
-The player who talks to every NPC enough times will reconstruct Froberger from the outside. Not the journal Froberger — the real-world Froberger, the one who left traces in people before the Void became urgent.
+> *The world is not assembled for the player's benefit. It predates them. They're discovering what's already there.*
 
-### FROBERGER_TRACES Const
+**Why this matters for playability.** Layer 44 (its sibling) makes the world move without the player; Layer 45 makes it *have a past*. Mechanically it is the payoff arm of the `npcFavorability` ledger — the reason to raise favor at all when favor grants no stats. Concretely it adds, at HEAD: **6 Froberger traces** (one per NPC, one-time, favor- and visit-gated), **17 cross-reference lines** distributed across all six NPCs, **5 Yael patrol field lines** unavailable at her home node, a **50-line readable training log** that updates with the player's own record, a **4-paragraph empty room** with a found note reading *"— still here."*, and **3 cross-item connections** that make one character react to something they learned somewhere else. None of it grants XP, gold, or a stat. None of it gates a road. It is the layer that converts *favor* from a number into a **relationship with a history attached**.
+
+The eight subsystems: **(II)** Froberger's traces · **(III)** NPC cross-references · **(IV)** Nivers, the eleven-year guard · **(V)** Yael's patrol · **(VI)** Weckmann's training log · **(VII)** Room 6 · **(VIII)** cross-item connections · **(IX)** the composite truth.
+
+---
+
+## II. Method
+
+1. **Symbol census** — every construct the report names, grepped at HEAD and at the report's own build (`git show 32c10c5:roll2hit-v3.html`).
+2. **Byte-diff against the ship build** — each authored block compared line for line across 90 days.
+3. **Exhaustive favor-write enumeration** — *every* write to `npcFavorability` in the file located (4 sites), every `kind:'favor'` bit in `QUEST_DB` extracted per NPC, and the reachable ceiling derived per NPC rather than assumed.
+4. **Gate-vs-tier audit** — each gate's numeric threshold compared against the tier *name* the lock uses for it.
+5. **Chromium proof** — eleven measurement specs through the repo's own Playwright harness, asserting through the engine's own functions (`_setNpcFavor`, `_checkFrobergerTrace`, `_getYaelLocation`, `_buildWeckmannLog`, `_nodeHookBirkaRoom6`), including one **cross-layer** case that re-tests a §DOC-02cy claim.
+
+---
+
+## III. Result — spec → shipped delta
+
+**All eight subsystems shipped.** Every authored string is byte-identical; the only design-time symbol that never existed is `MAREN_DIALOGUE`, which shipped as `NIVERS_DIALOGUE` in the initial commit — the lock's own draft name for the character, never used.
+
+| § | Subsystem | Shipped? | Delta |
+|---|---|---|---|
+| II | Froberger's traces | ⚠️ 5 of 6 deliverable | 6/6 present, byte-identical, tiers exact. **`crov`'s asks for favor 3 and crov's ceiling is 2** (**F1**). **NOT SHIPPED:** *"added to the NPC's permanent pool so it can resurface"* — delivered once, then never again (**F6**) |
+| III | Cross-references | ✅ 17/17 | Distributed over all six NPCs, byte-identical. Delivered as a **consumed sequence** every 3rd visit, not the specified cycling pool (**F4**). Two declared relationships have **no lines** (**F3**) |
+| IV | Nivers | ✅ | `const NIVERS_DIALOGUE = "Evening."` live and rendered. Sits **at `LHR`**, not the specified intersection between CI and IN. Yael's follow-up gated at fav ≥ 2, not the specified Dear Friend. Her journal note hits the §DX-02et breadcrumb bug (**F7**) |
+| V | Yael's patrol | ⚠️ 4 of 5 usable | 5 entries (4 from the lock + 1 from Layer 74). **First-match-wins over non-exclusive conditions, loosest first** → four lines are even-day-only (**F2**). The lock's `ER`/Redwater row never shipped. Yael is **not removed** from her home node while "on patrol" |
+| VI | Training log | ✅ | Full log, Bruna's entries, the two-year gap, player entries keyed to `pitTrainingWins`, plus a Layer 64 championship entry. **Renders an authoring stage direction as player text** (**F5**) |
+| VII | Room 6 | ✅ · conditionally reachable | Room, sigil, two pillows, the note, and Brynn's payoff line all ship at `_npcFavor('brynn') >= 3` — a level reachable on **one of two quest orderings** (**F1b**) |
+| VIII | Cross-item connections | ✅ 3/3 | All three live. Two gated one tier below the lock's own words (**F8**). The Fighter's Token is removed from inventory but never *"sits on Weckmann's counter"* |
+| IX | The composite truth | ⚠️ | Arithmetically incomplete: the portrait is missing Crov's panel, and Brynn's depends on quest order |
+
+Anchors at HEAD: `function _checkFrobergerTrace(npcKey)@27648` · `function _getYaelLocation()@27660` · `function _buildWeckmannLog()@27667` · `const FROBERGER_TRACES = {@27685` · `const NPC_CROSS_REFS = {@27694` · `const NIVERS_DIALOGUE = "Evening.";@27726` · `const YAEL_PATROL_NODES = [@27728` · `const WECKMANN_TRAINING_LOG =@27736` · `function _npcFavor(key)@23460` · `function _setNpcFavor(key, level)@23462` · `function _checkDearFriendUpgrade(key)@23488` · `function _nodeHookBirkaNiversPasses(node,@32227` · `function _nodeHookBirkaYaelPatrolLine(node,@32518` · `function _nodeHookBirkaRoom6(node,@32778`.
+
+---
+
+## IV. Findings
+
+### F1 — the favor ceiling is 2, and the content was written for 3 ⚠️ *the headline*
+
+Every write to `npcFavorability` in the file resolves to four sites: `_setNpcFavor`'s own assignment, two hardcoded auto-upgrade lines, and one unrelated NPC. The two auto-upgrade sites — inside `function _setNpcFavor(key, level)@23462` and `function _checkDearFriendUpgrade(key)@23488` — are identical and both write the literal **2**:
 
 ```js
-const FROBERGER_TRACES = {
-  yael: {
-    minFav: 2,
-    visitTrigger: 3, // third Friendly visit
-    text: "A researcher came through once. Froberger, he said. Knew every patrol route by the second day. Left without saying why. I assumed it was urgent. It usually is, with that type."
-  },
-  brynn: {
-    minFav: 3,
-    visitTrigger: 1, // first Dear Friend visit
-    text: "He stayed in room 6. Very quiet. Read all night — I could see the light under the door. I brought him water twice. He said thank you both times. He left early. He didn't say goodbye, but he left the room cleaner than he found it. I think that's what he could manage."
-  },
-  couperin: {
-    minFav: 2,
-    visitTrigger: 2,
-    text: "He came in once, sat at the back, didn't request anything. Just listened. At the end he said: 'You're good.' I said thank you. He said: 'I mean technically. There's something else. You'll find it or you won't.' And he left. I've been thinking about what the something else is ever since."
-  },
-  pachelbel: {
-    minFav: 2,
-    visitTrigger: 2,
-    text: "He looked at the code on the wall for a long time. Then he said: 'You mean it.' Not a question. I said yes. He said: 'That's rarer than you think.' He bought one item. Left. I ran his description past three contacts afterward. Nobody had a file on him. I respected that."
-  },
-  weckmann: {
-    minFav: 3,
-    visitTrigger: 2,
-    text: "Watched three fights. Didn't place a bet. At the end he asked me how long I'd been running the pit. I told him. He said: 'You still grieve it, don't you. That's why you run it clean.' I asked how he knew. He said: 'You watch the fighters like you're watching for something specific.' He wasn't wrong. I didn't ask him how he knew that."
-  },
-  bruhns: {
-    minFav: 2,
-    visitTrigger: 1,
-    text: "He read my whole depth survey in one session. Three hours. No questions. At the end he said: 'The rate of change is accelerating. You have maybe two years before the first surface event.' I asked what he meant. He said he'd seen it three other places. He left before I could ask what happened to those places. I've been assuming the worst ever since. The data supports it."
-  }
-};
+const check = dearFriendBits[key];
+if (check && check()) { S_story.npcFavorability[key] = 2; /* "says your name when you walk in" */ }
 ```
 
-### Delivery Logic
+`_setNpcFavor` is also monotonic (`if (level <= prev) return;`), so the only way past 2 is a bit or call that names 3 outright. Enumerating every `kind:'favor'` bit in `QUEST_DB` and every direct call gives the reachable ceiling per NPC:
+
+| NPC | Declarative writes | Direct writes | **Ceiling** | Content asking for 3 |
+|---|---|---|---|---|
+| `yael` | `set:1`, `add:1` (cap 3) | `_setNpcFavor('yael', 3)@21429` (Ceremonia, CHA DC 15) | **3** | patrol entry 4 ✅ |
+| `brynn` | `set:1`, `add:1` (cap 3) | — | **3**, order-dependent | Froberger trace ⚠️ · Room 6 ⚠️ |
+| `quill` | `set:1` | — | **2** | — |
+| `pachelbel` | `set:1` | — | **2** | — |
+| `crov` | `set:1` | `_setNpcFavor('crov',1)@25400` | **2** | Froberger trace ❌ · Layer 44 `weckmann_class` ❌ |
+| `auros` | `set:2` | — | **2** | — |
+
+Measured in Chromium: with `pitTrainingWins = 5` (crov's own Dear-Friend condition) and his single `set:1` bit applied, `_npcFavor('crov')` is **2**, and a second `_setNpcFavor('crov', 2)` is a no-op. With visit counts amply satisfied, `_checkFrobergerTrace('crov')` returns **`null`**. Force the ledger to 3 and it returns the authored line — *"You still grieve it, don't you. That's why you run it clean."* — which is, by some distance, the best of the six.
+
+So **§II's central claim is arithmetically false**: *"The player who talks to every NPC enough times will reconstruct Froberger from the outside."* Five sixths of him. The missing panel is precisely the one §II's own Composite Picture lists as *"He could see grief from the outside (Weckmann)"* — the trace in which Froberger reads a man's twelve-year-old bereavement off the way he watches fighters. It has never been read by anyone.
+
+**The same ceiling reaches back a layer.** §DOC-02cy scored `WORLD_PROGRESSION_EVENTS` as *"all 6 events live and correctly gated."* One is not: `weckmann_class` requires `S_story.actNumber >= 6 && _npcFavor('crov') >= 3`. Measured at act 8 with crov at his ceiling, the condition is **`false`**; forced to 3 it is `true`. That report has been corrected, and the cross-layer case is pinned in this increment's suite. *A ceiling in a shared ledger is invisible from inside any single layer that reads it — which is exactly why it survived two verification passes.*
+
+### F1b — Room 6 exists, and whether you can open it depends on quest order
+
+`brynn` is the one non-yael NPC with an `add` bit — `quest_brynn_firewood`'s `{ kind:'favor', npc:'brynn', add:1 }`, capped at 3 — so she can stack the auto-upgrade. Whether she does depends entirely on sequence. Measured:
+
+| Order | Result |
+|---|---|
+| ledger (`set:1`) → journal entry 7 read (auto-upgrade → **2**) → firewood (`add:1` → **3**) | **3** — Room 6 opens |
+| ledger (`set:1`) → firewood (`add:1` → **2**) → journal entry 7 read | **2** — Room 6 never opens |
+
+The second ordering loses because `_checkDearFriendUpgrade` opens with `if (_npcFavor(key) !== 1) return;` — at 2 it declines to act, and the `add` bit has already been spent. Confirmed by rendering the hook: `_nodeHookBirkaRoom6` emits nothing at favor 2 and the full panel at 3.
+
+A player who does everything Brynn's arc offers, in the wrong order, is locked out of §VII — the room, the sigil, the second pillow, the scrap of paper reading *"— still here."*, and Brynn's payoff line, which is the best sentence in the layer:
+
+> *"He didn't say goodbye. I used to think that was the hard part. Now I think the hard part was that he thought he was coming back."*
+
+No message tells them. Nothing looks broken. The button is simply not there.
+
+### F2 — four of Yael's five patrol lines are even-game-day-only
 
 ```js
-function _checkFrobergerTrace(npcKey) {
-  const trace = FROBERGER_TRACES[npcKey];
-  if (!trace) return null;
-  if (S_story[`frobergerTrace_${npcKey}_delivered`]) return null;
-  const fav = S_story.npcFavorability[npcKey] ?? 0;
-  if (fav < trace.minFav) return null;
-  const visits = S_story.npcVisitCounts?.[npcKey] ?? 0;
-  if (visits < trace.visitTrigger) return null;
-  // Deliver
-  S_story[`frobergerTrace_${npcKey}_delivered`] = true;
-  return trace.text;
-}
+// function _getYaelLocation()@27660
+for (const p of YAEL_PATROL_NODES) { if (p.condition()) return p; }
 ```
 
-When a Froberger trace is delivered, it replaces the normal dialogue for that visit. It does not consume a visit-count slot. After delivery, the trace text is added to the NPC's permanent Friendly/Dear Friend pool so it can resurface naturally.
+First match wins, and `const YAEL_PATROL_NODES = [@27728` declares its **loosest** condition first: `(S_story.gameDay || 0) % 2 === 1`, true half the time and dependent on nothing else. Measured with *every* other patrol condition simultaneously satisfied — slums cleanup complete, escort used, named report delivered, yael at favor 3, act 5 — `_getYaelLocation()` on an odd game day returns `MSY` / *"Eastern check. You're traveling late."* Only on even days does it fall through to `BMA` / *"Showing my face."*
 
-### The Composite Picture
+So the Ghetto line, the escort line, the *"Checking on Quill. Don't tell him."* line and Layer 74's second-report line are reachable **only on even game days**, and only one at a time, in declaration order. The four conditions were written as *independent facts about Yael's week*; the loop reads them as a priority list.
 
-A player who collects all six Froberger traces knows:
-- He was methodical (Yael: knew every patrol route in two days)
-- He was gentle and somewhat defeated by the end (Brynn: left the room clean; couldn't manage a goodbye)
-- He heard something in Quill that Quill still can't name
-- He read Pachelbel's code and believed it was real
-- He could see grief from the outside (Weckmann)
-- He knew the timeline (Auros: two years; three other cities; didn't say what happened)
+The section's premise takes a second hit: `_nodeHookBirkaYaelPatrolLine` runs `if (node.code !== 'LHR')` and only **adds** a field line elsewhere — it never removes Yael from her home node. §V's setup — *"The player who visits CI and doesn't find Yael: she's somewhere else"* — does not occur. She is always at `LHR`, and sometimes also in the field. The spatial puzzle has no puzzle in it. (The lock's sixth table row, Yael near `ER` with the Redwater line, never shipped: **0** occurrences of "Redwater" in the file.)
 
-Together: a portrait of someone who was very good and very tired and running out of time and still stopping to say thank you when water was brought.
+### F3 — two declared relationships with no lines in either direction
 
-The journal shows Froberger's self-report. The traces show him through six other pairs of eyes. Neither is complete. Both are true.
+§III's connection map declares eight edges. Six are honored by `NPC_CROSS_REFS` — Yael↔Brynn, Yael↔Weckmann, Brynn↔Quill, Quill↔Pachelbel, Weckmann↔Auros, and All→Froberger (all six traces). Two are not:
 
----
+- **`Yael — Pachelbel` (*"professional awareness; Yael knows what Pachelbel does; doesn't move on it"*)** — measured: **0** lines from Yael mentioning Pachelbel, **0** from Pachelbel mentioning Yael. The most interesting relationship on the map, dramatically speaking — a guard captain who knows a fence's business and has decided not to act — is described in the design and never spoken in the game.
+- **`All → Gigault` (*"everyone mentions Gigault; Gigault mentions no one"*)** — measured: **0** mentions of Gigault across all 17 cross-references.
 
-## III. NPC Cross-References
+That second one is the same defect §DOC-02cy found from the other side. Layer 44's §II says Gigault is real *because two people name her*; Layer 45's §III says *everyone* names her. Two design locks, written the same day, each treating the other as the place the naming happens — and neither shipped it. **Between them the game has one bread stall, three ambient strings, and a woman nobody has ever mentioned.**
 
-NPCs who know each other mention each other. Not constantly — once or twice, at the right moment. The player builds the web by collecting mentions.
+### F4 — the cross-references are a consumed sequence, not a cycling pool
 
-### The Connection Map
-
-```
-Yael ←→ Brynn    (Yael knows Brynn is tired; Brynn knows Yael is more than she shows)
-Yael ←→ Weckmann     (mutual respect; Yael uses Weckmann's training record to assess fighters)
-Yael — Pachelbel    (professional awareness; Yael knows what Pachelbel does; doesn't move on it)
-Brynn ←→ Quill   (Brynn sometimes requests songs; Quill plays them for free)
-Quill — Pachelbel   (complicated history around debt and a loan that was and wasn't a favor)
-Weckmann ←→ Auros    (share the CY node; know each other's work; quiet mutual acknowledgment)
-All → Gigault      (everyone mentions Gigault; Gigault mentions no one)
-All → Froberger       (everyone has a trace; Froberger mentions no one who is still living)
-```
-
-### Cross-Reference Lines — Sample
-
-These surface in the Friendly/Dear Friend pools as naturally cycling dialogue. Not triggered — just there, waiting.
-
-**Yael on Brynn:**
-- Friendly: "Brynn's been running that inn alone for six years. Nobody asks if she's managing. I ask. She says fine. I ask again. She says fine and pours tea. I count the tea as the real answer."
-- Dear Friend: "If something happens to this city, Brynn will keep the inn open. That's not a prediction — that's a fact about who she is. I've been making sure the CI district stays stable partly because of that."
-
-**Brynn on Yael:**
-- Friendly: "Yael comes in on Tuesday nights. Always the corner table. Doesn't want food. Sits for an hour. I don't ask. I just make sure the fire's warm and nobody bothers her."
-- Dear Friend: "She filed something last month. Wouldn't tell me what. She looked like someone who had just done the thing they should have done ten years ago. I know that look. I've been working on my version of it."
-
-**Yael on Weckmann:**
-- Friendly: "Weckmann's pit is one of the only clean operations in the district. I don't go in — conflict of interest — but I pay attention to who comes out. Mostly they come out standing. That's not nothing."
-
-**Weckmann on Yael:**
-- Friendly: "The guard captain checks on the pit results without checking on the pit. Smart. She knows what she needs to know without knowing what she can't unknow. I respect the line she's drawn."
-
-**Brynn on Quill:**
-- Friendly: "I asked Quill to play something slow last month. He came by the next evening. Didn't charge me. Played for forty minutes. He knows exactly when to stop."
-- Dear Friend: "Quill is going to be fine. He's already fine, actually. He just doesn't know it yet because the debt number is still in his head. Once that's gone — he'll play like he used to. I heard him play before the Guild, once. Different sound. He'll get back to it."
-
-**Quill on Pachelbel:**
-- Friendly: "Pachelbel and I have a history. He lent me money when the Guild first came after me. He says it wasn't a loan. I say it was. We've been having this argument for four years. I think we both like having it."
-- Dear Friend: "Pachelbel's code is real. I've tested it — accidentally. He turned down a deal I set up for a mutual contact because the margin was wrong by his code's standards. He didn't tell me he was turning it down. He just did. I found out later. That's when I understood the code isn't performance."
-
-**Quill on Brynn:**
-- Friendly: "Brynn asked for something slow last Tuesday. I was there Wednesday. She was doing the books while I played. She didn't look up. She looked less tired by the time I stopped. I count that."
-
-**Pachelbel on Quill:**
-- Friendly: "Quill says it wasn't a loan. It was. I let him say it wasn't because the alternative is that it was a gift, and Quill's too proud for gifts. So it's a loan we both know will never be repaid. That works fine."
-- Dear Friend: "He's going to pay it back eventually. Not because he has to — because he'll want to. When he does I'll tell him to put it toward the next license payment. He'll argue. I'll win. It'll be fine."
-
-**Weckmann on Auros:**
-- Friendly: "Auros does her surveys at the bottom of the CY access shaft. I hear the equipment. I don't ask. She doesn't ask about the pit. We work in parallel. That's a good arrangement."
-- Dear Friend: "She found something down there six months ago. I could tell by the way she came back up. She didn't say what. I didn't ask. But I've been keeping the pit fighters away from the north corner of the shaft since then."
-
-**Auros on Weckmann:**
-- Friendly: "Weckmann cleared the north access corridor last season without being asked. I think he knew I needed it clear. He didn't say anything. That's his way."
-- Dear Friend: "I've been using the fighters he trains for depth security when the survey goes past the first threshold. They're calm under pressure. Whatever he's teaching them, it works down there too."
-
----
-
-## IV. Nivers — The Eleven-Year Guard
-
-Yael mentions Nivers in her Friendly pool: *"Eleven years on this corner. Same guard. Nivers. She hasn't called in sick once. She's either a machine or she's scared. I keep watching."*
-
-Nivers exists at a minor intersection node between CI and IN — a patrol point that is traversable but not a full node. She is present every time the player passes through.
-
-She has one line of dialogue.
+§III specifies: *"These surface in the Friendly/Dear Friend pools as naturally cycling dialogue. Not triggered — just there, waiting."* Shipped:
 
 ```js
-const MAREN_DIALOGUE = "Evening.";
+const idx = S_story['crossRefIdx_' + npcKey] || 0;
+if (count > 0 && count % 3 === 0 && idx < eligible.length) { S_story[...] = idx + 1; return eligible[idx].text; }
 ```
 
-That's it. She says "Evening." regardless of time of day. She has been saying it for eleven years. She will say it again.
+Every third visit, strictly in declaration order, each line once. Measured for Brynn at favor 2 (4 eligible lines): they arrive on visits **3, 6, 9, 12**, and from visit 13 onward the cross-reference pool is silent forever. This is a different feature from the one specified — a **collection** rather than an ambience — and it is arguably the better one for a player who wants to see all 17. It is worth recording because the lock's phrasing (*"just there, waiting"*) would lead a future editor to expect re-cycling and to "fix" a bug that isn't one.
 
-If the player has Yael at Dear Friend: Yael's Dear Friend pool gains one addition — delivered once, after the player has passed Nivers's node at least three times:
+Note also that all 17 lines are gated at `fav: 1` or `fav: 2` — never 3 — which is why §III alone escaped F1 unharmed.
 
-*"Nivers's been on that corner for eleven years. You know what that takes? Not skill. Presence. The willingness to be there every single day when the world is not watching. I've tried to understand it. I think it's the thing I should be learning from her instead of the other way around."*
+### F5 — the training log renders a stage direction as handwriting
 
-Nivers never gets a name tag. The game calls her "The Guard on the Corner." If the player asks Yael about her (a dialogue option in Yael's Friendly state): Yael says her name is Nivers. The player's journal gains a note: *"The guard on the corner — Nivers. Eleven years."* No quest. No reward. A name, given.
+The lock writes `[twelve years of entries — fighters' names, brief notes, outcomes]` as an authoring instruction, in the same bracket convention it uses for `[gap of two years]`. The first is a note to whoever fills the log in; the second is prose. `const WECKMANN_TRAINING_LOG =@27736` shipped **both** verbatim, and `_buildWeckmannLog()` substitutes only `{PLAYER_ENTRIES}` and `{CHAMP_ENTRY}`. Measured: the rendered log contains the literal string `[years of entries — fighters' names, brief notes, outcomes]`.
 
----
+So a player who opens Weckmann's battered notebook — a genuinely lovely object, with Cabanilles who said he'd be back and wasn't, and Bruna pushed too far, and the two-year silence, and *"Back. Running legal fights only."* — reads, in the middle of it, an editorial placeholder describing what should have been written there. Everything else in §VI shipped exactly: Bruna's entries, the gap, the player's own five progressive notes keyed to `pitTrainingWins`, and Layer 64's championship addendum. **Cost to fix: replace one bracketed line with three or four invented fighters.**
 
-## V. Yael's Patrol — The Spatial Puzzle
+### F6 — the trace is delivered once and does not come back
 
-Yael is stationed at CI. But she's on patrol. At certain times — morning (game day, even), afternoon (odd), evening (specific quest states) — Yael appears at secondary patrol nodes rather than at CI.
+§II specifies: *"After delivery, the trace text is added to the NPC's permanent Friendly/Dear Friend pool so it can resurface naturally."* `_checkFrobergerTrace` sets `frobergerTrace_<key>_delivered` and returns the text; the selector returns it as that visit's quote. **Nothing adds it to any pool.** Measured: first call returns the line, second and third return `null` forever.
 
-The player who visits CI and doesn't find Yael: she's somewhere else. The player who learns the pattern finds her in the field — one line of dialogue per field location, not available any other way.
+This is a small loss and a real one. The traces are the layer's best writing, and the design's argument for re-cycling them is sound — a memory of a dead man that surfaces again months later, unprompted, is a different experience from a memory you were shown once during a checklist of visits.
 
-### Patrol Node Table
+### F7 — Nivers ships, at the wrong address, with the breadcrumb bug attached
 
-| Condition | Yael's Location | Field Line |
-|-----------|----------------|------------|
-| Early game day (even) | CI (home) | Normal pool |
-| Late game day (odd) | SW corridor entry | "Eastern check. You're traveling late." |
-| After Ghetto quest complete | SL (Ghetto node) | "Showing my face. They should see someone who isn't making a report." |
-| After escorting player | IN area | "I walk this route now. It adds six minutes. Worth it." |
-| Dear Friend + Act III+ | TV/BA corridor | "Checking on Quill. Don't tell him." |
-| EB quest active at ER | ER adjacent | "I know about the Redwater situation. I'm watching it from outside my jurisdiction. Don't ask me to do anything official." |
+§IV shipped nearly whole, and its centerpiece is intact: `const NIVERS_DIALOGUE = "Evening.";` rendered on every pass, the pass counter, Yael's eleven-years speech, and the "🛡 Who is the guard on the corner?" button that gives the player her name for no reward. Three deltas:
 
-### Implementation
+- The lock places her *"at a minor intersection node between CI and IN — a patrol point that is traversable but not a full node."* Shipped: `if (node.code === 'LHR')` — she is at CI itself. The traversable-but-not-a-node concept does not exist in the engine, then or now.
+- Yael's follow-up is gated `_npcFavor('yael') >= 2` where §IV says *"If the player has Yael at **Dear Friend**"* — one tier low (see **F8**).
+- The name-learned journal note is written as `S_story.log.unshift({ type:'world', text: … })`, which is **§DX-02et's breadcrumb-array defect**, filed from §DOC-02cy. This is its second site and Layer 45's own. *"The guard on the corner — Nivers. Eleven years."* — a name, given, and filed into an array of node codes.
 
-```js
-const YAEL_PATROL_NODES = [
-  {
-    condition: () => S_story.gameDay % 2 === 1,
-    nodeSlug: 'SW_ENTRY', // corridor node near SW
-    line: "Eastern check. You're traveling late."
-  },
-  {
-    condition: () => S_story.yaelGhettoQuestComplete,
-    nodeSlug: 'SL',
-    line: "Showing my face. They should see someone who isn't making a report."
-  },
-  {
-    condition: () => S_story.yaelEscortUsed,
-    nodeSlug: 'IN_APPROACH',
-    line: "I walk this route now. It adds six minutes. Worth it."
-  },
-  {
-    condition: () => (S_story.npcFavorability.yael ?? 0) >= 3 && S_story.actNumber >= 3,
-    nodeSlug: 'TV_APPROACH',
-    line: "Checking on Quill. Don't tell him."
-  }
-];
-```
+### F8 — the tier names and the tier numbers disagree, in four places
 
-A player who figures out that Yael moves — and learns when and where — can collect lines that CI never shows. This is not a secret quest. It's just: Yael has a job. She does it. The player who pays attention finds her doing it.
+The lock names its gates by tier: *Friendly*, *Dear Friend*. The engine numbers them, and the file carries **two incompatible scales** in its own comments — `@22305` says *"cap (default 3 = Dear Friend)"* while `@23088` says *"Friendly (fav 1)"* and `@23507` says *"Dear Friend (fav 2)"*. Layer 45's constructs are split across both:
+
+| Construct | Lock says | Shipped gate | Verdict |
+|---|---|---|---|
+| `FROBERGER_TRACES` | *"Friendly or Dear Friend"* | `minFav` 2 and 3 | ✅ 0–3 scale |
+| Room 6 | *"Brynn reaches Dear Friend"* | `>= 3` | ✅ 0–3 scale |
+| `NPC_CROSS_REFS` | *"Friendly / Dear Friend"* | `fav` 1 and 2 | ⚠️ 0–2 scale |
+| Nivers → Yael line | *"Yael at Dear Friend"* | `>= 2` | ⚠️ 0–2 scale |
+| Froberger note × Auros | *"visits Auros at Dear Friend"* | `>= 2` | ⚠️ 0–2 scale |
+| Rough Whiskey × Brynn | *"Friendly or higher"* | `>= 1` | ⚠️ 0–2 scale |
+
+Layer 44 adds two more on the 0–2 side (farewells, Brynn's maintenance) and two on the 0–3 side (`_getNodeMapColor`, `weckmann_class`). **This is the same root cause as F1 seen from the other end:** content written against the 0–3 scale either fires a tier early or, where the ceiling bites, never fires at all. The scales need to be reconciled once, centrally, not gate by gate.
+
+### F9 — credit: this is the most complete layer the program has scored
+
+Worth stating plainly. All eight subsystems shipped. All 17 cross-references, all 6 traces, all 5 patrol lines and the entire 50-line training log are **byte-identical from the repository's first commit to HEAD**. §VI, §VII and §VIII shipped as written, including details a shortcut would have dropped: the second pillow Brynn added and cannot explain, the sigil at eye level, the token that Weckmann keeps rather than hands back, and Brynn noticing Pachelbel's stock changed without knowing why. The implementer also finished a thing the lock left implicit — the training log's player entries advance on `pitTrainingWins` exactly as the five sample lines imply, and Layer 64 later extended the same mechanism for the championship rather than bolting on a new one.
 
 ---
 
-## VI. Weckmann's Training Log — Readable Object
+## V. Playability assessment
 
-At the CY pit: a battered notebook hanging from a hook near the training mat. "📓 The training log."
+**What the layer adds, and it is the reason favor exists.** Favor grants no stats in this game. Layer 45 is most of what it buys: 6 memories of a dead researcher told by the people who met him, 17 lines in which the cast describes each other, a guard who says *"Evening,"* a log with a two-year hole in it, and a room with a note that reads *"— still here."* A player who raises every NPC as far as the game allows gets, measured at HEAD, **5 of 6 traces**, **17 of 17 cross-references** (over ~39 node visits), **4 of 5 patrol lines** and only on even days, **1 of 1 training logs**, **3 of 3 cross-item connections**, and **Room 6 if and only if they read journal entry 7 before stacking Brynn's firewood.**
 
-The log is formatted as dated entries, earliest to latest. Bruna appears in entries from years ago. The player's own training appears near the bottom.
+**What the player experiences vs. what was designed.** Six subsystems land whole. Two are diminished by the shared ledger rather than by their own code — which is the finding worth carrying forward: **§II and §VII are not broken, they are out of range.** Every line of them is correct, present, and byte-identical to a design document written the same week the repository was created. They simply ask the favor system for a number it stopped being able to produce.
 
-### Log Text (Full Rendering)
+**The fixes, in order of value per character changed.** One line — give `crov` an `add:1` bit on any existing quest — restores the sixth Froberger trace *and* revives Layer 44's `weckmann_class` event. One reorder — move the parity entry to the end of `YAEL_PATROL_NODES` — makes four patrol lines reachable every day instead of half of them. One decision — reconcile the two favor scales — retires an entire class of off-by-one gate. One string replaces the training log's stage direction. Two strings give Gigault the mentions that two separate design locks both promised. None of them touches the road, the mover, the VM, or the save format.
 
-```
-CROV'S TRAINING LOG — CY Fighting Pit
-—————————————————————————————————————
-
-Year 6, Day 14
-New fighter — Cabanilles. Strong, untrained. Good instincts, no patience.
-Note: patience is teachable. Instincts aren't. Worth the time.
-
-Year 6, Day 31
-Cabanilles left for the east contracts. Said he'd be back. He wasn't.
-Good fighter. Hope he's using it.
-
-Year 12, Day 8
-Bruna — first session. Best natural footwork I've seen in six years.
-He drops his left when he's tired. Told him. He'll fix it.
-
-Year 12, Day 23
-Bruna — pushed too far.
-Note for next time: when a fighter says they're fine, check the footwork.
-If they're still dropping the left, they're not fine.
-
-[gap of two years]
-
-Year 14, Day 3
-Back.
-Running legal fights only.
-
-[twelve years of entries — fighters' names, brief notes, outcomes]
-
-[Game Day 1, current run]
-New fighter — [PLAYER_NAME]. Showed up without signing in.
-Good instincts. Overcorrects left (different reason than Bruna).
-Potential. Will see.
-
-[Updates after each training win:]
-Day 3: Better. Starting to listen.
-Day 7: Reading the room now. Not just reacting.
-Day 12: Controlled. Still aggressive at the wrong moments. Getting there.
-Day 18: Good. Starting to feel like a real session.
-Day 25: The lesson's in. Don't know when it happened. That's when you know.
-```
-
-The player's name is filled from `S_story.playerName`. Their log entries update after each `pitTrainingWins` increment. Bruna's entry is there, with no drama, in handwriting that got slightly shakier after day 23 and then steadied again by year 14.
-
-The gap of two years is blank. No explanation. Weckmann said: *"Back."*
+**What should not be "fixed."** F4's consumed sequence is better than the specified cycling pool for a collection this good; record the divergence and keep the behavior. Nivers at `LHR` rather than a sub-node intersection is a sensible adaptation to an engine that has no sub-node intersections.
 
 ---
 
-## VII. Room 6 — The Empty Room
+## VI. Doc corrections applied in this increment
 
-Available at IN after Brynn reaches Dear Friend (`npcFavorability.brynn >= 3`). Below the maintenance interactions: **"🚪 Room 6."**
-
-The room is at the end of the hall. The description when entered:
-
----
-
-*Room 6.*
-
-*It's clean. Brynn keeps all the rooms clean, but this one is slightly more so — the way a room gets when someone tidies it out of care rather than routine.*
-
-*There's a mark on the wall near the window: a small sigil, scratched into the plaster. Not defacement — done carefully, at eye level, the kind of mark someone makes when they want to be able to find a place again.*
-
-*The bed has two pillows. Brynn added the second one after the fact. She doesn't know exactly why. She changed the pillowcase last week even though no one had slept on it.*
-
-*On the windowsill, almost under the sill itself, a scrap of paper. Not Froberger's journal pages — different paper, smaller. It slipped off the desk and was never found. In the same handwriting as the journal, but lighter:*
+1. Report restructured to the program's IEEE-style form; **402 → 258 lines**, all design-intent prose preserved, speculative code blocks replaced with shipped anchors.
+2. Status header added: **HISTORY doc**, ship build and both file sizes pinned, sibling-layer cross-link to `lab-report-living-world.md`.
+3. §II annotated: the `crov` trace is **out of range**, not missing; `MAREN_DIALOGUE` shipped as `NIVERS_DIALOGUE` from the first commit.
+4. §III's connection map annotated: 6 of 8 edges honored; `Yael — Pachelbel` and `All → Gigault` marked **NOT SHIPPED** rather than deleted.
+5. §V annotated with the §AUDIT-03j node remap (`SW`→`MSY`, `SL`→`BMA`, `IN`→`TLL`, `TV`→`MHQ`) and the Layer 74 fifth entry; the `ER`/Redwater row marked **NOT SHIPPED**.
+6. **`lab-report-living-world.md` corrected** — its Result table said *"All 6 events live and correctly gated"*; `weckmann_class` cannot fire. Both the table row and finding F2's prose now carry the correction and a pointer here.
 
 ---
 
-*— still here.*
+## VII. Rows filed
+
+| Row | Premise | Size |
+|---|---|---|
+| **§DX-02fb** | `crov`'s favor ceiling is 2; his Froberger trace and Layer 44's `weckmann_class` both need 3 — one `add:1` bit fixes both | 🟢 one bit, no design call |
+| **§DX-02fc** | Room 6 is reachable only if journal entry 7 is read before the firewood quest — silent, order-dependent lockout of a whole section | 🟡 one design call |
+| **§DX-02fd** | `_getYaelLocation()` is first-match-wins with its loosest condition first; four patrol lines are even-day-only and Yael is never actually away from home | 🟡 reorder + one design call |
+| **§DX-02fe** | Two favor scales (0–2 and 0–3) in circulation, with the engine's own comments asserting both; ~8 gates split between them | 🟡 reconcile centrally |
+| **§DX-02ff** | The connection map's `Yael — Pachelbel` and `All → Gigault` edges have no lines; the Gigault half is the other side of §DX-02es | 🟡 four strings |
+| **§DX-02fg** | Weckmann's training log renders `[years of entries — …]`, an authoring stage direction, as player-facing handwriting | 🟢 one string |
+| **§DX-02fh** | A delivered Froberger trace never rejoins the NPC's pool, as §II specifies it should | 🟢 implement-or-retire |
+| **§DX-02fa** | The new Code Comments directive (CC-1..CC-6) conflicts with the repo's §AUDIT-03n *"annotate, don't rewrite"* convention — needs a user call | 🟡 policy |
 
 ---
 
-*That's all.*
+## VIII. Test coverage
 
-*You can't take it. It's not an item. It's a note that fell and stayed and will probably stay until the building does something else.*
+Before this increment, **no test touched any Layer 45 symbol.** `tests/integration/web-of-connections-l45.spec.js` now pins eleven behaviours through the engine's own functions: the per-NPC favor ceilings derived from `QUEST_DB` plus the auto-upgrade path, `crov`'s trace returning `null` at his ceiling, Brynn's two orderings, Room 6's render at 2 vs 3, the patrol short-circuit with every rival condition satisfied, the 17-line cross-reference census with the Gigault and Yael–Pachelbel gaps, the every-third-visit sequence and its exhaustion at visit 12, the training log's stage direction, the six traces' tier pairs, one-time trace delivery, and — **cross-layer** — Layer 44's `weckmann_class` event proven unfireable. **11/11 green** in Chromium.
 
-*You look at it for a while.*
-
-*You close the door behind you.*
+The cross-layer case is the one worth keeping. It exists because a claim this program published yesterday was wrong, and the only reason it was caught is that the next report happened to measure the ledger underneath it.
 
 ---
 
-After visiting Room 6, Brynn's Dear Friend pool gains one permanent addition:
+## IX. Conclusion
 
-*"He didn't say goodbye. I used to think that was the hard part. Now I think the hard part was that he thought he was coming back."*
+Layer 45 is the most completely-shipped design lock the verification program has scored: eight subsystems, every authored string byte-identical from the repository's first commit to a file six times its size, and three whole sections — the training log, Room 6, the cross-item connections — delivered with the small human details that are the first thing a hurried implementation drops.
 
----
+Its two real losses were not caused by anything in it. They were caused by a **ceiling in a shared ledger that no single layer can see.** `_setNpcFavor`'s auto-upgrade writes a hardcoded `2`; the content above it was written for a scale that goes to 3; and so the best of the six Froberger traces has never been read, an entire section opens only on one quest ordering, and a Layer 44 event that a report published yesterday passed as live cannot fire. Nothing looks broken. No error is thrown. The gate is simply above the ceiling, and the ceiling is 300 lines and forty subsystems away from the gate.
 
-## VIII. Cross-Item Connections
+That is this report's contribution to the method, and it is a general one: **a threshold and the value that feeds it must be verified together, or neither is verified.** §DOC-02cx found an ending unreachable by one point. §DOC-02cy found a promise off by one copper. This one found a relationship tier off by one, in a ledger two layers deep. Three increments, three off-by-ones, none of which any test in the repository could have caught, because none of them is a bug in the ordinary sense — every line involved does exactly what it says.
 
-Items that connect NPC knowledge to player discovery.
+The lock's own closing still holds, and now describes its own verification as well as its subject:
 
-### Froberger's Note + Auros
+> *The Curse of Knowledge says: once you know how to fix things, you stop seeing the things that don't need fixing. You stop seeing things that just need witnessing.*
+>
+> *The web of connections is the witness.*
 
-If the player has `froberger_last_note_read = true` AND visits Auros at Dear Friend:
-
-Auros has a one-time dialogue trigger (delivered before her normal pool, consumed after delivery):
-
-*"You found one of his notes. He left several. I found one in the depth access shaft — it described a structural feature that took me a year to verify was real. He'd been there in maybe three hours. He always knew exactly what to look for. I sometimes think the curse isn't that he couldn't connect — it's that he could see everything else so clearly that people just looked slow by comparison."*
-
-This is the only in-game moment where someone explicitly names the Curse of Knowledge as a thing that happened to Froberger, from the outside. Every other reference is oblique. Auros is a researcher. She names things.
-
-### Rough Whiskey + Brynn (seeing Pachelbel's stock)
-
-When `roughWhiskeyInInventory = true` and the player visits IN:
-
-Brynn (Friendly or higher) has a one-time triggered line:
-
-*"Pachelbel's selling that now? He used to turn it away — said the margin didn't justify the trouble it causes. Must have changed his policy. Things do."*
-
-This is one sentence connecting two nodes, two characters, one item. The world is denser for it. Brynn doesn't know why Pachelbel changed his policy. She noticed that he did.
-
-### Fighter's Token + Weckmann (post-illegal-pit-quest)
-
-After the illegal pit operation is shut down (Weckmann's quest complete), a new exploration appears at the now-closed lot:
-
-A collapsed tarpaulin over a dirt fighting ring. Searching: one item drops — **Fighter's Token** (key item, no sell value). Small stamped metal disc with a fighter's number.
-
-Bringing it to Weckmann at CY:
-
-```
-[Weckmann holds it for a long time.]
-"I know this number. This is from Fischer's operation — 
-he ran fights before I opened the legal pit. 
-The fighter who had this token went on to 
-compete legally. They're okay. They moved on."
-
-[He sets it on the counter. Doesn't give it back.]
-
-"Don't ask me how I know. I've been watching 
-these numbers for twenty years."
-```
-
-Weckmann keeps the token. It's not in the loot pool after this interaction. It sits on Weckmann's counter for the rest of the game. A small thing that belongs there now.
+Five sixths of it, at present. The sixth needs one bit.
 
 ---
 
-## IX. The Composite Truth
-
-When all of this is assembled — the six Froberger traces, the NPC cross-references, Nivers's Evening, Yael in the field, Weckmann's training log, Room 6, the cross-item connections — the player has built a portrait of Birka that the game never narrated directly.
-
-They know:
-- Froberger was here. He was good and tired and ran out of time.
-- These people have known each other for years before the player arrived.
-- The city is running because of things that happen at night, alone, without anyone watching.
-- The debt gets worse if you leave it. The third step creaks until someone fixes it. The ledger is in the red.
-- Nivers says Evening. She's been saying it for eleven years.
-- There's a note in Room 6 that reads *"— still here."*
-
-None of this was a quest. None of it was required. All of it is true about the place.
-
-The Curse of Knowledge says: once you know how to fix things, you stop seeing the things that don't need fixing. You stop seeing things that just need witnessing.
-
-The web of connections is the witness.
-
----
-
-*lab-report-web-of-connections.md — Layer 45 design document*  
-*Generated 2026-05-22 — roll2hit.com / Codex of Conquest*
-
+*lab-report-web-of-connections.md — Layer 45 design lock · original 2026-05-22 · verified §DOC-02cz 2026-08-23*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
