@@ -99,3 +99,13 @@ test-results/
 # ── §MESH tracker log (wbapi-toggle.sh tracker) ──────────────────────────────
 wbapi-tracker.log
 milepoints/wbapi-server.error
+
+# ── Vendored / not published: third-party texts, imported books, working docs ─
+vendor/
+
+# ── Dependencies — never commit ───────────────────────────────────────────────
+node_modules/
+
+# ── milepoints/ is a RUNTIME dir (say-daemon queue, server logs, patch pointer)
+#    It stays on disk and out of git; nothing under it is source.
+milepoints/
