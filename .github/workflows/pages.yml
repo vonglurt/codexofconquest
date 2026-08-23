@@ -13,6 +13,7 @@ on:
       - 'index.html'
       - 'play.html'
       - 'edit.html'
+      - 'assets/screenshots/**'
       - '.github/workflows/pages.yml'
   workflow_dispatch:
 
@@ -39,6 +40,8 @@ jobs:
           mkdir -p _site
           cp index.html play.html edit.html _site/
           cp LICENSE _site/LICENSE
+          mkdir -p _site/assets/screenshots
+          cp assets/screenshots/*.png _site/assets/screenshots/
           touch _site/.nojekyll
           ls -la _site
 
@@ -48,6 +51,12 @@ jobs:
           head -1 _site/play.html | grep -q '<!DOCTYPE html>'
           tail -c 200 _site/play.html | grep -q '</html>'
           echo "play.html: $(wc -c < _site/play.html) bytes — doctype and closing tag present"
+          # every <img src> in the landing page must exist in the artefact
+          missing=0
+          for src in $(grep -oE 'src="assets/[^"]+"' _site/index.html | sed 's/src="//;s/"//' | sort -u); do
+            if [ -s "_site/$src" ]; then echo "  ok  $src"; else echo "  MISSING $src"; missing=1; fi
+          done
+          [ "$missing" = "0" ] || { echo "landing page references images not in the artefact"; exit 1; }
 
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

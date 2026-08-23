@@ -117,6 +117,15 @@
   nav.top a.cta{margin-left:auto;background:var(--c4);color:var(--text);
     padding:.42em .95em;border:2px solid var(--c1);border-radius:3px}
   nav.top a.cta:hover{background:var(--c3);color:#fff}
+
+  /* ── Screenshot gallery ────────────────────────────── */
+  figure.shot{margin:2.4rem 0;border:3px solid var(--c1);background:var(--panel);
+    box-shadow:6px 6px 0 var(--panel3);overflow:hidden}
+  figure.shot img{display:block;width:100%;height:auto;background:#1a1410}
+  figure.shot figcaption{font-size:.95rem;line-height:1.6;color:var(--muted);
+    padding:.9rem 1.15rem;border-top:2px solid var(--c1);background:var(--panel2)}
+  figure.shot figcaption strong{color:var(--c1);font-family:var(--mono);font-size:.9rem;
+    letter-spacing:.02em}
   @media (max-width:600px){ .play{font-size:1.2rem;padding:1rem 2.2rem} }
 </style>
 </head>
@@ -128,6 +137,7 @@
   <div class="wrap">
     <a href="#get">Get it</a>
     <a href="#about">About</a>
+    <a href="#shots">Screens</a>
     <a href="#labs">Lab reports</a>
     <a href="https://github.com/vonglurt/codexofconquest">GitHub</a>
     <a class="cta" href="play.html">▶ Play</a>
@@ -201,61 +211,10 @@ make test           # 960 Playwright tests</code></pre>
   <p>That someone is you. The Void is not a fog of consuming darkness. It is a <strong>conqueror</strong> — it advances where the defenders are thin and retreats where they are strong. You have until Day 49.</p>
 </section>
 
-<figure>
-  <svg viewBox="0 0 860 430" role="img" aria-label="Placeholder mockup of the Codex of Conquest game screen, showing the world map, combat panel and quest log">
-    <rect width="860" height="430" fill="#E2D0A8"/>
-    <!-- title bar -->
-    <rect x="0" y="0" width="860" height="34" fill="#562717"/>
-    <text x="16" y="23" font-family="ui-monospace,monospace" font-size="14" fill="#FDDCA9">⚔ CODEX OF CONQUEST — Act III · The Verdant Wilds · Day 17/49</text>
-    <!-- left: map -->
-    <rect x="14" y="48" width="330" height="250" fill="#F0E6C8" stroke="#8B4A2A" stroke-width="2"/>
-    <text x="24" y="68" font-family="ui-monospace,monospace" font-size="11" fill="#6A4A28">WORLD MAP · 416 NODES</text>
-    <g stroke="#C47A4A" stroke-width="1" opacity=".55">
-      <path d="M14 84h330M14 120h330M14 156h330M14 192h330M14 228h330M14 264h330"/>
-      <path d="M60 48v250M106 48v250M152 48v250M198 48v250M244 48v250M290 48v250"/>
-    </g>
-    <path d="M60 264 L106 228 L152 232 L198 192 L244 156 L290 120" fill="none" stroke="#8B4A2A" stroke-width="3" stroke-dasharray="6 4"/>
-    <g>
-      <circle cx="60" cy="264" r="7" fill="#1E5868"/><circle cx="106" cy="228" r="6" fill="#6A4808"/>
-      <circle cx="152" cy="232" r="6" fill="#6A4808"/><circle cx="198" cy="192" r="6" fill="#6A4808"/>
-      <circle cx="244" cy="156" r="9" fill="#C21717"/><circle cx="290" cy="120" r="6" fill="#6A4808"/>
-      <circle cx="244" cy="156" r="14" fill="none" stroke="#C21717" stroke-width="2" opacity=".55"/>
-    </g>
-    <text x="252" y="150" font-family="ui-monospace,monospace" font-size="10" fill="#2A1A0A">YOU</text>
-    <!-- right: combat -->
-    <rect x="358" y="48" width="488" height="160" fill="#CDE6B8" stroke="#8B4A2A" stroke-width="2"/>
-    <text x="368" y="68" font-family="ui-monospace,monospace" font-size="11" fill="#6A4808">⚔ ENCOUNTER · VOID OUTRIDER · AC 15</text>
-    <g>
-      <rect x="378" y="86" width="54" height="54" rx="7" fill="#F0E6C8" stroke="#562717" stroke-width="2"/>
-      <text x="405" y="122" font-family="ui-monospace,monospace" font-size="24" fill="#2A1A0A" text-anchor="middle">17</text>
-      <rect x="446" y="86" width="54" height="54" rx="7" fill="#F0E6C8" stroke="#562717" stroke-width="2"/>
-      <text x="473" y="122" font-family="ui-monospace,monospace" font-size="24" fill="#2A1A0A" text-anchor="middle">6</text>
-      <text x="516" y="112" font-family="ui-monospace,monospace" font-size="13" fill="#2A1A0A">d20+5 = 22 → HIT · 1d8+3 = 9 dmg</text>
-    </g>
-    <rect x="378" y="156" width="330" height="14" rx="3" fill="#F0E6C8" stroke="#562717"/>
-    <rect x="380" y="158" width="196" height="10" rx="2" fill="url(#hp)"/>
-    <defs><linearGradient id="hp" x1="0" x2="1"><stop offset="0" stop-color="#7A4A1A"/><stop offset=".5" stop-color="#C9920E"/><stop offset="1" stop-color="#F7C93C"/></linearGradient></defs>
-    <text x="716" y="167" font-family="ui-monospace,monospace" font-size="11" fill="#2A1A0A">34 / 58 HP</text>
-    <!-- right: quest log -->
-    <rect x="358" y="222" width="488" height="76" fill="#F0E6C8" stroke="#8B4A2A" stroke-width="2"/>
-    <text x="368" y="242" font-family="ui-monospace,monospace" font-size="11" fill="#6A4A28">◆ ACTIVE QUEST · The Hag's Bargain</text>
-    <text x="368" y="262" font-family="Georgia,serif" font-size="12" fill="#2A1A0A">Carry the sealed jar to the swamp. Do not open it.</text>
-    <text x="368" y="283" font-family="ui-monospace,monospace" font-size="11" fill="#1E5868">◇ WIS Insight DC 14 · ◇ Mission bit: hag_jar_sealed</text>
-    <!-- bottom bar -->
-    <rect x="14" y="312" width="832" height="102" fill="#D4BC88" stroke="#8B4A2A" stroke-width="2"/>
-    <text x="26" y="332" font-family="ui-monospace,monospace" font-size="11" fill="#52351A">FIGHTER · LVL 6 · STR 16 DEX 14 CON 15 INT 10 WIS 12 CHA 11 · LCK 3</text>
-    <text x="26" y="354" font-family="ui-monospace,monospace" font-size="11" fill="#52351A">SHARDS ◈◈◈◇◇◇◇ 3/7 · VOID PRESSURE ▓▓▓░░░░░ · GOLD 214</text>
-    <g font-family="ui-monospace,monospace" font-size="11" fill="#2A1A0A">
-      <rect x="26" y="368" width="88" height="26" rx="3" fill="#FEA712" stroke="#562717"/><text x="70" y="385" text-anchor="middle">WALK</text>
-      <rect x="124" y="368" width="88" height="26" rx="3" fill="#E2D0A8" stroke="#562717"/><text x="168" y="385" text-anchor="middle">TALK</text>
-      <rect x="222" y="368" width="88" height="26" rx="3" fill="#E2D0A8" stroke="#562717"/><text x="266" y="385" text-anchor="middle">FISH</text>
-      <rect x="320" y="368" width="88" height="26" rx="3" fill="#E2D0A8" stroke="#562717"/><text x="364" y="385" text-anchor="middle">MAP</text>
-      <rect x="418" y="368" width="88" height="26" rx="3" fill="#E2D0A8" stroke="#562717"/><text x="462" y="385" text-anchor="middle">JOURNAL</text>
-      <rect x="516" y="368" width="106" height="26" rx="3" fill="#E2D0A8" stroke="#562717"/><text x="569" y="385" text-anchor="middle">WARRANTS</text>
-    </g>
-  </svg>
-  <figcaption><span class="ph">PLACEHOLDER</span> — schematic of the play screen: world map, encounter panel, quest log, character bar. Swap for a real screenshot before launch.</figcaption>
-</figure>
+<figure class="shot">
+    <img src="assets/screenshots/06-battle.png" alt="Codex of Conquest combat tracker — two d20 rolls, attack modifier and target AC" width="1280">
+    <figcaption><strong>The combat tracker</strong> — a real screen from the running game. The opponent's roll and yours, side by side, with the whole sum shown: <code>d20 +6 vs AC 13 (1d8+3)</code>. Attack roll, skill check and saving throw are the same three buttons all game.</figcaption>
+  </figure>
 
 <section>
   <h2><span class="num">WHO IT IS FOR</span>If you miss text that respected you</h2>
@@ -311,6 +270,56 @@ make run          # monitor + API server + opens the game
 make worldbuilder # the authoring tool, API and monitor</pre>
     <p style="margin:0">Or skip all of it and just open <code>play.html</code> in a browser. The game needs nothing else.</p>
   </div>
+</section>
+
+<section id="shots">
+  <h2><span class="num">SEE IT</span>Nine surfaces, one at a time</h2>
+  <p class="lede">Every image below is a crop of the running game, captured straight from the test harness — not a mockup, not a render. The state behind each one was seeded the same way the integration suite seeds it.</p>
+
+  <figure class="shot">
+    <img src="assets/screenshots/01-character-creation.png" alt="Character creation — Codex of Conquest" loading="lazy" width="1280">
+    <figcaption><strong>Character creation</strong> — Choose an origin, then spend a 27-point budget in the open. Custom Build or Hard Mode — and the tattoos on your arm will record every level-up decision you make from here.</figcaption>
+  </figure>
+
+  <figure class="shot">
+    <img src="assets/screenshots/02-stat-point-buy.png" alt="Stat point allocation — Codex of Conquest" loading="lazy" width="1280">
+    <figcaption><strong>Stat point allocation</strong> — The costs are printed on the screen: 9→1, 10→2, 11→3, 12→4, 13→5, 14→7, 15→9. Every modifier updates as you spend. Nothing is rolled behind your back.</figcaption>
+  </figure>
+
+  <figure class="shot">
+    <img src="assets/screenshots/04-character-sheet.png" alt="The character sheet — Codex of Conquest" loading="lazy" width="1280">
+    <figcaption><strong>The character sheet</strong> — Six abilities, proficiency, AC and max HP — plus Luck as a seventh stat that behaves like none of the others. The sheet is the same one the combat tracker reads.</figcaption>
+  </figure>
+
+  <figure class="shot">
+    <img src="assets/screenshots/06-battle.png" alt="Combat on an advantaged d20 — Codex of Conquest" loading="lazy" width="1280">
+    <figcaption><strong>Combat on an advantaged d20</strong> — The die, the modifier, the target and the result, all on screen: <code>d20 +6 vs AC 13 (1d8+3)</code>. Roll as an attack, a skill check or a saving throw. Resistance and vulnerability are one click.</figcaption>
+  </figure>
+
+  <figure class="shot">
+    <img src="assets/screenshots/09-victory.png" alt="Victory — Codex of Conquest" loading="lazy" width="1280">
+    <figcaption><strong>Victory</strong> — A fight ends and the banner tells you so. What it paid — XP, gold, drops — lands in the log behind it.</figcaption>
+  </figure>
+
+  <figure class="shot">
+    <img src="assets/screenshots/08-death-saves.png" alt="Death saves — Codex of Conquest" loading="lazy" width="1280">
+    <figcaption><strong>Death saves</strong> — Drop to zero and you are <em>dying</em>, not dead. Three successes or three failures on a d20, rolled where you can see them. Death leaves a corpse and a grave marker you can walk back to.</figcaption>
+  </figure>
+
+  <figure class="shot">
+    <img src="assets/screenshots/03-inventory.png" alt="Inventory — Codex of Conquest" loading="lazy" width="1280">
+    <figcaption><strong>Inventory</strong> — Sorted by what a thing is for — consumables, weapons, trophies. Every item says what it does and what it is worth, and equipping is one click.</figcaption>
+  </figure>
+
+  <figure class="shot">
+    <img src="assets/screenshots/05-fishing.png" alt="Fishing gear and bait — Codex of Conquest" loading="lazy" width="1280">
+    <figcaption><strong>Fishing gear and bait</strong> — Bait, zones and DCs. Shore, reeds and deep water unlock separately; day and night hold different species. Catches feed the economy, quests and the inn ledger.</figcaption>
+  </figure>
+
+  <figure class="shot">
+    <img src="assets/screenshots/07-level-up.png" alt="Level up — Codex of Conquest" loading="lazy" width="1280">
+    <figcaption><strong>Level up</strong> — Roll the hit die yourself — d10 plus your CON modifier. The feature you gained is named and explained, and the sheet below it shows exactly what changed.</figcaption>
+  </figure>
 </section>
 
 <section id="labs">
