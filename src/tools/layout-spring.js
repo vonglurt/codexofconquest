@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // Copyright (c) 2026 Paul Richeson <paulr@sdf.org> — CodexOfConquest.com
-// layout-spring.js — spring-based N/E/S/W grid layout engine for roll2hit WBAPI
+// layout-spring.js — spring-based N/E/S/W grid layout engine for codexofconquest WBAPI
 //
 // The game's _buildNodeExits() probes up to 4 cells per direction.
 // Two connected nodes MUST be 1–4 coordinate units apart on the correct axis,

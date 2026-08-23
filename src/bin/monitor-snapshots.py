@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 """
-Monitor-Snapshots  —  TUI monitor for roll2hit snapshot archiving.
+Monitor-Snapshots  —  TUI monitor for codexofconquest snapshot archiving.
 paulr@sdf.org  MIT License
 
 Watches for new play-YYYYMMDD-HHMMSS.html files, waits until all

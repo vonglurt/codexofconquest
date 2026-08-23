@@ -2,10 +2,10 @@
 
 # Layer 18 — Character Progression, the Flashbang, and the Condition Gold Economy
 
-**Roll2Hit v3 — Engineering Design Record · Verification Pass**
+**CodexOfConquest v3 — Engineering Design Record · Verification Pass**
 **Classification:** Game Mechanics · Combat Action Economy · Progression Design
-**Original:** 2026-05-21 · **Verified against `roll2hit-v3.html` (38,712 lines):** 2026-08-12 (§DOC-02t)
-**Original status claim:** *"Complete — Layer 18 implemented and verified against `roll2hit-v3.html` (8,236 lines)"*
+**Original:** 2026-05-21 · **Verified against `play.html` (38,712 lines):** 2026-08-12 (§DOC-02t)
+**Original status claim:** *"Complete — Layer 18 implemented and verified against `play.html` (8,236 lines)"*
 **Verified status:** **Three of four subsystems live and largely exact; the fourth — character progression — was replaced wholesale, by a design this report's own §II.A explicitly forbade.**
 
 > **HISTORY DOCUMENT.** Per the Lab Report Policy this file is annotated, never rewritten to match
@@ -37,9 +37,9 @@ ability-score improvements — the precise shape §II.A ruled out.
 *(Restated from the original Abstract, §I, §II.A and §VII, because it is the part of this document
 that survived best and is the reason the work was done.)*
 
-**The inspiration** is tabletop D&D compressed to a browser tab. Roll2Hit's story battle is a
+**The inspiration** is tabletop D&D compressed to a browser tab. CodexOfConquest's story battle is a
 **rapid-play** interface: the player makes 2–4 decisions per round, and a full battle resolves in
-under two minutes. Where tabletop spends its time on dice, narration and table consensus, Roll2Hit
+under two minutes. Where tabletop spends its time on dice, narration and table consensus, CodexOfConquest
 spends it on *decision clarity*. The governing constraint the report set for itself:
 
 > **Every mechanical addition must pay for itself in decision density per second of play, not in
@@ -347,7 +347,7 @@ Kept because no maintained doc carries it and this report is its only copy:
 ---
 
 *Original report 2026-05-21 (Layer 18: Character Levels, Flashbang 150 gp, `CONDITION_GOLD` ×100).*
-*Verified and rewritten 2026-08-12 under §DOC-02t against `roll2hit-v3.html` at 38,712 lines.*
+*Verified and rewritten 2026-08-12 under §DOC-02t against `play.html` at 38,712 lines.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

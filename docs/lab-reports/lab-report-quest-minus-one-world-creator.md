@@ -4,7 +4,7 @@
 
 **IEEE-format post-mortem · verified rewrite**
 **Original:** 2026-05-25 · Layer 49 · §XIV · authored against `0a131f5`
-**Verified:** 2026-08-12 (§DOC-02ah) against `roll2hit-v3.html` @ `fe74868` — 38,712 lines, 416 nodes, 398 monsters, 111 terrains, 2,853 quests
+**Verified:** 2026-08-12 (§DOC-02ah) against `play.html` @ `fe74868` — 38,712 lines, 416 nodes, 398 monsters, 111 terrains, 2,853 quests
 **Status:** ✅ **SHIPPED AND STILL RENDERING.** 18 of 18 identifiers resolve (100 %). 0 of 2 node codes resolve. Every *mechanical* claim holds; every *quantitative* claim in the shipped text has rotted, and one was wrong the hour it was written.
 
 ---
@@ -159,11 +159,11 @@ Three correct recommendations, zero converted into tracked rows, zero shipped. �
 
 | File | Anchor | Content |
 |---|---|---|
-| `roll2hit-v3.html` | `` `questMinusOne: false@23123` `` | run-once flag in `_S_DEFAULTS()` |
-| `roll2hit-v3.html` | `` `priorQuestMinusOne: false@23126` `` | NG+ carry flag |
-| `roll2hit-v3.html` | `` `const savedPriorQuestMinus1@24027` `` | NG+ capture |
-| `roll2hit-v3.html` | `` `Layer 49: §XIV Quest -1@31380` `` | the disclosure panel |
-| `roll2hit-v3.html` | `` `quest_ng_02: { id:'quest_ng_02'@11048` `` | the Entry 42 pairing |
+| `play.html` | `` `questMinusOne: false@23123` `` | run-once flag in `_S_DEFAULTS()` |
+| `play.html` | `` `priorQuestMinusOne: false@23126` `` | NG+ carry flag |
+| `play.html` | `` `const savedPriorQuestMinus1@24027` `` | NG+ capture |
+| `play.html` | `` `Layer 49: §XIV Quest -1@31380` `` | the disclosure panel |
+| `play.html` | `` `quest_ng_02: { id:'quest_ng_02'@11048` `` | the Entry 42 pairing |
 | `edit.html` · `src/js/wbapi-server.js` · `api.sh` | — | the World Creator Wizard, as shipped |
 | ~~`plan.md` §XIV~~ | — | **NOT SHIPPED / DELETED** by `5e48dd7`; superseded by `CONTRIBUTING.md` + `BACKLOG.md` |
 | `lab-report-ng-plus-remembrance.md` | — | Layer 50 — Entry 42 and `quest_ng_02` |

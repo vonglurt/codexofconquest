@@ -84,10 +84,10 @@ single most durable thing this report produced.
 
 Three sources, because HEAD alone cannot adjudicate a claim about an afternoon in June:
 
-1. **The archive at the birth commit.** `git show 89fa13b:roll2hit-v3.html` and its parent
+1. **The archive at the birth commit.** `git show 89fa13b:play.html` and its parent
    `89fa13b^` were extracted to disk and diffed directly. Every "what was wrong" claim was
    measured against the *parent*; every "what was built" claim against the *birth*.
-2. **`git log -S <symbol> -- roll2hit-v3.html`** on every symbol the census marked dead, to
+2. **`git log -S <symbol> -- play.html`** on every symbol the census marked dead, to
    separate **RETIRED** (shipped, later removed) from **NOT SHIPPED** (never existed).
 3. **HEAD**, at `r2h-3.104.0`, 38,7xx lines, for what survives and what the successor did.
 
@@ -174,7 +174,7 @@ report's `typeof … === 'function'` form.
 > The console logs showed: `BLOCKED: DAM blind-days gate {saulConverted: true,
 > anathSightRestored: false, blindDaysKS: 12}`
 
-The string `BLOCKED` **does not occur anywhere in `roll2hit-v3.html` at the parent commit**,
+The string `BLOCKED` **does not occur anywhere in `play.html` at the parent commit**,
 and there is no `console.*` call in the blind-days handler at all. The handler is a
 `storyMsg` on a `>= 3` day counter — the prose reads *"Day N of three"* — so the quoted
 `blindDaysKS: 12` is not merely unlogged, it is a value the surrounding fiction does not

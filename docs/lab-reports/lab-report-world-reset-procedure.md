@@ -2,7 +2,7 @@
 
 # World Reset & Mesh Insertion Cycle — Lab Report
 
-**Roll2Hit World Builder — Engineering Report**
+**CodexOfConquest World Builder — Engineering Report**
 *2026-06-09*
 
 ---
@@ -20,7 +20,7 @@ the world, and the new API toolchain that automates the process.
 ### Grid
 
 The game uses a flat integer grid: `r` (row, increases southward) × `c` (column, increases eastward).
-Range: 0–512 × 0–512. All coordinates are stored in `NODE_COORDS` in `roll2hit-v3.html`.
+Range: 0–512 × 0–512. All coordinates are stored in `NODE_COORDS` in `play.html`.
 
 ### Traversal Rule (`_buildNodeExits`)
 

@@ -76,11 +76,11 @@ has two legitimate time horizons: how *this* life is going, and how *all* lives 
 Per the §DOC-02 program:
 
 1. **Batch census first.** All 59 named symbols run through one `grep -cF` loop against
-   `roll2hit-v3.html` before reading a line of the report body.
+   `play.html` before reading a line of the report body.
 2. **Instrument 4** — `git log -S` on every symbol the census marks dead, separating **RETIRED**
    (shipped, later removed) from **NEVER SHIPPED** (written from intent).
 3. **Instrument 8** — claims about the past adjudicated against the archive
-   (`git show aef1650:roll2hit-v3.html`), never against HEAD.
+   (`git show aef1650:play.html`), never against HEAD.
 4. **Reachability** — for every specified behaviour, the *call path* is traced, not just the symbol.
    This is what produced Finding 1.
 5. **Instrument 12** — worked examples and illustrations scored separately from transcribed data,

@@ -2,7 +2,7 @@
 
 # UX Walkthrough: First Battles & First Level-Up
 
-**Roll2Hit v3 — Player Experience Analysis**  
+**CodexOfConquest v3 — Player Experience Analysis**  
 **Date:** 2026-05-21  
 **Status:** Post-Layer 37 — starting weapons (Pointy Stick + Flint Dagger), Boyscout Token, SL node
 

@@ -4,7 +4,7 @@
 
 **Project:** CodexOfConquest.com — *The Shattered Codex*
 **Report Designation:** §API-01 (mechanics.md) + §API-02 (combat.md)
-**HTML Baseline:** `roll2hit-v3.html` — 17,708 lines at time of review
+**HTML Baseline:** `play.html` — 17,708 lines at time of review
 **Review Date:** 2026-05-25
 **Category:** API Surface Verification · Line Number Accuracy · Scope Boundary Audit
 
@@ -12,7 +12,7 @@
 
 ## Abstract
 
-Two IEEE-format API reviews were conducted against `roll2hit-v3.html` to verify the accuracy of the two primary mechanics documentation files. §API-01 audited `mechanics.md` across 36 comparison points in five categories (Game Design, Combat System, Economy, Progression, Persistence). §API-02 audited `combat.md`'s F6 Function Reference Table, which had drifted +163 to +3,115 lines from the last sync. Both reviews were completed 2026-05-25; `mechanics.md` was subsequently split into `mechanics-combat.md` + `mechanics-economy.md` (FC03) based on §API-01's scope-split recommendation.
+Two IEEE-format API reviews were conducted against `play.html` to verify the accuracy of the two primary mechanics documentation files. §API-01 audited `mechanics.md` across 36 comparison points in five categories (Game Design, Combat System, Economy, Progression, Persistence). §API-02 audited `combat.md`'s F6 Function Reference Table, which had drifted +163 to +3,115 lines from the last sync. Both reviews were completed 2026-05-25; `mechanics.md` was subsequently split into `mechanics-combat.md` + `mechanics-economy.md` (FC03) based on §API-01's scope-split recommendation.
 
 ---
 
@@ -23,7 +23,7 @@ Two IEEE-format API reviews were conducted against `roll2hit-v3.html` to verify 
 
 ### Abstract
 
-`combat.md` is the F6 surface document for roll2hit's combat engine. It covers: pre-battle setup (Pre-Battle Screen → storyCommitBattle), action economy (1.5 AP), weapon/damage formulas, death saves (FL11), level-up chain (FL6), notoriety scaling, the F6 function reference table, and the FL2/FL6/FL11 milepoint flowcharts.
+`combat.md` is the F6 surface document for codexofconquest's combat engine. It covers: pre-battle setup (Pre-Battle Screen → storyCommitBattle), action economy (1.5 AP), weapon/damage formulas, death saves (FL11), level-up chain (FL6), notoriety scaling, the F6 function reference table, and the FL2/FL6/FL11 milepoint flowcharts.
 
 The document was last synced at ~14,377 HTML lines. The HTML had grown to 17,708 lines (+3,331 lines, +23%). This produced systemic line-number drift in the F6 Function Reference Table — all 30 entries were stale.
 
@@ -72,7 +72,7 @@ F6 Function Reference Table in combat.md: all line numbers corrected to verified
 
 ### Abstract
 
-`mechanics.md` was the primary API surface document for roll2hit's simulation engine. It documented two behavioral modes (Battle Mode, Story Mode), the action economy (1.5 AP system), the loot pipeline (`_D100_TABLE`), the vendor economy (5 nodes × 3 item categories), the level-up chain (Fighter Champion, 1–20), and the save/load architecture (`localStorage`, two-key). This review records 36 comparison points across five categories evaluating `mechanics.md` against `roll2hit-v3.html` for accuracy, completeness, and sync parity.
+`mechanics.md` was the primary API surface document for codexofconquest's simulation engine. It documented two behavioral modes (Battle Mode, Story Mode), the action economy (1.5 AP system), the loot pipeline (`_D100_TABLE`), the vendor economy (5 nodes × 3 item categories), the level-up chain (Fighter Champion, 1–20), and the save/load architecture (`localStorage`, two-key). This review records 36 comparison points across five categories evaluating `mechanics.md` against `play.html` for accuracy, completeness, and sync parity.
 
 **Key outcome:** FC03 (split into `mechanics-combat.md` + `mechanics-economy.md`) was recommended and completed on 2026-05-25.
 
@@ -247,21 +247,21 @@ _rollD100Loot()
 
 | File | Location | Content |
 |------|----------|---------|
-| `roll2hit-v3.html` | 5393 | `VENDOR_NODES` Set (BA/MQ/SF/IS/BK) |
-| `roll2hit-v3.html` | 5482–5486 | `roll()` / `rollN()` dice primitives |
-| `roll2hit-v3.html` | 5505–5533 | `abilityMod()` / `getProfBonus()` / `getAtkAbilityMod()` / `getDmgMod()` |
-| `roll2hit-v3.html` | 5999 | `CONDITION_ADV` (SP4-corrected) |
-| `roll2hit-v3.html` | 6084 | `doPlayerAttack()` |
-| `roll2hit-v3.html` | 6152 | `rollInitiative()` — includes `_tomeInit = _tomeBonuses().initiative` |
-| `roll2hit-v3.html` | 6212 | `rollDeathSave()` — includes `_kingsSealBonus` modifier |
-| `roll2hit-v3.html` | 6374 / 6464 / 6596 | `offhandRoll()` / `bonusRoll()` / `oppRoll()` |
-| `roll2hit-v3.html` | 6682 | `newCombat()` |
-| `roll2hit-v3.html` | 8219 | `_autoSellDuplicates()` |
-| `roll2hit-v3.html` | 8608 | `XP_LEVELS` (20-entry array; max 195,000 at L20) |
-| `roll2hit-v3.html` | 8683 / 8708 / 8714 / 8762 | `_magicTierAllowed()` / `_d100Result()` / `_rollD100Loot()` / `_rollMonsterWeaponDrop()` |
-| `roll2hit-v3.html` | 9599 / 9655 | `_showLevelUpModal()` / `_checkLevelUp()` |
-| `roll2hit-v3.html` | 13007 | `storyPreBattle()` |
-| `roll2hit-v3.html` | 14233 | `_lu_applyGiftsAndFinish()` |
+| `play.html` | 5393 | `VENDOR_NODES` Set (BA/MQ/SF/IS/BK) |
+| `play.html` | 5482–5486 | `roll()` / `rollN()` dice primitives |
+| `play.html` | 5505–5533 | `abilityMod()` / `getProfBonus()` / `getAtkAbilityMod()` / `getDmgMod()` |
+| `play.html` | 5999 | `CONDITION_ADV` (SP4-corrected) |
+| `play.html` | 6084 | `doPlayerAttack()` |
+| `play.html` | 6152 | `rollInitiative()` — includes `_tomeInit = _tomeBonuses().initiative` |
+| `play.html` | 6212 | `rollDeathSave()` — includes `_kingsSealBonus` modifier |
+| `play.html` | 6374 / 6464 / 6596 | `offhandRoll()` / `bonusRoll()` / `oppRoll()` |
+| `play.html` | 6682 | `newCombat()` |
+| `play.html` | 8219 | `_autoSellDuplicates()` |
+| `play.html` | 8608 | `XP_LEVELS` (20-entry array; max 195,000 at L20) |
+| `play.html` | 8683 / 8708 / 8714 / 8762 | `_magicTierAllowed()` / `_d100Result()` / `_rollD100Loot()` / `_rollMonsterWeaponDrop()` |
+| `play.html` | 9599 / 9655 | `_showLevelUpModal()` / `_checkLevelUp()` |
+| `play.html` | 13007 | `storyPreBattle()` |
+| `play.html` | 14233 | `_lu_applyGiftsAndFinish()` |
 | `mechanics-combat.md` | §Battle Mode | 1.5 AP system, XP formula, loot table, flee chain |
 | `mechanics-economy.md` | §Story Mode | Vendor, save system, items |
 | `mechanics-economy.md` | §F4 Function Reference | Economy + pre-battle functions |

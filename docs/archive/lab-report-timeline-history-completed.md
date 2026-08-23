@@ -10,11 +10,11 @@
 
 ---
 
-# Roll2Hit — Development Timeline & Implementation History
+# CodexOfConquest — Development Timeline & Implementation History
 
-> Extracted from `plan.md` on 2026-05-22. This document is the complete archived record of the Roll2Hit implementation log — every layer, every design constant, every state field, every fulfilled feature suggestion, and the Baroque organ composer naming migration. Source of truth for running code: `roll2hit-v3.html`.
+> Extracted from `plan.md` on 2026-05-22. This document is the complete archived record of the CodexOfConquest implementation log — every layer, every design constant, every state field, every fulfilled feature suggestion, and the Baroque organ composer naming migration. Source of truth for running code: `play.html`.
 
-**File:** `roll2hit-v3.html`  
+**File:** `play.html`  
 **Status at archive:** Layers 0–45 complete. All S-suggestions (S1–S60) addressed. No pending layers or items.
 
 ---
@@ -75,7 +75,7 @@
 
 ## II. Design Constants Quick Reference
 
-> The 30 named constants below are the structural skeleton of `roll2hit-v3.html`. Each entry gives the constant's role in the game system; exact initializer syntax lives in the source file.
+> The 30 named constants below are the structural skeleton of `play.html`. Each entry gives the constant's role in the game system; exact initializer syntax lives in the source file.
 
 | Const | Purpose |
 |---|---|
@@ -431,7 +431,7 @@ At IN, after reaching Dear Friend with Brynn: a fifth interaction appears below 
 
 ## VI. Name Migration — Baroque Organ Composer Renaming
 
-> Recorded at the close of Layer 45. All phases marked ✅ complete. The script and tables below are the canonical record of the naming decision; the live names are in `roll2hit-v3.html`.
+> Recorded at the close of Layer 45. All phases marked ✅ complete. The script and tables below are the canonical record of the naming decision; the live names are in `play.html`.
 
 *All characters and places use real public-domain Baroque organ composer names — Latin characters only, no hyphens. Theme: Bach-era pirate/sea-music, early organ school. Names feel old, authoritative, and slightly weathered.*
 
@@ -539,13 +539,13 @@ cp plan.md plan.md.bak
 cp maps.md maps.md.bak
 # Copy all lab reports:
 for f in lab-report-*.md; do cp "$f" "${f%.md}.bak.md"; done
-# If roll2hit-v3.html exists:
-# cp roll2hit-v3.html roll2hit-v3.html.bak
+# If play.html exists:
+# cp play.html play.html.bak
 ```
 
 **Phase 1 — Rename in .md files ✅**  
 Scope: `*.md` files in `/Users/user/code/CodexOfConquest.com/`  
-Not yet: `roll2hit-v3.html` (review .md output first)
+Not yet: `play.html` (review .md output first)
 
 **Phase 2 — Review diff ✅**  
 ```bash
@@ -554,7 +554,7 @@ diff maps.md.bak maps.md | head -40
 ```
 Confirm names look right in context before touching the HTML.
 
-**Phase 3 — Rename in roll2hit-v3.html ✅**  
+**Phase 3 — Rename in play.html ✅**  
 Same script, scoped to .html. Separate pass because HTML has JS variable names like `couperiSongReceived` that should NOT be renamed — only display strings and story text.
 
 **Phase 4 — Manual checks ✅**
@@ -792,7 +792,7 @@ Ocean EB nodes         →  London sea
 ---
 
 *plan.md last updated 2026-05-22 — Layers 0–45 complete. All S-suggestions addressed: S1–S60 ✅ (S24–S26 are tooling, marked out of scope).*  
-*Codebase: roll2hit-v3.html — 14,339 lines · NODE_MAP: 51 nodes (71 with Layer 39 EBs) · MONSTER_POOL: 341+ monsters*
+*Codebase: play.html — 14,339 lines · NODE_MAP: 51 nodes (71 with Layer 39 EBs) · MONSTER_POOL: 341+ monsters*
 
 
 

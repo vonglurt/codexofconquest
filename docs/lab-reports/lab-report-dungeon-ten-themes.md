@@ -39,7 +39,7 @@ none retired. Nothing here is report-rot from the code moving.
 | # | Instrument | Applied to |
 |---|---|---|
 | 1 | Batch `grep -c` of every named identifier before reading a line of prose | 57 identifiers, one command |
-| 2 | `git log -S "<sym>" -- roll2hit-v3.html` on every dead identifier | 8 symbols → separates RETIRED from NEVER SHIPPED |
+| 2 | `git log -S "<sym>" -- play.html` on every dead identifier | 8 symbols → separates RETIRED from NEVER SHIPPED |
 | 3 | Occurrence-site read (declaration · writer · reader) for every *live* field | 26 state fields |
 | 4 | Grep for the code that **reveals** a surface, never the surface's own id | the three §D01-04 gates, the CY panel |
 | 5 | Two-way delta table — HEAD is not the reference | §3 (below) |
@@ -289,7 +289,7 @@ Retained verbatim in intent so no reader mistakes absence for success:
 
 ---
 
-*Verified 2026-08-11 (§DOC-02k) against `roll2hit-v3.html` @ `4eb1dc6`. 326 → 295 lines.*
+*Verified 2026-08-11 (§DOC-02k) against `play.html` @ `4eb1dc6`. 326 → 295 lines.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

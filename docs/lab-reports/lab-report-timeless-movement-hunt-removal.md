@@ -68,9 +68,9 @@ abolish had quietly abolished itself.*
 
 ## 2. Method (verification pass, 2026-08-14)
 
-Every named symbol batched through one `grep -c` loop against live `roll2hit-v3.html`; `git log -S`
+Every named symbol batched through one `grep -c` loop against live `play.html`; `git log -S`
 with **no pathspec** on each, to separate *retired* from *never shipped* — and, as it turned out, to
-catch a *re-added*; spec line numbers replayed against `git show 017d7d8:roll2hit-v3.html`;
+catch a *re-added*; spec line numbers replayed against `git show 017d7d8:play.html`;
 `_S_DEFAULTS()` censused by a brace-depth walk, not a line regex.
 
 ---

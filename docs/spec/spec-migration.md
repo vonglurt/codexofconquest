@@ -83,7 +83,7 @@ The migrated system implements exactly two top-level modes. The boundary between
                ▼
 ┌──────────────────────────────────────────────┐
 │               BATTLE MODE                    │
-│  roll2hit combat tracker (Layer 0)           │
+│  codexofconquest combat tracker (Layer 0)           │
 │  Initiative · Rolls · Death saves            │
 └──────────────┬───────────────────────────────┘
                │  storyEnter() + pendingBattle set

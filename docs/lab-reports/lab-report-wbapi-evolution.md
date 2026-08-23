@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# Lab Report: From `grep` to WBAPI — How Roll2Hit Got a Write Path
+# Lab Report: From `grep` to WBAPI — How CodexOfConquest Got a Write Path
 
 **Author:** Claude (Sonnet 4.6) + paulr@sdf.org
 **Filed:** 2026-05-29 · **Verified:** 2026-08-13 (§DOC-02ap)
@@ -8,7 +8,7 @@
 **Audience:** CS/EE background; shell, Node.js, REST
 
 > **Verification stamp.** This is a HISTORY document, re-measured against the live
-> `roll2hit-v3.html` 76 days after filing. Claims that verified are kept and anchored;
+> `play.html` 76 days after filing. Claims that verified are kept and anchored;
 > claims that did not are **marked and kept**, never deleted — a silently removed claim
 > reads as one that held. §II dates the document; §VII is the delta table.
 
@@ -16,7 +16,7 @@
 
 ## Abstract
 
-Roll2Hit ships as **one static HTML file**. That is the product promise, not a
+CodexOfConquest ships as **one static HTML file**. That is the product promise, not a
 preference: a player, a friend, or an archaeologist opens the file in a browser and
 plays, forever, with no server, no install, and no build step. The promise is easy to
 make and expensive to keep, because it means every monster, node, quest and line of
@@ -43,7 +43,7 @@ than transcribed, and it is wrong about its parser's central trick.
 The constraint is stated in the original directive:
 
 > *The entire game — all data, all logic, all UI — is fully playable in a browser with
-> only `roll2hit-v3.html`. No Node, no server, no dependencies.*
+> only `play.html`. No Node, no server, no dependencies.*
 
 The naive reading is that this is an aesthetic, in the demoscene tradition, or a
 homage to single-file tools like `htmx`. The operational reading is harsher: **the
@@ -126,7 +126,7 @@ insight held. The mechanism described for it did not, in two particulars (§VII)
 ## IV. Architecture as-built
 
 ```
-roll2hit-v3.html      — single source of truth (game + all data)
+play.html      — single source of truth (game + all data)
 src/js/wbapi-core.js      — parser + serializer          [1,814 lines]
 src/js/wbapi-server.js    — REST server over the core    [11,671 lines]
 src/api/wb.js (./api.sh)  — the authoring CLI: queue, auto-nonce, retry, --ai
@@ -167,7 +167,7 @@ const MONSTER_POOL = { … };
 identifier, string template or operator, so it is unambiguously a marker and never a
 token. Nine sections carried anchors at filing; **twelve do now** (`NPC_DIALOGUES`,
 `ITEM_DB`, `D100_TABLE` were added later). The pair is also the last-resort escape
-hatch: with the server down, `grep -n "◆◆◆" roll2hit-v3.html` still prints every
+hatch: with the server down, `grep -n "◆◆◆" play.html` still prints every
 section boundary. Anchor `` `◆◆◆ WORLDBUILDER:BIRKA_NPC:START@22711` ``.
 
 A write finds the `:START`/`:END` pair, reconstructs the whole block from in-memory

@@ -22,7 +22,7 @@ three days of the real cap; the chip tooltip is reworded; and nothing mechanical
 report's own "Explicitly NOT changed" list — the Day-49 defeat flavour, the Void-Tide events,
 `_addVoidPressure`, sleep, the day counter — is unusually specific for a document of 31 lines.
 
-Re-measured 37 days later against live `roll2hit-v3.html` (38,712 lines · 416 nodes · 2,853 quests):
+Re-measured 37 days later against live `play.html` (38,712 lines · 416 nodes · 2,853 quests):
 **all four shipped surfaces are byte-identical**, the whole deferral list is byte-identical, the
 acceptance test is **1/1 green** and has not been edited since the ship, and **4 of 4 line citations
 resolve exactly at the parent build** — the programme's fourth perfect dating result.
@@ -60,7 +60,7 @@ generous and stop pretending otherwise.
    deliberate sleeps to reach. A warning that fires in a situation the player is not in is worse than
    no warning: it trains them to ignore the colour. Face **A** had shipped that chip **19 minutes
    earlier** specifically to make goals legible; (c) is face A's first bug-fix.
-2. **It gives the player permission to explore.** roll2hit is 416 nodes and 2,853 quests wide. A
+2. **It gives the player permission to explore.** codexofconquest is 416 nodes and 2,853 quests wide. A
    doom countdown on the opening screen is an instruction to rush past most of it. *"Take the time
    you need"* is a design statement about what the game is for, delivered in the courier's voice
    rather than in a patch note.
@@ -87,7 +87,7 @@ had diagnosed as a symptom.
 
 | # | Instrument | Applied to |
 |---|---|---|
-| 108 | Pin the PARENT build before scoring any line number | `git show caa489e^:roll2hit-v3.html` → `ac651a3`, 37,047 lines, extracted first |
+| 108 | Pin the PARENT build before scoring any line number | `git show caa489e^:play.html` → `ac651a3`, 37,047 lines, extracted first |
 | 84 | `git diff <ship> HEAD -- <report>` before reading | **empty** — untouched since the ship commit |
 | 51 | Census with the real parser, never a line regex | `src/js/wbapi-core.js` `W.load(GAME)` → 416 nodes, 2,853 quests, 38 sleep-capable nodes |
 | 4 | `git log -S <symbol> --all` with **no pathspec** | `DAY_DEADLINE` — three commits, born in face A |

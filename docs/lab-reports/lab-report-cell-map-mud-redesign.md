@@ -9,11 +9,11 @@
 
 ## Abstract
 
-Roll2Hit's navigation was replaced: stored exits (`node.N/E/S/W`) gave way to *implicit* topology, where two
+CodexOfConquest's navigation was replaced: stored exits (`node.N/E/S/W`) gave way to *implicit* topology, where two
 places are connected if and only if their `(r,c)` grid coordinates are adjacent. One keypress moves one cell.
 The change spans client, server, API and CLI, and added a multiplayer MUD session layer on top of the new grid.
 
-Re-measured against live `roll2hit-v3.html` (38,707 lines, 416 nodes) and `src/js/wbapi-server.js` two months on:
+Re-measured against live `play.html` (38,707 lines, 416 nodes) and `src/js/wbapi-server.js` two months on:
 **the client half is intact and byte-honest** — every symbol §CELL-01 through §CELL-11A claims to have added
 resolves, and every symbol it claims to have deleted returns **0 occurrences**. The rot is entirely on the
 server, and it has one shape: **§CELL-06 promised to migrate five graph algorithms to the cell grid and
@@ -75,7 +75,7 @@ guard defused `cluster-bridge`; a live 400 proved it. All probes ran against a b
 
 ## III. As-Built Inventory (verified at HEAD, 2026-08-13)
 
-### Client — `roll2hit-v3.html`
+### Client — `play.html`
 
 | § | Claim | Anchor | Verdict |
 |---|---|---|---|
@@ -159,7 +159,7 @@ PUT /api/node/J13  {"S":"WRO"}  →  400  (same)
 POST /api/node     {…,"N":"WRO"} →  400  "…not stored. Place the node at (r,c)…"
 ```
 
-`roll2hit-v3.html` was byte-identical before and after. With 415 clusters reported, an `--execute` run would
+`play.html` was byte-identical before and after. With 415 clusters reported, an `--execute` run would
 attempt **830 PUTs and land 0**, printing `✗ put failed` 415 times. The §CELL-08 decision the original report
 filed under *"Non-Obvious Decisions"* — **reject, don't silently ignore** — is the reason a stale repair tool
 has never once corrupted the world file. It is the single most valuable line in the original document, and its
@@ -238,4 +238,4 @@ world with one component, and the only thing standing between that diagnosis and
 ---
 
 *© 2026 Paul Richeson — MIT License.*
-*Verified §DOC-02ay, 2026-08-13, against `roll2hit-v3.html` @ `985505c` + live `src/js/wbapi-server.js` (port 1367).*
+*Verified §DOC-02ay, 2026-08-13, against `play.html` @ `985505c` + live `src/js/wbapi-server.js` (port 1367).*

@@ -5,7 +5,7 @@
 > Originally filed 2026-07-23 as ⚠️ PLANNED (spec only, no HTML edited), per the Lab Report Policy
 > (`CONTRIBUTING.md`). It stopped being a plan **48 minutes later**.
 >
-> **Written:** 2026-07-23 against `roll2hit-v3.html` at `ENGINE_VER = 'r2h-3.104.0'`, 37,812 lines.
+> **Written:** 2026-07-23 against `play.html` at `ENGINE_VER = 'r2h-3.104.0'`, 37,812 lines.
 > **Ship commit:** `fed5ee4` (docs-only, so the parent build **is** the build it measured).
 > **Verified:** 2026-08-21 (§DOC-02cl) against parent build `fed5ee4^` **and** live HEAD, with the
 > engine driven in a real browser at both builds. The report has not drifted a byte in 29 days.
@@ -42,7 +42,7 @@ five and a half hours later. Live at HEAD: **125 of 416 nodes carry cards and 20
 
 ## I. Intention and inspiration — why this matters to play
 
-roll2hit is a **49-day doom clock**. Every step and every rest spends a day you cannot get back, so
+codexofconquest is a **49-day doom clock**. Every step and every rest spends a day you cannot get back, so
 the game constantly asks: *is this detour worth a day of the world.* The combat answer is legible
 (XP, gold, a trophy). The **relationship** answer was not, because relationships had almost nowhere to
 appear.
@@ -82,7 +82,7 @@ cheap while **fixing the renderer it feeds is the actual work.** Hence the incre
 
 Verification instruments used (§DOC-02 programme):
 
-1. **Parent-build pinning.** `fed5ee4` is docs-only, so `git show fed5ee4^:roll2hit-v3.html`
+1. **Parent-build pinning.** `fed5ee4` is docs-only, so `git show fed5ee4^:play.html`
    reproduces the exact 37,812-line file the report measured. Every cited line number is scored
    against that build, never against HEAD.
 2. **Census by parser, never by line regex.** All entry counts re-derived with `wbapi-core`s

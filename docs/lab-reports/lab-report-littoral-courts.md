@@ -4,7 +4,7 @@
 
 **Project:** CodexOfConquest.com — *The Shattered Codex* · **Designation:** SIREN-01 (Layer 104)
 **Classification:** Narrative Architecture · Social Skill Checks · Parallel-Quest Design
-**Original:** 2026-05-28 · `roll2hit-v3.html` ~21,200 lines · ship commit **`42c2f82`**
+**Original:** 2026-05-28 · `play.html` ~21,200 lines · ship commit **`42c2f82`**
 **Verified against HEAD (38,712 lines):** 2026-08-12 (§DOC-02u)
 **Verified status:** **Every authored artifact survives — quests byte-exact through a total format migration — and not one node of the arc can be reached by any player.**
 
@@ -295,7 +295,7 @@ Kept because no maintained doc carries it and this report is its only copy:
 ---
 
 *Original report 2026-05-28, ship commit `42c2f82`.*
-*Verified and rewritten 2026-08-12 under §DOC-02u against `roll2hit-v3.html` at 38,712 lines.*
+*Verified and rewritten 2026-08-12 under §DOC-02u against `play.html` at 38,712 lines.*
 *Four courts, five quests, ten flags, every string intact — and a sea that is no longer there.*
 
 ---

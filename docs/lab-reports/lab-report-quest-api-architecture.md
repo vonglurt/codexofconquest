@@ -4,7 +4,7 @@
 
 **Document ID:** §ARCH-01
 **Original:** 2026-05-28 — Design Specification, Pre-Implementation (577 lines)
-**Verified:** 2026-08-12 — §DOC-02ag, re-measured against live `roll2hit-v3.html` (38,712 lines · 2,853 quests)
+**Verified:** 2026-08-12 — §DOC-02ag, re-measured against live `play.html` (38,712 lines · 2,853 quests)
 **Status:** ✅ **SHIPPED AND CLOSED.** Thesis executed at 13.6× the specified scale. Four delta clusters recorded below.
 
 ---
@@ -33,11 +33,11 @@ promised payoff was implemented and then silently outgrown.
 
 1. Census: every identifier, field, bit kind, node code and quest id named in the report, batched
    through one `grep -c` pass, then partitioned live / dead.
-2. `git log -S "<symbol>" -- roll2hit-v3.html` on every dead symbol, to separate **RETIRED**
+2. `git log -S "<symbol>" -- play.html` on every dead symbol, to separate **RETIRED**
    (shipped, later removed) from **NEVER SHIPPED** (0 commits ever).
 3. Archive adjudication (instrument 8): the report entered the repo at **`2d42ea2`
    (2026-05-29 09:50)**, one day after its stated date. Every *"currently"* claim is scored against
-   `git show 2d42ea2:roll2hit-v3.html`, never against HEAD.
+   `git show 2d42ea2:play.html`, never against HEAD.
 4. Delta table run **both ways** — report-rot *and* engine-rot.
 5. Reachability (instrument 19) and census cross-check (instrument 14): totals reproduced against
    `npm run stats` and `check:dupkeys` before any delta was derived.

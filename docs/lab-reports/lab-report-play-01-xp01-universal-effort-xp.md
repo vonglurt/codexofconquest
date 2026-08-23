@@ -28,7 +28,7 @@ notification is **written and never displayed**, and the **off-hand attack** —
 counted attack surface — was left out of scope without the report saying so.
 
 > *"The attempt was not wasted. +38 XP for the effort."*
-> — `roll2hit-v3.html`, a string no player has ever read (§7.1).
+> — `play.html`, a string no player has ever read (§7.1).
 
 ---
 
@@ -342,7 +342,7 @@ not a defect, and it is filed as §AUDIT-03bm.
 - **Live probe:** throwaway Playwright spec driving the real functions; main-miss `+20`,
   off-hand-miss `+0`, banked `20`; reward-check fail `+38` with `#story-move-msg` empty;
   mission-bit-check fail (`quest_spark_01`) `+0`. Spec run and deleted.
-- **Census:** `src/js/wbapi-core.js` `W.load('roll2hit-v3.html')`, brace-walked entry bodies for the
+- **Census:** `src/js/wbapi-core.js` `W.load('play.html')`, brace-walked entry bodies for the
   `_legacy_fn` scan — **0** of 77 `_legacy_fn` onPass bits carry an XP grant the reward-bit reader
   would miss, so the extraction in `const rewardXp = ((sc.onPass@7007` sees everything there is to
   see.

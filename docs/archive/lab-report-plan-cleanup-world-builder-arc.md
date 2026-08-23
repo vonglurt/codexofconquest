@@ -7,13 +7,13 @@
 **Commit:** `2940f81`
 **Diff:** 8,127 lines deleted · 1,748 lines added · 9 files changed
 **Status:** ✅ Committed
-**Codebase:** `roll2hit-v3.html` — single-file browser RPG; `plan.md` — primary planning document
+**Codebase:** `play.html` — single-file browser RPG; `plan.md` — primary planning document
 
 ---
 
 ## Abstract
 
-This report documents two things simultaneously: the mechanics of a major plan.md cleanup pass (8,127 lines removed, 36 lab reports now on disk, the planning surface reduced to 230 lines of active material) and the broader trajectory that made the cleanup possible — the transformation of roll2hit from an MIT D&D 5e combat simulator into a self-documenting world builder. The two stories are the same story told at different scales. plan.md accumulated 8,200 lines because the project outgrew it — the document absorbed sync-pass findings, function coverage tables, Q-indexes, and completed-layer manifests because there was nowhere else for that material to go while the layers were being built. The cleanup extracted all of that into 36 dedicated lab reports, leaving plan.md as the active surface it was always meant to be. This report analyzes the accumulation pattern, the extraction method, the architectural implications for single-file projects with large documentation surfaces, and the arc from simulator to world builder that drove the growth in the first place.
+This report documents two things simultaneously: the mechanics of a major plan.md cleanup pass (8,127 lines removed, 36 lab reports now on disk, the planning surface reduced to 230 lines of active material) and the broader trajectory that made the cleanup possible — the transformation of codexofconquest from an MIT D&D 5e combat simulator into a self-documenting world builder. The two stories are the same story told at different scales. plan.md accumulated 8,200 lines because the project outgrew it — the document absorbed sync-pass findings, function coverage tables, Q-indexes, and completed-layer manifests because there was nowhere else for that material to go while the layers were being built. The cleanup extracted all of that into 36 dedicated lab reports, leaving plan.md as the active surface it was always meant to be. This report analyzes the accumulation pattern, the extraction method, the architectural implications for single-file projects with large documentation surfaces, and the arc from simulator to world builder that drove the growth in the first place.
 
 ---
 
@@ -101,7 +101,7 @@ The total documentation footprint shrank by 8,000 lines. The active planning sur
 
 ### A. The Starting State (Layer 0, ~2024)
 
-Roll2hit began as a combat dice tracker — a response to a specific practical problem: tracking a D&D combat encounter in real time without a second screen. The original `roll2hit.html` was four panels: player HP, opponent stat block, d20 roller, damage roller. No state machine, no persistence, no narrative. A tool, not a game.
+CodexOfConquest began as a combat dice tracker — a response to a specific practical problem: tracking a D&D combat encounter in real time without a second screen. The original `codexofconquest.html` was four panels: player HP, opponent stat block, d20 roller, damage roller. No state machine, no persistence, no narrative. A tool, not a game.
 
 The single-file constraint was imposed by the deployment target: open in any browser, share as a file, no server required. This constraint became the project's primary architectural discipline. Complexity had to earn its place inside the file.
 
@@ -204,7 +204,7 @@ A 97% reduction in a document's line count sounds alarming. It is not. The mater
 
 ### The Arc in One Sentence
 
-Roll2hit started as a dice roller, became a quest engine, built a world that remembered its own history, and is now an MIT-licensed world builder that tells you — at Level 20, with a grep command — how to extend it.
+CodexOfConquest started as a dice roller, became a quest engine, built a world that remembered its own history, and is now an MIT-licensed world builder that tells you — at Level 20, with a grep command — how to extend it.
 
 ---
 

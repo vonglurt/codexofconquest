@@ -3,7 +3,7 @@
 # Lab Report: §FUTURE-01 Vignette Writing Spec — The Road to Kesra
 
 **Filed:** 2026-05-27 06:46:50 (`7f2715a`) · **Track:** §FUTURE-01 · **Status:** SHIPPED, with deltas
-**Verified:** 2026-08-12 (§DOC-02aj) against `roll2hit-v3.html` @ 38,712 lines · 416 nodes · 2,853 quests
+**Verified:** 2026-08-12 (§DOC-02aj) against `play.html` @ 38,712 lines · 416 nodes · 2,853 quests
 **Siblings:** `lab-report-saul-paul-travel-reference.md` (the source research, verified §DOC-02ai)
 **Superseded reference:** `plan.md §FUTURE-01 Name Translation Table` — deleted by `5e48dd7`
 
@@ -166,7 +166,7 @@ reads.** → **§FUTURE-01-FU2**, two lines, no design call.
 
 ## V. The Spec as Written — preserved, with deltas
 
-*Almost none of §I–§VI's prose reached `roll2hit-v3.html`, so this is not a second copy of live data
+*Almost none of §I–§VI's prose reached `play.html`, so this is not a second copy of live data
 — the §DOC-02h "delete a transcribed data section" rule does not apply. Claims are scored in place and
 kept; the long §II drafts are pointed at rather than reprinted.*
 
@@ -191,7 +191,7 @@ one stated as an example.*
 
 ### §II — Node Texts *(0 of 13 shipped as written; retained as the record of an unshipped design)*
 
-The thirteen drafts were the bulk of the original file and none of them reached `roll2hit-v3.html`.
+The thirteen drafts were the bulk of the original file and none of them reached `play.html`.
 **Full drafts: `git show "7f2715a:lab-report-saul-paul-vignette-spec.md"`** — note the **repo-root**
 path: `7d3615a` later moved the file into `docs/lab-reports/`, so the `docs/lab-reports/` path returns nothing at
 the birth commit, and the quotes are required (zsh reads `$c:r` as a modifier). Retained below: the

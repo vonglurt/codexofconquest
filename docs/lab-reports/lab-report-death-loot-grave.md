@@ -2,9 +2,9 @@
 # Lab Report — §DEATH-01: Death, Loot & the Grave
 
 **Design lock:** 2026-07-12 · **Shipped:** `a52f9cd`, same day, Inc A/B/C in one commit.
-**Verified against `roll2hit-v3.html` @ HEAD (38,712 lines):** 2026-08-18 (§DOC-02cc), 37 days after ship.
+**Verified against `play.html` @ HEAD (38,712 lines):** 2026-08-18 (§DOC-02cc), 37 days after ship.
 **Parent build for all pre-edit citations:** `a52f9cd^` (37,166 lines). The report has exactly one
-commit and it *is* the ship commit, so `git show a52f9cd^:roll2hit-v3.html` was pinned before any
+commit and it *is* the ship commit, so `git show a52f9cd^:play.html` was pinned before any
 line number was scored (instrument 108); `git diff a52f9cd HEAD -- <report>` is empty — never amended.
 
 ---

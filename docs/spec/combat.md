@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# Roll2Hit — Combat System Reference
+# CodexOfConquest — Combat System Reference
 **File:** `play.html` · **Layers:** 11–17 (battle engine), 21 (level-up), 23 (notoriety), 36–37 (features, d-pad, Boyscout)  
 **Last synced:** 2026-05-26 · 17,762 lines · §API-02 line numbers verified
 

@@ -4,7 +4,7 @@
 
 **Original filing:** 2026-05-28 · Claude (Sonnet 4.6) + CodexOfConquest.com design sessions
 **Classification:** Arc design / companion quest / behavioural-wisdom systems
-**Verified:** 2026-08-13 (§DOC-02as) against `roll2hit-v3.html` @ 38,712 lines
+**Verified:** 2026-08-13 (§DOC-02as) against `play.html` @ 38,712 lines
 **Depends on:** §ALCHEMY-01 (`personalLegendComplete`)
 **Status:** ✅ SHIPPED `e339aeb` (2026-05-28 21:25:08 −0700) · ⛔ **UNREACHABLE at HEAD — 8 of 8 quests**
 

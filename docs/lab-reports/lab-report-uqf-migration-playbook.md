@@ -125,7 +125,7 @@ must be a programmatic transform. Being wrong about the magnitude did not change
 
 ### 4.1 Recon (per arc, once)
 
-1. `grep -n "quest_<arc>_" roll2hit-v3.html` — enumerate the arc.
+1. `grep -n "quest_<arc>_" play.html` — enumerate the arc.
 2. Read each quest's **full** legacy object; capture the verbatim long strings.
 3. **Grep for external consumers** of every field you intend to drop
    (`\.checkStat|\.checkPassFlag|\.onPass|\.completeFn`). Confirm they occur only inside
@@ -356,7 +356,7 @@ gate terms (§BOARD-01 Void-tide windows), the `any`/`not` expression AST (§VM-
   claims are the sharpest: `cph`'s "WIS + CHA only" holds; `gci_` is the first clean family spanning
   all six abilities; `tbs_` still excludes STR; the `blq` split is still 29 migrated / 30 stubs.
 - **64 of 64 "Zero engine changes" claims exact.** Every hunk those 64 commits made to
-  `roll2hit-v3.html` — additions and deletions both — lands **inside** the `const QUEST_DB = {@10615`
+  `play.html` — additions and deletions both — lands **inside** the `const QUEST_DB = {@10615`
   literal. Not one strayed. The only non-test, non-doc file any of them touched is
   `src/scripts/uqf-bulk-migrate.js` in Wave 2a, where it was born. *A negative claim is normally the
   weakest thing in a report; this one is adjudicated by the diff and it holds 64 times.*

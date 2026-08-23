@@ -1,12 +1,12 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Story × Codex of Conquest × The Curse of Knowledge
-### Applying Steven Pinker's *Sense of Style* to roll2hit Story Design
+### Applying Steven Pinker's *Sense of Style* to codexofconquest Story Design
 
 **Date:** 2026-05-22 · **Source material:** `story.md`, `spec-world.md`, `monsters.md`
 **Framework:** David Perell interview with Steven Pinker
 **Category:** Narrative Craft · Prose Specification · Pre-Implementation Style Guide
-**Verification:** §DOC-02al, 2026-08-12 — re-measured against live `roll2hit-v3.html` (38,712 lines) and `story.md`, 82 days on.
+**Verification:** §DOC-02al, 2026-08-12 — re-measured against live `play.html` (38,712 lines) and `story.md`, 82 days on.
 
 ---
 
@@ -47,7 +47,7 @@ them; and empathy is cultivated by specific detail, not asserted.
 
 ### I-B. Why this helps the *game*
 
-roll2hit is read-and-click. A player spends most of a session looking at a node description and a mission
+codexofconquest is read-and-click. A player spends most of a session looking at a node description and a mission
 card — there is no camera, no score, no animation carrying mood. **The prose is the entire audiovisual
 budget.** A node that says *"the crypt has old tombs"* gives the player nothing to stand in; a node that
 says the dust has settled perfectly *until the second room, where it is gone entirely* gives them a place
@@ -76,7 +76,7 @@ quotes. Each proposal is stated as **current version → revised version**, with
 
 **Verification method.** Prose cannot be scored by symbol census, so this pass measures three things
 separately: (1) **names**, which are engine identifiers and can be counted; (2) **verbatim survival** of
-each authored specimen, greped against both `roll2hit-v3.html` and `story.md`, the report's stated target;
+each authored specimen, greped against both `play.html` and `story.md`, the report's stated target;
 and (3) **style adoption**, measured as the share of `NODE_MAP` text fields carrying a concrete numeral,
 at the earliest surviving build (`32c10c5`, 2026-05-24 — two days *after* this report) versus HEAD.
 

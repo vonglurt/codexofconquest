@@ -5,8 +5,8 @@
 > suite all landed, and every one of them is still load-bearing 30 days later.
 >
 > **Written:** 2026-07-21 18:41 as a pre-implementation lock (Lab Report Policy row 4 — spec only,
-> no HTML edited), against `roll2hit-v3.html` at **37,618 lines**, branch `feat/board-01-warrants-board`.
-> **Lock commit:** `7f2f45d` (docs-only, so `7f2f45d:roll2hit-v3.html` **is** the build it measured).
+> no HTML edited), against `play.html` at **37,618 lines**, branch `feat/board-01-warrants-board`.
+> **Lock commit:** `7f2f45d` (docs-only, so `7f2f45d:play.html` **is** the build it measured).
 > **Ship commit:** `c22f4f0` (2026-07-22 10:34) — 16 hours later, landing A + B + C as one commit.
 > **Verified:** 2026-08-21 (§DOC-02cm) against the parent build **and** live HEAD (38,712 lines),
 > with the engine driven in a real browser at HEAD.
@@ -48,7 +48,7 @@ itself uncommitted while being committed.
 
 ## I. Intention and inspiration — why this matters to play
 
-roll2hit is a **49-day doom clock**. Every step and every rest spends a day you do not get back. In a
+codexofconquest is a **49-day doom clock**. Every step and every rest spends a day you do not get back. In a
 game built entirely on that one question — *is this worth a day of the world* — the engine could only
 ever **tell** you what happened. It could not **ask**.
 
@@ -90,7 +90,7 @@ exactly one of it. That discipline is why the report scores as well as it does: 
 method (tables and function bodies are evidence, traces and reconstructions are claims) predicts a
 report made almost entirely of pasted function bodies will not rot, and this one did not.**
 
-Verification method for this pass: pin the parent build (`git show 7f2f45d:roll2hit-v3.html`), score
+Verification method for this pass: pin the parent build (`git show 7f2f45d:play.html`), score
 every anchor and every quoted block against it, then measure the shipped state at HEAD, run the
 report's own acceptance suite, and drive the authored consumer in a real browser.
 

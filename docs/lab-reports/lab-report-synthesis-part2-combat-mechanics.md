@@ -2,7 +2,7 @@
 
 # Lab Report Synthesis — Part 2: Combat & Mechanics
 
-**Cross-reference of seven Combat & Mechanics lab reports against `roll2hit-v3.html`**
+**Cross-reference of seven Combat & Mechanics lab reports against `play.html`**
 
 | | |
 |---|---|

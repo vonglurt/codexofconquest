@@ -3,7 +3,7 @@
 
 > **Type:** design review before implementation (Lab Report Policy row 4). **Child of** `docs/lab-reports/lab-report-javascript-mud.md` and the §VM-01 track in **[BACKLOG.md](../docs/backlog/BACKLOG.md)**. **Shipped** 2026-07-22, committed **`c22f4f0`** (the combined §VM-01-A/B/C landing).
 >
-> **§DOC-02cn verification pass — 2026-08-21.** Re-measured against live `roll2hit-v3.html` (**38,712** lines) and `src/js/wbapi-server.js` (**11,671** lines), 30 days after the ship. Original text 211 lines, this rewrite 160; it is the same lock, shortened, with a spec→shipped delta table and an errata section. **Nothing was deleted for being wrong** — a claim that did not hold is marked and kept.
+> **§DOC-02cn verification pass — 2026-08-21.** Re-measured against live `play.html` (**38,712** lines) and `src/js/wbapi-server.js` (**11,671** lines), 30 days after the ship. Original text 211 lines, this rewrite 160; it is the same lock, shortened, with a spec→shipped delta table and an errata section. **Nothing was deleted for being wrong** — a claim that did not hold is marked and kept.
 
 ---
 
@@ -129,7 +129,7 @@ Exit 0 iff all hold; exit 1 with the first divergence's seed and draw index.
 
 ## 9. Errata — four figures that did not measure true
 
-1. **`src/js/wbapi-server.js:1155` is off by one, and it was wrong the day it was written.** The quoted phrase *"a known SP/MP divergence"* begins at line **1156** and completes at 1157 — at HEAD *and* at `c22f4f0^`. Line 1155 is the preceding sentence about notoriety scaling. The report cites `1155` three times, and the wrong number was **copied into shipped engine code** at `roll2hit-v3.html:6431`. This is the same family as §DX-02ds and §DX-02dr, and it is the third instance. → **§DX-02du**.
+1. **`src/js/wbapi-server.js:1155` is off by one, and it was wrong the day it was written.** The quoted phrase *"a known SP/MP divergence"* begins at line **1156** and completes at 1157 — at HEAD *and* at `c22f4f0^`. Line 1155 is the preceding sentence about notoriety scaling. The report cites `1155` three times, and the wrong number was **copied into shipped engine code** at `play.html:6431`. This is the same family as §DX-02ds and §DX-02dr, and it is the third instance. → **§DX-02du**.
 2. **"62 `Math.random()` sites (up from the BACKLOG's 59 — three added by intervening content)."** The parent build holds **59**, and §VM-01-A added none, so the working tree held 59. The BACKLOG's figure was right; the recount and its explanation are both **NOT MEASURED**. The arithmetic proves it: 59 − 9 removed + 2 added-as-comment-text = **52** at `c22f4f0`, which is what the ship commit contains.
 3. **"37,618 lines" is the parent's count, not the tree the anchors were measured on.** `c22f4f0^` is exactly 37,618 lines; add §VM-01-A's net `+47` and the file the report greped was **37,665**. The header is stale by precisely the increment's own net insertion — the anchors are right and the line-count that frames them is not.
 4. **"5.13 MB" is the inline script, not the file, and its sibling ship record calls the same number "4.89 MB."** At `c22f4f0^` the file is 5,427,539 B (5.43 MB / 5.18 MiB) and its largest inline `<script>` is 5,163,675 B (5.16 MB / 4.92 MiB). The two figures reconcile as units, not as measurements: **4.89 MiB = 5.13 MB**. Two ship records of the same commit report one quantity in two systems and label both "MB".
@@ -142,8 +142,8 @@ Exit 0 iff all hold; exit 1 with the first divergence's seed and draw index.
 
 - `npm run check:rng` → **green**: P1 6,000 draws over 12 seeds (client ≡ server), P2 determinism, P3 6,000 draws (`__duelRng` ≡ `_seededNext`), P4 field presence.
 - `npx playwright test src/tests/integration/rng-seed.test.js` → **5 passed**: pure-function-of-seed · autosave/load round-trip resumes exactly · pre-§VM-01-B save lazily bootstraps · ranges intact (`[0,1)` / d20 1–20 / d100 0–99) · `QuestRuntime._rollSkill` reproducible from the seed.
-- Parent build pinned with `git show "c22f4f0^:roll2hit-v3.html"` and `git show "c22f4f0^:src/js/wbapi-server.js"`; all 28 line-number claims scored against it.
-- Ship state pinned with `git show c22f4f0:roll2hit-v3.html`; `Math.random()` occurrences counted at parent (59), ship (52) and HEAD (51).
+- Parent build pinned with `git show "c22f4f0^:play.html"` and `git show "c22f4f0^:src/js/wbapi-server.js"`; all 28 line-number claims scored against it.
+- Ship state pinned with `git show c22f4f0:play.html`; `Math.random()` occurrences counted at parent (59), ship (52) and HEAD (51).
 
 ---
 

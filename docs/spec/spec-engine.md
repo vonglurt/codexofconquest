@@ -64,7 +64,7 @@ The game has exactly two modes. Switching between them is explicit and intention
                    │         │ START BATTLE         │
                    │    ┌────▼─────┐               │
                    │    │  BATTLE  │───────────────►│
-                   │    └──────────┘  (roll2hit)
+                   │    └──────────┘  (codexofconquest)
                    │
               ┌────┴─────┐
               │   SLEEP  │ ← triggered at inn nodes
@@ -503,7 +503,7 @@ Before `🎲 START BATTLE`, Story Mode enters PRE_BATT:
 3. If Y: Show available condition items in inventory
 4. Player selects item → condition applied to enemy before battle
 5. Show condition effect summary: "Target enters battle as **Prone**. Your melee attacks have **ADV**."
-6. Load enemy stats from MONSTER_POOL into the roll2hit combat tracker
+6. Load enemy stats from MONSTER_POOL into the codexofconquest combat tracker
 7. Set ADV/DIS flags in tracker based on applied condition
 8. Hand off to Battle Mode (play.html takes over)
 
@@ -558,7 +558,7 @@ The **inn system** acts as a checkpoint save: when the player sleeps at an inn, 
 The 12 condition items (from world.md and conditions in play.html) map directly to the existing CONDITION_ADV system in the combat tracker:
 
 ```
-Condition Item          → roll2hit Condition Code   → Effect in tracker
+Condition Item          → codexofconquest Condition Code   → Effect in tracker
 ────────────────────    ────────────────────────    ─────────────────────
 Earthbind Root          → prone                     → ATK has ADV
 Crone's Binding Web     → restrained                → ATK has ADV + enemy DIS

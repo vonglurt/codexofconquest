@@ -2,7 +2,7 @@
 
 # The Ceremonia Roll: A Skill-Check Quest Type and Its Five-Act Consumer
 
-**Lab Report — IEEE Style · Roll2Hit: The Shattered Codex (`roll2hit-v3.html`)**
+**Lab Report — IEEE Style · CodexOfConquest: The Shattered Codex (`play.html`)**
 **Original date:** 2026-05-26 · **Layer:** §DESIGN-03 · **Classification:** Systems Design / Quest-Type Specification
 **Verification pass:** 2026-08-11 (§DOC-02e) — every claim re-measured against HEAD.
 
@@ -42,7 +42,7 @@ write-only state
 
 ## I. Method
 
-Four measurements, all from HEAD (`roll2hit-v3.html`, 38,707 lines, r2h-3.104.0, 416 nodes / 2,853
+Four measurements, all from HEAD (`play.html`, 38,707 lines, r2h-3.104.0, 416 nodes / 2,853
 quests):
 
 1. **Symbol census.** Every constant, field, function, quest id, item name, DOM id and CSS class the

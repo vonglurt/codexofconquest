@@ -55,7 +55,7 @@ mesh rather than its middle.* The instinct survived. The accounting did not.
    `09fa5b2`, `a61d6eb`) plus HEAD.
 3. **Re-implementation (§DOC-02av method note).** The report publishes its algorithm, so the
    algorithm was re-run: the `NODE_MAP` N/E/S/W graph and `NODE_COORDS` were extracted from
-   `62a4023:roll2hit-v3.html` and BFS'd directly to reproduce every component size and distance.
+   `62a4023:play.html` and BFS'd directly to reproduce every component size and distance.
 4. **Live probe at HEAD** of the three endpoints that descend from this code.
 
 > *Path hazard (§DOC-02au) applied:* at all of these commits the server lived at repo root as

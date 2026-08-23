@@ -2,18 +2,18 @@
 
 # Architectural Cleanup Report: plan.md Compaction — Layers 14 through 17
 
-**Roll2Hit v3 — Engineering Change Documentation**  
+**CodexOfConquest v3 — Engineering Change Documentation**  
 **Series:** Implementation Audit and Specification Archive  
 **Classification:** Software Engineering · Document Management · Spec Lifecycle  
 **Date:** 2026-05-21  
-**Author:** Roll2Hit Development Record  
-**Status:** Complete — archived content verified against `roll2hit-v3.html` (8,110 lines)
+**Author:** CodexOfConquest Development Record  
+**Status:** Complete — archived content verified against `play.html` (8,110 lines)
 
 ---
 
 ## Abstract
 
-This report documents the compaction of `plan.md` following the completion of Layers 14 through 17 of *The Shattered Codex* narrative engine. `plan.md` accumulated 1,358 lines of implementation specification across these four layers. All specified features have been implemented and verified in `roll2hit-v3.html`. This report serves as:
+This report documents the compaction of `plan.md` following the completion of Layers 14 through 17 of *The Shattered Codex* narrative engine. `plan.md` accumulated 1,358 lines of implementation specification across these four layers. All specified features have been implemented and verified in `play.html`. This report serves as:
 
 1. A **change record** — what was removed from `plan.md` and why
 2. A **specification archive** — a summary of every removed section with key decisions
@@ -268,7 +268,7 @@ When starting Layer 18, add a new `## Layer 18 — [Name]` section to `plan.md`.
 ---
 
 *Report written 2026-05-21*  
-*Codebase: roll2hit-v3.html — 8,110 lines, Layers 0–17 complete*  
+*Codebase: play.html — 8,110 lines, Layers 0–17 complete*  
 *plan.md: compacted from 1,358 → ~90 lines*  
 *All removed specs verified as implemented before archival*  
 *6 post-implementation bug corrections documented*

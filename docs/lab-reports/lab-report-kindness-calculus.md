@@ -6,7 +6,7 @@
 **Original manuscript:** 2026-05-28 · **Verification pass:** 2026-08-12 (§DOC-02r)
 
 > **STATUS — VERIFIED WITH MAJOR DELTAS.** This is a HISTORY document. The 2026-05-28 text has
-> been re-measured claim-by-claim against live `roll2hit-v3.html` and rewritten short. Claims that
+> been re-measured claim-by-claim against live `play.html` and rewritten short. Claims that
 > did not ship are marked **NOT SHIPPED** and **kept** — a silently deleted claim reads as one that
 > held. The design thesis survives. **The content it is a thesis about largely does not reach the
 > player:** 28 of the 51 quests in the six analysed arc families cannot be activated by any route.
@@ -325,7 +325,7 @@ in these arcs was still its own cell.
 
 **Manuscript received:** 2026-05-28 · **Verified and rewritten:** 2026-08-12 (§DOC-02r)
 **Reference build:** `e339aeb` (2026-05-28 21:25) · **Measured against:** HEAD, 38,712 lines
-**Source of truth:** `roll2hit-v3.html`. Where this document and the file disagree, the file is right.
+**Source of truth:** `play.html`. Where this document and the file disagree, the file is right.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

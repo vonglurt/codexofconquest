@@ -2,7 +2,7 @@
 
 # Lab Report Synthesis — Part 3: World & Navigation
 
-**Original:** 2026-06-16 · cross-reference of 13 World & Navigation lab reports against `roll2hit-v3.html`
+**Original:** 2026-06-16 · cross-reference of 13 World & Navigation lab reports against `play.html`
 **Verified:** 2026-08-14 (§DOC-02bd) · reference commit `89fa13b` (2026-06-16 12:20:47, 33,721 lines) · HEAD 38,712 lines
 **Verdict:** every figure it **borrowed** is exact; every figure it **measured for itself** is wrong. Its account of the world is off by a factor of three, and the reason is a space before a brace.
 

@@ -2,7 +2,7 @@
 # Lab Report — §MATH-01: Completion Design for the Mathematical World Arc
 
 **Designed:** 2026-07-07 08:58 (design lock, pre-implementation) · **Shipped:** 2026-07-07 09:22 `32d7bb0`
-**Verified:** 2026-08-17 (§DOC-02by) against `roll2hit-v3.html` at HEAD, 42 days on
+**Verified:** 2026-08-17 (§DOC-02by) against `play.html` at HEAD, 42 days on
 **Scope:** make `quest_math_01`–`05` completable, and make the four nodes they live on reachable.
 
 > ⚠ **Two documents in one file.** §I–§IV are the original 2026-07-07 design lock, corrected in place.
@@ -256,7 +256,7 @@ about him who cannot be addressed. Filed 🟡, small design call.
 **(b) `§DX-02as` (e) is wrong, and this report is what proves it.** §3 predicted the non-UQF residue
 would fall 35 → 30 and be exactly the `blq_05`–`10` stubs. §DX-02as (e), filed five weeks later,
 asserts the true figure is **50** and names 15 additional ids. All 15 carry `schema:"UQF-1.0"` at
-HEAD; `roll2hit-v3.html` has not changed since that row was written; and two independent instruments
+HEAD; `play.html` has not changed since that row was written; and two independent instruments
 return **30** — a comment- and string-aware brace walk over all 2,853 entries, and the live assertion
 `` `src/tests/integration/quest-runtime-uqf.test.js:expect(r.ids.length).toBe(30);@9382` `` running in the
 real JS engine. The 15 mis-counted entries are single lines of 1,436–2,655 characters with `schema:`

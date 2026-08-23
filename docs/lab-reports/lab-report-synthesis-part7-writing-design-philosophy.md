@@ -2,11 +2,11 @@
 
 # Lab Report Synthesis — Part 7: Writing & Design Philosophy
 
-### Cross-Reference of Eight Craft-and-Philosophy Reports Against `roll2hit-v3.html`
+### Cross-Reference of Eight Craft-and-Philosophy Reports Against `play.html`
 
 **Original date:** 2026-06-16 14:18 · **Stated baseline:** 33,721 lines · **Source reports:** 8
 **Reference build:** `89fa13b` (2026-06-16 12:20) — **exactly 33,721 lines**, the build this report was written against
-**Verified against HEAD:** 2026-08-14 (§DOC-02bh) — `roll2hit-v3.html` @ 38,712 lines, 59 days later
+**Verified against HEAD:** 2026-08-14 (§DOC-02bh) — `play.html` @ 38,712 lines, 59 days later
 **Series:** the closing part of the seven-part synthesis (64 reports)
 
 > **HISTORY DOCUMENT.** This is the synthesis as believed on 2026-06-16, re-measured, not a
@@ -54,7 +54,7 @@ nothing ever fails when a document is wrong.* Parts 1–6 covered architecture, 
 monsters, NPCs and quests. Part 7 was reserved for the layer none of those could hold — the
 **writing standards and the design philosophy**, the knowledge that has no data structure.
 
-**Why the game needed it.** roll2hit's central mechanic is not combat; it is *noticing*. The Void is
+**Why the game needed it.** codexofconquest's central mechanic is not combat; it is *noticing*. The Void is
 sealed by seven Shards, but the ending is selected by the player's side-content behaviour, and the
 Curse of Knowledge — Froberger's isolation, not his malice — is what the whole arc is about. That
 theme lives entirely in prose. There is no `curseOfKnowledge` field. If the writing standard drifts,
@@ -221,7 +221,7 @@ is real. Four of the five arcs cannot be played:
 - **The Curse Score ending.** `_curseScore()`'s `returned` term lost its writer to a 2026-05-29
   rename (§EPIC-01), pinning the score at a floor of 20. Part 7's closing thesis — *"The story ends
   when they come back"* — names precisely the ending that has been unwinnable since (§ENDING-01(b)).
-- **The organ.** `src/sources/5thOrgan.html` works exactly as specified. `roll2hit-v3.html` contains
+- **The organ.** `src/sources/5thOrgan.html` works exactly as specified. `play.html` contains
   **zero Web Audio**. The game has been silent since the day the synthesiser shipped (§AUDIO-01).
 
 The fifth — Birka's six NPCs — is reachable, and it is also the only entry whose verdict rests on a
@@ -279,7 +279,7 @@ These survive verification and are the reason this document is kept.
 **One rule has moved.** *"Decisions belong in plan.md; reasoning belongs in lab reports; the shift
 register holds only current working state."* `plan.md` was split on 2026-07-09 (`5e48dd7`). The live
 form: **policy → `CONTRIBUTING.md` · outstanding work → `BACKLOG.md` · reasoning → `docs/lab-reports/` ·
-implementation → `roll2hit-v3.html` · closed work → `plan-archive.md`.** The principle is unchanged
+implementation → `play.html` · closed work → `plan-archive.md`.** The principle is unchanged
 and is now enforced; only the filename retired.
 
 ---

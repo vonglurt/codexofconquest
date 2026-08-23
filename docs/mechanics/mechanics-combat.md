@@ -1,11 +1,11 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# Roll2Hit — The Shattered Codex: Combat Mechanics
+# CodexOfConquest — The Shattered Codex: Combat Mechanics
 **Last synced:** 2026-05-26 · 17,762 lines · All line numbers re-verified (SP4 annotation pass)
 
 ## Overview
 
-Roll2Hit runs in two modes that share a single state. **Battle Mode** is the combat tracker (this document). **Story Mode** vendor, economy, NPC, and function reference content is in `mechanics-economy.md`. The two modes communicate through `S_story.pendingBattle` and `S._pendingDrop`.
+CodexOfConquest runs in two modes that share a single state. **Battle Mode** is the combat tracker (this document). **Story Mode** vendor, economy, NPC, and function reference content is in `mechanics-economy.md`. The two modes communicate through `S_story.pendingBattle` and `S._pendingDrop`.
 
 ---
 

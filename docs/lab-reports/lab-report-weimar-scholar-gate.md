@@ -3,7 +3,7 @@
 # Lab Report — Layer 51: Weimar Scholar Gate
 
 **IEEE-Format Post-Mortem** · **Original date:** 2026-05-25 · **Layer:** 51 · **Section:** §XVI
-**Ship commit:** `194a810` · **Codebase:** `roll2hit-v3.html` — single-file browser RPG
+**Ship commit:** `194a810` · **Codebase:** `play.html` — single-file browser RPG
 
 > **VERIFIED 2026-08-13 (§DOC-02ar).** Re-measured claim-by-claim against HEAD (38,712 lines ·
 > 416 nodes · 2,853 quests) and against the arc's own ship tree. This is a **HISTORY** document:
@@ -94,7 +94,7 @@ arc's narrative climax and the stated entry condition for §XVII.
    reading a line of the source. Partition into live / dead before forming any thesis.
 2. **`git log -S <symbol>` on every dead or suspicious name**, to separate RETIRED (shipped, later
    removed) from NOT SHIPPED (never existed).
-3. **Archive read.** `git show 194a810:roll2hit-v3.html` — the arc's own ship tree — because HEAD
+3. **Archive read.** `git show 194a810:play.html` — the arc's own ship tree — because HEAD
    cannot adjudicate a claim about the day the report was written.
 4. **Writer/reader split.** For every state flag: who writes it, who reads it, and can the writer
    ever run. This is the instrument that found both defects; the census alone found neither.

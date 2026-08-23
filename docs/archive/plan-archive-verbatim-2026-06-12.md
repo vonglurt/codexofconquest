@@ -147,7 +147,7 @@ Earlier layers (9–47): see `lab-report-architecture-full.md` and `lab-report-t
 
 **Status:** ✅ Implemented 2026-05-26. P1–P8 complete.
 **Scope:** CSS variables · Story Mode layout · Character vitals panel · Quest strip · Action chip styling · Map panel
-**Files:** `roll2hit-v3.html` (CSS block lines 7–2229 + story mode structural CSS lines 886–2360)
+**Files:** `play.html` (CSS block lines 7–2229 + story mode structural CSS lines 886–2360)
 
 ---
 
@@ -305,7 +305,7 @@ Problems: (1) Left sidebar is cramped — 11 stat rows + 6 buttons in 180px. (2)
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│ HEADER (38px): Roll2Hit v3 ── story badge ── btns               │
+│ HEADER (38px): CodexOfConquest v3 ── story badge ── btns               │
 ├────────────────────────────────────────────────────────────────┤
 │ AZTEC BAND (horizontal, 8px tall, full width)                   │
 │ [dark ember ━━ red ━━ orange ━━ amber ━━ cream ━━ groove]       │
@@ -475,7 +475,7 @@ Current chips are small `border: 1px solid` pills. New chips are taller (32px mi
 
 **Status:** ✅ All phases implemented 2026-05-26/27 (P1–P5 live; P5 covered by §XLIV battle accordion).
 **Scope:** Story mode center layout · Section containers · Hour tracking · Per-quest hunt UI
-**Files:** `roll2hit-v3.html` (CSS + JS storyRenderSections + _S_DEFAULTS)
+**Files:** `play.html` (CSS + JS storyRenderSections + _S_DEFAULTS)
 
 ---
 
@@ -620,7 +620,7 @@ Only show conditions the player can afford. Clicking a condition button launches
 ## §RESEARCH-01 — Arthurian Romance Reference: Chrétien de Troyes
 
 **Source:** *Four Arthurian Romances* — Chrétien de Troyes (c. 1160–1172 CE)  
-**Purpose:** Research session — extract structural patterns, parallel analysis to roll2hit arcs, and propose an empathetic romance subplot layer with quote candidates for random romance events.
+**Purpose:** Research session — extract structural patterns, parallel analysis to codexofconquest arcs, and propose an empathetic romance subplot layer with quote candidates for random romance events.
 
 **Implementation status — 2026-05-25:**
 - §III.A Inn Vignette System: ✅ `NPC_ROMANCE_VIGNETTES` const (6 entries), `npcRomanceVignetteDelivered: {}` state field, delivery in `storyConfirmSleep()` at 1400ms — fav ≥ 2, NPC node in last 3 moves + current, once per NPC per run.
@@ -647,9 +647,9 @@ The earliest surviving account of Lancelot's love for Guinevere. Meleagant, a pr
 
 ---
 
-### II. Structural Parallels to roll2hit
+### II. Structural Parallels to codexofconquest
 
-| Romance | Core structural pattern | roll2hit parallel |
+| Romance | Core structural pattern | codexofconquest parallel |
 |---------|------------------------|-------------------|
 | **Erec/Enide** | Poverty + beauty + intelligence (the vavasor's daughter); love earned through service; testing that looks like cruelty but is recognition | **Brynn arc** (ledger debt, firewood, pantry service — domestic acts that earn trust); **Yael escort arc** (protection through presence); NPC fav system (Impartial → Dear Friend as the slow arc Enide walks) |
 | **Cligès / Anti-Tristan** | Refusing the tragic template; interiority over passion; love that writes its own ending rather than inheriting the doomed one | **Froberger arc** — Froberger died before he could write Entry 42. The player writes it. The player is Cligès: comes after the tragedy and refuses to repeat it. `entry42Written` is the Anti-Tristan move |
@@ -774,7 +774,7 @@ const ROMANCE_QUOTES = [
 ### IV. Parallel Arc Summary
 
 ```
-CHRÉTIEN                          ROLL2HIT
+CHRÉTIEN                          CODEXOFCONQUEST
 ========                          ========
 White Stag hunt → custom          Void Tide → covenant obligation
 Sparrow-hawk tournament → proof   EB quests → proof of worth
@@ -788,7 +788,7 @@ Entry 42 blank page               Fenice's refused inheritance of Iseut's story
 Froberger Entry 41                Froberger's death = Yvain's moment of forgetting
 ```
 
-The structural loop: **Chrétien's romances are about what you owe the people you said you would return to.** Roll2hit is built on the same question, encoded in mechanics: curse score, NPC favorability, EB return quests, the NG+ memory lines. The Arthurian layer gives this mechanical system its emotional vocabulary.
+The structural loop: **Chrétien's romances are about what you owe the people you said you would return to.** CodexOfConquest is built on the same question, encoded in mechanics: curse score, NPC favorability, EB return quests, the NG+ memory lines. The Arthurian layer gives this mechanical system its emotional vocabulary.
 
 ---
 
@@ -1261,7 +1261,7 @@ Patterns extracted from the rewrites above, usable as a style guide for all futu
 
 **Source:** *Yvain (The Knight of the Lion)*, vv. 4703–5184
 
-This passage contains four structural elements not present in the earlier Erec excerpt: the inheritance dispute between sisters, the night ride through rain guided by a horn, the trail of testimonies that leads a damsel to a man she has never met, and the castle of Pesme Avanture where everyone warns you away and you go in anyway. Each maps precisely onto roll2hit architecture.
+This passage contains four structural elements not present in the earlier Erec excerpt: the inheritance dispute between sisters, the night ride through rain guided by a horn, the trail of testimonies that leads a damsel to a man she has never met, and the castle of Pesme Avanture where everyone warns you away and you go in anyway. Each maps precisely onto codexofconquest architecture.
 
 ---
 
@@ -1277,7 +1277,7 @@ From the text, the damsel seeking Yvain never meets him directly. She follows hi
 
 The quest is constructed entirely from secondhand accounts. No one knows where he is now — only where he was, and what he did there, and how long ago. The accumulating testimony is itself the structure: by the time she catches up, she knows him from everyone except himself.
 
-**Roll2hit parallel — Void Archaeology arc:**
+**CodexOfConquest parallel — Void Archaeology arc:**
 
 The player never meets Froberger. They follow him through marginal notes, through people who knew him, through a mechanism he activated without knowing he activated it. The trail of testimonies is the quest structure:
 
@@ -1305,7 +1305,7 @@ Each document says: "he was here, and then he went there." No one knows where he
 
 The damsel is completely disoriented — no road, no light, rain, mud to the horse's girth. What navigates her is not sight or map but sound. She turns toward the horn before she knows what it leads to. The faith is not in the destination but in the principle that a sound in darkness leads somewhere habitable.
 
-**Roll2hit parallel — Void Tide and waypoint system:**
+**CodexOfConquest parallel — Void Tide and waypoint system:**
 
 The Void Tide events are the rain and forest. The waypoint system is the horn. When exhausted (`shortRests <= 0`), the game automatically routes to the nearest inn — a horn in the dark. The player does not need to see the inn; they only need to follow the path the game sets.
 
@@ -1333,7 +1333,7 @@ The Void Tide text currently narrates external fact (the sky is wrong, livestock
 
 Three layers: the crowd that warns without explaining, the courteous woman who translates the warning, and the knight who hears all of it clearly and goes in anyway. "My wayward heart leads me on inside" is not recklessness — it is deliberate acceptance of the cost of going forward. He knows the warning is genuine. He goes because his heart says the thing inside is the thing he needs.
 
-**Roll2hit parallels:**
+**CodexOfConquest parallels:**
 
 1. **The Warden quest at MT:** The Warden is the castle of Pesme Avanture — a thing that has been here a long time, that has hurt people, that everyone who has come near warns about. The courteous woman is Benedikt: he explains what the crowd only shouts.
 
@@ -1361,7 +1361,7 @@ Three layers: the crowd that warns without explaining, the courteous woman who t
 
 The elder sister moved first and claimed everything. The younger sister's only recourse is to find the knight everyone else has heard of but no one can locate. The quest is to find someone powerful enough to enforce a right that is already established — the right is not in question, only the enforcement.
 
-**Roll2hit parallel — Tilbury Harbor / Rennau arc:**
+**CodexOfConquest parallel — Tilbury Harbor / Rennau arc:**
 
 Rennau has the ledger. The Conclave has the protocol. The Harrow is already gone. The right is not in question (the ships are lost, the manifest exists, the embargo is bad policy) — only the enforcement. The arc is the younger sister's quest: finding someone willing to take up a case that is already right but has no champion.
 
@@ -1397,7 +1397,7 @@ Added to the §VIII grammar table:
 
 The 40-day postponement is the structural pressure that drives the damsel's search. It is a deadline imposed by law rather than by the void. It is not punishment — it is the court's formal recognition that finding the right person takes time, and that time is finite.
 
-**Roll2hit parallel:** The game's Day 49 limit and `voidPressure` counter are the same structure. The game gives you 49 days — not because the Void is arbitrary, but because the court has recognized that finding the Codex and the method takes time, and that time is finite. The "40 days" is the exact same contract: find your champion, or concede the field.
+**CodexOfConquest parallel:** The game's Day 49 limit and `voidPressure` counter are the same structure. The game gives you 49 days — not because the Void is arbitrary, but because the court has recognized that finding the Codex and the method takes time, and that time is finite. The "40 days" is the exact same contract: find your champion, or concede the field.
 
 The Day 49 defeat screen currently reads: *"the player chose rest; the Void sealed its breach at dawn."* The Yvain register would say: *"Forty-nine days. You needed one more. The Void does not grant postponements."*
 
@@ -5619,9 +5619,9 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 
 > **Status:** ✅ Fully implemented — §LIX (Layer 98) through §LXIX (Layer 104a). All nodes live: HR/KS/DR/TS/AO/CI2/LT/PL/AE/EF2/KR/ML/ST. See individual section entries above.
 
-**Concept:** A new act following the travels of Saul of Tarsus — his conversion on the road, his three missionary circuits across the inland sea, and his eventual arrest and voyage to the imperial capital. The arc is structurally derived from a historical itinerary (see `lab-report-saul-paul-travel-reference.md` for source material) but all city names, NPC names, and institutions are fictionalized to fit the Roll2Hit world.
+**Concept:** A new act following the travels of Saul of Tarsus — his conversion on the road, his three missionary circuits across the inland sea, and his eventual arrest and voyage to the imperial capital. The arc is structurally derived from a historical itinerary (see `lab-report-saul-paul-travel-reference.md` for source material) but all city names, NPC names, and institutions are fictionalized to fit the CodexOfConquest world.
 
-**Mechanical hook:** The Road to Damascus conversion is not a cutscene — it is a world event. The player walks the road to Damascus as Saul (enforcer) and arrives in Damascus as Paul (apostle). The conversion changes the available quest types: enforcement quests close, persuasion and network quests open. Pre-conversion Saul has combat resources (order escort, arrest warrants). Post-conversion Paul has rhetoric resources (speeches, NPC disposition chains) and loses the combat support. This is the first instance in Roll2Hit where a mid-arc identity shift rewrites the world map's available interactions.
+**Mechanical hook:** The Road to Damascus conversion is not a cutscene — it is a world event. The player walks the road to Damascus as Saul (enforcer) and arrives in Damascus as Paul (apostle). The conversion changes the available quest types: enforcement quests close, persuasion and network quests open. Pre-conversion Saul has combat resources (order escort, arrest warrants). Post-conversion Paul has rhetoric resources (speeches, NPC disposition chains) and loses the combat support. This is the first instance in CodexOfConquest where a mid-arc identity shift rewrites the world map's available interactions.
 
 ---
 
@@ -5742,7 +5742,7 @@ DR has one encounter (Desert Wanderer ×2) and no NPCs. The node text is the onl
 - **Source fidelity as constraint, not costume.** Every node maps to a documented stop in the lab report. Quests dramatize events rather than invent them. The Unknown Altar speech at Aethon is the text; the skill check is whether Paul finds the right entry point with this particular crowd.
 - **"It Did Nothing"** is the best single beat in the source arc. The Melta snake encounter should play completely straight: Paul is bitten, the crowd waits for him to swell and die, he shakes the snake off into the fire, nothing happens. No roll. No explanation. The crowd changes their mind about who he is.
 - **Travel pacing:** The journeys cover thousands of miles across multiple years. The hour counter is insufficient — this arc needs a **day/week counter** as the primary time unit, or explicit time-abstraction (node-to-node = one movement, no hour cost).
-- **Cross-reference with existing Arthurian arc:** Roll2Hit uses Chrétien's structural vocabulary (objects that carry weight, things enacted not stated). This arc uses the same technique: the snake that does nothing, the coat left behind at a waypoint inn, the letter carried for someone else. These are Chrétien objects. The arcs belong to the same tradition.
+- **Cross-reference with existing Arthurian arc:** CodexOfConquest uses Chrétien's structural vocabulary (objects that carry weight, things enacted not stated). This arc uses the same technique: the snake that does nothing, the coat left behind at a waypoint inn, the letter carried for someone else. These are Chrétien objects. The arcs belong to the same tradition.
 - **Source material:** `lab-report-saul-paul-travel-reference.md` — 37 nodes, Acts 7–28 + Pauline letters, full NPC list, lodging details, meals, speeches. Use for implementation reference; do not expose historical names in-game.
 - **Vignette spec:** `lab-report-saul-paul-vignette-spec.md` — 14 node texts, 9 quest descriptions + disposition quotes, 7 NPC voice lines, 8 voice rules, object inventory, thorn mechanic note.
 
@@ -6676,7 +6676,7 @@ Running total after §WISDOM-01: ~159 live quests
 
 Every skill-check quest that sets a `checkPassFlag` (or `checkFailFlag`) now also grants the player a carved bone token in inventory. The token is the physical, player-visible proof of a witnessed event.
 
-**Three new helpers added to roll2hit-v3.html (after `_hasItem`):**
+**Three new helpers added to play.html (after `_hasItem`):**
 
 ```javascript
 function _flagToLabel(f)

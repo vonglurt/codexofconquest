@@ -31,7 +31,7 @@ The design intent was therefore **legibility before content**: make the space be
 
 ## II. Diagnosis (measured 2026-07-01 on the live file)
 
-Re-derived independently on 2026-08-17 from `git show 01c5187:roll2hit-v3.html` — BFS over passable cells from the LHR/Birka spawn, and a parse of `QUEST_DB` through `src/js/wbapi-core.js`. **Every figure reproduces exactly.**
+Re-derived independently on 2026-08-17 from `git show 01c5187:play.html` — BFS over passable cells from the LHR/Birka spawn, and a parse of `QUEST_DB` through `src/js/wbapi-core.js`. **Every figure reproduces exactly.**
 
 | Diagnosed | As written | Re-derived (2026-08-17) | |
 |---|---|---|---|

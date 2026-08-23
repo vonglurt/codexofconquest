@@ -8,7 +8,7 @@
 |---|---|
 | **Original** | Layer 43 design document, dated **2026-05-22** (report footer) |
 | **First commit** | `32c10c5` 2026-05-24 17:34:49 — the repository's **initial commit**; the whole feature set is already present in it |
-| **Ship build** | `32c10c5:roll2hit-v3.html` — **14,377 lines / 859,773 bytes** |
+| **Ship build** | `32c10c5:play.html` — **14,377 lines / 859,773 bytes** |
 | **HEAD build** | 2026-08-22 — the same nine subsystems, at **5.5×** the file |
 | **Verified** | §DOC-02cx, 2026-08-22 — source census + exhaustive arithmetic + Chromium (Playwright/`@playwright/test`, 5 measurement specs, 231 state partitions) |
 | **Status** | **HISTORY doc.** Legacy 26×16 node codes (`SQ`, `CY`, `DK`, `BA`, `CO`) are left as written — annotate, don't rewrite (§DX-02c / §AUDIT-03n) |
@@ -37,7 +37,7 @@ The nine subsystems: **(II)** the Covenant Ceremony · **(III)** Sweelinck's dyn
 
 ## II. Method
 
-1. **Symbol census** — every construct the report names, grepped at HEAD and at the report's own build (`git show 32c10c5:roll2hit-v3.html`).
+1. **Symbol census** — every construct the report names, grepped at HEAD and at the report's own build (`git show 32c10c5:play.html`).
 2. **Byte-diff against the ship build** — the design-time text blocks compared line for line across 90 days.
 3. **Exhaustive arithmetic** — `_curseScore()`'s reachable range enumerated over all 231 partitions of the 20 Epic Battlegrounds into `returned` / `started-not-returned` / `never-started`.
 4. **Chromium proof** — five measurement specs run through the repo's own Playwright harness (`seedAndLoad` + `dismissContinue`), asserting the arithmetic *through the engine's own functions* rather than a re-implementation, plus a rendered screenshot of the ceremony overlay.
@@ -224,7 +224,7 @@ The same threshold gates §III: `missionDone && curse <= 0` is satisfiable **onl
 - **`story.md`** — *"The epilogue scroll builds a named list of all returned EB NPCs"* is false; it appends one summary count line. Corrected.
 - **`story.md` / `world.md`** — the two bare `HTML line NNNN` anchors of **F11** converted to `` `symbol@line` `` form so gate #15 can see them.
 - **`world.md` §Pit Training Perks** — the "Combat effect" column documented the *write*; it now states that the flag has no reader, with a pointer to §DX-02eq.
-- **NOT applied, filed instead:** `const COVENANT_STANDING_LABELS = [@27356` carries `→ doc: docs/mechanics/mechanics-economy.md §Covenant Standing`, and that file contains **zero** occurrences of the string; the live home is `story.md §Covenant Standing Tiers`. Fixing it edits `roll2hit-v3.html`, whose working tree carries the user's uncommitted CSS recolor. → **§DX-02er**
+- **NOT applied, filed instead:** `const COVENANT_STANDING_LABELS = [@27356` carries `→ doc: docs/mechanics/mechanics-economy.md §Covenant Standing`, and that file contains **zero** occurrences of the string; the live home is `story.md §Covenant Standing Tiers`. Fixing it edits `play.html`, whose working tree carries the user's uncommitted CSS recolor. → **§DX-02er**
 
 ---
 

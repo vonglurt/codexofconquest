@@ -9,7 +9,7 @@
 | **Original date** | 2026-05-25 |
 | **Ship commit** | `194a810` (2026-05-25 09:10:55 −0700) — verified |
 | **Layers** | 54 (§XIX Tilbury Harbor Arc) · 55 (§XX Visby Underground) |
-| **Codebase** | `roll2hit-v3.html` — single-file browser RPG |
+| **Codebase** | `play.html` — single-file browser RPG |
 | **Verified against** | HEAD, 2026-08-12 (`a962c2a`), 79 days after ship |
 | **Status** | ⚠️ **SHIPPED BUT UNREACHABLE** — 32/32 identifiers resolve; **1 of 7 quests is completable in play** |
 

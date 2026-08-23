@@ -2,7 +2,7 @@
 
 # Lab Report — Layers 75 + 77: Kenickie's Black Market · The Chronicle System
 
-**IEEE-format post-mortem · re-verified against live `roll2hit-v3.html`**
+**IEEE-format post-mortem · re-verified against live `play.html`**
 **Written:** 2026-05-25 · **Re-measured:** 2026-08-12 (§DOC-02q) · **Layers:** 75 (§XL) + 77 (§XLII)
 **Status:** both systems SHIPPED and reachable; five spec claims wrong when written, one live defect filed
 
@@ -18,7 +18,7 @@ Re-measurement finds **§XL implemented almost exactly as specified and fully re
 
 ## I. Method
 
-Seventeen-instrument §DOC-02 pass. Every named identifier batched through one `grep -c` before any prose was read; every dead symbol put through `git log -S "<symbol>" -- roll2hit-v3.html` to separate RETIRED from NEVER SHIPPED; every node code checked against the archive build before being called wrong; cell-primacy checked so a "shipped" surface is not reported as reachable when it is not; `NODE_MAP=416` cross-checked against `check:dupkeys` before any census figure was trusted.
+Seventeen-instrument §DOC-02 pass. Every named identifier batched through one `grep -c` before any prose was read; every dead symbol put through `git log -S "<symbol>" -- play.html` to separate RETIRED from NEVER SHIPPED; every node code checked against the archive build before being called wrong; cell-primacy checked so a "shipped" surface is not reported as reachable when it is not; `NODE_MAP=416` cross-checked against `check:dupkeys` before any census figure was trusted.
 
 Both systems **postdate** the earliest surviving build (`32c10c5`, 2026-05-24), so the archive cannot adjudicate them. Their birth commits do, and all four fall on the report's own date:
 

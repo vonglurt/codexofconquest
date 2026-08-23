@@ -4,7 +4,7 @@
 
 **Authored:** 2026-05-25 (pre-implementation spec) · **Shipped:** 2026-05-25
 **Layer:** 44 · **Section:** §IX · **Node:** `CDG` — The Cat Quarter
-**Status:** ✅ Implemented · **Re-verified against `roll2hit-v3.html` @ `a7867e3` on 2026-08-11**
+**Status:** ✅ Implemented · **Re-verified against `play.html` @ `a7867e3` on 2026-08-11**
 
 > **This is a HISTORY document** (`src/scripts/legacy-codes.js` classification). It records what
 > was *designed* in May 2026 and what is *live* now. The maintained home docs for this arc are

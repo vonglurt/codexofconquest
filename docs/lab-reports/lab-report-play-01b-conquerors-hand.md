@@ -21,7 +21,7 @@ enemy **presses** (a one-time, tier-scaled enrage) and a mundane beast **flees**
 ends the fight without a kill, but pays effort XP). The branch is confined to `_storyEnemyTurn`; the
 `DUEL:CORE` PvP kernel is untouched.
 
-Re-measured 37 days later against live `roll2hit-v3.html` (38,712 lines · 416 nodes · 398 monsters · 2,853
+Re-measured 37 days later against live `play.html` (38,712 lines · 416 nodes · 398 monsters · 2,853
 quests): **the shipped code is byte-identical to the day it landed**, the acceptance suite is **4/4 green**, and
 `DUEL:CORE` hashes identically at the parent build, the ship build and HEAD. Three defects surfaced, none of
 which the acceptance test could have caught, and all three are about **classification, not combat**.
@@ -70,7 +70,7 @@ from the same line.
 
 | # | Instrument | Applied to |
 |---|---|---|
-| 108 | Pin the PARENT build before scoring any line number | `git show 8eb909e^:roll2hit-v3.html` → 37,049 lines, extracted first |
+| 108 | Pin the PARENT build before scoring any line number | `git show 8eb909e^:play.html` → 37,049 lines, extracted first |
 | 84 | `git diff <ship> HEAD -- <report>` before reading | empty — the report has not been touched since the ship commit |
 | 4 | `git log -S <symbol> --all` with **no pathspec** | `hpMax` · `voidTainted` — separates NOT SHIPPED from RETIRED |
 | 51 | Census with the real parser, never a line regex | `src/js/wbapi-core.js` `W.load(GAME)` over `MONSTER_POOL` and `NODE_MAP` |
@@ -358,10 +358,10 @@ open, and then never measured** — not for 37 days, not by the acceptance suite
 ## 12. Provenance
 
 - **Birth:** `0883fa9` 2026-07-12 12:11:32 — spec, awaiting sign-off, docs-only (43 lines).
-- **Ship:** `8eb909e` 2026-07-12 12:40:44 — `roll2hit-v3.html` +77, `src/tests/integration/enemy-ai.test.js` +112,
+- **Ship:** `8eb909e` 2026-07-12 12:40:44 — `play.html` +77, `src/tests/integration/enemy-ai.test.js` +112,
   `mechanics.md` +11, BACKLOG +20, and a 2-line status edit to this file.
 - **Untouched since.** `git diff 8eb909e HEAD` over this report was empty before the §DOC-02cf rewrite.
-- **Re-verified 2026-08-18 (§DOC-02cf).** Docs-only; `roll2hit-v3.html` not modified. Three Playwright probes
+- **Re-verified 2026-08-18 (§DOC-02cf).** Docs-only; `play.html` not modified. Three Playwright probes
   were written, run and deleted. Siblings consulted: §DOC-02cd (§XP-01, which cites this increment's
   `EFFORT_XP_PCT` and `S.opp.enraged` lines and dated both byte-exact), §DX-02g, §DX-02h, §EPIC-01,
   `mechanics.md` §Enemy Low-HP Behavior.

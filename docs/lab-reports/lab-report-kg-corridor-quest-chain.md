@@ -34,7 +34,7 @@ engine could satisfy the completion clause the design depends on.
 Inc 2 built the corridor as a **place** — five zones, six training bots, five NPCs with one line
 each. Inc 3 gives those five people something to **ask**. The playability argument:
 
-- **A second front door.** roll2hit had one beginner ramp (Birka). A player who bounces off it has
+- **A second front door.** codexofconquest had one beginner ramp (Birka). A player who bounces off it has
   nowhere else to be at Level 1. The corridor is a parallel L1→~L6 band with its own voice, using
   Birka's technique transplanted east: **the arc runs alongside the main quest, never gates it.**
 - **Grinding becomes a spine.** Levelling by wandering encounters is arithmetic. The same levelling
@@ -259,7 +259,7 @@ finished.
 | **§DX-02cz** 🟡 | `check:questgraph` treats every `countMin` clause as monotone-satisfiable and never asks whether the counter has a host writer — the class §DX-02cy hid in. Extend written-by-nothing from flags to `count:` resources |
 | **§AUDIT-03bl** 🟡 | §KG XP re-tune: the minimum path is 199 XP short of the L6 promise. Design call — retune the capstones, or accept that §XP-01/§XP-02-A cover it and amend the band's stated target |
 | **§DX-02da** 🟢 | `quest_kg_04`/`quest_kg_11` ship `onFail:[]` — a failed corridor skill check is silent. Roshkova's whole lesson is *"a cadet who cannot lose cleanly cannot win cleanly"*, and the arc's thematic centre has no failure text wired to it |
-| **§DX-02db** 🟢 | Commit `3c86055` ("§KG Inc 3 follow-up") announces four game-file edits — road junctions J16–J21, a `monsterKills` revert, dropping SPB's stray loot — and **does not touch `roll2hit-v3.html` at all**; the file is byte-identical to `d6aeefd`. Only a milepoints *snapshot* carries the reverted text. J16–J21 do not exist at HEAD, so corridor walkability from TLL is an open question, and a `git log` search for `monsterKills` reports a revert that never happened |
+| **§DX-02db** 🟢 | Commit `3c86055` ("§KG Inc 3 follow-up") announces four game-file edits — road junctions J16–J21, a `monsterKills` revert, dropping SPB's stray loot — and **does not touch `play.html` at all**; the file is byte-identical to `d6aeefd`. Only a milepoints *snapshot* carries the reverted text. J16–J21 do not exist at HEAD, so corridor walkability from TLL is an open question, and a `git log` search for `monsterKills` reports a revert that never happened |
 
 ---
 

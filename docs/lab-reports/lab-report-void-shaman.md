@@ -5,7 +5,7 @@
 **IEEE-format post-mortem · §XXI**
 **Written:** 2026-05-25 · **Ship commit:** `194a810` (2026-05-25 09:10)
 **Verified against HEAD:** 2026-08-13 (§DOC-02ao) — 80 days later
-**Subject:** `roll2hit-v3.html`, single-file browser RPG
+**Subject:** `play.html`, single-file browser RPG
 **Status:** ✅ implemented · ❌ **never reachable in play** — see §VI
 
 ---

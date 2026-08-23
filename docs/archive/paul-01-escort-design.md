@@ -179,7 +179,7 @@ Quotes cleared for use in-game. All are sourced from Acts or the Pauline letters
 
 The Littoral Courts arc (`§SIREN-01`) uses compressed French present-tense syntax — sentence fragments, calibrated ambiguity, implied perspectives. The Paul arc uses the opposite: **spoken English, full sentences, plain verb tense, no compression**. The events are documented, not evoked. Paul's voice in particular sounds like someone who has described these events many times to many different rooms and has stopped trying to make them interesting — because the facts are already interesting and the embellishment would diminish them.
 
-The Fighter's sections use second-person present tense (same as the rest of Roll2Hit). Paul's sections can be third-person present tense, observed — "He gets in the basket. He does not speak." This maintains the separation between witnessing and participating, which is the Fighter's structural position throughout.
+The Fighter's sections use second-person present tense (same as the rest of CodexOfConquest). Paul's sections can be third-person present tense, observed — "He gets in the basket. He does not speak." This maintains the separation between witnessing and participating, which is the Fighter's structural position throughout.
 
 Object-anchored: every major scene has one object that carries the weight of the scene. The basket. The bread on the table. The seam on the tent. The snake on the fire. The warrant letters in the inner pocket. The door that should not be open. These objects should appear in both the quest description and the node text — the same object, named twice, from two distances.
 

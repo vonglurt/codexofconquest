@@ -4,7 +4,7 @@
 
 ## The World Builder API: parsing pipeline, buffer model, and the single-file source of truth
 
-**Authored:** 2026-05-30 · **Annotated:** 2026-08-03 (§DX-02k) · **Re-verified against `roll2hit-v3.html` + `src/js/wbapi-{core,server}.js` @ `7ee4d6d` on 2026-08-23 (§DOC-02da)**
+**Authored:** 2026-05-30 · **Annotated:** 2026-08-03 (§DX-02k) · **Re-verified against `play.html` + `src/js/wbapi-{core,server}.js` @ `7ee4d6d` on 2026-08-23 (§DOC-02da)**
 **System:** `src/js/wbapi-core.js` (1,814 lines) + `src/js/wbapi-server.js` (11,671 lines) · Node.js HTTP, port 1367
 **Status:** ✅ Architecture live · ⚠️ **§4 lifecycle inverted** — the original write-on-save model was replaced by write-through (§DX-02k)
 

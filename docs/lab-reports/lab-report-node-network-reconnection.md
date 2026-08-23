@@ -4,10 +4,10 @@
 
 ### Applied World Architecture — Graph Repair & Structural Integrity
 
-**Project:** roll2hit-v3.html — *The Shattered Codex*
+**Project:** play.html — *The Shattered Codex*
 **Layer:** Infrastructure — Node Mesh Repair Pass
-**Date:** 2026-06-09 · **Author:** Roll2Hit Engineering
-**Verification pass:** §DOC-02at, 2026-08-13 — re-measured against live `roll2hit-v3.html` and against the
+**Date:** 2026-06-09 · **Author:** CodexOfConquest Engineering
+**Verification pass:** §DOC-02at, 2026-08-13 — re-measured against live `play.html` and against the
 birth commit `661aa29` (2026-06-09 11:48, one minute after this file's mtime).
 
 > **Status: RETIRED, not wrong.** Every number in the original held at its own commit. The

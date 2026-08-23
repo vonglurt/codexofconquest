@@ -4,7 +4,7 @@
 
 ## Retiring per-node special cases from `storyRender` into three small registries
 
-**Authored:** 2026-07-28 (design lock) · **Ship addenda:** 2026-07-28 → 2026-08-05 · **Re-verified against `roll2hit-v3.html` @ `a66119f` on 2026-08-23 (§DOC-02db)**
+**Authored:** 2026-07-28 (design lock) · **Ship addenda:** 2026-07-28 → 2026-08-05 · **Re-verified against `play.html` @ `a66119f` on 2026-08-23 (§DOC-02db)**
 **System:** `` `function storyRender(node, prefix) {@34567` `` and the registries `` `const NODE_PANELS = [@31318` ``, `` `const NODE_HOOKS = [@34190` ``, `` `const NODE_VERBS = [@34291` ``
 **Status:** ✅ Design held · ✅ 11 slices shipped · ⚠️ 2 censused blocks unclaimed · ⚠️ 2 design asks still open
 

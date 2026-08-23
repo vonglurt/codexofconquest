@@ -89,7 +89,7 @@ may walk it and be bored, and that is the correct outcome.
 | Instrument | Applied as |
 |---|---|
 | Census via the real parser | `src/js/wbapi-core.js` `W.load()` on parent, ship and HEAD — never a line regex |
-| Anchor scoring on the pinned parent | `git show 89745ee:roll2hit-v3.html`, all eight cited lines read directly |
+| Anchor scoring on the pinned parent | `git show 89745ee:play.html`, all eight cited lines read directly |
 | Ship-day tree rebuild | `git archive 65d65c0 \| tar -x`, symlinked `node_modules`, gates run as they ran that day |
 | Behaviour proved in a browser | Chromium, both builds, seeded save at each of the five nodes |
 | Acceptance test re-run | `src/tests/integration/kg-zones.test.js` at HEAD |

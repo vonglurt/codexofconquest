@@ -8,7 +8,7 @@
 |---|---|
 | **Original** | Layer 44 design document, dated **2026-05-22** (report footer) |
 | **First commit** | `32c10c5` 2026-05-24 17:34:49 — the repository's **initial commit**; the whole feature set is already present in it |
-| **Ship build** | `32c10c5:roll2hit-v3.html` — **14,377 lines / 859,773 bytes** |
+| **Ship build** | `32c10c5:play.html` — **14,377 lines / 859,773 bytes** |
 | **HEAD build** | 2026-08-23 — **38,712 lines / 5,513,223 bytes**, a **6.4×** file |
 | **Verified** | §DOC-02cy, 2026-08-23 — source census + exhaustive route sweep + Chromium (`src/tests/integration/living-world-l44.spec.js`, 9 measurement specs, all green) |
 | **Status** | **HISTORY doc.** Legacy 26×16 node codes (`CI`, `IN`, `TV`, `BA`, `CY`, `SQ`, `E*`) are left as written — annotate, don't rewrite (§DX-02c / §AUDIT-03n) |
@@ -39,7 +39,7 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 
 ## II. Method
 
-1. **Symbol census** — every construct the report names, grepped at HEAD and at the report's own build (`git show 32c10c5:roll2hit-v3.html`).
+1. **Symbol census** — every construct the report names, grepped at HEAD and at the report's own build (`git show 32c10c5:play.html`).
 2. **Byte-diff against the ship build** — each design-time text block compared line for line across 90 days and a 6.4× file.
 3. **Reader/writer trace** — for every state field the spec introduces, write sites and read sites counted *separately*. A field with writers and no readers is the finding; so is a field with two writers that disagree about what it means.
 4. **Exhaustive route sweep** — `_getFarewell(from, to)` evaluated over every ordered pair in `NODE_MAP` at maximum favor, and the reachable string set compared against the authored set.
@@ -74,7 +74,7 @@ Anchors at HEAD: `const PETRA_STALL_STATES = [@27398` · `const WORLD_PROGRESSIO
 
 §II's argument rests on exactly one mechanism, and states it plainly: *"She is named by two people. She affects the world. She exists."* The two namings are quoted verbatim in the spec — Yael's (*"She goes home an hour early when there's going to be trouble. I use her schedule to calibrate mine."*) and Brynn's (*"Gigault's the one who notices when the city is wrong before anyone else does."*).
 
-Neither line is in the engine. `grep -c "Gigault" roll2hit-v3.html` returns **9**, and all nine are the feature's own plumbing: three stall strings, the state function, the hook, its registration, and two comments. Strip those and no character in the game has ever said her name.
+Neither line is in the engine. `grep -c "Gigault" play.html` returns **9**, and all nine are the feature's own plumbing: three stall strings, the state function, the hook, its registration, and two comments. Strip those and no character in the game has ever said her name.
 
 What shipped is the *set dressing* without the *evidence*. The stall cycles correctly — `PETRA_STALL_STATES[(S_story.gameDay || 0) % 3]`, three days, verified in Chromium — so a player sees a blocked counter, then warm loaves and *"Back at ninth bell,"* then *"Tomorrow."* But the section's own test ("*Gigault is the test*") cannot be administered: the player has no reason to try to interact with a stall belonging to a woman nobody mentioned, and therefore never experiences the frustration-or-delight the design was measuring.
 

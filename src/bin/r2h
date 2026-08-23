@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# r2h — one launcher for Roll2Hit. Run `./r2h help` for the menu.
+# r2h — one launcher for CodexOfConquest. Run `./r2h help` for the menu.
 # Everything the project needs, behind short verbs. Keep it obvious.
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -22,7 +22,7 @@ case "$cmd" in
   toggle)   exec ./wbapi-toggle.sh "$@" ;;                 # start|stop|restart|status
   help|-h|--help|*)
     cat <<EOF
-r2h — Roll2Hit launcher
+r2h — CodexOfConquest launcher
 
   ./r2h serve      start the WBAPI + game server (http://localhost:$PORT/)
   ./r2h game       open the standalone game (play.html) in a browser

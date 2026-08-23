@@ -2,7 +2,7 @@
 
 # Lab Report Synthesis — Part 1: Architecture & Systems
 
-**Original:** 2026-06-16 · cross-reference of 12 Architecture & Systems lab reports against `roll2hit-v3.html`
+**Original:** 2026-06-16 · cross-reference of 12 Architecture & Systems lab reports against `play.html`
 **Verified:** 2026-08-13 (§DOC-02bb) · reference commit `89fa13b` (2026-06-16 12:20:47, 33,721 lines) · HEAD 38,712 lines
 **Verdict:** the citations hold; the roll-ups do not. Every figure this document **measured or transcribed** is exact. Every figure it **totalled, rounded, or borrowed** is wrong.
 

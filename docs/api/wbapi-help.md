@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# Roll2Hit World Builder — Quick Reference
+# CodexOfConquest World Builder — Quick Reference
 
 ## Directive
 

@@ -132,7 +132,7 @@ It existed only to reach exact-name/≥min matching **in OR position**; `{any}` 
 
 Measured on the **pinned parent build** `4f56816b` (the file as it stood when the design was locked), re-verified 2026-08-22.
 
-| Symbol | `src/js/quest.js` | `roll2hit-v3.html` (parent) | verdict |
+| Symbol | `src/js/quest.js` | `play.html` (parent) | verdict |
 |---|---|---|---|
 | `QUEST:CORE:START` / `END` | 31 / 323 | 21706 / 21998 | ✅ ✅ |
 | `canActivate` | 122 | ~21786 | ✅ / ❌ **21797** |

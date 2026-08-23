@@ -34,7 +34,7 @@ by construction"* — was **false the day it was written**, by exactly three nod
 Every figure below was re-derived by running this report's own rules over `git show`-extracted
 archive files, not by reasoning about them. Reference commits: **`66e26dd`** (2026-06-10 09:23,
 the commit standing when the report was written) and **`09fa5b2`** (17:20, its birth commit).
-Symbol life-and-death by `git log -S`; HEAD state by direct census of `roll2hit-v3.html`.
+Symbol life-and-death by `git log -S`; HEAD state by direct census of `play.html`.
 
 > **Measurement hazard, recorded because it cost four tool calls.** Junction entries are
 > serialised `J3969: { num:…` — with a space between the colon and the brace, where named
@@ -332,7 +332,7 @@ pointed at a cartographer who has spent twelve years mapping roads that keep cha
 - **§DX-02bk** 🟠 — `POST /api/graph/nuke-junctions` is live at HEAD and classifies by key
   prefix. Against HEAD's data it selects exactly one node, `J13`, passes its own safety check,
   and deletes a content node with a live NPC vignette. Persistence is via `saveStamped()`
-  (§DX-02k), so the call writes a gitignored dated sibling and leaves `roll2hit-v3.html`
+  (§DX-02k), so the call writes a gitignored dated sibling and leaves `play.html`
   untouched — but the **running server's in-memory model is mutated**, and the next endpoint
   that calls `saveGameFile()` commits the loss to the real file. Silent by construction: git
   stays clean until an unrelated save lands it.

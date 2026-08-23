@@ -54,7 +54,7 @@ test.beforeAll(async () => {
   fs.copyFileSync(GAME, scratch);
   server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
     cwd: ROOT,
-    env: { ...process.env, PORT: String(PORT), ROLL2HIT_FILE: scratch,
+    env: { ...process.env, PORT: String(PORT), CODEXOFCONQUEST_FILE: scratch,
       PEERS_CACHE_FILE: path.join(dir, 'peers.json') },
     stdio: 'ignore',
   });

@@ -62,7 +62,7 @@ what justify the work:
 
 Every symbol, count and coordinate below was re-measured against the working tree at HEAD
 (`r2h-3.104.0`, 416 nodes, 38,712 lines): symbol census by `grep -c -F`; structural counts
-by loading `src/js/wbapi-core.js` against `roll2hit-v3.html` and walking `nodeMap`/`nodeCoords`
+by loading `src/js/wbapi-core.js` against `play.html` and walking `nodeMap`/`nodeCoords`
 directly; connectivity by re-implementing each of the three live BFS variants offline and
 running them on the real data. Line numbers in the original are superseded by
 `symbol@line` anchors, which name a symbol first and a line second.
@@ -149,7 +149,7 @@ to keep both cities rather than distort the map, and changed the data structure 
 
 ```js
 // §WALK-1.5: each cell is a LOCALE that may hold ≥1 node (1° collisions merge close cities).
-const CELL_GRID = (() => {                       // roll2hit-v3.html@9852
+const CELL_GRID = (() => {                       // play.html@9852
   const g = {};
   for (const code of Object.keys(NODE_MAP)) {
     const coord = NODE_COORDS[code] || { r: NODE_MAP[code].r, c: NODE_MAP[code].c };

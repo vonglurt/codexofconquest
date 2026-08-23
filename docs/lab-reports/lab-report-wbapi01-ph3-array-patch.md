@@ -33,7 +33,7 @@ array — with no error anywhere in the chain to blame.
 
 1. **Dating.** `stat` on the report file, then `git log --follow` for its birth commit; both compared
    against the stated header date.
-2. **Census replay.** The §1 field inventory re-measured against `git show a105e0e^:roll2hit-v3.html`
+2. **Census replay.** The §1 field inventory re-measured against `git show a105e0e^:play.html`
    — both by regex and by loading the archived file through `src/js/wbapi-core` itself, so a prose match
    cannot be counted as a field.
 3. **Symbol resolution.** Every named function located at HEAD; signatures compared token by token.
@@ -304,7 +304,7 @@ negatives **2 of 2 correct**. Contract clauses **6 of 7 hold**, the seventh exce
 
 **Gates run for this pass** (individually — the chained `check:walk` detaches past 400 s):
 `check:arraypatch` 13/13 · `check:itemchain` 29/29 · `check:laddermigration` 148/148 ·
-`check:worlddiff` all assertions · `check:anchors` 0 dead. `roll2hit-v3.html` **untouched** — every
+`check:worlddiff` all assertions · `check:anchors` 0 dead. `play.html` **untouched** — every
 replay ran read-only in a detached `wbapi-core` instance and the working tree's only diff is the user's
 uncommitted 9+/9− combat recolor, unchanged.
 

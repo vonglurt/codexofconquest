@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report: Loot Drop & Weapon Economy Redesign
-**Project:** Roll2Hit v3 (roll2hit-v3.html, ~9,600 lines)
+**Project:** CodexOfConquest v3 (play.html, ~9,600 lines)
 **System:** D&D 5e single-file story RPG
 **Date:** 2026-05-21
 **Status:** Design proposal — not yet implemented
@@ -404,7 +404,7 @@ No logic changes in layer 1 — only data. Run the existing test battles to conf
 
 ---
 
-*End of lab report. All constants, field names, and node IDs reference structures as they exist in `roll2hit-v3.html`. Implementation should touch only the constructs named above without restructuring the existing combat or world-graph engine.*
+*End of lab report. All constants, field names, and node IDs reference structures as they exist in `play.html`. Implementation should touch only the constructs named above without restructuring the existing combat or world-graph engine.*
 
 
 ---

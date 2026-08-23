@@ -2,14 +2,14 @@
 
 # Loot Drop System Redesign and API Formalization in *The Shattered Codex*
 
-**Roll2Hit v3 — Game Design & Engineering Report**
+**CodexOfConquest v3 — Game Design & Engineering Report**
 **Series:** Laboratory Reports on Narrative Engine Architecture
 **Classification:** Loot Economy · Drop Rate Balance · API Design
 **Date written:** 2026-06-05 · **Ship commit:** `440eb5d` (10:41) · **Reverted:** `88d41d1` (13:33) · **Partially re-shipped:** `0fffce7` (2026-07-07)
 **Original status:** *Specification Complete — Migration Implemented*
 **Verified status (§DOC-02v, 2026-08-12):** **Specification faithful; migration shipped, silently reverted the same afternoon, and restored only in part.**
 
-> **Verification note.** This document has been re-measured against live `roll2hit-v3.html`, against `src/js/wbapi-server.js`, and against the archive (`git show <sha>:roll2hit-v3.html`) under the §DOC-02 lab-report verification program. Claims that did not ship are marked **NOT SHIPPED** and **kept** — a silently deleted claim reads like one that held. Anchors are written `` `symbol@line` `` (§DX-01e); the line number is a cached hint, the symbol is the pointer.
+> **Verification note.** This document has been re-measured against live `play.html`, against `src/js/wbapi-server.js`, and against the archive (`git show <sha>:play.html`) under the §DOC-02 lab-report verification program. Claims that did not ship are marked **NOT SHIPPED** and **kept** — a silently deleted claim reads like one that held. Anchors are written `` `symbol@line` `` (§DX-01e); the line number is a cached hint, the symbol is the pointer.
 
 ---
 
@@ -55,7 +55,7 @@ That division is what makes Yugurt Lake read as a **destination** rather than as
 |---|-----------|-----------|
 | 1 | Batched `grep -c` census of every named symbol before reading the prose | 24 identifiers |
 | 4 | `git log -S "<symbol>"` to separate **RETIRED** from **NEVER SHIPPED** | `_onStoryVictory`, `LOOT_TABLE`, the d6 roll |
-| 8 | `git show <sha>:roll2hit-v3.html` — HEAD cannot adjudicate a claim about the past | the §IV-A "BEFORE" listings, scored against `440eb5d^` |
+| 8 | `git show <sha>:play.html` — HEAD cannot adjudicate a claim about the past | the §IV-A "BEFORE" listings, scored against `440eb5d^` |
 | 12 | **COPY-vs-COMPOSE**: transcribed material is evidence, composed illustration is a claim | §IV-A tables vs §III-C's expected-value paragraph |
 | 14 | Cross-check every census regex against a figure a gate already counts | `MONSTER_DROPS` / fish / lake-magic totals |
 | 16 | When a report specifies a **trade**, verify **both legs** | the taking (purge) vs the giving (fishing) |
@@ -302,7 +302,7 @@ The freed 36 points went to consumable variety as specified. See §V-F5 for the 
 
 | File | Claimed change | Verdict |
 |------|----------------|---------|
-| `roll2hit-v3.html` | remove `LOOT_TABLE`; update `_D100_TABLE`; d6 quality | **2 of 3** — the removal was reverted and never restored |
+| `play.html` | remove `LOOT_TABLE`; update `_D100_TABLE`; d6 quality | **2 of 3** — the removal was reverted and never restored |
 | `wbapi-server.js` | add `GET /api/loot-drop`; update `/api/loot` help; update endpoint index | ✅ all three (now `src/js/wbapi-server.js` since §CLEANUP-02) |
 | `wbapi-help.md` | add a "Loot Drop System" section | ⛔ **NOT SHIPPED** — 0 hits, in that file or `API-README.md` |
 
@@ -319,7 +319,7 @@ The freed 36 points went to consumable variety as specified. See §V-F5 for the 
 ---
 
 *Report written 2026-06-05 · verified and rewritten 2026-08-12 under §DOC-02v (382 → 325 lines).*
-*Codebase: `roll2hit-v3.html` · `src/js/wbapi-server.js`*
+*Codebase: `play.html` · `src/js/wbapi-server.js`*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

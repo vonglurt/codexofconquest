@@ -8,7 +8,7 @@
 
 > **STATUS — VERIFIED, AND THE STRONGEST SURVIVAL IN THE §DOC-02 PROGRAM TO DATE.** This is a
 > HISTORY document; the 2026-05-26 text has been re-measured claim-by-claim against live
-> `roll2hit-v3.html` and rewritten short. Claims that did not ship are marked **NOT SHIPPED** and
+> `play.html` and rewritten short. Claims that did not ship are marked **NOT SHIPPED** and
 > **kept** — a silently deleted claim reads as one that held. **43 of 46 named identifiers resolve
 > (93 %), every quoted string is verbatim after 78 days, and the arc is fully reachable** — the
 > first §DOC-02 increment in six to find no §AUDIT-03x casualty. The deltas are three: a retired
@@ -307,7 +307,7 @@ Three of four deferred items closed. **The one that did not is the arc's own sta
 
 **Original session:** 2026-05-26 · **Verified and rewritten:** 2026-08-12 (§DOC-02s)
 **Reference builds:** `dcb72cb` (La Riva) · `9684ff6` (romance layer) · `28dae66` (`INN_DREAMS`)
-**Measured against:** HEAD, 38,712 lines. Where this document and `roll2hit-v3.html` disagree, the file is right.
+**Measured against:** HEAD, 38,712 lines. Where this document and `play.html` disagree, the file is right.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

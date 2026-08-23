@@ -1,14 +1,79 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# Roll2Hit — The Shattered Codex: Document Index
+# Codex of Conquest — The Shattered Codex: Document Index
 
-**Project:** `play.html` — single-file combat tracker + narrative RPG
-**Status:** Layers 0–104 implemented · 37,950 lines · 416 nodes · 398 monsters · ~2,848 quests · 85 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + **§MESH-01 gameplay ladder (f–j) ✅ COMPLETE 2026-07-06** (buffs · hireling · sentries · no-dupe ledger incl. cross-origin trades · PvP duels) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · §DATA-01 ✅ RESOLVED 2026-07-06 (superseded by §ARCH-01 UQF; journal-renderer textContent residual shipped)
-**Last updated:** 2026-07-09 — repository reorganized + structure simplified (see below)
+**Project:** `play.html` — a single-file, quest-driven MUD-style fighter RPG
+**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,712 lines · 5.51 MB
+**Last updated:** 2026-08-23 — restructured for public release (§RELEASE-01)
 
-> **📁 Repo reorganized 2026-07-09.** Root decluttered ~110 → ~35 files. `plan.md` split into `CONTRIBUTING.md` (dev policies) + `BACKLOG.md` (outstanding work). Historical docs moved under `docs/{spec,story,api,mechanics,notes}/`; importers → `src/importers/`, dev utilities → `src/tools/`, narrative texts → `src/sources/`. Core sync docs stay at root. Folder map + hosting/run instructions: **`README.md`**.
+> **📁 Repository restructured 2026-08-23 for the first public release.** The
+> game was renamed *Roll2Hit* → **Codex of Conquest**; `roll2hit-v3.html` →
+> **`play.html`**; `worldbuilder.html` → **`edit.html`**; and a new
+> `index.html` became the project landing page. The root now holds only entry
+> points and the means to start them — everything else moved under four
+> directories.
 >
-> **🧹 Structure simplified 2026-07-09 (§CLEANUP-02).** Runtime JavaScript moved to **`src/js/`** (`wbapi-server.js`, `wbapi-core.js`, `mesh.js`, `mover.js`, `rooms.js`, `duel.js`); data + config moved to **`src/config/`** (`peers.txt`, `roads-pins.json`, `walk-geo-gazetteer.json`, `mesh-acl.json`, plus runtime caches). One launcher at root: **`./r2h`** (`serve` · `game` · `world` · `test` · `checks` · `api` · `tracker`). The single-file game bundle `play.html`, `edit.html`, the core sync docs, and shell launch scripts stay at root. Start the server with `./r2h serve` (was `node wbapi-server.js`).
+> **The rename was applied everywhere, history documents included** — 518
+> occurrences across 155 files. That is a deliberate exception to
+> annotate-don't-rewrite (§DX-02c / §AUDIT-03m), so a first-time reader of a
+> public repository never meets a name the project no longer uses. Two
+> consequences: a `git show <sha>:roll2hit-v3.html` quoted in an old report now
+> reads `play.html` and will not resolve — those SHAs were already invalidated
+> by the history rewrite — and the save keys `r2h_autosave` / `r2h_checkpoint`
+> and the engine version `r2h-3.104.0` were deliberately **not** renamed,
+> because they are `localStorage` keys and a mesh compatibility field.
+
+## Repository Structure
+
+```
+codexofconquest/
+├── index.html              project landing page — the PLAY button lives here
+├── play.html               THE GAME — one file, no build, no server, no account
+├── edit.html               visual world / quest / mission-bit editor
+├── Makefile                every way to start things (`make` lists them)
+├── run.sh                  the single entry point each make target delegates to
+├── bin/                    shortcuts: run play edit wbapi monitor api stop status check test
+├── README.md  LICENSE  CONTRIBUTING.md  CHANGELOG.md  SECURITY.md
+│
+├── src/                    ALL implementation, and the node project
+│   ├── package.json        npm manifest lives HERE — see src/NODE.md
+│   ├── node_modules/       gitignored
+│   ├── playwright.config.js
+│   ├── js/                 engine + server modules — wbapi-server, wbapi-core,
+│   │                       mesh, mover, rooms, duel, quest
+│   ├── server/             start-wbapi.sh — announces where node runs, then execs
+│   ├── api/                wb.js — the WBAPI CLI
+│   ├── scripts/            the CI gates — anchors, invariants, parity, questgraph
+│   ├── tools/              layout solvers, node parser, region renderer
+│   ├── bin/                internal utilities — api.sh, say.sh, sayd.sh, r2h
+│   ├── tests/              80 Playwright files, 960 tests, plus the MUD harness
+│   ├── importers/          one-off source importers
+│   ├── config/             mesh ACL, road pins, geo gazetteer
+│   └── sources/            5thOrgan.html (92 doc anchors resolve against it)
+│
+├── docs/                   ALL documentation
+│   ├── design/             story quest world mechanics monsters maps
+│   │                       potential prompt index  ← you are here
+│   ├── backlog/            BACKLOG.md + six phase backlogs + plan-archive.md
+│   ├── lab-reports/        126 engineering write-ups
+│   ├── archive/            superseded records — annotated, never rewritten
+│   ├── api/ maps/ mechanics/ notes/ spec/ story/
+│
+├── build/                  GITIGNORED — generated + runtime output
+│   ├── test-results/       Playwright artifacts
+│   ├── playwright-report/
+│   ├── milepoints/         say-daemon queue, server logs, patch store
+│   └── ledger/             per-deployment economy ledger
+│
+└── vendor/                 GITIGNORED — working material, never published
+    ├── 1367-sources/       the imported book corpus + import machinery
+    └── stories/            Froberger journal, Littoral Courts, Saul2Paul
+```
+
+**Starting it:** `make` lists every target. `make play` runs the API and monitor
+and opens the game; `make edit` opens the editor; `make wbapi` starts just the
+node server. To only play, open `play.html` — nothing else is required.
+
 
 ### Doc Health Badge
 
@@ -45,7 +110,7 @@
 
 ## The Game in One Paragraph
 
-Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 410-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 121 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D 5e mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
+CodexOfConquest is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 410-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 121 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D 5e mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
 
 ---
 
@@ -194,8 +259,8 @@ All finished §* items. Open/planned items live in `BACKLOG.md`.
 
 | Location | Contents |
 |----------|---------|
-| `milepoints/` | Curated milestone builds (e.g., `roll2hit-v3-20260602-174751.html`) |
-| `roll2hit-v3-*.html` (root) | Dated snapshots, gitignored, consumed by `monitor-snapshots.py` → `milepoints/patches/`. **Produced on request only (§DX-02k, 2026-08-03):** a deliberate `cp` or `./api.sh save`. Until then the server stamped one **per successful write** and never swept it — 6 files / ~32 MB were sitting in the root when this was found. `WBAPI.save()` now refuses without a destination; `saveStamped()` is the backup, `saveGameFile()` (temp + atomic rename) is the per-write persist. **They are gitignored, so `./api.sh snapshots` is the only thing that reports them (§DX-02l, 2026-08-03)** — `--sweep` deletes those the `milepoints/patches` chain already holds, `--force` discards the rest |
+| `milepoints/` | Curated milestone builds (e.g., `play-20260602-174751.html`) |
+| `play-*.html` (root) | Dated snapshots, gitignored, consumed by `monitor-snapshots.py` → `milepoints/patches/`. **Produced on request only (§DX-02k, 2026-08-03):** a deliberate `cp` or `./api.sh save`. Until then the server stamped one **per successful write** and never swept it — 6 files / ~32 MB were sitting in the root when this was found. `WBAPI.save()` now refuses without a destination; `saveStamped()` is the backup, `saveGameFile()` (temp + atomic rename) is the per-write persist. **They are gitignored, so `./api.sh snapshots` is the only thing that reports them (§DX-02l, 2026-08-03)** — `--sweep` deletes those the `milepoints/patches` chain already holds, `--force` discards the rest |
 
 ### 1367-Sources
 

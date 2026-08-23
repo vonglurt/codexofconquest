@@ -14,7 +14,7 @@
 // PUT/POST/DELETE, forever. The snapshot was never a backup of the pre-write
 // state — it holds the NEW text; its only job was to be the byte source of the
 // copy. Three of them (16 MB) were sitting in the repo root when this was found,
-// invisible because `roll2hit-v3-2*.html` is gitignored.
+// invisible because `play-2*.html` is gitignored.
 //
 // So the destination is now always explicit:
 //   save(dest)      — write exactly there

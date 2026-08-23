@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# roll2hit — Plan 0
+# codexofconquest — Plan 0
 *Single-file dice roller. No external scripts. Self-contained HTML.*
 
 ---
@@ -8,8 +8,8 @@
 ## UI Overview
 
 Two files ship from this plan:
-- `roll2hit.html` — Phase 0 reference build (4-quadrant layout)
-- `roll2hit-v2.html` — **current implementation** (Phase 2, 3-column arena layout)
+- `codexofconquest.html` — Phase 0 reference build (4-quadrant layout)
+- `codexofconquest-v2.html` — **current implementation** (Phase 2, 3-column arena layout)
 
 Phase 2 structure:
 1. **Playfield** — fixed viewport-height, 3 columns: left panel · center arena · history panel
@@ -249,7 +249,7 @@ Dropdown optgroups: **Trivial (1–8)** · **Easy (9–12)** · **Medium (13–1
 ## Action Plan
 
 ### Step 1 — HTML Skeleton ✅
-- Single `roll2hit.html`
+- Single `codexofconquest.html`
 - Page structure: header, playfield (4 quads + log), config panel
 - CSS grid: 3-column × 2-row playfield, config scrolls below
 
@@ -487,7 +487,7 @@ Tracks the last 100 rolls per die type, displayed as a section at the bottom of 
 
 Extend the arena with real-time combat-state tracking while keeping the interface fast to use. No character-sheet focus — every addition must be reachable in one click or one dropdown during a fight. Features are added one atomic step at a time; each step leaves the file in a working state.
 
-**File:** `play.html` — started as a direct copy of `roll2hit-v2.html`.
+**File:** `play.html` — started as a direct copy of `codexofconquest-v2.html`.
 
 ---
 
@@ -513,7 +513,7 @@ Extend the arena with real-time combat-state tracking while keeping the interfac
 
 #### Step S0 — File copy ✅
 ```bash
-cp roll2hit-v2.html play.html
+cp codexofconquest-v2.html play.html
 ```
 No code changes. All Phase 3 work targets `play.html` only.
 

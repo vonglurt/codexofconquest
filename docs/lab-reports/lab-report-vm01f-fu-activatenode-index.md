@@ -196,7 +196,7 @@ set, not `QUEST_DB`, and was untouched:
   });
 ```
 
-**Diff as shipped:** `roll2hit-v3.html` **+33 / −4** — net **+29**, which is exactly the file's line delta
+**Diff as shipped:** `play.html` **+33 / −4** — net **+29**, which is exactly the file's line delta
 (37,783 → 37,812) — plus 95 new test lines. Four files touched, two HTML hunks. No kernel, no parity fence, no
 `src/js/quest.js` mirror.
 

@@ -3,7 +3,7 @@
 # Lab Report Synthesis — Part 4: Monsters & Fishing
 
 **Original:** 2026-06-16 · **Stated baseline:** 33,721 lines · **Source reports:** 2
-**Verified:** 2026-08-13 (§DOC-02be) against `roll2hit-v3.html` @ 38,712 lines
+**Verified:** 2026-08-13 (§DOC-02be) against `play.html` @ 38,712 lines
 **Provenance:** mtime `13:57:03`, commit `58f89cf` `13:57:40` — a **37-second** birth window.
 Reference build `89fa13b` (`12:20:47`) is **33,721 lines**: the stated baseline, exact.
 

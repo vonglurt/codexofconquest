@@ -2,20 +2,20 @@
 
 # Hierarchical Map Visualization and Coordinate Mesh Organization for a Medieval World Graph
 
-**Roll2Hit World Builder — Technical Report**
+**CodexOfConquest World Builder — Technical Report**
 *2026-06-09*
 
 ---
 
 ## Abstract
 
-This report describes the design and implementation of a three-level hierarchical map visualization system developed during the mesh organization phase of the Roll2Hit world-building API. The system addresses the problem of laying out an N/E/S/W directional node graph — representing a medieval world of approximately 530 nodes — onto a coherent integer coordinate grid aligned with real-world latitude and longitude. We present three algorithmic approaches to the layout problem (BFS, spring simulation, and constraint propagation), detail the discovery process by which coordinate inconsistencies were identified, and describe the resulting API toolchain for interactive mesh repair. A geographic seeding strategy anchors 76 major city nodes to real-world coordinates, enabling a three-tier terminal visualization system (world → region → city) that exposes graph topology while preserving geographic intuition.
+This report describes the design and implementation of a three-level hierarchical map visualization system developed during the mesh organization phase of the CodexOfConquest world-building API. The system addresses the problem of laying out an N/E/S/W directional node graph — representing a medieval world of approximately 530 nodes — onto a coherent integer coordinate grid aligned with real-world latitude and longitude. We present three algorithmic approaches to the layout problem (BFS, spring simulation, and constraint propagation), detail the discovery process by which coordinate inconsistencies were identified, and describe the resulting API toolchain for interactive mesh repair. A geographic seeding strategy anchors 76 major city nodes to real-world coordinates, enabling a three-tier terminal visualization system (world → region → city) that exposes graph topology while preserving geographic intuition.
 
 ---
 
 ## 1. Introduction
 
-The Roll2Hit game engine represents its navigable world as a directed mesh graph in which every node carries up to four labeled directional edges: N, E, S, W. At runtime, the game's `_buildNodeExits()` function determines traversable connections by probing each cardinal direction for a neighbor within a strict 1–4 coordinate unit radius:
+The CodexOfConquest game engine represents its navigable world as a directed mesh graph in which every node carries up to four labeled directional edges: N, E, S, W. At runtime, the game's `_buildNodeExits()` function determines traversable connections by probing each cardinal direction for a neighbor within a strict 1–4 coordinate unit radius:
 
 ```javascript
 function probe(r, c, dr, dc) {
@@ -299,5 +299,5 @@ The three-level visualization system (world → region → city) exposes the res
 1. Tamassia, R. (1987). On embedding a graph in the grid with the minimum number of bends. *SIAM Journal on Computing*, 16(3), 421–444.
 2. Fruchterman, T. M. J., & Reingold, E. M. (1991). Graph drawing by force-directed placement. *Software: Practice and Experience*, 21(11), 1129–1164.
 3. Di Battista, G., Eades, P., Tamassia, R., & Tollis, I. G. (1998). *Graph Drawing: Algorithms for the Visualization of Graphs*. Prentice Hall.
-4. Roll2Hit Source, `roll2hit-v3.html:31954` — `_buildNodeExits()` function.
-5. Roll2Hit Source, `wbapi-server.js` — `/api/graph/broken`, `/api/layout/solve`, `/api/graph/spawn-junction`.
+4. CodexOfConquest Source, `play.html:31954` — `_buildNodeExits()` function.
+5. CodexOfConquest Source, `wbapi-server.js` — `/api/graph/broken`, `/api/layout/solve`, `/api/graph/spawn-junction`.

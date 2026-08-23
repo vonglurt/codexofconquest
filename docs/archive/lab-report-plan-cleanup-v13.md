@@ -2,18 +2,18 @@
 
 # Architectural Cleanup Report: plan.md Compaction — Layer 9 through Layer 13
 
-**Roll2Hit v3 — Engineering Change Documentation**  
+**CodexOfConquest v3 — Engineering Change Documentation**  
 **Series:** Implementation Audit and Specification Archive  
 **Classification:** Software Engineering · Document Management · Spec Lifecycle  
 **Date:** 2026-05-21  
-**Author:** Roll2Hit Development Record  
-**Status:** Complete — archived content verified against `roll2hit-v3.html` (7,465 lines)
+**Author:** CodexOfConquest Development Record  
+**Status:** Complete — archived content verified against `play.html` (7,465 lines)
 
 ---
 
 ## Abstract
 
-This report documents the planned compaction of `plan.md` following the completion of Layers 9 through 13 of *The Shattered Codex* narrative engine. `plan.md` accumulated 1,223 lines of implementation specification across five development layers. All specified features have been implemented and verified in `roll2hit-v3.html`. This report serves as:
+This report documents the planned compaction of `plan.md` following the completion of Layers 9 through 13 of *The Shattered Codex* narrative engine. `plan.md` accumulated 1,223 lines of implementation specification across five development layers. All specified features have been implemented and verified in `play.html`. This report serves as:
 
 1. A **change record** — what was removed from `plan.md` and why
 2. A **specification archive** — the full text of every removed section, preserved here for traceability
@@ -117,7 +117,7 @@ The following sections were removed from `plan.md`. They are reproduced in full 
 
 ## III. Verification Manifest
 
-Each removed spec item has been verified against the live code. The table below cross-references plan spec → live function/const in `roll2hit-v3.html`.
+Each removed spec item has been verified against the live code. The table below cross-references plan spec → live function/const in `play.html`.
 
 ### Layer 9 Verification
 
@@ -249,7 +249,7 @@ When a layer is complete, run this compaction process:
 ---
 
 *Report written 2026-05-21*  
-*Codebase: roll2hit-v3.html — 7,465 lines, Layers 0–13 complete*  
+*Codebase: play.html — 7,465 lines, Layers 0–13 complete*  
 *plan.md: compacted from 1,223 → 85 lines*  
 *All removed specs verified as implemented before archival*
 

@@ -3,7 +3,7 @@
 # Lab Report — Yugurt Lake Bait & Tackle (Layer 47) and the `plan.md` Prompt Protocol
 
 **Original:** CodexOfConquest.com development session, 2026-05-24 · **Verified against HEAD:** 2026-08-12 (§DOC-02n)
-**Subject:** `roll2hit-v3.html` — single-file browser D&D 5e RPG (14,377 lines at authoring; 38,712 at HEAD)
+**Subject:** `play.html` — single-file browser D&D 5e RPG (14,377 lines at authoring; 38,712 at HEAD)
 **License:** MIT — CodexOfConquest.com — Copyright (c) 2026
 
 ---
@@ -128,7 +128,7 @@ Two-way. **STALE** = the report aged. **NOT SHIPPED** = specified, absent at HEA
 | 25 | Fishing XP flows through `_checkLevelUp()` unchanged | Correct | **SHIPPED** |
 | 26 | Node `YL`, node 75 | `BOO:{ num:75@8782` — renamed, `num`/label/`isFishingLake`/`loot` preserved | **RIGHT WHEN WRITTEN** |
 | 27 | Node `YC` (cabin) | `SSJ:{ num:76@8786` — renamed, `sleepCost:0` preserved | **RIGHT WHEN WRITTEN** |
-| 28 | "Nothing has been written to `roll2hit-v3.html`" | False since Layer 47 shipped | **STALE** (by design — it was a Phase-1 statement) |
+| 28 | "Nothing has been written to `play.html`" | False since Layer 47 shipped | **STALE** (by design — it was a Phase-1 statement) |
 | 29 | "`plan.md` is 2,500+ lines" | `plan.md` does not exist — split into `CONTRIBUTING.md` + `BACKLOG.md` at `5e48dd7` | **STALE** |
 | 30 | Appendix B worked example | Conclusion right, both intermediates wrong (§V-E) | **PARTIAL** |
 

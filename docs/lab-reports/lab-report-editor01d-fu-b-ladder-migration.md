@@ -2,7 +2,7 @@
 # Lab Report — §EDITOR-01-D-FU(b): Reward-Ladder → `itemChain` Migration
 
 **Track:** §EDITOR-01-D-FU item (b) · **Original date:** 2026-06-27 · **Status:** ✅ CLOSED (Inc 1–5)
-**Verified against `roll2hit-v3.html` @ HEAD:** 2026-08-17 (§DOC-02bs). History doc — annotate, never rewrite.
+**Verified against `play.html` @ HEAD:** 2026-08-17 (§DOC-02bs). History doc — annotate, never rewrite.
 
 ---
 
@@ -50,8 +50,8 @@ of write. So this migration was designed guard-first.
 
 ## 2. Method (verification pass, 2026-08-17)
 
-1. Census re-derived from the archive, not from HEAD — `git show 27956e4:roll2hit-v3.html` (the Inc-1
-   design-lock build) and `git show de64c16:roll2hit-v3.html` (the Inc-5 close build).
+1. Census re-derived from the archive, not from HEAD — `git show 27956e4:play.html` (the Inc-1
+   design-lock build) and `git show de64c16:play.html` (the Inc-5 close build).
 2. Every line anchor in the original re-resolved against the build it was written against.
 3. Migration count taken from the live gate, not from prose: `npm run check:laddermigration`.
 4. Allow-list compared field-by-field across all four sites the report named as "in lockstep".
@@ -122,7 +122,7 @@ manifest, so every later wave was gated by a harness already proven to read the 
 
 | # | Report claim | HEAD (2026-08-17) | Verdict |
 |---|---|---|---|
-| 1 | 61-branch ladder at `roll2hit-v3.html` **25875–26094** | Exact at `27956e4`: first branch 25875, last 26094, count 61 | ✅ **EXACT, both ends** |
+| 1 | 61-branch ladder at `play.html` **25875–26094** | Exact at `27956e4`: first branch 25875, last 26094, count 61 | ✅ **EXACT, both ends** |
 | 2 | Grant builder at **23549**, `once` guard at **23548** | Exact at `27956e4` | ✅ **EXACT** |
 | 3 | `_applyItemChain` call site at **25869**, before the ladder body | Exact at `27956e4` | ✅ **EXACT** |
 | 4 | `FISHING_GUIDE_TEXT` at line **24017** | 23997 at `27956e4` (**−20**) | ⚠ hint drifted; the *argument* holds — `const FISHING_GUIDE_TEXT@26659` is still declared after `const QUEST_DB = {@10615`, so the TDZ objection is live today |
@@ -185,7 +185,7 @@ check:itemchain         29/29 pass
 check:anchors           3,162 anchors / 76 docs, 0 dead (117 stale hints = standing baseline)
 ```
 
-`roll2hit-v3.html` was **not modified** by this verification pass.
+`play.html` was **not modified** by this verification pass.
 
 ---
 

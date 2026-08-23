@@ -10,7 +10,7 @@ const WBAPI = require('../js/wbapi-core');
 
 // ── Config ──────────────────────────────────────────────────────────────────
 const DEFAULT_GAME_FILE = path.join(__dirname, '..', '..', 'play.html');  // repo ROOT (tools/ is one level down)
-const gameFile = process.env.ROLL2HIT_FILE || DEFAULT_GAME_FILE;
+const gameFile = process.env.CODEXOFCONQUEST_FILE || DEFAULT_GAME_FILE;
 
 // ── Arg parsing ──────────────────────────────────────────────────────────────
 const args  = process.argv.slice(2);
@@ -36,7 +36,7 @@ const ok   = (msg)=> { console.log('OK:', msg); };
 let _loaded = false;
 function load() {
   if (_loaded) return;
-  if (!fs.existsSync(gameFile)) err(`Game file not found: ${gameFile}\nSet ROLL2HIT_FILE env var to override.`);
+  if (!fs.existsSync(gameFile)) err(`Game file not found: ${gameFile}\nSet CODEXOFCONQUEST_FILE env var to override.`);
   WBAPI.load(gameFile);
   _loaded = true;
 }
@@ -362,7 +362,7 @@ WORLD FOLDER STRUCTURE
       {monster_key}.json
 
 ENVIRONMENT
-  ROLL2HIT_FILE   path to play.html  (default: ./play.html)
+  CODEXOFCONQUEST_FILE   path to play.html  (default: ./play.html)
 
 EXAMPLES
   node wbapi-cli.js get location CY

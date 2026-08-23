@@ -2,7 +2,7 @@
 
 # Lab Report — Layer 42: The NPC Dialogue System (World Truth · 4-State Speech · Groundhog Day)
 
-**IEEE-format design document · original 2026-05-22 · verified against live `roll2hit-v3.html` 2026-08-12 (§DOC-02ab)**
+**IEEE-format design document · original 2026-05-22 · verified against live `play.html` 2026-08-12 (§DOC-02ab)**
 **Home doc:** `docs/story/story-arc-npc-dialogues.md` · **Reference build:** `32c10c5` (2026-05-24, earliest surviving — this report **predates** it)
 **Status:** architecture ✅ shipped and scaled 35× · dialogue script ❌ 0 of 120 lines shipped · payoff ⛔ blocked by §EPIC-01
 

@@ -7,7 +7,7 @@
 **Session Date:** 2026-05-26 · **Ship commits:** `9684ff6` (Phases 1–3, FC06–FC07) · `ded062e` (Phase 4, FC08)
 **HTML baseline at close:** 17,762 lines — **verified exact at both ship commits**
 **Category:** Documentation Architecture · Two-Way Sync Enforcement · Technical Debt
-**Verification:** §DOC-02ak, 2026-08-12 — re-measured against live `roll2hit-v3.html` (38,712 lines), 78 days on.
+**Verification:** §DOC-02ak, 2026-08-12 — re-measured against live `play.html` (38,712 lines), 78 days on.
 
 ---
 
@@ -53,7 +53,7 @@ against a file annotated by this pass.
 
 ### I-B. The bidirectional invariant
 
-> Every item in the Markdown docs traces back to `roll2hit-v3.html`. Everything in the HTML has a home doc.
+> Every item in the Markdown docs traces back to `play.html`. Everything in the HTML has a home doc.
 
 Two mechanisms are required. **Outbound** references — docs citing HTML symbols — were established by
 SP1–SP3. **Inbound** references — the `// → doc:` comments — are SP4's mandate, alongside clearing docs
@@ -68,7 +68,7 @@ Four sequential phases, each generating drift the next had to correct.
 | Phase | Scope | Stated method |
 |-------|-------|---------------|
 | 1 | `world.md`, `story.md` | Grep `PLANNED` markers; cross-reference each feature against `_S_DEFAULTS()` — *"state fields are definitive evidence of implementation"* |
-| 2 | `roll2hit-v3.html` | Enumerate top-level `const`; add `// → doc: file.md §Section` at each declaration |
+| 2 | `play.html` | Enumerate top-level `const`; add `// → doc: file.md §Section` at each declaration |
 | 3 | `mechanics-economy.md` (F4), `combat.md` (F6), `mechanics-combat.md` | Re-grep every function-table line number |
 | 4 | All annotations | Extract each `file.md §Section` target; verify the section exists **as a heading** |
 
@@ -254,7 +254,7 @@ reads ✅ beside `HTML line count | 36,933` against a live 38,712. Both F4 and F
 numbers in a `| Function | Line |` column rather than the `symbol@line` anchors the repo adopted in
 §DX-01e, so `check:anchors` cannot see them. Measured drift: F4's `storyPreBattle` reads **16179** against
 a live **36399** — **+20,220 lines** — and F6's `roll(sides)` reads 5483 against 6417. The F4 table still
-carries SP4's own stamp, *"All 29 line numbers verified against `roll2hit-v3.html` (17,762 lines) ·
+carries SP4's own stamp, *"All 29 line numbers verified against `play.html` (17,762 lines) ·
 2026-05-26,"* above 26 rows. → **§DX-02aw**.
 
 ---

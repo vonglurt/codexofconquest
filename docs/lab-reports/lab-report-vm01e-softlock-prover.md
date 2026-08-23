@@ -164,7 +164,7 @@ this a planning problem, not pure graph reachability.
 
 ## 7. What Shipped (Option A)
 
-**Finding 0, ported — data-only, `QUEST:CORE` byte-identical.** One line of `roll2hit-v3.html` changed:
+**Finding 0, ported — data-only, `QUEST:CORE` byte-identical.** One line of `play.html` changed:
 
 ```js
 onFail:[{ kind:"skill_check", stat:"CON", dc:13, onFail:[{ kind:"flag_write", set:["plague_exposed"] }] }]
@@ -250,7 +250,7 @@ them optional, not required.
 
 ## 10. Verification of This Report (§DOC-02cq, 2026-08-22)
 
-Every figure re-measured against the pinned ship-day build (`git show 354b20a^:roll2hit-v3.html`; parent and
+Every figure re-measured against the pinned ship-day build (`git show 354b20a^:play.html`; parent and
 ship are both 37,783 lines, so **anchor offset is zero** between them) and against HEAD.
 
 **Confirmed exactly (19):** all 13 original anchors resolve on the ship-day build · `_legacy_fn` 125 → 124

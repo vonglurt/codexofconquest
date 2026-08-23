@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# Roll2Hit World Builder — API Reference
+# CodexOfConquest World Builder — API Reference
 
 **Architecture**: `./api.sh` → WBAPI server (localhost:1367) → `play.html`
 

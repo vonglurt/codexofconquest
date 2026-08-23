@@ -179,9 +179,9 @@ function fmtJson(rows) {
 
 function fmtOracle(rows) {
   // Oracle-style INSERT for a hypothetical NODES table
-  console.log('-- Oracle SQL: roll2hit NODES table');
+  console.log('-- Oracle SQL: codexofconquest NODES table');
   console.log('-- Generated: ' + new Date().toISOString());
-  console.log('TRUNCATE TABLE roll2hit_nodes;');
+  console.log('TRUNCATE TABLE codexofconquest_nodes;');
   console.log();
   rows.forEach(r => {
     const vals = [
@@ -207,13 +207,13 @@ function fmtOracle(rows) {
       r.boss_key ? `'${r.boss_key}'` : 'NULL',
       r.portal ? `'${r.portal}'` : 'NULL',
     ].join(', ');
-    console.log(`INSERT INTO roll2hit_nodes (num, code, label, act, type, terrain, grid_r, grid_c, n_exit, s_exit, e_exit, w_exit, extra_exits, exits_count, has_npc, has_battle, has_loot, can_sleep, sleep_cost, boss_key, portal_dest) VALUES (${vals});`);
+    console.log(`INSERT INTO codexofconquest_nodes (num, code, label, act, type, terrain, grid_r, grid_c, n_exit, s_exit, e_exit, w_exit, extra_exits, exits_count, has_npc, has_battle, has_loot, can_sleep, sleep_cost, boss_key, portal_dest) VALUES (${vals});`);
   });
   console.log('\nCOMMIT;');
 }
 
 function fmtSql(rows) {
-  console.log('-- SQL INSERT: roll2hit NODES');
+  console.log('-- SQL INSERT: codexofconquest NODES');
   console.log('-- Generated: ' + new Date().toISOString());
   rows.forEach(r => {
     const vals = [

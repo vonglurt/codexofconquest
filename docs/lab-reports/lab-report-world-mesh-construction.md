@@ -2,14 +2,14 @@
 
 # World Mesh Construction — Procedure & Design
 
-**Roll2Hit World Builder — Engineering Report**  
+**CodexOfConquest World Builder — Engineering Report**  
 *2026-06-09*
 
 ---
 
 ## Summary
 
-This report describes the procedure for constructing a fully-connected N/E/S/W coordinate mesh across the Roll2Hit medieval world map. Starting from a graph with 240/597 reachable nodes (40%) and 50 unreachable major cities, we reached 435/597 (72%) reachability with all 29 major GEO-referenced cities connected, using only `./api.sh` commands.
+This report describes the procedure for constructing a fully-connected N/E/S/W coordinate mesh across the CodexOfConquest medieval world map. Starting from a graph with 240/597 reachable nodes (40%) and 50 unreachable major cities, we reached 435/597 (72%) reachability with all 29 major GEO-referenced cities connected, using only `./api.sh` commands.
 
 ---
 

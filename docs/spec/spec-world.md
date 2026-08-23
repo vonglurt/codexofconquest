@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# roll2hit — World Engine Architecture Specification
+# codexofconquest — World Engine Architecture Specification
 ### Phase 3 Combat Utility Extension & Terrain-Based Monster Catalog System
 **Document:** spec-world.md  
 **Revision:** 1.0 — 2026-05-20  
@@ -10,7 +10,7 @@
 
 ## Abstract
 
-This document specifies the software architecture for Phase 3 of the roll2hit combat assistant: a browser-native, zero-dependency dice roller that executes entirely inside a single self-contained HTML file. Phase 3 introduces ten incremental feature additions (S1–S10) culminating in S11, a terrain-stratified world encounter system. The world engine partitions 329 unique monster stat-blocks across 42 terrain categories (expanded from the original 16 during later layers), exposes them through a two-level cascading dropdown UI, and integrates with the existing HP-tracking and dice-animation subsystems. This document covers data model design, interface architecture, the monster catalog, incremental implementation ordering, and forward-compatibility considerations. Code samples are given in ES2022 JavaScript; type annotations follow JSDoc convention.
+This document specifies the software architecture for Phase 3 of the codexofconquest combat assistant: a browser-native, zero-dependency dice roller that executes entirely inside a single self-contained HTML file. Phase 3 introduces ten incremental feature additions (S1–S10) culminating in S11, a terrain-stratified world encounter system. The world engine partitions 329 unique monster stat-blocks across 42 terrain categories (expanded from the original 16 during later layers), exposes them through a two-level cascading dropdown UI, and integrates with the existing HP-tracking and dice-animation subsystems. This document covers data model design, interface architecture, the monster catalog, incremental implementation ordering, and forward-compatibility considerations. Code samples are given in ES2022 JavaScript; type annotations follow JSDoc convention.
 
 > **Current state (2026-05-24):** MONSTER_POOL has grown to **370 entries**; WORLD_DB has **46 base + 20 epic = 66 terrain entries**. The 329/42 figures in this document reflect the Phase 3 snapshot. See `monsters.md` for live counts.
 
@@ -22,7 +22,7 @@ This document specifies the software architecture for Phase 3 of the roll2hit co
 
 ### I-A. Background
 
-roll2hit is a self-contained single-file web application designed to assist a DM or player in executing combat mechanics at the table without requiring an internet connection, a login, or an app store. The entire runtime — markup, styles, state, and logic — is shipped as one `.html` file (6,700 lines at Layers 0–10; ~14,377 lines at current Layer 37). Phase 1 established core mechanics (d20 attack roll, damage, adv/dis mirror logic). Phase 2 introduced a 3-column arena layout, die-face SVG animation, history cards, and a per-die roll histogram. Phase 3 extends the tool with combat-state utilities (conditions, death saves, multi-attack, sneak attack, resistance/vulnerability, healing, initiative, on-die display, damage multiplier) and a world encounter engine that provides terrain-classified monster presets.
+codexofconquest is a self-contained single-file web application designed to assist a DM or player in executing combat mechanics at the table without requiring an internet connection, a login, or an app store. The entire runtime — markup, styles, state, and logic — is shipped as one `.html` file (6,700 lines at Layers 0–10; ~14,377 lines at current Layer 37). Phase 1 established core mechanics (d20 attack roll, damage, adv/dis mirror logic). Phase 2 introduced a 3-column arena layout, die-face SVG animation, history cards, and a per-die roll histogram. Phase 3 extends the tool with combat-state utilities (conditions, death saves, multi-attack, sneak attack, resistance/vulnerability, healing, initiative, on-die display, damage multiplier) and a world encounter engine that provides terrain-classified monster presets.
 
 ### I-B. Design Constraints
 
@@ -865,9 +865,9 @@ No practical budget ceiling at single-file scale — browser loads sub-100 KB JS
 If the project outgrows single-file constraints, the natural split would be:
 
 ```
-roll2hit-v4/
+codexofconquest-v4/
   play.html          ← shell (~200 lines)
-  roll2hit.js         ← state + roll actions
+  codexofconquest.js         ← state + roll actions
   world_db.js         ← MONSTER_POOL + WORLD_DB (importable)
   styles.css
 ```

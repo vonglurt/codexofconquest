@@ -31,7 +31,7 @@ The design intent is therefore a **split surface**: pre-render the known, high-t
 
 ## II. Method
 
-Verification followed the §DOC-02 program: census every named symbol against live `roll2hit-v3.html` and `src/js/wbapi-server.js`; date every claim against the archive with `git log -S` rather than against HEAD alone; score each recommendation against the report's **own** commits, not against HEAD (§DOC-02q); and re-derive every measured figure from the primary artifact — here, `milepoints/npc-speak.log`, which the endpoint has been appending to since the day it was built.
+Verification followed the §DOC-02 program: census every named symbol against live `play.html` and `src/js/wbapi-server.js`; date every claim against the archive with `git log -S` rather than against HEAD alone; score each recommendation against the report's **own** commits, not against HEAD (§DOC-02q); and re-derive every measured figure from the primary artifact — here, `milepoints/npc-speak.log`, which the endpoint has been appending to since the day it was built.
 
 The log is the decisive instrument in this pass. This report is unusual in the corpus in that **its raw experimental data survived**, which permitted the token table to be checked row by row rather than merely believed.
 

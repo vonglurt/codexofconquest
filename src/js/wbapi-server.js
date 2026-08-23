@@ -212,7 +212,7 @@ const BIND_ADDR = process.env.BIND_ADDR
 const SERVER_NAME = String(process.env.SERVER_NAME
   || process.argv.find((a, i) => process.argv[i-1] === '--name')
   || require('os').hostname() || 'r2h-server').slice(0, 60);
-const GAME_FILE = process.env.ROLL2HIT_FILE
+const GAME_FILE = process.env.CODEXOFCONQUEST_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
   || path.join(ROOT, 'play.html');
 
@@ -1470,10 +1470,10 @@ function saveGameFile() {
 }
 
 // §DX-02l — the dated files `saveStamped()` writes BESIDE THE GAME FILE.
-// `roll2hit-v3-2*.html` is gitignored, so nothing in the repo will ever mention
+// `play-2*.html` is gitignored, so nothing in the repo will ever mention
 // them: §DX-02k found six (~32 MB) that had accumulated invisibly. This is the
 // read side of that surface — the server owns it because the server is what
-// knows where `GAME_FILE` actually lives (`--file`/`ROLL2HIT_FILE` move it).
+// knows where `GAME_FILE` actually lives (`--file`/`CODEXOFCONQUEST_FILE` move it).
 //
 // `archived` means the snapshot is already folded into the build/milepoints/patches
 // chain, which is what archive-snapshots.sh builds — and that script `rm`s each

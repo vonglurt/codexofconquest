@@ -2,7 +2,7 @@
 # Lab Report — §BOARD-01-FU7 *Warrant Standing*: reputation as a board-quality gate
 
 **Class:** design lock (IEEE-format spec written *before* implementation) · **Verified:** §DOC-02cu, 2026-08-22
-**Original date:** 2026-07-21 · **Measured against:** `roll2hit-v3.html` @ `4878c3c` (`ENGINE_VER = r2h-3.104.0`, 37,422 lines) — *both figures re-checked exact*
+**Original date:** 2026-07-21 · **Measured against:** `play.html` @ `4878c3c` (`ENGINE_VER = r2h-3.104.0`, 37,422 lines) — *both figures re-checked exact*
 **Shipped:** `e0051a8` 2026-07-21 12:51, **the same commit that added this report** · **Pinned parent:** `e0051a8^` = `4878c3c`
 **Parent item:** BACKLOG.md §BOARD-01-FU7 (promotes `potential.md` §POT-H4 / §POT-C5 / §POT-P3) · **Builds on:** `lab-report-warrants-board.md`, §BOARD-01-FU6 · **Superseded by:** §BOARD-01-FU8 (`lab-report-void-tide-bounties.md`)
 
@@ -183,7 +183,7 @@ means every pre-FU7 save starts the ladder at zero with its in-progress Warrant 
 | (f) header | `const _t = …` | `const _wt = _warrantTier(S_story.warrantStanding)@35703` | variable renamed `_t` → `_wt` |
 | — | *(not specified)* | `const _bounties = _boardBounties(node)@35701` | ⚠ **an edit §7 does not contain** |
 
-**Scope fence:** 4 files (this report, `roll2hit-v3.html`, `warrants-board.test.js`, BACKLOG.md),
+**Scope fence:** 4 files (this report, `play.html`, `warrants-board.test.js`, BACKLOG.md),
 **9 hunks, +53/−3**, net **+50** — **exactly the file's own line delta** (37,422 → 37,472). Every hunk
 header names a function §7 named.
 
@@ -206,7 +206,7 @@ header names a function §7 named.
 
 **A stale comment FU7 introduced and no gate can see.** `run it ONLY over the ≤4 shown cards@37206`
 is a §BOARD-01-FU3 comment defending a BFS cost bound. FU7 raised that bound to 7 and did not update
-it; it still says `≤4` at HEAD, thirty-two days later. Comments in `roll2hit-v3.html` are outside the
+it; it still says `≤4` at HEAD, thirty-two days later. Comments in `play.html` are outside the
 `.md`-only reach of `src/scripts/resolve-anchors.js:65` — the same blind spot §DX-02ef was filed for.
 
 ---

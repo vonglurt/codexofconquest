@@ -6,7 +6,7 @@
 
 **Original date:** 2026-05-24 · born `1d1b064` 18:47:49, §VI appended `13bb222` 18:54:19
 **Original status:** 💭 ASPIRATIONAL — no Layer number, no insertion spec, no HTML changes implied
-**Verified:** 2026-08-12 (§DOC-02ae) against `roll2hit-v3.html` @ 38,712 lines · `src/sources/5thOrgan.html` · `edit.html`
+**Verified:** 2026-08-12 (§DOC-02ae) against `play.html` @ 38,712 lines · `src/sources/5thOrgan.html` · `edit.html`
 **Verification verdict:** **3 of 5 concepts SHIPPED, two of them within five days.** The document's own scheduling claim — *"None of these can be started in the current session"* — was falsified **33 minutes later** by a commit in the same session. Every *transcribable* number in it is exact; every *illustrative* field name in it is invented.
 
 ---
@@ -26,7 +26,7 @@ The finding that generalises: the report ranked these by **effort and prerequisi
 The document was written at a moment of confidence: the world had reached 76 nodes and 370 monsters, the architecture felt settled, and the natural next question was *what is this thing for, beyond itself?* Each of the four answers is a different theory of that question, and each has a distinct effect on playability.
 
 **A. The DM's Companion Guide — playability by *transposition*.**
-roll2hit is a solo experience. The Guide's premise is that the HTML file is already an adventure module and only lacks the layer a human Dungeon Master needs to run it for a table: hidden agendas, favor thresholds stated plainly, monster flavour, ending conditions. The playability gain is not to the solo player at all — it converts a single-player program into a multiplayer evening. *"The game's HTML file is the adventure module. The DM's Guide is the thing that tells the DM what everything means."*
+codexofconquest is a solo experience. The Guide's premise is that the HTML file is already an adventure module and only lacks the layer a human Dungeon Master needs to run it for a table: hidden agendas, favor thresholds stated plainly, monster flavour, ending conditions. The playability gain is not to the solo player at all — it converts a single-player program into a multiplayer evening. *"The game's HTML file is the adventure module. The DM's Guide is the thing that tells the DM what everything means."*
 
 **B. The Fishing Guide — playability by *legibility*.**
 The fishing sub-game has a rank-20 species pool, a Hooked condition, zone DCs and a predator layer. None of that is discoverable by playing; a player casts, something happens, and the model stays invisible. The Guide's premise is that a systems-dense minigame needs a reference or it reads as randomness. **This is the concept whose implementation the report itself improved in passing** (see §V and Finding 3).
@@ -70,7 +70,7 @@ Two program instruments carried this pass in particular:
 
 **Nine of nine exact.** No design document in this corpus has done better on figures it measured itself.
 
-**§I.B's twenty named NPCs — 19 of 20 resolve (95 %).** Yael, Brynn, Quill, Pachelbel, Weckmann, Auros, Sweelinck, Muffat, Mordus, Draketide, Izador, Rennau, Vonn, Solvak, Yva, Isolde Voss, Benedikt Rasp, Jimmy Two-Tails and the Warden are all live. **`Leeuwenhoek` has 0 occurrences in `roll2hit-v3.html` and 0 commits in its entire history** — the name exists only in the planning documents of the period. A cast list that is 95 % real and 5 % aspirational is exactly what an aspirational document should look like; the point of recording it is that *nothing in the prose distinguishes the nineteen from the one*.
+**§I.B's twenty named NPCs — 19 of 20 resolve (95 %).** Yael, Brynn, Quill, Pachelbel, Weckmann, Auros, Sweelinck, Muffat, Mordus, Draketide, Izador, Rennau, Vonn, Solvak, Yva, Isolde Voss, Benedikt Rasp, Jimmy Two-Tails and the Warden are all live. **`Leeuwenhoek` has 0 occurrences in `play.html` and 0 commits in its entire history** — the name exists only in the planning documents of the period. A cast list that is 95 % real and 5 % aspirational is exactly what an aspirational document should look like; the point of recording it is that *nothing in the prose distinguishes the nineteen from the one*.
 
 **§III's ASCII detail-panel mock-ups — 0 of 14 field names correct.** See Finding 4.
 
@@ -80,13 +80,13 @@ Two program instruments carried this pass in particular:
 
 | # | Claim / concept | Section | Verdict | Evidence |
 |---|---|---|---|---|
-| 1 | DM's Companion Guide, 80–120 pp | §I | **NOT SHIPPED** | no `roll2hit-gm-guide` artefact; 0 occurrences repo-wide |
+| 1 | DM's Companion Guide, 80–120 pp | §I | **NOT SHIPPED** | no `codexofconquest-gm-guide` artefact; 0 occurrences repo-wide |
 | 2 | Fishing Guide, standalone 20–30 pp document | §II | **NOT SHIPPED** | superseded by row 3 |
 | 3 | Fishing Guide **as an in-game readable item** | §V | ✅ **SHIPPED** | `name:'Fishing Guide', icon:'📖', type:'readable'@13819` · `const FISHING_GUIDE_TEXT =@26659` |
 | 4 | …and it gates a mechanic, not just flavour | — | ✅ **exceeded** | `const hasGuide = (S_story.inventory@30406` reveals zone DCs |
 | 5 | Mission Explorer, a second HTML data browser | §III | ✅ **SHIPPED** `2d42ea2`, 2026-05-29 | `edit.html`, 10,685 lines, 17 tabs |
 | 6 | …read-only; C/U/D "intentionally excluded" | §III.D | ⚠️ **INVERTED** | 29 `POST` · 32 `PUT` · 4 `DELETE` call sites |
-| 7 | …cost: must externalize the data constants | §III.E | ❌ **cost never paid** | `<script src=` = **0** in `roll2hit-v3.html`; the one-file invariant held |
+| 7 | …cost: must externalize the data constants | §III.E | ❌ **cost never paid** | `<script src=` = **0** in `play.html`; the one-file invariant held |
 | 8 | …fallback: FileReader drag-and-drop | §III.E | **NOT SHIPPED** | shipped answer is a third option: server-side parse via `wbapi-core.js` |
 | 9 | …debug metadata (JS path · type · index) | §III.C | **NOT SHIPPED** → **§DX-02ao** | no detail view emits a reference path, a data type or an array position |
 | 10 | …Export as JSON, the "middle path" | §III.D | ✅ **SHIPPED + exceeded** | `edit.html:/api/export/all?format=json@2656`, `Export JS`, `Export Patched` |
@@ -108,8 +108,8 @@ Two program instruments carried this pass in particular:
 | 26 | Organ: JSON tablature *format* + parser | §VI.D | **NOT SHIPPED as a format** | 0 `JSON.parse`; the data shipped, the file format did not |
 | 27 | Organ: manual I / manual II / pedal channels | §VI.D | **NOT SHIPPED** | single manual |
 | 28 | Organ: meantone / Pythagorean temperament | §VI.G | **NOT SHIPPED** | 0 occurrences |
-| 29 | Organ: delivered as `roll2hit-organ.html` | §VI.G | **renamed** | shipped as `src/sources/5thOrgan.html` |
-| 30 | Organ: *"in the background, as the game is played"* | §VI.A | **NOT SHIPPED** → **§AUDIO-01** | `roll2hit-v3.html` has 0 `AudioContext` / 0 `<audio>` / 0 `iframe` |
+| 29 | Organ: delivered as `codexofconquest-organ.html` | §VI.G | **renamed** | shipped as `src/sources/5thOrgan.html` |
+| 30 | Organ: *"in the background, as the game is played"* | §VI.A | **NOT SHIPPED** → **§AUDIO-01** | `play.html` has 0 `AudioContext` / 0 `<audio>` / 0 `iframe` |
 | 31 | *"None of these can be started in the current session"* | §IV | ❌ **falsified in 33 minutes** | see Finding 1 |
 
 ---
@@ -160,7 +160,7 @@ The corollary is a practical one for this project: **the DM's Guide and the Fish
 
 **Axis 1 — Read vs. Write.** §III.D excludes Create/Update/Delete for three stated reasons: *"the HTML is the source of truth"*, *"a write interface would need validation, undo, and conflict resolution"*, *"read-only is safe and useful; writable is risky and complex."* HEAD ships **29 `POST` · 32 `PUT` · 4 `DELETE`** call sites. The objection was not overruled — it was **answered by building the thing it asked for**: WBAPI validates (a bad monster body is rejected 422 with the field list and nothing is written) and excises at source level with verify-or-revert. *The report was right that writes need validation. It was wrong that this meant not writing.*
 
-**Axis 2 — Where the data comes from.** §III.E enumerates exactly two options: externalize the constants into `roll2hit-data.js` (*"a significant change to the 'one file' architecture"*), or a FileReader drag-and-drop that `eval()`s the constants from the dropped file. Neither shipped. The shipped mechanism is a **third option the document does not consider**: a local server parses the HTML *as text* and serves structured data over REST, so the browser never needs the constants at all. `roll2hit-v3.html` contains **zero** `<script src=` tags — **the architectural cost the report priced was never paid, and the decision it was blocked on was never made.**
+**Axis 2 — Where the data comes from.** §III.E enumerates exactly two options: externalize the constants into `codexofconquest-data.js` (*"a significant change to the 'one file' architecture"*), or a FileReader drag-and-drop that `eval()`s the constants from the dropped file. Neither shipped. The shipped mechanism is a **third option the document does not consider**: a local server parses the HTML *as text* and serves structured data over REST, so the browser never needs the constants at all. `play.html` contains **zero** `<script src=` tags — **the architectural cost the report priced was never paid, and the decision it was blocked on was never made.**
 
 > This is the 22nd instrument in its cleanest positive form: *enumerate the space the chooser actually chooses from.* The report enumerated two options and the winner was outside the enumeration. A two-option table reads as exhaustive precisely because it is a table.
 
@@ -211,7 +211,7 @@ This is instrument 12 in a form worth keeping, because it defeats the older inst
 
 > ***DURABLE: a parameter added on top of a completed specification silently re-signs every default written against it.*** Neither document is wrong on its own; the defect exists only in the space between them, which is why instrument 7 (read the corpus, not the report) is the only thing that could find it.
 
-**And the thing that never happened at all.** §VI.A is explicit that this is a *game* feature — *"driven by a sequencer that reads a note file and plays it like a player piano — in the background, as the game is played"* — and the synth's own conclusion says it is *"ready for embedding as an iframe."* `roll2hit-v3.html` has **0** occurrences of `AudioContext`, `createOscillator`, `new Audio`, `<audio>` or `iframe`; its 119 uses of *"sound"* and 21 of *"music"* are all narrative prose. The instrument was built, the score was written, the file was filed under `src/sources/` with the authoring tools, and **the game has never made a sound**. That is §AUDIO-01, and this paragraph is its originating requirement.
+**And the thing that never happened at all.** §VI.A is explicit that this is a *game* feature — *"driven by a sequencer that reads a note file and plays it like a player piano — in the background, as the game is played"* — and the synth's own conclusion says it is *"ready for embedding as an iframe."* `play.html` has **0** occurrences of `AudioContext`, `createOscillator`, `new Audio`, `<audio>` or `iframe`; its 119 uses of *"sound"* and 21 of *"music"* are all narrative prose. The instrument was built, the score was written, the file was filed under `src/sources/` with the authoring tools, and **the game has never made a sound**. That is §AUDIO-01, and this paragraph is its originating requirement.
 
 ---
 
@@ -275,7 +275,7 @@ For a document whose title promises ponies and unicorns, the accuracy rate on th
 
 ---
 
-**Anchors used in this report** resolve against `roll2hit-v3.html` (38,712 lines), `src/sources/5thOrgan.html` (448 lines) and `edit.html` (10,685 lines) as of 2026-08-12. Legacy node codes (`YL`, `YC`, `CI`, `SL`, `CQ`, `VS`) are preserved as written — `docs/lab-reports/` is a HISTORY corpus under `src/scripts/legacy-codes.js`; annotate, never rewrite.
+**Anchors used in this report** resolve against `play.html` (38,712 lines), `src/sources/5thOrgan.html` (448 lines) and `edit.html` (10,685 lines) as of 2026-08-12. Legacy node codes (`YL`, `YC`, `CI`, `SL`, `CQ`, `VS`) are preserved as written — `docs/lab-reports/` is a HISTORY corpus under `src/scripts/legacy-codes.js`; annotate, never rewrite.
 
 ---
 

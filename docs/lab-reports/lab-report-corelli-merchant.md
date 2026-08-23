@@ -2,7 +2,7 @@
 
 # Lab Report — Layer 61, §XXVI: Corelli the Wandering Merchant
 
-**File:** `roll2hit-v3.html`
+**File:** `play.html`
 **Original:** 2026-05-25 · **Verified against HEAD:** 2026-08-11 (§DOC-02g)
 **Status:** Shipped, with three defects live at HEAD
 **Format:** IEEE post-mortem, verification-revised
@@ -21,7 +21,7 @@ Corelli is a cross-act vendor appearing at most once per act window across five 
 
 1. Grep every identifier the report names against HEAD.
 2. `git log -S` every dead symbol — this separates **RETIRED** (shipped, later removed) from **NEVER SHIPPED** (§DOC-02c instrument).
-3. For claims *about the past*, read the archive rather than HEAD (`git show <sha>:roll2hit-v3.html`) — HEAD cannot adjudicate what a prior version did (§DOC-02f instrument 8).
+3. For claims *about the past*, read the archive rather than HEAD (`git show <sha>:play.html`) — HEAD cannot adjudicate what a prior version did (§DOC-02f instrument 8).
 4. Resolve every node code against `NODE_MAP` **and check what it names**, not merely that it resolves.
 
 The birth commit is **`194a810`**; the repoint commit is **`c1d5a94`**.
@@ -190,7 +190,7 @@ Two design decisions verify exactly and remain sound: favorability derives from 
 
 ---
 
-*Layer 61, §XXVI — Corelli the Wandering Merchant. Verified against `roll2hit-v3.html` at HEAD, 2026-08-11.*
+*Layer 61, §XXVI — Corelli the Wandering Merchant. Verified against `play.html` at HEAD, 2026-08-11.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

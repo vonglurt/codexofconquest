@@ -10,7 +10,7 @@
 
 ## Abstract
 
-`src/js/` held `mover.js`, `rooms.js`, `duel.js` — and no `quest.js`. The engine that runs every quest in the game was the one engine the server could not `require()`. This increment gives the quest VM the parity-fenced kernel treatment the other three already carried: a `// ◆◆◆ QUEST:CORE ◆◆◆` block inlined **byte-identically** into `roll2hit-v3.html` and mirrored in `src/js/quest.js`, asserted by `src/scripts/check-quest-parity.js` and wired into `npm run check:walk`.
+`src/js/` held `mover.js`, `rooms.js`, `duel.js` — and no `quest.js`. The engine that runs every quest in the game was the one engine the server could not `require()`. This increment gives the quest VM the parity-fenced kernel treatment the other three already carried: a `// ◆◆◆ QUEST:CORE ◆◆◆` block inlined **byte-identically** into `play.html` and mirrored in `src/js/quest.js`, asserted by `src/scripts/check-quest-parity.js` and wired into `npm run check:walk`.
 
 The blocker was not packaging. `MOVER`/`ROOMS`/`DUEL` were pure from birth; `QuestRuntime` was an object literal closing over `S_story`, `QUEST_DB`, `NODE_MAP` and **ten host functions**. The resolution — chosen by the user over a minimal validation-only fence — is **dependency injection**: `createQuestRuntime({ getState, effects })`. The kernel names no global; the live game injects the real ones. On the live path every thunk calls the function it replaced, so the change is a **provable no-op**, and the regression suite is the proof.
 
@@ -39,7 +39,7 @@ The secondary payoff — a server authoritative over quest state — was **expli
 
 Five instruments, in order:
 
-1. **Pin the parent build.** `git show "9f10bfe^:roll2hit-v3.html"` (37,694 lines) — every line number in the report was measured pre-edit and must be scored there, not at HEAD.
+1. **Pin the parent build.** `git show "9f10bfe^:play.html"` (37,694 lines) — every line number in the report was measured pre-edit and must be scored there, not at HEAD.
 2. **Score the anchors.** All 18 line-number claims resolved against the pinned parent.
 3. **Score the free-name table.** All 13 rows of §2 re-grepped inside the parent literal `21764`–`21965`.
 4. **Score the artefacts at HEAD.** Parity gate, kernel members, host wiring, exports, consumers.

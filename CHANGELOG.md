@@ -12,9 +12,10 @@ The project became public. It had been developed privately since 2026-05-24
 across 1,471 commits.
 
 ### Renamed
-- The game is **Codex of Conquest**. `roll2hit-v3.html` → `play.html`;
-  `worldbuilder.html` → `edit.html`; the domain `roll2hit.com` →
-  `CodexOfConquest.com` throughout.
+- The game is **Codex of Conquest**, formerly *Roll2Hit*. `roll2hit-v3.html` →
+  `play.html`; `worldbuilder.html` → `edit.html`; the domain `roll2hit.com` →
+  `CodexOfConquest.com` throughout. Applied to every tracked file, history
+  documents included — 518 occurrences across 155 files.
 - `index.html` is now a landing page describing the project, not the game.
 
 ### Added

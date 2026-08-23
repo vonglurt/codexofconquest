@@ -3,7 +3,7 @@
 # Lab Report — World Structure Critique
 ### Geographic Architecture, Node Density, and the IATA Anchor System in *The Shattered Codex*
 
-**Project:** `roll2hit-v3.html` — single-file HTML5 game engine, MIT License
+**Project:** `play.html` — single-file HTML5 game engine, MIT License
 **Written:** 2026-06-16 15:22:50 · **Reference build:** `89fa13b` (12:20:47, 33,721 lines — the figure in the original status line, exact)
 **Verified:** 2026-08-14 (§DOC-02bj) — measured at the reference build and again at HEAD
 **Series:** World Architecture · Geographic Analysis · Structural Critique

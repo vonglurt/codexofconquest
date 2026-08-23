@@ -9,7 +9,7 @@
 
 ## 1. The Problem
 
-The game's `_buildNodeExits()` function (roll2hit-v3.html:31954) probes exactly 1–4 coordinate cells in each cardinal direction to discover connections:
+The game's `_buildNodeExits()` function (play.html:31954) probes exactly 1–4 coordinate cells in each cardinal direction to discover connections:
 
 ```javascript
 function probe(r, c, dr, dc) {

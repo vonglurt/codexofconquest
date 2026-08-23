@@ -4,14 +4,14 @@
 
 **IEEE-format source reference · verified rewrite**
 **Original:** undated (the corpus's only report with no header block); companion to `lab-report-saul-paul-vignette-spec.md` (2026-05-27). Arc birth commit **`8f8dc2a`** (2026-05-27 10:01:51, *"Layer 98 §LIX: HR + KS — The Road to Kesra opens"*).
-**Verified:** 2026-08-12 (§DOC-02ai) against `roll2hit-v3.html` @ `29c8a35` — 38,712 lines, 416 nodes, 2,853 quests
+**Verified:** 2026-08-12 (§DOC-02ai) against `play.html` @ `29c8a35` — 38,712 lines, 416 nodes, 2,853 quests
 **Status:** ✅ **BUILT — 14 nodes, 18 quests, 23 state flags, 13 of 14 nodes reachable.** Coverage of the source: **14 of 38 specified stops (37 %)**. The arc's naming policy shipped **half-applied** and has been that way for 75 days.
 
 ---
 
 ## Abstract
 
-This document is not a specification and never was. It is a **primary-source reference** — the historical and scriptural research from which the §FUTURE-01 Saul-to-Paul arc was written, organised as 38 travel "nodes" from Tarsus to Rome. It names no engine symbol and asserts nothing about `roll2hit-v3.html`, which makes it the first document in the §DOC-02 program that cannot be scored for accuracy against HEAD at all.
+This document is not a specification and never was. It is a **primary-source reference** — the historical and scriptural research from which the §FUTURE-01 Saul-to-Paul arc was written, organised as 38 travel "nodes" from Tarsus to Rome. It names no engine symbol and asserts nothing about `play.html`, which makes it the first document in the §DOC-02 program that cannot be scored for accuracy against HEAD at all.
 
 So the delta table runs the other way. Instead of *"did its claims survive?"* the question is **"of the 38 stops it researched, which became world?"** — and, for the one section where the document stops being history and starts making design promises (§FLAGGED DETAILS: Game Designer's Special Index), *"which promises became mechanics?"*
 
@@ -39,7 +39,7 @@ Five instruments applied; three carried the increment:
 
 ### A. Why it is here
 
-roll2hit is a D&D 5e Fighter walking a 90×360 world under a 49-day doom clock. Nothing in that premise wants a first-century missionary. The arc exists because of what it does to the **verb set**.
+codexofconquest is a D&D 5e Fighter walking a 90×360 world under a 49-day doom clock. Nothing in that premise wants a first-century missionary. The arc exists because of what it does to the **verb set**.
 
 Every other track in the game resolves through the same three motions: fight it, roll against it, or carry it somewhere. The Saul arc is the only content built around a protagonist whose defining actions are **being blinded, being vouched for, being stoned and getting up, and writing letters** — none of which the combat engine can express. It forces the game to prove that its declarative quest VM can carry a scene where nothing is defeated.
 
@@ -232,12 +232,12 @@ The scholarship below is the arc's writing bible and the only surviving record o
 
 | File | Anchor | Content |
 |---|---|---|
-| `roll2hit-v3.html` | `` `Mediterranean Real-World Locations (§FUTURE-01 Saul to Paul arc)@6366` `` | the 14 arc terrains |
-| `roll2hit-v3.html` | `` `JRS:{ num:84, code:'JRS'@8443` `` … `` `SEA:{ num:97, code:'SEA'@8477` `` | the 14 arc nodes |
-| `roll2hit-v3.html` | `` `saulConverted: false, blindDaysKS: 0@23174` `` | the 23 arc state flags |
-| `roll2hit-v3.html` | `` `if (S_story.hrHellenistDays >= 15) S_story.hellenistsThreaten = true;@36293` `` | the fifteen-day gate |
-| `roll2hit-v3.html` | `` `of Tarsus fell.@31334` `` · `` `He is called Paul here for the first time.@31329` `` | conversion + name change |
-| `roll2hit-v3.html` | `` `Thorn (Permanent)@37676` `` | the character-sheet caption |
+| `play.html` | `` `Mediterranean Real-World Locations (§FUTURE-01 Saul to Paul arc)@6366` `` | the 14 arc terrains |
+| `play.html` | `` `JRS:{ num:84, code:'JRS'@8443` `` … `` `SEA:{ num:97, code:'SEA'@8477` `` | the 14 arc nodes |
+| `play.html` | `` `saulConverted: false, blindDaysKS: 0@23174` `` | the 23 arc state flags |
+| `play.html` | `` `if (S_story.hrHellenistDays >= 15) S_story.hellenistsThreaten = true;@36293` `` | the fifteen-day gate |
+| `play.html` | `` `of Tarsus fell.@31334` `` · `` `He is called Paul here for the first time.@31329` `` | conversion + name change |
+| `play.html` | `` `Thorn (Permanent)@37676` `` | the character-sheet caption |
 | `lab-report-saul-paul-vignette-spec.md` | — | the fictionalized twin — voice rules and node texts |
 | ~~`plan.md` §FUTURE-01 Name Translation Table~~ | — | **DELETED** by `5e48dd7`; these two reports are the only surviving record |
 

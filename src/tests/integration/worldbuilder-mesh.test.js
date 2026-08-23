@@ -17,7 +17,7 @@ const FIXTURE = {
     'bind is loopback (127.0.0.1) — remote machines cannot reach this server. Start with --bind 0.0.0.0 (or BIND_ADDR=0.0.0.0).',
   ] },
   trackerUrls: ['http://tracker.example:1368'],
-  trackerGroups: [{ engineVer: 'r2h-3.104.0', worldHash: 'feedfacefeedface', worldTag: 'Roll2Hit-feedf', servers: 3, players: 7 }],
+  trackerGroups: [{ engineVer: 'r2h-3.104.0', worldHash: 'feedfacefeedface', worldTag: 'CodexOfConquest-feedf', servers: 3, players: 7 }],
   peers: [
     { addr: 'localhost:2367', serverId: 'beefbeef', live: true, lastSeenMs: 900, lastErr: null },
     { addr: '10.0.0.9:1367', serverId: null, live: false, lastSeenMs: null, lastErr: 'unreachable' },
@@ -44,7 +44,7 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
     await expect(page.locator('#mesh-identity')).toContainText('⚠ bind is loopback');
     // §MESH-01-FU 2: world tag on the identity strip + per world group
     await expect(page.locator('#mesh-identity')).toContainText('🌍 CodexOfConquest-feedf');
-    await expect(page.locator('#mesh-trackers')).toContainText('Roll2Hit-feedf');
+    await expect(page.locator('#mesh-trackers')).toContainText('CodexOfConquest-feedf');
     await expect(page.locator('#mesh-trackers')).toContainText('http://tracker.example:1368');
     await expect(page.locator('#mesh-trackers')).toContainText('3 server(s), 7 player(s)');
     await expect(page.locator('#mesh-peers')).toContainText('localhost:2367');

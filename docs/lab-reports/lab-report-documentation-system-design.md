@@ -5,7 +5,7 @@
 ### Design, Purpose, and Synchronization Architecture — with a 2026-08-11 verification pass
 
 **Original date:** 2026-05-24 (added at `59a9e0d`)
-**Verified:** 2026-08-11 (§DOC-02i) against `roll2hit-v3.html` @ HEAD **and** against the archive build `32c10c5` (2026-05-24)
+**Verified:** 2026-08-11 (§DOC-02i) against `play.html` @ HEAD **and** against the archive build `32c10c5` (2026-05-24)
 **Subject as written:** `plan.md` as master planning document; the repo's Markdown corpus
 **Subject at HEAD:** `plan.md` no longer exists — split into `CONTRIBUTING.md` + `BACKLOG.md` at `5e48dd7` (2026-07-09)
 
@@ -14,7 +14,7 @@
 ## Abstract
 
 This report argued that the CodexOfConquest.com documentation corpus is itself software: it has a schema
-(`index.md` as manifest), a source of truth (`roll2hit-v3.html`), a spec layer (`plan.md`), and a test
+(`index.md` as manifest), a source of truth (`play.html`), a spec layer (`plan.md`), and a test
 protocol (the sync pass). It specified a **two-way synchronization rule** — every doc item traces to the
 HTML, every HTML item has a home doc — and proposed it as a bijection to be driven to closure by
 successive sync passes.
@@ -42,9 +42,9 @@ field that has never existed.
 Ten instruments, per the §DOC-02 house method:
 
 1. Batch `grep -c` of every named symbol before reading the report body.
-2. `git log -S "<symbol>" -- roll2hit-v3.html` on every symbol the census marks dead — separates
+2. `git log -S "<symbol>" -- play.html` on every symbol the census marks dead — separates
    **RETIRED** (shipped, later removed) from **NOT SHIPPED** (never existed under that name).
-3. Archive read (`git show 32c10c5:roll2hit-v3.html`) — HEAD cannot adjudicate a claim about the past.
+3. Archive read (`git show 32c10c5:play.html`) — HEAD cannot adjudicate a claim about the past.
 4. Sibling cross-check against `lab-report-architecture-full.md` (§DOC-02b) and
    `lab-report-birka-beginner-arc.md` (§DOC-02d).
 5. Delta table run **both ways** — a specified behaviour absent from HEAD is engine-rot, not report-rot.
@@ -52,7 +52,7 @@ Ten instruments, per the §DOC-02 house method:
    written" is distinguishable from "wrong now".
 
 The report is unusual in the corpus: its subject is the repo, not the game. Where a claim is about a
-document rather than about `roll2hit-v3.html`, the document is the measurement target and this is stated.
+document rather than about `play.html`, the document is the measurement target and this is stated.
 
 ---
 
@@ -76,7 +76,7 @@ document rather than about `roll2hit-v3.html`, the document is the measurement t
 ## III. Design Constants — the delta table, both ways
 
 The report's §II-C table gave seven canonical numbers with a verification recipe. Measured against the
-build it was written against (`32c10c5`, 2026-05-24, `roll2hit-v3.html` at exactly **14,377 lines** —
+build it was written against (`32c10c5`, 2026-05-24, `play.html` at exactly **14,377 lines** —
 the report's own figure, exact) and against HEAD:
 
 | Constant | Report | Archive 2026-05-24 | HEAD 2026-08-11 | Verdict |
@@ -363,7 +363,7 @@ outside `.md`, Finding 2), **§DX-02n** (Finding 5).
 
 | Reference | Description |
 |---|---|
-| `roll2hit-v3.html` | Primary source — 38,712 lines at HEAD; 14,377 at `32c10c5` |
+| `play.html` | Primary source — 38,712 lines at HEAD; 14,377 at `32c10c5` |
 | `32c10c5` (2026-05-24) | Earliest surviving build; the archive baseline for §III |
 | `59a9e0d` (2026-05-24) | The commit that added this report; corpus baseline for Finding 1 |
 | `120d617` | Deleted the six lab reports `index.md` still lists |

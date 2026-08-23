@@ -1,9 +1,9 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# Lab Report — Roll2Hit Architecture: A Full Technical Review
+# Lab Report — CodexOfConquest Architecture: A Full Technical Review
 
 **Original:** 2026-05-22 (updated 2026-05-24) · **Verified against HEAD:** 2026-08-11 (§DOC-02b)
-**Source file:** `roll2hit-v3.html` — reviewed at 14,377 lines / ~580 KB; **measured at HEAD: 38,707 lines / 5.51 MB** (`npm run stats`, engine `` `const ENGINE_VER = 'r2h-3.104.0'@9907` ``)
+**Source file:** `play.html` — reviewed at 14,377 lines / ~580 KB; **measured at HEAD: 38,707 lines / 5.51 MB** (`npm run stats`, engine `` `const ENGINE_VER = 'r2h-3.104.0'@9907` ``)
 
 > **HISTORY DOCUMENT — annotate, never rewrite.** This report described the file as it stood on 2026-05-22. Eleven weeks and roughly a dozen `§`-tracks later, the *thesis* still holds and most of the *inventory* does not. The 2026-08-11 pass re-measured every quantitative and structural claim against HEAD and records the result as a delta table. A claim that no longer describes the code is marked **STALE** or **SUPERSEDED** and **kept** — it is the record of what the architecture was, and of which review claims were wrong even then.
 
@@ -11,7 +11,7 @@
 
 ## Abstract
 
-`roll2hit-v3.html` is a browser-native D&D-5e RPG that ships as one static HTML file: no build step, no CDN, no JavaScript modules, no server required to play. It runs two engines — a standalone dice combat tracker (Battle Mode) and a narrative campaign (Story Mode) — over a shared dice and combat-resolution layer, with all state in two plain mutable objects and all rendering done by full-section rewrite.
+`play.html` is a browser-native D&D-5e RPG that ships as one static HTML file: no build step, no CDN, no JavaScript modules, no server required to play. It runs two engines — a standalone dice combat tracker (Battle Mode) and a narrative campaign (Story Mode) — over a shared dice and combat-resolution layer, with all state in two plain mutable objects and all rendering done by full-section rewrite.
 
 The original review measured 76 nodes, 370 monsters, 66 terrains and a 26×16 grid. **At HEAD the same architecture carries 416 nodes, 398 monsters, 111 terrains, 2,853 quests and 204 NPC profiles on a 90×360 equirectangular grid** — a ~5.5× growth in the file with the *architectural pattern unchanged*. That is the review's central prediction under test, and it survived: the flat-scope, full-rewrite, single-state-object design absorbed the growth. What did not survive is nearly every concrete data shape the review documented, because four tracks (§WALK/§NAV-01, §ARCH-01, §VM-01, §CELL-13) replaced the navigation graph, the quest format, the execution model and the teleport system respectively.
 

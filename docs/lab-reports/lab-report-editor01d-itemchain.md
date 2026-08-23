@@ -8,7 +8,7 @@
 > (`2026-06-26 19:14:19 −0700`). The header's *2026-06-27* is **correct in UTC**
 > (`2026-06-27T02:13:50Z`) — the repo's clocks are `−0700`, so read the date before judging it.
 > **Reference build** for every "as-written" figure below is `57f9f44` = `8560254^`
-> (2026-06-26 19:03:25, `roll2hit-v3.html` 33,007 lines). HEAD figures are dated 2026-08-17.
+> (2026-06-26 19:03:25, `play.html` 33,007 lines). HEAD figures are dated 2026-08-17.
 > Bare line numbers in the original text are preserved as **historical citations**; live pointers
 > are `` `symbol@line` `` anchors (§DX-01e). This file is HISTORY in `src/scripts/legacy-codes.js` —
 > annotate, never rewrite.
@@ -65,7 +65,7 @@ patchable over HTTP, and checkable by a gate.
 
 1. Establish the reference build (`8560254^`) and replay every "as-written" count there, never at
    HEAD (instrument 11).
-2. Resolve all ten line citations against the reference build's `roll2hit-v3.html`,
+2. Resolve all ten line citations against the reference build's `play.html`,
    `edit.html` and the then-root `wbapi-server.js`.
 3. `git log -S "<symbol>" --all` **with no pathspec** on every symbol the report calls new or
    absent, to separate NOT SHIPPED from RETIRED (instruments 4, 67).
@@ -106,7 +106,7 @@ inlining pushes, filters, gold, favor and `msgs.push`.
 |---|---|---|---|
 | ladder branches | 58 | **61** | ✗ |
 | quests defining `onComplete` | 27 | **27** (`onComplete:`) | ✓ |
-| `itemChain` references in `roll2hit-v3.html`, `edit.html`, `wbapi-core.js`, `wbapi-server.js` | 0 ("greenfield") | **0 / 0 / 0 / 0** | ✓ |
+| `itemChain` references in `play.html`, `edit.html`, `wbapi-core.js`, `wbapi-server.js` | 0 ("greenfield") | **0 / 0 / 0 / 0** | ✓ |
 | `_takeMissionBit` exists | no | **0 occurrences** | ✓ |
 
 ---
@@ -233,7 +233,7 @@ ph3 gate's object-branch coverage gap.
 **148/148** (22 quests migrated, **0 ladder branches**, 7 key-event items indexed) ·
 `npm run check:legacycodes` exit 0 · `check:anchors` **3,098 → 3,113 across 74 docs, 0 dead**
 (117 stale hints = the unchanged pre-existing baseline, so all 15 new anchors are byte-exact; this
-was the 74th doc, having had none). `roll2hit-v3.html` untouched — every measurement was read-only.
+was the 74th doc, having had none). `play.html` untouched — every measurement was read-only.
 
 > **⚠ Anchor hazard, new this pass — a second way to write a pointer that is checked by nothing.**
 > `ANCHOR_RE` (`src/scripts/resolve-anchors.js`) is ``/`([^`\n]{1,80}?)@(\d{2,6})`/`` — the line number

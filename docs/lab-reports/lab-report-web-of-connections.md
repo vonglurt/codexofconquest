@@ -8,7 +8,7 @@
 |---|---|
 | **Original** | Layer 45 design document, dated **2026-05-22** (report footer) |
 | **First commit** | `32c10c5` 2026-05-24 17:34:49 — the repository's **initial commit**; the whole feature set is already present in it |
-| **Ship build** | `32c10c5:roll2hit-v3.html` — **14,377 lines / 859,773 bytes** |
+| **Ship build** | `32c10c5:play.html` — **14,377 lines / 859,773 bytes** |
 | **HEAD build** | 2026-08-23 — **38,712 lines / 5,513,223 bytes**, a **6.4×** file |
 | **Verified** | §DOC-02cz, 2026-08-23 — source census + exhaustive favor-write enumeration + Chromium (`src/tests/integration/web-of-connections-l45.spec.js`, 11 measurement specs, all green) |
 | **Status** | **HISTORY doc.** Legacy 26×16 node codes (`CI`, `IN`, `TV`, `BA`, `CY`, `SW`, `SL`) are left as written — annotate, don't rewrite (§DX-02c / §AUDIT-03n) |
@@ -40,7 +40,7 @@ The eight subsystems: **(II)** Froberger's traces · **(III)** NPC cross-referen
 
 ## II. Method
 
-1. **Symbol census** — every construct the report names, grepped at HEAD and at the report's own build (`git show 32c10c5:roll2hit-v3.html`).
+1. **Symbol census** — every construct the report names, grepped at HEAD and at the report's own build (`git show 32c10c5:play.html`).
 2. **Byte-diff against the ship build** — each authored block compared line for line across 90 days.
 3. **Exhaustive favor-write enumeration** — *every* write to `npcFavorability` in the file located (4 sites), every `kind:'favor'` bit in `QUEST_DB` extracted per NPC, and the reachable ceiling derived per NPC rather than assumed.
 4. **Gate-vs-tier audit** — each gate's numeric threshold compared against the tier *name* the lock uses for it.

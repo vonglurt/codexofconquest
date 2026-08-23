@@ -45,17 +45,17 @@ Ten instruments, §DOC-02a–g:
 
 1. Batch census — all 118 named identifiers through one `grep -c` pass before re-reading.
 2. Comment check — a symbol surviving only inside a comment counts as **dead**.
-3. `git log -S "<symbol>" -- roll2hit-v3.html` on every dead name, to separate
+3. `git log -S "<symbol>" -- play.html` on every dead name, to separate
    **RETIRED** (shipped, later removed) from **NOT SHIPPED** (never existed).
 4. Delta table **both ways** — a specified behaviour absent at HEAD is engine-rot, not
    report-rot, until the archive says otherwise.
-5. Archive read — `git show 00fe35c:roll2hit-v3.html` for every claim about the past.
+5. Archive read — `git show 00fe35c:play.html` for every claim about the past.
 6. Evidence weighting — **tables and function bodies are evidence, traces and
    narration are claims** (§DOC-02f, instrument 9).
 7. Self-criticism is a claim like any other (§DOC-02g, instrument 10).
 8. Corpus check — read against sibling reports, not only against HEAD.
 
-Anchors are `` `symbol@line` `` against `roll2hit-v3.html` at HEAD, audited by
+Anchors are `` `symbol@line` `` against `play.html` at HEAD, audited by
 `npm run anchors`. Legacy node codes in the prose below are **HISTORY** and are
 annotated, never rewritten (`docs/lab-reports/` is a HISTORY class in
 `src/scripts/legacy-codes.js`).

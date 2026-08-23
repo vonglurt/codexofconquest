@@ -29,7 +29,7 @@ This report specifies a naval campaign layer for *The Shattered Codex*: **7 new 
 Nine instruments, in the order run:
 
 1. **Batch census.** Every named quest id, flag, item, NPC and node code through one `grep -c` loop *before* reading a line of prose (§DOC-02b).
-2. **Archive comparison.** `git show e339aeb:roll2hit-v3.html` — the report's own ship commit — is the only thing that can adjudicate a claim about 2026-05-28 (§DOC-02f, instrument 8).
+2. **Archive comparison.** `git show e339aeb:play.html` — the report's own ship commit — is the only thing that can adjudicate a claim about 2026-05-28 (§DOC-02f, instrument 8).
 3. **Rename resolution by triple-match.** A dead node code is presumed a *rename*, not a deletion, until `num` + terrain key + label all fail (§DOC-02y).
 4. **Cell-primacy census.** `const CELL_GRID = (() => {@9852` builds each cell in `NODE_MAP` declaration order; only `list[0]` can ever become `S_story.currentCode` (§AUDIT-03x).
 5. **Reachability closure over gate flags.** For every gate term, find *all* writers; a single writer inside a blocked block kills the whole downstream chain (§DOC-02r, instrument 19).

@@ -3,7 +3,7 @@
 # Lab Report — Friendships with Magic
 ### Session Postmortem, Layers 41–42 + Five Systems — Verified Against HEAD
 
-**Subject:** `roll2hit-v3.html` — single-file HTML5 D&D-5e game engine, MIT License
+**Subject:** `play.html` — single-file HTML5 D&D-5e game engine, MIT License
 **Written:** 2026-05-22 (updated 2026-05-24) · **Verified:** 2026-08-12 (§DOC-02o)
 **Source state at writing:** 12,637 lines · Layers 0–42
 **State at verification:** 38,712 lines · 416 nodes · 398 monsters · 111 terrains · 2,853 quests
@@ -42,7 +42,7 @@ call that violates it.
 
 Per §DOC-02 house method. Instruments applied: full-name batch census before reading (2); `git log -S`
 on every dead symbol to separate RETIRED from NEVER SHIPPED (4); archive diff against
-`git show 32c10c5:roll2hit-v3.html`, the earliest surviving build, 2026-05-24 (8); copy-vs-compose as
+`git show 32c10c5:play.html`, the earliest surviving build, 2026-05-24 (8); copy-vs-compose as
 the error predictor (12); a report's self-criticism and its reversals are claims (10, 13); a census
 total cross-checked against a gate that counts the same set (14); both legs of a stated trade (16).
 

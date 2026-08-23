@@ -4,7 +4,7 @@
 ### Layer 39 — Dead-End Boss Nodes with NPC Contract Framing
 
 **Original date:** 2026-05-22 · **Verified against HEAD:** 2026-08-12 (§DOC-02l)
-**Subject:** `roll2hit-v3.html` — `EPIC_BOSS_POOL`, `EB_NPC_DIALOGUE`, `EB_STORY_ITEMS`, 20 `NODE_MAP` records, 40 `QUEST_DB` entries
+**Subject:** `play.html` — `EPIC_BOSS_POOL`, `EB_NPC_DIALOGUE`, `EB_STORY_ITEMS`, 20 `NODE_MAP` records, 40 `QUEST_DB` entries
 **Status:** ⚠️ **IMPLEMENTED, THEN SEVERED.** The design shipped almost exactly as specified and a later world-code rename broke the runtime's link to its own quest data. See §IV Finding 1.
 
 ---
@@ -38,7 +38,7 @@ the entire payment/return-beat layer is unreachable**: no gold, no reward items,
 2. **Field-level comparison** — all 100 statline fields and all 60 payment fields compared numerically,
    not by presence.
 3. **`git log -S` on every dead symbol** — separates RETIRED from NEVER SHIPPED.
-4. **Archive adjudication** — `git show 32c10c5:roll2hit-v3.html` (2026-05-24, earliest surviving build,
+4. **Archive adjudication** — `git show 32c10c5:play.html` (2026-05-24, earliest surviving build,
    two days after this report) is the only witness competent to judge what shipped *as specified*.
    All twenty node records, their compass links and their grid coordinates were read from it directly.
 5. **Reachability computation** — `CELL_GRID` rebuilt from `NODE_MAP` declaration order and `NODE_COORDS`

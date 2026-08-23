@@ -4,10 +4,10 @@
 
 ### Applied World Architecture — Automated Graph Construction Pipeline
 
-**Project:** roll2hit-v3.html — *The Shattered Codex*
+**Project:** play.html — *The Shattered Codex*
 **Command:** `./api.sh reweave --execute` · **Endpoint:** `POST /api/graph/reweave-all` (streaming, no timeout)
-**Date:** 2026-06-09 · **Author:** Roll2Hit Engineering
-**Verification pass:** §DOC-02au, 2026-08-13 — re-measured against live `roll2hit-v3.html` and against
+**Date:** 2026-06-09 · **Author:** CodexOfConquest Engineering
+**Verification pass:** §DOC-02au, 2026-08-13 — re-measured against live `play.html` and against
 the birth commit `1bfe7a6` (2026-06-09 17:36), ~2 h after this file's mtime.
 
 > **Status: RETIRED as a procedure, and its safety table was never true.** The ~3,200-line pipeline

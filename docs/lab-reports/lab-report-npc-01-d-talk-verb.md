@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §NPC-01-D: A Talk Verb to Make Favor Reachable at Scale
 
-**Original:** 2026-07-23 · design-lock, pre-implementation · subject `roll2hit-v3.html` @ `4acafa0` (37,913 lines)
+**Original:** 2026-07-23 · design-lock, pre-implementation · subject `play.html` @ `4acafa0` (37,913 lines)
 **Verified & rewritten:** 2026-08-21 (§DOC-02ck) against HEAD (38,712 lines) — 152 → 174 lines: the code
 blocks came out, the measurements went in. The only §DOC-02 rewrite so far that grew, because the original
 was already lean and had never been checked against the build it shipped from.
@@ -30,7 +30,7 @@ screen.*
 ## I. Method
 
 Line numbers were scored against the **parent build**: `4acafa0` is docs-only, so
-`git show 4acafa0:roll2hit-v3.html` is byte-identical to the file the author read. Counts were re-derived
+`git show 4acafa0:play.html` is byte-identical to the file the author read. Counts were re-derived
 with the real parser (`src/js/wbapi-core.js`), never a line regex. Reach and render were **executed in a browser
 at HEAD**, because reading source cannot tell a painted branch from an unreached one.
 

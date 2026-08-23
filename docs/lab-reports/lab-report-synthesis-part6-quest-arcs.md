@@ -2,7 +2,7 @@
 
 # Lab Report Synthesis — Part 6: Quest Arcs
 
-**Cross-reference of fourteen quest-arc lab reports against `roll2hit-v3.html`**
+**Cross-reference of fourteen quest-arc lab reports against `play.html`**
 **Written:** 2026-06-16 · **Stated baseline:** 33,721 lines · **Source reports:** 14
 **Verified:** 2026-08-14 (§DOC-02bg) · **Reference build:** `89fa13b` (2026-06-16 12:20:47, 33,721 lines — *the stated baseline is exact*) · **HEAD:** 38,712 lines
 
@@ -51,7 +51,7 @@ this document that fully survived contact with two more months of engine.
 
 ## II. Method
 
-1. Reconstruct the build the document was written against (`git show 89fa13b:roll2hit-v3.html`);
+1. Reconstruct the build the document was written against (`git show 89fa13b:play.html`);
    confirm the stated line count. **33,721 — exact.**
 2. Batch-census every backticked identifier (177 tokens) against the reference build **and** HEAD in
    one pass, before reading a line of prose.

@@ -195,7 +195,7 @@ Six behaviours were specified; they shipped as **three** test bodies in
 ## 9. Verification record (§DOC-02, 2026-08-22)
 
 **Method.** Pinned parent `f53b249` and ship `4af74b4` extracted with `git show`; a ship-day tree
-rebuilt with `git archive 4af74b4 scripts js package.json roll2hit-v3.html tests playwright.config.js`
+rebuilt with `git archive 4af74b4 scripts js package.json play.html tests playwright.config.js`
 and the repo's `node_modules` symlinked, so the day's own tooling runs as it ran; HEAD probed in
 Chromium through Playwright.
 
@@ -357,8 +357,8 @@ gets to write down in a language the tools can read.*
 ## 13. Reproduction
 
 ```bash
-git show f53b249:roll2hit-v3.html   > parent.html          # pinned parent
-git archive 4af74b4 scripts js package.json roll2hit-v3.html tests playwright.config.js \
+git show f53b249:play.html   > parent.html          # pinned parent
+git archive 4af74b4 scripts js package.json play.html tests playwright.config.js \
   | tar -x -C shipworld && ln -sfn "$PWD/node_modules" shipworld/node_modules
 cd shipworld && npx playwright test src/tests/integration/warrants-board.test.js        # 21/21
 npx playwright test src/tests/integration/quest-runtime-uqf.test.js -g "type:combat"    # RED at ship

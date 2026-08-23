@@ -4,7 +4,7 @@
 
 **Sections:** §WALK-1 (junction deletion) · §WALK-1.5 (geo re-projection) · §WALK-2 (unified mover) · §WALK-3 (reweave recast) · §WALK-4 (invariant suite) · §WALK-5 (MUD harness)
 **Date:** 2026-06-25 · **Original status:** 🔒 SPEC — data shapes locked before any HTML/server edit
-**Verified:** 2026-08-14 (§DOC-02bk) — re-measured against live `roll2hit-v3.html` (38,712 lines, 416 nodes) and `src/js/wbapi-server.js`
+**Verified:** 2026-08-14 (§DOC-02bk) — re-measured against live `play.html` (38,712 lines, 416 nodes) and `src/js/wbapi-server.js`
 **Verdict:** ✅ **FULLY SHIPPED.** Every step closed inside 20 hours of the lock. One design element (`FERRY_EDGES`) shipped and was then deliberately deleted; one background figure was wrong when written.
 
 > *History note (§DX-01e): the bare `file:line` citations in the original are 2026-06 pointers into a
@@ -15,7 +15,7 @@
 
 ## Abstract
 
-This report locked the data shapes and module boundaries for a redesign of the Roll2Hit navigation
+This report locked the data shapes and module boundaries for a redesign of the CodexOfConquest navigation
 core: one source of movement truth, shared by the single-player client and the multiplayer (MUD)
 server, sitting on a **geographic terrain field** — an equirectangular 1° lat/lon grid (360 cols ×
 90 rows, band 70°N→20°S) where the grid cell *is* the geographic bin — instead of a graph of stored

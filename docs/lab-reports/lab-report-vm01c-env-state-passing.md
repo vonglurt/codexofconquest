@@ -8,7 +8,7 @@
 **Status:** design LOCKED → SHIPPED `c22f4f0` (2026-07-22) · **verified 30 days on, §12**
 **Author decision on file (BACKLOG §VM-01-C 🟠 ASK):** *flag registry — defer.* The user chose the pure `_ENV` refactor; the enumerable-namespace / typo→error registry lands in §VM-01-E instead, as a static check rather than a runtime throw (§7.3).
 
-> **§DOC-02co verification pass — 2026-08-21.** Re-measured against live `roll2hit-v3.html` (**38,712** lines), against the ship build `c22f4f0` (**37,694**) and its parent (**37,618**), 30 days and six increments after the ship. Original text 152 lines; this rewrite is the same lock, shortened, with an anchor ledger, a spec→shipped delta table and an errata section. **Nothing was deleted for being wrong** — a claim that did not hold is marked and kept.
+> **§DOC-02co verification pass — 2026-08-21.** Re-measured against live `play.html` (**38,712** lines), against the ship build `c22f4f0` (**37,694**) and its parent (**37,618**), 30 days and six increments after the ship. Original text 152 lines; this rewrite is the same lock, shortened, with an anchor ledger, a spec→shipped delta table and an errata section. **Nothing was deleted for being wrong** — a claim that did not hold is marked and kept.
 
 ---
 

@@ -2,7 +2,7 @@
 # Lab Report — §BOARD-01 *The Warrant's Board*: rumor/bounty discovery
 
 **Class:** design lock (IEEE-format spec written *before* implementation) · **Verified:** §DOC-02cv, 2026-08-22
-**Original date:** 2026-07-21 · **Measured against:** `roll2hit-v3.html` @ `43bd09c` (`ENGINE_VER = r2h-3.104.0`, 37,271 lines) — *all three figures re-checked exact*
+**Original date:** 2026-07-21 · **Measured against:** `play.html` @ `43bd09c` (`ENGINE_VER = r2h-3.104.0`, 37,271 lines) — *all three figures re-checked exact*
 **Shipped:** `8dcca67` 2026-07-21 09:41, **the same commit that added this report** · **Pinned parent:** `8dcca67^` = `43bd09c`
 **Parent seed:** `potential.md` §POT-H1 (prompts 11 · 31 · 35), with §POT-S1 "Bounty board" merged into it · **Track:** BACKLOG.md §BOARD-01
 **Children (all eight extend this report):** FU1/FU2 `8b6327c` · FU3 `89133c4` · FU4/FU5 `8b12ed1` · FU6 `f7350b0`/`4878c3c`/`5a0cfdc`/`dbf62e0` · FU7 `e0051a8` (`lab-report-warrant-standing.md`) · FU8 `4af74b4` (`lab-report-void-tide-bounties.md`) · VOID-GATE `37f8ccb` · Inc C `0b7ba4a`
@@ -103,7 +103,7 @@ Sibling of §PLAY-01's Curse of Knowledge, and the same shape.
 comments promising it is absent.
 
 > ⚠ **C2 SHIPPED AS CODE AND HAS NEVER BEEN USED — at ship, and at HEAD thirty-two days later.**
-> The only occurrence of `board:` anywhere in `roll2hit-v3.html` is the comment describing it. Every
+> The only occurrence of `board:` anywhere in `play.html` is the comment describing it. Every
 > host is a host because `sleep === true`; the opt-in and the suppression have both been theoretical
 > since the day they were written. **The report retired one zero-author seam by adding another** —
 > and it is the same zero-author seam it opens by diagnosing in §1. *Latent capability is only a
@@ -222,7 +222,7 @@ asserted in §6, tested in §9, and **passes on the rebuilt ship-day tree**.
 
 ## 7. Implementation surface — spec → shipped delta
 
-**Scope fence:** 7 files, **2 hunks in `roll2hit-v3.html`, +90/−0** — purely additive, exactly the
+**Scope fence:** 7 files, **2 hunks in `play.html`, +90/−0** — purely additive, exactly the
 commit's claim. Both hunk headers name a function §7 named.
 
 | §7 block | Specified | Shipped at `8dcca67` | Delta |

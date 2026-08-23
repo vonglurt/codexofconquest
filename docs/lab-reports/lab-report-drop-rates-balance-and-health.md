@@ -2,7 +2,7 @@
 
 # Drop Rate Calibration, Health Economy, and the Rest Architecture in *The Shattered Codex*
 
-**Roll2Hit v3 — Laboratory Report**
+**CodexOfConquest v3 — Laboratory Report**
 **Classification:** Game Balance · Economy Design · Rest Mechanics
 **Written:** 2026-05-21 · **Verified against HEAD:** 2026-08-11 (§DOC-02j)
 **Status:** Design specification — **verified, corrected, and re-scored**
@@ -302,7 +302,7 @@ live 50 gp price.
 
 ---
 
-*Report written 2026-05-21 · verified against `roll2hit-v3.html` 2026-08-11 (§DOC-02j)*
+*Report written 2026-05-21 · verified against `play.html` 2026-08-11 (§DOC-02j)*
 *Design intent preserved verbatim; every measured claim re-scored against the live file.*
 
 ---

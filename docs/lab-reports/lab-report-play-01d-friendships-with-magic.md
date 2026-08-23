@@ -76,7 +76,7 @@ character every player meets on turn one *choose* to hand it over.
 
 ## II. Method
 
-1. Pin the parent build (`git show a52f9cd:roll2hit-v3.html`) and the ship (`cfdeb21`); score
+1. Pin the parent build (`git show a52f9cd:play.html`) and the ship (`cfdeb21`); score
    every cited line number against **both**, because a report that documents its own fix is
    written across two builds.
 2. `git diff cfdeb21 HEAD` over the report and over its acceptance test.

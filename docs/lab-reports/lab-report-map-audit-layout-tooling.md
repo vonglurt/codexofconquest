@@ -242,7 +242,7 @@ the audit rules were written.
 body `{}` (fix all)."*
 
 **The finding is exact. The repair never happened.** Measured across every commit touching
-`roll2hit-v3.html` from 06-04 18:02 to 06-05 20:47, the one-way count is:
+`play.html` from 06-04 18:02 to 06-05 20:47, the one-way count is:
 
 ```
 36 36 36 36 … 36 37 36 36 36 36   (06-04 18:02 → 20:47)
@@ -252,13 +252,13 @@ body `{}` (fix all)."*
 **It is never 0, and never below 36.** The mechanism is three lines of the handler:
 
 ```js
-const stamp = WBAPI.getStampedName();   // → "roll2hit-v3-20260604-202700.html"
+const stamp = WBAPI.getStampedName();   // → "play-20260604-202700.html"
 const sv    = WBAPI.save(stamp);        // wbapi-core.js:573 → dest = stamp → writeFileSync(dest)
 await WBAPI.load(stamp);                // the server now serves the dated sibling
 ```
 
 `save(outputPath)` writes to `outputPath`. The handler passes it a **timestamped filename**. All 36
-back-links were written correctly — into `roll2hit-v3-20260604-<hhmmss>.html` — and the response
+back-links were written correctly — into `play-20260604-<hhmmss>.html` — and the response
 returned `ok:true, saved:true, note:'Changes saved and reloaded.'` while the game file was never
 touched. The diagonal fix in the same session persisted only because it had been done **by hand** at
 `7f640ab`, nine minutes before the endpoint that would have done it existed.

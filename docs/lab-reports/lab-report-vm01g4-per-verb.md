@@ -3,7 +3,7 @@
 
 > **Status: CLOSED — design locked `f340143` 2026-08-04 · ask answered (refuse-at-click) ·
 > G4a `b905733` · G4b `f7a60a5` · G4c `4c2a831` · G4d `b0c2478`, all shipped 2026-08-04/05.**
-> **Verified against live `roll2hit-v3.html` on 2026-08-23 (§DOC-02dc)** — 618 → this. The design
+> **Verified against live `play.html` on 2026-08-23 (§DOC-02dc)** — 618 → this. The design
 > pass and its four ship addenda are compressed into §3–§7; every surviving number is re-measured,
 > every dead one is marked. Parent: [`lab-report-vm01g-migration-front.md`](lab-report-vm01g-migration-front.md)
 > (verified 2026-08-23, §DOC-02db). Policy: **Host/Script Separation** + **Lab Report Policy**
@@ -71,7 +71,7 @@ honour it.
 
 Read all 22 blocks end to end at `ca0113c`; no sampling. Verification (2026-08-23) added: every
 named symbol through one batched `grep -c`; each re-measurement figure re-derived **at its own cited hash**
-via `git show <hash>:roll2hit-v3.html`; the six test files run at HEAD rather than trusted from the
+via `git show <hash>:play.html`; the six test files run at HEAD rather than trusted from the
 ship record; and `git log -S` on the one symbol whose stated rationale looked wrong.
 
 **Citation convention.** Section numbers of the form §4, §9.1, §9.3, §10, §12⅞ refer to the
@@ -305,7 +305,7 @@ about the numbers it takes from the file and casual about the ones it takes from
 - **§DX-02fv 🟡** — the three unsliced D2 surfaces (Memory Gate · Prior Carrier · TL Vonn), and the
   status line that calls the plan COMPLETE without them. One design call: slice them, or record them
   as deliberately-inline with a reason.
-- **§DX-02fw 🟢** — the wrong `favor` rationale in the shipped comment at `roll2hit-v3.html` l. 34361
+- **§DX-02fw 🟢** — the wrong `favor` rationale in the shipped comment at `play.html` l. 34361
   (and §12⅞ of this report, corrected here). Keep `set:1`; fix the reason.
 - **§VM-01-G4c-FU** — ask 3 amended in place: the second-consumer bar is already met (N5), and the
   ask states two different bars. Asks 1 and 2 stand as filed; ask 2 is now the track's most expensive

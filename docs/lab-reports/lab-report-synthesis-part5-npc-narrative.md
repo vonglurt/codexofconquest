@@ -2,7 +2,7 @@
 
 # Lab Report Synthesis — Part 5: NPC & Narrative
 
-**Cross-reference of eight NPC/narrative lab reports against `roll2hit-v3.html`**
+**Cross-reference of eight NPC/narrative lab reports against `play.html`**
 **Written:** 2026-06-16 · **Reference build:** `89fa13b` (33,721 lines — the stated baseline, exact)
 **Verified:** 2026-08-14 (§DOC-02bf) · **Source reports:** 8
 
@@ -32,7 +32,7 @@ choosing people over efficiency."*
 
 ## I. Method
 
-1. Extract the reference build (`git show 89fa13b:roll2hit-v3.html`) and resolve every line
+1. Extract the reference build (`git show 89fa13b:play.html`) and resolve every line
    citation against it, not against HEAD (instrument 18 — HEAD cannot adjudicate a claim
    about 2026-06-16).
 2. Score each cited symbol again at HEAD to separate **stale** from **wrong when written**.
@@ -288,7 +288,7 @@ pointed slightly wrong, and §EPIC-01 is the row that straightens it.
 ## VII. Verification Record (§DOC-02bf, 2026-08-14)
 
 - **Reference:** `89fa13b` (2026-06-16 12:20:47, 33,721 lines — exact). File mtime `14:04:08`,
-  commit `2d7d625` at `14:04:42`: a **34-second** birth window; `roll2hit-v3.html` untouched
+  commit `2d7d625` at `14:04:42`: a **34-second** birth window; `play.html` untouched
   between the two.
 - **Citations:** 46 total — 43 exact, 2 landing on the marker/comment line immediately above the
   named construct (`NPC_DIALOGUES` 9,146→9,147; `AMS` 8,028→8,029), 1 pointing at a real line that

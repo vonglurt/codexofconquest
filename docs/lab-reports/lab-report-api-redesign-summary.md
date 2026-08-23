@@ -2,14 +2,14 @@
 
 # API Redesign & Worldbuilder Map Repair — Session Summary
 
-**Roll2Hit World Builder — Engineering Report**
+**CodexOfConquest World Builder — Engineering Report**
 *2026-06-09*
 
 ---
 
 ## Overview
 
-This report documents the complete redesign of the Roll2Hit world-building API,
+This report documents the complete redesign of the CodexOfConquest world-building API,
 the addition of map visualization and repair utilities, and the alignment of
 Worldbuilder.html with the new api.sh-first workflow.
 

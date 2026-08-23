@@ -4,7 +4,7 @@
 ### Narrative Architecture for the Full Story Arc — Specification and Post-Ship Verification
 
 **Original date:** 2026-05-22 · **Verified against HEAD:** 2026-08-12 (§DOC-02p)
-**Subject:** `roll2hit-v3.html` — story-mode narrative layer (Layer 40)
+**Subject:** `play.html` — story-mode narrative layer (Layer 40)
 **Frameworks applied at authoring time:** D&D 5-step quest template (Tales Arcane) · one-shot
 modular pacing · Steven Pinker's *Curse of Knowledge* as writing principle **and** theme · the
 Epic Battlegrounds as the testing ground.
@@ -86,7 +86,7 @@ Per the §DOC-02 house method, in order:
    a line of the source — the document is partitioned into live and dead claims first.
 2. **Instrument 4 (`git log -S`).** Applied to every dead symbol, to separate **RETIRED** (shipped,
    later removed) from **NOT SHIPPED** (never existed under that name).
-3. **Instrument 8 (the archive).** `git show 32c10c5:roll2hit-v3.html` — HEAD cannot adjudicate a
+3. **Instrument 8 (the archive).** `git show 32c10c5:play.html` — HEAD cannot adjudicate a
    claim about 2026-05-22. Run **before** writing any code-is-dead row: a dead node code is evidence
    of a rename until proven otherwise.
 4. **Instrument 12 (copy-vs-compose).** Passages the author could **copy** are scored separately

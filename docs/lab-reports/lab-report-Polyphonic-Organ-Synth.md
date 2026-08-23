@@ -5,7 +5,7 @@
 
 **Filed:** 2026-05-24 · **Ship commit:** `030c446` (2026-05-24 19:20) · **Path today:** `src/sources/5thOrgan.html`, moved from the repo root by `5e48dd7`
 **Verified:** 2026-08-12 (§DOC-02ad) — every claim below re-measured against the live file. Original 573 lines.
-**Status:** ✅ The synthesizer shipped and works. ⛔ **The game feature it was built to become did not** — `roll2hit-v3.html` contains zero Web Audio and is silent (Finding 1).
+**Status:** ✅ The synthesizer shipped and works. ⛔ **The game feature it was built to become did not** — `play.html` contains zero Web Audio and is silent (Finding 1).
 
 ---
 
@@ -33,11 +33,11 @@ x(t) = Σ_{n=1}^{N} A_n · sin(2π · n · f₀ · t + φ_n)
 
 and for an organ the phases `φ_n` are approximately zero — all partials speak together on key-down — leaving only the amplitudes to specify.
 
-**Why that matters to `roll2hit-v3.html` specifically.** The game is one static HTML file with no build step and no server at play time (prompt.md §0). Every conventional soundtrack option breaks that constraint: `.mp3` assets need files to fetch, a library needs a CDN, a tracker needs a decoder. An additive organ needs **none of it** — the score is a small array of integers and the instrument is arithmetic. It is the only music architecture that fits the game's own single-file invariant, which is why this shape was chosen.
+**Why that matters to `play.html` specifically.** The game is one static HTML file with no build step and no server at play time (prompt.md §0). Every conventional soundtrack option breaks that constraint: `.mp3` assets need files to fetch, a library needs a CDN, a tracker needs a decoder. An additive organ needs **none of it** — the score is a small array of integers and the instrument is arithmetic. It is the only music architecture that fits the game's own single-file invariant, which is why this shape was chosen.
 
 **What the feature adds to play.** Three things the game currently has no mechanism for:
 
-1. **Continuous tonal presence under a turn-based loop.** roll2hit is read-and-click: node text, a Ceremonia roll, a battle round. Nothing sustains between clicks, so pacing lives entirely in the prose. A held organ chord is the cheapest possible continuity — it makes a pause feel like a held breath instead of a stall.
+1. **Continuous tonal presence under a turn-based loop.** codexofconquest is read-and-click: node text, a Ceremonia roll, a battle round. Nothing sustains between clicks, so pacing lives entirely in the prose. A held organ chord is the cheapest possible continuity — it makes a pause feel like a held breath instead of a stall.
 2. **State expressed as timbre rather than as another text strip.** The parameters are already the right dials. Void pressure could open the harmonic falloff (bright, buzzy, wrong); act progression could add upper stops; the doom clock's approach to Day 49 could drop the filter cutoff until the world sounds muffled. That is diegetic feedback costing the player no screen space — and screen space is the scarce resource in a single-column story pane.
 3. **Place with an audible identity.** 416 nodes across 111 terrains are distinguished by prose alone today. A short registration per region is a second axis of location, essentially free: one motif array per terrain family.
 
@@ -54,7 +54,7 @@ and for an organ the phases `φ_n` are approximately zero — all partials speak
 3. Re-derive every stated number rather than re-reading it: harmonic amplitudes, MIDI frequencies, note durations, loop arithmetic, filter response, Taylor-series error.
 4. Simulate the two behavioural claims that cannot be read off a line — canon collision across the full selectable offset range, and the effect of a mid-play tempo change.
 5. Cross-check against the sibling report that specified the design. This located the root cause of Finding 2, which no single-document pass could have found.
-6. Measure the game side: does `roll2hit-v3.html` consume any of it.
+6. Measure the game side: does `play.html` consume any of it.
 
 **Census result: 42 of 55 named identifiers resolve (76 %).** Every one that does not is framed by the report itself as future work or reference material, with two exceptions — `ROUND_OFFSET` and `LOOKAHEAD`/`SCHEDULE_INTERVAL`, named as if they were constants in the file. They are inline literals; the *values* are correct.
 
@@ -352,13 +352,13 @@ Every range and every default matches the markup. Attack and Release apply to th
 | 28 | `actx.resume()` called before scheduling | ✅ exact |
 | 29 | No MIDI keyboard input | ✅ 0 occurrences — correctly stated |
 | 30 | Planned in `ponies-unicorns` §VI | ✅ confirmed — §VI is the organ section |
-| 31 | "Ready for embedding in `roll2hit-v3.html` as an iframe" | ⛔ **never happened** → §AUDIO-01 (Finding 1) |
+| 31 | "Ready for embedding in `play.html` as an iframe" | ⛔ **never happened** → §AUDIO-01 (Finding 1) |
 
 ---
 
 ## XII. Findings
 
-**1 — The game is silent, and that is this report's whole reason for existing.** `roll2hit-v3.html` contains **0** occurrences of `AudioContext`, `createOscillator`, `BiquadFilter`, `AnalyserNode`, `new Audio`, `<audio>` and `iframe`. Its 119 hits for *"sound"* and 21 for *"music"* are all narrative prose — the groan of a chain, the absence of sound where there was too much of it. The instrument was built exactly to the brief and then never connected to the thing it was built for, and the repo reorganization that filed it under `src/sources/` quietly settled the question by placing it among the authoring tools. **Nothing is wrong with the synthesizer.** What is missing is one `<iframe>`, or a ~120-line extraction of the voice pool, plus the design call about what it should play. → **§AUDIO-01**.
+**1 — The game is silent, and that is this report's whole reason for existing.** `play.html` contains **0** occurrences of `AudioContext`, `createOscillator`, `BiquadFilter`, `AnalyserNode`, `new Audio`, `<audio>` and `iframe`. Its 119 hits for *"sound"* and 21 for *"music"* are all narrative prose — the groan of a chain, the absence of sound where there was too much of it. The instrument was built exactly to the brief and then never connected to the thing it was built for, and the repo reorganization that filed it under `src/sources/` quietly settled the question by placing it among the authoring tools. **Nothing is wrong with the synthesizer.** What is missing is one `<iframe>`, or a ~120-line extraction of the voice pool, plus the design call about what it should play. → **§AUDIO-01**.
 
 **2 — The default registration is a Flute labelled Principal.** Measured at 1/n² to within 0.8 %, against a claimed 1/n. The root cause was found by cross-checking the sibling report that specified the drawbars *before* the falloff control existed — a single-document pass could not have reached it. The fix is one of three one-line choices (rebase the drawbars to 1.0, default the falloff to 0, or relabel the default), and the choice belongs to whoever owns the sound. → **§DX-02am**.
 
@@ -450,7 +450,7 @@ function genMotif(seed, len) {
 
 The canon offset keeps a random motif polyphonically interesting regardless of which notes come out, because temporal separation is guaranteed by the offset rather than by the pitch content. Finally, a **pedal layer** sustains chord roots on dedicated slots initialized to `drawbars = [1.0, 0.5, 0, 0, 0, 0]` — fundamental plus octave, no upper harmonics — under the melodic canon.
 
-**If any of this reaches `roll2hit-v3.html`, one house rule attaches:** randomness affecting game state must draw the seeded stream (`S_story.rngState`, mulberry32), never `Math.random()` or `Date.now()` — invariant #6. A soundtrack is cosmetic and therefore exempt; a *generative* soundtrack whose seed is persisted to the save is not.
+**If any of this reaches `play.html`, one house rule attaches:** randomness affecting game state must draw the seeded stream (`S_story.rngState`, mulberry32), never `Math.random()` or `Date.now()` — invariant #6. A soundtrack is cosmetic and therefore exempt; a *generative* soundtrack whose seed is persisted to the save is not.
 
 ### D. Known limitations — verified
 
@@ -467,7 +467,7 @@ The synthesizer succeeds on its own terms and the mathematics behind it is sound
 
 Two of those findings are worth fixing in the instrument itself: a default registration that is a Flute wearing a Principal's label, and a sequencer whose loop reads live controls its event array cannot follow. Both are small.
 
-The one that matters is not in the file at all. This was designed as background music for `roll2hit-v3.html` — *"like a player piano, in the background, as the game is played"* — and 79 days later the game has no audio of any kind. The instrument works. The constraint it was shaped around, one file with no build and no assets, is still the game's constraint. And the dials it exposes are the same dials the game's state already turns: void pressure, act number, the doom clock counting down to Day 49. The remaining work is an iframe and a design call, not a synthesizer.
+The one that matters is not in the file at all. This was designed as background music for `play.html` — *"like a player piano, in the background, as the game is played"* — and 79 days later the game has no audio of any kind. The instrument works. The constraint it was shaped around, one file with no build and no assets, is still the game's constraint. And the dials it exposes are the same dials the game's state already turns: void pressure, act number, the doom clock counting down to Day 49. The remaining work is an iframe and a design call, not a synthesizer.
 
 ---
 

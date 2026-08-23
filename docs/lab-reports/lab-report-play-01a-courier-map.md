@@ -69,7 +69,7 @@ player who already knew the win condition gains a convenience; a player who did 
 Re-verification followed the §DOC-02 instrument set:
 
 1. **Dating (108).** The report has exactly one commit and it *is* the ship commit, so every line
-   citation was scored against the parent tree `git show ec3fd36:roll2hit-v3.html`, never HEAD.
+   citation was scored against the parent tree `git show ec3fd36:play.html`, never HEAD.
    `git diff b46d3f0 HEAD -- <this file>` is empty: the text below is the text that shipped.
 2. **Provenance (4).** `git log -S <symbol> --all` with no pathspec on every symbol, to separate
    *retired* from *never shipped*.
@@ -342,13 +342,13 @@ Measured rather than asserted, 37 days on:
 - **Live probes (88, 117).** Three throwaway Playwright specs driving the real functions — day-leg
   colour sweep across nine days on both surfaces; the two-consecutive-`storyNewGame` sequence with
   `hasOwnProperty` checks against `_S_DEFAULTS()`; and a computed-style pass for the contrast
-  figures. All run against `roll2hit-v3.html` at HEAD, recorded above, and deleted.
+  figures. All run against `play.html` at HEAD, recorded above, and deleted.
 - **Scope.** Seven HTML hunks in the ship commit, read individually; zero mechanic writes.
 - **Gates.** `npm run check:walk` chain reached `check:anchors` and `check:legacycodes` — every
   gate exit 0. `check:anchors` **3,660 → 3,707 across 88 → 89 docs** (this report joined the
   anchored set; it previously carried none), **0 dead**, 117 stale = unchanged baseline. The +47
   is 36 in this report and 11 in the two new rows, counted after the §RESUME entry was written.
-- **Untouched.** `roll2hit-v3.html` was not modified by this re-verification. The only working-tree
+- **Untouched.** `play.html` was not modified by this re-verification. The only working-tree
   change present is the user's 2026-08-06 palette recolor, still exactly 9 additions / 9 deletions.
 
 **Corrections applied to other documents.** `plan-archive.md` §PLAY-01-A repeats both false claims

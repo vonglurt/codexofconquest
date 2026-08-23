@@ -7,7 +7,7 @@
 #     server/schema.  Kept for reference only — do not run without review.
 #     Import history: BACKLOG.md / plan-archive.md / 1367-sources/.
 # ═══════════════════════════════════════════════════════════════════════════
-"""Import LHR (Beowulf) — 7 cycles, 35 quest acts into roll2hit via WBAPI."""
+"""Import LHR (Beowulf) — 7 cycles, 35 quest acts into codexofconquest via WBAPI."""
 import json, time, subprocess, sys
 
 BASE = "http://localhost:1367"

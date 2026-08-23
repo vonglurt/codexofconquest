@@ -202,7 +202,7 @@ say "── cleanup-cruft ($([ "$DRY_RUN" -eq 1 ] && echo DRY-RUN || echo execut
 # 1. build/milepoints/patches/*.patch (+ matching .patch.log)
 if [ -d build/milepoints/patches ]; then
   patches=()
-  while IFS= read -r line; do patches+=("$line"); done < <(find build/milepoints/patches -maxdepth 1 -name 'roll2hit-v3-*.patch' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
+  while IFS= read -r line; do patches+=("$line"); done < <(find build/milepoints/patches -maxdepth 1 -name 'play-*.patch' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
   if [ "${#patches[@]}" -gt 0 ]; then
     prune_keep_newest "$KEEP_PATCHES" "build/milepoints/patches/*.patch" "${patches[@]}"
   else
@@ -210,7 +210,7 @@ if [ -d build/milepoints/patches ]; then
   fi
   # Always sweep .patch.log alongside their .patch (if they outnumber retention)
   logs=()
-  while IFS= read -r line; do logs+=("$line"); done < <(find build/milepoints/patches -maxdepth 1 -name 'roll2hit-v3-*.patch.log' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
+  while IFS= read -r line; do logs+=("$line"); done < <(find build/milepoints/patches -maxdepth 1 -name 'play-*.patch.log' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
   if [ "${#logs[@]}" -gt 0 ]; then
     prune_keep_newest "$KEEP_PATCHES" "build/milepoints/patches/*.patch.log" "${logs[@]}"
   fi
@@ -240,11 +240,11 @@ fi
 
 # 4. root-level stamped HTML snapshots (saveAndRestart leftovers)
 snaps=()
-while IFS= read -r line; do snaps+=("$line"); done < <(find . -maxdepth 1 -name 'roll2hit-v3-*.html' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
+while IFS= read -r line; do snaps+=("$line"); done < <(find . -maxdepth 1 -name 'play-*.html' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
 if [ "${#snaps[@]}" -gt 0 ]; then
-  prune_keep_newest "$KEEP_SNAPSHOTS" "roll2hit-v3-*.html" "${snaps[@]}"
+  prune_keep_newest "$KEEP_SNAPSHOTS" "play-*.html" "${snaps[@]}"
 else
-  note "roll2hit-v3-*.html: 0 files"
+  note "play-*.html: 0 files"
 fi
 
 # 5. Cap log sizes (truncate, don't delete — the files are referenced)

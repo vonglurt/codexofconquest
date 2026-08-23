@@ -33,13 +33,13 @@ That distinction is the whole point, and it is not cosmetic. A grammar nobody ca
 
 **Measured at HEAD, ten weeks on.** The game holds **2,853 quests**, of which **27 carry an `itemChain`**, totalling **32 steps** — **29 `grant`, 3 `take`**. Seventeen of those steps carry a rich item field (`bonus`, `readText`, `passive`, weapon stats) that the scalar pipe grammar could never have held; they are reachable only through the per-row **advanced-JSON** input this widget grew four hours later (§6, delta 2). And **29 of 29 grants set `silent:true`**, which is the detail that matters for the player: a migrated reward keeps its hand-written narrative line instead of stacking a generic *"🪵 X obtained."* on top of it. **The prose won.**
 
-**The honest counterweight, in the same breath.** The widget's stated headline gap — `once` — has **0 uses** in the shipped game, and `git log -S "once:false"` returns no commit that ever wrote one into `roll2hit-v3.html`. Two of the four kinds the selector offers, `grantBit` and `takeBit`, likewise have **0 live steps**; their only occurrences in the game file are in the applier's own `switch` and its comments, one of which calls `takeBit` *"the sole author path"* for retiring a mission bit — a sole author path with no authors. **Half the locked vocabulary and the one superset feature are unexercised.** The realised value is concentrated entirely in `grant`, and it is real there.
+**The honest counterweight, in the same breath.** The widget's stated headline gap — `once` — has **0 uses** in the shipped game, and `git log -S "once:false"` returns no commit that ever wrote one into `play.html`. Two of the four kinds the selector offers, `grantBit` and `takeBit`, likewise have **0 live steps**; their only occurrences in the game file are in the applier's own `switch` and its comments, one of which calls `takeBit` *"the sole author path"* for retiring a mission bit — a sole author path with no authors. **Half the locked vocabulary and the one superset feature are unexercised.** The realised value is concentrated entirely in `grant`, and it is real there.
 
 ---
 
 ## 2. Method
 
-Verification ran read-only; `roll2hit-v3.html` was not modified.
+Verification ran read-only; `play.html` was not modified.
 
 1. **Reference build.** The lock commit `2430dd0` itself — it touched only this report and `plan.md`, so its `edit.html` (10,266 lines) is the file the author was reading. All 12 citations were resolved there, not at HEAD.
 2. **Instrument 84 first.** `git diff 2430dd0 HEAD` on this path, to separate prediction from post-hoc correction.
@@ -129,7 +129,7 @@ Citation 8 deserves its own note: it is the only one the author hedged with a `~
 
 ## 7. The finding — "nothing changes on the server" was true of one path and false of the other
 
-> Nothing in `roll2hit-v3.html` / `wbapi-core.js` / `wbapi-server.js` changes. — §preamble
+> Nothing in `play.html` / `wbapi-core.js` / `wbapi-server.js` changes. — §preamble
 > **No data-shape change** → no `check-itemchain.js` change, no server change, no migration. — §6
 
 **The `check-itemchain.js` half is exactly right,** and the boundary is drawn precisely where it belongs: none of the three item-(a) commits touched that gate. It changed only in item **(b)** (`5454543`, `7fc0d8e`) — the migration this report explicitly fenced out of scope.

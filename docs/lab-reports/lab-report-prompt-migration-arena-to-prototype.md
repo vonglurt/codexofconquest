@@ -4,7 +4,7 @@
 
 **A Study in Prompt-Driven Game Engine Development — Verified Against the Live Engine**
 
-**Roll2Hit v3 — Post-Implementation Retrospective**
+**CodexOfConquest v3 — Post-Implementation Retrospective**
 **Series:** Laboratory Reports on Narrative Engine Architecture
 **Classification:** Software Architecture · Game Design · Specification Methodology
 **Written:** 2026-05-21 · **Verified:** 2026-08-12 (§DOC-02af)
@@ -14,7 +14,7 @@
 
 ## Abstract
 
-This report was written to answer a designer's question, not an engineer's: *what did thirteen layers of prompt-driven development actually build, and what did it come to believe?* It traces Roll2Hit from a four-panel combat dice tracker to *The Shattered Codex* — a solo PVE narrative adventure inside one HTML file — and argues that the project's real contribution is **specification gravity**: a family of interlocking documents exerting coherent pressure on every implementation choice. Its thesis is that the game encodes a philosophical position, the **Cooperative DM Principle**, not as flavour text but as arithmetic in the reward formula.
+This report was written to answer a designer's question, not an engineer's: *what did thirteen layers of prompt-driven development actually build, and what did it come to believe?* It traces CodexOfConquest from a four-panel combat dice tracker to *The Shattered Codex* — a solo PVE narrative adventure inside one HTML file — and argues that the project's real contribution is **specification gravity**: a family of interlocking documents exerting coherent pressure on every implementation choice. Its thesis is that the game encodes a philosophical position, the **Cooperative DM Principle**, not as flavour text but as arithmetic in the reward formula.
 
 **The 2026-08-12 verification finds the thesis intact and the arithmetic exact.** `reward = floor(0.1 × AC × maxHP)` is byte-identical after 83 days and a 5.2× growth in file size; so are the 25 %/50 % short-rest heals, the 3-per-day allowance, the 49-day doom clock, the 8-act structure, and the `XP = AC × maxHP` product. The report's *own* measurements survive at a rate the program has rarely seen.
 
@@ -26,7 +26,7 @@ This report was written to answer a designer's question, not an engineer's: *wha
 
 ### I-A. What the project was trying to solve
 
-Roll2Hit began as a response to friction at a real table: tracking a D&D combat encounter in real time, without a second screen or physical dice. The first build was a **tool** — HP bars, a d20 roller, a damage panel, a history log. No state machine, no persistence, no narrative.
+CodexOfConquest began as a response to friction at a real table: tracking a D&D combat encounter in real time, without a second screen or physical dice. The first build was a **tool** — HP bars, a d20 roller, a damage panel, a history log. No state machine, no persistence, no narrative.
 
 One constraint shaped everything after: **a single `.html` file with no external dependencies**, imposed by the deployment target (open in any browser, share as a file, no server). There was nowhere to put complexity except inside the file, which meant complexity had to earn its position.
 
@@ -186,7 +186,7 @@ Twenty-four hours awake imposes **disadvantage on every attack roll**, surfaced 
 
 ### Finding 5 — the report's first two deliverables have never existed in this repository.
 
-`roll2hit.html` and `roll2hit-v2.html` — the Arena and the 3-column refactor, Phases I and II, the *"From Arena"* half of the title — have **0 commits in the entire git history** and are absent from disk. The first commit (`32c10c5`, 2026-05-24) is three days *after* this report and already holds **14,377 lines and 81 nodes**, roughly double the 7,465 lines / 42 nodes recorded here as *"Current State."*
+`codexofconquest.html` and `codexofconquest-v2.html` — the Arena and the 3-column refactor, Phases I and II, the *"From Arena"* half of the title — have **0 commits in the entire git history** and are absent from disk. The first commit (`32c10c5`, 2026-05-24) is three days *after* this report and already holds **14,377 lines and 81 nodes**, roughly double the 7,465 lines / 42 nodes recorded here as *"Current State."*
 
 This is why the three arena function names could be invented without ever being contradicted: **there was no file to check them against.** `rollAttack` / `rollDamage` / `rollEnemyAttack` have 0 commits ever; §VII's "What Stayed" argues that the original dice engine survives untouched and names three functions that never existed under those names. The engine it describes *is* there — `function roll(sides)@6417`, `function rollN@6421`, `function rollD20@6496`, `function rollInitiative@7437`, `function rollMainDamage@7566` — so the **thesis is right and every identifier supporting it is wrong.** Instrument 12 in its purest form: §VII is the report's most narrative section and its only never-shipped one.
 
@@ -268,7 +268,7 @@ The report's 17-row inventory, adjudicated:
 
 ---
 
-*Report written 2026-05-21 · verified against `roll2hit-v3.html` 2026-08-12 (§DOC-02af)*
+*Report written 2026-05-21 · verified against `play.html` 2026-08-12 (§DOC-02af)*
 *Codebase at writing: 7,465 lines, Layers 0–13 (unverifiable — predates the repository)*
 *Codebase at verification: 38,712 lines · 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 8 acts*
 *Philosophy: the Cooperative DM Principle — three of its four invariants still bind*

@@ -6,7 +6,7 @@
 **Written:** 2026-05-25 · **Revised:** 2026-07-07 (§VI bug fix) · **Verified against HEAD:** 2026-08-17 (§DOC-02bz)
 **Layer:** 52 · **Section:** §XVII · **Track:** plan-archive.md §XVII
 **Status:** ✅ Implemented and structurally intact · ⚠️ **not reachable in play** — see §VII
-**Codebase:** `roll2hit-v3.html` (single-file browser RPG)
+**Codebase:** `play.html` (single-file browser RPG)
 
 > **Historical node codes.** Written before the §WALK/§NAV world rewrite renamed every node to
 > airport-style codes. Throughout: **CI → `LHR`** (City Streets — Birka; the Blue Shutters Archive),

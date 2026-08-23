@@ -2,7 +2,7 @@
 
 # Worldbuilder Grid UI — Design Decisions & Usage Guide
 
-**Roll2Hit World Builder — Engineering Report**
+**CodexOfConquest World Builder — Engineering Report**
 *2026-06-09*
 
 ---

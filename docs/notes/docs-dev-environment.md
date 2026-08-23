@@ -1,9 +1,9 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
-# Roll2Hit Developer Environment
+# CodexOfConquest Developer Environment
 
 ## Overview
 
-Roll2Hit is a single-file D&D 5e combat and world-exploration assistant.
+CodexOfConquest is a single-file D&D 5e combat and world-exploration assistant.
 The entire game — monsters, quests, NPCs, nodes, world map, terrain, loot
 tables, fish pools, dialogue trees — lives in one HTML file: `play.html`.
 At 210 MB it is simultaneously a playable web application, a database, and a
@@ -100,7 +100,7 @@ and git commits are reserved for intentional milestones.
 When you save the game file, copy it with a timestamp:
 
 ```bash
-cp play.html roll2hit-v3-$(date +%Y%m%d-%H%M%S).html
+cp play.html play-$(date +%Y%m%d-%H%M%S).html
 # …or ask the server for one:
 ./api.sh save                  # dated backup beside the game file, then overwrite + reload
 ./api.sh snapshots             # what is sitting there right now (they are gitignored)
@@ -136,8 +136,8 @@ milepoints/patches/
   _base.html.gz                      ← first snapshot, gzip-compressed
   _last.html                         ← baseline for next diff
   _last.name                         ← filename of _last.html
-  roll2hit-v3-YYYYMMDD-HHMMSS.patch  ← unified diff: prev → this
-  roll2hit-v3-YYYYMMDD-HHMMSS.patch.log  ← say.log + server log sidecar
+  play-YYYYMMDD-HHMMSS.patch  ← unified diff: prev → this
+  play-YYYYMMDD-HHMMSS.patch.log  ← say.log + server log sidecar
 ```
 
 Each `.patch` file is a standard unified diff. You can replay any session by
@@ -176,8 +176,8 @@ Running `python3 monitor-snapshots.py` does everything:
 ┌─ Monitor-Snapshots ──────────────────────── paulr@sdf.org ─┐
 │ ⏱ 00:12:34   7 patched   watching…                                     │
 │ ● server pid 41203                                                      │
-│ ← roll2hit-v3-20260610-144000.html                                      │
-│ → roll2hit-v3-20260610-145312.html                                      │
+│ ← play-20260610-144000.html                                      │
+│ → play-20260610-145312.html                                      │
 │ ────────────────────────────────────────────────────────────────────── │
 │  @@ -1823,7 +1823,7 @@                                                  │
 │ - hp: 7,                                                                │

@@ -2,9 +2,9 @@
 
 # Lab Report — The Corpus as Architecture
 
-### A Meta-Analysis of the Lab-Report Corpus and Its Structural Relationship to `roll2hit-v3.html`
+### A Meta-Analysis of the Lab-Report Corpus and Its Structural Relationship to `play.html`
 
-**Project:** `roll2hit-v3.html` — single-file HTML5 game engine, MIT License
+**Project:** `play.html` — single-file HTML5 game engine, MIT License
 **Written:** 2026-06-16 15:05 · **Reference build:** `89fa13b` (12:20:47, **33,721 lines — the stated baseline, exact**)
 **Verified:** 2026-08-14 (§DOC-02bi) · **HISTORY document — annotate, never rewrite**
 **Series:** Meta-Documentation · Corpus Analysis · Design Philosophy
@@ -49,7 +49,7 @@ did not.***
 This section is restated and expanded during verification, because the original left its own
 motivation implicit and it is the most durable thing in the document.
 
-**The problem.** `roll2hit-v3.html` is one file. No server, no npm, no CDN, no build step at play
+**The problem.** `play.html` is one file. No server, no npm, no CDN, no build step at play
 time — one HTML file you can email. That constraint is a philosophical statement encoded as an
 engineering requirement, and it produces a specific fragility: **everything is in one scope, so a
 single architectural mistake propagates everywhere and becomes invisible.** There is no module
@@ -84,13 +84,13 @@ of §V below.
 
 ## II. Method (verification pass)
 
-The reference build is `89fa13b` (2026-06-16 12:20:47), the last commit to `roll2hit-v3.html` before
+The reference build is `89fa13b` (2026-06-16 12:20:47), the last commit to `play.html` before
 this report's 15:05:14 mtime. It measures **33,721 lines**, exactly as the report states, so every
 citation is adjudicated *as written* rather than against a build the author never saw.
 
 The corpus itself is measured at `faddace` (14:19:02), the last commit touching `docs/lab-reports/` before
 the same mtime. Corpus claims are checked with `git ls-tree`; game claims with `git show
-<commit>:roll2hit-v3.html`; existence-vs-rename with `git log -S`.
+<commit>:play.html`; existence-vs-rename with `git log -S`.
 
 ---
 
@@ -317,8 +317,8 @@ finding 4 belongs to an open row that already names the mechanism.
 
 ## XI. Conclusion
 
-The corpus is not documentation *of* `roll2hit-v3.html`. It is the mechanism *by which*
-`roll2hit-v3.html` was built. The game needed a way to hold design decisions stable across sessions;
+The corpus is not documentation *of* `play.html`. It is the mechanism *by which*
+`play.html` was built. The game needed a way to hold design decisions stable across sessions;
 the IEEE lab-report format supplied it; the corpus is the accumulated residue.
 
 The stronger hypothesis — that the reports are structurally isomorphic to the game's core loop — also

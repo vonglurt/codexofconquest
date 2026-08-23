@@ -2,7 +2,7 @@
 # src/tools/ — Standalone dev & CLI utilities
 
 Helper scripts that are **not** part of the game runtime or the WBAPI server
-bundle. Nothing in `roll2hit-v3.html` or `wbapi-server.js` depends on these.
+bundle. Nothing in `play.html` or `wbapi-server.js` depends on these.
 
 | File | What it does |
 |------|--------------|

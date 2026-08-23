@@ -2,7 +2,7 @@
 
 # Birka Roots: The Beginner Arc and the NPC Favorability System
 
-**Lab Report — IEEE Style · Roll2Hit: The Shattered Codex (`roll2hit-v3.html`)**
+**Lab Report — IEEE Style · CodexOfConquest: The Shattered Codex (`play.html`)**
 **Original date:** 2026-05-22 · **Classification:** Content Design / Relationship-State Systems
 **Verification pass:** 2026-08-11 (§DOC-02d) — every claim re-measured against HEAD.
 
@@ -42,7 +42,7 @@ identifier drift
 
 ## I. Method
 
-Four measurements, all from HEAD (`roll2hit-v3.html`, 38,707 lines, r2h-3.104.0, 416 nodes / 2,853
+Four measurements, all from HEAD (`play.html`, 38,707 lines, r2h-3.104.0, 416 nodes / 2,853
 quests / 204 NPC profiles):
 
 1. **Symbol census.** Every constant, state field, function, quest id, item name and DOM string the

@@ -102,7 +102,7 @@ GET  /api/session/chat      ?limit=1..200 (default 100), optional &r=&c= cell fi
   `src/js/wbapi-server.js:footprints: footprintsAt(s.r, s.c),@8698` — one entry per player per
   cell, a re-pass refreshing the ts.
 
-### B. Client surface (`roll2hit-v3.html`)
+### B. Client surface (`play.html`)
 
 - Shell: `<div id="map-subtab-bar">@4585` + `function msubSwitch(id) {@36638`, which is a
   pure pane toggle plus one `on-open` hook per pane. 25 test hooks are exported at
@@ -209,7 +209,7 @@ than a feature to postpone. A property has a test; a postponed feature has good 
    round-tripped a PUT, and produced the §DX-02cs 500s.
 
 **Gate state at verification:** `check:anchors` 3,301 anchors / 81 docs, 0 dead (117 stale
-hints = unchanged baseline) · `roll2hit-v3.html` untouched by this pass.
+hints = unchanged baseline) · `play.html` untouched by this pass.
 
 ## VIII. Conclusion
 

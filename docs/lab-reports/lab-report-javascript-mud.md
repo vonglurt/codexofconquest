@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
-# Lab Report — The JavaScript of `roll2hit-v3.html`: Layers, Traces, and the MUD Client
+# Lab Report — The JavaScript of `play.html`: Layers, Traces, and the MUD Client
 
-**Original:** 2026-07-16 · subject `roll2hit-v3.html` @ `43bd09c` (37,271 lines · `ENGINE_VER = 'r2h-3.104.0'`)
+**Original:** 2026-07-16 · subject `play.html` @ `43bd09c` (37,271 lines · `ENGINE_VER = 'r2h-3.104.0'`)
 **Verified & rewritten:** 2026-08-21 (§DOC-02cj) against HEAD (38,712 lines) — 623 → 352 lines
 **Class:** structural read (whole-file code map). Four execution traces: boot, UI, movement, quest acceptance.
 
@@ -29,7 +29,7 @@ the day it was written (§V-C). *The document is more reliable about the engine 
 ## I. Method
 
 Line numbers in the original were scored against the **parent build**, not HEAD: `43bd09c` is docs-only, so
-`git show 43bd09c:roll2hit-v3.html` is byte-identical to the file the author read, and no commit touched the
+`git show 43bd09c:play.html` is byte-identical to the file the author read, and no commit touched the
 HTML between 2026-07-13 and 2026-07-18 — the report's stated date (07-16) and its cited commit (07-14) are
 the same file. Counts were re-derived with the real parser (`src/js/wbapi-core.js`, `W.load(...)`), never a line
 regex. Behavioural claims were **executed in a browser at both builds**, because reading source cannot tell

@@ -490,7 +490,7 @@ select.fi{appearance:none;}
       <div class="wcard" id="wcard-browse">
         <div class="wcard-icon">📂</div>
         <div class="wcard-title">Browse HTML</div>
-        <div class="wcard-desc">Open roll2hit-v3.html from your filesystem.</div>
+        <div class="wcard-desc">Open play.html from your filesystem.</div>
         <div class="wcard-status" id="wcard-browse-status"></div>
       </div>
 
@@ -514,7 +514,7 @@ select.fi{appearance:none;}
 
     <!-- Drop zone strip -->
     <div class="welcome-drop-zone" id="welcome-drop-zone">
-      ⬇ Drop roll2hit-v3.html anywhere on this screen
+      ⬇ Drop play.html anywhere on this screen
     </div>
 
     <!-- Terminal hint for server card -->
@@ -1174,19 +1174,19 @@ select.fi{appearance:none;}
       <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;flex:1">World Statistics</div>
       <button class="btn" id="btn-stats-refresh" style="font-size:11px" disabled>↺ Refresh from Server</button>
     </div>
-    <div id="stats-empty" class="empty"><h2>Load a game file</h2><p>Open roll2hit-v3.html to see world statistics.</p></div>
+    <div id="stats-empty" class="empty"><h2>Load a game file</h2><p>Open play.html to see world statistics.</p></div>
     <div id="stats-content" style="display:none;flex-direction:column;gap:14px"></div>
   </div>
 
   <!-- ═══ BUILDER ═══ -->
   <div class="panel" id="tab-builder" style="overflow-y:auto;padding:16px;flex-direction:column;gap:0">
-    <div id="builder-empty" class="empty"><h2>Load a game file</h2><p>Open roll2hit-v3.html to use the Builder.</p></div>
+    <div id="builder-empty" class="empty"><h2>Load a game file</h2><p>Open play.html to use the Builder.</p></div>
     <div id="builder-content" style="display:none;flex-direction:column;gap:0"></div>
   </div>
 
   <!-- ═══ WIZARD ═══ -->
   <div class="panel" id="tab-wizard" style="overflow-y:auto;padding:0;flex-direction:column;">
-    <div id="wizard-empty" class="empty"><h2>Load a game file</h2><p>Open roll2hit-v3.html to use the Wizard.</p></div>
+    <div id="wizard-empty" class="empty"><h2>Load a game file</h2><p>Open play.html to use the Wizard.</p></div>
     <div id="wizard-content" style="display:none;" class="wiz-wrap">
 
       <!-- Progress dots -->
@@ -1383,7 +1383,7 @@ select.fi{appearance:none;}
       <!-- ── Step 6: Review + Create ── -->
       <div class="wiz-step" id="wstep-6">
         <div class="wiz-title">Review &amp; Create</div>
-        <div class="wiz-subtitle">Check the generated objects below, then click Create to fire the API calls in sequence. Each section shows the JS literal that will be inserted into roll2hit-v3.html.</div>
+        <div class="wiz-subtitle">Check the generated objects below, then click Create to fire the API calls in sequence. Each section shows the JS literal that will be inserted into play.html.</div>
 
         <div id="wiz-review-sections"></div>
 
@@ -3099,7 +3099,7 @@ function renderDiffPanel(){
   $('patch-out').value=DIFF.patch();
 }
 $('btn-copy-patch').addEventListener('click',()=>{ navigator.clipboard.writeText($('patch-out').value); $('btn-copy-patch').textContent='Copied!'; setTimeout(()=>$('btn-copy-patch').textContent='Copy',1500); });
-$('btn-dl-patch').addEventListener('click',()=>{ dl(DIFF.patch(),`roll2hit-patch-${Date.now()}.patch.js`,'text/javascript'); });
+$('btn-dl-patch').addEventListener('click',()=>{ dl(DIFF.patch(),`codexofconquest-patch-${Date.now()}.patch.js`,'text/javascript'); });
 $('btn-apply-patch').addEventListener('click', async () => {
   if (!_rawSource) { alert('No source loaded.'); return; }
   if (SERVER.active) {
@@ -3128,7 +3128,7 @@ $('btn-apply-patch').addEventListener('click', async () => {
     const i = _rawSource.indexOf(anchor);
     if (i === -1) { alert('Cannot find insertion point.'); return; }
     const patched = _rawSource.slice(0, i+anchor.length) + '\n\n// ── Applied Patch ──\n' + DIFF.patch() + '\n' + _rawSource.slice(i+anchor.length);
-    dl(patched, 'roll2hit-v3-patched.html', 'text/html');
+    dl(patched, 'play-patched.html', 'text/html');
   }
 });
 function dl(content,filename,type){
@@ -4478,7 +4478,7 @@ $('btn-skill-check').addEventListener('click',()=>{
 
 // ═══════════════════════════════════════════════════════════════════════════
 // FISHING SIM (Easter Egg — Yugurt Lake)
-// Mirrors fishing mechanics from roll2hit-v3.html §Fishing
+// Mirrors fishing mechanics from play.html §Fishing
 // ═══════════════════════════════════════════════════════════════════════════
 (()=>{
   const FS_API = 'http://localhost:1367/api';
@@ -5300,7 +5300,7 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
 // API Tab
 // ═══════════════════════════════════════════════════════════════════════════
 const API_SCHEMAS = {
-  // Source of truth: roll2hit-v3.html data sections
+  // Source of truth: play.html data sections
   node:    `── NODE_MAP (144 nodes) ──────────────────────────────────────
 code*        string   Node ID (CI, CY…). Immutable; use MOVE to rename.
 label*       string   Display name shown on map + in game dialogue.
@@ -5385,7 +5385,7 @@ GET /api/schema/node       → node fields + notes
 GET /api/schema/quest      → quest fields (incl. non-editable fns)
 GET /api/schema/npc        → NPC fields + dialogue structure
 ──────────────────────────────────────────────────────────────
-Source of truth: roll2hit-v3.html anchor sections.
+Source of truth: play.html anchor sections.
 _anchors field in response lists each section's start marker.`,
 };
 
@@ -8055,7 +8055,7 @@ window._onServerActivated = () => {
     logLine('info', 'POST /api/save…');
     try {
       const r = await fetch(`${FS_API}/save`, { method:'POST' });
-      if (r.ok) logLine('ok', '✓ Saved to roll2hit-v3.html');
+      if (r.ok) logLine('ok', '✓ Saved to play.html');
       else { logLine('err', `✗ Save failed: ${r.status}`); allOk=false; }
     } catch(e){ logLine('err',`✗ Network error: ${e.message}`); allOk=false; }
 
@@ -10542,11 +10542,11 @@ window.__walkG = {
   <div id="mesh-dl-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);z-index:900;align-items:center;justify-content:center">
     <div style="max-width:560px;background:var(--panel,#16131c);border:2px solid var(--red,#e05555);border-radius:10px;padding:22px 26px;font-size:12px;line-height:1.75">
       <div style="font-size:15px;font-weight:800;color:var(--red,#e05555);margin-bottom:10px">⚠️ YOU ARE ABOUT TO DOWNLOAD SOMEONE ELSE'S CODE</div>
-      <p>A Roll2Hit world is a <b>complete HTML + JavaScript program</b>, not just data.
+      <p>A CodexOfConquest world is a <b>complete HTML + JavaScript program</b>, not just data.
          You are about to fetch it from <b id="mesh-dl-addr"></b>.</p>
       <p style="margin-top:8px"><b>Before you ever open it:</b></p>
       <ol style="margin:6px 0 6px 18px">
-        <li>Run <code>node src/scripts/world-diff.js roll2hit-v3.html &lt;downloaded file&gt;</code> —
+        <li>Run <code>node src/scripts/world-diff.js play.html &lt;downloaded file&gt;</code> —
             it shows the <b>modification set</b> per collection and prints a loud
             <b>CODE DIFFERS</b> block if any JavaScript changed. Review every non-data change by hand.</li>
         <li>It is <b>MIT-licensed</b> — attribution carries with the file.</li>
@@ -10651,7 +10651,7 @@ window.__walkG = {
       a.download = `world-${sid.slice(0, 8)}-${wh}.html`;
       a.click();
       URL.revokeObjectURL(a.href);
-      st.innerHTML = `Saved as <b>${a.download}</b> — now run: <code>node src/scripts/world-diff.js roll2hit-v3.html ~/Downloads/${a.download}</code>`;
+      st.innerHTML = `Saved as <b>${a.download}</b> — now run: <code>node src/scripts/world-diff.js play.html ~/Downloads/${a.download}</code>`;
     } catch (e) {
       st.textContent = `Download failed: ${e.message}`;
     }

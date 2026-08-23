@@ -6,7 +6,7 @@
 //   node src/scripts/world-diff.js <mine.html> <theirs.html> [--json]
 //   node src/scripts/world-diff.js --selftest
 //
-// Compares two Roll2Hit world files the way the mesh does: per data collection
+// Compares two CodexOfConquest world files the way the mesh does: per data collection
 // (the 8 manifest parts) plus ENGINE_VER, then hashes everything OUTSIDE the
 // data spans. A downloaded world is someone else's CODE — if this prints the
 // CODE DIFFERS block, review every non-data change by hand before opening it.

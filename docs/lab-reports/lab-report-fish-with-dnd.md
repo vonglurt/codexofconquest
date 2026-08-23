@@ -69,7 +69,7 @@ What this buys the game, concretely:
 |---|---|---|
 | 1 | Batched `grep -c` census of every symbol the report names | 40 identifiers, before reading any engine code |
 | 4 | `git log -S "<symbol>"` on every dead symbol | 8 sampled fish names + `Captain Rhistle` — all **0 commits ever** |
-| 8 | `git show 32c10c5:roll2hit-v3.html` (earliest surviving build, 2026-05-24) | the fish pool, the node pair, the cast function, the lock line |
+| 8 | `git show 32c10c5:play.html` (earliest surviving build, 2026-05-24) | the fish pool, the node pair, the cast function, the lock line |
 | 12 | Copy-vs-compose partition | the statline table, per column (§V) |
 | — | Cell-primacy check via `CELL_GRID` declaration order | the two Yugurt nodes (Finding 1) |
 

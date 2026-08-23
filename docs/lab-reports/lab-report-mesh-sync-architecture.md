@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Presence Without Consensus: Synchronization, Discovery, and Bootstrap in a Single-File Multiplayer World
 
-**Roll2Hit Lab Report — §MESH-01 architecture retrospective**
+**CodexOfConquest Lab Report — §MESH-01 architecture retrospective**
 *paulr@sdf.org · written 2026-07-02 · amended 2026-07-06 · descriptive (shipped behaviour as of harness 75 / commit `9dd029b`)*
 *Companion: [lab-report-mesh-multiuser.md](lab-report-mesh-multiuser.md) — the design-lock document this report narrates.*
 
@@ -15,7 +15,7 @@
 
 ## Abstract
 
-Roll2Hit is a D&D-5e combat assistant and world simulator whose defining constraint is that **the
+CodexOfConquest is a D&D-5e combat assistant and world simulator whose defining constraint is that **the
 entire game — engine, content, world data — is one HTML file**. This report describes how that
 artifact acquires multiplayer presence, server-to-server synchronization, rendezvous discovery and
 operator-controlled bootstrap without a database, a broker, a consensus protocol, or any component
@@ -40,7 +40,7 @@ links, single-writer replication, eventual consistency, browser games, self-host
 
 ### A. The artifact
 
-`roll2hit-v3.html` is the unit of distribution. Opening it *is* installing the game; copying it *is*
+`play.html` is the unit of distribution. Opening it *is* installing the game; copying it *is*
 forking the world. Measured at the report's own commit `9dd029b`:
 
 | Figure | As written | At `9dd029b` | At HEAD |
@@ -106,7 +106,7 @@ the day it was amended; the economy shipped 2026-07-06 (§XII.C).
 
 ## II. What This Adds to the Game
 
-Roll2Hit's spine is solitary and finite: one Fighter, a 49-day doom clock, seven Codex Shards, and a
+CodexOfConquest's spine is solitary and finite: one Fighter, a 49-day doom clock, seven Codex Shards, and a
 world that ends whether or not you were ready. Everything pushes toward *consequence* — XP for
 effort, mission bits as receipts, NPC favor the ending reads back to you. What the spine could not
 produce is a **witness.** A world where every choice is permanent and nobody else was there to see it
@@ -126,7 +126,7 @@ The mesh supplies exactly that, and deliberately not more:
   and auto-assist a battle there — and are explicitly excluded from the party bonus, so a garrisoned
   junction cannot inflate anyone's to-hit (`function _mpAllyCount()@28648`).
 - **A world is a thing you can hand someone.** The file *is* the game, so forking is copying, and the
-  world tag (`Roll2Hit-131ea`) tells two strangers at a glance whether they are playing the same
+  world tag (`CodexOfConquest-131ea`) tells two strangers at a glance whether they are playing the same
   world at all. A mod author brands their fork and gets their own swarm free.
 - **None of it is compulsory.** A page that never clicks 🌐 constructs no mesh state whatsoever. That
   is C1, and it is why the tower is built *beside* the game rather than under it.
@@ -195,7 +195,7 @@ stated boundary: narrative tables are **not** hashed, so a pure-dialogue mod doe
 ### B. Human-facing identity
 
 A 16-hex hash is a terrible thing to say out loud, so each world file carries a display name
-(`const WORLD_NAME = 'Roll2Hit'`) and every human surface renders the **world tag**
+(`const WORLD_NAME = 'CodexOfConquest'`) and every human surface renders the **world tag**
 `<name>-<hash5>`, e.g. `NextWorldMod-131ea` (`src/js/wbapi-server.js:function worldTag@700`). The halves
 serve opposite masters: the name is *chosen* (a mod author brands a fork), the suffix is *earned* (it
 separates two forks that picked the same name, and two renames of identical data collapse to one
@@ -559,7 +559,7 @@ MIT-licensed; it is saved as a separate file that never touches your world; insp
 and the inspection tool ships with it:
 
 ```
-$ node src/scripts/world-diff.js roll2hit-v3.html world-9f3ab2c1-131eabc131eabc00.html
+$ node src/scripts/world-diff.js play.html world-9f3ab2c1-131eabc131eabc00.html
   quest_db      DIFFERS   (+3 entries: Q_MIRE_1, Q_MIRE_2, Q_MIRE_3)
   monster_pool  DIFFERS   (~1 entry: bog_hag)
   node_map      identical
@@ -796,7 +796,7 @@ see also BEP-5 (DHT protocol) for trackerless operation.
 [6] P. Maymounkov and D. Mazières, "Kademlia: A peer-to-peer information system based on the XOR
 metric," in *Proc. IPTPS*, 2002, pp. 53–65.
 
-[7] Roll2Hit project documents: `docs/lab-reports/lab-report-mesh-multiuser.md` (design lock),
+[7] CodexOfConquest project documents: `docs/lab-reports/lab-report-mesh-multiuser.md` (design lock),
 `docs/lab-reports/lab-report-walk5-mud-harness.md` (session/instancing properties), `plan-archive.md`
 §MESH-01 / §MESH-01-FU (increment history), `src/config/peers.txt` (bootstrap format specification).
 

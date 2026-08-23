@@ -37,7 +37,7 @@ Every structural claim in this report holds. The compiler, the preview, the sequ
 
 ## 2. Method
 
-Verification ran read-only. `roll2hit-v3.html` was not modified.
+Verification ran read-only. `play.html` was not modified.
 
 1. **Reference build.** The design lock's parent, `6515592` — `edit.html` 9,962 lines, `wbapi-core.js` 1,325 lines. ⚠ `wbapi-core.js`, `wbapi-server.js` and `wbapi-cli.js` were at the **repo root** on that date; the `src/js/` prefix arrived later, so this report's unprefixed paths are correct for their day.
 2. **Every line citation resolved at the reference build**, not at HEAD (§5).
@@ -142,17 +142,17 @@ Compile rules as locked: `id = <arcId>_<n>` (1-based) · `arc = arcLabel` · pro
 
 It shipped at `edit.html:9196` in `e2dcd76`, and the spec asserted it: `expect(q.activateCond).toMatch(/^\(s\)\s*=>\s*s\./)`. **The test was written to enforce the defect.**
 
-**The engine calls the condition with no argument.** At the reference build, `roll2hit-v3.html:25845` reads `if (q.activateCond && !q.activateCond()) return;` — and at HEAD the same line is `if (q.activateCond && !q.activateCond()) return;@30154`, with a second, later call site that at least catches: `ok = q.activateCond(); } catch (e) { ok = false; }@37155`. So `s` is `undefined` and `s.<flag>` is a `TypeError` — thrown, at the reference build, inside the quest sweep with no `try`.
+**The engine calls the condition with no argument.** At the reference build, `play.html:25845` reads `if (q.activateCond && !q.activateCond()) return;` — and at HEAD the same line is `if (q.activateCond && !q.activateCond()) return;@30154`, with a second, later call site that at least catches: `ok = q.activateCond(); } catch (e) { ok = false; }@37155`. So `s` is `undefined` and `s.<flag>` is a `TypeError` — thrown, at the reference build, inside the quest sweep with no `try`.
 
 **Three mechanisms in the same toolchain already held the right answer.**
 
 1. **The server's serializer does the conversion for you.** `src/js/wbapi-server.js:const isBareIdent = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(v);@1724` — a plain flag name posted to `/api/quest` is written into the file as `() => !!S_story.<flag>`; anything containing JS syntax passes through **verbatim**. The bare identifier §8 calls forbidden is exactly the required *input*, and the arrow form §8 mandates is exactly what escapes conversion. The server's own CLI help had spelled the recipe out: *`Act 2+: add "activateCond":"stnAct1Done" (prev act checkPassFlag — serialized as () => !!S_story.stnAct1Done)`*.
-2. **Every authored condition in the game disagreed.** The reference build's quest database is wall-to-wall `activateCond:() => !!S_story.someFlag` — zero-arg, closing over the global. `activateCond:(s)` has **0** occurrences at HEAD and **0 commits ever** in `roll2hit-v3.html`. The counterexamples numbered in the hundreds and sat in the file the report was written against.
+2. **Every authored condition in the game disagreed.** The reference build's quest database is wall-to-wall `activateCond:() => !!S_story.someFlag` — zero-arg, closing over the global. `activateCond:(s)` has **0** occurrences at HEAD and **0 commits ever** in `play.html`. The counterexamples numbered in the hundreds and sat in the file the report was written against.
 3. **The flag index cannot see `s.`** `_questFlags` derives reads and writes by matching `/S_story\.(\w+)/` over each quest's source text. `(s)=>s.quest_yael_1_passed` contains no `S_story.`, so its `reads` set is **empty** — meaning `WBAPI.quests.chain(id)`, the very derivation §2 names as the definition of an arc, would report **no upstream and no downstream** for a chain this compiler built. Preview Chain would draw the `↓ reads <flag>` connector from the compiler's own knowledge and be the only surface in the system that believed the arc existed.
 
 **The mistake underneath is a layer confusion, and it is worth naming precisely.** The guard at `wbapi-core.js:1195` scans `_rawSrc` — the *file already written*. A bare identifier is illegal **there**. The report read a rule about the serializer's *output* and applied it to the serializer's *input*. Satisfying a guard is not the same as being correct; a guard proves only that you avoided the thing the guard was built to catch.
 
-**Severity: real, latent, and never triggered.** `git log -S '(s)=>s.'` on `roll2hit-v3.html` returns **no commits, ever**. No arc was authored through the tab into the shipped game before §ARCH-01 Wave 8b (`11af1e5`, 2026-07-03) replaced the emission with `gate:{flags:[…]}`. The dead form was live in the compiler for **6 d 22 h 46 m** and cost the player nothing — caught by a migration rather than by use, which is luck, not process.
+**Severity: real, latent, and never triggered.** `git log -S '(s)=>s.'` on `play.html` returns **no commits, ever**. No arc was authored through the tab into the shipped game before §ARCH-01 Wave 8b (`11af1e5`, 2026-07-03) replaced the emission with `gate:{flags:[…]}`. The dead form was live in the compiler for **6 d 22 h 46 m** and cost the player nothing — caught by a migration rather than by use, which is luck, not process.
 
 *What survives is the design.* Auto-numbered ids, a producer flag per step, gates that read the predecessor's flag, a pure compiler: every one of those is how the tool works today. Only the seven characters between the flag name and the gate were wrong.
 
@@ -238,7 +238,7 @@ That split — **older prose asserts, newer prose corrects, and nothing reconcil
 - **Census at HEAD, through the parser:** 2,853 quests · 1,624 with a `gate` · 35 multi-step arcs · 24 chaining on `gate.flags` · 44 surviving `activateCond` · **0** carrying `arc` · **0** carrying an auto producer flag.
 - **Negatives, checked with `git log -S` and no pathspec:** `activateCond:(s)` — 0 commits ever · `(s)=>s.` in the engine — 0 commits ever.
 - **Acceptance test run:** mission-builder spec **16/16**.
-- **`roll2hit-v3.html` untouched** — every measurement read-only.
+- **`play.html` untouched** — every measurement read-only.
 
 ---
 

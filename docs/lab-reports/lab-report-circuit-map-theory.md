@@ -2,7 +2,7 @@
 
 # Sparse Node Mesh Reduction via Circuit Corridor Junction Theory
 
-**Lab Report — IEEE Style · Roll2Hit: The Shattered Codex (`roll2hit-v3.html`)**
+**Lab Report — IEEE Style · CodexOfConquest: The Shattered Codex (`play.html`)**
 **Original date:** 2026-05-21 · **Layer:** 9 — Time-Warp Footpaths & Circuit Corridors
 **Classification:** World Architecture / Navigation Design
 **Verification pass:** 2026-08-11 (§DOC-02f) — every claim re-measured against HEAD and against the
@@ -46,7 +46,7 @@ verification, document-internal accuracy gradient
 
 ## I. Method
 
-Five measurements, all reproducible (`roll2hit-v3.html`, 38,707 lines, r2h-3.104.0):
+Five measurements, all reproducible (`play.html`, 38,707 lines, r2h-3.104.0):
 
 1. **Symbol census.** Every function, constant, state field, DOM id and CSS class the report names,
    batched through one `grep -c` loop — this partitions the document before a line of it is read.

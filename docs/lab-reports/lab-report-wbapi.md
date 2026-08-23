@@ -4,7 +4,7 @@
 
 **Filed:** 2026-05-29 · **Ship commit:** `2d42ea2` · **Retrofitted:** `77c517f` (2026-06-05), Appendix A added `8b75986` (2026-06-05)
 **Verified against HEAD:** 2026-08-13 (§DOC-02aq)
-**Subject:** the authoring layer over `roll2hit-v3.html` — `wbapi-core.js` · `wbapi-server.js` · `edit.html` · the CLI
+**Subject:** the authoring layer over `play.html` — `wbapi-core.js` · `wbapi-server.js` · `edit.html` · the CLI
 
 ---
 
@@ -68,7 +68,7 @@ reading a figure off a document.
 
 **Dating (instruments 18 / 34).** The header says 2026-05-29 and the git author date agrees
 (09:50:57 −0700). Two independent artifacts confirm it and sharpen it. The commit's own tree
-contains `roll2hit-v3-20260529-162839.html` — the exact filename this report quotes as `save()`
+contains `play-20260529-162839.html` — the exact filename this report quotes as `save()`
 output — and 16:28:39 **UTC** is 09:28:39 −0700, twenty-two minutes before the commit. The report
 pasted a real file from a real session and then committed it.
 

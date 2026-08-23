@@ -1,10 +1,10 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# Roll2Hit — The Shattered Codex: Game Mechanics
+# CodexOfConquest — The Shattered Codex: Game Mechanics
 
 ## Overview
 
-Roll2Hit runs in two modes that share a single state. **Battle Mode** is the combat tracker. **Story Mode** is the narrative exploration layer. The two modes communicate through `S_story.pendingBattle` and `S._pendingDrop`.
+CodexOfConquest runs in two modes that share a single state. **Battle Mode** is the combat tracker. **Story Mode** is the narrative exploration layer. The two modes communicate through `S_story.pendingBattle` and `S._pendingDrop`.
 
 ---
 
@@ -899,7 +899,7 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 
 ## Multiplayer — Mesh Presence (§MESH-01, ✅ Incs a–e shipped 2026-07-02 · §MESH-02 connection center 2026-07-07)
 
-Roll2Hit is single-player-first: multiplayer is a strictly **opt-in presence layer** on top of the unchanged solo game. Full design: `docs/lab-reports/lab-report-mesh-multiuser.md` (spec) and `docs/lab-reports/lab-report-mesh-sync-architecture.md` (architecture write-up); connection-center UI: `docs/lab-reports/lab-report-mesh02-connections-ui.md`; server/API detail: `docs/notes/docs-node-network.md §12`; map surfaces: `maps.md`.
+CodexOfConquest is single-player-first: multiplayer is a strictly **opt-in presence layer** on top of the unchanged solo game. Full design: `docs/lab-reports/lab-report-mesh-multiuser.md` (spec) and `docs/lab-reports/lab-report-mesh-sync-architecture.md` (architecture write-up); connection-center UI: `docs/lab-reports/lab-report-mesh02-connections-ui.md`; server/API detail: `docs/notes/docs-node-network.md §12`; map surfaces: `maps.md`.
 
 ### What the player experiences
 
@@ -942,7 +942,7 @@ The Map sheet also carries connection sub-tabs — **🌐 Multiplayer · 🔭 Di
 
 ### World identity — what forks a swarm and what doesn't
 
-Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `worldHash` covers the **eight spatial/mechanical data collections** — `NODE_MAP`, `NODE_COORDS`, `SEA_RUNS`, `SEA_LANES`, `ROAD_RUNS`, `QUEST_DB`, `MONSTER_POOL`, `WORLD_DB` — hashed as raw source spans, plus `ENGINE_VER`. **This boundary is intentional** (decided in the architecture report §III.A): *hash what determines where players can stand and what they can fight*. Narrative tables — `NPC_DIALOGUES`, `BIRKA_NPC_PROFILES`, `FROBERGER_JOURNAL`, `KEY_EVENTS`, and other prose — are deliberately **not** hashed, so a pure-dialogue mod does not fork the swarm. Likewise `WORLD_NAME` is a display-only tag (rendered as `worldTag` = `<name>-<hash5>`, e.g. `Roll2Hit-915aa`): renaming a world never forks it — identity is what a world *is* (data), the tag is what it's *called*. Incompatible worlds are refused at gossip ingress (409) and segregated into their own tracker world groups; mod inspection goes through `GET /api/world/download` + `src/scripts/world-diff.js`.
+Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `worldHash` covers the **eight spatial/mechanical data collections** — `NODE_MAP`, `NODE_COORDS`, `SEA_RUNS`, `SEA_LANES`, `ROAD_RUNS`, `QUEST_DB`, `MONSTER_POOL`, `WORLD_DB` — hashed as raw source spans, plus `ENGINE_VER`. **This boundary is intentional** (decided in the architecture report §III.A): *hash what determines where players can stand and what they can fight*. Narrative tables — `NPC_DIALOGUES`, `BIRKA_NPC_PROFILES`, `FROBERGER_JOURNAL`, `KEY_EVENTS`, and other prose — are deliberately **not** hashed, so a pure-dialogue mod does not fork the swarm. Likewise `WORLD_NAME` is a display-only tag (rendered as `worldTag` = `<name>-<hash5>`, e.g. `CodexOfConquest-915aa`): renaming a world never forks it — identity is what a world *is* (data), the tag is what it's *called*. Incompatible worlds are refused at gossip ingress (409) and segregated into their own tracker world groups; mod inspection goes through `GET /api/world/download` + `src/scripts/world-diff.js`.
 
 ### Gameplay ladder
 
@@ -967,7 +967,7 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 - **To trade**: click the **⇄** button next to a player's name in the "Also here:" strip. Tick what you give and what you ask for, then **Propose** — they get the offer instantly and have **60 seconds** to accept before it expires. Either side can cancel; walking away costs nothing. On accept the server re-checks that both sides still own what they promised, then writes **one co-signed event into both players' chains** — the trade is atomic: both halves happen or neither does.
 - **Trading works across servers.** A player standing next to you who is connected to a *different* server in the mesh gets the same ⇄ button. Your server relays the offer to theirs, the accept relays back, and the one trade event is **co-signed by both servers** before it gossips out to the whole mesh. The only requirement: the two servers must be able to reach each other (the same reachability the mesh already needs — if you can see them walking around, you can usually trade with them).
 - **No dupes, ever**: every server that hears about a trade independently verifies the item's full ownership history. A doctored double-spend is detected on merge and voided identically everywhere — no moderator needed.
-- The ledger protects **trades**, not stats — Roll2Hit stays a client-authoritative single-file game among friends.
+- The ledger protects **trades**, not stats — CodexOfConquest stays a client-authoritative single-file game among friends.
 
 ---
 

@@ -2,7 +2,7 @@
 
 # Lab Report — Layer 50: NG+ Remembrance, "Entry 42"
 
-**IEEE-format post-mortem · original 2026-05-25 · verified against live `roll2hit-v3.html` 2026-08-12 (§DOC-02aa)**
+**IEEE-format post-mortem · original 2026-05-25 · verified against live `play.html` 2026-08-12 (§DOC-02aa)**
 **Section:** §XV · **Ship commit:** `194a810` (2026-05-25 09:10, subject *"css block flex issues"*)
 **Home doc:** `docs/story/story-arc-ngplus.md` · **Status:** ✅ shipped; 18/18 identifiers live; 2 inert; 1 behavioural defect
 
@@ -35,7 +35,7 @@ fifth-ending chain hangs from, and **three quoted UI strings that were never wri
 ### A. The problem: NG+ is repetition with bigger numbers
 
 The second run through a world is normally the same run with the mystery removed. The player knows every
-beat, every encounter, every NPC. `roll2hit-v3.html` already preserved `npcFavorability` across the NG+
+beat, every encounter, every NPC. `play.html` already preserved `npcFavorability` across the NG+
 boundary, so the *data* said the NPCs remembered you. Layer 50 exists because **remembering is only a
 mechanic when somebody says something different.**
 
@@ -85,7 +85,7 @@ layers wearing three labels.
 
 1. **Symbol census first.** Every identifier the report names, batched through one `grep -c` pass before a
    line of prose was read (§DOC-02 instrument 2).
-2. **Archive adjudication.** `git log -S "<symbol>" -- roll2hit-v3.html` on every dead name, to separate
+2. **Archive adjudication.** `git log -S "<symbol>" -- play.html` on every dead name, to separate
    **RETIRED** (shipped, later removed) from **NOT SHIPPED** (never existed). `git show <sha>:file` for
    every claim about the past (instruments 4 and 8).
 3. **Dating by the File References table.** The original's ten line numbers were tested against every
