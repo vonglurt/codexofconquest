@@ -292,20 +292,3 @@ under the author's direction — a sub-contractor relationship that carries no
 independent authorship claim. See
 [CONTRIBUTING.md](CONTRIBUTING.md#authorship-and-ai-contribution).
 
-## A note on names
-
-The project was called **Roll2Hit** until 2026-08-23 and is now **Codex of
-Conquest**. The game file was `roll2hit-v3.html` and is now `play.html`, so a
-static host serves it at the root URL; the editor was `worldbuilder.html` and is
-now `edit.html`.
-
-The rename was applied to every tracked file — 518 occurrences across 155 —
-including the history documents in `docs/lab-reports/` and
-`docs/backlog/plan-archive.md`. That is a deliberate exception to this repo's
-annotate-don't-rewrite rule (§DX-02c / §AUDIT-03m): a first-time reader of a
-public repository should not have to learn a name the project no longer uses.
-
-Two things were **not** renamed, on purpose: the `localStorage` save keys
-`r2h_autosave` and `r2h_checkpoint`, and the engine version string
-`r2h-3.104.0`. The first two would discard every existing player's save; the
-third is one leg of the mesh compatibility triple.
