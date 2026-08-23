@@ -4,12 +4,12 @@
 // GREP-BEFORE-BUILDING: the BACKLOG spec (promoted from potential.md §POT-C1) framed this as a
 // build with a "point-buy vs standard array" design call. Measured live, the feature is ALREADY
 // SHIPPED and wired: btn-continue-new / btn-gameover-new → _showCharCreate() → the "⚔ Choose Your
-// Origin" modal (27-point D&D-5e point-buy, custom + hard tabs) → btn-charcreate-begin → storyNewGame.
+// Origin" modal (27-point D&D point-buy, custom + hard tabs) → btn-charcreate-begin → storyNewGame.
 // It just had NO test. This locks the shipped contract so a regression surfaces on sight.
 const { test, expect } = require('@playwright/test');
 
 test.describe('§CHAR-01-A — point-buy character creation (already shipped; contract lock)', () => {
-  test('point-buy constants are the standard 5e 27-point budget with the canonical cost curve', async ({ page }) => {
+  test('point-buy constants are the standard 27-point budget with the canonical cost curve', async ({ page }) => {
     await page.goto('/play.html');
     const r = await page.evaluate(() => ({
       budget: CC_BUDGET,
@@ -18,11 +18,11 @@ test.describe('§CHAR-01-A — point-buy character creation (already shipped; co
       // a legal all-13/12 style spread stays within budget; a maxed spread does not
       spentDefault: (() => { _cc_scores = { str:10, dex:10, con:10, int:8, wis:8, cha:8 }; return _ccSpent(); })(),
     }));
-    expect(r.budget, 'standard 5e point-buy budget').toBe(27);
+    expect(r.budget, 'standard point-buy budget').toBe(27);
     expect(r.cost, 'cost curve for scores 8..15').toEqual([0,1,2,3,4,5,7,9]);
     expect(r.cost8).toBe(0);
     expect(r.cost13).toBe(5);
-    expect(r.cost14).toBe(7);   // 14/15 cost 2 points each (the 5e premium)
+    expect(r.cost14).toBe(7);   // 14/15 cost 2 points each (the premium)
     expect(r.cost15).toBe(9);
     expect(r.spentDefault, 'the default spread is affordable within budget').toBeLessThanOrEqual(27);
   });

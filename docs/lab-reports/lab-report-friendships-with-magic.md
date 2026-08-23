@@ -3,7 +3,7 @@
 # Lab Report — Friendships with Magic
 ### Session Postmortem, Layers 41–42 + Five Systems — Verified Against HEAD
 
-**Subject:** `play.html` — single-file HTML5 D&D-5e game engine, MIT License
+**Subject:** `play.html` — single-file HTML5 D&D game engine, MIT License
 **Written:** 2026-05-22 (updated 2026-05-24) · **Verified:** 2026-08-12 (§DOC-02o)
 **Source state at writing:** 12,637 lines · Layers 0–42
 **State at verification:** 38,712 lines · 416 nodes · 398 monsters · 111 terrains · 2,853 quests

@@ -72,7 +72,7 @@ Three further fixes reached the whole game:
   ability name as **"undefined"**. Your Wisdom score was decorative on the overwhelming majority of
   the game's skill checks. Four read sites were aliased; the fix is verbatim at HEAD.
 - **§SKILLFIX-02** — ~176 more quests stored a *skill name* (`Persuasion`, `History`, `Insight`) in
-  the stat field, hitting the same `+0` path. The migrator maps skill → governing ability (D&D 5e;
+  the stat field, hitting the same `+0` path. The migrator maps skill → governing ability (D&D;
   homebrew Courage/Presence → CHA) and keeps the name for display and proficiency.
 - **Wave 2c** — three `ath_*` acts carried a duplicate `activateCond`, the real function *plus* a
   dead string copy. Last-key-wins made the parsed value a string, so `q.activateCond()` **threw a

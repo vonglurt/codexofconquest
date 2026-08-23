@@ -160,7 +160,7 @@ argument on it.**
 
 ### F3 — The rest architecture shipped inverted, and promises full HP in two strings
 
-§III-B explicitly sets aside the 5e model: *"Rather than Hit Die rolls, short rests
+§III-B explicitly sets aside the model: *"Rather than Hit Die rolls, short rests
 restore a flat HP amount."* HEAD does exactly that — **and ships Hit Die rolls on the
 long rest instead**: `2 × d10 + CON` on a first visit, `1 × d10 + CON` on a revisit,
 floored at 50% `hpMax`. The specified `S_story.hp = S_story.hpMax` never shipped.

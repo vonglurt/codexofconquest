@@ -110,7 +110,7 @@ node server. To only play, open `play.html` — nothing else is required.
 
 ## The Game in One Paragraph
 
-CodexOfConquest is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 410-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 121 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D 5e mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
+CodexOfConquest is a single-file HTML application. It runs as a combat dice tracker (Battle Mode) and a 410-node narrative adventure game (Story Mode). The narrative game — *The Shattered Codex* — is a solo journey across 8 acts and 121 locations to collect 7 Codex Shards and seal the Void before Day 49. The player is a Level 1–20 Fighter Champion. Combat uses D&D mechanics; story progression uses directional navigation across a node graph. MIT-licensed. No server. No build step.
 
 ---
 

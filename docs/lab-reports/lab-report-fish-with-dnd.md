@@ -12,7 +12,7 @@ whole feature is **currently unreachable in the shipped build** (Finding 1).
 ## ABSTRACT
 
 This report specified fishing as a *predator encounter system* rather than a patience minigame:
-a cast is an invitation, and what answers is a combatant resolved by the same 5e engine as every
+a cast is an invitation, and what answers is a combatant resolved by the same engine as every
 other fight. That thesis shipped and has been extended fourfold since — the 20-rank pool it
 described is byte-identical to the earliest surviving build and to HEAD, 80 days later, and four
 later layers (§XLV–§XLIX, §DROP-03) bolted bait, rods, night species, rarity, lake magic and a

@@ -227,7 +227,7 @@ being a permanent instrument rather than a one-time audit.*
 - **The Ceremonia Roll formula, unchanged in 77 days and 2,453 consumers.** `d20 + ⌊(score−10)/2⌋ +
   2+⌊(level−1)/4⌋ ≥ DC` is still exactly what `_rollSkill` computes. Two optional bonuses were added
   on top; not one specified term was altered. The report's most consequential decision was to write
-  the 5e formula plainly instead of inventing one.
+  the formula plainly instead of inventing one.
 - **Refusing to gate the main flow on a skill check (§8).** The reasoning — *"DC 10 with CHA 8 = +1
   total; 45% failure rate. A retryable gate here would be annoying rather than meaningful"* — reads
   today as an early, independent derivation of hard invariants #1 and #2 (free movement; mission

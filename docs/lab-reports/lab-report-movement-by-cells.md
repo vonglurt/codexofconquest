@@ -14,7 +14,7 @@
 
 ## Abstract
 
-CodexOfConquest.com is a single-file browser D&D 5e combat-and-story engine. Between §CELL-01
+CodexOfConquest.com is a single-file browser D&D combat-and-story engine. Between §CELL-01
 and §CELL-12 its navigation model was replaced: an explicit N/S/E/W edge list gave way to
 a coordinate grid in which every exit is *derived at runtime from cell adjacency*. This
 report characterised five layers of that system — API server, geographic seeding tool,

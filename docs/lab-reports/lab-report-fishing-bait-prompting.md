@@ -3,7 +3,7 @@
 # Lab Report — Yugurt Lake Bait & Tackle (Layer 47) and the `plan.md` Prompt Protocol
 
 **Original:** CodexOfConquest.com development session, 2026-05-24 · **Verified against HEAD:** 2026-08-12 (§DOC-02n)
-**Subject:** `play.html` — single-file browser D&D 5e RPG (14,377 lines at authoring; 38,712 at HEAD)
+**Subject:** `play.html` — single-file browser D&D RPG (14,377 lines at authoring; 38,712 at HEAD)
 **License:** MIT — CodexOfConquest.com — Copyright (c) 2026
 
 ---
@@ -295,7 +295,7 @@ inside unreachable code. Fix the `NODE_MAP` declaration order first, or none of 
 | 5 | +5 | Tadpole Madtom · Margined Madtom · Mummichog · Blacknose Dace | 7–8 | 11–12 | 25 | Deep |
 
 Slugs were specified as `snake_case` of the common name (`fathead_minnow`, `blacknose_dace`, …).
-Species were sourced from a user-provided naturalist list and given 5e-conventional statlines.
+Species were sourced from a user-provided naturalist list and given conventional statlines.
 
 ## Appendix B — What Shipped Instead: `BAIT_TABLES` (foraged, 3 × 6)
 

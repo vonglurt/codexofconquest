@@ -39,7 +39,7 @@ Five instruments applied; three carried the increment:
 
 ### A. Why it is here
 
-codexofconquest is a D&D 5e Fighter walking a 90×360 world under a 49-day doom clock. Nothing in that premise wants a first-century missionary. The arc exists because of what it does to the **verb set**.
+codexofconquest is a D&D Fighter walking a 90×360 world under a 49-day doom clock. Nothing in that premise wants a first-century missionary. The arc exists because of what it does to the **verb set**.
 
 Every other track in the game resolves through the same three motions: fight it, roll against it, or carry it somewhere. The Saul arc is the only content built around a protagonist whose defining actions are **being blinded, being vouched for, being stoned and getting up, and writing letters** — none of which the combat engine can express. It forces the game to prove that its declarative quest VM can carry a scene where nothing is defeated.
 

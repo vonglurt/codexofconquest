@@ -2,7 +2,7 @@
 
 # Lab Report: Loot Drop & Weapon Economy Redesign
 **Project:** CodexOfConquest v3 (play.html, ~9,600 lines)
-**System:** D&D 5e single-file story RPG
+**System:** D&D single-file story RPG
 **Date:** 2026-05-21
 **Status:** Design proposal — not yet implemented
 

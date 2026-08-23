@@ -15,7 +15,7 @@
 
 ## Abstract
 
-CodexOfConquest is a D&D-5e combat assistant and world simulator whose defining constraint is that **the
+CodexOfConquest is a D&D combat assistant and world simulator whose defining constraint is that **the
 entire game — engine, content, world data — is one HTML file**. This report describes how that
 artifact acquires multiplayer presence, server-to-server synchronization, rendezvous discovery and
 operator-controlled bootstrap without a database, a broker, a consensus protocol, or any component

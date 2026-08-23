@@ -26,7 +26,7 @@ Re-measured 83 days later: **42 of 44 named identifiers resolve (95 %)**, and of
 2 never shipped at all**. The two dead identifiers — `XP_LEVELS` as specified and `_LEVEL_REWARDS` —
 return **0 commits ever**. The condition repricing is the durable result: `CONDITION_GOLD` is
 **byte-identical at the earliest surviving build and at HEAD**, unchanged across 79 days and 24,476
-lines of file growth. The progression system is the casualty: what shipped is a D&D-5e Fighter
+lines of file growth. The progression system is the casualty: what shipped is a D&D Fighter
 advancement track to **level 20** delivered through an interactive modal with player-allocated
 ability-score improvements — the precise shape §II.A ruled out.
 

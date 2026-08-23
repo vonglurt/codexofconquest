@@ -11,7 +11,7 @@
 
 ## Abstract
 
-`play.html` is a browser-native D&D-5e RPG that ships as one static HTML file: no build step, no CDN, no JavaScript modules, no server required to play. It runs two engines — a standalone dice combat tracker (Battle Mode) and a narrative campaign (Story Mode) — over a shared dice and combat-resolution layer, with all state in two plain mutable objects and all rendering done by full-section rewrite.
+`play.html` is a browser-native D&D RPG that ships as one static HTML file: no build step, no CDN, no JavaScript modules, no server required to play. It runs two engines — a standalone dice combat tracker (Battle Mode) and a narrative campaign (Story Mode) — over a shared dice and combat-resolution layer, with all state in two plain mutable objects and all rendering done by full-section rewrite.
 
 The original review measured 76 nodes, 370 monsters, 66 terrains and a 26×16 grid. **At HEAD the same architecture carries 416 nodes, 398 monsters, 111 terrains, 2,853 quests and 204 NPC profiles on a 90×360 equirectangular grid** — a ~5.5× growth in the file with the *architectural pattern unchanged*. That is the review's central prediction under test, and it survived: the flat-scope, full-rewrite, single-state-object design absorbed the growth. What did not survive is nearly every concrete data shape the review documented, because four tracks (§WALK/§NAV-01, §ARCH-01, §VM-01, §CELL-13) replaced the navigation graph, the quest format, the execution model and the teleport system respectively.
 

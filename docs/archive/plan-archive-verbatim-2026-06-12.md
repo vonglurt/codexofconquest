@@ -3492,7 +3492,7 @@ d20 + abilityMod(ability) + profBonus ≥ DC  →  Pass
 
 - `abilityMod(a) = Math.floor((S_story.abilityScores[a] - 10) / 2)`
 - `profBonus = 2 + Math.floor((S_story.level - 1) / 4)`  
-  (D&D 5e standard: L1–4 → +2 · L5–8 → +3 · L9–12 → +4 · L13–16 → +5 · L17–20 → +6)
+  (D&D standard: L1–4 → +2 · L5–8 → +3 · L9–12 → +4 · L13–16 → +5 · L17–20 → +6)
 - **Default stat:** the character's own ability scores from character creation, modified by level proficiency. No situational bonuses unless a condition item grants them.
 
 **DC tiers:**

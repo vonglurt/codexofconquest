@@ -154,7 +154,7 @@ and `hour`.
 
 ### IV-A. Hard Mode — `str:10, dex:8, con:8, int:8, wis:8, cha:8`
 
-52 points against the 5e standard array's 72. Verified byte-exact at four sites, including
+52 points against the standard array's 72. Verified byte-exact at four sites, including
 `const _S_DEFAULTS = () => ({@23062`. Hard Mode's purpose is ledger legibility: with a flat floor,
 **every point above 8 in the final sheet is traceable to a tattoo**, so the ledger reads as pure
 player choice rather than as character-creation noise.
@@ -274,7 +274,7 @@ both inside `storyRespawnFromCheckpoint()`. That function has two callers:
 1. `btn-gameover-respawn@38327` — the game-over modal button.
 2. `_onPitChampionLoss()@27928` — losing the optional Birka pit championship.
 
-Combat death does not reach either. The 5e death-save mini-game resolves to `_storyDeathSaveCrawl()`
+Combat death does not reach either. The death-save mini-game resolves to `_storyDeathSaveCrawl()`
 (3 successes → survive at 1 HP) or `function _storyDeathSaveFall()@25950` (3 failures). The fall
 path writes the death tattoo, tallies `deaths`, strips the player, and **respawns inline** —
 `S_story.currentCode = S_story.checkpointNode || 'LHR'` followed by `storyEnter()`. It never opens
@@ -438,7 +438,7 @@ every symbol-level check, because it is not a missing symbol but a missing **cal
 
 ## References
 
-[1] *Dungeons & Dragons Player's Handbook*, 5th ed. Renton, WA: Wizards of the Coast, 2014.
+[1] *D&D Player's Handbook*, 5th ed. Renton, WA: Wizards of the Coast, 2014.
 [2] FromSoftware, *Dark Souls*, Namco Bandai Games, 2011.
 [3] M. Toy, G. Wichman, K. Arnold, J. Lane, *Rogue*, UC Berkeley, 1980.
 [4] ZA/UM, *Disco Elysium*, ZA/UM, 2019.

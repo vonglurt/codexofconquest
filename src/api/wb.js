@@ -240,7 +240,7 @@ function readStdin() {
 
 // ── Claude AI assistant ────────────────────────────────────────────────────────
 const AI_SYSTEM = `You are a concise assistant for the Codex of Conquest World Builder API (WBAPI) at localhost:1367.
-The game is a D&D 5e world stored in a single HTML file. The API manages: nodes (map locations), quests, monsters, npcs, terrain.
+The game is a D&D world stored in a single HTML file. The API manages: nodes (map locations), quests, monsters, npcs, terrain.
 
 ./bin/api CLI cheatsheet:
   ./bin/api ping                                 check server

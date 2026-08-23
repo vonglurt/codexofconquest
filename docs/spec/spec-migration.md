@@ -575,7 +575,7 @@ The world of *The Shattered Codex* — 42 nodes, 8 acts, 49 days, 7 Shards, and 
 
 [5] *world.md* — World lore, faction profiles, condition item descriptions, NPC profiles, `MONSTER_POOL` cross-reference. Source of `CONDITION_ITEMS` effect text.
 
-[6] Wizards of the Coast, *Dungeons & Dragons 5th Edition: Systems Reference Document 5.1*. Conditions reference: Prone, Restrained, Blinded, Paralyzed, Stunned, Grappled, Petrified, Incapacitated. Advantage/Disadvantage mechanic on d20 rolls.
+[6] Wizards of the Coast, *D&D 5th Edition: Systems Reference Document 5.1*. Conditions reference: Prone, Restrained, Blinded, Paralyzed, Stunned, Grappled, Petrified, Incapacitated. Advantage/Disadvantage mechanic on d20 rolls.
 
 [7] R. C. Martin, *Clean Architecture: A Craftsman's Guide to Software Structure and Design*. Prentice Hall, 2017. Vertical slice architecture principle: deliver complete, testable features layer by layer rather than horizontal layer by layer.
 

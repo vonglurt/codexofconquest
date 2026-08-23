@@ -3585,14 +3585,14 @@ test.describe('§ARCH-01 Wave 2h — rkv_* family (bulk-migrated, 50 acts; mixed
 // full ability word (Strength) rather than an ability abbreviation. The legacy
 // resolver read abilityScores[checkStat] → undefined → +0 ability mod (a latent
 // bug §SKILLFIX-01 did not reach). §SKILLFIX-02 (user-approved): the migrator
-// maps the skill to its governing ability (D&D 5e standard; homebrew
+// maps the skill to its governing ability (D&D standard; homebrew
 // Courage/Presence → CHA) into `stat`, keeping the skill name in `skill` for
 // display+proficiency. This is a deliberate BEHAVIOR CHANGE — the check now rolls
 // the mapped ability mod + proficiency (the intended behavior), so parity is
 // asserted on DISPLAY (untouched) + structure + the mapping, NOT vs the legacy
 // +0 roll. All flag-bearing; gates 38 {} + 10 {flags}. Self-contained.
 test.describe('§ARCH-01 Wave 2i / §SKILLFIX-02 — ist_* family (skill→ability mapped, 48 acts)', () => {
-  // D&D 5e skill→ability (mirrors scripts/uqf-bulk-migrate.js); used to pin the mapping durably.
+  // D&D skill→ability (mirrors scripts/uqf-bulk-migrate.js); used to pin the mapping durably.
   const ABILITIES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];
   const SKILL_TO_ABILITY = {
     ATHLETICS:'STR', ACROBATICS:'DEX', 'SLEIGHT OF HAND':'DEX', STEALTH:'DEX',
@@ -5450,7 +5450,7 @@ test.describe('§ARCH-01 Wave 2aa — ams_* family (bulk-migrated, 35 acts; unif
 // family (after ist_, Wave 2i): every checkStat holds a D&D SKILL NAME
 // (Deception/History/Insight/Investigation/Nature/Persuasion), which legacy read
 // as abilityScores[name] → undefined → +0 mod. The migrator maps the skill to its
-// governing ability (D&D 5e) into `stat`, keeping the name in `skill` — a
+// governing ability (D&D) into `stat`, keeping the name in `skill` — a
 // deliberate BEHAVIOR CHANGE (the check now rolls the mapped ability mod), so
 // parity is asserted on DISPLAY (untouched) + structure + the mapping, NOT vs the
 // legacy +0 roll. All 37 flag-bearing → onPass:[mission_bit{flag}]; gates all

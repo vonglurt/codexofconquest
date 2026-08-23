@@ -56,7 +56,7 @@ const SHOTS = [
     setup: async p => { await p.evaluate(() => window._showCharCreate && window._showCharCreate()); } },
 
   { name: '02-stat-point-buy', sel: '#charcreate-card',
-    caption: 'Point-buy — the standard 5e 27-point budget, spent in the open',
+    caption: 'Point-buy — the standard 27-point budget, spent in the open',
     setup: async p => {
       await p.evaluate(() => window._showCharCreate && window._showCharCreate());
       await p.evaluate(() => {

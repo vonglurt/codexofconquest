@@ -136,7 +136,7 @@ if (!targets.length) { console.error('no skill_check targets matched'); process.
 // ability abbreviations. The legacy resolver read abilityScores[checkStat] →
 // undefined → +0 ability mod (a latent bug; §SKILLFIX-01 did not reach these).
 // The UQF skill_check contract REQUIRES stat ∈ {STR,DEX,CON,INT,WIS,CHA}, so we
-// map the skill to its governing ability (D&D 5e standard) and keep the skill
+// map the skill to its governing ability (D&D standard) and keep the skill
 // name in `skill` (display + proficiency). This is a deliberate BEHAVIOR CHANGE
 // — the check now rolls ability-mod + proficiency, the intended D&D behavior.
 const ABILITIES = ['STR', 'DEX', 'CON', 'INT', 'WIS', 'CHA'];

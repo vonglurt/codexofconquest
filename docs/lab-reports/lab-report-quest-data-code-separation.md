@@ -18,7 +18,7 @@
 
 ## Abstract
 
-CodexOfConquest.com is a single-file browser D&D 5e engine whose entire world — nodes, monsters,
+CodexOfConquest.com is a single-file browser D&D engine whose entire world — nodes, monsters,
 quests, dialogue — lives in JavaScript object literals in one HTML file. That design makes
 the boundary between *data* and *code* a matter of discipline rather than of language: an
 object literal will happily hold an arrow function, and `QUEST_DB` held 127 of them.

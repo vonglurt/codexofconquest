@@ -3,7 +3,7 @@
 
 ## Overview
 
-CodexOfConquest is a single-file D&D 5e combat and world-exploration assistant.
+CodexOfConquest is a single-file D&D combat and world-exploration assistant.
 The entire game — monsters, quests, NPCs, nodes, world map, terrain, loot
 tables, fish pools, dialogue trees — lives in one HTML file: `play.html`.
 At 210 MB it is simultaneously a playable web application, a database, and a
