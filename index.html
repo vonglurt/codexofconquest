@@ -4,157 +4,184 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Codex of Conquest — a single-file adventure RPG</title>
-<meta name="description" content="A quest-driven, MUD-style fighter RPG that lives inside one HTML file. 416 nodes, 2,853 quests, 398 monsters, D&D 5e combat. MIT licensed — download it, fork it, rebuild the world.">
+<title>Codex of Conquest — a single-file D&amp;D-style MUD</title>
+<meta name="description" content="A quest-driven MUD with visible D&D 5e mechanics, in one HTML file. 416 nodes, 2,853 quests, 398 monsters. MIT licensed.">
 <style>
-  :root{
-    --c1:#562717; --c2:#C21717; --c3:#E76219; --c4:#FEA712; --c5:#FDDCA9;
-    --bg:#F0E6C8; --panel:#E2D0A8; --panel2:#D4BC88; --panel3:#C8A870;
-    --text:#2A1A0A; --dim:#6A4A28; --muted:#52351A;
-    --border:#8B4A2A; --border-lt:#C47A4A;
-    --sky:#1E5868; --sky-lt:#B0D0DC; --gold:#6A4808;
-    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
-    --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--text);font:17px/1.68 var(--serif);
-       -webkit-font-smoothing:antialiased}
-  .wrap{max-width:860px;margin:0 auto;padding:0 1.25rem}
-  a{color:var(--border);text-decoration-thickness:1px;text-underline-offset:3px}
-  a:hover{color:var(--c2)}
+:root{
+  --paper:#F8F6F0; --slab:#EDEAE1; --slab2:#E3DFD3;
+  --grid:#CBD9E8; --rule:#B9C6D6;
+  --ink:#12161C; --ink2:#39414E;
+  --torch:#B54708; --blood:#9B1B23; --moss:#2E6B4E; --gold:#8A6A00;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{animation:none!important;transition:none!important}}
+body{
+  margin:0; color:var(--ink); font:19px/1.72 var(--sans);
+  background-color:var(--paper);
+  background-image:
+    repeating-linear-gradient(0deg,transparent 0 31px,var(--grid) 31px 32px),
+    repeating-linear-gradient(90deg,transparent 0 31px,var(--grid) 31px 32px);
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:74ch;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
+.wide{max-width:104ch}
+a{color:var(--ink);text-decoration-color:var(--torch);text-decoration-thickness:2px;text-underline-offset:3px}
+a:hover{color:var(--torch)}
+a:focus-visible{outline:3px solid var(--torch);outline-offset:2px;border-radius:2px}
+code{font:.86em var(--mono);background:var(--slab2);padding:.12em .38em;border-radius:3px}
 
-  /* ── Aztec stripe rule ─────────────────────────────── */
-  .stripe{height:7px;border:0;margin:0;background:linear-gradient(90deg,
-    var(--c1) 0 20%,var(--c2) 20% 40%,var(--c3) 40% 60%,var(--c4) 60% 80%,var(--c5) 80% 100%)}
+/* ── ASCII dither rule — the structural device ─────────── */
+.dither{font:1rem/1 var(--mono);letter-spacing:.06em;color:var(--torch);
+  text-align:center;padding:1.6rem 0 .2rem;user-select:none;opacity:.85}
 
-  /* ── Hero ──────────────────────────────────────────── */
-  header{padding:4.5rem 0 3rem;text-align:center;
-    background:radial-gradient(ellipse at 50% 0%,#F7EFD8 0%,var(--bg) 70%)}
-  .kicker{font:600 .78rem/1 var(--mono);letter-spacing:.24em;text-transform:uppercase;
-    color:var(--border);margin-bottom:1.1rem}
-  h1{font:800 clamp(2.6rem,8vw,4.4rem)/1.02 var(--serif);margin:0 0 .5rem;letter-spacing:-.02em}
-  h1 .amp{color:var(--c3)}
-  .tagline{font-size:clamp(1.05rem,2.6vw,1.3rem);color:var(--muted);margin:0 auto 2.2rem;max-width:34ch}
-  .play{display:inline-block;font:800 1.5rem/1 var(--mono);letter-spacing:.16em;
-    padding:1.15rem 3.4rem;color:#2A1A0A;background:var(--c4);border:3px solid var(--c1);
-    border-radius:4px;text-decoration:none;box-shadow:5px 5px 0 var(--c1);
-    transition:transform .08s ease,box-shadow .08s ease}
-  .play:hover{background:var(--c3);color:#fff;transform:translate(2px,2px);box-shadow:3px 3px 0 var(--c1)}
-  .play:active{transform:translate(5px,5px);box-shadow:0 0 0 var(--c1)}
-  .subplay{margin-top:1rem;font:400 .9rem/1.5 var(--mono);color:var(--dim)}
+/* ── Nav ───────────────────────────────────────────────── */
+nav.top{position:sticky;top:0;z-index:60;background:rgba(248,246,240,.96);
+  backdrop-filter:blur(6px);border-bottom:2px solid var(--ink);
+  font:600 .82rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+nav.top .wrap{display:flex;gap:1.5rem;align-items:center;padding:.85rem 1.5rem;overflow-x:auto}
+nav.top a{color:var(--ink2);text-decoration:none;white-space:nowrap}
+nav.top a:hover{color:var(--torch)}
+nav.top .cta{margin-left:auto;background:var(--torch);color:#fff;padding:.5em 1.1em;
+  border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+nav.top .cta:hover{background:var(--blood);color:#fff}
 
-  /* ── Stat strip ────────────────────────────────────── */
-  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(105px,1fr));gap:0;
-    border-top:2px solid var(--border);border-bottom:2px solid var(--border);
-    background:var(--panel);margin:3rem 0 0}
-  .stat{padding:1rem .5rem;text-align:center;border-right:1px solid var(--border-lt)}
-  .stat:last-child{border-right:0}
-  .stat b{display:block;font:800 1.5rem/1 var(--mono);color:var(--c1)}
-  .stat span{font:600 .68rem/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+/* ── Section scaffolding + oversized emoji watermark ───── */
+section{position:relative;padding:2.2rem 0 1rem;overflow:hidden}
+.mark{position:absolute;right:-3rem;top:1rem;font-size:22rem;line-height:1;
+  opacity:.055;pointer-events:none;user-select:none;z-index:0;filter:saturate(.7)}
+.ghost{position:absolute;left:-1rem;bottom:-1.5rem;font:800 9rem/1 var(--mono);
+  letter-spacing:-.04em;color:var(--ink);opacity:.035;pointer-events:none;
+  user-select:none;z-index:0;white-space:nowrap}
+h2{font:700 clamp(1.6rem,4vw,2.1rem)/1.22 var(--mono);letter-spacing:-.02em;margin:0 0 .9rem}
+.eyebrow{font:700 .78rem/1 var(--mono);letter-spacing:.2em;color:var(--torch);
+  text-transform:uppercase;display:block;margin-bottom:.7rem}
+h3{font:700 1.12rem/1.35 var(--mono);margin:2rem 0 .5rem;color:var(--ink)}
+p{margin:0 0 1.15rem}
+.lede{font-size:1.14rem;color:var(--ink)}
+blockquote{margin:1.8rem 0;padding:1rem 1.4rem;border-left:5px solid var(--torch);
+  background:var(--slab);color:var(--ink)}
+blockquote p:last-child{margin:0}
+ul.plain{margin:0 0 1.15rem;padding-left:1.4rem} ul.plain li{margin:.4rem 0}
 
-  /* ── Sections ──────────────────────────────────────── */
-  section{padding:3.5rem 0 .5rem}
-  h2{font:800 clamp(1.7rem,4.5vw,2.3rem)/1.15 var(--serif);margin:0 0 .3rem;letter-spacing:-.01em}
-  h2 .num{font:700 .78rem/1 var(--mono);color:var(--c3);display:block;letter-spacing:.2em;margin-bottom:.55rem}
-  h3{font:700 1.16rem/1.3 var(--serif);margin:2rem 0 .35rem;color:var(--c1)}
-  p{margin:0 0 1.15rem}
-  .lede{font-size:1.16rem;color:var(--muted)}
-  blockquote{margin:2rem 0;padding:1.1rem 1.5rem;border-left:5px solid var(--c3);
-    background:var(--panel);font-style:italic;color:var(--muted)}
-  blockquote p:last-child{margin:0}
-  code{font:.86em var(--mono);background:var(--panel2);padding:.12em .4em;border-radius:3px}
+/* ── Hero ──────────────────────────────────────────────── */
+header{padding:3.4rem 0 1rem;text-align:center;position:relative}
+h1{font:800 clamp(2.1rem,7vw,3.6rem)/1.03 var(--mono);letter-spacing:-.045em;margin:0 0 .5rem}
+h1 .of{color:var(--torch)}
+.kicker{font:700 .8rem/1 var(--mono);letter-spacing:.24em;text-transform:uppercase;
+  color:var(--ink2);margin-bottom:1rem}
+.tagline{font-size:1.16rem;color:var(--ink);max-width:44ch;margin:0 auto 1.8rem}
+.play{display:inline-block;font:800 1.4rem/1 var(--mono);letter-spacing:.12em;
+  padding:1.05rem 3rem;color:#fff;background:var(--torch);border:3px solid var(--ink);
+  text-decoration:none;box-shadow:6px 6px 0 var(--ink);transition:transform .08s,box-shadow .08s}
+.play:hover{background:var(--blood);color:#fff;transform:translate(3px,3px);box-shadow:3px 3px 0 var(--ink)}
+.play:active{transform:translate(6px,6px);box-shadow:0 0 0 var(--ink)}
+.subplay{margin-top:.9rem;font:.86rem/1.6 var(--mono);color:var(--ink2)}
 
-  /* ── Feature grid ──────────────────────────────────── */
-  .feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1px;
-    background:var(--border-lt);border:2px solid var(--border);margin:1.8rem 0 2rem}
-  .feat > div{background:var(--panel);padding:1.15rem 1.25rem}
-  .feat h4{font:700 .95rem/1.3 var(--mono);margin:0 0 .4rem;color:var(--c1);
-    letter-spacing:.02em;display:flex;align-items:center;gap:.5rem}
-  .feat p{margin:0;font-size:.94rem;line-height:1.55;color:var(--muted)}
-  .ico{font-size:1.15rem;line-height:1}
+/* ── MUD transcript ────────────────────────────────────── */
+pre.mud{font:14.5px/1.62 var(--mono);text-align:left;background:var(--slab);
+  border:3px solid var(--ink);box-shadow:7px 7px 0 var(--slab2);
+  padding:1.2rem 1.3rem;margin:2.2rem 0 0;overflow-x:auto;color:var(--ink)}
+.c-dim{color:#7C8698} .c-room{color:var(--torch);font-weight:700}
+.c-say{color:var(--blood);font-weight:700} .c-lbl{color:var(--gold);font-weight:700}
+.c-exit{color:var(--moss);font-weight:700} .c-blood{color:var(--blood)}
+.c-you{color:var(--ink);font-weight:700} .c-roll{color:var(--torch);font-weight:700}
+.c-pass{color:var(--moss);font-weight:700}
 
-  /* ── Placeholder figure ────────────────────────────── */
-  figure{margin:2.2rem 0;border:3px solid var(--c1);background:var(--panel);
-    box-shadow:6px 6px 0 var(--panel3)}
-  figure svg{display:block;width:100%;height:auto}
-  figcaption{font:.82rem/1.5 var(--mono);color:var(--dim);padding:.7rem 1rem;
-    border-top:2px solid var(--c1);background:var(--panel2)}
-  .ph{font:700 .72rem/1 var(--mono);letter-spacing:.16em;color:var(--c2)}
+/* ── Stat bar ──────────────────────────────────────────── */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));
+  border:3px solid var(--ink);background:var(--slab);margin:2.4rem 0 0}
+.stat{padding:1rem .5rem;text-align:center;border-right:2px solid var(--rule)}
+.stat:last-child{border-right:0}
+.stat b{display:block;font:800 1.5rem/1 var(--mono);color:var(--torch)}
+.stat span{font:700 .74rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
 
-  /* ── Callout ───────────────────────────────────────── */
-  .callout{border:2px dashed var(--border);background:var(--panel);padding:1.4rem 1.5rem;margin:2rem 0}
-  .callout h3{margin-top:0}
-  pre{background:var(--c1);color:var(--c5);padding:1rem 1.15rem;border-radius:4px;
-    overflow-x:auto;font:.86rem/1.6 var(--mono);margin:0 0 1.15rem}
-  ul{margin:0 0 1.15rem;padding-left:1.3rem}
-  li{margin:.35rem 0}
-  footer{margin-top:3.5rem;padding:2.5rem 0 3.5rem;background:var(--panel);
-    border-top:2px solid var(--border);font-size:.92rem;color:var(--muted);text-align:center}
+/* ── Feature cards ─────────────────────────────────────── */
+.feats{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin:1.6rem 0 1rem}
+.feat{background:var(--slab);border:2px solid var(--ink);padding:1.1rem 1.2rem;position:relative}
+.feat h4{font:700 1rem/1.3 var(--mono);margin:0 0 .5rem;display:flex;align-items:center;gap:.55rem}
+.fico{font-size:1.3rem;line-height:1}
+.feat p{margin:0;font-size:.98rem;line-height:1.62;color:var(--ink2)}
 
-  /* ── Lab report index ──────────────────────────────── */
-  .labgrid h3{font:700 1rem/1.3 var(--mono);margin:1.8rem 0 .5rem;color:var(--c1);
-    border-bottom:2px solid var(--border-lt);padding-bottom:.35rem;
-    display:flex;justify-content:space-between;align-items:baseline}
-  .cnt{font:700 .74rem/1 var(--mono);color:var(--bg);background:var(--border);
-    padding:.22em .5em;border-radius:3px}
-  ul.reports{list-style:none;margin:0 0 .4rem;padding:0;
-    display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:.1rem .9rem}
-  ul.reports li{margin:0;font-size:.9rem;line-height:1.5;padding:.12rem 0;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  a.raw{font:600 .64rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
-    color:var(--dim);text-decoration:none;border:1px solid var(--border-lt);
-    padding:.1em .3em;border-radius:2px;vertical-align:.1em}
-  a.raw:hover{background:var(--c4);color:var(--text)}
+/* ── Screens ───────────────────────────────────────────── */
+figure.shot{margin:2.2rem 0;border:3px solid var(--ink);background:var(--slab);
+  box-shadow:7px 7px 0 var(--slab2)}
+.shot-hd{display:flex;align-items:center;gap:.6rem;padding:.7rem 1.1rem;
+  border-bottom:2px solid var(--ink);background:var(--slab2);
+  font:700 1rem/1.3 var(--mono)}
+.shot-ico{font-size:1.35rem;line-height:1}
+figure.shot img{display:block;width:100%;height:auto;background:#1a1410}
+figure.shot figcaption{font-size:.98rem;line-height:1.62;color:var(--ink2);
+  padding:.9rem 1.1rem;border-top:2px solid var(--rule)}
 
-  /* ── Sticky nav ────────────────────────────────────── */
-  nav.top{position:sticky;top:0;z-index:50;background:var(--panel);
-    border-bottom:2px solid var(--border);font:600 .8rem/1 var(--mono);
-    letter-spacing:.06em;text-transform:uppercase}
-  nav.top .wrap{display:flex;gap:1.3rem;align-items:center;padding:.75rem 1.25rem;
-    overflow-x:auto}
-  nav.top a{color:var(--muted);text-decoration:none;white-space:nowrap}
-  nav.top a:hover{color:var(--c2)}
-  nav.top a.cta{margin-left:auto;background:var(--c4);color:var(--text);
-    padding:.42em .95em;border:2px solid var(--c1);border-radius:3px}
-  nav.top a.cta:hover{background:var(--c3);color:#fff}
+/* ── Lab reports ───────────────────────────────────────── */
+.lab-h{display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:2px solid var(--ink);padding-bottom:.4rem;margin:2rem 0 .6rem}
+.cnt{font:700 .78rem/1 var(--mono);background:var(--ink);color:var(--paper);padding:.28em .6em}
+ul.reports{list-style:none;margin:0 0 .5rem;padding:0;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.15rem 1.2rem}
+ul.reports li{margin:0;font-size:.95rem;line-height:1.62;padding:.18rem 0;
+  display:flex;gap:.5rem;align-items:baseline}
+ul.reports li a:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+a.raw{font:700 .66rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink2);text-decoration:none;border:1.5px solid var(--rule);padding:.18em .35em;flex:none}
+a.raw:hover{background:var(--torch);color:#fff;border-color:var(--torch)}
 
-  /* ── Screenshot gallery ────────────────────────────── */
-  figure.shot{margin:2.4rem 0;border:3px solid var(--c1);background:var(--panel);
-    box-shadow:6px 6px 0 var(--panel3);overflow:hidden}
-  figure.shot img{display:block;width:100%;height:auto;background:#1a1410}
-  figure.shot figcaption{font-size:.95rem;line-height:1.6;color:var(--muted);
-    padding:.9rem 1.15rem;border-top:2px solid var(--c1);background:var(--panel2)}
-  figure.shot figcaption strong{color:var(--c1);font-family:var(--mono);font-size:.9rem;
-    letter-spacing:.02em}
-  @media (max-width:600px){ .play{font-size:1.2rem;padding:1rem 2.2rem} }
+pre.sh{font:14px/1.68 var(--mono);background:var(--ink);color:#EDEAE1;
+  padding:1.1rem 1.2rem;overflow-x:auto;margin:0 0 1.15rem;border:3px solid var(--ink)}
+pre.sh .cm{color:#93A1B5}
+
+footer{margin-top:2rem;padding:2.6rem 0 3.4rem;background:var(--slab);
+  border-top:3px solid var(--ink);text-align:center;font-size:.95rem;color:var(--ink2)}
+@media (max-width:640px){
+  body{font-size:17.5px} .mark{font-size:13rem;opacity:.05} .ghost{font-size:5rem}
+  .play{font-size:1.15rem;padding:.9rem 2rem} pre.mud{font-size:11.5px}
+}
 </style>
 </head>
 <body>
 
-<hr class="stripe">
+<nav class="top"><div class="wrap wide">
+  <a href="#what">What it is</a>
+  <a href="#get">Get it</a>
+  <a href="#screens">Screens</a>
+  <a href="#labs">Lab reports</a>
+  <a href="https://github.com/vonglurt/codexofconquest">GitHub</a>
+  <a class="cta" href="play.html">▶ Play</a>
+</div></nav>
 
-<nav class="top">
-  <div class="wrap">
-    <a href="#get">Get it</a>
-    <a href="#about">About</a>
-    <a href="#shots">Screens</a>
-    <a href="#labs">Lab reports</a>
-    <a href="https://github.com/vonglurt/codexofconquest">GitHub</a>
-    <a class="cta" href="play.html">▶ Play</a>
-  </div>
-</nav>
+<header><div class="wrap">
+  <div class="kicker">One HTML file · No install · No account</div>
+  <h1>Codex <span class="of">of</span> Conquest</h1>
+  <p class="tagline">A text dungeon with the dice showing. Seven scholar-kings died to seal the Void — you have a sword, a coin purse and forty-nine days.</p>
+  <a class="play" href="play.html">▶ PLAY</a>
+  <p class="subplay">Runs offline in your browser · saves stay on your machine</p>
+  <pre class="mud" aria-label="A sample MUD transcript from Codex of Conquest">
+<span class="c-dim">╔════════════════════════════════════════════════════════╗</span>
+<span class="c-dim">║</span> <span class="c-room">CITY STREETS — BIRKA</span>              <span class="c-dim">Act I · Day 1/49</span> <span class="c-dim">║</span>
+<span class="c-dim">╚════════════════════════════════════════════════════════╝</span>
 
-<header>
-  <div class="wrap">
-    <div class="kicker">A single-file adventure RPG</div>
-    <h1>Codex of Conquest</h1>
-    <p class="tagline">Seven scholar-kings died to seal the Void. You have a sword, a coin purse, and forty-nine days.</p>
-    <a class="play" href="play.html">▶ PLAY</a>
-    <p class="subplay">No install · No account · No server · Runs offline in your browser</p>
-  </div>
-</header>
+ Rain on the cobbles. The sky over Birka flickers — and it
+ is not lightning. It is something thinner than that.
 
-<div class="wrap">
+ A young man in a brown courier&#39;s satchel rounds the corner
+ too fast and collapses at your feet. His coat is dark.
+
+ He presses a folded, stained map into your hand.
+
+   <span class="c-say">&gt; &quot;Sweelinck.&quot;</span>
+
+ <span class="c-lbl">EXITS</span>  north: <span class="c-exit">slums</span>   east: <span class="c-exit">inn</span>   down: <span class="c-exit">the crypt</span>
+ <span class="c-lbl">HERE</span>   ▸ courier <span class="c-blood">(dying)</span>   ▸ folded map
+
+<span class="c-dim">────────────────────────────────────────────────────────────</span>
+ <span class="c-you">&gt; take map</span>
+ <span class="c-lbl">WIS Insight</span>  <span class="c-dim">DC 12</span>
+   d20 <span class="c-roll">⟨14⟩</span> <span class="c-dim">+ WIS 1 =</span> <span class="c-roll">15</span>  <span class="c-dim">vs DC 12</span>   ▸ <span class="c-pass">PASS</span>
+ The ink is faded. Four towns. Seven symbols.
+</pre>
   <div class="stats">
     <div class="stat"><b>416</b><span>Nodes</span></div>
     <div class="stat"><b>2,853</b><span>Quests</span></div>
@@ -163,336 +190,314 @@
     <div class="stat"><b>204</b><span>NPCs</span></div>
     <div class="stat"><b>8</b><span>Acts</span></div>
   </div>
-</div>
+</div></header>
 
-<div class="wrap">
+<div class="dither" aria-hidden="true">░░░▒▒▒▓▓▓███▓▓▓▒▒▒░░░</div>
 
-<section id="get">
-  <h2><span class="num">GET IT</span>Three ways in, none of them an installer</h2>
-  <p class="lede">The whole game is one HTML file. There is nothing to build, nothing to sign up for, and no dependency tree to audit before you can read the code.</p>
+<section id="what"><span class="mark">🐉</span><span class="ghost">D&amp;D · MUD</span><div class="wrap">
+  <span class="eyebrow">What it is</span>
+  <h2>A MUD that rolls in the open</h2>
+  <p class="lede">If you have never met either word: a <strong>MUD</strong> is a multi-user dungeon — the text games people played over terminals before graphics, where a room is a paragraph, movement is a compass direction, and the world is described rather than drawn. <strong>D&amp;D</strong> is Dungeons &amp; Dragons, the tabletop game where every uncertain action is settled by rolling a twenty-sided die and adding your character&rsquo;s modifiers against a difficulty number.</p>
+  <p>Codex of Conquest is both at once. You read a room, choose a verb, and walk somewhere. When something is uncertain, the game rolls a <strong>d20</strong> and shows you the whole sum — the die, the modifier, the DC, the outcome — the way a human dungeon master would say it out loud across a table.</p>
+  <p>It uses <strong>D&amp;D 5e</strong> rules: armour class, initiative, advantage and disadvantage, criticals on a natural 20, damage dice by weapon, six ability scores. What it does not do is hide any of it behind an animation.</p>
+  <blockquote><p>You play one Human Fighter Champion, level 1 to 20, crossing a continent alone. You are frequently the hired help in someone else&rsquo;s story — and the game is honest about that. <strong>You witness more than you command.</strong></p></blockquote>
+</div></section>
 
-  <h3>1 · Play it right now</h3>
-  <p>The copy on this site is the current build. <a href="play.html">Open <code>play.html</code></a> and you are in. Saves live in your browser's <code>localStorage</code> — nothing is uploaded anywhere, and nothing phones home.</p>
+<div class="dither" aria-hidden="true">░░░▒▒▒▓▓▓███▓▓▓▒▒▒░░░</div>
 
-  <h3>2 · Download the latest</h3>
-  <p>Grab a snapshot of the repository — or just the one file, which is genuinely all you need:</p>
-  <pre><code># the whole project
-curl -L https://github.com/vonglurt/codexofconquest/archive/refs/heads/main.zip -o codexofconquest.zip
+<section id="get"><span class="mark">📜</span><span class="ghost">CLONE</span><div class="wrap">
+  <span class="eyebrow">Get it</span>
+  <h2>Three ways in, none an installer</h2>
+  <p class="lede">The whole game is one HTML file. Nothing to build, nobody to sign up with, and no dependency tree to audit before you can read the code.</p>
 
-# or only the game, ~5.5 MB, playable offline forever
+  <h3>Play it now</h3>
+  <p>The copy on this site is the current build. <a href="play.html">Open <code>play.html</code></a> and you are in. Saves live in your browser&rsquo;s <code>localStorage</code> — nothing is uploaded, nothing phones home.</p>
+
+  <h3>Take the file</h3>
+  <p>Roughly 5.5&nbsp;MB, and yours forever:</p>
+  <pre class="sh"><span class="cm"># just the game — playable offline, for good</span>
 curl -L -O https://raw.githubusercontent.com/vonglurt/codexofconquest/main/play.html
-open play.html</code></pre>
-  <p>Releases, when they are cut, are on the <a href="https://github.com/vonglurt/codexofconquest/releases">releases page</a>. There is no build artefact to choose between — the tag <em>is</em> the file.</p>
+open play.html
 
-  <h3>3 · Clone it and run the tools</h3>
-  <pre><code>git clone https://github.com/vonglurt/codexofconquest.git
+<span class="cm"># or the whole project</span>
+curl -L https://github.com/vonglurt/codexofconquest/archive/refs/heads/main.zip -o codexofconquest.zip</pre>
+  <p>Tagged builds land on the <a href="https://github.com/vonglurt/codexofconquest/releases">releases page</a>. There is no artefact to choose between — the tag <em>is</em> the file.</p>
+
+  <h3>Clone and run the tools</h3>
+  <pre class="sh">git clone https://github.com/vonglurt/codexofconquest.git
 cd codexofconquest
-make install        # restores src/node_modules
-make                # lists every target
-make play           # API + monitor, opens the game
-make edit           # the world editor
-make check          # the full gate chain
-make test           # 960 Playwright tests</code></pre>
-  <p>The node project lives in <code>src/</code>, not the repo root — see <a href="https://github.com/vonglurt/codexofconquest/blob/main/src/NODE.md"><code>src/NODE.md</code></a> for why, and for how to run npm directly.</p>
-</section>
+make install        <span class="cm"># restores src/node_modules</span>
+make                <span class="cm"># lists every target</span>
+make play           <span class="cm"># API + monitor, opens the game</span>
+make edit           <span class="cm"># the world editor</span>
+make check          <span class="cm"># the full gate chain</span>
+make test           <span class="cm"># 960 Playwright tests</span></pre>
+  <p>The node project lives in <code>src/</code>, not the repo root — <a href="https://github.com/vonglurt/codexofconquest/blob/main/src/NODE.md"><code>src/NODE.md</code></a> explains why, and how to run npm directly.</p>
+</div></section>
 
-<section id="about">
-  <h2><span class="num">THE SHORT VERSION</span>What the README says, in a paragraph</h2>
-  <p><strong>Codex of Conquest is a single-file adventure RPG.</strong> The combat engine, world map, NPC dialogue, quest system, save system, hundreds of monsters and eight acts of story all live inside one HTML file. No server, no build step, no install, no account. You can email it to someone.</p>
-  <p>It is a <strong>quest-driven, MUD-style game</strong> built on <strong>D&amp;D 5e mechanics</strong> that stay visible: the advantaged d20, the stat modifier, the DC and the result are all shown rather than hidden behind an animation. You play one Human Fighter Champion from level 1 to 20, crossing 416 nodes across four towns against a 49-day clock.</p>
-  <p>The authoring tool ships with it. <a href="edit.html"><code>edit.html</code></a> is a visual editor for nodes, terrains, monsters, quests, NPCs and <strong>mission bits</strong> — the flags the world reads to know what you have already done. A set of CI gates checks the world for dead links, unreachable nodes, duplicate keys and quests that can never complete.</p>
-  <p>Everything is <strong>MIT licensed</strong>. Not source-available — actually MIT. <a href="https://github.com/vonglurt/codexofconquest/blob/main/README.md">Read the full README</a>.</p>
-</section>
+<div class="dither" aria-hidden="true">░░░▒▒▒▓▓▓███▓▓▓▒▒▒░░░</div>
 
-<section>
-  <h2><span class="num">THE PREMISE</span>A dying courier, and a map you did not ask for</h2>
-  <p class="lede">You are in the streets of Birka when a young man in a brown courier's satchel rounds a corner too fast and collapses at your feet. His coat is dark with blood. He presses a folded, stained map into your hand and says one word before his eyes close: <em>"Sweelinck."</em></p>
-  <p>The Codex of Seven Seals binds the Void. Seven scholar-kings each carried one Shard into hiding before they died, and the seals are weakening now — monsters walk where they never walked, and the sky over Birka flickers. The courier found six of the seven. The seventh would have meant walking back through Birka, and the Void's outriders were already following him. He ran anyway, because the map had to reach someone.</p>
-  <p>That someone is you. The Void is not a fog of consuming darkness. It is a <strong>conqueror</strong> — it advances where the defenders are thin and retreats where they are strong. You have until Day 49.</p>
-</section>
-
-<figure class="shot">
-    <img src="assets/screenshots/06-battle.png" alt="Codex of Conquest combat tracker — two d20 rolls, attack modifier and target AC" width="1280">
-    <figcaption><strong>The combat tracker</strong> — a real screen from the running game. The opponent's roll and yours, side by side, with the whole sum shown: <code>d20 +6 vs AC 13 (1d8+3)</code>. Attack roll, skill check and saving throw are the same three buttons all game.</figcaption>
-  </figure>
-
-<section>
-  <h2><span class="num">WHO IT IS FOR</span>If you miss text that respected you</h2>
-  <p>This is built for people who played MUDs at 2am and still think about them. For people who like <strong>D&amp;D 5e mechanics</strong> visible on screen — the advantaged d20, the stat modifier, the DC, the result — instead of hidden behind an animation. For roguelike and interactive-fiction readers who want prose that carries weight, and for tinkerers who want to open the file and change the world themselves.</p>
-  <p>It is a <strong>quest-driven, MUD-style RPG</strong>: you read, you choose a verb, you walk somewhere, something happens, and the world remembers. There is no twitch input and nothing to install. If you have ever wanted a game you could email to a friend as a single attachment, this is that.</p>
-  <blockquote><p>The architecture is its own argument: <strong>the thing you make should be giveable.</strong></p></blockquote>
-</section>
-
-<section>
-  <h2><span class="num">THE CLASS</span>You are a Fighter, and everything follows from that</h2>
-  <p>You play a single Human Fighter Champion from level 1 to 20. Not a party — one person, crossing a continent. Every system below is built around what a fighter can actually do: walk, look, fight, carry, ask, endure. You are frequently the hired help in someone else's story, and the game is honest about that. You witness more than you command.</p>
-  <div class="feat">
-    <div><h4><span class="ico">🚶</span>Walking</h4><p>Movement is a real system, not a menu. A cell grid with roads, junctions and sea lanes; terrain decides your encounter rate; distance costs you days against a 49-day clock.</p></div>
-    <div><h4><span class="ico">🗺️</span>World map</h4><p>416 nodes across four towns and eight acts — Birka, Tilbury, Visby, Weimar — with a live minimap, a region view and auto-travel along the road network.</p></div>
-    <div><h4><span class="ico">⚔️</span>D&amp;D 5e combat</h4><p>Initiative, AC, advantage, criticals, damage dice. 398 monsters across tiers, with the whole roll shown to you: d20, modifier, target, outcome.</p></div>
-    <div><h4><span class="ico">◆</span>Quest system</h4><p>2,853 quests. Escort vignettes, waypoint deliveries, arcs that span acts. Arrival can complete a quest — walking to the right place <em>is</em> the verb.</p></div>
-    <div><h4><span class="ico">🎣</span>Fishing games</h4><p>Not one minigame but several: bait selection, cast timing against a pool table, day and night species, rod and tackle upgrades, and a readable in-game Fishing Guide. Catches feed the economy, quests and the inn ledger.</p></div>
-    <div><h4><span class="ico">🎲</span>Skill checks</h4><p>STR, DEX, CON, INT, WIS, CHA — and Luck as a seventh stat. Named DCs, visible rolls, and failure that costs you time rather than ending the run.</p></div>
-    <div><h4><span class="ico">💬</span>NPCs &amp; favour</h4><p>204 NPC profiles and 213 dialogue sets. Favourability rises when you choose people over efficiency, and the ending names the friends you kept.</p></div>
-    <div><h4><span class="ico">🔖</span>Mission bits</h4><p>The world's memory. Every witnessed event sets a bit, and gates, quests and dialogue read them — so the world knows what you have already done.</p></div>
-    <div><h4><span class="ico">🌑</span>Void pressure</h4><p>The real loss condition. Pressure builds where defenders are thin; the Epic Battlegrounds are twenty specific failures waiting for someone with your capability.</p></div>
-    <div><h4><span class="ico">💀</span>Death &amp; loot</h4><p>Death leaves a corpse and a grave marker you can walk back to. Loot tables, weapon economy, and an honest message about what you lost.</p></div>
-    <div><h4><span class="ico">🖋️</span>Tattoos &amp; progression</h4><p>A progression track carried in ink. Perks, badges and marks that survive into New Game+ along with the journal you filled.</p></div>
-    <div><h4><span class="ico">🌐</span>Multiplayer mesh</h4><p>Optional. Run the local server and your world joins a peer mesh — presence, chat, consensual duels, shared maps, hash-chained ledgers.</p></div>
+<section><span class="mark">🗝️</span><span class="ghost">SYSTEMS</span><div class="wrap wide">
+  <span class="eyebrow">Systems</span>
+  <h2>Everything a fighter can actually do</h2>
+  <p class="lede">Walk, look, fight, carry, ask, endure. Every system below is built around those verbs — because that is the whole of what one person with a sword can bring to a continent.</p>
+  <div class="feats">
+      <div class="feat"><h4><span class="fico">🚶</span>Walking</h4><p>Movement is a system, not a menu. A cell grid with roads, junctions and sea lanes; terrain sets your encounter rate; distance costs days against the clock.</p></div>
+      <div class="feat"><h4><span class="fico">🗺️</span>World map</h4><p>416 nodes across four towns and eight acts — Birka, Tilbury, Visby, Weimar — with a live minimap, a region view and auto-travel along the road net.</p></div>
+      <div class="feat"><h4><span class="fico">◆</span>Quests</h4><p>2,853 of them. Escort vignettes, waypoint deliveries, arcs spanning acts. Arrival can complete a quest: walking to the right place <em>is</em> the verb.</p></div>
+      <div class="feat"><h4><span class="fico">👹</span>Monsters</h4><p>398 across tiers, with encounter rates per terrain — so walking somewhere you are not ready for is legible before it is fatal.</p></div>
+      <div class="feat"><h4><span class="fico">🎲</span>Skill checks</h4><p>STR, DEX, CON, INT, WIS, CHA — and Luck. DCs are named before you commit, and failure usually costs days rather than the run.</p></div>
+      <div class="feat"><h4><span class="fico">💬</span>NPCs &amp; favour</h4><p>204 profiles, 213 dialogue sets. Favour rises when you choose people over efficiency, and the ending names the friends you kept.</p></div>
+      <div class="feat"><h4><span class="fico">🔖</span>Mission bits</h4><p>The world&rsquo;s memory. Every witnessed event sets a bit; gates, quests and dialogue read them, so the world knows what you have done.</p></div>
+      <div class="feat"><h4><span class="fico">🌑</span>Void pressure</h4><p>The real loss condition. Pressure builds where defenders are thin — the twenty Epic Battlegrounds are specific failures waiting for you.</p></div>
+      <div class="feat"><h4><span class="fico">🪦</span>Death &amp; loot</h4><p>Death leaves a corpse and a grave marker you can walk back to. Loot tables, weapon economy, and an honest message about what you lost.</p></div>
+      <div class="feat"><h4><span class="fico">🖋️</span>Tattoos</h4><p>A progression track carried in ink. Perks, badges and marks that survive New Game+ along with the journal you filled.</p></div>
+      <div class="feat"><h4><span class="fico">🌐</span>Mesh multiplayer</h4><p>Optional. Run the local server and your world joins a peer mesh — presence, chat, consensual duels, shared maps, hash-chained ledgers.</p></div>
+      <div class="feat"><h4><span class="fico">📓</span>The journal</h4><p>Seventeen entries from a dead courier. Entry 41 stops mid-page. In New Game+, you write Entry 42.</p></div>
   </div>
-</section>
+</div></section>
 
-<section>
-  <h2><span class="num">THE DICE</span>An advantaged d20, and every modifier shown</h2>
-  <p class="lede">Every outcome in the game resolves on a <strong>d20</strong>, and the game shows you the whole sum. Not a result — the arithmetic.</p>
-  <p>Roll with <strong>advantage</strong> and two dice appear side by side; the higher is taken and the discarded die stays on screen so you can see what you were spared. Roll with <strong>disadvantage</strong> and the lower one wins instead. Terrain, injury, gear, a friend standing next to you, a tattoo you earned nine hours ago — any of them can grant it.</p>
-  <p>On top of the die sits your <strong>custom stat modifier</strong>. Six abilities — STR, DEX, CON, INT, WIS, CHA — plus <strong>Luck</strong> as a seventh stat that behaves like none of the others. Point-buy at character creation, then proficiency, class bonuses and situational modifiers stack on top. A skill check names its DC before you commit, so a hard roll is a decision rather than a surprise.</p>
-  <blockquote><p><code>d20 + STR 3 + prof 2 + advantage = 22 vs DC 14 → PASS</code><br>The story does not resolve the battle. The dice do.</p></blockquote>
-  <p>Combat runs the same way: initiative, armour class, attack rolls, criticals on a natural 20, damage dice by weapon, and 398 monsters tiered so that walking somewhere you are not ready for is legible before it is fatal. Failure usually costs you <em>days</em> against the 49-day clock rather than ending the run — the Void advances while you recover.</p>
-</section>
+<div class="dither" aria-hidden="true">░░░▒▒▒▓▓▓███▓▓▓▒▒▒░░░</div>
 
-<section>
-  <h2><span class="num">THE STORY LAYER</span>A journal that stops mid-page</h2>
-  <p>The courier's name was Froberger. His journal is found early and read in fragments — seventeen entries, five of which are read aloud at specific places in the world. Entry 41 is the last one. He stopped writing in the middle of the page, and the blank line below it is not an accident.</p>
-  <p>The game's theme is the <em>curse of knowledge</em>: once you understand something, you can no longer remember what it was like not to. Froberger saw the Void clearly and tried telling people. They could not hear it. So he stopped telling and started fixing, and became the only one who could do what needed doing — and that, not anything with teeth, is what destroyed him. In New Game+, you write Entry 42.</p>
-  <p>There are four endings. One of them names every person you helped, by name. One of them does not.</p>
-</section>
+<section id="screens"><span class="mark">🖼️</span><span class="ghost">SCREENS</span><div class="wrap wide">
+  <span class="eyebrow">See it</span>
+  <h2>Nine surfaces, one at a time</h2>
+  <p class="lede">Every image below is a crop of the running game, captured straight from the test harness — not a mockup and not a render. The state behind each was seeded the same way the integration suite seeds it.</p>
+    <figure class="shot">
+      <div class="shot-hd"><span class="shot-ico">🎭</span><strong>Character creation</strong></div>
+      <img src="assets/screenshots/01-character-creation.png" alt="Character creation — Codex of Conquest" loading="lazy" width="1280">
+      <figcaption>Choose an origin, then spend a 27-point budget in the open — the costs are printed right there: 9→1, 10→2, 11→3, 12→4, 13→5, 14→7, 15→9.</figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="shot-hd"><span class="shot-ico">🧮</span><strong>Point-buy allocation</strong></div>
+      <img src="assets/screenshots/02-stat-point-buy.png" alt="Point-buy allocation — Codex of Conquest" loading="lazy" width="1280">
+      <figcaption>Every modifier updates as you spend. Nothing is rolled behind your back, and nothing is hidden until later.</figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="shot-hd"><span class="shot-ico">📋</span><strong>The character sheet</strong></div>
+      <img src="assets/screenshots/04-character-sheet.png" alt="The character sheet — Codex of Conquest" loading="lazy" width="1280">
+      <figcaption>Six abilities, proficiency, AC and max HP — plus Luck as a seventh stat that behaves like none of the others.</figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="shot-hd"><span class="shot-ico">⚔️</span><strong>Combat on an advantaged d20</strong></div>
+      <img src="assets/screenshots/06-battle.png" alt="Combat on an advantaged d20 — Codex of Conquest" loading="lazy" width="1280">
+      <figcaption>The die, the modifier, the target and the result: <code>d20 +6 vs AC 13 (1d8+3)</code>. Attack, skill check and saving throw are the same three buttons all game.</figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="shot-hd"><span class="shot-ico">🏆</span><strong>Victory</strong></div>
+      <img src="assets/screenshots/09-victory.png" alt="Victory — Codex of Conquest" loading="lazy" width="1280">
+      <figcaption>A fight ends and the banner says so. What it paid — XP, gold, drops — lands in the log behind it.</figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="shot-hd"><span class="shot-ico">💀</span><strong>Death saves</strong></div>
+      <img src="assets/screenshots/08-death-saves.png" alt="Death saves — Codex of Conquest" loading="lazy" width="1280">
+      <figcaption>Drop to zero and you are <em>dying</em>, not dead. Three successes or three failures on a d20, rolled where you can see them.</figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="shot-hd"><span class="shot-ico">🎒</span><strong>Inventory</strong></div>
+      <img src="assets/screenshots/03-inventory.png" alt="Inventory — Codex of Conquest" loading="lazy" width="1280">
+      <figcaption>Sorted by what a thing is for. Every item says what it does and what it is worth; equipping is one click.</figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="shot-hd"><span class="shot-ico">🎣</span><strong>Fishing gear and bait</strong></div>
+      <img src="assets/screenshots/05-fishing.png" alt="Fishing gear and bait — Codex of Conquest" loading="lazy" width="1280">
+      <figcaption>Shore, reeds and deep water unlock separately. Day and night hold different species. Catches feed the economy, quests and the inn ledger.</figcaption>
+    </figure>
+    <figure class="shot">
+      <div class="shot-hd"><span class="shot-ico">⭐</span><strong>Level up</strong></div>
+      <img src="assets/screenshots/07-level-up.png" alt="Level up — Codex of Conquest" loading="lazy" width="1280">
+      <figcaption>Roll the hit die yourself — d10 plus your CON modifier. The feature you gained is named, and the sheet shows exactly what changed.</figcaption>
+    </figure>
+</div></section>
 
-<section>
-  <h2><span class="num">BUILD THE WORLD</span>edit.html — the authoring tool</h2>
-  <p>The game ships with its own editor. <a href="edit.html">edit.html</a> is a visual world builder where nodes, terrains, monsters, quests, NPCs and <strong>mission bits are set, configured and edited</strong> — the same bits the game reads at runtime to decide what has happened and what is now possible.</p>
-  <p>Point it at the local API server and you can add a town, wire a road, write a quest chain and watch it appear in the running game. The whole authoring pipeline emits a documented quest format, and a set of CI gates check the world for dead links, unreachable nodes, duplicate keys and quests that can never complete.</p>
-  <div class="callout">
-    <h3>Run it locally</h3>
-    <pre>git clone https://github.com/vonglurt/codexofconquest.git
-cd codexofconquest
-make run          # monitor + API server + opens the game
-make worldbuilder # the authoring tool, API and monitor</pre>
-    <p style="margin:0">Or skip all of it and just open <code>play.html</code> in a browser. The game needs nothing else.</p>
-  </div>
-</section>
+<div class="dither" aria-hidden="true">░░░▒▒▒▓▓▓███▓▓▓▒▒▒░░░</div>
 
-<section id="shots">
-  <h2><span class="num">SEE IT</span>Nine surfaces, one at a time</h2>
-  <p class="lede">Every image below is a crop of the running game, captured straight from the test harness — not a mockup, not a render. The state behind each one was seeded the same way the integration suite seeds it.</p>
+<section><span class="mark">📓</span><span class="ghost">ENTRY 42</span><div class="wrap">
+  <span class="eyebrow">The story layer</span>
+  <h2>A journal that stops mid-page</h2>
+  <p>The courier&rsquo;s name was Froberger. His journal is found early and read in fragments — seventeen entries, five of them read aloud at particular places in the world. Entry 41 is the last. He stopped writing in the middle of the page, and the blank line beneath it is not an accident.</p>
+  <p>The theme is the <em>curse of knowledge</em>: once you understand something, you can no longer remember what it was like not to. Froberger saw the Void clearly and tried telling people. They could not hear it. So he stopped telling and started fixing, and became the only one who could do what needed doing — and that, not anything with teeth, is what destroyed him.</p>
+  <p>In New Game+, you write Entry 42. There are four endings; one names every person you helped, by name. One does not.</p>
+</div></section>
 
-  <figure class="shot">
-    <img src="assets/screenshots/01-character-creation.png" alt="Character creation — Codex of Conquest" loading="lazy" width="1280">
-    <figcaption><strong>Character creation</strong> — Choose an origin, then spend a 27-point budget in the open. Custom Build or Hard Mode — and the tattoos on your arm will record every level-up decision you make from here.</figcaption>
-  </figure>
+<div class="dither" aria-hidden="true">░░░▒▒▒▓▓▓███▓▓▓▒▒▒░░░</div>
 
-  <figure class="shot">
-    <img src="assets/screenshots/02-stat-point-buy.png" alt="Stat point allocation — Codex of Conquest" loading="lazy" width="1280">
-    <figcaption><strong>Stat point allocation</strong> — The costs are printed on the screen: 9→1, 10→2, 11→3, 12→4, 13→5, 14→7, 15→9. Every modifier updates as you spend. Nothing is rolled behind your back.</figcaption>
-  </figure>
+<section><span class="mark">🛠️</span><span class="ghost">BUILD</span><div class="wrap">
+  <span class="eyebrow">Build the world</span>
+  <h2>The editor ships with it</h2>
+  <p><a href="edit.html"><code>edit.html</code></a> is a visual world builder — nodes, terrains, monsters, quests, NPCs and <strong>mission bits</strong>, the flags the game reads to know what has already happened. Point it at the local API and you can add a town, wire a road, write a quest chain and watch it appear in the running game.</p>
+  <p>A set of CI gates then checks the world for dead links, unreachable nodes, duplicate keys and quests that can never complete — because content that cannot be reached is the failure mode this project keeps finding.</p>
+</div></section>
 
-  <figure class="shot">
-    <img src="assets/screenshots/04-character-sheet.png" alt="The character sheet — Codex of Conquest" loading="lazy" width="1280">
-    <figcaption><strong>The character sheet</strong> — Six abilities, proficiency, AC and max HP — plus Luck as a seventh stat that behaves like none of the others. The sheet is the same one the combat tracker reads.</figcaption>
-  </figure>
+<div class="dither" aria-hidden="true">░░░▒▒▒▓▓▓███▓▓▓▒▒▒░░░</div>
 
-  <figure class="shot">
-    <img src="assets/screenshots/06-battle.png" alt="Combat on an advantaged d20 — Codex of Conquest" loading="lazy" width="1280">
-    <figcaption><strong>Combat on an advantaged d20</strong> — The die, the modifier, the target and the result, all on screen: <code>d20 +6 vs AC 13 (1d8+3)</code>. Roll as an attack, a skill check or a saving throw. Resistance and vulnerability are one click.</figcaption>
-  </figure>
+<section id="labs"><span class="mark">🔬</span><span class="ghost">114</span><div class="wrap wide">
+  <span class="eyebrow">The lab reports</span>
+  <h2>114 write-ups, each measured</h2>
+  <p class="lede">This project documents itself unusually hard. Every significant piece of work has an engineering write-up: the spec, what actually shipped, and a delta table naming everything that did not.</p>
+  <p>They are not marketing. A report claiming something that never shipped is marked <strong>NOT SHIPPED</strong> and kept, because the gap is the useful part. Their line-number citations are gate-checked — <strong>4,718 anchors across 118 documents, zero dead</strong>. Titles open the rendered document; <span class="raw" style="border:1.5px solid var(--rule);padding:.18em .35em;font:700 .66rem var(--mono)">RAW</span> gives you the plain markdown.</p>
+    <h3 class="lab-h">Architecture & Engine<span class="cnt">15</span></h3>
+    <ul class="reports">
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-architecture-full.md">architecture full</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-architecture-full.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-documentation-system-design.md">documentation system design</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-documentation-system-design.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-javascript-mud.md">javascript mud</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-javascript-mud.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-mesh-sync-architecture.md">mesh sync architecture</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-mesh-sync-architecture.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-meta-corpus-analysis.md">meta corpus analysis</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-meta-corpus-analysis.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-meta-process-loop-expansion.md">meta process loop expansion</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-meta-process-loop-expansion.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-page-generation-quests-waypoints-missionbits.md">page generation quests waypoints missionbits</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-page-generation-quests-waypoints-missionbits.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-quest-api-architecture.md">quest api architecture</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-quest-api-architecture.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-quest-data-code-separation.md">quest data code separation</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-quest-data-code-separation.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part1-architecture.md">synthesis part1 architecture</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part1-architecture.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-uqf-migration-playbook.md">uqf migration playbook</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-uqf-migration-playbook.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-wbapi-architecture.md">wbapi architecture</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-wbapi-architecture.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-wbapi-evolution.md">wbapi evolution</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-wbapi-evolution.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-wbapi.md">wbapi</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-wbapi.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-wbapi01-ph3-array-patch.md">wbapi01 ph3 array patch</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-wbapi01-ph3-array-patch.md" title="raw markdown">raw</a></li>
+    </ul>
+    <h3 class="lab-h">The Quest VM (§VM-01)<span class="cnt">9</span></h3>
+    <ul class="reports">
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01a-execbits-coroutine.md">vm01a execbits coroutine</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01a-execbits-coroutine.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01b-client-rng-seed.md">vm01b client rng seed</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01b-client-rng-seed.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01c-env-state-passing.md">vm01c env state passing</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01c-env-state-passing.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01d-quest-core-parity.md">vm01d quest core parity</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01d-quest-core-parity.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01e-softlock-prover.md">vm01e softlock prover</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01e-softlock-prover.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01f-fu-activatenode-index.md">vm01f fu activatenode index</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01f-fu-activatenode-index.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01f-gate-expression-ast.md">vm01f gate expression ast</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01f-gate-expression-ast.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01g-migration-front.md">vm01g migration front</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01g-migration-front.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01g4-per-verb.md">vm01g4 per verb</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01g4-per-verb.md" title="raw markdown">raw</a></li>
+    </ul>
+    <h3 class="lab-h">Combat, Economy & Progression<span class="cnt">18</span></h3>
+    <ul class="reports">
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-ceremonia-roll-skill-checks.md">ceremonia roll skill checks</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-ceremonia-roll-skill-checks.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-death-loot-grave.md">death loot grave</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-death-loot-grave.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-drop-rates-balance-and-health.md">drop rates balance and health</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-drop-rates-balance-and-health.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-fish-with-dnd.md">fish with dnd</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-fish-with-dnd.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-fishing-bait-prompting.md">fishing bait prompting</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-fishing-bait-prompting.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-kindness-calculus.md">kindness calculus</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-kindness-calculus.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-leveling-flashbang-condition-economy.md">leveling flashbang condition economy</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-leveling-flashbang-condition-economy.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-loot-drop-system-v2.md">loot drop system v2</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-loot-drop-system-v2.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-luck-seventh-stat.md">luck seventh stat</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-luck-seventh-stat.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-01-xp01-universal-effort-xp.md">play 01 xp01 universal effort xp</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-01-xp01-universal-effort-xp.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-01a-courier-map.md">play 01a courier map</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-01a-courier-map.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-01b-conquerors-hand.md">play 01b conquerors hand</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-01b-conquerors-hand.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-01c-no-postponements.md">play 01c no postponements</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-01c-no-postponements.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-01d-friendships-with-magic.md">play 01d friendships with magic</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-01d-friendships-with-magic.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-review.md">play review</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-review.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part2-combat-mechanics.md">synthesis part2 combat mechanics</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part2-combat-mechanics.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part4-monsters-fishing.md">synthesis part4 monsters fishing</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part4-monsters-fishing.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-tattoo-progression-system.md">tattoo progression system</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-tattoo-progression-system.md" title="raw markdown">raw</a></li>
+    </ul>
+    <h3 class="lab-h">World, Map & Navigation<span class="cnt">21</span></h3>
+    <ul class="reports">
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-battleground-circuit-path-quest.md">battleground circuit path quest</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-battleground-circuit-path-quest.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-cell-map-mud-redesign.md">cell map mud redesign</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-cell-map-mud-redesign.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-circuit-map-theory.md">circuit map theory</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-circuit-map-theory.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-highway-mesh-entry.md">highway mesh entry</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-highway-mesh-entry.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-ieee-map-visualization.md">ieee map visualization</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-ieee-map-visualization.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-kg-corridor-quest-chain.md">kg corridor quest chain</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-kg-corridor-quest-chain.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-kg-russia-kindergarten-zones.md">kg russia kindergarten zones</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-kg-russia-kindergarten-zones.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-map-audit-layout-tooling.md">map audit layout tooling</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-map-audit-layout-tooling.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-map-layout-solver.md">map layout solver</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-map-layout-solver.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-math01-completions.md">math01 completions</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-math01-completions.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-mega-reweave.md">mega reweave</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-mega-reweave.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-movement-by-cells.md">movement by cells</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-movement-by-cells.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-nav01-navigable-world.md">nav01 navigable world</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-nav01-navigable-world.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-node-network-reconnection.md">node network reconnection</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-node-network-reconnection.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-npc-card-map.md">npc card map</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-npc-card-map.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part3-world-navigation.md">synthesis part3 world navigation</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part3-world-navigation.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-terrain-field-mover-redesign.md">terrain field mover redesign</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-terrain-field-mover-redesign.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-timeless-movement-hunt-removal.md">timeless movement hunt removal</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-timeless-movement-hunt-removal.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-walk15fu-grid-resolution.md">walk15fu grid resolution</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-walk15fu-grid-resolution.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-walk5-mud-harness.md">walk5 mud harness</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-walk5-mud-harness.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-world-structure-critique.md">world structure critique</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-world-structure-critique.md" title="raw markdown">raw</a></li>
+    </ul>
+    <h3 class="lab-h">Narrative & Arcs<span class="cnt">35</span></h3>
+    <ul class="reports">
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-ally-cat.md">ally cat</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-ally-cat.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-birka-beginner-arc.md">birka beginner arc</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-birka-beginner-arc.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-corelli-merchant.md">corelli merchant</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-corelli-merchant.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-crown-three-hags.md">crown three hags</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-crown-three-hags.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-dungeon-ten-themes.md">dungeon ten themes</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-dungeon-ten-themes.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-endings-and-echoes.md">endings and echoes</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-endings-and-echoes.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-epic-battlegrounds.md">epic battlegrounds</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-epic-battlegrounds.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-friendships-with-magic.md">friendships with magic</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-friendships-with-magic.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-game-story-codex-of-conquest.md">game story codex of conquest</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-game-story-codex-of-conquest.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-kenickie-chronicle.md">kenickie chronicle</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-kenickie-chronicle.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-la-riva-grief-arc.md">la riva grief arc</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-la-riva-grief-arc.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-littoral-courts.md">littoral courts</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-littoral-courts.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-living-world.md">living world</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-living-world.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md">narrative arcs brynn bruhns yael</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-naval-campaign-layer.md">naval campaign layer</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-naval-campaign-layer.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-ng-plus-remembrance.md">ng plus remembrance</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-ng-plus-remembrance.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-npc-01-d-talk-verb.md">npc 01 d talk verb</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-npc-01-d-talk-verb.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-npc-dialogue-system.md">npc dialogue system</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-npc-dialogue-system.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-npc-speak-sdk.md">npc speak sdk</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-npc-speak-sdk.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-ponies-unicorns-aspirations-future-ideas.md">ponies unicorns aspirations future ideas</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-ponies-unicorns-aspirations-future-ideas.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-quest-minus-one-world-creator.md">quest minus one world creator</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-quest-minus-one-world-creator.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-saul-paul-travel-reference.md">saul paul travel reference</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-saul-paul-travel-reference.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-saul-paul-vignette-spec.md">saul paul vignette spec</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-saul-paul-vignette-spec.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-story-codoex-curse-of-knowedge.md">story codoex curse of knowedge</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-story-codoex-curse-of-knowedge.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part5-npc-narrative.md">synthesis part5 npc narrative</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part5-npc-narrative.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part6-quest-arcs.md">synthesis part6 quest arcs</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part6-quest-arcs.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-tilbury-visby-arcs.md">tilbury visby arcs</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-tilbury-visby-arcs.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-void-archaeology.md">void archaeology</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-void-archaeology.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-void-shaman.md">void shaman</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-void-shaman.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-void-tide-bounties.md">void tide bounties</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-void-tide-bounties.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-warrant-standing.md">warrant standing</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-warrant-standing.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-warrants-board.md">warrants board</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-warrants-board.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-web-of-connections.md">web of connections</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-web-of-connections.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-weimar-scholar-gate.md">weimar scholar gate</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-weimar-scholar-gate.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-wisdom-arc.md">wisdom arc</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-wisdom-arc.md" title="raw markdown">raw</a></li>
+    </ul>
+    <h3 class="lab-h">Multiplayer & Mesh<span class="cnt">3</span></h3>
+    <ul class="reports">
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-mesh-multiuser.md">mesh multiuser</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-mesh-multiuser.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-mesh02-connections-ui.md">mesh02 connections ui</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-mesh02-connections-ui.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-world-mesh-construction.md">world mesh construction</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-world-mesh-construction.md" title="raw markdown">raw</a></li>
+    </ul>
+    <h3 class="lab-h">Tooling & Process<span class="cnt">6</span></h3>
+    <ul class="reports">
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-editor01d-fu-b-ladder-migration.md">editor01d fu b ladder migration</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-editor01d-fu-b-ladder-migration.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-editor01d-fu-chain-ui.md">editor01d fu chain ui</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-editor01d-fu-chain-ui.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-editor01d-itemchain.md">editor01d itemchain</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-editor01d-itemchain.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-editor02-mission-builder.md">editor02 mission builder</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-editor02-mission-builder.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-prompt-migration-arena-to-prototype.md">prompt migration arena to prototype</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-prompt-migration-arena-to-prototype.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-sp4-documentation-sync-pass.md">sp4 documentation sync pass</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-sp4-documentation-sync-pass.md" title="raw markdown">raw</a></li>
+    </ul>
+    <h3 class="lab-h">Other<span class="cnt">7</span></h3>
+    <ul class="reports">
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-Polyphonic-Organ-Synth.md">Polyphonic Organ Synth</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-Polyphonic-Organ-Synth.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-api-redesign-summary.md">api redesign summary</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-api-redesign-summary.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-junction-reweave-overhaul.md">junction reweave overhaul</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-junction-reweave-overhaul.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part7-writing-design-philosophy.md">synthesis part7 writing design philosophy</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part7-writing-design-philosophy.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-world-reset-procedure.md">world reset procedure</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-world-reset-procedure.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-worldbuilder-grid-ui.md">worldbuilder grid ui</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-worldbuilder-grid-ui.md" title="raw markdown">raw</a></li>
+      <li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/plan-world-connectivity.md">plan world connectivity</a><a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/plan-world-connectivity.md" title="raw markdown">raw</a></li>
+    </ul>
+  <p style="margin-top:1.6rem">Whole folder: <a href="https://github.com/vonglurt/codexofconquest/tree/main/docs/lab-reports">docs/lab-reports/</a> · master index: <a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/design/index.md">docs/design/index.md</a> · open work: <a href="https://github.com/vonglurt/codexofconquest/tree/main/docs/backlog">six phase backlogs</a>.</p>
+</div></section>
 
-  <figure class="shot">
-    <img src="assets/screenshots/09-victory.png" alt="Victory — Codex of Conquest" loading="lazy" width="1280">
-    <figcaption><strong>Victory</strong> — A fight ends and the banner tells you so. What it paid — XP, gold, drops — lands in the log behind it.</figcaption>
-  </figure>
+<div class="dither" aria-hidden="true">░░░▒▒▒▓▓▓███▓▓▓▒▒▒░░░</div>
 
-  <figure class="shot">
-    <img src="assets/screenshots/08-death-saves.png" alt="Death saves — Codex of Conquest" loading="lazy" width="1280">
-    <figcaption><strong>Death saves</strong> — Drop to zero and you are <em>dying</em>, not dead. Three successes or three failures on a d20, rolled where you can see them. Death leaves a corpse and a grave marker you can walk back to.</figcaption>
-  </figure>
-
-  <figure class="shot">
-    <img src="assets/screenshots/03-inventory.png" alt="Inventory — Codex of Conquest" loading="lazy" width="1280">
-    <figcaption><strong>Inventory</strong> — Sorted by what a thing is for — consumables, weapons, trophies. Every item says what it does and what it is worth, and equipping is one click.</figcaption>
-  </figure>
-
-  <figure class="shot">
-    <img src="assets/screenshots/05-fishing.png" alt="Fishing gear and bait — Codex of Conquest" loading="lazy" width="1280">
-    <figcaption><strong>Fishing gear and bait</strong> — Bait, zones and DCs. Shore, reeds and deep water unlock separately; day and night hold different species. Catches feed the economy, quests and the inn ledger.</figcaption>
-  </figure>
-
-  <figure class="shot">
-    <img src="assets/screenshots/07-level-up.png" alt="Level up — Codex of Conquest" loading="lazy" width="1280">
-    <figcaption><strong>Level up</strong> — Roll the hit die yourself — d10 plus your CON modifier. The feature you gained is named and explained, and the sheet below it shows exactly what changed.</figcaption>
-  </figure>
-</section>
-
-<section id="labs">
-  <h2><span class="num">THE LAB REPORTS</span>114 write-ups, each measured against the live file</h2>
-  <p class="lede">This project documents itself unusually hard. Every significant piece of work has an engineering write-up — a spec, what actually shipped, and a delta table naming everything that did not.</p>
-  <p>They are not marketing. A report that claimed something which never shipped is marked <strong>NOT SHIPPED</strong> and kept, because the useful part is the gap. Line-number citations in them are checked by a CI gate: <strong>4,718 anchors across 118 documents, zero dead</strong>. Each title below opens the rendered document on GitHub; <a class="raw" href="#labs">raw</a> gives you the plain markdown.</p>
-  <div class="labgrid">
-<h3>Architecture & Engine <span class="cnt">15</span></h3>
-<ul class="reports">
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-architecture-full.md">architecture full</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-architecture-full.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-documentation-system-design.md">documentation system design</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-documentation-system-design.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-javascript-mud.md">javascript mud</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-javascript-mud.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-mesh-sync-architecture.md">mesh sync architecture</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-mesh-sync-architecture.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-meta-corpus-analysis.md">meta corpus analysis</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-meta-corpus-analysis.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-meta-process-loop-expansion.md">meta process loop expansion</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-meta-process-loop-expansion.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-page-generation-quests-waypoints-missionbits.md">page generation quests waypoints missionbits</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-page-generation-quests-waypoints-missionbits.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-quest-api-architecture.md">quest api architecture</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-quest-api-architecture.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-quest-data-code-separation.md">quest data code separation</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-quest-data-code-separation.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part1-architecture.md">synthesis part1 architecture</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part1-architecture.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-uqf-migration-playbook.md">uqf migration playbook</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-uqf-migration-playbook.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-wbapi-architecture.md">wbapi architecture</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-wbapi-architecture.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-wbapi-evolution.md">wbapi evolution</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-wbapi-evolution.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-wbapi.md">wbapi</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-wbapi.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-wbapi01-ph3-array-patch.md">wbapi01 ph3 array patch</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-wbapi01-ph3-array-patch.md" title="raw markdown">raw</a></li>
-</ul>
-<h3>The Quest VM (§VM-01) <span class="cnt">9</span></h3>
-<ul class="reports">
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01a-execbits-coroutine.md">vm01a execbits coroutine</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01a-execbits-coroutine.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01b-client-rng-seed.md">vm01b client rng seed</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01b-client-rng-seed.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01c-env-state-passing.md">vm01c env state passing</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01c-env-state-passing.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01d-quest-core-parity.md">vm01d quest core parity</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01d-quest-core-parity.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01e-softlock-prover.md">vm01e softlock prover</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01e-softlock-prover.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01f-fu-activatenode-index.md">vm01f fu activatenode index</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01f-fu-activatenode-index.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01f-gate-expression-ast.md">vm01f gate expression ast</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01f-gate-expression-ast.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01g-migration-front.md">vm01g migration front</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01g-migration-front.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-vm01g4-per-verb.md">vm01g4 per verb</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-vm01g4-per-verb.md" title="raw markdown">raw</a></li>
-</ul>
-<h3>Combat, Economy & Progression <span class="cnt">18</span></h3>
-<ul class="reports">
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-ceremonia-roll-skill-checks.md">ceremonia roll skill checks</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-ceremonia-roll-skill-checks.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-death-loot-grave.md">death loot grave</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-death-loot-grave.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-drop-rates-balance-and-health.md">drop rates balance and health</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-drop-rates-balance-and-health.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-fish-with-dnd.md">fish with dnd</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-fish-with-dnd.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-fishing-bait-prompting.md">fishing bait prompting</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-fishing-bait-prompting.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-kindness-calculus.md">kindness calculus</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-kindness-calculus.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-leveling-flashbang-condition-economy.md">leveling flashbang condition economy</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-leveling-flashbang-condition-economy.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-loot-drop-system-v2.md">loot drop system v2</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-loot-drop-system-v2.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-luck-seventh-stat.md">luck seventh stat</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-luck-seventh-stat.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-01-xp01-universal-effort-xp.md">play 01 xp01 universal effort xp</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-01-xp01-universal-effort-xp.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-01a-courier-map.md">play 01a courier map</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-01a-courier-map.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-01b-conquerors-hand.md">play 01b conquerors hand</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-01b-conquerors-hand.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-01c-no-postponements.md">play 01c no postponements</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-01c-no-postponements.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-01d-friendships-with-magic.md">play 01d friendships with magic</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-01d-friendships-with-magic.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-play-review.md">play review</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-play-review.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part2-combat-mechanics.md">synthesis part2 combat mechanics</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part2-combat-mechanics.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part4-monsters-fishing.md">synthesis part4 monsters fishing</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part4-monsters-fishing.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-tattoo-progression-system.md">tattoo progression system</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-tattoo-progression-system.md" title="raw markdown">raw</a></li>
-</ul>
-<h3>World, Map & Navigation <span class="cnt">21</span></h3>
-<ul class="reports">
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-battleground-circuit-path-quest.md">battleground circuit path quest</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-battleground-circuit-path-quest.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-cell-map-mud-redesign.md">cell map mud redesign</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-cell-map-mud-redesign.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-circuit-map-theory.md">circuit map theory</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-circuit-map-theory.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-highway-mesh-entry.md">highway mesh entry</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-highway-mesh-entry.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-ieee-map-visualization.md">ieee map visualization</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-ieee-map-visualization.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-kg-corridor-quest-chain.md">kg corridor quest chain</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-kg-corridor-quest-chain.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-kg-russia-kindergarten-zones.md">kg russia kindergarten zones</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-kg-russia-kindergarten-zones.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-map-audit-layout-tooling.md">map audit layout tooling</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-map-audit-layout-tooling.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-map-layout-solver.md">map layout solver</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-map-layout-solver.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-math01-completions.md">math01 completions</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-math01-completions.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-mega-reweave.md">mega reweave</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-mega-reweave.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-movement-by-cells.md">movement by cells</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-movement-by-cells.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-nav01-navigable-world.md">nav01 navigable world</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-nav01-navigable-world.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-node-network-reconnection.md">node network reconnection</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-node-network-reconnection.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-npc-card-map.md">npc card map</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-npc-card-map.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part3-world-navigation.md">synthesis part3 world navigation</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part3-world-navigation.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-terrain-field-mover-redesign.md">terrain field mover redesign</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-terrain-field-mover-redesign.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-timeless-movement-hunt-removal.md">timeless movement hunt removal</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-timeless-movement-hunt-removal.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-walk15fu-grid-resolution.md">walk15fu grid resolution</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-walk15fu-grid-resolution.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-walk5-mud-harness.md">walk5 mud harness</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-walk5-mud-harness.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-world-structure-critique.md">world structure critique</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-world-structure-critique.md" title="raw markdown">raw</a></li>
-</ul>
-<h3>Narrative & Arcs <span class="cnt">35</span></h3>
-<ul class="reports">
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-ally-cat.md">ally cat</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-ally-cat.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-birka-beginner-arc.md">birka beginner arc</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-birka-beginner-arc.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-corelli-merchant.md">corelli merchant</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-corelli-merchant.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-crown-three-hags.md">crown three hags</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-crown-three-hags.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-dungeon-ten-themes.md">dungeon ten themes</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-dungeon-ten-themes.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-endings-and-echoes.md">endings and echoes</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-endings-and-echoes.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-epic-battlegrounds.md">epic battlegrounds</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-epic-battlegrounds.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-friendships-with-magic.md">friendships with magic</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-friendships-with-magic.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-game-story-codex-of-conquest.md">game story codex of conquest</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-game-story-codex-of-conquest.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-kenickie-chronicle.md">kenickie chronicle</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-kenickie-chronicle.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-la-riva-grief-arc.md">la riva grief arc</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-la-riva-grief-arc.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-littoral-courts.md">littoral courts</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-littoral-courts.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-living-world.md">living world</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-living-world.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md">narrative arcs brynn bruhns yael</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-naval-campaign-layer.md">naval campaign layer</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-naval-campaign-layer.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-ng-plus-remembrance.md">ng plus remembrance</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-ng-plus-remembrance.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-npc-01-d-talk-verb.md">npc 01 d talk verb</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-npc-01-d-talk-verb.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-npc-dialogue-system.md">npc dialogue system</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-npc-dialogue-system.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-npc-speak-sdk.md">npc speak sdk</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-npc-speak-sdk.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-ponies-unicorns-aspirations-future-ideas.md">ponies unicorns aspirations future ideas</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-ponies-unicorns-aspirations-future-ideas.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-quest-minus-one-world-creator.md">quest minus one world creator</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-quest-minus-one-world-creator.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-saul-paul-travel-reference.md">saul paul travel reference</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-saul-paul-travel-reference.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-saul-paul-vignette-spec.md">saul paul vignette spec</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-saul-paul-vignette-spec.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-story-codoex-curse-of-knowedge.md">story codoex curse of knowedge</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-story-codoex-curse-of-knowedge.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part5-npc-narrative.md">synthesis part5 npc narrative</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part5-npc-narrative.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part6-quest-arcs.md">synthesis part6 quest arcs</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part6-quest-arcs.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-tilbury-visby-arcs.md">tilbury visby arcs</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-tilbury-visby-arcs.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-void-archaeology.md">void archaeology</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-void-archaeology.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-void-shaman.md">void shaman</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-void-shaman.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-void-tide-bounties.md">void tide bounties</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-void-tide-bounties.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-warrant-standing.md">warrant standing</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-warrant-standing.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-warrants-board.md">warrants board</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-warrants-board.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-web-of-connections.md">web of connections</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-web-of-connections.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-weimar-scholar-gate.md">weimar scholar gate</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-weimar-scholar-gate.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-wisdom-arc.md">wisdom arc</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-wisdom-arc.md" title="raw markdown">raw</a></li>
-</ul>
-<h3>Multiplayer & Mesh <span class="cnt">3</span></h3>
-<ul class="reports">
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-mesh-multiuser.md">mesh multiuser</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-mesh-multiuser.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-mesh02-connections-ui.md">mesh02 connections ui</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-mesh02-connections-ui.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-world-mesh-construction.md">world mesh construction</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-world-mesh-construction.md" title="raw markdown">raw</a></li>
-</ul>
-<h3>Tooling & Process <span class="cnt">6</span></h3>
-<ul class="reports">
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-editor01d-fu-b-ladder-migration.md">editor01d fu b ladder migration</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-editor01d-fu-b-ladder-migration.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-editor01d-fu-chain-ui.md">editor01d fu chain ui</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-editor01d-fu-chain-ui.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-editor01d-itemchain.md">editor01d itemchain</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-editor01d-itemchain.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-editor02-mission-builder.md">editor02 mission builder</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-editor02-mission-builder.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-prompt-migration-arena-to-prototype.md">prompt migration arena to prototype</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-prompt-migration-arena-to-prototype.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-sp4-documentation-sync-pass.md">sp4 documentation sync pass</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-sp4-documentation-sync-pass.md" title="raw markdown">raw</a></li>
-</ul>
-<h3>Other <span class="cnt">7</span></h3>
-<ul class="reports">
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-Polyphonic-Organ-Synth.md">Polyphonic Organ Synth</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-Polyphonic-Organ-Synth.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-api-redesign-summary.md">api redesign summary</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-api-redesign-summary.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-junction-reweave-overhaul.md">junction reweave overhaul</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-junction-reweave-overhaul.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-synthesis-part7-writing-design-philosophy.md">synthesis part7 writing design philosophy</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-synthesis-part7-writing-design-philosophy.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-world-reset-procedure.md">world reset procedure</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-world-reset-procedure.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/lab-report-worldbuilder-grid-ui.md">worldbuilder grid ui</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/lab-report-worldbuilder-grid-ui.md" title="raw markdown">raw</a></li>
-<li><a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/lab-reports/plan-world-connectivity.md">plan world connectivity</a> <a class="raw" href="https://raw.githubusercontent.com/vonglurt/codexofconquest/main/docs/lab-reports/plan-world-connectivity.md" title="raw markdown">raw</a></li>
-</ul>
-  </div>
-  <p style="margin-top:1.6rem">Browse the whole folder: <a href="https://github.com/vonglurt/codexofconquest/tree/main/docs/lab-reports">docs/lab-reports/</a> · the master index is <a href="https://github.com/vonglurt/codexofconquest/blob/main/docs/design/index.md">docs/design/index.md</a> · open work lives in <a href="https://github.com/vonglurt/codexofconquest/tree/main/docs/backlog">six phase backlogs</a>.</p>
-</section>
-
-<section>
-  <h2><span class="num">OPEN SOURCE</span>Download it, fork it, take it apart</h2>
-  <p>Codex of Conquest is <strong>MIT licensed</strong>. Not source-available, not a demo — actually MIT. Copy it, modify it, sell it, ship your own world built on it. The one file is the whole product: no build step, no bundler, no dependency tree to audit before you can read the code.</p>
+<section><span class="mark">⚖️</span><span class="ghost">MIT</span><div class="wrap">
+  <span class="eyebrow">Open source</span>
+  <h2>Take it apart</h2>
+  <p class="lede">Codex of Conquest is <strong>MIT licensed</strong> — not source-available, actually MIT. Copy it, change it, sell it, ship your own world on it.</p>
   <h3>Good first contributions</h3>
-  <ul>
-    <li><strong>Write a quest arc.</strong> The quest format is documented and the editor is visual — you do not need to touch the engine.</li>
+  <ul class="plain">
+    <li><strong>Write a quest arc.</strong> The format is documented and the editor is visual — you never touch the engine.</li>
     <li><strong>Add a region.</strong> Nodes, terrains and roads are data; the map solver lays them out.</li>
     <li><strong>Balance something.</strong> Monster tiers, drop rates and the XP curve are all tables.</li>
-    <li><strong>Take a backlog row.</strong> Open work is tracked in six phase backlogs under <code>docs/backlog/</code>, each row written with its evidence and its grep-to-disprove.</li>
-    <li><strong>Fix a lab report.</strong> Over a hundred engineering write-ups live in <code>docs/lab-reports/</code>, each verified against the live file.</li>
+    <li><strong>Take a backlog row.</strong> Open work sits in six phase backlogs, each row written with its evidence and its grep-to-disprove.</li>
   </ul>
-  <p>Read <a href="CONTRIBUTING.md">CONTRIBUTING.md</a> before starting — it carries the working rules, including the existing-work-first policy that has saved several rewrites of work that was already shipped.</p>
-</section>
+  <p>Read <a href="https://github.com/vonglurt/codexofconquest/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a> first — it carries the working rules, including the existing-work-first policy that has saved several rewrites of work already shipped.</p>
+</div></section>
 
-</div>
-
-<hr class="stripe">
-<footer>
-  <div class="wrap">
-    <p style="margin:0 0 .6rem"><a class="play" style="font-size:1.1rem;padding:.8rem 2.4rem" href="play.html">▶ PLAY</a></p>
-    <p style="margin:1.4rem 0 .4rem"><a href="https://github.com/vonglurt/codexofconquest">GitHub</a> · <a href="edit.html">World Builder</a> · <a href="LICENSE">MIT License</a> · <a href="README.md">README</a></p>
-    <p style="margin:0">© 2026 Paul Richeson. Built with AI assistance under contract — see <a href="CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
-  </div>
-</footer>
+<footer><div class="wrap">
+  <p><a class="play" style="font-size:1.05rem;padding:.75rem 2.2rem" href="play.html">▶ PLAY</a></p>
+  <p style="margin-top:1.6rem"><a href="https://github.com/vonglurt/codexofconquest">GitHub</a> · <a href="edit.html">World Builder</a> · <a href="LICENSE">MIT License</a> · <a href="https://github.com/vonglurt/codexofconquest/blob/main/README.md">README</a></p>
+  <p>© 2026 Paul Richeson. Built with AI assistance under contract — see <a href="https://github.com/vonglurt/codexofconquest/blob/main/CONTRIBUTING.md">CONTRIBUTING.md</a>.</p>
+</div></footer>
 
 </body>
 </html>

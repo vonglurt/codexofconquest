@@ -14,19 +14,124 @@ inside one HTML file. No server, no build step, no install. Open it and play.
 
 ---
 
-## Quick start — just play
+## Quick start
 
-Open **`play.html`** in any modern browser (Chrome, Firefox, Safari,
-Edge) with JavaScript enabled.
+### ▶ Play it in your browser — nothing to install
 
-- **Double-click** the file, or drag it onto a browser window, or `File → Open`.
-- Everything runs locally. Save state lives in the browser's `localStorage` —
-  nothing is uploaded anywhere.
-- The file is self-contained: you can email it, drop it on a USB stick, or serve
-  it from any static host.
+**https://vonglurt.github.io/codexofconquest/**
 
-> `edit.html` is the **authoring tool** (a visual editor for the world
-> data). The game does **not** need it — it's only used when building content.
+That is the current build, served from GitHub Pages. It runs entirely in your
+browser; saves live in `localStorage` on your own machine and nothing is
+uploaded anywhere.
+
+### ⬇ Download the game — one file, yours offline
+
+Right-click and **Save Link As…** →
+[**play.html**](https://raw.githubusercontent.com/vonglurt/codexofconquest/main/play.html) (~5.5 MB)
+
+Or from a terminal:
+
+```bash
+curl -L -O https://raw.githubusercontent.com/vonglurt/codexofconquest/main/play.html
+open play.html          # macOS   ·   xdg-open on Linux   ·   start on Windows
+```
+
+Double-click it, drag it onto a browser window, or `File → Open`. It is
+genuinely self-contained — email it to someone, put it on a USB stick, or serve
+it from any static host. No server, no build step, no account.
+
+### 📦 The whole source
+
+- **Repository:** <https://github.com/vonglurt/codexofconquest>
+- **Clone it:** `git clone https://github.com/vonglurt/codexofconquest.git`
+- **Zip:** <https://github.com/vonglurt/codexofconquest/archive/refs/heads/main.zip>
+- **Releases:** <https://github.com/vonglurt/codexofconquest/releases>
+
+### 🛠 Then build a world of your own
+
+The authoring tool ships with the game. Open
+[**edit.html**](https://vonglurt.github.io/codexofconquest/edit.html) — a visual editor for **nodes, terrains,
+monsters, quests, NPCs and mission bits**, the flags the world reads to know
+what has already happened.
+
+Start small and you will see it working in minutes:
+
+1. Run the API server — `make wbapi` (or `make edit`, which opens both).
+2. Add a node, give it a terrain and a description.
+3. Wire a road to somewhere that already exists.
+4. Write a three-step quest arc in the Mission Builder.
+5. Reload `play.html` and walk to it.
+
+> **The editor wants the API.** Opened straight off disk it will warn you: the
+> browser blocks the reads and writes it needs, so loading a world from file is
+> not supported. Start the server first — `make wbapi` — then reload.
+
+Quests, nodes, terrains, monsters and mission bits are **data**, not code, so
+most content work never touches the engine. When you are ready, `make check`
+runs the gate chain that looks for dead links, unreachable nodes, duplicate
+keys and quests that can never complete.
+
+---
+
+## Screenshots
+
+Every image is a crop of the running game, captured from the test harness by
+[`src/tools/capture-screens.mjs`](src/tools/capture-screens.mjs) — not mockups.
+Re-generate them any time with `node src/tools/capture-screens.mjs`.
+
+### ⚔️ Combat on an advantaged d20
+
+![Combat on an advantaged d20](assets/screenshots/06-battle.png)
+
+The die, the modifier, the target and the result — `d20 +6 vs AC 13 (1d8+3)`. Attack roll, skill check and saving throw are the same three buttons all game.
+
+### 🎭 Character creation
+
+![Character creation](assets/screenshots/01-character-creation.png)
+
+Choose an origin, then spend a 27-point budget in the open. The costs are printed on the screen: 9→1, 10→2, 11→3, 12→4, 13→5, 14→7, 15→9.
+
+### 🧮 Stat point allocation
+
+![Stat point allocation](assets/screenshots/02-stat-point-buy.png)
+
+Every modifier updates as you spend. Nothing is rolled behind your back.
+
+### 📋 The character sheet
+
+![The character sheet](assets/screenshots/04-character-sheet.png)
+
+Six abilities, proficiency, AC and max HP — plus Luck as a seventh stat that behaves like none of the others.
+
+### 🏆 Victory
+
+![Victory](assets/screenshots/09-victory.png)
+
+A fight ends and the banner says so. What it paid — XP, gold, drops — lands in the log behind it.
+
+### 💀 Death saves
+
+![Death saves](assets/screenshots/08-death-saves.png)
+
+Drop to zero and you are *dying*, not dead. Three successes or three failures on a d20, rolled where you can see them.
+
+### 🎒 Inventory
+
+![Inventory](assets/screenshots/03-inventory.png)
+
+Sorted by what a thing is for. Every item says what it does and what it is worth.
+
+### 🎣 Fishing gear and bait
+
+![Fishing gear and bait](assets/screenshots/05-fishing.png)
+
+Shore, reeds and deep water unlock separately; day and night hold different species.
+
+### ⭐ Level up
+
+![Level up](assets/screenshots/07-level-up.png)
+
+Roll the hit die yourself — d10 plus your CON modifier. The feature you gained is named, and the sheet shows what changed.
 
 ---
 
