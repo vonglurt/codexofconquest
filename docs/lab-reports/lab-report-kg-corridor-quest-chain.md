@@ -116,7 +116,7 @@ labels are the report's prose taxonomy, not engine values.
 
 - **Default** — ✅ verbatim: `catKills: {}, monsterKills: {}, catKingDefeated: false,@23120`
 - **Increment** — ✅ verbatim, and inert (§IV):
-  `S_story.monsterKills[S.opp.key] = (S_story.monsterKills[S.opp.key] || 0) + 1;@25345`
+  `S_story.monsterKills[S.enemy.key] = (S_story.monsterKills[S.enemy.key] || 0) + 1;@25345`
 - **HUD read** — ✅ verbatim, back-compat preserved:
   `const k = S_story[q.killCounter || 'catKills'] || {};@30759`
 
@@ -131,7 +131,9 @@ not a per-arc clone* — is architecturally sound and remains the right call.
 combat loader assigns the monster key to the other half of the pair —
 `S.enemy.key      = m.key;@8148`. Across the whole file `S.opp.key` has **four read sites and zero
 write sites**, and `git log -S "catKills[S.enemy.key]" --all` returns **no commit, ever**. The guard
-at `if (S.opp && S.opp.key) {@25342` has been false since the line was written.
+at `if (S.enemy && S.enemy.key) {@25342` read `S.opp.key` when this report was written, and had been false since the line was authored.
+
+> ⚠️ **ANNOTATION 2026-08-23 — §DX-02cy CLOSED.** The finding in §IV was acted on: the four sites were re-pointed from `S.opp.key` to `S.enemy.key`, and the anchors above were repaired to match the live code. **The measurements in this section describe the file as it stood on 2026-08-18** — `monsterKills`, `catKills` and `frCatKillCount` all move on a real victory now, pinned by `src/tests/integration/dx02cy-kill-counter-writer.test.js`.
 
 **Live acceptance test** (Playwright, real page, no mocks): load the game, call
 `loadWorldMonster(MONSTER_POOL.sparring_droid)`, zero both counters, run `_storyBattleVictory()`.

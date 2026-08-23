@@ -34,12 +34,12 @@ Split by **subsystem**, not by track prefix (121 of the 175 sections were `§DX-
 
 | Phase | Backlog | Open rows | History | Scope |
 |---|---|---:|---:|---|
-| **1** | [Playable Truth](BACKLOG-1-playable-truth.md) | 13 | 0 | Shipped content the player can never reach or complete: unreachable act-gated beats, inert counters, gate flags with no writer, quest deadlocks, endings out of range. |
+| **1** | [Playable Truth](BACKLOG-1-playable-truth.md) | 13 | 1 | Shipped content the player can never reach or complete: unreachable act-gated beats, inert counters, gate flags with no writer, quest deadlocks, endings out of range. |
 | **2** | [Engine & Systems](BACKLOG-2-engine-systems.md) | 49 | 51 | Rules and mechanics: combat math, XP and economy, progression and New Game+, save/state defaults, the render pipeline, the quest VM and its migration fronts. |
 | **3** | [Content & Narrative](BACKLOG-3-content-narrative.md) | 19 | 41 | Authored strings and the people who say them: NPC dialogue and relationships, favor scales, arc beats, epilogue and ending prose, lines with no lookup path. |
 | **4** | [World & Navigation](BACKLOG-4-world-navigation.md) | 8 | 20 | The map and moving on it: node registration and labels, terrain tables and encounter rates, GEO anchors and projection bounds, road nets, movement results. |
 | **5** | [Platform & Tooling](BACKLOG-5-platform-tooling.md) | 25 | 21 | Everything outside the game loop: the WBAPI server and its endpoints, the worldbuilder and editors, the HTML parse/export layer, multiplayer mesh, the NPC-speak service. |
-| **6** | [Verification & Documentation](BACKLOG-6-verification-docs.md) | 45 | 17 | What proves the rest is true: CI gates and parity fences, Playwright and MUD suites, the anchor resolver, engine comments, maintained-doc rot, and the §DOC-02 lab-report verification program. |
+| **6** | [Verification & Documentation](BACKLOG-6-verification-docs.md) | 46 | 17 | What proves the rest is true: CI gates and parity fences, Playwright and MUD suites, the anchor resolver, engine comments, maintained-doc rot, and the §DOC-02 lab-report verification program. |
 
 > **Phase order is a suggested work order, not a dependency chain.** Phase 1 is content the player cannot reach — the defects that make shipped work invisible — so it pays first. Phase 6 is what proves the other five stayed true. Any phase can be picked up on its own.
 
@@ -68,13 +68,16 @@ Closed tracks (full records in `plan-archive.md`): §NPC-01 (2026-07-28) · §PL
 
 ## §RESUME — cross-phase chronology
 
-> **149 entries, original order, newest first.** This index is the handoff log: read it top-down for *what happened last*, then open the phase file named in the right-hand column for the entry in full. The entries themselves were distributed by the subsystem each increment was about, so consecutive sessions often land in different files — this table is the only place the true chronology survives.
+> **150 entries, original order, newest first.** This index is the handoff log: read it top-down for *what happened last*, then open the phase file named in the right-hand column for the entry in full. The entries themselves were distributed by the subsystem each increment was about, so consecutive sessions often land in different files — this table is the only place the true chronology survives.
 
-> **Latest (2026-08-23) — §DX-01g:** this split itself. Full entry in [Phase 6 — Verification & Documentation](BACKLOG-6-verification-docs.md); the finding it raised is **§DX-02fx** in the same file. The 149 rows below are the log as it stood before the split.
+> **Latest (2026-08-23) — §DX-02cy ✅ SHIPPED:** the kill-counter writer. `S.opp.key` → `S.enemy.key` at four sites; every kill counter in the game had been inert for 90 days and 19 quests were unreachable behind it. Full entry in [Phase 1 — Playable Truth](BACKLOG-1-playable-truth.md); the findings it raised are **§DX-02fy** (same file) and **§DX-02fz** (Phase 6), and it unblocks **§DX-02cm**.
+>
+> **Previously (2026-08-23) — §DX-01g:** the six-way split itself. Full entry in [Phase 6 — Verification & Documentation](BACKLOG-6-verification-docs.md); the finding it raised is **§DX-02fx** in the same file. The 149 rows below are the log as it stood before the split.
 
 | # | Date | Increment | Headline | Full entry in |
 |---:|---|---|---|---|
-| 1 | 2026-08-23 | §DOC-02dc | the child design pass whose one missing opcode was the last one the VM ever needed, whose only carried nu… | [P2](BACKLOG-2-engine-systems.md) |
+| 1 | 2026-08-23 | §DX-02cy | the counter that had been monotone at zero for ninety days, and the gate that refused to let the docs stay wrong… | [P1](BACKLOG-1-playable-truth.md) |
+| 2 | 2026-08-23 | §DOC-02dc | the child design pass whose one missing opcode was the last one the VM ever needed, whose only carried nu… | [P2](BACKLOG-2-engine-systems.md) |
 | 2 | 2026-08-23 | §DOC-02db | the design that survived eleven slices and 26 days at 100% of its symbols, whose one unmodelled shape was… | [P2](BACKLOG-2-engine-systems.md) |
 | 3 | 2026-08-23 | §DOC-02da | the report whose architecture survived 85 days and a 3.15× file intact, whose operations were reversed fo… | [P5](BACKLOG-5-platform-tooling.md) |
 | 4 | 2026-08-23 | §DOC-02cz | the most completely-shipped lock the program has scored, whose best Froberger trace has never been read b… | [P3](BACKLOG-3-content-narrative.md) |

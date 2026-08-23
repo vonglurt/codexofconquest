@@ -25339,19 +25339,19 @@ function _storyBattleVictory() {
     storyMsg('🔴 The Void Corruption node is cleared. The undercity stabilises.');
   }
   // Layer 44: Ally Cat Arc kill tracking
-  if (S.opp && S.opp.key) {
-    // §KG Inc 3: generic per-monster kill counter (every arc can use this, keyed by opp.key)
+  if (S.enemy && S.enemy.key) {
+    // §KG Inc 3: generic per-monster kill counter
     if (!S_story.monsterKills) S_story.monsterKills = {};
-    S_story.monsterKills[S.opp.key] = (S_story.monsterKills[S.opp.key] || 0) + 1;
+    S_story.monsterKills[S.enemy.key] = (S_story.monsterKills[S.enemy.key] || 0) + 1;
     const _catKeys = ['stray_alley_cat','fluffy_cat','beefy_tom','fat_merchant_cat',
                       'honcho_cat_m','honcho_cat_f','corrupted_cat','taz_devil'];
-    if (_catKeys.includes(S.opp.key)) {
+    if (_catKeys.includes(S.enemy.key)) {
       if (!S_story.catKills) S_story.catKills = {};
-      S_story.catKills[S.opp.key] = (S_story.catKills[S.opp.key] || 0) + 1;
+      S_story.catKills[S.enemy.key] = (S_story.catKills[S.enemy.key] || 0) + 1;
     }
   }
   // Layer 78: La Riva — FR kill tracking and Vincenzo's Net drop
-  if (pb && pb.nodeCode === 'AMS' && S.opp && S.opp.key === 'corrupted_cat') {
+  if (pb && pb.nodeCode === 'AMS' && S.enemy && S.enemy.key === 'corrupted_cat') {
     S_story.frCatKillCount = (S_story.frCatKillCount || 0) + 1;
     if (S_story.frCatKillCount >= 5 && (S_story.quests || {})['quest_la_riva_02'] === 'active'
         && !(S_story.inventory || []).some(i => i.name === "Vincenzo's Net")) {

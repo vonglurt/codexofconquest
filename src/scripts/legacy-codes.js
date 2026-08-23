@@ -75,6 +75,7 @@ const SWEEP = [
   'docs/story/story-arc-epic-battlegrounds.md',
   'docs/story/story-flowchart.md',
   'docs/notes/docs-node-network.md',
+  'resume.md',
 ];
 
 /**
@@ -388,6 +389,8 @@ const NOT_A_NODE_CODE = new Map([
   ['MP', 'multiplayer'],
   ['TC', 'Town Crier — the `TC_*` line consts'],
   ['GB', 'gigabytes — the V8 heap limit'],
+  ['VM', 'virtual machine — the UQF quest VM (`QuestRuntime`), §VM-01'],
+  ['AD', 'anno domini — the 1367 AD setting'],
   ['FR', 'a real pre-airport code (Fishmonger\'s Row → `AMS`) that the `maps.md` legend never listed, so `npm run nodes` never put it in the LEGACY CODE MAP; every live-doc use states the mapping'],
 ]);
 
