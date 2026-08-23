@@ -687,11 +687,11 @@ Locked buttons show `🔒`, opacity 0.45, `disabled`, and a tooltip hint. The `b
 >
 > **What replaced it:** entering an empty cell rolls a notoriety-weighted random encounter from the terrain pool — no player target selection, no survival roll, no extra hour (movement and battle no longer advance the clock). Quest-kill progress is tracked purely by winning battles at the relevant node (e.g. `quest_slums_cleanup` completes after 3 BMA combat wins via `S_story.slStalksWon`, a field name retained to avoid a save migration).
 >
-> **Removed code/state:** `storyToggleHunt`, `_updateHuntBtn`, `storyQuestHunt`, `storyQuickWait`, `_stalkedMonsterPick`, `_getQuestTargetKeys`, the `HUNTING_GROUNDS` constant, the stalk modal, and the `huntMode` / `pb.stalk` / `huntSelectedTarget` / `huntLastSurvivalRoll` state fields. See `lab-reports/lab-report-timeless-movement-hunt-removal.md`.
+> **Removed code/state:** `storyToggleHunt`, `_updateHuntBtn`, `storyQuestHunt`, `storyQuickWait`, `_stalkedMonsterPick`, `_getQuestTargetKeys`, the `HUNTING_GROUNDS` constant, the stalk modal, and the `huntMode` / `pb.stalk` / `huntSelectedTarget` / `huntLastSurvivalRoll` state fields. See `docs/lab-reports/lab-report-timeless-movement-hunt-removal.md`.
 
 ---
 
-*© 2026 roll2hit.com — MIT License. See [LICENSE](../../LICENSE) for full text.*
+*© 2026 CodexOfConquest.com — MIT License. See [LICENSE](../../LICENSE) for full text.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

@@ -1,111 +1,33 @@
 # ── Secrets — never commit ────────────────────────────────────────────────────
 .env
 *.env
-.env.local
+
+# ── Per-machine identity, ACL and peer caches ────────────────────────────────
+.wbapi-server-id
+src/config/mesh-acl.json
+src/config/peers-cache.json
+src/config/tracker-cache.json
+
+# ── Dependencies ──────────────────────────────────────────────────────────────
+node_modules/
+
+# ── build/ — everything generated or written at runtime ───────────────────────
+#   test-results, playwright-report, the milepoints runtime dir (say-daemon
+#   queue, server logs, patch pointer) and the per-deployment economy ledger.
+build/
+
+# ── vendor/ — working material, not published ────────────────────────────────
+#   imported book corpus, narrative source texts, import machinery.
+vendor/
 
 # ── macOS / editor noise ──────────────────────────────────────────────────────
 .DS_Store
-.DS_Store?
 ._*
-.Spotlight-V100
-.Trashes
 *.swp
-*.swo
 *~
 
 # ── Claude Code internal ──────────────────────────────────────────────────────
 .claude/
 
-# ── Archives and binary blobs ─────────────────────────────────────────────────
-*.gz
-*.zip
-*.tar
-*.tar.gz
-*.tgz
-*.bz2
-*.xz
-*.7z
-*.rar
-*.dmg
-*.pkg
-*.exe
-*.bin
-*.dll
-*.so
-*.dylib
-
-# ── Images / media ────────────────────────────────────────────────────────────
-*.png
-*.jpg
-*.jpeg
-*.gif
-*.ico
-*.svg
-*.webp
-*.bmp
-*.tiff
-*.mp3
-*.mp4
-*.mov
-*.wav
-
-# ── PDFs and office docs ─────────────────────────────────────────────────────
-*.pdf
-*.doc
-*.docx
-*.xls
-*.xlsx
-*.ppt
-*.pptx
-
-# ── Binary patch files ────────────────────────────────────────────────────────
-milepoints/patches/*.patch
-milepoints/patches/*.patch.log
-milepoints/patches/_base.html.gz
-
-# ── Server logs ───────────────────────────────────────────────────────────────
-milepoints/wbapi-server.log
-milepoints/wbapi-server*.log
-milepoints/npc-speak.log
-milepoints/say.lock
-milepoints/say.log
-milepoints/say.seq
-milepoints/say.queue.d/
-milepoints/sayd.pid
-
-# ── Timestamped HTML snapshots (session-level, not milestones) ───────────────
-roll2hit-v3-2*.html
-milepoints/snapshots.zip
-
-# ── Cleanup archives (produced by scripts/cleanup-cruft.sh) ──────────────────
-milepoints/archive/cleanup-*.tar.gz
-
-# ── _last.html / _last.name ARE tracked (current game state pointer) ─────────
-# (not ignored — intentionally committed)
-
-# ── §MESH-01: per-machine mesh identity + peer cache — never commit ─────────
-.wbapi-server-id
-config/peers-cache.json
-config/tracker-cache.json
-config/mesh-acl.json
-
-# ── §MESH-01i: per-deployment economy ledger (durable hash-chain log) ────────
-ledger/
-
-# ── Playwright artifacts — regenerated every test run ────────────────────────
-playwright-report/
-test-results/
-
-# ── §MESH tracker log (wbapi-toggle.sh tracker) ──────────────────────────────
-wbapi-tracker.log
-milepoints/wbapi-server.error
-
-# ── Vendored / not published: third-party texts, imported books, working docs ─
-vendor/
-
-# ── Dependencies — never commit ───────────────────────────────────────────────
-node_modules/
-
-# ── milepoints/ is a RUNTIME dir (say-daemon queue, server logs, patch pointer)
-#    It stays on disk and out of git; nothing under it is source.
-milepoints/
+# ── Stray timestamped game snapshots at root ─────────────────────────────────
+play-2*.html

@@ -1,8 +1,8 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paulr@sdf.org -->
 <!-- GENERATED FILE — do not hand-edit. Regenerate with: npm run nodes  (scripts/node-index.js, §AUDIT-03l) -->
 # NODE INDEX — the live `NODE_MAP`
 
-> **Generated from `index.html` by `npm run nodes`.** This is the authoritative answer to
+> **Generated from `play.html` by `npm run nodes`.** This is the authoritative answer to
 > *"what is this node's code?"* — it is parsed from the same `wbapi-core` extractor the `:1367`
 > server and every `scripts/check-*.js` use, so it cannot drift from the game. **Never take a node
 > code from a hand-maintained table** (that is how `710bb75` put `activateNode:"SF"` on eight

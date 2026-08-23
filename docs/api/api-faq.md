@@ -41,7 +41,7 @@ curl "http://localhost:1367/api/coords/near/BK?radius=8"
 curl http://localhost:1367/api/coords | python3 -c "
 import json, sys, subprocess
 coords = json.load(sys.stdin)['coords']
-result = subprocess.run(['node','api/wb.js','list','node','--raw'], capture_output=True, text=True)
+result = subprocess.run(['node','src/api/wb.js','list','node','--raw'], capture_output=True, text=True)
 all_nodes = [n['id'] for n in json.loads(result.stdout)]
 missing = [n for n in all_nodes if n not in coords]
 print(f'Missing coords: {len(missing)}')

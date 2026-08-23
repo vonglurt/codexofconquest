@@ -284,17 +284,17 @@ The Harrow Manifest's `wmFirstResearcherKnown` gate creates a direct connection 
 
 | File | Location | Content |
 |------|----------|---------|
-| `index.html` | Line 4624 | `hollow_hands_guard` monster definition |
-| `index.html` | Line 5051 | `hollow_hands_guard` drop — Hollow Hands Seal |
-| `index.html` | Line 5426 | `goblin_cave` terrain pool — includes hollow_hands_guard |
-| `index.html` | Lines 7691–7704 | Rennau NPC profile |
-| `index.html` | Lines 7706–7718 | Vonn NPC profile |
-| `index.html` | Lines 7722–7745 | Solvak and Yva NPC profiles |
-| `index.html` | Lines 8032–8067 | quest_tl_01–03 + quest_vs_01–03 QUEST_DB entries |
-| `index.html` | Lines 8436, 8438 | Tilbury + Visby state flags in `_S_DEFAULTS()` |
-| `index.html` | Lines 13121–13158 | Quest reward handlers — tl_01–03, vs_01–03 |
-| `index.html` | Lines 14456–14542 | §XIX Tilbury render block — harbor board, Ori, Vonn choice |
-| `index.html` | Lines 14544–14609 | §XX Visby render block — Solvak, Mordus, Yva, seal delivery |
+| `play.html` | Line 4624 | `hollow_hands_guard` monster definition |
+| `play.html` | Line 5051 | `hollow_hands_guard` drop — Hollow Hands Seal |
+| `play.html` | Line 5426 | `goblin_cave` terrain pool — includes hollow_hands_guard |
+| `play.html` | Lines 7691–7704 | Rennau NPC profile |
+| `play.html` | Lines 7706–7718 | Vonn NPC profile |
+| `play.html` | Lines 7722–7745 | Solvak and Yva NPC profiles |
+| `play.html` | Lines 8032–8067 | quest_tl_01–03 + quest_vs_01–03 QUEST_DB entries |
+| `play.html` | Lines 8436, 8438 | Tilbury + Visby state flags in `_S_DEFAULTS()` |
+| `play.html` | Lines 13121–13158 | Quest reward handlers — tl_01–03, vs_01–03 |
+| `play.html` | Lines 14456–14542 | §XIX Tilbury render block — harbor board, Ori, Vonn choice |
+| `play.html` | Lines 14544–14609 | §XX Visby render block — Solvak, Mordus, Yva, seal delivery |
 | `lab-report-tilbury-visby-arcs.md` | All | §XIX + §XX full implementation record |
 | `lab-report-void-shaman.md` | §II | `vsShamanKnown` downstream use — §XXI Warden encounter |
 | `lab-report-weimar-scholar-gate.md` | §II.G | `tlLedgerRead` cross-reference; archiveLetterObtained path |

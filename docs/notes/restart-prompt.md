@@ -28,7 +28,7 @@
 
 4. **New `POST /api/graph/cluster-bridge` route** — standalone command to connect remaining isolated clusters without a full reweave. Uses undirected BFS (matching the canonical `reachability` endpoint), gets a connection plan from smart-connect, then PUTs the two direction fields.
 
-**New command added to `api/wb.js`:**
+**New command added to `src/api/wb.js`:**
 ```bash
 ./api.sh cluster-bridge            # dry-run: shows clusters
 ./api.sh cluster-bridge --execute  # bridges all isolated clusters

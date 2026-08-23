@@ -3,7 +3,7 @@
 # Cell-Grid Navigation Architecture for Text-Based Role-Playing Game Worlds: A MUD-Inspired Design Framework
 
 **Paul Richeson**  
-*roll2hit.com · Independent Game Research*  
+*CodexOfConquest.com · Independent Game Research*  
 *paulr@sdf.org*
 
 ---
@@ -198,7 +198,7 @@ Procedure reconstruct_path(parent, start, end):
 
 BFS guarantees that the first path found to the destination is a shortest path in terms of grid steps. Because movement costs are uniform (one step = one hour of game time), BFS is the optimal algorithm for this setting — no heuristic can improve on it for finding the guaranteed shortest path on an unweighted grid [5].
 
-The `IMPASSABLE` set blocks cells permanently regardless of adjacency. In the roll2hit.com implementation, ocean tiles are loaded into `IMPASSABLE_CELLS` at game startup, preventing the pathfinder from routing the player across water.
+The `IMPASSABLE` set blocks cells permanently regardless of adjacency. In the CodexOfConquest.com implementation, ocean tiles are loaded into `IMPASSABLE_CELLS` at game startup, preventing the pathfinder from routing the player across water.
 
 ### B. BFS Direction Extraction
 
@@ -257,7 +257,7 @@ h(r, c) = |r - r_d| + |c - c_d|
 
 is admissible (never overestimates the true distance on a 4-connected grid) and consistent (satisfies the triangle inequality). A* with this heuristic is guaranteed to produce an optimal path [6].
 
-On a 500×500 grid, the practical difference between BFS and A* depends on obstacle density. With no impassable cells, both algorithms explore approximately the same number of cells for a path of length L. With significant obstacles, A* may explore substantially fewer cells. For the roll2hit.com world, where impassable cells are confined to ocean borders, BFS and A* perform comparably on land-to-land paths.
+On a 500×500 grid, the practical difference between BFS and A* depends on obstacle density. With no impassable cells, both algorithms explore approximately the same number of cells for a path of length L. With significant obstacles, A* may explore substantially fewer cells. For the CodexOfConquest.com world, where impassable cells are confined to ocean borders, BFS and A* perform comparably on land-to-land paths.
 
 **Recommendation:** Use BFS for grids up to 200×200 and worlds with sparse obstacles. Use A* for larger grids or dense obstacle fields.
 
@@ -322,7 +322,7 @@ Acts map loosely to geographic regions: Act I occupies the northern reaches of t
 
 ### A. Implementation Architecture
 
-The reference implementation (roll2hit.com) uses the following runtime components:
+The reference implementation (CodexOfConquest.com) uses the following runtime components:
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -340,7 +340,7 @@ The reference implementation (roll2hit.com) uses the following runtime component
 └────────────────────┬─────────────────────────────────────────┘
                      │ file I/O (fs.readFileSync / writeFileSync)
 ┌────────────────────▼─────────────────────────────────────────┐
-│  Single-file Game (index.html)                         │
+│  Single-file Game (play.html)                         │
 │  • NODE_MAP     : location descriptors (no exit fields)      │
 │  • NODE_COORDS  : {code → {r, c}} coordinate index          │
 │  • CELL_GRID    : {"r,c" → code} reverse lookup (built once) │
@@ -524,9 +524,9 @@ The architecture is well-suited to any text-based role-playing game that require
 
 [11] M. Talbot, "A Dive into the MUD: A Series on Text-based Games Using Object-Oriented Ruby," *Medium*, 2019. Available: https://medium.com/@mdtalbot/a-dive-into-the-mud-a-series-on-text-based-games-using-object-oriented-ruby-d4be41c3d12a
 
-[12] P. Richeson, "Cell Map & MUD Redesign (§CELL-01 through §CELL-11)," *Roll2Hit.com Lab Report*, June 2026.
+[12] P. Richeson, "Cell Map & MUD Redesign (§CELL-01 through §CELL-11)," *CodexOfConquest.com Lab Report*, June 2026.
 
-[13] P. Richeson, "Roll2Hit.com — Cell-Grid Navigation Architecture, Program Flow, and Validation Test Design," *Technical Report TR-2026-CELL*, roll2hit.com, June 2026.
+[13] P. Richeson, "CodexOfConquest.com — Cell-Grid Navigation Architecture, Program Flow, and Validation Test Design," *Technical Report TR-2026-CELL*, CodexOfConquest.com, June 2026.
 
 ---
 

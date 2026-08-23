@@ -13,7 +13,7 @@
 > | Question | Live source |
 > |----------|-------------|
 > | What is this node's code / cell / act / terrain? | **[`docs/maps/node-index.md`](../maps/node-index.md)** · `npm run nodes` · `./api.sh get node <CODE>` |
-> | What does the grid actually look like here? | `node scripts/render-region.js <r0> <r1> <c0> <c1>` |
+> | What does the grid actually look like here? | `node src/scripts/render-region.js <r0> <r1> <c0> <c1>` |
 > | Is the world connected? | `./api.sh reachability` (100% from LHR) · `./api.sh broken` (0) |
 > | What does a legacy code (`SF`, `CQ`, `CI`…) mean? | the **LEGACY CODE MAP** at the bottom of `docs/maps/node-index.md` |
 >
@@ -50,7 +50,7 @@
 
 > **⚠️ Not the live world (§AUDIT-03l).** The live grid is 90×360 with nodes at r 2–73 / c 154–249,
 > and none of the two-letter codes below is a `NODE_MAP` key. Kept as the record of the 26×16 era.
-> **To see the real grid: `node scripts/render-region.js <r0> <r1> <c0> <c1>`** (ASCII window over the
+> **To see the real grid: `node src/scripts/render-region.js <r0> <r1> <c0> <c1>`** (ASCII window over the
 > live sea/lane/road/settlement layers); node codes + live cells: [`docs/maps/node-index.md`](../maps/node-index.md).
 
 *Two-letter node codes. `WW` = water. Non-node land cells shown as `..`. Epic Battleground nodes (E*) appear at WW cells only where the terrain has a logical override (deep forest, underwater cave, frozen waste, sky-adjacent spire). Mythic-east nodes shown at far right; reach by walking east via sky road.*
@@ -82,13 +82,13 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 **To look up a node code, read the generated index — never a table in this file.**
 
 ```bash
-npm run nodes                 # regenerate docs/maps/node-index.md from index.html
+npm run nodes                 # regenerate docs/maps/node-index.md from play.html
 ./api.sh get node CDG         # the other live answer
 ```
 
 `docs/maps/node-index.md` lists **all 416 nodes** — code · `Node #` · terrain · act · live
 `NODE_COORDS` cell · sleep flag · label · inline NPC — parsed by the same `wbapi-core`
-extractor the `:1367` server and every `scripts/check-*.js` use, exactly as `npm run stats`
+extractor the `:1367` server and every `src/scripts/check-*.js` use, exactly as `npm run stats`
 (§DX-01g) does for counts. It carries a **LEGACY CODE MAP** at the bottom for reading older
 docs, lab reports and commit messages (`SF`→`STN`, `CQ`→`CDG`, `CI`→`LHR`, …). It is
 gate-fenced: `npm run check:nodeindex` (gate #12 of `check:walk`) fails if it drifts from the
@@ -499,7 +499,7 @@ LITTORAL COURTS (§SIREN-01 — extended south from DS, Act IV)
 
 ## GATE LOCKS — ❌ REMOVED (Free-Movement Policy)
 
-> **The `GATE_LOCKS` array and all item-gated passage checks are gone from the code** (verified 2026-07-03: `GATE_LOCKS` greps to 0 in `index.html`; `cellMove` is a thin `Mover.move` caller with no gate branch). Movement is refused for exactly two reasons — `'oob'` and `'sea'` — per the Free-Movement / Mission-Gating Policy (CONTRIBUTING.md). The old CR→CY / SC→FL / AL→SE / VC→DE item gates and the CO shard gate no longer block *movement*; story gating happens at the *mission-listing* level only (quest `gate` / `activateCond` in `storyCheckQuests`).
+> **The `GATE_LOCKS` array and all item-gated passage checks are gone from the code** (verified 2026-07-03: `GATE_LOCKS` greps to 0 in `play.html`; `cellMove` is a thin `Mover.move` caller with no gate branch). Movement is refused for exactly two reasons — `'oob'` and `'sea'` — per the Free-Movement / Mission-Gating Policy (CONTRIBUTING.md). The old CR→CY / SC→FL / AL→SE / VC→DE item gates and the CO shard gate no longer block *movement*; story gating happens at the *mission-listing* level only (quest `gate` / `activateCond` in `storyCheckQuests`).
 
 ---
 
@@ -574,7 +574,7 @@ const CELL_GRID = (() => {
 
 ## ROAD NET & ROOM LAYER (§NAV-01, ✅ 2026-07-03)
 
-> Full design + diagnosis: `lab-reports/lab-report-nav01-navigable-world.md`. Layer stack: `docs/notes/docs-node-network.md §13`.
+> Full design + diagnosis: `docs/lab-reports/lab-report-nav01-navigable-world.md`. Layer stack: `docs/notes/docs-node-network.md §13`.
 
 ### ROAD_RUNS — the fungal road net
 
@@ -582,7 +582,7 @@ const CELL_GRID = (() => {
 
 - **Roads are terrain, not permissions** (Free-Movement, CONTRIBUTING.md): a road cell resolves to terrain `'road'` with **encounter rate 0** — a safe, legible highway. The open field stays fully walkable; roads are sugar, never required.
 - Terrain precedence (client `_inferTerrain` + server `terrainAt`, parity-checked): `SEA_LANES → 'ocean'` ▸ `ROAD_CELLS → 'road'` ▸ majority-of-named-neighbors ▸ `'midlands'`. Sea-lanes stay `ocean` — crossings keep their 0.10 encounter risk as texture.
-- Generated deterministically by `scripts/build-roads.js` (k-nearest ≤3 + MST + local loops ≤8; trunk-reuse Dijkstra costs settlement 2 / road 4 / virgin 10 / lane 14). **Never hand-edit ROAD_RUNS** — regenerate via ♻ Reweave (`PUT /api/roads` or `./api.sh reweave`); a red `check:roads` rolls the game file back automatically.
+- Generated deterministically by `src/scripts/build-roads.js` (k-nearest ≤3 + MST + local loops ≤8; trunk-reuse Dijkstra costs settlement 2 / road 4 / virgin 10 / lane 14). **Never hand-edit ROAD_RUNS** — regenerate via ♻ Reweave (`PUT /api/roads` or `./api.sh reweave`); a red `check:roads` rolls the game file back automatically.
 - User-authored net edits live in `roads-pins.json` `{pins, links, locked}` — pins are mandatory road vertices; `locked` city codes are never moved by geo-seed. Edited visually in worldbuilder.html (§NAV-01g/h): drag-&-lock cities, vertex drag → pin, ✚/┬ junction palette, 🔗 link toggle, 🗑 delete, ♻ Reweave Net.
 
 ### Room layer — every cell is a room
@@ -634,7 +634,7 @@ See `docs/spec/spec-corridors.md` for the full historical spec.
 
 ## NAVIGATION ENGINE — Function Reference (F1 Coverage)
 
-> **Source of truth:** `index.html`. This section documents all functions that read or write map/navigation state. Every function listed here is covered by at least one flowchart below.
+> **Source of truth:** `play.html`. This section documents all functions that read or write map/navigation state. Every function listed here is covered by at least one flowchart below.
 >
 > **§AUDIT-03e — the `code` field is a runtime backfill, not authored data.** 287 of the 416 authored
 > entries omit the redundant `code:` field (only 129 carry it, and **no entry has `code !== key`**). One

@@ -16,7 +16,7 @@ inside one HTML file. No server, no build step, no install. Open it and play.
 
 ## Quick start — just play
 
-Open **`index.html`** in any modern browser (Chrome, Firefox, Safari,
+Open **`play.html`** in any modern browser (Chrome, Firefox, Safari,
 Edge) with JavaScript enabled.
 
 - **Double-click** the file, or drag it onto a browser window, or `File → Open`.
@@ -32,7 +32,7 @@ Edge) with JavaScript enabled.
 
 ## What this project is
 
-`index.html` is the single source of truth: a ~37,000-line HTML file that
+`play.html` is the single source of truth: a ~37,000-line HTML file that
 *is* the game. Everything else in this repository exists to **author, document,
 test, and host** that one file:
 
@@ -41,7 +41,7 @@ test, and host** that one file:
 - **The WBAPI server** (`wbapi-server.js`) is an optional local REST API that
   reads the HTML and writes edits back in place, so content can be authored via
   `worldbuilder.html` / `./api.sh` instead of editing 37k lines by hand.
-- **Tests** (`tests/`, `scripts/`) guard the world's invariants.
+- **Tests** (`src/tests/`, `src/scripts/`) guard the world's invariants.
 
 If you only want to play, you never need any of that — just open the HTML.
 
@@ -51,7 +51,7 @@ If you only want to play, you never need any of that — just open the HTML.
 
 ### 1. Play locally (no tooling)
 
-Open `index.html` in a browser. Done.
+Open `play.html` in a browser. Done.
 
 ### 2. Host it (share it with others)
 
@@ -60,15 +60,15 @@ Because the game is a single static file, any static file server works:
 ```bash
 # Python (already on macOS/Linux) — serves the current directory at :8000
 python3 -m http.server 8000
-# then visit http://localhost:8000/index.html
+# then visit http://localhost:8000/play.html
 
 # …or Node's one-liner static server
 npx serve .
 ```
 
-To publish on the web, upload `index.html` to any static host (GitHub
+To publish on the web, upload `play.html` to any static host (GitHub
 Pages, Netlify, an S3 bucket, a plain nginx/Apache directory). No backend
-required. Rename it to `index.html` if you want it served at the site root.
+required. Rename it to `play.html` if you want it served at the site root.
 
 ### 3. Run the authoring / API server (content editing)
 
@@ -94,7 +94,7 @@ npm install
 # Author visually: open worldbuilder.html in a browser while the server runs
 ```
 
-The server reads and rewrites `index.html` in place. See
+The server reads and rewrites `play.html` in place. See
 **[CONTRIBUTING.md](CONTRIBUTING.md)** for the API-first authoring workflow and
 the WBAPI hazards to know before editing, and **`docs/api/`** for the full API
 reference.
@@ -116,11 +116,11 @@ npm run test:mud        # MUD server-protocol harness
 ## Repository layout
 
 ```
-index.html        ← THE GAME (single file — open this to play)
+play.html        ← THE GAME (single file — open this to play)
 worldbuilder.html       ← visual authoring tool (needs the WBAPI server)
 
 # Launch / ops scripts (root)
-api.sh                  ← WBAPI CLI wrapper  (→ api/wb.js)
+api.sh                  ← WBAPI CLI wrapper  (→ src/api/wb.js)
 wbapi-toggle.sh         ← start/stop/restart the WBAPI server
 say.sh · sayd.sh        ← narration helpers
 monitor-snapshots.py · watch-snapshots.sh · archive-snapshots.sh
@@ -141,15 +141,15 @@ BACKLOG.md              ← outstanding work / to-do list
 plan-archive.md         ← archived completed work
 
 # Folders
-docs/                   ← reference docs: spec/ story/ api/ mechanics/ notes/
-lab-reports/            ← design lab reports (one per major arc/system)
-importers/              ← ⚠️ archaic one-shot content importers (historical)
-tools/                  ← standalone dev/CLI utilities
-sources/                ← narrative source texts
+docs/                   ← reference docs: spec/ story/ src/api/ mechanics/ notes/
+docs/lab-reports/            ← design lab reports (one per major arc/system)
+src/importers/              ← ⚠️ archaic one-shot content importers (historical)
+src/tools/                  ← standalone dev/CLI utilities
+src/sources/                ← narrative source texts
 1367-sources/           ← imported source-book material
-scripts/                ← invariant/CI check scripts (npm run check:*)
-tests/                  ← Playwright integration + MUD harness
-api/                    ← wb.js (the WBAPI CLI implementation)
+src/scripts/                ← invariant/CI check scripts (npm run check:*)
+src/tests/                  ← Playwright integration + MUD harness
+src/api/                    ← wb.js (the WBAPI CLI implementation)
 maps/ · milepoints/ · ledger/   ← map assets, snapshots/logs, economy ledger
 ```
 
@@ -157,7 +157,7 @@ maps/ · milepoints/ · ledger/   ← map assets, snapshots/logs, economy ledger
 
 ## Documentation system
 
-This repo maintains a **two-way sync** between `index.html` and the
+This repo maintains a **two-way sync** between `play.html` and the
 markdown docs: every data structure in the HTML has a home document, and every
 documented item traces back to a line in the HTML.
 
@@ -174,8 +174,8 @@ documented item traces back to a line in the HTML.
 | `CONTRIBUTING.md` | How to work in this repo — API-first, cell-first, free-movement, test rules, lab-report policy |
 | `BACKLOG.md` | Outstanding / planned work |
 
-Deeper reference lives under **`docs/`** (`spec/`, `story/`, `api/`,
-`mechanics/`, `notes/`), and **`lab-reports/`** captures design decisions and
+Deeper reference lives under **`docs/`** (`spec/`, `story/`, `src/api/`,
+`mechanics/`, `notes/`), and **`docs/lab-reports/`** captures design decisions and
 implementation findings per major arc or system. See `index.md` for the full
 list.
 
@@ -249,9 +249,9 @@ independent authorship claim. See
 ## A note on names
 
 The game file was called `roll2hit-v3.html` for most of its history and is now
-`index.html`, so that a static host serves it at the root URL. The project was
+`play.html`, so that a static host serves it at the root URL. The project was
 called *Roll2Hit* before it was called *Codex of Conquest*.
 
-The `lab-reports/` and `plan-archive.md` are **history documents** — they are
+The `docs/lab-reports/` and `plan-archive.md` are **history documents** — they are
 annotated, never rewritten (§DX-02c / §AUDIT-03m), so they still name the file
 and the project as they were called at the time. That is deliberate.

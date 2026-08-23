@@ -1,9 +1,9 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
-# Integration Test Plan — index.html
+# Integration Test Plan — play.html
 
 ## Overview
 
-Browser-level integration tests for index.html using Playwright. Tests drive a real headless Chromium instance against the live game page, injecting known state via `localStorage` and asserting on DOM visibility and JS globals. Randomness is **not mocked** — tests are written to allow it.
+Browser-level integration tests for play.html using Playwright. Tests drive a real headless Chromium instance against the live game page, injecting known state via `localStorage` and asserting on DOM visibility and JS globals. Randomness is **not mocked** — tests are written to allow it.
 
 ---
 
@@ -28,7 +28,7 @@ The game hydrates from `localStorage.getItem('r2h_autosave')` at page load, via 
 await page.addInitScript(state => {
   localStorage.setItem('r2h_autosave', JSON.stringify(state));
 }, SEED_STATE);
-await page.goto('/index.html');
+await page.goto('/play.html');
 ```
 
 On load, the game finds the autosave and shows a **continue modal** (`#story-continue-modal`). Clicking `#btn-continue-load` calls `storyLoadContinue()`, which re-reads the autosave, sets `S_story.active = true`, and calls `storyRender(NODE_MAP[S_story.currentCode])` — rendering the seeded node.
@@ -64,7 +64,7 @@ Fishing uses `Math.random()` for three rolls per cast (DEX cast check, Catch rol
 
 ```
 playwright.config.js           ← Playwright config; serves . on port 7654
-tests/integration/
+src/tests/integration/
   helpers.js                   ← SEED_STATE, seedAndLoad(), dismissContinue(),
                                   openFishingModal(), castUntilFishRevealed()
   fishing.test.js              ← Fishing quest stage tests + main smoke test
@@ -186,7 +186,7 @@ To add a new quest path test:
 
 1. Identify the seed state needed (node, inventory, quest flags)
 2. Add the seed override to `helpers.js` as a named export (e.g., `NIGHT_FISH_SEED`)
-3. Create `tests/integration/<quest-name>.test.js`
+3. Create `src/tests/integration/<quest-name>.test.js`
 4. Use `seedAndLoad(page, overrides)` with the named seed
 5. Drive the UI path with locators, assert on `S_story` state via `page.evaluate()`
 

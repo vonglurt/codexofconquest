@@ -422,7 +422,7 @@ MILEPOINT E  _magicTierAllowed(magic) — single line: level >= magic * 5
 
 ### F4 Function Reference Table
 
-> All 29 line numbers verified against `index.html` (17,762 lines) · 2026-05-26 (SP4 annotation pass)
+> All 29 line numbers verified against `play.html` (17,762 lines) · 2026-05-26 (SP4 annotation pass)
 
 | Function | Line | Purpose | Key data read | Key data written |
 |----------|------|---------|---------------|-----------------|
@@ -455,7 +455,7 @@ MILEPOINT E  _magicTierAllowed(magic) — single line: level >= magic * 5
 
 ---
 
-*© 2026 roll2hit.com — MIT License. See [LICENSE](../../LICENSE) for full text.*
+*© 2026 CodexOfConquest.com — MIT License. See [LICENSE](../../LICENSE) for full text.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

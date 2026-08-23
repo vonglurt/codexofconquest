@@ -228,15 +228,15 @@ A player who reached NG+ without finding Quest -1's door is not asked to write E
 
 | File | Location | Content |
 |------|----------|---------|
-| `index.html` | Line 8395 | `ngPlusRun: 0` in `_S_DEFAULTS()` |
-| `index.html` | Lines 8424–8425 | `entry42Written`, `entry42Text`, `entry42Read`, `ngMemoryDelivered`, `nextFrobergerComplete`, `frobergerLetterFound` |
-| `index.html` | Lines 8889–8910 | `storyNewGamePlus()` — preservation logic |
-| `index.html` | Line 11836 | `NPC_NG_PLUS_GREETINGS` const |
-| `index.html` | Line 11846 | `NPC_NG_MEMORY_LINES` const |
-| `index.html` | Lines 8654–8664 | NPC memory line delivery logic |
-| `index.html` | Lines 14218–14221 | Entry 42 modal trigger at `LHR` (historical `CI`) |
-| `index.html` | Lines 14260–14262 | quest_ng_01/02/03 activation |
-| `index.html` | Lines 12837, 12857 | Epilogue `entry42Written` variant |
+| `play.html` | Line 8395 | `ngPlusRun: 0` in `_S_DEFAULTS()` |
+| `play.html` | Lines 8424–8425 | `entry42Written`, `entry42Text`, `entry42Read`, `ngMemoryDelivered`, `nextFrobergerComplete`, `frobergerLetterFound` |
+| `play.html` | Lines 8889–8910 | `storyNewGamePlus()` — preservation logic |
+| `play.html` | Line 11836 | `NPC_NG_PLUS_GREETINGS` const |
+| `play.html` | Line 11846 | `NPC_NG_MEMORY_LINES` const |
+| `play.html` | Lines 8654–8664 | NPC memory line delivery logic |
+| `play.html` | Lines 14218–14221 | Entry 42 modal trigger at `LHR` (historical `CI`) |
+| `play.html` | Lines 14260–14262 | quest_ng_01/02/03 activation |
+| `play.html` | Lines 12837, 12857 | Epilogue `entry42Written` variant |
 | `lab-report-ng-plus-remembrance.md` | All | §XV full implementation record |
 | `lab-report-void-archaeology.md` | §II.B | `entry42Written` as required gate for `vaArchitectureKnown` |
 | `lab-report-quest-minus-one-world-creator.md` | §II.C | `priorQuestMinusOne` origin — Quest -1 cross-reference |

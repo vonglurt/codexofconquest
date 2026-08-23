@@ -4,7 +4,7 @@
 ### Phase 3 Combat Utility Extension & Terrain-Based Monster Catalog System
 **Document:** spec-world.md  
 **Revision:** 1.0 — 2026-05-20  
-**Project:** roll2hit.com — single-file combat assistant  
+**Project:** CodexOfConquest.com — single-file combat assistant  
 
 ---
 
@@ -50,7 +50,7 @@ The Phase 3 runtime is organized into seven logical subsystems. All subsystems s
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        index.html                         │
+│                        play.html                         │
 │                                                                 │
 │  ┌──────────┐  ┌──────────┐  ┌───────────┐  ┌──────────────┐  │
 │  │  STATE   │  │  DICE    │  │ ANIMATION │  │   HISTORY    │  │
@@ -866,7 +866,7 @@ If the project outgrows single-file constraints, the natural split would be:
 
 ```
 roll2hit-v4/
-  index.html          ← shell (~200 lines)
+  play.html          ← shell (~200 lines)
   roll2hit.js         ← state + roll actions
   world_db.js         ← MONSTER_POOL + WORLD_DB (importable)
   styles.css
@@ -934,7 +934,7 @@ Until that migration, all Phase 3 code remains in one file. No module syntax, no
 
 ---
 
-*MIT License — Copyright (c) 2026 roll2hit.com*
+*MIT License — Copyright (c) 2026 CodexOfConquest.com*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

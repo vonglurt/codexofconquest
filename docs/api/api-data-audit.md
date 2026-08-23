@@ -133,7 +133,7 @@ When the quest ID does not map to a `1367-sources/` book (prefix `mq_`, `sq_`, `
 3. Check `story-arc-*.md` files — main narrative arcs
 4. Check the HTML game file directly:
    ```bash
-   grep -n "{quest_id}" index.html
+   grep -n "{quest_id}" play.html
    ```
    Read the entry. The `desc` and `hint` fields give you the full narrative context.
 5. Check `lab-report-*.md` files that cover the arc (epic battlegrounds, crown hags, etc.)
@@ -219,7 +219,7 @@ say "{BOOK} {cycle} complete. All acts patched. Committing." &
 git commit -m "{BOOK} — {BookName}: {N} quests patched ({BOOK}-01 through {BOOK}-0N, all acts desc+hint)"
 say "{BOOK} committed. {N} quests across {M} cycles." &
 
-# 5. NEXT — after commit, call api/next-error and announce what's up next
+# 5. NEXT — after commit, call src/api/next-error and announce what's up next
 curl -s 'http://localhost:1367/api/next-error?severity=warning&skip=50' | python3 -c "
 import sys,json; d=json.load(sys.stdin)
 if d.get('found'):
@@ -235,7 +235,7 @@ say "Next: {BOOK} {next_cycle} — {quest title}." &
 - The field name (e.g., "desc fixed", "hint fixed") must always appear
 - Include a verbatim quote — short, one sentence maximum — lifted directly from the text just patched
 - Book abbreviation + cycle number (e.g., "HTY 01") are mandatory so oral log is self-annotating
-- After a commit, name the next key from api/next-error so the speaker always signals what is coming
+- After a commit, name the next key from src/api/next-error so the speaker always signals what is coming
 
 ---
 
@@ -386,7 +386,7 @@ All 11 MQ/SQ quests had `desc` already but were missing `passText` and `failText
 Search order used:
 - `grep -rn "mq_\|sq_\|{title}" *.md lab-report-*.md` — found quest listed in mechanics.md flavor text but no passText/failText
 - Checked `story-arc-coastal.md`, `story-arc-investigation.md`, `story-arc-ngplus.md` — epigraphs and arc notes only; no passText/failText existed
-- Read HTML directly: `grep -n "mq_1\|sq_1" index.html` — found desc and hint for all, confirmed no passText/failText had ever been written
+- Read HTML directly: `grep -n "mq_1\|sq_1" play.html` — found desc and hint for all, confirmed no passText/failText had ever been written
 
 **5. Validated quest types:**
 `GET /api/list/quest` + type analysis showed `epic` (40), `combat` (36), `escort` (22), `dialogue` (7), `hybrid` (6) in live data but not in schema. Updated schema in `wbapi-server.js` to include all real types.

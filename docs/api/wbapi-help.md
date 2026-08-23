@@ -264,8 +264,8 @@ co-signed trades (parties on different servers) are the remaining §MESH-01i run
 
 ## Mesh API — server-to-server presence (§MESH-01 · §MESH-02)
 
-Full reference: `docs-node-network.md §12` + `lab-reports/lab-report-mesh-sync-architecture.md`;
-connection-center UI + ACL/blocklist design: `lab-reports/lab-report-mesh02-connections-ui.md`.
+Full reference: `docs-node-network.md §12` + `docs/lab-reports/lab-report-mesh-sync-architecture.md`;
+connection-center UI + ACL/blocklist design: `docs/lab-reports/lab-report-mesh02-connections-ui.md`.
 
 ```bash
 # CLI wrappers (§MESH-01-FU 10) — the preferred read surface; all read-only
@@ -330,14 +330,14 @@ curl "http://localhost:1367/api/session/chat?r=10&c=197"        # optional cell 
 curl -XPOST http://localhost:1368/api/tracker/announce -d '{...manifest+addr}'
 curl http://localhost:1368/api/tracker/peers                       # all world groups
 curl "http://localhost:1368/api/tracker/peers?wh=<hash>&format=txt"  # peers.txt bootstrap format
-scripts/publish-bootstrap.sh http://tracker:1368 [--wh h] > bootstrap.txt  # snapshot + manual-publish howto (never auto-publishes)
+src/scripts/publish-bootstrap.sh http://tracker:1368 [--wh h] > bootstrap.txt  # snapshot + manual-publish howto (never auto-publishes)
 curl -XPOST http://localhost:1368/api/tracker/sync -d '{...}'      # federation (tracker↔tracker)
 
 # World download + mod inspection (tracker-mode refuses with 410)
 curl -O http://localhost:1367/api/world/download   # game file + X-R2H-* identity headers
-node scripts/world-diff.js mine.html theirs.html   # DEEP per-entry diff (exact field paths,
+node src/scripts/world-diff.js mine.html theirs.html   # DEEP per-entry diff (exact field paths,
                                                    # fn bodies compared by source); LOUD if CODE differs
-node scripts/world-diff.js a.html b.html --json    # machine-readable report (tooling)
+node src/scripts/world-diff.js a.html b.html --json    # machine-readable report (tooling)
 npm run check:worlddiff                            # selftest (synthetic worlds; in CI)
 ```
 
@@ -378,7 +378,7 @@ default 120); a healthy peer spends ~0.5 token/s, so the defaults leave ~60×
 headroom. Current config is surfaced in `GET /api/mesh/status → rate`, and
 the traffic ring logs one `rate` row per flood.
 
-**Test gate:** `npm run test:mud` — 270 checks incl. the [L] partition-heal harness, [P] rate limiting, the `./api.sh mesh` CLI wrappers, [Q] ACL template / tracker cache+bootstrap / chat backlog (§MESH-01-FU 11–13), and [R] the §MESH-02a ACL editor endpoints + blocklist share flip; client side: `tests/integration/mesh-connections-ui.test.js` (hermetic connection-center UI).
+**Test gate:** `npm run test:mud` — 270 checks incl. the [L] partition-heal harness, [P] rate limiting, the `./api.sh mesh` CLI wrappers, [Q] ACL template / tracker cache+bootstrap / chat backlog (§MESH-01-FU 11–13), and [R] the §MESH-02a ACL editor endpoints + blocklist share flip; client side: `src/tests/integration/mesh-connections-ui.test.js` (hermetic connection-center UI).
 
 ---
 
@@ -408,7 +408,7 @@ to inspect the grid without scanning NODE_MAP manually.
 **Worldbuilder road-net editor (§NAV-01h):**
 - `GET /api/roads` — the full net for the overlay: parsed `ROAD_RUNS` (`runs` RLE + `cells`/`junctions` census) merged with the pins file (`pins`, `links`, `locked`)
 - `PUT /api/roads/pins` — body `{pins:[{r,c}], links:[["r,c","r,c"]]}`; replaces the authored net (`locked` preserved). Endpoints must be a pin cell or a settlement cell; pins are rejected on sea and on settlement cells. Saving does **not** touch the game file.
-- `PUT /api/roads` — **Reweave Net**: runs `scripts/build-roads.js --apply` (patches the `◆ §NAV-01b` ROAD_RUNS block in-place), then `scripts/check-roads.js` (R1–R4). A red check **rolls the game file back** — the on-disk game always passes `check:roads`. One reweave at a time (409 while busy).
+- `PUT /api/roads` — **Reweave Net**: runs `src/scripts/build-roads.js --apply` (patches the `◆ §NAV-01b` ROAD_RUNS block in-place), then `src/scripts/check-roads.js` (R1–R4). A red check **rolls the game file back** — the on-disk game always passes `check:roads`. One reweave at a time (409 while busy).
 - CLI: `./api.sh roads [pins] [--json]` · `./api.sh reweave`
 
 ---
@@ -433,7 +433,7 @@ The canonical workflow for adding any quest chain via the API. Steps are invaria
 # Step 0: confirm node exists and terrain is correct
 ./api.sh location {startNode}
 
-# Step 1: register new flags in _S_DEFAULTS (manual edit in index.html)
+# Step 1: register new flags in _S_DEFAULTS (manual edit in play.html)
 
 # Step 2: inspect quest schema
 ./api.sh get quest --schema

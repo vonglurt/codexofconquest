@@ -20,7 +20,7 @@ if [ "${SKIP_CLEANUP:-}" = "1" ]; then
 fi
 
 REPO_ROOT="$(git rev-parse --show-toplevel)"
-SCRIPT="$REPO_ROOT/scripts/cleanup-cruft.sh"
+SCRIPT="$REPO_ROOT/src/scripts/cleanup-cruft.sh"
 
 if [ ! -x "$SCRIPT" ]; then
   echo "[pre-commit] cleanup-cruft.sh not found or not executable — skipping" >&2
@@ -34,15 +34,15 @@ else
 fi
 
 # Re-stage transient deletions/truncations into this commit.
-# `git add -A -- milepoints/` follows .gitignore, so the ignored patches/
+# `git add -A -- build/milepoints/` follows .gitignore, so the ignored patches/
 # directory is skipped automatically — only tracked files (heatmaps,
 # reweave-maps, api-cli.log, say.log) get their deletions/edits staged.
 # Errors are tolerated: a fresh clone may not have milepoints/ yet.
-git -C "$REPO_ROOT" add -A -- milepoints/ 2>/dev/null || true
+git -C "$REPO_ROOT" add -A -- build/milepoints/ 2>/dev/null || true
 
 # Stamped HTML snapshots at repo root (roll2hit-v3-YYYYMMDD-HHMMSS.html)
 shopt -s nullglob
-for f in "$REPO_ROOT"/roll2hit-v3-[0-9]*.html; do
+for f in "$REPO_ROOT"/play-[0-9]*.html; do
   git -C "$REPO_ROOT" add -A -- "$(basename "$f")" 2>/dev/null || true
 done
 shopt -u nullglob

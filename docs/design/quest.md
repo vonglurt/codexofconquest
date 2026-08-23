@@ -166,12 +166,12 @@ not list until §AUDIT-03d lands.
 ## The `npc` field — authoring metadata, not gameplay (§AUDIT-03b, 2026-07-29)
 
 `quest.npc` **anchors a quest to an NPC for authoring purposes only.** The game client
-(`index.html`) has **zero** quest-level `.npc` reads — nothing a player sees depends
+(`play.html`) has **zero** quest-level `.npc` reads — nothing a player sees depends
 on it. Its consumers are the worldbuilder display, the server's `_questsByNpc` index,
 `./api.sh advise` (an unresolvable key is a *warning*), `./api.sh audit` (a **missing**
 field is an *error* — every quest must be anchored), and the NPC delete-guards.
 
-**The accepted vocabulary is four registries** (`WBAPI.npcKeyOk`, `js/wbapi-core.js`):
+**The accepted vocabulary is four registries** (`WBAPI.npcKeyOk`, `src/js/wbapi-core.js`):
 
 | # | Registry | Key form |
 |---|----------|----------|
@@ -205,14 +205,14 @@ bulk-default is gone. The last 68 unanchored quests were derived one family at a
 | `quest_brynn_firewood`, `quest_brynn_ledger` | `brynn` | TLL's own profile |
 | `quest_pit_debut` | `crov` | Pit Master Weckmann, matching `quest_pit_training` |
 
-Pinned by `tests/integration/audit03g-npc-coverage.test.js` (coverage · the 68 keys · vocabulary
+Pinned by `src/tests/integration/audit03g-npc-coverage.test.js` (coverage · the 68 keys · vocabulary
 resolution · the EB-giver derivation re-asserted from the live corpus, not hard-coded).
 
 **One character, one key — the alias map does this for you now (§AUDIT-03k ✅ 2026-08-04).** A
 node's inline `npc` string normalizes to a key that is often the *same character* as a
 `NPC_DIALOGUES` / `BIRKA_NPC` profile under a different spelling. Both used to pass `npcKeyOk`, so
 `_questsByNpc` filed one person under two headings — `city_guard_captain` held 5 quests while
-`yael`, the woman LHR's own node text names, held 17. **`WBAPI.NPC_ALIASES` (`js/wbapi-core.js`)
+`yael`, the woman LHR's own node text names, held 17. **`WBAPI.NPC_ALIASES` (`src/js/wbapi-core.js`)
 now collapses all seven pairs on write**, the alias slugs are **out of the vocabulary** (a quest
 still carrying one advise-warns), and `_questsByNpc` indexes under the canonical key even for a
 hand-authored UQF block that never passed through the API:
@@ -233,7 +233,7 @@ SEN is the *Tilbury Star*. That is why `check:npcregs` phase 5 classifies **expl
 display name that collides with a live profile must be listed in `NPC_ALIASES` or in the gate's
 `NOT_AN_ALIAS` with a reason, and an unlisted one **fails**. The node's display string itself is
 never rewritten — it is supposed to be a name (§AUDIT-03h). Pinned by
-`tests/integration/audit03k-npc-aliases.test.js`.
+`src/tests/integration/audit03k-npc-aliases.test.js`.
 
 **Write the registry KEY, never the display name (§AUDIT-03h, 2026-07-30).** Ten quests held a
 human-readable name (`npc:"Emmer Finch"`) where the key belongs (`emmer`). Capitals and spaces
@@ -253,7 +253,7 @@ unresolvable `npc` values**, and `audit03b-npc-anchor.test.js`'s tolerated list 
 `Pier Falk` → `pier`. Resolve every key against `WBAPI.npcKeyVocab()` before writing it.
 And note the inverse: **`NODE_MAP`'s inline `npc` is *supposed* to be a display name** (`SSJ.npc
 = 'The Fisherman'`) — normalizing *that* would be the bug, since it is what makes the key
-resolve. Pinned by `tests/integration/audit03h-npc-normalize.test.js`.
+resolve. Pinned by `src/tests/integration/audit03h-npc-normalize.test.js`.
 
 ---
 
@@ -342,7 +342,7 @@ resolve. Pinned by `tests/integration/audit03h-npc-normalize.test.js`.
 
 ### The Mathematics Pocket (EHZ, ZERO, MONS, CNTR) — NE of the Undercity — §MATH-01
 
-*Four-node walkable pocket anchored on HKG "Neon Undercity" (29,246): EHZ "Event Horizon — Math Station" through the east panel (29,247), ZERO "The Zero Corridor" north of the station (28,247), MONS "The Monster's Manifold" east (29,248), CNTR "Cantor's Attic" northeast (28,248). All five quests are UQF collect quests — the document is the node's first-visit loot; completion fires at the collect node. Gold rides `onComplete` reward bits; XP is the engine's side-quest award. Design: `lab-reports/lab-report-math01-completions.md`.*
+*Four-node walkable pocket anchored on HKG "Neon Undercity" (29,246): EHZ "Event Horizon — Math Station" through the east panel (29,247), ZERO "The Zero Corridor" north of the station (28,247), MONS "The Monster's Manifold" east (29,248), CNTR "Cantor's Attic" northeast (28,248). All five quests are UQF collect quests — the document is the node's first-visit loot; completion fires at the collect node. Gold rides `onComplete` reward bits; XP is the engine's side-quest award. Design: `docs/lab-reports/lab-report-math01-completions.md`.*
 
 | Quest ID | Title | Type | Activate → Collect | Reward | Status |
 |----------|-------|------|--------------------|--------|--------|
@@ -799,7 +799,7 @@ Events A–F use `gate:{}` (always listed on arrival) and `retryable:true`. **Ev
 
 **§KG Increment 2 (zones) is LIVE** — the St. Petersburg → Moscow corridor nodes (SPB/KMS/ZVD/FBR/TVR), 6 low-level "training" monsters (mLevel 1–4), and 5 Soviet-cyberpunk terrains all shipped. See world.md §"The St. Petersburg → Moscow Corridor" + monsters.md §"Soviet-Cyberpunk Training Tier."
 
-**§KG Increment 3 (the quest chain) is SHIPPED but NOT PLAYABLE** — ⚠ **all 11 quests are blocked at the head: `quest_kg_01` needs 3 `monsterKills.sparring_droid` and the counter has no writer (`S.opp.key` is never assigned — §DX-02cy, 2026-08-18). The XP band is also 199 short of its stated L6 (§AUDIT-03bl).** As authored: 11 UQF-1.0 side quests, honor-central, carrying a fresh L1 fighter east to ~L6 (mission *listing* gated W→E; movement always free). Each is anchored to one of the five corridor NPCs (audit-verified `npc` resolution). One new generic mechanic: a per-monster `monsterKills` counter (battle-win handler, in `_S_DEFAULTS`) read by the cull/duel quests' `completion.countMin` — reusable by any future arc. Design: `lab-reports/lab-report-kg-corridor-quest-chain.md`.
+**§KG Increment 3 (the quest chain) is SHIPPED but NOT PLAYABLE** — ⚠ **all 11 quests are blocked at the head: `quest_kg_01` needs 3 `monsterKills.sparring_droid` and the counter has no writer (`S.opp.key` is never assigned — §DX-02cy, 2026-08-18). The XP band is also 199 short of its stated L6 (§AUDIT-03bl).** As authored: 11 UQF-1.0 side quests, honor-central, carrying a fresh L1 fighter east to ~L6 (mission *listing* gated W→E; movement always free). Each is anchored to one of the five corridor NPCs (audit-verified `npc` resolution). One new generic mechanic: a per-monster `monsterKills` counter (battle-win handler, in `_S_DEFAULTS`) read by the cull/duel quests' `completion.countMin` — reusable by any future arc. Design: `docs/lab-reports/lab-report-kg-corridor-quest-chain.md`.
 
 | Quest | Node · NPC | Type | Completion | Reward |
 |-------|-----------|------|-----------|--------|

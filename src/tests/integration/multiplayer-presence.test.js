@@ -1,0 +1,261 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
+'use strict';
+// §MESH-01a — two-browser presence smoke: the REAL client flow end-to-end.
+// Spawns a throwaway wbapi-server (never the dev :1367), loads the game in two
+// isolated browser contexts, connects both via the 🌐 toggle, and asserts:
+// co-presence ("Also here:"), exactly-once chat via SSE, and player_left on
+// departure. Multiplayer stays strictly opt-in — a page that never clicks 🌐
+// is asserted to keep MP off.
+const { test, expect } = require('@playwright/test');
+const { spawn } = require('child_process');
+const { seedAndLoad, dismissContinue } = require('./helpers');
+
+const MP_PORT = 13891;
+const TRK_PORT = 13892;   // §MESH-01-FU 2: tracker for the join-by-magnet flow
+let server, tracker;
+
+const TMP = require('os').tmpdir();
+test.beforeAll(async () => {
+  tracker = spawn(process.execPath, ['src/js/wbapi-server.js', '--tracker-mode'], {
+    env: { ...process.env, PORT: String(TRK_PORT), MESH_SERVER_ID: 'b'.repeat(32),
+      PEERS_CACHE_FILE: `${TMP}/r2h-presence-trk-cache.json` },
+    stdio: 'ignore',
+  });
+  server = spawn(process.execPath, ['src/js/wbapi-server.js'], {
+    env: { ...process.env, PORT: String(MP_PORT), MESH_SERVER_ID: 'a'.repeat(32),
+      TRACKER_URL: `http://localhost:${TRK_PORT}`, MESH_ANNOUNCE_MS: '200',
+      SERVER_NAME: 'Hub Alpha', PEERS_CACHE_FILE: `${TMP}/r2h-presence-srv-cache.json` },
+    stdio: 'ignore',
+  });
+  for (let i = 0; i < 100; i++) {
+    try {
+      const r = await fetch(`http://localhost:${MP_PORT}/api/ping`);
+      const t = await fetch(`http://localhost:${TRK_PORT}/api/ping`);
+      if (r.ok && t.ok) return;
+    } catch {}
+    await new Promise((r) => setTimeout(r, 100));
+  }
+  throw new Error(`throwaway wbapi-server/tracker did not answer on :${MP_PORT}/:${TRK_PORT}`);
+});
+test.afterAll(() => {
+  for (const p of [server, tracker]) if (p) { try { p.kill('SIGTERM'); } catch {} }
+});
+
+// §MESH-01-REVIEW — every test in this file shares the ONE throwaway server, and
+// ctx.close()/disconnect only fire player_left; the session itself lingers in
+// SESSIONS to the 30-min TTL. That let a leaked session from a prior test bleed a
+// phantom pid/name into the next test's /api/session/who — the documented flake.
+// Sweep every local session after each test so who returns a clean slate. Assert
+// by pid, never by raw count (a leak inflates the count but never forges a pid).
+test.afterEach(async () => {
+  try {
+    const who = await (await fetch(`http://localhost:${MP_PORT}/api/session/who`)).json();
+    await Promise.all((who.sessions || []).map((s) =>
+      fetch(`http://localhost:${MP_PORT}/api/session/end`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId: s.id }),
+      }).catch(() => {})));
+  } catch { /* server already gone in afterAll — nothing to sweep */ }
+});
+
+// Load a seeded game at the LHR hub and point its MP module at the throwaway
+// server. mpServer is read from localStorage at CONNECT time (mpToggle), so
+// setting it post-load avoids fighting seedAndLoad's localStorage.clear().
+async function loadPlayer(browser, name) {
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  await seedAndLoad(page, { playerName: name, currentCode: 'LHR', checkpointNode: 'LHR', visited: { LHR: true } });
+  await dismissContinue(page);
+  await page.evaluate((port) => localStorage.setItem('mpServer', `http://localhost:${port}`), MP_PORT);
+  return { ctx, page };
+}
+
+test.describe('§MESH-01a — multiplayer presence (two real clients)', () => {
+  test('connect, co-presence, chat, departure — full flow', async ({ browser }) => {
+    const a = await loadPlayer(browser, 'Aldona');
+    const b = await loadPlayer(browser, 'Borys');
+
+    // A connects alone — status green, no one else here.
+    await a.page.click('#mp-toggle');
+    await expect(a.page.locator('#mp-status')).toContainText('🟢 Aldona');
+    await expect(a.page.locator('#mp-presence')).toHaveText('');
+
+    // B connects at the same cell — B's pos response lists Aldona; A learns of
+    // Borys via the session/start announce over SSE.
+    await b.page.click('#mp-toggle');
+    await expect(b.page.locator('#mp-status')).toContainText('🟢 Borys');
+    await expect(b.page.locator('#mp-presence')).toContainText('Aldona');
+    await expect(a.page.locator('#mp-presence')).toContainText('Borys');
+
+    // Chat: B says a line; BOTH clients render it exactly once through SSE
+    // (sender included — §WALK-5 exactly-once broadcast).
+    await b.page.fill('#mp-chat-input', 'ahoy from the hub');
+    await b.page.press('#mp-chat-input', 'Enter');
+    await expect(a.page.locator('#story-move-msg')).toContainText('💬 Borys: ahoy from the hub');
+    await expect(b.page.locator('#story-move-msg')).toContainText('💬 Borys: ahoy from the hub');
+
+    // A steps east (named cell BMA) — the beacon fires player_left at the hub,
+    // so Borys's "Also here" empties; Aldona's shows no one at BMA.
+    await a.page.click('#btn-E');
+    await expect(b.page.locator('#mp-presence')).not.toContainText('Aldona');
+    await expect(a.page.locator('#mp-presence')).not.toContainText('Borys');
+
+    // Disconnect A — status returns to off, chat input hides.
+    await a.page.click('#mp-toggle');
+    await expect(a.page.locator('#mp-status')).toHaveText('off');
+    await expect(a.page.locator('#mp-chat-input')).toBeHidden();
+
+    await a.ctx.close();
+    await b.ctx.close();
+  });
+
+  test('server browser: Shift+🌐, paste magnet, resolve via tracker, join (§MESH-01-FU 2)', async ({ browser }) => {
+    // Wait until the tracker has the game server's announce record.
+    const man = await (await fetch(`http://localhost:${MP_PORT}/api/manifest`)).json();
+    for (let i = 0; i < 50; i++) {
+      const t = await (await fetch(`http://localhost:${TRK_PORT}/api/tracker/peers?wh=${man.worldHash}`)).json();
+      if (t.count >= 1) break;
+      await new Promise((r) => setTimeout(r, 200));
+    }
+
+    const d = await loadPlayer(browser, 'Runa');
+    // Point mpServer somewhere dead so the Join click has to rewrite it.
+    await d.page.evaluate(() => localStorage.setItem('mpServer', 'http://localhost:9'));
+
+    // Shift+🌐 opens the browser WITHOUT creating any MP state (still opt-in).
+    await d.page.click('#mp-toggle', { modifiers: ['Shift'] });
+    await expect(d.page.locator('#mp-browser-modal')).toBeVisible();
+    expect(await d.page.evaluate(() => ({ on: MP.on, session: MP.session }))).toEqual({ on: false, session: null });
+
+    // Paste the magnet (as copied from the Mesh tab) and resolve via the tracker.
+    const magnet = `r2h:?p=${man.proto}&ev=${encodeURIComponent(man.engineVer)}&wh=${man.worldHash}&tr=http://localhost:${TRK_PORT}`;
+    await d.page.fill('#mp-magnet-input', magnet);
+    await d.page.click('#mp-browser-resolve');
+    const row = d.page.locator('.mp-srv-row');
+    await expect(row).toHaveCount(1);
+    await expect(row).toContainText('Hub Alpha');                                  // server name
+    await expect(row).toContainText(`Roll2Hit-${man.worldHash.slice(0, 5)}`);      // world tag
+    await expect(row.locator('[id^=mp-srv-ping]')).toHaveText(/\d+ ms/);           // real ping
+
+    // Join: rewrites mpServer to the tracker-resolved addr and connects.
+    await row.locator('button.mp-srv-join').click();
+    await expect(d.page.locator('#mp-status')).toContainText('🟢 Runa');
+    expect(await d.page.evaluate(() => localStorage.getItem('mpServer')))
+      .toBe(`http://localhost:${MP_PORT}`);
+    await d.ctx.close();
+  });
+
+  test('same display name: pid-keyed presence never misattributes a leave (§MESH-01-FU 3)', async ({ browser }) => {
+    const obs = await loadPlayer(browser, 'Ola');
+    const b1  = await loadPlayer(browser, 'Bob');
+    const b2  = await loadPlayer(browser, 'Bob');
+    await obs.page.click('#mp-toggle');
+    await expect(obs.page.locator('#mp-status')).toContainText('🟢 Ola');
+    await b1.page.click('#mp-toggle');
+    await b2.page.click('#mp-toggle');
+
+    // The observer tracks BOTH Bobs (name-keyed would collapse them into one)
+    // and the strip disambiguates the collision with an @server suffix.
+    await expect.poll(() => obs.page.evaluate(() => MP.players.filter((p) => p.name === 'Bob').length)).toBe(2);
+    await expect(obs.page.locator('#mp-presence')).toContainText('Bob@');
+
+    // One Bob disconnects — ONLY that Bob goes (name-keyed removed both), and
+    // with the collision gone the survivor renders as plain "Bob" again.
+    await b1.page.click('#mp-toggle');
+    await expect.poll(() => obs.page.evaluate(() => MP.players.filter((p) => p.name === 'Bob').length)).toBe(1);
+    await expect(obs.page.locator('#mp-presence')).toContainText('Bob');
+    await expect(obs.page.locator('#mp-presence')).not.toContainText('Bob@');
+
+    await obs.ctx.close(); await b1.ctx.close(); await b2.ctx.close();
+  });
+
+  test('remote players move on the watcher’s minimap in real time (§MESH-01-FU 4)', async ({ browser }) => {
+    const w = await loadPlayer(browser, 'Watcher');
+    const m = await loadPlayer(browser, 'Mover');
+    await w.page.click('#mp-toggle');
+    await expect(w.page.locator('#mp-status')).toContainText('🟢 Watcher');
+    await m.page.click('#mp-toggle');
+    await expect(m.page.locator('#mp-status')).toContainText('🟢 Mover');
+    await expect(w.page.locator('#mp-presence')).toContainText('Mover');
+
+    const moverPid = await m.page.evaluate(() => MP.pid);
+    const wCol = await w.page.evaluate(() => S_story.playerC);
+
+    // The mover steps east. The watcher does NOTHING — its worldwide track,
+    // viewport list, and minimap ☺ must all update from the SSE push alone.
+    await m.page.click('#btn-E');
+    await expect.poll(() => w.page.evaluate((pid) => (MP.remotes[pid] || {}).c, moverPid))
+      .toBe(wCol + 1);
+    await expect.poll(() => w.page.evaluate((pid) => MP.nearby.some((p) => p.pid === pid), moverPid)).toBe(true);
+    expect(await w.page.evaluate(() =>
+      [...document.querySelectorAll('#mini-map-grid .mmc')].some((cell) => cell.textContent === '☺')
+    )).toBe(true);
+
+    // The mover disconnects → to:null removes the dot from the watcher's track.
+    await m.page.click('#mp-toggle');
+    await expect.poll(() => w.page.evaluate((pid) => pid in MP.remotes, moverPid)).toBe(false);
+
+    await w.ctx.close(); await m.ctx.close();
+  });
+
+  test('page reload auto-resumes the SAME session — no abandoned ghost (§MESH-01-FU 5)', async ({ browser }) => {
+    const p = await loadPlayer(browser, 'Odys');
+    await p.page.click('#mp-toggle');
+    await expect(p.page.locator('#mp-status')).toContainText('🟢 Odys');
+    const sid = await p.page.evaluate(() => MP.session);
+    const pid = await p.page.evaluate(() => MP.pid);   // stable across resume (pid = pidOf(sid))
+
+    // A real browser keeps localStorage across a reload, but seedAndLoad's init
+    // script clears it on every navigation — re-plant mpServer from a second
+    // init script (they run in order, so this lands after the clear).
+    await p.page.addInitScript((port) => localStorage.setItem('mpServer', `http://localhost:${port}`), MP_PORT);
+    await p.page.reload();
+    await dismissContinue(p.page);   // Continue → storyLoadContinue → _mpResume (position now final)
+
+    await expect(p.page.locator('#mp-status')).toContainText('🟢 Odys');
+    expect(await p.page.evaluate(() => MP.session)).toBe(sid);       // SAME session, not a fresh one
+    expect(await p.page.evaluate(() => !!MP.es)).toBe(true);         // SSE stream reopened
+    await expect(p.page.locator('#mp-chat-input')).toBeVisible();
+    // Server-side: the reload leaked no ghost. Assert by pid — the set of pids
+    // carrying the name Odys must be exactly our resumed pid. A ghost session
+    // would surface a SECOND, different pid under the name; a cross-test leak
+    // (already swept in afterEach) could inflate a raw count but never forge pid.
+    const who = await (await fetch(`http://localhost:${MP_PORT}/api/session/who`)).json();
+    expect(who.sessions.filter((s) => s.name === 'Odys').map((s) => s.pid)).toEqual([pid]);
+    await p.ctx.close();
+  });
+
+  test('dead stored session falls back to a fresh connect on reload (§MESH-01-FU 5)', async ({ browser }) => {
+    const p = await loadPlayer(browser, 'Nell');
+    await p.page.click('#mp-toggle');
+    await expect(p.page.locator('#mp-status')).toContainText('🟢 Nell');
+    const sid = await p.page.evaluate(() => MP.session);
+
+    // Kill the session server-side (stand-in for TTL expiry), then reload.
+    await fetch(`http://localhost:${MP_PORT}/api/session/end`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sessionId: sid }),
+    });
+    await p.page.addInitScript((port) => localStorage.setItem('mpServer', `http://localhost:${port}`), MP_PORT);
+    await p.page.reload();
+    await dismissContinue(p.page);
+
+    // The tab's opt-in still stands → fresh session under the same name, new id,
+    // and the stored key now points at the live session.
+    await expect(p.page.locator('#mp-status')).toContainText('🟢 Nell');
+    const sid2 = await p.page.evaluate(() => MP.session);
+    expect(sid2).not.toBe(sid);
+    expect(await p.page.evaluate(() => sessionStorage.getItem('mpSession'))).toBe(sid2);
+    await p.ctx.close();
+  });
+
+  test('multiplayer is strictly opt-in — no MP state without the 🌐 click', async ({ browser }) => {
+    const c = await loadPlayer(browser, 'Cezar');
+    await expect(c.page.locator('#mp-status')).toHaveText('off');
+    await expect(c.page.locator('#mp-chat-input')).toBeHidden();
+    // top-level `const MP` lives in the global lexical scope, not on window
+    const mpState = await c.page.evaluate(() => ({ on: MP.on, session: MP.session }));
+    expect(mpState).toEqual({ on: false, session: null });
+    await c.ctx.close();
+  });
+});

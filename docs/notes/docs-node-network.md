@@ -1,8 +1,8 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# roll2hit.com — Node Network Technical Reference
+# CodexOfConquest.com — Node Network Technical Reference
 
-**File:** `index.html`  
+**File:** `play.html`  
 **Last updated:** 2026-08-04 §AUDIT-03m-FU (legacy-code sweep + retired-grid quarantine)  
 **Node count:** **416** named nodes, every one with a grid coordinate in `NODE_COORDS` (measured live via `wbapi-core`; run `npm run stats` rather than trusting this number). The 268 zombie J-stubs with no `r,c` were purged in §CELL-05b, and the last two `junction:true` nodes (J14/J15) were removed by §DX-01a — **there are now zero junction nodes.**
 
@@ -415,7 +415,7 @@ Preferred path: use `POST /api/node` via WBAPI (rejects duplicate coordinates an
 
 ## 12. Multiplayer Mesh (§MESH-01, ✅ Incs a–e 2026-07-02 · §MESH-02 connection center 2026-07-07)
 
-Server-to-server presence replication over the node network. Player-facing view: `mechanics.md` "Multiplayer — Mesh Presence"; endpoint quick reference: `wbapi-help.md`; design: `lab-reports/lab-report-mesh-multiuser.md` + `lab-reports/lab-report-mesh-sync-architecture.md`. All state is server-side (no game-file changes beyond `ENGINE_VER`/`WORLD_NAME` consts and the opt-in `MP` client module); since 2026-07-06 (§MESH-01-REVIEW) the mesh kernel — ACL, ingress rate limit, gossip, tracker/federation/bootstrap — lives in `mesh.js`, a factory `require()`d by `wbapi-server.js`, which keeps sessions, SSE fanout, the ledger, and all HTTP routes.
+Server-to-server presence replication over the node network. Player-facing view: `mechanics.md` "Multiplayer — Mesh Presence"; endpoint quick reference: `wbapi-help.md`; design: `docs/lab-reports/lab-report-mesh-multiuser.md` + `docs/lab-reports/lab-report-mesh-sync-architecture.md`. All state is server-side (no game-file changes beyond `ENGINE_VER`/`WORLD_NAME` consts and the opt-in `MP` client module); since 2026-07-06 (§MESH-01-REVIEW) the mesh kernel — ACL, ingress rate limit, gossip, tracker/federation/bootstrap — lives in `mesh.js`, a factory `require()`d by `wbapi-server.js`, which keeps sessions, SSE fanout, the ledger, and all HTTP routes.
 
 ### Sessions and the beacon/move dichotomy
 
@@ -448,7 +448,7 @@ Server-to-server presence replication over the node network. Player-facing view:
 
 ### Connection center + operator endpoints (§MESH-02)
 
-The game's Map sheet carries the multiplayer UI as sub-tabs (🗺 Map · 🌐 Connect · 🔭 Discover · 🛡 Lists) — player-facing walkthrough: `mechanics.md §Multiplayer` "Connection center"; design + locked decisions (D2/D3/D4/D6/D7): `lab-reports/lab-report-mesh02-connections-ui.md`. Server surfaces added for it: **`GET/PUT /api/mesh/acl`** (validated merge-write ACL editor over `MESH_ACL_FILE`, comment keys preserved, hot-reload) · **`GET /api/mesh/blocklist`** (403 until the `shareBlocklist` opt-in; publishes the three block* lists only — peers preview and merge manually, never automatically) · **`POST /api/mesh/connect`** (runtime peer/tracker dial, same shapes as `--peer`/`TRACKER_URL`, dials in the same request, outbound ACL-gated) · **`GET /api/session/chat[?limit=&r=&c=]`** (global chat-history ring for the 💬 panel) · footprints on `buildLook` (§MESH-02j — per-cell `[{pid,name,agoMs}]`, ≤8/cell, 30-min TTL, display-only). CLI parity (§MESH-02g): `./api.sh mesh acl|blocklist|connect` — see `wbapi-help.md §Mesh API`. Everything here is connection/display layer: the mover reads none of it.
+The game's Map sheet carries the multiplayer UI as sub-tabs (🗺 Map · 🌐 Connect · 🔭 Discover · 🛡 Lists) — player-facing walkthrough: `mechanics.md §Multiplayer` "Connection center"; design + locked decisions (D2/D3/D4/D6/D7): `docs/lab-reports/lab-report-mesh02-connections-ui.md`. Server surfaces added for it: **`GET/PUT /api/mesh/acl`** (validated merge-write ACL editor over `MESH_ACL_FILE`, comment keys preserved, hot-reload) · **`GET /api/mesh/blocklist`** (403 until the `shareBlocklist` opt-in; publishes the three block* lists only — peers preview and merge manually, never automatically) · **`POST /api/mesh/connect`** (runtime peer/tracker dial, same shapes as `--peer`/`TRACKER_URL`, dials in the same request, outbound ACL-gated) · **`GET /api/session/chat[?limit=&r=&c=]`** (global chat-history ring for the 💬 panel) · footprints on `buildLook` (§MESH-02j — per-cell `[{pid,name,agoMs}]`, ≤8/cell, 30-min TTL, display-only). CLI parity (§MESH-02g): `./api.sh mesh acl|blocklist|connect` — see `wbapi-help.md §Mesh API`. Everything here is connection/display layer: the mover reads none of it.
 
 **Test gates:** `npm run test:mud` — 270 checks, sections [A]–[R] (incl. [R] §MESH-02a ACL editor + blocklist share flip) (incl. [P] rate limiting, the `./api.sh mesh` CLI wrappers, and [Q] §MESH-01-FU 11–13 ACL template / tracker cache+bootstrap / chat backlog) + [H] §MESH-01h sentry cases (deploy→presence, deterministic encounter suppression, recall→leave, prune-immunity), including the Inc (e) partition-heal harness (3 servers + tracker: convergence, exactly-once across partitions via ACL-file split/heal, stale-replica availability, snapshot re-convergence, incompat-refusal + world-group segregation). Playwright: `multiplayer-presence.test.js` 7/7, `mesh-sentry.test.js` 7/7 (client half), `mesh-copresence-buff.test.js` 6/6, `mesh-hireling-guide.test.js` 6/6, `worldbuilder-mesh.test.js` + mesh tab 4/4, `mesh-connections-ui.test.js` 8/8 (§MESH-02f — hermetic connection-center UI, `:1367` route-blocked).
 
@@ -456,7 +456,7 @@ The game's Map sheet carries the multiplayer UI as sub-tabs (🗺 Map · 🌐 Co
 
 ## 13. Navigable World — §NAV-01 Layer Stack (✅ closed 2026-07-03)
 
-> Full diagnosis, data shapes, and increment record: `lab-reports/lab-report-nav01-navigable-world.md`. Player-facing surfaces: `maps.md` "ROAD NET & ROOM LAYER"; mechanics: `mechanics.md` "Roads, Rooms & Auto-Travel".
+> Full diagnosis, data shapes, and increment record: `docs/lab-reports/lab-report-nav01-navigable-world.md`. Player-facing surfaces: `maps.md` "ROAD NET & ROOM LAYER"; mechanics: `mechanics.md` "Roads, Rooms & Auto-Travel".
 
 §NAV-01 turned the geometrically correct §WALK world (median named cell 33 blind steps from start, every empty cell identical, every step an encounter roll) into a navigable MUD: rooms + exits + descriptions + safe highways + auto-travel. Nine layers, each reading only the layers below it:
 
@@ -465,7 +465,7 @@ The game's Map sheet carries the multiplayer UI as sub-tabs (🗺 Map · 🌐 Co
 | **L0 GEOMETRY** | `GEO_PROJ` 90×360 equirect 1°, `mover.js` kernel | **FROZEN** — untouched by §NAV-01 |
 | **L1 PASSABILITY** | `SEA_RUNS`→`IMPASSABLE_CELLS` · `SEA_LANES` land bridges | **FROZEN** |
 | **L2 TERRAIN FIELD** | `_inferTerrain` / server `terrainAt` / `WORLD_DB` / encounter rates; precedence `SEA_LANES→ocean` ▸ `ROAD_CELLS→road` ▸ neighbors ▸ `midlands` | extended (road override) |
-| **L3 ROAD GRAPH** | `ROAD_RUNS` RLE fungal net — 400 cells (1.4% of passable), 88 junctions, built by `scripts/build-roads.js` (MST + trunk-reuse Dijkstra), pins in `roads-pins.json`, verified by `check:roads` R1–R4 | NEW (§NAV-01b/h) |
+| **L3 ROAD GRAPH** | `ROAD_RUNS` RLE fungal net — 400 cells (1.4% of passable), 88 junctions, built by `src/scripts/build-roads.js` (MST + trunk-reuse Dijkstra), pins in `roads-pins.json`, verified by `check:roads` R1–R4 | NEW (§NAV-01b/h) |
 | **L4 ROOMS** | `describeCell(world,pos)` → `{icon,title,sub,prose,exits,signposts}` — ROOMS:CORE in `rooms.js`, inlined byte-identically into the HTML (`check:roomsparity`), `require()`d by the server | NEW (§NAV-01c) |
 | **L5 ROUTING & TRAVEL** | pos-origin geo-BFS (wrap + band clamp) · road-weighted `_roadGridPath` · `_travelTick` auto-travel loop with 4 interrupt classes | NEW (§NAV-01a/d) |
 | **L6 QUEST WAYFINDING** | Navigate → waypoint, `(n steps, NE)` readouts, arrival detection | NEW (§NAV-01d/e) |

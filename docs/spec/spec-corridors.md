@@ -16,7 +16,7 @@
 **Depends on:** `plan-archive.md` (architecture), `maps.md` (NODE_COORDS), existing `_renderMapGrid()`  
 **Status:** ✅ COMPLETE — All L9-A through L9-H implemented (2026-05-21)  
 **Navigation status:** ⚠️ SUPERSEDED — `storyMove_LEGACY` retained until §CELL-05; `cellMove` is the live movement function  
-**File target:** `index.html` (single-file rule)
+**File target:** `play.html` (single-file rule)
 
 ---
 

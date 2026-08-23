@@ -1,8 +1,8 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
-# roll2hit.com — Monster Reference
+# CodexOfConquest.com — Monster Reference
 
-**Total: 398 monsters** across 5 tiers, 8 source pools. All entries implemented in `MONSTER_POOL` in `index.html`. *(Count re-verified 2026-07-30 against a live `wbapi-core` parse: 398 pool entries, 398 drops.)*
+**Total: 398 monsters** across 5 tiers, 8 source pools. All entries implemented in `MONSTER_POOL` in `play.html`. *(Count re-verified 2026-07-30 against a live `wbapi-core` parse: 398 pool entries, 398 drops.)*
 
 ## Authoring a monster (§DX-01c, 2026-07-30)
 
@@ -29,7 +29,7 @@ Monsters go in through the API like every other entity — the old "hand-edit `M
 | the two threat badges | render the raw value (`RARE`) and ask for a `.threat-<tier>` CSS class **that does not exist** → an unstyled badge |
 | `populateTerrainEnemies` | the terrain-enemy picker groups by the five and **silently drops** anything else |
 
-`./api.sh post monster` has rejected off-contract tiers since §DX-01c, so no *new* one can be created; `tests/integration/dx02g-monster-tier-contract.test.js` pins both directions — every `MONSTER_POOL`/`EPIC_BOSS_POOL` entry on contract, **and** every tier-keyed engine map covering all five (a map that ships partial is the same silent-fallback defect from the other side).
+`./api.sh post monster` has rejected off-contract tiers since §DX-01c, so no *new* one can be created; `src/tests/integration/dx02g-monster-tier-contract.test.js` pins both directions — every `MONSTER_POOL`/`EPIC_BOSS_POOL` entry on contract, **and** every tier-keyed engine map covering all five (a map that ships partial is the same silent-fallback defect from the other side).
 
 **Two corrections, derived from the corpus rather than tasted:** `void_shaman` (The Warden) `rare → hard` — its two exact stat-block twins (AC15/HP65/atk6: Bandit Captain, Pirate Captain) are both `hard`; `void_rat_swarm` `low → easy` — 6 of its 8 nearest stat-neighbours are `easy`, its exact AC/HP/atk twin is Jackalwere.
 
@@ -607,7 +607,7 @@ The low-level "training" pool for the §KG kindergarten zones (nodes SPB/KMS/ZVD
 | Fabrika Enforcer | `fabrika_enforcer` | 13 | 16 | +4 | 1d8+1 | easy | 3 | Cortex Shunt (8) |
 | Malfunctioning Trainer-Bot | `trainer_bot_prime` | 15 | 26 | +5 | 2d6+1 | easy | 4 | Prime Core (12) |
 
-**Terrain pools (WORLD_DB, one per node, deepening W→E):** `soviet_checkpoint` (SPB) · `komsomol_school` (KMS) · `gladiator_zavod` (ZVD) · `skill_fabrika` (FBR) · `soviet_transit` (TVR). `commoner` (Rabid Monkey, mLevel 1) pads the two gentlest pools. **Signature node battles:** ZVD honor duel vs `gladiator_bot`; FBR sim-overload vs `trainer_bot_prime`. Design: `lab-reports/lab-report-kg-russia-kindergarten-zones.md`. Quest chain is §KG Increment 3.
+**Terrain pools (WORLD_DB, one per node, deepening W→E):** `soviet_checkpoint` (SPB) · `komsomol_school` (KMS) · `gladiator_zavod` (ZVD) · `skill_fabrika` (FBR) · `soviet_transit` (TVR). `commoner` (Rabid Monkey, mLevel 1) pads the two gentlest pools. **Signature node battles:** ZVD honor duel vs `gladiator_bot`; FBR sim-overload vs `trainer_bot_prime`. Design: `docs/lab-reports/lab-report-kg-russia-kindergarten-zones.md`. Quest chain is §KG Increment 3.
 
 ---
 
@@ -738,7 +738,7 @@ The Stalk mechanic (`storyStalk` target picker, `_getQuestTargetKeys`,
 was removed with the rest of the Hunt feature in §TIMELESS-01. Quest kills now
 progress purely by winning the relevant node battles (e.g. `quest_slums_cleanup`
 completes after 3 BMA combat wins via `S_story.slStalksWon`). See
-`lab-reports/lab-report-timeless-movement-hunt-removal.md` and `docs/mechanics/mechanics-combat.md`
+`docs/lab-reports/lab-report-timeless-movement-hunt-removal.md` and `docs/mechanics/mechanics-combat.md`
 §Stalk / Hunt (retired).
 
 ---
@@ -787,7 +787,7 @@ MILEPOINT E  [Battle Mode] resolves; fish drops from MONSTER_DROPS[fish.key]
 
 ---
 
-MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.
+MIT License — CodexOfConquest.com — Copyright (c) 2026 — Free to use, modify, and share.
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

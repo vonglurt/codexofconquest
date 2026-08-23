@@ -29,19 +29,19 @@
 ## §CELL-02 — CELL_GRID Registry (do this first)
 
 ```
-We are converting roll2hit.com from a custom node-graph navigation system to a 
+We are converting CodexOfConquest.com from a custom node-graph navigation system to a 
 cell-based MUD coordinate grid. This is the first increment: add CELL_GRID and 
 IMPASSABLE_CELLS as computed constants so the new movement engine has what it needs.
 
-Working directory: /Users/user/code/roll2hit.com
-Primary file: index.html (~143,000 lines)
+Working directory: /Users/user/code/CodexOfConquest.com
+Primary file: play.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-02
 
 The game's NODE_MAP already stores r and c on every node. NODE_COORDS is a parallel 
 object that also holds {r,c} per node code. We need a reverse lookup: given a grid 
 cell (r,c), what node is there?
 
-TASK: Add two new constants to index.html, populated at DOMContentLoaded or 
+TASK: Add two new constants to play.html, populated at DOMContentLoaded or 
 immediately after NODE_MAP is defined (search for the end of the NODE_MAP object):
 
 1. CELL_GRID — Object, keyed "r,c" → node code string (or undefined if empty).
@@ -90,12 +90,12 @@ After making changes, commit with message:
 ## §CELL-03 — Movement Engine Rewrite: storyMove → cellMove
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-02 is complete: CELL_GRID and IMPASSABLE_CELLS constants exist.
 This increment replaces storyMove with cellMove.
 
-Working directory: /Users/user/code/roll2hit.com
-Primary file: index.html (~143,000 lines)
+Working directory: /Users/user/code/CodexOfConquest.com
+Primary file: play.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-03
 
 CONTEXT — current system:
@@ -192,13 +192,13 @@ After making changes, commit:
 ## §CELL-04 — Empty Cell Traversal
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-02 and §CELL-03 are complete: CELL_GRID exists and cellMove() is the movement
 function. When the player moves to a cell with no named node, _enterEmptyCell(r,c)
 is called (currently a stub). This increment implements that function fully.
 
-Working directory: /Users/user/code/roll2hit.com
-Primary file: index.html (~143,000 lines)
+Working directory: /Users/user/code/CodexOfConquest.com
+Primary file: play.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-04
 
 TASK:
@@ -297,9 +297,9 @@ After making changes, commit:
 ## §CELL-01 — Strip N/E/S/W Fields from NODE_MAP
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-02, §CELL-03, §CELL-04 are complete and committed. Specifically:
-- CELL_GRID ("r,c" → node code) and IMPASSABLE_CELLS exist in index.html
+- CELL_GRID ("r,c" → node code) and IMPASSABLE_CELLS exist in play.html
 - cellMove(dir) is the active movement handler — reads CELL_GRID, not NODE_MAP edges
 - _enterEmptyCell(r, c) handles open terrain with terrain inference and encounters
 - storyMove_LEGACY(dir) is retained but not wired to any UI element
@@ -307,8 +307,8 @@ We are converting roll2hit.com to a MUD-style cell-based navigation system.
 The N/E/S/W direction fields in NODE_MAP are now dead navigation data.
 cellMove never reads them. This increment strips them from the data.
 
-Working directory: /Users/user/code/roll2hit.com
-Primary file: index.html (~143,000+ lines)
+Working directory: /Users/user/code/CodexOfConquest.com
+Primary file: play.html (~143,000+ lines)
 Server: wbapi-server.js (WBAPI runs on port 1367)
 Full design spec: plan-archive.md §CELL-01
 
@@ -319,7 +319,7 @@ Keep: portal (used by storyPortal() — a distinct mechanic, not a nav edge)
 Keep: all other content fields (code, r, c, name, label, act, text, npc, battle,
       loot, sleep, sleepCost, junction, isEpicBattleground, isFishingLake, bossKey)
 
-Remaining readers of node[dir] in index.html (do NOT modify these —
+Remaining readers of node[dir] in play.html (do NOT modify these —
 they are either legacy-guarded or deferred to later §CELL sections):
 
   storyMove_LEGACY (~line 143192): reads node[dir] — retained until §CELL-05,
@@ -406,7 +406,7 @@ this session — they are §CELL-06 scope):
    Run this grep and confirm every line is either in storyMove_LEGACY, _mapAddExits,
    _bfsPath, or _buildNodeExits (all deferred):
    grep -n "node\[dir\]\|node\[d\]\|\bnode\.N\b\|\bnode\.S\b\|\bnode\.E\b\|\bnode\.W\b" \
-     index.html | grep -v "//\|storyMove_LEGACY\|_mapAddExits\|_bfsPath\|_buildNodeExits"
+     play.html | grep -v "//\|storyMove_LEGACY\|_mapAddExits\|_bfsPath\|_buildNodeExits"
 
 8. Update docs-node-network.md Section 3 (Connection Object).
    The schema block currently shows N/S/E/W fields with the note
@@ -437,13 +437,13 @@ After making changes, commit:
 ## §CELL-05 — Abolish Junction Nodes
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-01 through §CELL-04 are complete: cellMove drives navigation via CELL_GRID,
 N/E/S/W fields are stripped, empty cells are traversable.
 This increment removes junction nodes — the auto-generated J##### routing stubs.
 
-Working directory: /Users/user/code/roll2hit.com
-Primary file: index.html (~143,000 lines)
+Working directory: /Users/user/code/CodexOfConquest.com
+Primary file: play.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-05
 
 CONTEXT:
@@ -458,8 +458,8 @@ through it without any special logic.
 TASK:
 
 1. Survey what exists:
-   grep -c 'junction:true' index.html
-   grep 'junction:true' index.html | grep -v 'label.*Elbow\|label.*Jct\|label.*Highway' | head -20
+   grep -c 'junction:true' play.html
+   grep 'junction:true' play.html | grep -v 'label.*Elbow\|label.*Jct\|label.*Highway' | head -20
    This will reveal any junctions with real narrative text (these may need promotion).
 
 2. Identify junctions with real content (text length > 60 chars that isn't the 
@@ -483,7 +483,7 @@ TASK:
      -H 'Content-Type: application/json' -d '{"dryRun":true}'
    Review count. Then run with dryRun:false.
 
-5. In index.html:
+5. In play.html:
    - Remove storyMove_LEGACY (the old storyMove renamed in §CELL-03)
    - Remove CORRIDOR_TERRAIN constant (line ~126546)
    - Remove buildCorridorMap() function and CORRIDOR_CELLS constant (line ~126577)
@@ -504,7 +504,7 @@ Verify:
 - Load game in browser — no corridor overlay should ever appear
 - Navigating through where junctions used to be now shows empty cell messages
 - ./api.sh audit should report 0 junction-related warnings
-- grep -c 'junction:true' index.html should be 0
+- grep -c 'junction:true' play.html should be 0
 
 After making changes, commit:
 "§CELL-05: abolish junction nodes — boilerplate J-nodes deleted, corridor system removed"
@@ -515,13 +515,13 @@ After making changes, commit:
 ## §CELL-09 — Quest System Cell-Driven Triggers
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-02 and §CELL-03 are complete (CELL_GRID exists, cellMove drives movement).
 The quest system still uses activateNode which is a node code — that stays. But the
 trigger mechanism and the BFS pathfinding for quest waypoints need updating.
 
-Working directory: /Users/user/code/roll2hit.com
-Primary file: index.html (~143,000 lines)
+Working directory: /Users/user/code/CodexOfConquest.com
+Primary file: play.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-09
 
 CONTEXT:
@@ -541,7 +541,7 @@ However, there are two things that need updating:
 TASK:
 
 1. Find the waypoint BFS function. Search for:
-   function _buildWaypointPath or _bfsToNode or waypoint in index.html
+   function _buildWaypointPath or _bfsToNode or waypoint in play.html
    Also search for "waypoint" in the minimap render function.
 
 2. Replace the edge-graph BFS with a grid BFS:
@@ -599,16 +599,16 @@ After making changes, commit:
 ## §CELL-10 — Minimap Live Player Cursor and Visited Fog
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-02 through §CELL-04 are complete. S_story.visitedCells tracks stepped cells.
 This increment updates the minimap to show a live player cursor and fog-of-war reveal.
 
-Working directory: /Users/user/code/roll2hit.com
-Primary file: index.html (~143,000 lines)
+Working directory: /Users/user/code/CodexOfConquest.com
+Primary file: play.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-10
 
 CONTEXT:
-There are two minimaps in index.html:
+There are two minimaps in play.html:
 - _renderMiniMap(): the small HUD minimap shown during play
 - _renderWorldMiniMap(): the full world map view (toggled by a button)
 Both currently render only named node cells, with corridor wire-glyphs in between.
@@ -671,12 +671,12 @@ After making changes, commit:
 ## §CELL-05b — Purge Zombie Junction Stubs
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-05 bulk-deleted junction nodes where junction:true, but 268 J-stubs with
 junction:false and no r/c coordinates survived. They're inert (not in CELL_GRID,
 unreachable by cellMove) but should be purged before §CELL-06.
 
-Working directory: /Users/user/code/roll2hit.com
+Working directory: /Users/user/code/CodexOfConquest.com
 Server: wbapi-server.js (WBAPI runs on port 1367)
 Full design spec: plan-archive.md §CELL-05b note
 
@@ -716,7 +716,7 @@ TASK:
 5. Verify:
    curl http://localhost:1367/api/audit   # 0 errors expected
    # Count remaining nodes — expect ~420
-   node -e "const f=require('fs').readFileSync('index.html','utf8'); \
+   node -e "const f=require('fs').readFileSync('play.html','utf8'); \
      const m=f.match(/^\s{2}[A-Z][A-Z0-9_]{0,7}:\s*\{/gm); console.log(m?.length)"
 
 After making changes, commit:
@@ -728,7 +728,7 @@ After making changes, commit:
 ## §CELL-06 — BFS and Heatmap Grid Walk Rewrite (server-side)
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-05b is complete: 268 zombie J-stubs deleted, NODE_MAP contains only 420 
 named nodes, all with r/c coordinates. No nodes have stored N/S/E/W fields 
 (stripped in §CELL-01 — confirmed: grep for N/S/E/W in NODE_MAP returns 0 hits
@@ -738,7 +738,7 @@ URGENCY: The server-side snail's bfsPath reads nm[cur]?.[d] (node.N/S/E/W).
 After §CELL-01 stripped those fields from stored HTML, bfsPath returns [] for
 every query. The reweave-all endpoint is currently broken.
 
-Working directory: /Users/user/code/roll2hit.com
+Working directory: /Users/user/code/CodexOfConquest.com
 Server file: wbapi-server.js (~11,877 lines as of 2026-06-14)
 Full design spec: plan-archive.md §CELL-06
 
@@ -865,12 +865,12 @@ After making changes, commit:
 ## §CELL-08 — WBAPI Cell Endpoints
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-06 is complete: server algorithms use grid walks. §CELL-02 is complete:
 buildCellGrid() exists in wbapi-server.js.
 This increment adds REST endpoints for cell-based queries.
 
-Working directory: /Users/user/code/roll2hit.com
+Working directory: /Users/user/code/CodexOfConquest.com
 Server file: wbapi-server.js (~8500 lines)
 CLI: api.sh
 Full design spec: plan-archive.md §CELL-08
@@ -935,12 +935,12 @@ After making changes, commit:
 ## §CELL-07 — MUD Server Multi-Session Architecture
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-08 is complete: cell and grid endpoints exist. The server now knows the
 coordinate layout. This increment adds multi-player session support to wbapi-server.js.
 This is the "multiplayer MUD" layer.
 
-Working directory: /Users/user/code/roll2hit.com
+Working directory: /Users/user/code/CodexOfConquest.com
 Server file: wbapi-server.js (~8500 lines)
 Full design spec: plan-archive.md §CELL-07
 
@@ -1026,9 +1026,9 @@ After making changes, commit:
 ## §CELL-11A — HTML Dead-Code Removal (corridor system cleanup)
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-05b is complete (zombie stubs purged). This increment removes the corridor
-system remnants still alive in index.html even though cellMove never calls them.
+system remnants still alive in play.html even though cellMove never calls them.
 
 CRITICAL FINDING: _buildNodeExits() at line 45059 still runs at every page load
 and re-populates node.N/S/E/W in memory for every node that has NODE_COORDS coords.
@@ -1036,8 +1036,8 @@ This is invisible to the player (cellMove uses CELL_GRID, not node[dir]) but mea
 the browser's runtime NODE_MAP always has N/S/E/W present. Removing _buildNodeExits
 cleanly severs the last in-memory edge-graph artifact.
 
-Working directory: /Users/user/code/roll2hit.com
-Primary file: index.html (45,495 lines as of 2026-06-14)
+Working directory: /Users/user/code/CodexOfConquest.com
+Primary file: play.html (45,495 lines as of 2026-06-14)
 Full design spec: plan-archive.md §CELL-11 Part A
 
 CONFIRMED LOCATIONS TO REMOVE (all verified by grep 2026-06-14):
@@ -1112,9 +1112,9 @@ CONFIRMED LOCATIONS TO REMOVE (all verified by grep 2026-06-14):
     Line 44767: inside another array — remove the entry 'story-corridor-overlay'
 
 VERIFY AFTER EACH DELETION:
-- The game still loads in browser (open index.html, no JS errors)
+- The game still loads in browser (open play.html, no JS errors)
 - N/S/E/W movement still works via cellMove
-- grep -c "storyMove_LEGACY\|CORRIDOR_CELLS\|story-corridor-overlay\|_buildNodeExits\|buildCorridorMap" index.html
+- grep -c "storyMove_LEGACY\|CORRIDOR_CELLS\|story-corridor-overlay\|_buildNodeExits\|buildCorridorMap" play.html
   Should return 0.
 
 After making changes, commit:
@@ -1126,15 +1126,15 @@ After making changes, commit:
 ## §CELL-11B — Documentation Sync Pass
 
 ```
-We are converting roll2hit.com to a MUD-style cell-based navigation system.
+We are converting CodexOfConquest.com to a MUD-style cell-based navigation system.
 §CELL-01 through §CELL-11A are all complete. This final increment synchronizes
 all markdown documentation to reflect the new cell-based architecture.
 
-Working directory: /Users/user/code/roll2hit.com
+Working directory: /Users/user/code/CodexOfConquest.com
 Full design spec: plan-archive.md §CELL-11
 
 Two-Way Sync Rule (from index.md): every item in the markdown docs traces back to
-index.html. Everything in the HTML has a home doc.
+play.html. Everything in the HTML has a home doc.
 
 STALE REFERENCE INVENTORY (confirmed by grep 2026-06-14):
 

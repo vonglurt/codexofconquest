@@ -1,12 +1,12 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # GAME ENGINE — Step 2: Design Specification
-### roll2hit.com — The Shattered Codex
+### CodexOfConquest.com — The Shattered Codex
 
-> **What this document is:** The design blueprint for the playable game layer. **All Layers 0–45 are now implemented in `index.html`.** This document covers Layers 0–37 in detail. Layers 38–45 (Epic Battlegrounds, Covenant Endings, NG+, Living World, Web of Connections) are documented in their respective lab reports — see `index.md`. Sections marked IMPLEMENTED reflect the actual code; any design details that changed during implementation are noted inline.
+> **What this document is:** The design blueprint for the playable game layer. **All Layers 0–45 are now implemented in `play.html`.** This document covers Layers 0–37 in detail. Layers 38–45 (Epic Battlegrounds, Covenant Endings, NG+, Living World, Web of Connections) are documented in their respective lab reports — see `index.md`. Sections marked IMPLEMENTED reflect the actual code; any design details that changed during implementation are noted inline.
 >
 > **Existing markdowns referenced:**
-> - `index.html` — single-file game (~14,377 lines, 515 div pairs, no external deps)
+> - `play.html` — single-file game (~14,377 lines, 515 div pairs, no external deps)
 > - `story.md` — 76 nodes, 8 acts, all NPCs, all quests, all items, all battles
 > - `maps.md` — grid coordinates, node network, travel connections
 > - `world.md` — conditions, factions, Froberger's journal, loot context
@@ -33,7 +33,7 @@ The game has exactly two modes. Switching between them is explicit and intention
 │                  BATTLE MODE                    │
 │  Initiative · Attack rolls · Damage · Conditions│
 │  Death saves · Win/Lose states · Loot drop      │
-│  (Implemented in index.html)              │
+│  (Implemented in play.html)              │
 └──────────────┬──────────────────────────────────┘
                │  🎲 END BATTLE trigger
                ▼
@@ -41,7 +41,7 @@ The game has exactly two modes. Switching between them is explicit and intention
          (with outcome applied)
 ```
 
-**Story Mode** is a text/UI overlay that runs on top of — or alongside — the existing roll2hit.com combat tracker. When a battle node is entered, the DM calls `🎲 START BATTLE` and the combat tracker takes over. When the battle ends, its outcome (win/lose, loot, HP remaining) is returned to Story Mode.
+**Story Mode** is a text/UI overlay that runs on top of — or alongside — the existing CodexOfConquest.com combat tracker. When a battle node is entered, the DM calls `🎲 START BATTLE` and the combat tracker takes over. When the battle ends, its outcome (win/lose, loot, HP remaining) is returned to Story Mode.
 
 ---
 
@@ -505,7 +505,7 @@ Before `🎲 START BATTLE`, Story Mode enters PRE_BATT:
 5. Show condition effect summary: "Target enters battle as **Prone**. Your melee attacks have **ADV**."
 6. Load enemy stats from MONSTER_POOL into the roll2hit combat tracker
 7. Set ADV/DIS flags in tracker based on applied condition
-8. Hand off to Battle Mode (index.html takes over)
+8. Hand off to Battle Mode (play.html takes over)
 
 ### Battle Mode Input/Output Contract
 
@@ -555,7 +555,7 @@ The **inn system** acts as a checkpoint save: when the player sleeps at an inn, 
 
 ## PART EIGHT — CONDITION ITEMS IN PRE-BATT
 
-The 12 condition items (from world.md and conditions in index.html) map directly to the existing CONDITION_ADV system in the combat tracker:
+The 12 condition items (from world.md and conditions in play.html) map directly to the existing CONDITION_ADV system in the combat tracker:
 
 ```
 Condition Item          → roll2hit Condition Code   → Effect in tracker
@@ -583,7 +583,7 @@ The PRE_BATT screen presents only the condition items the player currently holds
 The game is designed to be built in vertical slices. Each layer adds one complete interaction type. Nothing is mocked — each layer is real and usable.
 
 ### Layer 0 — ✅ IMPLEMENTED
-- Combat tracker (`index.html`): attack rolls, damage, conditions, death saves, monster presets, terrain-filtered monster selection
+- Combat tracker (`play.html`): attack rolls, damage, conditions, death saves, monster presets, terrain-filtered monster selection
 - All 370 monsters in `MONSTER_POOL`
 - 46 base + 20 epic = 66 terrains in `WORLD_DB`
 
@@ -653,7 +653,7 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 
 ### Layer 10 — ⊘ REMOVED (§TIMELESS-01)
 - The Hunt/Stalk layer was removed in §TIMELESS-01. Gone: `HUNTING_GROUNDS`, the 🎯 STALK d-pad chip, `storyStalk()` / `_stalkedMonsterPick()` / `_getQuestTargetKeys()`, and the stalk modal (terrain name + quest targets + Wait/Abandon flow).
-- Replacement: empty-cell movement rolls a single `TERRAIN_ENCOUNTER_RATE` encounter via `_weightedMonsterPick()` (§CELL-04 / FL9). The MT node remains as an ordinary `mountains`-terrain location. See `lab-reports/lab-report-timeless-movement-hunt-removal.md`.
+- Replacement: empty-cell movement rolls a single `TERRAIN_ENCOUNTER_RATE` encounter via `_weightedMonsterPick()` (§CELL-04 / FL9). The MT node remains as an ordinary `mountains`-terrain location. See `docs/lab-reports/lab-report-timeless-movement-hunt-removal.md`.
 
 ### Layer 11 — ✅ IMPLEMENTED
 - **Story Battle Focus System**: `#story-battle-overlay` full-screen takeover during combat
@@ -852,7 +852,7 @@ The game is presented as a **top-down overhead map** with direct N/E/S/W movemen
 - Active conditions on player
 
 ### Battle Mode Takeover
-When a battle is triggered, the roll2hit.com combat tracker replaces the Story Mode view entirely (full-screen takeover). On `🎲 END BATTLE`, story view returns with outcome applied.
+When a battle is triggered, the CodexOfConquest.com combat tracker replaces the Story Mode view entirely (full-screen takeover). On `🎲 END BATTLE`, story view returns with outcome applied.
 
 ---
 
@@ -942,14 +942,14 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 
 | File | Purpose | Role in Engine |
 |------|---------|----------------|
-| `index.html` | Combat tracker | Battle Mode (already implemented) |
+| `play.html` | Combat tracker | Battle Mode (already implemented) |
 | `story.md` | Story document | Source for node text, NPC dialogue, quest descriptions |
 | `maps.md` | Grid map + node network | `NODE_MAP` data, travel connections, coordinates |
 | `world.md` | World lore, conditions, Froberger | Condition item descriptions, NPC profiles |
 | `monsters.md` | Monster stats reference | Verified against `MONSTER_POOL` in HTML |
 
 ### Current State
-All 37 layers are implemented in `index.html` (~143,000 lines). The single-file, no-CDN architecture is complete. Story Mode and Battle Mode share a single mutable `S_story` state object. Layers 21–37 added the Fighter level-up system (tattoos, Extra Attack, Action Surge, Indomitable), d100 unified loot, notoriety scaling, world minimap, waypoint BFS, city slums node, and the d-pad 3×3 grid with Boyscout Token camping mechanics and character sheet overlay.
+All 37 layers are implemented in `play.html` (~143,000 lines). The single-file, no-CDN architecture is complete. Story Mode and Battle Mode share a single mutable `S_story` state object. Layers 21–37 added the Fighter level-up system (tattoos, Extra Attack, Action Surge, Indomitable), d100 unified loot, notoriety scaling, world minimap, waypoint BFS, city slums node, and the d-pad 3×3 grid with Boyscout Token camping mechanics and character sheet overlay.
 
 **§CELL migration (in progress — 2026-06-13):**
 - §CELL-02 ✅ `CELL_GRID` + `IMPASSABLE_CELLS` added

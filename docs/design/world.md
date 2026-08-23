@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # WORLD BUILDERS REFERENCE
-### roll2hit.com — Campaign Setting, NPCs, Conditions & Quest Architecture
+### CodexOfConquest.com — Campaign Setting, NPCs, Conditions & Quest Architecture
 
 > This document covers everything that is not monster stats or terrain descriptions. It is the DM's backstage manual: world history, factions, every named NPC, the 13 condition items and exactly how they enter the story, the survival pressure system, and the motivation architecture that makes the player care about winning.
 
@@ -105,7 +105,7 @@ Dead-end west of `ZRH` (historical `DF`).
 
 ### **[✅ Layer 46 — Implemented]** The Cat Quarter (Node CDG, cell 21,182)
 
-CDG in NODE_MAP: `` `CDG:{ num:77@8798` ``. Quest chain `quest_cat_01`–`quest_cat_void` in QUEST_DB from `` `quest_cat_01: { id:'quest_cat_01'@13689` ``. Full design + the 2026-08-11 spec→shipped verification in `lab-reports/lab-report-ally-cat.md`; original §IX spec in `plan-archive.md`.
+CDG in NODE_MAP: `` `CDG:{ num:77@8798` ``. Quest chain `quest_cat_01`–`quest_cat_void` in QUEST_DB from `` `quest_cat_01: { id:'quest_cat_01'@13689` ``. Full design + the 2026-08-11 spec→shipped verification in `docs/lab-reports/lab-report-ally-cat.md`; original §IX spec in `plan-archive.md`.
 
 **CDG — The Cat Quarter (Node 77, cell `r:21,c:182`)**
 `cat_quarter` terrain. *(Coordinates corrected 2026-08-11 — the historical `R04,C17` is the retired 26×16 grid; the live geo grid is 90×360.)* Authored as a dead-end east of `BMA` (historical `SL`), but `NODE_MAP` no longer carries compass connections at all — §WALK/§NAV-01 replaced them with the `ROAD_RUNS` net and the `mover.js` kernel.
@@ -143,7 +143,7 @@ Geography (projection `col=180+°lon, row≈69.75−°lat`): `TLL(10,204) → SP
 > other reads as already defeated); and the Rest card advertised "The First Inn (TLL) — 166 moves"
 > instead of TVR 4 cells away. The `code = key` backfill fixed all of it — see maps.md §NODE_MAP.
 >
-> **DM note:** No Codex Shard, no main-quest connection — optional Act I content, a second on-ramp for a fresh character. Reuses/extends the cyberpunk anchors HKG (Neon Undercity) + SVO (Station 7). Monsters: monsters.md §"Soviet-Cyberpunk Training Tier." **NPC dialogue trees + the ~10–12 UQF quest chain are §KG Increment 3.** Design: `lab-reports/lab-report-kg-russia-kindergarten-zones.md`.
+> **DM note:** No Codex Shard, no main-quest connection — optional Act I content, a second on-ramp for a fresh character. Reuses/extends the cyberpunk anchors HKG (Neon Undercity) + SVO (Station 7). Monsters: monsters.md §"Soviet-Cyberpunk Training Tier." **NPC dialogue trees + the ~10–12 UQF quest chain are §KG Increment 3.** Design: `docs/lab-reports/lab-report-kg-russia-kindergarten-zones.md`.
 
 ---
 
@@ -214,7 +214,7 @@ Quest chain Q-TL-01 through Q-TL-03: "The Conclave's Weight"
 - Q-TL-02: choose how to handle the harbor embargo — report to Muffat (Q65 cross-ref), deliver to Birka contact, or leave it; sets `tlEmbargoChallenged` or `tlEmbargoDismissed`.
 - Q-TL-03: Act IV+ only; Ori (Harrow survivor) appears at the `STN` docks; her account cross-references §XII apex predators if fishing overhaul is implemented; `ori_account` readable item; Rennau reaches Dear Friend.
 
-> **§AUDIT-03c (2026-07-29) — the dead-code remap audit closed here.** `710bb75` ("Fix 8 activateNode errors") moved eight quests off three codes that were never `NODE_MAP` keys: **historical `SF` → the Map Shop `STN`** (the commit guessed `LCY` — wrong, fixed by §VM-01-G3), **historical `CQ` → `CDG`** (The Cat Quarter), **`FR` → `AMS`** (Fishmonger's Row). All three identifications now hold corpus-wide: **0** of 2,853 quests name a non-existent node in `activateNode` *or* `waypointNode`, pinned by `tests/integration/audit03c-node-refs.test.js`. The shorthand survives only in **prose and the older docs** — most of all in `maps.md`'s legend table, where 73 of 76 rows still use the pre-airport-code names and which is the likeliest place the eight bad values were copied from (§AUDIT-03l). Read `NODE_MAP` for a node code, never a doc table.
+> **§AUDIT-03c (2026-07-29) — the dead-code remap audit closed here.** `710bb75` ("Fix 8 activateNode errors") moved eight quests off three codes that were never `NODE_MAP` keys: **historical `SF` → the Map Shop `STN`** (the commit guessed `LCY` — wrong, fixed by §VM-01-G3), **historical `CQ` → `CDG`** (The Cat Quarter), **`FR` → `AMS`** (Fishmonger's Row). All three identifications now hold corpus-wide: **0** of 2,853 quests name a non-existent node in `activateNode` *or* `waypointNode`, pinned by `src/tests/integration/audit03c-node-refs.test.js`. The shorthand survives only in **prose and the older docs** — most of all in `maps.md`'s legend table, where 73 of 76 rows still use the pre-airport-code names and which is the likeliest place the eight bad values were copied from (§AUDIT-03l). Read `NODE_MAP` for a node code, never a doc table.
 
 The `ship_manifest` cross-references §XVI: if `wmFirstResearcherKnown`, the consignee (Isolde Voss) is recognized. No new monsters. Two new readable items. See plan-archive.md §XIX for full dialogue and state flags.
 
@@ -236,11 +236,11 @@ New item category **Tomes** (`type:'tome'`): passive inventory bonuses, `sell:0`
 
 New monster `scholars_guard` (medium) in the `scholars_qtr` terrain pool. Drops Scholar Kings' Seal (sell:20), the currency for archive access (3 seals **or** Yael's archive letter from `LHR` (historical `CI`)).
 
-Q-WM-04 reveals a "First Researcher" who preceded Froberger — unnamed by the Scholar Kings, documented only in a redacted personnel file that Benedikt can unredact. **The unredaction has never rendered:** the substitution is guarded by a flag whose only writer is Q-WM-04's own completion effect (§AUDIT-03au). See plan-archive.md §XVI for the full quest chain and state flags, and `lab-reports/lab-report-weimar-scholar-gate.md` for the verified delta table.
+Q-WM-04 reveals a "First Researcher" who preceded Froberger — unnamed by the Scholar Kings, documented only in a redacted personnel file that Benedikt can unredact. **The unredaction has never rendered:** the substitution is guarded by a flag whose only writer is Q-WM-04's own completion effect (§AUDIT-03au). See plan-archive.md §XVI for the full quest chain and state flags, and `docs/lab-reports/lab-report-weimar-scholar-gate.md` for the verified delta table.
 
 #### ✅ Void Archaeology (plan-archive.md §XVII, Layer 52 — Implemented 2026-05-25; ⚠️ gated shut, see below)
 
-**Status corrected 2026-08-17 (§DOC-02bz):** this heading read ⚠️ PLANNED while `story.md` §Layer 52 read *✅ Implemented 2026-05-25* — the same contradiction §DOC-02ar repaired one layer up, at §XVI. The layer **is** built and verified (39/39 acceptance assertions at HEAD, `lab-reports/lab-report-void-archaeology.md` §IV); what is unsatisfiable is its prerequisite set, which is a different defect and is recorded below.
+**Status corrected 2026-08-17 (§DOC-02bz):** this heading read ⚠️ PLANNED while `story.md` §Layer 52 read *✅ Implemented 2026-05-25* — the same contradiction §DOC-02ar repaired one layer up, at §XVI. The layer **is** built and verified (39/39 acceptance assertions at HEAD, `docs/lab-reports/lab-report-void-archaeology.md` §IV); what is unsatisfiable is its prerequisite set, which is a different defect and is recorded below.
 
 Prerequisites: NG+ run + `wmFirstResearcherKnown` + `entry42Written`. **⚠️ Unsatisfiable at HEAD (§DOC-02ar):** `wmFirstResearcherKnown` has one writer — Q-WM-04's own completion effect, which that quest's completion condition depends on (§AUDIT-03au) — and `storyNewGamePlus` does not carry the flag across the NG+ transition this prerequisite also requires. Both must be repaired before Layer 52 can open — and `entry42Written` adds a **third** wall behind them: its panel needs `priorQuestMinusOne`, whose only writer in the whole file is a string literal the Quest −1 disclosure tells the player to type into a browser console (§AUDIT-03bi), plus three preserved Dear Friends (§AUDIT-03ah).
 
@@ -557,7 +557,7 @@ Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when
 > `perkList`, once in that assignment. Nothing in the duel engine consults any of them, so all five
 > specified effects (+1 when flanking · pre-combat HP tier · free shove on a crit · 1d4 between rounds ·
 > once-per-rest Recompose) are **inert**. The unlock, the message, the persistence and the badge are all
-> real; the mechanics are not. → §DX-02eq. Design source: `lab-reports/lab-report-endings-and-echoes.md` §VIII/F8.
+> real; the mechanics are not. → §DX-02eq. Design source: `docs/lab-reports/lab-report-endings-and-echoes.md` §VIII/F8.
 
 **Room 6** — locked room at `HKG` (historical `CY`). `storyShowRoom6()`. Available at Weckmann Dear Friend. Contains Froberger's last fighting note.
 
@@ -1270,7 +1270,7 @@ Six one-time beats fire in Act VIII (actNumber === 8) when a player with Friendl
 > eleven.** Left annotated, not rewritten (§AUDIT-03m-FU).
 >
 > ⚠️ **The `Flags:` line below names `act8FarewellWeckmann`, which does not exist** (0 occurrences
-> in `index.html`). `ACT8_FAREWELL_BEATS` is keyed by **profile key**, so the live flag is
+> in `play.html`). `ACT8_FAREWELL_BEATS` is keyed by **profile key**, so the live flag is
 > **`act8FarewellCrov`** — the doc uses the character's name, the code uses the ledger key.
 
 > **⚠️ Node column corrected 2026-08-04 (§AUDIT-03m-FU).** `ACT8_FAREWELL_BEATS` is keyed by **NPC key**, not by node — the beat fires wherever that NPC stands, which the engine settles in `birkaNpcs` (`LHR:['yael'] · TLL:['brynn'] · MHQ:['quill'] · LLA:['pachelbel'] · HKG:['crov','auros']`). Four of these six rows named the wrong place: Quill was listed at `LLA` (Pachelbel's node), Pachelbel at `SH` (**a code that was never in `NODE_MAP` at all** — the §AUDIT-03p born-dead class), Weckmann at `KRN` and Auros at `VBY`, when both are at `HKG`. Annotating those codes in place would have turned four wrong claims into four confident-looking live ones.  *(historical: `BA`=`LLA` · `CR`=`KRN` · `BK`=`VBY` · `CY`=`HKG`)*

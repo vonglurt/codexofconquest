@@ -706,7 +706,7 @@ There is no corridor dialog, no Manhattan-distance gating, and no "Hunt/Warp" ov
 
 ### Roads, Rooms & Auto-Travel (§NAV-01, ✅ 2026-07-03)
 
-> Design + diagnosis: `lab-reports/lab-report-nav01-navigable-world.md` · layer stack: `docs/notes/docs-node-network.md §13` · map surfaces: `maps.md` "ROAD NET & ROOM LAYER".
+> Design + diagnosis: `docs/lab-reports/lab-report-nav01-navigable-world.md` · layer stack: `docs/notes/docs-node-network.md §13` · map surfaces: `maps.md` "ROAD NET & ROOM LAYER".
 
 **Roads (what the player experiences):** a fungal highway net (400 road cells, 88 intersections/T-junctions) connects every settlement. Road cells are terrain `'road'` — **encounter rate 0** — so following the road is the safe way to cross the wilderness; striking out overland is always allowed but rolls the local terrain's encounter rate (0.10–0.35). Sea-lane crossings stay `ocean` at 0.10 — boats are never free. Roads are pure terrain: they never gate movement, and the open field stays fully walkable.
 
@@ -899,7 +899,7 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 
 ## Multiplayer — Mesh Presence (§MESH-01, ✅ Incs a–e shipped 2026-07-02 · §MESH-02 connection center 2026-07-07)
 
-Roll2Hit is single-player-first: multiplayer is a strictly **opt-in presence layer** on top of the unchanged solo game. Full design: `lab-reports/lab-report-mesh-multiuser.md` (spec) and `lab-reports/lab-report-mesh-sync-architecture.md` (architecture write-up); connection-center UI: `lab-reports/lab-report-mesh02-connections-ui.md`; server/API detail: `docs/notes/docs-node-network.md §12`; map surfaces: `maps.md`.
+Roll2Hit is single-player-first: multiplayer is a strictly **opt-in presence layer** on top of the unchanged solo game. Full design: `docs/lab-reports/lab-report-mesh-multiuser.md` (spec) and `docs/lab-reports/lab-report-mesh-sync-architecture.md` (architecture write-up); connection-center UI: `docs/lab-reports/lab-report-mesh02-connections-ui.md`; server/API detail: `docs/notes/docs-node-network.md §12`; map surfaces: `maps.md`.
 
 ### What the player experiences
 
@@ -931,7 +931,7 @@ The Map sheet also carries connection sub-tabs — **🌐 Multiplayer · 🔭 Di
 - **🔭 Discover** — three ways to find servers: **🖥 local scan** (parallel manifest probes of `localhost:1360–1380` — a browser can only probe, never listen), **🔭 Find** (magnet/tracker/server input through the shared resolver), and **server-list sources** (subscribe to a plain-text or JSON list URL; one `host:port` / URL / magnet per line, `#` comments). Sources marked **auto** load when the pane opens — but **only if their host is on your whitelist** (D4); a non-whitelisted auto source shows ⚠ and is never fetched.
 - **🛡 Lists** — your client **blacklist** (matched by address, host, server id, or world hash — blacklisted servers vanish from every row list and Join refuses them) and **whitelist** (which hosts may auto-load, D4); the **server ACL editor** (mode, `shareBlocklist`, all six allow/block lists — a validated merge-write over `GET/PUT /api/mesh/acl`, offline → hint); and **peer blocklist preview** (D2/D3): fetch a peer's shared blocklist — 403 means they haven't opted in — see a counted preview, and merge into your own blacklist **only on an explicit click**. Nothing is ever auto-imported.
 
-**Quick-start — two players, one machine:** run one server (`./wbapi-toggle.sh start`), open `index.html` in **two browser windows** (two local clients = one server), click 🌐 in each, pick different names. You'll see each other in "Also here:", on the map dots, and in 💬. A friend on your LAN instead runs nothing: they open the game, map tab → 🌐 Connect, and enter `your-lan-ip:1367` (or you send them an `r2h:?…` magnet); serve them the world itself via `GET /api/world/download`. CLI parity for everything above: `./api.sh mesh status|peers|tracker|acl|blocklist|connect` (§MESH-02g).
+**Quick-start — two players, one machine:** run one server (`./wbapi-toggle.sh start`), open `play.html` in **two browser windows** (two local clients = one server), click 🌐 in each, pick different names. You'll see each other in "Also here:", on the map dots, and in 💬. A friend on your LAN instead runs nothing: they open the game, map tab → 🌐 Connect, and enter `your-lan-ip:1367` (or you send them an `r2h:?…` magnet); serve them the world itself via `GET /api/world/download`. CLI parity for everything above: `./api.sh mesh status|peers|tracker|acl|blocklist|connect` (§MESH-02g).
 
 ### What multiplayer never does (invariants)
 
@@ -942,7 +942,7 @@ The Map sheet also carries connection sub-tabs — **🌐 Multiplayer · 🔭 Di
 
 ### World identity — what forks a swarm and what doesn't
 
-Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `worldHash` covers the **eight spatial/mechanical data collections** — `NODE_MAP`, `NODE_COORDS`, `SEA_RUNS`, `SEA_LANES`, `ROAD_RUNS`, `QUEST_DB`, `MONSTER_POOL`, `WORLD_DB` — hashed as raw source spans, plus `ENGINE_VER`. **This boundary is intentional** (decided in the architecture report §III.A): *hash what determines where players can stand and what they can fight*. Narrative tables — `NPC_DIALOGUES`, `BIRKA_NPC_PROFILES`, `FROBERGER_JOURNAL`, `KEY_EVENTS`, and other prose — are deliberately **not** hashed, so a pure-dialogue mod does not fork the swarm. Likewise `WORLD_NAME` is a display-only tag (rendered as `worldTag` = `<name>-<hash5>`, e.g. `Roll2Hit-915aa`): renaming a world never forks it — identity is what a world *is* (data), the tag is what it's *called*. Incompatible worlds are refused at gossip ingress (409) and segregated into their own tracker world groups; mod inspection goes through `GET /api/world/download` + `scripts/world-diff.js`.
+Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `worldHash` covers the **eight spatial/mechanical data collections** — `NODE_MAP`, `NODE_COORDS`, `SEA_RUNS`, `SEA_LANES`, `ROAD_RUNS`, `QUEST_DB`, `MONSTER_POOL`, `WORLD_DB` — hashed as raw source spans, plus `ENGINE_VER`. **This boundary is intentional** (decided in the architecture report §III.A): *hash what determines where players can stand and what they can fight*. Narrative tables — `NPC_DIALOGUES`, `BIRKA_NPC_PROFILES`, `FROBERGER_JOURNAL`, `KEY_EVENTS`, and other prose — are deliberately **not** hashed, so a pure-dialogue mod does not fork the swarm. Likewise `WORLD_NAME` is a display-only tag (rendered as `worldTag` = `<name>-<hash5>`, e.g. `Roll2Hit-915aa`): renaming a world never forks it — identity is what a world *is* (data), the tag is what it's *called*. Incompatible worlds are refused at gossip ingress (409) and segregated into their own tracker world groups; mod inspection goes through `GET /api/world/download` + `src/scripts/world-diff.js`.
 
 ### Gameplay ladder
 
