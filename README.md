@@ -243,11 +243,13 @@ MIT. Fork it. Extend it. Write Level 21. See [LICENSE](LICENSE) for full text.
 ```
 index.html          project landing page (start here)
 play.html           THE GAME — one file, no build, no server
-edit.html   visual world/quest/mission-bit editor
+edit.html           visual world/quest/mission-bit editor
 Makefile            every way to start things
 run.sh              the single entry point the Makefile delegates to
 bin/                shortcuts: ./bin/run, ./bin/play, ./bin/wbapi, ./bin/check …
-src/                all implementation
+src/                all implementation + the node project
+  package.json      npm manifest lives HERE (see src/NODE.md)
+  node_modules/     gitignored
   js/               engine + WBAPI server modules
   server/           start-wbapi.sh — announces where node runs, then execs it
   api/ scripts/ tools/ bin/ importers/ tests/ config/ sources/
@@ -262,21 +264,23 @@ vendor/             working material, not published (gitignored)
 make            # list every target
 make run        # API + monitor in terminals, opens the landing page
 make play       # API + monitor, opens the game
-make worldbuilder
+make edit
 make wbapi      # just the node API server, announcing its working dir
 make check      # the full gate chain
+make install    # restore src/node_modules
+make purge      # remove node_modules + build output
 make stop
 ```
 
 To just play, open `play.html`. Nothing else is required.
 
-**Why `package.json` stays at the repo root:** node resolves `node_modules` by
-walking *up* from the entry file, and npm expects its manifest at the project
-root. Moving it into `src/` would put `node_modules` there too and break every
-tool that assumes the conventional layout. Instead, `src/server/start-wbapi.sh`
-always `cd`s to the repo root and prints the node binary, the working directory,
-the entry file and the port before it launches — so there is never a question of
-where node is running from.
+**Where the node project lives:** `package.json`, `package-lock.json` and
+`node_modules/` are in **`src/`**, not the repo root — see [src/NODE.md](src/NODE.md).
+Node resolves a bare `require()` by walking *up* from the calling file, and the code
+needing external packages is spread across `src/tests` (Playwright, 81 call sites) and
+`src/js` + `src/api` (the Anthropic SDK). `src/` is the deepest placement where all of
+them still resolve; anything deeper and the tests fail to load. Run npm from `src/`, or
+use the make targets from anywhere.
 
 ## Author
 

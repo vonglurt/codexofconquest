@@ -2,7 +2,7 @@
 #
 # The root is about starting and running. Every target delegates to ./run.sh.
 .DEFAULT_GOAL := help
-.PHONY: help run play landing edit wbapi server monitor stop status test check gates clean
+.PHONY: help run play landing edit wbapi server monitor stop status install test check gates clean purge
 
 help:  ## show this help
 	@echo "Codex of Conquest — make targets"
@@ -29,11 +29,16 @@ stop:     ## stop the API server and the monitor
 status:   ## show what is running
 	@./run.sh status
 
+install:  ## restore node_modules (the node project lives in src/, see src/NODE.md)
+	@npm install --prefix src
 test:   ## run the Playwright integration suite
-	@npm test
+	@npm test --prefix src
 check:  ## run the full gate chain (anchors, invariants, parity, graphs)
-	@npm run check:walk
+	@npm run check:walk --prefix src
 gates: check  ## alias for check
 
 clean:  ## remove generated build output (never touches src/ or docs/)
 	@rm -rf build/test-results build/playwright-report && echo "build output cleared"
+
+purge: clean  ## also remove src/node_modules — restore it with `make install`
+	@rm -rf src/node_modules && echo "src/node_modules removed — run 'make install' to restore"

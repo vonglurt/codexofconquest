@@ -9,7 +9,7 @@ src/config/peers-cache.json
 src/config/tracker-cache.json
 
 # ── Dependencies ──────────────────────────────────────────────────────────────
-node_modules/
+src/node_modules/
 
 # ── build/ — everything generated or written at runtime ───────────────────────
 #   test-results, playwright-report, the milepoints runtime dir (say-daemon

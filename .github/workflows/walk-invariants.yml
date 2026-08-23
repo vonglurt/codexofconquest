@@ -34,7 +34,7 @@ on:
       - 'src/scripts/world-diff.js'
       - 'src/tests/mud-harness.mjs'
       - 'src/api/wb.js'
-      - 'package.json'
+      - 'src/package.json'
       - '.github/workflows/walk-invariants.yml'
   pull_request:
     paths:
@@ -53,7 +53,7 @@ on:
       - 'src/scripts/world-diff.js'
       - 'src/tests/mud-harness.mjs'
       - 'src/api/wb.js'
-      - 'package.json'
+      - 'src/package.json'
       - '.github/workflows/walk-invariants.yml'
 
 jobs:
@@ -68,24 +68,24 @@ jobs:
       # committed mover.js / play.html, so install would just pull
       # Playwright + the SDK for nothing.
       - name: Run terrain-field invariant + walk-parity suite
-        run: npm run check:walk
+        run: npm run check:walk --prefix src
       # §WBAPI-01 ph3: structured-field PATCH round-trip guard — also stdlib-only
       # (requires wbapi-core, which pulls in just fs/path), loads the committed HTML
       # read-only. No install needed.
       - name: Run WBAPI structured-field PATCH guard
-        run: npm run check:arraypatch
+        run: npm run check:arraypatch --prefix src
       # §EDITOR-01-D: declarative itemChain runtime + source round-trip guard —
       # stdlib-only (vm + wbapi-core), loads the committed HTML read-only.
       - name: Run itemChain guard
-        run: npm run check:itemchain
+        run: npm run check:itemchain --prefix src
       # §EDITOR-01-D-FU(b): reward-ladder → itemChain migration parity guard —
       # stdlib-only (vm + wbapi-core), loads the committed HTML read-only.
       - name: Run ladder-migration parity guard
-        run: npm run check:laddermigration
+        run: npm run check:laddermigration --prefix src
       # §MESH-01-FU 9: world-diff deep-diff selftest — stdlib-only (crypto +
       # wbapi-core), synthetic in-memory worlds, no HTML load.
       - name: Run world-diff selftest
-        run: npm run check:worlddiff
+        run: npm run check:worlddiff --prefix src
 
   mud:
     runs-on: ubuntu-latest
@@ -95,9 +95,10 @@ jobs:
         with:
           node-version: 'lts/*'
           cache: 'npm'
+          cache-dependency-path: src/package-lock.json
       # The MUD harness boots the real wbapi-server, which top-level-requires the
       # Anthropic SDK — so unlike the `invariants` job this one needs an install.
       - name: Install dependencies
-        run: npm ci
+        run: npm ci --prefix src
       - name: Run MUD multi-client harness (co-presence + instancing + TTL prune)
-        run: npm run test:mud
+        run: npm run test:mud --prefix src
