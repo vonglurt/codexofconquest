@@ -28,7 +28,7 @@ your contribution is licensed under the MIT terms in `LICENSE`.
 
 ### Existing-Work-First Policy (learned 2026-07-28 — two live sessions independently started §VM-01-G2)
 
-**Never start a row without first proving the work isn't already done, in progress, or half-shipped.** This failure mode is recurring and measured: §GR-D, §DESIGN-03, §DUNGEON-01, and §FUTURE-01 were each opened as build work and closed as **ALREADY SHIPPED** after an audit (the only real fix was usually a doc sync); §DX-01b's entire premise was disproved by measurement; and on 2026-07-28 two concurrently running sessions both picked up §VM-01-G2 from the same §RESUME entry — the second one caught the collision only because its greps stopped matching its own earlier reads mid-survey.
+**Never start a row without first proving the work isn't already done, in progress, or half-shipped.** This failure mode is recurring and measured: §GR-D, §DESIGN-03, §DUNGEON-01, and §FUTURE-01 were each opened as build work and closed as **ALREADY SHIPPED** after an audit.
 
 Before starting any BACKLOG row, in order:
 
