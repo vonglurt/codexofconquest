@@ -3,8 +3,8 @@
 'use strict';
 // world-diff.js — §MESH-01d3 modification-set inspector (§MESH-01-FU 9: deep diff).
 //
-//   node scripts/world-diff.js <mine.html> <theirs.html> [--json]
-//   node scripts/world-diff.js --selftest
+//   node src/scripts/world-diff.js <mine.html> <theirs.html> [--json]
+//   node src/scripts/world-diff.js --selftest
 //
 // Compares two Roll2Hit world files the way the mesh does: per data collection
 // (the 8 manifest parts) plus ENGINE_VER, then hashes everything OUTSIDE the
@@ -303,7 +303,7 @@ else {
   const jsonMode = argv.includes('--json');
   const [fileA, fileB] = argv.filter((a) => !a.startsWith('--'));
   if (!fileA || !fileB) {
-    console.error('usage: node scripts/world-diff.js <mine.html> <theirs.html> [--json]   |   --selftest');
+    console.error('usage: node src/scripts/world-diff.js <mine.html> <theirs.html> [--json]   |   --selftest');
     process.exit(64);
   }
   const A = fs.readFileSync(fileA, 'utf8');

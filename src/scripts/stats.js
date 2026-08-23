@@ -9,10 +9,10 @@
 // grepping `key:'` mixes items+nodes+monsters, `id:'…'` under-counts, and
 // `schema:'UQF-1.0'` over-counts. This prints the REAL numbers straight from the
 // canonical WBAPI parse — the same `wbapi-core` extractor the :1367 server and
-// every `scripts/check-*.js` use — so a doc that preaches "confirm from the live
+// every `src/scripts/check-*.js` use — so a doc that preaches "confirm from the live
 // file" can point HERE as the single source instead of hardcoding stale counts.
 //
-// Usage:  npm run stats            (or: node scripts/stats.js)
+// Usage:  npm run stats            (or: node src/scripts/stats.js)
 //         npm run stats -- --json  (machine-readable object)
 
 const fs = require('fs');

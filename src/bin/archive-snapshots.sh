@@ -7,9 +7,9 @@
 #
 # Picks up roll2hit-v3-YYYYMMDD-HHMMSS.html from:
 #   ./ (root)
-#   ./milepoints/ (uncompressed stragglers)
+#   ./build/milepoints/ (uncompressed stragglers)
 #
-# Patch store: milepoints/patches/
+# Patch store: build/milepoints/patches/
 #   _base.html.gz   — first snapshot, gzip base
 #   _last.html      — most recent, kept for next diff
 #   _last.name      — filename of _last.html

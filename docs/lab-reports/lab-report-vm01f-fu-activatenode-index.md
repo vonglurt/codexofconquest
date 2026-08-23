@@ -312,7 +312,7 @@ this helper.
 `function _questNodes()@36995` · `let _questsByNodeIndex = null@37014` · `function _questsByNode(nodeCode)@37015` ·
 `function _boardBounties(node, limit)@37183` · `src/js/wbapi-core.js:_questsByNode: {}@707` ·
 `src/scripts/check-quest-parity.js:quest parity: QUEST:CORE identical@25` ·
-`worldbuilder.html:function applyPatch(NODE_MAP, QUEST_DB@2473`.
+`edit.html:function applyPatch(NODE_MAP, QUEST_DB@2513`.
 
 *Ship-day anchors, superseded but recorded — all six verified to resolve on the pinned parent build `a6b648a`:
 `storyCheckQuests` 29624 · activation scan 29627 · completion loop 29645 · `_questNodes` 36094 · `_gateFlagSet`

@@ -6794,7 +6794,7 @@ KEY_EVENTS that physically surrender the item now carry `consumeItem:true`. `_ro
 `quest_solen_horizon` — truth token not taken; it is a record of discernment, not a physical handover.  
 Escort-arc "letter of introduction" remains P2 pending escort arc implementation.
 
-### §MBIT-02-C. ✅ worldbuilder.html schema updated (2026-05-29)
+### §MBIT-02-C. ✅ edit.html schema updated (2026-05-29)
 
 `SCHEMAS.quest.fields` in `wbapi-server.js` now includes:
 - `checkPassFlag` with note about `_grantMissionBit` side effect

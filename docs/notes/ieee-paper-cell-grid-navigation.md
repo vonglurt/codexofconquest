@@ -326,7 +326,7 @@ The reference implementation (CodexOfConquest.com) uses the following runtime co
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│  Admin SPA (worldbuilder.html)                               │
+│  Admin SPA (edit.html)                               │
 │  POST /api/node {code, r, c, name, label, act, …}            │
 └────────────────────┬─────────────────────────────────────────┘
                      │ HTTP, port 1367

@@ -3,7 +3,7 @@
 // §DX-02a — read-only ASCII visualizer for a world-grid window (promoted from
 // the §DX-01a debugging session, where it made the road/sea defects one glance).
 // Legend: ~ sea · = lane · # road · X road-on-sea (R3 violation!) · @ settlement · . land
-// Usage: node scripts/render-region.js [r0 r1 c0 c1]   (default 5 17 200 222)
+// Usage: node src/scripts/render-region.js [r0 r1 c0 c1]   (default 5 17 200 222)
 'use strict';
 const fs = require('fs');
 const path = require('path');

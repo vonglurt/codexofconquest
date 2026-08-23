@@ -9,7 +9,7 @@
 | **Author's build** | `125ef7c` — 36,192 lines, 5,305,672 bytes (both figures byte-exact) |
 | **Verified** | 2026-08-18 (§DOC-02ca) against HEAD `a029d5b` — 38,712 lines |
 | **Scope** | how a story "page" is produced from `NODE_MAP` + `QUEST_DB`, and how the **quest**, **waypoint** and **mission-bit** subsystems interlock to drive it |
-| **Companion** | `worldbuilder.html` (data-layer editor; port-1367 WBAPI) |
+| **Companion** | `edit.html` (data-layer editor; port-1367 WBAPI) |
 
 ---
 
@@ -208,7 +208,7 @@ report converges here, on every step.** Verified unchanged in composition at 42 
 ### A. Data/engine split
 
 A quest is inert data; `QuestRuntime` is the sole executor. This is the architecture's cleanest
-decision: content authors — and `worldbuilder.html` — touch data, never control flow. The legacy
+decision: content authors — and `edit.html` — touch data, never control flow. The legacy
 `completeFn` / `completeItems` closures were retired by §ARCH-01 W7d; completion is now
 declarative and the runtime is the only code path.
 
@@ -277,8 +277,8 @@ appear only in `NODE_HOOKS` chains): the mechanism shipped, the content has not.
 ### E. The cross-file contract
 
 The worldbuilder mirrors the registry so the editor can only author real, executable bits —
-`worldbuilder.html:const OPERAND_CONTRACTS = {@1373` and
-`worldbuilder.html:const UQF_BIT_FIELDS = {@1402`, both still exact at HEAD.
+`edit.html:const OPERAND_CONTRACTS = {@1413` and
+`edit.html:const UQF_BIT_FIELDS = {@1442`, both still exact at HEAD.
 
 > **Correction (ledger 18).** The original called it *"a byte-for-byte mirror of
 > `const BIT_CONTRACTS = {@21970`."* Measured: **11 of 12 kinds shared, `required`/`optional`
@@ -641,7 +641,7 @@ and it is not architectural. **Make the prover fail.**
 | Data sections | `const NODE_MAP = {@8425` · `const QUEST_DB = {@10615` · `const WORLD_DB = {@6279` · `const _S_DEFAULTS = () => ({@23062` |
 | Broken chain / working twin | `waw001_act2: {@14900` · `cph001_act2: {@15540` |
 | Inert NPC grant field | `rinaldo_sau: {@10461` |
-| Editor bit-contract mirror | `worldbuilder.html:const OPERAND_CONTRACTS = {@1373` · `worldbuilder.html:const UQF_BIT_FIELDS = {@1402` · `worldbuilder.html:_questsByNode: {},@1468` |
+| Editor bit-contract mirror | `edit.html:const OPERAND_CONTRACTS = {@1413` · `edit.html:const UQF_BIT_FIELDS = {@1442` · `edit.html:_questsByNode: {},@1508` |
 | Soft-lock prover's over-credit | `src/scripts/check-questgraph.js:// NPC/data mission-bit grant@309` |
 | Idempotency acceptance (Rec 5) | `src/tests/integration/uqf-node-panels.test.js:gone on re-render@28` |
 

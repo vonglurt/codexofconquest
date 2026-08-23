@@ -300,7 +300,7 @@ claim least likely to be re-measured.***
 
 The report's whole §1 is an argument against a definition living in more than one place. HEAD keeps
 the bit vocabulary twice: `const BIT_CONTRACTS = {@21970` in the game (13 kinds) and
-`worldbuilder.html:const OPERAND_CONTRACTS = {@1373` in the editor (11 kinds), whose own comment
+`edit.html:const OPERAND_CONTRACTS = {@1413` in the editor (11 kinds), whose own comment
 says it *"mirrors the game's BIT_CONTRACTS."*
 
 It no longer does. **Missing: `cost`** — the §VM-01-G4a price leaf, a live opcode with three
@@ -357,7 +357,7 @@ The report's most valuable section, because it names five things its author knew
 
 | Phase | Spec | Outcome |
 |---|---|---|
-| 0 — Anchors + WBAPI | ✅ claimed complete | **True.** 24 `◆◆◆ WORLDBUILDER:*` anchors live; `worldbuilder.html` shipped `2d42ea2`, the same commit that added this report |
+| 0 — Anchors + WBAPI | ✅ claimed complete | **True.** 24 `◆◆◆ WORLDBUILDER:*` anchors live; `edit.html` shipped `2d42ea2`, the same commit that added this report |
 | 1 — Schema + inert runtime | *"next session"* | ✅ **`80bc1f4`, 30 days later** |
 | 2 — New quests use UQF | 4 named arcs | ✅ **`f5117ca`** (20 min after Phase 1); 1 of 4 named arcs exists |
 | 3 — Migrate by arc | *"2–3 sessions"* | ✅ **2 days**, 34+ waves, via a codemod the plan does not contain |
@@ -367,7 +367,7 @@ The report's most valuable section, because it names five things its author knew
 **Beyond the spec:** the runtime became a *host-injected kernel*. `createQuestRuntime(host)@22180`
 names no global, so `src/js/quest.js` runs under `require()` on the server and in tests, and
 `check:questparity` asserts the inlined copy is byte-identical. §6 asked for a layer *"callable
-from both the game and worldbuilder.html"*; it got one callable from the game, the server, the MUD
+from both the game and edit.html"*; it got one callable from the game, the server, the MUD
 harness and the test suite. `execBits` also became a **generator**, which is what made a suspending
 `choice` possible at all — a capability §4's `choice` contract implied and §6's straight-line
 `for` loop could not have delivered.
@@ -380,7 +380,7 @@ harness and the test suite. `execBits` also became a **generator**, which is wha
 |---|---|---|
 | **§DX-02ar** | 🟡 | `WBAPI.quests.chain()` derives dependencies from an `S_story.` regex; 1,624 declaratively-gated quests are invisible, 96.4 % of the corpus returns an empty chain, and the quest **delete guard** passes vacuously as a result |
 | **§DX-02as** | 🟢 | Four contract surfaces validate green and do nothing — `skill_check.adv`, `narrative.template`, `unlock.npcs`, the whole `item_check` kind — plus (e) the `adaptLegacyQuest` comment's 35-vs-**50** miscount of the un-migrated set |
-| **§DX-02at** | 🟢 | `worldbuilder.html:OPERAND_CONTRACTS` mirrors `BIT_CONTRACTS` by hand and has drifted: **`cost` and `_legacy_fn` missing** |
+| **§DX-02at** | 🟢 | `edit.html:OPERAND_CONTRACTS` mirrors `BIT_CONTRACTS` by hand and has drifted: **`cost` and `_legacy_fn` missing** |
 
 ---
 

@@ -714,7 +714,7 @@ There is no corridor dialog, no Manhattan-distance gating, and no "Hunt/Warp" ov
 
 **Auto-travel:** set a waypoint (map click or quest "📍 Navigate →") and press **WP** — the player walks the road-weighted route automatically (~120 ms/step; road/lane cost 1 vs open land 2, so routes hug the highways). Travel halts on: an encounter roll, arrival, **any input**, or a blocked step. **Shift+WP** = single step. The journal and Navigate button show `(n steps, NE)`; a waypoint ★ marks the destination on the minimap and world canvases (edge-of-window arrow when off-screen).
 
-**Authoring:** worldbuilder.html drags & locks cities (`PUT /api/coords`, 🔒 → `roads-pins.json`) and edits the net itself — pins, ✚/┬ junction palette, 🔗 links, ♻ Reweave Net (`PUT /api/roads`, auto-rollback on a red `check:roads`). Never hand-edit `ROAD_RUNS`.
+**Authoring:** edit.html drags & locks cities (`PUT /api/coords`, 🔒 → `roads-pins.json`) and edits the net itself — pins, ✚/┬ junction palette, 🔗 links, ♻ Reweave Net (`PUT /api/roads`, auto-rollback on a red `check:roads`). Never hand-edit `ROAD_RUNS`.
 
 ---
 

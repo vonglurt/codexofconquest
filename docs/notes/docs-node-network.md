@@ -472,7 +472,7 @@ The game's Map sheet carries the multiplayer UI as sub-tabs (🗺 Map · 🌐 Co
 | **L7 PRESENTATION** | exits signage, minimap roads + waypoint ★, map tab 15×21 + amenities, WORLD/GLOBE canvases | NEW (§NAV-01e + map suite) |
 | **L8 MUD SERVER** | `session/start\|move\|look\|pos` all carry the same L4 `room` via shared `buildLook` — byte-equal to the SP client (mud-harness [M]) | NEW (§NAV-01f) |
 
-**Authoring (worldbuilder.html):** §NAV-01g drag-&-lock cities (marker drag / lat-lon → `PUT /api/coords`; 🔒 lock persists into `roads-pins.json.locked`, geo-seed never moves locked cities) · §NAV-01h road-net editor (ROAD_RUNS chain-link overlay; vertex drag → pin; ✚ intersection / ┬ T-junction palette; 🔗 link toggle; 🗑 delete; **♻ Reweave Net** = `PUT /api/roads` → `build-roads.js --apply` → `check:roads`, red check rolls the game file back). CLI: `./api.sh roads | reweave`.
+**Authoring (edit.html):** §NAV-01g drag-&-lock cities (marker drag / lat-lon → `PUT /api/coords`; 🔒 lock persists into `roads-pins.json.locked`, geo-seed never moves locked cities) · §NAV-01h road-net editor (ROAD_RUNS chain-link overlay; vertex drag → pin; ✚ intersection / ┬ T-junction palette; 🔗 link toggle; 🗑 delete; **♻ Reweave Net** = `PUT /api/roads` → `build-roads.js --apply` → `check:roads`, red check rolls the game file back). CLI: `./api.sh roads | reweave`.
 
 **Guard-rails:** mover.js untouched (refusals stay exactly `'oob'`/`'sea'`) · roads are terrain, never permissions · no stored node-to-node edge lists · never hand-edit `ROAD_RUNS` — always ♻ Reweave.
 

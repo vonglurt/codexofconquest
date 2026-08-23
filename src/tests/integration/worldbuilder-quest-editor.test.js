@@ -12,7 +12,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('Quest Creator — UQF emit (§EDITOR-03 W8b)', () => {
   test('Export JS: items + killGoals become the completion gate (no legacy roots)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
 
     // Fill the side-quest form including the two array fields.
@@ -39,7 +39,7 @@ test.describe('Quest Creator — UQF emit (§EDITOR-03 W8b)', () => {
   });
 
   test('Export JS: skill_check emits a UQF bit with onPass flag_write/reward + onFail bits', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
     await page.evaluate(() => {
       const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
@@ -78,7 +78,7 @@ test.describe('Quest Creator — UQF emit (§EDITOR-03 W8b)', () => {
 
   // ── §EDITOR-01-D — Quest Creator itemChain authoring ───────────────────────
   test('Export JS serializes the declarative itemChain (all four action kinds)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
     await page.evaluate(() => {
       const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
@@ -104,7 +104,7 @@ test.describe('Quest Creator — UQF emit (§EDITOR-03 W8b)', () => {
   });
 
   test('itemChain grant fills optional fields only when present', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
     await page.evaluate(() => {
       const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
@@ -119,7 +119,7 @@ test.describe('Quest Creator — UQF emit (§EDITOR-03 W8b)', () => {
   });
 
   test('killGoals label defaults to key, need defaults to 1 when omitted', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
     await page.evaluate(() => {
       const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
@@ -162,7 +162,7 @@ test.describe('Quest Creator — itemChain visual editor wiring (§EDITOR-01-D-F
   }
 
   test('authoring a mixed chain through the widget DOM exports the right itemChain', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
     await page.evaluate(() => {
       const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
@@ -186,7 +186,7 @@ test.describe('Quest Creator — itemChain visual editor wiring (§EDITOR-01-D-F
   });
 
   test('rich grant (bonus/readText) authored via the widget exports valid JS', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
     await page.evaluate(() => {
       const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
@@ -207,7 +207,7 @@ test.describe('Quest Creator — itemChain visual editor wiring (§EDITOR-01-D-F
   });
 
   test('grant.once unchecked in the widget serializes once:false', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
     await page.evaluate(() => {
       const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
@@ -221,7 +221,7 @@ test.describe('Quest Creator — itemChain visual editor wiring (§EDITOR-01-D-F
   });
 
   test('▲/▼ reorder in the widget is reflected in the exported itemChain order', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
     await page.evaluate(() => {
       const set = (id, v) => { const el = document.getElementById(id); el.value = v; };
@@ -245,7 +245,7 @@ test.describe('Quest Creator — itemChain visual editor wiring (§EDITOR-01-D-F
   });
 
   test('applying the blank preset clears the widget rows (no itemChain exported)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => { window.switchTab('editor'); document.getElementById('welcome-screen').classList.add('hidden'); });
     await page.evaluate(() => {
       document.getElementById('ed-id').value = 'quest_reset'; // any seed

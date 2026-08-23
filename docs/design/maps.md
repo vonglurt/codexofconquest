@@ -583,7 +583,7 @@ const CELL_GRID = (() => {
 - **Roads are terrain, not permissions** (Free-Movement, CONTRIBUTING.md): a road cell resolves to terrain `'road'` with **encounter rate 0** — a safe, legible highway. The open field stays fully walkable; roads are sugar, never required.
 - Terrain precedence (client `_inferTerrain` + server `terrainAt`, parity-checked): `SEA_LANES → 'ocean'` ▸ `ROAD_CELLS → 'road'` ▸ majority-of-named-neighbors ▸ `'midlands'`. Sea-lanes stay `ocean` — crossings keep their 0.10 encounter risk as texture.
 - Generated deterministically by `src/scripts/build-roads.js` (k-nearest ≤3 + MST + local loops ≤8; trunk-reuse Dijkstra costs settlement 2 / road 4 / virgin 10 / lane 14). **Never hand-edit ROAD_RUNS** — regenerate via ♻ Reweave (`PUT /api/roads` or `./api.sh reweave`); a red `check:roads` rolls the game file back automatically.
-- User-authored net edits live in `roads-pins.json` `{pins, links, locked}` — pins are mandatory road vertices; `locked` city codes are never moved by geo-seed. Edited visually in worldbuilder.html (§NAV-01g/h): drag-&-lock cities, vertex drag → pin, ✚/┬ junction palette, 🔗 link toggle, 🗑 delete, ♻ Reweave Net.
+- User-authored net edits live in `roads-pins.json` `{pins, links, locked}` — pins are mandatory road vertices; `locked` city codes are never moved by geo-seed. Edited visually in edit.html (§NAV-01g/h): drag-&-lock cities, vertex drag → pin, ✚/┬ junction palette, 🔗 link toggle, 🗑 delete, ♻ Reweave Net.
 
 ### Room layer — every cell is a room
 

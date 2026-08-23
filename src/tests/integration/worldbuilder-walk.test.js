@@ -4,7 +4,7 @@ const { test, expect } = require('@playwright/test');
 
 // ── §WALK — Playable World Editor Integration Tests ───────────────────────────
 //
-// Tests the "🚶 Walk" tab in worldbuilder.html against a minimal injected world.
+// Tests the "🚶 Walk" tab in edit.html against a minimal injected world.
 //
 // Mock world layout:
 //   A(10,10) ── B(10,11) ── C(10,12)
@@ -45,7 +45,7 @@ async function loadWalkTab(page, opts = {}) {
   // failure). Callers needing custom endpoint handlers pass their own pre-armed
   // stub (opts.stub); every other describe gets a bare 404-firewall here.
   if (!opts.stub) await armApiStub(page);
-  await page.goto('/worldbuilder.html');
+  await page.goto('/edit.html');
 
   await page.evaluate(({ nm, nc, qd }) => {
     WBAPI.nodeMap     = nm;

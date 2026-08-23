@@ -6,7 +6,7 @@
 
 **Original date:** 2026-05-24 · born `1d1b064` 18:47:49, §VI appended `13bb222` 18:54:19
 **Original status:** 💭 ASPIRATIONAL — no Layer number, no insertion spec, no HTML changes implied
-**Verified:** 2026-08-12 (§DOC-02ae) against `roll2hit-v3.html` @ 38,712 lines · `src/sources/5thOrgan.html` · `worldbuilder.html`
+**Verified:** 2026-08-12 (§DOC-02ae) against `roll2hit-v3.html` @ 38,712 lines · `src/sources/5thOrgan.html` · `edit.html`
 **Verification verdict:** **3 of 5 concepts SHIPPED, two of them within five days.** The document's own scheduling claim — *"None of these can be started in the current session"* — was falsified **33 minutes later** by a commit in the same session. Every *transcribable* number in it is exact; every *illustrative* field name in it is invented.
 
 ---
@@ -15,7 +15,7 @@
 
 This report is the project's roadmap-of-aspirations: four companion products imagined for the day the game itself is finished — a **Dungeon Master's Companion Guide**, a **Fishing Guide**, a **Mission Explorer** (a debug-annotated data browser), and a **Polyphonic Pipe Organ Synthesizer** (72 sine oscillators, no samples, no audio files). A fifth idea appears in a single paragraph of §V, almost as an aside: ship the Fishing Guide as a *readable item inside the game* rather than as a document.
 
-Re-measured 80 days later, the register reads: **Mission Explorer SHIPPED** (as `worldbuilder.html`, five days later, inverted on all three of its stated design axes) · **Organ SHIPPED** (as `src/sources/5thOrgan.html`, thirty-three minutes later) · **Fishing Guide SHIPPED — but as the aside, not the document** (`FISHING_GUIDE_TEXT`, a `type:'readable'` item that unlocks zone DCs) · **DM's Guide NOT SHIPPED** · **Fishing Guide as a standalone document NOT SHIPPED**.
+Re-measured 80 days later, the register reads: **Mission Explorer SHIPPED** (as `edit.html`, five days later, inverted on all three of its stated design axes) · **Organ SHIPPED** (as `src/sources/5thOrgan.html`, thirty-three minutes later) · **Fishing Guide SHIPPED — but as the aside, not the document** (`FISHING_GUIDE_TEXT`, a `type:'readable'` item that unlocks zone DCs) · **DM's Guide NOT SHIPPED** · **Fishing Guide as a standalone document NOT SHIPPED**.
 
 The finding that generalises: the report ranked these by **effort and prerequisite**, and that ranking predicted nothing. What predicted everything is the **medium of the deliverable**. The three concepts that shipped are the three whose output is code or data. The two that did not are the two whose output is prose. This repository converts a specification into an implementation reliably and quickly; it has never once converted a specification into a book.
 
@@ -84,13 +84,13 @@ Two program instruments carried this pass in particular:
 | 2 | Fishing Guide, standalone 20–30 pp document | §II | **NOT SHIPPED** | superseded by row 3 |
 | 3 | Fishing Guide **as an in-game readable item** | §V | ✅ **SHIPPED** | `name:'Fishing Guide', icon:'📖', type:'readable'@13819` · `const FISHING_GUIDE_TEXT =@26659` |
 | 4 | …and it gates a mechanic, not just flavour | — | ✅ **exceeded** | `const hasGuide = (S_story.inventory@30406` reveals zone DCs |
-| 5 | Mission Explorer, a second HTML data browser | §III | ✅ **SHIPPED** `2d42ea2`, 2026-05-29 | `worldbuilder.html`, 10,685 lines, 17 tabs |
+| 5 | Mission Explorer, a second HTML data browser | §III | ✅ **SHIPPED** `2d42ea2`, 2026-05-29 | `edit.html`, 10,685 lines, 17 tabs |
 | 6 | …read-only; C/U/D "intentionally excluded" | §III.D | ⚠️ **INVERTED** | 29 `POST` · 32 `PUT` · 4 `DELETE` call sites |
 | 7 | …cost: must externalize the data constants | §III.E | ❌ **cost never paid** | `<script src=` = **0** in `roll2hit-v3.html`; the one-file invariant held |
 | 8 | …fallback: FileReader drag-and-drop | §III.E | **NOT SHIPPED** | shipped answer is a third option: server-side parse via `wbapi-core.js` |
 | 9 | …debug metadata (JS path · type · index) | §III.C | **NOT SHIPPED** → **§DX-02ao** | no detail view emits a reference path, a data type or an array position |
-| 10 | …Export as JSON, the "middle path" | §III.D | ✅ **SHIPPED + exceeded** | `worldbuilder.html:/api/export/all?format=json@2616`, `Export JS`, `Export Patched` |
-| 11 | …State Flag Browser ("which quest sets it") | §III.B | ◐ **HALF SHIPPED** | `worldbuilder.html:this._flagToQuests[f].writes.push(id)@1695` indexes reads/writes — **over `QUEST_DB` source only**, so the "which render functions read it" half is absent |
+| 10 | …Export as JSON, the "middle path" | §III.D | ✅ **SHIPPED + exceeded** | `edit.html:/api/export/all?format=json@2656`, `Export JS`, `Export Patched` |
+| 11 | …State Flag Browser ("which quest sets it") | §III.B | ◐ **HALF SHIPPED** | `edit.html:this._flagToQuests[f].writes.push(id)@1735` indexes reads/writes — **over `QUEST_DB` source only**, so the "which render functions read it" half is absent |
 | 12 | Yugurt Lake at nodes `YL`, `YC` | §II.1 | ✅ **RIGHT WHEN WRITTEN**, renamed since | archive `YL:{num:75, yugurt_lake}` → `BOO:{ num:75, code:'BOO'@8782`; `YC:{num:76}` → `SSJ:{ num:76, code:'SSJ'@8786` — `num`, terrain and label all preserved |
 | 13 | 20-rank fish pool | §II.2 | ✅ **exact** | `const FISH_POOL = [@26504`, 20 entries; plus `const NIGHT_FISH_POOL = [@26526` (5, §XLVIII) |
 | 14 | The Hooked condition | §II.1 | ✅ SHIPPED | `condition:'Hooked'` in the catch resolver |
@@ -128,7 +128,7 @@ Thirty-three minutes from *"none of these can be started"* to a working polyphon
 
 This is not an error to correct; it is the most useful thing the document records. ***A roadmap's estimate of its own tractability is a claim like any other, and it is the claim most likely to be wrong within the hour.*** The sentence was true about the DM's Guide, true about the Fishing Guide, true about the Explorer's architectural question — and the author, five minutes after writing it, found a fifth idea it was not true about and simply built the thing.
 
-The five-day figure for the Explorer is the same result at a coarser resolution: `worldbuilder.html` is born on 2026-05-29 (`2d42ea2`, *"Working on worldbuilder to further the abstractions"*), and the *"architectural decision"* it was blocked on was never made — it was **dissolved** (Finding 3).
+The five-day figure for the Explorer is the same result at a coarser resolution: `edit.html` is born on 2026-05-29 (`2d42ea2`, *"Working on worldbuilder to further the abstractions"*), and the *"architectural decision"* it was blocked on was never made — it was **dissolved** (Finding 3).
 
 ---
 
@@ -156,7 +156,7 @@ The corollary is a practical one for this project: **the DM's Guide and the Fish
 
 ## VII. Finding 3 — The Explorer Shipped, Inverted on All Three of Its Design Axes
 
-`worldbuilder.html` (10,685 lines, 17 tabs: Map · Bestiary · Loot · NPCs · Quests · Dice Lab · CRUD · API · Audit · Stats · Endpoints · Builder · Wizard · Editor · Mission · Walk · Mesh) is unmistakably the Mission Explorer. `worldbuilder.html:data-tab="bestiary"@403` is §III.B's Monster Explorer; the NPCs, Quests and Mission tabs are its NPC, Quest and Mission-Arc browsers. And on each of the three axes the report reasoned about explicitly, the shipped answer is the opposite of the specified one.
+`edit.html` (10,685 lines, 17 tabs: Map · Bestiary · Loot · NPCs · Quests · Dice Lab · CRUD · API · Audit · Stats · Endpoints · Builder · Wizard · Editor · Mission · Walk · Mesh) is unmistakably the Mission Explorer. `edit.html:data-tab="bestiary"@443` is §III.B's Monster Explorer; the NPCs, Quests and Mission tabs are its NPC, Quest and Mission-Arc browsers. And on each of the three axes the report reasoned about explicitly, the shipped answer is the opposite of the specified one.
 
 **Axis 1 — Read vs. Write.** §III.D excludes Create/Update/Delete for three stated reasons: *"the HTML is the source of truth"*, *"a write interface would need validation, undo, and conflict resolution"*, *"read-only is safe and useful; writable is risky and complex."* HEAD ships **29 `POST` · 32 `PUT` · 4 `DELETE`** call sites. The objection was not overruled — it was **answered by building the thing it asked for**: WBAPI validates (a bad monster body is rejected 422 with the field list and nothing is written) and excises at source level with verify-or-revert. *The report was right that writes need validation. It was wrong that this meant not writing.*
 
@@ -164,9 +164,9 @@ The corollary is a practical one for this project: **the DM's Guide and the Fish
 
 > This is the 22nd instrument in its cleanest positive form: *enumerate the space the chooser actually chooses from.* The report enumerated two options and the winner was outside the enumeration. A two-option table reads as exhaustive precisely because it is a table.
 
-**Axis 3 — Debug metadata.** This is the one axis where the report is right and HEAD is not. §III.C quotes the user's own requirement verbatim and specifies three things per field: **JavaScript reference path** (`MONSTER_POOL["goblin_scout"].ac`), **data type**, and **position** (array index / object key / line number). No detail view in `worldbuilder.html` emits any of the three. What shipped instead answers the *"reference it to change it"* half by a different route: the Wizard and Builder tabs emit the **API call** that mutates the record. That is arguably better for authoring and strictly worse for understanding — you learn how to change the value without ever learning where it lives. → **§DX-02ao**.
+**Axis 3 — Debug metadata.** This is the one axis where the report is right and HEAD is not. §III.C quotes the user's own requirement verbatim and specifies three things per field: **JavaScript reference path** (`MONSTER_POOL["goblin_scout"].ac`), **data type**, and **position** (array index / object key / line number). No detail view in `edit.html` emits any of the three. What shipped instead answers the *"reference it to change it"* half by a different route: the Wizard and Builder tabs emit the **API call** that mutates the record. That is arguably better for authoring and strictly worse for understanding — you learn how to change the value without ever learning where it lives. → **§DX-02ao**.
 
-A fourth, gentler result: §III.B's **State Flag Browser** is half-built and nobody noticed. `worldbuilder.html:this._flagToQuests[f].writes.push(id)@1695` maintains a per-flag reader/writer index — precisely §III.B's *"which quest/arc sets it"* row — but its scan universe is the `QUEST_DB` source text only, so the *"which render functions read it"* row is structurally absent. **That is the same blind spot `check:deadconsts` (§DX-02n) keeps rediscovering from the other side**, and this is prior art for it: the census already exists, it is simply pointed at one section of the file.
+A fourth, gentler result: §III.B's **State Flag Browser** is half-built and nobody noticed. `edit.html:this._flagToQuests[f].writes.push(id)@1735` maintains a per-flag reader/writer index — precisely §III.B's *"which quest/arc sets it"* row — but its scan universe is the `QUEST_DB` source text only, so the *"which render functions read it"* row is structurally absent. **That is the same blind spot `check:deadconsts` (§DX-02n) keeps rediscovering from the other side**, and this is prior art for it: the census already exists, it is simply pointed at one section of the file.
 
 ---
 
@@ -221,7 +221,7 @@ This is instrument 12 in a form worth keeping, because it defeats the older inst
 |---|---|---|---|
 | 1 | DM's Companion Guide | ❌ not shipped in 80 days | — (partly superseded: the Explorer's NPC/Quest/Mission tabs render Parts II and IV from live data) |
 | 2 | Fishing Guide (document) | ❌ not shipped in 80 days | — |
-| 3 | Mission Explorer | ✅ shipped +5 days, inverted on 3 axes | `worldbuilder.html` |
+| 3 | Mission Explorer | ✅ shipped +5 days, inverted on 3 axes | `edit.html` |
 | 4 | Pipe Organ Synthesizer | ✅ shipped +33 minutes | `src/sources/5thOrgan.html` — **not embedded** (§AUDIO-01) |
 | 5 | Fishing Guide **as an in-game item** (§V aside) | ✅ shipped | `const FISHING_GUIDE_TEXT =@26659` |
 
@@ -237,9 +237,9 @@ There is one honest bright spot in the register's own reasoning, and it deserves
 
 **New this pass:**
 
-- **§DX-02ao (🟡, small design call)** — *the Explorer's debug-metadata requirement never shipped.* §III.C is a verbatim user requirement — variable name, data type, index/position, *"where we can reference it to change it"* — and no `worldbuilder.html` detail view emits a JavaScript reference path, a data-type annotation or an array position. The Wizard/Builder tabs answer the *mutation* half by emitting the API call, so the gap is specifically **comprehension**, not authoring. Design call is on form only (an always-on metadata column · a "dev mode" toggle · a click-to-copy path chip).
-- **§DX-02ap (🟢, no design call)** — *the authoring tool teaches raw `curl`.* `worldbuilder.html:Full curl sequence (run in order)@7929` renders a runnable `curl -s -X POST …/node|/monster|/quest` sequence for the author to copy, which is the exact shape prompt.md §3 and CONTRIBUTING Hazard #7 forbid (*"all world-building goes through `./api.sh`"*). It is invisible to every gate: §DX-02l-FU's detector was narrowed to *"a line an author can copy and run"* — which these are — but scans `.md` files only, and `worldbuilder.html` is not in its universe. Fix: emit `./api.sh post node code=… label=…` equivalents beside (or instead of) the curl block. The **Endpoints** tab's curl examples are correct as-is; that tab is an HTTP reference, not an authoring path.
-- **§DX-02n +1 (prior art, not a new member)** — `worldbuilder.html:this._flagToQuests[f].writes.push(id)@1695` already implements the reader/writer census `check:deadconsts` has been specified to need, over `QUEST_DB` source text. Whoever builds the gate should start here and widen the scan universe to the whole file rather than start over.
+- **§DX-02ao (🟡, small design call)** — *the Explorer's debug-metadata requirement never shipped.* §III.C is a verbatim user requirement — variable name, data type, index/position, *"where we can reference it to change it"* — and no `edit.html` detail view emits a JavaScript reference path, a data-type annotation or an array position. The Wizard/Builder tabs answer the *mutation* half by emitting the API call, so the gap is specifically **comprehension**, not authoring. Design call is on form only (an always-on metadata column · a "dev mode" toggle · a click-to-copy path chip).
+- **§DX-02ap (🟢, no design call)** — *the authoring tool teaches raw `curl`.* `edit.html:Full curl sequence (run in order)@7969` renders a runnable `curl -s -X POST …/node|/monster|/quest` sequence for the author to copy, which is the exact shape prompt.md §3 and CONTRIBUTING Hazard #7 forbid (*"all world-building goes through `./api.sh`"*). It is invisible to every gate: §DX-02l-FU's detector was narrowed to *"a line an author can copy and run"* — which these are — but scans `.md` files only, and `edit.html` is not in its universe. Fix: emit `./api.sh post node code=… label=…` equivalents beside (or instead of) the curl block. The **Endpoints** tab's curl examples are correct as-is; that tab is an HTTP reference, not an authoring path.
+- **§DX-02n +1 (prior art, not a new member)** — `edit.html:this._flagToQuests[f].writes.push(id)@1735` already implements the reader/writer census `check:deadconsts` has been specified to need, over `QUEST_DB` source text. Whoever builds the gate should start here and widen the scan universe to the whole file rather than start over.
 
 **Corroborated, not re-filed** (existing-work-first):
 
@@ -275,7 +275,7 @@ For a document whose title promises ponies and unicorns, the accuracy rate on th
 
 ---
 
-**Anchors used in this report** resolve against `roll2hit-v3.html` (38,712 lines), `src/sources/5thOrgan.html` (448 lines) and `worldbuilder.html` (10,685 lines) as of 2026-08-12. Legacy node codes (`YL`, `YC`, `CI`, `SL`, `CQ`, `VS`) are preserved as written — `docs/lab-reports/` is a HISTORY corpus under `src/scripts/legacy-codes.js`; annotate, never rewrite.
+**Anchors used in this report** resolve against `roll2hit-v3.html` (38,712 lines), `src/sources/5thOrgan.html` (448 lines) and `edit.html` (10,685 lines) as of 2026-08-12. Legacy node codes (`YL`, `YC`, `CI`, `SL`, `CQ`, `VS`) are preserved as written — `docs/lab-reports/` is a HISTORY corpus under `src/scripts/legacy-codes.js`; annotate, never rewrite.
 
 ---
 

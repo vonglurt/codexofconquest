@@ -9898,7 +9898,7 @@ const TERRAIN_ENCOUNTER_RATE = {
 // §WALK-2 — unified mover kernel. The block between the MOVER:CORE sentinels is
 // inlined BYTE-IDENTICALLY from mover.js (the server require()s the same source);
 // §WALK-4 walk-parity asserts the two copies match. Edit mover.js, not this copy,
-// then re-run: node scripts/check-mover-parity.js
+// then re-run: node src/scripts/check-mover-parity.js
 const GEO_PROJ = { ROWS: 90, COLS: 360 };   // §2.1 equirectangular 1° grid
 
 // §MESH-01b: game build identity — the mesh treats every version as a separate,
@@ -9981,7 +9981,7 @@ function _moverWorld() {
 // §NAV-01c — unified room-description kernel. The block between the ROOMS:CORE
 // sentinels is inlined BYTE-IDENTICALLY from rooms.js (the MUD server require()s
 // the same source); scripts/check-rooms-parity.js asserts the two copies match.
-// Edit rooms.js, not this copy, then re-run: node scripts/check-rooms-parity.js
+// Edit rooms.js, not this copy, then re-run: node src/scripts/check-rooms-parity.js
 // ◆◆◆ ROOMS:CORE:START ◆◆◆
 const __ROOM_DIRS = { N: [-1, 0], S: [1, 0], E: [0, 1], W: [0, -1] };
 const __ROOM_DIRWORD = { N: 'north', S: 'south', E: 'east', W: 'west' };

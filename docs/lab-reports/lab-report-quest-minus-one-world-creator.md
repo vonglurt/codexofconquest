@@ -87,7 +87,7 @@ Two mechanical details in the disclosure prose were checked and are **exact**: *
 | 10 | `sweelinck-variant` styling | Applied by the renderer, not the block | ✅ Survived the migration intact. |
 | 11 | State flags `questMinusOne` / `priorQuestMinusOne` | Both live, `@23123` and `@23126` | ✅ **Still exactly three lines apart, 79 days later.** |
 | 12 | NG+ preservation, cited at lines 8902–8910 | Same nine lines at `@24027`–`@24035` | ✅ Byte-identical. |
-| 13 | Interactive wizard UI **not implemented** | **It shipped** — as `worldbuilder.html` + `./api.sh` | ⚠️ **Delta in the other direction.** See §VI. |
+| 13 | Interactive wizard UI **not implemented** | **It shipped** — as `edit.html` + `./api.sh` | ⚠️ **Delta in the other direction.** See §VI. |
 | 14 | Quest −1 called a "quest" | No `QUEST_DB` entry exists | ⚠️ Naming only. It never lists in the journal and never counts toward `vic-quests`. The disclosure's *"To mark this quest complete"* refers to nothing the engine tracks — which the report frames as the point. |
 
 ---
@@ -124,7 +124,7 @@ The report's own §II-B calls this content *"exact line count, MONSTER_POOL size
 
 Both legs are now falsified, and by the same evidence:
 
-- **The "fragile" leg.** The wizard shipped. `worldbuilder.html` (2026-07-08) is a browser world editor; `src/js/wbapi-server.js` + `./api.sh` are the authoring API. Every step §III.A specified has a live endpoint — `./api.sh post monster`, `./api.sh post node`, `./api.sh post quest`, and a verification loop (`./api.sh audit` · `./api.sh advise <id>` · `npm run check:walk`) far stronger than the grep loop it replaced.
+- **The "fragile" leg.** The wizard shipped. `edit.html` (2026-07-08) is a browser world editor; `src/js/wbapi-server.js` + `./api.sh` are the authoring API. Every step §III.A specified has a live endpoint — `./api.sh post monster`, `./api.sh post node`, `./api.sh post quest`, and a verification loop (`./api.sh audit` · `./api.sh advise <id>` · `npm run check:walk`) far stronger than the grep loop it replaced.
 - **The "durable" leg.** `plan.md` was deleted, one of the three grep recipes now returns a meaningless number, and the *"markdown files in this directory"* the panel points at have been reorganised into `docs/`.
 
 The escape was a **third option the two-way framing hid**: build the wizard *beside* the game rather than inside it. That keeps the game's UI decoupled — the stated worry — while still shipping the tool. A two-option trade-off table reads as exhaustive precisely when a third option exists (§DOC-02's 22nd instrument), and this is the cleanest instance the corpus has produced, because the third option is now the repo's primary authoring surface.
@@ -164,7 +164,7 @@ Three correct recommendations, zero converted into tracked rows, zero shipped. �
 | `roll2hit-v3.html` | `` `const savedPriorQuestMinus1@24027` `` | NG+ capture |
 | `roll2hit-v3.html` | `` `Layer 49: §XIV Quest -1@31380` `` | the disclosure panel |
 | `roll2hit-v3.html` | `` `quest_ng_02: { id:'quest_ng_02'@11048` `` | the Entry 42 pairing |
-| `worldbuilder.html` · `src/js/wbapi-server.js` · `api.sh` | — | the World Creator Wizard, as shipped |
+| `edit.html` · `src/js/wbapi-server.js` · `api.sh` | — | the World Creator Wizard, as shipped |
 | ~~`plan.md` §XIV~~ | — | **NOT SHIPPED / DELETED** by `5e48dd7`; superseded by `CONTRIBUTING.md` + `BACKLOG.md` |
 | `lab-report-ng-plus-remembrance.md` | — | Layer 50 — Entry 42 and `quest_ng_02` |
 

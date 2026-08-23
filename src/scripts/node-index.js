@@ -12,7 +12,7 @@
 //
 // A hand-maintained index of generated/authored data rots silently. This one is
 // generated from the same `wbapi-core` parse the :1367 server and every
-// `scripts/check-*.js` read, exactly like `npm run stats` (§DX-01g) does for counts —
+// `src/scripts/check-*.js` read, exactly like `npm run stats` (§DX-01g) does for counts —
 // so the doc cannot drift from the file it describes.
 //
 // Usage:  npm run nodes                  → write docs/maps/node-index.md
@@ -103,9 +103,9 @@ lines.push('# NODE INDEX — the live `NODE_MAP`');
 lines.push('');
 lines.push('> **Generated from `play.html` by `npm run nodes`.** This is the authoritative answer to');
 lines.push('> *"what is this node\'s code?"* — it is parsed from the same `wbapi-core` extractor the `:1367`');
-lines.push('> server and every `scripts/check-*.js` use, so it cannot drift from the game. **Never take a node');
+lines.push('> server and every `src/scripts/check-*.js` use, so it cannot drift from the game. **Never take a node');
 lines.push('> code from a hand-maintained table** (that is how `710bb75` put `activateNode:"SF"` on eight');
-lines.push('> quests — §AUDIT-03c). `./api.sh get node <CODE>` is the other live answer.');
+lines.push('> quests — §AUDIT-03c). `./bin/api get node <CODE>` is the other live answer.');
 lines.push('');
 lines.push(`**${nodes.length} nodes** · coordinates are live `+
            `\`NODE_COORDS\` cells on the §CELL-02 grid (r ${Math.min(...nodes.filter(n=>n.r!==null).map(n=>n.r))}–${Math.max(...nodes.filter(n=>n.r!==null).map(n=>n.r))}, `+

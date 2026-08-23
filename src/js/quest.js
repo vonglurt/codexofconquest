@@ -16,7 +16,7 @@
 //
 // The region between the QUEST:CORE sentinels is inlined BYTE-IDENTICALLY into
 // play.html; scripts/check-quest-parity.js asserts the two copies match.
-// Do not edit one copy without the other (or run: node scripts/check-quest-parity.js).
+// Do not edit one copy without the other (or run: node src/scripts/check-quest-parity.js).
 //
 // host: { getState: () => state,          // returns the live progress state (S_story)
 //         effects: {                      // each thunk carries its own host guard

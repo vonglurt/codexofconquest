@@ -18,8 +18,8 @@
 //   4. road set = corridor cells minus settlement cells minus SEA_LANES (lanes
 //      stay ocean — crossings keep their texture); emitted as RLE runs.
 //
-// Usage:  node scripts/build-roads.js          # dry-run: stats only
-//         node scripts/build-roads.js --apply  # patch/replace the ROAD_RUNS
+// Usage:  node src/scripts/build-roads.js          # dry-run: stats only
+//         node src/scripts/build-roads.js --apply  # patch/replace the ROAD_RUNS
 //                                              # block in play.html
 // Pins:   roads-pins.json (repo root, optional) — full schema:
 //         { pins:[{r,c}], links:[["r,c","r,c"]], locked:["CODE",…] }

@@ -66,7 +66,7 @@ Two sidecars exist, both optional:
    **RELOCATED:** the mesh half left this file **nine hours after the report's last edit** —
    `4367a38` (2026-07-06 17:01), *"mesh layer extracted to mesh.js — 434-line kernel moved
    verbatim"*. Every excerpt below is still verbatim; the anchors point at `src/js/mesh.js`.
-2. **`worldbuilder.html`** — the separate editing UI. Its 🌐 **Mesh tab** is the operator's window
+2. **`edit.html`** — the separate editing UI. Its 🌐 **Mesh tab** is the operator's window
    into everything described here.
 
 ### B. The problem, under three unusual constraints
@@ -589,7 +589,7 @@ person instead.
   and federation merge. Every doorway, same rules.
 - **Shape validation everywhere addresses travel.** ServerIds must be 32-hex; addresses must match
   `^[\w.-]+:\d+$`. **Verified: that regex occurs 11 times across four files — 3 in `src/js/mesh.js`, 2 in
-  `src/js/wbapi-server.js`, 1 in `worldbuilder.html`, and *5 in the game file itself*** — exactly the
+  `src/js/wbapi-server.js`, 1 in `edit.html`, and *5 in the game file itself*** — exactly the
   claim that it is re-checked *again in the browser* before any address reaches the server-browser
   DOM, so a hostile tracker cannot smuggle markup through a peer row. The strongest positive in this
   verification: the defensive claim is not merely true, it is densest where it matters most.

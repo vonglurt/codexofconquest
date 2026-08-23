@@ -274,7 +274,7 @@ gap in §VI that let this live 37 days.
 3. **The double-fire guard works.** Calling `_showCourierMap()` a second time after dismissal is a
    clean no-op. The mechanism is sound; only its reset is missing.
 4. **The chip degrades safely outside the game.** `function _renderObjectiveChip() {@36176` returns
-   early when `#obj-shards` is absent, so `worldbuilder.html` and any harness that loads the render
+   early when `#obj-shards` is absent, so `edit.html` and any harness that loads the render
    path get a no-op rather than a throw. Zero page errors across all four browser runs.
 5. **The renderer is genuinely derivation-only.** Shards, level and day are read from `S_story` and
    never written. The chip cannot desynchronise from the sidebar's *numbers* — only, as §7.1 shows,

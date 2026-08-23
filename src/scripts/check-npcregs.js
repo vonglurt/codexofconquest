@@ -46,8 +46,8 @@
 // bug, since it is what makes the key resolve (§AUDIT-03h). Phase 5 checks only that a
 // lowercase `npc:` value is the CANONICAL key for its character, never that it exists.
 //
-// Usage:  node scripts/check-npcregs.js            # audit, exit 1 on findings
-//         node scripts/check-npcregs.js --selftest # prove each phase catches a plant
+// Usage:  node src/scripts/check-npcregs.js            # audit, exit 1 on findings
+//         node src/scripts/check-npcregs.js --selftest # prove each phase catches a plant
 'use strict';
 const fs = require('fs');
 const path = require('path');

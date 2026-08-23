@@ -43,7 +43,7 @@ The developer environment described here is built around three ideas:
                              │  HTTP
           ┌──────────────────┼──────────────────┐
           │                  │                  │
-   ./api.sh CLI        worldbuilder.html    monitor-snapshots.py
+   ./api.sh CLI        edit.html    monitor-snapshots.py
    (src/api/wb.js)         (browser GUI)        (TUI + keepalive)
 ```
 

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // Copyright (c) 2026 Paul Richeson <paulr@sdf.org> — CodexOfConquest.com
 // ============================================================
-// wbapi-server.js — Roll2Hit World Builder API Server
+// wbapi-server.js — Codex of Conquest World Builder API Server
 // MIT License — Copyright (c) 2026 paulr@sdf.org
 // SPDX-License-Identifier: MIT
 // ============================================================
@@ -17,16 +17,16 @@
 // api.sh is the official CLI wrapper: it handles nonces, retry/
 // backoff, queued requests, and pipe-safe JSON output.
 //
-//   ./api.sh ping                     health check
-//   ./api.sh get quest <id>           fetch any entity
-//   ./api.sh list npc --q egil        search by name
-//   ./api.sh put quest <id> k=v       patch a field
-//   ./api.sh post npc key=x name=y    create an entity
-//   ./api.sh import file.json         bulk import (nodes+quests+npcs)
-//   ./api.sh audit                    integrity scan
-//   ./api.sh --help                   full command reference (always current)
+//   ./bin/api ping                     health check
+//   ./bin/api get quest <id>           fetch any entity
+//   ./bin/api list npc --q egil        search by name
+//   ./bin/api put quest <id> k=v       patch a field
+//   ./bin/api post npc key=x name=y    create an entity
+//   ./bin/api import file.json         bulk import (nodes+quests+npcs)
+//   ./bin/api audit                    integrity scan
+//   ./bin/api --help                   full command reference (always current)
 //
-// GET /api/help/cli  — runs ./api.sh --help and returns live output.
+// GET /api/help/cli  — runs ./bin/api --help and returns live output.
 // ─────────────────────────────────────────────────────────────
 
 const http      = require('http');
@@ -768,7 +768,7 @@ const GEO_ANCHORED = new Set([
 
 // ── Runtime mode config ──────────────────────────────────────────────────────
 // Modes: fast (quiet) | debug (verbose) | trace (verbose + full algorithm trace)
-// Persisted in milepoints/wbapi-config.json; changed live via POST /api/mode.
+// Persisted in build/milepoints/wbapi-config.json; changed live via POST /api/mode.
 // Env vars WBAPI_VERBOSE / WBAPI_TRACE override the config on startup only.
 const CONFIG_FILE = path.join(ROOT, 'build', 'milepoints', 'wbapi-config.json');
 const MODES = {
@@ -1475,7 +1475,7 @@ function saveGameFile() {
 // read side of that surface — the server owns it because the server is what
 // knows where `GAME_FILE` actually lives (`--file`/`ROLL2HIT_FILE` move it).
 //
-// `archived` means the snapshot is already folded into the milepoints/patches
+// `archived` means the snapshot is already folded into the build/milepoints/patches
 // chain, which is what archive-snapshots.sh builds — and that script `rm`s each
 // file after patching it, so the honest disposal path produces a delta first.
 // A snapshot that is NOT archived is unrecorded history: deleting it discards
@@ -1935,7 +1935,7 @@ async function route(req, res) {
       index: {
         title: 'WBAPI Help Index',
         body: [
-          'Roll2Hit World Builder API — man-page style reference.',
+          'Codex of Conquest World Builder API — man-page style reference.',
           '',
           'TOPICS',
           '  GET /api/help/overview        — what this API is and how it works',
@@ -1955,13 +1955,13 @@ async function route(req, res) {
           '  GET /api/help/coords          — coordinate system, 4x expansion, and node placement',
           '  GET /api/help/import          — 1367 quest import workflow and node placement strategy',
           '  GET /api/help/curl            — curl cheat sheet for every operation',
-          '  GET /api/help/cli             — api.sh CLI reference (live: runs ./api.sh --help)',
+          '  GET /api/help/cli             — api.sh CLI reference (live: runs ./bin/api --help)',
           '  GET /api/help/workflow        — search→inspect→edit cycle for every entity type',
           '',
-          'PREFERRED TOOL — USE ./api.sh, NOT curl',
-          '  ./api.sh handles nonces, retry/backoff, pipe-safe JSON, and queued writes.',
+          'PREFERRED TOOL — USE ./bin/api, NOT curl',
+          '  ./bin/api handles nonces, retry/backoff, pipe-safe JSON, and queued writes.',
           '  Raw curl is a fallback only (graph/coords endpoints not yet wrapped).',
-          '  Run:  ./api.sh --help         for the full, always-current command reference.',
+          '  Run:  ./bin/api --help         for the full, always-current command reference.',
           '  Run:  GET /api/help/workflow  for the common search→inspect→edit cycle.',
           '',
           `Server: ${b}`,
@@ -1986,7 +1986,7 @@ async function route(req, res) {
           '',
           'ARCHITECTURE',
           '  Browser ─── play.html (game engine + all data)',
-          '  Dev tool ── worldbuilder.html (reads game via API, never touched by game)',
+          '  Dev tool ── edit.html (reads game via API, never touched by game)',
           '  API server ─ wbapi-server.js  (parses + writes play.html in-place)',
           '',
           'TYPICAL WORKFLOW',
@@ -2551,7 +2551,7 @@ async function route(req, res) {
           '# 8. Restart server to reload',
           `curl -XPOST $SERVER/api/restart`,
           '',
-          'TIP: Use worldbuilder.html → ✦ Wizard tab for a guided UI version.',
+          'TIP: Use edit.html → ✦ Wizard tab for a guided UI version.',
           'See: GET /api/help/mission_bit  |  GET /api/help/nonce',
         ].join('\n'),
       },
@@ -2589,8 +2589,8 @@ async function route(req, res) {
           '  3. For typos in existing keys: use /rename or /swap endpoints',
           '  4. Run audit again to confirm errors dropped to zero',
           '',
-          `  e.g. ./api.sh audit`,
-          `      ./api.sh audit --raw | jq '.errors'`,
+          `  e.g. ./bin/api audit`,
+          `      ./bin/api audit --raw | jq '.errors'`,
         ].join('\n'),
       },
 
@@ -2655,9 +2655,9 @@ async function route(req, res) {
         title: 'api.sh Workflow — Search → Inspect → Edit',
         body: [
           'PREFERRED TOOL',
-          '  Always use ./api.sh for day-to-day work. Raw curl is a fallback only.',
+          '  Always use ./bin/api for day-to-day work. Raw curl is a fallback only.',
           '  api.sh handles nonces, retry/backoff, pipe-safe JSON, and queued writes.',
-          '  Run  ./api.sh --help  for the full command reference.',
+          '  Run  ./bin/api --help  for the full command reference.',
           '  Run  GET /api/help/cli  for the live api.sh manual from this server.',
           '',
           'THE COMMON CYCLE — search → inspect → edit',
@@ -2666,105 +2666,105 @@ async function route(req, res) {
           '── QUESTS ───────────────────────────────────────────────────────',
           '',
           '  # 1. Find by keyword or filter',
-          '  ./api.sh list quest --q "wolsey"',
-          '  ./api.sh list quest --arc shk --q "inventory"',
-          '  ./api.sh list quest --node BK --type skill_check',
+          '  ./bin/api list quest --q "wolsey"',
+          '  ./bin/api list quest --arc shk --q "inventory"',
+          '  ./bin/api list quest --node BK --type skill_check',
           '',
           '  # 2. Fetch all fields',
-          '  ./api.sh get quest shk6_act1',
+          '  ./bin/api get quest shk6_act1',
           '  #  → desc, passText, failText, npc, activateNode, checkDC …',
           '',
           '  # 3. Patch the field(s) you need',
-          '  ./api.sh put quest shk6_act1 desc="Egil Thorvaldsen, a Birka wool factor..."',
-          '  ./api.sh put quest shk6_act1 npc=egil_thorvaldsen checkDC=14',
+          '  ./bin/api put quest shk6_act1 desc="Egil Thorvaldsen, a Birka wool factor..."',
+          '  ./bin/api put quest shk6_act1 npc=egil_thorvaldsen checkDC=14',
           '  # Multi-field via JSON pipe:',
-          '  echo \'{"desc":"...","passText":"...","failText":"..."}\' | ./api.sh put quest shk6_act1',
+          '  echo \'{"desc":"...","passText":"...","failText":"..."}\' | ./bin/api put quest shk6_act1',
           '',
           '── NODES ────────────────────────────────────────────────────────',
           '',
           '  # 1. Find the node',
-          '  ./api.sh list node --q "nuremberg"',
-          '  ./api.sh list node --terrain scholars_qtr',
+          '  ./bin/api list node --q "nuremberg"',
+          '  ./bin/api list node --terrain scholars_qtr',
           '',
           '  # 2. Composite view — node + quests + NPCs + monsters',
-          '  ./api.sh location NUE',
-          '  ./api.sh get node NUE   # → label, terrain, coords, N/E/S/W, quest list',
+          '  ./bin/api location NUE',
+          '  ./bin/api get node NUE   # → label, terrain, coords, N/E/S/W, quest list',
           '',
           '  # 3. Edit',
-          '  ./api.sh put node NUE label="Nuremberg Scholar Quarter"',
-          '  ./api.sh put node NUE N=BMA S=KRN',
+          '  ./bin/api put node NUE label="Nuremberg Scholar Quarter"',
+          '  ./bin/api put node NUE N=BMA S=KRN',
           '',
           '── NPCs ─────────────────────────────────────────────────────────',
           '',
           '  # 1. Find the NPC',
-          '  ./api.sh list npc --q "egil"',
-          '  ./api.sh list npc --node BK',
-          '  ./api.sh list npc --occupation "clerk"',
+          '  ./bin/api list npc --q "egil"',
+          '  ./bin/api list npc --node BK',
+          '  ./bin/api list npc --occupation "clerk"',
           '',
           '  # 2. Fetch details — quests linked, node, occupation',
-          '  ./api.sh get npc egil_thorvaldsen',
+          '  ./bin/api get npc egil_thorvaldsen',
           '',
           '  # 3. Edit or link a quest',
-          '  ./api.sh put npc egil_thorvaldsen occupation="wool factor and Hanseatic broker"',
-          '  ./api.sh put quest shk6_act1 npc=egil_thorvaldsen',
+          '  ./bin/api put npc egil_thorvaldsen occupation="wool factor and Hanseatic broker"',
+          '  ./bin/api put quest shk6_act1 npc=egil_thorvaldsen',
           '',
           '── MONSTERS ─────────────────────────────────────────────────────',
           '',
           '  # 1. Find by terrain or keyword',
-          '  ./api.sh list monster --terrain crypt',
-          '  ./api.sh list monster --q "shadow" --tier easy',
+          '  ./bin/api list monster --terrain crypt',
+          '  ./bin/api list monster --q "shadow" --tier easy',
           '',
           '  # 2. Inspect stat block',
-          '  ./api.sh get monster shadow',
+          '  ./bin/api get monster shadow',
           '',
           '  # 3. Tune stats',
-          '  ./api.sh put monster shadow hp=22 ac=13 tier=medium',
+          '  ./bin/api put monster shadow hp=22 ac=13 tier=medium',
           '',
           '── TERRAIN ──────────────────────────────────────────────────────',
           '',
           '  # 1. Find terrain key (needed when creating nodes)',
-          '  ./api.sh list terrain --q "scholar"',
-          '  ./api.sh list terrain --ids',
+          '  ./bin/api list terrain --q "scholar"',
+          '  ./bin/api list terrain --ids',
           '',
           '  # 2. See which monsters are assigned',
-          '  ./api.sh get terrain scholars_qtr',
-          '  ./api.sh list monster --terrain scholars_qtr',
+          '  ./bin/api get terrain scholars_qtr',
+          '  ./bin/api list monster --terrain scholars_qtr',
           '',
           '  # 3. Edit',
-          '  ./api.sh put terrain scholars_qtr label="Scholar\'s Quarter"',
+          '  ./bin/api put terrain scholars_qtr label="Scholar\'s Quarter"',
           '',
           '── CREATE → VERIFY → COMMIT ─────────────────────────────────────',
           '',
-          '  ./api.sh post npc key=marta_vby name="Marta" node=VBY occupation="Flemish intake clerk"',
-          '  ./api.sh get npc marta_vby                   # confirm it landed',
-          '  ./api.sh list quest --arc shk --q "visby"    # find quest ID',
-          '  ./api.sh put quest shk6_act2 npc=marta_vby   # link it',
-          '  ./api.sh audit --raw | jq \'{errors:.errors|length,warnings:.warnings|length}\'',
+          '  ./bin/api post npc key=marta_vby name="Marta" node=VBY occupation="Flemish intake clerk"',
+          '  ./bin/api get npc marta_vby                   # confirm it landed',
+          '  ./bin/api list quest --arc shk --q "visby"    # find quest ID',
+          '  ./bin/api put quest shk6_act2 npc=marta_vby   # link it',
+          '  ./bin/api audit --raw | jq \'{errors:.errors|length,warnings:.warnings|length}\'',
           '',
           '── BULK SEARCH WITH jq ──────────────────────────────────────────',
           '',
           '  # Quests missing desc',
-          '  ./api.sh export quest_db --raw | jq \'[to_entries[]|select(.value.desc==""or.value.desc==null)|.key]\'',
+          '  ./bin/api export quest_db --raw | jq \'[to_entries[]|select(.value.desc==""or.value.desc==null)|.key]\'',
           '',
           '  # All quests for a specific NPC',
-          '  ./api.sh list quest --npc egil_thorvaldsen',
+          '  ./bin/api list quest --npc egil_thorvaldsen',
           '',
           '  # Nodes in act 2 with no quests',
-          '  ./api.sh list node --act 2 --has-quests false',
+          '  ./bin/api list node --act 2 --has-quests false',
           '',
           '  # NPC keys at a node',
-          '  ./api.sh list npc --node NUE --ids',
+          '  ./bin/api list npc --node NUE --ids',
           '',
           'MORE',
-          '  ./api.sh --help             full command reference',
-          `  GET ${b}/api/help/cli    live ./api.sh --help output from server`,
+          '  ./bin/api --help             full command reference',
+          `  GET ${b}/api/help/cli    live ./bin/api --help output from server`,
           `  GET ${b}/api/help/wizard full create workflow`,
           `  GET ${b}/api/help/audit  fixing errors and warnings`,
         ].join('\n'),
       },
     };
 
-    // cli topic — run ./api.sh --help live and return current output
+    // cli topic — run ./bin/api --help live and return current output
     if (topic === 'cli') {
       const { execFile } = require('child_process');
       const apiSh = path.join(ROOT, 'api.sh');
@@ -2779,7 +2779,7 @@ async function route(req, res) {
             res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
             return resolve(res.end(`\n${title}\n${'─'.repeat(title.length)}\n\n${output}\n`));
           }
-          resolve(json(res, 200, { topic, title, text: output, live: true, source: './api.sh --help' }));
+          resolve(json(res, 200, { topic, title, text: output, live: true, source: './bin/api --help' }));
         });
       });
     }
@@ -3209,7 +3209,7 @@ async function route(req, res) {
     logResponse(method, url.pathname, 200, `${snapshots.length} snapshot(s)`);
     return json(res, 200, { ok:true, dir, count:snapshots.length, totalBytes,
       archived: snapshots.filter(s => s.archived).length, snapshots,
-      note:'./archive-snapshots.sh patches each into milepoints/patches and removes it. DELETE /api/snapshots (./api.sh snapshots --sweep) deletes only ones already in that chain.' });
+      note:'./archive-snapshots.sh patches each into build/milepoints/patches and removes it. DELETE /api/snapshots (./bin/api snapshots --sweep) deletes only ones already in that chain.' });
   }
 
   // DELETE /api/snapshots — sweep. Nonce-guarded like every other destructive
@@ -3221,7 +3221,7 @@ async function route(req, res) {
       logResponse(method, url.pathname, 403, 'sweep requires X-Nonce');
       return json(res, 403, { ok:false,
         error:'DELETE /api/snapshots requires a nonce. POST /api/nonce with {type:"snapshot",id:"sweep"} first.',
-        hint:'./api.sh snapshots --sweep does this for you.' });
+        hint:'./bin/api snapshots --sweep does this for you.' });
     }
     const nc = nonceConsume(nonce, 'snapshot', 'sweep');
     if (!nc.ok) {
@@ -3234,7 +3234,7 @@ async function route(req, res) {
     let freedBytes = 0;
     for (const s of snapshots) {
       if (!s.archived && !force) {
-        skipped.push({ name:s.name, reason:'not in the milepoints/patches chain — run ./archive-snapshots.sh to keep its delta, or sweep with force to discard it' });
+        skipped.push({ name:s.name, reason:'not in the build/milepoints/patches chain — run ./archive-snapshots.sh to keep its delta, or sweep with force to discard it' });
         continue;
       }
       try { fs.unlinkSync(path.join(dir, s.name)); deleted.push(s.name); freedBytes += s.bytes; }
@@ -6517,11 +6517,11 @@ async function route(req, res) {
       if (toCandidates.length)   logTrace('smart-connect insertB', `best=${toCandidates[0].code} deg=${toCandidates[0].degree} depth=${toCandidates[0].depth} dist=${toCandidates[0].dist}`);
       if (!fromCandidates.length) return json(res, 409, {
         error: `No open slots found within ${meshRadius} hops of "${fromCode}"`,
-        advice: `Run ./api.sh find-open-location ${fromCode} to inspect the mesh`,
+        advice: `Run ./bin/api find-open-location ${fromCode} to inspect the mesh`,
       });
       if (!toCandidates.length) return json(res, 409, {
         error: `No open slots found within ${meshRadius} hops of "${toCode}"`,
-        advice: `Run ./api.sh find-open-location ${toCode} to inspect the mesh`,
+        advice: `Run ./bin/api find-open-location ${toCode} to inspect the mesh`,
       });
 
       const insertA = fromCandidates[0];
@@ -6559,9 +6559,9 @@ async function route(req, res) {
         return json(res, 200, { ok: true, dryRun: true, plan,
           commands: [
             insertA.needsJunction
-              ? `./api.sh junction ${insertA.code} ${bestDir} --execute  # spawn junction at deg-3 node`
-              : `./api.sh connect ${insertA.code} ${bestDir} ${insertB.code}  # direct connect`,
-            ...(plan.needsFillGap ? [`./api.sh fill-gap ${insertA.code} ${bestDir} ${insertB.code} --execute  # bridge gap`] : []),
+              ? `./bin/api junction ${insertA.code} ${bestDir} --execute  # spawn junction at deg-3 node`
+              : `./bin/api connect ${insertA.code} ${bestDir} ${insertB.code}  # direct connect`,
+            ...(plan.needsFillGap ? [`./bin/api fill-gap ${insertA.code} ${bestDir} ${insertB.code} --execute  # bridge gap`] : []),
           ],
         });
       }
@@ -6570,7 +6570,7 @@ async function route(req, res) {
       // (actual write deferred to api.sh commands — this dry-run plan is the primary output)
       logResponse('POST', url.pathname, 200, `smart-connect: plan for ${insertA.code}→${insertB.code}`);
       return json(res, 200, { ok: true, dryRun: false, plan,
-        note: 'Execute the commands field to apply. smart-connect returns the plan; use ./api.sh connect + fill-gap to execute.' });
+        note: 'Execute the commands field to apply. smart-connect returns the plan; use ./bin/api connect + fill-gap to execute.' });
     }
 
     // ── POST /api/graph/promote-junction ─────────────────────────────────────
@@ -10113,7 +10113,7 @@ async function route(req, res) {
         if (Array.isArray(body.onComplete)) _walkBits(body.onComplete, 'onComplete', _checkBit);
         if (worldErrors.length) {
           logResponse(method, url.pathname, 422, `world-logic: ${worldErrors[0]}`);
-          return json(res, 422, { ok:false, error:'World-logic check failed', worldErrors, hint:'Fix all worldErrors before resubmitting. Run ./api.sh audit to confirm world state.' });
+          return json(res, 422, { ok:false, error:'World-logic check failed', worldErrors, hint:'Fix all worldErrors before resubmitting. Run ./bin/api audit to confirm world state.' });
         }
       }
       const entry = serializeQuestLiteral(id, body);
@@ -10530,7 +10530,7 @@ async function route(req, res) {
           return json(res, 422, { ok:false, error:`Field "${field}" must be a string — nothing was written` });
         }
       }
-      // `monsters` accepts a JSON array or a comma-separated string (./api.sh put
+      // `monsters` accepts a JSON array or a comma-separated string (./bin/api put
       // terrain sewers monsters=giant_rat,zombie). Every key is validated against
       // MONSTER_POOL by editTerrainRoster, which refuses without touching source.
       let roster = null;
@@ -11509,7 +11509,7 @@ server.listen(PORT, BIND_ADDR, () => {
   console.log(`  Game file: ${C.cyan}${GAME_FILE}${C.reset}`);
   console.log(`  Log file:  ${C.cyan}${LOG_FILE}${C.reset}`);
   const modeColor = { fast: C.dim, debug: C.yellow, trace: C.cyan }[currentMode] || C.white;
-  console.log(`  Mode:      ${modeColor}${C.bold}${currentMode.toUpperCase()}${C.reset}  ${C.dim}verbose=${VERBOSE} trace=${TRACE}  · ./api.sh mode [fast|debug|trace]${C.reset}`);
+  console.log(`  Mode:      ${modeColor}${C.bold}${currentMode.toUpperCase()}${C.reset}  ${C.dim}verbose=${VERBOSE} trace=${TRACE}  · ./bin/api mode [fast|debug|trace]${C.reset}`);
   console.log(`\n  ${C.dim}Endpoints:${C.reset}`);
   const routes = [
     ['GET',    '/api/help[/{topic}]             → man-page style docs (read|write|nonce|wizard|curl|...)'],
@@ -11613,8 +11613,8 @@ server.listen(PORT, BIND_ADDR, () => {
   // ── Quick-start examples ──
   const b = `http://localhost:${PORT}`;
   console.log(`\n${C.bold}  Quick-start examples${C.reset}`);
-  console.log(`  ${C.dim}Open in browser (or worldbuilder.html):${C.reset}`);
-  console.log(`    ${C.cyan}open worldbuilder.html${C.reset}  ${C.dim}← click "Localhost Server" card${C.reset}`);
+  console.log(`  ${C.dim}Open in browser (or edit.html):${C.reset}`);
+  console.log(`    ${C.cyan}open edit.html${C.reset}  ${C.dim}← click "Localhost Server" card${C.reset}`);
   console.log(`\n  ${C.dim}curl:${C.reset}`);
   console.log(`    ${C.green}curl${C.reset} ${C.dim}${b}/api/ping${C.reset}`);
   console.log(`    ${C.green}curl${C.reset} ${C.dim}${b}/api/node/CY${C.reset}           ${C.dim}# node by code${C.reset}`);

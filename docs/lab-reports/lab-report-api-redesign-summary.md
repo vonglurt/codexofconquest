@@ -252,7 +252,7 @@ New files:
 Modified files:
   src/api/wb.js                     14 new commands, ToC help, man-page reorganization
   wbapi-server.js               8 new endpoints, auto-junction, TRACE logging
-  worldbuilder.html             Grid tab rewrite, node editor alignment, API How-To
+  edit.html             Grid tab rewrite, node editor alignment, API How-To
   API-README.md                 Complete rewrite (api.sh only, no curl)
   wbapi-help.md                 Compact quick-reference
 ```

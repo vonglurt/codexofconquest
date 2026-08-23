@@ -288,7 +288,7 @@ The strip pass is built into the API as §CELL-14. It runs through the worldbuil
 
 - [ ] **E1.** Confirm `POST /api/node` no longer accepts `N/S/E/W` (they're stripped server-side anyway, but the API surface should reject them).
 - [ ] **E2.** Confirm `GET /api/cell/:r/:c` returns `{ code, node }` for a placed cell and `{ code: null, terrain }` for an empty cell.
-- [ ] **E3.** Worldbuilder UI (`worldbuilder.html`) — verify the editor never asks the human for exit fields. Placing a node is `(code, r, c, name, label, act)` and nothing else.
+- [ ] **E3.** Worldbuilder UI (`edit.html`) — verify the editor never asks the human for exit fields. Placing a node is `(code, r, c, name, label, act)` and nothing else.
 
 ### Phase F — docs
 

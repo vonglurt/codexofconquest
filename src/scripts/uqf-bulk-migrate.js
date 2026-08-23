@@ -24,9 +24,9 @@
  * _resolveQuestUQF itself; no legacy quest in scope carries checkFailFlag).
  *
  * Usage:
- *   node scripts/uqf-bulk-migrate.js --prefix hav_           # migrate a family
- *   node scripts/uqf-bulk-migrate.js id1,id2,id3             # explicit ids
- *   node scripts/uqf-bulk-migrate.js --prefix hav_ --dry     # report only
+ *   node src/scripts/uqf-bulk-migrate.js --prefix hav_           # migrate a family
+ *   node src/scripts/uqf-bulk-migrate.js id1,id2,id3             # explicit ids
+ *   node src/scripts/uqf-bulk-migrate.js --prefix hav_ --dry     # report only
  */
 'use strict';
 const fs = require('fs');

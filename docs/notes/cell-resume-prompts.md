@@ -889,7 +889,7 @@ TASK:
 
    GET /api/grid/region?r1=N&c1=N&r2=N&c2=N
    → Returns 2D array (r2-r1+1 rows × c2-c1+1 cols) of cell descriptors.
-     Useful for map rendering tools and worldbuilder.html map view.
+     Useful for map rendering tools and edit.html map view.
 
    GET /api/grid/heatmap
    → Triggers heatmap computation (same as §CELL-06 implementation) and returns

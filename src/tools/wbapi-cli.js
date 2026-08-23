@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
-// wbapi-cli.js — Roll2Hit World Builder command-line interface
+// wbapi-cli.js — Codex of Conquest World Builder command-line interface
 // Usage: node wbapi-cli.js <command> [args...]  -- see: node wbapi-cli.js help
 
 const fs   = require('fs');
@@ -312,7 +312,7 @@ function printSchemaHelp(type) {
 
 // ── Help text ─────────────────────────────────────────────────────────────────
 const HELP_TEXT = `
-Roll2Hit World Builder CLI
+Codex of Conquest World Builder CLI
 Usage: node wbapi-cli.js <command> [type] [id] [field] [value] [--flags]
 
 QUERY COMMANDS

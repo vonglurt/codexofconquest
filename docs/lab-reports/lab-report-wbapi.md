@@ -4,7 +4,7 @@
 
 **Filed:** 2026-05-29 · **Ship commit:** `2d42ea2` · **Retrofitted:** `77c517f` (2026-06-05), Appendix A added `8b75986` (2026-06-05)
 **Verified against HEAD:** 2026-08-13 (§DOC-02aq)
-**Subject:** the authoring layer over `roll2hit-v3.html` — `wbapi-core.js` · `wbapi-server.js` · `worldbuilder.html` · the CLI
+**Subject:** the authoring layer over `roll2hit-v3.html` — `wbapi-core.js` · `wbapi-server.js` · `edit.html` · the CLI
 
 ---
 
@@ -87,7 +87,7 @@ records what that retrofit walked past.
 |---|---|---|
 | `wbapi-core.js` | parse + CRUD + save/export/sync | ✅ `src/js/wbapi-core.js` |
 | `wbapi-server.js` | HTTP layer, port 1367 | ✅ `src/js/wbapi-server.js` |
-| `worldbuilder.html` | browser UI — Map, Bestiary, NPCs, Quests, Dice Lab, ⚙ API tab | ✅ |
+| `edit.html` | browser UI — Map, Bestiary, NPCs, Quests, Dice Lab, ⚙ API tab | ✅ |
 | `api.sh` / `src/api/wb.js` | primary CLI — queued HTTP, auto-nonce, retry, `--ai` | ✅ *(retrofit — see §II)* |
 | `wbapi-cli.js` | low-level CLI — direct in-process | ❌ **retired** (`5e48dd7`) |
 | `wbapi-help.md` | field reference + cheatsheet | ✅ `docs/api/wbapi-help.md` |
@@ -243,7 +243,7 @@ five tiers now sum to 398 of 398.**
 | Patch | *All mutations … patch `_rawSrc`* | `put()` is in-memory only, as the same section says two paragraphs later | ⚠️ self-contradictory |
 | Patch | `patchStringField` regex, quoted | real regex anchors on `${entryKey}\s*:` — the key's own **declaration**, not any occurrence of its text | ⚠️ near-verbatim, not verbatim |
 | Delete | cascade guard blocks on quests/NPCs/terrains/flags | still there; quest list **double-counts** and the flag leg is empty | ❌ **LIVE DEFECT** — §VI-1, §VI-2 |
-| Export | `DIFF.json()` shape | `worldbuilder.html:const DIFF = {@2408`, `json()` returns exactly that shape | ✅ — *browser-side, not a `wbapi-core` export* |
+| Export | `DIFF.json()` shape | `edit.html:const DIFF = {@2448`, `json()` returns exactly that shape | ✅ — *browser-side, not a `wbapi-core` export* |
 | Export | *The original file is **never modified**. Every `save()` produces a new timestamped copy.* | **inverted** — writes persist per-write via `saveGameFile()`; `src/js/wbapi-core.js:save() requires a destination path@1662` refuses the argless call | 🕳 **RETIRED** — §VI-4 |
 | Export | `wbapi-cli.js export ./world` / `sync ./world` | `src/js/wbapi-core.js:exportWorld(dir) {@1694` / `src/js/wbapi-core.js:syncWorld(dir) {@1743` | ✅ mechanism survives its CLI |
 | Browser | ⚙ API tab: GET/PUT/DELETE/MOVE, schema tables, pre-fill | all present | ✅ |

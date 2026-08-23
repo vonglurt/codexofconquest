@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
-// wbapi-core.js — Roll2Hit World Builder data layer for Node.js
-// Mirrors the parsing logic in worldbuilder.html.
+// wbapi-core.js — Codex of Conquest World Builder data layer for Node.js
+// Mirrors the parsing logic in edit.html.
 // Usage: const WBAPI = require('./wbapi-core'); WBAPI.load('./play.html');
 
 const fs   = require('fs');
@@ -926,7 +926,7 @@ const WBAPI = {
     get(idOrName){ const k=WBAPI._findKey(WBAPI.monsterPool,idOrName); return k?{...WBAPI.monsterPool[k],key:k,drop:WBAPI.monsterDrops[k]||null,terrains:WBAPI._monsterToTerrains[k]||[]}:null; },
     put(id,data) { WBAPI.monsterPool[id]={...(WBAPI.monsterPool[id]||{}),...data}; return {ok:true,key:id}; },
     // §DX-01i — deletes at SOURCE level (see WBAPI.deleteEntrySource). The trophy
-    // drop is cascaded: leaving it behind creates the orphan-drop error `./api.sh
+    // drop is cascaded: leaving it behind creates the orphan-drop error `./bin/api
     // audit` already reports.
     delete(idOrName) {
       const k=WBAPI._findKey(WBAPI.monsterPool,idOrName); if(!k) return {ok:false,error:'not found'};
@@ -1027,7 +1027,7 @@ const WBAPI = {
   // profile key instead of resolving to it, and `_questsByNpc` indexes one person under
   // two headings. Live proof: `city_guard_captain` (LHR's inline string) held 5 quests
   // while `yael` — the same woman, named in LHR's own node text — held 17, and the delete
-  // guard, `./api.sh location` and every quest-count surface saw only one half at a time.
+  // guard, `./bin/api location` and every quest-count surface saw only one half at a time.
   //
   // Each row is corroborated from the LIVE registries, never from a doc (§AUDIT-03l):
   //   slug                        → key                  corroboration
@@ -1204,10 +1204,10 @@ const WBAPI = {
     },
     // §DX-01d — deletes at SOURCE level (see WBAPI.deleteEntrySource), NODE_MAP and
     // NODE_COORDS together. This is the model/file desync Hazard #4 described for
-    // `./api.sh del node J##`: it was never junction-specific, every node delete
+    // `./bin/api del node J##`: it was never junction-specific, every node delete
     // reported success and changed nothing on disk. The coord entry is cascaded
     // because a NODE_COORDS row for a node that no longer exists is an orphan
-    // `./api.sh audit`/`check:roads` then has to reason about.
+    // `./bin/api audit`/`check:roads` then has to reason about.
     delete(codeOrName) {
       const k=WBAPI._findKey(WBAPI.nodeMap,codeOrName); if(!k) return {ok:false,error:'not found'};
       const d=WBAPI._deps.node(k); if(d.quests.length||d.npcs.length) return {ok:false,blockedBy:d};

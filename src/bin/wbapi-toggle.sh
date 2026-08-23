@@ -17,7 +17,7 @@
 # or by running this script again. POST /api/restart exits the server cleanly
 # (exit 0); this script does NOT auto-relaunch on that.
 
-SCRIPT="js/wbapi-server.js"
+SCRIPT="src/js/wbapi-server.js"
 DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 CMD="${1:-toggle}"
 
@@ -134,6 +134,6 @@ case "$CMD" in
     echo "       (no arg = toggle)"
     echo ""
     echo "  fg   — foreground mode: terminal stays attached, log scrolls live"
-    echo "  start — background mode: runs silently, log goes to milepoints/wbapi-server.log"
+    echo "  start — background mode: runs silently, log goes to build/milepoints/wbapi-server.log"
     exit 1 ;;
 esac

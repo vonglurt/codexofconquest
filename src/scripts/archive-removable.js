@@ -9,8 +9,8 @@
 //   <!-- /REMOVABLE -->
 //
 // Then run:
-//   node scripts/archive-removable.js <source.md> <archive.md> --dry   # preview
-//   node scripts/archive-removable.js <source.md> <archive.md>         # apply
+//   node src/scripts/archive-removable.js <source.md> <archive.md> --dry   # preview
+//   node src/scripts/archive-removable.js <source.md> <archive.md>         # apply
 //
 // Each marked block is appended VERBATIM to the archive file (under a dated
 // "Removable items archived from <source>" section, one "### <id>" heading per
@@ -20,7 +20,7 @@ const fs = require('fs');
 
 const [, , srcPath, archPath, flag] = process.argv;
 if (!srcPath || !archPath) {
-  console.error('usage: node scripts/archive-removable.js <source.md> <archive.md> [--dry]');
+  console.error('usage: node src/scripts/archive-removable.js <source.md> <archive.md> [--dry]');
   process.exit(2);
 }
 const dry = flag === '--dry';
@@ -52,7 +52,7 @@ for (const m of moved) {
 if (dry) process.exit(0);
 
 let arch = `\n---\n\n## Removable items archived from ${srcPath} (${today})\n\n`;
-arch += `> Moved by \`scripts/archive-removable.js\`; each block is verbatim. A pointer quote remains at the original location.\n\n`;
+arch += `> Moved by \`src/scripts/archive-removable.js\`; each block is verbatim. A pointer quote remains at the original location.\n\n`;
 for (const m of moved) arch += `### ${m.id}\n\n${m.body}\n\n`;
 
 fs.appendFileSync(archPath, arch);

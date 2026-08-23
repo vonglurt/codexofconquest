@@ -20,8 +20,8 @@
 // this phase fails on any textual-vs-parsed key mismatch so that class of
 // silent drop can never return.
 //
-// Usage:  node scripts/check-dupkeys.js            # audit, exit 1 on findings
-//         node scripts/check-dupkeys.js --selftest # prove the scanner catches
+// Usage:  node src/scripts/check-dupkeys.js            # audit, exit 1 on findings
+//         node src/scripts/check-dupkeys.js --selftest # prove the scanner catches
 //                                                  # a planted duplicate
 'use strict';
 const fs = require('fs');

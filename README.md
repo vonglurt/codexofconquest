@@ -25,7 +25,7 @@ Edge) with JavaScript enabled.
 - The file is self-contained: you can email it, drop it on a USB stick, or serve
   it from any static host.
 
-> `worldbuilder.html` is the **authoring tool** (a visual editor for the world
+> `edit.html` is the **authoring tool** (a visual editor for the world
 > data). The game does **not** need it — it's only used when building content.
 
 ---
@@ -40,7 +40,7 @@ test, and host** that one file:
   document, every doc entry traces back to a line in the HTML.
 - **The WBAPI server** (`wbapi-server.js`) is an optional local REST API that
   reads the HTML and writes edits back in place, so content can be authored via
-  `worldbuilder.html` / `./api.sh` instead of editing 37k lines by hand.
+  `edit.html` / `./api.sh` instead of editing 37k lines by hand.
 - **Tests** (`src/tests/`, `src/scripts/`) guard the world's invariants.
 
 If you only want to play, you never need any of that — just open the HTML.
@@ -73,7 +73,7 @@ required. Rename it to `play.html` if you want it served at the site root.
 ### 3. Run the authoring / API server (content editing)
 
 The World Builder API server lets you edit the game's data programmatically and
-through `worldbuilder.html`. You need **Node.js**.
+through `edit.html`. You need **Node.js**.
 
 ```bash
 # Install Node (macOS, via Homebrew — https://brew.sh)
@@ -91,7 +91,7 @@ npm install
 ./api.sh help
 ./api.sh list node
 
-# Author visually: open worldbuilder.html in a browser while the server runs
+# Author visually: open edit.html in a browser while the server runs
 ```
 
 The server reads and rewrites `play.html` in place. See
@@ -117,7 +117,7 @@ npm run test:mud        # MUD server-protocol harness
 
 ```
 play.html        ← THE GAME (single file — open this to play)
-worldbuilder.html       ← visual authoring tool (needs the WBAPI server)
+edit.html       ← visual authoring tool (needs the WBAPI server)
 
 # Launch / ops scripts (root)
 api.sh                  ← WBAPI CLI wrapper  (→ src/api/wb.js)
@@ -235,6 +235,48 @@ MIT. Fork it. Extend it. Write Level 21. See [LICENSE](LICENSE) for full text.
 *© 2026 Paul Richeson — MIT License.*
 
 ---
+
+---
+
+## Layout
+
+```
+index.html          project landing page (start here)
+play.html           THE GAME — one file, no build, no server
+edit.html   visual world/quest/mission-bit editor
+Makefile            every way to start things
+run.sh              the single entry point the Makefile delegates to
+bin/                shortcuts: ./bin/run, ./bin/play, ./bin/wbapi, ./bin/check …
+src/                all implementation
+  js/               engine + WBAPI server modules
+  server/           start-wbapi.sh — announces where node runs, then execs it
+  api/ scripts/ tools/ bin/ importers/ tests/ config/ sources/
+docs/               design/ backlog/ lab-reports/ api/ maps/ mechanics/ notes/ spec/
+build/              generated + runtime output (gitignored)
+vendor/             working material, not published (gitignored)
+```
+
+### Running it
+
+```
+make            # list every target
+make run        # API + monitor in terminals, opens the landing page
+make play       # API + monitor, opens the game
+make worldbuilder
+make wbapi      # just the node API server, announcing its working dir
+make check      # the full gate chain
+make stop
+```
+
+To just play, open `play.html`. Nothing else is required.
+
+**Why `package.json` stays at the repo root:** node resolves `node_modules` by
+walking *up* from the entry file, and npm expects its manifest at the project
+root. Moving it into `src/` would put `node_modules` there too and break every
+tool that assumes the conventional layout. Instead, `src/server/start-wbapi.sh`
+always `cd`s to the repo root and prints the node binary, the working directory,
+the entry file and the port before it launches — so there is never a question of
+where node is running from.
 
 ## Author
 

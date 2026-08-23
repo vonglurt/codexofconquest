@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Roll2Hit World Builder</title>
+<title>Codex of Conquest World Builder</title>
 <style>
 :root {
   --bg:      #0d1117; --bg2:     #161b22; --bg3:     #21262d;
@@ -396,9 +396,49 @@ select.fi{appearance:none;}
 </style>
 </head>
 <body>
+<!-- ── Connection notice ─────────────────────────────────────────────────────
+     The World Builder is designed to talk to the local WBAPI server. Opened
+     straight off disk it can render, but the browser blocks the reads and
+     writes it needs, so loading a world from file is not supported.        -->
+<div id="wb-conn-notice" role="status" style="display:none;font:14px/1.5 ui-monospace,Menlo,monospace;
+     padding:.85rem 1.1rem;border-bottom:3px solid #8B4A2A;background:#FEA712;color:#2A1A0A">
+  <strong id="wb-conn-title">⚠ No API connection</strong>
+  <span id="wb-conn-body"></span>
+  <div style="margin-top:.5rem;font-size:13px">
+    Start it with <code style="background:#F0E6C8;padding:.1em .35em;border-radius:3px">make wbapi</code>
+    (or <code style="background:#F0E6C8;padding:.1em .35em;border-radius:3px">./bin/wbapi</code>)
+    from the project root, then reload this page.
+  </div>
+</div>
+<script>
+(function () {
+  var box = document.getElementById('wb-conn-notice'),
+      ttl = document.getElementById('wb-conn-title'),
+      msg = document.getElementById('wb-conn-body'),
+      isFile = location.protocol === 'file:';
+  function show(title, text, colour) {
+    ttl.textContent = title; msg.textContent = ' ' + text;
+    box.style.background = colour; box.style.display = 'block';
+  }
+  if (isFile) {
+    show('\u26a0 Opened from disk \u2014 file loading is not supported.',
+         'You are on file://, so the browser will not let the World Builder read or write world data. ' +
+         'An API connection is strongly suggested; without it, editing and saving will not work.', '#E76219');
+  }
+  var ctrl = new AbortController(), t = setTimeout(function () { ctrl.abort(); }, 2500);
+  fetch('http://localhost:1367/api/ping', { signal: ctrl.signal })
+    .then(function (r) { clearTimeout(t); if (!r.ok) throw 0; box.style.display = 'none'; })
+    .catch(function () {
+      clearTimeout(t);
+      if (!isFile) show('\u26a0 No API connection.',
+        'The WBAPI server is not answering on localhost:1367. An API connection is suggested \u2014 ' +
+        'loading a world from file may not be supported.', '#FEA712');
+    });
+})();
+</script>
 
 <div id="topbar">
-  <h1>◆ Roll2Hit World Builder</h1>
+  <h1>◆ Codex of Conquest World Builder</h1>
   <div class="nav-tab active" data-tab="map">🗺 Map</div>
   <div class="nav-tab" data-tab="bestiary">⚔ Bestiary</div>
   <div class="nav-tab" data-tab="loot">🎣 Loot</div>
@@ -432,7 +472,7 @@ select.fi{appearance:none;}
 
   <!-- ═══ WELCOME SCREEN ═══ -->
   <div id="welcome-screen">
-    <div class="welcome-logo">◆ Roll2Hit World Builder</div>
+    <div class="welcome-logo">◆ Codex of Conquest World Builder</div>
     <div class="welcome-sub">Choose a data source to begin</div>
     <div style="position:absolute;bottom:14px;right:18px;font-size:10px;color:var(--muted)">MIT License · <a href="mailto:paulr@sdf.org" style="color:var(--muted);text-decoration:none">paulr@sdf.org</a></div>
 
@@ -2467,7 +2507,7 @@ const DIFF = {
 
   patch() {
     const ts = new Date().toISOString();
-    const lines = [`// Roll2Hit World Builder Patch — ${ts}`];
+    const lines = [`// Codex of Conquest World Builder Patch — ${ts}`];
 
     // NODE_MAP
     lines.push('(function applyPatch(NODE_MAP, QUEST_DB, MONSTER_POOL, BIRKA_NPC){');
@@ -10506,7 +10546,7 @@ window.__walkG = {
          You are about to fetch it from <b id="mesh-dl-addr"></b>.</p>
       <p style="margin-top:8px"><b>Before you ever open it:</b></p>
       <ol style="margin:6px 0 6px 18px">
-        <li>Run <code>node scripts/world-diff.js roll2hit-v3.html &lt;downloaded file&gt;</code> —
+        <li>Run <code>node src/scripts/world-diff.js roll2hit-v3.html &lt;downloaded file&gt;</code> —
             it shows the <b>modification set</b> per collection and prints a loud
             <b>CODE DIFFERS</b> block if any JavaScript changed. Review every non-data change by hand.</li>
         <li>It is <b>MIT-licensed</b> — attribution carries with the file.</li>
@@ -10611,7 +10651,7 @@ window.__walkG = {
       a.download = `world-${sid.slice(0, 8)}-${wh}.html`;
       a.click();
       URL.revokeObjectURL(a.href);
-      st.innerHTML = `Saved as <b>${a.download}</b> — now run: <code>node scripts/world-diff.js roll2hit-v3.html ~/Downloads/${a.download}</code>`;
+      st.innerHTML = `Saved as <b>${a.download}</b> — now run: <code>node src/scripts/world-diff.js roll2hit-v3.html ~/Downloads/${a.download}</code>`;
     } catch (e) {
       st.textContent = `Download failed: ${e.message}`;
     }

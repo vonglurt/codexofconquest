@@ -129,7 +129,7 @@ manifest, so every later wave was gated by a harness already proven to read the 
 | 5 | 22 branches migrated (9 b2a + 13 b2b) | `check:laddermigration`: **22 quests, 148/148 checks** | ✅ **EXACT** |
 | 6 | b1 allow-list: 13 optional fields | `for (const f of ['desc', 'description'@26182` carries all 13 **plus `heal`** | ✅ 13/13 shipped; ➕ grown to 14 |
 | 7 | `silent:true` added | `if (!s.silent) msgs.push@26189`; all 22 migrated grants carry it | ✅ SHIPPED |
-| 8 | Four sites in lockstep | Runtime ✓ · `worldbuilder.html:const GRANT_RICH = [@8567` ✓ · widget `worldbuilder.html:{f:'silent',chk:true}@8558` ✓ · `src/scripts/check-itemchain.js:grant passes heal@81` ✓ — and all four carry `heal` | ✅ held through a later widening by a different track |
+| 8 | Four sites in lockstep | Runtime ✓ · `edit.html:const GRANT_RICH = [@8607` ✓ · widget `edit.html:{f:'silent',chk:true}@8598` ✓ · `src/scripts/check-itemchain.js:grant passes heal@81` ✓ — and all four carry `heal` | ✅ held through a later widening by a different track |
 | 9 | Never emit `once:false` | 0 occurrences file-wide | ✅ HELD |
 | 10 | 3 named load-bearing names survive | `const KEY_EVENTS = [@26207` holds 7 items; all three named ones grant through `itemChain` | ✅ VERIFIED |
 | 11 | Guard wired into CI beside `check:itemchain` | `walk-invariants.yml` runs both on the same push paths | ✅ EXACT |

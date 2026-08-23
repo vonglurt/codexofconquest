@@ -18,7 +18,7 @@
 //
 // The assertions pin: (1) the round trip — save+reload must not resurrect the
 // entry; (2) the cascades (NODE_COORDS row, MONSTER_DROPS trophy) so a delete
-// leaves no orphan for `./api.sh audit` to find; (3) verify-or-revert — a splice
+// leaves no orphan for `./bin/api audit` to find; (3) verify-or-revert — a splice
 // that would take a neighbour with it must abort with the source untouched;
 // (4) the dependency guards still block; (5) `--execute` on the deprecated
 // highway builder is refused (§DX-01d, the tool that manufactured J14/J15).
@@ -81,7 +81,7 @@ test.describe('§DX-01d/i — a delete that reports success must persist', () =>
     const after = roundTrip(W);
     expect(after.monsterPool[key], `${key} came back after save+reload`).toBeFalsy();
     expect(Object.keys(after.monsterPool).length).toBe(before.monsters - 1);
-    // Cascade: an orphaned MONSTER_DROPS row is an error `./api.sh audit` reports.
+    // Cascade: an orphaned MONSTER_DROPS row is an error `./bin/api audit` reports.
     if (hadDrop) {
       expect(after.monsterDrops[key], 'trophy drop left orphaned').toBeFalsy();
       expect(Object.keys(after.monsterDrops).length).toBe(before.drops - 1);

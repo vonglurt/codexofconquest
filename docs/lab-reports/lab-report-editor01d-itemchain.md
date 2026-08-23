@@ -66,7 +66,7 @@ patchable over HTTP, and checkable by a gate.
 1. Establish the reference build (`8560254^`) and replay every "as-written" count there, never at
    HEAD (instrument 11).
 2. Resolve all ten line citations against the reference build's `roll2hit-v3.html`,
-   `worldbuilder.html` and the then-root `wbapi-server.js`.
+   `edit.html` and the then-root `wbapi-server.js`.
 3. `git log -S "<symbol>" --all` **with no pathspec** on every symbol the report calls new or
    absent, to separate NOT SHIPPED from RETIRED (instruments 4, 67).
 4. Census the field at HEAD **through `wbapi-core`'s parser**, not a line regex (instrument 51/74).
@@ -106,7 +106,7 @@ inlining pushes, filters, gold, favor and `msgs.push`.
 |---|---|---|---|
 | ladder branches | 58 | **61** | ✗ |
 | quests defining `onComplete` | 27 | **27** (`onComplete:`) | ✓ |
-| `itemChain` references in `roll2hit-v3.html`, `worldbuilder.html`, `wbapi-core.js`, `wbapi-server.js` | 0 ("greenfield") | **0 / 0 / 0 / 0** | ✓ |
+| `itemChain` references in `roll2hit-v3.html`, `edit.html`, `wbapi-core.js`, `wbapi-server.js` | 0 ("greenfield") | **0 / 0 / 0 / 0** | ✓ |
 | `_takeMissionBit` exists | no | **0 occurrences** | ✓ |
 
 ---
@@ -125,16 +125,16 @@ inlining pushes, filters, gold, favor and `msgs.push`.
 | §MBIT-02-E gate safety | `` `kept gate-referenced flag@26160` `` |
 | The one live hook | `` `msgs.push(..._applyItemChain(q)); // §EDITOR-01-D@30198` `` |
 | Ladder's obituary, in the engine | `` `W7c folded the per-id hardcoded effects block (61 ids@30193` `` |
-| Pipe codec (parse) | `` `worldbuilder.html:function parseItemChainText(txt) {@8493` `` |
-| `desc` re-join — the limitation that dissolved | `` `worldbuilder.html:if (p[5]) step.desc = p.slice(5)@8502` `` |
-| CRUD field declaration | `` `worldbuilder.html:arr:'itemchain',ta:true@6106` `` |
+| Pipe codec (parse) | `` `edit.html:function parseItemChainText(txt) {@8533` `` |
+| `desc` re-join — the limitation that dissolved | `` `edit.html:if (p[5]) step.desc = p.slice(5)@8542` `` |
+| CRUD field declaration | `` `edit.html:arr:'itemchain',ta:true@6146` `` |
 | Quest-create serializer (§ARCH-01 W8b) | `` `src/js/wbapi-server.js:const JSONF@1710` `` |
 | Parity guard's live branch tally | `` `src/scripts/check-ladder-migration.js:ladder branches@265` `` |
 
 **Ten of ten line citations byte-exact at the reference build:** `_rollCeremonia` 6246–6251 (6246 =
 `if (passed) {`, 6247 = the `'done'` set, 6251 = `if (q.onPass) q.onPass();`) · `storyCheckQuests`
 25820–25829 (25821 = the `'active'` guard, 25829 = `if (q.onComplete) q.onComplete();`) · ladder
-25835–26054 · handler literal ~30534 · `edBuildQuestObj` at `worldbuilder.html` **9082** · the PUT
+25835–26054 · handler literal ~30534 · `edBuildQuestObj` at `edit.html` **9082** · the PUT
 Array branch at the then-root `wbapi-server.js` **8905**. This equals the corpus best.
 
 ---

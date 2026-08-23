@@ -37,7 +37,7 @@ fi
 # `git add -A -- build/milepoints/` follows .gitignore, so the ignored patches/
 # directory is skipped automatically — only tracked files (heatmaps,
 # reweave-maps, api-cli.log, say.log) get their deletions/edits staged.
-# Errors are tolerated: a fresh clone may not have milepoints/ yet.
+# Errors are tolerated: a fresh clone may not have build/milepoints/ yet.
 git -C "$REPO_ROOT" add -A -- build/milepoints/ 2>/dev/null || true
 
 # Stamped HTML snapshots at repo root (roll2hit-v3-YYYYMMDD-HHMMSS.html)

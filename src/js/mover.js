@@ -6,7 +6,7 @@
 //
 // The region between the MOVER:CORE sentinels is inlined BYTE-IDENTICALLY into
 // play.html; §WALK-4 walk-parity asserts the two copies match. Do not
-// edit one copy without the other (or run: node scripts/check-mover-parity.js).
+// edit one copy without the other (or run: node src/scripts/check-mover-parity.js).
 //
 // world (read-only geo-grid snapshot, §4.1):
 //   { proj:{ROWS,COLS},          // §2.1 equirectangular 1° — 360 cols × 90 rows

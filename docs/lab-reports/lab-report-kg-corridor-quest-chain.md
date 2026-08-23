@@ -187,7 +187,7 @@ proves `QuestRuntime.canComplete` honours it. The reader was verified; the write
 | 7 | Six item grants incl. Field Ration as heal consumable | all six as `itemChain grant`; Field Ration `heal:20` | ✅ exact |
 | 8 | Bout Token (kg_05) · Prime Core (kg_09) tabled as **items** | shipped as `mission_bit` **labels** | ⚠ form differs — kg_01's papers were correctly marked mission_bit; these two were not |
 | 9 | skill_check `bits` with `onPass[…]` / `onFail[…]` | `onPass` populated, **`onFail:[]` on both** | ⚠ narrowed — a failed check is silent |
-| 10 | *"the entire mechanical footprint of Inc 3"* | ship also widened the itemChain grant allow-list with `'dmgFlat', 'heal']) {@26183`, in lockstep across `worldbuilder.html:const GRANT_RICH = ['description','readText','readableKey'@8567` and `check-itemchain.js`, and repaired a pre-existing `_gateFlagSet` crash in that harness | ⚠ **understated at ship** — 5 sites tabled, 6 engine sites + 2 support files needed |
+| 10 | *"the entire mechanical footprint of Inc 3"* | ship also widened the itemChain grant allow-list with `'dmgFlat', 'heal']) {@26183`, in lockstep across `edit.html:const GRANT_RICH = ['description','readText','readableKey'@8607` and `check-itemchain.js`, and repaired a pre-existing `_gateFlagSet` crash in that harness | ⚠ **understated at ship** — 5 sites tabled, 6 engine sites + 2 support files needed |
 | 11 | §6 XP model → *"≈5,697, just past L6"* | **5,301** — 199 short of 5,500 | ❌ **wrong when written** (§VI) |
 | 12 | *"Gold ≈ 550 across the chain"* | **450** | ❌ wrong when written |
 | 13 | *"winning a node card battle … increments the kill counter"* | nothing increments the kill counter | ❌ **NOT SHIPPED** (§IV) |

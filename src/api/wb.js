@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // Copyright (c) 2026 Paul Richeson <paulr@sdf.org> — CodexOfConquest.com
 'use strict';
-// api/wb.js — Roll2Hit WBAPI CLI wrapper
+// api/wb.js — Codex of Conquest WBAPI CLI wrapper
 // SDK-pattern queue with retry/backoff; Claude AI assist via --ai
 
 const http  = require('http');
@@ -24,7 +24,7 @@ let   TIMEOUT  = 10_000;
 const AI_KEY   = process.env.ANTHROPIC_API_KEY;
 const AI_MODEL = 'claude-haiku-4-5-20251001';
 
-// ── CLI Log — milepoints/api-cli.log ─────────────────────────────────────────
+// ── CLI Log — build/milepoints/api-cli.log ─────────────────────────────────────────
 const path     = require('path');
 const LOG_FILE = path.join(__dirname, '..', '..', 'build', 'milepoints', 'api-cli.log');
 const _logStart = new Date().toISOString();
@@ -239,36 +239,36 @@ function readStdin() {
 }
 
 // ── Claude AI assistant ────────────────────────────────────────────────────────
-const AI_SYSTEM = `You are a concise assistant for the Roll2Hit World Builder API (WBAPI) at localhost:1367.
+const AI_SYSTEM = `You are a concise assistant for the Codex of Conquest World Builder API (WBAPI) at localhost:1367.
 The game is a D&D 5e world stored in a single HTML file. The API manages: nodes (map locations), quests, monsters, npcs, terrain.
 
-./api.sh CLI cheatsheet:
-  ./api.sh ping                                 check server
-  ./api.sh count [nodes|quests|monsters|npcs|terrains|coords]  breakdown stats
-  ./api.sh get <type> <id>                      fetch entity JSON
-  ./api.sh list [type]                          list (no type = index)
-  ./api.sh list ids <type>                      IDs-only array
-  ./api.sh list node --act N --terrain X --q text --no-coords --has-quests bool --junction bool --ids
-  ./api.sh list quest --node X --type X --arc X --npc X --monster X --has-npc bool --ids
-  ./api.sh list monster --terrain X --tier X --has-drop bool --no-terrain --ids
-  ./api.sh list npc --node X --occupation X --q text --ids
-  ./api.sh put <type> <id> k=v [k=v]            update fields
-  ./api.sh post <type> k=v [k=v]                create entity (nonce auto-handled)
-  ./api.sh del <type> <id>                      delete (nonce auto-handled)
-  ./api.sh audit [--map] [--data] [--section node|quest|monster|terrain|coords]  integrity scan
-  ./api.sh chain <quest-id>                     quest dependency chain
-  ./api.sh advise <quest-id>                    §ARCH-02 Ph5: quest fields + chain + advisory in one call
-  ./api.sh batch-npc <updates.json>             §AUDIT-03b: bulk quest.npc re-anchor, one save ([{id,npc},…])
-  ./api.sh export <collection>                  dump JSON (node_map quest_db monster_pool world_db all)
-  ./api.sh location [code]                      composite view (no code = list all)
-  ./api.sh speak <npc> "<prompt>" --state neutral|friendly|dearFriend
-  ./api.sh import <file.json>                   bulk import nodes + quest cycles  [--out file]
-  ./api.sh roads [pins]                         road net summary / pins file (§NAV-01h)
-  ./api.sh reweave                              regenerate ROAD_RUNS from roads-pins.json + check:roads
-  ./api.sh mesh status|peers|tracker [url]      multiplayer mesh: identity/peers/server browser (§MESH-01)
-  ./api.sh mesh acl|blocklist|connect ...       mesh ACL editor, blocklist share/preview, runtime dial (§MESH-02)
+./bin/api CLI cheatsheet:
+  ./bin/api ping                                 check server
+  ./bin/api count [nodes|quests|monsters|npcs|terrains|coords]  breakdown stats
+  ./bin/api get <type> <id>                      fetch entity JSON
+  ./bin/api list [type]                          list (no type = index)
+  ./bin/api list ids <type>                      IDs-only array
+  ./bin/api list node --act N --terrain X --q text --no-coords --has-quests bool --junction bool --ids
+  ./bin/api list quest --node X --type X --arc X --npc X --monster X --has-npc bool --ids
+  ./bin/api list monster --terrain X --tier X --has-drop bool --no-terrain --ids
+  ./bin/api list npc --node X --occupation X --q text --ids
+  ./bin/api put <type> <id> k=v [k=v]            update fields
+  ./bin/api post <type> k=v [k=v]                create entity (nonce auto-handled)
+  ./bin/api del <type> <id>                      delete (nonce auto-handled)
+  ./bin/api audit [--map] [--data] [--section node|quest|monster|terrain|coords]  integrity scan
+  ./bin/api chain <quest-id>                     quest dependency chain
+  ./bin/api advise <quest-id>                    §ARCH-02 Ph5: quest fields + chain + advisory in one call
+  ./bin/api batch-npc <updates.json>             §AUDIT-03b: bulk quest.npc re-anchor, one save ([{id,npc},…])
+  ./bin/api export <collection>                  dump JSON (node_map quest_db monster_pool world_db all)
+  ./bin/api location [code]                      composite view (no code = list all)
+  ./bin/api speak <npc> "<prompt>" --state neutral|friendly|dearFriend
+  ./bin/api import <file.json>                   bulk import nodes + quest cycles  [--out file]
+  ./bin/api roads [pins]                         road net summary / pins file (§NAV-01h)
+  ./bin/api reweave                              regenerate ROAD_RUNS from roads-pins.json + check:roads
+  ./bin/api mesh status|peers|tracker [url]      multiplayer mesh: identity/peers/server browser (§MESH-01)
+  ./bin/api mesh acl|blocklist|connect ...       mesh ACL editor, blocklist share/preview, runtime dial (§MESH-02)
 
-Reply in 1–3 lines. Lead with a concrete ./api.sh command when applicable.`;
+Reply in 1–3 lines. Lead with a concrete ./bin/api command when applicable.`;
 
 async function askClaude(prompt) {
   if (!AI_KEY) die('ANTHROPIC_API_KEY not set — needed for --ai');
@@ -312,7 +312,7 @@ const CMD = {
   async get(pos, flags) {
     await requireServer();
     const [, type, id] = pos;
-    if (!type || !id) die('Usage: ./api.sh get <type> <id>');
+    if (!type || !id) die('Usage: ./bin/api get <type> <id>');
     const r = await request('GET', `/api/${type}/${encodeURIComponent(id)}`);
     if (r.status !== 200) { printError(r); process.exit(1); }
     printResult(r.body, flags);
@@ -327,10 +327,10 @@ const CMD = {
       printResult(r.body, flags);
       return;
     }
-    // ids-only shorthand: ./api.sh list ids node  OR  ./api.sh list node --ids
+    // ids-only shorthand: ./bin/api list ids node  OR  ./bin/api list node --ids
     if (type === 'ids') {
       const subtype = pos[2];
-      if (!subtype) die('Usage: ./api.sh list ids <node|quest|monster|npc|terrain>');
+      if (!subtype) die('Usage: ./bin/api list ids <node|quest|monster|npc|terrain>');
       const r = await request('GET', `/api/list/ids/${subtype}`);
       if (r.status !== 200) { printError(r); process.exit(1); }
       printResult(r.body, flags);
@@ -388,7 +388,7 @@ const CMD = {
     const mb = r.body.bytes ? `  ${C.dim}(${(r.body.bytes / 1048576).toFixed(1)} MB)${C.reset}` : '';
     ok(`primary  ${r.body.primary}`);
     ok(`backup   ${r.body.backup}${mb}`);
-    info('list them with ./api.sh snapshots');
+    info('list them with ./bin/api snapshots');
   },
 
   // Dated backups are gitignored, so nothing else in the repo will tell you they
@@ -415,14 +415,14 @@ const CMD = {
       process.stdout.write(`  ${s.archived ? `${C.green}archived  ${C.reset}` : `${C.yellow}unarchived${C.reset}`}  ${s.name}  ${C.dim}${(s.bytes / 1048576).toFixed(1)} MB${C.reset}\n`);
     if (d.count) {
       info('fold them into the patch chain (keeps each delta, then removes the file):  ./archive-snapshots.sh');
-      info('or delete the already-archived ones:  ./api.sh snapshots --sweep   [--force to discard unarchived too]');
+      info('or delete the already-archived ones:  ./bin/api snapshots --sweep   [--force to discard unarchived too]');
     }
   },
 
   async put(pos, flags) {
     await requireServer();
     const [, type, id, ...rest] = pos;
-    if (!type || !id) die('Usage: ./api.sh put <type> <id> [k=v ...]  (or pipe JSON)');
+    if (!type || !id) die('Usage: ./bin/api put <type> <id> [k=v ...]  (or pipe JSON)');
     const piped = await readStdin();
     const body  = Object.assign(
       typeof piped === 'object' && piped ? piped : {},
@@ -437,7 +437,7 @@ const CMD = {
   async post(pos, flags) {
     await requireServer();
     const [, type, ...rest] = pos;
-    if (!type) die('Usage: ./api.sh post <type> [k=v ...]  (or pipe JSON)');
+    if (!type) die('Usage: ./bin/api post <type> [k=v ...]  (or pipe JSON)');
     const piped = await readStdin();
     const body  = Object.assign(
       typeof piped === 'object' && piped ? piped : {},
@@ -456,7 +456,7 @@ const CMD = {
   async del(pos, flags) {
     await requireServer();
     const [, type, id] = pos;
-    if (!type || !id) die('Usage: ./api.sh del <type> <id>');
+    if (!type || !id) die('Usage: ./bin/api del <type> <id>');
     const nonce = await getNonce(type, id);
     const r = await request('DELETE', `/api/${type}/${encodeURIComponent(id)}`, null, { 'X-Nonce': nonce });
     if (r.status >= 400) { printError(r); process.exit(1); }
@@ -482,7 +482,7 @@ const CMD = {
   async chain(pos, flags) {
     await requireServer();
     const [, id] = pos;
-    if (!id) die('Usage: ./api.sh chain <quest-id>');
+    if (!id) die('Usage: ./bin/api chain <quest-id>');
     const r = await request('GET', `/api/quest/${encodeURIComponent(id)}/chain`);
     if (r.status !== 200) { printError(r); process.exit(1); }
     printResult(r.body, flags);
@@ -502,7 +502,7 @@ const CMD = {
     if (flags.json) { printResult(r.body, flags); return; }
     const b = r.body;
     ok(`road net: ${b.cells} cells · ${b.junctions} junctions · ${b.pins.length} pins · ${b.links.length} links · ${b.locked.length} locked 🔒`);
-    info('full runs: ./api.sh roads --json   pins file: ./api.sh roads pins');
+    info('full runs: ./bin/api roads --json   pins file: ./bin/api roads pins');
   },
 
   // §NAV-01h — Reweave Net: PUT /api/roads (build-roads.js --apply + check:roads)
@@ -521,7 +521,7 @@ const CMD = {
   async mesh(pos, flags) {
     const sub = pos[1];
     if (!sub || !['status', 'peers', 'tracker', 'acl', 'blocklist', 'connect'].includes(sub))
-      die('Usage: ./api.sh mesh status | peers | tracker [url] | acl [k=v ...] | blocklist [host:port] | connect <host:port|http(s)://tracker>   [--json]');
+      die('Usage: ./bin/api mesh status | peers | tracker [url] | acl [k=v ...] | blocklist [host:port] | connect <host:port|http(s)://tracker>   [--json]');
     await requireServer();
 
     // ── §MESH-02a/g — acl: GET (no args) or validated merge-PUT (k=v args) ──
@@ -537,7 +537,7 @@ const CMD = {
       if (flags.json) { printResult(r.body, flags); return; }
       ok(`${editing ? 'acl updated' : 'acl'} (${r.body.file}${r.body.exists === false ? ' — no file yet, defaults' : ''}): mode ${a.mode} · shareBlocklist ${a.shareBlocklist}`);
       for (const k of LISTS) if ((a[k] || []).length) process.stdout.write(`  ${k}: ${a[k].join(', ')}\n`);
-      if (!editing) info('edit: ./api.sh mesh acl mode=allowlist shareBlocklist=true blockIps=1.2.3.4,5.6.7.8  (merge-write; lists comma-split)');
+      if (!editing) info('edit: ./bin/api mesh acl mode=allowlist shareBlocklist=true blockIps=1.2.3.4,5.6.7.8  (merge-write; lists comma-split)');
       return;
     }
 
@@ -569,7 +569,7 @@ const CMD = {
     // ── §MESH-02i/g — connect: dial a peer or add a tracker at runtime ──
     if (sub === 'connect') {
       const target = pos[2];
-      if (!target) die('Usage: ./api.sh mesh connect <host:port>  (gossip peer)  |  mesh connect http(s)://tracker  (announce target)');
+      if (!target) die('Usage: ./bin/api mesh connect <host:port>  (gossip peer)  |  mesh connect http(s)://tracker  (announce target)');
       const body = /^https?:\/\//.test(target) ? { tracker: target.replace(/\/+$/, '') } : { addr: target };
       const r = await request('POST', '/api/mesh/connect', body);
       if (r.status !== 200) { printError(r); process.exit(1); }
@@ -597,7 +597,7 @@ const CMD = {
         info(`tracker group: ${g.worldTag ? `${g.worldTag} · ` : ''}${g.engineVer} · ${g.worldHash} — ${g.servers} server(s), ${g.players} player(s)`);
       for (const w of (s.reachability && s.reachability.warnings) || [])
         stderr(`${C.yellow}⚠${C.reset} ${w}\n`);
-      info('full JSON: ./api.sh mesh status --json  ·  ./api.sh mesh peers  ·  ./api.sh mesh tracker [url]');
+      info('full JSON: ./bin/api mesh status --json  ·  ./bin/api mesh peers  ·  ./bin/api mesh tracker [url]');
       return;
     }
 
@@ -625,7 +625,7 @@ const CMD = {
       : (s.trackerUrls || []).length ? s.trackerUrls
       : s.trackerMode ? [BASE] : [];   // a tracker with no upstream browses itself
     if (!urls.length)
-      die('no tracker configured — pass one: ./api.sh mesh tracker <url>\n  (or set TRACKER_URL / a `tracker` line in peers.txt / BOOTSTRAP_URLS)');
+      die('no tracker configured — pass one: ./bin/api mesh tracker <url>\n  (or set TRACKER_URL / a `tracker` line in peers.txt / BOOTSTRAP_URLS)');
     const seen = new Map(), errs = [];
     for (const u0 of urls) {
       const u = (/^https?:\/\//.test(u0) ? u0 : `http://${u0}`).replace(/\/+$/, '');
@@ -649,7 +649,7 @@ const CMD = {
 
   // §AUDIT-03b — named wrapper for POST /api/batch/npc (bulk quest.npc re-anchor,
   // one parse + one save for the whole batch instead of N full-file rewrites).
-  // Usage:  ./api.sh batch-npc updates.json     (or pipe the JSON on stdin)
+  // Usage:  ./bin/api batch-npc updates.json     (or pipe the JSON on stdin)
   //   file/stdin shape: [{id, npc}, ...]  or  {updates:[{id, npc}, ...]}
   async 'batch-npc'(pos, flags) {
     await requireServer();
@@ -660,7 +660,7 @@ const CMD = {
       try { raw = JSON.parse(require('fs').readFileSync(file, 'utf8')); }
       catch (e) { die(`Cannot read updates file "${file}": ${e.message}`); }
     }
-    if (!raw) die('Usage: ./api.sh batch-npc <updates.json>   (or pipe JSON on stdin)');
+    if (!raw) die('Usage: ./bin/api batch-npc <updates.json>   (or pipe JSON on stdin)');
     const updates = Array.isArray(raw) ? raw : (raw.updates || []);
     if (!updates.length) die('No updates found — expected [{id, npc}, ...] or {updates:[...]}');
     info(`batch-npc: ${updates.length} quest npc re-anchors in one save`);
@@ -673,7 +673,7 @@ const CMD = {
   async advise(pos, flags) {
     await requireServer();
     const [, id] = pos;
-    if (!id) die('Usage: ./api.sh advise <quest-id>');
+    if (!id) die('Usage: ./bin/api advise <quest-id>');
     const [rQuest, rChain] = await Promise.all([
       request('GET', `/api/quest/${encodeURIComponent(id)}`),
       request('GET', `/api/quest/${encodeURIComponent(id)}/chain`),
@@ -701,7 +701,7 @@ const CMD = {
   async export(pos, flags) {
     await requireServer();
     const [, collection] = pos;
-    if (!collection) die('Usage: ./api.sh export <node_map|quest_db|monster_pool|world_db>  [--format json|js|module]');
+    if (!collection) die('Usage: ./bin/api export <node_map|quest_db|monster_pool|world_db>  [--format json|js|module]');
     const fmt = flags.format || 'json';
     const r   = await request('GET', `/api/export/${collection}?format=${fmt}`);
     if (r.status !== 200) { printError(r); process.exit(1); }
@@ -733,14 +733,14 @@ const CMD = {
   async nonce(pos, flags) {
     await requireServer();
     const [, type, id] = pos;
-    if (!type || !id) die('Usage: ./api.sh nonce <type> <id>');
+    if (!type || !id) die('Usage: ./bin/api nonce <type> <id>');
     const nonce = await getNonce(type, id);
     process.stdout.write(nonce + '\n');
   },
 
   async ai(pos, flags) {
     const prompt = pos.slice(1).join(' ');
-    if (!prompt) die('Usage: ./api.sh ai "<question>"');
+    if (!prompt) die('Usage: ./bin/api ai "<question>"');
     const reply = await askClaude(prompt);
     process.stdout.write(`${C.cyan}${reply}${C.reset}\n`);
   },
@@ -748,7 +748,7 @@ const CMD = {
   async speak(pos, flags) {
     await requireServer();
     const [, id, ...rest] = pos;
-    if (!id) die('Usage: ./api.sh speak <npc-id> "<prompt>"  [--state neutral|friendly|dearFriend] [--model <model>]');
+    if (!id) die('Usage: ./bin/api speak <npc-id> "<prompt>"  [--state neutral|friendly|dearFriend] [--model <model>]');
     const prompt = rest.join(' ') || 'Good afternoon.';
     const qs = new URLSearchParams({ prompt });
     if (flags.state) qs.set('state', flags.state);
@@ -775,7 +775,7 @@ const CMD = {
       try { body = JSON.parse(fs.readFileSync(file, 'utf8')); }
       catch(e) { die(`Invalid JSON in ${file}: ${e.message}`); }
     } else {
-      die('Usage: ./api.sh import <file.json>  (or pipe JSON)');
+      die('Usage: ./bin/api import <file.json>  (or pipe JSON)');
     }
     const acts = (body.cycles || []).reduce((s, c) => s + (c.acts || []).length, 0);
     info(`importing ${body.book || '?'} — ${(body.nodes||[]).length} node(s), ${acts} act(s)`);
@@ -794,7 +794,7 @@ const CMD = {
   },
 
   // ── clean: prune orphaned NODE_COORDS + explosion J-nodes ──────────────────
-  // Usage: ./api.sh clean [--execute]
+  // Usage: ./bin/api clean [--execute]
   //   Dry-run: reports orphan coord count + explosion node count.
   //   --execute: removes all NODE_COORDS entries with no NODE_MAP match
   //              and any J-nodes whose label contains ↔ (explosion artifacts).
@@ -816,7 +816,7 @@ const CMD = {
   },
 
   // ── worldmap: terminal ASCII world map of major cities ──────────────────────
-  // Usage: ./api.sh worldmap [--latlon]
+  // Usage: ./bin/api worldmap [--latlon]
   async worldmap(_pos, flags) {
     // Delegate rich views to worldmap.js before fetching API data
     const regionArg   = flags.region;
@@ -888,10 +888,10 @@ const CMD = {
   },
 
   // ── move: move a node to new coordinates (with collision check / swap) ──────
-  // Usage: ./api.sh move <CODE> <r> <c> [--swap]
+  // Usage: ./bin/api move <CODE> <r> <c> [--swap]
   async move(pos, flags) {
     const [, code, rStr, cStr] = pos;
-    if (!code||rStr==null||cStr==null) die('Usage: ./api.sh move <CODE> <r> <c> [--swap]');
+    if (!code||rStr==null||cStr==null) die('Usage: ./bin/api move <CODE> <r> <c> [--swap]');
     const r=+rStr, c=+cStr;
     if (isNaN(r)||isNaN(c)) die('r and c must be numbers');
     const resp = await request('POST', '/api/graph/move', { code, r, c, swap: !!flags.swap });
@@ -902,7 +902,7 @@ const CMD = {
   },
 
   // ── junction: spawn a new junction node between two points ───────────────────
-  // Usage: ./api.sh junction <from> <dir> [--label "name"] [--terrain city] [--execute]
+  // Usage: ./bin/api junction <from> <dir> [--label "name"] [--terrain city] [--execute]
   //   from     — source node code
   //   dir      — N|S|E|W direction for the new junction
   //   --label  — custom label (default: auto-generated signpost name)
@@ -910,7 +910,7 @@ const CMD = {
   //   --execute — actually create (default is dry-run)
   async junction(pos, flags) {
     const [, from, dir] = pos;
-    if (!from||!dir) die('Usage: ./api.sh junction <from> <dir> [--label "name"] [--terrain type] [--execute]');
+    if (!from||!dir) die('Usage: ./bin/api junction <from> <dir> [--label "name"] [--terrain type] [--execute]');
     const body = { from, dir, dryRun: !flags.execute, ...(flags.label?{label:flags.label}:{}), ...(flags.terrain?{terrain:flags.terrain}:{}) };
     const resp = await request('POST', '/api/graph/spawn-junction', body);
     if (resp.status >= 400) { printError(resp); process.exit(1); }
@@ -919,17 +919,17 @@ const CMD = {
       ok(`[DRY RUN] Junction ${d.plan.code}  r=${d.plan.r}  c=${d.plan.c}  terrain=${d.plan.terrain}`);
       ok(`Label:  ${d.plan.label}`);
       ok(`Text:   ${d.plan.text}`);
-      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — empty land is walkable (§WALK-1.5); verify via ./api.sh reachability`);
+      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — empty land is walkable (§WALK-1.5); verify via ./bin/api reachability`);
       ok(`Add --execute to create the junction`);
     } else {
       ok(`Junction ${d.code} created at (${d.r},${d.c})`);
       ok(`Label: ${d.plan.label}`);
-      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — empty land is walkable (§WALK-1.5); verify via ./api.sh reachability`);
+      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — empty land is walkable (§WALK-1.5); verify via ./bin/api reachability`);
     }
   },
 
   // ── geo-seed: apply geographic lat/lon seeds to major city coordinates ────────
-  // Usage: ./api.sh geo-seed [--execute] [--grid-min 8] [--grid-max 500]
+  // Usage: ./bin/api geo-seed [--execute] [--grid-min 8] [--grid-max 500]
   async 'geo-seed'(pos, flags) {
     const dryRun = !flags.execute;
     const body   = { dryRun, ...(flags['grid-min']?{gridMin:+flags['grid-min']}:{}), ...(flags['grid-max']?{gridMax:+flags['grid-max']}:{}) };
@@ -944,17 +944,17 @@ const CMD = {
     } else {
       ok(`Geo-seeded ${d.seeded} cities to game grid.`);
       if (d.skipped?.length) info(`Skipped (not in node_map): ${d.skipped.join(', ')}`);
-      info(`Next: node tools/layout-solve.js --apply  to propagate remaining nodes from geo anchors`);
+      info(`Next: node src/tools/layout-solve.js --apply  to propagate remaining nodes from geo anchors`);
     }
   },
 
   // ── rip-and-connect: REMOVED (§WALK-3 Inc 2) ────────────────────────────────
   // The server endpoint now returns 410. Reachability is a terrain-field land
   // flood (§WALK-1.5), so there are no node-adjacency strays to relocate.
-  // Verify connectivity with `./api.sh reachability` instead.
+  // Verify connectivity with `./bin/api reachability` instead.
 
   // ── broken: §CELL-06 — show nodes in grid with no cell neighbors (isolated) ───
-  // Usage: ./api.sh broken
+  // Usage: ./bin/api broken
   //   In cell-first world, "broken" = a node is in a grid cell but touches 0
   //   adjacent occupied cells.  The old gap/diagonal check is gone because
   //   N/S/E/W direction fields were stripped in §CELL-01.
@@ -971,11 +971,11 @@ const CMD = {
     ok(`${isolated.length} isolated cell(s) — no cell neighbors:`);
     isolated.slice(0, 20).forEach(c => ok(`  ${c.code.padEnd(8)} r=${c.r} c=${c.c}  terrain=${c.terrain || '?'}`));
     if (isolated.length > 20) ok(`  ...and ${isolated.length - 20} more`);
-    ok(`Fix: re-anchor the node's lat/lon or carve a sea-lane (§WALK-1.5); confirm with ./api.sh reachability`);
+    ok(`Fix: re-anchor the node's lat/lon or carve a sea-lane (§WALK-1.5); confirm with ./bin/api reachability`);
   },
 
   // ── reachability: show how many nodes are reachable from the hub ─────────────
-  // Usage: ./api.sh reachability [--hub LHR]
+  // Usage: ./bin/api reachability [--hub LHR]
   //   Uses cell-grid BFS (§CELL-06): adjacency is determined by coordinate
   //   proximity, not N/S/E/W pointer fields.
   async reachability(pos, flags) {
@@ -998,7 +998,7 @@ const CMD = {
   },
 
   // ── verify: comprehensive cell-grid health check ──────────────────────────────
-  // Usage: ./api.sh verify [--hub LHR]
+  // Usage: ./bin/api verify [--hub LHR]
   //
   // Reports four categories:
   //   1. Nodes with no coordinates (not in any cell)
@@ -1101,12 +1101,12 @@ const CMD = {
     } else {
       ok(`  ${C.red}FAIL${C.reset} — ${issues} issue(s) found`);
       if (collisions.length) ok(`  Collisions: re-anchor a colliding node's lat/lon, or hold both as a 1° locale list (§WALK-1.5)`);
-      ok(`  General:    ./api.sh clean --execute → ./api.sh geo-seed --execute → node tools/layout-solve.js --apply → ./api.sh reachability`);
+      ok(`  General:    ./bin/api clean --execute → ./bin/api geo-seed --execute → node src/tools/layout-solve.js --apply → ./bin/api reachability`);
     }
   },
 
   // ── junction-audit: breakdown of junction vs named nodes + P_NUKE dry-run preview ─
-  // Usage: ./api.sh junction-audit
+  // Usage: ./bin/api junction-audit
   async 'junction-audit'() {
     const resp = await request('GET', '/api/graph/junction-audit');
     if (resp.status !== 200) { printError(resp); process.exit(1); }
@@ -1151,7 +1151,7 @@ const CMD = {
   },
 
   // ── find-open-location: find a node near a city that can accept a new neighbour
-  // Usage: ./api.sh find-open-location <city> [--radius 8]
+  // Usage: ./bin/api find-open-location <city> [--radius 8]
   //
   // Returns open attachment points in the city's mesh:
   //   directAttach   — degree ≤ 2, connect straight to this node
@@ -1159,7 +1159,7 @@ const CMD = {
   //   deadEnds       — degree = 1 nodes that should be expanded
   async 'find-open-location'(pos, flags) {
     const [, code] = pos;
-    if (!code) die('Usage: ./api.sh find-open-location <city> [--radius N]');
+    if (!code) die('Usage: ./bin/api find-open-location <city> [--radius N]');
     const radius = flags.radius ? +flags.radius : 8;
     const resp = await request('GET', `/api/graph/find-open-location/${code}?radius=${radius}`);
     if (resp.status >= 400) { printError(resp); process.exit(1); }
@@ -1187,7 +1187,7 @@ const CMD = {
   },
 
   // ── smart-connect: mesh-aware A→B connection with degree/junction rules ─────
-  // Usage: ./api.sh smart-connect <from> <to> [--radius 6] [--execute]
+  // Usage: ./bin/api smart-connect <from> <to> [--radius 6] [--execute]
   //
   // "A to B" is really "A-mesh to B-mesh".
   // Walks each city's network to find the best insertion points:
@@ -1197,7 +1197,7 @@ const CMD = {
   // Reports the plan; use --execute to apply the first step.
   async 'smart-connect'(pos, flags) {
     const [, fromCode, toCode] = pos;
-    if (!fromCode || !toCode) die('Usage: ./api.sh smart-connect <from> <to> [--radius 6] [--execute]');
+    if (!fromCode || !toCode) die('Usage: ./bin/api smart-connect <from> <to> [--radius 6] [--execute]');
     const radius  = flags.radius ? +flags.radius : 6;
     const execute = !!flags.execute;
 
@@ -1227,8 +1227,8 @@ const CMD = {
     ok(`\nExecuting...`);
     for (const rawCmd of cmds) {
       const parts = rawCmd.trim().split(/\s+/);
-      // Commands look like: "./api.sh connect TLL E BTR" or "node layout-solve.js ..."
-      const apiShIdx = parts.findIndex(p => p === './api.sh' || p === 'api.sh');
+      // Commands look like: "./bin/api connect TLL E BTR" or "node layout-solve.js ..."
+      const apiShIdx = parts.findIndex(p => p === './bin/api' || p === 'api.sh');
       if (apiShIdx >= 0) {
         const subParts = parts.slice(apiShIdx + 1);
         const subCmd = subParts[0];
@@ -1251,12 +1251,12 @@ const CMD = {
   },
 
   // ── connect: wire two existing nodes together in a direction ────────────────
-  // Usage: ./api.sh connect <A> <dir> <B>
+  // Usage: ./bin/api connect <A> <dir> <B>
   //   Sets A[dir] = B and B[OPP[dir]] = A (bidirectional wire).
   //   Checks coordinate alignment first; warns if bendy or gap > 4.
   async connect(pos, flags) {
     const [, aCode, dir, bCode] = pos;
-    if (!aCode||!dir||!bCode) die('Usage: ./api.sh connect <A> <N|E|S|W> <B>');
+    if (!aCode||!dir||!bCode) die('Usage: ./bin/api connect <A> <N|E|S|W> <B>');
     if (!['N','E','S','W'].includes(dir.toUpperCase())) die('dir must be N|E|S|W');
     const D = dir.toUpperCase(), OPP={N:'S',S:'N',E:'W',W:'E'};
 
@@ -1272,10 +1272,10 @@ const CMD = {
     const degB = ['N','E','S','W'].filter(d => nm[bCode]?.[d]).length;
 
     // Degree-cap warnings
-    if (degA >= 4) { ok(`⚠ ${aCode} already has 4 connections (full). Use ./api.sh smart-connect ${aCode} ${bCode} to find a mesh insertion point.`); if (!flags.force) return; }
-    if (degB >= 4) { ok(`⚠ ${bCode} already has 4 connections (full). Use ./api.sh smart-connect ${aCode} ${bCode} to find a mesh insertion point.`); if (!flags.force) return; }
-    if (degA === 3) ok(`⚠ ${aCode} has 3 connections — this will fill its 4th (last) slot. Consider: ./api.sh junction ${aCode} ${D} --execute  (spawns junction first, preserves slot)`);
-    if (degB === 3) ok(`⚠ ${bCode} has 3 connections — this will fill its 4th (last) slot. Consider: ./api.sh junction ${bCode} ${OPP[D]} --execute  (spawns junction first, preserves slot)`);
+    if (degA >= 4) { ok(`⚠ ${aCode} already has 4 connections (full). Use ./bin/api smart-connect ${aCode} ${bCode} to find a mesh insertion point.`); if (!flags.force) return; }
+    if (degB >= 4) { ok(`⚠ ${bCode} already has 4 connections (full). Use ./bin/api smart-connect ${aCode} ${bCode} to find a mesh insertion point.`); if (!flags.force) return; }
+    if (degA === 3) ok(`⚠ ${aCode} has 3 connections — this will fill its 4th (last) slot. Consider: ./bin/api junction ${aCode} ${D} --execute  (spawns junction first, preserves slot)`);
+    if (degB === 3) ok(`⚠ ${bCode} has 3 connections — this will fill its 4th (last) slot. Consider: ./bin/api junction ${bCode} ${OPP[D]} --execute  (spawns junction first, preserves slot)`);
 
     // Coordinate alignment check
     const ca = coords[aCode], cb = coords[bCode];
@@ -1283,7 +1283,7 @@ const CMD = {
       const axisOff = (D==='N'||D==='S') ? Math.abs(cb.c-ca.c) : Math.abs(cb.r-ca.r);
       const axisDist= (D==='N'||D==='S') ? Math.abs(cb.r-ca.r) : Math.abs(cb.c-ca.c);
       if (axisOff > 0) ok(`⚠ BENDY: offset=${axisOff} — consider an elbow junction first`);
-      if (axisDist > 4) ok(`⚠ GAP: distance=${axisDist} > 4 — empty land between is walkable (§WALK-1.5); verify via ./api.sh reachability`);
+      if (axisDist > 4) ok(`⚠ GAP: distance=${axisDist} > 4 — empty land between is walkable (§WALK-1.5); verify via ./bin/api reachability`);
       if (axisOff === 0 && axisDist <= 4) ok(`Coords OK: axis-aligned, gap=${axisDist} ≤ 4`);
     }
 
@@ -1302,16 +1302,16 @@ const CMD = {
   // ── fill-gap: REMOVED (§WALK-3 Inc 2) ───────────────────────────────────────
   // The server endpoint now returns 410. Junction stubs were abolished (§WALK-1)
   // and empty land cells are freely walkable (§WALK-1.5) — there is no gap to fill.
-  // Verify connectivity with `./api.sh reachability` instead.
+  // Verify connectivity with `./bin/api reachability` instead.
 
   // ── fix-diagonal: auto-fix one diagonal (bendy) edge via move or elbow ───────
-  // Usage: ./api.sh fix-diagonal <CODE> <dir> [--dry-run]
+  // Usage: ./bin/api fix-diagonal <CODE> <dir> [--dry-run]
   //   Inspects the edge CODE[dir] and proposes the least-invasive fix:
   //   1. Move target if it has only 1-2 connections (cheap)
   //   2. Otherwise spawn elbow junction at axis intersection
   async 'fix-diagonal'(pos, flags) {
     const [, code, dir] = pos;
-    if (!code||!dir) die('Usage: ./api.sh fix-diagonal <CODE> <N|E|S|W> [--dry-run]');
+    if (!code||!dir) die('Usage: ./bin/api fix-diagonal <CODE> <N|E|S|W> [--dry-run]');
     const D    = dir.toUpperCase();
     const exec = flags.execute && !flags['dry-run'];
 
@@ -1352,12 +1352,12 @@ const CMD = {
         ok(`Add --execute to apply fix`);
       }
     } else {
-      ok(`No auto-fix available — inspect manually: ./api.sh worldmap --city ${code}`);
+      ok(`No auto-fix available — inspect manually: ./bin/api worldmap --city ${code}`);
     }
   },
 
   // ── fix-all-broken: batch-diagnose all broken edges, apply safe auto-fixes ───
-  // Usage: ./api.sh fix-all-broken [--dry-run] [--limit N]
+  // Usage: ./bin/api fix-all-broken [--dry-run] [--limit N]
   //   Fetches /api/graph/broken, then for each edge either moves a light node
   //   or spawns an elbow junction. Safe fixes only (no multi-hop guesses).
   async 'fix-all-broken'(pos, flags) {
@@ -1409,12 +1409,12 @@ const CMD = {
     }
     if (exec) {
       ok(`Done: ${fixed} fixed, ${failed} failed, ${skipped} skipped (missing coords)`);
-      ok(`Re-check: ./api.sh fix-all-broken`);
+      ok(`Re-check: ./bin/api fix-all-broken`);
     }
   },
 
   // ── nuke-junctions: P_NUKE — bulk-delete all J#### junction nodes ────────────
-  // Usage: ./api.sh nuke-junctions [--execute]
+  // Usage: ./bin/api nuke-junctions [--execute]
   //   Dry-run (default): reports what would be deleted/stitched/deferred.
   //   --execute: applies straight stitches, bulk-deletes all J#### from source,
   //              cleans dangling direction refs, saves snapshot.
@@ -1429,7 +1429,7 @@ const CMD = {
   },
 
   // ── cluster-bridge: connect remaining isolated clusters without a full reweave ──
-  // Usage: ./api.sh cluster-bridge [--execute]
+  // Usage: ./bin/api cluster-bridge [--execute]
   //   Dry-run: reports isolated clusters and the nearest bridge target for each.
   //   --execute: bridges each cluster to the main network via smart-connect.
   async 'cluster-bridge'(pos, flags) {
@@ -1441,11 +1441,11 @@ const CMD = {
   },
 
   // ── promote-junction: upgrade a junction node to real content, wiring preserved ─
-  // Usage: ./api.sh promote-junction <CODE> --label "Name" --text "desc" [--terrain key]
+  // Usage: ./bin/api promote-junction <CODE> --label "Name" --text "desc" [--terrain key]
   //        [--npc key] [--act N]
   async 'promote-junction'(pos, flags) {
     await requireServer();
-    const code = pos[0]; if (!code) die('Usage: ./api.sh promote-junction <CODE> --label "..." --text "..."');
+    const code = pos[0]; if (!code) die('Usage: ./bin/api promote-junction <CODE> --label "..." --text "..."');
     const label   = flags.label;
     const text    = flags.text;
     const terrain = flags.terrain;
@@ -1465,7 +1465,7 @@ const CMD = {
   },
 
   // ── fix-bidirectional: batch-fix one-way links (A→B but B doesn't point back) ─
-  // Usage: ./api.sh fix-bidirectional [--execute]
+  // Usage: ./bin/api fix-bidirectional [--execute]
   //   Dry-run: calls GET /api/audit/map, counts bidirectional violations, shows summary.
   //   --execute: POSTs to /api/audit/map/fix (no body) which fixes all diagonal + one-way
   //              issues in one pass, then saves and reloads.
@@ -1490,14 +1490,14 @@ const CMD = {
     const diag  = fixed.filter(f => f.check === 'diagonal_exit');
     ok(`Done: ${bidir.length} bidirectional fixed, ${diag.length} diagonal fixed, ${errors.length} errors`);
     if (note) ok(note);
-    ok(`Re-check: ./api.sh audit --map`);
+    ok(`Re-check: ./bin/api audit --map`);
   },
 
   // ── migrate: §CELL-14 data cleanup ─────────────────────────────────────────
   // Usage:
-  //   ./api.sh migrate strip-exit-fields                # dry-run (default)
-  //   ./api.sh migrate strip-exit-fields --execute      # actually rewrite NODE_MAP
-  //   ./api.sh migrate strip-exit-fields --fields N,S,E,W   # narrow the field set
+  //   ./bin/api migrate strip-exit-fields                # dry-run (default)
+  //   ./bin/api migrate strip-exit-fields --execute      # actually rewrite NODE_MAP
+  //   ./bin/api migrate strip-exit-fields --fields N,S,E,W   # narrow the field set
   //
   // Strips dead direction pointers (N/S/E/W/SW/portal/spire) from every NODE_MAP
   // entry in play.html. After §CELL-01–§CELL-13 these fields are no longer
@@ -1507,7 +1507,7 @@ const CMD = {
     await requireServer();
     const sub = pos[1];
     if (sub !== 'strip-exit-fields')
-      die('Usage: ./api.sh migrate strip-exit-fields [--execute] [--fields N,S,E,W,portal,spire]');
+      die('Usage: ./bin/api migrate strip-exit-fields [--execute] [--fields N,S,E,W,portal,spire]');
     const dryRun = !flags.execute;
     const body = { dryRun };
     if (flags.fields) body.fields = String(flags.fields).split(',').map(s => s.trim()).filter(Boolean);
@@ -1531,7 +1531,7 @@ const CMD = {
   },
 
   // ── highway: build a full junction chain between two cities ─────────────────
-  // Usage: ./api.sh highway <from> <to> [--step 4] [--dry-run] [--terrain junction]
+  // Usage: ./bin/api highway <from> <to> [--step 4] [--dry-run] [--terrain junction]
   //
   // Builds a walkable highway of junctions from <from> to <to>.
   // Strategy:
@@ -1547,7 +1547,7 @@ const CMD = {
   // below the arg parse for why, and for what to do instead.
   async highway(pos, flags) {
     const [, fromCode, toCode] = pos;
-    if (!fromCode || !toCode) die('Usage: ./api.sh highway <from> <to> [--step N] [--dry-run] [--terrain type]');
+    if (!fromCode || !toCode) die('Usage: ./bin/api highway <from> <to> [--step N] [--dry-run] [--terrain type]');
     const step     = flags.step    ? +flags.step : 4;
     const terrain  = flags.terrain || 'junction';
     const dryRun   = flags['dry-run'] !== undefined ? true : !flags.execute;
@@ -1562,7 +1562,7 @@ const CMD = {
     // laid the real Tungas–Station 7 road.
     //
     // It is also unnecessary: a node on land contiguous with the main landmass is
-    // already walk-routable (./api.sh reachability is the authority — the mover
+    // already walk-routable (./bin/api reachability is the authority — the mover
     // walks cell by cell; the legacy edge graph is abandoned). Waypoints buy
     // nothing but invariant violations.
     //
@@ -1576,9 +1576,9 @@ const CMD = {
       '',
       'What to do instead:',
       '  • Reachability — nothing to do. A contiguous-land node is already walk-routable.',
-      '      ./api.sh reachability     # the authority (BFS from LHR); target 100%',
+      '      ./bin/api reachability     # the authority (BFS from LHR); target 100%',
       '  • An encounter-free ROAD between two nodes — lay real road cells:',
-      '      edit ROAD_RUNS in play.html, then  node scripts/build-roads.js --apply',
+      '      edit ROAD_RUNS in play.html, then  node src/scripts/build-roads.js --apply',
       '      verify with  npm run check:walk  (check:roads R1–R3)',
       '  • Just the route plan — re-run without --execute (the default).',
     ].join('\n'));
@@ -1674,8 +1674,8 @@ const CMD = {
     }
 
     ok(`\nHighway complete. Verify:`);
-    ok(`  ./api.sh worldmap --route ${fromCode} --to ${toCode}`);
-    ok(`  ./api.sh worldmap --city ${fromCode}`);
+    ok(`  ./bin/api worldmap --route ${fromCode} --to ${toCode}`);
+    ok(`  ./bin/api worldmap --city ${fromCode}`);
   },
 
   async mode(pos, flags) {
@@ -1695,11 +1695,11 @@ const CMD = {
   },
 
   // ── §CELL-08: cell — inspect a single grid cell ─────────────────────────────
-  // Usage: ./api.sh cell <r> <c> [neighbors]
+  // Usage: ./bin/api cell <r> <c> [neighbors]
   async cell(pos, flags) {
     await requireServer();
     const [, rStr, cStr, sub] = pos;
-    if (!rStr || !cStr) die('Usage: ./api.sh cell <r> <c> [neighbors]');
+    if (!rStr || !cStr) die('Usage: ./bin/api cell <r> <c> [neighbors]');
     const r = +rStr, c = +cStr;
     if (isNaN(r) || isNaN(c)) die('r and c must be integers');
     const endpoint = sub === 'neighbors'
@@ -1711,15 +1711,15 @@ const CMD = {
   },
 
   // ── §CELL-08: grid — query the cell grid ────────────────────────────────────
-  // Usage: ./api.sh grid <region|heatmap|reachability> [--r1=N --c1=N --r2=N --c2=N] [--hub=LHR]
+  // Usage: ./bin/api grid <region|heatmap|reachability> [--r1=N --c1=N --r2=N --c2=N] [--hub=LHR]
   async grid(pos, flags) {
     await requireServer();
     const [, sub] = pos;
-    if (!sub) die('Usage: ./api.sh grid <region|heatmap|reachability> [options]');
+    if (!sub) die('Usage: ./bin/api grid <region|heatmap|reachability> [options]');
     let endpoint;
     if (sub === 'region') {
       if (flags.r1 == null || flags.c1 == null || flags.r2 == null || flags.c2 == null)
-        die('Usage: ./api.sh grid region --r1=N --c1=N --r2=N --c2=N');
+        die('Usage: ./bin/api grid region --r1=N --c1=N --r2=N --c2=N');
       const qs = new URLSearchParams({ r1: flags.r1, c1: flags.c1, r2: flags.r2, c2: flags.c2 });
       endpoint = `/api/grid/region?${qs}`;
     } else if (sub === 'heatmap') {
@@ -1749,9 +1749,9 @@ const CMD = {
 
 // ── Help ───────────────────────────────────────────────────────────────────────
 const HELP = `
-${C.bold}./api.sh${C.reset}  —  Roll2Hit World Builder CLI  ${C.dim}(delegates to api/wb.js → localhost:1367)${C.reset}
+${C.bold}./bin/api${C.reset}  —  Codex of Conquest World Builder CLI  ${C.dim}(delegates to api/wb.js → localhost:1367)${C.reset}
 
-  ./api.sh <command> [args] [options]
+  ./bin/api <command> [args] [options]
 
   Every command talks to the WBAPI server running at localhost:1367.
   Start the server first:  ${C.dim}./wbapi-toggle.sh start${C.reset}
@@ -1760,7 +1760,7 @@ ${C.bold}═══════════════════════�
   PREFERRED TOOL — USE api.sh, NOT curl
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ${C.yellow}Always use ./api.sh for day-to-day work. Raw curl is a fallback only.${C.reset}
+  ${C.yellow}Always use ./bin/api for day-to-day work. Raw curl is a fallback only.${C.reset}
 
   api.sh handles automatically:
     • Nonces (one-time write tokens) — acquired and attached for you
@@ -1815,105 +1815,105 @@ ${C.bold}═══════════════════════�
   ── quests ───────────────────────────────────────────────────────
 
   # 1. Find the quest by keyword
-  ./api.sh list quest --q "wolsey"
-  ./api.sh list quest --arc shk --q "inventory"
-  ./api.sh list quest --node BK --type skill_check
+  ./bin/api list quest --q "wolsey"
+  ./bin/api list quest --arc shk --q "inventory"
+  ./bin/api list quest --node BK --type skill_check
 
   # 2. Fetch all fields for the exact quest
-  ./api.sh get quest shk6_act1
+  ./bin/api get quest shk6_act1
   # → see desc, passText, failText, npc, activateNode, checkDC, etc.
 
   # 3. Patch the specific field(s) you need
-  ./api.sh put quest shk6_act1 desc="Egil Thorvaldsen, a Birka wool factor..."
-  ./api.sh put quest shk6_act1 npc=egil_thorvaldsen checkDC=14
+  ./bin/api put quest shk6_act1 desc="Egil Thorvaldsen, a Birka wool factor..."
+  ./bin/api put quest shk6_act1 npc=egil_thorvaldsen checkDC=14
   # Multi-field — pipe JSON:
-  echo '{"desc":"...","passText":"...","failText":"..."}' | ./api.sh put quest shk6_act1
+  echo '{"desc":"...","passText":"...","failText":"..."}' | ./bin/api put quest shk6_act1
 
   ── nodes ────────────────────────────────────────────────────────
 
   # 1. Find the node
-  ./api.sh list node --q "nuremberg"
-  ./api.sh list node --terrain scholars_qtr
-  ./api.sh list node --act 2 --q "birka"
+  ./bin/api list node --q "nuremberg"
+  ./bin/api list node --terrain scholars_qtr
+  ./bin/api list node --act 2 --q "birka"
 
   # 2. Get composite view — node + quests + NPCs + monsters
-  ./api.sh location NUE
-  ./api.sh get node NUE
+  ./bin/api location NUE
+  ./bin/api get node NUE
   # → label, terrain, coords, N/E/S/W links, quest list, NPC list
 
   # 3. Edit
-  ./api.sh put node NUE label="Nuremberg Scholar Quarter"
-  ./api.sh put node NUE N=BMA S=KRN
+  ./bin/api put node NUE label="Nuremberg Scholar Quarter"
+  ./bin/api put node NUE N=BMA S=KRN
 
   ── NPCs ─────────────────────────────────────────────────────────
 
   # 1. Find the NPC
-  ./api.sh list npc --q "egil"
-  ./api.sh list npc --node BK
-  ./api.sh list npc --occupation "clerk"
+  ./bin/api list npc --q "egil"
+  ./bin/api list npc --node BK
+  ./bin/api list npc --occupation "clerk"
 
   # 2. Fetch full details (quests linked, node, occupation)
-  ./api.sh get npc egil_thorvaldsen
+  ./bin/api get npc egil_thorvaldsen
 
   # 3. Edit
-  ./api.sh put npc egil_thorvaldsen occupation="wool factor and Hanseatic broker"
+  ./bin/api put npc egil_thorvaldsen occupation="wool factor and Hanseatic broker"
   # Link a quest to this NPC:
-  ./api.sh put quest shk6_act1 npc=egil_thorvaldsen
+  ./bin/api put quest shk6_act1 npc=egil_thorvaldsen
 
   ── monsters ─────────────────────────────────────────────────────
 
   # 1. Find the monster
-  ./api.sh list monster --terrain crypt
-  ./api.sh list monster --q "shadow" --tier easy
+  ./bin/api list monster --terrain crypt
+  ./bin/api list monster --q "shadow" --tier easy
 
   # 2. Inspect stat block
-  ./api.sh get monster shadow
+  ./bin/api get monster shadow
 
   # 3. Tune a field
-  ./api.sh put monster shadow hp=22 ac=13
-  ./api.sh put monster shadow tier=medium
+  ./bin/api put monster shadow hp=22 ac=13
+  ./bin/api put monster shadow tier=medium
 
   ── terrain ──────────────────────────────────────────────────────
 
   # 1. Find terrain key (needed when creating nodes)
-  ./api.sh list terrain --q "scholar"
-  ./api.sh list terrain --ids
+  ./bin/api list terrain --q "scholar"
+  ./bin/api list terrain --ids
 
   # 2. Inspect which monsters are in it
-  ./api.sh get terrain scholars_qtr
-  ./api.sh list monster --terrain scholars_qtr
+  ./bin/api get terrain scholars_qtr
+  ./bin/api list monster --terrain scholars_qtr
 
   # 3. Update label or icon
-  ./api.sh put terrain scholars_qtr label="Scholar's Quarter"
+  ./bin/api put terrain scholars_qtr label="Scholar's Quarter"
 
   ── create → verify → commit cycle ──────────────────────────────
 
   # Create an NPC
-  ./api.sh post npc key=marta_vby name="Marta" node=VBY occupation="Flemish intake clerk"
+  ./bin/api post npc key=marta_vby name="Marta" node=VBY occupation="Flemish intake clerk"
 
   # Confirm it landed
-  ./api.sh get npc marta_vby
+  ./bin/api get npc marta_vby
 
   # Link a quest to it
-  ./api.sh list quest --arc shk --q "visby"    # find the quest ID
-  ./api.sh put quest shk6_act2 npc=marta_vby   # link it
+  ./bin/api list quest --arc shk --q "visby"    # find the quest ID
+  ./bin/api put quest shk6_act2 npc=marta_vby   # link it
 
   # Audit — confirm zero errors/warnings
-  ./api.sh audit --raw | jq '{errors:.errors|length, warnings:.warnings|length}'
+  ./bin/api audit --raw | jq '{errors:.errors|length, warnings:.warnings|length}'
 
   ── bulk search with jq ──────────────────────────────────────────
 
   # All quests missing desc
-  ./api.sh export quest_db --raw | jq '[to_entries[] | select(.value.desc=="" or .value.desc==null) | .key]'
+  ./bin/api export quest_db --raw | jq '[to_entries[] | select(.value.desc=="" or .value.desc==null) | .key]'
 
   # All quests for a specific NPC
-  ./api.sh list quest --npc egil_thorvaldsen
+  ./bin/api list quest --npc egil_thorvaldsen
 
   # All nodes in act 2 with no quests
-  ./api.sh list node --act 2 --has-quests false
+  ./bin/api list node --act 2 --has-quests false
 
   # NPC keys at a specific node
-  ./api.sh list npc --node NUE --ids
+  ./bin/api list npc --node NUE --ids
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   COMMAND INDEX
@@ -1955,44 +1955,44 @@ ${C.bold}═══════════════════════�
 
   Environment:
     WBAPI_URL           Override base URL
-    ANTHROPIC_API_KEY   Required for ./api.sh ai and ./api.sh speak
+    ANTHROPIC_API_KEY   Required for ./bin/api ai and ./bin/api speak
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   ping — server health
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh ping
+  ./bin/api ping
 
   Returns: ok, loaded, file, nodes, quests, monsters, fish, lakeMagic.
   Exit 0 on success; exit 1 if server is unreachable.
 
   Examples:
-    ./api.sh ping
-    ./api.sh ping --server http://192.168.1.10:1367
-    ./api.sh ping --raw
+    ./bin/api ping
+    ./bin/api ping --server http://192.168.1.10:1367
+    ./bin/api ping --raw
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   mode — get or set the server logging mode
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh mode               show current mode
-  ./api.sh mode fast          minimal output (quiet)
-  ./api.sh mode debug         verbose — request/response bodies logged
-  ./api.sh mode trace         verbose + full algorithm trace (ultra-verbose)
+  ./bin/api mode               show current mode
+  ./bin/api mode fast          minimal output (quiet)
+  ./bin/api mode debug         verbose — request/response bodies logged
+  ./bin/api mode trace         verbose + full algorithm trace (ultra-verbose)
 
-  Mode is saved to milepoints/wbapi-config.json and survives restarts.
+  Mode is saved to build/milepoints/wbapi-config.json and survives restarts.
   Default is TRACE. Env vars WBAPI_VERBOSE / WBAPI_TRACE override on startup.
 
   Examples:
-    ./api.sh mode
-    ./api.sh mode fast
-    ./api.sh mode trace
+    ./bin/api mode
+    ./bin/api mode fast
+    ./bin/api mode trace
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   count — breakdown statistics
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh count [subtype]
+  ./bin/api count [subtype]
 
   No subtype: master count for all collections in one call.
   Subtypes: nodes | quests | monsters | npcs | terrains | coords
@@ -2012,21 +2012,21 @@ ${C.bold}═══════════════════════�
     coords    → total, inNodeMap, orphanCoords, nodesWithoutCoordsList
 
   Examples:
-    ./api.sh count
-    ./api.sh count nodes
-    ./api.sh count quests
-    ./api.sh count monsters
-    ./api.sh count npcs
-    ./api.sh count terrains
-    ./api.sh count coords
-    ./api.sh count nodes --raw
-    ./api.sh count quests --out /tmp/quest-stats.json
+    ./bin/api count
+    ./bin/api count nodes
+    ./bin/api count quests
+    ./bin/api count monsters
+    ./bin/api count npcs
+    ./bin/api count terrains
+    ./bin/api count coords
+    ./bin/api count nodes --raw
+    ./bin/api count quests --out /tmp/quest-stats.json
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   get — fetch one entity
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh get <type> <id>
+  ./bin/api get <type> <id>
 
   Returns: entity (all fields), connections (related data), _meta (canDelete, blockedBy).
   Unknown id returns verbose 404 with full list of valid IDs for that type.
@@ -2046,47 +2046,47 @@ ${C.bold}═══════════════════════�
     nodeDetails, questCount, questIds[], questsDetail[]
 
   Examples:
-    ./api.sh get node LHR
-    ./api.sh get node BK
-    ./api.sh get node TLL
-    ./api.sh get node KRN
-    ./api.sh get node FRO
-    ./api.sh get node TRD
-    ./api.sh get node SDQ
-    ./api.sh get quest mq_1
-    ./api.sh get quest mq_2
-    ./api.sh get quest mq_3
-    ./api.sh get quest mq_4
-    ./api.sh get quest mq_5
-    ./api.sh get quest mq_6
-    ./api.sh get quest mq_7
-    ./api.sh get quest sq_1
-    ./api.sh get quest sq_2
-    ./api.sh get quest quest_wis_01
-    ./api.sh get monster goblin
-    ./api.sh get monster skeleton
-    ./api.sh get monster shadow
-    ./api.sh get monster bandit
-    ./api.sh get monster wolf
-    ./api.sh get monster leshen
-    ./api.sh get npc yael
-    ./api.sh get npc brynn
-    ./api.sh get npc archivus_sweelinck
-    ./api.sh get terrain city
-    ./api.sh get terrain forest
-    ./api.sh get terrain crypt
-    ./api.sh get terrain inn
-    ./api.sh get terrain tavern
-    ./api.sh get terrain goblin_cave
-    ./api.sh get terrain hag_swamp
-    ./api.sh get node LHR --raw
-    ./api.sh get quest mq_1 --out /tmp/mq1.json
+    ./bin/api get node LHR
+    ./bin/api get node BK
+    ./bin/api get node TLL
+    ./bin/api get node KRN
+    ./bin/api get node FRO
+    ./bin/api get node TRD
+    ./bin/api get node SDQ
+    ./bin/api get quest mq_1
+    ./bin/api get quest mq_2
+    ./bin/api get quest mq_3
+    ./bin/api get quest mq_4
+    ./bin/api get quest mq_5
+    ./bin/api get quest mq_6
+    ./bin/api get quest mq_7
+    ./bin/api get quest sq_1
+    ./bin/api get quest sq_2
+    ./bin/api get quest quest_wis_01
+    ./bin/api get monster goblin
+    ./bin/api get monster skeleton
+    ./bin/api get monster shadow
+    ./bin/api get monster bandit
+    ./bin/api get monster wolf
+    ./bin/api get monster leshen
+    ./bin/api get npc yael
+    ./bin/api get npc brynn
+    ./bin/api get npc archivus_sweelinck
+    ./bin/api get terrain city
+    ./bin/api get terrain forest
+    ./bin/api get terrain crypt
+    ./bin/api get terrain inn
+    ./bin/api get terrain tavern
+    ./bin/api get terrain goblin_cave
+    ./bin/api get terrain hag_swamp
+    ./bin/api get node LHR --raw
+    ./bin/api get quest mq_1 --out /tmp/mq1.json
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   list — collection listing with filters
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh list [type] [filters]
+  ./bin/api list [type] [filters]
 
   No type: shows index of all list types with counts + available filters.
   Each list type supports ?ids=true → {count, ids:[…]} compact response.
@@ -2103,37 +2103,37 @@ ${C.bold}═══════════════════════�
     --ids                  Return {count, ids:[…]}
 
   Examples:
-    ./api.sh list
-    ./api.sh list node
-    ./api.sh list node --act 1
-    ./api.sh list node --act 2
-    ./api.sh list node --act 3
-    ./api.sh list node --act 4
-    ./api.sh list node --act 5
-    ./api.sh list node --terrain city
-    ./api.sh list node --terrain forest
-    ./api.sh list node --terrain crypt
-    ./api.sh list node --terrain inn
-    ./api.sh list node --terrain tavern
-    ./api.sh list node --terrain goblin_cave
-    ./api.sh list node --terrain hag_swamp
-    ./api.sh list node --terrain beach
-    ./api.sh list node --terrain junction
-    ./api.sh list node --q birka
-    ./api.sh list node --q forest
-    ./api.sh list node --q crypt
-    ./api.sh list node --no-coords
-    ./api.sh list node --has-quests true
-    ./api.sh list node --has-quests false
-    ./api.sh list node --junction true
-    ./api.sh list node --junction false
-    ./api.sh list node --act 1 --terrain city
-    ./api.sh list node --act 3 --has-quests true
-    ./api.sh list node --terrain forest --has-quests true
-    ./api.sh list node --junction false --has-quests false
-    ./api.sh list node --no-coords --ids
-    ./api.sh list node --act 1 --ids
-    ./api.sh list node --ids
+    ./bin/api list
+    ./bin/api list node
+    ./bin/api list node --act 1
+    ./bin/api list node --act 2
+    ./bin/api list node --act 3
+    ./bin/api list node --act 4
+    ./bin/api list node --act 5
+    ./bin/api list node --terrain city
+    ./bin/api list node --terrain forest
+    ./bin/api list node --terrain crypt
+    ./bin/api list node --terrain inn
+    ./bin/api list node --terrain tavern
+    ./bin/api list node --terrain goblin_cave
+    ./bin/api list node --terrain hag_swamp
+    ./bin/api list node --terrain beach
+    ./bin/api list node --terrain junction
+    ./bin/api list node --q birka
+    ./bin/api list node --q forest
+    ./bin/api list node --q crypt
+    ./bin/api list node --no-coords
+    ./bin/api list node --has-quests true
+    ./bin/api list node --has-quests false
+    ./bin/api list node --junction true
+    ./bin/api list node --junction false
+    ./bin/api list node --act 1 --terrain city
+    ./bin/api list node --act 3 --has-quests true
+    ./bin/api list node --terrain forest --has-quests true
+    ./bin/api list node --junction false --has-quests false
+    ./bin/api list node --no-coords --ids
+    ./bin/api list node --act 1 --ids
+    ./bin/api list node --ids
 
   ── list quest ───────────────────────────────────────────────────
 
@@ -2149,37 +2149,37 @@ ${C.bold}═══════════════════════�
     --ids                  Return IDs only
 
   Examples:
-    ./api.sh list quest
-    ./api.sh list quest --type main
-    ./api.sh list quest --type side
-    ./api.sh list quest --type combat
-    ./api.sh list quest --type skill_check
-    ./api.sh list quest --type mission_bit
-    ./api.sh list quest --node LHR
-    ./api.sh list quest --node BK
-    ./api.sh list quest --node TLL
-    ./api.sh list quest --node KRN
-    ./api.sh list quest --node FRO
-    ./api.sh list quest --node TRD
-    ./api.sh list quest --arc mq_
-    ./api.sh list quest --arc sq_
-    ./api.sh list quest --arc quest_wis
-    ./api.sh list quest --npc yael
-    ./api.sh list quest --npc brynn
-    ./api.sh list quest --monster goblin
-    ./api.sh list quest --monster skeleton
-    ./api.sh list quest --monster leshen
-    ./api.sh list quest --has-npc true
-    ./api.sh list quest --has-npc false
-    ./api.sh list quest --complete true
-    ./api.sh list quest --q shard
-    ./api.sh list quest --q goblin
-    ./api.sh list quest --q "the road"
-    ./api.sh list quest --type side --node LHR
-    ./api.sh list quest --type main --ids
-    ./api.sh list quest --arc mq_ --ids
-    ./api.sh list quest --has-npc true --type side
-    ./api.sh list quest --ids
+    ./bin/api list quest
+    ./bin/api list quest --type main
+    ./bin/api list quest --type side
+    ./bin/api list quest --type combat
+    ./bin/api list quest --type skill_check
+    ./bin/api list quest --type mission_bit
+    ./bin/api list quest --node LHR
+    ./bin/api list quest --node BK
+    ./bin/api list quest --node TLL
+    ./bin/api list quest --node KRN
+    ./bin/api list quest --node FRO
+    ./bin/api list quest --node TRD
+    ./bin/api list quest --arc mq_
+    ./bin/api list quest --arc sq_
+    ./bin/api list quest --arc quest_wis
+    ./bin/api list quest --npc yael
+    ./bin/api list quest --npc brynn
+    ./bin/api list quest --monster goblin
+    ./bin/api list quest --monster skeleton
+    ./bin/api list quest --monster leshen
+    ./bin/api list quest --has-npc true
+    ./bin/api list quest --has-npc false
+    ./bin/api list quest --complete true
+    ./bin/api list quest --q shard
+    ./bin/api list quest --q goblin
+    ./bin/api list quest --q "the road"
+    ./bin/api list quest --type side --node LHR
+    ./bin/api list quest --type main --ids
+    ./bin/api list quest --arc mq_ --ids
+    ./bin/api list quest --has-npc true --type side
+    ./bin/api list quest --ids
 
   ── list monster ─────────────────────────────────────────────────
 
@@ -2192,35 +2192,35 @@ ${C.bold}═══════════════════════�
     --ids                  Return keys only
 
   Examples:
-    ./api.sh list monster
-    ./api.sh list monster --terrain city
-    ./api.sh list monster --terrain forest
-    ./api.sh list monster --terrain crypt
-    ./api.sh list monster --terrain inn
-    ./api.sh list monster --terrain tavern
-    ./api.sh list monster --terrain goblin_cave
-    ./api.sh list monster --terrain hag_swamp
-    ./api.sh list monster --terrain beach
-    ./api.sh list monster --terrain sewers
-    ./api.sh list monster --terrain vampire_castle
-    ./api.sh list monster --tier trivial
-    ./api.sh list monster --tier easy
-    ./api.sh list monster --tier medium
-    ./api.sh list monster --tier hard
-    ./api.sh list monster --tier boss
-    ./api.sh list monster --has-drop true
-    ./api.sh list monster --has-drop false
-    ./api.sh list monster --no-terrain
-    ./api.sh list monster --q vampire
-    ./api.sh list monster --q dragon
-    ./api.sh list monster --q ghost
-    ./api.sh list monster --q shadow
-    ./api.sh list monster --q wraith
-    ./api.sh list monster --tier easy --has-drop true
-    ./api.sh list monster --tier boss --ids
-    ./api.sh list monster --terrain crypt --tier easy
-    ./api.sh list monster --no-terrain --ids
-    ./api.sh list monster --ids
+    ./bin/api list monster
+    ./bin/api list monster --terrain city
+    ./bin/api list monster --terrain forest
+    ./bin/api list monster --terrain crypt
+    ./bin/api list monster --terrain inn
+    ./bin/api list monster --terrain tavern
+    ./bin/api list monster --terrain goblin_cave
+    ./bin/api list monster --terrain hag_swamp
+    ./bin/api list monster --terrain beach
+    ./bin/api list monster --terrain sewers
+    ./bin/api list monster --terrain vampire_castle
+    ./bin/api list monster --tier trivial
+    ./bin/api list monster --tier easy
+    ./bin/api list monster --tier medium
+    ./bin/api list monster --tier hard
+    ./bin/api list monster --tier boss
+    ./bin/api list monster --has-drop true
+    ./bin/api list monster --has-drop false
+    ./bin/api list monster --no-terrain
+    ./bin/api list monster --q vampire
+    ./bin/api list monster --q dragon
+    ./bin/api list monster --q ghost
+    ./bin/api list monster --q shadow
+    ./bin/api list monster --q wraith
+    ./bin/api list monster --tier easy --has-drop true
+    ./bin/api list monster --tier boss --ids
+    ./bin/api list monster --terrain crypt --tier easy
+    ./bin/api list monster --no-terrain --ids
+    ./bin/api list monster --ids
 
   ── list npc ─────────────────────────────────────────────────────
 
@@ -2231,17 +2231,17 @@ ${C.bold}═══════════════════════�
     --ids                  Return keys only
 
   Examples:
-    ./api.sh list npc
-    ./api.sh list npc --node LHR
-    ./api.sh list npc --node TLL
-    ./api.sh list npc --node KRN
-    ./api.sh list npc --occupation innkeeper
-    ./api.sh list npc --occupation merchant
-    ./api.sh list npc --occupation guard
-    ./api.sh list npc --occupation captain
-    ./api.sh list npc --q yael
-    ./api.sh list npc --q brynn
-    ./api.sh list npc --ids
+    ./bin/api list npc
+    ./bin/api list npc --node LHR
+    ./bin/api list npc --node TLL
+    ./bin/api list npc --node KRN
+    ./bin/api list npc --occupation innkeeper
+    ./bin/api list npc --occupation merchant
+    ./bin/api list npc --occupation guard
+    ./bin/api list npc --occupation captain
+    ./bin/api list npc --q yael
+    ./bin/api list npc --q brynn
+    ./bin/api list npc --ids
 
   ── list terrain ─────────────────────────────────────────────────
 
@@ -2250,30 +2250,30 @@ ${C.bold}═══════════════════════�
     --ids        Return keys only
 
   Examples:
-    ./api.sh list terrain
-    ./api.sh list terrain --q city
-    ./api.sh list terrain --q forest
-    ./api.sh list terrain --q swamp
-    ./api.sh list terrain --q crypt
-    ./api.sh list terrain --q cave
-    ./api.sh list terrain --ids
+    ./bin/api list terrain
+    ./bin/api list terrain --q city
+    ./bin/api list terrain --q forest
+    ./bin/api list terrain --q swamp
+    ./bin/api list terrain --q crypt
+    ./bin/api list terrain --q cave
+    ./bin/api list terrain --ids
 
   ── list ids <type> ──────────────────────────────────────────────
 
   Returns {type, count, ids:[…]} — no full objects.
 
   Examples:
-    ./api.sh list ids node
-    ./api.sh list ids quest
-    ./api.sh list ids monster
-    ./api.sh list ids npc
-    ./api.sh list ids terrain
+    ./bin/api list ids node
+    ./bin/api list ids quest
+    ./bin/api list ids monster
+    ./bin/api list ids npc
+    ./bin/api list ids terrain
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   location — composite node view
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh location [code] [filters]
+  ./bin/api location [code] [filters]
 
   No code: list all locations with counts (filterable).
   With code: node + monsters + quests + NPCs in one response.
@@ -2286,63 +2286,63 @@ ${C.bold}═══════════════════════�
     --ids                  Return {count, ids:[…]}
 
   Examples — list form:
-    ./api.sh location
-    ./api.sh location --act 1
-    ./api.sh location --act 2
-    ./api.sh location --act 3
-    ./api.sh location --act 4
-    ./api.sh location --act 5
-    ./api.sh location --terrain city
-    ./api.sh location --terrain forest
-    ./api.sh location --terrain crypt
-    ./api.sh location --terrain inn
-    ./api.sh location --terrain goblin_cave
-    ./api.sh location --has-quests true
-    ./api.sh location --has-quests false
-    ./api.sh location --q birka
-    ./api.sh location --q crypt
-    ./api.sh location --act 1 --has-quests true
-    ./api.sh location --terrain forest --has-quests true
-    ./api.sh location --ids
-    ./api.sh location --act 3 --ids
+    ./bin/api location
+    ./bin/api location --act 1
+    ./bin/api location --act 2
+    ./bin/api location --act 3
+    ./bin/api location --act 4
+    ./bin/api location --act 5
+    ./bin/api location --terrain city
+    ./bin/api location --terrain forest
+    ./bin/api location --terrain crypt
+    ./bin/api location --terrain inn
+    ./bin/api location --terrain goblin_cave
+    ./bin/api location --has-quests true
+    ./bin/api location --has-quests false
+    ./bin/api location --q birka
+    ./bin/api location --q crypt
+    ./bin/api location --act 1 --has-quests true
+    ./bin/api location --terrain forest --has-quests true
+    ./bin/api location --ids
+    ./bin/api location --act 3 --ids
 
   Examples — detail form:
-    ./api.sh location LHR
-    ./api.sh location BK
-    ./api.sh location TLL
-    ./api.sh location KRN
-    ./api.sh location FRO
-    ./api.sh location TRD
-    ./api.sh location SDQ
-    ./api.sh location LHR --out /tmp/lhr-location.json
+    ./bin/api location LHR
+    ./bin/api location BK
+    ./bin/api location TLL
+    ./bin/api location KRN
+    ./bin/api location FRO
+    ./bin/api location TRD
+    ./bin/api location SDQ
+    ./bin/api location LHR --out /tmp/lhr-location.json
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   chain — quest dependency chain
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh chain <quest-id>
+  ./bin/api chain <quest-id>
 
   Returns upstream (quests that must complete before this) and
   downstream (quests unlocked by this one). Also reports canDelete.
 
   Examples:
-    ./api.sh chain mq_1
-    ./api.sh chain mq_2
-    ./api.sh chain mq_3
-    ./api.sh chain mq_4
-    ./api.sh chain mq_5
-    ./api.sh chain mq_6
-    ./api.sh chain mq_7
-    ./api.sh chain sq_1
-    ./api.sh chain sq_2
-    ./api.sh chain quest_wis_01
-    ./api.sh chain mq_1 --raw
+    ./bin/api chain mq_1
+    ./bin/api chain mq_2
+    ./bin/api chain mq_3
+    ./bin/api chain mq_4
+    ./bin/api chain mq_5
+    ./bin/api chain mq_6
+    ./bin/api chain mq_7
+    ./bin/api chain sq_1
+    ./bin/api chain sq_2
+    ./bin/api chain quest_wis_01
+    ./bin/api chain mq_1 --raw
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   put — edit one or more fields
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh put <type> <id> <field>=<value> [field=value …]
+  ./bin/api put <type> <id> <field>=<value> [field=value …]
 
   Values are auto-coerced: numbers for ac/hp/atk/act/sleepCost etc.,
   null clears a field, true/false for booleans.
@@ -2364,57 +2364,57 @@ ${C.bold}═══════════════════════�
     label  icon
 
   Examples — node:
-    ./api.sh put node LHR label="City Streets — Birka (Revised)"
-    ./api.sh put node LHR name=city
-    ./api.sh put node LHR act=1
-    ./api.sh put node LHR N=BMA
-    ./api.sh put node LHR S=KRN
-    ./api.sh put node LHR E=TLL
-    ./api.sh put node LHR W=WRO
-    ./api.sh put node LHR W=null
-    ./api.sh put node TLL sleep=true sleepCost=5
-    ./api.sh put node KRN npc="The Sexton"
-    ./api.sh put node LHR loot="Bloodstained Map"
+    ./bin/api put node LHR label="City Streets — Birka (Revised)"
+    ./bin/api put node LHR name=city
+    ./bin/api put node LHR act=1
+    ./bin/api put node LHR N=BMA
+    ./bin/api put node LHR S=KRN
+    ./bin/api put node LHR E=TLL
+    ./bin/api put node LHR W=WRO
+    ./bin/api put node LHR W=null
+    ./bin/api put node TLL sleep=true sleepCost=5
+    ./bin/api put node KRN npc="The Sexton"
+    ./bin/api put node LHR loot="Bloodstained Map"
 
   Examples — quest:
-    ./api.sh put quest mq_1 passText="Muffat takes the map."
-    ./api.sh put quest mq_1 failText="The docks are empty."
-    ./api.sh put quest mq_1 hint="Seek Muffat at the Tilbury docks."
-    ./api.sh put quest mq_2 waypointNode=FRO
-    ./api.sh put quest mq_3 activateNode=SDQ
-    ./api.sh put quest sq_1 npc=brynn
-    ./api.sh batch-npc updates.json          # §AUDIT-03b: bulk npc re-anchor, ONE save
+    ./bin/api put quest mq_1 passText="Muffat takes the map."
+    ./bin/api put quest mq_1 failText="The docks are empty."
+    ./bin/api put quest mq_1 hint="Seek Muffat at the Tilbury docks."
+    ./bin/api put quest mq_2 waypointNode=FRO
+    ./bin/api put quest mq_3 activateNode=SDQ
+    ./bin/api put quest sq_1 npc=brynn
+    ./bin/api batch-npc updates.json          # §AUDIT-03b: bulk npc re-anchor, ONE save
                                              #   updates.json = [{"id":"quest_x","npc":"key"}, ...]
-    ./api.sh put quest quest_wis_01 checkDC=14
-    ./api.sh put quest quest_wis_01 checkStat=WIS
-    ./api.sh put quest sq_2 xpAward=50 reward=20
+    ./bin/api put quest quest_wis_01 checkDC=14
+    ./bin/api put quest quest_wis_01 checkStat=WIS
+    ./bin/api put quest sq_2 xpAward=50 reward=20
 
   Examples — monster:
-    ./api.sh put monster goblin hp=10
-    ./api.sh put monster goblin ac=14
-    ./api.sh put monster goblin atk=5
-    ./api.sh put monster goblin tier=medium
-    ./api.sh put monster skeleton name="Risen Skeleton"
-    ./api.sh put monster shadow dmgDie=8 dmgCount=2
+    ./bin/api put monster goblin hp=10
+    ./bin/api put monster goblin ac=14
+    ./bin/api put monster goblin atk=5
+    ./bin/api put monster goblin tier=medium
+    ./bin/api put monster skeleton name="Risen Skeleton"
+    ./bin/api put monster shadow dmgDie=8 dmgCount=2
 
   Examples — terrain:
-    ./api.sh put terrain city label="City Streets"
-    ./api.sh put terrain forest icon=🌲
+    ./bin/api put terrain city label="City Streets"
+    ./bin/api put terrain forest icon=🌲
 
   Examples — piping JSON body:
     echo '{"passText":"You recalled the text.","failText":"Try again."}' \\
-      | ./api.sh put quest quest_wis_01
+      | ./bin/api put quest quest_wis_01
     echo '{"label":"City Streets — Birka","act":1}' \\
-      | ./api.sh put node LHR
+      | ./bin/api put node LHR
     echo '{"hp":20,"ac":16,"tier":"medium"}' \\
-      | ./api.sh put monster skeleton
-    cat overrides.json | ./api.sh put quest mq_1
+      | ./bin/api put monster skeleton
+    cat overrides.json | ./bin/api put quest mq_1
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   post — create a new entity
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh post <type> [field=value …]
+  ./bin/api post <type> [field=value …]
 
   Nonce is auto-acquired if id/code/key is provided.
   Pipe a JSON object for complex bodies.
@@ -2427,32 +2427,32 @@ ${C.bold}═══════════════════════�
     terrain: key  label  icon
 
   Examples — node:
-    ./api.sh post node code=MM name=mimic_meadows label="Mimic Meadows" act=3
-    ./api.sh post node code=SW name=scholars_qtr label="Scholar Workshop" act=3 N=CY W=BK
-    ./api.sh post node code=EHZ name=void label="Event Horizon Zone" act=5
-    ./api.sh post node \\
+    ./bin/api post node code=MM name=mimic_meadows label="Mimic Meadows" act=3
+    ./bin/api post node code=SW name=scholars_qtr label="Scholar Workshop" act=3 N=CY W=BK
+    ./bin/api post node code=EHZ name=void label="Event Horizon Zone" act=5
+    ./bin/api post node \\
       code=VAULT name=crypt label="The Sealed Vault" act=2 \\
       N=KRN sleep=false
-    ./api.sh post node \\
+    ./bin/api post node \\
       code=NEW_INN name=inn label="The Silver Lantern Inn" act=2 \\
       sleep=true sleepCost=8 npc="Innkeeper Gert"
 
   Examples — quest:
-    ./api.sh post quest \\
+    ./bin/api post quest \\
       id=sq_birka_rat type=combat title="The Rat Problem" \\
       desc="Brynn wants the cellar cleared." \\
       hint="Head to the cellar beneath the inn." \\
       passText="The cellar is quiet now." \\
       failText="The rats are still down there." \\
       activateNode=TLL waypointNode=TLL npc=brynn
-    ./api.sh post quest \\
+    ./bin/api post quest \\
       id=sq_crypt_candle type=side title="The Black Candle" \\
       desc="Something lit that candle." \\
       hint="Search the crypt second chamber." \\
       passText="The candle burns out." \\
       failText="The candle is still burning." \\
       activateNode=KRN waypointNode=KRN
-    ./api.sh post quest \\
+    ./bin/api post quest \\
       id=quest_int_01 type=skill_check title="Decipher the Cipher" \\
       desc="The cipher is in three parts." \\
       hint="The answer is in the structure." \\
@@ -2462,34 +2462,34 @@ ${C.bold}═══════════════════════�
       checkStat=INT checkDC=14
 
   Examples — monster:
-    ./api.sh post monster \\
+    ./bin/api post monster \\
       key=bog_crawler name="Bog Crawler" tier=easy \\
       ac=11 hp=18 atk=4 dmgDie=6 dmgCount=1 dmgFlat=2
-    ./api.sh post monster \\
+    ./bin/api post monster \\
       key=swamp_sovereign name="Swamp Sovereign" tier=boss \\
       ac=16 hp=120 atk=8 dmgDie=10 dmgCount=2 dmgFlat=5
-    ./api.sh post monster \\
+    ./bin/api post monster \\
       key=void_tendril name="Void Tendril" tier=medium \\
       ac=13 hp=45 atk=6 dmgDie=8 dmgCount=2 dmgFlat=3
 
   Examples — npc:
-    ./api.sh post npc \\
+    ./bin/api post npc \\
       key=innkeeper_gert name="Innkeeper Gert" \\
       occupation=innkeeper node=NEW_INN
-    ./api.sh post npc \\
+    ./bin/api post npc \\
       key=fence_pachelbel name="City Fence Pachelbel" \\
       occupation=fence node=LLA
 
   Examples — terrain:
-    ./api.sh post terrain key=temple_ruins label="Temple Ruins" icon=🏛
-    ./api.sh post terrain key=void label="The Void" icon=🌑
+    ./bin/api post terrain key=temple_ruins label="Temple Ruins" icon=🏛
+    ./bin/api post terrain key=void label="The Void" icon=🌑
 
   Examples — piping JSON:
-    cat <<'EOF' | ./api.sh post node
+    cat <<'EOF' | ./bin/api post node
     {"code":"EHZ","name":"void","label":"Event Horizon Zone","act":5}
     EOF
 
-    cat <<'EOF' | ./api.sh post quest
+    cat <<'EOF' | ./bin/api post quest
     {"id":"quest_math_01","type":"side","title":"The Counting Problem",
      "desc":"The mathematician wants an exact count.",
      "hint":"Count carefully. Zero matters.",
@@ -2498,18 +2498,18 @@ ${C.bold}═══════════════════════�
      "activateNode":"EHZ","waypointNode":"EHZ"}
     EOF
 
-    cat import_cdg.json | ./api.sh post node
-    cat new_quests.json | ./api.sh post quest
+    cat import_cdg.json | ./bin/api post node
+    cat new_quests.json | ./bin/api post quest
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   del — delete an entity
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh del <type> <id>
+  ./bin/api del <type> <id>
 
   Nonce is auto-acquired. Before deleting:
-    - Run ./api.sh chain <id> for quests (check canDelete)
-    - Run ./api.sh location <code> for nodes (check quests/npcs)
+    - Run ./bin/api chain <id> for quests (check canDelete)
+    - Run ./bin/api location <code> for nodes (check quests/npcs)
 
   Deletes are SOURCE-LEVEL and verified (§DX-01d/i, 2026-07-30). The entry line
   is excised from the data section, the file is saved and re-parsed, and the
@@ -2517,7 +2517,7 @@ ${C.bold}═══════════════════════�
   that fix every del was model-only: it printed "✓ deleted" and the entry came
   back on the next parse.
 
-  Cascades, so no orphan is left for ./api.sh audit:
+  Cascades, so no orphan is left for ./bin/api audit:
     node    → its NODE_COORDS row
     monster → its MONSTER_DROPS trophy entry
 
@@ -2527,15 +2527,15 @@ ${C.bold}═══════════════════════�
   downstream dependents, is still blocked (409 + blockedBy).
 
   Examples:
-    ./api.sh del quest sq_birka_rat
-    ./api.sh del quest quest_old_01
-    ./api.sh del node MM
-    ./api.sh del node VAULT
-    ./api.sh del monster bog_crawler
-    ./api.sh del npc innkeeper_gert
+    ./bin/api del quest sq_birka_rat
+    ./bin/api del quest quest_old_01
+    ./bin/api del node MM
+    ./bin/api del node VAULT
+    ./bin/api del monster bog_crawler
+    ./bin/api del npc innkeeper_gert
 
   Manual nonce flow (for scripting):
-    NONCE=$(./api.sh nonce quest sq_birka_rat)
+    NONCE=$(./bin/api nonce quest sq_birka_rat)
     curl -s -XDELETE http://localhost:1367/api/quest/sq_birka_rat \\
       -H "X-Nonce: $NONCE" | jq
 
@@ -2543,7 +2543,7 @@ ${C.bold}═══════════════════════�
   audit — integrity scan
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh audit [--map] [--text]
+  ./bin/api audit [--map] [--text]
 
   No flags: full integrity scan (broken refs, missing data, dead flags).
   --map:  bidirectional link audit (A.N→B but B.S≠A).
@@ -2552,17 +2552,17 @@ ${C.bold}═══════════════════════�
   Severity levels: error | warning | suggestion | parse
 
   Examples:
-    ./api.sh audit
-    ./api.sh audit --map
-    ./api.sh audit --text
-    ./api.sh audit --map --text
-    ./api.sh audit --raw
-    ./api.sh audit --out /tmp/audit.json
+    ./bin/api audit
+    ./bin/api audit --map
+    ./bin/api audit --text
+    ./bin/api audit --map --text
+    ./bin/api audit --raw
+    ./bin/api audit --out /tmp/audit.json
 
   Pipe for quick checks:
-    ./api.sh audit --raw | jq '.summary'
-    ./api.sh audit --map --raw | jq '[.errors[] | {from:.from, dir:.dir, to:.to}]'
-    ./api.sh audit --map --text | grep ERROR
+    ./bin/api audit --raw | jq '.summary'
+    ./bin/api audit --map --raw | jq '[.errors[] | {from:.from, dir:.dir, to:.to}]'
+    ./bin/api audit --map --text | grep ERROR
 
   Systematic fix loop using next-error:
     curl -s 'http://localhost:1367/api/next-error'              | jq '{severity, key, field, fix}'
@@ -2573,7 +2573,7 @@ ${C.bold}═══════════════════════�
   export — dump collection data
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh export <collection> [--format json|js|module] [--out file]
+  ./bin/api export <collection> [--format json|js|module] [--out file]
 
   Collections: node_map | quest_db | monster_pool | world_db | all
 
@@ -2582,36 +2582,36 @@ ${C.bold}═══════════════════════�
   --format module — export const NODE_MAP = {...} ESM
 
   Examples:
-    ./api.sh export node_map
-    ./api.sh export quest_db
-    ./api.sh export monster_pool
-    ./api.sh export world_db
-    ./api.sh export all
-    ./api.sh export node_map --format js
-    ./api.sh export quest_db --format module
-    ./api.sh export all --format json
-    ./api.sh export node_map --out world/nodes.json
-    ./api.sh export quest_db --out world/quests.json
-    ./api.sh export monster_pool --out world/monsters.json
-    ./api.sh export world_db --out world/terrains.json
-    ./api.sh export all --out world/full-export.json
-    ./api.sh export quest_db --format module --out src/data/quests.mjs
+    ./bin/api export node_map
+    ./bin/api export quest_db
+    ./bin/api export monster_pool
+    ./bin/api export world_db
+    ./bin/api export all
+    ./bin/api export node_map --format js
+    ./bin/api export quest_db --format module
+    ./bin/api export all --format json
+    ./bin/api export node_map --out world/nodes.json
+    ./bin/api export quest_db --out world/quests.json
+    ./bin/api export monster_pool --out world/monsters.json
+    ./bin/api export world_db --out world/terrains.json
+    ./bin/api export all --out world/full-export.json
+    ./bin/api export quest_db --format module --out src/data/quests.mjs
 
   Backup before large edits:
-    ./api.sh export node_map --out backup-nodes-$(date +%Y%m%d).json
-    ./api.sh export quest_db --out backup-quests-$(date +%Y%m%d).json
+    ./bin/api export node_map --out backup-nodes-$(date +%Y%m%d).json
+    ./bin/api export quest_db --out backup-quests-$(date +%Y%m%d).json
 
   Inspect counts:
-    ./api.sh export quest_db --raw | jq 'keys | length'
-    ./api.sh export node_map --raw | jq 'keys'
-    ./api.sh export monster_pool --raw | jq '[to_entries[] | select(.value.tier=="boss") | .key]'
+    ./bin/api export quest_db --raw | jq 'keys | length'
+    ./bin/api export node_map --raw | jq 'keys'
+    ./bin/api export monster_pool --raw | jq '[to_entries[] | select(.value.tier=="boss") | .key]'
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   import — bulk import nodes + quest cycles
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh import <file.json>
-  cat file.json | ./api.sh import
+  ./bin/api import <file.json>
+  cat file.json | ./bin/api import
 
   Import file format:
     {
@@ -2630,64 +2630,64 @@ ${C.bold}═══════════════════════�
     }
 
   Examples:
-    ./api.sh import import_cdg.json
-    ./api.sh import import_vie.json
-    ./api.sh import import_rkv.json
-    ./api.sh import import_alf.json
-    ./api.sh import import_hft.json
-    cat import_cdg.json | ./api.sh import
-    ./api.sh import import_cdg.json --out /tmp/cdg-import-result.json
+    ./bin/api import import_cdg.json
+    ./bin/api import import_vie.json
+    ./bin/api import import_rkv.json
+    ./bin/api import import_alf.json
+    ./bin/api import import_hft.json
+    cat import_cdg.json | ./bin/api import
+    ./bin/api import import_cdg.json --out /tmp/cdg-import-result.json
 
   Review result:
-    ./api.sh import import_cdg.json --out /tmp/result.json
+    ./bin/api import import_cdg.json --out /tmp/result.json
     jq '{created:.nodesCreated, skipped:.nodesSkipped, quests:.questsCreated|length}' /tmp/result.json
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   speak — Claude-voiced NPC dialogue
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh speak <npc-id> "<prompt>" [--state neutral|friendly|dearFriend] [--model <model>]
+  ./bin/api speak <npc-id> "<prompt>" [--state neutral|friendly|dearFriend] [--model <model>]
 
   Requires: ANTHROPIC_API_KEY in environment.
   States: neutral (first meeting) | friendly (ally) | dearFriend (deep trust)
 
   Examples:
-    ./api.sh speak yael "Good afternoon."
-    ./api.sh speak yael "What happened here?"
-    ./api.sh speak yael "I cleared the crypt."
-    ./api.sh speak yael "Tell me what you know about the Void."
-    ./api.sh speak yael "I cleared the crypt." --state friendly
-    ./api.sh speak yael "Tell me what you know about the Void." --state dearFriend
-    ./api.sh speak brynn "Do you have a room available?"
-    ./api.sh speak brynn "What can you tell me about Froberger?"
-    ./api.sh speak brynn "I found the two missing merchants." --state friendly
-    ./api.sh speak archivus_sweelinck "I have all seven shards."
-    ./api.sh speak archivus_sweelinck "Is this the right path?" --state dearFriend
-    ./api.sh speak yael "What is happening in this city?" --model claude-haiku-4-5-20251001
-    ./api.sh speak yael "I need your help." --model claude-sonnet-4-6
+    ./bin/api speak yael "Good afternoon."
+    ./bin/api speak yael "What happened here?"
+    ./bin/api speak yael "I cleared the crypt."
+    ./bin/api speak yael "Tell me what you know about the Void."
+    ./bin/api speak yael "I cleared the crypt." --state friendly
+    ./bin/api speak yael "Tell me what you know about the Void." --state dearFriend
+    ./bin/api speak brynn "Do you have a room available?"
+    ./bin/api speak brynn "What can you tell me about Froberger?"
+    ./bin/api speak brynn "I found the two missing merchants." --state friendly
+    ./bin/api speak archivus_sweelinck "I have all seven shards."
+    ./bin/api speak archivus_sweelinck "Is this the right path?" --state dearFriend
+    ./bin/api speak yael "What is happening in this city?" --model claude-haiku-4-5-20251001
+    ./bin/api speak yael "I need your help." --model claude-sonnet-4-6
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   nonce — get a one-time write token
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh nonce <type> <id>
+  ./bin/api nonce <type> <id>
 
   Prints the nonce token to stdout (expires in 5 minutes).
   Use when scripting raw curl DELETE/POST calls.
-  ./api.sh post and ./api.sh del auto-acquire nonces — use this only
+  ./bin/api post and ./bin/api del auto-acquire nonces — use this only
   when you need the token separately.
 
   Examples:
-    ./api.sh nonce quest sq_birka_rat
-    ./api.sh nonce node MM
-    ./api.sh nonce monster bog_crawler
+    ./bin/api nonce quest sq_birka_rat
+    ./bin/api nonce node MM
+    ./bin/api nonce monster bog_crawler
 
   Capture and use in a script:
-    NONCE=$(./api.sh nonce quest sq_old_01)
+    NONCE=$(./bin/api nonce quest sq_old_01)
     curl -s -XDELETE http://localhost:1367/api/quest/sq_old_01 \\
       -H "X-Nonce: $NONCE" | jq
 
-    NONCE=$(./api.sh nonce node NEW_NODE)
+    NONCE=$(./bin/api nonce node NEW_NODE)
     curl -s -XPOST http://localhost:1367/api/node \\
       -H "Content-Type: application/json" \\
       -H "X-Nonce: $NONCE" \\
@@ -2697,54 +2697,54 @@ ${C.bold}═══════════════════════�
   ai — ask Claude about the API
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh ai "<question>"
-  ./api.sh --ai "<question>"
+  ./bin/api ai "<question>"
+  ./bin/api --ai "<question>"
 
   Requires: ANTHROPIC_API_KEY. Uses Claude Haiku. Replies in 1–3 lines,
-  leading with a concrete ./api.sh command when applicable.
+  leading with a concrete ./bin/api command when applicable.
 
   Examples:
-    ./api.sh ai "how do I link two nodes bidirectionally?"
-    ./api.sh ai "what monsters appear in dungeon terrain?"
-    ./api.sh ai "how do I add a quest that requires two items?"
-    ./api.sh ai "what is the difference between activateNode and waypointNode?"
-    ./api.sh ai "how do I create a junction between KRN and HKG?"
-    ./api.sh ai "what fields can I set on a node?"
-    ./api.sh ai "how do I bulk export and re-import node_map?"
-    ./api.sh ai "what curl command fills a gap between two nodes?"
-    ./api.sh ai "how do I see quests at node LHR?"
-    ./api.sh ai "how do I check if a node is walkable from BK?"
-    ./api.sh --ai "list all monster tiers"
-    ./api.sh --ai "show me how to create a skill_check quest"
+    ./bin/api ai "how do I link two nodes bidirectionally?"
+    ./bin/api ai "what monsters appear in dungeon terrain?"
+    ./bin/api ai "how do I add a quest that requires two items?"
+    ./bin/api ai "what is the difference between activateNode and waypointNode?"
+    ./bin/api ai "how do I create a junction between KRN and HKG?"
+    ./bin/api ai "what fields can I set on a node?"
+    ./bin/api ai "how do I bulk export and re-import node_map?"
+    ./bin/api ai "what curl command fills a gap between two nodes?"
+    ./bin/api ai "how do I see quests at node LHR?"
+    ./bin/api ai "how do I check if a node is walkable from BK?"
+    ./bin/api --ai "list all monster tiers"
+    ./bin/api --ai "show me how to create a skill_check quest"
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   GLOBAL OPTIONS — apply to every command
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
   --server <url>      Override base URL
-    ./api.sh ping --server http://localhost:1367
-    ./api.sh ping --server http://192.168.1.10:1367
-    WBAPI_URL=http://192.168.1.10:1367 ./api.sh ping
+    ./bin/api ping --server http://localhost:1367
+    ./bin/api ping --server http://192.168.1.10:1367
+    WBAPI_URL=http://192.168.1.10:1367 ./bin/api ping
 
   --out <file>        Write output to file
-    ./api.sh get node LHR --out /tmp/lhr.json
-    ./api.sh list quest --out /tmp/quests.json
-    ./api.sh export quest_db --out backup/quests-$(date +%Y%m%d).json
-    ./api.sh count nodes --out /tmp/node-stats.json
+    ./bin/api get node LHR --out /tmp/lhr.json
+    ./bin/api list quest --out /tmp/quests.json
+    ./bin/api export quest_db --out backup/quests-$(date +%Y%m%d).json
+    ./bin/api count nodes --out /tmp/node-stats.json
 
   --raw               Compact JSON (no pretty-print)
-    ./api.sh get node LHR --raw
-    ./api.sh list quest --raw | wc -c
-    ./api.sh list node --raw | jq 'length'
-    ./api.sh export monster_pool --raw | jq 'keys | length'
+    ./bin/api get node LHR --raw
+    ./bin/api list quest --raw | wc -c
+    ./bin/api list node --raw | jq 'length'
+    ./bin/api export monster_pool --raw | jq 'keys | length'
 
   --retry <n>         Max retries on 5xx or connection error (default 3)
-    ./api.sh put quest mq_1 passText="Updated." --retry 5
-    ./api.sh import big-import.json --retry 2
+    ./bin/api put quest mq_1 passText="Updated." --retry 5
+    ./bin/api import big-import.json --retry 2
 
   --timeout <ms>      Per-request timeout in ms (default 10000)
-    ./api.sh export monster_pool --timeout 30000
-    ./api.sh import import_vie.json --timeout 15000
+    ./bin/api export monster_pool --timeout 30000
+    ./bin/api import import_vie.json --timeout 15000
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   §23 CELL GRID QUERIES
@@ -2755,27 +2755,27 @@ ${C.bold}═══════════════════════�
 
   ── cell — inspect a single grid cell ──────────────────────────
 
-  ./api.sh cell <r> <c>              # node at (r,c): code, terrain, exits
-  ./api.sh cell <r> <c> neighbors    # N/E/S/W neighbors with terrain + passable
+  ./bin/api cell <r> <c>              # node at (r,c): code, terrain, exits
+  ./bin/api cell <r> <c> neighbors    # N/E/S/W neighbors with terrain + passable
 
   Example:
-    ./api.sh cell 5 16
+    ./bin/api cell 5 16
     → { r:5, c:16, code:"CI", terrain:"city", exits:{N:"SL",E:"IN",S:null,W:null} }
 
-    ./api.sh cell 5 16 neighbors
+    ./bin/api cell 5 16 neighbors
     → { N:{code:"SL",terrain:"road",passable:true}, E:{…}, S:null, W:null }
 
   ── grid — bulk cell-grid queries ──────────────────────────────
 
-  ./api.sh grid heatmap
+  ./bin/api grid heatmap
     → all cells with adjacency heat (0–4 occupied neighbors)
     → sort by heat to find highly connected vs isolated nodes
 
-  ./api.sh grid reachability [--hub LHR]
+  ./bin/api grid reachability [--hub LHR]
     → reachable vs unreachable cells from hub (default: LHR)
-    → same answer as ./api.sh reachability but cell-based
+    → same answer as ./bin/api reachability but cell-based
 
-  ./api.sh grid region --r1=0 --c1=0 --r2=10 --c2=20
+  ./bin/api grid region --r1=0 --c1=0 --r2=10 --c2=20
     → 2D array of cells in bounding box
     → null = empty cell, object = { code, terrain, exits }
 
@@ -2784,126 +2784,126 @@ ${C.bold}═══════════════════════�
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
   # Is the server running?
-  ./api.sh ping
+  ./bin/api ping
 
   # How many nodes / quests / monsters are loaded?
-  ./api.sh count
+  ./bin/api count
 
   # What nodes have no coordinates yet?
-  ./api.sh list node --no-coords
+  ./bin/api list node --no-coords
 
   # What quests are at a given node?
-  ./api.sh list quest --node LHR
-  ./api.sh list quest --node BK
+  ./bin/api list quest --node LHR
+  ./bin/api list quest --node BK
 
   # All main quest IDs in order
-  ./api.sh list quest --arc mq_ --ids
+  ./bin/api list quest --arc mq_ --ids
 
   # What monsters live in the crypt?
-  ./api.sh list monster --terrain crypt
+  ./bin/api list monster --terrain crypt
 
   # Are there any monsters not in any terrain?
-  ./api.sh list monster --no-terrain
+  ./bin/api list monster --no-terrain
 
   # Which nodes have no quests and are not junctions?
-  ./api.sh list node --has-quests false --junction false
+  ./bin/api list node --has-quests false --junction false
 
   # Full location composite view for a node
-  ./api.sh location LHR
-  ./api.sh location KRN
+  ./bin/api location LHR
+  ./bin/api location KRN
 
   # Check whether a quest can be safely deleted
-  ./api.sh chain sq_birka_rat
+  ./bin/api chain sq_birka_rat
 
   # Update quest text from a long heredoc
-  ./api.sh put quest mq_1 passText="\$(cat <<'EOF'
+  ./bin/api put quest mq_1 passText="\$(cat <<'EOF'
   Muffat takes the map and unfolds it on the dock counter.
   She does not ask how you came by it.
   EOF
   )"
 
   # Backup before editing
-  ./api.sh export node_map --out /tmp/backup-nodes.json && \\
-    ./api.sh put node LHR label="City Streets — Birka"
+  ./bin/api export node_map --out /tmp/backup-nodes.json && \\
+    ./bin/api put node LHR label="City Streets — Birka"
 
   # Full create+verify+save workflow
-  ./api.sh post node code=TEST name=city label="Test Node" act=1
-  ./api.sh post quest id=quest_test_01 type=side title="Test Quest" \\
+  ./bin/api post node code=TEST name=city label="Test Node" act=1
+  ./bin/api post quest id=quest_test_01 type=side title="Test Quest" \\
     activateNode=TEST desc="test" passText="pass" failText="fail"
-  ./api.sh location TEST
-  ./api.sh audit --map
+  ./bin/api location TEST
+  ./bin/api audit --map
   curl -s -XPOST http://localhost:1367/api/save | jq
 
   # Export all data for offline analysis
-  ./api.sh export all --out world-snapshot-$(date +%Y%m%d).json
+  ./bin/api export all --out world-snapshot-$(date +%Y%m%d).json
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   MAP VISUALIZATION
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh worldmap [options]
+  ./bin/api worldmap [options]
 
   Three zoom levels — each embeds navigation hints for the next level.
-  No curl needed. All map operations go through ./api.sh worldmap.
+  No curl needed. All map operations go through ./bin/api worldmap.
 
   Level 0 — World (all 76 geo-referenced cities, lat/lon oriented):
-    ./api.sh worldmap
-    ./api.sh worldmap --latlon
+    ./bin/api worldmap
+    ./bin/api worldmap --latlon
 
   Level 1 — Region (6×6 grid, A1–F6, west→east, north→south):
-    ./api.sh worldmap --regions
-    ./api.sh worldmap --region A1
-    ./api.sh worldmap --region B2
-    ./api.sh worldmap --region C3
-    ./api.sh worldmap --region C4
-    ./api.sh worldmap --region C5
+    ./bin/api worldmap --regions
+    ./bin/api worldmap --region A1
+    ./bin/api worldmap --region B2
+    ./bin/api worldmap --region C3
+    ./bin/api worldmap --region C4
+    ./bin/api worldmap --region C5
 
   Level 2 — City (immediate connections, terrain, gap/bendy status):
-    ./api.sh worldmap --city LHR
-    ./api.sh worldmap --city CON
-    ./api.sh worldmap --city ROM
-    ./api.sh worldmap --city JAR
-    ./api.sh worldmap --city BGD
-    ./api.sh worldmap --city SAM
+    ./bin/api worldmap --city LHR
+    ./bin/api worldmap --city CON
+    ./bin/api worldmap --city ROM
+    ./bin/api worldmap --city JAR
+    ./bin/api worldmap --city BGD
+    ./bin/api worldmap --city SAM
 
   Search / Hunt:
-    ./api.sh worldmap --search "crypt"
-    ./api.sh worldmap --search "forest"
-    ./api.sh worldmap --search "Jerusalem"
-    ./api.sh worldmap --monster skeleton
-    ./api.sh worldmap --monster thug
-    ./api.sh worldmap --monster drowner
+    ./bin/api worldmap --search "crypt"
+    ./bin/api worldmap --search "forest"
+    ./bin/api worldmap --search "Jerusalem"
+    ./bin/api worldmap --monster skeleton
+    ./bin/api worldmap --monster thug
+    ./bin/api worldmap --monster drowner
 
   Route navigation (BFS A→B, shows turn-by-turn + terrain + battles):
-    ./api.sh worldmap --route LHR --to CON
-    ./api.sh worldmap --route LON --to JAR
-    ./api.sh worldmap --route LHR --to SAM
-    ./api.sh worldmap --route GLA --to NID
+    ./bin/api worldmap --route LHR --to CON
+    ./bin/api worldmap --route LON --to JAR
+    ./bin/api worldmap --route LHR --to SAM
+    ./bin/api worldmap --route GLA --to NID
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   COORDINATE MANAGEMENT
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./api.sh geo-seed [--execute]
+  ./bin/api geo-seed [--execute]
 
   Dry-run by default (shows what would change). --execute applies.
   Anchors 76 major cities to real lat/lon positions on the game grid.
 
-    ./api.sh geo-seed
-    ./api.sh geo-seed --execute
+    ./bin/api geo-seed
+    ./bin/api geo-seed --execute
 
   After geo-seed, propagate all connected nodes:
-    node tools/layout-solve.js --apply
+    node src/tools/layout-solve.js --apply
 
   Move a node's coordinates (swap if destination is occupied):
-    ./api.sh move LHR 12 18
-    ./api.sh move LHR 12 18 --swap
-    ./api.sh move KRN 13 18
+    ./bin/api move LHR 12 18
+    ./bin/api move LHR 12 18 --swap
+    ./bin/api move KRN 13 18
 
   Find open attachment points near a city (where to add new content):
-    ./api.sh find-open-location LHR
-    ./api.sh find-open-location CON
-    ./api.sh find-open-location LHR --radius 10
+    ./bin/api find-open-location LHR
+    ./bin/api find-open-location CON
+    ./bin/api find-open-location LHR --radius 10
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   NETWORK WIRING
@@ -2916,34 +2916,34 @@ ${C.bold}═══════════════════════�
     • After any change: run broken + reachability to check for regressions
 
   Preferred — mesh-aware (finds open insertion points in each city's mesh):
-    ./api.sh smart-connect LHR CON
-    ./api.sh smart-connect LHR CON --execute
-    ./api.sh smart-connect KOL SAM --execute
-    ./api.sh smart-connect GLA NID --execute
-    ./api.sh smart-connect LHR CON --radius 8
+    ./bin/api smart-connect LHR CON
+    ./bin/api smart-connect LHR CON --execute
+    ./bin/api smart-connect KOL SAM --execute
+    ./bin/api smart-connect GLA NID --execute
+    ./bin/api smart-connect LHR CON --radius 8
 
   Full junction highway (L-shaped route, elbow at corner) — ⚠️ PLANNING ONLY:
-    ./api.sh highway LHR CON            # route/elbow/step report (free, honest)
-    ./api.sh highway LHR CON --execute  # REFUSED since §DX-01d
+    ./bin/api highway LHR CON            # route/elbow/step report (free, honest)
+    ./bin/api highway LHR CON --execute  # REFUSED since §DX-01d
 
     --execute laid ZERO road cells and dropped junction:true nodes on a terrain
     absent from WORLD_DB — the direct cause of the J14/J15 check:invariants reds.
-    A contiguous-land node is already walk-routable (./api.sh reachability is the
+    A contiguous-land node is already walk-routable (./bin/api reachability is the
     authority). For a real encounter-free road: edit ROAD_RUNS, then
-    node scripts/build-roads.js --apply, then npm run check:walk.
+    node src/scripts/build-roads.js --apply, then npm run check:walk.
 
   Single junction node:
-    ./api.sh junction LHR S
-    ./api.sh junction LHR S --execute
-    ./api.sh junction LHR S --label "Birka South Gate" --terrain city --execute
-    ./api.sh junction CON W --execute
+    ./bin/api junction LHR S
+    ./bin/api junction LHR S --execute
+    ./bin/api junction LHR S --label "Birka South Gate" --terrain city --execute
+    ./bin/api junction CON W --execute
 
   Direct wire (warns on deg=3 or deg=4; --force to override):
-    ./api.sh connect WOR E SAL
-    ./api.sh connect CON W THA
-    ./api.sh connect GLA S YRK
-    ./api.sh connect VEN N ROM
-    ./api.sh connect ANT S JAR
+    ./bin/api connect WOR E SAL
+    ./bin/api connect CON W THA
+    ./bin/api connect GLA S YRK
+    ./bin/api connect VEN N ROM
+    ./bin/api connect ANT S JAR
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   NETWORK HEALTH & REPAIR  (§CELL-06 cell-first)
@@ -2953,33 +2953,33 @@ ${C.bold}═══════════════════════�
   Each location must be in exactly one cell.  Steps are always length 1.
 
   Full grid health check (coords + collisions + reachability + isolated):
-    ./api.sh verify
-    ./api.sh verify --hub LHR
+    ./bin/api verify
+    ./bin/api verify --hub LHR
 
   Show nodes with no cell neighbors (isolated in grid):
-    ./api.sh broken
+    ./bin/api broken
 
   Check reachability (% of nodes walkable from hub via cell adjacency):
-    ./api.sh reachability
-    ./api.sh reachability --hub LHR
+    ./bin/api reachability
+    ./bin/api reachability --hub LHR
 
   Prune orphaned NODE_COORDS entries (leftovers from deleted junctions):
-    ./api.sh clean
-    ./api.sh clean --execute
+    ./bin/api clean
+    ./bin/api clean --execute
 
   Fix all one-way links (A→B but B doesn't point back):
-    ./api.sh fix-bidirectional
-    ./api.sh fix-bidirectional --execute
+    ./bin/api fix-bidirectional
+    ./bin/api fix-bidirectional --execute
 
   Junction audit (if any J#### nodes still remain):
-    ./api.sh junction-audit
+    ./bin/api junction-audit
 
   Full world reset sequence (cell-first, §WALK-1.5 geo flood):
-    ./api.sh clean --execute
-    ./api.sh geo-seed --execute
-    node tools/layout-solve.js --apply
-    ./api.sh verify
-    ./api.sh reachability
+    ./bin/api clean --execute
+    ./bin/api geo-seed --execute
+    node src/tools/layout-solve.js --apply
+    ./bin/api verify
+    ./bin/api reachability
 
   NOTE (§WALK-3): rip-and-connect, fill-gap, and reweave-all are retired (HTTP 410).
   Reachability is a terrain-field land flood — empty land cells are walkable and
@@ -2994,33 +2994,33 @@ ${C.bold}═══════════════════════�
   map-tab connection center (🌐 Connect · 🔭 Discover · 🛡 Lists).
 
   One-call status (identity, world hash, ACL + rate limits, peers, players):
-    ./api.sh mesh status
-    ./api.sh mesh status --json          full GET /api/mesh/status payload
+    ./bin/api mesh status
+    ./bin/api mesh status --json          full GET /api/mesh/status payload
 
   Gossip peer table (live/dead, last seen, last error) + remote players:
-    ./api.sh mesh peers
-    ./api.sh mesh peers --json
+    ./bin/api mesh peers
+    ./bin/api mesh peers --json
 
   Server browser — ask a tracker for its live server table:
-    ./api.sh mesh tracker                queries this server's configured tracker(s)
-    ./api.sh mesh tracker lan-host:1367  query an explicit tracker
-    ./api.sh mesh tracker --json
+    ./bin/api mesh tracker                queries this server's configured tracker(s)
+    ./bin/api mesh tracker lan-host:1367  query an explicit tracker
+    ./bin/api mesh tracker --json
     → servers on a different worldHash than yours are flagged "≠ different world"
 
   ACL editor (§MESH-02a — GET/PUT /api/mesh/acl, validated merge-write,
   comment keys in the file survive, hot-reloaded — no restart):
-    ./api.sh mesh acl                    show mode · shareBlocklist · six allow/block lists
-    ./api.sh mesh acl mode=allowlist shareBlocklist=true blockIps=1.2.3.4,5.6.7.8
+    ./bin/api mesh acl                    show mode · shareBlocklist · six allow/block lists
+    ./bin/api mesh acl mode=allowlist shareBlocklist=true blockIps=1.2.3.4,5.6.7.8
     → lists are comma-split; blockIps= (empty) clears a list; unknown field/bad mode → 400
 
   Blocklist share + preview (D2/D3 — share-OUT is opt-in, import is manual):
-    ./api.sh mesh blocklist              what THIS server shares (403 until shareBlocklist=true)
-    ./api.sh mesh blocklist host:1367    preview a PEER's shared blocklist (read-only —
+    ./bin/api mesh blocklist              what THIS server shares (403 until shareBlocklist=true)
+    ./bin/api mesh blocklist host:1367    preview a PEER's shared blocklist (read-only —
                                          merging is an explicit click in the game's 🛡 Lists pane)
 
   Runtime connect (§MESH-02i — no restart; persists via the peers cache):
-    ./api.sh mesh connect lan-host:1367          dial a gossip peer now
-    ./api.sh mesh connect http://tracker:1367    add an announce target now
+    ./bin/api mesh connect lan-host:1367          dial a gossip peer now
+    ./bin/api mesh connect http://tracker:1367    add an announce target now
 
   Mesh config lives server-side: peers.txt, mesh-acl.json (MESH_ACL_FILE),
   TRACKER_URL / BOOTSTRAP_URLS / --advertise. Design:
@@ -3042,16 +3042,16 @@ ${C.bold}═══════════════════════�
   beside the game file and renames it in (atomic; nothing left to sweep).
   You do NOT need to run save after a put/post/del.
 
-    ./api.sh save               dated backup beside play.html, then
+    ./bin/api save               dated backup beside play.html, then
                                 overwrite + hot-reload  (POST /api/save)
-    ./api.sh snapshots          list the dated backups + total size
-    ./api.sh snapshots --sweep  delete the ones already patch-archived
+    ./bin/api snapshots          list the dated backups + total size
+    ./bin/api snapshots --sweep  delete the ones already patch-archived
                                   [--force  discard unarchived ones too]
 
   Disposal keeps history by default: ./archive-snapshots.sh turns each
-  snapshot into a milepoints/patches delta and then removes the file, so
+  snapshot into a build/milepoints/patches delta and then removes the file, so
   --sweep refuses anything that chain has never seen unless you --force.
-  The dated files are gitignored — ./api.sh snapshots is the only thing
+  The dated files are gitignored — ./bin/api snapshots is the only thing
   that will ever tell you they are there.
 
   ── Logging modes ────────────────────────────────────────────────
@@ -3061,26 +3061,26 @@ ${C.bold}═══════════════════════�
     → Request method/URL, response status, timing. No bodies.
 
   Verbose — full request + response bodies:
-    WBAPI_VERBOSE=1 node js/wbapi-server.js
+    WBAPI_VERBOSE=1 node src/js/wbapi-server.js
     WBAPI_VERBOSE=1 ./wbapi-toggle.sh fg
     → Every body printed to terminal AND log file.
 
   Trace — ultra-verbose algorithm decisions:
-    WBAPI_TRACE=1 node js/wbapi-server.js
+    WBAPI_TRACE=1 node src/js/wbapi-server.js
     WBAPI_TRACE=1 ./wbapi-toggle.sh fg
     → Logs every decision: auto-junction trigger, smart-connect candidate
       selection, PUT field processing, node creation details.
     → Completely independent of VERBOSE. Off by default.
 
   Both at once:
-    WBAPI_VERBOSE=1 WBAPI_TRACE=1 node js/wbapi-server.js
+    WBAPI_VERBOSE=1 WBAPI_TRACE=1 node src/js/wbapi-server.js
 
   Live log tail (all modes write here):
-    tail -f milepoints/wbapi-server.log
-    tail -f milepoints/wbapi-server.log | grep TRACE
-    tail -f milepoints/wbapi-server.log | grep "auto-junction\|rip-stray\|smart-connect"
+    tail -f build/milepoints/wbapi-server.log
+    tail -f build/milepoints/wbapi-server.log | grep TRACE
+    tail -f build/milepoints/wbapi-server.log | grep "auto-junction\|rip-stray\|smart-connect"
 
-  Log file: milepoints/wbapi-server.log
+  Log file: build/milepoints/wbapi-server.log
   Port:     1367  (the canonical game year, 1367 AD)
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
@@ -3093,13 +3093,13 @@ ${C.bold}═══════════════════════�
   ./wbapi-toggle.sh status    Show PID and port
   ./wbapi-toggle.sh fg        Run in foreground with full log scroll
 
-  Log file: milepoints/wbapi-server.log
+  Log file: build/milepoints/wbapi-server.log
   Port:     1367  (the canonical game year, 1367 AD)
 `.trim();
 
 // ── Compact synopsis — printed before every response (stderr, TTY only) ───────
 const SYNOPSIS = [
-  `${C.bold}./api.sh${C.reset} ${C.dim}[--out file] [--raw] [--retry n] [--ai "..."]${C.reset}`,
+  `${C.bold}./bin/api${C.reset} ${C.dim}[--out file] [--raw] [--retry n] [--ai "..."]${C.reset}`,
   `  ${C.green}ping${C.reset}                               check server + counts`,
   `  ${C.green}count${C.reset} [nodes|quests|monsters|npcs|terrains|coords]  breakdown stats`,
   `  ${C.green}get${C.reset}   <type> <id>                  fetch entity + full details`,
@@ -3111,8 +3111,8 @@ const SYNOPSIS = [
   `  ${C.green}speak${C.reset} <npc-id> "<prompt>"           Claude NPC reply  [--state neutral|friendly|dearFriend]`,
   `  ${C.green}import${C.reset} <file.json>                 bulk import nodes + quest cycles`,
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
-  `  ${C.yellow}Directive: always use ./api.sh — never curl. Request a refactor if a feature is missing.${C.reset}`,
-  `  ${C.yellow}Maintain the network: run ./api.sh verify after every change.${C.reset}`,
+  `  ${C.yellow}Directive: always use ./bin/api — never curl. Request a refactor if a feature is missing.${C.reset}`,
+  `  ${C.yellow}Maintain the network: run ./bin/api verify after every change.${C.reset}`,
   ``,
   `  ${C.bold}── Health ──────────────────────────────────────────────────────────────${C.reset}`,
   `  ${C.green}ping${C.reset}                               health check + entity counts`,
@@ -3162,7 +3162,7 @@ const SYNOPSIS = [
   `  ${C.green}mesh connect${C.reset} <addr|tracker-url>    dial a gossip peer / add a tracker at runtime (no restart)  [--json]`,
   ``,
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
-  `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./api.sh help for full manual${C.reset}`,
+  `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./bin/api help for full manual${C.reset}`,
 ].join('\n');
 
 function printSynopsis() {
@@ -3187,7 +3187,7 @@ function printSynopsis() {
 
   const cmd = pos[0] || 'help';
   const fn  = CMD[cmd];
-  if (!fn) die(`Unknown command "${cmd}". Run: ./api.sh help`);
+  if (!fn) die(`Unknown command "${cmd}". Run: ./bin/api help`);
 
   // Print synopsis before every command except 'help' (which has its own full text)
   if (cmd !== 'help') printSynopsis();

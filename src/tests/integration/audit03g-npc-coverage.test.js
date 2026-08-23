@@ -2,7 +2,7 @@
 // §AUDIT-03g — every quest carries an `npc` anchor, and the 68 that had none are
 // anchored by DERIVATION, not by a bulk default.
 //
-// Why this test exists: `./api.sh audit` raises an ERROR for a quest with no `npc`
+// Why this test exists: `./bin/api audit` raises an ERROR for a quest with no `npc`
 // field. That error is what provoked the `ea02faf` bulk-default (203 quests stamped
 // `long_john_silver_sen`) that §AUDIT-03b spent a whole session undoing. This locks
 // the *coverage* invariant so the error can never come back — and pins the derivation
@@ -72,7 +72,7 @@ test.describe('§AUDIT-03g — npc anchor coverage', () => {
   test('every quest in the corpus carries an npc anchor', () => {
     const W = freshWorld();
     const orphans = Object.keys(W.questDb).filter(id => !W.questDb[id].npc);
-    expect(orphans).toEqual([]);                       // ./api.sh audit errors = 0
+    expect(orphans).toEqual([]);                       // ./bin/api audit errors = 0
     expect(Object.keys(W.questDb).length).toBe(2853);  // and nothing was lost re-anchoring
   });
 

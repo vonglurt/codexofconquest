@@ -409,7 +409,7 @@ did **not** audit the 48 surviving symbols for behavioural drift beyond the path
 function that still exists under its old name may do something else now. It did not exercise the
 live HTTP surface (no server was started, §2), so all endpoint claims are read from source and
 from in-process harness runs. It did not re-derive §5.2's browser/Node boundary argument or §7.2's
-`worldbuilder.html` description beyond confirming that file still calls `/api/source` and
+`edit.html` description beyond confirming that file still calls `/api/source` and
 `/api/save`.
 
 ---

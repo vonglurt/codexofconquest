@@ -8,7 +8,7 @@ Watches for new roll2hit-v3-YYYYMMDD-HHMMSS.html files, waits until all
 file handles close (lsof), shows a scrollable unified diff between
 consecutive snapshots, then saves a .patch file and advances _last.html.
 
-Patch store layout (milepoints/patches/):
+Patch store layout (build/milepoints/patches/):
   _base.html.gz   — first snapshot, gzip-compressed (no previous to diff)
   _last.html      — most recent snapshot, kept plain for next diff
   _last.name      — filename of _last.html (for patch headers)

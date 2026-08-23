@@ -207,7 +207,7 @@ Of the 10 `BLOCKED` rows, **9 are blocked on §VM-01 Inc A** (prompts 10, 14, 20
   **Today:** `ENEMY_DB` (`const ENEMY_DB@5327`) covers *"all combat opponents incl. dummy/commoner"* — a training dummy exists — and **§KG is a purpose-built tutorial zone**: `sparring_droid` (`_monsterLevel` 1), the Komsomol School, and the Skill Fabrika (jack-in "brain-download" training), carrying a fresh L1 fighter to ~L6. Nothing to build.
 
 - [x] **§POT-X1 — Collaborative worldbuilding: shipped, for developers** (prompt 41) `SHIPPED (dev-only)` 🟢
-  **Today:** `worldbuilder.html` + the WBAPI server + `api.sh` are a full alternate-turns authoring loop, and the **API-First Development Policy** makes it the *preferred* way to change the world. Emits UQF-1.0 end-to-end (§EDITOR-03).
+  **Today:** `edit.html` + the WBAPI server + `api.sh` are a full alternate-turns authoring loop, and the **API-First Development Policy** makes it the *preferred* way to change the world. Emits UQF-1.0 end-to-end (§EDITOR-03).
   **Potential:** the surface is dev-only; in-game player authoring is a different (large, speculative) product. Logged, not recommended.
 
 ---

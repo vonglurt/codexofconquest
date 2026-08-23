@@ -5,7 +5,7 @@
 #
 # Targets timestamped autosave outputs and append-only logs.  Newest entries
 # in each category are kept; older ones are archived into a single dated
-# tarball at milepoints/archive/cleanup-YYYYMMDD-HHMMSS.tar.gz, then
+# tarball at build/milepoints/archive/cleanup-YYYYMMDD-HHMMSS.tar.gz, then
 # removed from their original locations.  Logs above the size cap are
 # copied into the same archive before being truncated in place.
 #
@@ -18,15 +18,15 @@
 #   scripts/cleanup-cruft.sh --quiet      # suppress per-file output
 #
 # Per-category overrides:
-#   --patches N        keep most recent N  (default 20)  — milepoints/patches/*.patch[.log]
-#   --heatmaps N       keep most recent N  (default 10)  — milepoints/heatmap-*.txt
-#   --reweaves N       keep most recent N  (default 10)  — milepoints/reweave-maps-*.txt
+#   --patches N        keep most recent N  (default 20)  — build/milepoints/patches/*.patch[.log]
+#   --heatmaps N       keep most recent N  (default 10)  — build/milepoints/heatmap-*.txt
+#   --reweaves N       keep most recent N  (default 10)  — build/milepoints/reweave-maps-*.txt
 #   --snapshots N      keep most recent N  (default 3)   — roll2hit-v3-YYYYMMDD-HHMMSS.html
 #   --log-mb N         cap log files at N MB              (default 1)
 #   --archive-keep N   keep most recent N archives         (default 20)
 #   --no-archive       delete pruned files instead of archiving them
 #
-# Never touches:  milepoints/patches/_last.html, _last.name, _base.html.gz,
+# Never touches:  build/milepoints/patches/_last.html, _last.name, _base.html.gz,
 #                 node_modules/, playwright-report/, test-results/, .git/
 
 set -euo pipefail
@@ -44,7 +44,7 @@ KEEP_SNAPSHOTS=3
 KEEP_ARCHIVES=20
 LOG_CAP_MB=1
 
-ARCHIVE_DIR="milepoints/archive"
+ARCHIVE_DIR="build/milepoints/archive"
 ARCHIVE_TS=$(date +%Y%m%d-%H%M%S)
 ARCHIVE_PATH="$ARCHIVE_DIR/cleanup-$ARCHIVE_TS.tar.gz"
 STAGING=""        # tmpdir holding files to archive, populated as we go
@@ -199,42 +199,42 @@ prune_old_archives() {
 
 say "── cleanup-cruft ($([ "$DRY_RUN" -eq 1 ] && echo DRY-RUN || echo execute)) ──"
 
-# 1. milepoints/patches/*.patch (+ matching .patch.log)
-if [ -d milepoints/patches ]; then
+# 1. build/milepoints/patches/*.patch (+ matching .patch.log)
+if [ -d build/milepoints/patches ]; then
   patches=()
-  while IFS= read -r line; do patches+=("$line"); done < <(find milepoints/patches -maxdepth 1 -name 'roll2hit-v3-*.patch' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
+  while IFS= read -r line; do patches+=("$line"); done < <(find build/milepoints/patches -maxdepth 1 -name 'roll2hit-v3-*.patch' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
   if [ "${#patches[@]}" -gt 0 ]; then
-    prune_keep_newest "$KEEP_PATCHES" "milepoints/patches/*.patch" "${patches[@]}"
+    prune_keep_newest "$KEEP_PATCHES" "build/milepoints/patches/*.patch" "${patches[@]}"
   else
-    note "milepoints/patches/*.patch: 0 files"
+    note "build/milepoints/patches/*.patch: 0 files"
   fi
   # Always sweep .patch.log alongside their .patch (if they outnumber retention)
   logs=()
-  while IFS= read -r line; do logs+=("$line"); done < <(find milepoints/patches -maxdepth 1 -name 'roll2hit-v3-*.patch.log' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
+  while IFS= read -r line; do logs+=("$line"); done < <(find build/milepoints/patches -maxdepth 1 -name 'roll2hit-v3-*.patch.log' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
   if [ "${#logs[@]}" -gt 0 ]; then
-    prune_keep_newest "$KEEP_PATCHES" "milepoints/patches/*.patch.log" "${logs[@]}"
+    prune_keep_newest "$KEEP_PATCHES" "build/milepoints/patches/*.patch.log" "${logs[@]}"
   fi
 fi
 
-# 2. milepoints/heatmap-*.txt
+# 2. build/milepoints/heatmap-*.txt
 if [ -d milepoints ]; then
   heat=()
   while IFS= read -r line; do heat+=("$line"); done < <(find milepoints -maxdepth 1 -name 'heatmap-*.txt' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
   if [ "${#heat[@]}" -gt 0 ]; then
-    prune_keep_newest "$KEEP_HEATMAPS" "milepoints/heatmap-*.txt" "${heat[@]}"
+    prune_keep_newest "$KEEP_HEATMAPS" "build/milepoints/heatmap-*.txt" "${heat[@]}"
   else
-    note "milepoints/heatmap-*.txt: 0 files"
+    note "build/milepoints/heatmap-*.txt: 0 files"
   fi
 fi
 
-# 3. milepoints/reweave-maps-*.txt
+# 3. build/milepoints/reweave-maps-*.txt
 if [ -d milepoints ]; then
   rw=()
   while IFS= read -r line; do rw+=("$line"); done < <(find milepoints -maxdepth 1 -name 'reweave-maps-*.txt' -print0 | xargs -0 -n1 echo 2>/dev/null | sort)
   if [ "${#rw[@]}" -gt 0 ]; then
-    prune_keep_newest "$KEEP_REWEAVES" "milepoints/reweave-maps-*.txt" "${rw[@]}"
+    prune_keep_newest "$KEEP_REWEAVES" "build/milepoints/reweave-maps-*.txt" "${rw[@]}"
   else
-    note "milepoints/reweave-maps-*.txt: 0 files"
+    note "build/milepoints/reweave-maps-*.txt: 0 files"
   fi
 fi
 
@@ -248,15 +248,15 @@ else
 fi
 
 # 5. Cap log sizes (truncate, don't delete — the files are referenced)
-cap_log_size milepoints/api-cli.log
-cap_log_size milepoints/wbapi-server.log
-cap_log_size milepoints/npc-speak.log
-cap_log_size milepoints/say.log
+cap_log_size build/milepoints/api-cli.log
+cap_log_size build/milepoints/wbapi-server.log
+cap_log_size build/milepoints/npc-speak.log
+cap_log_size build/milepoints/say.log
 
 # 6. Build the dated archive from the queued files, then remove originals.
 finalize_archive
 
-# 7. Prune old archives so milepoints/archive/ stays bounded.
+# 7. Prune old archives so build/milepoints/archive/ stays bounded.
 prune_old_archives
 
 say "── done ──"

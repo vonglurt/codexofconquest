@@ -76,7 +76,7 @@ test('§DX-01e — every anchor in the migrated docs resolves at its cached line
       // `symbol@1234` is the documented placeholder the docs use to SHOW the convention.
       if (/^(?:symbol|sym|path\/to\/file\.js:symbol)$/.test(a.sym)) continue;
       total.push(a);
-      // A file-qualified anchor (`js/x.js:sym@N`) is covered by the gate; this test
+      // A file-qualified anchor (`src/js/x.js:sym@N`) is covered by the gate; this test
       // pins the game-file ones, which are the class that rotted.
       if (/^[\w./-]+\.(?:js|mjs|html|md):/.test(a.sym)) continue;
       expect(lines[a.line - 1], `${file}: \`${a.sym}@${a.line}\``).toContain(a.sym);

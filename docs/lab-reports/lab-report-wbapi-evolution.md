@@ -131,7 +131,7 @@ src/js/wbapi-core.js      — parser + serializer          [1,814 lines]
 src/js/wbapi-server.js    — REST server over the core    [11,671 lines]
 src/api/wb.js (./api.sh)  — the authoring CLI: queue, auto-nonce, retry, --ai
 wbapi-toggle.sh       — process manager: start · stop · restart · status · fg
-worldbuilder.html     — developer UI (✦ Wizard tab)
+edit.html     — developer UI (✦ Wizard tab)
 ```
 
 *(The three JS files sat at repo root when this was written; `cc35c08` moved them under
@@ -279,8 +279,8 @@ still there:
   §AUDIT-03b later established that `q.npc` is **authoring metadata only** — the engine
   does not route on it — so the ERROR rule enforces bookkeeping, not behaviour.
 - **The ✦ Wizard tab: 6 of 6 steps exact** — Vignette · Token · Location · Monster ·
-  Quest Arc · Review + Create (`` `worldbuilder.html:wdlbl-6@1164` ``,
-  `` `worldbuilder.html:Step 6: Review + Create@1343` ``). The claim that it adds no
+  Quest Arc · Review + Create (`` `edit.html:wdlbl-6@1204` ``,
+  `` `edit.html:Step 6: Review + Create@1383` ``). The claim that it adds no
   capability the endpoints lack, and exists only to enforce creation order
   (terrain → node → monster → quest → save) while showing the payloads beside the
   narrative, still holds.
@@ -301,7 +301,7 @@ still there:
 | 4 | *"`goblin: { name:'Goblin', ac:13, hp:7, atk:4, dmg:5, xp:50, tier:1 }` … // 391 more entries"* | **3 of 7 fields wrong when written** | Actual, byte-identical archive → HEAD: `` `goblin:        { name:'Goblin'@5339` `` is `ac:15 … dmgDie:6, dmgCount:1, dmgFlat:2`, and `tier:'easy'` — a **string**, from a five-member enum (`` `src/js/wbapi-server.js:values:['trivial','easy','medium','hard','deadly']@1306` ``). `dmg` and `xp` are not monster fields. The count "391 more" is **exact**. |
 | 5 | Monster creation takes `cr=1/8` | **NOT SHIPPED — never existed** | `cr:` — 0 at HEAD, 0 at the archive, 0 commits ever. |
 | 6 | The `<script>` block is **300 KB** (stated 3×) | **Wrong when written, by 5.1×** | 1,539,946 bytes at its own tree; whole file 1.79 MB. Never true: the earliest surviving build (2026-05-24) is already 0.86 MB. |
-| 7 | `GET /api/source` is how `worldbuilder.html` loads the game file | **Wrong when written** | 1 hit at the archive, 1 at HEAD — a documentation row. The UI drove typed endpoints then (`/api/schema` ×10, `/api/list` ×9) and drives them now (`/api/list` ×56, `/api/count` ×33). |
+| 7 | `GET /api/source` is how `edit.html` loads the game file | **Wrong when written** | 1 hit at the archive, 1 at HEAD — a documentation row. The UI drove typed endpoints then (`/api/schema` ×10, `/api/list` ×9) and drives them now (`/api/list` ×56, `/api/count` ×33). |
 | 8 | `POST /api/restart` → exit 67 → toggle relaunches | **RETIRED** (shipped, lived 7 days) | §V. |
 | 9 | The server *prevents* editor/API write races | **Wrong** — it is the cause of one | CONTRIBUTING Hazard #1. |
 | 10 | Node codes `CY`, `BK` as example primary keys | **Both retired; `BK` is worse than dead** | §IX. |
@@ -429,7 +429,7 @@ file that opens.
 **Filed:** 2026-05-29 · **Retro-fitted:** 2026-06-05 (`77c517f`) · **Verified:** 2026-08-13 (§DOC-02ap)
 **Follow-ups filed:** §DX-02ba · §DX-02bb · §DX-02bc
 **Cross-references:** `src/js/wbapi-core.js` · `src/js/wbapi-server.js` · `src/api/wb.js` ·
-`wbapi-toggle.sh` · `worldbuilder.html` · `docs/api/API-README.md` ·
+`wbapi-toggle.sh` · `edit.html` · `docs/api/API-README.md` ·
 `lab-report-wbapi.md` (same-day sibling) · `lab-report-wbapi-architecture.md` ·
 `lab-report-meta-process-loop-expansion.md` · CONTRIBUTING Hazard #1 · §AUDIT-03b ·
 §AUDIT-03f · §AUDIT-03m · §DX-02k

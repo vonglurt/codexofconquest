@@ -48,8 +48,8 @@
 //      (`const c = node.code; c === 'XX'`) is not caught. Comment-aware by construction
 //      (two of the corpus hits are prose in comments — the §AUDIT-03f lesson).
 //
-// Usage:  node scripts/check-noderegs.js            # audit, exit 1 on findings
-//         node scripts/check-noderegs.js --selftest # prove each phase catches a plant
+// Usage:  node src/scripts/check-noderegs.js            # audit, exit 1 on findings
+//         node src/scripts/check-noderegs.js --selftest # prove each phase catches a plant
 'use strict';
 const fs = require('fs');
 const path = require('path');

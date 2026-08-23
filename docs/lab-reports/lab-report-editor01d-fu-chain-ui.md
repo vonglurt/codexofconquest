@@ -3,7 +3,7 @@
 
 **Original status:** DESIGN LOCKED → implementing · **Original date:** 2026-06-27 (mtime `2026-06-27 16:56:37 -0700`)
 **Ship record:** lock `2430dd0` → inc2 factory `78ca3ae` → inc3 Quest Creator `0198149` → inc4 CRUD form `c2e6892` (closes (a)) · item (b) closed same evening by `de64c16`
-**Verified:** 2026-08-17 (§DOC-02br) against HEAD and against the reference build `2430dd0` (`worldbuilder.html` 10,266 lines)
+**Verified:** 2026-08-17 (§DOC-02br) against HEAD and against the reference build `2430dd0` (`edit.html` 10,266 lines)
 **Verdict:** **SHIPPED IN FULL — 4 of 4 increments in order, in 10 h 11 m.** Every one of the report's **12 line citations is byte-exact**, and §3's integration recipe was executed line for line. Two findings: the "nothing changes on the server" claim is true of the path it measured and false of the one it did not (§7), and the widget's single stated reason to exist has **zero live users** ten weeks on (§11).
 
 ---
@@ -41,7 +41,7 @@ That distinction is the whole point, and it is not cosmetic. A grammar nobody ca
 
 Verification ran read-only; `roll2hit-v3.html` was not modified.
 
-1. **Reference build.** The lock commit `2430dd0` itself — it touched only this report and `plan.md`, so its `worldbuilder.html` (10,266 lines) is the file the author was reading. All 12 citations were resolved there, not at HEAD.
+1. **Reference build.** The lock commit `2430dd0` itself — it touched only this report and `plan.md`, so its `edit.html` (10,266 lines) is the file the author was reading. All 12 citations were resolved there, not at HEAD.
 2. **Instrument 84 first.** `git diff 2430dd0 HEAD` on this path, to separate prediction from post-hoc correction.
 3. **`git log -S` with no pathspec** on each named symbol, to separate *retired* from *never shipped*.
 4. **The report's own acceptance tests were run**, not merely cited — and the failures re-created in isolation before any code was blamed (§10).
@@ -107,21 +107,21 @@ Citation 8 deserves its own note: it is the only one the author hedged with a `~
 
 | # | Locked | Shipped | Verdict |
 |---|---|---|---|
-| 1 | factory beside the codec, window-bridged | `worldbuilder.html:function buildChainEditor(host, opts)@8569` · `worldbuilder.html:window.buildChainEditor = buildChainEditor@8700` | ✅ verbatim |
-| 2 | four kinds, fields as tabled | `worldbuilder.html:const CHAIN_KINDS = {@8557` — all four kinds, all fields, `once` `{chk:true,def:true}` | ✅ **+ superset**: a `silent` checkbox and a per-row **advanced-JSON** input carrying 13 rich fields (`worldbuilder.html:const GRANT_RICH = [@8567`), both added 3 h 10 m later by FU(b1) `7fc0d8e` |
-| 3 | `once:false` only when unchecked | `worldbuilder.html:if (get('once') === false) step.once = false;@8666` | ✅ exact |
+| 1 | factory beside the codec, window-bridged | `edit.html:function buildChainEditor(host, opts)@8609` · `edit.html:window.buildChainEditor = buildChainEditor@8740` | ✅ verbatim |
+| 2 | four kinds, fields as tabled | `edit.html:const CHAIN_KINDS = {@8597` — all four kinds, all fields, `once` `{chk:true,def:true}` | ✅ **+ superset**: a `silent` checkbox and a per-row **advanced-JSON** input carrying 13 rich fields (`edit.html:const GRANT_RICH = [@8607`), both added 3 h 10 m later by FU(b1) `7fc0d8e` |
+| 3 | `once:false` only when unchecked | `edit.html:if (get('once') === false) step.once = false;@8706` | ✅ exact |
 | 4 | `sell` = `+v \|\| 0` when non-empty | `const sell = get('sell'); if (sell !== '') step.sell = +sell \|\| 0;` | ✅ exact — matches codec 9109 as promised |
-| 5 | blank required field drops the row | `readRow` returns `null`; `worldbuilder.html:.map(readRow).filter(Boolean)@8692` | ✅ exact |
+| 5 | blank required field drops the row | `readRow` returns `null`; `edit.html:.map(readRow).filter(Boolean)@8732` | ✅ exact |
 | 6 | instance API `getSteps` / `setSteps` / `el` | all three | ✅ **+ `addStep(s)`**, a fourth method not in the lock |
-| 7 | Quest Creator markup swap | `worldbuilder.html:id="ed-itemChain-editor"@8320`; header kept, grammar hint rewritten as a per-kind legend | ✅ exactly as §3.1 |
-| 8 | instance at IIFE init with `onChange: edSchedule` | `worldbuilder.html:const edChain = buildChainEditor(EG('ed-itemChain-editor')@9110` | ✅ **verbatim, character for character** |
-| 9 | build / reset / `liveIds` | `worldbuilder.html:const ic = edChain.getSteps();@8879`; `edChain.setSteps([])` in the reset path; `'ed-itemChain'` removed from both id lists | ✅ all four edits |
-| 10 | CRUD render special-case *before* the textarea branch | `worldbuilder.html:wrap._chainEd = window.buildChainEditor(wrap, { initial });@6313`, ahead of `if (f.ta)` | ✅ exact |
-| 11 | CRUD collect reads the stashed instance, keeps `if (a.length)` | `worldbuilder.html:const ed = w && w._chainEd;@6359` | ✅ — **refinement**: located via a `[data-chain-field]` selector, because `collectFormData` has no `wrap` in scope |
+| 7 | Quest Creator markup swap | `edit.html:id="ed-itemChain-editor"@8360`; header kept, grammar hint rewritten as a per-kind legend | ✅ exactly as §3.1 |
+| 8 | instance at IIFE init with `onChange: edSchedule` | `edit.html:const edChain = buildChainEditor(EG('ed-itemChain-editor')@9150` | ✅ **verbatim, character for character** |
+| 9 | build / reset / `liveIds` | `edit.html:const ic = edChain.getSteps();@8919`; `edChain.setSteps([])` in the reset path; `'ed-itemChain'` removed from both id lists | ✅ all four edits |
+| 10 | CRUD render special-case *before* the textarea branch | `edit.html:wrap._chainEd = window.buildChainEditor(wrap, { initial });@6353`, ahead of `if (f.ta)` | ✅ exact |
+| 11 | CRUD collect reads the stashed instance, keeps `if (a.length)` | `edit.html:const ed = w && w._chainEd;@6399` | ✅ — **refinement**: located via a `[data-chain-field]` selector, because `collectFormData` has no `wrap` in scope |
 | 12 | codec kept + parity assertion | both codec functions live; parity test shipped | ✅ |
 | 13 | drag: "`dragstart` stamps the row index" | a `.chain-drag` **CSS class**, with indices read from the live DOM at drop | ⚠ **different encoding, better** — an index stamped at dragstart goes stale if rows change under it |
 | 14 | ▲/▼ "**disabled** at the ends" | never disabled; they no-op (`if (p) { … }`) | ❌ **NOT SHIPPED** — the affordance is a dead click rather than a greyed control |
-| 15 | — | `worldbuilder.html:window.__edChain = edChain;@9111` | ➕ test hook, not in the lock |
+| 15 | — | `edit.html:window.__edChain = edChain;@9151` | ➕ test hook, not in the lock |
 
 **Increment plan: 4 of 4, in order, each with the tests it promised.** Lock `2430dd0` 06:45:23 → factory `78ca3ae` 06:48:37 (**+3 m 14 s**) → Quest Creator `0198149` 16:39:08 → CRUD `c2e6892` 16:56:13. **Spec → closed: 10 h 11 m.** The lock-to-runtime gap of **three minutes** is the fastest in the corpus; *"DESIGN LOCKED → implementing"* was accurate for slightly longer than it takes to read the report.
 
@@ -137,7 +137,7 @@ Citation 8 deserves its own note: it is the only one the author hedged with a `~
 **The server half is the interesting one.** At the reference build, the string `itemChain` occurs **zero times in the entire 9,379-line server**. Two save paths lead out of the two surfaces this report wires:
 
 - **CRUD form → `PUT`.** The dispatch is *generic*: `typeof value === 'string'` → `editField`, else `Array.isArray(value) || number || boolean` → `editStructuredField`, which patches `_rawSrc` at source level. An array field round-trips **without the server ever naming it.** The claim is true here, and this is precisely why the author could believe it.
-- **Quest Creator → `POST`.** `worldbuilder.html:async function edPostQuest()@9094` calls `WBAPI.quests.create(q)` → `POST /api/quest` → `serializeQuestLiteral`, whose four field lists at that build are `STR`, `NUM`, `BOOL`, `FN` — **and `itemChain` is in none of them.** Every chain authored through the new widget and posted with that button was serialized away in silence.
+- **Quest Creator → `POST`.** `edit.html:async function edPostQuest()@9134` calls `WBAPI.quests.create(q)` → `POST /api/quest` → `serializeQuestLiteral`, whose four field lists at that build are `STR`, `NUM`, `BOOL`, `FN` — **and `itemChain` is in none of them.** Every chain authored through the new widget and posted with that button was serialized away in silence.
 
 The repo says so in its own words. The fix arrived at §ARCH-01 Wave 8b, `11af1e5` (2026-07-03 20:57), which added `src/js/wbapi-server.js:const JSONF = ['gate','bits','completion','itemChain'@1710` and recorded in its commit subject: *"all silently dropped before — API-posted UQF quests arrived stripped dead."* **Exposure window: 6 d 4 h 18 m** from inc3.
 
@@ -230,4 +230,4 @@ The most quietly instructive line in the report is the one about drag: *"if it r
 
 - **"the 58-branch reward-ladder migration" (§scope).** The ladder held **61** branches, at the reference build and at every commit that day; **58 was never true**. It was re-measured correctly at 61 by this report's own sibling lock (`27956e4`) just **8 min 24 s** after this file was committed — the shortest gap in the corpus between an error and its available correction, and it still propagated no further — and the structure has been at **0** since §ARCH-01 W7c (`a79c76a`, 2026-07-03) folded it into per-quest UQF `onComplete` chains. Owned by **§DX-02ce**; `npm run check:laddermigration` reports `0 ladder branches` at HEAD.
 - **`wbapi-core.js` / `wbapi-server.js` (§preamble).** Both were at the **repo root** on 2026-06-27; the `src/js/` prefix arrived with `cc35c08` (2026-07-09). The unprefixed paths are correct for their day.
-- **Bare line numbers** (8942, 9277, 6040, …) are against `worldbuilder.html` at `2430dd0` (10,266 lines) and do not resolve at HEAD. All 12 were verified at that build (§5).
+- **Bare line numbers** (8942, 9277, 6040, …) are against `edit.html` at `2430dd0` (10,266 lines) and do not resolve at HEAD. All 12 were verified at that build (§5).

@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
-// §DX-02l — the dated-backup surface is reachable from ./api.sh.
+// §DX-02l — the dated-backup surface is reachable from ./bin/api.
 //
 // Why this test exists. `POST /api/save` — the one surface that stamps a dated
-// snapshot on purpose (§DX-02k) — had no `./api.sh` wrapper, so verifying it
+// snapshot on purpose (§DX-02k) — had no `./bin/api` wrapper, so verifying it
 // needed a raw `curl -XPOST http://localhost:1367/api/save`. prompt.md §3 says
-// authoring never falls back to raw curl: *"if `./api.sh` lacks a command you
-// need, add the endpoint + a named `./api.sh` wrapper."* Here the endpoint
+// authoring never falls back to raw curl: *"if `./bin/api` lacks a command you
+// need, add the endpoint + a named `./bin/api` wrapper."* Here the endpoint
 // existed and the wrapper did not — the same gap read from the other end, and
 // the author-facing guide had been printing the curl line for it.
 //
 // The snapshots half is the other thing §DX-02k left: the dated files are
 // gitignored, so nothing in the repo will ever mention them (six, ~32 MB, had
-// accumulated invisibly). `./api.sh snapshots` is now the only thing that will
+// accumulated invisibly). `./bin/api snapshots` is now the only thing that will
 // tell you they are there, and the sweep will not throw away a snapshot the
-// milepoints/patches chain has never seen — archive-snapshots.sh patches each
+// build/milepoints/patches chain has never seen — archive-snapshots.sh patches each
 // file and THEN removes it, so an unarchived snapshot is the only copy of that
 // state. `--force` is the deliberate discard.
 //
@@ -35,7 +35,7 @@ const PORT = 13897;
 const BASE = `http://localhost:${PORT}`;
 const STAMPED = /^roll2hit-v3-\d{8}-\d{6}\.html$/;
 
-// A name the real patch chain already knows — `milepoints/patches/<stem>.patch`
+// A name the real patch chain already knows — `build/milepoints/patches/<stem>.patch`
 // exists — so `archived:true` can be exercised without writing into the repo.
 const ARCHIVED_NAME = 'roll2hit-v3-20260709-034151.html';
 
@@ -74,7 +74,7 @@ test.beforeEach(() => {
   for (const f of stampedIn(dir)) fs.rmSync(path.join(dir, f), { force: true });
 });
 
-test.describe('§DX-02l — ./api.sh save + ./api.sh snapshots', () => {
+test.describe('§DX-02l — ./bin/api save + ./bin/api snapshots', () => {
 
   // The row's core ask: the surface exists in the CLI at all.
   test('save is a known command and reports both paths', () => {
@@ -240,7 +240,7 @@ test.describe('§DX-02l — ./api.sh save + ./api.sh snapshots', () => {
     const prose = [
       'verifying §DX-02k needed raw `curl` — `POST /api/save` had no wrapper.',
       '`dx02l-save-snapshots-cli.test.js` — *"no doc reaches `/api/save` with raw curl"*.',
-      'Use `./api.sh save`, never curl.',
+      'Use `./bin/api save`, never curl.',
       '```bash\ncurl -s http://localhost:1367/api/ping\n```',
     ];
     for (const doc of prose)

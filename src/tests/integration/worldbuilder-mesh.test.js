@@ -31,7 +31,7 @@ const FIXTURE = {
 
 test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
   test('tab activates and renders a full status fixture', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.click('.nav-tab[data-tab="mesh"]');
     await expect(page.locator('#tab-mesh')).toHaveClass(/active/);
     // no WBAPI behind the static test server → offline fallback line
@@ -60,7 +60,7 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
   });
 
   test('⬇ world sits behind the BIG WARNING modal (§MESH-01d3)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.click('.nav-tab[data-tab="mesh"]');
     await page.evaluate((d) => window.__meshTest.renderMeshStatus(d), FIXTURE);
     // magnet link lands on the identity strip (assert before the 2s offline
@@ -80,7 +80,7 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
   });
 
   test('server browser renders tracker rows: name · world tag · players · ping (§MESH-01-FU 2)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.click('.nav-tab[data-tab="mesh"]');
     await page.evaluate(() => window.__meshTest.renderServerBrowser([
       { serverId: 'aa', addr: 'localhost:59999', name: 'Hub Alpha', worldTag: 'NextWorldMod-131ea',
@@ -97,7 +97,7 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
   });
 
   test('empty status renders friendly placeholders (no peers / no packets)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.click('.nav-tab[data-tab="mesh"]');
     await page.evaluate(() => window.__meshTest.renderMeshStatus({
       ok: true, trackerMode: false, serverId: 'a1b2c3d4', addr: 'localhost:1367',

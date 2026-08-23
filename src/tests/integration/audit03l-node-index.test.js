@@ -8,7 +8,7 @@
 // guessed `SF → LCY` and two of them sat in the wrong city for two months (§AUDIT-03c).
 //
 // The fix was not to hand-remap 92 rows into a dead coordinate system — it was to generate
-// the index from the live parse (`scripts/node-index.js`, `npm run nodes`) and quarantine
+// the index from the live parse (`src/scripts/node-index.js`, `npm run nodes`) and quarantine
 // the historical tables. These assertions lock that: the generated file matches the game,
 // every code it names is real, and the two collision traps stay flagged.
 //

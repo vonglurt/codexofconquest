@@ -31,7 +31,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', () => {
   test('3-step skill_check arc: seq ids + gate.flags wiring + UQF bits', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const qs = await page.evaluate(() => window.buildArcQuests({
       arcId: 'quest_yael', arcLabel: 'Yael romance', activateNode: 'BRK',
       steps: [
@@ -65,7 +65,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('mixed arc: side step gets completion.items + a consumed grantBit producer flag', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const qs = await page.evaluate(() => window.buildArcQuests({
       arcId: 'quest_mix', activateNode: 'BMA',
       steps: [
@@ -85,7 +85,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('trailing non-skill step gets NO stray grantBit (nobody reads it)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const qs = await page.evaluate(() => window.buildArcQuests({
       arcId: 'quest_tail', activateNode: 'BMA',
       steps: [
@@ -99,7 +99,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('non-skill producer grantBit merges with an authored itemChain', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const qs = await page.evaluate(() => window.buildArcQuests({
       arcId: 'quest_ic', activateNode: 'BMA',
       steps: [
@@ -116,7 +116,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('side step with no authored terms completes on arrival (completion.atNode)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const qs = await page.evaluate(() => window.buildArcQuests({
       arcId: 'quest_beat', activateNode: 'BMA',
       steps: [
@@ -139,7 +139,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('skill_check defaults: unauthored stat/DC → WIS 12; xpAward → onPass reward bit', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const qs = await page.evaluate(() => window.buildArcQuests({
       arcId: 'quest_dflt', activateNode: 'BMA',
       steps: [{ type: 'skill_check', title: 'Bare roll', xpAward: '250' }],
@@ -154,7 +154,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('gateMode manual passes activateCond through; none emits gate:{}', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const qs = await page.evaluate(() => window.buildArcQuests({
       arcId: 'quest_gate', activateNode: 'BMA',
       steps: [
@@ -181,7 +181,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
 
   // ── §EDITOR-02-FU — branching: a step forks off an arbitrary EARLIER step ──
   test('branching: gateAfter forks two steps off the same predecessor', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const qs = await page.evaluate(() => window.buildArcQuests({
       arcId: 'quest_branch', activateNode: 'BMA',
       steps: [
@@ -201,7 +201,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('branching: blank / forward / out-of-range gateAfter falls back to previous', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const qs = await page.evaluate(() => window.buildArcQuests({
       arcId: 'quest_fb', activateNode: 'BMA',
       steps: [
@@ -220,7 +220,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
 
   // ── Inc 3 — the tab UI: fill a 2-step arc, Build Chain, inspect the preview ──
   test('Mission tab: Build Chain renders the resolved chain + connector flag', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => (window.switchTab('mission'), document.getElementById('welcome-screen').classList.add('hidden')));
     // Arc header + the seeded step #1 (defaults to type "side").
     await page.fill('#mb-arcId', 'quest_demo');
@@ -256,7 +256,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('Mission tab: removing a step renumbers the rows', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => (window.switchTab('mission'), document.getElementById('welcome-screen').classList.add('hidden')));
     await page.click('#mb-add');               // now 2 steps (1 seeded + 1)
     await page.click('#mb-add');               // 3 steps
@@ -268,7 +268,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('Mission tab: ▲/▼ reorders steps + re-wires the compiled chain order (§EDITOR-02-FU)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => (window.switchTab('mission'), document.getElementById('welcome-screen').classList.add('hidden')));
     await page.fill('#mb-arcId', 'quest_ord');
     await page.fill('#mb-steps .mb-step:nth-child(1) .mb-title', 'Alpha');
@@ -292,7 +292,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('Mission tab: "after #" picker forks a step off an earlier one (§EDITOR-02-FU)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => (window.switchTab('mission'), document.getElementById('welcome-screen').classList.add('hidden')));
     await page.fill('#mb-arcId', 'quest_ui');
     await page.fill('#mb-steps .mb-step:nth-child(1) .mb-title', 'Root');
@@ -334,7 +334,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   }
 
   test('POST All: creates each step in arc order, then reports done', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await mbBuildTwoStep(page);
     const out = await page.evaluate(async () => {
       // Pretend a world is loaded; mock create to record calls + always succeed.
@@ -354,7 +354,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('POST All: skips already-existing ids and stops on the first real error', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await mbBuildTwoStep(page);
     const out = await page.evaluate(async () => {
       WBAPI.loaded = true; window.renderQuestList = () => {};
@@ -378,7 +378,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
   });
 
   test('empty / malformed drafts compile to an empty array (no throw)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const r = await page.evaluate(() => ({
       none:  window.buildArcQuests(),
       empty: window.buildArcQuests({ arcId: 'q', steps: [] }),

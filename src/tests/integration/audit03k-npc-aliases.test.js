@@ -6,7 +6,7 @@
 // supposed to be a display name (§AUDIT-03h), so slugifying it mints a rival key for the
 // person standing at that node: `city_guard_captain` held 5 quests while `yael` — the same
 // woman, named in LHR's own node text — held 17, and `_questsByNpc` indexed her twice. The
-// delete guard, `./api.sh location`, and every quest-count surface saw one half at a time.
+// delete guard, `./bin/api location`, and every quest-count surface saw one half at a time.
 //
 // Nothing in the GAME reads `quest.npc` (it is authoring metadata), which is exactly why
 // this rotted quietly for months: the split is invisible from the player's side and only

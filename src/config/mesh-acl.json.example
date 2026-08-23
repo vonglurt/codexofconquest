@@ -7,7 +7,7 @@
   "mode": "open",
 
   "//2":  "Block lists — always checked first, a match refuses even an allowlisted peer.",
-  "//3":  "serverId = the peer's 32-hex identity (GET /api/manifest → serverId, or ./api.sh mesh peers). ip = the raw socket address as the server sees it (may be IPv6-mapped, e.g. '::ffff:192.168.1.20' — check the traffic ring). worldHash = 16-hex world identity (blocks every server of that world).",
+  "//3":  "serverId = the peer's 32-hex identity (GET /api/manifest → serverId, or ./bin/api mesh peers). ip = the raw socket address as the server sees it (may be IPv6-mapped, e.g. '::ffff:192.168.1.20' — check the traffic ring). worldHash = 16-hex world identity (blocks every server of that world).",
   "blockServerIds": [],
   "blockIps": [],
   "blockWorldHashes": [],

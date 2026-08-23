@@ -4,9 +4,9 @@
 
 > **Generated from `play.html` by `npm run nodes`.** This is the authoritative answer to
 > *"what is this node's code?"* — it is parsed from the same `wbapi-core` extractor the `:1367`
-> server and every `scripts/check-*.js` use, so it cannot drift from the game. **Never take a node
+> server and every `src/scripts/check-*.js` use, so it cannot drift from the game. **Never take a node
 > code from a hand-maintained table** (that is how `710bb75` put `activateNode:"SF"` on eight
-> quests — §AUDIT-03c). `./api.sh get node <CODE>` is the other live answer.
+> quests — §AUDIT-03c). `./bin/api get node <CODE>` is the other live answer.
 
 **416 nodes** · coordinates are live `NODE_COORDS` cells on the §CELL-02 grid (r 2–73, c 154–249), not the retired 26×16 projection.
 

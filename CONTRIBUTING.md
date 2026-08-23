@@ -52,7 +52,7 @@ A row that turns out to be already done still gets closed properly: record the a
 
 > *«cli-quick-reference» archived to plan-archive.md (2026-07-02). Day-to-day: ./api.sh help. Full reference: docs/api/wbapi-help.md + docs/api/API-README.md.*
 
-**Single source of truth:** `play.html` is the entire game. The API reads its text directly and writes mutations back in-place. `wbapi-server.js` and `worldbuilder.html` are authoring tools — the game requires neither at runtime.
+**Single source of truth:** `play.html` is the entire game. The API reads its text directly and writes mutations back in-place. `wbapi-server.js` and `edit.html` are authoring tools — the game requires neither at runtime.
 
 ### Cell-First Navigation Policy
 

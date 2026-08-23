@@ -86,7 +86,7 @@ function openSSE(sessionId, base = BASE) {
 }
 const closeSSE = (c) => { try { c.req.destroy(); } catch {} };
 
-// ── CLI runner — §MESH-01-FU 10: ./api.sh mesh wrappers, pointed at a throwaway
+// ── CLI runner — §MESH-01-FU 10: ./bin/api mesh wrappers, pointed at a throwaway
 // server via --server. Not a TTY, so wb.js keeps stdout to pure payload.
 function cli(args) {
   return new Promise((resolve) => {
@@ -389,7 +389,7 @@ async function main() {
   const txt = await (await fetch(trk.base + `/api/tracker/peers?wh=${manA.worldHash}&format=txt`)).text();
   check(txt.includes(`localhost:${PORT + 7}`), 'tracker emits the peers.txt bootstrap format (format=txt — the gist backup source)');
 
-  // ── §MESH-01-FU 10 — ./api.sh mesh CLI wrappers ride the same live mesh ──
+  // ── §MESH-01-FU 10 — ./bin/api mesh CLI wrappers ride the same live mesh ──
   const cliSt = await cli(['mesh', 'status', '--json', '--server', mE.base]);
   let cliStJ = {}; try { cliStJ = JSON.parse(cliSt.stdout); } catch {}
   check(cliSt.code === 0 && cliStJ.ok === true && cliStJ.serverId === 'f'.repeat(8),

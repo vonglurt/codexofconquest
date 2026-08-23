@@ -10,7 +10,7 @@
 
 ## Abstract
 
-§EDITOR-01 builds one quest per form submission. An *arc* — an ordered chain of quests where step *k* opens because step *k−1* closed — had no authoring surface at all: you filled the single-quest form N times and hand-maintained the flag plumbing between the steps. This report locked a Mission Builder tab for `worldbuilder.html`: an in-memory `arcDraft`, a **pure** `buildArcQuests(draft) → questObj[]` compiler that generates the inter-step flags, a Preview Chain that renders the resolved arc *before* anything is written, and a POST All that walks the existing single-quest create path one step at a time.
+§EDITOR-01 builds one quest per form submission. An *arc* — an ordered chain of quests where step *k* opens because step *k−1* closed — had no authoring surface at all: you filled the single-quest form N times and hand-maintained the flag plumbing between the steps. This report locked a Mission Builder tab for `edit.html`: an in-memory `arcDraft`, a **pure** `buildArcQuests(draft) → questObj[]` compiler that generates the inter-step flags, a Preview Chain that renders the resolved arc *before* anything is written, and a POST All that walks the existing single-quest create path one step at a time.
 
 Every structural claim in this report holds. The compiler, the preview, the sequential post, the stop-on-first-error and the already-posted skip all shipped and are green ten weeks on. The failure is narrow and instructive: the report locked the wiring *encoding* as an arrow-function source string `(s) => s.<flag>`, defended that choice in its risk register, and specified a test to enforce it. The engine calls `q.activateCond()` with **no argument**. The form was inert, the test asserted the defect, and three independent mechanisms in the same toolchain — the server's own serializer, the engine's several hundred hand-authored conditions, and the flag-index regex that defines what "reads a flag" *means* — each already encoded the right answer.
 
@@ -39,7 +39,7 @@ Every structural claim in this report holds. The compiler, the preview, the sequ
 
 Verification ran read-only. `roll2hit-v3.html` was not modified.
 
-1. **Reference build.** The design lock's parent, `6515592` — `worldbuilder.html` 9,962 lines, `wbapi-core.js` 1,325 lines. ⚠ `wbapi-core.js`, `wbapi-server.js` and `wbapi-cli.js` were at the **repo root** on that date; the `src/js/` prefix arrived later, so this report's unprefixed paths are correct for their day.
+1. **Reference build.** The design lock's parent, `6515592` — `edit.html` 9,962 lines, `wbapi-core.js` 1,325 lines. ⚠ `wbapi-core.js`, `wbapi-server.js` and `wbapi-cli.js` were at the **repo root** on that date; the `src/js/` prefix arrived later, so this report's unprefixed paths are correct for their day.
 2. **Every line citation resolved at the reference build**, not at HEAD (§5).
 3. **`git log -S` with no pathspec** on each named symbol, to separate *retired* from *never shipped*.
 4. **The report's own acceptance test was run**, not merely cited (§11).
@@ -85,26 +85,26 @@ Compile rules as locked: `id = <arcId>_<n>` (1-based) · `arc = arcLabel` · pro
 | `wbapi-core.js:588` | `const arc = id.replace(/_\d+$/, '')…` — arc-prefix strip | ✓ exact |
 | `wbapi-core.js:727` | `chain(id) {` | ✓ exact |
 | `wbapi-core.js:1195` | the bare-identifier `matchAll` scan in the save guard | ✓ exact |
-| `worldbuilder.html:146` | `.chain-link{…}` | ✓ exact |
-| `worldbuilder.html:1653` | the same arc-prefix strip, browser copy | ✓ exact |
-| `worldbuilder.html:1969` | `if (q.type === 'skill_check' && !q.checkPassFlag)` | ✓ exact; message quoted verbatim from :1970 |
-| `worldbuilder.html:1996` | `async create(questObj) {` | ✓ exact |
-| `worldbuilder.html:2002` | the `already exists` guard | ✓ exact |
-| `worldbuilder.html:2301` | `if (q.checkPassFlag && !allWrittenFlags.has(…))` | ✓ exact; message **paraphrased**, actual text is `flag "X" is never written by any quest` |
-| `worldbuilder.html:9094` | the item-chain grammar comment block | ~ **section-accurate, not symbol-exact** — `parseItemChainText` is at :9100, the window bridge at :9143 |
-| `worldbuilder.html:9146` | `function edBuildQuestObj() {` | ✓ exact |
-| `worldbuilder.html:9395` | `WBAPI._buildIndexes(); renderQuestList();` | ✓ exact |
+| `edit.html:146` | `.chain-link{…}` | ✓ exact |
+| `edit.html:1653` | the same arc-prefix strip, browser copy | ✓ exact |
+| `edit.html:1969` | `if (q.type === 'skill_check' && !q.checkPassFlag)` | ✓ exact; message quoted verbatim from :1970 |
+| `edit.html:1996` | `async create(questObj) {` | ✓ exact |
+| `edit.html:2002` | the `already exists` guard | ✓ exact |
+| `edit.html:2301` | `if (q.checkPassFlag && !allWrittenFlags.has(…))` | ✓ exact; message **paraphrased**, actual text is `flag "X" is never written by any quest` |
+| `edit.html:9094` | the item-chain grammar comment block | ~ **section-accurate, not symbol-exact** — `parseItemChainText` is at :9100, the window bridge at :9143 |
+| `edit.html:9146` | `function edBuildQuestObj() {` | ✓ exact |
+| `edit.html:9395` | `WBAPI._buildIndexes(); renderQuestList();` | ✓ exact |
 
 **Live surface at HEAD** (anchors resolve now):
 
-- Compiler — `worldbuilder.html:function buildArcQuests(arcDraft) {@8741`, bridged at `worldbuilder.html:window.buildArcQuests = buildArcQuests;@8825`
-- Helpers — `worldbuilder.html:function edArcProducerFlag(step, i, arcId) {@8724` · `worldbuilder.html:function edArcEffectiveGate(step, i) {@8729` · `worldbuilder.html:function edArcGateIndex(step, i) {@8736`
-- Chain wiring, current encoding — `worldbuilder.html:q.gate = { flags: [edArcProducerFlag(steps[p], p, arcId)] };@8773`
-- Consumption-gated producer bit — `worldbuilder.html:const consumed = steps.some((nx, k) => k > i@8814`
-- Draft collection — `worldbuilder.html:function mbCollectDraft() {@9291`
-- Preview validation — `worldbuilder.html:const adv = WBAPI.loaded ? WBAPI.quests.advise(q)@9327`
-- Red badge disables POST — `worldbuilder.html:MB('mb-post').disabled = anyError || !WBAPI.loaded;@9345`
-- POST All — `worldbuilder.html:async function mbPostAll() {@9361`
+- Compiler — `edit.html:function buildArcQuests(arcDraft) {@8781`, bridged at `edit.html:window.buildArcQuests = buildArcQuests;@8865`
+- Helpers — `edit.html:function edArcProducerFlag(step, i, arcId) {@8764` · `edit.html:function edArcEffectiveGate(step, i) {@8769` · `edit.html:function edArcGateIndex(step, i) {@8776`
+- Chain wiring, current encoding — `edit.html:q.gate = { flags: [edArcProducerFlag(steps[p], p, arcId)] };@8813`
+- Consumption-gated producer bit — `edit.html:const consumed = steps.some((nx, k) => k > i@8854`
+- Draft collection — `edit.html:function mbCollectDraft() {@9331`
+- Preview validation — `edit.html:const adv = WBAPI.loaded ? WBAPI.quests.advise(q)@9367`
+- Red badge disables POST — `edit.html:MB('mb-post').disabled = anyError || !WBAPI.loaded;@9385`
+- POST All — `edit.html:async function mbPostAll() {@9401`
 
 ---
 
@@ -117,12 +117,12 @@ Compile rules as locked: `id = <arcId>_<n>` (1-based) · `arc = arcLabel` · pro
 | 3 | `targetMonsterKeys` authored | **derived** from `killGoals`, not typed | **CHANGED — improvement** |
 | 3 | — | `hint`, `checkPassFlag` override, `gateAfter` added | **ADDED** |
 | 4 | `id = <arcId>_<n>`, `arc = arcLabel` | both emitted | **SHIPPED** |
-| 4 | producer flag `<arcId>_<n>_passed` / `_done` | `worldbuilder.html:function edArcProducerFlag(step, i, arcId) {@8724`, both forms | **SHIPPED** |
+| 4 | producer flag `<arcId>_<n>_passed` / `_done` | `edit.html:function edArcProducerFlag(step, i, arcId) {@8764`, both forms | **SHIPPED** |
 | 4 | `activateCond:(s)=>s.<flag>` arrow-source | **`gate:{flags:[…]}`** | **SUPERSEDED — was inert when written (§7)** |
 | 4 | producer `grantBit` unconditional → *(amended)* consumption-gated | consumption-gated, `@8814` | **SHIPPED as amended** |
 | 4 | per-step `itemChain` via the shared codec | unchanged | **SHIPPED** |
 | 5 | `.chain-link` rows + `↓ reads` connector + `advise` badge; red badge disables POST | all four, `@9327` / `@9345` | **SHIPPED** |
-| 6 | sequential create, stop-on-first-error | `worldbuilder.html:async function mbPostAll() {@9361`; each create re-indexes so later `advise()` sees earlier steps | **SHIPPED, exceeded** |
+| 6 | sequential create, stop-on-first-error | `edit.html:async function mbPostAll() {@9401`; each create re-indexes so later `advise()` sees earlier steps | **SHIPPED, exceeded** |
 | 7 | engine untouched | untouched | **HOLDS** |
 | 7 | `wbapi-core.js` untouched | untouched | **HOLDS** |
 | 7 | **server untouched** | true as written; **insufficient** — six compiler outputs had no persistence path (§8) | **HOLDS literally, FAILS in effect** |
@@ -140,7 +140,7 @@ Compile rules as locked: `id = <arcId>_<n>` (1-based) · `arc = arcLabel` · pro
 
 > Step *k* gets `activateCond: (s) => s.<prevflag>` — emitted as a real arrow-function source string (the Audit guard at `wbapi-core.js:1195` rejects bare-identifier activateConds, so we MUST emit `(s)=>s.flag`, never the bare name).
 
-It shipped at `worldbuilder.html:9196` in `e2dcd76`, and the spec asserted it: `expect(q.activateCond).toMatch(/^\(s\)\s*=>\s*s\./)`. **The test was written to enforce the defect.**
+It shipped at `edit.html:9196` in `e2dcd76`, and the spec asserted it: `expect(q.activateCond).toMatch(/^\(s\)\s*=>\s*s\./)`. **The test was written to enforce the defect.**
 
 **The engine calls the condition with no argument.** At the reference build, `roll2hit-v3.html:25845` reads `if (q.activateCond && !q.activateCond()) return;` — and at HEAD the same line is `if (q.activateCond && !q.activateCond()) return;@30154`, with a second, later call site that at least catches: `ok = q.activateCond(); } catch (e) { ok = false; }@37155`. So `s` is `undefined` and `s.<flag>` is a `TypeError` — thrown, at the reference build, inside the quest sweep with no `try`.
 
@@ -172,7 +172,7 @@ This is the second consecutive report in the §DOC-02 series to be bitten in the
 
 ## 9. A defect in the convention §1 cites
 
-§1 grounds the id convention on the arc-prefix strip at `wbapi-core.js:588` / `worldbuilder.html:1653`, which is still live at `src/js/wbapi-core.js:.replace(/_[a-z]{2}$/, '')@804` and `worldbuilder.html:.replace(/_[a-z]{2}$/, '')@1702`:
+§1 grounds the id convention on the arc-prefix strip at `wbapi-core.js:588` / `edit.html:1653`, which is still live at `src/js/wbapi-core.js:.replace(/_[a-z]{2}$/, '')@804` and `edit.html:.replace(/_[a-z]{2}$/, '')@1742`:
 
 ```js
 const arc = id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '');
@@ -193,7 +193,7 @@ Filed as **§DX-02cf**. Authoring-tool only; the engine never reads `_questArcs`
 | § | Risk as filed | Outcome |
 |---|---|---|
 | 8 | Bare-identifier activateCond is save-aborting; the compiler MUST emit the arrow form | ✗ **INVERTED.** The guard is real; the conclusion is backwards — the bare name is the correct POST input and the arrow form is the inert one (§7) |
-| 8 | Flag collisions across arcs, namespaced by `arcId` | ✓ holds — `worldbuilder.html:function edArcProducerFlag(step, i, arcId) {@8724` namespaces every flag; a shared `arcId` collides ids first and `create` rejects it |
+| 8 | Flag collisions across arcs, namespaced by `arcId` | ✓ holds — `edit.html:function edArcProducerFlag(step, i, arcId) {@8764` namespaces every flag; a shared `arcId` collides ids first and `create` rejects it |
 | 8 | Partial POST leaves steps 1..k−1 written | ✓ holds, and the mitigation shipped: `⊘ skipped (already exists)`, so a re-run resumes |
 | 8 | Out of scope → §EDITOR-02-FU: branching, drag-reorder, whole-arc UQF export | ✓ all three closed (`0449472` · `96c4258` · `11af1e5`) |
 
@@ -221,19 +221,19 @@ The spec grew 6 → 16 and, unlike the prose, **it was corrected**: line 17 of t
 
 ## 12. Findings filed
 
-**§DX-02cf** 🟢 **NEW** — `_questArcs`' second suffix strip merges 10 arcs / 35 quests into one bucket and has 0 legitimate targets. Delete `.replace(/_[a-z]{2}$/, '')` at `src/js/wbapi-core.js:804` and `worldbuilder.html:1702`; both copies must move together.
+**§DX-02cf** 🟢 **NEW** — `_questArcs`' second suffix strip merges 10 arcs / 35 quests into one bucket and has 0 legitimate targets. Delete `.replace(/_[a-z]{2}$/, '')` at `src/js/wbapi-core.js:804` and `edit.html:1702`; both copies must move together.
 
 **§DX-02cg** 🟢 **NEW** — three `plan-archive.md` rows (`:67`, `:103`, `:125`) still teach the dead `activateCond:(s)=>s.<prev flag>` as the locked design, complete with the inverted rationale *"MUST emit arrow-fn source, never bare ident."* Three younger sources carry the correction (`plan-archive.md:483` · `:498` · `lab-report-uqf-migration-playbook.md:107`). The four sites in **this** file were corrected in this pass.
 
 That split — **older prose asserts, newer prose corrects, and nothing reconciles them** — is the same shape found in the immediately preceding increment, where four documents still recorded a branch count that a gate had asserted otherwise for six weeks. *Machines back-propagate; prose has to be pushed.* Here the correction reached the compiler, its comment and its test, and stopped at the edge of the archive.
 
-**Not filed, recorded here:** the `worldbuilder.html:9094` pointer is section-accurate rather than symbol-exact, and §1's quotation of the audit message at `:2301` is a paraphrase. Neither misleads.
+**Not filed, recorded here:** the `edit.html:9094` pointer is section-accurate rather than symbol-exact, and §1's quotation of the audit message at `:2301` is a paraphrase. Neither misleads.
 
 ---
 
 ## 13. Verification record
 
-- **Reference build** `6515592` — `worldbuilder.html` 9,962 lines, `wbapi-core.js` 1,325 lines, both at the repo root.
+- **Reference build** `6515592` — `edit.html` 9,962 lines, `wbapi-core.js` 1,325 lines, both at the repo root.
 - **Citations** 12 of 12 resolve; 11 symbol-exact, 1 section-accurate.
 - **Census at HEAD, through the parser:** 2,853 quests · 1,624 with a `gate` · 35 multi-step arcs · 24 chaining on `gate.flags` · 44 surviving `activateCond` · **0** carrying `arc` · **0** carrying an auto producer flag.
 - **Negatives, checked with `git log -S` and no pathspec:** `activateCond:(s)` — 0 commits ever · `(s)=>s.` in the engine — 0 commits ever.

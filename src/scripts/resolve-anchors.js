@@ -27,11 +27,11 @@
 //         exists to remove — `npm run anchors:fix` refreshes every one mechanically.
 //
 // Usage:
-//   node scripts/resolve-anchors.js                # audit every doc; exit 1 on dead anchors
-//   node scripts/resolve-anchors.js --fix          # rewrite stale cached numbers in place
-//   node scripts/resolve-anchors.js --legacy       # count the un-migrated bare `NNNNN` anchors
-//   node scripts/resolve-anchors.js execBits       # lookup: where does this symbol live NOW?
-//   node scripts/resolve-anchors.js --selftest     # prove each phase catches a plant
+//   node src/scripts/resolve-anchors.js                # audit every doc; exit 1 on dead anchors
+//   node src/scripts/resolve-anchors.js --fix          # rewrite stale cached numbers in place
+//   node src/scripts/resolve-anchors.js --legacy       # count the un-migrated bare `NNNNN` anchors
+//   node src/scripts/resolve-anchors.js execBits       # lookup: where does this symbol live NOW?
+//   node src/scripts/resolve-anchors.js --selftest     # prove each phase catches a plant
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -226,7 +226,7 @@ function selftest() {
 
   // 7. file-qualified — `path.js:symbol@N` resolves in THAT file, not the game HTML
   r = audit([mk('qual.md', 'see `src/js/wbapi-server.js:function seededNext@99`, '
-    + 'and `js/no-such-file.js:whatever@99`')], target);
+    + 'and `src/js/no-such-file.js:whatever@99`')], target);
   check('qualified', r.stale.length === 1 && r.stale[0].hits.length === 1 && r.dead.length === 1,
     'resolved against src/js/wbapi-server.js (not the stand-in target); a missing file is DEAD');
 
@@ -287,7 +287,7 @@ if (dead.length) {
   console.error(`✗ check:anchors — ${dead.length} doc anchor(s) name a symbol that is NOT in ${rel(HTML)}:\n`);
   for (const a of dead) console.error(`    ${rel(a.file)}:${a.docLine}  \`${a.sym}@${a.cached}\``);
   console.error('\n  The pointer is dead, not merely drifted — the symbol was renamed or removed and the');
-  console.error('  doc still names it. Find the current name (`node scripts/resolve-anchors.js <symbol>`),');
+  console.error('  doc still names it. Find the current name (`node src/scripts/resolve-anchors.js <symbol>`),');
   console.error('  fix the doc, then `npm run anchors:fix` to refresh the number.');
   process.exit(1);
 }

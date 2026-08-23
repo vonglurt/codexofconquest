@@ -7,11 +7,11 @@
 // then optionally seeds NODE_COORDS so layout-solve starts from geography.
 //
 // Usage:
-//   ./api.sh worldmap                  — print terminal map
-//   ./api.sh worldmap --latlon         — add lat/lon column to list
-//   ./api.sh worldmap --seed           — apply geo-seeded coords via WBAPI
-//   ./api.sh worldmap --seed --dry-run — preview seed coords without applying
-//   ./api.sh worldmap --port 1367
+//   ./bin/api worldmap                  — print terminal map
+//   ./bin/api worldmap --latlon         — add lat/lon column to list
+//   ./bin/api worldmap --seed           — apply geo-seeded coords via WBAPI
+//   ./bin/api worldmap --seed --dry-run — preview seed coords without applying
+//   ./bin/api worldmap --port 1367
 
 'use strict';
 const http = require('http');
@@ -319,10 +319,10 @@ function drawRegionOverview(nRows, nCols) {
   console.log(`${nRows}×${nCols} region grid`);
   console.log();
   console.log('Navigate:');
-  console.log('  Zoom out → world:        ./api.sh worldmap');
-  console.log('  Zoom into a region:      ./api.sh worldmap --region B2');
-  console.log('  Zoom into a city:        ./api.sh worldmap --city LON');
-  console.log('  Show lat/lon list:       ./api.sh worldmap --latlon');
+  console.log('  Zoom out → world:        ./bin/api worldmap');
+  console.log('  Zoom into a region:      ./bin/api worldmap --region B2');
+  console.log('  Zoom into a city:        ./bin/api worldmap --city LON');
+  console.log('  Show lat/lon list:       ./bin/api worldmap --latlon');
 }
 
 // ─── Region zoom ─────────────────────────────────────────────────────────────
@@ -430,9 +430,9 @@ function drawRegionZoom(regionArg, nRows, nCols) {
     col > 0        ? `W: --region ${regionCode(row, col-1)}` : null,
     col < nCols-1  ? `E: --region ${regionCode(row, col+1)}` : null,
   ].filter(Boolean);
-  console.log(`  Zoom out → world:   ./api.sh worldmap`);
-  console.log(`  Region overview:    ./api.sh worldmap --regions`);
-  if (adjRegions.length) console.log(`  Adjacent regions:   ${adjRegions.map(s => `./api.sh worldmap ${s.slice(3)}`).join('  ')}`);
+  console.log(`  Zoom out → world:   ./bin/api worldmap`);
+  console.log(`  Region overview:    ./bin/api worldmap --regions`);
+  if (adjRegions.length) console.log(`  Adjacent regions:   ${adjRegions.map(s => `./bin/api worldmap ${s.slice(3)}`).join('  ')}`);
 }
 
 function project(lat, lon) {
@@ -558,9 +558,9 @@ function drawMap() {
   console.log(ftr.join(''));
   console.log();
   console.log('Navigate:');
-  console.log('  Region overview:    ./api.sh worldmap --regions');
-  console.log('  Zoom into region:   ./api.sh worldmap --region A1  (A1–F6)');
-  console.log('  Zoom into city:     ./api.sh worldmap --city LON');
+  console.log('  Region overview:    ./bin/api worldmap --regions');
+  console.log('  Zoom into region:   ./bin/api worldmap --region A1  (A1–F6)');
+  console.log('  Zoom into city:     ./bin/api worldmap --city LON');
 }
 
 // ─── City list ────────────────────────────────────────────────────────────────
@@ -782,10 +782,10 @@ async function drawCityMap(code, port) {
   const reg = regionForCity();
   console.log();
   console.log('Navigate:');
-  if (reg) console.log(`  Zoom out → region:  ./api.sh worldmap --region ${reg}`);
-  console.log(`  Zoom out → world:   ./api.sh worldmap`);
+  if (reg) console.log(`  Zoom out → region:  ./bin/api worldmap --region ${reg}`);
+  console.log(`  Zoom out → world:   ./bin/api worldmap`);
   for (const dir of DIRS) {
-    if (neighbours[dir]) console.log(`  Go ${dir}:             ./api.sh worldmap --city ${neighbours[dir].code}`);
+    if (neighbours[dir]) console.log(`  Go ${dir}:             ./bin/api worldmap --city ${neighbours[dir].code}`);
   }
 }
 
@@ -924,7 +924,7 @@ async function drawSearchMap(query, port) {
       const label    = (h.node.label || h.code).slice(0, 38);
       console.log(`  ${h.code.padEnd(6)} ${label.padEnd(38)} ${terrain} ${rc}${battle}`);
     }
-    console.log(`  → ./api.sh worldmap --region ${rk}`);
+    console.log(`  → ./bin/api worldmap --region ${rk}`);
     console.log();
   }
 
@@ -942,11 +942,11 @@ async function drawSearchMap(query, port) {
   console.log('Navigate:');
   if (isMonsterSearch) {
     const monsterCodes = [...new Set(hits.filter(h=>h.node.battle).map(h=>h.node.battle.key))].slice(0, 4);
-    console.log(`  Monster hunt: ${monsterCodes.map(m=>`./api.sh worldmap --monster ${m}`).join('  ')}`);
+    console.log(`  Monster hunt: ${monsterCodes.map(m=>`./bin/api worldmap --monster ${m}`).join('  ')}`);
   }
-  console.log(`  Zoom into city:   ./api.sh worldmap --city <CODE>`);
-  console.log(`  Zoom into region: ./api.sh worldmap --region <A1..F6>`);
-  console.log(`  New search:       ./api.sh worldmap --search "<query>"`);
+  console.log(`  Zoom into city:   ./bin/api worldmap --city <CODE>`);
+  console.log(`  Zoom into region: ./bin/api worldmap --region <A1..F6>`);
+  console.log(`  New search:       ./bin/api worldmap --search "<query>"`);
 }
 
 // ─── Route map: A → B navigation ────────────────────────────────────────────
@@ -988,7 +988,7 @@ async function drawRouteMap(fromCode, toCode, port) {
     console.log(`Route: ${src} → ${dst}`);
     console.log(`✗ No path found — nodes are not connected in the current graph.`);
     console.log(`  Check disconnected components: node layout-solve.js | jq .stats`);
-    console.log(`  Check connections: ./api.sh get node ${src}  and  ./api.sh get node ${dst}`);
+    console.log(`  Check connections: ./bin/api get node ${src}  and  ./bin/api get node ${dst}`);
     return;
   }
 
@@ -1110,11 +1110,11 @@ async function drawRouteMap(fromCode, toCode, port) {
   const srcReg = srcGeo ? (() => { for(let r=0;r<6;r++) for(let c=0;c<6;c++) { const b=regionBounds(r,c,6,6); if(srcGeo.lat>=b.minLat&&srcGeo.lat<b.maxLat&&srcGeo.lon>=b.minLon&&srcGeo.lon<b.maxLon) return regionCode(r,c); } return null; })() : null;
   const dstReg = dstGeo ? (() => { for(let r=0;r<6;r++) for(let c=0;c<6;c++) { const b=regionBounds(r,c,6,6); if(dstGeo.lat>=b.minLat&&dstGeo.lat<b.maxLat&&dstGeo.lon>=b.minLon&&dstGeo.lon<b.maxLon) return regionCode(r,c); } return null; })() : null;
   console.log(`\nNavigate:`);
-  if (srcReg)  console.log(`  Start region:  ./api.sh worldmap --region ${srcReg}`);
-  if (dstReg && dstReg !== srcReg) console.log(`  End region:    ./api.sh worldmap --region ${dstReg}`);
-  console.log(`  Start city:    ./api.sh worldmap --city ${src}`);
-  console.log(`  End city:      ./api.sh worldmap --city ${dst}`);
-  console.log(`  World map:     ./api.sh worldmap`);
+  if (srcReg)  console.log(`  Start region:  ./bin/api worldmap --region ${srcReg}`);
+  if (dstReg && dstReg !== srcReg) console.log(`  End region:    ./bin/api worldmap --region ${dstReg}`);
+  console.log(`  Start city:    ./bin/api worldmap --city ${src}`);
+  console.log(`  End city:      ./bin/api worldmap --city ${dst}`);
+  console.log(`  World map:     ./bin/api worldmap`);
 }
 
 // ─── Geo seeding ──────────────────────────────────────────────────────────────

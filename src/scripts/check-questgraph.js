@@ -54,9 +54,9 @@
 // so those are informational, not a gate. `--selftest` validates the analyser
 // against a synthetic graph and is the CI-wired mode (check:walk).
 //
-// USAGE:  node scripts/check-questgraph.js            # real-corpus report
-//         node scripts/check-questgraph.js --selftest # analyser self-test (CI)
-//         node scripts/check-questgraph.js --json      # machine-readable report
+// USAGE:  node src/scripts/check-questgraph.js            # real-corpus report
+//         node src/scripts/check-questgraph.js --selftest # analyser self-test (CI)
+//         node src/scripts/check-questgraph.js --json      # machine-readable report
 // ═══════════════════════════════════════════════════════════════════════════
 const fs = require('fs');
 const path = require('path');

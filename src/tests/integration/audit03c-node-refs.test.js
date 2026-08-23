@@ -12,7 +12,7 @@
 // and "fixed" to the wrong city without a single red.
 //
 // Pure-node (no browser): these are authoring-corpus invariants, so they lock the
-// same WBAPI parse `./api.sh audit` and the :1367 server read.
+// same WBAPI parse `./bin/api audit` and the :1367 server read.
 
 const { test, expect } = require('@playwright/test');
 const path = require('path');

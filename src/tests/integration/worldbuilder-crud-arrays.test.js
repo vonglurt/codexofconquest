@@ -17,7 +17,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
   test('codecs round-trip csv and objlines arrays', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const r = await page.evaluate(() => {
       const { arrToText, textToArr } = window.__crudTest;
       return {
@@ -45,7 +45,7 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
 
   // ── §EDITOR-01-D — itemchain codec via the CRUD __crudTest hook ─────────────
   test('codecs round-trip the itemchain grammar (all four action kinds)', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     const chain = [
       { action: 'grant', name: 'Pip Bead', icon: '🪵', type: 'misc', sell: 1, desc: "O'Brien's gift" },
       { action: 'take', name: "Smalt's Trust", all: true },
@@ -67,7 +67,7 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
   });
 
   test('quest CRUD form renders array inputs and collectFormData emits arrays', async ({ page }) => {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => window.switchTab('crud'));
     // Select the quest type, then open a blank "+ New" form (no server needed).
     await page.click('.crud-type-btn[data-ctype="quest"]');
@@ -122,7 +122,7 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
 test.describe('CRUD form — itemChain visual editor (§EDITOR-01-D-FU a Inc 4)', () => {
   // Open the quest CRUD type, then render a detail form for the given entity.
   async function renderEntity(page, entity) {
-    await page.goto('/worldbuilder.html');
+    await page.goto('/edit.html');
     await page.evaluate(() => window.switchTab('crud'));
     await page.click('.crud-type-btn[data-ctype="quest"]');
     await page.evaluate((e) => window.__crudTest.renderDetailForm(e, e ? e.id : ''), entity);
