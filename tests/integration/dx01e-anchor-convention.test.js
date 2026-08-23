@@ -32,6 +32,9 @@ const ANCHOR_RE = /`([^`\n]{1,80}?)@(\d{2,6})`/g;
 const LEGACY_RE = /`(\d{4,5})`/g;
 // The live docs migrated in this increment — every anchor in them must resolve.
 const MIGRATED = ['CONTRIBUTING.md', 'BACKLOG.md', 'mechanics.md',
+                  'BACKLOG-1-playable-truth.md', 'BACKLOG-2-engine-systems.md',
+                  'BACKLOG-3-content-narrative.md', 'BACKLOG-4-world-navigation.md',
+                  'BACKLOG-5-platform-tooling.md', 'BACKLOG-6-verification-docs.md',
                   path.join('docs', 'mechanics', 'mechanics-combat.md')];
 // §DX-01e-FU — potential.md is the live SEED INBOX: its anchors are read to build FROM,
 // so a rotted one sends a future session to build against the wrong code. It was the last
