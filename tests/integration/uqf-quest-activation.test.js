@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // §VM-01-G3 — Class-C migration: the legacy storyRender quest-activation blocks (NG+/WM/TL/VS/cat)
 // are now real `gate:` + `activateNode` quest data driven by storyCheckQuests, with a new

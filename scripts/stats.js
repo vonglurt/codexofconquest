@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 //
 // scripts/stats.js — live entity counts for roll2hit-v3.html  (§DX-01g)
 //

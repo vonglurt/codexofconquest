@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §WALK-2 / §WALK-4 — structural walk-parity: assert the MOVER:CORE block inlined
 // in roll2hit-v3.html is byte-identical to the same block in mover.js.
 'use strict';

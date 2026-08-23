@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report: Loot Drop & Weapon Economy Redesign
 **Project:** Roll2Hit v3 (roll2hit-v3.html, ~9,600 lines)

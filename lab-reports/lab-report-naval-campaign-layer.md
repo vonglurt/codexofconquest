@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report: The Naval Campaign Layer — Ports, Intercepts, Hunts, and the Harmony Chain at Sea
 
@@ -192,7 +192,7 @@ The cell map alone would strand 9 quests. The **flag closure** takes it to 13, b
 
 Two mechanisms rescue part of the layer, and both were found by looking for a *second route* before writing anything off:
 
-1. **The Warrant's Board pre-activates across the map.** `function _bountyPostable(q, node)@37150` requires only that the destination exist in `NODE_MAP` — **it never tests primacy** — and `_acceptBounty` fires the file's first live `unlock`. So `quest_sea_01` (gate `{}`, `xp:100` ≤ the Unknown tier's 250 cap) *is* postable, and its completion is `completion:{ atNode:'NWI' }` — a **primary** node. **§SPARK-01 SEA is fully playable, but only for a player who finds it on a board.**
+1. **The Warrant's Board pre-activates across the map.** `function _bountyPostable(q, node)@37149` requires only that the destination exist in `NODE_MAP` — **it never tests primacy** — and `_acceptBounty` fires the file's first live `unlock`. So `quest_sea_01` (gate `{}`, `xp:100` ≤ the Unknown tier's 250 cap) *is* postable, and its completion is `completion:{ atNode:'NWI' }` — a **primary** node. **§SPARK-01 SEA is fully playable, but only for a player who finds it on a board.**
 2. **The quest panel is not node-scoped.** `// ── QUESTS section (active quests at this node) ────@35545` is followed by `.filter(([, s]) => s === 'active')@35548` over the *whole* `S_story.quests` map, with no node filter. The Ceremonia roll card therefore renders for **any** active skill_check quest at **any** node. This is what makes board-accepted skill-check bounties completable at all — and it is a divergence between a comment and its code that nobody has recorded. → **§DX-02ah**.
 
 Final tally: **17 quests live by walking · 3 live only via the board · 13 unreachable.**

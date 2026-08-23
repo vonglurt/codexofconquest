@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 # MIT License — Copyright (c) 2026 Paul Richeson
 # Watches for new roll2hit-v3-YYYYMMDD-HHMMSS.html files and archives them
 # once fully written (no open file handles).

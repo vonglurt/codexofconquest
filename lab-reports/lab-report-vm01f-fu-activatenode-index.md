@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §VM-01-F-FU: The `activateNode` Index
 
 **Increment:** §VM-01-F-FU · **Status:** ✅ SHIPPED (Option A), `549d6b4` 2026-07-22 15:41 · **Design locked:** same day

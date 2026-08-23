@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-A — Give the VM a `yield`: execBits → coroutine.
 // Drives the REAL generator execBits + the REAL driver (_uqfPump / _uqfRunToCompletion)
 // and the REAL, now-implemented `choice` handler end-to-end. The keystone of the §VM-01

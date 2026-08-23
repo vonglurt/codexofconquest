@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §DX-02h/§DX-02i — the WORLD_DB terrain roster: its write path round-trips, its
 // shape stays stat blocks, and no voidTainted monster is authored-but-unreachable.
 //

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §XP-01 *Universal Effort XP*: misses and failed skill-checks
 
 **Parent:** `lab-reports/lab-report-play-review.md` §PLAY-01, spun off from §PLAY-01-B · **Track:** BACKLOG.md §XP-01 (Mechanics & Systems)
@@ -165,8 +165,8 @@ party, because `partyMult` (1.0–1.2) scales the kill but not the cap. All thre
 |---|---|
 | 1. Inline-script parse | ✅ 1 script block, **0 parse errors** |
 | 2a. Forced-miss grant + cap | ✅ `tests/integration/effort-xp.test.js:missed attack grants fractional effort XP@9` |
-| 2b. No mid-fight level-up modal | ✅ `tests/integration/effort-xp.test.js:misses bank XP silently@42` |
-| 2c. Failed check, guard, no-reward case | ✅ `tests/integration/effort-xp.test.js:failed skill-check grants 25@67` |
+| 2b. No mid-fight level-up modal | ✅ `tests/integration/effort-xp.test.js:misses bank XP silently@43` |
+| 2c. Failed check, guard, no-reward case | ✅ `tests/integration/effort-xp.test.js:failed skill-check grants 25@68` |
 | 2d. Regression enemy-ai / courier-map / hunt-mode | ✅ **4/4 · 1/1 · 3/3** |
 | 3. DUEL:CORE untouched | ✅ span sha `511b93cc1b21` **identical** at parent, ship and HEAD |
 | 4. Live screenshot of both notices | ⚠ combat log ✅ · quest notice **never rendered** (§7.1) |
@@ -182,7 +182,7 @@ moved `QuestRuntime._rollSkill`'s d20 onto the seeded stream, the stub stopped c
 anything, and the test became a ~45 % coin flip that the backlog recorded as a *deterministic* red.
 §DX-02f (2026-07-30) diagnosed it from the mechanic outward, found **the mechanic correct**, and
 repaired the test by forcing the outcome through the engine's own dial —
-`tests/integration/effort-xp.test.js:const forceFail@76` raises `sc.dc` to 999 and restores it in a
+`tests/integration/effort-xp.test.js:const forceFail@77` raises `sc.dc` to 999 and restores it in a
 `finally`. **The §XP-01 ship record was never in question; the test was.** The durable lesson:
 *a test that stubs an RNG must stub the stream the code actually draws.*
 

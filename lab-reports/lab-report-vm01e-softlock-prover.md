@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §VM-01-E: Prove the World Is Finishable (the Soft-Lock Prover)
 
 **Increment:** §VM-01-E · **Status:** ✅ SHIPPED (Option A), `354b20a` 2026-07-22 15:00 · **Author session:** 2026-07-22
@@ -152,7 +153,7 @@ surface. **C** — A now, Finding 1 (`counter`) as a fast-follow.
 this a planning problem, not pure graph reachability.
 
 > **RESOLVED 2026-07-22 — the user locked Option A**, with the **monotone bound** for the second question:
-> `scripts/check-questgraph.js:function gateSat@272` treats `favorMin`/`shardsMin`/`battles`/`nodes`/
+> `scripts/check-questgraph.js:function gateSat@273` treats `favorMin`/`shardsMin`/`battles`/`nodes`/
 > `restedAtMin`/`countMin`/`dayMin`·`dayMax` as satisfiable-if-reachable and negations as satisfiable-by-absence,
 > so a quest is reachable when its gate's *flag* and *quest-dependency* reads are supplied by the accumulated
 > write-pool. This **over-approximates** reachability, which is the sound direction for the primary output: a
@@ -196,7 +197,7 @@ invariant enforced is **zero residual non-determinism**, the one thing that is s
 ## 8. §VM-01-E-FU — the Write-Set Completion Pass (same day)
 
 The write-set tree-walk only sees flags a **quest bit** sets, so every gate flag provided by **non-quest code**
-looked like a soft-lock. `scripts/check-questgraph.js:function scanFlagWrites@301` scans the whole HTML for
+looked like a soft-lock. `scripts/check-questgraph.js:function scanFlagWrites@302` scans the whole HTML for
 every flag-write form and folds the result into **both** the written-flag pool and the reachability start pool.
 **Ten forms** across seven regexes (see §10 D3): `S_story.flag =`, `S_story.container[x] =`,
 `S_story['flag'] =`, `missionBit:`, `_grantMissionBit(…)`, the `flag:` / `key:` / `flagBought:` record fields
@@ -268,7 +269,7 @@ byte-exact · `parseSanitized` drops exactly `quest_sea_01` and `quest_sb_01` at
 | D3 | §8 | `scanFlagWrites` "captures each of its **eleven** write forms" | **Ten** forms across seven regexes; the selftest makes **eleven** assertions because `set:[…]` is exercised with two flags | **Off by one** — flags counted as forms |
 | D4 | §4 F1 | The counter tracks "are read by real gates (11–26 refs each)" | **Zero** quest gates read any of the five, at ship-day and at HEAD. `tribbleCount` occurs 6× in the whole file. The one intended gate read was demoted — `is not expressible in canActivate@13973` says so in the file | **Wrong**; conclusion survives, see §11 |
 | D5 | §7 | `check:questparity` "21,909 **bytes**" | The number is exact, but the gate prints `a.length` — UTF-16 code units. 21,909 chars = **22,135 UTF-8 bytes** | Figure right, **unit mislabelled by the tool itself** |
-| D6 | §5/§7 | E consumes §VM-01-D's kernel — "the kernel via `require('../js/quest.js')`" | `scripts/check-questgraph.js:const Q = require@62` binds `Q`, and `Q` occurs **exactly once in the file: on that line** — at ship-era and at HEAD. The prover rolls its own `gateSat` and `scripts/check-questgraph.js:function matchBrace@65`, and never calls the kernel | **The import is decorative.** C's scratch-state *concept* is used; D's code is not. Now §DX-02dx |
+| D6 | §5/§7 | E consumes §VM-01-D's kernel — "the kernel via `require('../js/quest.js')`" | `scripts/check-questgraph.js:const Q = require@63` binds `Q`, and `Q` occurs **exactly once in the file: on that line** — at ship-era and at HEAD. The prover rolls its own `gateSat` and `scripts/check-questgraph.js:function matchBrace@66`, and never calls the kernel | **The import is decorative.** C's scratch-state *concept* is used; D's code is not. Now §DX-02dx |
 | D7 | §8 | `waw001a1` "only survives play because an NPC `missionBit` coincidentally grants it — the chain stalls at **act 3**" | §AUDIT-03bj measured both halves false: `meta.missionBit` has **zero readers** (§DX-02cx), so the scan over-credits it, and the first dead rung is **act 2** in all eight chains | **Both halves wrong** |
 
 **Drift since ship (not errors).** `check:gateast` 72 → **76** (`37f8ccb` added the `dayMin`/`dayMax` leaf the
@@ -312,10 +313,10 @@ one unguarded effect call in the kernel this report's port routes through).
 `seaStrangenessNoticed@12491` · `is not expressible in canActivate@13973` · `S_story[ngEbKey] = true;@35308`
 (the eleventh computed-key writer, omitted from the original §9-FU list of ten) ·
 `js/quest.js:resolveSkillCheck(bit, ctx)@322` · `js/quest.js:const d20  = Math.ceil(E.rng() * 20)@314` ·
-`scripts/check-questgraph.js:const Q = require@62` · `scripts/check-questgraph.js:function matchBrace@65` ·
-`scripts/check-questgraph.js:function gateSat@272` · `scripts/check-questgraph.js:function scanFlagWrites@301` ·
+`scripts/check-questgraph.js:const Q = require@63` · `scripts/check-questgraph.js:function matchBrace@66` ·
+`scripts/check-questgraph.js:function gateSat@273` · `scripts/check-questgraph.js:function scanFlagWrites@302` ·
 `scripts/check-quest-parity.js:quest parity: QUEST:CORE identical@25` ·
-`scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@31` (§VM-01-F — the kernel's genuine first
+`scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` (§VM-01-F — the kernel's genuine first
 consumer, per D6).
 
 *Ship-day anchors, superseded but recorded — all verified to resolve on `354b20a^`: QUEST_DB 10492–21692 ·

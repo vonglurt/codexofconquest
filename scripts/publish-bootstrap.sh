@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 # MIT License — Copyright (c) 2026 Paul Richeson
 # scripts/publish-bootstrap.sh — §MESH-01-FU 7: snapshot a tracker's live peer
 # table in peers.txt format, for MANUAL bootstrap publishing.

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Migrating `roll2hit-v3.html` Onto the Cell-Grid Architecture
 ### A practical companion to `ieee-paper-cell-grid-navigation.md`

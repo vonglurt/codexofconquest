@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-G2b — the npc-row hooks: the Birka-region blocks G2 deferred.
 //
 // G2 extracted the 7 Class-E blocks that append to #story-text-box. The 29 blocks in the

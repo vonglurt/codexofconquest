@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # plan.md — Archive (closed / completed work)
 
 > Completed items moved out of `plan.md` on 2026-06-28 to keep the active plan lean.

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §WALK-4 Inc 1 — terrain-field invariant proof (CI-gated, no server needed).
 //
 // Parses the committed roll2hit-v3.html (same approach as check-mover-*.js) and

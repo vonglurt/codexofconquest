@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Roll2Hit Developer Environment
 
 ## Overview

@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 <!-- §VM-01-C child lab report — locked BEFORE the HTML edit (CONTRIBUTING.md Lab Report Policy). -->
 <!-- Parent structural read: lab-report-javascript-mud.md. Siblings: -vm01a-execbits-coroutine.md, -vm01b-client-rng-seed.md. -->
 
@@ -126,7 +127,7 @@ The env is a *call-time* parameter, not persisted state. It must never ride a sa
 ### 7.3 Registry — deferred to §VM-01-E (the ASK, answered by the user)
 An enumerable flag namespace where a typo throws is the natural companion, but it is a *behaviour* change, not a no-op: it would surface every existing dead or mistyped flag as a new runtime error, muddying this increment's verdict. Better caught **statically**.
 
-> **Outcome: SHIPPED where promised, and the destination names this report as the source.** `scripts/check-questgraph.js:detector §VM-01-C deferred here.@35`. It runs green today and reports **50 written-by-nothing** and **982 read-by-nothing** flags as a review artifact. *A deferral is only honest if someone writes down where it went; this one is cited by name in the file that received it.*
+> **Outcome: SHIPPED where promised, and the destination names this report as the source.** `scripts/check-questgraph.js:detector §VM-01-C deferred here.@36`. It runs green today and reports **50 written-by-nothing** and **982 read-by-nothing** flags as a review artifact. *A deferral is only honest if someone writes down where it went; this one is cited by name in the file that received it.*
 
 ## 8. Invariants preserved
 

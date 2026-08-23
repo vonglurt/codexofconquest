@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 /**
  * §AUDIT-03m — find (and annotate) 26x16-era node codes still living in doc prose.
  *

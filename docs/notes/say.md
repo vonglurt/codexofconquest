@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # say.sh — Queue-Based Text-to-Speech
 
 Enqueues text for speech and returns immediately. A daemon (`sayd.sh`) picks it up and speaks serially, one message at a time.

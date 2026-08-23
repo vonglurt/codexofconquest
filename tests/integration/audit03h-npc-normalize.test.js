@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03h — the 10 display-name `npc` values normalized to real registry keys.
 //
 // `ea02faf`-era authoring wrote the NPC's *display name* ("Emmer Finch") into `quest.npc`

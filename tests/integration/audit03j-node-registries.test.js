@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03j — the ENGINE-side node references resolve too, not just the quest corpus.
 //
 // Why this test exists: §AUDIT-03c locked `activateNode`/`waypointNode` in QUEST_DB, but

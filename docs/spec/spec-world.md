@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # roll2hit — World Engine Architecture Specification
 ### Phase 3 Combat Utility Extension & Terrain-Based Monster Catalog System

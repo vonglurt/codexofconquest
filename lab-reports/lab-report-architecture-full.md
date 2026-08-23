@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report — Roll2Hit Architecture: A Full Technical Review
 
@@ -65,7 +65,7 @@ Counts below are from HEAD on 2026-08-11 with the working tree carrying only the
 | `CORRIDOR_CELLS`, `buildCorridorMap()`, `_routeSegments()`, `_corridorTerrain()`, `_wireGlyph()` | **0 occurrences** each | §WALK — replaced by the `MOVER:CORE` kernel and the `ROAD_RUNS` / `ROAD_CELLS` net |
 | `storyMove(dir)`, `storyCorridorTravel()`, `triggerCorridorEncounter()` | **0 occurrences** | §NAV-01 auto-travel |
 | `_bfsPath()` | **0 occurrences** | replaced by the road-weighted router |
-| `storyPortal()`, `storySetHearthHome()`, `storyUseTransmort()`, `S_story.hearthHome` | **0 occurrences** — only the removal comments survive (`` `storyPortal removed@28452` ``) | §CELL-13, re-applied 2026-07-03. **Standing user rule: no jump travel, ever.** `checkpointNode` respawn is the only warp. The review's §IX.C "Hearthing and Teleport" section is entirely dead. |
+| `storyPortal()`, `storySetHearthHome()`, `storyUseTransmort()`, `S_story.hearthHome` | **0 occurrences** — only the removal comments survive (`` `storyPortal removed@28457` ``) | §CELL-13, re-applied 2026-07-03. **Standing user rule: no jump travel, ever.** `checkpointNode` respawn is the only warp. The review's §IX.C "Hearthing and Teleport" section is entirely dead. |
 | `storyStalk()`, `storyQuickWait()`, `storyRunAway()`, `_applyASI()` | **0 occurrences** | renamed/absorbed; `_ASI_LEVELS` (`` `const _ASI_LEVELS = new Set([4, 6, 8, 12, 14, 16, 19])@25526` ``) now drives ASI |
 | `storyShowRoom6()`, `storyShowFrobergerNote()`, `storyShowWeckmannLog()`, `storyShowDeaconCode()`, `storyShowBrynnLedger()` | **0 occurrences** | the five narrative-modal launchers were absorbed into the node registries (`NODE_HOOKS` / `NODE_PANELS`, §VM-01-G-FU) |
 
@@ -77,13 +77,13 @@ Counts below are from HEAD on 2026-08-11 with the working tree carrying only the
 |---|---|---|
 | XP = `AC × maxHP` | `Math.round(AC × maxHp × partyMult)` (`` `function _storyBattleVictory()@25280` ``) | **HOLDS** at `partyMult=1`; §MESH-01f added the party share |
 | gold = `floor(0.1 × AC × maxHP)` | `Math.floor(AC × maxHp × 0.1) × partyMult` | **HOLDS**, same caveat |
-| notoriety = `level × 3 + floor(battlesWon / 2)` | identical, but `battlesWon = Object.keys(defeatedBattles).length + dropsCollected` (`` `function _notoriety()@38202` ``) | **HOLDS** in form; the input widened |
-| `_notorietyWeights(n)`: 4 brackets (0–9 / 10–19 / 20–29 / 30+), weights 5/4/2/1/0 … deadly=0 below 20 | **6 brackets** (≤5 / ≤10 / ≤20 / ≤30 / ≤40 / else), percentage-scale weights `40/35/20/4/1` → `0/5/25/40/30` (`` `function _notorietyWeights(n)@38207` ``) | **STALE**. **Deadly is never 0** — a level-1 player already carries a 1% deadly draw. The review's *"at low notoriety deadly is impossible"* was never true of the shipped table. |
+| notoriety = `level × 3 + floor(battlesWon / 2)` | identical, but `battlesWon = Object.keys(defeatedBattles).length + dropsCollected` (`` `function _notoriety()@38207` ``) | **HOLDS** in form; the input widened |
+| `_notorietyWeights(n)`: 4 brackets (0–9 / 10–19 / 20–29 / 30+), weights 5/4/2/1/0 … deadly=0 below 20 | **6 brackets** (≤5 / ≤10 / ≤20 / ≤30 / ≤40 / else), percentage-scale weights `40/35/20/4/1` → `0/5/25/40/30` (`` `function _notorietyWeights(n)@38212` ``) | **STALE**. **Deadly is never 0** — a level-1 player already carries a 1% deadly draw. The review's *"at low notoriety deadly is impossible"* was never true of the shipped table. |
 | `encounterChance = min(95, 10 + notoriety × 1.5 + activeQuestCount × 4)` | **no such expression exists.** Encounter rate is per-terrain data (`TERRAIN_ENCOUNTER_RATE`, `encounterRate(t)`), applied only on `destKind === 'empty'` steps, roads at rate 0 | **NOT SHIPPED / SUPERSEDED**. Active quest count has never fed encounter probability. |
 | `_calcPlayerAc()` = base + shield + acBonus + **DEX mod** | base + shield + acBonus + `_lakeMagicBonuses().ac` — **no DEX term** (`` `function _calcPlayerAc()@24610` ``) | **STALE** (and likely wrong when written) |
 | `_rollD100Loot()` rerolls up to 3× "before settling for nothing" | 3 attempts, then falls back to **Minor Healing Potion**, and draws from the **seeded** stream with a Luck modifier (`` `function _rollD100Loot()@24533` ``) | **STALE** — the floor is an item, not nothing |
 | `_extraAttackCount()` returns 1/2/3/4; **"Action Surge doubles the count"** | returns 1/2/3/4 by level only — **no surge branch** (`` `function _extraAttackCount()@24995` ``) | **1/2/3/4 HOLDS; the doubling claim is NOT SHIPPED.** Action Surge resets the main action; it does not multiply the attack loop. |
-| Void Pressure ticks on days 3/7/14/21/28/35/42, ≥10 ends the run | **exact** (`` `const VOID_TIDE_EVENTS@22368` ``, `` `function storyCheckVoidTide()@36353` ``) | **HOLDS** |
+| Void Pressure ticks on days 3/7/14/21/28/35/42, ≥10 ends the run | **exact** (`` `const VOID_TIDE_EVENTS@22368` ``, `` `function storyCheckVoidTide()@36358` ``) | **HOLDS** |
 | *"there is no mechanical relief valve"* for Void Pressure | Layer 59 added a **mercy window** — `void_mercy_count` consumes a tide event instead of adding pressure | **STALE** — a relief valve now exists |
 
 ### E. Fighter progression
@@ -103,9 +103,9 @@ The reviewed table listed 9 levels. The live table has 19 (levels 2–20) and di
 
 | Claim | Measured | Verdict |
 |---|---|---|
-| `_curseScore()` = `(startedNotReturned×3) + (neverStarted×1) − (allComplete ? 5 : 0)`, range −5…+55 (§VII.E) | **exact** (`` `function _curseScore()@28186` ``) | **HOLDS** |
+| `_curseScore()` = `(startedNotReturned×3) + (neverStarted×1) − (allComplete ? 5 : 0)`, range −5…+55 (§VII.E) | **exact** (`` `function _curseScore()@28191` ``) | **HOLDS** |
 | `_curseScore()` = `+2 / +1 / −1`, range −20…+40 (§XI.E) | contradicted by the above | **NOT SHIPPED** — see §IV |
-| `_covenantStanding()` → 5 tiers Keeper/Warden/Keeper/Watcher/Wanderer (§VII.E) | **exact**, `maxScore` −6 / 0 / 7 / 14 / ∞ (`` `const COVENANT_STANDING_LABELS@27351` ``) | **HOLDS** |
+| `_covenantStanding()` → 5 tiers Keeper/Warden/Keeper/Watcher/Wanderer (§VII.E) | **exact**, `maxScore` −6 / 0 / 7 / 14 / ∞ (`` `const COVENANT_STANDING_LABELS@27356` ``) | **HOLDS** |
 | `_covenantStanding()` → `Covenant Keeper (True)` gated on `pitWins ≥ 5` + `ebNegotiated ≥ 5` (§XI.E) | **no such tier and no such gate exist** | **NOT SHIPPED** — see §IV |
 | `_missionComplete()` — 12 bits, true at ≥8 | **exact**, 12 keys, `>= 8` (`` `function _missionComplete()@23648` ``) | **HOLDS** |
 | `_lubeckFriends()` — *"true if all 6 Birka NPCs are at Friendly+"* | returns a **count** of every NPC at favor ≥1 across the whole 204-profile table; `_missionComplete` tests it `>= 3` (`` `function _lubeckFriends()@23461` ``) | **STALE** — a boolean claim about a counter, and the "6 Birka NPCs" scope is 34× wider |
@@ -116,7 +116,7 @@ The reviewed table listed 9 levels. The live table has 19 (levels 2–20) and di
 
 | Claim | Measured | Verdict |
 |---|---|---|
-| `storyRender()` is the largest function; full innerHTML rewrite, no diff, no cache | **1,490 lines** (34,562–36,051), 28 `innerHTML` writes per pass (`` `function storyRender(node, prefix)@34562` ``) | **HOLDS** — the defining pattern is intact at 5.5× the data |
+| `storyRender()` is the largest function; full innerHTML rewrite, no diff, no cache | **1,490 lines** (34,562–36,051), 28 `innerHTML` writes per pass (`` `function storyRender(node, prefix)@34567` ``) | **HOLDS** — the defining pattern is intact at 5.5× the data |
 | The 11-step render order (desc → quests → journal → NPC cards → combat → loot → vendor → nav → minimap → world map → status) | Order now opens with §CELL-03 position sync and `_uqfActivateAtNode()` (§VM-01-G3 — quest activation runs *before* the body so per-node UI keyed on `'active'` renders in the same arrival), and the nav step is gone with the compass | **STALE** in sequence, **HOLDS** in shape |
 | Render-target table naming `#story-desc`, `#story-vendor`, `#story-inventory`, `#story-journal-overlay`, `#story-char-overlay`, `#history-cards` | **all six ids occur 0 times.** The live main target is `story-text-box` (26 references inside `storyRender` alone); overlays are `story-vendor-overlay`, `story-eb-npc-modal`, `story-fishing-modal` | **STALE** — 6 of 11 rows point at nothing |
 | No event bus, no observables, synchronous click→pixel | intact | **HOLDS** |
@@ -140,7 +140,7 @@ Two dead-data defects surfaced that no gate currently catches. Both are filed to
 
 1. **`LOOT_TABLE` is dead data with a comment that claims otherwise.** `` `const LOOT_TABLE@24441` `` is declared with the trailing note *"used by `_rollD100Loot()`"* — and the identifier `LOOT_TABLE` occurs **exactly once in the whole file**: on its own declaration line. `_rollD100Loot()` reads `_D100_TABLE` instead. A doc comment asserting a reader that does not exist is worse than no comment, because it is what a reader greps for. → **§DX-02n**.
 
-2. **`S_story.ebReturnsCompleted` is a write-only shadow of `ebReturnDone`.** Both are initialised in `_S_DEFAULTS()` (`` `ebReturnsCompleted: {}@23086` ``) and both are written by the same function (`` `S_story.ebReturnDone[ebCode] = true@30358` `` and the line after it). `ebReturnDone` has **12 readers** — `_curseScore()`, `_missionComplete()`, the 20 `quest_e*_return` completions, the victory screen. `ebReturnsCompleted` has **zero**. It persists into every save file and means nothing. This is the Hazard-#2 class in its quietest form: *a write into a real-but-wrong object never throws*, and here the write is into a real-but-**unread** object, so even a round-trip test would pass. → **§DX-02n**.
+2. **`S_story.ebReturnsCompleted` is a write-only shadow of `ebReturnDone`.** Both are initialised in `_S_DEFAULTS()` (`` `ebReturnsCompleted: {}@23086` ``) and both are written by the same function (`` `S_story.ebReturnDone[ebCode] = true@30363` `` and the line after it). `ebReturnDone` has **12 readers** — `_curseScore()`, `_missionComplete()`, the 20 `quest_e*_return` completions, the victory screen. `ebReturnsCompleted` has **zero**. It persists into every save file and means nothing. This is the Hazard-#2 class in its quietest form: *a write into a real-but-wrong object never throws*, and here the write is into a real-but-**unread** object, so even a round-trip test would pass. → **§DX-02n**.
 
 Both were in the reviewed file's lineage but neither is mentioned in the original report, which is the honest finding about a 1,009-line architectural review: it enumerated the file exhaustively and still could not see a constant with no readers.
 

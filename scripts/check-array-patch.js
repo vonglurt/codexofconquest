@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // §WBAPI-01 ph3 — full structured-field PATCH guard.
 // Verifies WBAPI.editStructuredField serializes array/object/number values to

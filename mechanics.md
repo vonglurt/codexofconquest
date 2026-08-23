@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Roll2Hit — The Shattered Codex: Game Mechanics
 
@@ -824,7 +824,7 @@ Potions do not stack effects — each is one item, one use. Buy multiples to car
 
 ### Final Boss — Commander Auros ✅
 
-**High Commander Seraphine Bruhns / Auros** — accessible at **`TLS`** (Cosmic Realm; historical `CO`) when the node's **`finalBattle` thresholds** are met: `TLS` authors `finalBattle:{minLevel:20, minShards:7}` in `NODE_MAP` (§VM-01-G-FU-f2 — the §VM-01-G3 `onActivate` precedent: per-node data driving an engine seam), read by the single helper `` `function _finalBattleReady@27993` ``. That helper is the ONE copy of what used to be three hand-copied `=== 'TLS' && level ≥ 20 && shards ≥ 7` predicates (the encounter card + both quest-list Fight buttons); a node without the field is never final. The stat block is loaded from `BOSS_COMMANDER_AUROS`.
+**High Commander Seraphine Bruhns / Auros** — accessible at **`TLS`** (Cosmic Realm; historical `CO`) when the node's **`finalBattle` thresholds** are met: `TLS` authors `finalBattle:{minLevel:20, minShards:7}` in `NODE_MAP` (§VM-01-G-FU-f2 — the §VM-01-G3 `onActivate` precedent: per-node data driving an engine seam), read by the single helper `` `function _finalBattleReady@27998` ``. That helper is the ONE copy of what used to be three hand-copied `=== 'TLS' && level ≥ 20 && shards ≥ 7` predicates (the encounter card + both quest-list Fight buttons); a node without the field is never final. The stat block is loaded from `BOSS_COMMANDER_AUROS`.
 
 | Stat | Value |
 |---|---|

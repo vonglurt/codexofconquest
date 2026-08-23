@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report — Layer 44: The Ally Cat Arc ("Nine Lives, Capisce?")
 
@@ -105,7 +105,7 @@ by **monster key** (not node code — see §6.3).
 
 Three exclusive-by-quest-state buttons, migrated from inline `storyRender` handlers to
 `NODE_PANELS` by §VM-01-G4d as a **deliberately concurrent** group (`group:'cdg-boss-menu'`) —
-`` `cdg-boss-taz@34378` ``, `cdg-boss-don`, `cdg-boss-king`. Each emits a `narrative` bit then a
+`` `cdg-boss-taz@34383` ``, `cdg-boss-don`, `cdg-boss-king`. Each emits a `narrative` bit then a
 `combat` bit carrying the synthetic code. Victory is handled at
 `` `if (pb && pb.nodeCode === 'CQ_KING')@25372` `` and siblings, which write `catKingDefeated`
 and open the §Layer-78 La Riva chain.
@@ -117,7 +117,7 @@ and open the §Layer-78 La Riva chain.
 - **`NPC_DIALOGUES` profiles:** `` `occupation:"Cat Quarter fixer"@10403` `` (`jimmy`),
   `sandy_cat`, `don_fluffissimo` — plus **`kenickie`**, promoted to a full profile later
   (Layer 75 §XL). Four, not three.
-- **Card roster:** `` `const _cqNpcs = ['jimmy']@35123` `` — `sandy_cat` on `quest_cat_02`
+- **Card roster:** `` `const _cqNpcs = ['jimmy']@35128` `` — `sandy_cat` on `quest_cat_02`
   complete, `kenickie` on `quest_cat_05` complete. `CDG` was one of the codes repaired by
   §PLAY-01-G, when `birkaNpcs` was found keyed to pre-§WALK sublocation codes that rendered
   nowhere.
@@ -134,7 +134,7 @@ and open the §Layer-78 La Riva chain.
 
 ### 3.9 Vendor — Kenickie's Black Market
 
-Shipped Layer 75 §XL; migrated to `` `cdg-kenickie-market@34191` `` (`NODE_HOOKS`) by
+Shipped Layer 75 §XL; migrated to `` `cdg-kenickie-market@34196` `` (`NODE_HOOKS`) by
 §VM-01-G4d. Gated on `quest_cat_05` **complete**. Four SKUs: Sardine Pack ×3 (18gp, catch +2),
 Live Shallows Minnow (28gp, catch +3, size↑), Minor Healing Potion (45gp), Healing Potion
 (135gp). The "10% discount" is real but applies only to the two potions — 45 vs. `POTION_TIERS`
@@ -213,8 +213,8 @@ Each is filed as a BACKLOG row; none is fixed here (this pass is documentation-o
 `` `quest_cat_01: { id:'quest_cat_01'@13689` `` ·
 `` `catKills: {}, monsterKills: {}@23120` `` ·
 `` `CDG: { name:'Jimmy Two-Tails'@22696` `` ·
-`` `occupation:"Cat Quarter fixer"@10403` `` · `` `const _cqNpcs = ['jimmy']@35123` `` ·
-`` `cdg-boss-taz@34378` `` · `` `cdg-kenickie-market@34191` `` ·
+`` `occupation:"Cat Quarter fixer"@10403` `` · `` `const _cqNpcs = ['jimmy']@35128` `` ·
+`` `cdg-boss-taz@34383` `` · `` `cdg-kenickie-market@34196` `` ·
 `` `if (pb && pb.nodeCode === 'CQ_KING')@25372` `` ·
 `` `// §TIMELESS-01: HUNTING_GROUNDS removed@10392` ``
 

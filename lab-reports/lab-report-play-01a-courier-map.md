@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §PLAY-01-A *The Courier's Map*: goal legibility
 
 **Parent:** `lab-reports/lab-report-play-review.md` §PLAY-01-A · **Track:** BACKLOG.md §PLAY-01 (archived → `plan-archive.md`)
@@ -166,7 +166,7 @@ after `storyNewGame`: the chip has a non-null `offsetParent`, measures **958 × 
 **The acceptance test is honest about what it covers and silent about what it does not.** It
 asserts seven symbols, 0 → 3 → 7 darkening, the exact leg strings `⭐ Lv 1/20` and `☀ Day 1/49`,
 the gold-at-20 state, and — since §PLAY-01-C amended it — that the chip is calm at day 45 and
-softly amber at day 47 (`tests/integration/courier-map.smoke.test.js:out.day47SoftWarn@53`). It
+softly amber at day 47 (`tests/integration/courier-map.smoke.test.js:out.day47SoftWarn@54`). It
 contains **no assertion about `#s-day`** and it calls `storyNewGame` **once per page load**. Those
 are precisely the two blind spots the findings below occupy. Neither defect is a test failure;
 both are outside the test's universe.

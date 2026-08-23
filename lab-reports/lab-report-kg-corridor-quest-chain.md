@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report — §KG Increment 3: The Corridor Quest Chain
 
@@ -158,13 +158,13 @@ sit under the same guard, taking §GR's payoff with them.
 §KG chain copied the idiom 44 days later. Neither has ever incremented in live play.
 
 **Why no gate caught it.** `check:questgraph` registers counters as resources —
-`scripts/check-questgraph.js:out.resources.add('count:' + c.path.split('.')[0])@252` — then
+`scripts/check-questgraph.js:out.resources.add('count:' + c.path.split('.')[0])@253` — then
 classifies every `countMin` clause *monotone-satisfiable* because a counter only goes up. True, and
 irrelevant: **a counter that never moves is monotone too.** The written-by-nothing detector covers
 flags, not counters.
 
 **Why no test caught it.** `tests/integration/kg-quest-chain.test.js` is a good test of the wrong
-half: it sets `tests/integration/kg-quest-chain.test.js:S_story.monsterKills = {@62` by hand, then
+half: it sets `tests/integration/kg-quest-chain.test.js:S_story.monsterKills = {@63` by hand, then
 proves `QuestRuntime.canComplete` honours it. The reader was verified; the writer never was.
 
 **The fix is one identifier, four times:** `S.opp.key` → `S.enemy.key`. Filed as **§DX-02cy**.

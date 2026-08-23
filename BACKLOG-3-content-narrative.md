@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # BACKLOG — Phase 3: Content & Narrative — authored text, NPCs, arcs, endings as writing
 
 > **Phase 3 of 6.** Split out of `BACKLOG.md` on 2026-08-23; `BACKLOG.md` is now the routing index and holds the chronological §RESUME map across all six files.

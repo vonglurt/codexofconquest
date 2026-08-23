@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03j — every node reference in the engine must resolve in NODE_MAP.
 //
 // Why this exists: `NODE_MAP` is the only authority on which places exist, but a dozen

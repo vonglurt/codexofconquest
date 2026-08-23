@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §DX-02k — WBAPI.save() must be told where to write.
 //
 // Why this test exists. `save(outputPath)` used to fall back to

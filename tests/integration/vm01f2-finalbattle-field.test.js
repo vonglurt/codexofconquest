@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-G-FU-f2 — the TLS final-battle framing moves from three hand-copied engine
 // predicates to ONE node field read by ONE helper.
 //

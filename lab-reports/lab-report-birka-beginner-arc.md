@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Birka Roots: The Beginner Arc and the NPC Favorability System
 
@@ -72,7 +72,7 @@ quests / 204 NPC profiles):
 | Gold rewards 80 / 40 / 60 | **exact, all three** | `gold:80@21218`, `gold:40@21263`, `gold:60@21279` |
 | Items: Worn Ledger Book · Sealed Scholar Box · Pit Legend Token · EMP Grenade · Scholar's Note · Cipher Scrap · Conclave Pass | **all seven live** | `itemChain`@21242/21270/21288/21298/21324 |
 | Pachelbel hands the lute over on request, no fight — with his line verbatim | **exact**, including *"it didn't look like something that should be left under a chair in here"* | `key === 'pachelbel' && S_story.quests@23769` |
-| Sweelinck's four curse-score variants **plus** a fifth Birka variant at ≥3 friends | **exact structure** — 5 entries, the 5th flagged `birka:true` | `const SWEELINCK_DIALOGUE_VARIANTS@27224` |
+| Sweelinck's four curse-score variants **plus** a fifth Birka variant at ≥3 friends | **exact structure** — 5 entries, the 5th flagged `birka:true` | `const SWEELINCK_DIALOGUE_VARIANTS@27229` |
 | Player starts with 150gp | **exact** | `gold: 150@23005` |
 | Auros → Dear Friend on Void Below; the arc's only fav-2 grant | **exact** (`{kind:'favor', npc:'auros', set:2}`) | `quest_void_below@21317` |
 
@@ -96,9 +96,9 @@ Sixteen deltas. Each is **NOT SHIPPED** (never existed), **RETIRED** (shipped, l
 | 7 | **Pit Legend Token — "+5gp trade value at BA"** | **CHANGED** | `sell:30`, flat, everywhere. No node-specific trade bonus exists in the engine for any item. |
 | 8 | **Quest 5 requires 1+ Birka quest complete; Quest 6 requires Auros AND Weckmann both Friendly** | **NOT SHIPPED — both** | Both carry `gate:{}`. The gate shape exists and is used by a *sibling* quest in the same block (`quest_brynn_firewood` gates on `favorMin:{brynn:1}`), so this is an authoring omission, not a missing capability. **The arc's intended ordering is unenforced: Void Below is available on arrival.** |
 | 9 | **Slums Cleanup grants a "Guard Favor token (story item)"** | **NOT SHIPPED** | No inventory item. The phrase survives only inside the narrative string *"💰 +80gp from Yael. Guard Favor granted."* — 1 occurrence, 1 commit. The favor itself is granted (`favor npc:'yael' set:1`); the *token* was never minted. |
-| 10 | **Brynn's Ledger reward: "free lodging for 3 nights"** | **NOT SHIPPED** | `onComplete` emits *"🛏 Brynn offers 3 free nights"* and stops. No counter, no flag, no state. `storySleep` charges `node.sleepCost` unless `node.code === 'INN' && S_story.freeBookingUnlocked@36208` — an unrelated flag on a different node. **TLL charges `sleepCost:5` before and after the quest.** See §V-2. |
+| 10 | **Brynn's Ledger reward: "free lodging for 3 nights"** | **NOT SHIPPED** | `onComplete` emits *"🛏 Brynn offers 3 free nights"* and stops. No counter, no flag, no state. `storySleep` charges `node.sleepCost` unless `node.code === 'INN' && S_story.freeBookingUnlocked@36213` — an unrelated flag on a different node. **TLL charges `sleepCost:5` before and after the quest.** See §V-2. |
 | 11 | **Rough Whiskey can be consumed from inventory (−5% max HP, flavor)** | **NOT SHIPPED** | No consume path exists. The item's *only* consumer is the `pendingBattle.nodeCode === 'HKG'` auto-trigger, which removes it. |
-| 12 | **Rough Whiskey NPC reactions** — two authored (Quill refuses; Weckmann *"After the fight."*) | **CHANGED — expanded 2 → 18** | `const ROUGH_WHISKEY_REACTIONS@27359` covers **all six** NPCs × three tiers, read through `_checkRoughWhiskeyReaction@28154` and gated by a *second*, separate flag `roughWhiskeyActive` cleared on sleep and on battle victory. **Neither authored line survives verbatim** — Quill's became *"the lute strings are sensitive and I can smell everything from up here."* |
+| 12 | **Rough Whiskey NPC reactions** — two authored (Quill refuses; Weckmann *"After the fight."*) | **CHANGED — expanded 2 → 18** | `const ROUGH_WHISKEY_REACTIONS@27364` covers **all six** NPCs × three tiers, read through `_checkRoughWhiskeyReaction@28159` and gated by a *second*, separate flag `roughWhiskeyActive` cleared on sleep and on battle victory. **Neither authored line survives verbatim** — Quill's became *"the lute strings are sensitive and I can smell everything from up here."* |
 | 13 | **Three favorability states** — neutral / friendly / dear friend; **"one quest is enough"** | **CHANGED — four tiers, and two ways up** | The dialogue registry is keyed `impartial · questActive · friendly · dearFriend`; **`questActive`** is a fourth tier the report does not specify, selected by `_hasActiveQuestFor@23641`. §NPC-01-D then added a second route to Friendly with no quest at all: `TALK_TO_FRIENDLY = 3@23513` deliberate talks on distinct game-days. Fav 2 remains quest/personal-act earned, so the report's *"one quest is enough"* is now *"one quest **or** three conversations."* |
 | 14 | **`S_story.lubeckFriends`** — a derived count state field | **CHANGED** | Shipped as a **function**, `function _lubeckFriends()@23461`, not a field. **The name is a fossil**: the city is Birka, and `Lübeck` survives only as an unrelated live node, `LBC` — the Hansa Gate, Act 2. A reader who greps `lubeck` lands in the wrong city. |
 | 15 | **Escort mechanic** — a *"special node-description overlay on the corridors from CI"*, firing on the **next move** to an adjacent node, with the blue-shutters / Varga's-pigeons narration verbatim | **CHANGED — three ways** | (a) There are **no corridors** — §WALK/§NAV-01 deleted that layer entirely (§DOC-02c delta 3), so it renders as a **modal fired on click**, `function _yaelEscortAction@23796`; (b) the narration is a **different, shorter text** — Skalder's corner, Nivers at the fountain, the unread riot report — none of the specified paragraphs shipped; (c) `yaelEscortUsed` and the *"🛡 Walk the beat"* re-view both shipped exactly, and the flag grew **four more readers** the report never anticipated: Yael's dear-friend second act, a `_missionComplete` bit, a journal beat, and an Act-5 records line. |
@@ -123,7 +123,7 @@ every sentence containing it stays wrong. The remaining seven are cleanly dead.
 
 **The five NPC codes were born dead.** The engine records this in its own source, at the `birkaNpcs`
 literal that carries the fix: *"No NODE_MAP entry ever existed for CI/IN/TV/BA/CY, so these cards
-previously rendered nowhere"* (`const birkaNpcs@35134`, §PLAY-01-G). These codes came from the
+previously rendered nowhere"* (`const birkaNpcs@35139`, §PLAY-01-G). These codes came from the
 `maps.md` legend, not from the world — the §AUDIT-03p **born-dead** class, and the reason
 `docs/maps/node-index.md` (`npm run nodes`) is now the only place a node code may be read.
 
@@ -174,7 +174,7 @@ before the doc becomes the schema.*
    has her say *"'Free,' she says. 'The room's free too, if you need it.'"* (`TLL:{ num:2@8431`),
    and `quest_brynn_ledger.onComplete` narrates *"🛏 Brynn offers 3 free nights"* (`@21234`).
    `storySleep` charges `node.sleepCost` — **5gp** at TLL — with a single exemption hardcoded to a
-   *different* node (`node.code === 'INN' && S_story.freeBookingUnlocked@36208`). So the game states
+   *different* node (`node.code === 'INN' && S_story.freeBookingUnlocked@36213`). So the game states
    a price of zero in prose, restates it as a quest reward, and bills the player at both. **Small
    design call:** grant the three nights (a `brynnFreeNights` counter decremented in `storySleep`,
    the shape `freeBookingUnlocked` already models) **or** rewrite both strings. Do not do neither.

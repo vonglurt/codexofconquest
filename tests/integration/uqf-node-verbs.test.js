@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-G4b — NODE_VERBS, and the first `choice` bit ever executed in this game.
 //
 // G4a built the host end of the coroutine (`_uqfRunVerb`/`_uqfRenderAsk`) and moved zero content.

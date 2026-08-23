@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // §EDITOR-01-D-FU(b) — reward-ladder → itemChain migration parity guard.
 //

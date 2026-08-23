@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # docs/ — Reference & design documentation
 
 Secondary documentation. The **core sync docs** stay at the repo root

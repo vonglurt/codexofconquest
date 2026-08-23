@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // §VM-01-F — gate expression-AST differential. The gate evaluators (canActivate /
 // canComplete) were refactored from two straight-line term loops into a compiled

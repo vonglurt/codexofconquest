@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03a — duplicate-key audit over the WORLDBUILDER data sections.
 //
 // JS object literals silently drop earlier duplicate keys (last-key-wins), so a

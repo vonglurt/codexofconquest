@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §WBAPI-01 ph3: Source-Level PATCH for Structured Fields
 
 **Track:** §WBAPI-01 phase 3 · **Status:** SHIPPED (`a105e0e`) · **Filed:** 2026-06-27 (UTC) = 2026-06-26 17:48 PDT
@@ -175,7 +176,7 @@ and is recorded in the ship commit; it was not committed as a test.
 **Green at HEAD, 2026-08-14:** `✓ §WBAPI-01 ph3 structured-field PATCH: all 13 checks pass`.
 
 The gate carries its own repair history in a comment: it originally rode `completeItems`, and
-`scripts/check-array-patch.js:// §ARCH-01 repoint (2026-07-06)@20` records the day §ARCH-01's W7d/W8a
+`scripts/check-array-patch.js:// §ARCH-01 repoint (2026-07-06)@21` records the day §ARCH-01's W7d/W8a
 swept that field out of QUEST_DB entirely and the string-array cases were moved to
 `targetMonsterKeys`. *A gate that documents why it changed subject is worth two that do not.*
 

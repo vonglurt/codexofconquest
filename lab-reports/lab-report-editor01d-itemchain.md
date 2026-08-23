@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §EDITOR-01-D: declarative `itemChain` (token item manager)
 
 **Original status:** DESIGN LOCKED → implementing · **Original date:** 2026-06-27
@@ -128,7 +129,7 @@ inlining pushes, filters, gold, favor and `msgs.push`.
 | `desc` re-join — the limitation that dissolved | `` `worldbuilder.html:if (p[5]) step.desc = p.slice(5)@8502` `` |
 | CRUD field declaration | `` `worldbuilder.html:arr:'itemchain',ta:true@6106` `` |
 | Quest-create serializer (§ARCH-01 W8b) | `` `js/wbapi-server.js:const JSONF@1710` `` |
-| Parity guard's live branch tally | `` `scripts/check-ladder-migration.js:ladder branches@264` `` |
+| Parity guard's live branch tally | `` `scripts/check-ladder-migration.js:ladder branches@265` `` |
 
 **Ten of ten line citations byte-exact at the reference build:** `_rollCeremonia` 6246–6251 (6246 =
 `if (passed) {`, 6247 = the `'done'` set, 6251 = `if (q.onPass) q.onPass();`) · `storyCheckQuests`

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03k — one character, one key.
 //
 // The defect one level up from §AUDIT-03j/n. There the key resolved NOWHERE; here it

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report — Layer 56: The Void Shaman, "The Warden"
 
@@ -206,7 +206,7 @@ Using a synthetic code keeps the node's state clean.
 > **VERIFIED, AND PROMOTED TO AN INVARIANT.** This one-off trick is now a fenced contract:
 > `check:noderegs` phase 6 requires every `code:` spread and `defeatedBattles[…]` key to
 > resolve in `NODE_MAP` *or* appear in `SYNTHETIC_BATTLE_CODES`, where the arc is listed as
-> `scripts/check-noderegs.js:Layer 56 — Void Shaman Warden@110`. A design
+> `scripts/check-noderegs.js:Layer 56 — Void Shaman Warden@111`. A design
 > decision that a CI gate now enforces is the best outcome a lab report can have.
 
 **D. The callback is persuasion-only.** Combat leaves nobody to explain themselves, so Benedikt

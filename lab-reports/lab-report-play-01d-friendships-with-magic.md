@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §PLAY-01-D *Friendships With Magic*: signposting the magic path through a person
 
 **Track:** BACKLOG.md §PLAY-01 (*The Honest Floor*), face **D** of seven ·

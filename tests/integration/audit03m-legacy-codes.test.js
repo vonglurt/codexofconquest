@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03m — the live docs stop speaking 26×16.
 //
 // Why this test exists: §AUDIT-03l generated the node reference and quarantined `maps.md`'s

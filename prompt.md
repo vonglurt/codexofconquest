@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # prompt.md — Operating Directive for Building roll2hit.com
 
 > **What this file is.** The one-page onboarding + operating prompt for an agent (human or model) picking up work on this repo. It tells you **how to take a work item from BACKLOG.md, build it with the game's own mechanics through the API, sync the docs, and close it** — without re-learning the project from scratch or breaking a load-bearing invariant.

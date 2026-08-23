@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §WALK-1.5-FU(c): Grid Resolution for Dense Regions
 
 **Track:** §WALK-1.5-FU item (c) · a decision memo, not an implementation spec

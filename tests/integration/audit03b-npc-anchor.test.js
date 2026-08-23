@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03b — quest.npc anchoring: the corpus state, the 4-registry vocabulary,
 // and the depth-aware field patcher that made the corpus fix land correctly.
 //

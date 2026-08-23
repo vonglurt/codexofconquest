@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §PLAY-01-C *No Postponements*: making the deadline honest
 
 **Parent:** `lab-reports/lab-report-play-review.md` §PLAY-01-C · **Track:** BACKLOG.md §PLAY-01 (face **C** of *The Honest Floor*)

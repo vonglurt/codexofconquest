@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 # say.sh — enqueue text for speech and return immediately
 # Usage: say.sh "some text"  OR  echo "some text" | say.sh
 #

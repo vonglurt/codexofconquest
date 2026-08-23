@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §NPC-01 — The Derivable NPC Card Map (promotes §POT-R2). See lab-reports/lab-report-npc-card-map.md.
 //
 // §NPC-01-A guards that _renderNpcCard renders a "lean" BIRKA_NPC_PROFILES entry — one that carries

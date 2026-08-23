@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-G-FU-f — the SSJ tournament (Yugurt Cabin, §XLV): the census's ONE Class-E bespoke
 // UI — an accordion state machine over NPC_TOUR_OPPONENTS rendered as a _mkSection into
 // #story-info-row between the Rest and World sections — moved to NODE_HOOKS verbatim (G2's

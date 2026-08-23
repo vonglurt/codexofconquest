@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // §STATE-INIT regression: a fresh load (no autosave) followed by a move must not crash.
 // Before the fix, storyEnter() rendered the story panel using the stale partial S_story

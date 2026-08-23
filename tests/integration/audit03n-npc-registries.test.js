@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03n — the ENGINE-side NPC references resolve too, not just the node ones.
 //
 // The npc-key twin of §AUDIT-03j. Seven engine registries were keyed to the profiles'

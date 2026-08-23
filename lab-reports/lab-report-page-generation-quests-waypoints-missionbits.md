@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report — Page Generation: Quests, Waypoints, and Mission Bits
 ### Architectural review of the Story-Mode rendering pipeline in `roll2hit-v3.html`
@@ -500,7 +500,7 @@ None of the five required a framework or a build step, and that was the point.
 | 2 | Index quest activation by node, mirroring the editor's `_questsByNode` | ✅ **SHIPPED** (+15 d) | §VM-01-F-FU `549d6b4` — `function _questsByNode(@37015`, consumed by `function _uqfActivateAtNode(node) {@30137` |
 | 3 | A flag registry `FLAG_OWNERS` + collision assertion | ❌ **NOT SHIPPED** — 0 commits, any path, ever | see §XII |
 | 4 | Move state mutation out of `storyRender` into a declarative hook | ✅ **SHIPPED IN SUBSTANCE** (+21 d) | the `once:` field; the report's named example (`DAM`) is now `once:'saulConverted'@31332` |
-| 5 | A renderer idempotency test | ✅ **SHIPPED** (+21 d) | `tests/integration/uqf-node-panels.test.js:gone on re-render@27`, guarded at ship by a 24-combo golden-DOM diff |
+| 5 | A renderer idempotency test | ✅ **SHIPPED** (+21 d) | `tests/integration/uqf-node-panels.test.js:gone on re-render@28`, guarded at ship by a 24-combo golden-DOM diff |
 
 **None of the four shipped under the name the report proposed.** `nodeCards`, `FLAG_OWNERS`,
 `_questsByActivateNode` and `onArrive` have **zero commits in any file, ever** — they exist only in
@@ -570,7 +570,7 @@ correct, specific, deferred finding with no row against it ages into a live defe
 1. **The blast radius.** The gate and the report both count *heads* — 47–50. The transitive closure
    is **138 quests and ~29,000 words**, 2.8× larger, and nobody had computed it.
 2. **The prover under-counts by seven.** Its host-writer scan credits
-   `scripts/check-questgraph.js:// NPC/data mission-bit grant@308` — a regex lifting `missionBit:`
+   `scripts/check-questgraph.js:// NPC/data mission-bit grant@309` — a regex lifting `missionBit:`
    out of the NPC dialogue data — as a real writer, *"(→ `_grantMissionBit` → `S_story[flag]=true`)"*.
    That call does not exist: **`meta.missionBit` has 209 declarations across 203 distinct flags
    (first at `rinaldo_sau: {@10461`, born 2026-06-04) and zero readers in the engine.** Disabling
@@ -642,8 +642,8 @@ and it is not architectural. **Make the prover fail.**
 | Broken chain / working twin | `waw001_act2: {@14900` · `cph001_act2: {@15540` |
 | Inert NPC grant field | `rinaldo_sau: {@10461` |
 | Editor bit-contract mirror | `worldbuilder.html:const OPERAND_CONTRACTS = {@1373` · `worldbuilder.html:const UQF_BIT_FIELDS = {@1402` · `worldbuilder.html:_questsByNode: {},@1468` |
-| Soft-lock prover's over-credit | `scripts/check-questgraph.js:// NPC/data mission-bit grant@308` |
-| Idempotency acceptance (Rec 5) | `tests/integration/uqf-node-panels.test.js:gone on re-render@27` |
+| Soft-lock prover's over-credit | `scripts/check-questgraph.js:// NPC/data mission-bit grant@309` |
+| Idempotency acceptance (Rec 5) | `tests/integration/uqf-node-panels.test.js:gone on re-render@28` |
 
 ## Appendix B — Defects filed by this verification
 

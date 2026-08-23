@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 //
 // scripts/node-index.js — the LIVE node reference for roll2hit-v3.html  (§AUDIT-03l)
 //

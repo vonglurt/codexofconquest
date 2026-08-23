@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §MESH-01j — structural duel-parity: assert the DUEL:CORE block inlined in
 // roll2hit-v3.html is byte-identical to the same block in duel.js (the
 // mover.js / rooms.js precedent). A duel outcome must replay identically on

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §DX-02a — read-only ASCII visualizer for a world-grid window (promoted from
 // the §DX-01a debugging session, where it made the road/sea defects one glance).
 // Legend: ~ sea · = lane · # road · X road-on-sea (R3 violation!) · @ settlement · . land

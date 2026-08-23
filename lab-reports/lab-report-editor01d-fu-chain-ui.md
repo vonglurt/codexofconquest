@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §EDITOR-01-D-FU (a): the visual drag-reorder chain editor
 
 **Original status:** DESIGN LOCKED → implementing · **Original date:** 2026-06-27 (mtime `2026-06-27 16:56:37 -0700`)

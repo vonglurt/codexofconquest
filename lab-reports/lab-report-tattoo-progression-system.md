@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report — Tattoo Progression & Chronicle: Persisting Character Identity Across the Death Boundary
 
@@ -272,7 +272,7 @@ that suppresses the panel on an instant death with nothing to report.
 both inside `storyRespawnFromCheckpoint()`. That function has two callers:
 
 1. `btn-gameover-respawn@38327` — the game-over modal button.
-2. `_onPitChampionLoss()@27930` — losing the optional Birka pit championship.
+2. `_onPitChampionLoss()@27928` — losing the optional Birka pit championship.
 
 Combat death does not reach either. The 5e death-save mini-game resolves to `_storyDeathSaveCrawl()`
 (3 successes → survive at 1 HP) or `function _storyDeathSaveFall()@25950` (3 failures). The fall

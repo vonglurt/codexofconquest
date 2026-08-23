@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §VM-01-D: `QUEST:CORE`, the Fourth Kernel (host-injected)
 
 **Track:** §VM-01 — The Quest VM → *No Word for Wait*
@@ -58,7 +58,7 @@ Five instruments, in order:
 | `const QuestRuntime = createQuestRuntime({@22341` · `getState: () => S_story,@22342` · `rng:       () => _seededNext(),@22346` | host wiring, outside the sentinels |
 | `js/quest.js:module.exports = { createQuestRuntime@403` | the export line, byte-exact as specified |
 | `scripts/check-quest-parity.js:const a = core@22` | the fence — **25,030 bytes identical**, green |
-| `tests/integration/uqf-quest-core.test.js:const Q = require@12` | **7 tests, 7/7 green** (2.6 s) |
+| `tests/integration/uqf-quest-core.test.js:const Q = require@13` | **7 tests, 7/7 green** (2.6 s) |
 
 **Method surface unchanged**, as promised: `canActivate` · `canComplete` · `execBits` · `_rollSkill` · `resolveSkillCheck` · `HANDLERS`. No test caller needed adapting, and the §VM-01-A signature-break hazard did not recur.
 
@@ -92,11 +92,11 @@ Five instruments, in order:
 
 §4 states the kernel keeps *"a `Math.random()` fallback … only for a server that injects no rng."* There is no such fallback, at ship or at HEAD. The kernel contains **zero** occurrences of `Math.random()` — which is *better* than advertised for reproducibility — but `const d20  = Math.ceil(E.rng() * 20)@22248` calls the injected effect **bare**, and it is the **only** unguarded effect call among **13**. Every sibling is defended: `E.getQuest ? …`, `if (E.checkLevelUp)`, `if (E.mint)`, `if (E.preBattle)`, `mission_bit(bit, ctx)@22303` even carries an explicit env fallback.
 
-This is not hypothetical. `scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@31` — a **shipped, green, in-`check:walk` consumer** — builds a runtime with `effects: { getQuest }` and no `rng`. It survives only because gate evaluation never reaches `_rollSkill`. It is one `skill_check` walk away from a `TypeError`. Filed **§DX-02dw**.
+This is not hypothetical. `scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` — a **shipped, green, in-`check:walk` consumer** — builds a runtime with `effects: { getQuest }` and no `rng`. It survives only because gate evaluation never reaches `_rollSkill`. It is one `skill_check` walk away from a `TypeError`. Filed **§DX-02dw**.
 
 ### D6 — the prediction that landed in the wrong file
 
-§6 named two candidate first consumers: a future §MESH quest increment, or §VM-01-E's static gate walker. E's walker exists and it *does* carry `scripts/check-questgraph.js:const Q = require@62` — and **`Q` appears exactly once in that file, on its own declaration line.** The kernel is imported, credited in the header comment, and never called; the walker re-implements what it needs against its own brace matcher.
+§6 named two candidate first consumers: a future §MESH quest increment, or §VM-01-E's static gate walker. E's walker exists and it *does* carry `scripts/check-questgraph.js:const Q = require@63` — and **`Q` appears exactly once in that file, on its own declaration line.** The kernel is imported, credited in the header comment, and never called; the walker re-implements what it needs against its own brace matcher.
 
 The genuine first consumer is §VM-01-F's `check-gate-parity.js`, which was not on the list. The substrate paid off — one increment later than predicted and through a different door. Filed **§DX-02dx** (dead require).
 
@@ -148,8 +148,8 @@ The engine runs headless in Node. That is the thing that was structurally imposs
 
 ## VIII. Defects filed
 
-- **§DX-02dw** 🟢 — `const d20  = Math.ceil(E.rng() * 20)@22248` is the only unguarded effect call in a guards-in-the-host kernel, and `scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@31` already injects no `rng`. Guard it, or document `rng` as the one required effect. §4 of this report promised a fallback that was never written.
-- **§DX-02dx** 🟢 — `scripts/check-questgraph.js:const Q = require@62` imports the kernel and never uses it. Either call it or drop the import and the header claim.
+- **§DX-02dw** 🟢 — `const d20  = Math.ceil(E.rng() * 20)@22248` is the only unguarded effect call in a guards-in-the-host kernel, and `scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` already injects no `rng`. Guard it, or document `rng` as the one required effect. §4 of this report promised a fallback that was never written.
+- **§DX-02dx** 🟢 — `scripts/check-questgraph.js:const Q = require@63` imports the kernel and never uses it. Either call it or drop the import and the header claim.
 - **§DX-02dv** (already open) — resolved above: the ship record dropped the 17, the report did not.
 
 ---

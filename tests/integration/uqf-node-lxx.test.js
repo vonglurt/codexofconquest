@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-G-FU-e — the §LXX family (CAN/DA2/DA3/DSJ/DSF): four blocks to NODE_HOOKS verbatim
 // (every button lives inside .sweelinck-variant chrome — the WG0 embedded-button rule — and the
 // DA2 gate additionally writes a NUMERIC abilityScores.int += 1, the HCA class), the stack's

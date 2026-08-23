@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report — Story × Codex of Conquest × The Curse of Knowledge
 ### Applying Steven Pinker's *Sense of Style* to roll2hit Story Design

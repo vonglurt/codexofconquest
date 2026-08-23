@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §XP-02-A — first-arrival exploration XP (completes §XP-01 "all action earns XP").
 //
 // §XP-01 shipped three effort-XP grant sites (fled enemy, missed attack, failed check) but

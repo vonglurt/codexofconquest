@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03g — every quest carries an `npc` anchor, and the 68 that had none are
 // anchored by DERIVATION, not by a bulk default.
 //

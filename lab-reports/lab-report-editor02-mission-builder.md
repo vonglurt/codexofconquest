@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §EDITOR-02: Mission Builder (form-based arc insertion)
 
 **Original status:** DESIGN LOCKED → implementing · **Original date:** 2026-06-26 (mtime `2026-06-26 22:10:21 -0700`; `2026-06-27T05:10:21Z` in UTC)

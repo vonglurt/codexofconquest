@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // duel.js — §MESH-01j unified duel-resolution kernel: the single source of
 // "who won this duel" shared by the SP client (inlined into roll2hit-v3.html)

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # POTENTIAL — Backlog Seeds from the "40+ Solo RPG Prompts" Listicle
 
 > **What this file is.** A source list of 44 solo-RPG prompts was read against `roll2hit-v3.html` @ `43bd09c` (`ENGINE_VER = 'r2h-3.104.0'`), one prompt at a time, and each was answered with *what the file actually does today* before any improvement was proposed. Seeds only — **nothing here is scoped work.** Promoting a seed = its own `§` entry in **[BACKLOG.md](BACKLOG.md)** (+ a `lab-reports/lab-report-*.md` locking data shapes before any HTML edit, per the Lab Report Policy in **[CONTRIBUTING.md](CONTRIBUTING.md)**).

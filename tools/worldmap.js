@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com
 // worldmap.js — terminal world map of major cities + geographic coordinate seeding
 //

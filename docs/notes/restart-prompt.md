@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Restart Prompt — cluster-bridge / reweave fix session
 
 ## What was done

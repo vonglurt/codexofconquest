@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03c — no quest may name a node that does not exist, and the three dead
 // author-shorthand codes of `710bb75` stay dead.
 //

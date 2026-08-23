@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 /* §ARCH-01 Wave 2 — bulk legacy→UQF skill_check migrator.
  *
  * Surgically rewrites the `quest_*: { ... }` literals in roll2hit-v3.html for a

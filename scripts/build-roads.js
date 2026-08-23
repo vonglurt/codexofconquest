@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §NAV-01b — fungal road-net generator. Reads NODE_COORDS / SEA_RUNS / SEA_LANES
 // out of roll2hit-v3.html, connects every settlement cell (distinct occupied
 // CELL_GRID cell) with walkable road corridors, and emits a ROAD_RUNS RLE data

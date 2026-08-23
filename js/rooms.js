@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // rooms.js — §NAV-01c unified room-description kernel: the single source of
 // "what does this cell look like" shared by the SP client (inlined into

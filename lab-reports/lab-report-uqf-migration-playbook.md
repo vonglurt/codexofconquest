@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report: The UQF Migration Playbook (§ARCH-01)
 
@@ -178,7 +178,7 @@ safe-by-construction: it never re-serialises a narrative string; it deletes only
 fields; it decomposes the trivial `()=>!!S_story.<flag>` gate and keeps any other `activateCond`
 verbatim behind `gate:{_legacyFn:true}`; and it **throws** if an `activateCond` survives a
 decompose. Two hardenings from Wave 2c are still verbatim in
-`scripts/uqf-bulk-migrate.js:function trivialGateFlag(body) {@115`: the lookahead widened to
+`scripts/uqf-bulk-migrate.js:function trivialGateFlag(body) {@116`: the lookahead widened to
 `(?=[,}])` so a trivial gate that is the literal's **last** field is not missed, and the optional
 `"?` that strips the dead string-form duplicate.
 

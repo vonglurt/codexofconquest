@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Sparse Node Mesh Reduction via Circuit Corridor Junction Theory
 
@@ -69,10 +69,10 @@ Five measurements, all reproducible (`roll2hit-v3.html`, 38,707 lines, r2h-3.104
 | `NODE_MAP` flat, keyed by code; `name` is the terrain key; content fields `npc`/`battle`/`loot`/`sleep` | **exact** | `const NODE_MAP@8425` |
 | `NODE_COORDS` maps every node code to `{r, c}` | **exact shape**, different grid — see delta 8 | `const NODE_COORDS@9421` |
 | `WORLD_DB` terrain table drives the corridor monster pool | **live**; still the encounter pool, reached from terrain not corridor | `const WORLD_DB@6279` |
-| `_weightedMonsterPick(terrain)` — tier-weighted pool draw | **live**, signature intact; body now notoriety-scaled + seeded | `function _weightedMonsterPick@38232` |
-| `_setActivePath(fromCode, toCode, dir)` | **live** — the last surviving line of the runtime layer, see §IV-B | `function _setActivePath@38195` |
-| `S_story.lastExitCode` / `lastExitDir`; the `mc-exit-active` gold exit arrow | **live**, still wired exactly as §IX describes | `mc-exit-active@36714` |
-| Battle pipeline `loadWorldMonster` → `pendingBattle` → `#story-prebatt-overlay` → `storyApplyOutcome` → `btn-outcome-win` | **live** | `function _startStoryBattle@38254` |
+| `_weightedMonsterPick(terrain)` — tier-weighted pool draw | **live**, signature intact; body now notoriety-scaled + seeded | `function _weightedMonsterPick@38237` |
+| `_setActivePath(fromCode, toCode, dir)` | **live** — the last surviving line of the runtime layer, see §IV-B | `function _setActivePath@38200` |
+| `S_story.lastExitCode` / `lastExitDir`; the `mc-exit-active` gold exit arrow | **live**, still wired exactly as §IX describes | `mc-exit-active@36719` |
+| Battle pipeline `loadWorldMonster` → `pendingBattle` → `#story-prebatt-overlay` → `storyApplyOutcome` → `btn-outcome-win` | **live** | `function _startStoryBattle@38259` |
 | `storyRender`, `_renderPreBatt`, `_renderMapGrid`, `refreshLeftPanel`, `storyCheckMissedSleep` | **live** | — |
 | `S_story.quests` key→status map; `.log`; `.currentCode`; `.hp`/`.hpMax` | **live** | — |
 | `mc-current` map cursor class | **live** | — |
@@ -175,7 +175,7 @@ function _setActivePath(fromCode, toCode, dir) {   // @38195
 }
 ```
 
-Its only consumer is the map overlay's gold exit arrow (`mc-exit-active@36714`) — the last item in
+Its only consumer is the map overlay's gold exit arrow (`mc-exit-active@36719`) — the last item in
 the report's own §IX runtime diagram, and the only one still running. The parameter `toCode` is now
 unused: a **dead parameter** left by the amputation, and a minor member of the §DX-02n dead-code
 family.
@@ -227,10 +227,10 @@ Two program corrections follow:
    `const CELL_GRID@9852` maps each cell to an *array* of codes, `list[0]` being "the node you
    arrive at" and the rest "intra-cell sub-locations." Measured: **416 nodes occupy 244 cells**, so
    **172 are non-primary** (worst cell `32,203` holds **17**). `S_story.currentCode` is assigned at
-   exactly two sites — `S_story.currentCode = destCode@28368`, where `destCode = res.destCodes[0]`,
+   exactly two sites — `S_story.currentCode = destCode@28373`, where `destCode = res.destCodes[0]`,
    and the respawn line `checkpointNode || 'LHR'@26009` — so **a non-primary code can never become
    `currentCode`**, and its `text`/`npc`/`battle`/`loot`/`sleep` never render. Because
-   `_uqfActivateAtNode(node)@30132` keys on `node.code`, **1,260 quests carry an `activateNode` on a
+   `_uqfActivateAtNode(node)@30137` keys on `node.code`, **1,260 quests carry an `activateNode` on a
    non-primary node; 486 are already held by the §AUDIT-03e guard, leaving 774 across 135 nodes that
    would activate on arrival and cannot.** Affected nodes include `BK` (89 quests, sharing a cell
    with the starting node `LHR`), `WM` (312, behind `ERF`) and `HCA` (behind `WG0`). The waypoint

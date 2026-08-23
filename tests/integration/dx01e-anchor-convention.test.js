@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §DX-01e — a doc anchor names a SYMBOL; the line number is a refreshable hint.
 //
 // The defect: the docs pointed into roll2hit-v3.html with bare line numbers, and every

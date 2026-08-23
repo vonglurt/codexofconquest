@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // quest.js — §VM-01-D unified quest-VM kernel: the single source of the UQF
 // runtime shared by the SP client (inlined into roll2hit-v3.html) and, when a

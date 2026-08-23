@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §VM-01-B · *One stream, two machines*: seed the client RNG
 
 > **Type:** design review before implementation (Lab Report Policy row 4). **Child of** `lab-reports/lab-report-javascript-mud.md` and the §VM-01 track in **[BACKLOG.md](../BACKLOG.md)**. **Shipped** 2026-07-22, committed **`c22f4f0`** (the combined §VM-01-A/B/C landing).

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-G-FU-a — the §CROWN-01 stack: seven combat-dispatch verbs (the G4d shape verbatim),
 // two panel-with-embedded-button hooks (WG0 gate trial, HCA Leviathan — G2's verbatim method,
 // staying hooks until the G4c-FU ask-2 chrome question is answered), two NODE_PANELS once-panels

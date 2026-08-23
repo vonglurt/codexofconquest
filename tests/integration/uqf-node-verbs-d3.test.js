@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-G4d — the D3 concurrent menu + the two Class-E strays.
 //
 // CDG's `cq-boss-buttons` div was the census's one D3 surface: several verbs visible AT ONCE,

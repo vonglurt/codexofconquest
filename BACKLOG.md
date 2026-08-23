@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # BACKLOG — Outstanding Work (routing index)
 
 > **This file was split into six phase backlogs on 2026-08-23.** It no longer carries rows itself — it carries the directive, the routing table, and the cross-phase §RESUME chronology. Every row, track record, theme bucket and history entry from the former single file lives verbatim in exactly one of the six; the split was verified line-exact (0 lines lost, 0 duplicated).

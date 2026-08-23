@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §AUDIT-03l — the node reference an author reads is GENERATED, and it cannot drift.
 //
 // Why this test exists: `maps.md`'s hand-maintained legend was the doc you consulted to

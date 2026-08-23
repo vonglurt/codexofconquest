@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §CHAR-01-A — one-time point-buy at character creation.
 //
 // GREP-BEFORE-BUILDING: the BACKLOG spec (promoted from potential.md §POT-C1) framed this as a

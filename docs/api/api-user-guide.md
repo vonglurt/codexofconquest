@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Roll2Hit WBAPI — User Guide
 
 > **This guide uses `./api.sh`** — a thin wrapper around `api/wb.js` that delegates every call to the server at `localhost:1367`. All examples use real data from the live game file.

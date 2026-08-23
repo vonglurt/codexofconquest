@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 ## §DESIGN-REF — Transcript Design Principles Reference
 
 *Working notes distilled from 4 design transcripts. Items marked ⚙️ are actionable for future arcs. Items marked ✅ are already applied.*

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-E — Prove the world is finishable: the soft-lock prover.
 // The audit found the whole "arbitrary code defeats static analysis" blocker was
 // ONE bit: quest_1367_f_plague's onFail rolled `Math.random() > 0.5` to set

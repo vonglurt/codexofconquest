@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §MESH-02: Map-Tab Connection Center (sub-tabs · discovery · ACL UI · shared blocklists)
 
 **Date:** 2026-07-06 · **Status:** ✅ SHIPPED 2026-07-07 (increments a–j)
@@ -190,7 +190,7 @@ than a feature to postpone. A property has a test; a postponed feature has good 
    was added by `c03cdc5` — increment (g) itself. §1–§6 are the original 2026-07-06 design
    lock, unedited. Both halves are dated in the header above so a later reader cannot
    mistake the retrospective table for a prediction.
-3. **Instrument 70 (run the acceptance test).** `tests/integration/mesh-connections-ui.test.js:sub-tab shell: 6 tabs / 6 panes@47`
+3. **Instrument 70 (run the acceptance test).** `tests/integration/mesh-connections-ui.test.js:sub-tab shell: 6 tabs / 6 panes@48`
    — **8/8 green** (4.7 s). Harness section `tests/mud-harness.mjs:const aclR2 = path.join(tmp,@1364`
    — **18/18 green**, covering GET-defaults, PUT roundtrip, disk persistence, comment-key
    survival, five validation 400s, and the 403→200→403 share flip. `npm run test:mud` overall:

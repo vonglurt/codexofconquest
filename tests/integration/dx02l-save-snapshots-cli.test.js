@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §DX-02l — the dated-backup surface is reachable from ./api.sh.
 //
 // Why this test exists. `POST /api/save` — the one surface that stamps a dated

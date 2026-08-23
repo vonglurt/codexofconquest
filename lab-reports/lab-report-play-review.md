@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §PLAY-01 *The Honest Floor*: systems and play review
 
 **Track:** BACKLOG.md §PLAY-01, the **parent review** of a seven-face program (A–G) ·

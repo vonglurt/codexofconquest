@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report — Codex of Conquest: The Curse of Knowledge
 ### Narrative Architecture for the Full Story Arc — Specification and Post-Ship Verification

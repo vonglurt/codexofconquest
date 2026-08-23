@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §EDITOR-01-D-FU(b): Reward-Ladder → `itemChain` Migration
 
 **Track:** §EDITOR-01-D-FU item (b) · **Original date:** 2026-06-27 · **Status:** ✅ CLOSED (Inc 1–5)
@@ -128,7 +129,7 @@ manifest, so every later wave was gated by a harness already proven to read the 
 | 5 | 22 branches migrated (9 b2a + 13 b2b) | `check:laddermigration`: **22 quests, 148/148 checks** | ✅ **EXACT** |
 | 6 | b1 allow-list: 13 optional fields | `for (const f of ['desc', 'description'@26182` carries all 13 **plus `heal`** | ✅ 13/13 shipped; ➕ grown to 14 |
 | 7 | `silent:true` added | `if (!s.silent) msgs.push@26189`; all 22 migrated grants carry it | ✅ SHIPPED |
-| 8 | Four sites in lockstep | Runtime ✓ · `worldbuilder.html:const GRANT_RICH = [@8567` ✓ · widget `worldbuilder.html:{f:'silent',chk:true}@8558` ✓ · `scripts/check-itemchain.js:grant passes heal@80` ✓ — and all four carry `heal` | ✅ held through a later widening by a different track |
+| 8 | Four sites in lockstep | Runtime ✓ · `worldbuilder.html:const GRANT_RICH = [@8567` ✓ · widget `worldbuilder.html:{f:'silent',chk:true}@8558` ✓ · `scripts/check-itemchain.js:grant passes heal@81` ✓ — and all four carry `heal` | ✅ held through a later widening by a different track |
 | 9 | Never emit `once:false` | 0 occurrences file-wide | ✅ HELD |
 | 10 | 3 named load-bearing names survive | `const KEY_EVENTS = [@26207` holds 7 items; all three named ones grant through `itemChain` | ✅ VERIFIED |
 | 11 | Guard wired into CI beside `check:itemchain` | `walk-invariants.yml` runs both on the same push paths | ✅ EXACT |
@@ -191,13 +192,13 @@ check:anchors           3,162 anchors / 76 docs, 0 dead (117 stale hints = stand
 ## 8. Defects found → BACKLOG
 
 - **§DX-02ci** 🟢 — the parity guard's check (c) is **vacuous**. `LADDER` has been empty since
-  `a79c76a`, so `scripts/check-ladder-migration.js:// (c) no double-grant@244` iterates nothing and
+  `a79c76a`, so `scripts/check-ladder-migration.js:// (c) no double-grant@245` iterates nothing and
   cannot fail. The risk it guarded is real and *moved*: a double-grant would now come from an
   `onComplete` chain, not a ladder branch. No live double-grant exists today (checked: 0 of the 22
   manifest quests push inventory in their own block), so this is coverage, not a red. The same file's
   header prose still says the ladder *"is being migrated, branch by branch"* and *"at Inc 2 the
   manifest is EMPTY."* Its one W7c-aware line —
-  `scripts/check-ladder-migration.js:reward ladder stays deleted@207` — shows the right instinct and
+  `scripts/check-ladder-migration.js:reward ladder stays deleted@208` — shows the right instinct and
   was applied to one assertion instead of the file.
 - **§DX-02cj** 🟢 — the four-place lockstep is enforced by a **comment**. Nothing in `scripts/` or
   `tests/` mentions `GRANT_RICH`; no gate compares the widget's list to the runtime allow-list at

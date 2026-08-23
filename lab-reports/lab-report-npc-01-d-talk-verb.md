@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §NPC-01-D: A Talk Verb to Make Favor Reachable at Scale
 
 **Original:** 2026-07-23 · design-lock, pre-implementation · subject `roll2hit-v3.html` @ `4acafa0` (37,913 lines)

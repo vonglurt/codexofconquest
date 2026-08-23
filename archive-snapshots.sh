@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 # MIT License — Copyright (c) 2026 Paul Richeson
 # Archive dated roll2hit-v3 snapshots as a patch chain.
 #

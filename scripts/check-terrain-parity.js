@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §WALK-5 Inc 1 — server↔client terrain/encounter PARITY guard (CI-gated).
 //
 // The server keeps NO copy of the terrain-encounter data — getMoverWorld() parses

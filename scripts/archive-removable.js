@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // archive-removable.js — one-pass "mark → move" doc archiver (doc-simplification tooling).
 //
 // Mark any block in a markdown doc as removable:

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §DX-01c — `post monster` writes a real monster, into the real section.
 //
 // Why this test exists: for as long as the route existed, WBAPI Hazard #2 said

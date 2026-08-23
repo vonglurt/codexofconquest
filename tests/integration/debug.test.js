@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 const { test, expect } = require('@playwright/test');
 const { patchGameHtml } = require('./helpers.js');

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // §MESH-01a — two-browser presence smoke: the REAL client flow end-to-end.
 // Spawns a throwaway wbapi-server (never the dev :1367), loads the game in two

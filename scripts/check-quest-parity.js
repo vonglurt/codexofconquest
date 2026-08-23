@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-D — structural quest-parity: assert the QUEST:CORE block inlined in
 // roll2hit-v3.html is byte-identical to the same block in js/quest.js. The quest
 // VM (opcode table + gate evaluators + bit-chain executor) is a host-injected

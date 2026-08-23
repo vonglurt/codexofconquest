@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report — Yugurt Lake Bait & Tackle (Layer 47) and the `plan.md` Prompt Protocol
 
@@ -104,7 +104,7 @@ Two-way. **STALE** = the report aged. **NOT SHIPPED** = specified, absent at HEA
 | 1 | `BAIT_FISH_POOL`, 20 species × 5 tiers, caught as ammunition | 0 occurrences, 0 commits ever | **NOT SHIPPED** |
 | 2 | Bait fish have AC/HP, one hit catches them, XP on catch | No bait combat exists; bait is foraged on a WIS check | **NOT SHIPPED** |
 | 3 | Bait sourced from a tackle box (`tacklebox: {}`) | Bait lives in `S_story.inventory` as `type:'bait'` | **NOT SHIPPED** (replaced) |
-| 4 | 3 zones: Shore / Reeds / Deep | Shipped as `bank` / `reeds` / `shallows`, bridged by `_zoneMap = { bank:'shore'@30474` | **SHIPPED, renamed** |
+| 4 | 3 zones: Shore / Reeds / Deep | Shipped as `bank` / `reeds` / `shallows`, bridged by `_zoneMap = { bank:'shore'@30473` | **SHIPPED, renamed** |
 | 5 | Zone gate = Tier 2 / Tier 4 bait held | Gate = catch-log progress (≥1 catch; a Large+ catch) | **SHIPPED, different mechanism** |
 | 6 | Per-zone find DC 8 / 12 / 16 | Flat `S_story.fishingBaitSatchel ? 8 : 10@30491` in all three zones | **NOT SHIPPED** → §AUDIT-03v/w |
 | 7 | Effective DC = zoneDC − Luck Mod | `- _luckMod()@30491` | **SHIPPED** |
@@ -231,7 +231,7 @@ does not wait on §AUDIT-03x's design call.
 
 `BAIT_TABLES = {@26632` is keyed `bank`/`reeds`/`shallows` while `tackleboxZoneUnlocks: {shore:true@23107`
 is keyed `shore`/`reeds`/`deep`. This reads as a guaranteed `undefined` lookup and is not one: an
-explicit `_zoneMap = { bank:'shore'@30474` reconciles them. Recorded because it was nearly filed as a
+explicit `_zoneMap = { bank:'shore'@30473` reconciles them. Recorded because it was nearly filed as a
 crash — **check for a translation layer before scoring a key mismatch.**
 
 ---

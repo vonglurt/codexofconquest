@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — The Derivable NPC Card Map (§NPC-01, promotes §POT-R2)
 
 > **Status:** ✅ **SHIPPED IN FULL** — A, B, C, D and side-findings SF1–SF6 all landed.

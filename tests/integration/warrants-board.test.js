@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §BOARD-01 — The Warrant's Board: rumor/bounty discovery.
 // Drives the REAL pure selector (_boardBounties) and the REAL acceptance path
 // (_acceptBounty → first live `unlock` opcode). Design: lab-reports/lab-report-warrants-board.md.

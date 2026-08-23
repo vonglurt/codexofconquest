@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 # ═══════════════════════════════════════════════════════════════════════════
 # ⚠️  ARCHAIC — OUT OF DATE.  Historical one-shot importer (POSTs to the
 #     localhost:1367 WBAPI).  Content was long ago imported and lives in

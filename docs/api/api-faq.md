@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # WBAPI FAQ — Map Editing, Coordinate Surgery, and Junction Planning
 
 > **Philosophy:** One record at a time. No mass edits. No mass deletes. Every change is:

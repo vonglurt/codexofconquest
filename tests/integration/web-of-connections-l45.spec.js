@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 /**
  * §DOC-02cz — Layer 45 "Web of Connections" measurement suite.

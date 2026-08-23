@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Lab Report — §KG Increment 2: The St. Petersburg → Moscow Corridor
 ### A second beginner ramp — low-level "kindergarten" zones, Soviet-cyberpunk cover story, honor-central

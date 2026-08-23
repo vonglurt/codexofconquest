@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # WORLD BUILDERS REFERENCE
 ### roll2hit.com — Campaign Setting, NPCs, Conditions & Quest Architecture

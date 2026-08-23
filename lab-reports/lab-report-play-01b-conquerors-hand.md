@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §PLAY-01-B *The Conqueror's Hand*: enemy behaviour at low HP
 
 **Parent:** `lab-reports/lab-report-play-review.md` §PLAY-01-B · **Track:** BACKLOG.md §PLAY-01 (face **B** of *The Honest Floor*)

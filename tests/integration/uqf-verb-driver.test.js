@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-G4a — the host end of the choice seam + the `cost` leaf.
 //
 // Two halves of one slice, both proven here:

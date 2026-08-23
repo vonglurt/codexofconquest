@@ -1,3 +1,4 @@
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # Lab Report — §MATH-01: Completion Design for the Mathematical World Arc
 
 **Designed:** 2026-07-07 08:58 (design lock, pre-implementation) · **Shipped:** 2026-07-07 09:22 `32d7bb0`
@@ -127,7 +128,7 @@ repo-wide (§AUDIT-03x).
 live and unchanged.
 
 **6. Test pins.** The activate-only status was pinned three times in
-`` `tests/integration/quest-runtime-uqf.test.js:the full non-UQF residue is exactly@9370` `` and its
+`` `tests/integration/quest-runtime-uqf.test.js:the full non-UQF residue is exactly@9371` `` and its
 two holdout lists. All three cited line numbers are **exact at the design-lock build**.
 
 **7. Register check — passes.** The station still says *"I have been waiting five hundred and twelve
@@ -257,7 +258,7 @@ would fall 35 → 30 and be exactly the `blq_05`–`10` stubs. §DX-02as (e), fi
 asserts the true figure is **50** and names 15 additional ids. All 15 carry `schema:"UQF-1.0"` at
 HEAD; `roll2hit-v3.html` has not changed since that row was written; and two independent instruments
 return **30** — a comment- and string-aware brace walk over all 2,853 entries, and the live assertion
-`` `tests/integration/quest-runtime-uqf.test.js:expect(r.ids.length).toBe(30);@9381` `` running in the
+`` `tests/integration/quest-runtime-uqf.test.js:expect(r.ids.length).toBe(30);@9382` `` running in the
 real JS engine. The 15 mis-counted entries are single lines of 1,436–2,655 characters with `schema:`
 near the *end*. **The newer measurement was not the better one.** Row corrected in place, not re-filed.
 
