@@ -55,7 +55,7 @@ codexofconquest/
 │   ├── design/             story quest world mechanics monsters maps
 │   │                       potential prompt index  ← you are here
 │   ├── backlog/            BACKLOG.md + six phase backlogs + plan-archive.md
-│   ├── lab-reports/        126 engineering write-ups
+│   ├── lab-reports/        114 engineering write-ups
 │   ├── archive/            superseded records — annotated, never rewritten
 │   ├── api/ maps/ mechanics/ notes/ spec/ story/
 │

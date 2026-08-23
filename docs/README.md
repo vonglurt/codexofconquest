@@ -14,7 +14,7 @@ referenced constantly. Everything here is reference/history that changes less of
 | `mechanics/` | Mechanics deep-dives — `mechanics-combat`, `mechanics-economy` (companions to `design/mechanics.md`). |
 | `design/` | The design docs of record — `story`, `quest`, `world`, `mechanics`, `monsters`, `maps`, `potential`, `prompt`, `index`. |
 | `backlog/` | `BACKLOG.md` + the six phase backlogs + `plan-archive.md`. |
-| `lab-reports/` | 126 engineering write-ups, each verified against the live game file. |
+| `lab-reports/` | 114 engineering write-ups, each verified against the live game file. |
 | `archive/` | Superseded records. Annotated, never rewritten. |
 | `maps/` | Generated `node-index.md` and map lab reports. |
 | `notes/` | Dev/design notes — dev-environment, node-network, cell-resume-prompts, brainstorm-one-liners, IEEE cell-grid paper, data-code-migration, restart-prompt, say, ux-first-battles, IntegrationPlan, Year1367AD. |

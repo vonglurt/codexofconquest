@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
+#
+# Publishes the playable surface to GitHub Pages: the landing page, the game
+# and the editor. Nothing is built — the game IS the artefact, so the job just
+# copies three files. .nojekyll stops Pages running the site through Jekyll,
+# which would otherwise try to process 5.5 MB of inline HTML and JS.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'play.html'
+      - 'edit.html'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Assemble the site
+        run: |
+          mkdir -p _site
+          cp index.html play.html edit.html _site/
+          cp LICENSE _site/LICENSE
+          touch _site/.nojekyll
+          ls -la _site
+
+      - name: Verify the game is intact
+        run: |
+          test -s _site/play.html
+          head -1 _site/play.html | grep -q '<!DOCTYPE html>'
+          tail -c 200 _site/play.html | grep -q '</html>'
+          echo "play.html: $(wc -c < _site/play.html) bytes — doctype and closing tag present"
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

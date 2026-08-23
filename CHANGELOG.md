@@ -44,7 +44,7 @@ across 1,471 commits.
 ### Removed
 - 684 MB purged from git history: generated snapshots and logs, an imported book
   corpus, committed `node_modules`, and 36 one-off HTML backups. No `.md` of the
-  project's own documentation was touched — all 126 lab reports and the full
+  project's own documentation was touched — all 114 lab reports and the full
   backlog history remain.
 
 ### Fixed
