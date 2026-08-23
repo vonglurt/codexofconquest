@@ -333,7 +333,7 @@
 
 > **1 entry.** The pre-split log carried none to this phase; the entry below was written here. Order within this file is newest-first, as in the original. **The full cross-phase chronology — every entry in original order, with the file that now holds it — is the §RESUME index in [BACKLOG.md](BACKLOG.md).** Read that first when you need "what happened last", regardless of subsystem.
 
-### 2026-08-23 — §DX-02cy ✅ SHIPPED `1a5c04c` — the counter that had been monotone at zero for ninety days, and the gate that refused to let the docs stay wrong
+### 2026-08-23 — §DX-02cy ✅ SHIPPED `724682c` — the counter that had been monotone at zero for ninety days, and the gate that refused to let the docs stay wrong
 
 **What shipped.** `S.opp.key` → `S.enemy.key` at the four kill-counter read sites in `_storyBattleVictory()`. Six lines; `play.html` unchanged at 38,712. `S.opp` is the mutable *fight state* half of the combat pair (`adv · condition · cond · tier · hp · maxHp · dmgMod`); `S.enemy` is the *identity* half, and `loadWorldMonster` writes the key there. Reading identity off the state half returned `undefined`, so the guard had been false since the Ally Cat arc's birth commit `4090c82` on 2026-05-25. **Nineteen quests across §KG, Ally Cat and §GR La Riva were unreachable behind it; they are reachable now.** Full ship record in [plan-archive.md](plan-archive.md).
 
